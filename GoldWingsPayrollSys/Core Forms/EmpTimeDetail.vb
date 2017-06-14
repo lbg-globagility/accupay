@@ -940,11 +940,6 @@ Public Class EmpTimeDetail
 
         Dim db_curr_timestamp = New ExecuteQuery("SELECT DATE_FORMAT(CURRENT_TIMESTAMP(), @@datetime_format);").Result
 
-        Dim employeeIDs = timeEntries.GroupBy(Function(x) x.EmployeeID) _
-            .Select(Function(x) x.First) _
-            .Select(Function(x) x.EmployeeID) _
-            .ToArray()
-
         For Each timeEntry In timeEntries
             INSUPD_employeetimeentrydetails(
                 Nothing,
