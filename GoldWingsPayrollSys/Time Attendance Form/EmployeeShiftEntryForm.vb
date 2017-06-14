@@ -1032,7 +1032,7 @@ Public Class EmployeeShiftEntryForm
             Return Nothing
         End If
 
-        Dim dateParts = value.Split("/")
+        Dim dateParts = value.Split(separator)
         Dim month = CInt(dateParts(0))
         Dim day = CInt(dateParts(1))
         Dim year = CInt(dateParts(2))
