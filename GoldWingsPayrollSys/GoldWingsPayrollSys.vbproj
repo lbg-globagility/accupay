@@ -177,6 +177,12 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core Forms\AllowanceTypeForm.Designer.vb">
+      <DependentUpon>AllowanceTypeForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\AllowanceTypeForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Core Forms\Employee.Designer.vb">
       <DependentUpon>Employee.vb</DependentUpon>
     </Compile>
@@ -1155,6 +1161,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo - Copy.ico" />
+    <EmbeddedResource Include="Core Forms\AllowanceTypeForm.resx">
+      <DependentUpon>AllowanceTypeForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Employee.resx">
       <DependentUpon>Employee.vb</DependentUpon>
     </EmbeddedResource>
