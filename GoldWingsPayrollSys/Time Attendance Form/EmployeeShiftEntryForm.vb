@@ -590,6 +590,9 @@ Public Class EmployeeShiftEntryForm
 
         Dim isrestday = If(chkrestday.Checked, "1", "0")
 
+        ' A hack to make datepickers commit change to their values.
+        dgvEmpShiftList.Focus()
+
         Select Case CustomColoredTabControl1.SelectedIndex
 
             Case 0
