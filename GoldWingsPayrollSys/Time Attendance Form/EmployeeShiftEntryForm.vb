@@ -1055,6 +1055,10 @@ Public Class EmployeeShiftEntryForm
             Using excel As New ExcelPackage(New FileInfo(excelFileName))
                 Dim worksheet = excel.Workbook.Worksheets("Employee Shift")
 
+                If worksheet Is Nothing Then
+                    Throw New Exception("Sorry, but we can't find the `Employee Shift` worksheet.")
+                End If
+
                 Dim startRow = worksheet.Dimension.Start
                 Dim endRow = worksheet.Dimension.End
 
