@@ -698,7 +698,7 @@ Public Class Agency
 
         Dim returnvalue = Nothing
 
-        Dim params(6, 2)
+        Dim params(6, 1)
 
         params(0, 0) = "ag_RowID"
         params(1, 0) = "ag_OrganizationID"
@@ -714,7 +714,7 @@ Public Class Agency
         params(3, 1) = ag_AgencyName
         params(4, 1) = ValNoComma(ag_AgencyFee)
         params(5, 1) = If(ag_AddressID = Nothing, DBNull.Value, ag_AddressID)
-        params(6, 1) = CheckBox1.Tag
+        params(6, 1) = CheckBox1.Checked
 
         returnvalue = _
             EXEC_INSUPD_PROCEDURE(params,
