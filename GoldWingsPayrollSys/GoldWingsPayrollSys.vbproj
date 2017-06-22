@@ -152,6 +152,7 @@
       <HintPath>References\OCRTools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Design" />
@@ -177,6 +178,12 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Initial Forms\AboutUs.Designer.vb">
+      <DependentUpon>AboutUs.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Initial Forms\AboutUs.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Core Forms\AllowanceTypeForm.Designer.vb">
       <DependentUpon>AllowanceTypeForm.vb</DependentUpon>
     </Compile>
@@ -1221,6 +1228,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HRIS Forms\LoanScheduleForm.resx">
       <DependentUpon>LoanScheduleForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Initial Forms\AboutUs.resx">
+      <DependentUpon>AboutUs.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Initial Forms\FormReports.resx">
       <DependentUpon>FormReports.vb</DependentUpon>
