@@ -1,4 +1,5 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Imports System.Configuration
+Imports MySql.Data.MySqlClient
 Imports System.Threading
 Imports System.IO
 Imports Microsoft.Win32
@@ -13,6 +14,8 @@ Public Class MDIPrimaryForm
     Dim ExemptedForms As New List(Of String)
 
     'Dim ctlMDI As MdiClient
+
+    Private versionNo As String
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -313,7 +316,6 @@ Public Class MDIPrimaryForm
     Private Sub MDIPrimaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Try
-
             If dbnow = Nothing Then
                 dbnow = EXECQUER(CURDATE_MDY)
             End If
@@ -334,7 +336,7 @@ Public Class MDIPrimaryForm
             ToolStripButton0_Click(sender, e)
 
             PictureBox1.Image = ImageList1.Images(1)
-
+            LoadVersionNo()
             'Me.Text = orgNam
 
             'n_UserLog.Out()
@@ -349,6 +351,17 @@ Public Class MDIPrimaryForm
 
         End Try
 
+    End Sub
+
+    Private Sub LoadVersionNo()
+        Dim appSettings = ConfigurationManager.AppSettings
+        Me.versionNo = appSettings.Get("payroll.version")
+
+        If versionNo IsNot Nothing Then
+            lblVersionValue.Text = Me.versionNo
+        Else
+            lblVersionValue.Text = "Version no is missing."
+        End If
     End Sub
 
     'Trebuchet MS

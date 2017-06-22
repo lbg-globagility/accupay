@@ -144,6 +144,8 @@ Partial Class MDIPrimaryForm
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.ctxtmenNothing = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
+        Me.lblVersionName = New System.Windows.Forms.ToolStripLabel()
+        Me.lblVersionValue = New System.Windows.Forms.ToolStripLabel()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -1039,7 +1041,7 @@ Partial Class MDIPrimaryForm
         Me.ToolStrip1.CanOverflow = False
         Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel2, Me.ToolStripLabel1, Me.lblPosition, Me.ToolStripLabel8, Me.ToolStripLabel3, Me.lblUser, Me.ToolStripLabel4, Me.ToolStripLabel5, Me.lblTime, Me.ToolStripLabel6, Me.ToolStripLabel7, Me.lblCreatedBy, Me.tslblCreatedBy, Me.ToolStripLabel9, Me.lblCreatedDate, Me.tslblCreated, Me.ToolStripLabel11, Me.lblUpdatedBy, Me.tslblUpdateBy, Me.ToolStripLabel14, Me.lblUpdatedDate, Me.tslblUpdate, Me.systemprogressbar})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel2, Me.ToolStripLabel1, Me.lblPosition, Me.ToolStripLabel8, Me.ToolStripLabel3, Me.lblUser, Me.ToolStripLabel4, Me.ToolStripLabel5, Me.lblTime, Me.ToolStripLabel6, Me.ToolStripLabel7, Me.lblCreatedBy, Me.tslblCreatedBy, Me.ToolStripLabel9, Me.lblCreatedDate, Me.tslblCreated, Me.ToolStripLabel11, Me.lblUpdatedBy, Me.tslblUpdateBy, Me.ToolStripLabel14, Me.lblUpdatedDate, Me.tslblUpdate, Me.lblVersionName, Me.lblVersionValue, Me.systemprogressbar})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 537)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1059, 25)
@@ -1343,6 +1345,18 @@ Partial Class MDIPrimaryForm
         Me.BackgroundWorker1.WorkerReportsProgress = True
         Me.BackgroundWorker1.WorkerSupportsCancellation = True
         '
+        'lblVersionName
+        '
+        Me.lblVersionName.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblVersionName.Name = "lblVersionName"
+        Me.lblVersionName.Size = New System.Drawing.Size(52, 22)
+        Me.lblVersionName.Text = "Version:"
+        '
+        'lblVersionValue
+        '
+        Me.lblVersionValue.Name = "lblVersionValue"
+        Me.lblVersionValue.Size = New System.Drawing.Size(0, 22)
+        '
         'MDIPrimaryForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1517,4 +1531,6 @@ Partial Class MDIPrimaryForm
     Friend WithEvents Column21 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column22 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
+    Friend WithEvents lblVersionName As System.Windows.Forms.ToolStripLabel
+    Friend WithEvents lblVersionValue As System.Windows.Forms.ToolStripLabel
 End Class
