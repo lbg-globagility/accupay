@@ -504,7 +504,7 @@ ELSE
         IF officialWorkEnd < @sh_brktimeTo THEN
             SET @workAfterBreak = 0;
         ELSE
-            /* Let's make sure that we calculate the correct work hours after breaktime by ensuring that we don't choose the 
+            /* Let's make sure that we calculate the correct work hours after breaktime by ensuring that we don't choose the
              * breaktime's end when the employee started work after breaktime.
              */
             SET @workAfterBreakStart = GREATEST(@sh_brktimeTo, officialWorkStart);
@@ -902,6 +902,8 @@ IF pr_DayBefore IS NULL THEN
                 , 0
                 , 0
                 , 0
+                , NULL
+                , NULL
         ) INTO anyINT;
 
     -- a. If the day before isn't a holiday.
@@ -938,6 +940,8 @@ IF pr_DayBefore IS NULL THEN
                     , (ete_NDiffHrs * rateperhour) * ndiffrate
                     , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                     , (ete_HrsLate * rateperhour)
+                    , NULL
+                    , NULL
             ) INTO anyINT;
 
         ELSEIF isRestDay = '0' THEN
@@ -974,6 +978,8 @@ IF pr_DayBefore IS NULL THEN
                     , (ete_NDiffHrs * rateperhour) * ndiffrate
                     , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                     , (ete_HrsLate * rateperhour)
+                    , NULL
+                    , NULL
             ) INTO anyINT;
 
         END IF;
@@ -1043,6 +1049,8 @@ IF pr_DayBefore IS NULL THEN
                         , (ete_NDiffHrs * rateperhour) * ndiffrate
                         , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                         , (ete_HrsLate * rateperhour)
+                        , NULL
+                        , NULL
                 ) INTO anyINT;
 
                 -- SELECT ete_RegHrsWorkd, rateperhour, commonrate, restday_rate, ((ete_RegHrsWorkd - ete_NDiffHrs) * rateperhour) * ((commonrate + restday_rate) - 1)
@@ -1079,6 +1087,8 @@ IF pr_DayBefore IS NULL THEN
                         , (ete_NDiffHrs * rateperhour) * ndiffrate
                         , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                         , (ete_HrsLate * rateperhour)
+                        , NULL
+                        , NULL
                 ) INTO anyINT;
 
             END IF;
@@ -1121,7 +1131,9 @@ IF pr_DayBefore IS NULL THEN
                 (ete_HrsUnder * rateperhour),
                 (ete_NDiffHrs * rateperhour) * ndiffrate,
                 (ete_NDiffOTHrs * rateperhour) * ndiffotrate,
-                (ete_HrsLate * rateperhour)
+                (ete_HrsLate * rateperhour),
+                NULL,
+                NULL
             ) INTO anyINT;
         END IF;
 
@@ -1197,6 +1209,8 @@ ELSE
                     , (ete_NDiffHrs * rateperhour) * ndiffrate
                     , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                     , (ete_HrsLate * rateperhour)
+                    , NULL
+                    , NULL
             ) INTO anyINT;
 
 
@@ -1243,6 +1257,8 @@ ELSE
                     , (ete_NDiffHrs * rateperhour) * ndiffrate
                     , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                     , (ete_HrsLate * rateperhour)
+                    , NULL
+                    , NULL
             ) INTO anyINT;
 
 
@@ -1285,6 +1301,8 @@ ELSE
                     , (ete_NDiffHrs * rateperhour) * ndiffrate
                     , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                     , (ete_HrsLate * rateperhour)
+                    , NULL
+                    , NULL
             ) INTO anyINT;
 
 
@@ -1329,6 +1347,8 @@ ELSE
                         , (ete_NDiffHrs * rateperhour) * ndiffrate
                         , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                         , (ete_HrsLate * rateperhour)
+                        , NULL
+                        , NULL
                 ) INTO anyINT;
 
             ELSE
@@ -1360,6 +1380,8 @@ ELSE
                         , 0
                         , 0
                         , 0
+                        , NULL
+                        , NULL
                 ) INTO anyINT;
 
             END IF;
