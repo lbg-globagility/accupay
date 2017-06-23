@@ -1,0 +1,41 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.0.0.4396
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+-- Dumping structure for trigger goldwingspayrolldb.BEFINS_position_view
+DROP TRIGGER IF EXISTS `BEFINS_position_view`;
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
+DELIMITER //
+CREATE TRIGGER `BEFINS_position_view` BEFORE INSERT ON `position_view` FOR EACH ROW BEGIN
+
+DECLARE posit_name VARCHAR(50);
+
+SELECT p.PositionName FROM `position` p WHERE p.RowID=NEW.PositionID INTO posit_name;
+
+IF NEW.PositionID = 1
+	OR LCASE(TRIM(posit_name)) = 'administrator' THEN 
+	SET NEW.AllowedToAccess = 'Y';SET NEW.Creates='Y';SET NEW.Updates='Y';SET NEW.Deleting='Y';SET NEW.ReadOnly='N';
+ELSE
+
+	IF NEW.Creates='Y' OR NEW.Updates='Y' OR NEW.Deleting='Y' OR NEW.ReadOnly='Y' THEN
+		SET NEW.AllowedToAccess = 'Y';
+	ELSE
+		SET NEW.AllowedToAccess = 'N';
+	END IF;
+
+END IF;
+	
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

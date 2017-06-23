@@ -1,0 +1,37 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.0.0.4396
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+-- Dumping structure for procedure goldwingspayrolldb.FILL_time_table
+DROP PROCEDURE IF EXISTS `FILL_time_table`;
+DELIMITER //
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `FILL_time_table`()
+    DETERMINISTIC
+BEGIN
+
+DECLARE in_dex INT(11) DEFAULT 0;
+
+
+
+WHILE (in_dex < 86399) DO
+
+	INSERT INTO time_table(TimeValue) VALUES (ADDTIME(SEC_TO_TIME(0), SEC_TO_TIME(in_dex)));
+
+	SET in_dex = in_dex + 1;
+
+END WHILE;
+
+
+END//
+DELIMITER ;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

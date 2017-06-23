@@ -1,0 +1,59 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.0.0.4396
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+-- Dumping structure for function goldwingspayrolldb.INSUPD_division_location
+DROP FUNCTION IF EXISTS `INSUPD_division_location`;
+DELIMITER //
+CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `INSUPD_division_location`(`DivisionRowID` INT, `OrganizID` INT, `DivisionLocationName` VARCHAR(50), `UserRowID` INT) RETURNS int(11)
+    DETERMINISTIC
+BEGIN
+
+DECLARE returnvalue INT(11);
+
+	INSERT INTO `division`
+	(
+		RowID
+		,Name
+		,OrganizationID
+		,CreatedBy
+	) VALUES (
+		DivisionRowID
+		,DivisionLocationName
+		,OrganizID
+		,UserRowID
+	) ON
+	DUPLICATE
+	KEY
+	UPDATE
+		LastUpd=CURRENT_TIMESTAMP()
+		,LastUpdBy=UserRowID
+		,Name=DivisionLocationName;SELECT @@Identity AS ID INTO returnvalue;
+		
+	IF DivisionRowID IS NULL THEN
+		
+		INSERT INTO `division`(Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID,ParentDivisionID) SELECT 'Comissary', '', OrganizID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), UserRowID, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2,returnvalue
+		UNION
+		SELECT 'Office Staff', '', OrganizID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), UserRowID, 'Department', 15.00, 313, 'End of the month', 'End of the month', 'End of the month', 'End of the month', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'End of the month', 'End of the month', 'End of the month', 'End of the month',1,returnvalue
+		UNION
+		SELECT 'Supervisors', '', OrganizID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), UserRowID, 'Department', 15.00, 313, 'End of the month', 'End of the month', 'End of the month', 'End of the month', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',3,returnvalue
+		UNION
+		SELECT 'Service Crew', '', OrganizID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), UserRowID, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',4,returnvalue;
+		
+	END IF;
+
+RETURN returnvalue;
+
+END//
+DELIMITER ;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
