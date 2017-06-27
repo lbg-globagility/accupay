@@ -167,6 +167,8 @@ DECLARE officialWorkEnd TIME;
 
 DECLARE nextDay DATE;
 
+DECLARE overtimePay DECIMAL(11, 6);
+
 SELECT
 e.EmploymentStatus
 ,e.EmployeeType
@@ -853,16 +855,16 @@ ELSEIF IFNULL(OTCount,0) = 1 && ete_OvertimeHrs = 0 THEN
 
 END IF;
 
--- a. If the day before isn't a holiday.
+-- a. If the current day is a regular working day.
 IF pr_DayBefore IS NULL THEN
 
     SELECT
-        IFNULL(TotalDayPay,0),
-        IFNULL(TotalHoursWorked,0)
+        IFNULL(TotalDayPay, 0),
+        IFNULL(TotalHoursWorked, 0)
     FROM employeetimeentry
     WHERE EmployeeID=ete_EmpRowID
-    AND OrganizationID=ete_OrganizID
-    AND `Date`=ete_Date
+        AND OrganizationID=ete_OrganizID
+        AND `Date`=ete_Date
     INTO
         yester_TotDayPay,
         yester_TotHrsWorkd;
@@ -871,7 +873,7 @@ IF pr_DayBefore IS NULL THEN
         SET yester_TotDayPay = 0;
     END IF;
 
-    -- a. If the day before isn't a holiday.
+    -- a. If the current day is a regular working day.
     -- b. If current day is before employment hiring date.
     IF ete_Date < e_StartDate THEN
 
@@ -904,12 +906,18 @@ IF pr_DayBefore IS NULL THEN
                 , 0
                 , NULL
                 , NULL
+                , 1
         ) INTO anyINT;
 
-    -- a. If the day before isn't a holiday.
+    -- a. If the current day is a regular working day.
     -- b. If employee was not payed yesterday.
+    -- So far works when absent, or first time entry generation.
+    -- Candiate for deprecation
     ELSEIF yester_TotDayPay = 0 THEN
 
+        -- a. If the current day is a regular working day.
+        -- b. If employee was not payed yesterday.
+        -- c. If it's currently a rest day.
         IF isRestDay = '1' THEN
 
             SET ete_TotalDayPay = ((ete_RegHrsWorkd * rateperhour) * commonrate)
@@ -940,10 +948,14 @@ IF pr_DayBefore IS NULL THEN
                     , (ete_NDiffHrs * rateperhour) * ndiffrate
                     , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                     , (ete_HrsLate * rateperhour)
-                    , NULL
-                    , NULL
+                    , ete_RegHrsWorkd
+                    , ((ete_RegHrsWorkd - ete_NDiffHrs) * rateperhour) * ((commonrate + restday_rate) - 1)
+                    , 2
             ) INTO anyINT;
 
+        -- a. If the current day is a regular working day.
+        -- b. If employee was not payed yesterday.
+        -- c. If it's currently NOT a rest day.
         ELSEIF isRestDay = '0' THEN
 
             IF ete_RegHrsWorkd = 0 THEN
@@ -978,27 +990,36 @@ IF pr_DayBefore IS NULL THEN
                     , (ete_NDiffHrs * rateperhour) * ndiffrate
                     , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                     , (ete_HrsLate * rateperhour)
-                    , NULL
-                    , NULL
+                    , 0
+                    , 0
+                    , 3
             ) INTO anyINT;
 
         END IF;
 
+    -- a. If the current day is a regular working day.
+    -- b. Employee was payed yesterday AND
+    --    current day is after employment hiring date.
     ELSE
 
-
-
-        SELECT CAST(EXISTS(
-            SELECT
-            elv.RowID
-            FROM employeeleave elv
-            WHERE elv.EmployeeID=ete_EmpRowID
-                AND elv.`Status`='Approved'
-                AND elv.OrganizationID=ete_OrganizID
-                AND ete_Date BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate
-            LIMIT 1) AS CHAR) 'CharResult'
+        SELECT CAST(
+            EXISTS(
+                SELECT
+                elv.RowID
+                FROM employeeleave elv
+                WHERE elv.EmployeeID=ete_EmpRowID
+                    AND elv.`Status`='Approved'
+                    AND elv.OrganizationID=ete_OrganizID
+                    AND ete_Date BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate
+                LIMIT 1
+            ) AS CHAR
+        ) 'CharResult'
         INTO hasLeave;
 
+        -- a. If the current day is a regular working day.
+        -- b. Employee was payed yesterday AND
+        --    current day is after employment hiring date.
+        -- c. If no leave was filed today.
         IF hasLeave = '0' THEN
 
             SELECT EXISTS(
@@ -1011,16 +1032,21 @@ IF pr_DayBefore IS NULL THEN
                 LIMIT 1
             ) INTO isRestDay;
 
+            -- a. If the current day is a regular working day.
+            -- b. Employee was payed yesterday AND
+            --    current day is after employment hiring date.
+            -- c. If no leave was filed today.
+            -- d. If it's a rest day.
             IF isRestDay = '1' THEN
 
                 IF ete_RegHrsWorkd = 140 THEN
                     SET ete_RegHrsWorkd = 8;
-
                 END IF;
 
-                SET ete_TotalDayPay =   ((ete_RegHrsWorkd - ete_NDiffHrs) * rateperhour) * ((commonrate + restday_rate) - 1)
-                                                + (ete_OvertimeHrs * rateperhour) * restdayot_rate
-                                                + (ete_NDiffHrs * rateperhour) * ndiffrate;
+                SET ete_TotalDayPay =   (
+                    (ete_RegHrsWorkd - ete_NDiffHrs) * rateperhour) * ((commonrate + restday_rate) - 1)
+                    + (ete_OvertimeHrs * rateperhour) * restdayot_rate
+                    + (ete_NDiffHrs * rateperhour) * ndiffrate;
 
                 SET ete_HrsLate = 0.0;
 
@@ -1049,14 +1075,16 @@ IF pr_DayBefore IS NULL THEN
                         , (ete_NDiffHrs * rateperhour) * ndiffrate
                         , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                         , (ete_HrsLate * rateperhour)
-                        , NULL
-                        , NULL
+                        , ete_RegHrsWorkd
+                        , ((ete_RegHrsWorkd - ete_NDiffHrs) * rateperhour) * ((commonrate + restday_rate) - 1)
+                        , 4
                 ) INTO anyINT;
 
-                -- SELECT ete_RegHrsWorkd, rateperhour, commonrate, restday_rate, ((ete_RegHrsWorkd - ete_NDiffHrs) * rateperhour) * ((commonrate + restday_rate) - 1)
-                -- INTO OUTFILE 'D:/logs/timeentry.txt'
-                -- FIELDS TERMINATED BY ', ';
-
+            -- a. If the current day is a regular working day.
+            -- b. Employee was payed yesterday AND
+            --    current day is after employment hiring date.
+            -- c. If no leave was filed today.
+            -- d. If it's NOT a rest day.
             ELSE
 
                 SET ete_TotalDayPay = ((ete_RegHrsWorkd * rateperhour) * commonrate)
@@ -1087,12 +1115,17 @@ IF pr_DayBefore IS NULL THEN
                         , (ete_NDiffHrs * rateperhour) * ndiffrate
                         , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                         , (ete_HrsLate * rateperhour)
-                        , NULL
-                        , NULL
+                        , 0
+                        , 0
+                        , 5
                 ) INTO anyINT;
 
             END IF;
 
+        -- a. If the current day is a regular working day.
+        -- b. Employee was payed yesterday AND
+        --    current day is after employment hiring date.
+        -- c. If a leave was filed today.
         ELSE
 
             SET ete_TotalDayPay = IFNULL(
@@ -1132,26 +1165,31 @@ IF pr_DayBefore IS NULL THEN
                 (ete_NDiffHrs * rateperhour) * ndiffrate,
                 (ete_NDiffOTHrs * rateperhour) * ndiffotrate,
                 (ete_HrsLate * rateperhour),
-                NULL,
-                NULL
+                0,
+                0,
+                6
             ) INTO anyINT;
         END IF;
 
     END IF;
 
+-- a. If the current day is a holiday.
 ELSE
 
     SELECT
-    IFNULL(et.TotalDayPay,0)
-    ,IFNULL(et.TotalHoursWorked,0)
+        IFNULL(et.TotalDayPay,0),
+        IFNULL(et.TotalHoursWorked,0)
     FROM employeetimeentry et
     INNER JOIN employee e ON e.RowID=et.EmployeeID
     WHERE et.EmployeeID=ete_EmpRowID
     AND et.OrganizationID=ete_OrganizID
     AND et.`Date`=IF(CHAR_TO_DAYOFWEEK(e.DayOfRest) = DAYNAME(pr_DayBefore), SUBDATE(pr_DayBefore, INTERVAL 1 DAY), pr_DayBefore)
-    INTO yester_TotDayPay
-          ,yester_TotHrsWorkd;
+    INTO
+        yester_TotDayPay,
+        yester_TotHrsWorkd;
+
     SELECT EXISTS(SELECT elv.RowID FROM employeeleave elv WHERE elv.EmployeeID=ete_EmpRowID AND elv.`Status`='Approved' AND elv.OrganizationID=ete_OrganizID AND ete_Date BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate LIMIT 1) INTO hasLeave;
+
     IF yester_TotDayPay IS NULL THEN
         SET yester_TotDayPay = 0;
 
@@ -1166,6 +1204,8 @@ ELSE
 
     END IF;
 
+    -- a. If the current day is a holiday.
+    -- b. If employee was payed yesterday.
     IF yester_TotDayPay != 0 THEN
 
         SELECT (DAYOFWEEK(SUBDATE(ete_Date, INTERVAL 1 DAY)) = e.DayOfRest)
@@ -1173,6 +1213,9 @@ ELSE
         WHERE e.RowID=ete_EmpRowID
         INTO isRestDay;
 
+        -- a. If the current day is a holiday.
+        -- b. If employee was payed yesterday.
+        -- c. If today is a rest day.
         IF isRestDay = '1' THEN
 
             SET ete_TotalDayPay = ((ete_RegHrsWorkd * rateperhour) * ((commonrate + restday_rate) - 1))
@@ -1209,24 +1252,21 @@ ELSE
                     , (ete_NDiffHrs * rateperhour) * ndiffrate
                     , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                     , (ete_HrsLate * rateperhour)
-                    , NULL
-                    , NULL
+                    , 0
+                    , 0
+                    , 7
             ) INTO anyINT;
 
-
-
-
-
-
+        -- a. If the current day is a holiday.
+        -- b. If employee was payed yesterday.
+        -- c. If today is NOT a rest day.
         ELSE
 
             SET ete_TotalDayPay = ((ete_RegHrsWorkd * rateperhour) * commonrate)
                                          + ((ete_OvertimeHrs * rateperhour) * otrate);
 
-            IF (ete_TotalDayPay IS NULL
-                OR ete_TotalDayPay = 0)
+            IF (ete_TotalDayPay IS NULL OR ete_TotalDayPay = 0)
                 AND pr_PayType = 'Regular Holiday' THEN
-
 
                 SET ete_TotalDayPay = dailypay;
 
@@ -1257,19 +1297,20 @@ ELSE
                     , (ete_NDiffHrs * rateperhour) * ndiffrate
                     , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                     , (ete_HrsLate * rateperhour)
-                    , NULL
-                    , NULL
+                    , 0
+                    , 0
+                    , 8
             ) INTO anyINT;
-
-
-
-
-
 
         END IF;
 
+    -- a. If the current day is a holiday.
+    -- b. If employee was NOT payed yesterday.
     ELSE
 
+        -- a. If the current day is a holiday.
+        -- b. If employee was NOT payed yesterday.
+        -- c. If today is a rest day.
         IF isRestDay = '1' THEN
 
 
@@ -1301,26 +1342,31 @@ ELSE
                     , (ete_NDiffHrs * rateperhour) * ndiffrate
                     , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                     , (ete_HrsLate * rateperhour)
-                    , NULL
-                    , NULL
+                    , 0
+                    , 0
+                    , 9
             ) INTO anyINT;
 
-
-
-
-
-
+        -- a. If the current day is a holiday.
+        -- b. If employee was NOT payed yesterday.
+        -- c. If today is NOT a rest day.
         ELSEIF isRestDay = '0' THEN
 
-            SELECT (IF(CHAR_TO_DAYOFWEEK(e.DayOfRest) = DAYNAME(pr_DayBefore), DAYOFWEEK(SUBDATE(pr_DayBefore, INTERVAL 1 DAY)), DAYOFWEEK(pr_DayBefore)) = e.DayOfRest)
+            SELECT (
+                IF(
+                    CHAR_TO_DAYOFWEEK(e.DayOfRest) = DAYNAME(pr_DayBefore),
+                    DAYOFWEEK(SUBDATE(pr_DayBefore, INTERVAL 1 DAY)),
+                    DAYOFWEEK(pr_DayBefore)
+                ) = e.DayOfRest
+            )
             FROM employee e
-            WHERE e.RowID=ete_EmpRowID
+            WHERE e.RowID = ete_EmpRowID
             INTO isRestDay;
 
-            IF isRestDay IN (0,1) THEN
+            IF isRestDay IN (0, 1) THEN
 
                 SET ete_TotalDayPay = ((ete_RegHrsWorkd * rateperhour) * commonrate)
-                                             + ((ete_OvertimeHrs * rateperhour) * otrate);
+                                        + ((ete_OvertimeHrs * rateperhour) * otrate);
 
                 SELECT INSUPD_employeetimeentries(
                         anyINT
@@ -1347,10 +1393,13 @@ ELSE
                         , (ete_NDiffHrs * rateperhour) * ndiffrate
                         , (ete_NDiffOTHrs * rateperhour) * ndiffotrate
                         , (ete_HrsLate * rateperhour)
-                        , NULL
-                        , NULL
+                        , 0
+                        , 0
+                        , 10
                 ) INTO anyINT;
 
+            -- DOn't know when this works
+            -- Candiate for deprecation.
             ELSE
 
                 SET ete_TotalDayPay = 0.0;
@@ -1380,8 +1429,9 @@ ELSE
                         , 0
                         , 0
                         , 0
-                        , NULL
-                        , NULL
+                        , 0
+                        , 0
+                        , 11
                 ) INTO anyINT;
 
             END IF;
