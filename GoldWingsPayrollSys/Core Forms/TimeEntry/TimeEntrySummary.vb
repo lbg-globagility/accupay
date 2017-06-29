@@ -1,4 +1,6 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Option Strict On
+
+Imports MySql.Data.MySqlClient
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 
@@ -11,7 +13,26 @@ Public Class TimeEntrySummary
         Public Property Month As Integer
     End Class
 
-    Public Async Function LoadPayPeriods() As Task(Of Collection(Of PayPeriod))
+    Private payPeriods As Collection(Of PayPeriod)
+
+    Public Async Sub LoadPayPeriods()
+        Me.payPeriods = Await GetPayPeriods()
+        PayPeriodDataGridView.Rows.Add(2)
+
+        For Each payPeriod In Me.payPeriods
+            Dim button = New Button()
+            button.Height = button.Height * 2
+            button.Width = button.Width * 1.5
+            Dim payFromDate = payPeriod.PayFromDate.ToString("dd MMM yyyy")
+            Dim payToDate = payPeriod.PayToDate.ToString("dd MMM yyyy")
+
+            button.Text = payFromDate + vbNewLine + payToDate
+
+            PayPeriodsPanel.Controls.Add(button)
+        Next
+    End Sub
+
+    Public Async Function GetPayPeriods() As Task(Of Collection(Of PayPeriod))
         Dim sql = <![CDATA[
             SELECT PayFromDate, PayToDate, Year, Month
             FROM payperiod
@@ -20,9 +41,9 @@ Public Class TimeEntrySummary
                 AND payperiod.TotalGrossSalary = @SalaryType;
         ]]>.Value
 
-        sql = sql.Replace("@OrganizationID", z_OrganizationID) _
-            .Replace("@Year", 2016) _
-            .Replace("@SalaryType", 1)
+        sql = sql.Replace("@OrganizationID", CStr(z_OrganizationID)) _
+            .Replace("@Year", CStr(2016)) _
+            .Replace("@SalaryType", CStr(1))
 
         Dim payPeriods = New Collection(Of PayPeriod)
 
@@ -32,6 +53,19 @@ Public Class TimeEntrySummary
             Await connection.OpenAsync()
             Dim reader = Await command.ExecuteReaderAsync()
             While Await reader.ReadAsync()
+                Dim payFromDate = reader.GetValue(Of Date)("PayFromDate")
+                Dim payToDate = reader.GetValue(Of Date)("PayToDate")
+                Dim year = reader.GetValue(Of Integer)("Year")
+                Dim month = reader.GetValue(Of Integer)("Month")
+
+                Dim payPeriod = New PayPeriod() With {
+                    .PayFromDate = payFromDate,
+                    .PayToDate = payToDate,
+                    .Year = year,
+                    .Month = month
+                }
+
+                payPeriods.Add(payPeriod)
             End While
         End Using
 
@@ -39,6 +73,10 @@ Public Class TimeEntrySummary
     End Function
 
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        LoadPayPeriods()
+    End Sub
+
+    Private Sub PayPeriodDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles PayPeriodDataGridView.CellContentClick
 
     End Sub
 End Class
