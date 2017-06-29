@@ -1493,12 +1493,12 @@ Public Class TimEntduration
 
     Private Sub BackgroundWorker1_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkRECOMPUTE_employeeleave.DoWork
 
-        Dim n_ExecuteQuery As _
-            New ExecuteQuery("CALL RESET_employeeleave_duplicate('" & orgztnID & "','" & dayFrom & "','" & dayTo & "'" &
-                             ",'" & quer_empPayFreq & "','" & cboxDivisions.Tag & "');", 999999)
+        'Dim n_ExecuteQuery As _
+        '    New ExecuteQuery("CALL RESET_employeeleave_duplicate('" & orgztnID & "','" & dayFrom & "','" & dayTo & "'" &
+        '                     ",'" & quer_empPayFreq & "','" & cboxDivisions.Tag & "');", 999999)
 
 
-        n_ExecuteQuery = New ExecuteQuery("CALL RECOMPUTE_employeeleave('" & orgztnID & "','" & dayFrom & "','" & dayTo & "');", 999999)
+        'n_ExecuteQuery = New ExecuteQuery("CALL RECOMPUTE_employeeleave('" & orgztnID & "','" & dayFrom & "','" & dayTo & "');", 999999)
 
 
         bgworkRECOMPUTE_employeeleave.ReportProgress(50, "")
