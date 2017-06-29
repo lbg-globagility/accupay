@@ -178,6 +178,12 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core Forms\TimeEntry\TimeEntrySummary.Designer.vb">
+      <DependentUpon>TimeEntrySummary.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\TimeEntry\TimeEntrySummary.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
     </Compile>
@@ -1177,6 +1183,9 @@
     <EmbeddedResource Include="Core Forms\rpt\PayrollSumma.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PayrollSumma.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\TimeEntry\TimeEntrySummary.resx">
+      <DependentUpon>TimeEntrySummary.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="General Forms\ImproperLogOut.resx">
       <DependentUpon>ImproperLogOut.vb</DependentUpon>
