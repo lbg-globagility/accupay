@@ -27,13 +27,14 @@ Partial Class TimeAttendForm
         Me.TimeEntryLogsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimeEntryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelTimeAttend = New System.Windows.Forms.Panel()
+        Me.SummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TimeEntToolStripMenuItem, Me.TimeEntryLogsToolStripMenuItem, Me.TimeEntryToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TimeEntToolStripMenuItem, Me.TimeEntryLogsToolStripMenuItem, Me.TimeEntryToolStripMenuItem, Me.SummaryToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -66,6 +67,12 @@ Partial Class TimeAttendForm
         Me.PanelTimeAttend.Size = New System.Drawing.Size(1006, 446)
         Me.PanelTimeAttend.TabIndex = 3
         '
+        'SummaryToolStripMenuItem
+        '
+        Me.SummaryToolStripMenuItem.Name = "SummaryToolStripMenuItem"
+        Me.SummaryToolStripMenuItem.Size = New System.Drawing.Size(70, 20)
+        Me.SummaryToolStripMenuItem.Text = "Summary"
+        '
         'TimeAttendForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -88,4 +95,5 @@ Partial Class TimeAttendForm
     Friend WithEvents PanelTimeAttend As System.Windows.Forms.Panel
     Friend WithEvents TimeEntryLogsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TimeEntryToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents SummaryToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class
