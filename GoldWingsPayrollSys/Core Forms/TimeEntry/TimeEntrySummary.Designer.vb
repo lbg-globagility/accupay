@@ -25,7 +25,6 @@ Partial Class TimeEntrySummary
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TimeEntrySummary))
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -33,6 +32,7 @@ Partial Class TimeEntrySummary
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -49,7 +49,6 @@ Partial Class TimeEntrySummary
         Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -57,53 +56,9 @@ Partial Class TimeEntrySummary
         Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.dgvEmployi = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.cemp_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_MiddleName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_SurName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_Nickname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_MaritalStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_NoOfDependents = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_Birthdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_Startdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_JobTitle = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_Salutation = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_TIN = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_SSS = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_PAGIBIG = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_PhilHealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_WorkPhone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_HomePhone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_MobilePhone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_HomeAddress = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_EmailAddress = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_Gender = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_EmployementStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_PayFrequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_UndertimeOverride = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_OvertimeOverride = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_Created = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_CreatedBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastUpd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastUpdBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_PositionID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_PayFrequencyID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_EmployeeType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_SickLeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_MaternityLeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LeaveAllowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_SickLeaveAllowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_MaternityLeaveAllowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LeavePerPayPeriod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_SickLeavePerPayPeriod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_MaternityLeavePerPayPeriod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_fstatRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
@@ -132,10 +87,6 @@ Partial Class TimeEntrySummary
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tbpemptimeent = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.lblTimeOut = New System.Windows.Forms.Label()
-        Me.lblTimeIn = New System.Windows.Forms.Label()
-        Me.txtTimeOut = New System.Windows.Forms.TextBox()
-        Me.txtTimeIn = New System.Windows.Forms.TextBox()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.txt_PayType = New System.Windows.Forms.TextBox()
         Me.Label39 = New System.Windows.Forms.Label()
@@ -197,7 +148,6 @@ Partial Class TimeEntrySummary
         Me.secdec = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator26 = New System.Windows.Forms.ToolStripSeparator()
         Me.nxtyear = New System.Windows.Forms.ToolStripButton()
-        Me.lblmonthyear = New System.Windows.Forms.Label()
         Me.txt_RestDayOvertimeRate = New System.Windows.Forms.TextBox()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.dgvcalendar = New System.Windows.Forms.DataGridView()
@@ -209,31 +159,17 @@ Partial Class TimeEntrySummary
         Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txt_NightDifferentialRate = New System.Windows.Forms.TextBox()
-        Me.txtdescrptn = New System.Windows.Forms.TextBox()
         Me.txt_OvertimeRate = New System.Windows.Forms.TextBox()
-        Me.cbopaytype = New System.Windows.Forms.ComboBox()
         Me.txt_RestDayRate = New System.Windows.Forms.TextBox()
-        Me.txtpayrate = New System.Windows.Forms.TextBox()
         Me.txt_NightDifferentialOTRate = New System.Windows.Forms.TextBox()
-        Me.txtotrate = New System.Windows.Forms.TextBox()
         Me.txt_PayRate = New System.Windows.Forms.TextBox()
-        Me.txtnightdiffrate = New System.Windows.Forms.TextBox()
-        Me.txtnightdiffotrate = New System.Windows.Forms.TextBox()
         Me.txtempbasicpay = New System.Windows.Forms.TextBox()
-        Me.Label11 = New System.Windows.Forms.Label()
         Me.Label31 = New System.Windows.Forms.Label()
-        Me.Label12 = New System.Windows.Forms.Label()
         Me.chkrest = New System.Windows.Forms.CheckBox()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
         Me.chknight = New System.Windows.Forms.CheckBox()
-        Me.Label15 = New System.Windows.Forms.Label()
         Me.Label30 = New System.Windows.Forms.Label()
-        Me.Label16 = New System.Windows.Forms.Label()
         Me.txttotdaypay = New System.Windows.Forms.TextBox()
-        Me.dtppayperiod = New System.Windows.Forms.DateTimePicker()
         Me.Label28 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.txtnightdiffotpay = New System.Windows.Forms.TextBox()
         Me.txtshftEffFrom = New System.Windows.Forms.TextBox()
         Me.txtnightdiffpay = New System.Windows.Forms.TextBox()
@@ -244,7 +180,6 @@ Partial Class TimeEntrySummary
         Me.txtshftTimeTo = New System.Windows.Forms.TextBox()
         Me.Label26 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtFName = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.txtEmpID = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -267,51 +202,8 @@ Partial Class TimeEntrySummary
         Me.txtreghrsworkd = New System.Windows.Forms.TextBox()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.btnpaypNxt = New System.Windows.Forms.Button()
         Me.Label20 = New System.Windows.Forms.Label()
-        Me.btnpaypPrev = New System.Windows.Forms.Button()
         Me.txthrslate = New System.Windows.Forms.TextBox()
-        Me.dgvetentsemimon = New System.Windows.Forms.DataGridView()
-        Me.etiment_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_Org = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_Created = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_CBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_LastUpd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_LUpdBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_Date = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_EmpShiftID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_EmpID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_EmpSalID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_EmpFixSalFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_tothrsworked = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_RegHrsWork = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_reghrsamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_OTHrsWork = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_otpay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_UTHrsWork = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_utamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_NightDiffHrs = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_nightdiffpay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_NightDiffOTHrs = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_nightdiffotpay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_Hrslate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_lateamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_LateFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_PayrateID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_VacLeavHrs = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_SickLeavHrs = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_MaternLeavHrs = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_OtherLeavHrs = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_TotDayPay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_Absent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ete_DutyStartTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ete_DutyEndTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ShiftEffectiveDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ShiftEffectiveDateTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.IsDayOfRest = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esBasicPay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_TimeIn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etiment_TimeOut = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.First = New System.Windows.Forms.LinkLabel()
@@ -468,8 +360,6 @@ Partial Class TimeEntrySummary
         Me.wholedec = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator13 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsbtnNxt = New System.Windows.Forms.ToolStripButton()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.dgvdatesummary = New System.Windows.Forms.DataGridView()
         Me.col_sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_fri = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_thu = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -477,17 +367,23 @@ Partial Class TimeEntrySummary
         Me.col_tue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_mon = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_sun = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.lblpublish = New System.Windows.Forms.Label()
-        Me.lblperfectatt = New System.Windows.Forms.Label()
-        Me.lblmissin = New System.Windows.Forms.Label()
-        Me.lblmissout = New System.Windows.Forms.Label()
-        Me.lbldupin = New System.Windows.Forms.Label()
-        Me.lbldupout = New System.Windows.Forms.Label()
-        Me.lbllate = New System.Windows.Forms.Label()
-        Me.lblundertime = New System.Windows.Forms.Label()
-        Me.Label21 = New System.Windows.Forms.Label()
-        Me.Label40 = New System.Windows.Forms.Label()
-        Me.tbpemptimeentsumma = New System.Windows.Forms.TabPage()
+        Me.cemp_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvEmployi, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.TabControl2.SuspendLayout()
@@ -498,9 +394,7 @@ Partial Class TimeEntrySummary
         Me.Panel1.SuspendLayout()
         Me.ToolStrip3.SuspendLayout()
         CType(Me.dgvcalendar, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvetentsemimon, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvdatesummary, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.tbpemptimeentsumma.SuspendLayout()
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ComboBox1
@@ -523,10 +417,11 @@ Partial Class TimeEntrySummary
         Me.dgvEmployi.AllowUserToResizeRows = False
         Me.dgvEmployi.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.dgvEmployi.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvEmployi.BackgroundColor = System.Drawing.Color.White
         Me.dgvEmployi.ColumnHeadersHeight = 34
         Me.dgvEmployi.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvEmployi.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_RowID, Me.cemp_EmployeeID, Me.cemp_FirstName, Me.cemp_MiddleName, Me.cemp_LastName, Me.cemp_SurName, Me.cemp_Nickname, Me.cemp_MaritalStatus, Me.cemp_NoOfDependents, Me.cemp_Birthdate, Me.cemp_Startdate, Me.cemp_JobTitle, Me.cemp_Position, Me.cemp_Salutation, Me.cemp_TIN, Me.cemp_SSS, Me.cemp_PAGIBIG, Me.cemp_PhilHealth, Me.cemp_WorkPhone, Me.cemp_HomePhone, Me.cemp_MobilePhone, Me.cemp_HomeAddress, Me.cemp_EmailAddress, Me.cemp_Gender, Me.cemp_EmployementStatus, Me.cemp_PayFrequency, Me.cemp_UndertimeOverride, Me.cemp_OvertimeOverride, Me.cemp_Created, Me.cemp_CreatedBy, Me.cemp_LastUpd, Me.cemp_LastUpdBy, Me.cemp_PositionID, Me.cemp_PayFrequencyID, Me.cemp_EmployeeType, Me.cemp_LeaveBalance, Me.cemp_SickLeaveBalance, Me.cemp_MaternityLeaveBalance, Me.cemp_LeaveAllowance, Me.cemp_SickLeaveAllowance, Me.cemp_MaternityLeaveAllowance, Me.cemp_LeavePerPayPeriod, Me.cemp_SickLeavePerPayPeriod, Me.cemp_MaternityLeavePerPayPeriod, Me.cemp_fstatRowID})
+        Me.dgvEmployi.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_RowID, Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -544,277 +439,6 @@ Partial Class TimeEntrySummary
         Me.dgvEmployi.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvEmployi.Size = New System.Drawing.Size(350, 285)
         Me.dgvEmployi.TabIndex = 137
-        '
-        'cemp_RowID
-        '
-        Me.cemp_RowID.HeaderText = "RowID"
-        Me.cemp_RowID.Name = "cemp_RowID"
-        Me.cemp_RowID.ReadOnly = True
-        '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.HeaderText = "Employee ID"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
-        'cemp_FirstName
-        '
-        Me.cemp_FirstName.HeaderText = "First Name"
-        Me.cemp_FirstName.Name = "cemp_FirstName"
-        Me.cemp_FirstName.ReadOnly = True
-        '
-        'cemp_MiddleName
-        '
-        Me.cemp_MiddleName.HeaderText = "Middle Name"
-        Me.cemp_MiddleName.Name = "cemp_MiddleName"
-        Me.cemp_MiddleName.ReadOnly = True
-        '
-        'cemp_LastName
-        '
-        Me.cemp_LastName.HeaderText = "Last Name"
-        Me.cemp_LastName.Name = "cemp_LastName"
-        Me.cemp_LastName.ReadOnly = True
-        '
-        'cemp_SurName
-        '
-        Me.cemp_SurName.HeaderText = "Surname"
-        Me.cemp_SurName.Name = "cemp_SurName"
-        Me.cemp_SurName.ReadOnly = True
-        '
-        'cemp_Nickname
-        '
-        Me.cemp_Nickname.HeaderText = "Nickname"
-        Me.cemp_Nickname.Name = "cemp_Nickname"
-        Me.cemp_Nickname.ReadOnly = True
-        '
-        'cemp_MaritalStatus
-        '
-        Me.cemp_MaritalStatus.HeaderText = "Marital Status"
-        Me.cemp_MaritalStatus.Name = "cemp_MaritalStatus"
-        Me.cemp_MaritalStatus.ReadOnly = True
-        '
-        'cemp_NoOfDependents
-        '
-        Me.cemp_NoOfDependents.HeaderText = "No. Of Dependents"
-        Me.cemp_NoOfDependents.Name = "cemp_NoOfDependents"
-        Me.cemp_NoOfDependents.ReadOnly = True
-        '
-        'cemp_Birthdate
-        '
-        Me.cemp_Birthdate.HeaderText = "Birthdate"
-        Me.cemp_Birthdate.Name = "cemp_Birthdate"
-        Me.cemp_Birthdate.ReadOnly = True
-        '
-        'cemp_Startdate
-        '
-        Me.cemp_Startdate.HeaderText = "Startdate"
-        Me.cemp_Startdate.Name = "cemp_Startdate"
-        Me.cemp_Startdate.ReadOnly = True
-        '
-        'cemp_JobTitle
-        '
-        Me.cemp_JobTitle.HeaderText = "Job Title"
-        Me.cemp_JobTitle.Name = "cemp_JobTitle"
-        Me.cemp_JobTitle.ReadOnly = True
-        '
-        'cemp_Position
-        '
-        Me.cemp_Position.HeaderText = "Position"
-        Me.cemp_Position.Name = "cemp_Position"
-        Me.cemp_Position.ReadOnly = True
-        '
-        'cemp_Salutation
-        '
-        Me.cemp_Salutation.HeaderText = "Salutation"
-        Me.cemp_Salutation.Name = "cemp_Salutation"
-        Me.cemp_Salutation.ReadOnly = True
-        '
-        'cemp_TIN
-        '
-        Me.cemp_TIN.HeaderText = "TIN"
-        Me.cemp_TIN.Name = "cemp_TIN"
-        Me.cemp_TIN.ReadOnly = True
-        '
-        'cemp_SSS
-        '
-        Me.cemp_SSS.HeaderText = "SSS No."
-        Me.cemp_SSS.Name = "cemp_SSS"
-        Me.cemp_SSS.ReadOnly = True
-        '
-        'cemp_PAGIBIG
-        '
-        Me.cemp_PAGIBIG.HeaderText = "PAGIBIG No."
-        Me.cemp_PAGIBIG.Name = "cemp_PAGIBIG"
-        Me.cemp_PAGIBIG.ReadOnly = True
-        '
-        'cemp_PhilHealth
-        '
-        Me.cemp_PhilHealth.HeaderText = "PhilHealth"
-        Me.cemp_PhilHealth.Name = "cemp_PhilHealth"
-        Me.cemp_PhilHealth.ReadOnly = True
-        '
-        'cemp_WorkPhone
-        '
-        Me.cemp_WorkPhone.HeaderText = "Work Phone"
-        Me.cemp_WorkPhone.Name = "cemp_WorkPhone"
-        Me.cemp_WorkPhone.ReadOnly = True
-        '
-        'cemp_HomePhone
-        '
-        Me.cemp_HomePhone.HeaderText = "Home Phone"
-        Me.cemp_HomePhone.Name = "cemp_HomePhone"
-        Me.cemp_HomePhone.ReadOnly = True
-        '
-        'cemp_MobilePhone
-        '
-        Me.cemp_MobilePhone.HeaderText = "MobilePhone"
-        Me.cemp_MobilePhone.Name = "cemp_MobilePhone"
-        Me.cemp_MobilePhone.ReadOnly = True
-        '
-        'cemp_HomeAddress
-        '
-        Me.cemp_HomeAddress.HeaderText = "Home Address"
-        Me.cemp_HomeAddress.Name = "cemp_HomeAddress"
-        Me.cemp_HomeAddress.ReadOnly = True
-        '
-        'cemp_EmailAddress
-        '
-        Me.cemp_EmailAddress.HeaderText = "Email Address"
-        Me.cemp_EmailAddress.Name = "cemp_EmailAddress"
-        Me.cemp_EmailAddress.ReadOnly = True
-        '
-        'cemp_Gender
-        '
-        Me.cemp_Gender.HeaderText = "Gender"
-        Me.cemp_Gender.Name = "cemp_Gender"
-        Me.cemp_Gender.ReadOnly = True
-        '
-        'cemp_EmployementStatus
-        '
-        Me.cemp_EmployementStatus.HeaderText = "Employement Status"
-        Me.cemp_EmployementStatus.Name = "cemp_EmployementStatus"
-        Me.cemp_EmployementStatus.ReadOnly = True
-        '
-        'cemp_PayFrequency
-        '
-        Me.cemp_PayFrequency.HeaderText = "Pay Frequency"
-        Me.cemp_PayFrequency.Name = "cemp_PayFrequency"
-        Me.cemp_PayFrequency.ReadOnly = True
-        '
-        'cemp_UndertimeOverride
-        '
-        Me.cemp_UndertimeOverride.HeaderText = "UndertimeOverride"
-        Me.cemp_UndertimeOverride.Name = "cemp_UndertimeOverride"
-        Me.cemp_UndertimeOverride.ReadOnly = True
-        '
-        'cemp_OvertimeOverride
-        '
-        Me.cemp_OvertimeOverride.HeaderText = "OvertimeOverride"
-        Me.cemp_OvertimeOverride.Name = "cemp_OvertimeOverride"
-        Me.cemp_OvertimeOverride.ReadOnly = True
-        '
-        'cemp_Created
-        '
-        Me.cemp_Created.HeaderText = "Created"
-        Me.cemp_Created.Name = "cemp_Created"
-        Me.cemp_Created.ReadOnly = True
-        '
-        'cemp_CreatedBy
-        '
-        Me.cemp_CreatedBy.HeaderText = "CreatedBy"
-        Me.cemp_CreatedBy.Name = "cemp_CreatedBy"
-        Me.cemp_CreatedBy.ReadOnly = True
-        '
-        'cemp_LastUpd
-        '
-        Me.cemp_LastUpd.HeaderText = "LastUpd"
-        Me.cemp_LastUpd.Name = "cemp_LastUpd"
-        Me.cemp_LastUpd.ReadOnly = True
-        '
-        'cemp_LastUpdBy
-        '
-        Me.cemp_LastUpdBy.HeaderText = "LastUpdBy"
-        Me.cemp_LastUpdBy.Name = "cemp_LastUpdBy"
-        Me.cemp_LastUpdBy.ReadOnly = True
-        '
-        'cemp_PositionID
-        '
-        Me.cemp_PositionID.HeaderText = "PositionID"
-        Me.cemp_PositionID.Name = "cemp_PositionID"
-        Me.cemp_PositionID.ReadOnly = True
-        '
-        'cemp_PayFrequencyID
-        '
-        Me.cemp_PayFrequencyID.HeaderText = "PayFrequencyID"
-        Me.cemp_PayFrequencyID.Name = "cemp_PayFrequencyID"
-        Me.cemp_PayFrequencyID.ReadOnly = True
-        '
-        'cemp_EmployeeType
-        '
-        Me.cemp_EmployeeType.HeaderText = "Employee Type"
-        Me.cemp_EmployeeType.Name = "cemp_EmployeeType"
-        Me.cemp_EmployeeType.ReadOnly = True
-        '
-        'cemp_LeaveBalance
-        '
-        Me.cemp_LeaveBalance.HeaderText = "Leave balance"
-        Me.cemp_LeaveBalance.Name = "cemp_LeaveBalance"
-        Me.cemp_LeaveBalance.ReadOnly = True
-        '
-        'cemp_SickLeaveBalance
-        '
-        Me.cemp_SickLeaveBalance.HeaderText = "Sick leave balance"
-        Me.cemp_SickLeaveBalance.Name = "cemp_SickLeaveBalance"
-        Me.cemp_SickLeaveBalance.ReadOnly = True
-        '
-        'cemp_MaternityLeaveBalance
-        '
-        Me.cemp_MaternityLeaveBalance.HeaderText = "Maternity leave balance"
-        Me.cemp_MaternityLeaveBalance.Name = "cemp_MaternityLeaveBalance"
-        Me.cemp_MaternityLeaveBalance.ReadOnly = True
-        '
-        'cemp_LeaveAllowance
-        '
-        Me.cemp_LeaveAllowance.HeaderText = "Leave allowance"
-        Me.cemp_LeaveAllowance.Name = "cemp_LeaveAllowance"
-        Me.cemp_LeaveAllowance.ReadOnly = True
-        '
-        'cemp_SickLeaveAllowance
-        '
-        Me.cemp_SickLeaveAllowance.HeaderText = "Sick leave allowance"
-        Me.cemp_SickLeaveAllowance.Name = "cemp_SickLeaveAllowance"
-        Me.cemp_SickLeaveAllowance.ReadOnly = True
-        '
-        'cemp_MaternityLeaveAllowance
-        '
-        Me.cemp_MaternityLeaveAllowance.HeaderText = "Maternity leave allowance"
-        Me.cemp_MaternityLeaveAllowance.Name = "cemp_MaternityLeaveAllowance"
-        Me.cemp_MaternityLeaveAllowance.ReadOnly = True
-        '
-        'cemp_LeavePerPayPeriod
-        '
-        Me.cemp_LeavePerPayPeriod.HeaderText = "Leave per pay period"
-        Me.cemp_LeavePerPayPeriod.Name = "cemp_LeavePerPayPeriod"
-        Me.cemp_LeavePerPayPeriod.ReadOnly = True
-        '
-        'cemp_SickLeavePerPayPeriod
-        '
-        Me.cemp_SickLeavePerPayPeriod.HeaderText = "Sick leave per pay period"
-        Me.cemp_SickLeavePerPayPeriod.Name = "cemp_SickLeavePerPayPeriod"
-        Me.cemp_SickLeavePerPayPeriod.ReadOnly = True
-        '
-        'cemp_MaternityLeavePerPayPeriod
-        '
-        Me.cemp_MaternityLeavePerPayPeriod.HeaderText = "Maternity leave per pay period"
-        Me.cemp_MaternityLeavePerPayPeriod.Name = "cemp_MaternityLeavePerPayPeriod"
-        Me.cemp_MaternityLeavePerPayPeriod.ReadOnly = True
-        '
-        'cemp_fstatRowID
-        '
-        Me.cemp_fstatRowID.HeaderText = "fstatRowID"
-        Me.cemp_fstatRowID.Name = "cemp_fstatRowID"
-        Me.cemp_fstatRowID.ReadOnly = True
-        Me.cemp_fstatRowID.Visible = False
         '
         'lblforballoon
         '
@@ -1065,7 +689,6 @@ Partial Class TimeEntrySummary
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.tbpemptimeent)
-        Me.TabControl1.Controls.Add(Me.tbpemptimeentsumma)
         Me.TabControl1.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
         Me.TabControl1.ItemSize = New System.Drawing.Size(152, 25)
         Me.TabControl1.Location = New System.Drawing.Point(368, 24)
@@ -1090,10 +713,7 @@ Partial Class TimeEntrySummary
         'Panel1
         '
         Me.Panel1.AutoScroll = True
-        Me.Panel1.Controls.Add(Me.lblTimeOut)
-        Me.Panel1.Controls.Add(Me.lblTimeIn)
-        Me.Panel1.Controls.Add(Me.txtTimeOut)
-        Me.Panel1.Controls.Add(Me.txtTimeIn)
+        Me.Panel1.Controls.Add(Me.DataGridView1)
         Me.Panel1.Controls.Add(Me.Label41)
         Me.Panel1.Controls.Add(Me.txt_PayType)
         Me.Panel1.Controls.Add(Me.Label39)
@@ -1104,36 +724,21 @@ Partial Class TimeEntrySummary
         Me.Panel1.Controls.Add(Me.Label34)
         Me.Panel1.Controls.Add(Me.Label33)
         Me.Panel1.Controls.Add(Me.ToolStrip3)
-        Me.Panel1.Controls.Add(Me.lblmonthyear)
         Me.Panel1.Controls.Add(Me.txt_RestDayOvertimeRate)
         Me.Panel1.Controls.Add(Me.Label32)
         Me.Panel1.Controls.Add(Me.dgvcalendar)
         Me.Panel1.Controls.Add(Me.txt_NightDifferentialRate)
-        Me.Panel1.Controls.Add(Me.txtdescrptn)
         Me.Panel1.Controls.Add(Me.txt_OvertimeRate)
-        Me.Panel1.Controls.Add(Me.cbopaytype)
         Me.Panel1.Controls.Add(Me.txt_RestDayRate)
-        Me.Panel1.Controls.Add(Me.txtpayrate)
         Me.Panel1.Controls.Add(Me.txt_NightDifferentialOTRate)
-        Me.Panel1.Controls.Add(Me.txtotrate)
         Me.Panel1.Controls.Add(Me.txt_PayRate)
-        Me.Panel1.Controls.Add(Me.txtnightdiffrate)
-        Me.Panel1.Controls.Add(Me.txtnightdiffotrate)
         Me.Panel1.Controls.Add(Me.txtempbasicpay)
-        Me.Panel1.Controls.Add(Me.Label11)
         Me.Panel1.Controls.Add(Me.Label31)
-        Me.Panel1.Controls.Add(Me.Label12)
         Me.Panel1.Controls.Add(Me.chkrest)
-        Me.Panel1.Controls.Add(Me.Label13)
-        Me.Panel1.Controls.Add(Me.Label14)
         Me.Panel1.Controls.Add(Me.chknight)
-        Me.Panel1.Controls.Add(Me.Label15)
         Me.Panel1.Controls.Add(Me.Label30)
-        Me.Panel1.Controls.Add(Me.Label16)
         Me.Panel1.Controls.Add(Me.txttotdaypay)
-        Me.Panel1.Controls.Add(Me.dtppayperiod)
         Me.Panel1.Controls.Add(Me.Label28)
-        Me.Panel1.Controls.Add(Me.Label2)
         Me.Panel1.Controls.Add(Me.txtnightdiffotpay)
         Me.Panel1.Controls.Add(Me.txtshftEffFrom)
         Me.Panel1.Controls.Add(Me.txtnightdiffpay)
@@ -1144,7 +749,6 @@ Partial Class TimeEntrySummary
         Me.Panel1.Controls.Add(Me.txtshftTimeTo)
         Me.Panel1.Controls.Add(Me.Label26)
         Me.Panel1.Controls.Add(Me.Label4)
-        Me.Panel1.Controls.Add(Me.txtFName)
         Me.Panel1.Controls.Add(Me.Label5)
         Me.Panel1.Controls.Add(Me.txtEmpID)
         Me.Panel1.Controls.Add(Me.Label6)
@@ -1167,54 +771,13 @@ Partial Class TimeEntrySummary
         Me.Panel1.Controls.Add(Me.txtreghrsworkd)
         Me.Panel1.Controls.Add(Me.Label18)
         Me.Panel1.Controls.Add(Me.Label19)
-        Me.Panel1.Controls.Add(Me.btnpaypNxt)
         Me.Panel1.Controls.Add(Me.Label20)
-        Me.Panel1.Controls.Add(Me.btnpaypPrev)
         Me.Panel1.Controls.Add(Me.txthrslate)
-        Me.Panel1.Controls.Add(Me.dgvetentsemimon)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(3, 28)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(846, 447)
         Me.Panel1.TabIndex = 486
-        '
-        'lblTimeOut
-        '
-        Me.lblTimeOut.AutoSize = True
-        Me.lblTimeOut.Location = New System.Drawing.Point(642, 55)
-        Me.lblTimeOut.Name = "lblTimeOut"
-        Me.lblTimeOut.Size = New System.Drawing.Size(50, 13)
-        Me.lblTimeOut.TabIndex = 494
-        Me.lblTimeOut.Text = "Time Out"
-        '
-        'lblTimeIn
-        '
-        Me.lblTimeIn.AutoSize = True
-        Me.lblTimeIn.Location = New System.Drawing.Point(553, 55)
-        Me.lblTimeIn.Name = "lblTimeIn"
-        Me.lblTimeIn.Size = New System.Drawing.Size(42, 13)
-        Me.lblTimeIn.TabIndex = 494
-        Me.lblTimeIn.Text = "Time In"
-        '
-        'txtTimeOut
-        '
-        Me.txtTimeOut.BackColor = System.Drawing.Color.White
-        Me.txtTimeOut.Location = New System.Drawing.Point(642, 71)
-        Me.txtTimeOut.Name = "txtTimeOut"
-        Me.txtTimeOut.ReadOnly = True
-        Me.txtTimeOut.Size = New System.Drawing.Size(80, 20)
-        Me.txtTimeOut.TabIndex = 493
-        Me.txtTimeOut.Tag = "String"
-        '
-        'txtTimeIn
-        '
-        Me.txtTimeIn.BackColor = System.Drawing.Color.White
-        Me.txtTimeIn.Location = New System.Drawing.Point(556, 71)
-        Me.txtTimeIn.Name = "txtTimeIn"
-        Me.txtTimeIn.ReadOnly = True
-        Me.txtTimeIn.Size = New System.Drawing.Size(80, 20)
-        Me.txtTimeIn.TabIndex = 493
-        Me.txtTimeIn.Tag = "String"
         '
         'Label41
         '
@@ -1308,10 +871,10 @@ Partial Class TimeEntrySummary
         Me.ToolStrip3.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ToolStrip3.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.ToolStrip3.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.prevyear, Me.ToolStripSeparator14, Me.janmonth, Me.ToolStripSeparator15, Me.febmonth, Me.ToolStripSeparator16, Me.marmonth, Me.ToolStripSeparator17, Me.aprmonth, Me.ToolStripSeparator18, Me.maymonth, Me.ToolStripSeparator19, Me.junmonth, Me.ToolStripSeparator20, Me.julmonth, Me.ToolStripSeparator21, Me.augmonth, Me.ToolStripSeparator22, Me.sepmonth, Me.ToolStripSeparator23, Me.octmonth, Me.ToolStripSeparator24, Me.novmonth, Me.ToolStripSeparator25, Me.decmonth, Me.ToolStripSeparator26, Me.nxtyear})
-        Me.ToolStrip3.Location = New System.Drawing.Point(1, 25)
+        Me.ToolStrip3.Location = New System.Drawing.Point(33, 72)
         Me.ToolStrip3.Name = "ToolStrip3"
         Me.ToolStrip3.ShowItemToolTips = False
-        Me.ToolStrip3.Size = New System.Drawing.Size(5892, 25)
+        Me.ToolStrip3.Size = New System.Drawing.Size(5912, 28)
         Me.ToolStrip3.TabIndex = 168
         Me.ToolStrip3.Text = "ToolStrip3"
         '
@@ -1321,13 +884,13 @@ Partial Class TimeEntrySummary
         Me.prevyear.Image = CType(resources.GetObject("prevyear.Image"), System.Drawing.Image)
         Me.prevyear.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.prevyear.Name = "prevyear"
-        Me.prevyear.Size = New System.Drawing.Size(52, 22)
+        Me.prevyear.Size = New System.Drawing.Size(52, 25)
         Me.prevyear.Text = "← 2014"
         '
         'ToolStripSeparator14
         '
         Me.ToolStripSeparator14.Name = "ToolStripSeparator14"
-        Me.ToolStripSeparator14.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator14.Size = New System.Drawing.Size(6, 28)
         '
         'janmonth
         '
@@ -1336,25 +899,25 @@ Partial Class TimeEntrySummary
         Me.janmonth.Image = CType(resources.GetObject("janmonth.Image"), System.Drawing.Image)
         Me.janmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.janmonth.Name = "janmonth"
-        Me.janmonth.Size = New System.Drawing.Size(50, 22)
+        Me.janmonth.Size = New System.Drawing.Size(50, 25)
         Me.janmonth.Text = "   Jan "
         '
         'firstjan
         '
         Me.firstjan.Name = "firstjan"
-        Me.firstjan.Size = New System.Drawing.Size(100, 22)
+        Me.firstjan.Size = New System.Drawing.Size(152, 22)
         Me.firstjan.Text = "1-15"
         '
         'secjan
         '
         Me.secjan.Name = "secjan"
-        Me.secjan.Size = New System.Drawing.Size(100, 22)
+        Me.secjan.Size = New System.Drawing.Size(152, 22)
         Me.secjan.Text = "16-"
         '
         'ToolStripSeparator15
         '
         Me.ToolStripSeparator15.Name = "ToolStripSeparator15"
-        Me.ToolStripSeparator15.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator15.Size = New System.Drawing.Size(6, 28)
         '
         'febmonth
         '
@@ -1363,7 +926,7 @@ Partial Class TimeEntrySummary
         Me.febmonth.Image = CType(resources.GetObject("febmonth.Image"), System.Drawing.Image)
         Me.febmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.febmonth.Name = "febmonth"
-        Me.febmonth.Size = New System.Drawing.Size(51, 22)
+        Me.febmonth.Size = New System.Drawing.Size(51, 25)
         Me.febmonth.Text = "   Feb "
         '
         'firstfeb
@@ -1381,7 +944,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator16
         '
         Me.ToolStripSeparator16.Name = "ToolStripSeparator16"
-        Me.ToolStripSeparator16.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator16.Size = New System.Drawing.Size(6, 28)
         '
         'marmonth
         '
@@ -1390,7 +953,7 @@ Partial Class TimeEntrySummary
         Me.marmonth.Image = CType(resources.GetObject("marmonth.Image"), System.Drawing.Image)
         Me.marmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.marmonth.Name = "marmonth"
-        Me.marmonth.Size = New System.Drawing.Size(53, 22)
+        Me.marmonth.Size = New System.Drawing.Size(53, 25)
         Me.marmonth.Text = "   Mar "
         '
         'firstmar
@@ -1408,7 +971,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator17
         '
         Me.ToolStripSeparator17.Name = "ToolStripSeparator17"
-        Me.ToolStripSeparator17.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator17.Size = New System.Drawing.Size(6, 28)
         '
         'aprmonth
         '
@@ -1417,7 +980,7 @@ Partial Class TimeEntrySummary
         Me.aprmonth.Image = CType(resources.GetObject("aprmonth.Image"), System.Drawing.Image)
         Me.aprmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.aprmonth.Name = "aprmonth"
-        Me.aprmonth.Size = New System.Drawing.Size(51, 22)
+        Me.aprmonth.Size = New System.Drawing.Size(51, 25)
         Me.aprmonth.Text = "   Apr "
         '
         'firstapr
@@ -1435,7 +998,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator18
         '
         Me.ToolStripSeparator18.Name = "ToolStripSeparator18"
-        Me.ToolStripSeparator18.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator18.Size = New System.Drawing.Size(6, 28)
         '
         'maymonth
         '
@@ -1444,7 +1007,7 @@ Partial Class TimeEntrySummary
         Me.maymonth.Image = CType(resources.GetObject("maymonth.Image"), System.Drawing.Image)
         Me.maymonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.maymonth.Name = "maymonth"
-        Me.maymonth.Size = New System.Drawing.Size(55, 22)
+        Me.maymonth.Size = New System.Drawing.Size(55, 25)
         Me.maymonth.Text = "   May "
         '
         'firstmay
@@ -1462,7 +1025,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator19
         '
         Me.ToolStripSeparator19.Name = "ToolStripSeparator19"
-        Me.ToolStripSeparator19.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator19.Size = New System.Drawing.Size(6, 28)
         '
         'junmonth
         '
@@ -1471,7 +1034,7 @@ Partial Class TimeEntrySummary
         Me.junmonth.Image = CType(resources.GetObject("junmonth.Image"), System.Drawing.Image)
         Me.junmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.junmonth.Name = "junmonth"
-        Me.junmonth.Size = New System.Drawing.Size(51, 22)
+        Me.junmonth.Size = New System.Drawing.Size(51, 25)
         Me.junmonth.Text = "   Jun "
         '
         'firstjun
@@ -1489,7 +1052,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator20
         '
         Me.ToolStripSeparator20.Name = "ToolStripSeparator20"
-        Me.ToolStripSeparator20.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator20.Size = New System.Drawing.Size(6, 28)
         '
         'julmonth
         '
@@ -1498,7 +1061,7 @@ Partial Class TimeEntrySummary
         Me.julmonth.Image = CType(resources.GetObject("julmonth.Image"), System.Drawing.Image)
         Me.julmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.julmonth.Name = "julmonth"
-        Me.julmonth.Size = New System.Drawing.Size(47, 22)
+        Me.julmonth.Size = New System.Drawing.Size(47, 25)
         Me.julmonth.Text = "   Jul "
         '
         'firstjul
@@ -1516,7 +1079,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator21
         '
         Me.ToolStripSeparator21.Name = "ToolStripSeparator21"
-        Me.ToolStripSeparator21.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator21.Size = New System.Drawing.Size(6, 28)
         '
         'augmonth
         '
@@ -1525,7 +1088,7 @@ Partial Class TimeEntrySummary
         Me.augmonth.Image = CType(resources.GetObject("augmonth.Image"), System.Drawing.Image)
         Me.augmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.augmonth.Name = "augmonth"
-        Me.augmonth.Size = New System.Drawing.Size(54, 22)
+        Me.augmonth.Size = New System.Drawing.Size(54, 25)
         Me.augmonth.Text = "   Aug "
         '
         'firstaug
@@ -1543,7 +1106,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator22
         '
         Me.ToolStripSeparator22.Name = "ToolStripSeparator22"
-        Me.ToolStripSeparator22.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator22.Size = New System.Drawing.Size(6, 28)
         '
         'sepmonth
         '
@@ -1552,7 +1115,7 @@ Partial Class TimeEntrySummary
         Me.sepmonth.Image = CType(resources.GetObject("sepmonth.Image"), System.Drawing.Image)
         Me.sepmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.sepmonth.Name = "sepmonth"
-        Me.sepmonth.Size = New System.Drawing.Size(52, 22)
+        Me.sepmonth.Size = New System.Drawing.Size(52, 25)
         Me.sepmonth.Text = "   Sep "
         '
         'firstsep
@@ -1570,7 +1133,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator23
         '
         Me.ToolStripSeparator23.Name = "ToolStripSeparator23"
-        Me.ToolStripSeparator23.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator23.Size = New System.Drawing.Size(6, 28)
         '
         'octmonth
         '
@@ -1579,7 +1142,7 @@ Partial Class TimeEntrySummary
         Me.octmonth.Image = CType(resources.GetObject("octmonth.Image"), System.Drawing.Image)
         Me.octmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.octmonth.Name = "octmonth"
-        Me.octmonth.Size = New System.Drawing.Size(51, 22)
+        Me.octmonth.Size = New System.Drawing.Size(51, 25)
         Me.octmonth.Text = "   Oct "
         '
         'firstoct
@@ -1597,7 +1160,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator24
         '
         Me.ToolStripSeparator24.Name = "ToolStripSeparator24"
-        Me.ToolStripSeparator24.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator24.Size = New System.Drawing.Size(6, 28)
         '
         'novmonth
         '
@@ -1606,7 +1169,7 @@ Partial Class TimeEntrySummary
         Me.novmonth.Image = CType(resources.GetObject("novmonth.Image"), System.Drawing.Image)
         Me.novmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.novmonth.Name = "novmonth"
-        Me.novmonth.Size = New System.Drawing.Size(54, 22)
+        Me.novmonth.Size = New System.Drawing.Size(54, 25)
         Me.novmonth.Text = "   Nov "
         '
         'firstnov
@@ -1624,7 +1187,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator25
         '
         Me.ToolStripSeparator25.Name = "ToolStripSeparator25"
-        Me.ToolStripSeparator25.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator25.Size = New System.Drawing.Size(6, 28)
         '
         'decmonth
         '
@@ -1633,7 +1196,7 @@ Partial Class TimeEntrySummary
         Me.decmonth.Image = CType(resources.GetObject("decmonth.Image"), System.Drawing.Image)
         Me.decmonth.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.decmonth.Name = "decmonth"
-        Me.decmonth.Size = New System.Drawing.Size(53, 22)
+        Me.decmonth.Size = New System.Drawing.Size(53, 25)
         Me.decmonth.Text = "   Dec "
         '
         'firstdec
@@ -1651,7 +1214,7 @@ Partial Class TimeEntrySummary
         'ToolStripSeparator26
         '
         Me.ToolStripSeparator26.Name = "ToolStripSeparator26"
-        Me.ToolStripSeparator26.Size = New System.Drawing.Size(6, 25)
+        Me.ToolStripSeparator26.Size = New System.Drawing.Size(6, 28)
         '
         'nxtyear
         '
@@ -1659,18 +1222,8 @@ Partial Class TimeEntrySummary
         Me.nxtyear.Image = CType(resources.GetObject("nxtyear.Image"), System.Drawing.Image)
         Me.nxtyear.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.nxtyear.Name = "nxtyear"
-        Me.nxtyear.Size = New System.Drawing.Size(52, 22)
+        Me.nxtyear.Size = New System.Drawing.Size(52, 25)
         Me.nxtyear.Text = "2016 →"
-        '
-        'lblmonthyear
-        '
-        Me.lblmonthyear.AutoSize = True
-        Me.lblmonthyear.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblmonthyear.Location = New System.Drawing.Point(7, 0)
-        Me.lblmonthyear.Name = "lblmonthyear"
-        Me.lblmonthyear.Size = New System.Drawing.Size(92, 21)
-        Me.lblmonthyear.TabIndex = 169
-        Me.lblmonthyear.Text = "Pay period"
         '
         'txt_RestDayOvertimeRate
         '
@@ -1701,14 +1254,14 @@ Partial Class TimeEntrySummary
         Me.dgvcalendar.AllowUserToResizeRows = False
         Me.dgvcalendar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvcalendar.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.DimGray
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer))
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvcalendar.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle3.BackColor = System.Drawing.Color.DimGray
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer))
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvcalendar.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.dgvcalendar.ColumnHeadersHeight = 45
         Me.dgvcalendar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvcalendar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7})
@@ -1725,10 +1278,10 @@ Partial Class TimeEntrySummary
         '
         'Column1
         '
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.DimGray
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.DimGray
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle4
         Me.Column1.HeaderText = "SUNDAY"
         Me.Column1.Name = "Column1"
         Me.Column1.ReadOnly = True
@@ -1736,10 +1289,10 @@ Partial Class TimeEntrySummary
         '
         'Column2
         '
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.DimGray
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.Color.DimGray
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle5
         Me.Column2.HeaderText = "MONDAY"
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
@@ -1747,10 +1300,10 @@ Partial Class TimeEntrySummary
         '
         'Column3
         '
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.Color.DimGray
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.DimGray
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle6
         Me.Column3.HeaderText = "TUESDAY"
         Me.Column3.Name = "Column3"
         Me.Column3.ReadOnly = True
@@ -1758,10 +1311,10 @@ Partial Class TimeEntrySummary
         '
         'Column4
         '
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.DimGray
-        Me.Column4.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle7.ForeColor = System.Drawing.Color.DimGray
+        Me.Column4.DefaultCellStyle = DataGridViewCellStyle7
         Me.Column4.HeaderText = "WEDNESDAY"
         Me.Column4.Name = "Column4"
         Me.Column4.ReadOnly = True
@@ -1769,10 +1322,10 @@ Partial Class TimeEntrySummary
         '
         'Column5
         '
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.Color.DimGray
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.DimGray
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle8
         Me.Column5.HeaderText = "THURSDAY"
         Me.Column5.Name = "Column5"
         Me.Column5.ReadOnly = True
@@ -1780,10 +1333,10 @@ Partial Class TimeEntrySummary
         '
         'Column6
         '
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.DimGray
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.DimGray
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle9
         Me.Column6.HeaderText = "FRIDAY"
         Me.Column6.Name = "Column6"
         Me.Column6.ReadOnly = True
@@ -1791,10 +1344,10 @@ Partial Class TimeEntrySummary
         '
         'Column7
         '
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.DimGray
-        Me.Column7.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle10.ForeColor = System.Drawing.Color.DimGray
+        Me.Column7.DefaultCellStyle = DataGridViewCellStyle10
         Me.Column7.HeaderText = "SATURDAY"
         Me.Column7.Name = "Column7"
         Me.Column7.ReadOnly = True
@@ -1811,16 +1364,6 @@ Partial Class TimeEntrySummary
         Me.txt_NightDifferentialRate.Tag = "Numeric"
         Me.txt_NightDifferentialRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtdescrptn
-        '
-        Me.txtdescrptn.Location = New System.Drawing.Point(814, 31)
-        Me.txtdescrptn.MaxLength = 99
-        Me.txtdescrptn.Multiline = True
-        Me.txtdescrptn.Name = "txtdescrptn"
-        Me.txtdescrptn.Size = New System.Drawing.Size(148, 31)
-        Me.txtdescrptn.TabIndex = 128
-        Me.txtdescrptn.Visible = False
-        '
         'txt_OvertimeRate
         '
         Me.txt_OvertimeRate.BackColor = System.Drawing.Color.White
@@ -1831,19 +1374,6 @@ Partial Class TimeEntrySummary
         Me.txt_OvertimeRate.TabIndex = 23
         Me.txt_OvertimeRate.Tag = "Numeric"
         Me.txt_OvertimeRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'cbopaytype
-        '
-        Me.cbopaytype.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
-        Me.cbopaytype.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cbopaytype.DropDownWidth = 180
-        Me.cbopaytype.FormattingEnabled = True
-        Me.cbopaytype.Location = New System.Drawing.Point(814, 2)
-        Me.cbopaytype.MaxLength = 50
-        Me.cbopaytype.Name = "cbopaytype"
-        Me.cbopaytype.Size = New System.Drawing.Size(148, 21)
-        Me.cbopaytype.TabIndex = 127
-        Me.cbopaytype.Visible = False
         '
         'txt_RestDayRate
         '
@@ -1856,15 +1386,6 @@ Partial Class TimeEntrySummary
         Me.txt_RestDayRate.Tag = "Numeric"
         Me.txt_RestDayRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtpayrate
-        '
-        Me.txtpayrate.Location = New System.Drawing.Point(814, 67)
-        Me.txtpayrate.MaxLength = 10
-        Me.txtpayrate.Name = "txtpayrate"
-        Me.txtpayrate.Size = New System.Drawing.Size(148, 20)
-        Me.txtpayrate.TabIndex = 129
-        Me.txtpayrate.Visible = False
-        '
         'txt_NightDifferentialOTRate
         '
         Me.txt_NightDifferentialOTRate.BackColor = System.Drawing.Color.White
@@ -1875,15 +1396,6 @@ Partial Class TimeEntrySummary
         Me.txt_NightDifferentialOTRate.TabIndex = 25
         Me.txt_NightDifferentialOTRate.Tag = "Numeric"
         Me.txt_NightDifferentialOTRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtotrate
-        '
-        Me.txtotrate.Location = New System.Drawing.Point(814, 94)
-        Me.txtotrate.MaxLength = 10
-        Me.txtotrate.Name = "txtotrate"
-        Me.txtotrate.Size = New System.Drawing.Size(148, 20)
-        Me.txtotrate.TabIndex = 130
-        Me.txtotrate.Visible = False
         '
         'txt_PayRate
         '
@@ -1896,24 +1408,6 @@ Partial Class TimeEntrySummary
         Me.txt_PayRate.Tag = "Numeric"
         Me.txt_PayRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtnightdiffrate
-        '
-        Me.txtnightdiffrate.Location = New System.Drawing.Point(814, 121)
-        Me.txtnightdiffrate.MaxLength = 10
-        Me.txtnightdiffrate.Name = "txtnightdiffrate"
-        Me.txtnightdiffrate.Size = New System.Drawing.Size(148, 20)
-        Me.txtnightdiffrate.TabIndex = 131
-        Me.txtnightdiffrate.Visible = False
-        '
-        'txtnightdiffotrate
-        '
-        Me.txtnightdiffotrate.Location = New System.Drawing.Point(814, 148)
-        Me.txtnightdiffotrate.MaxLength = 10
-        Me.txtnightdiffotrate.Name = "txtnightdiffotrate"
-        Me.txtnightdiffotrate.Size = New System.Drawing.Size(148, 20)
-        Me.txtnightdiffotrate.TabIndex = 132
-        Me.txtnightdiffotrate.Visible = False
-        '
         'txtempbasicpay
         '
         Me.txtempbasicpay.BackColor = System.Drawing.Color.White
@@ -1924,19 +1418,6 @@ Partial Class TimeEntrySummary
         Me.txtempbasicpay.TabIndex = 0
         Me.txtempbasicpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.ForeColor = System.Drawing.Color.White
-        Me.Label11.Location = New System.Drawing.Point(888, 4)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(91, 13)
-        Me.Label11.TabIndex = 133
-        Me.Label11.Text = "No. of hrs worked"
-        Me.Label11.Visible = False
-        '
         'Label31
         '
         Me.Label31.AutoSize = True
@@ -1945,19 +1426,6 @@ Partial Class TimeEntrySummary
         Me.Label31.Size = New System.Drawing.Size(53, 13)
         Me.Label31.TabIndex = 476
         Me.Label31.Text = "Basic pay"
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.ForeColor = System.Drawing.Color.White
-        Me.Label12.Location = New System.Drawing.Point(663, 18)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(71, 13)
-        Me.Label12.TabIndex = 134
-        Me.Label12.Text = "No. of hrs OT"
-        Me.Label12.Visible = False
         '
         'chkrest
         '
@@ -1970,32 +1438,6 @@ Partial Class TimeEntrySummary
         Me.chkrest.Text = "Rest day"
         Me.chkrest.UseVisualStyleBackColor = True
         '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.ForeColor = System.Drawing.Color.White
-        Me.Label13.Location = New System.Drawing.Point(663, 32)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(102, 13)
-        Me.Label13.TabIndex = 135
-        Me.Label13.Text = "No. of hrs undertime"
-        Me.Label13.Visible = False
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.ForeColor = System.Drawing.Color.White
-        Me.Label14.Location = New System.Drawing.Point(663, 46)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(88, 13)
-        Me.Label14.TabIndex = 136
-        Me.Label14.Text = "No. of hrs absent"
-        Me.Label14.Visible = False
-        '
         'chknight
         '
         Me.chknight.AutoSize = True
@@ -2006,19 +1448,6 @@ Partial Class TimeEntrySummary
         Me.chknight.TabIndex = 5
         Me.chknight.Text = "Night shift"
         Me.chknight.UseVisualStyleBackColor = True
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.ForeColor = System.Drawing.Color.White
-        Me.Label15.Location = New System.Drawing.Point(663, 60)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(130, 13)
-        Me.Label15.TabIndex = 137
-        Me.Label15.Text = "No. of hrs night differential"
-        Me.Label15.Visible = False
         '
         'Label30
         '
@@ -2031,19 +1460,6 @@ Partial Class TimeEntrySummary
         Me.Label30.TabIndex = 472
         Me.Label30.Text = "Total day pay"
         '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Label16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label16.ForeColor = System.Drawing.Color.White
-        Me.Label16.Location = New System.Drawing.Point(663, 74)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(148, 13)
-        Me.Label16.TabIndex = 138
-        Me.Label16.Text = "No. of hrs night differential OT"
-        Me.Label16.Visible = False
-        '
         'txttotdaypay
         '
         Me.txttotdaypay.BackColor = System.Drawing.Color.White
@@ -2055,17 +1471,6 @@ Partial Class TimeEntrySummary
         Me.txttotdaypay.Tag = "Numeric"
         Me.txttotdaypay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'dtppayperiod
-        '
-        Me.dtppayperiod.CustomFormat = "MMMM-dd-yyyy"
-        Me.dtppayperiod.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtppayperiod.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtppayperiod.Location = New System.Drawing.Point(457, 3)
-        Me.dtppayperiod.Name = "dtppayperiod"
-        Me.dtppayperiod.Size = New System.Drawing.Size(154, 21)
-        Me.dtppayperiod.TabIndex = 139
-        Me.dtppayperiod.Visible = False
-        '
         'Label28
         '
         Me.Label28.AutoSize = True
@@ -2074,16 +1479,6 @@ Partial Class TimeEntrySummary
         Me.Label28.Size = New System.Drawing.Size(121, 13)
         Me.Label28.TabIndex = 470
         Me.Label28.Text = "Night differential OT pay"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(341, 10)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(57, 13)
-        Me.Label2.TabIndex = 140
-        Me.Label2.Text = "Pay period"
-        Me.Label2.Visible = False
         '
         'txtnightdiffotpay
         '
@@ -2184,19 +1579,6 @@ Partial Class TimeEntrySummary
         Me.Label4.Size = New System.Drawing.Size(96, 13)
         Me.Label4.TabIndex = 146
         Me.Label4.Text = "Effective date from"
-        '
-        'txtFName
-        '
-        Me.txtFName.BackColor = System.Drawing.Color.White
-        Me.txtFName.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtFName.Font = New System.Drawing.Font("Nyala", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFName.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
-        Me.txtFName.Location = New System.Drawing.Point(11, 55)
-        Me.txtFName.MaxLength = 250
-        Me.txtFName.Name = "txtFName"
-        Me.txtFName.ReadOnly = True
-        Me.txtFName.Size = New System.Drawing.Size(516, 26)
-        Me.txtFName.TabIndex = 162
         '
         'Label5
         '
@@ -2418,23 +1800,6 @@ Partial Class TimeEntrySummary
         Me.Label19.TabIndex = 165
         Me.Label19.Text = "Night differential OT hrs"
         '
-        'btnpaypNxt
-        '
-        Me.btnpaypNxt.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnpaypNxt.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.btnpaypNxt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.btnpaypNxt.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnpaypNxt.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnpaypNxt.Location = New System.Drawing.Point(617, 2)
-        Me.btnpaypNxt.Name = "btnpaypNxt"
-        Me.btnpaypNxt.Size = New System.Drawing.Size(32, 22)
-        Me.btnpaypNxt.TabIndex = 140
-        Me.btnpaypNxt.Text = ">>"
-        Me.btnpaypNxt.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.ToolTip1.SetToolTip(Me.btnpaypNxt, "Next pay period")
-        Me.btnpaypNxt.UseVisualStyleBackColor = False
-        Me.btnpaypNxt.Visible = False
-        '
         'Label20
         '
         Me.Label20.AutoSize = True
@@ -2443,23 +1808,6 @@ Partial Class TimeEntrySummary
         Me.Label20.Size = New System.Drawing.Size(61, 13)
         Me.Label20.TabIndex = 167
         Me.Label20.Text = "Hour(s) late"
-        '
-        'btnpaypPrev
-        '
-        Me.btnpaypPrev.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnpaypPrev.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.btnpaypPrev.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.btnpaypPrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnpaypPrev.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnpaypPrev.Location = New System.Drawing.Point(419, 2)
-        Me.btnpaypPrev.Name = "btnpaypPrev"
-        Me.btnpaypPrev.Size = New System.Drawing.Size(32, 22)
-        Me.btnpaypPrev.TabIndex = 138
-        Me.btnpaypPrev.Text = "<<"
-        Me.btnpaypPrev.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.ToolTip1.SetToolTip(Me.btnpaypPrev, "Previous pay period")
-        Me.btnpaypPrev.UseVisualStyleBackColor = False
-        Me.btnpaypPrev.Visible = False
         '
         'txthrslate
         '
@@ -2471,258 +1819,6 @@ Partial Class TimeEntrySummary
         Me.txthrslate.TabIndex = 15
         Me.txthrslate.Tag = "Numeric"
         Me.txthrslate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'dgvetentsemimon
-        '
-        Me.dgvetentsemimon.AllowUserToAddRows = False
-        Me.dgvetentsemimon.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvetentsemimon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.etiment_RowID, Me.etiment_Org, Me.etiment_Created, Me.etiment_CBy, Me.etiment_LastUpd, Me.etiment_LUpdBy, Me.etiment_Date, Me.etiment_EmpShiftID, Me.etiment_EmpID, Me.etiment_EmpSalID, Me.etiment_EmpFixSalFlag, Me.etiment_tothrsworked, Me.etiment_RegHrsWork, Me.etiment_reghrsamt, Me.etiment_OTHrsWork, Me.etiment_otpay, Me.etiment_UTHrsWork, Me.etiment_utamt, Me.etiment_NightDiffHrs, Me.etiment_nightdiffpay, Me.etiment_NightDiffOTHrs, Me.etiment_nightdiffotpay, Me.etiment_Hrslate, Me.etiment_lateamt, Me.etiment_LateFlag, Me.etiment_PayrateID, Me.etiment_VacLeavHrs, Me.etiment_SickLeavHrs, Me.etiment_MaternLeavHrs, Me.etiment_OtherLeavHrs, Me.etiment_TotDayPay, Me.etiment_Absent, Me.ete_DutyStartTime, Me.ete_DutyEndTime, Me.ShiftEffectiveDateFrom, Me.ShiftEffectiveDateTo, Me.IsDayOfRest, Me.esBasicPay, Me.etiment_TimeIn, Me.etiment_TimeOut})
-        Me.dgvetentsemimon.Location = New System.Drawing.Point(814, 224)
-        Me.dgvetentsemimon.Name = "dgvetentsemimon"
-        Me.dgvetentsemimon.ReadOnly = True
-        Me.dgvetentsemimon.Size = New System.Drawing.Size(240, 150)
-        Me.dgvetentsemimon.TabIndex = 170
-        Me.dgvetentsemimon.Visible = False
-        '
-        'etiment_RowID
-        '
-        Me.etiment_RowID.HeaderText = "Column8"
-        Me.etiment_RowID.Name = "etiment_RowID"
-        Me.etiment_RowID.ReadOnly = True
-        '
-        'etiment_Org
-        '
-        Me.etiment_Org.HeaderText = "Column9"
-        Me.etiment_Org.Name = "etiment_Org"
-        Me.etiment_Org.ReadOnly = True
-        '
-        'etiment_Created
-        '
-        Me.etiment_Created.HeaderText = "Column10"
-        Me.etiment_Created.Name = "etiment_Created"
-        Me.etiment_Created.ReadOnly = True
-        '
-        'etiment_CBy
-        '
-        Me.etiment_CBy.HeaderText = "Column11"
-        Me.etiment_CBy.Name = "etiment_CBy"
-        Me.etiment_CBy.ReadOnly = True
-        '
-        'etiment_LastUpd
-        '
-        Me.etiment_LastUpd.HeaderText = "Column12"
-        Me.etiment_LastUpd.Name = "etiment_LastUpd"
-        Me.etiment_LastUpd.ReadOnly = True
-        '
-        'etiment_LUpdBy
-        '
-        Me.etiment_LUpdBy.HeaderText = "Column13"
-        Me.etiment_LUpdBy.Name = "etiment_LUpdBy"
-        Me.etiment_LUpdBy.ReadOnly = True
-        '
-        'etiment_Date
-        '
-        Me.etiment_Date.HeaderText = "Column14"
-        Me.etiment_Date.Name = "etiment_Date"
-        Me.etiment_Date.ReadOnly = True
-        '
-        'etiment_EmpShiftID
-        '
-        Me.etiment_EmpShiftID.HeaderText = "Column15"
-        Me.etiment_EmpShiftID.Name = "etiment_EmpShiftID"
-        Me.etiment_EmpShiftID.ReadOnly = True
-        '
-        'etiment_EmpID
-        '
-        Me.etiment_EmpID.HeaderText = "Column16"
-        Me.etiment_EmpID.Name = "etiment_EmpID"
-        Me.etiment_EmpID.ReadOnly = True
-        '
-        'etiment_EmpSalID
-        '
-        Me.etiment_EmpSalID.HeaderText = "Column17"
-        Me.etiment_EmpSalID.Name = "etiment_EmpSalID"
-        Me.etiment_EmpSalID.ReadOnly = True
-        '
-        'etiment_EmpFixSalFlag
-        '
-        Me.etiment_EmpFixSalFlag.HeaderText = "Column18"
-        Me.etiment_EmpFixSalFlag.Name = "etiment_EmpFixSalFlag"
-        Me.etiment_EmpFixSalFlag.ReadOnly = True
-        '
-        'etiment_tothrsworked
-        '
-        Me.etiment_tothrsworked.HeaderText = "Total hours worked"
-        Me.etiment_tothrsworked.Name = "etiment_tothrsworked"
-        Me.etiment_tothrsworked.ReadOnly = True
-        '
-        'etiment_RegHrsWork
-        '
-        Me.etiment_RegHrsWork.HeaderText = "Column19"
-        Me.etiment_RegHrsWork.Name = "etiment_RegHrsWork"
-        Me.etiment_RegHrsWork.ReadOnly = True
-        '
-        'etiment_reghrsamt
-        '
-        Me.etiment_reghrsamt.HeaderText = "Regular pay"
-        Me.etiment_reghrsamt.Name = "etiment_reghrsamt"
-        Me.etiment_reghrsamt.ReadOnly = True
-        '
-        'etiment_OTHrsWork
-        '
-        Me.etiment_OTHrsWork.HeaderText = "Column20"
-        Me.etiment_OTHrsWork.Name = "etiment_OTHrsWork"
-        Me.etiment_OTHrsWork.ReadOnly = True
-        '
-        'etiment_otpay
-        '
-        Me.etiment_otpay.HeaderText = "Overtime pay"
-        Me.etiment_otpay.Name = "etiment_otpay"
-        Me.etiment_otpay.ReadOnly = True
-        '
-        'etiment_UTHrsWork
-        '
-        Me.etiment_UTHrsWork.HeaderText = "Column21"
-        Me.etiment_UTHrsWork.Name = "etiment_UTHrsWork"
-        Me.etiment_UTHrsWork.ReadOnly = True
-        '
-        'etiment_utamt
-        '
-        Me.etiment_utamt.HeaderText = "Undertime amount"
-        Me.etiment_utamt.Name = "etiment_utamt"
-        Me.etiment_utamt.ReadOnly = True
-        '
-        'etiment_NightDiffHrs
-        '
-        Me.etiment_NightDiffHrs.HeaderText = "Column22"
-        Me.etiment_NightDiffHrs.Name = "etiment_NightDiffHrs"
-        Me.etiment_NightDiffHrs.ReadOnly = True
-        '
-        'etiment_nightdiffpay
-        '
-        Me.etiment_nightdiffpay.HeaderText = "Night differential pay"
-        Me.etiment_nightdiffpay.Name = "etiment_nightdiffpay"
-        Me.etiment_nightdiffpay.ReadOnly = True
-        '
-        'etiment_NightDiffOTHrs
-        '
-        Me.etiment_NightDiffOTHrs.HeaderText = "Column8"
-        Me.etiment_NightDiffOTHrs.Name = "etiment_NightDiffOTHrs"
-        Me.etiment_NightDiffOTHrs.ReadOnly = True
-        '
-        'etiment_nightdiffotpay
-        '
-        Me.etiment_nightdiffotpay.HeaderText = "Night differential OT pay"
-        Me.etiment_nightdiffotpay.Name = "etiment_nightdiffotpay"
-        Me.etiment_nightdiffotpay.ReadOnly = True
-        '
-        'etiment_Hrslate
-        '
-        Me.etiment_Hrslate.HeaderText = "Column9"
-        Me.etiment_Hrslate.Name = "etiment_Hrslate"
-        Me.etiment_Hrslate.ReadOnly = True
-        '
-        'etiment_lateamt
-        '
-        Me.etiment_lateamt.HeaderText = "Late amount"
-        Me.etiment_lateamt.Name = "etiment_lateamt"
-        Me.etiment_lateamt.ReadOnly = True
-        '
-        'etiment_LateFlag
-        '
-        Me.etiment_LateFlag.HeaderText = "Column10"
-        Me.etiment_LateFlag.Name = "etiment_LateFlag"
-        Me.etiment_LateFlag.ReadOnly = True
-        '
-        'etiment_PayrateID
-        '
-        Me.etiment_PayrateID.HeaderText = "Column11"
-        Me.etiment_PayrateID.Name = "etiment_PayrateID"
-        Me.etiment_PayrateID.ReadOnly = True
-        '
-        'etiment_VacLeavHrs
-        '
-        Me.etiment_VacLeavHrs.HeaderText = "Column12"
-        Me.etiment_VacLeavHrs.Name = "etiment_VacLeavHrs"
-        Me.etiment_VacLeavHrs.ReadOnly = True
-        '
-        'etiment_SickLeavHrs
-        '
-        Me.etiment_SickLeavHrs.HeaderText = "Column13"
-        Me.etiment_SickLeavHrs.Name = "etiment_SickLeavHrs"
-        Me.etiment_SickLeavHrs.ReadOnly = True
-        '
-        'etiment_MaternLeavHrs
-        '
-        Me.etiment_MaternLeavHrs.HeaderText = "etiment_MaternLeavHrs"
-        Me.etiment_MaternLeavHrs.Name = "etiment_MaternLeavHrs"
-        Me.etiment_MaternLeavHrs.ReadOnly = True
-        '
-        'etiment_OtherLeavHrs
-        '
-        Me.etiment_OtherLeavHrs.HeaderText = "etiment_OtherLeavHrs"
-        Me.etiment_OtherLeavHrs.Name = "etiment_OtherLeavHrs"
-        Me.etiment_OtherLeavHrs.ReadOnly = True
-        '
-        'etiment_TotDayPay
-        '
-        Me.etiment_TotDayPay.HeaderText = "Column14"
-        Me.etiment_TotDayPay.Name = "etiment_TotDayPay"
-        Me.etiment_TotDayPay.ReadOnly = True
-        '
-        'etiment_Absent
-        '
-        Me.etiment_Absent.HeaderText = "etiment_Absent"
-        Me.etiment_Absent.Name = "etiment_Absent"
-        Me.etiment_Absent.ReadOnly = True
-        '
-        'ete_DutyStartTime
-        '
-        Me.ete_DutyStartTime.HeaderText = "ete_DutyStartTime"
-        Me.ete_DutyStartTime.Name = "ete_DutyStartTime"
-        Me.ete_DutyStartTime.ReadOnly = True
-        '
-        'ete_DutyEndTime
-        '
-        Me.ete_DutyEndTime.HeaderText = "ete_DutyEndTime"
-        Me.ete_DutyEndTime.Name = "ete_DutyEndTime"
-        Me.ete_DutyEndTime.ReadOnly = True
-        '
-        'ShiftEffectiveDateFrom
-        '
-        Me.ShiftEffectiveDateFrom.HeaderText = "ShiftEffectiveDateFrom"
-        Me.ShiftEffectiveDateFrom.Name = "ShiftEffectiveDateFrom"
-        Me.ShiftEffectiveDateFrom.ReadOnly = True
-        '
-        'ShiftEffectiveDateTo
-        '
-        Me.ShiftEffectiveDateTo.HeaderText = "ShiftEffectiveDateTo"
-        Me.ShiftEffectiveDateTo.Name = "ShiftEffectiveDateTo"
-        Me.ShiftEffectiveDateTo.ReadOnly = True
-        '
-        'IsDayOfRest
-        '
-        Me.IsDayOfRest.HeaderText = "IsDayOfRest"
-        Me.IsDayOfRest.Name = "IsDayOfRest"
-        Me.IsDayOfRest.ReadOnly = True
-        '
-        'esBasicPay
-        '
-        Me.esBasicPay.HeaderText = "BasicPay"
-        Me.esBasicPay.Name = "esBasicPay"
-        Me.esBasicPay.ReadOnly = True
-        '
-        'etiment_TimeIn
-        '
-        Me.etiment_TimeIn.HeaderText = "TimeIn"
-        Me.etiment_TimeIn.Name = "etiment_TimeIn"
-        Me.etiment_TimeIn.ReadOnly = True
-        '
-        'etiment_TimeOut
-        '
-        Me.etiment_TimeOut.HeaderText = "TimeOut"
-        Me.etiment_TimeOut.Name = "etiment_TimeOut"
-        Me.etiment_TimeOut.ReadOnly = True
         '
         'Label25
         '
@@ -3849,42 +2945,6 @@ Partial Class TimeEntrySummary
         Me.tsbtnNxt.Size = New System.Drawing.Size(52, 22)
         Me.tsbtnNxt.Text = "2016 →"
         '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(12, 35)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(0, 21)
-        Me.Label3.TabIndex = 166
-        '
-        'dgvdatesummary
-        '
-        Me.dgvdatesummary.AllowUserToAddRows = False
-        Me.dgvdatesummary.AllowUserToDeleteRows = False
-        Me.dgvdatesummary.AllowUserToResizeColumns = False
-        Me.dgvdatesummary.AllowUserToResizeRows = False
-        Me.dgvdatesummary.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle10.BackColor = System.Drawing.Color.DimGray
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer))
-        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvdatesummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
-        Me.dgvdatesummary.ColumnHeadersHeight = 45
-        Me.dgvdatesummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvdatesummary.Location = New System.Drawing.Point(6, 129)
-        Me.dgvdatesummary.MultiSelect = False
-        Me.dgvdatesummary.Name = "dgvdatesummary"
-        Me.dgvdatesummary.ReadOnly = True
-        Me.dgvdatesummary.RowHeadersVisible = False
-        Me.dgvdatesummary.RowTemplate.Height = 95
-        Me.dgvdatesummary.ScrollBars = System.Windows.Forms.ScrollBars.None
-        Me.dgvdatesummary.Size = New System.Drawing.Size(822, 478)
-        Me.dgvdatesummary.TabIndex = 167
-        '
         'col_sat
         '
         DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
@@ -3962,152 +3022,132 @@ Partial Class TimeEntrySummary
         Me.col_sun.ReadOnly = True
         Me.col_sun.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'lblpublish
+        'cemp_RowID
         '
-        Me.lblpublish.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(121, Byte), Integer))
-        Me.lblpublish.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.lblpublish.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblpublish.ForeColor = System.Drawing.Color.White
-        Me.lblpublish.Location = New System.Drawing.Point(126, 35)
-        Me.lblpublish.Name = "lblpublish"
-        Me.lblpublish.Size = New System.Drawing.Size(210, 25)
-        Me.lblpublish.TabIndex = 168
-        Me.lblpublish.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.lblpublish.Visible = False
+        Me.cemp_RowID.HeaderText = "RowID"
+        Me.cemp_RowID.Name = "cemp_RowID"
+        Me.cemp_RowID.ReadOnly = True
         '
-        'lblperfectatt
+        'cemp_EmployeeID
         '
-        Me.lblperfectatt.BackColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.lblperfectatt.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.lblperfectatt.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblperfectatt.ForeColor = System.Drawing.Color.White
-        Me.lblperfectatt.Location = New System.Drawing.Point(281, 35)
-        Me.lblperfectatt.Name = "lblperfectatt"
-        Me.lblperfectatt.Size = New System.Drawing.Size(210, 25)
-        Me.lblperfectatt.TabIndex = 169
-        Me.lblperfectatt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.lblperfectatt.Visible = False
+        Me.cemp_EmployeeID.HeaderText = "Employee ID"
+        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
+        Me.cemp_EmployeeID.ReadOnly = True
         '
-        'lblmissin
+        'cemp_LastName
         '
-        Me.lblmissin.BackColor = System.Drawing.Color.FromArgb(CType(CType(253, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblmissin.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.lblmissin.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblmissin.ForeColor = System.Drawing.Color.White
-        Me.lblmissin.Location = New System.Drawing.Point(437, 35)
-        Me.lblmissin.Name = "lblmissin"
-        Me.lblmissin.Size = New System.Drawing.Size(210, 25)
-        Me.lblmissin.TabIndex = 170
-        Me.lblmissin.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.lblmissin.Visible = False
+        Me.cemp_LastName.HeaderText = "Last Name"
+        Me.cemp_LastName.Name = "cemp_LastName"
+        Me.cemp_LastName.ReadOnly = True
         '
-        'lblmissout
+        'cemp_FirstName
         '
-        Me.lblmissout.BackColor = System.Drawing.Color.FromArgb(CType(CType(253, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lblmissout.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.lblmissout.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblmissout.ForeColor = System.Drawing.Color.White
-        Me.lblmissout.Location = New System.Drawing.Point(589, 29)
-        Me.lblmissout.Name = "lblmissout"
-        Me.lblmissout.Size = New System.Drawing.Size(210, 25)
-        Me.lblmissout.TabIndex = 171
-        Me.lblmissout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.lblmissout.Visible = False
+        Me.cemp_FirstName.HeaderText = "First Name"
+        Me.cemp_FirstName.Name = "cemp_FirstName"
+        Me.cemp_FirstName.ReadOnly = True
         '
-        'lbldupin
+        'DataGridView1
         '
-        Me.lbldupin.BackColor = System.Drawing.Color.FromArgb(CType(CType(253, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lbldupin.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.lbldupin.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbldupin.ForeColor = System.Drawing.Color.White
-        Me.lbldupin.Location = New System.Drawing.Point(39, 93)
-        Me.lbldupin.Name = "lbldupin"
-        Me.lbldupin.Size = New System.Drawing.Size(210, 25)
-        Me.lbldupin.TabIndex = 172
-        Me.lbldupin.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.lbldupin.Visible = False
+        Me.DataGridView1.AllowUserToAddRows = False
+        Me.DataGridView1.AllowUserToDeleteRows = False
+        Me.DataGridView1.AllowUserToResizeColumns = False
+        Me.DataGridView1.AllowUserToResizeRows = False
+        Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.DimGray
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer))
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.DataGridView1.ColumnHeadersHeight = 45
+        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.Column15, Me.Column16, Me.Column17, Me.Column18, Me.Column19})
+        Me.DataGridView1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.DataGridView1.Location = New System.Drawing.Point(0, 0)
+        Me.DataGridView1.MultiSelect = False
+        Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.ReadOnly = True
+        Me.DataGridView1.RowHeadersVisible = False
+        Me.DataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.DataGridView1.RowTemplate.Height = 95
+        Me.DataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.None
+        Me.DataGridView1.Size = New System.Drawing.Size(854, 62)
+        Me.DataGridView1.TabIndex = 493
         '
-        'lbldupout
+        'Column8
         '
-        Me.lbldupout.BackColor = System.Drawing.Color.FromArgb(CType(CType(253, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.lbldupout.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.lbldupout.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbldupout.ForeColor = System.Drawing.Color.White
-        Me.lbldupout.Location = New System.Drawing.Point(212, 96)
-        Me.lbldupout.Name = "lbldupout"
-        Me.lbldupout.Size = New System.Drawing.Size(210, 25)
-        Me.lbldupout.TabIndex = 173
-        Me.lbldupout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.lbldupout.Visible = False
+        Me.Column8.HeaderText = "January"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
         '
-        'lbllate
+        'Column9
         '
-        Me.lbllate.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(20, Byte), Integer))
-        Me.lbllate.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.lbllate.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbllate.ForeColor = System.Drawing.Color.White
-        Me.lbllate.Location = New System.Drawing.Point(373, 96)
-        Me.lbllate.Name = "lbllate"
-        Me.lbllate.Size = New System.Drawing.Size(210, 25)
-        Me.lbllate.TabIndex = 174
-        Me.lbllate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.lbllate.Visible = False
+        Me.Column9.HeaderText = "February"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
         '
-        'lblundertime
+        'Column10
         '
-        Me.lblundertime.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(90, Byte), Integer), CType(CType(20, Byte), Integer))
-        Me.lblundertime.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.lblundertime.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblundertime.ForeColor = System.Drawing.Color.White
-        Me.lblundertime.Location = New System.Drawing.Point(624, 96)
-        Me.lblundertime.Name = "lblundertime"
-        Me.lblundertime.Size = New System.Drawing.Size(210, 25)
-        Me.lblundertime.TabIndex = 175
-        Me.lblundertime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.lblundertime.Visible = False
+        Me.Column10.HeaderText = "March"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
         '
-        'Label21
+        'Column11
         '
-        Me.Label21.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.Label21.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label21.Location = New System.Drawing.Point(762, 99)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(210, 25)
-        Me.Label21.TabIndex = 176
-        Me.Label21.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.Label21.Visible = False
+        Me.Column11.HeaderText = "April"
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
         '
-        'Label40
+        'Column12
         '
-        Me.Label40.AutoSize = True
-        Me.Label40.ForeColor = System.Drawing.Color.White
-        Me.Label40.Location = New System.Drawing.Point(3, 610)
-        Me.Label40.Name = "Label40"
-        Me.Label40.Size = New System.Drawing.Size(0, 13)
-        Me.Label40.TabIndex = 177
+        Me.Column12.HeaderText = "May"
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
         '
-        'tbpemptimeentsumma
+        'Column13
         '
-        Me.tbpemptimeentsumma.AutoScroll = True
-        Me.tbpemptimeentsumma.BackColor = System.Drawing.Color.White
-        Me.tbpemptimeentsumma.Controls.Add(Me.Label40)
-        Me.tbpemptimeentsumma.Controls.Add(Me.Label21)
-        Me.tbpemptimeentsumma.Controls.Add(Me.lblundertime)
-        Me.tbpemptimeentsumma.Controls.Add(Me.lbllate)
-        Me.tbpemptimeentsumma.Controls.Add(Me.lbldupout)
-        Me.tbpemptimeentsumma.Controls.Add(Me.lbldupin)
-        Me.tbpemptimeentsumma.Controls.Add(Me.lblmissout)
-        Me.tbpemptimeentsumma.Controls.Add(Me.lblmissin)
-        Me.tbpemptimeentsumma.Controls.Add(Me.lblperfectatt)
-        Me.tbpemptimeentsumma.Controls.Add(Me.lblpublish)
-        Me.tbpemptimeentsumma.Controls.Add(Me.dgvdatesummary)
-        Me.tbpemptimeentsumma.Controls.Add(Me.Label3)
-        Me.tbpemptimeentsumma.Location = New System.Drawing.Point(4, 4)
-        Me.tbpemptimeentsumma.Name = "tbpemptimeentsumma"
-        Me.tbpemptimeentsumma.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpemptimeentsumma.Size = New System.Drawing.Size(852, 478)
-        Me.tbpemptimeentsumma.TabIndex = 1
-        Me.tbpemptimeentsumma.Text = "TIME ENTRY SUMMARY              "
+        Me.Column13.HeaderText = "June"
+        Me.Column13.Name = "Column13"
+        Me.Column13.ReadOnly = True
+        '
+        'Column14
+        '
+        Me.Column14.HeaderText = "July"
+        Me.Column14.Name = "Column14"
+        Me.Column14.ReadOnly = True
+        '
+        'Column15
+        '
+        Me.Column15.HeaderText = "August"
+        Me.Column15.Name = "Column15"
+        Me.Column15.ReadOnly = True
+        '
+        'Column16
+        '
+        Me.Column16.HeaderText = "September"
+        Me.Column16.Name = "Column16"
+        Me.Column16.ReadOnly = True
+        '
+        'Column17
+        '
+        Me.Column17.HeaderText = "October"
+        Me.Column17.Name = "Column17"
+        Me.Column17.ReadOnly = True
+        '
+        'Column18
+        '
+        Me.Column18.HeaderText = "November"
+        Me.Column18.Name = "Column18"
+        Me.Column18.ReadOnly = True
+        '
+        'Column19
+        '
+        Me.Column19.HeaderText = "December"
+        Me.Column19.Name = "Column19"
+        Me.Column19.ReadOnly = True
         '
         'TimeEntrySummary
         '
@@ -4145,10 +3185,7 @@ Partial Class TimeEntrySummary
         Me.ToolStrip3.ResumeLayout(False)
         Me.ToolStrip3.PerformLayout()
         CType(Me.dgvcalendar, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvetentsemimon, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvdatesummary, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.tbpemptimeentsumma.ResumeLayout(False)
-        Me.tbpemptimeentsumma.PerformLayout()
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -4210,20 +3247,6 @@ Partial Class TimeEntrySummary
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
     Friend WithEvents tbpemptimeent As System.Windows.Forms.TabPage
     Friend WithEvents dgvcalendar As System.Windows.Forms.DataGridView
-    Friend WithEvents Label16 As System.Windows.Forms.Label
-    Friend WithEvents Label15 As System.Windows.Forms.Label
-    Friend WithEvents Label14 As System.Windows.Forms.Label
-    Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents txtnightdiffotrate As System.Windows.Forms.TextBox
-    Friend WithEvents txtnightdiffrate As System.Windows.Forms.TextBox
-    Friend WithEvents txtotrate As System.Windows.Forms.TextBox
-    Friend WithEvents txtpayrate As System.Windows.Forms.TextBox
-    Friend WithEvents cbopaytype As System.Windows.Forms.ComboBox
-    Friend WithEvents txtdescrptn As System.Windows.Forms.TextBox
-    Friend WithEvents dtppayperiod As System.Windows.Forms.DateTimePicker
-    Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents txtshftEffFrom As System.Windows.Forms.TextBox
     Friend WithEvents txtshftEffTo As System.Windows.Forms.TextBox
     Friend WithEvents txtshftTimeTo As System.Windows.Forms.TextBox
@@ -4243,8 +3266,6 @@ Partial Class TimeEntrySummary
     Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents Label19 As System.Windows.Forms.Label
     Friend WithEvents Label25 As System.Windows.Forms.Label
-    Friend WithEvents btnpaypNxt As System.Windows.Forms.Button
-    Friend WithEvents btnpaypPrev As System.Windows.Forms.Button
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
     Friend WithEvents First As System.Windows.Forms.LinkLabel
     Friend WithEvents Prev As System.Windows.Forms.LinkLabel
@@ -4312,8 +3333,6 @@ Partial Class TimeEntrySummary
     Friend WithEvents secdec As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator26 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents nxtyear As System.Windows.Forms.ToolStripButton
-    Friend WithEvents lblmonthyear As System.Windows.Forms.Label
-    Friend WithEvents dgvetentsemimon As System.Windows.Forms.DataGridView
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents bgworkloademployees As System.ComponentModel.BackgroundWorker
     Friend WithEvents Label22 As System.Windows.Forms.Label
@@ -4334,7 +3353,6 @@ Partial Class TimeEntrySummary
     Friend WithEvents txttotdaypay As System.Windows.Forms.TextBox
     Friend WithEvents chkrest As System.Windows.Forms.CheckBox
     Friend WithEvents chknight As System.Windows.Forms.CheckBox
-    Friend WithEvents txtFName As System.Windows.Forms.TextBox
     Friend WithEvents txtEmpID As System.Windows.Forms.TextBox
     Friend WithEvents txtempbasicpay As System.Windows.Forms.TextBox
     Friend WithEvents Label31 As System.Windows.Forms.Label
@@ -4348,51 +3366,6 @@ Partial Class TimeEntrySummary
     Friend WithEvents Label32 As System.Windows.Forms.Label
     Friend WithEvents txt_RestDayOvertimeRate As System.Windows.Forms.TextBox
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents cemp_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_FirstName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_MiddleName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_LastName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_SurName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_Nickname As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_MaritalStatus As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_NoOfDependents As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_Birthdate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_Startdate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_JobTitle As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_Position As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_Salutation As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_TIN As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_SSS As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_PAGIBIG As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_PhilHealth As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_WorkPhone As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_HomePhone As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_MobilePhone As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_HomeAddress As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_EmailAddress As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_Gender As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_EmployementStatus As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_PayFrequency As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_UndertimeOverride As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_OvertimeOverride As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_Created As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_CreatedBy As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_LastUpd As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_LastUpdBy As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_PositionID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_PayFrequencyID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_EmployeeType As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_LeaveBalance As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_SickLeaveBalance As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_MaternityLeaveBalance As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_LeaveAllowance As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_SickLeaveAllowance As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_MaternityLeaveAllowance As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_LeavePerPayPeriod As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_SickLeavePerPayPeriod As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_MaternityLeavePerPayPeriod As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_fstatRowID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents Label33 As System.Windows.Forms.Label
     Friend WithEvents Label34 As System.Windows.Forms.Label
@@ -4468,63 +3441,6 @@ Partial Class TimeEntrySummary
     Friend WithEvents DataGridViewTextBoxColumn91 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn92 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn93 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents lblTimeOut As System.Windows.Forms.Label
-    Friend WithEvents lblTimeIn As System.Windows.Forms.Label
-    Friend WithEvents txtTimeOut As System.Windows.Forms.TextBox
-    Friend WithEvents txtTimeIn As System.Windows.Forms.TextBox
-    Friend WithEvents etiment_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_Org As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_Created As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_CBy As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_LastUpd As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_LUpdBy As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_Date As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_EmpShiftID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_EmpID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_EmpSalID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_EmpFixSalFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_tothrsworked As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_RegHrsWork As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_reghrsamt As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_OTHrsWork As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_otpay As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_UTHrsWork As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_utamt As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_NightDiffHrs As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_nightdiffpay As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_NightDiffOTHrs As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_nightdiffotpay As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_Hrslate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_lateamt As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_LateFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_PayrateID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_VacLeavHrs As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_SickLeavHrs As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_MaternLeavHrs As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_OtherLeavHrs As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_TotDayPay As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_Absent As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ete_DutyStartTime As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ete_DutyEndTime As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ShiftEffectiveDateFrom As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ShiftEffectiveDateTo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents IsDayOfRest As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esBasicPay As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_TimeIn As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etiment_TimeOut As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents tbpemptimeentsumma As System.Windows.Forms.TabPage
-    Friend WithEvents Label40 As System.Windows.Forms.Label
-    Friend WithEvents Label21 As System.Windows.Forms.Label
-    Friend WithEvents lblundertime As System.Windows.Forms.Label
-    Friend WithEvents lbllate As System.Windows.Forms.Label
-    Friend WithEvents lbldupout As System.Windows.Forms.Label
-    Friend WithEvents lbldupin As System.Windows.Forms.Label
-    Friend WithEvents lblmissout As System.Windows.Forms.Label
-    Friend WithEvents lblmissin As System.Windows.Forms.Label
-    Friend WithEvents lblperfectatt As System.Windows.Forms.Label
-    Friend WithEvents lblpublish As System.Windows.Forms.Label
-    Friend WithEvents dgvdatesummary As System.Windows.Forms.DataGridView
-    Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents miniToolStrip As System.Windows.Forms.ToolStrip
     Friend WithEvents tsbtnPrev As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
@@ -4584,4 +3500,21 @@ Partial Class TimeEntrySummary
     Friend WithEvents col_tue As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents col_mon As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents col_sun As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents cemp_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents cemp_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents cemp_LastName As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents cemp_FirstName As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents DataGridView1 As System.Windows.Forms.DataGridView
+    Friend WithEvents Column8 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column9 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column10 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column11 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column12 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column13 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column14 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column15 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column16 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column17 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column18 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column19 As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class
