@@ -21,8 +21,8 @@ Public Class TimeEntrySummary
 
         For Each payPeriod In Me.payPeriods
             Dim button = New Button()
-            button.Height = button.Height * 2
-            button.Width = button.Width * 1.5
+            button.Height = CInt(button.Height * 1.3)
+            button.Width = CInt(button.Width * 1.5)
             Dim payFromDate = payPeriod.PayFromDate.ToString("dd MMM yyyy")
             Dim payToDate = payPeriod.PayToDate.ToString("dd MMM yyyy")
 
@@ -76,7 +76,4 @@ Public Class TimeEntrySummary
         LoadPayPeriods()
     End Sub
 
-    Private Sub PayPeriodDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles PayPeriodDataGridView.CellContentClick
-
-    End Sub
 End Class
