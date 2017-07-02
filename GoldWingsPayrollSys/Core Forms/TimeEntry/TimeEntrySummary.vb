@@ -16,19 +16,37 @@ Public Class TimeEntrySummary
     Private payPeriods As Collection(Of PayPeriod)
 
     Public Async Sub LoadPayPeriods()
+
         Me.payPeriods = Await GetPayPeriods()
-        PayPeriodDataGridView.Rows.Add(2)
+        payPeriodDataGridView.Rows.Add(2)
+        'payPeriodDataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True
 
-        For Each payPeriod In Me.payPeriods
-            Dim button = New Button()
-            button.Height = CInt(button.Height * 1.3)
-            button.Width = CInt(button.Width * 1.5)
-            Dim payFromDate = payPeriod.PayFromDate.ToString("dd MMM yyyy")
-            Dim payToDate = payPeriod.PayToDate.ToString("dd MMM yyyy")
+        Dim monthCounters(11) As Integer
 
-            button.Text = payFromDate + vbNewLine + payToDate
+        'For Each payPeriod In Me.payPeriods
+        '    Dim button = New Button()
+        '    button.Height = CInt(button.Height * 1.3)
+        '    button.Width = CInt(button.Width * 1.5)
+        '    Dim payFromDate = payPeriod.PayFromDate.ToString("dd MMM yyyy")
+        '    Dim payToDate = payPeriod.PayToDate.ToString("dd MMM yyyy")
 
-            PayPeriodsPanel.Controls.Add(button)
+        '    button.Text = payFromDate + vbNewLine + payToDate
+
+        '    PayPeriodsPanel.Controls.Add(button)
+        'Next
+
+        For Each payperiod In Me.payPeriods
+            Dim monthNo = payperiod.Month
+            Dim counter = monthCounters(monthNo - 1)
+
+            Dim payFromDate = payperiod.PayFromDate.ToString("dd MMM")
+            Dim payToDate = payperiod.PayToDate.ToString("dd MMM")
+            Dim label = payFromDate + " - " + payToDate
+
+            payPeriodDataGridView.Rows(counter).Cells(monthNo - 1).Value = label
+
+            counter += 1
+            monthCounters(monthNo - 1) = counter
         Next
     End Sub
 
