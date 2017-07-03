@@ -23,16 +23,40 @@ Public Class TimeEntrySummary
     Private Class TimeEntry
         Public Property RowID As Integer?
         Public Property EntryDate As Date
-        Public Property TimeIn As String
-        Public Property TimeOut As String
-        Public Property ShiftFrom As String
-        Public Property ShiftTo As String
+        Public Property TimeIn As TimeSpan
+        Public Property TimeOut As TimeSpan
+        Public Property ShiftFrom As TimeSpan
+        Public Property ShiftTo As TimeSpan
         Public Property RegularHours As Decimal
-        Public Property RegularHoursAmount As Decimal
+        Public Property RegularAmount As Decimal
         Public Property OvertimeHours As Decimal
-        Public Property OvertimeHoursAmount As Decimal
+        Public Property OvertimeAmount As Decimal
         Public Property HolidayPayAmount As Decimal
         Public Property TotalPay As Decimal
+
+        Public ReadOnly Property TimeInDisplay As DateTime
+            Get
+                Return New DateTime(1, 1, 1, TimeIn.Hours, TimeIn.Minutes, TimeIn.Seconds)
+            End Get
+        End Property
+
+        Public ReadOnly Property TimeOutDisplay As DateTime
+            Get
+                Return New DateTime(1, 1, 1, TimeOut.Hours, TimeOut.Minutes, TimeOut.Seconds)
+            End Get
+        End Property
+
+        Public ReadOnly Property ShiftFromDisplay As DateTime
+            Get
+                Return New DateTime(1, 1, 1, ShiftFrom.Hours, ShiftFrom.Minutes, ShiftFrom.Seconds)
+            End Get
+        End Property
+
+        Public ReadOnly Property ShiftToDisplay As DateTime
+            Get
+                Return New DateTime(1, 1, 1, ShiftTo.Hours, ShiftTo.Minutes, ShiftTo.Seconds)
+            End Get
+        End Property
     End Class
 
     Private payPeriods As Collection(Of PayPeriod)
@@ -149,21 +173,26 @@ Public Class TimeEntrySummary
         Return payPeriods
     End Function
 
+    Public Async Sub LoadTimeEntries()
+        timeEntriesDataGridView.AutoGenerateColumns = False
+        timeEntriesDataGridView.DataSource = Await GetTimeEntries()
+    End Sub
+
     Private Async Function GetTimeEntries() As Task(Of Collection(Of TimeEntry))
         Dim sql = <![CDATA[
             SELECT
                 employeetimeentry.RowID,
                 employeetimeentry.Date,
-                employeetimeentrydetail.TimeIn,
-                employeetimeentrydetail.TimeOut,
+                employeetimeentrydetails.TimeIn,
+                employeetimeentrydetails.TimeOut,
                 shift.TimeFrom AS ShiftFrom,
                 shift.TimeTo AS ShiftTo,
                 employeetimeentry.RegularHoursWorked,
                 employeetimeentry.RegularHoursAmount,
-                employeetimeentry.OvertimeHours,
+                employeetimeentry.OvertimeHoursWorked,
                 employeetimeentry.OvertimeHoursAmount,
                 employeetimeentry.HolidayPayAmount,
-                employeetimeentry.TotalPay
+                employeetimeentry.TotalDayPay
             FROM employeetimeentry
             LEFT JOIN employeetimeentrydetails
                 ON employeetimeentrydetails.Date = employeetimeentry.Date
@@ -173,8 +202,8 @@ Public Class TimeEntrySummary
                 ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
             LEFT JOIN shift
                 ON shift.RowID = employeeshift.ShiftID
-            WHERE employeetimeentry.EmployeeID = @EmployeeID;
-                AND employeetimeentry.`Date` BETWEEN @DateFrom AND @DateTo
+            WHERE employeetimeentry.EmployeeID = @EmployeeID
+                AND employeetimeentry.`Date` BETWEEN @DateFrom AND @DateTo;
         ]]>.Value
 
         Dim timeEntries = New Collection(Of TimeEntry)
@@ -183,26 +212,28 @@ Public Class TimeEntrySummary
             command As New MySqlCommand(sql, connection)
 
             With command.Parameters
-                .AddWithValue("@EmployeeID", CStr(z_OrganizationID))
+                .AddWithValue("@EmployeeID", CStr(36))
                 .AddWithValue("@DateFrom", "2017-06-06")
                 .AddWithValue("@DateTo", "2017-06-20")
             End With
 
             Await connection.OpenAsync()
             Dim reader = Await command.ExecuteReaderAsync()
+
             While Await reader.ReadAsync()
                 Dim timeEntry = New TimeEntry() With {
                     .RowID = reader.GetValue(Of Integer?)("RowID"),
                     .EntryDate = reader.GetValue(Of Date)("Date"),
-                    .TimeIn = reader.GetValue(Of String)("TimeIn"),
-                    .TimeOut = reader.GetValue(Of String)("TimeOut"),
-                    .ShiftFrom = reader.GetValue(Of String)("ShiftFrom"),
-                    .ShiftTo = reader.GetValue(Of String)("ShiftTo"),
+                    .TimeIn = reader.GetValue(Of TimeSpan)("TimeIn"),
+                    .TimeOut = reader.GetValue(Of TimeSpan)("TimeOut"),
+                    .ShiftFrom = reader.GetValue(Of TimeSpan)("ShiftFrom"),
+                    .ShiftTo = reader.GetValue(Of TimeSpan)("ShiftTo"),
                     .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
-                    .RegularHoursAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
-                    .OvertimeHours = reader.GetValue(Of Decimal)("OvertimeHours"),
-                    .OvertimeHoursAmount = reader.GetValue(Of Decimal)("OvertimeHoursAmount"),
-                    .HolidayPayAmount = reader.GetValue(Of Decimal)("HolidayPayAmount")
+                    .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
+                    .OvertimeHours = reader.GetValue(Of Decimal)("OvertimeHoursWorked"),
+                    .OvertimeAmount = reader.GetValue(Of Decimal)("OvertimeHoursAmount"),
+                    .HolidayPayAmount = reader.GetValue(Of Decimal)("HolidayPayAmount"),
+                    .TotalPay = reader.GetValue(Of Decimal)("TotalDayPay")
                 }
 
                 timeEntries.Add(timeEntry)
@@ -215,6 +246,7 @@ Public Class TimeEntrySummary
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadEmployees()
         LoadPayPeriods()
+        LoadTimeEntries()
     End Sub
 
 End Class
