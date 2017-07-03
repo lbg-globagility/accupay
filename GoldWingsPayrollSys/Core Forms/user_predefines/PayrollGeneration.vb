@@ -207,10 +207,10 @@ Public Class PayrollGeneration
 
             Dim pause_process_message As String = String.Empty
 
-            LoadCurrentPayperiod()
-            LoadAnnualUnusedLeaves()
-            LoadProductIDForUnusedLeave()
-            LoadExistingUnusedLeaveAdjustments()
+            'LoadCurrentPayperiod()
+            'LoadAnnualUnusedLeaves()
+            'LoadProductIDForUnusedLeave()
+            'LoadExistingUnusedLeaveAdjustments()
             'ResetUnusedLeaveAdjustments()
 
             Dim sel_employee_dattab = employee_dattab.Select("PositionID IS NULL")

@@ -26,14 +26,6 @@ Partial Class TimeEntrySummary
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TimeEntrySummary))
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -64,12 +56,16 @@ Partial Class TimeEntrySummary
         Dim DataGridViewCellStyle38 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle40 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.dgvEmployi = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.cemp_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.employeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
@@ -174,14 +170,6 @@ Partial Class TimeEntrySummary
         Me.nxtyear = New System.Windows.Forms.ToolStripButton()
         Me.txt_RestDayOvertimeRate = New System.Windows.Forms.TextBox()
         Me.Label32 = New System.Windows.Forms.Label()
-        Me.dgvcalendar = New System.Windows.Forms.DataGridView()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txt_NightDifferentialRate = New System.Windows.Forms.TextBox()
         Me.txt_OvertimeRate = New System.Windows.Forms.TextBox()
         Me.txt_RestDayRate = New System.Windows.Forms.TextBox()
@@ -391,7 +379,19 @@ Partial Class TimeEntrySummary
         Me.col_tue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_mon = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_sun = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        CType(Me.dgvEmployi, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dgvcalendar = New System.Windows.Forms.DataGridView()
+        Me.cemp_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        CType(Me.employeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.TabControl2.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -416,19 +416,19 @@ Partial Class TimeEntrySummary
         Me.ComboBox1.TabIndex = 2
         Me.ComboBox1.Visible = False
         '
-        'dgvEmployi
+        'employeesDataGridView
         '
-        Me.dgvEmployi.AllowUserToAddRows = False
-        Me.dgvEmployi.AllowUserToDeleteRows = False
-        Me.dgvEmployi.AllowUserToOrderColumns = True
-        Me.dgvEmployi.AllowUserToResizeRows = False
-        Me.dgvEmployi.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.employeesDataGridView.AllowUserToAddRows = False
+        Me.employeesDataGridView.AllowUserToDeleteRows = False
+        Me.employeesDataGridView.AllowUserToOrderColumns = True
+        Me.employeesDataGridView.AllowUserToResizeRows = False
+        Me.employeesDataGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.dgvEmployi.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.dgvEmployi.BackgroundColor = System.Drawing.Color.White
-        Me.dgvEmployi.ColumnHeadersHeight = 34
-        Me.dgvEmployi.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvEmployi.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_RowID, Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
+        Me.employeesDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.employeesDataGridView.BackgroundColor = System.Drawing.Color.White
+        Me.employeesDataGridView.ColumnHeadersHeight = 34
+        Me.employeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.employeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_RowID, Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -436,40 +436,16 @@ Partial Class TimeEntrySummary
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvEmployi.DefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvEmployi.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvEmployi.Location = New System.Drawing.Point(12, 234)
-        Me.dgvEmployi.MultiSelect = False
-        Me.dgvEmployi.Name = "dgvEmployi"
-        Me.dgvEmployi.ReadOnly = True
-        Me.dgvEmployi.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvEmployi.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvEmployi.Size = New System.Drawing.Size(350, 285)
-        Me.dgvEmployi.TabIndex = 137
-        '
-        'cemp_RowID
-        '
-        Me.cemp_RowID.HeaderText = "RowID"
-        Me.cemp_RowID.Name = "cemp_RowID"
-        Me.cemp_RowID.ReadOnly = True
-        '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.HeaderText = "Employee ID"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
-        'cemp_LastName
-        '
-        Me.cemp_LastName.HeaderText = "Last Name"
-        Me.cemp_LastName.Name = "cemp_LastName"
-        Me.cemp_LastName.ReadOnly = True
-        '
-        'cemp_FirstName
-        '
-        Me.cemp_FirstName.HeaderText = "First Name"
-        Me.cemp_FirstName.Name = "cemp_FirstName"
-        Me.cemp_FirstName.ReadOnly = True
+        Me.employeesDataGridView.DefaultCellStyle = DataGridViewCellStyle1
+        Me.employeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.employeesDataGridView.Location = New System.Drawing.Point(12, 234)
+        Me.employeesDataGridView.MultiSelect = False
+        Me.employeesDataGridView.Name = "employeesDataGridView"
+        Me.employeesDataGridView.ReadOnly = True
+        Me.employeesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.employeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.employeesDataGridView.Size = New System.Drawing.Size(350, 285)
+        Me.employeesDataGridView.TabIndex = 137
         '
         'lblforballoon
         '
@@ -1010,7 +986,7 @@ Partial Class TimeEntrySummary
         Me.ToolStrip3.Location = New System.Drawing.Point(28, 153)
         Me.ToolStrip3.Name = "ToolStrip3"
         Me.ToolStrip3.ShowItemToolTips = False
-        Me.ToolStrip3.Size = New System.Drawing.Size(5970, 28)
+        Me.ToolStrip3.Size = New System.Drawing.Size(5978, 28)
         Me.ToolStrip3.TabIndex = 168
         Me.ToolStrip3.Text = "ToolStrip3"
         '
@@ -1020,7 +996,7 @@ Partial Class TimeEntrySummary
         Me.prevyear.Image = CType(resources.GetObject("prevyear.Image"), System.Drawing.Image)
         Me.prevyear.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.prevyear.Name = "prevyear"
-        Me.prevyear.Size = New System.Drawing.Size(50, 25)
+        Me.prevyear.Size = New System.Drawing.Size(52, 25)
         Me.prevyear.Text = "← 2014"
         '
         'ToolStripSeparator14
@@ -1041,13 +1017,13 @@ Partial Class TimeEntrySummary
         'firstjan
         '
         Me.firstjan.Name = "firstjan"
-        Me.firstjan.Size = New System.Drawing.Size(96, 22)
+        Me.firstjan.Size = New System.Drawing.Size(100, 22)
         Me.firstjan.Text = "1-15"
         '
         'secjan
         '
         Me.secjan.Name = "secjan"
-        Me.secjan.Size = New System.Drawing.Size(96, 22)
+        Me.secjan.Size = New System.Drawing.Size(100, 22)
         Me.secjan.Text = "16-"
         '
         'ToolStripSeparator15
@@ -1068,13 +1044,13 @@ Partial Class TimeEntrySummary
         'firstfeb
         '
         Me.firstfeb.Name = "firstfeb"
-        Me.firstfeb.Size = New System.Drawing.Size(96, 22)
+        Me.firstfeb.Size = New System.Drawing.Size(100, 22)
         Me.firstfeb.Text = "1-15"
         '
         'secfeb
         '
         Me.secfeb.Name = "secfeb"
-        Me.secfeb.Size = New System.Drawing.Size(96, 22)
+        Me.secfeb.Size = New System.Drawing.Size(100, 22)
         Me.secfeb.Text = "16-"
         '
         'ToolStripSeparator16
@@ -1095,13 +1071,13 @@ Partial Class TimeEntrySummary
         'firstmar
         '
         Me.firstmar.Name = "firstmar"
-        Me.firstmar.Size = New System.Drawing.Size(96, 22)
+        Me.firstmar.Size = New System.Drawing.Size(100, 22)
         Me.firstmar.Text = "1-15"
         '
         'secmar
         '
         Me.secmar.Name = "secmar"
-        Me.secmar.Size = New System.Drawing.Size(96, 22)
+        Me.secmar.Size = New System.Drawing.Size(100, 22)
         Me.secmar.Text = "16-"
         '
         'ToolStripSeparator17
@@ -1122,13 +1098,13 @@ Partial Class TimeEntrySummary
         'firstapr
         '
         Me.firstapr.Name = "firstapr"
-        Me.firstapr.Size = New System.Drawing.Size(96, 22)
+        Me.firstapr.Size = New System.Drawing.Size(100, 22)
         Me.firstapr.Text = "1-15"
         '
         'secapr
         '
         Me.secapr.Name = "secapr"
-        Me.secapr.Size = New System.Drawing.Size(96, 22)
+        Me.secapr.Size = New System.Drawing.Size(100, 22)
         Me.secapr.Text = "16-"
         '
         'ToolStripSeparator18
@@ -1149,13 +1125,13 @@ Partial Class TimeEntrySummary
         'firstmay
         '
         Me.firstmay.Name = "firstmay"
-        Me.firstmay.Size = New System.Drawing.Size(96, 22)
+        Me.firstmay.Size = New System.Drawing.Size(100, 22)
         Me.firstmay.Text = "1-15"
         '
         'secmay
         '
         Me.secmay.Name = "secmay"
-        Me.secmay.Size = New System.Drawing.Size(96, 22)
+        Me.secmay.Size = New System.Drawing.Size(100, 22)
         Me.secmay.Text = "16-"
         '
         'ToolStripSeparator19
@@ -1176,13 +1152,13 @@ Partial Class TimeEntrySummary
         'firstjun
         '
         Me.firstjun.Name = "firstjun"
-        Me.firstjun.Size = New System.Drawing.Size(96, 22)
+        Me.firstjun.Size = New System.Drawing.Size(100, 22)
         Me.firstjun.Text = "1-15"
         '
         'secjun
         '
         Me.secjun.Name = "secjun"
-        Me.secjun.Size = New System.Drawing.Size(96, 22)
+        Me.secjun.Size = New System.Drawing.Size(100, 22)
         Me.secjun.Text = "16-"
         '
         'ToolStripSeparator20
@@ -1203,13 +1179,13 @@ Partial Class TimeEntrySummary
         'firstjul
         '
         Me.firstjul.Name = "firstjul"
-        Me.firstjul.Size = New System.Drawing.Size(96, 22)
+        Me.firstjul.Size = New System.Drawing.Size(100, 22)
         Me.firstjul.Text = "1-15"
         '
         'secjul
         '
         Me.secjul.Name = "secjul"
-        Me.secjul.Size = New System.Drawing.Size(96, 22)
+        Me.secjul.Size = New System.Drawing.Size(100, 22)
         Me.secjul.Text = "16-"
         '
         'ToolStripSeparator21
@@ -1230,13 +1206,13 @@ Partial Class TimeEntrySummary
         'firstaug
         '
         Me.firstaug.Name = "firstaug"
-        Me.firstaug.Size = New System.Drawing.Size(96, 22)
+        Me.firstaug.Size = New System.Drawing.Size(100, 22)
         Me.firstaug.Text = "1-15"
         '
         'secaug
         '
         Me.secaug.Name = "secaug"
-        Me.secaug.Size = New System.Drawing.Size(96, 22)
+        Me.secaug.Size = New System.Drawing.Size(100, 22)
         Me.secaug.Text = "16-"
         '
         'ToolStripSeparator22
@@ -1257,13 +1233,13 @@ Partial Class TimeEntrySummary
         'firstsep
         '
         Me.firstsep.Name = "firstsep"
-        Me.firstsep.Size = New System.Drawing.Size(96, 22)
+        Me.firstsep.Size = New System.Drawing.Size(100, 22)
         Me.firstsep.Text = "1-15"
         '
         'secsep
         '
         Me.secsep.Name = "secsep"
-        Me.secsep.Size = New System.Drawing.Size(96, 22)
+        Me.secsep.Size = New System.Drawing.Size(100, 22)
         Me.secsep.Text = "16-"
         '
         'ToolStripSeparator23
@@ -1284,13 +1260,13 @@ Partial Class TimeEntrySummary
         'firstoct
         '
         Me.firstoct.Name = "firstoct"
-        Me.firstoct.Size = New System.Drawing.Size(96, 22)
+        Me.firstoct.Size = New System.Drawing.Size(100, 22)
         Me.firstoct.Text = "1-15"
         '
         'secoct
         '
         Me.secoct.Name = "secoct"
-        Me.secoct.Size = New System.Drawing.Size(96, 22)
+        Me.secoct.Size = New System.Drawing.Size(100, 22)
         Me.secoct.Text = "16-"
         '
         'ToolStripSeparator24
@@ -1311,13 +1287,13 @@ Partial Class TimeEntrySummary
         'firstnov
         '
         Me.firstnov.Name = "firstnov"
-        Me.firstnov.Size = New System.Drawing.Size(96, 22)
+        Me.firstnov.Size = New System.Drawing.Size(100, 22)
         Me.firstnov.Text = "1-15"
         '
         'secnov
         '
         Me.secnov.Name = "secnov"
-        Me.secnov.Size = New System.Drawing.Size(96, 22)
+        Me.secnov.Size = New System.Drawing.Size(100, 22)
         Me.secnov.Text = "16-"
         '
         'ToolStripSeparator25
@@ -1338,13 +1314,13 @@ Partial Class TimeEntrySummary
         'firstdec
         '
         Me.firstdec.Name = "firstdec"
-        Me.firstdec.Size = New System.Drawing.Size(96, 22)
+        Me.firstdec.Size = New System.Drawing.Size(100, 22)
         Me.firstdec.Text = "1-15"
         '
         'secdec
         '
         Me.secdec.Name = "secdec"
-        Me.secdec.Size = New System.Drawing.Size(96, 22)
+        Me.secdec.Size = New System.Drawing.Size(100, 22)
         Me.secdec.Text = "16-"
         '
         'ToolStripSeparator26
@@ -1358,7 +1334,7 @@ Partial Class TimeEntrySummary
         Me.nxtyear.Image = CType(resources.GetObject("nxtyear.Image"), System.Drawing.Image)
         Me.nxtyear.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.nxtyear.Name = "nxtyear"
-        Me.nxtyear.Size = New System.Drawing.Size(50, 25)
+        Me.nxtyear.Size = New System.Drawing.Size(52, 25)
         Me.nxtyear.Text = "2016 →"
         '
         'txt_RestDayOvertimeRate
@@ -1381,113 +1357,6 @@ Partial Class TimeEntrySummary
         Me.Label32.Size = New System.Drawing.Size(54, 15)
         Me.Label32.TabIndex = 484
         Me.Label32.Text = "Pay rates"
-        '
-        'dgvcalendar
-        '
-        Me.dgvcalendar.AllowUserToAddRows = False
-        Me.dgvcalendar.AllowUserToDeleteRows = False
-        Me.dgvcalendar.AllowUserToResizeColumns = False
-        Me.dgvcalendar.AllowUserToResizeRows = False
-        Me.dgvcalendar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.dgvcalendar.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.DimGray
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer))
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvcalendar.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.dgvcalendar.ColumnHeadersHeight = 45
-        Me.dgvcalendar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvcalendar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7})
-        Me.dgvcalendar.Location = New System.Drawing.Point(4, 291)
-        Me.dgvcalendar.MultiSelect = False
-        Me.dgvcalendar.Name = "dgvcalendar"
-        Me.dgvcalendar.ReadOnly = True
-        Me.dgvcalendar.RowHeadersVisible = False
-        Me.dgvcalendar.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvcalendar.RowTemplate.Height = 95
-        Me.dgvcalendar.ScrollBars = System.Windows.Forms.ScrollBars.None
-        Me.dgvcalendar.Size = New System.Drawing.Size(822, 332)
-        Me.dgvcalendar.TabIndex = 28
-        '
-        'Column1
-        '
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.DimGray
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle4
-        Me.Column1.HeaderText = "SUNDAY"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        Me.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column2
-        '
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.Color.DimGray
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle5
-        Me.Column2.HeaderText = "MONDAY"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        Me.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column3
-        '
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.DimGray
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle6
-        Me.Column3.HeaderText = "TUESDAY"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        Me.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column4
-        '
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.Color.DimGray
-        Me.Column4.DefaultCellStyle = DataGridViewCellStyle7
-        Me.Column4.HeaderText = "WEDNESDAY"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        Me.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column5
-        '
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.DimGray
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle8
-        Me.Column5.HeaderText = "THURSDAY"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        Me.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column6
-        '
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.DimGray
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle9
-        Me.Column6.HeaderText = "FRIDAY"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        Me.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column7
-        '
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle10.ForeColor = System.Drawing.Color.DimGray
-        Me.Column7.DefaultCellStyle = DataGridViewCellStyle10
-        Me.Column7.HeaderText = "SATURDAY"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        Me.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'txt_NightDifferentialRate
         '
@@ -3209,6 +3078,141 @@ Partial Class TimeEntrySummary
         Me.col_sun.ReadOnly = True
         Me.col_sun.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
+        'Column7
+        '
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle10.ForeColor = System.Drawing.Color.DimGray
+        Me.Column7.DefaultCellStyle = DataGridViewCellStyle10
+        Me.Column7.HeaderText = "SATURDAY"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        Me.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column6
+        '
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.DimGray
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle9
+        Me.Column6.HeaderText = "FRIDAY"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        Me.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column5
+        '
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.DimGray
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle8
+        Me.Column5.HeaderText = "THURSDAY"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        Me.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column4
+        '
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle7.ForeColor = System.Drawing.Color.DimGray
+        Me.Column4.DefaultCellStyle = DataGridViewCellStyle7
+        Me.Column4.HeaderText = "WEDNESDAY"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        Me.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column3
+        '
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.DimGray
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle6
+        Me.Column3.HeaderText = "TUESDAY"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        Me.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column2
+        '
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.Color.DimGray
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle5
+        Me.Column2.HeaderText = "MONDAY"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        Me.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column1
+        '
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.DimGray
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle4
+        Me.Column1.HeaderText = "SUNDAY"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        Me.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'dgvcalendar
+        '
+        Me.dgvcalendar.AllowUserToAddRows = False
+        Me.dgvcalendar.AllowUserToDeleteRows = False
+        Me.dgvcalendar.AllowUserToResizeColumns = False
+        Me.dgvcalendar.AllowUserToResizeRows = False
+        Me.dgvcalendar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.dgvcalendar.BackgroundColor = System.Drawing.Color.White
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle3.BackColor = System.Drawing.Color.DimGray
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer))
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvcalendar.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        Me.dgvcalendar.ColumnHeadersHeight = 45
+        Me.dgvcalendar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.dgvcalendar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7})
+        Me.dgvcalendar.Location = New System.Drawing.Point(4, 307)
+        Me.dgvcalendar.MultiSelect = False
+        Me.dgvcalendar.Name = "dgvcalendar"
+        Me.dgvcalendar.ReadOnly = True
+        Me.dgvcalendar.RowHeadersVisible = False
+        Me.dgvcalendar.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.dgvcalendar.RowTemplate.Height = 95
+        Me.dgvcalendar.ScrollBars = System.Windows.Forms.ScrollBars.None
+        Me.dgvcalendar.Size = New System.Drawing.Size(822, 332)
+        Me.dgvcalendar.TabIndex = 28
+        '
+        'cemp_RowID
+        '
+        Me.cemp_RowID.DataPropertyName = "RowID"
+        Me.cemp_RowID.HeaderText = "RowID"
+        Me.cemp_RowID.Name = "cemp_RowID"
+        Me.cemp_RowID.ReadOnly = True
+        '
+        'cemp_EmployeeID
+        '
+        Me.cemp_EmployeeID.DataPropertyName = "EmployeeID"
+        Me.cemp_EmployeeID.HeaderText = "Employee ID"
+        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
+        Me.cemp_EmployeeID.ReadOnly = True
+        '
+        'cemp_LastName
+        '
+        Me.cemp_LastName.DataPropertyName = "LastName"
+        Me.cemp_LastName.HeaderText = "Last Name"
+        Me.cemp_LastName.Name = "cemp_LastName"
+        Me.cemp_LastName.ReadOnly = True
+        '
+        'cemp_FirstName
+        '
+        Me.cemp_FirstName.DataPropertyName = "FirstName"
+        Me.cemp_FirstName.HeaderText = "First Name"
+        Me.cemp_FirstName.Name = "cemp_FirstName"
+        Me.cemp_FirstName.ReadOnly = True
+        '
         'TimeEntrySummary
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3220,7 +3224,7 @@ Partial Class TimeEntrySummary
         Me.Controls.Add(Me.Prev)
         Me.Controls.Add(Me.First)
         Me.Controls.Add(Me.Label25)
-        Me.Controls.Add(Me.dgvEmployi)
+        Me.Controls.Add(Me.employeesDataGridView)
         Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.btnRerfresh)
         Me.Controls.Add(Me.TabControl2)
@@ -3229,7 +3233,7 @@ Partial Class TimeEntrySummary
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "TimeEntrySummary"
         Me.Text = "employeetimeentry"
-        CType(Me.dgvEmployi, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.employeesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.TabControl2.ResumeLayout(False)
@@ -3251,7 +3255,7 @@ Partial Class TimeEntrySummary
 
     End Sub
     Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
-    Friend WithEvents dgvEmployi As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents employeesDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents lblforballoon As System.Windows.Forms.Label
     Friend WithEvents DataGridViewTextBoxColumn1 As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -3306,7 +3310,6 @@ Partial Class TimeEntrySummary
     Friend WithEvents txtSimple As System.Windows.Forms.TextBox
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
     Friend WithEvents tbpemptimeent As System.Windows.Forms.TabPage
-    Friend WithEvents dgvcalendar As System.Windows.Forms.DataGridView
     Friend WithEvents txtshftEffFrom As System.Windows.Forms.TextBox
     Friend WithEvents txtshftEffTo As System.Windows.Forms.TextBox
     Friend WithEvents txtshftTimeTo As System.Windows.Forms.TextBox
@@ -3333,13 +3336,6 @@ Partial Class TimeEntrySummary
     Friend WithEvents Nxt As System.Windows.Forms.LinkLabel
     Friend WithEvents bgwpayrate As System.ComponentModel.BackgroundWorker
     Friend WithEvents txthrslate As System.Windows.Forms.TextBox
-    Friend WithEvents Column1 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column3 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column4 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column5 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column6 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column7 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents ToolStrip3 As System.Windows.Forms.ToolStrip
     Friend WithEvents prevyear As System.Windows.Forms.ToolStripButton
@@ -3560,10 +3556,6 @@ Partial Class TimeEntrySummary
     Friend WithEvents col_tue As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents col_mon As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents col_sun As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_LastName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_FirstName As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents payPeriodDataGridView As System.Windows.Forms.DataGridView
     Friend WithEvents Column8 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column9 As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -3577,4 +3569,16 @@ Partial Class TimeEntrySummary
     Friend WithEvents Column17 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column18 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column19 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents dgvcalendar As System.Windows.Forms.DataGridView
+    Friend WithEvents Column1 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column3 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column4 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column5 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column6 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Column7 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents cemp_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents cemp_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents cemp_LastName As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents cemp_FirstName As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class
