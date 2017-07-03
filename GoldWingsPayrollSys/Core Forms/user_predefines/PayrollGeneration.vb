@@ -1308,9 +1308,9 @@ Public Class PayrollGeneration
 
                         progress_index += 1
 
-                        If IsFirstPayperiodOfTheYear() Then
-                            ConvertLeaveToCash(drow)
-                        End If
+                        'If IsFirstPayperiodOfTheYear() Then
+                        '    ConvertLeaveToCash(drow)
+                        'End If
 
                         'Dim f_args(1) As Object
 

@@ -26,6 +26,14 @@ Partial Class TimeEntrySummary
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TimeEntrySummary))
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -48,22 +56,6 @@ Partial Class TimeEntrySummary
         Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle38 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle40 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.employeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.lblforballoon = New System.Windows.Forms.Label()
@@ -108,114 +100,6 @@ Partial Class TimeEntrySummary
         Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label41 = New System.Windows.Forms.Label()
-        Me.txt_PayType = New System.Windows.Forms.TextBox()
-        Me.Label39 = New System.Windows.Forms.Label()
-        Me.Label38 = New System.Windows.Forms.Label()
-        Me.Label37 = New System.Windows.Forms.Label()
-        Me.Label36 = New System.Windows.Forms.Label()
-        Me.Label35 = New System.Windows.Forms.Label()
-        Me.Label34 = New System.Windows.Forms.Label()
-        Me.Label33 = New System.Windows.Forms.Label()
-        Me.ToolStrip3 = New System.Windows.Forms.ToolStrip()
-        Me.prevyear = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator14 = New System.Windows.Forms.ToolStripSeparator()
-        Me.janmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstjan = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secjan = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator15 = New System.Windows.Forms.ToolStripSeparator()
-        Me.febmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstfeb = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secfeb = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator16 = New System.Windows.Forms.ToolStripSeparator()
-        Me.marmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstmar = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secmar = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator17 = New System.Windows.Forms.ToolStripSeparator()
-        Me.aprmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstapr = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secapr = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator18 = New System.Windows.Forms.ToolStripSeparator()
-        Me.maymonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstmay = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secmay = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator19 = New System.Windows.Forms.ToolStripSeparator()
-        Me.junmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstjun = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secjun = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator20 = New System.Windows.Forms.ToolStripSeparator()
-        Me.julmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstjul = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secjul = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator21 = New System.Windows.Forms.ToolStripSeparator()
-        Me.augmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstaug = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secaug = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator22 = New System.Windows.Forms.ToolStripSeparator()
-        Me.sepmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstsep = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secsep = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator23 = New System.Windows.Forms.ToolStripSeparator()
-        Me.octmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstoct = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secoct = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator24 = New System.Windows.Forms.ToolStripSeparator()
-        Me.novmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstnov = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secnov = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator25 = New System.Windows.Forms.ToolStripSeparator()
-        Me.decmonth = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.firstdec = New System.Windows.Forms.ToolStripMenuItem()
-        Me.secdec = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator26 = New System.Windows.Forms.ToolStripSeparator()
-        Me.nxtyear = New System.Windows.Forms.ToolStripButton()
-        Me.txt_RestDayOvertimeRate = New System.Windows.Forms.TextBox()
-        Me.Label32 = New System.Windows.Forms.Label()
-        Me.txt_NightDifferentialRate = New System.Windows.Forms.TextBox()
-        Me.txt_OvertimeRate = New System.Windows.Forms.TextBox()
-        Me.txt_RestDayRate = New System.Windows.Forms.TextBox()
-        Me.txt_NightDifferentialOTRate = New System.Windows.Forms.TextBox()
-        Me.txt_PayRate = New System.Windows.Forms.TextBox()
-        Me.txtempbasicpay = New System.Windows.Forms.TextBox()
-        Me.Label31 = New System.Windows.Forms.Label()
-        Me.chkrest = New System.Windows.Forms.CheckBox()
-        Me.chknight = New System.Windows.Forms.CheckBox()
-        Me.Label30 = New System.Windows.Forms.Label()
-        Me.txttotdaypay = New System.Windows.Forms.TextBox()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.txtnightdiffotpay = New System.Windows.Forms.TextBox()
-        Me.txtshftEffFrom = New System.Windows.Forms.TextBox()
-        Me.txtnightdiffpay = New System.Windows.Forms.TextBox()
-        Me.txtshftEffTo = New System.Windows.Forms.TextBox()
-        Me.Label27 = New System.Windows.Forms.Label()
-        Me.txtshftTimeFrom = New System.Windows.Forms.TextBox()
-        Me.txtnightdiff = New System.Windows.Forms.TextBox()
-        Me.txtshftTimeTo = New System.Windows.Forms.TextBox()
-        Me.Label26 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.txtEmpID = New System.Windows.Forms.TextBox()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.txtlateamount = New System.Windows.Forms.TextBox()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label24 = New System.Windows.Forms.Label()
-        Me.txthrsworkd = New System.Windows.Forms.TextBox()
-        Me.txtutamount = New System.Windows.Forms.TextBox()
-        Me.txthrsOT = New System.Windows.Forms.TextBox()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.txthrsUT = New System.Windows.Forms.TextBox()
-        Me.txtotpay = New System.Windows.Forms.TextBox()
-        Me.txtnightdiffOT = New System.Windows.Forms.TextBox()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.txtregpay = New System.Windows.Forms.TextBox()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.Label22 = New System.Windows.Forms.Label()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.txtreghrsworkd = New System.Windows.Forms.TextBox()
-        Me.Label18 = New System.Windows.Forms.Label()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.txthrslate = New System.Windows.Forms.TextBox()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.First = New System.Windows.Forms.LinkLabel()
@@ -379,18 +263,118 @@ Partial Class TimeEntrySummary
         Me.col_tue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_mon = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_sun = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvcalendar = New System.Windows.Forms.DataGridView()
         Me.cemp_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.txthrslate = New System.Windows.Forms.TextBox()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.txtreghrsworkd = New System.Windows.Forms.TextBox()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.txtregpay = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.txtnightdiffOT = New System.Windows.Forms.TextBox()
+        Me.txtotpay = New System.Windows.Forms.TextBox()
+        Me.txthrsUT = New System.Windows.Forms.TextBox()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.txthrsOT = New System.Windows.Forms.TextBox()
+        Me.txtutamount = New System.Windows.Forms.TextBox()
+        Me.txthrsworkd = New System.Windows.Forms.TextBox()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.txtlateamount = New System.Windows.Forms.TextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.txtshftTimeTo = New System.Windows.Forms.TextBox()
+        Me.txtnightdiff = New System.Windows.Forms.TextBox()
+        Me.txtshftTimeFrom = New System.Windows.Forms.TextBox()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.txtshftEffTo = New System.Windows.Forms.TextBox()
+        Me.txtnightdiffpay = New System.Windows.Forms.TextBox()
+        Me.txtshftEffFrom = New System.Windows.Forms.TextBox()
+        Me.txtnightdiffotpay = New System.Windows.Forms.TextBox()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.txttotdaypay = New System.Windows.Forms.TextBox()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.chknight = New System.Windows.Forms.CheckBox()
+        Me.chkrest = New System.Windows.Forms.CheckBox()
+        Me.Label31 = New System.Windows.Forms.Label()
+        Me.txtempbasicpay = New System.Windows.Forms.TextBox()
+        Me.txt_PayRate = New System.Windows.Forms.TextBox()
+        Me.txt_NightDifferentialOTRate = New System.Windows.Forms.TextBox()
+        Me.txt_RestDayRate = New System.Windows.Forms.TextBox()
+        Me.txt_OvertimeRate = New System.Windows.Forms.TextBox()
+        Me.txt_NightDifferentialRate = New System.Windows.Forms.TextBox()
+        Me.Label32 = New System.Windows.Forms.Label()
+        Me.txt_RestDayOvertimeRate = New System.Windows.Forms.TextBox()
+        Me.prevyear = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator14 = New System.Windows.Forms.ToolStripSeparator()
+        Me.janmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstjan = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secjan = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator15 = New System.Windows.Forms.ToolStripSeparator()
+        Me.febmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstfeb = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secfeb = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator16 = New System.Windows.Forms.ToolStripSeparator()
+        Me.marmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstmar = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secmar = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator17 = New System.Windows.Forms.ToolStripSeparator()
+        Me.aprmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstapr = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secapr = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator18 = New System.Windows.Forms.ToolStripSeparator()
+        Me.maymonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstmay = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secmay = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator19 = New System.Windows.Forms.ToolStripSeparator()
+        Me.junmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstjun = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secjun = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator20 = New System.Windows.Forms.ToolStripSeparator()
+        Me.julmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstjul = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secjul = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator21 = New System.Windows.Forms.ToolStripSeparator()
+        Me.augmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstaug = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secaug = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator22 = New System.Windows.Forms.ToolStripSeparator()
+        Me.sepmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstsep = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secsep = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator23 = New System.Windows.Forms.ToolStripSeparator()
+        Me.octmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstoct = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secoct = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator24 = New System.Windows.Forms.ToolStripSeparator()
+        Me.novmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstnov = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secnov = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator25 = New System.Windows.Forms.ToolStripSeparator()
+        Me.decmonth = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.firstdec = New System.Windows.Forms.ToolStripMenuItem()
+        Me.secdec = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator26 = New System.Windows.Forms.ToolStripSeparator()
+        Me.nxtyear = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStrip3 = New System.Windows.Forms.ToolStrip()
+        Me.Label33 = New System.Windows.Forms.Label()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.Label35 = New System.Windows.Forms.Label()
+        Me.Label36 = New System.Windows.Forms.Label()
+        Me.Label37 = New System.Windows.Forms.Label()
+        Me.Label38 = New System.Windows.Forms.Label()
+        Me.Label39 = New System.Windows.Forms.Label()
+        Me.txt_PayType = New System.Windows.Forms.TextBox()
+        Me.txtEmpID = New System.Windows.Forms.TextBox()
         CType(Me.employeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.TabControl2.SuspendLayout()
@@ -401,7 +385,6 @@ Partial Class TimeEntrySummary
         Me.Panel1.SuspendLayout()
         CType(Me.payPeriodDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip3.SuspendLayout()
-        CType(Me.dgvcalendar, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ComboBox1
@@ -733,7 +716,6 @@ Partial Class TimeEntrySummary
         Me.Panel1.Controls.Add(Me.ToolStrip3)
         Me.Panel1.Controls.Add(Me.txt_RestDayOvertimeRate)
         Me.Panel1.Controls.Add(Me.Label32)
-        Me.Panel1.Controls.Add(Me.dgvcalendar)
         Me.Panel1.Controls.Add(Me.txt_NightDifferentialRate)
         Me.Panel1.Controls.Add(Me.txt_OvertimeRate)
         Me.Panel1.Controls.Add(Me.txt_RestDayRate)
@@ -900,930 +882,6 @@ Partial Class TimeEntrySummary
         Me.Label41.Size = New System.Drawing.Size(45, 13)
         Me.Label41.TabIndex = 492
         Me.Label41.Text = "Label41"
-        '
-        'txt_PayType
-        '
-        Me.txt_PayType.BackColor = System.Drawing.Color.White
-        Me.txt_PayType.Location = New System.Drawing.Point(746, 109)
-        Me.txt_PayType.Name = "txt_PayType"
-        Me.txt_PayType.ReadOnly = True
-        Me.txt_PayType.Size = New System.Drawing.Size(80, 20)
-        Me.txt_PayType.TabIndex = 21
-        Me.txt_PayType.Tag = "String"
-        '
-        'Label39
-        '
-        Me.Label39.AutoSize = True
-        Me.Label39.Location = New System.Drawing.Point(642, 272)
-        Me.Label39.Name = "Label39"
-        Me.Label39.Size = New System.Drawing.Size(88, 13)
-        Me.Label39.TabIndex = 491
-        Me.Label39.Text = "Rest day OT rate"
-        '
-        'Label38
-        '
-        Me.Label38.AutoSize = True
-        Me.Label38.Location = New System.Drawing.Point(642, 246)
-        Me.Label38.Name = "Label38"
-        Me.Label38.Size = New System.Drawing.Size(70, 13)
-        Me.Label38.TabIndex = 490
-        Me.Label38.Text = "Rest day rate"
-        '
-        'Label37
-        '
-        Me.Label37.AutoSize = True
-        Me.Label37.Location = New System.Drawing.Point(642, 220)
-        Me.Label37.Name = "Label37"
-        Me.Label37.Size = New System.Drawing.Size(95, 13)
-        Me.Label37.TabIndex = 489
-        Me.Label37.Text = "Night difft'l OT rate"
-        '
-        'Label36
-        '
-        Me.Label36.AutoSize = True
-        Me.Label36.Location = New System.Drawing.Point(642, 194)
-        Me.Label36.Name = "Label36"
-        Me.Label36.Size = New System.Drawing.Size(104, 13)
-        Me.Label36.TabIndex = 488
-        Me.Label36.Text = "Night differential rate"
-        '
-        'Label35
-        '
-        Me.Label35.AutoSize = True
-        Me.Label35.Location = New System.Drawing.Point(642, 168)
-        Me.Label35.Name = "Label35"
-        Me.Label35.Size = New System.Drawing.Size(43, 13)
-        Me.Label35.TabIndex = 487
-        Me.Label35.Text = "OT rate"
-        '
-        'Label34
-        '
-        Me.Label34.AutoSize = True
-        Me.Label34.Location = New System.Drawing.Point(642, 142)
-        Me.Label34.Name = "Label34"
-        Me.Label34.Size = New System.Drawing.Size(48, 13)
-        Me.Label34.TabIndex = 486
-        Me.Label34.Text = "Pay type"
-        '
-        'Label33
-        '
-        Me.Label33.AutoSize = True
-        Me.Label33.Location = New System.Drawing.Point(642, 116)
-        Me.Label33.Name = "Label33"
-        Me.Label33.Size = New System.Drawing.Size(48, 13)
-        Me.Label33.TabIndex = 485
-        Me.Label33.Text = "Pay type"
-        '
-        'ToolStrip3
-        '
-        Me.ToolStrip3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ToolStrip3.AutoSize = False
-        Me.ToolStrip3.Dock = System.Windows.Forms.DockStyle.None
-        Me.ToolStrip3.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ToolStrip3.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip3.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.prevyear, Me.ToolStripSeparator14, Me.janmonth, Me.ToolStripSeparator15, Me.febmonth, Me.ToolStripSeparator16, Me.marmonth, Me.ToolStripSeparator17, Me.aprmonth, Me.ToolStripSeparator18, Me.maymonth, Me.ToolStripSeparator19, Me.junmonth, Me.ToolStripSeparator20, Me.julmonth, Me.ToolStripSeparator21, Me.augmonth, Me.ToolStripSeparator22, Me.sepmonth, Me.ToolStripSeparator23, Me.octmonth, Me.ToolStripSeparator24, Me.novmonth, Me.ToolStripSeparator25, Me.decmonth, Me.ToolStripSeparator26, Me.nxtyear})
-        Me.ToolStrip3.Location = New System.Drawing.Point(28, 153)
-        Me.ToolStrip3.Name = "ToolStrip3"
-        Me.ToolStrip3.ShowItemToolTips = False
-        Me.ToolStrip3.Size = New System.Drawing.Size(5978, 28)
-        Me.ToolStrip3.TabIndex = 168
-        Me.ToolStrip3.Text = "ToolStrip3"
-        '
-        'prevyear
-        '
-        Me.prevyear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.prevyear.Image = CType(resources.GetObject("prevyear.Image"), System.Drawing.Image)
-        Me.prevyear.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.prevyear.Name = "prevyear"
-        Me.prevyear.Size = New System.Drawing.Size(52, 25)
-        Me.prevyear.Text = "← 2014"
-        '
-        'ToolStripSeparator14
-        '
-        Me.ToolStripSeparator14.Name = "ToolStripSeparator14"
-        Me.ToolStripSeparator14.Size = New System.Drawing.Size(6, 28)
-        '
-        'janmonth
-        '
-        Me.janmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.janmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstjan, Me.secjan})
-        Me.janmonth.Image = CType(resources.GetObject("janmonth.Image"), System.Drawing.Image)
-        Me.janmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.janmonth.Name = "janmonth"
-        Me.janmonth.Size = New System.Drawing.Size(50, 25)
-        Me.janmonth.Text = "   Jan "
-        '
-        'firstjan
-        '
-        Me.firstjan.Name = "firstjan"
-        Me.firstjan.Size = New System.Drawing.Size(100, 22)
-        Me.firstjan.Text = "1-15"
-        '
-        'secjan
-        '
-        Me.secjan.Name = "secjan"
-        Me.secjan.Size = New System.Drawing.Size(100, 22)
-        Me.secjan.Text = "16-"
-        '
-        'ToolStripSeparator15
-        '
-        Me.ToolStripSeparator15.Name = "ToolStripSeparator15"
-        Me.ToolStripSeparator15.Size = New System.Drawing.Size(6, 28)
-        '
-        'febmonth
-        '
-        Me.febmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.febmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstfeb, Me.secfeb})
-        Me.febmonth.Image = CType(resources.GetObject("febmonth.Image"), System.Drawing.Image)
-        Me.febmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.febmonth.Name = "febmonth"
-        Me.febmonth.Size = New System.Drawing.Size(51, 25)
-        Me.febmonth.Text = "   Feb "
-        '
-        'firstfeb
-        '
-        Me.firstfeb.Name = "firstfeb"
-        Me.firstfeb.Size = New System.Drawing.Size(100, 22)
-        Me.firstfeb.Text = "1-15"
-        '
-        'secfeb
-        '
-        Me.secfeb.Name = "secfeb"
-        Me.secfeb.Size = New System.Drawing.Size(100, 22)
-        Me.secfeb.Text = "16-"
-        '
-        'ToolStripSeparator16
-        '
-        Me.ToolStripSeparator16.Name = "ToolStripSeparator16"
-        Me.ToolStripSeparator16.Size = New System.Drawing.Size(6, 28)
-        '
-        'marmonth
-        '
-        Me.marmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.marmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstmar, Me.secmar})
-        Me.marmonth.Image = CType(resources.GetObject("marmonth.Image"), System.Drawing.Image)
-        Me.marmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.marmonth.Name = "marmonth"
-        Me.marmonth.Size = New System.Drawing.Size(53, 25)
-        Me.marmonth.Text = "   Mar "
-        '
-        'firstmar
-        '
-        Me.firstmar.Name = "firstmar"
-        Me.firstmar.Size = New System.Drawing.Size(100, 22)
-        Me.firstmar.Text = "1-15"
-        '
-        'secmar
-        '
-        Me.secmar.Name = "secmar"
-        Me.secmar.Size = New System.Drawing.Size(100, 22)
-        Me.secmar.Text = "16-"
-        '
-        'ToolStripSeparator17
-        '
-        Me.ToolStripSeparator17.Name = "ToolStripSeparator17"
-        Me.ToolStripSeparator17.Size = New System.Drawing.Size(6, 28)
-        '
-        'aprmonth
-        '
-        Me.aprmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.aprmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstapr, Me.secapr})
-        Me.aprmonth.Image = CType(resources.GetObject("aprmonth.Image"), System.Drawing.Image)
-        Me.aprmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.aprmonth.Name = "aprmonth"
-        Me.aprmonth.Size = New System.Drawing.Size(51, 25)
-        Me.aprmonth.Text = "   Apr "
-        '
-        'firstapr
-        '
-        Me.firstapr.Name = "firstapr"
-        Me.firstapr.Size = New System.Drawing.Size(100, 22)
-        Me.firstapr.Text = "1-15"
-        '
-        'secapr
-        '
-        Me.secapr.Name = "secapr"
-        Me.secapr.Size = New System.Drawing.Size(100, 22)
-        Me.secapr.Text = "16-"
-        '
-        'ToolStripSeparator18
-        '
-        Me.ToolStripSeparator18.Name = "ToolStripSeparator18"
-        Me.ToolStripSeparator18.Size = New System.Drawing.Size(6, 28)
-        '
-        'maymonth
-        '
-        Me.maymonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.maymonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstmay, Me.secmay})
-        Me.maymonth.Image = CType(resources.GetObject("maymonth.Image"), System.Drawing.Image)
-        Me.maymonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.maymonth.Name = "maymonth"
-        Me.maymonth.Size = New System.Drawing.Size(55, 25)
-        Me.maymonth.Text = "   May "
-        '
-        'firstmay
-        '
-        Me.firstmay.Name = "firstmay"
-        Me.firstmay.Size = New System.Drawing.Size(100, 22)
-        Me.firstmay.Text = "1-15"
-        '
-        'secmay
-        '
-        Me.secmay.Name = "secmay"
-        Me.secmay.Size = New System.Drawing.Size(100, 22)
-        Me.secmay.Text = "16-"
-        '
-        'ToolStripSeparator19
-        '
-        Me.ToolStripSeparator19.Name = "ToolStripSeparator19"
-        Me.ToolStripSeparator19.Size = New System.Drawing.Size(6, 28)
-        '
-        'junmonth
-        '
-        Me.junmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.junmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstjun, Me.secjun})
-        Me.junmonth.Image = CType(resources.GetObject("junmonth.Image"), System.Drawing.Image)
-        Me.junmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.junmonth.Name = "junmonth"
-        Me.junmonth.Size = New System.Drawing.Size(51, 25)
-        Me.junmonth.Text = "   Jun "
-        '
-        'firstjun
-        '
-        Me.firstjun.Name = "firstjun"
-        Me.firstjun.Size = New System.Drawing.Size(100, 22)
-        Me.firstjun.Text = "1-15"
-        '
-        'secjun
-        '
-        Me.secjun.Name = "secjun"
-        Me.secjun.Size = New System.Drawing.Size(100, 22)
-        Me.secjun.Text = "16-"
-        '
-        'ToolStripSeparator20
-        '
-        Me.ToolStripSeparator20.Name = "ToolStripSeparator20"
-        Me.ToolStripSeparator20.Size = New System.Drawing.Size(6, 28)
-        '
-        'julmonth
-        '
-        Me.julmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.julmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstjul, Me.secjul})
-        Me.julmonth.Image = CType(resources.GetObject("julmonth.Image"), System.Drawing.Image)
-        Me.julmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.julmonth.Name = "julmonth"
-        Me.julmonth.Size = New System.Drawing.Size(47, 25)
-        Me.julmonth.Text = "   Jul "
-        '
-        'firstjul
-        '
-        Me.firstjul.Name = "firstjul"
-        Me.firstjul.Size = New System.Drawing.Size(100, 22)
-        Me.firstjul.Text = "1-15"
-        '
-        'secjul
-        '
-        Me.secjul.Name = "secjul"
-        Me.secjul.Size = New System.Drawing.Size(100, 22)
-        Me.secjul.Text = "16-"
-        '
-        'ToolStripSeparator21
-        '
-        Me.ToolStripSeparator21.Name = "ToolStripSeparator21"
-        Me.ToolStripSeparator21.Size = New System.Drawing.Size(6, 28)
-        '
-        'augmonth
-        '
-        Me.augmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.augmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstaug, Me.secaug})
-        Me.augmonth.Image = CType(resources.GetObject("augmonth.Image"), System.Drawing.Image)
-        Me.augmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.augmonth.Name = "augmonth"
-        Me.augmonth.Size = New System.Drawing.Size(54, 25)
-        Me.augmonth.Text = "   Aug "
-        '
-        'firstaug
-        '
-        Me.firstaug.Name = "firstaug"
-        Me.firstaug.Size = New System.Drawing.Size(100, 22)
-        Me.firstaug.Text = "1-15"
-        '
-        'secaug
-        '
-        Me.secaug.Name = "secaug"
-        Me.secaug.Size = New System.Drawing.Size(100, 22)
-        Me.secaug.Text = "16-"
-        '
-        'ToolStripSeparator22
-        '
-        Me.ToolStripSeparator22.Name = "ToolStripSeparator22"
-        Me.ToolStripSeparator22.Size = New System.Drawing.Size(6, 28)
-        '
-        'sepmonth
-        '
-        Me.sepmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.sepmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstsep, Me.secsep})
-        Me.sepmonth.Image = CType(resources.GetObject("sepmonth.Image"), System.Drawing.Image)
-        Me.sepmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.sepmonth.Name = "sepmonth"
-        Me.sepmonth.Size = New System.Drawing.Size(52, 25)
-        Me.sepmonth.Text = "   Sep "
-        '
-        'firstsep
-        '
-        Me.firstsep.Name = "firstsep"
-        Me.firstsep.Size = New System.Drawing.Size(100, 22)
-        Me.firstsep.Text = "1-15"
-        '
-        'secsep
-        '
-        Me.secsep.Name = "secsep"
-        Me.secsep.Size = New System.Drawing.Size(100, 22)
-        Me.secsep.Text = "16-"
-        '
-        'ToolStripSeparator23
-        '
-        Me.ToolStripSeparator23.Name = "ToolStripSeparator23"
-        Me.ToolStripSeparator23.Size = New System.Drawing.Size(6, 28)
-        '
-        'octmonth
-        '
-        Me.octmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.octmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstoct, Me.secoct})
-        Me.octmonth.Image = CType(resources.GetObject("octmonth.Image"), System.Drawing.Image)
-        Me.octmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.octmonth.Name = "octmonth"
-        Me.octmonth.Size = New System.Drawing.Size(51, 25)
-        Me.octmonth.Text = "   Oct "
-        '
-        'firstoct
-        '
-        Me.firstoct.Name = "firstoct"
-        Me.firstoct.Size = New System.Drawing.Size(100, 22)
-        Me.firstoct.Text = "1-15"
-        '
-        'secoct
-        '
-        Me.secoct.Name = "secoct"
-        Me.secoct.Size = New System.Drawing.Size(100, 22)
-        Me.secoct.Text = "16-"
-        '
-        'ToolStripSeparator24
-        '
-        Me.ToolStripSeparator24.Name = "ToolStripSeparator24"
-        Me.ToolStripSeparator24.Size = New System.Drawing.Size(6, 28)
-        '
-        'novmonth
-        '
-        Me.novmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.novmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstnov, Me.secnov})
-        Me.novmonth.Image = CType(resources.GetObject("novmonth.Image"), System.Drawing.Image)
-        Me.novmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.novmonth.Name = "novmonth"
-        Me.novmonth.Size = New System.Drawing.Size(54, 25)
-        Me.novmonth.Text = "   Nov "
-        '
-        'firstnov
-        '
-        Me.firstnov.Name = "firstnov"
-        Me.firstnov.Size = New System.Drawing.Size(100, 22)
-        Me.firstnov.Text = "1-15"
-        '
-        'secnov
-        '
-        Me.secnov.Name = "secnov"
-        Me.secnov.Size = New System.Drawing.Size(100, 22)
-        Me.secnov.Text = "16-"
-        '
-        'ToolStripSeparator25
-        '
-        Me.ToolStripSeparator25.Name = "ToolStripSeparator25"
-        Me.ToolStripSeparator25.Size = New System.Drawing.Size(6, 28)
-        '
-        'decmonth
-        '
-        Me.decmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.decmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstdec, Me.secdec})
-        Me.decmonth.Image = CType(resources.GetObject("decmonth.Image"), System.Drawing.Image)
-        Me.decmonth.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.decmonth.Name = "decmonth"
-        Me.decmonth.Size = New System.Drawing.Size(53, 25)
-        Me.decmonth.Text = "   Dec "
-        '
-        'firstdec
-        '
-        Me.firstdec.Name = "firstdec"
-        Me.firstdec.Size = New System.Drawing.Size(100, 22)
-        Me.firstdec.Text = "1-15"
-        '
-        'secdec
-        '
-        Me.secdec.Name = "secdec"
-        Me.secdec.Size = New System.Drawing.Size(100, 22)
-        Me.secdec.Text = "16-"
-        '
-        'ToolStripSeparator26
-        '
-        Me.ToolStripSeparator26.Name = "ToolStripSeparator26"
-        Me.ToolStripSeparator26.Size = New System.Drawing.Size(6, 28)
-        '
-        'nxtyear
-        '
-        Me.nxtyear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.nxtyear.Image = CType(resources.GetObject("nxtyear.Image"), System.Drawing.Image)
-        Me.nxtyear.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.nxtyear.Name = "nxtyear"
-        Me.nxtyear.Size = New System.Drawing.Size(52, 25)
-        Me.nxtyear.Text = "2016 →"
-        '
-        'txt_RestDayOvertimeRate
-        '
-        Me.txt_RestDayOvertimeRate.BackColor = System.Drawing.Color.White
-        Me.txt_RestDayOvertimeRate.Location = New System.Drawing.Point(746, 265)
-        Me.txt_RestDayOvertimeRate.Name = "txt_RestDayOvertimeRate"
-        Me.txt_RestDayOvertimeRate.ReadOnly = True
-        Me.txt_RestDayOvertimeRate.Size = New System.Drawing.Size(80, 20)
-        Me.txt_RestDayOvertimeRate.TabIndex = 27
-        Me.txt_RestDayOvertimeRate.Tag = "Numeric"
-        Me.txt_RestDayOvertimeRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label32
-        '
-        Me.Label32.AutoSize = True
-        Me.Label32.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.Label32.Location = New System.Drawing.Point(743, 91)
-        Me.Label32.Name = "Label32"
-        Me.Label32.Size = New System.Drawing.Size(54, 15)
-        Me.Label32.TabIndex = 484
-        Me.Label32.Text = "Pay rates"
-        '
-        'txt_NightDifferentialRate
-        '
-        Me.txt_NightDifferentialRate.BackColor = System.Drawing.Color.White
-        Me.txt_NightDifferentialRate.Location = New System.Drawing.Point(746, 187)
-        Me.txt_NightDifferentialRate.Name = "txt_NightDifferentialRate"
-        Me.txt_NightDifferentialRate.ReadOnly = True
-        Me.txt_NightDifferentialRate.Size = New System.Drawing.Size(80, 20)
-        Me.txt_NightDifferentialRate.TabIndex = 24
-        Me.txt_NightDifferentialRate.Tag = "Numeric"
-        Me.txt_NightDifferentialRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txt_OvertimeRate
-        '
-        Me.txt_OvertimeRate.BackColor = System.Drawing.Color.White
-        Me.txt_OvertimeRate.Location = New System.Drawing.Point(746, 161)
-        Me.txt_OvertimeRate.Name = "txt_OvertimeRate"
-        Me.txt_OvertimeRate.ReadOnly = True
-        Me.txt_OvertimeRate.Size = New System.Drawing.Size(80, 20)
-        Me.txt_OvertimeRate.TabIndex = 23
-        Me.txt_OvertimeRate.Tag = "Numeric"
-        Me.txt_OvertimeRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txt_RestDayRate
-        '
-        Me.txt_RestDayRate.BackColor = System.Drawing.Color.White
-        Me.txt_RestDayRate.Location = New System.Drawing.Point(746, 239)
-        Me.txt_RestDayRate.Name = "txt_RestDayRate"
-        Me.txt_RestDayRate.ReadOnly = True
-        Me.txt_RestDayRate.Size = New System.Drawing.Size(80, 20)
-        Me.txt_RestDayRate.TabIndex = 26
-        Me.txt_RestDayRate.Tag = "Numeric"
-        Me.txt_RestDayRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txt_NightDifferentialOTRate
-        '
-        Me.txt_NightDifferentialOTRate.BackColor = System.Drawing.Color.White
-        Me.txt_NightDifferentialOTRate.Location = New System.Drawing.Point(746, 213)
-        Me.txt_NightDifferentialOTRate.Name = "txt_NightDifferentialOTRate"
-        Me.txt_NightDifferentialOTRate.ReadOnly = True
-        Me.txt_NightDifferentialOTRate.Size = New System.Drawing.Size(80, 20)
-        Me.txt_NightDifferentialOTRate.TabIndex = 25
-        Me.txt_NightDifferentialOTRate.Tag = "Numeric"
-        Me.txt_NightDifferentialOTRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txt_PayRate
-        '
-        Me.txt_PayRate.BackColor = System.Drawing.Color.White
-        Me.txt_PayRate.Location = New System.Drawing.Point(746, 135)
-        Me.txt_PayRate.Name = "txt_PayRate"
-        Me.txt_PayRate.ReadOnly = True
-        Me.txt_PayRate.Size = New System.Drawing.Size(80, 20)
-        Me.txt_PayRate.TabIndex = 22
-        Me.txt_PayRate.Tag = "Numeric"
-        Me.txt_PayRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtempbasicpay
-        '
-        Me.txtempbasicpay.BackColor = System.Drawing.Color.White
-        Me.txtempbasicpay.Location = New System.Drawing.Point(110, 109)
-        Me.txtempbasicpay.Name = "txtempbasicpay"
-        Me.txtempbasicpay.ReadOnly = True
-        Me.txtempbasicpay.Size = New System.Drawing.Size(80, 20)
-        Me.txtempbasicpay.TabIndex = 0
-        Me.txtempbasicpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label31
-        '
-        Me.Label31.AutoSize = True
-        Me.Label31.Location = New System.Drawing.Point(8, 116)
-        Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(53, 13)
-        Me.Label31.TabIndex = 476
-        Me.Label31.Text = "Basic pay"
-        '
-        'chkrest
-        '
-        Me.chkrest.AutoSize = True
-        Me.chkrest.Enabled = False
-        Me.chkrest.Location = New System.Drawing.Point(123, 260)
-        Me.chkrest.Name = "chkrest"
-        Me.chkrest.Size = New System.Drawing.Size(68, 17)
-        Me.chkrest.TabIndex = 6
-        Me.chkrest.Text = "Rest day"
-        Me.chkrest.UseVisualStyleBackColor = True
-        '
-        'chknight
-        '
-        Me.chknight.AutoSize = True
-        Me.chknight.Enabled = False
-        Me.chknight.Location = New System.Drawing.Point(123, 237)
-        Me.chknight.Name = "chknight"
-        Me.chknight.Size = New System.Drawing.Size(73, 17)
-        Me.chknight.TabIndex = 5
-        Me.chknight.Text = "Night shift"
-        Me.chknight.UseVisualStyleBackColor = True
-        '
-        'Label30
-        '
-        Me.Label30.AutoSize = True
-        Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.Label30.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label30.Location = New System.Drawing.Point(429, 116)
-        Me.Label30.Name = "Label30"
-        Me.Label30.Size = New System.Drawing.Size(71, 13)
-        Me.Label30.TabIndex = 472
-        Me.Label30.Text = "Total day pay"
-        '
-        'txttotdaypay
-        '
-        Me.txttotdaypay.BackColor = System.Drawing.Color.White
-        Me.txttotdaypay.Location = New System.Drawing.Point(556, 109)
-        Me.txttotdaypay.Name = "txttotdaypay"
-        Me.txttotdaypay.ShortcutsEnabled = False
-        Me.txttotdaypay.Size = New System.Drawing.Size(80, 20)
-        Me.txttotdaypay.TabIndex = 8
-        Me.txttotdaypay.Tag = "Numeric"
-        Me.txttotdaypay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label28
-        '
-        Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(429, 272)
-        Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(121, 13)
-        Me.Label28.TabIndex = 470
-        Me.Label28.Text = "Night differential OT pay"
-        '
-        'txtnightdiffotpay
-        '
-        Me.txtnightdiffotpay.BackColor = System.Drawing.Color.White
-        Me.txtnightdiffotpay.Location = New System.Drawing.Point(556, 265)
-        Me.txtnightdiffotpay.Name = "txtnightdiffotpay"
-        Me.txtnightdiffotpay.ShortcutsEnabled = False
-        Me.txtnightdiffotpay.Size = New System.Drawing.Size(80, 20)
-        Me.txtnightdiffotpay.TabIndex = 20
-        Me.txtnightdiffotpay.Tag = "Numeric"
-        Me.txtnightdiffotpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtshftEffFrom
-        '
-        Me.txtshftEffFrom.BackColor = System.Drawing.Color.White
-        Me.txtshftEffFrom.Location = New System.Drawing.Point(110, 134)
-        Me.txtshftEffFrom.Name = "txtshftEffFrom"
-        Me.txtshftEffFrom.ReadOnly = True
-        Me.txtshftEffFrom.Size = New System.Drawing.Size(80, 20)
-        Me.txtshftEffFrom.TabIndex = 1
-        Me.txtshftEffFrom.Tag = "String"
-        '
-        'txtnightdiffpay
-        '
-        Me.txtnightdiffpay.BackColor = System.Drawing.Color.White
-        Me.txtnightdiffpay.Location = New System.Drawing.Point(556, 239)
-        Me.txtnightdiffpay.Name = "txtnightdiffpay"
-        Me.txtnightdiffpay.ShortcutsEnabled = False
-        Me.txtnightdiffpay.Size = New System.Drawing.Size(80, 20)
-        Me.txtnightdiffpay.TabIndex = 18
-        Me.txtnightdiffpay.Tag = "Numeric"
-        Me.txtnightdiffpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtshftEffTo
-        '
-        Me.txtshftEffTo.BackColor = System.Drawing.Color.White
-        Me.txtshftEffTo.Location = New System.Drawing.Point(110, 159)
-        Me.txtshftEffTo.Name = "txtshftEffTo"
-        Me.txtshftEffTo.ReadOnly = True
-        Me.txtshftEffTo.Size = New System.Drawing.Size(80, 20)
-        Me.txtshftEffTo.TabIndex = 2
-        Me.txtshftEffTo.Tag = "String"
-        '
-        'Label27
-        '
-        Me.Label27.AutoSize = True
-        Me.Label27.Location = New System.Drawing.Point(429, 246)
-        Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(103, 13)
-        Me.Label27.TabIndex = 468
-        Me.Label27.Text = "Night differential pay"
-        '
-        'txtshftTimeFrom
-        '
-        Me.txtshftTimeFrom.BackColor = System.Drawing.Color.White
-        Me.txtshftTimeFrom.Location = New System.Drawing.Point(110, 184)
-        Me.txtshftTimeFrom.Name = "txtshftTimeFrom"
-        Me.txtshftTimeFrom.ReadOnly = True
-        Me.txtshftTimeFrom.Size = New System.Drawing.Size(80, 20)
-        Me.txtshftTimeFrom.TabIndex = 3
-        Me.txtshftTimeFrom.Tag = "String"
-        '
-        'txtnightdiff
-        '
-        Me.txtnightdiff.BackColor = System.Drawing.Color.White
-        Me.txtnightdiff.Location = New System.Drawing.Point(343, 239)
-        Me.txtnightdiff.Name = "txtnightdiff"
-        Me.txtnightdiff.ShortcutsEnabled = False
-        Me.txtnightdiff.Size = New System.Drawing.Size(80, 20)
-        Me.txtnightdiff.TabIndex = 17
-        Me.txtnightdiff.Tag = "Numeric"
-        Me.txtnightdiff.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtshftTimeTo
-        '
-        Me.txtshftTimeTo.BackColor = System.Drawing.Color.White
-        Me.txtshftTimeTo.Location = New System.Drawing.Point(110, 210)
-        Me.txtshftTimeTo.Name = "txtshftTimeTo"
-        Me.txtshftTimeTo.ReadOnly = True
-        Me.txtshftTimeTo.Size = New System.Drawing.Size(80, 20)
-        Me.txtshftTimeTo.TabIndex = 4
-        Me.txtshftTimeTo.Tag = "String"
-        '
-        'Label26
-        '
-        Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(429, 220)
-        Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(66, 13)
-        Me.Label26.TabIndex = 466
-        Me.Label26.Text = "Late amount"
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(8, 141)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(96, 13)
-        Me.Label4.TabIndex = 146
-        Me.Label4.Text = "Effective date from"
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(8, 166)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(85, 13)
-        Me.Label5.TabIndex = 147
-        Me.Label5.Text = "Effective date to"
-        '
-        'txtEmpID
-        '
-        Me.txtEmpID.BackColor = System.Drawing.Color.White
-        Me.txtEmpID.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtEmpID.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtEmpID.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
-        Me.txtEmpID.Location = New System.Drawing.Point(11, 87)
-        Me.txtEmpID.MaxLength = 50
-        Me.txtEmpID.Name = "txtEmpID"
-        Me.txtEmpID.ReadOnly = True
-        Me.txtEmpID.Size = New System.Drawing.Size(516, 22)
-        Me.txtEmpID.TabIndex = 161
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(8, 191)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(69, 13)
-        Me.Label6.TabIndex = 148
-        Me.Label6.Text = "Duty starts at"
-        '
-        'txtlateamount
-        '
-        Me.txtlateamount.BackColor = System.Drawing.Color.White
-        Me.txtlateamount.Location = New System.Drawing.Point(556, 213)
-        Me.txtlateamount.Name = "txtlateamount"
-        Me.txtlateamount.ShortcutsEnabled = False
-        Me.txtlateamount.Size = New System.Drawing.Size(80, 20)
-        Me.txtlateamount.TabIndex = 16
-        Me.txtlateamount.Tag = "Numeric"
-        Me.txtlateamount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(8, 217)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(67, 13)
-        Me.Label7.TabIndex = 149
-        Me.Label7.Text = "Duty ends at"
-        '
-        'Label24
-        '
-        Me.Label24.AutoSize = True
-        Me.Label24.Location = New System.Drawing.Point(429, 194)
-        Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(93, 13)
-        Me.Label24.TabIndex = 464
-        Me.Label24.Text = "Undertime amount"
-        '
-        'txthrsworkd
-        '
-        Me.txthrsworkd.BackColor = System.Drawing.Color.White
-        Me.txthrsworkd.Location = New System.Drawing.Point(343, 109)
-        Me.txthrsworkd.Name = "txthrsworkd"
-        Me.txthrsworkd.ShortcutsEnabled = False
-        Me.txthrsworkd.Size = New System.Drawing.Size(80, 20)
-        Me.txthrsworkd.TabIndex = 7
-        Me.txthrsworkd.Tag = "Numeric"
-        Me.txthrsworkd.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtutamount
-        '
-        Me.txtutamount.BackColor = System.Drawing.Color.White
-        Me.txtutamount.Location = New System.Drawing.Point(556, 187)
-        Me.txtutamount.Name = "txtutamount"
-        Me.txtutamount.ShortcutsEnabled = False
-        Me.txtutamount.Size = New System.Drawing.Size(80, 20)
-        Me.txtutamount.TabIndex = 14
-        Me.txtutamount.Tag = "Numeric"
-        Me.txtutamount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txthrsOT
-        '
-        Me.txthrsOT.BackColor = System.Drawing.Color.White
-        Me.txthrsOT.Location = New System.Drawing.Point(343, 161)
-        Me.txthrsOT.Name = "txthrsOT"
-        Me.txthrsOT.ShortcutsEnabled = False
-        Me.txthrsOT.Size = New System.Drawing.Size(80, 20)
-        Me.txthrsOT.TabIndex = 11
-        Me.txthrsOT.Tag = "Numeric"
-        Me.txthrsOT.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label23
-        '
-        Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(429, 168)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(69, 13)
-        Me.Label23.TabIndex = 461
-        Me.Label23.Text = "Overtime pay"
-        '
-        'txthrsUT
-        '
-        Me.txthrsUT.BackColor = System.Drawing.Color.White
-        Me.txthrsUT.Location = New System.Drawing.Point(343, 187)
-        Me.txthrsUT.Name = "txthrsUT"
-        Me.txthrsUT.ShortcutsEnabled = False
-        Me.txthrsUT.Size = New System.Drawing.Size(80, 20)
-        Me.txthrsUT.TabIndex = 13
-        Me.txthrsUT.Tag = "Numeric"
-        Me.txthrsUT.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtotpay
-        '
-        Me.txtotpay.BackColor = System.Drawing.Color.White
-        Me.txtotpay.Location = New System.Drawing.Point(556, 161)
-        Me.txtotpay.Name = "txtotpay"
-        Me.txtotpay.ShortcutsEnabled = False
-        Me.txtotpay.Size = New System.Drawing.Size(80, 20)
-        Me.txtotpay.TabIndex = 12
-        Me.txtotpay.Tag = "Numeric"
-        Me.txtotpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtnightdiffOT
-        '
-        Me.txtnightdiffOT.BackColor = System.Drawing.Color.White
-        Me.txtnightdiffOT.Location = New System.Drawing.Point(343, 265)
-        Me.txtnightdiffOT.Name = "txtnightdiffOT"
-        Me.txtnightdiffOT.ShortcutsEnabled = False
-        Me.txtnightdiffOT.Size = New System.Drawing.Size(80, 20)
-        Me.txtnightdiffOT.TabIndex = 19
-        Me.txtnightdiffOT.Tag = "Numeric"
-        Me.txtnightdiffOT.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(429, 141)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(64, 13)
-        Me.Label17.TabIndex = 460
-        Me.Label17.Text = "Regular pay"
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(199, 194)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(55, 13)
-        Me.Label8.TabIndex = 160
-        Me.Label8.Text = "Undertime"
-        '
-        'txtregpay
-        '
-        Me.txtregpay.BackColor = System.Drawing.Color.White
-        Me.txtregpay.Location = New System.Drawing.Point(556, 135)
-        Me.txtregpay.Name = "txtregpay"
-        Me.txtregpay.ShortcutsEnabled = False
-        Me.txtregpay.Size = New System.Drawing.Size(80, 20)
-        Me.txtregpay.TabIndex = 10
-        Me.txtregpay.Tag = "Numeric"
-        Me.txtregpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(199, 168)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(104, 13)
-        Me.Label9.TabIndex = 161
-        Me.Label9.Text = "Overtime hrs worked"
-        '
-        'Label22
-        '
-        Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(199, 142)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(99, 13)
-        Me.Label22.TabIndex = 458
-        Me.Label22.Text = "Regular hrs worked"
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(199, 116)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(86, 13)
-        Me.Label10.TabIndex = 162
-        Me.Label10.Text = "Total hrs worked"
-        '
-        'txtreghrsworkd
-        '
-        Me.txtreghrsworkd.BackColor = System.Drawing.Color.White
-        Me.txtreghrsworkd.Location = New System.Drawing.Point(343, 135)
-        Me.txtreghrsworkd.Name = "txtreghrsworkd"
-        Me.txtreghrsworkd.ShortcutsEnabled = False
-        Me.txtreghrsworkd.Size = New System.Drawing.Size(80, 20)
-        Me.txtreghrsworkd.TabIndex = 9
-        Me.txtreghrsworkd.Tag = "Numeric"
-        Me.txtreghrsworkd.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label18
-        '
-        Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(199, 246)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(138, 13)
-        Me.Label18.TabIndex = 164
-        Me.Label18.Text = "Night differential hrs worked"
-        '
-        'Label19
-        '
-        Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(199, 272)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(118, 13)
-        Me.Label19.TabIndex = 165
-        Me.Label19.Text = "Night differential OT hrs"
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(199, 220)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(61, 13)
-        Me.Label20.TabIndex = 167
-        Me.Label20.Text = "Hour(s) late"
-        '
-        'txthrslate
-        '
-        Me.txthrslate.BackColor = System.Drawing.Color.White
-        Me.txthrslate.Location = New System.Drawing.Point(343, 213)
-        Me.txthrslate.Name = "txthrslate"
-        Me.txthrslate.ShortcutsEnabled = False
-        Me.txthrslate.Size = New System.Drawing.Size(80, 20)
-        Me.txthrslate.TabIndex = 15
-        Me.txthrslate.Tag = "Numeric"
-        Me.txthrslate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label25
         '
@@ -2279,10 +1337,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn1
         '
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle11.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle11.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn1.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn1.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.ReadOnly = True
@@ -2292,10 +1350,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn2
         '
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle12.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridViewTextBoxColumn2.HeaderText = "EmployeeID"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
         Me.DataGridViewTextBoxColumn2.ReadOnly = True
@@ -2306,10 +1364,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn3
         '
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle5
         Me.DataGridViewTextBoxColumn3.HeaderText = "Award Type"
         Me.DataGridViewTextBoxColumn3.MaxInputLength = 500
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
@@ -2319,10 +1377,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn4
         '
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle14.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle6
         Me.DataGridViewTextBoxColumn4.HeaderText = "Award Description"
         Me.DataGridViewTextBoxColumn4.MaxInputLength = 500
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
@@ -2333,10 +1391,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn5
         '
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle15.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle7.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle7
         Me.DataGridViewTextBoxColumn5.HeaderText = "Date awarded"
         Me.DataGridViewTextBoxColumn5.MaxInputLength = 500
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
@@ -2346,10 +1404,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn6
         '
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle16.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle8
         Me.DataGridViewTextBoxColumn6.HeaderText = "Column6"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.ReadOnly = True
@@ -2359,10 +1417,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn7
         '
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle17.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle9
         Me.DataGridViewTextBoxColumn7.HeaderText = "Column7"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -2412,10 +1470,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn13
         '
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle10.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle10
         Me.DataGridViewTextBoxColumn13.HeaderText = "Middle Name"
         Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
         Me.DataGridViewTextBoxColumn13.ReadOnly = True
@@ -2425,10 +1483,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn14
         '
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle19.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle11.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle11.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle11
         Me.DataGridViewTextBoxColumn14.HeaderText = "Last Name"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
         Me.DataGridViewTextBoxColumn14.ReadOnly = True
@@ -2437,10 +1495,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn15
         '
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle20.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle12.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle12
         Me.DataGridViewTextBoxColumn15.HeaderText = "Surname"
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
         Me.DataGridViewTextBoxColumn15.ReadOnly = True
@@ -2450,10 +1508,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn16
         '
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle21.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle13.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle13
         Me.DataGridViewTextBoxColumn16.HeaderText = "Column16"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
         Me.DataGridViewTextBoxColumn16.ReadOnly = True
@@ -2462,10 +1520,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn17
         '
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle22.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle14.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridViewTextBoxColumn17.HeaderText = "Column17"
         Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
         Me.DataGridViewTextBoxColumn17.ReadOnly = True
@@ -2474,10 +1532,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn18
         '
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle23.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle23.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle15.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle15
         Me.DataGridViewTextBoxColumn18.HeaderText = "Column18"
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
         Me.DataGridViewTextBoxColumn18.ReadOnly = True
@@ -2486,10 +1544,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn19
         '
-        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle24.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle24.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle16.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle16
         Me.DataGridViewTextBoxColumn19.HeaderText = "Total hours worked"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.ReadOnly = True
@@ -2628,10 +1686,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn40
         '
-        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle25.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle25.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn40.DefaultCellStyle = DataGridViewCellStyle25
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle17.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn40.DefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridViewTextBoxColumn40.HeaderText = "Last Update by"
         Me.DataGridViewTextBoxColumn40.MaxInputLength = 500
         Me.DataGridViewTextBoxColumn40.Name = "DataGridViewTextBoxColumn40"
@@ -2639,10 +1697,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn41
         '
-        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle26.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle26.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn41.DefaultCellStyle = DataGridViewCellStyle26
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle18.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn41.DefaultCellStyle = DataGridViewCellStyle18
         Me.DataGridViewTextBoxColumn41.HeaderText = "PositionID"
         Me.DataGridViewTextBoxColumn41.Name = "DataGridViewTextBoxColumn41"
         Me.DataGridViewTextBoxColumn41.ReadOnly = True
@@ -2651,10 +1709,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn42
         '
-        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle27.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle27.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn42.DefaultCellStyle = DataGridViewCellStyle27
+        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle19.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn42.DefaultCellStyle = DataGridViewCellStyle19
         Me.DataGridViewTextBoxColumn42.HeaderText = "PayFrequencyID"
         Me.DataGridViewTextBoxColumn42.Name = "DataGridViewTextBoxColumn42"
         Me.DataGridViewTextBoxColumn42.ReadOnly = True
@@ -2663,10 +1721,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn43
         '
-        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle28.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle28.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn43.DefaultCellStyle = DataGridViewCellStyle28
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle20.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn43.DefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewTextBoxColumn43.HeaderText = "LeavePerPayPeriod"
         Me.DataGridViewTextBoxColumn43.Name = "DataGridViewTextBoxColumn43"
         Me.DataGridViewTextBoxColumn43.ReadOnly = True
@@ -2675,10 +1733,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn44
         '
-        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle29.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle29.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn44.DefaultCellStyle = DataGridViewCellStyle29
+        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle21.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn44.DefaultCellStyle = DataGridViewCellStyle21
         Me.DataGridViewTextBoxColumn44.HeaderText = "EmployeeType"
         Me.DataGridViewTextBoxColumn44.Name = "DataGridViewTextBoxColumn44"
         Me.DataGridViewTextBoxColumn44.ReadOnly = True
@@ -2687,10 +1745,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn45
         '
-        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle30.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle30.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn45.DefaultCellStyle = DataGridViewCellStyle30
+        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle22.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn45.DefaultCellStyle = DataGridViewCellStyle22
         Me.DataGridViewTextBoxColumn45.HeaderText = "FRIDAY"
         Me.DataGridViewTextBoxColumn45.Name = "DataGridViewTextBoxColumn45"
         Me.DataGridViewTextBoxColumn45.ReadOnly = True
@@ -2698,10 +1756,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn46
         '
-        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle31.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle31.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn46.DefaultCellStyle = DataGridViewCellStyle31
+        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle23.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle23.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn46.DefaultCellStyle = DataGridViewCellStyle23
         Me.DataGridViewTextBoxColumn46.HeaderText = "SATURDAY"
         Me.DataGridViewTextBoxColumn46.Name = "DataGridViewTextBoxColumn46"
         Me.DataGridViewTextBoxColumn46.ReadOnly = True
@@ -2709,10 +1767,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn47
         '
-        DataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle32.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle32.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn47.DefaultCellStyle = DataGridViewCellStyle32
+        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle24.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle24.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn47.DefaultCellStyle = DataGridViewCellStyle24
         Me.DataGridViewTextBoxColumn47.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn47.Name = "DataGridViewTextBoxColumn47"
         Me.DataGridViewTextBoxColumn47.ReadOnly = True
@@ -2720,10 +1778,10 @@ Partial Class TimeEntrySummary
         '
         'DataGridViewTextBoxColumn48
         '
-        DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle33.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle33.ForeColor = System.Drawing.Color.DimGray
-        Me.DataGridViewTextBoxColumn48.DefaultCellStyle = DataGridViewCellStyle33
+        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle25.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle25.ForeColor = System.Drawing.Color.DimGray
+        Me.DataGridViewTextBoxColumn48.DefaultCellStyle = DataGridViewCellStyle25
         Me.DataGridViewTextBoxColumn48.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn48.Name = "DataGridViewTextBoxColumn48"
         Me.DataGridViewTextBoxColumn48.ReadOnly = True
@@ -3003,10 +2061,10 @@ Partial Class TimeEntrySummary
         '
         'col_sat
         '
-        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle34.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle34.ForeColor = System.Drawing.Color.DimGray
-        Me.col_sat.DefaultCellStyle = DataGridViewCellStyle34
+        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle26.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle26.ForeColor = System.Drawing.Color.DimGray
+        Me.col_sat.DefaultCellStyle = DataGridViewCellStyle26
         Me.col_sat.HeaderText = "SATURDAY"
         Me.col_sat.Name = "col_sat"
         Me.col_sat.ReadOnly = True
@@ -3014,10 +2072,10 @@ Partial Class TimeEntrySummary
         '
         'col_fri
         '
-        DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle35.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle35.ForeColor = System.Drawing.Color.DimGray
-        Me.col_fri.DefaultCellStyle = DataGridViewCellStyle35
+        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle27.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle27.ForeColor = System.Drawing.Color.DimGray
+        Me.col_fri.DefaultCellStyle = DataGridViewCellStyle27
         Me.col_fri.HeaderText = "FRIDAY"
         Me.col_fri.Name = "col_fri"
         Me.col_fri.ReadOnly = True
@@ -3025,10 +2083,10 @@ Partial Class TimeEntrySummary
         '
         'col_thu
         '
-        DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle36.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle36.ForeColor = System.Drawing.Color.DimGray
-        Me.col_thu.DefaultCellStyle = DataGridViewCellStyle36
+        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle28.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle28.ForeColor = System.Drawing.Color.DimGray
+        Me.col_thu.DefaultCellStyle = DataGridViewCellStyle28
         Me.col_thu.HeaderText = "THURSDAY"
         Me.col_thu.Name = "col_thu"
         Me.col_thu.ReadOnly = True
@@ -3036,10 +2094,10 @@ Partial Class TimeEntrySummary
         '
         'col_wed
         '
-        DataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle37.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle37.ForeColor = System.Drawing.Color.DimGray
-        Me.col_wed.DefaultCellStyle = DataGridViewCellStyle37
+        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle29.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle29.ForeColor = System.Drawing.Color.DimGray
+        Me.col_wed.DefaultCellStyle = DataGridViewCellStyle29
         Me.col_wed.HeaderText = "WEDNESDAY"
         Me.col_wed.Name = "col_wed"
         Me.col_wed.ReadOnly = True
@@ -3047,10 +2105,10 @@ Partial Class TimeEntrySummary
         '
         'col_tue
         '
-        DataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle38.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle38.ForeColor = System.Drawing.Color.DimGray
-        Me.col_tue.DefaultCellStyle = DataGridViewCellStyle38
+        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle30.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle30.ForeColor = System.Drawing.Color.DimGray
+        Me.col_tue.DefaultCellStyle = DataGridViewCellStyle30
         Me.col_tue.HeaderText = "TUESDAY"
         Me.col_tue.Name = "col_tue"
         Me.col_tue.ReadOnly = True
@@ -3058,10 +2116,10 @@ Partial Class TimeEntrySummary
         '
         'col_mon
         '
-        DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle39.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle39.ForeColor = System.Drawing.Color.DimGray
-        Me.col_mon.DefaultCellStyle = DataGridViewCellStyle39
+        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle31.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle31.ForeColor = System.Drawing.Color.DimGray
+        Me.col_mon.DefaultCellStyle = DataGridViewCellStyle31
         Me.col_mon.HeaderText = "MONDAY"
         Me.col_mon.Name = "col_mon"
         Me.col_mon.ReadOnly = True
@@ -3069,121 +2127,14 @@ Partial Class TimeEntrySummary
         '
         'col_sun
         '
-        DataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle40.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle40.ForeColor = System.Drawing.Color.DimGray
-        Me.col_sun.DefaultCellStyle = DataGridViewCellStyle40
+        DataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
+        DataGridViewCellStyle32.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle32.ForeColor = System.Drawing.Color.DimGray
+        Me.col_sun.DefaultCellStyle = DataGridViewCellStyle32
         Me.col_sun.HeaderText = "SUNDAY"
         Me.col_sun.Name = "col_sun"
         Me.col_sun.ReadOnly = True
         Me.col_sun.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column7
-        '
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle10.ForeColor = System.Drawing.Color.DimGray
-        Me.Column7.DefaultCellStyle = DataGridViewCellStyle10
-        Me.Column7.HeaderText = "SATURDAY"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        Me.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column6
-        '
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.DimGray
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle9
-        Me.Column6.HeaderText = "FRIDAY"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        Me.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column5
-        '
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.DimGray
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle8
-        Me.Column5.HeaderText = "THURSDAY"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        Me.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column4
-        '
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.Color.DimGray
-        Me.Column4.DefaultCellStyle = DataGridViewCellStyle7
-        Me.Column4.HeaderText = "WEDNESDAY"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        Me.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column3
-        '
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.DimGray
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle6
-        Me.Column3.HeaderText = "TUESDAY"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        Me.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column2
-        '
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.Color.DimGray
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle5
-        Me.Column2.HeaderText = "MONDAY"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        Me.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column1
-        '
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.DimGray
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle4
-        Me.Column1.HeaderText = "SUNDAY"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        Me.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'dgvcalendar
-        '
-        Me.dgvcalendar.AllowUserToAddRows = False
-        Me.dgvcalendar.AllowUserToDeleteRows = False
-        Me.dgvcalendar.AllowUserToResizeColumns = False
-        Me.dgvcalendar.AllowUserToResizeRows = False
-        Me.dgvcalendar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.dgvcalendar.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.DimGray
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(232, Byte), Integer))
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvcalendar.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.dgvcalendar.ColumnHeadersHeight = 45
-        Me.dgvcalendar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvcalendar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7})
-        Me.dgvcalendar.Location = New System.Drawing.Point(4, 307)
-        Me.dgvcalendar.MultiSelect = False
-        Me.dgvcalendar.Name = "dgvcalendar"
-        Me.dgvcalendar.ReadOnly = True
-        Me.dgvcalendar.RowHeadersVisible = False
-        Me.dgvcalendar.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvcalendar.RowTemplate.Height = 95
-        Me.dgvcalendar.ScrollBars = System.Windows.Forms.ScrollBars.None
-        Me.dgvcalendar.Size = New System.Drawing.Size(822, 332)
-        Me.dgvcalendar.TabIndex = 28
         '
         'cemp_RowID
         '
@@ -3212,6 +2163,930 @@ Partial Class TimeEntrySummary
         Me.cemp_FirstName.HeaderText = "First Name"
         Me.cemp_FirstName.Name = "cemp_FirstName"
         Me.cemp_FirstName.ReadOnly = True
+        '
+        'txthrslate
+        '
+        Me.txthrslate.BackColor = System.Drawing.Color.White
+        Me.txthrslate.Location = New System.Drawing.Point(343, 213)
+        Me.txthrslate.Name = "txthrslate"
+        Me.txthrslate.ShortcutsEnabled = False
+        Me.txthrslate.Size = New System.Drawing.Size(80, 20)
+        Me.txthrslate.TabIndex = 15
+        Me.txthrslate.Tag = "Numeric"
+        Me.txthrslate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(199, 220)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(61, 13)
+        Me.Label20.TabIndex = 167
+        Me.Label20.Text = "Hour(s) late"
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(199, 272)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(118, 13)
+        Me.Label19.TabIndex = 165
+        Me.Label19.Text = "Night differential OT hrs"
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(199, 246)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(138, 13)
+        Me.Label18.TabIndex = 164
+        Me.Label18.Text = "Night differential hrs worked"
+        '
+        'txtreghrsworkd
+        '
+        Me.txtreghrsworkd.BackColor = System.Drawing.Color.White
+        Me.txtreghrsworkd.Location = New System.Drawing.Point(343, 135)
+        Me.txtreghrsworkd.Name = "txtreghrsworkd"
+        Me.txtreghrsworkd.ShortcutsEnabled = False
+        Me.txtreghrsworkd.Size = New System.Drawing.Size(80, 20)
+        Me.txtreghrsworkd.TabIndex = 9
+        Me.txtreghrsworkd.Tag = "Numeric"
+        Me.txtreghrsworkd.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(199, 116)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(86, 13)
+        Me.Label10.TabIndex = 162
+        Me.Label10.Text = "Total hrs worked"
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Location = New System.Drawing.Point(199, 142)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(99, 13)
+        Me.Label22.TabIndex = 458
+        Me.Label22.Text = "Regular hrs worked"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(199, 168)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(104, 13)
+        Me.Label9.TabIndex = 161
+        Me.Label9.Text = "Overtime hrs worked"
+        '
+        'txtregpay
+        '
+        Me.txtregpay.BackColor = System.Drawing.Color.White
+        Me.txtregpay.Location = New System.Drawing.Point(556, 135)
+        Me.txtregpay.Name = "txtregpay"
+        Me.txtregpay.ShortcutsEnabled = False
+        Me.txtregpay.Size = New System.Drawing.Size(80, 20)
+        Me.txtregpay.TabIndex = 10
+        Me.txtregpay.Tag = "Numeric"
+        Me.txtregpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(199, 194)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(55, 13)
+        Me.Label8.TabIndex = 160
+        Me.Label8.Text = "Undertime"
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(429, 141)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(64, 13)
+        Me.Label17.TabIndex = 460
+        Me.Label17.Text = "Regular pay"
+        '
+        'txtnightdiffOT
+        '
+        Me.txtnightdiffOT.BackColor = System.Drawing.Color.White
+        Me.txtnightdiffOT.Location = New System.Drawing.Point(343, 265)
+        Me.txtnightdiffOT.Name = "txtnightdiffOT"
+        Me.txtnightdiffOT.ShortcutsEnabled = False
+        Me.txtnightdiffOT.Size = New System.Drawing.Size(80, 20)
+        Me.txtnightdiffOT.TabIndex = 19
+        Me.txtnightdiffOT.Tag = "Numeric"
+        Me.txtnightdiffOT.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txtotpay
+        '
+        Me.txtotpay.BackColor = System.Drawing.Color.White
+        Me.txtotpay.Location = New System.Drawing.Point(556, 161)
+        Me.txtotpay.Name = "txtotpay"
+        Me.txtotpay.ShortcutsEnabled = False
+        Me.txtotpay.Size = New System.Drawing.Size(80, 20)
+        Me.txtotpay.TabIndex = 12
+        Me.txtotpay.Tag = "Numeric"
+        Me.txtotpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txthrsUT
+        '
+        Me.txthrsUT.BackColor = System.Drawing.Color.White
+        Me.txthrsUT.Location = New System.Drawing.Point(343, 187)
+        Me.txthrsUT.Name = "txthrsUT"
+        Me.txthrsUT.ShortcutsEnabled = False
+        Me.txthrsUT.Size = New System.Drawing.Size(80, 20)
+        Me.txthrsUT.TabIndex = 13
+        Me.txthrsUT.Tag = "Numeric"
+        Me.txthrsUT.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(429, 168)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(69, 13)
+        Me.Label23.TabIndex = 461
+        Me.Label23.Text = "Overtime pay"
+        '
+        'txthrsOT
+        '
+        Me.txthrsOT.BackColor = System.Drawing.Color.White
+        Me.txthrsOT.Location = New System.Drawing.Point(343, 161)
+        Me.txthrsOT.Name = "txthrsOT"
+        Me.txthrsOT.ShortcutsEnabled = False
+        Me.txthrsOT.Size = New System.Drawing.Size(80, 20)
+        Me.txthrsOT.TabIndex = 11
+        Me.txthrsOT.Tag = "Numeric"
+        Me.txthrsOT.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txtutamount
+        '
+        Me.txtutamount.BackColor = System.Drawing.Color.White
+        Me.txtutamount.Location = New System.Drawing.Point(556, 187)
+        Me.txtutamount.Name = "txtutamount"
+        Me.txtutamount.ShortcutsEnabled = False
+        Me.txtutamount.Size = New System.Drawing.Size(80, 20)
+        Me.txtutamount.TabIndex = 14
+        Me.txtutamount.Tag = "Numeric"
+        Me.txtutamount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txthrsworkd
+        '
+        Me.txthrsworkd.BackColor = System.Drawing.Color.White
+        Me.txthrsworkd.Location = New System.Drawing.Point(343, 109)
+        Me.txthrsworkd.Name = "txthrsworkd"
+        Me.txthrsworkd.ShortcutsEnabled = False
+        Me.txthrsworkd.Size = New System.Drawing.Size(80, 20)
+        Me.txthrsworkd.TabIndex = 7
+        Me.txthrsworkd.Tag = "Numeric"
+        Me.txthrsworkd.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.Location = New System.Drawing.Point(429, 194)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(93, 13)
+        Me.Label24.TabIndex = 464
+        Me.Label24.Text = "Undertime amount"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(8, 217)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(67, 13)
+        Me.Label7.TabIndex = 149
+        Me.Label7.Text = "Duty ends at"
+        '
+        'txtlateamount
+        '
+        Me.txtlateamount.BackColor = System.Drawing.Color.White
+        Me.txtlateamount.Location = New System.Drawing.Point(556, 213)
+        Me.txtlateamount.Name = "txtlateamount"
+        Me.txtlateamount.ShortcutsEnabled = False
+        Me.txtlateamount.Size = New System.Drawing.Size(80, 20)
+        Me.txtlateamount.TabIndex = 16
+        Me.txtlateamount.Tag = "Numeric"
+        Me.txtlateamount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(8, 191)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(69, 13)
+        Me.Label6.TabIndex = 148
+        Me.Label6.Text = "Duty starts at"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(8, 166)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(85, 13)
+        Me.Label5.TabIndex = 147
+        Me.Label5.Text = "Effective date to"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(8, 141)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(96, 13)
+        Me.Label4.TabIndex = 146
+        Me.Label4.Text = "Effective date from"
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = True
+        Me.Label26.Location = New System.Drawing.Point(429, 220)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(66, 13)
+        Me.Label26.TabIndex = 466
+        Me.Label26.Text = "Late amount"
+        '
+        'txtshftTimeTo
+        '
+        Me.txtshftTimeTo.BackColor = System.Drawing.Color.White
+        Me.txtshftTimeTo.Location = New System.Drawing.Point(110, 210)
+        Me.txtshftTimeTo.Name = "txtshftTimeTo"
+        Me.txtshftTimeTo.ReadOnly = True
+        Me.txtshftTimeTo.Size = New System.Drawing.Size(80, 20)
+        Me.txtshftTimeTo.TabIndex = 4
+        Me.txtshftTimeTo.Tag = "String"
+        '
+        'txtnightdiff
+        '
+        Me.txtnightdiff.BackColor = System.Drawing.Color.White
+        Me.txtnightdiff.Location = New System.Drawing.Point(343, 239)
+        Me.txtnightdiff.Name = "txtnightdiff"
+        Me.txtnightdiff.ShortcutsEnabled = False
+        Me.txtnightdiff.Size = New System.Drawing.Size(80, 20)
+        Me.txtnightdiff.TabIndex = 17
+        Me.txtnightdiff.Tag = "Numeric"
+        Me.txtnightdiff.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txtshftTimeFrom
+        '
+        Me.txtshftTimeFrom.BackColor = System.Drawing.Color.White
+        Me.txtshftTimeFrom.Location = New System.Drawing.Point(110, 184)
+        Me.txtshftTimeFrom.Name = "txtshftTimeFrom"
+        Me.txtshftTimeFrom.ReadOnly = True
+        Me.txtshftTimeFrom.Size = New System.Drawing.Size(80, 20)
+        Me.txtshftTimeFrom.TabIndex = 3
+        Me.txtshftTimeFrom.Tag = "String"
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = True
+        Me.Label27.Location = New System.Drawing.Point(429, 246)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(103, 13)
+        Me.Label27.TabIndex = 468
+        Me.Label27.Text = "Night differential pay"
+        '
+        'txtshftEffTo
+        '
+        Me.txtshftEffTo.BackColor = System.Drawing.Color.White
+        Me.txtshftEffTo.Location = New System.Drawing.Point(110, 159)
+        Me.txtshftEffTo.Name = "txtshftEffTo"
+        Me.txtshftEffTo.ReadOnly = True
+        Me.txtshftEffTo.Size = New System.Drawing.Size(80, 20)
+        Me.txtshftEffTo.TabIndex = 2
+        Me.txtshftEffTo.Tag = "String"
+        '
+        'txtnightdiffpay
+        '
+        Me.txtnightdiffpay.BackColor = System.Drawing.Color.White
+        Me.txtnightdiffpay.Location = New System.Drawing.Point(556, 239)
+        Me.txtnightdiffpay.Name = "txtnightdiffpay"
+        Me.txtnightdiffpay.ShortcutsEnabled = False
+        Me.txtnightdiffpay.Size = New System.Drawing.Size(80, 20)
+        Me.txtnightdiffpay.TabIndex = 18
+        Me.txtnightdiffpay.Tag = "Numeric"
+        Me.txtnightdiffpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txtshftEffFrom
+        '
+        Me.txtshftEffFrom.BackColor = System.Drawing.Color.White
+        Me.txtshftEffFrom.Location = New System.Drawing.Point(110, 134)
+        Me.txtshftEffFrom.Name = "txtshftEffFrom"
+        Me.txtshftEffFrom.ReadOnly = True
+        Me.txtshftEffFrom.Size = New System.Drawing.Size(80, 20)
+        Me.txtshftEffFrom.TabIndex = 1
+        Me.txtshftEffFrom.Tag = "String"
+        '
+        'txtnightdiffotpay
+        '
+        Me.txtnightdiffotpay.BackColor = System.Drawing.Color.White
+        Me.txtnightdiffotpay.Location = New System.Drawing.Point(556, 265)
+        Me.txtnightdiffotpay.Name = "txtnightdiffotpay"
+        Me.txtnightdiffotpay.ShortcutsEnabled = False
+        Me.txtnightdiffotpay.Size = New System.Drawing.Size(80, 20)
+        Me.txtnightdiffotpay.TabIndex = 20
+        Me.txtnightdiffotpay.Tag = "Numeric"
+        Me.txtnightdiffotpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Location = New System.Drawing.Point(429, 272)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(121, 13)
+        Me.Label28.TabIndex = 470
+        Me.Label28.Text = "Night differential OT pay"
+        '
+        'txttotdaypay
+        '
+        Me.txttotdaypay.BackColor = System.Drawing.Color.White
+        Me.txttotdaypay.Location = New System.Drawing.Point(556, 109)
+        Me.txttotdaypay.Name = "txttotdaypay"
+        Me.txttotdaypay.ShortcutsEnabled = False
+        Me.txttotdaypay.Size = New System.Drawing.Size(80, 20)
+        Me.txttotdaypay.TabIndex = 8
+        Me.txttotdaypay.Tag = "Numeric"
+        Me.txttotdaypay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
+        Me.Label30.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label30.Location = New System.Drawing.Point(429, 116)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(71, 13)
+        Me.Label30.TabIndex = 472
+        Me.Label30.Text = "Total day pay"
+        '
+        'chknight
+        '
+        Me.chknight.AutoSize = True
+        Me.chknight.Enabled = False
+        Me.chknight.Location = New System.Drawing.Point(123, 237)
+        Me.chknight.Name = "chknight"
+        Me.chknight.Size = New System.Drawing.Size(73, 17)
+        Me.chknight.TabIndex = 5
+        Me.chknight.Text = "Night shift"
+        Me.chknight.UseVisualStyleBackColor = True
+        '
+        'chkrest
+        '
+        Me.chkrest.AutoSize = True
+        Me.chkrest.Enabled = False
+        Me.chkrest.Location = New System.Drawing.Point(123, 260)
+        Me.chkrest.Name = "chkrest"
+        Me.chkrest.Size = New System.Drawing.Size(68, 17)
+        Me.chkrest.TabIndex = 6
+        Me.chkrest.Text = "Rest day"
+        Me.chkrest.UseVisualStyleBackColor = True
+        '
+        'Label31
+        '
+        Me.Label31.AutoSize = True
+        Me.Label31.Location = New System.Drawing.Point(8, 116)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(53, 13)
+        Me.Label31.TabIndex = 476
+        Me.Label31.Text = "Basic pay"
+        '
+        'txtempbasicpay
+        '
+        Me.txtempbasicpay.BackColor = System.Drawing.Color.White
+        Me.txtempbasicpay.Location = New System.Drawing.Point(110, 109)
+        Me.txtempbasicpay.Name = "txtempbasicpay"
+        Me.txtempbasicpay.ReadOnly = True
+        Me.txtempbasicpay.Size = New System.Drawing.Size(80, 20)
+        Me.txtempbasicpay.TabIndex = 0
+        Me.txtempbasicpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txt_PayRate
+        '
+        Me.txt_PayRate.BackColor = System.Drawing.Color.White
+        Me.txt_PayRate.Location = New System.Drawing.Point(746, 135)
+        Me.txt_PayRate.Name = "txt_PayRate"
+        Me.txt_PayRate.ReadOnly = True
+        Me.txt_PayRate.Size = New System.Drawing.Size(80, 20)
+        Me.txt_PayRate.TabIndex = 22
+        Me.txt_PayRate.Tag = "Numeric"
+        Me.txt_PayRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txt_NightDifferentialOTRate
+        '
+        Me.txt_NightDifferentialOTRate.BackColor = System.Drawing.Color.White
+        Me.txt_NightDifferentialOTRate.Location = New System.Drawing.Point(746, 213)
+        Me.txt_NightDifferentialOTRate.Name = "txt_NightDifferentialOTRate"
+        Me.txt_NightDifferentialOTRate.ReadOnly = True
+        Me.txt_NightDifferentialOTRate.Size = New System.Drawing.Size(80, 20)
+        Me.txt_NightDifferentialOTRate.TabIndex = 25
+        Me.txt_NightDifferentialOTRate.Tag = "Numeric"
+        Me.txt_NightDifferentialOTRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txt_RestDayRate
+        '
+        Me.txt_RestDayRate.BackColor = System.Drawing.Color.White
+        Me.txt_RestDayRate.Location = New System.Drawing.Point(746, 239)
+        Me.txt_RestDayRate.Name = "txt_RestDayRate"
+        Me.txt_RestDayRate.ReadOnly = True
+        Me.txt_RestDayRate.Size = New System.Drawing.Size(80, 20)
+        Me.txt_RestDayRate.TabIndex = 26
+        Me.txt_RestDayRate.Tag = "Numeric"
+        Me.txt_RestDayRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txt_OvertimeRate
+        '
+        Me.txt_OvertimeRate.BackColor = System.Drawing.Color.White
+        Me.txt_OvertimeRate.Location = New System.Drawing.Point(746, 161)
+        Me.txt_OvertimeRate.Name = "txt_OvertimeRate"
+        Me.txt_OvertimeRate.ReadOnly = True
+        Me.txt_OvertimeRate.Size = New System.Drawing.Size(80, 20)
+        Me.txt_OvertimeRate.TabIndex = 23
+        Me.txt_OvertimeRate.Tag = "Numeric"
+        Me.txt_OvertimeRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txt_NightDifferentialRate
+        '
+        Me.txt_NightDifferentialRate.BackColor = System.Drawing.Color.White
+        Me.txt_NightDifferentialRate.Location = New System.Drawing.Point(746, 187)
+        Me.txt_NightDifferentialRate.Name = "txt_NightDifferentialRate"
+        Me.txt_NightDifferentialRate.ReadOnly = True
+        Me.txt_NightDifferentialRate.Size = New System.Drawing.Size(80, 20)
+        Me.txt_NightDifferentialRate.TabIndex = 24
+        Me.txt_NightDifferentialRate.Tag = "Numeric"
+        Me.txt_NightDifferentialRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label32
+        '
+        Me.Label32.AutoSize = True
+        Me.Label32.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.Label32.Location = New System.Drawing.Point(743, 91)
+        Me.Label32.Name = "Label32"
+        Me.Label32.Size = New System.Drawing.Size(54, 15)
+        Me.Label32.TabIndex = 484
+        Me.Label32.Text = "Pay rates"
+        '
+        'txt_RestDayOvertimeRate
+        '
+        Me.txt_RestDayOvertimeRate.BackColor = System.Drawing.Color.White
+        Me.txt_RestDayOvertimeRate.Location = New System.Drawing.Point(746, 265)
+        Me.txt_RestDayOvertimeRate.Name = "txt_RestDayOvertimeRate"
+        Me.txt_RestDayOvertimeRate.ReadOnly = True
+        Me.txt_RestDayOvertimeRate.Size = New System.Drawing.Size(80, 20)
+        Me.txt_RestDayOvertimeRate.TabIndex = 27
+        Me.txt_RestDayOvertimeRate.Tag = "Numeric"
+        Me.txt_RestDayOvertimeRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'prevyear
+        '
+        Me.prevyear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.prevyear.Image = CType(resources.GetObject("prevyear.Image"), System.Drawing.Image)
+        Me.prevyear.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.prevyear.Name = "prevyear"
+        Me.prevyear.Size = New System.Drawing.Size(52, 25)
+        Me.prevyear.Text = "← 2014"
+        '
+        'ToolStripSeparator14
+        '
+        Me.ToolStripSeparator14.Name = "ToolStripSeparator14"
+        Me.ToolStripSeparator14.Size = New System.Drawing.Size(6, 28)
+        '
+        'janmonth
+        '
+        Me.janmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.janmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstjan, Me.secjan})
+        Me.janmonth.Image = CType(resources.GetObject("janmonth.Image"), System.Drawing.Image)
+        Me.janmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.janmonth.Name = "janmonth"
+        Me.janmonth.Size = New System.Drawing.Size(50, 25)
+        Me.janmonth.Text = "   Jan "
+        '
+        'firstjan
+        '
+        Me.firstjan.Name = "firstjan"
+        Me.firstjan.Size = New System.Drawing.Size(100, 22)
+        Me.firstjan.Text = "1-15"
+        '
+        'secjan
+        '
+        Me.secjan.Name = "secjan"
+        Me.secjan.Size = New System.Drawing.Size(100, 22)
+        Me.secjan.Text = "16-"
+        '
+        'ToolStripSeparator15
+        '
+        Me.ToolStripSeparator15.Name = "ToolStripSeparator15"
+        Me.ToolStripSeparator15.Size = New System.Drawing.Size(6, 28)
+        '
+        'febmonth
+        '
+        Me.febmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.febmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstfeb, Me.secfeb})
+        Me.febmonth.Image = CType(resources.GetObject("febmonth.Image"), System.Drawing.Image)
+        Me.febmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.febmonth.Name = "febmonth"
+        Me.febmonth.Size = New System.Drawing.Size(51, 25)
+        Me.febmonth.Text = "   Feb "
+        '
+        'firstfeb
+        '
+        Me.firstfeb.Name = "firstfeb"
+        Me.firstfeb.Size = New System.Drawing.Size(100, 22)
+        Me.firstfeb.Text = "1-15"
+        '
+        'secfeb
+        '
+        Me.secfeb.Name = "secfeb"
+        Me.secfeb.Size = New System.Drawing.Size(100, 22)
+        Me.secfeb.Text = "16-"
+        '
+        'ToolStripSeparator16
+        '
+        Me.ToolStripSeparator16.Name = "ToolStripSeparator16"
+        Me.ToolStripSeparator16.Size = New System.Drawing.Size(6, 28)
+        '
+        'marmonth
+        '
+        Me.marmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.marmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstmar, Me.secmar})
+        Me.marmonth.Image = CType(resources.GetObject("marmonth.Image"), System.Drawing.Image)
+        Me.marmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.marmonth.Name = "marmonth"
+        Me.marmonth.Size = New System.Drawing.Size(53, 25)
+        Me.marmonth.Text = "   Mar "
+        '
+        'firstmar
+        '
+        Me.firstmar.Name = "firstmar"
+        Me.firstmar.Size = New System.Drawing.Size(100, 22)
+        Me.firstmar.Text = "1-15"
+        '
+        'secmar
+        '
+        Me.secmar.Name = "secmar"
+        Me.secmar.Size = New System.Drawing.Size(100, 22)
+        Me.secmar.Text = "16-"
+        '
+        'ToolStripSeparator17
+        '
+        Me.ToolStripSeparator17.Name = "ToolStripSeparator17"
+        Me.ToolStripSeparator17.Size = New System.Drawing.Size(6, 28)
+        '
+        'aprmonth
+        '
+        Me.aprmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.aprmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstapr, Me.secapr})
+        Me.aprmonth.Image = CType(resources.GetObject("aprmonth.Image"), System.Drawing.Image)
+        Me.aprmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.aprmonth.Name = "aprmonth"
+        Me.aprmonth.Size = New System.Drawing.Size(51, 25)
+        Me.aprmonth.Text = "   Apr "
+        '
+        'firstapr
+        '
+        Me.firstapr.Name = "firstapr"
+        Me.firstapr.Size = New System.Drawing.Size(100, 22)
+        Me.firstapr.Text = "1-15"
+        '
+        'secapr
+        '
+        Me.secapr.Name = "secapr"
+        Me.secapr.Size = New System.Drawing.Size(100, 22)
+        Me.secapr.Text = "16-"
+        '
+        'ToolStripSeparator18
+        '
+        Me.ToolStripSeparator18.Name = "ToolStripSeparator18"
+        Me.ToolStripSeparator18.Size = New System.Drawing.Size(6, 28)
+        '
+        'maymonth
+        '
+        Me.maymonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.maymonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstmay, Me.secmay})
+        Me.maymonth.Image = CType(resources.GetObject("maymonth.Image"), System.Drawing.Image)
+        Me.maymonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.maymonth.Name = "maymonth"
+        Me.maymonth.Size = New System.Drawing.Size(55, 25)
+        Me.maymonth.Text = "   May "
+        '
+        'firstmay
+        '
+        Me.firstmay.Name = "firstmay"
+        Me.firstmay.Size = New System.Drawing.Size(100, 22)
+        Me.firstmay.Text = "1-15"
+        '
+        'secmay
+        '
+        Me.secmay.Name = "secmay"
+        Me.secmay.Size = New System.Drawing.Size(100, 22)
+        Me.secmay.Text = "16-"
+        '
+        'ToolStripSeparator19
+        '
+        Me.ToolStripSeparator19.Name = "ToolStripSeparator19"
+        Me.ToolStripSeparator19.Size = New System.Drawing.Size(6, 28)
+        '
+        'junmonth
+        '
+        Me.junmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.junmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstjun, Me.secjun})
+        Me.junmonth.Image = CType(resources.GetObject("junmonth.Image"), System.Drawing.Image)
+        Me.junmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.junmonth.Name = "junmonth"
+        Me.junmonth.Size = New System.Drawing.Size(51, 25)
+        Me.junmonth.Text = "   Jun "
+        '
+        'firstjun
+        '
+        Me.firstjun.Name = "firstjun"
+        Me.firstjun.Size = New System.Drawing.Size(100, 22)
+        Me.firstjun.Text = "1-15"
+        '
+        'secjun
+        '
+        Me.secjun.Name = "secjun"
+        Me.secjun.Size = New System.Drawing.Size(100, 22)
+        Me.secjun.Text = "16-"
+        '
+        'ToolStripSeparator20
+        '
+        Me.ToolStripSeparator20.Name = "ToolStripSeparator20"
+        Me.ToolStripSeparator20.Size = New System.Drawing.Size(6, 28)
+        '
+        'julmonth
+        '
+        Me.julmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.julmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstjul, Me.secjul})
+        Me.julmonth.Image = CType(resources.GetObject("julmonth.Image"), System.Drawing.Image)
+        Me.julmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.julmonth.Name = "julmonth"
+        Me.julmonth.Size = New System.Drawing.Size(47, 25)
+        Me.julmonth.Text = "   Jul "
+        '
+        'firstjul
+        '
+        Me.firstjul.Name = "firstjul"
+        Me.firstjul.Size = New System.Drawing.Size(100, 22)
+        Me.firstjul.Text = "1-15"
+        '
+        'secjul
+        '
+        Me.secjul.Name = "secjul"
+        Me.secjul.Size = New System.Drawing.Size(100, 22)
+        Me.secjul.Text = "16-"
+        '
+        'ToolStripSeparator21
+        '
+        Me.ToolStripSeparator21.Name = "ToolStripSeparator21"
+        Me.ToolStripSeparator21.Size = New System.Drawing.Size(6, 28)
+        '
+        'augmonth
+        '
+        Me.augmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.augmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstaug, Me.secaug})
+        Me.augmonth.Image = CType(resources.GetObject("augmonth.Image"), System.Drawing.Image)
+        Me.augmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.augmonth.Name = "augmonth"
+        Me.augmonth.Size = New System.Drawing.Size(54, 25)
+        Me.augmonth.Text = "   Aug "
+        '
+        'firstaug
+        '
+        Me.firstaug.Name = "firstaug"
+        Me.firstaug.Size = New System.Drawing.Size(100, 22)
+        Me.firstaug.Text = "1-15"
+        '
+        'secaug
+        '
+        Me.secaug.Name = "secaug"
+        Me.secaug.Size = New System.Drawing.Size(100, 22)
+        Me.secaug.Text = "16-"
+        '
+        'ToolStripSeparator22
+        '
+        Me.ToolStripSeparator22.Name = "ToolStripSeparator22"
+        Me.ToolStripSeparator22.Size = New System.Drawing.Size(6, 28)
+        '
+        'sepmonth
+        '
+        Me.sepmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.sepmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstsep, Me.secsep})
+        Me.sepmonth.Image = CType(resources.GetObject("sepmonth.Image"), System.Drawing.Image)
+        Me.sepmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.sepmonth.Name = "sepmonth"
+        Me.sepmonth.Size = New System.Drawing.Size(52, 25)
+        Me.sepmonth.Text = "   Sep "
+        '
+        'firstsep
+        '
+        Me.firstsep.Name = "firstsep"
+        Me.firstsep.Size = New System.Drawing.Size(100, 22)
+        Me.firstsep.Text = "1-15"
+        '
+        'secsep
+        '
+        Me.secsep.Name = "secsep"
+        Me.secsep.Size = New System.Drawing.Size(100, 22)
+        Me.secsep.Text = "16-"
+        '
+        'ToolStripSeparator23
+        '
+        Me.ToolStripSeparator23.Name = "ToolStripSeparator23"
+        Me.ToolStripSeparator23.Size = New System.Drawing.Size(6, 28)
+        '
+        'octmonth
+        '
+        Me.octmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.octmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstoct, Me.secoct})
+        Me.octmonth.Image = CType(resources.GetObject("octmonth.Image"), System.Drawing.Image)
+        Me.octmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.octmonth.Name = "octmonth"
+        Me.octmonth.Size = New System.Drawing.Size(51, 25)
+        Me.octmonth.Text = "   Oct "
+        '
+        'firstoct
+        '
+        Me.firstoct.Name = "firstoct"
+        Me.firstoct.Size = New System.Drawing.Size(100, 22)
+        Me.firstoct.Text = "1-15"
+        '
+        'secoct
+        '
+        Me.secoct.Name = "secoct"
+        Me.secoct.Size = New System.Drawing.Size(100, 22)
+        Me.secoct.Text = "16-"
+        '
+        'ToolStripSeparator24
+        '
+        Me.ToolStripSeparator24.Name = "ToolStripSeparator24"
+        Me.ToolStripSeparator24.Size = New System.Drawing.Size(6, 28)
+        '
+        'novmonth
+        '
+        Me.novmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.novmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstnov, Me.secnov})
+        Me.novmonth.Image = CType(resources.GetObject("novmonth.Image"), System.Drawing.Image)
+        Me.novmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.novmonth.Name = "novmonth"
+        Me.novmonth.Size = New System.Drawing.Size(54, 25)
+        Me.novmonth.Text = "   Nov "
+        '
+        'firstnov
+        '
+        Me.firstnov.Name = "firstnov"
+        Me.firstnov.Size = New System.Drawing.Size(100, 22)
+        Me.firstnov.Text = "1-15"
+        '
+        'secnov
+        '
+        Me.secnov.Name = "secnov"
+        Me.secnov.Size = New System.Drawing.Size(100, 22)
+        Me.secnov.Text = "16-"
+        '
+        'ToolStripSeparator25
+        '
+        Me.ToolStripSeparator25.Name = "ToolStripSeparator25"
+        Me.ToolStripSeparator25.Size = New System.Drawing.Size(6, 28)
+        '
+        'decmonth
+        '
+        Me.decmonth.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.decmonth.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.firstdec, Me.secdec})
+        Me.decmonth.Image = CType(resources.GetObject("decmonth.Image"), System.Drawing.Image)
+        Me.decmonth.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.decmonth.Name = "decmonth"
+        Me.decmonth.Size = New System.Drawing.Size(53, 25)
+        Me.decmonth.Text = "   Dec "
+        '
+        'firstdec
+        '
+        Me.firstdec.Name = "firstdec"
+        Me.firstdec.Size = New System.Drawing.Size(100, 22)
+        Me.firstdec.Text = "1-15"
+        '
+        'secdec
+        '
+        Me.secdec.Name = "secdec"
+        Me.secdec.Size = New System.Drawing.Size(100, 22)
+        Me.secdec.Text = "16-"
+        '
+        'ToolStripSeparator26
+        '
+        Me.ToolStripSeparator26.Name = "ToolStripSeparator26"
+        Me.ToolStripSeparator26.Size = New System.Drawing.Size(6, 28)
+        '
+        'nxtyear
+        '
+        Me.nxtyear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.nxtyear.Image = CType(resources.GetObject("nxtyear.Image"), System.Drawing.Image)
+        Me.nxtyear.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.nxtyear.Name = "nxtyear"
+        Me.nxtyear.Size = New System.Drawing.Size(52, 25)
+        Me.nxtyear.Text = "2016 →"
+        '
+        'ToolStrip3
+        '
+        Me.ToolStrip3.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ToolStrip3.AutoSize = False
+        Me.ToolStrip3.Dock = System.Windows.Forms.DockStyle.None
+        Me.ToolStrip3.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ToolStrip3.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip3.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.prevyear, Me.ToolStripSeparator14, Me.janmonth, Me.ToolStripSeparator15, Me.febmonth, Me.ToolStripSeparator16, Me.marmonth, Me.ToolStripSeparator17, Me.aprmonth, Me.ToolStripSeparator18, Me.maymonth, Me.ToolStripSeparator19, Me.junmonth, Me.ToolStripSeparator20, Me.julmonth, Me.ToolStripSeparator21, Me.augmonth, Me.ToolStripSeparator22, Me.sepmonth, Me.ToolStripSeparator23, Me.octmonth, Me.ToolStripSeparator24, Me.novmonth, Me.ToolStripSeparator25, Me.decmonth, Me.ToolStripSeparator26, Me.nxtyear})
+        Me.ToolStrip3.Location = New System.Drawing.Point(28, 153)
+        Me.ToolStrip3.Name = "ToolStrip3"
+        Me.ToolStrip3.ShowItemToolTips = False
+        Me.ToolStrip3.Size = New System.Drawing.Size(5978, 28)
+        Me.ToolStrip3.TabIndex = 168
+        Me.ToolStrip3.Text = "ToolStrip3"
+        '
+        'Label33
+        '
+        Me.Label33.AutoSize = True
+        Me.Label33.Location = New System.Drawing.Point(642, 116)
+        Me.Label33.Name = "Label33"
+        Me.Label33.Size = New System.Drawing.Size(48, 13)
+        Me.Label33.TabIndex = 485
+        Me.Label33.Text = "Pay type"
+        '
+        'Label34
+        '
+        Me.Label34.AutoSize = True
+        Me.Label34.Location = New System.Drawing.Point(642, 142)
+        Me.Label34.Name = "Label34"
+        Me.Label34.Size = New System.Drawing.Size(48, 13)
+        Me.Label34.TabIndex = 486
+        Me.Label34.Text = "Pay type"
+        '
+        'Label35
+        '
+        Me.Label35.AutoSize = True
+        Me.Label35.Location = New System.Drawing.Point(642, 168)
+        Me.Label35.Name = "Label35"
+        Me.Label35.Size = New System.Drawing.Size(43, 13)
+        Me.Label35.TabIndex = 487
+        Me.Label35.Text = "OT rate"
+        '
+        'Label36
+        '
+        Me.Label36.AutoSize = True
+        Me.Label36.Location = New System.Drawing.Point(642, 194)
+        Me.Label36.Name = "Label36"
+        Me.Label36.Size = New System.Drawing.Size(104, 13)
+        Me.Label36.TabIndex = 488
+        Me.Label36.Text = "Night differential rate"
+        '
+        'Label37
+        '
+        Me.Label37.AutoSize = True
+        Me.Label37.Location = New System.Drawing.Point(642, 220)
+        Me.Label37.Name = "Label37"
+        Me.Label37.Size = New System.Drawing.Size(95, 13)
+        Me.Label37.TabIndex = 489
+        Me.Label37.Text = "Night difft'l OT rate"
+        '
+        'Label38
+        '
+        Me.Label38.AutoSize = True
+        Me.Label38.Location = New System.Drawing.Point(642, 246)
+        Me.Label38.Name = "Label38"
+        Me.Label38.Size = New System.Drawing.Size(70, 13)
+        Me.Label38.TabIndex = 490
+        Me.Label38.Text = "Rest day rate"
+        '
+        'Label39
+        '
+        Me.Label39.AutoSize = True
+        Me.Label39.Location = New System.Drawing.Point(642, 272)
+        Me.Label39.Name = "Label39"
+        Me.Label39.Size = New System.Drawing.Size(88, 13)
+        Me.Label39.TabIndex = 491
+        Me.Label39.Text = "Rest day OT rate"
+        '
+        'txt_PayType
+        '
+        Me.txt_PayType.BackColor = System.Drawing.Color.White
+        Me.txt_PayType.Location = New System.Drawing.Point(746, 109)
+        Me.txt_PayType.Name = "txt_PayType"
+        Me.txt_PayType.ReadOnly = True
+        Me.txt_PayType.Size = New System.Drawing.Size(80, 20)
+        Me.txt_PayType.TabIndex = 21
+        Me.txt_PayType.Tag = "String"
+        '
+        'txtEmpID
+        '
+        Me.txtEmpID.BackColor = System.Drawing.Color.White
+        Me.txtEmpID.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtEmpID.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtEmpID.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
+        Me.txtEmpID.Location = New System.Drawing.Point(11, 87)
+        Me.txtEmpID.MaxLength = 50
+        Me.txtEmpID.Name = "txtEmpID"
+        Me.txtEmpID.ReadOnly = True
+        Me.txtEmpID.Size = New System.Drawing.Size(516, 22)
+        Me.txtEmpID.TabIndex = 161
         '
         'TimeEntrySummary
         '
@@ -3249,7 +3124,6 @@ Partial Class TimeEntrySummary
         CType(Me.payPeriodDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip3.ResumeLayout(False)
         Me.ToolStrip3.PerformLayout()
-        CType(Me.dgvcalendar, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -3310,24 +3184,6 @@ Partial Class TimeEntrySummary
     Friend WithEvents txtSimple As System.Windows.Forms.TextBox
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
     Friend WithEvents tbpemptimeent As System.Windows.Forms.TabPage
-    Friend WithEvents txtshftEffFrom As System.Windows.Forms.TextBox
-    Friend WithEvents txtshftEffTo As System.Windows.Forms.TextBox
-    Friend WithEvents txtshftTimeTo As System.Windows.Forms.TextBox
-    Friend WithEvents txtshftTimeFrom As System.Windows.Forms.TextBox
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents txthrsOT As System.Windows.Forms.TextBox
-    Friend WithEvents txthrsworkd As System.Windows.Forms.TextBox
-    Friend WithEvents txtnightdiffOT As System.Windows.Forms.TextBox
-    Friend WithEvents txtnightdiff As System.Windows.Forms.TextBox
-    Friend WithEvents txthrsUT As System.Windows.Forms.TextBox
-    Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents Label18 As System.Windows.Forms.Label
-    Friend WithEvents Label19 As System.Windows.Forms.Label
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
     Friend WithEvents First As System.Windows.Forms.LinkLabel
@@ -3335,101 +3191,11 @@ Partial Class TimeEntrySummary
     Friend WithEvents Last As System.Windows.Forms.LinkLabel
     Friend WithEvents Nxt As System.Windows.Forms.LinkLabel
     Friend WithEvents bgwpayrate As System.ComponentModel.BackgroundWorker
-    Friend WithEvents txthrslate As System.Windows.Forms.TextBox
-    Friend WithEvents Label20 As System.Windows.Forms.Label
-    Friend WithEvents ToolStrip3 As System.Windows.Forms.ToolStrip
-    Friend WithEvents prevyear As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripSeparator14 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents janmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstjan As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secjan As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator15 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents febmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstfeb As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secfeb As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator16 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents marmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstmar As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secmar As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator17 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents aprmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstapr As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secapr As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator18 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents maymonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstmay As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secmay As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator19 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents junmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstjun As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secjun As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator20 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents julmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstjul As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secjul As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator21 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents augmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstaug As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secaug As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator22 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents sepmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstsep As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secsep As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator23 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents octmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstoct As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secoct As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator24 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents novmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstnov As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secnov As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator25 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents decmonth As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents firstdec As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents secdec As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator26 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents nxtyear As System.Windows.Forms.ToolStripButton
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents bgworkloademployees As System.ComponentModel.BackgroundWorker
-    Friend WithEvents Label22 As System.Windows.Forms.Label
-    Friend WithEvents txtreghrsworkd As System.Windows.Forms.TextBox
-    Friend WithEvents txtregpay As System.Windows.Forms.TextBox
-    Friend WithEvents Label17 As System.Windows.Forms.Label
-    Friend WithEvents Label23 As System.Windows.Forms.Label
-    Friend WithEvents txtotpay As System.Windows.Forms.TextBox
-    Friend WithEvents Label24 As System.Windows.Forms.Label
-    Friend WithEvents txtutamount As System.Windows.Forms.TextBox
-    Friend WithEvents Label26 As System.Windows.Forms.Label
-    Friend WithEvents txtlateamount As System.Windows.Forms.TextBox
-    Friend WithEvents txtnightdiffpay As System.Windows.Forms.TextBox
-    Friend WithEvents Label27 As System.Windows.Forms.Label
-    Friend WithEvents Label28 As System.Windows.Forms.Label
-    Friend WithEvents txtnightdiffotpay As System.Windows.Forms.TextBox
-    Friend WithEvents Label30 As System.Windows.Forms.Label
-    Friend WithEvents txttotdaypay As System.Windows.Forms.TextBox
-    Friend WithEvents chkrest As System.Windows.Forms.CheckBox
-    Friend WithEvents chknight As System.Windows.Forms.CheckBox
-    Friend WithEvents txtEmpID As System.Windows.Forms.TextBox
-    Friend WithEvents txtempbasicpay As System.Windows.Forms.TextBox
-    Friend WithEvents Label31 As System.Windows.Forms.Label
     Friend WithEvents tsbtnrecalc As System.Windows.Forms.ToolStripButton
-    Friend WithEvents txt_NightDifferentialRate As System.Windows.Forms.TextBox
-    Friend WithEvents txt_OvertimeRate As System.Windows.Forms.TextBox
-    Friend WithEvents txt_RestDayRate As System.Windows.Forms.TextBox
-    Friend WithEvents txt_NightDifferentialOTRate As System.Windows.Forms.TextBox
-    Friend WithEvents txt_PayRate As System.Windows.Forms.TextBox
-    Friend WithEvents txt_PayType As System.Windows.Forms.TextBox
-    Friend WithEvents Label32 As System.Windows.Forms.Label
-    Friend WithEvents txt_RestDayOvertimeRate As System.Windows.Forms.TextBox
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
-    Friend WithEvents Label33 As System.Windows.Forms.Label
-    Friend WithEvents Label34 As System.Windows.Forms.Label
-    Friend WithEvents Label35 As System.Windows.Forms.Label
-    Friend WithEvents Label36 As System.Windows.Forms.Label
-    Friend WithEvents Label37 As System.Windows.Forms.Label
-    Friend WithEvents Label38 As System.Windows.Forms.Label
-    Friend WithEvents Label39 As System.Windows.Forms.Label
     Friend WithEvents Label41 As System.Windows.Forms.Label
     Friend WithEvents btnRerfresh As System.Windows.Forms.Button
     Friend WithEvents DataGridViewTextBoxColumn16 As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -3569,16 +3335,116 @@ Partial Class TimeEntrySummary
     Friend WithEvents Column17 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column18 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column19 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents dgvcalendar As System.Windows.Forms.DataGridView
-    Friend WithEvents Column1 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column3 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column4 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column5 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column6 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column7 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cemp_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cemp_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cemp_LastName As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cemp_FirstName As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents txt_PayType As System.Windows.Forms.TextBox
+    Friend WithEvents Label39 As System.Windows.Forms.Label
+    Friend WithEvents Label38 As System.Windows.Forms.Label
+    Friend WithEvents Label37 As System.Windows.Forms.Label
+    Friend WithEvents Label36 As System.Windows.Forms.Label
+    Friend WithEvents Label35 As System.Windows.Forms.Label
+    Friend WithEvents Label34 As System.Windows.Forms.Label
+    Friend WithEvents Label33 As System.Windows.Forms.Label
+    Friend WithEvents ToolStrip3 As System.Windows.Forms.ToolStrip
+    Friend WithEvents prevyear As System.Windows.Forms.ToolStripButton
+    Friend WithEvents ToolStripSeparator14 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents janmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstjan As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secjan As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator15 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents febmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstfeb As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secfeb As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator16 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents marmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstmar As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secmar As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator17 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents aprmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstapr As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secapr As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator18 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents maymonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstmay As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secmay As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator19 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents junmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstjun As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secjun As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator20 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents julmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstjul As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secjul As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator21 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents augmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstaug As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secaug As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator22 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents sepmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstsep As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secsep As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator23 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents octmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstoct As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secoct As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator24 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents novmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstnov As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secnov As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator25 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents decmonth As System.Windows.Forms.ToolStripDropDownButton
+    Friend WithEvents firstdec As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents secdec As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator26 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents nxtyear As System.Windows.Forms.ToolStripButton
+    Friend WithEvents txt_RestDayOvertimeRate As System.Windows.Forms.TextBox
+    Friend WithEvents Label32 As System.Windows.Forms.Label
+    Friend WithEvents txt_NightDifferentialRate As System.Windows.Forms.TextBox
+    Friend WithEvents txt_OvertimeRate As System.Windows.Forms.TextBox
+    Friend WithEvents txt_RestDayRate As System.Windows.Forms.TextBox
+    Friend WithEvents txt_NightDifferentialOTRate As System.Windows.Forms.TextBox
+    Friend WithEvents txt_PayRate As System.Windows.Forms.TextBox
+    Friend WithEvents txtempbasicpay As System.Windows.Forms.TextBox
+    Friend WithEvents Label31 As System.Windows.Forms.Label
+    Friend WithEvents chkrest As System.Windows.Forms.CheckBox
+    Friend WithEvents chknight As System.Windows.Forms.CheckBox
+    Friend WithEvents Label30 As System.Windows.Forms.Label
+    Friend WithEvents txttotdaypay As System.Windows.Forms.TextBox
+    Friend WithEvents Label28 As System.Windows.Forms.Label
+    Friend WithEvents txtnightdiffotpay As System.Windows.Forms.TextBox
+    Friend WithEvents txtshftEffFrom As System.Windows.Forms.TextBox
+    Friend WithEvents txtnightdiffpay As System.Windows.Forms.TextBox
+    Friend WithEvents txtshftEffTo As System.Windows.Forms.TextBox
+    Friend WithEvents Label27 As System.Windows.Forms.Label
+    Friend WithEvents txtshftTimeFrom As System.Windows.Forms.TextBox
+    Friend WithEvents txtnightdiff As System.Windows.Forms.TextBox
+    Friend WithEvents txtshftTimeTo As System.Windows.Forms.TextBox
+    Friend WithEvents Label26 As System.Windows.Forms.Label
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents txtEmpID As System.Windows.Forms.TextBox
+    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents txtlateamount As System.Windows.Forms.TextBox
+    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents Label24 As System.Windows.Forms.Label
+    Friend WithEvents txthrsworkd As System.Windows.Forms.TextBox
+    Friend WithEvents txtutamount As System.Windows.Forms.TextBox
+    Friend WithEvents txthrsOT As System.Windows.Forms.TextBox
+    Friend WithEvents Label23 As System.Windows.Forms.Label
+    Friend WithEvents txthrsUT As System.Windows.Forms.TextBox
+    Friend WithEvents txtotpay As System.Windows.Forms.TextBox
+    Friend WithEvents txtnightdiffOT As System.Windows.Forms.TextBox
+    Friend WithEvents Label17 As System.Windows.Forms.Label
+    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents txtregpay As System.Windows.Forms.TextBox
+    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents Label22 As System.Windows.Forms.Label
+    Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents txtreghrsworkd As System.Windows.Forms.TextBox
+    Friend WithEvents Label18 As System.Windows.Forms.Label
+    Friend WithEvents Label19 As System.Windows.Forms.Label
+    Friend WithEvents Label20 As System.Windows.Forms.Label
+    Friend WithEvents txthrslate As System.Windows.Forms.TextBox
 End Class
