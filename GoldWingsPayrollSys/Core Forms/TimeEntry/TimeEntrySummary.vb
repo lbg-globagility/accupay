@@ -23,10 +23,10 @@ Public Class TimeEntrySummary
     Private Class TimeEntry
         Public Property RowID As Integer?
         Public Property EntryDate As Date
-        Public Property TimeIn As TimeSpan
-        Public Property TimeOut As TimeSpan
-        Public Property ShiftFrom As TimeSpan
-        Public Property ShiftTo As TimeSpan
+        Public Property TimeIn As TimeSpan?
+        Public Property TimeOut As TimeSpan?
+        Public Property ShiftFrom As TimeSpan?
+        Public Property ShiftTo As TimeSpan?
         Public Property RegularHours As Decimal
         Public Property RegularAmount As Decimal
         Public Property OvertimeHours As Decimal
@@ -34,27 +34,43 @@ Public Class TimeEntrySummary
         Public Property HolidayPayAmount As Decimal
         Public Property TotalPay As Decimal
 
-        Public ReadOnly Property TimeInDisplay As DateTime
+        Public ReadOnly Property TimeInDisplay As DateTime?
             Get
-                Return New DateTime(1, 1, 1, TimeIn.Hours, TimeIn.Minutes, TimeIn.Seconds)
+                If Not TimeIn.HasValue Then
+                    Return Nothing
+                End If
+
+                Return DateTime.Parse(TimeIn.ToString())
             End Get
         End Property
 
-        Public ReadOnly Property TimeOutDisplay As DateTime
+        Public ReadOnly Property TimeOutDisplay As DateTime?
             Get
-                Return New DateTime(1, 1, 1, TimeOut.Hours, TimeOut.Minutes, TimeOut.Seconds)
+                If Not TimeOut.HasValue Then
+                    Return Nothing
+                End If
+
+                Return DateTime.Parse(TimeOut.ToString())
             End Get
         End Property
 
-        Public ReadOnly Property ShiftFromDisplay As DateTime
+        Public ReadOnly Property ShiftFromDisplay As DateTime?
             Get
-                Return New DateTime(1, 1, 1, ShiftFrom.Hours, ShiftFrom.Minutes, ShiftFrom.Seconds)
+                If Not ShiftFrom.HasValue Then
+                    Return Nothing
+                End If
+
+                Return DateTime.Parse(ShiftFrom.ToString())
             End Get
         End Property
 
-        Public ReadOnly Property ShiftToDisplay As DateTime
+        Public ReadOnly Property ShiftToDisplay As DateTime?
             Get
-                Return New DateTime(1, 1, 1, ShiftTo.Hours, ShiftTo.Minutes, ShiftTo.Seconds)
+                If Not ShiftTo.HasValue Then
+                    Return Nothing
+                End If
+
+                Return DateTime.Parse(ShiftTo.ToString())
             End Get
         End Property
     End Class
@@ -224,10 +240,10 @@ Public Class TimeEntrySummary
                 Dim timeEntry = New TimeEntry() With {
                     .RowID = reader.GetValue(Of Integer?)("RowID"),
                     .EntryDate = reader.GetValue(Of Date)("Date"),
-                    .TimeIn = reader.GetValue(Of TimeSpan)("TimeIn"),
-                    .TimeOut = reader.GetValue(Of TimeSpan)("TimeOut"),
-                    .ShiftFrom = reader.GetValue(Of TimeSpan)("ShiftFrom"),
-                    .ShiftTo = reader.GetValue(Of TimeSpan)("ShiftTo"),
+                    .TimeIn = reader.GetValue(Of TimeSpan?)("TimeIn"),
+                    .TimeOut = reader.GetValue(Of TimeSpan?)("TimeOut"),
+                    .ShiftFrom = reader.GetValue(Of TimeSpan?)("ShiftFrom"),
+                    .ShiftTo = reader.GetValue(Of TimeSpan?)("ShiftTo"),
                     .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
                     .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
                     .OvertimeHours = reader.GetValue(Of Decimal)("OvertimeHoursWorked"),
