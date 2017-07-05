@@ -701,12 +701,12 @@ Partial Class TimeEntrySummary
         Me.timeEntriesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.timeEntriesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column5, Me.Column32, Me.ShiftFrom, Me.Column4, Me.Column2, Me.Column3, Me.Column6, Me.Column7, Me.Column20, Me.Column21, Me.Column23, Me.Column24, Me.Column25, Me.Column26, Me.Column27, Me.Column28, Me.Column29, Me.Column30, Me.Column31, Me.Column22})
         Me.timeEntriesDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.timeEntriesDataGridView.Location = New System.Drawing.Point(0, 88)
+        Me.timeEntriesDataGridView.Location = New System.Drawing.Point(0, 86)
         Me.timeEntriesDataGridView.MultiSelect = False
         Me.timeEntriesDataGridView.Name = "timeEntriesDataGridView"
         Me.timeEntriesDataGridView.ReadOnly = True
         Me.timeEntriesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.timeEntriesDataGridView.Size = New System.Drawing.Size(846, 359)
+        Me.timeEntriesDataGridView.Size = New System.Drawing.Size(846, 361)
         Me.timeEntriesDataGridView.TabIndex = 494
         '
         'Column1
@@ -971,7 +971,7 @@ Partial Class TimeEntrySummary
         Me.payPeriodsDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.payPeriodsDataGridView.RowTemplate.Height = 95
         Me.payPeriodsDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.None
-        Me.payPeriodsDataGridView.Size = New System.Drawing.Size(846, 88)
+        Me.payPeriodsDataGridView.Size = New System.Drawing.Size(846, 86)
         Me.payPeriodsDataGridView.TabIndex = 493
         '
         'Column8

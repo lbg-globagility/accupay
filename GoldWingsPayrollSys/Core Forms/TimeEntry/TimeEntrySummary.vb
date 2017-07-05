@@ -3,8 +3,11 @@
 Imports MySql.Data.MySqlClient
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
+Imports log4net
 
 Public Class TimeEntrySummary
+
+    Private Shared _logger As ILog = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
 
     Private Class PayPeriod
         Public Property PayFromDate As Date
@@ -21,13 +24,20 @@ Public Class TimeEntrySummary
     End Class
 
     Private Class Employee
+
         Public Property RowID As String
         Public Property EmployeeID As String
         Public Property FirstName As String
         Public Property LastName As String
+
+        Public Overrides Function ToString() As String
+            Return EmployeeID
+        End Function
+
     End Class
 
     Private Class TimeEntry
+
         Public Property RowID As Integer?
         Public Property EntryDate As Date
         Public Property TimeIn As TimeSpan?
@@ -42,10 +52,12 @@ Public Class TimeEntrySummary
         Public Property OvertimeAmount As Decimal
         Public Property NightDiffOTHours As Decimal
         Public Property NightDiffOTAmount As Decimal
+        Public Property LeaveAmount As Decimal
         Public Property UndertimeHours As Decimal
         Public Property UndertimeAmount As Decimal
         Public Property LateHours As Decimal
         Public Property LateAmount As Decimal
+        Public Property AbsentAmount As Decimal
         Public Property TotalHoursWorked As Decimal
         Public Property HolidayPayAmount As Decimal
         Public Property TotalDayPay As Decimal
@@ -89,6 +101,7 @@ Public Class TimeEntrySummary
                 Return DateTime.Parse(ShiftTo.ToString())
             End Get
         End Property
+
     End Class
 
     Private _payPeriods As Collection(Of PayPeriod)
@@ -216,6 +229,8 @@ Public Class TimeEntrySummary
     End Function
 
     Public Async Sub LoadTimeEntries()
+        _logger.Info(New Object() {"LoadTimeEntries()", _selectedEmployee, _selectedPayPeriod})
+
         timeEntriesDataGridView.AutoGenerateColumns = False
         timeEntriesDataGridView.DataSource = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
     End Sub
@@ -237,11 +252,14 @@ Public Class TimeEntrySummary
                 employeetimeentry.OvertimeHoursAmount,
                 employeetimeentry.NightDifferentialOTHours,
                 employeetimeentry.NightDiffOTHoursAmount,
+                employeetimeentry.LeavePayment,
                 employeetimeentry.HoursLate,
-                employeetimeentry.HoursLateAmount,                
+                employeetimeentry.HoursLateAmount,
                 employeetimeentry.UndertimeHours,
                 employeetimeentry.UndertimeHoursAmount,
                 employeetimeentry.HolidayPayAmount,
+                employeetimeentry.Absent,
+                employeetimeentry.TotalHoursWorked,
                 employeetimeentry.TotalDayPay
             FROM employeetimeentry
             LEFT JOIN employeetimeentrydetails
@@ -291,6 +309,7 @@ Public Class TimeEntrySummary
                     .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
                     .UndertimeAmount = reader.GetValue(Of Decimal)("UndertimeHoursAmount"),
                     .HolidayPayAmount = reader.GetValue(Of Decimal)("HolidayPayAmount"),
+                    .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
                 }
 
@@ -338,4 +357,7 @@ Public Class TimeEntrySummary
         End If
     End Sub
 
+    Private Sub timeEntriesDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles timeEntriesDataGridView.CellContentClick
+
+    End Sub
 End Class
