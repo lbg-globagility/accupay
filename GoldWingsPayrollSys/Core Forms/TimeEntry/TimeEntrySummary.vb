@@ -13,7 +13,10 @@ Public Class TimeEntrySummary
         Public Property Month As Integer
 
         Public Overrides Function ToString() As String
-            Return PayFromDate.ToString()
+            Dim dateFrom = PayFromDate.ToString("MMM dd")
+            Dim dateTo = PayToDate.ToString("MMM dd")
+
+            Return dateFrom + " - " + dateTo
         End Function
     End Class
 
