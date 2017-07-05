@@ -11,6 +11,10 @@ Public Class TimeEntrySummary
         Public Property PayToDate As Date
         Public Property Year As Integer
         Public Property Month As Integer
+
+        Public Overrides Function ToString() As String
+            Return PayFromDate.ToString()
+        End Function
     End Class
 
     Private Class Employee
@@ -29,10 +33,19 @@ Public Class TimeEntrySummary
         Public Property ShiftTo As TimeSpan?
         Public Property RegularHours As Decimal
         Public Property RegularAmount As Decimal
+        Public Property NightDiffHours As Decimal
+        Public Property NightDiffAmount As Decimal
         Public Property OvertimeHours As Decimal
         Public Property OvertimeAmount As Decimal
+        Public Property NightDiffOTHours As Decimal
+        Public Property NightDiffOTAmount As Decimal
+        Public Property UndertimeHours As Decimal
+        Public Property UndertimeAmount As Decimal
+        Public Property LateHours As Decimal
+        Public Property LateAmount As Decimal
+        Public Property TotalHoursWorked As Decimal
         Public Property HolidayPayAmount As Decimal
-        Public Property TotalPay As Decimal
+        Public Property TotalDayPay As Decimal
 
         Public ReadOnly Property TimeInDisplay As DateTime?
             Get
@@ -75,12 +88,21 @@ Public Class TimeEntrySummary
         End Property
     End Class
 
-    Private payPeriods As Collection(Of PayPeriod)
-    Private employees As Collection(Of Employee)
+    Private _payPeriods As Collection(Of PayPeriod)
+
+    Private _employees As Collection(Of Employee)
+
+    Private _selectedEmployee As Employee
+
+    Private _selectedPayPeriod As PayPeriod
 
     Private Async Sub LoadEmployees()
-        Me.employees = Await GetEmployees()
-        employeesDataGridView.DataSource = Me.employees
+        _employees = Await GetEmployees()
+        employeesDataGridView.DataSource = _employees
+
+        If _selectedEmployee Is Nothing Then
+            _selectedEmployee = _employees.FirstOrDefault()
+        End If
     End Sub
 
     Private Async Function GetEmployees() As Task(Of Collection(Of Employee))
@@ -127,12 +149,12 @@ Public Class TimeEntrySummary
     End Function
 
     Public Async Sub LoadPayPeriods()
-        Me.payPeriods = Await GetPayPeriods()
-        payPeriodDataGridView.Rows.Add(2)
+        Me._payPeriods = Await GetPayPeriods(z_OrganizationID, 2017, 1)
+        payPeriodsDataGridView.Rows.Add(2)
 
         Dim monthCounters(11) As Integer
 
-        For Each payperiod In Me.payPeriods
+        For Each payperiod In Me._payPeriods
             Dim monthNo = payperiod.Month
             Dim counter = monthCounters(monthNo - 1)
 
@@ -140,14 +162,20 @@ Public Class TimeEntrySummary
             Dim payToDate = payperiod.PayToDate.ToString("dd MMM")
             Dim label = payFromDate + " - " + payToDate
 
-            payPeriodDataGridView.Rows(counter).Cells(monthNo - 1).Value = label
+            payPeriodsDataGridView.Rows(counter).Cells(monthNo - 1).Value = payperiod
 
             counter += 1
             monthCounters(monthNo - 1) = counter
         Next
+
+        If _selectedPayPeriod Is Nothing Then
+            _selectedPayPeriod = _payPeriods.FirstOrDefault()
+        End If
     End Sub
 
-    Private Async Function GetPayPeriods() As Task(Of Collection(Of PayPeriod))
+    Private Async Function GetPayPeriods(organizationID As Integer,
+                                         year As Integer,
+                                         salaryType As Integer) As Task(Of Collection(Of PayPeriod))
         Dim sql = <![CDATA[
             SELECT PayFromDate, PayToDate, Year, Month
             FROM payperiod
@@ -163,23 +191,18 @@ Public Class TimeEntrySummary
 
             With command.Parameters
                 .AddWithValue("@OrganizationID", CStr(z_OrganizationID))
-                .AddWithValue("@Year", CStr(2016))
-                .AddWithValue("@SalaryType", CStr(1))
+                .AddWithValue("@Year", CStr(year))
+                .AddWithValue("@SalaryType", CStr(salaryType))
             End With
 
             Await connection.OpenAsync()
             Dim reader = Await command.ExecuteReaderAsync()
             While Await reader.ReadAsync()
-                Dim payFromDate = reader.GetValue(Of Date)("PayFromDate")
-                Dim payToDate = reader.GetValue(Of Date)("PayToDate")
-                Dim year = reader.GetValue(Of Integer)("Year")
-                Dim month = reader.GetValue(Of Integer)("Month")
-
                 Dim payPeriod = New PayPeriod() With {
-                    .PayFromDate = payFromDate,
-                    .PayToDate = payToDate,
-                    .Year = year,
-                    .Month = month
+                    .PayFromDate = reader.GetValue(Of Date)("PayFromDate"),
+                    .PayToDate = reader.GetValue(Of Date)("PayToDate"),
+                    .Year = reader.GetValue(Of Integer)("Year"),
+                    .Month = reader.GetValue(Of Integer)("Month")
                 }
 
                 payPeriods.Add(payPeriod)
@@ -191,10 +214,10 @@ Public Class TimeEntrySummary
 
     Public Async Sub LoadTimeEntries()
         timeEntriesDataGridView.AutoGenerateColumns = False
-        timeEntriesDataGridView.DataSource = Await GetTimeEntries()
+        timeEntriesDataGridView.DataSource = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
     End Sub
 
-    Private Async Function GetTimeEntries() As Task(Of Collection(Of TimeEntry))
+    Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of Collection(Of TimeEntry))
         Dim sql = <![CDATA[
             SELECT
                 employeetimeentry.RowID,
@@ -205,8 +228,16 @@ Public Class TimeEntrySummary
                 shift.TimeTo AS ShiftTo,
                 employeetimeentry.RegularHoursWorked,
                 employeetimeentry.RegularHoursAmount,
+                employeetimeentry.NightDifferentialHours,
+                employeetimeentry.NightDiffHoursAmount,
                 employeetimeentry.OvertimeHoursWorked,
                 employeetimeentry.OvertimeHoursAmount,
+                employeetimeentry.NightDifferentialOTHours,
+                employeetimeentry.NightDiffOTHoursAmount,
+                employeetimeentry.HoursLate,
+                employeetimeentry.HoursLateAmount,                
+                employeetimeentry.UndertimeHours,
+                employeetimeentry.UndertimeHoursAmount,
                 employeetimeentry.HolidayPayAmount,
                 employeetimeentry.TotalDayPay
             FROM employeetimeentry
@@ -228,9 +259,9 @@ Public Class TimeEntrySummary
             command As New MySqlCommand(sql, connection)
 
             With command.Parameters
-                .AddWithValue("@EmployeeID", CStr(36))
-                .AddWithValue("@DateFrom", "2017-06-06")
-                .AddWithValue("@DateTo", "2017-06-20")
+                .AddWithValue("@EmployeeID", employee.RowID)
+                .AddWithValue("@DateFrom", payPeriod.PayFromDate)
+                .AddWithValue("@DateTo", payPeriod.PayToDate)
             End With
 
             Await connection.OpenAsync()
@@ -246,10 +277,18 @@ Public Class TimeEntrySummary
                     .ShiftTo = reader.GetValue(Of TimeSpan?)("ShiftTo"),
                     .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
                     .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
+                    .NightDiffHours = reader.GetValue(Of Decimal)("NightDifferentialHours"),
+                    .NightDiffAmount = reader.GetValue(Of Decimal)("NightDiffHoursAmount"),
                     .OvertimeHours = reader.GetValue(Of Decimal)("OvertimeHoursWorked"),
                     .OvertimeAmount = reader.GetValue(Of Decimal)("OvertimeHoursAmount"),
+                    .NightDiffOTHours = reader.GetValue(Of Decimal)("NightDifferentialOTHours"),
+                    .NightDiffOTAmount = reader.GetValue(Of Decimal)("NightDiffOTHoursAmount"),
+                    .LateHours = reader.GetValue(Of Decimal)("HoursLate"),
+                    .LateAmount = reader.GetValue(Of Decimal)("HoursLateAmount"),
+                    .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
+                    .UndertimeAmount = reader.GetValue(Of Decimal)("UndertimeHoursAmount"),
                     .HolidayPayAmount = reader.GetValue(Of Decimal)("HolidayPayAmount"),
-                    .TotalPay = reader.GetValue(Of Decimal)("TotalDayPay")
+                    .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
                 }
 
                 timeEntries.Add(timeEntry)
@@ -262,7 +301,38 @@ Public Class TimeEntrySummary
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadEmployees()
         LoadPayPeriods()
-        LoadTimeEntries()
+    End Sub
+
+    Private Sub employeesDataGridView_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles employeesDataGridView.CellClick
+        If employeesDataGridView.CurrentRow Is Nothing Then
+            Return
+        End If
+
+        Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
+
+        If employee IsNot _selectedEmployee Then
+            _selectedEmployee = employee
+
+            LoadTimeEntries()
+        End If
+    End Sub
+
+    Private Sub payPeriodDataGridView_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles payPeriodsDataGridView.CellClick
+        If e.RowIndex = -1 Then
+            Return
+        End If
+
+        If payPeriodsDataGridView.CurrentRow Is Nothing Then
+            Return
+        End If
+
+        Dim payPeriod = DirectCast(payPeriodsDataGridView.CurrentCell.Value, PayPeriod)
+
+        If payPeriod IsNot _selectedPayPeriod Then
+            _selectedPayPeriod = payPeriod
+
+            LoadTimeEntries()
+        End If
     End Sub
 
 End Class
