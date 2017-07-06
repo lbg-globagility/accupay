@@ -317,6 +317,7 @@ Public Class TimeEntrySummary
                     .LateAmount = reader.GetValue(Of Decimal)("HoursLateAmount"),
                     .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
                     .UndertimeAmount = reader.GetValue(Of Decimal)("UndertimeHoursAmount"),
+                    .AbsentAmount = reader.GetValue(Of Decimal)("Absent"),
                     .HolidayPayAmount = reader.GetValue(Of Decimal)("HolidayPayAmount"),
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
