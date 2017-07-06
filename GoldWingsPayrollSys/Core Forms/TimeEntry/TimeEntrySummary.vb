@@ -388,7 +388,8 @@ Public Class TimeEntrySummary
                             End Function
 
         Dim filtered = New BindingList(Of Employee)(
-                       _employees.Where(matchCriteria).ToList())
+            _employees.Where(matchCriteria).ToList()
+        )
 
         employeesDataGridView.DataSource = filtered
         employeesDataGridView.Update()
