@@ -2,6 +2,7 @@
 
 Imports MySql.Data.MySqlClient
 Imports System.Collections.ObjectModel
+Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports log4net
 
@@ -29,6 +30,10 @@ Public Class TimeEntrySummary
         Public Property EmployeeID As String
         Public Property FirstName As String
         Public Property LastName As String
+
+        Public Function FullName() As String
+            Return FirstName + " " + LastName
+        End Function
 
         Public Overrides Function ToString() As String
             Return EmployeeID
@@ -231,6 +236,10 @@ Public Class TimeEntrySummary
     Public Async Sub LoadTimeEntries()
         _logger.Info(New Object() {"LoadTimeEntries()", _selectedEmployee, _selectedPayPeriod})
 
+        If _selectedEmployee Is Nothing Or _selectedPayPeriod Is Nothing Then
+            Return
+        End If
+
         timeEntriesDataGridView.AutoGenerateColumns = False
         timeEntriesDataGridView.DataSource = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
     End Sub
@@ -325,7 +334,7 @@ Public Class TimeEntrySummary
         LoadPayPeriods()
     End Sub
 
-    Private Sub employeesDataGridView_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles employeesDataGridView.CellClick
+    Private Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
         If employeesDataGridView.CurrentRow Is Nothing Then
             Return
         End If
@@ -357,7 +366,32 @@ Public Class TimeEntrySummary
         End If
     End Sub
 
-    Private Sub timeEntriesDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles timeEntriesDataGridView.CellContentClick
-
+    Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
+        Me.Close()
     End Sub
+
+    Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
+        FilterEmployees()
+    End Sub
+
+    Private Sub FilterEmployees()
+        Dim searchValue = searchTextBox.Text.ToLower()
+
+        Dim matchCriteria = Function(employee As Employee) As Boolean
+                                Dim containsEmployeeId = employee.EmployeeID.ToLower().Contains(searchValue)
+                                Dim containsFullName = employee.FullName.ToLower().Contains(searchValue)
+
+                                Dim reverseFullName = employee.LastName.ToLower() + " " + employee.FirstName.ToLower()
+                                Dim containsFullNameInReverse = reverseFullName.Contains(searchValue)
+
+                                Return containsEmployeeId Or containsFullName Or containsFullNameInReverse
+                            End Function
+
+        Dim filtered = New BindingList(Of Employee)(
+                       _employees.Where(matchCriteria).ToList())
+
+        employeesDataGridView.DataSource = filtered
+        employeesDataGridView.Update()
+    End Sub
+
 End Class

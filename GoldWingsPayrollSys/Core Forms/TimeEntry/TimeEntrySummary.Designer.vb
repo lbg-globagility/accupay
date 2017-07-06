@@ -102,18 +102,8 @@ Partial Class TimeEntrySummary
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.ComboBox10 = New System.Windows.Forms.ComboBox()
-        Me.ComboBox9 = New System.Windows.Forms.ComboBox()
-        Me.ComboBox8 = New System.Windows.Forms.ComboBox()
-        Me.ComboBox7 = New System.Windows.Forms.ComboBox()
-        Me.Label60 = New System.Windows.Forms.Label()
-        Me.Label59 = New System.Windows.Forms.Label()
-        Me.Label58 = New System.Windows.Forms.Label()
         Me.Label29 = New System.Windows.Forms.Label()
-        Me.TextBox17 = New System.Windows.Forms.TextBox()
-        Me.TextBox16 = New System.Windows.Forms.TextBox()
-        Me.TextBox15 = New System.Windows.Forms.TextBox()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.searchTextBox = New System.Windows.Forms.TextBox()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.txtSimple = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
@@ -363,13 +353,13 @@ Partial Class TimeEntrySummary
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.employeesDataGridView.DefaultCellStyle = DataGridViewCellStyle1
         Me.employeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.employeesDataGridView.Location = New System.Drawing.Point(12, 234)
+        Me.employeesDataGridView.Location = New System.Drawing.Point(12, 177)
         Me.employeesDataGridView.MultiSelect = False
         Me.employeesDataGridView.Name = "employeesDataGridView"
         Me.employeesDataGridView.ReadOnly = True
         Me.employeesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.employeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.employeesDataGridView.Size = New System.Drawing.Size(350, 285)
+        Me.employeesDataGridView.Size = New System.Drawing.Size(350, 342)
         Me.employeesDataGridView.TabIndex = 137
         '
         'cemp_RowID
@@ -491,136 +481,37 @@ Partial Class TimeEntrySummary
         Me.TabControl2.Multiline = True
         Me.TabControl2.Name = "TabControl2"
         Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(350, 175)
+        Me.TabControl2.Size = New System.Drawing.Size(350, 118)
         Me.TabControl2.TabIndex = 133
         '
         'TabPage2
         '
-        Me.TabPage2.Controls.Add(Me.ComboBox10)
-        Me.TabPage2.Controls.Add(Me.ComboBox9)
-        Me.TabPage2.Controls.Add(Me.ComboBox8)
-        Me.TabPage2.Controls.Add(Me.ComboBox7)
-        Me.TabPage2.Controls.Add(Me.Label60)
-        Me.TabPage2.Controls.Add(Me.Label59)
-        Me.TabPage2.Controls.Add(Me.Label58)
         Me.TabPage2.Controls.Add(Me.Label29)
-        Me.TabPage2.Controls.Add(Me.TextBox17)
-        Me.TabPage2.Controls.Add(Me.TextBox16)
-        Me.TabPage2.Controls.Add(Me.TextBox15)
-        Me.TabPage2.Controls.Add(Me.TextBox2)
+        Me.TabPage2.Controls.Add(Me.searchTextBox)
         Me.TabPage2.Location = New System.Drawing.Point(4, 29)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(342, 142)
+        Me.TabPage2.Size = New System.Drawing.Size(342, 85)
         Me.TabPage2.TabIndex = 0
         Me.TabPage2.Text = "       Common       "
         Me.TabPage2.UseVisualStyleBackColor = True
         '
-        'ComboBox10
-        '
-        Me.ComboBox10.FormattingEnabled = True
-        Me.ComboBox10.Items.AddRange(New Object() {"starts with", "contains like", "is exactly", "does not contain", "is empty null", "is not empty"})
-        Me.ComboBox10.Location = New System.Drawing.Point(78, 100)
-        Me.ComboBox10.Name = "ComboBox10"
-        Me.ComboBox10.Size = New System.Drawing.Size(92, 21)
-        Me.ComboBox10.TabIndex = 69
-        Me.ComboBox10.Visible = False
-        '
-        'ComboBox9
-        '
-        Me.ComboBox9.FormattingEnabled = True
-        Me.ComboBox9.Items.AddRange(New Object() {"starts with", "contains like", "is exactly", "does not contain", "is empty null", "is not empty"})
-        Me.ComboBox9.Location = New System.Drawing.Point(78, 74)
-        Me.ComboBox9.Name = "ComboBox9"
-        Me.ComboBox9.Size = New System.Drawing.Size(92, 21)
-        Me.ComboBox9.TabIndex = 67
-        '
-        'ComboBox8
-        '
-        Me.ComboBox8.FormattingEnabled = True
-        Me.ComboBox8.Items.AddRange(New Object() {"starts with", "contains like", "is exactly", "does not contain", "is empty null", "is not empty"})
-        Me.ComboBox8.Location = New System.Drawing.Point(78, 48)
-        Me.ComboBox8.Name = "ComboBox8"
-        Me.ComboBox8.Size = New System.Drawing.Size(92, 21)
-        Me.ComboBox8.TabIndex = 65
-        '
-        'ComboBox7
-        '
-        Me.ComboBox7.FormattingEnabled = True
-        Me.ComboBox7.Items.AddRange(New Object() {"starts with", "contains like", "is exactly", "does not contain", "is empty null", "is not empty"})
-        Me.ComboBox7.Location = New System.Drawing.Point(78, 22)
-        Me.ComboBox7.Name = "ComboBox7"
-        Me.ComboBox7.Size = New System.Drawing.Size(92, 21)
-        Me.ComboBox7.TabIndex = 63
-        '
-        'Label60
-        '
-        Me.Label60.AutoSize = True
-        Me.Label60.Location = New System.Drawing.Point(5, 104)
-        Me.Label60.Name = "Label60"
-        Me.Label60.Size = New System.Drawing.Size(43, 13)
-        Me.Label60.TabIndex = 59
-        Me.Label60.Text = "Surame"
-        Me.Label60.Visible = False
-        '
-        'Label59
-        '
-        Me.Label59.AutoSize = True
-        Me.Label59.Location = New System.Drawing.Point(5, 78)
-        Me.Label59.Name = "Label59"
-        Me.Label59.Size = New System.Drawing.Size(58, 13)
-        Me.Label59.TabIndex = 60
-        Me.Label59.Text = "Last Name"
-        '
-        'Label58
-        '
-        Me.Label58.AutoSize = True
-        Me.Label58.Location = New System.Drawing.Point(5, 52)
-        Me.Label58.Name = "Label58"
-        Me.Label58.Size = New System.Drawing.Size(57, 13)
-        Me.Label58.TabIndex = 61
-        Me.Label58.Text = "First Name"
-        '
         'Label29
         '
         Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(5, 26)
+        Me.Label29.Location = New System.Drawing.Point(8, 37)
         Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(67, 13)
+        Me.Label29.Size = New System.Drawing.Size(41, 13)
         Me.Label29.TabIndex = 62
-        Me.Label29.Text = "Employee ID"
+        Me.Label29.Text = "Search"
         '
-        'TextBox17
+        'searchTextBox
         '
-        Me.TextBox17.Location = New System.Drawing.Point(176, 101)
-        Me.TextBox17.Name = "TextBox17"
-        Me.TextBox17.Size = New System.Drawing.Size(161, 20)
-        Me.TextBox17.TabIndex = 70
-        Me.TextBox17.Visible = False
-        '
-        'TextBox16
-        '
-        Me.TextBox16.Location = New System.Drawing.Point(176, 75)
-        Me.TextBox16.MaxLength = 50
-        Me.TextBox16.Name = "TextBox16"
-        Me.TextBox16.Size = New System.Drawing.Size(161, 20)
-        Me.TextBox16.TabIndex = 68
-        '
-        'TextBox15
-        '
-        Me.TextBox15.Location = New System.Drawing.Point(176, 49)
-        Me.TextBox15.MaxLength = 50
-        Me.TextBox15.Name = "TextBox15"
-        Me.TextBox15.Size = New System.Drawing.Size(161, 20)
-        Me.TextBox15.TabIndex = 66
-        '
-        'TextBox2
-        '
-        Me.TextBox2.Location = New System.Drawing.Point(176, 23)
-        Me.TextBox2.MaxLength = 50
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(161, 20)
-        Me.TextBox2.TabIndex = 64
+        Me.searchTextBox.Location = New System.Drawing.Point(75, 35)
+        Me.searchTextBox.MaxLength = 50
+        Me.searchTextBox.Name = "searchTextBox"
+        Me.searchTextBox.Size = New System.Drawing.Size(259, 20)
+        Me.searchTextBox.TabIndex = 64
         '
         'TabPage3
         '
@@ -630,7 +521,7 @@ Partial Class TimeEntrySummary
         Me.TabPage3.Location = New System.Drawing.Point(4, 29)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(342, 142)
+        Me.TabPage3.Size = New System.Drawing.Size(342, 85)
         Me.TabPage3.TabIndex = 1
         Me.TabPage3.Text = "       Simple       "
         Me.TabPage3.UseVisualStyleBackColor = True
@@ -1142,7 +1033,7 @@ Partial Class TimeEntrySummary
         '
         'btnRerfresh
         '
-        Me.btnRerfresh.Location = New System.Drawing.Point(287, 205)
+        Me.btnRerfresh.Location = New System.Drawing.Point(287, 148)
         Me.btnRerfresh.Name = "btnRerfresh"
         Me.btnRerfresh.Size = New System.Drawing.Size(75, 23)
         Me.btnRerfresh.TabIndex = 134
@@ -2448,18 +2339,8 @@ Partial Class TimeEntrySummary
     Friend WithEvents tsbtnCloseempawar As System.Windows.Forms.ToolStripButton
     Friend WithEvents TabControl2 As System.Windows.Forms.TabControl
     Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
-    Friend WithEvents ComboBox10 As System.Windows.Forms.ComboBox
-    Friend WithEvents ComboBox9 As System.Windows.Forms.ComboBox
-    Friend WithEvents ComboBox8 As System.Windows.Forms.ComboBox
-    Friend WithEvents ComboBox7 As System.Windows.Forms.ComboBox
-    Friend WithEvents Label60 As System.Windows.Forms.Label
-    Friend WithEvents Label59 As System.Windows.Forms.Label
-    Friend WithEvents Label58 As System.Windows.Forms.Label
     Friend WithEvents Label29 As System.Windows.Forms.Label
-    Friend WithEvents TextBox17 As System.Windows.Forms.TextBox
-    Friend WithEvents TextBox16 As System.Windows.Forms.TextBox
-    Friend WithEvents TextBox15 As System.Windows.Forms.TextBox
-    Friend WithEvents TextBox2 As System.Windows.Forms.TextBox
+    Friend WithEvents searchTextBox As System.Windows.Forms.TextBox
     Friend WithEvents TabPage3 As System.Windows.Forms.TabPage
     Friend WithEvents txtSimple As System.Windows.Forms.TextBox
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
