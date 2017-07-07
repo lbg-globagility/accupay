@@ -57,14 +57,14 @@ Public Class TimeEntrySummary
         Public Property OvertimeAmount As Decimal
         Public Property NightDiffOTHours As Decimal
         Public Property NightDiffOTAmount As Decimal
-        Public Property LeaveAmount As Decimal
+        Public Property LeavePay As Decimal
+        Public Property HolidayPay As Decimal
         Public Property UndertimeHours As Decimal
         Public Property UndertimeAmount As Decimal
         Public Property LateHours As Decimal
         Public Property LateAmount As Decimal
         Public Property AbsentAmount As Decimal
         Public Property TotalHoursWorked As Decimal
-        Public Property HolidayPayAmount As Decimal
         Public Property TotalDayPay As Decimal
 
         Public ReadOnly Property TimeInDisplay As DateTime?
@@ -266,6 +266,7 @@ Public Class TimeEntrySummary
                 employeetimeentry.HoursLateAmount,
                 employeetimeentry.UndertimeHours,
                 employeetimeentry.UndertimeHoursAmount,
+                employeetimeentry.Leavepayment,
                 employeetimeentry.HolidayPayAmount,
                 employeetimeentry.Absent,
                 employeetimeentry.TotalHoursWorked,
@@ -318,7 +319,8 @@ Public Class TimeEntrySummary
                     .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
                     .UndertimeAmount = reader.GetValue(Of Decimal)("UndertimeHoursAmount"),
                     .AbsentAmount = reader.GetValue(Of Decimal)("Absent"),
-                    .HolidayPayAmount = reader.GetValue(Of Decimal)("HolidayPayAmount"),
+                    .LeavePay = reader.GetValue(Of Decimal)("Leavepayment"),
+                    .HolidayPay = reader.GetValue(Of Decimal)("HolidayPayAmount"),
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
                 }
@@ -369,6 +371,7 @@ Public Class TimeEntrySummary
 
     Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
         Me.Close()
+        TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
     End Sub
 
     Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
