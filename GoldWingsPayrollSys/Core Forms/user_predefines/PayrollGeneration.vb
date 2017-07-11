@@ -587,7 +587,8 @@ Public Class PayrollGeneration
 
                         'End If
 
-                        Dim valoncenotax_allowance = 0.0
+                        Dim valoncenotax_allowance = ValNoComma(notax_allowanceOnce.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+
                         'For Each drowonceallow In oncenotax_allowance
                         '    valoncenotax_allowance = drowonceallow("TotalAllowanceAmount")
                         'Next
@@ -1147,7 +1148,7 @@ Public Class PayrollGeneration
                         If ValNoComma(drow("RowID")) = 661 Then '218 - EmployeeID
                             Dim call_lambert = "Over here"
                         End If
-                        'SET innodb_lock_wait_timeout = 5000; SET autocommit = 0; 
+                        'SET innodb_lock_wait_timeout = 5000; SET autocommit = 0;
                         '"UPDATE paystub SET LastUpd=CURRENT_TIMESTAMP(),LastUpdBy='" & z_User & "'" &
                         '" WHERE EmployeeID='" & Convert.ToString(drow("RowID")) & "' AND OrganizationID=" & orgztnID &
                         '" AND PayFromDate='" & n_PayrollDateFrom & "' AND PayToDate='" & n_PayrollDateTo & "';"
