@@ -15,6 +15,7 @@ Public Class TimeEntrySummary
         Public Property PayToDate As Date
         Public Property Year As Integer
         Public Property Month As Integer
+        Public Property OrdinalValue As Integer
 
         Public Overrides Function ToString() As String
             Dim dateFrom = PayFromDate.ToString("MMM dd")
@@ -192,7 +193,17 @@ Public Class TimeEntrySummary
         Next
 
         If _selectedPayPeriod Is Nothing Then
-            _selectedPayPeriod = _payPeriods.FirstOrDefault()
+            Dim dateToday = DateTime.Today
+
+            _selectedPayPeriod = _payPeriods.FirstOrDefault(
+                Function(payPeriod)
+                    Return (payPeriod.PayFromDate <= dateToday) And (payPeriod.PayToDate >= dateToday)
+                End Function
+            )
+
+            Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod 2
+            Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
+            payPeriodsDataGridView.CurrentCell = payPeriodCell
         End If
     End Sub
 
@@ -200,7 +211,7 @@ Public Class TimeEntrySummary
                                          year As Integer,
                                          salaryType As Integer) As Task(Of Collection(Of PayPeriod))
         Dim sql = <![CDATA[
-            SELECT PayFromDate, PayToDate, Year, Month
+            SELECT PayFromDate, PayToDate, Year, Month, OrdinalValue
             FROM payperiod
             WHERE payperiod.OrganizationID = @OrganizationID
                 AND payperiod.Year = @Year
@@ -225,7 +236,8 @@ Public Class TimeEntrySummary
                     .PayFromDate = reader.GetValue(Of Date)("PayFromDate"),
                     .PayToDate = reader.GetValue(Of Date)("PayToDate"),
                     .Year = reader.GetValue(Of Integer)("Year"),
-                    .Month = reader.GetValue(Of Integer)("Month")
+                    .Month = reader.GetValue(Of Integer)("Month"),
+                    .OrdinalValue = reader.GetValue(Of Integer)("OrdinalValue")
                 }
 
                 payPeriods.Add(payPeriod)
