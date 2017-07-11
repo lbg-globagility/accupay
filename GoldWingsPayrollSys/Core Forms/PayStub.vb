@@ -383,8 +383,8 @@ Public Class PayStub
 
             filltable(dgvemployees, "VIEW_employee", param, 1)
             'filltable(dgvEmp, q_employee)
-            'filltable(dgvEmp, "VIEW_employee", "e_OrganizationID", 1, 1)   
-        Else 'q_employee & 
+            'filltable(dgvEmp, "VIEW_employee", "e_OrganizationID", 1, 1)
+        Else 'q_employee &
             filltable(dgvemployees, searchquery) ' & " ORDER BY e.RowID DESC")
         End If
 
@@ -661,7 +661,7 @@ Public Class PayStub
             'If pagination - max_count_per_page < 0 Then
             '    pagination = 0
             'Else
-            '    pagination -= max_count_per_page 
+            '    pagination -= max_count_per_page
             'End If
 
             Dim modcent = pagination Mod max_count_per_page
@@ -793,7 +793,7 @@ Public Class PayStub
 
         dgvemployees.Tag = Nothing
 
-        If dgvemployees.RowCount > 0 Then 'And dgvemployees.CurrentRow IsNot Nothing 
+        If dgvemployees.RowCount > 0 Then 'And dgvemployees.CurrentRow IsNot Nothing
             With dgvemployees.CurrentRow
 
                 'If .Cells("RowID").Value <> sameEmpID Then
@@ -880,7 +880,7 @@ Public Class PayStub
                 Catch ex As Exception
 
                 End Try
-                
+
                 'End If
 
                 Gender_Label(.Cells("Gender").Value)
@@ -916,7 +916,7 @@ Public Class PayStub
                     '# ####################################################### #
                     'VIEW_paystub(.Cells("RowID").Value, _
                     '             paypRowID)
-                    ''"₱ " & 
+                    ''"₱ " &
                     'txtgrosssal.Text = "0.00"
                     'txtnetsal.Text = "0.00"
                     'txtTotalAdjustments.Text = "0.00" 'Josh
@@ -979,7 +979,7 @@ Public Class PayStub
                     '                ElseIf .Cells("Item").Value.ToString = "Sick leave" Then
                     '                    txtslbal.Text = FormatNumber(Val(.Cells("PayAmount").Value), 2)
                     '                    Continue For
-                    '                ElseIf .Cells("Item").Value.ToString = "Maternity leave" Then '/paternity 
+                    '                ElseIf .Cells("Item").Value.ToString = "Maternity leave" Then '/paternity
                     '                    'If Microsoft.VisualBasic.Left(dgvemployees.CurrentRow.Cells("Gender").Value, 1) = "M" Then
                     '                    txtmlbal.Text = FormatNumber(Val(.Cells("PayAmount").Value), 2)
                     '                    'Else
@@ -2788,7 +2788,7 @@ Public Class PayStub
 
                 Dim MyAdapter As MySqlDataAdapter = New MySqlDataAdapter(SpCmd)
                 MyAdapter.Fill(SpDataSet)
-                
+
                 payroll_emp_count = 0
 
                 Dim valid_table = SpDataSet.Tables.Cast(Of DataTable).Where(Function(dta) Convert.ToInt16(dta.Rows.Count) > 0)
@@ -3466,7 +3466,7 @@ Public Class PayStub
                                       " AND e.PayFrequencyID='" & paypPayFreqID & "'" &
                                       " AND '" & paypTo & "' BETWEEN esal.EffectiveDateFrom AND COALESCE(esal.EffectiveDateTo,'" & paypTo & "')" &
                                       " GROUP BY e.RowID" &
-                                      " ORDER BY e.LastName;") 'RowID DESC  
+                                      " ORDER BY e.LastName;") 'RowID DESC
 
         Dim employeeloanfulldetails As New DataTable
 
@@ -3552,7 +3552,7 @@ Public Class PayStub
                     newdatrow("Column7") = "₱ " & FormatNumber(ValNoComma(.Cells("paystb_TotalEmpWithholdingTax").Value), 2) 'Withholding Tax
 
                     'newdatrow("Column3") = .Cells("paystb_TotalEmpSSS").Value
-                    'newdatrow("Column3") = .Cells("paystb_TotalEmpPhilhealth").Value   
+                    'newdatrow("Column3") = .Cells("paystb_TotalEmpPhilhealth").Value
                     'newdatrow("Column3") = .Cells("paystb_TotalEmpHDMF").Value
 
                     newdatrow("Column8") = "₱ " & FormatNumber(ValNoComma(.Cells("paystb_TotalAllowance").Value), 2) 'Total Allowance
@@ -6112,7 +6112,7 @@ Public Class PayStub
                                          ",MaternityLeaveBalance=COALESCE(MaternityLeaveBalance,0) + MaternityLeavePerPayPeriod" &
                                          ",OtherLeaveBalance=COALESCE(OtherLeaveBalance,0) + OtherLeavePerPayPeriod" &
                                          ",LastUpdBy=" & z_User & _
-                                         " WHERE RowID='" & drow("RowID").ToString & "';") 'OrganizationID=" & orgztnID & " AND 
+                                         " WHERE RowID='" & drow("RowID").ToString & "';") 'OrganizationID=" & orgztnID & " AND
 
                                 'leavebalances'leavebalan
 
@@ -6433,7 +6433,7 @@ Public Class PayStub
             End If
 
         Else
-            
+
             VIEW_payperiodofyear(genpayselyear)
 
             loademployee(quer_empPayFreq)
@@ -6965,7 +6965,7 @@ Public Class PayStub
 
         IsUserPressEnterToSearch = False
         ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-        
+
         'loademployee(Trim(tsSearch.Text))
         If tsSearch.Text.Trim.Length = 0 Then
             First_LinkClicked(First, New LinkLabelLinkClickedEventArgs(New LinkLabel.Link())) 'loademployee(quer_empPayFreq)'quer_empPayFreq
@@ -7716,7 +7716,7 @@ Public Class PayStub
 
                                     valamount = valamount * (numofweekdays / (date_diff + 1))
 
-                                    totalAllowanceWork = totalAllowanceWork + (valamount) ' * emphourworked)    
+                                    totalAllowanceWork = totalAllowanceWork + (valamount) ' * emphourworked)
 
                                     Dim allowaval = valamount ' * emphourworked
 
@@ -7836,8 +7836,6 @@ Public Class PayStub
             End If
 
         Catch ex As Exception
-            Dim log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
-            log.Error("Error", ex)
             MsgBox(ex.Message)
         End Try
 
@@ -8173,7 +8171,7 @@ Public Class PayStub
                 'newdatrow("DatCol40") = 0
 
                 'newdatrow("DatCol40") = 0
-                'newdatrow("DatCol41") = 0  
+                'newdatrow("DatCol41") = 0
                 'newdatrow("DatCol42") = 0
                 'newdatrow("DatCol43") = 0
                 'newdatrow("DatCol44") = 0
