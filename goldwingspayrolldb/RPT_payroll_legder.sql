@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb.RPT_payroll_legder
 DROP PROCEDURE IF EXISTS `RPT_payroll_legder`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_payroll_legder`(IN `OrganizID` INT, IN `PayPerID1` INT, IN `PayPerID2` INT, IN `psi_undeclared` CHAR(1))
@@ -54,7 +47,7 @@ ee.RowID
 ,SUM(IFNULL(pst5.PayAmount,0)) AS NightDifftlOT
 FROM paystub ps
 LEFT JOIN employee ee ON ee.RowID=ps.EmployeeID AND ee.OrganizationID=ps.OrganizationID
-	
+
 INNER JOIN product pd ON pd.OrganizationID=OrganizID AND pd.PartNo='Tardiness'
 LEFT JOIN paystubitem pst ON pst.PayStubID=ps.RowID AND pst.ProductID=pd.RowID AND pst.`Undeclared`=psi_undeclared
 
@@ -94,6 +87,7 @@ ORDER BY ee.LastName,ps.PayToDate;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

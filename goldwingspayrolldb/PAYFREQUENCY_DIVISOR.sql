@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function goldwingspayrolldb.PAYFREQUENCY_DIVISOR
 DROP FUNCTION IF EXISTS `PAYFREQUENCY_DIVISOR`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `PAYFREQUENCY_DIVISOR`(`PayFrequencyName` VARCHAR(50)) RETURNS int(11)
@@ -20,23 +13,24 @@ BEGIN
 DECLARE returnvalue INT(11) DEFAULT NULL;
 
 IF PayFrequencyName = 'MONTHLY' THEN
-	SET returnvalue = 1;
-	
+    SET returnvalue = 1;
+
 ELSEIF PayFrequencyName = 'SEMI-MONTHLY' THEN
-	SET returnvalue = 2;
-	
+    SET returnvalue = 2;
+
 ELSEIF PayFrequencyName = 'WEEKLY' THEN
-	SET returnvalue = 4;
-	
+    SET returnvalue = 4;
+
 ELSEIF PayFrequencyName = 'DAILY' THEN
-	SET returnvalue = 1;
-	
+    SET returnvalue = 1;
+
 END IF;
 
 RETURN IFNULL(returnvalue,1);
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

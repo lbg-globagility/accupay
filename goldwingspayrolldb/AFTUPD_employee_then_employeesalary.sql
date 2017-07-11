@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.AFTUPD_employee_then_employeesalary
 DROP TRIGGER IF EXISTS `AFTUPD_employee_then_employeesalary`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='';
 DELIMITER //
@@ -72,126 +65,126 @@ SET @salary_count = (SELECT COUNT(RowID) FROM employeesalary WHERE EmployeeID=NE
 
 IF NEW.NoOfDependents != OLD.NoOfDependents OR NEW.MaritalStatus != COALESCE(OLD.MaritalStatus,'') OR @salary_count = 0 THEN
 
-	IF NEW.EmploymentStatus NOT IN ('Resigned','Terminated') THEN
+    IF NEW.EmploymentStatus NOT IN ('Resigned','Terminated') THEN
 
-	SELECT IF(NEW.MaritalStatus IN ('Single','Married'),NEW.MaritalStatus,'Zero') INTO marit_stat;
-	
-	
-	
-	SELECT RowID,Salary,EffectiveDateFrom FROM employeesalary WHERE EmployeeID=NEW.RowID AND OrganizationID=NEW.OrganizationID AND EffectiveDateTo IS NULL ORDER BY DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),EffectiveDateFrom) LIMIT 1 INTO prevesalRowID,empBasicPay,preEffDateFromEmpSal;
-	
-		SELECT RowID FROM payphilhealth WHERE COALESCE(empBasicPay,0) BETWEEN SalaryRangeFrom AND IF(COALESCE(empBasicPay,0) > SalaryRangeTo, COALESCE(empBasicPay,0) + 1, SalaryRangeTo) ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
-		
-		
-		
-	IF NEW.EmployeeType IN ('Fixed','Monthly') THEN
-		IF NEW.PayFrequencyID=1 THEN
-			SET thebasicpay = empBasicPay / 2;
-			SET thedailypay = 0;
-			SET thehourlypay = 0;
-		ELSE
-			SET thebasicpay = empBasicPay;
-			SET thedailypay = 0;
-			SET thehourlypay = 0;
-		END IF;
-		
-		SELECT RowID FROM paysocialsecurity WHERE COALESCE(empBasicPay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
-		
-	ELSEIF NEW.EmployeeType = 'Daily' THEN
-			SET thebasicpay = empBasicPay;
-			SET thedailypay = empBasicPay;
-			SET thehourlypay = 0;
-			
-		SELECT RowID FROM paysocialsecurity WHERE COALESCE(thedailypay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
-		
-	ELSEIF NEW.EmployeeType = 'Hourly' THEN
-			SET thebasicpay = empBasicPay;
-			SET thedailypay = 0;
-			SET thehourlypay = empBasicPay;	
-			
-		SELECT RowID FROM paysocialsecurity WHERE COALESCE(thehourlypay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
-		
-	END IF;
+    SELECT IF(NEW.MaritalStatus IN ('Single','Married'),NEW.MaritalStatus,'Zero') INTO marit_stat;
 
-	SELECT CAST(CONCAT(YEAR(NOW()),'-12-',DAY(LAST_DAY(CONCAT(YEAR(NOW()),'-12-00')))) AS DATE) INTO lastdate;
 
-	
+
+    SELECT RowID,Salary,EffectiveDateFrom FROM employeesalary WHERE EmployeeID=NEW.RowID AND OrganizationID=NEW.OrganizationID AND EffectiveDateTo IS NULL ORDER BY DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),EffectiveDateFrom) LIMIT 1 INTO prevesalRowID,empBasicPay,preEffDateFromEmpSal;
+
+        SELECT RowID FROM payphilhealth WHERE COALESCE(empBasicPay,0) BETWEEN SalaryRangeFrom AND IF(COALESCE(empBasicPay,0) > SalaryRangeTo, COALESCE(empBasicPay,0) + 1, SalaryRangeTo) ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
+
+
+
+    IF NEW.EmployeeType IN ('Fixed','Monthly') THEN
+        IF NEW.PayFrequencyID=1 THEN
+            SET thebasicpay = empBasicPay / 2;
+            SET thedailypay = 0;
+            SET thehourlypay = 0;
+        ELSE
+            SET thebasicpay = empBasicPay;
+            SET thedailypay = 0;
+            SET thehourlypay = 0;
+        END IF;
+
+        SELECT RowID FROM paysocialsecurity WHERE COALESCE(empBasicPay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
+
+    ELSEIF NEW.EmployeeType = 'Daily' THEN
+            SET thebasicpay = empBasicPay;
+            SET thedailypay = empBasicPay;
+            SET thehourlypay = 0;
+
+        SELECT RowID FROM paysocialsecurity WHERE COALESCE(thedailypay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
+
+    ELSEIF NEW.EmployeeType = 'Hourly' THEN
+            SET thebasicpay = empBasicPay;
+            SET thedailypay = 0;
+            SET thehourlypay = empBasicPay;
+
+        SELECT RowID FROM paysocialsecurity WHERE COALESCE(thehourlypay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
+
+    END IF;
+
+    SELECT CAST(CONCAT(YEAR(NOW()),'-12-',DAY(LAST_DAY(CONCAT(YEAR(NOW()),'-12-00')))) AS DATE) INTO lastdate;
+
+
 
 SET preEffDateFromEmpSallatest = IF(DATEDIFF(CURRENT_DATE(),preEffDateFromEmpSal) = 0, ADDDATE(CURRENT_DATE(), INTERVAL 1 DAY), IF(DATEDIFF(CURRENT_DATE(),preEffDateFromEmpSal) < 0, ADDDATE(preEffDateFromEmpSal, INTERVAL 1 DAY), ADDDATE(CURRENT_DATE(), INTERVAL -1 DAY)));
 
-	UPDATE employeesalary SET
-	LastUpdBy=NEW.LastUpdBy
-	,EffectiveDateTo=preEffDateFromEmpSallatest
-	WHERE RowID=prevesalRowID;
-	
-	
+    UPDATE employeesalary SET
+    LastUpdBy=NEW.LastUpdBy
+    ,EffectiveDateTo=preEffDateFromEmpSallatest
+    WHERE RowID=prevesalRowID;
 
-	SELECT ADDDATE(EffectiveDateTo, INTERVAL 1 DAY) FROM employeesalary WHERE RowID=prevesalRowID INTO preEffDateToEmpSallatest;
-	SET @emp_true_sal = (SELECT TrueSalary FROM employeesalary WHERE RowID=prevesalRowID);
-	INSERT INTO employeesalary
-	(
-		EmployeeID
-		,Created
-		,CreatedBy
-		,OrganizationID
-		,PaySocialSecurityID
-		,PayPhilhealthID
-		,HDMFAmount
-		,Salary
-		,BasicPay
-		,BasicDailyPay
-		,BasicHourlyPay
-		,FilingStatusID
-		,NoofDependents
-		,MaritalStatus
-		,PositionID
-		,EffectiveDateFrom,TrueSalary
-	) VALUES(
-		NEW.RowID
-		,CURRENT_TIMESTAMP()
-		,NEW.CreatedBy
-		,NEW.OrganizationID
-		,psssID
-		,phhID
-		,100
-		,COALESCE(empBasicPay,0)
-		,thebasicpay
-		,thedailypay
-		,thehourlypay
-		,(SELECT RowID FROM filingstatus WHERE MaritalStatus=marit_stat AND Dependent=COALESCE(NEW.NoOfDependents,0))
-		,COALESCE(NEW.NoOfDependents,0)
-		,NEW.MaritalStatus
-		,NEW.PositionID
-		,preEffDateToEmpSallatest,IFNULL(@emp_true_sal,0)
-	);
-	
-	
-	
-	
-	
-	
 
-	END IF;
+
+    SELECT ADDDATE(EffectiveDateTo, INTERVAL 1 DAY) FROM employeesalary WHERE RowID=prevesalRowID INTO preEffDateToEmpSallatest;
+    SET @emp_true_sal = (SELECT TrueSalary FROM employeesalary WHERE RowID=prevesalRowID);
+    INSERT INTO employeesalary
+    (
+        EmployeeID
+        ,Created
+        ,CreatedBy
+        ,OrganizationID
+        ,PaySocialSecurityID
+        ,PayPhilhealthID
+        ,HDMFAmount
+        ,Salary
+        ,BasicPay
+        ,BasicDailyPay
+        ,BasicHourlyPay
+        ,FilingStatusID
+        ,NoofDependents
+        ,MaritalStatus
+        ,PositionID
+        ,EffectiveDateFrom,TrueSalary
+    ) VALUES(
+        NEW.RowID
+        ,CURRENT_TIMESTAMP()
+        ,NEW.CreatedBy
+        ,NEW.OrganizationID
+        ,psssID
+        ,phhID
+        ,100
+        ,COALESCE(empBasicPay,0)
+        ,thebasicpay
+        ,thedailypay
+        ,thehourlypay
+        ,(SELECT RowID FROM filingstatus WHERE MaritalStatus=marit_stat AND Dependent=COALESCE(NEW.NoOfDependents,0))
+        ,COALESCE(NEW.NoOfDependents,0)
+        ,NEW.MaritalStatus
+        ,NEW.PositionID
+        ,preEffDateToEmpSallatest,IFNULL(@emp_true_sal,0)
+    );
+
+
+
+
+
+
+
+    END IF;
 
 
 
 ELSEIF NEW.EmploymentStatus = 'Resigned' THEN
 
-	UPDATE employeesalary SET
-	LastUpdBy=NEW.LastUpdBy
-	,EffectiveDateTo=CURRENT_DATE()
-	WHERE EmployeeID=NEW.RowID
-	AND OrganizationID=NEW.OrganizationID
-	AND EffectiveDateTo IS NULL;
+    UPDATE employeesalary SET
+    LastUpdBy=NEW.LastUpdBy
+    ,EffectiveDateTo=CURRENT_DATE()
+    WHERE EmployeeID=NEW.RowID
+    AND OrganizationID=NEW.OrganizationID
+    AND EffectiveDateTo IS NULL;
 
 ELSEIF NEW.EmploymentStatus = 'Terminated' THEN
 
-	UPDATE employeesalary SET
-	LastUpdBy=NEW.LastUpdBy
-	,EffectiveDateTo=CURRENT_DATE()
-	WHERE EmployeeID=NEW.RowID
-	AND OrganizationID=NEW.OrganizationID
-	AND EffectiveDateTo IS NULL;
+    UPDATE employeesalary SET
+    LastUpdBy=NEW.LastUpdBy
+    ,EffectiveDateTo=CURRENT_DATE()
+    WHERE EmployeeID=NEW.RowID
+    AND OrganizationID=NEW.OrganizationID
+    AND EffectiveDateTo IS NULL;
 
 
 
@@ -199,84 +192,84 @@ END IF;
 
 
 
-	SELECT RowID FROM employeechecklist WHERE EmployeeID=NEW.RowID ORDER BY RowID DESC LIMIT 1 INTO emp_chklist_ID;
+    SELECT RowID FROM employeechecklist WHERE EmployeeID=NEW.RowID ORDER BY RowID DESC LIMIT 1 INTO emp_chklist_ID;
 
 INSERT INTO employeechecklist
 (
-	RowID
-	,OrganizationID
-	,Created
-	,CreatedBy
-	,EmployeeID
-	,PerformanceAppraisal
-	,BIRTIN
-	,Diploma
-	,IDInfoSlip
-	,PhilhealthID
-	,HDMFID
-	,SSSNo
-	,TranscriptOfRecord
-	,BirthCertificate
-	,EmployeeContract
-	,MedicalExam
-	,NBIClearance
-	,COEEmployer
-	,MarriageContract
-	,HouseSketch
-	,TrainingAgreement
-	,HealthPermit
-	,ValidID
-	,Resume
+    RowID
+    ,OrganizationID
+    ,Created
+    ,CreatedBy
+    ,EmployeeID
+    ,PerformanceAppraisal
+    ,BIRTIN
+    ,Diploma
+    ,IDInfoSlip
+    ,PhilhealthID
+    ,HDMFID
+    ,SSSNo
+    ,TranscriptOfRecord
+    ,BirthCertificate
+    ,EmployeeContract
+    ,MedicalExam
+    ,NBIClearance
+    ,COEEmployer
+    ,MarriageContract
+    ,HouseSketch
+    ,TrainingAgreement
+    ,HealthPermit
+    ,ValidID
+    ,Resume
 ) VALUES (
-	emp_chklist_ID
-	,NEW.OrganizationID
-	,CURRENT_TIMESTAMP()
-	,NEW.CreatedBy
-	,NEW.RowID
-	,0
-	,IF(COALESCE(NEW.TINNo,'   -   -   -') = '   -   -   -', 0, 1)
-	,0
-	,0
-	,IF(COALESCE(NEW.PhilHealthNo,'    -    -') = '    -    -', 0, 1)
-	,IF(COALESCE(NEW.HDMFNo,'    -    -') = '    -    -', 0, 1)
-	,IF(COALESCE(NEW.SSSNo,'  -       -') = '  -       -', 0, 1)
-	,0
-	,0
-	,0
-	,0
-	,0
-	,0
-	,0
-	,0
-	,0
-	,0
-	,0
-	,0
+    emp_chklist_ID
+    ,NEW.OrganizationID
+    ,CURRENT_TIMESTAMP()
+    ,NEW.CreatedBy
+    ,NEW.RowID
+    ,0
+    ,IF(COALESCE(NEW.TINNo,'   -   -   -') = '   -   -   -', 0, 1)
+    ,0
+    ,0
+    ,IF(COALESCE(NEW.PhilHealthNo,'    -    -') = '    -    -', 0, 1)
+    ,IF(COALESCE(NEW.HDMFNo,'    -    -') = '    -    -', 0, 1)
+    ,IF(COALESCE(NEW.SSSNo,'  -       -') = '  -       -', 0, 1)
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
 ) ON
 DUPLICATE
 KEY
-UPDATE 
-	LastUpd=CURRENT_TIMESTAMP()
-	,LastUpdBy=NEW.LastUpdBy
-	,PerformanceAppraisal=0
-	,BIRTIN=IF(COALESCE(NEW.TINNo,'   -   -   -') = '   -   -   -', 0, 1)
-	,Diploma=0
-	,IDInfoSlip=0
-	,PhilhealthID=IF(COALESCE(NEW.PhilHealthNo,'    -    -') = '    -    -', 0, 1)
-	,HDMFID=IF(COALESCE(NEW.HDMFNo,'    -    -') = '    -    -', 0, 1)
-	,SSSNo=IF(COALESCE(NEW.SSSNo,'  -       -') = '  -       -', 0, 1)
-	,TranscriptOfRecord=0
-	,BirthCertificate=0
-	,EmployeeContract=0
-	,MedicalExam=0
-	,NBIClearance=0
-	,COEEmployer=0
-	,MarriageContract=0
-	,HouseSketch=0
-	,TrainingAgreement=0
-	,HealthPermit=0
-	,ValidID=0
-	,Resume=0;
+UPDATE
+    LastUpd=CURRENT_TIMESTAMP()
+    ,LastUpdBy=NEW.LastUpdBy
+    ,PerformanceAppraisal=0
+    ,BIRTIN=IF(COALESCE(NEW.TINNo,'   -   -   -') = '   -   -   -', 0, 1)
+    ,Diploma=0
+    ,IDInfoSlip=0
+    ,PhilhealthID=IF(COALESCE(NEW.PhilHealthNo,'    -    -') = '    -    -', 0, 1)
+    ,HDMFID=IF(COALESCE(NEW.HDMFNo,'    -    -') = '    -    -', 0, 1)
+    ,SSSNo=IF(COALESCE(NEW.SSSNo,'  -       -') = '  -       -', 0, 1)
+    ,TranscriptOfRecord=0
+    ,BirthCertificate=0
+    ,EmployeeContract=0
+    ,MedicalExam=0
+    ,NBIClearance=0
+    ,COEEmployer=0
+    ,MarriageContract=0
+    ,HouseSketch=0
+    ,TrainingAgreement=0
+    ,HealthPermit=0
+    ,ValidID=0
+    ,Resume=0;
 
 
 
@@ -287,51 +280,51 @@ SELECT RowID FROM `view` WHERE ViewName='Employee Personal Profile' AND Organiza
 
 IF NEW.WorkDaysPerYear != OLD.WorkDaysPerYear THEN
 
-	SELECT
-	EffectiveDateFrom
-	,Salary
-	FROM employeesalary
-	WHERE EmployeeID=NEW.RowID
-	AND OrganizationID=NEW.OrganizationID
-	AND EffectiveDateTo IS NULL
-	INTO current_salaryeffectivedate
-			,emp_fullmonthsalary;
+    SELECT
+    EffectiveDateFrom
+    ,Salary
+    FROM employeesalary
+    WHERE EmployeeID=NEW.RowID
+    AND OrganizationID=NEW.OrganizationID
+    AND EffectiveDateTo IS NULL
+    INTO current_salaryeffectivedate
+            ,emp_fullmonthsalary;
 
-	IF NEW.EmployeeType IN ('Fixed','Monthly') THEN
-		
-		SELECT GET_employeeallowancePerDay(NEW.OrganizationID, NEW.RowID, '1', CURDATE()) INTO emp_everydayallowance;
-	
-		SET emp_everydayallowance = (emp_everydayallowance * NEW.WorkDaysPerYear) / 12;
-			
-		SET emp_fullmonthsalary = emp_fullmonthsalary + emp_everydayallowance;
+    IF NEW.EmployeeType IN ('Fixed','Monthly') THEN
 
-	ELSEIF NEW.EmployeeType = 'Daily' THEN
-		
-		SELECT GET_employeerateperday(NEW.RowID,NEW.OrganizationID,current_salaryeffectivedate) INTO emp_fullmonthsalary;
-		
-	SELECT GET_employeeallowancePerDay(NEW.OrganizationID, NEW.RowID, '1', CURDATE()) INTO emp_everydayallowance;
+        SELECT GET_employeeallowancePerDay(NEW.OrganizationID, NEW.RowID, '1', CURDATE()) INTO emp_everydayallowance;
 
-		SET emp_fullmonthsalary = ((emp_fullmonthsalary + emp_everydayallowance) * NEW.WorkDaysPerYear) / 12;
-		
-	
-	
-	END IF;
+        SET emp_everydayallowance = (emp_everydayallowance * NEW.WorkDaysPerYear) / 12;
+
+        SET emp_fullmonthsalary = emp_fullmonthsalary + emp_everydayallowance;
+
+    ELSEIF NEW.EmployeeType = 'Daily' THEN
+
+        SELECT GET_employeerateperday(NEW.RowID,NEW.OrganizationID,current_salaryeffectivedate) INTO emp_fullmonthsalary;
+
+    SELECT GET_employeeallowancePerDay(NEW.OrganizationID, NEW.RowID, '1', CURDATE()) INTO emp_everydayallowance;
+
+        SET emp_fullmonthsalary = ((emp_fullmonthsalary + emp_everydayallowance) * NEW.WorkDaysPerYear) / 12;
 
 
 
-	SELECT RowID FROM paysocialsecurity WHERE emp_fullmonthsalary BETWEEN RangeFromAmount AND IF(emp_fullmonthsalary > RangeToAmount, (emp_fullmonthsalary + 1), RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
-	
-	SELECT RowID FROM payphilhealth WHERE emp_fullmonthsalary BETWEEN SalaryRangeFrom AND IF(emp_fullmonthsalary > SalaryRangeTo, (emp_fullmonthsalary + 1), SalaryRangeTo) ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
-	
-	UPDATE employeesalary SET
-	PaySocialSecurityID=psssID
-	,PayPhilhealthID=phhID
-	,LastUpdBy=NEW.LastUpdBy
-	WHERE EmployeeID=NEW.RowID
-	AND OrganizationID=NEW.OrganizationID
-	AND EffectiveDateTo IS NULL;
+    END IF;
 
-	INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'WorkDaysPerYear',NEW.RowID,OLD.WorkDaysPerYear,NEW.WorkDaysPerYear,'Update');
+
+
+    SELECT RowID FROM paysocialsecurity WHERE emp_fullmonthsalary BETWEEN RangeFromAmount AND IF(emp_fullmonthsalary > RangeToAmount, (emp_fullmonthsalary + 1), RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
+
+    SELECT RowID FROM payphilhealth WHERE emp_fullmonthsalary BETWEEN SalaryRangeFrom AND IF(emp_fullmonthsalary > SalaryRangeTo, (emp_fullmonthsalary + 1), SalaryRangeTo) ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
+
+    UPDATE employeesalary SET
+    PaySocialSecurityID=psssID
+    ,PayPhilhealthID=phhID
+    ,LastUpdBy=NEW.LastUpdBy
+    WHERE EmployeeID=NEW.RowID
+    AND OrganizationID=NEW.OrganizationID
+    AND EffectiveDateTo IS NULL;
+
+    INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'WorkDaysPerYear',NEW.RowID,OLD.WorkDaysPerYear,NEW.WorkDaysPerYear,'Update');
 
 END IF;
 
@@ -412,58 +405,58 @@ IF OLD.MaternityLeavePerPayPeriod!=NEW.MaternityLeavePerPayPeriod THEN INSERT IN
 
 IF OLD.PositionID!=NEW.PositionID THEN
 
-	INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'PositionID',NEW.RowID,OLD.PositionID,NEW.PositionID,'Update');
+    INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'PositionID',NEW.RowID,OLD.PositionID,NEW.PositionID,'Update');
 
-	
-	
-	
-	
-	
-	SELECT (pos.DivisionId != IFNULL(pot.DivisionId,0))
-	FROM position pos
-	LEFT JOIN position pot ON pot.RowID=NEW.PositionID
-	WHERE pos.RowID=OLD.PositionID
-	INTO IsDepartmentChanged;
-	
-	IF IsDepartmentChanged = '1' THEN
-	
-		SET group_concat_max_len = 1000000;
-	
-		SET @esh_RowID = '';
-	
-		
-		
-		SELECT EXISTS(
-			SELECT (@esh_RowID := GROUP_CONCAT(esh.RowID))
-			FROM employeeshift esh
-			
-			INNER JOIN (SELECT * FROM employee WHERE RowID=NEW.RowID) e ON e.RowID=esh.EmployeeID AND e.OrganizationID=esh.OrganizationID
-			
-			INNER JOIN (SELECT DateValue FROM dates WHERE YEAR(DateValue)=YEAR(CURDATE()) AND DAYOFWEEK(DateValue)=(@@default_week_format + 1) ORDER BY DateValue LIMIT 1) dd ON dd.DateValue IS NOT NULL
-			
-			INNER JOIN (SELECT IF(LAST_DAY(DATE_FORMAT(CURDATE(),'%Y-12-01')) > d.DateValue
-										, ADDDATE(d.DateValue, INTERVAL 1 WEEK)
-										, LAST_DAY(DATE_FORMAT(CURDATE(),'%Y-12-01'))) AS EndingDate
-							FROM dates d
-							WHERE YEAR(d.DateValue) <= YEAR(CURDATE())
-							AND DAYOFWEEK(d.DateValue) = IF(anyintiger - 1 < 0, 7, anyintiger)
-							AND WEEKOFYEAR(d.DateValue) > 50
-							ORDER BY d.DateValue DESC
-							LIMIT 1) ddd ON ddd.EndingDate IS NOT NULL
-			WHERE esh.OrganizationID=NEW.OrganizationID
-			AND (esh.EffectiveFrom >= IF(TIMESTAMPDIFF(YEAR,e.StartDate,CURDATE()) > 1, dd.DateValue, e.StartDate)
-					OR esh.EffectiveTo >= IF(TIMESTAMPDIFF(YEAR,e.StartDate,CURDATE()) > 1, dd.DateValue, e.StartDate))		
-			AND (esh.EffectiveFrom <= ddd.EndingDate OR esh.EffectiveTo <= ddd.EndingDate)
-		) INTO anyint;
-	
-		
-	
-		
-	
-		SET group_concat_max_len = 1024;
-		
-	END IF;
-		
+
+
+
+
+
+    SELECT (pos.DivisionId != IFNULL(pot.DivisionId,0))
+    FROM position pos
+    LEFT JOIN position pot ON pot.RowID=NEW.PositionID
+    WHERE pos.RowID=OLD.PositionID
+    INTO IsDepartmentChanged;
+
+    IF IsDepartmentChanged = '1' THEN
+
+        SET group_concat_max_len = 1000000;
+
+        SET @esh_RowID = '';
+
+
+
+        SELECT EXISTS(
+            SELECT (@esh_RowID := GROUP_CONCAT(esh.RowID))
+            FROM employeeshift esh
+
+            INNER JOIN (SELECT * FROM employee WHERE RowID=NEW.RowID) e ON e.RowID=esh.EmployeeID AND e.OrganizationID=esh.OrganizationID
+
+            INNER JOIN (SELECT DateValue FROM dates WHERE YEAR(DateValue)=YEAR(CURDATE()) AND DAYOFWEEK(DateValue)=(@@default_week_format + 1) ORDER BY DateValue LIMIT 1) dd ON dd.DateValue IS NOT NULL
+
+            INNER JOIN (SELECT IF(LAST_DAY(DATE_FORMAT(CURDATE(),'%Y-12-01')) > d.DateValue
+                                        , ADDDATE(d.DateValue, INTERVAL 1 WEEK)
+                                        , LAST_DAY(DATE_FORMAT(CURDATE(),'%Y-12-01'))) AS EndingDate
+                            FROM dates d
+                            WHERE YEAR(d.DateValue) <= YEAR(CURDATE())
+                            AND DAYOFWEEK(d.DateValue) = IF(anyintiger - 1 < 0, 7, anyintiger)
+                            AND WEEKOFYEAR(d.DateValue) > 50
+                            ORDER BY d.DateValue DESC
+                            LIMIT 1) ddd ON ddd.EndingDate IS NOT NULL
+            WHERE esh.OrganizationID=NEW.OrganizationID
+            AND (esh.EffectiveFrom >= IF(TIMESTAMPDIFF(YEAR,e.StartDate,CURDATE()) > 1, dd.DateValue, e.StartDate)
+                    OR esh.EffectiveTo >= IF(TIMESTAMPDIFF(YEAR,e.StartDate,CURDATE()) > 1, dd.DateValue, e.StartDate))
+            AND (esh.EffectiveFrom <= ddd.EndingDate OR esh.EffectiveTo <= ddd.EndingDate)
+        ) INTO anyint;
+
+
+
+
+
+        SET group_concat_max_len = 1024;
+
+    END IF;
+
 END IF;
 
 
@@ -475,37 +468,37 @@ END IF;
 
 IF IFNULL(OLD.AgencyID,0) != IFNULL(NEW.AgencyID,0) THEN
 
-	SELECT ag.AgencyName,ag.`AgencyFee` FROM agency ag WHERE ag.RowID=OLD.AgencyID INTO OLD_agency_name,OLD_agfee;
+    SELECT ag.AgencyName,ag.`AgencyFee` FROM agency ag WHERE ag.RowID=OLD.AgencyID INTO OLD_agency_name,OLD_agfee;
 
-	SET OLD_agency_name = IFNULL(OLD_agency_name,'');
-	SET OLD_agfee = IFNULL(OLD_agfee,0.0);
+    SET OLD_agency_name = IFNULL(OLD_agency_name,'');
+    SET OLD_agfee = IFNULL(OLD_agfee,0.0);
 
-	SELECT ag.AgencyName,ag.`AgencyFee` FROM agency ag WHERE ag.RowID=NEW.AgencyID INTO NEW_agency_name,NEW_agfee;
+    SELECT ag.AgencyName,ag.`AgencyFee` FROM agency ag WHERE ag.RowID=NEW.AgencyID INTO NEW_agency_name,NEW_agfee;
 
-	SET NEW_agency_name = IFNULL(NEW_agency_name,'');
-	SET NEW_agfee = IFNULL(NEW_agfee,0.0);
+    SET NEW_agency_name = IFNULL(NEW_agency_name,'');
+    SET NEW_agfee = IFNULL(NEW_agfee,0.0);
 
-	SET agfee_percent = NEW_agfee / OLD_agfee;
+    SET agfee_percent = NEW_agfee / OLD_agfee;
 
-	
-	
-	IF agfee_percent != 1.0 THEN
-	
-		UPDATE agencyfee agf
-		SET agf.DailyFee = agf.DailyFee * agfee_percent
-		WHERE agf.OrganizationID=NEW.OrganizationID
-		AND agf.AgencyID=NEW.AgencyID
-		AND agf.EmployeeID=NEW.RowID
-		AND agf.EmpPositionID=NEW.PositionID;
-		
-		
-		
 
-		
-		
-	END IF;
-		
-	INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'Agency',NEW.RowID,OLD_agency_name,NEW_agency_name,'Update');
+
+    IF agfee_percent != 1.0 THEN
+
+        UPDATE agencyfee agf
+        SET agf.DailyFee = agf.DailyFee * agfee_percent
+        WHERE agf.OrganizationID=NEW.OrganizationID
+        AND agf.AgencyID=NEW.AgencyID
+        AND agf.EmployeeID=NEW.RowID
+        AND agf.EmpPositionID=NEW.PositionID;
+
+
+
+
+
+
+    END IF;
+
+    INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'Agency',NEW.RowID,OLD_agency_name,NEW_agency_name,'Update');
 
 END IF;
 
@@ -520,21 +513,21 @@ END IF;
 
 IF NEW.AgencyID IS NOT NULL THEN
 
-	SET agfee_percent = 0.0;
-	
-	UPDATE employeesalary es
-	INNER JOIN payphilhealth phh ON phh.SalaryBracket = -1500 AND phh.HiddenData='1'
-	INNER JOIN paysocialsecurity pss ON pss.MonthlySalaryCredit = -1500 AND pss.HiddenData='1'
-	LEFT JOIN (SELECT * FROM listofval WHERE `Type`='Default Government Contribution' AND `LIC`='HDMF' LIMIT 1) lv ON lv.RowID > 0
-	SET es.PaySocialSecurityID = pss.RowID
-	,es.PayPhilhealthID = phh.RowID
-	,es.HDMFAmount = IF(lv.DisplayValue IS NULL, 100.0, (lv.DisplayValue * 1.0))
-	,es.LastUpd = CURRENT_TIMESTAMP()
-	,es.LastUpdBy = NEW.LastUpdBy
-	WHERE es.EmployeeID=NEW.RowID
-	AND es.OrganizationID=NEW.OrganizationID;
-	
-	SELECT RowID FROM `view` WHERE ViewName='Employee Salary' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
+    SET agfee_percent = 0.0;
+
+    UPDATE employeesalary es
+    INNER JOIN payphilhealth phh ON phh.SalaryBracket = -1500 AND phh.HiddenData='1'
+    INNER JOIN paysocialsecurity pss ON pss.MonthlySalaryCredit = -1500 AND pss.HiddenData='1'
+    LEFT JOIN (SELECT * FROM listofval WHERE `Type`='Default Government Contribution' AND `LIC`='HDMF' LIMIT 1) lv ON lv.RowID > 0
+    SET es.PaySocialSecurityID = pss.RowID
+    ,es.PayPhilhealthID = phh.RowID
+    ,es.HDMFAmount = IF(lv.DisplayValue IS NULL, 100.0, (lv.DisplayValue * 1.0))
+    ,es.LastUpd = CURRENT_TIMESTAMP()
+    ,es.LastUpdBy = NEW.LastUpdBy
+    WHERE es.EmployeeID=NEW.RowID
+    AND es.OrganizationID=NEW.OrganizationID;
+
+    SELECT RowID FROM `view` WHERE ViewName='Employee Salary' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 
 
 ELSE
@@ -543,53 +536,53 @@ ELSE
 
 
 
-	SELECT RowID,Salary,EffectiveDateFrom FROM employeesalary WHERE EmployeeID=NEW.RowID AND OrganizationID=NEW.OrganizationID ORDER BY EffectiveDateFrom DESC LIMIT 1 INTO prevesalRowID,empBasicPay,preEffDateFromEmpSal;
-	
-	
-	
-	
-	IF NEW.EmployeeType IN ('Fixed','Monthly') THEN
-		IF NEW.PayFrequencyID=1 THEN
-			SET thebasicpay = empBasicPay / 2.0;
-			SET thedailypay = 0;
-			SET thehourlypay = 0;
-		ELSE
-			SET thebasicpay = empBasicPay;
-			SET thedailypay = 0;
-			SET thehourlypay = 0;
-		END IF;
-		
-		SELECT RowID FROM payphilhealth WHERE IFNULL(empBasicPay,0) BETWEEN SalaryRangeFrom AND SalaryRangeTo ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
-		
-		SELECT RowID FROM paysocialsecurity WHERE IFNULL(empBasicPay,0) BETWEEN RangeFromAmount AND RangeToAmount ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
-		
-	ELSEIF NEW.EmployeeType = 'Daily' THEN
-			SET thebasicpay = (empBasicPay * NEW.WorkDaysPerYear) / 12;
-			SET thedailypay = empBasicPay;
-			SET thehourlypay = 0;
-			
-		SELECT RowID FROM payphilhealth WHERE IFNULL(thebasicpay,0) BETWEEN SalaryRangeFrom AND SalaryRangeTo ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
-		
-		SELECT RowID FROM paysocialsecurity WHERE IFNULL(thebasicpay,0) BETWEEN RangeFromAmount AND RangeToAmount ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
-		
-	ELSEIF NEW.EmployeeType = 'Hourly' THEN
-			SET thebasicpay = empBasicPay;
-			SET thedailypay = 0;
-			SET thehourlypay = empBasicPay;	
-			
-		SELECT RowID FROM paysocialsecurity WHERE COALESCE(thehourlypay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
-		
-	END IF;
+    SELECT RowID,Salary,EffectiveDateFrom FROM employeesalary WHERE EmployeeID=NEW.RowID AND OrganizationID=NEW.OrganizationID ORDER BY EffectiveDateFrom DESC LIMIT 1 INTO prevesalRowID,empBasicPay,preEffDateFromEmpSal;
 
-	UPDATE employeesalary es
-	SET es.PaySocialSecurityID = psssID
-	,es.PayPhilhealthID = phhID
-	,es.HDMFAmount = 100.0
-	,es.LastUpd = CURRENT_TIMESTAMP()
-	,es.LastUpdBy = NEW.LastUpdBy
-	WHERE es.EmployeeID=NEW.RowID
-	AND es.OrganizationID=NEW.OrganizationID;
-	
+
+
+
+    IF NEW.EmployeeType IN ('Fixed','Monthly') THEN
+        IF NEW.PayFrequencyID=1 THEN
+            SET thebasicpay = empBasicPay / 2.0;
+            SET thedailypay = 0;
+            SET thehourlypay = 0;
+        ELSE
+            SET thebasicpay = empBasicPay;
+            SET thedailypay = 0;
+            SET thehourlypay = 0;
+        END IF;
+
+        SELECT RowID FROM payphilhealth WHERE IFNULL(empBasicPay,0) BETWEEN SalaryRangeFrom AND SalaryRangeTo ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
+
+        SELECT RowID FROM paysocialsecurity WHERE IFNULL(empBasicPay,0) BETWEEN RangeFromAmount AND RangeToAmount ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
+
+    ELSEIF NEW.EmployeeType = 'Daily' THEN
+            SET thebasicpay = (empBasicPay * NEW.WorkDaysPerYear) / 12;
+            SET thedailypay = empBasicPay;
+            SET thehourlypay = 0;
+
+        SELECT RowID FROM payphilhealth WHERE IFNULL(thebasicpay,0) BETWEEN SalaryRangeFrom AND SalaryRangeTo ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
+
+        SELECT RowID FROM paysocialsecurity WHERE IFNULL(thebasicpay,0) BETWEEN RangeFromAmount AND RangeToAmount ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
+
+    ELSEIF NEW.EmployeeType = 'Hourly' THEN
+            SET thebasicpay = empBasicPay;
+            SET thedailypay = 0;
+            SET thehourlypay = empBasicPay;
+
+        SELECT RowID FROM paysocialsecurity WHERE COALESCE(thehourlypay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
+
+    END IF;
+
+    UPDATE employeesalary es
+    SET es.PaySocialSecurityID = psssID
+    ,es.PayPhilhealthID = phhID
+    ,es.HDMFAmount = 100.0
+    ,es.LastUpd = CURRENT_TIMESTAMP()
+    ,es.LastUpdBy = NEW.LastUpdBy
+    WHERE es.EmployeeID=NEW.RowID
+    AND es.OrganizationID=NEW.OrganizationID;
+
 END IF;
 
 
@@ -597,6 +590,7 @@ END IF;
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

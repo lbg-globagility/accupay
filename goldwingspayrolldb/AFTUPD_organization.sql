@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.AFTUPD_organization
 DROP TRIGGER IF EXISTS `AFTUPD_organization`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -19,12 +12,12 @@ CREATE TRIGGER `AFTUPD_organization` AFTER UPDATE ON `organization` FOR EACH ROW
 DECLARE view_RowID INT(11);
 
 DECLARE INS_audit_ID INT(11);
-	
-	
-	
-	SELECT RowID FROM `view` WHERE ViewName='Organization' AND OrganizationID=NEW.RowID INTO view_RowID;
-	
-	
+
+
+
+    SELECT RowID FROM `view` WHERE ViewName='Organization' AND OrganizationID=NEW.RowID INTO view_RowID;
+
+
 
 SELECT `INS_audittrail_RETRowID`(NEW.LastUpdBy,NEW.LastUpdBy,NEW.RowID,view_RowID,'Name',NEW.RowID,OLD.Name,NEW.Name,'Update') INTO INS_audit_ID;
 
@@ -101,6 +94,7 @@ SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,NEW.RowID,view_RowI
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

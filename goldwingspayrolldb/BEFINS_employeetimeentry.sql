@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.BEFINS_employeetimeentry
 DROP TRIGGER IF EXISTS `BEFINS_employeetimeentry`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -287,93 +280,93 @@ SET @ecalcnd = (SELECT e.CalcNightDiff FROM employee e WHERE e.RowID=NEW.Employe
 
 IF @ecalcnd = 1 THEN
 
-	SET @og_ndtimefrom=CURTIME();
-	SET @og_ndtimeto=CURTIME();
-	SELECT og.NightDifferentialTimeFrom,og.NightDifferentialTimeTo FROM organization og WHERE og.RowID=NEW.OrganizationID INTO @og_ndtimefrom,@og_ndtimeto;
+    SET @og_ndtimefrom=CURTIME();
+    SET @og_ndtimeto=CURTIME();
+    SELECT og.NightDifferentialTimeFrom,og.NightDifferentialTimeTo FROM organization og WHERE og.RowID=NEW.OrganizationID INTO @og_ndtimefrom,@og_ndtimeto;
 
-	SET @breaktimehrs = 0; SET @breakstarttime = NULL; SET @breakendtime = NULL; SET @isNightShift = 0; SET @divisortodailyrate = 0;
-	
-	SET @sh_tf = CURTIME(); SET @sh_tt = CURTIME();
-	
-	SET @sh_timefrom=CURTIME();
-	SET @sh_timeto=CURTIME();
-	
-	SELECT COMPUTE_TimeDifference(sh.BreakTimeFrom,sh.BreakTimeTo), sh.BreakTimeFrom, sh.BreakTimeTo,esh.NightShift, sh.TimeFrom, sh.TimeTo, sh.DivisorToDailyRate FROM employeeshift esh LEFT JOIN shift sh ON sh.RowID=esh.ShiftID WHERE esh.RowID=NEW.EmployeeShiftID AND NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo LIMIT 1 INTO @breaktimehrs, @breakstarttime, @breakendtime, @isNightShift, @sh_timefrom, @sh_timeto, @divisortodailyrate;
-	
-	IF ADDTIME(TIMESTAMP(NEW.`Date`), @og_ndtimefrom) BETWEEN TIMESTAMP(NEW.`Date`) AND ADDTIME(TIMESTAMP(NEW.`Date`), '23:59:59') AND @isNightShift = 1 THEN
-	
-		SET @etd_tsin = NULL; SET @etd_tsout = NULL;
-		SET @og_ndtsfrom = NULL; SET @og_ndtsto = NULL;
-			
-		SET @is_reg_shift_valid_for_ndiff=0;
-		
-		SELECT etd.TimeStampIn
-		,ADDTIME(TIMESTAMP(DATE_FORMAT(etd.TimeStampIn,@@date_format)), og.NightDifferentialTimeFrom)
-		
-		,ADDTIME(TIMESTAMP(DATE_FORMAT(etd.TimeStampOut,@@date_format)), og.NightDifferentialTimeTo)
-		,etd.TimeStampOut
-		
-		,(	CONCAT_DATETIME(NEW.`Date`
-								, IF(etd.TimeIn < @sh_timefrom
-										, @sh_timefrom
-										, etd.TimeIn))
-		<= CONCAT_DATETIME(NEW.`Date`, @og_ndtimefrom)
-		AND
-			CONCAT_DATETIME(ADDDATE(NEW.`Date`, INTERVAL 1 DAY), @og_ndtimeto)
-		>= CONCAT_DATETIME(ADDDATE(NEW.`Date`, INTERVAL 1 DAY)
-								, IF(etd.TimeOut > @sh_timeto
-										, @sh_timeto
-										, etd.TimeOut))
-		AND (TIME_FORMAT(@sh_timefrom, '%p') = TIME_FORMAT(@og_ndtimefrom, '%p')
-				AND TIME_FORMAT(@sh_timeto, '%p') = TIME_FORMAT(@og_ndtimeto, '%p'))
-			) `is_reg_shift_valid_for_ndiff`
-		FROM employeetimeentrydetails etd
-		INNER JOIN organization og ON og.RowID=etd.OrganizationID
-		WHERE etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=NEW.`Date`
-		AND TIME_FORMAT(og.NightDifferentialTimeFrom,'%p')	=TIME_FORMAT(@sh_timefrom,'%p')
-		AND TIME_FORMAT(og.NightDifferentialTimeTo,'%p')	=TIME_FORMAT(@sh_timeto,'%p')
-		ORDER BY IFNULL(etd.LastUpd,etd.Created) DESC LIMIT 1
-		INTO
-			@etd_tsin, @og_ndtsfrom
-			,@og_ndtsto, @etd_tsout
-			,@is_reg_shift_valid_for_ndiff;
-		
-		SET @TimeOne = TIME_FORMAT(IF(@etd_tsin < @og_ndtsfrom, @og_ndtsfrom, @etd_tsin), @@time_format);
-		SET @TimeTwo = TIME_FORMAT(IF(@og_ndtsto < @etd_tsout, @og_ndtsto, @etd_tsout), @@time_format);
-		
-		SET @breaktimehrs	=IF(TIME_FORMAT(@etd_tsin, @@time_format) BETWEEN @breakstarttime AND @breakendtime
-									, COMPUTE_TimeDifference(TIME_FORMAT(@etd_tsin, @@time_format), @breakendtime)
-									, IF(TIME_FORMAT(@etd_tsout, @@time_format) BETWEEN @breakstarttime AND @breakendtime
-										, COMPUTE_TimeDifference(@breakstarttime, TIME_FORMAT(@etd_tsout, @@time_format))
-										, @breaktimehrs));
-		
-		SET NEW.NightDifferentialHours	=NEW.NightDifferentialHours
-													+ COMPUTE_TimeDifference(@TimeOne, @TimeTwo) - @breaktimehrs;
-		
-		SET @daily_pay = 0.00;
-		
-		IF emp_type = 'Daily' THEN
-			SET @daily_pay = (SELECT BasicPay FROM employeesalary WHERE RowID=NEW.EmployeeSalaryID);
-		
-		ELSE
-			SET @daily_pay = GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, NEW.`Date`);
-			
-		END IF;
-		
-		SET NEW.NightDiffHoursAmount		=NEW.NightDiffHoursAmount
-													+ (
-														(NEW.NightDifferentialHours / IFNULL(@divisortodailyrate,default_workhours_everyday))
-														* (SELECT @daily_pay * (pr.NightDifferentialRate MOD 1) FROM payrate pr WHERE pr.RowID=NEW.PayRateID)
-														);
-		SET NEW.TotalDayPay	=NEW.TotalDayPay + NEW.NightDiffHoursAmount;
-	ELSE
-		SET NEW.NightDifferentialHours = 0;
-		
-	END IF;
-	
+    SET @breaktimehrs = 0; SET @breakstarttime = NULL; SET @breakendtime = NULL; SET @isNightShift = 0; SET @divisortodailyrate = 0;
+
+    SET @sh_tf = CURTIME(); SET @sh_tt = CURTIME();
+
+    SET @sh_timefrom=CURTIME();
+    SET @sh_timeto=CURTIME();
+
+    SELECT COMPUTE_TimeDifference(sh.BreakTimeFrom,sh.BreakTimeTo), sh.BreakTimeFrom, sh.BreakTimeTo,esh.NightShift, sh.TimeFrom, sh.TimeTo, sh.DivisorToDailyRate FROM employeeshift esh LEFT JOIN shift sh ON sh.RowID=esh.ShiftID WHERE esh.RowID=NEW.EmployeeShiftID AND NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo LIMIT 1 INTO @breaktimehrs, @breakstarttime, @breakendtime, @isNightShift, @sh_timefrom, @sh_timeto, @divisortodailyrate;
+
+    IF ADDTIME(TIMESTAMP(NEW.`Date`), @og_ndtimefrom) BETWEEN TIMESTAMP(NEW.`Date`) AND ADDTIME(TIMESTAMP(NEW.`Date`), '23:59:59') AND @isNightShift = 1 THEN
+
+        SET @etd_tsin = NULL; SET @etd_tsout = NULL;
+        SET @og_ndtsfrom = NULL; SET @og_ndtsto = NULL;
+
+        SET @is_reg_shift_valid_for_ndiff=0;
+
+        SELECT etd.TimeStampIn
+        ,ADDTIME(TIMESTAMP(DATE_FORMAT(etd.TimeStampIn,@@date_format)), og.NightDifferentialTimeFrom)
+
+        ,ADDTIME(TIMESTAMP(DATE_FORMAT(etd.TimeStampOut,@@date_format)), og.NightDifferentialTimeTo)
+        ,etd.TimeStampOut
+
+        ,(  CONCAT_DATETIME(NEW.`Date`
+                                , IF(etd.TimeIn < @sh_timefrom
+                                        , @sh_timefrom
+                                        , etd.TimeIn))
+        <= CONCAT_DATETIME(NEW.`Date`, @og_ndtimefrom)
+        AND
+            CONCAT_DATETIME(ADDDATE(NEW.`Date`, INTERVAL 1 DAY), @og_ndtimeto)
+        >= CONCAT_DATETIME(ADDDATE(NEW.`Date`, INTERVAL 1 DAY)
+                                , IF(etd.TimeOut > @sh_timeto
+                                        , @sh_timeto
+                                        , etd.TimeOut))
+        AND (TIME_FORMAT(@sh_timefrom, '%p') = TIME_FORMAT(@og_ndtimefrom, '%p')
+                AND TIME_FORMAT(@sh_timeto, '%p') = TIME_FORMAT(@og_ndtimeto, '%p'))
+            ) `is_reg_shift_valid_for_ndiff`
+        FROM employeetimeentrydetails etd
+        INNER JOIN organization og ON og.RowID=etd.OrganizationID
+        WHERE etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=NEW.`Date`
+        AND TIME_FORMAT(og.NightDifferentialTimeFrom,'%p')  =TIME_FORMAT(@sh_timefrom,'%p')
+        AND TIME_FORMAT(og.NightDifferentialTimeTo,'%p')    =TIME_FORMAT(@sh_timeto,'%p')
+        ORDER BY IFNULL(etd.LastUpd,etd.Created) DESC LIMIT 1
+        INTO
+            @etd_tsin, @og_ndtsfrom
+            ,@og_ndtsto, @etd_tsout
+            ,@is_reg_shift_valid_for_ndiff;
+
+        SET @TimeOne = TIME_FORMAT(IF(@etd_tsin < @og_ndtsfrom, @og_ndtsfrom, @etd_tsin), @@time_format);
+        SET @TimeTwo = TIME_FORMAT(IF(@og_ndtsto < @etd_tsout, @og_ndtsto, @etd_tsout), @@time_format);
+
+        SET @breaktimehrs   =IF(TIME_FORMAT(@etd_tsin, @@time_format) BETWEEN @breakstarttime AND @breakendtime
+                                    , COMPUTE_TimeDifference(TIME_FORMAT(@etd_tsin, @@time_format), @breakendtime)
+                                    , IF(TIME_FORMAT(@etd_tsout, @@time_format) BETWEEN @breakstarttime AND @breakendtime
+                                        , COMPUTE_TimeDifference(@breakstarttime, TIME_FORMAT(@etd_tsout, @@time_format))
+                                        , @breaktimehrs));
+
+        SET NEW.NightDifferentialHours  =NEW.NightDifferentialHours
+                                                    + COMPUTE_TimeDifference(@TimeOne, @TimeTwo) - @breaktimehrs;
+
+        SET @daily_pay = 0.00;
+
+        IF emp_type = 'Daily' THEN
+            SET @daily_pay = (SELECT BasicPay FROM employeesalary WHERE RowID=NEW.EmployeeSalaryID);
+
+        ELSE
+            SET @daily_pay = GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, NEW.`Date`);
+
+        END IF;
+
+        SET NEW.NightDiffHoursAmount        =NEW.NightDiffHoursAmount
+                                                    + (
+                                                        (NEW.NightDifferentialHours / IFNULL(@divisortodailyrate,default_workhours_everyday))
+                                                        * (SELECT @daily_pay * (pr.NightDifferentialRate MOD 1) FROM payrate pr WHERE pr.RowID=NEW.PayRateID)
+                                                        );
+        SET NEW.TotalDayPay =NEW.TotalDayPay + NEW.NightDiffHoursAmount;
+    ELSE
+        SET NEW.NightDifferentialHours = 0;
+
+    END IF;
+
 ELSE
-	SET NEW.NightDifferentialHours = 0;
-	
+    SET NEW.NightDifferentialHours = 0;
+
 END IF;
 
 
@@ -381,6 +374,7 @@ END IF;
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

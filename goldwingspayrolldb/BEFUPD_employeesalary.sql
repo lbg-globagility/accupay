@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.BEFUPD_employeesalary
 DROP TRIGGER IF EXISTS `BEFUPD_employeesalary`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -50,46 +43,47 @@ SELECT e.EmploymentStatus,e.EmployeeType,e.PayFrequencyID,e.WorkDaysPerYear,e.Ag
 ,e_agencyID,pay_freq_type;
 SET NEW.BasicPay = NEW.Salary / IF(LOCATE(e_type,CONCAT(pay_freq_type,'Fixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(e_type));
 SELECT EXISTS(SELECT RowID
-					FROM employeeallowance
-					WHERE (DATE_FORMAT(Created,'%Y-%m-%d')=CURDATE() OR DATE_FORMAT(LastUpd,'%Y-%m-%d')=CURDATE())
-					AND EmployeeID=NEW.EmployeeID
-					AND OrganizationID=NEW.OrganizationID
-					AND (EffectiveStartDate >= NEW.EffectiveDateFrom OR EffectiveEndDate >= NEW.EffectiveDateFrom)
-					AND (EffectiveStartDate <= IFNULL(NEW.EffectiveDateTo,CURDATE()) OR EffectiveEndDate <= IFNULL(NEW.EffectiveDateTo,CURDATE()))
-				UNION ALL
-					SELECT RowID
-					FROM employeeallowance
-					WHERE (DATE_FORMAT(Created,'%Y-%m-%d')=CURDATE() OR DATE_FORMAT(LastUpd,'%Y-%m-%d')=CURDATE())
-					AND EmployeeID=NEW.EmployeeID
-					AND OrganizationID=NEW.OrganizationID
-					AND (EffectiveStartDate <= NEW.EffectiveDateFrom OR EffectiveEndDate <= NEW.EffectiveDateFrom)
-					AND (EffectiveStartDate >= IFNULL(NEW.EffectiveDateTo,CURDATE()) OR EffectiveEndDate >= IFNULL(NEW.EffectiveDateTo,CURDATE()))) INTO hasadditionalamount;
+                    FROM employeeallowance
+                    WHERE (DATE_FORMAT(Created,'%Y-%m-%d')=CURDATE() OR DATE_FORMAT(LastUpd,'%Y-%m-%d')=CURDATE())
+                    AND EmployeeID=NEW.EmployeeID
+                    AND OrganizationID=NEW.OrganizationID
+                    AND (EffectiveStartDate >= NEW.EffectiveDateFrom OR EffectiveEndDate >= NEW.EffectiveDateFrom)
+                    AND (EffectiveStartDate <= IFNULL(NEW.EffectiveDateTo,CURDATE()) OR EffectiveEndDate <= IFNULL(NEW.EffectiveDateTo,CURDATE()))
+                UNION ALL
+                    SELECT RowID
+                    FROM employeeallowance
+                    WHERE (DATE_FORMAT(Created,'%Y-%m-%d')=CURDATE() OR DATE_FORMAT(LastUpd,'%Y-%m-%d')=CURDATE())
+                    AND EmployeeID=NEW.EmployeeID
+                    AND OrganizationID=NEW.OrganizationID
+                    AND (EffectiveStartDate <= NEW.EffectiveDateFrom OR EffectiveEndDate <= NEW.EffectiveDateFrom)
+                    AND (EffectiveStartDate >= IFNULL(NEW.EffectiveDateTo,CURDATE()) OR EffectiveEndDate >= IFNULL(NEW.EffectiveDateTo,CURDATE()))) INTO hasadditionalamount;
 
 
 IF e_type = 'Daily' THEN
 
-	SET NEW.PaySocialSecurityID = (SELECT RowID FROM paysocialsecurity WHERE ((NEW.BasicPay * e_workdayyear) / 12.00) BETWEEN RangeFromAmount AND RangeToAmount AND NEW.OverrideDiscardSSSContrib = 0 LIMIT 1);
+    SET NEW.PaySocialSecurityID = (SELECT RowID FROM paysocialsecurity WHERE ((NEW.BasicPay * e_workdayyear) / 12.00) BETWEEN RangeFromAmount AND RangeToAmount AND NEW.OverrideDiscardSSSContrib = 0 LIMIT 1);
 
-	SET NEW.PayPhilhealthID = (SELECT RowID FROM payphilhealth WHERE ((NEW.BasicPay * e_workdayyear) / 12.00) BETWEEN SalaryRangeFrom AND SalaryRangeTo AND NEW.OverrideDiscardPhilHealthContrib = 0 LIMIT 1);
+    SET NEW.PayPhilhealthID = (SELECT RowID FROM payphilhealth WHERE ((NEW.BasicPay * e_workdayyear) / 12.00) BETWEEN SalaryRangeFrom AND SalaryRangeTo AND NEW.OverrideDiscardPhilHealthContrib = 0 LIMIT 1);
 
 ELSE
-	IF NEW.OverrideDiscardSSSContrib = 1 THEN
-		SET NEW.PaySocialSecurityID = NULL;
-	END IF;
-	
-	IF NEW.OverrideDiscardPhilHealthContrib = 1 THEN
-		SET NEW.PayPhilhealthID = NULL;
-	END IF;
+    IF NEW.OverrideDiscardSSSContrib = 1 THEN
+        SET NEW.PaySocialSecurityID = NULL;
+    END IF;
+
+    IF NEW.OverrideDiscardPhilHealthContrib = 1 THEN
+        SET NEW.PayPhilhealthID = NULL;
+    END IF;
 
 END IF;
 
 IF IFNULL(NEW.UndeclaredSalary,0) = 0 THEN
-	SET NEW.UndeclaredSalary = IFNULL(NEW.TrueSalary - NEW.`Salary`,0);
+    SET NEW.UndeclaredSalary = IFNULL(NEW.TrueSalary - NEW.`Salary`,0);
 END IF;
 
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

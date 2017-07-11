@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.AFTINS_employeedependents
 DROP TRIGGER IF EXISTS `AFTINS_employeedependents`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -44,17 +37,18 @@ INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldC
 ,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'Birthdate',NEW.RowID,'',NEW.Birthdate,'Insert');
 
 
-	UPDATE employee SET
-	NoOfDependents=(SELECT COUNT(RowID) FROM employeedependents WHERE ParentEmployeeID=NEW.ParentEmployeeID AND OrganizationID=NEW.OrganizationID AND ActiveFlag='Y')
-	,LastUpdBy=NEW.CreatedBy
-	,LastUpd=CURRENT_TIMESTAMP()
-	WHERE RowID=NEW.ParentEmployeeID;
+    UPDATE employee SET
+    NoOfDependents=(SELECT COUNT(RowID) FROM employeedependents WHERE ParentEmployeeID=NEW.ParentEmployeeID AND OrganizationID=NEW.OrganizationID AND ActiveFlag='Y')
+    ,LastUpdBy=NEW.CreatedBy
+    ,LastUpd=CURRENT_TIMESTAMP()
+    WHERE RowID=NEW.ParentEmployeeID;
 
 
 
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

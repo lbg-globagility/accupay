@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.AFTINS_employeeofficialbusiness_then_employeetimeentrydetails
 DROP TRIGGER IF EXISTS `AFTINS_employeeofficialbusiness_then_employeetimeentrydetails`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -30,49 +23,49 @@ SET eob_dayrange = DATEDIFF(COALESCE(NEW.OffBusEndDate,NEW.OffBusStartDate),NEW.
 SET one_datetimestamp = (SELECT etd.Created FROM employeetimeentrydetails etd INNER JOIN (SELECT pp.RowID,pp.PayFromDate, pp.PayToDate FROM employee e INNER JOIN payperiod pp ON pp.TotalGrossSalary=e.PayFrequencyID AND pp.OrganizationID=e.OrganizationID AND NEW.OffBusStartDate BETWEEN pp.PayFromDate AND pp.PayToDate WHERE e.RowID=NEW.EmployeeID AND e.OrganizationID=NEW.OrganizationID LIMIT 1) i ON i.RowID IS NOT NULL OR i.RowID IS NULL WHERE etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date` BETWEEN i.PayFromDate AND i.PayToDate LIMIT 1);
 SET one_datetimestamp = IFNULL(one_datetimestamp,CURRENT_TIMESTAMP());
 SET i=0;
-	
-	IF NEW.OffBusStatus = 'Approved' THEN
-		
-		SELECT CURRENT_TIMESTAMP() INTO one_datetimestamp;
-		
-		INSERT INTO employeetimeentrydetails 
-		(
-			RowID
-			,OrganizationID
-			,Created
-			,CreatedBy
-			,EmployeeID
-			,TimeIn
-			,TimeOut
-			,`Date`
-			,TimeScheduleType
-			,TimeEntryStatus
-		) SELECT etd.RowID
-			,NEW.OrganizationID
-			,one_datetimestamp
-			,NEW.CreatedBy
-			,NEW.EmployeeID
-			,NEW.OffBusStartTime
-			,NEW.OffBusEndTime
-			,d.DateValue
-			,''
-			,''
-			FROM dates d
-			INNER JOIN employeetimeentrydetails etd ON etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=d.DateValue
-			WHERE d.DateValue BETWEEN NEW.OffBusStartDate AND NEW.OffBusEndDate
-		ON
-		DUPLICATE
-		KEY
-		UPDATE
-			LastUpd = CURRENT_TIMESTAMP()
-			,LastUpdBy = NEW.CreatedBy			
-			,TimeIn = IFNULL(NEW.OffBusStartTime,etd.TimeIn)
-			,TimeOut = IFNULL(NEW.OffBusEndTime,etd.TimeOut);
-		
-	
-	
-	END IF;
-		
+
+    IF NEW.OffBusStatus = 'Approved' THEN
+
+        SELECT CURRENT_TIMESTAMP() INTO one_datetimestamp;
+
+        INSERT INTO employeetimeentrydetails
+        (
+            RowID
+            ,OrganizationID
+            ,Created
+            ,CreatedBy
+            ,EmployeeID
+            ,TimeIn
+            ,TimeOut
+            ,`Date`
+            ,TimeScheduleType
+            ,TimeEntryStatus
+        ) SELECT etd.RowID
+            ,NEW.OrganizationID
+            ,one_datetimestamp
+            ,NEW.CreatedBy
+            ,NEW.EmployeeID
+            ,NEW.OffBusStartTime
+            ,NEW.OffBusEndTime
+            ,d.DateValue
+            ,''
+            ,''
+            FROM dates d
+            INNER JOIN employeetimeentrydetails etd ON etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=d.DateValue
+            WHERE d.DateValue BETWEEN NEW.OffBusStartDate AND NEW.OffBusEndDate
+        ON
+        DUPLICATE
+        KEY
+        UPDATE
+            LastUpd = CURRENT_TIMESTAMP()
+            ,LastUpdBy = NEW.CreatedBy
+            ,TimeIn = IFNULL(NEW.OffBusStartTime,etd.TimeIn)
+            ,TimeOut = IFNULL(NEW.OffBusEndTime,etd.TimeOut);
+
+
+
+    END IF;
+
 SELECT RowID FROM `view` WHERE ViewName='Official Business filing' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 
 INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed
@@ -94,6 +87,7 @@ INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldC
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

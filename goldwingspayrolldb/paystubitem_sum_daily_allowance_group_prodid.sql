@@ -1,20 +1,12 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for view goldwingspayrolldb.paystubitem_sum_daily_allowance_group_prodid
 DROP VIEW IF EXISTS `paystubitem_sum_daily_allowance_group_prodid`;
--- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `paystubitem_sum_daily_allowance_group_prodid`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `goldwingspayrolldb`.`paystubitem_sum_daily_allowance_group_prodid` AS SELECT
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_daily_allowance_group_prodid` AS SELECT
     DISTINCT(et.RowID) AS `etRowID`,
     ea.RowID AS `eaRowID`,
     (ea.ProductID) AS ProductID,
@@ -57,6 +49,7 @@ LEFT JOIN shift sh ON sh.RowID=es.ShiftID
 INNER JOIN employeeallowance ea ON ea.AllowanceFrequency='Daily' AND ea.EmployeeID=e.RowID AND ea.OrganizationID=e.OrganizationID AND et.`Date` BETWEEN ea.EffectiveStartDate AND ea.EffectiveEndDate
 INNER JOIN product p ON p.RowID=ea.ProductID
 INNER JOIN payrate pr ON pr.RowID=et.PayRateID ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

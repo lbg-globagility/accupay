@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function goldwingspayrolldb.INSERTUPDATE_employeetimeentry
 DROP FUNCTION IF EXISTS `INSERTUPDATE_employeetimeentry`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `INSERTUPDATE_employeetimeentry`(`eteRowID` INT
@@ -50,107 +43,108 @@ DECLARE returnvalue INT(11);
 
 INSERT INTO employeetimeentry
 (
-	RowID
-	,OrganizationID
-	,Created
-	,CreatedBy
-	,Date
-	,EmployeeShiftID
-	,EmployeeID
-	,EmployeeSalaryID
-	,EmployeeFixedSalaryFlag
-	,RegularHoursWorked
-	,RegularHoursAmount
-	,TotalHoursWorked
-	,OvertimeHoursWorked
-	,OvertimeHoursAmount
-	,UndertimeHours
-	,UndertimeHoursAmount
-	,NightDifferentialHours
-	,NightDiffHoursAmount
-	,NightDifferentialOTHours
-	,NightDiffOTHoursAmount
-	,HoursLate
-	,HoursLateAmount
-	,LateFlag
-	,PayRateID
-	,VacationLeaveHours
-	,SickLeaveHours
-	,MaternityLeaveHours
-	,OtherLeaveHours
-	,TotalDayPay
-	,Absent
-	,ChargeToDivisionID
+    RowID
+    ,OrganizationID
+    ,Created
+    ,CreatedBy
+    ,Date
+    ,EmployeeShiftID
+    ,EmployeeID
+    ,EmployeeSalaryID
+    ,EmployeeFixedSalaryFlag
+    ,RegularHoursWorked
+    ,RegularHoursAmount
+    ,TotalHoursWorked
+    ,OvertimeHoursWorked
+    ,OvertimeHoursAmount
+    ,UndertimeHours
+    ,UndertimeHoursAmount
+    ,NightDifferentialHours
+    ,NightDiffHoursAmount
+    ,NightDifferentialOTHours
+    ,NightDiffOTHoursAmount
+    ,HoursLate
+    ,HoursLateAmount
+    ,LateFlag
+    ,PayRateID
+    ,VacationLeaveHours
+    ,SickLeaveHours
+    ,MaternityLeaveHours
+    ,OtherLeaveHours
+    ,TotalDayPay
+    ,Absent
+    ,ChargeToDivisionID
 ) VALUES (
-	eteRowID
-	,eteOrganizID
-	,CURRENT_TIMESTAMP()
-	,UserRowID
-	,eteDate
-	,eteEmployeeShiftID
-	,eteEmployeeID
-	,eteEmployeeSalaryID
-	,eteEmployeeFixedSalaryFlag
-	,eteRegularHoursWorked
-	,eteRegularHoursAmount
-	,eteTotalHoursWorked
-	,eteOvertimeHoursWorked
-	,eteOvertimeHoursAmount
-	,eteUndertimeHours
-	,eteUndertimeHoursAmount
-	,eteNightDifferentialHours
-	,eteNightDiffHoursAmount
-	,eteNightDifferentialOTHours
-	,eteNightDiffOTHoursAmount
-	,eteHoursLate
-	,eteHoursLateAmount
-	,eteLateFlag
-	,etePayRateID
-	,eteVacationLeaveHours
-	,eteSickLeaveHours
-	,eteMaternityLeaveHours
-	,eteOtherLeaveHours
-	,eteTotalDayPay
-	,eteAbsent
-	,eteChargeToDivisionID
+    eteRowID
+    ,eteOrganizID
+    ,CURRENT_TIMESTAMP()
+    ,UserRowID
+    ,eteDate
+    ,eteEmployeeShiftID
+    ,eteEmployeeID
+    ,eteEmployeeSalaryID
+    ,eteEmployeeFixedSalaryFlag
+    ,eteRegularHoursWorked
+    ,eteRegularHoursAmount
+    ,eteTotalHoursWorked
+    ,eteOvertimeHoursWorked
+    ,eteOvertimeHoursAmount
+    ,eteUndertimeHours
+    ,eteUndertimeHoursAmount
+    ,eteNightDifferentialHours
+    ,eteNightDiffHoursAmount
+    ,eteNightDifferentialOTHours
+    ,eteNightDiffOTHoursAmount
+    ,eteHoursLate
+    ,eteHoursLateAmount
+    ,eteLateFlag
+    ,etePayRateID
+    ,eteVacationLeaveHours
+    ,eteSickLeaveHours
+    ,eteMaternityLeaveHours
+    ,eteOtherLeaveHours
+    ,eteTotalDayPay
+    ,eteAbsent
+    ,eteChargeToDivisionID
 ) ON
 DUPLICATE
 KEY
 UPDATE
-	LastUpd=CURRENT_TIMESTAMP()
-	,LastUpdBy=UserRowID
-	,EmployeeShiftID=eteEmployeeShiftID
-	,EmployeeSalaryID=eteEmployeeSalaryID
-	,EmployeeFixedSalaryFlag=eteEmployeeFixedSalaryFlag
-	,RegularHoursWorked=eteRegularHoursWorked
-	,RegularHoursAmount=eteRegularHoursAmount
-	,TotalHoursWorked=eteTotalHoursWorked
-	,OvertimeHoursWorked=eteOvertimeHoursWorked
-	,OvertimeHoursAmount=eteOvertimeHoursAmount
-	,UndertimeHours=eteUndertimeHours
-	,UndertimeHoursAmount=eteUndertimeHoursAmount
-	,NightDifferentialHours=eteNightDifferentialHours
-	,NightDiffHoursAmount=eteNightDiffHoursAmount
-	,NightDifferentialOTHours=eteNightDifferentialOTHours
-	,NightDiffOTHoursAmount=eteNightDiffOTHoursAmount
-	,HoursLate=eteHoursLate
-	,HoursLateAmount=eteHoursLateAmount
-	,LateFlag=eteLateFlag
-	,PayRateID=etePayRateID
-	,VacationLeaveHours=eteVacationLeaveHours
-	,SickLeaveHours=eteSickLeaveHours
-	,MaternityLeaveHours=eteMaternityLeaveHours
-	,OtherLeaveHours=eteOtherLeaveHours
-	,TotalDayPay=eteTotalDayPay
-	,Absent=eteAbsent
-	,ChargeToDivisionID=eteChargeToDivisionID;
-	
+    LastUpd=CURRENT_TIMESTAMP()
+    ,LastUpdBy=UserRowID
+    ,EmployeeShiftID=eteEmployeeShiftID
+    ,EmployeeSalaryID=eteEmployeeSalaryID
+    ,EmployeeFixedSalaryFlag=eteEmployeeFixedSalaryFlag
+    ,RegularHoursWorked=eteRegularHoursWorked
+    ,RegularHoursAmount=eteRegularHoursAmount
+    ,TotalHoursWorked=eteTotalHoursWorked
+    ,OvertimeHoursWorked=eteOvertimeHoursWorked
+    ,OvertimeHoursAmount=eteOvertimeHoursAmount
+    ,UndertimeHours=eteUndertimeHours
+    ,UndertimeHoursAmount=eteUndertimeHoursAmount
+    ,NightDifferentialHours=eteNightDifferentialHours
+    ,NightDiffHoursAmount=eteNightDiffHoursAmount
+    ,NightDifferentialOTHours=eteNightDifferentialOTHours
+    ,NightDiffOTHoursAmount=eteNightDiffOTHoursAmount
+    ,HoursLate=eteHoursLate
+    ,HoursLateAmount=eteHoursLateAmount
+    ,LateFlag=eteLateFlag
+    ,PayRateID=etePayRateID
+    ,VacationLeaveHours=eteVacationLeaveHours
+    ,SickLeaveHours=eteSickLeaveHours
+    ,MaternityLeaveHours=eteMaternityLeaveHours
+    ,OtherLeaveHours=eteOtherLeaveHours
+    ,TotalDayPay=eteTotalDayPay
+    ,Absent=eteAbsent
+    ,ChargeToDivisionID=eteChargeToDivisionID;
+
 
 
 RETURN returnvalue;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

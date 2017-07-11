@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.AFTINS_employeeshift
 DROP TRIGGER IF EXISTS `AFTINS_employeeshift`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -40,58 +33,58 @@ INNER JOIN position p ON p.RowID=e.PositionID
 INNER JOIN `division` d ON d.RowID=p.DivisionId
 WHERE e.RowID=NEW.EmployeeID
 INTO emp_group_name
-		,day_of_rest;
+        ,day_of_rest;
 
 IF emp_group_name = 'Comissary' THEN
 
-	SELECT
-	sh.TimeFrom
-	,sh.TimeTo
-	FROM shift sh
-	WHERE sh.RowID=NEW.ShiftID
-	INTO sh_timefrom
-			,sh_timeto;
+    SELECT
+    sh.TimeFrom
+    ,sh.TimeTo
+    FROM shift sh
+    WHERE sh.RowID=NEW.ShiftID
+    INTO sh_timefrom
+            ,sh_timeto;
 
-	SET isShiftRestDay = NEW.RestDay;
-	
-	
+    SET isShiftRestDay = NEW.RestDay;
 
-	IF isShiftRestDay IS NOT NULL THEN
 
-		SET isShiftRestDay = NEW.RestDay;
-		
-		INSERT INTO employeeovertime(RowID,OrganizationID,Created,OTStartTime,OTType,OTStatus,CreatedBy,EmployeeID,OTEndTime,OTStartDate,OTEndDate,Reason,Comments,Image)
-			SELECT
-			eot.RowID
-			,NEW.OrganizationID
-			,CURRENT_TIMESTAMP()
-			,ADDTIME(sh_timeto,'00:01:00')
-			,'Overtime'
-			,'Approved'
-			,NEW.CreatedBy
-			,NEW.EmployeeID
-			,etd.TimeOut
-			,d.DateValue
-			,d.DateValue
-			,''
-			,''
-			,NULL
-		FROM dates d
-		LEFT JOIN employeeovertime eot ON eot.EmployeeID=NEW.EmployeeID AND eot.OrganizationID=NEW.OrganizationID AND d.DateValue BETWEEN eot.OTStartDate AND eot.OTEndDate
-		INNER JOIN employeetimeentrydetails etd ON etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=d.DateValue
-		WHERE DAYOFWEEK(d.DateValue) != '1'
-		AND TIME(ADDTIME(sh_timeto,'00:15:59')) < etd.TimeOut
-		AND d.DateValue BETWEEN NEW.EffectiveFrom AND NEW.EffectiveTo
-		ORDER BY d.DateValue
-		ON
-		DUPLICATE
-		KEY
-		UPDATE
-			LastUpd=CURRENT_TIMESTAMP();
-	
-		
-	END IF;
-			
+
+    IF isShiftRestDay IS NOT NULL THEN
+
+        SET isShiftRestDay = NEW.RestDay;
+
+        INSERT INTO employeeovertime(RowID,OrganizationID,Created,OTStartTime,OTType,OTStatus,CreatedBy,EmployeeID,OTEndTime,OTStartDate,OTEndDate,Reason,Comments,Image)
+            SELECT
+            eot.RowID
+            ,NEW.OrganizationID
+            ,CURRENT_TIMESTAMP()
+            ,ADDTIME(sh_timeto,'00:01:00')
+            ,'Overtime'
+            ,'Approved'
+            ,NEW.CreatedBy
+            ,NEW.EmployeeID
+            ,etd.TimeOut
+            ,d.DateValue
+            ,d.DateValue
+            ,''
+            ,''
+            ,NULL
+        FROM dates d
+        LEFT JOIN employeeovertime eot ON eot.EmployeeID=NEW.EmployeeID AND eot.OrganizationID=NEW.OrganizationID AND d.DateValue BETWEEN eot.OTStartDate AND eot.OTEndDate
+        INNER JOIN employeetimeentrydetails etd ON etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=d.DateValue
+        WHERE DAYOFWEEK(d.DateValue) != '1'
+        AND TIME(ADDTIME(sh_timeto,'00:15:59')) < etd.TimeOut
+        AND d.DateValue BETWEEN NEW.EffectiveFrom AND NEW.EffectiveTo
+        ORDER BY d.DateValue
+        ON
+        DUPLICATE
+        KEY
+        UPDATE
+            LastUpd=CURRENT_TIMESTAMP();
+
+
+    END IF;
+
 END IF;
 
 
@@ -137,6 +130,7 @@ AND ete.`Date` BETWEEN NEW.EffectiveFrom AND NEW.EffectiveTo;
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

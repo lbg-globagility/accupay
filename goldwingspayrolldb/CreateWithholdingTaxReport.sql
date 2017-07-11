@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb.CreateWithholdingTaxReport
 DROP PROCEDURE IF EXISTS `CreateWithholdingTaxReport`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateWithholdingTaxReport`(IN `I_EmployeeID` INT, IN `I_OrganizationID` INT, IN `I_BatchID` INT, IN `I_Category` VARCHAR(50), IN `I_IsMinimumWageEarner` TINYINT(1), IN `I_MinimumWagePerDay` DECIMAL(16,6), IN `I_MinimumWagePerMonth` DECIMAL(16,6), IN `I_PreviousTaxableIncome` DECIMAL(16,6), IN `I_PremiumPaidOnHealth` DECIMAL(16,6), IN `I_PreviousTaxWithheld` DECIMAL(16,6), IN `I_HazardPay` DECIMAL(16,6), IN `I_DeMinimisBenefits` DECIMAL(16,6), IN `I_SalariesAndOtherCompensation` vARCHAR(50), IN `I_Representation` DECIMAL(16,6), IN `I_Transportation` DECIMAL(16,6), IN `I_CostOfLivingAllowance` DECIMAL(16,6), IN `I_FixedHousingAllowance` DECIMAL(16,6), IN `I_OthersAName` VARCHAR(50), IN `I_OthersAAmount` DECIMAL(16,6), IN `I_OthersBName` VARCHAR(50), IN `I_OthersBAmount` DECIMAL(16,6), IN `I_Commission` DECIMAL(16,6), IN `I_ProfitSharing` DECIMAL(16,6), IN `I_FeesInclDirectorsFees` DECIMAL(16,6), IN `I_Taxable13thMonthPay` DECIMAL(16,6), IN `I_TaxableHazardPay` DECIMAL(16,6), IN `I_TaxableOvertimePay` DECIMAL(16,6), IN `I_SupplementaryAName` VARCHAR(50), IN `I_SupplementaryAAmount` DECIMAL(16,6), IN `I_SupplementaryBName` VARCHAR(50), IN `I_SupplementaryBAmount` DECIMAL(16,6))
@@ -18,7 +11,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateWithholdingTaxReport`(IN `I_E
 BEGIN
 
     INSERT INTO withholdingtaxreport
-	 (
+     (
         EmployeeID,
         OrganizationID,
         BatchID,
@@ -53,8 +46,8 @@ BEGIN
         SupplementaryBName,
         SupplementaryBAmount
     )
-	 VALUES
-	 (
+     VALUES
+     (
         I_EmployeeID,
         I_OrganizationID,
         I_BatchID,
@@ -91,35 +84,36 @@ BEGIN
     )
     ON DUPLICATE KEY
     UPDATE
-		  Category = I_Category,
-		  IsMinimumWageEarner = I_IsMinimumWageEarner,
+          Category = I_Category,
+          IsMinimumWageEarner = I_IsMinimumWageEarner,
         MinimumWagePerDay = I_MinimumWagePerDay,
         MinimumWagePerMonth = I_MinimumWagePerMonth,
-	 	  PreviousTaxableIncome = I_PreviousTaxableIncome,
-	 	  PremiumPaidOnHealth = I_PremiumPaidOnHealth,
-	 	  PreviousTaxWithheld = I_PreviousTaxWithheld,
-	 	  HazardPay = I_HazardPay,
-	 	  DeMinimisBenefits = I_DeMinimisBenefits,
-	 	  SalariesAndOtherCompensation = I_SalariesAndOtherCompensation,
-	 	  Representation = I_Representation,
-	 	  Transportation = I_Transportation,
-	 	  CostOfLivingAllowance = I_CostOfLivingAllowance,
-	 	  FixedHousingAllowance = I_FixedHousingAllowance,
-	 	  OthersAName = I_OthersAName,
-	 	  OthersAAmount = I_OthersAAmount,
-	 	  OthersBName = I_OthersBName,
-	 	  OthersBAmount = I_OthersBAmount,
-	 	  Commission = I_Commission,
-	 	  ProfitSharing = I_ProfitSharing,
-	 	  FeesInclDirectorsFee = I_FeesInclDirectorsFees,
-	 	  Taxable13thMonthPay = I_Taxable13thMonthPay,
-	 	  TaxableHazardPay = I_TaxableHazardPay,
-	 	  TaxableOvertimePay = I_TaxableOvertimePay,
-	 	  SupplementaryAAmount = I_SupplementaryAAmount,
-	 	  SupplementaryBAmount = I_SupplementaryBAmount;
+          PreviousTaxableIncome = I_PreviousTaxableIncome,
+          PremiumPaidOnHealth = I_PremiumPaidOnHealth,
+          PreviousTaxWithheld = I_PreviousTaxWithheld,
+          HazardPay = I_HazardPay,
+          DeMinimisBenefits = I_DeMinimisBenefits,
+          SalariesAndOtherCompensation = I_SalariesAndOtherCompensation,
+          Representation = I_Representation,
+          Transportation = I_Transportation,
+          CostOfLivingAllowance = I_CostOfLivingAllowance,
+          FixedHousingAllowance = I_FixedHousingAllowance,
+          OthersAName = I_OthersAName,
+          OthersAAmount = I_OthersAAmount,
+          OthersBName = I_OthersBName,
+          OthersBAmount = I_OthersBAmount,
+          Commission = I_Commission,
+          ProfitSharing = I_ProfitSharing,
+          FeesInclDirectorsFee = I_FeesInclDirectorsFees,
+          Taxable13thMonthPay = I_Taxable13thMonthPay,
+          TaxableHazardPay = I_TaxableHazardPay,
+          TaxableOvertimePay = I_TaxableOvertimePay,
+          SupplementaryAAmount = I_SupplementaryAAmount,
+          SupplementaryBAmount = I_SupplementaryBAmount;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.AFTUPD_employeetimeentry
 DROP TRIGGER IF EXISTS `AFTUPD_employeetimeentry`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -52,12 +45,21 @@ DECLARE actualratepercent DECIMAL(11,5);
 
 DECLARE emprateperday DECIMAL(11,6);
 
-SELECT COMPUTE_TimeDifference(sh.TimeFrom,sh.TimeTo)
+DECLARE breaktimeFrom TIME;
+DECLARE breaktimeTo TIME;
+
+SELECT
+    COMPUTE_TimeDifference(sh.TimeFrom, sh.TimeTo),
+    sh.BreakTimeFrom,
+    sh.BreakTimeTo
 FROM employeeshift esh
 INNER JOIN shift sh
     ON sh.RowID=esh.ShiftID
 WHERE esh.RowID=NEW.EmployeeShiftID
-INTO perfecthoursworked;
+INTO
+    perfecthoursworked,
+    breaktimeFrom,
+    breaktimeTo;
 
 SELECT
     COALESCE(employeeshift.RestDay, FALSE),
@@ -72,15 +74,20 @@ INTO
     isShiftRestDay,
     dayOfRest;
 
+IF breaktimeFrom IS NOT NULL AND breaktimeTo IS NOT NULL THEN
+    SET perfecthoursworked = perfecthoursworked - COMPUTE_TimeDifference(breaktimeFrom, breaktimeTo);
+END IF;
+
 SET isRestDay = (DAYOFWEEK(NEW.Date) = dayOfRest) OR isShiftRestDay;
+SET isRestDay = isShiftRestDay;
 
 IF perfecthoursworked IS NULL THEN
     SET perfecthoursworked = 0;
 END IF;
 
-IF perfecthoursworked NOT IN (4,5) THEN
-    SET perfecthoursworked = perfecthoursworked - 1;
-END IF;
+-- IF perfecthoursworked NOT IN (4,5) THEN
+--    SET perfecthoursworked = perfecthoursworked - 1;
+-- END IF;
 
 SELECT
     e.AgencyID,
@@ -120,9 +127,7 @@ SET isHoliday = (payType = 'Regular Holiday') OR (payType = 'Special Non-Working
 -- FIELDS TERMINATED BY ', ';
 
 IF  (AgencyRowID IS NOT NULL) AND
-    (perfecthoursworked > 0) AND
-    (NOT isRestDay) AND
-    (NOT isHoliday) THEN
+    (perfecthoursworked > 0) THEN
 
     SELECT agf.RowID
     FROM agencyfee agf
@@ -345,6 +350,7 @@ SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,vi
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

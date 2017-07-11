@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb.VIEW_employeetimeentry_SUM
 DROP PROCEDURE IF EXISTS `VIEW_employeetimeentry_SUM`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `VIEW_employeetimeentry_SUM`(IN `etent_OrganizationID` INT, IN `etent_EmployeeID` INT, IN `etent_Date` DATE, IN `etent_DateTo` DATE)
@@ -36,41 +29,41 @@ SELECT RowID FROM employeesalary WHERE EmployeeID=etent_EmployeeID AND Organizat
 
 IF EmpPayFreqID = 1 THEN
 
-	
-	SET paypFrom = etent_Date;
 
-	IF employee_datehire IS NOT NULL THEN
-		
-		SET paypFrom = IF(employee_datehire > etent_Date, employee_datehire, etent_Date);
+    SET paypFrom = etent_Date;
 
-	END IF;
-	
-	SET paypTo = etent_DateTo;
+    IF employee_datehire IS NOT NULL THEN
+
+        SET paypFrom = IF(employee_datehire > etent_Date, employee_datehire, etent_Date);
+
+    END IF;
+
+    SET paypTo = etent_DateTo;
 
 ELSEIF EmpPayFreqID = 2 THEN
 
-	SELECT DATE(CONCAT(YEAR(etent_Date),'-',MONTH(etent_Date),'-01')) INTO paypFrom;
+    SELECT DATE(CONCAT(YEAR(etent_Date),'-',MONTH(etent_Date),'-01')) INTO paypFrom;
 
-	SELECT DATE(CONCAT(YEAR(etent_Date),'-',MONTH(etent_Date),'-',IF(DAY(etent_Date) <= 15,15,DAY(LAST_DAY(DATE(etent_Date)))))) INTO paypTo;
+    SELECT DATE(CONCAT(YEAR(etent_Date),'-',MONTH(etent_Date),'-',IF(DAY(etent_Date) <= 15,15,DAY(LAST_DAY(DATE(etent_Date)))))) INTO paypTo;
 
 ELSEIF EmpPayFreqID = 3 THEN
 
-	SELECT DATE(CONCAT(YEAR(etent_Date),'-',MONTH(etent_Date),'-',IF(DAY(etent_Date) <= 15,15,DAY(LAST_DAY(DATE(etent_Date)))))) INTO paypTo;
+    SELECT DATE(CONCAT(YEAR(etent_Date),'-',MONTH(etent_Date),'-',IF(DAY(etent_Date) <= 15,15,DAY(LAST_DAY(DATE(etent_Date)))))) INTO paypTo;
 
-	SET paypFrom = paypTo;
+    SET paypFrom = paypTo;
 
 ELSEIF EmpPayFreqID = 4 THEN
 
 
-	SET paypFrom = etent_Date;
+    SET paypFrom = etent_Date;
 
-	IF employee_datehire IS NOT NULL THEN
-		
-		SET paypFrom = IF(employee_datehire > etent_Date, employee_datehire, etent_Date);
+    IF employee_datehire IS NOT NULL THEN
 
-	END IF;
-	
-	SET paypTo = etent_DateTo;
+        SET paypFrom = IF(employee_datehire > etent_Date, employee_datehire, etent_Date);
+
+    END IF;
+
+    SET paypTo = etent_DateTo;
 
 END IF;
 
@@ -80,7 +73,7 @@ END IF;
 
 
 
-SELECT 
+SELECT
 COALESCE(etent.RowID,'') 'RowID'
 ,COALESCE(DATE(COALESCE(etent.Date,'')),'') 'Date'
 ,COALESCE(etent.EmployeeShiftID,(SELECT RowID FROM employeeshift WHERE EmployeeID=etent_EmployeeID AND OrganizationID=etent_OrganizationID AND DATE(etent_Date) BETWEEN COALESCE(EffectiveFrom,DATE_ADD(DATE(etent_Date), INTERVAL -1 MONTH)) AND COALESCE(EffectiveTo,DATE_ADD(DATE(etent_Date), INTERVAL 1 MONTH)) LIMIT 1)) 'EmployeeShiftID'
@@ -115,6 +108,7 @@ AND Date BETWEEN paypFrom AND paypTo;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

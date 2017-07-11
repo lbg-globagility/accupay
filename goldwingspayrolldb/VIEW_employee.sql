@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb.VIEW_employee
 DROP PROCEDURE IF EXISTS `VIEW_employee`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `VIEW_employee`(IN `e_OrganizationID` INT, IN `pagination` INT)
@@ -18,7 +11,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `VIEW_employee`(IN `e_OrganizationID
     COMMENT 'view all employee base on organization'
 BEGIN
 
-SELECT 
+SELECT
 e.RowID
 ,COALESCE(CAST(e.EmployeeID AS CHAR),'') 'Employee ID'
 ,COALESCE(e.FirstName,'') 'First Name'
@@ -51,7 +44,7 @@ e.RowID
 ,(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=e.LastUpdBy) 'LastUpdate by'
 ,COALESCE(pos.RowID,'') 'PositionID'
 ,COALESCE(e.PayFrequencyID,'') 'PayFrequencyID'
-,COALESCE(e.EmployeeType,'') 'EmployeeType' 
+,COALESCE(e.EmployeeType,'') 'EmployeeType'
 ,COALESCE(e.LeaveBalance,'') 'LeaveBalance'
 ,COALESCE(e.SickLeaveBalance,0) 'SickLeaveBalance'
 ,COALESCE(e.MaternityLeaveBalance,0) 'MaternityLeaveBalance'
@@ -61,12 +54,12 @@ e.RowID
 ,COALESCE(e.LeavePerPayPeriod,0) 'LeavePerPayPeriod'
 ,COALESCE(e.SickLeavePerPayPeriod,0) 'SickLeavePerPayPeriod'
 ,COALESCE(e.MaternityLeavePerPayPeriod,0) 'MaternityLeavePerPayPeriod'
-,COALESCE(fstat.RowID,'') 'fstatRowID' 
-,COALESCE(e.Image,'') 'Image' 
-FROM employee e 
-LEFT JOIN user u ON e.CreatedBy=u.RowID 
-LEFT JOIN position pos ON e.PositionID=pos.RowID 
-LEFT JOIN payfrequency pf ON e.PayFrequencyID=pf.RowID 
+,COALESCE(fstat.RowID,'') 'fstatRowID'
+,COALESCE(e.Image,'') 'Image'
+FROM employee e
+LEFT JOIN user u ON e.CreatedBy=u.RowID
+LEFT JOIN position pos ON e.PositionID=pos.RowID
+LEFT JOIN payfrequency pf ON e.PayFrequencyID=pf.RowID
 LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents
 WHERE e.OrganizationID=e_OrganizationID
 ORDER BY e.RowID DESC LIMIT pagination,100;
@@ -75,6 +68,7 @@ ORDER BY e.RowID DESC LIMIT pagination,100;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

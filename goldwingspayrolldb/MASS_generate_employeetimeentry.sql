@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb.MASS_generate_employeetimeentry
 DROP PROCEDURE IF EXISTS `MASS_generate_employeetimeentry`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `MASS_generate_employeetimeentry`(IN `OrganizID` INT, IN `Pay_FrequencyType` TEXT, IN `DivisionRowID` VARCHAR(200), IN `UserRowID` INT, IN `periodDateFrom` DATE, IN `periodDateTo` DATE)
@@ -20,9 +13,9 @@ BEGIN
 UPDATE `position` p
 INNER JOIN (SELECT * FROM `user` GROUP BY PositionID) u ON u.RowID > 0
 INNER JOIN `position` pos ON pos.RowID=u.PositionID AND LCASE(pos.PositionName)=LCASE(p.PositionName)
-SET p.DivisionId	=NULL
-		,p.LastUpd	=IFNULL(ADDTIME(p.LastUpd, SEC_TO_TIME(1)), CURRENT_TIMESTAMP())
-		,p.LastUpdBy=IFNULL(p.LastUpdBy,p.CreatedBy)
+SET p.DivisionId    =NULL
+        ,p.LastUpd  =IFNULL(ADDTIME(p.LastUpd, SEC_TO_TIME(1)), CURRENT_TIMESTAMP())
+        ,p.LastUpdBy=IFNULL(p.LastUpdBy,p.CreatedBy)
 WHERE p.OrganizationID=OrganizID;
 
 INSERT INTO `position` (`PositionName`, `LastUpd`, `Created`, `CreatedBy`, `OrganizationID`, `LastUpdBy`, `ParentPositionID`, `DivisionId`, `LevelNumber`) SELECT 'Default Position', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), UserRowID, OrganizID, UserRowID, NULL, d.RowID, 3 FROM division d WHERE d.OrganizationID=OrganizID AND ParentDivisionID IS NOT NULL LIMIT 1 ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP(),LastUpdBy=UserRowID;
@@ -66,6 +59,7 @@ WHERE d.DateValue BETWEEN periodDateFrom AND periodDateTo;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

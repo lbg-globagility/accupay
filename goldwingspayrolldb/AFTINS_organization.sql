@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.AFTINS_organization
 DROP TRIGGER IF EXISTS `AFTINS_organization`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -41,37 +34,37 @@ SELECT p.RowID FROM user u LEFT JOIN position p ON p.RowID=u.PositionID WHERE u.
 
 INSERT INTO `view`
 (
-	ViewName
-	,OrganizationID
+    ViewName
+    ,OrganizationID
 ) SELECT v.ViewName
-	,NEW.RowID
-	FROM `view` v
-	GROUP BY v.ViewName
-	ORDER BY v.ViewName;
+    ,NEW.RowID
+    FROM `view` v
+    GROUP BY v.ViewName
+    ORDER BY v.ViewName;
 
 INSERT INTO payperiod
 (
-	OrganizationID
-	,Created
-	,CreatedBy
-	,PayFromDate
-	,PayToDate
-	,TotalGrossSalary
-	,`Year`
-	,`Month`
-	,`Half`
-	,OrdinalValue
+    OrganizationID
+    ,Created
+    ,CreatedBy
+    ,PayFromDate
+    ,PayToDate
+    ,TotalGrossSalary
+    ,`Year`
+    ,`Month`
+    ,`Half`
+    ,OrdinalValue
 ) SELECT
-	NEW.RowID
-	,CURRENT_TIMESTAMP()
-	,NEW.CreatedBy
-	,PayFromDate
-	,PayToDate
-	,TotalGrossSalary
-	,`Year`
-	,`Month`
-	,`Half`
-	,OrdinalValue
+    NEW.RowID
+    ,CURRENT_TIMESTAMP()
+    ,NEW.CreatedBy
+    ,PayFromDate
+    ,PayToDate
+    ,TotalGrossSalary
+    ,`Year`
+    ,`Month`
+    ,`Half`
+    ,OrdinalValue
 FROM payperiod
 GROUP BY PayFromDate,PayToDate
 ORDER BY PayFromDate,PayToDate
@@ -79,37 +72,37 @@ ON
 DUPLICATE
 KEY
 UPDATE
-	LastUpd=CURRENT_TIMESTAMP();
-	
+    LastUpd=CURRENT_TIMESTAMP();
+
 INSERT INTO payrate
 (
-	OrganizationID
-	,Created
-	,CreatedBy
-	,DayBefore
-	,`Date`
-	,PayType
-	,Description
-	,`PayRate`
-	,OvertimeRate
-	,NightDifferentialRate
-	,NightDifferentialOTRate
-	,RestDayRate
-	,RestDayOvertimeRate
+    OrganizationID
+    ,Created
+    ,CreatedBy
+    ,DayBefore
+    ,`Date`
+    ,PayType
+    ,Description
+    ,`PayRate`
+    ,OvertimeRate
+    ,NightDifferentialRate
+    ,NightDifferentialOTRate
+    ,RestDayRate
+    ,RestDayOvertimeRate
 ) SELECT
-	NEW.RowID
-	,CURRENT_TIMESTAMP()
-	,NEW.CreatedBy
-	,DayBefore
-	,`Date`
-	,PayType
-	,Description
-	,`PayRate`
-	,OvertimeRate
-	,NightDifferentialRate
-	,NightDifferentialOTRate
-	,RestDayRate
-	,RestDayOvertimeRate
+    NEW.RowID
+    ,CURRENT_TIMESTAMP()
+    ,NEW.CreatedBy
+    ,DayBefore
+    ,`Date`
+    ,PayType
+    ,Description
+    ,`PayRate`
+    ,OvertimeRate
+    ,NightDifferentialRate
+    ,NightDifferentialOTRate
+    ,RestDayRate
+    ,RestDayOvertimeRate
 FROM payrate
 GROUP BY `Date`
 ORDER BY `Date`
@@ -117,134 +110,134 @@ ON
 DUPLICATE
 KEY
 UPDATE
-	LastUpd=CURRENT_TIMESTAMP();
-	
-	SELECT OrganizationID FROM user WHERE RowID=NEW.CreatedBy LIMIT 1 INTO orgIDOfCreator;
+    LastUpd=CURRENT_TIMESTAMP();
+
+    SELECT OrganizationID FROM user WHERE RowID=NEW.CreatedBy LIMIT 1 INTO orgIDOfCreator;
 
 
 INSERT INTO category
 (
-	CategoryID
-	,CategoryName
-	,OrganizationID
-	,`Catalog`
-	,CatalogID
-)	SELECT
-	CategoryID
-	,CategoryName
-	,NEW.RowID
-	,`Catalog`
-	,CatalogID
-	FROM category
-	GROUP BY CategoryName
+    CategoryID
+    ,CategoryName
+    ,OrganizationID
+    ,`Catalog`
+    ,CatalogID
+)   SELECT
+    CategoryID
+    ,CategoryName
+    ,NEW.RowID
+    ,`Catalog`
+    ,CatalogID
+    FROM category
+    GROUP BY CategoryName
 ON
 DUPLICATE
 KEY
 UPDATE
-	OrganizationID=NEW.RowID;
+    OrganizationID=NEW.RowID;
 
 
 INSERT INTO product
 (
-	Name
-	,OrganizationID
-	,Description
-	,PartNo
-	,Created
-	,LastUpd
-	,LastArrivedQty
-	,CreatedBy
-	,LastUpdBy
-	,`Category`
-	,CategoryID
-	,AccountingAccountID
-	,`Catalog`
-	,Comments
-	,`Status`
-	,UnitPrice
-	,VATPercent
-	,FirstBillFlag
-	,SecondBillFlag
-	,ThirdBillFlag
-	,PDCFlag
-	,MonthlyBIllFlag
-	,PenaltyFlag
-	,WithholdingTaxPercent
-	,CostPrice
-	,UnitOfMeasure
-	,SKU
-	,Image
-	,LeadTime
-	,BarCode
-	,BusinessUnitID
-	,LastRcvdFromShipmentDate
-	,LastRcvdFromShipmentCount
-	,TotalShipmentCount
-	,BookPageNo
-	,BrandName
-	,LastPurchaseDate
-	,LastSoldDate
-	,LastSoldCount
-	,ReOrderPoint
-	,AllocateBelowSafetyFlag
-	,Strength
-	,UnitsBackordered
-	,UnitsBackorderAsOf
-	,DateLastInventoryCount
-	,TaxVAT
-	,WithholdingTax
-	,COAId
-	,ActiveData
+    Name
+    ,OrganizationID
+    ,Description
+    ,PartNo
+    ,Created
+    ,LastUpd
+    ,LastArrivedQty
+    ,CreatedBy
+    ,LastUpdBy
+    ,`Category`
+    ,CategoryID
+    ,AccountingAccountID
+    ,`Catalog`
+    ,Comments
+    ,`Status`
+    ,UnitPrice
+    ,VATPercent
+    ,FirstBillFlag
+    ,SecondBillFlag
+    ,ThirdBillFlag
+    ,PDCFlag
+    ,MonthlyBIllFlag
+    ,PenaltyFlag
+    ,WithholdingTaxPercent
+    ,CostPrice
+    ,UnitOfMeasure
+    ,SKU
+    ,Image
+    ,LeadTime
+    ,BarCode
+    ,BusinessUnitID
+    ,LastRcvdFromShipmentDate
+    ,LastRcvdFromShipmentCount
+    ,TotalShipmentCount
+    ,BookPageNo
+    ,BrandName
+    ,LastPurchaseDate
+    ,LastSoldDate
+    ,LastSoldCount
+    ,ReOrderPoint
+    ,AllocateBelowSafetyFlag
+    ,Strength
+    ,UnitsBackordered
+    ,UnitsBackorderAsOf
+    ,DateLastInventoryCount
+    ,TaxVAT
+    ,WithholdingTax
+    ,COAId
+    ,ActiveData
 )  SELECT
-	p.Name
-	,NEW.RowID
-	,p.Description
-	,p.PartNo
-	,CURRENT_TIMESTAMP()
-	,CURRENT_TIMESTAMP()
-	,p.LastArrivedQty
-	,NEW.CreatedBy
-	,NEW.LastUpdBy
-	,p.`Category`
-	,(SELECT RowID FROM category WHERE OrganizationID=NEW.RowID AND CategoryName=p.Category)
-	,p.AccountingAccountID
-	,p.`Catalog`
-	,p.Comments
-	,p.`Status`
-	,p.UnitPrice
-	,p.VATPercent
-	,p.FirstBillFlag
-	,p.SecondBillFlag
-	,p.ThirdBillFlag
-	,p.PDCFlag
-	,p.MonthlyBIllFlag
-	,p.PenaltyFlag
-	,p.WithholdingTaxPercent
-	,p.CostPrice
-	,p.UnitOfMeasure
-	,p.SKU
-	,p.Image
-	,p.LeadTime
-	,p.BarCode
-	,p.BusinessUnitID
-	,p.LastRcvdFromShipmentDate
-	,p.LastRcvdFromShipmentCount
-	,p.TotalShipmentCount
-	,p.BookPageNo
-	,p.BrandName
-	,p.LastPurchaseDate
-	,p.LastSoldDate
-	,p.LastSoldCount
-	,p.ReOrderPoint
-	,p.AllocateBelowSafetyFlag
-	,p.Strength
-	,p.UnitsBackordered
-	,p.UnitsBackorderAsOf
-	,p.DateLastInventoryCount
-	,p.TaxVAT
-	,p.WithholdingTax
-	,p.COAId
-	,p.ActiveData
+    p.Name
+    ,NEW.RowID
+    ,p.Description
+    ,p.PartNo
+    ,CURRENT_TIMESTAMP()
+    ,CURRENT_TIMESTAMP()
+    ,p.LastArrivedQty
+    ,NEW.CreatedBy
+    ,NEW.LastUpdBy
+    ,p.`Category`
+    ,(SELECT RowID FROM category WHERE OrganizationID=NEW.RowID AND CategoryName=p.Category)
+    ,p.AccountingAccountID
+    ,p.`Catalog`
+    ,p.Comments
+    ,p.`Status`
+    ,p.UnitPrice
+    ,p.VATPercent
+    ,p.FirstBillFlag
+    ,p.SecondBillFlag
+    ,p.ThirdBillFlag
+    ,p.PDCFlag
+    ,p.MonthlyBIllFlag
+    ,p.PenaltyFlag
+    ,p.WithholdingTaxPercent
+    ,p.CostPrice
+    ,p.UnitOfMeasure
+    ,p.SKU
+    ,p.Image
+    ,p.LeadTime
+    ,p.BarCode
+    ,p.BusinessUnitID
+    ,p.LastRcvdFromShipmentDate
+    ,p.LastRcvdFromShipmentCount
+    ,p.TotalShipmentCount
+    ,p.BookPageNo
+    ,p.BrandName
+    ,p.LastPurchaseDate
+    ,p.LastSoldDate
+    ,p.LastSoldCount
+    ,p.ReOrderPoint
+    ,p.AllocateBelowSafetyFlag
+    ,p.Strength
+    ,p.UnitsBackordered
+    ,p.UnitsBackorderAsOf
+    ,p.DateLastInventoryCount
+    ,p.TaxVAT
+    ,p.WithholdingTax
+    ,p.COAId
+    ,p.ActiveData
 FROM product p
 LEFT JOIN category c ON c.CategoryName=p.Category
 GROUP BY p.PartNo
@@ -252,110 +245,110 @@ ON
 DUPLICATE
 KEY
 UPDATE
-	LastUpd=CURRENT_TIMESTAMP();
+    LastUpd=CURRENT_TIMESTAMP();
 
 
 INSERT INTO shift
 (
-	OrganizationID
-	,CreatedBy
-	,Created
-	,TimeFrom
-	,TimeTo
+    OrganizationID
+    ,CreatedBy
+    ,Created
+    ,TimeFrom
+    ,TimeTo
 ) VALUES (
-	NEW.RowID
-	,NEW.CreatedBy
-	,CURRENT_TIMESTAMP()
-	,NEW.NightShiftTimeFrom
-	,NEW.NightShiftTimeTo
+    NEW.RowID
+    ,NEW.CreatedBy
+    ,CURRENT_TIMESTAMP()
+    ,NEW.NightShiftTimeFrom
+    ,NEW.NightShiftTimeTo
 ) ON
 DUPLICATE
 KEY
 UPDATE
-	LastUpd=CURRENT_TIMESTAMP();
-	
-	
-	
-	INSERT INTO `division` (Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID) VALUES ( 'Any location', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2);SELECT @@Identity AS ID INTO INS_audit_ID;
-	
-	INSERT INTO `division` (Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID,ParentDivisionID) SELECT 'Comissary', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2,INS_audit_ID UNION 
-	SELECT 'Office Staff', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'End of the month', 'End of the month', 'End of the month', 'End of the month', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'End of the month', 'End of the month', 'End of the month', 'End of the month',1,INS_audit_ID UNION 
-	SELECT 'Supervisors', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'End of the month', 'End of the month', 'End of the month', 'End of the month', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',3,INS_audit_ID UNION 
-	SELECT 'Service Crew', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',4,INS_audit_ID;
-	
-	
+    LastUpd=CURRENT_TIMESTAMP();
+
+
+
+    INSERT INTO `division` (Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID) VALUES ( 'Any location', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2);SELECT @@Identity AS ID INTO INS_audit_ID;
+
+    INSERT INTO `division` (Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID,ParentDivisionID) SELECT 'Comissary', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2,INS_audit_ID UNION
+    SELECT 'Office Staff', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'End of the month', 'End of the month', 'End of the month', 'End of the month', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'End of the month', 'End of the month', 'End of the month', 'End of the month',1,INS_audit_ID UNION
+    SELECT 'Supervisors', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'End of the month', 'End of the month', 'End of the month', 'End of the month', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',3,INS_audit_ID UNION
+    SELECT 'Service Crew', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',4,INS_audit_ID;
+
+
 INSERT INTO position
 (
-	PositionName
-	,Created
-	,CreatedBy
-	,OrganizationID
-	,DivisionId
+    PositionName
+    ,Created
+    ,CreatedBy
+    ,OrganizationID
+    ,DivisionId
 ) SELECT
-	pos.PositionName
-	,CURRENT_TIMESTAMP()
-	,NEW.CreatedBy
-	,NEW.RowID
-	,dd.RowID
-	FROM position pos
-	LEFT JOIN `division` d ON d.RowID=pos.DivisionId AND d.OrganizationID=pos.OrganizationID
-	LEFT JOIN `division` dd ON dd.Name=d.Name AND dd.OrganizationID=NEW.RowID
-	GROUP BY pos.PositionName
+    pos.PositionName
+    ,CURRENT_TIMESTAMP()
+    ,NEW.CreatedBy
+    ,NEW.RowID
+    ,dd.RowID
+    FROM position pos
+    LEFT JOIN `division` d ON d.RowID=pos.DivisionId AND d.OrganizationID=pos.OrganizationID
+    LEFT JOIN `division` dd ON dd.Name=d.Name AND dd.OrganizationID=NEW.RowID
+    GROUP BY pos.PositionName
 ON
 DUPLICATE
 KEY
 UPDATE
-	LastUpd=CURRENT_TIMESTAMP()
-	,LastUpdBy=NEW.CreatedBy;
+    LastUpd=CURRENT_TIMESTAMP()
+    ,LastUpdBy=NEW.CreatedBy;
 
 INSERT INTO position_view
 (
-	PositionID
-	,ViewID
-	,Creates
-	,OrganizationID
-	,ReadOnly
-	,Updates
-	,Deleting
-	,Created
-	,CreatedBy
-	,LastUpdBy
-) SELECT 
-	pos.RowID
-	,v.RowID
-	,'N'
-	,NEW.RowID
-	,'Y'
-	,'N'
-	,'N'
-	,CURRENT_TIMESTAMP()
-	,NEW.CreatedBy
-	,NEW.CreatedBy
-	FROM `view` v
-	LEFT JOIN (SELECT * FROM position GROUP BY PositionName) pos ON pos.RowID > 0 AND pos.RowID != IFNULL(userPositionID,0)
-	WHERE v.OrganizationID=NEW.RowID
+    PositionID
+    ,ViewID
+    ,Creates
+    ,OrganizationID
+    ,ReadOnly
+    ,Updates
+    ,Deleting
+    ,Created
+    ,CreatedBy
+    ,LastUpdBy
+) SELECT
+    pos.RowID
+    ,v.RowID
+    ,'N'
+    ,NEW.RowID
+    ,'Y'
+    ,'N'
+    ,'N'
+    ,CURRENT_TIMESTAMP()
+    ,NEW.CreatedBy
+    ,NEW.CreatedBy
+    FROM `view` v
+    LEFT JOIN (SELECT * FROM position GROUP BY PositionName) pos ON pos.RowID > 0 AND pos.RowID != IFNULL(userPositionID,0)
+    WHERE v.OrganizationID=NEW.RowID
 UNION
-	SELECT 
-	pos.RowID
-	,v.RowID
-	,'Y'
-	,NEW.RowID
-	,'N'
-	,'Y'
-	,'Y'
-	,CURRENT_TIMESTAMP()
-	,NEW.CreatedBy
-	,NEW.CreatedBy
-	FROM `view` v
-	INNER JOIN position pos ON pos.RowID = IFNULL(userPositionID,0)
-	WHERE v.OrganizationID=NEW.RowID
+    SELECT
+    pos.RowID
+    ,v.RowID
+    ,'Y'
+    ,NEW.RowID
+    ,'N'
+    ,'Y'
+    ,'Y'
+    ,CURRENT_TIMESTAMP()
+    ,NEW.CreatedBy
+    ,NEW.CreatedBy
+    FROM `view` v
+    INNER JOIN position pos ON pos.RowID = IFNULL(userPositionID,0)
+    WHERE v.OrganizationID=NEW.RowID
 ON
 DUPLICATE
 KEY
 UPDATE
-	LastUpd=CURRENT_TIMESTAMP();
-	
-	SELECT RowID FROM `view` WHERE ViewName='Organization' AND OrganizationID=orgIDOfCreator INTO view_RowID;
+    LastUpd=CURRENT_TIMESTAMP();
+
+    SELECT RowID FROM `view` WHERE ViewName='Organization' AND OrganizationID=orgIDOfCreator INTO view_RowID;
 
 SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'Name',NEW.RowID,'',NEW.Name,'Insert') INTO INS_audit_ID;
 
@@ -428,19 +421,20 @@ SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view
 SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'RDOCode',NEW.RowID,'',NEW.RDOCode,'Insert') INTO INS_audit_ID;
 
 SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'ZIPCode',NEW.RowID,'',NEW.ZIPCode,'Insert') INTO INS_audit_ID;
-	
-	UPDATE product p LEFT JOIN product pp ON pp.PartNo=SUBSTRING_INDEX(p.PartNo,' ',1) AND pp.OrganizationID=NEW.RowID SET
-	p.LastSoldCount=pp.RowID
-	,p.LastUpd=CURRENT_TIMESTAMP()
-	,p.LastUpdBy=NEW.CreatedBy
-	WHERE p.OrganizationID=NEW.RowID
-	AND p.Category='Loan Interest';
+
+    UPDATE product p LEFT JOIN product pp ON pp.PartNo=SUBSTRING_INDEX(p.PartNo,' ',1) AND pp.OrganizationID=NEW.RowID SET
+    p.LastSoldCount=pp.RowID
+    ,p.LastUpd=CURRENT_TIMESTAMP()
+    ,p.LastUpdBy=NEW.CreatedBy
+    WHERE p.OrganizationID=NEW.RowID
+    AND p.Category='Loan Interest';
 
 
 
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

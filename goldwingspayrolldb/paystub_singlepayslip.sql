@@ -1,23 +1,16 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb.paystub_singlepayslip
 DROP PROCEDURE IF EXISTS `paystub_singlepayslip`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `paystub_singlepayslip`(
-	IN `OrganizID` INT,
-	IN `PayPeriodRowID` INT,
-	IN `IsActualFlag` CHAR(1),
-	IN `EmployeeRowID` INT
+    IN `OrganizID` INT,
+    IN `PayPeriodRowID` INT,
+    IN `IsActualFlag` CHAR(1),
+    IN `EmployeeRowID` INT
 
 
 
@@ -97,20 +90,20 @@ e.RowID,e.EmployeeID AS `COL1`
 
 
 FROM (SELECT RowID,OrganizationID,PayPeriodID,EmployeeID,TimeEntryID,PayFromDate,PayToDate,TotalGrossSalary,TotalNetSalary,TotalTaxableSalary,TotalEmpSSS,TotalEmpWithholdingTax,TotalCompSSS,TotalEmpPhilhealth,TotalCompPhilhealth,TotalEmpHDMF,TotalCompHDMF,TotalVacationDaysLeft,TotalLoans,TotalBonus,TotalAllowance,TotalAdjustments,ThirteenthMonthInclusion,FirstTimeSalary FROM paystub WHERE IsActualFlag=0 AND OrganizationID=OrganizID
-		UNION
-		SELECT RowID,OrganizationID,PayPeriodID,EmployeeID,TimeEntryID,PayFromDate,PayToDate,TotalGrossSalary,TotalNetSalary,TotalTaxableSalary,TotalEmpSSS,TotalEmpWithholdingTax,TotalCompSSS,TotalEmpPhilhealth,TotalCompPhilhealth,TotalEmpHDMF,TotalCompHDMF,TotalVacationDaysLeft,TotalLoans,TotalBonus,TotalAllowance,TotalAdjustments,ThirteenthMonthInclusion,FirstTimeSalary FROM paystubactual WHERE IsActualFlag=1 AND OrganizationID=OrganizID
-		) ps
+        UNION
+        SELECT RowID,OrganizationID,PayPeriodID,EmployeeID,TimeEntryID,PayFromDate,PayToDate,TotalGrossSalary,TotalNetSalary,TotalTaxableSalary,TotalEmpSSS,TotalEmpWithholdingTax,TotalCompSSS,TotalEmpPhilhealth,TotalCompPhilhealth,TotalEmpHDMF,TotalCompHDMF,TotalVacationDaysLeft,TotalLoans,TotalBonus,TotalAllowance,TotalAdjustments,ThirteenthMonthInclusion,FirstTimeSalary FROM paystubactual WHERE IsActualFlag=1 AND OrganizationID=OrganizID
+        ) ps
 
 INNER JOIN employee e ON e.RowID=ps.EmployeeID AND e.OrganizationID=ps.OrganizationID AND e.EmployeeType='Daily'
 
 INNER JOIN employeesalary es ON es.EmployeeID=ps.EmployeeID AND es.OrganizationID=ps.OrganizationID AND (es.EffectiveDateFrom >= ps.PayFromDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) >= ps.PayFromDate) AND (es.EffectiveDateFrom <= ps.PayToDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) <= ps.PayToDate)
 
 LEFT JOIN (SELECT RowID,EmployeeID,SUM(RegularHoursWorked) AS RegularHoursWorked,SUM(RegularHoursAmount) AS RegularHoursAmount,SUM(TotalHoursWorked) AS TotalHoursWorked,SUM(OvertimeHoursWorked) AS OvertimeHoursWorked,SUM(OvertimeHoursAmount) AS OvertimeHoursAmount,SUM(UndertimeHours) AS UndertimeHours,SUM(UndertimeHoursAmount) AS UndertimeHoursAmount,SUM(NightDifferentialHours) AS NightDifferentialHours,SUM(NightDiffHoursAmount) AS NightDiffHoursAmount,SUM(NightDifferentialOTHours) AS NightDifferentialOTHours,SUM(NightDiffOTHoursAmount) AS NightDiffOTHoursAmount,SUM(HoursLate) AS HoursLate,SUM(HoursLateAmount) AS HoursLateAmount,SUM(VacationLeaveHours) AS VacationLeaveHours,SUM(SickLeaveHours) AS SickLeaveHours,SUM(MaternityLeaveHours) AS MaternityLeaveHours,SUM(OtherLeaveHours) AS OtherLeaveHours,SUM(TotalDayPay) AS TotalDayPay,SUM(Absent) AS Absent,SUM(TaxableDailyAllowance) AS TaxableDailyAllowance,SUM(HolidayPayAmount) AS HolidayPayAmount,SUM(TaxableDailyBonus) AS TaxableDailyBonus,SUM(NonTaxableDailyBonus) AS NonTaxableDailyBonus,SUM(Leavepayment) AS Leavepayment
-				FROM (SELECT RowID,OrganizationID,`Date`,EmployeeShiftID,EmployeeID,EmployeeSalaryID,EmployeeFixedSalaryFlag,RegularHoursWorked,RegularHoursAmount,TotalHoursWorked,OvertimeHoursWorked,OvertimeHoursAmount,UndertimeHours,UndertimeHoursAmount,NightDifferentialHours,NightDiffHoursAmount,NightDifferentialOTHours,NightDiffOTHoursAmount,HoursLate,HoursLateAmount,LateFlag,PayRateID,VacationLeaveHours,SickLeaveHours,MaternityLeaveHours,OtherLeaveHours,TotalDayPay,Absent,ChargeToDivisionID,TaxableDailyAllowance,HolidayPayAmount,TaxableDailyBonus,NonTaxableDailyBonus,Leavepayment FROM employeetimeentry WHERE OrganizationID=OrganizID AND IsActualFlag=0 AND `Date` BETWEEN paydate_from AND paydat_to
-						UNION
-						SELECT RowID,OrganizationID,`Date`,EmployeeShiftID,EmployeeID,EmployeeSalaryID,EmployeeFixedSalaryFlag,RegularHoursWorked,RegularHoursAmount,TotalHoursWorked,OvertimeHoursWorked,OvertimeHoursAmount,UndertimeHours,UndertimeHoursAmount,NightDifferentialHours,NightDiffHoursAmount,NightDifferentialOTHours,NightDiffOTHoursAmount,HoursLate,HoursLateAmount,LateFlag,PayRateID,VacationLeaveHours,SickLeaveHours,MaternityLeaveHours,OtherLeaveHours,TotalDayPay,Absent,ChargeToDivisionID,TaxableDailyAllowance,HolidayPayAmount,TaxableDailyBonus,NonTaxableDailyBonus,Leavepayment FROM employeetimeentryactual WHERE OrganizationID=OrganizID AND IsActualFlag=1 AND `Date` BETWEEN paydate_from AND paydat_to
-						) i GROUP BY i.EmployeeID
-				) ete ON ete.RowID IS NOT NULL AND ete.EmployeeID=ps.EmployeeID
+                FROM (SELECT RowID,OrganizationID,`Date`,EmployeeShiftID,EmployeeID,EmployeeSalaryID,EmployeeFixedSalaryFlag,RegularHoursWorked,RegularHoursAmount,TotalHoursWorked,OvertimeHoursWorked,OvertimeHoursAmount,UndertimeHours,UndertimeHoursAmount,NightDifferentialHours,NightDiffHoursAmount,NightDifferentialOTHours,NightDiffOTHoursAmount,HoursLate,HoursLateAmount,LateFlag,PayRateID,VacationLeaveHours,SickLeaveHours,MaternityLeaveHours,OtherLeaveHours,TotalDayPay,Absent,ChargeToDivisionID,TaxableDailyAllowance,HolidayPayAmount,TaxableDailyBonus,NonTaxableDailyBonus,Leavepayment FROM employeetimeentry WHERE OrganizationID=OrganizID AND IsActualFlag=0 AND `Date` BETWEEN paydate_from AND paydat_to
+                        UNION
+                        SELECT RowID,OrganizationID,`Date`,EmployeeShiftID,EmployeeID,EmployeeSalaryID,EmployeeFixedSalaryFlag,RegularHoursWorked,RegularHoursAmount,TotalHoursWorked,OvertimeHoursWorked,OvertimeHoursAmount,UndertimeHours,UndertimeHoursAmount,NightDifferentialHours,NightDiffHoursAmount,NightDifferentialOTHours,NightDiffOTHoursAmount,HoursLate,HoursLateAmount,LateFlag,PayRateID,VacationLeaveHours,SickLeaveHours,MaternityLeaveHours,OtherLeaveHours,TotalDayPay,Absent,ChargeToDivisionID,TaxableDailyAllowance,HolidayPayAmount,TaxableDailyBonus,NonTaxableDailyBonus,Leavepayment FROM employeetimeentryactual WHERE OrganizationID=OrganizID AND IsActualFlag=1 AND `Date` BETWEEN paydate_from AND paydat_to
+                        ) i GROUP BY i.EmployeeID
+                ) ete ON ete.RowID IS NOT NULL AND ete.EmployeeID=ps.EmployeeID
 
 
 
@@ -128,9 +121,9 @@ LEFT JOIN (SELECT psi.*,p.PartNo AS ItemName FROM paystubitem psi INNER JOIN pro
 LEFT JOIN (SELECT psi.*,p.PartNo AS ItemName FROM paystubitem psi INNER JOIN product p ON p.RowID=psi.ProductID AND p.OrganizationID=psi.OrganizationID AND p.PartNo='Ecola' WHERE psi.Undeclared=0 AND psi.OrganizationID=OrganizID AND psi.PayAmount!=0) psiECOLA ON psiECOLA.PayStubID=ps.RowID
 
 LEFT JOIN (SELECT psa.RowID,psa.PayStubID,psa.PayAmount,p.PartNo AS ItemName FROM paystubadjustment psa INNER JOIN product p ON p.RowID=psa.ProductID WHERE IsActualFlag=0 AND psa.OrganizationID=OrganizID AND psa.PayAmount!=0
-				UNION
-				SELECT psa.RowID,psa.PayStubID,psa.PayAmount,p.PartNo AS ItemName FROM paystubadjustmentactual psa INNER JOIN product p ON p.RowID=psa.ProductID WHERE IsActualFlag=1 AND psa.OrganizationID=OrganizID AND psa.PayAmount!=0
-				) psa ON psa.PayStubID=ps.RowID
+                UNION
+                SELECT psa.RowID,psa.PayStubID,psa.PayAmount,p.PartNo AS ItemName FROM paystubadjustmentactual psa INNER JOIN product p ON p.RowID=psa.ProductID WHERE IsActualFlag=1 AND psa.OrganizationID=OrganizID AND psa.PayAmount!=0
+                ) psa ON psa.PayStubID=ps.RowID
 
 WHERE ps.OrganizationID=OrganizID
 AND ps.PayFromDate=paydate_from
@@ -201,20 +194,20 @@ e.RowID,e.EmployeeID AS `COL1`
 
 
 FROM (SELECT RowID,OrganizationID,PayPeriodID,EmployeeID,TimeEntryID,PayFromDate,PayToDate,TotalGrossSalary,TotalNetSalary,TotalTaxableSalary,TotalEmpSSS,TotalEmpWithholdingTax,TotalCompSSS,TotalEmpPhilhealth,TotalCompPhilhealth,TotalEmpHDMF,TotalCompHDMF,TotalVacationDaysLeft,TotalLoans,TotalBonus,TotalAllowance,TotalAdjustments,ThirteenthMonthInclusion,FirstTimeSalary FROM paystub WHERE IsActualFlag=0 AND OrganizationID=OrganizID
-		UNION
-		SELECT RowID,OrganizationID,PayPeriodID,EmployeeID,TimeEntryID,PayFromDate,PayToDate,TotalGrossSalary,TotalNetSalary,TotalTaxableSalary,TotalEmpSSS,TotalEmpWithholdingTax,TotalCompSSS,TotalEmpPhilhealth,TotalCompPhilhealth,TotalEmpHDMF,TotalCompHDMF,TotalVacationDaysLeft,TotalLoans,TotalBonus,TotalAllowance,TotalAdjustments,ThirteenthMonthInclusion,FirstTimeSalary FROM paystubactual WHERE IsActualFlag=1 AND OrganizationID=OrganizID
-		) ps
+        UNION
+        SELECT RowID,OrganizationID,PayPeriodID,EmployeeID,TimeEntryID,PayFromDate,PayToDate,TotalGrossSalary,TotalNetSalary,TotalTaxableSalary,TotalEmpSSS,TotalEmpWithholdingTax,TotalCompSSS,TotalEmpPhilhealth,TotalCompPhilhealth,TotalEmpHDMF,TotalCompHDMF,TotalVacationDaysLeft,TotalLoans,TotalBonus,TotalAllowance,TotalAdjustments,ThirteenthMonthInclusion,FirstTimeSalary FROM paystubactual WHERE IsActualFlag=1 AND OrganizationID=OrganizID
+        ) ps
 
 INNER JOIN employee e ON e.RowID=ps.EmployeeID AND e.OrganizationID=ps.OrganizationID AND e.EmployeeType='Monthly'
 
 INNER JOIN employeesalary es ON es.EmployeeID=ps.EmployeeID AND es.OrganizationID=ps.OrganizationID AND (es.EffectiveDateFrom >= ps.PayFromDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) >= ps.PayFromDate) AND (es.EffectiveDateFrom <= ps.PayToDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) <= ps.PayToDate)
 
 LEFT JOIN (SELECT RowID,EmployeeID,SUM(RegularHoursWorked) AS RegularHoursWorked,SUM(RegularHoursAmount) AS RegularHoursAmount,SUM(TotalHoursWorked) AS TotalHoursWorked,SUM(OvertimeHoursWorked) AS OvertimeHoursWorked,SUM(OvertimeHoursAmount) AS OvertimeHoursAmount,SUM(UndertimeHours) AS UndertimeHours,SUM(UndertimeHoursAmount) AS UndertimeHoursAmount,SUM(NightDifferentialHours) AS NightDifferentialHours,SUM(NightDiffHoursAmount) AS NightDiffHoursAmount,SUM(NightDifferentialOTHours) AS NightDifferentialOTHours,SUM(NightDiffOTHoursAmount) AS NightDiffOTHoursAmount,SUM(HoursLate) AS HoursLate,SUM(HoursLateAmount) AS HoursLateAmount,SUM(VacationLeaveHours) AS VacationLeaveHours,SUM(SickLeaveHours) AS SickLeaveHours,SUM(MaternityLeaveHours) AS MaternityLeaveHours,SUM(OtherLeaveHours) AS OtherLeaveHours,SUM(TotalDayPay) AS TotalDayPay,SUM(Absent) AS Absent,SUM(TaxableDailyAllowance) AS TaxableDailyAllowance,SUM(HolidayPayAmount) AS HolidayPayAmount,SUM(TaxableDailyBonus) AS TaxableDailyBonus,SUM(NonTaxableDailyBonus) AS NonTaxableDailyBonus,SUM(Leavepayment) AS Leavepayment
-				FROM (SELECT RowID,OrganizationID,`Date`,EmployeeShiftID,EmployeeID,EmployeeSalaryID,EmployeeFixedSalaryFlag,RegularHoursWorked,RegularHoursAmount,TotalHoursWorked,OvertimeHoursWorked,OvertimeHoursAmount,UndertimeHours,UndertimeHoursAmount,NightDifferentialHours,NightDiffHoursAmount,NightDifferentialOTHours,NightDiffOTHoursAmount,HoursLate,HoursLateAmount,LateFlag,PayRateID,VacationLeaveHours,SickLeaveHours,MaternityLeaveHours,OtherLeaveHours,TotalDayPay,Absent,ChargeToDivisionID,TaxableDailyAllowance,HolidayPayAmount,TaxableDailyBonus,NonTaxableDailyBonus,Leavepayment FROM employeetimeentry WHERE OrganizationID=OrganizID AND IsActualFlag=0 AND `Date` BETWEEN paydate_from AND paydat_to
-						UNION
-						SELECT RowID,OrganizationID,`Date`,EmployeeShiftID,EmployeeID,EmployeeSalaryID,EmployeeFixedSalaryFlag,RegularHoursWorked,RegularHoursAmount,TotalHoursWorked,OvertimeHoursWorked,OvertimeHoursAmount,UndertimeHours,UndertimeHoursAmount,NightDifferentialHours,NightDiffHoursAmount,NightDifferentialOTHours,NightDiffOTHoursAmount,HoursLate,HoursLateAmount,LateFlag,PayRateID,VacationLeaveHours,SickLeaveHours,MaternityLeaveHours,OtherLeaveHours,TotalDayPay,Absent,ChargeToDivisionID,TaxableDailyAllowance,HolidayPayAmount,TaxableDailyBonus,NonTaxableDailyBonus,Leavepayment FROM employeetimeentryactual WHERE OrganizationID=OrganizID AND IsActualFlag=1 AND `Date` BETWEEN paydate_from AND paydat_to
-						) i GROUP BY i.EmployeeID
-				) ete ON ete.RowID IS NOT NULL AND ete.EmployeeID=ps.EmployeeID
+                FROM (SELECT RowID,OrganizationID,`Date`,EmployeeShiftID,EmployeeID,EmployeeSalaryID,EmployeeFixedSalaryFlag,RegularHoursWorked,RegularHoursAmount,TotalHoursWorked,OvertimeHoursWorked,OvertimeHoursAmount,UndertimeHours,UndertimeHoursAmount,NightDifferentialHours,NightDiffHoursAmount,NightDifferentialOTHours,NightDiffOTHoursAmount,HoursLate,HoursLateAmount,LateFlag,PayRateID,VacationLeaveHours,SickLeaveHours,MaternityLeaveHours,OtherLeaveHours,TotalDayPay,Absent,ChargeToDivisionID,TaxableDailyAllowance,HolidayPayAmount,TaxableDailyBonus,NonTaxableDailyBonus,Leavepayment FROM employeetimeentry WHERE OrganizationID=OrganizID AND IsActualFlag=0 AND `Date` BETWEEN paydate_from AND paydat_to
+                        UNION
+                        SELECT RowID,OrganizationID,`Date`,EmployeeShiftID,EmployeeID,EmployeeSalaryID,EmployeeFixedSalaryFlag,RegularHoursWorked,RegularHoursAmount,TotalHoursWorked,OvertimeHoursWorked,OvertimeHoursAmount,UndertimeHours,UndertimeHoursAmount,NightDifferentialHours,NightDiffHoursAmount,NightDifferentialOTHours,NightDiffOTHoursAmount,HoursLate,HoursLateAmount,LateFlag,PayRateID,VacationLeaveHours,SickLeaveHours,MaternityLeaveHours,OtherLeaveHours,TotalDayPay,Absent,ChargeToDivisionID,TaxableDailyAllowance,HolidayPayAmount,TaxableDailyBonus,NonTaxableDailyBonus,Leavepayment FROM employeetimeentryactual WHERE OrganizationID=OrganizID AND IsActualFlag=1 AND `Date` BETWEEN paydate_from AND paydat_to
+                        ) i GROUP BY i.EmployeeID
+                ) ete ON ete.RowID IS NOT NULL AND ete.EmployeeID=ps.EmployeeID
 
 
 
@@ -232,9 +225,9 @@ LEFT JOIN (SELECT psi.*,p.PartNo AS ItemName FROM paystubitem psi INNER JOIN pro
 LEFT JOIN (SELECT psi.*,p.PartNo AS ItemName FROM paystubitem psi INNER JOIN product p ON p.RowID=psi.ProductID AND p.OrganizationID=psi.OrganizationID AND p.PartNo='Ecola' WHERE psi.Undeclared=0 AND psi.OrganizationID=OrganizID AND psi.PayAmount!=0) psiECOLA ON psiECOLA.PayStubID=ps.RowID
 
 LEFT JOIN (SELECT psa.RowID,psa.PayStubID,psa.PayAmount,p.PartNo AS ItemName FROM paystubadjustment psa INNER JOIN product p ON p.RowID=psa.ProductID WHERE IsActualFlag=0 AND psa.OrganizationID=OrganizID AND psa.PayAmount!=0
-				UNION
-				SELECT psa.RowID,psa.PayStubID,psa.PayAmount,p.PartNo AS ItemName FROM paystubadjustmentactual psa INNER JOIN product p ON p.RowID=psa.ProductID WHERE IsActualFlag=1 AND psa.OrganizationID=OrganizID AND psa.PayAmount!=0
-				) psa ON psa.PayStubID=ps.RowID
+                UNION
+                SELECT psa.RowID,psa.PayStubID,psa.PayAmount,p.PartNo AS ItemName FROM paystubadjustmentactual psa INNER JOIN product p ON p.RowID=psa.ProductID WHERE IsActualFlag=1 AND psa.OrganizationID=OrganizID AND psa.PayAmount!=0
+                ) psa ON psa.PayStubID=ps.RowID
 
 WHERE ps.OrganizationID=OrganizID
 AND ps.PayFromDate=paydate_from
@@ -243,6 +236,7 @@ GROUP BY ps.EmployeeID) i;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

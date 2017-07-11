@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb.VIEW_employee_for_payroll
 DROP PROCEDURE IF EXISTS `VIEW_employee_for_payroll`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `VIEW_employee_for_payroll`(IN `OrganizID` INT, IN `Page_Number` INT, IN `SearchString` VARCHAR(20))
@@ -81,15 +74,15 @@ e.RowID
 
 
 FROM (
-	SELECT *
-	FROM employee
-	WHERE LENGTH(SearchString) = 0 AND OrganizationID=OrganizID
+    SELECT *
+    FROM employee
+    WHERE LENGTH(SearchString) = 0 AND OrganizationID=OrganizID
 UNION
-	SELECT e.*
-	FROM employee e
-	INNER JOIN employeesearchstring ess ON ess.EmpPrimaKey=e.RowID AND LOCATE(SearchString,ess.searchstring) > 0
-	WHERE LENGTH(SearchString) > 0 AND e.OrganizationID=OrganizID
-	
+    SELECT e.*
+    FROM employee e
+    INNER JOIN employeesearchstring ess ON ess.EmpPrimaKey=e.RowID AND LOCATE(SearchString,ess.searchstring) > 0
+    WHERE LENGTH(SearchString) > 0 AND e.OrganizationID=OrganizID
+
 ) e
 LEFT JOIN position pos ON pos.RowID=e.PositionID
 ORDER BY RowID DESC
@@ -97,6 +90,7 @@ LIMIT Page_Number,20;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

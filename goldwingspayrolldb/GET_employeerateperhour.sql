@@ -1,22 +1,15 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function goldwingspayrolldb.GET_employeerateperhour
 DROP FUNCTION IF EXISTS `GET_employeerateperhour`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `GET_employeerateperhour`(
-	`EmpID` INT,
-	`OrgID` INT,
-	`paramDate` DATE
+    `EmpID` INT,
+    `OrgID` INT,
+    `paramDate` DATE
 
 ) RETURNS decimal(12,6)
     DETERMINISTIC
@@ -33,7 +26,7 @@ DECLARE dailyrate DECIMAL(11,7);
 DECLARE rateperhour DECIMAL(11,11);
 
 DECLARE numofweekthisyear INT(11) DEFAULT 53;
-	
+
 DECLARE shiftRowID INT(11);
 
 DECLARE PayFreqID INT(11);
@@ -59,16 +52,16 @@ SELECT COMPUTE_TimeDifference(TimeFrom,TimeTo) * 1.00000000000 FROM shift WHERE 
 
 IF hoursofduty > 8.00 OR hoursofduty IS NULL OR hoursofduty<=0 THEN
 
-	IF hoursofduty IS NULL THEN
-	
-		SET hoursofduty = 8;
-		
-	ELSE
-		
-		SET hoursofduty = hoursofduty - 1;
-		
-	END IF;
-	
+    IF hoursofduty IS NULL THEN
+
+        SET hoursofduty = 8;
+
+    ELSE
+
+        SET hoursofduty = hoursofduty - 1;
+
+    END IF;
+
 END IF;
 
 SELECT BasicPay * 1.00000000000,Salary * 1.00000000000 FROM employeesalary WHERE EmployeeID=EmpID AND OrganizationID=OrgID AND paramDate BETWEEN EffectiveDateFrom AND IFNULL(EffectiveDateTo,paramDate) AND DATEDIFF(paramDate,EffectiveDateFrom) >= 0 ORDER BY DATEDIFF(DATE_FORMAT(paramDate,'%Y-%m-%d'),EffectiveDateFrom) LIMIT 1 INTO empBasicPay,emp_sal;
@@ -82,11 +75,11 @@ SELECT PayFrequencyID,WEEKOFYEAR(LAST_DAY(CONCAT(YEAR(paramDate),'-12-01'))) FRO
 
 IF DAY(paramDate) <= 15 THEN
 
-	SET minnumday = 15;
+    SET minnumday = 15;
 
 ELSE
 
-	SET minnumday = DAY(LAST_DAY(paramDate)) - 15;
+    SET minnumday = DAY(LAST_DAY(paramDate)) - 15;
 
 END IF;
 
@@ -102,43 +95,43 @@ SET @perfecthrs = (SELECT sh.DivisorToDailyRate - COMPUTE_TimeDifference(sh.Brea
 SET @perfecthrs = IFNULL(@perfecthrs,8);
 
 IF emptype IN ('Fixed','Monthly') THEN
-	
-	IF PayFreqID = 1 THEN
-		
-		SET dailyrate = org_workdaysofyear / 12.00000000000;
-		
-		SET dailyrate = dailyrate / 2.00000000000;
-		
-		SET dailyrate = empBasicPay / dailyrate;
-		SET dailyrate = dailyrate * 1.00000000000;
-		SET dailyrate = ROUND(dailyrate,1);
-		
-	ELSEIF PayFreqID = 2 THEN
-	
-		
-		SET dailyrate = (empBasicPay * 12.00000000000) / org_workdaysofyear;
-		
-	ELSEIF PayFreqID = 3 THEN
-		SET dailyrate = empBasicPay;
-		
-	ELSEIF PayFreqID = 4 THEN
-		SET dailyrate = IF(DAY(LAST_DAY(ADDDATE(MAKEDATE(YEAR(paramDate),1), INTERVAL 1 MONTH))) <= 28, (empBasicPay * numofweekthisyear) / org_workdaysofyear, (empBasicPay * numofweekthisyear) / (org_workdaysofyear + 1));
-		
-	END IF;
-	
-	
+
+    IF PayFreqID = 1 THEN
+
+        SET dailyrate = org_workdaysofyear / 12.00000000000;
+
+        SET dailyrate = dailyrate / 2.00000000000;
+
+        SET dailyrate = empBasicPay / dailyrate;
+        SET dailyrate = dailyrate * 1.00000000000;
+        SET dailyrate = ROUND(dailyrate,1);
+
+    ELSEIF PayFreqID = 2 THEN
+
+
+        SET dailyrate = (empBasicPay * 12.00000000000) / org_workdaysofyear;
+
+    ELSEIF PayFreqID = 3 THEN
+        SET dailyrate = empBasicPay;
+
+    ELSEIF PayFreqID = 4 THEN
+        SET dailyrate = IF(DAY(LAST_DAY(ADDDATE(MAKEDATE(YEAR(paramDate),1), INTERVAL 1 MONTH))) <= 28, (empBasicPay * numofweekthisyear) / org_workdaysofyear, (empBasicPay * numofweekthisyear) / (org_workdaysofyear + 1));
+
+    END IF;
+
+
 
 ELSEIF emptype = 'Daily' THEN
-	
-	SET dailyrate = empBasicPay;
-	
+
+    SET dailyrate = empBasicPay;
+
 
 
 ELSEIF emptype = 'Hourly' THEN
-	
-	SET rateperhour = empBasicPay * hoursofduty;
-	
-	SET dailyrate = rateperhour;
+
+    SET rateperhour = empBasicPay * hoursofduty;
+
+    SET dailyrate = rateperhour;
 
 END IF;
 
@@ -146,6 +139,7 @@ RETURN dailyrate / @perfecthrs;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

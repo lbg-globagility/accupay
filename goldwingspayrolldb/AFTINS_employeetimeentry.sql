@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.AFTINS_employeetimeentry
 DROP TRIGGER IF EXISTS `AFTINS_employeetimeentry`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -45,13 +38,13 @@ WHERE esh.RowID=NEW.EmployeeShiftID
 INTO perfecthoursworked;
 
 IF perfecthoursworked IS NULL THEN
-	SET perfecthoursworked = 0;
-	
+    SET perfecthoursworked = 0;
+
 END IF;
 
 IF perfecthoursworked NOT IN (4,5) THEN
 
-	SET perfecthoursworked = perfecthoursworked -1;
+    SET perfecthoursworked = perfecthoursworked -1;
 
 END IF;
 
@@ -64,36 +57,36 @@ LEFT JOIN position p ON p.RowID=e.PositionID
 LEFT JOIN agency ag ON ag.RowID=e.AgencyID
 WHERE e.RowID=NEW.EmployeeID
 INTO AgencyRowID
-		,EmpPositionRowID
-		,DivisionRowID
-		,ag_fee;
+        ,EmpPositionRowID
+        ,DivisionRowID
+        ,ag_fee;
 
 IF AgencyRowID IS NOT NULL AND perfecthoursworked > 0 THEN
-	
-	SELECT agf.RowID FROM agencyfee agf WHERE agf.OrganizationID=NEW.OrganizationID AND agf.EmployeeID=NEW.EmployeeID AND agf.TimeEntryDate=NEW.`Date` ORDER BY DATEDIFF(DATE(DATE_FORMAT(agf.Created,'%Y-%m-%d')),NEW.`Date`) LIMIT 1 INTO agfRowID;
-	
-	SELECT INSUPD_agencyfee(agfRowID
-									,NEW.OrganizationID
-									,NEW.CreatedBy
-									,AgencyRowID
-									,NEW.EmployeeID
-									,EmpPositionRowID
-									,DivisionRowID
-									,NEW.RowID
-									,NEW.`Date`
-									,(ag_fee / perfecthoursworked) * NEW.RegularHoursWorked)
-	INTO anyint;
+
+    SELECT agf.RowID FROM agencyfee agf WHERE agf.OrganizationID=NEW.OrganizationID AND agf.EmployeeID=NEW.EmployeeID AND agf.TimeEntryDate=NEW.`Date` ORDER BY DATEDIFF(DATE(DATE_FORMAT(agf.Created,'%Y-%m-%d')),NEW.`Date`) LIMIT 1 INTO agfRowID;
+
+    SELECT INSUPD_agencyfee(agfRowID
+                                    ,NEW.OrganizationID
+                                    ,NEW.CreatedBy
+                                    ,AgencyRowID
+                                    ,NEW.EmployeeID
+                                    ,EmpPositionRowID
+                                    ,DivisionRowID
+                                    ,NEW.RowID
+                                    ,NEW.`Date`
+                                    ,(ag_fee / perfecthoursworked) * NEW.RegularHoursWorked)
+    INTO anyint;
 
 ELSE
 
-	UPDATE agencyfee af
-	SET af.DailyFee=0
-	,af.LastUpd=CURRENT_TIMESTAMP()
-	,af.LastUpdBy=af.CreatedBy
-	WHERE af.OrganizationID=NEW.OrganizationID
-	AND af.EmployeeID=NEW.EmployeeID
-	AND af.TimeEntryDate=NEW.`Date`;
-	
+    UPDATE agencyfee af
+    SET af.DailyFee=0
+    ,af.LastUpd=CURRENT_TIMESTAMP()
+    ,af.LastUpdBy=af.CreatedBy
+    WHERE af.OrganizationID=NEW.OrganizationID
+    AND af.EmployeeID=NEW.EmployeeID
+    AND af.TimeEntryDate=NEW.`Date`;
+
 END IF;
 
 
@@ -114,99 +107,99 @@ SET @actualratepercent = `GET_employeeundeclaredsalarypercent`(NEW.EmployeeID,NE
 
 INSERT INTO employeetimeentryactual
 (
-	RowID
-	,OrganizationID
-	,`Date`
-	,EmployeeShiftID
-	,EmployeeID
-	,EmployeeSalaryID
-	,EmployeeFixedSalaryFlag
-	,RegularHoursWorked
-	,RegularHoursAmount
-	,TotalHoursWorked
-	,OvertimeHoursWorked
-	,OvertimeHoursAmount
-	,UndertimeHours
-	,UndertimeHoursAmount
-	,NightDifferentialHours
-	,NightDiffHoursAmount
-	,NightDifferentialOTHours
-	,NightDiffOTHoursAmount
-	,HoursLate
-	,HoursLateAmount
-	,LateFlag
-	,PayRateID
-	,VacationLeaveHours
-	,SickLeaveHours
-	,MaternityLeaveHours
-	,OtherLeaveHours
-	,TotalDayPay
-	,Absent
-	,ChargeToDivisionID,Leavepayment
+    RowID
+    ,OrganizationID
+    ,`Date`
+    ,EmployeeShiftID
+    ,EmployeeID
+    ,EmployeeSalaryID
+    ,EmployeeFixedSalaryFlag
+    ,RegularHoursWorked
+    ,RegularHoursAmount
+    ,TotalHoursWorked
+    ,OvertimeHoursWorked
+    ,OvertimeHoursAmount
+    ,UndertimeHours
+    ,UndertimeHoursAmount
+    ,NightDifferentialHours
+    ,NightDiffHoursAmount
+    ,NightDifferentialOTHours
+    ,NightDiffOTHoursAmount
+    ,HoursLate
+    ,HoursLateAmount
+    ,LateFlag
+    ,PayRateID
+    ,VacationLeaveHours
+    ,SickLeaveHours
+    ,MaternityLeaveHours
+    ,OtherLeaveHours
+    ,TotalDayPay
+    ,Absent
+    ,ChargeToDivisionID,Leavepayment
 ) VALUES(
-	NEW.RowID
-	,NEW.OrganizationID
-	,NEW.`Date`
-	,NEW.EmployeeShiftID
-	,NEW.EmployeeID
-	,NEW.EmployeeSalaryID
-	,NEW.EmployeeFixedSalaryFlag
-	,NEW.RegularHoursWorked
-	,NEW.RegularHoursAmount + (NEW.RegularHoursAmount * actualrate)
-	,NEW.TotalHoursWorked
-	,NEW.OvertimeHoursWorked
-	,NEW.OvertimeHoursAmount + (NEW.OvertimeHoursAmount * actualrate)
-	,NEW.UndertimeHours
-	,NEW.UndertimeHoursAmount + (NEW.UndertimeHoursAmount * actualrate)
-	,NEW.NightDifferentialHours
-	,NEW.NightDiffHoursAmount + (NEW.NightDiffHoursAmount * actualrate)
-	,NEW.NightDifferentialOTHours
-	,NEW.NightDiffOTHoursAmount + (NEW.NightDiffOTHoursAmount * actualrate)
-	,NEW.HoursLate
-	,NEW.HoursLateAmount + (NEW.HoursLateAmount * actualrate)
-	,NEW.LateFlag
-	,NEW.PayRateID
-	,NEW.VacationLeaveHours
-	,NEW.SickLeaveHours
-	,NEW.MaternityLeaveHours
-	,NEW.OtherLeaveHours
-	,NEW.TotalDayPay * @actualratepercent
-	,NEW.Absent * @actualratepercent
-	,NEW.ChargeToDivisionID,NEW.Leavepayment + (NEW.Leavepayment * actualrate)
+    NEW.RowID
+    ,NEW.OrganizationID
+    ,NEW.`Date`
+    ,NEW.EmployeeShiftID
+    ,NEW.EmployeeID
+    ,NEW.EmployeeSalaryID
+    ,NEW.EmployeeFixedSalaryFlag
+    ,NEW.RegularHoursWorked
+    ,NEW.RegularHoursAmount + (NEW.RegularHoursAmount * actualrate)
+    ,NEW.TotalHoursWorked
+    ,NEW.OvertimeHoursWorked
+    ,NEW.OvertimeHoursAmount + (NEW.OvertimeHoursAmount * actualrate)
+    ,NEW.UndertimeHours
+    ,NEW.UndertimeHoursAmount + (NEW.UndertimeHoursAmount * actualrate)
+    ,NEW.NightDifferentialHours
+    ,NEW.NightDiffHoursAmount + (NEW.NightDiffHoursAmount * actualrate)
+    ,NEW.NightDifferentialOTHours
+    ,NEW.NightDiffOTHoursAmount + (NEW.NightDiffOTHoursAmount * actualrate)
+    ,NEW.HoursLate
+    ,NEW.HoursLateAmount + (NEW.HoursLateAmount * actualrate)
+    ,NEW.LateFlag
+    ,NEW.PayRateID
+    ,NEW.VacationLeaveHours
+    ,NEW.SickLeaveHours
+    ,NEW.MaternityLeaveHours
+    ,NEW.OtherLeaveHours
+    ,NEW.TotalDayPay * @actualratepercent
+    ,NEW.Absent * @actualratepercent
+    ,NEW.ChargeToDivisionID,NEW.Leavepayment + (NEW.Leavepayment * actualrate)
 ) ON
 DUPLICATE
 KEY
 UPDATE
-	OrganizationID=NEW.OrganizationID
-	,`Date`=NEW.`Date`
-	,EmployeeShiftID=NEW.EmployeeShiftID
-	,EmployeeID=NEW.EmployeeID
-	,EmployeeSalaryID=NEW.EmployeeSalaryID
-	,EmployeeFixedSalaryFlag=NEW.EmployeeFixedSalaryFlag
-	,RegularHoursWorked=NEW.RegularHoursWorked
-	,RegularHoursAmount=NEW.RegularHoursAmount + (NEW.RegularHoursAmount * actualrate)
-	,TotalHoursWorked=NEW.TotalHoursWorked
-	,OvertimeHoursWorked=NEW.OvertimeHoursWorked
-	,OvertimeHoursAmount=NEW.OvertimeHoursAmount + (NEW.OvertimeHoursAmount * actualrate)
-	,UndertimeHours=NEW.UndertimeHours
-	,UndertimeHoursAmount=NEW.UndertimeHoursAmount + (NEW.UndertimeHoursAmount * actualrate)
-	,NightDifferentialHours=NEW.NightDifferentialHours
-	,NightDiffHoursAmount=NEW.NightDiffHoursAmount + (NEW.NightDiffHoursAmount * actualrate)
-	,NightDifferentialOTHours=NEW.NightDifferentialOTHours
-	,NightDiffOTHoursAmount=NEW.NightDiffOTHoursAmount + (NEW.NightDiffOTHoursAmount * actualrate)
-	,HoursLate=NEW.HoursLate
-	,HoursLateAmount=NEW.HoursLateAmount + (NEW.HoursLateAmount * actualrate)
-	,LateFlag=NEW.LateFlag
-	,PayRateID=NEW.PayRateID
-	,VacationLeaveHours=NEW.VacationLeaveHours
-	,SickLeaveHours=NEW.SickLeaveHours
-	,MaternityLeaveHours=NEW.MaternityLeaveHours
-	,OtherLeaveHours=NEW.OtherLeaveHours
-	,TotalDayPay=NEW.TotalDayPay * @actualratepercent
-	,Absent=NEW.Absent * @actualratepercent
-	,ChargeToDivisionID=NEW.ChargeToDivisionID
-	,Leavepayment=NEW.Leavepayment + (NEW.Leavepayment * actualrate);
-	
+    OrganizationID=NEW.OrganizationID
+    ,`Date`=NEW.`Date`
+    ,EmployeeShiftID=NEW.EmployeeShiftID
+    ,EmployeeID=NEW.EmployeeID
+    ,EmployeeSalaryID=NEW.EmployeeSalaryID
+    ,EmployeeFixedSalaryFlag=NEW.EmployeeFixedSalaryFlag
+    ,RegularHoursWorked=NEW.RegularHoursWorked
+    ,RegularHoursAmount=NEW.RegularHoursAmount + (NEW.RegularHoursAmount * actualrate)
+    ,TotalHoursWorked=NEW.TotalHoursWorked
+    ,OvertimeHoursWorked=NEW.OvertimeHoursWorked
+    ,OvertimeHoursAmount=NEW.OvertimeHoursAmount + (NEW.OvertimeHoursAmount * actualrate)
+    ,UndertimeHours=NEW.UndertimeHours
+    ,UndertimeHoursAmount=NEW.UndertimeHoursAmount + (NEW.UndertimeHoursAmount * actualrate)
+    ,NightDifferentialHours=NEW.NightDifferentialHours
+    ,NightDiffHoursAmount=NEW.NightDiffHoursAmount + (NEW.NightDiffHoursAmount * actualrate)
+    ,NightDifferentialOTHours=NEW.NightDifferentialOTHours
+    ,NightDiffOTHoursAmount=NEW.NightDiffOTHoursAmount + (NEW.NightDiffOTHoursAmount * actualrate)
+    ,HoursLate=NEW.HoursLate
+    ,HoursLateAmount=NEW.HoursLateAmount + (NEW.HoursLateAmount * actualrate)
+    ,LateFlag=NEW.LateFlag
+    ,PayRateID=NEW.PayRateID
+    ,VacationLeaveHours=NEW.VacationLeaveHours
+    ,SickLeaveHours=NEW.SickLeaveHours
+    ,MaternityLeaveHours=NEW.MaternityLeaveHours
+    ,OtherLeaveHours=NEW.OtherLeaveHours
+    ,TotalDayPay=NEW.TotalDayPay * @actualratepercent
+    ,Absent=NEW.Absent * @actualratepercent
+    ,ChargeToDivisionID=NEW.ChargeToDivisionID
+    ,Leavepayment=NEW.Leavepayment + (NEW.Leavepayment * actualrate);
+
 SELECT RowID FROM `view` WHERE ViewName='Employee Time Entry' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 
 SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EmployeeShiftID',NEW.RowID,'',NEW.EmployeeShiftID,'Insert') INTO auditRowID;
@@ -258,6 +251,7 @@ SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,vi
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

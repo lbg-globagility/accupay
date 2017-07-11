@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.BEFUPD_employeetimeentry
 DROP TRIGGER IF EXISTS `BEFUPD_employeetimeentry`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -39,6 +32,12 @@ DECLARE e_rateperday DECIMAL(12,6) DEFAULT 0;
 DECLARE emp_type VARCHAR(50);
 
 DECLARE default_workhours_everyday DECIMAL(11,6) DEFAULT 8;
+
+DECLARE nightDiffTimeFrom TIME DEFAULT '22:00:00';
+DECLARE nightDiffTimeTo TIME DEFAULT '06:00:00';
+
+DECLARE nightDiffRangeFrom DATETIME;
+DECLARE nightDiffRangeTo DATETIME;
 
 SET @e_rateperday = 0.0;
 SELECT IF(e.EmployeeType = 'Daily', es.BasicPay, (es.Salary / (e.WorkDaysPerYear / 24))) FROM employeesalary es INNER JOIN employee e ON e.RowID=es.EmployeeID AND e.OrganizationID=es.OrganizationID WHERE es.RowID=NEW.EmployeeSalaryID INTO @e_rateperday;
@@ -170,7 +169,7 @@ IF isRest_day = '0' THEN
                    AND NEW.TotalDayPay = 0
                    AND @calclegalholi = 1 THEN
 
-                SET NEW.TotalDayPay = @daily_pay;
+                -- SET NEW.TotalDayPay = @daily_pay;
                 SET NEW.Absent = 0.0;
             ELSEIF has_shift = '1' AND (NEW.VacationLeaveHours + NEW.SickLeaveHours + NEW.MaternityLeaveHours + NEW.OtherLeaveHours) = 0
                    AND NEW.TotalDayPay = 0 THEN
@@ -214,47 +213,46 @@ END IF;
 SELECT GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, NEW.`Date`)
 INTO rate_this_date;
 
-SET NEW.HolidayPayAmount = (
-    SELECT IF(
-        NEW.TotalDayPay > 0 AND NEW.RegularHoursAmount = 0 AND e.CalcHoliday='1' AND LOCATE('Regular Holi',pr.PayType) > 0 AND isPresentInWorkingDaysPriorToThisDate='1',
-        rate_this_date,
-        IF(
-            (
-                e.CalcSpecialHoliday = '1'
-                AND pr.PayType = 'Special Non-Working Holiday'
-                AND e.EmployeeType = 'Monthly'
-                AND isSpecialHoliday = '1'
-                AND isPresentInWorkingDaysPriorToThisDate = '1'
-                AND NEW.TotalDayPay > 0
-                AND NEW.RegularHoursAmount = 0
-            ),
-            rate_this_date,
-            IF(
-                e.CalcSpecialHoliday='1' AND pr.PayType = 'Special Non-Working Holiday',
-                NEW.RegularHoursAmount - (NEW.RegularHoursAmount / payrate_this_date),
-                IF(
-                    e.CalcHoliday='1' AND pr.PayType='Regular Holiday' AND NEW.TotalDayPay > 0 AND NEW.RegularHoursAmount > 0,
-                    IF(
-                        NEW.TotalDayPay > NEW.RegularHoursAmount,
-                        NEW.RegularHoursAmount,
-                        NEW.TotalDayPay
-                    ) / payrate_this_date,
-                    0
-                )
-            )
-        )
-    )
-    FROM employee e
-    INNER JOIN payrate pr
-        ON pr.RowID=NEW.PayRateID
-        AND pr.PayType!='Regular Day'
-    WHERE e.RowID=NEW.EmployeeID
-        AND e.OrganizationID=NEW.OrganizationID
-);
+-- SET NEW.HolidayPayAmount = (
+--     SELECT IF(
+--         NEW.TotalDayPay > 0 AND NEW.RegularHoursAmount = 0 AND e.CalcHoliday='1' AND LOCATE('Regular Holi',pr.PayType) > 0 AND isPresentInWorkingDaysPriorToThisDate='1',
+--         rate_this_date,
+--         IF(
+--             (
+--                 e.CalcSpecialHoliday = '1' AND
+--                 pr.PayType = 'Special Non-Working Holiday' AND
+--                 e.EmployeeType = 'Monthly' AND
+--                 isSpecialHoliday = '1' AND
+--                 isPresentInWorkingDaysPriorToThisDate = '1' AND
+--                 NEW.TotalDayPay > 0 AND NEW.RegularHoursAmount = 0
+--             ),
+--             rate_this_date,
+--             IF(
+--                 e.CalcSpecialHoliday='1' AND pr.PayType = 'Special Non-Working Holiday',
+--                 NEW.RegularHoursAmount - (NEW.RegularHoursAmount / payrate_this_date),
+--                 IF(
+--                     e.CalcHoliday='1' AND pr.PayType='Regular Holiday' AND NEW.TotalDayPay > 0 AND NEW.RegularHoursAmount > 0,
+--                     IF(
+--                         NEW.TotalDayPay > NEW.RegularHoursAmount,
+--                         NEW.RegularHoursAmount,
+--                         NEW.TotalDayPay
+--                     ) / payrate_this_date,
+--                     0
+--                 )
+--             )
+--         )
+--     )
+--     FROM employee e
+--     INNER JOIN payrate pr
+--         ON pr.RowID=NEW.PayRateID
+--         AND pr.PayType!='Regular Day'
+--     WHERE e.RowID=NEW.EmployeeID AND
+--         e.OrganizationID=NEW.OrganizationID
+-- );
 
-IF NEW.HolidayPayAmount IS NULL THEN
-    SET NEW.HolidayPayAmount = 0;
-END IF;
+-- IF NEW.HolidayPayAmount IS NULL THEN
+--     SET NEW.HolidayPayAmount = 0;
+-- END IF;
 
 SELECT SUM(ea.AllowanceAmount) FROM employeeallowance ea WHERE ea.AllowanceFrequency='Daily' AND ea.TaxableFlag='1' AND ea.EmployeeID=NEW.EmployeeID AND ea.OrganizationID=NEW.OrganizationID AND NEW.`Date` BETWEEN ea.EffectiveStartDate AND ea.EffectiveEndDate INTO TaxableDailyAllowanceAmount;
 SET rate_this_date = IFNULL((SELECT sh.DivisorToDailyRate - COMPUTE_TimeDifference(sh.BreakTimeFrom,sh.BreakTimeTo)
@@ -382,8 +380,8 @@ IF @isEntitledToNightDifferential THEN
         WHERE etd.EmployeeID=NEW.EmployeeID
             AND etd.OrganizationID=NEW.OrganizationID
             AND etd.`Date`=NEW.`Date`
-            
-            
+
+
         ORDER BY IFNULL(etd.LastUpd,etd.Created) DESC
         LIMIT 1
         INTO
@@ -461,10 +459,10 @@ IF @isEntitledToNightDifferential THEN
 
                 SET NEW.NightDifferentialOTHours = COMPUTE_TimeDifference(@applicable_time_in, @applicable_time_out);
                 SET NEW.NightDiffOTHoursAmount = NEW.NightDifferentialOTHours * hourly_rate * @applicable_night_differential_ot_rate;
-                
+
                 SET NEW.TotalDayPay = NEW.TotalDayPay + NEW.NightDiffOTHoursAmount;
             END IF;
-            
+
         END IF;
     ELSE
         SET NEW.NightDifferentialHours = 0;
@@ -478,6 +476,7 @@ END IF;
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.11-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb.AFTUPD_employeeofficialbusines_then_employeetimeentrydetails
 DROP TRIGGER IF EXISTS `AFTUPD_employeeofficialbusines_then_employeetimeentrydetails`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -39,128 +32,128 @@ SET eob_dayrange = COALESCE(DATEDIFF(COALESCE(NEW.OffBusEndDate,NEW.OffBusStartD
 SET i=0;
 
 IF (OLD.OffBusStatus != 'Approved' AND NEW.OffBusStatus = 'Approved')
-	AND OLD.OffBusStartTime != NEW.OffBusStartTime
-	AND OLD.OffBusEndTime != NEW.OffBusEndTime
-	AND OLD.OffBusStartDate != NEW.OffBusStartDate
-	AND OLD.OffBusEndDate != NEW.OffBusEndDate THEN
-	
-	IF NEW.OffBusStatus = 'Approved' THEN
-		
-		SELECT CURRENT_TIMESTAMP() INTO one_datetimestamp;
-		
-		INSERT INTO employeetimeentrydetails 
-		(
-			RowID
-			,OrganizationID
-			,Created
-			,CreatedBy
-			,EmployeeID
-			,TimeIn
-			,TimeOut
-			,`Date`
-			,TimeScheduleType
-			,TimeEntryStatus
-		) SELECT etd.RowID
-			,NEW.OrganizationID
-			,one_datetimestamp
-			,NEW.CreatedBy
-			,NEW.EmployeeID
-			,NEW.OffBusStartTime
-			,NEW.OffBusEndTime
-			,d.DateValue
-			,''
-			,''
-			FROM dates d
-			LEFT JOIN employeetimeentrydetails etd ON etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=d.DateValue
-			WHERE d.DateValue BETWEEN NEW.OffBusStartDate AND NEW.OffBusEndDate
-		ON
-		DUPLICATE
-		KEY
-		UPDATE
-			LastUpd = CURRENT_TIMESTAMP()
-			,LastUpdBy = NEW.CreatedBy			
-			,TimeIn = IFNULL(NEW.OffBusStartTime,etd.TimeIn)
-			,TimeOut = IFNULL(NEW.OffBusEndTime,etd.TimeOut);
-			
-	END IF;
-	
+    AND OLD.OffBusStartTime != NEW.OffBusStartTime
+    AND OLD.OffBusEndTime != NEW.OffBusEndTime
+    AND OLD.OffBusStartDate != NEW.OffBusStartDate
+    AND OLD.OffBusEndDate != NEW.OffBusEndDate THEN
+
+    IF NEW.OffBusStatus = 'Approved' THEN
+
+        SELECT CURRENT_TIMESTAMP() INTO one_datetimestamp;
+
+        INSERT INTO employeetimeentrydetails
+        (
+            RowID
+            ,OrganizationID
+            ,Created
+            ,CreatedBy
+            ,EmployeeID
+            ,TimeIn
+            ,TimeOut
+            ,`Date`
+            ,TimeScheduleType
+            ,TimeEntryStatus
+        ) SELECT etd.RowID
+            ,NEW.OrganizationID
+            ,one_datetimestamp
+            ,NEW.CreatedBy
+            ,NEW.EmployeeID
+            ,NEW.OffBusStartTime
+            ,NEW.OffBusEndTime
+            ,d.DateValue
+            ,''
+            ,''
+            FROM dates d
+            LEFT JOIN employeetimeentrydetails etd ON etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=d.DateValue
+            WHERE d.DateValue BETWEEN NEW.OffBusStartDate AND NEW.OffBusEndDate
+        ON
+        DUPLICATE
+        KEY
+        UPDATE
+            LastUpd = CURRENT_TIMESTAMP()
+            ,LastUpdBy = NEW.CreatedBy
+            ,TimeIn = IFNULL(NEW.OffBusStartTime,etd.TimeIn)
+            ,TimeOut = IFNULL(NEW.OffBusEndTime,etd.TimeOut);
+
+    END IF;
+
 ELSEIF prev_dayrange > eob_dayrange AND NEW.OffBusStatus = 'Approved' THEN
 
-	simple_loop: LOOP
-	
-		IF i >= prev_dayrange THEN
-			LEAVE simple_loop;
-		ELSE
-			
-			SELECT SUM(RowID) FROM employeetimeentrydetails WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND Date=DATE_ADD(NEW.OffBusStartDate, INTERVAL i DAY) LIMIT 1 INTO etetn_RowID;
-			
-			IF i < eob_dayrange THEN
-				UPDATE employeetimeentrydetails SET
-				LastUpd=one_datetimestamp
-				,LastUpdBy=NEW.LastUpdBy
-				,TimeIn=NEW.OffBusStartTime
-				,TimeOut=NEW.OffBusEndTime
-				,Date=DATE_ADD(NEW.OffBusStartDate, INTERVAL i DAY)
-				,TimeScheduleType='F'
-				,TimeEntryStatus=IF(NEW.OffBusStartTime IS NULL,'missing clock in',IF(NEW.OffBusEndTime IS NULL,'missing clock out','')) WHERE RowID=etetn_RowID;
-			ELSE
-				DELETE FROM employeetimeentrydetails WHERE RowID=etetn_RowID;
-			END IF;
-			
-		END IF;
-		
-		SET i=i+1;
-	
-	END LOOP simple_loop;
+    simple_loop: LOOP
+
+        IF i >= prev_dayrange THEN
+            LEAVE simple_loop;
+        ELSE
+
+            SELECT SUM(RowID) FROM employeetimeentrydetails WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND Date=DATE_ADD(NEW.OffBusStartDate, INTERVAL i DAY) LIMIT 1 INTO etetn_RowID;
+
+            IF i < eob_dayrange THEN
+                UPDATE employeetimeentrydetails SET
+                LastUpd=one_datetimestamp
+                ,LastUpdBy=NEW.LastUpdBy
+                ,TimeIn=NEW.OffBusStartTime
+                ,TimeOut=NEW.OffBusEndTime
+                ,Date=DATE_ADD(NEW.OffBusStartDate, INTERVAL i DAY)
+                ,TimeScheduleType='F'
+                ,TimeEntryStatus=IF(NEW.OffBusStartTime IS NULL,'missing clock in',IF(NEW.OffBusEndTime IS NULL,'missing clock out','')) WHERE RowID=etetn_RowID;
+            ELSE
+                DELETE FROM employeetimeentrydetails WHERE RowID=etetn_RowID;
+            END IF;
+
+        END IF;
+
+        SET i=i+1;
+
+    END LOOP simple_loop;
 
 ELSEIF prev_dayrange = eob_dayrange AND NEW.OffBusStatus = 'Approved' THEN
 
 simple_loop: LOOP
 
-	IF i >= eob_dayrange THEN
-		LEAVE simple_loop;
-	ELSE
-		
-		SELECT SUM(RowID) FROM employeetimeentrydetails WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND Date=DATE_ADD(NEW.OffBusStartDate, INTERVAL i DAY) LIMIT 1 INTO etetn_RowID;
-		
-		INSERT INTO employeetimeentrydetails 
-		(
-			RowID
-			,OrganizationID
-			,Created
-			,CreatedBy
-			,EmployeeID
-			,TimeIn
-			,TimeOut
-			,Date
-			,TimeScheduleType
-			,TimeEntryStatus
-		) VALUES (
-			COALESCE(etetn_RowID,NULL)
-			,NEW.OrganizationID
-			,one_datetimestamp
-			,NEW.CreatedBy
-			,NEW.EmployeeID
-			,NEW.OffBusStartTime
-			,NEW.OffBusEndTime
-			,DATE_ADD(NEW.OffBusStartDate, INTERVAL i DAY)
-			,'F'
-			,IF(NEW.OffBusStartTime IS NULL,'missing clock in',IF(NEW.OffBusEndTime IS NULL,'missing clock out',''))
-		) ON
-		DUPLICATE
-		KEY
-		UPDATE 
-			LastUpd=one_datetimestamp
-			,LastUpdBy=NEW.LastUpdBy
-			,TimeIn=NEW.OffBusStartTime
-			,TimeOut=NEW.OffBusEndTime
-			,Date=DATE_ADD(NEW.OffBusStartDate, INTERVAL i DAY)
-			,TimeScheduleType='F'
-			,TimeEntryStatus=IF(NEW.OffBusStartTime IS NULL,'missing clock in',IF(NEW.OffBusEndTime IS NULL,'missing clock out',''));
-		
-	END IF;
-	
-	SET i=i+1;
+    IF i >= eob_dayrange THEN
+        LEAVE simple_loop;
+    ELSE
+
+        SELECT SUM(RowID) FROM employeetimeentrydetails WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND Date=DATE_ADD(NEW.OffBusStartDate, INTERVAL i DAY) LIMIT 1 INTO etetn_RowID;
+
+        INSERT INTO employeetimeentrydetails
+        (
+            RowID
+            ,OrganizationID
+            ,Created
+            ,CreatedBy
+            ,EmployeeID
+            ,TimeIn
+            ,TimeOut
+            ,Date
+            ,TimeScheduleType
+            ,TimeEntryStatus
+        ) VALUES (
+            COALESCE(etetn_RowID,NULL)
+            ,NEW.OrganizationID
+            ,one_datetimestamp
+            ,NEW.CreatedBy
+            ,NEW.EmployeeID
+            ,NEW.OffBusStartTime
+            ,NEW.OffBusEndTime
+            ,DATE_ADD(NEW.OffBusStartDate, INTERVAL i DAY)
+            ,'F'
+            ,IF(NEW.OffBusStartTime IS NULL,'missing clock in',IF(NEW.OffBusEndTime IS NULL,'missing clock out',''))
+        ) ON
+        DUPLICATE
+        KEY
+        UPDATE
+            LastUpd=one_datetimestamp
+            ,LastUpdBy=NEW.LastUpdBy
+            ,TimeIn=NEW.OffBusStartTime
+            ,TimeOut=NEW.OffBusEndTime
+            ,Date=DATE_ADD(NEW.OffBusStartDate, INTERVAL i DAY)
+            ,TimeScheduleType='F'
+            ,TimeEntryStatus=IF(NEW.OffBusStartTime IS NULL,'missing clock in',IF(NEW.OffBusEndTime IS NULL,'missing clock out',''));
+
+    END IF;
+
+    SET i=i+1;
 
 END LOOP simple_loop;
 
@@ -224,6 +217,7 @@ END IF;
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
