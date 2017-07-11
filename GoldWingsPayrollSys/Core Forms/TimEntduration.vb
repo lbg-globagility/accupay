@@ -16,6 +16,20 @@ Public Class TimEntduration
 
     Dim current_years = 0
 
+    Public Event DoneGenerating()
+
+    Public Sub New()
+        InitializeComponent()
+    End Sub
+
+    Public Sub New(dateToday As DateTime)
+        Me.New()
+
+        day_today = dateToday.Day
+        month_today = dateToday.Month
+        year_today = dateToday.Year
+    End Sub
+
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         Dim n_SQLQueryToDatatable As _
@@ -917,7 +931,7 @@ Public Class TimEntduration
                             '    If firstrow = 0 Then
                             '        firstrow = 1
 
-                            '        'txthrsUT.Text = UTval.ToString 'Total Undertime hour(s) 
+                            '        'txthrsUT.Text = UTval.ToString 'Total Undertime hour(s)
 
                             '        If Val(drows("IsLateNight")) <= 0 Then
                             '            drows("IsLateNight") = drows("IsLateNight").ToString.Replace("-", "")
@@ -997,8 +1011,8 @@ Public Class TimEntduration
 
                             ''********************
                             'cboOverUnderTime.SelectedIndex = If(OTval > 0 Or OTNightval > 0, 0, If(dt_etent.Rows.Count = 0, -1, 1))
-                            ''DEPENDE PA ANG OVER TIME, 
-                            ''EXAMPLE KUNG MAY APPROVAL PA BA? 
+                            ''DEPENDE PA ANG OVER TIME,
+                            ''EXAMPLE KUNG MAY APPROVAL PA BA?
                             ''NO OVER TIME
                             '',KUNG MAY ALLOWABLE HOUR(S) FOR OVER TIME
                             ''********************
@@ -1049,7 +1063,7 @@ Public Class TimEntduration
                      " LIMIT 1;")
 
         If blankTimeOut >= 1 Then
-            
+
             ' ''Dim prompt = MessageBox.Show("It seems that there were blank time logs." & vbNewLine & _
             ' ''                             "Would you to correct it first ?", _
             ' ''                             "Blank Time Logs", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
@@ -1138,7 +1152,7 @@ Public Class TimEntduration
         '                                     "' AND '" & Format(CDate(dgvpayper.CurrentRow.Cells("Pay period to").Value), "yyyy-MM-dd") & _
         '                                     "' GROUP BY Created;")
 
-        'If etentdet_for_this_payp.Rows.Count >= 2 Then 
+        'If etentdet_for_this_payp.Rows.Count >= 2 Then
 
         'End If
 
@@ -1264,18 +1278,22 @@ Public Class TimEntduration
 
         'Dim n_ExecuteQuery As New ExecuteQuery("CALL EXEC_sql_from_file('" & sql_script & "');")
         '",'" & division_selectedvalue & "'" & _
-        Dim n_ExecuteQuery As _
-                New ExecuteQuery("CALL MASS_generate_employeetimeentry('" & orgztnID & "'" & _
-                                 ",'" & quer_empPayFreq & "'" & _
-                                 ",'" & cboxDivisions.Tag & "'" & _
-                                 ",'" & z_User & "'" & _
-                                 ",'" & Format(CDate(selectdayFrom), "yyy-MM-dd") & "'" & _
-                                 ",'" & Format(CDate(selectdayTo), "yyy-MM-dd") & "');",
-                                 999999)
+        Try
+            Dim n_ExecuteQuery As _
+                    New ExecuteQuery("CALL MASS_generate_employeetimeentry('" & orgztnID & "'" & _
+                                     ",'" & quer_empPayFreq & "'" & _
+                                     ",'" & cboxDivisions.Tag & "'" & _
+                                     ",'" & z_User & "'" & _
+                                     ",'" & Format(CDate(selectdayFrom), "yyy-MM-dd") & "'" & _
+                                     ",'" & Format(CDate(selectdayTo), "yyy-MM-dd") & "');",
+                                     999999)
 
 
-        n_ExecuteQuery = _
-            New ExecuteQuery("CALL RECOMPUTE_agencytotalbill('" & orgztnID & "', '" & dayFrom & "', '" & dayTo & "', '" & z_User & "');")
+            n_ExecuteQuery = _
+                New ExecuteQuery("CALL RECOMPUTE_agencytotalbill('" & orgztnID & "', '" & dayFrom & "', '" & dayTo & "', '" & z_User & "');")
+        Catch exception As Exception
+            MsgBox("An unexpected error has occcured.", exception.Message)
+        End Try
 
         bgWork.ReportProgress(100, "")
 
@@ -1361,6 +1379,8 @@ Public Class TimEntduration
         EmpTimeEntry.dgvEmployi_SelectionChanged(sender, e)
 
         backgroundworking = 0
+
+        RaiseEvent DoneGenerating()
 
         AddHandler EmpTimeEntry.dgvEmployi.SelectionChanged, AddressOf EmpTimeEntry.dgvEmployi_SelectionChanged
 

@@ -117,6 +117,8 @@ Public Class TimeEntrySummary
 
     Private _selectedPayPeriod As PayPeriod
 
+    Private WithEvents _timeEntdurationModal As TimEntduration
+
     Private Async Sub LoadEmployees()
         _employees = Await GetEmployees()
         employeesDataGridView.DataSource = _employees
@@ -244,6 +246,30 @@ Public Class TimeEntrySummary
         timeEntriesDataGridView.DataSource = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
     End Sub
 
+    Private Async Function GetYears() As Task(Of Collection(Of Integer))
+        Dim sql = <![CDATA[
+            SELECT payperiod.Year
+            FROM payperiod
+            WHERE payperiod.OrganizationID
+            GROUP BY payperiod.Year
+        ]]>.Value
+
+        Dim years = New Collection(Of Integer)
+
+        Using connection As New MySqlConnection(connectionString),
+            command As New MySqlCommand(sql, connection)
+
+            Await connection.OpenAsync()
+
+            Dim reader = Await command.ExecuteReaderAsync()
+            While Await reader.ReadAsync()
+                years.Add(reader.GetValue(Of Integer)("Year"))
+            End While
+        End Using
+
+        Return years
+    End Function
+
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of Collection(Of TimeEntry))
         Dim sql = <![CDATA[
             SELECT
@@ -331,6 +357,17 @@ Public Class TimeEntrySummary
 
         Return timeEntries
     End Function
+
+    Private Sub generateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles generateTimeEntryButton.Click
+        Return
+        _timeEntdurationModal = New TimEntduration(DateTime.Today)
+
+        _timeEntdurationModal.ShowDialog()
+    End Sub
+
+    Private Sub a() Handles _timeEntdurationModal.DoneGenerating
+        Trace.Write("Hello")
+    End Sub
 
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadEmployees()
