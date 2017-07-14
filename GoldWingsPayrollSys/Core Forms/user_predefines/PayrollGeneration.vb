@@ -330,236 +330,234 @@ Public Class PayrollGeneration
 
             fixedNonTaxableMonthlyAllowances = New MySQLQueryToDataTable(fixedNonTaxableMonthlyAllowanceSql).ResultTable
 
-            If True Then
+            Dim pstub_TotalEmpSSS, pstub_TotalCompSSS, pstub_TotalEmpPhilhealth, pstub_TotalCompPhilhealth, pstub_TotalEmpHDMF, pstub_TotalCompHDMF, pstub_TotalVacationDaysLeft, pstub_TotalLoans, pstub_TotalBonus, OTAmount, NightDiffOTAmount, NightDiffAmount, thirteenthmoval As Double
 
-                Dim pstub_TotalEmpSSS, pstub_TotalCompSSS, pstub_TotalEmpPhilhealth, pstub_TotalCompPhilhealth, pstub_TotalEmpHDMF, pstub_TotalCompHDMF, pstub_TotalVacationDaysLeft, pstub_TotalLoans, pstub_TotalBonus, OTAmount, NightDiffOTAmount, NightDiffAmount, thirteenthmoval As Double
+            Dim emp_count As Integer = employee_dattab.Rows.Count
 
-                Dim emp_count As Integer = employee_dattab.Rows.Count
+            Dim progress_index As Integer = 0
 
-                Dim progress_index As Integer = 0
+            Dim emptaxabsal As Decimal = 0
+            Dim empnetsal As Decimal = 0
+            Dim emp_taxabsal = Val(0)
 
-                Dim emptaxabsal As Decimal = 0
-                Dim empnetsal As Decimal = 0
-                Dim emp_taxabsal = Val(0)
+            Dim tax_amount = Val(0)
 
-                Dim tax_amount = Val(0)
+            Dim grossincome = Val(0)
 
-                Dim grossincome = Val(0)
+            Dim grossincome_firsthalf = Val(0)
 
-                Dim grossincome_firsthalf = Val(0)
+            Dim date_to_use = If(CDate(n_PayrollDateFrom) > CDate(n_PayrollDateTo), CDate(n_PayrollDateFrom), CDate(n_PayrollDateTo))
 
-                Dim date_to_use = If(CDate(n_PayrollDateFrom) > CDate(n_PayrollDateTo), CDate(n_PayrollDateFrom), CDate(n_PayrollDateTo))
+            Dim dateStr_to_use = Format(CDate(date_to_use), "yyyy-MM-dd")
 
-                Dim dateStr_to_use = Format(CDate(date_to_use), "yyyy-MM-dd")
-
-                Dim numberofweeksthismonth = _
+            Dim numberofweeksthismonth =
                     New MySQLExecuteQuery("SELECT `COUNTTHEWEEKS`('" & dateStr_to_use & "');")
 
-                For Each drow As DataRow In employee_dattab.Rows
-                    Try
-                        strPHHdeductsched = drow("PhHealthDeductSched").ToString
-                        If drow("PhHealthDeductSched").ToString = "End of the month" Then
+            For Each drow As DataRow In employee_dattab.Rows
+                Try
+                    strPHHdeductsched = drow("PhHealthDeductSched").ToString
+                    If drow("PhHealthDeductSched").ToString = "End of the month" Then
 
-                            isorgPHHdeductsched = 0
+                        isorgPHHdeductsched = 0
 
-                        ElseIf drow("PhHealthDeductSched").ToString = "First half" Then
+                    ElseIf drow("PhHealthDeductSched").ToString = "First half" Then
 
-                            isorgPHHdeductsched = 1
+                        isorgPHHdeductsched = 1
 
-                        ElseIf drow("PhHealthDeductSched").ToString = "Per pay period" Then
+                    ElseIf drow("PhHealthDeductSched").ToString = "Per pay period" Then
 
-                            isorgPHHdeductsched = 2
+                        isorgPHHdeductsched = 2
 
-                        End If
-
-
-                        strSSSdeductsched = drow("SSSDeductSched").ToString
-                        If drow("SSSDeductSched").ToString = "End of the month" Then
-
-                            isorgSSSdeductsched = 0
-
-                        ElseIf drow("SSSDeductSched").ToString = "First half" Then
-
-                            isorgSSSdeductsched = 1
-
-                        ElseIf drow("SSSDeductSched").ToString = "Per pay period" Then
-
-                            isorgSSSdeductsched = 2
-
-                        End If
+                    End If
 
 
-                        strHDMFdeductsched = drow("HDMFDeductSched").ToString
-                        If drow("HDMFDeductSched").ToString = "End of the month" Then
+                    strSSSdeductsched = drow("SSSDeductSched").ToString
+                    If drow("SSSDeductSched").ToString = "End of the month" Then
 
-                            isorgHDMFdeductsched = 0
+                        isorgSSSdeductsched = 0
 
-                        ElseIf drow("HDMFDeductSched").ToString = "First half" Then
+                    ElseIf drow("SSSDeductSched").ToString = "First half" Then
 
-                            isorgHDMFdeductsched = 1
+                        isorgSSSdeductsched = 1
 
-                        ElseIf drow("HDMFDeductSched").ToString = "Per pay period" Then
+                    ElseIf drow("SSSDeductSched").ToString = "Per pay period" Then
 
-                            isorgHDMFdeductsched = 2
+                        isorgSSSdeductsched = 2
 
-                        End If
-
-
-                        If drow("WTaxDeductSched").ToString = "End of the month" Then
-
-                            isorgWTaxdeductsched = 0
-
-                        ElseIf drow("WTaxDeductSched").ToString = "First half" Then
-
-                            isorgWTaxdeductsched = 1
-
-                        ElseIf drow("WTaxDeductSched").ToString = "Per pay period" Then
-
-                            isorgWTaxdeductsched = 2
-
-                        End If
+                    End If
 
 
-                        Dim employee_ID = Trim(drow("RowID"))
+                    strHDMFdeductsched = drow("HDMFDeductSched").ToString
+                    If drow("HDMFDeductSched").ToString = "End of the month" Then
 
-                        Dim org_WorkDaysPerYear = drow("WorkDaysPerYear")
+                        isorgHDMFdeductsched = 0
 
-                        Dim divisorMonthlys = If(drow("PayFrequencyID") = 1, 2, _
-                                                 If(drow("PayFrequencyID") = 2, 1, _
-                                                    If(drow("PayFrequencyID") = 3, New MySQLExecuteQuery("SELECT COUNT(RowID) FROM employeetimeentry WHERE EmployeeID='" & employee_ID & "' AND Date BETWEEN '" & n_PayrollDateFrom & "' AND '" & n_PayrollDateTo & "' AND IFNULL(TotalDayPay,0)!=0 AND OrganizationID='" & orgztnID & "';"), _
+                    ElseIf drow("HDMFDeductSched").ToString = "First half" Then
+
+                        isorgHDMFdeductsched = 1
+
+                    ElseIf drow("HDMFDeductSched").ToString = "Per pay period" Then
+
+                        isorgHDMFdeductsched = 2
+
+                    End If
+
+
+                    If drow("WTaxDeductSched").ToString = "End of the month" Then
+
+                        isorgWTaxdeductsched = 0
+
+                    ElseIf drow("WTaxDeductSched").ToString = "First half" Then
+
+                        isorgWTaxdeductsched = 1
+
+                    ElseIf drow("WTaxDeductSched").ToString = "Per pay period" Then
+
+                        isorgWTaxdeductsched = 2
+
+                    End If
+
+
+                    Dim employee_ID = Trim(drow("RowID"))
+
+                    Dim org_WorkDaysPerYear = drow("WorkDaysPerYear")
+
+                    Dim divisorMonthlys = If(drow("PayFrequencyID") = 1, 2,
+                                                 If(drow("PayFrequencyID") = 2, 1,
+                                                    If(drow("PayFrequencyID") = 3, New MySQLExecuteQuery("SELECT COUNT(RowID) FROM employeetimeentry WHERE EmployeeID='" & employee_ID & "' AND Date BETWEEN '" & n_PayrollDateFrom & "' AND '" & n_PayrollDateTo & "' AND IFNULL(TotalDayPay,0)!=0 AND OrganizationID='" & orgztnID & "';"),
                                                        numberofweeksthismonth)))
 
 
-                        Dim rowempsal = esal_dattab.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                    Dim rowempsal = esal_dattab.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim emp_loan = emp_loans.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                    Dim emp_loan = emp_loans.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim emp_bon = emp_bonus.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-
+                    Dim emp_bon = emp_bonus.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
 
 
 
 
 
-                        Dim day_allowance = emp_allowanceDaily.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        Dim month_allowance = emp_allowanceMonthly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        Dim once_allowance = emp_allowanceOnce.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        Dim semim_allowance = emp_allowanceSemiM.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        Dim week_allowance = emp_allowanceWeekly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        'emp_allowanceSemiM
-
-                        'emp_allowanceWeekly
-
-                        Dim daynotax_allowance = notax_allowanceDaily.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        Dim monthnotax_allowance = notax_allowanceMonthly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        Dim oncenotax_allowance = notax_allowanceOnce.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        Dim semimnotax_allowance = notax_allowanceSemiM.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        Dim weeknotax_allowance = notax_allowanceWeekly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        'notax_allowanceSemiM
-
-                        'notax_allowanceWeekly
 
 
+                    Dim day_allowance = emp_allowanceDaily.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
+                    Dim month_allowance = emp_allowanceMonthly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim day_bon = emp_bonusDaily.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                    Dim once_allowance = emp_allowanceOnce.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim month_bon = emp_bonusMonthly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                    Dim semim_allowance = emp_allowanceSemiM.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim once_bon = emp_bonusOnce.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                    Dim week_allowance = emp_allowanceWeekly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim semim_bon = emp_bonusSemiM.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                    'emp_allowanceSemiM
 
-                        Dim week_bon = emp_bonusWeekly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                    'emp_allowanceWeekly
 
-                        'emp_bonusSemiM
+                    Dim daynotax_allowance = notax_allowanceDaily.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        'emp_bonusWeekly
+                    Dim monthnotax_allowance = notax_allowanceMonthly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
+                    Dim oncenotax_allowance = notax_allowanceOnce.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
+                    Dim semimnotax_allowance = notax_allowanceSemiM.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim daynotax_bon = notax_bonusDaily.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                    Dim weeknotax_allowance = notax_allowanceWeekly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim monthnotax_bon = notax_bonusMonthly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                    'notax_allowanceSemiM
 
-                        Dim oncenotax_bon = notax_bonusOnce.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        Dim semimnotax_bon = notax_bonusSemiM.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        Dim weeknotax_bon = notax_bonusWeekly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-                        'notax_bonusSemiM
-
-                        'notax_bonusWeekly
+                    'notax_allowanceWeekly
 
 
 
 
-                        Dim valemp_loan = Val(0)
-                        For Each drowloan In emp_loan
-                            valemp_loan = drowloan("DeductionAmount")
-                        Next
+                    Dim day_bon = emp_bonusDaily.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        'Dim valemp_bon = Val(0)
-                        'For Each drowbon In emp_bon
-                        '    valemp_bon = drowbon("BonusAmount")
-                        'Next
+                    Dim month_bon = emp_bonusMonthly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim valday_allowance = ValNoComma(emp_allowanceDaily.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
-                        'GET_employeeallowance(drow("RowID").ToString, _
-                        '                  "Daily", _
-                        '                  drow("EmployeeType").ToString, _
-                        '                  "1")
+                    Dim once_bon = emp_bonusOnce.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim valmonth_allowance = ValNoComma(emp_allowanceMonthly.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+                    Dim semim_bon = emp_bonusSemiM.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        'If isEndOfMonth = 1 Then
+                    Dim week_bon = emp_bonusWeekly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        '    For Each drowmonallow In month_allowance
+                    'emp_bonusSemiM
 
-                        '        valmonth_allowance = drowmonallow("TotalAllowanceAmount") ' / divisorMonthlys
+                    'emp_bonusWeekly
 
-                        '        Exit For
 
-                        '    Next
 
-                        'End If
+                    Dim daynotax_bon = notax_bonusDaily.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim valonce_allowance = 0.0
-                        For Each drowonceallow In once_allowance
-                            valonce_allowance = drowonceallow("TotalAllowanceAmount")
-                        Next
+                    Dim monthnotax_bon = notax_bonusMonthly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim valsemim_allowance = ValNoComma(emp_allowanceSemiM.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
-                        'For Each drowsemimallow In semim_allowance
-                        '    valonce_allowance = drowsemimallow("TotalAllowanceAmount")
-                        'Next
+                    Dim oncenotax_bon = notax_bonusOnce.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim valweek_allowance = 0.0
-                        For Each drowweekallow In week_allowance
-                            valonce_allowance = drowweekallow("TotalAllowanceAmount")
-                        Next
+                    Dim semimnotax_bon = notax_bonusSemiM.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        Dim totalFixedTaxableMonthlyAllowance = ValNoComma(fixedTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+                    Dim weeknotax_bon = notax_bonusWeekly.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
-                        'If isEndOfMonth = 1 Then
-                        '    totalFixedTaxableMonthlyAllowance = 0.0
-                        'End If
+                    'notax_bonusSemiM
 
-                        'this is taxable                                ' / divisorMonthlys
-                        Dim totalemployeeallownce = (valday_allowance _
+                    'notax_bonusWeekly
+
+
+
+
+                    Dim valemp_loan = Val(0)
+                    For Each drowloan In emp_loan
+                        valemp_loan = drowloan("DeductionAmount")
+                    Next
+
+                    'Dim valemp_bon = Val(0)
+                    'For Each drowbon In emp_bon
+                    '    valemp_bon = drowbon("BonusAmount")
+                    'Next
+
+                    Dim valday_allowance = ValNoComma(emp_allowanceDaily.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+                    'GET_employeeallowance(drow("RowID").ToString, _
+                    '                  "Daily", _
+                    '                  drow("EmployeeType").ToString, _
+                    '                  "1")
+
+                    Dim valmonth_allowance = ValNoComma(emp_allowanceMonthly.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+
+                    'If isEndOfMonth = 1 Then
+
+                    '    For Each drowmonallow In month_allowance
+
+                    '        valmonth_allowance = drowmonallow("TotalAllowanceAmount") ' / divisorMonthlys
+
+                    '        Exit For
+
+                    '    Next
+
+                    'End If
+
+                    Dim valonce_allowance = 0.0
+                    For Each drowonceallow In once_allowance
+                        valonce_allowance = drowonceallow("TotalAllowanceAmount")
+                    Next
+
+                    Dim valsemim_allowance = ValNoComma(emp_allowanceSemiM.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+                    'For Each drowsemimallow In semim_allowance
+                    '    valonce_allowance = drowsemimallow("TotalAllowanceAmount")
+                    'Next
+
+                    Dim valweek_allowance = 0.0
+                    For Each drowweekallow In week_allowance
+                        valonce_allowance = drowweekallow("TotalAllowanceAmount")
+                    Next
+
+                    Dim totalFixedTaxableMonthlyAllowance = ValNoComma(fixedTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+
+                    'If isEndOfMonth = 1 Then
+                    '    totalFixedTaxableMonthlyAllowance = 0.0
+                    'End If
+
+                    'this is taxable                                ' / divisorMonthlys
+                    Dim totalemployeeallownce = (valday_allowance _
                                                      + (valmonth_allowance) _
                                                      + valonce_allowance _
                                                      + valsemim_allowance _
@@ -567,57 +565,57 @@ Public Class PayrollGeneration
                                                      + totalFixedTaxableMonthlyAllowance)
 
 
-                        Dim valdaynotax_allowance = ValNoComma(notax_allowanceDaily.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
-                        'GET_employeeallowance(drow("RowID").ToString, _
-                        '                  "Daily", _
-                        '                  drow("EmployeeType").ToString, _
-                        '                  "0")
+                    Dim valdaynotax_allowance = ValNoComma(notax_allowanceDaily.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+                    'GET_employeeallowance(drow("RowID").ToString, _
+                    '                  "Daily", _
+                    '                  drow("EmployeeType").ToString, _
+                    '                  "0")
 
-                        Dim valmonthnotax_allowance = ValNoComma(notax_allowanceMonthly.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+                    Dim valmonthnotax_allowance = ValNoComma(notax_allowanceMonthly.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
 
-                        'If isEndOfMonth = 1 Then
+                    'If isEndOfMonth = 1 Then
 
-                        '    For Each drowmonallow In monthnotax_allowance
+                    '    For Each drowmonallow In monthnotax_allowance
 
-                        '        valmonthnotax_allowance = drowmonallow("TotalAllowanceAmount") ' / divisorMonthlys
+                    '        valmonthnotax_allowance = drowmonallow("TotalAllowanceAmount") ' / divisorMonthlys
 
-                        '        Exit For
+                    '        Exit For
 
-                        '    Next
+                    '    Next
 
-                        'End If
+                    'End If
 
-                        Dim valoncenotax_allowance = ValNoComma(notax_allowanceOnce.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+                    Dim valoncenotax_allowance = ValNoComma(notax_allowanceOnce.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
 
-                        'For Each drowonceallow In oncenotax_allowance
-                        '    valoncenotax_allowance = drowonceallow("TotalAllowanceAmount")
-                        'Next
+                    'For Each drowonceallow In oncenotax_allowance
+                    '    valoncenotax_allowance = drowonceallow("TotalAllowanceAmount")
+                    'Next
 
-                        Dim valsemimnotax_allowance = ValNoComma(notax_allowanceSemiM.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
-                        'For Each drowsemimallow In semimnotax_allowance
-                        '    valoncenotax_allowance = drowsemimallow("TotalAllowanceAmount")
-                        'Next
+                    Dim valsemimnotax_allowance = ValNoComma(notax_allowanceSemiM.Compute("SUM(TotalAllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+                    'For Each drowsemimallow In semimnotax_allowance
+                    '    valoncenotax_allowance = drowsemimallow("TotalAllowanceAmount")
+                    'Next
 
-                        Dim valweeknotax_allowance = 0.0
-                        'For Each drowweekallow In weeknotax_allowance
-                        '    valoncenotax_allowance = drowweekallow("TotalAllowanceAmount")
-                        'Next
+                    Dim valweeknotax_allowance = 0.0
+                    'For Each drowweekallow In weeknotax_allowance
+                    '    valoncenotax_allowance = drowweekallow("TotalAllowanceAmount")
+                    'Next
 
 
 
-                        If ValNoComma(drow("RowID")) = 36 Then '218 - EmployeeID
-                            Dim call_lambert = "Over here"
-                        End If
+                    If ValNoComma(drow("RowID")) = 36 Then '218 - EmployeeID
+                        Dim call_lambert = "Over here"
+                    End If
 
-                        Dim totalFixedNonTaxableMonthlyAllowance = ValNoComma(fixedNonTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
+                    Dim totalFixedNonTaxableMonthlyAllowance = ValNoComma(fixedNonTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", "EmployeeID = '" & drow("RowID") & "'"))
 
-                        'If isEndOfMonth = 1 Then
-                        '    totalFixedNonTaxableMonthlyAllowance = 0.0
-                        'End If
+                    'If isEndOfMonth = 1 Then
+                    '    totalFixedNonTaxableMonthlyAllowance = 0.0
+                    'End If
 
-                        'this is non-taxable                                        ' / divisorMonthlys
-                        '+ valsemimonnotax_allowance _
-                        Dim totalnotaxemployeeallownce = (valdaynotax_allowance _
+                    'this is non-taxable                                        ' / divisorMonthlys
+                    '+ valsemimonnotax_allowance _
+                    Dim totalnotaxemployeeallownce = (valdaynotax_allowance _
                                                           + (valmonthnotax_allowance) _
                                                           + valoncenotax_allowance _
                                                           + valsemimnotax_allowance _
@@ -625,52 +623,52 @@ Public Class PayrollGeneration
                                                           + totalFixedNonTaxableMonthlyAllowance)
 
 
-                        Dim valday_bon = 0.0
-                        For Each drowdaybon In day_bon
-                            'valday_bon = drowdaybon("BonusAmount")
+                    Dim valday_bon = 0.0
+                    For Each drowdaybon In day_bon
+                        'valday_bon = drowdaybon("BonusAmount")
 
-                            'If drow("EmployeeType").ToString = "Fixed" Then
-                            '    valday_bon = valday_bon * numofweekdays 'numofweekends
-                            'Else
-                            '    Dim daymultiplier = numofdaypresent.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-                            '    For Each drowdaymultip In daymultiplier
-                            '        Dim i_val = Val(drowdaymultip("DaysAttended"))
-                            '        valday_bon = valday_bon * i_val
-                            '        Exit For
-                            '    Next
+                        'If drow("EmployeeType").ToString = "Fixed" Then
+                        '    valday_bon = valday_bon * numofweekdays 'numofweekends
+                        'Else
+                        '    Dim daymultiplier = numofdaypresent.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                        '    For Each drowdaymultip In daymultiplier
+                        '        Dim i_val = Val(drowdaymultip("DaysAttended"))
+                        '        valday_bon = valday_bon * i_val
+                        '        Exit For
+                        '    Next
 
-                            'End If
+                        'End If
 
-                            Exit For
+                        Exit For
+                    Next
+
+                    Dim valmonth_bon = 0.0
+
+                    If isEndOfMonth = 1 Then
+
+                        For Each drowmonbon In month_bon
+                            'valmonth_bon = drowmonbon("BonusAmount")
                         Next
 
-                        Dim valmonth_bon = 0.0
+                    End If
 
-                        If isEndOfMonth = 1 Then
+                    Dim valonce_bon = 0.0
+                    For Each drowoncebon In once_bon
+                        'valonce_bon = drowoncebon("BonusAmount")
+                    Next
 
-                            For Each drowmonbon In month_bon
-                                'valmonth_bon = drowmonbon("BonusAmount")
-                            Next
+                    Dim valsemim_bon = 0.0
+                    For Each drowsemimbon In semim_bon
+                        'valonce_bon = drowsemimbon("BonusAmount")
+                    Next
 
-                        End If
+                    Dim valweek_bon = 0.0
+                    For Each drowweekbon In week_bon
+                        'valonce_bon = drowweekbon("BonusAmount")
+                    Next
 
-                        Dim valonce_bon = 0.0
-                        For Each drowoncebon In once_bon
-                            'valonce_bon = drowoncebon("BonusAmount")
-                        Next
-
-                        Dim valsemim_bon = 0.0
-                        For Each drowsemimbon In semim_bon
-                            'valonce_bon = drowsemimbon("BonusAmount")
-                        Next
-
-                        Dim valweek_bon = 0.0
-                        For Each drowweekbon In week_bon
-                            'valonce_bon = drowweekbon("BonusAmount")
-                        Next
-
-                        'this is taxable                        ' / divisorMonthlys
-                        Dim totalemployeebonus = (valday_bon _
+                    'this is taxable                        ' / divisorMonthlys
+                    Dim totalemployeebonus = (valday_bon _
                                                   + (valmonth_bon) _
                                                   + valonce_bon _
                                                   + valsemim_bon _
@@ -679,78 +677,102 @@ Public Class PayrollGeneration
 
 
 
-                        Dim valdaynotax_bon = 0.0
-                        For Each drowdaybon In daynotax_bon
-                            valdaynotax_bon = drowdaybon("BonusAmount")
+                    Dim valdaynotax_bon = 0.0
+                    For Each drowdaybon In daynotax_bon
+                        valdaynotax_bon = drowdaybon("BonusAmount")
 
-                            If drow("EmployeeType").ToString = "Fixed" Then
-                                valdaynotax_bon = valdaynotax_bon * org_WorkDaysPerYear 'numofweekends
-                            Else
-                                Dim daymultiplier = numofdaypresent.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-                                For Each drowdaymultip In daymultiplier
-                                    Dim i_val = Val(drowdaymultip("DaysAttended"))
-                                    valdaynotax_bon = valdaynotax_bon * i_val
-                                    Exit For
-                                Next
-
-                            End If
-
-                            Exit For
-                        Next
-
-                        Dim valmonthnotax_bon = 0.0
-
-                        If isEndOfMonth = 1 Then
-
-                            For Each drowmonbon In monthnotax_bon
-                                'valmonthnotax_bon = drowmonbon("BonusAmount")
+                        If drow("EmployeeType").ToString = "Fixed" Then
+                            valdaynotax_bon = valdaynotax_bon * org_WorkDaysPerYear 'numofweekends
+                        Else
+                            Dim daymultiplier = numofdaypresent.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                            For Each drowdaymultip In daymultiplier
+                                Dim i_val = Val(drowdaymultip("DaysAttended"))
+                                valdaynotax_bon = valdaynotax_bon * i_val
+                                Exit For
                             Next
 
                         End If
 
-                        Dim valoncenotax_bon = 0.0
-                        For Each drowoncebon In oncenotax_bon
-                            'valoncenotax_bon = drowoncebon("BonusAmount")
+                        Exit For
+                    Next
+
+                    Dim valmonthnotax_bon = 0.0
+
+                    If isEndOfMonth = 1 Then
+
+                        For Each drowmonbon In monthnotax_bon
+                            'valmonthnotax_bon = drowmonbon("BonusAmount")
                         Next
 
-                        Dim valsemimnotax_bon = 0.0
-                        For Each drowsemimbon In semimnotax_bon
-                            'valoncenotax_bon = drowsemimbon("BonusAmount")
-                        Next
+                    End If
 
-                        Dim valweeknotax_bon = 0.0
-                        For Each drowweekbon In weeknotax_bon
-                            'valoncenotax_bon = drowweekbon("BonusAmount")
-                        Next
+                    Dim valoncenotax_bon = 0.0
+                    For Each drowoncebon In oncenotax_bon
+                        'valoncenotax_bon = drowoncebon("BonusAmount")
+                    Next
 
+                    Dim valsemimnotax_bon = 0.0
+                    For Each drowsemimbon In semimnotax_bon
+                        'valoncenotax_bon = drowsemimbon("BonusAmount")
+                    Next
 
-
-                        'this is non-taxable
-                        Dim totalnotaxemployeebonus = Val(0)
-
-                        '(valdaynotax_bon _
-                        '+ (valmonthnotax_bon / divisorMonthlys) _
-                        '+ valoncenotax_bon _
-                        '+ valsemimnotax_bon _
-                        '+ valweeknotax_bon)
-
-                        totalnotaxemployeebonus = valdaynotax_bon
-                        totalnotaxemployeebonus += valoncenotax_bon
-                        totalnotaxemployeebonus += valsemimnotax_bon
-                        totalnotaxemployeebonus += valweeknotax_bon
-
-                        totalnotaxemployeebonus += valmonthnotax_bon / divisorMonthlys
+                    Dim valweeknotax_bon = 0.0
+                    For Each drowweekbon In weeknotax_bon
+                        'valoncenotax_bon = drowweekbon("BonusAmount")
+                    Next
 
 
 
+                    'this is non-taxable
+                    Dim totalnotaxemployeebonus = Val(0)
+
+                    '(valdaynotax_bon _
+                    '+ (valmonthnotax_bon / divisorMonthlys) _
+                    '+ valoncenotax_bon _
+                    '+ valsemimnotax_bon _
+                    '+ valweeknotax_bon)
+
+                    totalnotaxemployeebonus = valdaynotax_bon
+                    totalnotaxemployeebonus += valoncenotax_bon
+                    totalnotaxemployeebonus += valsemimnotax_bon
+                    totalnotaxemployeebonus += valweeknotax_bon
+
+                    totalnotaxemployeebonus += valmonthnotax_bon / divisorMonthlys
 
 
 
 
-                        Dim emptotdaypay = etent_totdaypay.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+
+
+
+                    Dim emptotdaypay = etent_totdaypay.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+
+                    grossincome = Val(0)
+
+                    pstub_TotalEmpSSS = Val(0)
+                    pstub_TotalCompSSS = Val(0)
+                    pstub_TotalEmpPhilhealth = Val(0)
+                    pstub_TotalCompPhilhealth = Val(0)
+                    pstub_TotalEmpHDMF = Val(0)
+                    pstub_TotalCompHDMF = Val(0)
+                    pstub_TotalVacationDaysLeft = Val(0)
+                    pstub_TotalLoans = Val(0)
+                    pstub_TotalBonus = Val(0)
+                    emp_taxabsal = Val(0)
+                    emptaxabsal = Val(0)
+                    empnetsal = Val(0)
+                    tax_amount = Val(0)
+
+                    Dim pstub_TotalAllowance = totalemployeeallownce + totalnotaxemployeeallownce
+
+                    Dim the_taxable_salary = ValNoComma(0)
+
+                    employee_ID = Trim(drow("RowID"))
+
+                    For Each drowtotdaypay In emptotdaypay
 
                         grossincome = Val(0)
-
+                        grossincome_firsthalf = Val(0)
                         pstub_TotalEmpSSS = Val(0)
                         pstub_TotalCompSSS = Val(0)
                         pstub_TotalEmpPhilhealth = Val(0)
@@ -759,339 +781,315 @@ Public Class PayrollGeneration
                         pstub_TotalCompHDMF = Val(0)
                         pstub_TotalVacationDaysLeft = Val(0)
                         pstub_TotalLoans = Val(0)
-                        pstub_TotalBonus = Val(0)
+                        pstub_TotalBonus = totalemployeebonus + totalnotaxemployeebonus
                         emp_taxabsal = Val(0)
                         emptaxabsal = Val(0)
                         empnetsal = Val(0)
                         tax_amount = Val(0)
+                        OTAmount = 0
+                        NightDiffOTAmount = 0
+                        NightDiffAmount = 0
 
-                        Dim pstub_TotalAllowance = totalemployeeallownce + totalnotaxemployeeallownce
+                        For Each drowsal In rowempsal
 
-                        Dim the_taxable_salary = ValNoComma(0)
+                            Dim skipgovtdeduct = drow("IsFirstTimeSalary")
 
-                        employee_ID = Trim(drow("RowID"))
+                            emptaxabsal = 0
+                            empnetsal = 0
+                            emp_taxabsal = 0
 
-                        For Each drowtotdaypay In emptotdaypay
+                            OTAmount = ValNoComma(drowtotdaypay("OvertimeHoursAmount"))
 
-                            grossincome = Val(0)
-                            grossincome_firsthalf = Val(0)
-                            pstub_TotalEmpSSS = Val(0)
-                            pstub_TotalCompSSS = Val(0)
-                            pstub_TotalEmpPhilhealth = Val(0)
-                            pstub_TotalCompPhilhealth = Val(0)
-                            pstub_TotalEmpHDMF = Val(0)
-                            pstub_TotalCompHDMF = Val(0)
-                            pstub_TotalVacationDaysLeft = Val(0)
-                            pstub_TotalLoans = Val(0)
-                            pstub_TotalBonus = totalemployeebonus + totalnotaxemployeebonus
-                            emp_taxabsal = Val(0)
-                            emptaxabsal = Val(0)
-                            empnetsal = Val(0)
-                            tax_amount = Val(0)
-                            OTAmount = 0
-                            NightDiffOTAmount = 0
-                            NightDiffAmount = 0
+                            NightDiffOTAmount = ValNoComma(drowtotdaypay("NightDiffOTHoursAmount"))
 
-                            For Each drowsal In rowempsal
+                            NightDiffAmount = ValNoComma(drowtotdaypay("NightDiffHoursAmount"))
 
-                                Dim skipgovtdeduct = drow("IsFirstTimeSalary")
+                            employee_ID = Trim(drow("RowID"))
 
-                                emptaxabsal = 0
-                                empnetsal = 0
-                                emp_taxabsal = 0
+                            Dim employment_type = StrConv(drow("EmployeeType").ToString, VbStrConv.ProperCase)
 
-                                OTAmount = ValNoComma(drowtotdaypay("OvertimeHoursAmount"))
+                            Dim sel_dtemployeefirsttimesalary = dtemployeefirsttimesalary.Select("EmployeeID = '" & drow("RowID") & "'")
 
-                                NightDiffOTAmount = ValNoComma(drowtotdaypay("NightDiffOTHoursAmount"))
+                            Dim StartingAttendanceCount = ValNoComma(drow("StartingAttendanceCount"))
+                            If employee_ID = 9 Then : Dim call_lambert = "Over here" : End If
+                            If employment_type = "Fixed" Then
+                                grossincome = ValNoComma(drowsal("BasicPay"))
+                                grossincome = grossincome + (OTAmount + NightDiffAmount + NightDiffOTAmount)
 
-                                NightDiffAmount = ValNoComma(drowtotdaypay("NightDiffHoursAmount"))
-
-                                employee_ID = Trim(drow("RowID"))
-
-                                Dim employment_type = StrConv(drow("EmployeeType").ToString, VbStrConv.ProperCase)
-
-                                Dim sel_dtemployeefirsttimesalary = dtemployeefirsttimesalary.Select("EmployeeID = '" & drow("RowID") & "'")
-
-                                Dim StartingAttendanceCount = ValNoComma(drow("StartingAttendanceCount"))
-                                If employee_ID = 9 Then : Dim call_lambert = "Over here" : End If
-                                If employment_type = "Fixed" Then
-                                    grossincome = ValNoComma(drowsal("BasicPay"))
-                                    grossincome = grossincome + (OTAmount + NightDiffAmount + NightDiffOTAmount)
-
-                                    grossincome_firsthalf = ValNoComma(drowsal("BasicPay")) + _
-                                        ValNoComma(prev_empTimeEntry.Compute("SUM(OvertimeHoursAmount)", "EmployeeID = '" & drow("RowID").ToString & "'")) + _
-                                        ValNoComma(prev_empTimeEntry.Compute("SUM(NightDiffOTHoursAmount)", "EmployeeID = '" & drow("RowID").ToString & "'")) + _
+                                grossincome_firsthalf = ValNoComma(drowsal("BasicPay")) +
+                                        ValNoComma(prev_empTimeEntry.Compute("SUM(OvertimeHoursAmount)", "EmployeeID = '" & drow("RowID").ToString & "'")) +
+                                        ValNoComma(prev_empTimeEntry.Compute("SUM(NightDiffOTHoursAmount)", "EmployeeID = '" & drow("RowID").ToString & "'")) +
                                         ValNoComma(prev_empTimeEntry.Compute("SUM(NightDiffHoursAmount)", "EmployeeID = '" & drow("RowID").ToString & "'"))
 
-                                ElseIf employment_type = "Monthly" Then
+                            ElseIf employment_type = "Monthly" Then
 
-                                    If skipgovtdeduct = "1" Then
-                                        grossincome = ValNoComma(drowtotdaypay("TotalDayPay"))
-
-                                        grossincome_firsthalf = ValNoComma(prev_empTimeEntry.Compute("SUM(TotalDayPay)", "EmployeeID = '" & drow("RowID").ToString & "'"))
-
-                                    Else
-
-                                        grossincome = ValNoComma(drowsal("BasicPay"))
-                                        'grossincome = grossincome + (OTAmount + NightDiffAmount + NightDiffOTAmount)
-
-                                        grossincome -= (ValNoComma(drowtotdaypay("HoursLateAmount")) _
-                                                        + ValNoComma(drowtotdaypay("UndertimeHoursAmount")) _
-                                                        + ValNoComma(drowtotdaypay("Absent")))
-                                        'grossincome += ValNoComma(drowtotdaypay("emtAmount"))
-
-                                        If prev_empTimeEntry.Select("EmployeeID = '" & drow("RowID").ToString & "'").Count > 0 Then
-                                            grossincome_firsthalf = ValNoComma(drowsal("BasicPay")) '+ _
-                                        End If
-                                        'ValNoComma(prev_empTimeEntry.Compute("SUM(OvertimeHoursAmount)", "EmployeeID = " & drow("RowID").ToString)) + _
-                                        'ValNoComma(prev_empTimeEntry.Compute("SUM(NightDiffOTHoursAmount)", "EmployeeID = " & drow("RowID").ToString)) + _
-                                        'ValNoComma(prev_empTimeEntry.Compute("SUM(NightDiffHoursAmount)", "EmployeeID = " & drow("RowID").ToString))
-
-                                        grossincome_firsthalf -=
-                                            (ValNoComma(prev_empTimeEntry.Compute("SUM(HoursLateAmount)", "EmployeeID = '" & drow("RowID").ToString & "'")) _
-                                            + ValNoComma(prev_empTimeEntry.Compute("SUM(UndertimeHoursAmount)", "EmployeeID = '" & drow("RowID").ToString & "'")) _
-                                            + ValNoComma(prev_empTimeEntry.Compute("SUM(Absent)", "EmployeeID = '" & drow("RowID").ToString & "'")))
-                                        grossincome_firsthalf += ValNoComma(prev_empTimeEntry.Compute("MIN(emtAmount)", "EmployeeID = '" & drow("RowID").ToString & "'"))
-                                    End If
-
-                                ElseIf employment_type = "Daily" Then
+                                If skipgovtdeduct = "1" Then
                                     grossincome = ValNoComma(drowtotdaypay("TotalDayPay"))
 
                                     grossincome_firsthalf = ValNoComma(prev_empTimeEntry.Compute("SUM(TotalDayPay)", "EmployeeID = '" & drow("RowID").ToString & "'"))
 
+                                Else
+
+                                    grossincome = ValNoComma(drowsal("BasicPay"))
+                                    'grossincome = grossincome + (OTAmount + NightDiffAmount + NightDiffOTAmount)
+
+                                    grossincome -= (ValNoComma(drowtotdaypay("HoursLateAmount")) _
+                                                        + ValNoComma(drowtotdaypay("UndertimeHoursAmount")) _
+                                                        + ValNoComma(drowtotdaypay("Absent")))
+                                    'grossincome += ValNoComma(drowtotdaypay("emtAmount"))
+
+                                    If prev_empTimeEntry.Select("EmployeeID = '" & drow("RowID").ToString & "'").Count > 0 Then
+                                        grossincome_firsthalf = ValNoComma(drowsal("BasicPay")) '+ _
+                                    End If
+                                    'ValNoComma(prev_empTimeEntry.Compute("SUM(OvertimeHoursAmount)", "EmployeeID = " & drow("RowID").ToString)) + _
+                                    'ValNoComma(prev_empTimeEntry.Compute("SUM(NightDiffOTHoursAmount)", "EmployeeID = " & drow("RowID").ToString)) + _
+                                    'ValNoComma(prev_empTimeEntry.Compute("SUM(NightDiffHoursAmount)", "EmployeeID = " & drow("RowID").ToString))
+
+                                    grossincome_firsthalf -=
+                                            (ValNoComma(prev_empTimeEntry.Compute("SUM(HoursLateAmount)", "EmployeeID = '" & drow("RowID").ToString & "'")) _
+                                            + ValNoComma(prev_empTimeEntry.Compute("SUM(UndertimeHoursAmount)", "EmployeeID = '" & drow("RowID").ToString & "'")) _
+                                            + ValNoComma(prev_empTimeEntry.Compute("SUM(Absent)", "EmployeeID = '" & drow("RowID").ToString & "'")))
+                                    grossincome_firsthalf += ValNoComma(prev_empTimeEntry.Compute("MIN(emtAmount)", "EmployeeID = '" & drow("RowID").ToString & "'"))
                                 End If
 
+                            ElseIf employment_type = "Daily" Then
+                                grossincome = ValNoComma(drowtotdaypay("TotalDayPay"))
 
-                                If isEndOfMonth = isorgSSSdeductsched Then
+                                grossincome_firsthalf = ValNoComma(prev_empTimeEntry.Compute("SUM(TotalDayPay)", "EmployeeID = '" & drow("RowID").ToString & "'"))
+
+                            End If
+
+
+                            If isEndOfMonth = isorgSSSdeductsched Then
+                                pstub_TotalEmpSSS = CDec(drowsal("EmployeeContributionAmount"))
+                                pstub_TotalCompSSS = CDec(drowsal("EmployerContributionAmount"))
+
+                            Else
+                                If isorgSSSdeductsched = 2 Then 'Per pay period
                                     pstub_TotalEmpSSS = CDec(drowsal("EmployeeContributionAmount"))
                                     pstub_TotalCompSSS = CDec(drowsal("EmployerContributionAmount"))
 
-                                Else
-                                    If isorgSSSdeductsched = 2 Then 'Per pay period
-                                        pstub_TotalEmpSSS = CDec(drowsal("EmployeeContributionAmount"))
-                                        pstub_TotalCompSSS = CDec(drowsal("EmployerContributionAmount"))
-
-                                        pstub_TotalEmpSSS = pstub_TotalEmpSSS / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-                                        pstub_TotalCompSSS = pstub_TotalCompSSS / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-
-                                    End If
+                                    pstub_TotalEmpSSS = pstub_TotalEmpSSS / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
+                                    pstub_TotalCompSSS = pstub_TotalCompSSS / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
 
                                 End If
 
-                                If isEndOfMonth = isorgPHHdeductsched Then
+                            End If
+
+                            If isEndOfMonth = isorgPHHdeductsched Then
+                                pstub_TotalEmpPhilhealth = CDec(drowsal("EmployeeShare"))
+                                pstub_TotalCompPhilhealth = CDec(drowsal("EmployerShare"))
+
+                            Else
+                                If isorgPHHdeductsched = 2 Then 'Per pay period
                                     pstub_TotalEmpPhilhealth = CDec(drowsal("EmployeeShare"))
                                     pstub_TotalCompPhilhealth = CDec(drowsal("EmployerShare"))
 
-                                Else
-                                    If isorgPHHdeductsched = 2 Then 'Per pay period
-                                        pstub_TotalEmpPhilhealth = CDec(drowsal("EmployeeShare"))
-                                        pstub_TotalCompPhilhealth = CDec(drowsal("EmployerShare"))
-
-                                        pstub_TotalEmpPhilhealth = pstub_TotalEmpPhilhealth / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-                                        pstub_TotalCompPhilhealth = pstub_TotalCompPhilhealth / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-
-                                    End If
+                                    pstub_TotalEmpPhilhealth = pstub_TotalEmpPhilhealth / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
+                                    pstub_TotalCompPhilhealth = pstub_TotalCompPhilhealth / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
 
                                 End If
 
-                                If isEndOfMonth = isorgHDMFdeductsched Then
+                            End If
+
+                            If isEndOfMonth = isorgHDMFdeductsched Then
+                                pstub_TotalEmpHDMF = CDec(drowsal("HDMFAmount"))
+                                pstub_TotalCompHDMF = 100 'CDec(drowsal("HDMFAmount"))
+
+                            Else
+                                If isorgHDMFdeductsched = 2 Then 'Per pay period
                                     pstub_TotalEmpHDMF = CDec(drowsal("HDMFAmount"))
                                     pstub_TotalCompHDMF = 100 'CDec(drowsal("HDMFAmount"))
 
-                                Else
-                                    If isorgHDMFdeductsched = 2 Then 'Per pay period
-                                        pstub_TotalEmpHDMF = CDec(drowsal("HDMFAmount"))
-                                        pstub_TotalCompHDMF = 100 'CDec(drowsal("HDMFAmount"))
-
-                                        pstub_TotalEmpHDMF = pstub_TotalEmpHDMF / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-                                        pstub_TotalCompHDMF = 100 / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-
-                                    End If
+                                    pstub_TotalEmpHDMF = pstub_TotalEmpHDMF / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
+                                    pstub_TotalCompHDMF = 100 / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
 
                                 End If
 
-                                '**************************************************************************************
-                                'Below is the condition that if the employee will receive his/her salary for first time
-                                'and his/her attended work days is less than five
-                                'the system will skip the gov't contributions for this period
-                                '**************************************************************************************
-                                'If skipgovtdeduct = "1" _
-                                '    And StartingAttendanceCount < 5.0 _
-                                '    And sel_dtemployeefirsttimesalary.Count <> 0 Then
+                            End If
 
-                                '    pstub_TotalEmpSSS = 0
-                                '    pstub_TotalCompSSS = 0
+                            '**************************************************************************************
+                            'Below is the condition that if the employee will receive his/her salary for first time
+                            'and his/her attended work days is less than five
+                            'the system will skip the gov't contributions for this period
+                            '**************************************************************************************
+                            'If skipgovtdeduct = "1" _
+                            '    And StartingAttendanceCount < 5.0 _
+                            '    And sel_dtemployeefirsttimesalary.Count <> 0 Then
 
-                                '    pstub_TotalEmpPhilhealth = 0
-                                '    pstub_TotalCompPhilhealth = 0
+                            '    pstub_TotalEmpSSS = 0
+                            '    pstub_TotalCompSSS = 0
 
-                                '    pstub_TotalEmpHDMF = 0
-                                '    pstub_TotalCompHDMF = 0
+                            '    pstub_TotalEmpPhilhealth = 0
+                            '    pstub_TotalCompPhilhealth = 0
 
-                                'End If
+                            '    pstub_TotalEmpHDMF = 0
+                            '    pstub_TotalCompHDMF = 0
 
-                                Dim the_EmpRatePerDay = ValNoComma(drow("EmpRatePerDay"))
+                            'End If
 
-                                Dim the_MinimumWageAmount = ValNoComma(drow("MinimumWageAmount"))
+                            Dim the_EmpRatePerDay = ValNoComma(drow("EmpRatePerDay"))
 
-                                Dim isMinimumWage = (ValNoComma(drow("EmpRatePerDay")) <= ValNoComma(drow("MinimumWageAmount")))
+                            Dim the_MinimumWageAmount = ValNoComma(drow("MinimumWageAmount"))
 
-                                Dim _eRowID = drow("RowID")
+                            Dim isMinimumWage = (ValNoComma(drow("EmpRatePerDay")) <= ValNoComma(drow("MinimumWageAmount")))
 
-                                If isEndOfMonth = isorgWTaxdeductsched Then
+                            Dim _eRowID = drow("RowID")
 
-                                    emp_taxabsal = grossincome - _
+                            If isEndOfMonth = isorgWTaxdeductsched Then
+
+                                emp_taxabsal = grossincome -
                                                     (pstub_TotalEmpSSS + pstub_TotalEmpPhilhealth + pstub_TotalEmpHDMF)
 
-                                    the_taxable_salary = (grossincome + grossincome_firsthalf) - _
+                                the_taxable_salary = (grossincome + grossincome_firsthalf) -
                                                     (pstub_TotalEmpSSS + pstub_TotalEmpPhilhealth + pstub_TotalEmpHDMF)
 
-                                    If isMinimumWage Then
+                                If isMinimumWage Then
 
-                                        tax_amount = 0
+                                    tax_amount = 0
 
-                                    Else
+                                Else
 
-                                        'Dim paywithholdingtax = retAsDatTbl("SELECT ExemptionAmount,TaxableIncomeFromAmount,ExemptionInExcessAmount" &
-                                        '                                    " FROM paywithholdingtax" &
-                                        '                                    " WHERE FilingStatusID=(SELECT RowID FROM filingstatus WHERE MaritalStatus='" & drow("MaritalStatus").ToString & "' AND Dependent=" & drow("NoOfDependents").ToString & ")" &
-                                        '                                    " AND " & emp_taxabsal & " BETWEEN TaxableIncomeFromAmount AND TaxableIncomeToAmount" &
-                                        '                                    " AND DATEDIFF(CURRENT_DATE(),COALESCE(EffectiveDateTo,COALESCE(EffectiveDateFrom,CURRENT_DATE()))) >= 0" &
-                                        '                                    " AND PayFrequencyID='" & drow("PayFrequencyID").ToString & "'" &
-                                        '                                    " ORDER BY DATEDIFF(CURRENT_DATE(),COALESCE(EffectiveDateTo,COALESCE(EffectiveDateFrom,CURRENT_DATE())))" &
-                                        '                                    " LIMIT 1;")
+                                    'Dim paywithholdingtax = retAsDatTbl("SELECT ExemptionAmount,TaxableIncomeFromAmount,ExemptionInExcessAmount" &
+                                    '                                    " FROM paywithholdingtax" &
+                                    '                                    " WHERE FilingStatusID=(SELECT RowID FROM filingstatus WHERE MaritalStatus='" & drow("MaritalStatus").ToString & "' AND Dependent=" & drow("NoOfDependents").ToString & ")" &
+                                    '                                    " AND " & emp_taxabsal & " BETWEEN TaxableIncomeFromAmount AND TaxableIncomeToAmount" &
+                                    '                                    " AND DATEDIFF(CURRENT_DATE(),COALESCE(EffectiveDateTo,COALESCE(EffectiveDateFrom,CURRENT_DATE()))) >= 0" &
+                                    '                                    " AND PayFrequencyID='" & drow("PayFrequencyID").ToString & "'" &
+                                    '                                    " ORDER BY DATEDIFF(CURRENT_DATE(),COALESCE(EffectiveDateTo,COALESCE(EffectiveDateFrom,CURRENT_DATE())))" &
+                                    '                                    " LIMIT 1;")
 
-                                        'payWTax,filingStatus
+                                    'payWTax,filingStatus
 
-                                        Dim sel_filingStatus = filingStatus.Select("MaritalStatus = '" & drow("MaritalStatus").ToString & "' AND Dependent = " & drow("NoOfDependents").ToString)
+                                    Dim sel_filingStatus = filingStatus.Select("MaritalStatus = '" & drow("MaritalStatus").ToString & "' AND Dependent = " & drow("NoOfDependents").ToString)
 
-                                        Dim fstat_id = 1
+                                    Dim fstat_id = 1
 
-                                        For Each fstatrow In sel_filingStatus
-                                            fstat_id = fstatrow("RowID")
-                                        Next
+                                    For Each fstatrow In sel_filingStatus
+                                        fstat_id = fstatrow("RowID")
+                                    Next
 
-                                        Dim sel_payWTax = payWTax.Select("FilingStatusID = " & fstat_id &
+                                    Dim sel_payWTax = payWTax.Select("FilingStatusID = " & fstat_id &
                                                                          " AND PayFrequencyID = 2 AND " &
                                                                          "TaxableIncomeFromAmount >= " & the_taxable_salary & " AND " & the_taxable_salary & " <= TaxableIncomeToAmount" &
                                                                          "")
 
-                                        Dim GET_employeetaxableincome = New MySQLExecuteQuery("SELECT `GET_employeetaxableincome`('" & drow("RowID") & "', '" & orgztnID & "', '" & n_PayrollDateFrom & "','" & grossincome & "');").Result
+                                    Dim GET_employeetaxableincome = New MySQLExecuteQuery("SELECT `GET_employeetaxableincome`('" & drow("RowID") & "', '" & orgztnID & "', '" & n_PayrollDateFrom & "','" & grossincome & "');").Result
 
 
-                                        'For Each drowtax As DataRow In paywithholdingtax.rows
-                                        For Each drowtax In sel_payWTax
+                                    'For Each drowtax As DataRow In paywithholdingtax.rows
+                                    For Each drowtax In sel_payWTax
 
-                                            'emp_taxabsal = emptaxabsal - (Val(drowtax("ExemptionAmount")) + _
-                                            '             ((emptaxabsal - Val(drowtax("TaxableIncomeFromAmount"))) * Val(drowtax("ExemptionInExcessAmount"))) _
-                                            '                             )
+                                        'emp_taxabsal = emptaxabsal - (Val(drowtax("ExemptionAmount")) + _
+                                        '             ((emptaxabsal - Val(drowtax("TaxableIncomeFromAmount"))) * Val(drowtax("ExemptionInExcessAmount"))) _
+                                        '                             )
 
-                                            Dim the_values = Split(GET_employeetaxableincome, ";")
+                                        Dim the_values = Split(GET_employeetaxableincome, ";")
 
-                                            tax_amount = _
+                                        tax_amount =
                                                 ValNoComma(drowtax("ExemptionAmount")) _
                                                 + ((the_taxable_salary - ValNoComma(drowtax("TaxableIncomeFromAmount"))) * ValNoComma(drowtax("ExemptionInExcessAmount")))
-                                            'ValNoComma(the_values(1))
+                                        'ValNoComma(the_values(1))
 
-                                            Exit For
+                                        Exit For
 
-                                        Next
+                                    Next
 
-                                    End If
+                                End If
 
-                                Else
-                                    'PAYFREQUENCY_DIVISOR
+                            Else
+                                'PAYFREQUENCY_DIVISOR
 
-                                    emp_taxabsal = grossincome - _
+                                emp_taxabsal = grossincome -
                                                     (pstub_TotalEmpSSS + pstub_TotalEmpPhilhealth + pstub_TotalEmpHDMF)
 
-                                    the_taxable_salary = grossincome - _
+                                the_taxable_salary = grossincome -
                                                     (pstub_TotalEmpSSS + pstub_TotalEmpPhilhealth + pstub_TotalEmpHDMF)
 
-                                    If isMinimumWage Then
+                                If isMinimumWage Then
 
-                                        tax_amount = 0
+                                    tax_amount = 0
 
-                                    ElseIf isorgWTaxdeductsched = 2 Then
+                                ElseIf isorgWTaxdeductsched = 2 Then
 
-                                        'Dim paywithholdingtax = retAsDatTbl("SELECT ExemptionAmount,TaxableIncomeFromAmount,ExemptionInExcessAmount" &
-                                        '                                    " FROM paywithholdingtax" &
-                                        '                                    " WHERE FilingStatusID=(SELECT RowID FROM filingstatus WHERE MaritalStatus='" & drow("MaritalStatus").ToString & "' AND Dependent=" & drow("NoOfDependents").ToString & ")" &
-                                        '                                    " AND " & emp_taxabsal & " BETWEEN TaxableIncomeFromAmount AND TaxableIncomeToAmount" &
-                                        '                                    " AND DATEDIFF(CURRENT_DATE(),COALESCE(EffectiveDateTo,COALESCE(EffectiveDateFrom,CURRENT_DATE()))) >= 0" &
-                                        '                                    " AND PayFrequencyID='" & drow("PayFrequencyID").ToString & "'" &
-                                        '                                    " ORDER BY DATEDIFF(CURRENT_DATE(),COALESCE(EffectiveDateTo,COALESCE(EffectiveDateFrom,CURRENT_DATE())))" &
-                                        '                                    " LIMIT 1;")
+                                    'Dim paywithholdingtax = retAsDatTbl("SELECT ExemptionAmount,TaxableIncomeFromAmount,ExemptionInExcessAmount" &
+                                    '                                    " FROM paywithholdingtax" &
+                                    '                                    " WHERE FilingStatusID=(SELECT RowID FROM filingstatus WHERE MaritalStatus='" & drow("MaritalStatus").ToString & "' AND Dependent=" & drow("NoOfDependents").ToString & ")" &
+                                    '                                    " AND " & emp_taxabsal & " BETWEEN TaxableIncomeFromAmount AND TaxableIncomeToAmount" &
+                                    '                                    " AND DATEDIFF(CURRENT_DATE(),COALESCE(EffectiveDateTo,COALESCE(EffectiveDateFrom,CURRENT_DATE()))) >= 0" &
+                                    '                                    " AND PayFrequencyID='" & drow("PayFrequencyID").ToString & "'" &
+                                    '                                    " ORDER BY DATEDIFF(CURRENT_DATE(),COALESCE(EffectiveDateTo,COALESCE(EffectiveDateFrom,CURRENT_DATE())))" &
+                                    '                                    " LIMIT 1;")
 
-                                        'payWTax,filingStatus
+                                    'payWTax,filingStatus
 
-                                        Dim sel_filingStatus = filingStatus.Select("MaritalStatus = '" & drow("MaritalStatus").ToString & "' AND Dependent = " & drow("NoOfDependents").ToString)
+                                    Dim sel_filingStatus = filingStatus.Select("MaritalStatus = '" & drow("MaritalStatus").ToString & "' AND Dependent = " & drow("NoOfDependents").ToString)
 
-                                        Dim fstat_id = 1
+                                    Dim fstat_id = 1
 
-                                        For Each fstatrow In sel_filingStatus
-                                            fstat_id = fstatrow("RowID")
-                                        Next
+                                    For Each fstatrow In sel_filingStatus
+                                        fstat_id = fstatrow("RowID")
+                                    Next
 
-                                        Dim sel_payWTax = payWTax.Select("FilingStatusID = " & fstat_id &
+                                    Dim sel_payWTax = payWTax.Select("FilingStatusID = " & fstat_id &
                                                                          " AND PayFrequencyID = 2 AND " &
                                                                          "TaxableIncomeFromAmount >= " & the_taxable_salary & " AND " & the_taxable_salary & " <= TaxableIncomeToAmount" &
                                                                          "")
 
-                                        Dim GET_employeetaxableincome = New MySQLExecuteQuery("SELECT `GET_employeetaxableincome`('" & drow("RowID") & "', '" & orgztnID & "', '" & n_PayrollDateFrom & "','" & grossincome & "');").Result
+                                    Dim GET_employeetaxableincome = New MySQLExecuteQuery("SELECT `GET_employeetaxableincome`('" & drow("RowID") & "', '" & orgztnID & "', '" & n_PayrollDateFrom & "','" & grossincome & "');").Result
 
-                                        'For Each drowtax As DataRow In paywithholdingtax.rows
-                                        For Each drowtax In sel_payWTax
+                                    'For Each drowtax As DataRow In paywithholdingtax.rows
+                                    For Each drowtax In sel_payWTax
 
-                                            'emp_taxabsal = emptaxabsal - (Val(drowtax("ExemptionAmount")) + _
-                                            '             ((emptaxabsal - Val(drowtax("TaxableIncomeFromAmount"))) * Val(drowtax("ExemptionInExcessAmount"))) _
-                                            '                             )
+                                        'emp_taxabsal = emptaxabsal - (Val(drowtax("ExemptionAmount")) + _
+                                        '             ((emptaxabsal - Val(drowtax("TaxableIncomeFromAmount"))) * Val(drowtax("ExemptionInExcessAmount"))) _
+                                        '                             )
 
-                                            Dim the_values = Split(GET_employeetaxableincome, ";")
+                                        Dim the_values = Split(GET_employeetaxableincome, ";")
 
-                                            tax_amount = _
+                                        tax_amount =
                                                 ValNoComma(drowtax("ExemptionAmount")) _
                                                 + ((the_taxable_salary - ValNoComma(drowtax("TaxableIncomeFromAmount"))) * ValNoComma(drowtax("ExemptionInExcessAmount")))
-                                            'ValNoComma(the_values(1))
+                                        'ValNoComma(the_values(1))
 
-                                            Exit For
+                                        Exit For
 
-                                        Next
-
-                                    End If
+                                    Next
 
                                 End If
 
-                                Exit For
-
-                            Next
+                            End If
 
                             Exit For
 
                         Next
 
+                        Exit For
 
-                        Dim tot_net_pay = emp_taxabsal - valemp_loan - tax_amount
+                    Next
 
-                        'emptaxabsal
 
-                        the_taxable_salary = the_taxable_salary
+                    Dim tot_net_pay = emp_taxabsal - valemp_loan - tax_amount
 
-                        Dim isPayStubExists As _
+                    'emptaxabsal
+
+                    the_taxable_salary = the_taxable_salary
+
+                    Dim isPayStubExists As _
                             New MySQLExecuteQuery("SELECT 0 `Result`;")
-                        'New MySQLExecuteQuery("SELECT EXISTS(SELECT RowID" &
-                        '                 " FROM paystub" &
-                        '                 " WHERE EmployeeID='" & drow("RowID") & "'" &
-                        '                 " AND OrganizationID='" & orgztnID & "'" &
-                        '                 " AND PayFromDate='" & n_PayrollDateFrom & "'" &
-                        '                 " AND PayToDate='" & n_PayrollDateTo & "');")
+                    'New MySQLExecuteQuery("SELECT EXISTS(SELECT RowID" &
+                    '                 " FROM paystub" &
+                    '                 " WHERE EmployeeID='" & drow("RowID") & "'" &
+                    '                 " AND OrganizationID='" & orgztnID & "'" &
+                    '                 " AND PayFromDate='" & n_PayrollDateFrom & "'" &
+                    '                 " AND PayToDate='" & n_PayrollDateTo & "');")
 
-                        If isPayStubExists.Result = "2" Then
+                    If isPayStubExists.Result = "2" Then
 
-                            If ValNoComma(VeryFirstPayPeriodIDOfThisYear) = ValNoComma(n_PayrollRecordID) Then 'this means, the very first cut off of this year falls here
-                                '                                                                           'so system should regain leave balance equals to leave allowance
+                        If ValNoComma(VeryFirstPayPeriodIDOfThisYear) = ValNoComma(n_PayrollRecordID) Then 'this means, the very first cut off of this year falls here
+                            '                                                                           'so system should regain leave balance equals to leave allowance
 
-                                Dim new_ExecuteQuery As _
+                            Dim new_ExecuteQuery As _
                                     New MySQLExecuteQuery("UPDATE employee e" &
                                                      " INNER JOIN payperiod pp ON pp.RowID='" & n_PayrollRecordID & "'" &
                                                      " SET" &
@@ -1104,16 +1102,16 @@ Public Class PayrollGeneration
                                                      " WHERE e.RowID='" & drow("RowID") & "'" &
                                                      " AND e.OrganizationID='" & orgztnID & "'" &
                                                      " AND ADDDATE(e.StartDate, INTERVAL 2 YEAR) <= pp.`Year`;")
-                                '" AND (ADDDATE(e.StartDate, INTERVAL 1 YEAR) <= '" & n_PayrollDateFrom & "'" &
-                                '" OR ADDDATE(e.StartDate, INTERVAL 1 YEAR) <= '" & n_PayrollDateTo & "');")
+                            '" AND (ADDDATE(e.StartDate, INTERVAL 1 YEAR) <= '" & n_PayrollDateFrom & "'" &
+                            '" OR ADDDATE(e.StartDate, INTERVAL 1 YEAR) <= '" & n_PayrollDateTo & "');")
 
-                                'typical regaining of leave balance at the start of the year
+                            'typical regaining of leave balance at the start of the year
 
-                            End If
+                        End If
 
-                            'gaining of employee leave balance whos year of service reaches one(1)
-                            'the values that employee will gain here are prorated
-                            Dim n_ExecuteQuery As _
+                        'gaining of employee leave balance whos year of service reaches one(1)
+                        'the values that employee will gain here are prorated
+                        Dim n_ExecuteQuery As _
                                 New MySQLExecuteQuery("UPDATE employee e" &
                                                  " INNER JOIN payperiod pp ON pp.RowID='" & n_PayrollRecordID & "'" &
                                                  " SET" &
@@ -1130,155 +1128,155 @@ Public Class PayrollGeneration
                                                  " AND e.PayFrequencyID=pp.TotalGrossSalary" &
                                                  " AND ADDDATE(e.StartDate, INTERVAL 1 YEAR) BETWEEN '" & n_PayrollDateFrom & "' AND '" & n_PayrollDateTo & "';")
 
-                            'Dim n_ExecuteQuery As _
-                            '    New MySQLExecuteQuery("UPDATE employee e SET" &
-                            '                     " e.LeaveBalance=e.LeaveBalance + e.LeavePerPayPeriod" &
-                            '                     ",e.SickLeaveBalance=e.SickLeaveBalance + e.SickLeavePerPayPeriod" &
-                            '                     ",e.MaternityLeaveBalance=e.MaternityLeaveBalance + e.MaternityLeavePerPayPeriod" &
-                            '                     ",e.OtherLeaveBalance=e.OtherLeaveBalance + e.OtherLeavePerPayPeriod" &
-                            '                     ",LastUpd=CURRENT_TIMESTAMP()" &
-                            '                     ",LastUpdBy='" & z_User & "'" &
-                            '                     " WHERE e.RowID='" & drow("RowID") & "'" &
-                            '                     " AND e.OrganizationID='" & orgztnID & "'" &
-                            '                     " AND (ADDDATE(e.StartDate, INTERVAL 1 YEAR) <= '" & n_PayrollDateFrom & "'" &
-                            '                     " OR ADDDATE(e.StartDate, INTERVAL 1 YEAR) <= '" & n_PayrollDateTo & "');")
+                        'Dim n_ExecuteQuery As _
+                        '    New MySQLExecuteQuery("UPDATE employee e SET" &
+                        '                     " e.LeaveBalance=e.LeaveBalance + e.LeavePerPayPeriod" &
+                        '                     ",e.SickLeaveBalance=e.SickLeaveBalance + e.SickLeavePerPayPeriod" &
+                        '                     ",e.MaternityLeaveBalance=e.MaternityLeaveBalance + e.MaternityLeavePerPayPeriod" &
+                        '                     ",e.OtherLeaveBalance=e.OtherLeaveBalance + e.OtherLeavePerPayPeriod" &
+                        '                     ",LastUpd=CURRENT_TIMESTAMP()" &
+                        '                     ",LastUpdBy='" & z_User & "'" &
+                        '                     " WHERE e.RowID='" & drow("RowID") & "'" &
+                        '                     " AND e.OrganizationID='" & orgztnID & "'" &
+                        '                     " AND (ADDDATE(e.StartDate, INTERVAL 1 YEAR) <= '" & n_PayrollDateFrom & "'" &
+                        '                     " OR ADDDATE(e.StartDate, INTERVAL 1 YEAR) <= '" & n_PayrollDateTo & "');")
 
-                        End If
+                    End If
 
-                        If ValNoComma(drow("RowID")) = 661 Then '218 - EmployeeID
-                            Dim call_lambert = "Over here"
-                        End If
-                        'SET innodb_lock_wait_timeout = 5000; SET autocommit = 0;
-                        '"UPDATE paystub SET LastUpd=CURRENT_TIMESTAMP(),LastUpdBy='" & z_User & "'" &
-                        '" WHERE EmployeeID='" & Convert.ToString(drow("RowID")) & "' AND OrganizationID=" & orgztnID &
-                        '" AND PayFromDate='" & n_PayrollDateFrom & "' AND PayToDate='" & n_PayrollDateTo & "';"
-                        'Dim dsfsd As New MySQLExecuteQuery(my_cmd,
-                        '                                   5000)
-                        'n_PayStub, PayStub
-                        'Dim paystubID = _
-                        'n_PayStub.
-                        'INSUPD_paystub(n_PayrollRecordID,
-                        '               drow("RowID").ToString,
-                        '               n_PayrollDateFrom,
-                        '               n_PayrollDateTo,
-                        '               grossincome + totalemployeebonus + totalnotaxemployeebonus + totalnotaxemployeeallownce + totalemployeeallownce,
-                        '               tot_net_pay + totalemployeebonus + totalnotaxemployeebonus + totalnotaxemployeeallownce + totalemployeeallownce + thirteenthmoval,
-                        '               the_taxable_salary,
-                        '               tax_amount,
-                        '               pstub_TotalEmpSSS,
-                        '               pstub_TotalCompSSS,
-                        '               pstub_TotalEmpPhilhealth,
-                        '               pstub_TotalCompPhilhealth,
-                        '               pstub_TotalEmpHDMF,
-                        '               pstub_TotalCompHDMF,
-                        '               valemp_loan,
-                        '               totalemployeebonus + totalnotaxemployeebonus,
-                        '               totalemployeeallownce + totalnotaxemployeeallownce) 'totalemployeebonus + totalemployeeallownce +
+                    If ValNoComma(drow("RowID")) = 661 Then '218 - EmployeeID
+                        Dim call_lambert = "Over here"
+                    End If
+                    'SET innodb_lock_wait_timeout = 5000; SET autocommit = 0;
+                    '"UPDATE paystub SET LastUpd=CURRENT_TIMESTAMP(),LastUpdBy='" & z_User & "'" &
+                    '" WHERE EmployeeID='" & Convert.ToString(drow("RowID")) & "' AND OrganizationID=" & orgztnID &
+                    '" AND PayFromDate='" & n_PayrollDateFrom & "' AND PayToDate='" & n_PayrollDateTo & "';"
+                    'Dim dsfsd As New MySQLExecuteQuery(my_cmd,
+                    '                                   5000)
+                    'n_PayStub, PayStub
+                    'Dim paystubID = _
+                    'n_PayStub.
+                    'INSUPD_paystub(n_PayrollRecordID,
+                    '               drow("RowID").ToString,
+                    '               n_PayrollDateFrom,
+                    '               n_PayrollDateTo,
+                    '               grossincome + totalemployeebonus + totalnotaxemployeebonus + totalnotaxemployeeallownce + totalemployeeallownce,
+                    '               tot_net_pay + totalemployeebonus + totalnotaxemployeebonus + totalnotaxemployeeallownce + totalemployeeallownce + thirteenthmoval,
+                    '               the_taxable_salary,
+                    '               tax_amount,
+                    '               pstub_TotalEmpSSS,
+                    '               pstub_TotalCompSSS,
+                    '               pstub_TotalEmpPhilhealth,
+                    '               pstub_TotalCompPhilhealth,
+                    '               pstub_TotalEmpHDMF,
+                    '               pstub_TotalCompHDMF,
+                    '               valemp_loan,
+                    '               totalemployeebonus + totalnotaxemployeebonus,
+                    '               totalemployeeallownce + totalnotaxemployeeallownce) 'totalemployeebonus + totalemployeeallownce +
 
-                        '############ # # # # # # # # ##############
-                        mysql_conn = New MySqlConnection
-                        mysql_conn.ConnectionString = mysql_conn_text
-                        Dim new_cmd As New MySqlCommand
-                        'new_cmd = New MySqlCommand("INSUPD_paystub", mysql_conn, myTrans)
-                        new_cmd = New MySqlCommand("INSUPDPROC_paystub",
+                    '############ # # # # # # # # ##############
+                    mysql_conn = New MySqlConnection
+                    mysql_conn.ConnectionString = mysql_conn_text
+                    Dim new_cmd As New MySqlCommand
+                    'new_cmd = New MySqlCommand("INSUPD_paystub", mysql_conn, myTrans)
+                    new_cmd = New MySqlCommand("INSUPDPROC_paystub",
                                                    mysql_conn,
                                                    myTrans)
 
-                        If mysql_conn.State = ConnectionState.Closed Then
-                            mysql_conn.Open()
-                        End If
-                        myTrans = mysql_conn.BeginTransaction()
-                        With new_cmd
+                    If mysql_conn.State = ConnectionState.Closed Then
+                        mysql_conn.Open()
+                    End If
+                    myTrans = mysql_conn.BeginTransaction()
+                    With new_cmd
 
-                            .Parameters.Clear()
-                            .CommandTimeout = 5000
-                            .CommandType = CommandType.StoredProcedure
+                        .Parameters.Clear()
+                        .CommandTimeout = 5000
+                        .CommandType = CommandType.StoredProcedure
 
-                            .Parameters.AddWithValue("pstub_RowID", DBNull.Value)
-                            .Parameters.AddWithValue("pstub_OrganizationID", orgztnID)
-                            .Parameters.AddWithValue("pstub_CreatedBy", z_User)
-                            .Parameters.AddWithValue("pstub_LastUpdBy", z_User)
-                            .Parameters.AddWithValue("pstub_PayPeriodID", n_PayrollRecordID)
-                            .Parameters.AddWithValue("pstub_EmployeeID", drow("RowID"))
+                        .Parameters.AddWithValue("pstub_RowID", DBNull.Value)
+                        .Parameters.AddWithValue("pstub_OrganizationID", orgztnID)
+                        .Parameters.AddWithValue("pstub_CreatedBy", z_User)
+                        .Parameters.AddWithValue("pstub_LastUpdBy", z_User)
+                        .Parameters.AddWithValue("pstub_PayPeriodID", n_PayrollRecordID)
+                        .Parameters.AddWithValue("pstub_EmployeeID", drow("RowID"))
 
-                            .Parameters.AddWithValue("pstub_TimeEntryID", DBNull.Value)
+                        .Parameters.AddWithValue("pstub_TimeEntryID", DBNull.Value)
 
-                            .Parameters.AddWithValue("pstub_PayFromDate", n_PayrollDateFrom) 'If(pstub_PayFromDate = Nothing, DBNull.Value, Format(CDate(pstub_PayFromDate), "yyyy-MM-dd")))
-                            .Parameters.AddWithValue("pstub_PayToDate", n_PayrollDateTo) 'If(pstub_PayToDate = Nothing, DBNull.Value, Format(CDate(pstub_PayToDate), "yyyy-MM-dd")))
+                        .Parameters.AddWithValue("pstub_PayFromDate", n_PayrollDateFrom) 'If(pstub_PayFromDate = Nothing, DBNull.Value, Format(CDate(pstub_PayFromDate), "yyyy-MM-dd")))
+                        .Parameters.AddWithValue("pstub_PayToDate", n_PayrollDateTo) 'If(pstub_PayToDate = Nothing, DBNull.Value, Format(CDate(pstub_PayToDate), "yyyy-MM-dd")))
 
-                            .Parameters.AddWithValue("pstub_TotalGrossSalary", grossincome + totalemployeebonus + totalnotaxemployeebonus + totalnotaxemployeeallownce + totalemployeeallownce)
-                            .Parameters.AddWithValue("pstub_TotalNetSalary", tot_net_pay + totalemployeebonus + totalnotaxemployeebonus + totalnotaxemployeeallownce + totalemployeeallownce + thirteenthmoval)
-                            .Parameters.AddWithValue("pstub_TotalTaxableSalary", the_taxable_salary)
-                            .Parameters.AddWithValue("pstub_TotalEmpWithholdingTax", tax_amount)
+                        .Parameters.AddWithValue("pstub_TotalGrossSalary", grossincome + totalemployeebonus + totalnotaxemployeebonus + totalnotaxemployeeallownce + totalemployeeallownce)
+                        .Parameters.AddWithValue("pstub_TotalNetSalary", tot_net_pay + totalemployeebonus + totalnotaxemployeebonus + totalnotaxemployeeallownce + totalemployeeallownce + thirteenthmoval)
+                        .Parameters.AddWithValue("pstub_TotalTaxableSalary", the_taxable_salary)
+                        .Parameters.AddWithValue("pstub_TotalEmpWithholdingTax", tax_amount)
 
-                            .Parameters.AddWithValue("pstub_TotalEmpSSS", pstub_TotalEmpSSS) 'DBNull.Value
-                            .Parameters.AddWithValue("pstub_TotalCompSSS", pstub_TotalCompSSS)
-                            .Parameters.AddWithValue("pstub_TotalEmpPhilhealth", pstub_TotalEmpPhilhealth)
-                            .Parameters.AddWithValue("pstub_TotalCompPhilhealth", pstub_TotalCompPhilhealth)
-                            .Parameters.AddWithValue("pstub_TotalEmpHDMF", pstub_TotalEmpHDMF)
-                            .Parameters.AddWithValue("pstub_TotalCompHDMF", pstub_TotalCompHDMF)
-                            .Parameters.AddWithValue("pstub_TotalVacationDaysLeft", pstub_TotalVacationDaysLeft)
-                            .Parameters.AddWithValue("pstub_TotalLoans", valemp_loan) 'pstub_TotalLoans
-                            .Parameters.AddWithValue("pstub_TotalBonus", pstub_TotalBonus)
-                            .Parameters.AddWithValue("pstub_TotalAllowance", pstub_TotalAllowance)
+                        .Parameters.AddWithValue("pstub_TotalEmpSSS", pstub_TotalEmpSSS) 'DBNull.Value
+                        .Parameters.AddWithValue("pstub_TotalCompSSS", pstub_TotalCompSSS)
+                        .Parameters.AddWithValue("pstub_TotalEmpPhilhealth", pstub_TotalEmpPhilhealth)
+                        .Parameters.AddWithValue("pstub_TotalCompPhilhealth", pstub_TotalCompPhilhealth)
+                        .Parameters.AddWithValue("pstub_TotalEmpHDMF", pstub_TotalEmpHDMF)
+                        .Parameters.AddWithValue("pstub_TotalCompHDMF", pstub_TotalCompHDMF)
+                        .Parameters.AddWithValue("pstub_TotalVacationDaysLeft", pstub_TotalVacationDaysLeft)
+                        .Parameters.AddWithValue("pstub_TotalLoans", valemp_loan) 'pstub_TotalLoans
+                        .Parameters.AddWithValue("pstub_TotalBonus", pstub_TotalBonus)
+                        .Parameters.AddWithValue("pstub_TotalAllowance", pstub_TotalAllowance)
 
-                            '.Parameters.Add("paystubID", MySqlDbType.Int32)
-                            '.Parameters("paystubID").Direction = ParameterDirection.ReturnValue
-                            'Dim d_reader As MySqlDataReader
-                            'd_reader = .ExecuteReader()
+                        '.Parameters.Add("paystubID", MySqlDbType.Int32)
+                        '.Parameters("paystubID").Direction = ParameterDirection.ReturnValue
+                        'Dim d_reader As MySqlDataReader
+                        'd_reader = .ExecuteReader()
 
-                            .ExecuteNonQuery()
-                            myTrans.Commit()
-                        End With
-                        new_cmd.Dispose()
-                        '############ # # # # # # # # ##############
+                        .ExecuteNonQuery()
+                        myTrans.Commit()
+                    End With
+                    new_cmd.Dispose()
+                    '############ # # # # # # # # ##############
 
-                        'For Each strvalID In allow_type
+                    'For Each strvalID In allow_type
 
-                        '    'INSERT INTO paystubitem(RowID,OrganizationID,Created,CreatedBy,PayStubID,ProductID,PayAmount,Undeclared)
+                    '    'INSERT INTO paystubitem(RowID,OrganizationID,Created,CreatedBy,PayStubID,ProductID,PayAmount,Undeclared)
 
-                        '    Dim totalallowance_amount = ValNoComma(0)
+                    '    Dim totalallowance_amount = ValNoComma(0)
 
-                        '    totalallowance_amount = ValNoComma(emp_allowanceDaily.Compute("SUM(TotalAllowanceAmount)",
-                        '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
+                    '    totalallowance_amount = ValNoComma(emp_allowanceDaily.Compute("SUM(TotalAllowanceAmount)",
+                    '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
 
-                        '    totalallowance_amount += ValNoComma(notax_allowanceDaily.Compute("SUM(TotalAllowanceAmount)",
-                        '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
+                    '    totalallowance_amount += ValNoComma(notax_allowanceDaily.Compute("SUM(TotalAllowanceAmount)",
+                    '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
 
-                        '    totalallowance_amount += ValNoComma(emp_allowanceMonthly.Compute("SUM(TotalAllowanceAmount)",
-                        '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
+                    '    totalallowance_amount += ValNoComma(emp_allowanceMonthly.Compute("SUM(TotalAllowanceAmount)",
+                    '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
 
-                        '    totalallowance_amount += ValNoComma(notax_allowanceMonthly.Compute("SUM(TotalAllowanceAmount)",
-                        '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
+                    '    totalallowance_amount += ValNoComma(notax_allowanceMonthly.Compute("SUM(TotalAllowanceAmount)",
+                    '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
 
-                        '    totalallowance_amount += ValNoComma(emp_allowanceSemiM.Compute("SUM(TotalAllowanceAmount)",
-                        '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
+                    '    totalallowance_amount += ValNoComma(emp_allowanceSemiM.Compute("SUM(TotalAllowanceAmount)",
+                    '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
 
-                        '    totalallowance_amount += ValNoComma(notax_allowanceSemiM.Compute("SUM(TotalAllowanceAmount)",
-                        '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
+                    '    totalallowance_amount += ValNoComma(notax_allowanceSemiM.Compute("SUM(TotalAllowanceAmount)",
+                    '                                                                  "ProductID = '" & strvalID & "' AND EmployeeID = '" & drow("RowID") & "'"))
 
-                        '    Dim n_ExecuteQuery As _
-                        '        New MySQLExecuteQuery("INSERT INTO paystubitem(OrganizationID,Created,CreatedBy,PayStubID,ProductID,PayAmount,Undeclared)" &
-                        '                         " VALUES('" & orgztnID & "'" &
-                        '                             ",CURRENT_TIMESTAMP()" &
-                        '                             ",'" & z_User & "'" &
-                        '                             ",'" & paystubID & "'" &
-                        '                             ",'" & strvalID & "'" &
-                        '                             "," & totalallowance_amount &
-                        '                             ",'0'" &
-                        '                         ") ON" &
-                        '                         " DUPLICATE" &
-                        '                         " KEY" &
-                        '                         " UPDATE" &
-                        '                             " LastUpd=CURRENT_TIMESTAMP()" &
-                        '                             ",LastUpdBy='" & z_User & "'" &
-                        '                             ",PayAmount=" & totalallowance_amount & ";")
+                    '    Dim n_ExecuteQuery As _
+                    '        New MySQLExecuteQuery("INSERT INTO paystubitem(OrganizationID,Created,CreatedBy,PayStubID,ProductID,PayAmount,Undeclared)" &
+                    '                         " VALUES('" & orgztnID & "'" &
+                    '                             ",CURRENT_TIMESTAMP()" &
+                    '                             ",'" & z_User & "'" &
+                    '                             ",'" & paystubID & "'" &
+                    '                             ",'" & strvalID & "'" &
+                    '                             "," & totalallowance_amount &
+                    '                             ",'0'" &
+                    '                         ") ON" &
+                    '                         " DUPLICATE" &
+                    '                         " KEY" &
+                    '                         " UPDATE" &
+                    '                             " LastUpd=CURRENT_TIMESTAMP()" &
+                    '                             ",LastUpdBy='" & z_User & "'" &
+                    '                             ",PayAmount=" & totalallowance_amount & ";")
 
-                        'Next
+                    'Next
 
-                        If isPayStubExists.Result = "2" Then
-                            'the decrement of leave balances happens here
-                            Dim new_ExecuteQuery As _
+                    If isPayStubExists.Result = "2" Then
+                        'the decrement of leave balances happens here
+                        Dim new_ExecuteQuery As _
                                 New MySQLExecuteQuery("UPDATE employee e" &
                                                  " LEFT JOIN (SELECT RowID" &
                                                              ",SUM(VacationLeaveHours) AS VacationLeaveHours" &
@@ -1298,55 +1296,52 @@ Public Class PayrollGeneration
                                                 ",LastUpdBy='" & z_User & "'" &
                                                 " WHERE e.RowID='" & drow("RowID") & "' AND e.OrganizationID='" & orgztnID & "';")
 
-                        End If
+                    End If
 
-                        ''Dim nn As New MySQLQueryToDataTable("CALL `SP_UpdatePaystubAdjustment`('" & drow("RowID") & "'" &
-                        'Dim newer_ExecuteQuery As _
-                        'New MySQLExecuteQuery("CALL `SP_UpdatePaystubAdjustment`('" & drow("RowID") & "'" &
-                        '                                  ",'" & n_PayrollRecordID & "'" &
-                        '                                  ",'" & z_User & "'" &
-                        '                                  ",'" & orgztnID & "');", 5000)
+                    ''Dim nn As New MySQLQueryToDataTable("CALL `SP_UpdatePaystubAdjustment`('" & drow("RowID") & "'" &
+                    'Dim newer_ExecuteQuery As _
+                    'New MySQLExecuteQuery("CALL `SP_UpdatePaystubAdjustment`('" & drow("RowID") & "'" &
+                    '                                  ",'" & n_PayrollRecordID & "'" &
+                    '                                  ",'" & z_User & "'" &
+                    '                                  ",'" & orgztnID & "');", 5000)
 
-                        progress_index += 1
+                    progress_index += 1
 
-                        'If IsFirstPayperiodOfTheYear() Then
-                        '    ConvertLeaveToCash(drow)
-                        'End If
+                    'If IsFirstPayperiodOfTheYear() Then
+                    '    ConvertLeaveToCash(drow)
+                    'End If
 
-                        'Dim f_args(1) As Object
+                    'Dim f_args(1) As Object
 
-                        ''bgworkgenpayroll.ReportProgress(CInt((100 * progress_index) / emp_count), "")
+                    ''bgworkgenpayroll.ReportProgress(CInt((100 * progress_index) / emp_count), "")
 
-                        'f_args(1) = Convert.ToInt32(progress_index / emp_count) 'Convert.ToInt32(drow("counter"))
+                    'f_args(1) = Convert.ToInt32(progress_index / emp_count) 'Convert.ToInt32(drow("counter"))
 
-                        form_caller.Invoke(m_NotifyMainWindow,
+                    form_caller.Invoke(m_NotifyMainWindow,
                                            1)
-                        'Convert.ToInt16(progress_index / emp_count))
+                    'Convert.ToInt16(progress_index / emp_count))
 
-                        Dim my_cmd As String = String.Concat(Convert.ToString(drow("RowID")), "@", Convert.ToString(drow("EmployeeID")))
-                        Console.WriteLine(my_cmd)
+                    Dim my_cmd As String = String.Concat(Convert.ToString(drow("RowID")), "@", Convert.ToString(drow("EmployeeID")))
+                    Console.WriteLine(my_cmd)
 
-                    Catch ex As Exception
+                Catch ex As Exception
 
-                        myTrans.Rollback()
+                    myTrans.Rollback()
 
-                        Dim this_err As String = String.Concat(getErrExcptn(ex, "PayrollGeneration"), " -- ", Convert.ToString(employee_dattab.TableName),
+                    Dim this_err As String = String.Concat(getErrExcptn(ex, "PayrollGeneration"), " -- ", Convert.ToString(employee_dattab.TableName),
                                                                ".Employee ID[", Convert.ToString(drow("EmployeeID")), "]")
-                        Console.WriteLine(this_err)
+                    Console.WriteLine(this_err)
 
-                    Finally
-                        'Continue For
-                        If mysql_conn IsNot Nothing Then
-                            mysql_conn.Close()
-                            mysql_conn.Dispose()
-                        End If
-                        'Thread.Sleep(500)
-                    End Try
+                Finally
+                    'Continue For
+                    If mysql_conn IsNot Nothing Then
+                        mysql_conn.Close()
+                        mysql_conn.Dispose()
+                    End If
+                    'Thread.Sleep(500)
+                End Try
 
-                Next
-
-
-            End If
+            Next
 
         Catch ex As Exception
             'MsgBox
