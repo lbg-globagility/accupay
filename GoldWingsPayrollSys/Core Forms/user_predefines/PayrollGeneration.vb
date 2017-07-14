@@ -191,9 +191,13 @@ Public Class PayrollGeneration
 
     'paypRowID
 
-    Private strPHHdeductsched,
-        strSSSdeductsched,
-        strHDMFdeductsched As String
+    Private Const FirstHalf As String = "First half"
+    Private Const EndOfTheMonth As String = "End of the month"
+    Private Const PerPayPeriod As String = "Per pay period"
+
+    Private _philHealthDeductionSchedule As String
+    Private _sssDeductionSchedule As String
+    Private _hdmfDeductionSchedule As String
 
     Private n_PayStub As New PayStub
 
@@ -330,7 +334,19 @@ Public Class PayrollGeneration
 
             fixedNonTaxableMonthlyAllowances = New MySQLQueryToDataTable(fixedNonTaxableMonthlyAllowanceSql).ResultTable
 
-            Dim pstub_TotalEmpSSS, pstub_TotalCompSSS, pstub_TotalEmpPhilhealth, pstub_TotalCompPhilhealth, pstub_TotalEmpHDMF, pstub_TotalCompHDMF, pstub_TotalVacationDaysLeft, pstub_TotalLoans, pstub_TotalBonus, OTAmount, NightDiffOTAmount, NightDiffAmount, thirteenthmoval As Double
+            Dim pstub_TotalEmpSSS As Decimal
+            Dim pstub_TotalCompSSS As Decimal
+            Dim pstub_TotalEmpPhilhealth As Decimal
+            Dim pstub_TotalCompPhilhealth As Decimal
+            Dim pstub_TotalEmpHDMF As Decimal
+            Dim pstub_TotalCompHDMF As Decimal
+            Dim pstub_TotalVacationDaysLeft As Decimal
+            Dim pstub_TotalLoans As Decimal
+            Dim pstub_TotalBonus As Decimal
+            Dim OTAmount As Decimal
+            Dim NightDiffOTAmount As Decimal
+            Dim NightDiffAmount As Decimal
+            Dim thirteenthmoval As Decimal
 
             Dim emp_count As Integer = employee_dattab.Rows.Count
 
@@ -355,77 +371,59 @@ Public Class PayrollGeneration
 
             For Each drow As DataRow In employee_dattab.Rows
                 Try
-                    strPHHdeductsched = drow("PhHealthDeductSched").ToString
-                    If drow("PhHealthDeductSched").ToString = "End of the month" Then
+                    _philHealthDeductionSchedule = drow("PhHealthDeductSched").ToString
 
+                    If _philHealthDeductionSchedule = EndOfTheMonth Then
                         isorgPHHdeductsched = 0
-
-                    ElseIf drow("PhHealthDeductSched").ToString = "First half" Then
-
+                    ElseIf _philHealthDeductionSchedule = "First half" Then
                         isorgPHHdeductsched = 1
-
-                    ElseIf drow("PhHealthDeductSched").ToString = "Per pay period" Then
-
+                    ElseIf _philHealthDeductionSchedule = "Per pay period" Then
                         isorgPHHdeductsched = 2
-
                     End If
 
-
-                    strSSSdeductsched = drow("SSSDeductSched").ToString
-                    If drow("SSSDeductSched").ToString = "End of the month" Then
-
+                    _sssDeductionSchedule = drow("SSSDeductSched").ToString
+                    If _sssDeductionSchedule = "End of the month" Then
                         isorgSSSdeductsched = 0
-
-                    ElseIf drow("SSSDeductSched").ToString = "First half" Then
-
+                    ElseIf _sssDeductionSchedule = "First half" Then
                         isorgSSSdeductsched = 1
-
-                    ElseIf drow("SSSDeductSched").ToString = "Per pay period" Then
-
+                    ElseIf _sssDeductionSchedule = "Per pay period" Then
                         isorgSSSdeductsched = 2
-
                     End If
 
-
-                    strHDMFdeductsched = drow("HDMFDeductSched").ToString
-                    If drow("HDMFDeductSched").ToString = "End of the month" Then
-
+                    _hdmfDeductionSchedule = drow("HDMFDeductSched").ToString
+                    If _hdmfDeductionSchedule = "End of the month" Then
                         isorgHDMFdeductsched = 0
-
-                    ElseIf drow("HDMFDeductSched").ToString = "First half" Then
-
+                    ElseIf _hdmfDeductionSchedule = "First half" Then
                         isorgHDMFdeductsched = 1
-
-                    ElseIf drow("HDMFDeductSched").ToString = "Per pay period" Then
-
+                    ElseIf _hdmfDeductionSchedule = "Per pay period" Then
                         isorgHDMFdeductsched = 2
-
                     End If
-
 
                     If drow("WTaxDeductSched").ToString = "End of the month" Then
-
                         isorgWTaxdeductsched = 0
-
                     ElseIf drow("WTaxDeductSched").ToString = "First half" Then
-
                         isorgWTaxdeductsched = 1
-
                     ElseIf drow("WTaxDeductSched").ToString = "Per pay period" Then
-
                         isorgWTaxdeductsched = 2
-
                     End If
 
 
-                    Dim employee_ID = Trim(drow("RowID"))
+                    Dim employeeID = Trim(drow("RowID"))
 
                     Dim org_WorkDaysPerYear = drow("WorkDaysPerYear")
 
-                    Dim divisorMonthlys = If(drow("PayFrequencyID") = 1, 2,
-                                                 If(drow("PayFrequencyID") = 2, 1,
-                                                    If(drow("PayFrequencyID") = 3, New MySQLExecuteQuery("SELECT COUNT(RowID) FROM employeetimeentry WHERE EmployeeID='" & employee_ID & "' AND Date BETWEEN '" & n_PayrollDateFrom & "' AND '" & n_PayrollDateTo & "' AND IFNULL(TotalDayPay,0)!=0 AND OrganizationID='" & orgztnID & "';"),
-                                                       numberofweeksthismonth)))
+                    Dim divisorMonthlys = If(
+                        drow("PayFrequencyID") = 1,
+                        2,
+                        If(
+                            drow("PayFrequencyID") = 2,
+                            1,
+                            If(
+                                drow("PayFrequencyID") = 3,
+                                New MySQLExecuteQuery("SELECT COUNT(RowID) FROM employeetimeentry WHERE EmployeeID='" & employeeID & "' AND Date BETWEEN '" & n_PayrollDateFrom & "' AND '" & n_PayrollDateTo & "' AND IFNULL(TotalDayPay,0)!=0 AND OrganizationID='" & orgztnID & "';"),
+                                numberofweeksthismonth)
+                            )
+                        )
 
 
                     Dim rowempsal = esal_dattab.Select("EmployeeID = '" & drow("RowID").ToString & "'")
@@ -433,13 +431,6 @@ Public Class PayrollGeneration
                     Dim emp_loan = emp_loans.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
                     Dim emp_bon = emp_bonus.Select("EmployeeID = '" & drow("RowID").ToString & "'")
-
-
-
-
-
-
-
 
                     Dim day_allowance = emp_allowanceDaily.Select("EmployeeID = '" & drow("RowID").ToString & "'")
 
@@ -767,7 +758,7 @@ Public Class PayrollGeneration
 
                     Dim the_taxable_salary = ValNoComma(0)
 
-                    employee_ID = Trim(drow("RowID"))
+                    employeeID = Trim(drow("RowID"))
 
                     For Each drowtotdaypay In emptotdaypay
 
@@ -804,14 +795,14 @@ Public Class PayrollGeneration
 
                             NightDiffAmount = ValNoComma(drowtotdaypay("NightDiffHoursAmount"))
 
-                            employee_ID = Trim(drow("RowID"))
+                            employeeID = Trim(drow("RowID"))
 
                             Dim employment_type = StrConv(drow("EmployeeType").ToString, VbStrConv.ProperCase)
 
                             Dim sel_dtemployeefirsttimesalary = dtemployeefirsttimesalary.Select("EmployeeID = '" & drow("RowID") & "'")
 
                             Dim StartingAttendanceCount = ValNoComma(drow("StartingAttendanceCount"))
-                            If employee_ID = 9 Then : Dim call_lambert = "Over here" : End If
+                            If employeeID = 9 Then : Dim call_lambert = "Over here" : End If
                             If employment_type = "Fixed" Then
                                 grossincome = ValNoComma(drowsal("BasicPay"))
                                 grossincome = grossincome + (OTAmount + NightDiffAmount + NightDiffOTAmount)
@@ -861,6 +852,7 @@ Public Class PayrollGeneration
 
 
                             If isEndOfMonth = isorgSSSdeductsched Then
+
                                 pstub_TotalEmpSSS = CDec(drowsal("EmployeeContributionAmount"))
                                 pstub_TotalCompSSS = CDec(drowsal("EmployerContributionAmount"))
 
