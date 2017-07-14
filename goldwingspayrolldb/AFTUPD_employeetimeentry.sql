@@ -232,6 +232,7 @@ INSERT INTO employeetimeentryactual
     ,ChargeToDivisionID
     ,Leavepayment
     ,HolidayPayAmount
+    ,BasicDayPay
 ) VALUES(
     NEW.RowID
     ,NEW.OrganizationID
@@ -264,6 +265,7 @@ INSERT INTO employeetimeentryactual
     ,NEW.ChargeToDivisionID
     ,NEW.Leavepayment + (NEW.Leavepayment * actualrate)
     ,NEW.HolidayPayAmount + (NEW.HolidayPayAmount * actualrate)
+    ,NEW.BasicDayPay + (NEW.BasicDayPay * actualrate)
 ) ON
 DUPLICATE
 KEY
@@ -297,7 +299,8 @@ UPDATE
     ,Absent=NEW.Absent * actualratepercent
     ,ChargeToDivisionID=NEW.ChargeToDivisionID
     ,Leavepayment=NEW.Leavepayment + (NEW.Leavepayment * actualrate)
-    ,HolidayPayAmount=NEW.HolidayPayAmount + (NEW.HolidayPayAmount * actualrate);
+    ,HolidayPayAmount=NEW.HolidayPayAmount + (NEW.HolidayPayAmount * actualrate)
+    ,BasicDayPay=NEW.BasicDayPay + (NEW.BasicDayPay * actualrate);
 
 SELECT RowID FROM `view` WHERE ViewName='Employee Time Entry' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 

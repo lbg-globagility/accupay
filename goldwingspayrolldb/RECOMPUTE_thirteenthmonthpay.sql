@@ -6,7 +6,12 @@
 
 DROP PROCEDURE IF EXISTS `RECOMPUTE_thirteenthmonthpay`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `RECOMPUTE_thirteenthmonthpay`(IN `OrganizID` INT, IN `PayPRowID` INT, IN `UserRowID` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `RECOMPUTE_thirteenthmonthpay`(
+	IN `OrganizID` INT,
+	IN `PayPRowID` INT,
+	IN `UserRowID` INT
+
+)
     DETERMINISTIC
 BEGIN
 
@@ -85,86 +90,122 @@ IF ispayperiodendofmonth IS NOT NULL THEN
         UserRowID,
         ps.RowID,
         (ii.BasicAmount / pf_div)
-        FROM
-        (
-                -- Get the summation of basic pay for the daily salaried employees.
-                SELECT
-                    (
-                        timeEntrySummary.BasicAmount +
-                        (timeEntrySummary.TotalOvertimeHours * (es.UndeclaredSalary / HOURS_IN_A_WORKDAY) * overtimeRate) +
-                        timeEntrySummary.TotalLeavePay
-                    ) AS BasicAmount,
-                    e.RowID AS EmployeeID,
-                    'employeetimeentry' AS SourceOfAmount
-                FROM employee e
-                INNER JOIN (
-                        SELECT
-                            ete.EmployeeID AS EmployeeID,
-                            SUM(ete.RegularHoursAmount) AS BasicAmount,
-                            SUM(ete.OvertimeHoursWorked) AS TotalOvertimeHours,
-                            SUM(ete.Leavepayment) AS TotalLeavePay
-                        FROM employeetimeentryactual ete
-                        LEFT JOIN employeeshift esh
-                            ON esh.RowID = ete.EmployeeShiftID
-                            AND esh.RestDay = FALSE
-                        WHERE ete.OrganizationID = OrganizID
-                            AND `Date` BETWEEN month_firstdate AND last_date
-                            AND esh.RestDay = 0
-                        GROUP BY ete.EmployeeID
-                    ) timeEntrySummary
-                    ON timeEntrySummary.EmployeeID = e.RowID
-                INNER JOIN employeesalary es
-                    ON es.EmployeeID = e.RowID
-                    AND last_date BETWEEN es.EffectiveDateFrom AND IFNULL(es.EffectiveDateTo, last_date)
-                WHERE e.PayFrequencyID = emppayfreqID
-                    AND e.EmployeeType = 'Daily'
-                    AND e.OrganizationID = OrganizID
-            UNION
-                -- Get the summation of basic pay for the monthly and fixed salaried employees.
-                SELECT
-                    (es.Salary - IFNULL(et.LessAmount,0)) AS BasicAmount,
-                    e.RowID AS EmployeeID,
-                    'employeeallowance' AS SourceOfAmount
-                FROM employee e
-                INNER JOIN employeesalary es
-                    ON es.EmployeeID=e.RowID
-                    AND last_date BETWEEN es.EffectiveDateFrom AND IFNULL(es.EffectiveDateTo, last_date)
-                LEFT JOIN (
-                        SELECT
-                            EmployeeID,
-                            SUM(HoursLateAmount + UndertimeHoursAmount + Absent) AS LessAmount
-                        FROM employeetimeentryactual
-                        WHERE
-                            (HoursLateAmount + UndertimeHoursAmount + Absent) > 0
-                            AND OrganizationID=OrganizID
-                            AND `Date` BETWEEN month_firstdate AND last_date
-                        GROUP BY EmployeeID
-                    ) et
-                    ON et.EmployeeID=e.RowID
-                WHERE e.PayFrequencyID=emppayfreqID
-                    AND e.OrganizationID=OrganizID
-                    AND e.EmployeeType IN ('Monthly','Fixed')
-        ) ii
-        INNER JOIN paystub ps
-            ON ps.OrganizationID=OrganizID
-            AND ps.PayPeriodID=PayPRowID
-            AND ps.EmployeeID=ii.EmployeeID
-        LEFT JOIN (
-                SELECT
-                    psi.PayStubID,
-                    SUM(psi.PayAmount) AS PayAmount
-                FROM paystubitem psi
-                INNER JOIN product p
-                    ON p.RowID=psi.ProductID
-                    AND p.`Category`='Allowance Type'
-                    AND p.AllocateBelowSafetyFlag='1'
-                    AND p.OrganizationID=psi.OrganizationID
-                WHERE psi.PayStubID IS NOT NULL
-                    AND psi.OrganizationID=OrganizID
-                    AND psi.PayAmount != 0
-                GROUP BY psi.PayStubID
-            ) ea
-            ON ea.PayStubID = ps.RowID
+    FROM
+    (
+            -- Get the summation of basic pay for the daily salaried employees.
+            SELECT
+                (
+                    timeEntrySummary.BasicAmount +
+                    (timeEntrySummary.TotalOvertimeHours * (es.UndeclaredSalary / HOURS_IN_A_WORKDAY) * overtimeRate) +
+                    timeEntrySummary.TotalLeavePay
+                ) AS BasicAmount,
+                e.RowID AS EmployeeID,
+                'employeetimeentry' AS SourceOfAmount
+            FROM employee e
+            INNER JOIN (
+                    SELECT
+                        ete.EmployeeID AS EmployeeID,
+                        SUM(ete.BasicDayPay) AS BasicAmount,
+                        SUM(ete.OvertimeHoursWorked) AS TotalOvertimeHours,
+                        SUM(ete.Leavepayment) AS TotalLeavePay
+                    FROM employeetimeentryactual ete
+                    LEFT JOIN employeeshift esh
+                        ON esh.RowID = ete.EmployeeShiftID
+                        AND esh.RestDay = FALSE
+                    WHERE ete.OrganizationID = OrganizID
+                        AND `Date` BETWEEN month_firstdate AND last_date
+                        AND esh.RestDay = 0
+                    GROUP BY ete.EmployeeID
+                ) timeEntrySummary
+                ON timeEntrySummary.EmployeeID = e.RowID
+            INNER JOIN employeesalary es
+                ON es.EmployeeID = e.RowID
+                AND last_date BETWEEN es.EffectiveDateFrom AND IFNULL(es.EffectiveDateTo, last_date)
+            WHERE e.PayFrequencyID = emppayfreqID
+                AND e.EmployeeType = 'Daily'
+                AND e.OrganizationID = OrganizID
+                AND e.EmploymentStatus NOT IN ('Contractual', 'SERVICE CONTRACT')
+        UNION
+            SELECT
+                (
+                    timeEntrySummary.BasicAmount +
+                    -- (timeEntrySummary.TotalOvertimeHours * (es.UndeclaredSalary / HOURS_IN_A_WORKDAY) * overtimeRate) +
+                    timeEntrySummary.TotalLeavePay
+                ) AS BasicAmount,
+                e.RowID AS EmployeeID,
+                'employeetimeentry' AS SourceOfAmount
+            FROM employee e
+            INNER JOIN (
+                    SELECT
+                        ete.EmployeeID AS EmployeeID,
+                        SUM(ete.BasicDayPay) AS BasicAmount,
+                        SUM(ete.OvertimeHoursWorked) AS TotalOvertimeHours,
+                        SUM(ete.Leavepayment) AS TotalLeavePay
+                    FROM employeetimeentry ete
+                    LEFT JOIN employeeshift esh
+                        ON esh.RowID = ete.EmployeeShiftID
+                        AND esh.RestDay = FALSE
+                    WHERE ete.OrganizationID = OrganizID
+                        AND `Date` BETWEEN month_firstdate AND last_date
+                        AND esh.RestDay = 0
+                    GROUP BY ete.EmployeeID
+                ) timeEntrySummary
+                ON timeEntrySummary.EmployeeID = e.RowID
+            INNER JOIN employeesalary es
+                ON (
+                    es.EmployeeID = e.RowID AND
+                    last_date BETWEEN es.EffectiveDateFrom AND IFNULL(es.EffectiveDateTo, last_date)
+                )
+            WHERE e.PayFrequencyID = emppayfreqID
+                AND e.EmployeeType = 'Daily'
+                AND e.OrganizationID = OrganizID
+                AND e.EmploymentStatus IN ('Contractual', 'SERVICE CONTRACT')
+        UNION
+            -- Get the summation of basic pay for the monthly and fixed salaried employees.
+            SELECT
+                (es.Salary - IFNULL(et.LessAmount,0)) AS BasicAmount,
+                e.RowID AS EmployeeID,
+                'employeeallowance' AS SourceOfAmount
+            FROM employee e
+            INNER JOIN employeesalary es
+                ON es.EmployeeID=e.RowID
+                AND last_date BETWEEN es.EffectiveDateFrom AND IFNULL(es.EffectiveDateTo, last_date)
+            LEFT JOIN (
+                    SELECT
+                        EmployeeID,
+                        SUM(HoursLateAmount + UndertimeHoursAmount + Absent) AS LessAmount
+                    FROM employeetimeentryactual
+                    WHERE
+                        (HoursLateAmount + UndertimeHoursAmount + Absent) > 0
+                        AND OrganizationID=OrganizID
+                        AND `Date` BETWEEN month_firstdate AND last_date
+                    GROUP BY EmployeeID
+                ) et
+                ON et.EmployeeID=e.RowID
+            WHERE e.PayFrequencyID=emppayfreqID
+                AND e.OrganizationID=OrganizID
+                AND e.EmployeeType IN ('Monthly','Fixed')
+    ) ii
+    INNER JOIN paystub ps
+        ON ps.OrganizationID=OrganizID
+        AND ps.PayPeriodID=PayPRowID
+        AND ps.EmployeeID=ii.EmployeeID
+    LEFT JOIN (
+            SELECT
+                psi.PayStubID,
+                SUM(psi.PayAmount) AS PayAmount
+            FROM paystubitem psi
+            INNER JOIN product p
+                ON p.RowID=psi.ProductID
+                AND p.`Category`='Allowance Type'
+                AND p.AllocateBelowSafetyFlag='1'
+                AND p.OrganizationID=psi.OrganizationID
+            WHERE psi.PayStubID IS NOT NULL
+                AND psi.OrganizationID=OrganizID
+                AND psi.PayAmount != 0
+            GROUP BY psi.PayStubID
+        ) ea
+        ON ea.PayStubID = ps.RowID
     ON DUPLICATE KEY
     UPDATE
         LastUpd=CURRENT_TIMESTAMP(),
