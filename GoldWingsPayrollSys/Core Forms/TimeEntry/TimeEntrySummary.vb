@@ -11,6 +11,7 @@ Public Class TimeEntrySummary
     Private Shared _logger As ILog = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
 
     Private Class PayPeriod
+
         Public Property PayFromDate As Date
         Public Property PayToDate As Date
         Public Property Year As Integer
@@ -23,6 +24,7 @@ Public Class TimeEntrySummary
 
             Return dateFrom + " - " + dateTo
         End Function
+
     End Class
 
     Private Class Employee
@@ -58,6 +60,8 @@ Public Class TimeEntrySummary
         Public Property OvertimeAmount As Decimal
         Public Property NightDiffOTHours As Decimal
         Public Property NightDiffOTAmount As Decimal
+        Public Property RestDayHours As Decimal
+        Public Property RestDayAmount As Decimal
         Public Property LeavePay As Decimal
         Public Property HolidayPay As Decimal
         Public Property UndertimeHours As Decimal
@@ -173,14 +177,16 @@ Public Class TimeEntrySummary
     End Function
 
     Public Async Sub LoadPayPeriods()
-        Me._payPeriods = Await GetPayPeriods(z_OrganizationID, 2017, 1)
-        payPeriodsDataGridView.Rows.Add(2)
+        Dim numOfRows = 2
 
-        Dim monthCounters(11) As Integer
+        _payPeriods = Await GetPayPeriods(z_OrganizationID, 2017, 1)
+        payPeriodsDataGridView.Rows.Add(numOfRows)
+
+        Dim monthRowCounters(11) As Integer
 
         For Each payperiod In Me._payPeriods
             Dim monthNo = payperiod.Month
-            Dim counter = monthCounters(monthNo - 1)
+            Dim counter = monthRowCounters(monthNo - 1)
 
             Dim payFromDate = payperiod.PayFromDate.ToString("dd MMM")
             Dim payToDate = payperiod.PayToDate.ToString("dd MMM")
@@ -189,7 +195,7 @@ Public Class TimeEntrySummary
             payPeriodsDataGridView.Rows(counter).Cells(monthNo - 1).Value = payperiod
 
             counter += 1
-            monthCounters(monthNo - 1) = counter
+            monthRowCounters(monthNo - 1) = counter
         Next
 
         If _selectedPayPeriod Is Nothing Then
@@ -201,7 +207,7 @@ Public Class TimeEntrySummary
                 End Function
             )
 
-            Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod 2
+            Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
             Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
             payPeriodsDataGridView.CurrentCell = payPeriodCell
         End If
@@ -230,6 +236,7 @@ Public Class TimeEntrySummary
             End With
 
             Await connection.OpenAsync()
+
             Dim reader = Await command.ExecuteReaderAsync()
             While Await reader.ReadAsync()
                 Dim payPeriod = New PayPeriod() With {
@@ -299,6 +306,8 @@ Public Class TimeEntrySummary
                 employeetimeentry.OvertimeHoursAmount,
                 employeetimeentry.NightDifferentialOTHours,
                 employeetimeentry.NightDiffOTHoursAmount,
+                employeetimeentry.RestDayHours,
+                employeetimeentry.RestDayAmount,
                 employeetimeentry.LeavePayment,
                 employeetimeentry.HoursLate,
                 employeetimeentry.HoursLateAmount,
@@ -352,6 +361,8 @@ Public Class TimeEntrySummary
                     .OvertimeAmount = reader.GetValue(Of Decimal)("OvertimeHoursAmount"),
                     .NightDiffOTHours = reader.GetValue(Of Decimal)("NightDifferentialOTHours"),
                     .NightDiffOTAmount = reader.GetValue(Of Decimal)("NightDiffOTHoursAmount"),
+                    .RestDayHours = reader.GetValue(Of Decimal)("RestDayHours"),
+                    .RestDayAmount = reader.GetValue(Of Decimal)("RestDayAmount"),
                     .LateHours = reader.GetValue(Of Decimal)("HoursLate"),
                     .LateAmount = reader.GetValue(Of Decimal)("HoursLateAmount"),
                     .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
@@ -400,10 +411,10 @@ Public Class TimeEntrySummary
         End If
     End Sub
 
-    Private Sub payPeriodDataGridView_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles payPeriodsDataGridView.CellClick
-        If e.RowIndex = -1 Then
-            Return
-        End If
+    Private Sub payPeriodDataGridView_CellClick(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
+        'If e.RowIndex = -1 Then
+        '    Return
+        'End If
 
         If payPeriodsDataGridView.CurrentRow Is Nothing Then
             Return
@@ -419,7 +430,7 @@ Public Class TimeEntrySummary
     End Sub
 
     Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
-        Me.Close()
+        Close()
         TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
     End Sub
 
@@ -427,7 +438,7 @@ Public Class TimeEntrySummary
         FilterEmployees()
     End Sub
 
-    Private Sub FilterEmployees()
+    Private Async Sub FilterEmployees()
         Dim searchValue = searchTextBox.Text.ToLower()
 
         Dim matchCriteria = Function(employee As Employee) As Boolean
@@ -440,11 +451,18 @@ Public Class TimeEntrySummary
                                 Return containsEmployeeId Or containsFullName Or containsFullNameInReverse
                             End Function
 
-        Dim filtered = New BindingList(Of Employee)(
-            _employees.Where(matchCriteria).ToList()
+        Dim filteredTask = Task.Factory.StartNew(Of BindingList(Of Employee))(
+            Function()
+                Return New BindingList(Of Employee)(
+                    _employees.Where(matchCriteria).ToList()
+                )
+            End Function
         )
+        'Dim filtered = New BindingList(Of Employee)(
+        '    _employees.Where(matchCriteria).ToList()
+        ')
 
-        employeesDataGridView.DataSource = filtered
+        employeesDataGridView.DataSource = Await filteredTask
         employeesDataGridView.Update()
     End Sub
 
