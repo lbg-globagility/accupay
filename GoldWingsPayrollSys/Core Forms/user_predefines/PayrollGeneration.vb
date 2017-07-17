@@ -59,6 +59,17 @@ Public Class PayrollGeneration
 
     Private agencyFeeSummary As DataTable
 
+    Private _employee As DataRow
+
+    Private _employeeSSS As Decimal
+    Private _employerSSS As Decimal
+
+    Private _employeePhilHealth As Decimal
+    Private _employerPhilHealth As Decimal
+
+    Private _employeeHDMF As Decimal
+    Private _employerHDMF As Decimal
+
     'ByVal _isorgPHHdeductsched As SByte,
     'ByVal _isorgSSSdeductsched As SByte,
     'ByVal _isorgHDMFdeductsched As SByte,
@@ -868,6 +879,8 @@ Public Class PayrollGeneration
 
                             End If
 
+                            CalculateSSS(drowsal)
+
                             If isEndOfMonth = isorgPHHdeductsched Then
                                 pstub_TotalEmpPhilhealth = CDec(drowsal("EmployeeShare"))
                                 pstub_TotalCompPhilhealth = CDec(drowsal("EmployerShare"))
@@ -884,6 +897,8 @@ Public Class PayrollGeneration
 
                             End If
 
+                            CalculatePhilHealth(drowsal)
+
                             If isEndOfMonth = isorgHDMFdeductsched Then
                                 pstub_TotalEmpHDMF = CDec(drowsal("HDMFAmount"))
                                 pstub_TotalCompHDMF = 100 'CDec(drowsal("HDMFAmount"))
@@ -899,6 +914,8 @@ Public Class PayrollGeneration
                                 End If
 
                             End If
+
+                            CalculateHDMF(drowsal)
 
                             '**************************************************************************************
                             'Below is the condition that if the employee will receive his/her salary for first time
@@ -1386,6 +1403,57 @@ Public Class PayrollGeneration
         'Dim dfsd As String = DirectCast(sender, System.ComponentModel.BackgroundWorker).ToString
         'Console.WriteLine(String.Concat(dfsd, " @@ ", employee_dattab.TableName))
 
+    End Sub
+
+    Private Sub CalculateSSS(salary As DataRow)
+        Dim monthlyEmployeeSSS = CDec(salary("EmployeeContributionAmount"))
+        Dim monthlyEmployerSSS = CDec(salary("EmployerContributionAmount"))
+
+        Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
+
+        If isEndOfMonth = isorgSSSdeductsched Then
+
+            _employeeSSS = monthlyEmployeeSSS
+            _employerSSS = monthlyEmployerSSS
+
+        ElseIf isorgSSSdeductsched = 2 Then 'Per pay period
+
+            _employeeSSS = monthlyEmployeeSSS / payPeriodsPerMonth
+            _employerSSS = monthlyEmployerSSS / payPeriodsPerMonth
+
+        End If
+    End Sub
+
+    Private Sub CalculatePhilHealth(salary As DataRow)
+        Dim employeePhilHealthPerMonth = CDec(salary("EmployeeShare"))
+        Dim monthlyEmployerPhilHealth = CDec(salary("EmployerShare"))
+        Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
+
+        If isEndOfMonth = isorgPHHdeductsched Then
+
+            _employeePhilHealth = employeePhilHealthPerMonth
+            _employerPhilHealth = monthlyEmployerPhilHealth
+
+        ElseIf isorgPHHdeductsched = 2 Then 'Per pay period
+
+            _employeePhilHealth = employeePhilHealthPerMonth / payPeriodsPerMonth
+            _employerPhilHealth = monthlyEmployerPhilHealth / payPeriodsPerMonth
+
+        End If
+    End Sub
+
+    Private Sub CalculateHDMF(salary As DataRow)
+        Dim employeeHdmfPerMonth = CDec(salary("HDMFAmount"))
+        Dim employerHdmfPerMonth = 100D
+        Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
+
+        If isEndOfMonth = isorgHDMFdeductsched Then
+            _employeeHDMF = employeeHdmfPerMonth
+            _employerHDMF = employerHdmfPerMonth
+        ElseIf isorgHDMFdeductsched = 2 Then 'Per pay period
+            _employeeHDMF = employeeHdmfPerMonth / payPeriodsPerMonth
+            _employerHDMF = employerHdmfPerMonth / payPeriodsPerMonth
+        End If
     End Sub
 
     Private Function IsFirstPayperiodOfTheYear() As Boolean
