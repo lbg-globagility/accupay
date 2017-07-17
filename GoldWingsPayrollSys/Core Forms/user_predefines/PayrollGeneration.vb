@@ -4,6 +4,27 @@ Imports System.Threading.Tasks
 
 Public Class PayrollGeneration
 
+    Private Class PayStubObject
+        Public Property RowID As Integer?
+        Public Property OrganizationID As Integer?
+        Public Property CreatedBy As Integer?
+        Public Property LastUpdBy As Integer?
+        Public Property PayPeriodID As Integer?
+        Public Property EmployeeID As Integer?
+        Public Property PayFromDate As DateTime
+        Public Property PayToDate As DateTime
+        Public Property TotalGrossSalary As Decimal
+        Public Property TotalNetSalary As Decimal
+        Public Property TotalTaxableSalary As Decimal
+        Public Property TotalEmpWithholdingTax As Decimal
+        Public Property TotalEmpSSS As Decimal
+        Public Property TotalCompSSS As Decimal
+        Public Property TotalEmpPhilHealth As Decimal
+        Public Property TotalCompPhilHealth As Decimal
+        Public Property TotalEmpHDMF As Decimal
+        Public Property TotalCompHDMF As Decimal
+    End Class
+
     Private employee_dattab As DataTable
     Private isEndOfMonth As String
     Private isorgPHHdeductsched As SByte
