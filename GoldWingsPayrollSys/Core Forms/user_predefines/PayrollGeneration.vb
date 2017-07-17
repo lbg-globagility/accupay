@@ -345,12 +345,12 @@ Public Class PayrollGeneration
 
             fixedNonTaxableMonthlyAllowances = New MySQLQueryToDataTable(fixedNonTaxableMonthlyAllowanceSql).ResultTable
 
-            Dim pstub_TotalEmpSSS As Decimal
-            Dim pstub_TotalCompSSS As Decimal
-            Dim pstub_TotalEmpPhilhealth As Decimal
-            Dim pstub_TotalCompPhilhealth As Decimal
-            Dim pstub_TotalEmpHDMF As Decimal
-            Dim pstub_TotalCompHDMF As Decimal
+            'Dim pstub_TotalEmpSSS As Decimal
+            'Dim pstub_TotalCompSSS As Decimal
+            'Dim pstub_TotalEmpPhilhealth As Decimal
+            'Dim pstub_TotalCompPhilhealth As Decimal
+            'Dim pstub_TotalEmpHDMF As Decimal
+            'Dim pstub_TotalCompHDMF As Decimal
             Dim pstub_TotalVacationDaysLeft As Decimal
             Dim pstub_TotalLoans As Decimal
             Dim pstub_TotalBonus As Decimal
@@ -751,12 +751,12 @@ Public Class PayrollGeneration
 
                     grossincome = Val(0)
 
-                    pstub_TotalEmpSSS = Val(0)
-                    pstub_TotalCompSSS = Val(0)
-                    pstub_TotalEmpPhilhealth = Val(0)
-                    pstub_TotalCompPhilhealth = Val(0)
-                    pstub_TotalEmpHDMF = Val(0)
-                    pstub_TotalCompHDMF = Val(0)
+                    'pstub_TotalEmpSSS = Val(0)
+                    'pstub_TotalCompSSS = Val(0)
+                    'pstub_TotalEmpPhilhealth = Val(0)
+                    'pstub_TotalCompPhilhealth = Val(0)
+                    'pstub_TotalEmpHDMF = Val(0)
+                    'pstub_TotalCompHDMF = Val(0)
                     pstub_TotalVacationDaysLeft = Val(0)
                     pstub_TotalLoans = Val(0)
                     pstub_TotalBonus = Val(0)
@@ -775,12 +775,18 @@ Public Class PayrollGeneration
 
                         grossincome = Val(0)
                         grossincome_firsthalf = Val(0)
-                        pstub_TotalEmpSSS = Val(0)
-                        pstub_TotalCompSSS = Val(0)
-                        pstub_TotalEmpPhilhealth = Val(0)
-                        pstub_TotalCompPhilhealth = Val(0)
-                        pstub_TotalEmpHDMF = Val(0)
-                        pstub_TotalCompHDMF = Val(0)
+                        _employeeSSS = 0D
+                        _employerSSS = 0D
+                        _employeePhilHealth = 0D
+                        _employerPhilHealth = 0D
+                        _employeeHDMF = 0D
+                        _employerHDMF = 0D
+                        'pstub_TotalEmpSSS = Val(0)
+                        'pstub_TotalCompSSS = Val(0)
+                        'pstub_TotalEmpPhilhealth = Val(0)
+                        'pstub_TotalCompPhilhealth = Val(0)
+                        'pstub_TotalEmpHDMF = Val(0)
+                        'pstub_TotalCompHDMF = Val(0)
                         pstub_TotalVacationDaysLeft = Val(0)
                         pstub_TotalLoans = Val(0)
                         pstub_TotalBonus = totalemployeebonus + totalnotaxemployeebonus
@@ -862,58 +868,58 @@ Public Class PayrollGeneration
                             End If
 
 
-                            If isEndOfMonth = isorgSSSdeductsched Then
+                            'If isEndOfMonth = isorgSSSdeductsched Then
 
-                                pstub_TotalEmpSSS = CDec(drowsal("EmployeeContributionAmount"))
-                                pstub_TotalCompSSS = CDec(drowsal("EmployerContributionAmount"))
+                            '    pstub_TotalEmpSSS = CDec(drowsal("EmployeeContributionAmount"))
+                            '    pstub_TotalCompSSS = CDec(drowsal("EmployerContributionAmount"))
 
-                            Else
-                                If isorgSSSdeductsched = 2 Then 'Per pay period
-                                    pstub_TotalEmpSSS = CDec(drowsal("EmployeeContributionAmount"))
-                                    pstub_TotalCompSSS = CDec(drowsal("EmployerContributionAmount"))
+                            'Else
+                            '    If isorgSSSdeductsched = 2 Then 'Per pay period
+                            '        pstub_TotalEmpSSS = CDec(drowsal("EmployeeContributionAmount"))
+                            '        pstub_TotalCompSSS = CDec(drowsal("EmployerContributionAmount"))
 
-                                    pstub_TotalEmpSSS = pstub_TotalEmpSSS / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-                                    pstub_TotalCompSSS = pstub_TotalCompSSS / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
+                            '        pstub_TotalEmpSSS = pstub_TotalEmpSSS / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
+                            '        pstub_TotalCompSSS = pstub_TotalCompSSS / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
 
-                                End If
+                            '    End If
 
-                            End If
+                            'End If
 
                             CalculateSSS(drowsal)
 
-                            If isEndOfMonth = isorgPHHdeductsched Then
-                                pstub_TotalEmpPhilhealth = CDec(drowsal("EmployeeShare"))
-                                pstub_TotalCompPhilhealth = CDec(drowsal("EmployerShare"))
+                            'If isEndOfMonth = isorgPHHdeductsched Then
+                            '    pstub_TotalEmpPhilhealth = CDec(drowsal("EmployeeShare"))
+                            '    pstub_TotalCompPhilhealth = CDec(drowsal("EmployerShare"))
 
-                            Else
-                                If isorgPHHdeductsched = 2 Then 'Per pay period
-                                    pstub_TotalEmpPhilhealth = CDec(drowsal("EmployeeShare"))
-                                    pstub_TotalCompPhilhealth = CDec(drowsal("EmployerShare"))
+                            'Else
+                            '    If isorgPHHdeductsched = 2 Then 'Per pay period
+                            '        pstub_TotalEmpPhilhealth = CDec(drowsal("EmployeeShare"))
+                            '        pstub_TotalCompPhilhealth = CDec(drowsal("EmployerShare"))
 
-                                    pstub_TotalEmpPhilhealth = pstub_TotalEmpPhilhealth / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-                                    pstub_TotalCompPhilhealth = pstub_TotalCompPhilhealth / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
+                            '        pstub_TotalEmpPhilhealth = pstub_TotalEmpPhilhealth / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
+                            '        pstub_TotalCompPhilhealth = pstub_TotalCompPhilhealth / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
 
-                                End If
+                            '    End If
 
-                            End If
+                            'End If
 
                             CalculatePhilHealth(drowsal)
 
-                            If isEndOfMonth = isorgHDMFdeductsched Then
-                                pstub_TotalEmpHDMF = CDec(drowsal("HDMFAmount"))
-                                pstub_TotalCompHDMF = 100 'CDec(drowsal("HDMFAmount"))
+                            'If isEndOfMonth = isorgHDMFdeductsched Then
+                            '    pstub_TotalEmpHDMF = CDec(drowsal("HDMFAmount"))
+                            '    pstub_TotalCompHDMF = 100 'CDec(drowsal("HDMFAmount"))
 
-                            Else
-                                If isorgHDMFdeductsched = 2 Then 'Per pay period
-                                    pstub_TotalEmpHDMF = CDec(drowsal("HDMFAmount"))
-                                    pstub_TotalCompHDMF = 100 'CDec(drowsal("HDMFAmount"))
+                            'Else
+                            '    If isorgHDMFdeductsched = 2 Then 'Per pay period
+                            '        pstub_TotalEmpHDMF = CDec(drowsal("HDMFAmount"))
+                            '        pstub_TotalCompHDMF = 100 'CDec(drowsal("HDMFAmount"))
 
-                                    pstub_TotalEmpHDMF = pstub_TotalEmpHDMF / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-                                    pstub_TotalCompHDMF = 100 / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
+                            '        pstub_TotalEmpHDMF = pstub_TotalEmpHDMF / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
+                            '        pstub_TotalCompHDMF = 100 / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
 
-                                End If
+                            '    End If
 
-                            End If
+                            'End If
 
                             CalculateHDMF(drowsal)
 
@@ -945,13 +951,13 @@ Public Class PayrollGeneration
 
                             Dim _eRowID = drow("RowID")
 
+                            Dim governmentContributions = _employeeSSS + _employeePhilHealth + _employeeHDMF
+
                             If isEndOfMonth = isorgWTaxdeductsched Then
 
-                                emp_taxabsal = grossincome -
-                                                    (pstub_TotalEmpSSS + pstub_TotalEmpPhilhealth + pstub_TotalEmpHDMF)
+                                emp_taxabsal = grossincome - governmentContributions
 
-                                the_taxable_salary = (grossincome + grossincome_firsthalf) -
-                                                    (pstub_TotalEmpSSS + pstub_TotalEmpPhilhealth + pstub_TotalEmpHDMF)
+                                the_taxable_salary = (grossincome + grossincome_firsthalf) - governmentContributions
 
                                 If isMinimumWage Then
 
@@ -1009,11 +1015,9 @@ Public Class PayrollGeneration
                             Else
                                 'PAYFREQUENCY_DIVISOR
 
-                                emp_taxabsal = grossincome -
-                                                    (pstub_TotalEmpSSS + pstub_TotalEmpPhilhealth + pstub_TotalEmpHDMF)
+                                emp_taxabsal = grossincome - governmentContributions
 
-                                the_taxable_salary = grossincome -
-                                                    (pstub_TotalEmpSSS + pstub_TotalEmpPhilhealth + pstub_TotalEmpHDMF)
+                                the_taxable_salary = grossincome - governmentContributions
 
                                 If isMinimumWage Then
 
@@ -1218,12 +1222,12 @@ Public Class PayrollGeneration
                         .Parameters.AddWithValue("pstub_TotalTaxableSalary", the_taxable_salary)
                         .Parameters.AddWithValue("pstub_TotalEmpWithholdingTax", tax_amount)
 
-                        .Parameters.AddWithValue("pstub_TotalEmpSSS", pstub_TotalEmpSSS) 'DBNull.Value
-                        .Parameters.AddWithValue("pstub_TotalCompSSS", pstub_TotalCompSSS)
-                        .Parameters.AddWithValue("pstub_TotalEmpPhilhealth", pstub_TotalEmpPhilhealth)
-                        .Parameters.AddWithValue("pstub_TotalCompPhilhealth", pstub_TotalCompPhilhealth)
-                        .Parameters.AddWithValue("pstub_TotalEmpHDMF", pstub_TotalEmpHDMF)
-                        .Parameters.AddWithValue("pstub_TotalCompHDMF", pstub_TotalCompHDMF)
+                        .Parameters.AddWithValue("pstub_TotalEmpSSS", _employeeSSS) 'DBNull.Value
+                        .Parameters.AddWithValue("pstub_TotalCompSSS", _employerSSS)
+                        .Parameters.AddWithValue("pstub_TotalEmpPhilhealth", _employeePhilHealth)
+                        .Parameters.AddWithValue("pstub_TotalCompPhilhealth", _employerPhilHealth)
+                        .Parameters.AddWithValue("pstub_TotalEmpHDMF", _employeeHDMF)
+                        .Parameters.AddWithValue("pstub_TotalCompHDMF", _employerHDMF)
                         .Parameters.AddWithValue("pstub_TotalVacationDaysLeft", pstub_TotalVacationDaysLeft)
                         .Parameters.AddWithValue("pstub_TotalLoans", valemp_loan) 'pstub_TotalLoans
                         .Parameters.AddWithValue("pstub_TotalBonus", pstub_TotalBonus)
