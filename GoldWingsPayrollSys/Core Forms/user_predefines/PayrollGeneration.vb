@@ -1431,38 +1431,38 @@ Public Class PayrollGeneration
     End Sub
 
     Private Sub CalculateSSS(salary As DataRow)
-        Dim monthlyEmployeeSSS = CDec(salary("EmployeeContributionAmount"))
-        Dim monthlyEmployerSSS = CDec(salary("EmployerContributionAmount"))
+        Dim employeeSSSPerMonth = CDec(salary("EmployeeContributionAmount"))
+        Dim employerSSSPerMonth = CDec(salary("EmployerContributionAmount"))
 
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
         If isEndOfMonth = isorgSSSdeductsched Then
 
-            _employeeSSS = monthlyEmployeeSSS
-            _employerSSS = monthlyEmployerSSS
+            _employeeSSS = employeeSSSPerMonth
+            _employerSSS = employerSSSPerMonth
 
-        ElseIf isorgSSSdeductsched = 2 Then 'Per pay period
+        ElseIf _sssDeductionSchedule = PerPayPeriod Then
 
-            _employeeSSS = monthlyEmployeeSSS / payPeriodsPerMonth
-            _employerSSS = monthlyEmployerSSS / payPeriodsPerMonth
+            _employeeSSS = employeeSSSPerMonth / payPeriodsPerMonth
+            _employerSSS = employerSSSPerMonth / payPeriodsPerMonth
 
         End If
     End Sub
 
     Private Sub CalculatePhilHealth(salary As DataRow)
         Dim employeePhilHealthPerMonth = CDec(salary("EmployeeShare"))
-        Dim monthlyEmployerPhilHealth = CDec(salary("EmployerShare"))
+        Dim employerPhilHealthPerMonth = CDec(salary("EmployerShare"))
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
         If isEndOfMonth = isorgPHHdeductsched Then
 
             _employeePhilHealth = employeePhilHealthPerMonth
-            _employerPhilHealth = monthlyEmployerPhilHealth
+            _employerPhilHealth = employerPhilHealthPerMonth
 
         ElseIf isorgPHHdeductsched = 2 Then 'Per pay period
 
             _employeePhilHealth = employeePhilHealthPerMonth / payPeriodsPerMonth
-            _employerPhilHealth = monthlyEmployerPhilHealth / payPeriodsPerMonth
+            _employerPhilHealth = employerPhilHealthPerMonth / payPeriodsPerMonth
 
         End If
     End Sub
@@ -1475,7 +1475,7 @@ Public Class PayrollGeneration
         If isEndOfMonth = isorgHDMFdeductsched Then
             _employeeHDMF = employeeHdmfPerMonth
             _employerHDMF = employerHdmfPerMonth
-        ElseIf isorgHDMFdeductsched = 2 Then 'Per pay period
+        ElseIf isorgHDMFdeductsched = 2 Then
             _employeeHDMF = employeeHdmfPerMonth / payPeriodsPerMonth
             _employerHDMF = employerHdmfPerMonth / payPeriodsPerMonth
         End If
