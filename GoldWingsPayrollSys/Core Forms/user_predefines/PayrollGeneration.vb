@@ -426,6 +426,8 @@ Public Class PayrollGeneration
 
             For Each drow As DataRow In employee_dattab.Rows
                 Try
+                    _employee = drow
+
                     _philHealthDeductionSchedule = drow("PhHealthDeductSched").ToString
 
                     If _philHealthDeductionSchedule = EndOfTheMonth Then
