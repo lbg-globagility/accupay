@@ -25,6 +25,29 @@ Public Class PayrollGeneration
         Public Property TotalCompHDMF As Decimal
     End Class
 
+    Private Class PayStubSummary
+        Public Property RowID As Integer?
+        Public Property PayStubID As Integer?
+        Public Property RegularHours As Decimal
+        Public Property RegularPay As Decimal
+        Public Property OvertimeHours As Decimal
+        Public Property OvertimePay As Decimal
+        Public Property NightDiffHours As Decimal
+        Public Property NightDiffPay As Decimal
+        Public Property NightDiffOTHours As Decimal
+        Public Property NightDiffOTPay As Decimal
+        Public Property RestDayHours As Decimal
+        Public Property RestDayPay As Decimal
+        Public Property LeavePay As Decimal
+        Public Property HolidayPay As Decimal
+        Public Property LateHours As Decimal
+        Public Property LateDeduction As Decimal
+        Public Property UndertimeHours As Decimal
+        Public Property UndertimeDeduction As Decimal
+        Public Property AbsenceDeduction As Decimal
+        Public Property BasicPay As Decimal
+    End Class
+
     Private employee_dattab As DataTable
     Private isEndOfMonth As String
     Private isorgPHHdeductsched As SByte
