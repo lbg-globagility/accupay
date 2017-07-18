@@ -913,60 +913,8 @@ Public Class PayrollGeneration
 
                             End If
 
-
-                            'If isEndOfMonth = isorgSSSdeductsched Then
-
-                            '    pstub_TotalEmpSSS = CDec(drowsal("EmployeeContributionAmount"))
-                            '    pstub_TotalCompSSS = CDec(drowsal("EmployerContributionAmount"))
-
-                            'Else
-                            '    If isorgSSSdeductsched = 2 Then 'Per pay period
-                            '        pstub_TotalEmpSSS = CDec(drowsal("EmployeeContributionAmount"))
-                            '        pstub_TotalCompSSS = CDec(drowsal("EmployerContributionAmount"))
-
-                            '        pstub_TotalEmpSSS = pstub_TotalEmpSSS / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-                            '        pstub_TotalCompSSS = pstub_TotalCompSSS / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-
-                            '    End If
-
-                            'End If
-
                             CalculateSSS(drowsal)
-
-                            'If isEndOfMonth = isorgPHHdeductsched Then
-                            '    pstub_TotalEmpPhilhealth = CDec(drowsal("EmployeeShare"))
-                            '    pstub_TotalCompPhilhealth = CDec(drowsal("EmployerShare"))
-
-                            'Else
-                            '    If isorgPHHdeductsched = 2 Then 'Per pay period
-                            '        pstub_TotalEmpPhilhealth = CDec(drowsal("EmployeeShare"))
-                            '        pstub_TotalCompPhilhealth = CDec(drowsal("EmployerShare"))
-
-                            '        pstub_TotalEmpPhilhealth = pstub_TotalEmpPhilhealth / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-                            '        pstub_TotalCompPhilhealth = pstub_TotalCompPhilhealth / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-
-                            '    End If
-
-                            'End If
-
                             CalculatePhilHealth(drowsal)
-
-                            'If isEndOfMonth = isorgHDMFdeductsched Then
-                            '    pstub_TotalEmpHDMF = CDec(drowsal("HDMFAmount"))
-                            '    pstub_TotalCompHDMF = 100 'CDec(drowsal("HDMFAmount"))
-
-                            'Else
-                            '    If isorgHDMFdeductsched = 2 Then 'Per pay period
-                            '        pstub_TotalEmpHDMF = CDec(drowsal("HDMFAmount"))
-                            '        pstub_TotalCompHDMF = 100 'CDec(drowsal("HDMFAmount"))
-
-                            '        pstub_TotalEmpHDMF = pstub_TotalEmpHDMF / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-                            '        pstub_TotalCompHDMF = 100 / ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-
-                            '    End If
-
-                            'End If
-
                             CalculateHDMF(drowsal)
 
                             '**************************************************************************************
