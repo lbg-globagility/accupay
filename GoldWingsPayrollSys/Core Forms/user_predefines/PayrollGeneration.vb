@@ -111,8 +111,8 @@ Public Class PayrollGeneration
     Private _employeePhilHealth As Decimal
     Private _employerPhilHealth As Decimal
 
-    Private _employeeHDMF As Decimal
-    Private _employerHDMF As Decimal
+    Private _employeeHdmf As Decimal
+    Private _employerHdmf As Decimal
 
     'ByVal _isorgPHHdeductsched As SByte,
     'ByVal _isorgSSSdeductsched As SByte,
@@ -825,8 +825,8 @@ Public Class PayrollGeneration
                         _employerSSS = 0D
                         _employeePhilHealth = 0D
                         _employerPhilHealth = 0D
-                        _employeeHDMF = 0D
-                        _employerHDMF = 0D
+                        _employeeHdmf = 0D
+                        _employerHdmf = 0D
                         'pstub_TotalEmpSSS = Val(0)
                         'pstub_TotalCompSSS = Val(0)
                         'pstub_TotalEmpPhilhealth = Val(0)
@@ -945,7 +945,7 @@ Public Class PayrollGeneration
 
                             Dim _eRowID = drow("RowID")
 
-                            Dim governmentContributions = _employeeSSS + _employeePhilHealth + _employeeHDMF
+                            Dim governmentContributions = _employeeSSS + _employeePhilHealth + _employeeHdmf
 
                             If isEndOfMonth = isorgWTaxdeductsched Then
 
@@ -1220,8 +1220,8 @@ Public Class PayrollGeneration
                         .Parameters.AddWithValue("pstub_TotalCompSSS", _employerSSS)
                         .Parameters.AddWithValue("pstub_TotalEmpPhilhealth", _employeePhilHealth)
                         .Parameters.AddWithValue("pstub_TotalCompPhilhealth", _employerPhilHealth)
-                        .Parameters.AddWithValue("pstub_TotalEmpHDMF", _employeeHDMF)
-                        .Parameters.AddWithValue("pstub_TotalCompHDMF", _employerHDMF)
+                        .Parameters.AddWithValue("pstub_TotalEmpHDMF", _employeeHdmf)
+                        .Parameters.AddWithValue("pstub_TotalCompHDMF", _employerHdmf)
                         .Parameters.AddWithValue("pstub_TotalVacationDaysLeft", pstub_TotalVacationDaysLeft)
                         .Parameters.AddWithValue("pstub_TotalLoans", valemp_loan) 'pstub_TotalLoans
                         .Parameters.AddWithValue("pstub_TotalBonus", pstub_TotalBonus)
@@ -1406,21 +1406,31 @@ Public Class PayrollGeneration
     Private Sub CalculateSSS(salary As DataRow)
         Dim employeeSSSPerMonth = CDec(salary("EmployeeContributionAmount"))
         Dim employerSSSPerMonth = CDec(salary("EmployerContributionAmount"))
-
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
-        If isEndOfMonth = isorgSSSdeductsched Then
+        If IsSssPaidOnce() Then
 
             _employeeSSS = employeeSSSPerMonth
             _employerSSS = employerSSSPerMonth
 
-        ElseIf _sssDeductionSchedule = PerPayPeriod Then
+        ElseIf IsSssPaidPerPayPeriod() Then
 
             _employeeSSS = employeeSSSPerMonth / payPeriodsPerMonth
             _employerSSS = employerSSSPerMonth / payPeriodsPerMonth
 
         End If
     End Sub
+
+    Private Function IsSssPaidOnce() As Boolean
+        Dim firstHalfOnSchedule = (isEndOfMonth = 0) And (_sssDeductionSchedule = FirstHalf)
+        Dim endOfMonthOnSchedule = (isEndOfMonth = 1) And (_sssDeductionSchedule = EndOfTheMonth)
+
+        Return firstHalfOnSchedule Or endOfMonthOnSchedule
+    End Function
+
+    Private Function IsSssPaidPerPayPeriod() As Boolean
+        Return _sssDeductionSchedule = PerPayPeriod
+    End Function
 
     Private Sub CalculatePhilHealth(salary As DataRow)
         Dim employeePhilHealthPerMonth = CDec(salary("EmployeeShare"))
@@ -1446,11 +1456,11 @@ Public Class PayrollGeneration
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
         If isEndOfMonth = isorgHDMFdeductsched Then
-            _employeeHDMF = employeeHdmfPerMonth
-            _employerHDMF = employerHdmfPerMonth
+            _employeeHdmf = employeeHdmfPerMonth
+            _employerHdmf = employerHdmfPerMonth
         ElseIf isorgHDMFdeductsched = 2 Then
-            _employeeHDMF = employeeHdmfPerMonth / payPeriodsPerMonth
-            _employerHDMF = employerHdmfPerMonth / payPeriodsPerMonth
+            _employeeHdmf = employeeHdmfPerMonth / payPeriodsPerMonth
+            _employerHdmf = employerHdmfPerMonth / payPeriodsPerMonth
         End If
     End Sub
 
