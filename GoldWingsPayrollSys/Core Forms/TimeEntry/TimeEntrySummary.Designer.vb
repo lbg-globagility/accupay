@@ -2110,7 +2110,7 @@ Partial Class TimeEntrySummary
         '
         Me.ShiftFrom.DataPropertyName = "ShiftFromDisplay"
         DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "hh:ss tt"
+        DataGridViewCellStyle6.Format = "hh:mm tt"
         DataGridViewCellStyle6.NullValue = Nothing
         Me.ShiftFrom.DefaultCellStyle = DataGridViewCellStyle6
         Me.ShiftFrom.HeaderText = "Shift From"
@@ -2122,7 +2122,7 @@ Partial Class TimeEntrySummary
         '
         Me.Column4.DataPropertyName = "ShiftToDisplay"
         DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle7.Format = "hh:ss tt"
+        DataGridViewCellStyle7.Format = "hh:mm tt"
         Me.Column4.DefaultCellStyle = DataGridViewCellStyle7
         Me.Column4.HeaderText = "Shift To"
         Me.Column4.Name = "Column4"
@@ -2133,7 +2133,7 @@ Partial Class TimeEntrySummary
         '
         Me.Column2.DataPropertyName = "TimeInDisplay"
         DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle8.Format = "hh:ss tt"
+        DataGridViewCellStyle8.Format = "hh:mm tt"
         Me.Column2.DefaultCellStyle = DataGridViewCellStyle8
         Me.Column2.HeaderText = "Time In"
         Me.Column2.Name = "Column2"
@@ -2144,7 +2144,7 @@ Partial Class TimeEntrySummary
         '
         Me.Column3.DataPropertyName = "TimeOutDisplay"
         DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle9.Format = "hh:ss tt"
+        DataGridViewCellStyle9.Format = "hh:mm tt"
         Me.Column3.DefaultCellStyle = DataGridViewCellStyle9
         Me.Column3.HeaderText = "Time Out"
         Me.Column3.Name = "Column3"
