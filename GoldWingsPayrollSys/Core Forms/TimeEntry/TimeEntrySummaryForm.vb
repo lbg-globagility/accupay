@@ -6,7 +6,7 @@ Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports log4net
 
-Public Class TimeEntrySummary
+Public Class TimeEntrySummaryForm
 
     Private Shared _logger As ILog = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
 
