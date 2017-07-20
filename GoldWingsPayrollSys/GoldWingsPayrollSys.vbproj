@@ -206,12 +206,10 @@
     <Compile Include="Core Forms\TimeEntry\Shift.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntry.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntryGenerator.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeEntrySummary.Designer.vb">
-      <DependentUpon>TimeEntrySummary.vb</DependentUpon>
+    <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryForm.Designer.vb">
+      <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\TimeEntry\TimeEntrySummary.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryForm.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeLog.vb" />
     <Compile Include="Core Forms\user_predefines\SqlReaderExtensions.vb" />
     <Compile Include="Initial Forms\AboutUs.Designer.vb">
@@ -1214,8 +1212,8 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PayrollSumma.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\TimeEntry\TimeEntrySummary.resx">
-      <DependentUpon>TimeEntrySummary.vb</DependentUpon>
+    <EmbeddedResource Include="Core Forms\TimeEntry\TimeEntrySummaryForm.resx">
+      <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="General Forms\ImproperLogOut.resx">
       <DependentUpon>ImproperLogOut.vb</DependentUpon>
