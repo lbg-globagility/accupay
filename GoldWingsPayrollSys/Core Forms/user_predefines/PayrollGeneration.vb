@@ -78,7 +78,7 @@ Public Class PayrollGeneration
     Private notax_bonusSemiM As DataTable
     Private notax_bonusWeekly As DataTable
     Private numofdaypresent As DataTable
-    Private etent_totdaypay As DataTable
+    Private allTimeEntries As DataTable
     Private dtemployeefirsttimesalary As DataTable
     Private prev_empTimeEntry As DataTable
     Private VeryFirstPayPeriodIDOfThisYear As Object
@@ -183,7 +183,7 @@ Public Class PayrollGeneration
         notax_bonusSemiM = _notax_bonusSemiM
         notax_bonusWeekly = _notax_bonusWeekly
         numofdaypresent = _numofdaypresent
-        etent_totdaypay = _etent_totdaypay
+        allTimeEntries = _etent_totdaypay
         dtemployeefirsttimesalary = _dtemployeefirsttimesalary
         prev_empTimeEntry = _prev_empTimeEntry
         VeryFirstPayPeriodIDOfThisYear = _VeryFirstPayPeriodIDOfThisYear
@@ -439,13 +439,6 @@ Public Class PayrollGeneration
                     End If
 
                     _sssDeductionSchedule = drow("SSSDeductSched").ToString
-                    If _sssDeductionSchedule = "End of the month" Then
-                        isorgSSSdeductsched = 0
-                    ElseIf _sssDeductionSchedule = "First half" Then
-                        isorgSSSdeductsched = 1
-                    ElseIf _sssDeductionSchedule = "Per pay period" Then
-                        isorgSSSdeductsched = 2
-                    End If
 
                     _hdmfDeductionSchedule = drow("HDMFDeductSched").ToString
                     If _hdmfDeductionSchedule = "End of the month" Then
@@ -793,7 +786,7 @@ Public Class PayrollGeneration
 
 
 
-                    Dim emptotdaypay = etent_totdaypay.Select("EmployeeID = '" & drow("RowID").ToString & "'")
+                    Dim timeEntries = allTimeEntries.Select("EmployeeID = '" & employeeID & "'")
 
                     grossincome = Val(0)
 
@@ -817,7 +810,7 @@ Public Class PayrollGeneration
 
                     employeeID = Trim(drow("RowID"))
 
-                    For Each drowtotdaypay In emptotdaypay
+                    For Each drowtotdaypay In timeEntries
 
                         grossincome = Val(0)
                         grossincome_firsthalf = Val(0)
@@ -941,7 +934,7 @@ Public Class PayrollGeneration
 
                             Dim the_MinimumWageAmount = ValNoComma(drow("MinimumWageAmount"))
 
-                            Dim isMinimumWage = (ValNoComma(drow("EmpRatePerDay")) <= ValNoComma(drow("MinimumWageAmount")))
+                            Dim isMinimumWage = the_EmpRatePerDay <= the_MinimumWageAmount
 
                             Dim _eRowID = drow("RowID")
 
@@ -1380,7 +1373,7 @@ Public Class PayrollGeneration
             notax_bonusSemiM.Dispose()
             notax_bonusWeekly.Dispose()
             numofdaypresent.Dispose()
-            etent_totdaypay.Dispose()
+            allTimeEntries.Dispose()
             dtemployeefirsttimesalary.Dispose()
             prev_empTimeEntry.Dispose()
             payWTax.Dispose()
