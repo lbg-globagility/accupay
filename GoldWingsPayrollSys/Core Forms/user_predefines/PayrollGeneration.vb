@@ -4,6 +4,12 @@ Imports System.Threading.Tasks
 
 Public Class PayrollGeneration
 
+    Private Class ContributionSchedule
+        Public Const FirstHalf As String = "First half"
+        Public Const EndOfTheMonth As String = "End of the month"
+        Public Const PerPayPeriod As String = "Per pay period"
+    End Class
+
     Private Class PayStubObject
         Public Property RowID As Integer?
         Public Property OrganizationID As Integer?
@@ -11,8 +17,8 @@ Public Class PayrollGeneration
         Public Property LastUpdBy As Integer?
         Public Property PayPeriodID As Integer?
         Public Property EmployeeID As Integer?
-        Public Property PayFromDate As DateTime
-        Public Property PayToDate As DateTime
+        Public Property PayFromDate As Date
+        Public Property PayToDate As Date
         Public Property TotalGrossSalary As Decimal
         Public Property TotalNetSalary As Decimal
         Public Property TotalTaxableSalary As Decimal
@@ -49,10 +55,9 @@ Public Class PayrollGeneration
     End Class
 
     Private employee_dattab As DataTable
-    Private isEndOfMonth As String
-    Private isorgPHHdeductsched As SByte
-    Private isorgSSSdeductsched As SByte
-    Private isorgHDMFdeductsched As SByte
+    Private isEndOfMonth2 As String
+    Private _isFirstHalf As Boolean
+    Private _isEndOfMonth As Boolean
     Private isorgWTaxdeductsched As SByte
     Private esal_dattab As DataTable
     Private emp_loans As DataTable
@@ -119,7 +124,7 @@ Public Class PayrollGeneration
     'ByVal _isorgHDMFdeductsched As SByte,
     'ByVal _isorgWTaxdeductsched As SByte,
     Sub New(ByVal _employee_dattab As DataTable,
-                  ByVal _isEndOfMonth As String,
+                  ByVal isEndOfMonth As String,
                   ByVal _esal_dattab As DataTable,
                   ByVal _emp_loans As DataTable,
                   ByVal _emp_bonus As DataTable,
@@ -154,7 +159,7 @@ Public Class PayrollGeneration
         form_caller = pay_stub_frm
 
         employee_dattab = _employee_dattab
-        isEndOfMonth = _isEndOfMonth
+        isEndOfMonth2 = isEndOfMonth
         'isorgPHHdeductsched = _isorgPHHdeductsched
         'isorgSSSdeductsched = _isorgSSSdeductsched
         'isorgHDMFdeductsched = _isorgHDMFdeductsched
@@ -197,6 +202,8 @@ Public Class PayrollGeneration
 
         m_NotifyMainWindow = AddressOf pay_stub_frm.ProgressCounter
 
+        _isFirstHalf = (isEndOfMonth = 0)
+        _isEndOfMonth = (isEndOfMonth = 1)
     End Sub
 
     Private n_PayrollDateFrom As Object = Nothing
@@ -245,10 +252,6 @@ Public Class PayrollGeneration
     End Property
 
     'paypRowID
-
-    Private Const FirstHalf As String = "First half"
-    Private Const EndOfTheMonth As String = "End of the month"
-    Private Const PerPayPeriod As String = "Per pay period"
 
     Private _philHealthDeductionSchedule As String
     Private _sssDeductionSchedule As String
@@ -321,7 +324,7 @@ Public Class PayrollGeneration
                 "AND p.`Fixed` = 1 " &
                 "AND p.`Status` = 1;"
 
-            If isEndOfMonth = 0 Then 'means end of the month
+            If isEndOfMonth2 = 0 Then 'means end of the month
                 fixedTaxableMonthlyAllowanceSql =
                 "SELECT ea.* " &
                 "FROM employeeallowance ea " &
@@ -361,7 +364,7 @@ Public Class PayrollGeneration
                 "AND p.`Fixed` = 1 " &
                 "AND p.`Status` = 0;"
 
-            If isEndOfMonth = 0 Then 'means end of the month
+            If isEndOfMonth2 = 0 Then 'means end of the month
                 fixedNonTaxableMonthlyAllowanceSql =
                 "SELECT ea.* " &
                 "FROM employeeallowance ea " &
@@ -389,12 +392,6 @@ Public Class PayrollGeneration
 
             fixedNonTaxableMonthlyAllowances = New MySQLQueryToDataTable(fixedNonTaxableMonthlyAllowanceSql).ResultTable
 
-            'Dim pstub_TotalEmpSSS As Decimal
-            'Dim pstub_TotalCompSSS As Decimal
-            'Dim pstub_TotalEmpPhilhealth As Decimal
-            'Dim pstub_TotalCompPhilhealth As Decimal
-            'Dim pstub_TotalEmpHDMF As Decimal
-            'Dim pstub_TotalCompHDMF As Decimal
             Dim pstub_TotalVacationDaysLeft As Decimal
             Dim pstub_TotalLoans As Decimal
             Dim pstub_TotalBonus As Decimal
@@ -428,26 +425,9 @@ Public Class PayrollGeneration
                 Try
                     _employee = drow
 
-                    _philHealthDeductionSchedule = drow("PhHealthDeductSched").ToString
-
-                    If _philHealthDeductionSchedule = EndOfTheMonth Then
-                        isorgPHHdeductsched = 0
-                    ElseIf _philHealthDeductionSchedule = "First half" Then
-                        isorgPHHdeductsched = 1
-                    ElseIf _philHealthDeductionSchedule = "Per pay period" Then
-                        isorgPHHdeductsched = 2
-                    End If
-
                     _sssDeductionSchedule = drow("SSSDeductSched").ToString
-
+                    _philHealthDeductionSchedule = drow("PhHealthDeductSched").ToString
                     _hdmfDeductionSchedule = drow("HDMFDeductSched").ToString
-                    If _hdmfDeductionSchedule = "End of the month" Then
-                        isorgHDMFdeductsched = 0
-                    ElseIf _hdmfDeductionSchedule = "First half" Then
-                        isorgHDMFdeductsched = 1
-                    ElseIf _hdmfDeductionSchedule = "Per pay period" Then
-                        isorgHDMFdeductsched = 2
-                    End If
 
                     If drow("WTaxDeductSched").ToString = "End of the month" Then
                         isorgWTaxdeductsched = 0
@@ -685,7 +665,7 @@ Public Class PayrollGeneration
 
                     Dim valmonth_bon = 0.0
 
-                    If isEndOfMonth = 1 Then
+                    If isEndOfMonth2 = 1 Then
 
                         For Each drowmonbon In month_bon
                             'valmonth_bon = drowmonbon("BonusAmount")
@@ -739,7 +719,7 @@ Public Class PayrollGeneration
 
                     Dim valmonthnotax_bon = 0.0
 
-                    If isEndOfMonth = 1 Then
+                    If isEndOfMonth2 = 1 Then
 
                         For Each drowmonbon In monthnotax_bon
                             'valmonthnotax_bon = drowmonbon("BonusAmount")
@@ -790,12 +770,6 @@ Public Class PayrollGeneration
 
                     grossincome = Val(0)
 
-                    'pstub_TotalEmpSSS = Val(0)
-                    'pstub_TotalCompSSS = Val(0)
-                    'pstub_TotalEmpPhilhealth = Val(0)
-                    'pstub_TotalCompPhilhealth = Val(0)
-                    'pstub_TotalEmpHDMF = Val(0)
-                    'pstub_TotalCompHDMF = Val(0)
                     pstub_TotalVacationDaysLeft = Val(0)
                     pstub_TotalLoans = Val(0)
                     pstub_TotalBonus = Val(0)
@@ -820,12 +794,6 @@ Public Class PayrollGeneration
                         _employerPhilHealth = 0D
                         _employeeHdmf = 0D
                         _employerHdmf = 0D
-                        'pstub_TotalEmpSSS = Val(0)
-                        'pstub_TotalCompSSS = Val(0)
-                        'pstub_TotalEmpPhilhealth = Val(0)
-                        'pstub_TotalCompPhilhealth = Val(0)
-                        'pstub_TotalEmpHDMF = Val(0)
-                        'pstub_TotalCompHDMF = Val(0)
                         pstub_TotalVacationDaysLeft = Val(0)
                         pstub_TotalLoans = Val(0)
                         pstub_TotalBonus = totalemployeebonus + totalnotaxemployeebonus
@@ -940,7 +908,7 @@ Public Class PayrollGeneration
 
                             Dim governmentContributions = _employeeSSS + _employeePhilHealth + _employeeHdmf
 
-                            If isEndOfMonth = isorgWTaxdeductsched Then
+                            If isEndOfMonth2 = isorgWTaxdeductsched Then
 
                                 emp_taxabsal = grossincome - governmentContributions
 
@@ -1401,28 +1369,25 @@ Public Class PayrollGeneration
         Dim employerSSSPerMonth = CDec(salary("EmployerContributionAmount"))
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
-        If IsSssPaidOnce() Then
-
+        If IsSssPaidOnFirstHalf() Or IsSssPaidOnEndOfTheMonth() Then
             _employeeSSS = employeeSSSPerMonth
             _employerSSS = employerSSSPerMonth
-
         ElseIf IsSssPaidPerPayPeriod() Then
-
             _employeeSSS = employeeSSSPerMonth / payPeriodsPerMonth
             _employerSSS = employerSSSPerMonth / payPeriodsPerMonth
-
         End If
     End Sub
 
-    Private Function IsSssPaidOnce() As Boolean
-        Dim firstHalfOnSchedule = (isEndOfMonth = 0) And (_sssDeductionSchedule = FirstHalf)
-        Dim endOfMonthOnSchedule = (isEndOfMonth = 1) And (_sssDeductionSchedule = EndOfTheMonth)
+    Private Function IsSssPaidOnFirstHalf() As Boolean
+        Return _isFirstHalf And (_sssDeductionSchedule = ContributionSchedule.FirstHalf)
+    End Function
 
-        Return firstHalfOnSchedule Or endOfMonthOnSchedule
+    Private Function IsSssPaidOnEndOfTheMonth() As Boolean
+        Return _isEndOfMonth And (_sssDeductionSchedule = ContributionSchedule.EndOfTheMonth)
     End Function
 
     Private Function IsSssPaidPerPayPeriod() As Boolean
-        Return _sssDeductionSchedule = PerPayPeriod
+        Return _sssDeductionSchedule = ContributionSchedule.PerPayPeriod
     End Function
 
     Private Sub CalculatePhilHealth(salary As DataRow)
@@ -1430,32 +1395,52 @@ Public Class PayrollGeneration
         Dim employerPhilHealthPerMonth = CDec(salary("EmployerShare"))
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
-        If isEndOfMonth = isorgPHHdeductsched Then
-
+        If IsPhilHealthPaidOnFirstHalf() Or IsPhilHealthPaidOnEndOfTheMonth() Then
             _employeePhilHealth = employeePhilHealthPerMonth
             _employerPhilHealth = employerPhilHealthPerMonth
-
-        ElseIf isorgPHHdeductsched = 2 Then 'Per pay period
-
+        ElseIf IsPhilHealthPaidPerPayPeriod() Then
             _employeePhilHealth = employeePhilHealthPerMonth / payPeriodsPerMonth
             _employerPhilHealth = employerPhilHealthPerMonth / payPeriodsPerMonth
-
         End If
     End Sub
+
+    Private Function IsPhilHealthPaidOnFirstHalf() As Boolean
+        Return _isFirstHalf And (_philHealthDeductionSchedule = ContributionSchedule.FirstHalf)
+    End Function
+
+    Private Function IsPhilHealthPaidOnEndOfTheMonth() As Boolean
+        Return _isEndOfMonth And (_philHealthDeductionSchedule = ContributionSchedule.EndOfTheMonth)
+    End Function
+
+    Private Function IsPhilHealthPaidPerPayPeriod() As Boolean
+        Return _philHealthDeductionSchedule = ContributionSchedule.PerPayPeriod
+    End Function
 
     Private Sub CalculateHDMF(salary As DataRow)
         Dim employeeHdmfPerMonth = CDec(salary("HDMFAmount"))
         Dim employerHdmfPerMonth = 100D
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
-        If isEndOfMonth = isorgHDMFdeductsched Then
+        If IsHdmfPaidOnFirstHalf() Or IsHdmfPaidOnEndOfTheMonth() Then
             _employeeHdmf = employeeHdmfPerMonth
             _employerHdmf = employerHdmfPerMonth
-        ElseIf isorgHDMFdeductsched = 2 Then
+        ElseIf IsHdmfPaidPerPayPeriod() Then
             _employeeHdmf = employeeHdmfPerMonth / payPeriodsPerMonth
             _employerHdmf = employerHdmfPerMonth / payPeriodsPerMonth
         End If
     End Sub
+
+    Private Function IsHdmfPaidOnFirstHalf() As Boolean
+        Return _isFirstHalf And (_hdmfDeductionSchedule = ContributionSchedule.FirstHalf)
+    End Function
+
+    Private Function IsHdmfPaidOnEndOfTheMonth() As Boolean
+        Return _isEndOfMonth And (_hdmfDeductionSchedule = ContributionSchedule.EndOfTheMonth)
+    End Function
+
+    Private Function IsHdmfPaidPerPayPeriod() As Boolean
+        Return _hdmfDeductionSchedule = ContributionSchedule.PerPayPeriod
+    End Function
 
     Private Function IsFirstPayperiodOfTheYear() As Boolean
         If Me.payPeriod Is Nothing Then
