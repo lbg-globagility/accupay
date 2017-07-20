@@ -1736,36 +1736,85 @@ Public Class PayStub
                                   '                                  " ORDER BY EmployeeID;")
 
                                   'employeetimeentry - EXPERIMENT
-                                  etent_totdaypay = New SQLQueryToDatatable("SELECT SUM(COALESCE(ete.TotalDayPay,0)) 'TotalDayPay'" &
-                                                                ",ete.EmployeeID" &
-                                                                ",ete.Date" &
-                                                                ",SUM(COALESCE(ete.RegularHoursAmount,0)) 'RegularHoursAmount'" &
-                                                                ",SUM(COALESCE(ete.OvertimeHoursAmount,0)) 'OvertimeHoursAmount'" &
-                                                                ",SUM(COALESCE(ete.UndertimeHoursAmount,0)) 'UndertimeHoursAmount'" &
-                                                                ",SUM(COALESCE(ete.NightDiffHoursAmount,0)) 'NightDiffHoursAmount'" &
-                                                                ",SUM(COALESCE(ete.NightDiffOTHoursAmount,0)) 'NightDiffOTHoursAmount'" &
-                                                                ",SUM(COALESCE(ete.HoursLateAmount,0)) 'HoursLateAmount'" &
-                                                                ",SUM(ete.Absent) AS Absent" &
-                                                                ",SUM(ete.RegularHoursAmount) AS HolidayPay" &
-                                                                ",IFNULL(emt.emtAmount,0) AS emtAmount" &
-                                                                " FROM employeetimeentry ete" &
-                                                                " LEFT JOIN employee e ON e.RowID=ete.EmployeeID" &
-                                                                " LEFT JOIN payrate pr ON pr.RowID=ete.PayRateID AND pr.OrganizationID=ete.OrganizationID" &
-                                                                " LEFT JOIN (SELECT ete.RowID" &
-                                                                              ",e.RowID AS eRowID" &
-                                                                              ",(SUM(ete.RegularHoursAmount) * (pr.`PayRate` - 1.0)) AS emtAmount" &
-                                                                              " FROM employeetimeentry ete" &
-                                                                              " INNER JOIN employee e ON e.RowID=ete.EmployeeID" &
-                                                                              " AND e.OrganizationID=ete.OrganizationID" &
-                                                                              " AND (e.CalcSpecialHoliday='1' OR e.CalcHoliday='1')" &
-                                                                              " INNER JOIN payrate pr ON pr.RowID=ete.PayRateID AND pr.PayType!='Regular Day'" &
-                                                                              " WHERE ete.OrganizationID='" & orgztnID & "' AND ete.`Date` BETWEEN '" & paypFrom & "' AND '" & paypTo & "') emt ON emt.RowID IS NOT NULL AND emt.eRowID=ete.EmployeeID" &
-                                                                " WHERE ete.OrganizationID=" & orgztnID & _
-                                                                " AND ete.Date" &
-                                                                " BETWEEN IF('" & paypFrom & "' < e.StartDate, e.StartDate, '" & paypFrom & "')" &
-                                                                " AND '" & paypTo & "'" &
-                                                                " GROUP BY ete.EmployeeID" &
-                                                                " ORDER BY ete.EmployeeID;").ResultTable
+                                  Dim timeEntrySql = <![CDATA[
+                                    SELECT
+                                        SUM(COALESCE(ete.TotalDayPay,0)) 'TotalDayPay',
+                                        ete.EmployeeID,
+                                        ete.Date,
+                                        SUM(COALESCE(ete.RegularHoursAmount,0)) 'RegularHoursAmount',
+                                        SUM(COALESCE(ete.OvertimeHoursAmount,0)) 'OvertimeHoursAmount',
+                                        SUM(COALESCE(ete.UndertimeHoursAmount,0)) 'UndertimeHoursAmount',
+                                        SUM(COALESCE(ete.NightDiffHoursAmount,0)) 'NightDiffHoursAmount',
+                                        SUM(COALESCE(ete.NightDiffOTHoursAmount,0)) 'NightDiffOTHoursAmount',
+                                        SUM(COALESCE(ete.HoursLateAmount,0)) 'HoursLateAmount',
+                                        SUM(ete.Absent) AS Absent,
+                                        SUM(ete.RegularHoursAmount) AS HolidayPay,
+                                        IFNULL(emt.emtAmount,0) AS emtAmount
+                                    FROM employeetimeentry ete
+                                    LEFT JOIN employee e
+                                        ON e.RowID = ete.EmployeeID
+                                    LEFT JOIN payrate pr
+                                        ON pr.RowID = ete.PayRateID
+                                        AND pr.OrganizationID = ete.OrganizationID
+                                    LEFT JOIN (
+                                            SELECT
+                                                ete.RowID,
+                                                e.RowID AS eRowID,
+                                                (SUM(ete.RegularHoursAmount) * (pr.`PayRate` - 1.0)) AS emtAmount
+                                            FROM employeetimeentry ete
+                                            INNER JOIN employee e
+                                                ON e.RowID=ete.EmployeeID
+                                                AND e.OrganizationID=ete.OrganizationID
+                                                AND (e.CalcSpecialHoliday='1' OR e.CalcHoliday='1')
+                                            INNER JOIN payrate pr
+                                                ON pr.RowID=ete.PayRateID
+                                                AND pr.PayType!='Regular Day'
+                                            WHERE ete.OrganizationID='@OrganizationID'
+                                              AND ete.`Date` BETWEEN '@DateFrom' AND '@DateTo'
+                                        ) emt
+                                        ON emt.RowID IS NOT NULL
+                                        AND emt.eRowID=ete.EmployeeID
+                                    WHERE ete.OrganizationID='@OrganizationID'
+                                        AND ete.Date BETWEEN IF('@DateFrom' < e.StartDate, e.StartDate, '@DateFrom') AND '@DateTo'
+                                    GROUP BY ete.EmployeeID
+                                    ORDER BY ete.EmployeeID;
+                                  ]]>.Value
+
+                                  timeEntrySql = timeEntrySql.Replace("@OrganizationID", orgztnID) _
+                                    .Replace("@DateFrom", paypFrom) _
+                                    .Replace("@DateTo", paypTo)
+
+                                  'etent_totdaypay = New SQLQueryToDatatable("SELECT SUM(COALESCE(ete.TotalDayPay,0)) 'TotalDayPay'" &
+                                  '                              ",ete.EmployeeID" &
+                                  '                              ",ete.Date" &
+                                  '                              ",SUM(COALESCE(ete.RegularHoursAmount,0)) 'RegularHoursAmount'" &
+                                  '                              ",SUM(COALESCE(ete.OvertimeHoursAmount,0)) 'OvertimeHoursAmount'" &
+                                  '                              ",SUM(COALESCE(ete.UndertimeHoursAmount,0)) 'UndertimeHoursAmount'" &
+                                  '                              ",SUM(COALESCE(ete.NightDiffHoursAmount,0)) 'NightDiffHoursAmount'" &
+                                  '                              ",SUM(COALESCE(ete.NightDiffOTHoursAmount,0)) 'NightDiffOTHoursAmount'" &
+                                  '                              ",SUM(COALESCE(ete.HoursLateAmount,0)) 'HoursLateAmount'" &
+                                  '                              ",SUM(ete.Absent) AS Absent" &
+                                  '                              ",SUM(ete.RegularHoursAmount) AS HolidayPay" &
+                                  '                              ",IFNULL(emt.emtAmount,0) AS emtAmount" &
+                                  '                              " FROM employeetimeentry ete" &
+                                  '                              " LEFT JOIN employee e ON e.RowID=ete.EmployeeID" &
+                                  '                              " LEFT JOIN payrate pr ON pr.RowID=ete.PayRateID AND pr.OrganizationID=ete.OrganizationID" &
+                                  '                              " LEFT JOIN (SELECT ete.RowID" &
+                                  '                                            ",e.RowID AS eRowID" &
+                                  '                                            ",(SUM(ete.RegularHoursAmount) * (pr.`PayRate` - 1.0)) AS emtAmount" &
+                                  '                                            " FROM employeetimeentry ete" &
+                                  '                                            " INNER JOIN employee e ON e.RowID=ete.EmployeeID" &
+                                  '                                            " AND e.OrganizationID=ete.OrganizationID" &
+                                  '                                            " AND (e.CalcSpecialHoliday='1' OR e.CalcHoliday='1')" &
+                                  '                                            " INNER JOIN payrate pr ON pr.RowID=ete.PayRateID AND pr.PayType!='Regular Day'" &
+                                  '                                            " WHERE ete.OrganizationID='" & orgztnID & "' AND ete.`Date` BETWEEN '" & paypFrom & "' AND '" & paypTo & "') emt ON emt.RowID IS NOT NULL AND emt.eRowID=ete.EmployeeID" &
+                                  '                              " WHERE ete.OrganizationID=" & orgztnID & _
+                                  '                              " AND ete.Date" &
+                                  '                              " BETWEEN IF('" & paypFrom & "' < e.StartDate, e.StartDate, '" & paypFrom & "')" &
+                                  '                              " AND '" & paypTo & "'" &
+                                  '                              " GROUP BY ete.EmployeeID" &
+                                  '                              " ORDER BY ete.EmployeeID;").ResultTable
+                                  etent_totdaypay = New SQLQueryToDatatable(timeEntrySql).ResultTable
 
                                   ''SELECT SUM(COALESCE(ete.TotalDayPay,0)) 'TotalDayPay',ete.EmployeeID , ete.DATE, SUM(COALESCE(ete.RegularHoursAmount,0)) 'RegularHoursAmount', SUM(COALESCE(ete.OvertimeHoursAmount,0)) 'OvertimeHoursAmount', SUM(COALESCE(ete.UndertimeHoursAmount,0)) 'UndertimeHoursAmount', SUM(COALESCE(ete.NightDiffHoursAmount,0)) 'NightDiffHoursAmount', SUM(COALESCE(ete.NightDiffOTHoursAmount,0)) 'NightDiffOTHoursAmount', SUM(COALESCE(ete.HoursLateAmount,0)) 'HoursLateAmount' FROM employeetimeentry ete LEFT JOIN employee e ON e.RowID=ete.EmployeeID WHERE ete.OrganizationID=2 AND ete.DATE BETWEEN IF('2015-06-01' < e.StartDate, e.StartDate, '2015-06-01') AND '2015-06-15' GROUP BY ete.EmployeeID ORDER BY ete.EmployeeID;
 
