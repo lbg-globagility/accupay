@@ -5,6 +5,12 @@ Public Class PayrollGeneration
 
     Private Shared logger As ILog = LogManager.GetLogger("PayrollLogger")
 
+    Private Class SalaryType
+        Public Const Fixed As String = "Fixed"
+        Public Const Monthly As String = "Monthly"
+        Public Const Daily As String = "Daily"
+    End Class
+
     Private Class ContributionSchedule
         Public Const FirstHalf As String = "First half"
         Public Const EndOfTheMonth As String = "End of the month"
@@ -20,6 +26,10 @@ Public Class PayrollGeneration
         Public Property EmployeeID As Integer?
         Public Property PayFromDate As Date
         Public Property PayToDate As Date
+        Public Property RegularHours As Decimal
+        Public Property RegularPay As Decimal
+        Public Property OvertimeHours As Decimal
+        Public Property OvertimePay As Decimal
         Public Property TotalGrossSalary As Decimal
         Public Property TotalNetSalary As Decimal
         Public Property TotalTaxableSalary As Decimal
@@ -118,6 +128,8 @@ Public Class PayrollGeneration
     Private agencyFeeSummary As DataTable
 
     Private _employee As DataRow
+
+    Private _payStub As PayStubObject
 
     Private _employeeSss As Decimal
     Private _employerSss As Decimal
@@ -298,7 +310,7 @@ Public Class PayrollGeneration
 
     Private Sub CalculateEmployee(employee As DataRow)
         Try
-            Dim payStub = New PayStubObject()
+            _payStub = New PayStubObject()
 
             Dim totalVacationDaysLeft = 0D
             Dim pstub_TotalLoans = 0D
@@ -324,9 +336,10 @@ Public Class PayrollGeneration
                     If(
                         employee("PayFrequencyID") = 3,
                         New MySQLExecuteQuery("SELECT COUNT(RowID) FROM employeetimeentry WHERE EmployeeID='" & employeeID & "' AND Date BETWEEN '" & PayrollDateFrom & "' AND '" & PayrollDateTo & "' AND IFNULL(TotalDayPay,0)!=0 AND OrganizationID='" & orgztnID & "';"),
-                        numberofweeksthismonth)
+                        numberofweeksthismonth
                     )
                 )
+            )
 
 
             Dim rowempsal = _allSalaries.Select($"EmployeeID = '{employeeID}'")
@@ -483,7 +496,7 @@ Public Class PayrollGeneration
             Next
 
             'this is taxable                        ' / divisorMonthlys
-            Dim totalTaxableEmployeeBonus = (
+            Dim totalTaxableBonus = (
                 valday_bon +
                 valmonth_bon +
                 valonce_bon +
@@ -536,7 +549,7 @@ Public Class PayrollGeneration
             Next
 
             'this is non-taxable
-            Dim totalNoTaxEmployeeBonus = (
+            Dim totalNoTaxBonus = (
                 valoncenotax_bon +
                 valdaynotax_bon +
                 valweeknotax_bon +
@@ -550,13 +563,13 @@ Public Class PayrollGeneration
 
             totalVacationDaysLeft = Val(0)
             pstub_TotalLoans = Val(0)
-            Dim taxableSalary = 0D
-            Dim totalTaxAmount = 0D
-            Dim totalBonus As Decimal
+            Dim taxAmount = 0D
+            Dim totalBonus = totalTaxableBonus + totalNoTaxBonus
 
             Dim totalAllowance = totalTaxableAllowance + totalNoTaxAllowance
+            Dim governmentContributions = 0D
 
-            Dim the_taxable_salary = 0.0
+            Dim taxableSalary = 0.0
 
             For Each timeEntrySummary In timeEntries
 
@@ -569,20 +582,27 @@ Public Class PayrollGeneration
                 _employerHdmf = 0D
                 totalVacationDaysLeft = Val(0)
                 pstub_TotalLoans = Val(0)
-                totalBonus = totalTaxableEmployeeBonus + totalNoTaxEmployeeBonus
 
                 For Each drowsal In rowempsal
 
                     Dim skipGovernmentDeductions = CStr(employee("IsFirstTimeSalary")) = "1"
-                    Dim overtimePay = ValNoComma(timeEntrySummary("OvertimeHoursAmount"))
-                    Dim nightDiffPay = ValNoComma(timeEntrySummary("NightDiffHoursAmount"))
-                    Dim nightDiffOTPay = ValNoComma(timeEntrySummary("NightDiffOTHoursAmount"))
+                    Dim basicPay = ValNoComma(drowsal("BasicPay"))
+
+                    Dim regularHours = Decimal.Parse(timeEntrySummary("RegularHours"))
+                    Dim regularPay = Decimal.Parse(timeEntrySummary("RegularHoursAmount"))
+
+                    Dim overtimeHours = Decimal.Parse(timeEntrySummary("OvertimeHours"))
+                    Dim overtimePay = Decimal.Parse(timeEntrySummary("OvertimeHoursAmount"))
+
+                    Dim nightDiffPay = Decimal.Parse(timeEntrySummary("NightDiffHoursAmount"))
+                    Dim nightDiffOTPay = Decimal.Parse(timeEntrySummary("NightDiffOTHoursAmount"))
+
                     Dim sel_dtemployeefirsttimesalary = dtemployeefirsttimesalary.Select($"EmployeeID = '{employeeID}'")
                     Dim StartingAttendanceCount = ValNoComma(employee("StartingAttendanceCount"))
                     Dim employmentType = StrConv(employee("EmployeeType").ToString, VbStrConv.ProperCase)
 
-                    If employmentType = "Fixed" Then
-                        Dim basicPay = ValNoComma(drowsal("BasicPay"))
+                    If employmentType = SalaryType.Fixed Then
+
                         grossIncome = basicPay + (overtimePay + nightDiffPay + nightDiffOTPay)
 
                         Dim previousOvertimePay = ValNoComma(previousTimeEntries.Compute("SUM(OvertimeHoursAmount)", $"EmployeeID = '{employeeID}'"))
@@ -591,14 +611,12 @@ Public Class PayrollGeneration
 
                         grossIncomeLastPayPeriod = basicPay + previousOvertimePay + previousNightDiffPay + previousNightDiffOTPay
 
-                    ElseIf employmentType = "Monthly" Then
+                    ElseIf employmentType = SalaryType.Monthly Then
 
                         If skipGovernmentDeductions Then
                             grossIncome = ValNoComma(timeEntrySummary("TotalDayPay"))
                             grossIncomeLastPayPeriod = ValNoComma(previousTimeEntries.Compute("SUM(TotalDayPay)", $"EmployeeID = '{employeeID}'"))
                         Else
-                            Dim basicPay = ValNoComma(drowsal("BasicPay"))
-
                             Dim lateDeduction = ValNoComma(timeEntrySummary("HoursLateAmount"))
                             Dim undertimeDeduction = ValNoComma(timeEntrySummary("UndertimeHoursAmount"))
                             Dim absenceDeduction = ValNoComma(timeEntrySummary("Absent"))
@@ -619,7 +637,7 @@ Public Class PayrollGeneration
                             grossIncomeLastPayPeriod += ValNoComma(previousTimeEntries.Compute("MIN(emtAmount)", $"EmployeeID = '{employeeID}'"))
                         End If
 
-                    ElseIf employmentType = "Daily" Then
+                    ElseIf employmentType = SalaryType.Daily Then
                         grossIncome = ValNoComma(timeEntrySummary("TotalDayPay"))
                         grossIncomeLastPayPeriod = ValNoComma(previousTimeEntries.Compute("SUM(TotalDayPay)", $"EmployeeID = '{employeeID}'"))
                     End If
@@ -628,21 +646,20 @@ Public Class PayrollGeneration
                     CalculatePhilHealth(drowsal)
                     CalculateHdmf(drowsal)
 
+                    governmentContributions = _payStub.TotalEmpSSS + _employeePhilHealth + _employeeHdmf
+
                     Dim dailyRate = ValNoComma(employee("EmpRatePerDay"))
                     Dim minimumWage = ValNoComma(employee("MinimumWageAmount"))
                     Dim isMinimumWageEarner = dailyRate <= minimumWage
-                    Dim governmentContributions = _employeeSss + _employeePhilHealth + _employeeHdmf
 
                     If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
-                        taxableSalary = grossIncome - governmentContributions
-                        the_taxable_salary = (grossIncome + grossIncomeLastPayPeriod) - governmentContributions
+                        taxableSalary = (grossIncome + grossIncomeLastPayPeriod) - governmentContributions
                     Else
                         taxableSalary = grossIncome - governmentContributions
-                        the_taxable_salary = grossIncome - governmentContributions
                     End If
 
                     If isMinimumWageEarner Then
-                        totalTaxAmount = 0
+                        taxAmount = 0
                     Else
                         Dim maritalStatus = employee("MaritalStatus").ToString
                         Dim noOfDependents = employee("NoOfDependents").ToString
@@ -656,7 +673,7 @@ Public Class PayrollGeneration
                         Dim sel_payWTax = _withholdingTaxTable.Select($"
                             FilingStatusID = '{filingStatusID}' AND
                             PayFrequencyID = 2 AND
-                            TaxableIncomeFromAmount <= {the_taxable_salary} AND {the_taxable_salary} <= TaxableIncomeToAmount
+                            TaxableIncomeFromAmount <= {taxableSalary} AND {taxableSalary} <= TaxableIncomeToAmount
                         ").FirstOrDefault()
 
                         If sel_payWTax IsNot Nothing Then
@@ -664,7 +681,7 @@ Public Class PayrollGeneration
                             Dim taxableIncomeFromAmount = ValNoComma(sel_payWTax("TaxableIncomeFromAmount"))
                             Dim exemptionInExcessAmount = ValNoComma(sel_payWTax("ExemptionInExcessAmount"))
 
-                            totalTaxAmount = exemptionAmount + ((the_taxable_salary - taxableIncomeFromAmount) * exemptionInExcessAmount)
+                            taxAmount = exemptionAmount + ((taxableSalary - taxableIncomeFromAmount) * exemptionInExcessAmount)
                         End If
                     End If
 
@@ -675,15 +692,7 @@ Public Class PayrollGeneration
             Next
 
 
-            Dim totalNetPay = (
-                taxableSalary -
-                totalLoanDeduction -
-                totalTaxAmount +
-                totalTaxableEmployeeBonus +
-                totalNoTaxEmployeeBonus +
-                totalNoTaxAllowance +
-                totalTaxableAllowance
-            )
+            Dim totalNetPay = (grossIncome + totalBonus + totalAllowance) - governmentContributions - totalLoanDeduction - taxAmount)
 
             mysql_conn = New MySqlConnection(mysql_conn_text)
             Dim command = New MySqlCommand("INSUPDPROC_paystub", mysql_conn, myTrans)
@@ -710,13 +719,13 @@ Public Class PayrollGeneration
                 .AddWithValue("pstub_PayFromDate", PayrollDateFrom)
                 .AddWithValue("pstub_PayToDate", PayrollDateTo)
 
-                .AddWithValue("pstub_TotalGrossSalary", grossIncome + totalTaxableEmployeeBonus + totalNoTaxEmployeeBonus + totalNoTaxAllowance + totalTaxableAllowance)
+                .AddWithValue("pstub_TotalGrossSalary", grossIncome + totalBonus + totalAllowance)
                 .AddWithValue("pstub_TotalNetSalary", totalNetPay)
-                .AddWithValue("pstub_TotalTaxableSalary", the_taxable_salary)
+                .AddWithValue("pstub_TotalTaxableSalary", taxableSalary)
 
-                .AddWithValue("pstub_TotalEmpWithholdingTax", totalTaxAmount)
-                .AddWithValue("pstub_TotalEmpSSS", _employeeSss)
-                .AddWithValue("pstub_TotalCompSSS", _employerSss)
+                .AddWithValue("pstub_TotalEmpWithholdingTax", taxAmount)
+                .AddWithValue("pstub_TotalEmpSSS", _payStub.TotalEmpSSS)
+                .AddWithValue("pstub_TotalCompSSS", _payStub.TotalCompSSS)
                 .AddWithValue("pstub_TotalEmpPhilhealth", _employeePhilHealth)
                 .AddWithValue("pstub_TotalCompPhilhealth", _employerPhilHealth)
                 .AddWithValue("pstub_TotalEmpHDMF", _employeeHdmf)
@@ -843,9 +852,15 @@ Public Class PayrollGeneration
         Dim payPeriodsPerMonth = CDec(ValNoComma(_employee("PAYFREQUENCY_DIVISOR")))
 
         If IsSssPaidOnFirstHalf() Or IsSssPaidOnEndOfTheMonth() Then
+            _payStub.TotalEmpSSS = employeeSssPerMonth
+            _payStub.TotalCompSSS = employerSssPerMonth
+
             _employeeSss = employeeSssPerMonth
             _employerSss = employerSssPerMonth
         ElseIf IsSssPaidPerPayPeriod() Then
+            _payStub.TotalEmpSSS = employeeSssPerMonth / payPeriodsPerMonth
+            _payStub.TotalCompSSS = employerSssPerMonth / payPeriodsPerMonth
+
             _employeeSss = employeeSssPerMonth / payPeriodsPerMonth
             _employerSss = employerSssPerMonth / payPeriodsPerMonth
         End If
@@ -869,9 +884,15 @@ Public Class PayrollGeneration
         Dim payPeriodsPerMonth = CDec(ValNoComma(_employee("PAYFREQUENCY_DIVISOR")))
 
         If IsPhilHealthPaidOnFirstHalf() Or IsPhilHealthPaidOnEndOfTheMonth() Then
+            _payStub.TotalEmpPhilHealth = employeePhilHealthPerMonth
+            _payStub.TotalCompPhilHealth = employerPhilHealthPerMonth
+
             _employeePhilHealth = employeePhilHealthPerMonth
             _employerPhilHealth = employerPhilHealthPerMonth
         ElseIf IsPhilHealthPaidPerPayPeriod() Then
+            _payStub.TotalEmpPhilHealth = employeePhilHealthPerMonth / payPeriodsPerMonth
+            _payStub.TotalCompPhilHealth = employerPhilHealthPerMonth / payPeriodsPerMonth
+
             _employeePhilHealth = employeePhilHealthPerMonth / payPeriodsPerMonth
             _employerPhilHealth = employerPhilHealthPerMonth / payPeriodsPerMonth
         End If
@@ -895,9 +916,15 @@ Public Class PayrollGeneration
         Dim payPeriodsPerMonth = CDec(ValNoComma(_employee("PAYFREQUENCY_DIVISOR")))
 
         If IsHdmfPaidOnFirstHalf() Or IsHdmfPaidOnEndOfTheMonth() Then
+            _payStub.TotalEmpHDMF = employeeHdmfPerMonth
+            _payStub.TotalCompHDMF = employerHdmfPerMonth
+
             _employeeHdmf = employeeHdmfPerMonth
             _employerHdmf = employerHdmfPerMonth
         ElseIf IsHdmfPaidPerPayPeriod() Then
+            _payStub.TotalEmpHDMF = employeeHdmfPerMonth / payPeriodsPerMonth
+            _payStub.TotalCompHDMF = employerHdmfPerMonth / payPeriodsPerMonth
+
             _employeeHdmf = employeeHdmfPerMonth / payPeriodsPerMonth
             _employerHdmf = employerHdmfPerMonth / payPeriodsPerMonth
         End If
