@@ -46,6 +46,10 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeetimeentries`(
 
 
 
+
+
+
+
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN
@@ -82,6 +86,8 @@ INSERT INTO employeetimeentry
     ,TotalDayPay
     ,HolidayPayAmount
     ,BasicDayPay
+    ,RestDayHours
+    ,RestDayAmount
 ) VALUES (
     etent_RowID
     ,etent_OrganizationID
@@ -111,6 +117,8 @@ INSERT INTO employeetimeentry
     ,   etent_TotalDayPay
     ,etent_HolidayPay
     ,etent_BasicDayPay
+    ,etent_RestDayHours
+    ,etent_RestDayAmount
 ) ON
 DUPLICATE
 KEY
@@ -134,7 +142,9 @@ UPDATE
     ,LateFlag = IF(etent_HoursLateAmount = 0, '0', '1')
     ,TotalDayPay = etent_TotalDayPay
     ,HolidayPayAmount = etent_HolidayPay
-    ,BasicDayPay = etent_BasicDayPay;
+    ,BasicDayPay = etent_BasicDayPay
+    ,RestDayHours = etent_RestDayHours
+    ,RestDayAmount = etent_RestDayAmount;
 
     SELECT @@Identity AS id INTO etentID;
 

@@ -9,7 +9,7 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTINS_employeetimeentrydetails` AFTER INSERT ON `employeetimeentrydetails` FOR EACH ROW BEGIN
 
-DECLARE emp_group_name VARCHAR(50);
+DECLARE isAutomaticOvertimeFiling TINYINT(1);
 
 DECLARE anyint INT(11);
 DECLARE sh_timefrom TIME;
@@ -25,53 +25,112 @@ DECLARE day_of_rest CHAR(1);
 
 DECLARE has_already_OTapproved CHAR(1);
 
-SELECT d.AutomaticOvertimeFiling
-,e.DayOfRest
+SELECT
+    d.AutomaticOvertimeFiling,
+    e.DayOfRest
 FROM employee e
-INNER JOIN position p ON p.RowID=e.PositionID
-INNER JOIN `division` d ON d.RowID=p.DivisionId AND d.ParentDivisionID IS NOT NULL
+INNER JOIN position p
+    ON p.RowID=e.PositionID
+INNER JOIN `division` d
+    ON d.RowID=p.DivisionId
+    AND d.ParentDivisionID IS NOT NULL
 WHERE e.RowID=NEW.EmployeeID
-INTO emp_group_name
-        ,day_of_rest;
+INTO
+    isAutomaticOvertimeFiling,
+    day_of_rest;
 
 SET today_timein = ADDTIME(TIMESTAMP(NEW.`Date`), NEW.TimeIn);
 
-SET today_timeout = ADDTIME(IF(NEW.TimeOut > NEW.TimeIn AND TIME_FORMAT(NEW.TimeIn,'%p') != TIME_FORMAT(NEW.TimeOut,'%p'), TIMESTAMP(NEW.`Date`), TIMESTAMP(ADDDATE(NEW.`Date`, INTERVAL 1 DAY))), NEW.TimeOut);
+SET today_timeout = ADDTIME(
+    IF(
+        NEW.TimeOut > NEW.TimeIn AND TIME_FORMAT(NEW.TimeIn,'%p') != TIME_FORMAT(NEW.TimeOut,'%p'),
+        TIMESTAMP(NEW.`Date`),
+        TIMESTAMP(ADDDATE(NEW.`Date`, INTERVAL 1 DAY))
+    ),
+    NEW.TimeOut
+);
 
-IF emp_group_name = '1' THEN
+IF isAutomaticOvertimeFiling THEN
 
-    SELECT sh.TimeFrom
-    ,sh.TimeTo
-    ,esh.RestDay
-    ,ADDTIME(TIMESTAMP(NEW.`Date`), sh.TimeFrom)
-    ,ADDTIME(IF(sh.TimeTo > sh.TimeFrom, TIMESTAMP(NEW.`Date`), TIMESTAMP(ADDDATE(NEW.`Date`, INTERVAL 1 DAY))), ADDTIME(sh.TimeTo,e.MinimumOvertime))
+    SELECT
+        sh.TimeFrom,
+        sh.TimeTo,
+        esh.RestDay,
+        ADDTIME(TIMESTAMP(NEW.`Date`), sh.TimeFrom),
+        ADDTIME(
+            IF(
+                sh.TimeTo > sh.TimeFrom,
+                TIMESTAMP(NEW.`Date`),
+                TIMESTAMP(ADDDATE(NEW.`Date`, INTERVAL 1 DAY))
+            ),
+            ADDTIME(sh.TimeTo, e.MinimumOvertime)
+        )
     FROM employeeshift esh
-    INNER JOIN employee e ON e.RowID=esh.EmployeeID AND e.OrganizationID=esh.OrganizationID
-    INNER JOIN shift sh ON sh.RowID=esh.ShiftID
+    INNER JOIN employee e
+        ON e.RowID=esh.EmployeeID AND e.OrganizationID=esh.OrganizationID
+    INNER JOIN shift sh
+        ON sh.RowID=esh.ShiftID
     WHERE esh.EmployeeID=NEW.EmployeeID
-    AND esh.OrganizationID=NEW.OrganizationID
-    AND NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo LIMIT 1
-    INTO sh_timefrom
-            ,sh_timeto
-            ,isShiftRestDay,today_timefrom,today_timeto;
+        AND esh.OrganizationID=NEW.OrganizationID
+        AND NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo LIMIT 1
+    INTO
+        sh_timefrom,
+        sh_timeto,
+        isShiftRestDay,
+        today_timefrom,
+        today_timeto;
 
     SET tomorrow_timefrom = TIMESTAMP(TIMESTAMPADD(HOUR,24,today_timefrom));
     SET tomorrow_timeto = TIMESTAMP(TIMESTAMPADD(HOUR,24,today_timeto));
-    SELECT EXISTS(SELECT RowID FROM employeeovertime WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND NEW.`Date` BETWEEN OTStartDate AND OTEndDate) INTO has_already_OTapproved;
+
+    SELECT EXISTS(
+        SELECT RowID
+        FROM employeeovertime
+        WHERE EmployeeID=NEW.EmployeeID
+            AND OrganizationID=NEW.OrganizationID
+            AND NEW.`Date` BETWEEN OTStartDate AND OTEndDate
+    )
+    INTO has_already_OTapproved;
 
     IF has_already_OTapproved = '0' THEN
 
+        IF TIMESTAMP(today_timeout) BETWEEN TIMESTAMP(today_timeto) AND TIMESTAMP(TIMESTAMPADD(SECOND, -1, tomorrow_timefrom)) THEN
 
+            SELECT INSUPD_employeeOT(
+                NULL,
+                NEW.OrganizationID,
+                NEW.CreatedBy,
+                NEW.CreatedBy,
+                NEW.EmployeeID,
+                'Overtime',
+                ADDTIME(sh_timeto,'00:00:01'),
+                NEW.TimeOut,
+                NEW.`Date`,
+                NEW.`Date`,
+                'Approved',
+                '',
+                '',
+                NULL
+            )
+            INTO anyint;
 
-
-            IF TIMESTAMP(today_timeout) BETWEEN TIMESTAMP(today_timeto) AND TIMESTAMP(TIMESTAMPADD(SECOND, -1, tomorrow_timefrom)) THEN
-                SELECT INSUPD_employeeOT(NULL,NEW.OrganizationID,NEW.CreatedBy,NEW.CreatedBy,NEW.EmployeeID,'Overtime',ADDTIME(sh_timeto,'00:00:01'),NEW.TimeOut,NEW.`Date`,NEW.`Date`,'Approved','','',NULL) INTO anyint;
-
-            END IF;
+        END IF;
 
     ELSE
 
-        UPDATE employeeovertime SET OTStartTime = ADDTIME(sh_timeto,'00:00:01'), OTEndTime = NEW.TimeOut, LastUpd=IFNULL(ADDTIME(LastUpd, '00:00:01'),CURRENT_TIMESTAMP()), LastUpdBy=NEW.CreatedBy WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND NEW.`Date` BETWEEN OTStartDate AND OTEndDate AND sh_timeto IS NOT NULL;
+        UPDATE employeeovertime
+        SET
+            OTStartTime = ADDTIME(sh_timeto,'00:00:01'),
+            OTEndTime = NEW.TimeOut,
+            LastUpd = IFNULL(
+                ADDTIME(LastUpd, '00:00:01'),
+                CURRENT_TIMESTAMP()
+            ),
+            LastUpdBy=NEW.CreatedBy
+        WHERE EmployeeID=NEW.EmployeeID
+            AND OrganizationID=NEW.OrganizationID
+            AND NEW.`Date` BETWEEN OTStartDate AND OTEndDate
+            AND sh_timeto IS NOT NULL;
 
     END IF;
 

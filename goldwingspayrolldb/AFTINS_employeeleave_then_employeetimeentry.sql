@@ -473,7 +473,12 @@ ELSE
                                                             , under_hrs * hourlypayamount
                                                             , 0
                                                             , 0
-                                                            , late_hrs * hourlypayamount) INTO anyint;
+                                                            , late_hrs * hourlypayamount
+                                                            , 0
+                                                            , 0
+                                                            , 0
+                                                            , 0
+                                                            , 0) INTO anyint;
 
 
                 SELECT RowID FROM employeetimeentry WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND `Date`=dateloop INTO anyint;

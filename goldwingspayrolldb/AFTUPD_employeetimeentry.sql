@@ -39,6 +39,8 @@ DECLARE agfRowID INT(11);
 
 DECLARE perfecthoursworked DECIMAL(11,6);
 
+DECLARE divisorToHourlyRate DECIMAL(11, 6);
+
 DECLARE actualrate DECIMAL(11,5);
 
 DECLARE actualratepercent DECIMAL(11,5);
@@ -51,7 +53,8 @@ DECLARE breaktimeTo TIME;
 SELECT
     COMPUTE_TimeDifference(sh.TimeFrom, sh.TimeTo),
     sh.BreakTimeFrom,
-    sh.BreakTimeTo
+    sh.BreakTimeTo,
+    sh.DivisorToDailyRate
 FROM employeeshift esh
 INNER JOIN shift sh
     ON sh.RowID=esh.ShiftID
@@ -59,7 +62,8 @@ WHERE esh.RowID=NEW.EmployeeShiftID
 INTO
     perfecthoursworked,
     breaktimeFrom,
-    breaktimeTo;
+    breaktimeTo,
+    divisorToHourlyRate;
 
 SELECT
     COALESCE(employeeshift.RestDay, FALSE),
@@ -113,44 +117,36 @@ INTO payType;
 
 SET isHoliday = (payType = 'Regular Holiday') OR (payType = 'Special Non-Working Holiday');
 
--- SELECT
---     isRestDay,
---     isHoliday,
---     (
---         (AgencyRowID IS NOT NULL) AND
---         (perfecthoursworked > 0) AND
---         (NOT isRestDay) AND
---         (NOT isHoliday)
---     ),
---     isShiftRestDay
--- INTO OUTFILE 'D:/logs/aaron.txt'
--- FIELDS TERMINATED BY ', ';
-
 IF  (AgencyRowID IS NOT NULL) AND
     (perfecthoursworked > 0) THEN
 
-    SELECT agf.RowID
-    FROM agencyfee agf
-    WHERE agf.OrganizationID=NEW.OrganizationID
-        AND agf.EmployeeID=NEW.EmployeeID
-        AND agf.TimeEntryDate=NEW.`Date`
-    ORDER BY DATEDIFF(DATE(DATE_FORMAT(agf.Created,'%Y-%m-%d')), NEW.`Date`)
-    LIMIT 1
-    INTO agfRowID;
+    SET @is3JGO = NEW.OrganizationID NOT IN (10, 11);
+    SET @giveAgencyFee = NOT (@is3JGO AND isHoliday);
 
-    SELECT INSUPD_agencyfee(
-        agfRowID,
-        NEW.OrganizationID,
-        NEW.CreatedBy,
-        AgencyRowID,
-        NEW.EmployeeID,
-        EmpPositionRowID,
-        DivisionRowID,
-        NEW.RowID,
-        NEW.`Date`,
-        (ag_fee / perfecthoursworked) * NEW.RegularHoursWorked
-    )
-    INTO anyint;
+    IF @giveAgencyFee THEN
+        SELECT agf.RowID
+        FROM agencyfee agf
+        WHERE agf.OrganizationID=NEW.OrganizationID
+            AND agf.EmployeeID=NEW.EmployeeID
+            AND agf.TimeEntryDate=NEW.`Date`
+        ORDER BY DATEDIFF(DATE(DATE_FORMAT(agf.Created,'%Y-%m-%d')), NEW.`Date`)
+        LIMIT 1
+        INTO agfRowID;
+
+        SELECT INSUPD_agencyfee(
+            agfRowID,
+            NEW.OrganizationID,
+            NEW.CreatedBy,
+            AgencyRowID,
+            NEW.EmployeeID,
+            EmpPositionRowID,
+            DivisionRowID,
+            NEW.RowID,
+            NEW.`Date`,
+            (ag_fee / divisorToHourlyRate) * NEW.RegularHoursWorked
+        )
+        INTO anyint;
+    END IF;
 
 ELSE
 
@@ -232,6 +228,7 @@ INSERT INTO employeetimeentryactual
     ,ChargeToDivisionID
     ,Leavepayment
     ,HolidayPayAmount
+    ,BasicDayPay
 ) VALUES(
     NEW.RowID
     ,NEW.OrganizationID
@@ -264,6 +261,7 @@ INSERT INTO employeetimeentryactual
     ,NEW.ChargeToDivisionID
     ,NEW.Leavepayment + (NEW.Leavepayment * actualrate)
     ,NEW.HolidayPayAmount + (NEW.HolidayPayAmount * actualrate)
+    ,NEW.BasicDayPay + (NEW.BasicDayPay * actualrate)
 ) ON
 DUPLICATE
 KEY
@@ -297,55 +295,56 @@ UPDATE
     ,Absent=NEW.Absent * actualratepercent
     ,ChargeToDivisionID=NEW.ChargeToDivisionID
     ,Leavepayment=NEW.Leavepayment + (NEW.Leavepayment * actualrate)
-    ,HolidayPayAmount=NEW.HolidayPayAmount + (NEW.HolidayPayAmount * actualrate);
+    ,HolidayPayAmount=NEW.HolidayPayAmount + (NEW.HolidayPayAmount * actualrate)
+    ,BasicDayPay=NEW.BasicDayPay + (NEW.BasicDayPay * actualrate);
 
-SELECT RowID FROM `view` WHERE ViewName='Employee Time Entry' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
+-- SELECT RowID FROM `view` WHERE ViewName='Employee Time Entry' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EmployeeShiftID',NEW.RowID,OLD.EmployeeShiftID,NEW.EmployeeShiftID,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EmployeeShiftID',NEW.RowID,OLD.EmployeeShiftID,NEW.EmployeeShiftID,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EmployeeSalaryID',NEW.RowID,OLD.EmployeeSalaryID,NEW.EmployeeSalaryID,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EmployeeSalaryID',NEW.RowID,OLD.EmployeeSalaryID,NEW.EmployeeSalaryID,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EmployeeFixedSalaryFlag',NEW.RowID,OLD.EmployeeFixedSalaryFlag,NEW.EmployeeFixedSalaryFlag,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EmployeeFixedSalaryFlag',NEW.RowID,OLD.EmployeeFixedSalaryFlag,NEW.EmployeeFixedSalaryFlag,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'RegularHoursWorked',NEW.RowID,OLD.RegularHoursWorked,NEW.RegularHoursWorked,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'RegularHoursWorked',NEW.RowID,OLD.RegularHoursWorked,NEW.RegularHoursWorked,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'RegularHoursAmount',NEW.RowID,OLD.RegularHoursAmount,NEW.RegularHoursAmount,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'RegularHoursAmount',NEW.RowID,OLD.RegularHoursAmount,NEW.RegularHoursAmount,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'TotalHoursWorked',NEW.RowID,OLD.TotalHoursWorked,NEW.TotalHoursWorked,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'TotalHoursWorked',NEW.RowID,OLD.TotalHoursWorked,NEW.TotalHoursWorked,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'OvertimeHoursWorked',NEW.RowID,OLD.OvertimeHoursWorked,NEW.OvertimeHoursWorked,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'OvertimeHoursWorked',NEW.RowID,OLD.OvertimeHoursWorked,NEW.OvertimeHoursWorked,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'OvertimeHoursAmount',NEW.RowID,OLD.OvertimeHoursAmount,NEW.OvertimeHoursAmount,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'OvertimeHoursAmount',NEW.RowID,OLD.OvertimeHoursAmount,NEW.OvertimeHoursAmount,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'UndertimeHours',NEW.RowID,OLD.UndertimeHours,NEW.UndertimeHours,'Insert') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'UndertimeHours',NEW.RowID,OLD.UndertimeHours,NEW.UndertimeHours,'Insert') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'UndertimeHoursAmount',NEW.RowID,OLD.UndertimeHoursAmount,NEW.UndertimeHoursAmount,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'UndertimeHoursAmount',NEW.RowID,OLD.UndertimeHoursAmount,NEW.UndertimeHoursAmount,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'NightDifferentialHours',NEW.RowID,OLD.NightDifferentialHours,NEW.NightDifferentialHours,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'NightDifferentialHours',NEW.RowID,OLD.NightDifferentialHours,NEW.NightDifferentialHours,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'NightDiffHoursAmount',NEW.RowID,OLD.NightDiffHoursAmount,NEW.NightDiffHoursAmount,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'NightDiffHoursAmount',NEW.RowID,OLD.NightDiffHoursAmount,NEW.NightDiffHoursAmount,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'NightDifferentialOTHours',NEW.RowID,OLD.NightDifferentialOTHours,NEW.NightDifferentialOTHours,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'NightDifferentialOTHours',NEW.RowID,OLD.NightDifferentialOTHours,NEW.NightDifferentialOTHours,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'NightDiffOTHoursAmount',NEW.RowID,OLD.NightDiffOTHoursAmount,NEW.NightDiffOTHoursAmount,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'NightDiffOTHoursAmount',NEW.RowID,OLD.NightDiffOTHoursAmount,NEW.NightDiffOTHoursAmount,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'HoursLate',NEW.RowID,OLD.HoursLate,NEW.HoursLate,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'HoursLate',NEW.RowID,OLD.HoursLate,NEW.HoursLate,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'HoursLateAmount',NEW.RowID,OLD.HoursLateAmount,NEW.HoursLateAmount,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'HoursLateAmount',NEW.RowID,OLD.HoursLateAmount,NEW.HoursLateAmount,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'LateFlag',NEW.RowID,OLD.LateFlag,NEW.LateFlag,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'LateFlag',NEW.RowID,OLD.LateFlag,NEW.LateFlag,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'PayRateID',NEW.RowID,OLD.PayRateID,NEW.PayRateID,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'PayRateID',NEW.RowID,OLD.PayRateID,NEW.PayRateID,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'VacationLeaveHours',NEW.RowID,OLD.VacationLeaveHours,NEW.VacationLeaveHours,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'VacationLeaveHours',NEW.RowID,OLD.VacationLeaveHours,NEW.VacationLeaveHours,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'SickLeaveHours',NEW.RowID,OLD.SickLeaveHours,NEW.SickLeaveHours,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'SickLeaveHours',NEW.RowID,OLD.SickLeaveHours,NEW.SickLeaveHours,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'MaternityLeaveHours',NEW.RowID,OLD.MaternityLeaveHours,NEW.MaternityLeaveHours,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'MaternityLeaveHours',NEW.RowID,OLD.MaternityLeaveHours,NEW.MaternityLeaveHours,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'OtherLeaveHours',NEW.RowID,OLD.OtherLeaveHours,NEW.OtherLeaveHours,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'OtherLeaveHours',NEW.RowID,OLD.OtherLeaveHours,NEW.OtherLeaveHours,'Update') INTO auditRowID;
 
-SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'TotalDayPay',NEW.RowID,OLD.TotalDayPay,NEW.TotalDayPay,'Update') INTO auditRowID;
+-- SELECT INS_audittrail_RETRowID(NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'TotalDayPay',NEW.RowID,OLD.TotalDayPay,NEW.TotalDayPay,'Update') INTO auditRowID;
 
 END//
 DELIMITER ;
