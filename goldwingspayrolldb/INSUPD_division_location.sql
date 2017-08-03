@@ -12,38 +12,204 @@ BEGIN
 
 DECLARE returnvalue INT(11);
 
-    INSERT INTO `division`
-    (
-        RowID
-        ,Name
-        ,OrganizationID
-        ,CreatedBy
-    ) VALUES (
-        DivisionRowID
-        ,DivisionLocationName
-        ,OrganizID
-        ,UserRowID
-    ) ON
-    DUPLICATE
-    KEY
+    INSERT INTO `division` (
+        RowID,
+        Name,
+        OrganizationID,
+        CreatedBy
+    )
+    VALUES (
+        DivisionRowID,
+        DivisionLocationName,
+        OrganizID,
+        UserRowID
+    )
+    ON DUPLICATE KEY
     UPDATE
-        LastUpd=CURRENT_TIMESTAMP()
-        ,LastUpdBy=UserRowID
-        ,Name=DivisionLocationName;SELECT @@Identity AS ID INTO returnvalue;
+        LastUpd = CURRENT_TIMESTAMP(),
+        LastUpdBy = UserRowID,
+        Name = DivisionLocationName;
+
+    SELECT @@Identity AS ID
+    INTO returnvalue;
 
     IF DivisionRowID IS NULL THEN
 
-        INSERT INTO `division`(Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID,ParentDivisionID) SELECT 'Comissary', '', OrganizID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), UserRowID, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2,returnvalue
-        UNION
-        SELECT 'Office Staff', '', OrganizID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), UserRowID, 'Department', 15.00, 313, 'End of the month', 'End of the month', 'End of the month', 'End of the month', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'End of the month', 'End of the month', 'End of the month', 'End of the month',1,returnvalue
-        UNION
-        SELECT 'Supervisors', '', OrganizID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), UserRowID, 'Department', 15.00, 313, 'End of the month', 'End of the month', 'End of the month', 'End of the month', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',3,returnvalue
-        UNION
-        SELECT 'Service Crew', '', OrganizID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), UserRowID, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',4,returnvalue;
+        INSERT INTO `division`(
+            Name,
+            TradeName,
+            OrganizationID,
+            MainPhone,
+            FaxNumber,
+            BusinessAddress,
+            ContactName,
+            EmailAddress,
+            AltEmailAddress,
+            AltPhone,
+            URL,
+            TINNo,
+            Created,
+            CreatedBy,
+            DivisionType,
+            GracePeriod,
+            WorkDaysPerYear,
+            PhHealthDeductSched,
+            HDMFDeductSched,
+            SSSDeductSched,
+            WTaxDeductSched,
+            DefaultVacationLeave,
+            DefaultSickLeave,
+            DefaultMaternityLeave,
+            DefaultPaternityLeave,
+            DefaultOtherLeave,
+            PayFrequencyID,
+            PhHealthDeductSchedAgency,
+            HDMFDeductSchedAgency,
+            SSSDeductSchedAgency,
+            WTaxDeductSchedAgency,
+            DivisionUniqueID,
+            ParentDivisionID
+        )
+        SELECT
+            'Comissary',
+            '',
+            OrganizID,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            CURRENT_TIMESTAMP(),
+            UserRowID,
+            'Department',
+            15.00,
+            313,
+            'Per pay period',
+            'Per pay period',
+            'Per pay period',
+            'Per pay period',
+            40.00,
+            40.00,
+            40.00,
+            40.00,
+            40.00,
+            1,
+            'Per pay period',
+            'Per pay period',
+            'Per pay period',
+            'Per pay period',
+            2,
+            returnvalue
+        UNION SELECT
+            'Office Staff',
+            '',
+            OrganizID,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            CURRENT_TIMESTAMP(),
+            UserRowID,
+            'Department',
+            15.00,
+            313,
+            'End of the month',
+            'End of the month',
+            'End of the month',
+            'End of the month',
+            40.00,
+            40.00,
+            40.00,
+            40.00,
+            40.00,
+            1,
+            'End of the month',
+            'End of the month',
+            'End of the month',
+            'End of the month',
+            1,
+            returnvalue
+        UNION SELECT
+            'Supervisors',
+            '',
+            OrganizID,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            CURRENT_TIMESTAMP(),
+            UserRowID,
+            'Department',
+            15.00,
+            313,
+            'End of the month',
+            'End of the month',
+            'End of the month',
+            'End of the month',
+            40.00,
+            40.00,
+            40.00,
+            40.00,
+            40.00,
+            1,
+            'Per pay period',
+            'Per pay period',
+            'Per pay period',
+            'Per pay period',
+            3,
+            returnvalue
+        UNION SELECT
+            'Service Crew',
+            '',
+            OrganizID,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            CURRENT_TIMESTAMP(),
+            UserRowID,
+            'Department',
+            15.00,
+            313,
+            'Per pay period',
+            'Per pay period',
+            'Per pay period',
+            'Per pay period',
+            40.00,
+            40.00,
+            40.00,
+            40.00,
+            40.00,
+            1,
+            'Per pay period',
+            'Per pay period',
+            'Per pay period',
+            'Per pay period',
+            4,
+            returnvalue;
 
     END IF;
 
-RETURN returnvalue;
+    RETURN returnvalue;
 
 END//
 DELIMITER ;
