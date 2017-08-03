@@ -2907,7 +2907,7 @@ Public Class PayStub
 
                                 array_bgwork(i) = n_bgwork
 
-                                AddHandler array_bgwork(i).DoWork, AddressOf .PayrollGeneration_BackgourndWork
+                                AddHandler array_bgwork(i).DoWork, AddressOf .PayrollGeneration_BackgroundWork
                                 If i = 0 Then
                                     Console.WriteLine(String.Concat("PROCESS STARTS @ ", Now.ToShortTimeString, "....."))
                                 End If
