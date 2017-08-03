@@ -42,7 +42,7 @@ DECLARE e_type VARCHAR(50);
 
 DECLARE IsFirstTimeSalary CHAR(1);
 
-DECLARE totalworkamount DECIMAL(11,6);
+DECLARE totalWorkAmount DECIMAL(11,6);
 
 DECLARE empsalRowID INT(11);
 
@@ -56,6 +56,13 @@ DECLARE totalallowanceamount VARCHAR(50);
 
 DECLARE MonthCount DECIMAL(11,2) DEFAULT 12.0;
 
+DECLARE regularPay DECIMAL(15, 4);
+DECLARE overtimePay DECIMAL(15, 4);
+DECLARE nightDiffPay DECIMAL(15, 4);
+DECLARE nightDiffOvertimePay DECIMAL(15, 4);
+DECLARE lateDeduction DECIMAL(15, 4);
+DECLARE undertimeDeduction DECIMAL(15, 4);
+DECLARE absenceDeduction DECIMAL(15, 4);
 
 SELECT pr.`Half`
 FROM payperiod pr
@@ -632,38 +639,38 @@ END IF;
 --     PayAmount = @any_decimalamount;
 
 
-INSERT INTO scheduledloansperpayperiod
-(
-    RowID,
-    CreatedBy,
-    OrganizationID,
-    PayPeriodID,
-    EmployeeID,
-    EmployeeLoanRecordID,
-    LoanPayPeriodLeft,
-    TotalBalanceLeft
-)
-SELECT
-    NULL,
-    NEW.LastUpdBy,
-    OrganizationID,
-    NEW.PayPeriodID,
-    EmployeeID,
-    RowID,
-    (LoanPayPeriodLeft - 1),
-    (TotalBalanceLeft - DeductionAmount)
-FROM employeeloanschedule
-WHERE OrganizationID = NEW.OrganizationID
-    AND BonusID IS NULL
-    AND LoanPayPeriodLeft >= 1
-    AND `Status` = 'In Progress'
-    AND EmployeeID = NEW.EmployeeID
-    AND DeductionSchedule IN (payperiod_type, 'Per pay period')
-    AND (DedEffectiveDateFrom >= NEW.PayFromDate OR DedEffectiveDateTo >= NEW.PayFromDate)
-    AND (DedEffectiveDateFrom <= NEW.PayToDate OR DedEffectiveDateTo <= NEW.PayToDate)
-ON DUPLICATE KEY
-UPDATE
-    LastUpdBy = NEW.LastUpdBy;
+-- INSERT INTO scheduledloansperpayperiod
+-- (
+--     RowID,
+--     CreatedBy,
+--     OrganizationID,
+--     PayPeriodID,
+--     EmployeeID,
+--     EmployeeLoanRecordID,
+--     LoanPayPeriodLeft,
+--     TotalBalanceLeft
+-- )
+-- SELECT
+--     NULL,
+--     NEW.LastUpdBy,
+--     OrganizationID,
+--     NEW.PayPeriodID,
+--     EmployeeID,
+--     RowID,
+--     (LoanPayPeriodLeft - 1),
+--     (TotalBalanceLeft - DeductionAmount)
+-- FROM employeeloanschedule
+-- WHERE OrganizationID = NEW.OrganizationID
+--     AND BonusID IS NULL
+--     AND LoanPayPeriodLeft >= 1
+--     AND `Status` = 'In Progress'
+--     AND EmployeeID = NEW.EmployeeID
+--     AND DeductionSchedule IN (payperiod_type, 'Per pay period')
+--     AND (DedEffectiveDateFrom >= NEW.PayFromDate OR DedEffectiveDateTo >= NEW.PayFromDate)
+--     AND (DedEffectiveDateFrom <= NEW.PayToDate OR DedEffectiveDateTo <= NEW.PayToDate)
+-- ON DUPLICATE KEY
+-- UPDATE
+--     LastUpdBy = NEW.LastUpdBy;
 
 -- SELECT GROUP_CONCAT(p.RowID)
 -- FROM product p
@@ -802,10 +809,10 @@ IF e_type IN ('Fixed', 'Monthly') AND IsFirstTimeSalary = '1' THEN
             AND EmployeeID = NEW.EmployeeID
             AND `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
         INTO
-            totalworkamount,
+            totalWorkAmount,
             empsalRowID;
 
-        IF totalworkamount IS NULL THEN
+        IF totalWorkAmount IS NULL THEN
 
             SELECT
                 SUM(TotalDayPay),
@@ -815,17 +822,17 @@ IF e_type IN ('Fixed', 'Monthly') AND IsFirstTimeSalary = '1' THEN
                 AND EmployeeID = NEW.EmployeeID
                 AND `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
             INTO
-                totalworkamount,
+                totalWorkAmount,
                 empsalRowID;
 
-            SET totalworkamount = IFNULL(totalworkamount,0);
+            SET totalWorkAmount = IFNULL(totalWorkAmount,0);
 
-            SELECT totalworkamount + (totalworkamount * actualrate)
-            INTO totalworkamount;
+            SELECT totalWorkAmount + (totalWorkAmount * actualrate)
+            INTO totalWorkAmount;
 
         END IF;
 
-        SET totalworkamount = IFNULL(totalworkamount, 0);
+        SET totalWorkAmount = IFNULL(totalWorkAmount, 0);
 
     ELSEIF e_type = 'Fixed' THEN
 
@@ -837,9 +844,9 @@ IF e_type IN ('Fixed', 'Monthly') AND IsFirstTimeSalary = '1' THEN
             AND (es.EffectiveDateFrom <= NEW.PayToDate OR IFNULL(es.EffectiveDateTo,NEW.PayToDate) <= NEW.PayToDate)
         ORDER BY es.EffectiveDateFrom DESC
         LIMIT 1
-        INTO totalworkamount;
+        INTO totalWorkAmount;
 
-        SET totalworkamount = IFNULL(totalworkamount, 0) * (IF(actualrate < 1, (actualrate + 1), actualrate));
+        SET totalWorkAmount = IFNULL(totalWorkAmount, 0) * (IF(actualrate < 1, (actualrate + 1), actualrate));
 
     END IF;
 
@@ -855,32 +862,32 @@ ELSEIF e_type IN ('Fixed','Monthly') AND IsFirstTimeSalary = '0' THEN
             AND (es.EffectiveDateFrom <= NEW.PayToDate OR IFNULL(es.EffectiveDateTo,CURDATE()) <= NEW.PayToDate)
         ORDER BY es.EffectiveDateFrom DESC
         LIMIT 1
-        INTO totalworkamount;
+        INTO totalWorkAmount;
 
-        SELECT totalworkamount - (SUM(HoursLateAmount) + SUM(UndertimeHoursAmount) + SUM(Absent))
+        SELECT totalWorkAmount - (SUM(HoursLateAmount) + SUM(UndertimeHoursAmount) + SUM(Absent))
         FROM employeetimeentryactual
         WHERE OrganizationID = NEW.OrganizationID
             AND EmployeeID = NEW.EmployeeID
             AND `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
-        INTO totalworkamount;
+        INTO totalWorkAmount;
 
-        IF totalworkamount IS NULL THEN
+        IF totalWorkAmount IS NULL THEN
 
             SELECT SUM(HoursLateAmount + UndertimeHoursAmount + Absent)
             FROM employeetimeentry
             WHERE OrganizationID = NEW.OrganizationID
                 AND EmployeeID = NEW.EmployeeID
                 AND `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
-            INTO totalworkamount;
+            INTO totalWorkAmount;
 
-            SET totalworkamount = IFNULL(totalworkamount, 0);
+            SET totalWorkAmount = IFNULL(totalWorkAmount, 0);
 
-            SELECT totalworkamount + (totalworkamount * actualrate)
-            INTO totalworkamount;
+            SELECT totalWorkAmount + (totalWorkAmount * actualrate)
+            INTO totalWorkAmount;
 
         END IF;
 
-        SET totalworkamount = IFNULL(totalworkamount, 0);
+        SET totalWorkAmount = IFNULL(totalWorkAmount, 0);
 
     ELSEIF e_type = 'Fixed' THEN
 
@@ -892,15 +899,22 @@ ELSEIF e_type IN ('Fixed','Monthly') AND IsFirstTimeSalary = '0' THEN
             AND (es.EffectiveDateFrom <= NEW.PayToDate OR IFNULL(es.EffectiveDateTo,NEW.PayToDate) <= NEW.PayToDate)
         ORDER BY es.EffectiveDateFrom DESC
         LIMIT 1
-        INTO totalworkamount;
+        INTO totalWorkAmount;
 
-        SET totalworkamount = IFNULL(totalworkamount, 0) * (IF(actualrate < 1, (actualrate + 1), actualrate));
+        SET totalWorkAmount = IFNULL(totalWorkAmount, 0) * (IF(actualrate < 1, (actualrate + 1), actualrate));
 
     END IF;
 
 ELSE
 
     SELECT
+        SUM(RegularHoursAmount),
+        SUM(OvertimeHoursAmount),
+        SUM(NightDiffHoursAmount),
+        SUM(NightDiffOTHoursAmount),
+        SUM(HoursLateAmount),
+        SUM(UndertimeHoursAmount),
+        SUM(Absent),
         SUM(TotalDayPay),
         EmployeeSalaryID
     FROM employeetimeentryactual
@@ -908,10 +922,17 @@ ELSE
         AND EmployeeID = NEW.EmployeeID
         AND `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
     INTO
-        totalworkamount,
+        regularPay,
+        overtimePay,
+        nightDiffPay,
+        nightDiffOvertimePay,
+        lateDeduction,
+        undertimeDeduction,
+        absenceDeduction,
+        totalWorkAmount,
         empsalRowID;
 
-    IF totalworkamount IS NULL THEN
+    IF totalWorkAmount IS NULL THEN
 
         SELECT
             SUM(TotalDayPay),
@@ -921,21 +942,21 @@ ELSE
             AND EmployeeID = NEW.EmployeeID
             AND `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
         INTO
-            totalworkamount,
+            totalWorkAmount,
             empsalRowID;
 
-        SET totalworkamount = IFNULL(totalworkamount, 0);
+        SET totalWorkAmount = IFNULL(totalWorkAmount, 0);
 
-        SELECT totalworkamount + (totalworkamount * actualrate)
-        INTO totalworkamount;
+        SELECT totalWorkAmount + (totalWorkAmount * actualrate)
+        INTO totalWorkAmount;
 
     END IF;
 
-    SET totalworkamount = IFNULL(totalworkamount, 0);
+    SET totalWorkAmount = IFNULL(totalWorkAmount, 0);
 
 END IF;
 
-SET actualgross = totalworkamount + NEW.TotalAllowance + NEW.TotalBonus;
+SET actualgross = totalWorkAmount + NEW.TotalAllowance + NEW.TotalBonus;
 
 SET @totaladjust_actual = IFNULL(
     (
@@ -948,82 +969,103 @@ SET @totaladjust_actual = IFNULL(
 
 INSERT INTO paystubactual
 (
-    RowID
-    ,OrganizationID
-    ,PayPeriodID
-    ,EmployeeID
-    ,TimeEntryID
-    ,PayFromDate
-    ,PayToDate
-    ,TotalGrossSalary
-    ,TotalNetSalary
-    ,TotalTaxableSalary
-    ,TotalEmpSSS
-    ,TotalEmpWithholdingTax
-    ,TotalCompSSS
-    ,TotalEmpPhilhealth
-    ,TotalCompPhilhealth
-    ,TotalEmpHDMF
-    ,TotalCompHDMF
-    ,TotalVacationDaysLeft
-    ,TotalLoans
-    ,TotalBonus
-    ,TotalAllowance
-    ,TotalAdjustments
-    ,ThirteenthMonthInclusion
-    ,FirstTimeSalary
-) VALUES (
-    NEW.RowID
-    ,NEW.OrganizationID
-    ,NEW.PayPeriodID
-    ,NEW.EmployeeID
-    ,NEW.TimeEntryID
-    ,NEW.PayFromDate
-    ,NEW.PayToDate
-    ,actualgross
-    ,(actualgross - (NEW.TotalEmpSSS + NEW.TotalEmpPhilhealth + NEW.TotalEmpHDMF + NEW.TotalEmpWithholdingTax)) - NEW.TotalLoans + (NEW.TotalAdjustments + @totaladjust_actual)
-    ,NEW.TotalTaxableSalary + ((NEW.TotalTaxableSalary + NEW.TotalEmpSSS + NEW.TotalEmpPhilhealth + NEW.TotalEmpHDMF) * actualrate)
-    ,NEW.TotalEmpSSS
-    ,NEW.TotalEmpWithholdingTax
-    ,NEW.TotalCompSSS
-    ,NEW.TotalEmpPhilhealth
-    ,NEW.TotalCompPhilhealth
-    ,NEW.TotalEmpHDMF
-    ,NEW.TotalCompHDMF
-    ,NEW.TotalVacationDaysLeft
-    ,NEW.TotalLoans
-    ,NEW.TotalBonus
-    ,NEW.TotalAllowance
-    ,(NEW.TotalAdjustments + @totaladjust_actual)
-    ,NEW.ThirteenthMonthInclusion
-    ,NEW.FirstTimeSalary
-) ON
-DUPLICATE
-KEY
+    RowID,
+    OrganizationID,
+    PayPeriodID,
+    EmployeeID,
+    TimeEntryID,
+    PayFromDate,
+    PayToDate,
+    RegularPay,
+    OvertimePay,
+    NightDiffPay,
+    NightDiffOvertimePay,
+    LateDeduction,
+    UndertimeDeduction,
+    AbsenceDeduction,
+    TotalGrossSalary,
+    TotalNetSalary,
+    TotalTaxableSalary,
+    TotalEmpSSS,
+    TotalEmpWithholdingTax,
+    TotalCompSSS,
+    TotalEmpPhilhealth,
+    TotalCompPhilhealth,
+    TotalEmpHDMF,
+    TotalCompHDMF,
+    TotalVacationDaysLeft,
+    TotalLoans,
+    TotalBonus,
+    TotalAllowance,
+    TotalAdjustments,
+    ThirteenthMonthInclusion,
+    FirstTimeSalary
+)
+VALUES (
+    NEW.RowID,
+    NEW.OrganizationID,
+    NEW.PayPeriodID,
+    NEW.EmployeeID,
+    NEW.TimeEntryID,
+    NEW.PayFromDate,
+    NEW.PayToDate,
+    regularPay,
+    overtimePay,
+    nightDiffPay,
+    nightDiffOvertimePay,
+    lateDeduction,
+    undertimeDeduction,
+    absenceDeduction,
+    actualgross,
+    (actualgross - (NEW.TotalEmpSSS + NEW.TotalEmpPhilhealth + NEW.TotalEmpHDMF + NEW.TotalEmpWithholdingTax)) - NEW.TotalLoans + (NEW.TotalAdjustments + @totaladjust_actual),
+    NEW.TotalTaxableSalary + ((NEW.TotalTaxableSalary + NEW.TotalEmpSSS + NEW.TotalEmpPhilhealth + NEW.TotalEmpHDMF) * actualrate),
+    NEW.TotalEmpSSS,
+    NEW.TotalEmpWithholdingTax,
+    NEW.TotalCompSSS,
+    NEW.TotalEmpPhilhealth,
+    NEW.TotalCompPhilhealth,
+    NEW.TotalEmpHDMF,
+    NEW.TotalCompHDMF,
+    NEW.TotalVacationDaysLeft,
+    NEW.TotalLoans,
+    NEW.TotalBonus,
+    NEW.TotalAllowance,
+    (NEW.TotalAdjustments + @totaladjust_actual),
+    NEW.ThirteenthMonthInclusion,
+    NEW.FirstTimeSalary
+)
+ON DUPLICATE KEY
 UPDATE
-    OrganizationID=NEW.OrganizationID
-    ,PayPeriodID=NEW.PayPeriodID
-    ,EmployeeID=NEW.EmployeeID
-    ,TimeEntryID=NEW.TimeEntryID
-    ,PayFromDate=NEW.PayFromDate
-    ,PayToDate=NEW.PayToDate
-    ,TotalGrossSalary=actualgross
-    ,TotalNetSalary=(actualgross - (NEW.TotalEmpSSS + NEW.TotalEmpPhilhealth + NEW.TotalEmpHDMF + NEW.TotalEmpWithholdingTax)) - NEW.TotalLoans + (NEW.TotalAdjustments + @totaladjust_actual)
-    ,TotalTaxableSalary=NEW.TotalTaxableSalary + ((NEW.TotalTaxableSalary + NEW.TotalEmpSSS + NEW.TotalEmpPhilhealth + NEW.TotalEmpHDMF) * actualrate)
-    ,TotalEmpSSS=NEW.TotalEmpSSS
-    ,TotalEmpWithholdingTax=NEW.TotalEmpWithholdingTax
-    ,TotalCompSSS=NEW.TotalCompSSS
-    ,TotalEmpPhilhealth=NEW.TotalEmpPhilhealth
-    ,TotalCompPhilhealth=NEW.TotalCompPhilhealth
-    ,TotalEmpHDMF=NEW.TotalEmpHDMF
-    ,TotalCompHDMF=NEW.TotalCompHDMF
-    ,TotalVacationDaysLeft=NEW.TotalVacationDaysLeft
-    ,TotalLoans=NEW.TotalLoans
-    ,TotalBonus=NEW.TotalBonus
-    ,TotalAllowance=NEW.TotalAllowance
-    ,TotalAdjustments=(NEW.TotalAdjustments + @totaladjust_actual)
-    ,ThirteenthMonthInclusion=NEW.ThirteenthMonthInclusion
-    ,FirstTimeSalary=NEW.FirstTimeSalary;
+    OrganizationID = NEW.OrganizationID,
+    PayPeriodID = NEW.PayPeriodID,
+    EmployeeID = NEW.EmployeeID,
+    TimeEntryID = NEW.TimeEntryID,
+    PayFromDate = NEW.PayFromDate,
+    PayToDate = NEW.PayToDate,
+    RegularPay = regularPay,
+    OvertimePay = overtimePay,
+    NightDiffPay = nightDiffPay,
+    NightDiffOvertimePay = nightDiffOvertimePay,
+    LateDeduction = lateDeduction,
+    UndertimeDeduction = undertimeDeduction,
+    AbsenceDeduction = absenceDeduction,
+    TotalGrossSalary = actualgross,
+    TotalNetSalary = (actualgross - (NEW.TotalEmpSSS + NEW.TotalEmpPhilhealth + NEW.TotalEmpHDMF + NEW.TotalEmpWithholdingTax)) - NEW.TotalLoans + (NEW.TotalAdjustments + @totaladjust_actual),
+    TotalTaxableSalary = NEW.TotalTaxableSalary + ((NEW.TotalTaxableSalary + NEW.TotalEmpSSS + NEW.TotalEmpPhilhealth + NEW.TotalEmpHDMF) * actualrate),
+    TotalEmpSSS = NEW.TotalEmpSSS,
+    TotalEmpWithholdingTax = NEW.TotalEmpWithholdingTax,
+    TotalCompSSS = NEW.TotalCompSSS,
+    TotalEmpPhilhealth = NEW.TotalEmpPhilhealth,
+    TotalCompPhilhealth = NEW.TotalCompPhilhealth,
+    TotalEmpHDMF = NEW.TotalEmpHDMF,
+    TotalCompHDMF = NEW.TotalCompHDMF,
+    TotalVacationDaysLeft = NEW.TotalVacationDaysLeft,
+    TotalLoans = NEW.TotalLoans,
+    TotalBonus = NEW.TotalBonus,
+    TotalAllowance = NEW.TotalAllowance,
+    TotalAdjustments = (NEW.TotalAdjustments + @totaladjust_actual),
+    ThirteenthMonthInclusion = NEW.ThirteenthMonthInclusion,
+    FirstTimeSalary = NEW.FirstTimeSalary;
 
 -- CALL UPDATE_employee_leavebalance(NEW.OrganizationID,NEW.EmployeeID,NEW.PayPeriodID,NEW.LastUpdBy);
 
