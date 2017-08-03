@@ -30,9 +30,9 @@
 
     Public Property NightDiffPay As Decimal
 
-    Public Property NightDiffOTHours As Decimal
+    Public Property NightDiffOvertimeHours As Decimal
 
-    Public Property NightDiffOTPay As Decimal
+    Public Property NightDiffOvertimePay As Decimal
 
     Public Property RestDayHours As Decimal
 
@@ -50,7 +50,7 @@
 
     Public Property UndertimePay As Decimal
 
-    Public Property AbsentDeduction As Decimal
+    Public Property AbsenceDeduction As Decimal
 
     Public Property TotalDayPay As Decimal
 

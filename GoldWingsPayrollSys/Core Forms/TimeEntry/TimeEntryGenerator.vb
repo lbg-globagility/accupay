@@ -2,31 +2,47 @@
 
 Public Class TimeEntryGenerator
 
-    Private _timeEntry As TimeEntry
+    Private timeEntry As TimeEntry
 
-    Private _timeLog As Object
+    Private timeLog As TimeLog
 
-    Private _shift As Shift
+    Private shift As Shift
+
+    Private dutyStart As Date
+
+    Private dutyEnd As Date
+
+    Private shiftToday As ShiftToday
+
+    Public Function GetFullTimeIn() As Date
+        Return Date.Parse(timeEntry.EntryDate & timeEntry.TimeIn.ToString())
+    End Function
+
+    Public Function GetFullTimeOut() As Date
+        If timeEntry.TimeIn > timeEntry.TimeOut Then
+            Return Date.Parse(timeEntry.EntryDate & timeEntry.TimeOut.ToString())
+        Else
+            Return Date.Parse(timeEntry.DateTomorrow() & timeEntry.TimeOut.ToString())
+        End If
+    End Function
 
     Public Sub ComputeRegularHours()
-        Dim dutyStart = New Date()
-        Dim dutyEnd = New Date()
-
         Dim regularHours As TimeSpan
 
-        Dim breaktimeStart = New Date()
-        Dim breaktimeEnd = New Date()
-
-        If _shift.HasBreaktime Then
+        If shiftToday.HasBreaktime Then
             Dim hoursBeforeBreak As TimeSpan
             Dim hoursAfterBreak As TimeSpan
 
-            If dutyStart < breaktimeStart Then
-                hoursBeforeBreak = breaktimeStart - dutyStart
+            If dutyStart < shiftToday.BreaktimeStart Then
+                Dim lastWorkBeforeBreaktimeStarts = {dutyEnd, shiftToday.BreaktimeStart}.Min()
+
+                hoursBeforeBreak = lastWorkBeforeBreaktimeStarts - dutyStart
             End If
 
-            If dutyEnd > breaktimeEnd Then
-                hoursAfterBreak = dutyEnd - breaktimeEnd
+            If dutyEnd > shiftToday.BreaktimeEnd Then
+                Dim workStartAfterBreaktime = {dutyStart, shiftToday.BreaktimeEnd}.Max()
+
+                hoursAfterBreak = dutyEnd - workStartAfterBreaktime
             End If
 
             regularHours = hoursBeforeBreak + hoursAfterBreak
@@ -34,27 +50,7 @@ Public Class TimeEntryGenerator
             regularHours = dutyEnd - dutyStart
         End If
 
-        _timeEntry.RegularHours = CDec(regularHours.TotalHours)
+        timeEntry.RegularHours = CDec(regularHours.TotalHours)
     End Sub
-
-    Public Function GetFullTimeIn() As Date
-        Return Date.Parse(_timeEntry.EntryDate & _timeEntry.TimeIn.ToString())
-    End Function
-
-    Public Function GetFullTimeOut() As Date
-        If _timeEntry.TimeIn > _timeEntry.TimeOut Then
-            Return Date.Parse(_timeEntry.EntryDate & _timeEntry.TimeOut.ToString())
-        Else
-            Return Date.Parse(_timeEntry.DateTomorrow() & _timeEntry.TimeOut.ToString())
-        End If
-    End Function
-
-    Public Function GetFullBreaktimeStart() As Date
-        Return Date.Parse(_timeEntry.EntryDate & _shift.BreaktimeFrom.ToString())
-    End Function
-
-    Public Function GetFullBreaktimeEnd() As Date
-        Return Date.Parse(_timeEntry.EntryDate & _shift.BreaktimeTo.ToString())
-    End Function
 
 End Class
