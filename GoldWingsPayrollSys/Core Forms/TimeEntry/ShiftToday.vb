@@ -22,11 +22,11 @@
         Me.Shift = shift
         Me.ShiftDate = shiftDate
 
-        RangeStart = PayrollTime.RangeStart(shift.ShiftFrom, shiftDate)
-        RangeEnd = PayrollTime.RangeEnd(shift.ShiftFrom, shift.ShiftTo, shiftDate)
+        RangeStart = TimeUtility.RangeStart(shift.ShiftFrom, shiftDate)
+        RangeEnd = TimeUtility.RangeEnd(shift.ShiftFrom, shift.ShiftTo, shiftDate)
 
-        BreaktimeStart = PayrollTime.RangeStart(shift.BreaktimeFrom, shiftDate)
-        BreaktimeEnd = PayrollTime.RangeEnd(shift.BreaktimeFrom, shift.BreaktimeTo, shiftDate)
+        BreaktimeStart = TimeUtility.RangeStart(shift.BreaktimeFrom, shiftDate)
+        BreaktimeEnd = TimeUtility.RangeEnd(shift.BreaktimeFrom, shift.BreaktimeTo, shiftDate)
     End Sub
 
 End Class

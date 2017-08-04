@@ -22,13 +22,13 @@ Public Class TimeLog
 
     Public ReadOnly Property FullTimeIn As Date
         Get
-            Return PayrollTime.RangeStart(TimeIn.Value, LogDate)
+            Return TimeUtility.RangeStart(TimeIn.Value, LogDate)
         End Get
     End Property
 
     Public ReadOnly Property FullTimeOut As Date
         Get
-            Return PayrollTime.RangeEnd(TimeIn.Value, TimeOut.Value, LogDate)
+            Return TimeUtility.RangeEnd(TimeIn.Value, TimeOut.Value, LogDate)
         End Get
     End Property
 

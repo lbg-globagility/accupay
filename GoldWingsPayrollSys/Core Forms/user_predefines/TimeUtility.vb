@@ -1,4 +1,4 @@
-﻿Public Class PayrollTime
+﻿Public Class TimeUtility
 
     Public Shared Function RangeStart(startTime As TimeSpan, dateToday As Date) As Date
         Return Create(dateToday, startTime)
