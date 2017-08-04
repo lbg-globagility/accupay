@@ -13,7 +13,7 @@
     End Function
 
     Public Shared Function Create(day As Date, time As TimeSpan) As Date
-        Dim timestampString = $"{day.ToString("yyyy-MM-dd")} {time.ToString("hh:mm:ss")}"
+        Dim timestampString = $"{day.ToString("yyyy-MM-dd")} {time.ToString("hh\:mm\:ss")}"
 
         Return Date.Parse(timestampString)
     End Function

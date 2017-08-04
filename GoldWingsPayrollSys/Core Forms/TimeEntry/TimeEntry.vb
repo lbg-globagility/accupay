@@ -1,4 +1,6 @@
-﻿Public Class TimeEntry
+﻿Option Strict On
+
+Public Class TimeEntry
 
     Public Property RowID As Integer?
 
@@ -13,10 +15,6 @@
     Public Property PayRateID As Integer?
 
     Public Property EntryDate As Date
-
-    Public Property TimeIn As TimeSpan?
-
-    Public Property TimeOut As TimeSpan?
 
     Public Property RegularHours As Decimal
 
@@ -54,8 +52,16 @@
 
     Public Property TotalDayPay As Decimal
 
-    Public Function DateTomorrow() As DateTime
-        Return EntryDate.AddDays(1)
-    End Function
+    Public Property DutyStart As Date
+
+    Public Property DutyEnd As Date
+
+    Public Sub New(timeLog As TimeLog, shiftToday As ShiftToday)
+        Dim timeIn = timeLog.FullTimeIn
+        Dim timeOut = timeLog.FullTimeOut
+
+        DutyStart = {timeIn, shiftToday.RangeStart}.Max
+        DutyEnd = {timeOut, shiftToday.RangeEnd}.Min
+    End Sub
 
 End Class
