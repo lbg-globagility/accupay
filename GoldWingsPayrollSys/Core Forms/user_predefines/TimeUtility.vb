@@ -1,10 +1,10 @@
 ﻿Public Class TimeUtility
 
-    Public Shared Function RangeStart(startTime As TimeSpan, dateToday As Date) As Date
+    Public Shared Function RangeStart(dateToday As Date, startTime As TimeSpan) As Date
         Return Create(dateToday, startTime)
     End Function
 
-    Public Shared Function RangeEnd(startTime As TimeSpan, endTime As TimeSpan, dateToday As Date) As Date
+    Public Shared Function RangeEnd(dateToday As Date, startTime As TimeSpan, endTime As TimeSpan) As Date
         Dim dateTomorrow = dateToday.AddDays(1)
         Return Create(
             If(endTime > startTime, dateToday, dateTomorrow),

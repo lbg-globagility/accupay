@@ -21,7 +21,7 @@ Public Class TimeUtilityTest
         Dim time = TimeSpan.Parse("10:30:12")
 
         Dim expected = Date.Parse("2017-01-01 10:30:12")
-        Dim answer = TimeUtility.RangeStart(time, day)
+        Dim answer = TimeUtility.RangeStart(day, time)
 
         Assert.AreEqual(expected, answer)
     End Sub
@@ -33,7 +33,7 @@ Public Class TimeUtilityTest
         Dim timeOut = TimeSpan.Parse("16:15:00")
 
         Dim expected = Date.Parse("2017-01-01 16:15:00")
-        Dim answer = TimeUtility.RangeEnd(timeIn, timeOut, day)
+        Dim answer = TimeUtility.RangeEnd(day, timeIn, timeOut)
 
         Assert.AreEqual(expected, answer)
     End Sub
@@ -45,7 +45,7 @@ Public Class TimeUtilityTest
         Dim timeOut = TimeSpan.Parse("02:00:00")
 
         Dim expected = Date.Parse("2017-01-02 02:00:00")
-        Dim answer = TimeUtility.RangeEnd(timeIn, timeOut, day)
+        Dim answer = TimeUtility.RangeEnd(day, timeIn, timeOut)
 
         Assert.AreEqual(expected, answer)
     End Sub
