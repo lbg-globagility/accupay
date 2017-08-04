@@ -215,7 +215,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\TimeEntry\TimeLog.vb" />
-    <Compile Include="Core Forms\user_predefines\PayrollTime.vb" />
+    <Compile Include="Core Forms\user_predefines\TimeUtility.vb" />
     <Compile Include="Core Forms\user_predefines\SqlReaderExtensions.vb" />
     <Compile Include="Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
