@@ -74,25 +74,25 @@ Public Class TimeEntrySummaryForm
         Public Property TotalHoursWorked As Decimal
         Public Property TotalDayPay As Decimal
 
-        Public ReadOnly Property TimeInDisplay As DateTime?
+        Public ReadOnly Property TimeInDisplay As Date?
             Get
                 Return ConvertToDate(TimeIn)
             End Get
         End Property
 
-        Public ReadOnly Property TimeOutDisplay As DateTime?
+        Public ReadOnly Property TimeOutDisplay As Date?
             Get
                 Return ConvertToDate(TimeOut)
             End Get
         End Property
 
-        Public ReadOnly Property ShiftFromDisplay As DateTime?
+        Public ReadOnly Property ShiftFromDisplay As Date?
             Get
                 Return ConvertToDate(ShiftFrom)
             End Get
         End Property
 
-        Public ReadOnly Property ShiftToDisplay As DateTime?
+        Public ReadOnly Property ShiftToDisplay As Date?
             Get
                 Return ConvertToDate(ShiftTo)
             End Get
@@ -443,7 +443,7 @@ Public Class TimeEntrySummaryForm
         employeesDataGridView.Update()
     End Sub
 
-    Private Shared Function ConvertToDate(time As TimeSpan?) As Date
+    Private Shared Function ConvertToDate(time As TimeSpan?) As Date?
         If Not time.HasValue Then
             Return Nothing
         End If

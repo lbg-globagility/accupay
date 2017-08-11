@@ -203,6 +203,7 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core Forms\TimeEntry\Overtime.vb" />
     <Compile Include="Core Forms\TimeEntry\Shift.vb" />
     <Compile Include="Core Forms\TimeEntry\ShiftToday.vb" />
     <Compile Include="Core Forms\TimeEntry\SqlToDataTable.vb" />
