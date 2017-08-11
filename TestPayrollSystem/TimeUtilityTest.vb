@@ -5,12 +5,12 @@ Imports GoldWingsPayrollSys
 Public Class TimeUtilityTest
 
     <Test>
-    Public Sub Create_Should_Combine_Date_And_TimeSpan()
+    Public Sub Should_Combine_Date_And_TimeSpan()
         Dim day = Date.Parse("2017-01-01")
         Dim time = TimeSpan.Parse("10:30:12")
 
         Dim expected = Date.Parse("2017-01-01 10:30:12")
-        Dim answer = TimeUtility.Create(day, time)
+        Dim answer = TimeUtility.Combine(day, time)
 
         Assert.AreEqual(expected, answer)
     End Sub
