@@ -6,9 +6,61 @@
 
 DROP VIEW IF EXISTS `v_uni_paystub`;
 DROP TABLE IF EXISTS `v_uni_paystub`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_uni_paystub` AS SELECT RowID,OrganizationID,PayPeriodID,EmployeeID,TimeEntryID,PayFromDate,PayToDate,TotalGrossSalary,TotalNetSalary,TotalTaxableSalary,TotalEmpSSS,TotalEmpWithholdingTax,TotalCompSSS,TotalEmpPhilhealth,TotalCompPhilhealth,TotalEmpHDMF,TotalCompHDMF,TotalVacationDaysLeft,TotalLoans,TotalBonus,TotalAllowance,TotalAdjustments,ThirteenthMonthInclusion,FirstTimeSalary,0 `AsActual` FROM paystub
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_uni_paystub` AS SELECT
+        RowID,
+        OrganizationID,
+        PayPeriodID,
+        EmployeeID,
+        TimeEntryID,
+        PayFromDate,
+        PayToDate,
+        TotalGrossSalary,
+        TotalNetSalary,
+        TotalTaxableSalary,
+        TotalEmpSSS,
+        TotalEmpWithholdingTax,
+        TotalCompSSS,
+        TotalEmpPhilhealth,
+        TotalCompPhilhealth,
+        TotalEmpHDMF,
+        TotalCompHDMF,
+        TotalVacationDaysLeft,
+        TotalLoans,
+        TotalBonus,
+        TotalAllowance,
+        TotalAdjustments,
+        ThirteenthMonthInclusion,
+        FirstTimeSalary,
+        0 `AsActual`
+    FROM paystub
 UNION
-SELECT RowID,OrganizationID,PayPeriodID,EmployeeID,TimeEntryID,PayFromDate,PayToDate,TotalGrossSalary,TotalNetSalary,TotalTaxableSalary,TotalEmpSSS,TotalEmpWithholdingTax,TotalCompSSS,TotalEmpPhilhealth,TotalCompPhilhealth,TotalEmpHDMF,TotalCompHDMF,TotalVacationDaysLeft,TotalLoans,TotalBonus,TotalAllowance,TotalAdjustments,ThirteenthMonthInclusion,FirstTimeSalary,1 `AsActual` FROM paystubactual ;
+    SELECT
+        RowID,
+        OrganizationID,
+        PayPeriodID,
+        EmployeeID,
+        TimeEntryID,
+        PayFromDate,
+        PayToDate,
+        TotalGrossSalary,
+        TotalNetSalary,
+        TotalTaxableSalary,
+        TotalEmpSSS,
+        TotalEmpWithholdingTax,
+        TotalCompSSS,
+        TotalEmpPhilhealth,
+        TotalCompPhilhealth,
+        TotalEmpHDMF,
+        TotalCompHDMF,
+        TotalVacationDaysLeft,
+        TotalLoans,
+        TotalBonus,
+        TotalAllowance,
+        TotalAdjustments,
+        ThirteenthMonthInclusion,
+        FirstTimeSalary,
+        1 `AsActual`
+    FROM paystubactual ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

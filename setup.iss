@@ -33,54 +33,53 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\Aga.Controls.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CollapsibleGroupBox.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.CrystalReports.Engine.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.ClientDoc.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.CommLayer.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.CommonControls.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.CommonObjectModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.Controllers.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.CubeDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.DataDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.DataSetConversion.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.ObjectFactory.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.Prompting.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.ReportDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.XmlSerialize.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportSource.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.Shared.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.Windows.Forms.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\DevComponents.DotNetBar2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\EWSoftware.ListControls.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\Femiani.Forms.UI.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\FlashControlV71.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.vshost.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.vshost.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.vshost.exe.manifest"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\log4net.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\log4net.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\log4.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\LBGClassLibrary.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\MessageBoxManager.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\MetroFramework.Design.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\MetroFramework.Fonts.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\MetroFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\Microsoft.Office.Interop.Excel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\MySql.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\MySqlBackup.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\OCRTools.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\ShockwaveFlashObjects.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\stdole.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ".\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\Aga.Controls.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CollapsibleGroupBox.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.CrystalReports.Engine.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.ClientDoc.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.CommLayer.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.CommonControls.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.CommonObjectModel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.Controllers.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.CubeDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.DataDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.DataSetConversion.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.ObjectFactory.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.Prompting.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.ReportDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportAppServer.XmlSerialize.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportSource.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.Shared.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.Windows.Forms.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\DevComponents.DotNetBar2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\EWSoftware.ListControls.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\Femiani.Forms.UI.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\FlashControlV71.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.vshost.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.vshost.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+; Source: ".\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.vshost.exe.manifest"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\GoldWingsPayrollSys.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\log4net.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\log4net.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\log4.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\MessageBoxManager.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\MetroFramework.Design.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\MetroFramework.Fonts.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\MetroFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
+; Source: ".\GoldWingsPayrollSys\bin\Debug\Microsoft.Office.Interop.Excel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\MySql.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\MySqlBackup.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\OCRTools.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\ShockwaveFlashObjects.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\stdole.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\Resources\*.xlsx"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\Resources\*.xlsx"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "D:\Aaron\Goldwings\GoldWingsPayrollSys\GoldWingsPayrollSys\bin\Debug\EPPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\EPPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

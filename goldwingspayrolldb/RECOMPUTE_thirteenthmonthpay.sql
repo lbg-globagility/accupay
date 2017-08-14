@@ -11,6 +11,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RECOMPUTE_thirteenthmonthpay`(
 	IN `PayPRowID` INT,
 	IN `UserRowID` INT
 
+
 )
     DETERMINISTIC
 BEGIN
@@ -163,7 +164,7 @@ IF ispayperiodendofmonth IS NOT NULL THEN
         UNION
             -- Get the summation of basic pay for the monthly and fixed salaried employees.
             SELECT
-                (es.Salary - IFNULL(et.LessAmount,0)) AS BasicAmount,
+                (es.TrueSalary - IFNULL(et.LessAmount,0)) AS BasicAmount,
                 e.RowID AS EmployeeID,
                 'employeeallowance' AS SourceOfAmount
             FROM employee e

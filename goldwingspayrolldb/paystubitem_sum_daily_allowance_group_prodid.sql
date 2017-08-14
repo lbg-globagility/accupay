@@ -21,12 +21,34 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_dail
             IF(
                 pr.PayType = 'Regular Day',
                 (
-                    (
-                        LEAST(
-                            (et.VacationLeaveHours + et.SickLeaveHours + et.MaternityLeaveHours + et.OtherLeaveHours + et.RegularHoursWorked),
-                            et.RegularHoursWorked
-                        ) / sh.DivisorToDailyRate
-                    ) * ea.AllowanceAmount
+                    IF(
+                        es.RestDay = '0',
+                        (
+                            LEAST(
+                                (et.VacationLeaveHours + et.SickLeaveHours + et.MaternityLeaveHours + et.OtherLeaveHours + et.RegularHoursWorked),
+                                et.RegularHoursWorked
+                            ) / sh.DivisorToDailyRate
+                        ) * ea.AllowanceAmount,
+                        IF(
+                            et.TotalHoursWorked > 0,
+                            ea.AllowanceAmount,
+                            0
+                        )
+                    ),
+                    IF(
+                        pr.PayType = 'Regular Holiday',
+                        (
+                            ((et.RegularHoursWorked / sh.DivisorToDailyRate) * ea.AllowanceAmount) +
+                            (
+                                IF(
+                                    HasWorkedLastWorkingDay(e.RowID, et.Date),
+                                    ea.AllowanceAmount,
+                                    0
+                                )
+                            )
+                        ),
+                        0 -- Unrecognizable Day type
+                    )
                 ),
                 IF(
                     pr.PayType = 'Special Non-Working Holiday',

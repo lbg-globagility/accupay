@@ -82,85 +82,114 @@ SELECT NEW.LeaveType INTO leavetype;
 
 IF LOCATE('aternity',leavetype) > 0 THEN
 
+    SET @dutyhours = 0.0;
+    SET @correct_date = CURDATE();
 
-
-SET @dutyhours = 0.0;
-
-SET @correct_date = CURDATE();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    SELECT EXISTS
-    (
+    SELECT EXISTS(
         SELECT
-
-
-
-
-
-
-
-
-        INSERTUPDATE_employeetimeentry(NULL,NEW.OrganizationID,NEW.CreatedBy,d.DateValue,esh.RowID,NEW.EmployeeID,es.RowID,'0',0,0,0,0,0,0,0,0,0,0,0,0,0,'0',pr.RowID,0,0,IF(sh.DutyHoursCount > 5.0, (sh.DutyHoursCount - 1.0), sh.DutyHoursCount),0,0,0,NULL)
+            INSERTUPDATE_employeetimeentry(
+                NULL,
+                NEW.OrganizationID,
+                NEW.CreatedBy,
+                d.DateValue,
+                esh.RowID,
+                NEW.EmployeeID,
+                es.RowID,
+                '0',
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                '0',
+                pr.RowID,
+                0,
+                0,
+                IF(
+                    sh.DutyHoursCount > 5.0,
+                    (sh.DutyHoursCount - 1.0),
+                    sh.DutyHoursCount
+                ),
+                0,
+                0,
+                0,
+                NULL
+            )
         FROM dates d
-
-
-
-        INNER JOIN payrate pr ON pr.OrganizationID=NEW.OrganizationID AND pr.`Date`=d.DateValue
-
-        LEFT JOIN (SELECT * FROM employeeshift WHERE OrganizationID=NEW.OrganizationID AND EmployeeID=NEW.EmployeeID) esh ON d.DateValue BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
-
-        LEFT JOIN (SELECT *,IFNULL(COMPUTE_TimeDifference(TimeFrom,TimeTo),0.0) AS DutyHoursCount FROM shift) sh ON sh.RowID=esh.ShiftID
-
-        LEFT JOIN (SELECT * FROM employeesalary
-                        WHERE EmployeeID=NEW.EmployeeID
-                        AND OrganizationID=NEW.OrganizationID
-                        AND (EffectiveDateFrom >= NEW.LeaveStartDate OR IFNULL(EffectiveDateTo, NEW.LeaveEndDate) >= NEW.LeaveStartDate)
-                        AND (EffectiveDateFrom <= NEW.LeaveEndDate OR IFNULL(EffectiveDateTo, NEW.LeaveEndDate) <= NEW.LeaveEndDate) LIMIT 1) es ON d.DateValue BETWEEN es.EffectiveDateFrom AND IFNULL(es.EffectiveDateTo, NEW.LeaveEndDate)
-
+        INNER JOIN payrate pr
+        ON pr.OrganizationID=NEW.OrganizationID AND
+            pr.`Date`=d.DateValue
+        LEFT JOIN (
+            SELECT *
+            FROM employeeshift
+            WHERE OrganizationID = NEW.OrganizationID AND
+                EmployeeID=NEW.EmployeeID
+        ) esh
+        ON d.DateValue BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
+        LEFT JOIN (
+            SELECT
+                *,
+                IFNULL(COMPUTE_TimeDifference(TimeFrom, TimeTo), 0.0) AS DutyHoursCount
+            FROM shift
+        ) sh
+        ON sh.RowID=esh.ShiftID
+        LEFT JOIN (
+            SELECT *
+            FROM employeesalary
+            WHERE EmployeeID=NEW.EmployeeID AND
+                OrganizationID=NEW.OrganizationID AND
+                (EffectiveDateFrom >= NEW.LeaveStartDate OR IFNULL(EffectiveDateTo, NEW.LeaveEndDate) >= NEW.LeaveStartDate) AND
+                (EffectiveDateFrom <= NEW.LeaveEndDate OR IFNULL(EffectiveDateTo, NEW.LeaveEndDate) <= NEW.LeaveEndDate)
+            LIMIT 1
+        ) es
+        ON d.DateValue BETWEEN es.EffectiveDateFrom AND IFNULL(es.EffectiveDateTo, NEW.LeaveEndDate)
         WHERE d.DateValue BETWEEN NEW.LeaveStartDate AND NEW.LeaveEndDate
-
         ORDER BY d.DateValue
-    ) INTO anyint;
+    )
+    INTO anyint;
 
 ELSE
 
-    SELECT IF(DATEDIFF(NEW.LeaveStartDate,NEW.LeaveEndDate) < 0,DATEDIFF(NEW.LeaveStartDate,NEW.LeaveEndDate) * -1,DATEDIFF(NEW.LeaveStartDate,NEW.LeaveEndDate)) INTO numofdaysofleave;
-
-
+    SELECT IF(
+        DATEDIFF(NEW.LeaveStartDate,NEW.LeaveEndDate) < 0,
+        DATEDIFF(NEW.LeaveStartDate,NEW.LeaveEndDate) * -1,
+        DATEDIFF(NEW.LeaveStartDate,NEW.LeaveEndDate)
+    )
+    INTO numofdaysofleave;
 
     IF TIME_FORMAT(NEW.LeaveStartTime, '%p') = 'PM'
         AND TIME_FORMAT(NEW.LeaveEndTime, '%p') = 'AM' THEN
 
         SET reghrsworkd = TIMEDIFF(ADDDATE(NEW.LeaveEndTime, '24:00'), NEW.LeaveStartTime);
-
     ELSE
-
         SET reghrsworkd = TIMEDIFF(NEW.LeaveEndTime, NEW.LeaveStartTime);
-
     END IF;
-
-
-
-
 
     SET numhrsworkd = COMPUTE_TimeDifference(NEW.LeaveStartTime, NEW.LeaveEndTime);
 
 
-    SELECT e.LeaveBalance,e.SickLeaveBalance,e.MaternityLeaveBalance,e.OtherLeaveBalance, e.EmployeeType FROM employee e WHERE e.RowID=NEW.EmployeeID INTO emp_vacabal,emp_sickbal,emp_materbal,emp_othrbal, e_EmpType;
-
+    SELECT
+        e.LeaveBalance,
+        e.SickLeaveBalance,
+        e.MaternityLeaveBalance,
+        e.OtherLeaveBalance,
+        e.EmployeeType
+    FROM employee e
+    WHERE e.RowID = NEW.EmployeeID
+    INTO
+        emp_vacabal,
+        emp_sickbal,
+        emp_materbal,
+        emp_othrbal,
+        e_EmpType;
 
     firstToLastDay: LOOP
 
@@ -473,7 +502,12 @@ ELSE
                                                             , under_hrs * hourlypayamount
                                                             , 0
                                                             , 0
-                                                            , late_hrs * hourlypayamount) INTO anyint;
+                                                            , late_hrs * hourlypayamount
+                                                            , 0
+                                                            , 0
+                                                            , 0
+                                                            , 0
+                                                            , 0) INTO anyint;
 
 
                 SELECT RowID FROM employeetimeentry WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND `Date`=dateloop INTO anyint;

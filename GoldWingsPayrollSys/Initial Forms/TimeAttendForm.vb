@@ -147,7 +147,7 @@
     End Sub
 
     Private Sub SummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SummaryToolStripMenuItem.Click
-        ChangeForm(TimeEntrySummary, "Employee Time Entry logs")
-        previousForm = TimeEntrySummary
+        ChangeForm(TimeEntrySummaryForm, "Employee Time Entry logs")
+        previousForm = TimeEntrySummaryForm
     End Sub
 End Class

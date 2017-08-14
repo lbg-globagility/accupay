@@ -11,6 +11,8 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `HasWorkedLastWorkingDay`(
 	`dateToCheck` DATETIME
 
 
+
+
 ) RETURNS tinyint(1)
 BEGIN
 

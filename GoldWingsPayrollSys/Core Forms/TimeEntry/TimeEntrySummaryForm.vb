@@ -6,9 +6,11 @@ Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports log4net
 
-Public Class TimeEntrySummary
+Public Class TimeEntrySummaryForm
 
-    Private Shared _logger As ILog = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
+    Private Shared logger As ILog = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
+
+    Private Shared HoursPerDay As TimeSpan = New TimeSpan(24, 0, 0)
 
     Private Class PayPeriod
 
@@ -72,64 +74,48 @@ Public Class TimeEntrySummary
         Public Property TotalHoursWorked As Decimal
         Public Property TotalDayPay As Decimal
 
-        Public ReadOnly Property TimeInDisplay As DateTime?
+        Public ReadOnly Property TimeInDisplay As Date?
             Get
-                If Not TimeIn.HasValue Then
-                    Return Nothing
-                End If
-
-                Return DateTime.Parse(TimeIn.ToString())
+                Return ConvertToDate(TimeIn)
             End Get
         End Property
 
-        Public ReadOnly Property TimeOutDisplay As DateTime?
+        Public ReadOnly Property TimeOutDisplay As Date?
             Get
-                If Not TimeOut.HasValue Then
-                    Return Nothing
-                End If
-
-                Return DateTime.Parse(TimeOut.ToString())
+                Return ConvertToDate(TimeOut)
             End Get
         End Property
 
-        Public ReadOnly Property ShiftFromDisplay As DateTime?
+        Public ReadOnly Property ShiftFromDisplay As Date?
             Get
-                If Not ShiftFrom.HasValue Then
-                    Return Nothing
-                End If
-
-                Return DateTime.Parse(ShiftFrom.ToString())
+                Return ConvertToDate(ShiftFrom)
             End Get
         End Property
 
-        Public ReadOnly Property ShiftToDisplay As DateTime?
+        Public ReadOnly Property ShiftToDisplay As Date?
             Get
-                If Not ShiftTo.HasValue Then
-                    Return Nothing
-                End If
-
-                Return DateTime.Parse(ShiftTo.ToString())
+                Return ConvertToDate(ShiftTo)
             End Get
         End Property
 
     End Class
 
-    Private _payPeriods As Collection(Of PayPeriod)
+    Private payPeriods As Collection(Of PayPeriod)
 
-    Private _employees As Collection(Of Employee)
+    Private employees As Collection(Of Employee)
 
-    Private _selectedEmployee As Employee
+    Private selectedEmployee As Employee
 
-    Private _selectedPayPeriod As PayPeriod
+    Private selectedPayPeriod As PayPeriod
 
-    Private WithEvents _timeEntdurationModal As TimEntduration
+    Private WithEvents timeEntDurationModal As TimEntduration
 
     Private Async Sub LoadEmployees()
-        _employees = Await GetEmployees()
-        employeesDataGridView.DataSource = _employees
+        employees = Await GetEmployees()
+        employeesDataGridView.DataSource = employees
 
-        If _selectedEmployee Is Nothing Then
-            _selectedEmployee = _employees.FirstOrDefault()
+        If selectedEmployee Is Nothing Then
+            selectedEmployee = employees.FirstOrDefault()
         End If
     End Sub
 
@@ -179,12 +165,12 @@ Public Class TimeEntrySummary
     Public Async Sub LoadPayPeriods()
         Dim numOfRows = 2
 
-        _payPeriods = Await GetPayPeriods(z_OrganizationID, 2017, 1)
+        payPeriods = Await GetPayPeriods(z_OrganizationID, 2017, 1)
         payPeriodsDataGridView.Rows.Add(numOfRows)
 
         Dim monthRowCounters(11) As Integer
 
-        For Each payperiod In Me._payPeriods
+        For Each payperiod In Me.payPeriods
             Dim monthNo = payperiod.Month
             Dim counter = monthRowCounters(monthNo - 1)
 
@@ -198,17 +184,17 @@ Public Class TimeEntrySummary
             monthRowCounters(monthNo - 1) = counter
         Next
 
-        If _selectedPayPeriod Is Nothing Then
+        If selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            _selectedPayPeriod = _payPeriods.FirstOrDefault(
+            selectedPayPeriod = payPeriods.FirstOrDefault(
                 Function(payPeriod)
                     Return (payPeriod.PayFromDate <= dateToday) And (payPeriod.PayToDate >= dateToday)
                 End Function
             )
 
-            Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
-            Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
+            Dim rowIdx = (selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
+            Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(selectedPayPeriod.Month - 1)
             payPeriodsDataGridView.CurrentCell = payPeriodCell
         End If
     End Sub
@@ -255,14 +241,14 @@ Public Class TimeEntrySummary
     End Function
 
     Public Async Sub LoadTimeEntries()
-        _logger.Info(New Object() {"LoadTimeEntries()", _selectedEmployee, _selectedPayPeriod})
+        logger.Info(New Object() {"LoadTimeEntries()", selectedEmployee, selectedPayPeriod})
 
-        If _selectedEmployee Is Nothing Or _selectedPayPeriod Is Nothing Then
+        If selectedEmployee Is Nothing Or selectedPayPeriod Is Nothing Then
             Return
         End If
 
         timeEntriesDataGridView.AutoGenerateColumns = False
-        timeEntriesDataGridView.DataSource = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
+        timeEntriesDataGridView.DataSource = Await GetTimeEntries(selectedEmployee, selectedPayPeriod)
     End Sub
 
     Private Async Function GetYears() As Task(Of Collection(Of Integer))
@@ -383,12 +369,12 @@ Public Class TimeEntrySummary
 
     Private Sub generateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles generateTimeEntryButton.Click
         Return
-        _timeEntdurationModal = New TimEntduration(DateTime.Today)
+        timeEntDurationModal = New TimEntduration(DateTime.Today)
 
-        _timeEntdurationModal.ShowDialog()
+        timeEntDurationModal.ShowDialog()
     End Sub
 
-    Private Sub a() Handles _timeEntdurationModal.DoneGenerating
+    Private Sub a() Handles timeEntDurationModal.DoneGenerating
         Trace.Write("Hello")
     End Sub
 
@@ -404,26 +390,22 @@ Public Class TimeEntrySummary
 
         Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
 
-        If employee IsNot _selectedEmployee Then
-            _selectedEmployee = employee
+        If employee IsNot selectedEmployee Then
+            selectedEmployee = employee
 
             LoadTimeEntries()
         End If
     End Sub
 
     Private Sub payPeriodDataGridView_CellClick(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
-        'If e.RowIndex = -1 Then
-        '    Return
-        'End If
-
         If payPeriodsDataGridView.CurrentRow Is Nothing Then
             Return
         End If
 
         Dim payPeriod = DirectCast(payPeriodsDataGridView.CurrentCell.Value, PayPeriod)
 
-        If payPeriod IsNot _selectedPayPeriod Then
-            _selectedPayPeriod = payPeriod
+        If payPeriod IsNot selectedPayPeriod Then
+            selectedPayPeriod = payPeriod
 
             LoadTimeEntries()
         End If
@@ -431,7 +413,7 @@ Public Class TimeEntrySummary
 
     Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
         Close()
-        TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
+        TimeAttendForm.listTimeAttendForm.Remove(Name)
     End Sub
 
     Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
@@ -451,19 +433,26 @@ Public Class TimeEntrySummary
                                 Return containsEmployeeId Or containsFullName Or containsFullNameInReverse
                             End Function
 
-        Dim filteredTask = Task.Factory.StartNew(Of BindingList(Of Employee))(
-            Function()
-                Return New BindingList(Of Employee)(
-                    _employees.Where(matchCriteria).ToList()
-                )
-            End Function
+        Dim filteredTask = Task.Factory.StartNew(
+            Function() New BindingList(Of Employee)(
+                employees.Where(matchCriteria).ToList()
+            )
         )
-        'Dim filtered = New BindingList(Of Employee)(
-        '    _employees.Where(matchCriteria).ToList()
-        ')
 
         employeesDataGridView.DataSource = Await filteredTask
         employeesDataGridView.Update()
     End Sub
+
+    Private Shared Function ConvertToDate(time As TimeSpan?) As Date?
+        If Not time.HasValue Then
+            Return Nothing
+        End If
+
+        If time > HoursPerDay Then
+            Return Date.Parse((time - HoursPerDay).ToString())
+        Else
+            Return Date.Parse(time.ToString())
+        End If
+    End Function
 
 End Class

@@ -48,6 +48,8 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeetimeentries`(
 
 
 
+
+
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN

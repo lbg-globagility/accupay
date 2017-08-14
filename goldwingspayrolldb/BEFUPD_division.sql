@@ -10,28 +10,47 @@ DELIMITER //
 CREATE TRIGGER `BEFUPD_division` BEFORE UPDATE ON `division` FOR EACH ROW BEGIN
 
 DECLARE min_start_date_of_employee DATE;
-
 DECLARE count_min_wage INT(11);
-
 DECLARE anyint INT(11);
 
-SELECT COUNT(RowID) FROM divisionminimumwage WHERE OrganizationID=NEW.OrganizationID AND DivisionID=NEW.RowID INTO count_min_wage;
+SELECT COUNT(RowID)
+FROM divisionminimumwage
+WHERE OrganizationID = NEW.OrganizationID AND
+    DivisionID = NEW.RowID
+INTO count_min_wage;
 
 IF count_min_wage = 0 THEN
 
-    SELECT MIN(e.StartDate) FROM employee e LEFT JOIN position pos ON pos.RowID=e.PositionID AND pos.DivisionId=NEW.RowID WHERE e.OrganizationID=NEW.OrganizationID INTO min_start_date_of_employee;
+    SELECT MIN(e.StartDate)
+    FROM employee e
+    LEFT JOIN position pos
+    ON pos.RowID = e.PositionID AND
+        pos.DivisionId = NEW.RowID
+    WHERE e.OrganizationID = NEW.OrganizationID
+    INTO min_start_date_of_employee;
 
     IF min_start_date_of_employee IS NULL THEN
-        SELECT Created FROM organization WHERE RowID=NEW.OrganizationID INTO min_start_date_of_employee;
+        SELECT Created
+        FROM organization
+        WHERE RowID = NEW.OrganizationID
+        INTO min_start_date_of_employee;
     END IF;
 
-
-
-    SELECT INSUPD_divisionminimumwage(NULL,NEW.OrganizationID,NEW.LastUpdBy,NEW.RowID,481.0,min_start_date_of_employee,pp.PayToDate) FROM payperiod pp WHERE min_start_date_of_employee < pp.PayToDate AND pp.OrganizationID=NEW.OrganizationID AND pp.TotalGrossSalary=1 AND CURDATE() BETWEEN pp.PayFromDate AND pp.PayToDate INTO anyint;
-
-
-
-
+    SELECT INSUPD_divisionminimumwage(
+        NULL,
+        NEW.OrganizationID,
+        NEW.LastUpdBy,
+        NEW.RowID,
+        481.0,
+        min_start_date_of_employee,
+        pp.PayToDate
+    )
+    FROM payperiod pp
+    WHERE min_start_date_of_employee < pp.PayToDate AND
+        pp.OrganizationID = NEW.OrganizationID AND
+        pp.TotalGrossSalary = 1 AND
+        CURDATE() BETWEEN pp.PayFromDate AND pp.PayToDate
+    INTO anyint;
 
 END IF;
 
