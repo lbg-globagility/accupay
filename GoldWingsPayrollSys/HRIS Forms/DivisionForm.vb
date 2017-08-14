@@ -10,6 +10,30 @@ Public Class DivisionForm
     Dim RegKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Control Panel\International", True)
 
     Dim machineShortTime As String = RegKey.GetValue("sShortTime").ToString
+
+    Dim IsNew As Integer = 0
+
+    Dim divisiontbl As New DataTable
+
+    Dim dontUpdate As SByte = 0
+
+    Dim view_ID As Integer = Nothing
+
+
+    Dim divisiontable As New DataTable
+
+    Dim alphadivision As New DataTable
+
+    Dim pagination As Integer = 0
+
+    Dim currentNode As TreeNode = Nothing
+
+    Dim currentDivisionRowID = Nothing
+
+    Dim VIEW_division As New DataTable
+
+    Dim n_ShiftList As New ShiftList
+
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         OjbAssignNoContextMenu(txtgraceperiod)
@@ -124,7 +148,7 @@ Public Class DivisionForm
 
     End Sub
 
-    Dim IsNew As Integer = 0
+
     'Private Sub AddNode(parentNode As String, nodeText As String)
     '    Dim node As New List(Of TreeNode)
     '    node.AddRange(TreeView1.Nodes.Find(parentNode, True))
@@ -385,7 +409,7 @@ Public Class DivisionForm
 
     End Sub
 
-    Dim divisiontbl As New DataTable
+
 
     Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
         cleartext()
@@ -408,7 +432,7 @@ Public Class DivisionForm
 
     End Sub
 
-    Dim dontUpdate As SByte = 0
+
 
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
@@ -528,7 +552,7 @@ Public Class DivisionForm
         End If
 
     End Sub
-    Dim view_ID As Integer = Nothing
+
 
     Private Sub DivisionForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -601,10 +625,6 @@ Public Class DivisionForm
         End If
 
     End Sub
-
-    Dim divisiontable As New DataTable
-
-    Dim alphadivision As New DataTable
 
     Sub Divisiontreeviewfiller(Optional primkey As Object = Nothing, _
                        Optional strval As Object = Nothing, _
@@ -750,13 +770,10 @@ Public Class DivisionForm
 
     End Sub
 
-    Dim pagination As Integer = 0
-
     Private Sub Pagination_Link(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles First.LinkClicked,
                                                                                                 Prev.LinkClicked,
                                                                                                 Nxt.LinkClicked,
                                                                                                 Last.LinkClicked
-
         'RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
         Dim sendrname As String = DirectCast(sender, LinkLabel).Name
@@ -824,8 +841,6 @@ Public Class DivisionForm
 
     End Sub
 
-    Dim VIEW_division As New DataTable
-
     Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
 
         VIEW_division = New DataTable
@@ -857,10 +872,6 @@ Public Class DivisionForm
         e.Handled = n_TrapDecimalKey.ResultTrap
 
     End Sub
-
-    Dim currentNode As TreeNode = Nothing
-
-    Dim currentDivisionRowID = Nothing
 
     Private Sub trvDepartment_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles trvDepartment.AfterSelect
 
@@ -1120,8 +1131,6 @@ Public Class DivisionForm
 
     End Sub
 
-    Dim n_ShiftList As New ShiftList
-
     Private Sub dgvWeek_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvWeek.CellMouseDown
 
         If e.Button = Windows.Forms.MouseButtons.Right _
@@ -1204,8 +1213,8 @@ Public Class DivisionForm
 
                                 .Tag = i1
 
-                                .Value = _
-                                    Format(i2, machineShortTime) & " to " & _
+                                .Value =
+                                    Format(i2, machineShortTime) & " to " &
                                     Format(i3, machineShortTime)
 
                             End If
