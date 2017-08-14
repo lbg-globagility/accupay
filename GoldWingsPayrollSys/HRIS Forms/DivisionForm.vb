@@ -725,14 +725,6 @@ Public Class DivisionForm
 
     End Sub
 
-    Private Sub txtgraceperiod_TextChanged(sender As Object, e As EventArgs) Handles txtgraceperiod.TextChanged
-
-    End Sub
-
-    Private Sub dgvDivisionList_SelectionChanged(sender As Object, e As EventArgs) Handles dgvDivisionList.SelectionChanged
-
-    End Sub
-
     Private Sub txtmindayperyear_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtmindayperyear.KeyPress
 
         Dim e_asc = Asc(e.KeyChar)
@@ -740,10 +732,6 @@ Public Class DivisionForm
         Dim n_TrapDecimalKey As New TrapDecimalKey(e_asc, txtmindayperyear.Text)
 
         e.Handled = n_TrapDecimalKey.ResultTrap
-
-    End Sub
-
-    Private Sub txtmindayperyear_TextChanged(sender As Object, e As EventArgs) Handles txtmindayperyear.TextChanged
 
     End Sub
 
@@ -860,16 +848,6 @@ Public Class DivisionForm
 
     End Sub
 
-    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-
-    End Sub
-
-    Private Sub cbopayfrequency_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbopayfrequency.SelectedIndexChanged
-
-        'MsgBox(cbopayfrequency.SelectedValue)
-
-    End Sub
-
     Private Sub txtminwage_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtminwage.KeyPress
 
         Dim e_asc = Asc(e.KeyChar)
@@ -877,10 +855,6 @@ Public Class DivisionForm
         Dim n_TrapDecimalKey As New TrapDecimalKey(e_asc, txtminwage.Text)
 
         e.Handled = n_TrapDecimalKey.ResultTrap
-
-    End Sub
-
-    Private Sub txtminwage_TextChanged(sender As Object, e As EventArgs) Handles txtminwage.TextChanged
 
     End Sub
 
@@ -1031,10 +1005,6 @@ Public Class DivisionForm
 
     End Sub
 
-    Private Sub CustomColoredTabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CustomColoredTabControl1.SelectedIndexChanged
-
-    End Sub
-
     Private Sub CustomColoredTabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) ' Handles CustomColoredTabControl1.Selecting
 
         Try
@@ -1055,10 +1025,6 @@ Public Class DivisionForm
             e.Cancel = True
 
         End Try
-    End Sub
-
-    Private Sub CustomColoredTabControl1_TabIndexChanged(sender As Object, e As EventArgs) Handles CustomColoredTabControl1.TabIndexChanged
-
     End Sub
 
     Private Sub tsbtnNewDivLoc_Click(sender As Object, e As EventArgs) Handles tsbtnNewDivLoc.Click
@@ -1113,10 +1079,6 @@ Public Class DivisionForm
         End If
     End Sub
 
-    Private Sub tbpageShift_Click(sender As Object, e As EventArgs) Handles tbpageShift.Click
-
-    End Sub
-
     Private Sub tbpageShift_Enter(sender As Object, e As EventArgs) Handles tbpageShift.Enter
 
         If tsbtnNewShift.Enabled = False Then
@@ -1155,10 +1117,6 @@ Public Class DivisionForm
         End Try
 
         CustomColoredTabControl2.SelectedIndex = 1
-
-    End Sub
-
-    Private Sub dgvWeek_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvWeek.CellContentClick
 
     End Sub
 
@@ -1494,14 +1452,6 @@ Public Class DivisionForm
 
     End Sub
 
-    Private Sub TabPage1_Click(sender As Object, e As EventArgs) Handles TabPage1.Click
-
-    End Sub
-
-    Private Sub TabPage1_Enter(sender As Object, e As EventArgs) Handles TabPage1.Enter
-
-    End Sub
-
     Private Sub bgworkUpdateEmployeeShiftIDOfEmployeetimeentry_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkUpdateEmployeeShiftIDOfEmployeetimeentry.DoWork
 
         Dim n_SQLQueryToDatatable As _
@@ -1544,10 +1494,6 @@ Public Class DivisionForm
         Else
 
         End If
-
-    End Sub
-
-    Private Sub btnDelete_EnabledChanged(sender As Object, e As EventArgs) Handles btnDelete.EnabledChanged
 
     End Sub
 
@@ -1632,10 +1578,6 @@ Public Class DivisionForm
         tsProgresSavingShift.Value = 0
 
         tsProgresSavingShift.Visible = False
-
-    End Sub
-
-    Private Sub tbpageDate_Click(sender As Object, e As EventArgs) Handles tbpageDate.Click
 
     End Sub
 
