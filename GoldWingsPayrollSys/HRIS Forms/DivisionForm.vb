@@ -672,18 +672,6 @@ Public Class DivisionForm
 
     End Sub
 
-    Private Sub cmbDivisionType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbDivisionType.SelectedIndexChanged
-
-    End Sub
-
-    Private Sub cmbDivision_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbDivision.SelectedIndexChanged
-
-    End Sub
-
-    Private Sub dgvDivisionList_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDivisionList.CellContentClick
-
-    End Sub
-
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         btnNew.Enabled = True
 
