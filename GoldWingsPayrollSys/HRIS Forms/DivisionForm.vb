@@ -476,6 +476,7 @@ Public Class DivisionForm
                 Dim getdv As Integer = Val(dv)
                 DirectCommand("UPDATE division SET ParentDivisionID = '" & getdv & "' Where RowID = '" & getdvID & "'")
             End If
+            LoadDivision()
             fillDivision()
             'filltreeview()
 
@@ -517,6 +518,7 @@ Public Class DivisionForm
                 DirectCommand("UPDATE division SET ParentDivisionID = '" & getdv & "' Where RowID = '" & getdvID & "'")
             End If
 
+            LoadDivision()
             fillDivision()
             'filltreeview()
 
