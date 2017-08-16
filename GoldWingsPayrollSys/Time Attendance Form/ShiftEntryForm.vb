@@ -1,56 +1,47 @@
 ﻿Public Class ShiftEntryForm
-    Dim IsNew As Integer
 
-    Dim my_RowID = Nothing
+    Private IsNew As Integer
+
+    Private my_RowID = Nothing
+
+    Private view_ID As Integer = Nothing
+
+    Private UpKey As SByte = 0
+
+    Private DownKey As SByte = 0
+
+    Private dontUpdate As SByte = 0
+
+    Private my_TimeFrom = Nothing
+
+    Private my_TimeTo = Nothing
 
     Property ShiftRowID As Object
-
         Get
             Return my_RowID
-
         End Get
-
         Set(value As Object)
             my_RowID = value
-
         End Set
-
     End Property
-
-    Dim my_TimeFrom = Nothing
 
     Property ShiftTimeFrom As Object
-
         Get
             Return my_TimeFrom
-
         End Get
-
         Set(value As Object)
             my_TimeFrom = value
-
         End Set
-
     End Property
-
-    Dim my_TimeTo = Nothing
 
     Property ShiftTimeTo As Object
-
         Get
             Return my_TimeTo
-
         End Get
-
         Set(value As Object)
             my_TimeTo = value
-
         End Set
-
     End Property
-
-
-
 
     Private Sub fillshiftentry()
         Dim dt As New DataTable
@@ -76,7 +67,6 @@
     End Sub
 
     Private Sub ShiftEntryForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
         If previousForm IsNot Nothing Then
             If previousForm.Name = Me.Name Then
                 previousForm = Nothing
@@ -95,8 +85,6 @@
 
         GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
-
-    Dim view_ID As Integer = Nothing
 
     Private Sub ShiftEntryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If Not dgvshiftentry.Rows.Count = 0 Then
@@ -169,12 +157,10 @@
             DirectCommand("DELETE FROM Shift Where RowID = '" & dgvshiftentry.CurrentRow.Cells(c_rowid.Index).Value & "'")
             fillshiftentry()
             myBalloon("Successfully Deleted", "Deleting", btnDelete, , -65)
-
         End If
     End Sub
 
     Private Sub dgvshiftentry_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvshiftentry.CellClick
-
         Try
             dtpTimeFrom.Text = dgvshiftentry.CurrentRow.Cells(c_timef.Index).Value
             dtpTimeTo.Text = dgvshiftentry.CurrentRow.Cells(c_timet.Index).Value
@@ -211,9 +197,7 @@
 
             AddHandler dtpBreakTimeFrom.ValueChanged, AddressOf dtpBreakTimeFrom_ValueChanged
             AddHandler dtpBreakTimeTo.ValueChanged, AddressOf dtpBreakTimeTo_ValueChanged
-
         End Try
-
     End Sub
 
     Private Sub dgvshiftentry_DoubleClick(sender As Object, e As EventArgs) Handles dgvshiftentry.DoubleClick
@@ -230,10 +214,6 @@
         End If
     End Sub
 
-    Private Sub dgvshiftentry_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvshiftentry.CellContentClick
-
-    End Sub
-
     Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
         IsNew = 1
         btnNew.Enabled = False
@@ -242,16 +222,8 @@
     Sub tsbtnNewShift_Click(sender As Object, e As EventArgs) Handles tsbtnNewShift.Click
         IsNew = 1
         tsbtnNewShift.Enabled = False
-
         dtpTimeFrom.Focus()
-
     End Sub
-
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-
-    End Sub
-
-    Dim dontUpdate As SByte = 0
 
     Private Sub tsbtnSaveShift_Click(sender As Object, e As EventArgs) Handles tsbtnSaveShift.Click
         Dim timeFrom = dtpTimeFrom.Value.ToString("HH:mm")
@@ -310,7 +282,6 @@
     End Sub
 
     Private Sub tsbtnCancelShift_Click(sender As Object, e As EventArgs) Handles tsbtnCancelShift.Click
-
         tsbtnNewShift.Enabled = True
 
         IsNew = 0
@@ -319,7 +290,6 @@
         If dgvshiftentry.RowCount <> 0 Then
             dgvshiftentry_CellClick(sender, New DataGridViewCellEventArgs(c_timef.Index, 0))
         End If
-
     End Sub
 
     Private Sub tsbtnCloseShift_Click(sender As Object, e As EventArgs) Handles tsbtnCloseShift.Click
@@ -328,26 +298,15 @@
 
     Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_ID)
-
         showAuditTrail.BringToFront()
-
     End Sub
 
-    Dim UpKey As SByte = 0
-
-    Dim DownKey As SByte = 0
-
     Private Sub dgvshiftentry_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvshiftentry.KeyDown
-
         If e.KeyCode = Keys.Up Then
             UpKey = 1
             DownKey = 0
-            'dgvshiftentry_CellClick()
-            Dim i = dgvshiftentry.CurrentRow.Index - 1
         ElseIf e.KeyCode = Keys.Down Then
-
             Dim ii = 0
 
             If UpKey = 1 Then
@@ -359,20 +318,12 @@
 
             DownKey = 1
             UpKey = 0
-
         End If
-
     End Sub
 
     Private Sub txtBreakMinutes_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtDivisorToDailyRate.KeyPress
         Dim n_TrapDecimalKey As New TrapDecimalKey(Asc(e.KeyChar), txtDivisorToDailyRate.Text.Trim)
-
         e.Handled = n_TrapDecimalKey.ResultTrap
-
-    End Sub
-
-    Private Sub txtDivisorToDailyRate_TextChanged(sender As Object, e As EventArgs) Handles txtDivisorToDailyRate.TextChanged
-
     End Sub
 
     Private Sub chkHasLunchBreak_CheckedChanged(sender As Object, e As EventArgs) Handles chkHasLunchBreak.CheckedChanged
@@ -390,13 +341,7 @@
         'dtpBreakTimeTo.Enabled = bool_result
 
         dtpBreakTimeFrom_ValueChanged(dtpBreakTimeFrom, New EventArgs)
-
         dtpBreakTimeTo_ValueChanged(dtpBreakTimeFrom, New EventArgs)
-
-    End Sub
-
-    Private Sub dtpBreakTimeFrom_ValueChanged1(sender As Object, e As EventArgs) Handles dtpBreakTimeFrom.ValueChanged
-
     End Sub
 
     Private Sub dtpBreakTimeFrom_ValueChanged(sender As Object, e As EventArgs) 'Handles dtpBreakTimeFrom.ValueChanged
@@ -405,11 +350,8 @@
         Else
             dtpBreakTimeFrom.Tag = Nothing
         End If
+
         dtpBreakTimeFrom.Enabled = chkHasLunchBreak.Checked
-    End Sub
-
-    Private Sub dtpBreakTimeTo_ValueChanged1(sender As Object, e As EventArgs) Handles dtpBreakTimeTo.ValueChanged
-
     End Sub
 
     Private Sub dtpBreakTimeTo_ValueChanged(sender As Object, e As EventArgs) 'Handles dtpBreakTimeTo.ValueChanged
@@ -418,25 +360,21 @@
         Else
             dtpBreakTimeTo.Tag = Nothing
         End If
+
         dtpBreakTimeTo.Enabled = chkHasLunchBreak.Checked
     End Sub
 
     Private Function VBDateToMySQLDate(DateExpression As String) As Object
-
         Return New ExecuteQuery("SELECT STR_TO_DATE('" & DateExpression & "','%h:%i %p');").Result
-
     End Function
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
         Dim hrs_shift = New ExecuteQuery("SELECT COMPUTE_TimeDifference(STR_TO_DATE('" & dtpTimeFrom.Text & "','%h:%i %p'), STR_TO_DATE('" & dtpTimeTo.Text & "','%h:%i %p'));").Result
-
         Dim hrs_break = New ExecuteQuery("SELECT COMPUTE_TimeDifference(STR_TO_DATE('" & dtpBreakTimeFrom.Text & "','%h:%i %p'), STR_TO_DATE('" & dtpBreakTimeTo.Text & "','%h:%i %p'));").Result
 
         MsgBox("hrs_shift is " & ValNoComma(hrs_shift) & vbNewLine &
                "hrs_break is " & ValNoComma(hrs_break) & vbNewLine &
                "and their difference is " & ValNoComma(hrs_shift) - ValNoComma(hrs_break))
-
     End Sub
 
 End Class
