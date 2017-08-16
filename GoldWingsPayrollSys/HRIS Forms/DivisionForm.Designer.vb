@@ -32,9 +32,7 @@ Partial Class DivisionForm
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label35 = New System.Windows.Forms.Label()
-        Me.dgvDivisionList = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Last = New System.Windows.Forms.LinkLabel()
         Me.Nxt = New System.Windows.Forms.LinkLabel()
         Me.Prev = New System.Windows.Forms.LinkLabel()
@@ -210,38 +208,6 @@ Partial Class DivisionForm
         Me.ToolStripButton7 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel4 = New System.Windows.Forms.ToolStripLabel()
         Me.tsProgresSavingShift = New System.Windows.Forms.ToolStripProgressBar()
-        Me.c_name = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_divisionName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_division = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_rowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_TradeName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_MainPhone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_AltMainPhone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_emailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_altemailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_FaxNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_tinno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_url = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_contactName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_businessaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.GracePeriod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WorkDaysPerYear = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PhHealthDeductSched = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.HDMFDeductSched = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SSSDeductSched = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WTaxDeductSched = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DefaultSickLeave = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DefaultVacationLeave = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DefaultMaternityLeave = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DefaultPaternityLeave = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DefaultOtherLeave = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PayFrequencyType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PayFrequencyID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PhHealthDeductSchedNoAgent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.HDMFDeductSchedNoAgent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SSSDeductSchedNoAgent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WTaxDeductSchedNoAgent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        CType(Me.dgvDivisionList, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomColoredTabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -274,30 +240,6 @@ Partial Class DivisionForm
         Me.Label35.TabIndex = 313
         Me.Label35.Text = "DIVISION"
         Me.Label35.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'dgvDivisionList
-        '
-        Me.dgvDivisionList.AllowUserToAddRows = False
-        Me.dgvDivisionList.AllowUserToDeleteRows = False
-        Me.dgvDivisionList.BackgroundColor = System.Drawing.Color.White
-        Me.dgvDivisionList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvDivisionList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_name, Me.c_divisionName, Me.c_division, Me.c_rowID, Me.c_TradeName, Me.c_MainPhone, Me.c_AltMainPhone, Me.c_emailaddr, Me.c_altemailaddr, Me.c_FaxNo, Me.c_tinno, Me.c_url, Me.c_contactName, Me.c_businessaddr, Me.GracePeriod, Me.WorkDaysPerYear, Me.PhHealthDeductSched, Me.HDMFDeductSched, Me.SSSDeductSched, Me.WTaxDeductSched, Me.DefaultSickLeave, Me.DefaultVacationLeave, Me.DefaultMaternityLeave, Me.DefaultPaternityLeave, Me.DefaultOtherLeave, Me.PayFrequencyType, Me.PayFrequencyID, Me.PhHealthDeductSchedNoAgent, Me.HDMFDeductSchedNoAgent, Me.SSSDeductSchedNoAgent, Me.WTaxDeductSchedNoAgent})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDivisionList.DefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvDivisionList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvDivisionList.Location = New System.Drawing.Point(79, 33)
-        Me.dgvDivisionList.MultiSelect = False
-        Me.dgvDivisionList.Name = "dgvDivisionList"
-        Me.dgvDivisionList.ReadOnly = True
-        Me.dgvDivisionList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvDivisionList.Size = New System.Drawing.Size(40, 212)
-        Me.dgvDivisionList.TabIndex = 314
         '
         'Last
         '
@@ -1664,14 +1606,14 @@ Partial Class DivisionForm
         Me.dgvDivisionShift.BackgroundColor = System.Drawing.Color.White
         Me.dgvDivisionShift.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvDivisionShift.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.divshiftRowID, Me.divshiftTimeFrom, Me.divshiftTimeTo, Me.divshiftDateFrom, Me.divshiftDateTo, Me.divshiftRestDay})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDivisionShift.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDivisionShift.DefaultCellStyle = DataGridViewCellStyle1
         Me.dgvDivisionShift.Dock = System.Windows.Forms.DockStyle.Top
         Me.dgvDivisionShift.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvDivisionShift.Location = New System.Drawing.Point(0, 0)
@@ -1745,14 +1687,14 @@ Partial Class DivisionForm
         Me.dgvWeek.AllowUserToResizeColumns = False
         Me.dgvWeek.AllowUserToResizeRows = False
         Me.dgvWeek.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvWeek.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvWeek.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvWeek.ColumnHeadersHeight = 30
         Me.dgvWeek.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvWeek.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7})
@@ -1767,8 +1709,8 @@ Partial Class DivisionForm
         '
         'Column1
         '
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle3
         Me.Column1.HeaderText = "Column1"
         Me.Column1.Name = "Column1"
         Me.Column1.ReadOnly = True
@@ -1776,8 +1718,8 @@ Partial Class DivisionForm
         '
         'Column2
         '
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle4
         Me.Column2.HeaderText = "Column2"
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
@@ -1785,8 +1727,8 @@ Partial Class DivisionForm
         '
         'Column3
         '
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle5
         Me.Column3.HeaderText = "Column3"
         Me.Column3.Name = "Column3"
         Me.Column3.ReadOnly = True
@@ -1794,8 +1736,8 @@ Partial Class DivisionForm
         '
         'Column4
         '
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column4.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column4.DefaultCellStyle = DataGridViewCellStyle6
         Me.Column4.HeaderText = "Column4"
         Me.Column4.Name = "Column4"
         Me.Column4.ReadOnly = True
@@ -1803,8 +1745,8 @@ Partial Class DivisionForm
         '
         'Column5
         '
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle7
         Me.Column5.HeaderText = "Column5"
         Me.Column5.Name = "Column5"
         Me.Column5.ReadOnly = True
@@ -1812,8 +1754,8 @@ Partial Class DivisionForm
         '
         'Column6
         '
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle8
         Me.Column6.HeaderText = "Column6"
         Me.Column6.Name = "Column6"
         Me.Column6.ReadOnly = True
@@ -1821,8 +1763,8 @@ Partial Class DivisionForm
         '
         'Column7
         '
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column7.DefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column7.DefaultCellStyle = DataGridViewCellStyle9
         Me.Column7.HeaderText = "Column7"
         Me.Column7.Name = "Column7"
         Me.Column7.ReadOnly = True
@@ -1924,199 +1866,6 @@ Partial Class DivisionForm
         Me.tsProgresSavingShift.Size = New System.Drawing.Size(100, 22)
         Me.tsProgresSavingShift.Visible = False
         '
-        'c_name
-        '
-        Me.c_name.HeaderText = "Name"
-        Me.c_name.Name = "c_name"
-        Me.c_name.ReadOnly = True
-        '
-        'c_divisionName
-        '
-        Me.c_divisionName.HeaderText = "Division Type"
-        Me.c_divisionName.Name = "c_divisionName"
-        Me.c_divisionName.ReadOnly = True
-        '
-        'c_division
-        '
-        Me.c_division.HeaderText = "Parent Division"
-        Me.c_division.Name = "c_division"
-        Me.c_division.ReadOnly = True
-        '
-        'c_rowID
-        '
-        Me.c_rowID.HeaderText = "Column1"
-        Me.c_rowID.Name = "c_rowID"
-        Me.c_rowID.ReadOnly = True
-        Me.c_rowID.Visible = False
-        '
-        'c_TradeName
-        '
-        Me.c_TradeName.HeaderText = "Trade Name"
-        Me.c_TradeName.Name = "c_TradeName"
-        Me.c_TradeName.ReadOnly = True
-        '
-        'c_MainPhone
-        '
-        Me.c_MainPhone.HeaderText = "Main Phone"
-        Me.c_MainPhone.Name = "c_MainPhone"
-        Me.c_MainPhone.ReadOnly = True
-        '
-        'c_AltMainPhone
-        '
-        Me.c_AltMainPhone.HeaderText = "Alt Main Phone"
-        Me.c_AltMainPhone.Name = "c_AltMainPhone"
-        Me.c_AltMainPhone.ReadOnly = True
-        '
-        'c_emailaddr
-        '
-        Me.c_emailaddr.HeaderText = "Email Address"
-        Me.c_emailaddr.Name = "c_emailaddr"
-        Me.c_emailaddr.ReadOnly = True
-        '
-        'c_altemailaddr
-        '
-        Me.c_altemailaddr.HeaderText = "Alt Email Address"
-        Me.c_altemailaddr.Name = "c_altemailaddr"
-        Me.c_altemailaddr.ReadOnly = True
-        '
-        'c_FaxNo
-        '
-        Me.c_FaxNo.HeaderText = "Fax No."
-        Me.c_FaxNo.Name = "c_FaxNo"
-        Me.c_FaxNo.ReadOnly = True
-        '
-        'c_tinno
-        '
-        Me.c_tinno.HeaderText = "Tin No."
-        Me.c_tinno.Name = "c_tinno"
-        Me.c_tinno.ReadOnly = True
-        '
-        'c_url
-        '
-        Me.c_url.HeaderText = "URL"
-        Me.c_url.Name = "c_url"
-        Me.c_url.ReadOnly = True
-        '
-        'c_contactName
-        '
-        Me.c_contactName.HeaderText = "Contact Name"
-        Me.c_contactName.Name = "c_contactName"
-        Me.c_contactName.ReadOnly = True
-        '
-        'c_businessaddr
-        '
-        Me.c_businessaddr.HeaderText = "Business Address"
-        Me.c_businessaddr.Name = "c_businessaddr"
-        Me.c_businessaddr.ReadOnly = True
-        '
-        'GracePeriod
-        '
-        Me.GracePeriod.HeaderText = "Grace Period"
-        Me.GracePeriod.Name = "GracePeriod"
-        Me.GracePeriod.ReadOnly = True
-        '
-        'WorkDaysPerYear
-        '
-        Me.WorkDaysPerYear.HeaderText = "Work days per year"
-        Me.WorkDaysPerYear.Name = "WorkDaysPerYear"
-        Me.WorkDaysPerYear.ReadOnly = True
-        '
-        'PhHealthDeductSched
-        '
-        Me.PhHealthDeductSched.HeaderText = "PhilHealth deduction sched"
-        Me.PhHealthDeductSched.Name = "PhHealthDeductSched"
-        Me.PhHealthDeductSched.ReadOnly = True
-        '
-        'HDMFDeductSched
-        '
-        Me.HDMFDeductSched.HeaderText = "HDMF deduction schedule"
-        Me.HDMFDeductSched.Name = "HDMFDeductSched"
-        Me.HDMFDeductSched.ReadOnly = True
-        '
-        'SSSDeductSched
-        '
-        Me.SSSDeductSched.HeaderText = "SSS deduction schedule"
-        Me.SSSDeductSched.Name = "SSSDeductSched"
-        Me.SSSDeductSched.ReadOnly = True
-        '
-        'WTaxDeductSched
-        '
-        Me.WTaxDeductSched.HeaderText = "Withholding tax deduction schedule"
-        Me.WTaxDeductSched.Name = "WTaxDeductSched"
-        Me.WTaxDeductSched.ReadOnly = True
-        '
-        'DefaultSickLeave
-        '
-        Me.DefaultSickLeave.HeaderText = "Sick leave"
-        Me.DefaultSickLeave.Name = "DefaultSickLeave"
-        Me.DefaultSickLeave.ReadOnly = True
-        '
-        'DefaultVacationLeave
-        '
-        Me.DefaultVacationLeave.HeaderText = "Vacation leave"
-        Me.DefaultVacationLeave.Name = "DefaultVacationLeave"
-        Me.DefaultVacationLeave.ReadOnly = True
-        '
-        'DefaultMaternityLeave
-        '
-        Me.DefaultMaternityLeave.HeaderText = "Maternity leave"
-        Me.DefaultMaternityLeave.Name = "DefaultMaternityLeave"
-        Me.DefaultMaternityLeave.ReadOnly = True
-        '
-        'DefaultPaternityLeave
-        '
-        Me.DefaultPaternityLeave.HeaderText = "Paternity leave"
-        Me.DefaultPaternityLeave.Name = "DefaultPaternityLeave"
-        Me.DefaultPaternityLeave.ReadOnly = True
-        '
-        'DefaultOtherLeave
-        '
-        Me.DefaultOtherLeave.HeaderText = "Other leave"
-        Me.DefaultOtherLeave.Name = "DefaultOtherLeave"
-        Me.DefaultOtherLeave.ReadOnly = True
-        '
-        'PayFrequencyType
-        '
-        Me.PayFrequencyType.HeaderText = "Pay frequency"
-        Me.PayFrequencyType.Name = "PayFrequencyType"
-        Me.PayFrequencyType.ReadOnly = True
-        Me.PayFrequencyType.Width = 120
-        '
-        'PayFrequencyID
-        '
-        Me.PayFrequencyID.HeaderText = "PayFrequencyRowID"
-        Me.PayFrequencyID.Name = "PayFrequencyID"
-        Me.PayFrequencyID.ReadOnly = True
-        Me.PayFrequencyID.Visible = False
-        '
-        'PhHealthDeductSchedNoAgent
-        '
-        Me.PhHealthDeductSchedNoAgent.HeaderText = "Column1"
-        Me.PhHealthDeductSchedNoAgent.Name = "PhHealthDeductSchedNoAgent"
-        Me.PhHealthDeductSchedNoAgent.ReadOnly = True
-        Me.PhHealthDeductSchedNoAgent.Visible = False
-        '
-        'HDMFDeductSchedNoAgent
-        '
-        Me.HDMFDeductSchedNoAgent.HeaderText = "Column2"
-        Me.HDMFDeductSchedNoAgent.Name = "HDMFDeductSchedNoAgent"
-        Me.HDMFDeductSchedNoAgent.ReadOnly = True
-        Me.HDMFDeductSchedNoAgent.Visible = False
-        '
-        'SSSDeductSchedNoAgent
-        '
-        Me.SSSDeductSchedNoAgent.HeaderText = "Column3"
-        Me.SSSDeductSchedNoAgent.Name = "SSSDeductSchedNoAgent"
-        Me.SSSDeductSchedNoAgent.ReadOnly = True
-        Me.SSSDeductSchedNoAgent.Visible = False
-        '
-        'WTaxDeductSchedNoAgent
-        '
-        Me.WTaxDeductSchedNoAgent.HeaderText = "Column4"
-        Me.WTaxDeductSchedNoAgent.Name = "WTaxDeductSchedNoAgent"
-        Me.WTaxDeductSchedNoAgent.ReadOnly = True
-        Me.WTaxDeductSchedNoAgent.Visible = False
-        '
         'DivisionForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2132,12 +1881,10 @@ Partial Class DivisionForm
         Me.Controls.Add(Me.First)
         Me.Controls.Add(Me.CustomColoredTabControl1)
         Me.Controls.Add(Me.Label35)
-        Me.Controls.Add(Me.dgvDivisionList)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.KeyPreview = True
         Me.Name = "DivisionForm"
         Me.Text = "DivisionForm"
-        CType(Me.dgvDivisionList, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomColoredTabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
@@ -2169,7 +1916,6 @@ Partial Class DivisionForm
 
     End Sub
     Friend WithEvents Label35 As System.Windows.Forms.Label
-    Friend WithEvents dgvDivisionList As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
     Friend WithEvents btnNew As System.Windows.Forms.ToolStripButton
     Friend WithEvents btnClose As System.Windows.Forms.ToolStripButton
@@ -2260,37 +2006,6 @@ Partial Class DivisionForm
     Friend WithEvents cbohdmfdeductsched2 As GoldWingsPayrollSys.cboListOfValue
     Friend WithEvents cbophhdeductsched2 As GoldWingsPayrollSys.cboListOfValue
     Friend WithEvents cbosssdeductsched2 As GoldWingsPayrollSys.cboListOfValue
-    Friend WithEvents c_name As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_divisionName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_division As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_rowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_TradeName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_MainPhone As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_AltMainPhone As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_emailaddr As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_altemailaddr As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_FaxNo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_tinno As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_url As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_contactName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_businessaddr As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents GracePeriod As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents WorkDaysPerYear As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PhHealthDeductSched As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents HDMFDeductSched As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SSSDeductSched As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents WTaxDeductSched As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DefaultSickLeave As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DefaultVacationLeave As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DefaultMaternityLeave As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DefaultPaternityLeave As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DefaultOtherLeave As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PayFrequencyType As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PayFrequencyID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PhHealthDeductSchedNoAgent As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents HDMFDeductSchedNoAgent As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SSSDeductSchedNoAgent As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents WTaxDeductSchedNoAgent As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents txtminwage As System.Windows.Forms.TextBox
     Friend WithEvents trvDepartment As System.Windows.Forms.TreeView

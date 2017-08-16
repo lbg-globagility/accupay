@@ -194,164 +194,6 @@ Public Class DivisionForm
 
     End Sub
 
-    Private Sub fillDivision()
-        Dim dt As New DataTable
-        dt = getDataTableForSQL("SELECT d.*" & _
-                                ",IFNULL(pf.PayFrequencyType,'') AS PayFrequencyType" & _
-                                ",IFNULL(pf.RowID,'') AS pfRowID" & _
-                                " FROM `division` d" & _
-                                " LEFT JOIN payfrequency pf ON pf.RowID=d.PayFrequencyID" & _
-                                " WHERE d.OrganizationID = '" & z_OrganizationID & "'" & _
-                                " LIMIT " & pagination & ", 20;")
-
-        dgvDivisionList.Rows.Clear()
-        For Each row As DataRow In dt.Rows
-            Dim n As Integer = dgvDivisionList.Rows.Add()
-            With row
-                Dim dvID As String = .Item("ParentDivisionID").ToString
-                Dim dv As String = getStringItem("Select Name from division Where RowID = '" & Val(dvID) & "' And OrganizationID = '" & z_OrganizationID & "'")
-                Dim getdv As String = dv
-
-                dgvDivisionList.Rows.Item(n).Cells(c_divisionName.Index).Value = .Item("DivisionType").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_division.Index).Value = getdv
-                dgvDivisionList.Rows.Item(n).Cells(c_name.Index).Value = .Item("Name").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_TradeName.Index).Value = .Item("TradeName").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_MainPhone.Index).Value = .Item("MainPhone").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_AltMainPhone.Index).Value = .Item("AltPhone").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_emailaddr.Index).Value = .Item("EmailAddress").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_altemailaddr.Index).Value = .Item("AltEmailAddress").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_FaxNo.Index).Value = .Item("FaxNumber").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_tinno.Index).Value = .Item("TinNo").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_url.Index).Value = .Item("URL").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_contactName.Index).Value = .Item("ContactName").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_businessaddr.Index).Value = .Item("BusinessAddress").ToString
-                dgvDivisionList.Rows.Item(n).Cells(c_rowID.Index).Value = .Item("RowID").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(GracePeriod.Index).Value = .Item("GracePeriod").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(WorkDaysPerYear.Index).Value = .Item("WorkDaysPerYear").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(PhHealthDeductSched.Index).Value = .Item("PhHealthDeductSched").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(HDMFDeductSched.Index).Value = .Item("HDMFDeductSched").ToString
-                
-                dgvDivisionList.Rows.Item(n).Cells(SSSDeductSched.Index).Value = .Item("SSSDeductSched").ToString
-                
-                dgvDivisionList.Rows.Item(n).Cells(WTaxDeductSched.Index).Value = .Item("WTaxDeductSched").ToString
-
-
-                dgvDivisionList.Rows.Item(n).Cells(DefaultVacationLeave.Index).Value = .Item("DefaultVacationLeave").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(DefaultSickLeave.Index).Value = .Item("DefaultSickLeave").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(DefaultMaternityLeave.Index).Value = .Item("DefaultMaternityLeave").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(DefaultPaternityLeave.Index).Value = .Item("DefaultPaternityLeave").ToString
-                
-                dgvDivisionList.Rows.Item(n).Cells(DefaultOtherLeave.Index).Value = .Item("DefaultOtherLeave").ToString
-
-
-                dgvDivisionList.Rows.Item(n).Cells(PayFrequencyType.Index).Value = .Item("PayFrequencyType").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(PayFrequencyID.Index).Value = .Item("pfRowID").ToString
-
-
-                dgvDivisionList.Rows.Item(n).Cells(PayFrequencyID.Index).Value = .Item("PhHealthDeductSchedAgency").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(PayFrequencyID.Index).Value = .Item("HDMFDeductSchedAgency").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(PayFrequencyID.Index).Value = .Item("SSSDeductSchedAgency").ToString
-
-                dgvDivisionList.Rows.Item(n).Cells(PayFrequencyID.Index).Value = .Item("WTaxDeductSchedAgency").ToString
-
-            End With
-
-        Next
-
-
-    End Sub
-
-    Private Sub fillSelectedDivision()
-        If dgvDivisionList.Rows.Count = 0 Then
-        Else
-            Dim dt As New DataTable
-            'dt = getDataTableForSQL("Select * From Division Where OrganizationID = '" & z_OrganizationID & "' And RowID = '" & dgvDivisionList.CurrentRow.Cells(c_rowID.Index).Value & "'")
-
-            dt = getDataTableForSQL("SELECT d.*" & _
-                                    ",IFNULL(pf.PayFrequencyType,'') AS PayFrequencyType" & _
-                                    ",IFNULL(pf.RowID,'') AS pfRowID" & _
-                                    " FROM `division` d" & _
-                                    " LEFT JOIN payfrequency pf ON pf.RowID=d.PayFrequencyID" & _
-                                    " WHERE d.OrganizationID = '" & z_OrganizationID & "'" & _
-                                    " AND d.RowID = '" & dgvDivisionList.CurrentRow.Cells(c_rowID.Index).Value & "'" & _
-                                    " LIMIT " & pagination & ", 20;")
-
-            For Each row As DataRow In dt.Rows
-
-                With row
-                    Dim dvID As String = .Item("ParentDivisionID").ToString
-                    Dim dv As String = getStringItem("Select Name from division Where RowID = '" & Val(dvID) & "' And OrganizationID = '" & z_OrganizationID & "'")
-                    Dim getdv As String = dv
-
-                    cmbDivision.Text = dv
-                    cmbDivisionType.Text = .Item("DivisionType").ToString
-                    txtname.Text = .Item("Name").ToString
-                    txttradename.Text = .Item("TradeName").ToString
-                    txtmainphone.Text = .Item("MainPhone").ToString
-                    txtaltphone.Text = .Item("AltPhone").ToString
-                    txtemailaddr.Text = .Item("EmailAddress").ToString
-                    txtaltemailaddr.Text = .Item("AltEmailAddress").ToString
-                    txtfaxno.Text = .Item("FaxNumber").ToString
-                    txttinno.Text = .Item("TinNo").ToString
-                    txturl.Text = .Item("URL").ToString
-                    txtcontantname.Text = .Item("ContactName").ToString
-                    txtbusinessaddr.Text = .Item("BusinessAddress").ToString
-
-
-                    txtgraceperiod.Text = .Item("GracePeriod").ToString
-
-                    txtmindayperyear.Text = .Item("WorkDaysPerYear").ToString
-
-                    cbophhdeductsched.Text = .Item("PhHealthDeductSched").ToString
-
-                    cbohdmfdeductsched.Text = .Item("HDMFDeductSched").ToString
-
-                    cbosssdeductsched.Text = .Item("SSSDeductSched").ToString
-
-                    cboTaxDeductSched.Text = .Item("WTaxDeductSched").ToString
-
-
-                    txtvlallow.Text = .Item("DefaultVacationLeave").ToString
-
-                    txtslallow.Text = .Item("DefaultSickLeave").ToString
-
-                    txtmlallow.Text = .Item("DefaultMaternityLeave").ToString
-
-                    txtpatlallow.Text = .Item("DefaultPaternityLeave").ToString
-
-                    txtotherallow.Text = .Item("DefaultOtherLeave").ToString
-
-                    cbopayfrequency.Text = .Item("PayFrequencyType").ToString
-
-
-                    cbophhdeductsched2.Text = .Item("PhHealthDeductSchedAgency").ToString
-
-                    cbohdmfdeductsched2.Text = .Item("HDMFDeductSchedAgency").ToString
-
-                    cbosssdeductsched2.Text = .Item("SSSDeductSchedAgency").ToString
-
-                    cboTaxDeductSched2.Text = .Item("WTaxDeductSchedAgency").ToString
-
-                    txtminwage.Text = .Item("MinimumWageAmount")
-
-                End With
-
-            Next
-
-        End If
-
-    End Sub
-
     Private Sub cleartext()
         txtaltemailaddr.Clear()
         txtaltphone.Clear()
@@ -466,7 +308,6 @@ Public Class DivisionForm
                 DirectCommand("UPDATE division SET ParentDivisionID = '" & getdv & "' Where RowID = '" & getdvID & "'")
             End If
             LoadDivision()
-            fillDivision()
             'filltreeview()
 
         ElseIf IsNew = 0 _
@@ -508,7 +349,6 @@ Public Class DivisionForm
             End If
 
             LoadDivision()
-            fillDivision()
             'filltreeview()
 
         End If
@@ -609,12 +449,6 @@ Public Class DivisionForm
 
         End If
 
-        If dgvDivisionList.RowCount <> 0 Then
-            fillDivisionCMB(dgvDivisionList.Item("c_name", 0).Value)
-        Else
-
-        End If
-
     End Sub
 
     Sub Divisiontreeviewfiller(Optional primkey As Object = Nothing, _
@@ -640,7 +474,7 @@ Public Class DivisionForm
         Next
 
     End Sub
-    Private Sub dgvDivisionList_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDivisionList.CellClick
+    Private Sub dgvDivisionList_CellClick(sender As Object, e As DataGridViewCellEventArgs)
 
         'fillSelectedDivision()
 
@@ -665,11 +499,6 @@ Public Class DivisionForm
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         btnNew.Enabled = True
-
-        If dgvDivisionList.RowCount <> 0 Then
-            dgvDivisionList_CellClick(sender, New DataGridViewCellEventArgs(c_divisionName.Index, 0))
-
-        End If
 
         IsNew = 0
 
@@ -829,17 +658,6 @@ Public Class DivisionForm
                                                                              autcomptxtdivision.Text.Trim)
 
         VIEW_division = n_ReadSQLProcedureToDatatable.ResultTable
-
-        dgvDivisionList.Rows.Clear()
-
-        For Each drow As DataRow In VIEW_division.Rows
-
-            Dim rowarray = drow.ItemArray
-
-            dgvDivisionList.Rows.Add(rowarray)
-
-        Next
-
     End Sub
 
     Private Sub txtminwage_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtminwage.KeyPress
