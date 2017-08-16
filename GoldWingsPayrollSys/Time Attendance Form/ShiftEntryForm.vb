@@ -223,17 +223,11 @@
         'Me.Hide()
 
         If dgvshiftentry.RowCount <> 0 Then
-
             dgvshiftentry_CellClick(sender, New DataGridViewCellEventArgs(c_timef.Index, dgvshiftentry.CurrentRow.Index))
-
             Me.DialogResult = Windows.Forms.DialogResult.OK
-
         Else
-
             Me.DialogResult = Windows.Forms.DialogResult.Cancel
-
         End If
-
     End Sub
 
     Private Sub dgvshiftentry_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvshiftentry.CellContentClick
@@ -260,32 +254,43 @@
     Dim dontUpdate As SByte = 0
 
     Private Sub tsbtnSaveShift_Click(sender As Object, e As EventArgs) Handles tsbtnSaveShift.Click
+        Dim timeFrom = dtpTimeFrom.Value.ToString("HH:mm")
+        Dim timeTo = dtpTimeTo.Value.ToString("HH:mm")
 
-        Dim dt As New DataTable
-        dt = getDataTableForSQL("Select * From Shift where TimeFrom = '" & dtpTimeFrom.Value.ToString("hh:mm") & "' And TimeTo = '" & dtpTimeTo.Value.ToString("hh:mm") & "' And OrganizationID = '" & z_OrganizationID & "'")
+        Dim existingShifts As DataTable = getDataTableForSQL($"
+            SELECT *
+            FROM shift
+            WHERE TimeFrom = '{timeFrom}' AND
+                TimeTo = '{timeTo}' AND
+                OrganizationID = '{z_OrganizationID}'
+        ")
 
-        If dt.Rows.Count > 0 Then
-            MsgBox("Shift Entry is already exist.", MsgBoxStyle.Exclamation, "Duplicate Entry")
+        If IsNew = 1 Then
+            Dim timeFrom12Hour = dtpTimeFrom.Value.ToString("hh:mm")
+            Dim timeTo12Hour = dtpTimeTo.Value.ToString("hh:mm")
+
+            If existingShifts.Rows.Count > 0 Then
+                MsgBox($"Sorry, but a shift from {timeFrom12Hour} to {timeTo12Hour} already exists.", MsgBoxStyle.Exclamation, "Shift already exists")
+                Return
+            End If
+
+            sp_shift(z_datetime, z_User, z_datetime, z_OrganizationID, z_User, dtpTimeFrom.Value, dtpTimeTo.Value)
+
+            myBalloon("Successfully Save", "Saving...", btnSave, , -65)
+            Dim shiftid As String = getStringItem("Select MAX(RowID) From Shift")
+            Dim getshiftid As Integer = Val(shiftid)
+            'EmployeeShiftEntryForm.lblShiftID.Text = getshiftid
+            'EmployeeShiftEntryForm.dtpTimeFrom.Text = dgvshiftentry.CurrentRow.Cells(c_timef.Index).Value
+            'EmployeeShiftEntryForm.dtpTimeTo.Text = dgvshiftentry.CurrentRow.Cells(c_timet.Index).Value
+            IsNew = 0
+            fillshiftentry()
+            'Me.Hide()
         Else
+            If dontUpdate = 1 Then
+                Exit Sub
+            End If
 
-            If IsNew = 1 Then
-                sp_shift(z_datetime, z_User, z_datetime, z_OrganizationID, z_User, dtpTimeFrom.Value, dtpTimeTo.Value)
-
-                myBalloon("Successfully Save", "Saving...", btnSave, , -65)
-                Dim shiftid As String = getStringItem("Select MAX(RowID) From Shift")
-                Dim getshiftid As Integer = Val(shiftid)
-                'EmployeeShiftEntryForm.lblShiftID.Text = getshiftid
-                'EmployeeShiftEntryForm.dtpTimeFrom.Text = dgvshiftentry.CurrentRow.Cells(c_timef.Index).Value
-                'EmployeeShiftEntryForm.dtpTimeTo.Text = dgvshiftentry.CurrentRow.Cells(c_timet.Index).Value
-                IsNew = 0
-                fillshiftentry()
-                'Me.Hide()
-            Else
-                If dontUpdate = 1 Then
-                    Exit Sub
-                End If
-                'txtDivisorToDailyRate
-                Dim str_quer As String = "UPDATE shift SET LastUpd = CURRENT_TIMESTAMP()" &
+            Dim str_quer As String = "UPDATE shift SET LastUpd = CURRENT_TIMESTAMP()" &
                     ", LastUpdBy = '" & z_User & "'" &
                     ", TimeFrom = '" & Format(CDate(dtpTimeFrom.Value), "HH:mm") & "'" &
                     ", TimeTo = '" & Format(CDate(dtpTimeTo.Value), "HH:mm") & "'" &
@@ -293,16 +298,15 @@
                     ", BreakTimeFrom=" & If(dtpBreakTimeFrom.Tag = Nothing, "NULL", ("'" & dtpBreakTimeFrom.Tag.ToString & "'")) &
                     ", BreakTimeTo=" & If(dtpBreakTimeTo.Tag = Nothing, "NULL", ("'" & dtpBreakTimeTo.Tag.ToString & "'")) &
                     " WHERE RowID = '" & dgvshiftentry.Tag & "';"
-                Dim n_ExecuteQuery As New ExecuteQuery(str_quer)
-                If n_ExecuteQuery.HasError = False Then
-                    myBalloon("Successfully Updated", "Updating...", btnSave, , -65)
-                End If
-                IsNew = 0
-                fillshiftentry()
+            Dim n_ExecuteQuery As New ExecuteQuery(str_quer)
+            If n_ExecuteQuery.HasError = False Then
+                myBalloon("Successfully Updated", "Updating...", btnSave, , -65)
             End If
-
-            tsbtnNewShift.Enabled = True
+            IsNew = 0
+            fillshiftentry()
         End If
+
+        tsbtnNewShift.Enabled = True
     End Sub
 
     Private Sub tsbtnCancelShift_Click(sender As Object, e As EventArgs) Handles tsbtnCancelShift.Click
