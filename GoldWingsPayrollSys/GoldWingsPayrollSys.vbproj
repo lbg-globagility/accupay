@@ -611,12 +611,6 @@
     <Compile Include="Core Forms\payFreqSelectn.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PayPeriodClass.Designer.vb">
-      <DependentUpon>PayPeriodClass.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Core Forms\PayPeriodClass.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Core Forms\PayPeriodSelector.Designer.vb">
       <DependentUpon>PayPeriodSelector.vb</DependentUpon>
     </Compile>
@@ -1391,9 +1385,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\payFreqSelectn.resx">
       <DependentUpon>payFreqSelectn.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\PayPeriodClass.resx">
-      <DependentUpon>PayPeriodClass.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\PayPeriodSelector.resx">
       <DependentUpon>PayPeriodSelector.vb</DependentUpon>
