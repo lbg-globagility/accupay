@@ -1,9 +1,9 @@
 ﻿Imports Microsoft.Win32
 Public Class DivisionForm
 
-    Dim ParentDiv As New DataTable
+    Dim ParentDivisions As New DataTable
 
-    Dim ChiledDiv As New DataTable
+    Dim ChildDivisions As New DataTable
 
     Dim ArrayWeekFormat() As String
 
@@ -90,12 +90,11 @@ Public Class DivisionForm
     End Sub
 
     Private Sub LoadDivision()
-
         trvDepartment.Nodes.Clear()
 
-        ParentDiv = New SQLQueryToDatatable("SELECT * FROM `division` WHERE OrganizationID='" & orgztnID & "' AND ParentDivisionID IS NULL;").ResultTable
+        ParentDivisions = New SQLQueryToDatatable("SELECT * FROM `division` WHERE OrganizationID='" & orgztnID & "' AND ParentDivisionID IS NULL;").ResultTable
 
-        ChiledDiv = New SQLQueryToDatatable("SELECT d.*" &
+        ChildDivisions = New SQLQueryToDatatable("SELECT d.*" &
                                             ",dd.Name AS ParentDivisionName" &
                                             ",pf.PayFrequencyType" &
                                             " FROM `division` d" &
@@ -103,49 +102,39 @@ Public Class DivisionForm
                                             " INNER JOIN payfrequency pf ON pf.RowID=d.PayFrequencyID" &
                                             " WHERE d.OrganizationID='" & orgztnID & "' AND d.ParentDivisionID IS NOT NULL;").ResultTable
 
-        For Each pdiv As DataRow In ParentDiv.Rows
-
-            ChildDivision(pdiv("RowID"), pdiv("Name"))
-
+        For Each parentDivision As DataRow In ParentDivisions.Rows
+            ChildDivision(parentDivision("RowID"), parentDivision("Name"))
         Next
 
         trvDepartment.ExpandAll()
 
-        For Each tnod As TreeNode In trvDepartment.Nodes
-            trvDepartment.SelectedNode = tnod
+        For Each node As TreeNode In trvDepartment.Nodes
+            trvDepartment.SelectedNode = node
             Exit For
         Next
-
     End Sub
 
     Private Sub ChildDivision(DivisionRowID As Object,
                               NodeText As String,
                               Optional trvnod As TreeNode = Nothing)
 
-        Dim n_nod As TreeNode = Nothing
-        
-        n_nod = trvDepartment.Nodes.Add(NodeText & Space(5))
+        Dim node As TreeNode = trvDepartment.Nodes.Add(NodeText & Space(5))
 
-        With n_nod
+        With node
             .Tag = DivisionRowID
-
             .NodeFont =
                 New System.Drawing.Font("Segoe UI", 8.75!, System.Drawing.FontStyle.Bold)
-
         End With
 
-        Dim sel_ChiledDiv = ChiledDiv.Select("ParentDivisionID = " & DivisionRowID)
+        Dim sel_ChiledDiv = ChildDivisions.Select("ParentDivisionID = " & DivisionRowID)
 
         For Each divrow In sel_ChiledDiv
-            Dim childnod = n_nod.Nodes.Add(divrow("Name"))
-
+            Dim childnod = node.Nodes.Add(divrow("Name"))
             childnod.Tag = divrow
 
             childnod.NodeFont =
                 New System.Drawing.Font("Segoe UI", 8.75!, System.Drawing.FontStyle.Regular)
-
         Next
-
     End Sub
 
 
