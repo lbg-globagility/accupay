@@ -270,7 +270,7 @@
             Dim timeTo12Hour = dtpTimeTo.Value.ToString("hh:mm")
 
             If existingShifts.Rows.Count > 0 Then
-                MsgBox($"Sorry, but a shift from {timeFrom12Hour} to {timeTo12Hour} already exists.", MsgBoxStyle.Exclamation, "Shift already exists")
+                MsgBox($"A shift from {timeFrom12Hour} to {timeTo12Hour} already exists.", MsgBoxStyle.Exclamation, "Shift already exists")
                 Return
             End If
 
