@@ -1,5 +1,8 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports Microsoft.Win32
+Imports OfficeOpenXml
+Imports System.IO
+Imports System.Windows.Forms
 
 Public Class EmpTimeDetail
 
@@ -2199,7 +2202,42 @@ Public Class EmpTimeDetail
     End Sub
 
     Private Sub tsbtnExportReportTimeLogs_Click(sender As Object, e As EventArgs) Handles tsbtnExportReportTimeLogs.Click
+        Dim saveFileDialog = New SaveFileDialog()
+        saveFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx"
 
+        If saveFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim fileName = saveFileDialog.FileName
+            Dim file = New FileInfo(fileName)
+
+            Using excelPackage = New ExcelPackage(file)
+                Dim worksheet = excelPackage.Workbook.Worksheets.Add("Time logs")
+                worksheet.Column(6).Style.Numberformat.Format = "mm/dd/yyyy"
+
+                worksheet.Cells("A1").Value = "Employee ID"
+                worksheet.Cells("B1").Value = "Name"
+                worksheet.Cells("C1").Value = "Shift"
+                worksheet.Cells("D1").Value = "Time In"
+                worksheet.Cells("E1").Value = "Time Out"
+                worksheet.Cells("F1").Value = "Date"
+                worksheet.Cells("G1").Value = "Schedule Type"
+
+                Dim i = 2
+                For Each row As DataGridViewRow In dgvetentdet.Rows
+                    worksheet.Cells($"A{i}").Value = row.Cells(2).Value
+                    worksheet.Cells($"B{i}").Value = row.Cells(3).Value
+                    worksheet.Cells($"C{i}").Value = row.Cells(4).Value
+                    worksheet.Cells($"D{i}").Value = row.Cells(5).Value
+                    worksheet.Cells($"E{i}").Value = row.Cells(6).Value
+                    worksheet.Cells($"F{i}").Value = row.Cells(7).Value
+                    worksheet.Cells($"G{i}").Value = row.Cells(8).Value
+
+                    i += 1
+                Next
+
+                excelPackage.Save()
+                MsgBox("Time logs has been exported.", MsgBoxStyle.OkOnly, "Exported time logs")
+            End Using
+        End If
     End Sub
 
 End Class
