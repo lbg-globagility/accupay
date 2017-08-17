@@ -36,12 +36,11 @@ Module TimeInTimeOutParserModule
         End Function
 
         Private Sub ParseLine(line As String, timeEntries As Collection(Of FixedFormatTimeEntry))
-            'Dim parts = line.Split() ' Split(line, vbTab)
             If String.IsNullOrEmpty(line) Then
                 Return
             End If
 
-            Dim parts = Regex.Split(line, "\s+")
+            Dim parts = Regex.Split(Trim(line), "\s+")
 
             If parts.Length < 3 Then
                 Return
