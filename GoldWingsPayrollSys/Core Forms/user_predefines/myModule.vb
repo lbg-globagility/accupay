@@ -128,10 +128,11 @@ Module myModule
         Dim op_FrmNam As String = If(FormNam = Nothing, "", FormNam & ".")
         'Form Name '.' Method Name '@Line' Code Line Number
 
-        Dim mystr As String = ex.Message & vbNewLine & vbNewLine & _
-                        "ERROR occured in " & op_FrmNam & _
-                        st.GetFrame(st.FrameCount - 1).GetMethod.Name & _
-                        " " & sf.GetFileLineNumber()
+        Dim mystr As String = ex.Message & vbNewLine & vbNewLine &
+                        "ERROR occured in " & op_FrmNam &
+                        st.GetFrame(st.FrameCount - 1).GetMethod.Name &
+                        " " & sf.GetFileLineNumber() &
+                        " " & ex.ToString()
         '               'ito ung line number sa code editor
         'ErrorLog(mystr)
 
