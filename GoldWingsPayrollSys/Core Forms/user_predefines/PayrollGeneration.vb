@@ -216,8 +216,8 @@ Public Class PayrollGeneration
 
         m_NotifyMainWindow = AddressOf pay_stub_frm.ProgressCounter
 
-        isFirstHalf = (payPeriodHalfNo = "0")
-        isEndOfMonth = (payPeriodHalfNo = "1")
+        isFirstHalf = (payPeriodHalfNo = "1")
+        isEndOfMonth = (payPeriodHalfNo = "0")
     End Sub
 
     Sub PayrollGeneration_BackgroundWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs)
