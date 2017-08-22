@@ -5,6 +5,11 @@ Public Class PayrollGeneration
 
     Private Shared logger As ILog = LogManager.GetLogger("PayrollLogger")
 
+    Private Class PayFrequency
+        Public Const SemiMonthly As Integer = 1
+        Public Const Monthly As Integer = 2
+    End Class
+
     Private Class SalaryType
         Public Const Fixed As String = "Fixed"
         Public Const Monthly As String = "Monthly"
@@ -415,9 +420,13 @@ Public Class PayrollGeneration
 
                     governmentContributions = _payStub.TotalEmpSSS + _payStub.TotalEmpPhilHealth + _payStub.TotalEmpHDMF
 
+                    Dim payFrequencyId As Integer?
+
                     If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
+                        payFrequencyId = PayFrequency.Monthly
                         _payStub.TotalTaxableSalary = (_payStub.WorkPay + grossIncomeLastPayPeriod) - governmentContributions
-                    Else
+                    ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
+                        payFrequencyId = PayFrequency.SemiMonthly
                         _payStub.TotalTaxableSalary = _payStub.WorkPay - governmentContributions
                     End If
 
@@ -444,7 +453,7 @@ Public Class PayrollGeneration
 
                         Dim withholdingTaxBracket = withholdingTaxTable.Select($"
                             FilingStatusID = '{filingStatusID}' AND
-                            PayFrequencyID = 2 AND
+                            PayFrequencyID = '{payFrequencyId}' AND
                             TaxableIncomeFromAmount <= {_payStub.TotalTaxableSalary} AND {_payStub.TotalTaxableSalary} <= TaxableIncomeToAmount
                         ").FirstOrDefault()
 
