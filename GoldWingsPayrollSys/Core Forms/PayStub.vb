@@ -771,14 +771,6 @@ Public Class PayStub
         'dgvemployees_CellClick(sender, dgv_DataGridViewCellEventArgs)
     End Sub
 
-    Private Sub dgvemployees_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployees.CellClick
-        'MsgBox("dgvemployees_CellClick " & dgvemployees.CurrentRow.Index)
-    End Sub
-
-    Private Sub dgvemployees_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployees.CellContentClick
-
-    End Sub
-
     Dim currentEmployeeID As String = Nothing
 
     Dim LastFirstMidName As String = Nothing
@@ -4198,10 +4190,6 @@ Public Class PayStub
 
     Dim pause_process_message = String.Empty
 
-    Private Sub bgworkgenpayroll_DoWorks(sender As Object, e As System.ComponentModel.DoWorkEventArgs) ' Handles bgworkgenpayroll.DoWork
-
-    End Sub
-
     Private Sub bgworkgenpayroll_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkgenpayroll.ProgressChanged
         MDIPrimaryForm.systemprogressbar.Value = CType(e.ProgressPercentage, Integer)
 
@@ -4499,50 +4487,8 @@ Public Class PayStub
 
     End Sub
 
-    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub ComboBox1_TextChanged(sender As Object, e As EventArgs)
-
-        'Static once As SByte = 0
-
-        'Dim searchitem = prodPartNo.Select("PartNo = '" & Trim(ComboBox1.Text) & "'")
-
-        'With ComboBox1
-        '    .DataSource = searchitem
-
-        '    If once = 0 Then
-        '        once = 1
-        '        '.DisplayMember = "PartNo"
-        '        '.ValueMember = "PartNo"
-        '    End If
-
-        '    '.AutoCompleteMode = AutoCompleteMode.SuggestAppend ' This is necessary
-        '    '.AutoCompleteSource = AutoCompleteSource.ListItems
-
-        'End With
-
-    End Sub
-
     Private Sub TabControl1_DrawItem(sender As Object, e As DrawItemEventArgs) Handles TabControl1.DrawItem
         TabControlColor(TabControl1, e)
-
-    End Sub
-
-    Private Sub dgvpaystub_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvpaystub.CellContentClick
-
-    End Sub
-
-    Private Sub dgvpaystub_SelectionChanged(sender As Object, e As EventArgs) Handles dgvpaystub.SelectionChanged
-
-    End Sub
-
-    Private Sub dgvpaystubitem_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvpaystubitem.CellContentClick
-
-    End Sub
-
-    Private Sub dgvpaystubitem_SelectionChanged(sender As Object, e As EventArgs) Handles dgvpaystubitem.SelectionChanged
 
     End Sub
 
@@ -4737,10 +4683,6 @@ Public Class PayStub
 
     End Sub
 
-    Private Sub tsSearch_Click(sender As Object, e As EventArgs) Handles tsSearch.Click
-
-    End Sub
-
     Dim IsUserPressEnterToSearch As Boolean = False
 
     Private Sub tsSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tsSearch.KeyPress
@@ -4891,10 +4833,6 @@ Public Class PayStub
                 MsgBox(getErrExcptn(ex, Me.Name), , "Unexpected Message")
             End Try
         End If
-
-    End Sub
-
-    Private Sub MaskedTextBox1_MaskInputRejected(sender As Object, e As MaskInputRejectedEventArgs) Handles MaskedTextBox1.MaskInputRejected
 
     End Sub
 
@@ -6086,14 +6024,6 @@ Public Class PayStub
 
     End Sub
 
-    Private Sub ToolStripButton0_Click(sender As Object, e As EventArgs)
-        'ToolStripButton0
-    End Sub
-
-    Private Sub tbppayroll_Click(sender As Object, e As EventArgs) Handles tbppayroll.Click
-
-    End Sub
-
     Dim selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
     Dim unselectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -6730,10 +6660,6 @@ Public Class PayStub
 
     End Sub
 
-    Private Sub TabPage1_Click(sender As Object, e As EventArgs) Handles TabPage1.Click 'DECLARED
-
-    End Sub
-
     Private Sub TabPage1_Enter1(sender As Object, e As EventArgs) Handles TabPage1.Enter 'DECLARED
 
         For Each txtbxctrl In TabPage1.Controls.OfType(Of TextBox).ToList()
@@ -6993,10 +6919,6 @@ Public Class PayStub
         Return ValNoComma(strresult)
 
     End Function
-
-    Private Sub TabPage4_Click(sender As Object, e As EventArgs) Handles TabPage4.Click 'UNDECLARED
-
-    End Sub
 
     Private Sub TabPage4_Enter1(sender As Object, e As EventArgs) Handles TabPage4.Enter 'UNDECLARED / ACTUAL
 
@@ -7563,10 +7485,6 @@ Public Class PayStub
 
     End Sub
 
-    Private Sub bgwPrintAllPaySlip_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgwPrintAllPaySlip.ProgressChanged
-
-    End Sub
-
     Dim rptdocAll As New rptAllDecUndecPaySlip
 
     Private Sub bgwPrintAllPaySlip_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgwPrintAllPaySlip.RunWorkerCompleted
@@ -7971,10 +7889,6 @@ Public Class PayStub
             MsgBox(getErrExcptn(ex, Me.Name), , "Unexpected Message")
 
         End Try
-
-    End Sub
-
-    Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles ActualToolStripMenuItem2.Click
 
     End Sub
 
