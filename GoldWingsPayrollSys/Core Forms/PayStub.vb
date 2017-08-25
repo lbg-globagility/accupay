@@ -2883,7 +2883,7 @@ Public Class PayStub
                                                                               isEndOfMonth,
                                                                               esal_dattab,
                                                                               emp_loans,
-                                                                              Nothing,
+                                                                              _allLoanTransactions,
                                                                               emp_bonus,
                                                                               emp_allowanceDaily,
                                                                               emp_allowanceMonthly,

@@ -564,12 +564,12 @@ Public Class PayrollGeneration
                 transaction.Rollback()
             End If
 
-            Throw
+            Throw New Exception($"Failure to generate paystub for employee {_payStub.EmployeeID}", ex)
 
-            Dim this_err As String = String.Concat(getErrExcptn(ex, "PayrollGeneration"), " -- ", Convert.ToString(employees.TableName),
-                                                       ".Employee ID[", Convert.ToString(employee("EmployeeID")), "]")
-            logger.Error($"Error calculting employee #{employee("EmployeeID")}.", ex)
-            Console.WriteLine(this_err)
+            'Dim this_err As String = String.Concat(getErrExcptn(ex, "PayrollGeneration"), " -- ", Convert.ToString(employees.TableName),
+            '                                           ".Employee ID[", Convert.ToString(employee("EmployeeID")), "]")
+            'logger.Error($"Error calculting employee #{employee("EmployeeID")}.", ex)
+            'Console.WriteLine(this_err)
         Finally
             If mysql_conn IsNot Nothing Then
                 mysql_conn.Close()
