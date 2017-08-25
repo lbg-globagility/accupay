@@ -1508,6 +1508,8 @@ Public Class PayStub
 
     Dim etent_totdaypay As New DataTable
 
+    Private _allLoanTransactions As DataTable
+
     Dim emp_loans As New DataTable
 
     Dim emp_bonus As New DataTable
@@ -1753,7 +1755,6 @@ Public Class PayStub
                                         SUM(COALESCE(ete.UndertimeHours, 0)) 'UndertimeHours',
                                         SUM(COALESCE(ete.UndertimeHoursAmount, 0)) 'UndertimeHoursAmount',
                                         SUM(COALESCE(ete.Absent, 0)) AS 'Absent',
-                                        SUM(ete.RegularHoursAmount) AS HolidayPay,
                                         IFNULL(emt.emtAmount,0) AS emtAmount
                                     FROM employeetimeentry ete
                                     LEFT JOIN employee e
@@ -1806,6 +1807,29 @@ Public Class PayStub
                                   '                        " ORDER BY EmployeeID;")
 
                                   'employeeloans
+
+                                  Dim sql = $"
+                                    SELECT
+                                        scheduledloansperpayperiod.RowID,
+                                        scheduledloansperpayperiod.Created,
+                                        scheduledloansperpayperiod.CreatedBy,
+                                        scheduledloansperpayperiod.LastUpd,
+                                        scheduledloansperpayperiod.LastUpdBy,
+                                        scheduledloansperpayperiod.OrganizationID,
+                                        scheduledloansperpayperiod.PayPeriodID,
+                                        scheduledloansperpayperiod.EmployeeID,
+                                        scheduledloansperpayperiod.EmployeeLoanRecordID,
+                                        scheduledloansperpayperiod.LoanPayPeriodLeft,
+                                        scheduledloansperpayperiod.TotalBalanceLeft,
+                                        employeeloanschedule.DeductionAmount
+                                    FROM scheduledloansperpayperiod
+                                    INNER JOIN employeeloanschedule
+                                    ON employeeloanschedule.RowID = scheduledloansperpayperiod.EmployeeLoanRecordID
+                                    WHERE scheduledloansperpayperiod.PayPeriodID = '{paypRowID}'
+                                  "
+
+                                  Dim scheduledLoansQuery = New SqlToDataTable(sql)
+                                  _allLoanTransactions = scheduledLoansQuery.Read()
 
                                   Dim sum_emp_loans = String.Empty
 
@@ -2859,6 +2883,7 @@ Public Class PayStub
                                                                               isEndOfMonth,
                                                                               esal_dattab,
                                                                               emp_loans,
+                                                                              Nothing,
                                                                               emp_bonus,
                                                                               emp_allowanceDaily,
                                                                               emp_allowanceMonthly,

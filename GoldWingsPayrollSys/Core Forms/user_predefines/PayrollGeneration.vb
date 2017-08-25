@@ -76,6 +76,7 @@ Public Class PayrollGeneration
     Private _isEndOfMonth As Boolean
     Private allSalaries As DataTable
     Private allLoans As DataTable
+    Private _allLoanTransactions As DataTable
     Private allBonuses As DataTable
 
     Private allOneTimeAllowances As DataTable
@@ -145,7 +146,8 @@ Public Class PayrollGeneration
     Sub New(employees As DataTable,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
-            allLoans As DataTable,
+            allScheduledLoans As DataTable,
+            allLoanTransactions As DataTable,
             allBonuses As DataTable,
             allDailyAllowances As DataTable,
             allMonthlyAllowances As DataTable,
@@ -182,7 +184,8 @@ Public Class PayrollGeneration
         Me.employees = employees
         isEndOfMonth2 = payPeriodHalfNo
         Me.allSalaries = allSalaries
-        Me.allLoans = allLoans
+        Me.allLoans = allScheduledLoans
+        _allLoanTransactions = allLoanTransactions
         Me.allBonuses = allBonuses
 
         Me.allOneTimeAllowances = allOneTimeAllowances
@@ -320,9 +323,20 @@ Public Class PayrollGeneration
             Dim salary = allSalaries.Select($"EmployeeID = '{_payStub.EmployeeID}'").FirstOrDefault()
             Dim employeeLoans = allLoans.Select($"EmployeeID = '{_payStub.EmployeeID}'")
 
-            For Each loan In employeeLoans
-                _payStub.TotalLoanDeduction = ValNoComma(loan("DeductionAmount"))
-            Next
+            Dim loanTransactions = _allLoanTransactions.Select($"EmployeeID = '{_payStub.EmployeeID}'")
+
+            If loanTransactions.Count > 0 Then
+                _payStub.TotalLoanDeduction = loanTransactions.Aggregate(
+                    0D,
+                    Function(acc, loanDeduction) CDec(loanDeduction("LoanDeduction")) + acc
+                )
+            Else
+                For Each loan In employeeLoans
+                    _payStub.TotalLoanDeduction = ValNoComma(loan("DeductionAmount"))
+                Next
+            End If
+
+
 
             totalVacationDaysLeft = 0D
 
@@ -389,12 +403,10 @@ Public Class PayrollGeneration
 
                             grossIncomeLastPayPeriod = ValNoComma(previousTimeEntries.Compute("SUM(TotalDayPay)", $"EmployeeID = '{_payStub.EmployeeID}'"))
                         Else
-                            Dim lateDeduction = ValNoComma(timeEntrySummary("HoursLateAmount"))
-                            Dim undertimeDeduction = ValNoComma(timeEntrySummary("UndertimeHoursAmount"))
-                            Dim absenceDeduction = ValNoComma(timeEntrySummary("Absent"))
-                            Dim totalDeduction = lateDeduction + undertimeDeduction + absenceDeduction
+                            Dim totalDeduction = _payStub.LateDeduction + _payStub.UndertimeDeduction + _payStub.AbsenceDeduction
+                            Dim extraPay = _payStub.RestDayPay + _payStub.HolidayPay
 
-                            _payStub.WorkPay = basicPay - totalDeduction
+                            _payStub.WorkPay = (basicPay + extraPay) - totalDeduction
 
                             If previousTimeEntries.Select($"EmployeeID = '{_payStub.EmployeeID}'").Count > 0 Then
                                 grossIncomeLastPayPeriod = basicPay
