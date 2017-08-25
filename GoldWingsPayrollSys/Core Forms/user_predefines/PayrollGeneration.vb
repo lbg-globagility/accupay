@@ -420,13 +420,13 @@ Public Class PayrollGeneration
 
                     governmentContributions = _payStub.TotalEmpSSS + _payStub.TotalEmpPhilHealth + _payStub.TotalEmpHDMF
 
-                    Dim payFrequencyId As Integer?
+                    Dim payFrequencyID As Integer?
 
                     If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
-                        payFrequencyId = PayFrequency.Monthly
+                        payFrequencyID = PayFrequency.Monthly
                         _payStub.TotalTaxableSalary = (_payStub.WorkPay + grossIncomeLastPayPeriod) - governmentContributions
                     ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
-                        payFrequencyId = PayFrequency.SemiMonthly
+                        payFrequencyID = PayFrequency.SemiMonthly
                         _payStub.TotalTaxableSalary = _payStub.WorkPay - governmentContributions
                     End If
 
@@ -442,9 +442,13 @@ Public Class PayrollGeneration
                         Dim maritalStatus = employee("MaritalStatus").ToString
                         Dim noOfDependents = employee("NoOfDependents").ToString
 
-                        Dim filingStatus = filingStatuses.Select($"
-                            MaritalStatus = '{maritalStatus}' AND Dependent = '{noOfDependents}'
-                        ").FirstOrDefault()
+                        Dim filingStatus = filingStatuses _
+                            .Select($"
+                                MaritalStatus = '{maritalStatus}' AND
+                                Dependent <= '{noOfDependents}'
+                            ") _
+                            .OrderByDescending(Function(f) CInt(f("Dependent"))) _
+                            .FirstOrDefault()
 
                         Dim filingStatusID = 1
                         If filingStatus IsNot Nothing Then
@@ -453,7 +457,7 @@ Public Class PayrollGeneration
 
                         Dim withholdingTaxBracket = withholdingTaxTable.Select($"
                             FilingStatusID = '{filingStatusID}' AND
-                            PayFrequencyID = '{payFrequencyId}' AND
+                            PayFrequencyID = '{payFrequencyID}' AND
                             TaxableIncomeFromAmount <= {_payStub.TotalTaxableSalary} AND {_payStub.TotalTaxableSalary} <= TaxableIncomeToAmount
                         ").FirstOrDefault()
 
