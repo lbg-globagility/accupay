@@ -328,7 +328,7 @@ Public Class PayrollGeneration
             If loanTransactions.Count > 0 Then
                 _payStub.TotalLoanDeduction = loanTransactions.Aggregate(
                     0D,
-                    Function(acc, loanDeduction) CDec(loanDeduction("LoanDeduction")) + acc
+                    Function(acc, loanDeduction) CDec(loanDeduction("DeductionAmount")) + acc
                 )
             Else
                 For Each loan In employeeLoans
@@ -336,15 +336,12 @@ Public Class PayrollGeneration
                 Next
             End If
 
-
-
             totalVacationDaysLeft = 0D
 
             CalculateAllowances()
             CalculateBonuses()
 
             Dim governmentContributions = 0D
-
             Dim timeEntrySummary = allTimeEntries.Select($"EmployeeID = '{_payStub.EmployeeID}'").FirstOrDefault()
 
             If timeEntrySummary IsNot Nothing Then
