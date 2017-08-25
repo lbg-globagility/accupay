@@ -3384,6 +3384,7 @@ Public Class PayStub
 
     End Sub
 
+    <Obsolete>
     Private Sub tsbtnprintall_Click(sender As Object, e As EventArgs) 'Handles DeclaredToolStripMenuItem1.Click 'tsbtnprintall.Click
 
         Dim sssProductID = Nothing
@@ -4338,6 +4339,7 @@ Public Class PayStub
 
     End Sub
 
+    <Obsolete>
     Function INSUPD_paystub(Optional pstub_PayPeriodID As Object = Nothing,
                                               Optional etent_EmployeeID As Object = Nothing,
                                               Optional pstub_PayFromDate As Object = Nothing,
@@ -4426,6 +4428,7 @@ Public Class PayStub
         Return return_value
     End Function
 
+    <Obsolete>
     Function INSUPD_paystubitem(Optional pstubitm_RowID As Object = Nothing,
                                 Optional pstubitm_PayStubID As Object = Nothing,
                                 Optional pstubitm_ProductID As Object = Nothing,
