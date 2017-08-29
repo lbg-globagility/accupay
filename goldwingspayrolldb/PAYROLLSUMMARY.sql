@@ -15,6 +15,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `PAYROLLSUMMARY`(
 
 
 
+
 )
 BEGIN
 
@@ -123,9 +124,9 @@ LEFT JOIN (
         EmployeeID,
         SUM(DailyFee) AS DailyFee
     FROM agencyfee
-    WHERE OrganizationID=ps_OrganizationID
-        AND DailyFee > 0
-        AND TimeEntryDate BETWEEN paypdatefrom AND paypdateto
+    WHERE OrganizationID=ps_OrganizationID AND
+        DailyFee > 0 AND
+        TimeEntryDate BETWEEN paypdatefrom AND paypdateto
     GROUP BY EmployeeID
 ) agf
 ON IFNULL(agf.RowID, 1) > 0 AND
@@ -133,11 +134,11 @@ ON IFNULL(agf.RowID, 1) > 0 AND
 LEFT JOIN thirteenthmonthpay
 ON thirteenthmonthpay.OrganizationID = paystub.OrganizationID AND
     thirteenthmonthpay.PaystubID = IF(psi_undeclared, paystubactual.RowID, paystub.RowID)
-WHERE paystub.OrganizationID=ps_OrganizationID
-    AND paystub.TotalNetSalary > 0
-    AND (paystub.PayFromDate >= paypdatefrom OR paystub.PayToDate >= paypdatefrom)
-    AND (paystub.PayFromDate <= paypdateto OR paystub.PayToDate <= paypdateto)
-    AND LENGTH(IFNULL(e.ATMNo,''))=IF(strSalaryDistrib = 'Cash', 0, LENGTH(IFNULL(e.ATMNo,'')))
+WHERE paystub.OrganizationID = ps_OrganizationID AND
+    paystub.TotalNetSalary > 0 AND
+    (paystub.PayFromDate >= paypdatefrom OR paystub.PayToDate >= paypdatefrom) AND
+    (paystub.PayFromDate <= paypdateto OR paystub.PayToDate <= paypdateto) AND
+    LENGTH(IFNULL(e.ATMNo, '')) = IF(strSalaryDistrib = 'Cash', 0, LENGTH(IFNULL(e.ATMNo, '')))
     -- AND paystub.AsActual = psi_undeclared
 ORDER BY d.Name, e.LastName;
 

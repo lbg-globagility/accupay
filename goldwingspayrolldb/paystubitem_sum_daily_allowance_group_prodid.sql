@@ -26,7 +26,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_dail
                         (
                             LEAST(
                                 (et.VacationLeaveHours + et.SickLeaveHours + et.MaternityLeaveHours + et.OtherLeaveHours + et.RegularHoursWorked),
-                                et.RegularHoursWorked
+                                sh.DivisorToDailyRate
                             ) / sh.DivisorToDailyRate
                         ) * ea.AllowanceAmount,
                         IF(
@@ -34,20 +34,6 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_dail
                             ea.AllowanceAmount,
                             0
                         )
-                    ),
-                    IF(
-                        pr.PayType = 'Regular Holiday',
-                        (
-                            ((et.RegularHoursWorked / sh.DivisorToDailyRate) * ea.AllowanceAmount) +
-                            (
-                                IF(
-                                    HasWorkedLastWorkingDay(e.RowID, et.Date),
-                                    ea.AllowanceAmount,
-                                    0
-                                )
-                            )
-                        ),
-                        0 -- Unrecognizable Day type
                     )
                 ),
                 IF(

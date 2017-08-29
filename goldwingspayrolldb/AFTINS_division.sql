@@ -31,7 +31,7 @@ IF countchildposition = -1 THEN
 
     SELECT INSUPD_position(
         NULL,
-        CONCAT('Default Position ', defaultpositionname + 1),
+        CONCAT('Default Position ',defaultpositionname + 1),
         NEW.CreatedBy,
         NEW.OrganizationID,
         NEW.LastUpdBy,

@@ -6,79 +6,55 @@
 
 DROP PROCEDURE IF EXISTS `RPT_SSS_Monthly`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_SSS_Monthly`(IN `OrganizID` INT, IN `paramDate` DATE)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_SSS_Monthly`(
+	IN `OrganizID` INT,
+	IN `paramDate` DATE
+
+)
     DETERMINISTIC
 BEGIN
 
-DECLARE deduc_sched VARCHAR(50);
+    DECLARE month INT(10);
+    DECLARE year INT(10);
 
-DECLARE ii INT(11) DEFAULT -1;
-
-DECLARE indx INT(11) DEFAULT -1;
-
-DECLARE mirr_EmpID INT(11) DEFAULT -1;
-
-DECLARE mirr_Amount DECIMAL(10,2) DEFAULT -1;
-
-
-DECLARE semimo_paydatefrom DATE;
-
-DECLARE semimo_paydateto DATE;
-
-DECLARE wk_paydatefrom DATE;
-
-DECLARE wk_paydateto DATE;
-
-
-SELECT PagIbigDeductionSchedule FROM organization WHERE RowID=OrganizID INTO deduc_sched;
-
-
-
-
-SELECT pyp.PayFromDate FROM payperiod pyp WHERE pyp.OrganizationID=OrganizID AND pyp.`Year`=YEAR(paramDate) AND pyp.`Month`=(MONTH(paramDate) * 1) AND pyp.TotalGrossSalary=1 ORDER BY pyp.PayFromDate, pyp.PayToDate LIMIT 1 INTO semimo_paydatefrom;
-
-SELECT pyp.PayToDate FROM payperiod pyp WHERE pyp.OrganizationID=OrganizID AND pyp.`Year`=YEAR(paramDate) AND pyp.`Month`=(MONTH(paramDate) * 1) AND pyp.TotalGrossSalary=1 ORDER BY pyp.PayFromDate DESC, pyp.PayToDate DESC LIMIT 1 INTO semimo_paydateto;
-
-
-SELECT pyp.PayFromDate FROM payperiod pyp WHERE pyp.OrganizationID=OrganizID AND pyp.`Year`=YEAR(paramDate) AND pyp.`Month`=(MONTH(paramDate) * 1) AND pyp.TotalGrossSalary=4 ORDER BY pyp.PayFromDate, pyp.PayToDate LIMIT 1 INTO wk_paydatefrom;
-
-SELECT pyp.PayToDate FROM payperiod pyp WHERE pyp.OrganizationID=OrganizID AND pyp.`Year`=YEAR(paramDate) AND pyp.`Month`=(MONTH(paramDate) * 1) AND pyp.TotalGrossSalary=4 ORDER BY pyp.PayFromDate DESC, pyp.PayToDate DESC LIMIT 1 INTO wk_paydateto;
+    SET month = DATE_FORMAT(paramDate, '%m');
+    SET year = DATE_FORMAT(paramDate, '%Y');
 
     SELECT
-    ee.SSSNo
-    ,CONCAT(ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) AS Fullname
-    ,psi.PayAmount AS EmployeeContributionAmount
-    ,pss.EmployerContributionAmount
-    ,pss.EmployeeECAmount
-    ,(psi.PayAmount + (pss.EmployerContributionAmount + pss.EmployeeECAmount)) 'Total'
-    FROM paystub ps
-    INNER JOIN employee ee ON ee.RowID=ps.EmployeeID AND ee.PayFrequencyID=1
-    INNER JOIN product p ON p.PartNo='.SSS' AND p.OrganizationID=OrganizID
-    INNER JOIN paystubitem psi ON psi.PayStubID=ps.RowID AND psi.OrganizationID=OrganizID AND psi.ProductID=p.RowID
-    INNER JOIN paysocialsecurity pss ON pss.EmployeeContributionAmount=psi.PayAmount
-    WHERE ps.OrganizationID=OrganizID
-    AND (ps.PayFromDate>=semimo_paydatefrom OR ps.PayToDate>=semimo_paydatefrom)
-    AND (ps.PayToDate<=semimo_paydateto OR ps.PayToDate<=semimo_paydateto)
-    AND IFNULL(psi.PayAmount,0)!=0
-UNION
-    SELECT
-    ee.SSSNo
-    ,CONCAT(ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) AS Fullname
-    ,psi.PayAmount AS EmployeeContributionAmount
-    ,pss.EmployerContributionAmount
-    ,pss.EmployeeECAmount
-    ,(psi.PayAmount + (pss.EmployerContributionAmount + pss.EmployeeECAmount)) 'Total'
-    FROM paystub ps
-    INNER JOIN employee ee ON ee.RowID=ps.EmployeeID AND ee.PayFrequencyID=4
-    INNER JOIN product p ON p.PartNo='.SSS' AND p.OrganizationID=OrganizID
-    INNER JOIN paystubitem psi ON psi.PayStubID=ps.RowID AND psi.OrganizationID=OrganizID AND psi.ProductID=p.RowID
-    INNER JOIN paysocialsecurity pss ON pss.EmployeeContributionAmount=psi.PayAmount
-    WHERE ps.OrganizationID=OrganizID
-    AND (ps.PayFromDate>=wk_paydatefrom OR ps.PayToDate>=wk_paydatefrom)
-    AND (ps.PayToDate<=wk_paydateto OR ps.PayToDate<=wk_paydateto)
-    AND IFNULL(psi.PayAmount,0)!=0;
-
-
+        employee.SSSNo,
+        CONCAT(
+            employee.LastName,
+            ',',
+            employee.FirstName,
+            IF(
+                employee.MiddleName = '',
+                '',
+                ','
+            ),
+            INITIALS(employee.MiddleName, '. ', '1')
+        ) AS Fullname,
+        paystubsummary.TotalEmpSSS AS EmployeeContributionAmount,
+        paysocialsecurity.EmployerContributionAmount,
+        paysocialsecurity.EmployeeECAmount,
+        (paystubsummary.TotalEmpSSS + paystubsummary.TotalCompSSS) AS Total
+    FROM employee
+    INNER JOIN (
+        SELECT
+            SUM(paystub.TotalEmpSSS) AS TotalEmpSSS,
+            SUM(paystub.TotalCompSSS) AS TotalCompSSS,
+            paystub.EmployeeID
+        FROM paystub
+        INNER JOIN payperiod
+        ON payperiod.RowID = paystub.PayPeriodID
+        WHERE
+            paystub.OrganizationID = OrganizID AND
+            payperiod.Year = year AND
+            payperiod.Month = month
+        GROUP BY paystub.EmployeeID
+    ) paystubsummary
+    ON paystubsummary.EmployeeID = employee.RowID
+    INNER JOIN paysocialsecurity
+    ON paysocialsecurity.EmployeeContributionAmount = paystubsummary.TotalEmpSSS;
 
 END//
 DELIMITER ;
