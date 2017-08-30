@@ -5864,7 +5864,7 @@ Public Class PayStub
                 Else
                     thebasicpay = ValNoComma(drow("BasicPay"))
                     thelessamounts = ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount")) + ValNoComma(drow("Absent")) _
-                        + ValNoComma(drow("HolidayPayment"))
+                        + ValNoComma(drow("HolidayPay"))
                 End If
 
 
@@ -5885,7 +5885,7 @@ Public Class PayStub
             'Holiday pay
             txttotholidayhrs.Text = 0.0
             Dim holidaybayad = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Holiday pay'"))
-            txttotholidayamt.Text = FormatNumber(holidaybayad, 2)
+            txttotholidayamt.Text = FormatNumber(ValNoComma(drow("HolidayPay")), 2)
 
             Dim sumallbasic = ValNoComma(txthrsworkamt.Text) _
                               + ValNoComma(drow("OvertimeHoursAmount")) _
@@ -5911,8 +5911,8 @@ Public Class PayStub
                 Else
                     thebasicpay = ValNoComma(drow("BasicPay"))
                     thelessamounts = ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount")) + ValNoComma(drow("Absent"))
-                    Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPayment"))))
-                    lblsubtot.Text = FormatNumber(all_regular + ValNoComma(drow("HolidayPayment")), 2)
+                    Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
+                    lblsubtot.Text = FormatNumber(all_regular + ValNoComma(drow("HolidayPay")), 2)
                 End If
 
 
@@ -6144,7 +6144,7 @@ Public Class PayStub
                 Else
                     thebasicpay = ValNoComma(drow("BasicPay"))
                     thelessamounts = ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount")) + ValNoComma(drow("Absent")) _
-                        + ValNoComma(drow("HolidayPayment"))
+                        + ValNoComma(drow("HolidayPay"))
                 End If
 
 
@@ -6166,6 +6166,8 @@ Public Class PayStub
             txttotholidayhrs_U.Text = 0.0
             Dim holidaybayad = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Holiday pay'"))
             txttotholidayamt_U.Text = FormatNumber(holidaybayad, 2)
+
+            txttotholidayamt_U.Text = FormatNumber(ValNoComma(drow("HolidayPay")), 2)
 
             Dim sumallbasic = ValNoComma(txthrsworkamt_U.Text) _
                               + ValNoComma(drow("OvertimeHoursAmount")) _
@@ -6191,8 +6193,8 @@ Public Class PayStub
                 Else
                     thebasicpay = ValNoComma(drow("BasicPay"))
                     thelessamounts = ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount")) + ValNoComma(drow("Absent"))
-                    Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPayment"))))
-                    lblsubtot.Text = FormatNumber(all_regular + ValNoComma(drow("HolidayPayment")), 2)
+                    Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
+                    lblsubtot.Text = FormatNumber(all_regular + ValNoComma(drow("HolidayPay")), 2)
                 End If
 
 
