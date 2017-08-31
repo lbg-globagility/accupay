@@ -472,9 +472,9 @@ Public Class TimeEntrySummaryForm
         _declared = Not _declared
 
         If _declared Then
-            declaredButton.Text = "Declared"
-        Else
             declaredButton.Text = "Actual"
+        Else
+            declaredButton.Text = "Declared"
         End If
 
         LoadTimeEntries()
