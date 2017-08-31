@@ -374,8 +374,7 @@ Public Class TimeEntrySummaryForm
         timeEntDurationModal.ShowDialog()
     End Sub
 
-    Private Sub a() Handles timeEntDurationModal.DoneGenerating
-        Trace.Write("Hello")
+    Private Sub DoneGenerating() Handles timeEntDurationModal.DoneGenerating
     End Sub
 
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -423,15 +422,16 @@ Public Class TimeEntrySummaryForm
     Private Async Sub FilterEmployees()
         Dim searchValue = searchTextBox.Text.ToLower()
 
-        Dim matchCriteria = Function(employee As Employee) As Boolean
-                                Dim containsEmployeeId = employee.EmployeeID.ToLower().Contains(searchValue)
-                                Dim containsFullName = employee.FullName.ToLower().Contains(searchValue)
+        Dim matchCriteria =
+            Function(employee As Employee) As Boolean
+                Dim containsEmployeeId = employee.EmployeeID.ToLower().Contains(searchValue)
+                Dim containsFullName = employee.FullName.ToLower().Contains(searchValue)
 
-                                Dim reverseFullName = employee.LastName.ToLower() + " " + employee.FirstName.ToLower()
-                                Dim containsFullNameInReverse = reverseFullName.Contains(searchValue)
+                Dim reverseFullName = employee.LastName.ToLower() + " " + employee.FirstName.ToLower()
+                Dim containsFullNameInReverse = reverseFullName.Contains(searchValue)
 
-                                Return containsEmployeeId Or containsFullName Or containsFullNameInReverse
-                            End Function
+                Return containsEmployeeId Or containsFullName Or containsFullNameInReverse
+            End Function
 
         Dim filteredTask = Task.Factory.StartNew(
             Function() New BindingList(Of Employee)(
