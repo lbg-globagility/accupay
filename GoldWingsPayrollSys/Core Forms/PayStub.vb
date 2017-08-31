@@ -2500,7 +2500,7 @@ Public Class PayStub
                                                                 " FROM employeeallowance" &
                                                                 " WHERE OrganizationID=" & orgztnID &
                                                                 " AND TaxableFlag='1'" &
-                                                                " AND AllowanceFrequency='" & semimallowfreq & "'" &
+                                                                " AND AllowanceFrequency='Weekly'" &
                                                                 " AND EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
                                                                 " GROUP BY EmployeeID" &
                                                                 " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
@@ -2509,7 +2509,7 @@ Public Class PayStub
                                                                 " FROM employeeallowance" &
                                                                 " WHERE OrganizationID=" & orgztnID &
                                                                 " AND TaxableFlag='0'" &
-                                                                " AND AllowanceFrequency='" & semimallowfreq & "'" &
+                                                                " AND AllowanceFrequency='Weekly'" &
                                                                 " AND EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
                                                                 " GROUP BY EmployeeID" &
                                                                 " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
