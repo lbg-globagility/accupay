@@ -12,9 +12,13 @@ Public Class TimeEntrySummaryForm
 
     Private Shared HoursPerDay As TimeSpan = New TimeSpan(24, 0, 0)
 
-    Private _payPeriods As Collection(Of PayPeriod)
+    Private _weeklyPayPeriods As ICollection(Of PayPeriod)
 
-    Private _employees As Collection(Of Employee)
+    Private _semiMonthlyPayPeriods As ICollection(Of PayPeriod)
+
+    Private _payPeriods As ICollection(Of PayPeriod)
+
+    Private _employees As ICollection(Of Employee)
 
     Private _selectedEmployee As Employee
 
@@ -22,16 +26,21 @@ Public Class TimeEntrySummaryForm
 
     Private WithEvents timeEntDurationModal As TimEntduration
 
-    Private Async Sub LoadEmployees()
+    Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim loadEmployeesTask = LoadEmployees()
+        Dim loadPayPeriodsTask = LoadPayPeriods()
+    End Sub
+
+    Private Async Function LoadEmployees() As Task
         _employees = Await GetEmployees()
         employeesDataGridView.DataSource = _employees
 
-        If _selectedEmployee Is Nothing Then
-            _selectedEmployee = _employees.FirstOrDefault()
-        End If
-    End Sub
+        'If _selectedEmployee Is Nothing Then
+        '    _selectedEmployee = _employees.FirstOrDefault()
+        'End If
+    End Function
 
-    Private Async Function GetEmployees() As Task(Of Collection(Of Employee))
+    Private Async Function GetEmployees() As Task(Of ICollection(Of Employee))
         Dim sql = <![CDATA[
             SELECT
                 employee.RowID,
@@ -74,7 +83,7 @@ Public Class TimeEntrySummaryForm
         Return employees
     End Function
 
-    Public Async Sub LoadPayPeriods()
+    Public Async Function LoadPayPeriods() As Task
         Dim numOfRows = 2
 
         _payPeriods = Await GetPayPeriods(z_OrganizationID, 2017, 1)
@@ -109,11 +118,11 @@ Public Class TimeEntrySummaryForm
             Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
             payPeriodsDataGridView.CurrentCell = payPeriodCell
         End If
-    End Sub
+    End Function
 
     Private Async Function GetPayPeriods(organizationID As Integer,
                                          year As Integer,
-                                         salaryType As Integer) As Task(Of Collection(Of PayPeriod))
+                                         salaryType As Integer) As Task(Of ICollection(Of PayPeriod))
         Dim sql = <![CDATA[
             SELECT PayFromDate, PayToDate, Year, Month, OrdinalValue
             FROM payperiod
@@ -153,8 +162,6 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Public Async Sub LoadTimeEntries()
-        _logger.Info(New Object() {"LoadTimeEntries()", _selectedEmployee, _selectedPayPeriod})
-
         If _selectedEmployee Is Nothing Or _selectedPayPeriod Is Nothing Then
             Return
         End If
@@ -163,7 +170,7 @@ Public Class TimeEntrySummaryForm
         timeEntriesDataGridView.DataSource = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
     End Sub
 
-    Private Async Function GetYears() As Task(Of Collection(Of Integer))
+    Private Async Function GetYears() As Task(Of ICollection(Of Integer))
         Dim sql = <![CDATA[
             SELECT payperiod.Year
             FROM payperiod
@@ -187,7 +194,7 @@ Public Class TimeEntrySummaryForm
         Return years
     End Function
 
-    Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of Collection(Of TimeEntry))
+    Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
         Dim sql = <![CDATA[
             SELECT
                 employeetimeentry.RowID,
@@ -289,37 +296,32 @@ Public Class TimeEntrySummaryForm
     Private Sub DoneGenerating() Handles timeEntDurationModal.DoneGenerating
     End Sub
 
-    Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        LoadEmployees()
-        LoadPayPeriods()
-    End Sub
-
     Private Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
         If employeesDataGridView.CurrentRow Is Nothing Then
             Return
         End If
 
         Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
-
-        If employee IsNot _selectedEmployee Then
-            _selectedEmployee = employee
-
-            LoadTimeEntries()
+        If employee Is _selectedEmployee Then
+            Return
         End If
+
+        _selectedEmployee = employee
+        LoadTimeEntries()
     End Sub
 
-    Private Sub payPeriodDataGridView_CellClick(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
+    Private Sub payPeriodDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
         If payPeriodsDataGridView.CurrentRow Is Nothing Then
             Return
         End If
 
         Dim payPeriod = DirectCast(payPeriodsDataGridView.CurrentCell.Value, PayPeriod)
-
-        If payPeriod IsNot _selectedPayPeriod Then
-            _selectedPayPeriod = payPeriod
-
-            LoadTimeEntries()
+        If payPeriod Is _selectedPayPeriod Then
+            Return
         End If
+
+        _selectedPayPeriod = payPeriod
+        LoadTimeEntries()
     End Sub
 
     Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
