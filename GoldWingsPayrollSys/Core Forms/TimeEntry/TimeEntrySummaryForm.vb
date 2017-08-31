@@ -24,6 +24,8 @@ Public Class TimeEntrySummaryForm
 
     Private _selectedPayPeriod As PayPeriod
 
+    Private _declared As Boolean = True
+
     Private WithEvents timeEntDurationModal As TimEntduration
 
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -167,7 +169,12 @@ Public Class TimeEntrySummaryForm
         End If
 
         timeEntriesDataGridView.AutoGenerateColumns = False
-        timeEntriesDataGridView.DataSource = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
+
+        If _declared Then
+            timeEntriesDataGridView.DataSource = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
+        Else
+            timeEntriesDataGridView.DataSource = Await GetActualTimeEntries(_selectedEmployee, _selectedPayPeriod)
+        End If
     End Sub
 
     Private Async Function GetYears() As Task(Of ICollection(Of Integer))
@@ -234,6 +241,98 @@ Public Class TimeEntrySummaryForm
                 ON shift.RowID = employeeshift.ShiftID
             WHERE employeetimeentry.EmployeeID = @EmployeeID
                 AND employeetimeentry.`Date` BETWEEN @DateFrom AND @DateTo;
+        ]]>.Value
+
+        Dim timeEntries = New Collection(Of TimeEntry)
+
+        Using connection As New MySqlConnection(connectionString),
+            command As New MySqlCommand(sql, connection)
+
+            With command.Parameters
+                .AddWithValue("@EmployeeID", employee.RowID)
+                .AddWithValue("@DateFrom", payPeriod.PayFromDate)
+                .AddWithValue("@DateTo", payPeriod.PayToDate)
+            End With
+
+            Await connection.OpenAsync()
+            Dim reader = Await command.ExecuteReaderAsync()
+
+            While Await reader.ReadAsync()
+                Dim timeEntry = New TimeEntry() With {
+                    .RowID = reader.GetValue(Of Integer?)("RowID"),
+                    .EntryDate = reader.GetValue(Of Date)("Date"),
+                    .TimeIn = reader.GetValue(Of TimeSpan?)("TimeIn"),
+                    .TimeOut = reader.GetValue(Of TimeSpan?)("TimeOut"),
+                    .ShiftFrom = reader.GetValue(Of TimeSpan?)("ShiftFrom"),
+                    .ShiftTo = reader.GetValue(Of TimeSpan?)("ShiftTo"),
+                    .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
+                    .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
+                    .NightDiffHours = reader.GetValue(Of Decimal)("NightDifferentialHours"),
+                    .NightDiffAmount = reader.GetValue(Of Decimal)("NightDiffHoursAmount"),
+                    .OvertimeHours = reader.GetValue(Of Decimal)("OvertimeHoursWorked"),
+                    .OvertimeAmount = reader.GetValue(Of Decimal)("OvertimeHoursAmount"),
+                    .NightDiffOTHours = reader.GetValue(Of Decimal)("NightDifferentialOTHours"),
+                    .NightDiffOTAmount = reader.GetValue(Of Decimal)("NightDiffOTHoursAmount"),
+                    .RestDayHours = reader.GetValue(Of Decimal)("RestDayHours"),
+                    .RestDayAmount = reader.GetValue(Of Decimal)("RestDayAmount"),
+                    .LateHours = reader.GetValue(Of Decimal)("HoursLate"),
+                    .LateAmount = reader.GetValue(Of Decimal)("HoursLateAmount"),
+                    .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
+                    .UndertimeAmount = reader.GetValue(Of Decimal)("UndertimeHoursAmount"),
+                    .AbsentAmount = reader.GetValue(Of Decimal)("Absent"),
+                    .LeavePay = reader.GetValue(Of Decimal)("Leavepayment"),
+                    .HolidayPay = reader.GetValue(Of Decimal)("HolidayPayAmount"),
+                    .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
+                    .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
+                }
+
+                timeEntries.Add(timeEntry)
+            End While
+        End Using
+
+        Return timeEntries
+    End Function
+
+    Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+        Dim sql = <![CDATA[
+            SELECT
+                employeetimeentryactual.RowID,
+                employeetimeentryactual.Date,
+                employeetimeentrydetails.TimeIn,
+                employeetimeentrydetails.TimeOut,
+                shift.TimeFrom AS ShiftFrom,
+                shift.TimeTo AS ShiftTo,
+                employeetimeentryactual.RegularHoursWorked,
+                employeetimeentryactual.RegularHoursAmount,
+                employeetimeentryactual.NightDifferentialHours,
+                employeetimeentryactual.NightDiffHoursAmount,
+                employeetimeentryactual.OvertimeHoursWorked,
+                employeetimeentryactual.OvertimeHoursAmount,
+                employeetimeentryactual.NightDifferentialOTHours,
+                employeetimeentryactual.NightDiffOTHoursAmount,
+                employeetimeentryactual.RestDayHours,
+                employeetimeentryactual.RestDayAmount,
+                employeetimeentryactual.LeavePayment,
+                employeetimeentryactual.HoursLate,
+                employeetimeentryactual.HoursLateAmount,
+                employeetimeentryactual.UndertimeHours,
+                employeetimeentryactual.UndertimeHoursAmount,
+                employeetimeentryactual.Leavepayment,
+                employeetimeentryactual.HolidayPayAmount,
+                employeetimeentryactual.Absent,
+                employeetimeentryactual.TotalHoursWorked,
+                employeetimeentryactual.TotalDayPay
+            FROM employeetimeentryactual
+            LEFT JOIN employeetimeentrydetails
+            ON employeetimeentrydetails.Date = employeetimeentryactual.Date AND
+                employeetimeentrydetails.OrganizationID = employeetimeentryactual.OrganizationID AND
+                employeetimeentrydetails.EmployeeID = employeetimeentryactual.EmployeeID
+            LEFT JOIN employeeshift
+            ON employeeshift.RowID = employeetimeentryactual.EmployeeShiftID
+            LEFT JOIN shift
+            ON shift.RowID = employeeshift.ShiftID
+            WHERE employeetimeentryactual.EmployeeID = @EmployeeID AND
+                employeetimeentryactual.`Date` BETWEEN @DateFrom AND @DateTo;
         ]]>.Value
 
         Dim timeEntries = New Collection(Of TimeEntry)
@@ -368,6 +467,18 @@ Public Class TimeEntrySummaryForm
             Return Date.Parse(time.ToString())
         End If
     End Function
+
+    Private Sub declaredButton_Click(sender As Object, e As EventArgs) Handles declaredButton.Click
+        _declared = Not _declared
+
+        If _declared Then
+            declaredButton.Text = "Declared"
+        Else
+            declaredButton.Text = "Actual"
+        End If
+
+        LoadTimeEntries()
+    End Sub
 
     Private Class PayPeriod
 
