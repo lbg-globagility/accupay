@@ -12,94 +12,6 @@ Public Class TimeEntrySummaryForm
 
     Private Shared HoursPerDay As TimeSpan = New TimeSpan(24, 0, 0)
 
-    Private Class PayPeriod
-
-        Public Property PayFromDate As Date
-        Public Property PayToDate As Date
-        Public Property Year As Integer
-        Public Property Month As Integer
-        Public Property OrdinalValue As Integer
-
-        Public Overrides Function ToString() As String
-            Dim dateFrom = PayFromDate.ToString("MMM dd")
-            Dim dateTo = PayToDate.ToString("MMM dd")
-
-            Return dateFrom + " - " + dateTo
-        End Function
-
-    End Class
-
-    Private Class Employee
-
-        Public Property RowID As String
-        Public Property EmployeeID As String
-        Public Property FirstName As String
-        Public Property LastName As String
-
-        Public Function FullName() As String
-            Return FirstName + " " + LastName
-        End Function
-
-        Public Overrides Function ToString() As String
-            Return EmployeeID
-        End Function
-
-    End Class
-
-    Private Class TimeEntry
-
-        Public Property RowID As Integer?
-        Public Property EntryDate As Date
-        Public Property TimeIn As TimeSpan?
-        Public Property TimeOut As TimeSpan?
-        Public Property ShiftFrom As TimeSpan?
-        Public Property ShiftTo As TimeSpan?
-        Public Property RegularHours As Decimal
-        Public Property RegularAmount As Decimal
-        Public Property NightDiffHours As Decimal
-        Public Property NightDiffAmount As Decimal
-        Public Property OvertimeHours As Decimal
-        Public Property OvertimeAmount As Decimal
-        Public Property NightDiffOTHours As Decimal
-        Public Property NightDiffOTAmount As Decimal
-        Public Property RestDayHours As Decimal
-        Public Property RestDayAmount As Decimal
-        Public Property LeavePay As Decimal
-        Public Property HolidayPay As Decimal
-        Public Property UndertimeHours As Decimal
-        Public Property UndertimeAmount As Decimal
-        Public Property LateHours As Decimal
-        Public Property LateAmount As Decimal
-        Public Property AbsentAmount As Decimal
-        Public Property TotalHoursWorked As Decimal
-        Public Property TotalDayPay As Decimal
-
-        Public ReadOnly Property TimeInDisplay As Date?
-            Get
-                Return ConvertToDate(TimeIn)
-            End Get
-        End Property
-
-        Public ReadOnly Property TimeOutDisplay As Date?
-            Get
-                Return ConvertToDate(TimeOut)
-            End Get
-        End Property
-
-        Public ReadOnly Property ShiftFromDisplay As Date?
-            Get
-                Return ConvertToDate(ShiftFrom)
-            End Get
-        End Property
-
-        Public ReadOnly Property ShiftToDisplay As Date?
-            Get
-                Return ConvertToDate(ShiftTo)
-            End Get
-        End Property
-
-    End Class
-
     Private payPeriods As Collection(Of PayPeriod)
 
     Private employees As Collection(Of Employee)
@@ -454,5 +366,93 @@ Public Class TimeEntrySummaryForm
             Return Date.Parse(time.ToString())
         End If
     End Function
+
+    Private Class PayPeriod
+
+        Public Property PayFromDate As Date
+        Public Property PayToDate As Date
+        Public Property Year As Integer
+        Public Property Month As Integer
+        Public Property OrdinalValue As Integer
+
+        Public Overrides Function ToString() As String
+            Dim dateFrom = PayFromDate.ToString("MMM dd")
+            Dim dateTo = PayToDate.ToString("MMM dd")
+
+            Return dateFrom + " - " + dateTo
+        End Function
+
+    End Class
+
+    Private Class Employee
+
+        Public Property RowID As String
+        Public Property EmployeeID As String
+        Public Property FirstName As String
+        Public Property LastName As String
+
+        Public Function FullName() As String
+            Return FirstName + " " + LastName
+        End Function
+
+        Public Overrides Function ToString() As String
+            Return EmployeeID
+        End Function
+
+    End Class
+
+    Private Class TimeEntry
+
+        Public Property RowID As Integer?
+        Public Property EntryDate As Date
+        Public Property TimeIn As TimeSpan?
+        Public Property TimeOut As TimeSpan?
+        Public Property ShiftFrom As TimeSpan?
+        Public Property ShiftTo As TimeSpan?
+        Public Property RegularHours As Decimal
+        Public Property RegularAmount As Decimal
+        Public Property NightDiffHours As Decimal
+        Public Property NightDiffAmount As Decimal
+        Public Property OvertimeHours As Decimal
+        Public Property OvertimeAmount As Decimal
+        Public Property NightDiffOTHours As Decimal
+        Public Property NightDiffOTAmount As Decimal
+        Public Property RestDayHours As Decimal
+        Public Property RestDayAmount As Decimal
+        Public Property LeavePay As Decimal
+        Public Property HolidayPay As Decimal
+        Public Property UndertimeHours As Decimal
+        Public Property UndertimeAmount As Decimal
+        Public Property LateHours As Decimal
+        Public Property LateAmount As Decimal
+        Public Property AbsentAmount As Decimal
+        Public Property TotalHoursWorked As Decimal
+        Public Property TotalDayPay As Decimal
+
+        Public ReadOnly Property TimeInDisplay As Date?
+            Get
+                Return ConvertToDate(TimeIn)
+            End Get
+        End Property
+
+        Public ReadOnly Property TimeOutDisplay As Date?
+            Get
+                Return ConvertToDate(TimeOut)
+            End Get
+        End Property
+
+        Public ReadOnly Property ShiftFromDisplay As Date?
+            Get
+                Return ConvertToDate(ShiftFrom)
+            End Get
+        End Property
+
+        Public ReadOnly Property ShiftToDisplay As Date?
+            Get
+                Return ConvertToDate(ShiftTo)
+            End Get
+        End Property
+
+    End Class
 
 End Class
