@@ -429,58 +429,8 @@ Public Class PayrollGeneration
 
                     governmentContributions = _payStub.TotalEmpSSS + _payStub.TotalEmpPhilHealth + _payStub.TotalEmpHDMF
 
-                    Dim payFrequencyID As Integer?
-
-                    If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
-                        payFrequencyID = PayFrequency.Monthly
-                        _payStub.TotalTaxableSalary = (_payStub.WorkPay + grossIncomeLastPayPeriod) - governmentContributions
-                    ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
-                        payFrequencyID = PayFrequency.SemiMonthly
-                        _payStub.TotalTaxableSalary = _payStub.WorkPay - governmentContributions
-                    End If
-
-                    Dim dailyRate = ValNoComma(employee("EmpRatePerDay"))
-                    Dim minimumWage = ValNoComma(employee("MinimumWageAmount"))
-                    Dim isMinimumWageEarner = dailyRate <= minimumWage
-
-                    If isMinimumWageEarner Then
-                        _payStub.TotalTaxableSalary = 0D
-                    End If
-
-                    If _payStub.TotalTaxableSalary > 0D Then
-                        Dim maritalStatus = employee("MaritalStatus").ToString
-                        Dim noOfDependents = employee("NoOfDependents").ToString
-
-                        Dim filingStatus = filingStatuses _
-                            .Select($"
-                                MaritalStatus = '{maritalStatus}' AND
-                                Dependent <= '{noOfDependents}'
-                            ") _
-                            .OrderByDescending(Function(f) CInt(f("Dependent"))) _
-                            .FirstOrDefault()
-
-                        Dim filingStatusID = 1
-                        If filingStatus IsNot Nothing Then
-                            filingStatusID = CInt(filingStatus("RowID"))
-                        End If
-
-                        Dim withholdingTaxBracket = withholdingTaxTable.Select($"
-                            FilingStatusID = '{filingStatusID}' AND
-                            PayFrequencyID = '{payFrequencyID}' AND
-                            TaxableIncomeFromAmount <= {_payStub.TotalTaxableSalary} AND {_payStub.TotalTaxableSalary} <= TaxableIncomeToAmount
-                        ").FirstOrDefault()
-
-                        If withholdingTaxBracket IsNot Nothing Then
-                            Dim exemptionAmount = ValNoComma(withholdingTaxBracket("ExemptionAmount"))
-                            Dim taxableIncomeFromAmount = ValNoComma(withholdingTaxBracket("TaxableIncomeFromAmount"))
-                            Dim exemptionInExcessAmount = ValNoComma(withholdingTaxBracket("ExemptionInExcessAmount"))
-
-                            _payStub.WithholdingTaxAmount = exemptionAmount + ((_payStub.TotalTaxableSalary - taxableIncomeFromAmount) * exemptionInExcessAmount)
-                        End If
-                    End If
-
+                    CalculateWithholdingTax(grossIncomeLastPayPeriod, governmentContributions)
                 End If
-
             End If
 
             _payStub.TotalGrossSalary = _payStub.WorkPay + _payStub.TotalBonus + _payStub.TotalAllowance
@@ -870,6 +820,58 @@ Public Class PayrollGeneration
     Private Function IsHdmfPaidPerPayPeriod() As Boolean
         Return _hdmfDeductionSchedule = ContributionSchedule.PerPayPeriod
     End Function
+
+    Private Sub CalculateWithholdingTax(grossIncomeLastPeriod As Decimal, governmentContributions As Decimal)
+        Dim payFrequencyID As Integer?
+
+        If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
+            payFrequencyID = PayFrequency.Monthly
+            _payStub.TotalTaxableSalary = (_payStub.WorkPay + grossIncomeLastPeriod) - governmentContributions
+        ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
+            payFrequencyID = PayFrequency.SemiMonthly
+            _payStub.TotalTaxableSalary = _payStub.WorkPay - governmentContributions
+        End If
+
+        Dim dailyRate = ValNoComma(_employee("EmpRatePerDay"))
+        Dim minimumWage = ValNoComma(_employee("MinimumWageAmount"))
+        Dim isMinimumWageEarner = dailyRate <= minimumWage
+
+        If isMinimumWageEarner Then
+            _payStub.TotalTaxableSalary = 0D
+        End If
+
+        If _payStub.TotalTaxableSalary > 0D Then
+            Dim maritalStatus = _employee("MaritalStatus").ToString
+            Dim noOfDependents = _employee("NoOfDependents").ToString
+
+            Dim filingStatus = filingStatuses _
+                .Select($"
+                    MaritalStatus = '{maritalStatus}' AND
+                    Dependent <= '{noOfDependents}'
+                ") _
+                .OrderByDescending(Function(f) CInt(f("Dependent"))) _
+                .FirstOrDefault()
+
+            Dim filingStatusID = 1
+            If filingStatus IsNot Nothing Then
+                filingStatusID = CInt(filingStatus("RowID"))
+            End If
+
+            Dim withholdingTaxBracket = withholdingTaxTable.Select($"
+                FilingStatusID = '{filingStatusID}' AND
+                PayFrequencyID = '{payFrequencyID}' AND
+                TaxableIncomeFromAmount <= {_payStub.TotalTaxableSalary} AND {_payStub.TotalTaxableSalary} <= TaxableIncomeToAmount
+            ").FirstOrDefault()
+
+            If withholdingTaxBracket IsNot Nothing Then
+                Dim exemptionAmount = ValNoComma(withholdingTaxBracket("ExemptionAmount"))
+                Dim taxableIncomeFromAmount = ValNoComma(withholdingTaxBracket("TaxableIncomeFromAmount"))
+                Dim exemptionInExcessAmount = ValNoComma(withholdingTaxBracket("ExemptionInExcessAmount"))
+
+                _payStub.WithholdingTaxAmount = exemptionAmount + ((_payStub.TotalTaxableSalary - taxableIncomeFromAmount) * exemptionInExcessAmount)
+            End If
+        End If
+    End Sub
 
     Private Function IsWithholdingTaxPaidOnFirstHalf() As Boolean
         Return _isFirstHalf And (_withholdingTaxSchedule = ContributionSchedule.FirstHalf)
