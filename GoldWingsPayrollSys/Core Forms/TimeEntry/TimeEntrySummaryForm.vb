@@ -8,26 +8,26 @@ Imports log4net
 
 Public Class TimeEntrySummaryForm
 
-    Private Shared logger As ILog = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
+    Private Shared _logger As ILog = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
 
     Private Shared HoursPerDay As TimeSpan = New TimeSpan(24, 0, 0)
 
-    Private payPeriods As Collection(Of PayPeriod)
+    Private _payPeriods As Collection(Of PayPeriod)
 
-    Private employees As Collection(Of Employee)
+    Private _employees As Collection(Of Employee)
 
-    Private selectedEmployee As Employee
+    Private _selectedEmployee As Employee
 
-    Private selectedPayPeriod As PayPeriod
+    Private _selectedPayPeriod As PayPeriod
 
     Private WithEvents timeEntDurationModal As TimEntduration
 
     Private Async Sub LoadEmployees()
-        employees = Await GetEmployees()
-        employeesDataGridView.DataSource = employees
+        _employees = Await GetEmployees()
+        employeesDataGridView.DataSource = _employees
 
-        If selectedEmployee Is Nothing Then
-            selectedEmployee = employees.FirstOrDefault()
+        If _selectedEmployee Is Nothing Then
+            _selectedEmployee = _employees.FirstOrDefault()
         End If
     End Sub
 
@@ -77,12 +77,12 @@ Public Class TimeEntrySummaryForm
     Public Async Sub LoadPayPeriods()
         Dim numOfRows = 2
 
-        payPeriods = Await GetPayPeriods(z_OrganizationID, 2017, 1)
+        _payPeriods = Await GetPayPeriods(z_OrganizationID, 2017, 1)
         payPeriodsDataGridView.Rows.Add(numOfRows)
 
         Dim monthRowCounters(11) As Integer
 
-        For Each payperiod In Me.payPeriods
+        For Each payperiod In Me._payPeriods
             Dim monthNo = payperiod.Month
             Dim counter = monthRowCounters(monthNo - 1)
 
@@ -96,17 +96,17 @@ Public Class TimeEntrySummaryForm
             monthRowCounters(monthNo - 1) = counter
         Next
 
-        If selectedPayPeriod Is Nothing Then
+        If _selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            selectedPayPeriod = payPeriods.FirstOrDefault(
+            _selectedPayPeriod = _payPeriods.FirstOrDefault(
                 Function(payPeriod)
                     Return (payPeriod.PayFromDate <= dateToday) And (payPeriod.PayToDate >= dateToday)
                 End Function
             )
 
-            Dim rowIdx = (selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
-            Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(selectedPayPeriod.Month - 1)
+            Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
+            Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
             payPeriodsDataGridView.CurrentCell = payPeriodCell
         End If
     End Sub
@@ -153,14 +153,14 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Public Async Sub LoadTimeEntries()
-        logger.Info(New Object() {"LoadTimeEntries()", selectedEmployee, selectedPayPeriod})
+        _logger.Info(New Object() {"LoadTimeEntries()", _selectedEmployee, _selectedPayPeriod})
 
-        If selectedEmployee Is Nothing Or selectedPayPeriod Is Nothing Then
+        If _selectedEmployee Is Nothing Or _selectedPayPeriod Is Nothing Then
             Return
         End If
 
         timeEntriesDataGridView.AutoGenerateColumns = False
-        timeEntriesDataGridView.DataSource = Await GetTimeEntries(selectedEmployee, selectedPayPeriod)
+        timeEntriesDataGridView.DataSource = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
     End Sub
 
     Private Async Function GetYears() As Task(Of Collection(Of Integer))
@@ -301,8 +301,8 @@ Public Class TimeEntrySummaryForm
 
         Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
 
-        If employee IsNot selectedEmployee Then
-            selectedEmployee = employee
+        If employee IsNot _selectedEmployee Then
+            _selectedEmployee = employee
 
             LoadTimeEntries()
         End If
@@ -315,8 +315,8 @@ Public Class TimeEntrySummaryForm
 
         Dim payPeriod = DirectCast(payPeriodsDataGridView.CurrentCell.Value, PayPeriod)
 
-        If payPeriod IsNot selectedPayPeriod Then
-            selectedPayPeriod = payPeriod
+        If payPeriod IsNot _selectedPayPeriod Then
+            _selectedPayPeriod = payPeriod
 
             LoadTimeEntries()
         End If
@@ -347,7 +347,7 @@ Public Class TimeEntrySummaryForm
 
         Dim filteredTask = Task.Factory.StartNew(
             Function() New BindingList(Of Employee)(
-                employees.Where(matchCriteria).ToList()
+                _employees.Where(matchCriteria).ToList()
             )
         )
 
