@@ -13,16 +13,16 @@
 
             Dim istaxab = If(chktaxab.Checked, "1", "0")
 
-            Dim new_ID = Employee.INS_product(Trim(TextBox1.Text), _
+            Dim new_ID = EmployeeForm.INS_product(Trim(TextBox1.Text), _
                              Trim(TextBox1.Text), _
                              "Bonus", _
                              istaxab)
 
-            Employee.cbobontype.Items.Add(Trim(TextBox1.Text))
+            EmployeeForm.cbobontype.Items.Add(Trim(TextBox1.Text))
 
-            Employee.bon_Type.Items.Add(Trim(TextBox1.Text))
+            EmployeeForm.bon_Type.Items.Add(Trim(TextBox1.Text))
 
-            Employee.bonus_type.Add(Trim(TextBox1.Text) & "@" & new_ID)
+            EmployeeForm.bonus_type.Add(Trim(TextBox1.Text) & "@" & new_ID)
 
         End If
 

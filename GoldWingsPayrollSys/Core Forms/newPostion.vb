@@ -97,7 +97,7 @@ Public Class newPostion
     End Property
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        txtPositName.Text = Employee.strTrimProper(txtPositName.Text)
+        txtPositName.Text = EmployeeForm.strTrimProper(txtPositName.Text)
 
         n_PositionName = txtPositName.Text
 
@@ -192,7 +192,7 @@ Public Class newPostion
 
         End If
 
-        WarnBalloon(, , txtPositName, , , 1) : Employee.Enabled = True
+        WarnBalloon(, , txtPositName, , , 1) : EmployeeForm.Enabled = True
 
         WarnBalloon(, , cboDivis, , , 1)
 

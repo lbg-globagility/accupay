@@ -1,13 +1,13 @@
 ﻿Public Class newEmpType
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        txtNewEmpType.Text = Employee.strTrimProper(txtNewEmpType.Text)
+        txtNewEmpType.Text = EmployeeForm.strTrimProper(txtNewEmpType.Text)
         If txtNewEmpType.Text = "" Then
             txtNewEmpType.Focus()
             WarnBalloon("Please input an Employee Type.", "Invalid Employee Type", txtNewEmpType, txtNewEmpType.Width - 16, -69, , 3000)
             Exit Sub
         End If
-        For Each itm In Employee.cboEmpType.Items
+        For Each itm In EmployeeForm.cboEmpType.Items
             If itm = txtNewEmpType.Text Then
                 txtNewEmpType.Focus()
                 WarnBalloon(txtNewEmpType.Text & " is already exist. Please try another.", "Invalid Employee Type", txtNewEmpType, txtNewEmpType.Width - 16, -69, , 3000)
@@ -15,8 +15,8 @@
             End If
         Next
 
-        Employee.cboEmpType.Items.Add(txtNewEmpType.Text)
-        Employee.cboEmpType.Text = txtNewEmpType.Text
+        EmployeeForm.cboEmpType.Items.Add(txtNewEmpType.Text)
+        EmployeeForm.cboEmpType.Text = txtNewEmpType.Text
 
         INS_LoL(txtNewEmpType.Text, txtNewEmpType.Text, "Employee Type", , "Yes", , , 1)
         Me.Hide() : Me.Close()

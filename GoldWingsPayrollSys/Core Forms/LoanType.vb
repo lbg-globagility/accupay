@@ -10,13 +10,13 @@
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         If Trim(TextBox1.Text) <> "" Then
             'TextBox1.Text = StrConv(TextBox1.Text, VbStrConv.ProperCase)
-            Dim new_ID = Employee.INS_product(Trim(TextBox1.Text), _
+            Dim new_ID = EmployeeForm.INS_product(Trim(TextBox1.Text), _
                              Trim(TextBox1.Text), _
                              "Loan Type")
 
-            Employee.cboloantype.Items.Add(Trim(TextBox1.Text))
+            EmployeeForm.cboloantype.Items.Add(Trim(TextBox1.Text))
 
-            Employee.loan_type.Add(Trim(TextBox1.Text) & "@" & new_ID)
+            EmployeeForm.loan_type.Add(Trim(TextBox1.Text) & "@" & new_ID)
 
         End If
 

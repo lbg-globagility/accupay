@@ -13,17 +13,17 @@
 
             TextBox1.Text = StrConv(TextBox1.Text, VbStrConv.ProperCase)
 
-            Dim new_ID = Employee.INS_product(Trim(TextBox1.Text), _
+            Dim new_ID = EmployeeForm.INS_product(Trim(TextBox1.Text), _
                              Trim(TextBox1.Text), _
                              "Allowance Type", _
                              istaxab,
                              chkFixed.Checked)
 
-            Employee.cboallowtype.Items.Add(Trim(TextBox1.Text))
+            EmployeeForm.cboallowtype.Items.Add(Trim(TextBox1.Text))
 
-            Employee.eall_Type.Items.Add(Trim(TextBox1.Text))
+            EmployeeForm.eall_Type.Items.Add(Trim(TextBox1.Text))
 
-            Employee.allowance_type.Add(Trim(TextBox1.Text) & "@" & new_ID)
+            EmployeeForm.allowance_type.Add(Trim(TextBox1.Text) & "@" & new_ID)
 
         End If
 

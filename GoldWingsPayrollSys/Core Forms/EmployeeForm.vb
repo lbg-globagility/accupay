@@ -9,7 +9,7 @@ Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
 
-Public Class Employee
+Public Class EmployeeForm
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -110,13 +110,13 @@ Public Class Employee
 
                     If datread.Read Then
                         For i = 0 To field_count
-                            chkliststring.Add(datread.GetString(text_indx).ToString & "@" & _
+                            chkliststring.Add(datread.GetString(text_indx).ToString & "@" &
                                               datread.GetString(text_indx + 1).ToString)
                             text_indx += 2
                         Next
                     Else
                         For i = 0 To field_count
-                            chkliststring.Add(datread.GetString(text_indx).ToString & "@" & _
+                            chkliststring.Add(datread.GetString(text_indx).ToString & "@" &
                                               datread.GetString(text_indx + 1).ToString)
                             text_indx += 2
                         Next
@@ -560,83 +560,83 @@ Public Class Employee
     Dim payFreq As New AutoCompleteStringCollection
     Dim dbnow, u_nem, positID, payFreqID, yrold18 As String
     Dim emp_rcount, salutn_count, viewid As Integer
-    Public q_employee As String = "SELECT e.RowID," & _
-        "e.EmployeeID 'Employee ID'," & _
-        "e.FirstName 'First Name'," & _
-        "e.MiddleName 'Middle Name'," & _
-        "e.LastName 'Last Name'," & _
-        "e.Surname," & _
-        "e.Nickname," & _
-        "e.MaritalStatus 'Marital Status'," & _
-        "COALESCE(e.NoOfDependents,0) 'No. Of Dependents'," & _
-        "e.Birthdate," & _
-        "e.Startdate," & _
-        "IFNULL(d.Name,'') `Job Title`," & _
-        "COALESCE(pos.PositionName,'') 'Position'," & _
-        "e.Salutation," & _
-        "e.TINNo 'TIN'," & _
-        "e.SSSNo 'SSS No.'," & _
-        "e.HDMFNo 'PAGIBIG No.'," & _
-        "e.PhilHealthNo 'PhilHealth No.'," & _
-        "e.WorkPhone 'Work Phone No.'," & _
-        "e.HomePhone 'Home Phone No.'," & _
-        "e.MobilePhone 'Mobile Phone No.'," & _
-        "e.HomeAddress 'Home address'," & _
-        "e.EmailAddress 'Email address'," & _
-        "IF(e.Gender='M','Male','Female') 'Gender'," & _
-        "e.EmploymentStatus 'Employment Status'," & _
-        "IFNULL(pf.PayFrequencyType,'') 'Pay Frequency'," & _
-        "e.UndertimeOverride," & _
-        "e.OvertimeOverride," & _
-        "DATE_FORMAT(e.Created,'%m-%d-%Y') 'Creation Date'," & _
-        "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," & _
-        "COALESCE(DATE_FORMAT(e.LastUpd,'%m-%d-%Y'),'') 'Last Update'," & _
-        "IFNULL((SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=e.LastUpdBy),'') 'LastUpdate by'" & _
-        ",COALESCE(pos.RowID,'') 'PositionID'" & _
-        ",IFNULL(e.PayFrequencyID,'') 'PayFrequencyID'" & _
-        ",e.EmployeeType" & _
-        ",e.LeaveBalance" & _
-        ",e.SickLeaveBalance" & _
-        ",e.MaternityLeaveBalance" & _
-        ",e.LeaveAllowance" & _
-        ",e.SickLeaveAllowance" & _
-        ",e.MaternityLeaveAllowance" & _
-        ",e.LeavePerPayPeriod" & _
-        ",e.SickLeavePerPayPeriod" & _
-        ",e.MaternityLeavePerPayPeriod" & _
-        ",COALESCE(fstat.RowID,3) 'fstatRowID'" & _
-        ",e.AlphaListExempted" & _
-        ",e.WorkDaysPerYear" & _
-        ",CHAR_TO_DAYOFWEEK(e.DayOfRest) 'DayOfRest'" & _
-        ",e.ATMNo" & _
-        ",e.BankName" & _
-        ",IFNULL(e.OtherLeavePerPayPeriod,0) 'OtherLeavePerPayPeriod'" & _
-        ",IFNULL(e.OtherLeaveAllowance,0) 'OtherLeaveAllowance'" & _
-        ",IFNULL(e.OtherLeaveBalance,0) 'OtherLeaveBalance'" & _
-        ",e.CalcHoliday" & _
-        ",e.CalcSpecialHoliday" & _
-        ",e.CalcNightDiff" & _
-        ",e.CalcNightDiffOT" & _
-        ",e.CalcRestDay" & _
-        ",e.CalcRestDayOT" & _
-        ",IFNULL(e.LateGracePeriod,0) AS LateGracePeriod" & _
-        ",IFNULL(e.RevealInPayroll,1) AS RevealInPayroll" & _
-        ",IFNULL(e.OffsetBalance,0) AS OffsetBalance" & _
-        ",IFNULL(ag.AgencyName,'') AS AgencyName" & _
-        ",IFNULL(ag.RowID,'') AS ag_RowID" & _
-        " " & _
-        "FROM employee e " & _
-        "LEFT JOIN user u ON e.CreatedBy=u.RowID " & _
-        "LEFT JOIN position pos ON e.PositionID=pos.RowID " & _
+    Public q_employee As String = "SELECT e.RowID," &
+        "e.EmployeeID 'Employee ID'," &
+        "e.FirstName 'First Name'," &
+        "e.MiddleName 'Middle Name'," &
+        "e.LastName 'Last Name'," &
+        "e.Surname," &
+        "e.Nickname," &
+        "e.MaritalStatus 'Marital Status'," &
+        "COALESCE(e.NoOfDependents,0) 'No. Of Dependents'," &
+        "e.Birthdate," &
+        "e.Startdate," &
+        "IFNULL(d.Name,'') `Job Title`," &
+        "COALESCE(pos.PositionName,'') 'Position'," &
+        "e.Salutation," &
+        "e.TINNo 'TIN'," &
+        "e.SSSNo 'SSS No.'," &
+        "e.HDMFNo 'PAGIBIG No.'," &
+        "e.PhilHealthNo 'PhilHealth No.'," &
+        "e.WorkPhone 'Work Phone No.'," &
+        "e.HomePhone 'Home Phone No.'," &
+        "e.MobilePhone 'Mobile Phone No.'," &
+        "e.HomeAddress 'Home address'," &
+        "e.EmailAddress 'Email address'," &
+        "IF(e.Gender='M','Male','Female') 'Gender'," &
+        "e.EmploymentStatus 'Employment Status'," &
+        "IFNULL(pf.PayFrequencyType,'') 'Pay Frequency'," &
+        "e.UndertimeOverride," &
+        "e.OvertimeOverride," &
+        "DATE_FORMAT(e.Created,'%m-%d-%Y') 'Creation Date'," &
+        "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," &
+        "COALESCE(DATE_FORMAT(e.LastUpd,'%m-%d-%Y'),'') 'Last Update'," &
+        "IFNULL((SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=e.LastUpdBy),'') 'LastUpdate by'" &
+        ",COALESCE(pos.RowID,'') 'PositionID'" &
+        ",IFNULL(e.PayFrequencyID,'') 'PayFrequencyID'" &
+        ",e.EmployeeType" &
+        ",e.LeaveBalance" &
+        ",e.SickLeaveBalance" &
+        ",e.MaternityLeaveBalance" &
+        ",e.LeaveAllowance" &
+        ",e.SickLeaveAllowance" &
+        ",e.MaternityLeaveAllowance" &
+        ",e.LeavePerPayPeriod" &
+        ",e.SickLeavePerPayPeriod" &
+        ",e.MaternityLeavePerPayPeriod" &
+        ",COALESCE(fstat.RowID,3) 'fstatRowID'" &
+        ",e.AlphaListExempted" &
+        ",e.WorkDaysPerYear" &
+        ",CHAR_TO_DAYOFWEEK(e.DayOfRest) 'DayOfRest'" &
+        ",e.ATMNo" &
+        ",e.BankName" &
+        ",IFNULL(e.OtherLeavePerPayPeriod,0) 'OtherLeavePerPayPeriod'" &
+        ",IFNULL(e.OtherLeaveAllowance,0) 'OtherLeaveAllowance'" &
+        ",IFNULL(e.OtherLeaveBalance,0) 'OtherLeaveBalance'" &
+        ",e.CalcHoliday" &
+        ",e.CalcSpecialHoliday" &
+        ",e.CalcNightDiff" &
+        ",e.CalcNightDiffOT" &
+        ",e.CalcRestDay" &
+        ",e.CalcRestDayOT" &
+        ",IFNULL(e.LateGracePeriod,0) AS LateGracePeriod" &
+        ",IFNULL(e.RevealInPayroll,1) AS RevealInPayroll" &
+        ",IFNULL(e.OffsetBalance,0) AS OffsetBalance" &
+        ",IFNULL(ag.AgencyName,'') AS AgencyName" &
+        ",IFNULL(ag.RowID,'') AS ag_RowID" &
+        " " &
+        "FROM employee e " &
+        "LEFT JOIN user u ON e.CreatedBy=u.RowID " &
+        "LEFT JOIN position pos ON e.PositionID=pos.RowID " &
         "LEFT JOIN division d ON d.RowID=pos.DivisionID " &
-        "LEFT JOIN payfrequency pf ON e.PayFrequencyID=pf.RowID " & _
-        "LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents " & _
-        "LEFT JOIN agency ag ON ag.RowID=e.AgencyID " & _
+        "LEFT JOIN payfrequency pf ON e.PayFrequencyID=pf.RowID " &
+        "LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents " &
+        "LEFT JOIN agency ag ON ag.RowID=e.AgencyID " &
         "WHERE e.OrganizationID=" & orgztnID
 
     Dim _by As String = "(SELECT CONCAT(CONCAT(UCASE(LEFT(FirstName, 1)), SUBSTRING(FirstName, 2)),' ',CONCAT(UCASE(LEFT(LastName, 1)), SUBSTRING(LastName, 2)))  FROM user WHERE RowID="
 
-    Public q_empldependents As String = "SELECT  edep.RowID, edep.ParentEmployeeID, COALESCE(edep.Salutation,''),  `FirstName`,  COALESCE(edep.MiddleName,''),  edep.LastName,  COALESCE(edep.Surname,''),  edep.RelationToEmployee,  COALESCE(edep.TINNo,''),  COALESCE(edep.SSSNo,''),  COALESCE(edep.HDMFNo,''),  COALESCE(PhilHealthNo,''),  COALESCE(EmailAddress,''),  COALESCE(edep.WorkPhone,''),  COALESCE(edep.HomePhone,''),  COALESCE(edep.MobilePhone,''),  COALESCE(HomeAddress,''),  COALESCE(Nickname,''),  COALESCE(edep.JobTitle,''), COALESCE(edep.Gender,''),  IF(edep.ActiveFlag='Y','TRUE','FALSE'),  COALESCE(DATE_FORMAT(edep.Birthdate,'%m-%d-%Y'),'')," & _
+    Public q_empldependents As String = "SELECT  edep.RowID, edep.ParentEmployeeID, COALESCE(edep.Salutation,''),  `FirstName`,  COALESCE(edep.MiddleName,''),  edep.LastName,  COALESCE(edep.Surname,''),  edep.RelationToEmployee,  COALESCE(edep.TINNo,''),  COALESCE(edep.SSSNo,''),  COALESCE(edep.HDMFNo,''),  COALESCE(PhilHealthNo,''),  COALESCE(EmailAddress,''),  COALESCE(edep.WorkPhone,''),  COALESCE(edep.HomePhone,''),  COALESCE(edep.MobilePhone,''),  COALESCE(HomeAddress,''),  COALESCE(Nickname,''),  COALESCE(edep.JobTitle,''), COALESCE(edep.Gender,''),  IF(edep.ActiveFlag='Y','TRUE','FALSE'),  COALESCE(DATE_FORMAT(edep.Birthdate,'%m-%d-%Y'),'')," &
         _by & "edep.CreatedBy), DATE_FORMAT(edep.Created,'%m-%d-%Y')," & _by & "edep.LastUpdBy),  COALESCE(DATE_FORMAT(edep.LastUpd,'%m-%d-%Y'),'') FROM employeedependents edep WHERE edep.OrganizationID=" & orgztnID & " AND edep.ParentEmployeeID="
 
     Public q_salut As String = "SELECT DisplayValue FROM listofval lov WHERE lov.Type='Salutation' AND Active='Yes'"
@@ -644,11 +644,11 @@ Public Class Employee
     Public q_empstat As String = "SELECT DisplayValue FROM listofval lov WHERE lov.Type='Employment Status' AND Active='Yes'"
     'Public q_empstat As String = "SELECT DISTINCT(COALESCE(EmploymentStatus,'')) FROM employee WHERE OrganizationID=" & orgztnID & " UNION SELECT DISTINCT(COALESCE(DisplayValue,'')) FROM listofval lov WHERE lov.Type='Employment Status' AND Active='Yes'"
 
-    Public q_emptype As String = "SELECT DisplayValue" & _
-        " FROM listofval lov" & _
-        " WHERE lov.`Type`='Employee Type'" & _
-        " AND lov.Active='Yes'" & _
-        " AND lov.DisplayValue IN ('Daily','Monthly','Fixed')" & _
+    Public q_emptype As String = "SELECT DisplayValue" &
+        " FROM listofval lov" &
+        " WHERE lov.`Type`='Employee Type'" &
+        " AND lov.Active='Yes'" &
+        " AND lov.DisplayValue IN ('Daily','Monthly','Fixed')" &
         " ORDER BY FIELD(lov.DisplayValue,'Daily','Monthly','Fixed');"
 
     Public q_maritstat As String = "SELECT DisplayValue FROM listofval lov WHERE lov.Type='Marital Status' AND Active='Yes'"
@@ -880,7 +880,7 @@ Public Class Employee
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
-        If tsbtnNewEmp.Enabled = False And _
+        If tsbtnNewEmp.Enabled = False And
             EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" & Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1 Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
@@ -988,7 +988,7 @@ Public Class Employee
 
             Dim agensi_rowid = If(cboAgency.SelectedValue = Nothing, DBNull.Value, cboAgency.SelectedValue)
             positID = cboPosit.SelectedValue
-            new_eRowID = _
+            new_eRowID =
             INSUPDemployee(employee_RowID,
                            z_User,
                            orgztnID,
@@ -1080,7 +1080,7 @@ Public Class Employee
 
             dgvEmp_RowIndex = 0
 
-            InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully." & vbNewLine & _
+            InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully." & vbNewLine &
                         If(rdMale.Checked, "His", "Her") & " salary was created also, you may now proceed to 'SALARY' tab and update it.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
 
         Else 'UPDATE employee
@@ -1120,7 +1120,7 @@ Public Class Employee
             .Cells("Column6").Value = Format(dtpempbdate.Value, machineShortDateFormat) 'dtpBDate.Value
             '.Cells("Column7").Value = Trim(txtDivisionName.Text)
 
-            .Cells("Column8").Value = If(cboPosit.SelectedIndex = -1, "", _
+            .Cells("Column8").Value = If(cboPosit.SelectedIndex = -1, "",
                                          If(cboPosit.SelectedIndex = (cboPosit.Items.Count - 1), Nothing, Trim(cboPosit.Text)))
 
             .Cells("Column9").Value = strTrimProper(cboSalut.Text) : .Cells("Column10").Value = txtTIN.Text
@@ -1206,7 +1206,7 @@ Public Class Employee
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
-        If tsbtnNewEmp.Enabled = False And _
+        If tsbtnNewEmp.Enabled = False And
             EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" & Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1 Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
@@ -1401,10 +1401,10 @@ Public Class Employee
 
             'End If
 
-            Dim positn_ID = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", _
-                               DBNull.Value, _
-                               If(getStrBetween(positn.Item(cboPosit.SelectedIndex).ToString, "", "@") = "NULL", _
-                                  DBNull.Value, _
+            Dim positn_ID = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "",
+                               DBNull.Value,
+                               If(getStrBetween(positn.Item(cboPosit.SelectedIndex).ToString, "", "@") = "NULL",
+                                  DBNull.Value,
                                   getStrBetween(positn.Item(cboPosit.SelectedIndex).ToString, "", "@")))
 
             params(27, 1) = positID 'positn_ID 'PositID
@@ -1421,11 +1421,11 @@ Public Class Employee
                 '    Employee_RowID_ID = dgvEmp.CurrentRow.Cells("").Value
             End If
 
-            Dim count_Dependents = EXECQUER("SELECT COUNT(edep.RowID)" & _
-                                     " FROM employeedependents edep" & _
-                                     " LEFT JOIN employee e ON e.RowID=edep.ParentEmployeeID AND e.OrganizationID=edep.OrganizationID" & _
-                                     " WHERE e.RowID='" & Employee_RowID_ID & "'" & _
-                                     " AND edep.ActiveFlag='Y'" & _
+            Dim count_Dependents = EXECQUER("SELECT COUNT(edep.RowID)" &
+                                     " FROM employeedependents edep" &
+                                     " LEFT JOIN employee e ON e.RowID=edep.ParentEmployeeID AND e.OrganizationID=edep.OrganizationID" &
+                                     " WHERE e.RowID='" & Employee_RowID_ID & "'" &
+                                     " AND edep.ActiveFlag='Y'" &
                                      " AND edep.OrganizationID='" & orgztnID & "';") 'NumDependent
 
             count_Dependents = IntVal(count_Dependents)
@@ -1495,9 +1495,9 @@ Public Class Employee
             params(54, 1) = If(chkcalcRestDayOT.Checked, "Y", "N")
 
 
-            Dim emplo_RowID = _
-                EXEC_INSUPD_PROCEDURE(params, _
-                                       "INSUPD_employee_01", _
+            Dim emplo_RowID =
+                EXEC_INSUPD_PROCEDURE(params,
+                                       "INSUPD_employee_01",
                                        "returnval")
 
             If tsbtnNewEmp.Enabled = False Then 'INSERT employee
@@ -1519,7 +1519,7 @@ Public Class Employee
 
                 dgvEmp_RowIndex = 0
 
-                InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully." & vbNewLine & _
+                InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully." & vbNewLine &
                             If(rdMale.Checked, "His", "Her") & " salary was created also, you may now proceed to 'SALARY' tab and update it.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
 
             Else 'UPDATE employee
@@ -1568,7 +1568,7 @@ Public Class Employee
                 .Cells("Column7").Value = Trim(txtDivisionName.Text)
 
                 '.Cells("Column8").Value = If(cboPosit.Text = "...............Leave as blank...............", "", Trim(cboPosit.Text))
-                .Cells("Column8").Value = If(cboPosit.SelectedIndex = -1, "", _
+                .Cells("Column8").Value = If(cboPosit.SelectedIndex = -1, "",
                                              If(cboPosit.SelectedIndex = (cboPosit.Items.Count - 1), Nothing, Trim(cboPosit.Text)))
 
                 .Cells("Column9").Value = strTrimProper(cboSalut.Text) : .Cells("Column10").Value = txtTIN.Text
@@ -1580,7 +1580,7 @@ Public Class Employee
                 .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = strTrimProper(txtSName.Text)
                 .Cells("Column25").Value = dbnow : .Cells("Column26").Value = u_nem
 
-                .Cells("Column29").Value = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", "", _
+                .Cells("Column29").Value = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", "",
                                              If(cboPosit.SelectedIndex = (cboPosit.Items.Count - 1), Nothing, getStrBetween(positn.Item(cboPosit.SelectedIndex), "", "@")))
 
                 .Cells("Column22").Value = paytypestring
@@ -1718,32 +1718,32 @@ Public Class Employee
                     Dim prevMaritStat As String = .Cells("Column31").Value 'cboMaritStat.Text
                     Dim prevNoOfDepen As String = Val(.Cells("Column32").Value) 'txtNumDepen.Text
                     'Format(dtpBDate.Value, "yyyy-MM-dd")
-                    EXECQUER("UPDATE employee SET " & _
-                    "EmployeeID='" & Trim(txtEmpID.Text) & _
-                    "',FirstName='" & strTrimProper(txtFName.Text) & _
-                    "',MiddleName='" & strTrimProper(txtMName.Text) & _
-                    "',LastName='" & strTrimProper(txtLName.Text) & _
-                    "',Surname='" & txtSName.Text & _
-                    "',Nickname='" & strTrimProper(txtNName.Text) & _
-                    "',Birthdate='" & empBDate & _
-                    "',JobTitle='" & Trim(txtDivisionName.Text) & _
-                    "',Salutation='" & strTrimProper(cboSalut.Text) & _
-                    "',TINNo='" & txtTIN.Text & _
-                    "',SSSNo='" & txtSSS.Text & _
-                    "',HDMFNo='" & txtHDMF.Text & _
-                    "',PhilHealthNo='" & txtPIN.Text & _
-                    "',WorkPhone='" & strTrimProper(txtWorkPhne.Text) & _
-                    "',HomePhone='" & strTrimProper(txtHomePhne.Text) & _
-                    "',MobilePhone='" & strTrimProper(txtMobPhne.Text) & _
-                    "',HomeAddress='" & strTrimProper(txtHomeAddr.Text) & _
-                    "',EmailAddress='" & txtemail.Text & _
-                    "',Gender='" & _gend & _
-                    "',EmploymentStatus='" & cboEmpStat.Text & _
-                    "',MaritalStatus='" & cboMaritStat.Text & _
-                    "',NoOfDependents=" & Val(txtNumDepen.Text) & _
-                    ",EmployeeType='" & cboEmpType.Text & _
-                    "',LastUpd=CURRENT_TIMESTAMP()" & _
-                    ",LastUpdBy=1" & _positID & _freqID & _
+                    EXECQUER("UPDATE employee SET " &
+                    "EmployeeID='" & Trim(txtEmpID.Text) &
+                    "',FirstName='" & strTrimProper(txtFName.Text) &
+                    "',MiddleName='" & strTrimProper(txtMName.Text) &
+                    "',LastName='" & strTrimProper(txtLName.Text) &
+                    "',Surname='" & txtSName.Text &
+                    "',Nickname='" & strTrimProper(txtNName.Text) &
+                    "',Birthdate='" & empBDate &
+                    "',JobTitle='" & Trim(txtDivisionName.Text) &
+                    "',Salutation='" & strTrimProper(cboSalut.Text) &
+                    "',TINNo='" & txtTIN.Text &
+                    "',SSSNo='" & txtSSS.Text &
+                    "',HDMFNo='" & txtHDMF.Text &
+                    "',PhilHealthNo='" & txtPIN.Text &
+                    "',WorkPhone='" & strTrimProper(txtWorkPhne.Text) &
+                    "',HomePhone='" & strTrimProper(txtHomePhne.Text) &
+                    "',MobilePhone='" & strTrimProper(txtMobPhne.Text) &
+                    "',HomeAddress='" & strTrimProper(txtHomeAddr.Text) &
+                    "',EmailAddress='" & txtemail.Text &
+                    "',Gender='" & _gend &
+                    "',EmploymentStatus='" & cboEmpStat.Text &
+                    "',MaritalStatus='" & cboMaritStat.Text &
+                    "',NoOfDependents=" & Val(txtNumDepen.Text) &
+                    ",EmployeeType='" & cboEmpType.Text &
+                    "',LastUpd=CURRENT_TIMESTAMP()" &
+                    ",LastUpdBy=1" & _positID & _freqID &
                     " WHERE RowID='" & .Cells("RowID").Value & "'")
 
                     If hasERR = 0 Then 'ito yung error sa EXECQUER() dun sa myModule.vb
@@ -1761,19 +1761,19 @@ Public Class Employee
                         .Cells("Column27").Value = dbnow : .Cells("Column28").Value = u_nem
                         '.Cells("Column22").Value = cboPayFreq.Text
 
-                        .Cells("Column29").Value = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", "", _
+                        .Cells("Column29").Value = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", "",
                                                       getStrBetween(positn.Item(cboPosit.SelectedIndex), "", "@"))
 
                         .Cells("Column31").Value = cboMaritStat.Text : .Cells("Column32").Value = Val(txtNumDepen.Text)
                         .Cells("Column34").Value = cboEmpType.Text
 
-                        If prevMaritStat <> .Cells("Column31").Value And _
+                        If prevMaritStat <> .Cells("Column31").Value And
                            prevNoOfDepen <> .Cells("Column32").Value Then
 
                             MsgBox("INSERT Row employeesalary")
                             'INSERT Row employeesalary
                         Else
-                            If prevMaritStat <> .Cells("Column31").Value Or _
+                            If prevMaritStat <> .Cells("Column31").Value Or
                                prevNoOfDepen <> .Cells("Column32").Value Then
 
                                 MsgBox("INSERT Row employeesalary")
@@ -1793,14 +1793,14 @@ Public Class Employee
 
         Else 'Format(dtpBDate.Value, "yyyy-MM-dd")
 
-            Dim _RowID = INS_employee(txtEmpID.Text, _
-                                cboEmpStat.Text, _gend, Trim(txtDivisionName.Text), positID, strTrimProper(cboSalut.Text), strTrimProper(txtFName.Text), _
-                                strTrimProper(txtMName.Text), _
-                                strTrimProper(txtLName.Text), strTrimProper(txtNName.Text), _
-                                empBDate, _
-                                txtTIN.Text, txtSSS.Text, txtHDMF.Text, txtPIN.Text, txtemail.Text, _
-                                txtWorkPhne.Text, txtHomePhne.Text, _
-                                txtMobPhne.Text, strTrimProper(txtHomeAddr.Text), payFreqID, , , strTrimProper(txtSName.Text), _
+            Dim _RowID = INS_employee(txtEmpID.Text,
+                                cboEmpStat.Text, _gend, Trim(txtDivisionName.Text), positID, strTrimProper(cboSalut.Text), strTrimProper(txtFName.Text),
+                                strTrimProper(txtMName.Text),
+                                strTrimProper(txtLName.Text), strTrimProper(txtNName.Text),
+                                empBDate,
+                                txtTIN.Text, txtSSS.Text, txtHDMF.Text, txtPIN.Text, txtemail.Text,
+                                txtWorkPhne.Text, txtHomePhne.Text,
+                                txtMobPhne.Text, strTrimProper(txtHomeAddr.Text), payFreqID, , , strTrimProper(txtSName.Text),
                                 cboMaritStat.Text, Val(txtNumDepen.Text), 0, strTrimProper(cboEmpType.Text))
             _EmpRowID = _RowID
             RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
@@ -1830,7 +1830,7 @@ Public Class Employee
                     .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = strTrimProper(txtSName.Text)
                     .Cells("Column25").Value = dbnow : .Cells("Column26").Value = u_nem
                     '.Cells("Column22").Value = cboPayFreq.Text
-                    .Cells("Column29").Value = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", "", _
+                    .Cells("Column29").Value = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", "",
                                                   getStrBetween(positn.Item(cboPosit.SelectedIndex), "", "@"))
 
                     .Cells("Column31").Value = cboMaritStat.Text : .Cells("Column32").Value = Val(txtNumDepen.Text)
@@ -1864,7 +1864,7 @@ Public Class Employee
             Case 0
 
             Case 1 'PERSONAL PROFILE
-                If tsbtnNewEmp.Enabled = False Or _
+                If tsbtnNewEmp.Enabled = False Or
                     listofEditDepen.Count <> 0 Then
 
                     'prompt = MessageBox.Show("Do you want to exit without saving ?", "Confimation for an unsave work", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
@@ -2013,15 +2013,15 @@ Public Class Employee
 
     Sub loadPositName()
 
-        enlistTheLists("SELECT CONCAT(pos.RowID,'@',pos.PositionName)" & _
-                       " FROM position pos" & _
-                       " WHERE pos.RowID NOT IN" & _
-                       " (SELECT COALESCE(emp.PositionID,'')" & _
-                       " FROM employee emp" & _
-                       " WHERE emp.OrganizationID=" & orgztnID & "" & _
-                       " GROUP BY emp.PositionID UNION SELECT DISTINCT(PositionID) FROM user WHERE PositionID IS NOT NULL AND OrganizationID=" & orgztnID & ")" & _
-                       " AND OrganizationID=" & orgztnID & "" & _
-                       " ORDER BY pos.PositionName;", _
+        enlistTheLists("SELECT CONCAT(pos.RowID,'@',pos.PositionName)" &
+                       " FROM position pos" &
+                       " WHERE pos.RowID NOT IN" &
+                       " (SELECT COALESCE(emp.PositionID,'')" &
+                       " FROM employee emp" &
+                       " WHERE emp.OrganizationID=" & orgztnID & "" &
+                       " GROUP BY emp.PositionID UNION SELECT DISTINCT(PositionID) FROM user WHERE PositionID IS NOT NULL AND OrganizationID=" & orgztnID & ")" &
+                       " AND OrganizationID=" & orgztnID & "" &
+                       " ORDER BY pos.PositionName;",
                        positn)
 
         positn.Add("NULL@...............Leave as blank...............") : cboPosit.Items.Clear()
@@ -2040,9 +2040,9 @@ Public Class Employee
         '    cboPosit.Items.Add(StrReverse(getStrBetween(StrReverse(r), "", "@")))
         'Next
 
-        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT RowID,PositionName" & _
-                                                             " FROM position" & _
-                                                             " WHERE OrganizationID=" & orgztnID & _
+        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT RowID,PositionName" &
+                                                             " FROM position" &
+                                                             " WHERE OrganizationID=" & orgztnID &
                                                              " AND RowID!='" & String.Empty & "';")
         Static once As SByte = 0
 
@@ -2075,8 +2075,8 @@ Public Class Employee
         params(0, 1) = orgztnID
         params(1, 1) = PayFreqRowID
 
-        Dim _divisor = EXEC_INSUPD_PROCEDURE(params, _
-                                              "COUNT_payperiodthisyear", _
+        Dim _divisor = EXEC_INSUPD_PROCEDURE(params,
+                                              "COUNT_payperiodthisyear",
                                               "payp_count")
 
         Return CInt(_divisor)
@@ -2204,17 +2204,17 @@ Public Class Employee
 
     End Sub
 
-    Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click, tsbtnCloseempawar.Click, tsbtnCloseempcert.Click, ToolStripButton4.Click, _
-                                                                    btnClose.Click, ToolStripButton5.Click, ToolStripButton13.Click, _
-                                                                   ToolStripButton18.Click, ToolStripButton24.Click, ToolStripButton30.Click, ToolStripButton32.Click, _
-                                                                   ToolStripButton2.Click, ToolStripButton7.Click, _
-                                                                   ToolStripButton11.Click, tsbtnCloseOBF.Click, ToolStripButton9.Click, ToolStripButton7.Click, _
+    Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click, tsbtnCloseempawar.Click, tsbtnCloseempcert.Click, ToolStripButton4.Click,
+                                                                    btnClose.Click, ToolStripButton5.Click, ToolStripButton13.Click,
+                                                                   ToolStripButton18.Click, ToolStripButton24.Click, ToolStripButton30.Click, ToolStripButton32.Click,
+                                                                   ToolStripButton2.Click, ToolStripButton7.Click,
+                                                                   ToolStripButton11.Click, tsbtnCloseOBF.Click, ToolStripButton9.Click, ToolStripButton7.Click,
                                                                    ToolStripButton16.Click, ToolStripButton12.Click 'ToolStripButton12.Click
 
         Me.Close()
     End Sub
 
-    Private Sub txt_Leave(sender As Object, e As EventArgs) Handles txtFName.Leave, txtFName.Leave, txtHomeAddr.Leave, _
+    Private Sub txt_Leave(sender As Object, e As EventArgs) Handles txtFName.Leave, txtFName.Leave, txtHomeAddr.Leave,
                                                                     txtLName.Leave, txtMName.Leave, txtNName.Leave, txtSName.Leave ', txtJTtle.Leave
         With DirectCast(sender, TextBox)
             .Text = StrConv(.Text, VbStrConv.ProperCase)
@@ -2345,23 +2345,23 @@ Public Class Employee
 
                     employeefullname = employeefullname & " " & .Cells("Column4").Value
 
-                    employeefullname = employeefullname & If(.Cells("Column21").Value = Nothing, _
-                                                             "", _
-                                                             "-" & StrConv(.Cells("Column21").Value, _
+                    employeefullname = employeefullname & If(.Cells("Column21").Value = Nothing,
+                                                             "",
+                                                             "-" & StrConv(.Cells("Column21").Value,
                                                                            VbStrConv.ProperCase))
                     '                                                       'Microsoft.VisualBasic.Left(.Cells("Column21").Value.ToString, 1)
 
-                    LastFirstMidName = .Cells("Column4").Value & ", " & .Cells("Column2").Value & _
+                    LastFirstMidName = .Cells("Column4").Value & ", " & .Cells("Column2").Value &
                         If(Trim(addtlWord) = Nothing, "", If(Trim(addtlWord) = ".", "", ", " & addtlWord))
 
 
 
-                    subdetails = "ID# " & .Cells("Column1").Value & _
-                                If(.Cells("Column8").Value = Nothing, _
-                                                                   "", _
-                                                                   ", " & .Cells("Column8").Value) & _
-                                If(.Cells("Column34").Value = Nothing, _
-                                                                   "", _
+                    subdetails = "ID# " & .Cells("Column1").Value &
+                                If(.Cells("Column8").Value = Nothing,
+                                                                   "",
+                                                                   ", " & .Cells("Column8").Value) &
+                                If(.Cells("Column34").Value = Nothing,
+                                                                   "",
                                                                    ", " & .Cells("Column34").Value & " salary")
 
                 End If
@@ -3375,13 +3375,13 @@ Public Class Employee
 
         Dim leavedefaults As New DataTable
 
-        leavedefaults = retAsDatTbl("SELECT CAST(VacationLeaveDays AS DECIMAL(11,2)) 'vl_allowance'" & _
-                                        ",CAST(SickLeaveDays AS DECIMAL(11,2)) 'sl_allowance'" & _
-                                        ",CAST(MaternityLeaveDays AS DECIMAL(11,2)) 'ml_allowance'" & _
-                                        ",CAST((VacationLeaveDays) / 26 AS DECIMAL(11,2)) 'vl_payp'" & _
-                                        ",CAST((SickLeaveDays) / 26 AS DECIMAL(11,2)) 'sl_payp'" & _
-                                        ",CAST((MaternityLeaveDays) / 26 AS DECIMAL(11,2)) 'ml_payp'" & _
-                                        " FROM organization" & _
+        leavedefaults = retAsDatTbl("SELECT CAST(VacationLeaveDays AS DECIMAL(11,2)) 'vl_allowance'" &
+                                        ",CAST(SickLeaveDays AS DECIMAL(11,2)) 'sl_allowance'" &
+                                        ",CAST(MaternityLeaveDays AS DECIMAL(11,2)) 'ml_allowance'" &
+                                        ",CAST((VacationLeaveDays) / 26 AS DECIMAL(11,2)) 'vl_payp'" &
+                                        ",CAST((SickLeaveDays) / 26 AS DECIMAL(11,2)) 'sl_payp'" &
+                                        ",CAST((MaternityLeaveDays) / 26 AS DECIMAL(11,2)) 'ml_payp'" &
+                                        " FROM organization" &
                                         " WHERE RowID=" & orgztnID & ";")
 
         For Each drow As DataRow In leavedefaults.Rows
@@ -3847,9 +3847,9 @@ Public Class Employee
         End If
 
         If TabControl2.SelectedIndex = 0 Then
-            Dim q_search = searchCommon(ComboBox7, TextBox1, _
-                                        ComboBox8, TextBox15, _
-                                        ComboBox9, TextBox16, _
+            Dim q_search = searchCommon(ComboBox7, TextBox1,
+                                        ComboBox8, TextBox15,
+                                        ComboBox9, TextBox16,
                                         ComboBox10, TextBox17)
 
             'If q_search = Nothing Then
@@ -3864,7 +3864,7 @@ Public Class Employee
                                             TextBox16.Text,
                                             pagination}
 
-            Dim n_ReadSQLProcedureToDatatable As New  _
+            Dim n_ReadSQLProcedureToDatatable As New _
                 ReadSQLProcedureToDatatable("SEARCH_employeeprofile",
                                             param_array)
 
@@ -3934,7 +3934,7 @@ Public Class Employee
             Then
             MessageBox.Show("parsing error")
         End If
-        If (e.Context = _
+        If (e.Context =
             DataGridViewDataErrorContexts.LeaveControl) Then
             MessageBox.Show("leave control error")
         End If
@@ -3983,7 +3983,7 @@ Public Class Employee
             RemoveHandler txtdgvDepen.KeyDown, AddressOf dgvDepen_KeyDown
         End If
     End Sub
-    Private Sub cboSearchCommon_KeyPress(sender As Object, e As KeyPressEventArgs) Handles ComboBox7.KeyPress, ComboBox8.KeyPress, ComboBox9.KeyPress, _
+    Private Sub cboSearchCommon_KeyPress(sender As Object, e As KeyPressEventArgs) Handles ComboBox7.KeyPress, ComboBox8.KeyPress, ComboBox9.KeyPress,
                                                                                            ComboBox10.KeyPress
         Dim e_asc As String = Asc(e.KeyChar)
 
@@ -3995,7 +3995,7 @@ Public Class Employee
         Else : e.Handled = True
         End If
     End Sub
-    Private Sub ComboBox7_TextChanged(sender As Object, e As EventArgs) Handles ComboBox7.TextChanged, ComboBox8.TextChanged, ComboBox9.TextChanged, _
+    Private Sub ComboBox7_TextChanged(sender As Object, e As EventArgs) Handles ComboBox7.TextChanged, ComboBox8.TextChanged, ComboBox9.TextChanged,
                                                                                            ComboBox10.TextChanged
         Dim cboSearch_nem As String = DirectCast(sender, ComboBox).Name
 
@@ -4021,7 +4021,7 @@ Public Class Employee
             End If
         End If
     End Sub
-    Private Sub Search_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TextBox1.KeyPress, TextBox15.KeyPress, TextBox16.KeyPress, _
+    Private Sub Search_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TextBox1.KeyPress, TextBox15.KeyPress, TextBox16.KeyPress,
                                                                                   TextBox17.KeyPress
         Dim e_asc As String = Asc(e.KeyChar)
 
@@ -4030,9 +4030,9 @@ Public Class Employee
         End If
     End Sub
     Function searchCommon(Optional cbox1 As ComboBox = Nothing, Optional search1 As Object = Nothing,
-                          Optional cbox2 As ComboBox = Nothing, Optional search2 As Object = Nothing, _
+                          Optional cbox2 As ComboBox = Nothing, Optional search2 As Object = Nothing,
                           Optional cbox3 As ComboBox = Nothing, Optional search3 As Object = Nothing,
-                          Optional cbox4 As ComboBox = Nothing, Optional search4 As Object = Nothing, _
+                          Optional cbox4 As ComboBox = Nothing, Optional search4 As Object = Nothing,
                           Optional cbox5 As ComboBox = Nothing, Optional search5 As Object = Nothing) As String
 
         '=============================================
@@ -4411,33 +4411,33 @@ Public Class Employee
                 For Each rlst In listofEditDepen
                     If r.Cells("Colmn0").Value = rlst Then
                         Dim _bdate = Format(Date.Parse(r.Cells("Colmn21").Value), "yyyy-MM-dd")
-                        EXECQUER("UPDATE employeedependents SET " & _
-                        "Salutation='" & r.Cells("Colmn2").Value & _
-                        "',FirstName='" & r.Cells("Colmn3").Value & _
-                        "',MiddleName='" & r.Cells("Colmn4").Value & _
-                        "',LastName='" & r.Cells("Colmn5").Value & _
-                        "',Surname='" & r.Cells("Colmn6").Value & _
-                        "',RelationToEmployee='" & r.Cells("Colmn7").Value & _
-                        "',TINNo='" & r.Cells("Colmn8").Value & _
-                        "',SSSNo='" & r.Cells("Colmn9").Value & _
-                        "',HDMFNo='" & r.Cells("Colmn10").Value & _
-                        "',PhilHealthNo='" & r.Cells("Colmn11").Value & _
-                        "',EmailAddress='" & r.Cells("Colmn12").Value & _
-                        "',WorkPhone='" & r.Cells("Colmn13").Value & _
-                        "',HomePhone='" & r.Cells("Colmn14").Value & _
-                        "',MobilePhone='" & r.Cells("Colmn15").Value & _
-                        "',HomeAddress='" & r.Cells("Colmn16").Value & _
-                        "',Nickname='" & r.Cells("Colmn17").Value & _
-                        "',JobTitle='" & r.Cells("Colmn18").Value & _
-                        "',Gender='" & r.Cells("Colmn19").Value & _
-                        "',ActiveFlag='" & isActivCell & _
-                        "',Birthdate='" & _bdate & _
-                        "',LastUpd=CURRENT_TIMESTAMP()" & _
-                        ",LastUpdBy=1" & _
+                        EXECQUER("UPDATE employeedependents SET " &
+                        "Salutation='" & r.Cells("Colmn2").Value &
+                        "',FirstName='" & r.Cells("Colmn3").Value &
+                        "',MiddleName='" & r.Cells("Colmn4").Value &
+                        "',LastName='" & r.Cells("Colmn5").Value &
+                        "',Surname='" & r.Cells("Colmn6").Value &
+                        "',RelationToEmployee='" & r.Cells("Colmn7").Value &
+                        "',TINNo='" & r.Cells("Colmn8").Value &
+                        "',SSSNo='" & r.Cells("Colmn9").Value &
+                        "',HDMFNo='" & r.Cells("Colmn10").Value &
+                        "',PhilHealthNo='" & r.Cells("Colmn11").Value &
+                        "',EmailAddress='" & r.Cells("Colmn12").Value &
+                        "',WorkPhone='" & r.Cells("Colmn13").Value &
+                        "',HomePhone='" & r.Cells("Colmn14").Value &
+                        "',MobilePhone='" & r.Cells("Colmn15").Value &
+                        "',HomeAddress='" & r.Cells("Colmn16").Value &
+                        "',Nickname='" & r.Cells("Colmn17").Value &
+                        "',JobTitle='" & r.Cells("Colmn18").Value &
+                        "',Gender='" & r.Cells("Colmn19").Value &
+                        "',ActiveFlag='" & isActivCell &
+                        "',Birthdate='" & _bdate &
+                        "',LastUpd=CURRENT_TIMESTAMP()" &
+                        ",LastUpdBy=1" &
                         " WHERE RowID='" & rlst & "'")
                         finUpd = rlst
 
-                        InfoBalloon("Dependent " & r.Cells("Colmn3").Value & " " & r.Cells("Colmn5").Value & " has successfully updated.", _
+                        InfoBalloon("Dependent " & r.Cells("Colmn3").Value & " " & r.Cells("Colmn5").Value & " has successfully updated.",
                                   "Dependent Update Successful", lblforballoon1, 0, -69)
                         Exit For
                         'Else
@@ -4450,16 +4450,16 @@ Public Class Employee
                 'Dim actv = If(DirectCast(r.Cells("Colmn20"), DataGridViewCheckBoxCell).Value = True, "Y", "N")
 
                 Dim bdate = Format(Date.Parse(r.Cells("Colmn21").Value), "yyyy-MM-dd").Replace("/", "-")
-                Dim depenRowID = INS_employeedepen(r.Cells("Colmn2").Value, r.Cells("Colmn3").Value, _
-                                  r.Cells("Colmn4").Value, r.Cells("Colmn5").Value, _
-                                  r.Cells("Colmn6").Value, dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                  r.Cells("Colmn8").Value, r.Cells("Colmn9").Value, _
-                                  r.Cells("Colmn10").Value, r.Cells("Colmn11").Value, _
-                                  r.Cells("Colmn12").Value, r.Cells("Colmn13").Value, _
-                                  r.Cells("Colmn14").Value, r.Cells("Colmn15").Value, _
-                                  r.Cells("Colmn16").Value, r.Cells("Colmn17").Value, _
-                                  r.Cells("Colmn18").Value, r.Cells("Colmn19").Value, _
-                                  r.Cells("Colmn7").Value, "Y", _
+                Dim depenRowID = INS_employeedepen(r.Cells("Colmn2").Value, r.Cells("Colmn3").Value,
+                                  r.Cells("Colmn4").Value, r.Cells("Colmn5").Value,
+                                  r.Cells("Colmn6").Value, dgvEmp.CurrentRow.Cells("RowID").Value,
+                                  r.Cells("Colmn8").Value, r.Cells("Colmn9").Value,
+                                  r.Cells("Colmn10").Value, r.Cells("Colmn11").Value,
+                                  r.Cells("Colmn12").Value, r.Cells("Colmn13").Value,
+                                  r.Cells("Colmn14").Value, r.Cells("Colmn15").Value,
+                                  r.Cells("Colmn16").Value, r.Cells("Colmn17").Value,
+                                  r.Cells("Colmn18").Value, r.Cells("Colmn19").Value,
+                                  r.Cells("Colmn7").Value, "Y",
                                   bdate)
 
                 r.Cells("Colmn0").Value = depenRowID
@@ -4468,7 +4468,7 @@ Public Class Employee
                 r.Cells("Colmn1").Value = dgvEmp.CurrentRow.Cells("RowID").Value
 
                 InfoBalloon(, , lblforballoon1, , , 1)
-                InfoBalloon("Dependent " & r.Cells("Colmn3").Value & " " & r.Cells("Colmn5").Value & " has successfully created.", _
+                InfoBalloon("Dependent " & r.Cells("Colmn3").Value & " " & r.Cells("Colmn5").Value & " has successfully created.",
                           "New Dependent successfully created", lblforballoon1, 0, -69)
             End If
 
@@ -4581,8 +4581,8 @@ Public Class Employee
 
                     End If
 
-                    If Val(r.Cells("Colmn0").Value) = 0 And _
-                        r.IsNewRow = False And _
+                    If Val(r.Cells("Colmn0").Value) = 0 And
+                        r.IsNewRow = False And
                         tsbtnNewDepen.Visible = True Then
                         'INSERT FUNCTION
 
@@ -4792,8 +4792,8 @@ Public Class Employee
         param(0, 1) = ParentEmployeeID
         param(1, 1) = orgztnID
 
-        EXEC_VIEW_PROCEDURE(param, _
-                           "VIEW_employeedependents", _
+        EXEC_VIEW_PROCEDURE(param,
+                           "VIEW_employeedependents",
                            dgvDepen, , 1)
 
     End Sub
@@ -4869,8 +4869,8 @@ Public Class Employee
 
                 For Each drow As DataRow In employeepix.Rows
                     If drow("RowID").ToString = dgvEmp.CurrentRow.Cells("RowID").Value Then
-                        drow("Image") = If(empPic = Nothing, _
-                                           Nothing, _
+                        drow("Image") = If(empPic = Nothing,
+                                           Nothing,
                                            convertFileToByte(empPic))
 
                         If empPic = Nothing Then
@@ -4928,7 +4928,7 @@ Public Class Employee
 
     Const emp_page_limiter As Integer = 50
 
-    Private Sub First_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles First.LinkClicked, Prev.LinkClicked, _
+    Private Sub First_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles First.LinkClicked, Prev.LinkClicked,
                                                                                                 Nxt.LinkClicked, Last.LinkClicked
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
@@ -4998,15 +4998,15 @@ Public Class Employee
 
         End If
 
-        If (Trim(TextBox1.Text) <> "" Or _
-            Trim(TextBox15.Text) <> "" Or _
-            Trim(TextBox16.Text) <> "" Or _
-            Trim(TextBox17.Text) <> "") And _
+        If (Trim(TextBox1.Text) <> "" Or
+            Trim(TextBox15.Text) <> "" Or
+            Trim(TextBox16.Text) <> "" Or
+            Trim(TextBox17.Text) <> "") And
             TabControl2.SelectedIndex = 0 Then
 
             SearchEmoloyee_Click(sender, e)
 
-        ElseIf Trim(txtSimple.Text) <> "" And _
+        ElseIf Trim(txtSimple.Text) <> "" And
         TabControl2.SelectedIndex = 1 Then
 
             SearchEmoloyee_Click(sender, e)
@@ -5067,8 +5067,8 @@ Public Class Employee
 
             enlistToCboBox("SELECT DisplayValue FROM listofval WHERE `Type`='Bank Names';", cbobank)
 
-            Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT '' AS RowID, '' AS AgencyName" & _
-                                                                 " UNION" & _
+            Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT '' AS RowID, '' AS AgencyName" &
+                                                                 " UNION" &
                                                                  " SELECT RowID,AgencyName FROM agency WHERE OrganizationID='" & orgztnID & "' AND IsActive=1;")
 
             Dim dt_agency As New DataTable
@@ -5097,7 +5097,7 @@ Public Class Employee
                 Colmn2.Items.Add(strval)
             Next
 
-            enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Employee Relationship' ORDER BY OrderBy;", _
+            enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Employee Relationship' ORDER BY OrderBy;",
                            emp_ralation)
 
             Dim dt_payfreq As New DataTable
@@ -5833,8 +5833,8 @@ Public Class Employee
         param(0, 1) = EmployeeID
         param(1, 1) = orgztnID
 
-        EXEC_VIEW_PROCEDURE(param, _
-                           "VIEW_employeeawards", _
+        EXEC_VIEW_PROCEDURE(param,
+                           "VIEW_employeeawards",
                            dgvempawar)
 
     End Sub
@@ -5879,7 +5879,7 @@ Public Class Employee
         param(9, 0) = "eawa_AwardDate"
 
         For Each r As DataGridViewRow In dgvempawar.Rows
-            If Val(r.Cells("eawar_RowID").Value) = 0 And _
+            If Val(r.Cells("eawar_RowID").Value) = 0 And
                 tsbtnNewempawar.Visible = True Then
 
                 If r.IsNewRow = False Then
@@ -6058,8 +6058,8 @@ Public Class Employee
         param(0, 1) = EmployeeID
         param(1, 1) = orgztnID
 
-        EXEC_VIEW_PROCEDURE(param, _
-                            "VIEW_employeecertification", _
+        EXEC_VIEW_PROCEDURE(param,
+                            "VIEW_employeecertification",
                             dgvempcert, , 1)
 
     End Sub
@@ -6112,7 +6112,7 @@ Public Class Employee
 
         For Each r As DataGridViewRow In dgvempcert.Rows
 
-            If Val(r.Cells("ecert_RowID").Value) = 0 And _
+            If Val(r.Cells("ecert_RowID").Value) = 0 And
                 tsbtnNewempcert.Visible = True Then
 
                 If r.IsNewRow = False Then
@@ -6270,7 +6270,7 @@ Public Class Employee
             '    cboleavetypes.Items.Add(strval)
             'Next
 
-            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Employee Leave Status' AND Active='Yes' ORDER BY OrderBy;", _
+            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Employee Leave Status' AND Active='Yes' ORDER BY OrderBy;",
                            cboleavestatus)
 
             view_IDLeave = VIEW_privilege("Employee Leave", orgztnID)
@@ -6282,7 +6282,7 @@ Public Class Employee
                 categleavID = INSUPD_category(, "Leave Type")
             End If
 
-            enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categleavID & "' AND OrganizationID=" & orgztnID & ";", _
+            enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categleavID & "' AND OrganizationID=" & orgztnID & ";",
                            leave_type) 'cboallowtype
 
             cboleavetypes.Items.Clear()
@@ -6359,8 +6359,8 @@ Public Class Employee
         param(0, 1) = EmployeeID
         param(1, 1) = orgztnID
 
-        EXEC_VIEW_PROCEDURE(param, _
-                           "VIEW_employeeleave", _
+        EXEC_VIEW_PROCEDURE(param,
+                           "VIEW_employeeleave",
                            dgvempleave, 1, 1)
 
         AddHandler dgvempleave.SelectionChanged, AddressOf dgvempleave_SelectionChanged
@@ -6457,12 +6457,12 @@ Public Class Employee
 
                 invalids = StrReverse(getStrBetween(StrReverse(dgvempleave.Item(colNameleave, rowIndxleave).ErrorText), "", " "))
 
-                WarnBalloon("Please input a valid " & invalids & ".", _
-                              StrConv(dgvempleave.Item(colNameleave, rowIndxleave).ErrorText, VbStrConv.ProperCase), _
+                WarnBalloon("Please input a valid " & invalids & ".",
+                              StrConv(dgvempleave.Item(colNameleave, rowIndxleave).ErrorText, VbStrConv.ProperCase),
                               lblforballoon, 0, -69)
             Else
-                WarnBalloon("Please input a valid and complete leave.", _
-                            "Invalid employee leave", _
+                WarnBalloon("Please input a valid and complete leave.",
+                            "Invalid employee leave",
                             lblforballoon, 0, -69)
             End If
 
@@ -6495,7 +6495,7 @@ Public Class Employee
         param(13, 0) = "elv_Status"
 
         For Each r As DataGridViewRow In dgvempleave.Rows
-            If Val(r.Cells("elv_RowID").Value) = 0 And _
+            If Val(r.Cells("elv_RowID").Value) = 0 And
                 tsbtnNewLeave.Visible = True Then
 
                 If r.IsNewRow = False Then
@@ -6516,10 +6516,10 @@ Public Class Employee
                         param(10, 1) = If(r.Cells("elv_Reason").Value = Nothing, "", r.Cells("elv_Reason").Value) 'Reason
                         param(11, 1) = If(r.Cells("elv_Comment").Value = Nothing, "", r.Cells("elv_Comment").Value) 'Comments
 
-                        Dim imageobj As Object = If(r.Cells("elv_Image").Value Is Nothing, _
-                                                    DBNull.Value, _
+                        Dim imageobj As Object = If(r.Cells("elv_Image").Value Is Nothing,
+                                                    DBNull.Value,
                                                     r.Cells("elv_Image").Value) 'Image
-                        
+
                         param(12, 1) = imageobj
 
                         param(13, 1) = If(r.Cells("elv_Status").Value = Nothing, "", r.Cells("elv_Status").Value)
@@ -6623,10 +6623,10 @@ Public Class Employee
 
     End Sub
 
-    Sub INSUPD_employeeattachments(Optional eatta_RowID As Object = Nothing, _
-                                   Optional eatta_EmployeeID As Object = Nothing, _
-                                   Optional eatta_Type As Object = Nothing, _
-                                   Optional eatta_FileType As Object = Nothing, _
+    Sub INSUPD_employeeattachments(Optional eatta_RowID As Object = Nothing,
+                                   Optional eatta_EmployeeID As Object = Nothing,
+                                   Optional eatta_Type As Object = Nothing,
+                                   Optional eatta_FileType As Object = Nothing,
                                    Optional eatta_FileName As Object = Nothing)
 
         Dim params(7, 2) As Object
@@ -6649,8 +6649,8 @@ Public Class Employee
         params(6, 1) = eatta_FileType
         params(7, 1) = eatta_FileName
 
-        EXEC_INSUPD_PROCEDURE(params, _
-                              "INSUPD_employeeattachments", _
+        EXEC_INSUPD_PROCEDURE(params,
+                              "INSUPD_employeeattachments",
                               "eatta_ID")
 
     End Sub
@@ -6661,10 +6661,10 @@ Public Class Employee
         isdlleave = 1
 
         If dgvempleave.RowCount <> 1 Then
-            dgvempleave.Item("elv_viewimage", _
+            dgvempleave.Item("elv_viewimage",
                              dgvempleave.CurrentRow.Index).Selected = True
 
-            Dim dgvceleventarg As New DataGridViewCellEventArgs(elv_viewimage.Index, _
+            Dim dgvceleventarg As New DataGridViewCellEventArgs(elv_viewimage.Index,
                                                                 dgvempleave.CurrentRow.Index)
 
             dgvempleave_CellContentClick(sender, dgvceleventarg)
@@ -6694,7 +6694,7 @@ Public Class Employee
 
                 If promptresult = Windows.Forms.DialogResult.No Then
 
-                    Dim _attafileextensn, _
+                    Dim _attafileextensn,
                         _attafilename As String
 
                     _attafilename = dgvempleave.CurrentRow.Cells("elv_attafilename").Value
@@ -6703,7 +6703,7 @@ Public Class Employee
                     'Dim tmp_path = Path.GetTempPath & _
                     '               dgvEmp.CurrentRow.Cells("Column1").Value & "_" & e.RowIndex & ".jpg"
 
-                    Dim tmp_path = Path.GetTempPath & _
+                    Dim tmp_path = Path.GetTempPath &
                                                 _attafilename & _attafileextensn
 
                     If _attafileextensn = Nothing Then
@@ -6722,9 +6722,9 @@ Public Class Employee
 
                             Process.Start(tmp_path)
                         End If
-                        
+
                     End If
-                    
+
                 Else 'If promptresult = Windows.Forms.DialogResult.Yes Then
 
                     Dim dlImage As SaveFileDialog = New SaveFileDialog
@@ -6745,8 +6745,8 @@ Public Class Employee
                         'dlImage.FileName = dgvempleave.CurrentRow.Cells("elv_attafilename").Value & _
                         '                   dgvempleave.CurrentRow.Cells("elv_attafileextensn").Value
 
-                        Dim savefilepath As String = _
-                            Path.GetFullPath(dlImage.FileName) & _
+                        Dim savefilepath As String =
+                            Path.GetFullPath(dlImage.FileName) &
                             dgvempleave.CurrentRow.Cells("elv_attafileextensn").Value
 
                         Dim fs As New FileStream(savefilepath, FileMode.Create)
@@ -6769,13 +6769,13 @@ Public Class Employee
 
     End Sub
 
-    Dim prev_elv_Type, _
-        prev_elv_StartTime, _
-        prev_elv_EndTime, _
-        prev_elv_StartDate, _
-        prev_elv_EndDate, _
-        prev_elv_Reason, _
-        prev_elv_Comment, _
+    Dim prev_elv_Type,
+        prev_elv_StartTime,
+        prev_elv_EndTime,
+        prev_elv_StartDate,
+        prev_elv_EndDate,
+        prev_elv_Reason,
+        prev_elv_Comment,
         prev_elv_Status As String
 
     Private Sub dgvempleave_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvempleave.SelectionChanged
@@ -6800,7 +6800,7 @@ Public Class Employee
                         prev_elv_EndDate = Format(CDate(.Cells("elv_EndDate").Value), machineShortDateFormat)
 
                         prev_elv_Reason = CStr(.Cells("elv_Reason").Value)
-                        
+
                         prev_elv_Comment = CStr(.Cells("elv_Comment").Value)
 
                         prev_elv_Status = CStr(.Cells("elv_Status").Value)
@@ -6930,8 +6930,8 @@ Public Class Employee
                 If dgvempleave.Item("elv_StartDate", rowIndxleave).Value <> Nothing _
                     And dgvempleave.Item("elv_EndDate", rowIndxleave).Value <> Nothing Then
 
-                    Dim date_differ = DateDiff(DateInterval.Day, _
-                                                CDate(dgvempleave.Item("elv_StartDate", rowIndxleave).Value), _
+                    Dim date_differ = DateDiff(DateInterval.Day,
+                                                CDate(dgvempleave.Item("elv_StartDate", rowIndxleave).Value),
                                                 CDate(dgvempleave.Item("elv_EndDate", rowIndxleave).Value))
 
                     If date_differ < 0 Then
@@ -6948,19 +6948,19 @@ Public Class Employee
                     Dim invalidleave = 0
 
                     If dgvEmp.RowCount <> 0 Then
-                        invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                                                    " FROM employeetimeentry" & _
-                                                    " WHERE DATE BETWEEN '" & _from & "'" & _
-                                                    " AND '" & _to & "'" & _
-                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
+                        invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" &
+                                                    " FROM employeetimeentry" &
+                                                    " WHERE DATE BETWEEN '" & _from & "'" &
+                                                    " AND '" & _to & "'" &
+                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value &
                                                     " AND OrganizationID=" & orgztnID & ");")
 
                         If invalidleave = 0 Then
-                            invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                                                    " FROM employeeleave" & _
-                                                    " WHERE " & _
-                                                    " ('" & _from & "' IN (LeaveStartDate,LeaveEndDate) OR '" & _to & "' IN (LeaveStartDate,LeaveEndDate))" & _
-                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
+                            invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" &
+                                                    " FROM employeeleave" &
+                                                    " WHERE " &
+                                                    " ('" & _from & "' IN (LeaveStartDate,LeaveEndDate) OR '" & _to & "' IN (LeaveStartDate,LeaveEndDate))" &
+                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value &
                                                     " AND OrganizationID=" & orgztnID & ");")
                         End If
                     End If
@@ -6996,8 +6996,8 @@ Public Class Employee
 
             Try
 
-                If dateobj.ToString.Contains("A") Or _
-                    dateobj.ToString.Contains("P") Or _
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
                     dateobj.ToString.Contains("M") Then
 
                     ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -7101,13 +7101,13 @@ Public Class Employee
 
                 'MsgBox(Trim(StrReverse(StrReverse("3:15 AM").ToString.Substring(i, ("3:15 AM").ToString.Length - i))).Length)
 
-                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i, _
+                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i,
                                                                                   endtime.ToString.Length - i)
                                           )
                                )
 
-                amTime = If(getStrBetween(amTime, "", ":") = "12", _
-                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")), _
+                amTime = If(getStrBetween(amTime, "", ":") = "12",
+                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")),
                             amTime)
 
                 retrnObj = amTime
@@ -7165,7 +7165,7 @@ Public Class Employee
 
     Dim thefilepath As String
 
-    Dim atta_name, _
+    Dim atta_name,
         atta_extensn As String
 
     Private Sub Button7_Click(sender As Object, e As EventArgs) Handles Button7.Click
@@ -7179,12 +7179,12 @@ Public Class Employee
 
             'browsefile.Filter = "JPEG(*.jpg)|*.jpg"
 
-            browsefile.Filter = "All files (*.*)|*.*" & _
-                                "|JPEG (*.jpg)|*.jpg" & _
-                                "|PNG (*.PNG)|*.png" & _
-                                "|MS Word 97-2003 Document (*.doc)|*.doc" & _
-                                "|MS Word Document (*.docx)|*.docx" & _
-                                "|MS Excel 97-2003 Workbook (*.xls)|*.xls" & _
+            browsefile.Filter = "All files (*.*)|*.*" &
+                                "|JPEG (*.jpg)|*.jpg" &
+                                "|PNG (*.PNG)|*.png" &
+                                "|MS Word 97-2003 Document (*.doc)|*.doc" &
+                                "|MS Word Document (*.docx)|*.docx" &
+                                "|MS Excel 97-2003 Workbook (*.xls)|*.xls" &
                                 "|MS Excel Workbook (*.xlsx)|*.xlsx"
 
             '|" & _
@@ -7325,19 +7325,19 @@ Public Class Employee
 
         txtstarttime.Focus()
 
-        InfoBalloon("Ex. The time is 08:30:15 am" & vbNewLine & _
-                    "     just type '8 30'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine & _
-                    "Ex. The time is 06:15:15 pm" & vbNewLine & _
-                    "     if it is 'pm', get the hour and then plus 12(twelve)" & vbNewLine & _
-                    "     the hour is 6 so, 6 + 12 = 18" & vbNewLine & _
-                    "     just type '18 15'" & vbNewLine & _
-                    "     or '18:15 pm'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine & _
-                    "Ex. The time is 12:12:12 pm" & vbNewLine & _
-                    "     if it is 'pm', and the hour is equal to twelve(12)" & vbNewLine & _
-                    "     no need to add 12" & vbNewLine & _
-                    "     just type '12 12'" & vbNewLine & _
-                    "     or '12:12 pm'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine, _
-                    "How to input Time ?", _
+        InfoBalloon("Ex. The time is 08:30:15 am" & vbNewLine &
+                    "     just type '8 30'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine &
+                    "Ex. The time is 06:15:15 pm" & vbNewLine &
+                    "     if it is 'pm', get the hour and then plus 12(twelve)" & vbNewLine &
+                    "     the hour is 6 so, 6 + 12 = 18" & vbNewLine &
+                    "     just type '18 15'" & vbNewLine &
+                    "     or '18:15 pm'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine &
+                    "Ex. The time is 12:12:12 pm" & vbNewLine &
+                    "     if it is 'pm', and the hour is equal to twelve(12)" & vbNewLine &
+                    "     no need to add 12" & vbNewLine &
+                    "     just type '12 12'" & vbNewLine &
+                    "     or '12:12 pm'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine,
+                    "How to input Time ?",
                     txtstarttime, 82, -240, , 3600000)
 
     End Sub
@@ -7387,8 +7387,8 @@ Public Class Employee
         If thegetval <> "" Then
             Try
 
-                If dateobj.ToString.Contains("A") Or _
-                    dateobj.ToString.Contains("P") Or _
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
                     dateobj.ToString.Contains("M") Then
 
                     ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -7511,8 +7511,8 @@ Public Class Employee
         If thegetval <> "" Then
             Try
 
-                If dateobj.ToString.Contains("A") Or _
-                    dateobj.ToString.Contains("P") Or _
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
                     dateobj.ToString.Contains("M") Then
 
                     ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -7659,11 +7659,11 @@ Public Class Employee
 
         txtstartdate.Focus()
 
-        InfoBalloon("Ex. The date is June 1 2015" & vbNewLine & _
-                    "     just type '6 1 15'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine & vbNewLine & _
-                    "Ex. The date is 2015-07-02" & vbNewLine & _
-                    "     just type '7 2 15'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine, _
-                    "How to input Date ?", _
+        InfoBalloon("Ex. The date is June 1 2015" & vbNewLine &
+                    "     just type '6 1 15'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine & vbNewLine &
+                    "Ex. The date is 2015-07-02" & vbNewLine &
+                    "     just type '7 2 15'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine,
+                    "How to input Date ?",
                     txtstartdate, 82, -135, , 3600000)
 
     End Sub
@@ -7735,8 +7735,8 @@ Public Class Employee
                 If thegetval <> Nothing _
                     And Trim(txtendate.Text) <> Nothing Then
 
-                    Dim date_differ = DateDiff(DateInterval.Day, _
-                                                CDate(thegetval), _
+                    Dim date_differ = DateDiff(DateInterval.Day,
+                                                CDate(thegetval),
                                                 CDate(Trim(txtendate.Text)))
 
                     If date_differ < 0 Then
@@ -7753,19 +7753,19 @@ Public Class Employee
                     Dim invalidleave = 0
 
                     If dgvEmp.RowCount <> 0 Then
-                        invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                                                    " FROM employeetimeentry" & _
-                                                    " WHERE DATE BETWEEN '" & _from & "'" & _
-                                                    " AND '" & _to & "'" & _
-                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
+                        invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" &
+                                                    " FROM employeetimeentry" &
+                                                    " WHERE DATE BETWEEN '" & _from & "'" &
+                                                    " AND '" & _to & "'" &
+                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value &
                                                     " AND OrganizationID=" & orgztnID & ");")
 
                         If invalidleave = 0 Then
-                            invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                                                    " FROM employeeleave" & _
-                                                    " WHERE " & _
-                                                    " ('" & _from & "' IN (LeaveStartDate,LeaveEndDate) OR '" & _to & "' IN (LeaveStartDate,LeaveEndDate))" & _
-                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
+                            invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" &
+                                                    " FROM employeeleave" &
+                                                    " WHERE " &
+                                                    " ('" & _from & "' IN (LeaveStartDate,LeaveEndDate) OR '" & _to & "' IN (LeaveStartDate,LeaveEndDate))" &
+                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value &
                                                     " AND OrganizationID=" & orgztnID & ");")
                         End If
                     End If
@@ -7867,8 +7867,8 @@ Public Class Employee
                 If thegetval <> Nothing _
                     And Trim(txtstartdate.Text) <> Nothing Then
 
-                    Dim date_differ = DateDiff(DateInterval.Day, _
-                                                CDate(Trim(txtstartdate.Text)), _
+                    Dim date_differ = DateDiff(DateInterval.Day,
+                                                CDate(Trim(txtstartdate.Text)),
                                                 CDate(thegetval))
 
                     If date_differ < 0 Then
@@ -7885,19 +7885,19 @@ Public Class Employee
                     Dim invalidleave = 0
 
                     If dgvEmp.RowCount <> 0 Then
-                        invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                                                    " FROM employeetimeentry" & _
-                                                    " WHERE DATE BETWEEN '" & _from & "'" & _
-                                                    " AND '" & _to & "'" & _
-                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
+                        invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" &
+                                                    " FROM employeetimeentry" &
+                                                    " WHERE DATE BETWEEN '" & _from & "'" &
+                                                    " AND '" & _to & "'" &
+                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value &
                                                     " AND OrganizationID=" & orgztnID & ");")
 
                         If invalidleave = 0 Then
-                            invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                                                    " FROM employeeleave" & _
-                                                    " WHERE " & _
-                                                    " ('" & _from & "' IN (LeaveStartDate,LeaveEndDate) OR '" & _to & "' IN (LeaveStartDate,LeaveEndDate))" & _
-                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
+                            invalidleave = EXECQUER("SELECT EXISTS(SELECT RowID" &
+                                                    " FROM employeeleave" &
+                                                    " WHERE " &
+                                                    " ('" & _from & "' IN (LeaveStartDate,LeaveEndDate) OR '" & _to & "' IN (LeaveStartDate,LeaveEndDate))" &
+                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value &
                                                     " AND OrganizationID=" & orgztnID & ");")
                         End If
                     End If
@@ -8084,9 +8084,9 @@ Public Class Employee
 
     Dim dateColumn As String
 
-    Function VIEW_employeemedrecordID(Optional emedrecord_EmployeeID As Object = Nothing, _
-                                      Optional emedrecord_DateFrom As Object = Nothing, _
-                                      Optional emedrecord_DateTo As Object = Nothing, _
+    Function VIEW_employeemedrecordID(Optional emedrecord_EmployeeID As Object = Nothing,
+                                      Optional emedrecord_DateFrom As Object = Nothing,
+                                      Optional emedrecord_DateTo As Object = Nothing,
                                       Optional emedrecord_ProductID As Object = Nothing) As Object
         Dim param(4, 2) As Object
 
@@ -8102,19 +8102,19 @@ Public Class Employee
         param(3, 1) = If(emedrecord_ProductID = Nothing, DBNull.Value, CInt(emedrecord_ProductID))
         param(4, 1) = orgztnID
 
-        Dim returnval = EXEC_INSUPD_PROCEDURE(param, _
-                                              "VIEW_employeemedrecordID", _
+        Dim returnval = EXEC_INSUPD_PROCEDURE(param,
+                                              "VIEW_employeemedrecordID",
                                               "empmedrecordID")
 
         Return returnval
 
     End Function
 
-    Sub INS_employeemedicalrecord(Optional emedrec_RowID As Object = Nothing, _
-                                     Optional emedrec_EmployeeID As Object = Nothing, _
-                                     Optional emedrec_DateFrom As Object = Nothing, _
-                                     Optional emedrec_DateTo As Object = Nothing, _
-                                     Optional emedrec_ProductID As Object = Nothing, _
+    Sub INS_employeemedicalrecord(Optional emedrec_RowID As Object = Nothing,
+                                     Optional emedrec_EmployeeID As Object = Nothing,
+                                     Optional emedrec_DateFrom As Object = Nothing,
+                                     Optional emedrec_DateTo As Object = Nothing,
+                                     Optional emedrec_ProductID As Object = Nothing,
                                      Optional emedrec_Finding As Object = Nothing)
 
         'INSERT LANG ITO SA employeemedicalrecord
@@ -8162,9 +8162,9 @@ Public Class Employee
 
     End Sub
 
-    Function INS_product(Optional p_Name As Object = Nothing, _
-                         Optional p_PartNo As Object = Nothing, _
-                         Optional p_CategName As Object = Nothing, _
+    Function INS_product(Optional p_Name As Object = Nothing,
+                         Optional p_PartNo As Object = Nothing,
+                         Optional p_CategName As Object = Nothing,
                          Optional p_Status As Object = "Active",
                          Optional p_IsFixed As Boolean = False) As Object
 
@@ -8387,7 +8387,7 @@ Public Class Employee
     Private Sub fillempdisciplinary()
         If Not dgvEmp.Rows.Count = 0 Then
             Dim dt As New DataTable
-            dt = getDataTableForSQL("Select *,ed.Comments 'ed_Comments' From employeedisciplinaryaction ed inner join product p on ed.FindingID = p.RowID " & _
+            dt = getDataTableForSQL("Select *,ed.Comments 'ed_Comments' From employeedisciplinaryaction ed inner join product p on ed.FindingID = p.RowID " &
                                     "Where ed.OrganizationID = '" & z_OrganizationID & "' And ed.EmployeeID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "' Order by ed.RowID DESC")
 
             dgvDisciplinaryList.Rows.Clear()
@@ -8416,7 +8416,7 @@ Public Class Employee
         If Not dgvDisciplinaryList.Rows.Count = 0 Then
             Dim dt As New DataTable
 
-            dt = getDataTableForSQL("Select * From employeedisciplinaryaction ed inner join product p on ed.FindingID = p.RowID " & _
+            dt = getDataTableForSQL("Select * From employeedisciplinaryaction ed inner join product p on ed.FindingID = p.RowID " &
                                     "Where ed.OrganizationID = '" & z_OrganizationID & "' And ed.RowID = '" & dID & "'")
 
             If dt.Rows.Count > 0 Then
@@ -8493,17 +8493,17 @@ Public Class Employee
                 Dim fID As String = getStringItem("Select RowID From product where PartNo = '" & cmbFinding.Text & "' And organizationID = '" & z_OrganizationID & "'")
                 Dim getfID As Integer = Val(fID)
 
-                sp_employeedisciplinaryaction(z_datetime, _
-                                              z_User, _
-                                              z_datetime, _
-                                              z_OrganizationID, _
-                                              z_User, _
-                                              Trim(cboAction.Text), _
-                                              txtcomments.Text, _
-                                              txtDesc.Text, _
-                                              getfID, dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                              dtpFrom.Value.ToString("yyyy-MM-dd"), _
-                                              dtpTo.Value.ToString("yyyy-MM-dd"), _
+                sp_employeedisciplinaryaction(z_datetime,
+                                              z_User,
+                                              z_datetime,
+                                              z_OrganizationID,
+                                              z_User,
+                                              Trim(cboAction.Text),
+                                              txtcomments.Text,
+                                              txtDesc.Text,
+                                              getfID, dgvEmp.CurrentRow.Cells("RowID").Value,
+                                              dtpFrom.Value.ToString("yyyy-MM-dd"),
+                                              dtpTo.Value.ToString("yyyy-MM-dd"),
                                               discipenalty)
 
                 fillempdisciplinary()
@@ -8528,8 +8528,8 @@ Public Class Employee
                 Dim getfID As Integer = Val(fID)
                 Dim penaltyUpd = If(discipenalty = Nothing, Nothing, ",Penalty='" & discipenalty & "'")
 
-                DirectCommand("UPDATE employeedisciplinaryaction SET Action = '" & cboAction.Text & "', DateFrom = '" & dtpFrom.Value.ToString("yyyy-MM-dd") & "' " & _
-                              ", DateTo = '" & dtpTo.Value.ToString("yyyy-MM-dd") & "', FindingDescription = '" & txtDesc.Text & "', Comments = '" & txtdiscipcomment.Text & "', " & _
+                DirectCommand("UPDATE employeedisciplinaryaction SET Action = '" & cboAction.Text & "', DateFrom = '" & dtpFrom.Value.ToString("yyyy-MM-dd") & "' " &
+                              ", DateTo = '" & dtpTo.Value.ToString("yyyy-MM-dd") & "', FindingDescription = '" & txtDesc.Text & "', Comments = '" & txtdiscipcomment.Text & "', " &
                               "FindingID = '" & getfID & "'" & penaltyUpd & " Where RowID = '" & dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value & "';")
 
                 fillempdisciplinary()
@@ -8663,7 +8663,7 @@ Public Class Employee
         If dgvEmp.Rows.Count = 0 Then
         Else
             Dim dt As New DataTable
-            dt = getDataTableForSQL("Select * from employeeeducation ed inner join employee ee on ed.EmployeeID = ee.RowID " & _
+            dt = getDataTableForSQL("Select * from employeeeducation ed inner join employee ee on ed.EmployeeID = ee.RowID " &
                                     "where ee.OrganizationID = '" & z_OrganizationID & "' and ee.EmployeeID = '" & dgvEmp.CurrentRow.Cells(c_empID.Index).Value & "'")
 
             dgvEducback.Rows.Clear()
@@ -8716,7 +8716,7 @@ Public Class Employee
 
     Private Sub btnSaveEduc_Click(sender As Object, e As EventArgs) Handles btnSaveEduc.Click
         If dgvEmp.RowCount <> 0 Then
-            
+
             If is_NewEducBG = 1 Then
 
             Else
@@ -8725,8 +8725,8 @@ Public Class Employee
 
             If btnNewEduc.Enabled = False Then
 
-                SP_EducBackGround(z_datetime, z_User, z_datetime, z_User, z_OrganizationID, dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                  dtpFrom.Value.ToString(machineShortDateFormat), dtpTo.Value.ToString(machineShortDateFormat), _
+                SP_EducBackGround(z_datetime, z_User, z_datetime, z_User, z_OrganizationID, dgvEmp.CurrentRow.Cells("RowID").Value,
+                                  dtpFrom.Value.ToString(machineShortDateFormat), dtpTo.Value.ToString(machineShortDateFormat),
                                   txtCourse.Text, txtSchool.Text, txtDegree.Text, txtMinor.Text, cmbEducType.Text, txtRemarks.Text)
 
                 myBalloon("Successfully Save", "Saved", lblforballoon, , -100)
@@ -8741,8 +8741,8 @@ Public Class Employee
                     Exit Sub
                 End If
                 If dgvEducback.RowCount <> 0 Then
-                    SP_employeeeducationUpdate(dtpFrom.Value.ToString(machineShortDateFormat), dtpTo.Value.ToString(machineShortDateFormat), _
-                                  txtCourse.Text, txtSchool.Text, txtDegree.Text, txtMinor.Text, cmbEducType.Text, txtRemarks.Text, _
+                    SP_employeeeducationUpdate(dtpFrom.Value.ToString(machineShortDateFormat), dtpTo.Value.ToString(machineShortDateFormat),
+                                  txtCourse.Text, txtSchool.Text, txtDegree.Text, txtMinor.Text, cmbEducType.Text, txtRemarks.Text,
                                   dgvEducback.CurrentRow.Cells(c_RowID1.Index).Value)
 
                     myBalloon("Successfully Save", "Saved", lblforballoon, , -100)
@@ -8779,7 +8779,7 @@ Public Class Employee
     Private Sub fillselectRowID()
 
         Dim dt As New DataTable
-        dt = getDataTableForSQL("Select * from employeeeducation ed inner join employee ee on ed.EmployeeID = ee.RowID " & _
+        dt = getDataTableForSQL("Select * from employeeeducation ed inner join employee ee on ed.EmployeeID = ee.RowID " &
                                 "where ee.OrganizationID = '" & z_OrganizationID & "' And ee.RowID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "'")
 
         dgvEducback.Rows.Clear()
@@ -8807,7 +8807,7 @@ Public Class Employee
             cleartextbox()
         Else
             Dim dt As New DataTable
-            dt = getDataTableForSQL("Select * from employeeeducation ed inner join employee ee on ed.EmployeeID = ee.RowID " & _
+            dt = getDataTableForSQL("Select * from employeeeducation ed inner join employee ee on ed.EmployeeID = ee.RowID " &
                                     "where ee.OrganizationID = '" & z_OrganizationID & "' And ed.RowID = '" & dgvEducback.CurrentRow.Cells(c_RowID1.Index).Value & "'")
             cleartextbox()
             For Each drow As DataRow In dt.Rows
@@ -8948,9 +8948,9 @@ Public Class Employee
                 End If
             Else
 
-                SP_employeepreviousemployer(txtCompanyName.Text, txtTradeName.Text, z_OrganizationID, txtMainPhone.Text, txtFaxNo.Text, txtJobTitle.Text, _
-                                       Format(CDate(dtpExfromto.Value), "yyyy-MM-dd") & "@" & Trim(dateExpTo), txtCompAddr.Text, txtContactName.Text, txtEmailAdd.Text, txtAltEmailAdd.Text, txtAltPhone.Text, _
-                                      txtUrl.Text, Trim(txtTinNo.Text), txtJobFunction.Text, z_datetime, z_User, z_datetime, z_User, txtOrganizationType.Text, _
+                SP_employeepreviousemployer(txtCompanyName.Text, txtTradeName.Text, z_OrganizationID, txtMainPhone.Text, txtFaxNo.Text, txtJobTitle.Text,
+                                       Format(CDate(dtpExfromto.Value), "yyyy-MM-dd") & "@" & Trim(dateExpTo), txtCompAddr.Text, txtContactName.Text, txtEmailAdd.Text, txtAltEmailAdd.Text, txtAltPhone.Text,
+                                      txtUrl.Text, Trim(txtTinNo.Text), txtJobFunction.Text, z_datetime, z_User, z_datetime, z_User, txtOrganizationType.Text,
                                       dgvEmp.CurrentRow.Cells("RowID").Value)
                 fillemployerlist()
 
@@ -8975,9 +8975,9 @@ Public Class Employee
                 End If
             Else
                 'dtpExpto
-                SP_EmployeePreviousEmployerUpdate(txtCompanyName.Text, txtTradeName.Text, txtMainPhone.Text, txtFaxNo.Text, txtJobTitle.Text, _
-                                Format(CDate(dtpExfromto.Value), "yyyy-MM-dd") & "@" & Trim(dateExpTo), txtCompAddr.Text, txtContactName.Text, txtEmailAdd.Text, txtAltEmailAdd.Text, txtAltPhone.Text, _
-                               txtUrl.Text, Trim(txtTinNo.Text), txtJobFunction.Text, txtOrganizationType.Text, _
+                SP_EmployeePreviousEmployerUpdate(txtCompanyName.Text, txtTradeName.Text, txtMainPhone.Text, txtFaxNo.Text, txtJobTitle.Text,
+                                Format(CDate(dtpExfromto.Value), "yyyy-MM-dd") & "@" & Trim(dateExpTo), txtCompAddr.Text, txtContactName.Text, txtEmailAdd.Text, txtAltEmailAdd.Text, txtAltPhone.Text,
+                               txtUrl.Text, Trim(txtTinNo.Text), txtJobFunction.Text, txtOrganizationType.Text,
                                dgvListCompany.CurrentRow.Cells(c_rowidPrevEmp.Index).Value)
                 fillemployerlist()
                 btnNewPrevEmp.Enabled = True
@@ -9000,7 +9000,7 @@ Public Class Employee
 
         SetWarningIfEmpty(txtCompAddr, "Hide this error provider")
         SetWarningIfEmpty(txtEmailAdd, "Hide this error provider")
-        
+
     End Sub
 
     Private Sub btnDelPrevEmp_Click(sender As Object, e As EventArgs) Handles btnDelPrevEmp.Click
@@ -9067,7 +9067,7 @@ Public Class Employee
             cleartextboxPrevEmp()
         Else
             Dim dt As New DataTable
-            dt = getDataTableForSQL("Select * From employeepreviousemployer where EmployeeID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "' " & _
+            dt = getDataTableForSQL("Select * From employeepreviousemployer where EmployeeID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "' " &
                                     "And OrganizationID = '" & z_OrganizationID & "' ")
 
             dgvListCompany.Rows.Clear()
@@ -9121,7 +9121,7 @@ Public Class Employee
             dtpExfromto.Value = Format(CDate(dbnow), machineShortDateFormat)
         Else
             Dim dt As New DataTable
-            dt = getDataTableForSQL("Select * From employeepreviousemployer where RowID = '" & dgvListCompany.CurrentRow.Cells(c_rowidPrevEmp.Index).Value & "' " & _
+            dt = getDataTableForSQL("Select * From employeepreviousemployer where RowID = '" & dgvListCompany.CurrentRow.Cells(c_rowidPrevEmp.Index).Value & "' " &
                                     "And OrganizationID = '" & z_OrganizationID & "'")
             If dt.Rows.Count > 0 Then
                 cleartextboxPrevEmp()
@@ -9371,7 +9371,7 @@ Public Class Employee
             Dim ii = DateDiff(DateInterval.Day, CDate(drow("EffectiveDateFrom")), CDate(drow("Curdate")))
 
             Dim min_date As Date
-            
+
             If ii <= 0 Then
                 If drow("CurrDateIsGreater") > "1" Then
                     min_date = DateAdd(DateInterval.Day, 1, CDate(drow("Curdate")))
@@ -9430,11 +9430,11 @@ Public Class Employee
                 cmbto.Items.Clear()
                 'cmbfrom.Text
                 'If Trim(txtpositfrompromot.Text) = "" Then
-                fillCombobox("SELECT PositionName from Position Where OrganizationID = '" & orgztnID & _
-                             "' And RowID NOT IN (SELECT PositionID FROM employee WHERE OrganizationID=" & orgztnID & _
-                             " AND PositionID IS NOT NULL GROUP BY PositionID" & _
-                             " UNION SELECT PositionID FROM user WHERE OrganizationID='" & orgztnID & _
-                             "' GROUP BY PositionID);", _
+                fillCombobox("SELECT PositionName from Position Where OrganizationID = '" & orgztnID &
+                             "' And RowID NOT IN (SELECT PositionID FROM employee WHERE OrganizationID=" & orgztnID &
+                             " AND PositionID IS NOT NULL GROUP BY PositionID" &
+                             " UNION SELECT PositionID FROM user WHERE OrganizationID='" & orgztnID &
+                             "' GROUP BY PositionID);",
                              cmbto)
                 'Else
                 '    fillCombobox("SELECT PositionName from Position Where OrganizationID = '" & orgztnID & "' And PositionName != '" & txtpositfrompromot.Text & "';", _
@@ -9444,12 +9444,12 @@ Public Class Employee
                 MsgBox(ex.Message & vbNewLine & "Error in 'Position to'.")
             End Try
 
-            Dim getsalarnearnow = EXECQUER("SELECT COALESCE(Salary,0)" & _
-                                   " FROM employeesalary" & _
-                                   " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value & _
-                                   "' AND OrganizationID='" & orgztnID & _
-                                   "' AND EffectiveDateTo IS NULL" & _
-                                   " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveDateFrom)" & _
+            Dim getsalarnearnow = EXECQUER("SELECT COALESCE(Salary,0)" &
+                                   " FROM employeesalary" &
+                                   " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value &
+                                   "' AND OrganizationID='" & orgztnID &
+                                   "' AND EffectiveDateTo IS NULL" &
+                                   " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveDateFrom)" &
                                    " LIMIT 1;")
 
             txtempcurrbasicpay.Text = Val(getsalarnearnow)
@@ -9457,11 +9457,11 @@ Public Class Employee
 
             Dim EffDateBeforCurrent As New DataTable
 
-            EffDateBeforCurrent = retAsDatTbl("SELECT EffectiveDateFrom" & _
-                                   ",EffectiveDateTo" & _
-                                   " FROM employeesalary" & _
-                                   " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value & _
-                                   "' AND OrganizationID='" & orgztnID & _
+            EffDateBeforCurrent = retAsDatTbl("SELECT EffectiveDateFrom" &
+                                   ",EffectiveDateTo" &
+                                   " FROM employeesalary" &
+                                   " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value &
+                                   "' AND OrganizationID='" & orgztnID &
                                    "' ORDER BY EffectiveDateFrom DESC;")
 
             If EffDateBeforCurrent.Rows.Count = 1 Then
@@ -9507,8 +9507,8 @@ Public Class Employee
 
             ElseIf EffDateBeforCurrent.Rows.Count >= 2 Then
 
-                Dim dateDiffer = DateDiff(DateInterval.Day, _
-                                          CDate(EffDateBeforCurrent.Rows(1)("EffectiveDateTo").ToString), _
+                Dim dateDiffer = DateDiff(DateInterval.Day,
+                                          CDate(EffDateBeforCurrent.Rows(1)("EffectiveDateTo").ToString),
                                           CDate(EffDateBeforCurrent.Rows(0)("EffectiveDateFrom").ToString))
 
                 Dim thevaliddate = Nothing
@@ -9567,12 +9567,12 @@ Public Class Employee
         dgvPromotionList.Rows.Clear()
         If Not dgvEmp.Rows.Count = 0 Then
             Dim dt As New DataTable
-            dt = getDataTableForSQL("select concat(COALESCE(e.Lastname, ' '),' ', COALESCE(e.Firstname, ' '), ' ', COALESCE(e.MiddleName, ' ')) as name " & _
-                                    ",ep.EffectiveDate, ep.CompensationChange, es.BasicPay, ep.PositionFrom, ep.PositionTo, e.EmployeeID, ep.RowID " & _
-                                    ", IFNULL(ep.Reason,'') 'Reason'" & _
-                                    "from employeepromotions ep LEFT join employee e on ep.EmployeeID = e.RowID " & _
-                                    "LEFT join employeesalary es on ep.EmployeeSalaryID = es.RowID " & _
-                                    "where ep.OrganizationID = '" & z_OrganizationID & "' And e.RowID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "'" & _
+            dt = getDataTableForSQL("select concat(COALESCE(e.Lastname, ' '),' ', COALESCE(e.Firstname, ' '), ' ', COALESCE(e.MiddleName, ' ')) as name " &
+                                    ",ep.EffectiveDate, ep.CompensationChange, es.BasicPay, ep.PositionFrom, ep.PositionTo, e.EmployeeID, ep.RowID " &
+                                    ", IFNULL(ep.Reason,'') 'Reason'" &
+                                    "from employeepromotions ep LEFT join employee e on ep.EmployeeID = e.RowID " &
+                                    "LEFT join employeesalary es on ep.EmployeeSalaryID = es.RowID " &
+                                    "where ep.OrganizationID = '" & z_OrganizationID & "' And e.RowID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "'" &
                                     " ORDER BY RowID DESC;")
 
             If dt.Rows.Count > 0 Then
@@ -9588,7 +9588,7 @@ Public Class Employee
                             getflg = "No"
                         End If
 
-                        
+
                         'dgvPromotionList.Item(n, c_empID2.Index).Value = .Item("EmployeeID").ToString
                         'dgvPromotionList.Rows.Item(n).Cells(c_empname2.Index).Value = .Item("Name").ToString
                         'dgvPromotionList.Rows.Item(n).Cells(c_basicpay.Index).Value = .Item("BasicPay").ToString
@@ -9598,14 +9598,14 @@ Public Class Employee
                         'dgvPromotionList.Rows.Item(n).Cells(c_rowid.Index).Value = .Item("RowID").ToString
                         'dgvPromotionList.Rows.Item(n).Cells(c_effecDate.Index).Value = CDate(.Item("EffectiveDate")).ToString(machineShortDateFormat)
 
-                        dgvPromotionList.Rows.Add(.Item("EmployeeID").ToString, _
-                                                  .Item("Name").ToString, _
-                                                  .Item("RowID").ToString, _
-                                                  .Item("PositionFrom").ToString, _
-                                                  .Item("PositionTo").ToString, _
-                                                  CDate(.Item("EffectiveDate")).ToString(machineShortDateFormat), _
-                                                  getflg, _
-                                                  .Item("BasicPay").ToString, _
+                        dgvPromotionList.Rows.Add(.Item("EmployeeID").ToString,
+                                                  .Item("Name").ToString,
+                                                  .Item("RowID").ToString,
+                                                  .Item("PositionFrom").ToString,
+                                                  .Item("PositionTo").ToString,
+                                                  CDate(.Item("EffectiveDate")).ToString(machineShortDateFormat),
+                                                  getflg,
+                                                  .Item("BasicPay").ToString,
                                                   .Item("Reason").ToString)
 
                         'dgvPromotionList.Item(n, c_empID2.Index).Value = .Item("EmployeeID").ToString
@@ -9641,12 +9641,12 @@ Public Class Employee
 
         If Not dgvPromotionList.Rows.Count = 0 Then
             Dim dt As New DataTable
-            dt = getDataTableForSQL("select concat(COALESCE(e.Lastname, ' '),' ', COALESCE(e.Firstname, ' '), ' ', COALESCE(e.MiddleName, ' ')) as name " & _
-                                    ",ep.EffectiveDate, ep.CompensationChange, es.BasicPay, ep.PositionFrom, ep.PositionTo, e.EmployeeID, ep.RowID, " & _
-                                    "concat('Php', ' ', Format(es.BasicPay,2), ' ', DATE_FORMAT(es.EffectiveDatefrom, '%m/%d/%Y'), ' ', 'To', DATE_FORMAT(es.EffectiveDateTo, '%m/%d/%Y')) As SalaryDate " & _
-                                    ", IFNULL(ep.Reason,'') 'Reason'" & _
-                                    "from employeepromotions ep LEFT join employee e on ep.EmployeeID = e.RowID " & _
-                                    "LEFT join employeesalary es on ep.EmployeeSalaryID = es.RowID " & _
+            dt = getDataTableForSQL("select concat(COALESCE(e.Lastname, ' '),' ', COALESCE(e.Firstname, ' '), ' ', COALESCE(e.MiddleName, ' ')) as name " &
+                                    ",ep.EffectiveDate, ep.CompensationChange, es.BasicPay, ep.PositionFrom, ep.PositionTo, e.EmployeeID, ep.RowID, " &
+                                    "concat('Php', ' ', Format(es.BasicPay,2), ' ', DATE_FORMAT(es.EffectiveDatefrom, '%m/%d/%Y'), ' ', 'To', DATE_FORMAT(es.EffectiveDateTo, '%m/%d/%Y')) As SalaryDate " &
+                                    ", IFNULL(ep.Reason,'') 'Reason'" &
+                                    "from employeepromotions ep LEFT join employee e on ep.EmployeeID = e.RowID " &
+                                    "LEFT join employeesalary es on ep.EmployeeSalaryID = es.RowID " &
                                     "where ep.OrganizationID = '" & z_OrganizationID & "' And e.RowID = '" & rowidPromot & "' And ep.RowID = '" & dgvPromotionList.CurrentRow.Cells(c_promotRowID.Index).Value & "'")
             controlclearPromot()
             If dt.Rows.Count > 0 Then
@@ -9710,7 +9710,7 @@ Public Class Employee
 
 
     Private Sub fillSalaryDate()
-        Dim strQuery As String = "Select concat('Php', ' ', Format(BasicPay,2), ' ', DATE_FORMAT(EffectiveDatefrom, '%m/%d/%Y'), ' ', 'To ', COALESCE(DATE_FORMAT(EffectiveDateTo, '%m/%d/%Y'),DATE_FORMAT(ADDDATE(CURRENT_DATE(), INTERVAL 100 YEAR),'%m/%d/%Y'))) as salarydate from employeesalary " & _
+        Dim strQuery As String = "Select concat('Php', ' ', Format(BasicPay,2), ' ', DATE_FORMAT(EffectiveDatefrom, '%m/%d/%Y'), ' ', 'To ', COALESCE(DATE_FORMAT(EffectiveDateTo, '%m/%d/%Y'),DATE_FORMAT(ADDDATE(CURRENT_DATE(), INTERVAL 100 YEAR),'%m/%d/%Y'))) as salarydate from employeesalary " &
                                  "where EmployeeID = '" & rowidPromot & "' And OrganizationID = '" & z_OrganizationID & "'"
         cmbSalaryChanged.Items.Clear()
         cmbSalaryChanged.Items.Add("-Please Select One-")
@@ -9856,9 +9856,9 @@ Public Class Employee
                 End If
             End If
 
-            Dim sID As String = getStringItem("Select rowidPromot from employeesalary " & _
-                                              "where concat('Php', ' ', Format(BasicPay,2), ' ', DATE_FORMAT(EffectiveDatefrom, '%m/%d/%Y'), ' ', " & _
-                                              "'To', DATE_FORMAT(EffectiveDateTo, '%m/%d/%Y')) = '" & cmbSalaryChanged.Text & "' " & _
+            Dim sID As String = getStringItem("Select rowidPromot from employeesalary " &
+                                              "where concat('Php', ' ', Format(BasicPay,2), ' ', DATE_FORMAT(EffectiveDatefrom, '%m/%d/%Y'), ' ', " &
+                                              "'To', DATE_FORMAT(EffectiveDateTo, '%m/%d/%Y')) = '" & cmbSalaryChanged.Text & "' " &
                                               "And EmployeeID = '" & rowidPromot & "' And OrganizationID = '" & z_OrganizationID & "'")
             Dim getsID As Integer = Val(sID)
 
@@ -9868,8 +9868,8 @@ Public Class Employee
                 flg = 1
                 If dgvEmp.RowCount <> 0 Then
 
-                    posit_RowID = If(cmbto.SelectedIndex = -1 Or Trim(cmbto.Text) = "", _
-                                     If(cmbto.SelectedIndex = (cmbto.Items.Count - 1), Nothing, dgvEmp.CurrentRow.Cells("Column29").Value), _
+                    posit_RowID = If(cmbto.SelectedIndex = -1 Or Trim(cmbto.Text) = "",
+                                     If(cmbto.SelectedIndex = (cmbto.Items.Count - 1), Nothing, dgvEmp.CurrentRow.Cells("Column29").Value),
                                      posit_RowID)
 
                     'If cboPosit.Text = "" Then
@@ -9903,8 +9903,8 @@ Public Class Employee
 
                 getsID = Val(latest_salaryID)
 
-                sp_promotion(z_datetime, z_User, z_datetime, z_OrganizationID, z_User, dtpEffectivityDate.Value.ToString("yyyy-MM-dd"), txtpositfrompromot.Text, cmbto.Text, _
-                             getsID, flg, dgvEmp.CurrentRow.Cells("RowID").Value, _
+                sp_promotion(z_datetime, z_User, z_datetime, z_OrganizationID, z_User, dtpEffectivityDate.Value.ToString("yyyy-MM-dd"), txtpositfrompromot.Text, cmbto.Text,
+                             getsID, flg, dgvEmp.CurrentRow.Cells("RowID").Value,
                              txtReasonPromot.Text, ValNoComma(txtbasicpay.Text))
 
 
@@ -9934,9 +9934,9 @@ Public Class Employee
                 Else
                     flg = 0
                 End If
-                Dim sID As String = getStringItem("Select rowidPromot from employeesalary " & _
-                                           "where concat('Php', ' ', Format(BasicPay,2), ' ', DATE_FORMAT(EffectiveDatefrom, '%m/%d/%Y'), ' ', " & _
-                                           "'To', DATE_FORMAT(EffectiveDateTo, '%m/%d/%Y')) = '" & cmbSalaryChanged.Text & "' " & _
+                Dim sID As String = getStringItem("Select rowidPromot from employeesalary " &
+                                           "where concat('Php', ' ', Format(BasicPay,2), ' ', DATE_FORMAT(EffectiveDatefrom, '%m/%d/%Y'), ' ', " &
+                                           "'To', DATE_FORMAT(EffectiveDateTo, '%m/%d/%Y')) = '" & cmbSalaryChanged.Text & "' " &
                                            "And EmployeeID = '" & rowidPromot & "' And OrganizationID = '" & z_OrganizationID & "'")
                 Dim getsID As Integer = Val(sID)
                 Dim basicpay As Double
@@ -9947,8 +9947,8 @@ Public Class Employee
 
                 End If
                 ', EmployeeSalaryID = '" & getsID & "'
-                DirectCommand("UPDATE employeepromotions SET Effectivedate = '" & dtpEffectivityDate.Value.ToString("yyyy-MM-dd") & "', " & _
-                              "LastUpd = '" & z_datetime & "', lastupdby = '" & z_User & "', PositionFrom = '" & cmbfrom.Text & "', PositionTo = '" & cmbto.Text & _
+                DirectCommand("UPDATE employeepromotions SET Effectivedate = '" & dtpEffectivityDate.Value.ToString("yyyy-MM-dd") & "', " &
+                              "LastUpd = '" & z_datetime & "', lastupdby = '" & z_User & "', PositionFrom = '" & cmbfrom.Text & "', PositionTo = '" & cmbto.Text &
                               "', CompensationChange = '" & flg & "', Reason = '" & txtReasonPromot.Text & "' Where rowid = '" & dgvPromotionList.CurrentRow.Cells(c_promotRowID.Index).Value & "'")
 
             Else
@@ -9960,8 +9960,8 @@ Public Class Employee
                     flg = 0
                 End If
 
-                DirectCommand("UPDATE employeepromotions SET Effectivedate = '" & dtpEffectivityDate.Value.ToString("yyyy-MM-dd") & "', LastUpd = '" & z_datetime & "', lastupdby = '" & z_User & "'," & _
-                       "PositionFrom = '" & cmbfrom.Text & "', PositionTo = '" & cmbto.Text & _
+                DirectCommand("UPDATE employeepromotions SET Effectivedate = '" & dtpEffectivityDate.Value.ToString("yyyy-MM-dd") & "', LastUpd = '" & z_datetime & "', lastupdby = '" & z_User & "'," &
+                       "PositionFrom = '" & cmbfrom.Text & "', PositionTo = '" & cmbto.Text &
                        "', CompensationChange = '" & flg & "', Reason = '" & txtReasonPromot.Text & "' Where rowid = '" & dgvPromotionList.CurrentRow.Cells(c_promotRowID.Index).Value & "'")
 
             End If
@@ -10181,9 +10181,9 @@ Public Class Employee
 
     Private Sub cmbSalaryChanged_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbSalaryChanged.SelectedIndexChanged
         Try
-            Dim sID As String = getStringItem("Select basicpay from employeesalary " & _
-                                         "where concat('Php', ' ', Format(BasicPay,2), ' ', DATE_FORMAT(EffectiveDatefrom, '%m/%d/%Y'), ' ', " & _
-                                         "'To', DATE_FORMAT(EffectiveDateTo, '%m/%d/%Y')) = '" & cmbSalaryChanged.Text & "' " & _
+            Dim sID As String = getStringItem("Select basicpay from employeesalary " &
+                                         "where concat('Php', ' ', Format(BasicPay,2), ' ', DATE_FORMAT(EffectiveDatefrom, '%m/%d/%Y'), ' ', " &
+                                         "'To', DATE_FORMAT(EffectiveDateTo, '%m/%d/%Y')) = '" & cmbSalaryChanged.Text & "' " &
                                          "And EmployeeID = '" & rowidPromot & "' And OrganizationID = '" & z_OrganizationID & "'")
             Dim getsID As Double = sID
 
@@ -10309,7 +10309,7 @@ Public Class Employee
                 cmbdedsched.Items.Add(strval)
             Next
             cmbStatus.Items.Add(str_LoanCancelledStauts)
-            enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categloantypeID & "' AND OrganizationID='" & orgztnID & "' AND PartNo IN ('Calamity', 'Cash Advance', 'PAGIBIG', 'PhilHealth', 'SSS')" & _
+            enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categloantypeID & "' AND OrganizationID='" & orgztnID & "' AND PartNo IN ('Calamity', 'Cash Advance', 'PAGIBIG', 'PhilHealth', 'SSS')" &
                            " UNION SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categloantypeID & "' AND OrganizationID='" & orgztnID & "';",
                            loan_type)
 
@@ -10372,8 +10372,8 @@ Public Class Employee
             Exit Sub
         End If
         Dim dt As New DataTable
-        dt = getDataTableForSQL("Select *,COALESCE((SELECT PartNo FROM product WHERE RowID=LoanTypeID),'') 'Loan Type'" & _
-                                " from employeeloanschedule Where EmployeeID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "' And OrganizationID = '" & z_OrganizationID & "'" & _
+        dt = getDataTableForSQL("Select *,COALESCE((SELECT PartNo FROM product WHERE RowID=LoanTypeID),'') 'Loan Type'" &
+                                " from employeeloanschedule Where EmployeeID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "' And OrganizationID = '" & z_OrganizationID & "'" &
                                 " ORDER BY DedEffectiveDateFrom DESC;")
 
         dgvLoanList.Rows.Clear()
@@ -10393,9 +10393,9 @@ Public Class Employee
                 dgvLoanList.Item(c_status.Index, n).Value = .Item("Status").ToString
                 dgvLoanList.Item(c_loantype.Index, n).Value = .Item("Loan Type").ToString
                 dgvLoanList.Item(c_noofpayperiodleft.Index, n).Value = .Item("LoanPayPeriodLeft").ToString
-                dgvLoanList.Item(c_dedeffectivedatefrom.Index, n).Value = _
-                    If(IsDBNull(.Item("DedEffectiveDateFrom")), _
-                       Format(CDate(dbnow), machineShortDateFormat), _
+                dgvLoanList.Item(c_dedeffectivedatefrom.Index, n).Value =
+                    If(IsDBNull(.Item("DedEffectiveDateFrom")),
+                       Format(CDate(dbnow), machineShortDateFormat),
                        Format(CDate(.Item("DedEffectiveDateFrom")), machineShortDateFormat))
                 dgvLoanList.Item(LoanHasBonus.Index, n).Value = Not IsDBNull(.Item("BonusID"))
             End With
@@ -10430,7 +10430,7 @@ Public Class Employee
             Exit Sub
         End If
         Dim dt As New DataTable
-        dt = getDataTableForSQL("Select *,(BonusID IS NOT NULL) AS LoanHasBonus,COALESCE((SELECT PartNo FROM product WHERE RowID=LoanTypeID),'') 'Loan Type'" & _
+        dt = getDataTableForSQL("Select *,(BonusID IS NOT NULL) AS LoanHasBonus,COALESCE((SELECT PartNo FROM product WHERE RowID=LoanTypeID),'') 'Loan Type'" &
                                 " from employeeloanschedule Where RowID = '" & dgvLoanList.CurrentRow.Cells(c_RowIDLoan.Index).Value & "' And OrganizationID = '" & z_OrganizationID & "'")
         cleartextbox()
         For Each drow As DataRow In dt.Rows
@@ -10498,7 +10498,7 @@ Public Class Employee
         dgvEmp.Enabled = False
 
         If dgvEmp.RowCount <> 0 Then
-            loanno = getStringItem("Select COALESCE(MAX(LoanNumber),0) from employeeloanschedule where OrganizationID = '" & _
+            loanno = getStringItem("Select COALESCE(MAX(LoanNumber),0) from employeeloanschedule where OrganizationID = '" &
                                                  z_OrganizationID & "' And EmployeeID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "';")
         End If
 
@@ -10577,14 +10577,14 @@ Public Class Employee
 
             ''dateto.Value.ToString("yyyy-MM-dd")
 
-            Dim LoanPayPeriodToDate = PAYTODATE_OF_NoOfPayPeriod(datefrom.Value.ToString("yyyy-MM-dd"), _
-                                                                 ValNoComma(txtnoofpayper.Text), _
+            Dim LoanPayPeriodToDate = PAYTODATE_OF_NoOfPayPeriod(datefrom.Value.ToString("yyyy-MM-dd"),
+                                                                 ValNoComma(txtnoofpayper.Text),
                                                                  dgvEmp.CurrentRow.Cells("RowID").Value,
                                                                  cmbdedsched.Text.Trim)
 
-            SP_LoadSchedule(z_User, z_User, z_datetime, z_datetime, Val(txtloannumber.Text.Replace(",", "")), datefrom.Value.ToString("yyyy-MM-dd"), Format(CDate(LoanPayPeriodToDate), "yyyy-MM-dd"), _
-                            z_OrganizationID, Val(empid), Val(txtloanamt.Text.Replace(",", "")), Trim(cmbdedsched.Text), Val(txtbal.Text.Replace(",", "")), Val(txtdedamt.Text.Replace(",", "")), _
-                            Val(txtnoofpayper.Text.Replace(",", "")), txtRemarks.Text, cmbStatus.Text, 0, loantypeID, _
+            SP_LoadSchedule(z_User, z_User, z_datetime, z_datetime, Val(txtloannumber.Text.Replace(",", "")), datefrom.Value.ToString("yyyy-MM-dd"), Format(CDate(LoanPayPeriodToDate), "yyyy-MM-dd"),
+                            z_OrganizationID, Val(empid), Val(txtloanamt.Text.Replace(",", "")), Trim(cmbdedsched.Text), Val(txtbal.Text.Replace(",", "")), Val(txtdedamt.Text.Replace(",", "")),
+                            Val(txtnoofpayper.Text.Replace(",", "")), txtRemarks.Text, cmbStatus.Text, 0, loantypeID,
                             cmbdedsched.Text, chkboxChargeToBonus.Tag) 'Val(txtdedpercent.Text)
             fillloadsched()
             fillloadschedselected()
@@ -10594,10 +10594,10 @@ Public Class Employee
             If dontUpdateLoan = 1 Then
                 Exit Sub
             End If
-            SP_UpdateLoadSchedule(z_User, z_datetime, Val(txtloannumber.Text), datefrom.Value.ToString("yyyy-MM-dd"), dateto.Value.ToString("yyyy-MM-dd"), _
-                                 Val(txtloanamt.Text.Replace(",", "")), "", Val(txtdedamt.Text.Replace(",", "")), _
-                                 Val(txtnoofpayper.Text), Trim(TextBox6.Text), cmbStatus.Text, 0, dgvLoanList.CurrentRow.Cells(c_RowIDLoan.Index).Value, _
-                                 loantypeID, _
+            SP_UpdateLoadSchedule(z_User, z_datetime, Val(txtloannumber.Text), datefrom.Value.ToString("yyyy-MM-dd"), dateto.Value.ToString("yyyy-MM-dd"),
+                                 Val(txtloanamt.Text.Replace(",", "")), "", Val(txtdedamt.Text.Replace(",", "")),
+                                 Val(txtnoofpayper.Text), Trim(TextBox6.Text), cmbStatus.Text, 0, dgvLoanList.CurrentRow.Cells(c_RowIDLoan.Index).Value,
+                                 loantypeID,
                                  cmbdedsched.Text, chkboxChargeToBonus.Tag) 'CDec(txtdedpercent.Text)'cmbdedsched.Text
             fillloadsched()
             fillloadschedselected()
@@ -10672,12 +10672,12 @@ Public Class Employee
 
         Dim loanType_Defualt_DeductSched = String.Empty
 
-        loanType_Defualt_DeductSched = _
-            EXECQUER("SELECT DisplayValue" & _
-                     " FROM listofval" & _
-                     " WHERE `Type`='Government deduction schedule'" & _
-                     " AND Active='Yes'" & _
-                     " AND Description='" & cboloantype.Text.Trim & "'" & _
+        loanType_Defualt_DeductSched =
+            EXECQUER("SELECT DisplayValue" &
+                     " FROM listofval" &
+                     " WHERE `Type`='Government deduction schedule'" &
+                     " AND Active='Yes'" &
+                     " AND Description='" & cboloantype.Text.Trim & "'" &
                      " ORDER BY OrderBy;")
 
         If loanType_Defualt_DeductSched <> String.Empty Then
@@ -11058,7 +11058,7 @@ Public Class Employee
 
     Private Sub txtloaninterest_Leave(sender As Object, e As EventArgs) Handles txtloaninterest.Leave
 
-        txtnoofpayper_Leave(txtnoofpayper, _
+        txtnoofpayper_Leave(txtnoofpayper,
                             New EventArgs)
 
     End Sub
@@ -11147,9 +11147,9 @@ Public Class Employee
 
     End Sub
 
-    Function PAYTODATE_OF_NoOfPayPeriod(Optional EmpLoanEffectiveDateFrom As Object = Nothing, _
-                                        Optional EmpLoanNoOfPayPeriod As Object = Nothing, _
-                                        Optional Employee_RowID As Object = Nothing, _
+    Function PAYTODATE_OF_NoOfPayPeriod(Optional EmpLoanEffectiveDateFrom As Object = Nothing,
+                                        Optional EmpLoanNoOfPayPeriod As Object = Nothing,
+                                        Optional Employee_RowID As Object = Nothing,
                                         Optional LoanDeductSched As Object = Nothing) As Object
 
         Dim params(3, 2) As Object
@@ -11171,10 +11171,10 @@ Public Class Employee
         params(3, 1) = LoanDeductSched
 
 
-        PAYTODATE_OF_NoOfPayPeriod = _
-            EXEC_INSUPD_PROCEDURE(params, _
-                                  "PAYTODATE_OF_NoOfPayPeriod", _
-                                  "ReturnDate", _
+        PAYTODATE_OF_NoOfPayPeriod =
+            EXEC_INSUPD_PROCEDURE(params,
+                                  "PAYTODATE_OF_NoOfPayPeriod",
+                                  "ReturnDate",
                                   MySqlDbType.Date)
 
     End Function
@@ -11192,7 +11192,7 @@ Public Class Employee
     Private Sub tsbtnImportLoans_Click(sender As Object, e As EventArgs) Handles tsbtnImportLoans.Click
         Dim browsefile As New OpenFileDialog()
 
-        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" & _
+        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
                                   "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
 
         If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -11334,8 +11334,8 @@ Public Class Employee
         params(0, 1) = EmployeeRowID
         params(1, 1) = orgztnID
 
-        EXEC_VIEW_PROCEDURE(params, _
-                            "VIEW_employeeloanhistory", _
+        EXEC_VIEW_PROCEDURE(params,
+                            "VIEW_employeeloanhistory",
                             dgvloanhisto)
 
     End Sub
@@ -11350,10 +11350,10 @@ Public Class Employee
 
             cbohistoloantype.Enabled = False
 
-            enlistToCboBox("SELECT p.PartNo" & _
-                           " FROM product p" & _
-                           " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND c.CategoryName='Loan Type'" & _
-                           " WHERE p.CategoryID=c.RowID" & _
+            enlistToCboBox("SELECT p.PartNo" &
+                           " FROM product p" &
+                           " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND c.CategoryName='Loan Type'" &
+                           " WHERE p.CategoryID=c.RowID" &
                            " AND p.OrganizationID=" & orgztnID & ";",
                            cbohistoloantype)
 
@@ -11373,15 +11373,15 @@ Public Class Employee
 
             Dim dtloanhist As New DataTable
 
-            dtloanhist = retAsDatTbl("SELECT COALESCE(DATE_FORMAT(DeductionDate,'%m/%d/%Y'),'') 'DeductionDate'" & _
-                                     ",COALESCE(DeductionAmount,0) 'DeductionAmount'" & _
-                                     ",COALESCE(Status,'') 'Status'" & _
-                                     ",COALESCE(Comments,'') 'Comments'" & _
-                                     ",RowID" & _
-                                     " FROM employeeloanhistory" & _
-                                     " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value & "'" & _
-                                     " AND OrganizationID='" & orgztnID & "'" & _
-                                     " AND Comments='" & cbohistoloantype.Text & "'" & _
+            dtloanhist = retAsDatTbl("SELECT COALESCE(DATE_FORMAT(DeductionDate,'%m/%d/%Y'),'') 'DeductionDate'" &
+                                     ",COALESCE(DeductionAmount,0) 'DeductionAmount'" &
+                                     ",COALESCE(Status,'') 'Status'" &
+                                     ",COALESCE(Comments,'') 'Comments'" &
+                                     ",RowID" &
+                                     " FROM employeeloanhistory" &
+                                     " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value & "'" &
+                                     " AND OrganizationID='" & orgztnID & "'" &
+                                     " AND Comments='" & cbohistoloantype.Text & "'" &
                                      " ORDER BY DeductionDate DESC;")
 
             dgvloanhisto.Rows.Clear()
@@ -11493,9 +11493,9 @@ Public Class Employee
 
 
             Dim dattabl_deductsched As New DataTable
-            dattabl_deductsched = retAsDatTbl("SELECT IF(COALESCE(PhilhealthDeductionSchedule,'" & govdeducsched.Item(0).ToString & "') = '" & govdeducsched.Item(0).ToString & "',1,0) 'PhilhealthDeductionSchedule'" & _
-                                              ",IF(COALESCE(SSSDeductionSchedule,'" & govdeducsched.Item(0).ToString & "') = '" & govdeducsched.Item(0).ToString & "',1,0) 'SSSDeductionSchedule'" & _
-                                              ",IF(COALESCE(PagIbigDeductionSchedule,'" & govdeducsched.Item(0).ToString & "') = '" & govdeducsched.Item(0).ToString & "',1,0) 'PagIbigDeductionSchedule'" & _
+            dattabl_deductsched = retAsDatTbl("SELECT IF(COALESCE(PhilhealthDeductionSchedule,'" & govdeducsched.Item(0).ToString & "') = '" & govdeducsched.Item(0).ToString & "',1,0) 'PhilhealthDeductionSchedule'" &
+                                              ",IF(COALESCE(SSSDeductionSchedule,'" & govdeducsched.Item(0).ToString & "') = '" & govdeducsched.Item(0).ToString & "',1,0) 'SSSDeductionSchedule'" &
+                                              ",IF(COALESCE(PagIbigDeductionSchedule,'" & govdeducsched.Item(0).ToString & "') = '" & govdeducsched.Item(0).ToString & "',1,0) 'PagIbigDeductionSchedule'" &
                                               " FROM organization WHERE RowID=" & orgztnID & ";")
 
             For Each drown As DataRow In dattabl_deductsched.Rows
@@ -11588,11 +11588,11 @@ Public Class Employee
                     End If
 
                 End If
-                
+
                 dptFromSal.MinDate = min_date
 
                 dtpToSal.MinDate = min_date
-                
+
                 txtpaytype.Text = drow("PayFrequencyType")
 
                 txtEmp_type.Text = drow("EmployeeType")
@@ -11629,10 +11629,10 @@ Public Class Employee
 
             Else
 
-                Dim emplatestdate As Object = EXECQUER("SELECT IF(EffectiveDateFrom > COALESCE(EffectiveDateTo,CURRENT_DATE()),EffectiveDateFrom,COALESCE(EffectiveDateTo,CURRENT_DATE())) 'FinalLatesDate'" & _
-                                                       " FROM employeesalary" & _
-                                                       " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value & "'" & _
-                                                       " AND OrganizationID=" & orgztnID & _
+                Dim emplatestdate As Object = EXECQUER("SELECT IF(EffectiveDateFrom > COALESCE(EffectiveDateTo,CURRENT_DATE()),EffectiveDateFrom,COALESCE(EffectiveDateTo,CURRENT_DATE())) 'FinalLatesDate'" &
+                                                       " FROM employeesalary" &
+                                                       " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value & "'" &
+                                                       " AND OrganizationID=" & orgztnID &
                                                        " ORDER BY EffectiveDateFrom ASC LIMIT 1;")
 
                 dptFromSal.Value = CDate(emplatestdate).AddDays(1)
@@ -11652,11 +11652,11 @@ Public Class Employee
 
             Dim EffDateBeforCurrent As New DataTable
 
-            EffDateBeforCurrent = retAsDatTbl("SELECT EffectiveDateFrom" & _
-                                   ",EffectiveDateTo" & _
-                                   " FROM employeesalary" & _
-                                   " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value & _
-                                   "' AND OrganizationID='" & orgztnID & _
+            EffDateBeforCurrent = retAsDatTbl("SELECT EffectiveDateFrom" &
+                                   ",EffectiveDateTo" &
+                                   " FROM employeesalary" &
+                                   " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value &
+                                   "' AND OrganizationID='" & orgztnID &
                                    "' ORDER BY EffectiveDateFrom DESC;")
 
             If EffDateBeforCurrent.Rows.Count = 1 Then
@@ -11702,8 +11702,8 @@ Public Class Employee
 
             ElseIf EffDateBeforCurrent.Rows.Count >= 2 Then
 
-                Dim dateDiffer = DateDiff(DateInterval.Day, _
-                                          CDate(EffDateBeforCurrent.Rows(1)("EffectiveDateTo").ToString), _
+                Dim dateDiffer = DateDiff(DateInterval.Day,
+                                          CDate(EffDateBeforCurrent.Rows(1)("EffectiveDateTo").ToString),
                                           CDate(EffDateBeforCurrent.Rows(0)("EffectiveDateFrom").ToString))
 
                 Dim thevaliddate = Nothing
@@ -11782,15 +11782,15 @@ Public Class Employee
                 Exit Sub
             End If
 
-            INSUPD_employeesalary(, _
-                                dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                Val(Trim(txtBasicrateSal.Text)), _
-                                Val(Trim(txtEmpDeclaSal.Text)), _
-                                noofdepd, _
-                                mStat, _
-                                Val(dgvEmp.CurrentRow.Cells("Column29").Value), _
-                                dptFromSal.Value, _
-                                dtpToSal.Value, _
+            INSUPD_employeesalary(,
+                                dgvEmp.CurrentRow.Cells("RowID").Value,
+                                Val(Trim(txtBasicrateSal.Text)),
+                                Val(Trim(txtEmpDeclaSal.Text)),
+                                noofdepd,
+                                mStat,
+                                Val(dgvEmp.CurrentRow.Cells("Column29").Value),
+                                dptFromSal.Value,
+                                dtpToSal.Value,
                                 txtTrueSal.Text)
 
         Else
@@ -11837,15 +11837,15 @@ Public Class Employee
 
                 If listofEditEmpSal.Contains(dgvrow.Cells("c_RowIDSal").Value) Then
 
-                    INSUPD_employeesalary(dgvrow.Cells("c_RowIDSal").Value, _
-                                          dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                          Val(Trim(txtBasicrateSal.Text)), _
-                                          Val(Trim(txtEmpDeclaSal.Text)), _
-                                          noofdepd, _
-                                          mStat, _
-                                          Val(dgvEmp.CurrentRow.Cells("Column29").Value), _
-                                          dgvrow.Cells("c_fromdate").Value, _
-                                          dgvrow.Cells("c_todate").Value, _
+                    INSUPD_employeesalary(dgvrow.Cells("c_RowIDSal").Value,
+                                          dgvEmp.CurrentRow.Cells("RowID").Value,
+                                          Val(Trim(txtBasicrateSal.Text)),
+                                          Val(Trim(txtEmpDeclaSal.Text)),
+                                          noofdepd,
+                                          mStat,
+                                          Val(dgvEmp.CurrentRow.Cells("Column29").Value),
+                                          dgvrow.Cells("c_fromdate").Value,
+                                          dgvrow.Cells("c_todate").Value,
                                           ValNoComma(txtTrueSal.Text))
                     'If(dgvrow.Index = 0, Nothing, dgvrow.Cells("c_TrueSal").Value)
                 End If
@@ -11923,7 +11923,7 @@ Public Class Employee
                                      " WHERE es.RowID=esa.RowID" &
                                      " AND es.OrganizationID='" & orgztnID & "';" &
                                      "UPDATE employeesalary SET LastUpd='1900-01-01 00:00:01',LastUpdBy='" & z_User & "' WHERE RowID='" & dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value & "';")
-                
+
                 n_ExecuteQuery = New ExecuteQuery("DELETE FROM employeesalary WHERE RowID = '" & dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value & "';" &
                                                   "ALTER TABLE employeesalary AUTO_INCREMENT = 0;")
 
@@ -11964,7 +11964,7 @@ Public Class Employee
 
     Dim objGotFoc As Object
 
-    Private Sub edited_GotFocus(sender As Object, e As EventArgs) Handles txtEmpDeclaSal.GotFocus, txtBasicrateSal.GotFocus, txtPhilHealthSal.GotFocus, _
+    Private Sub edited_GotFocus(sender As Object, e As EventArgs) Handles txtEmpDeclaSal.GotFocus, txtBasicrateSal.GotFocus, txtPhilHealthSal.GotFocus,
         txtSSSSal.GotFocus, txtPagibig.GotFocus, dptFromSal.GotFocus, dtpToSal.GotFocus
 
         objGotFoc = CType(sender, Object)
@@ -12021,7 +12021,7 @@ Public Class Employee
         Dim e_KAsc = Asc(e.KeyChar)
 
         Select Case e_KAsc
-            
+
             Case 8
                 GoTo TaskToDo
 
@@ -12031,8 +12031,8 @@ Public Class Employee
         End Select
 
 TaskToDo: txtSSSSal.Text = "0.00"
-        : txtSSSSal.Select(txtSSSSal.Text.Length, 0)
-        : is_user_override_sss = True
+        txtSSSSal.Select(txtSSSSal.Text.Length, 0)
+        is_user_override_sss = True
 
     End Sub
 
@@ -12082,7 +12082,7 @@ TaskToDo: txtSSSSal.Text = "0.00"
         Dim e_KAsc = Asc(e.KeyChar)
         'Console.WriteLine(e_KAsc)
         Select Case e_KAsc
-            
+
             Case 8
                 GoTo TaskToDo
 
@@ -12092,8 +12092,8 @@ TaskToDo: txtSSSSal.Text = "0.00"
         End Select
 
 TaskToDo: txtPhilHealthSal.Text = "0.00"
-        : txtPhilHealthSal.Select(txtPhilHealthSal.Text.Length, 0)
-        : is_user_override_phh = True
+        txtPhilHealthSal.Select(txtPhilHealthSal.Text.Length, 0)
+        is_user_override_phh = True
 
     End Sub
 
@@ -12134,13 +12134,13 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     Dim payfreqdivisor = Val(0)
 
-    Private Sub edited_employeesalary(sender As Object, e As EventArgs) Handles txtEmpDeclaSal.Leave, _
-                                                                                txtBasicrateSal.Leave, _
-                                                                                txtPhilHealthSal.Leave, _
-                                                                                txtSSSSal.Leave, _
-                                                                                txtPagibig.Leave, _
-                                                                                dptFromSal.Leave, _
-                                                                                dtpToSal.Leave, _
+    Private Sub edited_employeesalary(sender As Object, e As EventArgs) Handles txtEmpDeclaSal.Leave,
+                                                                                txtBasicrateSal.Leave,
+                                                                                txtPhilHealthSal.Leave,
+                                                                                txtSSSSal.Leave,
+                                                                                txtPagibig.Leave,
+                                                                                dptFromSal.Leave,
+                                                                                dtpToSal.Leave,
                                                                                 txtToComputeSal.Leave
 
         Dim sendr_name As String = CType(sender, Object).Name
@@ -12169,7 +12169,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                     Dim emp_type = StrConv(txtEmp_type.Text, VbStrConv.ProperCase)
 
-                    If emp_type = "Fixed" Or _
+                    If emp_type = "Fixed" Or
                         emp_type = "Monthly" Then
 
                         If txtpaytype.Text = "SEMI-MONTHLY" Then
@@ -12254,7 +12254,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                         End If
 
-                        
+
                         If drow("SSSDeductSched").ToString = "End of the month" Then
 
                             isorgSSSdeductsched = 0
@@ -12287,7 +12287,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                     Next
 
-                    If emp_type = "Fixed" Or _
+                    If emp_type = "Fixed" Or
                         emp_type = "Monthly" Then
                         the_salary = truefullsalary
 
@@ -12308,8 +12308,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     End If
 
                     'govdeducsched
-                    Dim obj_val = EXECQUER("SELECT COALESCE(EmployeeShare,0) FROM payphilhealth WHERE COALESCE(" & the_salary & _
-                                                     ",0) BETWEEN SalaryRangeFrom AND IF(COALESCE(COALESCE(" & the_salary & "),0) > SalaryRangeTo, COALESCE(" & the_salary & _
+                    Dim obj_val = EXECQUER("SELECT COALESCE(EmployeeShare,0) FROM payphilhealth WHERE COALESCE(" & the_salary &
+                                                     ",0) BETWEEN SalaryRangeFrom AND IF(COALESCE(COALESCE(" & the_salary & "),0) > SalaryRangeTo, COALESCE(" & the_salary &
                                                      ") + 1, SalaryRangeTo) ORDER BY SalaryBase DESC LIMIT 1;")
 
                     If btnNewSal.Enabled = False Then
@@ -12327,7 +12327,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                     End If
 
-                    Dim objval = EXECQUER("SELECT COALESCE(EmployeeContributionAmount,0) FROM paysocialsecurity WHERE COALESCE(" & the_salary & _
+                    Dim objval = EXECQUER("SELECT COALESCE(EmployeeContributionAmount,0) FROM paysocialsecurity WHERE COALESCE(" & the_salary &
                                           ",0) BETWEEN RangeFromAmount AND RangeToAmount ORDER BY MonthlySalaryCredit DESC LIMIT 1;")
 
                     If btnNewSal.Enabled = False Then
@@ -12355,7 +12355,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     'End If
 
                     'If isorgHDMFdeductsched = 1 Then
-                    
+
                     Dim pagibig_amount = ValNoComma(txtPagibig.Text)
 
                     Try
@@ -12673,7 +12673,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         Dim dtemp As New DataTable
 
         If dgvEmp.RowCount <> 0 Then
-            dtemp = getDataTableForSQL("Select * From employee ee inner join employeedependents ed on ee.RowID = ed.ParentEmployeeID  " & _
+            dtemp = getDataTableForSQL("Select * From employee ee inner join employeedependents ed on ee.RowID = ed.ParentEmployeeID  " &
                                        "where ee.EmployeeID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "' And ee.OrganizationID = '" & z_OrganizationID & "'")
 
         End If
@@ -12693,9 +12693,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
 
         Dim dt2 As New DataTable
-        dt2 = getDataTableForSQL("select * from paywithholdingtax ph inner join payfrequency pf on ph.PayFrequencyID = pf.RowID " & _
-                                 "inner join filingstatus fs on ph.FilingStatusID = fs.RowID " & _
-                                 "where fs.FilingStatus = '" & getfsid & "' And fs.MaritalStatus = '" & mStat & "' And pf.PayFrequencyType = '" & txtpaytype.Text & "' " & _
+        dt2 = getDataTableForSQL("select * from paywithholdingtax ph inner join payfrequency pf on ph.PayFrequencyID = pf.RowID " &
+                                 "inner join filingstatus fs on ph.FilingStatusID = fs.RowID " &
+                                 "where fs.FilingStatus = '" & getfsid & "' And fs.MaritalStatus = '" & mStat & "' And pf.PayFrequencyType = '" & txtpaytype.Text & "' " &
                                  "And ph.TaxableIncomeFromAmount <= '" & basicrate & "' And ph.TaxableIncomeToAmount >= '" & basicrate & "'")
 
         'txtTAX.Clear()
@@ -12945,8 +12945,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                     Dim AbsToComputeVal = Math.Abs(esal_Salary - esal_TrueSalary)
 
-                    Dim diffOfSal_TrueSal = If(esal_Salary > esal_TrueSalary, _
-                                                                            "-" & AbsToComputeVal, _
+                    Dim diffOfSal_TrueSal = If(esal_Salary > esal_TrueSalary,
+                                                                            "-" & AbsToComputeVal,
                                                                             AbsToComputeVal)
 
                     dgvemployeesalary.Rows.Item(n).Cells(c_ToComputeSal.Index).Value = diffOfSal_TrueSal
@@ -12973,7 +12973,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     dgvemployeesalary.Rows.Item(n).Cells(c_RowIDSal.Index).Value = .Item("RowID")
 
                     dgvemployeesalary.Item("TrueHDMFAmount", n).Value = ValNoComma(.Item("HDMFAmount"))
-					
+
                 End With
             Next
 
@@ -13096,8 +13096,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                         Dim AbsToComputeVal = Math.Abs(esal_Salary - esal_TrueSalary)
 
-                        txtToComputeSal.Text = If(esal_Salary > esal_TrueSalary, _
-                                                  "-" & AbsToComputeVal, _
+                        txtToComputeSal.Text = If(esal_Salary > esal_TrueSalary,
+                                                  "-" & AbsToComputeVal,
                                                   AbsToComputeVal)
 
                         'dgvemployeesalary.Rows.Item(n).Cells(c_basicpay.Index).Value = .Item("Basicpay").ToString
@@ -13186,7 +13186,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     'If IsDBNull(.Item("EffectiveDateTo")) Then
                     '    dtpToSal.Value = CDate(dbnow).ToString(machineShortDateFormat)
                     'Else
-                    
+
                     If IsDBNull(.Item("EffectiveDateTo")) Then
                         dtpToSal.Value = CDate(dbnow).AddYears(100)
                     Else
@@ -13217,23 +13217,23 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         param(1, 1) = Employee_ID
         param(2, 1) = DBNull.Value
 
-        EXEC_VIEW_PROCEDURE(param, _
-                           "VIEW_employeesalary", _
+        EXEC_VIEW_PROCEDURE(param,
+                           "VIEW_employeesalary",
                            dgvemployeesalary)
 
     End Sub
 
     'Function
-    Function INSUPD_employeesalary(Optional esal_RowID As Object = Nothing, _
-                              Optional esal_EmployeeID As Object = Nothing, _
-                              Optional esal_BasicPay As Object = Nothing, _
-                              Optional esal_Salary As Object = Nothing, _
-                              Optional esal_NoofDependents As Object = Nothing, _
-                              Optional esal_MaritalStatus As Object = Nothing, _
-                              Optional esal_PositionID As Object = Nothing, _
-                              Optional esal_EffectiveDateFrom As Object = Nothing, _
-                              Optional esal_EffectiveDateTo As Object = Nothing, _
-                              Optional esal_TrueSalary As Object = Nothing, _
+    Function INSUPD_employeesalary(Optional esal_RowID As Object = Nothing,
+                              Optional esal_EmployeeID As Object = Nothing,
+                              Optional esal_BasicPay As Object = Nothing,
+                              Optional esal_Salary As Object = Nothing,
+                              Optional esal_NoofDependents As Object = Nothing,
+                              Optional esal_MaritalStatus As Object = Nothing,
+                              Optional esal_PositionID As Object = Nothing,
+                              Optional esal_EffectiveDateFrom As Object = Nothing,
+                              Optional esal_EffectiveDateTo As Object = Nothing,
+                              Optional esal_TrueSalary As Object = Nothing,
                               Optional esal_IsDoneByImporting As Object = "0") As Object
 
         Dim params(17, 2) As Object
@@ -13284,7 +13284,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(17, 1) = Convert.ToInt16(is_user_override_phh)
 
 
-        INSUPD_employeesalary = _
+        INSUPD_employeesalary =
             EXEC_INSUPD_PROCEDURE(params,
                                   "INSUPD_employeesalary",
                                   "esalID")
@@ -13452,7 +13452,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     paypTo = Format(CDate(.Cells("payp_to").Value), "yyyy-MM-dd")
 
                     paypRowID = .Cells("payp_RowID").Value
-                    
+
                     isEndOfMonth = Trim(.Cells("payp_endofmonth").Value)
 
                     Dim date_diff = DateDiff(DateInterval.Day, CDate(paypFrom), CDate(paypTo))
@@ -13528,7 +13528,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 txtemptotloan.Text = "0.00"
 
                 txtnetsal.Text = "0.00"
-                
+
                 vlbal.Text = "0"
                 slbal.Text = "0"
                 mlbal.Text = "0"
@@ -13541,7 +13541,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 TextBox14.Text = dgvEmp.CurrentRow.Cells("slpayp").Value
                 TextBox10.Text = dgvEmp.CurrentRow.Cells("mlpayp").Value
 
-                VIEW_paystub(selEmpID, _
+                VIEW_paystub(selEmpID,
                              paypRowID)
 
                 For Each dgvrow As DataGridViewRow In dgvpaystub.Rows
@@ -13584,7 +13584,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                 Next
 
-                VIEW_specificemployeesalary(selEmpID, _
+                VIEW_specificemployeesalary(selEmpID,
                                             paypTo)
 
                 For Each dgvrow As DataGridViewRow In dgvempsal.Rows
@@ -13639,10 +13639,10 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     End With
                 Next
 
-                VIEW_employeetimeentry_SUM(selEmpID, _
-                                            paypFrom, _
+                VIEW_employeetimeentry_SUM(selEmpID,
+                                            paypFrom,
                                             paypTo)
-                
+
                 For Each dgvrow As DataGridViewRow In dgvetent.Rows
 
                     txttotreghrs.Text = "0.00"
@@ -13671,9 +13671,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                         If employeetype = "Fixed" Then
                             If dgvEmp.CurrentRow.Cells("Column30").Value = 1 Then
                                 If txtgrosssal.Text = "0.00" Then
-                                    txtgrosssal.Text = FormatNumber(Val(txtempbasicpay.Text.Replace(",", "")) + _
-                                    (.Cells("etent_OvertimeHoursAmount").Value) + _
-                                    (.Cells("etent_NightDiffOTHoursAmount").Value), _
+                                    txtgrosssal.Text = FormatNumber(Val(txtempbasicpay.Text.Replace(",", "")) +
+                                    (.Cells("etent_OvertimeHoursAmount").Value) +
+                                    (.Cells("etent_NightDiffOTHoursAmount").Value),
                                                                 2)
 
                                 End If
@@ -13686,9 +13686,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                             Else
                                 If txtgrosssal.Text = "0.00" Then
-                                    txtgrosssal.Text = FormatNumber(Val(txtemptotallow.Text.Replace(",", "")) + _
-                                    (.Cells("etent_OvertimeHoursAmount").Value) + _
-                                    (.Cells("etent_NightDiffOTHoursAmount").Value), _
+                                    txtgrosssal.Text = FormatNumber(Val(txtemptotallow.Text.Replace(",", "")) +
+                                    (.Cells("etent_OvertimeHoursAmount").Value) +
+                                    (.Cells("etent_NightDiffOTHoursAmount").Value),
                                                                 2)
 
                                 End If
@@ -13734,15 +13734,15 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     End With
                 Next
 
-                COUNT_employeeabsent(selEmpID, _
-                                    dgvEmp.CurrentRow.Cells("colstartdate").Value, _
-                                    paypFrom, _
+                COUNT_employeeabsent(selEmpID,
+                                    dgvEmp.CurrentRow.Cells("colstartdate").Value,
+                                    paypFrom,
                                     paypTo)
 
             Else
 
             End If
-            
+
         Else
             paypFrom = Nothing
             paypTo = Nothing
@@ -13872,13 +13872,13 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(0, 1) = orgztnID
         params(1, 1) = If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01")
 
-        EXEC_VIEW_PROCEDURE(params, _
-                            "VIEW_payperiodofyear", _
+        EXEC_VIEW_PROCEDURE(params,
+                            "VIEW_payperiodofyear",
                             dgvpayper)
 
     End Sub
 
-    Sub VIEW_paystub(Optional EmpID As Object = Nothing, _
+    Sub VIEW_paystub(Optional EmpID As Object = Nothing,
                      Optional PayPeriodID As Object = Nothing)
 
         Dim params(2, 2) As Object
@@ -13891,8 +13891,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(1, 1) = EmpID
         params(2, 1) = PayPeriodID
 
-        EXEC_VIEW_PROCEDURE(params, _
-                             "VIEW_paystub", _
+        EXEC_VIEW_PROCEDURE(params,
+                             "VIEW_paystub",
                              dgvpaystub, , 1)
 
     End Sub
@@ -13905,13 +13905,13 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
         params(0, 1) = paystitm_PayStubID
 
-        EXEC_VIEW_PROCEDURE(params, _
-                             "VIEW_paystubitem", _
+        EXEC_VIEW_PROCEDURE(params,
+                             "VIEW_paystubitem",
                              dgvpaystubitm, , 1)
 
     End Sub
 
-    Sub VIEW_specificemployeesalary(Optional esal_EmployeeID As Object = Nothing, _
+    Sub VIEW_specificemployeesalary(Optional esal_EmployeeID As Object = Nothing,
                                     Optional esal_Date As Object = Nothing)
 
         Dim params(2, 2) As Object
@@ -13924,14 +13924,14 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(1, 1) = orgztnID
         params(2, 1) = esal_Date
 
-        EXEC_VIEW_PROCEDURE(params, _
-                             "VIEW_specificemployeesalary", _
+        EXEC_VIEW_PROCEDURE(params,
+                             "VIEW_specificemployeesalary",
                              dgvempsal, , 1)
 
     End Sub
 
-    Sub VIEW_employeetimeentry_SUM(Optional etent_EmployeeID As Object = Nothing, _
-                                   Optional etent_Date As Object = Nothing, _
+    Sub VIEW_employeetimeentry_SUM(Optional etent_EmployeeID As Object = Nothing,
+                                   Optional etent_Date As Object = Nothing,
                                    Optional etent_DateTo As Object = Nothing)
 
         Dim params(3, 2) As Object
@@ -13946,15 +13946,15 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(2, 1) = etent_Date
         params(3, 1) = etent_DateTo
 
-        EXEC_VIEW_PROCEDURE(params, _
-                            "VIEW_employeetimeentry_SUM", _
+        EXEC_VIEW_PROCEDURE(params,
+                            "VIEW_employeetimeentry_SUM",
                             dgvetent, , 1)
 
     End Sub
 
-    Function COUNT_employeeabsent(Optional EmpID As Object = Nothing, _
-                                  Optional EmpStartDate As Object = Nothing, _
-                                  Optional payperiodDateFrom As Object = Nothing, _
+    Function COUNT_employeeabsent(Optional EmpID As Object = Nothing,
+                                  Optional EmpStartDate As Object = Nothing,
+                                  Optional payperiodDateFrom As Object = Nothing,
                                   Optional payperiodDateTo As Object = Nothing) As Object
 
         Dim returnval As Object = Nothing
@@ -14021,19 +14021,19 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 objText.Text = orgNam
 
                 objText = .ReportObjects("OrgAddress")
-                objText.Text = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" & _
-                                        ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" & _
-                                        ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" & _
-                                        ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" & _
-                                        ",IF(Country IS NULL,'',CONCAT(', ',Country))" & _
-                                        ",IF(State IS NULL,'',CONCAT(', ',State)))" & _
-                                        " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" & _
+                objText.Text = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" &
+                                        ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" &
+                                        ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" &
+                                        ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" &
+                                        ",IF(Country IS NULL,'',CONCAT(', ',Country))" &
+                                        ",IF(State IS NULL,'',CONCAT(', ',State)))" &
+                                        " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" &
                                         " WHERE o.RowID=" & orgztnID & ";")
 
-                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" & _
-                                        ",',',COALESCE(FaxNumber,'')" & _
-                                        ",',',COALESCE(EmailAddress,'')" & _
-                                        ",',',COALESCE(TINNo,''))" & _
+                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" &
+                                        ",',',COALESCE(FaxNumber,'')" &
+                                        ",',',COALESCE(EmailAddress,'')" &
+                                        ",',',COALESCE(TINNo,''))" &
                                         " FROM organization WHERE RowID=" & orgztnID & ";")
 
                 Dim contactdet = Split(contactdetails, ",")
@@ -14174,16 +14174,16 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                 If dgvEmp.RowCount <> 0 Then
 
-                    VIEW_eallow_indate(dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                        paypFrom, _
+                    VIEW_eallow_indate(dgvEmp.CurrentRow.Cells("RowID").Value,
+                                        paypFrom,
                                         paypTo)
 
-                    VIEW_eloan_indate(dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                        paypFrom, _
+                    VIEW_eloan_indate(dgvEmp.CurrentRow.Cells("RowID").Value,
+                                        paypFrom,
                                         paypTo)
 
-                    VIEW_ebon_indate(dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                        paypFrom, _
+                    VIEW_ebon_indate(dgvEmp.CurrentRow.Cells("RowID").Value,
+                                        paypFrom,
                                         paypTo)
 
                     Dim allowvalues As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("allowvalues")
@@ -14299,16 +14299,16 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
             Dim pay_stbitem As New DataTable 'this is for leave balances
 
-            pay_stbitem = retAsDatTbl("SELECT" & _
-                                      " pi.PayStubID" & _
-                                      ",pi.ProductID" & _
-                                      ",p.PartNo" & _
-                                      ",pi.PayAmount" & _
-                                      " FROM paystubitem pi" & _
-                                      " LEFT JOIN product p ON p.RowID = pi.ProductID" & _
-                                      " LEFT JOIN paystub ps ON ps.RowID = pi.PayStubID" & _
-                                      " WHERE p.Category='Leave Type'" & _
-                                      " AND p.OrganizationID=" & orgztnID & _
+            pay_stbitem = retAsDatTbl("SELECT" &
+                                      " pi.PayStubID" &
+                                      ",pi.ProductID" &
+                                      ",p.PartNo" &
+                                      ",pi.PayAmount" &
+                                      " FROM paystubitem pi" &
+                                      " LEFT JOIN product p ON p.RowID = pi.ProductID" &
+                                      " LEFT JOIN paystub ps ON ps.RowID = pi.PayStubID" &
+                                      " WHERE p.Category='Leave Type'" &
+                                      " AND p.OrganizationID=" & orgztnID &
                                       " AND ps.PayPeriodID='" & paypRowID & "';") 'this is for leave balances
 
             Dim rptdattab As New DataTable
@@ -14383,11 +14383,11 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
             Dim employee_dattab As New DataTable
 
-            employee_dattab = retAsDatTbl("SELECT e.* FROM" & _
-                                          " employee e LEFT JOIN employeesalary esal ON e.RowID=esal.EmployeeID" & _
-                                          " WHERE e.OrganizationID=" & orgztnID & _
-                                          " AND '" & paypTo & "' BETWEEN esal.EffectiveDateFrom AND COALESCE(esal.EffectiveDateTo,'" & paypTo & "')" & _
-                                          " GROUP BY e.RowID" & _
+            employee_dattab = retAsDatTbl("SELECT e.* FROM" &
+                                          " employee e LEFT JOIN employeesalary esal ON e.RowID=esal.EmployeeID" &
+                                          " WHERE e.OrganizationID=" & orgztnID &
+                                          " AND '" & paypTo & "' BETWEEN esal.EffectiveDateFrom AND COALESCE(esal.EffectiveDateTo,'" & paypTo & "')" &
+                                          " GROUP BY e.RowID" &
                                           " ORDER BY e.RowID DESC;")
 
             Dim newdatrow As DataRow
@@ -14398,21 +14398,21 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 newdatrow("Column1") = drow("RowID") 'Employee RowID
                 newdatrow("Column2") = drow("EmployeeID") 'Employee ID
 
-                Dim full_name = drow("FirstName").ToString & If(drow("MiddleName").ToString = Nothing, _
-                                                            "", _
-                                                            " " & StrConv(Microsoft.VisualBasic.Left(drow("MiddleName").ToString, 1), _
+                Dim full_name = drow("FirstName").ToString & If(drow("MiddleName").ToString = Nothing,
+                                                            "",
+                                                            " " & StrConv(Microsoft.VisualBasic.Left(drow("MiddleName").ToString, 1),
                                                             VbStrConv.ProperCase) & ".")
 
                 full_name = full_name & " " & drow("LastName").ToString
 
-                full_name = full_name & If(drow("Surname").ToString = Nothing, _
-                                        "", _
-                                        "-" & StrConv(Microsoft.VisualBasic.Left(drow("Surname").ToString, 1), _
+                full_name = full_name & If(drow("Surname").ToString = Nothing,
+                                        "",
+                                        "-" & StrConv(Microsoft.VisualBasic.Left(drow("Surname").ToString, 1),
                                         VbStrConv.ProperCase))
 
                 newdatrow("Column3") = full_name 'Employee Full Name
 
-                VIEW_paystub(drow("RowID").ToString, _
+                VIEW_paystub(drow("RowID").ToString,
                                      paypRowID)
 
                 Dim totamountallow = 0.0
@@ -14497,7 +14497,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     Exit For
                 Next
 
-                VIEW_specificemployeesalary(drow("RowID").ToString, _
+                VIEW_specificemployeesalary(drow("RowID").ToString,
                                             paypTo)
 
                 Dim theEmpBasicPayFix = 0.0
@@ -14551,8 +14551,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 Next
 
 
-                VIEW_employeetimeentry_SUM(drow("RowID").ToString, _
-                                            paypFrom, _
+                VIEW_employeetimeentry_SUM(drow("RowID").ToString,
+                                            paypFrom,
                                             paypTo)
 
                 For Each dgvrow As DataGridViewRow In dgvetent.Rows
@@ -14577,8 +14577,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                                     newdatrow("Column16") = "₱ " & FormatNumber(theEmpBasicPayFix, 2) 'newdatrow("Column4") 'txthrsworkamt
                                 Else
-                                    Dim totbasicpay = Val(totamountallow) + _
-                                    Val(.Cells("etent_OvertimeHoursAmount").Value) + _
+                                    Dim totbasicpay = Val(totamountallow) +
+                                    Val(.Cells("etent_OvertimeHoursAmount").Value) +
                                     Val(.Cells("etent_NightDiffOTHoursAmount").Value)
 
                                     newdatrow("Column4") = "₱ " & FormatNumber(totbasicpay, 2) 'newdatrow("Column4") '.ToString.Replace(",", "") 'Gross Income
@@ -14623,9 +14623,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                         newdatrow("Column26") = "₱ " & FormatNumber(Val(.Cells("etent_UndertimeHours").Value), 2) 'Undertime hours
                         newdatrow("Column27") = "₱ " & FormatNumber(Val(.Cells("etent_UndertimeHoursAmount").Value), 2) 'Undertime amount
 
-                        txttotabsent.Text = COUNT_employeeabsent(drow("RowID").ToString, _
-                                                                 drow("StartDate").ToString, _
-                                                                 paypFrom, _
+                        txttotabsent.Text = COUNT_employeeabsent(drow("RowID").ToString,
+                                                                 drow("StartDate").ToString,
+                                                                 paypFrom,
                                                                  paypTo)
 
                         'Dim param_date = If(paypTo = Nothing, paypFrom, paypTo)
@@ -14643,16 +14643,16 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
 
 
-                VIEW_eallow_indate(drow("RowID"), _
-                                    paypFrom, _
+                VIEW_eallow_indate(drow("RowID"),
+                                    paypFrom,
                                     paypTo)
 
-                VIEW_eloan_indate(drow("RowID"), _
-                                    paypFrom, _
+                VIEW_eloan_indate(drow("RowID"),
+                                    paypFrom,
                                     paypTo)
 
-                VIEW_ebon_indate(drow("RowID"), _
-                                    paypFrom, _
+                VIEW_ebon_indate(drow("RowID"),
+                                    paypFrom,
                                     paypTo)
 
 
@@ -14809,13 +14809,13 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                 objText = .ReportObjects("OrgAddress1")
 
-                Dim orgaddress = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" & _
-                                        ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" & _
-                                        ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" & _
-                                        ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" & _
-                                        ",IF(Country IS NULL,'',CONCAT(', ',Country))" & _
-                                        ",IF(State IS NULL,'',CONCAT(', ',State)))" & _
-                                        " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" & _
+                Dim orgaddress = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" &
+                                        ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" &
+                                        ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" &
+                                        ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" &
+                                        ",IF(Country IS NULL,'',CONCAT(', ',Country))" &
+                                        ",IF(State IS NULL,'',CONCAT(', ',State)))" &
+                                        " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" &
                                         " WHERE o.RowID=" & orgztnID & ";")
 
                 objText.Text = orgaddress
@@ -14824,10 +14824,10 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                 objText.Text = orgaddress
 
-                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" & _
-                                        ",',',COALESCE(FaxNumber,'')" & _
-                                        ",',',COALESCE(EmailAddress,'')" & _
-                                        ",',',COALESCE(TINNo,''))" & _
+                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" &
+                                        ",',',COALESCE(FaxNumber,'')" &
+                                        ",',',COALESCE(EmailAddress,'')" &
+                                        ",',',COALESCE(TINNo,''))" &
                                         " FROM organization WHERE RowID=" & orgztnID & ";")
 
                 Dim contactdet = Split(contactdetails, ",")
@@ -14880,8 +14880,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     End Sub
 
-    Sub VIEW_eallow_indate(Optional eallow_EmployeeID As Object = Nothing, _
-                               Optional datefrom As Object = Nothing, _
+    Sub VIEW_eallow_indate(Optional eallow_EmployeeID As Object = Nothing,
+                               Optional datefrom As Object = Nothing,
                                Optional dateto As Object = Nothing)
 
         Dim param(4, 2) As Object
@@ -14898,14 +14898,14 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         param(3, 1) = If(dateto = Nothing, DBNull.Value, dateto)
         param(4, 1) = Val(numofweekdays)
 
-        EXEC_VIEW_PROCEDURE(param, _
-                           "VIEW_employeeallowance_indate", _
+        EXEC_VIEW_PROCEDURE(param,
+                           "VIEW_employeeallowance_indate",
                            dgvempallowans, , 1)
 
     End Sub
 
-    Sub VIEW_eloan_indate(Optional eloan_EmployeeID As Object = Nothing, _
-                               Optional datefrom As Object = Nothing, _
+    Sub VIEW_eloan_indate(Optional eloan_EmployeeID As Object = Nothing,
+                               Optional datefrom As Object = Nothing,
                                Optional dateto As Object = Nothing)
 
         Dim params(3, 2) As Object
@@ -14920,14 +14920,14 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(2, 1) = datefrom
         params(3, 1) = dateto
 
-        EXEC_VIEW_PROCEDURE(params, _
-                             "VIEW_employeeloan_indate", _
+        EXEC_VIEW_PROCEDURE(params,
+                             "VIEW_employeeloan_indate",
                              dgvemploan)
 
     End Sub
 
-    Sub VIEW_ebon_indate(Optional ebon_EmployeeID As Object = Nothing, _
-                               Optional datefrom As Object = Nothing, _
+    Sub VIEW_ebon_indate(Optional ebon_EmployeeID As Object = Nothing,
+                               Optional datefrom As Object = Nothing,
                                Optional dateto As Object = Nothing)
 
         Dim params(3, 2) As Object
@@ -14942,8 +14942,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(2, 1) = datefrom
         params(3, 1) = dateto
 
-        EXEC_VIEW_PROCEDURE(params, _
-                             "VIEW_employeebonus_indate", _
+        EXEC_VIEW_PROCEDURE(params,
+                             "VIEW_employeebonus_indate",
                              dgvempbonus)
 
     End Sub
@@ -14974,7 +14974,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
         If once = 0 Then
             once = 1
-            
+
             txtallowamt.ContextMenu = New ContextMenu
 
             cboallowfreq.ContextMenu = New ContextMenu
@@ -14987,15 +14987,15 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
             If Val(categallowID) = 0 Then
                 categallowID = INSUPD_category(, "Allowance Type")
             End If
-            
+
             'enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categallowID & "' AND OrganizationID=" & orgztnID & ";", _
             '               allowance_type) 'cboallowtype
 
-            enlistTheLists("SELECT CONCAT(COALESCE(p.PartNo,''),'@',p.RowID)" & _
-                           " FROM product p" & _
-                           " INNER JOIN category c ON c.RowID=p.CategoryID" & _
-                           " WHERE c.CategoryName='Allowance Type'" & _
-                           " AND p.OrganizationID='" & orgztnID & "' AND p.ActiveData='1';", _
+            enlistTheLists("SELECT CONCAT(COALESCE(p.PartNo,''),'@',p.RowID)" &
+                           " FROM product p" &
+                           " INNER JOIN category c ON c.RowID=p.CategoryID" &
+                           " WHERE c.CategoryName='Allowance Type'" &
+                           " AND p.OrganizationID='" & orgztnID & "' AND p.ActiveData='1';",
                            allowance_type) 'cboallowtype
 
             For Each strval In allowance_type
@@ -15003,7 +15003,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 eall_Type.Items.Add(getStrBetween(strval, "", "@"))
             Next
 
-            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Allowance Frequency' AND Active='Yes' ORDER BY OrderBy;", _
+            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Allowance Frequency' AND Active='Yes' ORDER BY OrderBy;",
                            cboallowfreq)
 
             For Each strval In cboallowfreq.Items
@@ -15128,23 +15128,23 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 If .IsNewRow = 0 Then
                     If listofEditEmpAllow.Contains(.Cells("eall_RowID").Value) Then
 
-                        INSUPD_employeeallowance(.Cells("eall_RowID").Value, _
-                                                 dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                                 .Cells("eall_Frequency").Value, _
-                                                 .Cells("eall_Start").Value, _
-                                                 .Cells("eall_End").Value, _
-                                                 .Cells("eall_Amount").Value, _
+                        INSUPD_employeeallowance(.Cells("eall_RowID").Value,
+                                                 dgvEmp.CurrentRow.Cells("RowID").Value,
+                                                 .Cells("eall_Frequency").Value,
+                                                 .Cells("eall_Start").Value,
+                                                 .Cells("eall_End").Value,
+                                                 .Cells("eall_Amount").Value,
                                                  .Cells("eall_ProdID").Value)
                     Else
-                        If .Cells("eall_RowID").Value = Nothing And _
+                        If .Cells("eall_RowID").Value = Nothing And
                             tsbtnNewAllowance.Visible = True Then
 
-                            .Cells("eall_RowID").Value = INSUPD_employeeallowance(, _
-                                                     dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                                     .Cells("eall_Frequency").Value, _
-                                                     .Cells("eall_Start").Value, _
-                                                     .Cells("eall_End").Value, _
-                                                     .Cells("eall_Amount").Value, _
+                            .Cells("eall_RowID").Value = INSUPD_employeeallowance(,
+                                                     dgvEmp.CurrentRow.Cells("RowID").Value,
+                                                     .Cells("eall_Frequency").Value,
+                                                     .Cells("eall_Start").Value,
+                                                     .Cells("eall_End").Value,
+                                                     .Cells("eall_Amount").Value,
                                                      .Cells("eall_ProdID").Value)
                         End If
 
@@ -15169,12 +15169,12 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     End Sub
 
-    Function INSUPD_employeeallowance(Optional eall_RowID As Object = Nothing, _
-                                      Optional eall_EmployeeID As Object = Nothing, _
-                                      Optional eall_AllowanceFrequency As Object = Nothing, _
-                                      Optional eall_EffectiveStartDate As Object = Nothing, _
-                                      Optional eall_EffectiveEndDate As Object = Nothing, _
-                                      Optional eall_Amount As Object = Nothing, _
+    Function INSUPD_employeeallowance(Optional eall_RowID As Object = Nothing,
+                                      Optional eall_EmployeeID As Object = Nothing,
+                                      Optional eall_AllowanceFrequency As Object = Nothing,
+                                      Optional eall_EffectiveStartDate As Object = Nothing,
+                                      Optional eall_EffectiveEndDate As Object = Nothing,
+                                      Optional eall_Amount As Object = Nothing,
                                       Optional eall_ProductID As Object = Nothing) As Object
 
         Dim params(9, 2) As Object
@@ -15201,8 +15201,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(8, 1) = If(eall_EffectiveEndDate = Nothing, DBNull.Value, Format(CDate(eall_EffectiveEndDate), "yyyy-MM-dd"))
         params(9, 1) = eall_Amount
 
-        INSUPD_employeeallowance = EXEC_INSUPD_PROCEDURE(params, _
-                                                          "INSUPD_employeeallowance", _
+        INSUPD_employeeallowance = EXEC_INSUPD_PROCEDURE(params,
+                                                          "INSUPD_employeeallowance",
                                                           "eallow_RowID")
 
     End Function
@@ -15779,11 +15779,11 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
             If n_ProductControlForm.ShowDialog = Windows.Forms.DialogResult.OK Then
 
-                enlistTheLists("SELECT CONCAT(COALESCE(p.PartNo,''),'@',p.RowID)" & _
-                               " FROM product p" & _
-                               " INNER JOIN category c ON c.RowID=p.CategoryID" & _
-                               " WHERE c.CategoryName='Allowance Type'" & _
-                               " AND p.OrganizationID='" & orgztnID & "' AND p.ActiveData='1';", _
+                enlistTheLists("SELECT CONCAT(COALESCE(p.PartNo,''),'@',p.RowID)" &
+                               " FROM product p" &
+                               " INNER JOIN category c ON c.RowID=p.CategoryID" &
+                               " WHERE c.CategoryName='Allowance Type'" &
+                               " AND p.OrganizationID='" & orgztnID & "' AND p.ActiveData='1';",
                                allowance_type) 'cboallowtype
 
                 cboallowtype.Items.Clear()
@@ -15931,8 +15931,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         param(0, 1) = eallow_EmployeeID
         param(1, 1) = orgztnID
 
-        EXEC_VIEW_PROCEDURE(param, _
-                           "VIEW_employeeallowance", _
+        EXEC_VIEW_PROCEDURE(param,
+                           "VIEW_employeeallowance",
                            dgvempallowance, , 1)
 
     End Sub
@@ -16057,7 +16057,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         If once = 0 Then
             once = 1
 
-            enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Employee OT Type' AND Active='Yes';", _
+            enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Employee OT Type' AND Active='Yes';",
                            EmpOTtype)
 
             cboEmpOTtypes.Items.Clear()
@@ -16067,7 +16067,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 eot_Type.Items.Add(strval)
             Next
 
-            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Employee Overtime Status' AND Active='Yes' ORDER BY OrderBy;", _
+            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Employee Overtime Status' AND Active='Yes' ORDER BY OrderBy;",
                            cboStatusEmpOT)
 
             view_IDEmpOT = VIEW_privilege("Employee Overtime", orgztnID)
@@ -16143,8 +16143,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         param(1, 1) = orgztnID
         param(2, 1) = pagenumberOT
 
-        EXEC_VIEW_PROCEDURE(param, _
-                           "VIEW_employeeOT", _
+        EXEC_VIEW_PROCEDURE(param,
+                           "VIEW_employeeOT",
                            dgvempOT, 1, 1)
 
         AddHandler dgvempOT.SelectionChanged, AddressOf dgvEmpOT_SelectionChanged
@@ -16243,12 +16243,12 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                 invalids = StrReverse(getStrBetween(StrReverse(dgvempOT.Item(colNameEmpOT, rowIndxEmpOT).ErrorText), "", " "))
 
-                WarnBalloon("Please input a valid " & invalids & ".", _
-                              StrConv(dgvempOT.Item(colNameEmpOT, rowIndxEmpOT).ErrorText, VbStrConv.ProperCase), _
+                WarnBalloon("Please input a valid " & invalids & ".",
+                              StrConv(dgvempOT.Item(colNameEmpOT, rowIndxEmpOT).ErrorText, VbStrConv.ProperCase),
                               lblforballoon, 0, -69)
             Else
-                WarnBalloon("Please input a valid and complete Employee Overtime.", _
-                            "Invalid employee Overtime", _
+                WarnBalloon("Please input a valid and complete Employee Overtime.",
+                            "Invalid employee Overtime",
                             lblforballoon, 0, -69)
             End If
 
@@ -16287,7 +16287,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         'cboStatusEmpOT
 
         For Each r As DataGridViewRow In dgvempOT.Rows
-            If Val(r.Cells("eot_RowID").Value) = 0 And _
+            If Val(r.Cells("eot_RowID").Value) = 0 And
                 tsbtnNewEmpOT.Visible = True Then
 
                 If r.IsNewRow = False Then
@@ -16308,8 +16308,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                         param(10, 1) = If(r.Cells("eot_Reason").Value = Nothing, DBNull.Value, r.Cells("eot_Reason").Value) 'Reason
                         param(11, 1) = If(r.Cells("eot_Comment").Value = Nothing, DBNull.Value, r.Cells("eot_Comment").Value) 'Comments
 
-                        Dim imageobj As Object = If(r.Cells("eot_Image").Value Is Nothing, _
-                                                    DBNull.Value, _
+                        Dim imageobj As Object = If(r.Cells("eot_Image").Value Is Nothing,
+                                                    DBNull.Value,
                                                     r.Cells("eot_Image").Value) 'Image
 
                         param(12, 1) = imageobj
@@ -16317,9 +16317,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                         r.Cells("eot_RowID").Value = EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeeOT", "eot_ID")
 
-                        INSUPD_employeeattachments(, dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                                    "Employee Overtime@" & r.Cells("eot_RowID").Value, _
-                                                    r.Cells("eot_attafileextensn").Value, _
+                        INSUPD_employeeattachments(, dgvEmp.CurrentRow.Cells("RowID").Value,
+                                                    "Employee Overtime@" & r.Cells("eot_RowID").Value,
+                                                    r.Cells("eot_attafileextensn").Value,
                                                     r.Cells("eot_attafilename").Value)
 
                     End If
@@ -16349,9 +16349,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                         EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeeOT", "eot_ID")
 
-                        INSUPD_employeeattachments(, dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                                    "Employee Overtime@" & r.Cells("eot_RowID").Value, _
-                                                    r.Cells("eot_attafileextensn").Value, _
+                        INSUPD_employeeattachments(, dgvEmp.CurrentRow.Cells("RowID").Value,
+                                                    "Employee Overtime@" & r.Cells("eot_RowID").Value,
+                                                    r.Cells("eot_attafileextensn").Value,
                                                     r.Cells("eot_attafilename").Value)
 
                     End If
@@ -16377,10 +16377,10 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         isdlEmpOT = 1
 
         If dgvempOT.RowCount <> 1 Then
-            dgvempOT.Item("eot_viewimage", _
+            dgvempOT.Item("eot_viewimage",
                              dgvempOT.CurrentRow.Index).Selected = True
 
-            Dim dgvceleventarg As New DataGridViewCellEventArgs(eot_viewimage.Index, _
+            Dim dgvceleventarg As New DataGridViewCellEventArgs(eot_viewimage.Index,
                                                                 dgvempOT.CurrentRow.Index)
 
             dgvEmpOT_CellContentClick(sender, dgvceleventarg)
@@ -16410,7 +16410,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                 If promptresultEOT = Windows.Forms.DialogResult.No Then
 
-                    Dim _attafileextensn, _
+                    Dim _attafileextensn,
                         _attafilename As String
 
                     _attafilename = dgvempOT.CurrentRow.Cells("eot_attafilename").Value
@@ -16425,7 +16425,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                             dgvempOT.BeginEdit(1)
                             InfoBalloon("Please input a file name.", "Attachment has no file name", Label234, 0, -69)
                         Else
-                            Dim tmp_path = Path.GetTempPath & _
+                            Dim tmp_path = Path.GetTempPath &
                                                 _attafilename & _attafileextensn
 
                             Dim file_stream As New FileStream(tmp_path, FileMode.Create)
@@ -16461,8 +16461,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                         'dlImage.FileName = dgvEmpOT.CurrentRow.Cells("eot_attafilename").Value & _
                         '                   dgvEmpOT.CurrentRow.Cells("eot_attafileextensn").Value
 
-                        Dim savefilepath As String = _
-                            Path.GetFullPath(dlImage.FileName) & _
+                        Dim savefilepath As String =
+                            Path.GetFullPath(dlImage.FileName) &
                             dgvempOT.CurrentRow.Cells("eot_attafileextensn").Value
 
                         Dim fs As New FileStream(savefilepath, FileMode.Create)
@@ -16486,13 +16486,13 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     End Sub
 
-    Dim prev_eot_Type, _
-        prev_eot_StartTime, _
-        prev_eot_EndTime, _
-        prev_eot_StartDate, _
-        prev_eot_EndDate, _
-        prev_eot_Reason, _
-        prev_eot_Comment, _
+    Dim prev_eot_Type,
+        prev_eot_StartTime,
+        prev_eot_EndTime,
+        prev_eot_StartDate,
+        prev_eot_EndDate,
+        prev_eot_Reason,
+        prev_eot_Comment,
         prev_eot_Status As String
 
     Private Sub dgvEmpOT_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvEmpOT.SelectionChanged
@@ -16641,8 +16641,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 If dgvempOT.Item("eot_StartDate", rowIndxEmpOT).Value <> Nothing _
                     And dgvempOT.Item("eot_EndDate", rowIndxEmpOT).Value <> Nothing Then
 
-                    Dim date_differ = DateDiff(DateInterval.Day, _
-                                                CDate(dgvempOT.Item("eot_StartDate", rowIndxEmpOT).Value), _
+                    Dim date_differ = DateDiff(DateInterval.Day,
+                                                CDate(dgvempOT.Item("eot_StartDate", rowIndxEmpOT).Value),
                                                 CDate(dgvempOT.Item("eot_EndDate", rowIndxEmpOT).Value))
 
                     If date_differ < 0 Then
@@ -16659,19 +16659,19 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     Dim invalidEmpOT = 0
 
                     If dgvEmp.RowCount <> 0 Then
-                        invalidEmpOT = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                                                    " FROM employeetimeentry" & _
-                                                    " WHERE DATE BETWEEN '" & _from & "'" & _
-                                                    " AND '" & _to & "'" & _
-                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
+                        invalidEmpOT = EXECQUER("SELECT EXISTS(SELECT RowID" &
+                                                    " FROM employeetimeentry" &
+                                                    " WHERE DATE BETWEEN '" & _from & "'" &
+                                                    " AND '" & _to & "'" &
+                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value &
                                                     " AND OrganizationID=" & orgztnID & ");")
 
                         If invalidEmpOT = 0 Then
-                            invalidEmpOT = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                                                    " FROM employeeEmpOT" & _
-                                                    " WHERE " & _
-                                                    " ('" & _from & "' IN (EmpOTStartDate,EmpOTEndDate) OR '" & _to & "' IN (EmpOTStartDate,EmpOTEndDate))" & _
-                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
+                            invalidEmpOT = EXECQUER("SELECT EXISTS(SELECT RowID" &
+                                                    " FROM employeeEmpOT" &
+                                                    " WHERE " &
+                                                    " ('" & _from & "' IN (EmpOTStartDate,EmpOTEndDate) OR '" & _to & "' IN (EmpOTStartDate,EmpOTEndDate))" &
+                                                    " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value &
                                                     " AND OrganizationID=" & orgztnID & ");")
                         End If
                     End If
@@ -16707,8 +16707,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
             Try
 
-                If dateobj.ToString.Contains("A") Or _
-                    dateobj.ToString.Contains("P") Or _
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
                     dateobj.ToString.Contains("M") Then
 
                     ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -16816,7 +16816,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                 dgvempOT.EndEdit(True)
 
-                EXECQUER("DELETE FROM employeeovertime WHERE RowID = '" & dgvempOT.CurrentRow.Cells("eot_RowID").Value & "';" & _
+                EXECQUER("DELETE FROM employeeovertime WHERE RowID = '" & dgvempOT.CurrentRow.Cells("eot_RowID").Value & "';" &
                          "ALTER TABLE employeeovertime AUTO_INCREMENT = 0;")
 
                 dgvempOT.Rows.Remove(dgvempOT.CurrentRow)
@@ -16860,7 +16860,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     Dim thefilepathEOT As String
 
-    Dim atta_nameEOT, _
+    Dim atta_nameEOT,
         atta_extensnEOT As String
 
     Private Sub btnbrowseimageEmpOT_Click(sender As Object, e As EventArgs) Handles btnBrowseEmpOT.Click
@@ -16874,12 +16874,12 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
             'browsefile.Filter = "JPEG(*.jpg)|*.jpg"
 
-            browsefile.Filter = "All files (*.*)|*.*" & _
-                                "|JPEG (*.jpg)|*.jpg" & _
-                                "|PNG (*.PNG)|*.png" & _
-                                "|MS Word 97-2003 Document (*.doc)|*.doc" & _
-                                "|MS Word Document (*.docx)|*.docx" & _
-                                "|MS Excel 97-2003 Workbook (*.xls)|*.xls" & _
+            browsefile.Filter = "All files (*.*)|*.*" &
+                                "|JPEG (*.jpg)|*.jpg" &
+                                "|PNG (*.PNG)|*.png" &
+                                "|MS Word 97-2003 Document (*.doc)|*.doc" &
+                                "|MS Word Document (*.docx)|*.docx" &
+                                "|MS Excel 97-2003 Workbook (*.xls)|*.xls" &
                                 "|MS Excel Workbook (*.xlsx)|*.xlsx"
 
             '|" & _
@@ -17057,8 +17057,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         If thegetval <> "" Then
             Try
 
-                If dateobj.ToString.Contains("A") Or _
-                    dateobj.ToString.Contains("P") Or _
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
                     dateobj.ToString.Contains("M") Then
 
                     ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -17200,8 +17200,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         If thegetval <> "" Then
             Try
 
-                If dateobj.ToString.Contains("A") Or _
-                    dateobj.ToString.Contains("P") Or _
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
                     dateobj.ToString.Contains("M") Then
 
                     ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -17471,8 +17471,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 If thegetval <> Nothing _
                     And Trim(txtendateEmpOT.Text) <> Nothing Then
 
-                    Dim date_differ = DateDiff(DateInterval.Day, _
-                                                CDate(thegetval), _
+                    Dim date_differ = DateDiff(DateInterval.Day,
+                                                CDate(thegetval),
                                                 CDate(Trim(txtendateEmpOT.Text)))
 
                     If date_differ < 0 Then
@@ -17603,8 +17603,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 If thegetval <> Nothing _
                     And Trim(txtstartdateEmpOT.Text) <> Nothing Then
 
-                    Dim date_differ = DateDiff(DateInterval.Day, _
-                                                CDate(Trim(txtstartdateEmpOT.Text)), _
+                    Dim date_differ = DateDiff(DateInterval.Day,
+                                                CDate(Trim(txtstartdateEmpOT.Text)),
                                                 CDate(thegetval))
 
                     If date_differ < 0 Then
@@ -17864,7 +17864,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         If once = 0 Then
             once = 1
 
-            enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Official Business Type' AND Active='Yes';", _
+            enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Official Business Type' AND Active='Yes';",
                            OBFtype)
 
             cboOBFtypes.Items.Clear()
@@ -17874,7 +17874,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 obf_Type.Items.Add(strval)
             Next
 
-            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Employee Overtime Status' AND Active='Yes' ORDER BY OrderBy;", _
+            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Employee Overtime Status' AND Active='Yes' ORDER BY OrderBy;",
                            cboOBFstatus)
 
             view_IDOBF = VIEW_privilege("Official Business filing", orgztnID)
@@ -17941,8 +17941,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(0, 1) = Employee_ID
         params(1, 1) = orgztnID
 
-        EXEC_VIEW_PROCEDURE(params, _
-                            "VIEW_employeeoffbusi", _
+        EXEC_VIEW_PROCEDURE(params,
+                            "VIEW_employeeoffbusi",
                             dgvOBF, 1, 1)
 
     End Sub
@@ -18036,12 +18036,12 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                 invalids = StrReverse(getStrBetween(StrReverse(dgvOBF.Item(colNameEmpOT, rowIndxEmpOT).ErrorText), "", " "))
 
-                WarnBalloon("Please input a valid " & invalids & ".", _
-                              StrConv(dgvOBF.Item(colNameEmpOT, rowIndxEmpOT).ErrorText, VbStrConv.ProperCase), _
+                WarnBalloon("Please input a valid " & invalids & ".",
+                              StrConv(dgvOBF.Item(colNameEmpOT, rowIndxEmpOT).ErrorText, VbStrConv.ProperCase),
                               lblforballoon, 0, -69)
             Else
-                WarnBalloon("Please input a valid and complete Employee Overtime.", _
-                            "Invalid employee Employee Overtime", _
+                WarnBalloon("Please input a valid and complete Employee Overtime.",
+                            "Invalid employee Employee Overtime",
                             lblforballoon, 0, -69)
             End If
 
@@ -18076,7 +18076,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         param(13, 0) = "obf_OffBusStatus"
 
         For Each r As DataGridViewRow In dgvOBF.Rows
-            If Val(r.Cells("obf_RowID").Value) = 0 And _
+            If Val(r.Cells("obf_RowID").Value) = 0 And
                 tsbtnNewOBF.Visible = True Then
 
                 If r.IsNewRow = False Then
@@ -18097,8 +18097,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     param(10, 1) = If(r.Cells("obf_Reason").Value = Nothing, DBNull.Value, r.Cells("obf_Reason").Value) 'Reason
                     param(11, 1) = If(r.Cells("obf_Comment").Value = Nothing, DBNull.Value, r.Cells("obf_Comment").Value) 'Comments
 
-                    Dim imageobj As Object = If(r.Cells("obf_Image").Value Is Nothing, _
-                                                DBNull.Value, _
+                    Dim imageobj As Object = If(r.Cells("obf_Image").Value Is Nothing,
+                                                DBNull.Value,
                                                 r.Cells("obf_Image").Value) 'Image
 
                     param(12, 1) = imageobj
@@ -18107,9 +18107,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                     r.Cells("obf_RowID").Value = EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeeoffbusi", "obf_ID")
 
-                    INSUPD_employeeattachments(, dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                                "Official Business@" & r.Cells("obf_RowID").Value, _
-                                                r.Cells("obf_attafileextensn").Value, _
+                    INSUPD_employeeattachments(, dgvEmp.CurrentRow.Cells("RowID").Value,
+                                                "Official Business@" & r.Cells("obf_RowID").Value,
+                                                r.Cells("obf_attafileextensn").Value,
                                                 r.Cells("obf_attafilename").Value)
 
                     'End If
@@ -18117,7 +18117,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 End If
 
             Else
-                
+
                 If listofEditRowOBF.Contains(r.Cells("obf_RowID").Value) Then
                     'If r.Cells("obf_StartTime").Value <> Nothing And r.Cells("obf_EndTime").Value <> Nothing _
                     '    And r.Cells("obf_StartDate").Value <> Nothing And r.Cells("obf_EndDate").Value <> Nothing Then
@@ -18139,9 +18139,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                     EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeeoffbusi", "obf_ID")
 
-                    INSUPD_employeeattachments(, dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                                "Official Business@" & r.Cells("obf_RowID").Value, _
-                                                r.Cells("obf_attafileextensn").Value, _
+                    INSUPD_employeeattachments(, dgvEmp.CurrentRow.Cells("RowID").Value,
+                                                "Official Business@" & r.Cells("obf_RowID").Value,
+                                                r.Cells("obf_attafileextensn").Value,
                                                 r.Cells("obf_attafilename").Value)
 
 
@@ -18189,7 +18189,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                 If promptresultobf = Windows.Forms.DialogResult.No Then
 
-                    Dim _attafileextensn, _
+                    Dim _attafileextensn,
                         _attafilename As String
 
                     _attafilename = dgvOBF.CurrentRow.Cells("obf_attafilename").Value
@@ -18198,7 +18198,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     'Dim tmp_path = Path.GetTempPath & _
                     '               dgvEmp.CurrentRow.Cells("Column1").Value & "_" & e.RowIndex & ".jpg"
 
-                    Dim tmp_path = Path.GetTempPath & _
+                    Dim tmp_path = Path.GetTempPath &
                                                 _attafilename & _attafileextensn
 
                     If _attafileextensn <> "" Then
@@ -18241,8 +18241,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                         'dlImage.FileName = dgvOBF.CurrentRow.Cells("obf_attafilename").Value & _
                         '                   dgvOBF.CurrentRow.Cells("obf_attafileextensn").Value
 
-                        Dim savefilepath As String = _
-                            Path.GetFullPath(dlImage.FileName) & _
+                        Dim savefilepath As String =
+                            Path.GetFullPath(dlImage.FileName) &
                             dgvOBF.CurrentRow.Cells("obf_attafileextensn").Value
 
                         Dim fs As New FileStream(savefilepath, FileMode.Create)
@@ -18266,12 +18266,12 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         AddHandler cboOBFstatus.SelectedIndexChanged, AddressOf cboOBFstatus_SelectedIndexChanged
     End Sub
 
-    Dim prev_obf_Type, _
-        prev_obf_StartTime, _
-        prev_obf_EndTime, _
-        prev_obf_StartDate, _
-        prev_obf_EndDate, _
-        prev_obf_Reason, _
+    Dim prev_obf_Type,
+        prev_obf_StartTime,
+        prev_obf_EndTime,
+        prev_obf_StartDate,
+        prev_obf_EndDate,
+        prev_obf_Reason,
         prev_obf_Comment _
         As String
 
@@ -18314,7 +18314,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     txtcommentsOBF.Text = .Cells("obf_Comment").Value
 
                     cboOBFstatus.Text = .Cells("obf_Status").Value
-					
+
                     pbempOBF.Image = ConvByteToImage(.Cells("obf_Image").Value)
 
                 Else
@@ -18440,19 +18440,19 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
         txtstarttimeOBF.Focus()
 
-        InfoBalloon("Ex. The time is 08:30:15 am" & vbNewLine & _
-                    "     just type '8 30'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine & _
-                    "Ex. The time is 06:15:15 pm" & vbNewLine & _
-                    "     if it is 'pm', get the hour and then plus 12(twelve)" & vbNewLine & _
-                    "     the hour is 6 so, 6 + 12 = 18" & vbNewLine & _
-                    "     just type '18 15'" & vbNewLine & _
-                    "     or '18:15 pm'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine & _
-                    "Ex. The time is 12:12:12 pm" & vbNewLine & _
-                    "     if it is 'pm', and the hour is equal to twelve(12)" & vbNewLine & _
-                    "     no need to add 12" & vbNewLine & _
-                    "     just type '12 12'" & vbNewLine & _
-                    "     or '12:12 pm'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine, _
-                    "How to input Time ?", _
+        InfoBalloon("Ex. The time is 08:30:15 am" & vbNewLine &
+                    "     just type '8 30'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine &
+                    "Ex. The time is 06:15:15 pm" & vbNewLine &
+                    "     if it is 'pm', get the hour and then plus 12(twelve)" & vbNewLine &
+                    "     the hour is 6 so, 6 + 12 = 18" & vbNewLine &
+                    "     just type '18 15'" & vbNewLine &
+                    "     or '18:15 pm'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine &
+                    "Ex. The time is 12:12:12 pm" & vbNewLine &
+                    "     if it is 'pm', and the hour is equal to twelve(12)" & vbNewLine &
+                    "     no need to add 12" & vbNewLine &
+                    "     just type '12 12'" & vbNewLine &
+                    "     or '12:12 pm'(don't include the apostrophe(')) and press Tab key or Enter key" & vbNewLine,
+                    "How to input Time ?",
                     txtstarttimeOBF, 82, -240, , 3600000)
 
     End Sub
@@ -18502,8 +18502,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         If thegetval <> "" Then
             Try
 
-                If dateobj.ToString.Contains("A") Or _
-                    dateobj.ToString.Contains("P") Or _
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
                     dateobj.ToString.Contains("M") Then
 
                     ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -18626,8 +18626,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         If thegetval <> "" Then
             Try
 
-                If dateobj.ToString.Contains("A") Or _
-                    dateobj.ToString.Contains("P") Or _
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
                     dateobj.ToString.Contains("M") Then
 
                     ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -18770,8 +18770,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 If thegetval <> Nothing _
                     And Trim(txtendateOBF.Text) <> Nothing Then
 
-                    Dim date_differ = DateDiff(DateInterval.Day, _
-                                                CDate(thegetval), _
+                    Dim date_differ = DateDiff(DateInterval.Day,
+                                                CDate(thegetval),
                                                 CDate(Trim(txtendateOBF.Text)))
 
                     If date_differ < 0 Then
@@ -18902,8 +18902,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 If thegetval <> Nothing _
                     And Trim(txtstartdateOBF.Text) <> Nothing Then
 
-                    Dim date_differ = DateDiff(DateInterval.Day, _
-                                                CDate(Trim(txtstartdateOBF.Text)), _
+                    Dim date_differ = DateDiff(DateInterval.Day,
+                                                CDate(Trim(txtstartdateOBF.Text)),
                                                 CDate(thegetval))
 
                     If date_differ < 0 Then
@@ -19127,8 +19127,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     End Sub
 
-    Dim atta_nameobf, _
-        atta_extensnobf, _
+    Dim atta_nameobf,
+        atta_extensnobf,
         thefilepathobf As String
 
     Private Sub btnBrowseOBF_Click(sender As Object, e As EventArgs) Handles btnBrowseOBF.Click
@@ -19142,12 +19142,12 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
             'browsefile.Filter = "JPEG(*.jpg)|*.jpg"
 
-            browsefile.Filter = "All files (*.*)|*.*" & _
-                                "|JPEG (*.jpg)|*.jpg" & _
-                                "|PNG (*.PNG)|*.png" & _
-                                "|MS Word 97-2003 Document (*.doc)|*.doc" & _
-                                "|MS Word Document (*.docx)|*.docx" & _
-                                "|MS Excel 97-2003 Workbook (*.xls)|*.xls" & _
+            browsefile.Filter = "All files (*.*)|*.*" &
+                                "|JPEG (*.jpg)|*.jpg" &
+                                "|PNG (*.PNG)|*.png" &
+                                "|MS Word 97-2003 Document (*.doc)|*.doc" &
+                                "|MS Word Document (*.docx)|*.docx" &
+                                "|MS Excel 97-2003 Workbook (*.xls)|*.xls" &
                                 "|MS Excel Workbook (*.xlsx)|*.xlsx"
 
             '|" & _
@@ -19228,10 +19228,10 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         isdlOBF = 1
 
         If dgvOBF.RowCount <> 1 Then
-            dgvOBF.Item("obf_view", _
+            dgvOBF.Item("obf_view",
                              dgvOBF.CurrentRow.Index).Selected = True
 
-            Dim dgvceleventarg As New DataGridViewCellEventArgs(obf_view.Index, _
+            Dim dgvceleventarg As New DataGridViewCellEventArgs(obf_view.Index,
                                                                 dgvOBF.CurrentRow.Index)
 
             dgvOBF_CellContentClick(sender, dgvceleventarg)
@@ -19304,7 +19304,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 categBonusID = INSUPD_category(, "Bonus")
             End If
 
-            enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categBonusID & "' AND OrganizationID=" & orgztnID & ";", _
+            enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categBonusID & "' AND OrganizationID=" & orgztnID & ";",
                            bonus_type) 'cboallowtype
 
             For Each strval In bonus_type
@@ -19312,7 +19312,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 bon_Type.Items.Add(getStrBetween(strval, "", "@"))
             Next
 
-            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Allowance Frequency' AND Active='Yes' AND OrderBy=3;", _
+            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Allowance Frequency' AND Active='Yes' AND OrderBy=3;",
                            cbobonfreq)
 
             'enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Allowance Frequency' AND Active='Yes' ORDER BY OrderBy;", _
@@ -19385,18 +19385,18 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         param(0, 1) = bon_EmployeeID
         param(1, 1) = orgztnID
 
-        EXEC_VIEW_PROCEDURE(param, _
-                           "VIEW_employeebonus", _
+        EXEC_VIEW_PROCEDURE(param,
+                           "VIEW_employeebonus",
                            dgvempbon, , 1)
 
     End Sub
 
-    Function INSUPD_employeebonus(Optional bon_RowID As Object = Nothing, _
-                                      Optional bon_EmployeeID As Object = Nothing, _
-                                      Optional bon_AllowanceFrequency As Object = Nothing, _
-                                      Optional bon_EffectiveStartDate As Object = Nothing, _
-                                      Optional bon_EffectiveEndDate As Object = Nothing, _
-                                      Optional bon_BonusAmount As Object = Nothing, _
+    Function INSUPD_employeebonus(Optional bon_RowID As Object = Nothing,
+                                      Optional bon_EmployeeID As Object = Nothing,
+                                      Optional bon_AllowanceFrequency As Object = Nothing,
+                                      Optional bon_EffectiveStartDate As Object = Nothing,
+                                      Optional bon_EffectiveEndDate As Object = Nothing,
+                                      Optional bon_BonusAmount As Object = Nothing,
                                       Optional bon_ProductID As Object = Nothing) As Object
 
         Dim params(9, 2) As Object
@@ -19423,8 +19423,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(8, 1) = If(bon_EffectiveEndDate = Nothing, DBNull.Value, Format(CDate(bon_EffectiveEndDate), "yyyy-MM-dd"))
         params(9, 1) = bon_BonusAmount
 
-        INSUPD_employeebonus = EXEC_INSUPD_PROCEDURE(params, _
-                                                    "INSUPD_employeebonus", _
+        INSUPD_employeebonus = EXEC_INSUPD_PROCEDURE(params,
+                                                    "INSUPD_employeebonus",
                                                     "bon_ID")
 
     End Function
@@ -19496,23 +19496,23 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 If .IsNewRow = 0 Then
                     If listofEditRowBon.Contains(dgvrow.Cells("bon_RowID").Value) Then
 
-                        INSUPD_employeebonus(.Cells("bon_RowID").Value, _
-                                                 dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                                 .Cells("bon_Frequency").Value, _
-                                                 .Cells("bon_Start").Value, _
-                                                 .Cells("bon_End").Value, _
-                                                 .Cells("bon_Amount").Value, _
+                        INSUPD_employeebonus(.Cells("bon_RowID").Value,
+                                                 dgvEmp.CurrentRow.Cells("RowID").Value,
+                                                 .Cells("bon_Frequency").Value,
+                                                 .Cells("bon_Start").Value,
+                                                 .Cells("bon_End").Value,
+                                                 .Cells("bon_Amount").Value,
                                                  .Cells("bon_ProdID").Value)
                     Else
-                        If .Cells("bon_RowID").Value = Nothing And _
+                        If .Cells("bon_RowID").Value = Nothing And
                             tsbtnNewBon.Visible = True Then
 
-                            .Cells("bon_RowID").Value = INSUPD_employeebonus(, _
-                                                     dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                                     .Cells("bon_Frequency").Value, _
-                                                     .Cells("bon_Start").Value, _
-                                                     .Cells("bon_End").Value, _
-                                                     .Cells("bon_Amount").Value, _
+                            .Cells("bon_RowID").Value = INSUPD_employeebonus(,
+                                                     dgvEmp.CurrentRow.Cells("RowID").Value,
+                                                     .Cells("bon_Frequency").Value,
+                                                     .Cells("bon_Start").Value,
+                                                     .Cells("bon_End").Value,
+                                                     .Cells("bon_Amount").Value,
                                                      .Cells("bon_ProdID").Value)
                         End If
                     End If
@@ -20238,7 +20238,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
             computertemppath = Path.GetTempPath
 
-            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Employee Checklist' ORDER BY OrderBy;", _
+            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Employee Checklist' ORDER BY OrderBy;",
                             cboattatype)
 
             For Each strval In cboattatype.Items
@@ -20349,8 +20349,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
             If viewthis = "eatt_viewthis" Then
                 If dgvempatta.CurrentRow.Cells("eatt_AttachedFile").Value IsNot Nothing Then
 
-                    Dim savefilepath = Path.GetTempPath & _
-                                             dgvempatta.CurrentRow.Cells("eatt_FileName").Value & _
+                    Dim savefilepath = Path.GetTempPath &
+                                             dgvempatta.CurrentRow.Cells("eatt_FileName").Value &
                                              dgvempatta.CurrentRow.Cells("eatt_FileType").Value
 
                     If Trim(dgvempatta.CurrentRow.Cells("eatt_FileType").Value) = Nothing Then
@@ -20361,7 +20361,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                             dgvempatta.BeginEdit(1)
                             InfoBalloon("Please input a file name.", "Attachment has no file name", Label235, 0, -69)
                         Else
-                            Dim fs As New FileStream(savefilepath, _
+                            Dim fs As New FileStream(savefilepath,
                                                      FileMode.Create)
 
                             Dim blob As Byte() = DirectCast(dgvempatta.CurrentRow.Cells("eatt_AttachedFile").Value, Byte())
@@ -20417,17 +20417,17 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
         params(0, 1) = EmpID
 
-        EXEC_VIEW_PROCEDURE(params, _
-                             "VIEW_employeeattachments", _
+        EXEC_VIEW_PROCEDURE(params,
+                             "VIEW_employeeattachments",
                              dgvempatta)
 
     End Sub
 
-    Function INSUPD_employeeattachment(Optional eatta_RowID As Object = Nothing, _
-                                       Optional eatta_EmployeeID As Object = Nothing, _
-                                       Optional eatta_Type As Object = Nothing, _
-                                       Optional eatta_FileName As Object = Nothing, _
-                                       Optional eatta_FileType As Object = Nothing, _
+    Function INSUPD_employeeattachment(Optional eatta_RowID As Object = Nothing,
+                                       Optional eatta_EmployeeID As Object = Nothing,
+                                       Optional eatta_Type As Object = Nothing,
+                                       Optional eatta_FileName As Object = Nothing,
+                                       Optional eatta_FileType As Object = Nothing,
                                        Optional eatta_AttachedFile As Object = Nothing) As Object
 
         Dim params(7, 2) As Object
@@ -20462,9 +20462,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(6, 1) = Trim(eatta_FileType)
         params(7, 1) = If(eatta_AttachedFile Is Nothing, DBNull.Value, eatta_AttachedFile)
 
-        INSUPD_employeeattachment = _
-            EXEC_INSUPD_PROCEDURE(params, _
-                                   "INSUPD_employeeattachment", _
+        INSUPD_employeeattachment =
+            EXEC_INSUPD_PROCEDURE(params,
+                                   "INSUPD_employeeattachment",
                                    "empattaID")
 
     End Function
@@ -20504,12 +20504,12 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
             'browsefile.Filter = "JPEG(*.jpg)|*.jpg"
 
-            browsefile.Filter = "All files (*.*)|*.*" & _
-                                "|JPEG (*.jpg)|*.jpg" & _
-                                "|PNG (*.PNG)|*.png" & _
-                                "|MS Word 97-2003 Document (*.doc)|*.doc" & _
-                                "|MS Word Document (*.docx)|*.docx" & _
-                                "|MS Excel 97-2003 Workbook (*.xls)|*.xls" & _
+            browsefile.Filter = "All files (*.*)|*.*" &
+                                "|JPEG (*.jpg)|*.jpg" &
+                                "|PNG (*.PNG)|*.png" &
+                                "|MS Word 97-2003 Document (*.doc)|*.doc" &
+                                "|MS Word Document (*.docx)|*.docx" &
+                                "|MS Excel 97-2003 Workbook (*.xls)|*.xls" &
                                 "|MS Excel Workbook (*.xlsx)|*.xlsx"
 
             '|" & _
@@ -20539,7 +20539,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                         .Item("eatt_FileName", e_rowindx).Value = atta_nameatt
                         .Item("eatt_FileType", e_rowindx).Value = atta_extensnatt
                         .Item("eatt_viewthis", e_rowindx).Value = "view this"
-                        
+
                         .CurrentRow.Cells("Column38").Value = .CurrentRow.Cells("eatt_Type").Value
 
                         .Item(currcol, e_rowindx).Selected = True
@@ -20599,8 +20599,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 'dlImage.FileName = dgvOBF.CurrentRow.Cells("obf_attafilename").Value & _
                 '                   dgvOBF.CurrentRow.Cells("obf_attafileextensn").Value
 
-                Dim savefilepath As String = _
-                    Path.GetFullPath(dlImage.FileName) & _
+                Dim savefilepath As String =
+                    Path.GetFullPath(dlImage.FileName) &
                     dgvempatta.CurrentRow.Cells("eatt_FileType").Value
 
                 Dim fs As New FileStream(savefilepath, FileMode.Create)
@@ -20674,23 +20674,23 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     Dim fileextnsnLength = If(Trim(.Cells("eatt_FileType").Value).Length >= 200, 200, Trim(.Cells("eatt_FileType").Value).Length)
 
 
-                    If .Cells("eatt_RowID").Value = Nothing And _
+                    If .Cells("eatt_RowID").Value = Nothing And
                         tsbtnNewAtta.Visible = True Then
 
                         If .Cells("Column38").Value = Nothing Then
 
-                            WarnBalloon("The file '" & .Cells("eatt_FileName").Value & .Cells("eatt_FileType").Value & "' has no Attachment type." & vbNewLine & _
-                                        "Please supply it's attachment type.", _
+                            WarnBalloon("The file '" & .Cells("eatt_FileName").Value & .Cells("eatt_FileType").Value & "' has no Attachment type." & vbNewLine &
+                                        "Please supply it's attachment type.",
                                         "An attachment has no Type", cboattatype, 0, -69)
 
                             'Exit For
                             Exit Sub
                         Else
-                            .Cells("eatt_RowID").Value = INSUPD_employeeattachment(, _
-                                                                               dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                                                               .Cells("Column38").Value, _
-                                                                               Trim(.Cells("eatt_FileName").Value).Substring(0, filenameLength), _
-                                                                               Trim(.Cells("eatt_FileType").Value).Substring(0, fileextnsnLength), _
+                            .Cells("eatt_RowID").Value = INSUPD_employeeattachment(,
+                                                                               dgvEmp.CurrentRow.Cells("RowID").Value,
+                                                                               .Cells("Column38").Value,
+                                                                               Trim(.Cells("eatt_FileName").Value).Substring(0, filenameLength),
+                                                                               Trim(.Cells("eatt_FileType").Value).Substring(0, fileextnsnLength),
                                                                                .Cells("eatt_AttachedFile").Value)
 
                         End If
@@ -20698,11 +20698,11 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     Else
                         If listofEditRoweatt.Contains(.Cells("eatt_RowID").Value) Then
 
-                            INSUPD_employeeattachment(.Cells("eatt_RowID").Value, _
-                                                      dgvEmp.CurrentRow.Cells("RowID").Value, _
-                                                      .Cells("Column38").Value, _
-                                                      Trim(.Cells("eatt_FileName").Value).Substring(0, filenameLength), _
-                                                      Trim(.Cells("eatt_FileType").Value).Substring(0, fileextnsnLength), _
+                            INSUPD_employeeattachment(.Cells("eatt_RowID").Value,
+                                                      dgvEmp.CurrentRow.Cells("RowID").Value,
+                                                      .Cells("Column38").Value,
+                                                      Trim(.Cells("eatt_FileName").Value).Substring(0, filenameLength),
+                                                      Trim(.Cells("eatt_FileType").Value).Substring(0, fileextnsnLength),
                                                       .Cells("eatt_AttachedFile").Value)
 
                         End If
@@ -21010,8 +21010,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     Dim filepath As String = Nothing
 
-    Private Sub EmployeeImporter_Click(sender As Object, e As EventArgs) Handles tsbtnImportEmployee.Click, _
-                                                                                 tsbtnImportDependents.Click, _
+    Private Sub EmployeeImporter_Click(sender As Object, e As EventArgs) Handles tsbtnImportEmployee.Click,
+                                                                                 tsbtnImportDependents.Click,
                                                                                  tsbtnImportSalary.Click
 
         tsbtnImportEmployee.Enabled = False
@@ -21022,7 +21022,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
         Dim browsefile As OpenFileDialog = New OpenFileDialog()
 
-        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" & _
+        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
                                   "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
 
         If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -21076,8 +21076,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
-        Dim catchDT = _
-        getWorkBookAsDataSet(filepath, _
+        Dim catchDT =
+        getWorkBookAsDataSet(filepath,
                              Me.Name)
 
         If catchDT Is Nothing Then
@@ -21185,9 +21185,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                                         "1",
                                         "1",
                                         String.Empty,
-                                        0, _
-                                        0, _
-                                        0, _
+                                        0,
+                                        0,
+                                        0,
                                         0,
                                         0,
                                         0,
@@ -21242,25 +21242,25 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                     For Each drow As DataRow In dtEmpDepenWorkSheet.Rows
 
-                        INSUPD_employeedependents(, _
-                                                  drow(10), _
-                                                  drow(3), _
-                                                  drow(4), _
-                                                  drow(2), _
-                                                  drow(5), _
-                                                  drow(0), _
-                                                  drow(13), _
-                                                  drow(14), _
-                                                  drow(16), _
-                                                  drow(15), , , _
-                                                  drow(12), _
-                                                  drow(12), _
-                                                  drow(11), _
-                                                  drow(8), , _
-                                                  drow(7), _
-                                                  drow(1), _
-                                                  "Y", _
-                                                  drow(6), _
+                        INSUPD_employeedependents(,
+                                                  drow(10),
+                                                  drow(3),
+                                                  drow(4),
+                                                  drow(2),
+                                                  drow(5),
+                                                  drow(0),
+                                                  drow(13),
+                                                  drow(14),
+                                                  drow(16),
+                                                  drow(15), , ,
+                                                  drow(12),
+                                                  drow(12),
+                                                  drow(11),
+                                                  drow(8), ,
+                                                  drow(7),
+                                                  drow(1),
+                                                  "Y",
+                                                  drow(6),
                                                   "1")
 
                         Dim progressvalue = CInt((work_indx / emp_import_count) * 100)
@@ -21271,7 +21271,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                     Next
 
-                    EXECQUER("DELETE FROM listofval WHERE `Type`='EmployeeDependent' AND Active='No';" & _
+                    EXECQUER("DELETE FROM listofval WHERE `Type`='EmployeeDependent' AND Active='No';" &
                              "ALTER TABLE listofval AUTO_INCREMENT = 0 ;")
 
                 End If
@@ -21368,7 +21368,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
                         End If
 
-                        
+
                         Dim declared_Sal = ValNoComma(drow(1))
 
                         Dim undeclared_Sal = ValNoComma(drow(2))
@@ -21385,7 +21385,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
 
                         INSUPD_employeesalary(,
-                                                EmpRowID, _
+                                                EmpRowID,
                                                 declared_Sal / PAYFREQUENCY_DIVISOR,
                                                 declared_Sal,
                                                 EmpNumDepen,
@@ -21429,7 +21429,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
     Private Sub bgworkImporting_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkImporting.ProgressChanged
 
         If sender_Name = "tsbtnImportEmployee" Then
-            
+
             tsprogbarempimport.Value = CType(e.ProgressPercentage, Integer)
 
         ElseIf sender_Name = "tsbtnImportDependents" Then
@@ -21704,28 +21704,28 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     'End Function
 
-    Function INSUPD_employeedependents(Optional emp_RowID = Nothing, _
-                                       Optional emp_Salutation = Nothing, _
-                                       Optional emp_FirstName = Nothing, _
-                                       Optional emp_MiddleName = Nothing, _
-                                       Optional emp_LastName = Nothing, _
-                                       Optional emp_SurName = Nothing, _
-                                       Optional emp_ParentEmployeeID = Nothing, _
-                                       Optional emp_TINNo = Nothing, _
-                                       Optional emp_SSSNo = Nothing, _
-                                       Optional emp_HDMFNo = Nothing, _
-                                       Optional emp_PhilHealthNo = Nothing, _
-                                       Optional emp_EmailAddress = Nothing, _
-                                       Optional emp_WorkPhone = Nothing, _
-                                       Optional emp_HomePhone = Nothing, _
-                                       Optional emp_MobilePhone = Nothing, _
-                                       Optional emp_HomeAddress = Nothing, _
-                                       Optional emp_Nickname = Nothing, _
-                                       Optional emp_JobTitle = Nothing, _
-                                       Optional emp_Gender = Nothing, _
-                                       Optional emp_RelationToEmployee = Nothing, _
-                                       Optional emp_ActiveFlag = Nothing, _
-                                       Optional emp_Birthdate = Nothing, _
+    Function INSUPD_employeedependents(Optional emp_RowID = Nothing,
+                                       Optional emp_Salutation = Nothing,
+                                       Optional emp_FirstName = Nothing,
+                                       Optional emp_MiddleName = Nothing,
+                                       Optional emp_LastName = Nothing,
+                                       Optional emp_SurName = Nothing,
+                                       Optional emp_ParentEmployeeID = Nothing,
+                                       Optional emp_TINNo = Nothing,
+                                       Optional emp_SSSNo = Nothing,
+                                       Optional emp_HDMFNo = Nothing,
+                                       Optional emp_PhilHealthNo = Nothing,
+                                       Optional emp_EmailAddress = Nothing,
+                                       Optional emp_WorkPhone = Nothing,
+                                       Optional emp_HomePhone = Nothing,
+                                       Optional emp_MobilePhone = Nothing,
+                                       Optional emp_HomeAddress = Nothing,
+                                       Optional emp_Nickname = Nothing,
+                                       Optional emp_JobTitle = Nothing,
+                                       Optional emp_Gender = Nothing,
+                                       Optional emp_RelationToEmployee = Nothing,
+                                       Optional emp_ActiveFlag = Nothing,
+                                       Optional emp_Birthdate = Nothing,
                                        Optional emp_IsDoneByImporting = "0")
 
         Dim params(26, 2) As Object
@@ -21804,9 +21804,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         params(25, 1) = If(IsDBNull(emp_Birthdate), DBNull.Value, Format(CDate(emp_Birthdate), "yyyy-MM-dd"))
         params(26, 1) = emp_IsDoneByImporting
 
-        Dim ret_val = _
-        EXEC_INSUPD_PROCEDURE(params, _
-                              "INSUPD_employeedependents", _
+        Dim ret_val =
+        EXEC_INSUPD_PROCEDURE(params,
+                              "INSUPD_employeedependents",
                               "empdepenID")
 
         Return ret_val
@@ -21837,9 +21837,9 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         End If
     End Sub
 
-    Function INSUPD_position(Optional pos_RowID As Object = Nothing, _
-                             Optional pos_PositionName As Object = Nothing, _
-                             Optional pos_ParentPositionID As Object = Nothing, _
+    Function INSUPD_position(Optional pos_RowID As Object = Nothing,
+                             Optional pos_PositionName As Object = Nothing,
+                             Optional pos_ParentPositionID As Object = Nothing,
                              Optional pos_DivisionId As Object = Nothing) As Object
 
         Try
@@ -22050,13 +22050,13 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                 myValue = myValue.ToString.Trim
             End If
 
-            EXECQUER("SELECT `INSUPD_listofval`('" & myValue.ToString.Trim & "'" & _
-                     ", '" & myValue.ToString.Trim & "'" & _
-                     ", 'Bank Names'" & _
-                     ", '" & myValue.ToString.Trim & "'" & _
-                     ", 'Yes'" & _
-                     ", '" & myValue.ToString.Trim & "'" & _
-                     ", '" & z_User & "'" & _
+            EXECQUER("SELECT `INSUPD_listofval`('" & myValue.ToString.Trim & "'" &
+                     ", '" & myValue.ToString.Trim & "'" &
+                     ", 'Bank Names'" &
+                     ", '" & myValue.ToString.Trim & "'" &
+                     ", 'Yes'" &
+                     ", '" & myValue.ToString.Trim & "'" &
+                     ", '" & z_User & "'" &
                      ", '1');")
 
             cbobank.Items.Add(myValue.ToString.Trim)
@@ -22410,7 +22410,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
             PayrollForm.PayrollToolStripMenuItem_Click(sender, New EventArgs)
 
         End If
-        
+
     End Sub
 
 End Class

@@ -1,7 +1,7 @@
 ﻿Public Class newEmpStat
 
     Private Sub newEmpStat_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        WarnBalloon(, , txtNewEmpStat, , , 1) : Employee.Enabled = True
+        WarnBalloon(, , txtNewEmpStat, , , 1) : EmployeeForm.Enabled = True
     End Sub
 
     Private Sub newEmpStat_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -13,12 +13,12 @@
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        txtNewEmpStat.Text = Employee.strTrimProper(txtNewEmpStat.Text)
+        txtNewEmpStat.Text = EmployeeForm.strTrimProper(txtNewEmpStat.Text)
         If txtNewEmpStat.Text = "" Then
             txtNewEmpStat.Focus()
             WarnBalloon("Pleas try another.", "Invalid Employee Status", txtNewEmpStat, txtNewEmpStat.Width - 16, -69, , 3000) : Exit Sub
         Else
-            For Each itm In Employee.cboEmpStat.Items
+            For Each itm In EmployeeForm.cboEmpStat.Items
                 If txtNewEmpStat.Text = itm Then
                     txtNewEmpStat.Focus()
                     WarnBalloon(txtNewEmpStat.Text & " is already exist.", "Invalid Employee Status", txtNewEmpStat, txtNewEmpStat.Width - 16, -69, , 3000)
@@ -27,7 +27,7 @@
             Next
         End If
 
-        Employee.cboEmpStat.Items.Add(txtNewEmpStat.Text)
+        EmployeeForm.cboEmpStat.Items.Add(txtNewEmpStat.Text)
         INS_LoL(txtNewEmpStat.Text, txtNewEmpStat.Text, "Status", , "Yes", , , 1)
 
     End Sub

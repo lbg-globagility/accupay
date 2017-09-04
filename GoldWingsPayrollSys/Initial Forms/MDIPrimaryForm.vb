@@ -598,7 +598,7 @@ Public Class MDIPrimaryForm
 
                 If previousForm.Name = "Employee" Then
 
-                    With Employee
+                    With EmployeeForm
 
                         Select Case .tabIndx
                             Case 0 'Checklist
@@ -899,11 +899,11 @@ Public Class MDIPrimaryForm
             Dim indx = HRISForm.listHRISForm.Count - 1
 
             If HRISForm.listHRISForm.Item(indx) = "Employee" Then
-                Select Case Employee.tabctrlemp.SelectedIndex
+                Select Case EmployeeForm.tabctrlemp.SelectedIndex
                     Case 0
 
                     Case 1
-                        With Employee
+                        With EmployeeForm
                             If .tsbtnNewEmp.Enabled = True Then
                                 Dim isTableChange = EXECQUER("SELECT EXISTS(SELECT RowID" & _
                                                              " FROM position" & _

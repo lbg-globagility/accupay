@@ -3,7 +3,7 @@
     Private Sub leavetype_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         lstbxleavtyp.Items.Clear()
-        For Each strval In Employee.leavetype
+        For Each strval In EmployeeForm.leavetype
             lstbxleavtyp.Items.Add(strval)
         Next
 
@@ -13,7 +13,7 @@
                                                                                  Button1.Click
         If lstbxleavtyp.Items.Count <> 0 Then
 
-            With Employee
+            With EmployeeForm
                 If .dgvempleave.RowCount <> 1 Then
                     If .dgvempleave.CurrentRow.IsNewRow Then
                         .dgvempleave.Rows.Add()
