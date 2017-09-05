@@ -217,6 +217,7 @@
     </Compile>
     <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeLog.vb" />
+    <Compile Include="Core Forms\user_predefines\PayrollResources.vb" />
     <Compile Include="Core Forms\user_predefines\TimeUtility.vb" />
     <Compile Include="Core Forms\user_predefines\SqlReaderExtensions.vb" />
     <Compile Include="Initial Forms\AboutUs.Designer.vb">
