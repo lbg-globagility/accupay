@@ -404,6 +404,7 @@ Public Class PayrollGeneration
                             Dim extraPay = _payStub.RestDayPay + _payStub.HolidayPay
 
                             _payStub.WorkPay = (basicPay + extraPay) - totalDeduction
+                            _payStub.TotalTaxableSalary = basicPay
 
                             If previousTimeEntries.Select($"EmployeeID = '{_payStub.EmployeeID}'").Count > 0 Then
                                 grossIncomeLastPayPeriod = basicPay
@@ -429,7 +430,13 @@ Public Class PayrollGeneration
 
                     governmentContributions = _payStub.TotalEmpSSS + _payStub.TotalEmpPhilHealth + _payStub.TotalEmpHDMF
 
-                    CalculateWithholdingTax(grossIncomeLastPayPeriod, governmentContributions)
+                    If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
+                        _payStub.TotalTaxableSalary += _payStub.TotalTaxableSalary - governmentContributions
+                    ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
+                        _payStub.TotalTaxableSalary += -governmentContributions
+                    End If
+
+                    CalculateWithholdingTax()
                 End If
             End If
 
@@ -821,15 +828,13 @@ Public Class PayrollGeneration
         Return _hdmfDeductionSchedule = ContributionSchedule.PerPayPeriod
     End Function
 
-    Private Sub CalculateWithholdingTax(grossIncomeLastPeriod As Decimal, governmentContributions As Decimal)
+    Private Sub CalculateWithholdingTax()
         Dim payFrequencyID As Integer?
 
         If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
             payFrequencyID = PayFrequency.Monthly
-            _payStub.TotalTaxableSalary = (_payStub.WorkPay + grossIncomeLastPeriod) - governmentContributions
         ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
             payFrequencyID = PayFrequency.SemiMonthly
-            _payStub.TotalTaxableSalary = _payStub.WorkPay - governmentContributions
         End If
 
         Dim dailyRate = ValNoComma(_employee("EmpRatePerDay"))
