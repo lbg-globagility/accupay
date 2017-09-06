@@ -176,32 +176,32 @@ Partial Class PayStub
         Me.Label28 = New System.Windows.Forms.Label()
         Me.Label57 = New System.Windows.Forms.Label()
         Me.txttotabsentamt = New System.Windows.Forms.TextBox()
-        Me.txttototamt = New System.Windows.Forms.TextBox()
+        Me.txtOvertimePay = New System.Windows.Forms.TextBox()
         Me.txttottardiamt = New System.Windows.Forms.TextBox()
-        Me.txttotnightdiffamt = New System.Windows.Forms.TextBox()
+        Me.txtNightDiffPay = New System.Windows.Forms.TextBox()
         Me.txttotutamt = New System.Windows.Forms.TextBox()
-        Me.txttotnightdiffotamt = New System.Windows.Forms.TextBox()
+        Me.txtNightDiffOvertimePay = New System.Windows.Forms.TextBox()
         Me.Label51 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.Label50 = New System.Windows.Forms.Label()
-        Me.txttotholidayhrs = New System.Windows.Forms.TextBox()
+        Me.txtHolidayHours = New System.Windows.Forms.TextBox()
         Me.Label49 = New System.Windows.Forms.Label()
         Me.Label58 = New System.Windows.Forms.Label()
-        Me.txtempbasicpay = New System.Windows.Forms.TextBox()
+        Me.txtBasicPay = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.txttotreghrs = New System.Windows.Forms.TextBox()
         Me.txttotregamt = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.txttotothrs = New System.Windows.Forms.TextBox()
+        Me.txtOvertimeHours = New System.Windows.Forms.TextBox()
         Me.Label22 = New System.Windows.Forms.Label()
-        Me.txttotnightdiffhrs = New System.Windows.Forms.TextBox()
+        Me.txtNightDiffHours = New System.Windows.Forms.TextBox()
         Me.Label23 = New System.Windows.Forms.Label()
-        Me.txttotnightdiffothrs = New System.Windows.Forms.TextBox()
-        Me.txttotholidayamt = New System.Windows.Forms.TextBox()
+        Me.txtNightDiffOvertimeHours = New System.Windows.Forms.TextBox()
+        Me.txtHolidayPay = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.txthrswork = New System.Windows.Forms.TextBox()
-        Me.txthrsworkamt = New System.Windows.Forms.TextBox()
+        Me.txtRegularHours = New System.Windows.Forms.TextBox()
+        Me.txtRegularPay = New System.Windows.Forms.TextBox()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Label82 = New System.Windows.Forms.Label()
@@ -301,7 +301,7 @@ Partial Class PayStub
         Me.ProductID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PayAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.lblsubtot = New System.Windows.Forms.TextBox()
+        Me.lblSubtotal = New System.Windows.Forms.TextBox()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.dgvetent = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.etent_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -1228,7 +1228,7 @@ Partial Class PayStub
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label41)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label40)
         Me.SplitContainer1.Panel2.Controls.Add(Me.dgvpaystubitm)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.lblsubtot)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.lblSubtotal)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label30)
         Me.SplitContainer1.Panel2.Controls.Add(Me.dgvetent)
         Me.SplitContainer1.Panel2.Controls.Add(Me.dgvempsal)
@@ -1627,32 +1627,32 @@ Partial Class PayStub
         Me.TabPage1.Controls.Add(Me.Label28)
         Me.TabPage1.Controls.Add(Me.Label57)
         Me.TabPage1.Controls.Add(Me.txttotabsentamt)
-        Me.TabPage1.Controls.Add(Me.txttototamt)
+        Me.TabPage1.Controls.Add(Me.txtOvertimePay)
         Me.TabPage1.Controls.Add(Me.txttottardiamt)
-        Me.TabPage1.Controls.Add(Me.txttotnightdiffamt)
+        Me.TabPage1.Controls.Add(Me.txtNightDiffPay)
         Me.TabPage1.Controls.Add(Me.txttotutamt)
-        Me.TabPage1.Controls.Add(Me.txttotnightdiffotamt)
+        Me.TabPage1.Controls.Add(Me.txtNightDiffOvertimePay)
         Me.TabPage1.Controls.Add(Me.Label51)
         Me.TabPage1.Controls.Add(Me.Label18)
         Me.TabPage1.Controls.Add(Me.Label50)
-        Me.TabPage1.Controls.Add(Me.txttotholidayhrs)
+        Me.TabPage1.Controls.Add(Me.txtHolidayHours)
         Me.TabPage1.Controls.Add(Me.Label49)
         Me.TabPage1.Controls.Add(Me.Label58)
-        Me.TabPage1.Controls.Add(Me.txtempbasicpay)
+        Me.TabPage1.Controls.Add(Me.txtBasicPay)
         Me.TabPage1.Controls.Add(Me.Label8)
         Me.TabPage1.Controls.Add(Me.txttotreghrs)
         Me.TabPage1.Controls.Add(Me.txttotregamt)
         Me.TabPage1.Controls.Add(Me.Label11)
-        Me.TabPage1.Controls.Add(Me.txttotothrs)
+        Me.TabPage1.Controls.Add(Me.txtOvertimeHours)
         Me.TabPage1.Controls.Add(Me.Label22)
-        Me.TabPage1.Controls.Add(Me.txttotnightdiffhrs)
+        Me.TabPage1.Controls.Add(Me.txtNightDiffHours)
         Me.TabPage1.Controls.Add(Me.Label23)
-        Me.TabPage1.Controls.Add(Me.txttotnightdiffothrs)
-        Me.TabPage1.Controls.Add(Me.txttotholidayamt)
+        Me.TabPage1.Controls.Add(Me.txtNightDiffOvertimeHours)
+        Me.TabPage1.Controls.Add(Me.txtHolidayPay)
         Me.TabPage1.Controls.Add(Me.Label20)
         Me.TabPage1.Controls.Add(Me.Label19)
-        Me.TabPage1.Controls.Add(Me.txthrswork)
-        Me.TabPage1.Controls.Add(Me.txthrsworkamt)
+        Me.TabPage1.Controls.Add(Me.txtRegularHours)
+        Me.TabPage1.Controls.Add(Me.txtRegularPay)
         Me.TabPage1.Location = New System.Drawing.Point(4, 29)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
@@ -1828,14 +1828,14 @@ Partial Class PayStub
         '
         'txttototamt
         '
-        Me.txttototamt.BackColor = System.Drawing.Color.White
-        Me.txttototamt.Location = New System.Drawing.Point(244, 98)
-        Me.txttototamt.Name = "txttototamt"
-        Me.txttototamt.ReadOnly = True
-        Me.txttototamt.ShortcutsEnabled = False
-        Me.txttototamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttototamt.TabIndex = 196
-        Me.txttototamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtOvertimePay.BackColor = System.Drawing.Color.White
+        Me.txtOvertimePay.Location = New System.Drawing.Point(244, 98)
+        Me.txtOvertimePay.Name = "txttototamt"
+        Me.txtOvertimePay.ReadOnly = True
+        Me.txtOvertimePay.ShortcutsEnabled = False
+        Me.txtOvertimePay.Size = New System.Drawing.Size(100, 20)
+        Me.txtOvertimePay.TabIndex = 196
+        Me.txtOvertimePay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txttottardiamt
         '
@@ -1850,14 +1850,14 @@ Partial Class PayStub
         '
         'txttotnightdiffamt
         '
-        Me.txttotnightdiffamt.BackColor = System.Drawing.Color.White
-        Me.txttotnightdiffamt.Location = New System.Drawing.Point(244, 124)
-        Me.txttotnightdiffamt.Name = "txttotnightdiffamt"
-        Me.txttotnightdiffamt.ReadOnly = True
-        Me.txttotnightdiffamt.ShortcutsEnabled = False
-        Me.txttotnightdiffamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttotnightdiffamt.TabIndex = 197
-        Me.txttotnightdiffamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtNightDiffPay.BackColor = System.Drawing.Color.White
+        Me.txtNightDiffPay.Location = New System.Drawing.Point(244, 124)
+        Me.txtNightDiffPay.Name = "txttotnightdiffamt"
+        Me.txtNightDiffPay.ReadOnly = True
+        Me.txtNightDiffPay.ShortcutsEnabled = False
+        Me.txtNightDiffPay.Size = New System.Drawing.Size(100, 20)
+        Me.txtNightDiffPay.TabIndex = 197
+        Me.txtNightDiffPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txttotutamt
         '
@@ -1872,14 +1872,14 @@ Partial Class PayStub
         '
         'txttotnightdiffotamt
         '
-        Me.txttotnightdiffotamt.BackColor = System.Drawing.Color.White
-        Me.txttotnightdiffotamt.Location = New System.Drawing.Point(244, 150)
-        Me.txttotnightdiffotamt.Name = "txttotnightdiffotamt"
-        Me.txttotnightdiffotamt.ReadOnly = True
-        Me.txttotnightdiffotamt.ShortcutsEnabled = False
-        Me.txttotnightdiffotamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttotnightdiffotamt.TabIndex = 198
-        Me.txttotnightdiffotamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtNightDiffOvertimePay.BackColor = System.Drawing.Color.White
+        Me.txtNightDiffOvertimePay.Location = New System.Drawing.Point(244, 150)
+        Me.txtNightDiffOvertimePay.Name = "txttotnightdiffotamt"
+        Me.txtNightDiffOvertimePay.ReadOnly = True
+        Me.txtNightDiffOvertimePay.ShortcutsEnabled = False
+        Me.txtNightDiffOvertimePay.Size = New System.Drawing.Size(100, 20)
+        Me.txtNightDiffOvertimePay.TabIndex = 198
+        Me.txtNightDiffOvertimePay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label51
         '
@@ -1910,14 +1910,14 @@ Partial Class PayStub
         '
         'txttotholidayhrs
         '
-        Me.txttotholidayhrs.BackColor = System.Drawing.Color.White
-        Me.txttotholidayhrs.Location = New System.Drawing.Point(118, 176)
-        Me.txttotholidayhrs.Name = "txttotholidayhrs"
-        Me.txttotholidayhrs.ReadOnly = True
-        Me.txttotholidayhrs.ShortcutsEnabled = False
-        Me.txttotholidayhrs.Size = New System.Drawing.Size(100, 20)
-        Me.txttotholidayhrs.TabIndex = 201
-        Me.txttotholidayhrs.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtHolidayHours.BackColor = System.Drawing.Color.White
+        Me.txtHolidayHours.Location = New System.Drawing.Point(118, 176)
+        Me.txtHolidayHours.Name = "txttotholidayhrs"
+        Me.txtHolidayHours.ReadOnly = True
+        Me.txtHolidayHours.ShortcutsEnabled = False
+        Me.txtHolidayHours.Size = New System.Drawing.Size(100, 20)
+        Me.txtHolidayHours.TabIndex = 201
+        Me.txtHolidayHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label49
         '
@@ -1939,12 +1939,12 @@ Partial Class PayStub
         '
         'txtempbasicpay
         '
-        Me.txtempbasicpay.Location = New System.Drawing.Point(23, 23)
-        Me.txtempbasicpay.Name = "txtempbasicpay"
-        Me.txtempbasicpay.ShortcutsEnabled = False
-        Me.txtempbasicpay.Size = New System.Drawing.Size(100, 20)
-        Me.txtempbasicpay.TabIndex = 209
-        Me.txtempbasicpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtBasicPay.Location = New System.Drawing.Point(23, 23)
+        Me.txtBasicPay.Name = "txtempbasicpay"
+        Me.txtBasicPay.ShortcutsEnabled = False
+        Me.txtBasicPay.Size = New System.Drawing.Size(100, 20)
+        Me.txtBasicPay.TabIndex = 209
+        Me.txtBasicPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label8
         '
@@ -1990,14 +1990,14 @@ Partial Class PayStub
         '
         'txttotothrs
         '
-        Me.txttotothrs.BackColor = System.Drawing.Color.White
-        Me.txttotothrs.Location = New System.Drawing.Point(118, 98)
-        Me.txttotothrs.Name = "txttotothrs"
-        Me.txttotothrs.ReadOnly = True
-        Me.txttotothrs.ShortcutsEnabled = False
-        Me.txttotothrs.Size = New System.Drawing.Size(100, 20)
-        Me.txttotothrs.TabIndex = 214
-        Me.txttotothrs.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtOvertimeHours.BackColor = System.Drawing.Color.White
+        Me.txtOvertimeHours.Location = New System.Drawing.Point(118, 98)
+        Me.txtOvertimeHours.Name = "txttotothrs"
+        Me.txtOvertimeHours.ReadOnly = True
+        Me.txtOvertimeHours.ShortcutsEnabled = False
+        Me.txtOvertimeHours.Size = New System.Drawing.Size(100, 20)
+        Me.txtOvertimeHours.TabIndex = 214
+        Me.txtOvertimeHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label22
         '
@@ -2010,14 +2010,14 @@ Partial Class PayStub
         '
         'txttotnightdiffhrs
         '
-        Me.txttotnightdiffhrs.BackColor = System.Drawing.Color.White
-        Me.txttotnightdiffhrs.Location = New System.Drawing.Point(118, 124)
-        Me.txttotnightdiffhrs.Name = "txttotnightdiffhrs"
-        Me.txttotnightdiffhrs.ReadOnly = True
-        Me.txttotnightdiffhrs.ShortcutsEnabled = False
-        Me.txttotnightdiffhrs.Size = New System.Drawing.Size(100, 20)
-        Me.txttotnightdiffhrs.TabIndex = 217
-        Me.txttotnightdiffhrs.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtNightDiffHours.BackColor = System.Drawing.Color.White
+        Me.txtNightDiffHours.Location = New System.Drawing.Point(118, 124)
+        Me.txtNightDiffHours.Name = "txttotnightdiffhrs"
+        Me.txtNightDiffHours.ReadOnly = True
+        Me.txtNightDiffHours.ShortcutsEnabled = False
+        Me.txtNightDiffHours.Size = New System.Drawing.Size(100, 20)
+        Me.txtNightDiffHours.TabIndex = 217
+        Me.txtNightDiffHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label23
         '
@@ -2030,25 +2030,25 @@ Partial Class PayStub
         '
         'txttotnightdiffothrs
         '
-        Me.txttotnightdiffothrs.BackColor = System.Drawing.Color.White
-        Me.txttotnightdiffothrs.Location = New System.Drawing.Point(118, 150)
-        Me.txttotnightdiffothrs.Name = "txttotnightdiffothrs"
-        Me.txttotnightdiffothrs.ReadOnly = True
-        Me.txttotnightdiffothrs.ShortcutsEnabled = False
-        Me.txttotnightdiffothrs.Size = New System.Drawing.Size(100, 20)
-        Me.txttotnightdiffothrs.TabIndex = 220
-        Me.txttotnightdiffothrs.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtNightDiffOvertimeHours.BackColor = System.Drawing.Color.White
+        Me.txtNightDiffOvertimeHours.Location = New System.Drawing.Point(118, 150)
+        Me.txtNightDiffOvertimeHours.Name = "txttotnightdiffothrs"
+        Me.txtNightDiffOvertimeHours.ReadOnly = True
+        Me.txtNightDiffOvertimeHours.ShortcutsEnabled = False
+        Me.txtNightDiffOvertimeHours.Size = New System.Drawing.Size(100, 20)
+        Me.txtNightDiffOvertimeHours.TabIndex = 220
+        Me.txtNightDiffOvertimeHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txttotholidayamt
         '
-        Me.txttotholidayamt.BackColor = System.Drawing.Color.White
-        Me.txttotholidayamt.Location = New System.Drawing.Point(244, 176)
-        Me.txttotholidayamt.Name = "txttotholidayamt"
-        Me.txttotholidayamt.ReadOnly = True
-        Me.txttotholidayamt.ShortcutsEnabled = False
-        Me.txttotholidayamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttotholidayamt.TabIndex = 232
-        Me.txttotholidayamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtHolidayPay.BackColor = System.Drawing.Color.White
+        Me.txtHolidayPay.Location = New System.Drawing.Point(244, 176)
+        Me.txtHolidayPay.Name = "txttotholidayamt"
+        Me.txtHolidayPay.ReadOnly = True
+        Me.txtHolidayPay.ShortcutsEnabled = False
+        Me.txtHolidayPay.Size = New System.Drawing.Size(100, 20)
+        Me.txtHolidayPay.TabIndex = 232
+        Me.txtHolidayPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label20
         '
@@ -2072,25 +2072,25 @@ Partial Class PayStub
         '
         'txthrswork
         '
-        Me.txthrswork.BackColor = System.Drawing.Color.White
-        Me.txthrswork.Location = New System.Drawing.Point(118, 72)
-        Me.txthrswork.Name = "txthrswork"
-        Me.txthrswork.ReadOnly = True
-        Me.txthrswork.ShortcutsEnabled = False
-        Me.txthrswork.Size = New System.Drawing.Size(100, 20)
-        Me.txthrswork.TabIndex = 252
-        Me.txthrswork.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtRegularHours.BackColor = System.Drawing.Color.White
+        Me.txtRegularHours.Location = New System.Drawing.Point(118, 72)
+        Me.txtRegularHours.Name = "txthrswork"
+        Me.txtRegularHours.ReadOnly = True
+        Me.txtRegularHours.ShortcutsEnabled = False
+        Me.txtRegularHours.Size = New System.Drawing.Size(100, 20)
+        Me.txtRegularHours.TabIndex = 252
+        Me.txtRegularHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txthrsworkamt
         '
-        Me.txthrsworkamt.BackColor = System.Drawing.Color.White
-        Me.txthrsworkamt.Location = New System.Drawing.Point(244, 72)
-        Me.txthrsworkamt.Name = "txthrsworkamt"
-        Me.txthrsworkamt.ReadOnly = True
-        Me.txthrsworkamt.ShortcutsEnabled = False
-        Me.txthrsworkamt.Size = New System.Drawing.Size(100, 20)
-        Me.txthrsworkamt.TabIndex = 253
-        Me.txthrsworkamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtRegularPay.BackColor = System.Drawing.Color.White
+        Me.txtRegularPay.Location = New System.Drawing.Point(244, 72)
+        Me.txtRegularPay.Name = "txthrsworkamt"
+        Me.txtRegularPay.ReadOnly = True
+        Me.txtRegularPay.ShortcutsEnabled = False
+        Me.txtRegularPay.Size = New System.Drawing.Size(100, 20)
+        Me.txtRegularPay.TabIndex = 253
+        Me.txtRegularPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'TabPage4
         '
@@ -3130,17 +3130,17 @@ Partial Class PayStub
         '
         'lblsubtot
         '
-        Me.lblsubtot.BackColor = System.Drawing.Color.White
-        Me.lblsubtot.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.lblsubtot.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.lblsubtot.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.lblsubtot.Location = New System.Drawing.Point(253, 270)
-        Me.lblsubtot.Name = "lblsubtot"
-        Me.lblsubtot.ReadOnly = True
-        Me.lblsubtot.ShortcutsEnabled = False
-        Me.lblsubtot.Size = New System.Drawing.Size(100, 16)
-        Me.lblsubtot.TabIndex = 256
-        Me.lblsubtot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.lblSubtotal.BackColor = System.Drawing.Color.White
+        Me.lblSubtotal.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.lblSubtotal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.lblSubtotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.lblSubtotal.Location = New System.Drawing.Point(253, 270)
+        Me.lblSubtotal.Name = "lblsubtot"
+        Me.lblSubtotal.ReadOnly = True
+        Me.lblSubtotal.ShortcutsEnabled = False
+        Me.lblSubtotal.Size = New System.Drawing.Size(100, 16)
+        Me.lblSubtotal.TabIndex = 256
+        Me.lblSubtotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label30
         '
@@ -4710,26 +4710,26 @@ Partial Class PayStub
     Friend WithEvents txttottardi As System.Windows.Forms.TextBox
     Friend WithEvents txttotabsent As System.Windows.Forms.TextBox
     Friend WithEvents Label17 As System.Windows.Forms.Label
-    Friend WithEvents txttotholidayhrs As System.Windows.Forms.TextBox
+    Friend WithEvents txtHolidayHours As System.Windows.Forms.TextBox
     Friend WithEvents Label18 As System.Windows.Forms.Label
-    Friend WithEvents txttotnightdiffotamt As System.Windows.Forms.TextBox
-    Friend WithEvents txttotnightdiffamt As System.Windows.Forms.TextBox
-    Friend WithEvents txttototamt As System.Windows.Forms.TextBox
-    Friend WithEvents txtempbasicpay As System.Windows.Forms.TextBox
+    Friend WithEvents txtNightDiffOvertimePay As System.Windows.Forms.TextBox
+    Friend WithEvents txtNightDiffPay As System.Windows.Forms.TextBox
+    Friend WithEvents txtOvertimePay As System.Windows.Forms.TextBox
+    Friend WithEvents txtBasicPay As System.Windows.Forms.TextBox
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents txttotreghrs As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents txttotregamt As System.Windows.Forms.TextBox
-    Friend WithEvents txttotothrs As System.Windows.Forms.TextBox
+    Friend WithEvents txtOvertimeHours As System.Windows.Forms.TextBox
     Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents txttotnightdiffothrs As System.Windows.Forms.TextBox
+    Friend WithEvents txtNightDiffOvertimeHours As System.Windows.Forms.TextBox
     Friend WithEvents Label23 As System.Windows.Forms.Label
-    Friend WithEvents txttotnightdiffhrs As System.Windows.Forms.TextBox
+    Friend WithEvents txtNightDiffHours As System.Windows.Forms.TextBox
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents Label28 As System.Windows.Forms.Label
     Friend WithEvents Label27 As System.Windows.Forms.Label
     Friend WithEvents Label29 As System.Windows.Forms.Label
-    Friend WithEvents txttotholidayamt As System.Windows.Forms.TextBox
+    Friend WithEvents txtHolidayPay As System.Windows.Forms.TextBox
     Friend WithEvents Label19 As System.Windows.Forms.Label
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents txttottardiamt As System.Windows.Forms.TextBox
@@ -4818,11 +4818,11 @@ Partial Class PayStub
     Friend WithEvents etent_VacationLeaveHours As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents etent_SickLeaveHours As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents etent_TotalDayPay As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents txthrsworkamt As System.Windows.Forms.TextBox
-    Friend WithEvents txthrswork As System.Windows.Forms.TextBox
+    Friend WithEvents txtRegularPay As System.Windows.Forms.TextBox
+    Friend WithEvents txtRegularHours As System.Windows.Forms.TextBox
     Friend WithEvents Label30 As System.Windows.Forms.Label
     Friend WithEvents Label37 As System.Windows.Forms.Label
-    Friend WithEvents lblsubtot As System.Windows.Forms.TextBox
+    Friend WithEvents lblSubtotal As System.Windows.Forms.TextBox
     Friend WithEvents lblsubtotmisc As System.Windows.Forms.TextBox
     Friend WithEvents dgvpaystubitm As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents paystitmID As System.Windows.Forms.DataGridViewTextBoxColumn
