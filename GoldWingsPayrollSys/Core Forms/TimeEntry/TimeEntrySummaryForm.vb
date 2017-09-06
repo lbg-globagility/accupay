@@ -232,15 +232,16 @@ Public Class TimeEntrySummaryForm
                 employeetimeentry.TotalDayPay
             FROM employeetimeentry
             LEFT JOIN employeetimeentrydetails
-                ON employeetimeentrydetails.Date = employeetimeentry.Date
-                AND employeetimeentrydetails.OrganizationID = employeetimeentry.OrganizationID
-                AND employeetimeentrydetails.EmployeeID = employeetimeentry.EmployeeID
+            ON employeetimeentrydetails.Date = employeetimeentry.Date AND
+                employeetimeentrydetails.OrganizationID = employeetimeentry.OrganizationID AND
+                employeetimeentrydetails.EmployeeID = employeetimeentry.EmployeeID
             LEFT JOIN employeeshift
-                ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
+            ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
             LEFT JOIN shift
-                ON shift.RowID = employeeshift.ShiftID
-            WHERE employeetimeentry.EmployeeID = @EmployeeID
-                AND employeetimeentry.`Date` BETWEEN @DateFrom AND @DateTo;
+            ON shift.RowID = employeeshift.ShiftID
+            WHERE employeetimeentry.EmployeeID = @EmployeeID AND
+                employeetimeentry.`Date` BETWEEN @DateFrom AND @DateTo
+            ORDER BY employeetimeentry.`Date`;
         ]]>.Value
 
         Dim timeEntries = New Collection(Of TimeEntry)
@@ -332,7 +333,8 @@ Public Class TimeEntrySummaryForm
             LEFT JOIN shift
             ON shift.RowID = employeeshift.ShiftID
             WHERE employeetimeentryactual.EmployeeID = @EmployeeID AND
-                employeetimeentryactual.`Date` BETWEEN @DateFrom AND @DateTo;
+                employeetimeentryactual.`Date` BETWEEN @DateFrom AND @DateTo
+            ORDER BY employeetimeentryactual.`Date`;
         ]]>.Value
 
         Dim timeEntries = New Collection(Of TimeEntry)
