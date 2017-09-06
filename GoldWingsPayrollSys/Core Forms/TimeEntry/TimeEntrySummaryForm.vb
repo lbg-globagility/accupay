@@ -571,7 +571,7 @@ Public Class TimeEntrySummaryForm
         Public ReadOnly Property Remarks As String
             Get
                 If LeavePay > 0 Then
-                    Return "Leave"
+                    Return "w/ Leave"
                 End If
 
                 If AbsentAmount > 0 Then
@@ -579,7 +579,7 @@ Public Class TimeEntrySummaryForm
                 End If
 
                 If RestDayAmount > 0 Then
-                    Return "Rest day"
+                    Return "Work on rest day"
                 End If
 
                 Return Nothing
