@@ -217,9 +217,9 @@
     </Compile>
     <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeLog.vb" />
-    <Compile Include="Core Forms\user_predefines\PayrollResources.vb" />
-    <Compile Include="Core Forms\user_predefines\TimeUtility.vb" />
-    <Compile Include="Core Forms\user_predefines\SqlReaderExtensions.vb" />
+    <Compile Include="Core Forms\Commons\PayrollResources.vb" />
+    <Compile Include="Core Forms\Commons\TimeUtility.vb" />
+    <Compile Include="Core Forms\Commons\SqlReaderExtensions.vb" />
     <Compile Include="Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
     </Compile>
@@ -244,7 +244,7 @@
       <DependentUpon>PayrollSumma.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\user_predefines\SeparateLineTimeParser.vb" />
+    <Compile Include="Core Forms\Commons\SeparateLineTimeParser.vb" />
     <Compile Include="General Forms\ImproperLogOut.Designer.vb">
       <DependentUpon>ImproperLogOut.vb</DependentUpon>
     </Compile>
@@ -631,10 +631,10 @@
     <Compile Include="Core Forms\PayrollSummaDateSelection.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PayStub.Designer.vb">
+    <Compile Include="Core Forms\PayStub\PayStub.Designer.vb">
       <DependentUpon>PayStub.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\PayStub.vb">
+    <Compile Include="Core Forms\PayStub\PayStub.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\PhiHealth.Designer.vb">
@@ -673,145 +673,145 @@
     <Compile Include="Core Forms\ReportsList.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Alphalist.vb">
+    <Compile Include="Core Forms\Reports\Alphalist.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Alphalist.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Alphalistv2.vb">
+    <Compile Include="Core Forms\Reports\Alphalistv2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Alphalistv2.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Attendance Sheet.vb">
+    <Compile Include="Core Forms\Reports\Attendance Sheet.vb">
       <DependentUpon>Attendance Sheet.rpt</DependentUpon>
       <SubType>Component</SubType>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee 13th Month Pay Report.vb">
+    <Compile Include="Core Forms\Reports\Employee 13th Month Pay Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee 13th Month Pay Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee Citizenship.vb">
+    <Compile Include="Core Forms\Reports\Employee Citizenship.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee Citizenship.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee Leave Ledger.vb">
+    <Compile Include="Core Forms\Reports\Employee Leave Ledger.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee Leave Ledger.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee Loan Report.vb">
+    <Compile Include="Core Forms\Reports\Employee Loan Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee Loan Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee Personal Information.vb">
+    <Compile Include="Core Forms\Reports\Employee Personal Information.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee Personal Information.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee Skills.vb">
+    <Compile Include="Core Forms\Reports\Employee Skills.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee Skills.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee%27s 13th Month Pay Report.vb">
+    <Compile Include="Core Forms\Reports\Employee%27s 13th Month Pay Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s 13th Month Pay Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee%27s Dialect.vb">
+    <Compile Include="Core Forms\Reports\Employee%27s Dialect.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Dialect.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee%27s Employment Record.vb">
+    <Compile Include="Core Forms\Reports\Employee%27s Employment Record.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Employment Record.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee%27s History of Salary Increase.vb">
+    <Compile Include="Core Forms\Reports\Employee%27s History of Salary Increase.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s History of Salary Increase.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee%27s Identification Number.vb">
+    <Compile Include="Core Forms\Reports\Employee%27s Identification Number.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Identification Number.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee%27s Offenses.vb">
+    <Compile Include="Core Forms\Reports\Employee%27s Offenses.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Offenses.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee%27s Payroll Ledger.vb">
+    <Compile Include="Core Forms\Reports\Employee%27s Payroll Ledger.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Payroll Ledger.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee%27s Religion.vb">
+    <Compile Include="Core Forms\Reports\Employee%27s Religion.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Religion.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Employee%27s Spouse Information.vb">
+    <Compile Include="Core Forms\Reports\Employee%27s Spouse Information.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Spouse Information.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Loan Report.vb">
+    <Compile Include="Core Forms\Reports\Loan Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Loan Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Pagibig Monthly Report.vb">
+    <Compile Include="Core Forms\Reports\Pagibig Monthly Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Pagibig Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Payroll Summary Report.vb">
+    <Compile Include="Core Forms\Reports\Payroll Summary Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Payroll Summary Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Phil Health Monthly Report.vb">
+    <Compile Include="Core Forms\Reports\Phil Health Monthly Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Phil Health Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\SSS Monthly Report.vb">
+    <Compile Include="Core Forms\Reports\SSS Monthly Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SSS Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\REPORTS\Tax Monthly Report.vb">
+    <Compile Include="Core Forms\Reports\Tax Monthly Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Tax Monthly Report.rpt</DependentUpon>
@@ -962,10 +962,10 @@
     <Compile Include="Core Forms\selectMonth.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\selectPayPeriod.Designer.vb">
+    <Compile Include="Core Forms\PayStub\selectPayPeriod.Designer.vb">
       <DependentUpon>selectPayPeriod.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\selectPayPeriod.vb">
+    <Compile Include="Core Forms\PayStub\selectPayPeriod.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\SetEmployeeEndDate.Designer.vb">
@@ -1058,24 +1058,24 @@
     <Compile Include="Core Forms\userprivil.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\user_predefines\CountDownExpiration.vb" />
-    <Compile Include="Core Forms\user_predefines\DataBaseConnection.vb" />
-    <Compile Include="Core Forms\user_predefines\ExcelWriter.vb" />
-    <Compile Include="Core Forms\user_predefines\ExecSQLMultiDimArrProcedure.vb" />
-    <Compile Include="Core Forms\user_predefines\ExecSQLProcedure.vb" />
-    <Compile Include="Core Forms\user_predefines\ExecuteQuery.vb" />
-    <Compile Include="Core Forms\user_predefines\FileObserver.vb" />
-    <Compile Include="Core Forms\user_predefines\ImportLoans.vb" />
-    <Compile Include="Core Forms\user_predefines\KillAppCatcher.vb" />
-    <Compile Include="Core Forms\user_predefines\myModule.vb" />
-    <Compile Include="Core Forms\user_predefines\PayrollGeneration.vb" />
-    <Compile Include="Core Forms\user_predefines\ReadSQLFunction.vb" />
-    <Compile Include="Core Forms\user_predefines\ReadSQLFunctionV2.vb" />
-    <Compile Include="Core Forms\user_predefines\ReadSQLProcedureToDatatable.vb" />
-    <Compile Include="Core Forms\user_predefines\SQLQueryToDatatable.vb" />
-    <Compile Include="Core Forms\user_predefines\TimeInTimeOutParser.vb" />
-    <Compile Include="Core Forms\user_predefines\TrapDecimalKey.vb" />
-    <Compile Include="Core Forms\user_predefines\UserAccessRights.vb" />
+    <Compile Include="Core Forms\Commons\CountDownExpiration.vb" />
+    <Compile Include="Core Forms\Commons\DataBaseConnection.vb" />
+    <Compile Include="Core Forms\Commons\ExcelWriter.vb" />
+    <Compile Include="Core Forms\Commons\ExecSQLMultiDimArrProcedure.vb" />
+    <Compile Include="Core Forms\Commons\ExecSQLProcedure.vb" />
+    <Compile Include="Core Forms\Commons\ExecuteQuery.vb" />
+    <Compile Include="Core Forms\Commons\FileObserver.vb" />
+    <Compile Include="Core Forms\Commons\ImportLoans.vb" />
+    <Compile Include="Core Forms\Commons\KillAppCatcher.vb" />
+    <Compile Include="Core Forms\Commons\myModule.vb" />
+    <Compile Include="Core Forms\Commons\PayrollGeneration.vb" />
+    <Compile Include="Core Forms\Commons\ReadSQLFunction.vb" />
+    <Compile Include="Core Forms\Commons\ReadSQLFunctionV2.vb" />
+    <Compile Include="Core Forms\Commons\ReadSQLProcedureToDatatable.vb" />
+    <Compile Include="Core Forms\Commons\SQLQueryToDatatable.vb" />
+    <Compile Include="Core Forms\Commons\TimeInTimeOutParser.vb" />
+    <Compile Include="Core Forms\Commons\TrapDecimalKey.vb" />
+    <Compile Include="Core Forms\Commons\UserAccessRights.vb" />
     <Compile Include="Core Forms\viewtotallow.Designer.vb">
       <DependentUpon>viewtotallow.vb</DependentUpon>
     </Compile>
@@ -1397,7 +1397,7 @@
     <EmbeddedResource Include="Core Forms\PayrollSummaDateSelection.resx">
       <DependentUpon>PayrollSummaDateSelection.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\PayStub.resx">
+    <EmbeddedResource Include="Core Forms\PayStub\PayStub.resx">
       <DependentUpon>PayStub.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\PhiHealth.resx">
@@ -1418,99 +1418,99 @@
     <EmbeddedResource Include="Core Forms\ReportsList.resx">
       <DependentUpon>ReportsList.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Alphalist.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Alphalist.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Alphalist.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Alphalistv2.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Alphalistv2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Alphalistv2.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Attendance Sheet.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Attendance Sheet.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Attendance Sheet.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee 13th Month Pay Report.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee 13th Month Pay Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee 13th Month Pay Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee Citizenship.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee Citizenship.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee Citizenship.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee Leave Ledger.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee Leave Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee Leave Ledger.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee Loan Report.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee Loan Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee Loan Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee Personal Information.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee Personal Information.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee Personal Information.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee Skills.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee Skills.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee Skills.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee%27s 13th Month Pay Report.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee%27s 13th Month Pay Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s 13th Month Pay Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee%27s Dialect.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Dialect.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Dialect.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee%27s Employment Record.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Employment Record.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Employment Record.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee%27s History of Salary Increase.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee%27s History of Salary Increase.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s History of Salary Increase.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee%27s Identification Number.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Identification Number.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Identification Number.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee%27s Offenses.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Offenses.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Offenses.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee%27s Payroll Ledger.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Payroll Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Payroll Ledger.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee%27s Religion.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Religion.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Religion.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Employee%27s Spouse Information.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Spouse Information.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Spouse Information.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Loan Report.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Loan Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Loan Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Pagibig Monthly Report.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Pagibig Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Pagibig Monthly Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Payroll Summary Report.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Payroll Summary Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Payroll Summary Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Phil Health Monthly Report.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Phil Health Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Phil Health Monthly Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\SSS Monthly Report.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\SSS Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>SSS Monthly Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\REPORTS\Tax Monthly Report.rpt">
+    <EmbeddedResource Include="Core Forms\Reports\Tax Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Tax Monthly Report.vb</LastGenOutput>
     </EmbeddedResource>
@@ -1609,7 +1609,7 @@
     <EmbeddedResource Include="Core Forms\selectMonth.resx">
       <DependentUpon>selectMonth.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\selectPayPeriod.resx">
+    <EmbeddedResource Include="Core Forms\PayStub\selectPayPeriod.resx">
       <DependentUpon>selectPayPeriod.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\SetEmployeeEndDate.resx">
