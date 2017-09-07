@@ -140,7 +140,6 @@ Public Class PayrollGeneration
 
     Private mysql_conn As MySqlConnection
 
-    Dim transaction As MySqlTransaction
     Private numberofweeksthismonth As Integer
 
     Sub New(employees As DataTable,
@@ -305,6 +304,7 @@ Public Class PayrollGeneration
     End Sub
 
     Private Sub GeneratePayStub(employee As DataRow)
+        Dim transaction As MySqlTransaction = Nothing
         Try
             _payStub = New PayStubObject()
 
@@ -829,7 +829,7 @@ Public Class PayrollGeneration
     End Function
 
     Private Sub CalculateWithholdingTax()
-        Dim payFrequencyID As Integer?
+        Dim payFrequencyID As Integer
 
         If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
             payFrequencyID = PayFrequency.Monthly
@@ -863,10 +863,11 @@ Public Class PayrollGeneration
             End If
 
             Dim withholdingTaxBracket = withholdingTaxTable.Select($"
-                FilingStatusID = '{filingStatusID}' AND
-                PayFrequencyID = '{payFrequencyID}' AND
-                TaxableIncomeFromAmount <= {_payStub.TotalTaxableSalary} AND {_payStub.TotalTaxableSalary} <= TaxableIncomeToAmount
-            ").FirstOrDefault()
+                    FilingStatusID = '{filingStatusID}' AND
+                    PayFrequencyID = '{payFrequencyID}' AND
+                    TaxableIncomeFromAmount <= {_payStub.TotalTaxableSalary} AND {_payStub.TotalTaxableSalary} <= TaxableIncomeToAmount
+                ") _
+                .FirstOrDefault()
 
             If withholdingTaxBracket IsNot Nothing Then
                 Dim exemptionAmount = ValNoComma(withholdingTaxBracket("ExemptionAmount"))
