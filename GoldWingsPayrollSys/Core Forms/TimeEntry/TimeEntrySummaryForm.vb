@@ -229,7 +229,8 @@ Public Class TimeEntrySummaryForm
                 employeetimeentry.HolidayPayAmount,
                 employeetimeentry.Absent,
                 employeetimeentry.TotalHoursWorked,
-                employeetimeentry.TotalDayPay
+                employeetimeentry.TotalDayPay,
+                payrate.PayType
             FROM employeetimeentry
             LEFT JOIN employeetimeentrydetails
             ON employeetimeentrydetails.Date = employeetimeentry.Date AND
@@ -239,6 +240,9 @@ Public Class TimeEntrySummaryForm
             ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
             LEFT JOIN shift
             ON shift.RowID = employeeshift.ShiftID
+            LEFT JOIN payrate
+            ON payrate.Date = employeetimeentry.Date AND
+                payrate.OrganizationID = employeetimeentry.OrganizationID
             WHERE employeetimeentry.EmployeeID = @EmployeeID AND
                 employeetimeentry.`Date` BETWEEN @DateFrom AND @DateTo
             ORDER BY employeetimeentry.`Date`;
