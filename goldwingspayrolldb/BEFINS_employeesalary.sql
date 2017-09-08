@@ -35,15 +35,6 @@ IF e_type = 'Daily' THEN
 
     SET NEW.PayPhilhealthID = (SELECT RowID FROM payphilhealth WHERE ((NEW.BasicPay * e_workdayyear) / 12.00) BETWEEN SalaryRangeFrom AND SalaryRangeTo AND NEW.OverrideDiscardPhilHealthContrib = 0 LIMIT 1);
 
-ELSE
-    IF NEW.OverrideDiscardSSSContrib = 1 THEN
-        SET NEW.PaySocialSecurityID = NULL;
-    END IF;
-
-    IF NEW.OverrideDiscardPhilHealthContrib = 1 THEN
-        SET NEW.PayPhilhealthID = NULL;
-    END IF;
-
 END IF;
 
 IF IFNULL(NEW.UndeclaredSalary,0) = 0 THEN

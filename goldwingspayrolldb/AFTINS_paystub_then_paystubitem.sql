@@ -495,23 +495,37 @@ ELSE
 
 END IF;
 
-
-    INSERT INTO scheduledloansperpayperiod
-    (
-        RowID
-        ,CreatedBy
-        ,OrganizationID
-        ,PayPeriodID
-        ,EmployeeID
-        ,EmployeeLoanRecordID
-        ,LoanPayPeriodLeft
-        ,TotalBalanceLeft
-    ) SELECT NULL,NEW.CreatedBy,OrganizationID,NEW.PayPeriodID,EmployeeID,RowID,(LoanPayPeriodLeft - 1),(TotalBalanceLeft - DeductionAmount)
-     FROM employeeloanschedule WHERE OrganizationID=NEW.OrganizationID AND BonusID IS NULL AND LoanPayPeriodLeft >= 1 AND `Status`='In Progress' AND EmployeeID=NEW.EmployeeID AND DeductionSchedule IN (payperiod_type,'Per pay period') AND (DedEffectiveDateFrom >= NEW.PayFromDate OR DedEffectiveDateTo >= NEW.PayFromDate) AND (DedEffectiveDateFrom <= NEW.PayToDate OR DedEffectiveDateTo <= NEW.PayToDate)
-    ON DUPLICATE KEY UPDATE
-        LastUpdBy=NEW.CreatedBy;
-
-
+INSERT INTO scheduledloansperpayperiod(
+    RowID,
+    CreatedBy,
+    OrganizationID,
+    PayPeriodID,
+    EmployeeID,
+    EmployeeLoanRecordID,
+    LoanPayPeriodLeft,
+    TotalBalanceLeft
+)
+SELECT
+    NULL,
+    NEW.CreatedBy,
+    OrganizationID,
+    NEW.PayPeriodID,
+    EmployeeID,
+    RowID,
+    (LoanPayPeriodLeft - 1),
+    (TotalBalanceLeft - DeductionAmount)
+FROM employeeloanschedule
+WHERE OrganizationID = NEW.OrganizationID AND
+    BonusID IS NULL AND
+    LoanPayPeriodLeft >= 1 AND
+    `Status` = 'In Progress' AND
+    EmployeeID = NEW.EmployeeID AND
+    DeductionSchedule IN (payperiod_type, 'Per pay period') AND
+    (DedEffectiveDateFrom >= NEW.PayFromDate OR DedEffectiveDateTo >= NEW.PayFromDate) AND
+    (DedEffectiveDateFrom <= NEW.PayToDate OR DedEffectiveDateTo <= NEW.PayToDate)
+ON DUPLICATE KEY
+UPDATE
+    LastUpdBy = NEW.CreatedBy;
 
 SELECT RowID FROM `view` WHERE ViewName='Employee Pay Slip' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 

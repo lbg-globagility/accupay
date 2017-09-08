@@ -62,6 +62,10 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(
 
 
 
+
+
+
+
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN
@@ -356,10 +360,10 @@ INTO
 SELECT
     IFNULL((NightShift = '1'), FALSE)
 FROM employeeshift
-WHERE EmployeeID = ete_EmpRowID
-    AND OrganizationID = ete_OrganizID
-    AND ete_Date BETWEEN EffectiveFrom AND EffectiveTo
-    AND DATEDIFF(ete_Date, EffectiveFrom) >= 0
+WHERE EmployeeID = ete_EmpRowID AND
+    OrganizationID = ete_OrganizID AND
+    ete_Date BETWEEN EffectiveFrom AND EffectiveTo AND
+    DATEDIFF(ete_Date, EffectiveFrom) >= 0
 ORDER BY DATEDIFF(ete_Date, EffectiveFrom)
 LIMIT 1
 INTO
@@ -367,10 +371,10 @@ INTO
 
 SELECT COUNT(RowID)
 FROM employeeovertime
-WHERE EmployeeID=ete_EmpRowID
-    AND OrganizationID=ete_OrganizID
-    AND ete_Date BETWEEN OTStartDate AND OTEndDate
-    AND OTStatus='Approved'
+WHERE EmployeeID = ete_EmpRowID AND
+    OrganizationID = ete_OrganizID AND
+    ete_Date BETWEEN OTStartDate AND OTEndDate AND
+    OTStatus = 'Approved'
 INTO OTCount;
 
 SELECT COALESCE(DAYOFWEEK(ete_Date) = e.DayOfRest, FALSE)
@@ -406,10 +410,10 @@ IF OTCount = 1 THEN
         OTEndTime,
         RowID
     FROM employeeovertime
-    WHERE EmployeeID=ete_EmpRowID
-        AND OrganizationID=ete_OrganizID
+    WHERE EmployeeID = ete_EmpRowID
+        AND OrganizationID = ete_OrganizID
         AND OTStartTime >= shifttimeto
-        AND OTStatus='Approved'
+        AND OTStatus = 'Approved'
         AND (ete_Date BETWEEN OTStartDate AND OTEndDate)
     ORDER BY OTStartTime DESC
     LIMIT 1
@@ -425,10 +429,10 @@ ELSE
         OTEndTime,
         RowID
     FROM employeeovertime
-    WHERE EmployeeID=ete_EmpRowID
-        AND OrganizationID=ete_OrganizID
+    WHERE EmployeeID = ete_EmpRowID
+        AND OrganizationID = ete_OrganizID
         AND ete_Date BETWEEN OTStartDate AND COALESCE(OTEndDate,OTStartDate)
-        AND OTStatus='Approved'
+        AND OTStatus = 'Approved'
     ORDER BY OTStartTime DESC
     LIMIT 1
     INTO
@@ -438,8 +442,8 @@ ELSE
 
 END IF;
 
-SET @sh_brktimeFr=NULL;
-SET @sh_brktimeTo=NULL;
+SET @sh_brktimeFr = NULL;
+SET @sh_brktimeTo = NULL;
 
 SELECT
     etd.TimeIn,
@@ -448,14 +452,14 @@ SELECT
     sh.BreakTimeTo
 FROM employeetimeentrydetails etd
 LEFT JOIN employeeshift esh
-    ON esh.OrganizationID=etd.OrganizationID
-    AND esh.EmployeeID=etd.EmployeeID
-    AND etd.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
+ON esh.OrganizationID = etd.OrganizationID AND
+    esh.EmployeeID = etd.EmployeeID AND
+    etd.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
 LEFT JOIN shift sh
-    ON sh.RowID=esh.ShiftID
-WHERE etd.EmployeeID=ete_EmpRowID
-    AND etd.OrganizationID=ete_OrganizID
-    AND etd.`Date`=ete_Date
+ON sh.RowID = esh.ShiftID
+WHERE etd.EmployeeID = ete_EmpRowID AND
+    etd.OrganizationID = ete_OrganizID AND
+    etd.`Date` = ete_Date
 ORDER BY IFNULL(etd.LastUpd, etd.Created) DESC
 LIMIT 1
 INTO
@@ -736,7 +740,6 @@ SEt isHoliday = NOT isRegularDay;
 
 SET isWorkingDay = NOT isRestDay;
 
--- a. If the current day is a regular working day.
 IF isRegularDay THEN
 
     -- a. If the current day is a regular working day.
@@ -840,10 +843,10 @@ IF isRegularDay THEN
             '0',
             ete_RegHrsWorkd,
             ete_OvertimeHrs,
-            ete_HrsUnder,
+            undertimeHours,
             ete_NDiffHrs,
             ete_NDiffOTHrs,
-            ete_HrsLate,
+            lateHours,
             payrateRowID,
             ete_TotalDayPay,
             ete_RegHrsWorkd + ete_OvertimeHrs,
@@ -860,124 +863,6 @@ IF isRegularDay THEN
             5
         )
         INTO timeEntryID;
-
-        -- IF isWorkingDay THEN
-
-        --     SELECT EXISTS(
-        --         SELECT elv.RowID
-        --         FROM employeeleave elv
-        --         WHERE elv.EmployeeID = ete_EmpRowID AND
-        --             elv.`Status` = 'Approved' AND
-        --             elv.OrganizationID = ete_OrganizID AND
-        --             ete_Date BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate
-        --         LIMIT 1
-        --     )
-        --     INTO hasLeave;
-
-        --     IF hasLeave THEN
-        --         SET leavePay = IFNULL(
-        --             (
-        --                 SELECT SUM(TotalDayPay)
-        --                 FROM employeetimeentry
-        --                 WHERE EmployeeID = ete_EmpRowID AND
-        --                     OrganizationID = ete_OrganizID AND
-        --                     `Date` = ete_Date
-        --             ),
-        --             0
-        --         );
-        --     END IF;
-
-        --     SET regularAmount = (ete_RegHrsWorkd * hourlyRate) * commonrate;
-        --     SET overtimeAmount = (ete_OvertimeHrs * hourlyRate) * otrate;
-        --     SET nightDiffAmount = (ete_NDiffHrs * hourlyRate) * ndiffrate;
-        --     SET nightDiffOTAmount = (ete_NDiffOTHrs * hourlyRate) * ndiffotrate;
-
-        --     SET lateAmount = ete_HrsLate * hourlyRate;
-        --     SET undertimeAmount = ete_HrsUnder * hourlyRate;
-
-        --     SET ete_TotalDayPay = regularAmount + overtimeAmount +
-        --                           nightDiffAmount + nightDiffOTAmount +
-        --                           leavePay;
-
-        --     SELECT INSUPD_employeetimeentries(
-        --         timeEntryID,
-        --         ete_OrganizID,
-        --         ete_UserRowID,
-        --         ete_UserRowID,
-        --         ete_Date,
-        --         employeeShiftID,
-        --         ete_EmpRowID,
-        --         esalRowID,
-        --         '0',
-        --         ete_RegHrsWorkd,
-        --         ete_OvertimeHrs,
-        --         ete_HrsUnder,
-        --         ete_NDiffHrs,
-        --         ete_NDiffOTHrs,
-        --         ete_HrsLate,
-        --         payrateRowID,
-        --         ete_TotalDayPay,
-        --         ete_RegHrsWorkd + ete_OvertimeHrs,
-        --         regularAmount,
-        --         overtimeAmount,
-        --         undertimeAmount,
-        --         nightDiffAmount,
-        --         nightDiffOTAmount,
-        --         lateAmount,
-        --         NULL,
-        --         NULL,
-        --         0,
-        --         basicDayPay,
-        --         5
-        --     )
-        --     INTO timeEntryID;
-
-        -- ELSEIF isRestDay THEN
-
-        --     SET restDayAmount = (ete_RegHrsWorkd * hourlyRate) * restday_rate;
-        --     SET overtimeAmount = (ete_OvertimeHrs * hourlyRate) * restdayot_rate;
-        --     SET nightDiffAmount = (ete_NDiffHrs * hourlyRate) * ndiffrate;
-        --     SET nightDiffOTAmount = (ete_NDiffOTHrs * hourlyRate) * ndiffotrate;
-
-        --     SET ete_TotalDayPay = restDayAmount + overtimeAmount + nightDiffAmount + nightDiffOTAmount;
-
-        --     SET ete_HrsUnder = 0.0;
-        --     SET ete_HrsLate = 0.0;
-
-        --     SELECT INSUPD_employeetimeentries(
-        --         timeEntryID,
-        --         ete_OrganizID,
-        --         ete_UserRowID,
-        --         ete_UserRowID,
-        --         ete_Date,
-        --         employeeShiftID,
-        --         ete_EmpRowID,
-        --         esalRowID,
-        --         '0',
-        --         ete_RegHrsWorkd,
-        --         ete_OvertimeHrs,
-        --         ete_HrsUnder,
-        --         ete_NDiffHrs,
-        --         ete_NDiffOTHrs,
-        --         ete_HrsLate,
-        --         payrateRowID,
-        --         ete_TotalDayPay,
-        --         ete_RegHrsWorkd + ete_OvertimeHrs,
-        --         0,
-        --         overtimeAmount,
-        --         (ete_HrsUnder * hourlyRate),
-        --         nightDiffAmount,
-        --         nightDiffOTAmount,
-        --         (ete_HrsLate * hourlyRate),
-        --         ete_RegHrsWorkd,
-        --         restDayAmount,
-        --         0,
-        --         basicDayPay,
-        --         4
-        --     )
-        --     INTO timeEntryID;
-
-        -- END IF;
 
     END IF;
 
@@ -1006,7 +891,7 @@ ELSEIF isHoliday THEN
     IF yester_TotDayPay != 0 THEN
 
         IF isRestDay THEN
-            SET regularAmount = (ete_RegHrsWorkd * hourlyRate) * (restday_rate - 1);
+            SET regularAmount = (ete_RegHrsWorkd * hourlyRate);
             SET overtimeAmount = (ete_OvertimeHrs * hourlyRate) * restdayot_rate;
 
             SET applicableHolidayRate = restday_rate;
@@ -1017,10 +902,15 @@ ELSEIF isHoliday THEN
             SET applicableHolidayRate = commonrate;
         END IF;
 
+        SET ete_HrsLate = 0.0;
+        SET ete_HrsUnder = 0.0;
+
         IF pr_PayType = 'Regular Holiday' THEN
 
             IF e_EmpType = 'Daily' THEN
                 SET holidayPay = dailyRate;
+            ELSEIF e_EmpType = 'Monthly' THEN
+                SET holidayPay = regularAmount * (applicableHolidayRate - 1);
             END IF;
 
         ELSEIF pr_PayType = 'Special Non-Working Holiday' THEN
@@ -1073,8 +963,8 @@ ELSEIF isHoliday THEN
         -- c. If today is a rest day.
         IF isRestDay = '1' THEN
 
-            SET ete_TotalDayPay = ((ete_RegHrsWorkd * hourlyRate) * commonrate) +
-                                  ((ete_OvertimeHrs * hourlyRate) * otrate);
+            SET ete_TotalDayPay = ((ete_RegHrsWorkd * hourlyRate) * restday_rate) +
+                                  ((ete_OvertimeHrs * hourlyRate) * restdayot_rate);
 
             SELECT INSUPD_employeetimeentries(
                 timeEntryID,

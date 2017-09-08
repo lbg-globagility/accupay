@@ -853,13 +853,14 @@ IF e_type IN ('Fixed', 'Monthly') AND IsFirstTimeSalary THEN
 
     END IF;
 
-ELSEIF e_type IN ('Fixed','Monthly') AND NOT IsFirstTimeSalary THEN
+ELSEIF e_type IN ('Fixed', 'Monthly') AND NOT IsFirstTimeSalary THEN
 
-	SELECT
+    SELECT
         SUM(RegularHoursAmount),
         SUM(OvertimeHoursAmount),
         SUM(NightDiffHoursAmount),
         SUM(NightDiffOTHoursAmount),
+        SUM(RestDayAmount),
         SUM(HolidayPayAmount),
         SUM(HoursLateAmount),
         SUM(UndertimeHoursAmount),
@@ -868,13 +869,14 @@ ELSEIF e_type IN ('Fixed','Monthly') AND NOT IsFirstTimeSalary THEN
         EmployeeSalaryID
     FROM employeetimeentryactual
     WHERE OrganizationID = NEW.OrganizationID AND
-    	EmployeeID = NEW.EmployeeID AND
-    	`Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
+        EmployeeID = NEW.EmployeeID AND
+        `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
     INTO
         regularPay,
         overtimePay,
         nightDiffPay,
         nightDiffOvertimePay,
+        restDayPay,
         holidayPay,
         lateDeduction,
         undertimeDeduction,
@@ -887,18 +889,18 @@ ELSEIF e_type IN ('Fixed','Monthly') AND NOT IsFirstTimeSalary THEN
         SELECT (TrueSalary / PAYFREQUENCY_DIVISOR(pftype))
         FROM employeesalary es
         WHERE es.EmployeeID = NEW.EmployeeID AND
-        	es.OrganizationID = NEW.OrganizationID AND
-        	(es.EffectiveDateFrom >= NEW.PayFromDate OR IFNULL(es.EffectiveDateTo,CURDATE()) >= NEW.PayFromDate) AND
-        	(es.EffectiveDateFrom <= NEW.PayToDate OR IFNULL(es.EffectiveDateTo,CURDATE()) <= NEW.PayToDate)
+            es.OrganizationID = NEW.OrganizationID AND
+            (es.EffectiveDateFrom >= NEW.PayFromDate OR IFNULL(es.EffectiveDateTo,CURDATE()) >= NEW.PayFromDate) AND
+            (es.EffectiveDateFrom <= NEW.PayToDate OR IFNULL(es.EffectiveDateTo,CURDATE()) <= NEW.PayToDate)
         ORDER BY es.EffectiveDateFrom DESC
         LIMIT 1
         INTO totalWorkAmount;
 
-        SELECT (totalWorkAmount + SUM(HolidayPayAmount)) - (SUM(HoursLateAmount) + SUM(UndertimeHoursAmount) + SUM(Absent))
+        SELECT (totalWorkAmount + SUM(HolidayPayAmount) + SUM(RestDayAmount)) - (SUM(HoursLateAmount) + SUM(UndertimeHoursAmount) + SUM(Absent))
         FROM employeetimeentryactual
         WHERE OrganizationID = NEW.OrganizationID AND
-        	EmployeeID = NEW.EmployeeID AND
-        	`Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
+            EmployeeID = NEW.EmployeeID AND
+            `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
         INTO totalWorkAmount;
 
         IF totalWorkAmount IS NULL THEN
@@ -906,8 +908,8 @@ ELSEIF e_type IN ('Fixed','Monthly') AND NOT IsFirstTimeSalary THEN
             SELECT SUM(HoursLateAmount + UndertimeHoursAmount + Absent)
             FROM employeetimeentry
             WHERE OrganizationID = NEW.OrganizationID AND
-            	EmployeeID = NEW.EmployeeID AND
-            	`Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
+                EmployeeID = NEW.EmployeeID AND
+                `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
             INTO totalWorkAmount;
 
             SET totalWorkAmount = IFNULL(totalWorkAmount, 0);
@@ -924,9 +926,9 @@ ELSEIF e_type IN ('Fixed','Monthly') AND NOT IsFirstTimeSalary THEN
         SELECT es.BasicPay
         FROM employeesalary es
         WHERE es.EmployeeID = NEW.EmployeeID AND
-        	es.OrganizationID = NEW.OrganizationID AND
-        	(es.EffectiveDateFrom >= NEW.PayFromDate OR IFNULL(es.EffectiveDateTo,NEW.PayToDate) >= NEW.PayFromDate) AND
-        	(es.EffectiveDateFrom <= NEW.PayToDate OR IFNULL(es.EffectiveDateTo,NEW.PayToDate) <= NEW.PayToDate)
+            es.OrganizationID = NEW.OrganizationID AND
+            (es.EffectiveDateFrom >= NEW.PayFromDate OR IFNULL(es.EffectiveDateTo,NEW.PayToDate) >= NEW.PayFromDate) AND
+            (es.EffectiveDateFrom <= NEW.PayToDate OR IFNULL(es.EffectiveDateTo,NEW.PayToDate) <= NEW.PayToDate)
         ORDER BY es.EffectiveDateFrom DESC
         LIMIT 1
         INTO totalWorkAmount;
@@ -950,8 +952,8 @@ ELSE
         EmployeeSalaryID
     FROM employeetimeentryactual
     WHERE OrganizationID = NEW.OrganizationID AND
-    	EmployeeID = NEW.EmployeeID AND
-    	`Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
+        EmployeeID = NEW.EmployeeID AND
+        `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
     INTO
         regularPay,
         overtimePay,
@@ -971,8 +973,8 @@ ELSE
             EmployeeSalaryID
         FROM employeetimeentry
         WHERE OrganizationID = NEW.OrganizationID AND
-        	EmployeeID = NEW.EmployeeID AND
-        	`Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
+            EmployeeID = NEW.EmployeeID AND
+            `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
         INTO
             totalWorkAmount,
             empsalRowID;
@@ -1086,7 +1088,7 @@ UPDATE
     AbsenceDeduction = absenceDeduction,
     TotalGrossSalary = actualgross,
     TotalNetSalary = (actualgross - (NEW.TotalEmpSSS + NEW.TotalEmpPhilhealth + NEW.TotalEmpHDMF + NEW.TotalEmpWithholdingTax)) - NEW.TotalLoans + (NEW.TotalAdjustments + @totaladjust_actual),
-    TotalTaxableSalary = NEW.TotalTaxableSalary + ((NEW.TotalTaxableSalary + NEW.TotalEmpSSS + NEW.TotalEmpPhilhealth + NEW.TotalEmpHDMF) * actualrate),
+    TotalTaxableSalary = NEW.TotalTaxableSalary,
     TotalEmpSSS = NEW.TotalEmpSSS,
     TotalEmpWithholdingTax = NEW.TotalEmpWithholdingTax,
     TotalCompSSS = NEW.TotalCompSSS,

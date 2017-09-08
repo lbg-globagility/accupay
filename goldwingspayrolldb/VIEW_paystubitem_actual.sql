@@ -6,7 +6,12 @@
 
 DROP PROCEDURE IF EXISTS `VIEW_paystubitem_actual`;
 DELIMITER //
-CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `VIEW_paystubitem_actual`(IN `OrganizID` INT, IN `EmpRowID` INT, IN `pay_date_from` DATE, IN `pay_date_to` DATE)
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `VIEW_paystubitem_actual`(
+	IN `OrganizID` INT,
+	IN `EmpRowID` INT,
+	IN `pay_date_from` DATE,
+	IN `pay_date_to` DATE
+)
     DETERMINISTIC
 BEGIN
 
@@ -83,7 +88,7 @@ psa.RowID
 ,psa.TotalAdjustments
 ,psa.ThirteenthMonthInclusion
 ,psa.FirstTimeSalary
-
+,psa.HolidayPay
 ,es.BasicPay * (es.TrueSalary / es.Salary) AS `BasicPay`
 ,es.TrueSalary
 ,IF(e.EmployeeType='Daily',PAYFREQUENCY_DIVISOR(e.EmployeeType),PAYFREQUENCY_DIVISOR(pf.PayFrequencyType)) AS PAYFREQUENCYDIVISOR
@@ -119,7 +124,6 @@ LEFT JOIN (SELECT etea.RowID AS eteRowID
                 , SUM(etea.TotalDayPay) AS TotalDayPay
                 , SUM(etea.Absent) AS Absent
                 , SUM(etea.Leavepayment) AS Leavepayment
-                , IFNULL(i.`PayAmount`,0) `HolidayPayment`
                 , SUM(agencyfee.DailyFee) `TotalAgencyFee`
                 FROM employeetimeentryactual etea
                 INNER JOIN payrate pr ON pr.RowID=etea.PayRateID
