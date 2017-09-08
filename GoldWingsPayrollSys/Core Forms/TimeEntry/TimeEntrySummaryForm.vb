@@ -267,7 +267,7 @@ Public Class TimeEntrySummaryForm
             While Await reader.ReadAsync()
                 Dim timeEntry = New TimeEntry() With {
                     .RowID = reader.GetValue(Of Integer?)("RowID"),
-                    .EntryDate = reader.GetValue(Of Date)("Date"),
+                    .EntryDate = reader.GetValue(Of Date?)("Date"),
                     .TimeIn = reader.GetValue(Of TimeSpan?)("TimeIn"),
                     .TimeOut = reader.GetValue(Of TimeSpan?)("TimeOut"),
                     .ShiftFrom = reader.GetValue(Of TimeSpan?)("ShiftFrom"),
@@ -547,7 +547,7 @@ Public Class TimeEntrySummaryForm
     Private Class TimeEntry
 
         Public Property RowID As Integer?
-        Public Property EntryDate As Date
+        Public Property EntryDate As Date?
         Public Property TimeIn As TimeSpan?
         Public Property TimeOut As TimeSpan?
         Public Property ShiftFrom As TimeSpan?
