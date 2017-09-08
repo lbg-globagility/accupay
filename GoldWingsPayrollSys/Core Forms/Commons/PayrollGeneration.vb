@@ -70,14 +70,14 @@ Public Class PayrollGeneration
     Public Property PayrollDateTo As String
     Public Property PayPeriodID As String
 
-    Private employees As DataTable
+    Private _employees As DataTable
     Private isEndOfMonth2 As String
     Private _isFirstHalf As Boolean
     Private _isEndOfMonth As Boolean
-    Private allSalaries As DataTable
-    Private allLoans As DataTable
+    Private _allSalaries As DataTable
+    Private _allLoans As DataTable
     Private _allLoanTransactions As DataTable
-    Private allBonuses As DataTable
+    Private _allBonuses As DataTable
 
     Private allOneTimeAllowances As DataTable
     Private allDailyAllowances As DataTable
@@ -103,22 +103,22 @@ Public Class PayrollGeneration
     Private allNoTaxSemiMonthlyBonuses As DataTable
     Private allNoTaxMonthlyBonuses As DataTable
 
-    Private numofdaypresent As DataTable
-    Private allTimeEntries As DataTable
-    Private dtemployeefirsttimesalary As DataTable
-    Private previousTimeEntries As DataTable
-    Private VeryFirstPayPeriodIDOfThisYear As Object
-    Private withthirteenthmonthpay As SByte
+    Private _numOfDayPresent As DataTable
+    Private _allTimeEntries As DataTable
+    Private _employeeFirstTimeSalary As DataTable
+    Private _previousTimeEntries As DataTable
+    Private _VeryFirstPayPeriodIDOfThisYear As Object
+    Private _withThirteenthMonthPay As SByte
 
-    Private withholdingTaxTable As DataTable
+    Private _withholdingTaxTable As DataTable
 
-    Private filingStatuses As DataTable
+    Private _filingStatuses As DataTable
 
     Private fixedNonTaxableMonthlyAllowances As DataTable
     Private fixedTaxableMonthlyAllowances As DataTable
 
     Private Delegate Sub NotifyMainWindow(ByVal progress_index As Integer)
-    Private m_NotifyMainWindow As NotifyMainWindow
+    Private _notifyMainWindow As NotifyMainWindow
 
     Private form_caller As Form
 
@@ -138,7 +138,7 @@ Public Class PayrollGeneration
     Private _hdmfDeductionSchedule As String
     Private _withholdingTaxSchedule As String
 
-    Private mysql_conn As MySqlConnection
+    Private _connection As MySqlConnection
 
     Private numberofweeksthismonth As Integer
 
@@ -168,24 +168,24 @@ Public Class PayrollGeneration
             allNoTaxOneTimeBonuses As DataTable,
             allNoTaxSemiMonthlyBonuses As DataTable,
             allNoTaxWeeklyBonuses As DataTable,
-            _numofdaypresent As DataTable,
+            numOfDayPresent As DataTable,
             allTimeEntries As DataTable,
-            _dtemployeefirsttimesalary As DataTable,
+            dtemployeefirsttimesalary As DataTable,
             previousTimeEntries As DataTable,
-            _VeryFirstPayPeriodIDOfThisYear As Object,
-            _withthirteenthmonthpay As SByte,
+            VeryFirstPayPeriodIDOfThisYear As Object,
+            withThirteenthMonthPay As SByte,
             filingStatuses As DataTable,
             withholdingTaxTable As DataTable,
             Optional pay_stub_frm As PayStub = Nothing)
 
         form_caller = pay_stub_frm
 
-        Me.employees = employees
+        _employees = employees
         isEndOfMonth2 = payPeriodHalfNo
-        Me.allSalaries = allSalaries
-        Me.allLoans = allScheduledLoans
+        Me._allSalaries = allSalaries
+        Me._allLoans = allScheduledLoans
         _allLoanTransactions = allLoanTransactions
-        Me.allBonuses = allBonuses
+        Me._allBonuses = allBonuses
 
         Me.allOneTimeAllowances = allOneTimeAllowances
         Me.allDailyAllowances = allDailyAllowances
@@ -211,17 +211,17 @@ Public Class PayrollGeneration
         Me.allNoTaxSemiMonthlyBonuses = allNoTaxSemiMonthlyBonuses
         Me.allNoTaxMonthlyBonuses = allNoTaxMonthlyBonuses
 
-        numofdaypresent = _numofdaypresent
-        Me.allTimeEntries = allTimeEntries
-        dtemployeefirsttimesalary = _dtemployeefirsttimesalary
-        Me.previousTimeEntries = previousTimeEntries
-        VeryFirstPayPeriodIDOfThisYear = _VeryFirstPayPeriodIDOfThisYear
-        withthirteenthmonthpay = _withthirteenthmonthpay
+        _numOfDayPresent = numOfDayPresent
+        _allTimeEntries = allTimeEntries
+        _employeeFirstTimeSalary = dtemployeefirsttimesalary
+        _previousTimeEntries = previousTimeEntries
+        _VeryFirstPayPeriodIDOfThisYear = VeryFirstPayPeriodIDOfThisYear
+        _withThirteenthMonthPay = withThirteenthMonthPay
 
-        Me.filingStatuses = filingStatuses
-        Me.withholdingTaxTable = withholdingTaxTable
+        _filingStatuses = filingStatuses
+        _withholdingTaxTable = withholdingTaxTable
 
-        m_NotifyMainWindow = AddressOf pay_stub_frm.ProgressCounter
+        _notifyMainWindow = AddressOf pay_stub_frm.ProgressCounter
 
         _isFirstHalf = (payPeriodHalfNo = "1")
         _isEndOfMonth = (payPeriodHalfNo = "0")
@@ -242,7 +242,7 @@ Public Class PayrollGeneration
             'LoadExistingUnusedLeaveAdjustments()
             'ResetUnusedLeaveAdjustments()
 
-            Dim sel_employee_dattab = employees.Select("PositionID IS NULL")
+            Dim sel_employee_dattab = _employees.Select("PositionID IS NULL")
 
             If sel_employee_dattab.Count > 0 Then
                 For Each drow In sel_employee_dattab
@@ -261,11 +261,11 @@ Public Class PayrollGeneration
             Dim dateStr_to_use = Format(date_to_use, "yyyy-MM-dd")
             numberofweeksthismonth = CInt(New MySQLExecuteQuery("SELECT `COUNTTHEWEEKS`('" & dateStr_to_use & "');").Result)
 
-            For Each employee As DataRow In employees.Rows
+            For Each employee As DataRow In _employees.Rows
                 GeneratePayStub(employee)
             Next
         Catch ex As Exception
-            Console.WriteLine(getErrExcptn(ex, "PayrollGeneration - " & employees.TableName))
+            Console.WriteLine(getErrExcptn(ex, "PayrollGeneration - " & _employees.TableName))
             logger.Error("DoProcess", ex)
         Finally
             'employee_dattab.Dispose()
@@ -320,8 +320,8 @@ Public Class PayrollGeneration
 
             _payStub.EmployeeID = Trim(CStr(employee("RowID")))
 
-            Dim salary = allSalaries.Select($"EmployeeID = '{_payStub.EmployeeID}'").FirstOrDefault()
-            Dim employeeLoans = allLoans.Select($"EmployeeID = '{_payStub.EmployeeID}'")
+            Dim salary = _allSalaries.Select($"EmployeeID = '{_payStub.EmployeeID}'").FirstOrDefault()
+            Dim employeeLoans = _allLoans.Select($"EmployeeID = '{_payStub.EmployeeID}'")
 
             Dim loanTransactions = _allLoanTransactions.Select($"EmployeeID = '{_payStub.EmployeeID}'")
 
@@ -342,7 +342,7 @@ Public Class PayrollGeneration
             CalculateBonuses()
 
             Dim governmentContributions = 0D
-            Dim timeEntrySummary = allTimeEntries.Select($"EmployeeID = '{_payStub.EmployeeID}'").FirstOrDefault()
+            Dim timeEntrySummary = _allTimeEntries.Select($"EmployeeID = '{_payStub.EmployeeID}'").FirstOrDefault()
 
             If timeEntrySummary IsNot Nothing Then
 
@@ -380,16 +380,16 @@ Public Class PayrollGeneration
 
                     _payStub.AbsenceDeduction = ValNoComma(timeEntrySummary("Absent"))
 
-                    Dim sel_dtemployeefirsttimesalary = dtemployeefirsttimesalary.Select($"EmployeeID = '{_payStub.EmployeeID}'")
+                    Dim sel_dtemployeefirsttimesalary = _employeeFirstTimeSalary.Select($"EmployeeID = '{_payStub.EmployeeID}'")
                     Dim employmentType = StrConv(employee("EmployeeType").ToString, VbStrConv.ProperCase)
 
                     If employmentType = SalaryType.Fixed Then
 
                         _payStub.WorkPay = basicPay + (_payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay)
 
-                        Dim previousOvertimePay = ValNoComma(previousTimeEntries.Compute("SUM(OvertimeHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-                        Dim previousNightDiffPay = ValNoComma(previousTimeEntries.Compute("SUM(NightDiffHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-                        Dim previousNightDiffOTPay = ValNoComma(previousTimeEntries.Compute("SUM(NightDiffOTHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+                        Dim previousOvertimePay = ValNoComma(_previousTimeEntries.Compute("SUM(OvertimeHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+                        Dim previousNightDiffPay = ValNoComma(_previousTimeEntries.Compute("SUM(NightDiffHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+                        Dim previousNightDiffOTPay = ValNoComma(_previousTimeEntries.Compute("SUM(NightDiffOTHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
 
                         grossIncomeLastPayPeriod = basicPay + previousOvertimePay + previousNightDiffPay + previousNightDiffOTPay
 
@@ -398,7 +398,7 @@ Public Class PayrollGeneration
                         If skipGovernmentDeductions Then
                             _payStub.WorkPay = ValNoComma(timeEntrySummary("TotalDayPay"))
 
-                            grossIncomeLastPayPeriod = ValNoComma(previousTimeEntries.Compute("SUM(TotalDayPay)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+                            grossIncomeLastPayPeriod = ValNoComma(_previousTimeEntries.Compute("SUM(TotalDayPay)", $"EmployeeID = '{_payStub.EmployeeID}'"))
                         Else
                             Dim totalDeduction = _payStub.LateDeduction + _payStub.UndertimeDeduction + _payStub.AbsenceDeduction
                             Dim extraPay = _payStub.RestDayPay + _payStub.HolidayPay
@@ -406,22 +406,22 @@ Public Class PayrollGeneration
                             _payStub.WorkPay = (basicPay + extraPay) - totalDeduction
                             _payStub.TotalTaxableSalary = basicPay
 
-                            If previousTimeEntries.Select($"EmployeeID = '{_payStub.EmployeeID}'").Count > 0 Then
+                            If _previousTimeEntries.Select($"EmployeeID = '{_payStub.EmployeeID}'").Count > 0 Then
                                 grossIncomeLastPayPeriod = basicPay
                             End If
 
-                            Dim previousLateDeduction = ValNoComma(previousTimeEntries.Compute("SUM(HoursLateAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-                            Dim previousUndertimeDeduction = ValNoComma(previousTimeEntries.Compute("SUM(UndertimeHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-                            Dim previousAbsenceDeduction = ValNoComma(previousTimeEntries.Compute("SUM(Absent)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+                            Dim previousLateDeduction = ValNoComma(_previousTimeEntries.Compute("SUM(HoursLateAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+                            Dim previousUndertimeDeduction = ValNoComma(_previousTimeEntries.Compute("SUM(UndertimeHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+                            Dim previousAbsenceDeduction = ValNoComma(_previousTimeEntries.Compute("SUM(Absent)", $"EmployeeID = '{_payStub.EmployeeID}'"))
                             Dim totalPreviousDeduction = previousLateDeduction + previousUndertimeDeduction + previousAbsenceDeduction
 
                             grossIncomeLastPayPeriod -= totalPreviousDeduction
-                            grossIncomeLastPayPeriod += ValNoComma(previousTimeEntries.Compute("MIN(emtAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+                            grossIncomeLastPayPeriod += ValNoComma(_previousTimeEntries.Compute("MIN(emtAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
                         End If
 
                     ElseIf employmentType = SalaryType.Daily Then
                         _payStub.WorkPay = ValNoComma(timeEntrySummary("TotalDayPay"))
-                        grossIncomeLastPayPeriod = ValNoComma(previousTimeEntries.Compute("SUM(TotalDayPay)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+                        grossIncomeLastPayPeriod = ValNoComma(_previousTimeEntries.Compute("SUM(TotalDayPay)", $"EmployeeID = '{_payStub.EmployeeID}'"))
                     End If
 
                     CalculateSss(salary)
@@ -443,14 +443,14 @@ Public Class PayrollGeneration
             _payStub.TotalGrossSalary = _payStub.WorkPay + _payStub.TotalBonus + _payStub.TotalAllowance
             _payStub.TotalNetSalary = _payStub.TotalGrossSalary - (governmentContributions + _payStub.TotalLoanDeduction + _payStub.WithholdingTaxAmount)
 
-            mysql_conn = New MySqlConnection(mysql_conn_text)
-            Dim command = New MySqlCommand("SavePayStub", mysql_conn, transaction)
+            _connection = New MySqlConnection(mysql_conn_text)
+            Dim command = New MySqlCommand("SavePayStub", _connection, transaction)
 
-            If mysql_conn.State = ConnectionState.Closed Then
-                mysql_conn.Open()
+            If _connection.State = ConnectionState.Closed Then
+                _connection.Open()
             End If
 
-            transaction = mysql_conn.BeginTransaction()
+            transaction = _connection.BeginTransaction()
             command.CommandTimeout = 5000
             command.CommandType = CommandType.StoredProcedure
 
@@ -509,7 +509,7 @@ Public Class PayrollGeneration
             '    ConvertLeaveToCash(drow)
             'End If
 
-            form_caller.Invoke(m_NotifyMainWindow, 1)
+            form_caller.Invoke(_notifyMainWindow, 1)
             Dim my_cmd As String = String.Concat(Convert.ToString(employee("RowID")), "@", Convert.ToString(employee("EmployeeID")))
             Console.WriteLine(my_cmd)
 
@@ -525,9 +525,9 @@ Public Class PayrollGeneration
             'logger.Error($"Error calculting employee #{employee("EmployeeID")}.", ex)
             'Console.WriteLine(this_err)
         Finally
-            If mysql_conn IsNot Nothing Then
-                mysql_conn.Close()
-                mysql_conn.Dispose()
+            If _connection IsNot Nothing Then
+                _connection.Close()
+                _connection.Dispose()
             End If
         End Try
     End Sub
@@ -701,7 +701,7 @@ Public Class PayrollGeneration
             If _employee("EmployeeType").ToString = "Fixed" Then
                 valdaynotax_bon = valdaynotax_bon * workDaysPerYear 'numofweekends
             Else
-                Dim daymultiplier = numofdaypresent.Select($"EmployeeID = '{_payStub.EmployeeID}'")
+                Dim daymultiplier = _numOfDayPresent.Select($"EmployeeID = '{_payStub.EmployeeID}'")
                 For Each drowdaymultip In daymultiplier
                     Dim i_val = CInt(drowdaymultip("DaysAttended"))
                     valdaynotax_bon = valdaynotax_bon * i_val
@@ -849,7 +849,7 @@ Public Class PayrollGeneration
             Dim maritalStatus = _employee("MaritalStatus").ToString
             Dim noOfDependents = _employee("NoOfDependents").ToString
 
-            Dim filingStatus = filingStatuses _
+            Dim filingStatus = _filingStatuses _
                 .Select($"
                     MaritalStatus = '{maritalStatus}' AND
                     Dependent <= '{noOfDependents}'
@@ -862,7 +862,7 @@ Public Class PayrollGeneration
                 filingStatusID = CInt(filingStatus("RowID"))
             End If
 
-            Dim withholdingTaxBracket = withholdingTaxTable.Select($"
+            Dim withholdingTaxBracket = _withholdingTaxTable.Select($"
                     FilingStatusID = '{filingStatusID}' AND
                     PayFrequencyID = '{payFrequencyID}' AND
                     TaxableIncomeFromAmount <= {_payStub.TotalTaxableSalary} AND {_payStub.TotalTaxableSalary} <= TaxableIncomeToAmount
@@ -1003,7 +1003,7 @@ Public Class PayrollGeneration
         End If
 
         ' Let's find this employee's salary to derive the hourly pay
-        Dim salaryAgreement = allSalaries.Select($"EmployeeID = '{employeeID}'") _
+        Dim salaryAgreement = _allSalaries.Select($"EmployeeID = '{employeeID}'") _
             .FirstOrDefault()
 
         Dim basicPay = ValNoComma(salaryAgreement("BasicPay"))
