@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.Linq
+Imports System.IO
 Imports MySql.Data.MySqlClient
 Imports System.Threading
 
@@ -97,6 +98,10 @@ Public Class PayStub
     Dim annualUnusedLeaves As DataTable
 
     Dim n_VeryFirstPayPeriodIDOfThisYear As Object = Nothing
+
+    Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
+
+    Private _loanTransaction As ICollection(Of PayrollSys.LoanTransaction)
 
     Property VeryFirstPayPeriodIDOfThisYear As Object
 
@@ -1928,6 +1933,17 @@ Public Class PayStub
                                           End If
 
                                   End Select
+
+                                  Using context = New PayrollContext()
+                                      Dim query = From l In context.LoanSchedules
+                                                  Select l
+                                                  Where l.OrganizationID = z_OrganizationID And
+                                                      l.DedEffectiveDateFrom <= paypTo And
+                                                      l.Status <> "Cancelled" And
+                                                      l.Status <> "On Hold"
+                                      _loanSchedules = query.ToList()
+                                  End Using
+
                                   '                                   sum_emp_loans
                                   emp_loans = New SQLQueryToDatatable("CALL PAYSTUB_prepare_loans('" & orgztnID & "','" & paypFrom & "','" & paypTo & "','" & paypRowID & "');").ResultTable
 
@@ -2883,6 +2899,7 @@ Public Class PayStub
                                                                               isEndOfMonth,
                                                                               esal_dattab,
                                                                               emp_loans,
+                                                                              _loanSchedules,
                                                                               _allLoanTransactions,
                                                                               emp_bonus,
                                                                               emp_allowanceDaily,

@@ -1,4 +1,5 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Imports System.Collections.ObjectModel
+Imports MySql.Data.MySqlClient
 Imports log4net
 
 Public Class PayrollGeneration
@@ -76,6 +77,7 @@ Public Class PayrollGeneration
     Private _isEndOfMonth As Boolean
     Private _allSalaries As DataTable
     Private _allLoans As DataTable
+    Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
     Private _allLoanTransactions As DataTable
     Private _allBonuses As DataTable
 
@@ -146,6 +148,7 @@ Public Class PayrollGeneration
             payPeriodHalfNo As String,
             allSalaries As DataTable,
             allScheduledLoans As DataTable,
+            loanSchedules As ICollection(Of PayrollSys.LoanSchedule),
             allLoanTransactions As DataTable,
             allBonuses As DataTable,
             allDailyAllowances As DataTable,
@@ -184,6 +187,7 @@ Public Class PayrollGeneration
         isEndOfMonth2 = payPeriodHalfNo
         Me._allSalaries = allSalaries
         Me._allLoans = allScheduledLoans
+        _loanSchedules = loanSchedules
         _allLoanTransactions = allLoanTransactions
         Me._allBonuses = allBonuses
 
@@ -305,6 +309,8 @@ Public Class PayrollGeneration
 
     Private Sub GeneratePayStub(employee As DataRow)
         Dim transaction As MySqlTransaction = Nothing
+        Dim newLoanTransactions = New Collection(Of PayrollSys.LoanTransaction)
+
         Try
             _payStub = New PayStubObject()
 
@@ -318,12 +324,15 @@ Public Class PayrollGeneration
             _hdmfDeductionSchedule = employee("HDMFDeductSched").ToString
             _withholdingTaxSchedule = employee("WTaxDeductSched").ToString
 
+
+
             _payStub.EmployeeID = Trim(CStr(employee("RowID")))
 
             Dim salary = _allSalaries.Select($"EmployeeID = '{_payStub.EmployeeID}'").FirstOrDefault()
             Dim employeeLoans = _allLoans.Select($"EmployeeID = '{_payStub.EmployeeID}'")
 
             Dim loanTransactions = _allLoanTransactions.Select($"EmployeeID = '{_payStub.EmployeeID}'")
+            Dim loanSchedules = _loanSchedules.Where(Function(l) l.EmployeeID = _payStub.EmployeeID)
 
             If loanTransactions.Count > 0 Then
                 _payStub.TotalLoanDeduction = loanTransactions.Aggregate(
@@ -331,6 +340,21 @@ Public Class PayrollGeneration
                     Function(acc, loanDeduction) CDec(loanDeduction("DeductionAmount")) + acc
                 )
             Else
+                For Each loanSchedule In loanSchedules
+                    Dim loanTransaction = New PayrollSys.LoanTransaction() With {
+                        .Created = Date.Now(),
+                        .LastUpd = Date.Now(),
+                        .OrganizationID = z_OrganizationID,
+                        .EmployeeID = _payStub.EmployeeID,
+                        .PayPeriodID = PayPeriodID,
+                        .LoanScheduleID = loanSchedule.RowID,
+                        .LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft - 1,
+                        .TotalBalanceLeft = loanSchedule.TotalBalanceLeft - loanSchedule.DeductionAmount
+                    }
+
+                    newLoanTransactions.Add(loanTransaction)
+                Next
+
                 For Each loan In employeeLoans
                     _payStub.TotalLoanDeduction = ValNoComma(loan("DeductionAmount"))
                 Next
@@ -453,6 +477,11 @@ Public Class PayrollGeneration
             transaction = _connection.BeginTransaction()
             command.CommandTimeout = 5000
             command.CommandType = CommandType.StoredProcedure
+
+            Using context = New PayrollContext()
+                context.LoanTransactions.AddRange(newLoanTransactions)
+                context.SaveChanges()
+            End Using
 
             With command.Parameters
                 .Clear()
