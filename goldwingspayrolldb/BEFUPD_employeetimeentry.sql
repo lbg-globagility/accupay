@@ -271,20 +271,20 @@ INTO rate_this_date;
 
 SELECT SUM(ea.AllowanceAmount)
 FROM employeeallowance ea
-WHERE ea.AllowanceFrequency='Daily'
-    AND ea.TaxableFlag='1'
-    AND ea.EmployeeID=NEW.EmployeeID
-    AND ea.OrganizationID=NEW.OrganizationID
+WHERE ea.AllowanceFrequency = 'Daily'
+    AND ea.TaxableFlag = '1'
+    AND ea.EmployeeID = NEW.EmployeeID
+    AND ea.OrganizationID = NEW.OrganizationID
     AND NEW.`Date` BETWEEN ea.EffectiveStartDate AND ea.EffectiveEndDate
 INTO TaxableDailyAllowanceAmount;
 
 SET rate_this_date = IFNULL(
     (
-        SELECT sh.DivisorToDailyRate - COMPUTE_TimeDifference(sh.BreakTimeFrom,sh.BreakTimeTo)
+        SELECT sh.DivisorToDailyRate - COMPUTE_TimeDifference(sh.BreakTimeFrom, sh.BreakTimeTo)
         FROM employeeshift esh
         INNER JOIN shift sh
-            ON sh.RowID=esh.ShiftID
-        WHERE esh.RowID=NEW.EmployeeShiftID
+            ON sh.RowID = esh.ShiftID
+        WHERE esh.RowID = NEW.EmployeeShiftID
     ),
     0
 );

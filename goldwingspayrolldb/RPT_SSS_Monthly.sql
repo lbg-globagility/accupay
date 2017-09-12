@@ -10,6 +10,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_SSS_Monthly`(
 	IN `OrganizID` INT,
 	IN `paramDate` DATE
 
+
+
 )
     DETERMINISTIC
 BEGIN
@@ -24,12 +26,12 @@ BEGIN
         employee.SSSNo,
         CONCAT(
             employee.LastName,
-            ',',
+            ', ',
             employee.FirstName,
             IF(
                 employee.MiddleName = '',
                 '',
-                ','
+                ' '
             ),
             INITIALS(employee.MiddleName, '. ', '1')
         ) AS Fullname,
@@ -38,7 +40,7 @@ BEGIN
         paysocialsecurity.EmployeeECAmount,
         (paystubsummary.TotalEmpSSS + paystubsummary.TotalCompSSS) AS Total
     FROM employee
-    INNER JOIN (
+    LEFT JOIN (
         SELECT
             SUM(paystub.TotalEmpSSS) AS TotalEmpSSS,
             SUM(paystub.TotalCompSSS) AS TotalCompSSS,
@@ -53,8 +55,10 @@ BEGIN
         GROUP BY paystub.EmployeeID
     ) paystubsummary
     ON paystubsummary.EmployeeID = employee.RowID
-    INNER JOIN paysocialsecurity
-    ON paysocialsecurity.EmployeeContributionAmount = paystubsummary.TotalEmpSSS;
+    LEFT JOIN paysocialsecurity
+    ON paysocialsecurity.EmployeeContributionAmount = paystubsummary.TotalEmpSSS
+    WHERE employee.OrganizationID = OrganizID
+    ORDER BY employee.LastName, employee.FirstName;
 
 END//
 DELIMITER ;

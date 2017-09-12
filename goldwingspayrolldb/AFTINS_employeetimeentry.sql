@@ -244,7 +244,7 @@ VALUES (
     NEW.HolidayPayAmount + (NEW.HolidayPayAmount * actualrate),
     NEW.BasicDayPay + (NEW.BasicDayPay * actualrate),
     NEW.RestDayHours,
-    New.RestDayAmount + (NEW.BasicDayPay * actualrate)
+    New.RestDayAmount + (NEW.RestDayAmount * actualrate)
 )
 ON DUPLICATE KEY
 UPDATE
