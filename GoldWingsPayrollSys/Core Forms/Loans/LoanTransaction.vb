@@ -6,6 +6,7 @@ Namespace Global.PayrollSys
     <Table("scheduledloansperpayperiod")>
     Public Class LoanTransaction
 
+        <Key>
         Public Property RowID As Integer?
 
         Public Property Created As Date
@@ -16,12 +17,13 @@ Namespace Global.PayrollSys
 
         Public Property LastUpdBy As Integer?
 
-        Public Property OrganizatonID As Integer?
+        Public Property OrganizationID As Integer?
 
-        Public Property PayPeriod As Integer?
+        Public Property PayPeriodID As Integer?
 
         Public Property EmployeeID As Integer?
 
+        <Column("EmployeeLoanRecordID")>
         Public Property LoanScheduleID As Integer?
 
         Public Property LoanPayPeriodLeft As Integer

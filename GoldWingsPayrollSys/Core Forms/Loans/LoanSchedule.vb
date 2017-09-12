@@ -1,10 +1,12 @@
-﻿Imports System.ComponentModel.DataAnnotations.Schema
+﻿Imports System.ComponentModel.DataAnnotations
+Imports System.ComponentModel.DataAnnotations.Schema
 
 Namespace Global.PayrollSys
 
     <Table("employeeloanschedule")>
     Public Class LoanSchedule
 
+        <Key>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?
