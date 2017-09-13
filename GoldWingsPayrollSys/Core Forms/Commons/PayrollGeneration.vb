@@ -77,11 +77,10 @@ Public Class PayrollGeneration
     Private _isEndOfMonth As Boolean
     Private _allSalaries As DataTable
 
-    Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
+    Private _allLoanSchedules As ICollection(Of PayrollSys.LoanSchedule)
 
-    Private _loanTransactions As ICollection(Of PayrollSys.LoanTransaction)
+    Private _allLoanTransactions As ICollection(Of PayrollSys.LoanTransaction)
 
-    Private _allLoanTransactions As DataTable
     Private _allBonuses As DataTable
 
     Private allOneTimeAllowances As DataTable
@@ -150,9 +149,8 @@ Public Class PayrollGeneration
     Sub New(employees As DataTable,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
-            loanSchedules As ICollection(Of PayrollSys.LoanSchedule),
-            loanTransactions As ICollection(Of PayrollSys.LoanTransaction),
-            allLoanTransactions As DataTable,
+            allLoanSchedules As ICollection(Of PayrollSys.LoanSchedule),
+            allLoanTransactions As ICollection(Of PayrollSys.LoanTransaction),
             allBonuses As DataTable,
             allDailyAllowances As DataTable,
             allMonthlyAllowances As DataTable,
@@ -189,8 +187,7 @@ Public Class PayrollGeneration
         _employees = employees
         isEndOfMonth2 = payPeriodHalfNo
         Me._allSalaries = allSalaries
-        _loanSchedules = loanSchedules
-        _loanTransactions = loanTransactions
+        _allLoanSchedules = allLoanSchedules
         _allLoanTransactions = allLoanTransactions
         Me._allBonuses = allBonuses
 
@@ -333,12 +330,12 @@ Public Class PayrollGeneration
 
             Dim salary = _allSalaries.Select($"EmployeeID = '{_payStub.EmployeeID}'").FirstOrDefault()
 
-            Dim loanTransactions = _loanTransactions.Where(Function(t) t.EmployeeID = _payStub.EmployeeID)
+            Dim loanTransactions = _allLoanTransactions.Where(Function(t) t.EmployeeID = _payStub.EmployeeID)
 
             If loanTransactions.Count > 0 Then
                 _payStub.TotalLoanDeduction = loanTransactions.Aggregate(0D, Function(total, t) total + t.DeductionAmount)
             Else
-                Dim loanSchedules = _loanSchedules.Where(Function(l) l.EmployeeID = _payStub.EmployeeID)
+                Dim loanSchedules = _allLoanSchedules.Where(Function(l) l.EmployeeID = _payStub.EmployeeID)
 
                 For Each loanSchedule In loanSchedules
                     Dim loanTransaction = New PayrollSys.LoanTransaction() With {

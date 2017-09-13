@@ -1513,8 +1513,6 @@ Public Class PayStub
 
     Dim etent_totdaypay As New DataTable
 
-    Private _allLoanTransactions As DataTable
-
     Dim emp_bonus As New DataTable
 
     Dim emp_bonusDaily As New DataTable
@@ -1698,29 +1696,6 @@ Public Class PayStub
 
                                   etent_totdaypay = New SqlToDataTable(timeEntrySql).Read()
                                   'etent_totdaypay = New SQLQueryToDatatable(timeEntrySql).ResultTable
-
-                                  Dim sql = $"
-                                    SELECT
-                                        scheduledloansperpayperiod.RowID,
-                                        scheduledloansperpayperiod.Created,
-                                        scheduledloansperpayperiod.CreatedBy,
-                                        scheduledloansperpayperiod.LastUpd,
-                                        scheduledloansperpayperiod.LastUpdBy,
-                                        scheduledloansperpayperiod.OrganizationID,
-                                        scheduledloansperpayperiod.PayPeriodID,
-                                        scheduledloansperpayperiod.EmployeeID,
-                                        scheduledloansperpayperiod.EmployeeLoanRecordID,
-                                        scheduledloansperpayperiod.LoanPayPeriodLeft,
-                                        scheduledloansperpayperiod.TotalBalanceLeft,
-                                        employeeloanschedule.DeductionAmount
-                                    FROM scheduledloansperpayperiod
-                                    INNER JOIN employeeloanschedule
-                                    ON employeeloanschedule.RowID = scheduledloansperpayperiod.EmployeeLoanRecordID
-                                    WHERE scheduledloansperpayperiod.PayPeriodID = '{paypRowID}'
-                                  "
-
-                                  Dim scheduledLoansQuery = New SqlToDataTable(sql)
-                                  _allLoanTransactions = scheduledLoansQuery.Read()
 
                                   Dim sum_emp_loans = String.Empty
 
@@ -2478,7 +2453,6 @@ Public Class PayStub
                                                                               esal_dattab,
                                                                               _loanSchedules,
                                                                               _loanTransactions,
-                                                                              _allLoanTransactions,
                                                                               emp_bonus,
                                                                               emp_allowanceDaily,
                                                                               emp_allowanceMonthly,
