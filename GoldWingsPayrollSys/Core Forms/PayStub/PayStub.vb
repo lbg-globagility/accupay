@@ -101,7 +101,7 @@ Public Class PayStub
 
     Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
 
-    Private _loanTransaction As ICollection(Of PayrollSys.LoanTransaction)
+    Private _loanTransactions As ICollection(Of PayrollSys.LoanTransaction)
 
     Property VeryFirstPayPeriodIDOfThisYear As Object
 
@@ -1942,6 +1942,14 @@ Public Class PayStub
                                       _loanSchedules = query.ToList()
                                   End Using
 
+                                  Using context = New PayrollContext()
+                                      Dim query = From t In context.LoanTransactions
+                                                  Select t
+                                                  Where t.OrganizationID = z_OrganizationID And
+                                                      t.PayPeriodID = paypRowID
+                                      _loanTransactions = query.ToList()
+                                  End Using
+
                                   '"SELECT SUM((COALESCE(TotalLoanAmount,0) - COALESCE(TotalBalanceLeft,0))) 'TotalLoanAmount'" &
                                   '",SUM(DeductionAmount) 'DeductionAmount'" &
                                   '",EmployeeID" &
@@ -2894,6 +2902,7 @@ Public Class PayStub
                                                                               isEndOfMonth,
                                                                               esal_dattab,
                                                                               _loanSchedules,
+                                                                              _loanTransactions,
                                                                               _allLoanTransactions,
                                                                               emp_bonus,
                                                                               emp_allowanceDaily,
