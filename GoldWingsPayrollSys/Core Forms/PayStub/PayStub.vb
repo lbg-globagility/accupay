@@ -1515,8 +1515,6 @@ Public Class PayStub
 
     Private _allLoanTransactions As DataTable
 
-    Dim emp_loans As New DataTable
-
     Dim emp_bonus As New DataTable
 
     Dim emp_bonusDaily As New DataTable
@@ -1943,9 +1941,6 @@ Public Class PayStub
                                                       l.Status <> "On Hold"
                                       _loanSchedules = query.ToList()
                                   End Using
-
-                                  '                                   sum_emp_loans
-                                  emp_loans = New SQLQueryToDatatable("CALL PAYSTUB_prepare_loans('" & orgztnID & "','" & paypFrom & "','" & paypTo & "','" & paypRowID & "');").ResultTable
 
                                   '"SELECT SUM((COALESCE(TotalLoanAmount,0) - COALESCE(TotalBalanceLeft,0))) 'TotalLoanAmount'" &
                                   '",SUM(DeductionAmount) 'DeductionAmount'" &
@@ -2898,7 +2893,6 @@ Public Class PayStub
                             Dim n_PayrollGeneration As New PayrollGeneration(dt,
                                                                               isEndOfMonth,
                                                                               esal_dattab,
-                                                                              emp_loans,
                                                                               _loanSchedules,
                                                                               _allLoanTransactions,
                                                                               emp_bonus,
@@ -3497,8 +3491,6 @@ Public Class PayStub
             etent_dattab = Nothing
 
             etent_totdaypay = Nothing
-
-            emp_loans = Nothing
 
             emp_bonus = Nothing
 

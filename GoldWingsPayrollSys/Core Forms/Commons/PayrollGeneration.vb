@@ -149,7 +149,6 @@ Public Class PayrollGeneration
     Sub New(employees As DataTable,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
-            allScheduledLoans As DataTable,
             loanSchedules As ICollection(Of PayrollSys.LoanSchedule),
             allLoanTransactions As DataTable,
             allBonuses As DataTable,
@@ -188,7 +187,6 @@ Public Class PayrollGeneration
         _employees = employees
         isEndOfMonth2 = payPeriodHalfNo
         Me._allSalaries = allSalaries
-        Me._allLoans = allScheduledLoans
         _loanSchedules = loanSchedules
         _allLoanTransactions = allLoanTransactions
         Me._allBonuses = allBonuses
