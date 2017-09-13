@@ -421,6 +421,8 @@ Public Class PayrollGeneration
 
                         grossIncomeLastPayPeriod = basicPay + previousOvertimePay + previousNightDiffPay + previousNightDiffOTPay
 
+                        _payStub.TotalTaxableSalary = basicPay
+
                     ElseIf employmentType = SalaryType.Monthly Then
 
                         If skipGovernmentDeductions Then
