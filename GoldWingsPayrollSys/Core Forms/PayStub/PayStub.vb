@@ -1639,40 +1639,12 @@ Public Class PayStub
 
         Task.Factory.StartNew(Sub()
 
-                                  'RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
-                                  ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
-                                  'If dgvpayper.RowCount = 0 Then
-                                  '    'Exit Sub
-                                  'End If
-
                                   If paypFrom = Nothing _
                                       And paypTo = Nothing Then
                                       Exit Sub
                                   End If
 
                                   Dim _bool As Boolean = False
-
-                                  ''###### CONTROL DISABLER ######
-                                  'Me.Enabled = _bool
-                                  'PayrollForm.MenuStrip1.Enabled = _bool
-                                  'MDIPrimaryForm.Showmainbutton.Enabled = _bool
-                                  'ToolStrip1.Enabled = _bool
-                                  'MDIPrimaryForm.systemprogressbar.Value = 0
-                                  'MDIPrimaryForm.systemprogressbar.Visible = CBool(Not _bool)
-                                  'Panel5.Enabled = _bool
-
-
-                                  'Dim prompt = MessageBox.Show("Begin generate payroll from " & Format(CDate(paypFrom), "MMM-d-yyyy") & " to " & Format(CDate(paypTo), "MMM-d-yyyy") & " ?", "Generate payroll", MessageBoxButtons.YesNoCancel)
-                                  ''MsgBox("Employee time entry from " & paypFrom & " to " & paypTo & " is not yet prepared.", MsgBoxStyle.Information)
-
-
-                                  'If prompt = Windows.Forms.DialogResult.Yes Then
-
-                                  'numofweekdays = 0
-
-                                  'Dim date_diff = DateDiff(DateInterval.Day, CDate(paypFrom), CDate(paypTo))
 
                                   etent_dattab = New SQLQueryToDatatable("SELECT RowID,OrganizationID,Created,CreatedBy,COALESCE(LastUpd,'') 'LastUpd',COALESCE(LastUpdBy,'') 'LastUpdBy',Date,COALESCE(EmployeeShiftID,'') 'EmployeeShiftID',COALESCE(EmployeeID,'') 'EmployeeID',COALESCE(EmployeeSalaryID,'') 'EmployeeSalaryID',COALESCE(EmployeeFixedSalaryFlag,0) '',COALESCE(RegularHoursWorked,0) 'RegularHoursWorked',COALESCE(OvertimeHoursWorked,0) 'OvertimeHoursWorked',COALESCE(UndertimeHours,0) 'UndertimeHours',COALESCE(NightDifferentialHours,0) 'NightDifferentialHours',COALESCE(NightDifferentialOTHours,0) 'NightDifferentialOTHours',COALESCE(HoursLate,0) 'HoursLate',COALESCE(LateFlag,0) 'LateFlag',COALESCE(PayRateID,'') 'PayRateID',COALESCE(VacationLeaveHours,0) 'VacationLeaveHours',COALESCE(SickLeaveHours,0) 'SickLeaveHours',COALESCE(TotalDayPay,0) 'TotalDayPay'" &
                                                               " FROM employeetimeentry" &
@@ -1683,57 +1655,7 @@ Public Class PayStub
                                                               " ORDER BY Date;").ResultTable
 
                                   'OvertimeHoursAmount,NightDiffHoursAmount,NightDiffOTHoursAmount
-
-
-                                  'employee
-                                  'EMPLOYEE_payrollgen
-                                  'Dim ib = InputBox("Please input Employee ID", "title", 0)
-                                  'NULL, '" & ib.Trim & "'
-                                  '#############################################
-                                  '#############################################
-                                  'employee_dattab = New SQLQueryToDatatable("CALL EMPLOYEE_payrollgen('" & orgztnID & "', '" & paypFrom & "', '" & paypTo & "', NULL);").ResultTable
-                                  '#############################################
-                                  '#############################################
-                                  'employee_dattab = New SQLQueryToDatatable("SELECT e.*" &
-                                  '                                ",IF(e.AgencyID IS NOT NULL, IFNULL(d.PhHealthDeductSchedAgency,d.PhHealthDeductSched), d.PhHealthDeductSched) AS PhHealthDeductSched" &
-                                  '                                ",IF(e.AgencyID IS NOT NULL, IFNULL(d.HDMFDeductSchedAgency,d.HDMFDeductSched), d.HDMFDeductSched) AS HDMFDeductSched" &
-                                  '                                ",IF(e.AgencyID IS NOT NULL, IFNULL(d.SSSDeductSchedAgency,d.SSSDeductSched), d.SSSDeductSched) AS SSSDeductSched" &
-                                  '                                ",IF(e.AgencyID IS NOT NULL, IFNULL(d.WTaxDeductSchedAgency,d.WTaxDeductSched), d.WTaxDeductSched) AS WTaxDeductSched" &
-                                  '                                ",PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) 'PAYFREQUENCY_DIVISOR'" &
-                                  '                                ",GET_employeerateperday(e.RowID, e.OrganizationID, '" & paypTo & "') 'EmpRatePerDay'" &
-                                  '                                ",d.MinimumWageAmount" &
-                                  '                                ",(e.StartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "') AS IsFirstTimeSalary" &
-                                  '                                ",GET_employeeStartingAttendanceCount(e.RowID,'" & paypFrom & "','" & paypTo & "') AS StartingAttendanceCount" &
-                                  '                                " FROM" &
-                                  '                                " employee e LEFT JOIN employeesalary esal ON e.RowID=esal.EmployeeID" &
-                                  '                                " LEFT JOIN position p ON p.RowID=e.PositionID" &
-                                  '                                " LEFT JOIN `division` d ON d.RowID=p.DivisionId" &
-                                  '                                " LEFT JOIN agency ag ON ag.RowID=e.AgencyID" &
-                                  '                                " INNER JOIN payfrequency pf ON pf.RowID=e.PayFrequencyID" &
-                                  '                                " WHERE e.OrganizationID=" & orgztnID & _
-                                  '                                " AND '" & paypTo & "' BETWEEN esal.EffectiveDateFrom AND COALESCE(esal.EffectiveDateTo,'" & paypTo & "')" &
-                                  '                                " GROUP BY e.RowID" &
-                                  '                                " ORDER BY e.RowID DESC;").ResultTable
-                                  '",IFNULL(dmw.Amount,481.0) AS MinimumWageAmount" &
-                                  '" LEFT JOIN divisionminimumwage dmw ON dmw.OrganizationID=e.OrganizationID AND dmw.DivisionID=d.RowID AND '" & paypTo & "' BETWEEN dmw.EffectiveDateFrom AND dmw.EffectiveDateTo" &
                                   Dim double_value = ValNoComma(0)
-                                  ''employeetimeentry - ORIGINAL
-                                  '    etent_totdaypay = retAsDatTbl("SELECT SUM(COALESCE(TotalDayPay,0)) 'TotalDayPay'" &
-                                  '                                  ",EmployeeID" &
-                                  '                                  ",Date" &
-                                  '                                  ",SUM(COALESCE(RegularHoursAmount,0)) 'RegularHoursAmount'" &
-                                  '                                  ",SUM(COALESCE(OvertimeHoursAmount,0)) 'OvertimeHoursAmount'" &
-                                  '                                  ",SUM(COALESCE(UndertimeHoursAmount,0)) 'UndertimeHoursAmount'" &
-                                  '                                  ",SUM(COALESCE(NightDiffHoursAmount,0)) 'NightDiffHoursAmount'" &
-                                  '                                  ",SUM(COALESCE(NightDiffOTHoursAmount,0)) 'NightDiffOTHoursAmount'" &
-                                  '                                  ",SUM(COALESCE(HoursLateAmount,0)) 'HoursLateAmount'" &
-                                  '                                  " FROM employeetimeentry" &
-                                  '                                  " WHERE OrganizationID=" & orgztnID & _
-                                  '                                  " AND Date" &
-                                  '                                  " BETWEEN '" & paypFrom & "'" &
-                                  '                                  " AND '" & paypTo & "'" &
-                                  '                                  " GROUP BY EmployeeID" &
-                                  '                                  " ORDER BY EmployeeID;")
 
                                   'employeetimeentry - EXPERIMENT
                                   Dim timeEntrySql = <![CDATA[
@@ -1757,34 +1679,15 @@ Public Class PayStub
                                         SUM(COALESCE(ete.HoursLateAmount, 0)) 'HoursLateAmount',
                                         SUM(COALESCE(ete.UndertimeHours, 0)) 'UndertimeHours',
                                         SUM(COALESCE(ete.UndertimeHoursAmount, 0)) 'UndertimeHoursAmount',
-                                        SUM(COALESCE(ete.Absent, 0)) AS 'Absent',
-                                        IFNULL(emt.emtAmount,0) AS emtAmount
+                                        SUM(COALESCE(ete.Absent, 0)) AS 'Absent'
                                     FROM employeetimeentry ete
                                     LEFT JOIN employee e
-                                        ON e.RowID = ete.EmployeeID
+                                    ON e.RowID = ete.EmployeeID
                                     LEFT JOIN payrate pr
-                                        ON pr.RowID = ete.PayRateID
-                                        AND pr.OrganizationID = ete.OrganizationID
-                                    LEFT JOIN (
-                                            SELECT
-                                                ete.RowID,
-                                                e.RowID AS eRowID,
-                                                (SUM(ete.RegularHoursAmount) * (pr.`PayRate` - 1.0)) AS emtAmount
-                                            FROM employeetimeentry ete
-                                            INNER JOIN employee e
-                                                ON e.RowID=ete.EmployeeID
-                                                AND e.OrganizationID=ete.OrganizationID
-                                                AND (e.CalcSpecialHoliday='1' OR e.CalcHoliday='1')
-                                            INNER JOIN payrate pr
-                                                ON pr.RowID=ete.PayRateID
-                                                AND pr.PayType!='Regular Day'
-                                            WHERE ete.OrganizationID='@OrganizationID'
-                                              AND ete.`Date` BETWEEN '@DateFrom' AND '@DateTo'
-                                        ) emt
-                                        ON emt.RowID IS NOT NULL
-                                        AND emt.eRowID=ete.EmployeeID
-                                    WHERE ete.OrganizationID='@OrganizationID'
-                                        AND ete.Date BETWEEN IF('@DateFrom' < e.StartDate, e.StartDate, '@DateFrom') AND '@DateTo'
+                                    ON pr.RowID = ete.PayRateID AND
+                                        pr.OrganizationID = ete.OrganizationID
+                                    WHERE ete.OrganizationID='@OrganizationID' AND
+                                        ete.Date BETWEEN IF('@DateFrom' < e.StartDate, e.StartDate, '@DateFrom') AND '@DateTo'
                                     GROUP BY ete.EmployeeID
                                     ORDER BY ete.EmployeeID;
                                   ]]>.Value
@@ -1795,21 +1698,6 @@ Public Class PayStub
 
                                   etent_totdaypay = New SqlToDataTable(timeEntrySql).Read()
                                   'etent_totdaypay = New SQLQueryToDatatable(timeEntrySql).ResultTable
-
-                                  ''SELECT SUM(COALESCE(ete.TotalDayPay,0)) 'TotalDayPay',ete.EmployeeID , ete.DATE, SUM(COALESCE(ete.RegularHoursAmount,0)) 'RegularHoursAmount', SUM(COALESCE(ete.OvertimeHoursAmount,0)) 'OvertimeHoursAmount', SUM(COALESCE(ete.UndertimeHoursAmount,0)) 'UndertimeHoursAmount', SUM(COALESCE(ete.NightDiffHoursAmount,0)) 'NightDiffHoursAmount', SUM(COALESCE(ete.NightDiffOTHoursAmount,0)) 'NightDiffOTHoursAmount', SUM(COALESCE(ete.HoursLateAmount,0)) 'HoursLateAmount' FROM employeetimeentry ete LEFT JOIN employee e ON e.RowID=ete.EmployeeID WHERE ete.OrganizationID=2 AND ete.DATE BETWEEN IF('2015-06-01' < e.StartDate, e.StartDate, '2015-06-01') AND '2015-06-15' GROUP BY ete.EmployeeID ORDER BY ete.EmployeeID;
-
-                                  ''employeeloans
-                                  'emp_loans = retAsDatTbl("SELECT SUM((COALESCE(TotalLoanAmount,0) - COALESCE(TotalBalanceLeft,0))) 'TotalLoanAmount'" &
-                                  '                        ",SUM(DeductionAmount) 'DeductionAmount'" &
-                                  '                        ",EmployeeID" &
-                                  '                        " FROM employeeloanschedule" &
-                                  '                        " WHERE OrganizationID=" & orgztnID & _
-                                  '                        " AND IF('" & paypFrom & "' < DedEffectiveDateFrom AND '" & paypTo & "' < DedEffectiveDateTo, DedEffectiveDateFrom>='" & paypFrom & "' AND DedEffectiveDateTo>='" & paypTo & "', DedEffectiveDateFrom<='" & paypFrom & "' AND DedEffectiveDateTo>='" & paypTo & "')" &
-                                  '                        " AND Status='In Progress'" &
-                                  '                        " GROUP BY EmployeeID" &
-                                  '                        " ORDER BY EmployeeID;")
-
-                                  'employeeloans
 
                                   Dim sql = $"
                                     SELECT
@@ -1950,29 +1838,6 @@ Public Class PayStub
                                       _loanTransactions = query.ToList()
                                   End Using
 
-                                  '"SELECT SUM((COALESCE(TotalLoanAmount,0) - COALESCE(TotalBalanceLeft,0))) 'TotalLoanAmount'" &
-                                  '",SUM(DeductionAmount) 'DeductionAmount'" &
-                                  '",EmployeeID" &
-                                  '" FROM employeeloanschedule" &
-                                  '" WHERE OrganizationID=" & orgztnID & _
-                                  '" AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                  '" ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                  '" ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                  '" AND Status='In Progress'" &
-                                  '" AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                  '" GROUP BY EmployeeID" &
-                                  '" ORDER BY EmployeeID;"
-
-
-
-
-                                  '" AND IF('" & paypFrom & "' < DedEffectiveDateFrom AND '" & paypTo & "' < DedEffectiveDateTo, DedEffectiveDateFrom>='" & paypFrom & "' AND DedEffectiveDateTo>='" & paypTo & "', DedEffectiveDateFrom<='" & paypFrom & "' AND DedEffectiveDateTo<='" & paypTo & "')" &
-
-                                  '" AND DedEffectiveDateFrom>='" & paypFrom & "'" &
-                                  '" AND DedEffectiveDateTo<='" & paypTo & "'" &
-
-                                  'employeeloans
-
                                   Dim segregate_emp_loan = String.Empty
 
                                   Select Case PayFreqRowID
@@ -2058,25 +1923,6 @@ Public Class PayStub
 
                                   eloans = retAsDatTbl(segregate_emp_loan) 'LoanPayPeriodLeft
 
-                                  '"SELECT LoanTypeID,DeductionAmount,DeductionPercentage,EmployeeID,IF(LoanPayPeriodLeft BETWEEN 1 AND 1.99, '1', '0') 'LoanDueDate',TotalLoanAmount,DeductionAmount,NoOfPayPeriod" &
-                                  '" FROM employeeloanschedule" &
-                                  '" WHERE OrganizationID=" & orgztnID & _
-                                  '" AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                  '" ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                  '" ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                  '" AND Status='In Progress'" &
-                                  '" AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                  '" ORDER BY LoanTypeID;"
-
-
-
-                                  '" ,IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "')" &
-
-                                  '" AND IF('" & paypFrom & "' < DedEffectiveDateFrom AND '" & paypTo & "' < DedEffectiveDateTo, DedEffectiveDateFrom>='" & paypFrom & "' AND DedEffectiveDateTo>='" & paypTo & "', DedEffectiveDateFrom<='" & paypFrom & "' AND DedEffectiveDateTo>='" & paypTo & "')" &
-
-                                  '" AND DedEffectiveDateFrom>='" & paypFrom & "'" &
-                                  '" AND DedEffectiveDateTo<='" & paypTo & "'" &
-
                                   'employeebonus
                                   emp_bonus = retAsDatTbl("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'" &
                                                           ",EmployeeID" &
@@ -2095,75 +1941,12 @@ Public Class PayStub
                                       'allowfreq : Daily'Monthly'One time'Semi-monthly'Weely
                                   End If
 
-                                  'employeeallownce - Daily
-                                  'emp_allowanceDaily = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='1'" &
-                                  '                              " AND AllowanceFrequency='" & dailyallowfreq & "'" &
-                                  '                              " AND EffectiveStartDate>='" & paypFrom & "'" &
-                                  '                              " AND EffectiveEndDate<='" & paypTo & "'" &
-                                  '                              " GROUP BY EmployeeID;")
-
-                                  'emp_allowanceDaily = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount'" &
-                                  '                              ",EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='1'" &
-                                  '                              " AND AllowanceFrequency='" & dailyallowfreq & "'" &
-                                  '                              " AND IF(DATEDIFF(COALESCE(EffectiveEndDate,EffectiveStartDate),EffectiveStartDate) > DATEDIFF('" & paypTo & "','" & paypFrom & "')" &
-                                  '                              ",EffectiveStartDate<='" & paypFrom & "' AND EffectiveEndDate>='" & paypTo & "'" &
-                                  '                              ",EffectiveStartDate>='" & paypFrom & "' AND EffectiveEndDate<='" & paypTo & "')" &
-                                  '                              " GROUP BY EmployeeID;")
-
-                                  '",(DATEDIFF('" & paypTo & "',EffectiveStartDate) + 1) 'allowmultiplier'" &
-
-                                  'emp_allowanceDaily = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount'" &
-                                  '                              ",EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='1'" &
-                                  '                              " AND AllowanceFrequency='" & dailyallowfreq & "'" &
-                                  '                              " AND IF(EffectiveStartDate > '" & paypFrom & "' AND EffectiveEndDate > '" & paypTo & "'" &
-                                  '                              ", EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveStartDate < '" & paypFrom & "' AND EffectiveEndDate < '" & paypTo & "'" &
-                                  '                              ", EffectiveEndDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveStartDate <= '" & paypFrom & "' AND EffectiveEndDate >= '" & paypTo & "'" &
-                                  '                              ", '" & paypTo & "' BETWEEN EffectiveStartDate AND EffectiveEndDate" &
-                                  '                              ", IF(EffectiveStartDate >= '" & paypFrom & "' AND EffectiveEndDate <= '" & paypTo & "'" &
-                                  '                              ", EffectiveEndDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveEndDate IS NULL" &
-                                  '                              ", EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", EffectiveStartDate >= '" & paypFrom & "' AND EffectiveEndDate <= '" & paypTo & "'" &
-                                  '                              ")))))" &
-                                  '                              " GROUP BY EmployeeID;")
-
                                   emp_allowanceDaily = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
                                                                                        orgztnID,
                                                                                        "Daily",
                                                                                        "1",
                                                                                        paypFrom,
                                                                                        paypTo).ResultTable
-
-                                  'notax_allowanceDaily = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount'" &
-                                  '                              ",EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='0'" &
-                                  '                              " AND AllowanceFrequency='" & dailyallowfreq & "'" &
-                                  '                              " AND IF(EffectiveStartDate > '" & paypFrom & "' AND EffectiveEndDate > '" & paypTo & "'" &
-                                  '                              ", EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveStartDate < '" & paypFrom & "' AND EffectiveEndDate < '" & paypTo & "'" &
-                                  '                              ", EffectiveEndDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveStartDate <= '" & paypFrom & "' AND EffectiveEndDate >= '" & paypTo & "'" &
-                                  '                              ", '" & paypTo & "' BETWEEN EffectiveStartDate AND EffectiveEndDate" &
-                                  '                              ", IF(EffectiveStartDate >= '" & paypFrom & "' AND EffectiveEndDate <= '" & paypTo & "'" &
-                                  '                              ", EffectiveEndDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveEndDate IS NULL" &
-                                  '                              ", EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", EffectiveStartDate >= '" & paypFrom & "' AND EffectiveEndDate <= '" & paypTo & "'" &
-                                  '                              ")))))" &
-                                  '                              " GROUP BY EmployeeID;")
 
                                   notax_allowanceDaily = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
                                                                                        orgztnID,
@@ -2220,73 +2003,12 @@ Public Class PayStub
                                       monthlyallowfreq = If(allowfreq.Item(1).ToString = "", "Monthly", allowfreq.Item(1).ToString)
                                   End If
 
-                                  'employeeallownce - Monthly
-                                  'emp_allowanceMonthly = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='1'" &
-                                  '                              " AND AllowanceFrequency='" & monthlyallowfreq & "'" &
-                                  '                              " AND EffectiveStartDate>='" & paypFrom & "'" &
-                                  '                              " AND EffectiveEndDate<='" & paypTo & "'" &
-                                  '                              " AND DATEDIFF(CURRENT_DATE(),EffectiveStartDate)>=0" &
-                                  '                              " GROUP BY EmployeeID" &
-                                  '                              " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
-
-                                  'emp_allowanceMonthly = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='1'" &
-                                  '                              " AND AllowanceFrequency='" & monthlyallowfreq & "'" &
-                                  '                              " AND '" & If(paypTo = Nothing, paypFrom, paypTo) & "' BETWEEN EffectiveStartDate AND EffectiveEndDate" &
-                                  '                              " GROUP BY EmployeeID" &
-                                  '                              " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
-
-                                  'emp_allowanceMonthly = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='1'" &
-                                  '                              " AND AllowanceFrequency='" & monthlyallowfreq & "'" &
-                                  '                              " AND IF(EffectiveStartDate > '" & paypFrom & "' AND EffectiveEndDate > '" & paypTo & "'" &
-                                  '                              ", EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveStartDate < '" & paypFrom & "' AND EffectiveEndDate < '" & paypTo & "'" &
-                                  '                              ", EffectiveEndDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveStartDate <= '" & paypFrom & "' AND EffectiveEndDate >= '" & paypTo & "'" &
-                                  '                              ", '" & paypTo & "' BETWEEN EffectiveStartDate AND EffectiveEndDate" &
-                                  '                              ", IF(EffectiveStartDate >= '" & paypFrom & "' AND EffectiveEndDate <= '" & paypTo & "'" &
-                                  '                              ", EffectiveEndDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveEndDate IS NULL" &
-                                  '                              ", EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", EffectiveStartDate >= '" & paypFrom & "' AND EffectiveEndDate <= '" & paypTo & "'" &
-                                  '                              ")))))" &
-                                  '                              " GROUP BY EmployeeID" &
-                                  '                              " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
-
                                   emp_allowanceMonthly = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
                                                                                        orgztnID,
                                                                                        "Monthly",
                                                                                        "1",
                                                                                        paypFrom,
                                                                                        paypTo).ResultTable
-
-                                  'notax_allowanceMonthly = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='0'" &
-                                  '                              " AND AllowanceFrequency='" & monthlyallowfreq & "'" &
-                                  '                              " AND IF(EffectiveStartDate > '" & paypFrom & "' AND EffectiveEndDate > '" & paypTo & "'" &
-                                  '                              ", EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveStartDate < '" & paypFrom & "' AND EffectiveEndDate < '" & paypTo & "'" &
-                                  '                              ", EffectiveEndDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveStartDate <= '" & paypFrom & "' AND EffectiveEndDate >= '" & paypTo & "'" &
-                                  '                              ", '" & paypTo & "' BETWEEN EffectiveStartDate AND EffectiveEndDate" &
-                                  '                              ", IF(EffectiveStartDate >= '" & paypFrom & "' AND EffectiveEndDate <= '" & paypTo & "'" &
-                                  '                              ", EffectiveEndDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", IF(EffectiveEndDate IS NULL" &
-                                  '                              ", EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              ", EffectiveStartDate >= '" & paypFrom & "' AND EffectiveEndDate <= '" & paypTo & "'" &
-                                  '                              ")))))" &
-                                  '                              " GROUP BY EmployeeID" &
-                                  '                              " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
 
                                   notax_allowanceMonthly = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
                                                                                        orgztnID,
@@ -2345,17 +2067,6 @@ Public Class PayStub
                                       onceallowfreq = If(allowfreq.Item(2).ToString = "", "One time", allowfreq.Item(2).ToString)
                                   End If
 
-                                  'employeeallownce - One time
-                                  'emp_allowanceOnce = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='1'" &
-                                  '                              " AND AllowanceFrequency='" & onceallowfreq & "'" &
-                                  '                              " AND EffectiveStartDate='" & paypFrom & "'" &
-                                  '                              " AND DATEDIFF(CURRENT_DATE(),EffectiveStartDate)>=0" &
-                                  '                              " GROUP BY EmployeeID" &
-                                  '                              " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
-
                                   emp_allowanceOnce = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
                                                                 " FROM employeeallowance" &
                                                                 " WHERE OrganizationID=" & orgztnID &
@@ -2394,21 +2105,11 @@ Public Class PayStub
                                                                 " GROUP BY EmployeeID" &
                                                                 " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
 
-
-
-
-                                  'allowfreq : Daily'Monthly'One time'Semi-monthly'Weekly
-
                                   Dim semimallowfreq = "Semi-monthly"
 
                                   If allowfreq.Count <> 0 Then
                                       semimallowfreq = If(allowfreq.Item(3).ToString = "", "Semi-monthly", allowfreq.Item(3).ToString)
                                   End If
-
-                                  'emp_allowanceSemiM
-                                  'notax_allowanceSemiM
-                                  'emp_bonusSemiM
-                                  'notax_bonusSemiM
 
                                   emp_bonusSemiM = retAsDatTbl("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'" &
                                                               ",EmployeeID" &
@@ -2430,31 +2131,12 @@ Public Class PayStub
                                                                 " GROUP BY EmployeeID" &
                                                                 " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
 
-
-                                  'emp_allowanceSemiM = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='1'" &
-                                  '                              " AND AllowanceFrequency='" & semimallowfreq & "'" &
-                                  '                              " AND EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              " GROUP BY EmployeeID" &
-                                  '                              " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
-
                                   emp_allowanceSemiM = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
                                                                                        orgztnID,
                                                                                        "Semi-monthly",
                                                                                        "1",
                                                                                        paypFrom,
                                                                                        paypTo).ResultTable
-
-                                  'notax_allowanceSemiM = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
-                                  '                              " FROM employeeallowance" &
-                                  '                              " WHERE OrganizationID=" & orgztnID & _
-                                  '                              " AND TaxableFlag='0'" &
-                                  '                              " AND AllowanceFrequency='" & semimallowfreq & "'" &
-                                  '                              " AND EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                  '                              " GROUP BY EmployeeID" &
-                                  '                              " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
 
                                   notax_allowanceSemiM = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
                                                                                        orgztnID,
@@ -2463,36 +2145,11 @@ Public Class PayStub
                                                                                        paypFrom,
                                                                                        paypTo).ResultTable
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                   Dim weeklyallowfreq = "Weekly"
 
                                   If allowfreq.Count <> 0 Then
                                       weeklyallowfreq = If(allowfreq.Item(4).ToString = "", "Weekly", allowfreq.Item(4).ToString)
                                   End If
-
-                                  'emp_allowanceWeekly
-                                  'notax_allowanceWeekly
-                                  'emp_bonusWeekly
-                                  'notax_bonusWeekly
 
                                   emp_bonusWeekly = retAsDatTbl("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'" &
                                                               ",EmployeeID" &
@@ -2536,69 +2193,6 @@ Public Class PayStub
 
                                   _withholdingTaxTable = New SqlToDataTable("SELECT * FROM paywithholdingtax;").Read()
                                   _filingStatuses = New SqlToDataTable("SELECT * FROM filingstatus;").Read()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                  ''employeebonus
-                                  'emp_bonus = retAsDatTbl("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'" &
-                                  '                        ",EmployeeID" &
-                                  '                        " FROM employeebonus" &
-                                  '                        " WHERE OrganizationID=" & orgztnID & _
-                                  '                        " AND EffectiveStartDate>='" & paypFrom & "'" &
-                                  '                        " AND EffectiveEndDate<='" & paypTo & "'" &
-                                  '                        " AND TaxableFlag='1'" &
-                                  '                        " GROUP BY EmployeeID" &
-                                  '                        " ORDER BY EmployeeID;")
-
-                                  'esal_dattab = retAsDatTbl("SELECT RowID,EmployeeID,Created,CreatedBy,COALESCE(LastUpd,'') 'LastUpd',COALESCE(LastUpdBy,'') 'LastUpdBy',OrganizationID,COALESCE(FilingStatusID,'') 'FilingStatusID',COALESCE(PaySocialSecurityID,'') 'PaySocialSecurityID',COALESCE(PayPhilhealthID,'') 'PayPhilhealthID',COALESCE(HDMFAmount,'') 'HDMFAmount',BasicPay,Salary,BasicDailyPay,BasicHourlyPay,NoofDependents,MaritalStatus,PositionID,EffectiveDateFrom,COALESCE(EffectiveDateTo,'') 'EffectiveDateTo'" &
-
-                                  'employeesalary
-                                  'esal_dattab = retAsDatTbl("SELECT *,COALESCE((SELECT EmployeeShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployeeShare'" &
-                                  '                            ",COALESCE((SELECT EmployerShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployerShare'" &
-                                  '                            ",COALESCE((SELECT EmployeeContributionAmount FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployeeContributionAmount'" &
-                                  '                            ",COALESCE((SELECT (EmployerContributionAmount + EmployeeECAmount) FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployerContributionAmount'" &
-                                  '                            " FROM employeesalary" &
-                                  '                            " WHERE OrganizationID=" & orgztnID & "" &
-                                  '                            " AND (EffectiveDateFrom >= '" & paypFrom & "' AND IFNULL(EffectiveDateTo,CURDATE()) >= '" & paypFrom & "')" &
-                                  '                            " AND (EffectiveDateFrom <= '" & paypTo & "' AND IFNULL(EffectiveDateTo,CURDATE()) <= '" & paypTo & "')" &
-                                  '                        " UNION" &
-                                  '                            " SELECT *,COALESCE((SELECT EmployeeShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployeeShare'" &
-                                  '                            ",COALESCE((SELECT EmployerShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployerShare'" &
-                                  '                            ",COALESCE((SELECT EmployeeContributionAmount FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployeeContributionAmount'" &
-                                  '                            ",COALESCE((SELECT (EmployerContributionAmount + EmployeeECAmount) FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployerContributionAmount'" &
-                                  '                            " FROM employeesalary" &
-                                  '                            " WHERE OrganizationID=" & orgztnID & "" &
-                                  '                            " AND '" & paypFrom & "' BETWEEN EffectiveDateFrom AND EffectiveDateTo" &
-                                  '                        " UNION" &
-                                  '                            " SELECT *,COALESCE((SELECT EmployeeShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployeeShare'" &
-                                  '                            ",COALESCE((SELECT EmployerShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployerShare'" &
-                                  '                            ",COALESCE((SELECT EmployeeContributionAmount FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployeeContributionAmount'" &
-                                  '                            ",COALESCE((SELECT (EmployerContributionAmount + EmployeeECAmount) FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployerContributionAmount'" &
-                                  '                            " FROM employeesalary" &
-                                  '                            " WHERE OrganizationID=" & orgztnID & "" &
-                                  '                            " AND '" & paypTo & "' BETWEEN EffectiveDateFrom AND EffectiveDateTo" &
-                                  '                        " UNION" &
-                                  '                            " SELECT *,COALESCE((SELECT EmployeeShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployeeShare'" &
-                                  '                            ",COALESCE((SELECT EmployerShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployerShare'" &
-                                  '                            ",COALESCE((SELECT EmployeeContributionAmount FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployeeContributionAmount'" &
-                                  '                            ",COALESCE((SELECT (EmployerContributionAmount + EmployeeECAmount) FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployerContributionAmount'" &
-                                  '                            " FROM employeesalary" &
-                                  '                            " WHERE OrganizationID=" & orgztnID & "" &
-                                  '                            " AND (EffectiveDateFrom >= '" & paypFrom & "' AND EffectiveDateTo <= '" & paypTo & "')" &
-                                  '                            " GROUP BY EmployeeID" &
-                                  '                            " ORDER BY DATEDIFF(DATE_FORMAT(CURDATE(),'%Y-%m-%d'),EffectiveDateFrom)" &
-                                  '                            ";")
 
                                   esal_dattab = New SQLQueryToDatatable(" SELECT *,COALESCE((SELECT EmployeeShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployeeShare'" &
                                                               ",COALESCE((SELECT EmployerShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployerShare'" &
@@ -2654,25 +2248,6 @@ Public Class PayStub
                                   leavetype = EXECQUER("SELECT GROUP_CONCAT(RowID) FROM product WHERE OrganizationID='" & orgztnID & "' AND Category='Leave Type' ORDER BY PartNo;")
 
                                   leavtyp = Split(leavetype, ",")
-
-                                  'allowkind
-
-                                  'SELECT * FROM product WHERE CategoryID='33' AND OrganizationID=2;
-
-                                  'allow_kind()
-
-                                  'employeeleave
-                                  'empleave = retAsDatTbl("SELECT elv.*" &
-                                  '                        ",SUM((DATEDIFF(COALESCE(elv.LeaveEndDate,elv.LeaveStartDate),elv.LeaveStartDate) + 1)) 'NumOfDaysLeave'" &
-                                  '                        ",COALESCE(((TIME_TO_SEC(TIMEDIFF(elv.LeaveEndTime,elv.LeaveStartTime)) / 60) / 60),0) 'NumOfHoursLeave'" &
-                                  '                        ",e.LeavePerPayPeriod" &
-                                  '                        ",COALESCE((SELECT RowID FROM product WHERE PartNo=elv.LeaveType AND OrganizationID=" & orgztnID & "),'') 'ProductID'" &
-                                  '                        " FROM employeeleave elv LEFT JOIN employee e ON e.RowID=elv.EmployeeID" &
-                                  '                        " WHERE elv.OrganizationID=" & orgztnID & _
-                                  '                        " AND elv.LeaveStartDate>='" & paypFrom & "'" &
-                                  '                        " AND elv.LeaveEndDate<='" & paypTo & "'" &
-                                  '                        " GROUP BY elv.LeaveType" &
-                                  '                        " ORDER BY elv.EmployeeID;")
 
                                   empleave = retAsDatTbl("SELECT elv.*" &
                                                           ",SUM((DATEDIFF(COALESCE(elv.LeaveEndDate,elv.LeaveStartDate),elv.LeaveStartDate) + 1)) 'NumOfDaysLeave'" &
