@@ -30,6 +30,8 @@ Namespace Global.PayrollSys
 
         Public Property TotalBalanceLeft As Decimal
 
+        Public Property DeductionAmount As Decimal
+
     End Class
 
 End Namespace

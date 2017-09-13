@@ -76,6 +76,8 @@ Public Class PayrollGeneration
     Private _isFirstHalf As Boolean
     Private _isEndOfMonth As Boolean
     Private _allSalaries As DataTable
+
+    <Obsolete("Replaced with loanSchedules")>
     Private _allLoans As DataTable
     Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
     Private _allLoanTransactions As DataTable
@@ -329,7 +331,6 @@ Public Class PayrollGeneration
             _payStub.EmployeeID = Trim(CStr(employee("RowID")))
 
             Dim salary = _allSalaries.Select($"EmployeeID = '{_payStub.EmployeeID}'").FirstOrDefault()
-            Dim employeeLoans = _allLoans.Select($"EmployeeID = '{_payStub.EmployeeID}'")
 
             Dim loanTransactions = _allLoanTransactions.Select($"EmployeeID = '{_payStub.EmployeeID}'")
             Dim loanSchedules = _loanSchedules.Where(Function(l) l.EmployeeID = _payStub.EmployeeID)
@@ -349,15 +350,18 @@ Public Class PayrollGeneration
                         .PayPeriodID = PayPeriodID,
                         .LoanScheduleID = loanSchedule.RowID,
                         .LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft - 1,
-                        .TotalBalanceLeft = loanSchedule.TotalBalanceLeft - loanSchedule.DeductionAmount
+                        .TotalBalanceLeft = loanSchedule.TotalBalanceLeft - loanSchedule.DeductionAmount,
+                        .DeductionAmount = loanSchedule.DeductionAmount
                     }
 
                     newLoanTransactions.Add(loanTransaction)
                 Next
 
-                For Each loan In employeeLoans
-                    _payStub.TotalLoanDeduction = ValNoComma(loan("DeductionAmount"))
-                Next
+                _payStub.TotalLoanDeduction = newLoanTransactions.Aggregate(0D, Function(total, x) x.DeductionAmount + total)
+
+                'For Each loan In employeeLoans
+                '    _payStub.TotalLoanDeduction = ValNoComma(loan("DeductionAmount"))
+                'Next
             End If
 
             totalVacationDaysLeft = 0D
