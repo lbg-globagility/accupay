@@ -11513,10 +11513,6 @@ Public Class EmployeeForm
         dgvEmp_SelectionChanged(sender, e)
     End Sub
 
-    Private Sub TabPage13_Leave(sender As Object, e As EventArgs) 'Handles tbpSalary.Leave
-        tbpSalary.Text = "SALARY"
-    End Sub
-
     Private Sub btnNewSal_EnabledChanged(sender As Object, e As EventArgs) Handles btnNewSal.EnabledChanged
         Dim boolresult = btnNewSal.Enabled
 
@@ -11596,6 +11592,7 @@ Public Class EmployeeForm
 
     Dim IsNewSal As SByte = 0
 
+    <Obsolete>
     Private Sub btnNewSal_Click(sender As Object, e As EventArgs) 'Handles btnNewSal.Click
 
         dgvEmp.Enabled = False
