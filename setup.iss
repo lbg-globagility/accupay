@@ -53,6 +53,10 @@ Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.ReportSource.dll"; Des
 Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.Shared.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\GoldWingsPayrollSys\bin\Debug\CrystalDecisions.Windows.Forms.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\GoldWingsPayrollSys\bin\Debug\DevComponents.DotNetBar2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\EntityFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\EntityFramework.SqlServer.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\EntityFramework.SqlServer.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\EntityFramework.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\GoldWingsPayrollSys\bin\Debug\EWSoftware.ListControls.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\GoldWingsPayrollSys\bin\Debug\Femiani.Forms.UI.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\GoldWingsPayrollSys\bin\Debug\FlashControlV71.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -71,6 +75,7 @@ Source: ".\GoldWingsPayrollSys\bin\Debug\MetroFramework.Fonts.dll"; DestDir: "{a
 Source: ".\GoldWingsPayrollSys\bin\Debug\MetroFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; Source: ".\GoldWingsPayrollSys\bin\Debug\Microsoft.Office.Interop.Excel.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\GoldWingsPayrollSys\bin\Debug\MySql.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\GoldWingsPayrollSys\bin\Debug\MySql.Data.Entity.EF6.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\GoldWingsPayrollSys\bin\Debug\MySqlBackup.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\GoldWingsPayrollSys\bin\Debug\OCRTools.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\GoldWingsPayrollSys\bin\Debug\ShockwaveFlashObjects.dll"; DestDir: "{app}"; Flags: ignoreversion
