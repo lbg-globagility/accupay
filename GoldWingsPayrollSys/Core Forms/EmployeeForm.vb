@@ -11410,10 +11410,6 @@ Public Class EmployeeForm
     Dim mStat As String
     Dim payid, filingid, sssid, philID As Integer
 
-    Private Sub tbpSalary_Click(sender As Object, e As EventArgs) Handles tbpSalary.Click
-
-    End Sub
-
     Dim isorgPHHdeductsched As SByte
     Dim isorgSSSdeductsched As SByte
     Dim isorgHDMFdeductsched As SByte
@@ -11971,10 +11967,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub txtPagibig_TextChanged(sender As Object, e As EventArgs) Handles txtPagibig.TextChanged
-
-    End Sub
-
     Private Sub txtPagibig_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPagibig.KeyPress
 
         Dim e_KAsc As String = Asc(e.KeyChar)
@@ -12007,10 +11999,6 @@ Public Class EmployeeForm
         Else
             e.Handled = True
         End If
-
-    End Sub
-
-    Private Sub txtSSSSal_TextChanged(sender As Object, e As EventArgs) Handles txtSSSSal.TextChanged
 
     End Sub
 
@@ -12068,10 +12056,6 @@ TaskToDo: txtSSSSal.Text = "0.00"
         Else
             e.Handled = True
         End If
-
-    End Sub
-
-    Private Sub txtPhilHealthSal_TextChanged(sender As Object, e As EventArgs) Handles txtPhilHealthSal.TextChanged
 
     End Sub
 
@@ -12720,10 +12704,6 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     End Sub
 
-    Private Sub dgvemployeesalary_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployeesalary.CellContentClick
-
-    End Sub
-
     Dim is_user_override_phh, is_user_override_sss As Boolean
 
     Private Sub dgvemployeesalary_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployeesalary.CellClick
@@ -13362,22 +13342,6 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
         End If
 
-
-    End Sub
-
-    Private Sub txttruesalary_TextChanged(sender As Object, e As EventArgs) Handles txtToComputeSal.TextChanged
-
-    End Sub
-
-    Private Sub txttruesalary_Leave(sender As Object, e As EventArgs) Handles txtToComputeSal.Leave
-
-    End Sub
-
-    Private Sub txtEmpIDSal_TextChanged(sender As Object, e As EventArgs) Handles txtEmpIDSal.TextChanged
-        'txtEmpIDSal.Tag
-
-        'checks and displays
-        'if employee is a senior citizen
 
     End Sub
 
