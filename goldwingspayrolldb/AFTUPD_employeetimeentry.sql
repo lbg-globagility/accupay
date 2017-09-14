@@ -27,7 +27,7 @@ DECLARE isShiftRestDay TINYINT(1);
 DECLARE dayOfRest INT(11);
 DECLARE actualRegularHoursAmount DECIMAL(11, 6);
 DECLARE isRestDay TINYINT(1);
-DECLARE undeclaredSalary DECIMAL(11, 6);
+DECLARE undeclaredSalary DECIMAL(20, 6);
 
 DECLARE payType VARCHAR(50);
 
