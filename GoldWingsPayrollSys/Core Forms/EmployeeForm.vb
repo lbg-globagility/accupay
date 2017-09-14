@@ -11963,26 +11963,15 @@ TaskToDo: txtSSSSal.Text = "0.00"
 
     End Sub
 
-    Private Sub txtPhilHealthSal_KeyPress1(sender As Object, e As KeyPressEventArgs) Handles txtPhilHealthSal.KeyPress
-
+    Private Sub txtPhilHealthSal_KeyPress1(sender As Object, e As KeyEventArgs) Handles txtPhilHealthSal.KeyDown
         e.Handled = True
 
-        Dim e_KAsc = Asc(e.KeyChar)
-        'Console.WriteLine(e_KAsc)
-        Select Case e_KAsc
-
-            Case 8
-                GoTo TaskToDo
-
-            Case 48
-                GoTo TaskToDo
-
+        Select Case e.KeyCode
+            Case Keys.Back, Keys.D0, Keys.NumPad0
+                txtPhilHealthSal.Text = "0.00"
+                txtPhilHealthSal.Select(txtPhilHealthSal.Text.Length, 0)
+                is_user_override_phh = True
         End Select
-
-TaskToDo: txtPhilHealthSal.Text = "0.00"
-        txtPhilHealthSal.Select(txtPhilHealthSal.Text.Length, 0)
-        is_user_override_phh = True
-
     End Sub
 
     <Obsolete>
