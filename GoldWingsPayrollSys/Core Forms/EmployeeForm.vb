@@ -11925,6 +11925,7 @@ TaskToDo: txtSSSSal.Text = "0.00"
 
     End Sub
 
+    <Obsolete>
     Private Sub txtSSSSal_KeyPress(sender As Object, e As KeyPressEventArgs) 'Handles txtSSSSal.KeyPress
 
         Dim e_KAsc As String = Asc(e.KeyChar)
@@ -11982,6 +11983,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     End Sub
 
+    <Obsolete>
     Private Sub txtPhilHealthSal_KeyPress(sender As Object, e As KeyPressEventArgs) 'Handles txtPhilHealthSal.KeyPress
 
         Dim e_KAsc As String = Asc(e.KeyChar)
@@ -12380,6 +12382,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
         End If
     End Sub
 
+    <Obsolete>
     Private Sub txtBasicrateSal_TextChanged(sender As Object, e As EventArgs) 'Handles txtBasicrateSal.TextChanged
         ComputeEmpSalary(txtBasicrateSal, txtSSSSal, txtPhilHealthSal)
 
@@ -12828,6 +12831,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     End Function
 
+    <Obsolete>
     Sub VIEW_employeesalary(ByVal Employee_ID As Object)
 
         Dim param(2, 2) As Object
