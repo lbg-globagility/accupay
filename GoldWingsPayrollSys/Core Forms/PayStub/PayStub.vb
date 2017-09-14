@@ -1800,8 +1800,7 @@ Public Class PayStub
                                                   Select l
                                                   Where l.OrganizationID = z_OrganizationID And
                                                       l.DedEffectiveDateFrom <= paypTo And
-                                                      l.Status <> "Cancelled" And
-                                                      l.Status <> "On Hold"
+                                                      l.Status = "In Progress"
                                       _loanSchedules = query.ToList()
                                   End Using
 
