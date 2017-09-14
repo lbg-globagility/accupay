@@ -11414,7 +11414,17 @@ Public Class EmployeeForm
     Dim isorgSSSdeductsched As SByte
     Dim isorgHDMFdeductsched As SByte
 
+    Public listofEditEmpSal As New List(Of String)
+
+    Dim objGotFoc As Object
+
     Dim govdeducsched As New AutoCompleteStringCollection
+
+    Dim is_user_override_phh As Boolean
+    Dim is_user_override_sss As Boolean
+    Dim dontUpdateSal As SByte = 0
+    Dim IsNewSal As SByte = 0
+    Dim payfreqdivisor = Val(0)
 
     Sub tbpSalary_Enter(sender As Object, e As EventArgs) Handles tbpSalary.Enter
 
@@ -11590,8 +11600,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Dim IsNewSal As SByte = 0
-
     <Obsolete>
     Private Sub btnNewSal_Click(sender As Object, e As EventArgs) 'Handles btnNewSal.Click
 
@@ -11702,8 +11710,6 @@ Public Class EmployeeForm
         End If
 
     End Sub
-
-    Dim dontUpdateSal As SByte = 0
 
     Private Sub btnSaveSal_Click(sender As Object, e As EventArgs) Handles btnSaveSal.Click
 
@@ -11860,10 +11866,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Public listofEditEmpSal As New List(Of String)
-
-    Dim objGotFoc As Object
-
     Private Sub edited_GotFocus(sender As Object, e As EventArgs) Handles txtEmpDeclaSal.GotFocus, txtBasicrateSal.GotFocus, txtPhilHealthSal.GotFocus,
         txtSSSSal.GotFocus, txtPagibig.GotFocus, dptFromSal.GotFocus, dtpToSal.GotFocus
         objGotFoc = CType(sender, Object)
@@ -12019,7 +12021,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     End Sub
 
-    Dim payfreqdivisor = Val(0)
+
 
     Private Sub edited_employeesalary(sender As Object, e As EventArgs) Handles txtEmpDeclaSal.Leave,
                                                                                 txtBasicrateSal.Leave,
@@ -12444,7 +12446,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
 
     End Sub
 
-    Dim is_user_override_phh, is_user_override_sss As Boolean
+
 
     Private Sub dgvemployeesalary_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployeesalary.CellClick
 
