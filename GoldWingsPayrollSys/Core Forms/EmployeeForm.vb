@@ -11428,6 +11428,8 @@ Public Class EmployeeForm
 
     Private _socialSecurityBracket As PayrollSys.SocialSecurityBracket
 
+    Private _philHealthBracket As PayrollSys.PhilHealthBracket
+
     Sub tbpSalary_Enter(sender As Object, e As EventArgs) Handles tbpSalary.Enter
 
         txtPhilHealthSal.ContextMenu = New ContextMenu
@@ -11601,9 +11603,7 @@ Public Class EmployeeForm
 
     End Sub
 
-
     Private Sub btnSaveSal_Click(sender As Object, e As EventArgs) Handles btnSaveSal.Click
-
         pbEmpPicSal.Focus()
 
         If objGotFoc IsNot Nothing _
@@ -11618,9 +11618,10 @@ Public Class EmployeeForm
             WarnBalloon(errprovidSal.GetError(dtpToSal), "", lblforballoon, 0, -69)
             Exit Sub
         End If
-        IsNewSal = Convert.ToSByte(CBool(btnNewSal.Enabled = False))
+
+        IsNewSal = Convert.ToSByte(btnNewSal.Enabled = False)
+
         If IsNewSal = 1 Then
-            'SP_EmployeeSalary(z_User, z_User, z_datetime, z_datetime, filingid, mStat, noofdepd, z_OrganizationID, txtEmpID.Text, z_ssid, z_phID, txtPagibig.Text, txtBasicrateSal.Text, CDate(dptFromSal.Value).ToString("yyyy-MM-dd"), CDate(dtpTo.Value).ToString("yyyy-MM-dd"))
 
             If dgvEmp.RowCount = 0 Then
                 btnNewSal.Enabled = True
@@ -11635,17 +11636,18 @@ Public Class EmployeeForm
                 Exit Sub
             End If
 
-            INSUPD_employeesalary(,
-                                dgvEmp.CurrentRow.Cells("RowID").Value,
-                                Val(Trim(txtBasicrateSal.Text)),
-                                Val(Trim(txtEmpDeclaSal.Text)),
-                                noofdepd,
-                                mStat,
-                                Val(dgvEmp.CurrentRow.Cells("Column29").Value),
-                                dptFromSal.Value,
-                                dtpToSal.Value,
-                                txtTrueSal.Text)
-
+            INSUPD_employeesalary(
+                Nothing,
+                dgvEmp.CurrentRow.Cells("RowID").Value,
+                Val(Trim(txtBasicrateSal.Text)),
+                Val(Trim(txtEmpDeclaSal.Text)),
+                noofdepd,
+                mStat,
+                Val(dgvEmp.CurrentRow.Cells("Column29").Value),
+                dptFromSal.Value,
+                dtpToSal.Value,
+                txtTrueSal.Text
+            )
         Else
             If dontUpdateSal = 1 Then
                 btnNewSal.Enabled = True
@@ -11659,31 +11661,24 @@ Public Class EmployeeForm
 
                 Exit Sub
             End If
-            'Dim dt As New DataTable
-            'dt = getDataTableForSQL("select * from employeesalary es inner join employee ee on es.EmployeeID = ee.RowID Where es.RowID = '" & Val(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value) & "'")
-            'If dt.Rows.Count > 0 Then
 
             For Each dgvrow As DataGridViewRow In dgvemployeesalary.Rows
-
                 If listofEditEmpSal.Contains(dgvrow.Cells("c_RowIDSal").Value) Then
-
-                    INSUPD_employeesalary(dgvrow.Cells("c_RowIDSal").Value,
-                                          dgvEmp.CurrentRow.Cells("RowID").Value,
-                                          Val(Trim(txtBasicrateSal.Text)),
-                                          Val(Trim(txtEmpDeclaSal.Text)),
-                                          noofdepd,
-                                          mStat,
-                                          Val(dgvEmp.CurrentRow.Cells("Column29").Value),
-                                          dgvrow.Cells("c_fromdate").Value,
-                                          dgvrow.Cells("c_todate").Value,
-                                          ValNoComma(txtTrueSal.Text))
-                    'If(dgvrow.Index = 0, Nothing, dgvrow.Cells("c_TrueSal").Value)
+                    INSUPD_employeesalary(
+                        dgvrow.Cells("c_RowIDSal").Value,
+                        dgvEmp.CurrentRow.Cells("RowID").Value,
+                        Val(Trim(txtBasicrateSal.Text)),
+                        Val(Trim(txtEmpDeclaSal.Text)),
+                        noofdepd,
+                        mStat,
+                        Val(dgvEmp.CurrentRow.Cells("Column29").Value),
+                        dgvrow.Cells("c_fromdate").Value,
+                        dgvrow.Cells("c_todate").Value,
+                        ValNoComma(txtTrueSal.Text),
+                        _socialSecurityBracket.RowID
+                    )
                 End If
-
             Next
-
-            'End If
-
         End If
 
         'fillemployeelist()
@@ -11881,7 +11876,7 @@ Public Class EmployeeForm
 
                     End If
 
-                    Dim the_salary = ValNoComma(0)
+                    Dim monthlyRate = 0D
 
                     Dim _
                     employee_dattab = New SQLQueryToDatatable("SELECT e.*" &
@@ -11933,45 +11928,34 @@ Public Class EmployeeForm
                         End If
                     Next
 
-                    If emp_type = "Fixed" Or
-                        emp_type = "Monthly" Then
-                        the_salary = truefullsalary
+                    If emp_type = "Fixed" Or emp_type = "Monthly" Then
+                        monthlyRate = truefullsalary
                     ElseIf emp_type = "Daily" Then
-                        the_salary = ValNoComma(txtBasicrateSal.Text)
-                        the_salary = the_salary * ValNoComma(orgfulldays)
-                        the_salary = the_salary / 12.0
+                        monthlyRate = ValNoComma(txtBasicrateSal.Text)
+                        monthlyRate = monthlyRate * ValNoComma(orgfulldays)
+                        monthlyRate = monthlyRate / 12D
                     ElseIf emp_type = "Hourly" Then
-                        the_salary = ValNoComma(txtBasicrateSal.Text)
+                        monthlyRate = ValNoComma(txtBasicrateSal.Text)
                     ElseIf emp_type = "Weekly" Then
-                        the_salary = ValNoComma((truefullsalary * 4.0))
-                    End If
-
-
-
-                    'govdeducsched
-                    Dim obj_val = EXECQUER("SELECT COALESCE(EmployeeShare,0) FROM payphilhealth WHERE COALESCE(" & the_salary &
-                                                     ",0) BETWEEN SalaryRangeFrom AND IF(COALESCE(COALESCE(" & the_salary & "),0) > SalaryRangeTo, COALESCE(" & the_salary &
-                                                     ") + 1, SalaryRangeTo) ORDER BY SalaryBase DESC LIMIT 1;")
-
-                    If isorgPHHdeductsched = 0 _
-                        Or isorgPHHdeductsched = 1 Then 'End of the monthy OR First half of the month
-                        txtPhilHealthSal.Text = Val(obj_val)
-                    Else
-                        txtPhilHealthSal.Text = Val(obj_val) / payfreqdivisor
+                        monthlyRate = ValNoComma((truefullsalary * 4.0))
                     End If
 
                     Using context = New PayrollContext()
                         Dim query = From s In context.SocialSecurityBrackets
                                     Select s
-                                    Where s.RangeFromAmount <= the_salary And
-                                        s.RangeToAmount >= the_salary
-
+                                    Where s.RangeFromAmount <= monthlyRate And
+                                        monthlyRate <= s.RangeToAmount
                         _socialSecurityBracket = query.FirstOrDefault()
+
+                        Dim philHealthQuery = From p In context.PhilHealthBrackets
+                                              Select p
+                                              Where p.SalaryRangeFrom <= monthlyRate And
+                                                  monthlyRate <= p.SalaryRangeTo
+                        _philHealthBracket = philHealthQuery.FirstOrDefault()
                     End Using
 
-                    If _socialSecurityBracket IsNot Nothing Then
-                        txtSSSSal.Text = _socialSecurityBracket.EmployeeContributionAmount
-                    End If
+                    txtSSSSal.Text = _socialSecurityBracket?.EmployeeContributionAmount
+                    txtPhilHealthSal.Text = _philHealthBracket?.EmployeeShare
 
                     Dim pagibig_amount = ValNoComma(txtPagibig.Text)
 
