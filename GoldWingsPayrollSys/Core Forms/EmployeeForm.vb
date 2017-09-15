@@ -11820,19 +11820,13 @@ Public Class EmployeeForm
                                                                                 dptFromSal.Leave,
                                                                                 dtpToSal.Leave,
                                                                                 txtToComputeSal.Leave
-
         Dim sendr_name As String = CType(sender, Object).Name
 
         If dgvemployeesalary.RowCount <> 0 And dgvEmp.RowCount <> 0 Then
             If dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value <> Nothing Then
-
-                If sendr_name = "txtEmpDeclaSal" _
-                    Or sendr_name = "txtToComputeSal" Then 'txtEmp_Sal
-
+                If sendr_name = "txtEmpDeclaSal" Or sendr_name = "txtToComputeSal" Then
                     is_user_override_phh = False
                     is_user_override_sss = False
-
-                    '***********************************
 
                     listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
 
@@ -12072,8 +12066,8 @@ Public Class EmployeeForm
     Private Sub dgvemployeesalary_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployeesalary.CellClick
         If btnNewSal.Enabled = True Then
             grpbasicsalaryaddeduction.Enabled = True
-            Try
-                fillseletedEnterEmpID(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+            'Try
+            fillseletedEnterEmpID(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
                 grpbasicsalaryaddeduction.Enabled = True
                 btnDelSal.Enabled = True
 
@@ -12086,15 +12080,17 @@ Public Class EmployeeForm
                 dptFromSal.Enabled = True
                 dtpToSal.Enabled = True
 
-            Catch ex As Exception
-                If dgvemployeesalary.RowCount = 0 Then
-                    If btnNewSal.Enabled = False Then
-                        cleartextsal()
-                    End If
-                End If
+            'Catch ex As Exception
+            'If dgvemployeesalary.RowCount = 0 Then
+            '    If btnNewSal.Enabled = False Then
+            '        cleartextsal()
+            '    End If
+            'End If
 
-                MsgBox("Nothing to view", MsgBoxStyle.Information)
-            End Try
+            'Throw New Exception("", ex)
+
+            'MsgBox("Nothing to view", MsgBoxStyle.Information)
+            'End Try
         End If
 
         is_user_override_phh = False
@@ -12156,7 +12152,7 @@ Public Class EmployeeForm
                     Dim filingID As Integer = dgvEmp.CurrentRow.Cells("fstatRowID").Value
                     Dim fsID As String = getStringItem("Select `FilingStatus` from FilingStatus where RowID = '" & filingID & "'")
                     Dim getfsID As String = fsID
-                    Dim psID As String = getStringItem("Select EmployeeContributionAmount from PaySocialSecurity where RowID = '" & payssID & "'")
+                    Dim psID As String = getStringItem("Select EmployeeContributionAmount FROM PaySocialSecurity where RowID = '" & payssID & "'")
                     Dim getpsID As String = Val(psID)
 
                     'EmployeeShare
@@ -12220,45 +12216,28 @@ Public Class EmployeeForm
                     dgvemployeesalary.Rows.Item(n).Cells(c_filingstatus.Index).Value = dgvEmp.CurrentRow.Cells("fstatRowID").Value 'getfsID
                     dgvemployeesalary.Rows.Item(n).Cells(c_maritalStatus.Index).Value = dgvEmp.CurrentRow.Cells("Column31").Value '.Item("MaritalStatus").ToString 
                     dgvemployeesalary.Rows.Item(n).Cells(c_noofdepd.Index).Value = dgvEmp.CurrentRow.Cells("Column32").Value '.Item("NoOfDependents").ToString 
-
                     dgvemployeesalary.Rows.Item(n).Cells(c_BasicPaySal.Index).Value = .Item("Basicpay").ToString
-
                     dgvemployeesalary.Rows.Item(n).Cells(c_EmpSal.Index).Value = .Item("Salary").ToString
-
                     dgvemployeesalary.Rows.Item(n).Cells(c_BasicDailyPaySal.Index).Value = .Item("BasicDailyPay").ToString
                     dgvemployeesalary.Rows.Item(n).Cells(c_BasicHourlyPaySal.Index).Value = .Item("BasicHourlyPay").ToString
-
                     dgvemployeesalary.Rows.Item(n).Cells(c_pagibig.Index).Value = .Item("HDMFAmount").ToString
                     dgvemployeesalary.Rows.Item(n).Cells(c_philhealth.Index).Value = getphID
                     dgvemployeesalary.Rows.Item(n).Cells(c_sss.Index).Value = getpsID
-
                     dgvemployeesalary.Rows.Item(n).Cells(c_fromdate.Index).Value = datefrom
-
                     dgvemployeesalary.Rows.Item(n).Cells(c_todate.Index).Value = dateto
-
                     dgvemployeesalary.Rows.Item(n).Cells(c_TrueSal.Index).Value = If(IsDBNull(.Item("TrueSalary")), 0, .Item("TrueSalary"))
 
-
                     Dim esal_TrueSalary = dgvemployeesalary.Rows.Item(n).Cells(c_TrueSal.Index).Value
-
                     Dim esal_Salary = dgvemployeesalary.Rows.Item(n).Cells(c_EmpSal.Index).Value
 
-
                     Dim AbsToComputeVal = Math.Abs(esal_Salary - esal_TrueSalary)
-
-                    Dim diffOfSal_TrueSal = If(esal_Salary > esal_TrueSalary,
-                                                                            "-" & AbsToComputeVal,
-                                                                            AbsToComputeVal)
+                    Dim diffOfSal_TrueSal = If(esal_Salary > esal_TrueSalary, "-" & AbsToComputeVal, AbsToComputeVal)
 
                     dgvemployeesalary.Rows.Item(n).Cells(c_ToComputeSal.Index).Value = diffOfSal_TrueSal
-
                     dgvemployeesalary.Rows.Item(n).Cells(c_RowIDSal.Index).Value = .Item("RowID")
-
                     dgvemployeesalary.Item("TrueHDMFAmount", n).Value = ValNoComma(.Item("HDMFAmount"))
-
                 End With
             Next
-
         Catch ex As Exception
             MsgBox(ex.Message, MsgBoxStyle.Critical, "Error Code fillEmpSalaryList")
         End Try
@@ -12354,8 +12333,19 @@ Public Class EmployeeForm
                             txtBasicrateSal.Text = dgvemployeesalary.CurrentRow.Cells("c_BasicPaySal").Value
                         End If
 
-                        Dim esal_Salary = Val(dgvemployeesalary.CurrentRow.Cells("c_EmpSal").Value)
+                        Using context = New PayrollContext()
+                            Dim paySocialSecurityID = ConvertToType(Of Integer?)(drow("PaySocialSecurityID"))
+                            'If paySocialSecurityID IsNot Nothing Then
+                            _socialSecurityBracket = context.SocialSecurityBrackets.Find(paySocialSecurityID)
+                            'End If
 
+                            Dim payPhilHealthID = drow("PayPhilHealthID")
+                            If payPhilHealthID Then
+                                _philHealthBracket = context.PhilHealthBrackets.Find(payPhilHealthID)
+                            End If
+                        End Using
+
+                        Dim esal_Salary = Val(dgvemployeesalary.CurrentRow.Cells("c_EmpSal").Value)
                         Dim esal_TrueSalary = Val(dgvemployeesalary.CurrentRow.Cells("c_TrueSal").Value)
 
                         txtTrueSal.Text = esal_TrueSalary
@@ -12368,8 +12358,8 @@ Public Class EmployeeForm
                             AbsToComputeVal
                         )
 
-                        txtPhilHealthSal.Text = Val(dgvemployeesalary.CurrentRow.Cells("c_philhealth").Value)
-                        txtSSSSal.Text = Val(dgvemployeesalary.CurrentRow.Cells("c_sss").Value)
+                        txtPhilHealthSal.Text = _philHealthBracket?.EmployeeShare
+                        txtSSSSal.Text = If(_socialSecurityBracket?.EmployeeContributionAmount, 1)
                         txtPagibig.Text = Val(dgvemployeesalary.CurrentRow.Cells("c_pagibig").Value)
 
                         txtEmpDeclaSal.Text = dgvemployeesalary.CurrentRow.Cells("c_EmpSal").Value
