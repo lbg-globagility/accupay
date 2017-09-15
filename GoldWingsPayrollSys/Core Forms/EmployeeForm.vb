@@ -19170,7 +19170,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
                     End If
 
                     If Trim(.Cells("bon_End").Value) <> Nothing Then
-                        dtpbonenddate.Value = Format(CDate(.Cells("bon_End").Value), machineShortDateFormat)
+                        'dtpbonenddate.Value = Format(CDate(.Cells("bon_End").Value), machineShortDateFormat)
+                        dtpbonenddate.Value = Format(CDate(.Cells("bon_Start").Value), machineShortDateFormat)
                     Else
                         dtpbonenddate.Value = Format(CDate(dbnow), machineShortDateFormat)
                     End If
@@ -19631,7 +19632,7 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
     Private Sub dtpbonenddate_ValueChanged(sender As Object, e As EventArgs) Handles dtpbonenddate.ValueChanged
 
         If DateDiff(DateInterval.Day, CDate(dtpbonstartdate.Value), CDate(dtpbonenddate.Value)) < 0 Or IsBonusOneTimeFreq Then
-            dtpbonstartdate.Value = dtpbonenddate.Value
+            dtpbonenddate.Value = dtpbonstartdate.Value
         End If
 
     End Sub
