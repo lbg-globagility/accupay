@@ -64,7 +64,7 @@ DECLARE preEffDateFromEmpSallatest DATE;
 
 DECLARE preEffDateToEmpSallatest DATE DEFAULT CURRENT_DATE();
 
-DECLARE salaryToUseForContrib DECIMAL(11,2) DEFAULT 0;
+DECLARE monthlyRate DECIMAL(11,2) DEFAULT 0;
 
 DECLARE org_workingdays INT(11);
 
@@ -148,14 +148,14 @@ IF EmpType = 'Fixed' OR EmpType = 'Monthly' THEN
         SET esal_BasicHourlyPay = 0;
     END IF;
 
-    SET salaryToUseForContrib = esal_Salary;
+    SET monthlyRate = esal_Salary;
 
 ELSEIF EmpType = 'Daily' THEN
     SET esal_BasicPay = esal_BasicPay;
     SET esal_BasicDailyPay = esal_BasicPay;
     SET esal_BasicHourlyPay = 0;
 
-    SET salaryToUseForContrib = (esal_BasicPay * org_workingdays) / 12;
+    SET monthlyRate = (esal_BasicPay * org_workingdays) / 12;
 
 ELSEIF EmpType = 'Weekly' THEN
     SET esal_BasicPay = esal_BasicPay;
@@ -164,11 +164,11 @@ ELSEIF EmpType = 'Weekly' THEN
 
     IF org_workingdays BETWEEN 310 AND 320 THEN
 
-        SET salaryToUseForContrib = (esal_Salary * (org_workingdays / 6)) / 12;
+        SET monthlyRate = (esal_Salary * (org_workingdays / 6)) / 12;
 
     ELSEIF org_workingdays BETWEEN 260 AND 270 THEN
 
-        SET salaryToUseForContrib = (esal_Salary * (org_workingdays / 5)) / 12;
+        SET monthlyRate = (esal_Salary * (org_workingdays / 5)) / 12;
 
     END IF;
 
@@ -176,20 +176,20 @@ END IF;
 
 SELECT RowID
 FROM paysocialsecurity
-WHERE COALESCE(salaryToUseForContrib, 0) BETWEEN RangeFromAmount AND IF(COALESCE(salaryToUseForContrib, 0) > RangeToAmount, COALESCE(salaryToUseForContrib,0) + 1, RangeToAmount)
+WHERE COALESCE(monthlyRate, 0) BETWEEN RangeFromAmount AND IF(COALESCE(monthlyRate, 0) > RangeToAmount, COALESCE(monthlyRate,0) + 1, RangeToAmount)
 ORDER BY MonthlySalaryCredit DESC
 LIMIT 1
 INTO sss_amt;
 
 SELECT RowID
 FROM payphilhealth
-WHERE COALESCE(salaryToUseForContrib, 0) BETWEEN SalaryRangeFrom AND IF(COALESCE(salaryToUseForContrib, 0) > SalaryRangeTo, COALESCE(salaryToUseForContrib, 0) + 1, SalaryRangeTo)
+WHERE COALESCE(monthlyRate, 0) BETWEEN SalaryRangeFrom AND IF(COALESCE(monthlyRate, 0) > SalaryRangeTo, COALESCE(monthlyRate, 0) + 1, SalaryRangeTo)
 ORDER BY SalaryBase DESC
 LIMIT 1
 INTO phh_amt;
 
 
-SELECT GET_HDMFAmount(salaryToUseForContrib)
+SELECT GET_HDMFAmount(monthlyRate)
 INTO hdmf_amt;
 
 IF esal_RowID IS NULL AND emp_countsalaries >= 1 THEN
@@ -266,51 +266,54 @@ INSERT INTO employeesalary
     ,EffectiveDateTo
     ,TrueSalary
     ,UndeclaredSalary, OverrideDiscardSSSContrib, OverrideDiscardPhilHealthContrib
-) SELECT
-    esal_RowID
-    ,esal_EmployeeID
-    ,CURRENT_TIMESTAMP()
-    ,esal_CreatedBy
-    ,esal_OrganizationID
-    ,EmpFStatID
-    ,sss_amt
-    ,phh_amt
-    ,esal_HDMFAmount
-    ,esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType))
-    ,esal_Salary
-    ,esal_BasicDailyPay
-    ,esal_BasicHourlyPay
-    ,esal_NoofDependents
-    ,esal_MaritalStatus
-    ,esal_PositionID
-    ,esal_EffectiveDateFrom
-    ,esal_EffectiveDateTo
-    ,esal_TrueSalary
-    ,esal_TrueSalary - esal_Salary, esal_DiscardSSS, esal_DiscardPhH
-    FROM employee WHERE RowID=esal_EmployeeID AND OrganizationID=esal_OrganizationID
-ON
-DUPLICATE
-KEY
+)
+SELECT
+    esal_RowID,
+    esal_EmployeeID,
+    CURRENT_TIMESTAMP(),
+    esal_CreatedBy,
+    esal_OrganizationID,
+    EmpFStatID,
+    sss_amt,
+    phh_amt,
+    esal_HDMFAmount,
+    esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType)),
+    esal_Salary,
+    esal_BasicDailyPay,
+    esal_BasicHourlyPay,
+    esal_NoofDependents,
+    esal_MaritalStatus,
+    esal_PositionID,
+    esal_EffectiveDateFrom,
+    esal_EffectiveDateTo,
+    esal_TrueSalary,
+    esal_TrueSalary - esal_Salary,
+    esal_DiscardSSS,
+    esal_DiscardPhH
+FROM employee
+WHERE RowID = esal_EmployeeID AND
+    OrganizationID = esal_OrganizationID
+ON DUPLICATE KEY
 UPDATE
-    LastUpd=CURRENT_TIMESTAMP()
-    ,LastUpdBy=esal_LastUpdBy
-    ,FilingStatusID=EmpFStatID
-    ,PaySocialSecurityID=sss_amt
-    ,PayPhilhealthID=phh_amt
-    ,HDMFAmount=IF(esal_HDMFAmount != 0,esal_HDMFAmount,hdmf_amt)
-    ,BasicPay=esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType))
-    ,Salary=esal_Salary
-    ,BasicDailyPay=esal_BasicDailyPay
-    ,BasicHourlyPay=esal_BasicHourlyPay
-    ,NoofDependents=esal_NoofDependents
-    ,MaritalStatus=esal_MaritalStatus
-    ,PositionID=esal_PositionID
-    ,EffectiveDateFrom=esal_EffectiveDateFrom
-    ,TrueSalary=esal_TrueSalary
-    ,UndeclaredSalary=esal_TrueSalary - esal_Salary
-    ,EffectiveDateTo=esal_EffectiveDateTo
-    ,OverrideDiscardSSSContrib          =esal_DiscardSSS
-    ,OverrideDiscardPhilHealthContrib=esal_DiscardPhH;
+    LastUpd = CURRENT_TIMESTAMP(),
+    LastUpdBy = esal_LastUpdBy,
+    FilingStatusID = EmpFStatID,
+    PaySocialSecurityID = sss_amt,
+    PayPhilhealthID = phh_amt,
+    HDMFAmount = IF(esal_HDMFAmount != 0,esal_HDMFAmount,hdmf_amt),
+    BasicPay = esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType)),
+    Salary = esal_Salary,
+    BasicDailyPay = esal_BasicDailyPay,
+    BasicHourlyPay = esal_BasicHourlyPay,
+    NoofDependents = esal_NoofDependents,
+    MaritalStatus = esal_MaritalStatus,
+    PositionID = esal_PositionID,
+    EffectiveDateFrom = esal_EffectiveDateFrom,
+    TrueSalary = esal_TrueSalary,
+    UndeclaredSalary = esal_TrueSalary - esal_Salary,
+    EffectiveDateTo = esal_EffectiveDateTo,
+    OverrideDiscardSSSContrib = esal_DiscardSSS,
+    OverrideDiscardPhilHealthContrib = esal_DiscardPhH;
 
 SELECT @@Identity AS id
 INTO esalID;

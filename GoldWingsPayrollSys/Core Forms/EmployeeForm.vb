@@ -11426,6 +11426,8 @@ Public Class EmployeeForm
     Dim IsNewSal As SByte = 0
     Dim payfreqdivisor = Val(0)
 
+    Private _socialSecurityBracket As PayrollSys.SocialSecurityBracket
+
     Sub tbpSalary_Enter(sender As Object, e As EventArgs) Handles tbpSalary.Enter
 
         txtPhilHealthSal.ContextMenu = New ContextMenu
@@ -11451,7 +11453,6 @@ Public Class EmployeeForm
             view_IDSal = VIEW_privilege("Employee Salary", orgztnID)
 
             enlistTheLists("SELECT DisplayValue FROM listofval WHERE `Type`='Government deduction schedule' AND Active='Yes' ORDER BY OrderBy;", govdeducsched)
-
 
             Dim formuserprivilege = position_view_table.Select("ViewID = " & view_IDSal)
 
@@ -11795,26 +11796,16 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub txtSSSSal_KeyPress1(sender As Object, e As KeyPressEventArgs) Handles txtSSSSal.KeyPress
-
+    Private Sub txtSSSSal_KeyDown(sender As Object, e As KeyEventArgs) Handles txtSSSSal.KeyDown
         e.Handled = True
 
-        Dim e_KAsc = Asc(e.KeyChar)
-
-        Select Case e_KAsc
-
-            Case 8
-                GoTo TaskToDo
-
-            Case 48
-                GoTo TaskToDo
-
+        Select Case e.KeyCode
+            Case Keys.Back, Keys.D0, Keys.NumPad0
+                _socialSecurityBracket = Nothing
+                txtSSSSal.Text = "0.00"
+                txtSSSSal.Select(txtSSSSal.Text.Length, 0)
+                is_user_override_sss = True
         End Select
-
-TaskToDo: txtSSSSal.Text = "0.00"
-        txtSSSSal.Select(txtSSSSal.Text.Length, 0)
-        is_user_override_sss = True
-
     End Sub
 
     Private Sub txtPhilHealthSal_KeyPress1(sender As Object, e As KeyEventArgs) Handles txtPhilHealthSal.KeyDown
@@ -11911,147 +11902,94 @@ TaskToDo: txtSSSSal.Text = "0.00"
                                                     " LIMIT 1;").ResultTable
 
                     Dim orgfulldays = 0 ' EXECQUER("SELECT WorkDaysPerYear FROM employee WHERE RowID='" & If(sameEmpID < 0, String.Empty, sameEmpID) & "';")
-
                     Dim strHDMFDeductSched As String = ""
 
                     For Each drow As DataRow In employee_dattab.Rows
-
                         payfreqdivisor = ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-
                         orgfulldays = ValNoComma(drow("WorkDaysPerYear"))
 
                         If drow("PhHealthDeductSched").ToString = "End of the month" Then
-
                             isorgPHHdeductsched = 0
-
                         ElseIf drow("PhHealthDeductSched").ToString = "First half" Then
-
                             isorgPHHdeductsched = 1
-
                         ElseIf drow("PhHealthDeductSched").ToString = "Per pay period" Then
-
                             isorgPHHdeductsched = 2
-
                         End If
-
 
                         If drow("SSSDeductSched").ToString = "End of the month" Then
-
                             isorgSSSdeductsched = 0
-
                         ElseIf drow("SSSDeductSched").ToString = "First half" Then
-
                             isorgSSSdeductsched = 1
-
                         ElseIf drow("SSSDeductSched").ToString = "Per pay period" Then
-
                             isorgSSSdeductsched = 2
-
                         End If
-
 
                         If drow("HDMFDeductSched").ToString = "End of the month" Then
-
                             isorgHDMFdeductsched = 0
-
                         ElseIf drow("HDMFDeductSched").ToString = "First half" Then
-
                             isorgHDMFdeductsched = 1
-
                         ElseIf drow("HDMFDeductSched").ToString = "Per pay period" Then
-
                             isorgHDMFdeductsched = 2
-
                         End If
-
-
                     Next
 
                     If emp_type = "Fixed" Or
                         emp_type = "Monthly" Then
                         the_salary = truefullsalary
-
                     ElseIf emp_type = "Daily" Then
                         the_salary = ValNoComma(txtBasicrateSal.Text)
                         the_salary = the_salary * ValNoComma(orgfulldays)
-
                         the_salary = the_salary / 12.0
-
                     ElseIf emp_type = "Hourly" Then
                         the_salary = ValNoComma(txtBasicrateSal.Text)
-
                     ElseIf emp_type = "Weekly" Then
-
                         the_salary = ValNoComma((truefullsalary * 4.0))
-
                     End If
+
+
 
                     'govdeducsched
                     Dim obj_val = EXECQUER("SELECT COALESCE(EmployeeShare,0) FROM payphilhealth WHERE COALESCE(" & the_salary &
                                                      ",0) BETWEEN SalaryRangeFrom AND IF(COALESCE(COALESCE(" & the_salary & "),0) > SalaryRangeTo, COALESCE(" & the_salary &
                                                      ") + 1, SalaryRangeTo) ORDER BY SalaryBase DESC LIMIT 1;")
 
-                    If btnNewSal.Enabled = False Then
-
-                    End If
-
                     If isorgPHHdeductsched = 0 _
                         Or isorgPHHdeductsched = 1 Then 'End of the monthy OR First half of the month
-
                         txtPhilHealthSal.Text = Val(obj_val)
-
                     Else
-
                         txtPhilHealthSal.Text = Val(obj_val) / payfreqdivisor
-
                     End If
 
-                    Dim objval = EXECQUER("SELECT COALESCE(EmployeeContributionAmount,0) FROM paysocialsecurity WHERE COALESCE(" & the_salary &
-                                          ",0) BETWEEN RangeFromAmount AND RangeToAmount ORDER BY MonthlySalaryCredit DESC LIMIT 1;")
+                    Using context = New PayrollContext()
+                        Dim query = From s In context.SocialSecurityBrackets
+                                    Select s
+                                    Where s.RangeFromAmount <= the_salary And
+                                        s.RangeToAmount >= the_salary
 
-                    If btnNewSal.Enabled = False Then
+                        _socialSecurityBracket = query.FirstOrDefault()
+                    End Using
 
-                    End If
-
-                    If isorgSSSdeductsched = 0 _
-                        Or isorgSSSdeductsched = 1 Then 'End of the month OR First half of the month
-
-                        txtSSSSal.Text = Val(objval)
-
-                    Else
-
-                        txtSSSSal.Text = Val(objval) / payfreqdivisor
-
+                    If _socialSecurityBracket IsNot Nothing Then
+                        txtSSSSal.Text = _socialSecurityBracket.EmployeeContributionAmount
                     End If
 
                     Dim pagibig_amount = ValNoComma(txtPagibig.Text)
 
                     Try
-
-                        If dgvemployeesalary.CurrentRow Is Nothing Then
-
-                        Else
+                        If dgvemployeesalary.CurrentRow IsNot Nothing Then
                             pagibig_amount = dgvemployeesalary.CurrentRow.Cells("TrueHDMFAmount").Value
                         End If
-
                     Catch ex As Exception
-
                     End Try
 
                     txtPagibig.Text = pagibig_amount * payfreqdivisor
 
-                    If Val(txtPagibig.Text) > pagibig_amount Then
-
-                    Else
-
+                    If Val(txtPagibig.Text) <= pagibig_amount Then
                         txtPagibig.Text = pagibig_amount '"100.00"
-
                     End If
 
                     If isorgHDMFdeductsched = 0 _
                         Or isorgHDMFdeductsched = 1 Then
-
-
 
                         txtPagibig.Text = pagibig_amount '"100.00"
                         payfreqdivisor = 1
@@ -12111,40 +12049,6 @@ TaskToDo: txtSSSSal.Text = "0.00"
 
     End Sub
 
-    Private Sub txtBasicrateSal_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtBasicrateSal.KeyPress
-        Dim e_KAsc As String = Asc(e.KeyChar)
-
-        Static onedot As SByte = 0
-
-        If (e_KAsc >= 48 And e_KAsc <= 57) Or e_KAsc = 8 Or e_KAsc = 46 Then
-
-            If e_KAsc = 46 Then
-                onedot += 1
-                If onedot >= 2 Then
-                    If txtBasicrateSal.Text.Contains(".") Then
-                        e.Handled = True
-                        onedot = 2
-                    Else
-                        e.Handled = False
-                        onedot = 0
-                    End If
-                Else
-                    If txtBasicrateSal.Text.Contains(".") Then
-                        e.Handled = True
-                    Else
-                        e.Handled = False
-                    End If
-                End If
-            Else
-                e.Handled = False
-            End If
-
-        Else
-            e.Handled = True
-        End If
-
-    End Sub
-
     Private Sub txtEmpDeclaSal_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtEmpDeclaSal.KeyPress
         Dim e_KAsc As String = Asc(e.KeyChar)
 
@@ -12172,25 +12076,18 @@ TaskToDo: txtSSSSal.Text = "0.00"
             Else
                 e.Handled = False
             End If
-
         Else
             e.Handled = True
         End If
-
     End Sub
 
     Private Sub dptFromSal_ValueChanged(sender As Object, e As EventArgs) Handles dptFromSal.ValueChanged
-        If grpbasicsalaryaddeduction.Enabled = True _
-            And btnNewSal.Enabled = False Then
-
-            Dim dbdbnow As Object = Format(CDate(dbnow), machineShortDateFormat)
-
-            dtpToSal.MinDate = Format(CDate(dptFromSal.Value).AddDays(1), machineShortDateFormat)
+        If grpbasicsalaryaddeduction.Enabled = True And btnNewSal.Enabled = False Then
+            dtpToSal.MinDate = dptFromSal.Value.AddDays(1)
         End If
     End Sub
 
     Private Sub dgvemployeesalary_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployeesalary.CellClick
-
         If btnNewSal.Enabled = True Then
             grpbasicsalaryaddeduction.Enabled = True
             Try
@@ -12220,7 +12117,6 @@ TaskToDo: txtSSSSal.Text = "0.00"
 
         is_user_override_phh = False
         is_user_override_sss = False
-
     End Sub
 
     Private Sub cleartextsal()
@@ -12247,14 +12143,7 @@ TaskToDo: txtSSSSal.Text = "0.00"
             txtBasicrateSal.Enabled = True
             dptFromSal.Enabled = True
             dtpToSal.Enabled = True
-
         Else
-            If btnNewSal.Enabled = False Then
-
-            Else
-
-            End If
-
             txtpaytype.Enabled = False
             txtEmp_type.Enabled = False
             txtEmpDeclaSal.Enabled = False
@@ -12262,16 +12151,13 @@ TaskToDo: txtSSSSal.Text = "0.00"
             txtBasicrateSal.Enabled = False
             dptFromSal.Enabled = False
             dtpToSal.Enabled = False
-
         End If
 
         errprovidSal.SetError(dptFromSal, Nothing)
         errprovidSal.SetError(dtpToSal, Nothing)
-
     End Sub
 
     Private Function fillSelectedEmpSalaryList(ByVal EmpID As Integer) As Boolean
-
         Try
             Dim dt As New DataTable
             dt = getDataTableForSQL("select * from employeesalary es inner join employee ee on es.EmployeeID = ee.RowID Where es.EmployeeID = '" & EmpID & "' And ee.OrganizationID = '" & z_OrganizationID & "' Order By es.RowID DESC;")
@@ -12395,28 +12281,33 @@ TaskToDo: txtSSSSal.Text = "0.00"
         End Try
 
         Return True
-
     End Function
 
     Private Function fillseletedEnterEmpID(ByVal RowID As Integer) As Boolean
-
-        Dim dt As New DataTable
-        dt = getDataTableForSQL("select es.*" &
-                                ",ee.*" &
-                                ",IF(ee.AgencyID IS NOT NULL, IFNULL(d.PhHealthDeductSchedAgency,d.PhHealthDeductSched), d.PhHealthDeductSched) AS PhHealthDeductSched" &
-                                ",IF(ee.AgencyID IS NOT NULL, IFNULL(d.HDMFDeductSchedAgency,d.HDMFDeductSched), d.HDMFDeductSched) AS HDMFDeductSched" &
-                                ",IF(ee.AgencyID IS NOT NULL, IFNULL(d.SSSDeductSchedAgency,d.SSSDeductSched), d.SSSDeductSched) AS SSSDeductSched" &
-                                ",IF(ee.AgencyID IS NOT NULL, IFNULL(d.WTaxDeductSchedAgency,d.WTaxDeductSched), d.WTaxDeductSched) AS WTaxDeductSched" &
-                                ",PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) 'PAYFREQUENCY_DIVISOR'" &
-                                ",d.MinimumWageAmount" &
-                                " from employeesalary es" &
-                                " inner join employee ee on es.EmployeeID = ee.RowID" &
-                                " LEFT JOIN position p ON p.RowID=ee.PositionID" &
-                                " LEFT JOIN `division` d ON d.RowID=p.DivisionId" &
-                                " LEFT JOIN agency ag ON ag.RowID=ee.AgencyID" &
-                                " INNER JOIN payfrequency pf ON pf.RowID=ee.PayFrequencyID" &
-                                " where es.RowID = '" & RowID & "'" &
-                                " And ee.OrganizationID = '" & z_OrganizationID & "';")
+        Dim dt As DataTable = getDataTableForSQL($"
+            SELECT
+                es.*,
+                ee.*,
+                IF(ee.AgencyID IS NOT NULL, IFNULL(d.PhHealthDeductSchedAgency, d.PhHealthDeductSched), d.PhHealthDeductSched) AS PhHealthDeductSched,
+                IF(ee.AgencyID IS NOT NULL, IFNULL(d.HDMFDeductSchedAgency, d.HDMFDeductSched), d.HDMFDeductSched) AS HDMFDeductSched,
+                IF(ee.AgencyID IS NOT NULL, IFNULL(d.SSSDeductSchedAgency, d.SSSDeductSched), d.SSSDeductSched) AS SSSDeductSched,
+                IF(ee.AgencyID IS NOT NULL, IFNULL(d.WTaxDeductSchedAgency, d.WTaxDeductSched), d.WTaxDeductSched) AS WTaxDeductSched,
+                PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) 'PAYFREQUENCY_DIVISOR',
+                d.MinimumWageAmount
+            FROM employeesalary es
+            INNER JOIN employee ee
+            ON es.EmployeeID = ee.RowID
+            LEFT JOIN position p
+            ON p.RowID = ee.PositionID
+            LEFT JOIN `division` d
+            ON d.RowID = p.DivisionId
+            LEFT JOIN agency ag
+            ON ag.RowID = ee.AgencyID
+            INNER JOIN payfrequency pf
+            ON pf.RowID = ee.PayFrequencyID
+            WHERE es.RowID = '{RowID}' AND
+                ee.OrganizationID = '{z_OrganizationID}';
+        ")
 
         'cleartext()
         If dt.Rows.Count > 0 Then
@@ -12585,9 +12476,11 @@ TaskToDo: txtSSSSal.Text = "0.00"
                               Optional esal_EffectiveDateFrom As Object = Nothing,
                               Optional esal_EffectiveDateTo As Object = Nothing,
                               Optional esal_TrueSalary As Object = Nothing,
-                              Optional esal_IsDoneByImporting As Object = "0") As Object
+                              Optional esal_IsDoneByImporting As Object = "0",
+                              Optional esal_PaySocialSecurityID As Object = Nothing,
+                              Optional esal_PayPhilHealthID As Object = Nothing) As Object
 
-        Dim params(17, 2) As Object
+        Dim params(19, 2) As Object
 
         params(0, 0) = "esal_RowID"
         params(1, 0) = "esal_EmployeeID"
@@ -12608,6 +12501,8 @@ TaskToDo: txtSSSSal.Text = "0.00"
 
         params(16, 0) = "esal_DiscardSSS"
         params(17, 0) = "esal_DiscardPhH"
+        params(18, 0) = "esal_PaySocialSecurityID"
+        params(19, 0) = "esal_PayPhilHealthID"
 
         params(0, 1) = If(esal_RowID = Nothing, DBNull.Value, esal_RowID)
         params(1, 1) = esal_EmployeeID
@@ -12630,6 +12525,8 @@ TaskToDo: txtSSSSal.Text = "0.00"
 
         params(16, 1) = Convert.ToInt16(is_user_override_sss)
         params(17, 1) = Convert.ToInt16(is_user_override_phh)
+        params(18, 1) = esal_PaySocialSecurityID
+        params(19, 1) = esal_PayPhilHealthID
 
         INSUPD_employeesalary =
             EXEC_INSUPD_PROCEDURE(params,
