@@ -23,7 +23,9 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeesalary`(
     `esal_TrueSalary` DECIMAL(10,2),
     `esal_IsDoneByImporting` TEXT,
     `esal_DiscardSSS` TINYINT,
-    `esal_DiscardPhH` TINYINT
+    `esal_DiscardPhH` TINYINT,
+    `esal_PaySocialSecurityID` INT,
+    `esal_PayPhilHealthID` INT
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN
@@ -244,28 +246,29 @@ IF esal_RowID IS NULL AND emp_countsalaries >= 1 THEN
 
 END IF;
 
-INSERT INTO employeesalary
-(
-    RowID
-    ,EmployeeID
-    ,Created
-    ,CreatedBy
-    ,OrganizationID
-    ,FilingStatusID
-    ,PaySocialSecurityID
-    ,PayPhilhealthID
-    ,HDMFAmount
-    ,BasicPay
-    ,Salary
-    ,BasicDailyPay
-    ,BasicHourlyPay
-    ,NoofDependents
-    ,MaritalStatus
-    ,PositionID
-    ,EffectiveDateFrom
-    ,EffectiveDateTo
-    ,TrueSalary
-    ,UndeclaredSalary, OverrideDiscardSSSContrib, OverrideDiscardPhilHealthContrib
+INSERT INTO employeesalary(
+    RowID,
+    EmployeeID,
+    Created,
+    CreatedBy,
+    OrganizationID,
+    FilingStatusID,
+    PaySocialSecurityID,
+    PayPhilhealthID,
+    HDMFAmount,
+    BasicPay,
+    Salary,
+    BasicDailyPay,
+    BasicHourlyPay,
+    NoofDependents,
+    MaritalStatus,
+    PositionID,
+    EffectiveDateFrom,
+    EffectiveDateTo,
+    TrueSalary,
+    UndeclaredSalary,
+    OverrideDiscardSSSContrib,
+    OverrideDiscardPhilHealthContrib
 )
 SELECT
     esal_RowID,
@@ -274,8 +277,8 @@ SELECT
     esal_CreatedBy,
     esal_OrganizationID,
     EmpFStatID,
-    sss_amt,
-    phh_amt,
+    esal_PaySocialSecurityID,
+    esal_PayPhilHealthID,
     esal_HDMFAmount,
     esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType)),
     esal_Salary,
@@ -298,8 +301,8 @@ UPDATE
     LastUpd = CURRENT_TIMESTAMP(),
     LastUpdBy = esal_LastUpdBy,
     FilingStatusID = EmpFStatID,
-    PaySocialSecurityID = sss_amt,
-    PayPhilhealthID = phh_amt,
+    PaySocialSecurityID = esal_PaySocialSecurityID,
+    PayPhilhealthID = esal_PayPhilHealthID,
     HDMFAmount = IF(esal_HDMFAmount != 0,esal_HDMFAmount,hdmf_amt),
     BasicPay = esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType)),
     Salary = esal_Salary,
