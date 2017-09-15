@@ -11,61 +11,6 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(
 	`ete_OrganizID` INT,
 	`ete_Date` DATE,
 	`ete_UserRowID` INT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN
@@ -267,6 +212,8 @@ DECLARE undertimeHours DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE undertimeAmount DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE basicDayPay DECIMAL(12, 4);
+
+DECLARE hasWorkedLastWorkingDay BOOLEAN;
 
 DECLARE applicableRegularRate DECIMAL(11, 6);
 DECLARE applicableOvertimeRate DECIMAL(11, 6);
@@ -868,6 +815,8 @@ IF isRegularDay THEN
 
 ELSEIF isHoliday THEN
 
+    SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(ete_EmpRowID, ete_Date);
+
     SELECT
         IFNULL(et.TotalDayPay,0),
         IFNULL(et.TotalHoursWorked,0)
@@ -888,7 +837,7 @@ ELSEIF isHoliday THEN
 
     -- a. If the current day is a holiday.
     -- b. If employee was payed yesterday.
-    IF yester_TotDayPay != 0 THEN
+    IF hasWorkedLastWorkingDay THEN
 
         IF isRestDay THEN
             SET regularAmount = (ete_RegHrsWorkd * hourlyRate);
