@@ -19,7 +19,9 @@ Public Class PayrollContext
         MyBase.New(GetConnection(), True)
     End Sub
 
-    Public Overridable Property SocialSecurityBrackets As DbSet(Of PayrollSys.SocialSecurityBracket)
+    Public Overridable Property SocialSecurityBrackets As DbSet(Of SocialSecurityBracket)
+
+    Public Overridable Property PhilHealthBrackets As DbSet(Of PhilHealthBracket)
 
     Public Overridable Property LoanSchedules As DbSet(Of LoanSchedule)
 
