@@ -8,6 +8,8 @@
 
     Dim n_LoanEndDate As Object = Nothing
 
+    Private ebonus_rowid_comment As New Dictionary(Of Object, String)
+
     Sub New(Optional EmpRowID As Object = Nothing,
             Optional Bonus_RowID As Object = Nothing,
             Optional loan_startdate As Object = Nothing,
@@ -77,6 +79,20 @@
         Return MyBase.ProcessCmdKey(msg, keyData)
 
     End Function
+
+    Property BonusComments As Dictionary(Of Object, String)
+
+        Get
+            Return ebonus_rowid_comment
+
+        End Get
+
+        Set(value As Dictionary(Of Object, String))
+            value = ebonus_rowid_comment
+
+        End Set
+
+    End Property
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -204,6 +220,17 @@
 
     Private Sub dgvBonus_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempbon.CellContentClick
 
+        If TypeOf (dgvempbon.Item(e.ColumnIndex, e.RowIndex)) Is DataGridViewCheckBoxCell Then
+
+            With dgvempbon
+
+                .CurrentCell = .Item("bon_Type", e.RowIndex)
+                .CurrentCell = .Item("SelectionBox", e.RowIndex)
+
+            End With
+
+        End If
+
     End Sub
 
     Private Sub dgvBonus_SelectionChanged(sender As Object, e As EventArgs) Handles dgvempbon.SelectionChanged
@@ -248,8 +275,24 @@
 
         Else
 
+            Dim _key As Object = dgvempbon.Item("bon_RowID", e.RowIndex).Value
+            Dim _value As String =
+                If(String.IsNullOrEmpty(dgvempbon.Item("columnRemarks", e.RowIndex).Value),
+                   String.Empty,
+                   dgvempbon.Item("columnRemarks", e.RowIndex).Value)
+
+            If ebonus_rowid_comment.ContainsKey(_key) Then
+                ebonus_rowid_comment.Remove(_key)
+            End If
+
+            ebonus_rowid_comment.Add(_key, _value.Trim)
+
         End If
+
+        pnlBonPotentPayment.Enabled = IsThereBonusAppliedToLoan()
+
         n_EmployeeBonusRowID = Nothing
+
     End Sub
 
     Private Sub dgvempbon_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvempbon.EditingControlShowing
@@ -281,6 +324,8 @@
     End Sub
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click, Button1.Click, Button2.Click
+
+        dgvempbon.EndEdit()
 
         Dim sender_name = DirectCast(sender, Control).Name
 
@@ -325,5 +370,16 @@
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         dgvempbon.Rows.Add()
     End Sub
+
+    Private Function IsThereBonusAppliedToLoan() As Boolean
+
+        Dim dgvrow =
+            dgvempbon.Rows.OfType(Of DataGridViewRow).Where(Function(dgvr) dgvr.Cells("SelectionBox").Value = True)
+
+        Dim return_val As Boolean = (dgvrow.Count > 0)
+
+        Return return_val
+
+    End Function
 
 End Class
