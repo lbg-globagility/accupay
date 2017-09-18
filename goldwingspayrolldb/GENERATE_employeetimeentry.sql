@@ -195,6 +195,8 @@ DECLARE nightDiffOTAmount DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE isOvertimeOverlappedNightDifferential BOOLEAN;
 DECLARE shouldCalculateNightDifferentialOvertime BOOLEAN;
 
+DECLARE isDefaultRestDay BOOLEAN;
+DECLARE isShiftRestDay BOOLEAN;
 DECLARE restDayHours DECIMAL(15, 4);
 DECLARE restDayAmount DECIMAL(15, 4) DEFAULT 0.0;
 
@@ -327,14 +329,14 @@ INTO OTCount;
 SELECT COALESCE(DAYOFWEEK(ete_Date) = e.DayOfRest, FALSE)
 FROM employee e
 WHERE e.RowID = ete_EmpRowID
-INTO isDayMatchRestDay;
+INTO isDefaultRestDay;
 
 SELECT
     sh.TimeFrom,
     sh.TimeTo,
     esh.RowID,
     sh.RowID,
-    esh.RestDay
+    COALESCE(esh.RestDay, TRUE)
 FROM employeeshift esh
 INNER JOIN shift sh
     ON sh.RowID = esh.ShiftID
@@ -348,7 +350,9 @@ INTO
     shifttimeto,
     employeeShiftID,
     shiftID,
-    isRestDay;
+    isShiftRestDay;
+
+SET isRestDay = isDefaultRestDay OR isShiftRestDay;
 
 IF OTCount = 1 THEN
 
