@@ -167,7 +167,7 @@ SELECT `GET_employeeundeclaredsalarypercent`(
 )
 INTO actualratepercent;
 
--- Deprecate
+
 IF isRestDay THEN
     SET actualRegularHoursAmount = NEW.RegularHoursAmount + (undeclaredSalary / divisorToHourlyRate * NEW.RegularHoursWorked);
 ELSE

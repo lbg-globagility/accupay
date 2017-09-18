@@ -100,7 +100,7 @@ IF ispayperiodendofmonth IS NOT NULL THEN
         (ii.BasicAmount / pf_div)
     FROM
     (
-            -- Get the summation of basic pay for the daily salaried employees.
+            
             SELECT
                 (
                     timeEntrySummary.BasicAmount +
@@ -166,7 +166,7 @@ IF ispayperiodendofmonth IS NOT NULL THEN
                 e.OrganizationID = OrganizID AND
                 e.EmploymentStatus IN ('Contractual', 'SERVICE CONTRACT')
         UNION
-            -- Get the summation of basic pay for the monthly and fixed salaried employees.
+            
             SELECT
                 (es.BasicPay + (es.UndeclaredSalary / GetPayPeriodsPerMonth(e.PayFrequencyID)) - IFNULL(et.LessAmount,0)) AS BasicAmount,
                 e.RowID AS EmployeeID,

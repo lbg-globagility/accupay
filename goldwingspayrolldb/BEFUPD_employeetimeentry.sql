@@ -13,7 +13,7 @@ DECLARE isRest_day CHAR(1);
 
 DECLARE hasShift BOOLEAN;
 
--- DECLARE perfect_hrs DECIMAL(11,6) DEFAULT 0; -- deprecate
+
 
 DECLARE absent_amount DECIMAL(11,6);
 
@@ -63,21 +63,21 @@ INTO @e_rateperday;
 
 SET e_rateperday = IFNULL(@e_rateperday,0);
 
--- SELECT EXISTS(
---     SELECT et.RowID
---     FROM employeetimeentry et
---     INNER JOIN payrate pr
---     ON pr.RowID=et.PayRateID
---         AND pr.PayType='Regular Day'
---     WHERE et.EmployeeID=NEW.EmployeeID
---         AND et.OrganizationID=NEW.OrganizationID
---         AND et.`Date` BETWEEN SUBDATE(NEW.`Date`, INTERVAL 2 DAY) AND SUBDATE(NEW.`Date`, INTERVAL 1 DAY)
---         AND et.EmployeeShiftID IS NOT NULL
---         AND et.TotalDayPay > 0
---     ORDER BY et.`Date` DESC
---     LIMIT 1
--- )
--- INTO isPresentInWorkingDaysPriorToThisDate;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 SELECT
     (PayType = 'Regular Day'),
@@ -98,7 +98,7 @@ INTO
     payrate_this_date,
     rate_this_date;
 
--- SET perfect_hrs = 1; -- deprecate
+
 SET @myperfectshifthrs = 1;
 
 SET NEW.VacationLeaveHours = IFNULL(NEW.VacationLeaveHours,0);
@@ -160,8 +160,8 @@ IF isRest_day = '0' THEN
 
         SET absent_amount = GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, NEW.`Date`);
 
-        -- IF absent_amount < NEW.Absent THEN
-            -- SET NEW.Absent = 0;
+        
+            
         IF (SUBSTRING_INDEX(absent_amount,'.',1) * 1) = (SUBSTRING_INDEX(NEW.HoursLateAmount,'.',1) * 1) THEN
             SET NEW.Absent = 0;
         ELSEIF (SUBSTRING_INDEX(absent_amount,'.',1) * 1) = (SUBSTRING_INDEX(NEW.UndertimeHoursAmount,'.',1) * 1) THEN
@@ -223,7 +223,7 @@ IF isRest_day = '0' THEN
                    NEW.TotalDayPay = 0 AND
                    @calclegalholi = 1 THEN
 
-                -- SET NEW.TotalDayPay = @daily_pay;
+                
                 SET NEW.Absent = 0.0;
             ELSEIF hasShift AND
                    leaveHours = 0 AND

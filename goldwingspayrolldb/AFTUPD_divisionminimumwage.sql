@@ -9,18 +9,18 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTUPD_divisionminimumwage` AFTER UPDATE ON `divisionminimumwage` FOR EACH ROW BEGIN
 
--- SELECT COUNT(dmw.RowID) FROM divisionminimumwage dmw WHERE dmw.DivisionID=NEW.DivisionID
--- INTO @rec_count_minwage;
 
--- IF @rec_count_minwage = 1 THEN
 
---     UPDATE division d
---     SET d.MinimumWageAmount=NEW.Amount
---     ,d.LastUpd=IFNULL(ADDTIME(d.LastUpd, SEC_TO_TIME(1)),CURRENT_TIMESTAMP())
---     ,d.LastUpdBy=IFNULL(d.LastUpdBy,d.CreatedBy)
---     WHERE d.RowID=NEW.DivisionID;
 
--- END IF;
+
+
+
+
+
+
+
+
+
 
 END//
 DELIMITER ;

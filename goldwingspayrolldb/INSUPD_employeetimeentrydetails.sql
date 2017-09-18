@@ -36,21 +36,21 @@ DECLARE branch_rowid INT(11);
 
 SET EditAsUnique = 0;
 
--- IF etentd_RowID IS NULL AND EditAsUnique = 1 THEN
 
---     SELECT etd.RowID
---     FROM employeetimeentrydetails etd
---     INNER JOIN employee e
---     ON e.RowID = etd.EmployeeID AND
---         e.OrganizationID = etd.OrganizationID AND
---         e.EmployeeID = etentd_EmployeeID
---     WHERE etd.OrganizationID = etentd_OrganizationID AND
---         etd.Created = etentd_Created AND
---         etd.`Date` = etentd_Date
---     LIMIT 1
---     INTO etentd_RowID;
 
--- END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 IF IFNULL(Branch_Code,'') != '' THEN
     INSERT INTO branch(
@@ -87,64 +87,64 @@ IF EditAsUnique = '1' AND EXISTS(
 
     SET @noop = TRUE;
 
-    -- INSERT INTO employeetimeentrydetails (
-    --     RowID,
-    --     OrganizationID,
-    --     Created,
-    --     CreatedBy,
-    --     EmployeeID,
-    --     TimeIn,
-    --     TimeOut,
-    --     `Date`,
-    --     TimeScheduleType,
-    --     TimeEntryStatus,
-    --     ChargeToDivisionID,
-    --     TimeStampIn,
-    --     TimeStampOut
-    -- )
-    -- VALUES (
-    --     etentd_RowID,
-    --     etentd_OrganizationID,
-    --     etentd_Created,
-    --     etentd_CreatedBy,
-    --     (
-    --         SELECT RowID
-    --         FROM employee
-    --         WHERE OrganizationID = etentd_OrganizationID AND
-    --             EmployeeID = etentd_EmployeeID
-    --         LIMIT 1
-    --     ),
-    --     etentd_TimeIn,
-    --     etentd_TimeOut,
-    --     etentd_Date,
-    --     etentd_TimeScheduleType,
-    --     IFNULL(
-    --         etentd_TimeEntryStatus,
-    --         IF(
-    --             IFNULL(etentd_TimeIn, '') = '',
-    --             'missing clock in',
-    --             IF(
-    --                 IFNULL(etentd_TimeOut, '') = '',
-    --                 'missing clock out',
-    --                 ''
-    --             )
-    --         )
-    --     ),
-    --     branch_rowid,
-    --     TIMESTAMP(ADDDATE(DateTimeLogIn, INTERVAL 0 SECOND)),
-    --     TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND))
-    -- )
-    -- ON DUPLICATE KEY
-    -- UPDATE
-    --     LastUpd = CURRENT_TIMESTAMP(),
-    --     LastUpdBy = etentd_LastUpdBy,
-    --     TimeScheduleType = etentd_TimeScheduleType,
-    --     ChargeToDivisionID = branch_rowid,
-    --     TimeStampIn = TIMESTAMP(ADDDATE(DateTimeLogIn, INTERVAL 0 SECOND)),
-    --     TimeStampOut = TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND));
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    -- SELECT @@Identity AS id
-    -- INTO etentdID;
+    
+    
 
 ELSE
     IF EXISTS(
@@ -201,37 +201,37 @@ ELSE
             branch_rowid,
             TIMESTAMP(ADDDATE(DateTimeLogIn, INTERVAL 0 SECOND)),
             TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND))
-    -- UNION
-    --     SELECT
-    --         etd.RowID,
-    --         etd.OrganizationID,
-    --         etd.Created,
-    --         etentd_CreatedBy,
-    --         etd.EmployeeID,
-    --         etentd_TimeIn,
-    --         etentd_TimeOut,
-    --         etd.`Date`,
-    --         etentd_TimeScheduleType,
-    --         IFNULL(
-    --             etentd_TimeEntryStatus,
-    --             IF(
-    --                 IFNULL(etentd_TimeIn, '') = '',
-    --                 'missing clock in',
-    --                 IF(
-    --                     IFNULL(etentd_TimeOut, '') = '',
-    --                     'missing clock out',
-    --                     ''
-    --                 )
-    --             )
-    --         ),
-    --         branch_rowid,
-    --         TIMESTAMP(ADDDATE(DateTimeLogIn, INTERVAL 0 SECOND)),
-    --         TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND))
-    --     FROM employeetimeentrydetails etd
-    --     WHERE etd.RowID != IFNULL(etentd_RowID, 0) AND
-    --         etd.OrganizationID = etentd_OrganizationID AND
-    --         etd.EmployeeID = etentd_EmployeeID AND
-    --         etd.`Date` = etentd_Date
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     ON DUPLICATE KEY
     UPDATE
         LastUpd = CURRENT_TIMESTAMP(),

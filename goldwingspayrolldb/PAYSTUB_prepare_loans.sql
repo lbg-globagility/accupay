@@ -50,8 +50,8 @@ IF IsFirstHalfOfMonth = '1' THEN
         AND els.DeductionSchedule IN ('First half', 'Per pay period')
         AND (Date_To >= els.DedEffectiveDateFrom)
         AND els.TotalBalanceLeft > 0
-        -- AND (els.DedEffectiveDateFrom >= Date_From OR els.DedEffectiveDateTo >= Date_From)
-        -- AND (els.DedEffectiveDateFrom <= Date_To OR els.DedEffectiveDateTo <= Date_To)
+        
+        
     GROUP BY els.EmployeeID;
 
 ELSE
@@ -71,8 +71,8 @@ ELSE
         AND els.DeductionSchedule IN ('End of the month', 'Per pay period')
         AND (Date_To >= els.DedEffectiveDateFrom)
         AND els.TotalBalanceLeft > 0
-        -- AND (els.DedEffectiveDateFrom >= Date_From OR els.DedEffectiveDateTo >= Date_From)
-        -- AND (els.DedEffectiveDateFrom <= Date_To OR els.DedEffectiveDateTo <= Date_To)
+        
+        
     GROUP BY els.EmployeeID;
 
 END IF;

@@ -17,7 +17,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `GetPayPeriodsPerMonth`(
 ) RETURNS int(11)
 BEGIN
 
-	-- For semi-monthly paid employees
+	
 	IF $PayFrequencyID = 1 THEN
 		RETURN 2;
 	ELSE
