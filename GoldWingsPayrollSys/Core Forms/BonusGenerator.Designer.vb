@@ -30,8 +30,8 @@ Partial Class BonusGenerator
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.lblYear = New System.Windows.Forms.Label()
-        Me.linkNxt = New System.Windows.Forms.LinkLabel()
         Me.linkPrevs = New System.Windows.Forms.LinkLabel()
+        Me.linkNxt = New System.Windows.Forms.LinkLabel()
         Me.dgvPayPeriodList = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Col1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Col2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -94,6 +94,9 @@ Partial Class BonusGenerator
         Me.bgworkBonusGenerate = New System.ComponentModel.BackgroundWorker()
         Me.bgworkBonusPreparator = New System.ComponentModel.BackgroundWorker()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.txtTotalLoan = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
         CType(Me.dgvPayPeriodList, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -155,20 +158,6 @@ Partial Class BonusGenerator
         Me.lblYear.Text = "Label1"
         Me.lblYear.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
-        'linkNxt
-        '
-        Me.linkNxt.AutoSize = True
-        Me.linkNxt.Dock = System.Windows.Forms.DockStyle.Right
-        Me.linkNxt.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!)
-        Me.linkNxt.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.linkNxt.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.linkNxt.Location = New System.Drawing.Point(197, 0)
-        Me.linkNxt.Name = "linkNxt"
-        Me.linkNxt.Size = New System.Drawing.Size(39, 15)
-        Me.linkNxt.TabIndex = 2
-        Me.linkNxt.TabStop = True
-        Me.linkNxt.Text = "Next>"
-        '
         'linkPrevs
         '
         Me.linkPrevs.AutoSize = True
@@ -182,6 +171,20 @@ Partial Class BonusGenerator
         Me.linkPrevs.TabIndex = 1
         Me.linkPrevs.TabStop = True
         Me.linkPrevs.Text = "<Prev"
+        '
+        'linkNxt
+        '
+        Me.linkNxt.AutoSize = True
+        Me.linkNxt.Dock = System.Windows.Forms.DockStyle.Right
+        Me.linkNxt.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!)
+        Me.linkNxt.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.linkNxt.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.linkNxt.Location = New System.Drawing.Point(197, 0)
+        Me.linkNxt.Name = "linkNxt"
+        Me.linkNxt.Size = New System.Drawing.Size(39, 15)
+        Me.linkNxt.TabIndex = 2
+        Me.linkNxt.TabStop = True
+        Me.linkNxt.Text = "Next>"
         '
         'dgvPayPeriodList
         '
@@ -318,6 +321,9 @@ Partial Class BonusGenerator
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.AutoScroll = True
+        Me.SplitContainer1.Panel2.Controls.Add(Me.Label2)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.Label1)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalLoan)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalBonus)
         Me.SplitContainer1.Size = New System.Drawing.Size(964, 440)
         Me.SplitContainer1.SplitterDistance = 256
@@ -491,7 +497,7 @@ Partial Class BonusGenerator
         'txtTotalBonus
         '
         Me.txtTotalBonus.BackColor = System.Drawing.Color.White
-        Me.txtTotalBonus.Location = New System.Drawing.Point(83, 36)
+        Me.txtTotalBonus.Location = New System.Drawing.Point(281, 87)
         Me.txtTotalBonus.Name = "txtTotalBonus"
         Me.txtTotalBonus.ReadOnly = True
         Me.txtTotalBonus.Size = New System.Drawing.Size(100, 20)
@@ -641,6 +647,34 @@ Partial Class BonusGenerator
         Me.bgworkBonusPreparator.WorkerReportsProgress = True
         Me.bgworkBonusPreparator.WorkerSupportsCancellation = True
         '
+        'txtTotalLoan
+        '
+        Me.txtTotalLoan.BackColor = System.Drawing.Color.White
+        Me.txtTotalLoan.Location = New System.Drawing.Point(281, 61)
+        Me.txtTotalLoan.Name = "txtTotalLoan"
+        Me.txtTotalLoan.ReadOnly = True
+        Me.txtTotalLoan.Size = New System.Drawing.Size(100, 20)
+        Me.txtTotalLoan.TabIndex = 0
+        Me.txtTotalLoan.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(97, 93)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(64, 13)
+        Me.Label1.TabIndex = 1
+        Me.Label1.Text = "Total Bonus"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(97, 68)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(58, 13)
+        Me.Label2.TabIndex = 1
+        Me.Label2.Text = "Total Loan"
+        '
         'BonusGenerator
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -739,4 +773,7 @@ Partial Class BonusGenerator
     Friend WithEvents tsbtnDelEmpPayrollBonus As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripLabel2 As System.Windows.Forms.ToolStripLabel
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label1 As Label
+    Friend WithEvents txtTotalLoan As TextBox
 End Class

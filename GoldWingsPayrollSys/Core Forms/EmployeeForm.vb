@@ -10601,6 +10601,7 @@ Public Class EmployeeForm
                                  cmbdedsched.Text, chkboxChargeToBonus.Tag) 'CDec(txtdedpercent.Text)'cmbdedsched.Text
             fillloadsched()
             fillloadschedselected()
+            SaveBonusCommentsRegardsToLoan()
             myBalloon("Successfully Save", "Saved", lblforballoon, , -100)
 
         End If
@@ -11218,6 +11219,24 @@ Public Class EmployeeForm
             End If
 
         End If
+
+    End Sub
+
+    Private Sub SaveBonusCommentsRegardsToLoan()
+
+        For Each dict In ebonus_rowid_comment
+            Dim str_comment As String = String.Concat("'", dict.Value, "'")
+            Dim row_id = dict.Key
+
+            Dim str_quer As String =
+                String.Concat("UPDATE employeebonus eb",
+                              " SET `Remarks`=", str_comment,
+                              " WHERE eb.RowID='", row_id, "';")
+
+            Dim exec_quer As New ExecuteQuery(str_quer)
+            Dim exec_result = exec_quer.Result
+
+        Next
 
     End Sub
 
@@ -18709,7 +18728,8 @@ Public Class EmployeeForm
                     End If
 
                     If Trim(.Cells("bon_End").Value) <> Nothing Then
-                        dtpbonenddate.Value = Format(CDate(.Cells("bon_End").Value), machineShortDateFormat)
+                        'dtpbonenddate.Value = Format(CDate(.Cells("bon_End").Value), machineShortDateFormat)
+                        dtpbonenddate.Value = Format(CDate(.Cells("bon_Start").Value), machineShortDateFormat)
                     Else
                         dtpbonenddate.Value = Format(CDate(dbnow), machineShortDateFormat)
                     End If
@@ -19170,7 +19190,7 @@ Public Class EmployeeForm
     Private Sub dtpbonenddate_ValueChanged(sender As Object, e As EventArgs) Handles dtpbonenddate.ValueChanged
 
         If DateDiff(DateInterval.Day, CDate(dtpbonstartdate.Value), CDate(dtpbonenddate.Value)) < 0 Or IsBonusOneTimeFreq Then
-            dtpbonstartdate.Value = dtpbonenddate.Value
+            dtpbonenddate.Value = dtpbonstartdate.Value
         End If
 
     End Sub
@@ -21440,6 +21460,8 @@ Public Class EmployeeForm
     Private Sub chkboxChargeToBonus_CheckedChanged(sender As Object, e As EventArgs) Handles chkboxChargeToBonus.CheckedChanged
 
     End Sub
+
+    Private ebonus_rowid_comment As New Dictionary(Of Object, String)
 
     Private Sub chkboxChargeToBonus_Click(sender As Object, e As EventArgs) Handles chkboxChargeToBonus.Click
 
