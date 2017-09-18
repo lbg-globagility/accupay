@@ -1800,7 +1800,8 @@ Public Class PayStub
                                                   Select l
                                                   Where l.OrganizationID = z_OrganizationID And
                                                       l.DedEffectiveDateFrom <= paypTo And
-                                                      l.Status = "In Progress"
+                                                      l.Status = "In Progress" And
+                                                      l.BonusID Is Nothing
                                       _loanSchedules = query.ToList()
                                   End Using
 
