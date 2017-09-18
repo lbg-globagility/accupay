@@ -335,7 +335,17 @@ Public Class PayrollGeneration
             If loanTransactions.Count > 0 Then
                 _payStub.TotalLoanDeduction = loanTransactions.Aggregate(0D, Function(total, t) total + t.DeductionAmount)
             Else
-                Dim loanSchedules = _allLoanSchedules.Where(Function(l) l.EmployeeID = _payStub.EmployeeID)
+                Dim acceptedLoans As String() = {}
+                If _isFirstHalf Then
+                    acceptedLoans = {"Per pay period", "First half"}
+                ElseIf _isEndOfMonth Then
+                    acceptedLoans = {"Per pay period", "End of the month"}
+                End If
+
+                Dim loanSchedules = _allLoanSchedules _
+                    .Where(Function(l) l.EmployeeID = _payStub.EmployeeID) _
+                    .Where(Function(l) acceptedLoans.Contains(l.DeductionSchedule)) _
+                    .ToList()
 
                 For Each loanSchedule In loanSchedules
                     Dim loanTransaction = New PayrollSys.LoanTransaction() With {
