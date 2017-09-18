@@ -15,7 +15,7 @@ Public Class BonusGenerator
 
         SplitContainer1.SplitterWidth = 6
 
-        Dim listoftextbox = SplitContainer1.Panel2.Controls.Cast(Of TextBox)()
+        Dim listoftextbox = SplitContainer1.Panel2.Controls.OfType(Of TextBox)()
 
         For Each txtbx In listoftextbox
             AddHandler txtbx.TextChanged, AddressOf Amount_Formatter
@@ -284,7 +284,7 @@ Public Class BonusGenerator
 
         'GeneratePayPeriodRowID, GeneratePayFromDate, GeneratePayToDate
 
-        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("CALL EMPLOYEE_payrollgen('" & orgztnID & "', '" & GeneratePayFromDate & "', '" & GeneratePayToDate & "');")
+        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("CALL EMPLOYEE_payrollgen('" & orgztnID & "', '" & GeneratePayFromDate & "', '" & GeneratePayToDate & "', NULL);")
 
         validEmployeeList = n_SQLQueryToDatatable.ResultTable
 
@@ -492,7 +492,7 @@ Public Class BonusGenerator
 
             PayStubBonusRowID = drow("RowID")
 
-            'txtTotalBonus.Text = Math.Round(ValNoComma(drow("TotalNetSalary")), 2)
+            txtTotalLoan.Text = ValNoComma(drow("TotalLoans"))
             txtTotalBonus.Text = ValNoComma(drow("TotalNetSalary"))
 
         Next
@@ -505,7 +505,7 @@ Public Class BonusGenerator
 
         PayStubBonusRowID = Nothing
 
-        Dim listoftextbox = SplitContainer1.Panel2.Controls.Cast(Of TextBox)()
+        Dim listoftextbox = SplitContainer1.Panel2.Controls.OfType(Of TextBox)()
 
         For Each ctrl In listoftextbox
             ctrl.Text = 0
