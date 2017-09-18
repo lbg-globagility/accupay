@@ -17,58 +17,58 @@ Public Class EmpPosition
 
     Public ShowMeAsDialog As Boolean = False
 
-    Public q_employee As String = "SELECT e.RowID," & _
-        "e.EmployeeID 'Employee ID'," & _
-        "e.FirstName 'First Name'," & _
-        "e.MiddleName 'Middle Name'," & _
-        "e.LastName 'Last Name'," & _
-        "e.Surname," & _
-        "e.Nickname," & _
-        "e.MaritalStatus 'Marital Status'," & _
-        "COALESCE(e.NoOfDependents,0) 'No. Of Dependents'," & _
-        "COALESCE(DATE_FORMAT(e.Birthdate,'%m/%d/%Y'),'') 'Birthdate'," & _
-        "COALESCE(DATE_FORMAT(e.Startdate,'%m/%d/%Y'),'') 'Startdate'," & _
-        "e.JobTitle 'Job Title'," & _
-        "COALESCE(pos.PositionName,'') 'Position'," & _
-        "e.Salutation," & _
-        "e.TINNo 'TIN'," & _
-        "e.SSSNo 'SSS No.'," & _
-        "e.HDMFNo 'PAGIBIG No.'," & _
-        "e.PhilHealthNo 'PhilHealth No.'," & _
-        "e.WorkPhone 'Work Phone No.'," & _
-        "e.HomePhone 'Home Phone No.'," & _
-        "e.MobilePhone 'Mobile Phone No.'," & _
-        "e.HomeAddress 'Home address'," & _
-        "e.EmailAddress 'Email address'," & _
-        "COALESCE(IF(e.Gender='M','Male','Female'),'') 'Gender'," & _
-        "e.EmploymentStatus 'Employment Status'," & _
-        "IFNULL(pf.PayFrequencyType,'') 'Pay Frequency'," & _
-        "e.UndertimeOverride," & _
-        "e.OvertimeOverride," & _
-        "COALESCE(pos.RowID,'') 'PositionID'" & _
-        ",IFNULL(e.PayFrequencyID,'') 'PayFrequencyID'" & _
-        ",e.EmployeeType" & _
-        ",e.LeaveBalance" & _
-        ",e.SickLeaveBalance" & _
-        ",e.MaternityLeaveBalance" & _
-        ",e.LeaveAllowance" & _
-        ",e.SickLeaveAllowance" & _
-        ",e.MaternityLeaveAllowance" & _
-        ",e.LeavePerPayPeriod" & _
-        ",e.SickLeavePerPayPeriod" & _
-        ",e.MaternityLeavePerPayPeriod" & _
-        ",COALESCE(fstat.RowID,3) 'fstatRowID'" & _
-        ",'' 'Image'" & _
-        ",DATE_FORMAT(e.Created,'%m/%d/%Y') 'Creation Date'," & _
-        "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," & _
-        "COALESCE(DATE_FORMAT(e.LastUpd,'%m/%d/%Y'),'') 'Last Update'," & _
-        "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=e.LastUpdBy) 'LastUpdate by'" & _
-        " " & _
-        "FROM employee e " & _
-        "LEFT JOIN user u ON e.CreatedBy=u.RowID " & _
-        "LEFT JOIN position pos ON e.PositionID=pos.RowID " & _
-        "LEFT JOIN payfrequency pf ON e.PayFrequencyID=pf.RowID " & _
-        "LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents " & _
+    Public q_employee As String = "SELECT e.RowID," &
+        "e.EmployeeID 'Employee ID'," &
+        "e.FirstName 'First Name'," &
+        "e.MiddleName 'Middle Name'," &
+        "e.LastName 'Last Name'," &
+        "e.Surname," &
+        "e.Nickname," &
+        "e.MaritalStatus 'Marital Status'," &
+        "COALESCE(e.NoOfDependents,0) 'No. Of Dependents'," &
+        "COALESCE(DATE_FORMAT(e.Birthdate,'%m/%d/%Y'),'') 'Birthdate'," &
+        "COALESCE(DATE_FORMAT(e.Startdate,'%m/%d/%Y'),'') 'Startdate'," &
+        "e.JobTitle 'Job Title'," &
+        "COALESCE(pos.PositionName,'') 'Position'," &
+        "e.Salutation," &
+        "e.TINNo 'TIN'," &
+        "e.SSSNo 'SSS No.'," &
+        "e.HDMFNo 'PAGIBIG No.'," &
+        "e.PhilHealthNo 'PhilHealth No.'," &
+        "e.WorkPhone 'Work Phone No.'," &
+        "e.HomePhone 'Home Phone No.'," &
+        "e.MobilePhone 'Mobile Phone No.'," &
+        "e.HomeAddress 'Home address'," &
+        "e.EmailAddress 'Email address'," &
+        "COALESCE(IF(e.Gender='M','Male','Female'),'') 'Gender'," &
+        "e.EmploymentStatus 'Employment Status'," &
+        "IFNULL(pf.PayFrequencyType,'') 'Pay Frequency'," &
+        "e.UndertimeOverride," &
+        "e.OvertimeOverride," &
+        "COALESCE(pos.RowID,'') 'PositionID'" &
+        ",IFNULL(e.PayFrequencyID,'') 'PayFrequencyID'" &
+        ",e.EmployeeType" &
+        ",e.LeaveBalance" &
+        ",e.SickLeaveBalance" &
+        ",e.MaternityLeaveBalance" &
+        ",e.LeaveAllowance" &
+        ",e.SickLeaveAllowance" &
+        ",e.MaternityLeaveAllowance" &
+        ",e.LeavePerPayPeriod" &
+        ",e.SickLeavePerPayPeriod" &
+        ",e.MaternityLeavePerPayPeriod" &
+        ",COALESCE(fstat.RowID,3) 'fstatRowID'" &
+        ",'' 'Image'" &
+        ",DATE_FORMAT(e.Created,'%m/%d/%Y') 'Creation Date'," &
+        "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," &
+        "COALESCE(DATE_FORMAT(e.LastUpd,'%m/%d/%Y'),'') 'Last Update'," &
+        "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=e.LastUpdBy) 'LastUpdate by'" &
+        " " &
+        "FROM employee e " &
+        "LEFT JOIN user u ON e.CreatedBy=u.RowID " &
+        "LEFT JOIN position pos ON e.PositionID=pos.RowID " &
+        "LEFT JOIN payfrequency pf ON e.PayFrequencyID=pf.RowID " &
+        "LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents " &
         "WHERE e.OrganizationID=" & orgztnID
 
     '",Image 'Image'" & _
@@ -190,12 +190,12 @@ Public Class EmpPosition
 
     Sub reload()
 
-        positiontable = New SQLQueryToDatatable("SELECT p.*" & _
-                                    ",COALESCE((SELECT CONCAT('(',FirstName,IF(COALESCE(MiddleName,'')='','',CONCAT(' ',LEFT(MiddleName,1))),IF(LastName IS NULL,'',CONCAT(' ',LastName)),')') FROM employee WHERE OrganizationID=" & orgztnID & " AND PositionID=p.RowID AND TerminationDate IS NULL LIMIT 1),'(Open)') 'positionstats'" & _
+        positiontable = New SQLQueryToDatatable("SELECT p.*" &
+                                    ",COALESCE((SELECT CONCAT('(',FirstName,IF(COALESCE(MiddleName,'')='','',CONCAT(' ',LEFT(MiddleName,1))),IF(LastName IS NULL,'',CONCAT(' ',LastName)),')') FROM employee WHERE OrganizationID=" & orgztnID & " AND PositionID=p.RowID AND TerminationDate IS NULL LIMIT 1),'(Open)') 'positionstats'" &
                                     ",d.RowID AS DivRowID" &
-                                    " FROM position p" & _
+                                    " FROM position p" &
                                     " LEFT JOIN `division` d ON d.RowID=p.DivisionId" &
-                                    " WHERE p.OrganizationID=" & orgztnID & "" & _
+                                    " WHERE p.OrganizationID=" & orgztnID & "" &
                                     " AND p.RowID NOT IN (SELECT PositionID FROM user WHERE OrganizationID=" & orgztnID & ");").ResultTable
 
         'alphaposition = New SQLQueryToDatatable("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NOT NULL AND ParentPositionID!=RowID GROUP BY ParentPositionID;")
@@ -228,9 +228,9 @@ Public Class EmpPosition
 
     End Sub
 
-    Sub Positiontreeviewfiller(Optional primkey As Object = Nothing, _
-                       Optional strval As Object = Nothing, _
-                       Optional trnod As TreeNode = Nothing, _
+    Sub Positiontreeviewfiller(Optional primkey As Object = Nothing,
+                       Optional strval As Object = Nothing,
+                       Optional trnod As TreeNode = Nothing,
                        Optional tree_view As TreeView = Nothing)
 
         Dim n_nod As TreeNode = Nothing
@@ -258,8 +258,8 @@ Public Class EmpPosition
 
     End Sub
 
-    Sub Divisiontreeviewfiller(Optional primkey As Object = Nothing, _
-                       Optional strval As Object = Nothing, _
+    Sub Divisiontreeviewfiller(Optional primkey As Object = Nothing,
+                       Optional strval As Object = Nothing,
                        Optional trnod As TreeNode = Nothing)
 
         Dim n_nod As TreeNode = Nothing
@@ -294,8 +294,8 @@ Public Class EmpPosition
 
     End Sub
 
-    Sub DivisonPosition(Optional primkey As Object = Nothing, _
-                       Optional strval As Object = Nothing, _
+    Sub DivisonPosition(Optional primkey As Object = Nothing,
+                       Optional strval As Object = Nothing,
                        Optional trnod As TreeNode = Nothing)
 
         Dim n_nod As TreeNode = Nothing
@@ -380,7 +380,7 @@ Public Class EmpPosition
             'dgvemployees.Rows.Clear()
             currentNode = Nothing
 
-            cboDivis.Items.Clear()
+            'cboDivis.Items.Clear()
             cboParentPosit.Items.Clear()
 
         ElseIf currentNode IsNot Nothing Then
@@ -400,11 +400,11 @@ Public Class EmpPosition
                 Dim parentposition = divisiontable.Select("ParentDivisionID = " & usethisvalue)
 
                 If parentposition.Count <> 0 Then
-                    cboDivis.Items.Clear()
+                    'cboDivis.Items.Clear()
                 End If
 
                 For Each strval In parentposition
-                    cboDivis.Items.Add(strval("Name").ToString)
+                    'cboDivis.Items.Add(strval("Name").ToString)
                 Next
 
                 parentposition = divisiontable.Select("RowID=" & currentNode.Name)
@@ -422,14 +422,14 @@ Public Class EmpPosition
 
                 cboDivLoc.SelectedValue = prior_node
 
-                cboDivis.Items.Clear()
+                'cboDivis.Items.Clear()
 
                 Dim sel_divisiontable = divisiontable.Select("ParentDivisionID = " & prior_node)
 
 
                 'For Each divdrow As DataRow In divisiontable.Rows
                 For Each divdrow In sel_divisiontable
-                    cboDivis.Items.Add(divdrow("Name"))
+                    'cboDivis.Items.Add(divdrow("Name"))
                 Next
 
                 tsbtnDeletePosition.Enabled = True
@@ -503,7 +503,7 @@ Public Class EmpPosition
 
                             If cboDivis.Items.Contains(strval("Name").ToString) Then
                             Else
-                                cboDivis.Items.Add(strval("Name").ToString)
+                                'cboDivis.Items.Add(strval("Name").ToString)
                             End If
                             Exit For
                         Next
@@ -539,7 +539,7 @@ Public Class EmpPosition
 
                                 If cboDivis.Items.Contains(strval("Name").ToString) Then
                                 Else
-                                    cboDivis.Items.Add(strval("Name").ToString)
+                                    'cboDivis.Items.Add(strval("Name").ToString)
                                 End If
                                 Exit For
                             Next
@@ -555,11 +555,11 @@ Public Class EmpPosition
                 '    Dim parentposition = divisiontable.Select("RowID<>" & parent_node.Name, "Name ASC")
 
                 '    If parentposition.Count <> 0 Then
-                '        cboDivis.Items.Clear()
+                '        'cboDivis.Items.Clear()
                 '    End If
 
                 '    For Each strval In parentposition
-                '        cboDivis.Items.Add(strval("Name").ToString)
+                '        'cboDivis.Items.Add(strval("Name").ToString)
                 '    Next
 
                 '    parentposition = divisiontable.Select("RowID=" & parent_node.Name)
@@ -637,7 +637,7 @@ Public Class EmpPosition
 
     Dim pagination As Integer = 0
 
-    Private Sub Nxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles Nxt.LinkClicked, Last.LinkClicked, _
+    Private Sub Nxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles Nxt.LinkClicked, Last.LinkClicked,
                                                                                               Prev.LinkClicked, First.LinkClicked
 
         Dim sendrname As String = DirectCast(sender, LinkLabel).Name
@@ -686,7 +686,7 @@ Public Class EmpPosition
 
             Dim remender = lastpage Mod 100
 
-            
+
             pagination = (lastpage - remender) * 100
 
             If pagination - 100 < 100 Then
@@ -792,10 +792,10 @@ Public Class EmpPosition
 
         dgvemployees.Rows.Clear()
 
-        cboDivis.Items.Clear()
+        'cboDivis.Items.Clear()
 
         For Each drow As DataRow In divisiontable.Rows
-            cboDivis.Items.Add(drow("Name").ToString)
+            'cboDivis.Items.Add(drow("Name").ToString)
         Next
 
         cboParentPosit.Items.Clear()
@@ -813,6 +813,10 @@ Public Class EmpPosition
     Dim dontUpdate As SByte = 0
 
     Private Sub tsbtnSavePosition_Click(sender As Object, e As EventArgs) Handles tsbtnSavePosition.Click
+
+        Dim str_tn_fullpath As String =
+            tv2.SelectedNode.FullPath
+
         tbpPosition.Focus()
 
         RemoveHandler tv2.AfterSelect, AddressOf tv2_AfterSelect
@@ -828,14 +832,14 @@ Public Class EmpPosition
         Next
 
         'divisiontable
-        Dim divisID As Object = Nothing
+        Dim divisID As Object = cboDivis.SelectedValue
 
-        Dim seldivis = divisiontable.Select("Name='" & Trim(cboDivis.Text) & "' AND ParentDivisionID = " & cboDivLoc.SelectedValue)
+        'Dim seldivis = divisiontable.Select("Name='" & Trim(cboDivis.Text) & "' AND ParentDivisionID = " & cboDivLoc.SelectedValue)
 
-        For Each drow In seldivis
-            divisID = drow("RowID")
-            Exit For
-        Next
+        'For Each drow In seldivis
+        '    divisID = drow("RowID")
+        '    Exit For
+        'Next
 
         If divisID = Nothing Then
             WarnBalloon("Please select a Division Name.", "Invalid Division Name", cboDivis, cboDivis.Width - 17, -70)
@@ -854,9 +858,9 @@ Public Class EmpPosition
 
             'Else
 
-            Dim returnval = INSUPD_position(, _
-                Trim(txtPositName.Text), _
-                parentpositID, _
+            Dim returnval = INSUPD_position(,
+                Trim(txtPositName.Text),
+                parentpositID,
                 divisID)
 
             'currentNode.Nodes.Add(Trim(returnval), Trim(txtPositName.Text) & "(Open)")
@@ -879,9 +883,9 @@ Public Class EmpPosition
             If selPositionID = Nothing Then
 
             Else
-                INSUPD_position(selPositionID, _
-                                Trim(txtPositName.Text), _
-                                parentpositID, _
+                INSUPD_position(selPositionID,
+                                Trim(txtPositName.Text),
+                                parentpositID,
                                 If(parentpositID = Nothing, divisID, Nothing))
 
                 InfoBalloon("Position '" & txtPositName.Text & "' has successfully saved.", "Position save successful", lblforballoon, 0, -69)
@@ -906,6 +910,32 @@ Public Class EmpPosition
 
         tsbtnNewPosition.Enabled = 1
 
+        '########################################################
+
+        Dim node_names = str_tn_fullpath.Split("\")
+
+        Dim selected_node =
+            tv2.Nodes.Cast(Of TreeNode)()
+
+        If selected_node.Count > 0 _
+            Or node_names.Length > 0 Then
+
+            For i = 0 To (node_names.Length - 1)
+
+                selected_node =
+                    SelectTreeNode(selected_node,
+                                   node_names(i),
+                                   i)
+            Next
+
+            For Each sel_nod In selected_node
+
+                tv2.SelectedNode = sel_nod
+
+            Next
+
+        End If
+
     End Sub
 
     Private Sub tsbtnDeletePosition_Click(sender As Object, e As EventArgs) Handles tsbtnDeletePosition.Click
@@ -915,21 +945,22 @@ Public Class EmpPosition
         Else
 
             RemoveHandler tv2.AfterSelect, AddressOf tv2_AfterSelect
+            '"DELETE FROM `position_view` WHERE PositionID='", selPositionID, "' AND OrganizationID='", orgztnID, "';",
+            EXECQUER(
+                String.Concat("UPDATE employee SET PositionID=NULL,LastUpdBy=", z_User, " WHERE PositionID='", selPositionID, "' AND OrganizationID=", orgztnID, ";",
+                              "DELETE FROM `position_view` WHERE PositionID='", selPositionID, "';",
+                              "DELETE FROM position WHERE RowID='", selPositionID, "';",
+                              "ALTER TABLE position AUTO_INCREMENT = 0;"))
 
-            EXECQUER("UPDATE employee SET PositionID=NULL,LastUpdBy=" & z_User & " WHERE PositionID='" & selPositionID & "' AND OrganizationID=" & orgztnID & ";" & _
-                     "DELETE FROM `position_view` WHERE PositionID='" & selPositionID & "' AND OrganizationID=" & orgztnID & ";" & _
-                     "DELETE FROM position WHERE RowID='" & selPositionID & "';" & _
-                     "ALTER TABLE position AUTO_INCREMENT = 0;")
-
-            positiontable = retAsDatTbl("SELECT *" & _
-                                        ",COALESCE((SELECT CONCAT('(',FirstName,IF(MiddleName IS NULL,'',CONCAT(' ',LEFT(MiddleName,1))),IF(LastName IS NULL,'',CONCAT(' ',LEFT(LastName,1))),')') FROM employee WHERE OrganizationID=" & orgztnID & " AND PositionID=p.RowID AND TerminationDate IS NULL),'(Open)') 'positionstats'" & _
-                                        " FROM position p" & _
-                                        " WHERE p.OrganizationID=" & orgztnID & "" & _
+            positiontable = retAsDatTbl("SELECT *" &
+                                        ",COALESCE((SELECT CONCAT('(',FirstName,IF(MiddleName IS NULL,'',CONCAT(' ',LEFT(MiddleName,1))),IF(LastName IS NULL,'',CONCAT(' ',LEFT(LastName,1))),')') FROM employee WHERE OrganizationID=" & orgztnID & " AND PositionID=p.RowID AND TerminationDate IS NULL),'(Open)') 'positionstats'" &
+                                        " FROM position p" &
+                                        " WHERE p.OrganizationID=" & orgztnID & "" &
                                         " AND p.RowID NOT IN (SELECT PositionID FROM user WHERE OrganizationID=" & orgztnID & ");")
 
             'alphaposition = retAsDatTbl("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NOT NULL AND ParentPositionID!=RowID GROUP BY ParentPositionID;")
 
-            alphaposition = retAsDatTbl("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NULL" & _
+            alphaposition = retAsDatTbl("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NULL" &
                                         " AND RowID NOT IN (SELECT PositionID FROM user WHERE OrganizationID=" & orgztnID & ");")
 
             For Each drow As DataRow In alphadivision.Rows
@@ -966,9 +997,9 @@ Public Class EmpPosition
 
     End Sub
 
-    Function INSUPD_position(Optional pos_RowID As Object = Nothing, _
-                             Optional pos_PositionName As Object = Nothing, _
-                             Optional pos_ParentPositionID As Object = Nothing, _
+    Function INSUPD_position(Optional pos_RowID As Object = Nothing,
+                             Optional pos_PositionName As Object = Nothing,
+                             Optional pos_ParentPositionID As Object = Nothing,
                              Optional pos_DivisionId As Object = Nothing) As Object
         Dim return_value = Nothing
         Try
@@ -1081,6 +1112,26 @@ Public Class EmpPosition
 
     End Sub
 
+    Private Sub DivisionLocation_Changed(sender As Object, e As EventArgs) Handles cboDivLoc.SelectedIndexChanged
+
+        Dim str_quer_sub_division As String =
+            String.Concat("SELECT d.RowID",
+                          ",d.Name",
+                          " FROM division d",
+                          " WHERE d.OrganizationID=", orgztnID,
+                          " AND d.ParentDivisionID=", ValNoComma(cboDivLoc.SelectedValue), ";")
+
+        Dim sql As New SQLQueryToDatatable(str_quer_sub_division)
+
+        Dim dt As New DataTable
+        dt = sql.ResultTable
+
+        cboDivis.DisplayMember = dt.Columns(1).ColumnName
+        cboDivis.ValueMember = dt.Columns(0).ColumnName
+        cboDivis.DataSource = dt
+
+    End Sub
+
     Private Sub bgworkautcompsearch_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkautcompsearch.DoWork
 
         For Each drow As DataRow In alphaposition.Rows
@@ -1116,5 +1167,35 @@ Public Class EmpPosition
     Private Sub autcomptxtposition_TextChanged(sender As Object, e As EventArgs) Handles autcomptxtposition.TextChanged
 
     End Sub
+
+    Dim return_value As IEnumerable(Of TreeNode)
+
+    Private Function SelectTreeNode(tn As IEnumerable(Of TreeNode),
+                                    tn_name As String,
+                                    indx As Integer) As IEnumerable(Of TreeNode)
+
+        If indx = 0 Then
+
+            Dim sel_nod =
+                tn.Cast(Of TreeNode).Where(Function(tnod) tnod.Text = tn_name)
+
+            return_value = sel_nod
+
+        Else
+
+            For Each t_node In tn
+
+                Dim sel_nod =
+                    t_node.Nodes.Cast(Of TreeNode).Where(Function(tnod) tnod.Text = tn_name)
+
+                return_value = sel_nod
+
+            Next
+
+        End If
+
+        Return return_value
+
+    End Function
 
 End Class
