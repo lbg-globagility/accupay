@@ -21529,6 +21529,8 @@ Public Class EmployeeForm
                 bool_result = True
                 chkboxChargeToBonus.Checked = bool_result
                 chkboxChargeToBonus.Tag = .EmployeeBonusRowID
+                ebonus_rowid_comment = .BonusComments
+
             Else
                 Dim this_bool_result As Boolean = tsbtnNewLoan.Enabled
                 If this_bool_result = False Then
