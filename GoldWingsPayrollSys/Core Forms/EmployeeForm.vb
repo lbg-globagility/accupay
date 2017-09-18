@@ -10601,6 +10601,7 @@ Public Class EmployeeForm
                                  cmbdedsched.Text, chkboxChargeToBonus.Tag) 'CDec(txtdedpercent.Text)'cmbdedsched.Text
             fillloadsched()
             fillloadschedselected()
+            SaveBonusCommentsRegardsToLoan()
             myBalloon("Successfully Save", "Saved", lblforballoon, , -100)
 
         End If
@@ -11218,6 +11219,24 @@ Public Class EmployeeForm
             End If
 
         End If
+
+    End Sub
+
+    Private Sub SaveBonusCommentsRegardsToLoan()
+
+        For Each dict In ebonus_rowid_comment
+            Dim str_comment As String = String.Concat("'", dict.Value, "'")
+            Dim row_id = dict.Key
+
+            Dim str_quer As String =
+                String.Concat("UPDATE employeebonus eb",
+                              " SET `Remarks`=", str_comment,
+                              " WHERE eb.RowID='", row_id, "';")
+
+            Dim exec_quer As New ExecuteQuery(str_quer)
+            Dim exec_result = exec_quer.Result
+
+        Next
 
     End Sub
 
@@ -21902,6 +21921,8 @@ TaskToDo: txtPhilHealthSal.Text = "0.00"
     Private Sub chkboxChargeToBonus_CheckedChanged(sender As Object, e As EventArgs) Handles chkboxChargeToBonus.CheckedChanged
 
     End Sub
+
+    Private ebonus_rowid_comment As New Dictionary(Of Object, String)
 
     Private Sub chkboxChargeToBonus_Click(sender As Object, e As EventArgs) Handles chkboxChargeToBonus.Click
 
