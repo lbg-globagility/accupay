@@ -9,29 +9,16 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `BEFUPD_employeetimeentry` BEFORE UPDATE ON `employeetimeentry` FOR EACH ROW BEGIN
 
-DECLARE isRest_day CHAR(1);
-
+DECLARE isRestDay BOOLEAN;
 DECLARE hasShift BOOLEAN;
 
-
-
-DECLARE absent_amount DECIMAL(11,6);
-
-DECLARE isRegularDay CHAR(1);
+DECLARE dailyRate DECIMAL(11,6);
 
 DECLARE TaxableDailyAllowanceAmount DECIMAL(11,6);
 
 DECLARE rate_this_date DECIMAL(11,6);
-DECLARE hourly_rate DECIMAL(11,6);
-DECLARE isSpecialHoliday CHAR(1);
 DECLARE isPresentInWorkingDaysPriorToThisDate CHAR(1) DEFAULT '0';
 DECLARE payrate_this_date DECIMAL(11,2);
-
-DECLARE e_rateperday DECIMAL(12,6) DEFAULT 0;
-
-DECLARE emp_type VARCHAR(50);
-
-DECLARE default_workhours_everyday DECIMAL(11,6) DEFAULT 8;
 
 DECLARE nightDiffTimeFrom TIME DEFAULT '22:00:00';
 DECLARE nightDiffTimeTo TIME DEFAULT '06:00:00';
@@ -47,48 +34,16 @@ DECLARE shiftEnd DATETIME;
 DECLARE dateToday DATE;
 DECLARE dateTomorrow DATE;
 
-SET @e_rateperday = 0.0;
+DECLARE isRegularHoliday BOOLEAN;
+DECLARE isSpecialNonWorkingHoliday BOOLEAN;
+DECLARE isHoliday BOOLEAN;
 
-SELECT IF(
-    e.EmployeeType = 'Daily',
-    es.BasicPay,
-    (es.Salary / (e.WorkDaysPerYear / 24))
-)
-FROM employeesalary es
-INNER JOIN employee e
-ON e.RowID = es.EmployeeID AND
-    e.OrganizationID = es.OrganizationID
-WHERE es.RowID = NEW.EmployeeSalaryID
-INTO @e_rateperday;
+DECLARE isDefaultRestDay BOOLEAN;
+DECLARE isShiftRestDay BOOLEAN;
 
-SET e_rateperday = IFNULL(@e_rateperday,0);
+DECLARE hasWorked BOOLEAN;
+DECLARE hasLeave BOOLEAN;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-SELECT
-    (PayType = 'Regular Day'),
-    (LOCATE('Special',PayType) > 0)
-FROM payrate
-WHERE RowID = NEW.PayRateID
-INTO
-    isRegularDay,
-    isSpecialHoliday;
-
-SET @myperfectshifthrs = 0.0;
 SELECT
     `PayRate`,
     GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, NEW.`Date`)
@@ -98,170 +53,97 @@ INTO
     payrate_this_date,
     rate_this_date;
 
-
-SET @myperfectshifthrs = 1;
-
 SET NEW.VacationLeaveHours = IFNULL(NEW.VacationLeaveHours,0);
 SET NEW.SickLeaveHours = IFNULL(NEW.SickLeaveHours,0);
 SET NEW.MaternityLeaveHours = IFNULL(NEW.MaternityLeaveHours,0);
 SET NEW.OtherLeaveHours = IFNULL(NEW.OtherLeaveHours,0);
 
-SET @myperfectshifthrs = 0;
+SELECT COMPUTE_TimeDifference(sh.TimeFrom, sh.TimeTo)
+FROM employeeshift esh
+INNER JOIN shift sh
+ON sh.RowID = esh.ShiftID
+WHERE esh.EmployeeID = NEW.EmployeeID AND
+    esh.OrganizationID = NEW.OrganizationID AND
+    esh.RestDay = '0' AND
+    NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
+LIMIT 1
+INTO @fullshifthrs;
+
+SET NEW.RegularHoursWorked = IFNULL(NEW.RegularHoursWorked, 0);
+SET NEW.RegularHoursAmount = IFNULL(NEW.RegularHoursAmount, 0);
+SET NEW.TotalHoursWorked = IFNULL(NEW.TotalHoursWorked, 0);
+SET NEW.OvertimeHoursWorked = IFNULL(NEW.OvertimeHoursWorked, 0);
+SET NEW.OvertimeHoursAmount = IFNULL(NEW.OvertimeHoursAmount, 0);
+SET NEW.UndertimeHours = IFNULL(NEW.UndertimeHours, 0);
+SET NEW.UndertimeHoursAmount = IFNULL(NEW.UndertimeHoursAmount, 0);
+SET NEW.NightDifferentialHours = IFNULL(NEW.NightDifferentialHours, 0);
+SET NEW.NightDiffHoursAmount = IFNULL(NEW.NightDiffHoursAmount, 0);
+SET NEW.NightDifferentialOTHours = IFNULL(NEW.NightDifferentialOTHours, 0);
+SET NEW.NightDiffOTHoursAmount = IFNULL(NEW.NightDiffOTHoursAmount, 0);
+SET NEW.HoursLate = IFNULL(NEW.HoursLate, 0);
+SET NEW.HoursLateAmount = IFNULL(NEW.HoursLateAmount, 0);
+
+SET hasWorked = NEW.RegularHoursWorked > 0;
+
+SELECT GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, NEW.`Date`)
+INTO dailyRate;
+
+SELECT
+    (pr.PayType = 'Regular Holiday' AND e.CalcHoliday = '1' AND e.StartDate <= NEW.`Date`),
+    (pr.PayType = 'Special Non-Working Holiday' AND e.CalcSpecialHoliday = '1' AND e.StartDate <= NEW.`Date`)
+FROM payrate pr
+INNER JOIN employee e
+ON e.RowID = NEW.EmployeeID
+INNER JOIN (
+    SELECT RowID
+    FROM employeesalary
+    WHERE EmployeeID = NEW.EmployeeID AND
+        OrganizationID = NEW.OrganizationID AND
+        NEW.`Date` BETWEEN EffectiveDateFrom AND IFNULL(EffectiveDateTo, NEW.`Date`)
+    LIMIT 1
+) es
+ON es.RowID > 0
+WHERE pr.RowID=NEW.PayRateID
+INTO
+    isRegularHoliday,
+    isSpecialNonWorkingHoliday;
+
+SET isHoliday = isRegularHoliday OR isSpecialNonWorkingHoliday;
+
+SET leaveHours = NEW.VacationLeaveHours + NEW.SickLeaveHours + NEW.MaternityLeaveHours + NEW.OtherLeaveHours;
+SET hasLeave = leaveHours > 0;
 
 SELECT (e.DayOfRest = DAYOFWEEK(NEW.`Date`))
 FROM employee e
-WHERE e.RowID=NEW.EmployeeID
-INTO isRest_day;
+WHERE e.RowID = NEW.EmployeeID
+INTO isDefaultRestDay;
 
+SELECT
+    esh.RowID IS NOT NULL,
+    COALESCE(esh.RestDay, FALSE)
+FROM employeeshift esh
+WHERE esh.EmployeeID = NEW.EmployeeID AND
+    esh.OrganizationID = NEW.OrganizationID AND
+    NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
+LIMIT 1
+INTO
+    hasShift,
+    isShiftRestDay;
 
-SET NEW.RegularHoursWorked = IFNULL(NEW.RegularHoursWorked,0);
-SET NEW.RegularHoursAmount = IFNULL(NEW.RegularHoursAmount,0);
-SET NEW.TotalHoursWorked = IFNULL(NEW.TotalHoursWorked,0);
-SET NEW.OvertimeHoursWorked = IFNULL(NEW.OvertimeHoursWorked,0);
-SET NEW.OvertimeHoursAmount = IFNULL(NEW.OvertimeHoursAmount,0);
-SET NEW.UndertimeHours = IFNULL(NEW.UndertimeHours,0);
-SET NEW.UndertimeHoursAmount = IFNULL(NEW.UndertimeHoursAmount,0);
-SET NEW.NightDifferentialHours = IFNULL(NEW.NightDifferentialHours,0);
-SET NEW.NightDiffHoursAmount = IFNULL(NEW.NightDiffHoursAmount,0);
-SET NEW.NightDifferentialOTHours = IFNULL(NEW.NightDifferentialOTHours,0);
-SET NEW.NightDiffOTHoursAmount = IFNULL(NEW.NightDiffOTHoursAmount,0);
-SET NEW.HoursLate = IFNULL(NEW.HoursLate,0);
-SET NEW.HoursLateAmount = IFNULL(NEW.HoursLateAmount,0);
+-- If there is no shift set for the day, assume that it's a rest day.
+SET isShiftRestDay = IF(hasShift, isShiftRestDay, TRUE);
 
-IF isRest_day = '0' THEN
+SET isRestDay = isShiftRestDay OR isDefaultRestDay;
 
-    SELECT EXISTS(
-        SELECT RowID
-        FROM employeeshift esh
-        WHERE esh.EmployeeID = NEW.EmployeeID AND
-            esh.OrganizationID = NEW.OrganizationID AND
-            esh.RestDay = '0' AND
-            NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
-        LIMIT 1
-    )
-    INTO hasShift;
-
-    SET @fullshifthrs = 0.00;
-
-    IF hasShift AND isRegularDay = '1' THEN
-
-        SELECT
-            COMPUTE_TimeDifference(sh.TimeFrom, sh.TimeTo)
-        FROM employeeshift esh
-        INNER JOIN shift sh
-        ON sh.RowID = esh.ShiftID
-        WHERE esh.EmployeeID = NEW.EmployeeID AND
-            esh.OrganizationID = NEW.OrganizationID AND
-            esh.RestDay = '0' AND
-            NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
-        LIMIT 1
-        INTO
-            @fullshifthrs;
-
-        SET absent_amount = GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, NEW.`Date`);
-
-        
-            
-        IF (SUBSTRING_INDEX(absent_amount,'.',1) * 1) = (SUBSTRING_INDEX(NEW.HoursLateAmount,'.',1) * 1) THEN
-            SET NEW.Absent = 0;
-        ELSEIF (SUBSTRING_INDEX(absent_amount,'.',1) * 1) = (SUBSTRING_INDEX(NEW.UndertimeHoursAmount,'.',1) * 1) THEN
-            SET NEW.Absent = 0;
-        ELSE
-            IF NEW.TotalDayPay = 0 THEN
-                SET NEW.Absent = absent_amount;
-            ELSE
-                SET NEW.Absent = 0;
-            END IF;
-        END IF;
-
-    ELSE
-
-        IF NOT isRegularDay THEN
-
-            SET leaveHours = NEW.VacationLeaveHours + NEW.SickLeaveHours + NEW.MaternityLeaveHours + NEW.OtherLeaveHours;
-
-            SET @calclegalholi = '0';
-            SET @calcspecholi = '0';
-
-            SET @daily_pay = 0.00;
-
-            SELECT
-                (pr.PayType = 'Regular Holiday' AND e.CalcHoliday = '1' AND e.StartDate <= NEW.`Date`),
-                (pr.PayType = 'Special Non-Working Holiday' AND e.CalcSpecialHoliday = '1' AND e.StartDate <= NEW.`Date`),
-                e.EmployeeType,
-                GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, NEW.`Date`) `Result`
-            FROM payrate pr
-            INNER JOIN employee e
-            ON e.RowID=NEW.EmployeeID
-            INNER JOIN (
-                SELECT *
-                FROM employeesalary
-                WHERE EmployeeID=NEW.EmployeeID AND
-                    OrganizationID=NEW.OrganizationID AND
-                    NEW.`Date` BETWEEN EffectiveDateFrom AND IFNULL(EffectiveDateTo, NEW.`Date`)
-                LIMIT 1
-            ) es
-            ON es.RowID > 0
-            WHERE pr.RowID=NEW.PayRateID
-            INTO
-                @calclegalholi,
-                @calcspecholi,
-                emp_type,
-                @daily_pay;
-
-            IF leaveHours > 0 THEN
-                SET NEW.Absent = 0.0;
-            ELSEIF hasShift AND
-                   leaveHours = 0 AND
-                   NEW.TotalDayPay = 0 AND
-                   @calclegalholi = 0 AND
-                   @calcspecholi = 0 THEN
-
-                SET NEW.Absent = @daily_pay;
-            ELSEIF hasShift AND
-                   leaveHours = 0 AND
-                   NEW.TotalDayPay = 0 AND
-                   @calclegalholi = 1 THEN
-
-                
-                SET NEW.Absent = 0.0;
-            ELSEIF hasShift AND
-                   leaveHours = 0 AND
-                   NEW.TotalDayPay = 0 THEN
-
-                IF @calcspecholi = 1 THEN
-
-                    IF emp_type = 'Daily' THEN
-
-                        SET NEW.TotalDayPay = 0.0;
-                        SET NEW.Absent = 0.0;
-
-                    ELSEIF emp_type != 'Daily' THEN
-
-                        SET NEW.TotalDayPay = @daily_pay;
-                        SET NEW.Absent = 0.0;
-
-                    END IF;
-
-                ELSE
-                    SET NEW.TotalDayPay = 0.0;
-
-                    SET NEW.Absent = @daily_pay;
-                END IF;
-            ELSE
-                SET NEW.Absent = 0.0;
-            END IF;
-        ELSE
-            SET NEW.Absent = IFNULL(NEW.Absent,0);
-        END IF;
-    END IF;
+IF hasWorked OR isRestDay OR isHoliday OR hasLeave THEN
+    SET NEW.Absent = 0;
 ELSE
-    SET NEW.Absent = 0.0;
+    SET NEW.Absent = dailyRate;
 END IF;
 
-SET NEW.Absent = IFNULL(NEW.Absent,0);
+SET NEW.Absent = IFNULL(NEW.Absent, 0);
 
-IF isRest_day = '1' && NEW.EmployeeShiftID IS NOT NULL AND COALESCE(NEW.RegularHoursWorked, 0) = 0 THEN
+IF isDefaultRestDay = '1' && NEW.EmployeeShiftID IS NOT NULL AND COALESCE(NEW.RegularHoursWorked, 0) = 0 THEN
     SET NEW.EmployeeShiftID = NULL;
 END IF;
 
@@ -271,20 +153,20 @@ INTO rate_this_date;
 
 SELECT SUM(ea.AllowanceAmount)
 FROM employeeallowance ea
-WHERE ea.AllowanceFrequency = 'Daily'
-    AND ea.TaxableFlag = '1'
-    AND ea.EmployeeID = NEW.EmployeeID
-    AND ea.OrganizationID = NEW.OrganizationID
+WHERE ea.AllowanceFrequency='Daily'
+    AND ea.TaxableFlag='1'
+    AND ea.EmployeeID=NEW.EmployeeID
+    AND ea.OrganizationID=NEW.OrganizationID
     AND NEW.`Date` BETWEEN ea.EffectiveStartDate AND ea.EffectiveEndDate
 INTO TaxableDailyAllowanceAmount;
 
 SET rate_this_date = IFNULL(
     (
-        SELECT sh.DivisorToDailyRate - COMPUTE_TimeDifference(sh.BreakTimeFrom, sh.BreakTimeTo)
+        SELECT sh.DivisorToDailyRate - COMPUTE_TimeDifference(sh.BreakTimeFrom,sh.BreakTimeTo)
         FROM employeeshift esh
         INNER JOIN shift sh
-            ON sh.RowID = esh.ShiftID
-        WHERE esh.RowID = NEW.EmployeeShiftID
+            ON sh.RowID=esh.ShiftID
+        WHERE esh.RowID=NEW.EmployeeShiftID
     ),
     0
 );
