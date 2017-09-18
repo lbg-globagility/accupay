@@ -23,7 +23,7 @@
                 .Visible = (dcol.ColumnName.Contains(Space(1)))
 
             End With
-            
+
             i += 1
 
         Next
@@ -90,6 +90,9 @@
     Private Sub PayPeriodSelector_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         LoadPayPeriods(MYSQLDateFormat(CDate(ServerTodayDate)))
+
+        linkNxt.Text = (CDate(ServerTodayDate).Year + Convert.ToInt32(linkNxt.Tag))
+        linkPrevs.Text = (CDate(ServerTodayDate).Year + Convert.ToInt32(linkPrevs.Tag))
 
     End Sub
 
@@ -159,6 +162,26 @@
         End If
 
         dgvPayPeriodList.Tag = n_PayPeriodRowID
+
+    End Sub
+
+    Private Sub YearChanged(sender As Object, e As LinkLabelLinkClickedEventArgs) _
+        Handles _
+        linkNxt.LinkClicked,
+        linkPrevs.LinkClicked
+
+        Dim curr_lnklbl As New LinkLabel
+        curr_lnklbl = DirectCast(sender, LinkLabel)
+
+        Dim _year As Integer = Convert.ToInt32 (curr_lnklbl.text)
+
+        linkNxt.Text =
+            (Convert.ToInt32(linkNxt.Text) + Convert.ToInt32(curr_lnklbl.Tag))
+
+        linkPrevs.Text =
+            (Convert.ToInt32(linkPrevs.Text) + Convert.ToInt32(curr_lnklbl.Tag))
+
+        LoadPayPeriods(String.Concat(_year, "-01-01"))
 
     End Sub
 

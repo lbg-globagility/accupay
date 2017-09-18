@@ -281,6 +281,7 @@ Partial Class PayPeriodSelector
         Me.linkNxt.Size = New System.Drawing.Size(39, 15)
         Me.linkNxt.TabIndex = 2
         Me.linkNxt.TabStop = True
+        Me.linkNxt.Tag = "1"
         Me.linkNxt.Text = "Next>"
         '
         'linkPrevs
@@ -295,6 +296,7 @@ Partial Class PayPeriodSelector
         Me.linkPrevs.Size = New System.Drawing.Size(38, 15)
         Me.linkPrevs.TabIndex = 1
         Me.linkPrevs.TabStop = True
+        Me.linkPrevs.Tag = "-1"
         Me.linkPrevs.Text = "<Prev"
         '
         'DataGridViewTextBoxColumn1
