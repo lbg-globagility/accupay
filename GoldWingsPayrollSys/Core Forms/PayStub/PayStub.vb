@@ -1572,8 +1572,6 @@ Public Class PayStub
 
     Public numofweekends As Integer
 
-    Dim eloans As New DataTable
-
     Dim empleave As New DataTable
 
     Dim allowtyp As Object = Nothing
@@ -1695,105 +1693,6 @@ Public Class PayStub
                                     .Replace("@DateTo", paypTo)
 
                                   etent_totdaypay = New SqlToDataTable(timeEntrySql).Read()
-                                  'etent_totdaypay = New SQLQueryToDatatable(timeEntrySql).ResultTable
-
-                                  Dim sum_emp_loans = String.Empty
-
-                                  Select Case PayFreqRowID
-
-                                      Case 1
-
-                                          If isEndOfMonth = "1" Then 'means, first half of the month
-
-                                              sum_emp_loans = "SELECT SUM((COALESCE(TotalLoanAmount,0) - COALESCE(TotalBalanceLeft,0))) 'TotalLoanAmount'" &
-                                                          ",SUM(DeductionAmount) 'DeductionAmount'" &
-                                                          ",EmployeeID" &
-                                                          " FROM employeeloanschedule" &
-                                                          " WHERE OrganizationID=" & orgztnID &
-                                                          " AND BonusID IS NULL AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                                          " ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                          " ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                          " AND `Status`='In Progress'" &
-                                                          " AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                                          " AND DeductionSchedule IN ('First half','Per pay period')" &
-                                                          " GROUP BY EmployeeID" &
-                                                          " ORDER BY EmployeeID;"
-
-                                          Else 'If isEndOfMonth = "1" Then                'means, end of the month
-
-                                              sum_emp_loans = "SELECT SUM((COALESCE(TotalLoanAmount,0) - COALESCE(TotalBalanceLeft,0))) 'TotalLoanAmount'" &
-                                                          ",SUM(DeductionAmount) 'DeductionAmount'" &
-                                                          ",EmployeeID" &
-                                                          " FROM employeeloanschedule" &
-                                                          " WHERE OrganizationID=" & orgztnID &
-                                                          " AND BonusID IS NULL AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                                          " ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                          " ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                          " AND `Status`='In Progress'" &
-                                                          " AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                                          " AND DeductionSchedule IN ('End of the month','Per pay period')" &
-                                                          " GROUP BY EmployeeID" &
-                                                          " ORDER BY EmployeeID;"
-
-                                          End If
-
-                                      Case 2
-
-                                      Case 3
-
-                                      Case 4
-
-                                          If isEndOfMonth = "2" Then 'means, first half of the monthS
-
-                                              sum_emp_loans = "SELECT SUM((COALESCE(TotalLoanAmount,0) - COALESCE(TotalBalanceLeft,0))) 'TotalLoanAmount'" &
-                                                          ",SUM(DeductionAmount) 'DeductionAmount'" &
-                                                          ",EmployeeID" &
-                                                          " FROM employeeloanschedule" &
-                                                          " WHERE OrganizationID=" & orgztnID &
-                                                          " AND BonusID IS NULL AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                                          " ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                          " ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                          " AND Status='In Progress'" &
-                                                          " AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                                          " AND DeductionSchedule IN ('First half','Per pay period')" &
-                                                          " GROUP BY EmployeeID" &
-                                                          " ORDER BY EmployeeID;"
-
-                                          ElseIf isEndOfMonth = "1" Then 'means, end of the month
-
-                                              sum_emp_loans = "SELECT SUM((COALESCE(TotalLoanAmount,0) - COALESCE(TotalBalanceLeft,0))) 'TotalLoanAmount'" &
-                                                          ",SUM(DeductionAmount) 'DeductionAmount'" &
-                                                          ",EmployeeID" &
-                                                          " FROM employeeloanschedule" &
-                                                          " WHERE OrganizationID=" & orgztnID &
-                                                          " AND BonusID IS NULL AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                                          " ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                          " ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                          " AND Status='In Progress'" &
-                                                          " AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                                          " AND DeductionSchedule IN ('End of the month','Per pay period')" &
-                                                          " GROUP BY EmployeeID" &
-                                                          " ORDER BY EmployeeID;"
-
-                                          ElseIf isEndOfMonth = "0" Then 'means, per pay period
-
-                                              sum_emp_loans = "SELECT SUM((COALESCE(TotalLoanAmount,0) - COALESCE(TotalBalanceLeft,0))) 'TotalLoanAmount'" &
-                                                          ",SUM(DeductionAmount) 'DeductionAmount'" &
-                                                          ",EmployeeID" &
-                                                          " FROM employeeloanschedule" &
-                                                          " WHERE OrganizationID=" & orgztnID &
-                                                          " AND BonusID IS NULL AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                                          " ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                          " ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                          " AND Status='In Progress'" &
-                                                          " AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                                          " AND DeductionSchedule = 'Per pay period'" &
-                                                          " GROUP BY EmployeeID" &
-                                                          " ORDER BY EmployeeID;"
-
-                                          End If
-
-                                  End Select
 
                                   Using context = New PayrollContext()
                                       Dim query = From l In context.LoanSchedules
@@ -1812,91 +1711,6 @@ Public Class PayStub
                                                       t.PayPeriodID = paypRowID
                                       _loanTransactions = query.ToList()
                                   End Using
-
-                                  Dim segregate_emp_loan = String.Empty
-
-                                  Select Case PayFreqRowID
-
-                                      Case 1
-
-                                          If isEndOfMonth = "0" Then 'means, first half of the month
-
-                                              segregate_emp_loan = "SELECT LoanTypeID,DeductionAmount,DeductionPercentage,EmployeeID,IF(LoanPayPeriodLeft BETWEEN 1 AND 1.99, '1', '0') 'LoanDueDate',TotalLoanAmount,DeductionAmount,NoOfPayPeriod" &
-                                                                  " FROM employeeloanschedule" &
-                                                                  " WHERE OrganizationID=" & orgztnID &
-                                                                  " AND BonusID IS NULL AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                                                  " ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                                  " ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                                  " AND Status='In Progress'" &
-                                                                  " AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                                                  " AND DeductionSchedule IN ('First half','Per pay period')" &
-                                                                  " ORDER BY LoanTypeID;"
-
-                                          Else '                      'means, end of the month
-
-                                              segregate_emp_loan = "SELECT LoanTypeID,DeductionAmount,DeductionPercentage,EmployeeID,IF(LoanPayPeriodLeft BETWEEN 1 AND 1.99, '1', '0') 'LoanDueDate',TotalLoanAmount,DeductionAmount,NoOfPayPeriod" &
-                                                                  " FROM employeeloanschedule" &
-                                                                  " WHERE OrganizationID=" & orgztnID &
-                                                                  " AND BonusID IS NULL AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                                                  " ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                                  " ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                                  " AND Status='In Progress'" &
-                                                                  " AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                                                  " AND DeductionSchedule IN ('End of the month','Per pay period')" &
-                                                                  " ORDER BY LoanTypeID;"
-
-                                          End If
-
-                                      Case 2
-
-                                      Case 3
-
-                                      Case 4
-
-                                          If isEndOfMonth = "2" Then 'means, first half of the month
-
-                                              segregate_emp_loan = "SELECT LoanTypeID,DeductionAmount,DeductionPercentage,EmployeeID,IF(LoanPayPeriodLeft BETWEEN 1 AND 1.99, '1', '0') 'LoanDueDate',TotalLoanAmount,DeductionAmount,NoOfPayPeriod" &
-                                                                  " FROM employeeloanschedule" &
-                                                                  " WHERE OrganizationID=" & orgztnID &
-                                                                  " AND BonusID IS NULL AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                                                  " ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                                  " ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                                  " AND Status='In Progress'" &
-                                                                  " AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                                                  " AND DeductionSchedule IN ('First half','Per pay period')" &
-                                                                  " ORDER BY LoanTypeID;"
-
-                                          ElseIf isEndOfMonth = "1" Then 'means, end of the month
-
-                                              segregate_emp_loan = "SELECT LoanTypeID,DeductionAmount,DeductionPercentage,EmployeeID,IF(LoanPayPeriodLeft BETWEEN 1 AND 1.99, '1', '0') 'LoanDueDate',TotalLoanAmount,DeductionAmount,NoOfPayPeriod" &
-                                                                  " FROM employeeloanschedule" &
-                                                                  " WHERE OrganizationID=" & orgztnID &
-                                                                  " AND BonusID IS NULL AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                                                  " ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                                  " ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                                  " AND Status='In Progress'" &
-                                                                  " AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                                                  " AND DeductionSchedule IN ('End of the month','Per pay period')" &
-                                                                  " ORDER BY LoanTypeID;"
-
-                                          ElseIf isEndOfMonth = "0" Then 'means, per pay period
-
-                                              segregate_emp_loan = "SELECT LoanTypeID,DeductionAmount,DeductionPercentage,EmployeeID,IF(LoanPayPeriodLeft BETWEEN 1 AND 1.99, '1', '0') 'LoanDueDate',TotalLoanAmount,DeductionAmount,NoOfPayPeriod" &
-                                                                  " FROM employeeloanschedule" &
-                                                                  " WHERE OrganizationID=" & orgztnID &
-                                                                  " AND BonusID IS NULL AND IF(DedEffectiveDateFrom < '" & paypTo & "'" &
-                                                                  " ,IF(MONTH(DedEffectiveDateFrom) = MONTH('" & paypTo & "'), IF(DAY(DedEffectiveDateFrom) BETWEEN DAY('" & paypFrom & "') AND DAY('" & paypTo & "'), DedEffectiveDateFrom BETWEEN '" & paypFrom & "' AND '" & paypTo & "', DedEffectiveDateFrom<='" & paypTo & "'), DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                                  " ,DedEffectiveDateFrom<='" & paypTo & "')" &
-                                                                  " AND Status='In Progress'" &
-                                                                  " AND COALESCE(LoanPayPeriodLeft,0)!=0" &
-                                                                  " AND DeductionSchedule = 'Per pay period'" &
-                                                                  " ORDER BY LoanTypeID;"
-
-                                          End If
-
-                                  End Select
-
-                                  eloans = retAsDatTbl(segregate_emp_loan) 'LoanPayPeriodLeft
 
                                   'employeebonus
                                   emp_bonus = retAsDatTbl("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'" &
@@ -2320,20 +2134,6 @@ Public Class PayStub
                                                               " AND '" & paypTo & "'" &
                                                               " GROUP BY ete.EmployeeID" &
                                                               " HAVING COUNT(ete.RowID) < 5;").ResultTable
-
-                                  'bgworkgenpayroll.RunWorkerAsync()
-
-                                  'Thread_Method(ToolStripButton2, New EventArgs)
-
-                                  'If etent_dattab.Rows.Count <> 0 Then
-
-                                  'Else
-                                  '    MsgBox("Employee time entry from " & Format(CDate(paypFrom), "MMM-d-yyyy") & " to " & Format(CDate(paypTo), "MMM-d-yyyy") & " is not yet prepared.", MsgBoxStyle.Information)
-
-                                  'End If
-
-                                  'End If
-
                               End Sub, 0).ContinueWith(Sub()
 
                                                            indxStartBatch = 0
@@ -3077,8 +2877,6 @@ Public Class PayStub
             notax_allowanceOnce = Nothing
 
             numofdaypresent = Nothing
-
-            eloans = Nothing
 
             empleave = Nothing
 
