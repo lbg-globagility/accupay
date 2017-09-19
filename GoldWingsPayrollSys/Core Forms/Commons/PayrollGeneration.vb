@@ -81,8 +81,6 @@ Public Class PayrollGeneration
 
     Private _allLoanTransactions As ICollection(Of PayrollSys.LoanTransaction)
 
-    Private _allBonuses As DataTable
-
     Private allOneTimeAllowances As DataTable
     Private allDailyAllowances As DataTable
     Private allSemiMonthlyAllowances As DataTable
@@ -151,7 +149,6 @@ Public Class PayrollGeneration
             allSalaries As DataTable,
             allLoanSchedules As ICollection(Of PayrollSys.LoanSchedule),
             allLoanTransactions As ICollection(Of PayrollSys.LoanTransaction),
-            allBonuses As DataTable,
             allDailyAllowances As DataTable,
             allMonthlyAllowances As DataTable,
             allOneTimeAllowances As DataTable,
@@ -189,7 +186,6 @@ Public Class PayrollGeneration
         Me._allSalaries = allSalaries
         _allLoanSchedules = allLoanSchedules
         _allLoanTransactions = allLoanTransactions
-        Me._allBonuses = allBonuses
 
         Me.allOneTimeAllowances = allOneTimeAllowances
         Me.allDailyAllowances = allDailyAllowances

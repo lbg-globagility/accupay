@@ -103,20 +103,193 @@ Public Class PayStub
 
     Private _loanTransactions As ICollection(Of PayrollSys.LoanTransaction)
 
+    Public paypFrom As String = Nothing
+    Public paypTo As String = Nothing
+    Public paypRowID As String = Nothing
+    Public paypPayFreqID As String = Nothing
+    Public isEndOfMonth As String = 0
+
+    Const max_count_per_page As Integer = 20
+
+    Dim currentEmployeeID As String = Nothing
+
+    Dim LastFirstMidName As String = Nothing
+
+    Dim employee_dattab As New DataTable
+
+    Dim esal_dattab As New DataTable
+
+    Dim etent_holidaypay As New DataTable
+
+    Dim etent_totdaypay As New DataTable
+
+    Dim emp_bonusDaily As New DataTable
+
+    Dim notax_bonusDaily As New DataTable
+
+    Dim emp_bonusMonthly As New DataTable
+
+    Dim notax_bonusMonthly As New DataTable
+
+    Dim emp_bonusOnce As New DataTable
+
+    Dim notax_bonusOnce As New DataTable
+
+    Dim emp_allowanceDaily As New DataTable
+
+    Dim notax_allowanceDaily As New DataTable
+
+    Dim emp_allowanceMonthly As New DataTable
+
+    Dim notax_allowanceMonthly As New DataTable
+
+    Dim emp_allowanceOnce As New DataTable
+
+    Dim notax_allowanceOnce As New DataTable
+
+
+
+    Dim emp_bonusSemiM As New DataTable
+
+    Dim notax_bonusSemiM As New DataTable
+
+    Dim emp_allowanceSemiM As New DataTable
+
+    Dim notax_allowanceSemiM As New DataTable
+
+
+    Dim emp_allowanceWeekly As New DataTable
+
+    Dim notax_allowanceWeekly As New DataTable
+
+    Dim emp_bonusWeekly As New DataTable
+
+    Dim notax_bonusWeekly As New DataTable
+
+
+    Dim prev_empTimeEntry As New DataTable
+
+    Dim numofdaypresent As New DataTable
+
+    Dim emp_TardinessUndertime As New DataTable
+
+    Private _withholdingTaxTable As DataTable
+    Private _filingStatuses As DataTable
+
+    Public numofweekdays As Integer
+
+    Public numofweekends As Integer
+
+    Public withthirteenthmonthpay As SByte = 0
+
+    Dim empthirteenmonthtable As New DataTable
+
+    Dim dtemployeefirsttimesalary As New DataTable
+
+    Private thread_max As Integer = 5
+
+    Dim SpDataSet As DataSet = New DataSet
+
+    Const max_rec_perpage As Integer = 20
+
+    Dim emp_list_batcount As Integer = 0
+
+    Dim pstub_TotalEmpSSS = Val(0)
+
+    Dim pstub_TotalCompSSS = Val(0)
+
+    Dim pstub_TotalEmpPhilhealth = Val(0)
+
+    Dim pstub_TotalCompPhilhealth = Val(0)
+
+    Dim pstub_TotalEmpHDMF = Val(0)
+
+    Dim pstub_TotalCompHDMF = Val(0)
+
+    Dim pstub_TotalVacationDaysLeft = Val(0)
+
+    Dim pstub_TotalLoans = Val(0)
+
+    Dim pstub_TotalBonus = Val(0)
+
+    Dim pstub_TotalAllowance = Val(0)
+
+    Dim OTAmount = Val(0)
+
+    Dim NightDiffOTAmount = Val(0)
+
+    Dim NightDiffAmount = Val(0)
+
+    Dim leavebalances As Object = Nothing
+    Dim leavebalan() As String
+
+    Dim thirteenthmoval = 0.0
+
+    Dim org_WorkDaysPerYear As Integer = 0
+
+    Public Prior_PayPeriodID As String = String.Empty
+
+    Public Current_PayPeriodID As String = String.Empty
+
+    Public Next_PayPeriodID As String = String.Empty
+
+    Dim EcolaProductID = Nothing
+
+
+    Public paypSSSContribSched As String = Nothing
+
+    Public paypPhHContribSched As String = Nothing
+
+    Public paypHDMFContribSched As String = Nothing
+
+    Dim pause_process_message = String.Empty
+
+    Dim IsUserPressEnterToSearch As Boolean = False
+
+    Dim dtempalldistrib As New DataTable
+
+    Dim rptdattab As New DataTable
+
+    Dim PayrollSummaChosenData As String = String.Empty
+
+    Dim selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+
+    Dim unselectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+
+    Dim quer_empPayFreq = ""
+
+    Dim dtJosh As DataTable
+    Dim da As New MySqlDataAdapter()
+
+    Dim dtprintAllPaySlip As New DataTable
+
+    Dim rptdocAll As New rptAllDecUndecPaySlip
+
+    Dim payWTax As New DataTable
+
+    Dim filingStatus As New DataTable
+
+    Dim multi_threads(0) As Thread
+
+    Dim multithreads As New List(Of Thread)
+
+    Private _uiTasks As TaskFactory
+
+    Dim array_bgwork(1) As System.ComponentModel.BackgroundWorker
+
+    Dim payroll_emp_count As Integer = 0
+
+    Dim progress_precentage As Integer = 0
+
+    Dim indxStartBatch As Integer = 0
+
     Property VeryFirstPayPeriodIDOfThisYear As Object
-
         Get
-
             Return n_VeryFirstPayPeriodIDOfThisYear
-
         End Get
-
         Set(value As Object)
-
             n_VeryFirstPayPeriodIDOfThisYear = value
-
         End Set
-
     End Property
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -522,16 +695,6 @@ Public Class PayStub
 
     End Sub
 
-    Private Sub dgvpayper_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvpayper.CellContentClick
-
-    End Sub
-
-    Public paypFrom As String = Nothing
-    Public paypTo As String = Nothing
-    Public paypRowID As String = Nothing
-    Public paypPayFreqID As String = Nothing
-    Public isEndOfMonth As String = 0
-
     Private Sub dgvpayper_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvpayper.SelectionChanged
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
@@ -648,8 +811,6 @@ Public Class PayStub
 
         dgvpayper_SelectionChanged(sender, e)
     End Sub
-
-    Const max_count_per_page As Integer = 20
 
     Private Sub First_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles First.LinkClicked, Prev.LinkClicked,
                                                                                                 Nxt.LinkClicked, Last.LinkClicked,
@@ -775,10 +936,6 @@ Public Class PayStub
         '                                                                   dgvemployees.CurrentRow.Index)
         'dgvemployees_CellClick(sender, dgv_DataGridViewCellEventArgs)
     End Sub
-
-    Dim currentEmployeeID As String = Nothing
-
-    Dim LastFirstMidName As String = Nothing
 
     Private Sub dgvemployees_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvemployees.SelectionChanged
 
@@ -1184,99 +1341,6 @@ Public Class PayStub
 
     End Function
 
-    Dim employee_dattab As New DataTable
-
-    Dim esal_dattab As New DataTable
-
-    Dim etent_dattab As New DataTable
-
-    Dim etent_holidaypay As New DataTable
-
-    Dim etent_totdaypay As New DataTable
-
-    Dim emp_bonus As New DataTable
-
-    Dim emp_bonusDaily As New DataTable
-
-    Dim notax_bonusDaily As New DataTable
-
-    Dim emp_bonusMonthly As New DataTable
-
-    Dim notax_bonusMonthly As New DataTable
-
-    Dim emp_bonusOnce As New DataTable
-
-    Dim notax_bonusOnce As New DataTable
-
-    Dim emp_allowanceDaily As New DataTable
-
-    Dim notax_allowanceDaily As New DataTable
-
-    Dim emp_allowanceMonthly As New DataTable
-
-    Dim notax_allowanceMonthly As New DataTable
-
-    Dim emp_allowanceOnce As New DataTable
-
-    Dim notax_allowanceOnce As New DataTable
-
-
-
-    Dim emp_bonusSemiM As New DataTable
-
-    Dim notax_bonusSemiM As New DataTable
-
-    Dim emp_allowanceSemiM As New DataTable
-
-    Dim notax_allowanceSemiM As New DataTable
-
-
-    Dim emp_allowanceWeekly As New DataTable
-
-    Dim notax_allowanceWeekly As New DataTable
-
-    Dim emp_bonusWeekly As New DataTable
-
-    Dim notax_bonusWeekly As New DataTable
-
-
-    Dim prev_empTimeEntry As New DataTable
-
-    Dim numofdaypresent As New DataTable
-
-    Dim emp_TardinessUndertime As New DataTable
-
-    Private _withholdingTaxTable As DataTable
-    Private _filingStatuses As DataTable
-
-    Public numofweekdays As Integer
-
-    Public numofweekends As Integer
-
-    Dim empleave As New DataTable
-
-    Dim allowtyp As Object = Nothing
-    Dim allow_type() As String
-
-    Dim deductions As Object = Nothing
-    Dim arraydeduction() As String
-
-    Dim loan_type As Object = Nothing
-    Dim loantyp() As String
-
-    Dim misc As Object = Nothing
-    Dim miscs() As String
-
-    Dim totals As Object = Nothing
-    Dim emp_totals() As String
-
-    Dim leavetype As Object = Nothing
-    Dim leavtyp() As String
-
-
-    Dim allowkind As Object = Nothing
-    Dim allow_kind() As String
-
     Private Sub tsbtngenpayroll_Click(sender As Object, e As EventArgs) Handles tsbtngenpayroll.Click
 
         Me.VeryFirstPayPeriodIDOfThisYear = Nothing
@@ -1304,14 +1368,6 @@ Public Class PayStub
 
     End Sub
 
-    Public withthirteenthmonthpay As SByte = 0
-
-    Dim empthirteenmonthtable As New DataTable
-
-    Dim MinimumWageAmount = Val(0)
-
-    Dim dtemployeefirsttimesalary As New DataTable
-
     Sub genpayroll(Optional PayFreqRowID As Object = Nothing)
         Task.Factory.StartNew(
             Sub()
@@ -1320,19 +1376,6 @@ Public Class PayStub
                                       And paypTo = Nothing Then
                     Exit Sub
                 End If
-
-                Dim _bool As Boolean = False
-
-                etent_dattab = New SQLQueryToDatatable("SELECT RowID,OrganizationID,Created,CreatedBy,COALESCE(LastUpd,'') 'LastUpd',COALESCE(LastUpdBy,'') 'LastUpdBy',Date,COALESCE(EmployeeShiftID,'') 'EmployeeShiftID',COALESCE(EmployeeID,'') 'EmployeeID',COALESCE(EmployeeSalaryID,'') 'EmployeeSalaryID',COALESCE(EmployeeFixedSalaryFlag,0) '',COALESCE(RegularHoursWorked,0) 'RegularHoursWorked',COALESCE(OvertimeHoursWorked,0) 'OvertimeHoursWorked',COALESCE(UndertimeHours,0) 'UndertimeHours',COALESCE(NightDifferentialHours,0) 'NightDifferentialHours',COALESCE(NightDifferentialOTHours,0) 'NightDifferentialOTHours',COALESCE(HoursLate,0) 'HoursLate',COALESCE(LateFlag,0) 'LateFlag',COALESCE(PayRateID,'') 'PayRateID',COALESCE(VacationLeaveHours,0) 'VacationLeaveHours',COALESCE(SickLeaveHours,0) 'SickLeaveHours',COALESCE(TotalDayPay,0) 'TotalDayPay'" &
-                                                              " FROM employeetimeentry" &
-                                                              " WHERE OrganizationID=" & orgztnID & "" &
-                                                              " AND Date" &
-                                                              " BETWEEN '" & paypFrom & "'" &
-                                                              " AND '" & paypTo & "'" &
-                                                              " ORDER BY Date;").ResultTable
-
-                'OvertimeHoursAmount,NightDiffHoursAmount,NightDiffOTHoursAmount
-                Dim double_value = ValNoComma(0)
 
                 'employeetimeentry - EXPERIMENT
                 Dim timeEntrySql = <![CDATA[
@@ -1392,17 +1435,6 @@ Public Class PayStub
                                                       t.PayPeriodID = paypRowID
                     _loanTransactions = query.ToList()
                 End Using
-
-                'employeebonus
-                emp_bonus = retAsDatTbl("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'" &
-                                                          ",EmployeeID" &
-                                                          " FROM employeebonus" &
-                                                          " WHERE OrganizationID=" & orgztnID &
-                                                          " AND EffectiveStartDate>='" & paypFrom & "'" &
-                                                          " AND EffectiveEndDate<='" & paypTo & "'" &
-                                                          " AND TaxableFlag='1'" &
-                                                          " GROUP BY EmployeeID" &
-                                                          " ORDER BY EmployeeID;")
 
                 Dim dailyallowfreq = "Daily"
 
@@ -1689,59 +1721,6 @@ Public Class PayStub
                                                                 " AND Date BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
                                                                 " GROUP BY EmployeeID;")
 
-                'Clothing,Meal,Rice,Transportation
-                allowtyp = EXECQUER("SELECT GROUP_CONCAT(RowID) FROM product WHERE OrganizationID='" & orgztnID & "' AND Category='Allowance Type' ORDER BY PartNo;")
-                'CategoryName
-                allow_type = Split(allowtyp, ",")
-
-                'Absent,Tardiness,Undertime,.PAGIBIG,.PhilHealth,.SSS
-                deductions = EXECQUER("SELECT GROUP_CONCAT(RowID) FROM product WHERE OrganizationID='" & orgztnID & "' AND Category='Deductions' ORDER BY PartNo;")
-
-                arraydeduction = Split(deductions, ",")
-
-                'PhilHealth,SSS,PAGIBIG
-                loan_type = EXECQUER("SELECT GROUP_CONCAT(RowID) FROM product WHERE OrganizationID='" & orgztnID & "' AND Category='Loan Type' ORDER BY PartNo;")
-
-                loantyp = Split(loan_type, ",")
-
-                'Miscellaneous - Overtime,Night differential OT,Holiday pay
-                misc = EXECQUER("SELECT GROUP_CONCAT(RowID) FROM product WHERE OrganizationID='" & orgztnID & "' AND Category='Miscellaneous' ORDER BY PartNo;")
-
-                miscs = Split(misc, ",")
-
-                'Totals - Withholding Tax,Gross Income,Net Income,Taxable Income
-                totals = EXECQUER("SELECT GROUP_CONCAT(CONCAT(PartNo,';',RowID)) FROM product WHERE OrganizationID='" & orgztnID & "' AND Category='Totals' ORDER BY PartNo;") 'BusinessUnitID
-                'GROUP_CONCAT(RowID)
-                emp_totals = Split(totals, ",")
-
-                'Leave Type - Vacation leave,Sick leave,Maternity/paternity leave,Others
-                leavetype = EXECQUER("SELECT GROUP_CONCAT(RowID) FROM product WHERE OrganizationID='" & orgztnID & "' AND Category='Leave Type' ORDER BY PartNo;")
-
-                leavtyp = Split(leavetype, ",")
-
-                empleave = retAsDatTbl(
-                    "SELECT elv.*" &
-                    ",SUM((DATEDIFF(COALESCE(elv.LeaveEndDate,elv.LeaveStartDate),elv.LeaveStartDate) + 1)) 'NumOfDaysLeave'" &
-                    ",COALESCE(((TIME_TO_SEC(TIMEDIFF(elv.LeaveEndTime,elv.LeaveStartTime)) / 60) / 60),0) 'NumOfHoursLeave'" &
-                    ",e.LeavePerPayPeriod" &
-                    ",COALESCE((SELECT RowID FROM product WHERE PartNo=elv.LeaveType AND OrganizationID=" & orgztnID & "),'') 'ProductID'" &
-                    " FROM employeeleave elv LEFT JOIN employee e ON e.RowID=elv.EmployeeID" &
-                    " WHERE elv.OrganizationID=" & orgztnID &
-                    " AND IF(elv.LeaveStartDate > '" & paypFrom & "' AND elv.LeaveEndDate > '" & paypTo & "'" &
-                    ", elv.LeaveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                    ", IF(elv.LeaveStartDate < '" & paypFrom & "' AND elv.LeaveEndDate < '" & paypTo & "'" &
-                    ", elv.LeaveEndDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                    ", IF(elv.LeaveStartDate <= '" & paypFrom & "' AND elv.LeaveEndDate >= '" & paypTo & "'" &
-                    ", '" & paypTo & "' BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate" &
-                    ", IF(elv.LeaveStartDate >= '" & paypFrom & "' AND elv.LeaveEndDate <= '" & paypTo & "'" &
-                    ", elv.LeaveEndDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                    ", IF(elv.LeaveEndDate IS NULL" &
-                    ", elv.LeaveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                    ", elv.LeaveStartDate >= '" & paypFrom & "' AND elv.LeaveEndDate <= '" & paypTo & "'" &
-                    ")))))" &
-                    " GROUP BY elv.LeaveType" &
-                    " ORDER BY elv.EmployeeID;")
-
                 If withthirteenthmonthpay = 1 Then
 
                     Dim params(1, 2) As Object
@@ -1799,11 +1778,6 @@ Public Class PayStub
 
                 ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
-                Dim MinimumWage_Amount =
-                                      EXECQUER("SELECT `GET_MinimumWageRate`();")
-
-                MinimumWageAmount = ValNoComma(MinimumWage_Amount)
-
                 dtemployeefirsttimesalary =
                                       New SQLQueryToDatatable("SELECT COUNT(ete.RowID)" &
                                                               ",ete.EmployeeID" &
@@ -1837,14 +1811,6 @@ Public Class PayStub
             TaskScheduler.FromCurrentSynchronizationContext)
 
     End Sub
-
-    Private thread_max As Integer = 5
-
-    Dim SpDataSet As DataSet = New DataSet
-
-    Const max_rec_perpage As Integer = 20
-
-    Dim emp_list_batcount As Integer = 0
 
     Private Sub ThreadingPayrollGeneration(Optional starting_batchindex As Integer = 0)
 
@@ -1937,7 +1903,6 @@ Public Class PayStub
                                                                               esal_dattab,
                                                                               _loanSchedules,
                                                                               _loanTransactions,
-                                                                              emp_bonus,
                                                                               emp_allowanceDaily,
                                                                               emp_allowanceMonthly,
                                                                               emp_allowanceOnce,
@@ -2442,56 +2407,6 @@ Public Class PayStub
 
     End Sub
 
-    Dim pstub_TotalEmpSSS = Val(0)
-
-    Dim pstub_TotalCompSSS = Val(0)
-
-    Dim pstub_TotalEmpPhilhealth = Val(0)
-
-    Dim pstub_TotalCompPhilhealth = Val(0)
-
-    Dim pstub_TotalEmpHDMF = Val(0)
-
-    Dim pstub_TotalCompHDMF = Val(0)
-
-    Dim pstub_TotalVacationDaysLeft = Val(0)
-
-    Dim pstub_TotalLoans = Val(0)
-
-    Dim pstub_TotalBonus = Val(0)
-
-    Dim pstub_TotalAllowance = Val(0)
-
-    Dim OTAmount = Val(0)
-
-    Dim NightDiffOTAmount = Val(0)
-
-    Dim NightDiffAmount = Val(0)
-
-    Dim leavebalances As Object = Nothing
-    Dim leavebalan() As String
-
-    Dim thirteenthmoval = 0.0
-
-    Dim org_WorkDaysPerYear As Integer = 0
-
-    Public Prior_PayPeriodID As String = String.Empty
-
-    Public Current_PayPeriodID As String = String.Empty
-
-    Public Next_PayPeriodID As String = String.Empty
-
-    Dim EcolaProductID = Nothing
-
-
-    Public paypSSSContribSched As String = Nothing
-
-    Public paypPhHContribSched As String = Nothing
-
-    Public paypHDMFContribSched As String = Nothing
-
-    Dim pause_process_message = String.Empty
-
     Private Sub bgworkgenpayroll_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkgenpayroll.ProgressChanged
         MDIPrimaryForm.systemprogressbar.Value = CType(e.ProgressPercentage, Integer)
 
@@ -2530,11 +2445,7 @@ Public Class PayStub
 
             esal_dattab = Nothing
 
-            etent_dattab = Nothing
-
             etent_totdaypay = Nothing
-
-            emp_bonus = Nothing
 
             emp_bonusDaily = Nothing
 
@@ -2561,20 +2472,6 @@ Public Class PayStub
             notax_allowanceOnce = Nothing
 
             numofdaypresent = Nothing
-
-            empleave = Nothing
-
-            allowtyp = Nothing
-
-            deductions = Nothing
-
-            loan_type = Nothing
-
-            misc = Nothing
-
-            totals = Nothing
-
-            leavetype = Nothing
 
             empthirteenmonthtable = Nothing
 
@@ -2843,8 +2740,6 @@ Public Class PayStub
 
     End Sub
 
-    Dim IsUserPressEnterToSearch As Boolean = False
-
     Private Sub tsSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tsSearch.KeyPress
         Dim e_asc As String = Asc(e.KeyChar)
         IsUserPressEnterToSearch = (e_asc = 13)
@@ -3069,8 +2964,6 @@ Public Class PayStub
     End Sub
 
     'Dim empalldistrib As New List(Of String)
-
-    Dim dtempalldistrib As New DataTable
 
     'gingamit ko lang an 'GET_employeeallowance' sa allowance
     'na may Daily at semi-monthly
@@ -3647,10 +3540,6 @@ Public Class PayStub
 
     End Function
 
-    Dim rptdattab As New DataTable
-
-    Dim PayrollSummaChosenData As String = String.Empty
-
     Private Sub tsbtnPayrollSumma_Click1(sender As Object, e As EventArgs) Handles _
         DeclaredToolStripMenuItem2.Click,
         ActualToolStripMenuItem2.Click
@@ -4184,10 +4073,6 @@ Public Class PayStub
 
     End Sub
 
-    Dim selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-
-    Dim unselectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-
     Private Sub tbppayroll_Enter(sender As Object, e As EventArgs) Handles tbppayroll.Enter
 
         Static once As SByte = 0
@@ -4268,8 +4153,6 @@ Public Class PayStub
         End If
 
     End Sub
-
-    Dim quer_empPayFreq = ""
 
     Sub PayFreq_Changed(sender As Object, e As EventArgs)
 
@@ -4681,9 +4564,6 @@ Public Class PayStub
         End Try
     End Sub
 
-
-    Dim dtJosh As DataTable
-    Dim da As New MySqlDataAdapter()
 
     Private Sub UpdateAdjustmentDetails(Optional IsActual As Boolean = False)
         Try
@@ -5474,8 +5354,6 @@ Public Class PayStub
 
     End Sub
 
-    Dim dtprintAllPaySlip As New DataTable
-
     Private Sub bgwPrintAllPaySlip_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwPrintAllPaySlip.DoWork
 
         If dtprintAllPaySlip.Columns.Count = 0 Then
@@ -5585,8 +5463,6 @@ Public Class PayStub
 
 
     End Sub
-
-    Dim rptdocAll As New rptAllDecUndecPaySlip
 
     Private Sub bgwPrintAllPaySlip_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgwPrintAllPaySlip.RunWorkerCompleted
 
@@ -6827,10 +6703,6 @@ Public Class PayStub
 
     End Sub
 
-    Dim payWTax As New DataTable
-
-    Dim filingStatus As New DataTable
-
     'Dim MinimumWage_Amount = New ExecuteQuery("SELECT MinWageValue FROM payperiod WHERE RowID='" & paypRowID & "';").Result
 
     Function Recursive(ByRef isThereStillRunning As Boolean) As Boolean
@@ -6857,14 +6729,6 @@ Public Class PayStub
         Return If(isThereStillRunning, Recursive(isThereStillRunning), False)
 
     End Function
-
-    Dim multi_threads(0) As Thread
-
-    Dim multithreads As New List(Of Thread)
-
-    Private _uiTasks As TaskFactory
-
-    Dim array_bgwork(1) As System.ComponentModel.BackgroundWorker
 
     Private Sub bgworkgenpayroll_DoBackGroundWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkgenpayroll.DoWork
     End Sub
@@ -6958,8 +6822,6 @@ Public Class PayStub
         ToolStripButton1.Text = ValNoComma(array_bgworks.Count)
 
     End Sub
-
-    Dim payroll_emp_count As Integer = 0
 
     Private Sub Thread_Method(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
 
@@ -7114,8 +6976,6 @@ Public Class PayStub
 
     End Sub
 
-    Dim progress_precentage As Integer = 0
-
     Sub ProgressCounter(ByVal cnt As Integer)
 
         progress_precentage += 1
@@ -7142,8 +7002,6 @@ Public Class PayStub
         Console.WriteLine(String.Concat("#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@ ", compute_percentage, "% complete"))
 
     End Sub
-
-    Dim indxStartBatch As Integer = 0
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
 
