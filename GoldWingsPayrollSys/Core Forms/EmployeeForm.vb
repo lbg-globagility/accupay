@@ -12377,8 +12377,8 @@ Public Class EmployeeForm
                             AbsToComputeVal
                         )
 
-                        txtPhilHealthSal.Text = _philHealthBracket?.EmployeeShare
-                        txtSSSSal.Text = If(_socialSecurityBracket?.EmployeeContributionAmount, 1)
+                        txtPhilHealthSal.Text = _philHealthBracket?.EmployeeShare.ToString()
+                        txtSSSSal.Text = _socialSecurityBracket?.EmployeeContributionAmount.ToString()
                         txtPagibig.Text = Val(dgvemployeesalary.CurrentRow.Cells("c_pagibig").Value)
 
                         txtEmpDeclaSal.Text = dgvemployeesalary.CurrentRow.Cells("c_EmpSal").Value
