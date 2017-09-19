@@ -11451,6 +11451,8 @@ Public Class EmployeeForm
     Dim IsNewSal As SByte = 0
     Dim payfreqdivisor = Val(0)
 
+    Private _salary As PayrollSys.Salary
+
     Private _socialSecurityBracket As PayrollSys.SocialSecurityBracket
 
     Private _philHealthBracket As PayrollSys.PhilHealthBracket
@@ -11462,8 +11464,8 @@ Public Class EmployeeForm
         tabpageText(tabIndx)
 
         tbpSalary.Text = "SALARY               "
-
         Label25.Text = "SALARY"
+
         Static once As SByte = 0
 
         If once = 0 Then
@@ -11473,8 +11475,8 @@ Public Class EmployeeForm
                 dbnow = EXECQUER(CURDATE_MDY)
             End If
 
-            dptFromSal.Value = Format(CDate(dbnow), machineShortDateFormat)
-            dtpToSal.Value = Format(CDate(dbnow), machineShortDateFormat)
+            dptFromSal.Value = CDate(dbnow)
+            dtpToSal.Value = CDate(dbnow)
 
             view_IDSal = VIEW_privilege("Employee Salary", orgztnID)
 
@@ -11965,8 +11967,8 @@ Public Class EmployeeForm
                         _philHealthBracket = philHealthQuery.FirstOrDefault()
                     End Using
 
-                    txtSSSSal.Text = _socialSecurityBracket?.EmployeeContributionAmount
-                    txtPhilHealthSal.Text = _philHealthBracket?.EmployeeShare
+                    txtSSSSal.Text = _socialSecurityBracket?.EmployeeContributionAmount.ToString()
+                    txtPhilHealthSal.Text = _philHealthBracket?.EmployeeShare.ToString()
 
                     Dim pagibig_amount = ValNoComma(txtPagibig.Text)
 
