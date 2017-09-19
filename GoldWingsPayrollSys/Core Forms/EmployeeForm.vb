@@ -11225,12 +11225,17 @@ Public Class EmployeeForm
     Private Sub SaveBonusCommentsRegardsToLoan()
 
         For Each dict In ebonus_rowid_comment
-            Dim str_comment As String = String.Concat("'", dict.Value, "'")
+            Dim str_comment As String = String.Concat("'", dict.Value(0), "'")
+            Dim bool_bonus_potent As Short = Convert.ToInt16(dict.Value(1))
             Dim row_id = dict.Key
 
             Dim str_quer As String =
                 String.Concat("UPDATE employeebonus eb",
-                              " SET `Remarks`=", str_comment,
+                              " LEFT JOIN employeeloanschedule els ON els.BonusID=eb.RowID",
+                              " SET eb.`Remarks`=", str_comment,
+                              ",els.Comments=", str_comment,
+                              ",els.BonusPotentialPaymentForLoan=", bool_bonus_potent,
+                              ",els.LoanPayPeriodLeftForBonus=IF(els.LoanPayPeriodLeftForBonus IS NULL, els.LoanPayPeriodLeft, els.LoanPayPeriodLeftForBonus)",
                               " WHERE eb.RowID='", row_id, "';")
 
             Dim exec_quer As New ExecuteQuery(str_quer)
@@ -21471,7 +21476,7 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private ebonus_rowid_comment As New Dictionary(Of Object, String)
+    Private ebonus_rowid_comment As New Dictionary(Of Object, String())
 
     Private Sub chkboxChargeToBonus_Click(sender As Object, e As EventArgs) Handles chkboxChargeToBonus.Click
 
@@ -21517,9 +21522,20 @@ Public Class EmployeeForm
             DedEffectiveDateTo = MYSQLDateFormat(CDate(DedEffectiveDateTo))
         End If
 
+        Dim els_rowid As Object = Nothing
+
+        Try
+            els_rowid =
+                dgvLoanList.CurrentRow.Cells("c_RowIDLoan").Value
+        Catch ex As Exception
+            els_rowid = Nothing
+        End Try
+
         Dim n_EmployeeBonusControl As New EmployeeBonusControl(EmpRow_ID, BonusRefID, DedEffectiveDateFrom, DedEffectiveDateTo)
 
         With n_EmployeeBonusControl
+
+            .EmployeeLoanRowID = els_rowid
 
             .ShowAsDialog = True
 
