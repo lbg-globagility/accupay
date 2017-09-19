@@ -11693,6 +11693,7 @@ Public Class EmployeeForm
                         dgvrow.Cells("c_fromdate").Value,
                         dgvrow.Cells("c_todate").Value,
                         ValNoComma(txtTrueSal.Text),
+                        "0",
                         _socialSecurityBracket?.RowID,
                         _philHealthBracket?.RowID
                     )
@@ -11827,6 +11828,7 @@ Public Class EmployeeForm
 
         Select Case e.KeyCode
             Case Keys.Back, Keys.D0, Keys.NumPad0
+                _philHealthBracket = Nothing
                 txtPhilHealthSal.Text = "0.00"
                 txtPhilHealthSal.Select(txtPhilHealthSal.Text.Length, 0)
                 is_user_override_phh = True
@@ -12088,18 +12090,18 @@ Public Class EmployeeForm
         If btnNewSal.Enabled = True Then
             grpbasicsalaryaddeduction.Enabled = True
             'Try
-            fillseletedEnterEmpID(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
-                grpbasicsalaryaddeduction.Enabled = True
-                btnDelSal.Enabled = True
+            SelectSalary(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+            grpbasicsalaryaddeduction.Enabled = True
+            btnDelSal.Enabled = True
 
-                txtpaytype.Enabled = True
-                txtEmp_type.Enabled = True
-                txtEmpDeclaSal.Enabled = True
+            txtpaytype.Enabled = True
+            txtEmp_type.Enabled = True
+            txtEmpDeclaSal.Enabled = True
 
-                txtBasicrateSal.Enabled = True
+            txtBasicrateSal.Enabled = True
 
-                dptFromSal.Enabled = True
-                dtpToSal.Enabled = True
+            dptFromSal.Enabled = True
+            dtpToSal.Enabled = True
 
             'Catch ex As Exception
             'If dgvemployeesalary.RowCount = 0 Then
@@ -12266,7 +12268,7 @@ Public Class EmployeeForm
         Return True
     End Function
 
-    Private Function fillseletedEnterEmpID(ByVal RowID As Integer) As Boolean
+    Private Function SelectSalary(ByVal salaryID As Integer) As Boolean
         Dim dt As DataTable = getDataTableForSQL($"
             SELECT
                 es.*,
@@ -12288,7 +12290,7 @@ Public Class EmployeeForm
             ON ag.RowID = ee.AgencyID
             INNER JOIN payfrequency pf
             ON pf.RowID = ee.PayFrequencyID
-            WHERE es.RowID = '{RowID}' AND
+            WHERE es.RowID = '{salaryID}' AND
                 ee.OrganizationID = '{z_OrganizationID}';
         ")
 
@@ -12356,14 +12358,10 @@ Public Class EmployeeForm
 
                         Using context = New PayrollContext()
                             Dim paySocialSecurityID = ConvertToType(Of Integer?)(drow("PaySocialSecurityID"))
-                            'If paySocialSecurityID IsNot Nothing Then
                             _socialSecurityBracket = context.SocialSecurityBrackets.Find(paySocialSecurityID)
-                            'End If
 
-                            Dim payPhilHealthID = drow("PayPhilHealthID")
-                            If payPhilHealthID Then
-                                _philHealthBracket = context.PhilHealthBrackets.Find(payPhilHealthID)
-                            End If
+                            Dim payPhilHealthID = ConvertToType(Of Integer?)(drow("PayPhilHealthID"))
+                            _philHealthBracket = context.PhilHealthBrackets.Find(payPhilHealthID)
                         End Using
 
                         Dim esal_Salary = Val(dgvemployeesalary.CurrentRow.Cells("c_EmpSal").Value)
