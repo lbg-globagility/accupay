@@ -15,6 +15,8 @@ Namespace Global.PayrollSys
 
         Public Property FilingStatusID As Integer?
 
+        Public Property PositionID As Integer?
+
         Public Property PaySocialSecurityID As Integer?
 
         Public Property PayPhilHealthID As Integer?
