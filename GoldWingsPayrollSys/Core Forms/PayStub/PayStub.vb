@@ -1338,56 +1338,11 @@ Public Class PayStub
                     Exit Sub
                 End If
 
-                'employeetimeentry - EXPERIMENT
-                Dim timeEntrySql = <![CDATA[
-                    SELECT
-                        SUM(COALESCE(ete.TotalDayPay,0)) 'TotalDayPay',
-                        ete.EmployeeID,
-                        ete.Date,
-                        SUM(COALESCE(ete.RegularHoursAmount, 0)) 'RegularHoursAmount',
-                        SUM(COALESCE(ete.RegularHoursWorked, 0)) 'RegularHoursWorked',
-                        SUM(COALESCE(ete.OvertimeHoursWorked, 0)) 'OvertimeHoursWorked',
-                        SUM(COALESCE(ete.OvertimeHoursAmount, 0)) 'OvertimeHoursAmount',
-                        SUM(COALESCE(ete.NightDifferentialHours, 0)) 'NightDifferentialHours',
-                        SUM(COALESCE(ete.NightDiffHoursAmount, 0)) 'NightDiffHoursAmount',
-                        SUM(COALESCE(ete.NightDifferentialOTHours, 0)) 'NightDifferentialOTHours',
-                        SUM(COALESCE(ete.NightDiffOTHoursAmount, 0)) 'NightDiffOTHoursAmount',
-                        SUM(COALESCE(ete.RestDayHours, 0)) 'RestDayHours',
-                        SUM(COALESCE(ete.RestDayAmount, 0)) 'RestDayAmount',
-                        SUM(COALESCE(ete.Leavepayment, 0)) 'Leavepayment',
-                        SUM(COALESCE(ete.HolidayPayAmount, 0)) 'HolidayPayAmount',
-                        SUM(COALESCE(ete.HoursLate, 0)) 'HoursLate',
-                        SUM(COALESCE(ete.HoursLateAmount, 0)) 'HoursLateAmount',
-                        SUM(COALESCE(ete.UndertimeHours, 0)) 'UndertimeHours',
-                        SUM(COALESCE(ete.UndertimeHoursAmount, 0)) 'UndertimeHoursAmount',
-                        SUM(COALESCE(ete.Absent, 0)) AS 'Absent'
-                    FROM employeetimeentry ete
-                    LEFT JOIN employee e
-                    ON e.RowID = ete.EmployeeID
-                    LEFT JOIN payrate pr
-                    ON pr.RowID = ete.PayRateID AND
-                        pr.OrganizationID = ete.OrganizationID
-                    WHERE ete.OrganizationID='@OrganizationID' AND
-                        ete.Date BETWEEN IF('@DateFrom' < e.StartDate, e.StartDate, '@DateFrom') AND '@DateTo'
-                    GROUP BY ete.EmployeeID
-                    ORDER BY ete.EmployeeID;
-                ]]>.Value
-
-                timeEntrySql = timeEntrySql.Replace("@OrganizationID", orgztnID) _
-                                    .Replace("@DateFrom", paypFrom) _
-                                    .Replace("@DateTo", paypTo)
-
-                etent_totdaypay = New SqlToDataTable(timeEntrySql).Read()
-
-                Using context = New PayrollContext()
-                    Dim query = From l In context.LoanSchedules
-                                Select l
-                                Where l.OrganizationID = z_OrganizationID And
-                                                      l.DedEffectiveDateFrom <= paypTo And
-                                                      l.Status = "In Progress" And
-                                                      l.BonusID Is Nothing
-                    _loanSchedules = query.ToList()
-                End Using
+                Dim resources = New PayrollResources(CDate(paypFrom), CDate(paypTo))
+                Dim resourcesTask = resources.Load()
+                resourcesTask.Wait()
+                etent_totdaypay = resources.TimeEntries
+                _loanSchedules = resources.LoanSchedules
 
                 Using context = New PayrollContext()
                     Dim query = From t In context.LoanTransactions
