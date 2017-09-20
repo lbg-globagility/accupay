@@ -1,5 +1,9 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
+Imports System.Collections.ObjectModel
+Imports System.Data.Entity
+
 Public Class PayrollResources
 
     Private _payDateFrom As Date
@@ -8,13 +12,28 @@ Public Class PayrollResources
 
     Private _timeEntries As DataTable
 
+    Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
+
     Public ReadOnly Property TimeEntries As DataTable
         Get
             Return _timeEntries
         End Get
     End Property
 
-    Public Async Sub LoadTimeEntries()
+    Public ReadOnly Property LoanSchedules As ICollection(Of PayrollSys.LoanSchedule)
+        Get
+            Return _loanSchedules
+        End Get
+    End Property
+
+    Public Async Function Load() As Task
+        Dim loadTimeEntriesTask = LoadTimeEntries()
+        Dim loadLoanSchedulesTask = LoadLoanSchedules()
+
+        Await Task.WhenAll({loadTimeEntriesTask, loadLoanSchedulesTask})
+    End Function
+
+    Public Async Function LoadTimeEntries() As Task
         Dim timeEntrySql = <![CDATA[
             SELECT
                 SUM(COALESCE(ete.TotalDayPay,0)) 'TotalDayPay',
@@ -73,6 +92,18 @@ Public Class PayrollResources
             .Replace("@DateTo", CStr(_payDateTo))
 
         _timeEntries = Await New SqlToDataTable(timeEntrySql).ReadAsync()
-    End Sub
+    End Function
+
+    Private Async Function LoadLoanSchedules() As Task
+        Using context = New PayrollContext()
+            Dim query = From l In context.LoanSchedules
+                        Select l
+                        Where l.OrganizationID = z_OrganizationID And
+                                                      l.DedEffectiveDateFrom <= _payDateTo And
+                                                      l.Status = "In Progress" And
+                                                      l.BonusID Is Nothing
+            _loanSchedules = Await query.ToListAsync()
+        End Using
+    End Function
 
 End Class
