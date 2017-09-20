@@ -12399,13 +12399,13 @@ Public Class EmployeeForm
                     If IsDBNull(.Item("EffectiveDateFrom")) Then
                         dptFromSal.Value = CDate(dbnow).ToString(machineShortDateFormat)
                     Else
-                        dptFromSal.Value = CDate(.Item("EffectiveDateFrom")).ToString(machineShortDateFormat)
+                        dptFromSal.Value = CDate(.Item("EffectiveDateFrom")).ToShortDateString
                     End If
 
                     If IsDBNull(.Item("EffectiveDateTo")) Then
                         dtpToSal.Value = CDate(dbnow).AddYears(100)
                     Else
-                        dtpToSal.Value = CDate(.Item("EffectiveDateTo")).ToString(machineShortDateFormat)
+                        dtpToSal.Value = CDate(.Item("EffectiveDateTo")).ToShortDateString 'ToString(machineShortDateFormat)
                     End If
                 End With
             Next
