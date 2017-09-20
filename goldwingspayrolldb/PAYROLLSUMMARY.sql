@@ -16,6 +16,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `PAYROLLSUMMARY`(
 
 
 
+
 )
 BEGIN
 
@@ -39,35 +40,35 @@ WHERE RowID = IFNULL(ps_PayPeriodID2, ps_PayPeriodID1)
 INTO paypdateto;
 
 SELECT
-    -- IFNULL(
-    --     (
-    --         SELECT
-    --             IF(
-    --                 e.EmployeeType='Fixed',
-    --                 IFNULL(es.BasicPay, 0),
-    --                 IF(
-    --                     e.EmployeeType='Daily',
-    --                     SUM(IFNULL(i.RegularHoursAmount, 0)),
-    --                     (IFNULL(es.BasicPay, 0) - (SUM(IFNULL(i.HoursLateAmount, 0)) + SUM(IFNULL(i.UndertimeHoursAmount, 0)) + SUM(IFNULL(i.Absent, 0)) + SUM(IFNULL(HolidayPayAmount, 0))))
-    --                 )
-    --             )
-    --         FROM (
-    --             SELECT
-    --                 HoursLateAmount,
-    --                 UndertimeHoursAmount,
-    --                 Absent,
-    --                 HolidayPayAmount
-    --             FROM v_uni_employeetimeentry i
-    --             WHERE i.`AsActual` = psi_undeclared
-    --                 AND i.OrganizationID = ps_OrganizationID
-    --         ) i
-    --         LEFT JOIN employeesalary es
-    --             ON es.RowID = i.EmployeeSalaryID
-    --         WHERE i.EmployeeID = ps.EmployeeID
-    --             AND i.`Date` BETWEEN paypdatefrom AND paypdateto
-    --     ),
-    --     0
-    -- ) `DatCol21`,
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     e.RowID 'EmployeeRowID',
     e.EmployeeID `DatCol2`,
     IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay) `DatCol21`,
@@ -95,7 +96,7 @@ SELECT
     UCASE(e.Surname) 'Surname',
     UCASE(p.PositionName) 'PositionName',
     UCASE(d.Name) `DatCol1`,
-    -- (GET_employeerateperday(ps.EmployeeID,ps_OrganizationID,PayFromDate) <= d.MinimumWageAmount) AS IsMinimum,
+    
     IFNULL(agf.DailyFee,0) `DatCol39`,
     IFNULL(thirteenthmonthpay.Amount,0) `DatCol40`,
     CONCAT_WS(
@@ -104,7 +105,8 @@ SELECT
         DATE_FORMAT(paystub.PayToDate,'%c/%e/%Y')
     ) `DatCol20`,
     paystub.RegularHours `DatCol41`,
-    (IFNULL(paystub.TotalNetSalary, 0) + IFNULL(thirteenthmonthpay.Amount, 0) + IFNULL(agf.DailyFee, 0)) AS `DatCol42`
+    
+    (IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) + IFNULL(thirteenthmonthpay.Amount,0) + IFNULL(agf.DailyFee, 0)) `DatCol42`
 FROM paystub
 
 LEFT JOIN paystubactual
@@ -139,7 +141,7 @@ WHERE paystub.OrganizationID = ps_OrganizationID AND
     (paystub.PayFromDate >= paypdatefrom OR paystub.PayToDate >= paypdatefrom) AND
     (paystub.PayFromDate <= paypdateto OR paystub.PayToDate <= paypdateto) AND
     LENGTH(IFNULL(e.ATMNo, '')) = IF(strSalaryDistrib = 'Cash', 0, LENGTH(IFNULL(e.ATMNo, '')))
-    -- AND paystub.AsActual = psi_undeclared
+    
 ORDER BY d.Name, e.LastName;
 
 END//

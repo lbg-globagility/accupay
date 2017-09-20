@@ -25,39 +25,39 @@ DECLARE thisyear INT(11);
 
 SET @timediffcount = 0.00;
 
--- IF AllowanceFrequenzy = 'Semi-monthly version 1' THEN
-
---     SET @dailyallowanceamount = 0.000000;
 
 
---     SELECT
---         (SELECT @dailyallowanceamount := ROUND((ea.AllowanceAmount / (e.WorkDaysPerYear / (PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) * MonthCount))),2)),
---         (SELECT @timediffcount := COMPUTE_TimeDifference(sh.TimeFrom,sh.TimeTo)),
---         (SELECT @timediffcount := IF(@timediffcount < 5,@timediffcount,(@timediffcount - 1.0))),
---         ((et.RegularHoursWorked / @timediffcount) * @dailyallowanceamount) AS TotalAllowanceAmount,
---         et.EmployeeID,
---         ea.ProductID
---     FROM employeetimeentry et
---     INNER JOIN employee e
---     ON e.OrganizationID = OrganizID AND
---         e.RowID = et.EmployeeID AND
---         e.EmploymentStatus NOT IN ('Resigned','Terminated')
---     INNER JOIN payfrequency pf
---     ON pf.RowID = e.PayFrequencyID
---     INNER JOIN employeeshift es
---     ON es.RowID = et.EmployeeShiftID
---     INNER JOIN shift sh
---     ON sh.RowID = es.ShiftID
---     INNER JOIN employeeallowance ea
---     ON ea.AllowanceFrequency = AllowanceFrequenzy AND
---         ea.TaxableFlag = IsTaxable AND
---         ea.EmployeeID = e.RowID AND
---         ea.OrganizationID = OrganizID AND
---         et.`Date` BETWEEN ea.EffectiveStartDate AND ea.EffectiveEndDate
---     INNER JOIN product p
---     ON p.RowID = ea.ProductID AND p.`Fixed` = 0
---     WHERE et.OrganizationID = OrganizID AND
---         et.`Date` BETWEEN DatePayFrom AND DatePayTo;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 IF AllowanceFrequenzy = 'Monthly' THEN
 
@@ -146,40 +146,40 @@ ELSEIF AllowanceFrequenzy = 'Semi-monthly' THEN
     GROUP BY i.EmployeeID,
         ii.RowID;
 
--- ELSEIF AllowanceFrequenzy = 'Daily version 1' THEN
 
---     SELECT et.EmployeeID,
---         (SELECT @timediffcount := COMPUTE_TimeDifference(sh.TimeFrom,sh.TimeTo)) AS Equatn,
---         (SELECT @timediffcount := IF(@timediffcount < 5,@timediffcount,(@timediffcount - 1.0))) AS timediffcount,
---         IF(
---             LOCATE('Regular Holi',pr.PayType) > 0 AND LOCATE('cola',p.PartNo) > 0 AND et.TotalDayPay > 0,
---             ea.AllowanceAmount,
---             ((et.RegularHoursWorked / @timediffcount) * ea.AllowanceAmount)
---         ) AS TotalAllowanceAmount,
---         ea.ProductID,
---         et.`Date`
---     FROM employeetimeentry et
---     INNER JOIN employee e
---     ON e.OrganizationID = OrganizID AND
---         e.RowID = et.EmployeeID AND
---         e.EmploymentStatus NOT IN ('Resigned','Terminated')
---     LEFT JOIN employeeshift es
---     ON es.RowID = IFNULL(et.EmployeeShiftID,0)
---     INNER JOIN shift sh
---     ON sh.RowID = es.ShiftID
---     INNER JOIN employeeallowance ea
---     ON ea.AllowanceFrequency = AllowanceFrequenzy AND
---         ea.TaxableFlag = IsTaxable AND
---         ea.EmployeeID = e.RowID AND
---         ea.OrganizationID = OrganizID AND
---         et.`Date` BETWEEN ea.EffectiveStartDate AND ea.EffectiveEndDate
---     INNER JOIN product p
---     ON p.RowID = ea.ProductID AND
---         p.`Fixed` = 0
---     INNER JOIN payrate pr
---     ON pr.RowID = et.PayRateID
---     WHERE et.OrganizationID = OrganizID AND
---         et.`Date` BETWEEN DatePayFrom AND DatePayTo;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ELSEIF AllowanceFrequenzy = 'Daily' THEN
 

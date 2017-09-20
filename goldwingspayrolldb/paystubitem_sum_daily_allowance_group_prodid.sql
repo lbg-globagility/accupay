@@ -47,7 +47,10 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_dail
                     IF(
                         pr.PayType = 'Regular Holiday',
                         (
-                            ((et.RegularHoursWorked / sh.DivisorToDailyRate) * ea.AllowanceAmount) +
+                            COALESCE(
+                                ((et.RegularHoursWorked / sh.DivisorToDailyRate) * ea.AllowanceAmount),
+                                0
+                            ) +
                             (
                                 IF(
                                     HasWorkedLastWorkingDay(e.RowID, et.Date),
@@ -56,7 +59,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_dail
                                 )
                             )
                         ),
-                        0 -- Unrecognizable Day type
+                        0 
                     )
                 )
             )

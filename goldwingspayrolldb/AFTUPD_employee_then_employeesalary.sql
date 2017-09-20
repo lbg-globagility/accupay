@@ -269,55 +269,55 @@ UPDATE
 SELECT RowID FROM `view` WHERE ViewName='Employee Personal Profile' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 
 
--- IF NEW.WorkDaysPerYear != OLD.WorkDaysPerYear THEN
-
---     SELECT
---     EffectiveDateFrom
---     ,Salary
---     FROM employeesalary
---     WHERE EmployeeID=NEW.RowID
---     AND OrganizationID=NEW.OrganizationID
---     AND EffectiveDateTo IS NULL
---     INTO current_salaryeffectivedate
---             ,emp_fullmonthsalary;
-
---     IF NEW.EmployeeType IN ('Fixed','Monthly') THEN
-
---         SELECT GET_employeeallowancePerDay(NEW.OrganizationID, NEW.RowID, '1', CURDATE()) INTO emp_everydayallowance;
-
---         SET emp_everydayallowance = (emp_everydayallowance * NEW.WorkDaysPerYear) / 12;
-
---         SET emp_fullmonthsalary = emp_fullmonthsalary + emp_everydayallowance;
-
---     ELSEIF NEW.EmployeeType = 'Daily' THEN
-
---         SELECT GET_employeerateperday(NEW.RowID,NEW.OrganizationID,current_salaryeffectivedate) INTO emp_fullmonthsalary;
-
---     SELECT GET_employeeallowancePerDay(NEW.OrganizationID, NEW.RowID, '1', CURDATE()) INTO emp_everydayallowance;
-
---         SET emp_fullmonthsalary = ((emp_fullmonthsalary + emp_everydayallowance) * NEW.WorkDaysPerYear) / 12;
 
 
 
---     END IF;
 
 
 
---     SELECT RowID FROM paysocialsecurity WHERE emp_fullmonthsalary BETWEEN RangeFromAmount AND IF(emp_fullmonthsalary > RangeToAmount, (emp_fullmonthsalary + 1), RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
 
---     SELECT RowID FROM payphilhealth WHERE emp_fullmonthsalary BETWEEN SalaryRangeFrom AND IF(emp_fullmonthsalary > SalaryRangeTo, (emp_fullmonthsalary + 1), SalaryRangeTo) ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
 
---     UPDATE employeesalary SET
---     PaySocialSecurityID=psssID
---     ,PayPhilhealthID=phhID
---     ,LastUpdBy=NEW.LastUpdBy
---     WHERE EmployeeID=NEW.RowID
---     AND OrganizationID=NEW.OrganizationID
---     AND EffectiveDateTo IS NULL;
 
---     INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'WorkDaysPerYear',NEW.RowID,OLD.WorkDaysPerYear,NEW.WorkDaysPerYear,'Update');
 
--- END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 IF OLD.Salutation!=NEW.Salutation THEN INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'Salutation',NEW.RowID,OLD.Salutation,NEW.Salutation,'Update'); END IF;
 
@@ -502,79 +502,79 @@ END IF;
 
 
 
--- IF NEW.AgencyID IS NOT NULL THEN
-
---     SET agfee_percent = 0.0;
-
---     UPDATE employeesalary es
---     INNER JOIN payphilhealth phh ON phh.SalaryBracket = -1500 AND phh.HiddenData='1'
---     INNER JOIN paysocialsecurity pss ON pss.MonthlySalaryCredit = -1500 AND pss.HiddenData='1'
---     LEFT JOIN (SELECT * FROM listofval WHERE `Type`='Default Government Contribution' AND `LIC`='HDMF' LIMIT 1) lv ON lv.RowID > 0
---     SET es.PaySocialSecurityID = pss.RowID
---     ,es.PayPhilhealthID = phh.RowID
---     ,es.HDMFAmount = IF(lv.DisplayValue IS NULL, 100.0, (lv.DisplayValue * 1.0))
---     ,es.LastUpd = CURRENT_TIMESTAMP()
---     ,es.LastUpdBy = NEW.LastUpdBy
---     WHERE es.EmployeeID=NEW.RowID
---     AND es.OrganizationID=NEW.OrganizationID;
-
---     SELECT RowID FROM `view` WHERE ViewName='Employee Salary' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
-
-
--- ELSE
 
 
 
 
 
---     SELECT RowID,Salary,EffectiveDateFrom FROM employeesalary WHERE EmployeeID=NEW.RowID AND OrganizationID=NEW.OrganizationID ORDER BY EffectiveDateFrom DESC LIMIT 1 INTO prevesalRowID,empBasicPay,preEffDateFromEmpSal;
 
 
 
 
---     IF NEW.EmployeeType IN ('Fixed','Monthly') THEN
---         IF NEW.PayFrequencyID=1 THEN
---             SET thebasicpay = empBasicPay / 2.0;
---             SET thedailypay = 0;
---             SET thehourlypay = 0;
---         ELSE
---             SET thebasicpay = empBasicPay;
---             SET thedailypay = 0;
---             SET thehourlypay = 0;
---         END IF;
 
---         SELECT RowID FROM payphilhealth WHERE IFNULL(empBasicPay,0) BETWEEN SalaryRangeFrom AND SalaryRangeTo ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
 
---         SELECT RowID FROM paysocialsecurity WHERE IFNULL(empBasicPay,0) BETWEEN RangeFromAmount AND RangeToAmount ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
 
---     ELSEIF NEW.EmployeeType = 'Daily' THEN
---             SET thebasicpay = (empBasicPay * NEW.WorkDaysPerYear) / 12;
---             SET thedailypay = empBasicPay;
---             SET thehourlypay = 0;
 
---         SELECT RowID FROM payphilhealth WHERE IFNULL(thebasicpay,0) BETWEEN SalaryRangeFrom AND SalaryRangeTo ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
 
---         SELECT RowID FROM paysocialsecurity WHERE IFNULL(thebasicpay,0) BETWEEN RangeFromAmount AND RangeToAmount ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
 
---     ELSEIF NEW.EmployeeType = 'Hourly' THEN
---             SET thebasicpay = empBasicPay;
---             SET thedailypay = 0;
---             SET thehourlypay = empBasicPay;
 
---         SELECT RowID FROM paysocialsecurity WHERE COALESCE(thehourlypay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
 
---     END IF;
 
---     UPDATE employeesalary es
---     SET es.PaySocialSecurityID = psssID
---     ,es.PayPhilhealthID = phhID
---     ,es.HDMFAmount = 100.0
---     ,es.LastUpd = CURRENT_TIMESTAMP()
---     ,es.LastUpdBy = NEW.LastUpdBy
---     WHERE es.EmployeeID=NEW.RowID
---     AND es.OrganizationID=NEW.OrganizationID;
 
--- END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

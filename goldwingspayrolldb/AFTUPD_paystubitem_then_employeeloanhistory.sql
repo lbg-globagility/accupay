@@ -41,7 +41,7 @@ DECLARE loan_status VARCHAR(100);
 
 DECLARE ItemName TEXT;
 
--- DECLARE lastdateofmonth DATE;
+
 
 DECLARE prev13monthRowID INT(11);
 
@@ -74,10 +74,10 @@ DECLARE pay_dateto DATE;
 
 DECLARE productName VARCHAR(50);
 
--- SELECT Category
--- FROM product
--- WHERE RowID=NEW.ProductID
--- INTO categofprod;
+
+
+
+
 
 SELECT
     PayPeriodID,
@@ -92,10 +92,10 @@ INTO
     paypDateTo,
     pay_fromdate;
 
--- SELECT EmployeeID
--- FROM paystub
--- WHERE RowID=NEW.PayStubID
--- INTO selectedEmployeeID;
+
+
+
+
 
 SELECT RowID
 FROM category
@@ -139,138 +139,138 @@ IF isItemLoan = '1' THEN
 
 END IF;
 
--- SELECT PartNo
--- FROM product
--- WHERE RowID=NEW.ProductID
--- INTO ItemName;
 
--- IF ItemName = 'Gross Incomefasd5f15asd15 151d51151df51a5sd1f51sd5a1f5as1d' THEN
 
---     SELECT PayToDate
---     FROM paystub
---     WHERE RowID=NEW.PayStubID
---     INTO lastdateofmonth;
 
---     SELECT
---         `Half`,
---         `Month`
---     FROM payperiod
---     WHERE RowID=paypID
---     INTO
---         is_LastDateOfMonth,
---         thisdatemonth;
 
---     IF is_LastDateOfMonth = '0' THEN
 
---         SELECT pyp.PayToDate
---         FROM payperiod pyp
---         WHERE pyp.OrganizationID=NEW.OrganizationID
---             AND pyp.`Month`=thisdatemonth
---             AND pyp.`Year`=YEAR(CURDATE())
---         ORDER BY pyp.PayFromDate DESC, pyp.PayToDate DESC
---         LIMIT 1
---         INTO lastdateofmonth;
 
---         SELECT pyp.PayFromDate
---         FROM payperiod pyp
---         WHERE pyp.OrganizationID=NEW.OrganizationID
---             AND pyp.`Month`=thisdatemonth
---             AND pyp.`Year`=YEAR(CURDATE())
---         ORDER BY pyp.PayFromDate, pyp.PayToDate
---         LIMIT 1
---         INTO fistdatethismonth;
 
---         SELECT RowID
---         FROM thirteenthmonthpay
---         WHERE OrganizationID=NEW.OrganizationID
---             AND PaystubID=NEW.PayStubID
---         LIMIT 1
---         INTO prev13monthRowID;
 
---         SELECT EmployeeID
---         FROM paystub
---         WHERE RowID=NEW.PayStubID
---         INTO ps_EmployeeID;
 
---         SELECT SUM(psi.PayAmount)
---         FROM paystubitem psi
---         INNER JOIN paystub ps ON ps.OrganizationID=NEW.OrganizationID
---             AND ps.EmployeeID=ps_EmployeeID
---             AND (ps.PayFromDate >= fistdatethismonth OR ps.PayToDate >= fistdatethismonth)
---             AND (ps.PayFromDate <= lastdateofmonth OR ps.PayToDate <= lastdateofmonth)
---         WHERE psi.PayStubID=ps.RowID
---             AND psi.ProductID=NEW.ProductID
---             AND psi.RowID!=prev13monthRowID
---         INTO newvalue;
 
---         IF newvalue IS NULL THEN
---             SET newvalue = 0;
---         END IF;
 
---         SET newvalue = newvalue + NEW.PayAmount;
 
---         INSERT INTO thirteenthmonthpay
---         (
---             RowID
---             ,OrganizationID
---             ,Created
---             ,CreatedBy
---             ,PaystubID
---             ,Amount
---         ) VALUES (
---             prev13monthRowID
---             ,NEW.OrganizationID
---             ,CURRENT_TIMESTAMP()
---             ,NEW.CreatedBy
---             ,NEW.PayStubID
---             ,(newvalue) / 12
---         ) ON DUPLICATE KEY UPDATE
---             LastUpd=CURRENT_TIMESTAMP()
---             ,LastUpdBy=NEW.CreatedBy
---             ,Amount=(newvalue) / 12;
 
---     END IF;
 
--- END IF;
 
--- SELECT
---     pp.`Half`,
---     ps.EmployeeID,
---     pp.PayFromDate,
---     pp.PayToDate
--- FROM payperiod pp
--- INNER JOIN paystub ps
---     ON ps.RowID=NEW.PayStubID
---     AND pp.RowID=ps.PayPeriodID
--- INTO
---     IsrbxpayrollFirstHalfOfMonth,
---     e_RowID,
---     pay_datefrom,
---     pay_dateto;
 
--- SELECT p.`Category`
--- FROM product p
--- WHERE p.RowID=NEW.ProductID
--- INTO item_categName;
 
--- IF item_categName = 'Loan Type'
---     && OLD.PayAmount = 0.0
---     && NEW.PayAmount != 0.0
---     && OLD.PayAmount != NEW.PayAmount THEN
 
---     SET item_categName = 'Loan Type';
 
---     IF IsrbxpayrollFirstHalfOfMonth = '1' THEN
 
---         SET item_categName = 'Loan Type';
 
---     ELSE
 
---         SET item_categName = 'Loan Type';
 
---     END IF;
 
--- END IF;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 END//

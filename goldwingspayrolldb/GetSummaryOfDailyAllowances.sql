@@ -64,7 +64,7 @@ BEGIN
                                     )
                                 )
                             ),
-                            0 -- Unrecognizable Day type
+                            0 
                         )
                     )
                 )
