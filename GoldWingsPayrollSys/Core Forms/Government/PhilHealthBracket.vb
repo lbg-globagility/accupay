@@ -31,7 +31,7 @@ Namespace Global.PayrollSys
 
         Public Property EmployerShare As Decimal
 
-        Public Property HiddenDate As Boolean
+        Public Property HiddenData As Boolean
 
     End Class
 
