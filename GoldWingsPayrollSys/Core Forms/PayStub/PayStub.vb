@@ -194,52 +194,22 @@ Public Class PayStub
 
     Dim emp_list_batcount As Integer = 0
 
-    Dim pstub_TotalEmpSSS = Val(0)
-
-    Dim pstub_TotalCompSSS = Val(0)
-
-    Dim pstub_TotalEmpPhilhealth = Val(0)
-
-    Dim pstub_TotalCompPhilhealth = Val(0)
-
-    Dim pstub_TotalEmpHDMF = Val(0)
-
-    Dim pstub_TotalCompHDMF = Val(0)
-
-    Dim pstub_TotalVacationDaysLeft = Val(0)
-
-    Dim pstub_TotalLoans = Val(0)
-
-    Dim pstub_TotalBonus = Val(0)
-
-    Dim pstub_TotalAllowance = Val(0)
-
-    Dim OTAmount = Val(0)
-
-    Dim NightDiffOTAmount = Val(0)
-
-    Dim NightDiffAmount = Val(0)
-
-    Dim leavebalances As Object = Nothing
-    Dim leavebalan() As String
-
-    Dim thirteenthmoval = 0.0
-
-    Dim org_WorkDaysPerYear As Integer = 0
-
+    <Obsolete>
     Public Prior_PayPeriodID As String = String.Empty
 
+    <Obsolete>
     Public Current_PayPeriodID As String = String.Empty
 
+    <Obsolete>
     Public Next_PayPeriodID As String = String.Empty
 
-    Dim EcolaProductID = Nothing
-
-
+    <Obsolete>
     Public paypSSSContribSched As String = Nothing
 
+    <Obsolete>
     Public paypPhHContribSched As String = Nothing
 
+    <Obsolete>
     Public paypHDMFContribSched As String = Nothing
 
     Dim pause_process_message = String.Empty
@@ -265,15 +235,7 @@ Public Class PayStub
 
     Dim rptdocAll As New rptAllDecUndecPaySlip
 
-    Dim payWTax As New DataTable
-
-    Dim filingStatus As New DataTable
-
     Dim multi_threads(0) As Thread
-
-    Dim multithreads As New List(Of Thread)
-
-    Private _uiTasks As TaskFactory
 
     Dim array_bgwork(1) As System.ComponentModel.BackgroundWorker
 
@@ -306,7 +268,6 @@ Public Class PayStub
             dgvcol.Width = mincolwidth
             dgvcol.SortMode = DataGridViewColumnSortMode.NotSortable
         Next
-        _uiTasks = New TaskFactory(TaskScheduler.FromCurrentSynchronizationContext())
         MyBase.OnLoad(e)
 
     End Sub
@@ -1826,7 +1787,6 @@ Public Class PayStub
         loop_max_ctr = (loop_max_ctr - (loop_max_ctr Mod 1)) + 1
 
         ReDim multi_threads(loop_max_ctr)
-        multithreads.Clear()
         Dim i = 0
 
         Dim erro_msg_length As Integer = 0
