@@ -35,6 +35,8 @@ Partial Class EmployeeBonusControl
         Me.bon_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.RemainingBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.columnRemarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bonpotent = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.tsbtnNewBon = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnSaveBon = New System.Windows.Forms.ToolStripButton()
@@ -45,18 +47,28 @@ Partial Class EmployeeBonusControl
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.pnlBonPotentPayment = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.cboBonusPotentPayment = New System.Windows.Forms.ComboBox()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewNumberColumn1 = New GoldWingsPayrollSys.DataGridViewNumberColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        Me.pnlBonPotentPayment.SuspendLayout()
         Me.SuspendLayout()
         '
         'dgvempbon
         '
         Me.dgvempbon.BackgroundColor = System.Drawing.Color.White
-        Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SelectionBox, Me.bon_RowID, Me.bon_Type, Me.bon_Amount, Me.bon_Frequency, Me.bon_Start, Me.bon_End, Me.bon_ProdID, Me.RemainingBalance})
+        Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SelectionBox, Me.bon_RowID, Me.bon_Type, Me.bon_Amount, Me.bon_Frequency, Me.bon_Start, Me.bon_End, Me.bon_ProdID, Me.RemainingBalance, Me.columnRemarks, Me.bonpotent})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -201,6 +213,19 @@ Partial Class EmployeeBonusControl
         Me.RemainingBalance.ReadOnly = True
         Me.RemainingBalance.Visible = False
         '
+        'columnRemarks
+        '
+        Me.columnRemarks.HeaderText = "Remarks"
+        Me.columnRemarks.MaxInputLength = 255
+        Me.columnRemarks.Name = "columnRemarks"
+        Me.columnRemarks.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'bonpotent
+        '
+        Me.bonpotent.HeaderText = "LoanPaymentPotential"
+        Me.bonpotent.Name = "bonpotent"
+        Me.bonpotent.Visible = False
+        '
         'ToolStrip1
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
@@ -266,6 +291,7 @@ Partial Class EmployeeBonusControl
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.pnlBonPotentPayment)
         Me.Panel1.Controls.Add(Me.Button3)
         Me.Panel1.Controls.Add(Me.Button2)
         Me.Panel1.Controls.Add(Me.Button1)
@@ -275,9 +301,49 @@ Partial Class EmployeeBonusControl
         Me.Panel1.Size = New System.Drawing.Size(780, 35)
         Me.Panel1.TabIndex = 5
         '
+        'pnlBonPotentPayment
+        '
+        Me.pnlBonPotentPayment.Controls.Add(Me.Label1)
+        Me.pnlBonPotentPayment.Controls.Add(Me.Label2)
+        Me.pnlBonPotentPayment.Controls.Add(Me.cboBonusPotentPayment)
+        Me.pnlBonPotentPayment.Enabled = False
+        Me.pnlBonPotentPayment.Location = New System.Drawing.Point(335, 0)
+        Me.pnlBonPotentPayment.Name = "pnlBonPotentPayment"
+        Me.pnlBonPotentPayment.Size = New System.Drawing.Size(271, 35)
+        Me.pnlBonPotentPayment.TabIndex = 11
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(7, 14)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(125, 13)
+        Me.Label1.TabIndex = 4
+        Me.Label1.Text = "Bonus' potential payment"
+        '
+        'Label2
+        '
+        Me.Label2.Font = New System.Drawing.Font("Bell MT", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.Color.Red
+        Me.Label2.Location = New System.Drawing.Point(123, 4)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(12, 12)
+        Me.Label2.TabIndex = 10
+        Me.Label2.Text = "*"
+        '
+        'cboBonusPotentPayment
+        '
+        Me.cboBonusPotentPayment.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboBonusPotentPayment.FormattingEnabled = True
+        Me.cboBonusPotentPayment.Items.AddRange(New Object() {"Default", "Full"})
+        Me.cboBonusPotentPayment.Location = New System.Drawing.Point(140, 7)
+        Me.cboBonusPotentPayment.Name = "cboBonusPotentPayment"
+        Me.cboBonusPotentPayment.Size = New System.Drawing.Size(121, 21)
+        Me.cboBonusPotentPayment.TabIndex = 3
+        '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(353, 6)
+        Me.Button3.Location = New System.Drawing.Point(12, 6)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(75, 23)
         Me.Button3.TabIndex = 2
@@ -303,6 +369,41 @@ Partial Class EmployeeBonusControl
         Me.Button1.Text = "OK"
         Me.Button1.UseVisualStyleBackColor = True
         '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        Me.DataGridViewTextBoxColumn1.Visible = False
+        '
+        'DataGridViewNumberColumn1
+        '
+        Me.DataGridViewNumberColumn1.HeaderText = "Amount"
+        Me.DataGridViewNumberColumn1.MaxInputLength = 11
+        Me.DataGridViewNumberColumn1.Name = "DataGridViewNumberColumn1"
+        Me.DataGridViewNumberColumn1.Width = 123
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "ProductID"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        Me.DataGridViewTextBoxColumn2.Visible = False
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "RemainingBalance"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        Me.DataGridViewTextBoxColumn3.Visible = False
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Remarks"
+        Me.DataGridViewTextBoxColumn4.MaxInputLength = 255
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
         'EmployeeBonusControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -321,6 +422,8 @@ Partial Class EmployeeBonusControl
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.Panel1.ResumeLayout(False)
+        Me.pnlBonPotentPayment.ResumeLayout(False)
+        Me.pnlBonPotentPayment.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -338,14 +441,25 @@ Partial Class EmployeeBonusControl
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents Button2 As System.Windows.Forms.Button
-    Friend WithEvents SelectionBox As System.Windows.Forms.DataGridViewCheckBoxColumn
-    Friend WithEvents bon_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bon_Type As System.Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents bon_Amount As GoldWingsPayrollSys.DataGridViewNumberColumn
-    Friend WithEvents bon_Frequency As System.Windows.Forms.DataGridViewComboBoxColumn
+    Friend WithEvents Button3 As System.Windows.Forms.Button
+    Friend WithEvents cboBonusPotentPayment As ComboBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents Label2 As Label
+    Friend WithEvents pnlBonPotentPayment As Panel
+    Friend WithEvents SelectionBox As DataGridViewCheckBoxColumn
+    Friend WithEvents bon_RowID As DataGridViewTextBoxColumn
+    Friend WithEvents bon_Type As DataGridViewComboBoxColumn
+    Friend WithEvents bon_Amount As DataGridViewNumberColumn
+    Friend WithEvents bon_Frequency As DataGridViewComboBoxColumn
     Friend WithEvents bon_Start As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
     Friend WithEvents bon_End As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
-    Friend WithEvents bon_ProdID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents RemainingBalance As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Button3 As System.Windows.Forms.Button
+    Friend WithEvents bon_ProdID As DataGridViewTextBoxColumn
+    Friend WithEvents RemainingBalance As DataGridViewTextBoxColumn
+    Friend WithEvents columnRemarks As DataGridViewTextBoxColumn
+    Friend WithEvents bonpotent As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewNumberColumn1 As DataGridViewNumberColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
 End Class

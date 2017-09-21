@@ -11225,12 +11225,17 @@ Public Class EmployeeForm
     Private Sub SaveBonusCommentsRegardsToLoan()
 
         For Each dict In ebonus_rowid_comment
-            Dim str_comment As String = String.Concat("'", dict.Value, "'")
+            Dim str_comment As String = String.Concat("'", dict.Value(0), "'")
+            Dim bool_bonus_potent As Short = Convert.ToInt16(dict.Value(1))
             Dim row_id = dict.Key
 
             Dim str_quer As String =
                 String.Concat("UPDATE employeebonus eb",
-                              " SET `Remarks`=", str_comment,
+                              " LEFT JOIN employeeloanschedule els ON els.BonusID=eb.RowID",
+                              " SET eb.`Remarks`=", str_comment,
+                              ",els.Comments=", str_comment,
+                              ",els.BonusPotentialPaymentForLoan=", bool_bonus_potent,
+                              ",els.LoanPayPeriodLeftForBonus=IF(els.LoanPayPeriodLeftForBonus IS NULL, els.LoanPayPeriodLeft, els.LoanPayPeriodLeftForBonus)",
                               " WHERE eb.RowID='", row_id, "';")
 
             Dim exec_quer As New ExecuteQuery(str_quer)
@@ -12392,15 +12397,15 @@ Public Class EmployeeForm
                     End If
 
                     If IsDBNull(.Item("EffectiveDateFrom")) Then
-                        dptFromSal.Value = CDate(dbnow).ToString(machineShortDateFormat)
+                        dptFromSal.Value = CDate(dbnow).ToShortDateString
                     Else
-                        dptFromSal.Value = CDate(.Item("EffectiveDateFrom")).ToString(machineShortDateFormat)
+                        dptFromSal.Value = CDate(.Item("EffectiveDateFrom")).AddDays(0)
                     End If
 
                     If IsDBNull(.Item("EffectiveDateTo")) Then
                         dtpToSal.Value = CDate(dbnow).AddYears(100)
                     Else
-                        dtpToSal.Value = CDate(.Item("EffectiveDateTo")).ToString(machineShortDateFormat)
+                        dtpToSal.Value = CDate(.Item("EffectiveDateTo")).AddDays(0) 'ToShortDateString 'ToString(machineShortDateFormat)
                     End If
                 End With
             Next
@@ -21461,7 +21466,7 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private ebonus_rowid_comment As New Dictionary(Of Object, String)
+    Private ebonus_rowid_comment As New Dictionary(Of Object, String())
 
     Private Sub chkboxChargeToBonus_Click(sender As Object, e As EventArgs) Handles chkboxChargeToBonus.Click
 
@@ -21507,9 +21512,20 @@ Public Class EmployeeForm
             DedEffectiveDateTo = MYSQLDateFormat(CDate(DedEffectiveDateTo))
         End If
 
+        Dim els_rowid As Object = Nothing
+
+        Try
+            els_rowid =
+                dgvLoanList.CurrentRow.Cells("c_RowIDLoan").Value
+        Catch ex As Exception
+            els_rowid = Nothing
+        End Try
+
         Dim n_EmployeeBonusControl As New EmployeeBonusControl(EmpRow_ID, BonusRefID, DedEffectiveDateFrom, DedEffectiveDateTo)
 
         With n_EmployeeBonusControl
+
+            .EmployeeLoanRowID = els_rowid
 
             .ShowAsDialog = True
 
@@ -21519,6 +21535,8 @@ Public Class EmployeeForm
                 bool_result = True
                 chkboxChargeToBonus.Checked = bool_result
                 chkboxChargeToBonus.Tag = .EmployeeBonusRowID
+                ebonus_rowid_comment = .BonusComments
+
             Else
                 Dim this_bool_result As Boolean = tsbtnNewLoan.Enabled
                 If this_bool_result = False Then

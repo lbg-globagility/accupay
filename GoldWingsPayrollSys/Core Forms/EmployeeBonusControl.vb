@@ -1,4 +1,5 @@
-﻿Public Class EmployeeBonusControl
+﻿
+Public Class EmployeeBonusControl
 
     Dim n_EmployeeRowID As Object = Nothing
 
@@ -7,6 +8,10 @@
     Dim n_LoanStartDate As Object = Nothing
 
     Dim n_LoanEndDate As Object = Nothing
+
+    Dim els_rowid As Object = Nothing
+
+    Private ebonus_rowid_comment As New Dictionary(Of Object, String())
 
     Sub New(Optional EmpRowID As Object = Nothing,
             Optional Bonus_RowID As Object = Nothing,
@@ -27,6 +32,15 @@
         n_LoanEndDate = loan_enddate
 
     End Sub
+
+    Property EmployeeLoanRowID As Object
+        Get
+            Return els_rowid
+        End Get
+        Set(value As Object)
+            els_rowid = value
+        End Set
+    End Property
 
     Dim n_EmployeeBonusRowID As Object = Nothing
 
@@ -78,6 +92,20 @@
 
     End Function
 
+    Property BonusComments As Dictionary(Of Object, String())
+
+        Get
+            Return ebonus_rowid_comment
+
+        End Get
+
+        Set(value As Dictionary(Of Object, String()))
+            value = ebonus_rowid_comment
+
+        End Set
+
+    End Property
+
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         MyBase.OnLoad(e)
@@ -94,17 +122,18 @@
 
         Dim selected_bonus = dgvempbon.Rows.Cast(Of DataGridViewRow).Where(Function(c) c.Cells("SelectionBox").Value = True And c.IsNewRow = False)
 
-        HasSelection = (selected_bonus.Count() > 0) 'Bonus_RowID
+        'HasSelection = (selected_bonus.Count() > 0) 'Bonus_RowID
+        HasSelection = isSelectionChanged
 
         If HasSelection Then
             For Each selrow In selected_bonus
                 n_EmployeeBonusRowID = selrow.Cells("bon_RowID").Value
                 Exit For
             Next
-            Me.DialogResult = Windows.Forms.DialogResult.OK
+            Me.DialogResult = DialogResult.OK
 
         Else
-            Me.DialogResult = Windows.Forms.DialogResult.Cancel
+            Me.DialogResult = DialogResult.Cancel
 
         End If
 
@@ -178,9 +207,15 @@
     End Sub
 
     Sub VIEW_employeebonus(ByVal bon_EmployeeID As Object)
+
+        Dim emploanrowid =
+            If(els_rowid = Nothing,
+               "NULL",
+               String.Concat("'", els_rowid, "'"))
+
         Dim n_SQLQueryToDatatable As _
-            New SQLQueryToDatatable("CALL VIEW_employeebonusforloan('" & bon_EmployeeID & "', '" & orgztnID & "'" &
-                                    ", '" & n_BonusRowID & "', '" & n_LoanStartDate & "', '" & n_LoanEndDate & "');")
+            New SQLQueryToDatatable(String.Concat("CALL VIEW_employeebonusforloan('", bon_EmployeeID, "', '", orgztnID, "'",
+                                                  ", '", n_BonusRowID, "', '", n_LoanStartDate, "', '", n_LoanEndDate, "', ", emploanrowid, ");"))
         Dim catchdt As New DataTable
         catchdt = n_SQLQueryToDatatable.ResultTable
         dgvempbon.Rows.Clear()
@@ -204,9 +239,19 @@
 
     Private Sub dgvBonus_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempbon.CellContentClick
 
-    End Sub
+        Dim is_dgv_chkbxcell As Boolean =
+            (TypeOf (dgvempbon.Item(e.ColumnIndex, e.RowIndex)) Is DataGridViewCheckBoxCell)
 
-    Private Sub dgvBonus_SelectionChanged(sender As Object, e As EventArgs) Handles dgvempbon.SelectionChanged
+        If is_dgv_chkbxcell Then
+
+            With dgvempbon
+
+                .CurrentCell = .Item("bon_Type", e.RowIndex)
+                .CurrentCell = .Item("SelectionBox", e.RowIndex)
+
+            End With
+
+        End If
 
     End Sub
 
@@ -246,10 +291,53 @@
             '    dgvrow.Cells("SelectionBox").Value = False
             'Next
 
+            SupplyBonusComments(e.RowIndex)
+
         Else
 
         End If
+
+        pnlBonPotentPayment.Enabled = IsThereBonusAppliedToLoan()
+
         n_EmployeeBonusRowID = Nothing
+
+    End Sub
+
+    Private Sub dgvBonus_SelectionChanged(sender As Object, e As EventArgs) Handles dgvempbon.SelectionChanged
+
+    End Sub
+
+    Private Sub dgvempbon_CurrentCellChanged(sender As Object, e As EventArgs) Handles dgvempbon.CurrentCellChanged
+
+        Dim has_valid_dgvrow As Boolean = False
+
+        Dim dgvcurrrow As DataGridViewRow = Nothing
+
+        Try
+            has_valid_dgvrow = (dgvempbon.CurrentRow IsNot Nothing)
+            dgvcurrrow = dgvempbon.CurrentRow
+
+        Catch ex As Exception
+            has_valid_dgvrow = False
+
+        Finally
+
+            If has_valid_dgvrow Then
+
+                If Convert.ToBoolean(dgvcurrrow.Cells("SelectionBox").Value) = True Then
+
+                    cboBonusPotentPayment.SelectedIndex =
+                        Convert.ToInt16(dgvcurrrow.Cells("bonpotent").Value)
+
+                Else
+
+                    cboBonusPotentPayment.SelectedIndex = -1
+                End If
+
+            End If
+
+        End Try
+
     End Sub
 
     Private Sub dgvempbon_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvempbon.EditingControlShowing
@@ -282,10 +370,14 @@
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click, Button1.Click, Button2.Click
 
+        dgvempbon.EndEdit()
+
         Dim sender_name = DirectCast(sender, Control).Name
 
+        isSelectionChanged =
+            (dgvempbon.Rows.Cast(Of DataGridViewRow).Where(Function(c) c.Cells("SelectionBox").Value = True And c.IsNewRow = False).Count() = 1)
+
         If sender_name = "Button1" _
-            And dgvempbon.Rows.Cast(Of DataGridViewRow).Where(Function(c) c.Cells("SelectionBox").Value = True And c.IsNewRow = False).Count() = 1 _
             And isSelectionChanged Then
 
             'will update BonusID column of employeeloanschedule
@@ -293,12 +385,32 @@
 
             'MsgBox(sender_name)
 
+            If cboBonusPotentPayment.SelectedIndex < 0 Then
+
+                isSelectionChanged = False
+
+                MessageBox.Show(Me,
+                                "Please select the option on how the applied bonus will pay employee's loan.",
+                                "Bonus' potential payment not specified",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information)
+
+                cboBonusPotentPayment.Focus()
+
+            Else
+
+                Me.Close()
+
+            End If
+
         ElseIf sender_name = "Button2" _
-            And dgvempbon.Rows.Cast(Of DataGridViewRow).Where(Function(c) c.Cells("SelectionBox").Value = True And c.IsNewRow = False).Count() = 1 Then
+            And isSelectionChanged Then
+
+            isSelectionChanged = False
+
+            Me.Close()
 
         End If
-
-        Me.Close()
 
     End Sub
 
@@ -324,6 +436,70 @@
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         dgvempbon.Rows.Add()
+    End Sub
+
+    Private Function IsThereBonusAppliedToLoan() As Boolean
+
+        Dim dgvrow =
+            dgvempbon.Rows.OfType(Of DataGridViewRow).Where(Function(dgvr) Convert.ToBoolean(dgvr.Cells("SelectionBox").Value) = True)
+
+        Dim return_val As Boolean = (dgvrow.Count > 0)
+
+        Return return_val
+
+    End Function
+
+    Private Sub cboBonusPotentPayment_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBonusPotentPayment.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub cboBonusPotentPayment_SelectedIndexChanged1(sender As Object, e As EventArgs) Handles cboBonusPotentPayment.SelectedIndexChanged
+
+        Dim row_index As Integer = 0
+
+        Dim has_valid_dgvrow As Boolean = False
+
+        Try
+
+            has_valid_dgvrow = (dgvempbon.CurrentRow IsNot Nothing)
+
+            If has_valid_dgvrow Then
+                row_index = dgvempbon.CurrentRow.Index
+            End If
+
+        Catch ex As Exception
+
+        Finally
+
+            SupplyBonusComments(row_index)
+
+        End Try
+
+    End Sub
+
+    Private Sub SupplyBonusComments(dgv_curr_rowindex As Integer)
+
+        Dim _key As Object = dgvempbon.Item("bon_RowID", dgv_curr_rowindex).Value
+        Dim _value As String =
+                If(String.IsNullOrEmpty(dgvempbon.Item("columnRemarks", dgv_curr_rowindex).Value),
+                   String.Empty,
+                   dgvempbon.Item("columnRemarks", dgv_curr_rowindex).Value)
+
+        If ebonus_rowid_comment.ContainsKey(_key) Then
+            ebonus_rowid_comment.Remove(_key)
+        End If
+
+        Dim cbo_indx As Integer =
+            If(cboBonusPotentPayment.SelectedIndex < 0,
+               0,
+               cboBonusPotentPayment.SelectedIndex)
+
+        Dim param_array() As String =
+                New String() {_value.Trim,
+                              cbo_indx}
+
+        ebonus_rowid_comment.Add(_key, param_array)
+
     End Sub
 
 End Class
