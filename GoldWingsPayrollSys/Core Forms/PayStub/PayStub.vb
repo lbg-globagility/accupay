@@ -1612,22 +1612,7 @@ Public Class PayStub
                 _withholdingTaxTable = New SqlToDataTable("SELECT * FROM paywithholdingtax;").Read()
                 _filingStatuses = New SqlToDataTable("SELECT * FROM filingstatus;").Read()
 
-                esal_dattab = New SQLQueryToDatatable(" SELECT *,COALESCE((SELECT EmployeeShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployeeShare'" &
-                                                              ",COALESCE((SELECT EmployerShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployerShare'" &
-                                                              ",COALESCE((SELECT EmployeeContributionAmount FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployeeContributionAmount'" &
-                                                              ",COALESCE((SELECT (EmployerContributionAmount + EmployeeECAmount) FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployerContributionAmount'" &
-                                                              " FROM employeesalary" &
-                                                              " WHERE OrganizationID=" & orgztnID & "" &
-                                                              " AND (EffectiveDateFrom >= '" & paypFrom & "' OR IFNULL(EffectiveDateTo,CURDATE()) >= '" & paypFrom & "')" &
-                                                              " AND (EffectiveDateFrom <= '" & paypTo & "' OR IFNULL(EffectiveDateTo,CURDATE()) <= '" & paypTo & "')" &
-                                                              " GROUP BY EmployeeID" &
-                                                              " ORDER BY DATEDIFF(DATE_FORMAT(CURDATE(),'%Y-%m-%d'),EffectiveDateFrom)" &
-                                                              ";").ResultTable
-
-                '" AND EffectiveDateFrom>='" & paypFrom & "'" &
-                '" AND COALESCE(EffectiveDateTo,CURRENT_DATE())<='" & paypTo & "'" &
-
-                '" AND DATEDIFF(CURRENT_DATE(),EffectiveDateFrom) >= 0" &
+                esal_dattab = resources.Salaries
 
                 numofdaypresent = retAsDatTbl("SELECT COUNT(RowID) 'DaysAttended'" &
                                                                 ",SUM((TIME_TO_SEC(TIMEDIFF(TimeOut,TimeIn)) / 60) / 60) 'SumHours'" &

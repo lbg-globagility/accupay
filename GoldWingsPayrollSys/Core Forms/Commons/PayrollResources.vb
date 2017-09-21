@@ -30,6 +30,12 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property Salaries As DataTable
+        Get
+            Return _salaries
+        End Get
+    End Property
+
     Public Sub New(payDateFrom As Date, payDateTo As Date)
         _payDateFrom = payDateFrom
         _payDateTo = payDateTo
