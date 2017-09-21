@@ -1,12 +1,22 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
+Imports System.Data.Entity
+
+''' <summary>
+''' Takes care of loading all the information needed to produce the payroll for a given pay period.
+''' </summary>
 Public Class PayrollResources
 
     Private _payDateFrom As Date
 
     Private _payDateTo As Date
 
+    Private _salaries As DataTable
+
     Private _timeEntries As DataTable
+
+    Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
 
     Public ReadOnly Property TimeEntries As DataTable
         Get
@@ -14,7 +24,30 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public Async Sub LoadTimeEntries()
+    Public ReadOnly Property LoanSchedules As ICollection(Of PayrollSys.LoanSchedule)
+        Get
+            Return _loanSchedules
+        End Get
+    End Property
+
+    Public Sub New(payDateFrom As Date, payDateTo As Date)
+        _payDateFrom = payDateFrom
+        _payDateTo = payDateTo
+    End Sub
+
+    Public Async Function Load() As Task
+        Dim loadTimeEntriesTask = LoadTimeEntries()
+        Dim loadSalariesTask = LoadSalaries()
+        Dim loadLoanSchedulesTask = LoadLoanSchedules()
+
+        Await Task.WhenAll({
+            loadTimeEntriesTask,
+            loadLoanSchedulesTask,
+            loadSalariesTask
+        })
+    End Function
+
+    Public Async Function LoadTimeEntries() As Task
         Dim timeEntrySql = <![CDATA[
             SELECT
                 SUM(COALESCE(ete.TotalDayPay,0)) 'TotalDayPay',
@@ -69,10 +102,41 @@ Public Class PayrollResources
         ]]>.Value
 
         timeEntrySql = timeEntrySql.Replace("@OrganizationID", orgztnID) _
-            .Replace("@DateFrom", CStr(_payDateFrom)) _
-            .Replace("@DateTo", CStr(_payDateTo))
+            .Replace("@DateFrom", _payDateFrom.ToString("s")) _
+            .Replace("@DateTo", _payDateTo.ToString("s"))
 
         _timeEntries = Await New SqlToDataTable(timeEntrySql).ReadAsync()
-    End Sub
+    End Function
+
+    Private Async Function LoadLoanSchedules() As Task
+        Using context = New PayrollContext()
+            Dim query = From l In context.LoanSchedules
+                        Select l
+                        Where l.OrganizationID = z_OrganizationID And
+                                                      l.DedEffectiveDateFrom <= _payDateTo And
+                                                      l.Status = "In Progress" And
+                                                      l.BonusID Is Nothing
+            _loanSchedules = Await query.ToListAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadSalaries() As Task
+        Dim query = New SqlToDataTable($"
+            SELECT
+                *,
+                COALESCE((SELECT EmployeeShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployeeShare',
+                COALESCE((SELECT EmployerShare FROM payphilhealth WHERE RowID=employeesalary.PayPhilhealthID),0) 'EmployerShare',
+                COALESCE((SELECT EmployeeContributionAmount FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployeeContributionAmount',
+                COALESCE((SELECT (EmployerContributionAmount + EmployeeECAmount) FROM paysocialsecurity WHERE RowID=employeesalary.PaySocialSecurityID),0) 'EmployerContributionAmount'
+            FROM employeesalary
+            WHERE OrganizationID = {orgztnID} AND
+                (EffectiveDateFrom >= '{_payDateFrom.ToString("s")}' OR IFNULL(EffectiveDateTo,CURDATE()) >= '{_payDateFrom.ToString("s")}') AND
+                (EffectiveDateFrom <= '{_payDateTo.ToString("s")}' OR IFNULL(EffectiveDateTo,CURDATE()) <= '{_payDateTo.ToString("s")}')
+            GROUP BY EmployeeID
+            ORDER BY DATEDIFF(CURDATE(), EffectiveDateFrom);
+        ")
+
+        _salaries = Await query.ReadAsync()
+    End Function
 
 End Class
