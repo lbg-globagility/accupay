@@ -11557,6 +11557,23 @@ Public Class EmployeeForm
         dgvEmp_SelectionChanged(sender, e)
     End Sub
 
+    Private Sub ChangeSalaryFormContext(context As SalaryFormContext)
+        Select Case context
+            Case SalaryFormContext.NoneSelected
+                btnNewSal.Enabled = True
+                btnSaveSal.Enabled = False
+                grpbasicsalaryaddeduction.Enabled = False
+            Case SalaryFormContext.NewSalary
+                btnNewSal.Enabled = False
+                btnSaveSal.Enabled = True
+                grpbasicsalaryaddeduction.Enabled = True
+            Case SalaryFormContext.Selected
+                btnNewSal.Enabled = True
+                btnSaveSal.Enabled = True
+                grpbasicsalaryaddeduction.Enabled = True
+        End Select
+    End Sub
+
     Private Sub btnNewSal_EnabledChanged(sender As Object, e As EventArgs) Handles btnNewSal.EnabledChanged
         Dim boolresult = btnNewSal.Enabled
         IsNewSal = Convert.ToInt16(Not boolresult)
