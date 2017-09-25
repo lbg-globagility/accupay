@@ -1036,7 +1036,7 @@ Public Class EmployeeForm
                            ValNoComma(txtothrallow.Text),
                            "0",
                            ValNoComma(txtWorkDaysPerYear.Text),
-                           If(cboDayOfRest.SelectedIndex < 0, 1, cboDayOfRest.SelectedIndex),
+                           If(cboDayOfRest.SelectedIndex <= 0, 1, cboDayOfRest.SelectedIndex + 1),
                            txtATM.Text.Trim,
                            cbobank.Text,
                            Convert.ToInt16(chkcalcHoliday.Checked),
