@@ -27,7 +27,8 @@ Namespace Global.PayrollSys
 
         Public Property BasicPay As Decimal
 
-        Public Property Salary As Decimal
+        <Column("Salary")>
+        Public Property Amount As Decimal
 
         Public Property UndeclaredSalary As Decimal
 
@@ -45,7 +46,13 @@ Namespace Global.PayrollSys
 
         Public Property OverrideDiscardSSSContrib As Boolean
 
-        Public Property OverrideDiscaredPhilHealth As Boolean
+        Public Property OverrideDiscardPhilHealthContrib As Boolean
+
+        Public ReadOnly Property IsIndefinite As Boolean
+            Get
+                Return Not EffectiveDateTo.HasValue
+            End Get
+        End Property
 
     End Class
 

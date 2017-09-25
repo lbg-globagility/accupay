@@ -12155,7 +12155,50 @@ Public Class EmployeeForm
         errprovidSal.SetError(dtpToSal, Nothing)
     End Sub
 
+    Private Sub ValidateSalaryRanges(salaries As List(Of PayrollSys.Salary))
+        For i = 0 To salaries.Count - 1
+            Dim salary = salaries.Item(i)
+
+            For j = i + 1 To salaries.Count - 1
+                Dim comparedSalary = salaries.Item(j)
+                If salary.RowID = comparedSalary.RowID Then
+                    Continue For
+                End If
+
+                If SalariesOverlap(salary, comparedSalary) Then
+                    'TODO make the overlapping salaries show in the form as warnings
+                End If
+            Next
+        Next
+    End Sub
+
+    Private Function SalariesOverlap(salaryA As PayrollSys.Salary, salaryB As PayrollSys.Salary) As Boolean
+        If (Not salaryA.IsIndefinite) And (Not salaryB.IsIndefinite) Then
+            Return salaryA.EffectiveDateFrom <= salaryB.EffectiveDateTo And
+                salaryB.EffectiveDateFrom <= salaryA.EffectiveDateTo
+        End If
+
+        If salaryA.IsIndefinite Then
+            Return salaryB.EffectiveDateTo <= salaryA.EffectiveDateFrom
+        End If
+
+        If salaryB.IsIndefinite Then
+            Return salaryA.EffectiveDateTo <= salaryB.EffectiveDateFrom
+        End If
+
+        Return True
+    End Function
+
     Private Function fillSelectedEmpSalaryList(employeeID As Integer) As Boolean
+        Dim salaries As List(Of PayrollSys.Salary)
+        Using context = New PayrollContext()
+            Dim query = From s In context.Salaries
+                        Where s.EmployeeID = employeeID
+            salaries = query.ToList()
+        End Using
+
+        ValidateSalaryRanges(salaries)
+
         Try
             Dim employeeSalaries As DataTable = getDataTableForSQL("select * from employeesalary es inner join employee ee on es.EmployeeID = ee.RowID Where es.EmployeeID = '" & employeeID & "' And ee.OrganizationID = '" & z_OrganizationID & "' Order By es.RowID DESC;")
             dgvemployeesalary.Rows.Clear()
