@@ -11557,6 +11557,23 @@ Public Class EmployeeForm
         dgvEmp_SelectionChanged(sender, e)
     End Sub
 
+    Private Sub ChangeSalaryFormContext(context As SalaryFormContext)
+        Select Case context
+            Case SalaryFormContext.NoneSelected
+                btnNewSal.Enabled = True
+                btnSaveSal.Enabled = False
+                grpbasicsalaryaddeduction.Enabled = False
+            Case SalaryFormContext.NewSalary
+                btnNewSal.Enabled = False
+                btnSaveSal.Enabled = True
+                grpbasicsalaryaddeduction.Enabled = True
+            Case SalaryFormContext.Selected
+                btnNewSal.Enabled = True
+                btnSaveSal.Enabled = True
+                grpbasicsalaryaddeduction.Enabled = True
+        End Select
+    End Sub
+
     Private Sub btnNewSal_EnabledChanged(sender As Object, e As EventArgs) Handles btnNewSal.EnabledChanged
         Dim boolresult = btnNewSal.Enabled
         IsNewSal = Convert.ToInt16(Not boolresult)
@@ -11590,36 +11607,11 @@ Public Class EmployeeForm
 
             For Each drow As DataRow In n_SQLQueryToDatatable.ResultTable.Rows
 
-                Dim ii = DateDiff(DateInterval.Day, CDate(drow("EffectiveDateFrom")), CDate(drow("Curdate")))
-
-                Dim min_date As Date
-
-                If ii <= 0 Then
-                    If drow("CurrDateIsGreater") > "1" Then
-                        min_date = DateAdd(DateInterval.Day, 1, CDate(drow("Curdate")))
-                    Else
-                        min_date = DateAdd(DateInterval.Day, 1, CDate(drow("EffectiveDateFrom")))
-                    End If
-
-                Else
-                    If drow("CurrDateIsGreater") > "1" Then
-                        min_date = DateAdd(DateInterval.Day, 1, CDate(drow("Curdate")))
-                    Else
-                        min_date = DateAdd(DateInterval.Day, 1, CDate(drow("EffectiveDateFrom")))
-                    End If
-
-                End If
-
-                dptFromSal.MinDate = min_date
-
-                dtpToSal.MinDate = min_date
-
                 txtpaytype.Text = drow("PayFrequencyType")
 
                 txtEmp_type.Text = drow("EmployeeType")
 
                 Exit For
-
             Next
 
         End If

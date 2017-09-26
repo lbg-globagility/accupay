@@ -26,6 +26,10 @@ Module SqlReaderExtensions
 
             If innerType Is Nothing Then
                 Return CType(value, T)
+            End If
+
+            If value Is Nothing Then
+                Return Nothing
             Else
                 Return CTypeDynamic(value, innerType)
             End If
