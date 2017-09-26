@@ -12178,11 +12178,11 @@ Public Class EmployeeForm
                 salaryB.EffectiveDateFrom <= salaryA.EffectiveDateTo
         End If
 
-        If salaryA.IsIndefinite Then
+        If salaryA.IsIndefinite And (Not salaryB.IsIndefinite) Then
             Return salaryB.EffectiveDateTo <= salaryA.EffectiveDateFrom
         End If
 
-        If salaryB.IsIndefinite Then
+        If salaryB.IsIndefinite And (Not salaryA.IsIndefinite) Then
             Return salaryA.EffectiveDateTo <= salaryB.EffectiveDateFrom
         End If
 
