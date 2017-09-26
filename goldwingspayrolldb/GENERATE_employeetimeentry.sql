@@ -11,6 +11,9 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(
 	`ete_OrganizID` INT,
 	`ete_Date` DATE,
 	`ete_UserRowID` INT
+
+
+
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN
@@ -352,7 +355,7 @@ INTO
     shiftID,
     isShiftRestDay;
 
-SET isRestDay = isDefaultRestDay OR isShiftRestDay;
+SET isRestDay = isShiftRestDay;
 
 IF OTCount = 1 THEN
 
@@ -779,6 +782,10 @@ ELSEIF isRegularDay THEN
     SET ete_TotalDayPay = regularAmount + overtimeAmount +
                           nightDiffAmount + nightDiffOTAmount +
                           restDayAmount + leavePay;
+
+    -- SELECT timeEntryID, ete_EmpRowID, shiftStart, shiftEnd, regularHours
+    -- INTO OUTFILE 'D:/Aaron/logs/santos.txt'
+    -- FIELDS TERMINATED BY ', ';
 
     SELECT INSUPD_employeetimeentries(
         timeEntryID,
