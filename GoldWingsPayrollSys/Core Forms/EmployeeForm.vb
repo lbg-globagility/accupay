@@ -11687,8 +11687,8 @@ Public Class EmployeeForm
                         noofdepd,
                         mStat,
                         Val(dgvEmp.CurrentRow.Cells("Column29").Value),
-                        dgvrow.Cells("c_fromdate").Value,
-                        dgvrow.Cells("c_todate").Value,
+                        MYSQLDateFormat(CDate(dgvrow.Cells("c_fromdate").Value)),
+                        MYSQLDateFormat(CDate(dgvrow.Cells("c_todate").Value)),
                         ValNoComma(txtTrueSal.Text),
                         "0",
                         _socialSecurityBracket?.RowID,
@@ -11841,6 +11841,17 @@ Public Class EmployeeForm
                                                                                 dtpToSal.Leave,
                                                                                 txtToComputeSal.Leave
         Dim sendr_name As String = CType(sender, Object).Name
+
+        Dim is_encoded_asnew As Boolean = (Not btnNewSal.Enabled)
+
+        Dim curr_salaryrow As DataGridViewRow = Nothing
+
+        Try
+            curr_salaryrow = New DataGridViewRow
+            curr_salaryrow = dgvemployeesalary.CurrentRow
+        Catch ex As Exception
+            curr_salaryrow = Nothing
+        End Try
 
         If dgvemployeesalary.RowCount <> 0 And dgvEmp.RowCount <> 0 Then
             If dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value <> Nothing Then
@@ -12027,9 +12038,22 @@ Public Class EmployeeForm
                     If dgvemployeesalary.CurrentRow.Cells("c_fromdate").Value <> Format(CDate(dptFromSal.Value), "M/d/yyy") Then
                         listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
                     End If
+
+                    If is_encoded_asnew = False _
+                        And curr_salaryrow IsNot Nothing Then
+                        curr_salaryrow.Cells("c_todate").Value =
+                            Format(CDate(dptFromSal.Value), "M/d/yyy")
+                    End If
+
                 ElseIf sendr_name = "dtpToSal" Then
                     If dgvemployeesalary.CurrentRow.Cells("c_todate").Value <> Format(CDate(dtpToSal.Value), "M/d/yyy") Then
                         listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+                    End If
+
+                    If is_encoded_asnew = False _
+                        And curr_salaryrow IsNot Nothing Then
+                        curr_salaryrow.Cells("c_todate").Value =
+                            Format(CDate(dtpToSal.Value), "M/d/yyy")
                     End If
 
                 ElseIf sendr_name = "txtPagibig" Then
