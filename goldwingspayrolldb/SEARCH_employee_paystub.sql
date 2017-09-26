@@ -1,9 +1,16 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for procedure goldwingspayrolldb_global_e_pc.SEARCH_employee_paystub
 DROP PROCEDURE IF EXISTS `SEARCH_employee_paystub`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employee_paystub`(IN `og_rowid` INT, IN `unified_search_string` VARCHAR(50), IN `page_number` INT)
@@ -51,12 +58,15 @@ SELECT e.RowID
         ,e.SickLeaveAllowance
         ,e.MaternityLeaveAllowance
 
-        ,fstat.`FilingStatus`
-        ,''                                 `Nothing`
-        ,e.Created
-        ,e.CreatedBy
-        ,e.LastUpd
-        ,e.LastUpdBy
+        ,e.LeavePerPayPeriod `LeavePerPayPeriod`
+		  ,e.SickLeavePerPayPeriod `SickLeavePerPayPeriod`
+		  ,e.MaternityLeavePerPayPeriod `MaternityLeavePerPayPeriod`
+		  ,fstat.RowID `fstatRowID`
+		  ,'' `Image`
+		  ,e.Created`Creation Date`
+		  ,CONCAT_WS(u.LastName, u.FirstName) `Created by`
+		  ,e.LastUpd `Last Update`
+		  ,CONCAT_WS(uu.LastName, uu.FirstName) `LastUpdate by`
 
 FROM (SELECT * FROM employee WHERE OrganizationID=og_rowid AND EmployeeID   =unified_search_string  AND LENGTH(unified_search_string) > 0
     UNION
@@ -80,7 +90,6 @@ LIMIT page_number, max_count_per_page;
 
 END//
 DELIMITER ;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
