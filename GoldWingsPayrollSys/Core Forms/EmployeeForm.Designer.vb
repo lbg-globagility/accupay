@@ -15514,10 +15514,8 @@ Partial Class EmployeeForm
         Me.Panel7.Size = New System.Drawing.Size(1231, 523)
         Me.Panel7.TabIndex = 151
         '
-<<<<<<< HEAD
         'EmployeeForm
         '
-=======
         'tsbtnimportallowance
         '
         Me.tsbtnimportallowance.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Add
@@ -15544,7 +15542,6 @@ Partial Class EmployeeForm
         '
         'EmployeeForm
         '
->>>>>>> ImportaionFunctionsForHyundai
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1231, 545)

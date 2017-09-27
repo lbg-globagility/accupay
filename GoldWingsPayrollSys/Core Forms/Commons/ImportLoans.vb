@@ -58,7 +58,6 @@ Public Class ImportLoans
                                             "",
                                             DBNull.Value,
                                             drow(1))
-<<<<<<< HEAD
                     'DBNull.Value,
                     'orgztnID,
                     'z_User,
@@ -77,8 +76,6 @@ Public Class ImportLoans
                     '"",
                     'DBNull.Value,
                     'drow(2))
-=======
->>>>>>> ImportaionFunctionsForHyundai
                     i += 1
                     'n_ReadSQLFunctionV2.HasError And 
                     'If n_ReadSQLFunctionV2.ErrorMessage.Length > 0 Then
