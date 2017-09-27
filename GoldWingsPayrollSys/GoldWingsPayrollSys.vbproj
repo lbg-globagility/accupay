@@ -242,6 +242,13 @@
     <Compile Include="Core Forms\Commons\PayrollResources.vb" />
     <Compile Include="Core Forms\Commons\TimeUtility.vb" />
     <Compile Include="Core Forms\Commons\SqlReaderExtensions.vb" />
+    <Compile Include="Core Forms\USER CONTROLS\ImportAllowance.vb" />
+    <Compile Include="Core Forms\USER CONTROLS\ImportOB.vb" />
+    <Compile Include="Core Forms\USER CONTROLS\ImportOvertime.vb" />
+    <Compile Include="Core Forms\USER CONTROLS\MySQL\IMySQLCommander.vb" />
+    <Compile Include="Core Forms\USER CONTROLS\MySQL\MySQLCommander.vb" />
+    <Compile Include="Core Forms\USER CONTROLS\MySQL\MySQLExecuteCommand.vb" />
+    <Compile Include="Core Forms\USER CONTROLS\MySQL\SQL.vb" />
     <Compile Include="Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
     </Compile>
@@ -1811,6 +1818,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
