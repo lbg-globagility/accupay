@@ -1,9 +1,16 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for trigger goldwingspayrolldb_global_e_pc.AFTINS_organization
 DROP TRIGGER IF EXISTS `AFTINS_organization`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -267,39 +274,37 @@ KEY
 UPDATE
     LastUpd=CURRENT_TIMESTAMP();
 
-
-
-    INSERT INTO `division` (Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID) VALUES ( 'Any location', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2);SELECT @@Identity AS ID INTO INS_audit_ID;
-
-    INSERT INTO `division` (Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID,ParentDivisionID) SELECT 'Comissary', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2,INS_audit_ID UNION
-    SELECT 'Office Staff', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'End of the month', 'End of the month', 'End of the month', 'End of the month', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'End of the month', 'End of the month', 'End of the month', 'End of the month',1,INS_audit_ID UNION
-    SELECT 'Supervisors', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'End of the month', 'End of the month', 'End of the month', 'End of the month', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',3,INS_audit_ID UNION
-    SELECT 'Service Crew', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',4,INS_audit_ID;
-
-
-INSERT INTO position
+	
+	
+	INSERT INTO `division` (Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID) VALUES ( 'Any location', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2);SELECT @@Identity AS ID INTO INS_audit_ID;
+	
+	INSERT INTO `division` (Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID,ParentDivisionID) SELECT 'Default division', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2,INS_audit_ID;
+	
+	
+INSERT INTO `position`
 (
-    PositionName
-    ,Created
-    ,CreatedBy
-    ,OrganizationID
-    ,DivisionId
+	PositionName
+	,Created
+	,CreatedBy
+	,OrganizationID
+	,DivisionId
 ) SELECT
-    pos.PositionName
-    ,CURRENT_TIMESTAMP()
-    ,NEW.CreatedBy
-    ,NEW.RowID
-    ,dd.RowID
-    FROM position pos
-    LEFT JOIN `division` d ON d.RowID=pos.DivisionId AND d.OrganizationID=pos.OrganizationID
-    LEFT JOIN `division` dd ON dd.Name=d.Name AND dd.OrganizationID=NEW.RowID
-    GROUP BY pos.PositionName
+	pos.PositionName
+	,CURRENT_TIMESTAMP()
+	,NEW.CreatedBy
+	,NEW.RowID
+	,dd.RowID
+	FROM `position` pos
+	# LEFT JOIN `division` d ON d.RowID=pos.DivisionId AND d.OrganizationID=pos.OrganizationID
+	# LEFT JOIN `division` dd ON dd.Name=d.Name AND dd.OrganizationID=NEW.RowID
+	LEFT JOIN `division` dd ON dd.Name='Default division' AND dd.OrganizationID=NEW.RowID
+	GROUP BY pos.PositionName
 ON
 DUPLICATE
 KEY
 UPDATE
-    LastUpd=CURRENT_TIMESTAMP()
-    ,LastUpdBy=NEW.CreatedBy;
+	LastUpd=CURRENT_TIMESTAMP()
+	,LastUpdBy=NEW.CreatedBy;
 
 INSERT INTO position_view
 (
@@ -434,7 +439,6 @@ SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
