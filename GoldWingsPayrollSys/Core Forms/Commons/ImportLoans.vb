@@ -44,12 +44,12 @@ Public Class ImportLoans
                                             orgztnID,
                                             z_User,
                                             drow(0),
-                                            drow(1),
-                                            MYSQLDateFormat(CDate(drow(6))),
-                                            ValNoComma(drow(3)),
-                                            drow(7),
+                                            drow(2),
+                                            MYSQLDateFormat(CDate(drow(3))),
                                             ValNoComma(drow(4)),
-                                            ValNoComma(drow(9)),
+                                            drow(7),
+                                            ValNoComma(drow(5)),
+                                            ValNoComma(drow(6)),
                                             "In Progress",
                                             DBNull.Value,
                                             0,
@@ -57,7 +57,7 @@ Public Class ImportLoans
                                             ValNoComma(drow(8)),
                                             "",
                                             DBNull.Value,
-                                            drow(2))
+                                            drow(1))
                     i += 1
                     'n_ReadSQLFunctionV2.HasError And 
                     'If n_ReadSQLFunctionV2.ErrorMessage.Length > 0 Then

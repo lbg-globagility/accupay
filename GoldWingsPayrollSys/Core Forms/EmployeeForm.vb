@@ -11,6 +11,10 @@ Imports System.Threading.Tasks
 
 Public Class EmployeeForm
 
+    Private str_ms_excel_file_extensn As String =
+        String.Concat("Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|",
+                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls")
+
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         SplitContainer2.SplitterWidth = 7
@@ -11193,8 +11197,7 @@ Public Class EmployeeForm
     Private Sub tsbtnImportLoans_Click(sender As Object, e As EventArgs) Handles tsbtnImportLoans.Click
         Dim browsefile As New OpenFileDialog()
 
-        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
-                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
+        browsefile.Filter = str_ms_excel_file_extensn
 
         If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
 
@@ -15197,6 +15200,37 @@ Public Class EmployeeForm
 
     End Sub
 
+    Private Sub tsbtnimportallowance_Click(sender As Object, e As EventArgs) Handles tsbtnimportallowance.Click
+        Dim browsefile As New OpenFileDialog()
+
+        browsefile.Filter = str_ms_excel_file_extensn
+
+        If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
+
+            filepath = IO.Path.GetFullPath(browsefile.FileName)
+
+            Dim catchDatSet =
+                getWorkBookAsDataSet(filepath,
+                                     Me.Name)
+
+            If (catchDatSet Is Nothing) = False And Trim(filepath).Length > 0 Then
+
+                Dim n_importallowance As New ImportAllowance(catchDatSet, Me)
+
+                Dim objNewThread As New Thread(AddressOf n_importallowance.DoImport)
+
+                objNewThread.IsBackground = True
+
+                objNewThread.Start()
+
+                threadArrayList.Add(objNewThread)
+
+            End If
+
+        End If
+
+    End Sub
+
 #End Region
 
 #Region "Employee Overtime"
@@ -17003,7 +17037,45 @@ Public Class EmployeeForm
         'End With
 
     End Sub
+    Private Sub OTImport_Click(sender As Object, e As EventArgs) Handles OTImport.Click
+        Dim browsefile As New OpenFileDialog()
 
+        browsefile.Filter = str_ms_excel_file_extensn
+
+        Try
+
+
+            If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
+
+                filepath = IO.Path.GetFullPath(browsefile.FileName)
+
+                Dim catchDatSet =
+                    getWorkBookAsDataSet(filepath,
+                                         Me.Name)
+
+                If (catchDatSet Is Nothing) = False And Trim(filepath).Length > 0 Then
+
+                    Dim n_overtime As New ImportOvertime(catchDatSet, Me)
+
+                    Dim objNewThread As New Thread(AddressOf n_overtime.DoImport)
+
+                    objNewThread.IsBackground = True
+
+                    objNewThread.Start()
+
+                    threadArrayList.Add(objNewThread)
+
+                End If
+
+            End If
+
+            MsgBox("Overtime Successfully Imported !")
+
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Me.Name), , "Overtime Import Failed")
+        End Try
+
+    End Sub
 #End Region
 
 #Region "Official Business Filing"
@@ -18428,6 +18500,45 @@ Public Class EmployeeForm
         End If
 
         tsbtnDelOffBusi.Enabled = True
+
+    End Sub
+    Private Sub OBImport_Click(sender As Object, e As EventArgs) Handles OBImport.Click
+        Dim browsefile As New OpenFileDialog()
+
+        browsefile.Filter = str_ms_excel_file_extensn
+
+        Try
+
+
+            If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
+
+                filepath = IO.Path.GetFullPath(browsefile.FileName)
+
+                Dim catchDatSet =
+                    getWorkBookAsDataSet(filepath,
+                                         Me.Name)
+
+                If (catchDatSet Is Nothing) = False And Trim(filepath).Length > 0 Then
+
+                    Dim n_ob As New ImportOB(catchDatSet, Me)
+
+                    Dim objNewThread As New Thread(AddressOf n_ob.DoImport)
+
+                    objNewThread.IsBackground = True
+
+                    objNewThread.Start()
+
+                    threadArrayList.Add(objNewThread)
+
+                End If
+
+            End If
+
+            MsgBox("Official Business Successfully Imported !")
+
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Me.Name), , "Official Business Import Failed")
+        End Try
 
     End Sub
 #End Region
@@ -20187,8 +20298,7 @@ Public Class EmployeeForm
 
         Dim browsefile As OpenFileDialog = New OpenFileDialog()
 
-        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
-                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
+        browsefile.Filter = str_ms_excel_file_extensn
 
         If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
 
