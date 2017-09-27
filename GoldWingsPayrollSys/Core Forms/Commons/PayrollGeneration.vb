@@ -429,7 +429,7 @@ Public Class PayrollGeneration
                             grossIncomeLastPayPeriod = ValNoComma(_previousTimeEntries.Compute("SUM(TotalDayPay)", $"EmployeeID = '{_payStub.EmployeeID}'"))
                         Else
                             Dim totalDeduction = _payStub.LateDeduction + _payStub.UndertimeDeduction + _payStub.AbsenceDeduction
-                            Dim extraPay = _payStub.RestDayPay + _payStub.HolidayPay
+                            Dim extraPay = _payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay + _payStub.RestDayPay + _payStub.HolidayPay
 
                             _payStub.WorkPay = (basicPay + extraPay) - totalDeduction
                             _payStub.TotalTaxableSalary = basicPay
