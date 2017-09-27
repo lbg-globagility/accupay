@@ -2255,7 +2255,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(858, 430)
-        Me.SplitContainer2.SplitterDistance = 224
+        Me.SplitContainer2.SplitterDistance = 221
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3488,7 +3488,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(856, 172)
+        Me.dgvDepen.Size = New System.Drawing.Size(856, 175)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -8832,6 +8832,7 @@ Partial Class EmployeeForm
         Me.tsbtnImportLoans.Name = "tsbtnImportLoans"
         Me.tsbtnImportLoans.Size = New System.Drawing.Size(23, 22)
         Me.tsbtnImportLoans.ToolTipText = "Import loans"
+        Me.tsbtnImportLoans.Visible = False
         '
         'tbpLoanHist
         '
@@ -15510,17 +15511,17 @@ Partial Class EmployeeForm
         Me.Panel7.Size = New System.Drawing.Size(1231, 523)
         Me.Panel7.TabIndex = 151
         '
-        'Employee
+        'EmployeeForm
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1231, 545)
         Me.Controls.Add(Me.Panel7)
         Me.Controls.Add(Me.Label25)
-        Me.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
-        Me.KeyPreview = true
-        Me.Name = "Employee"
+        Me.KeyPreview = True
+        Me.Name = "EmployeeForm"
         Me.Text = "employee"
         Me.tabctrlemp.ResumeLayout(false)
         Me.tbpempchklist.ResumeLayout(false)

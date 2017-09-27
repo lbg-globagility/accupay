@@ -2013,21 +2013,46 @@ Public Class EmployeeForm
 
     Sub loadPositName()
 
-        enlistTheLists("SELECT CONCAT(pos.RowID,'@',pos.PositionName)" &
-                       " FROM position pos" &
-                       " WHERE pos.RowID NOT IN" &
-                       " (SELECT COALESCE(emp.PositionID,'')" &
-                       " FROM employee emp" &
-                       " WHERE emp.OrganizationID=" & orgztnID & "" &
-                       " GROUP BY emp.PositionID UNION SELECT DISTINCT(PositionID) FROM user WHERE PositionID IS NOT NULL AND OrganizationID=" & orgztnID & ")" &
-                       " AND OrganizationID=" & orgztnID & "" &
-                       " ORDER BY pos.PositionName;",
-                       positn)
+        'enlistTheLists("SELECT CONCAT(pos.RowID,'@',pos.PositionName)" &
+        '               " FROM position pos" &
+        '               " WHERE pos.RowID NOT IN" &
+        '               " (SELECT COALESCE(emp.PositionID,'')" &
+        '               " FROM employee emp" &
+        '               " WHERE emp.OrganizationID=" & orgztnID & "" &
+        '               " GROUP BY emp.PositionID UNION SELECT DISTINCT(PositionID) FROM user WHERE PositionID IS NOT NULL AND OrganizationID=" & orgztnID & ")" &
+        '               " AND OrganizationID=" & orgztnID & "" &
+        '               " ORDER BY pos.PositionName;",
+        '               positn)
 
-        positn.Add("NULL@...............Leave as blank...............") : cboPosit.Items.Clear()
-        For Each r In positn
-            cboPosit.Items.Add(StrReverse(getStrBetween(StrReverse(r), "", "@")))
-        Next
+        'positn.Add("NULL@...............Leave as blank...............") : cboPosit.Items.Clear()
+        'For Each r In positn
+        '    cboPosit.Items.Add(StrReverse(getStrBetween(StrReverse(r), "", "@")))
+        'Next
+
+        Dim str_quer_positions As String =
+            String.Concat("SELECT pos.RowID",
+                          ",pos.PositionName",
+                          " FROM `position` pos",
+                          " INNER JOIN division dv ON dv.RowID=pos.DivisionId AND dv.OrganizationID=pos.OrganizationID",
+                          " WHERE pos.OrganizationID=", orgztnID,
+                          " AND LENGTH(TRIM(pos.PositionName)) > 0",
+                          " ORDER BY pos.PositionName;")
+
+        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable(str_quer_positions)
+
+        Static once As SByte = 0
+
+        If once = 0 Then
+
+            once = 1
+
+            cboPosit.ValueMember = n_SQLQueryToDatatable.ResultTable.Columns(0).ColumnName
+
+            cboPosit.DisplayMember = n_SQLQueryToDatatable.ResultTable.Columns(1).ColumnName
+
+        End If
+
+        cboPosit.DataSource = n_SQLQueryToDatatable.ResultTable
 
     End Sub
 
