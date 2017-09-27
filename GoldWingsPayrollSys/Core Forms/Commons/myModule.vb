@@ -13,6 +13,8 @@ Module myModule
     Public da As New MySqlDataAdapter
     Public cmd As New MySqlCommand
 
+    Public firstchar_requiredforparametername As String = "?"
+
     Public n_DataBaseConnection As New DataBaseConnection
     Public mysql_conn_text As String = n_DataBaseConnection.GetStringMySQLConnectionString
     Dim RegKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Control Panel\International", True)
