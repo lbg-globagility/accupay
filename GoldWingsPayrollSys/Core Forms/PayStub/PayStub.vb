@@ -1614,6 +1614,8 @@ Public Class PayStub
 
                 esal_dattab = resources.Salaries
 
+                DebugUtility.DumpTable(esal_dattab, "salaries")
+
                 numofdaypresent = retAsDatTbl("SELECT COUNT(RowID) 'DaysAttended'" &
                                                                 ",SUM((TIME_TO_SEC(TIMEDIFF(TimeOut,TimeIn)) / 60) / 60) 'SumHours'" &
                                                                 ",EmployeeID" &

@@ -218,6 +218,7 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
     <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
     <Compile Include="Core Forms\Government\SocialSecurityBracket.vb" />

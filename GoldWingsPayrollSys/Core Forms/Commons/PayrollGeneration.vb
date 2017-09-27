@@ -411,7 +411,7 @@ Public Class PayrollGeneration
 
                     If employmentType = SalaryType.Fixed Then
 
-                        _payStub.WorkPay = basicPay + (_payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay)
+                        _payStub.WorkPay = basicPay + (_payStub.HolidayPay + _payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay)
 
                         Dim previousOvertimePay = ValNoComma(_previousTimeEntries.Compute("SUM(OvertimeHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
                         Dim previousNightDiffPay = ValNoComma(_previousTimeEntries.Compute("SUM(NightDiffHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))

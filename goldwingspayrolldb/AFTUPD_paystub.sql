@@ -934,6 +934,7 @@ ELSEIF e_type IN ('Fixed', 'Monthly') AND NOT IsFirstTimeSalary THEN
         INTO totalWorkAmount;
 
         SET totalWorkAmount = IFNULL(totalWorkAmount, 0) * (IF(actualrate < 1, (actualrate + 1), actualrate));
+        SET totalWorkAmount = totalWorkAmount + holidayPay;
 
     END IF;
 

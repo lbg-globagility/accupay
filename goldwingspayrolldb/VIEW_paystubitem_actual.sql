@@ -11,6 +11,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `VIEW_paystubitem_actual`(
 	IN `EmpRowID` INT,
 	IN `pay_date_from` DATE,
 	IN `pay_date_to` DATE
+
 )
     DETERMINISTIC
 BEGIN
@@ -105,7 +106,7 @@ LEFT JOIN thirteenthmonthpay
     ON thirteenthmonthpay.PaystubID = psa.RowID
 LEFT JOIN (SELECT etea.RowID AS eteRowID
                 , SUM(etea.RegularHoursWorked) AS RegularHoursWorked
-                , SUM(etea.RegularHoursAmount / pr.`PayRate`) AS RegularHoursAmount
+                , SUM(etea.RegularHoursAmount) AS RegularHoursAmount
                 , SUM(etea.TotalHoursWorked) AS TotalHoursWorked
                 , SUM(etea.OvertimeHoursWorked) AS OvertimeHoursWorked
                 , SUM(etea.OvertimeHoursAmount) AS OvertimeHoursAmount
