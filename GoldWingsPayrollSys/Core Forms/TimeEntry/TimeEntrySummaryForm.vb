@@ -298,7 +298,7 @@ Public Class TimeEntrySummaryForm
                 totalTimeEntry.OvertimeHours += timeEntry.OvertimeHours
                 totalTimeEntry.OvertimeAmount += timeEntry.OvertimeAmount
                 totalTimeEntry.NightDiffHours += timeEntry.NightDiffHours
-                totalTimeEntry.NightDiffAmount += timeEntry.NightDiffOTHours
+                totalTimeEntry.NightDiffAmount += timeEntry.NightDiffAmount
                 totalTimeEntry.NightDiffOTHours += timeEntry.NightDiffOTHours
                 totalTimeEntry.NightDiffOTAmount += timeEntry.NightDiffOTAmount
                 totalTimeEntry.RestDayHours += timeEntry.RestDayHours
@@ -379,6 +379,8 @@ Public Class TimeEntrySummaryForm
             Await connection.OpenAsync()
             Dim reader = Await command.ExecuteReaderAsync()
 
+            Dim totalTimeEntry = New TimeEntry()
+
             While Await reader.ReadAsync()
                 Dim timeEntry = New TimeEntry() With {
                     .RowID = reader.GetValue(Of Integer?)("RowID"),
@@ -408,8 +410,30 @@ Public Class TimeEntrySummaryForm
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
                 }
 
+                totalTimeEntry.RegularHours += timeEntry.RegularHours
+                totalTimeEntry.RegularAmount += timeEntry.RegularAmount
+                totalTimeEntry.OvertimeHours += timeEntry.OvertimeHours
+                totalTimeEntry.OvertimeAmount += timeEntry.OvertimeAmount
+                totalTimeEntry.NightDiffHours += timeEntry.NightDiffHours
+                totalTimeEntry.NightDiffAmount += timeEntry.NightDiffAmount
+                totalTimeEntry.NightDiffOTHours += timeEntry.NightDiffOTHours
+                totalTimeEntry.NightDiffOTAmount += timeEntry.NightDiffOTAmount
+                totalTimeEntry.RestDayHours += timeEntry.RestDayHours
+                totalTimeEntry.RestDayAmount += timeEntry.RestDayAmount
+                totalTimeEntry.HolidayPay += timeEntry.HolidayPay
+                totalTimeEntry.LeavePay += timeEntry.LeavePay
+                totalTimeEntry.LateHours += timeEntry.LateHours
+                totalTimeEntry.LateAmount += timeEntry.LateAmount
+                totalTimeEntry.UndertimeHours += timeEntry.UndertimeHours
+                totalTimeEntry.UndertimeAmount += timeEntry.UndertimeAmount
+                totalTimeEntry.AbsentAmount += timeEntry.AbsentAmount
+                totalTimeEntry.TotalHoursWorked += timeEntry.TotalHoursWorked
+                totalTimeEntry.TotalDayPay += timeEntry.TotalDayPay
+
                 timeEntries.Add(timeEntry)
             End While
+
+            timeEntries.Add(totalTimeEntry)
         End Using
 
         Return timeEntries
