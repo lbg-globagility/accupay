@@ -63,10 +63,10 @@ SELECT e.RowID
 		  ,e.MaternityLeavePerPayPeriod `MaternityLeavePerPayPeriod`
 		  ,fstat.RowID `fstatRowID`
 		  ,'' `Image`
-		  ,e.Created`Creation Date`
-		  ,CONCAT_WS(u.LastName, u.FirstName) `Created by`
-		  ,e.LastUpd `Last Update`
-		  ,CONCAT_WS(uu.LastName, uu.FirstName) `LastUpdate by`
+		  ,e.Created`Created`
+		  ,CONCAT_WS(u.LastName, u.FirstName) `Createdby`
+		  ,e.LastUpd `LastUpd`
+		  ,CONCAT_WS(uu.LastName, uu.FirstName) `LastUpdby`
 
 FROM (SELECT * FROM employee WHERE OrganizationID=og_rowid AND EmployeeID   =unified_search_string  AND LENGTH(unified_search_string) > 0
     UNION
