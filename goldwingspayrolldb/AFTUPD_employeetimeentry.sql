@@ -48,6 +48,10 @@ DECLARE emprateperday DECIMAL(11,6);
 DECLARE breaktimeFrom TIME;
 DECLARE breaktimeTo TIME;
 
+DECLARE shouldPaySalaryAllowanceForOvertime BOOLEAN;
+
+DECLARE overtimeHoursAmount DECIMAL(12, 6);
+
 SELECT
     sh.BreakTimeFrom,
     sh.BreakTimeTo,
@@ -174,6 +178,19 @@ ELSE
     SET actualRegularHoursAmount = NEW.RegularHoursAmount;
 END IF;
 
+SELECT IFNULL(DisplayValue, TRUE)
+FROM listofval
+WHERE `Type` = 'Payroll Policy' AND
+    LIC = 'PaySalaryAllowanceForOvertime'
+LIMIT 1
+INTO shouldPaySalaryAllowanceForOvertime;
+
+IF shouldPaySalaryAllowanceForOvertime THEN
+    SET overtimeHoursAmount = NEW.OvertimeHoursAmount + (NEW.OvertimeHoursAmount * actualrate);
+ELSE
+    SET overtimeHoursAmount = NEW.OvertimeHoursAmount;
+END IF;
+
 INSERT INTO employeetimeentryactual (
     RowID,
     OrganizationID,
@@ -222,7 +239,7 @@ VALUES (
     NEW.RegularHoursAmount + (NEW.RegularHoursAmount * actualrate),
     NEW.TotalHoursWorked,
     NEW.OvertimeHoursWorked,
-    NEW.OvertimeHoursAmount + (NEW.OvertimeHoursAmount * actualrate),
+    overtimeHoursAmount,
     NEW.UndertimeHours,
     NEW.UndertimeHoursAmount + (NEW.UndertimeHoursAmount * actualrate),
     NEW.NightDifferentialHours,
@@ -258,7 +275,7 @@ UPDATE
     RegularHoursAmount = NEW.RegularHoursAmount + (NEW.RegularHoursAmount * actualrate),
     TotalHoursWorked = NEW.TotalHoursWorked,
     OvertimeHoursWorked = NEW.OvertimeHoursWorked,
-    OvertimeHoursAmount = NEW.OvertimeHoursAmount + (NEW.OvertimeHoursAmount * actualrate),
+    OvertimeHoursAmount = overtimeHoursAmount,
     UndertimeHours = NEW.UndertimeHours,
     UndertimeHoursAmount = NEW.UndertimeHoursAmount + (NEW.UndertimeHoursAmount * actualrate),
     NightDifferentialHours = NEW.NightDifferentialHours,
