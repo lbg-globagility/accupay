@@ -24,6 +24,10 @@ DECLARE actualgross DECIMAL(11,6);
 
 DECLARE pftype VARCHAR(50);
 
+DECLARE basicAmount DECIMAL(15, 4);
+DECLARE totalAdditionalPay DECIMAL(15, 4);
+DECLARE totalDeductions DECIMAL(15, 4);
+
 DECLARE regularPay DECIMAL(15, 4);
 DECLARE overtimePay DECIMAL(15, 4);
 DECLARE nightDiffPay DECIMAL(15, 4);
@@ -149,31 +153,12 @@ ELSEIF e_type = 'Monthly' AND NOT IsFirstTimeSalary THEN
         (es.EffectiveDateFrom <= NEW.PayToDate OR IFNULL(es.EffectiveDateTo,CURDATE()) <= NEW.PayToDate)
     ORDER BY es.EffectiveDateFrom DESC
     LIMIT 1
-    INTO totalWorkAmount;
+    INTO basicAmount;
 
-    SELECT (totalWorkAmount + SUM(HolidayPayAmount) + SUM(RestDayAmount)) - (SUM(HoursLateAmount) + SUM(UndertimeHoursAmount) + SUM(Absent))
-    FROM employeetimeentryactual
-    WHERE OrganizationID = NEW.OrganizationID AND
-        EmployeeID = NEW.EmployeeID AND
-        `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
-    INTO totalWorkAmount;
+    SET totalAdditionalPay = overtimePay + nightDiffPay + nightDiffOvertimePay + holidayPay + restDayPay;
+    SET totalDeductions = lateDeduction + undertimeDeduction + absenceDeduction;
 
-    IF totalWorkAmount IS NULL THEN
-
-        SELECT SUM(HoursLateAmount + UndertimeHoursAmount + Absent)
-        FROM employeetimeentry
-        WHERE OrganizationID = NEW.OrganizationID AND
-            EmployeeID = NEW.EmployeeID AND
-            `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
-        INTO totalWorkAmount;
-
-        SET totalWorkAmount = IFNULL(totalWorkAmount, 0);
-
-        SELECT totalWorkAmount + (totalWorkAmount * actualrate)
-        INTO totalWorkAmount;
-
-    END IF;
-
+    SET totalWorkAmount = basicAmount + totalAdditionalPay - totalDeductions;
     SET totalWorkAmount = IFNULL(totalWorkAmount, 0);
 
 ELSE
