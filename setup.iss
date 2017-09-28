@@ -25,6 +25,7 @@ OutputBaseFilename=goldwingssetup
 Compression=lzma
 UsePreviousAppDir=yes
 SolidCompression=yes
+VersionInfoVersion={#MyAppVersion}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

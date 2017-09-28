@@ -11238,6 +11238,12 @@ Public Class EmployeeForm
 
                 Dim objNewThread As New Thread(AddressOf n_ImportLoans.StartProcess)
 
+                Static indx As Integer = 0
+
+                indx += 1
+
+                objNewThread.Name = String.Concat("ImportLoans", indx)
+
                 objNewThread.IsBackground = True
 
                 objNewThread.Start()
@@ -15287,6 +15293,12 @@ Public Class EmployeeForm
 
                 Dim objNewThread As New Thread(AddressOf n_importallowance.DoImport)
 
+                Static indx As Integer = 0
+
+                indx += 1
+
+                objNewThread.Name = String.Concat("ImportAllowance", indx)
+
                 objNewThread.IsBackground = True
 
                 objNewThread.Start()
@@ -17127,6 +17139,12 @@ Public Class EmployeeForm
 
                     Dim objNewThread As New Thread(AddressOf n_overtime.DoImport)
 
+                    Static indx As Integer = 0
+
+                    indx += 1
+
+                    objNewThread.Name = String.Concat("ImportOvertime", indx)
+
                     objNewThread.IsBackground = True
 
                     objNewThread.Start()
@@ -17135,9 +17153,9 @@ Public Class EmployeeForm
 
                 End If
 
-            End If
+                'MsgBox("Overtime Successfully Imported !")
 
-            MsgBox("Overtime Successfully Imported !")
+            End If
 
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name), , "Overtime Import Failed")
@@ -18592,6 +18610,12 @@ Public Class EmployeeForm
 
                     Dim objNewThread As New Thread(AddressOf n_ob.DoImport)
 
+                    Static indx As Integer = 0
+
+                    indx += 1
+
+                    objNewThread.Name = String.Concat("ImportOB", indx)
+
                     objNewThread.IsBackground = True
 
                     objNewThread.Start()
@@ -18600,9 +18624,9 @@ Public Class EmployeeForm
 
                 End If
 
-            End If
+                'MsgBox("Official Business Successfully Imported !")
 
-            MsgBox("Official Business Successfully Imported !")
+            End If
 
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name), , "Official Business Import Failed")

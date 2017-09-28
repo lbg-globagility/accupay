@@ -27,4 +27,27 @@
         Me.Close()
     End Sub
 
+    Private Sub LoanType_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+
+        enlistTheLists(
+            String.Concat("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID)",
+                          " FROM product",
+                          " WHERE `Category`='Loan Type'",
+                          " AND OrganizationID='" & orgztnID & "'",
+                          " AND PartNo IN ('Calamity', 'Cash Advance', 'PAGIBIG', 'PhilHealth', 'SSS')",
+                          " UNION",
+                          " SELECT CONCAT(COALESCE(PartNo,''),'@',RowID)",
+                          " FROM product",
+                          " WHERE `Category`='Loan Type'",
+                          " AND OrganizationID='" & orgztnID & "';"),
+                           EmployeeForm.loan_type)
+
+        EmployeeForm.cboloantype.Items.Clear()
+
+        For Each strval In EmployeeForm.loan_type
+            EmployeeForm.cboloantype.Items.Add(getStrBetween(strval, "", "@"))
+        Next
+
+    End Sub
+
 End Class
