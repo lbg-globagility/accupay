@@ -2745,13 +2745,13 @@ Public Class PayStub
                                       drow("LeaveAllowance"),
                                       drow("SickLeaveAllowance"),
                                       drow("MaternityLeaveAllowance"),
-                                      drow("FilingStatus"),
+                                      drow("fstatRowID"),
                                       Nothing,
                                       drow("Created"),
                                       drow("CreatedBy"),
                                       If(IsDBNull(drow("LastUpd")), "", drow("LastUpd")),
                                       If(IsDBNull(drow("LastUpdBy")), "", drow("LastUpdBy")))
-
+                'FilingStatus
             Next
 
             RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
