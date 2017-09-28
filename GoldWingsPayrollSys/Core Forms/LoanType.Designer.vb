@@ -68,11 +68,11 @@ Partial Class LoanType
         'Label164
         '
         Me.Label164.AutoSize = True
-        Me.Label164.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label164.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label164.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label164.Location = New System.Drawing.Point(79, 11)
         Me.Label164.Name = "Label164"
-        Me.Label164.Size = New System.Drawing.Size(19, 23)
+        Me.Label164.Size = New System.Drawing.Size(18, 24)
         Me.Label164.TabIndex = 355
         Me.Label164.Text = "*"
         '
