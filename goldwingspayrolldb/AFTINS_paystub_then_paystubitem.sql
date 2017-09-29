@@ -21,13 +21,16 @@ DECLARE empsalRowID INT(11);
 
 DECLARE actualrate DECIMAL(11,6);
 DECLARE actualgross DECIMAL(11,6);
+DECLARE basicAmount DECIMAL(15, 4);
+DECLARE totalAdditionalPay DECIMAL(15, 4);
+DECLARE totalDeductions DECIMAL(15, 4);
 
 DECLARE pftype VARCHAR(50);
 
-DECLARE vacationLeaveHours DECIMAL(15, 4);
-DECLARE sickLeaveHours DECIMAL(15, 4);
-DECLARE otherLeaveHours DECIMAL(15, 4);
-DECLARE maternityLeaveHours DECIMAL(15, 4);
+DECLARE $vacationLeaveHours DECIMAL(15, 4);
+DECLARE $sickLeaveHours DECIMAL(15, 4);
+DECLARE $otherLeaveHours DECIMAL(15, 4);
+DECLARE $maternityLeaveHours DECIMAL(15, 4);
 
 DECLARE regularPay DECIMAL(15, 4);
 DECLARE overtimePay DECIMAL(15, 4);
@@ -66,25 +69,25 @@ SELECT (e_startdate BETWEEN NEW.PayFromDate AND NEW.PayToDate)
 INTO IsFirstTimeSalary;
 
 SELECT
-    SUM(RegularHoursAmount),
-    SUM(OvertimeHoursAmount),
-    SUM(NightDiffHoursAmount),
-    SUM(NightDiffOTHoursAmount),
-    SUM(RestDayAmount),
-    SUM(HolidayPayAmount),
-    SUM(HoursLateAmount),
-    SUM(UndertimeHoursAmount),
-    SUM(Absent),
-    SUM(TotalDayPay),
-    SUM(VacationLeaveHours),
-    SUM(SickLeaveHours),
-    SUM(MaternityLeaveHours),
-    SUM(OtherLeaveHours),
-    EmployeeSalaryID
-FROM employeetimeentryactual
-WHERE OrganizationID = NEW.OrganizationID AND
-    EmployeeID = NEW.EmployeeID AND
-    `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
+    SUM(t.RegularHoursAmount),
+    SUM(t.OvertimeHoursAmount),
+    SUM(t.NightDiffHoursAmount),
+    SUM(t.NightDiffOTHoursAmount),
+    SUM(t.RestDayAmount),
+    SUM(t.HolidayPayAmount),
+    SUM(t.HoursLateAmount),
+    SUM(t.UndertimeHoursAmount),
+    SUM(t.Absent),
+    SUM(t.TotalDayPay),
+    SUM(t.VacationLeaveHours),
+    SUM(t.SickLeaveHours),
+    SUM(t.MaternityLeaveHours),
+    SUM(t.OtherLeaveHours),
+    t.EmployeeSalaryID
+FROM employeetimeentryactual t
+WHERE t.OrganizationID = NEW.OrganizationID AND
+    t.EmployeeID = NEW.EmployeeID AND
+    t.`Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
 INTO
     regularPay,
     overtimePay,
@@ -96,10 +99,10 @@ INTO
     undertimeDeduction,
     absenceDeduction,
     totalWorkAmount,
-    vacationLeaveHours,
-    sickLeaveHours,
-    maternityLeaveHours,
-    otherLeaveHours,
+    $vacationLeaveHours,
+    $sickLeaveHours,
+    $maternityLeaveHours,
+    $otherLeaveHours,
     empsalRowID;
 
 IF e_type = 'Fixed' THEN
@@ -162,31 +165,12 @@ ELSEIF e_type = 'Monthly' AND NOT IsFirstTimeSalary THEN
         (es.EffectiveDateFrom <= NEW.PayToDate OR IFNULL(es.EffectiveDateTo,CURDATE()) <= NEW.PayToDate)
     ORDER BY es.EffectiveDateFrom DESC
     LIMIT 1
-    INTO totalWorkAmount;
+    INTO basicAmount;
 
-    SELECT (totalWorkAmount + SUM(HolidayPayAmount) + SUM(RestDayAmount)) - (SUM(HoursLateAmount) + SUM(UndertimeHoursAmount) + SUM(Absent))
-    FROM employeetimeentryactual
-    WHERE OrganizationID = NEW.OrganizationID AND
-        EmployeeID = NEW.EmployeeID AND
-        `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
-    INTO totalWorkAmount;
+    SET totalAdditionalPay = overtimePay + nightDiffPay + nightDiffOvertimePay + holidayPay + restDayPay;
+    SET totalDeductions = lateDeduction + undertimeDeduction + absenceDeduction;
 
-    IF totalWorkAmount IS NULL THEN
-
-        SELECT SUM(HoursLateAmount + UndertimeHoursAmount + Absent)
-        FROM employeetimeentry
-        WHERE OrganizationID = NEW.OrganizationID AND
-            EmployeeID = NEW.EmployeeID AND
-            `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
-        INTO totalWorkAmount;
-
-        SET totalWorkAmount = IFNULL(totalWorkAmount, 0);
-
-        SELECT totalWorkAmount + (totalWorkAmount * actualrate)
-        INTO totalWorkAmount;
-
-    END IF;
-
+    SET totalWorkAmount = basicAmount + totalAdditionalPay - totalDeductions;
     SET totalWorkAmount = IFNULL(totalWorkAmount, 0);
 
 ELSE
@@ -216,10 +200,10 @@ ELSE
 END IF;
 
 UPDATE employee e
-SET e.LeaveBalance = GREATEST(e.LeaveBalance - vacationLeaveHours, 0),
-    e.SickLeaveBalance = GREATEST(e.SickLeaveBalance - sickLeaveHours, 0),
-    e.MaternityLeaveBalance = GREATEST(e.MaternityLeaveBalance - maternityLeaveHours, 0),
-    e.OtherLeaveBalance = GREATEST(e.OtherLeaveBalance - otherLeaveHours, 0)
+SET e.LeaveBalance = GREATEST(e.LeaveBalance - $vacationLeaveHours, 0),
+    e.SickLeaveBalance = GREATEST(e.SickLeaveBalance - $sickLeaveHours, 0),
+    e.MaternityLeaveBalance = GREATEST(e.MaternityLeaveBalance - $maternityLeaveHours, 0),
+    e.OtherLeaveBalance = GREATEST(e.OtherLeaveBalance - $otherLeaveHours, 0)
 WHERE e.RowID = NEW.EmployeeID;
 
 SET actualgross = totalWorkAmount + NEW.TotalAllowance + NEW.TotalBonus;
