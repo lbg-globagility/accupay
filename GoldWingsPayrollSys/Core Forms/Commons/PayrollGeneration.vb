@@ -870,7 +870,10 @@ Public Class PayrollGeneration
             payFrequencyID = PayFrequency.SemiMonthly
         End If
 
-        Dim dailyRate = ValNoComma(_employee("EmpRatePerDay"))
+        ' Round the daily rate to two decimal places since amounts in the 3rd decimal place
+        ' isn't significant enough to warrant the employee to be taxable.
+        Dim dailyRate = Math.Round(ValNoComma(_employee("EmpRatePerDay")), 2)
+
         Dim minimumWage = ValNoComma(_employee("MinimumWageAmount"))
         Dim isMinimumWageEarner = dailyRate <= minimumWage
 
