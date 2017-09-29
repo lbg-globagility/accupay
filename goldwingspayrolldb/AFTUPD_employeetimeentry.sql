@@ -49,8 +49,16 @@ DECLARE breaktimeFrom TIME;
 DECLARE breaktimeTo TIME;
 
 DECLARE shouldPaySalaryAllowanceForOvertime BOOLEAN;
+DECLARE shouldPaySalaryAllowanceForNightDifferential BOOLEAN;
+DECLARE shouldPaySalaryAllowanceForNightDifferentialOvertime BOOLEAN;
+DECLARE shouldPaySalaryAllowanceForRestDay BOOLEAN;
+DECLARE shouldPaySalaryAllowanceForHolidayPay BOOLEAN;
 
 DECLARE overtimeHoursAmount DECIMAL(12, 6);
+DECLARE nightDiffAmount DECIMAL(12, 6);
+DECLARE nightDiffOvertimeAmount DECIMAL(12, 6);
+DECLARE restDayAmount DECIMAL(12, 6);
+DECLARE holidayPayAmount DECIMAL(12, 6);
 
 SELECT
     sh.BreakTimeFrom,
@@ -178,17 +186,66 @@ ELSE
     SET actualRegularHoursAmount = NEW.RegularHoursAmount;
 END IF;
 
-SELECT IFNULL(DisplayValue, TRUE)
-FROM listofval
-WHERE `Type` = 'Payroll Policy' AND
-    LIC = 'PaySalaryAllowanceForOvertime'
-LIMIT 1
-INTO shouldPaySalaryAllowanceForOvertime;
+/* TODO: Make this faster by selecting the payroll policy settings only once for all employees. */
 
+/*
+ * Calculate the allowance salary for overtime work.
+ */
+SET shouldPaySalaryAllowanceForOvertime = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForOvertime', TRUE
+);
+
+SET overtimeHoursAmount = NEW.OvertimeHoursAmount;
 IF shouldPaySalaryAllowanceForOvertime THEN
-    SET overtimeHoursAmount = NEW.OvertimeHoursAmount + (NEW.OvertimeHoursAmount * actualrate);
-ELSE
-    SET overtimeHoursAmount = NEW.OvertimeHoursAmount;
+    SET overtimeHoursAmount = overtimeHoursAmount + (overtimeHoursAmount * actualrate);
+END IF;
+
+/*
+ * Calculate the allowance salary for night differential work.
+ */
+SET shouldPaySalaryAllowanceForNightDifferential = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForNightDifferential', TRUE
+);
+
+SET nightDiffAmount = NEW.NightDiffHoursAmount;
+IF shouldPaySalaryAllowanceForOvertime THEN
+    SET nightDiffAmount = nightDiffAmount + (nightDiffAmount * actualrate);
+END IF;
+
+/*
+ * Calculate the allowance salary for night differential overtime work.
+ */
+SET shouldPaySalaryAllowanceForNightDifferentialOvertime = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForNightDifferentialOvertime', TRUE
+);
+
+SET nightDiffOvertimeAmount = NEW.NightDiffOTHoursAmount;
+IF shouldPaySalaryAllowanceForOvertime THEN
+    SET nightDiffOvertimeAmount = nightDiffOvertimeAmount + (nightDiffOvertimeAmount * actualrate);
+END IF;
+
+/*
+ * Calculate the allowance salary for rest day work.
+ */
+SET shouldPaySalaryAllowanceForRestDay = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForRestDay', TRUE
+);
+
+SET restDayAmount = NEW.RestDayAmount;
+IF shouldPaySalaryAllowanceForRestDay THEN
+    SET restDayAmount = restDayAmount + (restDayAmount * actualrate);
+END IF;
+
+/*
+ * Calculate the allowance salary for holiday work (both for regular and special non-working holidays).
+ */
+SET shouldPaySalaryAllowanceForHolidayPay = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForHolidayPay', TRUE
+);
+
+SET holidayPayAmount = NEW.HolidayPayAmount;
+IF shouldPaySalaryAllowanceForHolidayPay THEN
+    SET holidayPayAmount = holidayPayAmount + (holidayPayAmount * actualrate);
 END IF;
 
 INSERT INTO employeetimeentryactual (
