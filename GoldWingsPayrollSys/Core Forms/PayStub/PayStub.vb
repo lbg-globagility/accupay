@@ -2745,6 +2745,9 @@ Public Class PayStub
                                       drow("LeaveAllowance"),
                                       drow("SickLeaveAllowance"),
                                       drow("MaternityLeaveAllowance"),
+                                      drow("LeavePerPayPeriod"),
+                                      drow("SickLeavePerPayPeriod"),
+                                      drow("MaternityLeavePerPayPeriod"),
                                       drow("fstatRowID"),
                                       Nothing,
                                       drow("Created"),
@@ -6938,6 +6941,10 @@ Public Class PayStub
             Console.WriteLine("batch still in process...")
 
         End If
+    End Sub
+
+    Private Sub dgvemployees_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployees.CellContentClick
+
     End Sub
 End Class
 
