@@ -6892,13 +6892,13 @@ Public Class PayStub
 
             Case 100
                 'Me.Enabled = True
-                dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
-
                 Dim param_array = New Object() {orgztnID, paypRowID, z_User}
 
                 Dim n_ExecSQLProcedure As New _
                     ExecSQLProcedure("RECOMPUTE_thirteenthmonthpay",
                                      param_array)
+
+                dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
 
             Case Else
 

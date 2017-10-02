@@ -675,7 +675,7 @@ Partial Class PayStub
         Me.Label25.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
         Me.Label25.Location = New System.Drawing.Point(0, 0)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(1378, 21)
+        Me.Label25.Size = New System.Drawing.Size(1370, 21)
         Me.Label25.TabIndex = 139
         Me.Label25.Text = "PAYROLL"
         Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1133,7 +1133,7 @@ Partial Class PayStub
         Me.TabControl1.Location = New System.Drawing.Point(254, 21)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1124, 654)
+        Me.TabControl1.Size = New System.Drawing.Size(1116, 654)
         Me.TabControl1.TabIndex = 0
         '
         'tbppayroll
@@ -1143,7 +1143,7 @@ Partial Class PayStub
         Me.tbppayroll.Location = New System.Drawing.Point(4, 4)
         Me.tbppayroll.Name = "tbppayroll"
         Me.tbppayroll.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbppayroll.Size = New System.Drawing.Size(1116, 621)
+        Me.tbppayroll.Size = New System.Drawing.Size(1108, 621)
         Me.tbppayroll.TabIndex = 0
         Me.tbppayroll.Text = "PAYROLL               "
         Me.tbppayroll.UseVisualStyleBackColor = True
@@ -1154,7 +1154,7 @@ Partial Class PayStub
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(3, 28)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1110, 590)
+        Me.Panel1.Size = New System.Drawing.Size(1102, 590)
         Me.Panel1.TabIndex = 176
         '
         'SplitContainer1
@@ -1265,7 +1265,7 @@ Partial Class PayStub
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label36)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label94)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label42)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1110, 590)
+        Me.SplitContainer1.Size = New System.Drawing.Size(1102, 590)
         Me.SplitContainer1.SplitterDistance = 310
         Me.SplitContainer1.TabIndex = 0
         '
@@ -1826,11 +1826,11 @@ Partial Class PayStub
         Me.txttotabsentamt.TabIndex = 235
         Me.txttotabsentamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txttototamt
+        'txtOvertimePay
         '
         Me.txtOvertimePay.BackColor = System.Drawing.Color.White
         Me.txtOvertimePay.Location = New System.Drawing.Point(244, 98)
-        Me.txtOvertimePay.Name = "txttototamt"
+        Me.txtOvertimePay.Name = "txtOvertimePay"
         Me.txtOvertimePay.ReadOnly = True
         Me.txtOvertimePay.ShortcutsEnabled = False
         Me.txtOvertimePay.Size = New System.Drawing.Size(100, 20)
@@ -1848,11 +1848,11 @@ Partial Class PayStub
         Me.txttottardiamt.TabIndex = 236
         Me.txttottardiamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txttotnightdiffamt
+        'txtNightDiffPay
         '
         Me.txtNightDiffPay.BackColor = System.Drawing.Color.White
         Me.txtNightDiffPay.Location = New System.Drawing.Point(244, 124)
-        Me.txtNightDiffPay.Name = "txttotnightdiffamt"
+        Me.txtNightDiffPay.Name = "txtNightDiffPay"
         Me.txtNightDiffPay.ReadOnly = True
         Me.txtNightDiffPay.ShortcutsEnabled = False
         Me.txtNightDiffPay.Size = New System.Drawing.Size(100, 20)
@@ -1870,11 +1870,11 @@ Partial Class PayStub
         Me.txttotutamt.TabIndex = 237
         Me.txttotutamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txttotnightdiffotamt
+        'txtNightDiffOvertimePay
         '
         Me.txtNightDiffOvertimePay.BackColor = System.Drawing.Color.White
         Me.txtNightDiffOvertimePay.Location = New System.Drawing.Point(244, 150)
-        Me.txtNightDiffOvertimePay.Name = "txttotnightdiffotamt"
+        Me.txtNightDiffOvertimePay.Name = "txtNightDiffOvertimePay"
         Me.txtNightDiffOvertimePay.ReadOnly = True
         Me.txtNightDiffOvertimePay.ShortcutsEnabled = False
         Me.txtNightDiffOvertimePay.Size = New System.Drawing.Size(100, 20)
@@ -1908,11 +1908,11 @@ Partial Class PayStub
         Me.Label50.TabIndex = 270
         Me.Label50.Text = "₱"
         '
-        'txttotholidayhrs
+        'txtHolidayHours
         '
         Me.txtHolidayHours.BackColor = System.Drawing.Color.White
         Me.txtHolidayHours.Location = New System.Drawing.Point(118, 176)
-        Me.txtHolidayHours.Name = "txttotholidayhrs"
+        Me.txtHolidayHours.Name = "txtHolidayHours"
         Me.txtHolidayHours.ReadOnly = True
         Me.txtHolidayHours.ShortcutsEnabled = False
         Me.txtHolidayHours.Size = New System.Drawing.Size(100, 20)
@@ -1937,10 +1937,10 @@ Partial Class PayStub
         Me.Label58.TabIndex = 272
         Me.Label58.Text = "₱"
         '
-        'txtempbasicpay
+        'txtBasicPay
         '
         Me.txtBasicPay.Location = New System.Drawing.Point(23, 23)
-        Me.txtBasicPay.Name = "txtempbasicpay"
+        Me.txtBasicPay.Name = "txtBasicPay"
         Me.txtBasicPay.ShortcutsEnabled = False
         Me.txtBasicPay.Size = New System.Drawing.Size(100, 20)
         Me.txtBasicPay.TabIndex = 209
@@ -1988,11 +1988,11 @@ Partial Class PayStub
         Me.Label11.TabIndex = 213
         Me.Label11.Text = "Overtime :"
         '
-        'txttotothrs
+        'txtOvertimeHours
         '
         Me.txtOvertimeHours.BackColor = System.Drawing.Color.White
         Me.txtOvertimeHours.Location = New System.Drawing.Point(118, 98)
-        Me.txtOvertimeHours.Name = "txttotothrs"
+        Me.txtOvertimeHours.Name = "txtOvertimeHours"
         Me.txtOvertimeHours.ReadOnly = True
         Me.txtOvertimeHours.ShortcutsEnabled = False
         Me.txtOvertimeHours.Size = New System.Drawing.Size(100, 20)
@@ -2008,11 +2008,11 @@ Partial Class PayStub
         Me.Label22.TabIndex = 216
         Me.Label22.Text = "Night differential :"
         '
-        'txttotnightdiffhrs
+        'txtNightDiffHours
         '
         Me.txtNightDiffHours.BackColor = System.Drawing.Color.White
         Me.txtNightDiffHours.Location = New System.Drawing.Point(118, 124)
-        Me.txtNightDiffHours.Name = "txttotnightdiffhrs"
+        Me.txtNightDiffHours.Name = "txtNightDiffHours"
         Me.txtNightDiffHours.ReadOnly = True
         Me.txtNightDiffHours.ShortcutsEnabled = False
         Me.txtNightDiffHours.Size = New System.Drawing.Size(100, 20)
@@ -2028,22 +2028,22 @@ Partial Class PayStub
         Me.Label23.TabIndex = 219
         Me.Label23.Text = "Night differential OT :"
         '
-        'txttotnightdiffothrs
+        'txtNightDiffOvertimeHours
         '
         Me.txtNightDiffOvertimeHours.BackColor = System.Drawing.Color.White
         Me.txtNightDiffOvertimeHours.Location = New System.Drawing.Point(118, 150)
-        Me.txtNightDiffOvertimeHours.Name = "txttotnightdiffothrs"
+        Me.txtNightDiffOvertimeHours.Name = "txtNightDiffOvertimeHours"
         Me.txtNightDiffOvertimeHours.ReadOnly = True
         Me.txtNightDiffOvertimeHours.ShortcutsEnabled = False
         Me.txtNightDiffOvertimeHours.Size = New System.Drawing.Size(100, 20)
         Me.txtNightDiffOvertimeHours.TabIndex = 220
         Me.txtNightDiffOvertimeHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txttotholidayamt
+        'txtHolidayPay
         '
         Me.txtHolidayPay.BackColor = System.Drawing.Color.White
         Me.txtHolidayPay.Location = New System.Drawing.Point(244, 176)
-        Me.txtHolidayPay.Name = "txttotholidayamt"
+        Me.txtHolidayPay.Name = "txtHolidayPay"
         Me.txtHolidayPay.ReadOnly = True
         Me.txtHolidayPay.ShortcutsEnabled = False
         Me.txtHolidayPay.Size = New System.Drawing.Size(100, 20)
@@ -2070,22 +2070,22 @@ Partial Class PayStub
         Me.Label19.TabIndex = 234
         Me.Label19.Text = "Total amount"
         '
-        'txthrswork
+        'txtRegularHours
         '
         Me.txtRegularHours.BackColor = System.Drawing.Color.White
         Me.txtRegularHours.Location = New System.Drawing.Point(118, 72)
-        Me.txtRegularHours.Name = "txthrswork"
+        Me.txtRegularHours.Name = "txtRegularHours"
         Me.txtRegularHours.ReadOnly = True
         Me.txtRegularHours.ShortcutsEnabled = False
         Me.txtRegularHours.Size = New System.Drawing.Size(100, 20)
         Me.txtRegularHours.TabIndex = 252
         Me.txtRegularHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txthrsworkamt
+        'txtRegularPay
         '
         Me.txtRegularPay.BackColor = System.Drawing.Color.White
         Me.txtRegularPay.Location = New System.Drawing.Point(244, 72)
-        Me.txtRegularPay.Name = "txthrsworkamt"
+        Me.txtRegularPay.Name = "txtRegularPay"
         Me.txtRegularPay.ReadOnly = True
         Me.txtRegularPay.ShortcutsEnabled = False
         Me.txtRegularPay.Size = New System.Drawing.Size(100, 20)
@@ -3128,14 +3128,14 @@ Partial Class PayStub
         Me.PayAmount.HeaderText = "PayAmount"
         Me.PayAmount.Name = "PayAmount"
         '
-        'lblsubtot
+        'lblSubtotal
         '
         Me.lblSubtotal.BackColor = System.Drawing.Color.White
         Me.lblSubtotal.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.lblSubtotal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.lblSubtotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.lblSubtotal.Location = New System.Drawing.Point(253, 270)
-        Me.lblSubtotal.Name = "lblsubtot"
+        Me.lblSubtotal.Name = "lblSubtotal"
         Me.lblSubtotal.ReadOnly = True
         Me.lblSubtotal.ShortcutsEnabled = False
         Me.lblSubtotal.Size = New System.Drawing.Size(100, 16)
@@ -4266,7 +4266,7 @@ Partial Class PayStub
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtngenpayroll, Me.tsbtnprintpayslip, Me.tsbtnprintall, Me.tsbtnClose, Me.tsbtnPayrollSumma, Me.ToolStripSeparator1, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.tsbtnDelEmpPayroll, Me.ToolStripButton1, Me.ToolStripButton2})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1110, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1102, 25)
         Me.ToolStrip1.TabIndex = 175
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -4602,7 +4602,7 @@ Partial Class PayStub
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(234, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(1378, 675)
+        Me.ClientSize = New System.Drawing.Size(1370, 675)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.Panel4)
         Me.Controls.Add(Me.Label25)
