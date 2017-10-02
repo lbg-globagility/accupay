@@ -1723,8 +1723,6 @@ Public Class PayStub
         Timer1.Enabled = False
 
         Dim emp_count = employee_dattab.Rows.Count
-
-        Dim process_seconds As Integer = max_rec_perpage * 1000
         Dim loop_max_ctr = emp_count / max_rec_perpage
         loop_max_ctr = (loop_max_ctr - (loop_max_ctr Mod 1)) + 1
 
@@ -1783,11 +1781,6 @@ Public Class PayStub
             SpCmd.Dispose()
 
             If erro_msg_length = 0 Then
-                'BusyBGWorkChecker.RunWorkerAsync()
-
-                Dim tasks As New List(Of Task)
-
-                'Task.Factory.StartNew(Sub()
                 Dim tblcount As Integer = Convert.ToInt16(SpDataSet.Tables.Count)
 
                 ReDim array_bgwork(tblcount - 1)
@@ -1853,101 +1846,27 @@ Public Class PayStub
 
                             End With
 
-                            'tasks.Add(
-                            '    Task.Factory.StartNew(Sub()
-                            '                              n_PayrollGeneration.DoProcess()
-
-                            '                              _uiTasks.StartNew(Sub()
-                            '                                                    'Thread.Sleep(1000)
-                            '                                                End Sub)
-
-                            '                          End Sub)
-                            '                      )
-                            ''Thread.Sleep(3000)
-                            ''ThreadPool.QueueUserWorkItem(New WaitCallback(AddressOf n_PayrollGeneration.DoProcess))
-                            'Dim objNewThread As Thread = New Thread(AddressOf n_PayrollGeneration.DoProcess)
-
-                            'objNewThread.IsBackground = True
-
-                            'objNewThread.Start()
-
-                            'multi_threads(i) = objNewThread
-                            'multithreads.Add(objNewThread)
-
-                            'Thread.Sleep(3500)
-
                             i += 1
 
-                            'If (i Mod thread_max) = 0 Then
                             If (i Mod starting_batchindex) = 0 Then
                                 indxStartBatch = starting_batchindex
-                                'Dim ii = 5000
-                                'Console.WriteLine(String.Concat("...batch ", batch, " already running, wait ", (ii / 1000), " sec for next batch"))
-                                'Thread.Sleep(ii)
                                 Exit For
                             Else
                                 Continue For
-
                             End If
-
                         Else
-
                             i += 1
-
                             Continue For
-
                         End If
-
                     Else
                         Continue For
-
                     End If
-
                 Next
 
                 Timer1.Enabled = True
                 Timer1.Start()
-
-                '    _uiTasks.StartNew(Sub()
-
-                '                      End Sub)
-
-                'End Sub)
-
-                'Task.WaitAll(tasks.ToArray())
-
-                Dim callthem = "Hey, over here"
-
-                'Dim valid_threads = multi_threads.Cast(Of Thread).Where(Function(x) x IsNot Nothing)
-
-                'Dim thread_counter = valid_threads.Count
-
-                'Dim thereAreThreadStillRunning As Boolean = Recursive(True)
-
-                'callthem = "Hey, over here"
-
-                ''            If Thread.CurrentThread.ThreadState = ThreadState.Running Then
-                ''                GoTo fsfsdf
-                ''            End If
-
-                ''fsfsdf:     If Thread.CurrentThread.ThreadState = ThreadState.Running Then : GoTo fsfsdf : End If
-
-                ''Dim n_ImportLoans As New ImportLoans(catchDatSet, Me)
-
-                ''Dim objNewThread As New Thread(AddressOf n_ImportLoans.StartProcess)
-
-                ''objNewThread.IsBackground = True
-
-                ''objNewThread.Start()
-
-                ''threadArrayList.Add(objNewThread)
-
-                '# ################################################################################################################################################ #
-
             End If
-
         End Try
-
     End Sub
 
     Private Sub SinglePaySlip_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem.Click,
