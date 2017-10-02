@@ -2,6 +2,7 @@
 Imports System.IO
 Imports MySql.Data.MySqlClient
 Imports System.Threading
+Imports System.Collections.Concurrent
 
 Imports System.Threading.Tasks
 
@@ -109,7 +110,7 @@ Public Class PayStub
     Public paypPayFreqID As String = Nothing
     Public isEndOfMonth As String = 0
 
-    Const max_count_per_page As Integer = 20
+    Const max_count_per_page As Integer = 1
 
     Dim currentEmployeeID As String = Nothing
 
@@ -190,7 +191,7 @@ Public Class PayStub
 
     Dim SpDataSet As DataSet = New DataSet
 
-    Const max_rec_perpage As Integer = 20
+    Const max_rec_perpage As Integer = 1
 
     Dim emp_list_batcount As Integer = 0
 
@@ -1772,6 +1773,72 @@ Public Class PayStub
 
             End If
 
+            Dim batches = New BlockingCollection(Of DataTable)
+            For Each table In SpDataSet.Tables
+                batches.Add(table)
+            Next
+
+            Dim generators = New BlockingCollection(Of PayrollGeneration)
+
+            Parallel.ForEach(
+                batches,
+                Sub(batch)
+                    Dim generator = New PayrollGeneration(
+                        batch,
+                        isEndOfMonth,
+                        esal_dattab,
+                        _loanSchedules,
+                        _loanTransactions,
+                        emp_allowanceDaily,
+                        emp_allowanceMonthly,
+                        emp_allowanceOnce,
+                        emp_allowanceSemiM,
+                        emp_allowanceWeekly,
+                        notax_allowanceDaily,
+                        notax_allowanceMonthly,
+                        notax_allowanceOnce,
+                        notax_allowanceSemiM,
+                        notax_allowanceWeekly,
+                        emp_bonusDaily,
+                        emp_bonusMonthly,
+                        emp_bonusOnce,
+                        emp_bonusSemiM,
+                        emp_bonusWeekly,
+                        notax_bonusDaily,
+                        notax_bonusMonthly,
+                        notax_bonusOnce,
+                        notax_bonusSemiM,
+                        notax_bonusWeekly,
+                        numofdaypresent,
+                        etent_totdaypay,
+                        dtemployeefirsttimesalary,
+                        prev_empTimeEntry,
+                        VeryFirstPayPeriodIDOfThisYear,
+                        withthirteenthmonthpay,
+                        _filingStatuses,
+                        _withholdingTaxTable,
+                        Me
+                    )
+
+                    With generator
+                        .PayrollDateFrom = paypFrom
+                        .PayrollDateTo = paypTo
+                        .PayPeriodID = paypRowID
+                    End With
+
+                    generators.Add(generator)
+                End Sub
+            )
+
+            Timer1.Enabled = True
+            Timer1.Start()
+
+            Parallel.ForEach(
+                generators,
+                Sub(generator)
+                    generator.DoProcess()
+                End Sub
+            )
         Catch ex As Exception
             Dim err_msg As String = getErrExcptn(ex, Me.Name)
             erro_msg_length = err_msg.Length
@@ -1780,92 +1847,90 @@ Public Class PayStub
             SpCmd.Connection.Close()
             SpCmd.Dispose()
 
-            If erro_msg_length = 0 Then
-                Dim tblcount As Integer = Convert.ToInt16(SpDataSet.Tables.Count)
+            'If erro_msg_length = 0 Then
+            '    Dim tblcount As Integer = Convert.ToInt16(SpDataSet.Tables.Count)
 
-                ReDim array_bgwork(tblcount - 1)
+            '    ReDim array_bgwork(tblcount - 1)
 
-                Dim min_index As Integer = starting_batchindex - thread_max
+            '    Dim min_index As Integer = starting_batchindex - thread_max
 
-                For Each dt As DataTable In SpDataSet.Tables
+            '    For Each dt As DataTable In SpDataSet.Tables
 
-                    If dt.Rows.Count > 0 Then
+            '        If dt.Rows.Count > 0 Then
 
-                        If min_index <= i Then
+            '            If min_index <= i Then
 
-                            Dim n_PayrollGeneration As New PayrollGeneration(dt,
-                                                                              isEndOfMonth,
-                                                                              esal_dattab,
-                                                                              _loanSchedules,
-                                                                              _loanTransactions,
-                                                                              emp_allowanceDaily,
-                                                                              emp_allowanceMonthly,
-                                                                              emp_allowanceOnce,
-                                                                              emp_allowanceSemiM,
-                                                                              emp_allowanceWeekly,
-                                                                              notax_allowanceDaily,
-                                                                              notax_allowanceMonthly,
-                                                                              notax_allowanceOnce,
-                                                                              notax_allowanceSemiM,
-                                                                              notax_allowanceWeekly,
-                                                                              emp_bonusDaily,
-                                                                              emp_bonusMonthly,
-                                                                              emp_bonusOnce,
-                                                                              emp_bonusSemiM,
-                                                                              emp_bonusWeekly,
-                                                                              notax_bonusDaily,
-                                                                              notax_bonusMonthly,
-                                                                              notax_bonusOnce,
-                                                                              notax_bonusSemiM,
-                                                                              notax_bonusWeekly,
-                                                                              numofdaypresent,
-                                                                              etent_totdaypay,
-                                                                              dtemployeefirsttimesalary,
-                                                                              prev_empTimeEntry,
-                                                                              VeryFirstPayPeriodIDOfThisYear,
-                                                                              withthirteenthmonthpay,
-                                                                              _filingStatuses,
-                                                                              _withholdingTaxTable,
-                                                                              Me)
+            '                Dim n_PayrollGeneration As New PayrollGeneration(dt,
+            '                                                                  isEndOfMonth,
+            '                                                                  esal_dattab,
+            '                                                                  _loanSchedules,
+            '                                                                  _loanTransactions,
+            '                                                                  emp_allowanceDaily,
+            '                                                                  emp_allowanceMonthly,
+            '                                                                  emp_allowanceOnce,
+            '                                                                  emp_allowanceSemiM,
+            '                                                                  emp_allowanceWeekly,
+            '                                                                  notax_allowanceDaily,
+            '                                                                  notax_allowanceMonthly,
+            '                                                                  notax_allowanceOnce,
+            '                                                                  notax_allowanceSemiM,
+            '                                                                  notax_allowanceWeekly,
+            '                                                                  emp_bonusDaily,
+            '                                                                  emp_bonusMonthly,
+            '                                                                  emp_bonusOnce,
+            '                                                                  emp_bonusSemiM,
+            '                                                                  emp_bonusWeekly,
+            '                                                                  notax_bonusDaily,
+            '                                                                  notax_bonusMonthly,
+            '                                                                  notax_bonusOnce,
+            '                                                                  notax_bonusSemiM,
+            '                                                                  notax_bonusWeekly,
+            '                                                                  numofdaypresent,
+            '                                                                  etent_totdaypay,
+            '                                                                  dtemployeefirsttimesalary,
+            '                                                                  prev_empTimeEntry,
+            '                                                                  VeryFirstPayPeriodIDOfThisYear,
+            '                                                                  withthirteenthmonthpay,
+            '                                                                  _filingStatuses,
+            '                                                                  _withholdingTaxTable,
+            '                                                                  Me)
 
-                            With n_PayrollGeneration
-                                .PayrollDateFrom = paypFrom
-                                .PayrollDateTo = paypTo
-                                .PayPeriodID = paypRowID
+            '                With n_PayrollGeneration
+            '                    .PayrollDateFrom = paypFrom
+            '                    .PayrollDateTo = paypTo
+            '                    .PayPeriodID = paypRowID
 
-                                Dim n_bgwork As New System.ComponentModel.BackgroundWorker() With {.WorkerReportsProgress = True, .WorkerSupportsCancellation = True}
+            '                    Dim n_bgwork As New System.ComponentModel.BackgroundWorker() With {.WorkerReportsProgress = True, .WorkerSupportsCancellation = True}
 
-                                array_bgwork(i) = n_bgwork
+            '                    array_bgwork(i) = n_bgwork
 
-                                AddHandler array_bgwork(i).DoWork, AddressOf .PayrollGeneration_BackgroundWork
-                                If i = 0 Then
-                                    Console.WriteLine(String.Concat("PROCESS STARTS @ ", Now.ToShortTimeString, "....."))
-                                End If
-                                array_bgwork(i).RunWorkerAsync()
-                                'Thread.Sleep(3500) 'process_seconds
+            '                    AddHandler array_bgwork(i).DoWork, AddressOf .PayrollGeneration_BackgroundWork
+            '                    If i = 0 Then
+            '                        Console.WriteLine(String.Concat("PROCESS STARTS @ ", Now.ToShortTimeString, "....."))
+            '                    End If
+            '                    array_bgwork(i).RunWorkerAsync()
+            '                    'Thread.Sleep(3500) 'process_seconds
 
-                            End With
+            '                End With
 
-                            i += 1
+            '                i += 1
 
-                            If (i Mod starting_batchindex) = 0 Then
-                                indxStartBatch = starting_batchindex
-                                Exit For
-                            Else
-                                Continue For
-                            End If
-                        Else
-                            i += 1
-                            Continue For
-                        End If
-                    Else
-                        Continue For
-                    End If
-                Next
+            '                If (i Mod starting_batchindex) = 0 Then
+            '                    indxStartBatch = starting_batchindex
+            '                    Exit For
+            '                Else
+            '                    Continue For
+            '                End If
+            '            Else
+            '                i += 1
+            '                Continue For
+            '            End If
+            '        Else
+            '            Continue For
+            '        End If
+            '    Next
 
-                Timer1.Enabled = True
-                Timer1.Start()
-            End If
+            'End If
         End Try
     End Sub
 
@@ -6646,8 +6711,8 @@ Public Class PayStub
 
     Sub ProgressCounter(ByVal cnt As Integer)
 
-        progress_precentage += 1
-
+        'progress_precentage += 1
+        Interlocked.Increment(progress_precentage)
         Dim compute_percentage As Integer = (progress_precentage / payroll_emp_count) * 100
         MDIPrimaryForm.systemprogressbar.Value = compute_percentage
 
@@ -6685,7 +6750,7 @@ Public Class PayStub
 
             'If payroll_emp_count >= max_rec_perpage Then
             If emp_list_batcount > thread_max Then
-                ThreadingPayrollGeneration(indxStartBatch)
+                'ThreadingPayrollGeneration(indxStartBatch)
             End If
 
             Console.WriteLine("batch has finished...")

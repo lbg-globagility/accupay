@@ -542,7 +542,7 @@ Public Class PayrollGeneration
             '    ConvertLeaveToCash(drow)
             'End If
 
-            form_caller.Invoke(_notifyMainWindow, 1)
+            form_caller.BeginInvoke(_notifyMainWindow, 1)
             Dim my_cmd As String = String.Concat(Convert.ToString(employee("RowID")), "@", Convert.ToString(employee("EmployeeID")))
             Console.WriteLine(my_cmd)
 
