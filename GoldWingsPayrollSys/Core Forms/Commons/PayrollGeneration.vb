@@ -71,7 +71,7 @@ Public Class PayrollGeneration
     Public Property PayrollDateTo As String
     Public Property PayPeriodID As String
 
-    Private _employees As DataTable
+    Private _employees As DataRow
     Private isEndOfMonth2 As String
     Private _isFirstHalf As Boolean
     Private _isEndOfMonth As Boolean
@@ -144,7 +144,7 @@ Public Class PayrollGeneration
 
     Private numberofweeksthismonth As Integer
 
-    Sub New(employees As DataTable,
+    Sub New(employees As DataRow,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
             allLoanSchedules As ICollection(Of PayrollSys.LoanSchedule),
@@ -242,18 +242,18 @@ Public Class PayrollGeneration
             'LoadExistingUnusedLeaveAdjustments()
             'ResetUnusedLeaveAdjustments()
 
-            Dim sel_employee_dattab = _employees.Select("PositionID IS NULL")
+            'Dim sel_employee_dattab = _employees.Select("PositionID IS NULL")
 
-            If sel_employee_dattab.Count > 0 Then
-                For Each drow In sel_employee_dattab
-                    pause_process_message = "Employee '" & CStr(drow("EmployeeID")) & "' has no position." &
-                        vbNewLine & "Please supply his/her position before proceeding to payroll."
-                    'e.Cancel = True
-                    'If bgworkgenpayroll.CancellationPending Then
-                    '    bgworkgenpayroll.CancelAsync()
-                    'End If
-                Next
-            End If
+            'If sel_employee_dattab.Count > 0 Then
+            '    For Each drow In sel_employee_dattab
+            '        pause_process_message = "Employee '" & CStr(drow("EmployeeID")) & "' has no position." &
+            '            vbNewLine & "Please supply his/her position before proceeding to payroll."
+            '        'e.Cancel = True
+            '        'If bgworkgenpayroll.CancellationPending Then
+            '        '    bgworkgenpayroll.CancelAsync()
+            '        'End If
+            '    Next
+            'End If
 
             LoadFixedMonthlyAllowances()
 
@@ -261,11 +261,9 @@ Public Class PayrollGeneration
             Dim dateStr_to_use = Format(date_to_use, "yyyy-MM-dd")
             numberofweeksthismonth = CInt(New MySQLExecuteQuery("SELECT `COUNTTHEWEEKS`('" & dateStr_to_use & "');").Result)
 
-            For Each employee As DataRow In _employees.Rows
-                GeneratePayStub(employee)
-            Next
+            GeneratePayStub(_employees)
         Catch ex As Exception
-            Console.WriteLine(getErrExcptn(ex, "PayrollGeneration - " & _employees.TableName))
+            Console.WriteLine(getErrExcptn(ex, "PayrollGeneration - Error"))
             logger.Error("DoProcess", ex)
         Finally
             'employee_dattab.Dispose()
