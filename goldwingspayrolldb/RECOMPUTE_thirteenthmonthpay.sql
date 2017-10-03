@@ -10,13 +10,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RECOMPUTE_thirteenthmonthpay`(
 	IN `OrganizID` INT,
 	IN `PayPRowID` INT,
 	IN `UserRowID` INT
-
-
-
-
-
-
-
 )
     DETERMINISTIC
 BEGIN
@@ -97,10 +90,10 @@ IF ispayperiodendofmonth IS NOT NULL THEN
         CURRENT_TIMESTAMP(),
         UserRowID,
         ps.RowID,
-        (ii.BasicAmount / pf_div)
+        (ii.BasicAmount / pf_div) + thirteenthMonthAllowances.Amount
     FROM
     (
-            
+
             SELECT
                 (
                     timeEntrySummary.BasicAmount +
@@ -166,7 +159,7 @@ IF ispayperiodendofmonth IS NOT NULL THEN
                 e.OrganizationID = OrganizID AND
                 e.EmploymentStatus IN ('Contractual', 'SERVICE CONTRACT')
         UNION
-            
+
             SELECT
                 (es.BasicPay + (es.UndeclaredSalary / GetPayPeriodsPerMonth(e.PayFrequencyID)) - IFNULL(et.LessAmount,0)) AS BasicAmount,
                 e.RowID AS EmployeeID,
@@ -196,21 +189,16 @@ IF ispayperiodendofmonth IS NOT NULL THEN
         ps.PayPeriodID = PayPRowID AND
         ps.EmployeeID = ii.EmployeeID
     LEFT JOIN (
-        SELECT
-            psi.PayStubID,
-            SUM(psi.PayAmount) AS PayAmount
-        FROM paystubitem psi
-        INNER JOIN product p
-        ON p.RowID = psi.ProductID AND
-            p.`Category` = 'Allowance Type' AND
-            p.AllocateBelowSafetyFlag = '1' AND
-            p.OrganizationID = psi.OrganizationID
-        WHERE psi.PayStubID IS NOT NULL AND
-            psi.OrganizationID = OrganizID AND
-            psi.PayAmount != 0
-        GROUP BY psi.PayStubID
-    ) ea
-    ON ea.PayStubID = ps.RowID
+        SELECT SUM(ea.AllowanceAmount) AS Amount,
+            ea.EmployeeID
+        FROM employeeallowance ea
+        LEFT JOIN product p
+        ON p.RowID = ea.ProductID
+        WHERE ea.OrganizationID = OrganizID AND
+            ea.EffectiveDateFrom BETWEEN month_firstdate AND last_date
+        GROUP BY ea.EmployeeID
+    ) thirteenthMonthAllowances
+    ON thirteenthMonthAllowances.EmployeeID = ps.EmployeeID
     ON DUPLICATE KEY
     UPDATE
         LastUpd = CURRENT_TIMESTAMP(),
