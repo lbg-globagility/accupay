@@ -189,8 +189,6 @@ Public Class PayStub
 
     Private thread_max As Integer = 5
 
-    Dim SpDataSet As DataSet = New DataSet
-
     Const max_rec_perpage As Integer = 1
 
     Dim emp_list_batcount As Integer = 0
@@ -1722,42 +1720,34 @@ Public Class PayStub
         Timer1.Stop()
         Timer1.Enabled = False
 
-        Dim emp_count = employee_dattab.Rows.Count
-        Dim loop_max_ctr = emp_count / max_rec_perpage
-        loop_max_ctr = (loop_max_ctr - (loop_max_ctr Mod 1)) + 1
-
-        ReDim multi_threads(loop_max_ctr)
-
-        Dim erro_msg_length As Integer = 0
-
-        Dim SpCmd As MySqlCommand = New MySqlCommand
-        Dim employees As DataTable = Nothing
         Try
-            SpCmd = New MySqlCommand(
-                "GetEmployees",
-                New MySql.Data.MySqlClient.MySqlConnection(mysql_conn_text)
-            )
+            Dim employees As DataTable = Nothing
 
-            If Me.Enabled Then 'tsbtngenpayroll
-                SpDataSet = New DataSet
-                With SpCmd
-                    .Connection.Open()
-                    .CommandType = CommandType.StoredProcedure
-                    .Parameters.Clear()
-                    .Parameters.AddWithValue("$OrganizationID", orgztnID)
-                    .Parameters.AddWithValue("$PayDateFrom", paypFrom)
-                    .Parameters.AddWithValue("$PayDateTo", paypTo)
-                End With
+            Using connection = New MySqlConnection(mysql_conn_text),
+                command = New MySqlCommand("GetEmployees", connection)
 
-                Dim MyAdapter As MySqlDataAdapter = New MySqlDataAdapter(SpCmd)
-                MyAdapter.Fill(SpDataSet)
+                If Me.Enabled Then
+                    Dim dataSet = New DataSet()
 
-                employees = SpDataSet.Tables(0)
+                    With command
+                        .Connection.Open()
+                        .CommandType = CommandType.StoredProcedure
+                        .Parameters.Clear()
+                        .Parameters.AddWithValue("$OrganizationID", orgztnID)
+                        .Parameters.AddWithValue("$PayDateFrom", paypFrom)
+                        .Parameters.AddWithValue("$PayDateTo", paypTo)
+                    End With
 
-                payroll_emp_count = employees.Rows.Count
+                    Dim adapter = New MySqlDataAdapter(command)
+                    adapter.Fill(dataSet)
 
-                Me.Enabled = False 'tsbtngenpayroll
-            End If
+                    employees = dataSet.Tables(0)
+
+                    payroll_emp_count = employees.Rows.Count
+
+                    Me.Enabled = False
+                End If
+            End Using
 
             Dim employeeRows = employees.Rows.Cast(Of DataRow)
 
@@ -1815,9 +1805,6 @@ Public Class PayStub
             )
         Catch ex As Exception
             _logger.Error("Error loading the employees", ex)
-        Finally
-            SpCmd.Connection.Close()
-            SpCmd.Dispose()
         End Try
     End Sub
 
@@ -6367,33 +6354,6 @@ Public Class PayStub
         End With
 
     End Sub
-
-    'Dim MinimumWage_Amount = New ExecuteQuery("SELECT MinWageValue FROM payperiod WHERE RowID='" & paypRowID & "';").Result
-
-    Function Recursive(ByRef isThereStillRunning As Boolean) As Boolean
-        'Console.WriteLine("Recursive({0})", isThereStillRunning.ToString)
-
-        'count = count + 1
-        'If value >= 100 Then
-        '    Return value
-        'End If
-        'Return Recursive(value * 2, count)
-
-        Dim still_running = multi_threads.Cast(Of Thread).Where(Function(ii) ii.ThreadState = (ThreadState.Background _
-                                                                                               Or ThreadState.Running) _
-                                                                                           And ii.IsAlive = True)
-
-        isThereStillRunning = (still_running IsNot Nothing)
-
-        'If still_running.Count > 0 Then
-        '    isThereStillRunning = True
-        'Else
-        '    isThereStillRunning = False
-        'End If
-
-        Return If(isThereStillRunning, Recursive(isThereStillRunning), False)
-
-    End Function
 
     Private Sub Gender_Label(ByVal strGender As String)
 
