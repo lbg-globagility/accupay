@@ -60,4 +60,25 @@ Public Class TrialForm
 
     End Sub
 
+    Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+
+        Dim params =
+            New Object() {3, 1077}
+
+        Dim sql As New SQL("CALL `HyundaiPayslip`(?og_rowid, ?pp_rowid, TRUE, NULL);",
+                           params)
+
+        Dim dt As New DataTable
+        dt = sql.GetFoundRows.Tables(0)
+
+        Dim rptdoc As New HyundaiPayslip
+        rptdoc.SetDataSource(dt)
+
+        Dim crvwr As New CrysVwr
+
+        crvwr.CrystalReportViewer1.ReportSource = rptdoc
+        crvwr.Show()
+
+    End Sub
+
 End Class
