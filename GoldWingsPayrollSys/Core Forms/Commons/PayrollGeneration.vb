@@ -71,7 +71,7 @@ Public Class PayrollGeneration
     Public Property PayrollDateTo As String
     Public Property PayPeriodID As String
 
-    Private _employees As DataTable
+    Private _employees As DataRow
     Private isEndOfMonth2 As String
     Private _isFirstHalf As Boolean
     Private _isEndOfMonth As Boolean
@@ -144,7 +144,7 @@ Public Class PayrollGeneration
 
     Private numberofweeksthismonth As Integer
 
-    Sub New(employees As DataTable,
+    Sub New(employees As DataRow,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
             allLoanSchedules As ICollection(Of PayrollSys.LoanSchedule),
@@ -242,30 +242,26 @@ Public Class PayrollGeneration
             'LoadExistingUnusedLeaveAdjustments()
             'ResetUnusedLeaveAdjustments()
 
-            Dim sel_employee_dattab = _employees.Select("PositionID IS NULL")
+            'Dim sel_employee_dattab = _employees.Select("PositionID IS NULL")
 
-            If sel_employee_dattab.Count > 0 Then
-                For Each drow In sel_employee_dattab
-                    pause_process_message = "Employee '" & CStr(drow("EmployeeID")) & "' has no position." &
-                        vbNewLine & "Please supply his/her position before proceeding to payroll."
-                    'e.Cancel = True
-                    'If bgworkgenpayroll.CancellationPending Then
-                    '    bgworkgenpayroll.CancelAsync()
-                    'End If
-                Next
-            End If
-
-            LoadFixedMonthlyAllowances()
+            'If sel_employee_dattab.Count > 0 Then
+            '    For Each drow In sel_employee_dattab
+            '        pause_process_message = "Employee '" & CStr(drow("EmployeeID")) & "' has no position." &
+            '            vbNewLine & "Please supply his/her position before proceeding to payroll."
+            '        'e.Cancel = True
+            '        'If bgworkgenpayroll.CancellationPending Then
+            '        '    bgworkgenpayroll.CancelAsync()
+            '        'End If
+            '    Next
+            'End If
 
             Dim date_to_use = If(CDate(PayrollDateFrom) > CDate(PayrollDateTo), CDate(PayrollDateFrom), CDate(PayrollDateTo))
             Dim dateStr_to_use = Format(date_to_use, "yyyy-MM-dd")
             numberofweeksthismonth = CInt(New MySQLExecuteQuery("SELECT `COUNTTHEWEEKS`('" & dateStr_to_use & "');").Result)
 
-            For Each employee As DataRow In _employees.Rows
-                GeneratePayStub(employee)
-            Next
+            GeneratePayStub(_employees)
         Catch ex As Exception
-            Console.WriteLine(getErrExcptn(ex, "PayrollGeneration - " & _employees.TableName))
+            Console.WriteLine(getErrExcptn(ex, "PayrollGeneration - Error"))
             logger.Error("DoProcess", ex)
         Finally
             'employee_dattab.Dispose()
@@ -542,7 +538,7 @@ Public Class PayrollGeneration
             '    ConvertLeaveToCash(drow)
             'End If
 
-            form_caller.Invoke(_notifyMainWindow, 1)
+            form_caller.BeginInvoke(_notifyMainWindow, 1)
             Dim my_cmd As String = String.Concat(Convert.ToString(employee("RowID")), "@", Convert.ToString(employee("EmployeeID")))
             Console.WriteLine(my_cmd)
 
@@ -565,89 +561,6 @@ Public Class PayrollGeneration
         End Try
     End Sub
 
-    Private Sub LoadFixedMonthlyAllowances()
-        ' Construct sql to load all fixed monthly allowances for all employees
-        Dim fixedTaxableMonthlyAllowanceSql =
-            "SELECT ea.* " &
-            "FROM employeeallowance ea " &
-            "INNER JOIN product p " &
-            "ON p.RowID = ea.ProductID " &
-            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
-            "AND ea.EffectiveStartDate <= '" & PayrollDateFrom & "' " &
-            "AND ea.EffectiveEndDate >= '" & PayrollDateTo & "' " &
-            "AND ea.AllowanceFrequency = 'Monthly' " &
-            "AND p.`Fixed` = 1 " &
-            "AND p.`Status` = 1;"
-
-        If isEndOfMonth2 = "0" Then 'means end of the month
-            fixedTaxableMonthlyAllowanceSql =
-            "SELECT ea.* " &
-            "FROM employeeallowance ea " &
-            "INNER JOIN product p " &
-            "ON p.RowID = ea.ProductID " &
-            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
-            "AND ea.AllowanceFrequency IN ('Monthly','Semi-monthly') " &
-            " AND (ea.EffectiveStartDate >= '" & PayrollDateFrom & "' OR ea.EffectiveEndDate >= '" & PayrollDateFrom & "')" &
-            " AND (ea.EffectiveStartDate <= '" & PayrollDateTo & "' OR ea.EffectiveEndDate <= '" & PayrollDateTo & "')" &
-            " AND p.`Fixed` = 1 " &
-            "AND p.`Status` = 1;"
-        Else '                      'means first half of the month
-            fixedTaxableMonthlyAllowanceSql =
-                "SELECT ea.* " &
-                "FROM employeeallowance ea " &
-                "INNER JOIN product p " &
-                "ON p.RowID = ea.ProductID " &
-                "WHERE ea.OrganizationID = '" & orgztnID & "' " &
-                "AND ea.AllowanceFrequency = 'Semi-monthly' " &
-                " AND (ea.EffectiveStartDate >= '" & PayrollDateFrom & "' OR ea.EffectiveEndDate >= '" & PayrollDateFrom & "')" &
-                " AND (ea.EffectiveStartDate <= '" & PayrollDateTo & "' OR ea.EffectiveEndDate <= '" & PayrollDateTo & "')" &
-                " AND p.`Fixed` = 1 " &
-                "AND p.`Status` = 1;"
-        End If
-
-        fixedTaxableMonthlyAllowances = New MySQLQueryToDataTable(fixedTaxableMonthlyAllowanceSql).ResultTable
-
-        Dim fixedNonTaxableMonthlyAllowanceSql =
-            "SELECT ea.* " &
-            "FROM employeeallowance ea " &
-            "INNER JOIN product p " &
-            "ON p.RowID = ea.ProductID " &
-            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
-            "AND ea.EffectiveStartDate <= '" & PayrollDateFrom & "' " &
-            "AND ea.EffectiveEndDate >= '" & PayrollDateTo & "' " &
-            "AND ea.AllowanceFrequency = 'Monthly' " &
-            "AND p.`Fixed` = 1 " &
-            "AND p.`Status` = 0;"
-
-        If isEndOfMonth2 = "0" Then 'means end of the month
-            fixedNonTaxableMonthlyAllowanceSql =
-            "SELECT ea.* " &
-            "FROM employeeallowance ea " &
-            "INNER JOIN product p " &
-            "On p.RowID = ea.ProductID " &
-            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
-            "AND ea.AllowanceFrequency IN ('Monthly','Semi-monthly') " &
-            " AND (ea.EffectiveStartDate >= '" & PayrollDateFrom & "' OR ea.EffectiveEndDate >= '" & PayrollDateFrom & "')" &
-            " AND (ea.EffectiveStartDate <= '" & PayrollDateTo & "' OR ea.EffectiveEndDate <= '" & PayrollDateTo & "')" &
-            " AND p.`Fixed` = 1 " &
-            "AND p.`Status` = 0;"
-        Else '                      'means first half of the month
-            fixedNonTaxableMonthlyAllowanceSql =
-            "SELECT ea.* " &
-            "FROM employeeallowance ea " &
-            "INNER JOIN product p " &
-            "ON p.RowID = ea.ProductID " &
-            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
-            "AND ea.AllowanceFrequency = 'Semi-monthly' " &
-            " AND (ea.EffectiveStartDate >= '" & PayrollDateFrom & "' OR ea.EffectiveEndDate >= '" & PayrollDateFrom & "')" &
-            " AND (ea.EffectiveStartDate <= '" & PayrollDateTo & "' OR ea.EffectiveEndDate <= '" & PayrollDateTo & "')" &
-            " AND p.`Fixed` = 1 " &
-            "AND p.`Status` = 0;"
-        End If
-
-        fixedNonTaxableMonthlyAllowances = New MySQLQueryToDataTable(fixedNonTaxableMonthlyAllowanceSql).ResultTable
-    End Sub
-
     Private Sub CalculateAllowances()
         Dim oneTimeAllowances = allOneTimeAllowances.Select($"EmployeeID = '{_payStub.EmployeeID}'")
         Dim dailyAllowances = allDailyAllowances.Select($"EmployeeID = '{_payStub.EmployeeID}'")
@@ -668,7 +581,8 @@ Public Class PayrollGeneration
         Next
         Dim totalSemiMonthlyAllowances = ValNoComma(allSemiMonthlyAllowances.Compute("SUM(TotalAllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
         Dim totalMonthlyAllowances = ValNoComma(allMonthlyAllowances.Compute("SUM(TotalAllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-        Dim totalFixedTaxableMonthlyAllowance = ValNoComma(fixedTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+        ' TODO: fixed month allowances
+        Dim totalFixedTaxableMonthlyAllowance = 0 'ValNoComma(fixedTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
 
         Dim totalTaxableAllowance = (
             totalOneTimeAllowances +
@@ -684,7 +598,8 @@ Public Class PayrollGeneration
         Dim totalWeeklyNoTaxAllowances = ValNoComma(allNoTaxWeeklyAllowances.Compute("SUM(TotalAllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
         Dim totalSemiMonthlyNoTaxAllowances = ValNoComma(allNoTaxSemiMonthlyAllowances.Compute("SUM(TotalAllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
         Dim totalMonthlyNoTaxAllowances = ValNoComma(allNoTaxMonthlyAllowances.Compute("SUM(TotalAllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-        Dim totalFixedMonthlyNoTaxAllowances = ValNoComma(fixedNonTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+        ' TODO: fixed month allowances
+        Dim totalFixedMonthlyNoTaxAllowances = 0 'ValNoComma(fixedNonTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
 
         Dim totalNoTaxAllowance = (
             totalOneTimeNoTaxAllowances +
