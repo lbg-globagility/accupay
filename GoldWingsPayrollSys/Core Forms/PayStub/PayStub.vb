@@ -846,51 +846,44 @@ Public Class PayStub
         'Else
         'End If
 
-        If bgworkgenpayroll.IsBusy Then
+        Dim pay_freqString = String.Empty
 
-        Else
+        For Each ctrl In tstrip.Items
+            If TypeOf ctrl Is ToolStripButton Then
 
-            Dim pay_freqString = String.Empty
-
-            For Each ctrl In tstrip.Items
-                If TypeOf ctrl Is ToolStripButton Then
-
-                    If DirectCast(ctrl, ToolStripButton).BackColor =
+                If DirectCast(ctrl, ToolStripButton).BackColor =
                         Color.FromArgb(194, 228, 255) Then
 
-                        pay_freqString =
+                    pay_freqString =
                             DirectCast(ctrl, ToolStripButton).Text
 
-                        Exit For
-
-                    Else
-                        Continue For
-                    End If
+                    Exit For
 
                 Else
                     Continue For
                 End If
 
-            Next
+            Else
+                Continue For
+            End If
 
-            quer_empPayFreq = " AND pf.PayFrequencyType='" & pay_freqString & "' "
+        Next
 
-            loademployee(quer_empPayFreq)
-            '# ############################# #
-            'dgvemployees_SelectionChanged(sender, e)
+        quer_empPayFreq = " AND pf.PayFrequencyType='" & pay_freqString & "' "
 
-            ''AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+        loademployee(quer_empPayFreq)
+        '# ############################# #
+        'dgvemployees_SelectionChanged(sender, e)
 
-            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+        ''AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
-            dgvemployees_SelectionChanged(sender, e)
+        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
-            AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+        dgvemployees_SelectionChanged(sender, e)
 
-        End If
-
+        AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
     End Sub
 
     Private Sub dgvemployees_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvemployees.KeyDown
@@ -2187,106 +2180,7 @@ Public Class PayStub
 
     End Sub
 
-    Private Sub bgworkgenpayroll_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkgenpayroll.ProgressChanged
-        MDIPrimaryForm.systemprogressbar.Value = CType(e.ProgressPercentage, Integer)
-
-    End Sub
-
     Public genpayselyear As String = Nothing
-
-    Private Sub bgworkgenpayroll_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgworkgenpayroll.RunWorkerCompleted
-
-        If e.Error IsNot Nothing Then
-            'MsgBox("Error : bgworkgenpayroll" & vbNewLine & e.Error.Message)
-            MsgBox(getErrExcptn(e.Error, Me.Name), , "bgworkgenpayroll_RunWorkerCompleted")
-
-        ElseIf e.Cancelled Then
-
-            If pause_process_message = String.Empty Then
-
-                MsgBox("Background work cancelled.",
-                       MsgBoxStyle.Exclamation)
-
-            Else
-
-                MsgBox(pause_process_message,
-                       MsgBoxStyle.Information,
-                       "Payroll process skipped")
-
-            End If
-
-        Else
-
-            VIEW_payperiodofyear(genpayselyear)
-
-            loademployee(quer_empPayFreq)
-
-            employee_dattab = Nothing
-
-            esal_dattab = Nothing
-
-            etent_totdaypay = Nothing
-
-            emp_bonusDaily = Nothing
-
-            notax_bonusDaily = Nothing
-
-            emp_bonusMonthly = Nothing
-
-            notax_bonusMonthly = Nothing
-
-            emp_bonusOnce = Nothing
-
-            notax_bonusOnce = Nothing
-
-            emp_allowanceDaily = Nothing
-
-            notax_allowanceDaily = Nothing
-
-            emp_allowanceMonthly = Nothing
-
-            notax_allowanceMonthly = Nothing
-
-            emp_allowanceOnce = Nothing
-
-            notax_allowanceOnce = Nothing
-
-            numofdaypresent = Nothing
-
-            empthirteenmonthtable = Nothing
-
-            dtempalldistrib.Rows.Clear()
-
-            MsgBox("Done generating payroll",
-                   MsgBoxStyle.Information)
-
-        End If
-
-        PayrollForm.MenuStrip1.Enabled = True
-
-        MDIPrimaryForm.Showmainbutton.Enabled = True
-
-        Me.Enabled = True
-
-        MDIPrimaryForm.systemprogressbar.Visible = False
-
-        ToolStrip1.Enabled = True
-
-        Panel5.Enabled = True
-
-        MDIPrimaryForm.systemprogressbar.Value = Nothing
-
-        'AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
-        ''AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
-        dgvpayper_SelectionChanged(sender, e)
-
-        backgroundworking = 0
-
-        Me.Enabled = True
-
-    End Sub
 
     Sub btnrefresh_Click(sender As Object, e As EventArgs) Handles btnrefresh.Click
         'For Each c As DataGridViewColumn In dgvpayper.Columns
@@ -2489,35 +2383,28 @@ Public Class PayStub
 
         Dim bool_result As Boolean = (Convert.ToInt16(busy_bgworks.Count) > 0)
 
-        If bgworkgenpayroll.IsBusy Then 'bgworkgenpayroll.IsBusy, bool_result
-            e.Cancel = True
+        e.Cancel = False
 
-        Else
-            e.Cancel = False
-
-            If previousForm IsNot Nothing Then
-                If previousForm.Name = Me.Name Then
-                    previousForm = Nothing
-                End If
+        If previousForm IsNot Nothing Then
+            If previousForm.Name = Me.Name Then
+                previousForm = Nothing
             End If
-
-            showAuditTrail.Close()
-            selectPayPeriod.Close()
-            Dim open_forms = My.Application.OpenForms.Cast(Of Form).Where(Function(i) i.Name = "CrysVwr")
-            If open_forms.Count > 0 Then
-                Dim array_open_forms = open_forms.ToArray
-                For Each frm In array_open_forms
-                    frm.Close()
-                Next
-            End If
-            viewtotallow.Close()
-            viewtotloan.Close()
-            viewtotbon.Close()
-
-            PayrollForm.listPayrollForm.Remove(Me.Name)
-
         End If
 
+        showAuditTrail.Close()
+        selectPayPeriod.Close()
+        Dim open_forms = My.Application.OpenForms.Cast(Of Form).Where(Function(i) i.Name = "CrysVwr")
+        If open_forms.Count > 0 Then
+            Dim array_open_forms = open_forms.ToArray
+            For Each frm In array_open_forms
+                frm.Close()
+            Next
+        End If
+        viewtotallow.Close()
+        viewtotloan.Close()
+        viewtotbon.Close()
+
+        PayrollForm.listPayrollForm.Remove(Me.Name)
     End Sub
 
     Private Sub tsSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tsSearch.KeyPress
@@ -3941,109 +3828,104 @@ Public Class PayStub
 
         quer_empPayFreq = ""
 
-        If bgworkgenpayroll.IsBusy Then
 
-        Else
+        Dim senderObj As New ToolStripButton
 
-            Dim senderObj As New ToolStripButton
+        Static prevObj As New ToolStripButton
 
-            Static prevObj As New ToolStripButton
+        Static once As SByte = 0
 
-            Static once As SByte = 0
+        senderObj = DirectCast(sender, ToolStripButton)
 
-            senderObj = DirectCast(sender, ToolStripButton)
+        If once = 0 Then
 
-            If once = 0 Then
+            once += 1
 
-                once += 1
-
-                prevObj = senderObj
-
-                senderObj.BackColor = Color.FromArgb(194, 228, 255)
-
-                senderObj.Font = selectedButtonFont
-
-                ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
-                quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' "
-
-                loademployee(quer_empPayFreq)
-
-                ''AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
-                Exit Sub
-
-            End If
-
-            If prevObj.Name = Nothing Then
-
-            Else
-
-                If prevObj.Name <> senderObj.Name Then
-
-                    prevObj.BackColor = Color.FromArgb(255, 255, 255)
-
-                    prevObj.Font = unselectedButtonFont
-
-                    prevObj = senderObj
-
-                End If
-
-            End If
+            prevObj = senderObj
 
             senderObj.BackColor = Color.FromArgb(194, 228, 255)
 
             senderObj.Font = selectedButtonFont
 
-            Dim prev_selRowIndex = -1
+            ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
-            If dgvemployees.RowCount <> 0 Then
-                Try
-                    prev_selRowIndex = dgvemployees.CurrentRow.Index
-                Catch ex As Exception
-                    prev_selRowIndex = -1
-                End Try
+            quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' "
+
+            loademployee(quer_empPayFreq)
+
+            ''AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+
+            Exit Sub
+
+        End If
+
+        If prevObj.Name = Nothing Then
+
+        Else
+
+            If prevObj.Name <> senderObj.Name Then
+
+                prevObj.BackColor = Color.FromArgb(255, 255, 255)
+
+                prevObj.Font = unselectedButtonFont
+
+                prevObj = senderObj
+
             End If
 
-            quer_empPayFreq = String.Empty
+        End If
 
-            If tsSearch.Text.Trim.Length = 0 Then
-                'quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' "
-                tsbtnSearch_Click(sender, e)
+        senderObj.BackColor = Color.FromArgb(194, 228, 255)
 
-            ElseIf 1 = 2 Then 'ElseIf IsUserPressEnterToSearch Then
+        senderObj.Font = selectedButtonFont
 
-                ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+        Dim prev_selRowIndex = -1
 
-                quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' AND e.EmployeeID='" & tsSearch.Text & "' "
+        If dgvemployees.RowCount <> 0 Then
+            Try
+                prev_selRowIndex = dgvemployees.CurrentRow.Index
+            Catch ex As Exception
+                prev_selRowIndex = -1
+            End Try
+        End If
 
-                loademployee(quer_empPayFreq)
+        quer_empPayFreq = String.Empty
 
-                If prev_selRowIndex <> -1 Then
-                    If dgvemployees.RowCount > prev_selRowIndex Then
-                        dgvemployees.Item("EmployeeID", prev_selRowIndex).Selected = True
-                    End If
+        If tsSearch.Text.Trim.Length = 0 Then
+            'quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' "
+            tsbtnSearch_Click(sender, e)
+
+        ElseIf 1 = 2 Then 'ElseIf IsUserPressEnterToSearch Then
+
+            ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+
+            quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' AND e.EmployeeID='" & tsSearch.Text & "' "
+
+            loademployee(quer_empPayFreq)
+
+            If prev_selRowIndex <> -1 Then
+                If dgvemployees.RowCount > prev_selRowIndex Then
+                    dgvemployees.Item("EmployeeID", prev_selRowIndex).Selected = True
                 End If
+            End If
 
-                ''AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+            ''AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
-                'dgvemployees_SelectionChanged(sender, e)
+            'dgvemployees_SelectionChanged(sender, e)
 
-                Static twice As SByte = 0
+            Static twice As SByte = 0
 
-                If twice < 1 Then
+            If twice < 1 Then
 
-                    twice += 1
+                twice += 1
 
-                ElseIf twice = 1 Then
-                    twice = 2
-                    ''RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
+            ElseIf twice = 1 Then
+                twice = 2
+                ''RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
 
-                    'dgvpayper_SelectionChanged(sender, e)
+                'dgvpayper_SelectionChanged(sender, e)
 
-                    ''AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
-                End If
+                ''AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
 
             End If
 
@@ -6512,9 +6394,6 @@ Public Class PayStub
         Return If(isThereStillRunning, Recursive(isThereStillRunning), False)
 
     End Function
-
-    Private Sub bgworkgenpayroll_DoBackGroundWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkgenpayroll.DoWork
-    End Sub
 
     Private Sub Gender_Label(ByVal strGender As String)
 

@@ -467,7 +467,6 @@ Partial Class PayStub
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
-        Me.bgworkgenpayroll = New System.ComponentModel.BackgroundWorker()
         Me.bgwPrintAllPaySlip = New System.ComponentModel.BackgroundWorker()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Panel5 = New System.Windows.Forms.Panel()
@@ -4558,11 +4557,6 @@ Partial Class PayStub
         Me.Button1.UseVisualStyleBackColor = True
         Me.Button1.Visible = False
         '
-        'bgworkgenpayroll
-        '
-        Me.bgworkgenpayroll.WorkerReportsProgress = True
-        Me.bgworkgenpayroll.WorkerSupportsCancellation = True
-        '
         'bgwPrintAllPaySlip
         '
         Me.bgwPrintAllPaySlip.WorkerReportsProgress = True
@@ -4939,7 +4933,6 @@ Partial Class PayStub
     Friend WithEvents paystb_TotalBonus As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents paystb_TotalAllowance As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents paystb_TotalAdjustments As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bgworkgenpayroll As System.ComponentModel.BackgroundWorker
     Friend WithEvents tabEarned As System.Windows.Forms.TabControl
     Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
     Friend WithEvents TabPage4 As System.Windows.Forms.TabPage

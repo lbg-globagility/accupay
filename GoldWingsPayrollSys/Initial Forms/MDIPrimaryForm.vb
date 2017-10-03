@@ -497,8 +497,8 @@ Public Class MDIPrimaryForm
 
     Dim theemployeetable As New DataTable
 
-    Sub refresh_previousForm(Optional groupindex As Object = 0, _
-                             Optional sndr As Object = 0, _
+    Sub refresh_previousForm(Optional groupindex As Object = 0,
+                             Optional sndr As Object = 0,
                              Optional ee As EventArgs = Nothing)
 
         Static once As SByte = 0
@@ -738,73 +738,10 @@ Public Class MDIPrimaryForm
             ElseIf groupindex = 3 Then 'Payroll
                 If previousForm.Name = "Paystub" Then
                     With PayStub
-
-                        If .bgworkgenpayroll.IsBusy Then
-
-                        Else
-                            .btnrefresh_Click(sndr, ee)
-                            'For Each drow As DataRow In theemployeetable.Rows
-
-                            '    For Each dgvrow As DataGridViewRow In .dgvemployees.Rows
-                            '        If dgvrow.Cells("RowID").Value = drow("RowID").ToString Then
-
-                            '            dgvrow.Cells("EmployeeID").Value = drow("EmployeeID").ToString
-                            '            dgvrow.Cells("FirstName").Value = drow("FirstName").ToString
-                            '            dgvrow.Cells("MiddleName").Value = If(IsDBNull(drow("MiddleName")), "", drow("MiddleName").ToString)
-                            '            dgvrow.Cells("LastName").Value = drow("LastName").ToString
-                            '            dgvrow.Cells("Surname").Value = If(IsDBNull(drow("Surname")), "", drow("Surname").ToString)
-                            '            dgvrow.Cells("NickName").Value = If(IsDBNull(drow("Nickname")), "", drow("Nickname").ToString)
-                            '            dgvrow.Cells("MaritStat").Value = drow("MaritalStatus").ToString
-                            '            dgvrow.Cells("NoOfDepen").Value = drow("NoOfDependents").ToString
-                            '            dgvrow.Cells("Bdate").Value = If(IsDBNull(drow("Birthdate")), "", drow("Birthdate").ToString)
-                            '            dgvrow.Cells("Startdate").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("JobTitle").Value = If(IsDBNull(drow("JobTitle")), "", drow("JobTitle").ToString)
-                            '            dgvrow.Cells("Position").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("Salutation").Value = If(IsDBNull(drow("Salutation")), "", drow("Salutation").ToString)
-                            '            dgvrow.Cells("TIN").Value = drow("TINNo").ToString
-                            '            dgvrow.Cells("SSSNo").Value = drow("SSSNo").ToString
-                            '            dgvrow.Cells("HDMFNo").Value = drow("HDMFNo").ToString
-                            '            dgvrow.Cells("PHHNo").Value = drow("PhilHealthNo").ToString
-                            '            dgvrow.Cells("WorkNo").Value = If(IsDBNull(drow("WorkPhone")), "", drow("WorkPhone").ToString)
-                            '            dgvrow.Cells("HomeNo").Value = If(IsDBNull(drow("HomePhone")), "", drow("HomePhone").ToString)
-                            '            dgvrow.Cells("MobileNo").Value = If(IsDBNull(drow("MobilPhone")), "", drow("MobilPhone").ToString)
-                            '            dgvrow.Cells("HomeAdd").Value = If(IsDBNull(drow("HomeAddress")), "", drow("HomeAddress").ToString)
-                            '            dgvrow.Cells("EmailAdd").Value = If(IsDBNull(drow("EmailAddress")), "", drow("EmailAddress").ToString)
-                            '            dgvrow.Cells("Gender").Value = If(drow("Gender").ToString = "M", "Male", "Female")
-                            '            dgvrow.Cells("EmploymentStat").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("PayFreq").Value = drow("PayFrequencyID").ToString
-                            '            dgvrow.Cells("UndertimeOverride").Value = drow("UndertimeOverride").ToString
-                            '            dgvrow.Cells("OvertimeOverride").Value = drow("OvertimeOverride").ToString
-                            '            dgvrow.Cells("PositionID").Value = If(IsDBNull(drow("PositionID")), "", drow("PositionID").ToString)
-                            '            dgvrow.Cells("PayFreqID").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("EmployeeType").Value = drow("PayFrequencyID").ToString
-                            '            dgvrow.Cells("LeaveBal").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("SickBal").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("MaternBal").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("LeaveAllow").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("SickAllow").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("MaternAllow").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("Leavepayp").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("Sickpayp").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("Maternpayp").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("fstatRowID").Value = drow("RowID").ToString
-                            '            dgvrow.Cells("Image").Value = drow("RowID")
-                            '            dgvrow.Cells("lastupd").Value = Format(CDate(drow("LastUpd")), "MM-dd-yyyy")
-                            '            dgvrow.Cells("lastupdby").Value = EXECQUER(USERNameStrPropr & z_User)
-
-                            '            Exit For
-                            '        End If
-                            '    Next
-                            'Next
-
-                        End If
-
+                        .btnrefresh_Click(sndr, ee)
                     End With
-
                 End If
-
             End If
-
 
             'previousForm = UsersFrom
             'previousForm = ListOfValueForm
@@ -823,11 +760,7 @@ Public Class MDIPrimaryForm
             'previousForm = EmpTimeEntry
 
             countchanges = theemployeetable.Rows.Count
-
-        Else
-
         End If
-
     End Sub
 
     Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles ToolStripButton4.Click
