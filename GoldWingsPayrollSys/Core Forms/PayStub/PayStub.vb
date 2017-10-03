@@ -1,12 +1,12 @@
-﻿Imports System.Linq
-Imports System.IO
-Imports MySql.Data.MySqlClient
+﻿Imports MySql.Data.MySqlClient
 Imports System.Threading
-Imports System.Collections.Concurrent
-
 Imports System.Threading.Tasks
+Imports log4net
 
 Public Class PayStub
+
+    Private _logger As ILog = LogManager.GetLogger("PayrollLogger")
+
     Public q_employee As String = "SELECT e.RowID," &
         "e.EmployeeID 'Employee ID'," &
         "e.FirstName 'First Name'," &
@@ -1331,11 +1331,9 @@ Public Class PayStub
     End Sub
 
     Sub genpayroll(Optional PayFreqRowID As Object = Nothing)
-        Task.Factory.StartNew(
+        Dim loadTask = Task.Factory.StartNew(
             Sub()
-
-                If paypFrom = Nothing _
-                                      And paypTo = Nothing Then
+                If paypFrom = Nothing And paypTo = Nothing Then
                     Exit Sub
                 End If
 
@@ -1671,7 +1669,6 @@ Public Class PayStub
                 emp_TardinessUndertime =
                                       callProcAsDatTab(paramets,
                                                        "GETVIEW_employeeTardinessUndertime")
-
                 prev_empTimeEntry = New ReadSQLProcedureToDatatable("GETVIEW_previousemployeetimeentry",
                                                                                       orgztnID,
                                                                                       paypRowID,
@@ -1695,25 +1692,44 @@ Public Class PayStub
                                                               " GROUP BY ete.EmployeeID" &
                                                               " HAVING COUNT(ete.RowID) < 5;").ResultTable
             End Sub,
-            0).ContinueWith(
-            Sub()
-                indxStartBatch = 0
+            0
+        )
 
-                Dim n_lov_mxthread As New ExecuteQuery("SELECT CAST(DisplayValue AS INT) `Result` FROM listofval WHERE `Type`='Max thread count' AND LIC='Max thread count' AND Active='Yes' LIMIT 1;")
-                If ValNoComma(n_lov_mxthread.Result) > 0 Then
-                    thread_max = ValNoComma(n_lov_mxthread.Result)
-                Else
-                    n_lov_mxthread = New _
+        loadTask.ContinueWith(
+            AddressOf LoadingPayrollDataOnSuccess,
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+
+        loadTask.ContinueWith(
+            AddressOf LoadingPayrollDataOnError,
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+    End Sub
+
+    Private Sub LoadingPayrollDataOnSuccess()
+        indxStartBatch = 0
+
+        Dim n_lov_mxthread As New ExecuteQuery("SELECT CAST(DisplayValue AS INT) `Result` FROM listofval WHERE `Type`='Max thread count' AND LIC='Max thread count' AND Active='Yes' LIMIT 1;")
+        If ValNoComma(n_lov_mxthread.Result) > 0 Then
+            thread_max = ValNoComma(n_lov_mxthread.Result)
+        Else
+            n_lov_mxthread = New _
                                                                    ExecuteQuery(String.Concat("INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('5', 'Max thread count', 'Max thread count', '', 'Yes', 'max thread count when generating payroll', CURRENT_TIMESTAMP(), ", z_User, ", CURRENT_TIMESTAMP(), 1, ", z_User, ") ON DUPLICATE KEY UPDATE LastUpd = CURRENT_TIMESTAMP(), LastUpdBy = IFNULL(LastUpdBy,CreatedBy);"))
-                End If
+        End If
 
-                progress_precentage = 0
+        progress_precentage = 0
 
-                ThreadingPayrollGeneration(thread_max)
+        ThreadingPayrollGeneration(thread_max)
+    End Sub
 
-            End Sub,
-            TaskScheduler.FromCurrentSynchronizationContext)
-
+    Private Sub LoadingPayrollDataOnError(t As Task)
+        _logger.Error("Error loading one of the payroll data.", t.Exception)
+        MsgBox("Error loading", "Sorry, but something went wrong while loading the payroll data for computation.")
+        Me.Enabled = True
     End Sub
 
     Private Sub ThreadingPayrollGeneration(Optional starting_batchindex As Integer = 0)
@@ -1731,8 +1747,10 @@ Public Class PayStub
         Dim SpCmd As MySqlCommand = New MySqlCommand
         Dim employees As DataTable = Nothing
         Try
-            SpCmd = New MySqlCommand("GetEmployees",
-                                      New MySql.Data.MySqlClient.MySqlConnection(mysql_conn_text))
+            SpCmd = New MySqlCommand(
+                "GetEmployees",
+                New MySql.Data.MySqlClient.MySqlConnection(mysql_conn_text)
+            )
 
             If Me.Enabled Then 'tsbtngenpayroll
                 SpDataSet = New DataSet
@@ -1810,9 +1828,7 @@ Public Class PayStub
                 End Sub
             )
         Catch ex As Exception
-            Dim err_msg As String = getErrExcptn(ex, Me.Name)
-            erro_msg_length = err_msg.Length
-            MsgBox(err_msg)
+            _logger.Error("Error loading the employees", ex)
         Finally
             SpCmd.Connection.Close()
             SpCmd.Dispose()
