@@ -18,6 +18,12 @@ Public Class PayrollResources
 
     Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
 
+    Private _fixedTaxableMonthlyAllowances As DataTable
+
+    Private _fixedNonTaxableMonthlyAllowances As DataTable
+
+    Private _isEndOfMonth As Boolean
+
     Public ReadOnly Property TimeEntries As DataTable
         Get
             Return _timeEntries
@@ -144,5 +150,66 @@ Public Class PayrollResources
 
         _salaries = Await query.ReadAsync()
     End Function
+
+    Private Sub LoadFixedMonthlyAllowances()
+        Dim fixedTaxableMonthlyAllowanceSql = String.Empty
+
+        If _isEndOfMonth Then
+            fixedTaxableMonthlyAllowanceSql =
+            "SELECT ea.* " &
+            "FROM employeeallowance ea " &
+            "INNER JOIN product p " &
+            "ON p.RowID = ea.ProductID " &
+            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
+            "AND ea.AllowanceFrequency IN ('Monthly','Semi-monthly') " &
+            " AND (ea.EffectiveStartDate >= '" & _payDateFrom.ToString("s") & "' OR ea.EffectiveEndDate >= '" & _payDateFrom.ToString("s") & "')" &
+            " AND (ea.EffectiveStartDate <= '" & _payDateTo.ToString("s") & "' OR ea.EffectiveEndDate <= '" & _payDateTo.ToString("s") & "')" &
+            " AND p.`Fixed` = 1 " &
+            "AND p.`Status` = 1;"
+        Else
+            fixedTaxableMonthlyAllowanceSql =
+                "SELECT ea.* " &
+                "FROM employeeallowance ea " &
+                "INNER JOIN product p " &
+                "ON p.RowID = ea.ProductID " &
+                "WHERE ea.OrganizationID = '" & orgztnID & "' " &
+                "AND ea.AllowanceFrequency = 'Semi-monthly' " &
+                " AND (ea.EffectiveStartDate >= '" & _payDateFrom.ToString("s") & "' OR ea.EffectiveEndDate >= '" & _payDateFrom.ToString("s") & "')" &
+                " AND (ea.EffectiveStartDate <= '" & _payDateTo.ToString("s") & "' OR ea.EffectiveEndDate <= '" & _payDateTo.ToString("s") & "')" &
+                " AND p.`Fixed` = 1 " &
+                "AND p.`Status` = 1;"
+        End If
+
+        _fixedTaxableMonthlyAllowances = New MySQLQueryToDataTable(fixedTaxableMonthlyAllowanceSql).ResultTable
+
+        Dim fixedNonTaxableMonthlyAllowanceSql = String.Empty
+        If _isEndOfMonth Then
+            fixedNonTaxableMonthlyAllowanceSql =
+            "SELECT ea.* " &
+            "FROM employeeallowance ea " &
+            "INNER JOIN product p " &
+            "On p.RowID = ea.ProductID " &
+            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
+            "AND ea.AllowanceFrequency IN ('Monthly','Semi-monthly') " &
+            " AND (ea.EffectiveStartDate >= '" & _payDateFrom.ToString("s") & "' OR ea.EffectiveEndDate >= '" & _payDateFrom.ToString("s") & "')" &
+            " AND (ea.EffectiveStartDate <= '" & _payDateTo.ToString("s") & "' OR ea.EffectiveEndDate <= '" & _payDateTo.ToString("s") & "')" &
+            " AND p.`Fixed` = 1 " &
+            "AND p.`Status` = 0;"
+        Else '                      'means first half of the month
+            fixedNonTaxableMonthlyAllowanceSql =
+            "SELECT ea.* " &
+            "FROM employeeallowance ea " &
+            "INNER JOIN product p " &
+            "ON p.RowID = ea.ProductID " &
+            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
+            "AND ea.AllowanceFrequency = 'Semi-monthly' " &
+            " AND (ea.EffectiveStartDate >= '" & _payDateFrom.ToString("s") & "' OR ea.EffectiveEndDate >= '" & _payDateFrom.ToString("s") & "')" &
+            " AND (ea.EffectiveStartDate <= '" & _payDateTo.ToString("s") & "' OR ea.EffectiveEndDate <= '" & _payDateTo.ToString("s") & "')" &
+            " AND p.`Fixed` = 1 " &
+            "AND p.`Status` = 0;"
+        End If
+
+        _fixedNonTaxableMonthlyAllowances = New MySQLQueryToDataTable(fixedNonTaxableMonthlyAllowanceSql).ResultTable
+    End Sub
 
 End Class

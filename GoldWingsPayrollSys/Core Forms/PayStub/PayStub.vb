@@ -1756,7 +1756,9 @@ Public Class PayStub
             End If
 
             Dim employeeRows = employees.Rows.Cast(Of DataRow)
-            Dim generators = New BlockingCollection(Of PayrollGeneration)
+
+            Timer1.Enabled = True
+            Timer1.Start()
 
             Parallel.ForEach(
                 employeeRows,
@@ -1804,16 +1806,6 @@ Public Class PayStub
                         .PayPeriodID = paypRowID
                     End With
 
-                    generators.Add(generator)
-                End Sub
-            )
-
-            Timer1.Enabled = True
-            Timer1.Start()
-
-            Parallel.ForEach(
-                generators,
-                Sub(generator)
                     generator.DoProcess()
                 End Sub
             )
