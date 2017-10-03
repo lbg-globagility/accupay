@@ -78,10 +78,10 @@ INTO
     isEmpStatusContractual,
     pay_freq_type;
 
-IF isEmpStatusContractual = '0' THEN
+/*IF isEmpStatusContractual = '0' THEN
     SELECT NULL
     INTO esal_EffectiveDateTo;
-END IF;
+END IF;*/
 
 SELECT RowID
 FROM `view`
@@ -300,7 +300,7 @@ UPDATE
     ,EffectiveDateFrom=esal_EffectiveDateFrom
     ,TrueSalary=esal_TrueSalary
     ,UndeclaredSalary=esal_TrueSalary - esal_Salary
-    # ,EffectiveDateTo=esal_EffectiveDateTo
+	 ,EffectiveDateTo=esal_EffectiveDateTo
     ,OverrideDiscardSSSContrib          =esal_DiscardSSS
     ,OverrideDiscardPhilHealthContrib=esal_DiscardPhH;
 

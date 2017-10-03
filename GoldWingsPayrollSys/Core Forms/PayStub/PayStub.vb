@@ -2630,6 +2630,9 @@ Public Class PayStub
                                       drow("LeaveAllowance"),
                                       drow("SickLeaveAllowance"),
                                       drow("MaternityLeaveAllowance"),
+                                      drow("LeavePerPayPeriod"),
+                                      drow("SickLeavePerPayPeriod"),
+                                      drow("MaternityLeavePerPayPeriod"),
                                       drow("fstatRowID"),
                                       Nothing,
                                       drow("Created"),
@@ -6618,13 +6621,13 @@ Public Class PayStub
         Select Case compute_percentage
             Case 100
                 'Me.Enabled = True
-                dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
-
                 Dim param_array = New Object() {orgztnID, paypRowID, z_User}
 
                 Dim n_ExecSQLProcedure As New _
                     ExecSQLProcedure("RECOMPUTE_thirteenthmonthpay",
                                      param_array)
+
+                dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
             Case Else
         End Select
 

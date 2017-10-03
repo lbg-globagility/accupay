@@ -12075,7 +12075,7 @@ Public Class EmployeeForm
 
                     If is_encoded_asnew = False _
                         And curr_salaryrow IsNot Nothing Then
-                        curr_salaryrow.Cells("c_todate").Value =
+                        curr_salaryrow.Cells("c_fromdate").Value =
                             Format(CDate(dptFromSal.Value), "M/d/yyy")
                     End If
 
@@ -12557,7 +12557,8 @@ Public Class EmployeeForm
         params(8, 1) = esal_MaritalStatus
         params(9, 1) = If(esal_PositionID = Nothing, DBNull.Value, esal_PositionID)
         params(10, 1) = Format(CDate(esal_EffectiveDateFrom), "yyyy-MM-dd")
-        params(11, 1) = If(esal_EffectiveDateTo = Nothing, DBNull.Value, Format(CDate(esal_EffectiveDateTo), "yyyy-MM-dd"))
+        Dim date_to = If(esal_EffectiveDateTo = Nothing, DBNull.Value, Format(CDate(esal_EffectiveDateTo), "yyyy-MM-dd"))
+        params(11, 1) = date_to
 
         params(12, 1) = ValNoComma(txtPagibig.Text) * payfreqdivisor
         params(13, 1) = ValNoComma(txtPagibig.Text) * payfreqdivisor
