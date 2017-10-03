@@ -8,6 +8,8 @@ Imports System.Data.Entity
 ''' </summary>
 Public Class PayrollResources
 
+    Private _payPeriodID As String
+
     Private _payDateFrom As Date
 
     Private _payDateTo As Date
@@ -17,6 +19,8 @@ Public Class PayrollResources
     Private _timeEntries As DataTable
 
     Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
+
+    Private _loanTransactions As ICollection(Of PayrollSys.LoanTransaction)
 
     Private _fixedTaxableMonthlyAllowances As DataTable
 
@@ -36,13 +40,20 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property LoanTransactions As ICollection(Of PayrollSys.LoanTransaction)
+        Get
+            Return _loanTransactions
+        End Get
+    End Property
+
     Public ReadOnly Property Salaries As DataTable
         Get
             Return _salaries
         End Get
     End Property
 
-    Public Sub New(payDateFrom As Date, payDateTo As Date)
+    Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
+        _payPeriodID = payPeriodID
         _payDateFrom = payDateFrom
         _payDateTo = payDateTo
     End Sub
@@ -51,10 +62,12 @@ Public Class PayrollResources
         Dim loadTimeEntriesTask = LoadTimeEntries()
         Dim loadSalariesTask = LoadSalaries()
         Dim loadLoanSchedulesTask = LoadLoanSchedules()
+        Dim loadLoanTransactionsTask = LoadLoanTransactions()
 
         Await Task.WhenAll({
             loadTimeEntriesTask,
             loadLoanSchedulesTask,
+            loadLoanTransactionsTask,
             loadSalariesTask
         })
     End Function
@@ -129,6 +142,16 @@ Public Class PayrollResources
                                                       l.Status = "In Progress" And
                                                       l.BonusID Is Nothing
             _loanSchedules = Await query.ToListAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadLoanTransactions() As Task
+        Using context = New PayrollContext()
+            Dim query = From t In context.LoanTransactions
+                        Select t
+                        Where t.OrganizationID = z_OrganizationID And
+                            t.PayPeriodID = CType(_payPeriodID, Integer?)
+            _loanTransactions = Await query.ToListAsync()
         End Using
     End Function
 

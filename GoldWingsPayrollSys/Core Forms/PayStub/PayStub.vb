@@ -1337,19 +1337,12 @@ Public Class PayStub
                     Exit Sub
                 End If
 
-                Dim resources = New PayrollResources(CDate(paypFrom), CDate(paypTo))
+                Dim resources = New PayrollResources(paypRowID, CDate(paypFrom), CDate(paypTo))
                 Dim resourcesTask = resources.Load()
                 resourcesTask.Wait()
                 etent_totdaypay = resources.TimeEntries
                 _loanSchedules = resources.LoanSchedules
-
-                Using context = New PayrollContext()
-                    Dim query = From t In context.LoanTransactions
-                                Select t
-                                Where t.OrganizationID = z_OrganizationID And
-                                                      t.PayPeriodID = paypRowID
-                    _loanTransactions = query.ToList()
-                End Using
+                _loanTransactions = resources.LoanTransactions
 
                 Dim dailyallowfreq = "Daily"
 
