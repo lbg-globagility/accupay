@@ -195,7 +195,7 @@ IF ispayperiodendofmonth IS NOT NULL THEN
         LEFT JOIN product p
         ON p.RowID = ea.ProductID
         WHERE ea.OrganizationID = OrganizID AND
-            ea.EffectiveDateFrom BETWEEN month_firstdate AND last_date
+            ea.EffectiveStartDate BETWEEN month_firstdate AND last_date
         GROUP BY ea.EmployeeID
     ) thirteenthMonthAllowances
     ON thirteenthMonthAllowances.EmployeeID = ps.EmployeeID
