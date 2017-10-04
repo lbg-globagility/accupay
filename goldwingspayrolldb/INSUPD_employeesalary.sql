@@ -34,10 +34,6 @@ DECLARE EmpPayFreqID INT(11);
 
 DECLARE EmpFStatID INT(11);
 
-DECLARE sss_amt DECIMAL(11,6);
-
-DECLARE phh_amt DECIMAL(11,6);
-
 DECLARE prevesalRowID INT(11) DEFAULT NULL;
 
 DECLARE prevdatefrom DATE;
@@ -166,21 +162,6 @@ ELSEIF EmpType = 'Weekly' THEN
 
 END IF;
 
-SELECT RowID
-FROM paysocialsecurity
-WHERE COALESCE(salaryToUseForContrib, 0) BETWEEN RangeFromAmount AND IF(COALESCE(salaryToUseForContrib, 0) > RangeToAmount, COALESCE(salaryToUseForContrib,0) + 1, RangeToAmount)
-ORDER BY MonthlySalaryCredit DESC
-LIMIT 1
-INTO sss_amt;
-
-SELECT RowID
-FROM payphilhealth
-WHERE COALESCE(salaryToUseForContrib, 0) BETWEEN SalaryRangeFrom AND IF(COALESCE(salaryToUseForContrib, 0) > SalaryRangeTo, COALESCE(salaryToUseForContrib, 0) + 1, SalaryRangeTo)
-ORDER BY SalaryBase DESC
-LIMIT 1
-INTO phh_amt;
-
-
 SELECT GET_HDMFAmount(salaryToUseForContrib)
 INTO hdmf_amt;
 
@@ -265,8 +246,8 @@ INSERT INTO employeesalary
     ,esal_CreatedBy
     ,esal_OrganizationID
     ,EmpFStatID
-    ,sss_amt
-    ,phh_amt
+    ,esal_PaySocialSecurityID
+    ,esal_PayPhilHealthID
     ,esal_HDMFAmount
     ,esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType))
     ,esal_Salary
@@ -287,8 +268,8 @@ UPDATE
     LastUpd=CURRENT_TIMESTAMP()
     ,LastUpdBy=esal_LastUpdBy
     ,FilingStatusID=EmpFStatID
-    ,PaySocialSecurityID=sss_amt
-    ,PayPhilhealthID=phh_amt
+    ,PaySocialSecurityID=esal_PaySocialSecurityID
+    ,PayPhilhealthID=esal_PayPhilHealthID
     ,HDMFAmount=IF(esal_HDMFAmount != 0,esal_HDMFAmount,hdmf_amt)
     ,BasicPay=esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType))
     ,Salary=esal_Salary
