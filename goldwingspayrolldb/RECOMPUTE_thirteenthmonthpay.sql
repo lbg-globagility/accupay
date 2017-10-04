@@ -90,7 +90,7 @@ IF ispayperiodendofmonth IS NOT NULL THEN
         CURRENT_TIMESTAMP(),
         UserRowID,
         ps.RowID,
-        (ii.BasicAmount / pf_div) + thirteenthMonthAllowances.Amount
+        (ii.BasicAmount / pf_div)
     FROM
     (
 
@@ -195,7 +195,8 @@ IF ispayperiodendofmonth IS NOT NULL THEN
         LEFT JOIN product p
         ON p.RowID = ea.ProductID
         WHERE ea.OrganizationID = OrganizID AND
-            ea.EffectiveStartDate BETWEEN month_firstdate AND last_date
+            ea.EffectiveStartDate BETWEEN month_firstdate AND last_date AND
+            FALSE
         GROUP BY ea.EmployeeID
     ) thirteenthMonthAllowances
     ON thirteenthMonthAllowances.EmployeeID = ps.EmployeeID
