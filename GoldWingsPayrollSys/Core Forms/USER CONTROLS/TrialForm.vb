@@ -74,6 +74,11 @@ Public Class TrialForm
         Dim rptdoc As New HyundaiPayslip
         rptdoc.SetDataSource(dt)
 
+        Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
+
+        objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
+        objText.Text = "HYUNDAI PAMPANGA INC."
+
         Dim crvwr As New CrysVwr
 
         crvwr.CrystalReportViewer1.ReportSource = rptdoc
