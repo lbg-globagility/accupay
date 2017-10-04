@@ -716,12 +716,12 @@ Public Class EmployeeForm
 
             'Next
 
-            dgvRowAdder(q_employee & " ORDER BY e.StartDate DESC" &
+            dgvRowAdder(q_employee & " ORDER BY e.LastName, e.FirstName " &
                         ",FIELD(e.EmploymentStatus,'Resigned','Terminated')" &
                         ",FIELD(e.RevealInPayroll,'1','0') LIMIT " & pagination & ",100;", dgvEmp)
             ''e.RowID DESC
         Else
-            dgvRowAdder(q_employee & q_empsearch & " ORDER BY e.StartDate DESC" &
+            dgvRowAdder(q_employee & q_empsearch & " ORDER BY e.LastName, e.FirstName DESC" &
                         ",FIELD(e.EmploymentStatus,'Resigned','Terminated')" &
                         ",FIELD(e.RevealInPayroll,'1','0')", dgvEmp) ', Simple)
             ''e.RowID DESC
