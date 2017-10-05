@@ -657,6 +657,88 @@ Public Class MetroLogin
     Private Sub txtbxUserID_Click(sender As Object, e As EventArgs) Handles txtbxUserID.Click
 
     End Sub
+
+    Private Sub lnklblleave_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblleave.LinkClicked
+
+        If z_User > 0 Then
+
+            Dim n_LeaveForm As New LeaveForm
+
+            With n_LeaveForm
+
+                .CboListOfValue1.Visible = False
+
+                .Label3.Visible = False
+
+                .Label4.Visible = False
+
+                .Show()
+
+            End With
+
+        Else
+
+            MsgBox("Please sign in first.", MsgBoxStyle.Information)
+            txtbxUserID.Focus()
+
+        End If
+
+    End Sub
+
+    Private Sub lnklblovertime_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblovertime.LinkClicked
+
+        If z_User > 0 Then
+
+            Dim n_OverTimeForm As New OverTimeForm
+
+            With n_OverTimeForm
+
+                .cboOTStatus.Visible = False
+
+                .Label186.Visible = False
+
+                .Label4.Visible = False
+
+                .Show()
+
+            End With
+
+        Else
+
+            MsgBox("Please sign in first.", MsgBoxStyle.Information)
+            txtbxUserID.Focus()
+
+        End If
+
+    End Sub
+
+    Private Sub lnklblobf_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblobf.LinkClicked
+
+        If z_User > 0 Then
+
+            Dim n_OBFForm As New OBFForm
+
+            With n_OBFForm
+
+                .cboOBFStatus.Visible = False
+
+                .Label186.Visible = False
+
+                .Label4.Visible = False
+
+                .Show()
+
+            End With
+
+        Else
+
+            MsgBox("Please sign in first.", MsgBoxStyle.Information)
+            txtbxUserID.Focus()
+
+        End If
+
+    End Sub
+
 End Class
 
 Friend Class EncryptData

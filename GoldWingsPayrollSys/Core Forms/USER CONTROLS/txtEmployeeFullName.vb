@@ -56,11 +56,11 @@ Public Class txtEmployeeFullName
 
     Protected Overrides Sub OnLeave(e As EventArgs)
 
-        Dim isExistCount = _
-            EXECQUER("SELECT" & _
-                        " COUNT(RowID)" & _
-                        " FROM employee" & _
-                        " WHERE " & dbcol_employee & "='" & MyBase.Text & "'" & _
+        Dim isExistCount =
+            EXECQUER("SELECT" &
+                        " COUNT(RowID)" &
+                        " FROM employee" &
+                        " WHERE " & dbcol_employee & "='" & MyBase.Text & "'" &
                         " AND EmploymentStatus NOT IN ('Resigned','Terminated');")
 
         Static once As String = String.Empty
@@ -74,8 +74,8 @@ Public Class txtEmployeeFullName
                 Dim n_OrganizationPrompt As New OrganizationPrompt
 
                 n_OrganizationPrompt.EmployeeRowIDValue = MyBase.Text
-
-                n_OrganizationPrompt.OrganizationTableColumnName = "CONCAT(e.LastName,', ',e.FirstName,IF(e.MiddleName = '', '', CONCAT(', ',e.MiddleName)))"
+                'n_OrganizationPrompt.OrganizationTableColumnName = "CONCAT(e.LastName,', ',e.FirstName,IF(e.MiddleName = '', '', CONCAT(', ',e.MiddleName)))"
+                n_OrganizationPrompt.OrganizationTableColumnName = "CONCAT_WS(', ', e.LastName, e.FirstName, IF(LENGTH(TRIM(e.MiddleName)) = 0, NULL, e.MiddleName))"
 
                 If n_OrganizationPrompt.ShowDialog = DialogResult.OK Then
 
@@ -93,32 +93,32 @@ Public Class txtEmployeeFullName
 
             Else
 
-                organization_RowID = _
-                    EXECQUER("SELECT" & _
-                            " OrganizationID" & _
-                            " FROM employee" & _
-                            " WHERE " & dbcol_employee & "='" & MyBase.Text & "'" & _
+                organization_RowID =
+                    EXECQUER("SELECT" &
+                            " OrganizationID" &
+                            " FROM employee" &
+                            " WHERE " & dbcol_employee & "='" & MyBase.Text & "'" &
                             " AND EmploymentStatus NOT IN ('Resigned','Terminated');")
 
             End If
 
-            Dim isExists = _
-                EXECQUER("SELECT EXISTS(SELECT" & _
-                            " RowID" & _
-                            " FROM employee" & _
-                            " WHERE " & dbcol_employee & "='" & MyBase.Text & "'" & _
-                            " AND OrganizationID='" & organization_RowID & "'" & _
+            Dim isExists =
+                EXECQUER("SELECT EXISTS(SELECT" &
+                            " RowID" &
+                            " FROM employee" &
+                            " WHERE " & dbcol_employee & "='" & MyBase.Text & "'" &
+                            " AND OrganizationID='" & organization_RowID & "'" &
                             " AND EmploymentStatus NOT IN ('Resigned','Terminated'));")
 
             n_Exists = CBool(isExists)
 
             If n_Exists Then
 
-                n_RowIDValue = EXECQUER("SELECT" & _
-                                        " RowID" & _
-                                        " FROM employee" & _
-                                        " WHERE " & dbcol_employee & "='" & MyBase.Text & "'" & _
-                                        " AND OrganizationID='" & organization_RowID & "'" & _
+                n_RowIDValue = EXECQUER("SELECT" &
+                                        " RowID" &
+                                        " FROM employee" &
+                                        " WHERE " & dbcol_employee & "='" & MyBase.Text & "'" &
+                                        " AND OrganizationID='" & organization_RowID & "'" &
                                         " AND EmploymentStatus NOT IN ('Resigned','Terminated');")
 
             Else
