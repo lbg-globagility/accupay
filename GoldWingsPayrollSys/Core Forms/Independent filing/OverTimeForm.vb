@@ -26,10 +26,6 @@ Public Class OverTimeForm
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
-        dtpstartdateEmpOT.MinDate = Format(CDate(dbCurrentTimeStamp), "yyyy-MM-dd")
-
-        dtpendateEmpOT.MinDate = Format(CDate(dbCurrentTimeStamp), "yyyy-MM-dd")
-
         Dim item_count As Integer = cboOTType.Items.Count
 
         If item_count > 0 Then
