@@ -1,11 +1,12 @@
-﻿Imports System.Linq
-Imports System.IO
-Imports MySql.Data.MySqlClient
+﻿Imports MySql.Data.MySqlClient
 Imports System.Threading
-
 Imports System.Threading.Tasks
+Imports log4net
 
 Public Class PayStub
+
+    Private _logger As ILog = LogManager.GetLogger("PayrollLogger")
+
     Public q_employee As String = "SELECT e.RowID," &
         "e.EmployeeID 'Employee ID'," &
         "e.FirstName 'First Name'," &
@@ -109,7 +110,7 @@ Public Class PayStub
     Public paypPayFreqID As String = Nothing
     Public isEndOfMonth As String = 0
 
-    Const max_count_per_page As Integer = 20
+    Const max_count_per_page As Integer = 1
 
     Dim currentEmployeeID As String = Nothing
 
@@ -190,7 +191,7 @@ Public Class PayStub
 
     Dim SpDataSet As DataSet = New DataSet
 
-    Const max_rec_perpage As Integer = 20
+    Const max_rec_perpage As Integer = 1
 
     Dim emp_list_batcount As Integer = 0
 
@@ -1330,11 +1331,9 @@ Public Class PayStub
     End Sub
 
     Sub genpayroll(Optional PayFreqRowID As Object = Nothing)
-        Task.Factory.StartNew(
+        Dim loadTask = Task.Factory.StartNew(
             Sub()
-
-                If paypFrom = Nothing _
-                                      And paypTo = Nothing Then
+                If paypFrom = Nothing And paypTo = Nothing Then
                     Exit Sub
                 End If
 
@@ -1670,7 +1669,6 @@ Public Class PayStub
                 emp_TardinessUndertime =
                                       callProcAsDatTab(paramets,
                                                        "GETVIEW_employeeTardinessUndertime")
-
                 prev_empTimeEntry = New ReadSQLProcedureToDatatable("GETVIEW_previousemployeetimeentry",
                                                                                       orgztnID,
                                                                                       paypRowID,
@@ -1694,260 +1692,147 @@ Public Class PayStub
                                                               " GROUP BY ete.EmployeeID" &
                                                               " HAVING COUNT(ete.RowID) < 5;").ResultTable
             End Sub,
-            0).ContinueWith(
-            Sub()
-                indxStartBatch = 0
+            0
+        )
 
-                Dim n_lov_mxthread As New ExecuteQuery("SELECT CAST(DisplayValue AS INT) `Result` FROM listofval WHERE `Type`='Max thread count' AND LIC='Max thread count' AND Active='Yes' LIMIT 1;")
-                If ValNoComma(n_lov_mxthread.Result) > 0 Then
-                    thread_max = ValNoComma(n_lov_mxthread.Result)
-                Else
-                    n_lov_mxthread = New _
+        loadTask.ContinueWith(
+            AddressOf LoadingPayrollDataOnSuccess,
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+
+        loadTask.ContinueWith(
+            AddressOf LoadingPayrollDataOnError,
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+    End Sub
+
+    Private Sub LoadingPayrollDataOnSuccess()
+        indxStartBatch = 0
+
+        Dim n_lov_mxthread As New ExecuteQuery("SELECT CAST(DisplayValue AS INT) `Result` FROM listofval WHERE `Type`='Max thread count' AND LIC='Max thread count' AND Active='Yes' LIMIT 1;")
+        If ValNoComma(n_lov_mxthread.Result) > 0 Then
+            thread_max = ValNoComma(n_lov_mxthread.Result)
+        Else
+            n_lov_mxthread = New _
                                                                    ExecuteQuery(String.Concat("INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('5', 'Max thread count', 'Max thread count', '', 'Yes', 'max thread count when generating payroll', CURRENT_TIMESTAMP(), ", z_User, ", CURRENT_TIMESTAMP(), 1, ", z_User, ") ON DUPLICATE KEY UPDATE LastUpd = CURRENT_TIMESTAMP(), LastUpdBy = IFNULL(LastUpdBy,CreatedBy);"))
-                End If
+        End If
 
-                progress_precentage = 0
+        progress_precentage = 0
 
-                ThreadingPayrollGeneration(thread_max)
+        ThreadingPayrollGeneration(thread_max)
+    End Sub
 
-            End Sub,
-            TaskScheduler.FromCurrentSynchronizationContext)
-
+    Private Sub LoadingPayrollDataOnError(t As Task)
+        _logger.Error("Error loading one of the payroll data.", t.Exception)
+        MsgBox("Error loading", "Sorry, but something went wrong while loading the payroll data for computation.")
+        Me.Enabled = True
     End Sub
 
     Private Sub ThreadingPayrollGeneration(Optional starting_batchindex As Integer = 0)
-
-        '# ################################################################################################################################################ #
-
         Timer1.Stop()
         Timer1.Enabled = False
 
         Dim emp_count = employee_dattab.Rows.Count
-
-        Dim process_seconds As Integer = max_rec_perpage * 1000
         Dim loop_max_ctr = emp_count / max_rec_perpage
         loop_max_ctr = (loop_max_ctr - (loop_max_ctr Mod 1)) + 1
 
         ReDim multi_threads(loop_max_ctr)
-        Dim i = 0
 
         Dim erro_msg_length As Integer = 0
 
         Dim SpCmd As MySqlCommand = New MySqlCommand
-        Dim conn_bool As Boolean = False
-
+        Dim employees As DataTable = Nothing
         Try
-
-            SpCmd = New MySqlCommand("EMPLOYEE_payrollgen_paginate",
-                                      New MySql.Data.MySqlClient.MySqlConnection(mysql_conn_text))
+            SpCmd = New MySqlCommand(
+                "GetEmployees",
+                New MySql.Data.MySqlClient.MySqlConnection(mysql_conn_text)
+            )
 
             If Me.Enabled Then 'tsbtngenpayroll
                 SpDataSet = New DataSet
                 With SpCmd
-                    conn_bool = (.Connection.State = ConnectionState.Closed)
-                    If conn_bool Then
-                        .Connection.Open()
-                    End If
-                    .CommandTimeout = 5000
+                    .Connection.Open()
                     .CommandType = CommandType.StoredProcedure
                     .Parameters.Clear()
-                    .Parameters.AddWithValue("OrganizID", orgztnID)
-                    .Parameters.AddWithValue("Pay_Date_From", paypFrom)
-                    .Parameters.AddWithValue("Pay_Date_To", paypTo)
-                    .Parameters.AddWithValue("max_rec_perpage", max_rec_perpage)
+                    .Parameters.AddWithValue("$OrganizationID", orgztnID)
+                    .Parameters.AddWithValue("$PayDateFrom", paypFrom)
+                    .Parameters.AddWithValue("$PayDateTo", paypTo)
                 End With
 
                 Dim MyAdapter As MySqlDataAdapter = New MySqlDataAdapter(SpCmd)
                 MyAdapter.Fill(SpDataSet)
 
-                payroll_emp_count = 0
+                employees = SpDataSet.Tables(0)
 
-                Dim valid_table = SpDataSet.Tables.Cast(Of DataTable).Where(Function(dta) Convert.ToInt16(dta.Rows.Count) > 0)
-
-                emp_list_batcount = valid_table.Count
-
-                For Each dt As DataTable In valid_table 'SpDataSet.Tables
-                    payroll_emp_count += Convert.ToInt16(dt.Rows.Count)
-                Next
+                payroll_emp_count = employees.Rows.Count
 
                 Me.Enabled = False 'tsbtngenpayroll
-
             End If
 
+            Dim employeeRows = employees.Rows.Cast(Of DataRow)
+
+            Timer1.Enabled = True
+            Timer1.Start()
+
+            Parallel.ForEach(
+                employeeRows,
+                Sub(employeeRow)
+                    Dim generator = New PayrollGeneration(
+                        employeeRow,
+                        isEndOfMonth,
+                        esal_dattab,
+                        _loanSchedules,
+                        _loanTransactions,
+                        emp_allowanceDaily,
+                        emp_allowanceMonthly,
+                        emp_allowanceOnce,
+                        emp_allowanceSemiM,
+                        emp_allowanceWeekly,
+                        notax_allowanceDaily,
+                        notax_allowanceMonthly,
+                        notax_allowanceOnce,
+                        notax_allowanceSemiM,
+                        notax_allowanceWeekly,
+                        emp_bonusDaily,
+                        emp_bonusMonthly,
+                        emp_bonusOnce,
+                        emp_bonusSemiM,
+                        emp_bonusWeekly,
+                        notax_bonusDaily,
+                        notax_bonusMonthly,
+                        notax_bonusOnce,
+                        notax_bonusSemiM,
+                        notax_bonusWeekly,
+                        numofdaypresent,
+                        etent_totdaypay,
+                        dtemployeefirsttimesalary,
+                        prev_empTimeEntry,
+                        VeryFirstPayPeriodIDOfThisYear,
+                        withthirteenthmonthpay,
+                        _filingStatuses,
+                        _withholdingTaxTable,
+                        Me
+                    )
+
+                    With generator
+                        .PayrollDateFrom = paypFrom
+                        .PayrollDateTo = paypTo
+                        .PayPeriodID = paypRowID
+                    End With
+
+                    generator.DoProcess()
+                End Sub
+            )
         Catch ex As Exception
-            Dim err_msg As String = getErrExcptn(ex, Me.Name)
-            erro_msg_length = err_msg.Length
-            MsgBox(err_msg)
+            _logger.Error("Error loading the employees", ex)
         Finally
             SpCmd.Connection.Close()
             SpCmd.Dispose()
-
-            If erro_msg_length = 0 Then
-                'BusyBGWorkChecker.RunWorkerAsync()
-
-                Dim tasks As New List(Of Task)
-
-                'Task.Factory.StartNew(Sub()
-                Dim tblcount As Integer = Convert.ToInt16(SpDataSet.Tables.Count)
-
-                ReDim array_bgwork(tblcount - 1)
-
-                Dim min_index As Integer = starting_batchindex - thread_max
-
-                For Each dt As DataTable In SpDataSet.Tables
-
-                    If dt.Rows.Count > 0 Then
-
-                        If min_index <= i Then
-
-                            Dim n_PayrollGeneration As New PayrollGeneration(dt,
-                                                                              isEndOfMonth,
-                                                                              esal_dattab,
-                                                                              _loanSchedules,
-                                                                              _loanTransactions,
-                                                                              emp_allowanceDaily,
-                                                                              emp_allowanceMonthly,
-                                                                              emp_allowanceOnce,
-                                                                              emp_allowanceSemiM,
-                                                                              emp_allowanceWeekly,
-                                                                              notax_allowanceDaily,
-                                                                              notax_allowanceMonthly,
-                                                                              notax_allowanceOnce,
-                                                                              notax_allowanceSemiM,
-                                                                              notax_allowanceWeekly,
-                                                                              emp_bonusDaily,
-                                                                              emp_bonusMonthly,
-                                                                              emp_bonusOnce,
-                                                                              emp_bonusSemiM,
-                                                                              emp_bonusWeekly,
-                                                                              notax_bonusDaily,
-                                                                              notax_bonusMonthly,
-                                                                              notax_bonusOnce,
-                                                                              notax_bonusSemiM,
-                                                                              notax_bonusWeekly,
-                                                                              numofdaypresent,
-                                                                              etent_totdaypay,
-                                                                              dtemployeefirsttimesalary,
-                                                                              prev_empTimeEntry,
-                                                                              VeryFirstPayPeriodIDOfThisYear,
-                                                                              withthirteenthmonthpay,
-                                                                              _filingStatuses,
-                                                                              _withholdingTaxTable,
-                                                                              Me)
-
-                            With n_PayrollGeneration
-                                .PayrollDateFrom = paypFrom
-                                .PayrollDateTo = paypTo
-                                .PayPeriodID = paypRowID
-
-                                Dim n_bgwork As New System.ComponentModel.BackgroundWorker() With {.WorkerReportsProgress = True, .WorkerSupportsCancellation = True}
-
-                                array_bgwork(i) = n_bgwork
-
-                                AddHandler array_bgwork(i).DoWork, AddressOf .PayrollGeneration_BackgroundWork
-                                If i = 0 Then
-                                    Console.WriteLine(String.Concat("PROCESS STARTS @ ", Now.ToShortTimeString, "....."))
-                                End If
-                                array_bgwork(i).RunWorkerAsync()
-                                'Thread.Sleep(3500) 'process_seconds
-
-                            End With
-
-                            'tasks.Add(
-                            '    Task.Factory.StartNew(Sub()
-                            '                              n_PayrollGeneration.DoProcess()
-
-                            '                              _uiTasks.StartNew(Sub()
-                            '                                                    'Thread.Sleep(1000)
-                            '                                                End Sub)
-
-                            '                          End Sub)
-                            '                      )
-                            ''Thread.Sleep(3000)
-                            ''ThreadPool.QueueUserWorkItem(New WaitCallback(AddressOf n_PayrollGeneration.DoProcess))
-                            'Dim objNewThread As Thread = New Thread(AddressOf n_PayrollGeneration.DoProcess)
-
-                            'objNewThread.IsBackground = True
-
-                            'objNewThread.Start()
-
-                            'multi_threads(i) = objNewThread
-                            'multithreads.Add(objNewThread)
-
-                            'Thread.Sleep(3500)
-
-                            i += 1
-
-                            'If (i Mod thread_max) = 0 Then
-                            If (i Mod starting_batchindex) = 0 Then
-                                indxStartBatch = starting_batchindex
-                                'Dim ii = 5000
-                                'Console.WriteLine(String.Concat("...batch ", batch, " already running, wait ", (ii / 1000), " sec for next batch"))
-                                'Thread.Sleep(ii)
-                                Exit For
-                            Else
-                                Continue For
-
-                            End If
-
-                        Else
-
-                            i += 1
-
-                            Continue For
-
-                        End If
-
-                    Else
-                        Continue For
-
-                    End If
-
-                Next
-
-                Timer1.Enabled = True
-                Timer1.Start()
-
-                '    _uiTasks.StartNew(Sub()
-
-                '                      End Sub)
-
-                'End Sub)
-
-                'Task.WaitAll(tasks.ToArray())
-
-                Dim callthem = "Hey, over here"
-
-                'Dim valid_threads = multi_threads.Cast(Of Thread).Where(Function(x) x IsNot Nothing)
-
-                'Dim thread_counter = valid_threads.Count
-
-                'Dim thereAreThreadStillRunning As Boolean = Recursive(True)
-
-                'callthem = "Hey, over here"
-
-                ''            If Thread.CurrentThread.ThreadState = ThreadState.Running Then
-                ''                GoTo fsfsdf
-                ''            End If
-
-                ''fsfsdf:     If Thread.CurrentThread.ThreadState = ThreadState.Running Then : GoTo fsfsdf : End If
-
-                ''Dim n_ImportLoans As New ImportLoans(catchDatSet, Me)
-
-                ''Dim objNewThread As New Thread(AddressOf n_ImportLoans.StartProcess)
-
-                ''objNewThread.IsBackground = True
-
-                ''objNewThread.Start()
-
-                ''threadArrayList.Add(objNewThread)
-
-                '# ################################################################################################################################################ #
-
-            End If
-
         End Try
-
     End Sub
 
     Private Sub SinglePaySlip_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem.Click,
@@ -6728,168 +6613,12 @@ Public Class PayStub
 
     End Sub
 
-    Private Sub Thread_Method(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
-
-        SpDataSet = New DataSet("ds")
-
-        payroll_emp_count = 0
-
-        SpDataSet = New DataSet("ds")
-
-        Dim SpCmd As New MySqlCommand("EMPLOYEE_payrollgen_paginate",
-                                      New MySql.Data.MySqlClient.MySqlConnection(mysql_conn_text))
-
-        Try
-
-            SpCmd.CommandTimeout = 1000
-            SpCmd.CommandType = CommandType.StoredProcedure
-            SpCmd.Parameters.Clear()
-            SpCmd.Parameters.AddWithValue("OrganizID", 3)
-            SpCmd.Parameters.AddWithValue("Pay_Date_From", paypFrom) '"2016-11-06")
-            SpCmd.Parameters.AddWithValue("Pay_Date_To", paypTo) '"2016-11-20")
-            SpCmd.Parameters.AddWithValue("max_rec_perpage", 20)
-
-            Dim MyAdapter As New MySqlDataAdapter(SpCmd)
-
-            MyAdapter.Fill(SpDataSet)
-        Catch ex As Exception
-            MessageBox.Show(String.Concat("ERROR @: Thread_Method", ex.Message))
-
-        Finally
-
-            Dim tbl_cnt As Integer = SpDataSet.Tables.Count
-
-            Console.WriteLine(String.Concat("Number of tables : ", Convert.ToString(tbl_cnt)))
-
-            ' This is not run on the UI thread.
-
-            'mysql_cmd.Connection.Open();
-            'mysql_cmd.Connection.Close();
-            Dim tbl_count As Integer = SpDataSet.Tables.Count
-            Console.WriteLine(String.Concat("Starts @ ", Now))
-            '.Factory.StartNew
-
-            'Dim taskWithFactoryAndState1 As Task =
-            '    Task.Run(Sub()
-
-            '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-            For Each dt As DataTable In SpDataSet.Tables
-
-                Try
-
-                Catch ex As Exception
-                    Console.WriteLine(String.Concat("Error @ ", dt.TableName, " : ", ex.Message))
-
-                End Try
-
-                'Task.Factory.StartNew()
-                'Dim inner_task As Task =
-                '    Task.Run(Sub()
-                'New Task
-                Try
-
-                    Dim n_PayrollGeneration As PayrollGeneration
-                    ' New PayrollGeneration(dt,
-                    '                                                  isEndOfMonth,
-                    '                                                  esal_dattab,
-                    '                                                  emp_loans,
-                    '                                                  emp_bonus,
-                    '                                                  emp_allowanceDaily,
-                    '                                                  emp_allowanceMonthly,
-                    '                                                  emp_allowanceOnce,
-                    '                                                  emp_allowanceSemiM,
-                    '                                                  emp_allowanceWeekly,
-                    '                                                  notax_allowanceDaily,
-                    '                                                  notax_allowanceMonthly,
-                    '                                                  notax_allowanceOnce,
-                    '                                                  notax_allowanceSemiM,
-                    '                                                  notax_allowanceWeekly,
-                    '                                                  emp_bonusDaily,
-                    '                                                  emp_bonusMonthly,
-                    '                                                  emp_bonusOnce,
-                    '                                                  emp_bonusSemiM,
-                    '                                                  emp_bonusWeekly,
-                    '                                                  notax_bonusDaily,
-                    '                                                  notax_bonusMonthly,
-                    '                                                  notax_bonusOnce,
-                    '                                                  notax_bonusSemiM,
-                    '                                                  notax_bonusWeekly,
-                    '                                                  numofdaypresent,
-                    '                                                  etent_totdaypay,
-                    '                                                  dtemployeefirsttimesalary,
-                    '                                                  prev_empTimeEntry,
-                    '                                                  VeryFirstPayPeriodIDOfThisYear,
-                    '                                                  withthirteenthmonthpay, Me)
-
-                    With n_PayrollGeneration
-                        .PayrollDateFrom = paypFrom
-                        .PayrollDateTo = paypTo
-                        .PayPeriodID = paypRowID
-
-                        Dim innr_task As Task =
-                            Task.Run(Sub()
-                                         'New Task
-                                         Console.WriteLine("From Task.RUN")
-                                     End Sub)
-
-                        'innr_task.RunSynchronously()
-                        innr_task.Wait()
-                    End With
-
-                    payroll_emp_count += Convert.ToInt16(dt.Rows.Count)
-
-                Catch ex As Exception
-                    Console.WriteLine(String.Concat("INNER_Task_Error @ ",
-                                                    dt.TableName,
-                                                    " :#: ", ex.Message))
-
-                Finally
-                    'Thread.Sleep(1000)
-
-                End Try
-
-                'End Sub)
-
-                '.ContinueWith(Sub()
-
-                '              End Sub)
-                'inner_task.Wait()
-
-                'inner_task.RunSynchronously()
-                'inner_task.Start()
-
-            Next
-
-            '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-            'End Sub)
-
-            '.ContinueWith(Function(ant)
-            '                  'updates UI no problem as we are using correct SynchronizationContext
-            Console.WriteLine(String.Concat("Total number of records : ", payroll_emp_count))
-            Console.WriteLine("Done @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-            Console.WriteLine(String.Concat("Finished @ ", Now))
-            '                  Return True
-
-            '              End Function, TaskScheduler.FromCurrentSynchronizationContext())
-            'taskWithFactoryAndState1.Start()
-            'taskWithFactoryAndState1.RunSynchronously()
-            'taskWithFactoryAndState1.Wait()
-
-        End Try
-
-    End Sub
-
     Sub ProgressCounter(ByVal cnt As Integer)
-
-        progress_precentage += 1
-
+        Interlocked.Increment(progress_precentage)
         Dim compute_percentage As Integer = (progress_precentage / payroll_emp_count) * 100
         MDIPrimaryForm.systemprogressbar.Value = compute_percentage
 
         Select Case compute_percentage
-
             Case 100
                 'Me.Enabled = True
                 Dim param_array = New Object() {orgztnID, paypRowID, z_User}
@@ -6899,53 +6628,23 @@ Public Class PayStub
                                      param_array)
 
                 dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
-
             Case Else
-
         End Select
 
         Console.WriteLine(String.Concat("#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@ ", compute_percentage, "% complete"))
-
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        indxStartBatch += thread_max
+        Console.WriteLine("batch has finished...")
 
-        Dim alive_bgworks = array_bgwork.Cast(Of System.ComponentModel.BackgroundWorker).Where(Function(y) y IsNot Nothing)
-
-        Dim busy_bgworks = alive_bgworks.Cast(Of System.ComponentModel.BackgroundWorker).Where(Function(y) y.IsBusy)
-
-        Dim bool_result As Boolean = (Convert.ToInt16(busy_bgworks.Count) > 0)
-
-        If bool_result = False Then
-
-            indxStartBatch += thread_max
-
-            'If payroll_emp_count >= max_rec_perpage Then
-            If emp_list_batcount > thread_max Then
-                ThreadingPayrollGeneration(indxStartBatch)
-            End If
-
-            Console.WriteLine("batch has finished...")
-
-            If progress_precentage = payroll_emp_count Then
-                Timer1.Stop()
-                Me.Enabled = True
-                Timer1.Enabled = False
-
-            Else
-
-            End If
-
-        Else
-
-            Console.WriteLine("batch still in process...")
-
+        If progress_precentage = payroll_emp_count Then
+            Timer1.Stop()
+            Me.Enabled = True
+            Timer1.Enabled = False
         End If
     End Sub
 
-    Private Sub dgvemployees_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployees.CellContentClick
-
-    End Sub
 End Class
 
 Friend Class PrintAllPaySlipOfficialFormat
