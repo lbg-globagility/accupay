@@ -255,6 +255,7 @@
     <Compile Include="Core Forms\USER CONTROLS\MySQL\MySQLCommander.vb" />
     <Compile Include="Core Forms\USER CONTROLS\MySQL\MySQLExecuteCommand.vb" />
     <Compile Include="Core Forms\USER CONTROLS\MySQL\SQL.vb" />
+    <Compile Include="Core Forms\USER CONTROLS\SystemOwner.vb" />
     <Compile Include="Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
     </Compile>
