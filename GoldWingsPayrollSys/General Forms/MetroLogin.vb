@@ -278,7 +278,8 @@ Public Class MetroLogin
                     New TrialForm
 
                 'n_ShiftTemplater.Show()
-                n_ShiftTemplater.PrintPayslip(Me, New EventArgs)
+                'n_ShiftTemplater.PrintPayslip(Me, New EventArgs)
+                n_ShiftTemplater.Dispose()
 
             End If
 
