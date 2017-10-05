@@ -78,6 +78,16 @@ Public Class MetroLogin
 
         ReloadOrganization()
 
+        Dim sql As New SQL("SELECT Name FROM systemowner WHERE IsCurrentOwner='1' LIMIT 1;")
+
+        Dim current_system_owner As String = Convert.ToString(sql.GetFoundRow)
+
+        If SystemOwner.Goldwings = current_system_owner Then
+
+        ElseIf SystemOwner.Hyundai = current_system_owner Then
+
+        End If
+
         MyBase.OnLoad(e)
 
     End Sub
