@@ -21,6 +21,8 @@ Module myModule
 
     Public machineShortDateFormat As String = RegKey.GetValue("sShortDate").ToString
 
+    Public machineShortTimeFormat As String = RegKey.GetValue("sShortTime").ToString
+
     Public custom_mysqldateformat As String = String.Empty
 
     Public defRowCount As Integer

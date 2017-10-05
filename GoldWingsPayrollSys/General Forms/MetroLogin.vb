@@ -78,6 +78,8 @@ Public Class MetroLogin
 
         ReloadOrganization()
 
+        setAppropriateInterface()
+
         MyBase.OnLoad(e)
 
     End Sub
@@ -243,7 +245,7 @@ Public Class MetroLogin
 
                 ''if the loop found a <LastName tag
                 'If (document.Name = "LastName") Then
-                
+
                 'Console.WriteLine(document.ReadInnerXml)
                 Console.WriteLine(document.ReadOuterXml)
                 'Console.WriteLine(document.ReadElementContentAsString)
@@ -347,8 +349,8 @@ Public Class MetroLogin
 
     End Sub
 
-    Private Sub Login_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtbxPword.KeyPress, _
-                                                                                    txtbxUserID.KeyPress, _
+    Private Sub Login_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtbxPword.KeyPress,
+                                                                                    txtbxUserID.KeyPress,
                                                                                     cbxorganiz.KeyPress
 
         Dim e_asc = Asc(e.KeyChar)
@@ -633,7 +635,7 @@ Public Class MetroLogin
 
         Else
 
-            Dim isThereSomeNewToOrganization = _
+            Dim isThereSomeNewToOrganization =
                 EXECQUER("SELECT EXISTS(SELECT RowID FROM organization WHERE DATE_FORMAT(Created,'%Y-%m-%d')=CURDATE() OR DATE_FORMAT(LastUpd,'%Y-%m-%d')=CURDATE() LIMIT 1);")
 
             If isThereSomeNewToOrganization = "1" Then
@@ -657,6 +659,106 @@ Public Class MetroLogin
     Private Sub txtbxUserID_Click(sender As Object, e As EventArgs) Handles txtbxUserID.Click
 
     End Sub
+
+    Private Sub lnklblleave_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblleave.LinkClicked
+
+        If z_User > 0 Then
+
+            Dim n_LeaveForm As New LeaveForm
+
+            With n_LeaveForm
+
+                .CboListOfValue1.Visible = False
+
+                .Label3.Visible = False
+
+                .Label4.Visible = False
+
+                .Show()
+
+            End With
+
+        Else
+
+            MsgBox("Please sign in first.", MsgBoxStyle.Information)
+            txtbxUserID.Focus()
+
+        End If
+
+    End Sub
+
+    Private Sub lnklblovertime_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblovertime.LinkClicked
+
+        If z_User > 0 Then
+
+            Dim n_OverTimeForm As New OverTimeForm
+
+            With n_OverTimeForm
+
+                .cboOTStatus.Visible = False
+
+                .Label186.Visible = False
+
+                .Label4.Visible = False
+
+                .Show()
+
+            End With
+
+        Else
+
+            MsgBox("Please sign in first.", MsgBoxStyle.Information)
+            txtbxUserID.Focus()
+
+        End If
+
+    End Sub
+
+    Private Sub lnklblobf_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblobf.LinkClicked
+
+        If z_User > 0 Then
+
+            Dim n_OBFForm As New OBFForm
+
+            With n_OBFForm
+
+                .cboOBFStatus.Visible = False
+
+                .Label186.Visible = False
+
+                .Label4.Visible = False
+
+                .Show()
+
+            End With
+
+        Else
+
+            MsgBox("Please sign in first.", MsgBoxStyle.Information)
+            txtbxUserID.Focus()
+
+        End If
+
+    End Sub
+
+    Private Sub setAppropriateInterface()
+
+        Dim sql As New SQL("SELECT Name FROM systemowner WHERE IsCurrentOwner='1' LIMIT 1;")
+
+        Dim current_system_owner As String = Convert.ToString(sql.GetFoundRow)
+
+        If SystemOwner.Goldwings = current_system_owner Then
+            Size = New Size(Size.Width, 319)
+            PhotoImages.Location = New Point(242, 89)
+            Panel1.Visible = False
+        ElseIf SystemOwner.Hyundai = current_system_owner Then
+            Size = New Size(Size.Width, 371)
+            PhotoImages.Location = New Point(242, 89)
+            Panel1.Visible = True
+        End If
+
+    End Sub
+
 End Class
 
 Friend Class EncryptData
