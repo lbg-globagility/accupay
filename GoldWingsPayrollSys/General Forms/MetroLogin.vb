@@ -748,11 +748,11 @@ Public Class MetroLogin
         Dim current_system_owner As String = Convert.ToString(sql.GetFoundRow)
 
         If SystemOwner.Goldwings = current_system_owner Then
-            Size = New Size(544, 319)
+            Size = New Size(Size.Width, 319)
             PhotoImages.Location = New Point(242, 89)
             Panel1.Visible = False
         ElseIf SystemOwner.Hyundai = current_system_owner Then
-            Size = New Size(544, 371)
+            Size = New Size(Size.Width, 371)
             PhotoImages.Location = New Point(242, 89)
             Panel1.Visible = True
         End If
