@@ -40,35 +40,6 @@ WHERE RowID = IFNULL(ps_PayPeriodID2, ps_PayPeriodID1)
 INTO paypdateto;
 
 SELECT
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     e.RowID 'EmployeeRowID',
     e.EmployeeID `DatCol2`,
     IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay) `DatCol21`,
@@ -96,7 +67,7 @@ SELECT
     UCASE(e.Surname) 'Surname',
     UCASE(p.PositionName) 'PositionName',
     UCASE(d.Name) `DatCol1`,
-    
+
     IFNULL(agf.DailyFee,0) `DatCol39`,
     IFNULL(thirteenthmonthpay.Amount,0) `DatCol40`,
     CONCAT_WS(
@@ -105,21 +76,18 @@ SELECT
         DATE_FORMAT(paystub.PayToDate,'%c/%e/%Y')
     ) `DatCol20`,
     paystub.RegularHours `DatCol41`,
-    
+
     (IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) + IFNULL(thirteenthmonthpay.Amount,0) + IFNULL(agf.DailyFee, 0)) `DatCol42`
 FROM paystub
-
 LEFT JOIN paystubactual
 ON paystubactual.EmployeeID = paystub.EmployeeID AND
     paystubactual.PayPeriodID = paystub.PayPeriodID
-
 LEFT JOIN employee e
 ON e.RowID = paystub.EmployeeID
 LEFT JOIN `position` p
 ON p.RowID = e.PositionID
 LEFT JOIN division d
 ON d.RowID = p.DivisionId
-
 LEFT JOIN (
     SELECT
         RowID,
@@ -140,8 +108,9 @@ WHERE paystub.OrganizationID = ps_OrganizationID AND
     paystub.TotalNetSalary > 0 AND
     (paystub.PayFromDate >= paypdatefrom OR paystub.PayToDate >= paypdatefrom) AND
     (paystub.PayFromDate <= paypdateto OR paystub.PayToDate <= paypdateto) AND
-    LENGTH(IFNULL(e.ATMNo, '')) = IF(strSalaryDistrib = 'Cash', 0, LENGTH(IFNULL(e.ATMNo, '')))
-    
+    LENGTH(IFNULL(e.ATMNo, '')) = IF(strSalaryDistrib = 'Cash', 0, LENGTH(IFNULL(e.ATMNo, ''))) AND
+    -- If employee is paid monthly or daily, employee should have worked for the pay period to appear
+    IF(e.EmployeeType IN ('Monthly', 'Daily'), paystub.RegularHours > 0, TRUE)
 ORDER BY d.Name, e.LastName;
 
 END//
