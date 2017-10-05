@@ -4312,14 +4312,14 @@ Partial Class PayStub
         'DeclaredToolStripMenuItem1
         '
         Me.DeclaredToolStripMenuItem1.Name = "DeclaredToolStripMenuItem1"
-        Me.DeclaredToolStripMenuItem1.Size = New System.Drawing.Size(120, 22)
+        Me.DeclaredToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
         Me.DeclaredToolStripMenuItem1.Tag = "0"
         Me.DeclaredToolStripMenuItem1.Text = "Declared"
         '
         'ActualToolStripMenuItem1
         '
         Me.ActualToolStripMenuItem1.Name = "ActualToolStripMenuItem1"
-        Me.ActualToolStripMenuItem1.Size = New System.Drawing.Size(120, 22)
+        Me.ActualToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
         Me.ActualToolStripMenuItem1.Tag = "1"
         Me.ActualToolStripMenuItem1.Text = "Actual"
         '

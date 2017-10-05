@@ -224,6 +224,12 @@
     <Compile Include="Core Forms\Government\SocialSecurityBracket.vb" />
     <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
+    <Compile Include="Core Forms\rpt\HyundaiPayslip.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HyundaiPayslip.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Core Forms\Salary\Salary.vb" />
     <Compile Include="Core Forms\TimeEntry\Overtime.vb" />
     <Compile Include="Core Forms\TimeEntry\Shift.vb" />
@@ -249,6 +255,7 @@
     <Compile Include="Core Forms\USER CONTROLS\MySQL\MySQLCommander.vb" />
     <Compile Include="Core Forms\USER CONTROLS\MySQL\MySQLExecuteCommand.vb" />
     <Compile Include="Core Forms\USER CONTROLS\MySQL\SQL.vb" />
+    <Compile Include="Core Forms\USER CONTROLS\SystemOwner.vb" />
     <Compile Include="Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
     </Compile>
@@ -1238,6 +1245,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\EmployeeForm.resx">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HyundaiPayslip.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\rpt\PayrollSumma.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

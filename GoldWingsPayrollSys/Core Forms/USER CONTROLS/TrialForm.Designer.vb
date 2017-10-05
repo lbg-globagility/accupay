@@ -22,9 +22,9 @@ Partial Class TrialForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TrialForm))
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.FileSystemWatcher1 = New System.IO.FileSystemWatcher()
@@ -36,19 +36,20 @@ Partial Class TrialForm
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.TreeViewAdv1 = New Aga.Controls.Tree.TreeViewAdv()
-        Me.CustomDatePicker1 = New GoldWingsPayrollSys.CustomDatePicker()
-        Me.DataGridViewX1 = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column1 = New GoldWingsPayrollSys.DataGridViewTimeColumn()
-        Me.NodeTextBox1 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
-        Me.NodeTextBox2 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
-        Me.NodeTextBox3 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
-        Me.NodeTextBox4 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
-        Me.NodeTextBox5 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
         Me.TreeColumn1 = New Aga.Controls.Tree.TreeColumn()
         Me.TreeColumn2 = New Aga.Controls.Tree.TreeColumn()
         Me.TreeColumn3 = New Aga.Controls.Tree.TreeColumn()
         Me.TreeColumn4 = New Aga.Controls.Tree.TreeColumn()
         Me.TreeColumn5 = New Aga.Controls.Tree.TreeColumn()
+        Me.NodeTextBox1 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
+        Me.NodeTextBox2 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
+        Me.NodeTextBox3 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
+        Me.NodeTextBox4 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
+        Me.NodeTextBox5 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
+        Me.CustomDatePicker1 = New GoldWingsPayrollSys.CustomDatePicker()
+        Me.DataGridViewX1 = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column1 = New GoldWingsPayrollSys.DataGridViewTimeColumn()
+        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
@@ -56,6 +57,7 @@ Partial Class TrialForm
         Me.SplitContainer2.SuspendLayout()
         CType(Me.FileSystemWatcher1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridViewX2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ToolStrip1.SuspendLayout()
         CType(Me.DataGridViewX1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -88,14 +90,14 @@ Partial Class TrialForm
         'DataGridViewX2
         '
         Me.DataGridViewX2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewX2.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridViewX2.DefaultCellStyle = DataGridViewCellStyle1
         Me.DataGridViewX2.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.DataGridViewX2.Location = New System.Drawing.Point(636, 314)
         Me.DataGridViewX2.Name = "DataGridViewX2"
@@ -143,6 +145,7 @@ Partial Class TrialForm
         '
         'ToolStrip1
         '
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(899, 25)
@@ -181,38 +184,35 @@ Partial Class TrialForm
         Me.TreeViewAdv1.TabIndex = 204
         Me.TreeViewAdv1.Text = "TreeViewAdv1"
         '
-        'CustomDatePicker1
+        'TreeColumn1
         '
-        Me.CustomDatePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.CustomDatePicker1.Location = New System.Drawing.Point(24, 314)
-        Me.CustomDatePicker1.Name = "CustomDatePicker1"
-        Me.CustomDatePicker1.Size = New System.Drawing.Size(117, 20)
-        Me.CustomDatePicker1.TabIndex = 4
-        Me.CustomDatePicker1.Tag = "2016-08-11"
-        Me.CustomDatePicker1.Value = New Date(2016, 8, 11, 0, 0, 0, 0)
+        Me.TreeColumn1.Header = ""
+        Me.TreeColumn1.SortOrder = System.Windows.Forms.SortOrder.None
+        Me.TreeColumn1.TooltipText = Nothing
         '
-        'DataGridViewX1
+        'TreeColumn2
         '
-        Me.DataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewX1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1})
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewX1.DefaultCellStyle = DataGridViewCellStyle6
-        Me.DataGridViewX1.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.DataGridViewX1.Location = New System.Drawing.Point(375, 314)
-        Me.DataGridViewX1.Name = "DataGridViewX1"
-        Me.DataGridViewX1.Size = New System.Drawing.Size(240, 150)
-        Me.DataGridViewX1.TabIndex = 1
+        Me.TreeColumn2.Header = ""
+        Me.TreeColumn2.SortOrder = System.Windows.Forms.SortOrder.None
+        Me.TreeColumn2.TooltipText = Nothing
         '
-        'Column1
+        'TreeColumn3
         '
-        Me.Column1.HeaderText = "Column1"
-        Me.Column1.Name = "Column1"
+        Me.TreeColumn3.Header = ""
+        Me.TreeColumn3.SortOrder = System.Windows.Forms.SortOrder.None
+        Me.TreeColumn3.TooltipText = Nothing
+        '
+        'TreeColumn4
+        '
+        Me.TreeColumn4.Header = ""
+        Me.TreeColumn4.SortOrder = System.Windows.Forms.SortOrder.None
+        Me.TreeColumn4.TooltipText = Nothing
+        '
+        'TreeColumn5
+        '
+        Me.TreeColumn5.Header = ""
+        Me.TreeColumn5.SortOrder = System.Windows.Forms.SortOrder.None
+        Me.TreeColumn5.TooltipText = Nothing
         '
         'NodeTextBox1
         '
@@ -244,35 +244,47 @@ Partial Class TrialForm
         Me.NodeTextBox5.LeftMargin = 3
         Me.NodeTextBox5.ParentColumn = Nothing
         '
-        'TreeColumn1
+        'CustomDatePicker1
         '
-        Me.TreeColumn1.Header = ""
-        Me.TreeColumn1.SortOrder = System.Windows.Forms.SortOrder.None
-        Me.TreeColumn1.TooltipText = Nothing
+        Me.CustomDatePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.CustomDatePicker1.Location = New System.Drawing.Point(24, 314)
+        Me.CustomDatePicker1.Name = "CustomDatePicker1"
+        Me.CustomDatePicker1.Size = New System.Drawing.Size(117, 20)
+        Me.CustomDatePicker1.TabIndex = 4
+        Me.CustomDatePicker1.Tag = "2016-08-11"
+        Me.CustomDatePicker1.Value = New Date(2016, 8, 11, 0, 0, 0, 0)
         '
-        'TreeColumn2
+        'DataGridViewX1
         '
-        Me.TreeColumn2.Header = ""
-        Me.TreeColumn2.SortOrder = System.Windows.Forms.SortOrder.None
-        Me.TreeColumn2.TooltipText = Nothing
+        Me.DataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewX1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridViewX1.DefaultCellStyle = DataGridViewCellStyle2
+        Me.DataGridViewX1.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.DataGridViewX1.Location = New System.Drawing.Point(375, 314)
+        Me.DataGridViewX1.Name = "DataGridViewX1"
+        Me.DataGridViewX1.Size = New System.Drawing.Size(240, 150)
+        Me.DataGridViewX1.TabIndex = 1
         '
-        'TreeColumn3
+        'Column1
         '
-        Me.TreeColumn3.Header = ""
-        Me.TreeColumn3.SortOrder = System.Windows.Forms.SortOrder.None
-        Me.TreeColumn3.TooltipText = Nothing
+        Me.Column1.HeaderText = "Column1"
+        Me.Column1.Name = "Column1"
         '
-        'TreeColumn4
+        'ToolStripButton2
         '
-        Me.TreeColumn4.Header = ""
-        Me.TreeColumn4.SortOrder = System.Windows.Forms.SortOrder.None
-        Me.TreeColumn4.TooltipText = Nothing
-        '
-        'TreeColumn5
-        '
-        Me.TreeColumn5.Header = ""
-        Me.TreeColumn5.SortOrder = System.Windows.Forms.SortOrder.None
-        Me.TreeColumn5.TooltipText = Nothing
+        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
+        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton2.Name = "ToolStripButton2"
+        Me.ToolStripButton2.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton2.Text = "ToolStripButton2"
         '
         'TrialForm
         '
@@ -299,6 +311,8 @@ Partial Class TrialForm
         Me.SplitContainer2.ResumeLayout(False)
         CType(Me.FileSystemWatcher1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridViewX2, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip1.ResumeLayout(False)
+        Me.ToolStrip1.PerformLayout()
         CType(Me.DataGridViewX1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -328,5 +342,6 @@ Partial Class TrialForm
     Friend WithEvents TreeColumn3 As Aga.Controls.Tree.TreeColumn
     Friend WithEvents TreeColumn4 As Aga.Controls.Tree.TreeColumn
     Friend WithEvents TreeColumn5 As Aga.Controls.Tree.TreeColumn
+    Friend WithEvents ToolStripButton2 As System.Windows.Forms.ToolStripButton
 
 End Class
