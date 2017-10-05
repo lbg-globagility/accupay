@@ -78,7 +78,7 @@ Public Class MetroLogin
 
         ReloadOrganization()
 
-        AppropriateInterface()
+        setAppropriateInterface()
 
         MyBase.OnLoad(e)
 
@@ -741,7 +741,7 @@ Public Class MetroLogin
 
     End Sub
 
-    Private Sub AppropriateInterface()
+    Private Sub setAppropriateInterface()
 
         Dim sql As New SQL("SELECT Name FROM systemowner WHERE IsCurrentOwner='1' LIMIT 1;")
 
