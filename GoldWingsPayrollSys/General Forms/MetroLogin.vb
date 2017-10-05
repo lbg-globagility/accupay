@@ -277,7 +277,8 @@ Public Class MetroLogin
                 Dim n_ShiftTemplater As _
                     New TrialForm
 
-                n_ShiftTemplater.Show()
+                'n_ShiftTemplater.Show()
+                n_ShiftTemplater.PrintPayslip(Me, New EventArgs)
 
             End If
 

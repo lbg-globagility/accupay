@@ -60,7 +60,7 @@ Public Class TrialForm
 
     End Sub
 
-    Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+    Sub PrintPayslip(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
 
         Dim params =
             New Object() {3, 1077}
