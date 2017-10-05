@@ -222,6 +222,24 @@
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
     <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
     <Compile Include="Core Forms\Government\SocialSecurityBracket.vb" />
+    <Compile Include="Core Forms\Independent filing\LeaveForm.designer.vb">
+      <DependentUpon>LeaveForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Independent filing\LeaveForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Independent filing\OBFForm.designer.vb">
+      <DependentUpon>OBFForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Independent filing\OBFForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Independent filing\OverTimeForm.designer.vb">
+      <DependentUpon>OverTimeForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Independent filing\OverTimeForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
     <Compile Include="Core Forms\rpt\HyundaiPayslip.vb">
@@ -565,12 +583,6 @@
     <Compile Include="Core Forms\Josh_CrysRepForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\LeaveForm.Designer.vb">
-      <DependentUpon>LeaveForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Core Forms\LeaveForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Core Forms\leavetype.Designer.vb">
       <DependentUpon>leavetype.vb</DependentUpon>
     </Compile>
@@ -619,12 +631,6 @@
     <Compile Include="Core Forms\newProdBonus.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\OBFForm.Designer.vb">
-      <DependentUpon>OBFForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Core Forms\OBFForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Core Forms\OffSetting.designer.vb">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </Compile>
@@ -635,12 +641,6 @@
       <DependentUpon>OrganizationPrompt.vb</DependentUpon>
     </Compile>
     <Compile Include="Core Forms\OrganizationPrompt.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Core Forms\OverTimeForm.Designer.vb">
-      <DependentUpon>OverTimeForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Core Forms\OverTimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\payFreqSelectn.Designer.vb">
@@ -1246,6 +1246,15 @@
     <EmbeddedResource Include="Core Forms\EmployeeForm.resx">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Independent filing\LeaveForm.resx">
+      <DependentUpon>LeaveForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Independent filing\OBFForm.resx">
+      <DependentUpon>OBFForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Independent filing\OverTimeForm.resx">
+      <DependentUpon>OverTimeForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HyundaiPayslip.vb</LastGenOutput>
@@ -1386,9 +1395,6 @@
     <EmbeddedResource Include="Core Forms\Josh_CrysRepForm.resx">
       <DependentUpon>Josh_CrysRepForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\LeaveForm.resx">
-      <DependentUpon>LeaveForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\leavetype.resx">
       <DependentUpon>leavetype.vb</DependentUpon>
     </EmbeddedResource>
@@ -1413,17 +1419,11 @@
     <EmbeddedResource Include="Core Forms\newProdBonus.resx">
       <DependentUpon>newProdBonus.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\OBFForm.resx">
-      <DependentUpon>OBFForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\OrganizationPrompt.resx">
       <DependentUpon>OrganizationPrompt.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\OverTimeForm.resx">
-      <DependentUpon>OverTimeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\payFreqSelectn.resx">
       <DependentUpon>payFreqSelectn.vb</DependentUpon>
