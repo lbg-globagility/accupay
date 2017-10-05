@@ -61,12 +61,6 @@ Public Class LeaveForm
         'enlistToCboBox("SELECT DISTINCT(DisplayValue) FROM listofval WHERE Type='Leave Type' AND Active='Yes';", _
         '               cboleavetypes)
 
-        Dim item_count As Integer = cboleavetypes.Items.Count
-
-        If item_count > 0 Then
-            cboleavetypes.SelectedIndex = (item_count - 1)
-        End If
-
         enlistToCboBox("SELECT p.PartNo" & _
                         " FROM product p" & _
                         " INNER JOIN category c ON c.RowID=p.CategoryID" & _
