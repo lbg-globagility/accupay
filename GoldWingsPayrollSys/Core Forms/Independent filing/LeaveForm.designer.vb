@@ -52,14 +52,14 @@ Partial Class LeaveForm
         Me.cboxEmployees = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.TxtEmployeeFullName1 = New txtEmployeeFullName()
+        Me.TxtEmployeeFullName1 = New GoldWingsPayrollSys.txtEmployeeFullName()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.CboListOfValue1 = New cboListOfValue()
+        Me.CboListOfValue1 = New GoldWingsPayrollSys.cboListOfValue()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.cboOrganization = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.TxtEmployeeNumber1 = New txtEmployeeNumber()
+        Me.TxtEmployeeNumber1 = New GoldWingsPayrollSys.txtEmployeeNumber()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.bgwEmpNames = New System.ComponentModel.BackgroundWorker()
         Me.Panel1.SuspendLayout()
@@ -96,11 +96,11 @@ Partial Class LeaveForm
         'Label199
         '
         Me.Label199.AutoSize = True
-        Me.Label199.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label199.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label199.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label199.Location = New System.Drawing.Point(133, 190)
         Me.Label199.Name = "Label199"
-        Me.Label199.Size = New System.Drawing.Size(19, 23)
+        Me.Label199.Size = New System.Drawing.Size(18, 24)
         Me.Label199.TabIndex = 208
         Me.Label199.Text = "*"
         Me.ToolTip1.SetToolTip(Me.Label199, "This field is required")
@@ -108,11 +108,11 @@ Partial Class LeaveForm
         'Label198
         '
         Me.Label198.AutoSize = True
-        Me.Label198.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label198.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label198.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label198.Location = New System.Drawing.Point(133, 156)
         Me.Label198.Name = "Label198"
-        Me.Label198.Size = New System.Drawing.Size(19, 23)
+        Me.Label198.Size = New System.Drawing.Size(18, 24)
         Me.Label198.TabIndex = 207
         Me.Label198.Text = "*"
         Me.ToolTip1.SetToolTip(Me.Label198, "This field is required")
@@ -120,11 +120,11 @@ Partial Class LeaveForm
         'Label197
         '
         Me.Label197.AutoSize = True
-        Me.Label197.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label197.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label197.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label197.Location = New System.Drawing.Point(133, 258)
         Me.Label197.Name = "Label197"
-        Me.Label197.Size = New System.Drawing.Size(19, 23)
+        Me.Label197.Size = New System.Drawing.Size(18, 24)
         Me.Label197.TabIndex = 206
         Me.Label197.Text = "*"
         Me.ToolTip1.SetToolTip(Me.Label197, "This field is required")
@@ -132,11 +132,11 @@ Partial Class LeaveForm
         'Label196
         '
         Me.Label196.AutoSize = True
-        Me.Label196.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label196.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label196.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label196.Location = New System.Drawing.Point(133, 224)
         Me.Label196.Name = "Label196"
-        Me.Label196.Size = New System.Drawing.Size(19, 23)
+        Me.Label196.Size = New System.Drawing.Size(18, 24)
         Me.Label196.TabIndex = 205
         Me.Label196.Text = "*"
         Me.ToolTip1.SetToolTip(Me.Label196, "This field is required")
@@ -144,11 +144,11 @@ Partial Class LeaveForm
         'Label195
         '
         Me.Label195.AutoSize = True
-        Me.Label195.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label195.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label195.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label195.Location = New System.Drawing.Point(133, 122)
         Me.Label195.Name = "Label195"
-        Me.Label195.Size = New System.Drawing.Size(19, 23)
+        Me.Label195.Size = New System.Drawing.Size(18, 24)
         Me.Label195.TabIndex = 204
         Me.Label195.Text = "*"
         Me.ToolTip1.SetToolTip(Me.Label195, "This field is required")
@@ -280,11 +280,11 @@ Partial Class LeaveForm
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label2.Location = New System.Drawing.Point(133, 86)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(19, 23)
+        Me.Label2.Size = New System.Drawing.Size(18, 24)
         Me.Label2.TabIndex = 214
         Me.Label2.Text = "*"
         Me.ToolTip1.SetToolTip(Me.Label2, "This field is required")
@@ -370,11 +370,11 @@ Partial Class LeaveForm
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label7.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label7.Location = New System.Drawing.Point(133, 41)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(19, 23)
+        Me.Label7.Size = New System.Drawing.Size(18, 24)
         Me.Label7.TabIndex = 265
         Me.Label7.Text = "*"
         '
@@ -416,11 +416,11 @@ Partial Class LeaveForm
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label6.Location = New System.Drawing.Point(446, 86)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(19, 23)
+        Me.Label6.Size = New System.Drawing.Size(18, 24)
         Me.Label6.TabIndex = 219
         Me.Label6.Text = "*"
         Me.ToolTip1.SetToolTip(Me.Label6, "This field is required")
@@ -463,21 +463,23 @@ Partial Class LeaveForm
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label4.Location = New System.Drawing.Point(133, 289)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(19, 23)
+        Me.Label4.Size = New System.Drawing.Size(18, 24)
         Me.Label4.TabIndex = 217
         Me.Label4.Text = "*"
         Me.ToolTip1.SetToolTip(Me.Label4, "This field is required")
         '
         'TxtEmployeeNumber1
         '
+        Me.TxtEmployeeNumber1.BackColor = System.Drawing.Color.White
         Me.TxtEmployeeNumber1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
         Me.TxtEmployeeNumber1.Location = New System.Drawing.Point(158, 74)
         Me.TxtEmployeeNumber1.MaxLength = 50
         Me.TxtEmployeeNumber1.Name = "TxtEmployeeNumber1"
+        Me.TxtEmployeeNumber1.ReadOnly = True
         Me.TxtEmployeeNumber1.RowIDValue = ""
         Me.TxtEmployeeNumber1.Size = New System.Drawing.Size(196, 39)
         Me.TxtEmployeeNumber1.TabIndex = 201

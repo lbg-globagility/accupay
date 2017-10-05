@@ -24,9 +24,10 @@ Partial Class OBFForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.cboxEmployees = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.TxtEmployeeFullName1 = New txtEmployeeFullName()
+        Me.TxtEmployeeFullName1 = New GoldWingsPayrollSys.txtEmployeeFullName()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.cboOrganization = New System.Windows.Forms.ComboBox()
@@ -40,9 +41,9 @@ Partial Class OBFForm
         Me.dtpOBFEndTime = New System.Windows.Forms.DateTimePicker()
         Me.dtpOBFStartTime = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.cboOBFStatus = New cboListOfValue()
-        Me.cboOBFtype = New cboListOfValue()
-        Me.TxtEmployeeNumber1 = New txtEmployeeNumber()
+        Me.cboOBFStatus = New GoldWingsPayrollSys.cboListOfValue()
+        Me.cboOBFtype = New GoldWingsPayrollSys.cboListOfValue()
+        Me.TxtEmployeeNumber1 = New GoldWingsPayrollSys.txtEmployeeNumber()
         Me.dtpOBFEndDate = New System.Windows.Forms.DateTimePicker()
         Me.dtpOBFStartDate = New System.Windows.Forms.DateTimePicker()
         Me.Label186 = New System.Windows.Forms.Label()
@@ -60,7 +61,6 @@ Partial Class OBFForm
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.bgwSaving = New System.ComponentModel.BackgroundWorker()
         Me.bgwEmpNames = New System.ComponentModel.BackgroundWorker()
-        Me.cboxEmployees = New System.Windows.Forms.ComboBox()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -107,14 +107,23 @@ Partial Class OBFForm
         Me.Panel1.Size = New System.Drawing.Size(895, 427)
         Me.Panel1.TabIndex = 0
         '
+        'cboxEmployees
+        '
+        Me.cboxEmployees.FormattingEnabled = True
+        Me.cboxEmployees.Location = New System.Drawing.Point(12, 390)
+        Me.cboxEmployees.Name = "cboxEmployees"
+        Me.cboxEmployees.Size = New System.Drawing.Size(121, 25)
+        Me.cboxEmployees.TabIndex = 356
+        Me.cboxEmployees.Visible = False
+        '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label7.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label7.Location = New System.Drawing.Point(133, 41)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(19, 23)
+        Me.Label7.Size = New System.Drawing.Size(18, 24)
         Me.Label7.TabIndex = 262
         Me.Label7.Text = "*"
         '
@@ -156,11 +165,11 @@ Partial Class OBFForm
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label6.Location = New System.Drawing.Point(446, 85)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(19, 23)
+        Me.Label6.Size = New System.Drawing.Size(18, 24)
         Me.Label6.TabIndex = 259
         Me.Label6.Text = "*"
         Me.ToolTip1.SetToolTip(Me.Label6, "This field is required")
@@ -182,77 +191,77 @@ Partial Class OBFForm
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label4.Location = New System.Drawing.Point(133, 288)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(19, 23)
+        Me.Label4.Size = New System.Drawing.Size(18, 24)
         Me.Label4.TabIndex = 256
         Me.Label4.Text = "*"
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label2.Location = New System.Drawing.Point(133, 85)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(19, 23)
+        Me.Label2.Size = New System.Drawing.Size(18, 24)
         Me.Label2.TabIndex = 255
         Me.Label2.Text = "*"
         '
         'Label199
         '
         Me.Label199.AutoSize = True
-        Me.Label199.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label199.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label199.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label199.Location = New System.Drawing.Point(133, 189)
         Me.Label199.Name = "Label199"
-        Me.Label199.Size = New System.Drawing.Size(19, 23)
+        Me.Label199.Size = New System.Drawing.Size(18, 24)
         Me.Label199.TabIndex = 254
         Me.Label199.Text = "*"
         '
         'Label198
         '
         Me.Label198.AutoSize = True
-        Me.Label198.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label198.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label198.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label198.Location = New System.Drawing.Point(133, 155)
         Me.Label198.Name = "Label198"
-        Me.Label198.Size = New System.Drawing.Size(19, 23)
+        Me.Label198.Size = New System.Drawing.Size(18, 24)
         Me.Label198.TabIndex = 253
         Me.Label198.Text = "*"
         '
         'Label195
         '
         Me.Label195.AutoSize = True
-        Me.Label195.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label195.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label195.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label195.Location = New System.Drawing.Point(133, 121)
         Me.Label195.Name = "Label195"
-        Me.Label195.Size = New System.Drawing.Size(19, 23)
+        Me.Label195.Size = New System.Drawing.Size(18, 24)
         Me.Label195.TabIndex = 250
         Me.Label195.Text = "*"
         '
         'Label197
         '
         Me.Label197.AutoSize = True
-        Me.Label197.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label197.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label197.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label197.Location = New System.Drawing.Point(133, 257)
         Me.Label197.Name = "Label197"
-        Me.Label197.Size = New System.Drawing.Size(19, 23)
+        Me.Label197.Size = New System.Drawing.Size(18, 24)
         Me.Label197.TabIndex = 252
         Me.Label197.Text = "*"
         '
         'Label196
         '
         Me.Label196.AutoSize = True
-        Me.Label196.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label196.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label196.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label196.Location = New System.Drawing.Point(133, 223)
         Me.Label196.Name = "Label196"
-        Me.Label196.Size = New System.Drawing.Size(19, 23)
+        Me.Label196.Size = New System.Drawing.Size(18, 24)
         Me.Label196.TabIndex = 251
         Me.Label196.Text = "*"
         '
@@ -311,10 +320,12 @@ Partial Class OBFForm
         '
         'TxtEmployeeNumber1
         '
+        Me.TxtEmployeeNumber1.BackColor = System.Drawing.Color.White
         Me.TxtEmployeeNumber1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
         Me.TxtEmployeeNumber1.Location = New System.Drawing.Point(158, 73)
         Me.TxtEmployeeNumber1.MaxLength = 50
         Me.TxtEmployeeNumber1.Name = "TxtEmployeeNumber1"
+        Me.TxtEmployeeNumber1.ReadOnly = True
         Me.TxtEmployeeNumber1.RowIDValue = ""
         Me.TxtEmployeeNumber1.Size = New System.Drawing.Size(196, 39)
         Me.TxtEmployeeNumber1.TabIndex = 1
@@ -385,7 +396,7 @@ Partial Class OBFForm
         Me.Label191.AutoSize = True
         Me.Label191.Location = New System.Drawing.Point(54, 129)
         Me.Label191.Name = "Label191"
-        Me.Label191.Size = New System.Drawing.Size(36, 17)
+        Me.Label191.Size = New System.Drawing.Size(35, 17)
         Me.Label191.TabIndex = 243
         Me.Label191.Text = "Type"
         '
@@ -458,15 +469,6 @@ Partial Class OBFForm
         '
         'bgwEmpNames
         '
-        '
-        'cboxEmployees
-        '
-        Me.cboxEmployees.FormattingEnabled = True
-        Me.cboxEmployees.Location = New System.Drawing.Point(12, 390)
-        Me.cboxEmployees.Name = "cboxEmployees"
-        Me.cboxEmployees.Size = New System.Drawing.Size(121, 25)
-        Me.cboxEmployees.TabIndex = 356
-        Me.cboxEmployees.Visible = False
         '
         'OBFForm
         '
