@@ -30,6 +30,12 @@ Public Class OverTimeForm
 
         dtpendateEmpOT.MinDate = Format(CDate(dbCurrentTimeStamp), "yyyy-MM-dd")
 
+        Dim item_count As Integer = cboOTType.Items.Count
+
+        If item_count > 0 Then
+            cboOTType.SelectedIndex = (item_count - 1)
+        End If
+
         MyBase.OnLoad(e)
 
     End Sub

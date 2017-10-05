@@ -323,6 +323,12 @@ Public Class OBFForm
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
+        Dim item_count As Integer = cboOBFtype.Items.Count
+
+        If item_count > 0 Then
+            cboOBFtype.SelectedIndex = (item_count - 1)
+        End If
+
         MyBase.OnLoad(e)
 
     End Sub
