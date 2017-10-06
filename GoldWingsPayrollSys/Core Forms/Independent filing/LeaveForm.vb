@@ -219,8 +219,8 @@ Public Class LeaveForm
         param(14, 1) = 0
 
         Return _
-                EXEC_INSUPD_PROCEDURE(param, _
-                                      "INSUPD_employeeleave", _
+                EXEC_INSUPD_PROCEDURE(param,
+                                      "INSUPD_employeeleave_indepen",
                                       "empleaveID")
 
     End Function

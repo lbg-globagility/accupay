@@ -26,10 +26,6 @@ Public Class OverTimeForm
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
-        dtpstartdateEmpOT.MinDate = Format(CDate(dbCurrentTimeStamp), "yyyy-MM-dd")
-
-        dtpendateEmpOT.MinDate = Format(CDate(dbCurrentTimeStamp), "yyyy-MM-dd")
-
         Dim item_count As Integer = cboOTType.Items.Count
 
         If item_count > 0 Then
@@ -216,8 +212,8 @@ Public Class OverTimeForm
         param(13, 1) = If(OTStatusString = Nothing, "Pending", OTStatusString)
 
         Return _
-                EXEC_INSUPD_PROCEDURE(param, _
-                                      "INSUPD_employeeOT", _
+                EXEC_INSUPD_PROCEDURE(param,
+                                      "INSUPD_employeeOT_indepen",
                                       "eot_ID")
 
     End Function

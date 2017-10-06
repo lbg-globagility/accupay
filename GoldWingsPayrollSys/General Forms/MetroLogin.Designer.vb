@@ -150,7 +150,7 @@ Partial Class MetroLogin
         Me.lnklblobf.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lnklblobf.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.lnklblobf.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.lnklblobf.Location = New System.Drawing.Point(0, 42)
+        Me.lnklblobf.Location = New System.Drawing.Point(0, 39)
         Me.lnklblobf.Name = "lnklblobf"
         Me.lnklblobf.Size = New System.Drawing.Size(126, 15)
         Me.lnklblobf.TabIndex = 22
