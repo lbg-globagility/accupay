@@ -212,8 +212,8 @@ Public Class OverTimeForm
         param(13, 1) = If(OTStatusString = Nothing, "Pending", OTStatusString)
 
         Return _
-                EXEC_INSUPD_PROCEDURE(param, _
-                                      "INSUPD_employeeOT", _
+                EXEC_INSUPD_PROCEDURE(param,
+                                      "INSUPD_employeeOT_indepen",
                                       "eot_ID")
 
     End Function

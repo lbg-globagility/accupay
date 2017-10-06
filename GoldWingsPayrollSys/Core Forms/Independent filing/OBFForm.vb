@@ -171,13 +171,15 @@ Public Class OBFForm
         param(4, 1) = e_rowid 'TxtEmployeeNumber1.RowIDValue
         param(5, 1) = OBFtypeString
 
-        Dim iii = Format(CDate(dtpOBFStartTime.Value), "hh:mm tt")
+        'Dim iii = Format(CDate(dtpOBFStartTime.Value), "hh:mm tt")
 
-        param(6, 1) = MilitTime(iii)
+        'param(6, 1) = MilitTime(iii)
+        param(6, 1) = If(CBool(txtOBFStartTime.Tag) = False, DBNull.Value, txtOBFStartTime.Text)
 
-        iii = Format(CDate(dtpOBFEndTime.Value), "hh:mm tt")
+        'iii = Format(CDate(dtpOBFEndTime.Value), "hh:mm tt")
 
-        param(7, 1) = MilitTime(iii)
+        'param(7, 1) = MilitTime(iii)
+        param(7, 1) = If(CBool(txtOBFEndTime.Tag) = False, DBNull.Value, txtOBFEndTime.Text)
 
         param(8, 1) = Format(CDate(dtpOBFStartDate.Value), "yyyy-MM-dd")
 
@@ -189,8 +191,8 @@ Public Class OBFForm
         param(13, 1) = If(OBFStatusString = Nothing, "Pending", OBFStatusString)
 
         Return _
-                EXEC_INSUPD_PROCEDURE(param, _
-                                      "INSUPD_employeeoffbusi", _
+                EXEC_INSUPD_PROCEDURE(param,
+                                      "INSUPD_employeeoffbusi_indepen",
                                       "obf_ID")
 
     End Function
@@ -424,6 +426,136 @@ Public Class OBFForm
         Else
 
             cboxEmployees.Text = TxtEmployeeFullName1.Text
+
+        End If
+
+    End Sub
+
+    Private Sub chkOBTimeIn_CheckedChanged(sender As Object, e As EventArgs) Handles chkOBTimeIn.CheckedChanged
+        'dtpOBFStartTime
+        Static dtp As New DateTimePicker
+
+        If TypeOf sender Is CheckBox Then
+
+            If chkOBTimeIn.Checked Then
+                dtpOBFStartTime.Focus()
+            End If
+
+        Else
+            chkOBTimeIn.Checked = True
+
+        End If
+
+        If chkOBTimeIn.Checked Then
+            'dtpOBFStartTime.CalendarForeColor = dtp.CalendarForeColor
+            dtpOBFStartTime.Value = dtp.Value
+        Else
+            'dtpOBFStartTime.CalendarForeColor = Color.Silver
+
+        End If
+
+    End Sub
+
+    Private Sub dtpOBFStartTime_GotFocus(sender As Object, e As EventArgs) Handles dtpOBFStartTime.GotFocus
+        chkOBTimeIn_CheckedChanged(dtpOBFStartTime, New EventArgs)
+    End Sub
+
+    Private Sub chkOBTimeOut_CheckedChanged(sender As Object, e As EventArgs) Handles chkOBTimeOut.CheckedChanged
+        'dtpOBFEndTime
+        If TypeOf sender Is CheckBox Then
+
+            If chkOBTimeOut.Checked Then
+                dtpOBFEndTime.Focus()
+            Else
+
+            End If
+
+        Else
+            chkOBTimeOut.Checked = True
+
+        End If
+
+    End Sub
+
+    Private Sub dtpOBFEndTime_GotFocus(sender As Object, e As EventArgs) Handles dtpOBFEndTime.GotFocus
+        chkOBTimeOut_CheckedChanged(dtpOBFEndTime, New EventArgs)
+    End Sub
+
+
+    Private Sub dtpOBFStartTime_ValueChanged(sender As Object, e As EventArgs) Handles dtpOBFStartTime.ValueChanged
+
+    End Sub
+
+    Private Sub dtpOBFEndTime_ValueChanged(sender As Object, e As EventArgs) Handles dtpOBFEndTime.ValueChanged
+
+    End Sub
+
+    Private Sub txtOBFStartTime_TextChanged(sender As Object, e As EventArgs) Handles txtOBFStartTime.TextChanged
+        ErrorProvider1.Clear()
+    End Sub
+
+    Private Sub txtOBFEndTime_TextChanged(sender As Object, e As EventArgs) Handles txtOBFEndTime.TextChanged
+        ErrorProvider1.Clear()
+    End Sub
+
+    Private Sub EventHandler_OnLeave(sender As TextBox, e As EventArgs) _
+        Handles txtOBFStartTime.Leave,
+                txtOBFEndTime.Leave
+
+        sender.Tag = False
+
+        Dim text_time As String = sender.Text.Trim
+
+        Dim thegetval = text_time
+
+        Dim dateobj As Object = thegetval.Replace(" ", ":")
+        Dim ampm As String = Nothing
+
+        If thegetval.Length > 0 Then
+
+            Try
+
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
+                    dateobj.ToString.Contains("M") Then
+
+                    ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
+                    dateobj = dateobj.ToString.Replace(":", " ")
+                    dateobj = Trim(dateobj.ToString.Substring(0, 5)) 'dateobj.ToString.Substring(0, 4)
+                    dateobj = dateobj.ToString.Replace(" ", ":")
+
+                End If
+
+                Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm tt")
+
+                sender.Text = valtime
+                sender.Tag = True
+
+            Catch ex As Exception
+
+                Try
+                    dateobj = dateobj.ToString.Replace(":", " ")
+                    dateobj = Trim(dateobj.ToString.Substring(0, 5))
+                    dateobj = dateobj.ToString.Replace(" ", ":")
+
+                    Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm")
+
+                    sender.Text = valtime
+                    sender.Tag = True
+
+                Catch ex_1 As Exception
+
+                    sender.Tag = False
+                    ErrorProvider1.SetError(sender,
+                                             ex.Message)
+
+                Finally
+
+                End Try
+
+            Finally
+
+            End Try
 
         End If
 
