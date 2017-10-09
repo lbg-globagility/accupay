@@ -12,11 +12,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `PAYROLLSUMMARY`(
 	IN `ps_PayPeriodID2` INT,
 	IN `psi_undeclared` CHAR(1),
 	IN `strSalaryDistrib` VARCHAR(50)
-
-
-
-
-
 )
 BEGIN
 
@@ -53,7 +48,11 @@ SELECT
     paystub.TotalBonus `DatCol30`,
     paystub.TotalAllowance `DatCol31`,
     IF(psi_undeclared, paystubactual.TotalGrossSalary, paystub.TotalGrossSalary) `DatCol22`,
-    IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) `DatCol23`,
+    IF(
+        psi_undeclared,
+        paystubactual.TotalNetSalary + IFNULL(agf.DailyFee, 0),
+        paystub.TotalNetSalary + IFNULL(agf.DailyFee, 0)
+    ) `DatCol23`,
     paystub.TotalTaxableSalary `DatCol24`,
     paystub.TotalEmpSSS `DatCol25`,
     paystub.TotalEmpPhilhealth `DatCol27`,
@@ -67,7 +66,6 @@ SELECT
     UCASE(e.Surname) 'Surname',
     UCASE(p.PositionName) 'PositionName',
     UCASE(d.Name) `DatCol1`,
-
     IFNULL(agf.DailyFee,0) `DatCol39`,
     IFNULL(thirteenthmonthpay.Amount,0) `DatCol40`,
     CONCAT_WS(
@@ -76,7 +74,6 @@ SELECT
         DATE_FORMAT(paystub.PayToDate,'%c/%e/%Y')
     ) `DatCol20`,
     paystub.RegularHours `DatCol41`,
-
     (IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) + IFNULL(thirteenthmonthpay.Amount,0) + IFNULL(agf.DailyFee, 0)) `DatCol42`
 FROM paystub
 LEFT JOIN paystubactual
