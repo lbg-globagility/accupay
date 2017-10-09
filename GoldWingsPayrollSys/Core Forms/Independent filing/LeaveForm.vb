@@ -20,6 +20,9 @@ Public Class LeaveForm
 
         dtpendtime.CustomFormat = machineShortTimeFormat
 
+        dtpstartdate.Tag = Format(CDate(dtpstartdate.Value), "yyyy-MM-dd")
+        dtpendate.Tag = Format(CDate(dtpendate.Value), "yyyy-MM-dd")
+
     End Sub
 
     Dim n_LeaveRowID As String = String.Empty
