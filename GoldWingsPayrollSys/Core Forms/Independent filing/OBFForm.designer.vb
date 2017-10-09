@@ -34,6 +34,7 @@ Partial Class OBFForm
         Me.cboxEmployees = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.TxtEmployeeFullName1 = New GoldWingsPayrollSys.txtEmployeeFullName()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.cboOrganization = New System.Windows.Forms.ComboBox()
@@ -43,6 +44,9 @@ Partial Class OBFForm
         Me.Label198 = New System.Windows.Forms.Label()
         Me.Label195 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.cboOBFStatus = New GoldWingsPayrollSys.cboListOfValue()
+        Me.cboOBFtype = New GoldWingsPayrollSys.cboListOfValue()
+        Me.TxtEmployeeNumber1 = New GoldWingsPayrollSys.txtEmployeeNumber()
         Me.dtpOBFEndDate = New System.Windows.Forms.DateTimePicker()
         Me.dtpOBFStartDate = New System.Windows.Forms.DateTimePicker()
         Me.Label186 = New System.Windows.Forms.Label()
@@ -61,10 +65,6 @@ Partial Class OBFForm
         Me.bgwSaving = New System.ComponentModel.BackgroundWorker()
         Me.bgwEmpNames = New System.ComponentModel.BackgroundWorker()
         Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
-        Me.TxtEmployeeFullName1 = New GoldWingsPayrollSys.txtEmployeeFullName()
-        Me.cboOBFStatus = New GoldWingsPayrollSys.cboListOfValue()
-        Me.cboOBFtype = New GoldWingsPayrollSys.cboListOfValue()
-        Me.TxtEmployeeNumber1 = New GoldWingsPayrollSys.txtEmployeeNumber()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -211,6 +211,22 @@ Partial Class OBFForm
         Me.Label3.TabIndex = 261
         Me.Label3.Text = "Full Name"
         '
+        'TxtEmployeeFullName1
+        '
+        Me.TxtEmployeeFullName1.BackColor = System.Drawing.SystemColors.Window
+        Me.TxtEmployeeFullName1.BorderColor = System.Drawing.Color.LightSteelBlue
+        Me.TxtEmployeeFullName1.EmployeeTableColumnName = ""
+        Me.TxtEmployeeFullName1.Enabled = False
+        Me.TxtEmployeeFullName1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
+        Me.TxtEmployeeFullName1.Location = New System.Drawing.Point(158, 24)
+        Me.TxtEmployeeFullName1.Name = "TxtEmployeeFullName1"
+        Me.TxtEmployeeFullName1.Padding = New System.Windows.Forms.Padding(4)
+        Me.TxtEmployeeFullName1.PopupWidth = 120
+        Me.TxtEmployeeFullName1.SelectedItemBackColor = System.Drawing.SystemColors.Highlight
+        Me.TxtEmployeeFullName1.SelectedItemForeColor = System.Drawing.SystemColors.HighlightText
+        Me.TxtEmployeeFullName1.Size = New System.Drawing.Size(465, 40)
+        Me.TxtEmployeeFullName1.TabIndex = 0
+        '
         'Label5
         '
         Me.Label5.AutoSize = True
@@ -310,6 +326,42 @@ Partial Class OBFForm
         Me.Label1.Size = New System.Drawing.Size(81, 17)
         Me.Label1.TabIndex = 249
         Me.Label1.Text = "Employee ID"
+        '
+        'cboOBFStatus
+        '
+        Me.cboOBFStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboOBFStatus.DropDownWidth = 121
+        Me.cboOBFStatus.FormattingEnabled = True
+        Me.cboOBFStatus.ListOfValueType = "Leave Status"
+        Me.cboOBFStatus.Location = New System.Drawing.Point(158, 291)
+        Me.cboOBFStatus.Name = "cboOBFStatus"
+        Me.cboOBFStatus.OrderByColumn = CType(CSByte(0), SByte)
+        Me.cboOBFStatus.Size = New System.Drawing.Size(196, 25)
+        Me.cboOBFStatus.TabIndex = 7
+        '
+        'cboOBFtype
+        '
+        Me.cboOBFtype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboOBFtype.DropDownWidth = 121
+        Me.cboOBFtype.FormattingEnabled = True
+        Me.cboOBFtype.ListOfValueType = "Official Business Type"
+        Me.cboOBFtype.Location = New System.Drawing.Point(158, 121)
+        Me.cboOBFtype.Name = "cboOBFtype"
+        Me.cboOBFtype.OrderByColumn = CType(CSByte(0), SByte)
+        Me.cboOBFtype.Size = New System.Drawing.Size(196, 25)
+        Me.cboOBFtype.TabIndex = 2
+        '
+        'TxtEmployeeNumber1
+        '
+        Me.TxtEmployeeNumber1.BackColor = System.Drawing.Color.White
+        Me.TxtEmployeeNumber1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
+        Me.TxtEmployeeNumber1.Location = New System.Drawing.Point(158, 73)
+        Me.TxtEmployeeNumber1.MaxLength = 50
+        Me.TxtEmployeeNumber1.Name = "TxtEmployeeNumber1"
+        Me.TxtEmployeeNumber1.ReadOnly = True
+        Me.TxtEmployeeNumber1.RowIDValue = ""
+        Me.TxtEmployeeNumber1.Size = New System.Drawing.Size(196, 39)
+        Me.TxtEmployeeNumber1.TabIndex = 1
         '
         'dtpOBFEndDate
         '
@@ -454,58 +506,6 @@ Partial Class OBFForm
         'ErrorProvider1
         '
         Me.ErrorProvider1.ContainerControl = Me
-        '
-        'TxtEmployeeFullName1
-        '
-        Me.TxtEmployeeFullName1.BackColor = System.Drawing.SystemColors.Window
-        Me.TxtEmployeeFullName1.BorderColor = System.Drawing.Color.LightSteelBlue
-        Me.TxtEmployeeFullName1.EmployeeTableColumnName = ""
-        Me.TxtEmployeeFullName1.Enabled = False
-        Me.TxtEmployeeFullName1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
-        Me.TxtEmployeeFullName1.Location = New System.Drawing.Point(158, 24)
-        Me.TxtEmployeeFullName1.Name = "TxtEmployeeFullName1"
-        Me.TxtEmployeeFullName1.Padding = New System.Windows.Forms.Padding(4)
-        Me.TxtEmployeeFullName1.PopupWidth = 120
-        Me.TxtEmployeeFullName1.SelectedItemBackColor = System.Drawing.SystemColors.Highlight
-        Me.TxtEmployeeFullName1.SelectedItemForeColor = System.Drawing.SystemColors.HighlightText
-        Me.TxtEmployeeFullName1.Size = New System.Drawing.Size(465, 40)
-        Me.TxtEmployeeFullName1.TabIndex = 0
-        '
-        'cboOBFStatus
-        '
-        Me.cboOBFStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboOBFStatus.DropDownWidth = 121
-        Me.cboOBFStatus.FormattingEnabled = True
-        Me.cboOBFStatus.ListOfValueType = "Leave Status"
-        Me.cboOBFStatus.Location = New System.Drawing.Point(158, 291)
-        Me.cboOBFStatus.Name = "cboOBFStatus"
-        Me.cboOBFStatus.OrderByColumn = CType(CSByte(0), SByte)
-        Me.cboOBFStatus.Size = New System.Drawing.Size(196, 25)
-        Me.cboOBFStatus.TabIndex = 7
-        '
-        'cboOBFtype
-        '
-        Me.cboOBFtype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboOBFtype.DropDownWidth = 121
-        Me.cboOBFtype.FormattingEnabled = True
-        Me.cboOBFtype.ListOfValueType = "Official Business Type"
-        Me.cboOBFtype.Location = New System.Drawing.Point(158, 121)
-        Me.cboOBFtype.Name = "cboOBFtype"
-        Me.cboOBFtype.OrderByColumn = CType(CSByte(0), SByte)
-        Me.cboOBFtype.Size = New System.Drawing.Size(196, 25)
-        Me.cboOBFtype.TabIndex = 2
-        '
-        'TxtEmployeeNumber1
-        '
-        Me.TxtEmployeeNumber1.BackColor = System.Drawing.Color.White
-        Me.TxtEmployeeNumber1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
-        Me.TxtEmployeeNumber1.Location = New System.Drawing.Point(158, 73)
-        Me.TxtEmployeeNumber1.MaxLength = 50
-        Me.TxtEmployeeNumber1.Name = "TxtEmployeeNumber1"
-        Me.TxtEmployeeNumber1.ReadOnly = True
-        Me.TxtEmployeeNumber1.RowIDValue = ""
-        Me.TxtEmployeeNumber1.Size = New System.Drawing.Size(196, 39)
-        Me.TxtEmployeeNumber1.TabIndex = 1
         '
         'OBFForm
         '

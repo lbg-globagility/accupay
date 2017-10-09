@@ -6524,6 +6524,9 @@ Public Class EmployeeForm
         param(13, 0) = "elv_Status"
 
         For Each r As DataGridViewRow In dgvempleave.Rows
+
+            Dim elv_rowid = If(ValNoComma(r.Cells("elv_RowID").Value) = 0, DBNull.Value, r.Cells("elv_RowID").Value)
+
             If Val(r.Cells("elv_RowID").Value) = 0 And
                 tsbtnNewLeave.Visible = True Then
 
@@ -6557,7 +6560,7 @@ Public Class EmployeeForm
                         r.Cells("elv_RowID").Value =
                             New ReadSQLFunction("INSUPD_employeeleave",
                                                     "empleaveID",
-                                                DBNull.Value,
+                                                elv_rowid,
                                                 orgztnID,
                                                 MilitTime(r.Cells("elv_StartTime").Value),
                                                 If(r.Cells("elv_Type").Value = Nothing, DBNull.Value, r.Cells("elv_Type").Value),
@@ -6608,7 +6611,7 @@ Public Class EmployeeForm
                         Dim n_ReadSQLFunction As _
                             New ReadSQLFunction("INSUPD_employeeleave",
                                                     "empleaveID",
-                                                DBNull.Value,
+                                                elv_rowid,
                                                 orgztnID,
                                                 MilitTime(r.Cells("elv_StartTime").Value),
                                                 If(r.Cells("elv_Type").Value = Nothing, DBNull.Value, r.Cells("elv_Type").Value),
@@ -6810,7 +6813,7 @@ Public Class EmployeeForm
     Private Sub dgvempleave_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvempleave.SelectionChanged
         Try
 
-            If dgvempleave.RowCount <> 1 Then
+            If dgvempleave.RowCount > 1 Then
 
                 With dgvempleave.CurrentRow
 
