@@ -920,12 +920,6 @@
       <DependentUpon>onepagefouremployeepayslip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\PayrollSumaryRpt.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PayrollSumaryRpt.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Core Forms\rpt\PaySlipHalfPage.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1598,10 +1592,6 @@
     <EmbeddedResource Include="Core Forms\rpt\onepagefouremployeepayslip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>onepagefouremployeepayslip.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\PayrollSumaryRpt.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>PayrollSumaryRpt.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\rpt\PaySlipHalfPage.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
