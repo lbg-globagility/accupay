@@ -1,16 +1,23 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for procedure hyundaipayrolldb_dev.RPT_attendance_sheet
 DROP PROCEDURE IF EXISTS `RPT_attendance_sheet`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_attendance_sheet`(IN `OrganizationID` INT, IN `FromDate` DATE, IN `ToDate` DATE)
     DETERMINISTIC
 BEGIN
 
-SELECT CONCAT(ee.EmployeeID,' / ',ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) AS Fullname
+SELECT CONCAT_WS(' / ', ee.EmployeeID, CONCAT_WS(',', ee.LastName, ee.FirstName, INITIALS(ee.MiddleName,'. ','1'))) AS Fullname
 , UCASE(SUBSTRING(DATE_FORMAT(ete.Date,'%W'),1,3)) 'DayText'
 , DATE_FORMAT(ete.Date,'%m/%e/%y') 'Date'
 , IFNULL(CONCAT(TIME_FORMAT(sh.TimeFrom,'%l'), IF(TIME_FORMAT(sh.TimeFrom,'%i') > 0, CONCAT(':', TIME_FORMAT(sh.TimeFrom,'%i')),''),'to', TIME_FORMAT(sh.TimeTo,'%l'), IF(TIME_FORMAT(sh.TimeTo,'%i') > 0, CONCAT(':', TIME_FORMAT(sh.TimeTo,'%i')),'')),'') 'Shift'
@@ -18,7 +25,8 @@ SELECT CONCAT(ee.EmployeeID,' / ',ee.LastName,',',ee.FirstName, IF(ee.MiddleName
 ,'' AS BOut
 ,'' AS BIn
 ,REPLACE(TIME_FORMAT(etd.TimeOut,'%l:%i %p'),'M','') 'TimeOut'
-, IFNULL(ete.TotalHoursWorked,0) 'TotalHoursWorked', IFNULL(ete.HoursLate,0) 'HoursLate'
+, IFNULL(ete.RegularHoursWorked,0) 'TotalHoursWorked' # TotalHoursWorked
+, IFNULL(ete.HoursLate,0) 'HoursLate'
 , IFNULL(ete.UndertimeHours,0) 'UndertimeHours'
 , IFNULL(ete.NightDifferentialHours,0) 'NightDifferentialHours'
 , IFNULL(ete.OvertimeHoursWorked,0) 'OvertimeHoursWorked'
@@ -36,7 +44,6 @@ ORDER BY ete.Date,ee.LastName;
 
 END//
 DELIMITER ;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
