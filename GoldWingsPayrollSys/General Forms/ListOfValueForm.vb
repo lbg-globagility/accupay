@@ -562,7 +562,7 @@ Public Class ListOfValueForm
 
         Dim dt As New DataTable
 
-        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT DISTINCT(`Type`) FROM listofval LIMIT " & pagination & ", 50;")
+        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT DISTINCT(`Type`) FROM listofval ORDER BY `Type` LIMIT " & pagination & ", 50;")
 
         If sender.Name = "btnSearchNow" Then
 
@@ -580,7 +580,7 @@ Public Class ListOfValueForm
 
         Else
 
-            n_SQLQueryToDatatable = New SQLQueryToDatatable("SELECT DISTINCT(`Type`) FROM listofval LIMIT " & pagination & ", 50;")
+            n_SQLQueryToDatatable = New SQLQueryToDatatable("SELECT DISTINCT(`Type`) FROM listofval ORDER BY `Type` LIMIT " & pagination & ", 50;")
 
             dt = n_SQLQueryToDatatable.ResultTable
 

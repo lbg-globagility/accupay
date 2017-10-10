@@ -15,6 +15,8 @@ Namespace My
 
     Partial Friend Class MyApplication
 
+        Private _logger As ILog = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
+
         Protected Overrides Sub Finalize()
             MyBase.Finalize()
         End Sub
@@ -73,10 +75,6 @@ Namespace My
         'Public n_DataBaseConnection As New DataBaseConnection
 
         Private Sub MyApplication_Startup(sender As Object, e As ApplicationServices.StartupEventArgs) Handles Me.Startup
-
-            Dim log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
-            log.Info("Success")
-
             Try
 
                 conn = New MySqlConnection
@@ -320,17 +318,7 @@ Namespace My
         End Sub
 
         Private Sub MyApplication_UnhandledException(sender As Object, e As ApplicationServices.UnhandledExceptionEventArgs) Handles Me.UnhandledException
-            'My.Application.Log.WriteException(e.Exception,
-            '                                  TraceEventType.Critical,
-            '                                  My.Computer.Clock.GmtTime.ToString &
-            '                                  e.Exception.Message)
-            If e.Exception IsNot Nothing Then
-                My.Computer.FileSystem.WriteAllText(
-                    AppFilePath & "\errlog.txt",
-                    My.Computer.Clock.GmtTime.ToString & vbTab &
-                    e.Exception.Message,
-                    True)
-            End If
+            _logger.Error("Uncaught exception", e.Exception)
         End Sub
 
     End Class

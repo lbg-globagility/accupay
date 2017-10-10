@@ -68,7 +68,7 @@
     <ApplicationIcon>logo - Copy.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>C4C87B3D16466A0683BC52F1F917CAE0254115D7</ManifestCertificateThumbprint>
@@ -1749,6 +1749,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="app.manifest" />
     <None Include="Core Forms\Dataset\AlphalistDataset.xsc">
       <DependentUpon>AlphalistDataset.xsd</DependentUpon>
     </None>
