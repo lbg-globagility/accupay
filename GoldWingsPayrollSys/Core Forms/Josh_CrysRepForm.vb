@@ -52,7 +52,7 @@ Public Class Josh_CrysRepForm
 
         CrystalReportViewer1.ParameterFieldInfo = paramFields
         '\Lambert Form
-        rpt.Load(Application.StartupPath + "\rpt\discplinaryActions.rpt")
+        rpt.Load(Application.StartupPath + "\Core Forms\rpt\discplinaryActions.rpt")
 
         adapter.SelectCommand = New MySqlCommand("SELECT * FROM VW_DisciplinaryMemoUserDetails WHERE UserID = " & z_User)
 
