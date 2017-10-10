@@ -24,6 +24,7 @@ Partial Class ListOfValueForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ListOfValueForm))
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblRowID = New System.Windows.Forms.Label()
         Me.cmbStatus = New System.Windows.Forms.ComboBox()
         Me.txtDescription = New System.Windows.Forms.TextBox()
@@ -56,14 +57,6 @@ Partial Class ListOfValueForm
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.lblSaveMsg = New System.Windows.Forms.Label()
         Me.dglistofval = New System.Windows.Forms.DataGridView()
-        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_display = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_lic = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_parentvalue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Active = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.c_description = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_orderBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.dgvlistofvaltype = New System.Windows.Forms.DataGridView()
@@ -78,6 +71,14 @@ Partial Class ListOfValueForm
         Me.btnSearchNow = New System.Windows.Forms.Button()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.autcoListOfValType = New Femiani.Forms.UI.Input.AutoCompleteTextBox()
+        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_display = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_lic = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_parentvalue = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Active = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.c_description = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_orderBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip1.SuspendLayout()
         Me.grplistval.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -312,33 +313,33 @@ Partial Class ListOfValueForm
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label8.Location = New System.Drawing.Point(81, 17)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(19, 23)
+        Me.Label8.Size = New System.Drawing.Size(18, 24)
         Me.Label8.TabIndex = 361
         Me.Label8.Text = "*"
         '
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label9.Location = New System.Drawing.Point(337, 49)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(19, 23)
+        Me.Label9.Size = New System.Drawing.Size(18, 24)
         Me.Label9.TabIndex = 362
         Me.Label9.Text = "*"
         '
         'Label212
         '
         Me.Label212.AutoSize = True
-        Me.Label212.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label212.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label212.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label212.Location = New System.Drawing.Point(81, 71)
         Me.Label212.Name = "Label212"
-        Me.Label212.Size = New System.Drawing.Size(19, 23)
+        Me.Label212.Size = New System.Drawing.Size(18, 24)
         Me.Label212.TabIndex = 360
         Me.Label212.Text = "*"
         '
@@ -381,6 +382,7 @@ Partial Class ListOfValueForm
         Me.dglistofval.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.dglistofval.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dglistofval.BackgroundColor = System.Drawing.Color.White
         Me.dglistofval.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dglistofval.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_rowid, Me.c_display, Me.c_lic, Me.c_Type, Me.c_parentvalue, Me.c_Active, Me.c_description, Me.c_orderBy})
@@ -389,60 +391,6 @@ Partial Class ListOfValueForm
         Me.dglistofval.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dglistofval.Size = New System.Drawing.Size(927, 319)
         Me.dglistofval.TabIndex = 0
-        '
-        'c_rowid
-        '
-        Me.c_rowid.HeaderText = "Row ID"
-        Me.c_rowid.Name = "c_rowid"
-        Me.c_rowid.Visible = False
-        Me.c_rowid.Width = 50
-        '
-        'c_display
-        '
-        Me.c_display.HeaderText = "Display Value"
-        Me.c_display.Name = "c_display"
-        Me.c_display.Width = 147
-        '
-        'c_lic
-        '
-        Me.c_lic.HeaderText = "LIC"
-        Me.c_lic.Name = "c_lic"
-        Me.c_lic.Width = 148
-        '
-        'c_Type
-        '
-        Me.c_Type.HeaderText = "Type"
-        Me.c_Type.Name = "c_Type"
-        Me.c_Type.Visible = False
-        Me.c_Type.Width = 150
-        '
-        'c_parentvalue
-        '
-        Me.c_parentvalue.HeaderText = "Parent Value"
-        Me.c_parentvalue.Name = "c_parentvalue"
-        Me.c_parentvalue.Width = 147
-        '
-        'c_Active
-        '
-        Me.c_Active.HeaderText = "Active"
-        Me.c_Active.Name = "c_Active"
-        Me.c_Active.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.c_Active.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.c_Active.Width = 147
-        '
-        'c_description
-        '
-        Me.c_description.FillWeight = 200.0!
-        Me.c_description.HeaderText = "Description"
-        Me.c_description.Name = "c_description"
-        Me.c_description.Width = 295
-        '
-        'c_orderBy
-        '
-        Me.c_orderBy.HeaderText = "Order By"
-        Me.c_orderBy.Name = "c_orderBy"
-        Me.c_orderBy.Visible = False
-        Me.c_orderBy.Width = 50
         '
         'Panel1
         '
@@ -599,6 +547,54 @@ Partial Class ListOfValueForm
         Me.autcoListOfValType.Size = New System.Drawing.Size(239, 25)
         Me.autcoListOfValType.TabIndex = 393
         '
+        'c_rowid
+        '
+        Me.c_rowid.HeaderText = "Row ID"
+        Me.c_rowid.Name = "c_rowid"
+        Me.c_rowid.Visible = False
+        '
+        'c_display
+        '
+        Me.c_display.HeaderText = "Display Value"
+        Me.c_display.Name = "c_display"
+        '
+        'c_lic
+        '
+        Me.c_lic.HeaderText = "LIC"
+        Me.c_lic.Name = "c_lic"
+        '
+        'c_Type
+        '
+        Me.c_Type.HeaderText = "Type"
+        Me.c_Type.Name = "c_Type"
+        Me.c_Type.Visible = False
+        '
+        'c_parentvalue
+        '
+        Me.c_parentvalue.HeaderText = "Parent Value"
+        Me.c_parentvalue.Name = "c_parentvalue"
+        '
+        'c_Active
+        '
+        Me.c_Active.HeaderText = "Active"
+        Me.c_Active.Name = "c_Active"
+        Me.c_Active.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.c_Active.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'c_description
+        '
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.c_description.DefaultCellStyle = DataGridViewCellStyle1
+        Me.c_description.FillWeight = 200.0!
+        Me.c_description.HeaderText = "Description"
+        Me.c_description.Name = "c_description"
+        '
+        'c_orderBy
+        '
+        Me.c_orderBy.HeaderText = "Order By"
+        Me.c_orderBy.Name = "c_orderBy"
+        Me.c_orderBy.Visible = False
+        '
         'ListOfValueForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -672,14 +668,6 @@ Partial Class ListOfValueForm
     Friend WithEvents LinkLabel4 As System.Windows.Forms.LinkLabel
     Friend WithEvents Column1 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Button4 As System.Windows.Forms.Button
-    Friend WithEvents c_rowid As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_display As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_lic As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_Type As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_parentvalue As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_Active As System.Windows.Forms.DataGridViewCheckBoxColumn
-    Friend WithEvents c_description As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_orderBy As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents Label212 As System.Windows.Forms.Label
@@ -688,4 +676,12 @@ Partial Class ListOfValueForm
     Friend WithEvents btnSearchNow As System.Windows.Forms.Button
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
     Friend WithEvents autcoListOfValType As Femiani.Forms.UI.Input.AutoCompleteTextBox
+    Friend WithEvents c_rowid As DataGridViewTextBoxColumn
+    Friend WithEvents c_display As DataGridViewTextBoxColumn
+    Friend WithEvents c_lic As DataGridViewTextBoxColumn
+    Friend WithEvents c_Type As DataGridViewTextBoxColumn
+    Friend WithEvents c_parentvalue As DataGridViewTextBoxColumn
+    Friend WithEvents c_Active As DataGridViewCheckBoxColumn
+    Friend WithEvents c_description As DataGridViewTextBoxColumn
+    Friend WithEvents c_orderBy As DataGridViewTextBoxColumn
 End Class
