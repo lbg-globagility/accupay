@@ -1781,7 +1781,7 @@ Public Class ReportsList
 
                 objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("Text14")
 
-                objText.Text = "for the period of " & date_from & " to " & date_to & ""
+                objText.Text = String.Concat("for the period of ", date_from, " to ", date_to)
 
 
                 objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
@@ -1791,14 +1791,10 @@ Public Class ReportsList
 
                 objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgaddress")
 
-                objText.Text = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" & _
-                                            ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" & _
-                                            ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" & _
-                                            ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" & _
-                                            ",IF(Country IS NULL,'',CONCAT(', ',Country))" & _
-                                            ",IF(State IS NULL,'',CONCAT(', ',State)))" & _
-                                            " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" & _
-                                            " WHERE o.RowID=" & orgztnID & ";")
+                objText.Text = EXECQUER(
+                    String.Concat("SELECT CONCAT_WS(', ', a.StreetAddress1, a.StreetAddress2, a.Barangay, a.CityTown, a.Country, a.State) `Result`",
+                                  " FROM organization o LEFT JOIN address a ON a.RowID = o.PrimaryAddressID",
+                                  " WHERE o.RowID=", orgztnID, ";"))
 
 
                 Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" & _
