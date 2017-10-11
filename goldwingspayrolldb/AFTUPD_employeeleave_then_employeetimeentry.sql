@@ -51,6 +51,25 @@ END IF;*/
 
 SET numhrsworkd = NEW.OfficialValidHours;
 
+UPDATE employeetimeentry et
+INNER JOIN employee e ON e.RowID=et.EmployeeID AND e.OrganizationID=et.OrganizationID
+INNER JOIN employeesalary es ON es.RowID=et.EmployeeSalaryID
+INNER JOIN employeeshift esh ON esh.RowID=et.EmployeeShiftID
+INNER JOIN shift sh ON sh.RowID=esh.ShiftID
+SET
+et.LastUpd=CURRENT_TIMESTAMP()
+,et.LastUpdBy=NEW.LastUpdBy
+,et.VacationLeaveHours=IF(leavetype LIKE '%Vacation%',numhrsworkd,0.0)
+,et.SickLeaveHours=IF(leavetype LIKE '%Sick%',numhrsworkd,0.0)
+,et.MaternityLeaveHours=IF(leavetype LIKE '%aternity%',numhrsworkd,0.0)
+,et.OtherLeaveHours=IF(leavetype LIKE '%Others%',numhrsworkd,0.0)
+,et.Leavepayment = (numhrsworkd * IF(e.EmployeeType = 'Daily'
+                                     , (es.BasicPay / sh.DivisorToDailyRate)
+												 , ((es.Salary / (e.WorkDaysPerYear / 12)) / sh.DivisorToDailyRate)))
+WHERE et.OrganizationID=NEW.OrganizationID
+AND et.EmployeeID=NEW.EmployeeID
+AND et.`Date` BETWEEN NEW.LeaveStartDate AND NEW.LeaveEndDate;
+
 /*IF OLD.LeaveStartDate = NEW.LeaveStartDate AND OLD.LeaveEndDate = NEW.LeaveEndDate THEN
 
     IF OLD.LeaveStartTime != NEW.LeaveStartTime OR OLD.LeaveEndTime != NEW.LeaveEndTime THEN

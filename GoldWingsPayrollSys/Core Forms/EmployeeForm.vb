@@ -8002,16 +8002,13 @@ Public Class EmployeeForm
             End If
         End If
 
-        If thegetval <> "" Then
-            dgvempleave.Item("elv_Reason", dgvleaveRowindx).Value = thegetval
-            txtreason.Text = thegetval
-            dgvempleave.Item("elv_viewimage", dgvleaveRowindx).Value = "view this"
+        dgvempleave.Item("elv_Reason", dgvleaveRowindx).Value = thegetval
+        txtreason.Text = thegetval
+        dgvempleave.Item("elv_viewimage", dgvleaveRowindx).Value = "view this"
 
-            If thegetval <> prev_elv_Reason _
+        If thegetval <> prev_elv_Reason _
                     And dgvempleave.Item("elv_RowID", dgvleaveRowindx).Value <> Nothing Then
-                listofEditRowleave.Add(dgvempleave.Item("elv_RowID", dgvleaveRowindx).Value)
-            End If
-
+            listofEditRowleave.Add(dgvempleave.Item("elv_RowID", dgvleaveRowindx).Value)
         End If
 
     End Sub
@@ -8053,16 +8050,13 @@ Public Class EmployeeForm
             End If
         End If
 
-        If thegetval <> "" Then
-            dgvempleave.Item("elv_Comment", dgvleaveRowindx).Value = thegetval
-            txtcomments.Text = thegetval
-            dgvempleave.Item("elv_viewimage", dgvleaveRowindx).Value = "view this"
+        dgvempleave.Item("elv_Comment", dgvleaveRowindx).Value = thegetval
+        txtcomments.Text = thegetval
+        dgvempleave.Item("elv_viewimage", dgvleaveRowindx).Value = "view this"
 
-            If thegetval <> prev_elv_Comment _
+        If thegetval <> prev_elv_Comment _
                     And dgvempleave.Item("elv_RowID", dgvleaveRowindx).Value <> Nothing Then
-                listofEditRowleave.Add(dgvempleave.Item("elv_RowID", dgvleaveRowindx).Value)
-            End If
-
+            listofEditRowleave.Add(dgvempleave.Item("elv_RowID", dgvleaveRowindx).Value)
         End If
 
     End Sub
