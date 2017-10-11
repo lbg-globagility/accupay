@@ -127,6 +127,8 @@ Partial Class MDIPrimaryForm
         Me.ToolStripLabel14 = New System.Windows.Forms.ToolStripLabel()
         Me.lblUpdatedDate = New System.Windows.Forms.ToolStripLabel()
         Me.tslblUpdate = New System.Windows.Forms.ToolStripLabel()
+        Me.lblVersionName = New System.Windows.Forms.ToolStripLabel()
+        Me.lblVersionValue = New System.Windows.Forms.ToolStripLabel()
         Me.systemprogressbar = New System.Windows.Forms.ToolStripProgressBar()
         Me.Showmainbutton = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton0 = New System.Windows.Forms.ToolStripButton()
@@ -144,8 +146,6 @@ Partial Class MDIPrimaryForm
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.ctxtmenNothing = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
-        Me.lblVersionName = New System.Windows.Forms.ToolStripLabel()
-        Me.lblVersionValue = New System.Windows.Forms.ToolStripLabel()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -1184,6 +1184,18 @@ Partial Class MDIPrimaryForm
         Me.tslblUpdate.Name = "tslblUpdate"
         Me.tslblUpdate.Size = New System.Drawing.Size(15, 22)
         '
+        'lblVersionName
+        '
+        Me.lblVersionName.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblVersionName.Name = "lblVersionName"
+        Me.lblVersionName.Size = New System.Drawing.Size(51, 22)
+        Me.lblVersionName.Text = "Version:"
+        '
+        'lblVersionValue
+        '
+        Me.lblVersionValue.Name = "lblVersionValue"
+        Me.lblVersionValue.Size = New System.Drawing.Size(0, 22)
+        '
         'systemprogressbar
         '
         Me.systemprogressbar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
@@ -1345,18 +1357,6 @@ Partial Class MDIPrimaryForm
         Me.BackgroundWorker1.WorkerReportsProgress = True
         Me.BackgroundWorker1.WorkerSupportsCancellation = True
         '
-        'lblVersionName
-        '
-        Me.lblVersionName.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblVersionName.Name = "lblVersionName"
-        Me.lblVersionName.Size = New System.Drawing.Size(52, 22)
-        Me.lblVersionName.Text = "Version:"
-        '
-        'lblVersionValue
-        '
-        Me.lblVersionValue.Name = "lblVersionValue"
-        Me.lblVersionValue.Size = New System.Drawing.Size(0, 22)
-        '
         'MDIPrimaryForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1366,7 +1366,6 @@ Partial Class MDIPrimaryForm
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.Showmainbutton)
         Me.Controls.Add(Me.ToolStrip1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(1065, 590)
         Me.Name = "MDIPrimaryForm"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
