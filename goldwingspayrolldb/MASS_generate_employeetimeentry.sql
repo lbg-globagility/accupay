@@ -50,12 +50,20 @@ WHERE eot.OrganizationID = OrganizID
 AND (eot.OTStartDate >= periodDateFrom OR eot.OTEndDate >= periodDateFrom)
 AND (eot.OTStartDate <= periodDateTo OR eot.OTEndDate <= periodDateTo);
 
-SELECT GENERATE_employeetimeentry(e.RowID,OrganizID,d.DateValue,UserRowID)
-FROM dates d
-INNER JOIN payfrequency pf ON pf.PayFrequencyType=Pay_FrequencyType
-INNER JOIN `position` ps ON ps.OrganizationID=OrganizID AND ps.DivisionId = DivisionRowID
-INNER JOIN employee e ON e.OrganizationID=OrganizID AND e.PayFrequencyID=pf.RowID AND e.PositionID=ps.RowID
-WHERE d.DateValue BETWEEN periodDateFrom AND periodDateTo;
+IF ISNULL(DivisionRowID)
+    SELECT GENERATE_employeetimeentry(e.RowID, OrganizID, d.DateValue, UserRowID)
+    FROM dates d
+    INNER JOIN payfrequency pf ON pf.PayFrequencyType=Pay_FrequencyType
+    INNER JOIN employee e ON e.OrganizationID=OrganizID AND e.PayFrequencyID=pf.RowID
+    WHERE d.DateValue BETWEEN periodDateFrom AND periodDateTo;
+ELSE
+    SELECT GENERATE_employeetimeentry(e.RowID, OrganizID, d.DateValue, UserRowID)
+    FROM dates d
+    INNER JOIN payfrequency pf ON pf.PayFrequencyType=Pay_FrequencyType
+    INNER JOIN `position` ps ON ps.OrganizationID=OrganizID AND ps.DivisionId = DivisionRowID
+    INNER JOIN employee e ON e.OrganizationID=OrganizID AND e.PayFrequencyID=pf.RowID AND e.PositionID=ps.RowID
+    WHERE d.DateValue BETWEEN periodDateFrom AND periodDateTo;
+END IF;
 
 END//
 DELIMITER ;
