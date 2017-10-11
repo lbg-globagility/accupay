@@ -12,8 +12,6 @@ Public Class TimEntduration
     Dim new_conn As New MySqlConnection
     Dim new_cmd As New MySqlCommand
 
-    Dim employee_dattab As New DataTable
-
     Dim current_years = 0
 
     Public Event DoneGenerating()
@@ -47,6 +45,12 @@ Public Class TimEntduration
 
             cboxDivisions.DisplayMember = .Columns(1).ColumnName
 
+            Dim allOptionRow = n_SQLQueryToDatatable.ResultTable.NewRow()
+            allOptionRow("RowID") = DBNull.Value
+            allOptionRow("Name") = "All"
+
+            n_SQLQueryToDatatable.ResultTable.Rows.InsertAt(allOptionRow, 0)
+
             cboxDivisions.DataSource = n_SQLQueryToDatatable.ResultTable
 
         End With
@@ -69,8 +73,6 @@ Public Class TimEntduration
         linkPrev.Text = "← " & (current_years - 1)
         linkNxt.Text = (current_years + 1) & " →"
 
-
-
         txtYr.Text = CDate(EmpTimeEntry.today_date).Year
 
         cbomonth.Items.Clear()
@@ -80,7 +82,7 @@ Public Class TimEntduration
         For i = 0 To 11
             'EXECQUER("SELECT DATE_FORMAT(DATE_ADD(MAKEDATE(YEAR(NOW()),1), INTERVAL " & i & " MONTH),'%M');")
 
-            date_month = Format(CDate(txtYr.Text & "-01-01").AddMonths(i), _
+            date_month = Format(CDate(txtYr.Text & "-01-01").AddMonths(i),
                                 "MMMM")
 
             cbomonth.Items.Add(date_month)
@@ -89,9 +91,7 @@ Public Class TimEntduration
 
         cbomonth.SelectedIndex = CDate(EmpTimeEntry.today_date).Month - 1
 
-
         Dim payfrqncy As New AutoCompleteStringCollection
-
 
         Dim sel_query = ""
 
@@ -104,7 +104,6 @@ Public Class TimEntduration
         End If
 
         enlistTheLists(sel_query, payfrqncy)
-
 
         Dim first_sender As New ToolStripButton
 
@@ -146,7 +145,6 @@ Public Class TimEntduration
         If first_sender IsNot Nothing Then
             PayFreq_Changed(first_sender, New EventArgs)
         End If
-
 
         'With dgvpayper
         '    .Columns("RowID").Visible = False
@@ -210,7 +208,6 @@ Public Class TimEntduration
         End If
 
         If prevObj.Name = Nothing Then
-
         Else
 
             If prevObj.Name <> senderObj.Name Then
@@ -239,12 +236,12 @@ Public Class TimEntduration
 
         'loadpayp(CDate(EmpTimeEntry.today_date), quer_empPayFreq)
 
-        loadpayp(Trim(txtYr.Text) & "-" & sel_month & "-01", _
+        loadpayp(Trim(txtYr.Text) & "-" & sel_month & "-01",
                  quer_empPayFreq)
 
     End Sub
 
-    Sub loadpayp(Optional param_Date As Object = Nothing, _
+    Sub loadpayp(Optional param_Date As Object = Nothing,
                  Optional PayFreqType As Object = "SEMI-MONTHLY")
 
         'Dim param(3, 2) As Object
@@ -308,14 +305,14 @@ Public Class TimEntduration
             sel_month = "0" & sel_month
         End If
 
-        loadpayp(Trim(txtYr.Text) & "-" & sel_month & "-01", _
+        loadpayp(Trim(txtYr.Text) & "-" & sel_month & "-01",
                  quer_empPayFreq)
 
         dgvpayper.Focus()
 
     End Sub
 
-    Private Sub TextBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles txtYr.KeyDown, _
+    Private Sub TextBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles txtYr.KeyDown,
                                                                               cbomonth.KeyDown
         If e.KeyCode = Keys.Enter Then
             Button2_Click(sender, e)
@@ -374,7 +371,6 @@ Public Class TimEntduration
             'Me.Hide()
 
             MDIPrimaryForm.BringToFront()
-
         Else
             e.Cancel = True
             me_close = 0
@@ -453,33 +449,32 @@ Public Class TimEntduration
 
                 With .CurrentRow
 
-                    year_payp = If(.Cells("Pay period from").Value = Nothing, _
-                                                    CDate(EmpTimeEntry.today_date).Year, _
+                    year_payp = If(.Cells("Pay period from").Value = Nothing,
+                                                    CDate(EmpTimeEntry.today_date).Year,
                                                     CDate(.Cells("Pay period from").Value).Year)
 
-
-                    day_paypFrom = If(.Cells("Pay period from").Value = Nothing, _
-                                      CDate(.Cells("Pay period to").Value).Day, _
+                    day_paypFrom = If(.Cells("Pay period from").Value = Nothing,
+                                      CDate(.Cells("Pay period to").Value).Day,
                                       CDate(.Cells("Pay period from").Value).Day)
 
-                    day_paypTo = If(.Cells("Pay period to").Value = Nothing, _
-                                    CDate(.Cells("Pay period from").Value).Day, _
+                    day_paypTo = If(.Cells("Pay period to").Value = Nothing,
+                                    CDate(.Cells("Pay period from").Value).Day,
                                     CDate(.Cells("Pay period to").Value).Day)
 
-                    month_paypFrom = If(.Cells("Pay period from").Value = Nothing, _
-                                        CDate(.Cells("Pay period to").Value).Month, _
+                    month_paypFrom = If(.Cells("Pay period from").Value = Nothing,
+                                        CDate(.Cells("Pay period to").Value).Month,
                                         CDate(.Cells("Pay period from").Value).Month)
 
-                    month_paypTo = If(.Cells("Pay period to").Value = Nothing, _
-                                      CDate(.Cells("Pay period from").Value).Month, _
+                    month_paypTo = If(.Cells("Pay period to").Value = Nothing,
+                                      CDate(.Cells("Pay period from").Value).Month,
                                       CDate(.Cells("Pay period to").Value).Month)
 
-                    date_paypFrom = If(.Cells("Pay period from").Value = Nothing, _
-                                       CDate(EmpTimeEntry.today_date), _
+                    date_paypFrom = If(.Cells("Pay period from").Value = Nothing,
+                                       CDate(EmpTimeEntry.today_date),
                                        CDate(.Cells("Pay period from").Value))
 
-                    date_paypTo = If(.Cells("Pay period to").Value = Nothing, _
-                                     CDate(EmpTimeEntry.today_date), _
+                    date_paypTo = If(.Cells("Pay period to").Value = Nothing,
+                                     CDate(EmpTimeEntry.today_date),
                                      CDate(.Cells("Pay period to").Value))
 
                     If day_today = day_paypFrom Then
@@ -491,7 +486,6 @@ Public Class TimEntduration
                     ElseIf day_today = 16 Then
 
                     ElseIf day_today = day_paypTo Then
-
                     Else
 
                     End If
@@ -571,17 +565,17 @@ Public Class TimEntduration
 
                         'Next
 
-                        If DateDiff(DateInterval.Day, _
-                                    CDate(empsh_EffTo), _
+                        If DateDiff(DateInterval.Day,
+                                    CDate(empsh_EffTo),
                                     CDate(EmpTimeEntry.today_date)) <= 0 Then 'the date today is
                             '                                                 'within the effecitivity
                             '                                                 'of the employee's shift
 
-                            Dim drowExists() As DataRow = EmpTimeEntry.employeetimeentry.Select("Date>='" & year_payp & _
-                                                                                                "-" & month_paypFrom & _
-                                                                                                "-" & If(day_paypFrom.ToString.Length = 1, "0" & day_paypFrom, day_paypFrom) & "'" & _
-                                                                                                " AND Date<='" & year_payp & _
-                                                                                                "-" & month_paypFrom & _
+                            Dim drowExists() As DataRow = EmpTimeEntry.employeetimeentry.Select("Date>='" & year_payp &
+                                                                                                "-" & month_paypFrom &
+                                                                                                "-" & If(day_paypFrom.ToString.Length = 1, "0" & day_paypFrom, day_paypFrom) & "'" &
+                                                                                                " AND Date<='" & year_payp &
+                                                                                                "-" & month_paypFrom &
                                                                                                 "-" & If(day_paypTo.ToString.Length = 1, "0" & day_paypTo, day_paypTo) & "'")
 
                             'For Each r As DataRow In drowExists
@@ -596,10 +590,10 @@ Public Class TimEntduration
                             '    MsgBox(drowExists(0).ToString)
                             'End If
 
-                            Dim UTval, _
-                                UTNightval, _
-                                OTval, _
-                                OTNightval, _
+                            Dim UTval,
+                                UTNightval,
+                                OTval,
+                                OTNightval,
                                 Lateval As Object
                             UTNightval = ValNoComma(0) : OTNightval = ValNoComma(0)
                             Dim ot_hrsworkd = ValNoComma(0)
@@ -610,12 +604,12 @@ Public Class TimEntduration
                                 Dim dateFrom = Format(CDate(dgvpayper.CurrentRow.Cells("Pay period from").Value), "yyyy-MM-dd")
                                 Dim dateTo = Format(CDate(dgvpayper.CurrentRow.Cells("Pay period to").Value), "yyyy-MM-dd")
 
-                                Dim firstbound = If(dgvpayper.CurrentRow.Cells("Pay period from").Value = Nothing, _
-                                                    CDate(dgvpayper.CurrentRow.Cells("Pay period to").Value).Day, _
+                                Dim firstbound = If(dgvpayper.CurrentRow.Cells("Pay period from").Value = Nothing,
+                                                    CDate(dgvpayper.CurrentRow.Cells("Pay period to").Value).Day,
                                                     CDate(dgvpayper.CurrentRow.Cells("Pay period from").Value).Day)
 
-                                Dim lastbound = If(dgvpayper.CurrentRow.Cells("Pay period to").Value = Nothing, _
-                                                    CDate(dgvpayper.CurrentRow.Cells("Pay period from").Value).Day, _
+                                Dim lastbound = If(dgvpayper.CurrentRow.Cells("Pay period to").Value = Nothing,
+                                                    CDate(dgvpayper.CurrentRow.Cells("Pay period from").Value).Day,
                                                     CDate(dgvpayper.CurrentRow.Cells("Pay period to").Value).Day)
 
                                 Dim month = If(month_paypFrom.ToString.Length = 1, "0" & month_paypFrom, month_paypFrom)
@@ -629,23 +623,23 @@ Public Class TimEntduration
                                     Dim i_dateDay = If(i_date.ToString.Length = 1, "0" & i_date, i_date)
 
                                     dt_esh = New DataTable
-                                    dt_esh = retAsDatTbl("SELECT " & _
-                                     "esh.RowID 'esh_RowID'" & _
-                                     ",COALESCE(DATE_FORMAT(esh.EffectiveFrom,'%m-%d-%Y'),MAKEDATE(YEAR(NOW()),1)) 'EffFrom'" & _
-                                     ",COALESCE(DATE_FORMAT(esh.EffectiveTo,'%m-%d-%Y'),DATE_FORMAT(MAKEDATE(YEAR(NOW()),DAYOFYEAR(DATE(CONCAT(YEAR(NOW()),'-12-',DAY(LAST_DAY(DATE(CONCAT(YEAR(NOW()),'-12-00')))))))),'%m-%d-%Y')) 'EffTo'" & _
-                                     ",COALESCE(sh.RowID,'') 'sh_RowID'" & _
-                                     ",COALESCE(TIME_FORMAT(sh.TimeFrom,'%r'),'') 'sh_TimeFrom'" & _
-                                     ",COALESCE(TIME_FORMAT(sh.TimeTo,'%r'),'') 'sh_TimeTo'" & _
-                                     ",COALESCE(TIME_FORMAT(sh.TimeFrom,'%H:%i:%s'),'') 'sh_TimeFromMILIT'" & _
-                                     ",COALESCE(TIME_FORMAT(sh.TimeTo,'%H:%i:%s'),'') 'sh_TimeToMILIT'" & _
-                                     ",COALESCE(esh.NightShift,'') 'NightShift'" & _
-                                     ",COALESCE((CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(sh.TimeFrom>sh.TimeTo,ADDTIME(sh.TimeTo, '24:00:00'),sh.TimeTo),'%H:%i:%s'),TIME_FORMAT(sh.TimeFrom,'%H:%i:%s')),':',1) AS INT)) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(sh.TimeFrom>sh.TimeTo,ADDTIME(sh.TimeTo, '24:00:00'),sh.TimeTo),'%H:%i:%s'),TIME_FORMAT(sh.TimeFrom,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),0) 'RegularHrsWork'" & _
-                                     " FROM employeeshift esh" & _
-                                     " LEFT JOIN shift sh ON sh.RowID=esh.ShiftID" & _
-                                     " WHERE esh.EmployeeID=" & .dgvEmployi.CurrentRow.Cells("RowID").Value & _
-                                     " AND esh.OrganizationID=" & orgztnID & _
-                                     " AND CAST('" & year_payp & "-" & month & "-" & i_dateDay & "' AS DATE)" & _
-                                     " BETWEEN COALESCE(esh.EffectiveFrom,DATE_ADD(DATE('" & year_payp & "-" & month & "-" & i_dateDay & "'), INTERVAL -1 MONTH))" & _
+                                    dt_esh = retAsDatTbl("SELECT " &
+                                     "esh.RowID 'esh_RowID'" &
+                                     ",COALESCE(DATE_FORMAT(esh.EffectiveFrom,'%m-%d-%Y'),MAKEDATE(YEAR(NOW()),1)) 'EffFrom'" &
+                                     ",COALESCE(DATE_FORMAT(esh.EffectiveTo,'%m-%d-%Y'),DATE_FORMAT(MAKEDATE(YEAR(NOW()),DAYOFYEAR(DATE(CONCAT(YEAR(NOW()),'-12-',DAY(LAST_DAY(DATE(CONCAT(YEAR(NOW()),'-12-00')))))))),'%m-%d-%Y')) 'EffTo'" &
+                                     ",COALESCE(sh.RowID,'') 'sh_RowID'" &
+                                     ",COALESCE(TIME_FORMAT(sh.TimeFrom,'%r'),'') 'sh_TimeFrom'" &
+                                     ",COALESCE(TIME_FORMAT(sh.TimeTo,'%r'),'') 'sh_TimeTo'" &
+                                     ",COALESCE(TIME_FORMAT(sh.TimeFrom,'%H:%i:%s'),'') 'sh_TimeFromMILIT'" &
+                                     ",COALESCE(TIME_FORMAT(sh.TimeTo,'%H:%i:%s'),'') 'sh_TimeToMILIT'" &
+                                     ",COALESCE(esh.NightShift,'') 'NightShift'" &
+                                     ",COALESCE((CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(sh.TimeFrom>sh.TimeTo,ADDTIME(sh.TimeTo, '24:00:00'),sh.TimeTo),'%H:%i:%s'),TIME_FORMAT(sh.TimeFrom,'%H:%i:%s')),':',1) AS INT)) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(sh.TimeFrom>sh.TimeTo,ADDTIME(sh.TimeTo, '24:00:00'),sh.TimeTo),'%H:%i:%s'),TIME_FORMAT(sh.TimeFrom,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),0) 'RegularHrsWork'" &
+                                     " FROM employeeshift esh" &
+                                     " LEFT JOIN shift sh ON sh.RowID=esh.ShiftID" &
+                                     " WHERE esh.EmployeeID=" & .dgvEmployi.CurrentRow.Cells("RowID").Value &
+                                     " AND esh.OrganizationID=" & orgztnID &
+                                     " AND CAST('" & year_payp & "-" & month & "-" & i_dateDay & "' AS DATE)" &
+                                     " BETWEEN COALESCE(esh.EffectiveFrom,DATE_ADD(DATE('" & year_payp & "-" & month & "-" & i_dateDay & "'), INTERVAL -1 MONTH))" &
                                      " AND COALESCE(esh.EffectiveTo,DATE_ADD(DATE('" & year_payp & "-" & month & "-" & i_dateDay & "'), INTERVAL 1 MONTH));")
 
                                     '*******KUNG MAY GRACE TIME, THEN HERE...**********
@@ -682,7 +676,6 @@ Public Class TimEntduration
                                             .curr_RegHrsWork = drow("RegularHrsWork")
 
                                             'isNightShift = 0 'DAY SHIFT
-
                                         Else '                              'NIGHT SHIFT
 
                                             .currNightEShiftID = drow("esh_RowID")
@@ -699,31 +692,31 @@ Public Class TimEntduration
 
                                     If .dgvEmployi.RowCount <> 0 Then
 
-                                        dt_etent = retAsDatTbl("SELECT RowID" & _
-                                                               ", COALESCE(TIME_FORMAT(TimeIn,'%H:%i:%s'),'') 'TimeIn'" & _
-                                                               ", COALESCE(TIME_FORMAT(TimeOut,'%H:%i:%s'),'') 'TimeOut'" & _
-                                                               ", COALESCE(DATE_FORMAT(Date,'%m-%d-%Y'),'') 'Date'" & _
-                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF('" & .curr_TimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF('" & .curr_TimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),'') 'IsLate'" & _
-                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_TimeToMILIT & "'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_TimeToMILIT & "'),':',-2),':',1) AS DECIMAL) / 60),'') 'IsUT'" & _
-                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'17:00:00'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'17:00:00'),':',-2),':',1) AS DECIMAL) / 60),'') 'OT'" & _
-                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(TimeIn>TimeOut,ADDTIME(TimeOut, '24:00:00'),TimeOut),'%H:%i:%s'), TIME_FORMAT(TimeIn,'%H:%i:%s')),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(TimeIn>TimeOut,ADDTIME(TimeOut, '24:00:00'),TimeOut),'%H:%i:%s'), TIME_FORMAT(TimeIn,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),0) 'HRS_workd'" & _
-                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF('" & .curr_NightTimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF('" & .curr_NightTimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),'') 'IsLateNight'" & _
-                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_NightTimeToMILIT & "'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_NightTimeToMILIT & "'),':',-2),':',1) AS DECIMAL) / 60),'') 'IsUTNight'" & _
-                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_NightTimeToMILIT & "'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_NightTimeToMILIT & "'),':',-2),':',1) AS DECIMAL) / 60),'') 'OTNight'" & _
-                                                               " FROM employeetimeentrydetails" & _
-                                                               " WHERE EmployeeID=" & .dgvEmployi.CurrentRow.Cells("RowID").Value & _
-                                                               " AND DATE BETWEEN DATE('" & dateFrom & "') AND DATE('" & dateTo & "')" & _
-                                                               " AND OrganizationID=" & orgztnID & _
+                                        dt_etent = retAsDatTbl("SELECT RowID" &
+                                                               ", COALESCE(TIME_FORMAT(TimeIn,'%H:%i:%s'),'') 'TimeIn'" &
+                                                               ", COALESCE(TIME_FORMAT(TimeOut,'%H:%i:%s'),'') 'TimeOut'" &
+                                                               ", COALESCE(DATE_FORMAT(Date,'%m-%d-%Y'),'') 'Date'" &
+                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF('" & .curr_TimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF('" & .curr_TimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),'') 'IsLate'" &
+                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_TimeToMILIT & "'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_TimeToMILIT & "'),':',-2),':',1) AS DECIMAL) / 60),'') 'IsUT'" &
+                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'17:00:00'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'17:00:00'),':',-2),':',1) AS DECIMAL) / 60),'') 'OT'" &
+                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(TimeIn>TimeOut,ADDTIME(TimeOut, '24:00:00'),TimeOut),'%H:%i:%s'), TIME_FORMAT(TimeIn,'%H:%i:%s')),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(TimeIn>TimeOut,ADDTIME(TimeOut, '24:00:00'),TimeOut),'%H:%i:%s'), TIME_FORMAT(TimeIn,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),0) 'HRS_workd'" &
+                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF('" & .curr_NightTimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF('" & .curr_NightTimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),'') 'IsLateNight'" &
+                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_NightTimeToMILIT & "'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_NightTimeToMILIT & "'),':',-2),':',1) AS DECIMAL) / 60),'') 'IsUTNight'" &
+                                                               ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_NightTimeToMILIT & "'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & .curr_NightTimeToMILIT & "'),':',-2),':',1) AS DECIMAL) / 60),'') 'OTNight'" &
+                                                               " FROM employeetimeentrydetails" &
+                                                               " WHERE EmployeeID=" & .dgvEmployi.CurrentRow.Cells("RowID").Value &
+                                                               " AND DATE BETWEEN DATE('" & dateFrom & "') AND DATE('" & dateTo & "')" &
+                                                               " AND OrganizationID=" & orgztnID &
                                                                " ORDER BY RowID ASC;") '" ORDER BY DATE_FORMAT(Created,'%H') ASC;")
                                     Else
                                         dt_etent = Nothing
                                     End If
 
-                                    Dim hrs_workd As Object = dt_etent.Compute("SUM(HRS_workd)", _
+                                    Dim hrs_workd As Object = dt_etent.Compute("SUM(HRS_workd)",
                                                                                "Date='" & month & "-" & i_dateDay & "-" & year_payp & "'")
 
-                                    hrswrkd = If(IsDBNull(hrs_workd), _
-                                                 0, _
+                                    hrswrkd = If(IsDBNull(hrs_workd),
+                                                 0,
                                                  hrs_workd)
 
                                     OTval = Nothing
@@ -741,8 +734,8 @@ Public Class TimEntduration
 
                                     End If
 
-                                    Dim lateDayNight() As DataRow = _
-                                        dt_etent.Select("Date='" & month & "-" & i_dateDay & "-" & year_payp & "'", _
+                                    Dim lateDayNight() As DataRow =
+                                        dt_etent.Select("Date='" & month & "-" & i_dateDay & "-" & year_payp & "'",
                                                         "TimeIn ASC")
 
                                     Lateval = Nothing
@@ -753,12 +746,12 @@ Public Class TimEntduration
                                         '    'Lateval = If(drw("IsLate").ToString.Contains("-"), _
                                         '    '             Val(drw("IsLate")) * -1, _
                                         '    '             0)
-                                        Lateval = DateDiff(DateInterval.Minute, _
-                                                           CDate(drw("TimeIn")), _
+                                        Lateval = DateDiff(DateInterval.Minute,
+                                                           CDate(drw("TimeIn")),
                                                            If(.curr_NightTimeFromMILIT = Nothing, CDate(.curr_TimeFromMILIT), CDate(.curr_NightTimeFromMILIT)))
 
-                                        Lateval = If(Lateval < 0, _
-                                                     (Lateval * -1) / 60, _
+                                        Lateval = If(Lateval < 0,
+                                                     (Lateval * -1) / 60,
                                                      0)
                                         'Else
                                         '    Lateval = If(drw("IsLateNight").ToString.Contains("-"), _
@@ -863,16 +856,16 @@ Public Class TimEntduration
 
                                         nightshiftstart = If(Trim(nightshiftstart) = "", "20:00:00", nightshiftstart)
 
-                                        Dim isNightShift = If(.curr_TimeFromMILIT = Nothing, _
-                                                              DateDiff(DateInterval.Minute, CDate(.curr_NightTimeFromMILIT), CDate(nightshiftstart)) / 60, _
+                                        Dim isNightShift = If(.curr_TimeFromMILIT = Nothing,
+                                                              DateDiff(DateInterval.Minute, CDate(.curr_NightTimeFromMILIT), CDate(nightshiftstart)) / 60,
                                                               DateDiff(DateInterval.Minute, CDate(.curr_TimeFromMILIT), CDate(nightshiftstart)))
 
                                         isNightShift = If(isNightShift <= 0, 1, 0)
 
-                                        EmpTimeEntry.INSUPD_employeetimeentry(, _
-                                            the_paypdate, _
-                                            If(.currNightEShiftID <> Nothing, .currNightEShiftID, .currEShiftID), _
-                                            .dgvEmployi.CurrentRow.Cells("RowID").Value, _
+                                        EmpTimeEntry.INSUPD_employeetimeentry(,
+                                            the_paypdate,
+                                            If(.currNightEShiftID <> Nothing, .currNightEShiftID, .currEShiftID),
+                                            .dgvEmployi.CurrentRow.Cells("RowID").Value,
                                             , , hrswrkd, OTval, UTval, , , Lateval, , , , , isNightShift)
 
                                     End If
@@ -902,7 +895,6 @@ Public Class TimEntduration
                                     '    '*****************NIGHT SHIFT****************
 
                                 Next
-
                             Else
 
                                 'dt_etent = retAsDatTbl("SELECT RowID" & _
@@ -1016,7 +1008,6 @@ Public Class TimEntduration
                             ''NO OVER TIME
                             '',KUNG MAY ALLOWABLE HOUR(S) FOR OVER TIME
                             ''********************
-
                         Else
 
                         End If
@@ -1036,27 +1027,16 @@ Public Class TimEntduration
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
-        employee_dattab = retAsDatTbl("SELECT e.RowID" & _
-                                      ",e.StartDate" & _
-                                      " FROM employee e" & _
-                                      " INNER JOIN payfrequency pf ON pf.RowID=e.PayFrequencyID" & _
-                                      " INNER JOIN position ps ON ps.RowID=e.PositionID AND ps.DivisionId IN (" & cboxDivisions.Tag & ")" & _
-                                      " WHERE e.OrganizationID=" & orgztnID & _
-                                      " AND pf.PayFrequencyType='" & quer_empPayFreq & _
-                                      "' GROUP BY e.RowID" & _
-                                      " ORDER BY RowID;")
-
         If selectdayFrom = Nothing Or selectdayFrom = Nothing Then
             dgvpayper_SelectionChanged(sender, e)
         End If
 
-        Dim blankTimeOut = _
-            EXECQUER("SELECT COUNT(etd.RowID)" &
+        Dim blankTimeOut =
+            EXECQUER("Select COUNT(etd.RowID)" &
                      " FROM employeetimeentrydetails etd" &
                      " WHERE etd.OrganizationID=" & orgztnID & "" &
-                     " AND etd.EmployeeID IS NOT NULL" &
-                     " AND (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='')" &
+                     " And etd.EmployeeID Is Not NULL" &
+                     " And (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='')" &
                      " AND etd.`Date`" &
                      " BETWEEN '" & MYSQLDateFormat(CDate(selectdayFrom)) & "'" &
                      " AND '" & MYSQLDateFormat(CDate(selectdayTo)) & "'" &
@@ -1096,31 +1076,42 @@ Public Class TimEntduration
 
         ElseIf blankTimeOut = 0 Then
 
-            Dim timelogs =
-                EXECQUER(
-                    String.Concat("SELECT EXISTS(SELECT etd.RowID",
-                         " FROM employeetimeentrydetails etd",
-                         " INNER JOIN employee e ON e.RowID=etd.EmployeeID AND e.OrganizationID=etd.OrganizationID",
-                         " INNER JOIN division dv ON dv.RowID=", ValNoComma(cboxDivisions.Tag),
-                         " INNER JOIN `position` pos ON pos.RowID=e.PositionID AND pos.DivisionId=dv.RowID",
-                         " WHERE etd.OrganizationID=", orgztnID,
-                         " AND etd.`Date`",
-                         " BETWEEN '", Format(CDate(selectdayFrom), "yyyy-MM-dd"), "'",
-                         " AND '", Format(CDate(selectdayTo), "yyyy-MM-dd"), "');"))
+            Dim sql = String.Empty
 
-            If timelogs = 1 Then
-
+            If IsDBNull(cboxDivisions.Tag) Then
+                sql = ($"
+                    SELECT EXISTS(
+                        SELECT etd.RowID
+                        FROM employeetimeentrydetails etd
+                        INNER JOIN employee e ON e.RowID=etd.EmployeeID AND e.OrganizationID=etd.OrganizationID
+                        INNER JOIN `position` pos ON pos.RowID=e.PositionID
+                        WHERE etd.OrganizationID='{orgztnID}' AND
+                            etd.`Date` BETWEEN '{Format(CDate(selectdayFrom), "yyyy-MM-dd")}' AND '{Format(CDate(selectdayTo), "yyyy-MM-dd")}'
+                    );
+                ")
             Else
+                sql = ($"
+                    SELECT EXISTS(
+                        SELECT etd.RowID
+                        FROM employeetimeentrydetails etd
+                        INNER JOIN employee e ON e.RowID=etd.EmployeeID AND e.OrganizationID=etd.OrganizationID
+                        INNER JOIN division dv ON dv.RowID={ValNoComma(cboxDivisions.Tag)}
+                        INNER JOIN `position` pos ON pos.RowID=e.PositionID AND pos.DivisionId=dv.RowID
+                        WHERE etd.OrganizationID='{orgztnID}' AND
+                            etd.`Date` BETWEEN '{Format(CDate(selectdayFrom), "yyyy-MM-dd")}' AND '{Format(CDate(selectdayTo), "yyyy-MM-dd")}'
+                    );
+                ")
+            End If
 
-                MsgBox("There are no time logs within this pay period." & vbNewLine & _
+            Dim hasTimeLogs As Boolean = EXECQUER(sql)
+
+            If Not hasTimeLogs Then
+                MsgBox("There are no time logs within this pay period." & vbNewLine &
                        "Please prepare the time logs first.",
                        MsgBoxStyle.Information,
                        "")
-
                 Exit Sub
-
             End If
-
         End If
 
         'compute_employeetimeentry()
@@ -1134,8 +1125,6 @@ Public Class TimEntduration
         EmpTimeEntry.Nxt.Enabled = False
 
         EmpTimeEntry.Last.Enabled = False
-
-
 
         'EmpTimeEntry.ToolStrip1.Enabled = False
 
@@ -1190,8 +1179,8 @@ Public Class TimEntduration
 
         'firstbound = 1
 
-        Dim lastbound = DateDiff(DateInterval.Day, _
-                                 CDate(selectdayFrom), _
+        Dim lastbound = DateDiff(DateInterval.Day,
+                                 CDate(selectdayFrom),
                                  CDate(selectdayTo)) 'CDate(selectdayTo).Day
 
         'If(selectdayTo = Nothing, _
@@ -1233,18 +1222,6 @@ Public Class TimEntduration
 
         'Next
 
-
-
-
-
-
-
-
-
-
-
-
-
         'Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT CONCAT('SELECT GENERATE_employeetimeentry(', e.RowID,',', e.OrganizationID,',\'', d.DateValue,'\'," & z_User & ");')" & _
         '                                                     " FROM dates d" & _
         '                                                     " INNER JOIN employee e ON e.OrganizationID=" & orgztnID & _
@@ -1279,17 +1256,27 @@ Public Class TimEntduration
         'Dim n_ExecuteQuery As New ExecuteQuery("CALL EXEC_sql_from_file('" & sql_script & "');")
         '",'" & division_selectedvalue & "'" & _
         Try
-            Dim n_ExecuteQuery As _
-                    New ExecuteQuery("CALL MASS_generate_employeetimeentry('" & orgztnID & "'" & _
-                                     ",'" & quer_empPayFreq & "'" & _
-                                     ",'" & cboxDivisions.Tag & "'" & _
-                                     ",'" & z_User & "'" & _
-                                     ",'" & Format(CDate(selectdayFrom), "yyy-MM-dd") & "'" & _
+            If IsDBNull(cboxDivisions.Tag) Then
+                Dim n_ExecuteQuery As _
+                        New ExecuteQuery("CALL MASS_generate_employeetimeentry('" & orgztnID & "'" &
+                                         ",'" & quer_empPayFreq & "'" &
+                                         ",NULL" &
+                                         ",'" & z_User & "'" &
+                                         ",'" & Format(CDate(selectdayFrom), "yyy-MM-dd") & "'" &
+                                         ",'" & Format(CDate(selectdayTo), "yyy-MM-dd") & "');",
+                                         999999)
+            Else
+                Dim n_ExecuteQuery As _
+                    New ExecuteQuery("CALL MASS_generate_employeetimeentry('" & orgztnID & "'" &
+                                     ",'" & quer_empPayFreq & "'" &
+                                     ",'" & cboxDivisions.Tag & "'" &
+                                     ",'" & z_User & "'" &
+                                     ",'" & Format(CDate(selectdayFrom), "yyy-MM-dd") & "'" &
                                      ",'" & Format(CDate(selectdayTo), "yyy-MM-dd") & "');",
                                      999999)
+            End If
 
-
-            n_ExecuteQuery = _
+            Dim n_ExecuteQuery2 =
                 New ExecuteQuery("CALL RECOMPUTE_agencytotalbill('" & orgztnID & "', '" & dayFrom & "', '" & dayTo & "', '" & z_User & "');")
         Catch exception As Exception
             MsgBox("An unexpected error has occcured.", exception.Message)
@@ -1340,10 +1327,10 @@ Public Class TimEntduration
             MsgBox("Error: " & vbNewLine & e.Error.Message)
             'MessageBox.Show
         ElseIf e.Cancelled Then
-            MsgBox("Background work cancelled.", _
+            MsgBox("Background work cancelled.",
                    MsgBoxStyle.Exclamation)
         Else
-            MsgBox("Done computing the hours worked.", _
+            MsgBox("Done computing the hours worked.",
                    MsgBoxStyle.Information)
 
             If me_close = 1 Then
@@ -1372,8 +1359,6 @@ Public Class TimEntduration
         MDIPrimaryForm.systemprogressbar.Value = Nothing
         Button1.Enabled = True
 
-        employee_dattab = Nothing
-
         EmpTimeEntry.dgvEmployi_SelectionChanged(sender, e)
 
         EmpTimeEntry.dgvEmployi_SelectionChanged(sender, e)
@@ -1388,8 +1373,8 @@ Public Class TimEntduration
 
     End Sub
 
-    Function computehrswork_employeetimeentry(Optional etent_EmployeeID As Object = Nothing, _
-                                              Optional etent_Date As Object = Nothing, _
+    Function computehrswork_employeetimeentry(Optional etent_EmployeeID As Object = Nothing,
+                                              Optional etent_Date As Object = Nothing,
                                               Optional employee_startdate As Object = Nothing) As Object
         Dim return_value = Nothing
         Try
@@ -1464,7 +1449,6 @@ Public Class TimEntduration
                     dayTo = Format(CDate(selectdayTo), "yyyy-MM-dd")
 
                 End With
-
             Else
                 selectdayFrom = Nothing
                 selectdayTo = Nothing
@@ -1473,7 +1457,6 @@ Public Class TimEntduration
                 dayTo = Nothing
 
             End If
-
         Else
             selectdayFrom = Nothing
             selectdayTo = Nothing
@@ -1517,9 +1500,7 @@ Public Class TimEntduration
         '    New ExecuteQuery("CALL RESET_employeeleave_duplicate('" & orgztnID & "','" & dayFrom & "','" & dayTo & "'" &
         '                     ",'" & quer_empPayFreq & "','" & cboxDivisions.Tag & "');", 999999)
 
-
         'n_ExecuteQuery = New ExecuteQuery("CALL RECOMPUTE_employeeleave('" & orgztnID & "','" & dayFrom & "','" & dayTo & "');", 999999)
-
 
         bgworkRECOMPUTE_employeeleave.ReportProgress(50, "")
     End Sub
@@ -1538,13 +1519,11 @@ Public Class TimEntduration
             MsgBox("Error: " & vbNewLine & e.Error.Message & vbNewLine & "bgworkRECOMPUTE_employeeleave_RunWorkerCompleted")
 
         ElseIf e.Cancelled Then
-            MsgBox("Background work cancelled.", _
+            MsgBox("Background work cancelled.",
                    MsgBoxStyle.Exclamation)
         Else
 
-
             bgWork.RunWorkerAsync()
-
 
         End If
     End Sub
@@ -1586,7 +1565,6 @@ Public Class TimEntduration
             End If
 
             Return True
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)

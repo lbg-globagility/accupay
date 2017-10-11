@@ -50,7 +50,7 @@ WHERE eot.OrganizationID = OrganizID
 AND (eot.OTStartDate >= periodDateFrom OR eot.OTEndDate >= periodDateFrom)
 AND (eot.OTStartDate <= periodDateTo OR eot.OTEndDate <= periodDateTo);
 
-IF ISNULL(DivisionRowID)
+IF ISNULL(DivisionRowID) THEN
     SELECT GENERATE_employeetimeentry(e.RowID, OrganizID, d.DateValue, UserRowID)
     FROM dates d
     INNER JOIN payfrequency pf ON pf.PayFrequencyType=Pay_FrequencyType
