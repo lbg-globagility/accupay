@@ -1,9 +1,16 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for trigger hyundaipayrolldb_dev.AFTINS_employeeleave_then_employeetimeentry
 DROP TRIGGER IF EXISTS `AFTINS_employeeleave_then_employeetimeentry`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -75,7 +82,7 @@ DECLARE late_hrs DECIMAL(11,6);
 
 DECLARE under_hrs DECIMAL(11,6);
 
-
+DECLARE month_count_peryear INT(11) DEFAULT 12;
 
 
 SELECT NEW.LeaveType INTO leavetype;
@@ -187,12 +194,12 @@ ELSE
                 SELECT RowID FROM employeetimeentry WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND `Date`=dateloop INTO etentRowID;
 
 
-                SELECT RowID,BasicPay FROM employeesalary WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND dateloop BETWEEN DATE(COALESCE(EffectiveDateFrom,DATE_FORMAT(CURRENT_TIMESTAMP(),'%Y-%m-%d'))) AND DATE(COALESCE(EffectiveDateTo,dateloop)) AND DATEDIFF(dateloop,EffectiveDateFrom) >= 0 ORDER BY DATEDIFF(DATE_FORMAT(dateloop,'%Y-%m-%d'),EffectiveDateFrom) LIMIT 1 INTO esal_RowID,dailypayamount;
+                SELECT esa.RowID, IF(e.EmployeeType='Daily', esa.BasicPay, (esa.Salary / (e.WorkDaysPerYear / month_count_peryear))) `BasicPay` FROM employeesalary esa INNER JOIN employee e ON e.RowID=esa.EmployeeID WHERE esa.EmployeeID=NEW.EmployeeID AND esa.OrganizationID=NEW.OrganizationID AND dateloop BETWEEN DATE(COALESCE(esa.EffectiveDateFrom,DATE_FORMAT(CURRENT_TIMESTAMP(),'%Y-%m-%d'))) AND DATE(COALESCE(esa.EffectiveDateTo,dateloop)) AND DATEDIFF(dateloop,esa.EffectiveDateFrom) >= 0 ORDER BY DATEDIFF(DATE_FORMAT(dateloop,'%Y-%m-%d'),esa.EffectiveDateFrom) LIMIT 1 INTO esal_RowID, dailypayamount;
 
 
-                SELECT GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, dateloop) INTO dailypayamount;
+                # SELECT GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, dateloop) INTO dailypayamount;
 
-                IF e_EmpType = 'Monthly 15a1s5d1f5a1sd1f51asd51f5s1da5' THEN
+                /*IF e_EmpType = 'Monthly 15a1s5d1f5a1sd1f51asd51f5s1da5' THEN
 
                     SELECT BasicPay
                     ,Salary
@@ -208,7 +215,7 @@ ELSE
 
                     SET dailypayamount = empBasicPay / GET_employeesalarydivisor(NEW.OrganizationID, NEW.EmployeeID, dateloop);
 
-                END IF;
+                END IF;*/
 
 
 
@@ -217,23 +224,24 @@ ELSE
                 FROM shift sh
                 WHERE sh.RowID=shift_RowID
                 INTO sh_timefrom,sh_timeto;
+                
+                SET numhrsworkd =  (TIMESTAMPDIFF(SECOND
+														        ,CONCAT_DATETIME(NEW.LeaveStartDate, sh_timefrom)
+																  ,CONCAT_DATETIME(ADDDATE(NEW.LeaveStartDate, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh_timefrom, sh_timeto) DAY), sh_timeto))
+												/ 3600);
+									
+                IF (numhrsworkd < 6) = FALSE THEN
 
-                IF COMPUTE_TimeDifference(sh_timefrom, sh_timeto) < 6 THEN
-
-                    SET numhrsworkd = COMPUTE_TimeDifference(NEW.LeaveStartTime, NEW.LeaveEndTime);
-
-                ELSE
-
-                    SET numhrsworkd = COMPUTE_TimeDifference(NEW.LeaveStartTime, NEW.LeaveEndTime) - 1.0;
+                    SET numhrsworkd = (numhrsworkd - 1);
 
                 END IF;
 
-                IF IFNULL(numhrsworkd,0) < 0 THEN
-                    SET numhrsworkd = 0;
-                END IF;
+                SET numhrsworkd = IFNULL(numhrsworkd, 0);
 
-                SET hourlypayamount = dailypayamount / numhrsworkd;
+                SET hourlypayamount = (dailypayamount / numhrsworkd);
 
+				    SET numhrsworkd = NEW.OfficialValidHours;
+				
                 IF leavetype LIKE '%Vacation%' THEN
 
                     IF emp_vacabal - numhrsworkd < 0 THEN
@@ -292,7 +300,7 @@ ELSE
                 AND etd.`Date`='1900-01-01'
                 INTO etd_timein,etd_timeout;
 
-                IF etd_timein IS NOT NULL AND etd_timeout IS NOT NULL THEN
+                /*IF etd_timein IS NOT NULL AND etd_timeout IS NOT NULL THEN
 
                     SELECT sh.TimeFrom
                     ,sh.TimeTo
@@ -443,7 +451,7 @@ ELSE
 
                     SET under_hrs = 0;
 
-                END IF;
+                END IF;*/
 
                 SET late_hrs = IFNULL(late_hrs,0);
 
@@ -593,7 +601,6 @@ INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldC
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

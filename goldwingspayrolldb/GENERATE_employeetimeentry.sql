@@ -1,16 +1,19 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for function hyundaipayrolldb_dev.GENERATE_employeetimeentry
 DROP FUNCTION IF EXISTS `GENERATE_employeetimeentry`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(
-	`ete_EmpRowID` INT,
-	`ete_OrganizID` INT,
-	`ete_Date` DATE,
-	`ete_UserRowID` INT
+CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(`ete_EmpRowID` INT, `ete_OrganizID` INT, `ete_Date` DATE, `ete_UserRowID` INT
 
 
 
@@ -734,6 +737,47 @@ IF ete_Date < e_StartDate THEN
 
 ELSEIF isRegularDay THEN
 
+    SELECT EXISTS(
+        SELECT elv.RowID
+        FROM employeeleave elv
+        WHERE elv.EmployeeID = ete_EmpRowID AND
+            elv.`Status` = 'Approved' AND
+            elv.OrganizationID = ete_OrganizID AND
+            ete_Date BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate
+        LIMIT 1
+    )
+    INTO hasLeave;
+
+    IF hasLeave AND isWorkingDay THEN
+	 	
+		SELECT SUM(TotalDayPay)
+		FROM employeetimeentry
+		WHERE EmployeeID = ete_EmpRowID AND
+		OrganizationID = ete_OrganizID AND
+		`Date` = ete_Date
+      INTO leavePay;
+		     
+      SET leavePay = IFNULL(leavePay, 0);
+      
+    END IF;
+		
+ 	 SET @leave_hrs = 0;
+	 
+	 SELECT @lv_hrs `LeaveHours`
+	 FROM employeetimeentry
+	 WHERE EmployeeID = ete_EmpRowID AND
+	 OrganizationID = ete_OrganizID AND
+	 `Date` = ete_Date AND
+	 (@lv_hrs := (VacationLeaveHours + SickLeaveHours + OtherLeaveHours + MaternityLeaveHours)) > 0
+	 LIMIT 1
+	 INTO @leave_hrs;
+	 
+	 SET @leave_hrs = IFNULL(@leave_hrs, 0);
+
+	 IF (ete_HrsLate - @leave_hrs) > -1 THEN SET ete_HrsLate = (ete_HrsLate - @leave_hrs); SET lateHours = ete_HrsLate; END IF;
+	 
+	 IF (ete_HrsUnder - @leave_hrs) > -1 THEN SET ete_HrsUnder = (ete_HrsUnder - @leave_hrs); SEt undertimeHours = ete_HrsUnder; END IF;
+	 
     -- a. If the current day is a regular working day.
     -- b. Employee was payed yesterday AND
     --    current day is after employment hiring date.
@@ -752,36 +796,13 @@ ELSEIF isRegularDay THEN
         SEt undertimeHours = 0.0;
     END IF;
 
-    SELECT EXISTS(
-        SELECT elv.RowID
-        FROM employeeleave elv
-        WHERE elv.EmployeeID = ete_EmpRowID AND
-            elv.`Status` = 'Approved' AND
-            elv.OrganizationID = ete_OrganizID AND
-            ete_Date BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate
-        LIMIT 1
-    )
-    INTO hasLeave;
-
-    IF hasLeave AND isWorkingDay THEN
-        SET leavePay = IFNULL(
-            (
-                SELECT SUM(TotalDayPay)
-                FROM employeetimeentry
-                WHERE EmployeeID = ete_EmpRowID AND
-                    OrganizationID = ete_OrganizID AND
-                    `Date` = ete_Date
-            ),
-            0
-        );
-    END IF;
-
     SET nightDiffAmount = (ete_NDiffHrs * hourlyRate) * ndiffrate;
     SET nightDiffOTAmount = (ete_NDiffOTHrs * hourlyRate) * ndiffotrate;
 
     SET ete_TotalDayPay = regularAmount + overtimeAmount +
                           nightDiffAmount + nightDiffOTAmount +
-                          restDayAmount + leavePay;
+                          restDayAmount + leavePay +
+								  (@leave_hrs * hourlyRate);
 
     -- SELECT timeEntryID, ete_EmpRowID, shiftStart, shiftEnd, regularHours
     -- INTO OUTFILE 'D:/Aaron/logs/santos.txt'
@@ -897,7 +918,6 @@ RETURN yes_true;
 
 END//
 DELIMITER ;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

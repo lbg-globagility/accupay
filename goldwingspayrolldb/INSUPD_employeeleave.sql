@@ -1,9 +1,16 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for function hyundaipayrolldb_dev.INSUPD_employeeleave
 DROP FUNCTION IF EXISTS `INSUPD_employeeleave`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeeleave`(`elv_RowID` INT, `elv_OrganizationID` INT, `elv_LeaveStartTime` TIME, `elv_LeaveType` VARCHAR(50), `elv_CreatedBy` INT, `elv_LastUpdBy` INT, `elv_EmployeeID` INT, `elv_LeaveEndTime` TIME, `elv_LeaveStartDate` DATE, `elv_LeaveEndDate` DATE, `elv_Reason` VARCHAR(500), `elv_Comments` VARCHAR(2000), `elv_Image` LONGBLOB, `elv_Status` VARCHAR(50)) RETURNS int(11)
@@ -69,6 +76,8 @@ IF emp_employment_stat = 'Regular' THEN
         ,Image=elv_Image
         ,`Status`=IF(elv_Status = '', 'Pending', elv_Status);SELECT @@Identity AS id INTO empleaveID;
 
+	 SET @leave_rowid = IFNULL(elv_RowID, empleaveID);
+
     INSERT INTO employeeleave_duplicate
     (
         RowID
@@ -87,7 +96,7 @@ IF emp_employment_stat = 'Regular' THEN
         ,Image
         ,`Status`
     ) SELECT
-        empleaveID
+         @leave_rowid
         ,elv_OrganizationID
         ,CURRENT_TIMESTAMP()
         ,elv_LeaveStartTime
@@ -103,7 +112,7 @@ IF emp_employment_stat = 'Regular' THEN
         ,elv_Image
         ,IF(elv_Status = '', 'Pending', elv_Status)
 
-        FROM (SELECT IFNULL(empleaveID,0) AS NewRowID) i WHERE i.NewRowID > 0
+        FROM (SELECT IFNULL(@leave_rowid,0) AS NewRowID) i WHERE i.NewRowID > 0
     ON DUPLICATE KEY UPDATE
         LeaveStartTime=elv_LeaveStartTime
         ,LeaveType=elv_LeaveType
@@ -132,7 +141,6 @@ RETURN empleaveID;
 
 END//
 DELIMITER ;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
