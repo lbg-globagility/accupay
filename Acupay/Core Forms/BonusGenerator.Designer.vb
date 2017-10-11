@@ -526,7 +526,7 @@ Partial Class BonusGenerator
         'tsbntClose
         '
         Me.tsbntClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbntClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbntClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbntClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbntClose.Name = "tsbntClose"
         Me.tsbntClose.Size = New System.Drawing.Size(56, 22)
@@ -548,7 +548,7 @@ Partial Class BonusGenerator
         'tsbtnSearch
         '
         Me.tsbtnSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnSearch.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.magnifier_zoom
+        Me.tsbtnSearch.Image = Global.Acupay.My.Resources.Resources.magnifier_zoom
         Me.tsbtnSearch.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSearch.Name = "tsbtnSearch"
         Me.tsbtnSearch.Size = New System.Drawing.Size(23, 22)
@@ -570,7 +570,7 @@ Partial Class BonusGenerator
         'tsbtnDelEmpPayrollBonus
         '
         Me.tsbtnDelEmpPayrollBonus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnDelEmpPayrollBonus.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.CLOSE_00
+        Me.tsbtnDelEmpPayrollBonus.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
         Me.tsbtnDelEmpPayrollBonus.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDelEmpPayrollBonus.Name = "tsbtnDelEmpPayrollBonus"
         Me.tsbtnDelEmpPayrollBonus.Size = New System.Drawing.Size(23, 22)

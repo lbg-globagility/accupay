@@ -29,7 +29,7 @@ Partial Class Agency
         Me.Label25 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.dgvagency = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.CustomColoredTabControl1 = New GoldWingsPayrollSys.CustomColoredTabControl()
+        Me.CustomColoredTabControl1 = New Acupay.CustomColoredTabControl()
         Me.tbpAgency = New System.Windows.Forms.TabPage()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
@@ -346,7 +346,7 @@ Partial Class Agency
         'tsbtnClose
         '
         Me.tsbtnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnClose.Name = "tsbtnClose"
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
@@ -562,7 +562,7 @@ Partial Class Agency
         'ToolStripButton4
         '
         Me.ToolStripButton4.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton4.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.ToolStripButton4.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.ToolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton4.Name = "ToolStripButton4"
         Me.ToolStripButton4.Size = New System.Drawing.Size(56, 22)
@@ -770,7 +770,7 @@ Partial Class Agency
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents autcomptxtagency As Femiani.Forms.UI.Input.AutoCompleteTextBox
     Friend WithEvents btnRefresh As System.Windows.Forms.Button
-    Friend WithEvents CustomColoredTabControl1 As Global.GoldWingsPayrollSys.CustomColoredTabControl
+    Friend WithEvents CustomColoredTabControl1 As Global.Acupay.CustomColoredTabControl
     Friend WithEvents tbpAgency As System.Windows.Forms.TabPage
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
     Friend WithEvents Panel2 As System.Windows.Forms.Panel

@@ -1,5 +1,5 @@
 ﻿Imports System.Text
-Imports GoldWingsPayrollSys
+Imports Acupay
 
 <TestFixture>
 Public Class TimeUtilityTest

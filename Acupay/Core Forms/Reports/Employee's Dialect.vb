@@ -45,7 +45,7 @@ Public Class Employees_Dialect
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Employee's Dialect.rpt"
+            Return "Acupay.Employee's Dialect.rpt"
         End Get
         Set
             'Do nothing

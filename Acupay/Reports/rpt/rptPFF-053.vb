@@ -45,7 +45,7 @@ Public Class rptPFF_053
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.rptPFF-053.rpt"
+            Return "Acupay.rptPFF-053.rpt"
         End Get
         Set
             'Do nothing

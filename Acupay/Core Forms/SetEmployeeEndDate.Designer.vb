@@ -24,7 +24,7 @@ Partial Class SetEmployeeEndDate
     Private Sub InitializeComponent()
         Me.btnOk = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
-        Me.CustomDatePicker1 = New GoldWingsPayrollSys.CustomDatePicker()
+        Me.CustomDatePicker1 = New Acupay.CustomDatePicker()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
@@ -95,7 +95,7 @@ Partial Class SetEmployeeEndDate
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents CustomDatePicker1 As GoldWingsPayrollSys.CustomDatePicker
+    Friend WithEvents CustomDatePicker1 As Acupay.CustomDatePicker
     Friend WithEvents btnOk As System.Windows.Forms.Button
     Friend WithEvents btnCancel As System.Windows.Forms.Button
     Friend WithEvents Label1 As System.Windows.Forms.Label

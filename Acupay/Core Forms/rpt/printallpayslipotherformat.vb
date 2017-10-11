@@ -45,7 +45,7 @@ Public Class printallpayslipotherformat
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.printallpayslipotherformat.rpt"
+            Return "Acupay.printallpayslipotherformat.rpt"
         End Get
         Set
             'Do nothing

@@ -46,9 +46,9 @@ Partial Class TrialForm
         Me.NodeTextBox3 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
         Me.NodeTextBox4 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
         Me.NodeTextBox5 = New Aga.Controls.Tree.NodeControls.NodeTextBox()
-        Me.CustomDatePicker1 = New GoldWingsPayrollSys.CustomDatePicker()
+        Me.CustomDatePicker1 = New Acupay.CustomDatePicker()
         Me.DataGridViewX1 = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column1 = New GoldWingsPayrollSys.DataGridViewTimeColumn()
+        Me.Column1 = New Acupay.DataGridViewTimeColumn()
         Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -322,10 +322,10 @@ Partial Class TrialForm
     Friend WithEvents SplitContainer2 As System.Windows.Forms.SplitContainer
     Friend WithEvents DataGridViewX1 As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents FileSystemWatcher1 As System.IO.FileSystemWatcher
-    Friend WithEvents Column1 As GoldWingsPayrollSys.DataGridViewTimeColumn
+    Friend WithEvents Column1 As Acupay.DataGridViewTimeColumn
     Friend WithEvents DataGridViewX2 As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents CustomDatePicker1 As GoldWingsPayrollSys.CustomDatePicker
+    Friend WithEvents CustomDatePicker1 As Acupay.CustomDatePicker
     Friend WithEvents Button2 As System.Windows.Forms.Button
     Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents AutoCompleteTextBox1 As Femiani.Forms.UI.Input.AutoCompleteTextBox

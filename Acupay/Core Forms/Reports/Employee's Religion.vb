@@ -45,7 +45,7 @@ Public Class Employees_Religion
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Employee's Religion.rpt"
+            Return "Acupay.Employee's Religion.rpt"
         End Get
         Set
             'Do nothing

@@ -141,7 +141,7 @@ Partial Class Revised_Withholding_Tax_Tables
         '
         'tsbtnNewTax
         '
-        Me.tsbtnNewTax.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.tsbtnNewTax.Image = Global.Acupay.My.Resources.Resources._new
         Me.tsbtnNewTax.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNewTax.Name = "tsbtnNewTax"
         Me.tsbtnNewTax.Size = New System.Drawing.Size(72, 22)
@@ -149,7 +149,7 @@ Partial Class Revised_Withholding_Tax_Tables
         '
         'tsbtnSaveTax
         '
-        Me.tsbtnSaveTax.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveTax.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveTax.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveTax.Name = "tsbtnSaveTax"
         Me.tsbtnSaveTax.Size = New System.Drawing.Size(72, 22)
@@ -165,7 +165,7 @@ Partial Class Revised_Withholding_Tax_Tables
         '
         'tsbtnCancelTax
         '
-        Me.tsbtnCancelTax.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancelTax.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancelTax.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancelTax.Name = "tsbtnCancelTax"
         Me.tsbtnCancelTax.Size = New System.Drawing.Size(63, 22)
@@ -174,7 +174,7 @@ Partial Class Revised_Withholding_Tax_Tables
         'tsbtnCloseTax
         '
         Me.tsbtnCloseTax.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnCloseTax.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnCloseTax.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnCloseTax.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCloseTax.Name = "tsbtnCloseTax"
         Me.tsbtnCloseTax.Size = New System.Drawing.Size(56, 22)
@@ -184,7 +184,7 @@ Partial Class Revised_Withholding_Tax_Tables
         '
         Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)

@@ -45,7 +45,7 @@ Public Class Employees_13th_Month_Pay_Report
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Employee's 13th Month Pay Report.rpt"
+            Return "Acupay.Employee's 13th Month Pay Report.rpt"
         End Get
         Set
             'Do nothing

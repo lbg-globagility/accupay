@@ -30,7 +30,7 @@ Partial Class EmployeeBonusForm
         Me.SelectionBox = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.bon_Amount = New GoldWingsPayrollSys.DataGridViewNumberColumn()
+        Me.bon_Amount = New Acupay.DataGridViewNumberColumn()
         Me.bon_Frequency = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.bon_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.bon_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
@@ -427,7 +427,7 @@ Partial Class EmployeeBonusForm
     Friend WithEvents SelectionBox As System.Windows.Forms.DataGridViewCheckBoxColumn
     Friend WithEvents bon_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents bon_Type As System.Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents bon_Amount As GoldWingsPayrollSys.DataGridViewNumberColumn
+    Friend WithEvents bon_Amount As Acupay.DataGridViewNumberColumn
     Friend WithEvents bon_Frequency As System.Windows.Forms.DataGridViewComboBoxColumn
     Friend WithEvents bon_Start As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
     Friend WithEvents bon_End As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn

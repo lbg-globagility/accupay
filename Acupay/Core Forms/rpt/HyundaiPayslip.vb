@@ -45,7 +45,7 @@ Public Class HyundaiPayslip
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.HyundaiPayslip.rpt"
+            Return "Acupay.HyundaiPayslip.rpt"
         End Get
         Set
             'Do nothing

@@ -45,7 +45,7 @@ Public Class Employees_Offenses
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Employee's Offenses.rpt"
+            Return "Acupay.Employee's Offenses.rpt"
         End Get
         Set
             'Do nothing

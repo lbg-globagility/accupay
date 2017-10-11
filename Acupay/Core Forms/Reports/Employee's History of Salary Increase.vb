@@ -45,7 +45,7 @@ Public Class Employees_History_of_Salary_Increase
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Employee's History of Salary Increase.rpt"
+            Return "Acupay.Employee's History of Salary Increase.rpt"
         End Get
         Set
             'Do nothing

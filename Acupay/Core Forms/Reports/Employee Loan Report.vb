@@ -45,7 +45,7 @@ Public Class Employee_Loan_Report
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Employee Loan Report.rpt"
+            Return "Acupay.Employee Loan Report.rpt"
         End Get
         Set
             'Do nothing

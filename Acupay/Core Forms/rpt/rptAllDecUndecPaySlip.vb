@@ -45,7 +45,7 @@ Public Class rptAllDecUndecPaySlip
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.rptAllDecUndecPaySlip.rpt"
+            Return "Acupay.rptAllDecUndecPaySlip.rpt"
         End Get
         Set
             'Do nothing

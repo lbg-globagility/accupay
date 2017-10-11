@@ -74,7 +74,7 @@ Partial Class DivisionForm
         Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CustomColoredTabControl1 = New GoldWingsPayrollSys.CustomColoredTabControl()
+        Me.CustomColoredTabControl1 = New Acupay.CustomColoredTabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
@@ -86,22 +86,22 @@ Partial Class DivisionForm
         Me.Label64 = New System.Windows.Forms.Label()
         Me.Label65 = New System.Windows.Forms.Label()
         Me.lblhdmfdeductsched = New System.Windows.Forms.Label()
-        Me.cboTaxDeductSched = New GoldWingsPayrollSys.cboListOfValue()
+        Me.cboTaxDeductSched = New Acupay.cboListOfValue()
         Me.Label69 = New System.Windows.Forms.Label()
-        Me.cbohdmfdeductsched = New GoldWingsPayrollSys.cboListOfValue()
-        Me.cbophhdeductsched = New GoldWingsPayrollSys.cboListOfValue()
-        Me.cbosssdeductsched = New GoldWingsPayrollSys.cboListOfValue()
+        Me.cbohdmfdeductsched = New Acupay.cboListOfValue()
+        Me.cbophhdeductsched = New Acupay.cboListOfValue()
+        Me.cbosssdeductsched = New Acupay.cboListOfValue()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.Label23 = New System.Windows.Forms.Label()
-        Me.cboTaxDeductSched2 = New GoldWingsPayrollSys.cboListOfValue()
+        Me.cboTaxDeductSched2 = New Acupay.cboListOfValue()
         Me.Label24 = New System.Windows.Forms.Label()
-        Me.cbohdmfdeductsched2 = New GoldWingsPayrollSys.cboListOfValue()
-        Me.cbophhdeductsched2 = New GoldWingsPayrollSys.cboListOfValue()
-        Me.cbosssdeductsched2 = New GoldWingsPayrollSys.cboListOfValue()
+        Me.cbohdmfdeductsched2 = New Acupay.cboListOfValue()
+        Me.cbophhdeductsched2 = New Acupay.cboListOfValue()
+        Me.cbosssdeductsched2 = New Acupay.cboListOfValue()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.cbopayfrequency = New GoldWingsPayrollSys.cboListOfValue()
+        Me.cbopayfrequency = New Acupay.cboListOfValue()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.txtpatlallow = New System.Windows.Forms.TextBox()
@@ -176,11 +176,11 @@ Partial Class DivisionForm
         Me.tsbtnCancelDivLoc = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton6 = New System.Windows.Forms.ToolStripButton()
         Me.tbpageShift = New System.Windows.Forms.TabPage()
-        Me.CustomColoredTabControl2 = New GoldWingsPayrollSys.CustomColoredTabControl()
+        Me.CustomColoredTabControl2 = New Acupay.CustomColoredTabControl()
         Me.tbpageDate = New System.Windows.Forms.TabPage()
         Me.panelShiftDate = New System.Windows.Forms.Panel()
         Me.dgvDivisionShift = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.divshiftRowID = New GoldWingsPayrollSys.DataGridViewTimeColumn()
+        Me.divshiftRowID = New Acupay.DataGridViewTimeColumn()
         Me.divshiftTimeFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.divshiftTimeTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.divshiftDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -1376,7 +1376,7 @@ Partial Class DivisionForm
         '
         'btnNew
         '
-        Me.btnNew.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.btnNew.Image = Global.Acupay.My.Resources.Resources._new
         Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnNew.Name = "btnNew"
         Me.btnNew.Size = New System.Drawing.Size(96, 22)
@@ -1385,7 +1385,7 @@ Partial Class DivisionForm
         'btnClose
         '
         Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.btnClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
@@ -1398,7 +1398,7 @@ Partial Class DivisionForm
         '
         'btnSave
         '
-        Me.btnSave.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.btnSave.Image = Global.Acupay.My.Resources.Resources.Save
         Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(96, 22)
@@ -1418,7 +1418,7 @@ Partial Class DivisionForm
         'btnDelete
         '
         Me.btnDelete.Enabled = False
-        Me.btnDelete.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel
+        Me.btnDelete.Image = Global.Acupay.My.Resources.Resources.cancel
         Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(105, 22)
@@ -1426,7 +1426,7 @@ Partial Class DivisionForm
         '
         'btnCancel
         '
-        Me.btnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.btnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
@@ -1435,7 +1435,7 @@ Partial Class DivisionForm
         'tsAudittrail
         '
         Me.tsAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsAudittrail.Name = "tsAudittrail"
         Me.tsAudittrail.Size = New System.Drawing.Size(23, 22)
@@ -1497,7 +1497,7 @@ Partial Class DivisionForm
         '
         'tsbtnNewDivLoc
         '
-        Me.tsbtnNewDivLoc.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.tsbtnNewDivLoc.Image = Global.Acupay.My.Resources.Resources._new
         Me.tsbtnNewDivLoc.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNewDivLoc.Name = "tsbtnNewDivLoc"
         Me.tsbtnNewDivLoc.Size = New System.Drawing.Size(100, 22)
@@ -1506,7 +1506,7 @@ Partial Class DivisionForm
         'ToolStripButton2
         '
         Me.ToolStripButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton2.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.ToolStripButton2.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton2.Name = "ToolStripButton2"
         Me.ToolStripButton2.Size = New System.Drawing.Size(56, 22)
@@ -1519,7 +1519,7 @@ Partial Class DivisionForm
         '
         'tsbtnSaveDivLoc
         '
-        Me.tsbtnSaveDivLoc.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveDivLoc.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveDivLoc.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveDivLoc.Name = "tsbtnSaveDivLoc"
         Me.tsbtnSaveDivLoc.Size = New System.Drawing.Size(100, 22)
@@ -1538,7 +1538,7 @@ Partial Class DivisionForm
         '
         'tsbtnCancelDivLoc
         '
-        Me.tsbtnCancelDivLoc.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancelDivLoc.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancelDivLoc.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancelDivLoc.Name = "tsbtnCancelDivLoc"
         Me.tsbtnCancelDivLoc.Size = New System.Drawing.Size(63, 22)
@@ -1547,7 +1547,7 @@ Partial Class DivisionForm
         'ToolStripButton6
         '
         Me.ToolStripButton6.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton6.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.ToolStripButton6.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.ToolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton6.Name = "ToolStripButton6"
         Me.ToolStripButton6.Size = New System.Drawing.Size(23, 22)
@@ -1784,7 +1784,7 @@ Partial Class DivisionForm
         '
         'tsbtnNewShift
         '
-        Me.tsbtnNewShift.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.tsbtnNewShift.Image = Global.Acupay.My.Resources.Resources._new
         Me.tsbtnNewShift.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNewShift.Name = "tsbtnNewShift"
         Me.tsbtnNewShift.Size = New System.Drawing.Size(78, 22)
@@ -1793,7 +1793,7 @@ Partial Class DivisionForm
         'ToolStripButton3
         '
         Me.ToolStripButton3.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton3.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.ToolStripButton3.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton3.Name = "ToolStripButton3"
         Me.ToolStripButton3.Size = New System.Drawing.Size(56, 22)
@@ -1806,7 +1806,7 @@ Partial Class DivisionForm
         '
         'tsbtnSaveShift
         '
-        Me.tsbtnSaveShift.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveShift.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveShift.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveShift.Name = "tsbtnSaveShift"
         Me.tsbtnSaveShift.Size = New System.Drawing.Size(78, 22)
@@ -1825,7 +1825,7 @@ Partial Class DivisionForm
         '
         'tsbtnCancelShift
         '
-        Me.tsbtnCancelShift.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancelShift.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancelShift.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancelShift.Name = "tsbtnCancelShift"
         Me.tsbtnCancelShift.Size = New System.Drawing.Size(63, 22)
@@ -1839,7 +1839,7 @@ Partial Class DivisionForm
         '
         'tsbtnDelAllShiftOfThisDivision
         '
-        Me.tsbtnDelAllShiftOfThisDivision.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.CLOSE_00
+        Me.tsbtnDelAllShiftOfThisDivision.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
         Me.tsbtnDelAllShiftOfThisDivision.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDelAllShiftOfThisDivision.Name = "tsbtnDelAllShiftOfThisDivision"
         Me.tsbtnDelAllShiftOfThisDivision.Size = New System.Drawing.Size(87, 22)
@@ -1848,7 +1848,7 @@ Partial Class DivisionForm
         'ToolStripButton7
         '
         Me.ToolStripButton7.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton7.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.ToolStripButton7.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.ToolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton7.Name = "ToolStripButton7"
         Me.ToolStripButton7.Size = New System.Drawing.Size(23, 22)
@@ -1954,7 +1954,7 @@ Partial Class DivisionForm
     Friend WithEvents cmbDivision As System.Windows.Forms.ComboBox
     Friend WithEvents Label212 As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents CustomColoredTabControl1 As Global.GoldWingsPayrollSys.CustomColoredTabControl
+    Friend WithEvents CustomColoredTabControl1 As Global.Acupay.CustomColoredTabControl
     Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents txtgraceperiod As System.Windows.Forms.TextBox
@@ -2001,11 +2001,11 @@ Partial Class DivisionForm
     Friend WithEvents Label21 As System.Windows.Forms.Label
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents Label23 As System.Windows.Forms.Label
-    Friend WithEvents cboTaxDeductSched2 As GoldWingsPayrollSys.cboListOfValue
+    Friend WithEvents cboTaxDeductSched2 As Acupay.cboListOfValue
     Friend WithEvents Label24 As System.Windows.Forms.Label
-    Friend WithEvents cbohdmfdeductsched2 As GoldWingsPayrollSys.cboListOfValue
-    Friend WithEvents cbophhdeductsched2 As GoldWingsPayrollSys.cboListOfValue
-    Friend WithEvents cbosssdeductsched2 As GoldWingsPayrollSys.cboListOfValue
+    Friend WithEvents cbohdmfdeductsched2 As Acupay.cboListOfValue
+    Friend WithEvents cbophhdeductsched2 As Acupay.cboListOfValue
+    Friend WithEvents cbosssdeductsched2 As Acupay.cboListOfValue
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents txtminwage As System.Windows.Forms.TextBox
     Friend WithEvents trvDepartment As System.Windows.Forms.TreeView
@@ -2079,12 +2079,12 @@ Partial Class DivisionForm
     Friend WithEvents bgworkUpdateEmployeeShiftIDOfEmployeetimeentry As System.ComponentModel.BackgroundWorker
     Friend WithEvents bgworkDelDeptShift As System.ComponentModel.BackgroundWorker
     Friend WithEvents ToolStripLabel5 As System.Windows.Forms.ToolStripLabel
-    Friend WithEvents CustomColoredTabControl2 As GoldWingsPayrollSys.CustomColoredTabControl
+    Friend WithEvents CustomColoredTabControl2 As Acupay.CustomColoredTabControl
     Friend WithEvents tbpageDate As System.Windows.Forms.TabPage
     Friend WithEvents tbpageDay As System.Windows.Forms.TabPage
     Friend WithEvents panelShiftDate As System.Windows.Forms.Panel
     Friend WithEvents dgvDivisionShift As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents divshiftRowID As GoldWingsPayrollSys.DataGridViewTimeColumn
+    Friend WithEvents divshiftRowID As Acupay.DataGridViewTimeColumn
     Friend WithEvents divshiftTimeFrom As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents divshiftTimeTo As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents divshiftDateFrom As System.Windows.Forms.DataGridViewTextBoxColumn

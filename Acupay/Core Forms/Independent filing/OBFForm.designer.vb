@@ -34,7 +34,7 @@ Partial Class OBFForm
         Me.cboxEmployees = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.TxtEmployeeFullName1 = New GoldWingsPayrollSys.txtEmployeeFullName()
+        Me.TxtEmployeeFullName1 = New Acupay.txtEmployeeFullName()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.cboOrganization = New System.Windows.Forms.ComboBox()
@@ -44,9 +44,9 @@ Partial Class OBFForm
         Me.Label198 = New System.Windows.Forms.Label()
         Me.Label195 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.cboOBFStatus = New GoldWingsPayrollSys.cboListOfValue()
-        Me.cboOBFtype = New GoldWingsPayrollSys.cboListOfValue()
-        Me.TxtEmployeeNumber1 = New GoldWingsPayrollSys.txtEmployeeNumber()
+        Me.cboOBFStatus = New Acupay.cboListOfValue()
+        Me.cboOBFtype = New Acupay.cboListOfValue()
+        Me.TxtEmployeeNumber1 = New Acupay.txtEmployeeNumber()
         Me.dtpOBFEndDate = New System.Windows.Forms.DateTimePicker()
         Me.dtpOBFStartDate = New System.Windows.Forms.DateTimePicker()
         Me.Label186 = New System.Windows.Forms.Label()
@@ -539,7 +539,7 @@ Partial Class OBFForm
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents cboOBFStatus As cboListOfValue
     Friend WithEvents cboOBFtype As cboListOfValue
-    Friend WithEvents TxtEmployeeNumber1 As GoldWingsPayrollSys.txtEmployeeNumber
+    Friend WithEvents TxtEmployeeNumber1 As Acupay.txtEmployeeNumber
     Friend WithEvents dtpOBFEndDate As System.Windows.Forms.DateTimePicker
     Friend WithEvents dtpOBFStartDate As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label186 As System.Windows.Forms.Label

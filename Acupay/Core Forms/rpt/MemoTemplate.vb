@@ -45,7 +45,7 @@ Public Class MemoTemplate
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.MemoTemplate.rpt"
+            Return "Acupay.MemoTemplate.rpt"
         End Get
         Set
             'Do nothing

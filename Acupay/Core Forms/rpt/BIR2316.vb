@@ -45,7 +45,7 @@ Public Class BIR2316
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.BIR2316.rpt"
+            Return "Acupay.BIR2316.rpt"
         End Get
         Set
             'Do nothing

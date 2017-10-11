@@ -683,7 +683,7 @@ Partial Class LoanScheduleForm
         '
         'btnNew
         '
-        Me.btnNew.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.btnNew.Image = Global.Acupay.My.Resources.Resources._new
         Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnNew.Name = "btnNew"
         Me.btnNew.Size = New System.Drawing.Size(115, 22)
@@ -691,7 +691,7 @@ Partial Class LoanScheduleForm
         '
         'btnSave
         '
-        Me.btnSave.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.btnSave.Image = Global.Acupay.My.Resources.Resources.Save
         Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(115, 22)
@@ -711,7 +711,7 @@ Partial Class LoanScheduleForm
         'btnDelete
         '
         Me.btnDelete.Enabled = False
-        Me.btnDelete.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.deleteuser
+        Me.btnDelete.Image = Global.Acupay.My.Resources.Resources.deleteuser
         Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(124, 22)
@@ -724,7 +724,7 @@ Partial Class LoanScheduleForm
         '
         'btnCancel
         '
-        Me.btnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.btnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
@@ -733,7 +733,7 @@ Partial Class LoanScheduleForm
         'btnClose
         '
         Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.btnClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
@@ -743,7 +743,7 @@ Partial Class LoanScheduleForm
         '
         Me.btnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.btnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.btnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.btnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.btnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnAudittrail.Name = "btnAudittrail"
         Me.btnAudittrail.Size = New System.Drawing.Size(23, 22)

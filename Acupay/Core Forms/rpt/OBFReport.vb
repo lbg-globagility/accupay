@@ -45,7 +45,7 @@ Public Class OBFReport
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.OBFReport.rpt"
+            Return "Acupay.OBFReport.rpt"
         End Get
         Set
             'Do nothing

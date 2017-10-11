@@ -521,7 +521,7 @@ Partial Class OffSetting
         '
         'tsbtnNew
         '
-        Me.tsbtnNew.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.tsbtnNew.Image = Global.Acupay.My.Resources.Resources._new
         Me.tsbtnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNew.Name = "tsbtnNew"
         Me.tsbtnNew.Size = New System.Drawing.Size(51, 22)
@@ -529,7 +529,7 @@ Partial Class OffSetting
         '
         'tsbtnSave
         '
-        Me.tsbtnSave.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSave.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSave.Name = "tsbtnSave"
         Me.tsbtnSave.Size = New System.Drawing.Size(51, 22)
@@ -537,7 +537,7 @@ Partial Class OffSetting
         '
         'tsbtnCancel
         '
-        Me.tsbtnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancel.Name = "tsbtnCancel"
         Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
@@ -551,7 +551,7 @@ Partial Class OffSetting
         '
         'tsbtnDelete
         '
-        Me.tsbtnDelete.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.CLOSE_00
+        Me.tsbtnDelete.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
         Me.tsbtnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDelete.Name = "tsbtnDelete"
         Me.tsbtnDelete.Size = New System.Drawing.Size(60, 22)
@@ -560,7 +560,7 @@ Partial Class OffSetting
         'tsbtnClose
         '
         Me.tsbtnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnClose.Name = "tsbtnClose"
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)

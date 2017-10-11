@@ -75,7 +75,7 @@ Partial Class DepartmentMinWages
         '
         'tsbtnSaveMinimum
         '
-        Me.tsbtnSaveMinimum.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveMinimum.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveMinimum.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveMinimum.Name = "tsbtnSaveMinimum"
         Me.tsbtnSaveMinimum.Size = New System.Drawing.Size(140, 22)
@@ -83,7 +83,7 @@ Partial Class DepartmentMinWages
         '
         'tsbtnCancelMinimum
         '
-        Me.tsbtnCancelMinimum.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancelMinimum.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancelMinimum.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancelMinimum.Name = "tsbtnCancelMinimum"
         Me.tsbtnCancelMinimum.Size = New System.Drawing.Size(113, 22)
@@ -92,7 +92,7 @@ Partial Class DepartmentMinWages
         'tsbtnDelMinimumWage
         '
         Me.tsbtnDelMinimumWage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnDelMinimumWage.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.CLOSE_00
+        Me.tsbtnDelMinimumWage.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
         Me.tsbtnDelMinimumWage.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDelMinimumWage.Name = "tsbtnDelMinimumWage"
         Me.tsbtnDelMinimumWage.Size = New System.Drawing.Size(23, 22)

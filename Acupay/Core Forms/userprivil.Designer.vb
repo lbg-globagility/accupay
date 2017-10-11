@@ -331,7 +331,7 @@ Partial Class userprivil
         '
         'tsbtnNewUserPrivil
         '
-        Me.tsbtnNewUserPrivil.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.tsbtnNewUserPrivil.Image = Global.Acupay.My.Resources.Resources._new
         Me.tsbtnNewUserPrivil.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNewUserPrivil.Name = "tsbtnNewUserPrivil"
         Me.tsbtnNewUserPrivil.Size = New System.Drawing.Size(125, 22)
@@ -339,7 +339,7 @@ Partial Class userprivil
         '
         'tsbtnSaveUserPrivil
         '
-        Me.tsbtnSaveUserPrivil.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveUserPrivil.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveUserPrivil.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveUserPrivil.Name = "tsbtnSaveUserPrivil"
         Me.tsbtnSaveUserPrivil.Size = New System.Drawing.Size(125, 22)
@@ -347,7 +347,7 @@ Partial Class userprivil
         '
         'tsbtnCancelUserPrivil
         '
-        Me.tsbtnCancelUserPrivil.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancelUserPrivil.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancelUserPrivil.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancelUserPrivil.Name = "tsbtnCancelUserPrivil"
         Me.tsbtnCancelUserPrivil.Size = New System.Drawing.Size(63, 22)
@@ -356,7 +356,7 @@ Partial Class userprivil
         'tsbtnCloseUserPrivil
         '
         Me.tsbtnCloseUserPrivil.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnCloseUserPrivil.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnCloseUserPrivil.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnCloseUserPrivil.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCloseUserPrivil.Name = "tsbtnCloseUserPrivil"
         Me.tsbtnCloseUserPrivil.Size = New System.Drawing.Size(56, 22)
@@ -366,7 +366,7 @@ Partial Class userprivil
         '
         Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)

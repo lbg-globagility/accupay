@@ -45,7 +45,7 @@ Public Class Phil_Health_Monthly_Report
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Phil Health Monthly Report.rpt"
+            Return "Acupay.Phil Health Monthly Report.rpt"
         End Get
         Set
             'Do nothing

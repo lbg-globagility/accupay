@@ -67,7 +67,7 @@ Partial Class PhiHealth
         '
         'ToolStripButton2
         '
-        Me.ToolStripButton2.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.ToolStripButton2.Image = Global.Acupay.My.Resources.Resources.Save
         Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton2.Name = "ToolStripButton2"
         Me.ToolStripButton2.Size = New System.Drawing.Size(180, 22)
@@ -75,7 +75,7 @@ Partial Class PhiHealth
         '
         'ToolStripButton3
         '
-        Me.ToolStripButton3.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.CLOSE_00
+        Me.ToolStripButton3.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
         Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton3.Name = "ToolStripButton3"
         Me.ToolStripButton3.Size = New System.Drawing.Size(87, 22)
@@ -84,7 +84,7 @@ Partial Class PhiHealth
         'ToolStripButton4
         '
         Me.ToolStripButton4.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton4.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.ToolStripButton4.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.ToolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton4.Name = "ToolStripButton4"
         Me.ToolStripButton4.Size = New System.Drawing.Size(56, 22)
@@ -100,7 +100,7 @@ Partial Class PhiHealth
         '
         'ToolStripButton1
         '
-        Me.ToolStripButton1.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.ToolStripButton1.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
         Me.ToolStripButton1.Size = New System.Drawing.Size(63, 22)
@@ -110,7 +110,7 @@ Partial Class PhiHealth
         '
         Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)

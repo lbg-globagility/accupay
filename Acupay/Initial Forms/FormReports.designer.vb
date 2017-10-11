@@ -58,7 +58,7 @@ Partial Class FormReports
         'tsbtnstartreport
         '
         Me.tsbtnstartreport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnstartreport.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Copy_of_Home_front_view00112
+        Me.tsbtnstartreport.Image = Global.Acupay.My.Resources.Resources.Copy_of_Home_front_view00112
         Me.tsbtnstartreport.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnstartreport.Name = "tsbtnstartreport"
         Me.tsbtnstartreport.Size = New System.Drawing.Size(23, 22)

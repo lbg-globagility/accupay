@@ -45,7 +45,7 @@ Public Class Employees_Identification_Number
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Employee's Identification Number.rpt"
+            Return "Acupay.Employee's Identification Number.rpt"
         End Get
         Set
             'Do nothing

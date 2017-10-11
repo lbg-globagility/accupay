@@ -1,5 +1,5 @@
 ﻿Imports CrystalDecisions.Windows.Forms
-Imports GoldWingsPayrollSys.AlphalistDataset
+Imports Acupay.AlphalistDataset
 Imports System.Globalization
 
 Public Class WithholdingTax
@@ -220,7 +220,7 @@ Public Class WithholdingTax
         With Alphalist.ReportDefinition.Sections(2)
             Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("Text2")
             objText.Text = mtxtFromDate.Text.Replace("/", "")
-            
+
             objText = .ReportObjects("Text3")
             objText.Text = mtxtToDate.Text.Replace("/", "")
 
@@ -235,7 +235,7 @@ Public Class WithholdingTax
             If txtAuthSign.Text.Trim.Length > 0 Then
                 objText.Text = txtAuthSign.Text.Trim
             End If
-            
+
         End With
 
         Dim viewer = New CrysRepForm()

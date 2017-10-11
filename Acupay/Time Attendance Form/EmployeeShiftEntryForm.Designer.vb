@@ -120,7 +120,7 @@ Partial Class EmployeeShiftEntryForm
         Me.c_ID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ShiftEncodingType = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ShiftEncodingTypeDisplayValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CustomColoredTabControl1 = New GoldWingsPayrollSys.CustomColoredTabControl()
+        Me.CustomColoredTabControl1 = New Acupay.CustomColoredTabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.dtpDateFrom = New System.Windows.Forms.DateTimePicker()
@@ -548,7 +548,7 @@ Partial Class EmployeeShiftEntryForm
         'btnNew
         '
         Me.btnNew.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ByDateToolStripMenuItem, Me.ByDayToolStripMenuItem})
-        Me.btnNew.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.btnNew.Image = Global.Acupay.My.Resources.Resources._new
         Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnNew.Name = "btnNew"
         Me.btnNew.Size = New System.Drawing.Size(87, 22)
@@ -568,7 +568,7 @@ Partial Class EmployeeShiftEntryForm
         '
         'btnSave
         '
-        Me.btnSave.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.btnSave.Image = Global.Acupay.My.Resources.Resources.Save
         Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(78, 22)
@@ -588,7 +588,7 @@ Partial Class EmployeeShiftEntryForm
         'btnDelete
         '
         Me.btnDelete.Enabled = False
-        Me.btnDelete.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.deleteuser
+        Me.btnDelete.Image = Global.Acupay.My.Resources.Resources.deleteuser
         Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(87, 22)
@@ -601,7 +601,7 @@ Partial Class EmployeeShiftEntryForm
         '
         'btnCancel
         '
-        Me.btnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.btnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
@@ -610,7 +610,7 @@ Partial Class EmployeeShiftEntryForm
         'btnClose
         '
         Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.btnClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
@@ -620,7 +620,7 @@ Partial Class EmployeeShiftEntryForm
         '
         Me.btnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.btnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.btnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.btnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.btnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnAudittrail.Name = "btnAudittrail"
         Me.btnAudittrail.Size = New System.Drawing.Size(23, 22)
@@ -1335,7 +1335,7 @@ Partial Class EmployeeShiftEntryForm
     Friend WithEvents Prev As System.Windows.Forms.LinkLabel
     Friend WithEvents First As System.Windows.Forms.LinkLabel
     Friend WithEvents dgvWeek As System.Windows.Forms.DataGridView
-    Friend WithEvents CustomColoredTabControl1 As GoldWingsPayrollSys.CustomColoredTabControl
+    Friend WithEvents CustomColoredTabControl1 As Acupay.CustomColoredTabControl
     Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
     Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
     Friend WithEvents btnNew As System.Windows.Forms.ToolStripDropDownButton

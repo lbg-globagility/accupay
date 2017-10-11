@@ -145,7 +145,7 @@ Partial Class UsersForm
         '
         'btnNew
         '
-        Me.btnNew.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.btnNew.Image = Global.Acupay.My.Resources.Resources._new
         Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnNew.Name = "btnNew"
         Me.btnNew.Size = New System.Drawing.Size(77, 19)
@@ -154,7 +154,7 @@ Partial Class UsersForm
         '
         'btnSave
         '
-        Me.btnSave.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.btnSave.Image = Global.Acupay.My.Resources.Resources.Save
         Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(77, 19)
@@ -162,7 +162,7 @@ Partial Class UsersForm
         '
         'btnDelete
         '
-        Me.btnDelete.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.deleteuser
+        Me.btnDelete.Image = Global.Acupay.My.Resources.Resources.deleteuser
         Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(86, 19)
@@ -171,7 +171,7 @@ Partial Class UsersForm
         '
         'btnCancel
         '
-        Me.btnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.btnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 19)
@@ -180,7 +180,7 @@ Partial Class UsersForm
         'ToolStripButton12
         '
         Me.ToolStripButton12.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton12.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.ToolStripButton12.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.ToolStripButton12.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton12.Name = "ToolStripButton12"
         Me.ToolStripButton12.Size = New System.Drawing.Size(56, 19)
@@ -190,7 +190,7 @@ Partial Class UsersForm
         '
         Me.tsAuditTrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsAuditTrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsAuditTrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsAuditTrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsAuditTrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsAuditTrail.Name = "tsAuditTrail"
         Me.tsAuditTrail.Size = New System.Drawing.Size(23, 19)

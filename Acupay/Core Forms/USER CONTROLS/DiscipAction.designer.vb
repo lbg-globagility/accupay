@@ -90,7 +90,7 @@ Partial Class DiscipAction
         '
         'btnNew
         '
-        Me.btnNew.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.btnNew.Image = Global.Acupay.My.Resources.Resources._new
         Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnNew.Name = "btnNew"
         Me.btnNew.Size = New System.Drawing.Size(89, 22)
@@ -98,7 +98,7 @@ Partial Class DiscipAction
         '
         'btnSave
         '
-        Me.btnSave.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.btnSave.Image = Global.Acupay.My.Resources.Resources.Save
         Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(89, 22)
@@ -107,7 +107,7 @@ Partial Class DiscipAction
         'btnDelete
         '
         Me.btnDelete.Enabled = False
-        Me.btnDelete.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.deleteuser
+        Me.btnDelete.Image = Global.Acupay.My.Resources.Resources.deleteuser
         Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(98, 22)
@@ -116,7 +116,7 @@ Partial Class DiscipAction
         'btnCancel
         '
         Me.btnCancel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.btnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)

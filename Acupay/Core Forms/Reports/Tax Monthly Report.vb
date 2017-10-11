@@ -45,7 +45,7 @@ Public Class Tax_Monthly_Report
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Tax Monthly Report.rpt"
+            Return "Acupay.Tax Monthly Report.rpt"
         End Get
         Set
             'Do nothing

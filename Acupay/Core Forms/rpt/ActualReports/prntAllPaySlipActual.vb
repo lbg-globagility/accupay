@@ -45,7 +45,7 @@ Public Class prntAllPaySlipActual
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.prntAllPaySlipActual.rpt"
+            Return "Acupay.prntAllPaySlipActual.rpt"
         End Get
         Set
             'Do nothing

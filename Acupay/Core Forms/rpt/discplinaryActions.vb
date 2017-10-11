@@ -45,7 +45,7 @@ Public Class discplinaryActions
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.discplinaryActions.rpt"
+            Return "Acupay.discplinaryActions.rpt"
         End Get
         Set
             'Do nothing

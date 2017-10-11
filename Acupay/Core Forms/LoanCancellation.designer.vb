@@ -40,16 +40,16 @@ Partial Class LoanCancellation
         Me.elsRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.elsLoanType = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.elsLoanNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elsTotalLoanAmount = New GoldWingsPayrollSys.DataGridViewNumberColumn()
+        Me.elsTotalLoanAmount = New Acupay.DataGridViewNumberColumn()
         Me.elsTotalBalanceLeft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elsDedEffectiveDateFrom = New GoldWingsPayrollSys.DataGridViewDateColumn()
+        Me.elsDedEffectiveDateFrom = New Acupay.DataGridViewDateColumn()
         Me.elsDeductionSchedule = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.elsNoOfPayPeriod = New GoldWingsPayrollSys.DataGridViewNumberColumn()
-        Me.elsDedEffectiveDateTo = New GoldWingsPayrollSys.DataGridViewDateColumn()
-        Me.elsLoanPayPeriodLeft = New GoldWingsPayrollSys.DataGridViewNumberColumn()
-        Me.elsDeductionAmount = New GoldWingsPayrollSys.DataGridViewNumberColumn()
+        Me.elsNoOfPayPeriod = New Acupay.DataGridViewNumberColumn()
+        Me.elsDedEffectiveDateTo = New Acupay.DataGridViewDateColumn()
+        Me.elsLoanPayPeriodLeft = New Acupay.DataGridViewNumberColumn()
+        Me.elsDeductionAmount = New Acupay.DataGridViewNumberColumn()
         Me.elsStatus = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.elsDeductionPercentage = New GoldWingsPayrollSys.DataGridViewNumberColumn()
+        Me.elsDeductionPercentage = New Acupay.DataGridViewNumberColumn()
         Me.elsComments = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.dateto = New System.Windows.Forms.DateTimePicker()
@@ -82,14 +82,14 @@ Partial Class LoanCancellation
         Me.Label94 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewNumberColumn1 = New GoldWingsPayrollSys.DataGridViewNumberColumn()
+        Me.DataGridViewNumberColumn1 = New Acupay.DataGridViewNumberColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewDateColumn1 = New GoldWingsPayrollSys.DataGridViewDateColumn()
-        Me.DataGridViewNumberColumn2 = New GoldWingsPayrollSys.DataGridViewNumberColumn()
-        Me.DataGridViewDateColumn2 = New GoldWingsPayrollSys.DataGridViewDateColumn()
-        Me.DataGridViewNumberColumn3 = New GoldWingsPayrollSys.DataGridViewNumberColumn()
-        Me.DataGridViewNumberColumn4 = New GoldWingsPayrollSys.DataGridViewNumberColumn()
-        Me.DataGridViewNumberColumn5 = New GoldWingsPayrollSys.DataGridViewNumberColumn()
+        Me.DataGridViewDateColumn1 = New Acupay.DataGridViewDateColumn()
+        Me.DataGridViewNumberColumn2 = New Acupay.DataGridViewNumberColumn()
+        Me.DataGridViewDateColumn2 = New Acupay.DataGridViewDateColumn()
+        Me.DataGridViewNumberColumn3 = New Acupay.DataGridViewNumberColumn()
+        Me.DataGridViewNumberColumn4 = New Acupay.DataGridViewNumberColumn()
+        Me.DataGridViewNumberColumn5 = New Acupay.DataGridViewNumberColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -129,7 +129,7 @@ Partial Class LoanCancellation
         '
         'tsbtnCancel
         '
-        Me.tsbtnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnCancel.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancel.Name = "tsbtnCancel"
         Me.tsbtnCancel.Size = New System.Drawing.Size(113, 22)
@@ -876,27 +876,27 @@ Partial Class LoanCancellation
     Friend WithEvents DataGridViewTextBoxColumn13 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn14 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents DataGridViewNumberColumn1 As GoldWingsPayrollSys.DataGridViewNumberColumn
-    Friend WithEvents DataGridViewDateColumn1 As GoldWingsPayrollSys.DataGridViewDateColumn
-    Friend WithEvents DataGridViewNumberColumn2 As GoldWingsPayrollSys.DataGridViewNumberColumn
-    Friend WithEvents DataGridViewDateColumn2 As GoldWingsPayrollSys.DataGridViewDateColumn
-    Friend WithEvents DataGridViewNumberColumn3 As GoldWingsPayrollSys.DataGridViewNumberColumn
-    Friend WithEvents DataGridViewNumberColumn4 As GoldWingsPayrollSys.DataGridViewNumberColumn
-    Friend WithEvents DataGridViewNumberColumn5 As GoldWingsPayrollSys.DataGridViewNumberColumn
+    Friend WithEvents DataGridViewNumberColumn1 As Acupay.DataGridViewNumberColumn
+    Friend WithEvents DataGridViewDateColumn1 As Acupay.DataGridViewDateColumn
+    Friend WithEvents DataGridViewNumberColumn2 As Acupay.DataGridViewNumberColumn
+    Friend WithEvents DataGridViewDateColumn2 As Acupay.DataGridViewDateColumn
+    Friend WithEvents DataGridViewNumberColumn3 As Acupay.DataGridViewNumberColumn
+    Friend WithEvents DataGridViewNumberColumn4 As Acupay.DataGridViewNumberColumn
+    Friend WithEvents DataGridViewNumberColumn5 As Acupay.DataGridViewNumberColumn
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents elsRowID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents elsLoanType As System.Windows.Forms.DataGridViewComboBoxColumn
     Friend WithEvents elsLoanNumber As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents elsTotalLoanAmount As GoldWingsPayrollSys.DataGridViewNumberColumn
+    Friend WithEvents elsTotalLoanAmount As Acupay.DataGridViewNumberColumn
     Friend WithEvents elsTotalBalanceLeft As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents elsDedEffectiveDateFrom As GoldWingsPayrollSys.DataGridViewDateColumn
+    Friend WithEvents elsDedEffectiveDateFrom As Acupay.DataGridViewDateColumn
     Friend WithEvents elsDeductionSchedule As System.Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents elsNoOfPayPeriod As GoldWingsPayrollSys.DataGridViewNumberColumn
-    Friend WithEvents elsDedEffectiveDateTo As GoldWingsPayrollSys.DataGridViewDateColumn
-    Friend WithEvents elsLoanPayPeriodLeft As GoldWingsPayrollSys.DataGridViewNumberColumn
-    Friend WithEvents elsDeductionAmount As GoldWingsPayrollSys.DataGridViewNumberColumn
+    Friend WithEvents elsNoOfPayPeriod As Acupay.DataGridViewNumberColumn
+    Friend WithEvents elsDedEffectiveDateTo As Acupay.DataGridViewDateColumn
+    Friend WithEvents elsLoanPayPeriodLeft As Acupay.DataGridViewNumberColumn
+    Friend WithEvents elsDeductionAmount As Acupay.DataGridViewNumberColumn
     Friend WithEvents elsStatus As System.Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents elsDeductionPercentage As GoldWingsPayrollSys.DataGridViewNumberColumn
+    Friend WithEvents elsDeductionPercentage As Acupay.DataGridViewNumberColumn
     Friend WithEvents elsComments As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents PanelEqual As System.Windows.Forms.Panel
     Friend WithEvents Label3 As System.Windows.Forms.Label

@@ -45,7 +45,7 @@ Public Class Employees_Spouse_Information
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Employee's Spouse Information.rpt"
+            Return "Acupay.Employee's Spouse Information.rpt"
         End Get
         Set
             'Do nothing

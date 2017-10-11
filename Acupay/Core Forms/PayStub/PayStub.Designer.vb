@@ -2560,7 +2560,7 @@ Partial Class PayStub
         'btnSaveAdjustments
         '
         Me.btnSaveAdjustments.Enabled = False
-        Me.btnSaveAdjustments.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Add
+        Me.btnSaveAdjustments.Image = Global.Acupay.My.Resources.Resources.Add
         Me.btnSaveAdjustments.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnSaveAdjustments.Location = New System.Drawing.Point(746, 243)
         Me.btnSaveAdjustments.Name = "btnSaveAdjustments"
@@ -4326,7 +4326,7 @@ Partial Class PayStub
         'tsbtnClose
         '
         Me.tsbtnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnClose.Name = "tsbtnClose"
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
@@ -4368,7 +4368,7 @@ Partial Class PayStub
         'tsbtnSearch
         '
         Me.tsbtnSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnSearch.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.magnifier_zoom
+        Me.tsbtnSearch.Image = Global.Acupay.My.Resources.Resources.magnifier_zoom
         Me.tsbtnSearch.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSearch.Name = "tsbtnSearch"
         Me.tsbtnSearch.Size = New System.Drawing.Size(23, 22)
@@ -4378,7 +4378,7 @@ Partial Class PayStub
         '
         Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
@@ -4394,7 +4394,7 @@ Partial Class PayStub
         'tsbtnDelEmpPayroll
         '
         Me.tsbtnDelEmpPayroll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnDelEmpPayroll.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.CLOSE_00
+        Me.tsbtnDelEmpPayroll.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
         Me.tsbtnDelEmpPayroll.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDelEmpPayroll.Name = "tsbtnDelEmpPayroll"
         Me.tsbtnDelEmpPayroll.Size = New System.Drawing.Size(23, 22)
@@ -4539,7 +4539,7 @@ Partial Class PayStub
         Me.Button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
         Me.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Button3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button3.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.r_arrow
+        Me.Button3.Image = Global.Acupay.My.Resources.Resources.r_arrow
         Me.Button3.Location = New System.Drawing.Point(213, 11)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(32, 23)

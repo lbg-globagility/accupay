@@ -45,7 +45,7 @@ Public Class SSS_R5
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.SSS_R5.rpt"
+            Return "Acupay.SSS_R5.rpt"
         End Get
         Set
             'Do nothing

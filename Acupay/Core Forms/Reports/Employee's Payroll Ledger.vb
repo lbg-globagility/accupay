@@ -45,7 +45,7 @@ Public Class Employees_Payroll_Ledger
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Employee's Payroll Ledger.rpt"
+            Return "Acupay.Employee's Payroll Ledger.rpt"
         End Get
         Set
             'Do nothing

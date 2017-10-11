@@ -1238,7 +1238,7 @@ Partial Class MDIPrimaryForm
         '
         Me.ToolStripButton1.AutoSize = False
         Me.ToolStripButton1.BackColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(242, Byte), Integer), CType(CType(242, Byte), Integer))
-        Me.ToolStripButton1.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._1431339112_Settings
+        Me.ToolStripButton1.Image = Global.Acupay.My.Resources.Resources._1431339112_Settings
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
         Me.ToolStripButton1.Name = "ToolStripButton1"
@@ -1279,7 +1279,7 @@ Partial Class MDIPrimaryForm
         'ToolStripButton4
         '
         Me.ToolStripButton4.AutoSize = False
-        Me.ToolStripButton4.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cash_register001
+        Me.ToolStripButton4.Image = Global.Acupay.My.Resources.Resources.cash_register001
         Me.ToolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton4.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
         Me.ToolStripButton4.Name = "ToolStripButton4"

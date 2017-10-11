@@ -179,7 +179,7 @@ Partial Class ShiftEntryForm
         '
         'tsbtnNewShift
         '
-        Me.tsbtnNewShift.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.tsbtnNewShift.Image = Global.Acupay.My.Resources.Resources._new
         Me.tsbtnNewShift.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNewShift.Name = "tsbtnNewShift"
         Me.tsbtnNewShift.Size = New System.Drawing.Size(77, 22)
@@ -187,7 +187,7 @@ Partial Class ShiftEntryForm
         '
         'tsbtnSaveShift
         '
-        Me.tsbtnSaveShift.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveShift.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveShift.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveShift.Name = "tsbtnSaveShift"
         Me.tsbtnSaveShift.Size = New System.Drawing.Size(77, 22)
@@ -195,7 +195,7 @@ Partial Class ShiftEntryForm
         '
         'tsbtnCancelShift
         '
-        Me.tsbtnCancelShift.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancelShift.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancelShift.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancelShift.Name = "tsbtnCancelShift"
         Me.tsbtnCancelShift.Size = New System.Drawing.Size(63, 22)
@@ -204,7 +204,7 @@ Partial Class ShiftEntryForm
         'tsbtnCloseShift
         '
         Me.tsbtnCloseShift.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnCloseShift.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnCloseShift.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnCloseShift.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCloseShift.Name = "tsbtnCloseShift"
         Me.tsbtnCloseShift.Size = New System.Drawing.Size(56, 22)
@@ -214,7 +214,7 @@ Partial Class ShiftEntryForm
         '
         Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)

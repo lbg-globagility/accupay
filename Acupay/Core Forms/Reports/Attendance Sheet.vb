@@ -45,7 +45,7 @@ Public Class Attendance_Sheet
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Attendance Sheet.rpt"
+            Return "Acupay.Attendance Sheet.rpt"
         End Get
         Set
             'Do nothing

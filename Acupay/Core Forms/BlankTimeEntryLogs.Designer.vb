@@ -89,7 +89,7 @@ Partial Class BlankTimeEntryLogs
         '
         'tsbtnSave
         '
-        Me.tsbtnSave.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSave.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSave.Name = "tsbtnSave"
         Me.tsbtnSave.Size = New System.Drawing.Size(108, 22)
@@ -97,7 +97,7 @@ Partial Class BlankTimeEntryLogs
         '
         'tsbtnCancel
         '
-        Me.tsbtnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancel.Name = "tsbtnCancel"
         Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
@@ -106,7 +106,7 @@ Partial Class BlankTimeEntryLogs
         'tsbtnClose
         '
         Me.tsbtnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnClose.Name = "tsbtnClose"
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
@@ -117,7 +117,7 @@ Partial Class BlankTimeEntryLogs
         '
         Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)

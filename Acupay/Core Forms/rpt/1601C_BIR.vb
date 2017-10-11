@@ -45,7 +45,7 @@ Public Class Crystal_Report11601C_BIR
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.1601C_BIR.rpt"
+            Return "Acupay.1601C_BIR.rpt"
         End Get
         Set
             'Do nothing

@@ -45,7 +45,7 @@ Public Class Alphalist
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Alphalist.rpt"
+            Return "Acupay.Alphalist.rpt"
         End Get
         Set
             'Do nothing

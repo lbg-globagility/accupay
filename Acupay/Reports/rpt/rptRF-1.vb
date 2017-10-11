@@ -45,7 +45,7 @@ Public Class rptRF_1
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.rptRF-1.rpt"
+            Return "Acupay.rptRF-1.rpt"
         End Get
         Set
             'Do nothing

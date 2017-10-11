@@ -45,7 +45,7 @@ Public Class Pagibig_Monthly_Report
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Pagibig Monthly Report.rpt"
+            Return "Acupay.Pagibig Monthly Report.rpt"
         End Get
         Set
             'Do nothing

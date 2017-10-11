@@ -45,7 +45,7 @@ Public Class PayrollSummaActual
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.PayrollSummaActual.rpt"
+            Return "Acupay.PayrollSummaActual.rpt"
         End Get
         Set
             'Do nothing

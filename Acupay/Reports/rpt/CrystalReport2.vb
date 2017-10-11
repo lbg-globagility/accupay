@@ -45,7 +45,7 @@ Public Class CrystalReport2
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.CrystalReport2.rpt"
+            Return "Acupay.CrystalReport2.rpt"
         End Get
         Set
             'Do nothing

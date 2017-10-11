@@ -135,7 +135,7 @@ Partial Class AreaForm
         '
         'tsbtnNewArea
         '
-        Me.tsbtnNewArea.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.tsbtnNewArea.Image = Global.Acupay.My.Resources.Resources._new
         Me.tsbtnNewArea.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNewArea.Name = "tsbtnNewArea"
         Me.tsbtnNewArea.Size = New System.Drawing.Size(78, 22)
@@ -143,7 +143,7 @@ Partial Class AreaForm
         '
         'tsbtnSaveArea
         '
-        Me.tsbtnSaveArea.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveArea.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveArea.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveArea.Name = "tsbtnSaveArea"
         Me.tsbtnSaveArea.Size = New System.Drawing.Size(78, 22)
@@ -151,7 +151,7 @@ Partial Class AreaForm
         '
         'tsbtnCancel
         '
-        Me.tsbtnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancel.Name = "tsbtnCancel"
         Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
@@ -160,7 +160,7 @@ Partial Class AreaForm
         'tsbtnClose
         '
         Me.tsbtnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnClose.Name = "tsbtnClose"
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
@@ -174,7 +174,7 @@ Partial Class AreaForm
         '
         'tsbtnDelArea
         '
-        Me.tsbtnDelArea.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.CLOSE_00
+        Me.tsbtnDelArea.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
         Me.tsbtnDelArea.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDelArea.Name = "tsbtnDelArea"
         Me.tsbtnDelArea.Size = New System.Drawing.Size(87, 22)
@@ -413,7 +413,7 @@ Partial Class AreaForm
         '
         'tsbtnSaveEmployee
         '
-        Me.tsbtnSaveEmployee.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveEmployee.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveEmployee.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveEmployee.Name = "tsbtnSaveEmployee"
         Me.tsbtnSaveEmployee.Size = New System.Drawing.Size(106, 22)
@@ -422,7 +422,7 @@ Partial Class AreaForm
         'tsbtnCancelEmployee
         '
         Me.tsbtnCancelEmployee.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnCancelEmployee.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancelEmployee.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancelEmployee.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancelEmployee.Name = "tsbtnCancelEmployee"
         Me.tsbtnCancelEmployee.Size = New System.Drawing.Size(63, 22)

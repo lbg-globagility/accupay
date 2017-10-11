@@ -162,7 +162,7 @@ Partial Class ListOfValueForm
         '
         'btnNew
         '
-        Me.btnNew.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.btnNew.Image = Global.Acupay.My.Resources.Resources._new
         Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnNew.Name = "btnNew"
         Me.btnNew.Size = New System.Drawing.Size(117, 22)
@@ -171,7 +171,7 @@ Partial Class ListOfValueForm
         'btnClose
         '
         Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.btnClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
@@ -185,7 +185,7 @@ Partial Class ListOfValueForm
         'btnSave
         '
         Me.btnSave.Enabled = False
-        Me.btnSave.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.btnSave.Image = Global.Acupay.My.Resources.Resources.Save
         Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(117, 22)
@@ -213,7 +213,7 @@ Partial Class ListOfValueForm
         '
         'btnCancel
         '
-        Me.btnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.btnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
@@ -222,7 +222,7 @@ Partial Class ListOfValueForm
         'tsAudittrail
         '
         Me.tsAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsAudittrail.Name = "tsAudittrail"
         Me.tsAudittrail.Size = New System.Drawing.Size(23, 22)

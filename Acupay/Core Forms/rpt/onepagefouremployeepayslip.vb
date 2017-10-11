@@ -45,7 +45,7 @@ Public Class onepagefouremployeepayslip
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.onepagefouremployeepayslip.rpt"
+            Return "Acupay.onepagefouremployeepayslip.rpt"
         End Get
         Set
             'Do nothing

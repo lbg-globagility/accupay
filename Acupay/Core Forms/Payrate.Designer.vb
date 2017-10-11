@@ -291,7 +291,7 @@ Partial Class Payrate
         '
         'tsbtnsavepayrate
         '
-        Me.tsbtnsavepayrate.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnsavepayrate.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnsavepayrate.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnsavepayrate.Name = "tsbtnsavepayrate"
         Me.tsbtnsavepayrate.Size = New System.Drawing.Size(96, 22)
@@ -300,7 +300,7 @@ Partial Class Payrate
         'ToolStripButton1
         '
         Me.ToolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton1.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.ToolStripButton1.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
         Me.ToolStripButton1.Size = New System.Drawing.Size(56, 22)
@@ -308,7 +308,7 @@ Partial Class Payrate
         '
         'ToolStripButton2
         '
-        Me.ToolStripButton2.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.ToolStripButton2.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton2.Name = "ToolStripButton2"
         Me.ToolStripButton2.Size = New System.Drawing.Size(63, 22)
@@ -318,7 +318,7 @@ Partial Class Payrate
         '
         Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)

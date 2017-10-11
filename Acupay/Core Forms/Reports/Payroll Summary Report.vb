@@ -45,7 +45,7 @@ Public Class Payroll_Summary_Report
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Payroll Summary Report.rpt"
+            Return "Acupay.Payroll Summary Report.rpt"
         End Get
         Set
             'Do nothing

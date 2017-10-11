@@ -28,7 +28,7 @@ Partial Class OverTimeForm
         Me.cboxEmployees = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.TxtEmployeeFullName1 = New GoldWingsPayrollSys.txtEmployeeFullName()
+        Me.TxtEmployeeFullName1 = New Acupay.txtEmployeeFullName()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.cboOrganization = New System.Windows.Forms.ComboBox()
@@ -43,9 +43,9 @@ Partial Class OverTimeForm
         Me.dtpstarttime = New System.Windows.Forms.DateTimePicker()
         Me.btnApply = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.cboOTStatus = New GoldWingsPayrollSys.cboListOfValue()
-        Me.cboOTType = New GoldWingsPayrollSys.cboListOfValue()
-        Me.TxtEmployeeNumber1 = New GoldWingsPayrollSys.txtEmployeeNumber()
+        Me.cboOTStatus = New Acupay.cboListOfValue()
+        Me.cboOTType = New Acupay.cboListOfValue()
+        Me.TxtEmployeeNumber1 = New Acupay.txtEmployeeNumber()
         Me.dtpendateEmpOT = New System.Windows.Forms.DateTimePicker()
         Me.dtpstartdateEmpOT = New System.Windows.Forms.DateTimePicker()
         Me.Label186 = New System.Windows.Forms.Label()
@@ -500,7 +500,7 @@ Partial Class OverTimeForm
     Friend WithEvents txtreasonEmpOT As System.Windows.Forms.TextBox
     Friend WithEvents Label193 As System.Windows.Forms.Label
     Friend WithEvents txtcommentsEmpOT As System.Windows.Forms.TextBox
-    Friend WithEvents TxtEmployeeNumber1 As GoldWingsPayrollSys.txtEmployeeNumber
+    Friend WithEvents TxtEmployeeNumber1 As Acupay.txtEmployeeNumber
     Friend WithEvents cboOTType As cboListOfValue
     Friend WithEvents cboOTStatus As cboListOfValue
     Friend WithEvents Label1 As System.Windows.Forms.Label

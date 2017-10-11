@@ -157,7 +157,7 @@ Partial Class BranchHierarchyForm
         '
         'tsbtnNewBranch
         '
-        Me.tsbtnNewBranch.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.tsbtnNewBranch.Image = Global.Acupay.My.Resources.Resources._new
         Me.tsbtnNewBranch.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNewBranch.Name = "tsbtnNewBranch"
         Me.tsbtnNewBranch.Size = New System.Drawing.Size(91, 22)
@@ -165,7 +165,7 @@ Partial Class BranchHierarchyForm
         '
         'tsbtnSaveBranch
         '
-        Me.tsbtnSaveBranch.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveBranch.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveBranch.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveBranch.Name = "tsbtnSaveBranch"
         Me.tsbtnSaveBranch.Size = New System.Drawing.Size(91, 22)
@@ -173,7 +173,7 @@ Partial Class BranchHierarchyForm
         '
         'tsbtnCancel
         '
-        Me.tsbtnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancel.Name = "tsbtnCancel"
         Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
@@ -182,7 +182,7 @@ Partial Class BranchHierarchyForm
         'tsbtnClose
         '
         Me.tsbtnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnClose.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnClose.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnClose.Name = "tsbtnClose"
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
@@ -196,7 +196,7 @@ Partial Class BranchHierarchyForm
         '
         'tsbtnDelBranch
         '
-        Me.tsbtnDelBranch.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.CLOSE_00
+        Me.tsbtnDelBranch.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
         Me.tsbtnDelBranch.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDelBranch.Name = "tsbtnDelBranch"
         Me.tsbtnDelBranch.Size = New System.Drawing.Size(100, 22)
@@ -584,7 +584,7 @@ Partial Class BranchHierarchyForm
         '
         'tsbtnSaveEmployee
         '
-        Me.tsbtnSaveEmployee.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveEmployee.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveEmployee.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveEmployee.Name = "tsbtnSaveEmployee"
         Me.tsbtnSaveEmployee.Size = New System.Drawing.Size(106, 22)
@@ -593,7 +593,7 @@ Partial Class BranchHierarchyForm
         'tsbtnCancelEmployee
         '
         Me.tsbtnCancelEmployee.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnCancelEmployee.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancelEmployee.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancelEmployee.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancelEmployee.Name = "tsbtnCancelEmployee"
         Me.tsbtnCancelEmployee.Size = New System.Drawing.Size(63, 22)

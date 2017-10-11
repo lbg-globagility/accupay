@@ -858,7 +858,7 @@ Partial Class EmpTimeEntry
         '
         'tsbtnSavetimeent
         '
-        Me.tsbtnSavetimeent.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSavetimeent.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSavetimeent.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSavetimeent.Name = "tsbtnSavetimeent"
         Me.tsbtnSavetimeent.Size = New System.Drawing.Size(111, 22)
@@ -874,7 +874,7 @@ Partial Class EmpTimeEntry
         '
         'tsbtnCancelempawar
         '
-        Me.tsbtnCancelempawar.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancelempawar.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancelempawar.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancelempawar.Name = "tsbtnCancelempawar"
         Me.tsbtnCancelempawar.Size = New System.Drawing.Size(63, 22)
@@ -883,7 +883,7 @@ Partial Class EmpTimeEntry
         'tsbtnCloseempawar
         '
         Me.tsbtnCloseempawar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnCloseempawar.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnCloseempawar.Image = Global.Acupay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnCloseempawar.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCloseempawar.Name = "tsbtnCloseempawar"
         Me.tsbtnCloseempawar.Size = New System.Drawing.Size(56, 22)
@@ -893,7 +893,7 @@ Partial Class EmpTimeEntry
         '
         Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
@@ -3447,7 +3447,7 @@ Partial Class EmpTimeEntry
         Me.Button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
         Me.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Button3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button3.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.r_arrow
+        Me.Button3.Image = Global.Acupay.My.Resources.Resources.r_arrow
         Me.Button3.Location = New System.Drawing.Point(330, 24)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(32, 23)

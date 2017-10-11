@@ -45,7 +45,7 @@ Public Class TardinessReport
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.TardinessReport.rpt"
+            Return "Acupay.TardinessReport.rpt"
         End Get
         Set
             'Do nothing

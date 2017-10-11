@@ -117,7 +117,7 @@ Partial Class dutyshift
         '
         'tsbtnNewShift
         '
-        Me.tsbtnNewShift.Image = Global.GoldWingsPayrollSys.My.Resources.Resources._new
+        Me.tsbtnNewShift.Image = Global.Acupay.My.Resources.Resources._new
         Me.tsbtnNewShift.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNewShift.Name = "tsbtnNewShift"
         Me.tsbtnNewShift.Size = New System.Drawing.Size(75, 22)
@@ -125,7 +125,7 @@ Partial Class dutyshift
         '
         'tsbtnSaveShift
         '
-        Me.tsbtnSaveShift.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.Save
+        Me.tsbtnSaveShift.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSaveShift.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveShift.Name = "tsbtnSaveShift"
         Me.tsbtnSaveShift.Size = New System.Drawing.Size(91, 22)
@@ -134,7 +134,7 @@ Partial Class dutyshift
         '
         'tsbtnCancel
         '
-        Me.tsbtnCancel.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.cancel1
+        Me.tsbtnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
         Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancel.Name = "tsbtnCancel"
         Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
@@ -145,7 +145,7 @@ Partial Class dutyshift
         '
         Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.GoldWingsPayrollSys.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.Image = Global.Acupay.My.Resources.Resources.audit_trail_icon
         Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)

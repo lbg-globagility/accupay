@@ -45,7 +45,7 @@ Public Class Employee_Citizenship
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "GoldWingsPayrollSys.Employee Citizenship.rpt"
+            Return "Acupay.Employee Citizenship.rpt"
         End Get
         Set
             'Do nothing
