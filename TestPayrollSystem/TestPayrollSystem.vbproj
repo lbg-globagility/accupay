@@ -121,12 +121,6 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GoldWingsPayrollSys\GoldWingsPayrollSys.vbproj">
-      <Project>{81373c7b-f3b6-4e8b-a202-869962273ba8}</Project>
-      <Name>GoldWingsPayrollSys</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
