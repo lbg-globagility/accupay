@@ -21279,10 +21279,7 @@ Public Class EmployeeForm
 
                 dgvempleave.EndEdit(True)
 
-                EXECQUER("DELETE FROM employeeleave WHERE RowID = '" & dgvempleave.CurrentRow.Cells("elv_RowID").Value & "';" &
-                         "ALTER TABLE employeeleave AUTO_INCREMENT = 0;" &
-                         "DELETE FROM employeeleave_duplicate WHERE RowID = '" & dgvempleave.CurrentRow.Cells("elv_RowID").Value & "';" &
-                         "ALTER TABLE employeeleave_duplicate AUTO_INCREMENT = 0;")
+                EXECQUER(String.Concat("CALL DEL_employeeleave('", ValNoComma(dgvempleave.CurrentRow.Cells("elv_RowID").Value), "');"))
 
                 dgvempleave.Rows.Remove(dgvempleave.CurrentRow)
 
