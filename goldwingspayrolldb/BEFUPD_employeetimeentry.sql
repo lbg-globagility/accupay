@@ -26,9 +26,9 @@ DECLARE isShiftRestDay BOOLEAN;
 DECLARE hasWorked BOOLEAN;
 DECLARE hasLeave BOOLEAN;
 
-DECLARE requireLastWorkingDayOrAbsent BOOLEAN;
+DECLARE requiredToWorkLastWorkingDay BOOLEAN;
 DECLARE hasWorkedLastWorkingDay BOOLEAN;
-DECLARE isDeductibleOnHoliday BOOLEAN;
+DECLARE isExemptForHoliday BOOLEAN;
 
 SET NEW.VacationLeaveHours = IFNULL(NEW.VacationLeaveHours, 0);
 SET NEW.SickLeaveHours = IFNULL(NEW.SickLeaveHours, 0);
@@ -99,19 +99,18 @@ INTO
 SET isShiftRestDay = IF(hasShift, isShiftRestDay, TRUE);
 SET isRestDay = isShiftRestDay OR isDefaultRestDay;
 
-SET requireLastWorkingDayOrAbsent = GetListOfValueOrDefault(
+SET requiredToWorkLastWorkingDay = GetListOfValueOrDefault(
     'Payroll Policy', 'HolidayLastWorkingDayOrAbsent', FALSE
 );
 
 SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(NEW.EmployeeID, NEW.Date);
 
-SET isDeductibleOnHoliday = (
-    isHoliday AND
-    requireLastWorkingDayOrAbsent AND
-    (NOT hasWorkedLastWorkingDay)
+SET isExemptForHoliday = (
+    (isHoliday AND (NOT requiredToWorkLastWorkingDay)) OR
+    (isHoliday AND hasWorkedLastWorkingDay)
 );
 
-IF hasWorked OR isRestDay OR (NOT isDeductibleOnHoliday) OR hasLeave THEN
+IF hasWorked OR isRestDay OR isExemptForHoliday OR hasLeave THEN
     SET NEW.Absent = 0;
 ELSE
     SET NEW.Absent = dailyRate;
