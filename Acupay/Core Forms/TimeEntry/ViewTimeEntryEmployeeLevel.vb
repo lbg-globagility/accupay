@@ -736,6 +736,8 @@ Public Class ViewTimeEntryEmployeeLevel
 
         ShowTimeEntryPanel(_bool)
 
+        TabPage_Enter(TabPage1, New EventArgs)
+
     End Sub
 
     Private Sub Panel2_Paint(sender As Object, e As PaintEventArgs) Handles Panel2.Paint
