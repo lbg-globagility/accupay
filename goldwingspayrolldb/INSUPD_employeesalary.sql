@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function goldwingspayrolldb_global_e_pc.INSUPD_employeesalary
+-- Dumping structure for function hyundaipayrolldb_dev.INSUPD_employeesalary
 DROP FUNCTION IF EXISTS `INSUPD_employeesalary`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeesalary`(`esal_RowID` INT, `esal_EmployeeID` INT, `esal_CreatedBy` INT, `esal_LastUpdBy` INT, `esal_OrganizationID` INT, `esal_BasicPay` DECIMAL(11,6), `esal_Salary` DECIMAL(11,6), `esal_NoofDependents` INT, `esal_MaritalStatus` VARCHAR(50), `esal_PositionID` INT, `esal_EffectiveDateFrom` DATE, `esal_EffectiveDateTo` DATE, `esal_HDMFAmount` DECIMAL(10,2), `esal_PAGIBIGAmout` DECIMAL(10,2), `esal_TrueSalary` DECIMAL(10,2), `esal_IsDoneByImporting` TEXT, `esal_DiscardSSS` TINYINT, `esal_DiscardPhH` TINYINT
@@ -119,10 +119,16 @@ SET employeemaritstat = IF(esal_MaritalStatus IN ('Single','Married'),esal_Marit
 SELECT EmployeeType,PayFrequencyID FROM employee WHERE RowID=esal_EmployeeID AND OrganizationID=esal_OrganizationID INTO EmpType,EmpPayFreqID;
 
 -- TODO: Fix filingStatus retrieval since it will not work if emploee dependents is > 4.
-SELECT RowID
-FROM filingstatus
-WHERE MaritalStatus = employeemaritstat AND
-    Dependent = COALESCE(esal_NoofDependents, 0)
+SELECT fs.RowID
+FROM filingstatus fs
+INNER JOIN (SELECT RowID
+            , MaritalStatus
+				, MAX(Dependent) `Dependent`
+				FROM filingstatus
+				GROUP BY MaritalStatus) fss
+        ON fss.MaritalStatus=employeemaritstat
+WHERE fs.MaritalStatus = employeemaritstat AND
+      fs.Dependent = IF(COALESCE(esal_NoofDependents, 0) > fss.Dependent, fss.Dependent, COALESCE(esal_NoofDependents, 0))
 INTO EmpFStatID;
 
 IF EmpType = 'Fixed' OR EmpType = 'Monthly' THEN

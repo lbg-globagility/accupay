@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger goldwingspayrolldb_global_e_pc.AFTUPD_employee_then_employeesalary
+-- Dumping structure for trigger hyundaipayrolldb_dev.AFTUPD_employee_then_employeesalary
 DROP TRIGGER IF EXISTS `AFTUPD_employee_then_employeesalary`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
@@ -158,7 +158,7 @@ SET preEffDateFromEmpSallatest = IF(DATEDIFF(CURRENT_DATE(),preEffDateFromEmpSal
         ,thebasicpay
         ,thedailypay
         ,thehourlypay
-        ,(SELECT RowID FROM filingstatus WHERE MaritalStatus=marit_stat AND Dependent=COALESCE(NEW.NoOfDependents,0))
+        ,(SELECT fs.RowID FROM filingstatus fs INNER JOIN (SELECT RowID, MaritalStatus, MAX(Dependent) `Dependent` FROM filingstatus GROUP BY MaritalStatus) fss ON fss.MaritalStatus=fs.MaritalStatus WHERE fs.MaritalStatus = NEW.MaritalStatus AND fs.Dependent = IF(NEW.NoOfDependents > fss.Dependent, fss.Dependent, NEW.NoOfDependents))
         ,COALESCE(NEW.NoOfDependents,0)
         ,NEW.MaritalStatus
         ,NEW.PositionID
