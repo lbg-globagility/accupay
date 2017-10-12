@@ -52,6 +52,18 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property FixedTaxableMonthlyAllowances As DataTable
+        Get
+            Return _fixedTaxableMonthlyAllowances
+        End Get
+    End Property
+
+    Public ReadOnly Property FixedNonTaxableMonthlyAllowances As DataTable
+        Get
+            Return _fixedNonTaxableMonthlyAllowances
+        End Get
+    End Property
+
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = payPeriodID
         _payDateFrom = payDateFrom
@@ -68,7 +80,9 @@ Public Class PayrollResources
             loadTimeEntriesTask,
             loadLoanSchedulesTask,
             loadLoanTransactionsTask,
-            loadSalariesTask
+            loadSalariesTask,
+            LoadFixedTaxableMonthlyAllowances(),
+            LoadFixedNonTaxableMonthlyAllowancesTask()
         })
     End Function
 
@@ -174,7 +188,7 @@ Public Class PayrollResources
         _salaries = Await query.ReadAsync()
     End Function
 
-    Private Sub LoadFixedMonthlyAllowances()
+    Private Async Function LoadFixedTaxableMonthlyAllowances() As Task
         Dim fixedTaxableMonthlyAllowanceSql = String.Empty
 
         If _isEndOfMonth Then
@@ -203,8 +217,10 @@ Public Class PayrollResources
                 "AND p.`Status` = 1;"
         End If
 
-        _fixedTaxableMonthlyAllowances = New MySQLQueryToDataTable(fixedTaxableMonthlyAllowanceSql).ResultTable
+        _fixedTaxableMonthlyAllowances = Await New SqlToDataTable(fixedTaxableMonthlyAllowanceSql).ReadAsync()
+    End Function
 
+    Private Async Function LoadFixedNonTaxableMonthlyAllowancesTask() As Task
         Dim fixedNonTaxableMonthlyAllowanceSql = String.Empty
         If _isEndOfMonth Then
             fixedNonTaxableMonthlyAllowanceSql =
@@ -232,7 +248,7 @@ Public Class PayrollResources
             "AND p.`Status` = 0;"
         End If
 
-        _fixedNonTaxableMonthlyAllowances = New MySQLQueryToDataTable(fixedNonTaxableMonthlyAllowanceSql).ResultTable
-    End Sub
+        _fixedNonTaxableMonthlyAllowances = Await New SqlToDataTable(fixedNonTaxableMonthlyAllowanceSql).ReadAsync()
+    End Function
 
 End Class
