@@ -83,7 +83,6 @@ Public Class ViewTimeEntryEmployeeLevel
                 employee.LastName,
                 employee.OrganizationID
             FROM employee
-            WHERE employee.OrganizationID = @OrganizationID
             ORDER BY
                 employee.LastName,
                 employee.FirstName
@@ -93,8 +92,6 @@ Public Class ViewTimeEntryEmployeeLevel
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)
-
-            command.Parameters.AddWithValue("@OrganizationID", CStr(z_OrganizationID))
 
             Await connection.OpenAsync()
             Dim reader = Await command.ExecuteReaderAsync()
@@ -755,7 +752,6 @@ Public Class ViewTimeEntryEmployeeLevel
             Panel2.Location = New Point(0, Panel2.Location.Y)
 
             Size = New Size(1107, 617)
-
         Else
 
         End If
@@ -787,7 +783,6 @@ Public Class ViewTimeEntryEmployeeLevel
             Me.Close()
 
             Return False
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)
