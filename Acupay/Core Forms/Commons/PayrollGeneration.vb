@@ -105,6 +105,9 @@ Public Class PayrollGeneration
     Private allNoTaxSemiMonthlyBonuses As DataTable
     Private allNoTaxMonthlyBonuses As DataTable
 
+    Private allFixedTaxableMonthlyAllowances As DataTable
+    Private allFixedNonTaxableMonthlyAllowances As DataTable
+
     Private _numOfDayPresent As DataTable
     Private _allTimeEntries As DataTable
     Private _employeeFirstTimeSalary As DataTable
@@ -116,10 +119,8 @@ Public Class PayrollGeneration
 
     Private _filingStatuses As DataTable
 
-    Private fixedNonTaxableMonthlyAllowances As DataTable
-    Private fixedTaxableMonthlyAllowances As DataTable
-
     Private Delegate Sub NotifyMainWindow(ByVal progress_index As Integer)
+
     Private _notifyMainWindow As NotifyMainWindow
 
     Private form_caller As Form
@@ -159,6 +160,8 @@ Public Class PayrollGeneration
             allNoTaxOneTimeAllowances As DataTable,
             allNoTaxSemiMonthlyAllowances As DataTable,
             allNoTaxWeeklyAllowances As DataTable,
+            allFixedTaxableMonthlyAllowances As DataTable,
+            allFixedNonTaxableMonthlyAllowances As DataTable,
             allDailyBonuses As DataTable,
             allMonthlyBonuses As DataTable,
             allOneTimeBonuses As DataTable,
@@ -198,6 +201,8 @@ Public Class PayrollGeneration
         Me.allNoTaxWeeklyAllowances = allNoTaxWeeklyAllowances
         Me.allNoTaxSemiMonthlyAllowances = allNoTaxSemiMonthlyAllowances
         Me.allNoTaxMonthlyAllowances = allNoTaxMonthlyAllowances
+        Me.allFixedTaxableMonthlyAllowances = allFixedTaxableMonthlyAllowances
+        Me.allFixedNonTaxableMonthlyAllowances = allFixedNonTaxableMonthlyAllowances
 
         Me.allOneTimeBonuses = allOneTimeBonuses
         Me.allDailyBonuses = allDailyBonuses
@@ -315,8 +320,6 @@ Public Class PayrollGeneration
             _philHealthDeductionSchedule = employee("PhHealthDeductSched").ToString
             _hdmfDeductionSchedule = employee("HDMFDeductSched").ToString
             _withholdingTaxSchedule = employee("WTaxDeductSched").ToString
-
-
 
             _payStub.EmployeeID = Trim(CStr(employee("RowID")))
 
@@ -541,7 +544,6 @@ Public Class PayrollGeneration
             form_caller.BeginInvoke(_notifyMainWindow, 1)
             Dim my_cmd As String = String.Concat(Convert.ToString(employee("RowID")), "@", Convert.ToString(employee("EmployeeID")))
             Console.WriteLine(my_cmd)
-
         Catch ex As Exception
             If transaction IsNot Nothing Then
                 transaction.Rollback()
@@ -581,8 +583,7 @@ Public Class PayrollGeneration
         Next
         Dim totalSemiMonthlyAllowances = ValNoComma(allSemiMonthlyAllowances.Compute("SUM(TotalAllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
         Dim totalMonthlyAllowances = ValNoComma(allMonthlyAllowances.Compute("SUM(TotalAllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-        ' TODO: fixed month allowances
-        Dim totalFixedTaxableMonthlyAllowance = 0 'ValNoComma(fixedTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+        Dim totalFixedTaxableMonthlyAllowance = ValNoComma(allFixedTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
 
         Dim totalTaxableAllowance = (
             totalOneTimeAllowances +
@@ -598,8 +599,7 @@ Public Class PayrollGeneration
         Dim totalWeeklyNoTaxAllowances = ValNoComma(allNoTaxWeeklyAllowances.Compute("SUM(TotalAllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
         Dim totalSemiMonthlyNoTaxAllowances = ValNoComma(allNoTaxSemiMonthlyAllowances.Compute("SUM(TotalAllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
         Dim totalMonthlyNoTaxAllowances = ValNoComma(allNoTaxMonthlyAllowances.Compute("SUM(TotalAllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-        ' TODO: fixed month allowances
-        Dim totalFixedMonthlyNoTaxAllowances = 0 'ValNoComma(fixedNonTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
+        Dim totalFixedMonthlyNoTaxAllowances = ValNoComma(allFixedNonTaxableMonthlyAllowances.Compute("SUM(AllowanceAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
 
         Dim totalNoTaxAllowance = (
             totalOneTimeNoTaxAllowances +
@@ -1015,7 +1015,6 @@ Friend Class MySQLQueryToDataTable
 
             priv_conn.ConnectionString = mysql_conn_text &
                 "default command timeout=" & cmd_time_out & ";"
-
         Else
 
             priv_conn.ConnectionString = mysql_conn_text
@@ -1050,7 +1049,6 @@ Friend Class MySQLQueryToDataTable
                 priv_da.Fill(n_ResultTable)
 
             End With
-
         Catch ex As Exception
             _hasError = True
             'MsgBox()
@@ -1124,7 +1122,6 @@ Friend Class MySQLExecuteQuery
             'n_DataBaseConnection.GetStringMySQLConnectionString
             priv_conn.ConnectionString = mysql_conn_text &
                 "default command timeout=" & cmd_time_out & ";"
-
         Else
             'n_DataBaseConnection.GetStringMySQLConnectionString
             priv_conn.ConnectionString = mysql_conn_text
@@ -1159,7 +1156,6 @@ Friend Class MySQLExecuteQuery
                                             except_this_string) Then
 
                     .ExecuteNonQuery()
-
                 Else
 
                     dr = .ExecuteReader()
@@ -1183,14 +1179,12 @@ Friend Class MySQLExecuteQuery
                         getResult = dr(0)
 
                     End If
-
                 Else
                     getResult = Nothing
 
                 End If
 
             End If
-
         Catch ex As Exception
 
             _hasError = True
