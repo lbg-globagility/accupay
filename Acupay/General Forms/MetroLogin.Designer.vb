@@ -38,6 +38,7 @@ Partial Class MetroLogin
         Me.lnklblovertime = New System.Windows.Forms.LinkLabel()
         Me.lnklblleave = New System.Windows.Forms.LinkLabel()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
         CType(Me.MetroStyleManager1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PhotoImages, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -185,13 +186,27 @@ Partial Class MetroLogin
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.LinkLabel1)
         Me.Panel1.Controls.Add(Me.lnklblobf)
         Me.Panel1.Controls.Add(Me.lnklblleave)
         Me.Panel1.Controls.Add(Me.lnklblovertime)
         Me.Panel1.Location = New System.Drawing.Point(23, 302)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(138, 65)
+        Me.Panel1.Size = New System.Drawing.Size(279, 65)
         Me.Panel1.TabIndex = 23
+        '
+        'LinkLabel1
+        '
+        Me.LinkLabel1.AutoSize = True
+        Me.LinkLabel1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LinkLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel1.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.LinkLabel1.Location = New System.Drawing.Point(132, 9)
+        Me.LinkLabel1.Name = "LinkLabel1"
+        Me.LinkLabel1.Size = New System.Drawing.Size(79, 15)
+        Me.LinkLabel1.TabIndex = 23
+        Me.LinkLabel1.TabStop = True
+        Me.LinkLabel1.Text = "My time entry"
         '
         'MetroLogin
         '
@@ -238,4 +253,5 @@ Partial Class MetroLogin
     Friend WithEvents lnklblovertime As LinkLabel
     Friend WithEvents lnklblleave As LinkLabel
     Friend WithEvents Panel1 As Panel
+    Friend WithEvents LinkLabel1 As LinkLabel
 End Class

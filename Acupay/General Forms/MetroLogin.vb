@@ -277,7 +277,7 @@ Public Class MetroLogin
                 thrice = 0
 
                 Dim n_ShiftTemplater As _
-                    New TrialForm
+                    New ViewTimeEntryEmployeeLevel
 
                 'n_ShiftTemplater.Show()
                 'n_ShiftTemplater.PrintPayslip(Me, New EventArgs)
@@ -729,6 +729,14 @@ Public Class MetroLogin
             PhotoImages.Location = New Point(242, 89)
             Panel1.Visible = True
         End If
+
+    End Sub
+
+    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
+
+        Dim my_time_entry As New ViewTimeEntryEmployeeLevel
+
+        my_time_entry.Show()
 
     End Sub
 
