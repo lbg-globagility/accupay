@@ -43,13 +43,13 @@ Public Class ProductControlForm
 
         If ToolStripButton2.Enabled Then
 
-            Dim haschangestoDB = _
-                EXECQUER("SELECT EXISTS(SELECT" & _
-                         " RowID" & _
-                         " FROM product" & _
-                         " WHERE OrganizationID='" & orgztnID & "'" & _
-                         " AND `Category`='" & n_categname & "'" & _
-                         " AND (DATE_FORMAT(Created, '%Y-%m-%d') = CURDATE() OR DATE_FORMAT(LastUpd, '%Y-%m-%d') = CURDATE())" & _
+            Dim haschangestoDB =
+                EXECQUER("SELECT EXISTS(SELECT" &
+                         " RowID" &
+                         " FROM product" &
+                         " WHERE OrganizationID='" & orgztnID & "'" &
+                         " AND `Category`='" & n_categname & "'" &
+                         " AND (DATE_FORMAT(Created, '%Y-%m-%d') = CURDATE() OR DATE_FORMAT(LastUpd, '%Y-%m-%d') = CURDATE())" &
                          " LIMIT 1);")
 
             If haschangestoDB = 1 Then
@@ -73,10 +73,10 @@ Public Class ProductControlForm
 
     End Sub
 
-    Function INS_product(Optional prod_rowID As Object = Nothing, _
-                         Optional p_Name As Object = Nothing, _
-                         Optional p_PartNo As Object = Nothing, _
-                         Optional p_CategName As Object = Nothing, _
+    Function INS_product(Optional prod_rowID As Object = Nothing,
+                         Optional p_Name As Object = Nothing,
+                         Optional p_PartNo As Object = Nothing,
+                         Optional p_CategName As Object = Nothing,
                          Optional p_Status As Object = "Active",
                          Optional p_IsFixed As Object = "0",
                          Optional p_IsIncludedIn13th As Object = "0") As Object
@@ -108,13 +108,12 @@ Public Class ProductControlForm
 
                 .Parameters.AddWithValue("p_RowID", If(prod_rowID = Nothing, DBNull.Value, prod_rowID))
                 .Parameters.AddWithValue("p_Name", p_Name)
-                .Parameters.AddWithValue("p_OrganizationID", orgztnID) 'orgztnID
+                .Parameters.AddWithValue("p_OrganizationID", orgztnID)
                 .Parameters.AddWithValue("p_PartNo", p_PartNo)
-                .Parameters.AddWithValue("p_LastUpd", DBNull.Value)
                 .Parameters.AddWithValue("p_CreatedBy", z_User)
                 .Parameters.AddWithValue("p_LastUpdBy", z_User)
                 .Parameters.AddWithValue("p_Category", p_CategName)
-                .Parameters.AddWithValue("p_CategoryID", DBNull.Value) 'KELANGAN MA-RETRIEVE KO UNG ROWID SA CATEGORY WHERE CATEGORYNAME = 'MEDICAL RECORD'
+                .Parameters.AddWithValue("p_CategoryID", DBNull.Value)
                 .Parameters.AddWithValue("p_Status", p_Status)
                 .Parameters.AddWithValue("p_UnitPrice", 0.0)
                 .Parameters.AddWithValue("p_UnitOfMeasure", 0)
@@ -168,7 +167,7 @@ Public Class ProductControlForm
             If drow.IsNewRow = False Then
 
                 Dim datastatus As Short = 0
-                
+
                 datastatus = Convert.ToInt16(drow.Cells("Status").Value)
 
                 Dim returnval =
@@ -215,11 +214,11 @@ Public Class ProductControlForm
 
         Dim selectAllProduct As New DataTable
 
-        selectAllProduct = retAsDatTbl("SELECT p.*, IF(p.`Status` = '0', 'No', 'Yes') AS IStatus" & _
-                                       " FROM product p" & _
-                                       " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND CategoryName='" & n_categname & "'" & _
-                                       " WHERE p.OrganizationID='" & orgztnID & "'" & _
-                                       " AND p.CategoryID=c.RowID" & _
+        selectAllProduct = retAsDatTbl("SELECT p.*, IF(p.`Status` = '0', 'No', 'Yes') AS IStatus" &
+                                       " FROM product p" &
+                                       " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND CategoryName='" & n_categname & "'" &
+                                       " WHERE p.OrganizationID='" & orgztnID & "'" &
+                                       " AND p.CategoryID=c.RowID" &
                                        " AND p.ActiveData='1';")
 
         'dgvproducts.Rows.Clear()
