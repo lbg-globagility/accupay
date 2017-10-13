@@ -1,9 +1,16 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for function hyundaipayrolldb_dev.INSUPD_product
 DROP FUNCTION IF EXISTS `INSUPD_product`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_product`(`p_RowID` INT(11), `p_Name` VARCHAR(50), `p_OrganizationID` INT, `p_PartNo` VARCHAR(50), `p_CreatedBy` INT, `p_LastUpdBy` INT, `p_Category` VARCHAR(50), `p_CategoryID` INT, `p_Status` VARCHAR(50), `p_UnitPrice` DECIMAL(10,2), `p_UnitOfMeasure` VARCHAR(50), `p_IsFixed` TINYINT, `p_IsIncludedIn13th` TINYINT) RETURNS int(11)
@@ -32,6 +39,7 @@ INSERT INTO product
     ,UnitPrice
     ,UnitOfMeasure
     ,`Fixed`
+    ,AllocateBelowSafetyFlag
 ) VALUES (
     p_RowID
     ,p_Name
@@ -46,6 +54,7 @@ INSERT INTO product
     ,p_UnitPrice
     ,p_UnitOfMeasure
     ,p_IsFixed
+    ,p_IsIncludedIn13th
 ) ON
 DUPLICATE
 KEY
@@ -54,7 +63,8 @@ UPDATE
     ,PartNo=p_PartNo
     ,LastUpd=CURRENT_TIMESTAMP()
     ,LastUpdBy=p_LastUpdBy
-    ,`Fixed`=p_IsFixed;SELECT @@Identity AS id INTO prod_RowID;
+    ,`Fixed`=p_IsFixed
+    ,AllocateBelowSafetyFlag=p_IsIncludedIn13th;SELECT @@Identity AS id INTO prod_RowID;
 
     IF IFNULL(prod_RowID,0) = 0 THEN
         SELECT RowID FROM product WHERE PartNo=p_PartNo AND OrganizationID=p_OrganizationID AND `Category`=p_Category LIMIT 1 INTO prod_RowID;
@@ -144,7 +154,6 @@ RETURN prod_RowID;
 
 END//
 DELIMITER ;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
