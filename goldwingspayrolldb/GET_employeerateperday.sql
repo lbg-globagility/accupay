@@ -1,9 +1,16 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for function hyundaipayrolldb_dev.GET_employeerateperday
 DROP FUNCTION IF EXISTS `GET_employeerateperday`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `GET_employeerateperday`(`EmpID` INT, `OrgID` INT, `paramDate` DATE) RETURNS decimal(11,6)
@@ -36,6 +43,7 @@ DECLARE org_workdaysofyear INT(11);
 
 DECLARE emp_sal DECIMAL(11,6);
 
+DECLARE month_count_peryear INT(11) DEFAULT 12;
 
 SELECT ShiftID FROM employeeshift WHERE EmployeeID=EmpID AND OrganizationID=OrgID AND paramDate BETWEEN DATE(COALESCE(EffectiveFrom,DATE_FORMAT(CURRENT_TIMESTAMP(),'%Y-%m-%d'))) AND DATE(COALESCE(EffectiveTo,ADDDATE(CURRENT_TIMESTAMP(), INTERVAL 3 MONTH))) AND DATEDIFF(paramDate,EffectiveFrom) >= 0 AND COALESCE(RestDay,0)=0 ORDER BY DATEDIFF(DATE_FORMAT(paramDate,'%Y-%m-%d'),EffectiveFrom) LIMIT 1 INTO shiftRowID;
 
@@ -110,7 +118,10 @@ IF emptype IN ('Fixed','Monthly') THEN
 
     ELSEIF PayFreqID = 2 THEN
 
-        SET dailyrate = (empBasicPay * 12.00000000000) / org_workdaysofyear;
+        SELECT (emp_sal / (e.WorkDaysPerYear / month_count_peryear)) `Result`
+		  FROM employee e
+		  WHERE e.RowID=EmpID
+		  INTO dailyrate;
 
     ELSEIF PayFreqID = 3 THEN
 
@@ -148,7 +159,6 @@ RETURN dailyrate;
 
 END//
 DELIMITER ;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
