@@ -801,8 +801,8 @@ ELSEIF isRegularDay THEN
 
     SET ete_TotalDayPay = regularAmount + overtimeAmount +
                           nightDiffAmount + nightDiffOTAmount +
-                          restDayAmount + leavePay +
-								  (@leave_hrs * hourlyRate);
+                          restDayAmount + leavePay #+ (@leave_hrs * hourlyRate)
+								  ;
 
     -- SELECT timeEntryID, ete_EmpRowID, shiftStart, shiftEnd, regularHours
     -- INTO OUTFILE 'D:/Aaron/logs/santos.txt'
