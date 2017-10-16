@@ -232,10 +232,19 @@ Public Class TimeEntrySummaryForm
                 employeetimeentry.TotalDayPay,
                 payrate.PayType
             FROM employeetimeentry
+            LEFT JOIN (
+                SELECT EmployeeID, Date, MAX(Created) Created
+                FROM employeetimeentrydetails
+                WHERE Date BETWEEN @DateFrom AND @DateTo
+                GROUP BY EmployeeID, Date
+            ) latest
+            ON latest.EmployeeID = employeetimeentry.EmployeeID AND
+                latest.Date = employeetimeentry.Date
             LEFT JOIN employeetimeentrydetails
             ON employeetimeentrydetails.Date = employeetimeentry.Date AND
                 employeetimeentrydetails.OrganizationID = employeetimeentry.OrganizationID AND
-                employeetimeentrydetails.EmployeeID = employeetimeentry.EmployeeID
+                employeetimeentrydetails.EmployeeID = employeetimeentry.EmployeeID AND
+                employeetimeentrydetails.Created = latest.Created
             LEFT JOIN employeeshift
             ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
             LEFT JOIN shift
@@ -352,10 +361,19 @@ Public Class TimeEntrySummaryForm
                 employeetimeentryactual.TotalHoursWorked,
                 employeetimeentryactual.TotalDayPay
             FROM employeetimeentryactual
+            LEFT JOIN (
+                SELECT EmployeeID, Date, MAX(Created) Created
+                FROM employeetimeentrydetails
+                WHERE Date BETWEEN @DateFrom AND @DateTo
+                GROUP BY EmployeeID, Date
+            ) latest
+            ON latest.EmployeeID = employeetimeentryactual.EmployeeID AND
+                latest.Date = employeetimeentryactual.Date
             LEFT JOIN employeetimeentrydetails
             ON employeetimeentrydetails.Date = employeetimeentryactual.Date AND
                 employeetimeentrydetails.OrganizationID = employeetimeentryactual.OrganizationID AND
-                employeetimeentrydetails.EmployeeID = employeetimeentryactual.EmployeeID
+                employeetimeentrydetails.EmployeeID = employeetimeentryactual.EmployeeID AND
+                employeetimeentrydetails.Created = latest.Created
             LEFT JOIN employeeshift
             ON employeeshift.RowID = employeetimeentryactual.EmployeeShiftID
             LEFT JOIN shift
