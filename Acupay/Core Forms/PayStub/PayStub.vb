@@ -588,10 +588,11 @@ Public Class PayStub
         catchdt = n_ReadSQLProcedureToDatatable.ResultTable
 
         dgvemployees.Rows.Clear()
-        For Each drow As DataRow In catchdt.Rows
-            Dim row_array = drow.ItemArray
-            dgvemployees.Rows.Add(row_array)
-        Next
+        'For Each drow As DataRow In catchdt.Rows
+        '    Dim row_array = drow.ItemArray
+        '    dgvemployees.Rows.Add(row_array)
+        'Next
+        PopulateDGVEmployee(catchdt)
         Static x As SByte = 0
 
         If x = 0 Then
@@ -2429,57 +2430,7 @@ Public Class PayStub
             '" AGAINST ('" & Trim(tsSearch.Text) & "') AND e.OrganizationID=" & orgztnID & " ORDER BY e.RowID DESC LIMIT " & pagination & ",100;")
 
             dgvemployees.Rows.Clear()
-
-            For Each drow As DataRow In dattabsearch.Rows
-                dgvemployees.Rows.Add(drow("RowID"),
-                                      drow("EmployeeID"),
-                                      drow("FirstName"),
-                                      drow("MiddleName"),
-                                      drow("LastName"),
-                                      drow("Surname"),
-                                      drow("Nickname"),
-                                      drow("MaritalStatus"),
-                                      drow("NoOfDependents"),
-                                      Format(CDate(drow("Birthdate")), machineShortDateFormat),
-                                      Format(CDate(drow("StartDate")), machineShortDateFormat),
-                                      drow("JobTitle"),
-                                      If(IsDBNull(drow("PositionName")), "", drow("PositionName")),
-                                      drow("Salutation"),
-                                      drow("TINNo"),
-                                      drow("SSSNo"),
-                                      drow("HDMFNo"),
-                                      drow("PhilHealthNo"),
-                                      drow("WorkPhone"),
-                                      drow("HomePhone"),
-                                      drow("MobilePhone"),
-                                      drow("HomeAddress"),
-                                      drow("EmailAddress"),
-                                      If(Trim(drow("Gender")) = "M", "Male", "Female"),
-                                      drow("EmploymentStatus"),
-                                      drow("PayFrequencyType"),
-                                      drow("UndertimeOverride"),
-                                      drow("OvertimeOverride"),
-                                      If(IsDBNull(drow("PositionID")), "", drow("PositionID")),
-                                      drow("PayFrequencyID"),
-                                      drow("EmployeeType"),
-                                      drow("LeaveBalance"),
-                                      drow("SickLeaveBalance"),
-                                      drow("MaternityLeaveBalance"),
-                                      drow("LeaveAllowance"),
-                                      drow("SickLeaveAllowance"),
-                                      drow("MaternityLeaveAllowance"),
-                                      drow("LeavePerPayPeriod"),
-                                      drow("SickLeavePerPayPeriod"),
-                                      drow("MaternityLeavePerPayPeriod"),
-                                      drow("fstatRowID"),
-                                      Nothing,
-                                      drow("Created"),
-                                      drow("CreatedBy"),
-                                      If(IsDBNull(drow("LastUpd")), "", drow("LastUpd")),
-                                      If(IsDBNull(drow("LastUpdBy")), "", drow("LastUpdBy")))
-                'FilingStatus
-            Next
-
+            PopulateDGVEmployee(dattabsearch)
             RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
             RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
             RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
@@ -6321,6 +6272,63 @@ Public Class PayStub
             Me.Enabled = True
             Timer1.Enabled = False
         End If
+    End Sub
+
+    Private Sub dgvemployees_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployees.CellContentClick
+
+    End Sub
+
+    Private Sub PopulateDGVEmployee(dat_tbl As DataTable)
+
+        For Each drow As DataRow In dat_tbl.Rows
+            dgvemployees.Rows.Add(drow("RowID"),
+                                  drow("EmployeeID"),
+                                  drow("FirstName"),
+                                  drow("MiddleName"),
+                                  drow("LastName"),
+                                  drow("Surname"),
+                                  drow("Nickname"),
+                                  drow("MaritalStatus"),
+                                  drow("NoOfDependents"),
+                                  Format(CDate(drow("Birthdate")), machineShortDateFormat),
+                                  Format(CDate(drow("StartDate")), machineShortDateFormat),
+                                  drow("JobTitle"),
+                                  If(IsDBNull(drow("PositionName")), "", drow("PositionName")),
+                                  drow("Salutation"),
+                                  drow("TINNo"),
+                                  drow("SSSNo"),
+                                  drow("HDMFNo"),
+                                  drow("PhilHealthNo"),
+                                  drow("WorkPhone"),
+                                  drow("HomePhone"),
+                                  drow("MobilePhone"),
+                                  drow("HomeAddress"),
+                                  drow("EmailAddress"),
+                                  If(Trim(drow("Gender")) = "M", "Male", "Female"),
+                                  drow("EmploymentStatus"),
+                                  drow("PayFrequencyType"),
+                                  drow("UndertimeOverride"),
+                                  drow("OvertimeOverride"),
+                                  If(IsDBNull(drow("PositionID")), "", drow("PositionID")),
+                                  drow("PayFrequencyID"),
+                                  drow("EmployeeType"),
+                                  drow("LeaveBalance"),
+                                  drow("SickLeaveBalance"),
+                                  drow("MaternityLeaveBalance"),
+                                  drow("LeaveAllowance"),
+                                  drow("SickLeaveAllowance"),
+                                  drow("MaternityLeaveAllowance"),
+                                  drow("LeavePerPayPeriod"),
+                                  drow("SickLeavePerPayPeriod"),
+                                  drow("MaternityLeavePerPayPeriod"),
+                                  drow("fstatRowID"),
+                                  Nothing,
+                                  drow("Created"),
+                                  drow("CreatedBy"),
+                                  If(IsDBNull(drow("LastUpd")), "", drow("LastUpd")),
+                                  If(IsDBNull(drow("LastUpdBy")), "", drow("LastUpdBy")))
+        Next
+
     End Sub
 
 End Class
