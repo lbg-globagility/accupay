@@ -7,28 +7,52 @@ Namespace Auditing
 
     Public Class TimeLogForm
 
-        Private _viewID As Integer = 124
-        Private Shared _payrollContext As PayrollContext
+        Private _view As View
+
+        Private _payrollContext As PayrollContext
+
+        Public Sub New()
+            InitializeComponent()
+            _payrollContext = New PayrollContext()
+        End Sub
 
         Private Sub TimeLogForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-            _payrollContext = New PayrollContext()
+            InitializeForm()
+            LoadView()
+            LoadAuditDataGridView()
+        End Sub
 
-            Dim logGroups As IEnumerable(Of IGrouping(Of String, AuditTrail))
+        Private Sub LoadView()
+            Using context = New AuditContext()
+                _view = context.Views.
+                    Where(Function(v) v.ViewName = "Employee Time Entry logs").
+                    Where(Function(v) CBool(v.OrganizationID = z_OrganizationID)).
+                    First()
+            End Using
+        End Sub
+
+        Private Sub InitializeForm()
+            AuditDataGridView.AutoGenerateColumns = False
+        End Sub
+
+        Private Sub LoadAuditDataGridView()
+            Dim auditTrailPerTimeLog As IEnumerable(Of IGrouping(Of String, AuditTrail))
 
             Using context = New AuditContext()
-                Dim logs = (From t In context.AuditTrails
-                            Where t.ViewID = 124).ToList()
+                Dim auditTrails = (From t In context.AuditTrails
+                                   Where t.ViewID = _view.RowID).ToList()
 
-                logGroups = logs.GroupBy(Function(l) l.Created & l.ChangedRowID)
+                auditTrailPerTimeLog = auditTrails.GroupBy(Function(l) l.Created & l.ChangedRowID)
             End Using
 
-            AuditDataGridView.AutoGenerateColumns = False
             AuditDataGridView.DataSource = New BindingList(Of TimeLogView)(
-                logGroups.Select(Function(l) New TimeLogView(l)).ToList()
+                auditTrailPerTimeLog.Select(
+                    Function(a) New TimeLogView(a, GetTimeLog(a.First().ChangedRowID))
+                ).ToList()
             )
         End Sub
 
-        Private Shared Function GetTimeLog(timeLogID As Integer?) As TimeLog
+        Private Function GetTimeLog(timeLogID As Integer?) As TimeLog
             Return _payrollContext.TimeLogs.Find(timeLogID)
         End Function
 
@@ -38,9 +62,9 @@ Namespace Auditing
 
             Private _timeLog As TimeLog
 
-            Public Sub New(logGroup As IGrouping(Of String, AuditTrail))
+            Public Sub New(logGroup As IGrouping(Of String, AuditTrail), timeLog As TimeLog)
                 _logGroup = logGroup
-                _timeLog = GetTimeLog(_logGroup.First().ChangedRowID)
+                _timeLog = timeLog
             End Sub
 
             Public ReadOnly Property DateOccurred As Date
@@ -64,7 +88,6 @@ Namespace Auditing
                         If log IsNot firstLog Then
                             output &= vbCrLf
                         End If
-
                         output &= $"{log.FieldChanged}={log.NewValue}"
                     Next
 

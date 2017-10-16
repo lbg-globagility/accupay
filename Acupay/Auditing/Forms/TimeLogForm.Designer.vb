@@ -24,7 +24,7 @@
         'Do not modify it using the code editor.
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
-            Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+            Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
             Me.AuditDataGridView = New System.Windows.Forms.DataGridView()
             Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
             Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -36,11 +36,12 @@
             '
             Me.AuditDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
             Me.AuditDataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+            Me.AuditDataGridView.BackgroundColor = System.Drawing.Color.White
             Me.AuditDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
             Me.AuditDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3})
-            Me.AuditDataGridView.Location = New System.Drawing.Point(16, 176)
+            Me.AuditDataGridView.Location = New System.Drawing.Point(8, 8)
             Me.AuditDataGridView.Name = "AuditDataGridView"
-            Me.AuditDataGridView.Size = New System.Drawing.Size(1000, 272)
+            Me.AuditDataGridView.Size = New System.Drawing.Size(1168, 456)
             Me.AuditDataGridView.TabIndex = 0
             '
             'Column1
@@ -58,8 +59,8 @@
             'Column3
             '
             Me.Column3.DataPropertyName = "Details"
-            DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-            Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
+            DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+            Me.Column3.DefaultCellStyle = DataGridViewCellStyle2
             Me.Column3.HeaderText = "Change"
             Me.Column3.Name = "Column3"
             '
@@ -67,7 +68,7 @@
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-            Me.ClientSize = New System.Drawing.Size(1032, 470)
+            Me.ClientSize = New System.Drawing.Size(1184, 473)
             Me.Controls.Add(Me.AuditDataGridView)
             Me.Name = "TimeLogForm"
             Me.Text = "TimeLogForm"

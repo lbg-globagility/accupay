@@ -11,6 +11,8 @@ Namespace Auditing
             MyBase.New("name=AuditContext")
         End Sub
 
+        Public Overridable Property Views As DbSet(Of View)
+
         Public Overridable Property AuditTrails As DbSet(Of AuditTrail)
 
     End Class
