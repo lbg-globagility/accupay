@@ -17,6 +17,22 @@ Public Class MDIPrimaryForm
 
     Private versionNo As String
 
+    Private str_pending_leave As String =
+        String.Concat("SELECT e.EmployeeID",
+                      ", CONCAT_WS(', ', e.LastName, e.FirstName) `FullName`",
+                      ", CONCAT_WS(' to ', CONCAT(TIME_FORMAT(elv.LeaveStartTime, '%l:%i'), LEFT(TIME_FORMAT(elv.LeaveEndTime, '%p'), 1))",
+                      "                  , CONCAT(TIME_FORMAT(elv.LeaveEndTime, '%l:%i'), LEFT(TIME_FORMAT(elv.LeaveEndTime, '%p'), 1))) `LeaveTime`",
+                      ", DATE_FORMAT(elv.LeaveStartDate, '%c/%e/%Y') `LeaveStartDate`",
+                      ", (DATEDIFF(elv.LeaveEndDate, elv.LeaveStartDate) + 1) `LeaveDays`",
+                      " FROM employeeleave elv",
+                      " INNER JOIN employee e ON e.RowID=elv.EmployeeID",
+                      " WHERE elv.OrganizationID=?og_rowid",
+                      " And elv.`Status`=?lv_status",
+                      " ORDER BY elv.Created DESC;")
+
+    Private if_sysowner_is_hyundai As Boolean =
+        Convert.ToInt16(New SQL("SELECT EXISTS(SELECT RowID FROM systemowner WHERE IsCurrentOwner='1' AND Name='Hyundai' LIMIT 1) `Result`;").GetFoundRow)
+
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         'For Each ctl As Control In Me.Controls
@@ -66,6 +82,9 @@ Public Class MDIPrimaryForm
         Panel5.Font = DefaultFontStyle
 
         Panel7.Font = DefaultFontStyle
+
+        CollapsibleGroupBox6.Visible = if_sysowner_is_hyundai
+        Panel15.Font = DefaultFontStyle
 
 
         Panel1.Focus()
@@ -1086,6 +1105,8 @@ Public Class MDIPrimaryForm
 
     Dim n_bgwForRegularization = Nothing
 
+    Dim dt_pend_leave As New DataTable
+
     Private Sub bgDashBoardReloader_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgDashBoardReloader.DoWork
 
         Dim params(0, 1) As Object
@@ -1149,6 +1170,15 @@ Public Class MDIPrimaryForm
         dgvfrequentleave.Tag = New SQLQueryToDatatable("CALL `FREQUENT_leave`('" & orgztnID & "');").ResultTable
 
         'dgvfrequentleave
+
+        If if_sysowner_is_hyundai Then
+
+            Dim pend_leave As New SQL(str_pending_leave,
+                                  New Object() {orgztnID, "Pending"})
+
+            dt_pend_leave = pend_leave.GetFoundRows.Tables(0)
+
+        End If
 
     End Sub
 
@@ -1228,6 +1258,13 @@ Public Class MDIPrimaryForm
         PopulateDGVwithDatTbl(dgvfrequentleave, _
                               n_dt)
 
+        If if_sysowner_is_hyundai Then
+            dgvpendingleave.Rows.Clear()
+            For Each drow As DataRow In dt_pend_leave.Rows
+                dgvpendingleave.Rows.Add(drow.ItemArray)
+            Next
+            dgvpendingleave.Enabled = True
+        End If
 
         dgvAge21Depen.Enabled = True
 
