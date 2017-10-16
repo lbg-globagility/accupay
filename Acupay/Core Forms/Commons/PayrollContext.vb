@@ -1,4 +1,3 @@
-
 Imports System
 Imports System.Data.Entity
 Imports System.Data.Common
@@ -28,5 +27,7 @@ Public Class PayrollContext
     Public Overridable Property LoanSchedules As DbSet(Of LoanSchedule)
 
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
+
+    Public Overridable Property TimeLogs As DbSet(Of TimeLog)
 
 End Class

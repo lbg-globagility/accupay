@@ -219,6 +219,14 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audit\AuditContext.vb" />
+    <Compile Include="Audit\Entity\AuditTrail.vb" />
+    <Compile Include="Audit\Forms\TimeLogForm.Designer.vb">
+      <DependentUpon>TimeLogForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Audit\Forms\TimeLogForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
     <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
@@ -250,6 +258,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Core Forms\Salary\Salary.vb" />
+    <Compile Include="Core Forms\TimeEntry\Employee.vb" />
     <Compile Include="Core Forms\TimeEntry\Overtime.vb" />
     <Compile Include="Core Forms\TimeEntry\Shift.vb" />
     <Compile Include="Core Forms\TimeEntry\ShiftToday.vb" />
@@ -1241,6 +1250,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo - Copy.ico" />
+    <EmbeddedResource Include="Audit\Forms\TimeLogForm.resx">
+      <DependentUpon>TimeLogForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\AllowanceTypeForm.resx">
       <DependentUpon>AllowanceTypeForm.vb</DependentUpon>
     </EmbeddedResource>

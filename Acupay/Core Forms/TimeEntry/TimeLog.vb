@@ -1,13 +1,20 @@
 ﻿Option Strict On
 
+Imports System
+Imports System.ComponentModel.DataAnnotations
+Imports System.ComponentModel.DataAnnotations.Schema
+
+<Table("employeetimeentrydetails")>
 Public Class TimeLog
 
+    <Key>
     Public Property RowID As Integer?
 
     Public Property OrganizationID As Integer?
 
     Public Property EmployeeID As Integer?
 
+    <Column("Date")>
     Public Property LogDate As Date
 
     Public Property TimeIn As TimeSpan?
@@ -32,12 +39,15 @@ Public Class TimeLog
         End Get
     End Property
 
+    Public Sub New()
+    End Sub
+
     Public Sub New(timeIn As String, timeOut As String)
         Me.TimeIn = TimeSpan.Parse(timeIn)
         Me.TimeOut = TimeSpan.Parse(timeOut)
     End Sub
 
-    Public Sub New()
-    End Sub
+    <ForeignKey("EmployeeID")>
+    Public Overridable Property Employee As Employee
 
 End Class
