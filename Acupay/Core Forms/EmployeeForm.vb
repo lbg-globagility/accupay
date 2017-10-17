@@ -10189,10 +10189,6 @@ Public Class EmployeeForm
 
     Dim view_IDLoan As Integer
 
-    Private Sub tbpLoans_Click(sender As Object, e As EventArgs) Handles tbpLoans.Click
-
-    End Sub
-
     Public loan_type As New AutoCompleteStringCollection
 
     Dim categloantypeID As String = Nothing
@@ -10215,14 +10211,6 @@ Public Class EmployeeForm
         Static once As SByte = 0
         If once = 0 Then
             once = 1
-
-            'txtnoofpayper.ContextMenu = New ContextMenu
-
-            'txtdedamt.ContextMenu = New ContextMenu
-
-            'cboloantype.ContextMenu = New ContextMenu
-
-            'cmbStatus.ContextMenu = New ContextMenu
 
             OjbAssignNoContextMenu(txtnoofpayper)
 
@@ -10415,10 +10403,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub dgvLoanList_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvLoanList.CellContentClick
-
-    End Sub
-
     Dim IsNewLoan As SByte = 0
 
     Private Sub tsbtnNewLoan_Click(sender As Object, e As EventArgs) Handles tsbtnNewLoan.Click
@@ -10496,29 +10480,6 @@ Public Class EmployeeForm
 
         If IsNewLoan = 1 Then
 
-            'Dim startpayperiodRowID = EXECQUER("SELECT RowID FROM payperiod WHERE '" & datefrom.Value.ToString("yyyy-MM-dd") & "' BETWEEN PayFromDate AND PayToDate;")
-
-            'Dim startpayperiodInRowID = EXECQUER("SELECT RowID FROM payperiod WHERE RowID >= " & startpayperiodRowID & " ORDER BY PayFromDate DESC LIMIT 1;")
-
-            ''SUBSTRING_INDEX(GROUP_CONCAT(RowID),',',-2)
-
-            ''& " LIMIT " & FormatNumber(Val(txtnoofpayper.Text.Replace(",", "")), 0) & ";")
-
-            ''" & FormatNumber(Val(txtnoofpayper.Text.Replace(",", "")), 0) & _"
-
-            ''Dim startpayperiodInRowIDArray = Split(startpayperiodInRowID, ",")
-
-            ''For Each strval In startpayperiodInRowIDArray
-            ''    If Trim(strval) = "" Then
-            ''    Else
-            ''        startpayperiodInRowID = strval
-            ''    End If
-            ''Next
-
-            'Dim startpayperiodDate = EXECQUER("SELECT PayToDate FROM payperiod WHERE RowID=" & startpayperiodInRowID & " ORDER BY RowID DESC LIMIT 1;")
-
-            ''dateto.Value.ToString("yyyy-MM-dd")
-
             Dim LoanPayPeriodToDate = PAYTODATE_OF_NoOfPayPeriod(datefrom.Value.ToString("yyyy-MM-dd"),
                                                                  ValNoComma(txtnoofpayper.Text),
                                                                  dgvEmp.CurrentRow.Cells("RowID").Value,
@@ -10547,10 +10508,6 @@ Public Class EmployeeForm
 
         End If
 
-        'If hasERR = 1 Then
-        '    dgvEmp_SelectionChanged(sender, e)
-        'End If
-
         IsNewLoan = 0
         dgvEmp.Enabled = True
         tsbtnNewLoan.Enabled = True
@@ -10562,10 +10519,6 @@ Public Class EmployeeForm
         SetWarningIfEmpty(cmbdedsched, "Hide this error provider")
         SetWarningIfEmpty(txtnoofpayper, "Hide this error provider")
         SetWarningIfEmpty(cmbStatus, "Hide this error provider")
-
-    End Sub
-
-    Private Sub ToolStripButton22_Click(sender As Object, e As EventArgs) Handles ToolStripButton22.Click
 
     End Sub
 
@@ -10598,16 +10551,7 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub cboloantype_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboloantype.KeyPress
-        'Dim e_asc As String = Asc(e.KeyChar)
-
         e.Handled = True
-
-        'If e_asc = 24 Or e_asc = 25 Then
-        '    e.Handled = 1
-        'Else
-        '    e.Handled = 0
-        'End If
-
     End Sub
 
     Private Sub cboloantype_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboloantype.SelectedIndexChanged
@@ -10698,24 +10642,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub txtloannumber_TextChanged(sender As Object, e As EventArgs) Handles txtloannumber.TextChanged
-
-    End Sub
-
-    Private Sub txtloanamt_TextChanged(sender As Object, e As EventArgs) Handles txtloanamt.TextChanged
-
-    End Sub
-
-    Private Sub txtloanamt_GotFocus(sender As Object, e As EventArgs) Handles txtloanamt.GotFocus
-
-        'If interest_charging_amt <> Val(txtloanamt.Text) Then
-
-        '    txtloanamt.Text = interest_charging_amt
-
-        'End If
-
-    End Sub
-
     Private Sub txtloanamt_Leave(sender As Object, e As EventArgs) Handles txtloanamt.Leave
 
         txtloanamt.Text = txtloanamt.Text.Replace(",", "")
@@ -10737,15 +10663,6 @@ Public Class EmployeeForm
             interest_charging_amt = Val(txtloanamt.Text)
 
         End If
-
-        'If Val(txtloaninterest.Text) > 0 Then
-
-        '    txtloanamt.Text = interest_charging_amt + (interest_charging_amt * Val(txtloaninterest.Text))
-
-        'End If
-
-        'txtdedamt_Leave(sender, e)
-
     End Sub
 
     Private Sub txtdedamt_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtdedamt.KeyPress
@@ -10813,72 +10730,18 @@ Public Class EmployeeForm
 
         e.Handled = TrapNumKey(e_KAsc)
 
-        'Static onedot As SByte = 0
-
-        'If (e_KAsc >= 48 And e_KAsc <= 57) Or e_KAsc = 8 Or e_KAsc = 46 Then
-
-        '    If e_KAsc = 46 Then
-        '        onedot += 1
-        '        If onedot >= 2 Then
-        '            If txtnoofpayper.Text.Contains(".") Then
-        '                e.Handled = True
-        '                onedot = 2
-        '            Else
-        '                e.Handled = False
-        '                onedot = 0
-        '            End If
-        '        Else
-        '            If txtnoofpayper.Text.Contains(".") Then
-        '                e.Handled = True
-        '            Else
-        '                e.Handled = False
-        '            End If
-        '        End If
-        '    Else
-        '        e.Handled = False
-        '    End If
-
-        'Else
-        '    e.Handled = True
-        'End If
-
-    End Sub
-
-    Private Sub txtnoofpayper_TextChanged(sender As Object, e As EventArgs) Handles txtnoofpayper.TextChanged
-        'txtnoofpayper.Text = If(Val(txtnoofpayper.Text) = 0, 0, txtnoofpayper.Text)
-
     End Sub
 
     Private Sub txtnoofpayper_Leave(sender As Object, e As EventArgs) Handles txtnoofpayper.Leave
-
-        'txtnoofpayper.Text = txtnoofpayper.Text.Replace(",", "")
-
-        'If ValNoComma(txtloaninterest.Text) = 0 Then
-        'Else
-        '    interest_charging_amt = ValNoComma(txtloanamt.Text)
-        'End If
-
-        'Dim dedect_amt = interest_charging_amt / Format(Val(txtnoofpayper.Text), 0) '.Replace(",", "")
-
-        'txtdedamt.Text = FormatNumber(dedect_amt, 2) '.ToString.Replace(",", "") 'Val(txtloanamt.Text.Replace(",", "")) / txtnoofpayper.Text
-
         If tsbtnNewLoan.Enabled = False Then
 
             txtnoofpayperleft.Text = txtnoofpayper.Text
 
             Dim numpayp = Val(txtnoofpayper.Text)
 
-            Dim loan_interest = 0 'EXECQUER("SELECT DisplayValue FROM listofval WHERE Type='Employee loan interest' AND Active='Yes' LIMIT 1;")
-
-            'loan_interest = Val(loan_interest)
-
-            'If txtloaninterest.Text.Length = 0 Then
-
-            'End If
+            Dim loan_interest = 0
 
             loan_interest = ValNoComma(txtloaninterest.Text)
-
-            'txtloaninterest.Text = If(numpayp >= 12, loan_interest, 0)
 
             If numpayp > 12 Then
 
@@ -10941,8 +10804,6 @@ Public Class EmployeeForm
 
                 loan_amt = FormatNumber(loan_amt, 2).ToString.Replace(",", "")
 
-                'loan_amt = loan_amt + (loan_amt * loan_interest)
-
                 txtdedamt.Text = loan_amt 'FormatNumber(loan_amt, 2).Replace(",", "")
 
             End If
@@ -10995,22 +10856,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub txtloaninterest_TextChanged(sender As Object, e As EventArgs) Handles txtloaninterest.TextChanged
-
-        If tsbtnNewLoan.Enabled = False Then
-
-            'If dgvEmp.RowCount <> 0 Then
-
-            'End If
-
-            'Dim loan_interest = Val(txtloaninterest.Text)
-
-            'Dim dedloan_amt = Val(txtdedamt.Text)
-
-        End If
-
-    End Sub
-
     Private Sub txtdedpercent_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtdedpercent.KeyPress
         Dim e_KAsc As String = Asc(e.KeyChar)
 
@@ -11048,34 +10893,14 @@ Public Class EmployeeForm
         e.Handled = True
     End Sub
 
-    Private Sub Label90_Click(sender As Object, e As EventArgs) Handles Label90.Click
-
-    End Sub
-
     Private Sub rdbpercent_CheckedChanged(sender As Object, e As EventArgs) Handles rdbpercent.CheckedChanged
         Dim rdbcheckd = If(rdbpercent.Checked, 1, 0)
-
         txtdedpercent.Enabled = rdbcheckd
-
-    End Sub
-
-    Private Sub Label96_Click(sender As Object, e As EventArgs) Handles Label96.Click
-
     End Sub
 
     Private Sub rdbamount_CheckedChanged(sender As Object, e As EventArgs) Handles rdbamount.CheckedChanged
         Dim rdbcheckd = If(rdbamount.Checked, 1, 0)
-
         txtdedamt.Enabled = True 'rdbcheckd
-
-    End Sub
-
-    Private Sub txtdedpercent_TextChanged(sender As Object, e As EventArgs) Handles txtdedpercent.TextChanged
-
-    End Sub
-
-    Private Sub txtdedpercent_Leave(sender As Object, e As EventArgs) Handles txtdedpercent.Leave
-
     End Sub
 
     Function PAYTODATE_OF_NoOfPayPeriod(Optional EmpLoanEffectiveDateFrom As Object = Nothing,
@@ -11110,10 +10935,6 @@ Public Class EmployeeForm
 
     Private Sub cmbdedsched_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cmbdedsched.KeyPress
         e.Handled = True
-    End Sub
-
-    Private Sub cmbdedsched_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbdedsched.SelectedIndexChanged
-
     End Sub
 
     Dim threadArrayList As New List(Of Thread)
@@ -11156,7 +10977,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub SaveBonusCommentsRegardsToLoan()
-
         For Each dict In ebonus_rowid_comment
             Dim str_comment As String = String.Concat("'", dict.Value(0), "'")
             Dim bool_bonus_potent As Short = Convert.ToInt16(dict.Value(1))
@@ -11173,9 +10993,7 @@ Public Class EmployeeForm
 
             Dim exec_quer As New ExecuteQuery(str_quer)
             Dim exec_result = exec_quer.Result
-
         Next
-
     End Sub
 
 #End Region 'Loan Schedule
