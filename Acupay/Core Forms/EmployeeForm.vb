@@ -10187,19 +10187,27 @@ Public Class EmployeeForm
 
 #Region "Loan Schedule"
 
-    Dim view_IDLoan As Integer
+    Private view_IDLoan As Integer
 
     Public loan_type As New AutoCompleteStringCollection
 
-    Dim categloantypeID As String = Nothing
+    Private categloantypeID As String = Nothing
 
     Public loandeducsched As New AutoCompleteStringCollection
 
-    Dim cancell_status = New ExecuteQuery("SELECT ii.COLUMN_COMMENT FROM information_schema.`COLUMNS` ii WHERE ii.TABLE_SCHEMA='" & sys_db & "' AND ii.COLUMN_NAME='Status' AND ii.TABLE_NAME='employeeloanschedule';").Result
+    Private cancell_status = New ExecuteQuery("SELECT ii.COLUMN_COMMENT FROM information_schema.`COLUMNS` ii WHERE ii.TABLE_SCHEMA='" & sys_db & "' AND ii.COLUMN_NAME='Status' AND ii.TABLE_NAME='employeeloanschedule';").Result
 
-    Dim status_last_index() As String = Split(cancell_status, ",") 'Fully Paid,In Progress,On hold,Cancelled
-    Dim numb_er = status_last_index.GetUpperBound(0)
-    Dim str_LoanCancelledStauts As String = status_last_index(numb_er)
+    Private status_last_index() As String = Split(cancell_status, ",") 'Fully Paid,In Progress,On hold,Cancelled
+    Private numb_er = status_last_index.GetUpperBound(0)
+    Private str_LoanCancelledStauts As String = status_last_index(numb_er)
+    Private IsNewLoan As SByte = 0
+    Private dontUpdateLoan As SByte = 0
+    Private loantypeID As String = Nothing
+
+    Private interest_charging As SByte = 0
+
+    Private interest_charging_amt As Double = 0
+    Private threadArrayList As New List(Of Thread)
 
     Sub tbpLoans_Enter(sender As Object, e As EventArgs) Handles tbpLoans.Enter
 
@@ -10403,8 +10411,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Dim IsNewLoan As SByte = 0
-
     Private Sub tsbtnNewLoan_Click(sender As Object, e As EventArgs) Handles tsbtnNewLoan.Click
         tsbtnNewLoan.Enabled = False
         IsNewLoan = 1
@@ -10432,8 +10438,6 @@ Public Class EmployeeForm
         txtloannumber.Text = getloanno
         chkboxChargeToBonus.Checked = tsbtnNewLoan.Enabled
     End Sub
-
-    Dim dontUpdateLoan As SByte = 0
 
     Private Sub tsbtnSaveLoan_Click(sender As Object, e As EventArgs) Handles tsbtnSaveLoan.Click
         pbEmpPicLoan.Focus() 'And txtdedpercent.Text = ""
@@ -10573,8 +10577,6 @@ Public Class EmployeeForm
         End If
 
     End Sub
-
-    Dim loantypeID As String = Nothing
 
     Private Sub cboloantype_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboloantype.SelectedValueChanged
         loantypeID = Nothing
@@ -10812,10 +10814,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Dim interest_charging As SByte = 0
-
-    Dim interest_charging_amt As Double = 0
-
     Private Sub txtloaninterest_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtloaninterest.KeyPress
         Dim e_KAsc As String = Asc(e.KeyChar)
 
@@ -10936,8 +10934,6 @@ Public Class EmployeeForm
     Private Sub cmbdedsched_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cmbdedsched.KeyPress
         e.Handled = True
     End Sub
-
-    Dim threadArrayList As New List(Of Thread)
 
     Private Sub tsbtnImportLoans_Click(sender As Object, e As EventArgs) Handles tsbtnImportLoans.Click
         Dim browsefile As New OpenFileDialog()
