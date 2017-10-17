@@ -10260,7 +10260,7 @@ Public Class EmployeeForm
 
                 tsbtnNewLoan.Visible = 0
                 tsbtnSaveLoan.Visible = 0
-                ToolStripButton22.Visible = 0
+                DeleteLoanScheduleButton.Visible = 0
 
                 dontUpdateLoan = 1
             Else
@@ -10268,7 +10268,7 @@ Public Class EmployeeForm
                     If drow("ReadOnly").ToString = "Y" Then
                         tsbtnNewLoan.Visible = 0
                         tsbtnSaveLoan.Visible = 0
-                        ToolStripButton22.Visible = 0
+                        DeleteLoanScheduleButton.Visible = 0
 
                         dontUpdateLoan = 1
                         Exit For
@@ -10280,9 +10280,9 @@ Public Class EmployeeForm
                         End If
 
                         If drow("Deleting").ToString = "N" Then
-                            ToolStripButton22.Visible = 0
+                            DeleteLoanScheduleButton.Visible = 0
                         Else
-                            ToolStripButton22.Visible = 1
+                            DeleteLoanScheduleButton.Visible = 1
                         End If
 
                         If drow("Updates").ToString = "N" Then
@@ -10990,6 +10990,13 @@ Public Class EmployeeForm
             Dim exec_quer As New ExecuteQuery(str_quer)
             Dim exec_result = exec_quer.Result
         Next
+    End Sub
+
+    Private Sub DeleteLoanSchedule() Handles DeleteLoanScheduleButton.Click
+        Using context = New PayrollContext()
+
+
+        End Using
     End Sub
 
 #End Region 'Loan Schedule
