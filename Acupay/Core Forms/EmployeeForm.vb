@@ -10992,11 +10992,26 @@ Public Class EmployeeForm
         Next
     End Sub
 
+    ''' <summary>
+    ''' Deletes the loan schedule the user has requested.
+    ''' </summary>
     Private Sub DeleteLoanSchedule() Handles DeleteLoanScheduleButton.Click
-        Using context = New PayrollContext()
+        Dim loanScheduleID As Integer
+        If Not Integer.TryParse(dgvLoanList.CurrentRow.Cells(c_RowIDLoan.Index).Value, loanScheduleID) Then
+            MsgBox("Sorry, but something has gone awry. Please contact Globagility, Inc. if you see this error message.")
+            Return
+        End If
 
-
-        End Using
+        Try
+            ' TODO: Add check if a loan schedule has started deducting already. Display message if there is.
+            Using context = New PayrollContext()
+                Dim loanSchedule = context.LoanSchedules.Find(loanScheduleID)
+                context.LoanSchedules.Remove(loanSchedule)
+                context.SaveChanges()
+            End Using
+        Catch ex As Exception
+            Throw New Exception($"Failed to delete loan schedule #{loanScheduleID}.", ex)
+        End Try
     End Sub
 
 #End Region 'Loan Schedule
