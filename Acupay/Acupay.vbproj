@@ -230,6 +230,12 @@
     </Compile>
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
+    <Compile Include="Core Forms\Employee\LeaveTab.Designer.vb">
+      <DependentUpon>LeaveTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\LeaveTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
     <Compile Include="Core Forms\Government\SocialSecurityBracket.vb" />
     <Compile Include="Core Forms\Independent filing\LeaveForm.designer.vb">
@@ -1259,6 +1265,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\EmployeeForm.resx">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\LeaveTab.resx">
+      <DependentUpon>LeaveTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Independent filing\LeaveForm.resx">
       <DependentUpon>LeaveForm.vb</DependentUpon>
