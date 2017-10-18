@@ -6237,6 +6237,8 @@ Public Class EmployeeForm
 
     Dim leave_type As New AutoCompleteStringCollection
 
+    Dim curr_leave_dgvrow, curr_ot_dgvrow, curr_ob_dgvrow As DataGridViewRow
+
     Sub tbpLeave_Enter(sender As Object, e As EventArgs) Handles tbpLeave.Enter
 
         tabpageText(tabIndx)
@@ -7619,6 +7621,26 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub dtpstartdate_ValueChanged(sender As Object, e As EventArgs) Handles dtpstartdate.ValueChanged
+
+        Dim has_valid_dgvrow As Boolean = False
+
+        Try
+            curr_leave_dgvrow = dgvempleave.CurrentRow
+            has_valid_dgvrow = (curr_leave_dgvrow IsNot Nothing _
+                                And curr_leave_dgvrow.Cells("elv_RowID").Value = Nothing)
+
+        Catch ex As Exception
+            has_valid_dgvrow = False
+
+        Finally
+            If has_valid_dgvrow Then
+                Dim date_value = dtpstartdate.Value
+                dtpendate.Value = date_value
+                curr_leave_dgvrow.Cells("elv_EndDate").Value = date_value
+
+            End If
+
+        End Try
 
     End Sub
 
@@ -16359,6 +16381,26 @@ Public Class EmployeeForm
 
     Private Sub dtpstartdateEmpOT_ValueChanged(sender As Object, e As EventArgs) Handles dtpstartdateEmpOT.ValueChanged
 
+        Dim has_valid_dgvrow As Boolean = False
+
+        Try
+            curr_ot_dgvrow = dgvempOT.CurrentRow
+            has_valid_dgvrow = (curr_ot_dgvrow IsNot Nothing _
+                                And curr_ot_dgvrow.Cells("eot_RowID").Value = Nothing)
+
+        Catch ex As Exception
+            has_valid_dgvrow = False
+
+        Finally
+            If has_valid_dgvrow Then
+                Dim date_value = dtpstartdateEmpOT.Value
+                dtpendateEmpOT.Value = date_value
+                curr_ot_dgvrow.Cells("eot_EndDate").Value = date_value
+
+            End If
+
+        End Try
+
     End Sub
 
     Private Sub txtstartdateEmpOT_TextChanged(sender As Object, e As EventArgs) Handles txtstartdateEmpOT.TextChanged
@@ -17684,6 +17726,26 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub dtpstartdateOBF_ValueChanged(sender As Object, e As EventArgs) Handles dtpstartdateOBF.ValueChanged
+
+        Dim has_valid_dgvrow As Boolean = False
+
+        Try
+            curr_ob_dgvrow = dgvOBF.CurrentRow
+            has_valid_dgvrow = (curr_ob_dgvrow IsNot Nothing _
+                                And curr_ob_dgvrow.Cells("obf_RowID").Value = Nothing)
+
+        Catch ex As Exception
+            has_valid_dgvrow = False
+
+        Finally
+            If has_valid_dgvrow Then
+                Dim date_value = dtpstartdateOBF.Value
+                dtpendateOBF.Value = date_value
+                curr_ob_dgvrow.Cells("obf_EndDate").Value = date_value
+
+            End If
+
+        End Try
 
     End Sub
 
