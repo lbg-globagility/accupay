@@ -471,6 +471,9 @@ Partial Class PayStub
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.txtRestDayAmount = New System.Windows.Forms.TextBox()
+        Me.Label96 = New System.Windows.Forms.Label()
+        Me.txtRestDayHours = New System.Windows.Forms.TextBox()
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.cms1.SuspendLayout()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1006,7 +1009,7 @@ Partial Class PayStub
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(14, 432)
+        Me.Label1.Location = New System.Drawing.Point(14, 465)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(91, 13)
         Me.Label1.TabIndex = 170
@@ -1186,6 +1189,9 @@ Partial Class PayStub
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.AutoScroll = True
+        Me.SplitContainer1.Panel2.Controls.Add(Me.txtRestDayHours)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.Label96)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.txtRestDayAmount)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label95)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label67)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txttaxabsal)
@@ -1560,7 +1566,7 @@ Partial Class PayStub
         '
         Me.txtPaidLeave.BackColor = System.Drawing.Color.White
         Me.txtPaidLeave.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtPaidLeave.Location = New System.Drawing.Point(251, 249)
+        Me.txtPaidLeave.Location = New System.Drawing.Point(251, 282)
         Me.txtPaidLeave.Name = "txtPaidLeave"
         Me.txtPaidLeave.ReadOnly = True
         Me.txtPaidLeave.ShortcutsEnabled = False
@@ -3054,7 +3060,7 @@ Partial Class PayStub
         'Label43
         '
         Me.Label43.AutoSize = True
-        Me.Label43.Location = New System.Drawing.Point(233, 367)
+        Me.Label43.Location = New System.Drawing.Point(233, 400)
         Me.Label43.Name = "Label43"
         Me.Label43.Size = New System.Drawing.Size(14, 13)
         Me.Label43.TabIndex = 264
@@ -3133,7 +3139,7 @@ Partial Class PayStub
         Me.lblSubtotal.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.lblSubtotal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.lblSubtotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.lblSubtotal.Location = New System.Drawing.Point(253, 270)
+        Me.lblSubtotal.Location = New System.Drawing.Point(253, 303)
         Me.lblSubtotal.Name = "lblSubtotal"
         Me.lblSubtotal.ReadOnly = True
         Me.lblSubtotal.ShortcutsEnabled = False
@@ -3144,7 +3150,7 @@ Partial Class PayStub
         'Label30
         '
         Me.Label30.AutoSize = True
-        Me.Label30.Location = New System.Drawing.Point(14, 249)
+        Me.Label30.Location = New System.Drawing.Point(14, 282)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(63, 13)
         Me.Label30.TabIndex = 251
@@ -3518,7 +3524,7 @@ Partial Class PayStub
         'Label24
         '
         Me.Label24.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label24.Location = New System.Drawing.Point(15, 398)
+        Me.Label24.Location = New System.Drawing.Point(15, 431)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(365, 13)
         Me.Label24.TabIndex = 240
@@ -3528,7 +3534,7 @@ Partial Class PayStub
         'Label21
         '
         Me.Label21.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label21.Location = New System.Drawing.Point(15, 295)
+        Me.Label21.Location = New System.Drawing.Point(15, 328)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(365, 13)
         Me.Label21.TabIndex = 239
@@ -3540,7 +3546,7 @@ Partial Class PayStub
         Me.TabControl3.Controls.Add(Me.tbpleavebal)
         Me.TabControl3.Controls.Add(Me.tbpleaveallow)
         Me.TabControl3.Controls.Add(Me.tbpleavepayp)
-        Me.TabControl3.Location = New System.Drawing.Point(17, 462)
+        Me.TabControl3.Location = New System.Drawing.Point(17, 546)
         Me.TabControl3.Name = "TabControl3"
         Me.TabControl3.SelectedIndex = 0
         Me.TabControl3.Size = New System.Drawing.Size(291, 141)
@@ -3868,7 +3874,7 @@ Partial Class PayStub
         '
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label29.Location = New System.Drawing.Point(14, 279)
+        Me.Label29.Location = New System.Drawing.Point(14, 312)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(66, 13)
         Me.Label29.TabIndex = 230
@@ -3880,7 +3886,7 @@ Partial Class PayStub
         Me.txtemptotbon.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtemptotbon.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtemptotbon.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtemptotbon.Location = New System.Drawing.Point(253, 366)
+        Me.txtemptotbon.Location = New System.Drawing.Point(253, 399)
         Me.txtemptotbon.Name = "txtemptotbon"
         Me.txtemptotbon.ReadOnly = True
         Me.txtemptotbon.ShortcutsEnabled = False
@@ -3892,7 +3898,7 @@ Partial Class PayStub
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(14, 373)
+        Me.Label13.Location = New System.Drawing.Point(14, 406)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(83, 13)
         Me.Label13.TabIndex = 197
@@ -3904,7 +3910,7 @@ Partial Class PayStub
         Me.txtemptotallow.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtemptotallow.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtemptotallow.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtemptotallow.Location = New System.Drawing.Point(253, 319)
+        Me.txtemptotallow.Location = New System.Drawing.Point(253, 352)
         Me.txtemptotallow.Name = "txtemptotallow"
         Me.txtemptotallow.ReadOnly = True
         Me.txtemptotallow.ShortcutsEnabled = False
@@ -3916,7 +3922,7 @@ Partial Class PayStub
         '
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(14, 329)
+        Me.Label12.Location = New System.Drawing.Point(14, 362)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(106, 13)
         Me.Label12.TabIndex = 199
@@ -4013,7 +4019,7 @@ Partial Class PayStub
         Me.txtgrosssal.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtgrosssal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtgrosssal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtgrosssal.Location = New System.Drawing.Point(253, 422)
+        Me.txtgrosssal.Location = New System.Drawing.Point(253, 455)
         Me.txtgrosssal.Name = "txtgrosssal"
         Me.txtgrosssal.ReadOnly = True
         Me.txtgrosssal.ShortcutsEnabled = False
@@ -4214,7 +4220,7 @@ Partial Class PayStub
         'Label39
         '
         Me.Label39.AutoSize = True
-        Me.Label39.Location = New System.Drawing.Point(233, 425)
+        Me.Label39.Location = New System.Drawing.Point(233, 458)
         Me.Label39.Name = "Label39"
         Me.Label39.Size = New System.Drawing.Size(14, 13)
         Me.Label39.TabIndex = 260
@@ -4223,7 +4229,7 @@ Partial Class PayStub
         'Label38
         '
         Me.Label38.AutoSize = True
-        Me.Label38.Location = New System.Drawing.Point(233, 320)
+        Me.Label38.Location = New System.Drawing.Point(233, 353)
         Me.Label38.Name = "Label38"
         Me.Label38.Size = New System.Drawing.Size(14, 13)
         Me.Label38.TabIndex = 259
@@ -4232,7 +4238,7 @@ Partial Class PayStub
         'Label36
         '
         Me.Label36.AutoSize = True
-        Me.Label36.Location = New System.Drawing.Point(233, 271)
+        Me.Label36.Location = New System.Drawing.Point(233, 304)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(14, 13)
         Me.Label36.TabIndex = 176
@@ -4590,6 +4596,29 @@ Partial Class PayStub
         'Timer1
         '
         Me.Timer1.Interval = 2500
+        '
+        'txtRestDayAmount
+        '
+        Me.txtRestDayAmount.Location = New System.Drawing.Point(248, 242)
+        Me.txtRestDayAmount.Name = "txtRestDayAmount"
+        Me.txtRestDayAmount.Size = New System.Drawing.Size(100, 20)
+        Me.txtRestDayAmount.TabIndex = 531
+        '
+        'Label96
+        '
+        Me.Label96.AutoSize = True
+        Me.Label96.Location = New System.Drawing.Point(8, 242)
+        Me.Label96.Name = "Label96"
+        Me.Label96.Size = New System.Drawing.Size(72, 13)
+        Me.Label96.TabIndex = 532
+        Me.Label96.Text = "Rest Day Pay"
+        '
+        'txtRestDayHours
+        '
+        Me.txtRestDayHours.Location = New System.Drawing.Point(128, 242)
+        Me.txtRestDayHours.Name = "txtRestDayHours"
+        Me.txtRestDayHours.Size = New System.Drawing.Size(100, 20)
+        Me.txtRestDayHours.TabIndex = 533
         '
         'PayStub
         '
@@ -5076,4 +5105,7 @@ Partial Class PayStub
     Friend WithEvents txtThirteenthMonthPay As System.Windows.Forms.TextBox
     Friend WithEvents Label94 As System.Windows.Forms.Label
     Friend WithEvents Label95 As System.Windows.Forms.Label
+    Friend WithEvents Label96 As Label
+    Friend WithEvents txtRestDayAmount As TextBox
+    Friend WithEvents txtRestDayHours As TextBox
 End Class

@@ -69,6 +69,8 @@ SELECT
     psa.NightDiffPay,
     psa.NightDiffOvertimeHours,
     psa.NightDiffOvertimePay,
+    psa.RestDayHours,
+    psa.RestDayPay,
     psa.LateHours,
     psa.LateDeduction,
     psa.UndertimeHours,

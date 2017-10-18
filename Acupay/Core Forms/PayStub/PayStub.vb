@@ -4268,6 +4268,9 @@ Public Class PayStub
             txtNightDiffOvertimeHours.Text = ValNoComma(drow("NightDiffOvertimeHours"))
             txtNightDiffOvertimePay.Text = FormatNumber(ValNoComma(drow("NightDiffOvertimePay")), 2)
 
+            txtRestDayHours.Text = ValNoComma(drow("RestDayHours"))
+            txtRestDayAmount.Text = ValNoComma(drow("RestDayPay"))
+
             txtHolidayHours.Text = 0.0
             txtHolidayPay.Text = FormatNumber(ValNoComma(drow("HolidayPay")), 2)
 
