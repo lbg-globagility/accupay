@@ -11003,9 +11003,14 @@ Public Class EmployeeForm
         End If
 
         Try
-            ' TODO: Add check if a loan schedule has started deducting already. Display message if there is.
             Using context = New PayrollContext()
                 Dim loanSchedule = context.LoanSchedules.Find(loanScheduleID)
+
+                If loanSchedule.LoanTransactions.Count() > 0 Then
+                    MsgBox("Sorry, but you can't delete a loan that has already started.")
+                    Return
+                End If
+
                 context.LoanSchedules.Remove(loanSchedule)
                 context.SaveChanges()
             End Using

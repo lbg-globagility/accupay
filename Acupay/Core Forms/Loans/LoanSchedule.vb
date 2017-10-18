@@ -1,4 +1,5 @@
-﻿Imports System.ComponentModel.DataAnnotations
+﻿Imports System.Collections.Generic
+Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Namespace Global.PayrollSys
@@ -42,6 +43,8 @@ Namespace Global.PayrollSys
         Public Property Comments As String
 
         Public Property LoanName As String
+
+        Public Overridable Property LoanTransactions As ICollection(Of LoanTransaction)
 
     End Class
 

@@ -32,6 +32,9 @@ Namespace Global.PayrollSys
 
         Public Property DeductionAmount As Decimal
 
+        <ForeignKey("LoanScheduleID")>
+        Public Overridable Property LoanSchedule As LoanSchedule
+
     End Class
 
 End Namespace
