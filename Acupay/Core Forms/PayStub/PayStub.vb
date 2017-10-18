@@ -4589,6 +4589,8 @@ Public Class PayStub
             txttotut_U.Text = ValNoComma(drow("UndertimeHours"))
             txttotutamt_U.Text = FormatNumber(ValNoComma((drow("UndertimeHoursAmount"))), 2)
 
+            txtRestDayAmount.Text = FormatNumber(ValNoComma(drow("RestDayPay")), 0)
+
             Dim miscsubtotal = ValNoComma(drow("Absent")) + ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount"))
             lblsubtotmisc.Text = FormatNumber(ValNoComma((miscsubtotal)), 2)
 

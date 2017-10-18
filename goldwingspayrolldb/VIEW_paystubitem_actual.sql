@@ -63,6 +63,7 @@ psa.RowID
 ,psa.TotalEmpHDMF
 ,psa.TotalCompHDMF
 ,psa.TotalVacationDaysLeft
+,psa.RestDayPay
 ,psa.TotalLoans
 ,psa.TotalBonus
 ,psa.TotalAllowance

@@ -137,6 +137,9 @@ Partial Class PayStub
         Me.LinkLabel4 = New System.Windows.Forms.LinkLabel()
         Me.Label59 = New System.Windows.Forms.Label()
         Me.pbEmpPicChk = New System.Windows.Forms.PictureBox()
+        Me.txtRestDayHours = New System.Windows.Forms.TextBox()
+        Me.Label96 = New System.Windows.Forms.Label()
+        Me.txtRestDayAmount = New System.Windows.Forms.TextBox()
         Me.Label95 = New System.Windows.Forms.Label()
         Me.Label67 = New System.Windows.Forms.Label()
         Me.txttaxabsal = New System.Windows.Forms.TextBox()
@@ -471,9 +474,6 @@ Partial Class PayStub
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.txtRestDayAmount = New System.Windows.Forms.TextBox()
-        Me.Label96 = New System.Windows.Forms.Label()
-        Me.txtRestDayHours = New System.Windows.Forms.TextBox()
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.cms1.SuspendLayout()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1366,6 +1366,31 @@ Partial Class PayStub
         Me.pbEmpPicChk.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.pbEmpPicChk.TabIndex = 164
         Me.pbEmpPicChk.TabStop = False
+        '
+        'txtRestDayHours
+        '
+        Me.txtRestDayHours.Location = New System.Drawing.Point(128, 242)
+        Me.txtRestDayHours.Name = "txtRestDayHours"
+        Me.txtRestDayHours.Size = New System.Drawing.Size(100, 20)
+        Me.txtRestDayHours.TabIndex = 533
+        Me.txtRestDayHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label96
+        '
+        Me.Label96.AutoSize = True
+        Me.Label96.Location = New System.Drawing.Point(8, 242)
+        Me.Label96.Name = "Label96"
+        Me.Label96.Size = New System.Drawing.Size(72, 13)
+        Me.Label96.TabIndex = 532
+        Me.Label96.Text = "Rest Day Pay"
+        '
+        'txtRestDayAmount
+        '
+        Me.txtRestDayAmount.Location = New System.Drawing.Point(248, 242)
+        Me.txtRestDayAmount.Name = "txtRestDayAmount"
+        Me.txtRestDayAmount.Size = New System.Drawing.Size(100, 20)
+        Me.txtRestDayAmount.TabIndex = 531
+        Me.txtRestDayAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label95
         '
@@ -4596,29 +4621,6 @@ Partial Class PayStub
         'Timer1
         '
         Me.Timer1.Interval = 2500
-        '
-        'txtRestDayAmount
-        '
-        Me.txtRestDayAmount.Location = New System.Drawing.Point(248, 242)
-        Me.txtRestDayAmount.Name = "txtRestDayAmount"
-        Me.txtRestDayAmount.Size = New System.Drawing.Size(100, 20)
-        Me.txtRestDayAmount.TabIndex = 531
-        '
-        'Label96
-        '
-        Me.Label96.AutoSize = True
-        Me.Label96.Location = New System.Drawing.Point(8, 242)
-        Me.Label96.Name = "Label96"
-        Me.Label96.Size = New System.Drawing.Size(72, 13)
-        Me.Label96.TabIndex = 532
-        Me.Label96.Text = "Rest Day Pay"
-        '
-        'txtRestDayHours
-        '
-        Me.txtRestDayHours.Location = New System.Drawing.Point(128, 242)
-        Me.txtRestDayHours.Name = "txtRestDayHours"
-        Me.txtRestDayHours.Size = New System.Drawing.Size(100, 20)
-        Me.txtRestDayHours.TabIndex = 533
         '
         'PayStub
         '
