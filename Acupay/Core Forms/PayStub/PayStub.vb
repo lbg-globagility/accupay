@@ -2316,20 +2316,22 @@ Public Class PayStub
                                Optional datefrom As Object = Nothing,
                                Optional dateto As Object = Nothing)
 
-        Dim params(3, 2) As Object
+        Dim params(4, 2) As Object
 
         params(0, 0) = "ebon_EmployeeID"
         params(1, 0) = "ebon_OrganizationID"
         params(2, 0) = "effectivedatefrom"
         params(3, 0) = "effectivedateto"
+        params(4, 0) = "numweekdays"
 
         params(0, 1) = ebon_EmployeeID
         params(1, 1) = orgztnID
         params(2, 1) = datefrom
         params(3, 1) = dateto
+        params(4, 1) = 0
 
         EXEC_VIEW_PROCEDURE(params,
-                             "VIEW_employeebonus_indate",
+                             "VIEW_employeeallowance_indate",
                              dgvempbon)
 
     End Sub
