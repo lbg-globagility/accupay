@@ -45,12 +45,6 @@ DECLARE emp_materbal DECIMAL(11,6);
 
 DECLARE emp_othrbal DECIMAL(11,6);
 
-
-DECLARE etd_timein TIME;
-
-DECLARE etd_timeout TIME;
-
-
 DECLARE sh_timefrom TIME;
 
 DECLARE sh_timeto TIME;
@@ -69,11 +63,6 @@ DECLARE e_EmpType TEXT;
 DECLARE empBasicPay DECIMAL(11,6);
 
 DECLARE emp_sal DECIMAL(11,6);
-
-
-DECLARE late_hrs DECIMAL(11,6);
-
-DECLARE under_hrs DECIMAL(11,6);
 
 DECLARE month_count_peryear INT(11) DEFAULT 12;
 
@@ -284,20 +273,6 @@ ELSE
                 END IF;
             END IF;
 
-            SELECT
-                etd.TimeIn,
-                etd.TimeOut
-            FROM employeetimeentrydetails etd
-            WHERE etd.EmployeeID = NEW.EmployeeID AND
-                etd.OrganizationID = NEW.OrganizationID AND
-                etd.`Date`='1900-01-01'
-            INTO
-                etd_timein,
-                etd_timeout;
-
-            SET late_hrs = IFNULL(late_hrs,0);
-            SET under_hrs = IFNULL(under_hrs,0);
-
             SELECT INSUPD_employeetimeentries(
                 etentRowID,
                 NEW.OrganizationID,
@@ -310,10 +285,10 @@ ELSE
                 '0',
                 IFNULL(extra_regularhours, 0),
                 0,
-                under_hrs,
                 0,
                 0,
-                late_hrs,
+                0,
+                0,
                 (
                     SELECT RowID
                     FROM payrate
@@ -324,10 +299,10 @@ ELSE
                 IFNULL(extra_regularhours, 0),
                 dailypayamount,
                 0,
-                under_hrs * hourlypayamount,
                 0,
                 0,
-                late_hrs * hourlypayamount,
+                0,
+                0,
                 0,
                 0,
                 0,
@@ -346,80 +321,42 @@ ELSE
             IF leavetype LIKE '%Vacation%' THEN
 
                 UPDATE employeetimeentry ete
-                SET ete.VacationLeaveHours=numhrsworkd
-                ,ete.SickLeaveHours=0
-                ,ete.MaternityLeaveHours=0
-                ,ete.OtherLeaveHours=0,ete.Leavepayment=dailypayamount
+                SET ete.VacationLeaveHours=numhrsworkd,
+                    ete.SickLeaveHours=0,
+                    ete.MaternityLeaveHours=0,
+                    ete.OtherLeaveHours=0,
+                    ete.Leavepayment=dailypayamount
                 WHERE ete.RowID=anyint;
 
             ELSEIF leavetype LIKE '%Sick%' THEN
 
                 UPDATE employeetimeentry ete
-                SET ete.SickLeaveHours=numhrsworkd
-                ,ete.VacationLeaveHours=0
-                ,ete.MaternityLeaveHours=0
-                ,ete.OtherLeaveHours=0,ete.Leavepayment=dailypayamount
-                WHERE ete.RowID=anyint;
+                SET ete.SickLeaveHours = numhrsworkd,
+                    ete.VacationLeaveHours = 0,
+                    ete.MaternityLeaveHours = 0,
+                    ete.OtherLeaveHours = 0,
+                    ete.Leavepayment = dailypayamount
+                WHERE ete.RowID = anyint;
 
             ELSEIF leavetype LIKE '%aternity%' THEN
 
                 UPDATE employeetimeentry ete
-                SET ete.MaternityLeaveHours=numhrsworkd
-                ,ete.SickLeaveHours=0
-                ,ete.VacationLeaveHours=0
-                ,ete.OtherLeaveHours=0,ete.Leavepayment=dailypayamount
-                WHERE ete.RowID=anyint;
+                SET ete.MaternityLeaveHours = numhrsworkd,
+                    ete.SickLeaveHours = 0,
+                    ete.VacationLeaveHours = 0,
+                    ete.OtherLeaveHours = 0,
+                    ete.Leavepayment = dailypayamount
+                WHERE ete.RowID = anyint;
 
             ELSE
 
                 UPDATE employeetimeentry ete
-                SET ete.OtherLeaveHours=numhrsworkd
-                ,ete.SickLeaveHours=0
-                ,ete.MaternityLeaveHours=0
-                ,ete.VacationLeaveHours=0,ete.Leavepayment=dailypayamount
-                WHERE ete.RowID=anyint;
-
-            END IF;
-
-
-            IF NEW.LeaveEndTime < sh_timeto THEN
-
-                SELECT
-                    etd.TimeIn,
-                    etd.TimeOut
-                FROM employeetimeentrydetails etd
-                WHERE etd.EmployeeID=NEW.EmployeeID AND
-                    etd.OrganizationID=NEW.OrganizationID AND
-                    etd.`Date`=dateloop
-                INTO
-                    etd_timein,
-                    etd_timeout;
-
-                IF etd_timeout < NEW.LeaveEndTime THEN
-
-                    IF leavetype = 'Others' THEN
-                        SET leavetype = 'Others';
-                    END IF;
-
-                END IF;
-
-            END IF;
-
-
-            IF etd_timein > sh_timefrom THEN
-
-                IF etd_timein >= NEW.LeaveStartTime
-                    AND etd_timein >= NEW.LeaveEndTime THEN
-
-                    IF leavetype = 'Others' THEN
-
-                        SET leavetype = 'Others';
-
-
-
-                    END IF;
-
-                END IF;
+                SET ete.OtherLeaveHours = numhrsworkd,
+                    ete.SickLeaveHours = 0,
+                    ete.MaternityLeaveHours = 0,
+                    ete.VacationLeaveHours = 0,
+                    ete.Leavepayment = dailypayamount
+                WHERE ete.RowID = anyint;
 
             END IF;
 
