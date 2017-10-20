@@ -749,35 +749,41 @@ ELSEIF isRegularDay THEN
     INTO hasLeave;
 
     IF hasLeave AND isWorkingDay THEN
-	 	
-		SELECT SUM(TotalDayPay)
-		FROM employeetimeentry
-		WHERE EmployeeID = ete_EmpRowID AND
-		OrganizationID = ete_OrganizID AND
-		`Date` = ete_Date
-      INTO leavePay;
-		     
-      SET leavePay = IFNULL(leavePay, 0);
-      
-    END IF;
-		
- 	 SET @leave_hrs = 0;
-	 
-	 SELECT @lv_hrs `LeaveHours`
-	 FROM employeetimeentry
-	 WHERE EmployeeID = ete_EmpRowID AND
-	 OrganizationID = ete_OrganizID AND
-	 `Date` = ete_Date AND
-	 (@lv_hrs := (VacationLeaveHours + SickLeaveHours + OtherLeaveHours + MaternityLeaveHours)) > 0
-	 LIMIT 1
-	 INTO @leave_hrs;
-	 
-	 SET @leave_hrs = IFNULL(@leave_hrs, 0);
 
-	 IF (ete_HrsLate - @leave_hrs) > -1 THEN SET ete_HrsLate = (ete_HrsLate - @leave_hrs); SET lateHours = ete_HrsLate; END IF;
-	 
-	 IF (ete_HrsUnder - @leave_hrs) > -1 THEN SET ete_HrsUnder = (ete_HrsUnder - @leave_hrs); SEt undertimeHours = ete_HrsUnder; END IF;
-	 
+        SELECT SUM(Leavepayment)
+        FROM employeetimeentry
+        WHERE EmployeeID = ete_EmpRowID AND
+            OrganizationID = ete_OrganizID AND
+            `Date` = ete_Date
+        INTO leavePay;
+
+        SET leavePay = IFNULL(leavePay, 0);
+
+    END IF;
+
+    SET @leave_hrs = 0;
+
+    SELECT @lv_hrs `LeaveHours`
+    FROM employeetimeentry
+    WHERE EmployeeID = ete_EmpRowID AND
+        OrganizationID = ete_OrganizID AND
+        `Date` = ete_Date AND
+        (@lv_hrs := (VacationLeaveHours + SickLeaveHours + OtherLeaveHours + MaternityLeaveHours)) > 0
+    LIMIT 1
+    INTO @leave_hrs;
+
+    SET @leave_hrs = IFNULL(@leave_hrs, 0);
+
+    IF (ete_HrsLate - @leave_hrs) > -1 THEN
+        SET ete_HrsLate = (ete_HrsLate - @leave_hrs);
+        SET lateHours = ete_HrsLate;
+    END IF;
+
+    IF (ete_HrsUnder - @leave_hrs) > -1 THEN
+        SET ete_HrsUnder = (ete_HrsUnder - @leave_hrs);
+        SET undertimeHours = ete_HrsUnder;
+    END IF;
+
     -- a. If the current day is a regular working day.
     -- b. Employee was payed yesterday AND
     --    current day is after employment hiring date.
@@ -801,12 +807,7 @@ ELSEIF isRegularDay THEN
 
     SET ete_TotalDayPay = regularAmount + overtimeAmount +
                           nightDiffAmount + nightDiffOTAmount +
-                          restDayAmount + leavePay #+ (@leave_hrs * hourlyRate)
-								  ;
-
-    -- SELECT timeEntryID, ete_EmpRowID, shiftStart, shiftEnd, regularHours
-    -- INTO OUTFILE 'D:/Aaron/logs/santos.txt'
-    -- FIELDS TERMINATED BY ', ';
+                          restDayAmount + leavePay;
 
     SELECT INSUPD_employeetimeentries(
         timeEntryID,
