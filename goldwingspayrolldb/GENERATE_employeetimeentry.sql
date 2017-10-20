@@ -444,8 +444,8 @@ SET fullTimeOut = TIMESTAMP(IF(etd_TimeOut > etd_TimeIn, dateToday, dateTomorrow
 SET shiftStart = TIMESTAMP(dateToday, shifttimefrom);
 SET shiftEnd = TIMESTAMP(IF(shifttimeto > shifttimefrom, dateToday, dateTomorrow), shifttimeto);
 
-SET breaktimeStart = TIMESTAMP(dateToday, @sh_brktimeFr);
-SET breaktimeEnd = TIMESTAMP(dateToday, @sh_brktimeTo);
+SET breaktimeStart = TIMESTAMP(IF(@sh_brktimeFr > shifttimefrom, dateToday, dateTomorrow), @sh_brktimeFr);
+SET breaktimeEnd = TIMESTAMP(IF(@sh_brktimeTo > shifttimefrom, dateToday, dateTomorrow), @sh_brktimeTo);
 
 /*
  * The official work start is the time that is considered the employee has started working.
@@ -475,7 +475,7 @@ IF hasBreaktime THEN
         SET regularHoursBeforeBreak = COMPUTE_TimeDifference(TIME(dutyStart), TIME(@lastWorkBeforeBreaktime));
     END IF;
 
-    IF dutyEnd >= breaktimeEnd THEN
+    IF dutyEnd > breaktimeEnd THEN
         /*
          * Let's make sure that we calculate the correct work hours after breaktime by ensuring that we don't choose the
          * breaktime's end when the employee started work after breaktime.
@@ -652,7 +652,7 @@ IF hasLeave THEN
     END IF;
 END IF;
 
--- SELECT breaktimeStart, breaktimeEnd, leaveHoursBeforeBreak, leaveHoursAfterBreak, leaveHours, leaveStart, leaveEnd
+-- SELECT leaveStart, leaveEnd, breaktimeStart, breaktimeEnd, leaveHoursBeforeBreak, leaveHoursAfterBreak, leaveHours
 -- INTO OUTFILE 'D:/aaron/logs/times.txt'
 -- FIELDS TERMINATED BY '\n';
 
