@@ -10,29 +10,16 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `paystub_payslip`(
 	IN `OrganizID` INT,
 	IN `PayPeriodRowID` INT,
 	IN `IsActualFlag` CHAR(1)
-
-
-
-
-
-
-
-
-
 )
     DETERMINISTIC
 BEGIN
 
 DECLARE paydate_from DATE;
-
 DECLARE paydat_to DATE;
 
 SELECT pp.PayFromDate,pp.PayToDate FROM payperiod pp WHERE pp.RowID=PayPeriodRowID INTO paydate_from,paydat_to;
 
-
 SET @daily_rate = GET_employeerateperday(9,2,paydat_to);
-
-
 
 SELECT i.*
 FROM (
@@ -280,7 +267,7 @@ FROM (
     LEFT JOIN (
         SELECT
             REPLACE(GROUP_CONCAT(IFNULL(product.PartNo, '')), ',', '\n') 'Names',
-            REPLACE(GROUP_CONCAT(IFNULL(paystubitem.PayAmount, '')), ',', '\n') 'PayAmounts',
+            REPLACE(GROUP_CONCAT(IFNULL(scheduledloansperpayperiod.DeductionAmount, '')), ',', '\n') 'PayAmounts',
             REPLACE(GROUP_CONCAT(IFNULL(ROUND(scheduledloansperpayperiod.TotalBalanceLeft, 2), '')), ',', '\n') 'TotalBalanceLeft',
             paystub.RowID 'PayStubID'
         FROM scheduledloansperpayperiod
@@ -289,11 +276,8 @@ FROM (
         INNER JOIN paystub
         ON paystub.PayPeriodID = scheduledloansperpayperiod.PayPeriodID AND
             paystub.EmployeeID = scheduledloansperpayperiod.EmployeeID
-        INNER JOIN paystubitem
-        ON paystubitem.PayStubID = paystub.RowID AND
-            paystubitem.ProductID = employeeloanschedule.LoanTypeID
         INNER JOIN product
-        ON product.RowID = paystubitem.ProductID
+        ON product.RowID = employeeloanschedule.LoanTypeID
         GROUP BY paystub.RowID
     ) payStubLoans
     ON payStubLoans.PayStubID = ps.RowID
