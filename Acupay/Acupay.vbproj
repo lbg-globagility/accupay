@@ -258,7 +258,10 @@
     </Compile>
     <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\TimeEntry.vb" />
     <Compile Include="Core Forms\rpt\HyundaiPayslip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
