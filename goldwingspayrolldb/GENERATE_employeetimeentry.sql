@@ -29,8 +29,6 @@ DECLARE BASIC_RATE INT(10) DEFAULT 1;
 
 DECLARE returnvalue INT(11);
 
-DECLARE pr_DayBefore DATE;
-
 DECLARE pr_PayType TEXT;
 
 DECLARE isRestDay TEXT;
@@ -306,7 +304,6 @@ SELECT
     IF(e_CalcNightDiffOT = '1', NightDifferentialOTRate, 1),
     IF(e_CalcRestDay = '1', RestDayRate, 1),
     IF(e_CalcRestDayOT = '1', RestDayOvertimeRate, 1),
-    DayBefore,
     PayType
 FROM payrate
 WHERE `Date` = ete_Date
@@ -319,7 +316,6 @@ INTO
     ndiffotrate,
     restday_rate,
     restdayot_rate,
-    pr_DayBefore,
     pr_PayType;
 
 SELECT
@@ -741,8 +737,11 @@ END IF;
 
 SET basicDayPay = ete_RegHrsWorkd * hourlyRate;
 
-SET isRegularDay = pr_DayBefore IS NULL;
-SEt isHoliday = NOT isRegularDay;
+SET isSpecialNonWorkingHoliday = pr_PayType = 'Special Non-Working Holiday';
+SET isRegularHoliday = pr_PayType = 'Regular Holiday';
+
+SET isHoliday = isSpecialNonWorkingHoliday OR isRegularHoliday;
+SET isRegularDay = NOT isHoliday;
 
 SET isWorkingDay = NOT isRestDay;
 
