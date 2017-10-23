@@ -6,3 +6,6 @@
 # UPDATE payperiod pp SET pp.LastUpd=IFNULL(ADDDATE(pp.LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP()), pp.LastUpdBy=IFNULL(pp.LastUpdBy, pp.CreatedBy) WHERE pp.TotalGrossSalary=1;
 
 # UPDATE payperiod pp SET pp.LastUpd=IFNULL(ADDDATE(pp.LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP()), pp.LastUpdBy=IFNULL(pp.LastUpdBy, pp.CreatedBy) WHERE pp.TotalGrossSalary=4;
+
+# INSERT INTO `systemowner` (`RowID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `Name`, `IsCurrentOwner`) VALUES (3, '2017-10-05 09:59:15', NULL, '2017-10-23 11:04:49', NULL, 'Cinema 2000', '0');
+
