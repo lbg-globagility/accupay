@@ -1,10 +1,3 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.3.0.4694
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
@@ -13,10 +6,11 @@
 -- Dumping structure for function hyundaipayrolldb_dev.GENERATE_employeetimeentry
 DROP FUNCTION IF EXISTS `GENERATE_employeetimeentry`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(`ete_EmpRowID` INT, `ete_OrganizID` INT, `ete_Date` DATE, `ete_UserRowID` INT
-
-
-
+CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(
+    `ete_EmpRowID` INT,
+    `ete_OrganizID` INT,
+    `ete_Date` DATE,
+    `ete_UserRowID` INT
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN
@@ -221,6 +215,7 @@ DECLARE leaveStartTime TIME;
 DECLARE leaveEndTime TIME;
 DECLARE leaveStart DATETIME;
 DECLARE leaveEnd DATETIME;
+DECLARE leaveType VARCHAR(50);
 
 DECLARE leaveHoursBeforeBreak DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE leaveHoursAfterBreak DECIMAL(15, 4) DEFAULT 0.0;
@@ -613,7 +608,8 @@ END IF;
 SELECT
     COUNT(elv.RowID) > 0,
     elv.LeaveStartTime,
-    elv.LeaveEndTime
+    elv.LeaveEndTime,
+    elv.LeaveType
 FROM employeeleave elv
 WHERE elv.EmployeeID = ete_EmpRowID AND
     elv.`Status` = 'Approved' AND
@@ -623,7 +619,8 @@ LIMIT 1
 INTO
     hasLeave,
     leaveStartTime,
-    leaveEndTime;
+    leaveEndTime,
+    leaveType;
 
 IF hasLeave THEN
     SET leaveStart = TIMESTAMP(dateToday, leaveStartTime);
@@ -647,10 +644,6 @@ IF hasLeave THEN
         SET leaveHours = COMPUTE_TimeDifference(TIME(leaveStart), TIME(leaveEnd));
     END IF;
 END IF;
-
--- SELECT leaveStart, leaveEnd, breaktimeStart, breaktimeEnd, leaveHoursBeforeBreak, leaveHoursAfterBreak, leaveHours
--- INTO OUTFILE 'D:/aaron/logs/times.txt'
--- FIELDS TERMINATED BY '\n';
 
 SET ete_RegHrsWorkd = regularHours;
 SET ete_OvertimeHrs = overtimeHours;
@@ -779,7 +772,10 @@ IF ete_Date < e_StartDate THEN
         NULL,
         NULL,
         NULL,
-        1
+        1,
+        NULL,
+        NULL,
+        NULL
     )
     INTO timeEntryID;
 
@@ -788,10 +784,6 @@ ELSEIF isRegularDay THEN
     IF hasLeave AND isWorkingDay THEN
         SET leavePay = IFNULL(leaveHours * hourlyRate, 0);
     END IF;
-
-    -- SELECT leavePay, leaveHours, leaveStart, leaveEnd, hourlyRate
-    -- INTO OUTFILE 'D:/aaron/logs/leave.txt'
-    -- FIELDS TERMINATED BY ', ';
 
     SET @leave_hrs = IFNULL(leaveHours, 0);
 
@@ -826,10 +818,6 @@ ELSEIF isRegularDay THEN
                           nightDiffAmount + nightDiffOTAmount +
                           restDayAmount + leavePay;
 
-    -- SELECT ete_TotalDayPay, regularAmount, overtimeAmount, nightDiffAmount, nightDiffOTAmount, restDayAmount, leavePay
-    -- INTO OUTFILE 'D:/aaron/logs/amount.txt'
-    -- FIELDS TERMINATED BY ', ';
-
     SELECT INSUPD_employeetimeentries(
         timeEntryID,
         ete_OrganizID,
@@ -859,7 +847,10 @@ ELSEIF isRegularDay THEN
         restDayAmount,
         0,
         basicDayPay,
-        5
+        5,
+        leaveType,
+        leaveHours,
+        leavePay
     )
     INTO timeEntryID;
 
@@ -927,7 +918,10 @@ ELSEIF isHoliday THEN
         NULL,
         holidayPay,
         basicDayPay,
-        7
+        7,
+        NULL,
+        NULL,
+        NULL
     )
     INTO timeEntryID;
 
