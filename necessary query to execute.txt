@@ -9,3 +9,5 @@
 
 # INSERT INTO `systemowner` (`RowID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `Name`, `IsCurrentOwner`) VALUES (3, '2017-10-05 09:59:15', NULL, '2017-10-23 11:04:49', NULL, 'Cinema 2000', '0');
 
+# INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('Weekly', 'Weekly', 'Allowance Frequency', '', 'Yes', NULL, '2014-11-13 00:00:00', 2, '2014-11-13 00:00:00', 4, 2);
+
