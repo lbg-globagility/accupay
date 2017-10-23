@@ -119,6 +119,12 @@ Public Class OffSetting
         InfoBalloon("Successfully saved.", _
                   "Successfully saved.", lblforballoon, 0, -69)
 
+        lnk = New LinkLabel.Link
+
+        lnk.Name = "First"
+
+        Pagination_Link(First, New LinkLabelLinkClickedEventArgs(lnk))
+
     End Sub
 
     Function INSUPD_employeeoffset(Optional eosRowID As Object = Nothing,
@@ -531,6 +537,8 @@ Public Class OffSetting
 
     Dim pagination As Integer = 0
 
+    Dim lnk As LinkLabel.Link
+
     Private Sub Pagination_Link(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles First.LinkClicked,
                                                                                                 Prev.LinkClicked,
                                                                                                 Nxt.LinkClicked,
@@ -578,11 +586,9 @@ Public Class OffSetting
         ElseIf sendrname = "Last" Then
             Dim lastpage = Val(EXECQUER("SELECT COUNT(RowID) / 20 FROM employee WHERE OrganizationID=" & orgztnID & ";"))
 
-
-
             Dim remender = lastpage Mod 1
-            
-            pagination = (lastpage - remender) * 20
+
+            pagination = lastpage - remender
 
             If pagination - 20 < 20 Then
                 'pagination = 0
@@ -654,14 +660,14 @@ Public Class OffSetting
 
             End If
         ElseIf sendrname = "lnkLast" Then
-            Dim lastpage = Val(EXECQUER("SELECT COUNT(RowID) FROM employeeoffset WHERE OrganizationID='" & orgztnID & "' AND EmployeeID='" & publicEmpRowID & "';"))
+            Dim lastpage = Val(EXECQUER("SELECT COUNT(RowID) / 20 FROM employeeoffset WHERE OrganizationID='" & orgztnID & "' AND EmployeeID='" & publicEmpRowID & "';"))
 
-            Dim remender = lastpage Mod 20
+            Dim remender = lastpage Mod 1
 
             pagenumber = lastpage - remender
 
             If pagenumber - 20 < 20 Then
-                pagenumber = 0
+                'pagenumber = 0
 
             End If
 
@@ -695,6 +701,12 @@ Public Class OffSetting
                 'c_RowIDLoan
 
                 dgvempoffset.Rows.Remove(dgvempoffset.CurrentRow)
+
+                lnk = New LinkLabel.Link
+
+                lnk.Name = "First"
+
+                Pagination_Link(First, New LinkLabelLinkClickedEventArgs(lnk))
 
             End If
 

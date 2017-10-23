@@ -3,6 +3,7 @@ Imports MySql.Data.MySqlClient
 Imports System.Threading
 Imports System.IO
 Imports Microsoft.Win32
+Imports Indigo
 
 'Imports System
 'Imports System.Threading
@@ -32,6 +33,9 @@ Public Class MDIPrimaryForm
 
     Private if_sysowner_is_hyundai As Boolean =
         Convert.ToInt16(New SQL("SELECT EXISTS(SELECT RowID FROM systemowner WHERE IsCurrentOwner='1' AND Name='Hyundai' LIMIT 1) `Result`;").GetFoundRow)
+
+    Private if_sysowner_is_cinema2k As Boolean =
+        Convert.ToInt16(New SQL("SELECT EXISTS(SELECT RowID FROM systemowner WHERE IsCurrentOwner='1' AND Name='Cinema 2000' LIMIT 1) `Result`;").GetFoundRow)
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -86,6 +90,7 @@ Public Class MDIPrimaryForm
         CollapsibleGroupBox6.Visible = if_sysowner_is_hyundai
         Panel15.Font = DefaultFontStyle
 
+        setProperDashBoardAccordingToSystemOwner()
 
         Panel1.Focus()
         BackgroundWorker1.RunWorkerAsync()
@@ -1478,20 +1483,46 @@ Public Class MDIPrimaryForm
 
     End Sub
 
+    Private Sub setProperDashBoardAccordingToSystemOwner()
+
+        If if_sysowner_is_cinema2k Then
+            setVisiblePropertyDashBoardBaseOnCinema2K(Panel8)
+            setVisiblePropertyDashBoardBaseOnCinema2K(Panel9)
+            setVisiblePropertyDashBoardBaseOnCinema2K(Panel10)
+
+        End If
+
+    End Sub
+
+    Private Sub setVisiblePropertyDashBoardBaseOnCinema2K(pnl As Panel)
+
+        Dim _list =
+            pnl.Controls.OfType(Of CollapsibleGroupBox)()
+
+        For Each collapgpbox In _list
+            Dim _bool As Boolean =
+                (collapgpbox.AccessibleDescription = SystemOwner.Cinema2000)
+
+            collapgpbox.Visible = _bool
+
+        Next
+
+    End Sub
+
 End Class
 
 Public Class DashBoardDataExtractor
 
     Dim datatab As New DataTable
 
-    Sub New(Optional ParamsCollection As Array = Nothing, _
+    Sub New(Optional ParamsCollection As Array = Nothing,
             Optional ProcedureName As String = Nothing)
 
         'Dim n_callProcAsDatTable As New callProcAsDatTable
 
         'datatab = New DataTable
 
-        datatab = callProcAsDatTbl(ParamsCollection, _
+        datatab = callProcAsDatTbl(ParamsCollection,
                                    ProcedureName)
 
     End Sub
@@ -1505,7 +1536,7 @@ Public Class DashBoardDataExtractor
 
     End Property
 
-    Function callProcAsDatTbl(Optional ParamsCollection As Array = Nothing, _
+    Function callProcAsDatTbl(Optional ParamsCollection As Array = Nothing,
                                       Optional ProcedureName As String = Nothing) As Object
 
         Dim returnvalue = Nothing
@@ -1569,7 +1600,6 @@ Public Class DashBoardDataExtractor
     End Function
 
 End Class
-
 
 Public Class UserLog
 

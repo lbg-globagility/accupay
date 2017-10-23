@@ -716,18 +716,23 @@ Public Class MetroLogin
 
     Private Sub setAppropriateInterface()
 
-        Dim sql As New SQL("SELECT Name FROM systemowner WHERE IsCurrentOwner='1' LIMIT 1;")
+        Dim sys_ownr As New SystemOwner
 
-        Dim current_system_owner As String = Convert.ToString(sql.GetFoundRow)
+        Dim current_system_owner As String = sys_ownr.CurrentSystemOwner
 
-        If SystemOwner.Goldwings = current_system_owner Then
+        If SystemOwner.Goldwings = current_system_owner _
+            Or SystemOwner.Cinema2000 = current_system_owner Then
+
             Size = New Size(Size.Width, 319)
             PhotoImages.Location = New Point(242, 89)
             Panel1.Visible = False
+
         ElseIf SystemOwner.Hyundai = current_system_owner Then
+
             Size = New Size(Size.Width, 371)
             PhotoImages.Location = New Point(242, 89)
             Panel1.Visible = True
+
         End If
 
     End Sub

@@ -22,8 +22,8 @@ Partial Class OffSetting
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvemployees = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.eRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eEmpID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -72,6 +72,7 @@ Partial Class OffSetting
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.AutoCompleteTextBox1 = New Femiani.Forms.UI.Input.AutoCompleteTextBox()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.Last = New System.Windows.Forms.LinkLabel()
@@ -80,7 +81,6 @@ Partial Class OffSetting
         Me.First = New System.Windows.Forms.LinkLabel()
         Me.bgwork = New System.ComponentModel.BackgroundWorker()
         Me.bgworkSearchAutoComplete = New System.ComponentModel.BackgroundWorker()
-        Me.Label1 = New System.Windows.Forms.Label()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
@@ -101,14 +101,14 @@ Partial Class OffSetting
         Me.dgvemployees.BackgroundColor = System.Drawing.Color.White
         Me.dgvemployees.ColumnHeadersHeight = 38
         Me.dgvemployees.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eRowID, Me.eEmpID, Me.eFName, Me.eMidName, Me.eLName, Me.eGender, Me.eEmpStatus, Me.ePayFreq, Me.ePosition, Me.ePositionID, Me.ePayFreqID, Me.eEmpType, Me.eOffsetBal, Me.eFullName, Me.eDetails, Me.eImage})
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle1
         Me.dgvemployees.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvemployees.Location = New System.Drawing.Point(12, 166)
         Me.dgvemployees.MultiSelect = False
@@ -322,14 +322,14 @@ Partial Class OffSetting
         Me.dgvempoffset.BackgroundColor = System.Drawing.Color.White
         Me.dgvempoffset.ColumnHeadersHeight = 35
         Me.dgvempoffset.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eosRowID, Me.eosType, Me.eosStartTime, Me.eosEndTime, Me.eosStartDate, Me.eosEndDate, Me.eosStatus, Me.eosReason, Me.eosComment})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempoffset.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempoffset.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvempoffset.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvempoffset.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempoffset.Location = New System.Drawing.Point(0, 0)
@@ -524,16 +524,16 @@ Partial Class OffSetting
         Me.tsbtnNew.Image = Global.Acupay.My.Resources.Resources._new
         Me.tsbtnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNew.Name = "tsbtnNew"
-        Me.tsbtnNew.Size = New System.Drawing.Size(51, 22)
-        Me.tsbtnNew.Text = "&New"
+        Me.tsbtnNew.Size = New System.Drawing.Size(87, 22)
+        Me.tsbtnNew.Text = "&New Excess"
         '
         'tsbtnSave
         '
         Me.tsbtnSave.Image = Global.Acupay.My.Resources.Resources.Save
         Me.tsbtnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSave.Name = "tsbtnSave"
-        Me.tsbtnSave.Size = New System.Drawing.Size(51, 22)
-        Me.tsbtnSave.Text = "&Save"
+        Me.tsbtnSave.Size = New System.Drawing.Size(87, 22)
+        Me.tsbtnSave.Text = "&Save Excess"
         '
         'tsbtnCancel
         '
@@ -554,8 +554,8 @@ Partial Class OffSetting
         Me.tsbtnDelete.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
         Me.tsbtnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDelete.Name = "tsbtnDelete"
-        Me.tsbtnDelete.Size = New System.Drawing.Size(60, 22)
-        Me.tsbtnDelete.Text = "Delete"
+        Me.tsbtnDelete.Size = New System.Drawing.Size(96, 22)
+        Me.tsbtnDelete.Text = "Delete Excess"
         '
         'tsbtnClose
         '
@@ -602,6 +602,15 @@ Partial Class OffSetting
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(1151, 520)
         Me.Panel1.TabIndex = 326
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(9, 48)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(61, 13)
+        Me.Label1.TabIndex = 331
+        Me.Label1.Text = "Search box"
         '
         'AutoCompleteTextBox1
         '
@@ -682,15 +691,6 @@ Partial Class OffSetting
         '
         Me.bgworkSearchAutoComplete.WorkerReportsProgress = True
         Me.bgworkSearchAutoComplete.WorkerSupportsCancellation = True
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(9, 48)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(61, 13)
-        Me.Label1.TabIndex = 331
-        Me.Label1.Text = "Search box"
         '
         'OffSetting
         '
