@@ -8,18 +8,22 @@ Imports MySql.Data.MySqlClient
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
+
 Public Class EmployeeForm
     Private str_ms_excel_file_extensn As String =
         String.Concat("Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|",
                       "Microsoft Excel Documents 97-2003 (*.xls)|*.xls")
+
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
         MyBase.OnLoad(e)
     End Sub
 #Region "Employee Check list"
+
     Dim empchklist_columns As New AutoCompleteStringCollection
 
     Dim view_IDEmpLoan As Integer = Nothing
+
     Sub tbpempchklist_Enter(sender As Object, e As EventArgs) Handles tbpempchklist.Enter
 
         InfoBalloon(, , txtTIN, , , 1)
@@ -44,7 +48,9 @@ Public Class EmployeeForm
         tabIndx = 0 'TabControl1.SelectedIndex
         dgvEmp_SelectionChanged(sender, e)
     End Sub
+
     Dim chkliststring As New AutoCompleteStringCollection
+
     Sub VIEW_employeechecklist(ByVal emp_rowid As Object)
         Static once As Integer = -1
         Static emp_row_id As String = Nothing
@@ -166,6 +172,7 @@ Public Class EmployeeForm
 
         End If
     End Sub
+
     Sub chklistlinklbl_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
 
         Dim link_lablesender As New LinkLabel
@@ -398,6 +405,7 @@ Public Class EmployeeForm
             End If
         End With
     End Sub
+
     Sub ctrlAttachment(ByVal lnk_lablesender As LinkLabel)
 
         If lnk_lablesender IsNot Nothing Then
@@ -423,6 +431,7 @@ Public Class EmployeeForm
     End Sub
 #End Region
 #Region "Personal Profile"
+
     Public positn As New AutoCompleteStringCollection
     Public Simple As New AutoCompleteStringCollection
     Public SimpleDummy As New AutoCompleteStringCollection
@@ -523,6 +532,7 @@ Public Class EmployeeForm
     Public q_maritstat As String = "SELECT DisplayValue FROM listofval lov WHERE lov.Type='Marital Status' AND Active='Yes'"
 
     Dim employeepix As New DataTable
+
     Sub loademployee(Optional q_empsearch As String = Nothing)
         If q_empsearch = Nothing Then
 
@@ -588,8 +598,10 @@ Public Class EmployeeForm
                                                         End Sub, TaskScheduler.FromCurrentSynchronizationContext)
         End If
     End Sub
+
     Dim empBDate As String
     Dim dontUpdateEmp As SByte = 0
+
     Sub INSUPD_employee_01(sender As Object, e As EventArgs) Handles tsbtnSaveEmp.Click
         MaskedTextBox1.Focus()
         pbemppic.Focus()
@@ -892,6 +904,7 @@ Public Class EmployeeForm
 
         tsbtnSaveEmp.Enabled = True
     End Sub
+
     Sub SaveEmployee(sender As Object, e As EventArgs) 'Handles tsbtnSaveEmp.Click
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
@@ -1251,6 +1264,7 @@ Public Class EmployeeForm
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
         End Try
     End Sub
+
     Sub tsbtnSaveEmp_Click(sender As Object, e As EventArgs) 'Handles tsbtnSaveEmp.Click
         If tsbtnSaveEmp.Visible = False Then : Exit Sub : End If
         Static isDupEmpID As SByte
@@ -1418,6 +1432,7 @@ Public Class EmployeeForm
         newEmpStat.Close()
         newPostion.Close()
     End Sub
+
     Private Sub Employee_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Dim result = Windows.Forms.DialogResult.Yes
 
@@ -1523,12 +1538,14 @@ Public Class EmployeeForm
     Private Sub txtBDate_Leave(sender As Object, e As EventArgs)
         Throw New NotImplementedException()
     End Sub
+
     Sub loadPayFreqType()
         enlistTheLists("SELECT CONCAT(RowID,'@',PayFrequencyType) FROM payfrequency", payFreq)
         For Each r In payFreq
             cboPayFreq.Items.Add(StrReverse(getStrBetween(StrReverse(r), "", "@")))
         Next
     End Sub
+
     Sub loadPositName()
 
         Dim str_quer_positions As String =
@@ -1550,6 +1567,7 @@ Public Class EmployeeForm
         End If
         cboPosit.DataSource = n_SQLQueryToDatatable.ResultTable
     End Sub
+
     Sub reloadPositName(ByVal e_positID As String)
 
         Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT RowID,PositionName" &
@@ -1564,6 +1582,7 @@ Public Class EmployeeForm
         End If
         cboPosit.DataSource = n_SQLQueryToDatatable.ResultTable
     End Sub
+
     Function payp_count(Optional PayFreqRowID As Object = Nothing) As Integer
         Dim params(1, 2) As Object
 
@@ -1584,8 +1603,10 @@ Public Class EmployeeForm
                                               "payp_count")
         Return CInt(_divisor)
     End Function
+
     Dim view_ID As Object
     Dim paytypestring As String
+
     Private Sub Employee_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         If dbnow = Nothing Then
@@ -1607,6 +1628,7 @@ Public Class EmployeeForm
 
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
     End Sub
+
     Private Sub Employee_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
 
         InfoBalloon(, , lblforballoon1, , , 1)
@@ -1663,6 +1685,7 @@ Public Class EmployeeForm
                 WarnBalloon(, , cboattatype, , , 1)
         End Select
     End Sub
+
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click, tsbtnCloseempawar.Click, tsbtnCloseempcert.Click, ToolStripButton4.Click,
                                                                     btnClose.Click, ToolStripButton5.Click, ToolStripButton13.Click,
                                                                    ToolStripButton18.Click, ToolStripButton24.Click, ToolStripButton30.Click, ToolStripButton32.Click,
@@ -1671,16 +1694,20 @@ Public Class EmployeeForm
                                                                    ToolStripButton16.Click, ToolStripButton12.Click 'ToolStripButton12.Click
         Me.Close()
     End Sub
+
     Private Sub txt_Leave(sender As Object, e As EventArgs) Handles txtFName.Leave, txtFName.Leave, txtHomeAddr.Leave,
                                                                     txtLName.Leave, txtMName.Leave, txtNName.Leave, txtSName.Leave ', txtJTtle.Leave
         With DirectCast(sender, TextBox)
             .Text = StrConv(.Text, VbStrConv.ProperCase)
         End With
     End Sub
+
     Dim PositE_asc As String
+
     Private Sub cboPosit_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboPosit.KeyPress
         e.Handled = True
     End Sub
+
     Private Sub cboPosit_SelectedIndexChanged(sender As Object, e As EventArgs) 'Handles cboPosit.SelectedIndexChanged ', cboPosit.SelectedValueChanged
 
         positID = cboPosit.SelectedValue
@@ -1688,6 +1715,7 @@ Public Class EmployeeForm
             New ExecuteQuery("SELECT d.GracePeriod FROM `division` d INNER JOIN position pos ON pos.RowID='" & positID & "' AND d.RowID=pos.DivisionId;")
         txtUTgrace.Text = ValNoComma(n_ExecuteQuery.Result)
     End Sub
+
     Dim noCurrCellChange As SByte
     Dim EmployeeImage As Image
 
@@ -1696,6 +1724,7 @@ Public Class EmployeeForm
     Dim sameEmpID As Integer = -1
     Dim LastFirstMidName As String = Nothing
     Dim publicEmpRowID = Nothing
+
     Sub dgvEmp_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvEmp.SelectionChanged
 
         RemoveHandler cboPosit.SelectedIndexChanged, AddressOf cboPosit_SelectedIndexChanged
@@ -1864,7 +1893,7 @@ Public Class EmployeeForm
                         Else
                             If dgvDepen.RowCount = 1 Then
                             Else
-                            
+
                                 If dgvDepen.CurrentRow.Index >= dependentitemcount Then
                                     ''MsgBox("If")
                                     If dependentitemcount = -1 Then
@@ -2187,7 +2216,6 @@ Public Class EmployeeForm
                     txtFNameLeave.Text = ""
                     pbEmpPicLeave.Image = Nothing
                     listofEditRowleave.Clear()
-                    'txtleavetype.Text = ""
                     cboleavetypes.SelectedIndex = -1
                     txtstarttime.Text = ""
                     txtendtime.Text = ""
@@ -2340,6 +2368,7 @@ Public Class EmployeeForm
         End If
         listofEditDepen.Clear()
     End Sub
+
     Dim currDepenCount As Integer
 
     Sub tsbtnNewEmp_Click(sender As Object, e As EventArgs) Handles tsbtnNewEmp.Click
@@ -2387,7 +2416,9 @@ Public Class EmployeeForm
     Private Sub cboEmpType_SelectedIndexChanged(sender As Object, e As EventArgs)
         Throw New NotImplementedException()
     End Sub
+
     Dim PayFreqE_asc As String
+
     Private Sub cboPayFreq_KeyPress(sender As Object, e As KeyPressEventArgs) 'Handles cboPayFreq.KeyPress
         PayFreqE_asc = Asc(e.KeyChar)
         If PayFreqE_asc = 8 Then
@@ -2395,6 +2426,7 @@ Public Class EmployeeForm
             cboPayFreq.SelectedIndex = -1
         End If
     End Sub
+
     Private Sub cboPayFreq_SelectedIndexChanged(sender As Object, e As EventArgs) 'Handles cboPayFreq.SelectedIndexChanged, cboPayFreq.SelectedValueChanged
         If cboPayFreq.Text = "" Then
             payFreqID = ""
@@ -2402,6 +2434,7 @@ Public Class EmployeeForm
         Else : payFreqID = getStrBetween(payFreq.Item(cboPayFreq.SelectedIndex), "", "@")
         End If
     End Sub
+
     Private Sub tsbtnCancel_Click(sender As Object, e As EventArgs) Handles tsbtnCancel.Click
         cboEmpStat.Enabled = True
         tsbtnNewEmp.Enabled = True
@@ -2409,15 +2442,19 @@ Public Class EmployeeForm
         dependentitemcount = -1
         dgvEmp_SelectionChanged(sender, e)
     End Sub
+
     Private Sub TabControl1_DrawItem(sender As Object, e As DrawItemEventArgs) Handles tabctrlemp.DrawItem
         TabControlColor(tabctrlemp, e)
     End Sub
+
     Private Sub TabControl2_DrawItem(sender As Object, e As DrawItemEventArgs) 'Handles TabControl2.DrawItem
         TabControlColor(TabControl2, e, Me.BackColor)
     End Sub
+
     Function strTrimProper(ByVal exprssn As String) As String
         Return StrConv(Trim(exprssn), VbStrConv.ProperCase)
     End Function
+
     Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
 
         HRISForm.PositionToolStripMenuItem_Click(HRISForm.PositionToolStripMenuItem, New EventArgs)
@@ -2455,11 +2492,13 @@ Public Class EmployeeForm
         End If
 
     End Sub
+
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         newPostion.Close()
         newEmpType.Close()
         newEmpStat.Show() : newEmpStat.BringToFront()
     End Sub
+
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
 
         If Button3.Image.Tag = 1 Then
@@ -2480,9 +2519,11 @@ Public Class EmployeeForm
             dgvEmp.Width = pointX
         End If
     End Sub
+
     Dim dgvR_indx As Integer
     Dim dgvDepenPrevVal, dgvC_indx As String
     Dim dgvDepenActiv As Object
+
     Private Sub dgvDepen_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvDepen.CellBeginEdit 'te Sub dgvDepen_
         dgvR_indx = e.RowIndex : dgvC_indx = dgvDepen.Columns(dgvDepen.CurrentCell.ColumnIndex).Name
         c_Editing = dgvDepen.Columns(dgvDepen.CurrentCell.ColumnIndex).Name
@@ -2495,7 +2536,9 @@ Public Class EmployeeForm
         End If
         noCurrCellChange = 1
     End Sub
+
     Public listofEditDepen As New List(Of String)
+
     Private Sub dgvDepen_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDepen.CellEndEdit
         Try
             dgvC_indx = dgvDepen.Columns(e.ColumnIndex).Name
@@ -2540,6 +2583,7 @@ Public Class EmployeeForm
             dgvDepen.PerformLayout()
         End Try
     End Sub
+
     Dim dependentitemcount As Integer = 0
 
     Sub substituteCell(ByVal dgv As DataGridView, ByVal colName As String, ByVal Obj As Object, Optional isVisb As SByte = Nothing)
@@ -2568,6 +2612,7 @@ Public Class EmployeeForm
         Else
         End If
     End Sub
+
     Private Sub dgvDepen_Scroll(sender As Object, e As ScrollEventArgs) 'Handles dgvDepen.Scroll
         If dgvDepen.RowCount <> 0 Then
             With dgvDepen.CurrentRow
@@ -2576,9 +2621,11 @@ Public Class EmployeeForm
         Else
         End If
     End Sub
+
     Dim currDgvIndx, r_Editing As Integer
     Dim c_Editing As String
     Dim txtdgvDepen As TextBox
+
     Private Sub dgvDepen_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvDepen.EditingControlShowing
 
         Try
@@ -2594,6 +2641,7 @@ Public Class EmployeeForm
         c_Editing = dgvDepen.Columns(dgvDepen.CurrentCell.ColumnIndex).Name
 
     End Sub
+
     Private Sub dgvDepen_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvDepen.SelectionChanged
         If dgvDepen.RowCount <> 0 Then
             With dgvDepen.CurrentRow
@@ -2609,6 +2657,7 @@ Public Class EmployeeForm
             txtCell.Visible = False
         End If
     End Sub
+
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
         'Regular Exempt, Regular Non Exempt, Contractor
         newPostion.Close() : newEmpStat.Close()
@@ -2617,6 +2666,7 @@ Public Class EmployeeForm
 
     Dim curr_empColm As String
     Dim curr_empRow As Integer
+
     Sub SearchEmoloyee_Click(sender As Object, e As EventArgs) Handles Button4.Click
         dependentitemcount = -1
 
@@ -2681,6 +2731,7 @@ Public Class EmployeeForm
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
         AddHandler dgvDepen.SelectionChanged, AddressOf dgvDepen_SelectionChanged
     End Sub
+
     Private Sub dgvDepen_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvDepen.DataError
         e.ThrowException = False
 
@@ -2710,6 +2761,7 @@ Public Class EmployeeForm
             e.ThrowException = False
         End If
     End Sub
+
     Private Sub dgvDepen_CurrentCellChanged(sender As Object, e As EventArgs) Handles dgvDepen.CurrentCellChanged
 
         If r_Editing = Nothing And c_Editing = Nothing Then
@@ -2740,6 +2792,7 @@ Public Class EmployeeForm
             RemoveHandler txtdgvDepen.KeyDown, AddressOf dgvDepen_KeyDown
         End If
     End Sub
+
     Private Sub cboSearchCommon_KeyPress(sender As Object, e As KeyPressEventArgs) Handles ComboBox7.KeyPress, ComboBox8.KeyPress, ComboBox9.KeyPress,
                                                                                           ComboBox10.KeyPress
         Dim e_asc As String = Asc(e.KeyChar)
@@ -2751,6 +2804,7 @@ Public Class EmployeeForm
         Else : e.Handled = True
         End If
     End Sub
+
     Private Sub ComboBox7_TextChanged(sender As Object, e As EventArgs) Handles ComboBox7.TextChanged, ComboBox8.TextChanged, ComboBox9.TextChanged,
                                                                                            ComboBox10.TextChanged
         Dim cboSearch_nem As String = DirectCast(sender, ComboBox).Name
@@ -2777,6 +2831,7 @@ Public Class EmployeeForm
             End If
         End If
     End Sub
+
     Private Sub Search_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TextBox1.KeyPress, TextBox15.KeyPress, TextBox16.KeyPress,
                                                                                   TextBox17.KeyPress
         Dim e_asc As String = Asc(e.KeyChar)
@@ -2785,6 +2840,7 @@ Public Class EmployeeForm
             SearchEmoloyee_Click(sender, e)
         End If
     End Sub
+
     Function searchCommon(Optional cbox1 As ComboBox = Nothing, Optional search1 As Object = Nothing,
                           Optional cbox2 As ComboBox = Nothing, Optional search2 As Object = Nothing,
                           Optional cbox3 As ComboBox = Nothing, Optional search3 As Object = Nothing,
@@ -2904,7 +2960,9 @@ Public Class EmployeeForm
 
         Return _search1 & _search2 & _search3 & _search4 & _search5
     End Function
+
     Dim colName As String
+
     Sub searchEmpSimple() ' As String
         Static s As SByte
 
@@ -2970,6 +3028,7 @@ Public Class EmployeeForm
 
     Dim isKPressSimple As SByte
     Dim colSearchSimple As String
+
     Private Sub txtSimple_KeyDown(sender As Object, e As KeyEventArgs) Handles txtSimple.KeyDown ',
         'ComboBox1.KeyDown
         If e.KeyCode = Keys.Enter Then
@@ -2978,9 +3037,11 @@ Public Class EmployeeForm
             isKPressSimple = 0
         End If
     End Sub
+
     Private Sub txtSimple_TextChanged(sender As Object, e As EventArgs) Handles txtSimple.TextChanged
         ComboBox1.Text = txtSimple.Text
     End Sub
+
     Sub tsbtnNewDepen_Click(sender As Object, e As EventArgs) Handles tsbtnNewDepen.Click
         RemoveHandler dgvDepen.SelectionChanged, AddressOf dgvDepen_SelectionChanged
 
@@ -3314,7 +3375,7 @@ Public Class EmployeeForm
 
         listofEditDepen.Clear()
 
-              dependentitemcount = -1
+        dependentitemcount = -1
 
         If tsbtnNewEmp.Enabled = True Then
             tsbtnNewDepen.Enabled = True : listofEditDepen.Clear()
@@ -5652,14 +5713,12 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempleave.Rows.Add()
                 dgvleaveRowindx = dgvempleave.RowCount - 2
-                'dgvempleave.Item("elv_EndTime", dgvleaveRowindx).Selected = True
             End If
         Else
             If dgvempleave.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempleave.Rows.Add()
                     dgvleaveRowindx = dgvempleave.RowCount - 2
-                    'dgvempleave.Item("elv_EndTime", dgvleaveRowindx).Selected = True
                 End If
             Else
                 dgvleaveRowindx = dgvempleave.CurrentRow.Index
@@ -5682,10 +5741,7 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                 End If
-                '    dateobj = getStrBetween(dateobj.ToString, "", " ")
-                '    Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm")
-                '    dgvempleave.Item("elv_EndTime", rowIndx).Value = valtime.ToShortTimeString
-                'Else
+
                 Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm tt")
 
                 If ampm = Nothing Then
@@ -5693,10 +5749,7 @@ Public Class EmployeeForm
                 Else
                     theretval = Trim(valtime.ToShortTimeString.Substring(0, 5)) & ampm
                 End If
-                'End If
-                'valtime = DateTime.Parse(e.FormattedValue)
-                'valtime = valtime.ToShortTimeString
-                'Format(valtime, "hh:mm tt")
+
                 haserrinputleave = 0
 
                 dgvempleave.Item("elv_EndTime", dgvleaveRowindx).ErrorText = Nothing
@@ -5707,10 +5760,8 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                     Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm")
-                    'valtime = DateTime.Parse(e.FormattedValue)
-                    'valtime = valtime.ToShortTimeString
+
                     theretval = valtime.ToShortTimeString
-                    'Format(valtime, "hh:mm tt")
 
                     haserrinputleave = 0
 
@@ -5866,11 +5917,6 @@ Public Class EmployeeForm
 
     Private Sub txtstartdate_GotFocus(sender As Object, e As EventArgs) Handles txtstartdate.GotFocus
 
-        'If dgvempleave.RowCount = 1 Then
-        'Else
-        '    dgvempleave.Item("elv_StartDate", dgvleaveRowindx).Selected = True
-        'End If
-
     End Sub
 
     Private Sub dtpstartdate_Leave(sender As Object, e As EventArgs) Handles dtpstartdate.Leave
@@ -5977,15 +6023,12 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtstartdate_Leave(sender As Object, e As EventArgs) Handles txtstartdate.Leave
-
     End Sub
 
     Private Sub dtpendate_ValueChanged(sender As Object, e As EventArgs) Handles dtpendate.ValueChanged
-
     End Sub
 
     Private Sub txtendate_TextChanged(sender As Object, e As EventArgs) Handles txtendate.TextChanged
-
     End Sub
 
     Private Sub dtpendate_GotFocus(sender As Object, e As EventArgs) Handles dtpendate.GotFocus
@@ -5998,12 +6041,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtendate_GotFocus(sender As Object, e As EventArgs) Handles txtendate.GotFocus
-
-        'If dgvempleave.RowCount = 1 Then
-        'Else
-        '    dgvempleave.Item("elv_EndDate", dgvleaveRowindx).Selected = True
-        'End If
-
     End Sub
 
     Private Sub dtpendate_Leave(sender As Object, e As EventArgs) Handles dtpendate.Leave
@@ -6018,14 +6055,12 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempleave.Rows.Add()
                 dgvleaveRowindx = dgvempleave.RowCount - 2
-                'dgvempleave.Item("elv_EndDate", dgvleaveRowindx).Selected = True
             End If
         Else
             If dgvempleave.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempleave.Rows.Add()
                     dgvleaveRowindx = dgvempleave.RowCount - 2
-                    'dgvempleave.Item("elv_EndDate", dgvleaveRowindx).Selected = True
                 End If
             Else
                 dgvleaveRowindx = dgvempleave.CurrentRow.Index
@@ -6107,11 +6142,9 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtendate_Leave(sender As Object, e As EventArgs) Handles txtendate.Leave
-
     End Sub
 
     Private Sub txtreason_TextChanged(sender As Object, e As EventArgs) Handles txtreason.TextChanged
-
     End Sub
 
     Private Sub txtreason_GotFocus(sender As Object, e As EventArgs) Handles txtreason.GotFocus
@@ -6133,14 +6166,12 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempleave.Rows.Add()
                 dgvleaveRowindx = dgvempleave.RowCount - 2
-                'dgvempleave.Item("elv_EndDate", dgvleaveRowindx).Selected = True
             End If
         Else
             If dgvempleave.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempleave.Rows.Add()
                     dgvleaveRowindx = dgvempleave.RowCount - 2
-                    'dgvempleave.Item("elv_EndDate", dgvleaveRowindx).Selected = True
                 End If
             Else
                 dgvleaveRowindx = dgvempleave.CurrentRow.Index
@@ -6378,7 +6409,6 @@ Public Class EmployeeForm
     Public categDiscipID As String
 
     Private Sub tbpDiscipAct_Click(sender As Object, e As EventArgs) Handles tbpDiscipAct.Click
-
     End Sub
 
     Dim empdiscippenal As New DataTable
@@ -6486,16 +6516,13 @@ Public Class EmployeeForm
                 Exit For
             End If
         Next
-
         'empdiscippenal
     End Sub
 
     Private Sub dtpFrom_ValueChanged(sender As Object, e As EventArgs) Handles dtpFrom.ValueChanged
-
     End Sub
 
     Private Sub dtpTo_ValueChanged(sender As Object, e As EventArgs) Handles dtpTo.ValueChanged
-
     End Sub
 
     Private Sub dgvDisciplinaryList_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDisciplinaryList.CellClick
@@ -6508,7 +6535,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub dgvDisciplinaryList_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDisciplinaryList.CellContentClick
-
     End Sub
 
     Private Sub TabPage8_Leave(sender As Object, e As EventArgs) 'Handles tbpDiscipAct.Leave
@@ -6516,7 +6542,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub lblAddFindingname_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblAddFindingname.LinkClicked
-
     End Sub
 
     Private Sub fillempdisciplinary()
@@ -6684,7 +6709,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -6775,7 +6799,6 @@ Public Class EmployeeForm
         tabIndx = 7 'TabControl1.SelectedIndex
 
         dgvEmp_SelectionChanged(sender, e)
-
     End Sub
 
     Private Sub TabPage9_Leave(sender As Object, e As EventArgs) 'Handles tbpEducBG.Leave
@@ -7062,7 +7085,6 @@ Public Class EmployeeForm
                 dgvListCompany.Enabled = True
                 btnNewPrevEmp.Enabled = True
                 dgvEmp.Enabled = True
-                'btnSavePrevEmp.Enabled = False
                 IsNewPrevEmp = 0
             End If
         Else
@@ -7086,7 +7108,6 @@ Public Class EmployeeForm
                 fillemployerlist()
                 btnNewPrevEmp.Enabled = True
                 dgvEmp.Enabled = True
-                'btnSavePrevEmp.Enabled = False
                 myBalloon("Successfully Save", "Saved", lblforballoon, , -100)
             End If
 
@@ -10287,11 +10308,8 @@ Public Class EmployeeForm
                             'numofweekends += 1
                         Else
                             numofweekdays += 1
-
                         End If
-
                     Next
-
                 End With
 
                 txtempbasicpay.Text = "0.00"
@@ -10390,15 +10408,10 @@ Public Class EmployeeForm
                                 ElseIf .Cells("Item").Value.ToString = "Maternity/paternity leave" Then
                                     mlbal.Text = FormatNumber(Val(.Cells("PayAmount").Value), 2)
                                 End If
-
                             End With
-
                         Next
-
                     End With
-
                 Next
-
                 VIEW_specificemployeesalary(selEmpID,
                                             paypTo)
 
@@ -10446,11 +10459,9 @@ Public Class EmployeeForm
                             txtemphdmf.Text = FormatNumber(txtemphdmf.Text, 2).ToString '.Replace(",", "")
 
                         End If
-
                         Exit For
                     End With
                 Next
-
                 VIEW_employeetimeentry_SUM(selEmpID,
                                             paypFrom,
                                             paypTo)
@@ -10487,25 +10498,19 @@ Public Class EmployeeForm
                                     (.Cells("etent_OvertimeHoursAmount").Value) +
                                     (.Cells("etent_NightDiffOTHoursAmount").Value),
                                                                 2)
-
                                 End If
 
                                 lblsubtot.Text = txtempbasicpay.Text 'txtgrosssal
-
-                                'txtgrosssal.Text = txtgrosssal.Text '.Replace(",", "")
 
                                 txthrsworkamt.Text = lblsubtot.Text
                             Else
                                 If txtgrosssal.Text = "0.00" Then
                                     txtgrosssal.Text = FormatNumber(Val(txtemptotallow.Text.Replace(",", "")) +
                                     (.Cells("etent_OvertimeHoursAmount").Value) +
-                                    (.Cells("etent_NightDiffOTHoursAmount").Value),
-                                                                2)
-
+                                    (.Cells("etent_NightDiffOTHoursAmount").Value), 2)
                                 End If
 
                                 lblsubtot.Text = txtempbasicpay.Text 'txtgrosssal'.Replace(",", "")
-
                                 txthrsworkamt.Text = lblsubtot.Text
 
                             End If
@@ -10530,9 +10535,6 @@ Public Class EmployeeForm
 
                         txttotut.Text = .Cells("etent_UndertimeHours").Value
                         txttotutamt.Text = FormatNumber(Val(.Cells("etent_UndertimeHoursAmount").Value), 2)
-
-                        'txttotholidayhrs.Text = .Cells("esal_BasicPay").Value
-                        'txttotholidayamt.Text = .Cells("esal_BasicPay").Value
 
                         txthrswork.Text = .Cells("etent_TotalHoursWorked").Value
 
@@ -10630,9 +10632,7 @@ Public Class EmployeeForm
                 TextBox10.Text = "0"
 
             End If
-
         End If
-
     End Sub
 
     Private Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
@@ -10664,9 +10664,7 @@ Public Class EmployeeForm
         VIEW_payperiodofyear(paypyearnow)
 
         AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
         dgvpayper_SelectionChanged(sender, e)
-
     End Sub
 
     Sub VIEW_payperiodofyear(Optional param_Date As Object = Nothing)
@@ -10804,7 +10802,6 @@ Public Class EmployeeForm
     Sub SplitContainer3_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles SplitContainer3.SplitterMoved
 
         PanelPayslip.Focus()
-
     End Sub
 
     'tsbtnprintpayslip.Click
@@ -10922,9 +10919,7 @@ Public Class EmployeeForm
                         objText.Text = Val(dgvrow.Cells("PayAmount").Value)
 
                         Exit For
-
                     End If
-
                 Next
 
                 objText = .ReportObjects("txttotabsent")
@@ -11013,9 +11008,6 @@ Public Class EmployeeForm
                         End If
                     Next
 
-                    'objText.Text &= vbNewLine
-                    'allowvalues.Text &= vbNewLine
-
                     objText = .ReportObjects("loansubdetails")
 
                     Dim loanvalues As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("loanvalues")
@@ -11041,11 +11033,6 @@ Public Class EmployeeForm
                         End If
                     Next
 
-                    'objText.Text &= vbNewLine
-                    'loanvalues.Text &= vbNewLine
-
-                    ''dgvempbon'bonsubdetails
-
                     objText = .ReportObjects("bonsubdetails")
 
                     Dim bonvalues As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("bonvalues")
@@ -11070,12 +11057,7 @@ Public Class EmployeeForm
 
                         End If
                     Next
-
-                    'objText.Text &= vbNewLine
-                    'bonvalues.Text &= vbNewLine
-
                 End If
-
             End With
 
             Dim crvwr As New CrysVwr
@@ -11086,12 +11068,9 @@ Public Class EmployeeForm
             crvwr.Show() '
             'TINNo
 
-            'rptdoc = Nothing
-            'rptdoc.Dispose()
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name), , "Unexpected Message")
         End Try
-
     End Sub
 
     Private Sub tsbtnprintall_Click(sender As Object, e As EventArgs) Handles tsbtnprintall.Click
@@ -11227,28 +11206,14 @@ Public Class EmployeeForm
 
                         newdatrow("Column7") = "₱ " & FormatNumber(Val(.Cells("paystb_TotalEmpWithholdingTax").Value), 2) 'Withholding Tax
 
-                        'newdatrow("Column3") = .Cells("paystb_TotalEmpSSS").Value
-                        'newdatrow("Column3") = .Cells("paystb_TotalEmpPhilhealth").Value
-                        'newdatrow("Column3") = .Cells("paystb_TotalEmpHDMF").Value
-
                         newdatrow("Column8") = "₱ " & FormatNumber(Val(.Cells("paystb_TotalAllowance").Value), 2) 'Total Allowance
 
                         totamountallow = Val(.Cells("paystb_TotalAllowance").Value)
-
-                        'txtholidaypay.Text = .Cells("paystb_TotalAllowance").Value
-
-                        'lblsubtotmisc.Text = .Cells("paystb_TotalAllowance").Value
 
                         newdatrow("Column9") = "₱ " & FormatNumber(Val(.Cells("paystb_TotalLoans").Value), 2) 'Total Loans
                         newdatrow("Column10") = "₱ " & FormatNumber(Val(.Cells("paystb_TotalBonus").Value), 2) 'Total Bonuses
 
                         totamountbon = Val(.Cells("paystb_TotalBonus").Value)
-
-                        'txtvacleft.Text = .Cells("paystb_TotalVacationDaysLeft").Value
-
-                        'VIEW_paystubitem(.Cells("paystb_RowID").Value)
-
-                        'paystb_RowID
 
                         Dim selpay_stbitem = pay_stbitem.Select("PayStubID = " & .Cells("paystb_RowID").Value)
 
@@ -11258,8 +11223,6 @@ Public Class EmployeeForm
 
                         For Each datrow In selpay_stbitem 'this is for leave balances
 
-                            '.Add("Column30") 'Leave type
-                            '.Add("Column31") 'Leave count
                             Dim leavebalance = Val(datrow("PayAmount"))
 
                             If firstRow = 0 Then
@@ -11285,11 +11248,8 @@ Public Class EmployeeForm
                             firstRow += 1
 
                         Next 'this is for leave balances
-
                         isStrListed.Clear()
-
                     End With
-
                     Exit For
                 Next
 
@@ -11313,7 +11273,6 @@ Public Class EmployeeForm
                                 newdatrow("Column12") = "₱ " & FormatNumber(Val(.Cells("esal_EmployeeContributionAmount").Value), 2) 'SSS Amount
                             End If
                             'SSS Amount
-
                         End If
 
                         If isorgPHHdeductsched = 1 Then
@@ -11324,7 +11283,6 @@ Public Class EmployeeForm
                             Else
                                 newdatrow("Column13") = "₱ " & FormatNumber(Val(.Cells("esal_EmployeeShare").Value), 2) 'PhilHealth Amount
                             End If
-
                         End If
 
                         If isorgHDMFdeductsched = 1 Then
@@ -11337,9 +11295,7 @@ Public Class EmployeeForm
                             End If
 
                         End If
-
                         Exit For
-
                     End With
                 Next
 
@@ -11405,9 +11361,6 @@ Public Class EmployeeForm
                         newdatrow("Column23") = FormatNumber(Val(.Cells("etent_NightDifferentialOTHours").Value), 2) 'Night differential OT hours worked
                         newdatrow("Column24") = "₱ " & FormatNumber(Val(.Cells("etent_NightDiffOTHoursAmount").Value), 2) 'Night differential OT hours amount
 
-                        'txttotholidayhrs.Text = .Cells("esal_BasicPay").Value
-                        'txttotholidayamt.Text = .Cells("esal_BasicPay").Value
-
                         newdatrow("Column25") = FormatNumber(Val(.Cells("etent_TotalHoursWorked").Value), 2) 'Total hours worked
 
                         newdatrow("Column26") = "₱ " & FormatNumber(Val(.Cells("etent_UndertimeHours").Value), 2) 'Undertime hours
@@ -11417,10 +11370,6 @@ Public Class EmployeeForm
                                                                  drow("StartDate").ToString,
                                                                  paypFrom,
                                                                  paypTo)
-
-                        'Dim param_date = If(paypTo = Nothing, paypFrom, paypTo)
-
-                        'Dim rateper_hour = GET_employeerateperhour(.Cells("RowID").Value, param_date)
 
                         newdatrow("Column28") = "₱ " & FormatNumber(Val(.Cells("etent_HoursLate").Value), 2)
                         newdatrow("Column29") = "₱ " & FormatNumber(Val(.Cells("etent_HoursLateAmount").Value), 2)
@@ -11453,13 +11402,8 @@ Public Class EmployeeForm
 
                         newdatrow("Column37") &= vbNewLine & "₱ " & FormatNumber(Val(dgvrow.Cells("eall_Amount").Value), 2)
 
-                        'Dim strtxt = dgvrow.Cells("eall_Type").Value & vbTab & "₱ " & dgvrow.Cells("eall_Amount").Value
-
                     End If
                 Next
-
-                'objText.Text &= vbNewLine
-                'allowvalues.Text &= vbNewLine
 
                 For Each dgvrow As DataGridViewRow In dgvLoanList.Rows 'Loans
                     If dgvrow.Index = 0 Then
@@ -11471,15 +11415,8 @@ Public Class EmployeeForm
 
                         newdatrow("Column38") &= vbNewLine & "₱ " & FormatNumber(Val(dgvrow.Cells("c_dedamt").Value), 2)
 
-                        'Dim strtxt = dgvrow.Cells("c_loantype").Value & vbTab & "₱ " & dgvrow.Cells("c_dedamt").Value
-
                     End If
                 Next
-
-                'objText.Text &= vbNewLine
-                'loanvalues.Text &= vbNewLine
-
-                ''dgvempbon'bonsubdetails
 
                 For Each dgvrow As DataGridViewRow In dgvempbon.Rows 'Bonuses
                     If dgvrow.Index = 0 Then
@@ -11494,93 +11431,9 @@ Public Class EmployeeForm
                     End If
                 Next
 
-                'objText.Text &= vbNewLine
-                'bonvalues.Text &= vbNewLine
-
                 rptdattab.Rows.Add(newdatrow)
 
             Next
-
-            'For Each dgvrow As DataGridViewRow In dgvemployees.Rows
-            '    newdatrow = rptdattab.NewRow
-
-            '    dgvrow.Selected = 1
-            '    dgvemployees_SelectionChanged(sender, e)
-
-            '    With dgvrow
-            '        newdatrow("Column1") = .Cells("RowID").Value
-            '        newdatrow("Column2") = .Cells("EmployeeID").Value
-
-            '        Dim full_name = .Cells("FirstName").Value & If(.Cells("MiddleName").Value = Nothing, _
-            '                                                 "", _
-            '                                                 " " & StrConv(Microsoft.VisualBasic.Left(.Cells("MiddleName").Value.ToString, 1), _
-            '                                                                                                VbStrConv.ProperCase) & ".")
-            '        full_name = full_name & " " & .Cells("LastName").Value
-
-            '        full_name = full_name & If(.Cells("Surname").Value = Nothing, _
-            '                                                 "", _
-            '                                                 "-" & StrConv(Microsoft.VisualBasic.Left(.Cells("Surname").Value.ToString, 1), _
-            '                                                                                                VbStrConv.ProperCase))
-
-            '        newdatrow("Column3") = full_name
-
-            '        'txtempbasicpay.Text
-
-            '        'txttotreghrs.Text
-            '        'txttotregamt.Text
-
-            '        'txttotothrs.Text
-            '        'txttototamt.Text
-
-            '        'txttotnightdiffhrs.Text
-            '        'txttotnightdiffamt.Text
-
-            '        'txttotnightdiffothrs.Text
-            '        'txttotnightdiffotamt.Text
-
-            '        'txttotholidayhrs.Text
-            '        'txttotholidayamt.Text
-
-            '        'txthrswork.Text
-            '        'txthrsworkamt.Text
-
-            '        'lblsubtot.Text
-
-            '        'txtemptotallow.Text
-
-            '        'txtgrosssal.Text
-
-            '        'txtvlbal.Text
-            '        'txtslbal.Text
-            '        'txtmlbal.Text
-
-            '        'txttotabsent.Text
-            '        'txttotabsentamt.Text
-
-            '        'txttottardi.Text
-            '        'txttottardiamt.Text
-
-            '        'txttotut.Text
-            '        'txttotutamt.Text
-
-            '        'lblsubtotmisc.Text
-
-            '        'txtempsss.Text
-            '        'txtempphh.Text
-            '        'txtemphdmf.Text
-
-            '        'txtemptotloan.Text
-            '        'txtemptotbon.Text
-
-            '        'txttaxabsal.Text
-            '        'txtempwtax.Text
-            '        'txtnetsal.Text
-
-            '    End With
-
-            '    rptdattab.Rows.Add(newdatrow)
-
-            'Next
 
             Dim rptdoc As New prntAllPaySlip
 
@@ -11657,8 +11510,6 @@ Public Class EmployeeForm
             crvwr.Refresh()
             crvwr.Show()
 
-            'rptdattab = Nothing
-            'rptdattab.Dispose()
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name), , "Unexpected Message")
         End Try
@@ -11760,20 +11611,14 @@ Public Class EmployeeForm
             once = 1
 
             txtallowamt.ContextMenu = New ContextMenu
-
             cboallowfreq.ContextMenu = New ContextMenu
-
             cboallowtype.ContextMenu = New ContextMenu
-
             '48
             categallowID = EXECQUER("SELECT RowID FROM category WHERE OrganizationID=" & orgztnID & " AND CategoryName='" & "Allowance Type" & "' LIMIT 1;")
 
             If Val(categallowID) = 0 Then
                 categallowID = INSUPD_category(, "Allowance Type")
             End If
-
-            'enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categallowID & "' AND OrganizationID=" & orgztnID & ";", _
-            '               allowance_type) 'cboallowtype
 
             enlistTheLists("SELECT CONCAT(COALESCE(p.PartNo,''),'@',p.RowID)" &
                            " FROM product p" &
@@ -11834,17 +11679,12 @@ Public Class EmployeeForm
                         End If
 
                     End If
-
                 Next
-
             End If
-
         End If
 
         tabIndx = 13 'TabControl1.SelectedIndex
-
         dgvEmp_SelectionChanged(sender, e)
-
     End Sub
 
     Private Sub tsbtnNewAllowance_Click(sender As Object, e As EventArgs) Handles tsbtnNewAllowance.Click
@@ -11858,9 +11698,7 @@ Public Class EmployeeForm
                 Exit For
             End If
         Next
-
         dgvempallowance_SelectionChanged(sender, e)
-
     End Sub
 
     Dim dontUpdateAllow As SByte = 0
@@ -11930,10 +11768,8 @@ Public Class EmployeeForm
                                                      .Cells("eall_Amount").Value,
                                                      .Cells("eall_ProdID").Value)
                         End If
-
                     End If
                 End If
-
             End With
         Next
 
@@ -11946,7 +11782,6 @@ Public Class EmployeeForm
             dgvEmp_SelectionChanged(sender, e)
 
         End If
-
         'AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
     End Sub
@@ -11986,7 +11821,6 @@ Public Class EmployeeForm
         INSUPD_employeeallowance = EXEC_INSUPD_PROCEDURE(params,
                                                           "INSUPD_employeeallowance",
                                                           "eallow_RowID")
-
     End Function
 
     Private Sub ToolStripButton10_Click(sender As Object, e As EventArgs) Handles ToolStripButton10.Click
@@ -11999,19 +11833,8 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub cboallowfreq_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboallowfreq.KeyPress, cboallowtype.KeyPress
-        'Dim e_asc As String = Asc(e.KeyChar)
 
         e.Handled = True
-
-        'If e_asc = 8 Then
-        '    cboallowfreq.SelectedIndex = -1
-        '    e.Handled = 0
-        'Else
-        '    e.Handled = 1
-        'End If
-    End Sub
-
-    Private Sub cboallowfreq_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboallowfreq.SelectedIndexChanged ', cboallowfreq.SelectedIndexChanged
 
     End Sub
 
@@ -12047,22 +11870,7 @@ Public Class EmployeeForm
 
                 lblreqstartdate.Visible = 0
                 lblreqenddate.Visible = 0
-
         End Select
-
-    End Sub
-
-    Private Sub cboallowfreq_GotFocus(sender As Object, e As EventArgs) Handles cboallowfreq.GotFocus
-
-        If dgvempallowance.RowCount = 1 Then
-            'dgvempallowance.Item("eall_Frequency", 0).Selected = 1
-        Else
-            'If statictabindxempallow <> cboallowtype.TabIndex Then
-            '    statictabindxempallow = cboallowtype.TabIndex
-            dgvempallowance.Item("eall_Frequency", dgvallowRowindx).Selected = 1
-            'End If
-        End If
-
     End Sub
 
     Private Sub cboallowfreq_Leave(sender As Object, e As EventArgs) Handles cboallowfreq.Leave ', cboallowfreq.SelectedIndexChanged
@@ -12119,12 +11927,8 @@ Public Class EmployeeForm
     Private Sub cboallowtype_GotFocus(sender As Object, e As EventArgs) Handles cboallowtype.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
-            'dgvempallowance.Item("eall_type", 0).Selected = 1
         Else
-            'If statictabindxempallow <> cboallowtype.TabIndex Then
-            '    statictabindxempallow = cboallowtype.TabIndex
             dgvempallowance.Item("eall_type", dgvallowRowindx).Selected = 1
-            'End If
         End If
 
     End Sub
@@ -12144,18 +11948,15 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempallowance.Rows.Add()
                 dgvallowRowindx = dgvempallowance.RowCount - 2
-                'dgvempallowance.Item("eall_type", dgvallowRowindx).Selected = True
             End If
         Else
             If dgvempallowance.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempallowance.Rows.Add()
                     dgvallowRowindx = dgvempallowance.RowCount - 2
-                    'dgvempallowance.Item("eall_type", dgvallowRowindx).Selected = True
                 End If
             Else
                 dgvallowRowindx = dgvempallowance.CurrentRow.Index
-                'dgvempallowance.Item("eall_type", dgvallowRowindx).Selected = True
             End If
         End If
 
@@ -12236,8 +12037,6 @@ Public Class EmployeeForm
                 m = 0
             End If
 
-            'ElseIf e_asc = 70 Or e_asc = 102 Then 'f
-            '    dtpallowstartdate.Value = CDate("Feb-" & dd & "-" & yyyy)
         ElseIf e_asc = 83 Or e_asc = 115 Then 's
             dtpallowstartdate.Value = CDate("Sep-" & dd & "-" & yyyy)
         ElseIf e_asc = 78 Or e_asc = 110 Then 'n
@@ -12309,8 +12108,6 @@ Public Class EmployeeForm
                 m = 0
             End If
 
-            'ElseIf e_asc = 70 Or e_asc = 102 Then 'f
-            '    dtpallowenddate.Value = CDate("Feb-" & dd & "-" & yyyy)
         ElseIf e_asc = 83 Or e_asc = 115 Then 's
             dtpallowenddate.Value = CDate("Sep-" & dd & "-" & yyyy)
         ElseIf e_asc = 78 Or e_asc = 110 Then 'n
@@ -12324,16 +12121,12 @@ Public Class EmployeeForm
         End If
     End Sub
 
-    Private Sub Label167_Click(sender As Object, e As EventArgs) Handles Label167.Click
-
-    End Sub
-
     Dim dtpallowstartdateval As Object = Nothing
 
     Dim empallow_daterangehasrecord
 
     Private Sub dtpallowstartdate_ValueChanged(sender As Object, e As EventArgs) 'Handles dtpallowstartdate.ValueChanged
-        'dtpallowstartdateval = dtpallowstartdate.Value
+
         empallow_daterangehasrecord = 0
         Dim date_range = DateDiff(DateInterval.Day, CDate(dtpallowstartdate.Value), CDate(dtpallowenddate.Value))
 
@@ -12351,36 +12144,31 @@ Public Class EmployeeForm
     Private Sub dtpallowstartdate_GotFocus(sender As Object, e As EventArgs) Handles dtpallowstartdate.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
-            'dgvempallowance.Item("eall_Start", 0).Selected = 1
-        Else
-            'If statictabindxempallow <> cboallowtype.TabIndex Then
-            '    statictabindxempallow = cboallowtype.TabIndex
-            dgvempallowance.Item("eall_Start", dgvallowRowindx).Selected = 1
-            'End If
-        End If
 
+        Else
+
+            dgvempallowance.Item("eall_Start", dgvallowRowindx).Selected = 1
+
+        End If
     End Sub
 
     Private Sub dtpallowstartdate_Leave(sender As Object, e As EventArgs) Handles dtpallowstartdate.Leave
-        'dtpallowstartdateval.ToString
+
         Dim thegetval = If(dtpallowstartdateval = Nothing, Trim(dtpallowstartdate.Value), Trim(dtpallowstartdateval))
 
         If dgvempallowance.RowCount = 1 Then
             If thegetval <> "" Then
                 dgvempallowance.Rows.Add()
                 dgvallowRowindx = dgvempallowance.RowCount - 2
-                'dgvempallowance.Item("eall_Start", dgvallowRowindx).Selected = True
             End If
         Else
             If dgvempallowance.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempallowance.Rows.Add()
                     dgvallowRowindx = dgvempallowance.RowCount - 2
-                    'dgvempallowance.Item("eall_Start", dgvallowRowindx).Selected = True
                 End If
             Else
                 dgvallowRowindx = dgvempallowance.CurrentRow.Index
-                'dgvempallowance.Item("eall_Start", dgvallowRowindx).Selected = True
             End If
         End If
 
@@ -12402,20 +12190,11 @@ Public Class EmployeeForm
             Else
             End If
         End With
-
-        'SELECT EXISTS(SELECT RowID FROM employeeallowance WHERE EmployeeID=6 AND ProductID=314 AND AllowanceFrequency='One time' AND EffectiveStartDate='2015-02-15') 'One time';
-        'empallow_daterangehasrecord = 1
-        '
-    End Sub
-
-    Private Sub Label168_Click(sender As Object, e As EventArgs) Handles Label168.Click
-
     End Sub
 
     Dim dtpallowenddateval As Object = Nothing
 
     Private Sub dtpallowenddate_ValueChanged(sender As Object, e As EventArgs) 'Handles dtpallowenddate.ValueChanged
-        'dtpallowenddateval = dtpallowenddate.Value
         empallow_daterangehasrecord = 0
         Dim date_range = DateDiff(DateInterval.Day, CDate(dtpallowstartdate.Value), CDate(dtpallowenddate.Value))
 
@@ -12433,14 +12212,10 @@ Public Class EmployeeForm
     Private Sub dtpallowenddate_GotFocus(sender As Object, e As EventArgs) Handles dtpallowenddate.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
-            'dgvempallowance.Item("eall_End", 0).Selected = 1
-        Else
-            'If statictabindxempallow <> cboallowtype.TabIndex Then
-            '    statictabindxempallow = cboallowtype.TabIndex
-            dgvempallowance.Item("eall_End", dgvallowRowindx).Selected = 1
-            'End If
-        End If
 
+        Else
+            dgvempallowance.Item("eall_End", dgvallowRowindx).Selected = 1
+        End If
     End Sub
 
     Private Sub dtpallowenddate_Leave(sender As Object, e As EventArgs) Handles dtpallowenddate.Leave
@@ -12451,18 +12226,15 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempallowance.Rows.Add()
                 dgvallowRowindx = dgvempallowance.RowCount - 2
-                'dgvempallowance.Item("eall_End", dgvallowRowindx).Selected = True
             End If
         Else
             If dgvempallowance.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempallowance.Rows.Add()
                     dgvallowRowindx = dgvempallowance.RowCount - 2
-                    'dgvempallowance.Item("eall_End", dgvallowRowindx).Selected = True
                 End If
             Else
                 dgvallowRowindx = dgvempallowance.CurrentRow.Index
-                'dgvempallowance.Item("eall_End", dgvallowRowindx).Selected = True
             End If
         End If
 
@@ -12484,19 +12256,11 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub txtallowamt_TextChanged(sender As Object, e As EventArgs) Handles txtallowamt.TextChanged
-
-    End Sub
-
     Private Sub txtallowamt_GotFocus(sender As Object, e As EventArgs) Handles txtallowamt.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
-            'dgvempallowance.Item("eall_Amount", 0).Selected = 1
         Else
-            'If statictabindxempallow <> cboallowtype.TabIndex Then
-            '    statictabindxempallow = cboallowtype.TabIndex
             dgvempallowance.Item("eall_Amount", dgvallowRowindx).Selected = 1
-            'End If
         End If
 
     End Sub
@@ -12509,18 +12273,15 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempallowance.Rows.Add()
                 dgvallowRowindx = dgvempallowance.RowCount - 2
-                'dgvempallowance.Item("eall_Amount", dgvallowRowindx).Selected = True
             End If
         Else
             If dgvempallowance.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempallowance.Rows.Add()
                     dgvallowRowindx = dgvempallowance.RowCount - 2
-                    'dgvempallowance.Item("eall_Amount", dgvallowRowindx).Selected = True
                 End If
             Else
                 dgvallowRowindx = dgvempallowance.CurrentRow.Index
-                'dgvempallowance.Item("eall_Amount", dgvallowRowindx).Selected = True
             End If
         End If
 
@@ -12575,20 +12336,10 @@ Public Class EmployeeForm
 
         End With
 
-        'With newProdAllowa
-        '    .Show()
-        '    .BringToFront()
-        '    .TextBox1.Focus()
-        'End With
-
     End Sub
 
     Private Sub dgvempallowance_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvempallowance.DataError
         e.ThrowException = False
-
-    End Sub
-
-    Private Sub dgvempallowance_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempallowance.CellContentClick
 
     End Sub
 
@@ -12608,8 +12359,6 @@ Public Class EmployeeForm
 
             If colname = "eall_Start" Or colname = "eall_End" Then
 
-                'ElseIf colname = "" Then
-                'ElseIf colname = "" Then
             ElseIf colname = "eall_Type" Then
 
                 For Each strval In allowance_type
@@ -12619,11 +12368,8 @@ Public Class EmployeeForm
                         Exit For
                     End If
                 Next
-
             End If
-
         End With
-
     End Sub
 
     Dim allowance_prevval(5) As Object
@@ -12715,36 +12461,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtallowamt_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtallowamt.KeyPress
-        'Dim e_KAsc As String = Asc(e.KeyChar)
-
-        'Static onedot As SByte = 0
-
-        'If (e_KAsc >= 48 And e_KAsc <= 57) Or e_KAsc = 8 Or e_KAsc = 46 Then
-
-        '    If e_KAsc = 46 Then
-        '        onedot += 1
-        '        If onedot >= 2 Then
-        '            If txtallowamt.Text.Contains(".") Then
-        '                e.Handled = True
-        '                onedot = 2
-        '            Else
-        '                e.Handled = False
-        '                onedot = 0
-        '            End If
-        '        Else
-        '            If txtallowamt.Text.Contains(".") Then
-        '                e.Handled = True
-        '            Else
-        '                e.Handled = False
-        '            End If
-        '        End If
-        '    Else
-        '        e.Handled = False
-        '    End If
-
-        'Else
-        '    e.Handled = True
-        'End If
 
         '*******************************CHANGES
 
@@ -12977,19 +12693,8 @@ Public Class EmployeeForm
             End If
         Next
 
-        'txtEmpOTtype.Text = ""
-        'txtstarttimeEmpOT.Text = ""
-        'txtstartdateEmpOT.Text = ""
-        'txtstartdateEmpOT.Text = ""
-        'txtendateEmpOT.Text = ""
-        'txtstartdateEmpOT.Text = ""
-        'txtcommentsEmpOT.Text = ""
-
-        'pbempEmpOT.Image = Nothing
-
         dgvEmpOT_SelectionChanged(sender, e)
 
-        'txtEmpOTtype.Focus()
         cboEmpOTtypes.Focus()
 
         AddHandler dgvempOT.SelectionChanged, AddressOf dgvEmpOT_SelectionChanged
@@ -13016,10 +12721,6 @@ Public Class EmployeeForm
 
         txtstarttimeEmpOT.Focus()
 
-        'pbEmpPicEmpOT.Focus()
-
-        'txtendtimeEmpOT.Focus()
-
         pbEmpPicEmpOT.Focus()
 
         txtreasonEmpOT.Focus()
@@ -13041,8 +12742,6 @@ Public Class EmployeeForm
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
         dgvempOT.EndEdit(True)
-
-        'dgvEmpOT.Item("Column2", dgvEmpOT.RowCount - 1).Selected = True
 
         If haserrinputEmpOT = 1 Then
             '"Invalid Date issued or Date of expiration"
@@ -13066,8 +12765,6 @@ Public Class EmployeeForm
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
             Exit Sub
-            'ElseIf dgvEmployi.RowCount = 0 Then
-            '    Exit Sub
         End If
 
         If dgvEmp.RowCount = 0 Then
@@ -13075,8 +12772,6 @@ Public Class EmployeeForm
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             Exit Sub
         End If
-
-        'Dim dbnow As Object = EXECQUER("SELECT DATE_FORMAT(NOW(),'%Y-%m-%d %T');")
 
         Dim param(13, 2) As Object
 
@@ -13200,7 +12895,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub dgvempOT_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvempOT.DataError
-
     End Sub
 
     Dim promptresultEOT As Object
@@ -13225,9 +12919,6 @@ Public Class EmployeeForm
 
                     _attafilename = dgvempOT.CurrentRow.Cells("eot_attafilename").Value
                     _attafileextensn = dgvempOT.CurrentRow.Cells("eot_attafileextensn").Value
-
-                    'Dim tmp_path = Path.GetTempPath & _
-                    '               dgvEmp.CurrentRow.Cells("Column1").Value & "_" & e.RowIndex & ".jpg"
 
                     If _attafileextensn <> "" Then
                         If Trim(_attafilename) = Nothing Then
@@ -13265,9 +12956,6 @@ Public Class EmployeeForm
                     '                 "|MS Excel Workbook (*.xlsx)|*.xlsx"
 
                     If dlImage.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                        'dlImage.FileName = dgvEmpOT.CurrentRow.Cells("eot_attafilename").Value & _
-                        '                   dgvEmpOT.CurrentRow.Cells("eot_attafileextensn").Value
 
                         Dim savefilepath As String =
                             Path.GetFullPath(dlImage.FileName) &
@@ -13328,7 +13016,6 @@ Public Class EmployeeForm
 
                     prev_eot_Status = CStr(.Cells("eot_Status").Value)
 
-                    'txtEmpOTtype.Text = .Cells("eot_Type").Value
                     cboEmpOTtypes.Text = prev_eot_Type '.Cells("eot_Type").Value
 
                     txtstarttimeEmpOT.Text = prev_eot_StartTime '.Cells("eot_StartTime").Value
@@ -13374,12 +13061,10 @@ Public Class EmployeeForm
 
         End If
 
-        'myEllipseButton(dgvEmpOT, "eot_Type", btnEmpOTtyp)
         AddHandler cboStatusEmpOT.SelectedIndexChanged, AddressOf cboStatusEmpOT_SelectedIndexChanged
     End Sub
 
     Private Sub dgvEmpOT_Scroll(sender As Object, e As ScrollEventArgs) Handles dgvempOT.Scroll
-        'myEllipseButton(dgvEmpOT, "eot_Type", btnEmpOTtyp)
     End Sub
 
     Sub clearEOT()
@@ -13398,16 +13083,7 @@ Public Class EmployeeForm
 
     Public listofEditRowEmpOT As New AutoCompleteStringCollection
 
-    'Dim editcolindx, editrowindx As Integer
-
     Private Sub dgvEmpOT_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvempOT.CellBeginEdit
-
-        'editcolindx = e.ColumnIndex
-        'editrowindx = e.RowIndex
-
-        'MsgBox("editcolindx=" & editcolindx & _
-        '       "editrowindx=" & editrowindx & _
-        '       "dgvEmpOT_CellBeginEdit")
     End Sub
 
     Dim colNameEmpOT As String
@@ -13418,24 +13094,17 @@ Public Class EmployeeForm
         dgvempOT.ShowCellErrors = True
 
         Static num As Integer = -1
-        'MsgBox("editcolindx=" & e.ColumnIndex & _
-        '       "editrowindx=" & e.RowIndex & _
-        '       "dgvEmpOT_CellEndEdit")
 
         colNameEmpOT = dgvempOT.Columns(e.ColumnIndex).Name
         rowIndxEmpOT = e.RowIndex
 
         If Val(dgvempOT.Item("eot_RowID", e.RowIndex).Value) <> 0 Then
-            'If num <> Val(dgvEmpOT.Item("Column1", e.RowIndex).Value) Then
-            '    num = Val(dgvEmpOT.Item("Column1", e.RowIndex).Value)
             listofEditRowEmpOT.Add(dgvempOT.Item("eot_RowID", e.RowIndex).Value)
-            'End If
         Else
 
         End If
 
         If (colNameEmpOT = "eot_StartDate" Or colNameEmpOT = "eot_EndDate") Then
-            'And dgvEmpOT.Item(colName, rowIndx).Value <> Nothing Then
             Dim dateobj As Object = Trim(dgvempOT.Item(colNameEmpOT, rowIndxEmpOT).Value)
             Try
                 dgvempOT.Item(colNameEmpOT, rowIndxEmpOT).Value = Format(CDate(dateobj), machineShortDateFormat)
@@ -13501,13 +13170,9 @@ Public Class EmployeeForm
             End Try
 
         ElseIf (colNameEmpOT = "eot_StartTime" Or colNameEmpOT = "eot_EndTime") Then
-            'And dgvEmpOT.Item(colName, rowIndx).Value <> Nothing Then
+
             Dim dateobj As Object = Trim(dgvempOT.Item(colNameEmpOT, rowIndxEmpOT).Value).Replace(" ", ":")
 
-            'Dim colonindx As Integer = dateobj.ToString.IndexOf(":")
-
-            'dateobj = dateobj.ToString.Remove(colonindx, 1)
-            'MsgBox(dateobj.ToString) '.IndexOf(":")
             Dim ampm As String = Nothing
 
             Try
@@ -13522,20 +13187,14 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                 End If
-                '    dateobj = getStrBetween(dateobj.ToString, "", " ")
-                '    Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm")
-                '    dgvEmpOT.Item(colName, rowIndx).Value = valtime.ToShortTimeString
-                'Else
+
                 Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm tt")
                 If ampm = Nothing Then
                     dgvempOT.Item(colNameEmpOT, rowIndxEmpOT).Value = valtime.ToShortTimeString
                 Else
                     dgvempOT.Item(colNameEmpOT, rowIndxEmpOT).Value = Trim(valtime.ToShortTimeString.Substring(0, 5)) & ampm
                 End If
-                'End If
-                'valtime = DateTime.Parse(e.FormattedValue)
-                'valtime = valtime.ToShortTimeString
-                'Format(valtime, "hh:mm tt")
+
                 haserrinputEmpOT = 0
 
                 dgvempOT.Item(colNameEmpOT, rowIndxEmpOT).ErrorText = Nothing
@@ -13546,10 +13205,8 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                     Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm")
-                    'valtime = DateTime.Parse(e.FormattedValue)
-                    'valtime = valtime.ToShortTimeString
+
                     dgvempOT.Item(colNameEmpOT, rowIndxEmpOT).Value = valtime.ToShortTimeString
-                    'Format(valtime, "hh:mm tt")
 
                     haserrinputEmpOT = 0
 
@@ -13645,7 +13302,6 @@ Public Class EmployeeForm
     Private Sub dgvEmpOT_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvempOT.EditingControlShowing
         currleavcolmnEOT = dgvempOT.Columns(dgvempOT.CurrentCell.ColumnIndex).Name
 
-        'If TypeOf e.Control Is TextBox Then
         If currleavcolmnEOT = "eot_Type" Then
             With DirectCast(e.Control, ComboBox)
                 .AutoCompleteCustomSource = EmpOTtype
@@ -13654,8 +13310,6 @@ Public Class EmployeeForm
 
             End With
         Else
-            '.AutoCompleteCustomSource = Nothing
-
         End If
 
     End Sub
@@ -13691,11 +13345,6 @@ Public Class EmployeeForm
                 With dgvempOT
                     '.ClearSelection()
                     .Focus()
-                    'If .RowCount = 1 Then
-                    '    .Rows.Add()
-                    '    .Item("Column9", 0).Value = convertFileToByte(browsefile.FileName)
-                    '    '.Item(.CurrentCell.ColumnIndex, 0).Selected = True
-                    'Else
 
                     thefilepathEOT = browsefile.FileName
                     atta_nameEOT = Path.GetFileNameWithoutExtension(thefilepathEOT)
@@ -13723,8 +13372,7 @@ Public Class EmployeeForm
                             listofEditRowEmpOT.Add(dgvempOT.Item("eot_RowID", .CurrentRow.Index).Value)
                         End If
                     End If
-                    'End If
-                    'pbempEmpOT.Image = Image.FromFile(browsefile.FileName)
+
                     .Focus()
                 End With
             Else
@@ -13774,22 +13422,18 @@ Public Class EmployeeForm
 
         colNameEmpOT = "eot_Type"
 
-        'Dim sendr_name As String = CType(sender, Object).Name
-
         Dim thegetval = Trim(cboEmpOTtypes.Text) 'If(sendr_name = "txtEmpOTtype", Trim(txtEmpOTtype.Text), Trim(cboEmpOTtypes.Text))
 
         If dgvempOT.RowCount = 1 Then
             If thegetval <> "" Then
                 dgvempOT.Rows.Add()
                 dgvEmpOTRowindx = dgvempOT.RowCount - 2
-                'dgvEmpOT.Item("eot_Type", dgvEmpOTRowindx).Selected = True
             End If
         Else
             If dgvempOT.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempOT.Rows.Add()
                     dgvEmpOTRowindx = dgvempOT.RowCount - 2
-                    'dgvEmpOT.Item("eot_Type", dgvEmpOTRowindx).Selected = True
                 End If
             Else
                 dgvEmpOTRowindx = dgvempOT.CurrentRow.Index
@@ -13813,7 +13457,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtstarttimeEmpOT_TextChanged(sender As Object, e As EventArgs) Handles txtstarttimeEmpOT.TextChanged
-
     End Sub
 
     Private Sub txtstarttimeEmpOT_GotFocus(sender As Object, e As EventArgs) Handles txtstarttimeEmpOT.GotFocus
@@ -13837,7 +13480,6 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempOT.Rows.Add()
                 dgvEmpOTRowindx = dgvempOT.RowCount - 2
-                'dgvEmpOT.Item("eot_StartTime", dgvEmpOTRowindx).Selected = True
             End If
         Else
 
@@ -13845,7 +13487,6 @@ Public Class EmployeeForm
                 If thegetval <> "" Then
                     dgvempOT.Rows.Add()
                     dgvEmpOTRowindx = dgvempOT.RowCount - 2
-                    'dgvEmpOT.Item("eot_StartTime", dgvEmpOTRowindx).Selected = True
                 End If
             Else
                 dgvEmpOTRowindx = dgvempOT.CurrentRow.Index
@@ -13869,10 +13510,7 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                 End If
-                '    dateobj = getStrBetween(dateobj.ToString, "", " ")
-                '    Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm")
-                '    dgvEmpOT.Item("eot_StartTime", rowIndx).Value = valtime.ToShortTimeString
-                'Else
+
                 Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm tt")
 
                 If ampm = Nothing Then
@@ -13880,10 +13518,7 @@ Public Class EmployeeForm
                 Else
                     theretval = Trim(valtime.ToShortTimeString.Substring(0, 5)) & ampm
                 End If
-                'End If
-                'valtime = DateTime.Parse(e.FormattedValue)
-                'valtime = valtime.ToShortTimeString
-                'Format(valtime, "hh:mm tt")
+
                 haserrinputEmpOT = 0
 
                 dgvempOT.Item("eot_StartTime", dgvEmpOTRowindx).ErrorText = Nothing
@@ -13894,8 +13529,7 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                     Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm")
-                    'valtime = DateTime.Parse(e.FormattedValue)
-                    'valtime = valtime.ToShortTimeString
+
                     theretval = valtime.ToShortTimeString
                     'Format(valtime, "hh:mm tt")
 
@@ -13936,7 +13570,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtendtimeEmpOT_TextChanged(sender As Object, e As EventArgs) Handles txtendtimeEmpOT.TextChanged
-
     End Sub
 
     Private Sub txtendtimeEmpOT_GotFocus(sender As Object, e As EventArgs) Handles txtendtimeEmpOT.GotFocus
@@ -14010,10 +13643,7 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                 End If
-                '    dateobj = getStrBetween(dateobj.ToString, "", " ")
-                '    Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm")
-                '    dgvEmpOT.Item("eot_EndTime", rowIndx).Value = valtime.ToShortTimeString
-                'Else
+
                 Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm tt")
 
                 If ampm = Nothing Then
@@ -14021,9 +13651,6 @@ Public Class EmployeeForm
                 Else
                     theretval = Trim(valtime.ToShortTimeString.Substring(0, 5)) & ampm
                 End If
-                'End If
-                'valtime = DateTime.Parse(e.FormattedValue)
-                'valtime = valtime.ToShortTimeString
                 'Format(valtime, "hh:mm tt")
 
                 '**************************************************************
@@ -14039,108 +13666,11 @@ Public Class EmployeeForm
 
                     Dim starttimevalue = Format(CDate("2015-01-01 " & txtstarttimeEmpOT.Text), "hh:mm tt")
 
-                    'txtstarttimeEmpOT.Text = custom_date & " " & starttimevalue
-
                     Dim endtimevalue = Format(CDate("2015-01-01 " & theretval), "hh:mm tt")
-
-                    'txtendtimeEmpOT.Text = custom_date & " " & endtimevalue
 
                     Dim starttimeMilit = MilitTime(starttimevalue)
 
                     Dim endtimeMilit = MilitTime(endtimevalue)
-
-                    'Dim timediff As Double = 0.0
-
-                    'Dim plushoursnextday As Double = 0.0
-
-                    'If Format(CDate(custom_date & " " & starttimevalue), "tt") = "PM" _
-                    '    And Format(CDate(custom_date & " " & endtimevalue), "tt") = "AM" Then
-
-                    '    '    timediff = DateDiff(DateInterval.Hour, _
-                    '    '                        CDate(txtstarttimeEmpOT.Value), _
-                    '    '                        CDate(txtendtimeEmpOT.Value).AddHours(24))
-
-                    '    timediff = ValNoComma(EXECQUER("SELECT ((TIME_TO_SEC(TIMEDIFF(ADDTIME('" & endtimeMilit & "','24:00'),'" & starttimeMilit & "')) / 60) / 60);"))
-
-                    '    plushoursnextday = 24
-
-                    'Else
-
-                    '    '    timediff = DateDiff(DateInterval.Hour, _
-                    '    '                        CDate(txtstarttimeEmpOT.Value), _
-                    '    '                        CDate(txtendtimeEmpOT.Value))
-
-                    '    timediff = ValNoComma(EXECQUER("SELECT ((TIME_TO_SEC(TIMEDIFF('" & endtimeMilit & "','" & starttimeMilit & "')) / 60) / 60);"))
-
-                    'End If
-
-                    'If timediff > 1 Then
-
-                    '    If Format(CDate(custom_date & " " & starttimevalue), "tt") = "AM" Then
-
-                    '        starttimeMilit = getStrBetween(starttimeMilit.ToString, "", ":")
-
-                    '        starttimeMilit = ValNoComma(starttimeMilit) + 24
-
-                    '        Dim reversetimeformat = Format(CDate(custom_date & " " & starttimevalue), "hh:mm tt")
-
-                    '        reversetimeformat = MilitTime(reversetimeformat)
-
-                    '        reversetimeformat = StrReverse(reversetimeformat.ToString)
-
-                    '        starttimeMilit = starttimeMilit & ":" & StrReverse(getStrBetween(reversetimeformat, "", ":"))
-
-                    '    End If
-
-                    '    Dim gethour = getStrBetween(endtimeMilit.ToString, "", ":")
-
-                    '    If ValNoComma(gethour) + plushoursnextday >= 22 Then 'Unpaid 9PM - 10PM
-
-                    '        theretval = Format(CDate(custom_date & " " & starttimevalue).AddMinutes((timediff - 1) * 60), "hh:mm tt")
-
-                    '    ElseIf ValNoComma(gethour) + plushoursnextday >= 21 Then
-
-                    '        theretval = "9:00 PM" 'Format(CDate(custom_date & " " & endtimevalue), "hh:mm tt")
-
-                    '    End If
-
-                    '    If Format(starttimeMilit, "tt") = "PM" Then
-
-                    '        'Deduct another 1 hour for 2AM - 3AM
-                    '        'theretval
-                    '        Dim over3OClock = EXECQUER("SELECT TIME_FORMAT(IF(HOUR('" & endtimeMilit & "') = 24, TIME_FORMAT('" & endtimeMilit & "','00:%i'), '" & endtimeMilit & "'),'%H:%i') BETWEEN '02:00' AND '03:00';")
-
-                    '        If IsDBNull(over3OClock) Then : over3OClock = 0 : End If
-
-                    '        If over3OClock.ToString = "1" Then
-
-                    '            theretval = "12:00 AM" 'Format(CDate(custom_date & " " & starttimevalue).AddMinutes((timediff - 1) * 60), "hh:00 tt")
-
-                    '            'theretval = Format(CDate(custom_date & " " & starttimevalue).AddMinutes((timediff - 1) * 60), "hh:mm tt")
-
-                    '        Else
-                    '            over3OClock = EXECQUER("SELECT TIME_FORMAT('" & endtimeMilit & "','%p') = 'AM';")
-
-                    '            If IsDBNull(over3OClock) Then : over3OClock = 0 : End If
-
-                    '            If over3OClock.ToString = "1" Then
-
-                    '                over3OClock = EXECQUER("SELECT TIME_FORMAT(IF(HOUR('" & endtimeMilit & "') = 24, TIME_FORMAT('" & endtimeMilit & "','00:%i'), '" & endtimeMilit & "'),'%H:%i') >= '03:00';")
-
-                    '                If over3OClock.ToString = "1" Then
-                    '                    theretval = Format(CDate(custom_date & " " & starttimevalue).AddMinutes((timediff - 2) * 60), "hh:mm tt")
-
-                    '                End If
-
-                    '            End If
-
-                    '        End If
-
-                    '        Dim haha As Object = theretval
-
-                    '    End If
-
-                    'End If
 
                     txtendtimeEmpOT.Text = txtendtimeEmpOT.Text
 
@@ -14160,8 +13690,7 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                     Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm")
-                    'valtime = DateTime.Parse(e.FormattedValue)
-                    'valtime = valtime.ToShortTimeString
+
                     theretval = valtime.ToShortTimeString
                     'Format(valtime, "hh:mm tt")
 
@@ -14240,11 +13769,6 @@ Public Class EmployeeForm
 
     Private Sub txtstartdateEmpOT_GotFocus(sender As Object, e As EventArgs) Handles txtstartdateEmpOT.GotFocus
 
-        'If dgvempOT.RowCount = 1 Then
-        'Else
-        '    dgvempOT.Item("eot_StartDate", dgvEmpOTRowindx).Selected = True
-        'End If
-
     End Sub
 
     Private Sub dtpstartdateEmpOT_Leave(sender As Object, e As EventArgs) Handles dtpstartdateEmpOT.Leave
@@ -14303,28 +13827,6 @@ Public Class EmployeeForm
 
                     Dim invalidEmpOT = 0
 
-                    'If dgvEmp.RowCount <> 0 Then
-                    '    invalidEmpOT = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                    '                                " FROM employeetimeentry" & _
-                    '                                " WHERE DATE BETWEEN '" & _from & "'" & _
-                    '                                " AND '" & _to & "'" & _
-                    '                                " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
-                    '                                " AND OrganizationID=" & orgztnID & ");")
-
-                    '    If invalidEmpOT = 0 Then
-                    '        invalidEmpOT = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                    '                                " FROM employeeovertime" & _
-                    '                                " WHERE " & _
-                    '                                " ('" & _from & "' IN (OTStartDate,OTEndDate) OR '" & _to & "' IN (OTStartDate,OTEndDate))" & _
-                    '                                " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
-                    '                                " AND OrganizationID=" & orgztnID & ");")
-                    '    End If
-                    'End If
-
-                    'If invalidEmpOT = 1 Then
-                    '    haserrinputEmpOT = 1
-                    '    dgvempOT.Item("eot_StartDate", dgvEmpOTRowindx).ErrorText = "     The employee has already a record on this date"
-                    'End If
 
                 End If
             Catch ex As Exception
@@ -14349,15 +13851,12 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtstartdateEmpOT_Leave(sender As Object, e As EventArgs) Handles txtstartdateEmpOT.Leave
-
     End Sub
 
     Private Sub dtpendateEmpOT_ValueChanged(sender As Object, e As EventArgs) Handles dtpendateEmpOT.ValueChanged
-
     End Sub
 
     Private Sub txtendateEmpOT_TextChanged(sender As Object, e As EventArgs) Handles txtendateEmpOT.TextChanged
-
     End Sub
 
     Private Sub dtpendateEmpOT_GotFocus(sender As Object, e As EventArgs) Handles dtpendateEmpOT.GotFocus
@@ -14370,12 +13869,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtendateEmpOT_GotFocus(sender As Object, e As EventArgs) Handles txtendateEmpOT.GotFocus
-
-        'If dgvempOT.RowCount = 1 Then
-        'Else
-        '    dgvempOT.Item("eot_EndDate", dgvEmpOTRowindx).Selected = True
-        'End If
-
     End Sub
 
     Private Sub dtpendateEmpOT_Leave(sender As Object, e As EventArgs) Handles dtpendateEmpOT.Leave
@@ -14481,11 +13974,9 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtendateEmpOT_Leave(sender As Object, e As EventArgs) Handles txtendateEmpOT.Leave
-
     End Sub
 
     Private Sub txtreasonEmpOT_TextChanged(sender As Object, e As EventArgs) Handles txtreasonEmpOT.TextChanged
-
     End Sub
 
     Private Sub txtreasonEmpOT_GotFocus(sender As Object, e As EventArgs) Handles txtreasonEmpOT.GotFocus
@@ -14536,7 +14027,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtcommentsEmpOT_TextChanged(sender As Object, e As EventArgs) Handles txtcommentsEmpOT.TextChanged
-
     End Sub
 
     Private Sub txtcommentsEmpOT_GotFocus(sender As Object, e As EventArgs) Handles txtcommentsEmpOT.GotFocus
@@ -14587,7 +14077,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub Label186_Click(sender As Object, e As EventArgs) Handles Label186.Click
-
     End Sub
 
     Private Sub cboStatusEmpOT_SelectedIndexChanged(sender As Object, e As EventArgs) 'Handles cboStatusEmpOT.SelectedIndexChanged
@@ -14642,15 +14131,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub btnEmpOTtyp_Click(sender As Object, e As EventArgs) Handles btnEmpOTtyp.Click
-
-        'With leavtyp
-        '   .Show()
-        '   .BringToFront()
-        '
-        '   .lstbxleavtyp.Focus()
-
-        'End With
-
     End Sub
 
     Private Sub OTImport_Click(sender As Object, e As EventArgs) Handles OTImport.Click
@@ -14761,25 +14241,15 @@ Public Class EmployeeForm
                             tsbtnNewOBF.Visible = 1
                         End If
 
-                        'If drow("Deleting").ToString = "N" Then
-                        '    tsbtnDeletePosition.Visible = 0
-                        'Else
-                        '    tsbtnDeletePosition.Visible = 1
-                        'End If
-
                         If drow("Updates").ToString = "N" Then
                             dontUpdateOBF = 1
                         Else
                             dontUpdateOBF = 0
 
                         End If
-
                     End If
-
                 Next
-
             End If
-
         End If
 
         tabIndx = 15 'TabControl1.SelectedIndex
@@ -14817,15 +14287,6 @@ Public Class EmployeeForm
             End If
         Next
 
-        'txtEmpOTtype.Text = ""
-        'txtstarttimeEmpOT.Text = ""
-        'txtstartdateEmpOT.Text = ""
-        'txtstartdateEmpOT.Text = ""
-        'txtendateEmpOT.Text = ""
-        'txtstartdateEmpOT.Text = ""
-        'txtcommentsEmpOT.Text = ""
-
-        'pbempEmpOT.Image = Nothing
         dgvOBF_SelectionChanged(sender, e)
 
         AddHandler dgvOBF.SelectionChanged, AddressOf dgvOBF_SelectionChanged
@@ -14875,7 +14336,6 @@ Public Class EmployeeForm
         pbEmpPicOBF.Focus()
 
         dgvOBF.EndEdit(True)
-        'dgvOBF.Item("Column2", dgvOBF.RowCount - 1).Selected = True
 
         If dontUpdateOBF = 1 Then
             listofEditRowOBF.Clear()
@@ -14903,15 +14363,12 @@ Public Class EmployeeForm
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
             Exit Sub
-            'ElseIf dgvEmployi.RowCount = 0 Then
-            '    Exit Sub
         End If
 
         If dgvEmp.RowCount = 0 Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             Exit Sub
         End If
-        'Dim dbnow As Object = EXECQUER("SELECT DATE_FORMAT(NOW(),'%Y-%m-%d %T');")
 
         Dim param(13, 2) As Object
 
@@ -14935,9 +14392,6 @@ Public Class EmployeeForm
                 tsbtnNewOBF.Visible = True Then
 
                 If r.IsNewRow = False Then
-
-                    'If r.Cells("obf_StartTime").Value <> Nothing And r.Cells("obf_EndTime").Value <> Nothing _
-                    '    And r.Cells("obf_StartDate").Value <> Nothing Then 'And r.Cells("obf_EndDate").Value <> Nothing
 
                     param(0, 1) = DBNull.Value
                     param(1, 1) = orgztnID
@@ -14967,14 +14421,10 @@ Public Class EmployeeForm
                                                 r.Cells("obf_attafileextensn").Value,
                                                 r.Cells("obf_attafilename").Value)
 
-                    'End If
-
                 End If
             Else
 
                 If listofEditRowOBF.Contains(r.Cells("obf_RowID").Value) Then
-                    'If r.Cells("obf_StartTime").Value <> Nothing And r.Cells("obf_EndTime").Value <> Nothing _
-                    '    And r.Cells("obf_StartDate").Value <> Nothing And r.Cells("obf_EndDate").Value <> Nothing Then
 
                     param(0, 1) = r.Cells("obf_RowID").Value
                     param(1, 1) = orgztnID
@@ -14997,8 +14447,6 @@ Public Class EmployeeForm
                                                 "Official Business@" & r.Cells("obf_RowID").Value,
                                                 r.Cells("obf_attafileextensn").Value,
                                                 r.Cells("obf_attafilename").Value)
-
-                    'End If
 
                 End If
 
@@ -15048,9 +14496,6 @@ Public Class EmployeeForm
                     _attafilename = dgvOBF.CurrentRow.Cells("obf_attafilename").Value
                     _attafileextensn = dgvOBF.CurrentRow.Cells("obf_attafileextensn").Value
 
-                    'Dim tmp_path = Path.GetTempPath & _
-                    '               dgvEmp.CurrentRow.Cells("Column1").Value & "_" & e.RowIndex & ".jpg"
-
                     Dim tmp_path = Path.GetTempPath &
                                                 _attafilename & _attafileextensn
 
@@ -15072,7 +14517,7 @@ Public Class EmployeeForm
                     Else
                         MsgBox("Nothing to view", MsgBoxStyle.Information)
                     End If
-                Else 'If promptresultobf = Windows.Forms.DialogResult.Yes Then
+                Else
 
                     Dim dlImage As SaveFileDialog = New SaveFileDialog
                     dlImage.RestoreDirectory = True
@@ -15217,15 +14662,12 @@ Public Class EmployeeForm
     Public listofEditRowOBF As New AutoCompleteStringCollection
 
     Private Sub dgvOBF_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvOBF.CellEndEdit
-
     End Sub
 
     Dim dgvOBFRowindx As Integer
-
     Dim colNameOBF As String
 
     Private Sub cboOBFtypes_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboOBFtypes.SelectedIndexChanged
-
     End Sub
 
     Private Sub cboOBFtypes_GotFocus(sender As Object, e As EventArgs) Handles cboOBFtypes.GotFocus
@@ -15240,22 +14682,18 @@ Public Class EmployeeForm
 
         colNameOBF = "obf_Type"
 
-        'Dim sendr_name As String = CType(sender, Object).Name
-
         Dim thegetval = Trim(cboOBFtypes.Text) 'If(sendr_name = "txtOBFtype", Trim(txtOBFtype.Text), Trim(cboOBFtypes.Text))
 
         If dgvOBF.RowCount = 1 Then
             If thegetval <> "" Then
                 dgvOBF.Rows.Add()
                 dgvOBFRowindx = dgvOBF.RowCount - 2
-                'dgvOBF.Item("obf_Type", dgvOBFRowindx).Selected = True
             End If
         Else
             If dgvOBF.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvOBF.Rows.Add()
                     dgvOBFRowindx = dgvOBF.RowCount - 2
-                    'dgvOBF.Item("obf_Type", dgvOBFRowindx).Selected = True
                 End If
             Else
                 dgvOBFRowindx = dgvOBF.CurrentRow.Index
@@ -15328,7 +14766,6 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvOBF.Rows.Add()
                 dgvOBFRowindx = dgvOBF.RowCount - 2
-                'dgvOBF.Item("obf_StartTime", dgvOBFRowindx).Selected = True
             End If
         Else
 
@@ -15336,7 +14773,6 @@ Public Class EmployeeForm
                 If thegetval <> "" Then
                     dgvOBF.Rows.Add()
                     dgvOBFRowindx = dgvOBF.RowCount - 2
-                    'dgvOBF.Item("obf_StartTime", dgvOBFRowindx).Selected = True
                 End If
             Else
                 dgvOBFRowindx = dgvOBF.CurrentRow.Index
@@ -15360,10 +14796,7 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                 End If
-                '    dateobj = getStrBetween(dateobj.ToString, "", " ")
-                '    Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm")
-                '    dgvOBF.Item("obf_StartTime", rowIndx).Value = valtime.ToShortTimeString
-                'Else
+
                 Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm tt")
 
                 If ampm = Nothing Then
@@ -15371,9 +14804,7 @@ Public Class EmployeeForm
                 Else
                     theretval = Trim(valtime.ToShortTimeString.Substring(0, 5)) & ampm
                 End If
-                'End If
-                'valtime = DateTime.Parse(e.FormattedValue)
-                'valtime = valtime.ToShortTimeString
+
                 'Format(valtime, "hh:mm tt")
                 haserrinputOBF = 0
 
@@ -15385,8 +14816,7 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                     Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm")
-                    'valtime = DateTime.Parse(e.FormattedValue)
-                    'valtime = valtime.ToShortTimeString
+
                     theretval = valtime.ToShortTimeString
                     'Format(valtime, "hh:mm tt")
 
@@ -15427,7 +14857,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtendtimeOBF_TextChanged(sender As Object, e As EventArgs) Handles txtendtimeOBF.TextChanged
-
     End Sub
 
     Private Sub txtendtimeOBF_GotFocus(sender As Object, e As EventArgs) Handles txtendtimeOBF.GotFocus
@@ -15451,14 +14880,12 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvOBF.Rows.Add()
                 dgvOBFRowindx = dgvOBF.RowCount - 2
-                'dgvOBF.Item("obf_EndTime", dgvOBFRowindx).Selected = True
             End If
         Else
             If dgvOBF.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvOBF.Rows.Add()
                     dgvOBFRowindx = dgvOBF.RowCount - 2
-                    'dgvOBF.Item("obf_EndTime", dgvOBFRowindx).Selected = True
                 End If
             Else
                 dgvOBFRowindx = dgvOBF.CurrentRow.Index
@@ -15481,10 +14908,7 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                 End If
-                '    dateobj = getStrBetween(dateobj.ToString, "", " ")
-                '    Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm")
-                '    dgvOBF.Item("obf_EndTime", rowIndx).Value = valtime.ToShortTimeString
-                'Else
+
                 Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm tt")
 
                 If ampm = Nothing Then
@@ -15492,9 +14916,6 @@ Public Class EmployeeForm
                 Else
                     theretval = Trim(valtime.ToShortTimeString.Substring(0, 5)) & ampm
                 End If
-                'End If
-                'valtime = DateTime.Parse(e.FormattedValue)
-                'valtime = valtime.ToShortTimeString
                 'Format(valtime, "hh:mm tt")
                 haserrinputOBF = 0
 
@@ -15506,8 +14927,7 @@ Public Class EmployeeForm
                     dateobj = dateobj.ToString.Replace(" ", ":")
 
                     Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm")
-                    'valtime = DateTime.Parse(e.FormattedValue)
-                    'valtime = valtime.ToShortTimeString
+
                     theretval = valtime.ToShortTimeString
                     'Format(valtime, "hh:mm tt")
 
@@ -15566,13 +14986,10 @@ Public Class EmployeeForm
                 curr_ob_dgvrow.Cells("obf_EndDate").Value = date_value
 
             End If
-
         End Try
-
     End Sub
 
     Private Sub txtstartdateOBF_TextChanged(sender As Object, e As EventArgs) Handles txtstartdateOBF.TextChanged
-
     End Sub
 
     Private Sub dtpstartdateOBF_GotFocus(sender As Object, e As EventArgs) Handles dtpstartdateOBF.GotFocus
@@ -15585,12 +15002,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtstartdateOBF_GotFocus(sender As Object, e As EventArgs) Handles txtstartdateOBF.GotFocus
-
-        'If dgvOBF.RowCount = 1 Then
-        'Else
-        '    dgvOBF.Item("obf_StartDate", dgvOBFRowindx).Selected = True
-        'End If
-
     End Sub
 
     Private Sub dtpstartdateOBF_Leave(sender As Object, e As EventArgs) Handles dtpstartdateOBF.Leave
@@ -15605,14 +15016,12 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvOBF.Rows.Add()
                 dgvOBFRowindx = dgvOBF.RowCount - 2
-                'dgvOBF.Item("obf_StartDate", dgvOBFRowindx).Selected = True
             End If
         Else
             If dgvOBF.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvOBF.Rows.Add()
                     dgvOBFRowindx = dgvOBF.RowCount - 2
-                    'dgvOBF.Item("obf_StartDate", dgvOBFRowindx).Selected = True
                 End If
             Else
                 dgvOBFRowindx = dgvOBF.CurrentRow.Index
@@ -15649,29 +15058,6 @@ Public Class EmployeeForm
 
                     Dim invalidOBF = 0
 
-                    'If dgvEmp.RowCount <> 0 Then
-                    '    invalidOBF = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                    '                                " FROM employeetimeentry" & _
-                    '                                " WHERE DATE BETWEEN '" & _from & "'" & _
-                    '                                " AND '" & _to & "'" & _
-                    '                                " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
-                    '                                " AND OrganizationID=" & orgztnID & ");")
-
-                    '    If invalidOBF = 0 Then
-                    '        invalidOBF = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                    '                                " FROM employeeovertime" & _
-                    '                                " WHERE " & _
-                    '                                " ('" & _from & "' IN (OTStartDate,OTEndDate) OR '" & _to & "' IN (OTStartDate,OTEndDate))" & _
-                    '                                " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
-                    '                                " AND OrganizationID=" & orgztnID & ");")
-                    '    End If
-                    'End If
-
-                    'If invalidOBF = 1 Then
-                    '    haserrinputOBF = 1
-                    '    dgvOBF.Item("obf_StartDate", dgvOBFRowindx).ErrorText = "     The employee has already a record on this date"
-                    'End If
-
                 End If
             Catch ex As Exception
                 haserrinputOBF = 1
@@ -15695,15 +15081,12 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtstartdateOBF_Leave(sender As Object, e As EventArgs) Handles txtstartdateOBF.Leave
-
     End Sub
 
     Private Sub dtpendateOBF_ValueChanged(sender As Object, e As EventArgs) Handles dtpendateOBF.ValueChanged
-
     End Sub
 
     Private Sub txtendateOBF_TextChanged(sender As Object, e As EventArgs) Handles txtendateOBF.TextChanged
-
     End Sub
 
     Private Sub dtpendateOBF_GotFocus(sender As Object, e As EventArgs) Handles dtpendateOBF.GotFocus
@@ -15716,12 +15099,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtendateOBF_GotFocus(sender As Object, e As EventArgs) Handles txtendateOBF.GotFocus
-
-        'If dgvOBF.RowCount = 1 Then
-        'Else
-        '    dgvOBF.Item("obf_EndDate", dgvOBFRowindx).Selected = True
-        'End If
-
     End Sub
 
     Private Sub dtpendateOBF_Leave(sender As Object, e As EventArgs) Handles dtpendateOBF.Leave
@@ -15780,29 +15157,6 @@ Public Class EmployeeForm
 
                     Dim invalidOBF = 0
 
-                    'If dgvEmp.RowCount <> 0 Then
-                    '    invalidOBF = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                    '                                " FROM employeetimeentry" & _
-                    '                                " WHERE DATE BETWEEN '" & _from & "'" & _
-                    '                                " AND '" & _to & "'" & _
-                    '                                " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
-                    '                                " AND OrganizationID=" & orgztnID & ");")
-
-                    '    If invalidOBF = 0 Then
-                    '        invalidOBF = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                    '                                " FROM employeeovertime" & _
-                    '                                " WHERE " & _
-                    '                                " ('" & _from & "' IN (OTStartDate,OTEndDate) OR '" & _to & "' IN (OTStartDate,OTEndDate))" & _
-                    '                                " AND EmployeeID=" & dgvEmp.CurrentRow.Cells("RowID").Value & _
-                    '                                " AND OrganizationID=" & orgztnID & ");")
-                    '    End If
-                    'End If
-
-                    'If invalidOBF = 1 Then
-                    '    haserrinputOBF = 1
-                    '    dgvOBF.Item("obf_EndDate", dgvOBFRowindx).ErrorText = "     The employee has already a record on this date"
-                    'End If
-
                 End If
             Catch ex As Exception
                 haserrinputOBF = 1
@@ -15827,11 +15181,9 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtendateOBF_Leave(sender As Object, e As EventArgs) Handles txtendateOBF.Leave
-
     End Sub
 
     Private Sub txtreasonOBF_TextChanged(sender As Object, e As EventArgs) Handles txtreasonOBF.TextChanged
-
     End Sub
 
     Private Sub txtreasonOBF_GotFocus(sender As Object, e As EventArgs) Handles txtreasonOBF.GotFocus
@@ -15882,7 +15234,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtcommentsOBF_TextChanged(sender As Object, e As EventArgs) Handles txtcommentsOBF.TextChanged
-
     End Sub
 
     Private Sub txtcommentsOBF_GotFocus(sender As Object, e As EventArgs) Handles txtcommentsOBF.GotFocus
@@ -15927,13 +15278,10 @@ Public Class EmployeeForm
                     And dgvOBF.Item("obf_RowID", dgvOBFRowindx).Value <> Nothing Then
                 listofEditRowOBF.Add(dgvOBF.Item("obf_RowID", dgvOBFRowindx).Value)
             End If
-
         End If
-
     End Sub
 
     Private Sub Label228_Click(sender As Object, e As EventArgs) Handles Label228.Click
-
     End Sub
 
     Private Sub cboOBFstatus_SelectedIndexChanged(sender As Object, e As EventArgs) 'Handles cboOBFstatus.SelectedIndexChanged
@@ -15959,14 +15307,12 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvOBF.Rows.Add()
                 dgvOBFRowindx = dgvOBF.RowCount - 2
-                'dgvOBF.Item("obf_EndDate", dgvOBFRowindx).Selected = True
             End If
         Else
             If dgvOBF.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvOBF.Rows.Add()
                     dgvOBFRowindx = dgvOBF.RowCount - 2
-                    'dgvOBF.Item("obf_EndDate", dgvOBFRowindx).Selected = True
                 End If
             Else
                 dgvOBFRowindx = dgvOBF.CurrentRow.Index
@@ -16017,11 +15363,6 @@ Public Class EmployeeForm
                 With dgvOBF
                     '.ClearSelection()
                     .Focus()
-                    'If .RowCount = 1 Then
-                    '    .Rows.Add()
-                    '    .Item("Column9", 0).Value = convertFileToByte(browsefile.FileName)
-                    '    '.Item(.CurrentCell.ColumnIndex, 0).Selected = True
-                    'Else
 
                     thefilepathobf = browsefile.FileName
                     atta_nameobf = Path.GetFileNameWithoutExtension(thefilepathobf)
@@ -16049,8 +15390,7 @@ Public Class EmployeeForm
                             listofEditRowOBF.Add(dgvOBF.Item("obf_RowID", .CurrentRow.Index).Value)
                         End If
                     End If
-                    'End If
-                    'pbempEmpOT.Image = Image.FromFile(browsefile.FileName)
+
                     .Focus()
                 End With
             Else
@@ -16463,7 +15803,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub dgvempbon_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempbon.CellContentClick
-
     End Sub
 
     Dim bon_prevval(4) As Object
@@ -16490,7 +15829,6 @@ Public Class EmployeeForm
                     End If
 
                     If Trim(.Cells("bon_End").Value) <> Nothing Then
-                        'dtpbonenddate.Value = Format(CDate(.Cells("bon_End").Value), machineShortDateFormat)
                         dtpbonenddate.Value = Format(CDate(.Cells("bon_Start").Value), machineShortDateFormat)
                     Else
                         dtpbonenddate.Value = Format(CDate(dbnow), machineShortDateFormat)
@@ -16545,11 +15883,7 @@ Public Class EmployeeForm
 
             If colname = "bon_Start" Or colname = "bon_End" Then
 
-                'ElseIf colname = "" Then
-                'ElseIf colname = "" Then
             ElseIf colname = "bon_Type" Then
-
-                'dgvempbon.EndEdit(1)
 
                 For Each strval In bonus_type
                     Dim strcompare = Trim(dgvempbon.Item("bon_Type", e.RowIndex).Value.ToString)
@@ -16576,7 +15910,6 @@ Public Class EmployeeForm
     Private Sub cbobontype_GotFocus(sender As Object, e As EventArgs) Handles cbobontype.GotFocus
 
         If dgvempbon.RowCount = 1 Then
-            'dgvempallowance.Item("eall_Start", 0).Selected = 1
         Else
             dgvempbon.Item("bon_Type", dgvbonRowindx).Selected = 1
         End If
@@ -16598,18 +15931,15 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempbon.Rows.Add()
                 dgvbonRowindx = dgvempbon.RowCount - 2
-                'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
             End If
         Else
             If dgvempbon.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempbon.Rows.Add()
                     dgvbonRowindx = dgvempbon.RowCount - 2
-                    'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
                 End If
             Else
                 dgvbonRowindx = dgvempbon.CurrentRow.Index
-                'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
             End If
         End If
 
@@ -16650,11 +15980,7 @@ Public Class EmployeeForm
                 lblbonstartdate.Visible = 0
                 lblbonenddate.Visible = 0
             Case 0 'Daily
-                'dtpbonstartdate.Enabled = 1
-                'dtpbonenddate.Enabled = 1
 
-                'lblbonstartdate.Visible = 1
-                'lblbonenddate.Visible = 1
                 IsBonusOneTimeFreq = 1
                 dtpbonstartdate.Enabled = 1
                 dtpbonenddate.Enabled = 0
@@ -16662,7 +15988,7 @@ Public Class EmployeeForm
                 lblbonstartdate.Visible = 1
                 lblbonenddate.Visible = 0
             Case 1 'Monthly
-                'dtpbonstartdate.CustomFormat = "MMMM-yyyy"
+
                 dtpbonstartdate.Enabled = 1
                 dtpbonenddate.Enabled = 1
 
@@ -16688,7 +16014,6 @@ Public Class EmployeeForm
     Private Sub cbobonfreq_GotFocus(sender As Object, e As EventArgs) Handles cbobonfreq.GotFocus
 
         If dgvempbon.RowCount = 1 Then
-            'dgvempallowance.Item("eall_Start", 0).Selected = 1
         Else
             dgvempbon.Item("bon_Frequency", dgvbonRowindx).Selected = 1
         End If
@@ -16703,18 +16028,15 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempbon.Rows.Add()
                 dgvbonRowindx = dgvempbon.RowCount - 2
-                'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
             End If
         Else
             If dgvempbon.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempbon.Rows.Add()
                     dgvbonRowindx = dgvempbon.RowCount - 2
-                    'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
                 End If
             Else
                 dgvbonRowindx = dgvempbon.CurrentRow.Index
-                'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
             End If
         End If
 
@@ -16794,8 +16116,6 @@ Public Class EmployeeForm
                 m = 0
             End If
 
-            'ElseIf e_asc = 70 Or e_asc = 102 Then 'f
-            '    dtpbonstartdate.Value = CDate("Feb-" & dd & "-" & yyyy)
         ElseIf e_asc = 83 Or e_asc = 115 Then 's
             dtpbonstartdate.Value = CDate("Sep-" & dd & "-" & yyyy)
         ElseIf e_asc = 78 Or e_asc = 110 Then 'n
@@ -16826,7 +16146,6 @@ Public Class EmployeeForm
     Private Sub dtpbonstartdate_GotFocus(sender As Object, e As EventArgs) Handles dtpbonstartdate.GotFocus
 
         If dgvempbon.RowCount = 1 Then
-            'dgvempallowance.Item("eall_Start", 0).Selected = 1
         Else
             dgvempbon.Item("bon_Start", dgvbonRowindx).Selected = 1
         End If
@@ -16841,18 +16160,15 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempbon.Rows.Add()
                 dgvbonRowindx = dgvempbon.RowCount - 2
-                'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
             End If
         Else
             If dgvempbon.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempbon.Rows.Add()
                     dgvbonRowindx = dgvempbon.RowCount - 2
-                    'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
                 End If
             Else
                 dgvbonRowindx = dgvempbon.CurrentRow.Index
-                'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
             End If
         End If
 
@@ -16932,8 +16248,6 @@ Public Class EmployeeForm
                 m = 0
             End If
 
-            'ElseIf e_asc = 70 Or e_asc = 102 Then 'f
-            '    dtpbonenddate.Value = CDate("Feb-" & dd & "-" & yyyy)
         ElseIf e_asc = 83 Or e_asc = 115 Then 's
             dtpbonenddate.Value = CDate("Sep-" & dd & "-" & yyyy)
         ElseIf e_asc = 78 Or e_asc = 110 Then 'n
@@ -16964,7 +16278,6 @@ Public Class EmployeeForm
     Private Sub dtpbonenddate_GotFocus(sender As Object, e As EventArgs) Handles dtpbonenddate.GotFocus
 
         If dgvempbon.RowCount = 1 Then
-            'dgvempallowance.Item("eall_Start", 0).Selected = 1
         Else
             dgvempbon.Item("bon_End", dgvbonRowindx).Selected = 1
         End If
@@ -16979,18 +16292,15 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempbon.Rows.Add()
                 dgvbonRowindx = dgvempbon.RowCount - 2
-                'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
             End If
         Else
             If dgvempbon.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempbon.Rows.Add()
                     dgvbonRowindx = dgvempbon.RowCount - 2
-                    'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
                 End If
             Else
                 dgvbonRowindx = dgvempbon.CurrentRow.Index
-                'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
             End If
         End If
 
@@ -17013,13 +16323,11 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtbonamt_TextChanged(sender As Object, e As EventArgs) Handles txtbonamt.TextChanged
-
     End Sub
 
     Private Sub txtbonamt_GotFocus(sender As Object, e As EventArgs) Handles txtbonamt.GotFocus
 
         If dgvempbon.RowCount = 1 Then
-            'dgvempallowance.Item("eall_Start", 0).Selected = 1
         Else
             dgvempbon.Item("bon_Amount", dgvbonRowindx).Selected = 1
         End If
@@ -17034,18 +16342,15 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempbon.Rows.Add()
                 dgvbonRowindx = dgvempbon.RowCount - 2
-                'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
             End If
         Else
             If dgvempbon.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempbon.Rows.Add()
                     dgvbonRowindx = dgvempbon.RowCount - 2
-                    'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
                 End If
             Else
                 dgvbonRowindx = dgvempbon.CurrentRow.Index
-                'dgvempbon.Item("eall_type", dgvbonRowindx).Selected = True
             End If
         End If
 
@@ -17117,7 +16422,6 @@ Public Class EmployeeForm
 #Region "Attachment"
 
     Private Sub tbpAttachment_Click(sender As Object, e As EventArgs) Handles tbpAttachment.Click
-
     End Sub
 
     Dim computertemppath = Nothing
@@ -17145,11 +16449,6 @@ Public Class EmployeeForm
             For Each strval In cboattatype.Items
                 eatt_Type.Items.Add(strval)
             Next
-
-            'Dim dgvcc As DataGridViewComboBoxCell
-            'dgvcc = dgvempatta.Columns("eatt_Type")
-            'dgvcc.Items.Add("comboitem1")
-            'dgvcc.Items.Add("comboitem2")
 
             AddHandler dgvempatta.SelectionChanged, AddressOf dgvempatta_SelectionChanged
 
@@ -17180,12 +16479,6 @@ Public Class EmployeeForm
                             tsbtnNewAtta.Visible = 1
                         End If
 
-                        'If drow("Deleting").ToString = "N" Then
-                        '    tsbtnDeletePosition.Visible = 0
-                        'Else
-                        '    tsbtnDeletePosition.Visible = 1
-                        'End If
-
                         If drow("Updates").ToString = "N" Then
                             dontUpdateAtta = 1
                         Else
@@ -17207,11 +16500,9 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub cboattatype_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboattatype.SelectedIndexChanged
-
     End Sub
 
     Private Sub cboattatype_Leave(sender As Object, e As EventArgs) Handles cboattatype.Leave
-
     End Sub
 
     Private Sub dgvempatta_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempatta.CellEndEdit
@@ -17237,7 +16528,6 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub dgvempatta_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvempatta.DataError
-        'e.ThrowException = 0
     End Sub
 
     Private Sub dgvempatta_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempatta.CellContentClick
@@ -17277,11 +16567,8 @@ Public Class EmployeeForm
                     MsgBox("Nothing to view", MsgBoxStyle.Information)
 
                 End If
-
             End If
-
         End If
-
     End Sub
 
     Private Sub dgvempatta_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvempatta.SelectionChanged
@@ -17300,13 +16587,9 @@ Public Class EmployeeForm
                         Dim eattachment_type = .Cells("eatt_Type").Value
 
                     End If
-
                 End If
-
             End With
-
         End If
-
     End Sub
 
     Sub VIEW_employeeattachments(ByVal EmpID As Object)
@@ -17457,8 +16740,6 @@ Public Class EmployeeForm
                         End If
 
                     End If
-                    'End If
-                    'pbempEmpOT.Image = Image.FromFile(browsefile.FileName)
                     .Focus()
                 End With
             Else
@@ -17579,7 +16860,6 @@ Public Class EmployeeForm
                                         "Please supply it's attachment type.",
                                         "An attachment has no Type", cboattatype, 0, -69)
 
-                            'Exit For
                             Exit Sub
                         Else
                             .Cells("eatt_RowID").Value = INSUPD_employeeattachment(,
@@ -17635,32 +16915,6 @@ Public Class EmployeeForm
             Case 0
                 tbpempchklist.Text = "CHECKLIST"
             Case 1
-                'If listofEditDepen.Count <> 0 Then
-
-                '    Dim prompt = MsgBox("Do you want to save any changes made in Employee Dependent ?", MsgBoxStyle.YesNo)
-
-                '    If prompt = MsgBoxResult.Yes Then
-                '        'tabctrlemp.SelectedIndex = tbpIndex
-
-                '        btnsavr_Click(tsbtnSaveDepen, New EventArgs)
-
-                '        'Exit Sub
-                '    End If
-
-                'ElseIf tsbtnNewEmp.Enabled = False Then
-
-                '    Dim prompt = MsgBox("Do you want to save any changes made in Personal Profile ?", MsgBoxStyle.YesNo)
-
-                '    If prompt = MsgBoxResult.Yes Then
-                '        'tabctrlemp.SelectedIndex = tbpIndex
-
-                '        SaveEmployee(tsbtnSaveEmp, New EventArgs)
-
-                '        'Exit Sub
-                '    End If
-
-                'End If
-
                 tbpEmployee.Text = "PERSON"
             Case 2
                 tbpSalary.Text = "SALARY"
@@ -17758,149 +17012,106 @@ Public Class EmployeeForm
 
     Private Sub ToolStripButton17_Click(sender As Object, e As EventArgs) Handles ToolStripButton17.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDLeave)
-
         showAuditTrail.BringToFront()
 
     End Sub
 
     Private Sub ToolStripButton20_Click(sender As Object, e As EventArgs)
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDMed)
-
         showAuditTrail.BringToFront()
 
     End Sub
 
     Private Sub btnAudittrail_Click(sender As Object, e As EventArgs) Handles btnAudittrail.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDDiscip)
-
         showAuditTrail.BringToFront()
 
     End Sub
 
     Private Sub tsAudittrail_Click(sender As Object, e As EventArgs) Handles tsAudittrail.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDEduc)
-
         showAuditTrail.BringToFront()
 
     End Sub
 
     Private Sub ToolStripButton21_Click(sender As Object, e As EventArgs) Handles ToolStripButton21.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDPrevEmp)
-
         showAuditTrail.BringToFront()
 
     End Sub
 
     Private Sub ToolStripButton19_Click(sender As Object, e As EventArgs) Handles ToolStripButton19.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDPromot)
-
         showAuditTrail.BringToFront()
 
     End Sub
 
     Private Sub ToolStripButton25_Click(sender As Object, e As EventArgs) Handles ToolStripButton25.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDLoan)
-
         showAuditTrail.BringToFront()
 
     End Sub
 
     Private Sub ToolStripButton33_Click(sender As Object, e As EventArgs) Handles ToolStripButton33.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDHisto)
-
         showAuditTrail.BringToFront()
-
     End Sub
 
     Private Sub ToolStripButton26_Click(sender As Object, e As EventArgs) Handles ToolStripButton26.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDAllow)
-
         showAuditTrail.BringToFront()
-
     End Sub
 
     Private Sub ToolStripButton27_Click(sender As Object, e As EventArgs) Handles ToolStripButton27.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDEmpOT)
-
         showAuditTrail.BringToFront()
-
     End Sub
 
     Private Sub ToolStripButton28_Click(sender As Object, e As EventArgs) Handles ToolStripButton28.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDOBF)
-
         showAuditTrail.BringToFront()
-
     End Sub
 
     Private Sub ToolStripButton29_Click(sender As Object, e As EventArgs) Handles ToolStripButton29.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDBon)
-
         showAuditTrail.BringToFront()
-
     End Sub
 
     Private Sub ToolStripButton34_Click(sender As Object, e As EventArgs) Handles ToolStripButton34.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_IDAttach)
-
         showAuditTrail.BringToFront()
-
     End Sub
 
     Private Sub dgvempawar_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempawar.CellContentClick
-
     End Sub
-
-    'Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
-
-    '    Return MyBase.ProcessCmdKey(msg, keyData)
-
-    'End Function
 
     Private Sub dgvempawar_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvempawar.EditingControlShowing
         e.Control.ContextMenu = New ContextMenu
-
     End Sub
 
     Private Sub dgvempcert_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvempcert.EditingControlShowing
         e.Control.ContextMenu = New ContextMenu
-
     End Sub
 
     Private Sub dgvmedrec_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs)
         e.Control.ContextMenu = New ContextMenu
-
     End Sub
 
     Private Sub dgvempatta_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvempatta.EditingControlShowing
         e.Control.ContextMenu = New ContextMenu
-
     End Sub
 
     Dim filepath As String = Nothing
@@ -17976,20 +17187,6 @@ Public Class EmployeeForm
         If catchDT Is Nothing Then
         Else
 
-            'Dim datset As DataSet
-
-            'MsgBox(catchDT.Tables.Count)
-
-            'For Each dtbl As DataTable In catchDT.Tables
-            '    MsgBox(dtbl.TableName)
-            '    'MsgBox(dtbl.Rows.Count)
-
-            '    Dim tblname = dtbl.TableName
-            '    '"'Employee DependentsS'"
-            '    '"'Employee Salary$'"
-            '    'Employees$
-            'Next
-
             Dim tbltoUse As String = Nothing
 
             If sender_Name = "tsbtnImportEmployee" Then
@@ -18021,8 +17218,6 @@ Public Class EmployeeForm
                             Else
                                 emp_positName = positName
                                 emp_positID = DBNull.Value
-                                'emp_positID = _
-                                'INSUPD_position(, positName)
 
                             End If
 
@@ -18035,13 +17230,7 @@ Public Class EmployeeForm
                         For Each prow In payfreq_rowID
                             payfreqrow_id = prow("RowID")
                         Next
-                        'RID,UserRowID,OrganizID,Salutat,FName,MName,LName,Surname,EmpID
-                        ',TIN,SSS,HDMF,PhH,EmpStatus,EmailAdd,WorkNo,HomeNo,MobileNo,HAddress
-                        ',Nick,JTitle,Gend,EmpType,MaritStat,BDate,Start_Date,TerminatDate,PositID
-                        ',PayFreqID,NumDependent,UTOverride,OTOverride,NewEmpFlag,LeaveBal,SickBal
-                        ',MaternBal,LeaveAllow,SickAllow,MaternAllow,Imag,LeavePayPer,SickPayPer,MaternPayPer
-                        ',IsExemptAlphaList,Work_DaysPerYear,Day_Rest,ATM_No,OtherLeavePayPer,Bank_Name,Calc_Holiday
-                        ',Calc_SpecialHoliday,Calc_NightDiff,Calc_NightDiffOT,Calc_RestDay,Calc_RestDayOT
+
                         INSUPD_employee(DBNull.Value,
                                         z_User,
                                         orgztnID,
@@ -18093,21 +17282,6 @@ Public Class EmployeeForm
                                         drow(22),
                                         "1", "1", "1", "1", "1", "1",
                                         emp_positName)
-
-                        'drow(21),
-                        'drow(21),
-                        'drow(21),
-                        'DBNull.Value,
-                        'drow(22),
-                        'drow(22),
-                        'drow(22),
-                        '"0",
-                        '313,
-                        '"1",
-                        'drow(23),
-                        '0,
-                        'drow(24),
-                        '"1", "1", "1", "1", "1", "1")
 
                         Dim progressvalue = CInt((work_indx / emp_import_count) * 100)
 
@@ -18201,16 +17375,6 @@ Public Class EmployeeForm
 
                             emp_RowID = sheetEmpRowID
 
-                            'catchEmpRow = EXECQUER("SELECT CONCAT(e.RowID" &
-                            '                       ",',',e.MaritalStatus" &
-                            '                       ",',',IFNULL(e.PositionID,'')" &
-                            '                       ",',',PAYFREQUENCY_DIVISOR(e.EmployeeType))" &
-                            '                       " FROM employee e" &
-                            '                       " INNER JOIN payfrequency pf ON pf.RowID=e.PayFrequencyID" &
-                            '                       " WHERE e.EmployeeID='" & emp_RowID & "'" &
-                            '                       " AND e.OrganizationID=" & orgztnID &
-                            '                       " LIMIT 1;")
-
                             Dim dtrowrecord As New DataTable
 
                             dtrowrecord =
@@ -18281,17 +17445,6 @@ Public Class EmployeeForm
                                                 declared_Sal + (undeclared_Sal),
                                                 "1")
 
-                        'INSUPD_employeesalary(, _
-                        '                    dgvEmp.CurrentRow.Cells("RowID").Value, _
-                        '                    Val(Trim(txtBasicrateSal.Text)), _
-                        '                    Val(Trim(txtEmpDeclaSal.Text)), _
-                        '                    noofdepd, _
-                        '                    mStat, _
-                        '                    Val(dgvEmp.CurrentRow.Cells("Column29").Value), _
-                        '                    dptFromSal.Value, _
-                        '                    dtpToSal.Value, _
-                        '                    txtTrueSal.Text)
-
                         Dim progressvalue = CInt((work_indx / emp_import_count) * 100)
 
                         bgworkImporting.ReportProgress(progressvalue)
@@ -18331,7 +17484,6 @@ Public Class EmployeeForm
     Private Sub bgworkImporting_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgworkImporting.RunWorkerCompleted
 
         If e.Error IsNot Nothing Then
-            'MessageBox.Show("Error: " & e.Error.Message)
             MsgBox(getErrExcptn(e.Error, Me.Name))
         ElseIf e.Cancelled Then
             MessageBox.Show("Background work cancelled.")
@@ -18387,210 +17539,6 @@ Public Class EmployeeForm
         Return n_ReadSQLFunction.ReturnValue
 
     End Function
-
-    'Function INSUPD_employee(Optional RID = Nothing, _
-    '                         Optional Salutat = Nothing, _
-    '                         Optional FName = Nothing, _
-    '                         Optional MName = Nothing, _
-    '                         Optional LName = Nothing, _
-    '                         Optional Surname = Nothing, _
-    '                         Optional EmpID = Nothing, _
-    '                         Optional TIN = Nothing, _
-    '                         Optional SSS = Nothing, _
-    '                         Optional HDMF = Nothing, _
-    '                         Optional PhH = Nothing, _
-    '                         Optional EmpStatus = Nothing, _
-    '                         Optional EmailAdd = Nothing, _
-    '                         Optional WorkNo = Nothing, _
-    '                         Optional HomeNo = Nothing, _
-    '                         Optional MobileNo = Nothing, _
-    '                         Optional HAddress = Nothing, _
-    '                         Optional Nick = Nothing, _
-    '                         Optional JTitle = Nothing, _
-    '                         Optional Gend = Nothing, _
-    '                         Optional EmpType = Nothing, _
-    '                         Optional MaritStat = Nothing, _
-    '                         Optional BDate = Nothing, _
-    '                         Optional Start_Date = Nothing, _
-    '                         Optional TerminatDate = Nothing, _
-    '                         Optional PositID = Nothing, _
-    '                         Optional PayFreqID = Nothing, _
-    '                         Optional NumDependent = Nothing, _
-    '                         Optional UTOverride = Nothing, _
-    '                         Optional OTOverride = Nothing, _
-    '                         Optional NewEmpFlag = Nothing, _
-    '                         Optional LeaveBal = Nothing, _
-    '                         Optional SickBal = Nothing, _
-    '                         Optional MaternBal = Nothing, _
-    '                         Optional LeaveAllow = Nothing, _
-    '                         Optional SickAllow = Nothing, _
-    '                         Optional MaternAllow = Nothing, _
-    '                         Optional Imag = Nothing, _
-    '                         Optional LeavePayPer = Nothing, _
-    '                         Optional SickPayPer = Nothing, _
-    '                         Optional MaternPayPer = Nothing, _
-    '                         Optional ATM_No = Nothing, _
-    '                         Optional Bank_Name = Nothing) As Object
-
-    '    Dim params(47, 2) As Object
-
-    '    params(0, 0) = "RID"
-    '    params(1, 0) = "CreaBy"
-    '    params(2, 0) = "LUpdBy"
-    '    params(3, 0) = "OrganizID"
-    '    params(4, 0) = "Salutat"
-    '    params(5, 0) = "FName"
-    '    params(6, 0) = "MName"
-    '    params(7, 0) = "LName"
-    '    params(8, 0) = "Surname"
-    '    params(9, 0) = "EmpID"
-    '    params(10, 0) = "TIN"
-    '    params(11, 0) = "SSS"
-    '    params(12, 0) = "HDMF"
-    '    params(13, 0) = "PhH"
-    '    params(14, 0) = "EmpStatus"
-    '    params(15, 0) = "EmailAdd"
-    '    params(16, 0) = "WorkNo"
-    '    params(17, 0) = "HomeNo"
-    '    params(18, 0) = "MobileNo"
-    '    params(19, 0) = "HAddress"
-    '    params(20, 0) = "Nick"
-    '    params(21, 0) = "JTitle"
-    '    params(22, 0) = "Gend"
-    '    params(23, 0) = "EmpType"
-    '    params(24, 0) = "MaritStat"
-    '    params(25, 0) = "BDate"
-    '    params(26, 0) = "Start_Date"
-    '    params(27, 0) = "TerminatDate"
-    '    params(28, 0) = "PositID"
-    '    params(29, 0) = "PayFreqID"
-    '    params(30, 0) = "NumDependent"
-    '    params(31, 0) = "UTOverride"
-    '    params(32, 0) = "OTOverride"
-    '    params(33, 0) = "NewEmpFlag"
-    '    params(34, 0) = "LeaveBal"
-    '    params(35, 0) = "SickBal"
-    '    params(36, 0) = "MaternBal"
-    '    params(37, 0) = "LeaveAllow"
-    '    params(38, 0) = "SickAllow"
-    '    params(39, 0) = "MaternAllow"
-    '    params(40, 0) = "Imag"
-    '    params(41, 0) = "LeavePayPer"
-    '    params(42, 0) = "SickPayPer"
-    '    params(43, 0) = "MaternPayPer"
-    '    params(44, 0) = "IsExemptAlphaList"
-    '    params(45, 0) = "Work_DaysPerYear"
-
-    '    params(46, 0) = "Day_Rest"
-    '    params(47, 0) = "ATM_No"
-
-    '    params(0, 1) = If(RID = Nothing, DBNull.Value, RID)
-    '    params(1, 1) = z_User
-    '    params(2, 1) = z_User
-    '    params(3, 1) = orgztnID
-    '    params(4, 1) = Trim(Salutat)
-    '    params(5, 1) = If(IsDBNull(FName), "", Trim(FName))
-    '    params(6, 1) = If(IsDBNull(MName), "", Trim(MName))
-    '    params(7, 1) = If(IsDBNull(LName), "", Trim(LName))
-    '    params(8, 1) = If(IsDBNull(Surname), "", Trim(Surname))
-    '    params(9, 1) = If(IsDBNull(EmpID), "", Trim(EmpID))
-    '    params(10, 1) = If(IsDBNull(TIN), "   -   -   -", Trim(TIN))
-    '    params(11, 1) = If(IsDBNull(SSS), "  -       -", Trim(SSS))
-    '    params(12, 1) = If(IsDBNull(HDMF), "    -    -", Trim(HDMF))
-    '    params(13, 1) = If(IsDBNull(PhH), "    -    -", Trim(PhH))
-    '    params(14, 1) = If(IsDBNull(EmpStatus), "", Trim(EmpStatus))
-    '    params(15, 1) = If(IsDBNull(EmailAdd), "", Trim(EmailAdd))
-    '    params(16, 1) = If(IsDBNull(WorkNo), "", Trim(WorkNo))
-    '    params(17, 1) = If(IsDBNull(HomeNo), "", Trim(HomeNo))
-    '    params(18, 1) = If(IsDBNull(MobileNo), "", Trim(MobileNo))
-    '    params(19, 1) = If(IsDBNull(HAddress), "", Trim(HAddress))
-    '    params(20, 1) = If(IsDBNull(Nick), "", Trim(Nick))
-    '    params(21, 1) = If(IsDBNull(JTitle), "", Trim(JTitle))
-    '    params(22, 1) = If(IsDBNull(Gend), "M", Trim(Gend))
-    '    params(23, 1) = If(IsDBNull(EmpType), "Fixed", Trim(EmpType))
-    '    params(24, 1) = If(IsDBNull(MaritStat), "Single", Trim(MaritStat))
-
-    '    Try
-    '        params(25, 1) = If(BDate = Nothing, DBNull.Value, Format(CDate(BDate), "yyyy-MM-dd"))
-
-    '    Catch ex As Exception
-    '        params(25, 1) = DBNull.Value
-
-    '    End Try
-
-    '    Try
-
-    '        params(26, 1) = If(IsDBNull(Start_Date), CDate("1000-01-01"), _
-    '                           Format(CDate(CObj(Start_Date.ToString.Replace("""", ""))), "yyyy-MM-dd"))
-
-    '    Catch ex As Exception
-
-    '        If IsDBNull(Start_Date) Then
-
-    '            params(26, 1) = CDate("1000-01-01")
-
-    '        Else
-
-    '            Dim strdate = Nothing
-
-    '            If Start_Date.ToString.Contains("-") Then
-    '                strdate = Split(Start_Date, "-")
-    '                params(26, 1) = strdate(2) & "-" & strdate(1) & "-" & strdate(0)
-    '            ElseIf Start_Date.ToString.Contains("/") Then
-    '                strdate = Split(Start_Date, "/")
-    '                params(26, 1) = strdate(2) & "-" & strdate(1) & "-" & strdate(0)
-    '            Else
-    '                params(26, 1) = DBNull.Value
-    '            End If
-
-    '        End If
-
-    '    End Try
-
-    '    params(27, 1) = If(TerminatDate = Nothing, DBNull.Value, TerminatDate)
-    '    params(28, 1) = If(PositID = Nothing, DBNull.Value, PositID)
-
-    '    If TypeOf PayFreqID Is String Then
-    '        Dim pay_freqID = EXECQUER("SELECT RowID FROM payfrequency WHERE PayFrequencyType='" & PayFreqID & "';")
-
-    '        params(29, 1) = If(pay_freqID = Nothing, DBNull.Value, pay_freqID)
-
-    '    ElseIf TypeOf PayFreqID Is Integer Then
-    '        params(29, 1) = If(PayFreqID = Nothing, DBNull.Value, PayFreqID)
-
-    '    Else
-    '        params(29, 1) = 1
-
-    '    End If
-
-    '    params(30, 1) = NumDependent
-    '    params(31, 1) = If(IsDBNull(UTOverride), "0", If(IsNothing(UTOverride), "0", UTOverride))
-    '    params(32, 1) = If(IsDBNull(OTOverride), "0", If(IsNothing(OTOverride), "0", OTOverride))
-    '    params(33, 1) = NewEmpFlag
-    '    params(34, 1) = LeaveBal
-    '    params(35, 1) = SickBal
-    '    params(36, 1) = MaternBal
-    '    params(37, 1) = If(IsDBNull(LeaveAllow), 0, LeaveAllow)
-    '    params(38, 1) = If(IsDBNull(SickAllow), 0, SickAllow)
-    '    params(39, 1) = If(IsDBNull(MaternAllow), 0, MaternAllow)
-    '    params(40, 1) = If(Imag IsNot Nothing, Imag, DBNull.Value)
-    '    params(41, 1) = If(IsDBNull(LeavePayPer), 0, LeavePayPer)
-    '    params(42, 1) = If(IsDBNull(SickPayPer), 0, SickPayPer)
-    '    params(43, 1) = If(IsDBNull(MaternPayPer), 0, MaternPayPer)
-    '    params(44, 1) = "0"
-    '    params(45, 1) = 313
-
-    '    params(46, 1) = 1
-    '    params(47, 1) = ""
-
-    '    Dim ret_val = _
-    '    EXEC_INSUPD_PROCEDURE(params, _
-    '                          "INSUPD_employee_01", _
-    '                          "returnval")
-
-    '    Return ret_val
-
-    'End Function
 
     Function INSUPD_employeedependents(Optional emp_RowID = Nothing,
                                        Optional emp_Salutation = Nothing,
@@ -18715,10 +17663,7 @@ Public Class EmployeeForm
             frm.disciplinaryAction = dgvRow.Cells(1).Value.ToString().Trim
             frm.infraction = dgvRow.Cells(0).Value.ToString().Trim
             frm.comments = dgvRow.Cells(5).Value.ToString().Trim
-            'Dim rptdoc = New Tax_Monthly_Report
-            'rptdoc.SetDataSource()
 
-            'frm.crysrepvwr.ReportSource = rptdoc
             frm.Show()
         Else : MsgBox("Choose a disciplinary action first")
         End If
@@ -18774,13 +17719,11 @@ Public Class EmployeeForm
 
     Private Sub txtWorkHoursPerWeek_KeyPress(sender As Object, e As KeyPressEventArgs) Handles _
                                                                                                 txtWorkDaysPerYear.KeyPress
-
         e.Handled = TrapNumKey(Asc(e.KeyChar))
 
     End Sub
 
     Private Sub txtWorkHoursPerWeek_TextChanged(sender As Object, e As EventArgs)
-
     End Sub
 
     Private Sub tsbtnDeletLeave_Click(sender As Object, e As EventArgs) Handles tsbtnDeletLeave.Click
@@ -18888,24 +17831,12 @@ Public Class EmployeeForm
 
         End If
 
-        'SELECT `INSUPD_listofval`('BDO', 'BDO', 'Bank Names', 'BDO', 'Yes', 'BDO', '3', '1')
-
     End Sub
 
     Private Sub cbobank_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbobank.SelectedIndexChanged
-
     End Sub
 
     Private Sub rdbCash_CheckedChanged(sender As Object, e As EventArgs) Handles rdbCash.CheckedChanged
-
-        'Static once As SByte = 0
-
-        'If once = 1 Then
-
-        '    rdbDirectDepo.Checked = False
-
-        'End If
-
     End Sub
 
     Private Sub lnklblAddBank_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblAddBank.LinkClicked
@@ -19121,9 +18052,6 @@ Public Class EmployeeForm
 
             Dim curr_row = dgvempallowance.CurrentRow
 
-            'If curr_row.IsNewRow Then
-
-            'Else
             If curr_row IsNot Nothing Then
 
                 dgvempallowance.Tag = curr_row.Cells("eall_RowID").Value
@@ -19151,8 +18079,6 @@ Public Class EmployeeForm
 
     Private Sub MaskedTextBox2_TextChanged(sender As Object, e As EventArgs) Handles MaskedTextBox2.TextChanged
         Try
-            'MaskedTextBox2.Text = CDate(MaskedTextBox2.Text).ToShortDateString
-            'MaskedTextBox2.Text = Format(CDate(MaskedTextBox2.Text), MaskedTextBox2.TextMaskFormat)
             MaskedTextBox2.Tag = MYSQLDateFormat(CDate(MaskedTextBox2.Text))
         Catch ex As Exception
             MaskedTextBox2.Tag = String.Empty
@@ -19178,8 +18104,6 @@ Public Class EmployeeForm
 
     Private Sub MaskedTextBox1_TextChanged(sender As Object, e As EventArgs) Handles MaskedTextBox1.TextChanged
         Try
-            'MaskedTextBox1.Text = CDate(MaskedTextBox1.Text).ToShortDateString
-            'MaskedTextBox1.Text = Format(CDate(MaskedTextBox1.Text), MaskedTextBox1.TextMaskFormat)
             MaskedTextBox1.Tag = MYSQLDateFormat(CDate(MaskedTextBox1.Text))
         Catch ex As Exception
             MaskedTextBox1.Tag = String.Empty
@@ -19202,8 +18126,6 @@ Public Class EmployeeForm
             And tsbtnNewLoan.Enabled Then
             chkboxChargeToBonus.Checked = Convert.ToInt16(CBool(dgvLoanList.CurrentRow.Cells("LoanHasBonus").Value))
         End If
-
-        'If dgvLoanList.RowCount > 0 Then
 
         Dim bool_result As Boolean = False
 
@@ -19274,15 +18196,9 @@ Public Class EmployeeForm
             End If
 
         End With
-
-        'chkboxChargeToBonus.Checked = (chkboxChargeToBonus.Checked And bool_result)
-
-        'End If
-
     End Sub
 
     Private Sub cmbStatus_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbStatus.SelectedIndexChanged
-
     End Sub
 
     Private Sub cmbStatus_TextChanged(sender As Object, e As EventArgs) Handles cmbStatus.TextChanged
