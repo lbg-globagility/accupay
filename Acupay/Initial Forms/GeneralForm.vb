@@ -2,6 +2,8 @@
 
     Public listGeneralForm As New List(Of String)
 
+    Dim sys_ownr As New SystemOwner
+
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
         reloadViewPrivilege()
@@ -400,4 +402,17 @@
             Exit For
         Next
     End Sub
+
+    Protected Overrides Sub OnLoad(e As EventArgs)
+
+        Dim ownr() As String =
+            Split(AgencyToolStripMenuItem.AccessibleDescription, ";")
+
+        AgencyToolStripMenuItem.Visible =
+            ownr.Contains(sys_ownr.CurrentSystemOwner)
+
+        MyBase.OnLoad(e)
+
+    End Sub
+
 End Class
