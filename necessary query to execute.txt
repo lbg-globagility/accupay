@@ -1,0 +1,8 @@
+
+# UPDATE employee e SET e.CalcHoliday = (e.CalcHoliday = 'Y'), e.CalcSpecialHoliday = (e.CalcSpecialHoliday = 'Y'), e.CalcNightDiff = (e.CalcNightDiff = 'Y'), e.CalcNightDiffOT = (e.CalcNightDiffOT = 'Y'), e.CalcRestDay = (e.CalcRestDay = 'Y'), e.CalcRestDayOT = (e.CalcRestDayOT = 'Y'), e.LastUpd = IFNULL(ADDDATE(e.LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP()), e.LastUpdBy = IFNULL(e.LastUpdBy, e.CreatedBy) WHERE (e.CalcHoliday IN ('Y', 'N') OR e.CalcSpecialHoliday IN ('Y', 'N') OR e.CalcNightDiff IN ('Y', 'N') OR e.CalcNightDiffOT IN ('Y', 'N') OR e.CalcRestDay IN ('Y', 'N') OR e.CalcRestDayOT IN ('Y', 'N'));
+
+# UPDATE position_view SET AllowedToAccess = 'Y', LastUpd=IFNULL(ADDDATE(LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP()), LastUpdBy=IFNULL(LastUpdBy, CreatedBy) WHERE PositionID=25;
+
+# UPDATE payperiod pp SET pp.LastUpd=IFNULL(ADDDATE(pp.LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP()), pp.LastUpdBy=IFNULL(pp.LastUpdBy, pp.CreatedBy) WHERE pp.TotalGrossSalary=1;
+
+# UPDATE payperiod pp SET pp.LastUpd=IFNULL(ADDDATE(pp.LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP()), pp.LastUpdBy=IFNULL(pp.LastUpdBy, pp.CreatedBy) WHERE pp.TotalGrossSalary=4;
