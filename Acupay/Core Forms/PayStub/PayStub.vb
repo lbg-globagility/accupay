@@ -5299,6 +5299,28 @@ Friend Class PrintAllPaySlipOfficialFormat
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
             objText.Text = orgNam.ToUpper
 
+        ElseIf SystemOwner.Cinema2000 = current_system_owner Then
+
+            Dim params =
+                New Object() {orgztnID, n_PayPeriodRowID}
+
+            Dim str_query As String = String.Concat(
+                "CALL `RPT_payslip`(?og_rowid",
+                "                   , (SELECT PayFromDate FROM payperiod WHERE RowID=?pp_rowid)",
+                "                   , (SELECT PayToDate FROM payperiod WHERE RowID=?pp_rowid));")
+
+            Dim _sql As New SQL(str_query,
+                                params)
+
+            catchdt = _sql.GetFoundRows.Tables(0)
+
+            rptdoc = New TwoEmpIn1PaySlip
+
+            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
+
+            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgName")
+            objText.Text = orgNam.ToUpper
+
         End If
 
         rptdoc.SetDataSource(catchdt)
