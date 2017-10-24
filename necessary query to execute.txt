@@ -14,3 +14,29 @@
 # ALTER TABLE `payperiod` ADD COLUMN `WeekOridnalValue` INT(11) NULL DEFAULT '0' AFTER `OrdinalValue`;
 
 # ALTER TABLE `payperiod` ADD COLUMN `IsLastFridayOfMonthFallsHere` CHAR(1) NULL DEFAULT '0' AFTER `MinWageValue`;
+
+/*
+# INSERT INTO `position_view` (`RowID`, `PositionID`, `ViewID`, `Creates`, `OrganizationID`, `Updates`, `Deleting`, `ReadOnly`, `AllowedToAccess`, `Created`, `CreatedBy`, `LastUpdBy`)
+
+SELECT
+pv.RowID
+,pos.RowID `PositionID`
+,v.RowID `ViewID`
+,(@is_create := IFNULL(pv.Creates, 'N')) `Creates`
+,v.OrganizationID
+,(@is_upd := IFNULL(pv.Updates, 'N')) `Updates`
+,(@is_del := IFNULL(pv.Deleting, 'N')) `Deleting`
+,(@is_read_only := IFNULL(pv.ReadOnly, 'Y')) `ReadOnly`
+,IF((@is_read_only = 'Y'
+    OR @is_create = 'Y'
+	 OR @is_upd = 'Y'
+	 OR @is_del = 'Y') = TRUE, 'Y', 'N') `AllowedToAccess`
+,CURRENT_TIMESTAMP() `Created`
+,(@creator := IFNULL(pv.CreatedBy, pos.CreatedBy)) `CreatedBy`
+,@creator `LastUpdBy`
+FROM `position` pos
+INNER JOIN `view` v ON v.OrganizationID=pos.OrganizationID
+LEFT JOIN position_view pv ON pv.OrganizationID=v.OrganizationID AND pv.PositionID=pos.OrganizationID AND pv.ViewID=v.RowID
+
+# ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP(), LastUpdBy=@creator;
+*/
