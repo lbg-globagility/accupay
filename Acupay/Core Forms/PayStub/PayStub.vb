@@ -244,6 +244,8 @@ Public Class PayStub
 
     Dim indxStartBatch As Integer = 0
 
+    Private sys_ownr As New SystemOwner
+
     Property VeryFirstPayPeriodIDOfThisYear As Object
         Get
             Return n_VeryFirstPayPeriodIDOfThisYear
@@ -267,6 +269,9 @@ Public Class PayStub
             dgvcol.Width = mincolwidth
             dgvcol.SortMode = DataGridViewColumnSortMode.NotSortable
         Next
+
+        setProperInterfaceBaseOnCurrentSystemOwner()
+
         MyBase.OnLoad(e)
 
     End Sub
@@ -5188,6 +5193,36 @@ Public Class PayStub
                                   If(IsDBNull(drow("LastUpd")), "", drow("LastUpd")),
                                   If(IsDBNull(drow("LastUpdBy")), "", drow("LastUpdBy")))
         Next
+
+    End Sub
+
+    Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
+
+        Static _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+
+        If _bool Then
+
+            Dim str_empty As String = String.Empty
+
+            TabPage1.Text = str_empty
+
+            TabPage4.Text = str_empty
+
+            AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
+
+        Else
+
+        End If
+
+    End Sub
+
+    Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
+
+        Static _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+
+        e.Cancel = _bool
 
     End Sub
 

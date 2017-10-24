@@ -2343,4 +2343,15 @@ Public Class EmpTimeDetail
 
     End Sub
 
+    Protected Overrides Sub OnLoad(e As EventArgs)
+
+        Static _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner <> SystemOwner.Cinema2000)
+
+        tsbtnExportReportTimeLogs.Visible = _bool
+
+        MyBase.OnLoad(e)
+
+    End Sub
+
 End Class

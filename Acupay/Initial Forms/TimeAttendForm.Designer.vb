@@ -26,8 +26,8 @@ Partial Class TimeAttendForm
         Me.TimeEntToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimeEntryLogsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimeEntryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PanelTimeAttend = New System.Windows.Forms.Panel()
         Me.SummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PanelTimeAttend = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -59,6 +59,12 @@ Partial Class TimeAttendForm
         Me.TimeEntryToolStripMenuItem.Size = New System.Drawing.Size(76, 20)
         Me.TimeEntryToolStripMenuItem.Text = "Time entry"
         '
+        'SummaryToolStripMenuItem
+        '
+        Me.SummaryToolStripMenuItem.Name = "SummaryToolStripMenuItem"
+        Me.SummaryToolStripMenuItem.Size = New System.Drawing.Size(70, 20)
+        Me.SummaryToolStripMenuItem.Text = "Summary"
+        '
         'PanelTimeAttend
         '
         Me.PanelTimeAttend.Dock = System.Windows.Forms.DockStyle.Fill
@@ -66,12 +72,6 @@ Partial Class TimeAttendForm
         Me.PanelTimeAttend.Name = "PanelTimeAttend"
         Me.PanelTimeAttend.Size = New System.Drawing.Size(1006, 446)
         Me.PanelTimeAttend.TabIndex = 3
-        '
-        'SummaryToolStripMenuItem
-        '
-        Me.SummaryToolStripMenuItem.Name = "SummaryToolStripMenuItem"
-        Me.SummaryToolStripMenuItem.Size = New System.Drawing.Size(70, 20)
-        Me.SummaryToolStripMenuItem.Text = "Summary"
         '
         'TimeAttendForm
         '

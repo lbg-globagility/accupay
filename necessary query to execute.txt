@@ -11,3 +11,6 @@
 
 # INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('Weekly', 'Weekly', 'Allowance Frequency', '', 'Yes', NULL, '2014-11-13 00:00:00', 2, '2014-11-13 00:00:00', 4, 2);
 
+# ALTER TABLE `payperiod` ADD COLUMN `WeekOridnalValue` INT(11) NULL DEFAULT '0' AFTER `OrdinalValue`;
+
+# ALTER TABLE `payperiod` ADD COLUMN `IsLastFridayOfMonthFallsHere` CHAR(1) NULL DEFAULT '0' AFTER `MinWageValue`;
