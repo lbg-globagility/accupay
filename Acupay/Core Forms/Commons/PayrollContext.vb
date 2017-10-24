@@ -4,6 +4,7 @@ Imports System.Data.Common
 Imports System.Linq
 
 Imports PayrollSys
+Imports AccuPay.Entity
 
 Public Class PayrollContext
     Inherits DbContext
@@ -29,5 +30,9 @@ Public Class PayrollContext
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
 
     Public Overridable Property TimeLogs As DbSet(Of TimeLog)
+
+    Public Overridable Property Products As DbSet(Of Product)
+
+    Public Overridable Property PaystubItem As DbSet(Of PaystubItem)
 
 End Class
