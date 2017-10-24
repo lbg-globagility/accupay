@@ -10,22 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for view hyundaipayrolldb.v_employeetimeentry_numbers
-DROP VIEW IF EXISTS `v_employeetimeentry_numbers`;
--- Creating temporary table to overcome VIEW dependency errors
-CREATE TABLE `v_employeetimeentry_numbers` (
-	`RowID` INT(11) NOT NULL,
-	`OrganizationID` INT(11) NOT NULL,
-	`Date` DATE NOT NULL,
-	`PayPeriodID` INT(11) NOT NULL,
-	`EmployeeID` INT(11) NULL,
-	`RegularHoursWorked` DECIMAL(10,2) NULL,
-	`DivisorToDailyRate` DECIMAL(10,2) NULL,
-	`AttendancePercentage` DECIMAL(18,6) NULL
-) ENGINE=MyISAM;
-
-
--- Dumping structure for view hyundaipayrolldb.v_employeetimeentry_numbers
+-- Dumping structure for view cinema2k.v_employeetimeentry_numbers
 DROP VIEW IF EXISTS `v_employeetimeentry_numbers`;
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `v_employeetimeentry_numbers`;

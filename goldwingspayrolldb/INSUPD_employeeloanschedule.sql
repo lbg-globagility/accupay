@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function goldwingspayrolldb_global_e_pc.INSUPD_employeeloanschedule
+-- Dumping structure for function INSUPD_employeeloanschedule
 DROP FUNCTION IF EXISTS `INSUPD_employeeloanschedule`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `INSUPD_employeeloanschedule`(`els_RowID` INT(11)

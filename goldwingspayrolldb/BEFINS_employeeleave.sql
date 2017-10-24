@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for trigger hyundaipayrolldb_dev.BEFINS_employeeleave
+-- Dumping structure for trigger BEFINS_employeeleave
 DROP TRIGGER IF EXISTS `BEFINS_employeeleave`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //

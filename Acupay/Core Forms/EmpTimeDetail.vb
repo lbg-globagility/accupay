@@ -16,6 +16,11 @@ Public Class EmpTimeDetail
 
     Dim view_ID As Object
 
+    Private sys_ownr As New SystemOwner
+
+    Private str_query_insupd_timeentrylogs As String =
+        "SELECT INSUPD_timeentrylogs(?og_id, ?emp_unique_key, ?timestamp_log, ?max_importid);"
+
     Private Sub Form8_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'dbconn()
 
@@ -184,6 +189,9 @@ Public Class EmpTimeDetail
     Private Sub tsbtnNew_Click(sender As Object, e As EventArgs) Handles tsbtnNew.Click
         Static employeeleaveRowID As Integer = -1
 
+        Static _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+
         Try
             Dim browsefile As OpenFileDialog = New OpenFileDialog()
             browsefile.Filter = "Text Documents (*.txt)|*.txt" & _
@@ -210,7 +218,16 @@ Public Class EmpTimeDetail
 
                 ToolStripProgressBar1.Visible = True
 
-                bgworkImport.RunWorkerAsync()
+                If _bool Then
+
+                    bgworkTypicalImport.RunWorkerAsync()
+
+                Else
+
+                    bgworkImport.RunWorkerAsync()
+
+                End If
+
             End If
         Catch ex As Exception
             MsgBox(ex.Message & " Error on file initialization")
@@ -1367,7 +1384,9 @@ Public Class EmpTimeDetail
 
     End Sub
 
-    Private Sub bgworkInsertImport_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgworkInsertImport.RunWorkerCompleted
+    Private Sub bgworkInsertImport_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+        Handles bgworkInsertImport.RunWorkerCompleted,
+                bgworkTypicalImport.RunWorkerCompleted
 
         Dim balloon_x = lblforballoon.Location.X
 
@@ -1388,7 +1407,7 @@ Public Class EmpTimeDetail
 
             InfoBalloon(, , lblforballoon, , , 1)
 
-            InfoBalloon(IO.Path.GetFileName(thefilepath) & " imported successfully.", _
+            InfoBalloon(IO.Path.GetFileName(thefilepath) & " imported successfully.",
                       "Importing file finished", lblforballoon, 0, -69)
 
         End If
@@ -2142,6 +2161,10 @@ Public Class EmpTimeDetail
 
     End Sub
 
+    Private Sub bgworkTypicalImport_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgworkTypicalImport.RunWorkerCompleted
+
+    End Sub
+
     Private Sub DeleteRowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeleteRowToolStripMenuItem.Click
 
         Dim result = MessageBox.Show("Are you sure you want to delete this item ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
@@ -2154,7 +2177,7 @@ Public Class EmpTimeDetail
 
                 .EndEdit(True)
 
-                EXECQUER("DELETE FROM employeetimeentrydetails WHERE RowID='" & .CurrentRow.Cells("Column1").Value & "';" & _
+                EXECQUER("DELETE FROM employeetimeentrydetails WHERE RowID='" & .CurrentRow.Cells("Column1").Value & "';" &
                           "ALTER TABLE employeetimeentrydetails AUTO_INCREMENT = 0;")
 
                 .Rows.Remove(.CurrentRow)
@@ -2238,6 +2261,86 @@ Public Class EmpTimeDetail
                 MsgBox("Time logs has been exported.", MsgBoxStyle.OkOnly, "Exported time logs")
             End Using
         End If
+    End Sub
+
+    Private Function ImportConventionalFormatTimeLogs() As Integer
+
+        Dim return_value As Integer = 0
+
+        Dim max_importid = New SQL(String.Concat("SELECT MAX(ImportID) FROM timeentrylogs WHERE OrganizationID=", orgztnID, ";")).GetFoundRow
+        max_importid = (Convert.ToDouble(max_importid) + 1)
+
+        Dim emp_unique_key, datetime_attended As Object
+
+        Dim parser = New TimeInTimeOutParser()
+        Dim timeEntries = parser.ParseConventionalTimeLogs(thefilepath)
+
+        Dim i = 1
+
+        Dim line_content_count As Integer = timeEntries.Count
+
+        Console.WriteLine(line_content_count)
+
+        For Each timeEntry In timeEntries
+
+            emp_unique_key =
+                timeEntry.EmployeUniqueKey
+
+            datetime_attended =
+                timeEntry.DateAndTime
+
+            Dim param_values =
+                New Object() {orgztnID,
+                              emp_unique_key,
+                              Convert.ToString(datetime_attended),
+                              max_importid}
+
+            Dim sql As New SQL(str_query_insupd_timeentrylogs,
+                               param_values)
+            sql.ExecuteQuery()
+
+            If sql.HasError Then
+
+                MsgBox(sql.ErrorMessage)
+
+            End If
+
+            return_value = ((i / line_content_count) * 100)
+
+            bgworkTypicalImport.
+                ReportProgress(return_value)
+
+            i += 1
+
+        Next
+
+        'Return return_value
+        Return max_importid
+
+    End Function
+
+    Private Sub bgworkTypicalImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkTypicalImport.DoWork
+
+        Dim import_id =
+            ImportConventionalFormatTimeLogs()
+
+        Dim param_values =
+            New Object() {orgztnID,
+                         z_User,
+                          DBNull.Value,
+                          DBNull.Value,
+                          import_id}
+
+        Dim sql As New SQL("CALL BULK_INSUPD_employeetimeentrydetails(?og_id, ?user_id, ?from_date, ?to_date, ?id_import);",
+                           param_values)
+        sql.ExecuteQuery()
+
+    End Sub
+
+    Private Sub bgworkTypicalImport_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkTypicalImport.ProgressChanged
+
+        ToolStripProgressBar1.Value = e.ProgressPercentage
+
     End Sub
 
 End Class

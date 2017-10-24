@@ -28,24 +28,10 @@ Partial Class EmpTimeDetail
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmpTimeDetail))
         Me.bgworkImport = New System.ComponentModel.BackgroundWorker()
         Me.dgvetentdet = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column5 = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.timeentstat = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.DeleteRowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.dgvetentd = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Createds = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.createdmilit = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -89,6 +75,10 @@ Partial Class EmpTimeDetail
         Me.txtSimple = New System.Windows.Forms.TextBox()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.bgworkInsertImport = New System.ComponentModel.BackgroundWorker()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.bgworkTypicalImport = New System.ComponentModel.BackgroundWorker()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -101,9 +91,22 @@ Partial Class EmpTimeDetail
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.bgworkInsertImport = New System.ComponentModel.BackgroundWorker()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Createds = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.createdmilit = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.timeentstat = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvetentdet, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip2.SuspendLayout()
         CType(Me.dgvetentd, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -150,51 +153,6 @@ Partial Class EmpTimeDetail
         Me.dgvetentdet.Size = New System.Drawing.Size(872, 385)
         Me.dgvetentdet.TabIndex = 6
         '
-        'Column1
-        '
-        Me.Column1.HeaderText = "RowID"
-        Me.Column1.Name = "Column1"
-        Me.Column1.Visible = False
-        '
-        'Column7
-        '
-        Me.Column7.HeaderText = "empRowID"
-        Me.Column7.Name = "Column7"
-        Me.Column7.Visible = False
-        '
-        'Column2
-        '
-        Me.Column2.HeaderText = "Employee ID"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        Me.Column2.Width = 115
-        '
-        'Column11
-        '
-        Me.Column11.HeaderText = "Employee name"
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        Me.Column11.Width = 165
-        '
-        'Column12
-        '
-        Me.Column12.HeaderText = "Employee shift"
-        Me.Column12.Name = "Column12"
-        Me.Column12.ReadOnly = True
-        Me.Column12.Width = 155
-        '
-        'Column3
-        '
-        Me.Column3.HeaderText = "Time In (I)"
-        Me.Column3.Name = "Column3"
-        Me.Column3.Width = 115
-        '
-        'Column4
-        '
-        Me.Column4.HeaderText = "Time Out (O)"
-        Me.Column4.Name = "Column4"
-        Me.Column4.Width = 115
-        '
         'Column5
         '
         '
@@ -232,18 +190,6 @@ Partial Class EmpTimeDetail
         Me.Column5.Name = "Column5"
         Me.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Column5.Width = 115
-        '
-        'Column6
-        '
-        Me.Column6.HeaderText = "Schedule type"
-        Me.Column6.Name = "Column6"
-        Me.Column6.Width = 115
-        '
-        'timeentstat
-        '
-        Me.timeentstat.HeaderText = "TimeEntryStatus"
-        Me.timeentstat.Name = "timeentstat"
-        Me.timeentstat.Visible = False
         '
         'ContextMenuStrip2
         '
@@ -286,41 +232,6 @@ Partial Class EmpTimeDetail
         Me.dgvetentd.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvetentd.Size = New System.Drawing.Size(350, 247)
         Me.dgvetentd.TabIndex = 7
-        '
-        'Createds
-        '
-        Me.Createds.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.Createds.HeaderText = "Date imported"
-        Me.Createds.Name = "Createds"
-        Me.Createds.ReadOnly = True
-        '
-        'createdmilit
-        '
-        Me.createdmilit.HeaderText = "createdmilit"
-        Me.createdmilit.Name = "createdmilit"
-        Me.createdmilit.ReadOnly = True
-        Me.createdmilit.Visible = False
-        '
-        'Column8
-        '
-        Me.Column8.HeaderText = "Created by"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        Me.Column8.Visible = False
-        '
-        'Column9
-        '
-        Me.Column9.HeaderText = "Last update"
-        Me.Column9.Name = "Column9"
-        Me.Column9.ReadOnly = True
-        Me.Column9.Visible = False
-        '
-        'Column10
-        '
-        Me.Column10.HeaderText = "Last upate by"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        Me.Column10.Visible = False
         '
         'TabControl1
         '
@@ -765,6 +676,35 @@ Partial Class EmpTimeDetail
         Me.ComboBox1.TabIndex = 59
         Me.ComboBox1.Visible = False
         '
+        'bgworkInsertImport
+        '
+        Me.bgworkInsertImport.WorkerReportsProgress = True
+        Me.bgworkInsertImport.WorkerSupportsCancellation = True
+        '
+        'Panel1
+        '
+        Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(165, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.Panel1.Controls.Add(Me.Button3)
+        Me.Panel1.Controls.Add(Me.Button4)
+        Me.Panel1.Controls.Add(Me.dgvetentd)
+        Me.Panel1.Controls.Add(Me.TabControl2)
+        Me.Panel1.Controls.Add(Me.TabControl1)
+        Me.Panel1.Controls.Add(Me.First)
+        Me.Panel1.Controls.Add(Me.Last)
+        Me.Panel1.Controls.Add(Me.Prev)
+        Me.Panel1.Controls.Add(Me.Nxt)
+        Me.Panel1.Controls.Add(Me.lblforballoon)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel1.Location = New System.Drawing.Point(0, 21)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(1272, 496)
+        Me.Panel1.TabIndex = 140
+        '
+        'bgworkTypicalImport
+        '
+        Me.bgworkTypicalImport.WorkerReportsProgress = True
+        Me.bgworkTypicalImport.WorkerSupportsCancellation = True
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
@@ -825,12 +765,14 @@ Partial Class EmpTimeDetail
         '
         Me.DataGridViewTextBoxColumn9.HeaderText = "Date"
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        Me.DataGridViewTextBoxColumn9.ReadOnly = True
         Me.DataGridViewTextBoxColumn9.Width = 150
         '
         'DataGridViewTextBoxColumn10
         '
         Me.DataGridViewTextBoxColumn10.HeaderText = "Schedule type"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Width = 150
         '
         'DataGridViewTextBoxColumn11
@@ -845,29 +787,109 @@ Partial Class EmpTimeDetail
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
         Me.DataGridViewTextBoxColumn12.Width = 115
         '
-        'bgworkInsertImport
+        'DataGridViewTextBoxColumn13
         '
-        Me.bgworkInsertImport.WorkerReportsProgress = True
-        Me.bgworkInsertImport.WorkerSupportsCancellation = True
+        Me.DataGridViewTextBoxColumn13.HeaderText = "Schedule type"
+        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        Me.DataGridViewTextBoxColumn13.Width = 115
         '
-        'Panel1
+        'DataGridViewTextBoxColumn14
         '
-        Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(165, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.Panel1.Controls.Add(Me.Button3)
-        Me.Panel1.Controls.Add(Me.Button4)
-        Me.Panel1.Controls.Add(Me.dgvetentd)
-        Me.Panel1.Controls.Add(Me.TabControl2)
-        Me.Panel1.Controls.Add(Me.TabControl1)
-        Me.Panel1.Controls.Add(Me.First)
-        Me.Panel1.Controls.Add(Me.Last)
-        Me.Panel1.Controls.Add(Me.Prev)
-        Me.Panel1.Controls.Add(Me.Nxt)
-        Me.Panel1.Controls.Add(Me.lblforballoon)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel1.Location = New System.Drawing.Point(0, 21)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1272, 496)
-        Me.Panel1.TabIndex = 140
+        Me.DataGridViewTextBoxColumn14.HeaderText = "TimeEntryStatus"
+        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        Me.DataGridViewTextBoxColumn14.Visible = False
+        '
+        'Createds
+        '
+        Me.Createds.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.Createds.HeaderText = "Date imported"
+        Me.Createds.Name = "Createds"
+        Me.Createds.ReadOnly = True
+        '
+        'createdmilit
+        '
+        Me.createdmilit.HeaderText = "createdmilit"
+        Me.createdmilit.Name = "createdmilit"
+        Me.createdmilit.ReadOnly = True
+        Me.createdmilit.Visible = False
+        '
+        'Column8
+        '
+        Me.Column8.HeaderText = "Created by"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        Me.Column8.Visible = False
+        '
+        'Column9
+        '
+        Me.Column9.HeaderText = "Last update"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
+        Me.Column9.Visible = False
+        '
+        'Column10
+        '
+        Me.Column10.HeaderText = "Last upate by"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        Me.Column10.Visible = False
+        '
+        'Column1
+        '
+        Me.Column1.HeaderText = "RowID"
+        Me.Column1.Name = "Column1"
+        Me.Column1.Visible = False
+        '
+        'Column7
+        '
+        Me.Column7.HeaderText = "empRowID"
+        Me.Column7.Name = "Column7"
+        Me.Column7.Visible = False
+        '
+        'Column2
+        '
+        Me.Column2.HeaderText = "Employee ID"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        Me.Column2.Width = 115
+        '
+        'Column11
+        '
+        Me.Column11.HeaderText = "Employee name"
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        Me.Column11.Width = 165
+        '
+        'Column12
+        '
+        Me.Column12.HeaderText = "Employee shift"
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
+        Me.Column12.Width = 155
+        '
+        'Column3
+        '
+        Me.Column3.HeaderText = "Time In (I)"
+        Me.Column3.Name = "Column3"
+        Me.Column3.Width = 115
+        '
+        'Column4
+        '
+        Me.Column4.HeaderText = "Time Out (O)"
+        Me.Column4.Name = "Column4"
+        Me.Column4.Width = 115
+        '
+        'Column6
+        '
+        Me.Column6.HeaderText = "Schedule type"
+        Me.Column6.Name = "Column6"
+        Me.Column6.Width = 115
+        '
+        'timeentstat
+        '
+        Me.timeentstat.HeaderText = "TimeEntryStatus"
+        Me.timeentstat.Name = "timeentstat"
+        Me.timeentstat.Visible = False
         '
         'EmpTimeDetail
         '
@@ -975,4 +997,7 @@ Partial Class EmpTimeDetail
     Friend WithEvents Column8 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column9 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column10 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bgworkTypicalImport As System.ComponentModel.BackgroundWorker
+    Friend WithEvents DataGridViewTextBoxColumn13 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn14 As DataGridViewTextBoxColumn
 End Class

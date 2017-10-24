@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function goldwingspayrolldb_global_e_pc.INSUPD_paystubbonus
+-- Dumping structure for function INSUPD_paystubbonus
 DROP FUNCTION IF EXISTS `INSUPD_paystubbonus`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `INSUPD_paystubbonus`(`OrganizID` INT, `EmpRowID` INT, `UserRowID` INT, `psb_PayPeriodID` INT

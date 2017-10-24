@@ -1,9 +1,16 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for function INSUPD_employeedependents
 DROP FUNCTION IF EXISTS `INSUPD_employeedependents`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeedependents`(`emp_RowID` INT, `emp_CreatedBy` INT, `emp_LastUpdBy` INT, `emp_LastUpd` DATETIME, `emp_OrganizationID` INT, `emp_Salutation` VARCHAR(50), `emp_FirstName` VARCHAR(50), `emp_MiddleName` VARCHAR(50), `emp_LastName` VARCHAR(50), `emp_SurName` VARCHAR(50), `emp_ParentEmployeeID` VARCHAR(50), `emp_TINNo` VARCHAR(50), `emp_SSSNo` VARCHAR(50), `emp_HDMFNo` VARCHAR(50), `emp_PhilHealthNo` VARCHAR(50), `emp_EmailAddress` VARCHAR(50), `emp_WorkPhone` VARCHAR(50), `emp_HomePhone` VARCHAR(50), `emp_MobilePhone` VARCHAR(50), `emp_HomeAddress` VARCHAR(2000), `emp_Nickname` VARCHAR(50), `emp_JobTitle` VARCHAR(50), `emp_Gender` VARCHAR(50), `emp_RelationToEmployee` VARCHAR(50), `emp_ActiveFlag` VARCHAR(50), `emp_Birthdate` DATE, `emp_IsDoneByImporting` TEXT) RETURNS int(11)
@@ -121,7 +128,6 @@ RETURN empdepenID;
 
 END//
 DELIMITER ;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
