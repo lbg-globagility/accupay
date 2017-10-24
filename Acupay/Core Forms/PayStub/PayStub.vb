@@ -1049,10 +1049,10 @@ Public Class PayStub
     End Sub
 
     Sub genpayroll(Optional PayFreqRowID As Object = Nothing)
-        Dim loadTask = Task.Factory.StartNew(
-            Sub()
+        Dim loadTask = Task.Factory.StartNew(Of PayrollResources)(
+            Function()
                 If paypFrom = Nothing And paypTo = Nothing Then
-                    Exit Sub
+                    Return Nothing
                 End If
 
                 Dim resources = New PayrollResources(paypRowID, CDate(paypFrom), CDate(paypTo))
@@ -1398,7 +1398,9 @@ Public Class PayStub
                                                               " AND '" & paypTo & "'" &
                                                               " GROUP BY ete.EmployeeID" &
                                                               " HAVING COUNT(ete.RowID) < 5;").ResultTable
-            End Sub,
+
+                Return resources
+            End Function,
             0
         )
 
@@ -1417,20 +1419,11 @@ Public Class PayStub
         )
     End Sub
 
-    Private Sub LoadingPayrollDataOnSuccess()
+    Private Sub LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources))
         indxStartBatch = 0
-
-        Dim n_lov_mxthread As New ExecuteQuery("SELECT CAST(DisplayValue AS INT) `Result` FROM listofval WHERE `Type`='Max thread count' AND LIC='Max thread count' AND Active='Yes' LIMIT 1;")
-        If ValNoComma(n_lov_mxthread.Result) > 0 Then
-            thread_max = ValNoComma(n_lov_mxthread.Result)
-        Else
-            n_lov_mxthread = New _
-                                                                   ExecuteQuery(String.Concat("INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('5', 'Max thread count', 'Max thread count', '', 'Yes', 'max thread count when generating payroll', CURRENT_TIMESTAMP(), ", z_User, ", CURRENT_TIMESTAMP(), 1, ", z_User, ") ON DUPLICATE KEY UPDATE LastUpd = CURRENT_TIMESTAMP(), LastUpdBy = IFNULL(LastUpdBy,CreatedBy);"))
-        End If
-
         progress_precentage = 0
 
-        ThreadingPayrollGeneration(thread_max)
+        ThreadingPayrollGeneration(t.Result)
     End Sub
 
     Private Sub LoadingPayrollDataOnError(t As Task)
@@ -1439,7 +1432,7 @@ Public Class PayStub
         Me.Enabled = True
     End Sub
 
-    Private Sub ThreadingPayrollGeneration(Optional starting_batchindex As Integer = 0)
+    Private Sub ThreadingPayrollGeneration(resources As PayrollResources)
         Timer1.Stop()
         Timer1.Enabled = False
 
@@ -1516,6 +1509,7 @@ Public Class PayStub
                         withthirteenthmonthpay,
                         _filingStatuses,
                         _withholdingTaxTable,
+                        resources.Products,
                         Me
                     )
 

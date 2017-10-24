@@ -136,6 +136,8 @@ Public Class PayrollGeneration
 
     Private _payStub As PayStubObject
 
+    Private _products As IEnumerable(Of Product)
+
     Private _philHealthDeductionSchedule As String
     Private _sssDeductionSchedule As String
     Private _hdmfDeductionSchedule As String
@@ -180,6 +182,7 @@ Public Class PayrollGeneration
             withThirteenthMonthPay As SByte,
             filingStatuses As DataTable,
             withholdingTaxTable As DataTable,
+            products As IEnumerable(Of Product),
             Optional pay_stub_frm As PayStub = Nothing)
 
         form_caller = pay_stub_frm

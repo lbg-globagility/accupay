@@ -1,7 +1,8 @@
 ﻿Option Strict On
 
-Imports System.Threading.Tasks
 Imports System.Data.Entity
+Imports System.Threading.Tasks
+Imports AccuPay.Entity
 
 ''' <summary>
 ''' Takes care of loading all the information needed to produce the payroll for a given pay period.
@@ -25,6 +26,8 @@ Public Class PayrollResources
     Private _fixedTaxableMonthlyAllowances As DataTable
 
     Private _fixedNonTaxableMonthlyAllowances As DataTable
+
+    Private _products As IEnumerable(Of Product)
 
     Private _isEndOfMonth As Boolean
 
@@ -64,6 +67,12 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property Products As IEnumerable(Of Product)
+        Get
+            Return _products
+        End Get
+    End Property
+
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = payPeriodID
         _payDateFrom = payDateFrom
@@ -81,6 +90,7 @@ Public Class PayrollResources
             loadLoanSchedulesTask,
             loadLoanTransactionsTask,
             loadSalariesTask,
+            LoadProducts(),
             LoadFixedTaxableMonthlyAllowances(),
             LoadFixedNonTaxableMonthlyAllowancesTask()
         })
@@ -109,6 +119,8 @@ Public Class PayrollResources
                 SUM(COALESCE(ete.UndertimeHours, 0)) 'UndertimeHours',
                 SUM(COALESCE(ete.UndertimeHoursAmount, 0)) 'UndertimeHoursAmount',
                 SUM(COALESCE(ete.Absent, 0)) AS 'Absent',
+                SUM(COALESCE(ete.VacationLeaveHours, 0)) AS 'VacationLeaveHours', 
+                SUM(COALESCE(ete.SickLeaveHours, 0)) As 'SickLeaveHours',
                 IFNULL(emt.emtAmount,0) AS emtAmount
             FROM employeetimeentry ete
             LEFT JOIN employee e
@@ -249,6 +261,14 @@ Public Class PayrollResources
         End If
 
         _fixedNonTaxableMonthlyAllowances = Await New SqlToDataTable(fixedNonTaxableMonthlyAllowanceSql).ReadAsync()
+    End Function
+
+    Private Async Function LoadProducts() As Task
+        Using context = New PayrollContext()
+            Dim query = From p In context.Products
+                        Where p.OrganizationID = z_OrganizationID
+            _products = Await query.ToListAsync()
+        End Using
     End Function
 
 End Class
