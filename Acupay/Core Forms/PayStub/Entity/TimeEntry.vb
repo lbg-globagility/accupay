@@ -3,7 +3,7 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Namespace Global.TimeEntry.Entity
+Namespace Global.AccuPay.Entity
 
     <Table("employeetimeentry")>
     Public Class TimeEntry
@@ -21,7 +21,8 @@ Namespace Global.TimeEntry.Entity
 
         Public Property LastUpdBy As Integer?
 
-        Public Property eteDate As Date
+        <Column("Date")>
+        Public Property EntryDate As Date
 
         Public Property EmployeeShiftID As Integer?
 

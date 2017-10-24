@@ -3,7 +3,7 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Namespace Global.Product.Entity
+Namespace Global.AccuPay.Entity
 
     <Table("product")>
     Public Class Product

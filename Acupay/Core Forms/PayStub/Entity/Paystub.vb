@@ -3,7 +3,7 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Namespace Global.Paystub.Entity
+Namespace Global.AccuPay.Entity
 
     <Table("paystub")>
     Public Class Paystub

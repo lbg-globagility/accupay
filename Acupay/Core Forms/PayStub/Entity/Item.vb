@@ -3,10 +3,10 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Namespace Global.Item.Entity
+Namespace Global.AccuPay.Entity
 
     <Table("paystubitem")>
-    Public Class Item
+    Public Class PaystubItem
 
         <Key>
         Public Property RowID As Integer?
