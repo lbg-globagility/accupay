@@ -19,6 +19,10 @@ Public Class PayrollContext
         MyBase.New(GetConnection(), True)
     End Sub
 
+    Public Sub New(connection As DbConnection)
+        MyBase.New(connection, True)
+    End Sub
+
     Public Overridable Property Salaries As DbSet(Of Salary)
 
     Public Overridable Property SocialSecurityBrackets As DbSet(Of SocialSecurityBracket)
