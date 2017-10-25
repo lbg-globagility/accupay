@@ -48,20 +48,6 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `SavePayStub`(
 	`pstub_TotalLoans` DECIMAL(15,4),
 	`pstub_TotalBonus` DECIMAL(15,4),
 	`pstub_TotalAllowance` DECIMAL(15,4)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ) RETURNS int(11)
 BEGIN
 
@@ -260,7 +246,12 @@ UPDATE
     paystub.TotalAdjustments = totalAdjustments,
     paystub.TotalUndeclaredSalary = totalUndeclaredSalary;
 
-RETURN LAST_INSERT_ID();
+IF payStubID IS NULL THEN
+    RETURN LAST_INSERT_ID();
+ELSE
+    RETURN payStubID;
+END IF;
+
 
 END//
 DELIMITER ;

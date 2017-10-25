@@ -29,6 +29,8 @@ Public Class PayrollResources
 
     Private _products As IEnumerable(Of Product)
 
+    Private _paystubs As IEnumerable(Of AccuPay.Entity.Paystub)
+
     Private _isEndOfMonth As Boolean
 
     Public ReadOnly Property TimeEntries As DataTable
@@ -70,6 +72,12 @@ Public Class PayrollResources
     Public ReadOnly Property Products As IEnumerable(Of Product)
         Get
             Return _products
+        End Get
+    End Property
+
+    Public ReadOnly Property Paystubs As IEnumerable(Of AccuPay.Entity.Paystub)
+        Get
+            Return _paystubs
         End Get
     End Property
 
@@ -268,6 +276,15 @@ Public Class PayrollResources
             Dim query = From p In context.Products
                         Where p.OrganizationID = z_OrganizationID
             _products = Await query.ToListAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadPaystubs() As Task
+        Using context = New PayrollContext()
+            Dim query = From p In context.Paystubs
+                        Where p.PayFromdate = _payDateFrom And p.PayToDate = _payDateTo
+
+            _paystubs = Await query.ToListAsync()
         End Using
     End Function
 

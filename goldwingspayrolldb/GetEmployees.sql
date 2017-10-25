@@ -29,6 +29,10 @@ BEGIN
         e.EmploymentStatus,
         e.WorkDaysPerYear,
         e.PositionID,
+        e.LeaveBalance,
+        e.SickLeaveBalance,
+        e.MaternityLeaveBalance,
+        e.OtherLeaveBalance,
         IF(
             e.AgencyID IS NOT NULL,
             IFNULL(

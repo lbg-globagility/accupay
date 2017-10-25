@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
-Imports MySql.Data.MySqlClient
+Imports AccuPay.Entity
 Imports log4net
+Imports MySql.Data.MySqlClient
 
 Public Class PayrollGeneration
 
@@ -24,51 +25,95 @@ Public Class PayrollGeneration
     End Class
 
     Private Class PayStubObject
+
         Public Property RowID As Integer?
+
         Public Property OrganizationID As Integer?
+
         Public Property CreatedBy As Integer?
+
         Public Property LastUpdBy As Integer?
+
         Public Property PayPeriodID As Integer?
+
         Public Property EmployeeID As String
+
         Public Property PayFromDate As Date
+
         Public Property PayToDate As Date
+
         Public Property RegularHours As Decimal
+
         Public Property RegularPay As Decimal
+
         Public Property OvertimeHours As Decimal
+
         Public Property OvertimePay As Decimal
+
         Public Property NightDiffHours As Decimal
+
         Public Property NightDiffPay As Decimal
+
         Public Property NightDiffOvertimeHours As Decimal
+
         Public Property NightDiffOvertimePay As Decimal
+
         Public Property RestDayHours As Decimal
+
         Public Property RestDayPay As Decimal
+
         Public Property LeavePay As Decimal
+
         Public Property HolidayPay As Decimal
+
         Public Property LateHours As Decimal
+
         Public Property LateDeduction As Decimal
+
         Public Property UndertimeHours As Decimal
+
         Public Property UndertimeDeduction As Decimal
+
         Public Property AbsenceDeduction As Decimal
+
         Public Property BasicPay As Decimal
+
         Public Property WorkPay As Decimal
+
         Public Property TotalAllowance As Decimal
+
         Public Property TotalBonus As Decimal
+
         Public Property TotalGrossSalary As Decimal
+
         Public Property TotalNetSalary As Decimal
+
         Public Property TotalTaxableSalary As Decimal
+
         Public Property WithholdingTaxAmount As Decimal
+
         Public Property TotalEmpWithholdingTax As Decimal
+
         Public Property TotalEmpSSS As Decimal
+
         Public Property TotalCompSSS As Decimal
+
         Public Property TotalEmpPhilHealth As Decimal
+
         Public Property TotalCompPhilHealth As Decimal
+
         Public Property TotalEmpHDMF As Decimal
+
         Public Property TotalCompHDMF As Decimal
+
         Public Property TotalLoanDeduction As Decimal
+
     End Class
 
     Public Property PayrollDateFrom As String
+
     Public Property PayrollDateTo As String
+
     Public Property PayPeriodID As String
 
     Private _employees As DataRow
@@ -147,6 +192,14 @@ Public Class PayrollGeneration
 
     Private numberofweeksthismonth As Integer
 
+    Private _vacationLeaveBalanceAmount As Integer
+
+    Private _sickLeaveBalanceAmount As Integer
+
+    Private _sickLeaveHours As Integer
+
+    Private _paystubs As IEnumerable(Of AccuPay.Entity.Paystub)
+
     Sub New(employees As DataRow,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
@@ -183,6 +236,7 @@ Public Class PayrollGeneration
             filingStatuses As DataTable,
             withholdingTaxTable As DataTable,
             products As IEnumerable(Of Product),
+            paystubs As IEnumerable(Of AccuPay.Entity.Paystub),
             Optional pay_stub_frm As PayStub = Nothing)
 
         form_caller = pay_stub_frm
@@ -230,6 +284,9 @@ Public Class PayrollGeneration
         _withholdingTaxTable = withholdingTaxTable
 
         _notifyMainWindow = AddressOf pay_stub_frm.ProgressCounter
+
+        _products = products
+        _paystubs = paystubs
 
         _isFirstHalf = (payPeriodHalfNo = "1")
         _isEndOfMonth = (payPeriodHalfNo = "0")
@@ -406,6 +463,9 @@ Public Class PayrollGeneration
                     _payStub.UndertimeHours = ValNoComma(timeEntrySummary("UndertimeHours"))
                     _payStub.UndertimeDeduction = ValNoComma(timeEntrySummary("UndertimeHoursAmount"))
 
+                    _vacationLeaveBalanceAmount = _employee("LeaveBalance")
+                    _sickLeaveBalanceAmount = _employee("SickLeaveBalance")
+
                     _payStub.AbsenceDeduction = ValNoComma(timeEntrySummary("Absent"))
 
                     Dim sel_dtemployeefirsttimesalary = _employeeFirstTimeSalary.Select($"EmployeeID = '{_payStub.EmployeeID}'")
@@ -473,6 +533,9 @@ Public Class PayrollGeneration
             _payStub.TotalGrossSalary = _payStub.WorkPay + _payStub.TotalBonus + _payStub.TotalAllowance
             _payStub.TotalNetSalary = _payStub.TotalGrossSalary - (governmentContributions + _payStub.TotalLoanDeduction + _payStub.WithholdingTaxAmount)
 
+            Dim vacationLeaveProduct = _products.Where(Function(p) p.PartNo = "Vacation leave").FirstOrDefault()
+            Dim sickLeaveProduct = _products.Where(Function(p) p.PartNo = "Sick leave").FirstOrDefault()
+
             _connection = New MySqlConnection(mysql_conn_text)
             Dim command = New MySqlCommand("SavePayStub", _connection, transaction)
 
@@ -483,11 +546,6 @@ Public Class PayrollGeneration
             transaction = _connection.BeginTransaction()
             command.CommandTimeout = 5000
             command.CommandType = CommandType.StoredProcedure
-
-            Using context = New PayrollContext()
-                context.LoanTransactions.AddRange(newLoanTransactions)
-                context.SaveChanges()
-            End Using
 
             With command.Parameters
                 .Clear()
@@ -537,27 +595,60 @@ Public Class PayrollGeneration
             End With
 
             command.ExecuteNonQuery()
+            _payStub.RowID = command.Parameters("NewID").Value
+
             transaction.Commit()
             command.Dispose()
 
-            'If IsFirstPayperiodOfTheYear() Then
-            '    ConvertLeaveToCash(drow)
-            'End If
+            Using context = New PayrollContext()
+                Dim vacationLeaveBalance =
+                    (From p In context.PaystubItems
+                     Where p.Product.PartNo = "Vacation leave" And
+                        p.PayStubID = _payStub.RowID).
+                    FirstOrDefault()
+
+                If vacationLeaveBalance Is Nothing Then
+                    vacationLeaveBalance = New PaystubItem() With {
+                        .OrganizationID = z_OrganizationID,
+                        .Created = Date.Now,
+                        .ProductID = vacationLeaveProduct?.RowID,
+                        .PayAmount = _vacationLeaveBalanceAmount,
+                        .PayStubID = _payStub.RowID
+                    }
+
+                    context.PaystubItems.Add(vacationLeaveBalance)
+                End If
+
+                Dim sickLeaveBalance =
+                    (From p In context.PaystubItems
+                     Where p.Product.PartNo = "Sick leave" And
+                        p.PayStubID = _payStub.RowID).
+                    FirstOrDefault()
+
+                If sickLeaveBalance Is Nothing Then
+                    sickLeaveBalance = New PaystubItem() With {
+                        .OrganizationID = z_OrganizationID,
+                        .Created = Date.Now,
+                        .ProductID = sickLeaveProduct?.RowID,
+                        .PayAmount = _sickLeaveBalanceAmount,
+                        .PayStubID = _payStub.RowID
+                    }
+
+                    context.PaystubItems.Add(sickLeaveBalance)
+                End If
+
+                context.LoanTransactions.AddRange(newLoanTransactions)
+
+                context.SaveChanges()
+            End Using
 
             form_caller.BeginInvoke(_notifyMainWindow, 1)
-            Dim my_cmd As String = String.Concat(Convert.ToString(employee("RowID")), "@", Convert.ToString(employee("EmployeeID")))
-            Console.WriteLine(my_cmd)
         Catch ex As Exception
             If transaction IsNot Nothing Then
                 transaction.Rollback()
             End If
 
             Throw New Exception($"Failure to generate paystub for employee {_payStub.EmployeeID}", ex)
-
-            'Dim this_err As String = String.Concat(getErrExcptn(ex, "PayrollGeneration"), " -- ", Convert.ToString(employees.TableName),
-            '                                           ".Employee ID[", Convert.ToString(employee("EmployeeID")), "]")
-            'logger.Error($"Error calculting employee #{employee("EmployeeID")}.", ex)
-            'Console.WriteLine(this_err)
         Finally
             If _connection IsNot Nothing Then
                 _connection.Close()

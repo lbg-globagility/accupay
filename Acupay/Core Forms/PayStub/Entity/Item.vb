@@ -17,9 +17,9 @@ Namespace Global.AccuPay.Entity
 
         Public Property CreatedBy As Integer?
 
-        Public Property LastUpd As Date
+        Public Property LastUpd As Date?
 
-        Public Property LastUpdBy As Integer
+        Public Property LastUpdBy As Integer?
 
         Public Property PayStubID As Integer?
 
@@ -28,6 +28,9 @@ Namespace Global.AccuPay.Entity
         Public Property PayAmount As Decimal
 
         Public Property Undeclared As Char
+
+        <ForeignKey("ProductID")>
+        Public Overridable Property Product As Product
 
     End Class
 

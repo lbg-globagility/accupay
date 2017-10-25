@@ -30,7 +30,7 @@ Public Class PayrollContextTest
 
     <Test>
     Public Sub Should_Retrieve_PaystubItem()
-        Dim paystubItem = _context.PaystubItem.Find(1)
+        Dim paystubItem = _context.PaystubItems.Find(1)
 
         Assert.IsInstanceOf(Of PaystubItem)(paystubItem)
     End Sub

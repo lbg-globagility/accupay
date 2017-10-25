@@ -23,7 +23,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property Created As Date
 
-        Public Property LastUpd As Date
+        Public Property LastUpd As Date?
 
         <NotMapped>
         Public Property LastArrivedQty As Integer?

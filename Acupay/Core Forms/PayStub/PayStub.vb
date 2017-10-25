@@ -1510,6 +1510,7 @@ Public Class PayStub
                         _filingStatuses,
                         _withholdingTaxTable,
                         resources.Products,
+                        resources.Paystubs,
                         Me
                     )
 
