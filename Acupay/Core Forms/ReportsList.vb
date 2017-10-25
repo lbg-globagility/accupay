@@ -227,17 +227,6 @@ Public Class ReportsList
 
             Case 1 'Alpha list
 
-                Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
-
-                If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                    Dim n_AlphaListRptVwr As New AlphaListRptVwr(Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "yyyy-MM-dd"), _
-                                                                 Format(CDate(n_PayrollSummaDateSelection.DateTostr), "yyyy-MM-dd"))
-
-                    n_AlphaListRptVwr.Show()
-
-                End If
-
             Case 2 'Employment Record
 
                 '   Case 2 'Employee 13th Month Pay Report
@@ -760,17 +749,6 @@ Public Class ReportsList
                 End If
 
             Case 1 'Alpha list
-
-                Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
-
-                If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                    Dim n_AlphaListRptVwr As New AlphaListRptVwr(Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "yyyy-MM-dd"), _
-                                                                 Format(CDate(n_PayrollSummaDateSelection.DateTostr), "yyyy-MM-dd"))
-
-                    n_AlphaListRptVwr.Show()
-
-                End If
 
                 '**********************
 
