@@ -75,6 +75,10 @@ Namespace My
         'Public n_DataBaseConnection As New DataBaseConnection
 
         Private Sub MyApplication_Startup(sender As Object, e As ApplicationServices.StartupEventArgs) Handles Me.Startup
+            Using context = New PayrollContext()
+                context.Database.Initialize(False)
+            End Using
+
             Try
 
                 conn = New MySqlConnection
