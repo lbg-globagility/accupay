@@ -15,6 +15,8 @@
 
 # ALTER TABLE `payperiod` ADD COLUMN `IsLastFridayOfMonthFallsHere` CHAR(1) NULL DEFAULT '0' AFTER `MinWageValue`;
 
+####################################
+
 /*
 # INSERT INTO `position_view` (`RowID`, `PositionID`, `ViewID`, `Creates`, `OrganizationID`, `Updates`, `Deleting`, `ReadOnly`, `AllowedToAccess`, `Created`, `CreatedBy`, `LastUpdBy`)
 
@@ -35,8 +37,23 @@ pv.RowID
 ,(@creator := IFNULL(pv.CreatedBy, pos.CreatedBy)) `CreatedBy`
 ,@creator `LastUpdBy`
 FROM `position` pos
-INNER JOIN `view` v ON v.OrganizationID=pos.OrganizationID
+INNER JOIN `view` v ON v.RowID > 0 # v.OrganizationID=pos.OrganizationID
+INNER JOIN organization og ON og.RowID=v.OrganizationID #AND og.NoPurpose='0'
 LEFT JOIN position_view pv ON pv.OrganizationID=v.OrganizationID AND pv.PositionID=pos.OrganizationID AND pv.ViewID=v.RowID
+# WHERE pos.RowID=8
 
-# ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP(), LastUpdBy=@creator;
+# ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP(), LastUpdBy=@creator, Creates = @is_create, Updates = @is_upd, Deleting = @is_del, ReadOnly = @is_read_only, AllowedToAccess = IF((@is_read_only = 'Y' OR @is_create = 'Y' OR @is_upd = 'Y' OR @is_del = 'Y') = TRUE, 'Y', 'N')
+;
+
+# TRUNCATE TABLE position_view; ALTER TABLE position_view AUTO_INCREMENT = 0;
+
+SELECT COUNT(pos.RowID)
+FROM `position` pos
+INNER JOIN organization og ON og.RowID=pos.OrganizationID AND og.NoPurpose='0'
+;
+
+SELECT * FROM `position` WHERE PositionName='Administrator'
+;
 */
+
+####################################

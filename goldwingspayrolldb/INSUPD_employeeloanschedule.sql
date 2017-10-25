@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function INSUPD_employeeloanschedule
+-- Dumping structure for function cinema2k.INSUPD_employeeloanschedule
 DROP FUNCTION IF EXISTS `INSUPD_employeeloanschedule`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `INSUPD_employeeloanschedule`(`els_RowID` INT(11)
@@ -71,7 +71,7 @@ INSERT INTO employeeloanschedule
     ,els_TotBalLeft
     ,els_DeductAmt
     ,els_Status
-    ,NULL
+    ,p.RowID # NULL
     ,els_DeductPerc
     ,(@count_of_payperiod := (els_TotLoanAmt / els_DeductAmt)) # els_NoOfPayPer
     ,((els_TotBalLeft / els_TotLoanAmt) *  @count_of_payperiod)
@@ -81,6 +81,7 @@ INSERT INTO employeeloanschedule
     ,PAYTODATE_OF_NoOfPayPeriod(els_DateFrom,@count_of_payperiod,e.RowID,els_DeductSched) # els_NoOfPayPer
     FROM employee e
     LEFT JOIN employeeloanschedule els ON els.EmployeeID=e.RowID AND els.OrganizationID=e.OrganizationID AND els.LoanName=TRIM(els_LoanName) AND els.DedEffectiveDateFrom=els_DateFrom AND els.`Status`=els_Status AND els.BonusID=0
+    LEFT JOIN product p ON p.`Category`='Loan Type' AND p.OrganizationID=e.OrganizationID AND p.PartNo=TRIM(els_LoanName)
     WHERE e.EmployeeID=TRIM(els_EmpNumber) AND e.OrganizationID=els_OrganizID AND LENGTH(TRIM(els_LoanName)) > 0
     LIMIT 1
 ON
