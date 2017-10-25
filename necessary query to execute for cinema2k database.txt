@@ -57,3 +57,32 @@ SELECT * FROM `position` WHERE PositionName='Administrator'
 */
 
 ####################################
+
+# INSERT INTO `payperiod` (`OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `PayFromDate`, `PayToDate`, `TotalGrossSalary`, `TotalNetSalary`, `TotalEmpSSS`, `TotalEmpWithholdingTax`, `TotalCompSSS`, `TotalEmpPhilhealth`, `TotalCompPhilhealth`, `TotalEmpHDMF`, `TotalCompHDMF`, `Month`, `Year`, `Half`, `SSSContribSched`, `PhHContribSched`, `HDMFContribSched`, `OrdinalValue`, `WeekOridnalValue`, `MinWageValue`, `IsLastFridayOfMonthFallsHere`)
+
+SELECT
+og.RowID `OrganizationID`
+,CURRENT_TIMESTAMP() `Created`, og.`CreatedBy`, pp.`LastUpd`, og.`LastUpdBy`
+
+,DATE(IF(pp.Half = '1'
+         , SUBDATE(STR_TO_DATE(CONCAT_WS('-', pp.`Year`, pp.`Month`, '16'), '%Y-%c-%e'), INTERVAL 1 MONTH)
+			, STR_TO_DATE(CONCAT_WS('-', pp.`Year`, pp.`Month`, '1'), '%Y-%c-%e')))
+`PayFromDate`
+
+,DATE(IF(pp.Half = '1'
+         , LAST_DAY(SUBDATE(STR_TO_DATE(CONCAT_WS('-', pp.`Year`, pp.`Month`, '16'), '%Y-%c-%e'), INTERVAL 1 MONTH))
+			, STR_TO_DATE(CONCAT_WS('-', pp.`Year`, pp.`Month`, '15'), '%Y-%c-%e')))
+`PayToDate`
+
+, pp.`TotalGrossSalary`, pp.`TotalNetSalary`, pp.`TotalEmpSSS`, pp.`TotalEmpWithholdingTax`, pp.`TotalCompSSS`, pp.`TotalEmpPhilhealth`, pp.`TotalCompPhilhealth`, pp.`TotalEmpHDMF`, pp.`TotalCompHDMF`, pp.`Month`, pp.`Year`, pp.`Half`, pp.`SSSContribSched`, pp.`PhHContribSched`, pp.`HDMFContribSched`, pp.`OrdinalValue`, pp.`WeekOridnalValue`, pp.`MinWageValue`, pp.`IsLastFridayOfMonthFallsHere`
+FROM transprintpayrolldb_test2.payperiod pp
+INNER JOIN organization og ON og.RowID > 0
+WHERE pp.`Year` < 2015
+AND pp.TotalGrossSalary=1
+AND pp.OrganizationID=2
+ORDER BY og.RowID, pp.PayFromDate, pp.PayToDate
+
+####################################
+
+####################################
+
