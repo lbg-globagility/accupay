@@ -478,12 +478,6 @@
     <Compile Include="Core Forms\AddressClass.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\AlphaListRptVwr.designer.vb">
-      <DependentUpon>AlphaListRptVwr.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Core Forms\AlphaListRptVwr.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Core Forms\BIR_1601CForm.Designer.vb">
       <DependentUpon>BIR_1601CForm.vb</DependentUpon>
     </Compile>
@@ -512,12 +506,6 @@
       <DependentUpon>CrysVwr.vb</DependentUpon>
     </Compile>
     <Compile Include="Core Forms\CrysVwr.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Core Forms\DataAccessRights.Designer.vb">
-      <DependentUpon>DataAccessRights.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Core Forms\DataAccessRights.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\Dataset\AlphalistDataset.Designer.vb">
@@ -590,12 +578,6 @@
       <DependentUpon>BlankTimeEntryLogs.vb</DependentUpon>
     </Compile>
     <Compile Include="Core Forms\BlankTimeEntryLogs.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Core Forms\Form4.Designer.vb">
-      <DependentUpon>Form4.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Core Forms\Form4.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\importWithholdingTax.Designer.vb">
@@ -1374,9 +1356,6 @@
     <EmbeddedResource Include="Core Forms\AddressClass.resx">
       <DependentUpon>AddressClass.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\AlphaListRptVwr.resx">
-      <DependentUpon>AlphaListRptVwr.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\BIR_1601CForm.resx">
       <DependentUpon>BIR_1601CForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -1415,9 +1394,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\EmpTimeEntry.resx">
       <DependentUpon>EmpTimeEntry.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Form4.resx">
-      <DependentUpon>Form4.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\importWithholdingTax.resx">
       <DependentUpon>importWithholdingTax.vb</DependentUpon>
