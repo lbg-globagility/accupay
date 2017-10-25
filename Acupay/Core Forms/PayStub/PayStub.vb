@@ -5251,13 +5251,13 @@ Friend Class PrintAllPaySlipOfficialFormat
 
     Private catchdt As New DataTable
 
+    Private sys_ownr As New SystemOwner
+
     Sub DoProcess()
 
         Dim rptdoc As Object = Nothing
 
-        Dim sql As New SQL("SELECT Name FROM systemowner WHERE IsCurrentOwner='1' LIMIT 1;")
-
-        Dim current_system_owner As String = Convert.ToString(sql.GetFoundRow)
+        Static current_system_owner As String = sys_ownr.CurrentSystemOwner
 
         If SystemOwner.Goldwings = current_system_owner Then
 
@@ -5305,9 +5305,7 @@ Friend Class PrintAllPaySlipOfficialFormat
                 New Object() {orgztnID, n_PayPeriodRowID}
 
             Dim str_query As String = String.Concat(
-                "CALL `RPT_payslip`(?og_rowid",
-                "                   , (SELECT PayFromDate FROM payperiod WHERE RowID=?pp_rowid)",
-                "                   , (SELECT PayToDate FROM payperiod WHERE RowID=?pp_rowid));")
+                "CALL `RPT_payslip`(?og_rowid, ?pp_rowid, TRUE, NULL);")
 
             Dim _sql As New SQL(str_query,
                                 params)
