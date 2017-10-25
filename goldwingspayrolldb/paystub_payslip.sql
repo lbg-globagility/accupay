@@ -26,11 +26,22 @@ FROM (
     SELECT
         e.RowID,
         e.EmployeeID AS `COL1`,
-        CONCAT_WS(', ',e.LastName,e.FirstName,e.MiddleName) AS `COL69`,
-        IF(IsActualFlag=0, ete.RegularHoursAmount, ROUND(ete.RegularHoursAmount, 2)) AS `COL70`,
+        CONCAT_WS(', ', e.LastName, e.FirstName, e.MiddleName) AS `COL69`,
+        IF(IsActualFlag = 0, ete.RegularHoursAmount, ROUND(ete.RegularHoursAmount, 2)) AS `COL70`,
         IF(IsActualFlag = 1, es.TrueSalary, es.Salary) `COL80`,
         0 AS `COL2`,
-        ROUND( IF(e.EmployeeType IN ('Fixed','Monthly'), (es.BasicPay * IF(IsActualFlag=0, 1, (es.TrueSalary / es.Salary))), IFNULL(ete.RegularHoursAmount,0)) , 2) AS `COL3`,
+        ROUND(
+            IF(
+                e.EmployeeType IN ('Fixed', 'Monthly'),
+                (es.BasicPay * IF(
+                    IsActualFlag = 0,
+                    1,
+                    (es.TrueSalary / es.Salary)
+                )),
+                IFNULL(ete.RegularHoursAmount, 0)
+            ),
+            2
+        ) AS `COL3`,
         IFNULL(ete.UndertimeHours, 0) AS `COL4`,
         IFNULL(ete.Absent, 0) AS `COL5`,
         IFNULL(ete.HoursLate, 0) AS `COL6`,
@@ -70,7 +81,9 @@ FROM (
         IFNULL(ete.Leavepayment,0) AS `COL41`,
         IFNULL(psiHoli.PayAmount,0) AS `COL42`,
         IFNULL(psiECOLA.PayAmount,0) AS `COL43`,
-        psiLeave.Names AS `COL44`
+        psiLeave.Names AS `COL44`,
+        psiLeave.Availed AS `COl45`,
+        psiLeave.Balance AS `COL46`
     FROM (
             SELECT
                 RowID,
@@ -284,17 +297,44 @@ FROM (
     LEFT JOIN (
         SELECT
             psi.PayStubID,
-            REPLACE(GROUP_CONCAT(IFNULL(p.PartNo, '')), ',', '\n') `Names`
+            REPLACE(GROUP_CONCAT(IFNULL(p.PartNo, '')), ',', '\n') `Names`,
+            REPLACE(
+                GROUP_CONCAT(
+                    IFNULL(
+                        IF(
+                            p.PartNo = 'Sick leave',
+                            ete.SickLeaveHours,
+                            ete.VacationLeaveHours
+                        ),
+                        ''
+                    )
+                ),
+                ',',
+                '\n'
+            ) 'Availed',
+            REPLACE(GROUP_CONCAT(IFNULL(psi.PayAmount, 0)), ',', '\n') 'Balance'
         FROM paystubitem psi
         INNER JOIN product p
-        ON p.RowID=psi.ProductID AND
-            p.OrganizationID=psi.OrganizationID AND
-            p.`Category`='Leave Type'
-        WHERE psi.OrganizationID=OrganizID AND
-            psi.PayAmount!=0
+        ON p.RowID = psi.ProductID AND
+            p.OrganizationID = psi.OrganizationID AND
+            p.`Category` = 'Leave Type' AND
+            (p.PartNo = 'Sick leave' OR p.PartNo = 'Vacation leave')
+        INNER JOIN paystub ps
+        ON ps.RowID = psi.PayStubID
+        INNER JOIN (
+            SELECT
+                EmployeeID,
+                VacationLeaveHours,
+                SickLeaveHours
+            FROM employeetimeentry
+            WHERE Date BETWEEN paydate_from AND paydat_to
+            GROUP BY EmployeeID
+        ) ete
+        ON ete.EmployeeID = ps.EmployeeID
+        WHERE psi.OrganizationID = OrganizID
         GROUP BY psi.PayStubID
     ) psiLeave
-    ON psiLeave.PayStubID=ps.RowID
+    ON psiLeave.PayStubID = ps.RowID
     LEFT JOIN (
         SELECT
             psi.*,
@@ -306,7 +346,7 @@ FROM (
             p.PartNo='Holiday pay'
         WHERE psi.Undeclared=IsActualFlag AND
             psi.OrganizationID=OrganizID AND
-            psi.PayAmount!=0
+            psi.PayAmount != 0
     ) psiHoli
     ON psiHoli.PayStubID=ps.RowID
     LEFT JOIN (
