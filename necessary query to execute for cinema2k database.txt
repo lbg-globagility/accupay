@@ -1,0 +1,88 @@
+
+# UPDATE employee e SET e.CalcHoliday = (e.CalcHoliday = 'Y'), e.CalcSpecialHoliday = (e.CalcSpecialHoliday = 'Y'), e.CalcNightDiff = (e.CalcNightDiff = 'Y'), e.CalcNightDiffOT = (e.CalcNightDiffOT = 'Y'), e.CalcRestDay = (e.CalcRestDay = 'Y'), e.CalcRestDayOT = (e.CalcRestDayOT = 'Y'), e.LastUpd = IFNULL(ADDDATE(e.LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP()), e.LastUpdBy = IFNULL(e.LastUpdBy, e.CreatedBy) WHERE (e.CalcHoliday IN ('Y', 'N') OR e.CalcSpecialHoliday IN ('Y', 'N') OR e.CalcNightDiff IN ('Y', 'N') OR e.CalcNightDiffOT IN ('Y', 'N') OR e.CalcRestDay IN ('Y', 'N') OR e.CalcRestDayOT IN ('Y', 'N'));
+
+# UPDATE position_view SET AllowedToAccess = 'Y', LastUpd=IFNULL(ADDDATE(LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP()), LastUpdBy=IFNULL(LastUpdBy, CreatedBy) WHERE PositionID=25;
+
+# UPDATE payperiod pp SET pp.LastUpd=IFNULL(ADDDATE(pp.LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP()), pp.LastUpdBy=IFNULL(pp.LastUpdBy, pp.CreatedBy) WHERE pp.TotalGrossSalary=1;
+
+# UPDATE payperiod pp SET pp.LastUpd=IFNULL(ADDDATE(pp.LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP()), pp.LastUpdBy=IFNULL(pp.LastUpdBy, pp.CreatedBy) WHERE pp.TotalGrossSalary=4;
+
+# INSERT INTO `systemowner` (`RowID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `Name`, `IsCurrentOwner`) VALUES (3, '2017-10-05 09:59:15', NULL, '2017-10-23 11:04:49', NULL, 'Cinema 2000', '0');
+
+# INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('Weekly', 'Weekly', 'Allowance Frequency', '', 'Yes', NULL, '2014-11-13 00:00:00', 2, '2014-11-13 00:00:00', 4, 2);
+
+# ALTER TABLE `payperiod` ADD COLUMN `WeekOridnalValue` INT(11) NULL DEFAULT '0' AFTER `OrdinalValue`;
+
+# ALTER TABLE `payperiod` ADD COLUMN `IsLastFridayOfMonthFallsHere` CHAR(1) NULL DEFAULT '0' AFTER `MinWageValue`;
+
+####################################
+
+/*
+# INSERT INTO `position_view` (`RowID`, `PositionID`, `ViewID`, `Creates`, `OrganizationID`, `Updates`, `Deleting`, `ReadOnly`, `AllowedToAccess`, `Created`, `CreatedBy`, `LastUpdBy`)
+
+SELECT
+pv.RowID
+,pos.RowID `PositionID`
+,v.RowID `ViewID`
+,(@is_create := IFNULL(pv.Creates, 'N')) `Creates`
+,v.OrganizationID
+,(@is_upd := IFNULL(pv.Updates, 'N')) `Updates`
+,(@is_del := IFNULL(pv.Deleting, 'N')) `Deleting`
+,(@is_read_only := IFNULL(pv.ReadOnly, 'Y')) `ReadOnly`
+,IF((@is_read_only = 'Y'
+    OR @is_create = 'Y'
+	 OR @is_upd = 'Y'
+	 OR @is_del = 'Y') = TRUE, 'Y', 'N') `AllowedToAccess`
+,CURRENT_TIMESTAMP() `Created`
+,(@creator := IFNULL(pv.CreatedBy, pos.CreatedBy)) `CreatedBy`
+,@creator `LastUpdBy`
+FROM `position` pos
+INNER JOIN `view` v ON v.RowID > 0 # v.OrganizationID=pos.OrganizationID
+INNER JOIN organization og ON og.RowID=v.OrganizationID #AND og.NoPurpose='0'
+LEFT JOIN position_view pv ON pv.OrganizationID=v.OrganizationID AND pv.PositionID=pos.OrganizationID AND pv.ViewID=v.RowID
+# WHERE pos.RowID=8
+
+# ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP(), LastUpdBy=@creator, Creates = @is_create, Updates = @is_upd, Deleting = @is_del, ReadOnly = @is_read_only, AllowedToAccess = IF((@is_read_only = 'Y' OR @is_create = 'Y' OR @is_upd = 'Y' OR @is_del = 'Y') = TRUE, 'Y', 'N')
+;
+
+# TRUNCATE TABLE position_view; ALTER TABLE position_view AUTO_INCREMENT = 0;
+
+SELECT COUNT(pos.RowID)
+FROM `position` pos
+INNER JOIN organization og ON og.RowID=pos.OrganizationID AND og.NoPurpose='0'
+;
+
+SELECT * FROM `position` WHERE PositionName='Administrator'
+;
+*/
+
+####################################
+
+# INSERT INTO `payperiod` (`OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `PayFromDate`, `PayToDate`, `TotalGrossSalary`, `TotalNetSalary`, `TotalEmpSSS`, `TotalEmpWithholdingTax`, `TotalCompSSS`, `TotalEmpPhilhealth`, `TotalCompPhilhealth`, `TotalEmpHDMF`, `TotalCompHDMF`, `Month`, `Year`, `Half`, `SSSContribSched`, `PhHContribSched`, `HDMFContribSched`, `OrdinalValue`, `WeekOridnalValue`, `MinWageValue`, `IsLastFridayOfMonthFallsHere`)
+
+SELECT
+og.RowID `OrganizationID`
+,CURRENT_TIMESTAMP() `Created`, og.`CreatedBy`, pp.`LastUpd`, og.`LastUpdBy`
+
+,DATE(IF(pp.Half = '1'
+         , SUBDATE(STR_TO_DATE(CONCAT_WS('-', pp.`Year`, pp.`Month`, '16'), '%Y-%c-%e'), INTERVAL 1 MONTH)
+			, STR_TO_DATE(CONCAT_WS('-', pp.`Year`, pp.`Month`, '1'), '%Y-%c-%e')))
+`PayFromDate`
+
+,DATE(IF(pp.Half = '1'
+         , LAST_DAY(SUBDATE(STR_TO_DATE(CONCAT_WS('-', pp.`Year`, pp.`Month`, '16'), '%Y-%c-%e'), INTERVAL 1 MONTH))
+			, STR_TO_DATE(CONCAT_WS('-', pp.`Year`, pp.`Month`, '15'), '%Y-%c-%e')))
+`PayToDate`
+
+, pp.`TotalGrossSalary`, pp.`TotalNetSalary`, pp.`TotalEmpSSS`, pp.`TotalEmpWithholdingTax`, pp.`TotalCompSSS`, pp.`TotalEmpPhilhealth`, pp.`TotalCompPhilhealth`, pp.`TotalEmpHDMF`, pp.`TotalCompHDMF`, pp.`Month`, pp.`Year`, pp.`Half`, pp.`SSSContribSched`, pp.`PhHContribSched`, pp.`HDMFContribSched`, pp.`OrdinalValue`, pp.`WeekOridnalValue`, pp.`MinWageValue`, pp.`IsLastFridayOfMonthFallsHere`
+FROM transprintpayrolldb_test2.payperiod pp
+INNER JOIN organization og ON og.RowID > 0
+WHERE pp.`Year` < 2015
+AND pp.TotalGrossSalary=1
+AND pp.OrganizationID=2
+ORDER BY og.RowID, pp.PayFromDate, pp.PayToDate
+
+####################################
+
+####################################
+

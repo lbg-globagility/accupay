@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb_global_e_pc.SEARCH_employee_paystub
+-- Dumping structure for procedure SEARCH_employee_paystub
 DROP PROCEDURE IF EXISTS `SEARCH_employee_paystub`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employee_paystub`(IN `og_rowid` INT, IN `unified_search_string` VARCHAR(50), IN `page_number` INT)

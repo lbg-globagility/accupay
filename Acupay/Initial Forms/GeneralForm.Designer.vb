@@ -113,6 +113,7 @@ Partial Class GeneralForm
         '
         'AgencyToolStripMenuItem
         '
+        Me.AgencyToolStripMenuItem.AccessibleDescription = "Hyundai;Goldwings"
         Me.AgencyToolStripMenuItem.Name = "AgencyToolStripMenuItem"
         Me.AgencyToolStripMenuItem.Size = New System.Drawing.Size(59, 20)
         Me.AgencyToolStripMenuItem.Text = "Agency"

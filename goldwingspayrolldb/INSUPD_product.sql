@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function hyundaipayrolldb_dev.INSUPD_product
+-- Dumping structure for function INSUPD_product
 DROP FUNCTION IF EXISTS `INSUPD_product`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_product`(`p_RowID` INT(11), `p_Name` VARCHAR(50), `p_OrganizationID` INT, `p_PartNo` VARCHAR(50), `p_CreatedBy` INT, `p_LastUpdBy` INT, `p_Category` VARCHAR(50), `p_CategoryID` INT, `p_Status` VARCHAR(50), `p_UnitPrice` DECIMAL(10,2), `p_UnitOfMeasure` VARCHAR(50), `p_IsFixed` TINYINT, `p_IsIncludedIn13th` TINYINT) RETURNS int(11)

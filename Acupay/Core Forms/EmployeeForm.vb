@@ -14,6 +14,8 @@ Public Class EmployeeForm
         String.Concat("Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|",
                       "Microsoft Excel Documents 97-2003 (*.xls)|*.xls")
 
+    Dim sys_ownr As New SystemOwner
+
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
         MyBase.OnLoad(e)
@@ -771,7 +773,7 @@ Public Class EmployeeForm
                            Convert.ToInt16(chkcalcRestDayOT.Checked),
                            If(MaskedTextBox2.Tag = Nothing, DBNull.Value, MaskedTextBox2.Tag),
                            If(MaskedTextBox1.Tag = Nothing, DBNull.Value, MaskedTextBox1.Tag),
-                           "1",
+                           (Not chkbxRevealInPayroll.Checked),
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
                            0)
@@ -1949,6 +1951,9 @@ Public Class EmployeeForm
                         chkcalcRestDay.Checked = Convert.ToInt16(.Cells("CalcRestDay").Value) 'If(.Cells("CalcRestDay").Value = "Y", True, False)
                         chkcalcRestDayOT.Checked = Convert.ToInt16(.Cells("CalcRestDayOT").Value) 'If(.Cells("CalcRestDayOT").Value = "Y", True, False)
 
+                        chkbxRevealInPayroll.Checked =
+                            (Not CBool(Convert.ToInt16(.Cells("RevealInPayroll").Value)))
+
                         txtUTgrace.Text = .Cells("LateGracePeriod").Value 'AgencyName
                         cboAgency.Text = .Cells("AgencyName").Value
 
@@ -2409,7 +2414,7 @@ Public Class EmployeeForm
         Next
         dtpempstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
         dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-
+        chkbxRevealInPayroll.Checked = False
         AddHandler cboEmpType.SelectedValueChanged, AddressOf cboEmpType_SelectedIndexChanged
     End Sub
 
@@ -3716,6 +3721,9 @@ Public Class EmployeeForm
 
             AddHandler dgvDepen.SelectionChanged, AddressOf dgvDepen_SelectionChanged
 
+            Panel1.Visible =
+                (Panel1.AccessibleDescription = sys_ownr.CurrentSystemOwner)
+
         End If
 
         tabIndx = 1 'TabControl1.SelectedIndex
@@ -4173,6 +4181,19 @@ Public Class EmployeeForm
         Else
             txtOTgrace.Enabled = 0
         End If
+    End Sub
+
+    Private Sub Panel1_VisibleChanged(sender As Object, e As EventArgs) Handles Panel1.VisibleChanged
+
+        Dim _bool As Boolean = Panel1.Visible
+
+        If _bool Then
+
+            GroupBox1.Location =
+                New Point(GroupBox1.Location.X, 557)
+
+        End If
+
     End Sub
 
 #End Region 'Personal Profile
@@ -17523,6 +17544,14 @@ Public Class EmployeeForm
     End Function
 
     Private Sub Label25_Click(sender As Object, e As EventArgs) Handles Label25.Click
+
+    End Sub
+
+    Private Sub Panel1_Paint(sender As Object, e As PaintEventArgs) Handles Panel1.Paint
+
+    End Sub
+
+    Private Sub dgvEmp_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvEmp.CellContentClick
 
     End Sub
 

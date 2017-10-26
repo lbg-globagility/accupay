@@ -258,10 +258,19 @@
     </Compile>
     <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
+<<<<<<< HEAD
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
     <Compile Include="Core Forms\PayStub\Entity\TimeEntry.vb" />
+=======
+    <Compile Include="Core Forms\OffSetting.designer.vb">
+      <DependentUpon>OffSetting.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\OffSetting.vb">
+      <SubType>Form</SubType>
+    </Compile>
+>>>>>>> cinema2kdevelop
     <Compile Include="Core Forms\rpt\HyundaiPayslip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -656,12 +665,6 @@
       <DependentUpon>newProdBonus.vb</DependentUpon>
     </Compile>
     <Compile Include="Core Forms\newProdBonus.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Core Forms\OffSetting.designer.vb">
-      <DependentUpon>OffSetting.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Core Forms\OffSetting.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\OrganizationPrompt.Designer.vb">
@@ -1282,6 +1285,9 @@
     <EmbeddedResource Include="Core Forms\Independent filing\OverTimeForm.resx">
       <DependentUpon>OverTimeForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\OffSetting.resx">
+      <DependentUpon>OffSetting.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HyundaiPayslip.vb</LastGenOutput>
@@ -1448,9 +1454,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\newProdBonus.resx">
       <DependentUpon>newProdBonus.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\OffSetting.resx">
-      <DependentUpon>OffSetting.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\OrganizationPrompt.resx">
       <DependentUpon>OrganizationPrompt.vb</DependentUpon>

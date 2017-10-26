@@ -151,6 +151,17 @@ Partial Class EmployeeForm
         Me.txtEmpIDChk = New System.Windows.Forms.TextBox()
         Me.tbpEmployee = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.chkcalcRestDayOT = New System.Windows.Forms.CheckBox()
+        Me.chkcalcRestDay = New System.Windows.Forms.CheckBox()
+        Me.chkcalcNightDiffOT = New System.Windows.Forms.CheckBox()
+        Me.chkcalcNightDiff = New System.Windows.Forms.CheckBox()
+        Me.chkcalcSpclHoliday = New System.Windows.Forms.CheckBox()
+        Me.chkcalcHoliday = New System.Windows.Forms.CheckBox()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.chkbxRevealInPayroll = New System.Windows.Forms.CheckBox()
+        Me.Label366 = New System.Windows.Forms.Label()
+        Me.txtWorkHoursPerWeek = New System.Windows.Forms.TextBox()
         Me.Label364 = New System.Windows.Forms.Label()
         Me.cboAgency = New System.Windows.Forms.ComboBox()
         Me.MaskedTextBox2 = New System.Windows.Forms.MaskedTextBox()
@@ -169,13 +180,6 @@ Partial Class EmployeeForm
         Me.Label353 = New System.Windows.Forms.Label()
         Me.Label359 = New System.Windows.Forms.Label()
         Me.Label360 = New System.Windows.Forms.Label()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.chkcalcRestDayOT = New System.Windows.Forms.CheckBox()
-        Me.chkcalcRestDay = New System.Windows.Forms.CheckBox()
-        Me.chkcalcNightDiffOT = New System.Windows.Forms.CheckBox()
-        Me.chkcalcNightDiff = New System.Windows.Forms.CheckBox()
-        Me.chkcalcSpclHoliday = New System.Windows.Forms.CheckBox()
-        Me.chkcalcHoliday = New System.Windows.Forms.CheckBox()
         Me.chkWed = New System.Windows.Forms.CheckBox()
         Me.chkSat = New System.Windows.Forms.CheckBox()
         Me.chkFri = New System.Windows.Forms.CheckBox()
@@ -1500,8 +1504,9 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.SuspendLayout()
         Me.SplitContainer2.Panel2.SuspendLayout()
         Me.SplitContainer2.SuspendLayout()
-        Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        Me.Panel1.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
         Me.TabControl3.SuspendLayout()
         Me.tbpleavebal.SuspendLayout()
         Me.tbpleaveallow.SuspendLayout()
@@ -2144,6 +2149,8 @@ Partial Class EmployeeForm
         'SplitContainer2.Panel1
         '
         Me.SplitContainer2.Panel1.AutoScroll = True
+        Me.SplitContainer2.Panel1.Controls.Add(Me.GroupBox1)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.Panel1)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label364)
         Me.SplitContainer2.Panel1.Controls.Add(Me.cboAgency)
         Me.SplitContainer2.Panel1.Controls.Add(Me.MaskedTextBox2)
@@ -2153,7 +2160,6 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label363)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label362)
         Me.SplitContainer2.Panel1.Controls.Add(Me.GroupBox2)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.GroupBox1)
         Me.SplitContainer2.Panel1.Controls.Add(Me.chkWed)
         Me.SplitContainer2.Panel1.Controls.Add(Me.chkSat)
         Me.SplitContainer2.Panel1.Controls.Add(Me.chkFri)
@@ -2258,9 +2264,125 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(858, 430)
-        Me.SplitContainer2.SplitterDistance = 209
+        Me.SplitContainer2.SplitterDistance = 200
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.chkcalcRestDayOT)
+        Me.GroupBox1.Controls.Add(Me.chkcalcRestDay)
+        Me.GroupBox1.Controls.Add(Me.chkcalcNightDiffOT)
+        Me.GroupBox1.Controls.Add(Me.chkcalcNightDiff)
+        Me.GroupBox1.Controls.Add(Me.chkcalcSpclHoliday)
+        Me.GroupBox1.Controls.Add(Me.chkcalcHoliday)
+        Me.GroupBox1.Location = New System.Drawing.Point(400, 507)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(380, 105)
+        Me.GroupBox1.TabIndex = 40
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Pay Rate Inclusion"
+        Me.ToolTip1.SetToolTip(Me.GroupBox1, "If unchecked, pay rate for the day will be 1")
+        '
+        'chkcalcRestDayOT
+        '
+        Me.chkcalcRestDayOT.AutoSize = True
+        Me.chkcalcRestDayOT.Location = New System.Drawing.Point(190, 72)
+        Me.chkcalcRestDayOT.Name = "chkcalcRestDayOT"
+        Me.chkcalcRestDayOT.Size = New System.Drawing.Size(135, 17)
+        Me.chkcalcRestDayOT.TabIndex = 5
+        Me.chkcalcRestDayOT.Text = "Calculate Rest Day OT"
+        Me.chkcalcRestDayOT.UseVisualStyleBackColor = True
+        '
+        'chkcalcRestDay
+        '
+        Me.chkcalcRestDay.AutoSize = True
+        Me.chkcalcRestDay.Location = New System.Drawing.Point(190, 49)
+        Me.chkcalcRestDay.Name = "chkcalcRestDay"
+        Me.chkcalcRestDay.Size = New System.Drawing.Size(117, 17)
+        Me.chkcalcRestDay.TabIndex = 4
+        Me.chkcalcRestDay.Text = "Calculate Rest Day"
+        Me.chkcalcRestDay.UseVisualStyleBackColor = True
+        '
+        'chkcalcNightDiffOT
+        '
+        Me.chkcalcNightDiffOT.AutoSize = True
+        Me.chkcalcNightDiffOT.Location = New System.Drawing.Point(190, 26)
+        Me.chkcalcNightDiffOT.Name = "chkcalcNightDiffOT"
+        Me.chkcalcNightDiffOT.Size = New System.Drawing.Size(169, 17)
+        Me.chkcalcNightDiffOT.TabIndex = 3
+        Me.chkcalcNightDiffOT.Text = "Calculate Night Differential OT"
+        Me.chkcalcNightDiffOT.UseVisualStyleBackColor = True
+        '
+        'chkcalcNightDiff
+        '
+        Me.chkcalcNightDiff.AutoSize = True
+        Me.chkcalcNightDiff.Location = New System.Drawing.Point(22, 72)
+        Me.chkcalcNightDiff.Name = "chkcalcNightDiff"
+        Me.chkcalcNightDiff.Size = New System.Drawing.Size(151, 17)
+        Me.chkcalcNightDiff.TabIndex = 2
+        Me.chkcalcNightDiff.Text = "Calculate Night Differential"
+        Me.chkcalcNightDiff.UseVisualStyleBackColor = True
+        '
+        'chkcalcSpclHoliday
+        '
+        Me.chkcalcSpclHoliday.AutoSize = True
+        Me.chkcalcSpclHoliday.Location = New System.Drawing.Point(22, 49)
+        Me.chkcalcSpclHoliday.Name = "chkcalcSpclHoliday"
+        Me.chkcalcSpclHoliday.Size = New System.Drawing.Size(146, 17)
+        Me.chkcalcSpclHoliday.TabIndex = 1
+        Me.chkcalcSpclHoliday.Text = "Calculate Special Holiday"
+        Me.chkcalcSpclHoliday.UseVisualStyleBackColor = True
+        '
+        'chkcalcHoliday
+        '
+        Me.chkcalcHoliday.AutoSize = True
+        Me.chkcalcHoliday.Location = New System.Drawing.Point(22, 26)
+        Me.chkcalcHoliday.Name = "chkcalcHoliday"
+        Me.chkcalcHoliday.Size = New System.Drawing.Size(108, 17)
+        Me.chkcalcHoliday.TabIndex = 0
+        Me.chkcalcHoliday.Text = "Calculate Holiday"
+        Me.chkcalcHoliday.UseVisualStyleBackColor = True
+        '
+        'Panel1
+        '
+        Me.Panel1.AccessibleDescription = "Cinema 2000"
+        Me.Panel1.Controls.Add(Me.chkbxRevealInPayroll)
+        Me.Panel1.Controls.Add(Me.Label366)
+        Me.Panel1.Controls.Add(Me.txtWorkHoursPerWeek)
+        Me.Panel1.Location = New System.Drawing.Point(298, 507)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(243, 44)
+        Me.Panel1.TabIndex = 536
+        Me.Panel1.Visible = False
+        '
+        'chkbxRevealInPayroll
+        '
+        Me.chkbxRevealInPayroll.AutoSize = True
+        Me.chkbxRevealInPayroll.Location = New System.Drawing.Point(103, 26)
+        Me.chkbxRevealInPayroll.Name = "chkbxRevealInPayroll"
+        Me.chkbxRevealInPayroll.Size = New System.Drawing.Size(105, 17)
+        Me.chkbxRevealInPayroll.TabIndex = 528
+        Me.chkbxRevealInPayroll.Text = "Hidden in Payroll"
+        Me.chkbxRevealInPayroll.UseVisualStyleBackColor = True
+        '
+        'Label366
+        '
+        Me.Label366.AutoSize = True
+        Me.Label366.Location = New System.Drawing.Point(0, 7)
+        Me.Label366.Name = "Label366"
+        Me.Label366.Size = New System.Drawing.Size(97, 13)
+        Me.Label366.TabIndex = 526
+        Me.Label366.Text = "Work hrs per week"
+        '
+        'txtWorkHoursPerWeek
+        '
+        Me.txtWorkHoursPerWeek.Location = New System.Drawing.Point(103, 0)
+        Me.txtWorkHoursPerWeek.MaxLength = 12
+        Me.txtWorkHoursPerWeek.Name = "txtWorkHoursPerWeek"
+        Me.txtWorkHoursPerWeek.Size = New System.Drawing.Size(79, 20)
+        Me.txtWorkHoursPerWeek.TabIndex = 527
+        Me.txtWorkHoursPerWeek.Text = "90"
         '
         'Label364
         '
@@ -2441,82 +2563,6 @@ Partial Class EmployeeForm
         Me.Label360.Size = New System.Drawing.Size(18, 24)
         Me.Label360.TabIndex = 519
         Me.Label360.Text = "*"
-        '
-        'GroupBox1
-        '
-        Me.GroupBox1.Controls.Add(Me.chkcalcRestDayOT)
-        Me.GroupBox1.Controls.Add(Me.chkcalcRestDay)
-        Me.GroupBox1.Controls.Add(Me.chkcalcNightDiffOT)
-        Me.GroupBox1.Controls.Add(Me.chkcalcNightDiff)
-        Me.GroupBox1.Controls.Add(Me.chkcalcSpclHoliday)
-        Me.GroupBox1.Controls.Add(Me.chkcalcHoliday)
-        Me.GroupBox1.Location = New System.Drawing.Point(400, 507)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(380, 105)
-        Me.GroupBox1.TabIndex = 40
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Pay Rate Inclusion"
-        Me.ToolTip1.SetToolTip(Me.GroupBox1, "If unchecked, pay rate for the day will be 1")
-        '
-        'chkcalcRestDayOT
-        '
-        Me.chkcalcRestDayOT.AutoSize = True
-        Me.chkcalcRestDayOT.Location = New System.Drawing.Point(190, 72)
-        Me.chkcalcRestDayOT.Name = "chkcalcRestDayOT"
-        Me.chkcalcRestDayOT.Size = New System.Drawing.Size(135, 17)
-        Me.chkcalcRestDayOT.TabIndex = 5
-        Me.chkcalcRestDayOT.Text = "Calculate Rest Day OT"
-        Me.chkcalcRestDayOT.UseVisualStyleBackColor = True
-        '
-        'chkcalcRestDay
-        '
-        Me.chkcalcRestDay.AutoSize = True
-        Me.chkcalcRestDay.Location = New System.Drawing.Point(190, 49)
-        Me.chkcalcRestDay.Name = "chkcalcRestDay"
-        Me.chkcalcRestDay.Size = New System.Drawing.Size(117, 17)
-        Me.chkcalcRestDay.TabIndex = 4
-        Me.chkcalcRestDay.Text = "Calculate Rest Day"
-        Me.chkcalcRestDay.UseVisualStyleBackColor = True
-        '
-        'chkcalcNightDiffOT
-        '
-        Me.chkcalcNightDiffOT.AutoSize = True
-        Me.chkcalcNightDiffOT.Location = New System.Drawing.Point(190, 26)
-        Me.chkcalcNightDiffOT.Name = "chkcalcNightDiffOT"
-        Me.chkcalcNightDiffOT.Size = New System.Drawing.Size(169, 17)
-        Me.chkcalcNightDiffOT.TabIndex = 3
-        Me.chkcalcNightDiffOT.Text = "Calculate Night Differential OT"
-        Me.chkcalcNightDiffOT.UseVisualStyleBackColor = True
-        '
-        'chkcalcNightDiff
-        '
-        Me.chkcalcNightDiff.AutoSize = True
-        Me.chkcalcNightDiff.Location = New System.Drawing.Point(22, 72)
-        Me.chkcalcNightDiff.Name = "chkcalcNightDiff"
-        Me.chkcalcNightDiff.Size = New System.Drawing.Size(151, 17)
-        Me.chkcalcNightDiff.TabIndex = 2
-        Me.chkcalcNightDiff.Text = "Calculate Night Differential"
-        Me.chkcalcNightDiff.UseVisualStyleBackColor = True
-        '
-        'chkcalcSpclHoliday
-        '
-        Me.chkcalcSpclHoliday.AutoSize = True
-        Me.chkcalcSpclHoliday.Location = New System.Drawing.Point(22, 49)
-        Me.chkcalcSpclHoliday.Name = "chkcalcSpclHoliday"
-        Me.chkcalcSpclHoliday.Size = New System.Drawing.Size(146, 17)
-        Me.chkcalcSpclHoliday.TabIndex = 1
-        Me.chkcalcSpclHoliday.Text = "Calculate Special Holiday"
-        Me.chkcalcSpclHoliday.UseVisualStyleBackColor = True
-        '
-        'chkcalcHoliday
-        '
-        Me.chkcalcHoliday.AutoSize = True
-        Me.chkcalcHoliday.Location = New System.Drawing.Point(22, 26)
-        Me.chkcalcHoliday.Name = "chkcalcHoliday"
-        Me.chkcalcHoliday.Size = New System.Drawing.Size(108, 17)
-        Me.chkcalcHoliday.TabIndex = 0
-        Me.chkcalcHoliday.Text = "Calculate Holiday"
-        Me.chkcalcHoliday.UseVisualStyleBackColor = True
         '
         'chkWed
         '
@@ -3491,7 +3537,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(856, 187)
+        Me.dgvDepen.Size = New System.Drawing.Size(856, 196)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -15562,10 +15608,12 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.PerformLayout()
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
-        Me.GroupBox2.ResumeLayout(False)
-        Me.GroupBox2.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
         Me.TabControl3.ResumeLayout(False)
         Me.tbpleavebal.ResumeLayout(False)
         Me.tbpleavebal.PerformLayout()
@@ -15616,145 +15664,145 @@ Partial Class EmployeeForm
         Me.TabPage6.ResumeLayout(False)
         Me.TabPage6.PerformLayout()
         Me.TabPage8.ResumeLayout(False)
-        Me.TabPage8.PerformLayout
-        CType(Me.pbempleave,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvempleave,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip5.ResumeLayout(false)
-        Me.ToolStrip5.PerformLayout
-        Me.tbpDiscipAct.ResumeLayout(false)
-        Me.tbpDiscipAct.PerformLayout
-        Me.Panel14.ResumeLayout(false)
-        Me.Panel14.PerformLayout
-        CType(Me.pbEmpPicDiscip,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvDisciplinaryList,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip8.ResumeLayout(false)
-        Me.ToolStrip8.PerformLayout
-        Me.tbpEducBG.ResumeLayout(false)
-        Me.tbpEducBG.PerformLayout
-        Me.Panel13.ResumeLayout(false)
-        Me.Panel13.PerformLayout
-        CType(Me.pbEmpPicEduc,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvEducback,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip9.ResumeLayout(false)
-        Me.ToolStrip9.PerformLayout
-        Me.tbpPrevEmp.ResumeLayout(false)
-        Me.tbpPrevEmp.PerformLayout
-        Me.Panel12.ResumeLayout(false)
-        Me.Panel12.PerformLayout
-        CType(Me.pbEmpPicPrevEmp,System.ComponentModel.ISupportInitialize).EndInit
-        Me.grpDetails.ResumeLayout(false)
-        Me.grpDetails.PerformLayout
-        CType(Me.DataGridView2,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvListCompany,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip10.ResumeLayout(false)
-        Me.ToolStrip10.PerformLayout
-        Me.tbpPromotion.ResumeLayout(false)
-        Me.tbpPromotion.PerformLayout
-        Me.Panel11.ResumeLayout(false)
-        Me.Panel11.PerformLayout
-        CType(Me.pbEmpPicPromot,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvPromotionList,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip11.ResumeLayout(false)
-        Me.ToolStrip11.PerformLayout
-        Me.tbpLoans.ResumeLayout(false)
-        Me.tbpLoans.PerformLayout
-        Me.Panel10.ResumeLayout(false)
-        Me.Panel10.PerformLayout
-        CType(Me.pbEmpPicLoan,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvLoanList,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip12.ResumeLayout(false)
-        Me.ToolStrip12.PerformLayout
-        Me.tbpLoanHist.ResumeLayout(false)
-        Me.tbpLoanHist.PerformLayout
-        Me.Panel9.ResumeLayout(false)
-        Me.Panel9.PerformLayout
-        Me.GroupBox3.ResumeLayout(false)
-        Me.GroupBox3.PerformLayout
-        CType(Me.pbEmpPicLoanhist,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvloanhisto,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip14.ResumeLayout(false)
-        Me.ToolStrip14.PerformLayout
-        Me.tbpPayslip.ResumeLayout(false)
-        Me.tbpPayslip.PerformLayout
-        Me.SplitContainer3.Panel1.ResumeLayout(false)
-        Me.SplitContainer3.Panel1.PerformLayout
-        Me.SplitContainer3.Panel2.ResumeLayout(false)
-        CType(Me.SplitContainer3,System.ComponentModel.ISupportInitialize).EndInit
-        Me.SplitContainer3.ResumeLayout(false)
-        CType(Me.dgvpayper,System.ComponentModel.ISupportInitialize).EndInit
-        Me.PanelPayslip.ResumeLayout(false)
-        Me.PanelPayslip.PerformLayout
-        CType(Me.dgvempallowans,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvemploan,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvempbonus,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvpaystubitm,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvetent,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvempsal,System.ComponentModel.ISupportInitialize).EndInit
-        Me.TabControl1.ResumeLayout(false)
-        Me.TabPage1.ResumeLayout(false)
-        Me.TabPage1.PerformLayout
-        Me.TabPage4.ResumeLayout(false)
-        Me.TabPage4.PerformLayout
-        Me.TabPage5.ResumeLayout(false)
-        Me.TabPage5.PerformLayout
-        CType(Me.dgvpaystub,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip16.ResumeLayout(false)
-        Me.ToolStrip16.PerformLayout
-        Me.tbpempallow.ResumeLayout(false)
-        Me.tbpempallow.PerformLayout
-        Me.Panel6.ResumeLayout(false)
-        Me.Panel6.PerformLayout
-        CType(Me.pbEmpPicAllow,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvempallowance,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip17.ResumeLayout(false)
-        Me.ToolStrip17.PerformLayout
-        Me.tbpEmpOT.ResumeLayout(false)
-        Me.tbpEmpOT.PerformLayout
-        Me.Panel5.ResumeLayout(false)
-        Me.Panel5.PerformLayout
-        CType(Me.pbEmpPicEmpOT,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.pbempEmpOT,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvempOT,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip18.ResumeLayout(false)
-        Me.ToolStrip18.PerformLayout
-        Me.tbpOBF.ResumeLayout(false)
-        Me.tbpOBF.PerformLayout
-        Me.Panel4.ResumeLayout(false)
-        Me.Panel4.PerformLayout
-        CType(Me.pbEmpPicOBF,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.pbempOBF,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvOBF,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip19.ResumeLayout(false)
-        Me.ToolStrip19.PerformLayout
-        Me.tbpBonus.ResumeLayout(false)
-        Me.tbpBonus.PerformLayout
-        Me.Panel3.ResumeLayout(false)
-        Me.Panel3.PerformLayout
-        CType(Me.pbEmpPicBon,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvempbon,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip20.ResumeLayout(false)
-        Me.ToolStrip20.PerformLayout
-        Me.tbpAttachment.ResumeLayout(false)
-        Me.tbpAttachment.PerformLayout
-        Me.Panel2.ResumeLayout(false)
-        Me.Panel2.PerformLayout
-        CType(Me.pbEmpPicAtta,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvempatta,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.pbatta,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip21.ResumeLayout(false)
-        Me.ToolStrip21.PerformLayout
-        Me.TabControl2.ResumeLayout(false)
-        Me.TabPage2.ResumeLayout(false)
-        Me.TabPage2.PerformLayout
-        Me.TabPage3.ResumeLayout(false)
-        Me.TabPage3.PerformLayout
-        CType(Me.dgvEmp,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.errprovidSal,System.ComponentModel.ISupportInitialize).EndInit
-        Me.Panel7.ResumeLayout(false)
-        Me.Panel7.PerformLayout
-        Me.ResumeLayout(false)
+        Me.TabPage8.PerformLayout()
+        CType(Me.pbempleave, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvempleave, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip5.ResumeLayout(False)
+        Me.ToolStrip5.PerformLayout()
+        Me.tbpDiscipAct.ResumeLayout(False)
+        Me.tbpDiscipAct.PerformLayout()
+        Me.Panel14.ResumeLayout(False)
+        Me.Panel14.PerformLayout()
+        CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvDisciplinaryList, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip8.ResumeLayout(False)
+        Me.ToolStrip8.PerformLayout()
+        Me.tbpEducBG.ResumeLayout(False)
+        Me.tbpEducBG.PerformLayout()
+        Me.Panel13.ResumeLayout(False)
+        Me.Panel13.PerformLayout()
+        CType(Me.pbEmpPicEduc, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvEducback, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip9.ResumeLayout(False)
+        Me.ToolStrip9.PerformLayout()
+        Me.tbpPrevEmp.ResumeLayout(False)
+        Me.tbpPrevEmp.PerformLayout()
+        Me.Panel12.ResumeLayout(False)
+        Me.Panel12.PerformLayout()
+        CType(Me.pbEmpPicPrevEmp, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.grpDetails.ResumeLayout(False)
+        Me.grpDetails.PerformLayout()
+        CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvListCompany, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip10.ResumeLayout(False)
+        Me.ToolStrip10.PerformLayout()
+        Me.tbpPromotion.ResumeLayout(False)
+        Me.tbpPromotion.PerformLayout()
+        Me.Panel11.ResumeLayout(False)
+        Me.Panel11.PerformLayout()
+        CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip11.ResumeLayout(False)
+        Me.ToolStrip11.PerformLayout()
+        Me.tbpLoans.ResumeLayout(False)
+        Me.tbpLoans.PerformLayout()
+        Me.Panel10.ResumeLayout(False)
+        Me.Panel10.PerformLayout()
+        CType(Me.pbEmpPicLoan, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvLoanList, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip12.ResumeLayout(False)
+        Me.ToolStrip12.PerformLayout()
+        Me.tbpLoanHist.ResumeLayout(False)
+        Me.tbpLoanHist.PerformLayout()
+        Me.Panel9.ResumeLayout(False)
+        Me.Panel9.PerformLayout()
+        Me.GroupBox3.ResumeLayout(False)
+        Me.GroupBox3.PerformLayout()
+        CType(Me.pbEmpPicLoanhist, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvloanhisto, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip14.ResumeLayout(False)
+        Me.ToolStrip14.PerformLayout()
+        Me.tbpPayslip.ResumeLayout(False)
+        Me.tbpPayslip.PerformLayout()
+        Me.SplitContainer3.Panel1.ResumeLayout(False)
+        Me.SplitContainer3.Panel1.PerformLayout()
+        Me.SplitContainer3.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer3.ResumeLayout(False)
+        CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.PanelPayslip.ResumeLayout(False)
+        Me.PanelPayslip.PerformLayout()
+        CType(Me.dgvempallowans, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvemploan, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvempbonus, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvpaystubitm, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvetent, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvempsal, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabControl1.ResumeLayout(False)
+        Me.TabPage1.ResumeLayout(False)
+        Me.TabPage1.PerformLayout()
+        Me.TabPage4.ResumeLayout(False)
+        Me.TabPage4.PerformLayout()
+        Me.TabPage5.ResumeLayout(False)
+        Me.TabPage5.PerformLayout()
+        CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip16.ResumeLayout(False)
+        Me.ToolStrip16.PerformLayout()
+        Me.tbpempallow.ResumeLayout(False)
+        Me.tbpempallow.PerformLayout()
+        Me.Panel6.ResumeLayout(False)
+        Me.Panel6.PerformLayout()
+        CType(Me.pbEmpPicAllow, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip17.ResumeLayout(False)
+        Me.ToolStrip17.PerformLayout()
+        Me.tbpEmpOT.ResumeLayout(False)
+        Me.tbpEmpOT.PerformLayout()
+        Me.Panel5.ResumeLayout(False)
+        Me.Panel5.PerformLayout()
+        CType(Me.pbEmpPicEmpOT, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbempEmpOT, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvempOT, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip18.ResumeLayout(False)
+        Me.ToolStrip18.PerformLayout()
+        Me.tbpOBF.ResumeLayout(False)
+        Me.tbpOBF.PerformLayout()
+        Me.Panel4.ResumeLayout(False)
+        Me.Panel4.PerformLayout()
+        CType(Me.pbEmpPicOBF, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbempOBF, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvOBF, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip19.ResumeLayout(False)
+        Me.ToolStrip19.PerformLayout()
+        Me.tbpBonus.ResumeLayout(False)
+        Me.tbpBonus.PerformLayout()
+        Me.Panel3.ResumeLayout(False)
+        Me.Panel3.PerformLayout()
+        CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip20.ResumeLayout(False)
+        Me.ToolStrip20.PerformLayout()
+        Me.tbpAttachment.ResumeLayout(False)
+        Me.tbpAttachment.PerformLayout()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
+        CType(Me.pbEmpPicAtta, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvempatta, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pbatta, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip21.ResumeLayout(False)
+        Me.ToolStrip21.PerformLayout()
+        Me.TabControl2.ResumeLayout(False)
+        Me.TabPage2.ResumeLayout(False)
+        Me.TabPage2.PerformLayout()
+        Me.TabPage3.ResumeLayout(False)
+        Me.TabPage3.PerformLayout()
+        CType(Me.dgvEmp, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.errprovidSal, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel7.ResumeLayout(False)
+        Me.Panel7.PerformLayout()
+        Me.ResumeLayout(False)
 
-End Sub
+    End Sub
     Friend WithEvents txtEmpID As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents rdMale As System.Windows.Forms.RadioButton
@@ -17147,4 +17195,8 @@ End Sub
     Friend WithEvents tsbtnimportallowance As ToolStripButton
     Friend WithEvents OTImport As ToolStripButton
     Friend WithEvents OBImport As ToolStripButton
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents chkbxRevealInPayroll As CheckBox
+    Friend WithEvents Label366 As Label
+    Friend WithEvents txtWorkHoursPerWeek As TextBox
 End Class
