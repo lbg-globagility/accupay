@@ -256,6 +256,12 @@
     <Compile Include="Core Forms\Independent filing\OverTimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\JobLevel\JobLevelForm.Designer.vb">
+      <DependentUpon>JobLevelForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\JobLevel\JobLevelForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
@@ -1263,6 +1269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Independent filing\OverTimeForm.resx">
       <DependentUpon>OverTimeForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\JobLevel\JobLevelForm.resx">
+      <DependentUpon>JobLevelForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
