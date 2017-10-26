@@ -2,6 +2,8 @@
 
     Public listPayrollForm As New List(Of String)
 
+    Private sys_ownr As New SystemOwner
+
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
         reloadViewPrivilege()
@@ -102,7 +104,7 @@
     End Sub
 
     Private Sub PayrollForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        setProperInterfaceBaseOnCurrentSystemOwner()
     End Sub
 
     Sub reloadViewPrivilege()
@@ -141,6 +143,20 @@
     Private Sub WithholdingTaxToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles WithholdingTaxToolStripMenuItem.Click
         ChangeForm(WithholdingTax, "Employee Pay Slip")
         previousForm = WithholdingTax
+    End Sub
+
+    Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
+
+        Dim _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+
+        If _bool Then
+            BonusToolStripMenuItem.Visible = (Not _bool)
+
+        Else
+
+        End If
+
     End Sub
 
 End Class

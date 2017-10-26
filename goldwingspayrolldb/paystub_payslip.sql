@@ -1,49 +1,54 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for procedure paystub_payslip
 DROP PROCEDURE IF EXISTS `paystub_payslip`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `paystub_payslip`(
 	IN `OrganizID` INT,
 	IN `PayPeriodRowID` INT,
 	IN `IsActualFlag` CHAR(1)
-
-
-
-
-
-
-
-
-
 )
     DETERMINISTIC
 BEGIN
 
 DECLARE paydate_from DATE;
-
 DECLARE paydat_to DATE;
 
 SELECT pp.PayFromDate,pp.PayToDate FROM payperiod pp WHERE pp.RowID=PayPeriodRowID INTO paydate_from,paydat_to;
 
-
 SET @daily_rate = GET_employeerateperday(9,2,paydat_to);
-
-
 
 SELECT i.*
 FROM (
     SELECT
         e.RowID,
         e.EmployeeID AS `COL1`,
-        CONCAT_WS(', ',e.LastName,e.FirstName,e.MiddleName) AS `COL69`,
-        IF(IsActualFlag=0, ete.RegularHoursAmount, ROUND(ete.RegularHoursAmount, 2)) AS `COL70`,
+        CONCAT_WS(', ', e.LastName, e.FirstName, e.MiddleName) AS `COL69`,
+        IF(IsActualFlag = 0, ete.RegularHoursAmount, ROUND(ete.RegularHoursAmount, 2)) AS `COL70`,
         IF(IsActualFlag = 1, es.TrueSalary, es.Salary) `COL80`,
         0 AS `COL2`,
-        ROUND( IF(e.EmployeeType IN ('Fixed','Monthly'), (es.BasicPay * IF(IsActualFlag=0, 1, (es.TrueSalary / es.Salary))), IFNULL(ete.RegularHoursAmount,0)) , 2) AS `COL3`,
+        ROUND(
+            IF(
+                e.EmployeeType IN ('Fixed', 'Monthly'),
+                (es.BasicPay * IF(
+                    IsActualFlag = 0,
+                    1,
+                    (es.TrueSalary / es.Salary)
+                )),
+                IFNULL(ete.RegularHoursAmount, 0)
+            ),
+            2
+        ) AS `COL3`,
         IFNULL(ete.UndertimeHours, 0) AS `COL4`,
         IFNULL(ete.Absent, 0) AS `COL5`,
         IFNULL(ete.HoursLate, 0) AS `COL6`,
@@ -83,7 +88,9 @@ FROM (
         IFNULL(ete.Leavepayment,0) AS `COL41`,
         IFNULL(psiHoli.PayAmount,0) AS `COL42`,
         IFNULL(psiECOLA.PayAmount,0) AS `COL43`,
-        psiLeave.Names AS `COL44`
+        psiLeave.Names AS `COL44`,
+        psiLeave.Availed AS `COl45`,
+        psiLeave.Balance AS `COL46`
     FROM (
             SELECT
                 RowID,
@@ -280,7 +287,7 @@ FROM (
     LEFT JOIN (
         SELECT
             REPLACE(GROUP_CONCAT(IFNULL(product.PartNo, '')), ',', '\n') 'Names',
-            REPLACE(GROUP_CONCAT(IFNULL(paystubitem.PayAmount, '')), ',', '\n') 'PayAmounts',
+            REPLACE(GROUP_CONCAT(IFNULL(scheduledloansperpayperiod.DeductionAmount, '')), ',', '\n') 'PayAmounts',
             REPLACE(GROUP_CONCAT(IFNULL(ROUND(scheduledloansperpayperiod.TotalBalanceLeft, 2), '')), ',', '\n') 'TotalBalanceLeft',
             paystub.RowID 'PayStubID'
         FROM scheduledloansperpayperiod
@@ -289,28 +296,52 @@ FROM (
         INNER JOIN paystub
         ON paystub.PayPeriodID = scheduledloansperpayperiod.PayPeriodID AND
             paystub.EmployeeID = scheduledloansperpayperiod.EmployeeID
-        INNER JOIN paystubitem
-        ON paystubitem.PayStubID = paystub.RowID AND
-            paystubitem.ProductID = employeeloanschedule.LoanTypeID
         INNER JOIN product
-        ON product.RowID = paystubitem.ProductID
+        ON product.RowID = employeeloanschedule.LoanTypeID
         GROUP BY paystub.RowID
     ) payStubLoans
     ON payStubLoans.PayStubID = ps.RowID
     LEFT JOIN (
         SELECT
             psi.PayStubID,
-            REPLACE(GROUP_CONCAT(IFNULL(p.PartNo, '')), ',', '\n') `Names`
+            REPLACE(GROUP_CONCAT(IFNULL(p.PartNo, '')), ',', '\n') `Names`,
+            REPLACE(
+                GROUP_CONCAT(
+                    IFNULL(
+                        IF(
+                            p.PartNo = 'Sick leave',
+                            ete.SickLeaveHours,
+                            ete.VacationLeaveHours
+                        ),
+                        ''
+                    )
+                ),
+                ',',
+                '\n'
+            ) 'Availed',
+            REPLACE(GROUP_CONCAT(IFNULL(psi.PayAmount, 0)), ',', '\n') 'Balance'
         FROM paystubitem psi
         INNER JOIN product p
-        ON p.RowID=psi.ProductID AND
-            p.OrganizationID=psi.OrganizationID AND
-            p.`Category`='Leave Type'
-        WHERE psi.OrganizationID=OrganizID AND
-            psi.PayAmount!=0
+        ON p.RowID = psi.ProductID AND
+            p.OrganizationID = psi.OrganizationID AND
+            p.`Category` = 'Leave Type' AND
+            (p.PartNo = 'Sick leave' OR p.PartNo = 'Vacation leave')
+        INNER JOIN paystub ps
+        ON ps.RowID = psi.PayStubID
+        INNER JOIN (
+            SELECT
+                EmployeeID,
+                VacationLeaveHours,
+                SickLeaveHours
+            FROM employeetimeentry
+            WHERE Date BETWEEN paydate_from AND paydat_to
+            GROUP BY EmployeeID
+        ) ete
+        ON ete.EmployeeID = ps.EmployeeID
+        WHERE psi.OrganizationID = OrganizID
         GROUP BY psi.PayStubID
     ) psiLeave
-    ON psiLeave.PayStubID=ps.RowID
+    ON psiLeave.PayStubID = ps.RowID
     LEFT JOIN (
         SELECT
             psi.*,
@@ -322,7 +353,7 @@ FROM (
             p.PartNo='Holiday pay'
         WHERE psi.Undeclared=IsActualFlag AND
             psi.OrganizationID=OrganizID AND
-            psi.PayAmount!=0
+            psi.PayAmount != 0
     ) psiHoli
     ON psiHoli.PayStubID=ps.RowID
     LEFT JOIN (
@@ -378,7 +409,6 @@ FROM (
 
 END//
 DELIMITER ;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

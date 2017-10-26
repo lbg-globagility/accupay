@@ -4464,6 +4464,7 @@ Partial Class PayStub
         Me.TabControl2.SelectedIndex = 0
         Me.TabControl2.Size = New System.Drawing.Size(235, 158)
         Me.TabControl2.TabIndex = 176
+        Me.TabControl2.Visible = False
         '
         'TabPage2
         '

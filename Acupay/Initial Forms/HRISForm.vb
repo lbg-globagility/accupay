@@ -4,6 +4,10 @@ Public Class HRISForm
 
     Public listHRISForm As New List(Of String)
 
+    Dim sys_ownr As New SystemOwner
+
+    Private curr_sys_owner_name As String = sys_ownr.CurrentSystemOwner
+
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
         reloadViewPrivilege()
@@ -316,4 +320,14 @@ Public Class HRISForm
             Exit For
         Next
     End Sub
+
+    Protected Overrides Sub OnLoad(e As EventArgs)
+
+        OffSetToolStripMenuItem.Visible =
+            (curr_sys_owner_name = SystemOwner.Cinema2000)
+
+        MyBase.OnLoad(e)
+
+    End Sub
+
 End Class

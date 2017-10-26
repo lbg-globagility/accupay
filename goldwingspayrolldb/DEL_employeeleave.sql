@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure hyundaipayrolldb_dev.DEL_employeeleave
+-- Dumping structure for procedure cinema2k.DEL_employeeleave
 DROP PROCEDURE IF EXISTS `DEL_employeeleave`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `DEL_employeeleave`(IN `leave_rowid` INT)

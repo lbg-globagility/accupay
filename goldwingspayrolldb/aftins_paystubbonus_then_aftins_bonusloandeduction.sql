@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb_global_e_pc.aftins_paystubbonus_then_aftins_bonusloandeduction
+-- Dumping structure for procedure aftins_paystubbonus_then_aftins_bonusloandeduction
 DROP PROCEDURE IF EXISTS `aftins_paystubbonus_then_aftins_bonusloandeduction`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `aftins_paystubbonus_then_aftins_bonusloandeduction`(IN `OrganizID` INT, IN `UserRowID` INT, IN `EmpRowID` INT, IN `psb_PayPeriodID` INT, IN `min_date_ofparamdate` DATE, IN `max_date_ofparamdate` DATE)

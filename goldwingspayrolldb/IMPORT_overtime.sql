@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure hyundaipayrolldb.IMPORT_overtime
+-- Dumping structure for procedure IMPORT_overtime
 DROP PROCEDURE IF EXISTS `IMPORT_overtime`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `IMPORT_overtime`(IN `og_id` INT, IN `user_rowid` INT, IN `emp_num` VARCHAR(50), IN `allowance_name` VARCHAR(50), IN `start_date` VARCHAR(50), IN `i_starttime` VARCHAR(50), IN `end_date` VARCHAR(50), IN `i_endtime` VARCHAR(50))

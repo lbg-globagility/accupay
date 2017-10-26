@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb_global_e_pc.DEL_specificpaystubbonus
+-- Dumping structure for procedure cinema2k.DEL_specificpaystubbonus
 DROP PROCEDURE IF EXISTS `DEL_specificpaystubbonus`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `DEL_specificpaystubbonus`(IN `paystubbonus_RowID` INT)

@@ -240,6 +240,8 @@ Public Class PayStub
 
     Dim indxStartBatch As Integer = 0
 
+    Private sys_ownr As New SystemOwner
+
     Property VeryFirstPayPeriodIDOfThisYear As Object
         Get
             Return n_VeryFirstPayPeriodIDOfThisYear
@@ -263,6 +265,9 @@ Public Class PayStub
             dgvcol.Width = mincolwidth
             dgvcol.SortMode = DataGridViewColumnSortMode.NotSortable
         Next
+
+        setProperInterfaceBaseOnCurrentSystemOwner()
+
         MyBase.OnLoad(e)
 
     End Sub
@@ -1049,10 +1054,10 @@ Public Class PayStub
     End Sub
 
     Sub genpayroll(Optional PayFreqRowID As Object = Nothing)
-        Dim loadTask = Task.Factory.StartNew(
-            Sub()
+        Dim loadTask = Task.Factory.StartNew(Of PayrollResources)(
+            Function()
                 If paypFrom = Nothing And paypTo = Nothing Then
-                    Exit Sub
+                    Return Nothing
                 End If
 
                 Dim resources = New PayrollResources(paypRowID, CDate(paypFrom), CDate(paypTo))
@@ -1398,7 +1403,9 @@ Public Class PayStub
                                                               " AND '" & paypTo & "'" &
                                                               " GROUP BY ete.EmployeeID" &
                                                               " HAVING COUNT(ete.RowID) < 5;").ResultTable
-            End Sub,
+
+                Return resources
+            End Function,
             0
         )
 
@@ -1417,20 +1424,11 @@ Public Class PayStub
         )
     End Sub
 
-    Private Sub LoadingPayrollDataOnSuccess()
+    Private Sub LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources))
         indxStartBatch = 0
-
-        Dim n_lov_mxthread As New ExecuteQuery("SELECT CAST(DisplayValue AS INT) `Result` FROM listofval WHERE `Type`='Max thread count' AND LIC='Max thread count' AND Active='Yes' LIMIT 1;")
-        If ValNoComma(n_lov_mxthread.Result) > 0 Then
-            thread_max = ValNoComma(n_lov_mxthread.Result)
-        Else
-            n_lov_mxthread = New _
-                                                                   ExecuteQuery(String.Concat("INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('5', 'Max thread count', 'Max thread count', '', 'Yes', 'max thread count when generating payroll', CURRENT_TIMESTAMP(), ", z_User, ", CURRENT_TIMESTAMP(), 1, ", z_User, ") ON DUPLICATE KEY UPDATE LastUpd = CURRENT_TIMESTAMP(), LastUpdBy = IFNULL(LastUpdBy,CreatedBy);"))
-        End If
-
         progress_precentage = 0
 
-        ThreadingPayrollGeneration(thread_max)
+        ThreadingPayrollGeneration(t.Result)
     End Sub
 
     Private Sub LoadingPayrollDataOnError(t As Task)
@@ -1439,7 +1437,7 @@ Public Class PayStub
         Me.Enabled = True
     End Sub
 
-    Private Sub ThreadingPayrollGeneration(Optional starting_batchindex As Integer = 0)
+    Private Sub ThreadingPayrollGeneration(resources As PayrollResources)
         Timer1.Stop()
         Timer1.Enabled = False
 
@@ -1516,6 +1514,8 @@ Public Class PayStub
                         withthirteenthmonthpay,
                         _filingStatuses,
                         _withholdingTaxTable,
+                        resources.Products,
+                        resources.Paystubs,
                         Me
                     )
 
@@ -3548,6 +3548,36 @@ Public Class PayStub
 
     End Sub
 
+    Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
+
+        Static _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+
+        If _bool Then
+
+            Dim str_empty As String = String.Empty
+
+            TabPage1.Text = str_empty
+
+            TabPage4.Text = str_empty
+
+            AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
+
+        Else
+
+        End If
+
+    End Sub
+
+    Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
+
+        Static _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+
+        e.Cancel = _bool
+
+    End Sub
+
 End Class
 
 Friend Class PrintAllPaySlipOfficialFormat
@@ -3573,13 +3603,13 @@ Friend Class PrintAllPaySlipOfficialFormat
 
     Private catchdt As New DataTable
 
+    Private sys_ownr As New SystemOwner
+
     Sub DoProcess()
 
         Dim rptdoc As Object = Nothing
 
-        Dim sql As New SQL("SELECT Name FROM systemowner WHERE IsCurrentOwner='1' LIMIT 1;")
-
-        Dim current_system_owner As String = Convert.ToString(sql.GetFoundRow)
+        Static current_system_owner As String = sys_ownr.CurrentSystemOwner
 
         If SystemOwner.Goldwings = current_system_owner Then
 
@@ -3619,6 +3649,26 @@ Friend Class PrintAllPaySlipOfficialFormat
             Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
 
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
+            objText.Text = orgNam.ToUpper
+
+        ElseIf SystemOwner.Cinema2000 = current_system_owner Then
+
+            Dim params =
+                New Object() {orgztnID, n_PayPeriodRowID}
+
+            Dim str_query As String = String.Concat(
+                "CALL `RPT_payslip`(?og_rowid, ?pp_rowid, TRUE, NULL);")
+
+            Dim _sql As New SQL(str_query,
+                                params)
+
+            catchdt = _sql.GetFoundRows.Tables(0)
+
+            rptdoc = New TwoEmpIn1PaySlip
+
+            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
+
+            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgName")
             objText.Text = orgNam.ToUpper
 
         End If

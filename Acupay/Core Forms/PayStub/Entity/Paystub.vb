@@ -3,7 +3,7 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Namespace Global.Paystub.Entity
+Namespace Global.AccuPay.Entity
 
     <Table("paystub")>
     Public Class Paystub
@@ -17,7 +17,7 @@ Namespace Global.Paystub.Entity
 
         Public Property CreatedBy As Integer?
 
-        Public Property LastUpd As Date
+        Public Property LastUpd As Date?
 
         Public Property LastUpdBy As Integer?
 

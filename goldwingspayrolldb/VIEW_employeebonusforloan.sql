@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure goldwingspayrolldb_global_e_pc.VIEW_employeebonusforloan
+-- Dumping structure for procedure VIEW_employeebonusforloan
 DROP PROCEDURE IF EXISTS `VIEW_employeebonusforloan`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `VIEW_employeebonusforloan`(IN `ebon_EmployeeID` INT, IN `ebon_OrganizationID` INT, IN `AssignBonusRowID` INT, IN `loan_startdate` DATE, IN `loan_enddate` DATE, IN `els_rowid` INT)

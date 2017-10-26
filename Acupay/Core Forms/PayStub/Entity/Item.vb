@@ -3,10 +3,10 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Namespace Global.Item.Entity
+Namespace Global.AccuPay.Entity
 
     <Table("paystubitem")>
-    Public Class Item
+    Public Class PaystubItem
 
         <Key>
         Public Property RowID As Integer?
@@ -17,9 +17,9 @@ Namespace Global.Item.Entity
 
         Public Property CreatedBy As Integer?
 
-        Public Property LastUpd As Date
+        Public Property LastUpd As Date?
 
-        Public Property LastUpdBy As Integer
+        Public Property LastUpdBy As Integer?
 
         Public Property PayStubID As Integer?
 
@@ -28,6 +28,9 @@ Namespace Global.Item.Entity
         Public Property PayAmount As Decimal
 
         Public Property Undeclared As Char
+
+        <ForeignKey("ProductID")>
+        Public Overridable Property Product As Product
 
     End Class
 
