@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function hyundaipayrolldb_dev.GET_employeerateperday
+-- Dumping structure for function GET_employeerateperday
 DROP FUNCTION IF EXISTS `GET_employeerateperday`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `GET_employeerateperday`(`EmpID` INT, `OrgID` INT, `paramDate` DATE) RETURNS decimal(11,6)

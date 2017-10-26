@@ -1,9 +1,16 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for function INSUPD_paywithholdingtax
 DROP FUNCTION IF EXISTS `INSUPD_paywithholdingtax`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_paywithholdingtax`(`wtx_RowID` INT, `wtx_CreatedBy` INT, `wtx_LastUpdBy` INT, `wtx_PayFrequencyID` INT, `wtx_FilingStatusID` INT, `wtx_EffectiveDateFrom` DATE, `wtx_EffectiveDateTo` DATE, `wtx_ExemptionAmount` DECIMAL(10,2), `wtx_ExemptionInExcessAmount` DECIMAL(10,2), `wtx_TaxableIncomeFromAmount` DECIMAL(10,2), `wtx_TaxableIncomeToAmount` DECIMAL(10,2)) RETURNS int(11)
@@ -56,7 +63,6 @@ RETURN returnval;
 
 END//
 DELIMITER ;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -198,6 +198,7 @@ Partial Class HRISForm
         '
         'OffSetToolStripMenuItem
         '
+        Me.OffSetToolStripMenuItem.AccessibleDescription = "Cinema 2000"
         Me.OffSetToolStripMenuItem.Name = "OffSetToolStripMenuItem"
         Me.OffSetToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.OffSetToolStripMenuItem.Text = "Offset"

@@ -195,8 +195,7 @@ Public Class EmpPosition
                                     ",d.RowID AS DivRowID" &
                                     " FROM position p" &
                                     " LEFT JOIN `division` d ON d.RowID=p.DivisionId" &
-                                    " WHERE p.OrganizationID=" & orgztnID & "" &
-                                    " AND p.RowID NOT IN (SELECT PositionID FROM user WHERE OrganizationID=" & orgztnID & ");").ResultTable
+                                    " WHERE p.OrganizationID=" & orgztnID & ";").ResultTable
 
         'alphaposition = New SQLQueryToDatatable("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NOT NULL AND ParentPositionID!=RowID GROUP BY ParentPositionID;")
 
@@ -205,8 +204,7 @@ Public Class EmpPosition
                                                 " FROM position p" &
                                                 " INNER JOIN `division` d ON d.RowID=p.DivisionId" &
                                                 " WHERE p.OrganizationID=" & orgztnID & "" &
-                                                " AND p.ParentPositionID IS NULL" &
-                                                " AND p.RowID NOT IN (SELECT PositionID FROM user WHERE OrganizationID=" & orgztnID & ");").ResultTable
+                                                " AND p.ParentPositionID IS NULL;").ResultTable
 
         'For Each drow As DataRow In alphaposition.Rows
         '    Positiontreeviewfiller(drow("RowID"), drow("PositionName"), )
@@ -337,10 +335,6 @@ Public Class EmpPosition
 
     End Sub
 
-    Private Sub tv2_AfterSelect_1(sender As Object, e As TreeViewEventArgs) Handles tv2.AfterSelect
-
-    End Sub
-
     Private Sub tv2_BeforeSelect(sender As Object, e As TreeViewCancelEventArgs) Handles tv2.BeforeSelect
 
         Try
@@ -352,6 +346,10 @@ Public Class EmpPosition
         Finally
 
         End Try
+
+    End Sub
+
+    Private Sub tv2_AfterSelect_1(sender As Object, e As TreeViewEventArgs) Handles tv2.AfterSelect
 
     End Sub
 

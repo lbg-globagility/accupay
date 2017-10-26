@@ -33,6 +33,8 @@ Public Class EmployeeShiftEntryForm
 
     Dim ArrayWeekFormat() As String
 
+    Private sys_ownr As New SystemOwner
+
     Protected Overrides Sub OnLoad(e As EventArgs)
         Dim n_SQLQueryToDatatable As _
             New SQLQueryToDatatable("CALL `MACHINE_WEEKFORMAT`(@@default_week_format);")
@@ -53,6 +55,9 @@ Public Class EmployeeShiftEntryForm
         dgvWeek.Rows.Clear()
         dgvWeek.Rows.Add()
         LoadDivision()
+
+        setProperInterfaceBaseOnSystemOwner()
+
         MyBase.OnLoad(e)
     End Sub
 
@@ -1264,6 +1269,40 @@ Public Class EmployeeShiftEntryForm
         If e_asc = 13 Then
             btnSearch_Click(txtsrchEmpLName, New EventArgs)
         End If
+    End Sub
+
+    Private Sub CustomColoredTabControl1_Selecting_1(sender As Object, e As TabControlCancelEventArgs) Handles CustomColoredTabControl1.Selecting
+
+    End Sub
+
+    Private Sub CustomColoredTabControl1_SelectingTabPage(sender As Object, e As TabControlCancelEventArgs)
+
+        e.Cancel =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000 _
+            And CustomColoredTabControl1.SelectedIndex = 1)
+
+    End Sub
+
+    Private Sub setProperInterfaceBaseOnSystemOwner()
+
+        Dim _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+
+        If _bool Then
+            TabPage2.Text = String.Empty
+
+            AddHandler CustomColoredTabControl1.Selecting, AddressOf CustomColoredTabControl1_SelectingTabPage
+
+            Dim opposite_bool As Boolean = (Not _bool)
+
+            ByDayToolStripMenuItem.Visible = opposite_bool
+
+            tsbtnBulkEditShift.Visible = opposite_bool
+
+        Else
+
+        End If
+
     End Sub
 
 End Class

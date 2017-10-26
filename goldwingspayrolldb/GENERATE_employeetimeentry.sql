@@ -1,16 +1,22 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function hyundaipayrolldb_dev.GENERATE_employeetimeentry
+-- Dumping structure for function GENERATE_employeetimeentry
 DROP FUNCTION IF EXISTS `GENERATE_employeetimeentry`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(
-    `ete_EmpRowID` INT,
-    `ete_OrganizID` INT,
-    `ete_Date` DATE,
-    `ete_UserRowID` INT
+CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(`ete_EmpRowID` INT, `ete_OrganizID` INT, `ete_Date` DATE, `ete_UserRowID` INT
+
+
+
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN
@@ -22,6 +28,8 @@ DECLARE DAYTYPE_REGULAR_HOLIDAY VARCHAR(50) DEFAULT 'Regular Holiday';
 DECLARE BASIC_RATE INT(10) DEFAULT 1;
 
 DECLARE returnvalue INT(11);
+
+DECLARE pr_DayBefore DATE;
 
 DECLARE pr_PayType TEXT;
 
@@ -119,7 +127,7 @@ DECLARE payrateRowID INT(11);
 DECLARE ete_TotalDayPay DECIMAL(11,6);
 
 
-
+DECLARE hasLeave CHAR(1) DEFAULT '0';
 
 DECLARE OTCount INT(11) DEFAULT 0;
 
@@ -199,6 +207,7 @@ DECLARE restDayHours DECIMAL(15, 4);
 DECLARE restDayAmount DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE holidayPay DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE leavePay DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE lateHoursBeforeBreak DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE lateHoursAfterBreak DECIMAL(11, 6) DEFAULT 0.0;
@@ -209,18 +218,6 @@ DECLARE undertimeHoursBeforeBreak DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE undertimeHoursAfterBreak DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE undertimeHours DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE undertimeAmount DECIMAL(15, 4) DEFAULT 0.0;
-
-DECLARE hasLeave BOOLEAN DEFAULT FALSE;
-DECLARE leaveStartTime TIME;
-DECLARE leaveEndTime TIME;
-DECLARE leaveStart DATETIME;
-DECLARE leaveEnd DATETIME;
-DECLARE leaveType VARCHAR(50);
-
-DECLARE leaveHoursBeforeBreak DECIMAL(15, 4) DEFAULT 0.0;
-DECLARE leaveHoursAfterBreak DECIMAL(15, 4) DEFAULT 0.0;
-DECLARE leaveHours DECIMAL(15, 4);
-DECLARE leavePay DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE basicDayPay DECIMAL(12, 4);
 
@@ -299,6 +296,7 @@ SELECT
     IF(e_CalcNightDiffOT = '1', NightDifferentialOTRate, 1),
     IF(e_CalcRestDay = '1', RestDayRate, 1),
     IF(e_CalcRestDayOT = '1', RestDayOvertimeRate, 1),
+    DayBefore,
     PayType
 FROM payrate
 WHERE `Date` = ete_Date
@@ -311,6 +309,7 @@ INTO
     ndiffotrate,
     restday_rate,
     restdayot_rate,
+    pr_DayBefore,
     pr_PayType;
 
 SELECT
@@ -339,28 +338,24 @@ WHERE e.RowID = ete_EmpRowID
 INTO isDefaultRestDay;
 
 SELECT
-    esh.RowID,
-    sh.RowID,
     sh.TimeFrom,
     sh.TimeTo,
-    sh.BreakTimeFrom,
-    sh.BreakTimeTo,
+    esh.RowID,
+    sh.RowID,
     COALESCE(esh.RestDay, TRUE)
 FROM employeeshift esh
 INNER JOIN shift sh
-ON sh.RowID = esh.ShiftID
-WHERE esh.EmployeeID = ete_EmpRowID AND
-    esh.OrganizationID = ete_OrganizID AND
-    ete_Date BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
+    ON sh.RowID = esh.ShiftID
+WHERE esh.EmployeeID = ete_EmpRowID
+    AND esh.OrganizationID = ete_OrganizID
+    AND ete_Date BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
 ORDER BY DATEDIFF(ete_Date, esh.EffectiveFrom)
 LIMIT 1
 INTO
-    employeeShiftID,
-    shiftID,
     shifttimefrom,
     shifttimeto,
-    @sh_brktimeFr,
-    @sh_brktimeTo,
+    employeeShiftID,
+    shiftID,
     isShiftRestDay;
 
 SET isRestDay = isShiftRestDay;
@@ -404,9 +399,14 @@ ELSE
 
 END IF;
 
+SET @sh_brktimeFr = NULL;
+SET @sh_brktimeTo = NULL;
+
 SELECT
     etd.TimeIn,
-    IF(e_UTOverride = 1, etd.TimeOut, IFNULL(sh.TimeTo, etd.TimeOut))
+    IF(e_UTOverride = 1, etd.TimeOut, IFNULL(sh.TimeTo, etd.TimeOut)),
+    sh.BreakTimeFrom,
+    sh.BreakTimeTo
 FROM employeetimeentrydetails etd
 LEFT JOIN employeeshift esh
 ON esh.OrganizationID = etd.OrganizationID AND
@@ -421,7 +421,9 @@ ORDER BY IFNULL(etd.LastUpd, etd.Created) DESC
 LIMIT 1
 INTO
     etd_TimeIn,
-    etd_TimeOut;
+    etd_TimeOut,
+    @sh_brktimeFr,
+    @sh_brktimeTo;
 
 SET dateToday = ete_Date;
 SET dateTomorrow = DATE_ADD(dateToday, INTERVAL 1 DAY);
@@ -435,8 +437,8 @@ SET fullTimeOut = TIMESTAMP(IF(etd_TimeOut > etd_TimeIn, dateToday, dateTomorrow
 SET shiftStart = TIMESTAMP(dateToday, shifttimefrom);
 SET shiftEnd = TIMESTAMP(IF(shifttimeto > shifttimefrom, dateToday, dateTomorrow), shifttimeto);
 
-SET breaktimeStart = TIMESTAMP(IF(@sh_brktimeFr > shifttimefrom, dateToday, dateTomorrow), @sh_brktimeFr);
-SET breaktimeEnd = TIMESTAMP(IF(@sh_brktimeTo > shifttimefrom, dateToday, dateTomorrow), @sh_brktimeTo);
+SET breaktimeStart = TIMESTAMP(dateToday, @sh_brktimeFr);
+SET breaktimeEnd = TIMESTAMP(dateToday, @sh_brktimeTo);
 
 /*
  * The official work start is the time that is considered the employee has started working.
@@ -466,7 +468,7 @@ IF hasBreaktime THEN
         SET regularHoursBeforeBreak = COMPUTE_TimeDifference(TIME(dutyStart), TIME(@lastWorkBeforeBreaktime));
     END IF;
 
-    IF dutyEnd > breaktimeEnd THEN
+    IF dutyEnd >= breaktimeEnd THEN
         /*
          * Let's make sure that we calculate the correct work hours after breaktime by ensuring that we don't choose the
          * breaktime's end when the employee started work after breaktime.
@@ -605,46 +607,6 @@ IF dutyEnd < shiftEnd THEN
 
 END IF;
 
-SELECT
-    COUNT(elv.RowID) > 0,
-    elv.LeaveStartTime,
-    elv.LeaveEndTime,
-    elv.LeaveType
-FROM employeeleave elv
-WHERE elv.EmployeeID = ete_EmpRowID AND
-    elv.`Status` = 'Approved' AND
-    elv.OrganizationID = ete_OrganizID AND
-    ete_Date BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate
-LIMIT 1
-INTO
-    hasLeave,
-    leaveStartTime,
-    leaveEndTime,
-    leaveType;
-
-IF hasLeave THEN
-    SET leaveStart = TIMESTAMP(dateToday, leaveStartTime);
-    SET leaveEnd = TIMESTAMP(IF(leaveEndTime > leaveStartTime, dateToday, dateTomorrow), leaveEndTime);
-
-    IF hasBreaktime THEN
-        IF leaveStart < breaktimeStart THEN
-            SET @leavePeriodEndBeforeBreaktime = LEAST(leaveEnd, breaktimeStart);
-
-            SET leaveHoursBeforeBreak = COMPUTE_TimeDifference(TIME(leaveStart), TIME(@leavePeriodEndBeforeBreaktime));
-        END IF;
-
-        IF leaveEnd > breaktimeEnd THEN
-            SET @leavePeriodStartAfterBreaktime = GREATEST(breaktimeEnd, leaveStart);
-
-            SET leaveHoursAfterBreak = COMPUTE_TimeDifference(TIME(@leavePeriodStartAfterBreaktime), TIME(leaveEnd));
-        END IF;
-
-        SET leaveHours = leaveHoursBeforeBreak + leaveHoursAfterBreak;
-    ELSE
-        SET leaveHours = COMPUTE_TimeDifference(TIME(leaveStart), TIME(leaveEnd));
-    END IF;
-END IF;
-
 SET ete_RegHrsWorkd = regularHours;
 SET ete_OvertimeHrs = overtimeHours;
 SET ete_NDiffHrs = nightDiffHours;
@@ -730,11 +692,8 @@ END IF;
 
 SET basicDayPay = ete_RegHrsWorkd * hourlyRate;
 
-SET isSpecialNonWorkingHoliday = pr_PayType = 'Special Non-Working Holiday';
-SET isRegularHoliday = pr_PayType = 'Regular Holiday';
-
-SET isHoliday = isSpecialNonWorkingHoliday OR isRegularHoliday;
-SET isRegularDay = NOT isHoliday;
+SET isRegularDay = pr_DayBefore IS NULL;
+SEt isHoliday = NOT isRegularDay;
 
 SET isWorkingDay = NOT isRestDay;
 
@@ -772,20 +731,48 @@ IF ete_Date < e_StartDate THEN
         NULL,
         NULL,
         NULL,
-        1,
-        NULL,
-        NULL,
-        NULL
+        1
     )
     INTO timeEntryID;
 
 ELSEIF isRegularDay THEN
 
+    SELECT EXISTS(
+        SELECT elv.RowID
+        FROM employeeleave elv
+        WHERE elv.EmployeeID = ete_EmpRowID AND
+            elv.`Status` = 'Approved' AND
+            elv.OrganizationID = ete_OrganizID AND
+            ete_Date BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate
+        LIMIT 1
+    )
+    INTO hasLeave;
+
     IF hasLeave AND isWorkingDay THEN
-        SET leavePay = IFNULL(leaveHours * hourlyRate, 0);
+
+        SELECT SUM(Leavepayment)
+        FROM employeetimeentry
+        WHERE EmployeeID = ete_EmpRowID AND
+            OrganizationID = ete_OrganizID AND
+            `Date` = ete_Date
+        INTO leavePay;
+
+        SET leavePay = IFNULL(leavePay, 0);
+
     END IF;
 
-    SET @leave_hrs = IFNULL(leaveHours, 0);
+    SET @leave_hrs = 0;
+
+    SELECT @lv_hrs `LeaveHours`
+    FROM employeetimeentry
+    WHERE EmployeeID = ete_EmpRowID AND
+        OrganizationID = ete_OrganizID AND
+        `Date` = ete_Date AND
+        (@lv_hrs := (VacationLeaveHours + SickLeaveHours + OtherLeaveHours + MaternityLeaveHours)) > 0
+    LIMIT 1
+    INTO @leave_hrs;
+
+    SET @leave_hrs = IFNULL(@leave_hrs, 0);
 
     IF (ete_HrsLate - @leave_hrs) > -1 THEN
         SET ete_HrsLate = (ete_HrsLate - @leave_hrs);
@@ -796,6 +783,10 @@ ELSEIF isRegularDay THEN
         SET ete_HrsUnder = (ete_HrsUnder - @leave_hrs);
         SET undertimeHours = ete_HrsUnder;
     END IF;
+
+    -- a. If the current day is a regular working day.
+    -- b. Employee was payed yesterday AND
+    --    current day is after employment hiring date.
 
     IF isWorkingDay THEN
         SET regularAmount = (ete_RegHrsWorkd * hourlyRate) * commonrate;
@@ -847,10 +838,7 @@ ELSEIF isRegularDay THEN
         restDayAmount,
         0,
         basicDayPay,
-        5,
-        leaveType,
-        leaveHours,
-        leavePay
+        5
     )
     INTO timeEntryID;
 
@@ -918,10 +906,7 @@ ELSEIF isHoliday THEN
         NULL,
         holidayPay,
         basicDayPay,
-        7,
-        NULL,
-        NULL,
-        NULL
+        7
     )
     INTO timeEntryID;
 

@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function hyundaipayrolldb_dev.INSUPD_employeeoffbusi_indepen
+-- Dumping structure for function INSUPD_employeeoffbusi_indepen
 DROP FUNCTION IF EXISTS `INSUPD_employeeoffbusi_indepen`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeeoffbusi_indepen`(`obf_RowID` INT, `obf_OrganizationID` INT, `obf_CreatedBy` INT, `obf_LastUpdBy` INT, `obf_EmployeeID` INT, `obf_Type` VARCHAR(50), `obf_StartTime` VARCHAR(50), `obf_EndTime` VARCHAR(50), `obf_StartDate` DATE, `obf_EndDate` DATE, `obf_Reason` VARCHAR(500), `obf_Comments` VARCHAR(2000), `obf_Image` LONGBLOB, `obf_OffBusStatus` VARCHAR(500)) RETURNS int(11)

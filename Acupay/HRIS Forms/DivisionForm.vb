@@ -34,6 +34,8 @@ Public Class DivisionForm
 
     Dim n_ShiftList As New ShiftList
 
+    Private sys_ownr As New SystemOwner
+
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         OjbAssignNoContextMenu(txtgraceperiod)
@@ -84,6 +86,8 @@ Public Class DivisionForm
 
         dgvWeek.Rows.Add()
         LoadDivision()
+
+        setProperInterfaceBaseOnCurrentSystemOwner()
 
         MyBase.OnLoad(e)
 
@@ -277,8 +281,8 @@ Public Class DivisionForm
         If IsNew = 1 _
             And CustomColoredTabControl1.SelectedIndex = 0 Then
 
-            SP_Division(Trim(txtname.Text), Trim(txtmainphone.Text), Trim(txtfaxno.Text), Trim(txtemailaddr.Text), Trim(txtaltemailaddr.Text), _
-                        Trim(txtaltphone.Text), Trim(txturl.Text), z_datetime, z_User, z_datetime, z_User, Trim(txttinno.Text), _
+            SP_Division(Trim(txtname.Text), Trim(txtmainphone.Text), Trim(txtfaxno.Text), Trim(txtemailaddr.Text), Trim(txtaltemailaddr.Text),
+                        Trim(txtaltphone.Text), Trim(txturl.Text), z_datetime, z_User, z_datetime, z_User, Trim(txttinno.Text),
                         Trim(txttradename.Text), Trim(cmbDivisionType.Text), Trim(txtbusinessaddr.Text), Trim(txtcontantname.Text),
                         z_OrganizationID,
                         FormatNumber(ValNoComma(txtgraceperiod.Text), 2).Replace(",", ""),
@@ -317,8 +321,8 @@ Public Class DivisionForm
                 Exit Sub
             End If
 
-            SP_DivisionUpdate(txtname.Text, txtmainphone.Text, txtfaxno.Text, txtemailaddr.Text, txtaltemailaddr.Text, _
-                       txtaltphone.Text, txturl.Text, z_datetime, z_User, txttinno.Text, _
+            SP_DivisionUpdate(txtname.Text, txtmainphone.Text, txtfaxno.Text, txtemailaddr.Text, txtaltemailaddr.Text,
+                       txtaltphone.Text, txturl.Text, z_datetime, z_User, txttinno.Text,
                        txttradename.Text, cmbDivisionType.Text, txtbusinessaddr.Text, txtcontantname.Text,
                        currentDivisionRowID,
                         FormatNumber(ValNoComma(txtgraceperiod.Text), 2).Replace(",", ""),
@@ -451,8 +455,8 @@ Public Class DivisionForm
 
     End Sub
 
-    Sub Divisiontreeviewfiller(Optional primkey As Object = Nothing, _
-                       Optional strval As Object = Nothing, _
+    Sub Divisiontreeviewfiller(Optional primkey As Object = Nothing,
+                       Optional strval As Object = Nothing,
                        Optional trnod As TreeNode = Nothing)
 
         Dim n_nod As TreeNode = Nothing
@@ -563,9 +567,9 @@ Public Class DivisionForm
 
     End Sub
 
-    Private Sub Leaves_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtslallow.KeyPress, _
-                                                                                    txtvlallow.KeyPress, _
-                                                                                    txtmlallow.KeyPress, _
+    Private Sub Leaves_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtslallow.KeyPress,
+                                                                                    txtvlallow.KeyPress,
+                                                                                    txtmlallow.KeyPress,
                                                                                     txtpatlallow.KeyPress
 
         Dim e_asc = Asc(e.KeyChar)
@@ -627,7 +631,7 @@ Public Class DivisionForm
 
 
             Dim remender = lastpage Mod 1
-            
+
             pagination = (lastpage - remender) * 50
 
             If pagination - 20 < 20 Then
@@ -673,7 +677,7 @@ Public Class DivisionForm
     Private Sub trvDepartment_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles trvDepartment.AfterSelect
 
         If currentNode Is Nothing Then
-            
+
             clearObjControl(Panel1)
             clearObjControl(GroupBox1)
             clearObjControl(TabPage2)
@@ -850,7 +854,7 @@ Public Class DivisionForm
         Dim NewValueString = txtDivLocName.Text.Trim
 
         Dim customRowID = If(tsbtnNewDivLoc.Enabled, currentDivisionRowID, DBNull.Value)
-        
+
         Dim n_ReadSQLFunction As _
             New ReadSQLFunction("INSUPD_division_location",
                                 "returnvalue",
@@ -902,7 +906,7 @@ Public Class DivisionForm
 
         dgvWeek.Rows.Clear()
 
-        Dim n_row = _
+        Dim n_row =
             dgvWeek.Rows.Add()
 
         Dim ii = 0
@@ -1473,6 +1477,35 @@ Public Class DivisionForm
             End If
 
         End If
+
+    End Sub
+
+    Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
+
+        Dim _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+
+        If _bool Then
+
+            chkbxautomaticOT.Visible = (Not _bool)
+
+            TabPage3.Text = String.Empty
+
+            AddHandler TabControl1.Selecting, AddressOf TabControl1_Selecting
+
+        Else
+
+        End If
+
+    End Sub
+
+    Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs)
+
+        Static _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000 _
+            And TabControl1.SelectedIndex = 1)
+
+        e.Cancel = _bool
 
     End Sub
 

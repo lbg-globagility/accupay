@@ -10,7 +10,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure hyundaipayrolldb.HyundaiPayslip
+-- Dumping structure for procedure HyundaiPayslip
 DROP PROCEDURE IF EXISTS `HyundaiPayslip`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `HyundaiPayslip`(IN `og_rowid` INT, IN `pperiod_id` INT, IN `is_actual` BOOL, IN `emp_rowid` INT)
