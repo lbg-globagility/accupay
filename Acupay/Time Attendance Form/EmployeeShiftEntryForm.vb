@@ -1,19 +1,25 @@
-﻿Imports OfficeOpenXml
+﻿Imports System.Collections.ObjectModel
 Imports System.IO
-Imports MySql.Data.MySqlClient
 Imports Microsoft.Win32
-Imports Indigo.CollapsibleGroupBox
-Imports System.Globalization
-Imports System.Collections.ObjectModel
+Imports MySql.Data.MySqlClient
+Imports OfficeOpenXml
 
 Public Class EmployeeShiftEntryForm
+
     Class ImportedShiftEntry
+
         Public Property EmployeeID As Integer
+
         Public Property TimeFrom As String
+
         Public Property TimeTo As String
+
         Public Property DateFrom As Date
+
         Public Property DateTo As Date
+
         Public Property SchedType As String
+
     End Class
 
     Dim IsNew As Integer = 0
@@ -28,12 +34,8 @@ Public Class EmployeeShiftEntryForm
     Dim ArrayWeekFormat() As String
 
     Protected Overrides Sub OnLoad(e As EventArgs)
-
-        'Dim n_SQLQueryToDatatable As _
-        '    New SQLQueryToDatatable("CALL `MACHINE_WEEKFORMAT`('" & machineFirstDayOfWeek & "');")
         Dim n_SQLQueryToDatatable As _
             New SQLQueryToDatatable("CALL `MACHINE_WEEKFORMAT`(@@default_week_format);")
-
         Dim dtweek As New DataTable
 
         dtweek = n_SQLQueryToDatatable.ResultTable
@@ -43,25 +45,15 @@ Public Class EmployeeShiftEntryForm
         ReDim ArrayWeekFormat(dtweek.Rows.Count - 1)
 
         For Each drow As DataRow In dtweek.Rows
-
             ArrayWeekFormat(i) = drow("DayFullName").ToString
-
             dgvWeek.Columns(i).HeaderText = drow("DayName").ToString
-
             i += 1
-
         Next
 
         dgvWeek.Rows.Clear()
-
         dgvWeek.Rows.Add()
-
         LoadDivision()
-
-        'CollapsibleGroupBox1.ToggleCollapsed()
-
         MyBase.OnLoad(e)
-
     End Sub
 
     Dim ParentDiv As New DataTable
@@ -69,7 +61,6 @@ Public Class EmployeeShiftEntryForm
     Dim ChiledDiv As New DataTable
 
     Private Sub LoadDivision()
-
         trvDepartment.Nodes.Clear()
 
         ParentDiv = New SQLQueryToDatatable("SELECT * FROM `division` WHERE OrganizationID='" & orgztnID & "' AND ParentDivisionID IS NULL;").ResultTable
@@ -83,9 +74,7 @@ Public Class EmployeeShiftEntryForm
                                             " WHERE d.OrganizationID='" & orgztnID & "' AND d.ParentDivisionID IS NOT NULL;").ResultTable
 
         For Each pdiv As DataRow In ParentDiv.Rows
-
             ChildDivision(pdiv("RowID"), pdiv("Name"))
-
         Next
 
         trvDepartment.ExpandAll()
@@ -94,23 +83,19 @@ Public Class EmployeeShiftEntryForm
             trvDepartment.SelectedNode = tnod
             Exit For
         Next
-
     End Sub
 
     Private Sub ChildDivision(DivisionRowID As Object,
                               NodeText As String,
                               Optional trvnod As TreeNode = Nothing)
-
         Dim n_nod As TreeNode = Nothing
 
         n_nod = trvDepartment.Nodes.Add(NodeText & Space(5))
 
         With n_nod
             .Tag = DivisionRowID
-
             .NodeFont =
                 New System.Drawing.Font("Segoe UI", 8.75!, System.Drawing.FontStyle.Bold)
-
         End With
 
         Dim sel_ChiledDiv = ChiledDiv.Select("ParentDivisionID = " & DivisionRowID)
@@ -119,37 +104,15 @@ Public Class EmployeeShiftEntryForm
             Dim childnod = n_nod.Nodes.Add(divrow("Name"))
 
             childnod.Tag = divrow("RowID") 'divrow
-
             childnod.NodeFont =
                 New System.Drawing.Font("Segoe UI", 8.75!, System.Drawing.FontStyle.Regular)
-
         Next
-
     End Sub
 
     Private Sub fillemplyeelist()
-        'If dgvEmplist.Rows.Count = 0 Then
-        'ElseCOALESCE(StreetAddress1,' ')
         Dim dt As New DataTable
         Dim lastName = txtsrchEmpLName.Text.Trim
         Dim shouldIgnoreLastName = String.IsNullOrWhiteSpace(lastName)
-
-        If TextBox4.Text.Trim.Length = 0 _
-            And divisionRowID = 0 Then
-
-            'dt = getDataTableForSQL("Select concat(COALESCE(e.Lastname, ' '),' ', COALESCE(e.Firstname, ' '), ' ', COALESCE(e.MiddleName, ' ')) as name" & _
-            '                        ", e.EmployeeID" & _
-            '                        ", e.RowID" & _
-            '                        ",(esh.esdRowID IS NOT NULL) AS IsByDayEncoding" &
-            '                        " from employee e" & _
-            '                        " LEFT JOIN (SELECT RowID AS esdRowID,EmployeeID FROM employeeshiftbyday WHERE OrganizationID='" & orgztnID & "' GROUP BY EmployeeID) esh ON esh.EmployeeID=e.RowID" &
-            '                        " where e.organizationID = '" & z_OrganizationID & "'" & _
-            '                        " AND (e.LastName LIKE '%" & lastName & "%' OR " & shouldIgnoreLastName & ")" & _
-            '                        " ORDER BY e.RowID DESC;")
-
-        Else
-
-        End If
 
         Dim emp_id_logic_operator As String = "="
 
@@ -163,18 +126,6 @@ Public Class EmployeeShiftEntryForm
             division_condition = String.Empty
         End If
 
-        'dt = getDataTableForSQL("Select concat(COALESCE(e.Lastname, ' '),' ', COALESCE(e.Firstname, ' '), ' ', COALESCE(e.MiddleName, ' ')) as name" & _
-        'dt = getDataTableForSQL("Select CONCAT(e.LastName,',',e.FirstName,',',INITIALS(e.MiddleName,'.','1')) as name" & _
-        '                        ", e.EmployeeID" & _
-        '                        ", e.RowID" & _
-        '                        ",(esh.esdRowID IS NOT NULL) AS IsByDayEncoding" &
-        '                        " from employee e" & _
-        '                        " LEFT JOIN (SELECT RowID AS esdRowID,EmployeeID FROM employeeshiftbyday WHERE OrganizationID='" & orgztnID & "' GROUP BY EmployeeID) esh ON esh.EmployeeID=e.RowID" &
-        '                        " INNER JOIN (SELECT * FROM position WHERE OrganizationID='" & orgztnID & "'" & division_condition & ") pos ON pos.RowID=e.PositionID" &
-        '                        " where e.organizationID = '" & z_OrganizationID & "'" & _
-        '                        " AND e.EmployeeID " & emp_id_logic_operator & " '" & TextBox4.Text & "'" & _
-        '                        " ORDER BY e.RowID DESC;")
-
         Dim n_ReadSQLProcedureToDatatable As _
             New ReadSQLProcedureToDatatable("SEARCH_employeeshift",
                                             orgztnID,
@@ -187,9 +138,7 @@ Public Class EmployeeShiftEntryForm
         For Each drow As DataRow In dt.Rows
             Dim n As Integer = dgvEmpList.Rows.Add()
             With drow
-
                 dgvEmpList.Rows.Item(n).Cells(c_EmployeeID.Index).Value = .Item("EmployeeID").ToString
-                'txtempid.Text = .Item("EmployeeID").ToString
                 dgvEmpList.Rows.Item(n).Cells(c_EmployeeName.Index).Value = .Item("Name").ToString
                 dgvEmpList.Rows.Item(n).Cells(c_ID.Index).Value = .Item("RowID").ToString
                 dgvEmpList.Item("ShiftEncodingType", n).Value = CBool(.Item("IsByDayEncoding"))
@@ -199,35 +148,24 @@ Public Class EmployeeShiftEntryForm
                 Else
                     dgvEmpList.Item("ShiftEncodingTypeDisplayValue", n).Value = "By date"
                 End If
-
             End With
         Next
-        'End If
-
     End Sub
 
     Private Sub fillemplyeelistselected()
-        'If dgvEmplist.Rows.Count = 0 Then
-        'ElseCOALESCE(StreetAddress1,' ')
         Dim dt As New DataTable
         dt = getDataTableForSQL("Select concat(COALESCE(Lastname, ' '),' ', COALESCE(Firstname, ' '), ' ', COALESCE(MiddleName, ' ')) as name, EmployeeID, RowID from employee where organizationID = '" & z_OrganizationID & "' And RowID = '" & dgvEmpList.CurrentRow.Cells(c_ID.Index).Value & "'")
 
         For Each drow As DataRow In dt.Rows
-
             With drow
-
                 txtEmpID.Text = .Item("EmployeeID").ToString
-                'txtempid.Text = .Item("EmployeeID").ToString
                 txtEmpName.Text = .Item("Name").ToString
                 rowid = .Item("RowID").ToString
             End With
         Next
-        'End If
-
     End Sub
 
     Private Sub fillemployeeshift()
-
         Dim new_link = New System.Windows.Forms.LinkLabel.Link()
 
         new_link.Name = "First"
@@ -237,11 +175,11 @@ Public Class EmployeeShiftEntryForm
         'If Not dgvEmpList.Rows.Count = 0 Then
         If dgvEmpList.Rows.Count = -1 Then
             Dim dt As New DataTable
-            dt = getDataTableForSQL("select concat(COALESCE(ee.Lastname, ' '),' ', COALESCE(ee.Firstname, ' '), ' ', COALESCE(ee.MiddleName, ' ')) as name, " & _
-                                    "ee.EmployeeID, es.EffectiveFrom, es.EffectiveTo, COALESCE(TIME_FORMAT(s.TimeFrom, '%h:%i:%s %p'),'') timef, COALESCE(TIME_FORMAT(s.TimeTo, '%h:%i:%s %p'),'') timet, es.RowID from employeeshift es " & _
-                                    "left join shift s on es.ShiftID = s.RowID " & _
-                                    "inner join employee ee on es.EmployeeID = ee.RowID " & _
-                                    "where es.OrganizationID = '" & z_OrganizationID & "' And ee.RowID = '" & dgvEmpList.CurrentRow.Cells(c_ID.Index).Value & "'" & _
+            dt = getDataTableForSQL("select concat(COALESCE(ee.Lastname, ' '),' ', COALESCE(ee.Firstname, ' '), ' ', COALESCE(ee.MiddleName, ' ')) as name, " &
+                                    "ee.EmployeeID, es.EffectiveFrom, es.EffectiveTo, COALESCE(TIME_FORMAT(s.TimeFrom, '%h:%i:%s %p'),'') timef, COALESCE(TIME_FORMAT(s.TimeTo, '%h:%i:%s %p'),'') timet, es.RowID from employeeshift es " &
+                                    "left join shift s on es.ShiftID = s.RowID " &
+                                    "inner join employee ee on es.EmployeeID = ee.RowID " &
+                                    "where es.OrganizationID = '" & z_OrganizationID & "' And ee.RowID = '" & dgvEmpList.CurrentRow.Cells(c_ID.Index).Value & "'" &
                                     " ORDER BY es.EffectiveFrom, es.EffectiveTo;")
             dgvEmpShiftList.Rows.Clear()
             For Each drow As DataRow In dt.Rows
@@ -256,21 +194,17 @@ Public Class EmployeeShiftEntryForm
                     dgvEmpShiftList.Rows.Item(n).Cells(c_RowIDShift.Index).Value = .Item("RowID").ToString
                 End With
             Next
-
         End If
-
     End Sub
 
     Private Sub fillemployeeshiftSelected(Optional esh_RowID As Object = Nothing)
-
         cboshiftlist.SelectedIndex = -1
-
         cboshiftlist.Text = ""
 
         If Not dgvEmpShiftList.Rows.Count = 0 Then
             Dim dt As New DataTable
             Dim selRowID = If(esh_RowID = Nothing, dgvEmpShiftList.CurrentRow.Cells(c_RowIDShift.Index).Value, esh_RowID)
-            dt = getDataTableForSQL("select concat(COALESCE(ee.Lastname, ' '),' ', COALESCE(ee.Firstname, ' '), ' ', COALESCE(ee.MiddleName, ' ')) as name" & _
+            dt = getDataTableForSQL("select concat(COALESCE(ee.Lastname, ' '),' ', COALESCE(ee.Firstname, ' '), ' ', COALESCE(ee.MiddleName, ' ')) as name" &
                                     ",ee.EmployeeID" &
                                     ",es.EffectiveFrom" &
                                     ",es.EffectiveTo" &
@@ -279,15 +213,12 @@ Public Class EmployeeShiftEntryForm
                                     ",es.NightShift, es.RestDay" &
                                     ",IFNULL(TIME_FORMAT(s.TimeFrom, '%l:%i %p'),'') timef" &
                                     ",IFNULL(TIME_FORMAT(s.TimeTo, '%l:%i %p'),'') timet" &
-                                    ",es.RowID from employeeshift es " & _
-                                    "left join shift s on es.ShiftID = s.RowID " & _
-                                    "inner join employee ee on es.EmployeeID = ee.RowID " & _
+                                    ",es.RowID from employeeshift es " &
+                                    "left join shift s on es.ShiftID = s.RowID " &
+                                    "inner join employee ee on es.EmployeeID = ee.RowID " &
                                     "where es.OrganizationID = '" & z_OrganizationID & "' And es.RowID = '" & selRowID & "';")
-            '",IF(s.TimeFrom IS NULL,'',TIMESTAMP(CONCAT(CURDATE(),' ',s.TimeFrom))) AS  timef" &
-            '",IF(s.TimeTo IS NULL,'',TIMESTAMP(CONCAT(CURDATE(),' ',s.TimeTo))) AS  timef" &
-            For Each drow As DataRow In dt.Rows
-                'Dim timefrom, timeto As DateTime
 
+            For Each drow As DataRow In dt.Rows
                 With drow
 
                     txtEmpID.Text = .Item("EmployeeID").ToString
@@ -299,23 +230,17 @@ Public Class EmployeeShiftEntryForm
                         cboshiftlist.Text = .Item("timef") & " TO " & .Item("timet")
                     End If
 
-                    'dtpTimeFrom.Text = .Item("timef").ToString
-                    'dtpTimeTo.Text = .Item("timet").ToString
-
                     dtpDateFrom.Value = CDate(.Item("EffectiveFrom")).ToString(machineShortDateFormat)
                     dtpDateTo.Value = CDate(.Item("Effectiveto")).ToString(machineShortDateFormat)
                     lblShiftID.Text = .Item("ShiftID").ToString
                     chkNightShift.Checked = IIf(If(IsDBNull(.Item("NightShift")), 0, .Item("NightShift")) = "1", True, False)
                     chkrestday.Checked = If(.Item("RestDay") = 1, 1, 0)
-
                 End With
             Next
         End If
-
     End Sub
 
     Private Sub EmployeeShiftEntryForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
         myBalloon(, , lblSaveMsg, , , 1)
 
         If previousForm IsNot Nothing Then
@@ -330,7 +255,6 @@ Public Class EmployeeShiftEntryForm
 
         ShiftList.Close()
         ShiftList.Dispose()
-
     End Sub
 
     Dim view_ID As Integer = Nothing
@@ -340,14 +264,7 @@ Public Class EmployeeShiftEntryForm
         fillemployeeshift()
         fillemployeeshiftSelected()
 
-        If dgvEmpList.RowCount <> 0 Then
-            Dim dgvceleventarg As New DataGridViewCellEventArgs(c_EmployeeID.Index, 0)
-            dgvEmpList_CellClick(sender, dgvceleventarg)
-        End If
-
-        'cboshiftlist.ContextMenu = New ContextMenu
-
-        enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p')) FROM shift WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NOT NULL  AND TimeTo IS NOT NULL ORDER BY TimeFrom,TimeTo;", _
+        enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p')) FROM shift WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NOT NULL  AND TimeTo IS NOT NULL ORDER BY TimeFrom,TimeTo;",
                        cboshiftlist)
 
         view_ID = VIEW_privilege("Employee Shift", orgztnID)
@@ -359,7 +276,6 @@ Public Class EmployeeShiftEntryForm
             btnNew.Visible = 0
             btnSave.Visible = 0
             btnDelete.Visible = 0
-
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
@@ -387,83 +303,23 @@ Public Class EmployeeShiftEntryForm
                     Else
                         dontUpdate = 0
                     End If
-
                 End If
-
             Next
-
         End If
-
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
         Me.Close()
-
-    End Sub
-
-    Private Sub dgvEmpList_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvEmpList.CellContentClick
-
-    End Sub
-
-    Private Sub dgvEmpList_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvEmpList.CellClick
-
-        'chkbxNewShiftByDay.Checked = False
-
-        'chkNightShift.Checked = False
-
-        'chkrestday.Checked = False
-
-        'IsNew = 0
-
-        'If e.ColumnIndex > -1 _
-        '    And e.RowIndex > -1 Then
-        '    dgvEmpList.Tag = dgvEmpList.Item("c_ID", e.RowIndex).Value
-        'Else
-        '    dgvEmpList.Tag = Nothing
-        'End If
-
-        'Try
-        '    fillemplyeelistselected()
-        '    fillemployeeshift()
-        '    fillemployeeshiftSelected()
-        'Catch ex As Exception
-        '    MsgBox(getErrExcptn(ex, Me.Name))
-        'Finally
-
-        '    'CustomColoredTabControlActivateSelecting(True)
-
-        '    'If CBool(dgvEmpList.Item("ShiftEncodingType", e.RowIndex).Value) = True Then
-        '    '    CustomColoredTabControl1.SelectedIndex = 1
-        '    '    TabPage2.Focus()
-        '    'Else
-        '    '    CustomColoredTabControl1.SelectedIndex = 0
-        '    '    TabPage1.Focus()
-        '    'End If
-
-        '    'CustomColoredTabControlActivateSelecting(False)
-
-        '    If CustomColoredTabControl1.SelectedIndex = 1 Then
-        '        TabPage2_Enter(TabPage2, New EventArgs)
-        '    End If
-
-        'End Try
-
     End Sub
 
     Private Sub dgvEmpList_CurrentCellChanged(sender As Object, e As EventArgs) Handles dgvEmpList.CurrentCellChanged
-
         If dgvEmpList.RowCount > 0 Then
-
             chkbxNewShiftByDay.Checked = False
-
             chkNightShift.Checked = False
-
             chkrestday.Checked = False
-
             IsNew = 0
 
             If dgvEmpList.CurrentRow IsNot Nothing Then
-
                 dgvEmpList.Tag = dgvEmpList.CurrentRow.Cells("c_ID").Value
 
                 Try
@@ -473,37 +329,12 @@ Public Class EmployeeShiftEntryForm
                 Catch ex As Exception
                     MsgBox(getErrExcptn(ex, Me.Name))
                 Finally
-
-                    'CustomColoredTabControlActivateSelecting(True)
-
-                    'If CBool(dgvEmpList.Item("ShiftEncodingType", e.RowIndex).Value) = True Then
-                    '    CustomColoredTabControl1.SelectedIndex = 1
-                    '    TabPage2.Focus()
-                    'Else
-                    '    CustomColoredTabControl1.SelectedIndex = 0
-                    '    TabPage1.Focus()
-                    'End If
-
-                    'CustomColoredTabControlActivateSelecting(False)
-
                     If CustomColoredTabControl1.SelectedIndex = 1 Then
                         TabPage2_Enter(TabPage2, New EventArgs)
                     End If
-
                 End Try
-
-            Else
-
             End If
-
-        Else
-
         End If
-
-    End Sub
-
-    Private Sub dgvEmpShiftList_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvEmpShiftList.CellContentClick
-
     End Sub
 
     Private Sub dgvEmpShiftList_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvEmpShiftList.CellClick
@@ -512,14 +343,11 @@ Public Class EmployeeShiftEntryForm
             fillemployeeshiftSelected()
             btnDelete.Enabled = True
         Catch ex As Exception
-
         End Try
     End Sub
 
     Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click, ByDateToolStripMenuItem.Click
-
         If TypeOf CObj(sender) Is ToolStripDropDownButton Then
-
         Else
             CustomColoredTabControlActivateSelecting(True)
             CustomColoredTabControl1.SelectedIndex = 0
@@ -532,31 +360,25 @@ Public Class EmployeeShiftEntryForm
             btnNew.Enabled = False
 
             chkNightShift.Checked = False
-
             chkrestday.Checked = False
-
 
             If dgvEmpList.RowCount <> 0 Then
 
-                Dim empshiftmaxdate = _
-                    EXECQUER("SELECT IFNULL(ADDDATE(MAX(EffectiveTo), INTERVAL 1 DAY),'') 'empshiftmaxdate'" & _
-                             " FROM employeeshift" & _
-                             " WHERE EmployeeID=" & dgvEmpList.CurrentRow.Cells("c_ID").Value & _
-                             " AND RestDay='0'" & _
+                Dim empshiftmaxdate =
+                    EXECQUER("SELECT IFNULL(ADDDATE(MAX(EffectiveTo), INTERVAL 1 DAY),'') 'empshiftmaxdate'" &
+                             " FROM employeeshift" &
+                             " WHERE EmployeeID=" & dgvEmpList.CurrentRow.Cells("c_ID").Value &
+                             " AND RestDay='0'" &
                              " LIMIT 1;")
 
-
                 If empshiftmaxdate = Nothing Then
-                    empshiftmaxdate = _
-                    EXECQUER("SELECT IFNULL(StartDate,CURRENT_DATE()) 'StartDate'" & _
-                             " FROM employee" & _
-                             " WHERE RowID='" & dgvEmpList.CurrentRow.Cells("c_ID").Value & _
+                    empshiftmaxdate =
+                    EXECQUER("SELECT IFNULL(StartDate,CURRENT_DATE()) 'StartDate'" &
+                             " FROM employee" &
+                             " WHERE RowID='" & dgvEmpList.CurrentRow.Cells("c_ID").Value &
                              "';")
 
                     dtpDateFrom.MinDate = CDate(empshiftmaxdate).ToShortDateString
-
-                    'Else
-                    '    dtpDateFrom.MinDate = CDate(empshiftmaxdate).ToShortDateString
 
                 End If
 
@@ -571,11 +393,8 @@ Public Class EmployeeShiftEntryForm
                 End Try
 
             End If
-
             CustomColoredTabControlActivateSelecting(False)
-
         End If
-
     End Sub
 
     Dim dontUpdate As SByte = 0
@@ -583,7 +402,6 @@ Public Class EmployeeShiftEntryForm
     Public dutyShiftRowID As Integer = Nothing
 
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-
         If dgvEmpList.RowCount = 0 Then
             Exit Sub
         End If
@@ -597,17 +415,16 @@ Public Class EmployeeShiftEntryForm
 
             Case 0
 
-                Dim shiftRowID As String = EXECQUER("SELECT RowID" & _
-                                          " FROM shift" & _
-                                          " WHERE CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p'))='" & cboshiftlist.Text & "'" & _
+                Dim shiftRowID As String = EXECQUER("SELECT RowID" &
+                                          " FROM shift" &
+                                          " WHERE CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p'))='" & cboshiftlist.Text & "'" &
                                           " AND OrganizationID=" & orgztnID & ";")
-                'shiftRowID = If(shiftRowID.ToString.Length = 0, 0, shiftRowID)
                 shiftRowID = If(shiftRowID = Nothing, 0, shiftRowID)
 
                 If chkrestday.Checked = 0 Then
 
                     Dim dt As New DataTable
-                    dt = getDataTableForSQL("Select * From employeeshift where " & _
+                    dt = getDataTableForSQL("Select * From employeeshift where " &
                                             " EmployeeID = '" & dgvEmpList.CurrentRow.Cells(c_ID.Index).Value & "' And OrganizationID = '" & z_OrganizationID & "'")
 
                     For Each drow As DataRow In dt.Rows
@@ -651,7 +468,6 @@ Public Class EmployeeShiftEntryForm
                     '                                                                                                                                                                 'Val(lblShiftID.Text)
                     sp_employeeshiftentry(z_datetime, z_User, z_datetime, z_OrganizationID, z_User, dtpDateFrom.Value, dtpDateTo.Value, dgvEmpList.CurrentRow.Cells(c_ID.Index).Value, shiftRowID, nightshift, isrestday)
 
-
                     dtpDateFrom.MinDate = CDate("1/1/1753").ToShortDateString
 
                     dtpDateTo.MinDate = CDate("1/1/1753").ToShortDateString
@@ -661,19 +477,12 @@ Public Class EmployeeShiftEntryForm
                     fillemployeeshiftSelected()
 
                     myBalloon("Successfully Save", "Saving...", lblSaveMsg, , -100)
-
                 Else
                     If dontUpdate = 1 Then
                         Exit Sub
                     ElseIf dgvEmpShiftList.RowCount = 0 Then
                         Exit Sub
                     End If
-                    '                                                                                            'Val(lblShiftID.Text)
-                    'DirectCommand("UPDATE employeeshift SET lastupd = '" & z_datetime & "', " & _
-                    '              "lastupdby = '" & z_User & "', EffectiveFrom = '" & dtpDateFrom.Value.ToString("yyyy-MM-dd") & "', " & _
-                    '              "EffectiveTo = '" & dtpDateTo.Value.ToString("yyyy-MM-dd") & "', ShiftID = '" & shiftRowID & "', NightShift = '" & nightshift & "' " & _
-                    '              ", RestDay = '" & isrestday & "' " & _
-                    '              "Where RowID = '" & dgvEmpShiftList.CurrentRow.Cells(c_RowIDShift.Index).Value & "'")
 
                     Dim n_ExecuteQuery As New ExecuteQuery("CALL UPD_employeeshift('" & dgvEmpShiftList.CurrentRow.Cells(c_RowIDShift.Index).Value & "'" &
                                                            ",'" & z_User & "'" &
@@ -690,14 +499,7 @@ Public Class EmployeeShiftEntryForm
                     fillemployeeshift()
                     Dim selRowID = ValNoComma(dgvEmpShiftList.CurrentRow.Cells(c_RowIDShift.Index).Value)
                     fillemployeeshiftSelected(selRowID)
-                    'Dim i = 0
-                    'For Each dgvrow As DataGridViewRow In dgvEmpShiftList.Rows
-                    '    If dgvrow.Cells("c_RowIDShift").Value = CInt(selRowID) Then
-                    '        Exit For
-                    '    End If
-                    '    i += 1
-                    'Next
-                    'dgvEmpShiftList.Rows(i).Selected = True
+
                     myBalloon("Successfully Updated", "Updating...", lblSaveMsg, , -100)
                 End If
 
@@ -707,7 +509,7 @@ Public Class EmployeeShiftEntryForm
 
                 For Each strval In ArrayWeekFormat
                     customArrayWeekFormat &= ",'" & strval & "'"
-                Next 'concatenates all the day names, separated with comma sign
+                Next
 
                 Dim trimcustomArrayWeekFormat = customArrayWeekFormat.Substring(1, (customArrayWeekFormat.Length - 1))
                 'the result of this variable is the concatenation of the day names in a week
@@ -746,44 +548,8 @@ Public Class EmployeeShiftEntryForm
                                          " ALTER TABLE employeeshiftbyday AUTO_INCREMENT = 0;").Result
                 End If
 
-                'If chkbxNewShiftByDay.Checked Then
-
-                'Else
-
-                'End If
-
                 For Each dgvcol As DataGridViewColumn In dgvWeek.Columns
-
                     For Each dgvrow As DataGridViewRow In dgvWeek.Rows
-
-                        'If shiftrowIDs.Contains(dgvWeek.Tag) = False Then
-                        '    shiftrowIDs.Add(dgvWeek.Tag)
-                        'End If
-
-                        'customEmployeeShift.Rows.Add(EmployeeStartingDate, 1, dgvWeek.Tag, dgvcol.HeaderText)
-
-                        'Dim n_ExecuteQuery As _
-                        '    New ExecuteQuery("INSERT INTO employeeshiftbyday(OrganizationID" &
-                        '                     ",Created" &
-                        '                     ",CreatedBy" &
-                        '                     ",EmployeeID" &
-                        '                     ",ShiftID" &
-                        '                     ",NameOfDay" &
-                        '                     ",NightShift" &
-                        '                     ",RestDay)" &
-                        '                     " SELECT" &
-                        '                     " " & orgztnID & "" &
-                        '                     ",CURRENT_TIMESTAMP()" &
-                        '                     "," & z_User & "" &
-                        '                     ",'" & dgvEmpList.Tag & "'" &
-                        '                     "," & If(dgvrow.Tag = Nothing, "NULL", dgvrow.Tag) &
-                        '                     ",'" & ArrayWeekFormat(dgvcol.Index) & "'" &
-                        '                     ",'0'" &
-                        '                     ",'" & If(dgvrow.Tag = Nothing, 1, 0) & "'" &
-                        '                     " ON DUPLICATE KEY UPDATE" &
-                        '                     " LastUpd=CURRENT_TIMESTAMP()" &
-                        '                     ",LastUpdBy='" & z_User & "'" &
-                        '                     ",ShiftID=" & If(dgvrow.Tag = Nothing, "NULL", dgvrow.Tag) & ";")
 
                         Dim IDShift = dgvWeek.Item(dgvcol.Index, dgvrow.Index).Tag
 
@@ -799,53 +565,28 @@ Public Class EmployeeShiftEntryForm
                                                 dgvcol.Index,
                                                 Convert.ToInt16(chkbxNewShiftByDay.Checked))
 
-                        '",SampleDate" &
-                        '",CURDATE()" &
-                        '",'" & MYSQLDateFormat(CDate(EmployeeStartingDate).AddDays(dgvcol.Index)) & "'" &
                         Exit For
-
                     Next
-
                 Next
 
                 customEmployeeShift.Dispose()
 
                 If shiftbydayIsExists = "0" Then
-
                     Dim n_ExecuteQuery As _
                         New ExecuteQuery("CALL AUTOMATICUPD_employeeshiftbyday('" & orgztnID & "','" & dgvEmpList.Tag & "');")
-
                 Else
-
                     If chkbxNewShiftByDay.Checked Then
-
                         Dim n_ExecuteQuery As _
                             New ExecuteQuery("CALL AUTOMATICUPD_employeeshiftbyday('" & orgztnID & "','" & dgvEmpList.Tag & "');")
-
                     End If
-
                 End If
-                '
-
-                'Dim n_SQLQueryToDatatable As _
-                '    New SQLQueryToDatatable("SELECT * FROM employeeshiftbyday WHERE EmployeeID='" & dgvEmpList.Tag & "' AND OrganizationID='" & orgztnID & "' ORDER BY OrderByValue;")
-
-                'dgvEmpList.Tag
 
                 chkbxNewShiftByDay.Checked = False
 
-                Dim dgvceleventarg As New DataGridViewCellEventArgs(c_EmployeeID.Index, _
+                Dim dgvceleventarg As New DataGridViewCellEventArgs(c_EmployeeID.Index,
                                                                     0) 'dgvEmpList.CurrentRow.Index
 
-                If dgvEmpList.RowCount > -1 Then
-
-                    dgvEmpList_CellClick(sender, dgvceleventarg)
-
-                End If
-
         End Select
-
-
 
         IsNew = 0
         lblShiftID.Text = 0
@@ -853,42 +594,25 @@ Public Class EmployeeShiftEntryForm
         btnNew.Enabled = True
 
         dtpDateFrom.MinDate = CDate("1/1/1753").ToShortDateString
-
     End Sub
 
     Private Sub lblShiftEntry_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblShiftEntry.LinkClicked
-        'ShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
-        'ShiftEntryForm.Close()
-        'ShiftEntryForm.ShowDialog()
-
-        'dutyshift.Show()
-        'dutyshift.BringToFront()
-
         Dim n_ShiftEntryForm As New ShiftEntryForm
-
         n_ShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
-
         n_ShiftEntryForm.StartPosition = FormStartPosition.CenterScreen
 
         If n_ShiftEntryForm.ShowDialog = Windows.Forms.DialogResult.OK Then
-
             If n_ShiftEntryForm.ShiftRowID <> Nothing Then
 
-                enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p'))" & _
-                               " FROM shift" & _
-                               " WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NOT NULL  AND TimeTo IS NOT NULL " & _
-                               " ORDER BY TimeFrom,TimeTo;", _
+                enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p'))" &
+                               " FROM shift" &
+                               " WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NOT NULL  AND TimeTo IS NOT NULL " &
+                               " ORDER BY TimeFrom,TimeTo;",
                                cboshiftlist)
 
                 cboshiftlist.Text = Format(CDate(n_ShiftEntryForm.ShiftTimeFrom), machineShortTime) & " TO " & Format(CDate(n_ShiftEntryForm.ShiftTimeTo), machineShortTime)
-
             End If
-
         End If
-
-        'Dim newShiftEntryForm As New ShiftEntryForm
-        'newShiftEntryForm.ShowDialog()
-
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
@@ -898,68 +622,44 @@ Public Class EmployeeShiftEntryForm
             Dim prompt = MessageBox.Show("Do you want to delete this employee shift ?", "Confirm deleting shift", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
 
             If prompt = Windows.Forms.DialogResult.Yes Then
-
-                Dim n_ExecSQLProcedure As New  _
+                Dim n_ExecSQLProcedure As New _
                     ExecSQLProcedure("DEL_employeeshift",
                                      Convert.ToInt32(dgvEmpShiftList.CurrentRow.Cells("c_RowIDShift").Value),
                                      z_User)
-                'EXECQUER("UPDATE employeetimeentry SET LastUpd = '1900-01-01 00:00:01',EmployeeShiftID=NULL WHERE EmployeeShiftID='" & dgvEmpShiftList.CurrentRow.Cells("c_RowIDShift").Value & "' AND OrganizationID=" & orgztnID & ";" & _
-                '         "DELETE FROM employeeshift WHERE RowID='" & dgvEmpShiftList.CurrentRow.Cells("c_RowIDShift").Value & "';" &
-                '         "ALTER TABLE employeeshift AUTO_INCREMENT = 0;")
-                'Else
 
                 dgvEmpShiftList.Rows.Remove(dgvEmpShiftList.CurrentRow)
-
-                'dgvEmpList_CellClick(sender, New DataGridViewCellEventArgs(c_EmployeeID.Index, dgvEmpList.CurrentRow.Index))
-
-                'For Each seldgvcells As DataGridViewCell In dgvWeek.SelectedCells
-
             End If
-
         End If
-        btnDelete.Enabled = True
 
+        btnDelete.Enabled = True
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         IsNew = 0
         dgvEmpList.Enabled = 1
 
-        Dim dgvceleventarg As New DataGridViewCellEventArgs(c_EmployeeID.Index, _
-                                                            0) 'dgvEmpList.CurrentRow.Index
-
-        If dgvEmpList.RowCount > -1 Then
-            dgvEmpList_CellClick(sender, dgvceleventarg)
-        End If
+        Dim dgvceleventarg As New DataGridViewCellEventArgs(c_EmployeeID.Index,
+                                                            0)
 
         btnNew.Enabled = True
 
         dtpDateFrom.MinDate = CDate("1/1/1753").ToShortDateString
-
         CustomColoredTabControlActivateSelecting(True)
-
         chkbxNewShiftByDay.Checked = False
-
     End Sub
 
     Private Sub btnAudittrail_Click(sender As Object, e As EventArgs) Handles btnAudittrail.Click
-
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_ID)
-
         showAuditTrail.BringToFront()
-
     End Sub
 
     Private Sub dgvEmpList_GotFocus(sender As Object, e As EventArgs) Handles dgvEmpList.GotFocus
         btnDelete.Enabled = False
-
     End Sub
 
     Private Sub dgvEmpShiftList_GotFocus(sender As Object, e As EventArgs) Handles dgvEmpShiftList.GotFocus
         btnDelete.Enabled = True
-
     End Sub
 
     Private Sub cboshiftlist_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboshiftlist.KeyPress
@@ -974,11 +674,6 @@ Public Class EmployeeShiftEntryForm
         Else
             e.Handled = True
         End If
-
-    End Sub
-
-    Private Sub cboshiftlist_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboshiftlist.SelectedIndexChanged
-
     End Sub
 
     Dim filepath As String = String.Empty
@@ -987,7 +682,7 @@ Public Class EmployeeShiftEntryForm
 
         Dim browsefile As OpenFileDialog = New OpenFileDialog()
 
-        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" & _
+        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
                                   "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
 
         If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -1106,22 +801,10 @@ Public Class EmployeeShiftEntryForm
         Return tempFileName
     End Function
 
-
     Private Sub bgEmpShiftImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgEmpShiftImport.DoWork
-
         backgroundworking = 1
 
         Dim shiftEntries = ImportShiftFromExcelFile(filepath)
-
-        'IMPORT_employeeshift
-
-        'EmployeeID
-        'OrganizID
-        'CreatedLastUpdBy
-        'i_TimeFrom
-        'i_TimeTo
-        'i_DateFrom
-        'i_DateTo
 
         For Each shiftEntry In shiftEntries
             IMPORT_employeeshift(
@@ -1135,149 +818,8 @@ Public Class EmployeeShiftEntryForm
         Next
 
         Return
-
-        Dim catchDT = getWorkBookAsDataSet(filepath, Me.Name)
-
-        If catchDT Is Nothing Then
-
-        Else
-
-            'For Each dtbl As DataTable In catchDT.Tables
-            '    MsgBox(dtbl.TableName)
-            '    'MsgBox(dtbl.Rows.Count)
-
-            '    Dim tblname = dtbl.TableName
-            '    '"'Employee DependentsS'"
-            '    '"'Employee Salary$'"
-            '    'Employees$
-            'Next
-
-            'Dim input_box = InputBox("What is the ordinal number of worksheet to be use ?", _
-            '                         "Select the worksheet", _
-            '                         1)
-
-            'Dim table_name = Nothing
-
-            'If input_box = Nothing Then
-            '    table_name = catchDT.Tables(Val(input_box)).Name
-            'Else
-            '    table_name = catchDT.Tables(Val(input_box)).Name
-            'End If
-
-            Dim dtEmpShift = catchDT.Tables("'Employee Shift$'") 'Employee Shift
-
-            If dtEmpShift IsNot Nothing Then
-                Dim i = 1
-                Dim newdt As DataTable = dtEmpShift
-                Dim distnct_dt As DataTable
-
-                distnct_dt = newdt.DefaultView.ToTable(True, newdt.Columns(0).ColumnName)
-
-                For Each e_row As DataRow In distnct_dt.Rows
-
-                    Dim n_ExecuteQuery As New ExecuteQuery(String.Concat("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='", e_row(0), "' AND OrganizationID='", orgztnID, "');"))
-
-                    If Convert.ToInt16(n_ExecuteQuery.Result) = 1 Then
-
-                        Dim sel_empshift = newdt.Select(String.Concat("`", newdt.Columns(0).ColumnName, "` = '", e_row(0), "'"))
-
-                        For Each drow As DataRow In sel_empshift 'dtEmpShift.Rows
-                            Dim time_from = Nothing
-
-                            Try
-                                time_from = Format(CDate(drow(1)), "HH:mm")
-                            Catch ex As Exception
-                                time_from = DBNull.Value
-                            End Try
-
-                            Dim time_to = Nothing
-
-                            Try
-                                time_to = Format(CDate(drow(2)), "HH:mm")
-                            Catch ex As Exception
-                                time_to = DBNull.Value
-                            End Try
-
-                            Dim employeeID = drow(0)
-                            Dim dateFrom = drow(3)
-                            Dim dateTo = drow(4)
-                            Dim schedType = drow(5)
-
-                            IMPORT_employeeshift(
-                                employeeID,
-                                time_from,
-                                time_to,
-                                dateFrom,
-                                dateTo,
-                                schedType
-                            )
-
-                            'Dim progressresult = (i / dtEmpShift.Rows.Count) * 100
-
-                            'bgEmpShiftImport.ReportProgress(CInt(progressresult))
-
-                        Next
-
-                    Else
-                        Continue For
-                    End If
-
-                    Dim progressresult = (i / distnct_dt.Rows.Count) * 100
-
-                    bgEmpShiftImport.ReportProgress(CInt(progressresult))
-
-                    i += 1
-
-                Next
-
-                'For Each drow As DataRow In dtEmpShift.Rows
-
-                '    Dim n_ExecuteQuery As New ExecuteQuery(String.Concat("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='", drow(0), "' AND OrganizationID='", orgztnID, "');"))
-
-                '    If Convert.ToInt16(n_ExecuteQuery.Result) = 1 Then
-
-                '        Dim time_from = Nothing
-
-                '        Try
-                '            time_from = Format(CDate(drow(1)), "HH:mm")
-                '        Catch ex As Exception
-                '            time_from = DBNull.Value
-                '        End Try
-
-                '        Dim time_to = Nothing
-
-                '        Try
-                '            time_to = Format(CDate(drow(2)), "HH:mm")
-                '        Catch ex As Exception
-                '            time_to = DBNull.Value
-                '        End Try
-
-                '        IMPORT_employeeshift(drow(0), _
-                '                             time_from, _
-                '                             time_to, _
-                '                             drow(3), _
-                '                             drow(4), _
-                '                             drow(5))
-
-                '        Dim progressresult = (i / dtEmpShift.Rows.Count) * 100
-
-                '        bgEmpShiftImport.ReportProgress(CInt(progressresult))
-
-                '    Else
-                '        Continue For
-                '    End If
-
-                '    i += 1
-
-                'Next
-
-            End If
-
-        End If
-
-        EXECQUER("DELETE FROM shift WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NULL AND TimeTo IS NULL;" & _
+        EXECQUER("DELETE FROM shift WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NULL AND TimeTo IS NULL;" &
                  "ALTER TABLE shift AUTO_INCREMENT = 0;")
-
     End Sub
 
     Private Sub bgEmpShiftImport_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgEmpShiftImport.ProgressChanged
@@ -1285,57 +827,41 @@ Public Class EmployeeShiftEntryForm
     End Sub
 
     Private Sub bgEmpShiftImport_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgEmpShiftImport.RunWorkerCompleted
-
         If e.Error IsNot Nothing Then
             MessageBox.Show("Error: " & e.Error.Message)
         ElseIf e.Cancelled Then
             MessageBox.Show("Background work cancelled.")
-        Else
-
         End If
 
         Panel1.Enabled = True
-
         Panel2.Enabled = True
 
         ToolStripProgressBar1.Visible = False
 
         backgroundworking = 0
 
-        enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', IF(TimeTo IS NULL, '', TIME_FORMAT(TimeTo,'%l:%i %p')))" & _
-                       " FROM shift" & _
-                       " WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NOT NULL  AND TimeTo IS NOT NULL " & _
-                       " ORDER BY TimeFrom,TimeTo;", _
+        enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', IF(TimeTo IS NULL, '', TIME_FORMAT(TimeTo,'%l:%i %p')))" &
+                       " FROM shift" &
+                       " WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NOT NULL  AND TimeTo IS NOT NULL " &
+                       " ORDER BY TimeFrom,TimeTo;",
                        cboshiftlist)
 
-        If dgvEmpList.RowCount <> 0 Then
-            Dim dgvceleventarg As New DataGridViewCellEventArgs(c_EmployeeID.Index, 0)
-            dgvEmpList_CellClick(sender, dgvceleventarg)
-        End If
-
         MDIPrimaryForm.Showmainbutton.Enabled = True
-
         Panel2.Enabled = True
-
         Panel1.Enabled = True
-
     End Sub
 
     Dim dataread As MySqlDataReader
 
-    Private Sub IMPORT_employeeshift(Optional i_EmployeeID As Object = Nothing, _
-                                     Optional i_TimeFrom As Object = Nothing, _
-                                     Optional i_TimeTo As Object = Nothing, _
-                                     Optional i_DateFrom As Object = Nothing, _
-                                     Optional i_DateTo As Object = Nothing, _
+    Private Sub IMPORT_employeeshift(Optional i_EmployeeID As Object = Nothing,
+                                     Optional i_TimeFrom As Object = Nothing,
+                                     Optional i_TimeTo As Object = Nothing,
+                                     Optional i_DateFrom As Object = Nothing,
+                                     Optional i_DateTo As Object = Nothing,
                                      Optional i_SchedType As Object = Nothing)
-
         Try
-
             If conn.State = ConnectionState.Open Then
-
                 conn.Close()
-
             End If
 
             cmd = New MySqlCommand("IMPORT_employeeshift", conn)
@@ -1381,113 +907,71 @@ Public Class EmployeeShiftEntryForm
                 End Try
 
                 .Parameters.AddWithValue("i_SchedType", schedtypevalue)
-
-                'dataread =
                 .ExecuteNonQuery()
 
             End With
-
         Catch ex As Exception
-
             MsgBox(getErrExcptn(ex, Me.Name))
-
         End Try
-
     End Sub
 
     Function MilitTime(ByVal timeval As Object) As Object
-
         Dim retrnObj As Object
 
         retrnObj = New Object
 
         Try
-
-            'If timeval Is Nothing Then
-            '    retrnObj = DBNull.Value
-            'Else
             If timeval = Nothing Then
                 retrnObj = DBNull.Value
             ElseIf IsDBNull(timeval) Then
                 retrnObj = DBNull.Value
             Else
-
                 Dim endtime As Object = timeval
 
                 If endtime.ToString.Contains("P") Then
-
                     Dim hrs As String = If(Val(getStrBetween(endtime, "", ":")) = 12, 12, Val(getStrBetween(endtime, "", ":")) + 12)
-
                     Dim mins As String = StrReverse(getStrBetween(StrReverse(endtime.ToString), "", ":"))
 
                     mins = getStrBetween(mins, "", " ")
-
                     retrnObj = hrs & ":" & mins
 
                 ElseIf endtime.ToString.Contains("A") Then
-
                     Dim i As Integer = StrReverse(endtime).ToString.IndexOf(" ")
-
                     endtime = endtime.ToString.Replace("A", "")
 
-                    'Dim i As Integer = StrReverse("3:15 AM").ToString.IndexOf(" ")
-
-                    ''endtime = endtime.ToString.Replace("A", "")
-
-                    'MsgBox(Trim(StrReverse(StrReverse("3:15 AM").ToString.Substring(i, ("3:15 AM").ToString.Length - i))).Length)
-
-                    Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i, _
+                    Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i,
                                                                                       endtime.ToString.Length - i)
                                               )
                                    )
 
-                    amTime = If(getStrBetween(amTime, "", ":") = "12", _
-                                24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")), _
+                    amTime = If(getStrBetween(amTime, "", ":") = "12",
+                                24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")),
                                 amTime)
 
                     retrnObj = amTime
-
                 Else
                     retrnObj = endtime
-
                 End If
-
             End If
-
         Catch ex As Exception
             retrnObj = DBNull.Value
         End Try
 
         Return retrnObj
-
     End Function
 
     Private Sub TextBox4_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TextBox4.KeyPress
-
         Dim e_asc = Asc(e.KeyChar)
 
         If e_asc = 13 Then
-
             fillemplyeelist()
-
-            If dgvEmpList.RowCount <> 0 Then
-                dgvEmpList_CellClick(sender, New DataGridViewCellEventArgs(c_EmployeeID.Index, 0))
-
-            End If
-
         End If
-
-    End Sub
-
-    Private Sub TextBox4_TextChanged(sender As Object, e As EventArgs) Handles TextBox4.TextChanged
-
     End Sub
 
     Dim pagination As Integer = 0
 
     Private Sub Link_Paging(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles First.LinkClicked, Prev.LinkClicked,
                                                                                             Nxt.LinkClicked, Last.LinkClicked
-
         dgvEmpShiftList.Rows.Clear()
 
         Dim sendrname As String = DirectCast(sender, LinkLabel).Name
@@ -1502,22 +986,10 @@ Public Class EmployeeShiftEntryForm
         ElseIf sendrname = "Nxt" Then
             pagination += 50
         ElseIf sendrname = "Last" Then
-
             Dim lastpage = Val(EXECQUER("SELECT COUNT(RowID) / 50 FROM employeeshift WHERE OrganizationID=" & orgztnID & " AND EmployeeID='" & dgvEmpList.Tag & "';"))
-
             Dim remender = lastpage Mod 1
 
             pagination = (lastpage - remender) * 50
-
-            If pagination - 50 < 50 Then
-                'pagination = 0
-
-            End If
-
-            'pagination = If(lastpage - 50 >= 50, _
-            '                lastpage - 50, _
-            '                lastpage)
-
         End If
 
         Dim n_ReadSQLProcedureToDatatable As _
@@ -1531,36 +1003,21 @@ Public Class EmployeeShiftEntryForm
         empshifttable = n_ReadSQLProcedureToDatatable.ResultTable
 
         For Each drow As DataRow In empshifttable.Rows
-
             Dim rowArray = drow.ItemArray
-
             dgvEmpShiftList.Rows.Add(rowArray)
-
         Next
 
         dgvEmpShiftList.PerformLayout()
-
         empshifttable.Dispose()
-
-    End Sub
-
-    Private Sub dgvWeek_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvWeek.CellContentClick
-
     End Sub
 
     Dim n_ShiftList As New ShiftList
 
     Private Sub dgvWeek_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvWeek.CellMouseDown
-
         If e.Button = Windows.Forms.MouseButtons.Right _
             And e.RowIndex > -1 Then
 
             dgvWeek.Item(e.ColumnIndex, e.RowIndex).Selected = True
-
-            'dgvcalendar_CellContentClick(dgvcalendar, New DataGridViewCellEventArgs(1, 1))
-
-            'If Application.OpenForms().OfType(Of ShiftList).Count Then
-            'End If
 
             Dim ii = Application.OpenForms().OfType(Of ShiftList).Count
 
@@ -1580,30 +1037,12 @@ Public Class EmployeeShiftEntryForm
                                                  ptY)
 
                 n_ShiftList.BringToFront()
-
             Else
-
-                'For i = 0 To ii
-                '    ShiftList.Close()
-                '    ShiftList.Dispose()
-                'Next
-
-                'n_ShiftList.Size = New Size(1, 1)
-
-                'n_ShiftList.Location = New Point(MousePosition.X,
-                '                                 MousePosition.Y)
-
-                'n_ShiftList.Location = New Point((MousePosition.X + n_ShiftList.Width),
-                '                                 (MousePosition.Y + n_ShiftList.Height))
-
-                'n_ShiftList.Size = New Size(493, 401)
-
                 n_ShiftList = New ShiftList
 
                 n_ShiftList.Location = New Point(ptX,
                                                  ptY)
 
-                'n_ShiftList.Show()
                 If n_ShiftList.ShowDialog("") = Windows.Forms.DialogResult.OK Then
 
                     Dim i1 = Nothing
@@ -1614,9 +1053,6 @@ Public Class EmployeeShiftEntryForm
                     i1 = n_ShiftList.ShiftRowID
                     i2 = n_ShiftList.TimeFromValue
                     i3 = n_ShiftList.TimeToValue
-                    'Catch ex As Exception
-                    '    MsgBox(getErrExcptn(ex, Me.Name), , "n_ShiftList.ShowDialog")
-                    'End Try
 
                     For Each seldgvcells As DataGridViewCell In dgvWeek.SelectedCells
 
@@ -1627,13 +1063,12 @@ Public Class EmployeeShiftEntryForm
                                 .Tag = Nothing
 
                                 .Value = Nothing
-
                             Else
 
                                 .Tag = i1
 
-                                .Value = _
-                                    Format(i2, machineShortTime) & " to " & _
+                                .Value =
+                                    Format(i2, machineShortTime) & " to " &
                                     Format(i3, machineShortTime)
 
                             End If
@@ -1643,22 +1078,13 @@ Public Class EmployeeShiftEntryForm
                     Next
 
                 End If
-                'n_ShiftList.ShowDialog("")
-
             End If
-
         ElseIf e.Button = Windows.Forms.MouseButtons.Left Then
-
         End If
-
     End Sub
 
     Private Sub dgvWeek_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles dgvWeek.RowsAdded
         dgvWeek.Rows(e.RowIndex).Height = 75
-    End Sub
-
-    Private Sub TabPage1_Click(sender As Object, e As EventArgs) Handles TabPage1.Click
-
     End Sub
 
     Private Sub TabPage1_Enter(sender As Object, e As EventArgs) Handles TabPage1.Enter
@@ -1673,38 +1099,10 @@ Public Class EmployeeShiftEntryForm
 
     End Sub
 
-    Private Sub TabPage2_Click(sender As Object, e As EventArgs) Handles TabPage2.Click
-
-    End Sub
-
     Private Sub TabPage2_Enter(sender As Object, e As EventArgs) Handles TabPage2.Enter
         TabPage2.Text = TabPage2.Text.Trim & Space(15)
         TabPage1.Text = TabPage1.Text.Trim
         tsbtnImportEmpShift.Enabled = False
-        'btnDelete.Enabled = False
-
-        'Dim concatquery As String = String.Empty
-
-        'Dim i = 0
-
-        'For Each strval In ArrayWeekFormat
-        '    Dim aliass = "esd" & i
-
-        '    concatquery &= " INNER JOIN employeeshiftbyday " & aliass &
-        '        " ON " & aliass & ".EmployeeID=esd.EmployeeID" &
-        '        " AND " & aliass & ".OrganizationID=esd.OrganizationID" &
-        '        " AND " & aliass & ".NameOfDay='" & strval & "'"
-
-        '    i += 1
-
-        'Next
-
-        'Dim n_ReadSQLProcedureToDatatable As _
-        '    New SQLQueryToDatatable("SELECT esd.*" &
-        '                            " FROM employeeshiftbyday esd" &
-        '                            concatquery &
-        '                            " WHERE esd.EmployeeID='" & dgvEmpList.Tag & "'" &
-        '                            " AND esd.OrganizationID='" & dgvEmpList.Tag & "';")
 
         Dim n_ReadSQLProcedureToDatatable As _
             New SQLQueryToDatatable("SELECT sh.RowID AS shRowID" &
@@ -1722,34 +1120,24 @@ Public Class EmployeeShiftEntryForm
 
         dgvWeek.Rows.Clear()
 
-        Dim n_row = _
+        Dim n_row =
         dgvWeek.Rows.Add()
-
-        'Dim rowArray() As Object
-
-        'ReDim rowArray(shiftbyday.Rows.Count - 1)
 
         Dim ii = 0
 
         For Each drow As DataRow In shiftbyday.Rows
-
-            'rowArray(ii) = drow("")
-
             If IsDBNull(drow("shRowID")) = False Then
                 dgvWeek.Item(ii, n_row).Value = drow("TimeFrom") & " to " & drow("TimeTo")
                 dgvWeek.Item(ii, n_row).Tag = drow("shRowID")
             End If
 
             ii += 1
-
         Next
-
     End Sub
 
     Private Sub ByDateToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ByDateToolStripMenuItem.Click
         CustomColoredTabControlActivateSelecting(True)
         CustomColoredTabControl1.SelectedIndex = 0
-
         CustomColoredTabControlActivateSelecting(False)
     End Sub
 
@@ -1772,203 +1160,110 @@ Public Class EmployeeShiftEntryForm
         End If
     End Sub
 
-    Private Sub CustomColoredTabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CustomColoredTabControl1.SelectedIndexChanged
-
-    End Sub
-
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
-
         btnSearch.Enabled = False
-
-        If TypeOf sender Is Femiani.Forms.UI.Input.AutoCompleteTextBox _
-            Or txtsrchEmpLName.Text.Trim.Length > 0 Then
-
-        Else
-
-        End If
 
         fillemplyeelist()
 
         If dgvEmpList.RowCount > 0 Then
-            dgvEmpList_CellClick(sender, New DataGridViewCellEventArgs(c_EmployeeID.Index, 0))
             dgvEmpList_CurrentCellChanged(dgvEmpList, New EventArgs)
         End If
 
         btnSearch.Enabled = True
-
     End Sub
 
     Private Sub txtEmpSearchBox_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtEmpSearchBox.KeyPress
-
         Dim e_asc = Asc(e.KeyChar)
 
         If e_asc = 13 Then
-
             btnSearch_Click(btnSearch, New EventArgs)
-
         End If
-
     End Sub
 
     Private Sub txtEmpSearchBox_TextChanged(sender As Object, e As EventArgs) Handles txtEmpSearchBox.TextChanged
-
         TextBox4.Text = txtEmpSearchBox.Text
-
     End Sub
 
     Dim divisionRowID = Nothing
 
     Private Sub trvDepartment_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles trvDepartment.AfterSelect
-
         Static once As SByte = 0
 
         divisionRowID = 0
 
         If e.Node IsNot Nothing Then
-
             If once = 0 Then
-
                 once = 1
-
             Else
-
                 divisionRowID = CInt(ValNoComma(e.Node.Tag))
 
                 btnSearch_Click(btnSearch, New EventArgs)
-
             End If
-
         End If
-
     End Sub
 
     Private Sub lnklblClearDivRowID_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblClearDivRowID.LinkClicked
-
         lnklblClearDivRowID.Enabled = False
-
         divisionRowID = 0
-
         btnSearch_Click(btnSearch, New EventArgs)
-
         lnklblClearDivRowID.Enabled = True
-
-    End Sub
-
-    'Dim sdfsd As New Indigo.CollapsibleGroupBox '.CollapseBoxClickedEventHandler
-
-    'Dim msd As sdfsd = AddressOf sdfsd.CollapseBoxClickedEventHandler
-
-    Private Sub CollapsibleGroupBox1_Click(sender As Object,
-                                           e As CollapseBoxClickedEventHandler)
-
-    End Sub
-
-    Private Sub CollapsibleGroupBox1_Enter(sender As Object, e As EventArgs) Handles CollapsibleGroupBox1.Enter
-
-    End Sub
-
-    Private Sub CollapsibleGroupBox1_CollapseBoxClickedEvent(sender As Object) Handles CollapsibleGroupBox1.CollapseBoxClickedEvent
-
     End Sub
 
     Private Sub dgvEmpShiftList_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvEmpShiftList.CellMouseDown
-
         If e.Button = Windows.Forms.MouseButtons.Right _
             And btnDelete.Visible Then
 
             If e.ColumnIndex > -1 And e.RowIndex > -1 Then
-
                 dgvEmpShiftList.Focus()
-
                 dgvEmpShiftList.Item(e.ColumnIndex, e.RowIndex).Selected = True
-
                 dgvEmpShiftList_CellClick(sender, New DataGridViewCellEventArgs(e.ColumnIndex, e.RowIndex))
-
                 cmsDeleteShift.Show(MousePosition, ToolStripDropDownDirection.Default)
-
             End If
-
-        Else
-
         End If
-
-    End Sub
-
-    Private Sub cmsDeleteShift_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles cmsDeleteShift.Opening
-
     End Sub
 
     Private Sub DeleteSelectedShiftToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeleteSelectedShiftToolStripMenuItem.Click
-
         Dim prompt = MessageBox.Show("Do you want to delete this employee shift ?", "Confirm deleting shift", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
 
         If prompt = Windows.Forms.DialogResult.Yes Then
-
             Dim selected_dgvcells As DataGridViewSelectedRowCollection = dgvEmpShiftList.SelectedRows
-
             Dim empshiftRowIDs As New List(Of String)
-
             Dim row_index As New List(Of String)
 
             For Each dgvrow As DataGridViewRow In selected_dgvcells
                 empshiftRowIDs.Add(dgvrow.Cells("c_RowIDShift").Value)
                 row_index.Add(dgvrow.Index)
-
             Next
 
             For Each strval In empshiftRowIDs
-                ' AND OrganizationID=" & orgztnID & "
-                EXECQUER("UPDATE employeetimeentry SET EmployeeShiftID=NULL WHERE EmployeeShiftID='" & strval & "';" & _
+                EXECQUER("UPDATE employeetimeentry SET EmployeeShiftID=NULL WHERE EmployeeShiftID='" & strval & "';" &
                          "DELETE FROM employeeshift WHERE RowID='" & strval & "';" &
                          "ALTER TABLE employeeshift AUTO_INCREMENT = 0;")
-
             Next
 
             For Each rindx In row_index
-
                 dgvEmpShiftList.Rows.Remove(dgvEmpShiftList.Rows(rindx))
-
             Next
-
         End If
-
     End Sub
 
     Private Sub tsbtnBulkEditShift_Click(sender As Object, e As EventArgs) Handles tsbtnBulkEditShift.Click
-
         Dim n_EmployeeShiftMassUpdate As New EmployeeShiftMassUpdate
 
         With n_EmployeeShiftMassUpdate
-
             .MinimizeBox = False
-
             .MaximizeBox = .MinimizeBox
-
             .StartPosition = FormStartPosition.CenterScreen
-
             .FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
-
-            If .ShowDialog("") = Windows.Forms.DialogResult.OK Then
-
-            End If
-
         End With
-
-    End Sub
-
-    Private Sub txtsrchEmpLName_TextChanged(sender As Object, e As EventArgs) Handles txtsrchEmpLName.TextChanged
-
     End Sub
 
     Private Sub txtsrchEmpLName_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtsrchEmpLName.KeyPress
-
         Dim e_asc As Integer = Asc(e.KeyChar)
 
         If e_asc = 13 Then
             btnSearch_Click(txtsrchEmpLName, New EventArgs)
-
         End If
-
     End Sub
 
 End Class
