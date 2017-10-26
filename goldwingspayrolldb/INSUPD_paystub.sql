@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.3.0.4694
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function INSUPD_paystub
 DROP FUNCTION IF EXISTS `INSUPD_paystub`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_paystub`(`pstub_RowID` INT, `pstub_OrganizationID` INT, `pstub_CreatedBy` INT, `pstub_LastUpdBy` INT, `pstub_PayPeriodID` INT, `pstub_EmployeeID` INT, `pstub_TimeEntryID` INT, `pstub_PayFromDate` DATE, `pstub_PayToDate` DATE, `pstub_TotalGrossSalary` DECIMAL(10,2), `pstub_TotalNetSalary` DECIMAL(10,2), `pstub_TotalTaxableSalary` DECIMAL(10,2), `pstub_TotalEmpSSS` DECIMAL(10,2), `pstub_TotalEmpWithholdingTax` DECIMAL(10,2), `pstub_TotalCompSSS` DECIMAL(10,2), `pstub_TotalEmpPhilhealth` DECIMAL(10,2), `pstub_TotalCompPhilhealth` DECIMAL(10,2), `pstub_TotalEmpHDMF` DECIMAL(10,2), `pstub_TotalCompHDMF` DECIMAL(10,2), `pstub_TotalVacationDaysLeft` DECIMAL(10,2), `pstub_TotalLoans` DECIMAL(10,2), `pstub_TotalBonus` DECIMAL(10,2), `pstub_TotalAllowance` DECIMAL(10,2)) RETURNS int(11)
@@ -141,6 +134,7 @@ END IF;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

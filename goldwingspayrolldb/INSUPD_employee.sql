@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.3.0.4694
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function INSUPD_employee
 DROP FUNCTION IF EXISTS `INSUPD_employee`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employee`(`emplo_RowID` INT, `emplo_UserID` INT, `emplo_OrganizationID` INT, `emplo_Salutation` VARCHAR(50), `emplo_FirstName` VARCHAR(100), `emplo_MiddleName` VARCHAR(100), `emplo_LastName` VARCHAR(100), `emplo_Surname` VARCHAR(50), `emplo_EmployeeID` VARCHAR(50), `emplo_TINNo` VARCHAR(50), `emplo_SSSNo` VARCHAR(50), `emplo_HDMFNo` VARCHAR(50), `emplo_PhilHealthNo` VARCHAR(50), `emplo_EmploymentStatus` VARCHAR(50), `emplo_EmailAddress` VARCHAR(50), `emplo_WorkPhone` VARCHAR(50), `emplo_HomePhone` VARCHAR(50), `emplo_MobilePhone` VARCHAR(50), `emplo_HomeAddress` VARCHAR(1000), `emplo_Nickname` VARCHAR(50), `emplo_JobTitle` VARCHAR(50), `emplo_Gender` VARCHAR(50), `emplo_EmployeeType` VARCHAR(50), `emplo_MaritalStatus` VARCHAR(50), `emplo_Birthdate` DATE, `emplo_Startdate` DATE, `emplo_TerminationDate` DATE, `emplo_PositionID` INT, `emplo_PayFrequencyID` INT, `emplo_NoOfDependents` INT, `emplo_Image` LONGBLOB, `emplo_LeavePerPayPeriod` DECIMAL(10,2), `emplo_SickLeavePerPayPeriod` DECIMAL(10,2), `emplo_MaternityLeavePerPayPeriod` DECIMAL(10,2), `emplo_OtherLeavePerPayPeriod` DECIMAL(10,2), `emplo_UndertimeOverride` VARCHAR(1), `emplo_OvertimeOverride` VARCHAR(1), `emplo_LeaveBalance` DECIMAL(10,2), `emplo_SickLeaveBalance` DECIMAL(10,2), `emplo_MaternityLeaveBalance` DECIMAL(10,2), `emplo_OtherLeaveBalance` DECIMAL(10,2), `emplo_LeaveAllowance` DECIMAL(10,2), `emplo_SickLeaveAllowance` DECIMAL(10,2), `emplo_MaternityLeaveAllowance` DECIMAL(10,2), `emplo_OtherLeaveAllowance` DECIMAL(10,2), `emplo_AlphaListExempted` VARCHAR(50), `emplo_WorkDaysPerYear` INT, `emplo_DayOfRest` CHAR(1), `emplo_ATMNo` VARCHAR(50), `emplo_BankName` VARCHAR(50), `emplo_CalcHoliday` CHAR(1), `emplo_CalcSpecialHoliday` CHAR(1), `emplo_CalcNightDiff` CHAR(1), `emplo_CalcNightDiffOT` CHAR(1), `emplo_CalcRestDay` CHAR(1), `emplo_CalcRestDayOT` CHAR(1), `emplo_DateRegularized` DATE, `emplo_DateEvaluated` DATE, `emplo_RevealInPayroll` CHAR(1), `emplo_LateGracePeriod` DECIMAL(10,2), `emplo_AgencyID` INT, `emplo_OffsetBalance` DECIMAL(10,2)) RETURNS int(11)
@@ -223,6 +216,7 @@ RETURN emploRowID;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

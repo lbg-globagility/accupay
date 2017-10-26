@@ -1,16 +1,9 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.3.0.4694
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for function INSUPD_account
 DROP FUNCTION IF EXISTS `INSUPD_account`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_account`(`acc_RowID` INT, `acc_CompanyName` VARCHAR(100), `acc_TradeName` VARCHAR(100), `acc_MobilePhone` VARCHAR(100), `acc_OrganizationID` INT, `acc_PrimaryContactID` INT, `acc_PrimaryAddressID` INT, `acc_PrimaryBillToAddressID` INT, `acc_PrimarySoldToAddressID` INT, `acc_PrimaryShipToAddressID` INT, `acc_PrimaryAgreementID` INT, `acc_PrimaryBillToPersonID` INT, `acc_PrimaryShipToPersonID` INT, `acc_PrimarySoldToPersonID` INT, `acc_ParentAccountID` INT, `acc_VATRegistrationNo` VARCHAR(50), `acc_ATPNo` VARCHAR(50), `acc_BranchFlg` VARCHAR(50), `acc_BusinessType` VARCHAR(50), `acc_PrimaryHomeAddressID` INT, `acc_FloorArea` DECIMAL(10,2), `acc_AverageMonthlySales` DECIMAL(10,2), `acc_YearsInBusiness` DECIMAL(10,2), `acc_ExistingBranch` VARCHAR(1), `acc_FaxNumber` VARCHAR(50), `acc_Description` VARCHAR(1000), `acc_Active` CHAR(1), `acc_ManagerName` VARCHAR(50), `acc_PaymentTermsID` INT, `acc_BranchType` VARCHAR(50), `acc_AliasName` VARCHAR(100), `acc_CustomerSinceDate` DATE, `acc_CreditDays` INT, `acc_StockHolder1` VARCHAR(100), `acc_StockHolder2` VARCHAR(100), `acc_StockHolder3` VARCHAR(100), `acc_Comments` VARCHAR(2000), `acc_GoodStandingFlg` CHAR(1), `acc_CreatedBy` INT, `acc_LastUpdBy` INT, `acc_PrimaryRepID` INT, `acc_EmailAddress` VARCHAR(100), `acc_AltEmailAddress` VARCHAR(100), `acc_Website` VARCHAR(100), `acc_MainPhone` VARCHAR(100), `acc_AltPhone` VARCHAR(100), `acc_Status` VARCHAR(50), `acc_Capitalization` DECIMAL(10,2), `acc_AverageRating` DECIMAL(10,2), `acc_Image` LONGBLOB) RETURNS int(11)
@@ -196,6 +189,7 @@ RETURN acctID;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
