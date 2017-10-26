@@ -11,13 +11,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `VIEW_employeeshift`(IN `OrganizID` 
 BEGIN
 
 SELECT
-ee.EmployeeID
-,CONCAT(ee.LastName,',',ee.FirstName,',',INITIALS(ee.MiddleName,'.','1')) AS Name
-,es.RowID
-,es.EffectiveFrom
-,es.EffectiveTo
-,COALESCE(TIME_FORMAT(s.TimeFrom, '%h:%i:%s %p'),'') timef
-,COALESCE(TIME_FORMAT(s.TimeTo, '%h:%i:%s %p'),'') timet
+    ee.EmployeeID,
+    CONCAT(ee.LastName,',',ee.FirstName,',',INITIALS(ee.MiddleName,'.','1')) AS Name,
+    es.RowID,
+    es.EffectiveFrom,
+    IF(es.EffectiveTo != es.EffectiveFrom, es.EffectiveTo, NULL),
+    COALESCE(TIME_FORMAT(s.TimeFrom, '%h:%i:%s %p'),'') timef,
+    COALESCE(TIME_FORMAT(s.TimeTo, '%h:%i:%s %p'),'') timet
 FROM employeeshift es
 LEFT JOIN shift s ON es.ShiftID = s.RowID
 INNER JOIN employee ee ON es.EmployeeID = ee.RowID
