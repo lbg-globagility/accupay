@@ -280,7 +280,7 @@ FROM (
     LEFT JOIN (
         SELECT
             REPLACE(GROUP_CONCAT(IFNULL(product.PartNo, '')), ',', '\n') 'Names',
-            REPLACE(GROUP_CONCAT(IFNULL(scheduledloansperpayperiod.DeductionAmount, '')), ',', '\n') 'PayAmounts',
+            REPLACE(GROUP_CONCAT(IFNULL(ROUND(scheduledloansperpayperiod.DeductionAmount, 2), '')), ',', '\n') 'PayAmounts',
             REPLACE(GROUP_CONCAT(IFNULL(ROUND(scheduledloansperpayperiod.TotalBalanceLeft, 2), '')), ',', '\n') 'TotalBalanceLeft',
             paystub.RowID 'PayStubID'
         FROM scheduledloansperpayperiod
