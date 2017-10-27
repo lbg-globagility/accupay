@@ -26,23 +26,24 @@ Partial Class JobLevelForm
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tbpPosition = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.CategoryNameTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.dgvemployees = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.JobLevelDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtnNewPosition = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnSavePosition = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnDeletePosition = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.NewCategoryButton = New System.Windows.Forms.ToolStripButton()
+        Me.SaveCategoryButton = New System.Windows.Forms.ToolStripButton()
+        Me.DeleteCategoryButton = New System.Windows.Forms.ToolStripButton()
+        Me.CancelCategoryButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.tv2 = New System.Windows.Forms.TreeView()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1.SuspendLayout()
         Me.tbpPosition.SuspendLayout()
         Me.Panel1.SuspendLayout()
-        CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.JobLevelDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -77,22 +78,22 @@ Partial Class JobLevelForm
         'Panel1
         '
         Me.Panel1.AutoScroll = True
-        Me.Panel1.Controls.Add(Me.TextBox1)
+        Me.Panel1.Controls.Add(Me.CategoryNameTextBox)
         Me.Panel1.Controls.Add(Me.Label6)
-        Me.Panel1.Controls.Add(Me.dgvemployees)
+        Me.Panel1.Controls.Add(Me.JobLevelDataGridView)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(3, 28)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(794, 432)
         Me.Panel1.TabIndex = 108
         '
-        'TextBox1
+        'CategoryNameTextBox
         '
-        Me.TextBox1.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(160, 16)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(344, 23)
-        Me.TextBox1.TabIndex = 183
+        Me.CategoryNameTextBox.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CategoryNameTextBox.Location = New System.Drawing.Point(160, 16)
+        Me.CategoryNameTextBox.Name = "CategoryNameTextBox"
+        Me.CategoryNameTextBox.Size = New System.Drawing.Size(344, 23)
+        Me.CategoryNameTextBox.TabIndex = 183
         '
         'Label6
         '
@@ -104,14 +105,14 @@ Partial Class JobLevelForm
         Me.Label6.Text = "Division Location"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'dgvemployees
+        'JobLevelDataGridView
         '
-        Me.dgvemployees.AllowUserToAddRows = False
-        Me.dgvemployees.AllowUserToDeleteRows = False
-        Me.dgvemployees.AllowUserToOrderColumns = True
-        Me.dgvemployees.BackgroundColor = System.Drawing.Color.White
-        Me.dgvemployees.ColumnHeadersHeight = 34
-        Me.dgvemployees.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1})
+        Me.JobLevelDataGridView.AllowUserToAddRows = False
+        Me.JobLevelDataGridView.AllowUserToDeleteRows = False
+        Me.JobLevelDataGridView.AllowUserToOrderColumns = True
+        Me.JobLevelDataGridView.BackgroundColor = System.Drawing.Color.White
+        Me.JobLevelDataGridView.ColumnHeadersHeight = 34
+        Me.JobLevelDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -119,64 +120,58 @@ Partial Class JobLevelForm
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvemployees.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvemployees.Location = New System.Drawing.Point(8, 48)
-        Me.dgvemployees.MultiSelect = False
-        Me.dgvemployees.Name = "dgvemployees"
-        Me.dgvemployees.ReadOnly = True
-        Me.dgvemployees.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvemployees.Size = New System.Drawing.Size(496, 376)
-        Me.dgvemployees.TabIndex = 175
-        '
-        'Column1
-        '
-        Me.Column1.HeaderText = "RowID"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
+        Me.JobLevelDataGridView.DefaultCellStyle = DataGridViewCellStyle1
+        Me.JobLevelDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.JobLevelDataGridView.Location = New System.Drawing.Point(8, 48)
+        Me.JobLevelDataGridView.MultiSelect = False
+        Me.JobLevelDataGridView.Name = "JobLevelDataGridView"
+        Me.JobLevelDataGridView.ReadOnly = True
+        Me.JobLevelDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.JobLevelDataGridView.Size = New System.Drawing.Size(496, 376)
+        Me.JobLevelDataGridView.TabIndex = 175
         '
         'ToolStrip1
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewPosition, Me.tsbtnSavePosition, Me.tsbtnDeletePosition, Me.tsbtnCancel, Me.ToolStripButton4, Me.tsbtnAudittrail})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewCategoryButton, Me.SaveCategoryButton, Me.DeleteCategoryButton, Me.CancelCategoryButton, Me.ToolStripButton4, Me.tsbtnAudittrail})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(794, 25)
         Me.ToolStrip1.TabIndex = 13
         Me.ToolStrip1.Text = "ToolStrip1"
         '
-        'tsbtnNewPosition
+        'NewCategoryButton
         '
-        Me.tsbtnNewPosition.Image = Global.Acupay.My.Resources.Resources._new
-        Me.tsbtnNewPosition.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnNewPosition.Name = "tsbtnNewPosition"
-        Me.tsbtnNewPosition.Size = New System.Drawing.Size(102, 22)
-        Me.tsbtnNewPosition.Text = "&New Category"
+        Me.NewCategoryButton.Image = Global.Acupay.My.Resources.Resources._new
+        Me.NewCategoryButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.NewCategoryButton.Name = "NewCategoryButton"
+        Me.NewCategoryButton.Size = New System.Drawing.Size(102, 22)
+        Me.NewCategoryButton.Text = "&New Category"
         '
-        'tsbtnSavePosition
+        'SaveCategoryButton
         '
-        Me.tsbtnSavePosition.Image = Global.Acupay.My.Resources.Resources.Save
-        Me.tsbtnSavePosition.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnSavePosition.Name = "tsbtnSavePosition"
-        Me.tsbtnSavePosition.Size = New System.Drawing.Size(102, 22)
-        Me.tsbtnSavePosition.Text = "&Save Category"
+        Me.SaveCategoryButton.Image = Global.Acupay.My.Resources.Resources.Save
+        Me.SaveCategoryButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SaveCategoryButton.Name = "SaveCategoryButton"
+        Me.SaveCategoryButton.Size = New System.Drawing.Size(102, 22)
+        Me.SaveCategoryButton.Text = "&Save Category"
         '
-        'tsbtnDeletePosition
+        'DeleteCategoryButton
         '
-        Me.tsbtnDeletePosition.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
-        Me.tsbtnDeletePosition.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnDeletePosition.Name = "tsbtnDeletePosition"
-        Me.tsbtnDeletePosition.Size = New System.Drawing.Size(111, 22)
-        Me.tsbtnDeletePosition.Text = "D&elete Category"
+        Me.DeleteCategoryButton.Image = Global.Acupay.My.Resources.Resources.CLOSE_00
+        Me.DeleteCategoryButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DeleteCategoryButton.Name = "DeleteCategoryButton"
+        Me.DeleteCategoryButton.Size = New System.Drawing.Size(111, 22)
+        Me.DeleteCategoryButton.Text = "D&elete Category"
         '
-        'tsbtnCancel
+        'CancelCategoryButton
         '
-        Me.tsbtnCancel.Image = Global.Acupay.My.Resources.Resources.cancel1
-        Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnCancel.Name = "tsbtnCancel"
-        Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
-        Me.tsbtnCancel.Text = "Cancel"
+        Me.CancelCategoryButton.Image = Global.Acupay.My.Resources.Resources.cancel1
+        Me.CancelCategoryButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.CancelCategoryButton.Name = "CancelCategoryButton"
+        Me.CancelCategoryButton.Size = New System.Drawing.Size(63, 22)
+        Me.CancelCategoryButton.Text = "Cancel"
         '
         'ToolStripButton4
         '
@@ -214,6 +209,20 @@ Partial Class JobLevelForm
         Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "RowID"
+        Me.Column1.HeaderText = "RowID"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "Name"
+        Me.Column2.HeaderText = "Name"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
         'JobLevelForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -229,7 +238,7 @@ Partial Class JobLevelForm
         Me.tbpPosition.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.JobLevelDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.ResumeLayout(False)
@@ -240,16 +249,17 @@ Partial Class JobLevelForm
     Friend WithEvents tbpPosition As TabPage
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Label6 As Label
-    Friend WithEvents dgvemployees As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents JobLevelDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents ToolStrip1 As ToolStrip
-    Friend WithEvents tsbtnNewPosition As ToolStripButton
-    Friend WithEvents tsbtnSavePosition As ToolStripButton
-    Friend WithEvents tsbtnDeletePosition As ToolStripButton
-    Friend WithEvents tsbtnCancel As ToolStripButton
+    Friend WithEvents NewCategoryButton As ToolStripButton
+    Friend WithEvents SaveCategoryButton As ToolStripButton
+    Friend WithEvents DeleteCategoryButton As ToolStripButton
+    Friend WithEvents CancelCategoryButton As ToolStripButton
     Friend WithEvents ToolStripButton4 As ToolStripButton
     Friend WithEvents tsbtnAudittrail As ToolStripButton
     Friend WithEvents tv2 As TreeView
-    Friend WithEvents TextBox1 As TextBox
-    Friend WithEvents Column1 As DataGridViewTextBoxColumn
+    Friend WithEvents CategoryNameTextBox As TextBox
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents Column1 As DataGridViewTextBoxColumn
+    Friend WithEvents Column2 As DataGridViewTextBoxColumn
 End Class

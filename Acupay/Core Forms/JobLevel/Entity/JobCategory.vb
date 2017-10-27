@@ -24,7 +24,7 @@ Namespace Global.AccuPay.JobLevel
 
         Public Property Name As String
 
-        Public Overridable Property JobLevels As IEnumerable(Of JobLevel)
+        Public Overridable Property JobLevels As ICollection(Of JobLevel)
 
         Public Sub New()
             JobLevels = New Collection(Of JobLevel)

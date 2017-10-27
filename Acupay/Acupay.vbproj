@@ -256,6 +256,8 @@
     <Compile Include="Core Forms\Independent filing\OverTimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\JobLevel\Entity\JobCategory.vb" />
+    <Compile Include="Core Forms\JobLevel\Entity\JobLevel.vb" />
     <Compile Include="Core Forms\JobLevel\JobLevelForm.Designer.vb">
       <DependentUpon>JobLevelForm.vb</DependentUpon>
     </Compile>
