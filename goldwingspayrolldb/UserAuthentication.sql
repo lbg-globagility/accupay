@@ -12,7 +12,7 @@ BEGIN
 
 DECLARE returnvaue INT(11) DEFAULT 0;
 
-SELECT u.RowID
+SELECT u.RowID, pv.AllowedToAccess
 FROM `user` u
 INNER JOIN `position` po
 ON po.RowID = u.PositionID
