@@ -3,39 +3,47 @@ Imports AccuPay.JobLevel
 
 Public Class JobLevelForm
 
+    Private _context As PayrollContext
+
     Private _category As JobCategory
 
-    Private _jobLevelsBinding As BindingSource
+    Private WithEvents _jobLevelsSource As BindingSource
 
     Private Sub JobLevelForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _jobLevelsBinding = New BindingSource()
-        JobLevelDataGridView.DataSource = _jobLevelsBinding
+        JobLevelDataGridView.AutoGenerateColumns = False
+        _jobLevelsSource = New BindingSource()
+        JobLevelDataGridView.DataSource = _jobLevelsSource
     End Sub
 
     Private Sub NewCategoryButton_Click(sender As Object, e As EventArgs) Handles NewCategoryButton.Click
-        _category = New JobCategory()
-        _category.JobLevels.Add(New JobLevel() With {.Name = "Test"})
+        _context = New PayrollContext()
 
-        _jobLevelsBinding.DataSource = _category.JobLevels
+        _category = New JobCategory() With {
+            .OrganizationID = z_OrganizationID,
+            .Created = Date.Now,
+            .CreatedBy = z_User
+        }
+
+        _context.JobCategories.Add(_category)
+
+        _jobLevelsSource.DataSource = _category.JobLevels
     End Sub
 
     Private Sub SaveCategoryButton_Click(sender As Object, e As EventArgs) Handles SaveCategoryButton.Click
-        _category.Name = CategoryNameTextBox.Text
+        JobLevelDataGridView.EndEdit()
 
-        Using context = New PayrollContext()
-            'context.JobCategories.Add(_category)
-        End Using
+        _category.Name = CategoryNameTextBox.Text
+        _context.SaveChanges()
     End Sub
 
-    Private Sub CategoryNameTextBox_KeyUp(sender As Object, e As KeyEventArgs) Handles CategoryNameTextBox.KeyUp
-        If e.KeyCode = Keys.Enter Then
-            Dim level = New JobLevel() With {
-                .Name = CategoryNameTextBox.Text
-            }
+    Private Sub OnNewJobLevel(sender As Object, e As AddingNewEventArgs) Handles _jobLevelsSource.AddingNew
+        Dim jobLevel = New JobLevel() With {
+            .OrganizationID = z_OrganizationID,
+            .Created = Date.Now,
+            .CreatedBy = z_User
+        }
 
-            _category.JobLevels.Add(level)
-            _jobLevelsBinding.ResetBindings(False)
-        End If
+        e.NewObject = jobLevel
     End Sub
 
 End Class

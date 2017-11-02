@@ -28,6 +28,7 @@ Namespace Global.AccuPay.JobLevel
 
         Public Sub New()
             JobLevels = New Collection(Of JobLevel)
+            Created = Date.Now
         End Sub
 
     End Class

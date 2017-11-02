@@ -29,6 +29,9 @@ Partial Class JobLevelForm
         Me.CategoryNameTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.JobLevelDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.NewCategoryButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveCategoryButton = New System.Windows.Forms.ToolStripButton()
@@ -38,8 +41,8 @@ Partial Class JobLevelForm
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.tv2 = New System.Windows.Forms.TreeView()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1.SuspendLayout()
         Me.tbpPosition.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -90,7 +93,7 @@ Partial Class JobLevelForm
         'CategoryNameTextBox
         '
         Me.CategoryNameTextBox.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CategoryNameTextBox.Location = New System.Drawing.Point(160, 16)
+        Me.CategoryNameTextBox.Location = New System.Drawing.Point(160, 8)
         Me.CategoryNameTextBox.Name = "CategoryNameTextBox"
         Me.CategoryNameTextBox.Size = New System.Drawing.Size(344, 23)
         Me.CategoryNameTextBox.TabIndex = 183
@@ -98,21 +101,19 @@ Partial Class JobLevelForm
         'Label6
         '
         Me.Label6.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(8, 16)
+        Me.Label6.Location = New System.Drawing.Point(8, 8)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(144, 20)
         Me.Label6.TabIndex = 182
-        Me.Label6.Text = "Division Location"
+        Me.Label6.Text = "Category Name"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'JobLevelDataGridView
         '
-        Me.JobLevelDataGridView.AllowUserToAddRows = False
-        Me.JobLevelDataGridView.AllowUserToDeleteRows = False
         Me.JobLevelDataGridView.AllowUserToOrderColumns = True
         Me.JobLevelDataGridView.BackgroundColor = System.Drawing.Color.White
         Me.JobLevelDataGridView.ColumnHeadersHeight = 34
-        Me.JobLevelDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2})
+        Me.JobLevelDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -125,10 +126,28 @@ Partial Class JobLevelForm
         Me.JobLevelDataGridView.Location = New System.Drawing.Point(8, 48)
         Me.JobLevelDataGridView.MultiSelect = False
         Me.JobLevelDataGridView.Name = "JobLevelDataGridView"
-        Me.JobLevelDataGridView.ReadOnly = True
         Me.JobLevelDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.JobLevelDataGridView.Size = New System.Drawing.Size(496, 376)
         Me.JobLevelDataGridView.TabIndex = 175
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "RowID"
+        Me.Column1.HeaderText = "RowID"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "Name"
+        Me.Column2.HeaderText = "Name"
+        Me.Column2.Name = "Column2"
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "Points"
+        Me.Column3.HeaderText = "Points"
+        Me.Column3.Name = "Column3"
         '
         'ToolStrip1
         '
@@ -206,22 +225,20 @@ Partial Class JobLevelForm
         '
         'DataGridViewTextBoxColumn1
         '
+        Me.DataGridViewTextBoxColumn1.DataPropertyName = "RowID"
         Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         '
-        'Column1
+        'DataGridViewTextBoxColumn2
         '
-        Me.Column1.DataPropertyName = "RowID"
-        Me.Column1.HeaderText = "RowID"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
+        Me.DataGridViewTextBoxColumn2.DataPropertyName = "Name"
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Name"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
         '
-        'Column2
+        'DataGridViewTextBoxColumn3
         '
-        Me.Column2.DataPropertyName = "Name"
-        Me.Column2.HeaderText = "Name"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Points"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         '
         'JobLevelForm
         '
@@ -260,6 +277,9 @@ Partial Class JobLevelForm
     Friend WithEvents tv2 As TreeView
     Friend WithEvents CategoryNameTextBox As TextBox
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
+    Friend WithEvents Column3 As DataGridViewTextBoxColumn
 End Class
