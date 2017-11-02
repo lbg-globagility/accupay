@@ -397,10 +397,10 @@ Public Class PayrollGeneration
                     acceptedLoans = {"Per pay period", "End of the month"}
                 End If
 
-                Dim loanSchedules = _allLoanSchedules _
-                    .Where(Function(l) l.EmployeeID = _payStub.EmployeeID) _
-                    .Where(Function(l) acceptedLoans.Contains(l.DeductionSchedule)) _
-                    .ToList()
+                Dim loanSchedules = _allLoanSchedules.
+                    Where(Function(l) l.EmployeeID = _payStub.EmployeeID).
+                    Where(Function(l) acceptedLoans.Contains(l.DeductionSchedule)).
+                    ToList()
 
                 For Each loanSchedule In loanSchedules
                     Dim loanTransaction = New PayrollSys.LoanTransaction() With {
@@ -410,10 +410,16 @@ Public Class PayrollGeneration
                         .EmployeeID = _payStub.EmployeeID,
                         .PayPeriodID = PayPeriodID,
                         .LoanScheduleID = loanSchedule.RowID,
-                        .LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft - 1,
-                        .TotalBalanceLeft = loanSchedule.TotalBalanceLeft - loanSchedule.DeductionAmount,
-                        .DeductionAmount = loanSchedule.DeductionAmount
+                        .LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft - 1
                     }
+
+                    If loanSchedule.DeductionAmount > loanSchedule.TotalBalanceLeft Then
+                        loanTransaction.DeductionAmount = loanSchedule.TotalBalanceLeft
+                    Else
+                        loanTransaction.DeductionAmount = loanSchedule.DeductionAmount
+                    End If
+
+                    loanTransaction.TotalBalanceLeft = loanSchedule.TotalBalanceLeft - loanTransaction.TotalBalanceLeft
 
                     newLoanTransactions.Add(loanTransaction)
                 Next
