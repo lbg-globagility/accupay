@@ -139,6 +139,7 @@ DECLARE sh2 TIME DEFAULT NULL;
 
 DECLARE dateToday DATE;
 DECLARE dateTomorrow DATE;
+DECLARE dateYesterday DATE;
 
 DECLARE fullTimeIn DATETIME;
 DECLARE fullTimeOut DATETIME;
@@ -168,6 +169,8 @@ DECLARE nightDiffTimeFrom TIME;
 DECLARE nightDiffTimeTo TIME;
 DECLARE nightDiffRangeStart DATETIME;
 DECLARE nightDiffRangeEnd DATETIME;
+DECLARE dawnNightDiffRangeStart DATETIME;
+DECLARE dawnNightDiffRangeEnd DATETIME;
 
 DECLARE nightDiffDutyStart DATETIME;
 DECLARE nightDiffDutyEnd DATETIME;
@@ -425,6 +428,7 @@ INTO
 
 SET dateToday = ete_Date;
 SET dateTomorrow = DATE_ADD(dateToday, INTERVAL 1 DAY);
+SET dateYesterday = DATE_SUB(dateToday, INTERVAL 1 DAY);
 
 SELECT GRACE_PERIOD(etd_TimeIn, shifttimefrom, e_LateGracePeriod)
 INTO etd_TimeIn;
@@ -482,27 +486,22 @@ ELSE
     SET regularHours = COMPUTE_TimeDifference(TIME(dutyStart), TIME(dutyEnd));
 END IF;
 
-SET nightDiffRangeStart = TIMESTAMP(ete_Date, nightDiffTimeFrom);
+SET nightDiffRangeStart = TIMESTAMP(dateToday, nightDiffTimeFrom);
 SET nightDiffRangeEnd = TIMESTAMP(IF(nightDiffTimeTo > nightDiffTimeFrom, ete_Date, dateTomorrow), nightDiffTimeTo);
+
+SET dawnNightDiffRangeStart = TIMESTAMP(dateYesterday, nightDiffTimeFrom);
+SET dawnNightDiffRangeEnd = TIMESTAMP(IF(nightDiffTimeTo > nightDiffTimeFrom, dateYesterday, dateToday), nightDiffTimeTo);
 
 SET isEntitledToNightDifferential = (e_CalcNightDiff = 1);
 
-SET isDutyOverlappedWithNightDifferential = (
-    (dutyStart < nightDiffRangeEnd) AND
-    (dutyEnd > nightDiffRangeStart)
-);
-
 SET shouldCalculateNightDifferential = (
     isNightShift AND
-    isDutyOverlappedWithNightDifferential AND
     isEntitledToNightDifferential
 );
 
 IF shouldCalculateNightDifferential THEN
-    SET nightDiffDutyStart = GREATEST(dutyStart, nightDiffRangeStart);
-    SET nightDiffDutyEnd = LEAST(dutyEnd, nightDiffRangeEnd);
-
-    SET nightDiffHours = COMPUTE_TimeDifference(TIME(nightDiffDutyStart), TIME(nightDiffDutyEnd));
+    SET nightDiffHours = IFNULL(ComputeNightDiffHours(dutyStart, dutyEnd, nightDiffDutyStart, nightDiffDutyEnd), 0);
+    SET nightDiffHours = nightDiffHours + IFNULL(ComputeNightDiffHours(dutyStart, dutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd), 0);
 END IF;
 
 SET hasOvertime = (otstartingtime IS NOT NULL) AND (otendingtime IS NOT NULL);
