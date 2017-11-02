@@ -230,10 +230,52 @@
     </Compile>
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
+    <Compile Include="Core Forms\Employee\AllowanceTab.Designer.vb">
+      <DependentUpon>AllowanceTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\AllowanceTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\BonusTab.Designer.vb">
+      <DependentUpon>BonusTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\BonusTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Core Forms\Employee\LeaveTab.Designer.vb">
       <DependentUpon>LeaveTab.vb</DependentUpon>
     </Compile>
     <Compile Include="Core Forms\Employee\LeaveTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\LoanSchedule.Designer.vb">
+      <DependentUpon>LoanSchedule.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\LoanSchedule.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\OfficialBusinessTab.Designer.vb">
+      <DependentUpon>OfficialBusinessTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\OfficialBusinessTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\OvertimeTab.Designer.vb">
+      <DependentUpon>OvertimeTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\OvertimeTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\PersonalProfileTab.Designer.vb">
+      <DependentUpon>PersonalProfileTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\PersonalProfileTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\SalaryTab.Designer.vb">
+      <DependentUpon>SalaryTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\SalaryTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
@@ -1255,8 +1297,29 @@
     <EmbeddedResource Include="Core Forms\EmployeeForm.resx">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\AllowanceTab.resx">
+      <DependentUpon>AllowanceTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\BonusTab.resx">
+      <DependentUpon>BonusTab.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Employee\LeaveTab.resx">
       <DependentUpon>LeaveTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\LoanSchedule.resx">
+      <DependentUpon>LoanSchedule.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\OfficialBusinessTab.resx">
+      <DependentUpon>OfficialBusinessTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\OvertimeTab.resx">
+      <DependentUpon>OvertimeTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\PersonalProfileTab.resx">
+      <DependentUpon>PersonalProfileTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\SalaryTab.resx">
+      <DependentUpon>SalaryTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Independent filing\LeaveForm.resx">
       <DependentUpon>LeaveForm.vb</DependentUpon>
