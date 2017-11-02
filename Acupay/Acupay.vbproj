@@ -258,9 +258,12 @@
     </Compile>
     <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Adjustment.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Allowance.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\ThirteenthMonthPay.vb" />
     <Compile Include="Core Forms\PayStub\Entity\TimeEntry.vb" />
     <Compile Include="Core Forms\OffSetting.designer.vb">
       <DependentUpon>OffSetting.vb</DependentUpon>
