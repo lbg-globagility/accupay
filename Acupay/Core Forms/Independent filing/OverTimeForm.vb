@@ -59,7 +59,6 @@ Public Class OverTimeForm
         If Panel1.Enabled = True Then
 
             e.Cancel = False
-
         Else
 
             e.Cancel = True
@@ -72,22 +71,22 @@ Public Class OverTimeForm
 
     Private Sub OverTimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        enlistToCboBox("SELECT Name FROM organization WHERE NoPurpose='0' ORDER BY Name;", _
+        enlistToCboBox("SELECT Name FROM organization WHERE NoPurpose='0' ORDER BY Name;",
                        cboOrganization)
 
         If n_OverTimeRowID <> Nothing Then
 
             Dim dtOverTimeRow As New DataTable
 
-            dtOverTimeRow = _
-            retAsDatTbl("SELECT eo.*" & _
-                        ",e.EmployeeID AS EmpID" & _
-                        ",IFNULL(og.Name,'') AS OrgName" & _
-                        ",TIME_FORMAT(eo.OTStartTime,'%r') AS OTStartTime" & _
-                        ",TIME_FORMAT(eo.OTEndTime,'%r') AS OTEndTime" & _
-                        " FROM employeeovertime eo" & _
-                        " LEFT JOIN employee e ON e.RowID=eo.EmployeeID" & _
-                        " LEFT JOIN organization og ON og.RowID=eo.OrganizationID" & _
+            dtOverTimeRow =
+            retAsDatTbl("SELECT eo.*" &
+                        ",e.EmployeeID AS EmpID" &
+                        ",IFNULL(og.Name,'') AS OrgName" &
+                        ",TIME_FORMAT(eo.OTStartTime,'%r') AS OTStartTime" &
+                        ",TIME_FORMAT(eo.OTEndTime,'%r') AS OTEndTime" &
+                        " FROM employeeovertime eo" &
+                        " LEFT JOIN employee e ON e.RowID=eo.EmployeeID" &
+                        " LEFT JOIN organization og ON og.RowID=eo.OrganizationID" &
                         " WHERE eo.RowID='" & n_OverTimeRowID & "';")
 
             If dtOverTimeRow IsNot Nothing Then
@@ -252,13 +251,13 @@ Public Class OverTimeForm
 
                 'MsgBox(Trim(StrReverse(StrReverse("3:15 AM").ToString.Substring(i, ("3:15 AM").ToString.Length - i))).Length)
 
-                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i, _
+                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i,
                                                                                   endtime.ToString.Length - i)
                                           )
                                )
 
-                amTime = If(getStrBetween(amTime, "", ":") = "12", _
-                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")), _
+                amTime = If(getStrBetween(amTime, "", ":") = "12",
+                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")),
                             amTime)
 
                 retrnObj = amTime
@@ -286,7 +285,7 @@ Public Class OverTimeForm
     Private Sub bgwSaving_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwSaving.DoWork
 
         If n_OverTimeRowID = Nothing Then
-            n_OverTimeRowID = _
+            n_OverTimeRowID =
                 INSUPD_employeeOT()
         Else
             INSUPD_employeeOT()
@@ -339,124 +338,6 @@ Public Class OverTimeForm
 
     Dim custom_date = EXECQUER("SELECT CURDATE();")
 
-    Private Sub dtpendtime_Leave(sender As Object, e As EventArgs) Handles dtpendtime.Leave
-
-        Static previous_starttime As String = String.Empty
-
-        Static previous_endtime As String = String.Empty
-
-        If previous_starttime <> dtpstarttime.Text _
-            Or previous_endtime <> dtpendtime.Text Then
-
-            previous_starttime = dtpstarttime.Text
-
-            Dim starttimevalue = Format(CDate(dtpstarttime.Value), "hh:mm tt")
-
-            dtpstarttime.Value = custom_date & " " & starttimevalue
-
-            Dim endtimevalue = Format(CDate(dtpendtime.Value), "hh:mm tt")
-
-            dtpendtime.Value = custom_date & " " & endtimevalue
-
-            Dim starttimeMilit = MilitTime(starttimevalue)
-
-            Dim endtimeMilit = MilitTime(endtimevalue)
-
-            Dim timediff As Double = 0.0
-
-            If Format(CDate(dtpstarttime.Value), "tt") = "PM" _
-                And Format(CDate(dtpendtime.Value), "tt") = "AM" Then
-
-                '    timediff = DateDiff(DateInterval.Hour, _
-                '                        CDate(dtpstarttime.Value), _
-                '                        CDate(dtpendtime.Value).AddHours(24))
-
-                timediff = ValNoComma(EXECQUER("SELECT ((TIME_TO_SEC(TIMEDIFF(ADDTIME('" & endtimeMilit & "','24:00'),'" & starttimeMilit & "')) / 60) / 60);"))
-
-            Else
-
-                '    timediff = DateDiff(DateInterval.Hour, _
-                '                        CDate(dtpstarttime.Value), _
-                '                        CDate(dtpendtime.Value))
-
-                timediff = ValNoComma(EXECQUER("SELECT ((TIME_TO_SEC(TIMEDIFF('" & endtimeMilit & "','" & starttimeMilit & "')) / 60) / 60);"))
-
-            End If
-
-            If timediff > 1 Then
-
-                If Format(CDate(dtpstarttime.Value), "tt") = "AM" Then
-
-                    starttimeMilit = getStrBetween(starttimeMilit.ToString, "", ":")
-
-                    starttimeMilit = ValNoComma(starttimeMilit) + 24
-
-
-                    Dim reversetimeformat = Format(CDate(dtpstarttime.Value), "hh:mm tt")
-
-                    reversetimeformat = MilitTime(reversetimeformat)
-
-                    reversetimeformat = StrReverse(reversetimeformat.ToString)
-
-
-                    starttimeMilit = starttimeMilit & ":" & StrReverse(getStrBetween(reversetimeformat, "", ":"))
-
-                End If
-
-                Dim gethour = getStrBetween(endtimeMilit.ToString, "", ":")
-
-                If ValNoComma(gethour) >= 22 Then
-
-                    dtpendtime.Text = Format(CDate(dtpstarttime.Value).AddMinutes((timediff - 1) * 60), "hh:mm tt")
-
-                ElseIf ValNoComma(gethour) >= 21 Then
-
-                    dtpendtime.Text = "9:00 PM"
-
-                End If
-
-                If Format(starttimeMilit, "tt") = "PM" Then
-
-                    'Deduct another 1 hour for 2AM - 3AM
-                    'theretval
-                    Dim over3OClock = EXECQUER("SELECT TIME_FORMAT(IF(HOUR('" & endtimeMilit & "') = 24, TIME_FORMAT('" & endtimeMilit & "','00:%i'), '" & endtimeMilit & "'),'%H:%i') BETWEEN '02:00' AND '03:00';")
-
-                    If IsDBNull(over3OClock) Then : over3OClock = 0 : End If
-
-                    If over3OClock.ToString = "1" Then
-
-                        dtpendtime.Text = "12:00 AM" 'Format(CDate(custom_date & " " & starttimevalue).AddMinutes((timediff - 1) * 60), "hh:00 tt")
-
-                        'theretval = Format(CDate(custom_date & " " & starttimevalue).AddMinutes((timediff - 1) * 60), "hh:mm tt")
-
-                    Else
-                        over3OClock = EXECQUER("SELECT TIME_FORMAT('" & endtimeMilit & "','%p') = 'AM';")
-
-                        If IsDBNull(over3OClock) Then : over3OClock = 0 : End If
-
-                        If over3OClock.ToString = "1" Then
-
-                            over3OClock = EXECQUER("SELECT TIME_FORMAT(IF(HOUR('" & endtimeMilit & "') = 24, TIME_FORMAT('" & endtimeMilit & "','00:%i'), '" & endtimeMilit & "'),'%H:%i') >= '03:00';")
-
-                            If over3OClock.ToString = "1" Then
-                                dtpendtime.Text = Format(CDate(custom_date & " " & starttimevalue).AddMinutes((timediff - 2) * 60), "hh:mm tt")
-
-                            End If
-
-                        End If
-
-                    End If
-
-                End If
-
-            End If
-
-            previous_endtime = dtpendtime.Text
-
-        End If
-
-    End Sub
-
     Dim catchdt As New DataTable
 
     Private Sub bgwEmpNames_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwEmpNames.DoWork
@@ -469,9 +350,9 @@ Public Class OverTimeForm
         '                            " FROM employee" & _
         '                            " GROUP BY CONCAT(LastName,', ',FirstName,IF(MiddleName = '', '', CONCAT(', ',MiddleName)));")
         'CONCAT(e.LastName,', ',e.FirstName, IF(e.MiddleName = '', '', CONCAT(', ',e.MiddleName)))
-        dtempfullname = New SQLQueryToDatatable("SELECT e.RowID, CONCAT_WS(', ', e.LastName, e.FirstName, IF(LENGTH(TRIM(e.MiddleName)) = 0, NULL, e.MiddleName)) `EmpFullName`" & _
-                                    " FROM employee e INNER JOIN organization og ON og.RowID=e.OrganizationID" & _
-                                    " WHERE og.NoPurpose='0'" & _
+        dtempfullname = New SQLQueryToDatatable("SELECT e.RowID, CONCAT_WS(', ', e.LastName, e.FirstName, IF(LENGTH(TRIM(e.MiddleName)) = 0, NULL, e.MiddleName)) `EmpFullName`" &
+                                    " FROM employee e INNER JOIN organization og ON og.RowID=e.OrganizationID" &
+                                    " WHERE og.NoPurpose='0'" &
                                     " GROUP BY e.OrganizationID,e.EmployeeID;").ResultTable
 
         If dtempfullname IsNot Nothing Then
@@ -508,7 +389,6 @@ Public Class OverTimeForm
         ElseIf e.Cancelled Then
 
             MessageBox.Show("Background work cancelled.")
-
         Else
 
             TxtEmployeeFullName1.Enabled = True
@@ -564,7 +444,6 @@ Public Class OverTimeForm
         If TxtEmployeeFullName1.Text.Trim.Length = 0 Then
 
             cboxEmployees.Text = String.Empty
-
         Else
 
             cboxEmployees.Text = TxtEmployeeFullName1.Text
