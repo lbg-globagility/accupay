@@ -10,9 +10,22 @@ Public Class JobLevelForm
     Private WithEvents _jobLevelsSource As BindingSource
 
     Private Sub JobLevelForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        JobLevelDataGridView.AutoGenerateColumns = False
+        InitializeComponents()
+        LoadJobCategories()
+    End Sub
+
+    Private Sub InitializeComponents()
         _jobLevelsSource = New BindingSource()
-        JobLevelDataGridView.DataSource = _jobLevelsSource
+        JobLevelsDataGridView.DataSource = _jobLevelsSource
+        JobCategoriesDataGridView.AutoGenerateColumns = False
+        JobLevelsDataGridView.AutoGenerateColumns = False
+    End Sub
+
+    Private Sub LoadJobCategories()
+        Using context = New PayrollContext()
+            Dim jobCategories = context.JobCategories.ToList()
+            JobCategoriesDataGridView.DataSource = jobCategories
+        End Using
     End Sub
 
     Private Sub NewCategoryButton_Click(sender As Object, e As EventArgs) Handles NewCategoryButton.Click
@@ -30,7 +43,7 @@ Public Class JobLevelForm
     End Sub
 
     Private Sub SaveCategoryButton_Click(sender As Object, e As EventArgs) Handles SaveCategoryButton.Click
-        JobLevelDataGridView.EndEdit()
+        JobLevelsDataGridView.EndEdit()
 
         _category.Name = CategoryNameTextBox.Text
         _context.SaveChanges()
@@ -44,6 +57,16 @@ Public Class JobLevelForm
         }
 
         e.NewObject = jobLevel
+    End Sub
+
+    Private Sub JobCategoriesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles JobCategoriesDataGridView.SelectionChanged
+        Dim jobCategory = DirectCast(JobCategoriesDataGridView.CurrentRow.DataBoundItem, JobCategory)
+
+        _context?.Dispose()
+        _context = New PayrollContext()
+
+        _category = _context.JobCategories.Find(jobCategory.RowID)
+        _jobLevelsSource.DataSource = _category.JobLevels
     End Sub
 
 End Class

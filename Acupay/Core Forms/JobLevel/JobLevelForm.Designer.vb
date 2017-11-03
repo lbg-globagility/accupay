@@ -23,12 +23,13 @@ Partial Class JobLevelForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tbpPosition = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.CategoryNameTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.JobLevelDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.JobLevelsDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -39,15 +40,18 @@ Partial Class JobLevelForm
         Me.CancelCategoryButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
-        Me.tv2 = New System.Windows.Forms.TreeView()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.JobCategoriesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1.SuspendLayout()
         Me.tbpPosition.SuspendLayout()
         Me.Panel1.SuspendLayout()
-        CType(Me.JobLevelDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.JobLevelsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
+        CType(Me.JobCategoriesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -83,7 +87,7 @@ Partial Class JobLevelForm
         Me.Panel1.AutoScroll = True
         Me.Panel1.Controls.Add(Me.CategoryNameTextBox)
         Me.Panel1.Controls.Add(Me.Label6)
-        Me.Panel1.Controls.Add(Me.JobLevelDataGridView)
+        Me.Panel1.Controls.Add(Me.JobLevelsDataGridView)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(3, 28)
         Me.Panel1.Name = "Panel1"
@@ -108,12 +112,12 @@ Partial Class JobLevelForm
         Me.Label6.Text = "Category Name"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'JobLevelDataGridView
+        'JobLevelsDataGridView
         '
-        Me.JobLevelDataGridView.AllowUserToOrderColumns = True
-        Me.JobLevelDataGridView.BackgroundColor = System.Drawing.Color.White
-        Me.JobLevelDataGridView.ColumnHeadersHeight = 34
-        Me.JobLevelDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3})
+        Me.JobLevelsDataGridView.AllowUserToOrderColumns = True
+        Me.JobLevelsDataGridView.BackgroundColor = System.Drawing.Color.White
+        Me.JobLevelsDataGridView.ColumnHeadersHeight = 34
+        Me.JobLevelsDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -121,14 +125,14 @@ Partial Class JobLevelForm
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.JobLevelDataGridView.DefaultCellStyle = DataGridViewCellStyle1
-        Me.JobLevelDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.JobLevelDataGridView.Location = New System.Drawing.Point(8, 48)
-        Me.JobLevelDataGridView.MultiSelect = False
-        Me.JobLevelDataGridView.Name = "JobLevelDataGridView"
-        Me.JobLevelDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.JobLevelDataGridView.Size = New System.Drawing.Size(496, 376)
-        Me.JobLevelDataGridView.TabIndex = 175
+        Me.JobLevelsDataGridView.DefaultCellStyle = DataGridViewCellStyle1
+        Me.JobLevelsDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.JobLevelsDataGridView.Location = New System.Drawing.Point(8, 40)
+        Me.JobLevelsDataGridView.MultiSelect = False
+        Me.JobLevelsDataGridView.Name = "JobLevelsDataGridView"
+        Me.JobLevelsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.JobLevelsDataGridView.Size = New System.Drawing.Size(496, 384)
+        Me.JobLevelsDataGridView.TabIndex = 175
         '
         'Column1
         '
@@ -212,17 +216,6 @@ Partial Class JobLevelForm
         Me.tsbtnAudittrail.Text = "ToolStripButton1"
         Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
         '
-        'tv2
-        '
-        Me.tv2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.tv2.ForeColor = System.Drawing.Color.Black
-        Me.tv2.HideSelection = False
-        Me.tv2.Location = New System.Drawing.Point(8, 8)
-        Me.tv2.Name = "tv2"
-        Me.tv2.Size = New System.Drawing.Size(192, 496)
-        Me.tv2.TabIndex = 106
-        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "RowID"
@@ -240,12 +233,51 @@ Partial Class JobLevelForm
         Me.DataGridViewTextBoxColumn3.HeaderText = "Points"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         '
+        'JobCategoriesDataGridView
+        '
+        Me.JobCategoriesDataGridView.AllowUserToAddRows = False
+        Me.JobCategoriesDataGridView.AllowUserToDeleteRows = False
+        Me.JobCategoriesDataGridView.AllowUserToOrderColumns = True
+        Me.JobCategoriesDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.JobCategoriesDataGridView.BackgroundColor = System.Drawing.Color.White
+        Me.JobCategoriesDataGridView.ColumnHeadersHeight = 34
+        Me.JobCategoriesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.JobCategoriesDataGridView.DefaultCellStyle = DataGridViewCellStyle2
+        Me.JobCategoriesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.JobCategoriesDataGridView.Location = New System.Drawing.Point(8, 8)
+        Me.JobCategoriesDataGridView.MultiSelect = False
+        Me.JobCategoriesDataGridView.Name = "JobCategoriesDataGridView"
+        Me.JobCategoriesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.JobCategoriesDataGridView.Size = New System.Drawing.Size(192, 496)
+        Me.JobCategoriesDataGridView.TabIndex = 176
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.DataPropertyName = "RowID"
+        Me.DataGridViewTextBoxColumn4.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        Me.DataGridViewTextBoxColumn4.Visible = False
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.DataPropertyName = "Name"
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Name"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        '
         'JobLevelForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1024, 512)
-        Me.Controls.Add(Me.tv2)
+        Me.Controls.Add(Me.JobCategoriesDataGridView)
         Me.Controls.Add(Me.TabControl1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "JobLevelForm"
@@ -255,9 +287,10 @@ Partial Class JobLevelForm
         Me.tbpPosition.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.JobLevelDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.JobLevelsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
+        CType(Me.JobCategoriesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -266,7 +299,7 @@ Partial Class JobLevelForm
     Friend WithEvents tbpPosition As TabPage
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Label6 As Label
-    Friend WithEvents JobLevelDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents JobLevelsDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents ToolStrip1 As ToolStrip
     Friend WithEvents NewCategoryButton As ToolStripButton
     Friend WithEvents SaveCategoryButton As ToolStripButton
@@ -274,7 +307,6 @@ Partial Class JobLevelForm
     Friend WithEvents CancelCategoryButton As ToolStripButton
     Friend WithEvents ToolStripButton4 As ToolStripButton
     Friend WithEvents tsbtnAudittrail As ToolStripButton
-    Friend WithEvents tv2 As TreeView
     Friend WithEvents CategoryNameTextBox As TextBox
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
@@ -282,4 +314,7 @@ Partial Class JobLevelForm
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
     Friend WithEvents Column3 As DataGridViewTextBoxColumn
+    Friend WithEvents JobCategoriesDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
 End Class

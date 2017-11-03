@@ -8,7 +8,8 @@ Namespace Global.AccuPay.JobLevel
     <Table("joblevel")>
     Public Class JobLevel
 
-        <Key>
+        <Key, Column(Order:=1)>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?
@@ -21,6 +22,7 @@ Namespace Global.AccuPay.JobLevel
 
         Public Property LastUpdBy As Integer?
 
+        <Key, Column(Order:=2)>
         Public Property JobCategoryID As Integer?
 
         Public Property Name As String
