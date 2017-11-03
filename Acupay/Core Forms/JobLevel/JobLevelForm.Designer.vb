@@ -22,8 +22,9 @@ Partial Class JobLevelForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tbpPosition = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -46,12 +47,16 @@ Partial Class JobLevelForm
         Me.JobCategoriesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewX1 = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1.SuspendLayout()
         Me.tbpPosition.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.JobLevelsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.JobCategoriesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridViewX1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -85,6 +90,7 @@ Partial Class JobLevelForm
         'Panel1
         '
         Me.Panel1.AutoScroll = True
+        Me.Panel1.Controls.Add(Me.DataGridViewX1)
         Me.Panel1.Controls.Add(Me.CategoryNameTextBox)
         Me.Panel1.Controls.Add(Me.Label6)
         Me.Panel1.Controls.Add(Me.JobLevelsDataGridView)
@@ -99,7 +105,7 @@ Partial Class JobLevelForm
         Me.CategoryNameTextBox.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CategoryNameTextBox.Location = New System.Drawing.Point(160, 8)
         Me.CategoryNameTextBox.Name = "CategoryNameTextBox"
-        Me.CategoryNameTextBox.Size = New System.Drawing.Size(344, 23)
+        Me.CategoryNameTextBox.Size = New System.Drawing.Size(296, 23)
         Me.CategoryNameTextBox.TabIndex = 183
         '
         'Label6
@@ -118,20 +124,20 @@ Partial Class JobLevelForm
         Me.JobLevelsDataGridView.BackgroundColor = System.Drawing.Color.White
         Me.JobLevelsDataGridView.ColumnHeadersHeight = 34
         Me.JobLevelsDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.JobLevelsDataGridView.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.JobLevelsDataGridView.DefaultCellStyle = DataGridViewCellStyle2
         Me.JobLevelsDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.JobLevelsDataGridView.Location = New System.Drawing.Point(8, 40)
         Me.JobLevelsDataGridView.MultiSelect = False
         Me.JobLevelsDataGridView.Name = "JobLevelsDataGridView"
         Me.JobLevelsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.JobLevelsDataGridView.Size = New System.Drawing.Size(496, 384)
+        Me.JobLevelsDataGridView.Size = New System.Drawing.Size(448, 384)
         Me.JobLevelsDataGridView.TabIndex = 175
         '
         'Column1
@@ -242,14 +248,14 @@ Partial Class JobLevelForm
         Me.JobCategoriesDataGridView.BackgroundColor = System.Drawing.Color.White
         Me.JobCategoriesDataGridView.ColumnHeadersHeight = 34
         Me.JobCategoriesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.JobCategoriesDataGridView.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.JobCategoriesDataGridView.DefaultCellStyle = DataGridViewCellStyle3
         Me.JobCategoriesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.JobCategoriesDataGridView.Location = New System.Drawing.Point(8, 8)
         Me.JobCategoriesDataGridView.MultiSelect = False
@@ -272,6 +278,42 @@ Partial Class JobLevelForm
         Me.DataGridViewTextBoxColumn5.HeaderText = "Name"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         '
+        'DataGridViewX1
+        '
+        Me.DataGridViewX1.AllowUserToOrderColumns = True
+        Me.DataGridViewX1.BackgroundColor = System.Drawing.Color.White
+        Me.DataGridViewX1.ColumnHeadersHeight = 34
+        Me.DataGridViewX1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn6, Me.DataGridViewTextBoxColumn7})
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridViewX1.DefaultCellStyle = DataGridViewCellStyle1
+        Me.DataGridViewX1.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.DataGridViewX1.Location = New System.Drawing.Point(464, 40)
+        Me.DataGridViewX1.MultiSelect = False
+        Me.DataGridViewX1.Name = "DataGridViewX1"
+        Me.DataGridViewX1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.DataGridViewX1.Size = New System.Drawing.Size(320, 384)
+        Me.DataGridViewX1.TabIndex = 184
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.DataPropertyName = "RowID"
+        Me.DataGridViewTextBoxColumn6.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
+        Me.DataGridViewTextBoxColumn6.Visible = False
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.DataPropertyName = "Name"
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Name"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        '
         'JobLevelForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -291,6 +333,7 @@ Partial Class JobLevelForm
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         CType(Me.JobCategoriesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridViewX1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -317,4 +360,7 @@ Partial Class JobLevelForm
     Friend WithEvents JobCategoriesDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewX1 As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
 End Class

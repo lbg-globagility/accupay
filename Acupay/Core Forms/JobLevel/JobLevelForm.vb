@@ -28,25 +28,31 @@ Public Class JobLevelForm
         End Using
     End Sub
 
-    Private Sub NewCategoryButton_Click(sender As Object, e As EventArgs) Handles NewCategoryButton.Click
-        _context = New PayrollContext()
+    Private Sub LoadJobCategory(jobCategory As JobCategory)
+        _category = jobCategory
+        CategoryNameTextBox.Text = _category.Name
+        _jobLevelsSource.DataSource = _category.JobLevels
+    End Sub
 
-        _category = New JobCategory() With {
+    Private Sub NewCategoryButton_Click(sender As Object, e As EventArgs) Handles NewCategoryButton.Click
+        Dim category = New JobCategory() With {
             .OrganizationID = z_OrganizationID,
             .Created = Date.Now,
             .CreatedBy = z_User
         }
 
-        _context.JobCategories.Add(_category)
-
-        _jobLevelsSource.DataSource = _category.JobLevels
+        _context?.Dispose()
+        _context = New PayrollContext()
+        _context.JobCategories.Add(category)
+        LoadJobCategory(category)
     End Sub
 
     Private Sub SaveCategoryButton_Click(sender As Object, e As EventArgs) Handles SaveCategoryButton.Click
         JobLevelsDataGridView.EndEdit()
-
         _category.Name = CategoryNameTextBox.Text
         _context.SaveChanges()
+
+        LoadJobCategories()
     End Sub
 
     Private Sub OnNewJobLevel(sender As Object, e As AddingNewEventArgs) Handles _jobLevelsSource.AddingNew
@@ -65,8 +71,8 @@ Public Class JobLevelForm
         _context?.Dispose()
         _context = New PayrollContext()
 
-        _category = _context.JobCategories.Find(jobCategory.RowID)
-        _jobLevelsSource.DataSource = _category.JobLevels
+        Dim category = _context.JobCategories.Find(jobCategory.RowID)
+        LoadJobCategory(category)
     End Sub
 
 End Class
