@@ -248,10 +248,10 @@
     <Compile Include="Core Forms\Employee\LeaveTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\Employee\LoanSchedule.Designer.vb">
-      <DependentUpon>LoanSchedule.vb</DependentUpon>
+    <Compile Include="Core Forms\Employee\LoanScheduleTab.Designer.vb">
+      <DependentUpon>LoanScheduleTab.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Employee\LoanSchedule.vb">
+    <Compile Include="Core Forms\Employee\LoanScheduleTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Core Forms\Employee\OfficialBusinessTab.Designer.vb">
@@ -1306,8 +1306,8 @@
     <EmbeddedResource Include="Core Forms\Employee\LeaveTab.resx">
       <DependentUpon>LeaveTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Employee\LoanSchedule.resx">
-      <DependentUpon>LoanSchedule.vb</DependentUpon>
+    <EmbeddedResource Include="Core Forms\Employee\LoanScheduleTab.resx">
+      <DependentUpon>LoanScheduleTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Employee\OfficialBusinessTab.resx">
       <DependentUpon>OfficialBusinessTab.vb</DependentUpon>
