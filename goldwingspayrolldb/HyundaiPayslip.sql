@@ -79,6 +79,7 @@ SELECT ps.RowID
 ,ps.TotalEmpHDMF `COL12`
 
 ,IF(slp.`LoanNameList` IS NULL, '', REPLACE(slp.`LoanNameList`, ',', '\n')) `COL13`
+,IF(slp.`LoanBalanceList` IS NULL, '', REPLACE(slp.`LoanBalanceList`, ',', '\n')) `COL14`
 ,IF(slp.`LoanDeductList` IS NULL, '', REPLACE(slp.`LoanDeductList`, ',', '\n')) `COL15`
 
 
@@ -139,6 +140,7 @@ INNER JOIN employee e
         ON e.RowID=ps.EmployeeID
 		     AND e.OrganizationID=ps.OrganizationID
 		     AND e.EmploymentStatus NOT IN ('Resigned', 'Terminated')
+		     AND e.RowID = IF(emp_rowid IS NULL, e.RowID, emp_rowid)
 INNER JOIN `position` pos
         ON pos.RowID=e.PositionID
 		     AND pos.OrganizationID=e.OrganizationID
@@ -174,6 +176,7 @@ INNER JOIN employeesalary esa
 LEFT JOIN (SELECT slp.*
            ,GROUP_CONCAT(CONCAT('  ', p.PartNo)) `LoanNameList`
            ,GROUP_CONCAT(ROUND(slp.DeductionAmount, 2)) `LoanDeductList`
+           ,GROUP_CONCAT(ROUND(slp.TotalBalanceLeft, 2)) `LoanBalanceList`
            FROM scheduledloansperpayperiod slp
            INNER JOIN employeeloanschedule els
                    ON els.RowID=slp.EmployeeLoanRecordID
@@ -192,18 +195,20 @@ LEFT JOIN (SELECT padj.RowID
            INNER JOIN paystub ps ON ps.RowID=padj.PayStubID AND ps.PayPeriodID=pperiod_id
            WHERE padj.PayAmount > 0
 			  AND padj.OrganizationID=og_rowid
+			  AND padj.AsActual = is_actual
 			  GROUP BY padj.PayStubID) plusadj
        ON plusadj.PayStubID=ps.RowID
 
 LEFT JOIN (SELECT padj.RowID
            ,padj.PayStubID
-           ,GROUP_CONCAT(padj.AdjustmentName) `AdjustmentName`
+           ,GROUP_CONCAT(CONCAT(' ', padj.AdjustmentName)) `AdjustmentName`
            ,GROUP_CONCAT(ROUND(padj.PayAmount, 2)) `PayAmount`
            ,SUM(ROUND(padj.PayAmount, 2)) `TotalNegativeAdjustment`
            FROM paystubadjustwithproductname padj
            INNER JOIN paystub ps ON ps.RowID=padj.PayStubID AND ps.PayPeriodID=pperiod_id
            WHERE padj.PayAmount < 0
 			  AND padj.OrganizationID=og_rowid
+			  AND padj.AsActual = is_actual
 			  GROUP BY padj.PayStubID) lessadj
        ON lessadj.PayStubID=ps.RowID
 
