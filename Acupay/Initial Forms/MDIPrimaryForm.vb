@@ -972,33 +972,43 @@ Public Class MDIPrimaryForm
 
         Dim privileges = New SqlToDataTable(sql).Read()
 
-        Dim loanPrivilege = privileges.Select("Name = 'Employee Loan Schedule'").FirstOrDefault()
-        If Not CBool(loanPrivilege("HasAccess")) Then
+        If Not HasPrivilege(privileges, "Employee Loan Schedule") Then
             CollapsibleGroupBox1.Visible = False
         End If
 
-        ' TODO: Birthday Celebrant dashboard privilege
-        ' TODO: Frequency absent
-        ' TODO: Negative payslips
-        ' TODO: Unqualified dependents
-        ' TODO: Regularizations
+        If Not HasPrivilege(privileges, "Employee Time Entry Logs") Then
+            CollapsibleGroupBox3.Visible = False
+        End If
 
-        Dim officialBusinessPrivilege = privileges.Select("Name = 'Official Business filing'").FirstOrDefault()
-        If Not CBool(officialBusinessPrivilege("HasAccess")) Then
+        If Not HasPrivilege(privileges, "Employee Pay Slip") Then
+            CollapsibleGroupBox10.Visible = False
+        End If
+
+        If Not HasPrivilege(privileges, "Employee Personal Profile") Then
+            CollapsibleGroupBox2.Visible = False
+            CollapsibleGroupBox9.Visible = False
+            CollapsibleGroupBox5.Visible = False
+        End If
+
+        If Not HasPrivilege(privileges, "Official Business filing") Then
             CollapsibleGroupBox8.Visible = False
         End If
 
-        Dim overtimePrivilege = privileges.Select("Name = 'Employee Overtime'").FirstOrDefault()
-        If Not CBool(overtimePrivilege("HasAccess")) Then
+        If Not HasPrivilege(privileges, "Employee Overtime") Then
             CollapsibleGroupBox7.Visible = False
         End If
 
-        Dim leavePrivilege = privileges.Select("Name = 'Employee Leave'").FirstOrDefault()
-        If Not CBool(leavePrivilege("HasAccess")) Then
+        If Not HasPrivilege(privileges, "Employee Leave") Then
             CollapsibleGroupBox4.Visible = False
             CollapsibleGroupBox6.Visible = False
         End If
     End Sub
+
+    Private Function HasPrivilege(privilegeTable As DataTable, name As String) As Boolean
+        Dim privilege = privilegeTable.Select($"Name = '{name}'").FirstOrDefault()
+
+        Return If(privilege Is Nothing, False, CBool(privilege("HasAccess")))
+    End Function
 
     Private Sub NotifyIcon1_Click(sender As Object, e As EventArgs)
         ToolStripButton0_Click(sender, e)
