@@ -72,7 +72,7 @@ Public Class MDIPrimaryForm
         Panel1.Focus()
         BackgroundWorker1.RunWorkerAsync()
         MyBase.OnLoad(e)
-
+        RestrictDashboardByPrivilege()
         MetroLogin.Hide()
     End Sub
 
@@ -953,6 +953,50 @@ Public Class MDIPrimaryForm
         Else
             NotifyIcon1.Visible = True
             NotifyIcon1.ShowBalloonTip(30000)
+        End If
+    End Sub
+
+    Private Sub RestrictDashboardByPrivilege()
+        Dim sql = $"
+            SELECT v.ViewName 'Name', (pv.AllowedToAccess = 'Y') 'HasAccess'
+            FROM position_view pv
+            INNER JOIN view v
+            ON v.RowID = pv.ViewID
+            INNER JOIN position p
+            ON p.RowID = pv.PositionID
+            INNER JOIN user u
+            ON u.PositionID = p.RowID
+            WHERE u.RowID = {z_User} AND
+                pv.OrganizationID = {orgztnID};
+        "
+
+        Dim privileges = New SqlToDataTable(sql).Read()
+
+        Dim loanPrivilege = privileges.Select("Name = 'Employee Loan Schedule'").FirstOrDefault()
+        If Not CBool(loanPrivilege("HasAccess")) Then
+            CollapsibleGroupBox1.Visible = False
+        End If
+
+        ' TODO: Birthday Celebrant dashboard privilege
+        ' TODO: Frequency absent
+        ' TODO: Negative payslips
+        ' TODO: Unqualified dependents
+        ' TODO: Regularizations
+
+        Dim officialBusinessPrivilege = privileges.Select("Name = 'Official Business filing'").FirstOrDefault()
+        If Not CBool(officialBusinessPrivilege("HasAccess")) Then
+            CollapsibleGroupBox8.Visible = False
+        End If
+
+        Dim overtimePrivilege = privileges.Select("Name = 'Employee Overtime'").FirstOrDefault()
+        If Not CBool(overtimePrivilege("HasAccess")) Then
+            CollapsibleGroupBox7.Visible = False
+        End If
+
+        Dim leavePrivilege = privileges.Select("Name = 'Employee Leave'").FirstOrDefault()
+        If Not CBool(leavePrivilege("HasAccess")) Then
+            CollapsibleGroupBox4.Visible = False
+            CollapsibleGroupBox6.Visible = False
         End If
     End Sub
 
