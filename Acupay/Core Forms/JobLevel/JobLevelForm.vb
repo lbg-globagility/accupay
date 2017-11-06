@@ -24,8 +24,22 @@ Public Class JobLevelForm
     Private Sub LoadJobCategories()
         Using context = New PayrollContext()
             Dim jobCategories = context.JobCategories.ToList()
+            RemoveHandler JobCategoriesDataGridView.SelectionChanged, AddressOf JobCategoriesDataGridView_SelectionChanged
             JobCategoriesDataGridView.DataSource = jobCategories
+            SelectJobCategory(_category)
+            AddHandler JobCategoriesDataGridView.SelectionChanged, AddressOf JobCategoriesDataGridView_SelectionChanged
         End Using
+    End Sub
+
+    Private Sub SelectJobCategory(jobCategory As JobCategory)
+        For Each row As DataGridViewRow In JobCategoriesDataGridView.Rows
+            Dim currentCategory = DirectCast(row.DataBoundItem, JobCategory)
+
+            If currentCategory.RowID = jobCategory?.RowID Then
+                JobCategoriesDataGridView.ClearSelection()
+                JobCategoriesDataGridView.Item(1, row.Index).Selected = True
+            End If
+        Next
     End Sub
 
     Private Sub LoadJobCategory(jobCategory As JobCategory)
@@ -51,6 +65,7 @@ Public Class JobLevelForm
         JobLevelsDataGridView.EndEdit()
         _category.Name = CategoryNameTextBox.Text
         _context.SaveChanges()
+        JobLevelsDataGridView.Refresh()
 
         LoadJobCategories()
     End Sub
@@ -65,7 +80,7 @@ Public Class JobLevelForm
         e.NewObject = jobLevel
     End Sub
 
-    Private Sub JobCategoriesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles JobCategoriesDataGridView.SelectionChanged
+    Private Sub JobCategoriesDataGridView_SelectionChanged(sender As Object, e As EventArgs) 'Handles JobCategoriesDataGridView.SelectionChanged
         Dim jobCategory = DirectCast(JobCategoriesDataGridView.CurrentRow.DataBoundItem, JobCategory)
 
         _context?.Dispose()
@@ -73,6 +88,14 @@ Public Class JobLevelForm
 
         Dim category = _context.JobCategories.Find(jobCategory.RowID)
         LoadJobCategory(category)
+    End Sub
+
+    Private Sub JobLevelsDataGridView_UserDeletedRow(sender As Object, e As DataGridViewRowEventArgs) Handles JobLevelsDataGridView.UserDeletedRow
+        Dim rowsRemaining = JobLevelsDataGridView.Rows.Count
+
+        If rowsRemaining <= 1 Then
+            JobLevelsDataGridView.CurrentCell = Nothing
+        End If
     End Sub
 
 End Class

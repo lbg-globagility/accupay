@@ -10,6 +10,7 @@ Namespace Global.AccuPay.JobLevel
     Public Class JobCategory
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?
