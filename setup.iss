@@ -82,7 +82,7 @@ Source: ".\Acupay\bin\Debug\ShockwaveFlashObjects.dll"; DestDir: "{app}"; Flags:
 Source: ".\Acupay\bin\Debug\stdole.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\Acupay\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
-Source: ".\Acupay\Resources\*.xlsx"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\Acupay\Resources\*.xlsx"; DestDir: "{app}\Resources"; Flags: ignoreversion
 
 Source: ".\Acupay\bin\Debug\EPPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
 
