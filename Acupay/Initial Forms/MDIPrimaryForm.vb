@@ -1,9 +1,7 @@
 ﻿Imports System.Configuration
-Imports MySql.Data.MySqlClient
 Imports System.Threading
-Imports System.IO
-Imports Microsoft.Win32
 Imports Indigo
+Imports MySql.Data.MySqlClient
 
 'Imports System
 'Imports System.Threading
@@ -67,7 +65,6 @@ Public Class MDIPrimaryForm
 
         SplitContainer2.SplitterWidth = 6
 
-
         Panel2.Font = DefaultFontStyle
 
         Panel3.Font = DefaultFontStyle
@@ -81,7 +78,6 @@ Public Class MDIPrimaryForm
         Panel14.Font = DefaultFontStyle
 
         Panel6.Font = DefaultFontStyle
-
 
         Panel5.Font = DefaultFontStyle
 
@@ -115,7 +111,6 @@ Public Class MDIPrimaryForm
             If listofGroup.Contains(FName) Then
                 Formname.Show()
                 Formname.BringToFront()
-
             Else
                 Me.Panel1.Controls.Add(Formname)
                 'Formname.MdiParent = Me
@@ -130,7 +125,6 @@ Public Class MDIPrimaryForm
                 Formname.Dock = DockStyle.Fill
 
             End If
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         End Try
@@ -140,7 +134,7 @@ Public Class MDIPrimaryForm
         lblTime.Text = TimeOfDay
     End Sub
 
-    Dim ClosingForm As Form = Nothing 'New 
+    Dim ClosingForm As Form = Nothing 'New
 
     Dim busy_bgworks(1) As System.ComponentModel.BackgroundWorker
 
@@ -204,10 +198,6 @@ Public Class MDIPrimaryForm
                 listofExtraForm.Add("HRISForm")
                 listofExtraForm.Add("PayrollForm")
                 listofExtraForm.Add("TimeAttendForm")
-
-
-
-
 
                 ReDim listofExtraFrm(My.Application.OpenForms.Count - 1)
 
@@ -328,7 +318,6 @@ Public Class MDIPrimaryForm
                 'n_UserLog.Out()
 
             End If
-
         Else
 
         End If
@@ -352,7 +341,7 @@ Public Class MDIPrimaryForm
 
             lblTime.Text = TimeOfDay
             'lblUser.Text = Z_UserName
-            lblUser.Text = userFirstName & _
+            lblUser.Text = userFirstName &
                            If(userLastName = Nothing, "", " " & userLastName)
 
             lblPosition.Text = z_postName
@@ -366,11 +355,9 @@ Public Class MDIPrimaryForm
             'n_UserLog.Out()
 
             'n_UserLog.Inn()
-
         Catch ex As Exception
 
             MsgBox(getErrExcptn(ex, Me.Name))
-
         Finally
 
         End Try
@@ -727,7 +714,6 @@ Public Class MDIPrimaryForm
 
                     End With
 
-
                 ElseIf previousForm.Name = "Positn" Then
 
                 ElseIf previousForm.Name = "EmpPosition" Then
@@ -750,7 +736,6 @@ Public Class MDIPrimaryForm
 
                     If Application.OpenForms().OfType(Of TimEntduration).Any Then
                         If TimEntduration.bgWork.IsBusy Then
-
                         Else
                             EmpTimeEntry.btnRerfresh_Click(sndr, ee)
                         End If
@@ -862,10 +847,10 @@ Public Class MDIPrimaryForm
                     Case 1
                         With EmployeeForm
                             If .tsbtnNewEmp.Enabled = True Then
-                                Dim isTableChange = EXECQUER("SELECT EXISTS(SELECT RowID" & _
-                                                             " FROM position" & _
-                                                             " WHERE CURRENT_DATE()" & _
-                                                             " IN (DATE_FORMAT(Created,'%Y-%m-%d'),DATE_FORMAT(LastUpd,'%Y-%m-%d'))" & _
+                                Dim isTableChange = EXECQUER("SELECT EXISTS(SELECT RowID" &
+                                                             " FROM position" &
+                                                             " WHERE CURRENT_DATE()" &
+                                                             " IN (DATE_FORMAT(Created,'%Y-%m-%d'),DATE_FORMAT(LastUpd,'%Y-%m-%d'))" &
                                                              " AND OrganizationID=" & orgztnID & " LIMIT 1);")
 
                                 If isTableChange = 1 Then
@@ -966,7 +951,6 @@ Public Class MDIPrimaryForm
             PictureBox1.Image.Tag = 0
 
             Showmainbutton.Dock = DockStyle.None
-
         Else '                             'Show toolstrip
             PictureBox1.Image = ImageList1.Images(1)
             PictureBox1.Image.Tag = 1
@@ -1097,16 +1081,13 @@ Public Class MDIPrimaryForm
 
     Dim n_bgwBDayCelebrant = Nothing
 
-
     Dim n_bgwOBPending = Nothing
 
     Dim n_bgwOTPending = Nothing
 
-
     Dim n_bgwLoanBalances = Nothing
 
     Dim n_bgwNegaPaySlips = Nothing
-
 
     Dim n_bgwForRegularization = Nothing
 
@@ -1120,55 +1101,40 @@ Public Class MDIPrimaryForm
 
         params(0, 1) = orgztnID
 
-
-        n_bgwAge21Dependents = New DashBoardDataExtractor(params, _
+        n_bgwAge21Dependents = New DashBoardDataExtractor(params,
                                                           "DBoard_Age21Dependents")
 
         n_bgwAge21Dependents = n_bgwAge21Dependents.getDataTable
 
-
-
-        n_bgwBDayCelebrant = New DashBoardDataExtractor(params, _
+        n_bgwBDayCelebrant = New DashBoardDataExtractor(params,
                                                         "DBoard_BirthdayCelebrantThisMonth")
 
         n_bgwBDayCelebrant = n_bgwBDayCelebrant.getDataTable
 
-
-
-        n_bgwOBPending = New DashBoardDataExtractor(params, _
+        n_bgwOBPending = New DashBoardDataExtractor(params,
                                                         "DBoard_OBPending")
 
         n_bgwOBPending = n_bgwOBPending.getDataTable
 
-
-
-        n_bgwOTPending = New DashBoardDataExtractor(params, _
+        n_bgwOTPending = New DashBoardDataExtractor(params,
                                                         "DBoard_OTPending")
 
         n_bgwOTPending = n_bgwOTPending.getDataTable
 
-
-
-        n_bgwLoanBalances = New DashBoardDataExtractor(params, _
+        n_bgwLoanBalances = New DashBoardDataExtractor(params,
                                                         "DBoard_LoanBalances")
 
         n_bgwLoanBalances = n_bgwLoanBalances.getDataTable
 
-
-
-        n_bgwNegaPaySlips = New DashBoardDataExtractor(params, _
+        n_bgwNegaPaySlips = New DashBoardDataExtractor(params,
                                                         "DBoard_NegativePaySlips")
 
         n_bgwNegaPaySlips = n_bgwNegaPaySlips.getDataTable
 
-
-
-        n_bgwForRegularization = New DashBoardDataExtractor(params, _
+        n_bgwForRegularization = New DashBoardDataExtractor(params,
                                                         "DBoard_ForRegularization")
 
         n_bgwForRegularization = n_bgwForRegularization.getDataTable
-
-
 
         dgvfrequentabsent.Tag = New SQLQueryToDatatable("CALL `FREQUENT_absent`('" & orgztnID & "');").ResultTable
 
@@ -1200,7 +1166,6 @@ Public Class MDIPrimaryForm
         ElseIf e.Cancelled Then
 
             MessageBox.Show("CANCELLED" & vbNewLine & e.Error.Message)
-
         Else
 
         End If
@@ -1211,56 +1176,48 @@ Public Class MDIPrimaryForm
 
         Dim dattbl = InstantiateDatatable(n_bgwAge21Dependents)
 
-        PopulateDGVwithDatTbl(dgvAge21Depen, _
+        PopulateDGVwithDatTbl(dgvAge21Depen,
                               dattbl)
-
 
         dattbl = InstantiateDatatable(n_bgwBDayCelebrant)
 
-        PopulateDGVwithDatTbl(dgvBDayCeleb, _
+        PopulateDGVwithDatTbl(dgvBDayCeleb,
                               dattbl)
-
-
 
         dattbl = InstantiateDatatable(n_bgwLoanBalances)
 
-        PopulateDGVwithDatTbl(dgvLoanBalance, _
+        PopulateDGVwithDatTbl(dgvLoanBalance,
                               dattbl)
-
 
         dattbl = InstantiateDatatable(n_bgwOBPending)
 
-        PopulateDGVwithDatTbl(dgvOBPending, _
+        PopulateDGVwithDatTbl(dgvOBPending,
                               dattbl)
-
 
         dattbl = InstantiateDatatable(n_bgwOTPending)
 
-        PopulateDGVwithDatTbl(dgvOTPending, _
+        PopulateDGVwithDatTbl(dgvOTPending,
                               dattbl)
-
 
         'dgvnegaPaySlip, n_bgwNegaPaySlips
         dattbl = InstantiateDatatable(n_bgwNegaPaySlips)
 
-        PopulateDGVwithDatTbl(dgvnegaPaySlip, _
+        PopulateDGVwithDatTbl(dgvnegaPaySlip,
                               dattbl)
-
 
         dattbl = InstantiateDatatable(n_bgwForRegularization)
 
-        PopulateDGVwithDatTbl(dgvRegularization, _
+        PopulateDGVwithDatTbl(dgvRegularization,
                               dattbl)
 
         Dim new_dt As New DataTable
         new_dt = DirectCast(dgvfrequentabsent.Tag, DataTable)
-        PopulateDGVwithDatTbl(dgvfrequentabsent, _
+        PopulateDGVwithDatTbl(dgvfrequentabsent,
                               new_dt)
-
 
         Dim n_dt As New DataTable
         n_dt = DirectCast(dgvfrequentleave.Tag, DataTable)
-        PopulateDGVwithDatTbl(dgvfrequentleave, _
+        PopulateDGVwithDatTbl(dgvfrequentleave,
                               n_dt)
 
         If if_sysowner_is_hyundai Then
@@ -1285,11 +1242,9 @@ Public Class MDIPrimaryForm
 
         dgvRegularization.Enabled = True
 
-
         dgvfrequentabsent.Enabled = True
 
         dgvfrequentleave.Enabled = True
-
 
         If once = 0 Then
 
@@ -1299,10 +1254,7 @@ Public Class MDIPrimaryForm
 
             dgvBDayCeleb.Enabled = True
 
-
             AddHandler NotifyIcon1.DoubleClick, AddressOf NotifyIcon1_Click
-
-
         Else
 
             NotifyIcon1.Visible = True
@@ -1371,7 +1323,6 @@ Public Class MDIPrimaryForm
             End If
 
             Return False
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)
@@ -1475,7 +1426,7 @@ Public Class MDIPrimaryForm
             'MsgBox(getErrExcptn(e.Error, Me.Name))
             MsgBox(bgwork_errormsg)
         ElseIf e.Cancelled Then
-            MsgBox("Background work cancelled.", _
+            MsgBox("Background work cancelled.",
                    MsgBoxStyle.Information)
         Else
 
@@ -1588,7 +1539,6 @@ Public Class DashBoardDataExtractor
             MsgBox(getErrExcptn(ex, ProcedureName), MsgBoxStyle.Critical)
 
             returnvalue = Nothing
-
         Finally
 
             mysqlda.Dispose()
@@ -1617,29 +1567,29 @@ Public Class UserLog
 
     Sub Inn()
 
-        INS_audittrail("System Log", _
-                       "", _
-                       "IN", _
-                       "", _
+        INS_audittrail("System Log",
+                       "",
+                       "IN",
+                       "",
                        "Log")
 
     End Sub
 
     Sub Out()
 
-        EXECQUER("UPDATE `audittrail`" & _
-                 " SET NewValue='OUT'" & _
-                 " WHERE CreatedBy='" & z_User & "'" & _
-                 " AND OrganizationID='" & orgztnID & "'" & _
-                 " AND NewValue=''" & _
+        EXECQUER("UPDATE `audittrail`" &
+                 " SET NewValue='OUT'" &
+                 " WHERE CreatedBy='" & z_User & "'" &
+                 " AND OrganizationID='" & orgztnID & "'" &
+                 " AND NewValue=''" &
                  " AND ViewID='" & syslogViewID & "';")
 
     End Sub
 
-    Sub INS_audittrail(Optional au_FieldChanged = Nothing, _
-                       Optional au_ChangedRowID = Nothing, _
-                       Optional au_OldValue = Nothing, _
-                       Optional au_NewValue = Nothing, _
+    Sub INS_audittrail(Optional au_FieldChanged = Nothing,
+                       Optional au_ChangedRowID = Nothing,
+                       Optional au_OldValue = Nothing,
+                       Optional au_NewValue = Nothing,
                        Optional au_ActionPerformed = Nothing)
 
         Try
@@ -1677,7 +1627,6 @@ Public Class UserLog
                 datread = .ExecuteReader()
 
             End With
-
         Catch ex As Exception
             MsgBox(ex.Message & " " & "INS_audittrail", , "Error")
         Finally
