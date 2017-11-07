@@ -3,7 +3,7 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Namespace Global.AccuPay.JobLevel
+Namespace Global.AccuPay.JobLevels
 
     <Table("joblevel")>
     Public Class JobLevel

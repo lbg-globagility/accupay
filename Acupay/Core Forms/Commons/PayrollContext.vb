@@ -1,7 +1,7 @@
 Imports System.Data.Common
 Imports System.Data.Entity
 Imports AccuPay.Entity
-Imports AccuPay.JobLevel
+Imports AccuPay.JobLevels
 Imports PayrollSys
 
 Public Class PayrollContext
@@ -40,5 +40,7 @@ Public Class PayrollContext
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
 
     Public Overridable Property JobCategories As DbSet(Of JobCategory)
+
+    Public Overridable Property Position As DbSet(Of Position)
 
 End Class

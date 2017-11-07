@@ -1,5 +1,5 @@
 ﻿Imports System.ComponentModel
-Imports AccuPay.JobLevel
+Imports AccuPay.JobLevels
 
 Public Class JobLevelForm
 
