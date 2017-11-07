@@ -74,7 +74,9 @@ SELECT
         DATE_FORMAT(paystub.PayToDate,'%c/%e/%Y')
     ) `DatCol20`,
     paystub.RegularHours `DatCol41`,
-    (IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) + IFNULL(thirteenthmonthpay.Amount,0) + IFNULL(agf.DailyFee, 0)) `DatCol42`
+    (IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) + IFNULL(thirteenthmonthpay.Amount,0) + IFNULL(agf.DailyFee, 0)) `DatCol42`,
+    GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate) `DatCol43`,
+    paystub.OvertimeHours `DatCol44`
 FROM paystub
 LEFT JOIN paystubactual
 ON paystubactual.EmployeeID = paystub.EmployeeID AND
