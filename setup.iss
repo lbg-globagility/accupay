@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AccuPay"
-#define MyAppVersion "1.1.13"
+#define MyAppVersion "1.1.13.1"
 #define MyAppPublisher "Globagility, Inc."
 #define MyAppURL "http://www.globagilityinc.com/"
 #define MyAppExeName "AccuPay.exe"
@@ -82,7 +82,7 @@ Source: ".\Acupay\bin\Debug\ShockwaveFlashObjects.dll"; DestDir: "{app}"; Flags:
 Source: ".\Acupay\bin\Debug\stdole.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\Acupay\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
-Source: ".\Acupay\Resources\*.xlsx"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\Acupay\Resources\*.xlsx"; DestDir: "{app}\Resources"; Flags: ignoreversion
 
 Source: ".\Acupay\bin\Debug\EPPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
 

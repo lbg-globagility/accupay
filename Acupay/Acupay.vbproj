@@ -319,12 +319,6 @@
       <DependentUpon>HyundaiPayslip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\rptPrintAllEmployeeProfile.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>rptPrintAllEmployeeProfile.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Core Forms\Salary\Salary.vb" />
     <Compile Include="Core Forms\TimeEntry\Employee.vb" />
     <Compile Include="Core Forms\TimeEntry\Overtime.vb" />
@@ -1346,10 +1340,6 @@
     <EmbeddedResource Include="Core Forms\rpt\PayrollSumma.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PayrollSumma.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\rptPrintAllEmployeeProfile.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>rptPrintAllEmployeeProfile.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\TimeEntry\TimeEntrySummaryForm.resx">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
