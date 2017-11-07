@@ -90,12 +90,25 @@ Public Class JobLevelForm
         LoadJobCategory(category)
     End Sub
 
-    Private Sub JobLevelsDataGridView_UserDeletedRow(sender As Object, e As DataGridViewRowEventArgs) Handles JobLevelsDataGridView.UserDeletedRow
-        Dim rowsRemaining = JobLevelsDataGridView.Rows.Count
+    Private Sub JobLevelsDataGridView_KeyPress(sender As Object, e As KeyEventArgs) Handles JobLevelsDataGridView.KeyDown
+        If Not (e.KeyCode = Keys.Delete) Then
+            Return
+        End If
 
-        If rowsRemaining <= 1 Then
+        Dim jobLevel = DirectCast(JobLevelsDataGridView.CurrentRow?.DataBoundItem, JobLevel)
+
+        If jobLevel Is Nothing Then
             JobLevelsDataGridView.CurrentCell = Nothing
         End If
+
+        _category.JobLevels.Remove(jobLevel)
+
+        If jobLevel?.RowID IsNot Nothing Then
+            _context.Entry(jobLevel).State = Entity.EntityState.Deleted
+        End If
+
+        ' Make sure to synchronize the binding list to make sure no error happens.
+        _jobLevelsSource.CurrencyManager.Refresh()
     End Sub
 
 End Class

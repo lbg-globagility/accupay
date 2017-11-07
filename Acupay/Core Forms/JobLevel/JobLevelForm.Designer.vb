@@ -156,6 +156,7 @@ Partial Class JobLevelForm
         '
         'JobLevelsDataGridView
         '
+        Me.JobLevelsDataGridView.AllowUserToDeleteRows = False
         Me.JobLevelsDataGridView.AllowUserToOrderColumns = True
         Me.JobLevelsDataGridView.BackgroundColor = System.Drawing.Color.White
         Me.JobLevelsDataGridView.ColumnHeadersHeight = 34

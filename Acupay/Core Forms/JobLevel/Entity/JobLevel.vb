@@ -22,7 +22,6 @@ Namespace Global.AccuPay.JobLevel
 
         Public Property LastUpdBy As Integer?
 
-        <Key, Column(Order:=2)>
         Public Property JobCategoryID As Integer?
 
         Public Property Name As String
