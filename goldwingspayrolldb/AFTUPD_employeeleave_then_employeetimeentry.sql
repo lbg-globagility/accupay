@@ -9,59 +9,59 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTUPD_employeeleave_then_employeetimeentry` AFTER UPDATE ON `employeeleave` FOR EACH ROW BEGIN
 
-DECLARE looper INT(11) DEFAULT 0;
+-- DECLARE looper INT(11) DEFAULT 0;
 
-DECLARE leavetype VARCHAR(50);
+-- DECLARE leavetype VARCHAR(50);
 
-DECLARE dateloop DATE;
+-- DECLARE dateloop DATE;
 
-DECLARE newleavenumdays INT(11);
+-- DECLARE newleavenumdays INT(11);
 
-DECLARE oldleavenumdays INT(11);
+-- DECLARE oldleavenumdays INT(11);
 
-DECLARE reghrsworkd TIME;
+-- DECLARE reghrsworkd TIME;
 
-DECLARE numhrsworkd DECIMAL(10,2);
+-- DECLARE numhrsworkd DECIMAL(10,2);
 
-DECLARE prateID INT(11);
+-- DECLARE prateID INT(11);
 
 DECLARE viewID INT(11);
 
-SELECT NEW.LeaveType INTO leavetype;
+-- SELECT NEW.LeaveType INTO leavetype;
 
-SELECT ADDDATE(TIMEDIFF(IF(NEW.LeaveStartTime>NEW.LeaveEndTime,ADDTIME(NEW.LeaveEndTime,'24:00:00'),NEW.LeaveEndTime),NEW.LeaveStartTime), INTERVAL 0 HOUR) INTO reghrsworkd;
+-- SELECT ADDDATE(TIMEDIFF(IF(NEW.LeaveStartTime>NEW.LeaveEndTime,ADDTIME(NEW.LeaveEndTime,'24:00:00'),NEW.LeaveEndTime),NEW.LeaveStartTime), INTERVAL 0 HOUR) INTO reghrsworkd;
 
 
 
-SET reghrsworkd = IF('09:00:00' > reghrsworkd, reghrsworkd, ADDDATE(reghrsworkd, INTERVAL -1 HOUR));
+-- SET reghrsworkd = IF('09:00:00' > reghrsworkd, reghrsworkd, ADDDATE(reghrsworkd, INTERVAL -1 HOUR));
 
-SELECT ((TIME_TO_SEC(reghrsworkd) / 60) / 60) INTO numhrsworkd;
+-- SELECT ((TIME_TO_SEC(reghrsworkd) / 60) / 60) INTO numhrsworkd;
 
-/*IF numhrsworkd >= 9 THEN
-    SET numhrsworkd = 8;
+-- /*IF numhrsworkd >= 9 THEN
+--     SET numhrsworkd = 8;
 
-END IF;*/
+-- END IF;*/
 
-SET numhrsworkd = NEW.OfficialValidHours;
+-- SET numhrsworkd = NEW.OfficialValidHours;
 
-UPDATE employeetimeentry et
-INNER JOIN employee e ON e.RowID=et.EmployeeID AND e.OrganizationID=et.OrganizationID
-INNER JOIN employeesalary es ON es.RowID=et.EmployeeSalaryID
-INNER JOIN employeeshift esh ON esh.RowID=et.EmployeeShiftID
-INNER JOIN shift sh ON sh.RowID=esh.ShiftID
-SET
-et.LastUpd=CURRENT_TIMESTAMP()
-,et.LastUpdBy=NEW.LastUpdBy
-,et.VacationLeaveHours=IF(leavetype LIKE '%Vacation%',numhrsworkd,0.0)
-,et.SickLeaveHours=IF(leavetype LIKE '%Sick%',numhrsworkd,0.0)
-,et.MaternityLeaveHours=IF(leavetype LIKE '%aternity%',numhrsworkd,0.0)
-,et.OtherLeaveHours=IF(leavetype LIKE '%Others%',numhrsworkd,0.0)
-,et.Leavepayment = (numhrsworkd * IF(e.EmployeeType = 'Daily'
-                                     , (es.BasicPay / sh.DivisorToDailyRate)
-												 , ((es.Salary / (e.WorkDaysPerYear / 12)) / sh.DivisorToDailyRate)))
-WHERE et.OrganizationID=NEW.OrganizationID
-AND et.EmployeeID=NEW.EmployeeID
-AND et.`Date` BETWEEN NEW.LeaveStartDate AND NEW.LeaveEndDate;
+-- UPDATE employeetimeentry et
+-- INNER JOIN employee e ON e.RowID=et.EmployeeID AND e.OrganizationID=et.OrganizationID
+-- INNER JOIN employeesalary es ON es.RowID=et.EmployeeSalaryID
+-- INNER JOIN employeeshift esh ON esh.RowID=et.EmployeeShiftID
+-- INNER JOIN shift sh ON sh.RowID=esh.ShiftID
+-- SET
+-- et.LastUpd=CURRENT_TIMESTAMP()
+-- ,et.LastUpdBy=NEW.LastUpdBy
+-- ,et.VacationLeaveHours=IF(leavetype LIKE '%Vacation%',numhrsworkd,0.0)
+-- ,et.SickLeaveHours=IF(leavetype LIKE '%Sick%',numhrsworkd,0.0)
+-- ,et.MaternityLeaveHours=IF(leavetype LIKE '%aternity%',numhrsworkd,0.0)
+-- ,et.OtherLeaveHours=IF(leavetype LIKE '%Others%',numhrsworkd,0.0)
+-- ,et.Leavepayment = (numhrsworkd * IF(e.EmployeeType = 'Daily'
+--                                      , (es.BasicPay / sh.DivisorToDailyRate)
+-- 												 , ((es.Salary / (e.WorkDaysPerYear / 12)) / sh.DivisorToDailyRate)))
+-- WHERE et.OrganizationID=NEW.OrganizationID
+-- AND et.EmployeeID=NEW.EmployeeID
+-- AND et.`Date` BETWEEN NEW.LeaveStartDate AND NEW.LeaveEndDate;
 
 /*IF OLD.LeaveStartDate = NEW.LeaveStartDate AND OLD.LeaveEndDate = NEW.LeaveEndDate THEN
 

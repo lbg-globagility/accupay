@@ -27,7 +27,7 @@ WHERE u.UserID = user_name AND
     u.`Status` = 'Active'
 GROUP BY u.RowID, pv.ReadOnly
 HAVING pv.AllowedToAccess = 'Y'
-INTO returnvaue;
+INTO returnvaue, @Pv;
 
 IF returnvaue IS NULL THEN
     SET returnvaue = 0;
