@@ -1,7 +1,11 @@
-﻿Imports CrystalDecisions.CrystalReports.Engine
-
+﻿Imports System.IO
+Imports CrystalDecisions.CrystalReports.Engine
+Imports OfficeOpenXml
 
 Public Class ReportsList
+
+    Private basic_alphabet =
+        New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 
     Public listReportsForm As New List(Of String)
 
@@ -87,7 +91,7 @@ Public Class ReportsList
 
         Dim report_list As New AutoCompleteStringCollection
 
-        enlistTheLists("SELECT DisplayValue FROM listofval WHERE `Type`='Report List' AND `Active`='Yes' ORDER BY RowID;", _
+        enlistTheLists("SELECT DisplayValue FROM listofval WHERE `Type`='Report List' AND `Active`='Yes' ORDER BY RowID;",
                         report_list)
 
         For Each strval In report_list
@@ -136,18 +140,18 @@ Public Class ReportsList
 
     Private Sub lvMainMenu_MouseDown(sender As Object, e As MouseEventArgs) Handles lvMainMenu.MouseDown
 
+    End Sub
+
+    Private Sub lvMainMenu_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles lvMainMenu.MouseDoubleClick
+
         date_from = Nothing
 
         date_to = Nothing
 
-        If lvMainMenu.Items.Count <> 0 Then
+        If lvMainMenu.Items.Count > 0 _
+            And e.Button = Windows.Forms.MouseButtons.Left Then
 
-            If e.Clicks = 2 And _
-                e.Button = Windows.Forms.MouseButtons.Left Then
-
-                report_maker()
-
-            End If
+            report_maker()
 
         End If
 
@@ -180,7 +184,7 @@ Public Class ReportsList
 
         End Try
 
-        Dim lvi_index = _
+        Dim lvi_index =
             lvMainMenu.Items.IndexOf(n_listviewitem)
 
         reportname = n_listviewitem.Text
@@ -195,17 +199,17 @@ Public Class ReportsList
 
                     Dim dat_tbl As New DataTable
 
-                    Dim d_from = If(n_PayrollSummaDateSelection.DateFromstr = Nothing, Nothing, _
+                    Dim d_from = If(n_PayrollSummaDateSelection.DateFromstr = Nothing, Nothing,
                                     Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "yyyy-MM-dd"))
 
-                    Dim d_to = If(n_PayrollSummaDateSelection.DateTostr = Nothing, Nothing, _
+                    Dim d_to = If(n_PayrollSummaDateSelection.DateTostr = Nothing, Nothing,
                                     Format(CDate(n_PayrollSummaDateSelection.DateTostr), "yyyy-MM-dd"))
 
 
-                    date_from = If(n_PayrollSummaDateSelection.DateFromstr = Nothing, Nothing, _
+                    date_from = If(n_PayrollSummaDateSelection.DateFromstr = Nothing, Nothing,
                                     Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "MMM d,yyyy"))
 
-                    date_to = If(n_PayrollSummaDateSelection.DateTostr = Nothing, Nothing, _
+                    date_to = If(n_PayrollSummaDateSelection.DateTostr = Nothing, Nothing,
                                     Format(CDate(n_PayrollSummaDateSelection.DateTostr), "MMM d,yyyy"))
 
                     Dim params(2, 2) As Object
@@ -218,7 +222,7 @@ Public Class ReportsList
                     params(1, 1) = d_from
                     params(2, 1) = d_to
 
-                    dat_tbl = callProcAsDatTab(params, _
+                    dat_tbl = callProcAsDatTab(params,
                                                "RPT_attendance_sheet")
 
                     printReport(dat_tbl)
@@ -265,7 +269,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_13thmonthpay")
 
                     printReport(datatab)
@@ -299,11 +303,11 @@ Public Class ReportsList
                     params(1, 1) = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "yyyy-MM-dd")
                     params(2, 1) = Format(CDate(n_PayrollSummaDateSelection.DateTostr), "yyyy-MM-dd")
 
-                    Dim LoanTypeID = EXECQUER("SELECT p.RowID" & _
-                               " FROM product p" & _
-                               " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND c.CategoryName='Loan Type'" & _
-                               " WHERE p.CategoryID=c.RowID" & _
-                               " AND p.OrganizationID=" & orgztnID & _
+                    Dim LoanTypeID = EXECQUER("SELECT p.RowID" &
+                               " FROM product p" &
+                               " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND c.CategoryName='Loan Type'" &
+                               " WHERE p.CategoryID=c.RowID" &
+                               " AND p.OrganizationID=" & orgztnID &
                                " AND p.PartNo='" & n_PayrollSummaDateSelection.cboStringParameter.Text & "';")
 
                     'MsgBox(n_PayrollSummaDateSelection.cboStringParameter.Text)
@@ -316,7 +320,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_loans")
 
                     printReport(datatab)
@@ -327,7 +331,7 @@ Public Class ReportsList
 
             Case 10 'Personal Information
 
-                '   Case 10 'Tardiness
+                printEmployeeProfiles()
 
             Case 11 'PAGIBIG
 
@@ -352,7 +356,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_PAGIBIG_Monthly")
 
                     printReport(datatab)
@@ -387,7 +391,7 @@ Public Class ReportsList
 
                     MessageBoxManager.Register()
 
-                    Dim custom_prompt = _
+                    Dim custom_prompt =
                         MessageBox.Show("Choose the payroll summary to be printed.", "Payroll Summary Data Option", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)
 
                     If custom_prompt = Windows.Forms.DialogResult.OK Then
@@ -412,7 +416,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "PAYROLLSUMMARY")
 
                     Dim AbsTardiUTNDifOTHolipay As New DataTable
@@ -448,7 +452,7 @@ Public Class ReportsList
 
                         newdatrow("Column4") = If(IsDBNull(drow(16)), "None", drow(16)) 'Position
 
-                        newdatrow("Column20") = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "MMMM d, yyyy") & _
+                        newdatrow("Column20") = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "MMMM d, yyyy") &
             If(n_PayrollSummaDateSelection.DateFromstr = Nothing, "", " to " & Format(CDate(n_PayrollSummaDateSelection.DateTostr), "MMMM d, yyyy")) 'Pay period
 
                         newdatrow("Column21") = FormatNumber(Val(drow(0)), 2) 'Basic pay
@@ -466,7 +470,7 @@ Public Class ReportsList
 
                         paramets(1, 1) = drow("EmployeeRowID")
 
-                        AbsTardiUTNDifOTHolipay = callProcAsDatTab(paramets, _
+                        AbsTardiUTNDifOTHolipay = callProcAsDatTab(paramets,
                                                                    "GET_AbsTardiUTNDifOTHolipay")
 
                         Dim absentval = 0.0
@@ -586,7 +590,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_PhilHealth_Monthly")
 
                     printReport(datatab)
@@ -618,7 +622,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_SSS_Monthly")
 
                     printReport(datatab)
@@ -649,7 +653,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_Tax_Monthly")
 
                     printReport(datatab)
@@ -675,7 +679,7 @@ Public Class ReportsList
 
         n_listviewitem = lvMainMenu.SelectedItems(0)
 
-        Dim lvi_index = _
+        Dim lvi_index =
             lvMainMenu.Items.IndexOf(n_listviewitem)
 
         Select Case lvi_index
@@ -688,17 +692,17 @@ Public Class ReportsList
 
                     Dim dat_tbl As New DataTable
 
-                    Dim d_from = If(n_PayrollSummaDateSelection.DateFromstr = Nothing, Nothing, _
+                    Dim d_from = If(n_PayrollSummaDateSelection.DateFromstr = Nothing, Nothing,
                                     Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "yyyy-MM-dd"))
 
-                    Dim d_to = If(n_PayrollSummaDateSelection.DateTostr = Nothing, Nothing, _
+                    Dim d_to = If(n_PayrollSummaDateSelection.DateTostr = Nothing, Nothing,
                                     Format(CDate(n_PayrollSummaDateSelection.DateTostr), "yyyy-MM-dd"))
 
 
-                    date_from = If(n_PayrollSummaDateSelection.DateFromstr = Nothing, Nothing, _
+                    date_from = If(n_PayrollSummaDateSelection.DateFromstr = Nothing, Nothing,
                                     Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "MMMM d, yyyy"))
 
-                    date_to = If(n_PayrollSummaDateSelection.DateTostr = Nothing, Nothing, _
+                    date_to = If(n_PayrollSummaDateSelection.DateTostr = Nothing, Nothing,
                                     Format(CDate(n_PayrollSummaDateSelection.DateTostr), "MMMM d, yyyy"))
 
                     '",IFNULL(CONCAT(TIME_FORMAT(sh.TimeFrom,'%l:%i'),'TO',TIME_FORMAT(sh.TimeTo,'%l:%i')),'') 'Shift'" & _
@@ -741,7 +745,7 @@ Public Class ReportsList
                     params(1, 1) = d_from
                     params(2, 1) = d_to
 
-                    dat_tbl = callProcAsDatTab(params, _
+                    dat_tbl = callProcAsDatTab(params,
                                                "RPT_attendance_sheet")
 
                     printReport(dat_tbl)
@@ -918,7 +922,7 @@ Public Class ReportsList
 
                 params(0, 1) = orgztnID
 
-                dt_prevemplyr = callProcAsDatTab(params, _
+                dt_prevemplyr = callProcAsDatTab(params,
                                            "RPT_employment_record")
 
                 printReport(dt_prevemplyr)
@@ -943,7 +947,7 @@ Public Class ReportsList
                     params(1, 1) = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "yyyy-MM-dd")
                     params(2, 1) = Format(CDate(n_PayrollSummaDateSelection.DateTostr), "yyyy-MM-dd")
 
-                    dattab = callProcAsDatTab(params, _
+                    dattab = callProcAsDatTab(params,
                                                "RPT_salary_increase_histo")
 
                     printReport(dattab)
@@ -979,7 +983,7 @@ Public Class ReportsList
 
                     MessageBoxManager.Register()
 
-                    Dim custom_prompt = _
+                    Dim custom_prompt =
                         MessageBox.Show("Choose the payroll ledger to be printed.", "Payroll Ledger Data Option", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)
 
                     If custom_prompt = Windows.Forms.DialogResult.OK Then
@@ -1000,7 +1004,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_payroll_legder")
 
                     Dim AbsTardiUTNDifOTHolipay As New DataTable
@@ -1046,7 +1050,7 @@ Public Class ReportsList
 
                         paramets(1, 1) = drow(0) 'Employee RowID
 
-                        AbsTardiUTNDifOTHolipay = callProcAsDatTab(paramets, _
+                        AbsTardiUTNDifOTHolipay = callProcAsDatTab(paramets,
                                                                    "GET_AbsTardiUTNDifOTHolipay")
 
                         Dim absentval = 0.0
@@ -1182,7 +1186,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_13thmonthpay")
 
                     printReport(datatab)
@@ -1211,8 +1215,8 @@ Public Class ReportsList
                     params(1, 1) = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "yyyy-MM-dd")
                     params(2, 1) = Format(CDate(n_PayrollSummaDateSelection.DateTostr), "yyyy-MM-dd")
                     params(3, 1) = n_PayrollSummaDateSelection.DateFromID
-                    params(4, 1) = If(n_PayrollSummaDateSelection.DateToID = Nothing, _
-                                      n_PayrollSummaDateSelection.DateFromID, _
+                    params(4, 1) = If(n_PayrollSummaDateSelection.DateToID = Nothing,
+                                      n_PayrollSummaDateSelection.DateFromID,
                                       n_PayrollSummaDateSelection.DateToID)
 
                     date_from = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "MMMM  d, yyyy")
@@ -1221,7 +1225,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_leave_ledger")
 
                     printReport(datatab)
@@ -1252,7 +1256,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_loans")
 
                     printReport(datatab)
@@ -1283,7 +1287,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_PAGIBIG_Monthly")
 
                     printReport(datatab)
@@ -1315,7 +1319,7 @@ Public Class ReportsList
 
                     MessageBoxManager.Register()
 
-                    Dim custom_prompt = _
+                    Dim custom_prompt =
                         MessageBox.Show("Choose the payroll summary to be printed.", "Payroll Summary Data Option", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)
 
                     If custom_prompt = Windows.Forms.DialogResult.OK Then
@@ -1336,7 +1340,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "PAYROLLSUMMARY")
 
                     Dim AbsTardiUTNDifOTHolipay As New DataTable
@@ -1372,7 +1376,7 @@ Public Class ReportsList
 
                         newdatrow("Column4") = If(IsDBNull(drow(16)), "None", drow(16)) 'Position
 
-                        newdatrow("Column20") = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "MMMM d, yyyy") & _
+                        newdatrow("Column20") = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "MMMM d, yyyy") &
             If(n_PayrollSummaDateSelection.DateFromstr = Nothing, "", " to " & Format(CDate(n_PayrollSummaDateSelection.DateTostr), "MMMM d, yyyy")) 'Pay period
 
                         newdatrow("Column21") = FormatNumber(Val(drow(0)), 2) 'Basic pay
@@ -1390,7 +1394,7 @@ Public Class ReportsList
 
                         paramets(1, 1) = drow("EmployeeRowID")
 
-                        AbsTardiUTNDifOTHolipay = callProcAsDatTab(paramets, _
+                        AbsTardiUTNDifOTHolipay = callProcAsDatTab(paramets,
                                                                    "GET_AbsTardiUTNDifOTHolipay")
 
                         Dim absentval = 0.0
@@ -1511,7 +1515,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_PhilHealth_Monthly")
 
                     printReport(datatab)
@@ -1540,7 +1544,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_SSS_Monthly")
 
                     printReport(datatab)
@@ -1571,7 +1575,7 @@ Public Class ReportsList
 
                     Dim datatab As DataTable
 
-                    datatab = callProcAsDatTab(params, _
+                    datatab = callProcAsDatTab(params,
                                                "RPT_Tax_Monthly")
 
                     printReport(datatab)
@@ -1727,7 +1731,7 @@ Public Class ReportsList
 
                 For Each dcol As DataColumn In param_dt.Columns
 
-                    n_row(ii) = If(IsDBNull(drow(dcol.ColumnName)), Nothing, _
+                    n_row(ii) = If(IsDBNull(drow(dcol.ColumnName)), Nothing,
                                    drow(dcol.ColumnName))
 
                     ii += 1
@@ -1748,7 +1752,7 @@ Public Class ReportsList
 
         n_listviewitem = lvMainMenu.SelectedItems(0)
 
-        Dim lvi_index = _
+        Dim lvi_index =
             lvMainMenu.Items.IndexOf(n_listviewitem)
 
         Select Case lvi_index
@@ -1775,10 +1779,10 @@ Public Class ReportsList
                                   " WHERE o.RowID=", orgztnID, ";"))
 
 
-                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" & _
-                                        ",',',COALESCE(FaxNumber,'')" & _
-                                        ",',',COALESCE(EmailAddress,'')" & _
-                                        ",',',COALESCE(TINNo,''))" & _
+                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" &
+                                        ",',',COALESCE(FaxNumber,'')" &
+                                        ",',',COALESCE(EmailAddress,'')" &
+                                        ",',',COALESCE(TINNo,''))" &
                                         " FROM organization WHERE RowID=" & orgztnID & ";")
 
                 Dim contactdet = Split(contactdetails, ",")
@@ -1872,19 +1876,19 @@ Public Class ReportsList
 
                 objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgaddress")
 
-                objText.Text = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" & _
-                                            ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" & _
-                                            ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" & _
-                                            ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" & _
-                                            ",IF(Country IS NULL,'',CONCAT(', ',Country))" & _
-                                            ",IF(State IS NULL,'',CONCAT(', ',State)))" & _
-                                            " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" & _
+                objText.Text = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" &
+                                            ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" &
+                                            ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" &
+                                            ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" &
+                                            ",IF(Country IS NULL,'',CONCAT(', ',Country))" &
+                                            ",IF(State IS NULL,'',CONCAT(', ',State)))" &
+                                            " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" &
                                             " WHERE o.RowID=" & orgztnID & ";")
 
-                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" & _
-                                        ",',',COALESCE(FaxNumber,'')" & _
-                                        ",',',COALESCE(EmailAddress,'')" & _
-                                        ",',',COALESCE(TINNo,''))" & _
+                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" &
+                                        ",',',COALESCE(FaxNumber,'')" &
+                                        ",',',COALESCE(EmailAddress,'')" &
+                                        ",',',COALESCE(TINNo,''))" &
                                         " FROM organization WHERE RowID=" & orgztnID & ";")
 
                 Dim contactdet = Split(contactdetails, ",")
@@ -2086,7 +2090,7 @@ Public Class ReportsList
 
                 For Each dcol As DataColumn In param_dt.Columns
 
-                    n_row(ii) = If(IsDBNull(drow(dcol.ColumnName)), Nothing, _
+                    n_row(ii) = If(IsDBNull(drow(dcol.ColumnName)), Nothing,
                                    drow(dcol.ColumnName))
 
                     ii += 1
@@ -2107,7 +2111,7 @@ Public Class ReportsList
 
         n_listviewitem = lvMainMenu.SelectedItems(0)
 
-        Dim lvi_index = _
+        Dim lvi_index =
             lvMainMenu.Items.IndexOf(n_listviewitem)
 
         Select Case lvi_index
@@ -2128,20 +2132,20 @@ Public Class ReportsList
 
                 objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgaddress")
 
-                objText.Text = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" & _
-                                            ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" & _
-                                            ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" & _
-                                            ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" & _
-                                            ",IF(Country IS NULL,'',CONCAT(', ',Country))" & _
-                                            ",IF(State IS NULL,'',CONCAT(', ',State)))" & _
-                                            " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" & _
+                objText.Text = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" &
+                                            ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" &
+                                            ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" &
+                                            ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" &
+                                            ",IF(Country IS NULL,'',CONCAT(', ',Country))" &
+                                            ",IF(State IS NULL,'',CONCAT(', ',State)))" &
+                                            " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" &
                                             " WHERE o.RowID=" & orgztnID & ";")
 
 
-                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" & _
-                                        ",',',COALESCE(FaxNumber,'')" & _
-                                        ",',',COALESCE(EmailAddress,'')" & _
-                                        ",',',COALESCE(TINNo,''))" & _
+                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" &
+                                        ",',',COALESCE(FaxNumber,'')" &
+                                        ",',',COALESCE(EmailAddress,'')" &
+                                        ",',',COALESCE(TINNo,''))" &
                                         " FROM organization WHERE RowID=" & orgztnID & ";")
 
                 Dim contactdet = Split(contactdetails, ",")
@@ -2217,20 +2221,20 @@ Public Class ReportsList
 
                 objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgaddress")
 
-                objText.Text = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" & _
-                                            ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" & _
-                                            ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" & _
-                                            ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" & _
-                                            ",IF(Country IS NULL,'',CONCAT(', ',Country))" & _
-                                            ",IF(State IS NULL,'',CONCAT(', ',State)))" & _
-                                            " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" & _
+                objText.Text = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" &
+                                            ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" &
+                                            ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" &
+                                            ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" &
+                                            ",IF(Country IS NULL,'',CONCAT(', ',Country))" &
+                                            ",IF(State IS NULL,'',CONCAT(', ',State)))" &
+                                            " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" &
                                             " WHERE o.RowID=" & orgztnID & ";")
 
 
-                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" & _
-                                        ",',',COALESCE(FaxNumber,'')" & _
-                                        ",',',COALESCE(EmailAddress,'')" & _
-                                        ",',',COALESCE(TINNo,''))" & _
+                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" &
+                                        ",',',COALESCE(FaxNumber,'')" &
+                                        ",',',COALESCE(EmailAddress,'')" &
+                                        ",',',COALESCE(TINNo,''))" &
                                         " FROM organization WHERE RowID=" & orgztnID & ";")
 
                 Dim contactdet = Split(contactdetails, ",")
@@ -2587,6 +2591,94 @@ Public Class ReportsList
         '//wait 2 seconds to let the above command complete or the copy will still fail
         '//============================================================================
         System.Threading.Thread.Sleep(2000)
+
+    End Sub
+
+    Private Sub printEmployeeProfiles()
+
+        Dim sql_print_employee_profiles As New SQL("CALL PRINT_employee_profiles(?og_rowid);",
+                                                   New Object() {orgztnID})
+
+        Static one_value As Integer = 1
+
+        Try
+
+            Dim dt As New DataTable
+
+            dt = sql_print_employee_profiles.GetFoundRows.Tables(0)
+
+            If sql_print_employee_profiles.HasError Then
+
+                Throw sql_print_employee_profiles.ErrorException
+
+            Else
+
+                Static report_name As String = "EmployeeProfiles"
+
+                Static temp_path As String = Path.GetTempPath()
+
+                Static temp_file As String = String.Concat(temp_path, report_name, "Report.xlsx")
+
+                Dim newFile = New FileInfo(temp_file)
+
+                If newFile.Exists Then
+                    newFile.Delete()
+                    newFile = New FileInfo(temp_file)
+                End If
+
+                Using excl_pkg = New ExcelPackage(newFile)
+
+                    Dim worksheet As ExcelWorksheet =
+                                excl_pkg.Workbook.Worksheets.Add(report_name)
+
+                    Dim row_indx As Integer = one_value
+
+                    Dim col_index As Integer = one_value
+
+                    For Each dtcol As DataColumn In dt.Columns
+                        worksheet.Cells(row_indx, col_index).Value = dtcol.ColumnName
+                        col_index += one_value
+                    Next
+
+                    row_indx += one_value
+
+                    For Each dtrow As DataRow In dt.Rows
+
+                        Dim row_array = dtrow.ItemArray
+
+                        Dim i = 0
+
+                        For Each rowval In row_array
+
+                            Dim excl_colrow As String =
+                                        String.Concat(basic_alphabet(i),
+                                                      row_indx)
+
+                            worksheet.Cells(excl_colrow).Value = rowval
+
+                            i += one_value
+
+                        Next
+
+                        row_indx += one_value
+
+                    Next
+
+                    worksheet.Cells.AutoFitColumns(0)
+
+                    excl_pkg.Save()
+
+                End Using
+
+                Process.Start(temp_file)
+
+            End If
+
+        Catch ex As Exception
+
+            MsgBox(getErrExcptn(ex, Me.Name))
+
+        End Try
 
     End Sub
 
