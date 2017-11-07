@@ -284,50 +284,7 @@ Public Class ReportsList
 
             Case 9 'Loan report
 
-                '   Case 9 'Tax Monthly Report
-
-                Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
-
-                n_PayrollSummaDateSelection.ReportIndex = lvi_index
-
-                If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                    Dim params(3, 2) As Object
-
-                    params(0, 0) = "OrganizID"
-                    params(1, 0) = "PayDateFrom"
-                    params(2, 0) = "PayDateTo"
-                    params(3, 0) = "LoanTypeID"
-
-                    params(0, 1) = orgztnID
-                    params(1, 1) = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "yyyy-MM-dd")
-                    params(2, 1) = Format(CDate(n_PayrollSummaDateSelection.DateTostr), "yyyy-MM-dd")
-
-                    Dim LoanTypeID = EXECQUER("SELECT p.RowID" &
-                               " FROM product p" &
-                               " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND c.CategoryName='Loan Type'" &
-                               " WHERE p.CategoryID=c.RowID" &
-                               " AND p.OrganizationID=" & orgztnID &
-                               " AND p.PartNo='" & n_PayrollSummaDateSelection.cboStringParameter.Text & "';")
-
-                    'MsgBox(n_PayrollSummaDateSelection.cboStringParameter.Text)
-
-                    params(3, 1) = LoanTypeID
-
-                    date_from = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "MMMM  d, yyyy")
-
-                    date_to = Format(CDate(n_PayrollSummaDateSelection.DateTostr), "MMMM  d, yyyy")
-
-                    Dim datatab As DataTable
-
-                    datatab = callProcAsDatTab(params,
-                                               "RPT_loans")
-
-                    printReport(datatab)
-
-                    datatab = Nothing
-
-                End If
+                printLoanReports()
 
             Case 10 'Personal Information
 
@@ -2679,6 +2636,68 @@ Public Class ReportsList
             MsgBox(getErrExcptn(ex, Me.Name))
 
         End Try
+
+    End Sub
+
+    Private Sub printLoanReports()
+
+        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
+
+        If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
+
+            Dim date_from, date_to As Object
+
+            date_from = n_PayrollSummaDateSelection.DateFromstr
+            date_to = n_PayrollSummaDateSelection.DateTostr
+
+            Dim sql_print_employee_loanreports As _
+                New SQL("CALL RPT_loans(?og_rowid, ?date_f, ?date_t, NULL);",
+                        New Object() {orgztnID, date_from, date_to})
+
+            Try
+
+                Dim dt As New DataTable
+
+                dt = sql_print_employee_loanreports.GetFoundRows.Tables(0)
+
+                If sql_print_employee_loanreports.HasError Then
+
+                    Throw sql_print_employee_loanreports.ErrorException
+
+                Else
+
+                    Dim rptdoc As New LoanReports
+
+                    rptdoc.SetDataSource(dt)
+
+                    Dim crvwr As New CrysRepForm
+
+                    Dim objText As TextObject = Nothing
+
+                    objText =
+                        rptdoc.ReportDefinition.Sections(1).ReportObjects("PeriodDate")
+
+                    objText.Text =
+                        String.Concat("for the period of ",
+                                      DirectCast(date_from, Date).ToShortDateString,
+                                       " to ",
+                                      DirectCast(date_to, Date).ToShortDateString)
+
+                    crvwr.crysrepvwr.ReportSource = rptdoc
+
+                    crvwr.Show()
+
+                End If
+
+            Catch ex As Exception
+
+                MsgBox(getErrExcptn(ex, Me.Name))
+
+            Finally
+
+            End Try
+
+        End If
 
     End Sub
 
