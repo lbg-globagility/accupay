@@ -206,6 +206,7 @@ IF ispayperiodendofmonth IS NOT NULL THEN
     UPDATE
         LastUpd = CURRENT_TIMESTAMP(),
         LastUpdBy = UserRowID,
+        BasicPay = ii.BasicAmount,
         Amount = ii.BasicAmount / pf_div;
 END IF;
 
