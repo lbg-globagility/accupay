@@ -11,7 +11,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_loans`(IN `OrganizID` INT, IN `
 BEGIN
 
 SELECT
-    p.PartNo 'Comments',
+    /*p.PartNo 'Comments',
     ee.EmployeeID,
     CONCAT(
         ee.LastName,
@@ -22,7 +22,13 @@ SELECT
     ) 'Fullname',
     FORMAT(SUM(IFNULL(slp.DeductionAmount, 0)), 2) 'DeductionAmount',
     FORMAT(els.TotalLoanAmount, 2),
-    FORMAT(els.TotalBalanceLeft, 2)
+    FORMAT(els.TotalBalanceLeft, 2)*/
+    ee.EmployeeID `DatCol1`
+    ,CONCAT_WS(', ', ee.LastName, ee.FirstName, ee.MiddleName) `DatCol2`
+    ,p.PartNo `DatCol3`
+    ,ROUND(slp.DeductionAmount, 2) `DatCol4`
+    ,ROUND(slp.TotalBalanceLeft, 2) `DatCol5`
+    ,ROUND(els.TotalLoanAmount, 2) `DatCol6`
 FROM scheduledloansperpayperiod slp
 INNER JOIN employeeloanschedule els
 ON els.RowID = slp.EmployeeLoanRecordID
@@ -32,10 +38,12 @@ INNER JOIN product p
 ON p.RowID = els.LoanTypeID
 INNER JOIN payperiod pp
 ON pp.RowID = slp.PayPeriodID
-WHERE slp.OrganizationID = OrganizID AND
-    pp.PayFromDate BETWEEN PayDateFrom AND PayDateTo
-GROUP BY slp.EmployeeID, els.RowID
-ORDER BY p.PartNo, ee.LastName;
+WHERE slp.OrganizationID = OrganizID
+# AND pp.PayFromDate BETWEEN PayDateFrom AND PayDateTo
+AND (pp.PayFromDate >= PayDateFrom OR pp.PayToDate >= PayDateFrom)
+AND (pp.PayFromDate <= PayDateTo OR pp.PayToDate <= PayDateTo)
+# GROUP BY slp.EmployeeID, els.RowID
+ORDER BY CONCAT(ee.LastName, ee.FirstName), p.PartNo;
 
 END//
 DELIMITER ;
