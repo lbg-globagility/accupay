@@ -371,7 +371,7 @@ SET isRestDay = isShiftRestDay;
 IF OTCount = 1 THEN
 
     SELECT
-        IF(OTStartTime = shifttimeto, ADDTIME(shifttimeto,'00:00:01'), OTStartTime),
+        OTStartTime,
         OTEndTime,
         RowID
     FROM employeeovertime
@@ -390,7 +390,7 @@ IF OTCount = 1 THEN
 ELSE
 
     SELECT
-        IF(OTStartTime = shifttimeto, ADDTIME(shifttimeto,'00:00:01'), OTStartTime),
+        OTStartTime,
         OTEndTime,
         RowID
     FROM employeeovertime
