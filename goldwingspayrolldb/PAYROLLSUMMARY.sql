@@ -75,7 +75,11 @@ SELECT
     ) `DatCol20`,
     paystub.RegularHours `DatCol41`,
     (IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) + IFNULL(thirteenthmonthpay.Amount,0) + IFNULL(agf.DailyFee, 0)) `DatCol42`,
-    GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate) `DatCol43`,
+    IF(
+        psi_undeclared,
+        GetActualDailyRate(e.RowID, e.OrganizationID, paystub.PayFromDate),
+        GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
+    ) `DatCol43`,
     paystub.OvertimeHours `DatCol44`
 FROM paystub
 LEFT JOIN paystubactual
