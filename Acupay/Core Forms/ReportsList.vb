@@ -157,9 +157,7 @@ Public Class ReportsList
         reportname = n_listviewitem.Text
 
         Select Case lvi_index
-
-            Case 0 'Attendance sheet
-
+            Case ReportType.AttendanceSheet
                 Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
 
                 If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -195,36 +193,16 @@ Public Class ReportsList
 
                 End If
 
-            Case 1 'Alpha list
-
-            Case 2 'Employment Record
-
-                '   Case 2 'Employee 13th Month Pay Report
-
-            Case 3 'History of salary
-
-                '   Case 3 'Official Business filing
-
-            Case 4 'ID number
-
-                '   Case 4 'Employee Loan Report
-
-            Case 5 'Offenses
-
-                '   Case 5 'PAGIBIG Monthly Report
-
-            Case 6 'Payroll Ledger
-
-                '   Case 6 'Payroll Summary Report
-
-            Case 7 '13th month pay
-
-                '   Case 7 'PhilHealth Monthly Report
-
+            Case ReportType.Alphalist
+            Case ReportType.EmploymentRecord
+            Case ReportType.SalaryHistory
+            Case ReportType.IDNumber
+            Case ReportType.Offenses
+            Case ReportType.PayrollLedger
+            Case ReportType.ThirteenthMonthPay
                 Dim n_promptyear As New promptyear
 
                 If n_promptyear.ShowDialog = Windows.Forms.DialogResult.OK Then
-
                     Dim params(4, 2) As Object
 
                     params(0, 0) = "OrganizID"
@@ -241,23 +219,14 @@ Public Class ReportsList
                     printReport(datatab)
 
                     datatab = Nothing
-
                 End If
-
-            Case 8 'Leave ledger
-
-                '   Case 8 'SSS Monthly Report
-
-            Case 9 'Loan report
-
-                '   Case 9 'Tax Monthly Report
-
+            Case ReportType.LeaveLedger
+            Case ReportType.LoanReport
                 Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
 
                 n_PayrollSummaDateSelection.ReportIndex = lvi_index
 
                 If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
-
                     Dim params(3, 2) As Object
 
                     params(0, 0) = "OrganizID"
@@ -288,25 +257,17 @@ Public Class ReportsList
 
                     datatab = callProcAsDatTab(params,
                                                "RPT_loans")
-
                     printReport(datatab)
 
                     datatab = Nothing
-
                 End If
 
-            Case 10 'Personal Information
-
+            Case ReportType.PersonalInformation
                 printEmployeeProfiles()
-
-            Case 11 'PAGIBIG
-
+            Case ReportType.PagIBIG
                 Dim n_selectMonth As New selectMonth
 
                 If n_selectMonth.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                    'MsgBox(Format(CDate(n_selectMonth.MonthValue), "MM"))
-
                     Dim params(2, 2) As Object
 
                     params(0, 0) = "OrganizID"
@@ -330,8 +291,7 @@ Public Class ReportsList
                     datatab = Nothing
 
                 End If
-
-            Case 12 'Payroll summary
+            Case ReportType.PayrollSummary
 
                 Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
 
@@ -529,7 +489,7 @@ Public Class ReportsList
 
                 End If
 
-            Case 13 'PhilHealth
+            Case ReportType.PhilHealth
 
                 Dim n_selectMonth As New selectMonth
 
@@ -561,7 +521,7 @@ Public Class ReportsList
 
                 End If
 
-            Case 14 'SSS
+            Case ReportType.SSS
 
                 Dim n_selectMonth As New selectMonth
 
@@ -593,7 +553,7 @@ Public Class ReportsList
 
                 End If
 
-            Case 15 'Tax
+            Case ReportType.Tax
 
                 Dim n_selectMonth As New selectMonth
 
@@ -624,9 +584,9 @@ Public Class ReportsList
 
                 End If
 
-            Case 16 'Post employement clearance
+            Case ReportType.PostEmploymentClearance
 
-            Case 17 'Agency fee
+            Case ReportType.AgencyFee
 
             Case Else
 
@@ -1446,11 +1406,29 @@ Public Class ReportsList
 
             End If
         Catch ex As Exception
-
             MsgBox(getErrExcptn(ex, Me.Name))
-
         End Try
-
     End Sub
+
+    Public Enum ReportType As Integer
+        AttendanceSheet = 0
+        Alphalist = 1
+        EmploymentRecord = 2
+        SalaryHistory = 3
+        IDNumber = 4
+        Offenses = 5
+        PayrollLedger = 6
+        ThirteenthMonthPay = 7
+        LeaveLedger = 8
+        LoanReport = 9
+        PersonalInformation = 10
+        PagIBIG = 11
+        PayrollSummary = 12
+        PhilHealth = 13
+        SSS = 14
+        Tax = 15
+        PostEmploymentClearance = 16
+        AgencyFee = 17
+    End Enum
 
 End Class
