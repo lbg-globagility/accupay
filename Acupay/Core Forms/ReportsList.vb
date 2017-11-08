@@ -1421,6 +1421,13 @@ Public Class ReportsList
                                        " to ",
                                       DirectCast(date_to, Date).ToShortDateString)
 
+
+                    objText =
+                        rptdoc.ReportDefinition.Sections(1).ReportObjects("txtOrganizationName")
+
+                    objText.Text = orgNam.ToUpper
+
+
                     crvwr.crysrepvwr.ReportSource = rptdoc
 
                     crvwr.Show()
