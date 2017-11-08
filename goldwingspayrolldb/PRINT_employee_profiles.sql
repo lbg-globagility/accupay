@@ -34,8 +34,59 @@ INTO pp_rowid
      ,result_count;
 
 IF pp_rowid IS NOT NULL THEN
-# IF pp_rowid IS NULL THEN
+
+	SELECT
+	# e.RowID `DatCol1`,
+	e.EmployeeID	`Employee ID`
+	,e.LastName	`Last Name`
+	,e.FirstName	`First name`
+	,e.MiddleName	`Middle Name`
+	,IFNULL(DATE_FORMAT(e.Birthdate, preferred_dateformat), '') `Birthdate`
+	,e.Gender	`Sex`
+	,e.MaritalStatus	`Marital Status`
+	,e.EmployeeType	`Employee Type`
+	,IFNULL(DATE_FORMAT(e.StartDate, preferred_dateformat), '') `Start Date`
+	,IFNULL(DATE_FORMAT(e.DateRegularized, preferred_dateformat), '') `Date Regularized`
+	,pf.PayFrequencyType	`Pay Frequency`
+	,e.EmploymentStatus	`Employment Status`
+	,pos.PositionName	`Position Name`
+	,e.MobilePhone	`Mobile no.`
+	,e.HomeAddress	`Address`
+	,e.TINNo	`TIN`
+	,e.SSSNo	`SSS No.`
+	,e.HDMFNo	`HDMF No.`
+	,e.PhilHealthNo	`PHIC No.`
+	# ,e.ATMNo
+	,IFNULL(COUNT(edp.RowID), 0) `Dependent count`
+	/*
+	,(@dependent_lists := REPLACE(	
+	                      GROUP_CONCAT( CONCAT_WS('', CONCAT_WS(' ', edp.FirstName, edp.LastName), CONCAT('(', edp.RelationToEmployee, ')')) )
+								 , ',', '\n')
+								 )	`DatCol22`
+   */
+	FROM employee e
+	LEFT JOIN employeedependents edp
+	       ON edp.ParentEmployeeID=e.RowID
+	          AND edp.OrganizationID=e.OrganizationID
+	INNER JOIN payfrequency pf
+	        ON pf.RowID=e.PayFrequencyID
+	INNER JOIN `position` pos
+	        ON pos.RowID=e.PositionID
 	
+	INNER JOIN paystub ps
+	        ON ps.OrganizationID=e.OrganizationID
+	           AND ps.EmployeeID=e.RowID
+	           AND ps.PayPeriodID=pp_rowid
+	
+	WHERE e.OrganizationID=og_rowid
+	AND e.EmployeeType NOT IN ('Resigned', 'Terminated')
+	AND e.RevealInPayroll IN ('1', 'Y')
+	GROUP BY e.RowID
+	ORDER BY CONCAT_WS(',', e.LastName, e.FirstName, e.MiddleName)
+	;
+	
+ELSE
+
 	SELECT
 	# e.RowID `DatCol1`,
 	e.EmployeeID	`Employee ID`
@@ -80,8 +131,6 @@ IF pp_rowid IS NOT NULL THEN
 	ORDER BY CONCAT_WS(',', e.LastName, e.FirstName, e.MiddleName)
 	;
 	
-# ELSE
-
 END IF;
 
 END//
