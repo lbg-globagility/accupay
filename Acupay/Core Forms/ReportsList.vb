@@ -157,7 +157,7 @@ Public Class ReportsList
         reportname = n_listviewitem.Text
 
         Select Case lvi_index
-            Case ReportType.Alphalist
+            Case ReportType.AttendanceSheet
                 Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
 
                 If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
