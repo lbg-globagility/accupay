@@ -11,20 +11,34 @@ CREATE TRIGGER `BEFUPD_employeeovertime` BEFORE UPDATE ON `employeeovertime` FOR
 
 DECLARE eshiftID INT(11);
 
-SELECT esh.ShiftID FROM employeeshift esh WHERE esh.OrganizationID=NEW.OrganizationID AND esh.EmployeeID=NEW.EmployeeID AND (esh.EffectiveFrom >= NEW.OTStartDate OR esh.EffectiveTo >= NEW.OTStartDate) AND (esh.EffectiveFrom <= NEW.OTEndDate OR esh.EffectiveTo <= NEW.OTEndDate) ORDER BY esh.EffectiveFrom,esh.EffectiveTo LIMIT 1 INTO eshiftID;
+SELECT esh.ShiftID
+FROM employeeshift esh
+WHERE esh.OrganizationID = NEW.OrganizationID AND
+    esh.EmployeeID = NEW.EmployeeID AND
+    (
+        esh.EffectiveFrom >= NEW.OTStartDate OR
+        esh.EffectiveTo >= NEW.OTStartDate
+    ) AND
+    (
+        esh.EffectiveFrom <= NEW.OTEndDate OR
+        esh.EffectiveTo <= NEW.OTEndDate
+    )
+ORDER BY esh.EffectiveFrom, esh.EffectiveTo
+LIMIT 1
+INTO eshiftID;
 
 IF eshiftID IS NOT NULL THEN
-	SET NEW.OTStartTime = (SELECT IF(ADDTIME(sh.TimeTo, SEC_TO_TIME(60)) = NEW.OTStartTime OR sh.TimeTo = NEW.OTStartTime, ADDTIME(sh.TimeTo,SEC_TO_TIME(1)), TIME_FORMAT(NEW.OTStartTime, @@time_format)) FROM shift sh WHERE sh.RowID=eshiftID);
-	
-	## SET NEW.OTStartTime = (SELECT IF(TIME_FORMAT(sh.TimeTo,'%H:%i') = TIME_FORMAT(NEW.OTStartTime,'%H:%i'), ADDTIME(sh.TimeTo,'00:00:01'), NEW.OTStartTime) FROM shift sh WHERE sh.RowID=eshiftID);
-	
-	
-	# SET NEW.OTEndTime = (SELECT IF(ADDTIME(sh.TimeFrom, SEC_TO_TIME(60)) = NEW.OTEndTime OR sh.TimeFrom = NEW.OTEndTime, SUBTIME(sh.TimeFrom,SEC_TO_TIME(1)), TIME_FORMAT(NEW.OTEndTime, @@time_format)) FROM shift sh WHERE sh.RowID=eshiftID);
-	
-	## SET NEW.OTEndTime = (SELECT IF(TIME_FORMAT(sh.TimeFrom,'%H:%i') = TIME_FORMAT(NEW.OTEndTime,'%H:%i'), SUBTIME(sh.TimeFrom,'00:00:01'), NEW.OTEndTime) FROM shift sh WHERE sh.RowID=eshiftID);*/
-	
-	SET eshiftID = NULL;
-	
+    SET NEW.OTStartTime = (
+        SELECT IF(
+            ADDTIME(sh.TimeTo, SEC_TO_TIME(60)) = NEW.OTStartTime OR sh.TimeTo = NEW.OTStartTime,
+            sh.TimeTo,
+            TIME_FORMAT(NEW.OTStartTime, @@time_format)
+        )
+        FROM shift sh
+        WHERE sh.RowID = eshiftID
+    );
+
+    SET eshiftID = NULL;
 END IF;
 
 END//

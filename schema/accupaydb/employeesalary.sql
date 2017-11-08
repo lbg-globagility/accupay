@@ -1,0 +1,52 @@
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+CREATE TABLE IF NOT EXISTS `employeesalary` (
+  `RowID` int(10) NOT NULL AUTO_INCREMENT,
+  `EmployeeID` int(10) NOT NULL,
+  `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `CreatedBy` int(10) NOT NULL,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpdBy` int(10) DEFAULT NULL,
+  `OrganizationID` int(10) NOT NULL,
+  `FilingStatusID` int(10) NOT NULL,
+  `PaySocialSecurityID` int(10) DEFAULT NULL,
+  `PayPhilhealthID` int(10) DEFAULT NULL,
+  `HDMFAmount` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `TrueSalary` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `BasicPay` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `Salary` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `UndeclaredSalary` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `BasicDailyPay` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `BasicHourlyPay` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `NoofDependents` int(11) DEFAULT NULL,
+  `MaritalStatus` varchar(50) DEFAULT NULL,
+  `PositionID` int(11) DEFAULT NULL,
+  `EffectiveDateFrom` date DEFAULT NULL,
+  `EffectiveDateTo` date DEFAULT NULL,
+  `OverrideDiscardSSSContrib` tinyint(3) DEFAULT '0',
+  `OverrideDiscardPhilHealthContrib` tinyint(3) DEFAULT '0',
+  PRIMARY KEY (`RowID`),
+  UNIQUE KEY `EmployeeID` (`EmployeeID`,`OrganizationID`,`EffectiveDateFrom`,`EffectiveDateTo`),
+  KEY `FK_EmployeeSalary_employee` (`EmployeeID`),
+  KEY `FK_EmployeeSalary_user` (`CreatedBy`),
+  KEY `FK_EmployeeSalary_user_2` (`LastUpdBy`),
+  KEY `FK_EmployeeSalary_organization` (`OrganizationID`),
+  KEY `FK_EmployeeSalary_paysocialsecurity` (`PaySocialSecurityID`),
+  KEY `FK_EmployeeSalary_payphilhealth` (`PayPhilhealthID`),
+  KEY `FK_employeesalary_filingstatus` (`FilingStatusID`),
+  CONSTRAINT `FK_EmployeeSalary_employee` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`),
+  CONSTRAINT `FK_EmployeeSalary_organization` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
+  CONSTRAINT `FK_EmployeeSalary_payphilhealth` FOREIGN KEY (`PayPhilhealthID`) REFERENCES `payphilhealth` (`RowID`),
+  CONSTRAINT `FK_EmployeeSalary_paysocialsecurity` FOREIGN KEY (`PaySocialSecurityID`) REFERENCES `paysocialsecurity` (`RowID`),
+  CONSTRAINT `FK_EmployeeSalary_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+  CONSTRAINT `FK_EmployeeSalary_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
+  CONSTRAINT `FK_employeesalary_filingstatus` FOREIGN KEY (`FilingStatusID`) REFERENCES `filingstatus` (`RowID`)
+) ENGINE=InnoDB AUTO_INCREMENT=983 DEFAULT CHARSET=latin1;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
