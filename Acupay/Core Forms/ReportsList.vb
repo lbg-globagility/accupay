@@ -35,7 +35,7 @@ Public Class ReportsList
 
     Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim a = New Object() {
-            "Attendance sheet",
+            New AttendanceSheetReportProvider(),
             "Alpha List",
             "Employee's Employment Record",
             "Employee's History of Salary Increase",
@@ -46,10 +46,10 @@ Public Class ReportsList
             "Employee Leave Ledger",
             "Employee Loan Report",
             "Employee Personal Information",
-            "PAGIBIG Monthly Report",
+            New PagIBIGMonthlyReportProvider(),
             "Payroll Summary Report",
             New PhilHealthReportProvider(),
-            "SSS Monthly Report",
+            New SSSMonthlyReportProvider(),
             "Tax Monthly Report",
             "Post Employment Clearance",
             "Agency Fee"
@@ -136,42 +136,6 @@ Public Class ReportsList
             lvMainMenu.Items.IndexOf(n_listviewitem)
 
         Select Case lvi_index
-            Case ReportType.AttendanceSheet
-                Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
-
-                If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                    Dim dat_tbl As New DataTable
-
-                    Dim d_from = If(n_PayrollSummaDateSelection.DateFromstr = Nothing, Nothing,
-                                    Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "yyyy-MM-dd"))
-
-                    Dim d_to = If(n_PayrollSummaDateSelection.DateTostr = Nothing, Nothing,
-                                    Format(CDate(n_PayrollSummaDateSelection.DateTostr), "yyyy-MM-dd"))
-
-                    date_from = If(n_PayrollSummaDateSelection.DateFromstr = Nothing, Nothing,
-                                    Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "MMM d,yyyy"))
-
-                    date_to = If(n_PayrollSummaDateSelection.DateTostr = Nothing, Nothing,
-                                    Format(CDate(n_PayrollSummaDateSelection.DateTostr), "MMM d,yyyy"))
-
-                    Dim params(2, 2) As Object
-
-                    params(0, 0) = "OrganizationID"
-                    params(1, 0) = "FromDate"
-                    params(2, 0) = "ToDate"
-
-                    params(0, 1) = orgztnID
-                    params(1, 1) = d_from
-                    params(2, 1) = d_to
-
-                    dat_tbl = callProcAsDatTab(params,
-                                               "RPT_attendance_sheet")
-
-                    printReport(dat_tbl)
-
-                End If
-
             Case ReportType.Alphalist
             Case ReportType.EmploymentRecord
             Case ReportType.SalaryHistory
@@ -211,64 +175,6 @@ Public Class ReportsList
             Case 10 'Personal Information
 
                 printEmployeeProfiles()
-            Case ReportType.PagIBIG
-                Dim n_selectMonth As New selectMonth
-
-                If n_selectMonth.ShowDialog = Windows.Forms.DialogResult.OK Then
-                    Dim params(2, 2) As Object
-
-                    params(0, 0) = "OrganizID"
-                    params(1, 0) = "paramDate"
-
-                    params(0, 1) = orgztnID
-
-                    Dim thedatevalue = Format(CDate(n_selectMonth.MonthValue), "yyyy-MM-dd")
-
-                    params(1, 1) = Format(CDate(n_selectMonth.MonthValue), "yyyy-MM-dd")
-
-                    date_from = Format(CDate(n_selectMonth.MonthValue), "MMMM  yyyy")
-
-                    Dim datatab As DataTable
-
-                    datatab = callProcAsDatTab(params,
-                                               "RPT_PAGIBIG_Monthly")
-
-                    printReport(datatab)
-
-                    datatab = Nothing
-
-                End If
-            Case ReportType.SSS
-
-                Dim n_selectMonth As New selectMonth
-
-                If n_selectMonth.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                    'MsgBox(Format(CDate(n_selectMonth.MonthValue), "MM"))
-
-                    Dim params(2, 2) As Object
-
-                    params(0, 0) = "OrganizID"
-                    params(1, 0) = "paramDate"
-
-                    params(0, 1) = orgztnID
-
-                    Dim thedatevalue = Format(CDate(n_selectMonth.MonthValue), "yyyy-MM-dd")
-
-                    params(1, 1) = Format(CDate(n_selectMonth.MonthValue), "yyyy-MM-dd")
-
-                    date_from = Format(CDate(n_selectMonth.MonthValue), "MMMM  yyyy")
-
-                    Dim datatab As DataTable
-
-                    datatab = callProcAsDatTab(params,
-                                               "RPT_SSS_Monthly")
-
-                    printReport(datatab)
-
-                    datatab = Nothing
-
-                End If
 
             Case ReportType.Tax
 
@@ -461,40 +367,6 @@ Public Class ReportsList
 
         Select Case lvi_index
 
-            Case 0 'Attendance sheet
-
-                rptdoc = New Attendance_Sheet
-
-                objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("Text14")
-
-                objText.Text = String.Concat("for the period of ", date_from, " to ", date_to)
-
-                objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
-
-                objText.Text = orgNam
-
-                objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgaddress")
-
-                objText.Text = EXECQUER(
-                    String.Concat("SELECT CONCAT_WS(', ', a.StreetAddress1, a.StreetAddress2, a.Barangay, a.CityTown, a.Country, a.State) `Result`",
-                                  " FROM organization o LEFT JOIN address a ON a.RowID = o.PrimaryAddressID",
-                                  " WHERE o.RowID=", orgztnID, ";"))
-
-                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" &
-                                        ",',',COALESCE(FaxNumber,'')" &
-                                        ",',',COALESCE(EmailAddress,'')" &
-                                        ",',',COALESCE(TINNo,''))" &
-                                        " FROM organization WHERE RowID=" & orgztnID & ";")
-
-                Dim contactdet = Split(contactdetails, ",")
-
-                objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgcontactno")
-
-                If Trim(contactdet(0).ToString) = "" Then
-                Else
-                    objText.Text = "Contact No. " & contactdet(0).ToString
-                End If
-
             Case 1 'Alpha list
 
                 ''Case 2 'Employee 13th Month Pay Report
@@ -557,25 +429,7 @@ Public Class ReportsList
 
                 ''    objText.Text = date_from
 
-            Case 11 'PAGIBIG
-
-                rptdoc = New Pagibig_Monthly_Report
-
-                objText = rptdoc.ReportDefinition.Sections(1).ReportObjects("Text2")
-
-                objText.Text = "for the month of " & date_from
-
-                InfoBalloon()
-
             Case 12 'Payroll summary
-
-            Case 14 'SSS
-
-                rptdoc = New SSS_Monthly_Report
-
-                objText = rptdoc.ReportDefinition.Sections(1).ReportObjects("Text2")
-
-                objText.Text = "for the month of " & date_from
 
             Case 15 'Tax
 
