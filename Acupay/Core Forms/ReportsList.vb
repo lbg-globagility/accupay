@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports CrystalDecisions.CrystalReports.Engine
 Imports OfficeOpenXml
+Imports Acupay.DS1
 
 Public Class ReportsList
 
@@ -33,58 +34,37 @@ Public Class ReportsList
     End Sub
 
     Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim a = New Object() {
+            "Attendance sheet",
+            "Alpha List",
+            "Employee 's Employment Record",
+            "Employee 's History of Salary Increase",
+            "Employee 's Identification Number",
+            "Employee 's Offenses",
+            "Employee 's Payroll Ledger",
+            "Employee 's 13th Month Pay Report",
+            "Employee Leave Ledger",
+            "Employee Loan Report",
+            "Employee Personal Information",
+            "PAGIBIG MOnthly Report",
+            "Payroll Summary Report",
+            New PhilHealthReportProvider(),
+            "SSS Monthly Report",
+            "Tax Monthly Report",
+            "Post Employment Clearance",
+            "Agency Fee"
+        }
 
-        'LV_Item("Attendance sheet")
+        For Each strval In a
+            If TypeOf strval Is String Then
+                LV_Item(strval)
+            ElseIf TypeOf strval Is ReportProvider Then
+                Dim provider = DirectCast(strval, ReportProvider)
+                Dim newListItem = New ListViewItem(provider.Name)
+                newListItem.Tag = provider
 
-        'LV_Item("Alpha list")
-
-        ''LV_Item("Employee's Dialect")
-
-        'LV_Item("Employee's Employment Record")
-
-        'LV_Item("Employee's History of Salary Increase")
-
-        'LV_Item("Employee's Identification Number")
-
-        'LV_Item("Employee's Offenses")
-
-        'LV_Item("Employee's Payroll Ledger")
-
-        ''LV_Item("Employee's Religion")
-
-        ''LV_Item("Employee's Spouse Information")
-
-        'LV_Item("Employee 13th Month Pay Report")
-
-        ''LV_Item("Employee Citizenship")
-
-        'LV_Item("Employee Leave Ledger")
-
-        'LV_Item("Employee Loan Report")
-
-        'LV_Item("Employee Personal Information")
-
-        ''LV_Item("Employee Skills")
-
-        'LV_Item("Loan Report")
-
-        'LV_Item("PAGIBIG Monthly Report")
-
-        'LV_Item("Payroll Summary Report")
-
-        'LV_Item("PhilHealth Monthly Report")
-
-        'LV_Item("SSS Monthly Report")
-
-        'LV_Item("Tax Monthly Report")
-
-        Dim report_list As New AutoCompleteStringCollection
-
-        enlistTheLists("SELECT DisplayValue FROM listofval WHERE `Type`='Report List' AND `Active`='Yes' ORDER BY RowID;",
-                        report_list)
-
-        For Each strval In report_list
-            LV_Item(strval)
+                lvMainMenu.Items.Add(newListItem)
+            End If
         Next
     End Sub
 
@@ -131,12 +111,7 @@ Public Class ReportsList
 
     Dim PayrollSummaChosenData As String = String.Empty
 
-    Public reportname As String = String.Empty
-
     Sub report_maker()
-
-        reportname = String.Empty
-
         PayrollSummaChosenData = String.Empty
         Dim n_listviewitem As New ListViewItem
 
@@ -151,10 +126,15 @@ Public Class ReportsList
 
         End Try
 
+        If TypeOf n_listviewitem.Tag Is ReportProvider Then
+            Dim provider = DirectCast(n_listviewitem.Tag, ReportProvider)
+            provider.Run()
+            printReport(provider)
+            Return
+        End If
+
         Dim lvi_index =
             lvMainMenu.Items.IndexOf(n_listviewitem)
-
-        reportname = n_listviewitem.Text
 
         Select Case lvi_index
             Case ReportType.AttendanceSheet
@@ -457,38 +437,6 @@ Public Class ReportsList
 
                 End If
 
-            Case ReportType.PhilHealth
-
-                Dim n_selectMonth As New selectMonth
-
-                If n_selectMonth.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                    'MsgBox(Format(CDate(n_selectMonth.MonthValue), "MM"))
-
-                    Dim params(2, 2) As Object
-
-                    params(0, 0) = "OrganizID"
-                    params(1, 0) = "paramDate"
-
-                    params(0, 1) = orgztnID
-
-                    Dim thedatevalue = Format(CDate(n_selectMonth.MonthValue), "yyyy-MM-dd")
-
-                    params(1, 1) = Format(CDate(n_selectMonth.MonthValue), "yyyy-MM-dd")
-
-                    date_from = Format(CDate(n_selectMonth.MonthValue), "MMMM  yyyy")
-
-                    Dim datatab As DataTable
-
-                    datatab = callProcAsDatTab(params,
-                                               "RPT_PhilHealth_Monthly")
-
-                    printReport(datatab)
-
-                    datatab = Nothing
-
-                End If
-
             Case ReportType.SSS
 
                 Dim n_selectMonth As New selectMonth
@@ -563,6 +511,163 @@ Public Class ReportsList
     End Sub
 
     Dim rptdt As New DataTable
+
+    Sub printReport(provider As ReportProvider)
+
+        Static once As SByte = 0
+
+        If once = 0 Then
+
+            once = 1
+
+            With rptdt.Columns
+
+                .Add("DatCol1") ', Type.GetType("System.Int32"))
+
+                .Add("DatCol2") ', Type.GetType("System.String"))
+
+                .Add("DatCol3") 'Employee Full NameS
+
+                .Add("DatCol4") 'Gross Income
+
+                .Add("DatCol5") 'Net Income
+
+                .Add("DatCol6") 'Taxable salary
+
+                .Add("DatCol7") 'Withholding Tax
+
+                .Add("DatCol8") 'Total Allowance
+
+                .Add("DatCol9") 'Total Loans
+
+                .Add("DatCol10") 'Total Bonuses
+
+                .Add("DatCol11") 'Basic Pay
+
+                .Add("DatCol12") 'SSS Amount
+
+                .Add("DatCol13") 'PhilHealth Amount
+
+                .Add("DatCol14") 'PAGIBIG Amount
+
+                .Add("DatCol15") 'Sub Total - Right side
+
+                .Add("DatCol16") 'txthrsworkamt
+
+                .Add("DatCol17") 'Regular hours worked
+
+                .Add("DatCol18") 'Regular hours amount
+
+                .Add("DatCol19") 'Overtime hours worked
+
+                .Add("DatCol20") 'Overtime hours amount
+
+                .Add("DatCol21") 'Night differential hours worked
+
+                .Add("DatCol22") 'Night differential hours amount
+
+                .Add("DatCol23") 'Night differential OT hours worked
+
+                .Add("DatCol24") 'Night differential OT hours amount
+
+                .Add("DatCol25") 'Total hours worked
+
+                .Add("DatCol26") 'Undertime hours
+
+                .Add("DatCol27") 'Undertime amount
+
+                .Add("DatCol28") 'Late hours
+
+                .Add("DatCol29") 'Late amount
+
+                .Add("DatCol30") 'Leave type
+
+                .Add("DatCol31") 'Leave count
+
+                .Add("DatCol32")
+
+                .Add("DatCol33")
+
+                .Add("DatCol34") 'Allowance type
+
+                .Add("DatCol35") 'Loan type
+
+                .Add("DatCol36") 'Bonus type
+
+                .Add("DatCol37") 'Allowance amount
+
+                .Add("DatCol38") 'Loan amount
+
+                .Add("DatCol39") 'Bonus amount
+
+                .Add("DatCol40") '
+                .Add("DatCol41") '
+                .Add("DatCol42") '
+                .Add("DatCol43") '
+                .Add("DatCol44") '
+                .Add("DatCol45") '
+                .Add("DatCol46") '
+                .Add("DatCol47") '
+                .Add("DatCol48") '
+                .Add("DatCol49") '
+
+                .Add("DatCol50") '
+                .Add("DatCol51") '
+                .Add("DatCol52") '
+                .Add("DatCol53") '
+                .Add("DatCol54") '
+                .Add("DatCol55")
+                .Add("DatCol56") '
+                .Add("DatCol57") '
+                .Add("DatCol58") '
+                .Add("DatCol59") '
+
+                .Add("DatCol60") '
+
+            End With
+        Else
+            rptdt.Rows.Clear()
+        End If
+        Dim param_dt = provider.DataTable
+
+        If param_dt IsNot Nothing Then
+            Dim n_row As DataRow
+
+            For Each drow As DataRow In param_dt.Rows
+                n_row = rptdt.NewRow
+
+                Dim ii = 0
+
+                For Each dcol As DataColumn In param_dt.Columns
+                    n_row(ii) = If(IsDBNull(drow(dcol.ColumnName)), Nothing,
+                                   drow(dcol.ColumnName))
+                    ii += 1
+                Next
+
+                rptdt.Rows.Add(n_row)
+            Next
+        End If
+
+        Dim rptdoc = provider.ReportFile
+        Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
+
+        Try
+            Dim a As DataTable = rptdt
+            rptdoc.SetDataSource(a)
+
+            Dim crvwr As New CrysRepForm
+
+            crvwr.crysrepvwr.ReportSource = rptdoc
+
+            Dim papy_string = ""
+
+            crvwr.Text = papy_string & PayrollSummaChosenData
+
+            crvwr.Show()
+        Catch ex As Exception
+
+        End Try
+    End Sub
 
     Sub printReport(Optional param_dt As DataTable = Nothing)
 
@@ -852,14 +957,6 @@ Public Class ReportsList
                     objText.Text = "Contact No. " & contactdet(0).ToString
                 End If
 
-            Case 13 'PhilHealth
-
-                rptdoc = New Phil_Health_Monthly_Report
-
-                objText = rptdoc.ReportDefinition.Sections(1).ReportObjects("Text2")
-
-                objText.Text = "for the month of " & date_from
-
             Case 14 'SSS
 
                 rptdoc = New SSS_Monthly_Report
@@ -886,7 +983,8 @@ Public Class ReportsList
 
         Try
 
-            rptdoc.SetDataSource(rptdt)
+            Dim a As DataTable = rptdt
+            rptdoc.SetDataSource(a)
 
             Dim crvwr As New CrysRepForm
 
@@ -1091,12 +1189,10 @@ Public Class ReportsList
                                        " to ",
                                       DirectCast(date_to, Date).ToShortDateString)
 
-
                     objText =
                         rptdoc.ReportDefinition.Sections(1).ReportObjects("txtOrganizationName")
 
                     objText.Text = orgNam.ToUpper
-
 
                     crvwr.crysrepvwr.ReportSource = rptdoc
 
