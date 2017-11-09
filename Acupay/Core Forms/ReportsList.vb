@@ -37,13 +37,13 @@ Public Class ReportsList
         Dim a = New Object() {
             New AttendanceSheetReportProvider(),
             "Alpha List",
-            "Employee's Employment Record",
-            "Employee's History of Salary Increase",
-            "Employee's Identification Number",
-            "Employee's Offenses",
-            "Employee's Payroll Ledger",
+            New EmploymentRecordReportProvider(),
+            New SalaryIncreaseHistoryReportProvider(),
+            New EmployeeIdentificationNumberReportProvider(),
+            New EmployeeOffenseReportProvider(),
+            New PayrollLedgerReportProvider(),
             "Employee's 13th Month Pay Report",
-            "Employee Leave Ledger",
+            New LeaveLedgerReportProvider(),
             New PagIBIGMonthlyReportProvider(),
             New LoanSummaryReportProvider(),
             New EmployeeProfilesReportProvider(),
@@ -51,8 +51,8 @@ Public Class ReportsList
             New PhilHealthReportProvider(),
             New SSSMonthlyReportProvider(),
             New TaxReportProvider(),
-            "Post Employment Clearance",
-            "Agency Fee"
+            New PostEmploymentClearanceReportProvider(),
+            New AgencyFeeReportProvider()
         }
 
         For Each strval In a
