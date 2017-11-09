@@ -19,7 +19,7 @@ Public Class ThirteenthMonthPayReportProvider
             date_to = n_PayrollSummaDateSelection.DateTostr
 
             Dim sql_print_13thmonth_pay_detailedsummary As _
-                New SQL("CALL RPT_13thmonthpay(?og_rowid, ?date_from, ?date_to);",
+                New SQL("CALL RPT_13thmonthpayDetailed(?og_rowid, ?date_from, ?date_to);",
                         New Object() {orgztnID, date_from, date_to})
 
             Try
@@ -44,7 +44,7 @@ Public Class ThirteenthMonthPayReportProvider
                     objText = DirectCast(rptdoc.ReportDefinition.Sections(1).ReportObjects("PeriodDate"), TextObject)
 
                     objText.Text =
-                        String.Concat("for the period of ",
+                        String.Concat("Salary from ",
                                       DirectCast(date_from, Date).ToShortDateString,
                                        " to ",
                                       DirectCast(date_to, Date).ToShortDateString)
