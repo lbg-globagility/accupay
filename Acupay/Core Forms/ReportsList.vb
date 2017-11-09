@@ -44,9 +44,9 @@ Public Class ReportsList
             "Employee's Payroll Ledger",
             "Employee's 13th Month Pay Report",
             "Employee Leave Ledger",
-            "Employee Loan Report",
-            "Employee Personal Information",
             New PagIBIGMonthlyReportProvider(),
+            New LoanSummaryReportProvider(),
+            New EmployeeProfilesReportProvider(),
             "Payroll Summary Report",
             New PhilHealthReportProvider(),
             New SSSMonthlyReportProvider(),
@@ -87,6 +87,10 @@ Public Class ReportsList
             End If
 
         End If
+
+    End Sub
+
+    Private Sub lvMainMenu_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvMainMenu.SelectedIndexChanged
 
     End Sub
 
@@ -168,13 +172,7 @@ Public Class ReportsList
 
                 '   Case 8 'SSS Monthly Report
 
-            Case 9 'Loan report
 
-                printLoanReports()
-
-            Case 10 'Personal Information
-
-                printEmployeeProfiles()
 
             Case ReportType.Tax
 
@@ -526,153 +524,6 @@ Public Class ReportsList
         '//wait 2 seconds to let the above command complete or the copy will still fail
         '//============================================================================
         System.Threading.Thread.Sleep(2000)
-
-    End Sub
-
-    Private Sub printEmployeeProfiles()
-
-        Dim sql_print_employee_profiles As New SQL("CALL PRINT_employee_profiles(?og_rowid);",
-                                                   New Object() {orgztnID})
-
-        Static one_value As Integer = 1
-
-        Try
-
-            Dim dt As New DataTable
-
-            dt = sql_print_employee_profiles.GetFoundRows.Tables(0)
-
-            If sql_print_employee_profiles.HasError Then
-
-                Throw sql_print_employee_profiles.ErrorException
-            Else
-
-                Static report_name As String = "EmployeeProfiles"
-
-                Static temp_path As String = Path.GetTempPath()
-
-                Static temp_file As String = String.Concat(temp_path, report_name, "Report.xlsx")
-
-                Dim newFile = New FileInfo(temp_file)
-
-                If newFile.Exists Then
-                    newFile.Delete()
-                    newFile = New FileInfo(temp_file)
-                End If
-
-                Using excl_pkg = New ExcelPackage(newFile)
-
-                    Dim worksheet As ExcelWorksheet =
-                                excl_pkg.Workbook.Worksheets.Add(report_name)
-
-                    Dim row_indx As Integer = one_value
-
-                    Dim col_index As Integer = one_value
-
-                    For Each dtcol As DataColumn In dt.Columns
-                        worksheet.Cells(row_indx, col_index).Value = dtcol.ColumnName
-                        col_index += one_value
-                    Next
-
-                    row_indx += one_value
-
-                    For Each dtrow As DataRow In dt.Rows
-
-                        Dim row_array = dtrow.ItemArray
-
-                        Dim i = 0
-
-                        For Each rowval In row_array
-
-                            Dim excl_colrow As String =
-                                        String.Concat(basic_alphabet(i),
-                                                      row_indx)
-
-                            worksheet.Cells(excl_colrow).Value = rowval
-
-                            i += one_value
-
-                        Next
-
-                        row_indx += one_value
-
-                    Next
-
-                    worksheet.Cells.AutoFitColumns(0)
-
-                    excl_pkg.Save()
-
-                End Using
-
-                Process.Start(temp_file)
-
-            End If
-        Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Me.Name))
-        End Try
-    End Sub
-
-    Private Sub printLoanReports()
-
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
-
-        If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-            Dim date_from, date_to As Object
-
-            date_from = n_PayrollSummaDateSelection.DateFromstr
-            date_to = n_PayrollSummaDateSelection.DateTostr
-
-            Dim sql_print_employee_loanreports As _
-                New SQL("CALL RPT_loans(?og_rowid, ?date_f, ?date_t, NULL);",
-                        New Object() {orgztnID, date_from, date_to})
-
-            Try
-
-                Dim dt As New DataTable
-
-                dt = sql_print_employee_loanreports.GetFoundRows.Tables(0)
-
-                If sql_print_employee_loanreports.HasError Then
-
-                    Throw sql_print_employee_loanreports.ErrorException
-                Else
-
-                    Dim rptdoc As New LoanReports
-
-                    rptdoc.SetDataSource(dt)
-
-                    Dim crvwr As New CrysRepForm
-
-                    Dim objText As TextObject = Nothing
-
-                    objText =
-                        rptdoc.ReportDefinition.Sections(1).ReportObjects("PeriodDate")
-
-                    objText.Text =
-                        String.Concat("for the period of ",
-                                      DirectCast(date_from, Date).ToShortDateString,
-                                       " to ",
-                                      DirectCast(date_to, Date).ToShortDateString)
-
-                    objText =
-                        rptdoc.ReportDefinition.Sections(1).ReportObjects("txtOrganizationName")
-
-                    objText.Text = orgNam.ToUpper
-
-                    crvwr.crysrepvwr.ReportSource = rptdoc
-
-                    crvwr.Show()
-
-                End If
-            Catch ex As Exception
-
-                MsgBox(getErrExcptn(ex, Me.Name))
-            Finally
-
-            End Try
-
-        End If
 
     End Sub
 
