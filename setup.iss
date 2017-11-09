@@ -85,6 +85,7 @@ Source: ".\Acupay\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreve
 Source: ".\Acupay\Resources\*.xlsx"; DestDir: "{app}\Resources"; Flags: ignoreversion
 
 Source: ".\Acupay\bin\Debug\EPPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\Acupay\Resources\SourceSansPro-Regular.ttf"; DestDir: "{fonts}"; FontInstall: "Source Sans Pro"; Flags: onlyifdoesntexist uninsneveruninstall
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

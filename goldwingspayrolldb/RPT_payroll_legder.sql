@@ -27,14 +27,15 @@ SELECT
     ee.RowID AS `DatCol1`,
     ee.EmployeeID AS `DatCol2`,
     CONCAT(ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) AS `DatCol3`,
-    DATE_FORMAT(ps.PayFromDate,'%m/%d/%Y') AS `DatCol4`,
-    DATE_FORMAT(ps.PayToDate,'%m/%d/%Y') AS `DatCol5`,
-    '999,999.00' AS `DatCol6`,
+    DATE_FORMAT(ps.PayFromDate, '%m/%d/%Y') AS `DatCol4`,
+    DATE_FORMAT(ps.PayToDate, '%m/%d/%Y') AS `DatCol5`,
+    ps.GrossIncome AS `DatCol6`,
     ps.TotalEmpSSS AS `DatCol7`,
     ps.TotalEmpPhilHealth AS `DatCol8`,
     ps.TotalEmpHDMF AS `DatCol9`,
-    ps.TotalAdjustments AS `DatCol10`,
-    ps.TotalNetSalary AS `DatCol11`
+    ps.TotalLoanDeductions AS `DatCol10`,
+    ps.TotalAdjustments AS `DatCol11`,
+    ps.TotalNetSalary AS `DatCol12`
 FROM paystub ps
 INNER JOIN employee ee
 ON ee.RowID = ps.EmployeeID
