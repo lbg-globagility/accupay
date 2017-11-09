@@ -29,11 +29,11 @@ SELECT
     CONCAT(ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) AS `DatCol3`,
     DATE_FORMAT(ps.PayFromDate, '%m/%d/%Y') AS `DatCol4`,
     DATE_FORMAT(ps.PayToDate, '%m/%d/%Y') AS `DatCol5`,
-    ps.GrossIncome AS `DatCol6`,
+    ps.TotalGrossSalary AS `DatCol6`,
     ps.TotalEmpSSS AS `DatCol7`,
     ps.TotalEmpPhilHealth AS `DatCol8`,
     ps.TotalEmpHDMF AS `DatCol9`,
-    ps.TotalLoanDeductions AS `DatCol10`,
+    ps.TotalLoans AS `DatCol10`,
     ps.TotalAdjustments AS `DatCol11`,
     ps.TotalNetSalary AS `DatCol12`
 FROM paystub ps
