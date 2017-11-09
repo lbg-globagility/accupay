@@ -5,9 +5,6 @@ Imports Acupay.DS1
 
 Public Class ReportsList
 
-    Private basic_alphabet =
-        New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
-
     Public listReportsForm As New List(Of String)
 
     Sub ChangeForm(ByVal Formname As Form)
@@ -42,7 +39,7 @@ Public Class ReportsList
             "Employee's Identification Number",
             "Employee's Offenses",
             "Employee's Payroll Ledger",
-            "Employee's 13th Month Pay Report",
+            New ThirteenthMonthPayReportProvider(),
             "Employee Leave Ledger",
             New LoanSummaryReportProvider(),
             New EmployeeProfilesReportProvider(),

@@ -2,10 +2,10 @@
 Imports Acupay
 Imports CrystalDecisions.CrystalReports.Engine
 
-Public Class LoanSummaryReportProvider
+Public Class ThirteenthMonthPayReportProvider
     Implements ReportProvider
 
-    Public Property Name As String = "Loan Payment Summary Report" Implements ReportProvider.Name
+    Public Property Name As String = "Employee's 13th Month Pay Report" Implements ReportProvider.Name
 
     Public Sub Run() Implements ReportProvider.Run
 
@@ -18,22 +18,22 @@ Public Class LoanSummaryReportProvider
             date_from = n_PayrollSummaDateSelection.DateFromstr
             date_to = n_PayrollSummaDateSelection.DateTostr
 
-            Dim sql_print_employee_loanreports As _
-                New SQL("CALL RPT_loans(?og_rowid, ?date_f, ?date_t, NULL);",
+            Dim sql_print_13thmonth_pay_detailedsummary As _
+                New SQL("CALL RPT_13thmonthpay(?og_rowid, ?date_from, ?date_to);",
                         New Object() {orgztnID, date_from, date_to})
 
             Try
 
                 Dim dt As New DataTable
 
-                dt = sql_print_employee_loanreports.GetFoundRows.Tables(0)
+                dt = sql_print_13thmonth_pay_detailedsummary.GetFoundRows.Tables(0)
 
-                If sql_print_employee_loanreports.HasError Then
+                If sql_print_13thmonth_pay_detailedsummary.HasError Then
 
-                    Throw sql_print_employee_loanreports.ErrorException
+                    Throw sql_print_13thmonth_pay_detailedsummary.ErrorException
                 Else
 
-                    Dim rptdoc As New LoanReports
+                    Dim rptdoc As New ThirteenthMonthPayDetailSummary
 
                     rptdoc.SetDataSource(dt)
 
