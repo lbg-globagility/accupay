@@ -14,24 +14,15 @@ DECLARE deduc_sched VARCHAR(50);
 
 SELECT PagIbigDeductionSchedule FROM organization WHERE RowID=OrganizID INTO deduc_sched;
 
-
-
-
-
-
-
-
-
 SELECT
-ee.TINNo 'TIN'
-,CONCAT(ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) AS Fullname
-,FORMAT(SUM(ps.TotalTaxableSalary),2) 'Taxable Gross'
-,FORMAT(SUM(ps.TotalEmpWithholdingTax),2) 'Tax Withheld'
-,(SELECT FORMAT(SUM(TotalTaxableSalary),2) FROM paystub WHERE EmployeeID=ps.EmployeeID AND OrganizationID=OrganizID AND PayFromDate>=MAKEDATE(YEAR(paramDateTo),1) AND PayToDate<=paramDateTo) 'Year To Date Tax Gross'
-,(SELECT FORMAT(SUM(TotalEmpWithholdingTax),2) FROM paystub WHERE EmployeeID=ps.EmployeeID AND OrganizationID=OrganizID AND PayFromDate>=MAKEDATE(YEAR(paramDateTo),1) AND PayToDate<=paramDateTo) 'Year To Date Tax Withheld'
+ee.TINNo AS `DatCol1`
+,CONCAT(ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) AS `DatCol2`
+,FORMAT(SUM(ps.TotalTaxableSalary),2) AS `DatCol3`
+,FORMAT(SUM(ps.TotalEmpWithholdingTax),2) AS `DatCol4`
+,(SELECT FORMAT(SUM(TotalTaxableSalary),2) FROM paystub WHERE EmployeeID=ps.EmployeeID AND OrganizationID=OrganizID AND PayFromDate>=MAKEDATE(YEAR(paramDateTo),1) AND PayToDate<=paramDateTo) AS `DatCol5`
+,(SELECT FORMAT(SUM(TotalEmpWithholdingTax),2) FROM paystub WHERE EmployeeID=ps.EmployeeID AND OrganizationID=OrganizID AND PayFromDate>=MAKEDATE(YEAR(paramDateTo),1) AND PayToDate<=paramDateTo) AS `DatCol6`
 FROM paystub ps
 LEFT JOIN employee ee ON ee.RowID=ps.EmployeeID AND ee.OrganizationID=ps.OrganizationID
-
 INNER JOIN product pd ON pd.OrganizationID=OrganizID AND pd.PartNo='Gross Income'
 LEFT JOIN paystubitem psi ON psi.PayStubID=ps.RowID AND psi.ProductID=pd.RowID AND psi.`Undeclared`='0'
 

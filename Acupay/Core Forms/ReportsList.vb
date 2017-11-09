@@ -50,7 +50,7 @@ Public Class ReportsList
             "Payroll Summary Report",
             New PhilHealthReportProvider(),
             New SSSMonthlyReportProvider(),
-            "Tax Monthly Report",
+            New TaxReportProvider(),
             "Post Employment Clearance",
             "Agency Fee"
         }
@@ -171,39 +171,6 @@ Public Class ReportsList
             Case 8 'Leave ledger
 
                 '   Case 8 'SSS Monthly Report
-
-
-
-            Case ReportType.Tax
-
-                Dim n_selectMonth As New selectMonth
-
-                If n_selectMonth.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                    'MsgBox(Format(CDate(n_selectMonth.MonthValue), "MM"))
-
-                    Dim params(2, 2) As Object
-
-                    params(0, 0) = "OrganizID"
-                    params(1, 0) = "paramDateFrom"
-                    params(2, 0) = "paramDateTo"
-
-                    params(0, 1) = orgztnID
-                    params(1, 1) = Format(CDate(n_selectMonth.MonthFirstDate), "yyyy-MM-dd")
-                    params(2, 1) = Format(CDate(n_selectMonth.MonthLastDate), "yyyy-MM-dd")
-
-                    date_from = Format(CDate(n_selectMonth.MonthValue), "MMMM  yyyy")
-
-                    Dim datatab As DataTable
-
-                    datatab = callProcAsDatTab(params,
-                                               "RPT_Tax_Monthly")
-
-                    printReport(datatab)
-
-                    datatab = Nothing
-
-                End If
 
             Case ReportType.PostEmploymentClearance
 
@@ -428,14 +395,6 @@ Public Class ReportsList
                 ''    objText.Text = date_from
 
             Case 12 'Payroll summary
-
-            Case 15 'Tax
-
-                rptdoc = New Tax_Monthly_Report
-
-                objText = rptdoc.ReportDefinition.Sections(1).ReportObjects("Text2")
-
-                objText.Text = "for the month of  " & date_from
 
             Case 16 'Post employement clearance
 

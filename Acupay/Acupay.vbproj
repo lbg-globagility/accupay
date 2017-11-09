@@ -320,6 +320,7 @@
     <Compile Include="Core Forms\Reports\PhilHealthReportProvider.vb" />
     <Compile Include="Core Forms\Reports\ReportProvider.vb" />
     <Compile Include="Core Forms\Reports\SSSMonthlyReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\TaxReportProvider.vb" />
     <Compile Include="Core Forms\rpt\HyundaiPayslip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
