@@ -37,16 +37,16 @@ Public Class ReportsList
         Dim a = New Object() {
             "Attendance sheet",
             "Alpha List",
-            "Employee 's Employment Record",
-            "Employee 's History of Salary Increase",
-            "Employee 's Identification Number",
-            "Employee 's Offenses",
-            "Employee 's Payroll Ledger",
-            "Employee 's 13th Month Pay Report",
+            "Employee's Employment Record",
+            "Employee's History of Salary Increase",
+            "Employee's Identification Number",
+            "Employee's Offenses",
+            "Employee's Payroll Ledger",
+            "Employee's 13th Month Pay Report",
             "Employee Leave Ledger",
             "Employee Loan Report",
             "Employee Personal Information",
-            "PAGIBIG MOnthly Report",
+            "PAGIBIG Monthly Report",
             "Payroll Summary Report",
             New PhilHealthReportProvider(),
             "SSS Monthly Report",
@@ -239,204 +239,6 @@ Public Class ReportsList
                     datatab = Nothing
 
                 End If
-            Case ReportType.PayrollSummary
-
-                Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
-
-                n_PayrollSummaDateSelection.ReportIndex = lvi_index
-
-                If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                    Dim params(4, 2) As Object
-
-                    params(0, 0) = "ps_OrganizationID"
-                    params(1, 0) = "ps_PayPeriodID1"
-                    params(2, 0) = "ps_PayPeriodID2"
-                    params(3, 0) = "psi_undeclared"
-                    params(4, 0) = "strSalaryDistrib"
-
-                    params(0, 1) = orgztnID
-                    params(1, 1) = n_PayrollSummaDateSelection.DateFromID
-                    params(2, 1) = n_PayrollSummaDateSelection.DateToID
-
-                    MessageBoxManager.OK = "Actual"
-
-                    MessageBoxManager.Cancel = "Declared"
-
-                    MessageBoxManager.Register()
-
-                    Dim custom_prompt =
-                        MessageBox.Show("Choose the payroll summary to be printed.", "Payroll Summary Data Option", MessageBoxButtons.OKCancel, MessageBoxIcon.Information)
-
-                    If custom_prompt = Windows.Forms.DialogResult.OK Then
-
-                        params(3, 1) = "1"
-
-                        PayrollSummaChosenData = " (ACTUAL)"
-                    Else
-
-                        params(3, 1) = "0"
-
-                        PayrollSummaChosenData = " (DECLARED)"
-
-                    End If
-
-                    params(4, 1) = n_PayrollSummaDateSelection.
-                                   cboStringParameter.
-                                   Text
-
-                    MessageBoxManager.Unregister()
-
-                    Dim datatab As DataTable
-
-                    datatab = callProcAsDatTab(params,
-                                               "PAYROLLSUMMARY")
-
-                    Dim AbsTardiUTNDifOTHolipay As New DataTable
-
-                    Dim paramets(4, 2) As Object
-
-                    paramets(0, 0) = "param_OrganizationID"
-                    paramets(1, 0) = "param_EmployeeRowID"
-                    paramets(2, 0) = "param_PayPeriodID1"
-                    paramets(3, 0) = "param_PayPeriodID2"
-                    paramets(4, 0) = "IsActual"
-                    paramets(0, 1) = orgztnID
-                    'paramets(1, 1) = drow("EmployeeRowID")R
-                    paramets(2, 1) = n_PayrollSummaDateSelection.DateFromID
-                    paramets(3, 1) = n_PayrollSummaDateSelection.DateToID
-                    paramets(4, 1) = params(3, 1)
-                    Dim newdatrow As DataRow
-
-                    Dim dt_result As New DataTable
-
-                    For i = 1 To 40
-                        dt_result.Columns.Add("Column" & i)
-                    Next
-
-                    For Each drow As DataRow In datatab.Rows
-
-                        newdatrow = dt_result.NewRow
-
-                        newdatrow("Column1") = If(IsDBNull(drow(17)), "None", drow(17)) 'Division
-                        newdatrow("Column2") = drow(11) 'Employee ID
-
-                        newdatrow("Column3") = drow(14) & ", " & drow(12) & If(Trim(drow(13)) = "", "", ", " & drow(13)) 'Full name
-
-                        newdatrow("Column4") = If(IsDBNull(drow(16)), "None", drow(16)) 'Position
-
-                        newdatrow("Column20") = Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "MMMM d, yyyy") &
-            If(n_PayrollSummaDateSelection.DateFromstr = Nothing, "", " to " & Format(CDate(n_PayrollSummaDateSelection.DateTostr), "MMMM d, yyyy")) 'Pay period
-
-                        newdatrow("Column21") = FormatNumber(Val(drow(0)), 2) 'Basic pay
-                        newdatrow("Column22") = FormatNumber(Val(drow(1)), 2) 'Gross income
-                        newdatrow("Column23") = FormatNumber(Val(drow(2)), 2) 'Net salary
-                        newdatrow("Column24") = FormatNumber(Val(drow(3)), 2) 'Taxable income
-                        newdatrow("Column25") = FormatNumber(Val(drow(4)), 2) 'SSS
-                        newdatrow("Column26") = FormatNumber(Val(drow(5)), 2) 'Withholding tax
-                        newdatrow("Column27") = FormatNumber(Val(drow(6)), 2) 'PhilHealth
-                        newdatrow("Column28") = FormatNumber(Val(drow(7)), 2) 'PAGIBIG
-                        newdatrow("Column29") = FormatNumber(Val(drow(8)), 2) 'Loans
-                        newdatrow("Column30") = FormatNumber(Val(drow(9)), 2) 'Bonus
-                        newdatrow("Column31") = FormatNumber(Val(drow(10)), 2) 'Allowance
-
-                        paramets(1, 1) = drow("EmployeeRowID")
-
-                        AbsTardiUTNDifOTHolipay = callProcAsDatTab(paramets,
-                                                                   "GET_AbsTardiUTNDifOTHolipay")
-
-                        Dim absentval = 0.0
-
-                        Dim tardival = 0.0
-
-                        Dim UTval = 0.0
-
-                        Dim ndiffOTval = 0.0
-
-                        Dim holidayval = 0.0
-
-                        Dim overtimeval = 0.0
-
-                        Dim ndiffval = 0.0
-
-                        For Each ddrow As DataRow In AbsTardiUTNDifOTHolipay.Rows
-
-                            If Trim(ddrow("PartNo")) = "Absent" Then
-
-                                absentval = Val(ddrow("PayAmount"))
-
-                            ElseIf Trim(ddrow("PartNo")) = "Tardiness" Then
-
-                                tardival = Val(ddrow("PayAmount"))
-
-                            ElseIf Trim(ddrow("PartNo")) = "Undertime" Then
-
-                                UTval = Val(ddrow("PayAmount"))
-
-                            ElseIf Trim(ddrow("PartNo")) = "Night differential OT" Then
-
-                                ndiffOTval = Val(ddrow("PayAmount"))
-
-                            ElseIf Trim(ddrow("PartNo")) = "Holiday pay" Then
-
-                                holidayval = Val(ddrow("PayAmount"))
-
-                            ElseIf Trim(ddrow("PartNo")) = "Overtime" Then
-
-                                overtimeval = Val(ddrow("PayAmount"))
-
-                            ElseIf Trim(ddrow("PartNo")) = "Night differential" Then
-
-                                ndiffval = Val(ddrow("PayAmount"))
-
-                            End If
-
-                        Next
-
-                        newdatrow("Column32") = FormatNumber(absentval, 2) 'Absent
-
-                        'newdatrow("Column33") = FormatNumber(tardival, 2) 'Tardiness
-
-                        'newdatrow("Column34") = FormatNumber(UTval, 2) 'Undertime
-
-                        'newdatrow("Column35") = FormatNumber(ndiffval, 2) 'Night differential
-
-                        'newdatrow("Column36") = FormatNumber(holidayval, 2) 'Holiday pay
-
-                        'newdatrow("Column37") = FormatNumber(overtimeval, 2) 'Overtime
-
-                        'newdatrow("Column38") = FormatNumber(ndiffOTval, 2) 'Night differential OT
-
-                        '***********************************************************************************
-
-                        'newdatrow("DatCol33") = FormatNumber(Val(drow("Absent")), 2) 'Tardiness
-
-                        newdatrow("Column33") = FormatNumber(Val(drow("Tardiness")), 2) 'Tardiness
-
-                        newdatrow("Column34") = FormatNumber(Val(drow("UnderTime")), 2) 'Undertime
-
-                        newdatrow("Column35") = FormatNumber(Val(drow("NightDifftl")), 2) 'Night differential
-
-                        newdatrow("Column36") = FormatNumber(Val(drow("HolidayPay")), 2) 'Holiday pay
-
-                        newdatrow("Column37") = FormatNumber(Val(drow("OverTime")), 2) 'Overtime
-
-                        newdatrow("Column38") = FormatNumber(Val(drow("NightDifftlOT")), 2) 'Night differential OT
-
-                        newdatrow("Column39") = FormatNumber(ValNoComma(drow("DatCol39")), 2) 'AGENCY FEE
-
-                        AbsTardiUTNDifOTHolipay = Nothing
-
-                        dt_result.Rows.Add(newdatrow)
-
-                    Next
-
-                    printReport(dt_result)
-
-                    dt_result = Nothing
-
-                End If
-
             Case ReportType.SSS
 
                 Dim n_selectMonth As New selectMonth
@@ -924,38 +726,6 @@ Public Class ReportsList
                 InfoBalloon()
 
             Case 12 'Payroll summary
-
-                rptdoc = New PayrollSumma 'PayrollSumaryRpt
-
-                objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
-
-                objText.Text = orgNam
-
-                objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgaddress")
-
-                objText.Text = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" &
-                                            ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" &
-                                            ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" &
-                                            ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" &
-                                            ",IF(Country IS NULL,'',CONCAT(', ',Country))" &
-                                            ",IF(State IS NULL,'',CONCAT(', ',State)))" &
-                                            " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" &
-                                            " WHERE o.RowID=" & orgztnID & ";")
-
-                Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" &
-                                        ",',',COALESCE(FaxNumber,'')" &
-                                        ",',',COALESCE(EmailAddress,'')" &
-                                        ",',',COALESCE(TINNo,''))" &
-                                        " FROM organization WHERE RowID=" & orgztnID & ";")
-
-                Dim contactdet = Split(contactdetails, ",")
-
-                objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgcontactno")
-
-                If Trim(contactdet(0).ToString) = "" Then
-                Else
-                    objText.Text = "Contact No. " & contactdet(0).ToString
-                End If
 
             Case 14 'SSS
 
