@@ -44,7 +44,7 @@ Public Class ThirteenthMonthPayReportProvider
                     objText = DirectCast(rptdoc.ReportDefinition.Sections(1).ReportObjects("PeriodDate"), TextObject)
 
                     objText.Text =
-                        String.Concat("for the period of ",
+                        String.Concat("Salary from ",
                                       DirectCast(date_from, Date).ToShortDateString,
                                        " to ",
                                       DirectCast(date_to, Date).ToShortDateString)
