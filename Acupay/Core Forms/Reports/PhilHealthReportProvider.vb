@@ -7,10 +7,6 @@ Public Class PhilHealthReportProvider
 
     Public Property Name As String = "PhilHealth Monthly Report" Implements ReportProvider.Name
 
-    Public Property DataTable As DataTable Implements ReportProvider.DataTable
-
-    Public Property ReportFile As Object Implements ReportProvider.ReportFile
-
     Private Sub Run() Implements ReportProvider.Run
         Dim n_selectMonth As New selectMonth
 
@@ -26,13 +22,17 @@ Public Class PhilHealthReportProvider
 
         Dim date_from = Format(CDate(n_selectMonth.MonthValue), "MMMM  yyyy")
 
-        DataTable = DirectCast(callProcAsDatTab(params, "RPT_PhilHealth_Monthly"), DataTable)
+        Dim data = DirectCast(callProcAsDatTab(params, "RPT_PhilHealth_Monthly"), DataTable)
 
         Dim philHealthReport = New Phil_Health_Monthly_Report
         Dim objText As TextObject = DirectCast(philHealthReport.ReportDefinition.Sections(1).ReportObjects("Text2"), TextObject)
         objText.Text = "For the month of " & date_from
+        philHealthReport.SetDataSource(data)
 
-        ReportFile = philHealthReport
+        Dim crvwr As New CrysRepForm
+        crvwr.crysrepvwr.ReportSource = philHealthReport
+
+        crvwr.Show()
     End Sub
 
 End Class
