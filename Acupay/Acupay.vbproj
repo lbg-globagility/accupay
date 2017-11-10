@@ -329,6 +329,13 @@
     <Compile Include="Core Forms\Reports\SalaryIncreaseHistoryReportProvider.vb" />
     <Compile Include="Core Forms\Reports\SSSMonthlyReportProvider.vb" />
     <Compile Include="Core Forms\Reports\TaxReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\ThirteenthMonthSummary.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ThirteenthMonthSummary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Reports\ThirteenthMonthSummaryReportProvider.vb" />
     <Compile Include="Core Forms\rpt\HyundaiPayslip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1361,6 +1368,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Reports\ThirteenthMonthSummary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ThirteenthMonthSummary.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

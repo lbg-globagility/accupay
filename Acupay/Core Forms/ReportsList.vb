@@ -17,6 +17,7 @@ Public Class ReportsList
             New LeaveLedgerReportProvider(),
             New PagIBIGMonthlyReportProvider(),
             New ThirteenthMonthPayReportProvider(),
+            New ThirteenthMonthSummaryReportProvider(),
             New LoanSummaryReportProvider(),
             New EmployeeProfilesReportProvider(),
             New PhilHealthReportProvider(),
