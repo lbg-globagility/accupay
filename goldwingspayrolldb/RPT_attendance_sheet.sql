@@ -10,21 +10,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_attendance_sheet`(IN `Organizat
     DETERMINISTIC
 BEGIN
 
-SELECT CONCAT_WS(' / ', ee.EmployeeID, CONCAT_WS(',', ee.LastName, ee.FirstName, INITIALS(ee.MiddleName,'. ','1'))) AS Fullname
-, UCASE(SUBSTRING(DATE_FORMAT(ete.Date,'%W'),1,3)) 'DayText'
-, DATE_FORMAT(ete.Date,'%m/%e/%y') 'Date'
-, IFNULL(CONCAT(TIME_FORMAT(sh.TimeFrom,'%l'), IF(TIME_FORMAT(sh.TimeFrom,'%i') > 0, CONCAT(':', TIME_FORMAT(sh.TimeFrom,'%i')),''),'to', TIME_FORMAT(sh.TimeTo,'%l'), IF(TIME_FORMAT(sh.TimeTo,'%i') > 0, CONCAT(':', TIME_FORMAT(sh.TimeTo,'%i')),'')),'') 'Shift'
-,REPLACE(TIME_FORMAT(etd.TimeIn,'%l:%i %p'),'M','') 'TimeIn'
-,'' AS BOut
-,'' AS BIn
-,REPLACE(TIME_FORMAT(etd.TimeOut,'%l:%i %p'),'M','') 'TimeOut'
-, IFNULL(ete.RegularHoursWorked,0) 'TotalHoursWorked' # TotalHoursWorked
-, IFNULL(ete.HoursLate,0) 'HoursLate'
-, IFNULL(ete.UndertimeHours,0) 'UndertimeHours'
-, IFNULL(ete.NightDifferentialHours,0) 'NightDifferentialHours'
-, IFNULL(ete.OvertimeHoursWorked,0) 'OvertimeHoursWorked'
-, IFNULL(ete.NightDifferentialOTHours,0) 'NightDifferentialOTHours'
-,etd.TimeScheduleType
+SELECT
+CONCAT_WS(' / ', ee.EmployeeID, CONCAT_WS(',', ee.LastName, ee.FirstName, INITIALS(ee.MiddleName,'. ','1'))) `DatCol1`
+, UCASE(SUBSTRING(DATE_FORMAT(ete.Date,'%W'),1,3)) `DatCol2`
+, DATE_FORMAT(ete.Date,'%m/%e/%y') `DatCol3`
+, IFNULL(CONCAT(TIME_FORMAT(sh.TimeFrom,'%l'), IF(TIME_FORMAT(sh.TimeFrom,'%i') > 0, CONCAT(':', TIME_FORMAT(sh.TimeFrom,'%i')),''),'to', TIME_FORMAT(sh.TimeTo,'%l'), IF(TIME_FORMAT(sh.TimeTo,'%i') > 0, CONCAT(':', TIME_FORMAT(sh.TimeTo,'%i')),'')),'') `DatCol4`
+,REPLACE(TIME_FORMAT(etd.TimeIn,'%l:%i %p'),'M','') `DatCol5`
+,'' AS `DatCol6`
+,'' AS `DatCol7`
+,REPLACE(TIME_FORMAT(etd.TimeOut,'%l:%i %p'),'M','') `DatCol8`
+, IFNULL(ete.RegularHoursWorked,0) `DatCol9`
+, IFNULL(ete.HoursLate,0) `DatCol10`
+, IFNULL(ete.UndertimeHours,0) `DatCol11`
+, IFNULL(ete.NightDifferentialHours,0) `DatCol12`
+, IFNULL(ete.OvertimeHoursWorked,0) `DatCol13`
+, IFNULL(ete.NightDifferentialOTHours,0) `DatCol14`
+,etd.TimeScheduleType `DatCol15`
 FROM employeetimeentry ete
 LEFT JOIN employeeshift esh ON esh.RowID=ete.EmployeeShiftID
 LEFT JOIN shift sh ON sh.RowID=esh.ShiftID
