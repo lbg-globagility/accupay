@@ -61,7 +61,12 @@ Public Class ReportsList
 
         If TypeOf n_listviewitem.Tag Is ReportProvider Then
             Dim provider = DirectCast(n_listviewitem.Tag, ReportProvider)
-            provider.Run()
+
+            Try
+                provider.Run()
+            Catch ex As NotImplementedException
+                MsgBox($"Report Is Not Yet Done: {ex.Message}", MsgBoxStyle.OkOnly)
+            End Try
         End If
     End Sub
 
