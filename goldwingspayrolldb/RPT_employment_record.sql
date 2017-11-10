@@ -10,20 +10,28 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_employment_record`(IN `Organiza
     DETERMINISTIC
 BEGIN
 
+DECLARE custom_dateformat VARCHAR(50) DEFAULT '%c/%e/%Y';
+
 SELECT
-ee.EmployeeID
-,CONCAT(ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) 'Fullname'
-,epe.Name
-,epe.JobTitle
-,DATE_FORMAT((SELECT IF(LOCATE('@',ExperienceFromTo) > 0, SUBSTRING_INDEX(ExperienceFromTo, '@', 1), ExperienceFromTo) FROM employeepreviousemployer WHERE RowID=epe.RowID),'%b %e, %Y') AS ExperienceFrom
-,DATE_FORMAT((SELECT IF(LOCATE('@',ExperienceFromTo) > 0, REVERSE(SUBSTRING_INDEX(REVERSE(ExperienceFromTo), '@', 1)), ExperienceFromTo) FROM employeepreviousemployer WHERE RowID=epe.RowID),'%b %e, %Y') AS ExperienceTo
-FROM employeepreviousemployer epe
-LEFT JOIN employee ee ON ee.RowID=epe.EmployeeID
-WHERE epe.OrganizationID=OrganizatID
-ORDER BY ee.LastName,ExperienceTo DESC;
+e.EmployeeID `DatCol1`
+,CONCAT_WS(', ', e.LastName, e.FirstName, e.MiddleName) `DatCol2`
+,pe.Name `DatCol3`
+,pe.JobFunction `DatCol4`
 
+,(@date_from := SUBSTRING_INDEX(pe.ExperienceFromTo, '@', 1))
+,(@date_to := SUBSTRING_INDEX(pe.ExperienceFromTo, '@', -1))
 
+,DATE_FORMAT(@date_from, custom_dateformat) `DatCol5`
+,DATE_FORMAT(@date_to, custom_dateformat) `DatCol6`
 
+FROM employeepreviousemployer pe
+INNER JOIN employee e
+        ON e.RowID=pe.EmployeeID AND e.OrganizationID=pe.OrganizationID
+WHERE pe.OrganizationID=OrganizatID
+ORDER BY CONCAT(e.LastName, e.FirstName)
+         ,STR_TO_DATE(@date_from, @@date_format) DESC
+         ,STR_TO_DATE(@date_to, @@date_format) DESC
+;
 
 END//
 DELIMITER ;
