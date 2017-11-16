@@ -313,29 +313,30 @@
     <Compile Include="Core Forms\OffSetting.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\AgencyFeeReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\EmployeeIdentificationNumberReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\EmployeeOffenseReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\EmploymentRecordReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\LeaveLedgerReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\LoanSummaryReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\EmployeeProfilesReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\AttendanceSheetReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\PagIBIGMonthlyReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\PayrollLedgerReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\PhilHealthReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\PostEmploymentClearanceReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\ReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\SalaryIncreaseHistoryReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\SSSMonthlyReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\TaxReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\AgencyFeeReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\AttendanceSheetReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\EmployeeIdentificationNumberReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\EmployeeOffenseReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\EmployeeProfilesReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\EmploymentRecordReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\LeaveLedgerReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\LoanSummaryByTypeReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\LoanSummaryReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\PagIBIGMonthlyReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\PayrollLedgerReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\PhilHealthReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\PostEmploymentClearanceReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\ReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\SalaryIncreaseHistoryReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\SSSMonthlyReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\TaxReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\ThirteenthMonthSummaryReportProvider.vb" />
     <Compile Include="Core Forms\Reports\ThirteenthMonthSummary.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ThirteenthMonthSummary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\ThirteenthMonthSummaryReportProvider.vb" />
     <Compile Include="Core Forms\rpt\HyundaiPayslip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
