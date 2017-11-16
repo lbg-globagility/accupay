@@ -6,23 +6,23 @@
 
 DROP PROCEDURE IF EXISTS `RPT_LoansByType`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_LoansByType`(IN `OrganizID` INT, IN `PayDateFrom` DATE, IN `PayDateTo` DATE, IN `LoanTypeID` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_LoansByType`(IN `OrganizID` INT, IN `PayDateFrom` DATE, IN `PayDateTo` DATE)
     DETERMINISTIC
 BEGIN
 
 SELECT
-    p.PartNo 'Comments',
-    ee.EmployeeID,
+    p.PartNo `DatCol1`,
+    ee.EmployeeID `DatCol2`,
     CONCAT(
         ee.LastName,
         ',',
         ee.FirstName,
         IF(ee.MiddleName = '', '', ','),
         INITIALS(ee.MiddleName, '. ', '1')
-    ) 'Fullname',
-    FORMAT(SUM(IFNULL(slp.DeductionAmount, 0)), 2) 'DeductionAmount',
-    FORMAT(els.TotalLoanAmount, 2),
-    FORMAT(els.TotalBalanceLeft, 2)
+    ) `DatCol3`,
+    FORMAT(SUM(IFNULL(slp.DeductionAmount, 0)), 2) `DatCol4`,
+    FORMAT(els.TotalLoanAmount, 2) `DatCol5`,
+    FORMAT(els.TotalBalanceLeft, 2) `DatCol6`
 FROM scheduledloansperpayperiod slp
 INNER JOIN employeeloanschedule els
 ON els.RowID = slp.EmployeeLoanRecordID
