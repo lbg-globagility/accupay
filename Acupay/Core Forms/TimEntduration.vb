@@ -385,7 +385,7 @@ Public Class TimEntduration
 
             If IsDBNull(cboxDivisions.Tag) Then
                 sql = ($"
-                    Select Case EXISTS(
+                    SELECT EXISTS(
                         SELECT etd.RowID
                         FROM employeetimeentrydetails etd
                         INNER JOIN employee e ON e.RowID=etd.EmployeeID AND e.OrganizationID=etd.OrganizationID
