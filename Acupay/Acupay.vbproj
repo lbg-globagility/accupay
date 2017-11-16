@@ -313,6 +313,12 @@
     <Compile Include="Core Forms\OffSetting.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\Reports\LoanReportByType.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoanReportByType.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Core Forms\Reports\Providers\AgencyFeeReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\AttendanceSheetReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\EmployeeIdentificationNumberReportProvider.vb" />
@@ -1369,6 +1375,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Reports\LoanReportByType.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LoanReportByType.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Reports\ThirteenthMonthSummary.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
