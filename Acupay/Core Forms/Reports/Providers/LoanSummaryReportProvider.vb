@@ -3,11 +3,11 @@ Imports Acupay
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class LoanSummaryReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Loan Payment Summary Report" Implements ReportProvider.Name
+    Public Property Name As String = "Loan Payment Summary Report" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
 
         Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
 

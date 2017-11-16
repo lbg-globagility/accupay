@@ -1,13 +1,10 @@
 ﻿Imports System.Collections.ObjectModel
-Imports System.IO
 Imports CrystalDecisions.CrystalReports.Engine
-Imports OfficeOpenXml
-Imports Acupay.DS1
 
 Public Class ReportsList
 
     Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim providers = New Collection(Of ReportProvider) From {
+        Dim providers = New Collection(Of IReportProvider) From {
             New AttendanceSheetReportProvider(),
             New SalaryIncreaseHistoryReportProvider(),
             New EmploymentRecordReportProvider(),
@@ -60,8 +57,8 @@ Public Class ReportsList
             Exit Sub
         End Try
 
-        If TypeOf n_listviewitem.Tag Is ReportProvider Then
-            Dim provider = DirectCast(n_listviewitem.Tag, ReportProvider)
+        If TypeOf n_listviewitem.Tag Is IReportProvider Then
+            Dim provider = DirectCast(n_listviewitem.Tag, IReportProvider)
 
             Try
                 provider.Run()

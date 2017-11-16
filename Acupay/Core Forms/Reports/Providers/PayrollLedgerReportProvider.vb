@@ -1,11 +1,11 @@
 ﻿Option Strict On
 
 Public Class PayrollLedgerReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Payroll Ledger" Implements ReportProvider.Name
+    Public Property Name As String = "Payroll Ledger" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
         Dim payperiodSelector = New PayrollSummaDateSelection()
 
         If Not payperiodSelector.ShowDialog() = DialogResult.OK Then

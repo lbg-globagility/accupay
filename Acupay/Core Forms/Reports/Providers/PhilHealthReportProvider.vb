@@ -3,11 +3,11 @@
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class PhilHealthReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "PhilHealth Monthly Report" Implements ReportProvider.Name
+    Public Property Name As String = "PhilHealth Monthly Report" Implements IReportProvider.Name
 
-    Private Sub Run() Implements ReportProvider.Run
+    Private Sub Run() Implements IReportProvider.Run
         Dim n_selectMonth As New selectMonth
 
         If Not n_selectMonth.ShowDialog = Windows.Forms.DialogResult.OK Then

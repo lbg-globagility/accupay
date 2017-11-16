@@ -1,11 +1,11 @@
 ﻿Imports Acupay
 
 Public Class AgencyFeeReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Agency Fee" Implements ReportProvider.Name
+    Public Property Name As String = "Agency Fee" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
         Throw New NotImplementedException()
     End Sub
 

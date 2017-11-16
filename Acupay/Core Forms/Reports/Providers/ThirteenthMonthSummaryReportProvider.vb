@@ -1,11 +1,11 @@
 ﻿Option Strict On
 
 Public Class ThirteenthMonthSummaryReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Thirteenth Month Summary" Implements ReportProvider.Name
+    Public Property Name As String = "Thirteenth Month Summary" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
         Dim promptYear = New promptyear()
 
         If Not promptYear.ShowDialog = Windows.Forms.DialogResult.OK Then

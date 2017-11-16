@@ -1,4 +1,4 @@
-﻿Public Interface ReportProvider
+﻿Public Interface IReportProvider
 
     Property Name As String
 

@@ -1,11 +1,11 @@
 ﻿Imports Acupay
 
 Public Class EmployeeIdentificationNumberReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Employee's Identification Number" Implements ReportProvider.Name
+    Public Property Name As String = "Employee's Identification Number" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
         Throw New NotImplementedException()
     End Sub
 

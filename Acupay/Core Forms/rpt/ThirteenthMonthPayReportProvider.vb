@@ -3,11 +3,11 @@ Imports Acupay
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class ThirteenthMonthPayReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Employee's 13th Month Pay Report" Implements ReportProvider.Name
+    Public Property Name As String = "Employee's 13th Month Pay Report" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
 
         Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
 

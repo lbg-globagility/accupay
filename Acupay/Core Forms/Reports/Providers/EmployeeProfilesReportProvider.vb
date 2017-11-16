@@ -4,14 +4,14 @@ Imports CrystalDecisions.CrystalReports.Engine
 Imports OfficeOpenXml
 
 Public Class EmployeeProfilesReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Employee Personal Information" Implements ReportProvider.Name
+    Public Property Name As String = "Employee Personal Information" Implements IReportProvider.Name
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
 
         Dim sql_print_employee_profiles As New SQL("CALL PRINT_employee_profiles(?og_rowid);",
                                                    New Object() {orgztnID})

@@ -3,11 +3,11 @@
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class LoanSummaryByTypeReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Loan Summary by Type" Implements ReportProvider.Name
+    Public Property Name As String = "Loan Summary by Type" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
         Dim dateSelector As New PayrollSummaDateSelection
 
         If Not dateSelector.ShowDialog = Windows.Forms.DialogResult.OK Then

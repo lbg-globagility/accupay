@@ -1,11 +1,11 @@
 ﻿Imports Acupay
 
 Public Class EmploymentRecordReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Employees' Employment Record" Implements ReportProvider.Name
+    Public Property Name As String = "Employees' Employment Record" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
 
         Dim sql_print_employment_history As _
             New SQL("CALL RPT_employment_record(?og_rowid);",

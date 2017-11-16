@@ -3,11 +3,11 @@
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class SSSMonthlyReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "SSS Monthly Report" Implements ReportProvider.Name
+    Public Property Name As String = "SSS Monthly Report" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
 
         Dim n_selectMonth As New selectMonth
 

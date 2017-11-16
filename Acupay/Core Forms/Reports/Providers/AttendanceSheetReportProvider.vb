@@ -3,11 +3,11 @@
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class AttendanceSheetReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Attendance Sheet" Implements ReportProvider.Name
+    Public Property Name As String = "Attendance Sheet" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
         Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
 
         If Not n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then

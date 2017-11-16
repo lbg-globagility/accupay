@@ -3,11 +3,11 @@
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class SalaryIncreaseHistoryReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Salary Increase History" Implements ReportProvider.Name
+    Public Property Name As String = "Salary Increase History" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
         Dim payPeriodSelector As New PayrollSummaDateSelection()
 
         If Not payPeriodSelector.ShowDialog = Windows.Forms.DialogResult.OK Then

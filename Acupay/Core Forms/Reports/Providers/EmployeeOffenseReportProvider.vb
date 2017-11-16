@@ -3,11 +3,11 @@
 Imports Acupay
 
 Public Class EmployeeOffenseReportProvider
-    Implements ReportProvider
+    Implements IReportProvider
 
-    Public Property Name As String = "Employee Offenses" Implements ReportProvider.Name
+    Public Property Name As String = "Employee Offenses" Implements IReportProvider.Name
 
-    Public Sub Run() Implements ReportProvider.Run
+    Public Sub Run() Implements IReportProvider.Run
         Throw New NotImplementedException()
     End Sub
 
