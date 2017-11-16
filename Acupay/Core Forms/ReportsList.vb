@@ -28,24 +28,23 @@ Public Class ReportsList
             New AgencyFeeReportProvider()
         }
 
-        Using file = New StreamReader("./reports.xml")
-            Dim document = New XPathDocument(file)
-            Dim nav = document.CreateNavigator()
+        For Each provider In providers
+            Dim dataTable = New SqlToDataTable($"
+                SELECT l.DisplayValue
+                FROM listofval l
+                WHERE l.`Type` = 'ReportProviders'
+            ").Read()
 
-            For Each provider In providers
-                Dim type = provider.GetType().Name
+            Dim type = provider.GetType().Name
+            Dim found = dataTable.Select($"DisplayValue = '{type}'").Count >= 1
 
-                Dim xpath = $"/reports/report[@name='{type}']/@enabled"
-                Dim enabled = Boolean.Parse(nav.SelectSingleNode(xpath).Value)
+            If found Then
+                Dim newListItem = New ListViewItem(provider.Name)
+                newListItem.Tag = provider
 
-                If enabled Then
-                    Dim newListItem = New ListViewItem(provider.Name)
-                    newListItem.Tag = provider
-
-                    lvMainMenu.Items.Add(newListItem)
-                End If
-            Next
-        End Using
+                lvMainMenu.Items.Add(newListItem)
+            End If
+        Next
     End Sub
 
     Private Sub lvMainMenu_KeyDown(sender As Object, e As KeyEventArgs) Handles lvMainMenu.KeyDown
