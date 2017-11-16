@@ -1331,6 +1331,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo - Copy.ico" />
+    <Content Include="reports.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Auditing\Forms\TimeLogForm.resx">
       <DependentUpon>TimeLogForm.vb</DependentUpon>
     </EmbeddedResource>

@@ -1,5 +1,8 @@
-﻿Imports System.Collections.ObjectModel
+﻿Imports System.Xml.XPath
+Imports System.Collections.ObjectModel
 Imports CrystalDecisions.CrystalReports.Engine
+Imports System.IO
+Imports System.Text.RegularExpressions
 
 Public Class ReportsList
 
@@ -25,12 +28,24 @@ Public Class ReportsList
             New AgencyFeeReportProvider()
         }
 
-        For Each provider In providers
-            Dim newListItem = New ListViewItem(provider.Name)
-            newListItem.Tag = provider
+        Using file = New StreamReader("./reports.xml")
+            Dim document = New XPathDocument(file)
+            Dim nav = document.CreateNavigator()
 
-            lvMainMenu.Items.Add(newListItem)
-        Next
+            For Each provider In providers
+                Dim type = provider.GetType().Name
+
+                Dim xpath = $"/reports/report[@name='{type}']/@enabled"
+                Dim enabled = Boolean.Parse(nav.SelectSingleNode(xpath).Value)
+
+                If enabled Then
+                    Dim newListItem = New ListViewItem(provider.Name)
+                    newListItem.Tag = provider
+
+                    lvMainMenu.Items.Add(newListItem)
+                End If
+            Next
+        End Using
     End Sub
 
     Private Sub lvMainMenu_KeyDown(sender As Object, e As KeyEventArgs) Handles lvMainMenu.KeyDown

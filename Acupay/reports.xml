@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<reports>
+  <report name="AttendanceSheetReportProvider" enabled="true" />
+  <report name="SalaryIncreaseHistoryReportProvider" enabled="true" />
+  <report name="EmploymentRecordReportProvider" enabled="true" />
+  <report name="EmployeeIdentificationNumberReportProvider" enabled="true" />
+  <report name="EmployeeOffenseReportProvider" enabled="true" />
+  <report name="PayrollLedgerReportProvider" enabled="true" />
+  <report name="LeaveLedgerReportProvider" enabled="true" />
+  <report name="PagIBIGMonthlyReportProvider" enabled="true" />
+  <report name="ThirteenthMonthPayReportProvider" enabled="true" />
+  <report name="ThirteenthMonthSummaryReportProvider" enabled="true" />
+  <report name="LoanSummaryReportProvider" enabled="true" />
+  <report name="LoanSummaryByTypeReportProvider" enabled="true" />
+  <report name="EmployeeProfilesReportProvider" enabled="true" />
+  <report name="PhilHealthReportProvider" enabled="true" />
+  <report name="SSSMonthlyReportProvider" enabled="true" />
+  <report name="TaxReportProvider" enabled="true" />
+  <report name="PostEmploymentClearanceReportProvider" enabled="true" />
+  <report name="AgencyFeeReportProvider" enabled="true" />
+</reports>
