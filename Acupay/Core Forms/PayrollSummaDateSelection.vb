@@ -1,26 +1,26 @@
 ﻿Public Class PayrollSummaDateSelection
 
-    Public Property ReportIndex As Object
+    Public Property ReportIndex As Integer
 
-    Public ReadOnly Property DateFromID As Object
+    Public ReadOnly Property PayPeriodFromID As Integer?
         Get
             Return If(_payPeriodFrom Is Nothing, _payPeriodTo?.RowID, _payPeriodFrom.RowID)
         End Get
     End Property
 
-    Public ReadOnly Property DateToID As Object
+    Public ReadOnly Property PayPeriodToID As Integer?
         Get
             Return If(_payPeriodTo Is Nothing, _payPeriodFrom?.RowID, _payPeriodTo.RowID)
         End Get
     End Property
 
-    Public ReadOnly Property DateFromstr As Object
+    Public ReadOnly Property DateFrom As Date?
         Get
             Return If(_payPeriodFrom Is Nothing, _payPeriodTo?.DateFrom, _payPeriodFrom.DateFrom)
         End Get
     End Property
 
-    Public ReadOnly Property DateTostr As Object
+    Public ReadOnly Property DateTo As Date?
         Get
             Return If(_payPeriodTo Is Nothing, _payPeriodFrom?.DateTo, _payPeriodTo.DateTo)
         End Get
@@ -72,7 +72,7 @@
     End Sub
 
     '**********************
-    Dim yearnow = CDate(dbnow).Year
+    Dim yearnow As Integer = CDate(dbnow).Year
 
     Private Sub PayrollSummaDateSelection_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         linkPrev.Text = "← " & (yearnow - 1)
@@ -92,7 +92,7 @@
         params(3, 0) = "PayFreqType"
 
         params(0, 1) = orgztnID
-        params(1, 1) = If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01")
+        params(1, 1) = If(param_Date Is Nothing, DBNull.Value, param_Date & "-01-01")
         params(2, 1) = "1"
         params(3, 1) = PayFreqType
 
@@ -116,20 +116,20 @@
         End If
 
         Dim payPeriod = New PayPeriod() With {
-            .RowID = dgvpayperiod.Item("Column4", rowIdx).Value,
+            .RowID = ConvertToType(Of Integer?)(dgvpayperiod.Item("Column4", rowIdx).Value),
             .DateFrom = CDate(dgvpayperiod.Item("Column2", rowIdx).Value),
             .DateTo = CDate(dgvpayperiod.Item("Column3", rowIdx).Value)
         }
 
         Dim checkBox = dgvpayperiod.Item("Column1", rowIdx)
-        If checkBox.Value = False Then
+        If CBool(checkBox.Value) = False Then
             DeselectPayPeriod(payPeriod)
         Else
             SelectPayPeriod(payPeriod, rowIdx)
         End If
 
-        DateFromLabel.Text = If(DateFromstr Is Nothing, String.Empty, CDate(DateFromstr).ToString("MMMM d, yyyy"))
-        DateToLabel.Text = If(DateTostr Is Nothing, String.Empty, CDate(DateTostr).ToString("MMMM d, yyyy"))
+        DateFromLabel.Text = If(DateFrom Is Nothing, String.Empty, CDate(DateFrom).ToString("MMMM d, yyyy"))
+        DateToLabel.Text = If(DateTo Is Nothing, String.Empty, CDate(DateTo).ToString("MMMM d, yyyy"))
     End Sub
 
     Private Sub DeselectPayPeriod(payPeriod As PayPeriod)
@@ -162,13 +162,13 @@
         End If
     End Sub
 
-    Dim numofweekdays = 0
+    Dim numofweekdays As Integer = 0
 
-    Dim numofweekends = 0
+    Dim numofweekends As Integer = 0
 
-    Dim paypFrom = Nothing
+    Dim paypFrom As Object = Nothing
 
-    Dim paypTo = Nothing
+    Dim paypTo As Object = Nothing
 
     Private Sub dgvpayperiod_SelectionChanged(sender As Object, e As EventArgs) Handles dgvpayperiod.SelectionChanged
         If dgvpayperiod.RowCount <> 0 Then
@@ -215,13 +215,13 @@
         Dim sel_tab_pg = TabControl1.SelectedTab
         VIEW_payp(yearnow, sel_tab_pg.Text.Trim)
 
-        dgvpayperiod.EndEdit(True)
+        dgvpayperiod.EndEdit()
     End Sub
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
-        dgvpayperiod.EndEdit(True)
+        dgvpayperiod.EndEdit()
 
-        If DateFromID = Nothing Then
+        If PayPeriodFromID Is Nothing Then
             Exit Sub
         ElseIf cboStringParameter.Visible Then
             If cboStringParameter.Text = String.Empty Then
@@ -261,9 +261,9 @@
         End If
     End Sub
 
-    Dim DefaultFontStyle = New System.Drawing.Font("Segoe UI Semibold", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim DefaultFontStyle As Font = New System.Drawing.Font("Segoe UI Semibold", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
-    Dim faultFontStyle = New System.Drawing.Font("Segoe UI Semilight", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim faultFontStyle As Font = New System.Drawing.Font("Segoe UI Semilight", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
     Private Sub SemiMonthlyTab_Enter(sender As Object, e As EventArgs) Handles SemiMonthlyTab.Enter
         VIEW_payp(, SemiMonthlyTab.Text.Trim)
@@ -286,7 +286,7 @@
                 Return False
             End If
 
-            Return DirectCast(obj, PayPeriod)?.RowID = RowID
+            Return CBool(DirectCast(obj, PayPeriod)?.RowID = RowID)
         End Function
 
     End Class

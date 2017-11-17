@@ -15,8 +15,8 @@ Public Class LoanSummaryReportProvider
 
             Dim date_from, date_to As Object
 
-            date_from = n_PayrollSummaDateSelection.DateFromstr
-            date_to = n_PayrollSummaDateSelection.DateTostr
+            date_from = n_PayrollSummaDateSelection.DateFrom
+            date_to = n_PayrollSummaDateSelection.DateTo
 
             Dim sql_print_employee_loanreports As _
                 New SQL("CALL RPT_loans(?og_rowid, ?date_f, ?date_t, NULL);",

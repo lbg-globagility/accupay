@@ -2330,8 +2330,8 @@ Public Class PayStub
                 Dim str_saldistrib As String = n_PayrollSummaDateSelection.cboStringParameter.Text
 
                 Dim param_array = New Object() {orgztnID,
-                                                n_PayrollSummaDateSelection.DateFromID,
-                                                n_PayrollSummaDateSelection.DateToID,
+                                                n_PayrollSummaDateSelection.PayPeriodFromID,
+                                                n_PayrollSummaDateSelection.PayPeriodToID,
                                                 Convert.ToInt16(is_actual),
                                                 str_saldistrib}
 
@@ -2356,8 +2356,8 @@ Public Class PayStub
 
                     Dim papy_string = ""
 
-                    papy_string = "for the period of " & Format(CDate(n_PayrollSummaDateSelection.DateFromstr), machineShortDateFormat) &
-                        If(paypTo = Nothing, "", " to " & Format(CDate(n_PayrollSummaDateSelection.DateTostr), machineShortDateFormat))
+                    papy_string = "for the period of " & Format(CDate(n_PayrollSummaDateSelection.DateFrom), machineShortDateFormat) &
+                        If(paypTo = Nothing, "", " to " & Format(CDate(n_PayrollSummaDateSelection.DateTo), machineShortDateFormat))
 
                     Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
 
@@ -3132,7 +3132,6 @@ Public Class PayStub
                     Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
                     lblSubtotal.Text = FormatNumber(all_regular + ValNoComma(drow("HolidayPay")), 2)
                 End If
-
             Else
                 lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
             End If
@@ -3562,7 +3561,6 @@ Public Class PayStub
             TabPage4.Text = str_empty
 
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
-
         Else
 
         End If
