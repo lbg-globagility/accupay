@@ -2,15 +2,35 @@
 
     Public Property ReportIndex As Object
 
-    Public Property DateFromID As Object
+    Public ReadOnly Property DateFromID As Object
+        Get
+            Return If(_payPeriodFrom Is Nothing, _payPeriodTo?.RowID, _payPeriodFrom.RowID)
+        End Get
+    End Property
 
-    Public Property DateToID As Object
+    Public ReadOnly Property DateToID As Object
+        Get
+            Return If(_payPeriodTo Is Nothing, _payPeriodFrom?.RowID, _payPeriodTo.RowID)
+        End Get
+    End Property
 
-    Public Property DateFromstr As Object
+    Public ReadOnly Property DateFromstr As Object
+        Get
+            Return If(_payPeriodFrom Is Nothing, _payPeriodTo?.DateFrom, _payPeriodFrom.DateFrom)
+        End Get
+    End Property
 
-    Public Property DateTostr As Object
+    Public ReadOnly Property DateTostr As Object
+        Get
+            Return If(_payPeriodTo Is Nothing, _payPeriodFrom?.DateTo, _payPeriodTo.DateTo)
+        End Get
+    End Property
 
     Public Property PayPeriodID As Object
+
+    Private _payPeriodFrom As PayPeriod
+
+    Private _payPeriodTo As PayPeriod
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         Select Case ReportIndex
@@ -80,107 +100,65 @@
     End Sub
 
     Private Sub dgvpayperiod_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvpayperiod.CellContentClick
+        dgvpayperiod.EndEdit()
+        DateFromLabel.Text = String.Empty
+        DateToLabel.Text = String.Empty
+
+        If dgvpayperiod.RowCount = 0 Then
+            Return
+        End If
+
+        Dim rowIdx = e.RowIndex
         Dim colName = dgvpayperiod.Columns(e.ColumnIndex).Name
 
-        If colName = "Column1" Then
-            dgvpayperiod.Item("Column6", e.RowIndex).Selected = True
-            dgvpayperiod.Item("Column1", e.RowIndex).Selected = True
+        If Not colName = "Column1" Then
+            Return
+        End If
+
+        Dim payPeriod = New PayPeriod() With {
+            .RowID = dgvpayperiod.Item("Column4", rowIdx).Value,
+            .DateFrom = CDate(dgvpayperiod.Item("Column2", rowIdx).Value),
+            .DateTo = CDate(dgvpayperiod.Item("Column3", rowIdx).Value)
+        }
+
+        Dim checkBox = dgvpayperiod.Item("Column1", rowIdx)
+        If checkBox.Value = False Then
+            DeselectPayPeriod(payPeriod)
+        Else
+            SelectPayPeriod(payPeriod, rowIdx)
+        End If
+
+        DateFromLabel.Text = If(DateFromstr Is Nothing, String.Empty, CDate(DateFromstr).ToString("MMMM d, yyyy"))
+        DateToLabel.Text = If(DateTostr Is Nothing, String.Empty, CDate(DateTostr).ToString("MMMM d, yyyy"))
+    End Sub
+
+    Private Sub DeselectPayPeriod(payPeriod As PayPeriod)
+        If _payPeriodFrom?.Equals(payPeriod) Then
+            _payPeriodFrom = Nothing
+        ElseIf _payPeriodTo?.Equals(payPeriod) Then
+            _payPeriodTo = Nothing
         End If
     End Sub
 
-    Private Sub dgvpayperiod_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvpayperiod.CellEndEdit
-        Static limittwo As SByte = 0
-        Static previousindex As SByte = 0
+    Private Sub SelectPayPeriod(payPeriod As PayPeriod, rowIdx As Integer)
+        If _payPeriodFrom Is Nothing Then
+            _payPeriodFrom = payPeriod
+        ElseIf _payPeriodTo Is Nothing Then
+            _payPeriodTo = payPeriod
 
-        DateFromLabel.Text = ""
-        DateToLabel.Text = ""
-
-        If dgvpayperiod.RowCount <> 0 Then
-            Dim rowindx = e.RowIndex
-            Dim colName = dgvpayperiod.Columns(e.ColumnIndex).Name
-
-            If colName = "Column1" Then
-                If dgvpayperiod.Item("Column1", rowindx).Value = True Then
-                    limittwo += 1
-                    Dim istwo = 0
-
-                    For Each dgvrow As DataGridViewRow In dgvpayperiod.Rows
-                        If dgvrow.Cells("Column1").Value = True Then
-                            istwo += 1
-                        End If
-                    Next
-
-                    If istwo = 2 Then
-                        limittwo = 2
-                    End If
-
-                    If limittwo >= 3 Then
-                        limittwo = 0
-                        previousindex = -1
-                        DateFromID = Nothing
-                        DateToID = Nothing
-                        DateFromstr = Nothing
-                        DateTostr = Nothing
-
-                        For Each dgvrow As DataGridViewRow In dgvpayperiod.Rows
-                            dgvrow.Cells("Column1").Value = False
-                        Next
-                    ElseIf limittwo = 2 Then
-
-                        If previousindex < rowindx Then
-                            DateFromID = dgvpayperiod.Item("Column4", previousindex).Value
-                            DateToID = dgvpayperiod.Item("Column4", rowindx).Value
-                            DateFromstr = dgvpayperiod.Item("Column2", previousindex).Value
-                            DateTostr = dgvpayperiod.Item("Column3", rowindx).Value
-                        Else
-                            DateFromID = dgvpayperiod.Item("Column4", rowindx).Value
-                            DateToID = dgvpayperiod.Item("Column4", previousindex).Value
-                            DateFromstr = dgvpayperiod.Item("Column2", rowindx).Value
-                            DateTostr = dgvpayperiod.Item("Column3", previousindex).Value
-                        End If
-                    Else
-                        If limittwo = 1 Then
-                            DateFromID = dgvpayperiod.Item("Column4", rowindx).Value
-                            DateToID = dgvpayperiod.Item("Column4", rowindx).Value
-                            DateFromstr = dgvpayperiod.Item("Column2", rowindx).Value
-                            DateTostr = dgvpayperiod.Item("Column3", rowindx).Value
-                        End If
-
-                        previousindex = rowindx
-                    End If
-                Else
-
-                    If limittwo >= 2 Then
-                        For Each dgvrow As DataGridViewRow In dgvpayperiod.Rows
-
-                            If dgvrow.Cells("Column1").Value = True Then
-                                DateFromID = dgvrow.Cells("Column4").Value
-                                DateToID = dgvrow.Cells("Column4").Value
-                                DateFromstr = dgvrow.Cells("Column2").Value
-                                DateTostr = dgvrow.Cells("Column3").Value
-
-                                Exit For
-                            End If
-                        Next
-
-                        limittwo = 1
-                    End If
-                End If
-            End If
-
-            If DateFromstr = Nothing And
-                DateFromstr = Nothing Then
-            Else
-                DateFromLabel.Text = Format(CDate(DateFromstr), "MMMM d, yyyy")
-                DateToLabel.Text = Format(CDate(DateTostr), "MMMM d, yyyy")
+            If _payPeriodFrom.DateFrom > _payPeriodTo.DateFrom Then
+                Dim swap = _payPeriodTo
+                _payPeriodTo = _payPeriodFrom
+                _payPeriodFrom = swap
             End If
         Else
-            limittwo = 0
-            previousindex = 0
-            DateFromID = Nothing
-            DateToID = Nothing
-            DateFromstr = Nothing
-            DateTostr = Nothing
+            For Each row As DataGridViewRow In dgvpayperiod.Rows
+                row.Cells("Column1").Value = False
+            Next
+            dgvpayperiod.Item("Column1", rowIdx).Value = True
+            _payPeriodFrom = payPeriod
+
+            _payPeriodTo = Nothing
         End If
     End Sub
 
@@ -238,13 +216,6 @@
         VIEW_payp(yearnow, sel_tab_pg.Text.Trim)
 
         dgvpayperiod.EndEdit(True)
-
-        If dgvpayperiod.RowCount = 0 Then
-            DateFromID = Nothing
-            DateToID = Nothing
-            DateFromstr = Nothing
-            DateTostr = Nothing
-        End If
     End Sub
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
@@ -301,5 +272,23 @@
     Private Sub WeeklyTab_Enter(sender As Object, e As EventArgs) Handles WeeklyTab.Enter
         VIEW_payp(, WeeklyTab.Text.Trim)
     End Sub
+
+    Private Class PayPeriod
+
+        Public Property RowID As Integer?
+
+        Public Property DateFrom As Date
+
+        Public Property DateTo As Date
+
+        Public Overrides Function Equals(obj As Object) As Boolean
+            If TypeOf obj IsNot PayPeriod Then
+                Return False
+            End If
+
+            Return DirectCast(obj, PayPeriod)?.RowID = RowID
+        End Function
+
+    End Class
 
 End Class
