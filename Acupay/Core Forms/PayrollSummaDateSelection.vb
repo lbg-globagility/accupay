@@ -1,73 +1,19 @@
 ﻿Public Class PayrollSummaDateSelection
 
-    Dim rpt_index = Nothing
-
     Public Property ReportIndex As Object
-        Get
-            Return rpt_index
-        End Get
-        Set(value As Object)
-            rpt_index = value
-        End Set
-    End Property
-
-    Dim me_DateFromID = Nothing
 
     Public Property DateFromID As Object
-        Get
-            Return me_DateFromID
-        End Get
-        Set(value As Object)
-            me_DateFromID = value
-        End Set
-    End Property
-
-    Dim me_DateToID = Nothing
 
     Public Property DateToID As Object
-        Get
-            Return me_DateToID
-        End Get
-        Set(value As Object)
-            me_DateToID = value
-        End Set
-    End Property
-
-    Dim me_DateFromstr = Nothing
 
     Public Property DateFromstr As Object
-        Get
-            Return me_DateFromstr
-        End Get
-        Set(value As Object)
-            me_DateFromstr = value
-        End Set
-    End Property
-
-    Dim me_DateTostr = Nothing
 
     Public Property DateTostr As Object
-        Get
-            Return me_DateTostr
-        End Get
-        Set(value As Object)
-            me_DateTostr = value
-        End Set
-    End Property
-
-    Dim me_PaypID = Nothing
 
     Public Property PayPeriodID As Object
-        Get
-            Return me_PaypID
-        End Get
-        Set(value As Object)
-            me_PaypID = value
-        End Set
-    End Property
 
     Protected Overrides Sub OnLoad(e As EventArgs)
-        Select Case rpt_index
+        Select Case ReportIndex
 
             Case 4 'Employee Loan Report
 
@@ -130,9 +76,7 @@
         params(2, 1) = "1"
         params(3, 1) = PayFreqType
 
-        EXEC_VIEW_PROCEDURE(params,
-                            "VIEW_payp",
-                            dgvpayperiod)
+        EXEC_VIEW_PROCEDURE(params, "VIEW_payp", dgvpayperiod)
     End Sub
 
     Private Sub dgvpayperiod_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvpayperiod.CellContentClick
@@ -173,10 +117,10 @@
                     If limittwo >= 3 Then
                         limittwo = 0
                         previousindex = -1
-                        me_DateFromID = Nothing
-                        me_DateToID = Nothing
-                        me_DateFromstr = Nothing
-                        me_DateTostr = Nothing
+                        DateFromID = Nothing
+                        DateToID = Nothing
+                        DateFromstr = Nothing
+                        DateTostr = Nothing
 
                         For Each dgvrow As DataGridViewRow In dgvpayperiod.Rows
                             dgvrow.Cells("Column1").Value = False
@@ -184,22 +128,22 @@
                     ElseIf limittwo = 2 Then
 
                         If previousindex < rowindx Then
-                            me_DateFromID = dgvpayperiod.Item("Column4", previousindex).Value
-                            me_DateToID = dgvpayperiod.Item("Column4", rowindx).Value
-                            me_DateFromstr = dgvpayperiod.Item("Column2", previousindex).Value
-                            me_DateTostr = dgvpayperiod.Item("Column3", rowindx).Value
+                            DateFromID = dgvpayperiod.Item("Column4", previousindex).Value
+                            DateToID = dgvpayperiod.Item("Column4", rowindx).Value
+                            DateFromstr = dgvpayperiod.Item("Column2", previousindex).Value
+                            DateTostr = dgvpayperiod.Item("Column3", rowindx).Value
                         Else
-                            me_DateFromID = dgvpayperiod.Item("Column4", rowindx).Value
-                            me_DateToID = dgvpayperiod.Item("Column4", previousindex).Value
-                            me_DateFromstr = dgvpayperiod.Item("Column2", rowindx).Value
-                            me_DateTostr = dgvpayperiod.Item("Column3", previousindex).Value
+                            DateFromID = dgvpayperiod.Item("Column4", rowindx).Value
+                            DateToID = dgvpayperiod.Item("Column4", previousindex).Value
+                            DateFromstr = dgvpayperiod.Item("Column2", rowindx).Value
+                            DateTostr = dgvpayperiod.Item("Column3", previousindex).Value
                         End If
                     Else
                         If limittwo = 1 Then
-                            me_DateFromID = dgvpayperiod.Item("Column4", rowindx).Value
-                            me_DateToID = dgvpayperiod.Item("Column4", rowindx).Value
-                            me_DateFromstr = dgvpayperiod.Item("Column2", rowindx).Value
-                            me_DateTostr = dgvpayperiod.Item("Column3", rowindx).Value
+                            DateFromID = dgvpayperiod.Item("Column4", rowindx).Value
+                            DateToID = dgvpayperiod.Item("Column4", rowindx).Value
+                            DateFromstr = dgvpayperiod.Item("Column2", rowindx).Value
+                            DateTostr = dgvpayperiod.Item("Column3", rowindx).Value
                         End If
 
                         previousindex = rowindx
@@ -210,10 +154,10 @@
                         For Each dgvrow As DataGridViewRow In dgvpayperiod.Rows
 
                             If dgvrow.Cells("Column1").Value = True Then
-                                me_DateFromID = dgvrow.Cells("Column4").Value
-                                me_DateToID = dgvrow.Cells("Column4").Value
-                                me_DateFromstr = dgvrow.Cells("Column2").Value
-                                me_DateTostr = dgvrow.Cells("Column3").Value
+                                DateFromID = dgvrow.Cells("Column4").Value
+                                DateToID = dgvrow.Cells("Column4").Value
+                                DateFromstr = dgvrow.Cells("Column2").Value
+                                DateTostr = dgvrow.Cells("Column3").Value
 
                                 Exit For
                             End If
@@ -224,19 +168,19 @@
                 End If
             End If
 
-            If me_DateFromstr = Nothing And
-                me_DateFromstr = Nothing Then
+            If DateFromstr = Nothing And
+                DateFromstr = Nothing Then
             Else
-                Label3.Text = Format(CDate(me_DateFromstr), "MMMM d, yyyy")
-                Label4.Text = Format(CDate(me_DateTostr), "MMMM d, yyyy")
+                Label3.Text = Format(CDate(DateFromstr), "MMMM d, yyyy")
+                Label4.Text = Format(CDate(DateTostr), "MMMM d, yyyy")
             End If
         Else
             limittwo = 0
             previousindex = 0
-            me_DateFromID = Nothing
-            me_DateToID = Nothing
-            me_DateFromstr = Nothing
-            me_DateTostr = Nothing
+            DateFromID = Nothing
+            DateToID = Nothing
+            DateFromstr = Nothing
+            DateTostr = Nothing
         End If
     End Sub
 
@@ -289,10 +233,10 @@
 
         If dgvpayperiod.RowCount <> 0 Then
         Else
-            me_DateFromID = Nothing
-            me_DateToID = Nothing
-            me_DateFromstr = Nothing
-            me_DateTostr = Nothing
+            DateFromID = Nothing
+            DateToID = Nothing
+            DateFromstr = Nothing
+            DateTostr = Nothing
         End If
     End Sub
 
@@ -309,21 +253,21 @@
 
         If dgvpayperiod.RowCount <> 0 Then
         Else
-            me_DateFromID = Nothing
-            me_DateToID = Nothing
-            me_DateFromstr = Nothing
-            me_DateTostr = Nothing
+            DateFromID = Nothing
+            DateToID = Nothing
+            DateFromstr = Nothing
+            DateTostr = Nothing
         End If
     End Sub
 
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         dgvpayperiod.EndEdit(True)
 
-        If me_DateFromID = Nothing Then
+        If DateFromID = Nothing Then
             Exit Sub
         ElseIf cboStringParameter.Visible Then
 
-            Select Case Convert.ToInt32(rpt_index)
+            Select Case Convert.ToInt32(ReportIndex)
                 Case 6 'prints Payroll summary report
 
                     Dim n_ExecuteQuery As New _
@@ -331,7 +275,7 @@
                                                    "SELECT tp.RowID",
                                                    " FROM thirteenthmonthpay tp",
                                                    " INNER JOIN paystub ps ON ps.RowID=tp.PaystubID AND ps.OrganizationID=tp.OrganizationID",
-                                                   " AND ps.PayPeriodID=", ValNoComma(me_DateFromID),
+                                                   " AND ps.PayPeriodID=", ValNoComma(DateFromID),
                                                    " WHERE tp.OrganizationID=", orgztnID,
                                                    " LIMIT 1",
                                                    ") `Result`;"), 192)
@@ -339,7 +283,7 @@
                     Dim bool_result As Boolean = (Convert.ToInt16(n_ExecuteQuery.Result) = 0)
 
                     If Convert.ToInt16(n_ExecuteQuery.Result) = 0 Then
-                        Dim param_array = New Object() {orgztnID, me_DateFromID, z_User}
+                        Dim param_array = New Object() {orgztnID, DateFromID, z_User}
 
                         Dim n_ExecSQLProcedure As New _
                             ExecSQLProcedure("RECOMPUTE_thirteenthmonthpay",
@@ -362,11 +306,8 @@
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-
         Me.DialogResult = Windows.Forms.DialogResult.Cancel
-
         Me.Close()
-
     End Sub
 
     Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
