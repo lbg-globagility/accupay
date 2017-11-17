@@ -3691,6 +3691,8 @@ Friend Class PrintSinglePaySlipOfficialFormat
 
     Private n_EmployeeRowID As Object = Nothing
 
+    Private sys_ownr As New SystemOwner
+
     Sub New(PayPeriodRowID As Object,
             IsPrintingAsActual As SByte,
             EmployeeRow_ID As Object)
@@ -3713,31 +3715,82 @@ Friend Class PrintSinglePaySlipOfficialFormat
 
     Sub DoProcess()
 
-        Dim rptdoc = New OfficialPaySlipFormat
+        Static current_system_owner As String = sys_ownr.CurrentSystemOwner
 
-        Dim n_SQLQueryToDatatable As _
+        If SystemOwner.Goldwings = current_system_owner Then
+
+            Dim rptdoc = New OfficialPaySlipFormat
+
+            Dim n_SQLQueryToDatatable As _
             New SQLQueryToDatatable("CALL paystub_singlepayslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual &
                                     "," & n_EmployeeRowID & ");")
-        'New SQLQueryToDatatable("CALL RPT_solopayslip(" & orgztnID & ",'2016-10-06','2016-10-20',9,0);")
+            'New SQLQueryToDatatable("CALL RPT_solopayslip(" & orgztnID & ",'2016-10-06','2016-10-20',9,0);")
 
-        catchdt = n_SQLQueryToDatatable.ResultTable
+            catchdt = n_SQLQueryToDatatable.ResultTable
 
-        With rptdoc.ReportDefinition.Sections(2)
-            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("txtOrganizName")
-            objText.Text = orgNam.ToUpper
+            With rptdoc.ReportDefinition.Sections(2)
+                Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("txtOrganizName")
+                objText.Text = orgNam.ToUpper
 
-            objText = .ReportObjects("txtPayPeriod")
+                objText = .ReportObjects("txtPayPeriod")
 
-            If ValNoComma(n_PayPeriodRowID) > 0 Then
-                objText.Text =
+                If ValNoComma(n_PayPeriodRowID) > 0 Then
+                    objText.Text =
                     New ExecuteQuery("SELECT CONCAT(DATE_FORMAT(PayFromDate," & customDateFormat & "),' to ',DATE_FORMAT(PayToDate," & customDateFormat & ")) `Result`" &
                                      " FROM payperiod WHERE RowID=" & ValNoComma(n_PayPeriodRowID) & ";").Result
-            End If
-        End With
+                End If
+            End With
 
-        rptdoc.SetDataSource(catchdt)
+            rptdoc.SetDataSource(catchdt)
 
-        crvwr.crysrepvwr.ReportSource = rptdoc
+            crvwr.crysrepvwr.ReportSource = rptdoc
+
+        ElseIf SystemOwner.Hyundai = current_system_owner Then
+
+            Dim params =
+                New Object() {orgztnID, n_PayPeriodRowID, n_EmployeeRowID}
+
+            Dim _sql As New SQL("CALL `HyundaiPayslip`(?og_rowid, ?pp_rowid, TRUE, ?emp_rowid);",
+                               params)
+
+            catchdt = _sql.GetFoundRows.Tables(0)
+
+            Dim rptdoc = New HyundaiPayslip
+
+            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
+
+            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
+            objText.Text = orgNam.ToUpper
+
+            rptdoc.SetDataSource(catchdt)
+
+            crvwr.crysrepvwr.ReportSource = rptdoc
+
+        ElseIf SystemOwner.Cinema2000 = current_system_owner Then
+
+            Dim params =
+                New Object() {orgztnID, n_PayPeriodRowID, n_EmployeeRowID}
+
+            Dim str_query As String = String.Concat(
+                "CALL `RPT_payslip`(?og_rowid, ?pp_rowid, TRUE, ?emp_rowid);")
+
+            Dim _sql As New SQL(str_query,
+                                params)
+
+            catchdt = _sql.GetFoundRows.Tables(0)
+
+            Dim rptdoc = New TwoEmpIn1PaySlip
+
+            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
+
+            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgName")
+            objText.Text = orgNam.ToUpper
+
+            rptdoc.SetDataSource(catchdt)
+
+            crvwr.crysrepvwr.ReportSource = rptdoc
+
+        End If
 
         crvwr.Show()
 

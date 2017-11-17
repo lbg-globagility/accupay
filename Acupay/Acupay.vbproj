@@ -230,10 +230,52 @@
     </Compile>
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
+    <Compile Include="Core Forms\Employee\AllowanceTab.Designer.vb">
+      <DependentUpon>AllowanceTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\AllowanceTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\BonusTab.Designer.vb">
+      <DependentUpon>BonusTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\BonusTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Core Forms\Employee\LeaveTab.Designer.vb">
       <DependentUpon>LeaveTab.vb</DependentUpon>
     </Compile>
     <Compile Include="Core Forms\Employee\LeaveTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\LoanScheduleTab.Designer.vb">
+      <DependentUpon>LoanScheduleTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\LoanScheduleTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\OfficialBusinessTab.Designer.vb">
+      <DependentUpon>OfficialBusinessTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\OfficialBusinessTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\OvertimeTab.Designer.vb">
+      <DependentUpon>OvertimeTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\OvertimeTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\PersonalProfileTab.Designer.vb">
+      <DependentUpon>PersonalProfileTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\PersonalProfileTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Employee\SalaryTab.Designer.vb">
+      <DependentUpon>SalaryTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\SalaryTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
@@ -266,10 +308,13 @@
     </Compile>
     <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Adjustment.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Allowance.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Position.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\ThirteenthMonthPay.vb" />
     <Compile Include="Core Forms\PayStub\Entity\TimeEntry.vb" />
     <Compile Include="Core Forms\OffSetting.designer.vb">
       <DependentUpon>OffSetting.vb</DependentUpon>
@@ -277,12 +322,55 @@
     <Compile Include="Core Forms\OffSetting.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\Reports\LoanReportByType.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoanReportByType.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Reports\Providers\AgencyFeeReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\AttendanceSheetReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\EmployeeIdentificationNumberReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\EmployeeOffenseReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\EmployeeProfilesReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\EmploymentRecordReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\LeaveLedgerReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\LoanSummaryByTypeReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\LoanSummaryReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\PagIBIGMonthlyReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\PayrollLedgerReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\PhilHealthReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\PostEmploymentClearanceReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\IReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\SalaryIncreaseHistoryReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\SSSMonthlyReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\TaxReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\ThirteenthMonthSummaryReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\ThirteenthMonthSummary.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ThirteenthMonthSummary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Core Forms\rpt\HyundaiPayslip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>HyundaiPayslip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Core Forms\rpt\LoanReports.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoanReports.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core Forms\rpt\ThirteenthMonthPayDetailSummary.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ThirteenthMonthPayDetailSummary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core Forms\rpt\ThirteenthMonthPayReportProvider.vb" />
     <Compile Include="Core Forms\Salary\Salary.vb" />
     <Compile Include="Core Forms\TimeEntry\Employee.vb" />
     <Compile Include="Core Forms\TimeEntry\Overtime.vb" />
@@ -1261,8 +1349,29 @@
     <EmbeddedResource Include="Core Forms\EmployeeForm.resx">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\AllowanceTab.resx">
+      <DependentUpon>AllowanceTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\BonusTab.resx">
+      <DependentUpon>BonusTab.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Employee\LeaveTab.resx">
       <DependentUpon>LeaveTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\LoanScheduleTab.resx">
+      <DependentUpon>LoanScheduleTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\OfficialBusinessTab.resx">
+      <DependentUpon>OfficialBusinessTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\OvertimeTab.resx">
+      <DependentUpon>OvertimeTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\PersonalProfileTab.resx">
+      <DependentUpon>PersonalProfileTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\SalaryTab.resx">
+      <DependentUpon>SalaryTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Independent filing\LeaveForm.resx">
       <DependentUpon>LeaveForm.vb</DependentUpon>
@@ -1279,13 +1388,29 @@
     <EmbeddedResource Include="Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Reports\LoanReportByType.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LoanReportByType.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Reports\ThirteenthMonthSummary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ThirteenthMonthSummary.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HyundaiPayslip.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\rpt\LoanReports.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LoanReports.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\rpt\PayrollSumma.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PayrollSumma.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\rpt\ThirteenthMonthPayDetailSummary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ThirteenthMonthPayDetailSummary.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\TimeEntry\TimeEntrySummaryForm.resx">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
@@ -1822,6 +1947,19 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="Resources\schedule-7.1.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\schedule-7.3.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\schedule-7.4.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\schedule-7.5.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\SourceSansPro-Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

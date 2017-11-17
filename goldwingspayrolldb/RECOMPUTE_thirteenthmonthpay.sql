@@ -82,6 +82,7 @@ IF ispayperiodendofmonth IS NOT NULL THEN
         Created,
         CreatedBy,
         PaystubID,
+        BasicPay,
         Amount
     )
     SELECT
@@ -90,6 +91,7 @@ IF ispayperiodendofmonth IS NOT NULL THEN
         CURRENT_TIMESTAMP(),
         UserRowID,
         ps.RowID,
+        ii.BasicAmount,
         (ii.BasicAmount / pf_div)
     FROM
     (
@@ -204,6 +206,7 @@ IF ispayperiodendofmonth IS NOT NULL THEN
     UPDATE
         LastUpd = CURRENT_TIMESTAMP(),
         LastUpdBy = UserRowID,
+        BasicPay = ii.BasicAmount,
         Amount = ii.BasicAmount / pf_div;
 END IF;
 

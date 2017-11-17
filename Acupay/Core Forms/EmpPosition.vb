@@ -1,18 +1,12 @@
-﻿Imports MySql.Data.MySqlClient
-Imports Femiani.Forms.UI.Input
+﻿Imports Femiani.Forms.UI.Input
+Imports MySql.Data.MySqlClient
 
 Public Class EmpPosition
 
     Public ReadOnly Property ViewIdentification As Object
-
         Get
-
-            'view_ID = VIEW_privilege("Position", orgztnID)
-
             Return view_ID
-
         End Get
-
     End Property
 
     Public ShowMeAsDialog As Boolean = False
@@ -71,8 +65,6 @@ Public Class EmpPosition
         "LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents " &
         "WHERE e.OrganizationID=" & orgztnID
 
-    '",Image 'Image'" & _
-
     Dim positiontable As New DataTable
 
     Dim alphaposition As New DataTable
@@ -102,25 +94,6 @@ Public Class EmpPosition
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'dbconn()
-
-        'positiontable = retAsDatTbl("SELECT *" & _
-        '                            ",COALESCE((SELECT CONCAT('(',FirstName,IF(MiddleName IS NULL,'',CONCAT(' ',LEFT(MiddleName,1))),IF(LastName IS NULL,'',CONCAT(' ',LEFT(LastName,1))),')') FROM employee WHERE OrganizationID=" & orgztnID & " AND PositionID=p.RowID AND TerminationDate IS NULL),'(Open)') 'positionstats'" & _
-        '                            " FROM position p" & _
-        '                            " WHERE p.OrganizationID=" & orgztnID & ";")
-
-        ''alphaposition = retAsDatTbl("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NOT NULL AND ParentPositionID!=RowID GROUP BY ParentPositionID;")
-
-        'alphaposition = retAsDatTbl("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NULL;")
-
-        ''For Each drow As DataRow In alphaposition.Rows
-        ''    Positiontreeviewfiller(drow("RowID"), drow("PositionName"), )
-        ''Next
-
-        'divisiontable = retAsDatTbl("SELECT * FROM division WHERE OrganizationID=" & orgztnID & ";")
-
-        'alphadivision = retAsDatTbl("SELECT * FROM division WHERE OrganizationID=" & orgztnID & " AND ParentDivisionID IS NULL;")
-
         reload()
 
         For Each drow As DataRow In alphadivision.Rows
@@ -197,18 +170,12 @@ Public Class EmpPosition
                                     " LEFT JOIN `division` d ON d.RowID=p.DivisionId" &
                                     " WHERE p.OrganizationID=" & orgztnID & ";").ResultTable
 
-        'alphaposition = New SQLQueryToDatatable("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NOT NULL AND ParentPositionID!=RowID GROUP BY ParentPositionID;")
-
         alphaposition = New SQLQueryToDatatable("SELECT p.*" &
                                                 ",d.RowID AS DivRowID" &
                                                 " FROM position p" &
                                                 " INNER JOIN `division` d ON d.RowID=p.DivisionId" &
                                                 " WHERE p.OrganizationID=" & orgztnID & "" &
                                                 " AND p.ParentPositionID IS NULL;").ResultTable
-
-        'For Each drow As DataRow In alphaposition.Rows
-        '    Positiontreeviewfiller(drow("RowID"), drow("PositionName"), )
-        'Next
 
         divisiontable = New SQLQueryToDatatable("SELECT d.*" &
                                                 ",dd.RowID AS DivLocID" &
@@ -342,14 +309,9 @@ Public Class EmpPosition
         Catch ex As Exception
             currentNode = Nothing
             MsgBox(getErrExcptn(ex, Me.Name))
-
         Finally
 
         End Try
-
-    End Sub
-
-    Private Sub tv2_AfterSelect_1(sender As Object, e As TreeViewEventArgs) Handles tv2.AfterSelect
 
     End Sub
 
@@ -370,15 +332,8 @@ Public Class EmpPosition
         tsbtnDeletePosition.Enabled = False
 
         If tv2.Nodes.Count = 0 Then
-            'cboDivis.SelectedIndex = -1
-            'cboParentPosit.Text = ""
-            'txtPositName.Text = ""
-
-            'selPositionID = Nothing
-            'dgvemployees.Rows.Clear()
             currentNode = Nothing
 
-            'cboDivis.Items.Clear()
             cboParentPosit.Items.Clear()
 
         ElseIf currentNode IsNot Nothing Then
@@ -394,16 +349,7 @@ Public Class EmpPosition
 
                 cboDivLoc.SelectedValue = usethisvalue
 
-                'Dim parentposition = divisiontable.Select("RowID<>" & currentNode.Name)
                 Dim parentposition = divisiontable.Select("ParentDivisionID = " & usethisvalue)
-
-                If parentposition.Count <> 0 Then
-                    'cboDivis.Items.Clear()
-                End If
-
-                For Each strval In parentposition
-                    'cboDivis.Items.Add(strval("Name").ToString)
-                Next
 
                 parentposition = divisiontable.Select("RowID=" & currentNode.Name)
 
@@ -411,7 +357,6 @@ Public Class EmpPosition
                     cboDivis.Text = strval("Name").ToString
                     Exit For
                 Next
-
             Else '                                  'Node is a position
 
                 Dim priornod = currentNode.Parent
@@ -420,15 +365,7 @@ Public Class EmpPosition
 
                 cboDivLoc.SelectedValue = prior_node
 
-                'cboDivis.Items.Clear()
-
                 Dim sel_divisiontable = divisiontable.Select("ParentDivisionID = " & prior_node)
-
-
-                'For Each divdrow As DataRow In divisiontable.Rows
-                For Each divdrow In sel_divisiontable
-                    'cboDivis.Items.Add(divdrow("Name"))
-                Next
 
                 tsbtnDeletePosition.Enabled = True
 
@@ -492,26 +429,18 @@ Public Class EmpPosition
                     Next
 
                     If divisRowID = Nothing Then
-
                     Else
                         Dim divistab = divisiontable.Select("RowID = " & divisRowID)
 
                         For Each strval In divistab
                             cboDivis.Text = strval("Name").ToString
-
-                            If cboDivis.Items.Contains(strval("Name").ToString) Then
-                            Else
-                                'cboDivis.Items.Add(strval("Name").ToString)
-                            End If
                             Exit For
                         Next
 
                     End If
-
                 Else
 
                     If parentPositRowID = Nothing Then
-
                     Else
                         rootParentPosition(parentPositRowID)
 
@@ -528,17 +457,11 @@ Public Class EmpPosition
                         divisRowID = division_rowID
 
                         If divisRowID = Nothing Then
-
                         Else
                             Dim divistab = divisiontable.Select("RowID = " & divisRowID)
 
                             For Each strval In divistab
                                 cboDivis.Text = strval("Name").ToString
-
-                                If cboDivis.Items.Contains(strval("Name").ToString) Then
-                                Else
-                                    'cboDivis.Items.Add(strval("Name").ToString)
-                                End If
                                 Exit For
                             Next
 
@@ -547,27 +470,6 @@ Public Class EmpPosition
                     End If
 
                 End If
-
-                'If parent_node.Text.Contains("[") Then 'Division
-
-                '    Dim parentposition = divisiontable.Select("RowID<>" & parent_node.Name, "Name ASC")
-
-                '    If parentposition.Count <> 0 Then
-                '        'cboDivis.Items.Clear()
-                '    End If
-
-                '    For Each strval In parentposition
-                '        'cboDivis.Items.Add(strval("Name").ToString)
-                '    Next
-
-                '    parentposition = divisiontable.Select("RowID=" & parent_node.Name)
-
-                '    For Each strval In parentposition
-                '        cboDivis.Text = strval("Name").ToString
-                '        Exit For
-                '    Next
-
-                'End If
 
             End If
 
@@ -580,7 +482,6 @@ Public Class EmpPosition
     Dim division_rowID As Object = Nothing
 
     Function rootParentDivision(Optional division_ID As Object = Nothing) As Object
-
         If division_ID = Nothing Then
         Else
             Dim divistab = divisiontable.Select("RowID = " & division_ID)
@@ -590,17 +491,13 @@ Public Class EmpPosition
                     division_rowID = division_ID 'division_rowID
                     Exit For
                 Else
-                    'division_rowID = _
                     division_rowID = division_ID 'strval("ParentDivisionID")
-                    'rootParentDivision(strval("ParentDivisionID"))
                     Exit For
                 End If
-                'Exit For
             Next
-
         End If
-        Return division_rowID
 
+        Return division_rowID
     End Function
 
     Dim position_rowID As Object = Nothing
@@ -616,45 +513,34 @@ Public Class EmpPosition
                     position_rowID = position_ID
                     Exit For
                 Else
-                    'position_rowID = _
                     position_rowID = strval("ParentPositionID")
                     rootParentPosition(strval("ParentPositionID"))
                 End If
                 Exit For
             Next
-
         End If
+
         Return position_rowID
     End Function
 
     Sub loademployee(Optional PositID As Object = Nothing)
-
         dgvRowAdder(q_employee & " AND e.PositionID='" & PositID & "' ORDER BY e.RowID DESC LIMIT " & pagination & ",100;", dgvemployees)
-
     End Sub
 
     Dim pagination As Integer = 0
 
     Private Sub Nxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles Nxt.LinkClicked, Last.LinkClicked,
                                                                                               Prev.LinkClicked, First.LinkClicked
-
         Dim sendrname As String = DirectCast(sender, LinkLabel).Name
 
         If sendrname = "First" Then
             pagination = 0
         ElseIf sendrname = "Prev" Then
-            'If pagination - 100 < 0 Then
-            '    pagination = 0
-            'Else
-            '    pagination -= 100
-            'End If
-
             Dim modcent = pagination Mod 100
 
             If modcent = 0 Then
 
                 pagination -= 100
-
             Else
 
                 pagination -= modcent
@@ -672,7 +558,6 @@ Public Class EmpPosition
 
             If modcent = 0 Then
                 pagination += 100
-
             Else
                 pagination -= modcent
 
@@ -681,27 +566,12 @@ Public Class EmpPosition
             End If
         ElseIf sendrname = "Last" Then
             Dim lastpage = Val(EXECQUER("SELECT COUNT(RowID) / 100 FROM employee WHERE OrganizationID=" & orgztnID & ";"))
-
             Dim remender = lastpage Mod 100
 
-
             pagination = (lastpage - remender) * 100
-
-            If pagination - 100 < 100 Then
-                'pagination = 0
-
-            End If
-
-            'pagination = If(lastpage - 100 >= 100, _
-            '                lastpage - 100, _
-            '                lastpage)
-
         End If
 
-        'loademployees()
-
         loademployee(selPositionID)
-
     End Sub
 
     Private Sub cboDivis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboDivis.KeyPress
@@ -709,9 +579,7 @@ Public Class EmpPosition
 
         If e_asc = 8 Then
             e.Handled = False
-            'cboDivis.SelectedIndex = -1
             cboDivis.Text = ""
-            'Else : e.Handled = True
         Else
             e.Handled = True 'TrapCharKey(e_asc)
 
@@ -719,13 +587,8 @@ Public Class EmpPosition
 
     End Sub
 
-    Private Sub cboDivis_Leave(sender As Object, e As EventArgs) Handles cboDivis.Leave
-
-    End Sub
-
     Private Sub cboDivis_SelectedIndexChanged(sender As Object, e As EventArgs) 'Handles cboDivis.SelectedIndexChanged
         If cboDivis.SelectedIndex = -1 Then
-
         Else
             cboParentPosit.Items.Clear()
 
@@ -746,35 +609,17 @@ Public Class EmpPosition
                 cboParentPosit.Items.Add(drow("PositionName"))
 
             Next
-
         End If
-
     End Sub
 
     Private Sub cboParentPosit_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboParentPosit.KeyPress
         Dim e_asc As String = Asc(e.KeyChar)
         If e_asc = 8 Then
             e.Handled = False
-            'cboParentPosit.SelectedIndex = -1 : 
             cboParentPosit.Text = ""
-            'Else : e.Handled = True
         Else
             e.Handled = True 'TrapCharKey(e_asc)
-
         End If
-
-    End Sub
-
-    Private Sub cboParentPosit_Leave(sender As Object, e As EventArgs) Handles cboParentPosit.Leave
-
-    End Sub
-
-    Private Sub cboParentPosit_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboParentPosit.SelectedIndexChanged
-
-    End Sub
-
-    Private Sub txtPositName_Leave(sender As Object, e As EventArgs) Handles txtPositName.Leave
-
     End Sub
 
     Private Sub tsbtnNewPosition_Click(sender As Object, e As EventArgs) Handles tsbtnNewPosition.Click
@@ -790,21 +635,11 @@ Public Class EmpPosition
 
         dgvemployees.Rows.Clear()
 
-        'cboDivis.Items.Clear()
-
-        For Each drow As DataRow In divisiontable.Rows
-            'cboDivis.Items.Add(drow("Name").ToString)
-        Next
-
         cboParentPosit.Items.Clear()
 
         For Each drow As DataRow In positiontable.Rows
             cboParentPosit.Items.Add(drow("PositionName").ToString)
         Next
-
-    End Sub
-
-    Private Sub txtPositName_TextChanged(sender As Object, e As EventArgs) Handles txtPositName.TextChanged
 
     End Sub
 
@@ -829,15 +664,7 @@ Public Class EmpPosition
             Exit For
         Next
 
-        'divisiontable
         Dim divisID As Object = cboDivis.SelectedValue
-
-        'Dim seldivis = divisiontable.Select("Name='" & Trim(cboDivis.Text) & "' AND ParentDivisionID = " & cboDivLoc.SelectedValue)
-
-        'For Each drow In seldivis
-        '    divisID = drow("RowID")
-        '    Exit For
-        'Next
 
         If divisID = Nothing Then
             WarnBalloon("Please select a Division Name.", "Invalid Division Name", cboDivis, cboDivis.Width - 17, -70)
@@ -852,34 +679,18 @@ Public Class EmpPosition
 
         If tsbtnNewPosition.Enabled = 0 Then
 
-            'If currentNode Is Nothing Then
-
-            'Else
-
             Dim returnval = INSUPD_position(,
                 Trim(txtPositName.Text),
                 parentpositID,
                 divisID)
 
-            'currentNode.Nodes.Add(Trim(returnval), Trim(txtPositName.Text) & "(Open)")
-
             InfoBalloon("Position '" & txtPositName.Text & "' has successfully saved.", "Position save successful", lblforballoon, 0, -69)
-
-            'End If
-
         Else
             If dontUpdate = 1 Then
                 Exit Sub
             End If
-            'Dim selemp_posit = positiontable.Select("PositionName='" & Trim(txtPositName.Text) & "'")
-
-            'For Each drow In selemp_posit
-
-            '    Exit For
-            'Next
 
             If selPositionID = Nothing Then
-
             Else
                 INSUPD_position(selPositionID,
                                 Trim(txtPositName.Text),
@@ -889,8 +700,6 @@ Public Class EmpPosition
                 InfoBalloon("Position '" & txtPositName.Text & "' has successfully saved.", "Position save successful", lblforballoon, 0, -69)
 
             End If
-
-            'currentNode.Nodes.Add(Trim(returnval), Trim(txtPositName.Text) & "(Open)")
 
         End If
 
@@ -939,11 +748,9 @@ Public Class EmpPosition
     Private Sub tsbtnDeletePosition_Click(sender As Object, e As EventArgs) Handles tsbtnDeletePosition.Click
 
         If selPositionID = Nothing Then
-
         Else
 
             RemoveHandler tv2.AfterSelect, AddressOf tv2_AfterSelect
-            '"DELETE FROM `position_view` WHERE PositionID='", selPositionID, "' AND OrganizationID='", orgztnID, "';",
             EXECQUER(
                 String.Concat("UPDATE employee SET PositionID=NULL,LastUpdBy=", z_User, " WHERE PositionID='", selPositionID, "' AND OrganizationID=", orgztnID, ";",
                               "DELETE FROM `position_view` WHERE PositionID='", selPositionID, "';",
@@ -955,8 +762,6 @@ Public Class EmpPosition
                                         " FROM position p" &
                                         " WHERE p.OrganizationID=" & orgztnID & "" &
                                         " AND p.RowID NOT IN (SELECT PositionID FROM user WHERE OrganizationID=" & orgztnID & ");")
-
-            'alphaposition = retAsDatTbl("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NOT NULL AND ParentPositionID!=RowID GROUP BY ParentPositionID;")
 
             alphaposition = retAsDatTbl("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NULL" &
                                         " AND RowID NOT IN (SELECT PositionID FROM user WHERE OrganizationID=" & orgztnID & ");")
@@ -971,10 +776,6 @@ Public Class EmpPosition
 
             AddHandler tv2.AfterSelect, AddressOf tv2_AfterSelect
 
-            'If tv2.Nodes.Count <> 0 Then
-            '    tv2_AfterSelect(sender, New TreeViewEventArgs(tv2.Nodes.Item(0)))
-            'End If
-
             btnRefresh_Click(sender, e)
 
         End If
@@ -987,7 +788,6 @@ Public Class EmpPosition
 
         If tv2.Nodes.Count <> 0 Then
             If currentNode Is Nothing Then
-
             Else
                 tv2_AfterSelect(sender, New TreeViewEventArgs(currentNode))
             End If
@@ -1041,7 +841,6 @@ Public Class EmpPosition
     End Function
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-
         If Button3.Image.Tag = 1 Then
             Button3.Image = Nothing
             Button3.Image = My.Resources.r_arrow
@@ -1081,10 +880,6 @@ Public Class EmpPosition
 
     End Sub
 
-    Private Sub tbpPosition_Click(sender As Object, e As EventArgs) Handles tbpPosition.Click
-
-    End Sub
-
     Private Sub tbpPosition_Enter(sender As Object, e As EventArgs) Handles tbpPosition.Enter
 
         cboDivis.ContextMenu = New ContextMenu
@@ -1103,11 +898,6 @@ Public Class EmpPosition
         Else
             e.Handled = True
         End If
-
-    End Sub
-
-    Private Sub cboDivLoc_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboDivLoc.SelectedIndexChanged
-
     End Sub
 
     Private Sub DivisionLocation_Changed(sender As Object, e As EventArgs) Handles cboDivLoc.SelectedIndexChanged
@@ -1120,50 +910,28 @@ Public Class EmpPosition
                           " AND d.ParentDivisionID=", ValNoComma(cboDivLoc.SelectedValue), ";")
 
         Dim sql As New SQLQueryToDatatable(str_quer_sub_division)
-
         Dim dt As New DataTable
         dt = sql.ResultTable
 
         cboDivis.DisplayMember = dt.Columns(1).ColumnName
         cboDivis.ValueMember = dt.Columns(0).ColumnName
         cboDivis.DataSource = dt
-
     End Sub
 
     Private Sub bgworkautcompsearch_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkautcompsearch.DoWork
-
         For Each drow As DataRow In alphaposition.Rows
             Dim newarray = StringToArray(drow("PositionName"))
-
             autcomptxtposition.Items.Add(New AutoCompleteEntry(drow("PositionName"), newarray))
-
         Next
-
-    End Sub
-
-    Private Sub bgworkautcompsearch_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkautcompsearch.ProgressChanged
-
     End Sub
 
     Private Sub bgworkautcompsearch_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgworkautcompsearch.RunWorkerCompleted
-
         If e.Error IsNot Nothing Then
             MsgBox("Error: " & vbNewLine & e.Error.Message)
-
         ElseIf e.Cancelled Then
-
         Else
             autcomptxtposition.Enabled = True
         End If
-
-    End Sub
-
-    Private Sub autcomptxtposition_KeyDown(sender As Object, e As KeyEventArgs) Handles autcomptxtposition.KeyDown
-
-    End Sub
-
-    Private Sub autcomptxtposition_TextChanged(sender As Object, e As EventArgs) Handles autcomptxtposition.TextChanged
-
     End Sub
 
     Dim return_value As IEnumerable(Of TreeNode)
@@ -1178,7 +946,6 @@ Public Class EmpPosition
                 tn.Cast(Of TreeNode).Where(Function(tnod) tnod.Text = tn_name)
 
             return_value = sel_nod
-
         Else
 
             For Each t_node In tn

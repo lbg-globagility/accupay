@@ -11,22 +11,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_13thmonthpay`(IN `OrganizID` IN
 BEGIN
 
 SELECT
-
-
-
-
-
-
-e.EmployeeID AS DatCol1
-,CONCAT_WS(', ',IF(e.LastName = '', NULL, e.LastName),e.FirstName) AS DatCol2
-,FORMAT(SUM(ttmp.Amount),2) AS DatCol3
+    e.EmployeeID AS DatCol1,
+    CONCAT_WS(', ',IF(e.LastName = '', NULL, e.LastName),e.FirstName) AS DatCol2,
+    FORMAT(SUM(ttmp.Amount),2) AS DatCol3
 FROM thirteenthmonthpay ttmp
-INNER JOIN paystub ps ON ps.RowID=ttmp.PaystubID
-INNER JOIN employee e ON e.RowID=ps.EmployeeID AND e.OrganizationID=OrganizID
-INNER JOIN payperiod pyp ON pyp.RowID=ps.PayPeriodID AND pyp.OrganizationID=OrganizID
-WHERE ttmp.OrganizationID=OrganizID
-AND YEAR(ps.PayFromDate)=paramYear
+INNER JOIN paystub ps
+ON ps.RowID = ttmp.PaystubID
+INNER JOIN employee e
+ON e.RowID = ps.EmployeeID AND
+    e.OrganizationID = OrganizID
+INNER JOIN payperiod pyp
+ON pyp.RowID = ps.PayPeriodID AND
+    pyp.OrganizationID = OrganizID
+WHERE ttmp.OrganizationID = OrganizID AND
+    YEAR(ps.PayFromDate) = paramYear
 GROUP BY ps.EmployeeID;
+
 END//
 DELIMITER ;
 

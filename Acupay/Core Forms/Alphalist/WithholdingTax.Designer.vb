@@ -170,7 +170,7 @@ Partial Class WithholdingTax
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(0, 52)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1053, 728)
+        Me.Panel1.Size = New System.Drawing.Size(1053, 720)
         Me.Panel1.TabIndex = 0
         '
         'pnlWithholdingTaxForm
@@ -184,7 +184,7 @@ Partial Class WithholdingTax
         Me.pnlWithholdingTaxForm.Location = New System.Drawing.Point(390, 72)
         Me.pnlWithholdingTaxForm.Name = "pnlWithholdingTaxForm"
         Me.pnlWithholdingTaxForm.Padding = New System.Windows.Forms.Padding(10, 5, 10, 5)
-        Me.pnlWithholdingTaxForm.Size = New System.Drawing.Size(663, 656)
+        Me.pnlWithholdingTaxForm.Size = New System.Drawing.Size(663, 648)
         Me.pnlWithholdingTaxForm.TabIndex = 2
         '
         'GroupBox4
@@ -1308,7 +1308,7 @@ Partial Class WithholdingTax
         Me.dgvEmployees.RowHeadersWidth = 25
         Me.dgvEmployees.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvEmployees.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvEmployees.Size = New System.Drawing.Size(284, 728)
+        Me.dgvEmployees.Size = New System.Drawing.Size(284, 720)
         Me.dgvEmployees.TabIndex = 1
         '
         'colEmployeeID
@@ -1335,7 +1335,7 @@ Partial Class WithholdingTax
         Me.dgvYear.RowHeadersVisible = False
         Me.dgvYear.RowHeadersWidth = 25
         Me.dgvYear.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvYear.Size = New System.Drawing.Size(106, 728)
+        Me.dgvYear.Size = New System.Drawing.Size(106, 720)
         Me.dgvYear.TabIndex = 0
         '
         'Year
@@ -1382,7 +1382,7 @@ Partial Class WithholdingTax
         Me.btnPrint.Image = CType(resources.GetObject("btnPrint.Image"), System.Drawing.Image)
         Me.btnPrint.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnPrint.Name = "btnPrint"
-        Me.btnPrint.Size = New System.Drawing.Size(93, 22)
+        Me.btnPrint.Size = New System.Drawing.Size(92, 22)
         Me.btnPrint.Text = "Print Tax Forms"
         '
         'tsbAlphalist
@@ -1423,7 +1423,7 @@ Partial Class WithholdingTax
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1053, 780)
+        Me.ClientSize = New System.Drawing.Size(1053, 772)
         Me.Controls.Add(Me.Label38)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.ToolStrip1)

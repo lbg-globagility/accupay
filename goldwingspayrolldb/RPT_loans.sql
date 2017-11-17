@@ -10,29 +10,40 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_loans`(IN `OrganizID` INT, IN `
     DETERMINISTIC
 BEGIN
 
-DECLARE strloantype TEXT;
-
-SELECT PartNo FROM product WHERE RowID=LoanTypeID INTO strloantype;
-
 SELECT
-elh.Comments
-,ee.EmployeeID
-,CONCAT(ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) 'Fullname'
-,FORMAT(SUM(IFNULL(elh.DeductionAmount,0)),2) 'DeductionAmount'
-,els.TotalLoanAmount
-,els.TotalBalanceLeft
-FROM employeeloanhistory elh
-LEFT JOIN paystub ps ON ps.RowID=elh.PayStubID AND ps.OrganizationID=elh.OrganizationID
-LEFT JOIN employee ee ON ee.RowID=ps.EmployeeID AND ee.OrganizationID=elh.OrganizationID
-INNER JOIN employeeloanschedule els ON els.LoanTypeID=LoanTypeID AND els.OrganizationID=OrganizID AND (els.DedEffectiveDateFrom>=PayDateFrom OR els.DedEffectiveDateTo>=PayDateFrom) AND (els.DedEffectiveDateFrom<=PayDateTo OR els.DedEffectiveDateTo<=PayDateTo)
-WHERE elh.DeductionAmount!=0
-AND elh.OrganizationID=OrganizID
-AND elh.DeductionDate BETWEEN PayDateFrom AND PayDateTo
-AND elh.Comments=strloantype
-GROUP BY elh.EmployeeID, elh.Comments, els.RowID
-ORDER BY elh.Comments,ee.LastName;
-
-
+    /*p.PartNo 'Comments',
+    ee.EmployeeID,
+    CONCAT(
+        ee.LastName,
+        ',',
+        ee.FirstName,
+        IF(ee.MiddleName = '', '', ','),
+        INITIALS(ee.MiddleName, '. ', '1')
+    ) 'Fullname',
+    FORMAT(SUM(IFNULL(slp.DeductionAmount, 0)), 2) 'DeductionAmount',
+    FORMAT(els.TotalLoanAmount, 2),
+    FORMAT(els.TotalBalanceLeft, 2)*/
+    ee.EmployeeID `DatCol1`
+    ,CONCAT_WS(', ', ee.LastName, ee.FirstName, ee.MiddleName) `DatCol2`
+    ,p.PartNo `DatCol3`
+    ,ROUND(slp.DeductionAmount, 2) `DatCol4`
+    ,ROUND(slp.TotalBalanceLeft, 2) `DatCol5`
+    ,ROUND(els.TotalLoanAmount, 2) `DatCol6`
+FROM scheduledloansperpayperiod slp
+INNER JOIN employeeloanschedule els
+ON els.RowID = slp.EmployeeLoanRecordID
+INNER JOIN employee ee
+ON ee.RowID = slp.EmployeeID
+INNER JOIN product p
+ON p.RowID = els.LoanTypeID
+INNER JOIN payperiod pp
+ON pp.RowID = slp.PayPeriodID
+WHERE slp.OrganizationID = OrganizID
+# AND pp.PayFromDate BETWEEN PayDateFrom AND PayDateTo
+AND (pp.PayFromDate >= PayDateFrom OR pp.PayToDate >= PayDateFrom)
+AND (pp.PayFromDate <= PayDateTo OR pp.PayToDate <= PayDateTo)
+# GROUP BY slp.EmployeeID, els.RowID
+ORDER BY CONCAT(ee.LastName, ee.FirstName), p.PartNo;
 
 END//
 DELIMITER ;

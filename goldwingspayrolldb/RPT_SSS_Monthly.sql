@@ -23,7 +23,7 @@ BEGIN
     SET year = DATE_FORMAT(paramDate, '%Y');
 
     SELECT
-        employee.SSSNo,
+        employee.SSSNo `DatCol1`,
         CONCAT(
             employee.LastName,
             ', ',
@@ -34,11 +34,11 @@ BEGIN
                 ' '
             ),
             INITIALS(employee.MiddleName, '. ', '1')
-        ) AS Fullname,
-        paystubsummary.TotalEmpSSS AS EmployeeContributionAmount,
-        paysocialsecurity.EmployerContributionAmount,
-        paysocialsecurity.EmployeeECAmount,
-        (paystubsummary.TotalEmpSSS + paystubsummary.TotalCompSSS) AS Total
+        ) AS `DatCol2`,
+        paystubsummary.TotalEmpSSS  AS `DatCol3`,
+        paysocialsecurity.EmployerContributionAmount AS `DatCol4`,
+        paysocialsecurity.EmployeeECAmount AS `DatCol5`,
+        (paystubsummary.TotalEmpSSS + paystubsummary.TotalCompSSS) AS `DatCol6`
     FROM employee
     LEFT JOIN (
         SELECT

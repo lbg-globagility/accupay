@@ -1,0 +1,73 @@
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+CREATE TABLE IF NOT EXISTS `paystubbonus` (
+  `RowID` int(10) NOT NULL AUTO_INCREMENT,
+  `OrganizationID` int(10) NOT NULL,
+  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `CreatedBy` int(10) DEFAULT NULL,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpdBy` int(10) DEFAULT NULL,
+  `PayPeriodID` int(10) DEFAULT NULL,
+  `EmployeeID` int(10) DEFAULT NULL,
+  `TimeEntryID` int(10) DEFAULT NULL,
+  `PayFromDate` date DEFAULT NULL,
+  `PayToDate` date DEFAULT NULL,
+  `RegularHours` decimal(15,4) DEFAULT NULL,
+  `RegularPay` decimal(15,4) DEFAULT NULL,
+  `OvertimeHours` decimal(15,4) DEFAULT NULL,
+  `OvertimePay` decimal(15,4) DEFAULT NULL,
+  `NightDiffHours` decimal(15,4) DEFAULT NULL,
+  `NightDiffPay` decimal(15,4) DEFAULT NULL,
+  `NightDiffOvertimeHours` decimal(15,4) DEFAULT NULL,
+  `NightDiffOvertimePay` decimal(15,4) DEFAULT NULL,
+  `RestDayHours` decimal(15,4) DEFAULT NULL,
+  `RestDayPay` decimal(15,4) DEFAULT NULL,
+  `LeavePay` decimal(15,4) DEFAULT NULL,
+  `HolidayPay` decimal(15,4) DEFAULT NULL,
+  `LateHours` decimal(15,4) DEFAULT NULL,
+  `LateDeduction` decimal(15,4) DEFAULT NULL,
+  `UndertimeHours` decimal(15,4) DEFAULT NULL,
+  `UndertimeDeduction` decimal(15,4) DEFAULT NULL,
+  `AbsenceDeduction` decimal(15,4) DEFAULT NULL,
+  `WorkPay` decimal(15,4) DEFAULT NULL,
+  `TotalGrossSalary` decimal(10,2) DEFAULT '0.00',
+  `TotalNetSalary` decimal(10,2) DEFAULT '0.00',
+  `TotalTaxableSalary` decimal(10,2) DEFAULT '0.00',
+  `TotalEmpSSS` decimal(10,2) DEFAULT '0.00',
+  `TotalEmpWithholdingTax` decimal(10,2) DEFAULT '0.00',
+  `TotalCompSSS` decimal(10,2) DEFAULT '0.00',
+  `TotalEmpPhilhealth` decimal(10,2) DEFAULT '0.00',
+  `TotalCompPhilhealth` decimal(10,2) DEFAULT '0.00',
+  `TotalEmpHDMF` decimal(10,2) DEFAULT '0.00',
+  `TotalCompHDMF` decimal(10,2) DEFAULT '0.00',
+  `TotalVacationDaysLeft` decimal(10,2) DEFAULT '0.00',
+  `TotalUndeclaredSalary` decimal(10,2) DEFAULT '0.00',
+  `TotalLoans` decimal(10,2) DEFAULT '0.00',
+  `TotalBonus` decimal(10,2) DEFAULT '0.00',
+  `TotalAllowance` decimal(10,2) DEFAULT '0.00',
+  `TotalAdjustments` decimal(10,2) DEFAULT '0.00',
+  `ThirteenthMonthInclusion` char(1) DEFAULT '0',
+  `FirstTimeSalary` char(1) DEFAULT '0',
+  PRIMARY KEY (`RowID`),
+  UNIQUE KEY `Index 5` (`PayPeriodID`,`EmployeeID`,`OrganizationID`),
+  KEY `FK_BaseTables_organization` (`OrganizationID`),
+  KEY `FK_BaseTables_user` (`CreatedBy`),
+  KEY `FK_BaseTables_user_2` (`LastUpdBy`),
+  KEY `FK_paystub_employee` (`EmployeeID`),
+  KEY `FK_paystub_timeentry` (`TimeEntryID`),
+  KEY `Index 9` (`PayToDate`,`PayFromDate`),
+  CONSTRAINT `paystubbonus_ibfk_1` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`),
+  CONSTRAINT `paystubbonus_ibfk_2` FOREIGN KEY (`PayPeriodID`) REFERENCES `payperiod` (`RowID`),
+  CONSTRAINT `paystubbonus_ibfk_3` FOREIGN KEY (`TimeEntryID`) REFERENCES `timeentry` (`RowID`),
+  CONSTRAINT `paystubbonus_ibfk_4` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
+  CONSTRAINT `paystubbonus_ibfk_5` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+  CONSTRAINT `paystubbonus_ibfk_6` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

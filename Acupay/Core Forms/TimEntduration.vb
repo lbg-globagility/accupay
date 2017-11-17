@@ -322,16 +322,48 @@ Public Class TimEntduration
             dgvpayper_SelectionChanged(sender, e)
         End If
 
-        Dim blankTimeOut =
-            EXECQUER("Select COUNT(etd.RowID)" &
-                     " FROM employeetimeentrydetails etd" &
-                     " WHERE etd.OrganizationID=" & orgztnID & "" &
-                     " And etd.EmployeeID Is Not NULL" &
-                     " And (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='')" &
-                     " AND etd.`Date`" &
-                     " BETWEEN '" & MYSQLDateFormat(CDate(selectdayFrom)) & "'" &
-                     " AND '" & MYSQLDateFormat(CDate(selectdayTo)) & "'" &
-                     " LIMIT 1;")
+        'Dim blankTimeOut =
+        '    EXECQUER($"
+        '        SELECT COUNT(etd.RowID)
+        '        FROM employeetimeentrydetails etd
+        '        WHERE etd.OrganizationID = {orgztnID} AND
+        '            etd.EmployeeID IS NOT NULL AND
+        '            (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='') AND
+        '            etd.`Date` BETWEEN '{MYSQLDateFormat(CDate(selectdayFrom))}' AND '{MYSQLDateFormat(CDate(selectdayTo))}'
+        '        LIMIT 1;
+        '    ")
+
+        Dim blankSql = String.Empty
+        If IsDBNull(cboxDivisions.Tag) Then
+            blankSql = $"
+                SELECT COUNT(etd.RowID)
+                FROM employeetimeentrydetails etd
+                WHERE etd.OrganizationID = {orgztnID} AND
+                    etd.EmployeeID IS NOT NULL AND
+                    (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='') AND
+                    etd.`Date` BETWEEN '{MYSQLDateFormat(CDate(selectdayFrom))}' AND '{MYSQLDateFormat(CDate(selectdayTo))}'
+                LIMIT 1;
+            "
+        Else
+            blankSql = $"
+                SELECT COUNT(etd.RowID)
+                FROM employeetimeentrydetails etd
+                INNER JOIN employee ee
+                ON ee.RowID = etd.EmployeeID
+                INNER JOIN position p
+                ON p.RowID = ee.PositionID
+                INNER JOIN division d
+                ON d.RowID = p.DivisionID
+                WHERE etd.OrganizationID = {orgztnID} AND
+                    etd.EmployeeID IS NOT NULL AND
+                    (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='') AND
+                    etd.`Date` BETWEEN '{MYSQLDateFormat(CDate(selectdayFrom))}' AND '{MYSQLDateFormat(CDate(selectdayTo))}' AND
+                    d.RowID = {ValNoComma(cboxDivisions.Tag)}
+                LIMIT 1;
+            "
+        End If
+
+        Dim blankTimeOut = EXECQUER(blankSql)
 
         If blankTimeOut >= 1 Then
 

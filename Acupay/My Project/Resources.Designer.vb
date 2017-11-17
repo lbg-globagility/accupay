@@ -581,6 +581,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property SourceSansPro_Regular() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("SourceSansPro_Regular", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to RBX.
         '''</summary>
         Friend ReadOnly Property SystemOwner() As String

@@ -26,6 +26,10 @@ DECLARE isShiftRestDay BOOLEAN;
 DECLARE hasWorked BOOLEAN;
 DECLARE hasLeave BOOLEAN;
 
+DECLARE requiredToWorkLastWorkingDay BOOLEAN;
+DECLARE hasWorkedLastWorkingDay BOOLEAN;
+DECLARE isExemptForHoliday BOOLEAN;
+
 SET NEW.VacationLeaveHours = IFNULL(NEW.VacationLeaveHours, 0);
 SET NEW.SickLeaveHours = IFNULL(NEW.SickLeaveHours, 0);
 SET NEW.MaternityLeaveHours = IFNULL(NEW.MaternityLeaveHours, 0);
@@ -93,10 +97,20 @@ INTO
 
 -- If there is no shift set for the day, assume that it's a rest day.
 SET isShiftRestDay = IF(hasShift, isShiftRestDay, TRUE);
-
 SET isRestDay = isShiftRestDay OR isDefaultRestDay;
 
-IF hasWorked OR isRestDay OR isHoliday OR hasLeave THEN
+SET requiredToWorkLastWorkingDay = GetListOfValueOrDefault(
+    'Payroll Policy', 'HolidayLastWorkingDayOrAbsent', FALSE
+);
+
+SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(NEW.EmployeeID, NEW.Date);
+
+SET isExemptForHoliday = (
+    (isHoliday AND (NOT requiredToWorkLastWorkingDay)) OR
+    (isHoliday AND hasWorkedLastWorkingDay)
+);
+
+IF hasWorked OR isRestDay OR isExemptForHoliday OR hasLeave THEN
     SET NEW.Absent = 0;
 ELSE
     SET NEW.Absent = dailyRate;
@@ -104,7 +118,7 @@ END IF;
 
 SET NEW.Absent = IFNULL(NEW.Absent, 0);
 
-IF isDefaultRestDay = '1' && NEW.EmployeeShiftID IS NOT NULL AND COALESCE(NEW.RegularHoursWorked, 0) = 0 THEN
+IF isDefaultRestDay = '1' AND COALESCE(NEW.RegularHoursWorked, 0) = 0 THEN
     SET NEW.EmployeeShiftID = NULL;
 END IF;
 

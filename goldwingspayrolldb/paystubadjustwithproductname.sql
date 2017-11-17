@@ -8,7 +8,15 @@ DROP VIEW IF EXISTS `paystubadjustwithproductname`;
 DROP TABLE IF EXISTS `paystubadjustwithproductname`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `paystubadjustwithproductname` AS SELECT psj.*
 ,p.PartNo `AdjustmentName`
+,FALSE `AsActual`
 FROM paystubadjustment psj
+INNER JOIN product p ON p.RowID=psj.ProductID AND p.OrganizationID=psj.OrganizationID 
+
+UNION
+SELECT psj.*
+,p.PartNo `AdjustmentName`
+,TRUE `AsActual`
+FROM paystubadjustmentactual psj
 INNER JOIN product p ON p.RowID=psj.ProductID AND p.OrganizationID=psj.OrganizationID ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

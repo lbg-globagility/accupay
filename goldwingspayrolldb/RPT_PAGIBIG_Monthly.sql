@@ -20,17 +20,17 @@ BEGIN
     SET month = DATE_FORMAT(paramDate, '%m');
 
     SELECT
-        employee.PhilHealthNo,
+        employee.PhilHealthNo `DatCol1`,
         CONCAT(
             employee.LastName,
             ',',
             employee.FirstName,
             IF(employee.MiddleName = '', '', ','),
             INITIALS(employee.MiddleName, '. ', '1')
-        ) AS Fullname,
-        paystubsummary.TotalEmpHDMF,
-        paystubsummary.TotalCompHDMF,
-        (paystubsummary.TotalEmpHDMF + paystubsummary.TotalCompHDMF) 'TotalContribution'
+        ) AS `DatCol2`,
+        paystubsummary.TotalEmpHDMF AS `DatCol3`,
+        paystubsummary.TotalCompHDMF AS `DatCol4`,
+        (paystubsummary.TotalEmpHDMF + paystubsummary.TotalCompHDMF) AS `DatCol5`
     FROM employee
     LEFT JOIN (
         SELECT

@@ -10,20 +10,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_salary_increase_histo`(IN `Orga
     DETERMINISTIC
 BEGIN
 
+
 SELECT
-ee.EmployeeID
-,CONCAT(ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) 'Fullname'
-,DATE_FORMAT(ep.EffectiveDate,'%m/%e/%Y') 'EffectiveDate'
-,IFNULL(esal.BasicPay,(SELECT BasicPay FROM employeesalary WHERE EmployeeID=ep.EmployeeID AND OrganizationID=ep.OrganizationID AND ep.EffectiveDate BETWEEN EffectiveDateFrom AND IFNULL(EffectiveDateTo,CURDATE()) ORDER BY IFNULL(EffectiveDateTo,CURDATE()) DESC LIMIT 1)) 'BasicPay'
-FROM employeepromotions ep
-LEFT JOIN employeesalary esal ON esal.RowID=ep.EmployeeSalaryID AND esal.OrganizationID=ep.OrganizationID
-LEFT JOIN employee ee ON ee.RowID=ep.EmployeeID AND ee.OrganizationID=ep.OrganizationID
-WHERE ep.OrganizationID=OrganizID
-AND ep.EffectiveDate BETWEEN PayPerDate1 AND PayPerDate2
-GROUP BY ep.RowID
-ORDER BY ee.LastName,ep.EffectiveDate;
-
-
+    ee.RowID AS `DatCol1`,
+    es.RowID AS `DatCol2`,
+    ee.EmployeeID AS `DatCol3`,
+    CONCAT(ee.LastName, ', ', ee.FirstName) AS `DatCol4`,
+    DATE_FORMAT(es.EffectiveDateFrom, '%m/%d/%Y') AS `DatCol5`,
+    DATE_FORMAT(es.EffectiveDateTo, '%m/%d/%Y') AS `DatCol6`,
+    es.Salary AS `DatCol7`,
+    es.UndeclaredSalary AS `DatCol8`,
+    (es.Salary + es.UndeclaredSalary) AS `DatCol9`
+FROM employeesalary es
+INNER JOIN employee ee
+ON ee.RowID = es.EmployeeID
+WHERE es.OrganizationID = OrganizID
+ORDER BY ee.LastName,
+    ee.FirstName,
+    ee.MiddleName,
+    es.EffectiveDateFrom;
 
 END//
 DELIMITER ;

@@ -11,41 +11,33 @@ CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `UserAuthentication`(`user_name` VARC
 BEGIN
 
 DECLARE returnvaue INT(11) DEFAULT 0;
-DECLARE _count TINYINT;
-DECLARE _haspriv CHAR(1);
 
-
-
-SET @_allow = 'N';
-
-SELECT u.RowID , pv.AllowedToAccess, COUNT(pv.RowID)
-FROM `user` u INNER JOIN `position` po ON po.RowID=u.PositionID INNER JOIN `position` p ON p.PositionName=po.PositionName AND
-
-p.OrganizationID=organizid
-
-INNER JOIN position_view pv ON pv.PositionID=p.RowID AND pv.OrganizationID=p.OrganizationID
-WHERE
-u.UserID=user_name AND u.`Password`=pass_word AND u.`Status`='Active'
+SELECT u.RowID, pv.AllowedToAccess
+FROM `user` u
+INNER JOIN `position` po
+ON po.RowID = u.PositionID
+INNER JOIN `position` p
+ON p.PositionName = po.PositionName AND
+    p.OrganizationID = organizid
+INNER JOIN position_view pv
+ON pv.PositionID = p.RowID AND
+    pv.OrganizationID = p.OrganizationID
+WHERE u.UserID = user_name AND
+    u.`Password` = pass_word AND
+    u.`Status` = 'Active'
 GROUP BY u.RowID, pv.ReadOnly
-
 HAVING pv.AllowedToAccess = 'Y'
-INTO returnvaue, _haspriv, _count;
+INTO returnvaue, @Pv;
 
 IF returnvaue IS NULL THEN
     SET returnvaue = 0;
 END IF;
 
-SET @appmodule_count = (SELECT COUNT(DISTINCT v.ViewName) FROM `view` v);
-
-IF returnvaue > 0 AND _haspriv = 'Y' AND _count >= @appmodule_count THEN
-    UPDATE `user` SET
-    InSession=1
-    ,LastUpd=CURRENT_TIMESTAMP()
-    ,LastUpdBy=returnvaue
-    WHERE RowID=returnvaue;
-ELSE
-    SET returnvaue = 0;
-END IF;
+UPDATE `user`
+SET InSession = 1,
+    LastUpd = CURRENT_TIMESTAMP(),
+    LastUpdBy = returnvaue
+WHERE RowID = returnvaue;
 
 RETURN returnvaue;
 

@@ -74,7 +74,13 @@ SELECT
         DATE_FORMAT(paystub.PayToDate,'%c/%e/%Y')
     ) `DatCol20`,
     paystub.RegularHours `DatCol41`,
-    (IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) + IFNULL(thirteenthmonthpay.Amount,0) + IFNULL(agf.DailyFee, 0)) `DatCol42`
+    (IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) + IFNULL(thirteenthmonthpay.Amount,0) + IFNULL(agf.DailyFee, 0)) `DatCol42`,
+    IF(
+        psi_undeclared,
+        GetActualDailyRate(e.RowID, e.OrganizationID, paystub.PayFromDate),
+        GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
+    ) `DatCol43`,
+    paystub.OvertimeHours `DatCol44`
 FROM paystub
 LEFT JOIN paystubactual
 ON paystubactual.EmployeeID = paystub.EmployeeID AND
@@ -102,7 +108,6 @@ LEFT JOIN thirteenthmonthpay
 ON thirteenthmonthpay.OrganizationID = paystub.OrganizationID AND
     thirteenthmonthpay.PaystubID = IF(psi_undeclared, paystubactual.RowID, paystub.RowID)
 WHERE paystub.OrganizationID = ps_OrganizationID AND
-    paystub.TotalNetSalary > 0 AND
     (paystub.PayFromDate >= paypdatefrom OR paystub.PayToDate >= paypdatefrom) AND
     (paystub.PayFromDate <= paypdateto OR paystub.PayToDate <= paypdateto) AND
     LENGTH(IFNULL(e.ATMNo, '')) = IF(strSalaryDistrib = 'Cash', 0, LENGTH(IFNULL(e.ATMNo, ''))) AND
