@@ -57,9 +57,9 @@
     Private Sub PayrollSummaDateSelection_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         linkPrev.Text = "← " & (yearnow - 1)
         linkNxt.Text = (yearnow + 1) & " →"
-        Label3.Text = ""
-        Label4.Text = ""
-        TabPage1_Enter(TabControl1, New EventArgs)
+        DateFromLabel.Text = ""
+        DateToLabel.Text = ""
+        SemiMonthlyTab_Enter(TabControl1, New EventArgs)
     End Sub
 
     Sub VIEW_payp(Optional param_Date As Object = Nothing,
@@ -92,8 +92,8 @@
         Static limittwo As SByte = 0
         Static previousindex As SByte = 0
 
-        Label3.Text = ""
-        Label4.Text = ""
+        DateFromLabel.Text = ""
+        DateToLabel.Text = ""
 
         If dgvpayperiod.RowCount <> 0 Then
             Dim rowindx = e.RowIndex
@@ -171,8 +171,8 @@
             If DateFromstr = Nothing And
                 DateFromstr = Nothing Then
             Else
-                Label3.Text = Format(CDate(DateFromstr), "MMMM d, yyyy")
-                Label4.Text = Format(CDate(DateTostr), "MMMM d, yyyy")
+                DateFromLabel.Text = Format(CDate(DateFromstr), "MMMM d, yyyy")
+                DateToLabel.Text = Format(CDate(DateTostr), "MMMM d, yyyy")
             End If
         Else
             limittwo = 0
@@ -222,27 +222,15 @@
 
     Private Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
         yearnow = yearnow + 1
-
-        linkNxt.Text = (yearnow + 1) & " →"
-        linkPrev.Text = "← " & (yearnow - 1)
-
-        Dim sel_tab_pg = TabControl1.SelectedTab
-        VIEW_payp(yearnow, sel_tab_pg.Text.Trim)
-
-        dgvpayperiod.EndEdit(True)
-
-        If dgvpayperiod.RowCount <> 0 Then
-        Else
-            DateFromID = Nothing
-            DateToID = Nothing
-            DateFromstr = Nothing
-            DateTostr = Nothing
-        End If
+        ChangePageLinks()
     End Sub
 
     Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
         yearnow = yearnow - 1
+        ChangePageLinks()
+    End Sub
 
+    Private Sub ChangePageLinks()
         linkPrev.Text = "← " & (yearnow - 1)
         linkNxt.Text = (yearnow + 1) & " →"
 
@@ -251,8 +239,7 @@
 
         dgvpayperiod.EndEdit(True)
 
-        If dgvpayperiod.RowCount <> 0 Then
-        Else
+        If dgvpayperiod.RowCount = 0 Then
             DateFromID = Nothing
             DateToID = Nothing
             DateFromstr = Nothing
@@ -266,34 +253,8 @@
         If DateFromID = Nothing Then
             Exit Sub
         ElseIf cboStringParameter.Visible Then
-
-            Select Case Convert.ToInt32(ReportIndex)
-                Case 6 'prints Payroll summary report
-
-                    Dim n_ExecuteQuery As New _
-                        ExecuteQuery(String.Concat("SELECT EXISTS(",
-                                                   "SELECT tp.RowID",
-                                                   " FROM thirteenthmonthpay tp",
-                                                   " INNER JOIN paystub ps ON ps.RowID=tp.PaystubID AND ps.OrganizationID=tp.OrganizationID",
-                                                   " AND ps.PayPeriodID=", ValNoComma(DateFromID),
-                                                   " WHERE tp.OrganizationID=", orgztnID,
-                                                   " LIMIT 1",
-                                                   ") `Result`;"), 192)
-
-                    Dim bool_result As Boolean = (Convert.ToInt16(n_ExecuteQuery.Result) = 0)
-
-                    If Convert.ToInt16(n_ExecuteQuery.Result) = 0 Then
-                        Dim param_array = New Object() {orgztnID, DateFromID, z_User}
-
-                        Dim n_ExecSQLProcedure As New _
-                            ExecSQLProcedure("RECOMPUTE_thirteenthmonthpay",
-                                             param_array)
-                    End If
-            End Select
-
             If cboStringParameter.Text = String.Empty Then
                 WarnBalloon("Please input " & TextBox1.Text, "Invalid " & TextBox1.Text, cboStringParameter, cboStringParameter.Width - 17, -69)
-
                 Exit Sub
             End If
         End If
@@ -333,12 +294,12 @@
 
     Dim faultFontStyle = New System.Drawing.Font("Segoe UI Semilight", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
-    Private Sub TabPage1_Enter(sender As Object, e As EventArgs) Handles TabPage1.Enter
-        VIEW_payp(, TabPage1.Text.Trim)
+    Private Sub SemiMonthlyTab_Enter(sender As Object, e As EventArgs) Handles SemiMonthlyTab.Enter
+        VIEW_payp(, SemiMonthlyTab.Text.Trim)
     End Sub
 
-    Private Sub TabPage2_Enter(sender As Object, e As EventArgs) Handles TabPage2.Enter
-        VIEW_payp(, TabPage2.Text.Trim)
+    Private Sub WeeklyTab_Enter(sender As Object, e As EventArgs) Handles WeeklyTab.Enter
+        VIEW_payp(, WeeklyTab.Text.Trim)
     End Sub
 
 End Class
