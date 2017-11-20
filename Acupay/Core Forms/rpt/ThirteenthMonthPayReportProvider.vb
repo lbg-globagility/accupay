@@ -15,8 +15,8 @@ Public Class ThirteenthMonthPayReportProvider
 
             Dim date_from, date_to As Object
 
-            date_from = n_PayrollSummaDateSelection.DateFromstr
-            date_to = n_PayrollSummaDateSelection.DateTostr
+            date_from = n_PayrollSummaDateSelection.DateFrom
+            date_to = n_PayrollSummaDateSelection.DateTo
 
             Dim sql_print_13thmonth_pay_detailedsummary As _
                 New SQL("CALL RPT_13thmonthpayDetailed(?og_rowid, ?date_from, ?date_to);",

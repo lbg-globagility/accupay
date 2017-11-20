@@ -14,13 +14,13 @@ Public Class LoanSummaryByTypeReportProvider
             Return
         End If
 
-        Dim dateFrom = CDate(dateSelector.DateFromstr)
-        Dim dateTo = CDate(dateSelector.DateTostr)
+        Dim dateFrom = CDate(dateSelector.DateFrom)
+        Dim dateTo = CDate(dateSelector.DateTo)
 
         Dim params = New Object(,) {
             {"OrganizID", orgztnID},
-            {"PayDateFrom", CDate(dateSelector.DateFromstr)},
-            {"PayDateTo", CDate(dateSelector.DateTostr)}
+            {"PayDateFrom", CDate(dateSelector.DateFrom)},
+            {"PayDateTo", CDate(dateSelector.DateTo)}
         }
 
         Dim data = DirectCast(callProcAsDatTab(params, "RPT_LoansByType"), DataTable)

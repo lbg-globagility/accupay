@@ -19,6 +19,8 @@ DECLARE DAYTYPE_REGULAR_WORKING_DAY VARCHAR(50) DEFAULT 'Regular Working Day';
 DECLARE DAYTYPE_SPECIAL_NON_WORKING_HOLIDAY VARCHAR(50) DEFAULT 'Special Non-Working Holiday';
 DECLARE DAYTYPE_REGULAR_HOLIDAY VARCHAR(50) DEFAULT 'Regular Holiday';
 
+DECLARE MAX_REGULAR_HOURS INT(10) DEFAULT 8;
+
 DECLARE BASIC_RATE INT(10) DEFAULT 1;
 
 DECLARE returnvalue INT(11);
@@ -172,8 +174,6 @@ DECLARE nightDiffRangeEnd DATETIME;
 DECLARE dawnNightDiffRangeStart DATETIME;
 DECLARE dawnNightDiffRangeEnd DATETIME;
 
-DECLARE nightDiffDutyStart DATETIME;
-DECLARE nightDiffDutyEnd DATETIME;
 DECLARE nightDiffHours DECIMAL(11, 6);
 DECLARE nightDiffAmount DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE isDutyOverlappedWithNightDifferential BOOLEAN;
@@ -486,6 +486,9 @@ ELSE
     SET regularHours = COMPUTE_TimeDifference(TIME(dutyStart), TIME(dutyEnd));
 END IF;
 
+/* Make sure the regular hours doesn't go above the standard 8-hour workday. */
+SET regularHours = LEAST(regularHours, MAX_REGULAR_HOURS);
+
 SET nightDiffRangeStart = TIMESTAMP(dateToday, nightDiffTimeFrom);
 SET nightDiffRangeEnd = TIMESTAMP(IF(nightDiffTimeTo > nightDiffTimeFrom, ete_Date, dateTomorrow), nightDiffTimeTo);
 
@@ -500,7 +503,7 @@ SET shouldCalculateNightDifferential = (
 );
 
 IF shouldCalculateNightDifferential THEN
-    SET nightDiffHours = IFNULL(ComputeNightDiffHours(dutyStart, dutyEnd, nightDiffDutyStart, nightDiffDutyEnd), 0);
+    SET nightDiffHours = IFNULL(ComputeNightDiffHours(dutyStart, dutyEnd, nightDiffRangeStart, nightDiffRangeEnd), 0);
     SET nightDiffHours = nightDiffHours + IFNULL(ComputeNightDiffHours(dutyStart, dutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd), 0);
 END IF;
 

@@ -14,11 +14,11 @@ Public Class AttendanceSheetReportProvider
             Return
         End If
 
-        Dim d_from = If(n_PayrollSummaDateSelection.DateFromstr Is Nothing, Nothing,
-                        Format(CDate(n_PayrollSummaDateSelection.DateFromstr), "yyyy-MM-dd"))
+        Dim d_from = If(n_PayrollSummaDateSelection.DateFrom Is Nothing, Nothing,
+                        Format(CDate(n_PayrollSummaDateSelection.DateFrom), "yyyy-MM-dd"))
 
-        Dim d_to = If(n_PayrollSummaDateSelection.DateTostr Is Nothing, Nothing,
-                        Format(CDate(n_PayrollSummaDateSelection.DateTostr), "yyyy-MM-dd"))
+        Dim d_to = If(n_PayrollSummaDateSelection.DateTo Is Nothing, Nothing,
+                        Format(CDate(n_PayrollSummaDateSelection.DateTo), "yyyy-MM-dd"))
 
         Dim params(2, 2) As Object
 

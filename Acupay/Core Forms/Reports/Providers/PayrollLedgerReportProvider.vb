@@ -12,8 +12,8 @@ Public Class PayrollLedgerReportProvider
             Return
         End If
 
-        Dim startPayPeriodID = payperiodSelector.DateFromID
-        Dim endPayPeriodID = payperiodSelector.DateToID
+        Dim startPayPeriodID = payperiodSelector.PayPeriodFromID
+        Dim endPayPeriodID = payperiodSelector.PayPeriodToID
 
         Dim params = New Object(,) {
             {"OrganizID", z_OrganizationID},

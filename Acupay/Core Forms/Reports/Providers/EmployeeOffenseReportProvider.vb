@@ -14,8 +14,8 @@ Public Class EmployeeOffenseReportProvider
             Return
         End If
 
-        Dim dateFrom = CDate(payperiodSelector.DateFromstr)
-        Dim dateTo = CDate(payperiodSelector.DateTostr)
+        Dim dateFrom = CDate(payperiodSelector.DateFrom)
+        Dim dateTo = CDate(payperiodSelector.DateTo)
 
         Dim params = New Object(,) {
             {"organizationID", orgztnID},

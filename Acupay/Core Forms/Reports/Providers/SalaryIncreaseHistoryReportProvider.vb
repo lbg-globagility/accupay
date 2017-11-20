@@ -14,8 +14,8 @@ Public Class SalaryIncreaseHistoryReportProvider
             Return
         End If
 
-        Dim dateFrom = payPeriodSelector.DateFromstr
-        Dim dateTo = payPeriodSelector.DateTostr
+        Dim dateFrom = payPeriodSelector.DateFrom
+        Dim dateTo = payPeriodSelector.DateTo
 
         Dim params = New Object(,) {
             {"OrganizID", orgztnID},

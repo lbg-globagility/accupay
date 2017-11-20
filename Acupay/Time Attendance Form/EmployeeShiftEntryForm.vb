@@ -1261,6 +1261,8 @@ Public Class EmployeeShiftEntryForm
             .StartPosition = FormStartPosition.CenterScreen
             .FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
         End With
+
+        n_EmployeeShiftMassUpdate.ShowDialog("")
     End Sub
 
     Private Sub txtsrchEmpLName_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtsrchEmpLName.KeyPress
@@ -1298,7 +1300,6 @@ Public Class EmployeeShiftEntryForm
             ByDayToolStripMenuItem.Visible = opposite_bool
 
             tsbtnBulkEditShift.Visible = opposite_bool
-
         Else
 
         End If
