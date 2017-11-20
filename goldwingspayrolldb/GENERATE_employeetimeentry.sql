@@ -19,6 +19,8 @@ DECLARE DAYTYPE_REGULAR_WORKING_DAY VARCHAR(50) DEFAULT 'Regular Working Day';
 DECLARE DAYTYPE_SPECIAL_NON_WORKING_HOLIDAY VARCHAR(50) DEFAULT 'Special Non-Working Holiday';
 DECLARE DAYTYPE_REGULAR_HOLIDAY VARCHAR(50) DEFAULT 'Regular Holiday';
 
+DECLARE MAX_REGULAR_HOURS INT(10) DEFAULT 8;
+
 DECLARE BASIC_RATE INT(10) DEFAULT 1;
 
 DECLARE returnvalue INT(11);
@@ -485,6 +487,9 @@ ELSE
     /* If there is no breaktime, just compute the time spanning from the duty start and end. */
     SET regularHours = COMPUTE_TimeDifference(TIME(dutyStart), TIME(dutyEnd));
 END IF;
+
+/* Make sure the regular hours doesn't go above the standard 8-hour workday. */
+SET regularHours = LEAST(regularHours, MAX_REGULAR_HOURS);
 
 SET nightDiffRangeStart = TIMESTAMP(dateToday, nightDiffTimeFrom);
 SET nightDiffRangeEnd = TIMESTAMP(IF(nightDiffTimeTo > nightDiffTimeFrom, ete_Date, dateTomorrow), nightDiffTimeTo);
