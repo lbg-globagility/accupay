@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.ComponentModel
 Imports AccuPay.Entity
 Imports log4net
 Imports MySql.Data.MySqlClient
@@ -605,6 +606,7 @@ Public Class PayrollGeneration
 
             transaction.Commit()
             command.Dispose()
+            _connection.Close()
 
             Using context = New PayrollContext()
                 Dim vacationLeaveBalance =
@@ -657,8 +659,10 @@ Public Class PayrollGeneration
             Throw New Exception($"Failure to generate paystub for employee {_payStub.EmployeeID}", ex)
         Finally
             If _connection IsNot Nothing Then
-                _connection.Close()
-                _connection.Dispose()
+                If _connection.State = ConnectionState.Open Then
+                    _connection.Close()
+                    _connection.Dispose()
+                End If
             End If
         End Try
     End Sub
