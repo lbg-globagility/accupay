@@ -174,8 +174,6 @@ DECLARE nightDiffRangeEnd DATETIME;
 DECLARE dawnNightDiffRangeStart DATETIME;
 DECLARE dawnNightDiffRangeEnd DATETIME;
 
-DECLARE nightDiffDutyStart DATETIME;
-DECLARE nightDiffDutyEnd DATETIME;
 DECLARE nightDiffHours DECIMAL(11, 6);
 DECLARE nightDiffAmount DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE isDutyOverlappedWithNightDifferential BOOLEAN;
@@ -505,7 +503,7 @@ SET shouldCalculateNightDifferential = (
 );
 
 IF shouldCalculateNightDifferential THEN
-    SET nightDiffHours = IFNULL(ComputeNightDiffHours(dutyStart, dutyEnd, nightDiffDutyStart, nightDiffDutyEnd), 0);
+    SET nightDiffHours = IFNULL(ComputeNightDiffHours(dutyStart, dutyEnd, nightDiffRangeStart, nightDiffRangeEnd), 0);
     SET nightDiffHours = nightDiffHours + IFNULL(ComputeNightDiffHours(dutyStart, dutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd), 0);
 END IF;
 
