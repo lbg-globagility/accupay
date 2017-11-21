@@ -1,4 +1,5 @@
-﻿Imports Femiani.Forms.UI.Input
+﻿Imports AccuPay.JobLevels
+Imports Femiani.Forms.UI.Input
 Imports MySql.Data.MySqlClient
 
 Public Class EmpPosition
@@ -158,7 +159,21 @@ Public Class EmpPosition
         End If
 
         bgworkautcompsearch.RunWorkerAsync()
+        LoadJobLevels()
+    End Sub
 
+    Private Sub LoadJobLevels()
+        Dim jobLevels As ICollection(Of JobLevel)
+
+        Using context = New PayrollContext()
+            jobLevels =
+                (From j In context.JobLevels
+                 Where j.OrganizationID = z_OrganizationID
+                 Select j).ToList()
+        End Using
+
+        JobLevelComboBox.DataSource = jobLevels
+        JobLevelComboBox.SelectedIndex = -1
     End Sub
 
     Sub reload()
@@ -677,12 +692,17 @@ Public Class EmpPosition
 
         End If
 
+        Dim jobLevel = DirectCast(JobLevelComboBox.SelectedItem, JobLevel)
+
         If tsbtnNewPosition.Enabled = 0 Then
 
-            Dim returnval = INSUPD_position(,
+            Dim returnval = INSUPD_position(
+                Nothing,
                 Trim(txtPositName.Text),
                 parentpositID,
-                divisID)
+                divisID,
+                jobLevel?.RowID
+            )
 
             InfoBalloon("Position '" & txtPositName.Text & "' has successfully saved.", "Position save successful", lblforballoon, 0, -69)
         Else
@@ -692,10 +712,13 @@ Public Class EmpPosition
 
             If selPositionID = Nothing Then
             Else
-                INSUPD_position(selPositionID,
-                                Trim(txtPositName.Text),
-                                parentpositID,
-                                If(parentpositID = Nothing, divisID, Nothing))
+                INSUPD_position(
+                    selPositionID,
+                    Trim(txtPositName.Text),
+                    parentpositID,
+                    If(parentpositID = Nothing, divisID, Nothing),
+                    jobLevel?.RowID
+                )
 
                 InfoBalloon("Position '" & txtPositName.Text & "' has successfully saved.", "Position save successful", lblforballoon, 0, -69)
 
@@ -798,7 +821,8 @@ Public Class EmpPosition
     Function INSUPD_position(Optional pos_RowID As Object = Nothing,
                              Optional pos_PositionName As Object = Nothing,
                              Optional pos_ParentPositionID As Object = Nothing,
-                             Optional pos_DivisionId As Object = Nothing) As Object
+                             Optional pos_DivisionId As Object = Nothing,
+                             Optional jobLevelID As Integer? = Nothing) As Object
         Dim return_value = Nothing
         Try
             If conn.State = ConnectionState.Open Then : conn.Close() : End If
@@ -821,6 +845,7 @@ Public Class EmpPosition
                 .Parameters.AddWithValue("pos_LastUpdBy", z_User)
                 .Parameters.AddWithValue("pos_ParentPositionID", If(pos_ParentPositionID = Nothing, DBNull.Value, pos_ParentPositionID))
                 .Parameters.AddWithValue("pos_DivisionId", If(pos_DivisionId = Nothing, DBNull.Value, pos_DivisionId))
+                .Parameters.AddWithValue("pos_JobLevelID", jobLevelID)
 
                 .Parameters("positID").Direction = ParameterDirection.ReturnValue
 

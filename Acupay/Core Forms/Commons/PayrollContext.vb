@@ -41,6 +41,8 @@ Public Class PayrollContext
 
     Public Overridable Property JobCategories As DbSet(Of JobCategory)
 
+    Public Overridable Property JobLevels As DbSet(Of JobLevel)
+
     Public Overridable Property Position As DbSet(Of Position)
 
 End Class

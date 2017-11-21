@@ -6,7 +6,7 @@
 
 DROP FUNCTION IF EXISTS `INSUPD_position`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_position`(`pos_RowID` INT, `pos_PositionName` VARCHAR(50), `pos_CreatedBy` INT, `pos_OrganizationID` INT, `pos_LastUpdBy` INT, `pos_ParentPositionID` INT, `pos_DivisionId` INT) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_position`(`pos_RowID` INT, `pos_PositionName` VARCHAR(50), `pos_CreatedBy` INT, `pos_OrganizationID` INT, `pos_LastUpdBy` INT, `pos_ParentPositionID` INT, `pos_DivisionId` INT, `pos_JobLevelID` INT) RETURNS int(11)
     DETERMINISTIC
 BEGIN
 
@@ -14,44 +14,56 @@ DECLARE positID INT(11);
 
 DECLARE defaultDivisID INT(11);
 
-SELECT COUNT(RowID) FROM `division` WHERE OrganizationID=pos_OrganizationID INTO defaultDivisID;
+SELECT COUNT(RowID)
+FROM `division`
+WHERE OrganizationID = pos_OrganizationID
+INTO defaultDivisID;
 
 IF defaultDivisID > 0 THEN
 
     IF pos_DivisionId IS NULL THEN
-
-        SELECT RowID FROM division WHERE OrganizationID=pos_OrganizationID AND ParentDivisionID IS NOT NULL ORDER BY RowID LIMIT 1 INTO pos_DivisionId;
-
+        SELECT RowID
+        FROM division
+        WHERE OrganizationID = pos_OrganizationID AND
+            ParentDivisionID IS NOT NULL
+        ORDER BY RowID
+        LIMIT 1
+        INTO pos_DivisionId;
     END IF;
 
-    INSERT INTO `position`
-    (
+    INSERT INTO `position` (
         RowID
-        ,PositionName
-        ,Created
-        ,CreatedBy
-        ,OrganizationID
-        ,LastUpdBy
-        ,ParentPositionID
-        ,DivisionId
-    ) VALUES (
-        pos_RowID
-        ,pos_PositionName
-        ,CURRENT_TIMESTAMP()
-        ,pos_CreatedBy
-        ,pos_OrganizationID
-        ,pos_LastUpdBy
-        ,pos_ParentPositionID
-        ,pos_DivisionId
-    ) ON
-    DUPLICATE
-    KEY
+        PositionName,
+        Created,
+        CreatedBy,
+        OrganizationID,
+        LastUpdBy,
+        ParentPositionID,
+        DivisionId,
+        JobLevelID
+    )
+    VALUES (
+        pos_RowID,
+        pos_PositionName,
+        CURRENT_TIMESTAMP(),
+        pos_CreatedBy,
+        pos_OrganizationID,
+        pos_LastUpdBy,
+        pos_ParentPositionID,
+        pos_DivisionId,
+        pos_JobLevelID
+    )
+    ON DUPLICATE KEY
     UPDATE
-        PositionName=pos_PositionName
-        ,LastUpd=CURRENT_TIMESTAMP()
-        ,LastUpdBy=pos_LastUpdBy
-        ,ParentPositionID=pos_ParentPositionID
-        ,DivisionId=pos_DivisionId;SELECT @@Identity AS Id INTO positID;
+        PositionName = pos_PositionName,
+        LastUpd = CURRENT_TIMESTAMP(),
+        LastUpdBy = pos_LastUpdBy,
+        ParentPositionID = pos_ParentPositionID,
+        DivisionId = pos_DivisionId,
+        JobLevelID = pos_JobLevelID;
+
+    SELECT @@Identity AS Id
+    INTO positID;
 
 ELSE
 
