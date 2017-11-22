@@ -2133,7 +2133,7 @@ Partial Class EmployeeForm
         Me.tbpEmployee.Location = New System.Drawing.Point(4, 4)
         Me.tbpEmployee.Name = "tbpEmployee"
         Me.tbpEmployee.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpEmployee.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpEmployee.Size = New System.Drawing.Size(860, 486)
         Me.tbpEmployee.TabIndex = 0
         Me.tbpEmployee.Text = "PERSON"
         '
@@ -2264,8 +2264,8 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.txtCell)
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
-        Me.SplitContainer2.Size = New System.Drawing.Size(1017, 455)
-        Me.SplitContainer2.SplitterDistance = 210
+        Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
+        Me.SplitContainer2.SplitterDistance = 207
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3538,7 +3538,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(1015, 211)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 214)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -3760,7 +3760,7 @@ Partial Class EmployeeForm
         Me.ToolStrip4.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewDepen, Me.tsbtnSaveDepen, Me.ToolStripButton1, Me.ToolStripButton6, Me.tsbtnImportDependents, Me.ToolStripProgressBar1})
         Me.ToolStrip4.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip4.Name = "ToolStrip4"
-        Me.ToolStrip4.Size = New System.Drawing.Size(1015, 25)
+        Me.ToolStrip4.Size = New System.Drawing.Size(852, 25)
         Me.ToolStrip4.TabIndex = 114
         Me.ToolStrip4.Text = "ToolStrip4"
         '
@@ -3840,7 +3840,7 @@ Partial Class EmployeeForm
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewEmp, Me.tsbtnSaveEmp, Me.tsbtnCancel, Me.tsbtnClose, Me.tsbtnAudittrail, Me.tsbtnImportEmployee, Me.tsprogbarempimport})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip1.TabIndex = 28
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -3911,7 +3911,7 @@ Partial Class EmployeeForm
         Me.tbpSalary.Location = New System.Drawing.Point(4, 4)
         Me.tbpSalary.Name = "tbpSalary"
         Me.tbpSalary.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpSalary.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpSalary.Size = New System.Drawing.Size(860, 486)
         Me.tbpSalary.TabIndex = 10
         Me.tbpSalary.Text = "SALARY"
         Me.tbpSalary.UseVisualStyleBackColor = True
@@ -3929,7 +3929,7 @@ Partial Class EmployeeForm
         Me.Panel8.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel8.Location = New System.Drawing.Point(3, 28)
         Me.Panel8.Name = "Panel8"
-        Me.Panel8.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel8.Size = New System.Drawing.Size(854, 455)
         Me.Panel8.TabIndex = 349
         '
         'Label319
@@ -4482,7 +4482,7 @@ Partial Class EmployeeForm
         Me.ToolStrip13.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNewSal, Me.btnSaveSal, Me.ToolStripLabel6, Me.ToolStripSeparator11, Me.btnDelSal, Me.ToolStripSeparator12, Me.btnCancelSal, Me.ToolStripButton30, Me.ToolStripButton31, Me.tsbtnImportSalary, Me.ToolStripProgressBar2})
         Me.ToolStrip13.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip13.Name = "ToolStrip13"
-        Me.ToolStrip13.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip13.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip13.TabIndex = 323
         Me.ToolStrip13.Text = "ToolStrip13"
         '
@@ -4577,7 +4577,7 @@ Partial Class EmployeeForm
         Me.tbpAwards.Location = New System.Drawing.Point(4, 4)
         Me.tbpAwards.Name = "tbpAwards"
         Me.tbpAwards.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpAwards.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpAwards.Size = New System.Drawing.Size(860, 486)
         Me.tbpAwards.TabIndex = 1
         Me.tbpAwards.Text = "AWARD"
         Me.tbpAwards.UseVisualStyleBackColor = True
@@ -4593,7 +4593,7 @@ Partial Class EmployeeForm
         Me.Panel17.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel17.Location = New System.Drawing.Point(3, 28)
         Me.Panel17.Name = "Panel17"
-        Me.Panel17.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel17.Size = New System.Drawing.Size(854, 455)
         Me.Panel17.TabIndex = 159
         '
         'Label320
@@ -4746,7 +4746,7 @@ Partial Class EmployeeForm
         Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewempawar, Me.tsbtnSaveempawar, Me.tsbtnCancelempawar, Me.tsbtnCloseempawar, Me.ToolStripButton14})
         Me.ToolStrip2.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip2.Name = "ToolStrip2"
-        Me.ToolStrip2.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip2.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip2.TabIndex = 125
         Me.ToolStrip2.Text = "ToolStrip2"
         '
@@ -4802,7 +4802,7 @@ Partial Class EmployeeForm
         Me.tbpCertifications.Location = New System.Drawing.Point(4, 4)
         Me.tbpCertifications.Name = "tbpCertifications"
         Me.tbpCertifications.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpCertifications.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpCertifications.Size = New System.Drawing.Size(860, 486)
         Me.tbpCertifications.TabIndex = 2
         Me.tbpCertifications.Text = "CERTI"
         Me.tbpCertifications.UseVisualStyleBackColor = True
@@ -4819,7 +4819,7 @@ Partial Class EmployeeForm
         Me.Panel16.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel16.Location = New System.Drawing.Point(3, 28)
         Me.Panel16.Name = "Panel16"
-        Me.Panel16.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel16.Size = New System.Drawing.Size(854, 455)
         Me.Panel16.TabIndex = 170
         '
         'Label322
@@ -5052,7 +5052,7 @@ Partial Class EmployeeForm
         Me.ToolStrip3.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewempcert, Me.tsbtnSaveempcert, Me.tsbtnCertEmploymnt, Me.tsbtnCancelempcert, Me.tsbtnCloseempcert, Me.ToolStripButton15})
         Me.ToolStrip3.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip3.Name = "ToolStrip3"
-        Me.ToolStrip3.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip3.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip3.TabIndex = 126
         Me.ToolStrip3.Text = "ToolStrip3"
         '
@@ -5117,7 +5117,7 @@ Partial Class EmployeeForm
         Me.tbpLeave.Location = New System.Drawing.Point(4, 4)
         Me.tbpLeave.Name = "tbpLeave"
         Me.tbpLeave.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpLeave.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpLeave.Size = New System.Drawing.Size(860, 486)
         Me.tbpLeave.TabIndex = 3
         Me.tbpLeave.Text = "LEAVE"
         Me.tbpLeave.UseVisualStyleBackColor = True
@@ -5167,7 +5167,7 @@ Partial Class EmployeeForm
         Me.Panel15.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel15.Location = New System.Drawing.Point(3, 28)
         Me.Panel15.Name = "Panel15"
-        Me.Panel15.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel15.Size = New System.Drawing.Size(854, 455)
         Me.Panel15.TabIndex = 188
         '
         'Label345
@@ -6059,7 +6059,7 @@ Partial Class EmployeeForm
         Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewLeave, Me.tsbtnSaveLeave, Me.ToolStripButton3, Me.ToolStripLabel10, Me.tsbtnDeletLeave, Me.ToolStripButton4, Me.ToolStripButton17, Me.ToolStripButton20})
         Me.ToolStrip5.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip5.Name = "ToolStrip5"
-        Me.ToolStrip5.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip5.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip5.TabIndex = 0
         Me.ToolStrip5.Text = "ToolStrip5"
         '
@@ -6148,7 +6148,7 @@ Partial Class EmployeeForm
         Me.tbpDiscipAct.Location = New System.Drawing.Point(4, 4)
         Me.tbpDiscipAct.Name = "tbpDiscipAct"
         Me.tbpDiscipAct.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpDiscipAct.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpDiscipAct.Size = New System.Drawing.Size(860, 486)
         Me.tbpDiscipAct.TabIndex = 5
         Me.tbpDiscipAct.Text = "DISCIP"
         Me.tbpDiscipAct.UseVisualStyleBackColor = True
@@ -6179,7 +6179,7 @@ Partial Class EmployeeForm
         Me.Panel14.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel14.Location = New System.Drawing.Point(3, 28)
         Me.Panel14.Name = "Panel14"
-        Me.Panel14.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel14.Size = New System.Drawing.Size(854, 455)
         Me.Panel14.TabIndex = 338
         '
         'LinkLabel3
@@ -6461,7 +6461,7 @@ Partial Class EmployeeForm
         Me.ToolStrip8.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.btnPrintMemo, Me.btnCancel, Me.btnClose, Me.btnAudittrail})
         Me.ToolStrip8.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip8.Name = "ToolStrip8"
-        Me.ToolStrip8.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip8.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip8.TabIndex = 326
         Me.ToolStrip8.Text = "ToolStrip8"
         '
@@ -6551,7 +6551,7 @@ Partial Class EmployeeForm
         Me.tbpEducBG.Location = New System.Drawing.Point(4, 4)
         Me.tbpEducBG.Name = "tbpEducBG"
         Me.tbpEducBG.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpEducBG.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpEducBG.Size = New System.Drawing.Size(860, 486)
         Me.tbpEducBG.TabIndex = 6
         Me.tbpEducBG.Text = "EDUC"
         Me.tbpEducBG.UseVisualStyleBackColor = True
@@ -6584,7 +6584,7 @@ Partial Class EmployeeForm
         Me.Panel13.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel13.Location = New System.Drawing.Point(3, 28)
         Me.Panel13.Name = "Panel13"
-        Me.Panel13.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel13.Size = New System.Drawing.Size(854, 455)
         Me.Panel13.TabIndex = 349
         '
         'Label327
@@ -6913,7 +6913,7 @@ Partial Class EmployeeForm
         Me.ToolStrip9.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNewEduc, Me.ToolStripButton5, Me.ToolStripSeparator3, Me.btnSaveEduc, Me.ToolStripSeparator4, Me.ToolStripLabel2, Me.btnDeleteEduc, Me.btnCancelEduc, Me.tsAudittrail})
         Me.ToolStrip9.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip9.Name = "ToolStrip9"
-        Me.ToolStrip9.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip9.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip9.TabIndex = 63
         Me.ToolStrip9.Text = "ToolStrip9"
         '
@@ -6992,7 +6992,7 @@ Partial Class EmployeeForm
         Me.tbpPrevEmp.Location = New System.Drawing.Point(4, 4)
         Me.tbpPrevEmp.Name = "tbpPrevEmp"
         Me.tbpPrevEmp.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpPrevEmp.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpPrevEmp.Size = New System.Drawing.Size(860, 486)
         Me.tbpPrevEmp.TabIndex = 7
         Me.tbpPrevEmp.Text = "PREV EMP"
         Me.tbpPrevEmp.UseVisualStyleBackColor = True
@@ -7010,7 +7010,7 @@ Partial Class EmployeeForm
         Me.Panel12.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel12.Location = New System.Drawing.Point(3, 28)
         Me.Panel12.Name = "Panel12"
-        Me.Panel12.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel12.Size = New System.Drawing.Size(854, 455)
         Me.Panel12.TabIndex = 352
         '
         'Label329
@@ -7623,7 +7623,7 @@ Partial Class EmployeeForm
         Me.ToolStrip10.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNewPrevEmp, Me.btnSavePrevEmp, Me.ToolStripLabel3, Me.ToolStripSeparator5, Me.btnDelPrevEmp, Me.ToolStripSeparator6, Me.btnCancelPrevEmp, Me.ToolStripButton13, Me.ToolStripButton21})
         Me.ToolStrip10.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip10.Name = "ToolStrip10"
-        Me.ToolStrip10.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip10.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip10.TabIndex = 309
         Me.ToolStrip10.Text = "ToolStrip10"
         '
@@ -7703,7 +7703,7 @@ Partial Class EmployeeForm
         Me.tbpPromotion.Location = New System.Drawing.Point(4, 4)
         Me.tbpPromotion.Name = "tbpPromotion"
         Me.tbpPromotion.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpPromotion.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpPromotion.Size = New System.Drawing.Size(860, 486)
         Me.tbpPromotion.TabIndex = 8
         Me.tbpPromotion.Text = "PROMOT"
         Me.tbpPromotion.UseVisualStyleBackColor = True
@@ -7741,7 +7741,7 @@ Partial Class EmployeeForm
         Me.Panel11.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel11.Location = New System.Drawing.Point(3, 28)
         Me.Panel11.Name = "Panel11"
-        Me.Panel11.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel11.Size = New System.Drawing.Size(854, 455)
         Me.Panel11.TabIndex = 386
         '
         'Label331
@@ -8106,7 +8106,7 @@ Partial Class EmployeeForm
         Me.ToolStrip11.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNewPromot, Me.btnSavePromot, Me.ToolStripLabel4, Me.ToolStripSeparator7, Me.btnDelPromot, Me.ToolStripSeparator8, Me.btnCancePromot, Me.ToolStripButton18, Me.ToolStripButton19})
         Me.ToolStrip11.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip11.Name = "ToolStrip11"
-        Me.ToolStrip11.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip11.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip11.TabIndex = 329
         Me.ToolStrip11.Text = "ToolStrip11"
         '
@@ -8187,7 +8187,7 @@ Partial Class EmployeeForm
         Me.tbpLoans.Location = New System.Drawing.Point(4, 4)
         Me.tbpLoans.Name = "tbpLoans"
         Me.tbpLoans.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpLoans.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpLoans.Size = New System.Drawing.Size(860, 486)
         Me.tbpLoans.TabIndex = 9
         Me.tbpLoans.Text = "LOAN SCH"
         Me.tbpLoans.UseVisualStyleBackColor = True
@@ -8245,7 +8245,7 @@ Partial Class EmployeeForm
         Me.Panel10.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel10.Location = New System.Drawing.Point(3, 28)
         Me.Panel10.Name = "Panel10"
-        Me.Panel10.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel10.Size = New System.Drawing.Size(854, 455)
         Me.Panel10.TabIndex = 385
         '
         'chkboxChargeToBonus
@@ -8810,7 +8810,7 @@ Partial Class EmployeeForm
         Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewLoan, Me.tsbtnSaveLoan, Me.ToolStripLabel5, Me.ToolStripSeparator9, Me.DeleteLoanScheduleButton, Me.ToolStripSeparator10, Me.ToolStripButton23, Me.ToolStripButton24, Me.ToolStripButton25, Me.tsbtnImportLoans})
         Me.ToolStrip12.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip12.Name = "ToolStrip12"
-        Me.ToolStrip12.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip12.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip12.TabIndex = 327
         Me.ToolStrip12.Text = "ToolStrip12"
         '
@@ -8899,7 +8899,7 @@ Partial Class EmployeeForm
         Me.tbpLoanHist.Location = New System.Drawing.Point(4, 4)
         Me.tbpLoanHist.Name = "tbpLoanHist"
         Me.tbpLoanHist.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpLoanHist.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpLoanHist.Size = New System.Drawing.Size(860, 486)
         Me.tbpLoanHist.TabIndex = 11
         Me.tbpLoanHist.Text = "LOAN HIST"
         Me.tbpLoanHist.UseVisualStyleBackColor = True
@@ -8929,7 +8929,7 @@ Partial Class EmployeeForm
         Me.Panel9.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel9.Location = New System.Drawing.Point(3, 28)
         Me.Panel9.Name = "Panel9"
-        Me.Panel9.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel9.Size = New System.Drawing.Size(854, 455)
         Me.Panel9.TabIndex = 386
         '
         'GroupBox3
@@ -9209,7 +9209,7 @@ Partial Class EmployeeForm
         Me.ToolStrip14.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton32, Me.ToolStripButton33, Me.tsbtnPayLoan})
         Me.ToolStrip14.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip14.Name = "ToolStrip14"
-        Me.ToolStrip14.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip14.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip14.TabIndex = 328
         Me.ToolStrip14.Text = "ToolStrip14"
         '
@@ -9250,7 +9250,7 @@ Partial Class EmployeeForm
         Me.tbpPayslip.Location = New System.Drawing.Point(4, 4)
         Me.tbpPayslip.Name = "tbpPayslip"
         Me.tbpPayslip.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpPayslip.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpPayslip.Size = New System.Drawing.Size(860, 486)
         Me.tbpPayslip.TabIndex = 12
         Me.tbpPayslip.Text = "PAYSLIP"
         Me.tbpPayslip.UseVisualStyleBackColor = True
@@ -9274,8 +9274,8 @@ Partial Class EmployeeForm
         'SplitContainer3.Panel2
         '
         Me.SplitContainer3.Panel2.Controls.Add(Me.PanelPayslip)
-        Me.SplitContainer3.Size = New System.Drawing.Size(1017, 455)
-        Me.SplitContainer3.SplitterDistance = 274
+        Me.SplitContainer3.Size = New System.Drawing.Size(854, 455)
+        Me.SplitContainer3.SplitterDistance = 230
         Me.SplitContainer3.TabIndex = 171
         '
         'Label312
@@ -9566,7 +9566,7 @@ Partial Class EmployeeForm
         Me.PanelPayslip.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelPayslip.Location = New System.Drawing.Point(0, 0)
         Me.PanelPayslip.Name = "PanelPayslip"
-        Me.PanelPayslip.Size = New System.Drawing.Size(737, 453)
+        Me.PanelPayslip.Size = New System.Drawing.Size(618, 453)
         Me.PanelPayslip.TabIndex = 170
         '
         'dgvempallowans
@@ -11588,7 +11588,7 @@ Partial Class EmployeeForm
         Me.ToolStrip16.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnprintpayslip, Me.ToolStripButton12, Me.tsbtnprintall})
         Me.ToolStrip16.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip16.Name = "ToolStrip16"
-        Me.ToolStrip16.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip16.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip16.TabIndex = 172
         Me.ToolStrip16.Text = "ToolStrip16"
         '
@@ -11626,7 +11626,7 @@ Partial Class EmployeeForm
         Me.tbpempallow.Location = New System.Drawing.Point(4, 4)
         Me.tbpempallow.Name = "tbpempallow"
         Me.tbpempallow.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpempallow.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpempallow.Size = New System.Drawing.Size(860, 486)
         Me.tbpempallow.TabIndex = 14
         Me.tbpempallow.Text = "ALLOW"
         Me.tbpempallow.UseVisualStyleBackColor = True
@@ -11660,7 +11660,7 @@ Partial Class EmployeeForm
         Me.Panel6.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel6.Location = New System.Drawing.Point(3, 28)
         Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel6.Size = New System.Drawing.Size(854, 455)
         Me.Panel6.TabIndex = 359
         '
         'Label337
@@ -12060,7 +12060,7 @@ Partial Class EmployeeForm
         Me.ToolStrip17.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton7, Me.tsbtnNewAllowance, Me.tsbtnSaveAllowance, Me.ToolStripButton10, Me.ToolStripButton26, Me.ToolStripLabel7, Me.tsbtnDelAllowance, Me.tsbtnimportallowance})
         Me.ToolStrip17.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip17.Name = "ToolStrip17"
-        Me.ToolStrip17.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip17.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip17.TabIndex = 164
         Me.ToolStrip17.Text = "ToolStrip17"
         '
@@ -12139,7 +12139,7 @@ Partial Class EmployeeForm
         Me.tbpEmpOT.Location = New System.Drawing.Point(4, 4)
         Me.tbpEmpOT.Name = "tbpEmpOT"
         Me.tbpEmpOT.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpEmpOT.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpEmpOT.Size = New System.Drawing.Size(860, 486)
         Me.tbpEmpOT.TabIndex = 15
         Me.tbpEmpOT.Text = "EMP OT"
         Me.tbpEmpOT.UseVisualStyleBackColor = True
@@ -12190,7 +12190,7 @@ Partial Class EmployeeForm
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel5.Location = New System.Drawing.Point(3, 28)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel5.Size = New System.Drawing.Size(854, 455)
         Me.Panel5.TabIndex = 194
         '
         'lnkLastOT
@@ -12786,7 +12786,7 @@ Partial Class EmployeeForm
         Me.ToolStrip18.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewEmpOT, Me.tsbtnSaveEmpOT, Me.tsbtnDeleteEmpOT, Me.ToolStripButton8, Me.ToolStripButton9, Me.ToolStripButton27, Me.OTImport})
         Me.ToolStrip18.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip18.Name = "ToolStrip18"
-        Me.ToolStrip18.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip18.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip18.TabIndex = 0
         Me.ToolStrip18.Text = "ToolStrip18"
         '
@@ -12869,7 +12869,7 @@ Partial Class EmployeeForm
         Me.tbpOBF.Location = New System.Drawing.Point(4, 4)
         Me.tbpOBF.Name = "tbpOBF"
         Me.tbpOBF.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpOBF.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpOBF.Size = New System.Drawing.Size(860, 461)
         Me.tbpOBF.TabIndex = 16
         Me.tbpOBF.Text = "OFFBUSI"
         Me.tbpOBF.UseVisualStyleBackColor = True
@@ -12918,7 +12918,7 @@ Partial Class EmployeeForm
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel4.Location = New System.Drawing.Point(3, 28)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel4.Size = New System.Drawing.Size(854, 430)
         Me.Panel4.TabIndex = 198
         '
         'Label341
@@ -13497,7 +13497,7 @@ Partial Class EmployeeForm
         Me.ToolStrip19.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewOBF, Me.tsbtnSaveOBF, Me.tsbtnCancelOBF, Me.tsbtnCloseOBF, Me.ToolStripButton28, Me.ToolStripLabel9, Me.tsbtnDelOffBusi, Me.OBImport})
         Me.ToolStrip19.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip19.Name = "ToolStrip19"
-        Me.ToolStrip19.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip19.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip19.TabIndex = 0
         Me.ToolStrip19.Text = "ToolStrip19"
         '
@@ -13585,7 +13585,7 @@ Partial Class EmployeeForm
         Me.tbpBonus.Location = New System.Drawing.Point(4, 4)
         Me.tbpBonus.Name = "tbpBonus"
         Me.tbpBonus.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpBonus.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpBonus.Size = New System.Drawing.Size(860, 461)
         Me.tbpBonus.TabIndex = 17
         Me.tbpBonus.Text = "BONUS"
         Me.tbpBonus.UseVisualStyleBackColor = True
@@ -13618,7 +13618,7 @@ Partial Class EmployeeForm
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel3.Location = New System.Drawing.Point(3, 28)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel3.Size = New System.Drawing.Size(854, 430)
         Me.Panel3.TabIndex = 360
         '
         'Label342
@@ -14000,7 +14000,7 @@ Partial Class EmployeeForm
         Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.tsbtnNewBon, Me.tsbtnSaveBon, Me.tsbtnCancelBon, Me.ToolStripButton29, Me.ToolStripLabel8, Me.tsbtnDelBon})
         Me.ToolStrip20.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip20.Name = "ToolStrip20"
-        Me.ToolStrip20.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip20.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip20.TabIndex = 164
         Me.ToolStrip20.Text = "ToolStrip20"
         '
@@ -14070,7 +14070,7 @@ Partial Class EmployeeForm
         Me.tbpAttachment.Location = New System.Drawing.Point(4, 4)
         Me.tbpAttachment.Name = "tbpAttachment"
         Me.tbpAttachment.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpAttachment.Size = New System.Drawing.Size(1023, 486)
+        Me.tbpAttachment.Size = New System.Drawing.Size(860, 461)
         Me.tbpAttachment.TabIndex = 18
         Me.tbpAttachment.Text = "ATTACH"
         Me.tbpAttachment.UseVisualStyleBackColor = True
@@ -14093,7 +14093,7 @@ Partial Class EmployeeForm
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(3, 28)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(1017, 455)
+        Me.Panel2.Size = New System.Drawing.Size(854, 430)
         Me.Panel2.TabIndex = 345
         '
         'Label344
@@ -14333,7 +14333,7 @@ Partial Class EmployeeForm
         Me.ToolStrip21.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewAtta, Me.tsbtnSaveAtta, Me.tsbtnCancelAtta, Me.ToolStripButton16, Me.ToolStripButton34})
         Me.ToolStrip21.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip21.Name = "ToolStrip21"
-        Me.ToolStrip21.Size = New System.Drawing.Size(1017, 25)
+        Me.ToolStrip21.Size = New System.Drawing.Size(854, 25)
         Me.ToolStrip21.TabIndex = 344
         Me.ToolStrip21.Text = "ToolStrip21"
         '

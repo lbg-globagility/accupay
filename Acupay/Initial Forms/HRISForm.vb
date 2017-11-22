@@ -330,8 +330,14 @@ Public Class HRISForm
 
     End Sub
 
-    Private Sub JobLevelToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobLevelToolStripMenuItem.Click
+    Private Sub JobCategoryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobCategoryToolStripMenuItem.Click
         ChangeForm(JobLevelForm, "Position")
         previousForm = JobLevelForm
     End Sub
+
+    Private Sub PointsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PointsToolStripMenuItem.Click
+        ChangeForm(JobPointsForm, "Position")
+        previousForm = JobPointsForm
+    End Sub
+
 End Class

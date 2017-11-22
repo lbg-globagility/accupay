@@ -48,8 +48,10 @@ Partial Class HRISForm
         Me.OffSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DivisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PositionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PanelHRIS = New System.Windows.Forms.Panel()
         Me.JobLevelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PanelHRIS = New System.Windows.Forms.Panel()
+        Me.JobCategoryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PointsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -216,6 +218,13 @@ Partial Class HRISForm
         Me.PositionToolStripMenuItem.Size = New System.Drawing.Size(62, 20)
         Me.PositionToolStripMenuItem.Text = "Position"
         '
+        'JobLevelToolStripMenuItem
+        '
+        Me.JobLevelToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.JobCategoryToolStripMenuItem, Me.PointsToolStripMenuItem})
+        Me.JobLevelToolStripMenuItem.Name = "JobLevelToolStripMenuItem"
+        Me.JobLevelToolStripMenuItem.Size = New System.Drawing.Size(67, 20)
+        Me.JobLevelToolStripMenuItem.Text = "Job Level"
+        '
         'PanelHRIS
         '
         Me.PanelHRIS.Dock = System.Windows.Forms.DockStyle.Fill
@@ -224,11 +233,17 @@ Partial Class HRISForm
         Me.PanelHRIS.Size = New System.Drawing.Size(1006, 446)
         Me.PanelHRIS.TabIndex = 3
         '
-        'JobLevelToolStripMenuItem
+        'JobCategoryToolStripMenuItem
         '
-        Me.JobLevelToolStripMenuItem.Name = "JobLevelToolStripMenuItem"
-        Me.JobLevelToolStripMenuItem.Size = New System.Drawing.Size(67, 20)
-        Me.JobLevelToolStripMenuItem.Text = "Job Level"
+        Me.JobCategoryToolStripMenuItem.Name = "JobCategoryToolStripMenuItem"
+        Me.JobCategoryToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.JobCategoryToolStripMenuItem.Text = "Job Category"
+        '
+        'PointsToolStripMenuItem
+        '
+        Me.PointsToolStripMenuItem.Name = "PointsToolStripMenuItem"
+        Me.PointsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.PointsToolStripMenuItem.Text = "Points"
         '
         'HRISForm
         '
@@ -275,4 +290,6 @@ Partial Class HRISForm
     Friend WithEvents AttachmentToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OffSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents JobLevelToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents JobCategoryToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PointsToolStripMenuItem As ToolStripMenuItem
 End Class

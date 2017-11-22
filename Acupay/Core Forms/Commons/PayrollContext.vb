@@ -45,4 +45,6 @@ Public Class PayrollContext
 
     Public Overridable Property Position As DbSet(Of Position)
 
+    Public Overridable Property Employees As DbSet(Of Employee)
+
 End Class

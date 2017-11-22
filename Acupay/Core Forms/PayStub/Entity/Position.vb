@@ -12,6 +12,7 @@ Namespace Global.AccuPay.Entity
         <Key>
         Public Property RowID As Integer?
 
+        <Column("PositionName")>
         Public Property Name As String
 
         Public Property Created As Date
