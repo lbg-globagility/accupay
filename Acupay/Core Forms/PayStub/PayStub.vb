@@ -2778,6 +2778,21 @@ Public Class PayStub
         End If
     End Sub
 
+    Private Sub btntotloan_Click(sender As Object, e As EventArgs) Handles btntotloan.Click
+        viewtotallow.Close()
+        viewtotbon.Close()
+
+        With viewtotloan
+            .Show()
+            .BringToFront()
+
+            If dgvemployees.RowCount <> 0 Then
+                .VIEW_employeeloan_indate(dgvemployees.CurrentRow.Cells("RowID").Value, paypFrom, paypTo)
+                .Text = .Text & " - ID# " & dgvemployees.CurrentRow.Cells("EmployeeID").Value
+            End If
+        End With
+    End Sub
+
     Private Sub UpdatePaystubAdjustmentColumn()
         Dim _conn As New MySqlConnection
         _conn.ConnectionString = n_DataBaseConnection.GetStringMySQLConnectionString
