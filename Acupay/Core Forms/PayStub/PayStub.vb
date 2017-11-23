@@ -61,8 +61,6 @@ Public Class PayStub
         "LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents " &
         "WHERE e.OrganizationID=" & orgztnID
 
-    '",COALESCE(LEFT(Image,256),'') 'Image'" &
-
     Public current_year As String = CDate(dbnow).Year
 
     Dim new_conn As New MySqlConnection
@@ -93,7 +91,6 @@ Public Class PayStub
 
     Dim employeecolumnname As New AutoCompleteStringCollection
 
-    'josh
     Dim currentTotal As Double
 
     Dim n_VeryFirstPayPeriodIDOfThisYear As Object = Nothing
@@ -291,47 +288,24 @@ Public Class PayStub
 
     Private Sub PayStub_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        'customTabControl3.DrawMode = TabDrawMode.Normal
-        'customTabControl3.DisplayStyle = TabStyle.Rounded
-
-        'dbconn()
-
         viewID = VIEW_privilege("Employee Pay Slip", orgztnID)
 
         new_conn.ConnectionString = db_connectinstring 'conn.ConnectionString
 
-        'new_conn.Open()
-
         VIEW_payperiodofyear()
-
-        'loademployees()
-        'loademployee()
 
         dgvpayper.Focus()
 
         orgpayfreqID = EXECQUER("SELECT COALESCE(PayFrequencyID,'') FROM organization WHERE RowID=" & orgztnID & ";")
 
-        ''dgvpayper_SelectionChanged(sender, e)
-
         enlistTheLists("SELECT DisplayValue FROM listofval WHERE `Type`='Government deduction schedule' AND Active='Yes' ORDER BY OrderBy;", govdeducsched)
 
         Dim dattabl_deductsched As New DataTable
-        'dattabl_deductsched = retAsDatTbl("SELECT IF(COALESCE(PhilhealthDeductionSchedule,'" & govdeducsched.Item(1).ToString & "') = '" & govdeducsched.Item(1).ToString & "',1,0) 'PhilhealthDeductionSchedule'" &
-        '                                  ",IF(COALESCE(SSSDeductionSchedule,'" & govdeducsched.Item(1).ToString & "') = '" & govdeducsched.Item(1).ToString & "',1,0) 'SSSDeductionSchedule'" &
-        '                                  ",IF(COALESCE(PagIbigDeductionSchedule,'" & govdeducsched.Item(1).ToString & "') = '" & govdeducsched.Item(1).ToString & "',1,0) 'PagIbigDeductionSchedule'" &
-        '                                  " FROM organization WHERE RowID=" & orgztnID & ";")
 
         dattabl_deductsched = retAsDatTbl("SELECT COALESCE(PhilhealthDeductionSchedule,'" & govdeducsched.Item(2).ToString & "') 'PhilhealthDeductionSchedule'" &
                                           ",COALESCE(SSSDeductionSchedule,'" & govdeducsched.Item(2).ToString & "') 'SSSDeductionSchedule'" &
                                           ",COALESCE(PagIbigDeductionSchedule,'" & govdeducsched.Item(2).ToString & "') 'PagIbigDeductionSchedule'" &
                                           " FROM organization WHERE RowID=" & orgztnID & ";")
-
-        'For Each drown As DataRow In dattabl_deductsched.Rows
-        '    isorgPHHdeductsched = CSByte(drown("PhilhealthDeductionSchedule"))
-        '    isorgSSSdeductsched = CSByte(drown("SSSDeductionSchedule"))
-        '    isorgHDMFdeductsched = CSByte(drown("PagIbigDeductionSchedule"))
-        '    Exit For
-        'Next
 
         Dim strdeductsched = dattabl_deductsched.Rows(0)("PhilhealthDeductionSchedule")
 
@@ -399,18 +373,6 @@ Public Class PayStub
         enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Allowance Frequency' AND Active='Yes' ORDER BY OrderBy;",
                        allowfreq) 'Daily'Monthly'One time'Semi-monthly'Weely
 
-        ''tsbtnSearch.Image = ImageList1.Images(0)
-
-        '        enlistTheLists("SELECT column_name" &
-        '" FROM information_schema.`COLUMNS`" &
-        '" WHERE table_schema = '" & sys_db & "'" &
-        '" AND table_name = 'employee';", _
-        '                       employeecolumnname)
-
-        '        For Each strval In employeecolumnname
-        '            MsgBox(strval.ToString)
-        '        Next
-
         Dim formuserprivilege = position_view_table.Select("ViewID = " & viewID)
 
         If formuserprivilege.Count = 0 Then
@@ -419,10 +381,8 @@ Public Class PayStub
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
                     tsbtngenpayroll.Visible = 0
 
-                    'dontUpdate = 1
                     Exit For
                 Else
                     If drow("Creates").ToString = "N" Then
@@ -431,53 +391,23 @@ Public Class PayStub
                         tsbtngenpayroll.Visible = 1
                     End If
 
-                    'If drow("Deleting").ToString = "N" Then
-                    '    tsbtndel.Visible = 0
-                    'Else
-                    '    tsbtndel.Visible = 1
-                    'End If
-
-                    'If drow("Updates").ToString = "N" Then
-                    '    dontUpdate = 1
-                    'Else
-                    '    dontUpdate = 0
-                    'End If
-
                 End If
 
             Next
 
         End If
 
-        'Josh
         cboProducts.ValueMember = "ProductID"
         cboProducts.DisplayMember = "ProductName"
 
         cboProducts.DataSource = New SQLQueryToDatatable("SELECT RowID AS 'ProductID', Name AS 'ProductName', Category FROM product WHERE Category IN ('Allowance Type', 'Bonus', 'Adjustment Type')" &
                                                   " AND OrganizationID='" & orgztnID & "';").ResultTable
 
-        'cboProducts.DataSource = New SQLQueryToDatatable("SELECT RowID AS 'ProductID', Name AS 'ProductName', Category FROM product WHERE Category IN ('Allowance Type', 'Bonus')" &
-        '                                          " AND OrganizationID='" & orgztnID & "';").ResultTable
-
         dgvAdjustments.AutoGenerateColumns = False
 
     End Sub
 
     Sub VIEW_payperiodofyear(Optional param_Date As Object = Nothing)
-
-        'Dim params(2, 2) As Object
-
-        'params(0, 0) = "payp_OrganizationID"
-        'params(1, 0) = "param_Date"
-        'params(2, 0) = "FormatNumber"
-
-        'params(0, 1) = orgztnID
-        'params(1, 1) = If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01")
-        'params(2, 1) = 0
-
-        'EXEC_VIEW_PROCEDURE(params, _
-        '                    "VIEW_payperiodofyear", _
-        '                    dgvpayper)
         Dim hasValue = (MDIPrimaryForm.systemprogressbar.Value > 0)
         If hasValue Then
             For i = 0 To 5
@@ -511,7 +441,6 @@ Public Class PayStub
 
         End If
         Dim catchdt As New DataTable
-        'catchdt = New SQLQueryToDatatable(full_query).ResultTable
 
         Dim param_array = New Object() {orgztnID,
                                         tsSearch.Text,
@@ -524,10 +453,7 @@ Public Class PayStub
         catchdt = n_ReadSQLProcedureToDatatable.ResultTable
 
         dgvemployees.Rows.Clear()
-        'For Each drow As DataRow In catchdt.Rows
-        '    Dim row_array = drow.ItemArray
-        '    dgvemployees.Rows.Add(row_array)
-        'Next
+
         PopulateDGVEmployee(catchdt)
         Static x As SByte = 0
 
@@ -556,20 +482,6 @@ Public Class PayStub
                 .Columns("fstatRowID").Visible = False
                 .Columns("Image").Visible = False
 
-                'For Each r As DataGridViewRow In .Rows
-                '    empcolcount = 0
-                '    For Each c As DataGridViewColumn In .Columns
-                '        If c.Visible Then
-                '            If TypeOf r.Cells(c.Index).Value Is Byte() Then
-                '                Simple.Add("")
-                '            Else
-                '                Simple.Add(CStr(r.Cells(c.Index).Value))
-                '            End If
-                '            empcolcount += 1
-                '        End If
-                '    Nexte
-                'Next
-
             End With
             If dgvemployees.RowCount > 0 Then
                 dgvemployees.Item("EmployeeID", 0).Selected = True
@@ -592,19 +504,7 @@ Public Class PayStub
                 paypRowID = .Cells("Column1").Value
                 paypFrom = MYSQLDateFormat(CDate(.Cells("Column2").Value)) 'Format(CDate(.Cells("Column2").Value), "yyyy-MM-dd")
 
-                'If .Cells("Column3").Value = Nothing Then
-                '    paypTo = Format(CDate(dbnow), "yyyy-MM-dd")
-
-                '    If DateDiff(DateInterval.Day, CDate(paypFrom), CDate(paypTo)) < 0 Then
-                '        Dim payptoval = EXECQUER("SELECT LAST_DAY('" & paypFrom & "');")
-
-                '        paypTo = Format(CDate(dbnow), "yyyy-MM-dd")
-                '    ElseIf DateDiff(DateInterval.Day, CDate(paypFrom), CDate(paypTo)) < 0 Then
-                '        paypTo = Format(CDate(dbnow), "yyyy-MM-dd")
-                '    End If
-                'Else
                 paypTo = MYSQLDateFormat(CDate(.Cells("Column3").Value)) 'Format(CDate(.Cells("Column3").Value), "yyyy-MM-dd")
-                'End If
 
                 isEndOfMonth = Trim(.Cells("Column14").Value)
 
@@ -627,16 +527,6 @@ Public Class PayStub
                     End If
 
                 Next
-
-                'For Each tsitem As ToolStripItem In tstrip.Items
-
-                '    If tsitem.Text = Trim(.Cells("Column12").Value) Then
-                '        tsitem.PerformClick()
-                '        PayFreq_Changed(tsitem, New EventArgs)
-                '        Exit For
-                '    End If
-
-                'Next
 
             End With
             If tsSearch.Text.Trim.Length > 0 Then
@@ -662,7 +552,6 @@ Public Class PayStub
 
     Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
         RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-        'RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
         current_year = current_year - 1
 
@@ -673,14 +562,11 @@ Public Class PayStub
 
         AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
 
-        'AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
         dgvpayper_SelectionChanged(sender, e)
     End Sub
 
     Private Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
         RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-        'RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
         current_year = current_year + 1
 
@@ -691,8 +577,6 @@ Public Class PayStub
 
         AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
 
-        'AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
         dgvpayper_SelectionChanged(sender, e)
     End Sub
 
@@ -700,19 +584,11 @@ Public Class PayStub
                                                                                                 Nxt.LinkClicked, Last.LinkClicked,
                                                                                                 LinkLabel4.LinkClicked, LinkLabel3.LinkClicked,
                                                                                                 LinkLabel2.LinkClicked, LinkLabel1.LinkClicked
-
-        ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
         Dim sendrname As String = DirectCast(sender, LinkLabel).Name
 
         If sendrname = "First" Or sendrname = "LinkLabel1" Then
             pagination = 0
         ElseIf sendrname = "Prev" Or sendrname = "LinkLabel2" Then
-            'If pagination - max_count_per_page < 0 Then
-            '    pagination = 0
-            'Else
-            '    pagination -= max_count_per_page
-            'End If
 
             Dim modcent = pagination Mod max_count_per_page
 
@@ -751,20 +627,10 @@ Public Class PayStub
             pagination = (lastpage - remender) * max_count_per_page
 
             If pagination - max_count_per_page < max_count_per_page Then
-                'pagination = 0
 
             End If
 
-            'pagination = If(lastpage - max_count_per_page >= max_count_per_page , _
-            '                lastpage - max_count_per_page , _
-            '                lastpage)
-
         End If
-
-        'loademployees()
-        'If Trim(tsSearch.Text) = "" Then
-        'Else
-        'End If
 
         Dim pay_freqString = String.Empty
 
@@ -790,10 +656,6 @@ Public Class PayStub
         quer_empPayFreq = " AND pf.PayFrequencyType='" & pay_freqString & "' "
 
         loademployee(quer_empPayFreq)
-        '# ############################# #
-        'dgvemployees_SelectionChanged(sender, e)
-
-        ''AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
@@ -817,24 +679,13 @@ Public Class PayStub
         If dgvemployees.RowCount > 0 Then 'And dgvemployees.CurrentRow IsNot Nothing
             With dgvemployees.CurrentRow
 
-                'If .Cells("RowID").Value <> sameEmpID Then
                 employeetype = Trim(.Cells("EmployeeType").Value)
                 sameEmpID = .Cells("RowID").Value
 
                 dgvemployees.Tag = .Cells("RowID").Value
 
-                'empPix = employeepix.Select("RowID=" & .Cells("RowID").Value)
-                'For Each drow In empPix
-                '    EmployeeImage = ConvByteToImage(DirectCast(drow("Image"), Byte()))
-                '    makefileGetPath(drow("Image"))
-                'Next
 
                 txtFName.Text = .Cells("FirstName").Value
-
-                'txtFName.Text = txtFName.Text & If(.Cells("MiddleName").Value = Nothing, _
-                '                                         "", _
-                '                                         " " & StrConv(Microsoft.VisualBasic.Left(.Cells("MiddleName").Value.ToString, 1), _
-                'VbStrConv.ProperCase) & ".")
 
                 Dim addtlWord = Nothing
 
@@ -865,8 +716,6 @@ Public Class PayStub
                                                          "-" & StrConv(.Cells("Surname").Value,
                                                                        VbStrConv.ProperCase))
 
-                'Microsoft.VisualBasic.Left(.Cells("Surname").Value.ToString, 1)
-
                 currentEmployeeID = .Cells("EmployeeID").Value
 
                 txtEmpID.Text = "ID# " & .Cells("EmployeeID").Value &
@@ -876,12 +725,6 @@ Public Class PayStub
                             If(.Cells("EmployeeType").Value = Nothing,
                                                                "",
                                                                ", " & .Cells("EmployeeType").Value & " salary")
-
-                'If IsDBNull(.Cells("Image").Value) Then
-                '    pbEmpPicChk.Image = Nothing
-                'Else
-                '    pbEmpPicChk.Image = ConvByteToImage(DirectCast(.Cells("Image").Value, Byte()))
-                'End If
 
                 pbEmpPicChk.Image = Nothing
                 Try
@@ -1073,7 +916,6 @@ Public Class PayStub
 
                 If allowfreq.Count <> 0 Then
                     dailyallowfreq = If(allowfreq.Item(0).ToString = "", "Daily", allowfreq.Item(0).ToString)
-                    'allowfreq : Daily'Monthly'One time'Semi-monthly'Weely
                 End If
 
                 emp_allowanceDaily = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
@@ -1193,8 +1035,6 @@ Public Class PayStub
                                                                 ")))))" &
                                                                 " GROUP BY EmployeeID" &
                                                                 " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
-
-                '" AND DATEDIFF(CURRENT_DATE(),EffectiveStartDate)>=0" &
 
                 Dim onceallowfreq = "One time"
 
@@ -1385,11 +1225,6 @@ Public Class PayStub
                                                                                       orgztnID,
                                                                                       paypRowID,
                                                                                       paypRowID).ResultTable
-                'prev_empTimeEntry
-
-                'RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
-                ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
                 dtemployeefirsttimesalary =
                                       New SQLQueryToDatatable("SELECT COUNT(ete.RowID)" &
@@ -1593,11 +1428,8 @@ Public Class PayStub
     End Sub
 
     Private Sub btntotbon_Click(sender As Object, e As EventArgs) Handles btntotbon.Click
-
         viewtotallow.Close()
-
         viewtotloan.Close()
-        'viewtotallow
 
         With viewtotbon
             .Show()
@@ -1700,7 +1532,6 @@ Public Class PayStub
         If e_asc = 13 Then
             Try
                 If MaskedTextBox1.Text = "  /  /" Then
-                    'MsgBox(Format(CDate(dbnow), machineShortDateFormat))
                     MaskedTextBox1.Text = Format(CDate(dbnow), machineShortDateFormat)
                 Else
                     If MaskedTextBox1.Text.Contains("_") Then
@@ -1901,8 +1732,6 @@ Public Class PayStub
                 Exit For
             Next
 
-            'RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
             dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
 
             AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
@@ -1924,7 +1753,6 @@ Public Class PayStub
         senderObj = DirectCast(sender, ToolStripButton)
 
         If once = 0 Then
-
             once += 1
 
             prevObj = senderObj
@@ -1933,16 +1761,11 @@ Public Class PayStub
 
             senderObj.Font = selectedButtonFont
 
-            ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
             quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' "
 
             loademployee(quer_empPayFreq)
 
-            ''AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
             Exit Sub
-
         End If
 
         If prevObj.Name = Nothing Then
@@ -1977,12 +1800,9 @@ Public Class PayStub
         quer_empPayFreq = String.Empty
 
         If tsSearch.Text.Trim.Length = 0 Then
-            'quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' "
             tsbtnSearch_Click(sender, e)
 
         ElseIf 1 = 2 Then 'ElseIf IsUserPressEnterToSearch Then
-
-            ''RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
             quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' AND e.EmployeeID='" & tsSearch.Text & "' "
 
@@ -1994,10 +1814,6 @@ Public Class PayStub
                 End If
             End If
 
-            ''AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
-            'dgvemployees_SelectionChanged(sender, e)
-
             Static twice As SByte = 0
 
             If twice < 1 Then
@@ -2006,16 +1822,8 @@ Public Class PayStub
 
             ElseIf twice = 1 Then
                 twice = 2
-                ''RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
-                'dgvpayper_SelectionChanged(sender, e)
-
-                ''AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
             End If
-
         End If
-
     End Sub
 
     '********************************************************
@@ -2044,14 +1852,6 @@ Public Class PayStub
                 paypFrom = Format(CDate(.Cells("Column2").Value), "yyyy-MM-dd")
 
                 paypTo = Format(CDate(.Cells("Column3").Value), "yyyy-MM-dd")
-
-                'Dim sel_yearDateFrom = CDate(PayStub.paypFrom).Year
-
-                'Dim sel_yearDateTo = CDate(PayStub.paypTo).Year
-
-                'Dim sel_year = If(sel_yearDateFrom > sel_yearDateTo, _
-                '                  sel_yearDateFrom, _
-                '                  sel_yearDateTo)
 
                 isEndOfMonth = Trim(.Cells("Column14").Value)
 
@@ -2086,13 +1886,8 @@ Public Class PayStub
                     Dim prompt = MessageBox.Show("Do you want to include the calculation of Thirteenth month pay ?", "Thirteenth month pay calculation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
 
                     If prompt = Windows.Forms.DialogResult.Yes Then
-
-                        'withthirteenthmonthpay = 1
-
                     ElseIf prompt = Windows.Forms.DialogResult.No Then
-
                     ElseIf prompt = Windows.Forms.DialogResult.Cancel Then
-                        'Exit Sub
                     End If
                 Else
 
@@ -2100,20 +1895,14 @@ Public Class PayStub
 
                 Dim PayFreqRowID = EXECQUER("SELECT RowID FROM payfrequency WHERE PayFrequencyType='" & Trim(.Cells("Column12").Value) & "';")
 
-                'genpayroll(PayFreqRowID)
-
             End With
-
         End If
-
     End Sub
 
     Sub InsertPaystubAdjustment(paystubID As Integer, productID As Integer, payAmount As Double)
         Try
-
             If conn.State = ConnectionState.Open Then
                 conn.Close()
-                'Else
             End If
 
             new_cmd = New MySqlCommand("INSUPD_paystub", conn)
@@ -2162,11 +1951,9 @@ Public Class PayStub
                     "ALTER TABLE " & SQLTableName & " AUTO_INCREMENT = 0;"
                 n_ExecuteQuery = New ExecuteQuery(del_quer)
                 dgvAdjustments.Rows.Remove(dgvAdjustments.Rows(e.RowIndex))
-                'btndiscardchanges_Click(btndiscardchanges, New EventArgs)
                 dgvemployees_SelectionChanged(dgvemployees, New EventArgs)
                 btnSaveAdjustments.Enabled = False
             End If
-            'dgvAdjustments.Rows.RemoveAt(e.RowIndex)'UpdateSaveAdjustmentButtonDisable()
         End If
     End Sub
 
@@ -2279,22 +2066,17 @@ Public Class PayStub
                 .Parameters.AddWithValue("pa_OrganizationID", orgztnID)
                 .Parameters.AddWithValue("pa_IsActual", Convert.ToInt16(IsActual))
             End With
+
             da = New MySqlDataAdapter(cmd)
             da.Fill(dtJosh)
             dgvAdjustments.DataSource = dtJosh
-
-            'txtnetsal.Text = FormatNumber(currentTotal + Convert.ToDouble(GET_SumPayStubAdjustments()), 2)
         Catch ex As Exception
             dgvAdjustments.Rows.Clear()
         Finally
             conn.Close()
-
             cmd.Dispose()
-
             da.Dispose()
-
         End Try
-
     End Sub
 
     Private Sub dgvAdjustments_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvAdjustments.DataError
@@ -2381,15 +2163,10 @@ Public Class PayStub
                               ValNoComma(drow("NightDiffPay")) +
                               ValNoComma(drow("NightDiffOvertimePay")) +
                               ValNoComma(drow("HolidayPay"))
-            'lblsubtot.Text = FormatNumber((ValNoComma(sumallbasic)), 2)
-            'lblsubtot.Text = FormatNumber((ValNoComma(drow("TotalDayPay"))), 2)
+
             If drow("EmployeeType").ToString = "Fixed" Then
                 lblSubtotal.Text = FormatNumber(ValNoComma(strdouble), 2)
             ElseIf drow("EmployeeType").ToString = "Monthly" Then
-                'Dim thebasicpay = ValNoComma(drow("BasicPay"))
-                'Dim thelessamounts = ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount")) + ValNoComma(drow("Absent"))
-
-                'txthrsworkamt.Text = FormatNumber((thebasicpay - thelessamounts), 2)
                 Dim thebasicpay = ValNoComma(drow("BasicPay"))
                 Dim thelessamounts = ValNoComma(0)
 
@@ -2402,8 +2179,6 @@ Public Class PayStub
                     Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
                     lblSubtotal.Text = FormatNumber(all_regular + ValNoComma(drow("HolidayPay")), 2)
                 End If
-
-                'lblsubtot.Text = FormatNumber((thebasicpay - thelessamounts), 2)
             Else
                 lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
 
@@ -2460,34 +2235,21 @@ Public Class PayStub
 
             'LEAVE BALANCES
             txtvlbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Vacation leave'")) ' -
-            'ValNoComma(drow("VacationLeaveHours"))
-
             txtslbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Sick leave'")) ' -
-            'ValNoComma(drow("SickLeaveHours"))
-
             txtmlbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Maternity/paternity leave'")) ' -
-
             txtPaidLeave.Text = FormatNumber(ValNoComma(drow("PaidLeaveAmount")), 2)
-            'txtPaidLeaveHrs.Text = FormatNumber(ValNoComma(drow("PaidLeaveHours")), 2)
 
             Exit For
         Next
 
         paystubactual.Dispose()
-
         UpdateAdjustmentDetails(Convert.ToInt16(DirectCast(sender, TabPage).Tag))
-
     End Sub
 
     Private Sub TabPage1_Enter(sender As Object, e As EventArgs) Handles TabPage1.Enter 'DECLARED
         TabPage1.Text = TabPage1.Text.Trim
-
         TabPage1.Text = TabPage1.Text & Space(15)
-
         TabPage4.Text = TabPage4.Text.Trim
-
-        'dgvemployees_SelectionChanged(dgvemployees, New EventArgs)
-
     End Sub
 
     Private Sub TabPage4_Enter1(sender As Object, e As EventArgs) Handles TabPage4.Enter 'UNDECLARED / ACTUAL
@@ -2643,19 +2405,9 @@ Public Class PayStub
 
             'LEAVE BALANCES
             txtvlbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Vacation leave'")) ' -
-            'ValNoComma(drow("VacationLeaveHours"))
-
             txtslbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Sick leave'")) ' -
-            'ValNoComma(drow("SickLeaveHours"))
-
             txtmlbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Maternity/paternity leave'")) ' -
-            'ValNoComma(drow("MaternityLeaveHours"))
-
-            'txtothrbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Others'")) -
-            '    ValNoComma(drow("OtherLeaveHours"))
-
             txtPaidLeave.Text = FormatNumber(ValNoComma(drow("PaidLeaveAmount")), 2)
-            'txtPaidLeaveHrs.Text = FormatNumber(ValNoComma(drow("PaidLeaveHours")), 2)
 
             Exit For
         Next
@@ -2693,8 +2445,6 @@ Public Class PayStub
                                       " AND CURDATE() BETWEEN esal.EffectiveDateFrom AND COALESCE(esal.EffectiveDateTo,CURDATE())" &
                                       " GROUP BY e.RowID" &
                                       " ORDER BY e.LastName;") 'RowID DESC
-
-        '" AND '" & paypTo & "' BETWEEN esal.EffectiveDateFrom AND COALESCE(esal.EffectiveDateTo,'" & paypTo & "')" &
 
         Dim n_row As DataRow
 
@@ -2746,58 +2496,40 @@ Public Class PayStub
                                     " FROM organization WHERE RowID=" & orgztnID & ";")
 
             Dim contactdet = Split(contactdetails, ",")
-
             objText = .ReportObjects("OrgContact")
 
             Dim contactdets As String = Nothing
 
             If Trim(contactdet(0).ToString) = "" Then
-
                 contactdets = ""
             Else
-
                 contactdets = "Contact No. " & contactdet(0).ToString
-
             End If
 
             objText.Text = contactdets
-
             objText = .ReportObjects("payperiod")
 
-            'Dim papy_str = "Payroll slip for the period of   " & Format(CDate(paypFrom), machineShortDateFormat) & If(paypTo = Nothing, "", " to " & Format(CDate(paypTo), machineShortDateFormat))
             Dim papy_str = "Payroll slip for the period of   " & Format(CDate(Now), machineShortDateFormat) & If(paypTo = Nothing, "", " to " & Format(CDate(Now), machineShortDateFormat))
-
             objText.Text = papy_str
-
         End With
 
         rptdocAll.SetDataSource(dtprintAllPaySlip)
-
     End Sub
 
     Private Sub bgwPrintAllPaySlip_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgwPrintAllPaySlip.RunWorkerCompleted
-
         If e.Error IsNot Nothing Then
             MsgBox("Error: " & vbNewLine & e.Error.Message)
-
         ElseIf e.Cancelled Then
             MsgBox("Background work cancelled.",
                    MsgBoxStyle.Exclamation)
         Else
-
             Dim crvwr As New CrysVwr
 
             crvwr.CrystalReportViewer1.ReportSource = rptdocAll
-
-            'Dim papy_string = "Print all pay slip for the period of " & Format(CDate(paypFrom), machineShortDateFormat) & If(paypTo = Nothing, "", " to " & Format(CDate(paypTo), machineShortDateFormat))
             Dim papy_string = "Payroll slip for the period of   " & Format(CDate(Now), machineShortDateFormat) & If(paypTo = Nothing, "", " to " & Format(CDate(Now), machineShortDateFormat))
-
             crvwr.Text = papy_string
-
             crvwr.Refresh()
-
             crvwr.Show()
-
         End If
     End Sub
 
@@ -2921,7 +2653,6 @@ Public Class PayStub
 
         Select Case compute_percentage
             Case 100
-                'Me.Enabled = True
                 Dim param_array = New Object() {orgztnID, paypRowID, z_User}
 
                 Dim n_ExecSQLProcedure As New _
@@ -3064,7 +2795,6 @@ Friend Class PrintAllPaySlipOfficialFormat
 
             Dim n_SQLQueryToDatatable As _
             New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual & ");")
-            'New SQLQueryToDatatable("CALL RPT_solopayslip(" & orgztnID & ",'2016-10-06','2016-10-20',9,0);")
 
             catchdt = n_SQLQueryToDatatable.ResultTable
 
@@ -3173,7 +2903,6 @@ Friend Class PrintSinglePaySlipOfficialFormat
             Dim n_SQLQueryToDatatable As _
             New SQLQueryToDatatable("CALL paystub_singlepayslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual &
                                     "," & n_EmployeeRowID & ");")
-            'New SQLQueryToDatatable("CALL RPT_solopayslip(" & orgztnID & ",'2016-10-06','2016-10-20',9,0);")
 
             catchdt = n_SQLQueryToDatatable.ResultTable
 
@@ -3264,8 +2993,6 @@ Friend Class PrintSoloPaySlipThisPayPeriod
             Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("OrgName")
 
             objText.Text = orgNam
-            'objText = .ReportObjects("OrgName1")
-            'objText.Text = orgNam
 
             Dim orgaddress = EXECQUER("SELECT CONCAT_WS(', ',a.StreetAddress1,a.StreetAddress2,a.Barangay,a.CityTown,a.Country,a.State) AS Result" &
                                       " FROM organization o LEFT JOIN address a ON a.RowID=o.PrimaryAddressID" &
@@ -3273,8 +3000,6 @@ Friend Class PrintSoloPaySlipThisPayPeriod
 
             objText = .ReportObjects("OrgAddress")
             objText.Text = orgaddress
-            'objText = .ReportObjects("OrgAddress1")
-            'objText.Text = orgaddress
 
             Dim og_contact = String.Empty
 
@@ -3283,16 +3008,10 @@ Friend Class PrintSoloPaySlipThisPayPeriod
                                             " FROM organization o LEFT JOIN contact c ON c.RowID=o.PrimaryContactID" &
                                             " LEFT JOIN address a ON a.RowID=c.AddressID" &
                                             " WHERE o.RowID=" & orgztnID & ";").Result
-            'objText = .ReportObjects("OrgContact1")
-            'objText.Text = ""
-
             pay_periodstring = "for the period of  " & CDate(payp_From).ToShortDateString & " to " & CDate(payp_To).ToShortDateString
 
             objText = .ReportObjects("payperiod")
             objText.Text = pay_periodstring
-            'objText = .ReportObjects("payperiod1")
-            'objText.Text = pay_periodstring
-
         End With
 
         rptdoc.SetDataSource(rptdt)
