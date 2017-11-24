@@ -174,7 +174,7 @@ DECLARE nightDiffRangeEnd DATETIME;
 DECLARE dawnNightDiffRangeStart DATETIME;
 DECLARE dawnNightDiffRangeEnd DATETIME;
 
-DECLARE nightDiffHours DECIMAL(11, 6);
+DECLARE nightDiffHours DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE nightDiffAmount DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE isDutyOverlappedWithNightDifferential BOOLEAN;
 DECLARE shouldCalculateNightDifferential BOOLEAN;
@@ -191,7 +191,7 @@ DECLARE overtimeAmount DECIMAL(11, 6) DEFAULT 0.0;
 
 DECLARE nightDiffOTDutyStart DATETIME;
 DECLARE nightDiffOTDutyEnd DATETIME;
-DECLARE nightDiffOTHours DECIMAL(11, 6);
+DECLARE nightDiffOTHours DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE nightDiffOTAmount DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE isOvertimeOverlappedNightDifferential BOOLEAN;
 DECLARE shouldCalculateNightDifferentialOvertime BOOLEAN;
@@ -375,11 +375,11 @@ IF OTCount = 1 THEN
         OTEndTime,
         RowID
     FROM employeeovertime
-    WHERE EmployeeID = ete_EmpRowID
-        AND OrganizationID = ete_OrganizID
-        AND OTStartTime >= shifttimeto
-        AND OTStatus = 'Approved'
-        AND (ete_Date BETWEEN OTStartDate AND OTEndDate)
+    WHERE EmployeeID = ete_EmpRowID AND
+        OrganizationID = ete_OrganizID AND
+        -- OTStartTime >= shifttimeto AND
+        OTStatus = 'Approved' AND
+        (ete_Date BETWEEN OTStartDate AND OTEndDate)
     ORDER BY OTStartTime DESC
     LIMIT 1
     INTO
@@ -430,8 +430,8 @@ SET dateToday = ete_Date;
 SET dateTomorrow = DATE_ADD(dateToday, INTERVAL 1 DAY);
 SET dateYesterday = DATE_SUB(dateToday, INTERVAL 1 DAY);
 
-SELECT GRACE_PERIOD(etd_TimeIn, shifttimefrom, e_LateGracePeriod)
-INTO etd_TimeIn;
+-- SELECT GRACE_PERIOD(etd_TimeIn, shifttimefrom, e_LateGracePeriod)
+-- INTO etd_TimeIn;
 
 SET fullTimeIn = TIMESTAMP(dateToday, etd_TimeIn);
 SET fullTimeOut = TIMESTAMP(IF(etd_TimeOut > etd_TimeIn, dateToday, dateTomorrow), etd_TimeOut);
@@ -503,8 +503,9 @@ SET shouldCalculateNightDifferential = (
 );
 
 IF shouldCalculateNightDifferential THEN
-    SET nightDiffHours = IFNULL(ComputeNightDiffHours(dutyStart, dutyEnd, nightDiffRangeStart, nightDiffRangeEnd), 0);
-    SET nightDiffHours = nightDiffHours + IFNULL(ComputeNightDiffHours(dutyStart, dutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd), 0);
+    SET nightDiffHours =
+        ComputeNightDiffHours(dutyStart, dutyEnd, nightDiffRangeStart, nightDiffRangeEnd) +
+        ComputeNightDiffHours(dutyStart, dutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd);
 END IF;
 
 SET hasOvertime = (otstartingtime IS NOT NULL) AND (otendingtime IS NOT NULL);
@@ -516,11 +517,40 @@ IF hasOvertime THEN
     SET overtimeStart = TIMESTAMP(overtimeDate, otstartingtime);
     SET overtimeEnd = TIMESTAMP(IF(otendingtime > otstartingtime, overtimeDate, dateTomorrow), otendingtime);
 
+    SET @preShiftOvertimeHours = 0;
+
     /*
-     * Start by figuring out the overtimeDutyStart (the time considered the employee has started working overtime)
-     * and the overtimeDutyEnd (the time considered the employee has worked overtime until).
+     * Compute the overtime hours for pre-shift work.
      */
-    IF (overtimeStart > shiftStart) THEN
+    IF overtimeStart < shiftStart THEN
+
+        /*
+         * Ensure that the overtime hours are not calculated until the employee has clocked in.
+         */
+        SET overtimeDutyStart = GREATEST(overtimeStart, fullTimeIn);
+
+        /*
+         * Ensure that the overtime hours stop computing when either the overtime has ended,
+         * the employee has clocked out, or the regular shift has already started.
+         */
+        SET overtimeDutyEnd = LEAST(overtimeEnd, fullTimeOut, shiftStart);
+
+        SET @preShiftOvertimeHours = COMPUTE_TimeDifference(TIME(overtimeDutyStart), TIME(overtimeDutyEnd));
+
+        IF shouldCalculateNightDifferential THEN
+            SET nightDiffOTHours =
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, nightDiffRangeStart, nightDiffRangeEnd) +
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd);
+        END IF;
+
+    END IF;
+
+    SET @postShiftOvertimeHours = 0;
+
+    /*
+     * Compute the overtime hours for post-shift work.
+     */
+    IF overtimeEnd > shiftEnd THEN
 
         SET overtimeDutyStart = LEAST(
             GREATEST(overtimeStart, fullTimeIn, shiftEnd),
@@ -528,34 +558,18 @@ IF hasOvertime THEN
         );
         SET overtimeDutyEnd = LEAST(overtimeEnd, fullTimeOut);
 
-    ELSEIF (overtimeStart < shiftStart) THEN
+        SET @postShiftOvertimeHours = COMPUTE_TimeDifference(TIME(overtimeDutyStart), TIME(overtimeDutyEnd));
 
-        SET overtimeDutyStart = GREATEST(overtimeStart, fullTimeIn);
-        SET overtimeDutyEnd = LEAST(overtimeEnd, fullTimeOut, shiftStart);
+        IF shouldCalculateNightDifferential THEN
+            SET nightDiffOTHours = nightDiffOTHours +
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, nightDiffRangeStart, nightDiffRangeEnd) +
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd);
+        END IF;
 
     END IF;
 
-    SET overtimeHours = COMPUTE_TimeDifference(TIME(overtimeDutyStart), TIME(overtimeDutyEnd));
+    SET overtimeHours = @preShiftOvertimeHours + @postShiftOvertimeHours;
 
-END IF;
-
-SET isOvertimeOverlappedNightDifferential = (
-    (overtimeDutyStart < nightDiffRangeEnd) AND
-    (overtimeDutyEnd > nightDiffRangeStart)
-);
-
-SET shouldCalculateNightDifferentialOvertime = (
-    isNightShift AND
-    isEntitledToNightDifferential AND
-    isOvertimeOverlappedNightDifferential AND
-    hasOvertime
-);
-
-IF shouldCalculateNightDifferentialOvertime THEN
-    SET nightDiffOTDutyStart = GREATEST(overtimeDutyStart, nightDiffRangeStart);
-    SET nightDiffOTDutyEnd = LEAST(overtimeDutyEnd, nightDiffRangeEnd);
-
-    SET nightDiffOTHours = COMPUTE_TimeDifference(TIME(nightDiffOTDutyStart), TIME(nightDiffOTDutyEnd));
 END IF;
 
 /* First check if the duty start is above shift start to check if the employee is late. */
