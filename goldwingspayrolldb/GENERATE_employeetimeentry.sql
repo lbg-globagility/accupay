@@ -366,7 +366,7 @@ INTO
     @sh_brktimeTo,
     isShiftRestDay;
 
-SET isRestDay = isShiftRestDay;
+SET isRestDay = isShiftRestDay OR isDefaultRestDay;
 
 IF OTCount = 1 THEN
 
