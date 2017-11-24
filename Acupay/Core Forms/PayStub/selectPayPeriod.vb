@@ -254,8 +254,6 @@ Public Class selectPayPeriod
 
                 CurrentPayPeriodID = .Cells("Column1").Value
 
-                PayStub.Current_PayPeriodID = CurrentPayPeriodID
-
                 Dim prior_index = .Index - 1
 
                 If prior_index < 0 Then
@@ -275,18 +273,6 @@ Public Class selectPayPeriod
 
                 End If
 
-                PayStub.Prior_PayPeriodID = PriorPayPeriodID
-
-
-                PayStub.paypSSSContribSched = dgvpaypers.Item("SSSContribSched", .Index).Value
-
-                PayStub.paypPhHContribSched = dgvpaypers.Item("PhHContribSched", .Index).Value
-
-                PayStub.paypHDMFContribSched = dgvpaypers.Item("HDMFContribSched", .Index).Value
-
-
-
-
                 Dim next_index = .Index + 1
 
                 If next_index < dgvpaypers.RowCount Then
@@ -304,11 +290,6 @@ Public Class selectPayPeriod
                                                 " LIMIT 1,1;")
 
                 End If
-
-                PayStub.Next_PayPeriodID = NextPayPeriodID
-
-                'NextPayPeriodID
-
 
                 PayStub.paypFrom = Format(CDate(.Cells("Column2").Value), "yyyy-MM-dd")
 

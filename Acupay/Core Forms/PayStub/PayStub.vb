@@ -70,15 +70,6 @@ Public Class PayStub
 
     Dim orgpayfreqID As String
 
-    Dim isorgPHHdeductsched As SByte = 0
-    Dim isorgSSSdeductsched As SByte = 0
-    Dim isorgHDMFdeductsched As SByte = 0
-    Dim isorgWTaxdeductsched As SByte = 0
-
-    Dim strPHHdeductsched As String = String.Empty
-    Dim strSSSdeductsched As String = String.Empty
-    Dim strHDMFdeductsched As String = String.Empty
-
     Dim govdeducsched As New AutoCompleteStringCollection
 
     Dim allowfreq As New AutoCompleteStringCollection
@@ -88,10 +79,6 @@ Public Class PayStub
     Dim employeepicture As New DataTable
 
     Dim viewID As Integer = Nothing
-
-    Dim employeecolumnname As New AutoCompleteStringCollection
-
-    Dim currentTotal As Double
 
     Dim n_VeryFirstPayPeriodIDOfThisYear As Object = Nothing
 
@@ -186,24 +173,6 @@ Public Class PayStub
 
     Dim emp_list_batcount As Integer = 0
 
-    <Obsolete>
-    Public Prior_PayPeriodID As String = String.Empty
-
-    <Obsolete>
-    Public Current_PayPeriodID As String = String.Empty
-
-    <Obsolete>
-    Public Next_PayPeriodID As String = String.Empty
-
-    <Obsolete>
-    Public paypSSSContribSched As String = Nothing
-
-    <Obsolete>
-    Public paypPhHContribSched As String = Nothing
-
-    <Obsolete>
-    Public paypHDMFContribSched As String = Nothing
-
     Dim pause_process_message = String.Empty
 
     Dim IsUserPressEnterToSearch As Boolean = False
@@ -226,8 +195,6 @@ Public Class PayStub
     Dim dtprintAllPaySlip As New DataTable
 
     Dim rptdocAll As New rptAllDecUndecPaySlip
-
-    Dim multi_threads(0) As Thread
 
     Dim array_bgwork(1) As System.ComponentModel.BackgroundWorker
 
@@ -300,67 +267,6 @@ Public Class PayStub
 
         enlistTheLists("SELECT DisplayValue FROM listofval WHERE `Type`='Government deduction schedule' AND Active='Yes' ORDER BY OrderBy;", govdeducsched)
 
-        Dim dattabl_deductsched As New DataTable
-
-        dattabl_deductsched = retAsDatTbl("SELECT COALESCE(PhilhealthDeductionSchedule,'" & govdeducsched.Item(2).ToString & "') 'PhilhealthDeductionSchedule'" &
-                                          ",COALESCE(SSSDeductionSchedule,'" & govdeducsched.Item(2).ToString & "') 'SSSDeductionSchedule'" &
-                                          ",COALESCE(PagIbigDeductionSchedule,'" & govdeducsched.Item(2).ToString & "') 'PagIbigDeductionSchedule'" &
-                                          " FROM organization WHERE RowID=" & orgztnID & ";")
-
-        Dim strdeductsched = dattabl_deductsched.Rows(0)("PhilhealthDeductionSchedule")
-
-        'PhilHealth deduction schedule
-
-        If govdeducsched.Item(0).ToString = strdeductsched Then 'End of the month
-
-            isorgPHHdeductsched = 0
-
-        ElseIf govdeducsched.Item(1).ToString = strdeductsched Then 'First half
-
-            isorgPHHdeductsched = 2
-
-        ElseIf govdeducsched.Item(2).ToString = strdeductsched Then 'Per pay period
-
-            isorgPHHdeductsched = 1
-
-        End If
-
-        strdeductsched = dattabl_deductsched.Rows(0)("SSSDeductionSchedule")
-
-        'SSS deduction schedule
-
-        If govdeducsched.Item(0).ToString = strdeductsched Then 'End of the month
-
-            isorgSSSdeductsched = 0
-
-        ElseIf govdeducsched.Item(1).ToString = strdeductsched Then 'First half
-
-            isorgSSSdeductsched = 2
-
-        ElseIf govdeducsched.Item(2).ToString = strdeductsched Then 'Per pay period
-
-            isorgSSSdeductsched = 1
-
-        End If
-
-        strdeductsched = dattabl_deductsched.Rows(0)("PagIbigDeductionSchedule")
-
-        'PAGIBIG deduction schedule
-
-        If govdeducsched.Item(0).ToString = strdeductsched Then 'End of the month
-
-            isorgHDMFdeductsched = 0
-
-        ElseIf govdeducsched.Item(1).ToString = strdeductsched Then 'First half
-
-            isorgHDMFdeductsched = 2
-
-        ElseIf govdeducsched.Item(2).ToString = strdeductsched Then 'Per pay period
-
-            isorgHDMFdeductsched = 1
-
-        End If
-
         linkPrev.Text = "← " & (current_year - 1)
         linkNxt.Text = (current_year + 1) & " →"
 
@@ -429,19 +335,14 @@ Public Class PayStub
     End Sub
 
     Sub loademployee(Optional q_empsearch As String = Nothing)
-        Dim full_query As String = String.Empty
         If q_empsearch = Nothing Then
-            full_query = (q_employee & " ORDER BY e.RowID DESC LIMIT " & pagination & ",20;") ', dgvemployees
         Else
             If pagination <= 0 Then
                 pagination = 0
             End If
-
-            full_query = (q_employee & q_empsearch & " ORDER BY e.RowID DESC LIMIT " & pagination & ",20;") ', dgvemployees', Simple)
-
         End If
-        Dim catchdt As New DataTable
 
+        Dim catchdt As New DataTable
         Dim param_array = New Object() {orgztnID,
                                         tsSearch.Text,
                                         pagination}
@@ -486,10 +387,9 @@ Public Class PayStub
             If dgvemployees.RowCount > 0 Then
                 dgvemployees.Item("EmployeeID", 0).Selected = True
             End If
+
             employeepicture = New SQLQueryToDatatable("SELECT RowID,Image FROM employee WHERE Image IS NOT NULL AND OrganizationID=" & orgztnID & ";").ResultTable 'retAsDatTbl("SELECT RowID,Image FROM employee WHERE OrganizationID=" & orgztnID & ";")
-
         End If
-
     End Sub
 
     Private Sub dgvpayper_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvpayper.SelectionChanged
@@ -621,15 +521,9 @@ Public Class PayStub
             End If
         ElseIf sendrname = "Last" Or sendrname = "LinkLabel3" Then
             Dim lastpage = Val(EXECQUER("SELECT COUNT(RowID) / " & max_count_per_page & " FROM employee WHERE OrganizationID=" & orgztnID & ";"))
-
             Dim remender = lastpage Mod 1
 
             pagination = (lastpage - remender) * max_count_per_page
-
-            If pagination - max_count_per_page < max_count_per_page Then
-
-            End If
-
         End If
 
         Dim pay_freqString = String.Empty
@@ -1169,8 +1063,6 @@ Public Class PayStub
 
                 esal_dattab = resources.Salaries
 
-                DebugUtility.DumpTable(esal_dattab, "salaries")
-
                 numofdaypresent = retAsDatTbl("SELECT COUNT(RowID) 'DaysAttended'" &
                                                                 ",SUM((TIME_TO_SEC(TIMEDIFF(TimeOut,TimeIn)) / 60) / 60) 'SumHours'" &
                                                                 ",EmployeeID" &
@@ -1370,38 +1262,22 @@ Public Class PayStub
 
     Private Sub SinglePaySlip_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem.Click,
                                                                                 ActualToolStripMenuItem.Click
-
         Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
 
         Dim n_PrintSinglePaySlipOfficialFormat As _
             New PrintSinglePaySlipOfficialFormat(ValNoComma(paypRowID),
                                                  IsActualFlag,
                                                  ValNoComma(dgvemployees.Tag))
-
     End Sub
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
         Me.Close()
-
     End Sub
 
     Public genpayselyear As String = Nothing
 
     Sub btnrefresh_Click(sender As Object, e As EventArgs) Handles btnrefresh.Click
-        If TabControl2.SelectedIndex = 0 Then
-            '
-            Dim searchdate = Nothing
-            If MaskedTextBox1.Text = "  /  /" Then
-                searchdate = Format(CDate(dbnow), "yyyy")
-            Else
-                searchdate = Format(CDate(Trim(MaskedTextBox1.Text)), "yyyy")
-
-            End If
-
-            VIEW_payperiodofyear() 'searchdate
-        Else
-
-        End If
+        VIEW_payperiodofyear()
     End Sub
 
     Private Sub TabControl1_DrawItem(sender As Object, e As DrawItemEventArgs) Handles TabControl1.DrawItem
@@ -1446,13 +1322,6 @@ Public Class PayStub
     End Sub
 
     Private Sub PayStub_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
-        Dim alive_bgworks = array_bgwork.Cast(Of System.ComponentModel.BackgroundWorker).Where(Function(y) y IsNot Nothing)
-
-        Dim busy_bgworks = alive_bgworks.Cast(Of System.ComponentModel.BackgroundWorker).Where(Function(y) y.IsBusy)
-
-        Dim bool_result As Boolean = (Convert.ToInt16(busy_bgworks.Count) > 0)
-
         e.Cancel = False
 
         If previousForm IsNot Nothing Then
@@ -1524,29 +1393,6 @@ Public Class PayStub
             AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
         End If
-    End Sub
-
-    Private Sub MaskedTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles MaskedTextBox1.KeyPress
-        Dim e_asc As String = Asc(e.KeyChar)
-
-        If e_asc = 13 Then
-            Try
-                If MaskedTextBox1.Text = "  /  /" Then
-                    MaskedTextBox1.Text = Format(CDate(dbnow), machineShortDateFormat)
-                Else
-                    If MaskedTextBox1.Text.Contains("_") Then
-                        MaskedTextBox1.Text = Format(CDate(Trim(MaskedTextBox1.Text.Replace("_", ""))), machineShortDateFormat)
-
-                    End If
-
-                End If
-
-                btnrefresh_Click(sender, e)
-            Catch ex As Exception
-                MsgBox(getErrExcptn(ex, Me.Name), , "Unexpected Message")
-            End Try
-        End If
-
     End Sub
 
     Private Sub SplitContainer1_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles SplitContainer1.SplitterMoved
@@ -1897,44 +1743,6 @@ Public Class PayStub
 
             End With
         End If
-    End Sub
-
-    Sub InsertPaystubAdjustment(paystubID As Integer, productID As Integer, payAmount As Double)
-        Try
-            If conn.State = ConnectionState.Open Then
-                conn.Close()
-            End If
-
-            new_cmd = New MySqlCommand("INSUPD_paystub", conn)
-
-            conn.Open()
-
-            With new_cmd
-                .Parameters.Clear()
-
-                .CommandType = CommandType.StoredProcedure
-
-                .Parameters.Add("paystubID", MySqlDbType.Int32)
-
-                .Parameters.AddWithValue("pstub_RowID", DBNull.Value)
-                .Parameters.AddWithValue("pstub_OrganizationID", orgztnID)
-                .Parameters.AddWithValue("pstub_CreatedBy", z_User)
-                .Parameters.AddWithValue("pstub_LastUpdBy", z_User)
-
-                .Parameters("paystubID").Direction = ParameterDirection.ReturnValue
-
-                Dim datread As MySqlDataReader
-
-                datread = .ExecuteReader()
-            End With
-        Catch ex As Exception
-            MsgBox(ex.Message & " " & "INSUPD_paystub", , "Error")
-        Finally
-            new_conn.Close()
-            conn.Close()
-            new_cmd.Dispose()
-        End Try
-
     End Sub
 
     Private Sub dgAdjustments_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvAdjustments.CellContentClick
@@ -2730,7 +2538,6 @@ Public Class PayStub
     End Sub
 
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
-
         Static _bool As Boolean =
             (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
 
