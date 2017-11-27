@@ -19,7 +19,7 @@ DECLARE DAYTYPE_REGULAR_WORKING_DAY VARCHAR(50) DEFAULT 'Regular Working Day';
 DECLARE DAYTYPE_SPECIAL_NON_WORKING_HOLIDAY VARCHAR(50) DEFAULT 'Special Non-Working Holiday';
 DECLARE DAYTYPE_REGULAR_HOLIDAY VARCHAR(50) DEFAULT 'Regular Holiday';
 
-DECLARE MAX_REGULAR_HOURS INT(10) DEFAULT 8;
+DECLARE STANDARD_WORKING_HOURS INT(10) DEFAULT 8;
 
 DECLARE BASIC_RATE INT(10) DEFAULT 1;
 
@@ -30,8 +30,6 @@ DECLARE pr_PayType TEXT;
 DECLARE isRestDay TEXT;
 DECLARe isWorkingDay BOOLEAN;
 
-DECLARE hasTimeLogs TEXT;
-
 DECLARE yester_TotDayPay DECIMAL(11,2);
 DECLARE yester_TotHrsWorkd DECIMAL(11,2);
 
@@ -41,18 +39,6 @@ DECLARE ete_NDiffHrs DECIMAL(11,6);
 DECLARE ete_NDiffOTHrs DECIMAL(11,6);
 DECLARE ete_HrsLate DECIMAL(11,6);
 DECLARE ete_HrsUnder DECIMAL(11,6);
-
-DECLARE etd_TimeIn TIME;
-DECLARE etd_TimeOut TIME;
-
-DECLARE shifttimefrom TIME;
-DECLARE shifttimeto TIME;
-
-DECLARE otstartingtime TIME DEFAULT NULL;
-DECLARE otendingtime TIME DEFAULT NULL;
-
-DECLARE og_ndtimefrom TIME DEFAULT NULL;
-DECLARE og_ndtimeto TIME DEFAULT NULL;
 
 DECLARE e_EmpStatus TEXT;
 
@@ -84,7 +70,7 @@ DECLARE e_CalcRestDay CHAR(1);
 
 DECLARE e_CalcRestDayOT CHAR(1);
 
-DECLARE isDayMatchRestDay TINYINT(1);
+DECLARE isDayMatchRestDay BOOLEAN DEFAULT FALSE;
 
 
 DECLARE yes_true CHAR(1) DEFAULT '0';
@@ -96,8 +82,6 @@ DECLARE timeEntryID INT(11);
 
 DECLARE hourlyRate DECIMAL(11,6);
 DECLARE dailyRate DECIMAL(11,6);
-
-
 
 DECLARE commonrate DECIMAL(11,6);
 
@@ -120,9 +104,6 @@ DECLARE payrateRowID INT(11);
 
 DECLARE ete_TotalDayPay DECIMAL(11,6);
 
-
-
-
 DECLARE OTCount INT(11) DEFAULT 0;
 
 DECLARE aftershiftOTRowID INT(11) DEFAULT 0;
@@ -134,7 +115,7 @@ DECLARE e_LateGracePeriod DECIMAL(11,2);
 DECLARE e_PositionID INT(11);
 DECLARE shiftID INT(11);
 
-DECLARE divisorToDailyRate INT(11) DEFAULT 0;
+DECLARE workingHours INT(10) DEFAULT 0;
 
 DECLARE sh1 TIME DEFAULT NULL;
 DECLARE sh2 TIME DEFAULT NULL;
@@ -143,18 +124,25 @@ DECLARE dateToday DATE;
 DECLARE dateTomorrow DATE;
 DECLARE dateYesterday DATE;
 
+DECLARE etd_TimeIn TIME;
+DECLARE etd_TimeOut TIME;
 DECLARE fullTimeIn DATETIME;
 DECLARE fullTimeOut DATETIME;
+DECLARE hasTimeLogs BOOLEAN DEFAULT FALSE;
+
+DECLARE shifttimefrom TIME;
+DECLARE shifttimeto TIME;
 DECLARE shiftStart DATETIME;
 DECLARE shiftEnd DATETIME;
+DECLARE hasShift BOOLEAN DEFAULT FALSE;
 DECLARE breaktimeStart DATETIME;
 DECLARE breaktimeEnd DATETIME;
-DECLARE hasBreaktime BOOLEAN;
+DECLARE hasBreaktime BOOLEAN DEFAULT FALSE;
 
-DECLARE isRegularDay BOOLEAN;
-DECLARE isSpecialNonWorkingHoliday BOOLEAN;
-DECLARE isRegularHoliday BOOLEAN;
-DECLARE isHoliday BOOLEAN;
+DECLARE isRegularDay BOOLEAN DEFAULT FALSE;
+DECLARE isSpecialNonWorkingHoliday BOOLEAN DEFAULT FALSE;
+DECLARE isRegularHoliday BOOLEAN DEFAULT FALSE;
+DECLARE isHoliday BOOLEAN DEFAULT FALSE;
 
 DECLARE dutyStart DATETIME;
 DECLARE dutyEnd DATETIME;
@@ -167,6 +155,8 @@ DECLARE regularAmount DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE isNightShift BOOLEAN;
 DECLARE isEntitledToNightDifferential BOOLEAN;
 
+DECLARE og_ndtimefrom TIME DEFAULT NULL;
+DECLARE og_ndtimeto TIME DEFAULT NULL;
 DECLARE nightDiffTimeFrom TIME;
 DECLARE nightDiffTimeTo TIME;
 DECLARE nightDiffRangeStart DATETIME;
@@ -179,6 +169,8 @@ DECLARE nightDiffAmount DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE isDutyOverlappedWithNightDifferential BOOLEAN;
 DECLARE shouldCalculateNightDifferential BOOLEAN;
 
+DECLARE otstartingtime TIME DEFAULT NULL;
+DECLARE otendingtime TIME DEFAULT NULL;
 DECLARE overtimeStart DATETIME;
 DECLARE overtimeEnd DATETIME;
 DECLARE overtimeDate DATE;
@@ -348,7 +340,8 @@ SELECT
     sh.TimeTo,
     sh.BreakTimeFrom,
     sh.BreakTimeTo,
-    COALESCE(esh.RestDay, TRUE)
+    COALESCE(esh.RestDay, TRUE),
+    sh.DivisorToDailyRate
 FROM employeeshift esh
 INNER JOIN shift sh
 ON sh.RowID = esh.ShiftID
@@ -364,9 +357,13 @@ INTO
     shifttimeto,
     @sh_brktimeFr,
     @sh_brktimeTo,
-    isShiftRestDay;
+    isShiftRestDay,
+    workingHours;
 
+SET hasShift = (shifttimefrom IS NOT NULL) AND (shifttimeto IS NOT NULL);
 SET isRestDay = isShiftRestDay OR isDefaultRestDay;
+
+SET workingHours = IF(hasShift, workingHours, STANDARD_WORKING_HOURS);
 
 IF OTCount = 1 THEN
 
@@ -487,7 +484,7 @@ ELSE
 END IF;
 
 /* Make sure the regular hours doesn't go above the standard 8-hour workday. */
-SET regularHours = LEAST(regularHours, MAX_REGULAR_HOURS);
+SET regularHours = LEAST(regularHours, STANDARD_WORKING_HOURS);
 
 SET nightDiffRangeStart = TIMESTAMP(dateToday, nightDiffTimeFrom);
 SET nightDiffRangeEnd = TIMESTAMP(IF(nightDiffTimeTo > nightDiffTimeFrom, ete_Date, dateTomorrow), nightDiffTimeTo);
@@ -638,6 +635,21 @@ INTO
     leaveEndTime,
     leaveType;
 
+IF NOT hasShift THEN
+   SET regularHours = COMPUTE_TimeDifference(TIME(fullTimeIn), TIME(fullTimeOut));
+END IF;
+
+/*
+ * If the hours worked is in excess of the working hours, put that extra hours into
+ * overtime.
+ */
+IF isRestDay AND (regularHours > workingHours) THEN
+    SET @excessHours = regularHours - workingHours;
+    SET regularHours = workingHours;
+
+    SET overtimeHours = @excessHours;
+END IF;
+
 IF hasLeave THEN
     SET leaveStart = TIMESTAMP(dateToday, leaveStartTime);
     SET leaveEnd = TIMESTAMP(IF(leaveEndTime > leaveStartTime, dateToday, dateTomorrow), leaveEndTime);
@@ -661,6 +673,8 @@ IF hasLeave THEN
     END IF;
 END IF;
 
+SET overtimeHours = overtimeHours - nightDiffOTHours;
+
 SET ete_RegHrsWorkd = regularHours;
 SET ete_OvertimeHrs = overtimeHours;
 SET ete_NDiffHrs = nightDiffHours;
@@ -674,12 +688,7 @@ SET ndiffotrate = otrate * ndiffrate;
 SELECT GET_employeerateperday(ete_EmpRowID, ete_OrganizID, ete_Date)
 INTO dailyRate;
 
-SELECT shift.DivisorToDailyRate
-FROM shift
-WHERE shift.RowID = shiftID
-INTO divisorToDailyRate;
-
-SET hourlyRate = dailyRate / divisorToDailyRate;
+SET hourlyRate = dailyRate / workingHours;
 
 SELECT RowID
 FROM employeetimeentry
