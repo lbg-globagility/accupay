@@ -24,6 +24,12 @@ Partial Class EmployeeShiftEntryForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeShiftEntryForm))
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -32,14 +38,12 @@ Partial Class EmployeeShiftEntryForm
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeShiftEntryForm))
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.SuperTabControl1 = New DevComponents.DotNetBar.SuperTabControl()
@@ -57,46 +61,14 @@ Partial Class EmployeeShiftEntryForm
         Me.TextBox3 = New System.Windows.Forms.TextBox()
         Me.SuperTabItem2 = New DevComponents.DotNetBar.SuperTabItem()
         Me.dgvEmpList = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_EmployeeName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_ID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ShiftEncodingType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ShiftEncodingTypeDisplayValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.chkbxNewShiftByDay = New System.Windows.Forms.CheckBox()
-        Me.CustomColoredTabControl1 = New Acupay.CustomColoredTabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.dtpDateFrom = New System.Windows.Forms.DateTimePicker()
-        Me.dtpDateTo = New System.Windows.Forms.DateTimePicker()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.cboshiftlist = New System.Windows.Forms.ComboBox()
-        Me.lblShiftEntry = New System.Windows.Forms.LinkLabel()
-        Me.chkrestday = New System.Windows.Forms.CheckBox()
-        Me.chkNightShift = New System.Windows.Forms.CheckBox()
-        Me.Label140 = New System.Windows.Forms.Label()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.dgvWeek = New System.Windows.Forms.DataGridView()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Last = New System.Windows.Forms.LinkLabel()
         Me.Nxt = New System.Windows.Forms.LinkLabel()
         Me.Prev = New System.Windows.Forms.LinkLabel()
         Me.First = New System.Windows.Forms.LinkLabel()
         Me.lblSaveMsg = New System.Windows.Forms.Label()
         Me.dgvEmpShiftList = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_empIDShift = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_EmpnameShift = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_RowIDShift = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_DateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_DateTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_TimeFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_TimeTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtEmpID = New System.Windows.Forms.TextBox()
         Me.txtEmpName = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -147,6 +119,42 @@ Partial Class EmployeeShiftEntryForm
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_EmployeeName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_ID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShiftEncodingType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ShiftEncodingTypeDisplayValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CustomColoredTabControl1 = New Acupay.CustomColoredTabControl()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.dtpDateFrom = New System.Windows.Forms.DateTimePicker()
+        Me.dtpDateTo = New System.Windows.Forms.DateTimePicker()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.cboshiftlist = New System.Windows.Forms.ComboBox()
+        Me.lblShiftEntry = New System.Windows.Forms.LinkLabel()
+        Me.chkrestday = New System.Windows.Forms.CheckBox()
+        Me.chkNightShift = New System.Windows.Forms.CheckBox()
+        Me.Label140 = New System.Windows.Forms.Label()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.dgvWeek = New System.Windows.Forms.DataGridView()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_empIDShift = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_EmpnameShift = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_RowIDShift = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_DateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_DateTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_TimeFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_TimeTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BreaktimeFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BreaktimeTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel2.SuspendLayout()
         CType(Me.SuperTabControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuperTabControl1.SuspendLayout()
@@ -154,10 +162,6 @@ Partial Class EmployeeShiftEntryForm
         Me.SuperTabControlPanel2.SuspendLayout()
         CType(Me.dgvEmpList, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
-        Me.CustomColoredTabControl1.SuspendLayout()
-        Me.TabPage1.SuspendLayout()
-        Me.TabPage2.SuspendLayout()
-        CType(Me.dgvWeek, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvEmpShiftList, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -165,6 +169,10 @@ Partial Class EmployeeShiftEntryForm
         Me.Panel4.SuspendLayout()
         Me.Panel5.SuspendLayout()
         Me.cmsDeleteShift.SuspendLayout()
+        Me.CustomColoredTabControl1.SuspendLayout()
+        Me.TabPage1.SuspendLayout()
+        Me.TabPage2.SuspendLayout()
+        CType(Me.dgvWeek, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label16
@@ -230,9 +238,9 @@ Partial Class EmployeeShiftEntryForm
         Me.SuperTabControlPanel1.Controls.Add(Me.cmbempname)
         Me.SuperTabControlPanel1.Controls.Add(Me.Label7)
         Me.SuperTabControlPanel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SuperTabControlPanel1.Location = New System.Drawing.Point(0, 23)
+        Me.SuperTabControlPanel1.Location = New System.Drawing.Point(0, 0)
         Me.SuperTabControlPanel1.Name = "SuperTabControlPanel1"
-        Me.SuperTabControlPanel1.Size = New System.Drawing.Size(307, 90)
+        Me.SuperTabControlPanel1.Size = New System.Drawing.Size(307, 113)
         Me.SuperTabControlPanel1.TabIndex = 1
         Me.SuperTabControlPanel1.TabItem = Me.SuperTabItem1
         '
@@ -370,41 +378,6 @@ Partial Class EmployeeShiftEntryForm
         Me.dgvEmpList.Size = New System.Drawing.Size(325, 176)
         Me.dgvEmpList.TabIndex = 321
         '
-        'c_EmployeeID
-        '
-        Me.c_EmployeeID.HeaderText = "Employee ID"
-        Me.c_EmployeeID.Name = "c_EmployeeID"
-        Me.c_EmployeeID.ReadOnly = True
-        Me.c_EmployeeID.Width = 80
-        '
-        'c_EmployeeName
-        '
-        Me.c_EmployeeName.HeaderText = "Employee Name"
-        Me.c_EmployeeName.Name = "c_EmployeeName"
-        Me.c_EmployeeName.ReadOnly = True
-        Me.c_EmployeeName.Width = 180
-        '
-        'c_ID
-        '
-        Me.c_ID.HeaderText = "RowID"
-        Me.c_ID.Name = "c_ID"
-        Me.c_ID.ReadOnly = True
-        Me.c_ID.Visible = False
-        '
-        'ShiftEncodingType
-        '
-        Me.ShiftEncodingType.HeaderText = "ShiftEncodingType"
-        Me.ShiftEncodingType.Name = "ShiftEncodingType"
-        Me.ShiftEncodingType.ReadOnly = True
-        Me.ShiftEncodingType.Visible = False
-        '
-        'ShiftEncodingTypeDisplayValue
-        '
-        Me.ShiftEncodingTypeDisplayValue.HeaderText = "Shift Encoding Type"
-        Me.ShiftEncodingTypeDisplayValue.Name = "ShiftEncodingTypeDisplayValue"
-        Me.ShiftEncodingTypeDisplayValue.ReadOnly = True
-        Me.ShiftEncodingTypeDisplayValue.Width = 150
-        '
         'Panel1
         '
         Me.Panel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -445,224 +418,6 @@ Partial Class EmployeeShiftEntryForm
         Me.chkbxNewShiftByDay.Text = "chkbxNewShiftByDay"
         Me.chkbxNewShiftByDay.UseVisualStyleBackColor = True
         Me.chkbxNewShiftByDay.Visible = False
-        '
-        'CustomColoredTabControl1
-        '
-        Me.CustomColoredTabControl1.Alignment = System.Windows.Forms.TabAlignment.Bottom
-        Me.CustomColoredTabControl1.Controls.Add(Me.TabPage1)
-        Me.CustomColoredTabControl1.Controls.Add(Me.TabPage2)
-        Me.CustomColoredTabControl1.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
-        Me.CustomColoredTabControl1.ItemSize = New System.Drawing.Size(152, 25)
-        Me.CustomColoredTabControl1.Location = New System.Drawing.Point(3, 70)
-        Me.CustomColoredTabControl1.Name = "CustomColoredTabControl1"
-        Me.CustomColoredTabControl1.SelectedIndex = 0
-        Me.CustomColoredTabControl1.Size = New System.Drawing.Size(710, 139)
-        Me.CustomColoredTabControl1.TabIndex = 349
-        '
-        'TabPage1
-        '
-        Me.TabPage1.Controls.Add(Me.Label5)
-        Me.TabPage1.Controls.Add(Me.dtpDateFrom)
-        Me.TabPage1.Controls.Add(Me.dtpDateTo)
-        Me.TabPage1.Controls.Add(Me.Label6)
-        Me.TabPage1.Controls.Add(Me.cboshiftlist)
-        Me.TabPage1.Controls.Add(Me.lblShiftEntry)
-        Me.TabPage1.Controls.Add(Me.chkrestday)
-        Me.TabPage1.Controls.Add(Me.chkNightShift)
-        Me.TabPage1.Controls.Add(Me.Label140)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 4)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(702, 106)
-        Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Text = "By date               "
-        Me.TabPage1.UseVisualStyleBackColor = True
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.BackColor = System.Drawing.Color.Transparent
-        Me.Label5.Location = New System.Drawing.Point(17, 6)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(56, 13)
-        Me.Label5.TabIndex = 337
-        Me.Label5.Text = "Date From"
-        '
-        'dtpDateFrom
-        '
-        Me.dtpDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpDateFrom.Location = New System.Drawing.Point(20, 22)
-        Me.dtpDateFrom.Name = "dtpDateFrom"
-        Me.dtpDateFrom.Size = New System.Drawing.Size(105, 20)
-        Me.dtpDateFrom.TabIndex = 328
-        '
-        'dtpDateTo
-        '
-        Me.dtpDateTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpDateTo.Location = New System.Drawing.Point(146, 22)
-        Me.dtpDateTo.Name = "dtpDateTo"
-        Me.dtpDateTo.Size = New System.Drawing.Size(105, 20)
-        Me.dtpDateTo.TabIndex = 329
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.BackColor = System.Drawing.Color.Transparent
-        Me.Label6.Location = New System.Drawing.Point(143, 6)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(46, 13)
-        Me.Label6.TabIndex = 338
-        Me.Label6.Text = "Date To"
-        '
-        'cboshiftlist
-        '
-        Me.cboshiftlist.FormattingEnabled = True
-        Me.cboshiftlist.Location = New System.Drawing.Point(20, 62)
-        Me.cboshiftlist.Name = "cboshiftlist"
-        Me.cboshiftlist.Size = New System.Drawing.Size(231, 21)
-        Me.cboshiftlist.TabIndex = 332
-        '
-        'lblShiftEntry
-        '
-        Me.lblShiftEntry.AutoSize = True
-        Me.lblShiftEntry.Location = New System.Drawing.Point(257, 70)
-        Me.lblShiftEntry.Name = "lblShiftEntry"
-        Me.lblShiftEntry.Size = New System.Drawing.Size(163, 13)
-        Me.lblShiftEntry.TabIndex = 333
-        Me.lblShiftEntry.TabStop = True
-        Me.lblShiftEntry.Text = "Add Shift Entry/Select Shift Entry"
-        '
-        'chkrestday
-        '
-        Me.chkrestday.AutoSize = True
-        Me.chkrestday.Location = New System.Drawing.Point(338, 26)
-        Me.chkrestday.Name = "chkrestday"
-        Me.chkrestday.Size = New System.Drawing.Size(68, 17)
-        Me.chkrestday.TabIndex = 331
-        Me.chkrestday.Text = "Rest day"
-        Me.chkrestday.UseVisualStyleBackColor = True
-        '
-        'chkNightShift
-        '
-        Me.chkNightShift.AutoSize = True
-        Me.chkNightShift.Location = New System.Drawing.Point(257, 26)
-        Me.chkNightShift.Name = "chkNightShift"
-        Me.chkNightShift.Size = New System.Drawing.Size(75, 17)
-        Me.chkNightShift.TabIndex = 330
-        Me.chkNightShift.Text = "Night Shift"
-        Me.chkNightShift.UseVisualStyleBackColor = True
-        '
-        'Label140
-        '
-        Me.Label140.AutoSize = True
-        Me.Label140.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label140.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label140.Location = New System.Drawing.Point(3, 60)
-        Me.Label140.Name = "Label140"
-        Me.Label140.Size = New System.Drawing.Size(18, 24)
-        Me.Label140.TabIndex = 343
-        Me.Label140.Text = "*"
-        '
-        'TabPage2
-        '
-        Me.TabPage2.Controls.Add(Me.dgvWeek)
-        Me.TabPage2.Location = New System.Drawing.Point(4, 4)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(702, 106)
-        Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "By day"
-        Me.TabPage2.UseVisualStyleBackColor = True
-        '
-        'dgvWeek
-        '
-        Me.dgvWeek.AllowUserToAddRows = False
-        Me.dgvWeek.AllowUserToDeleteRows = False
-        Me.dgvWeek.AllowUserToResizeColumns = False
-        Me.dgvWeek.AllowUserToResizeRows = False
-        Me.dgvWeek.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvWeek.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvWeek.ColumnHeadersHeight = 30
-        Me.dgvWeek.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvWeek.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7})
-        Me.dgvWeek.Location = New System.Drawing.Point(0, 0)
-        Me.dgvWeek.Name = "dgvWeek"
-        Me.dgvWeek.ReadOnly = True
-        Me.dgvWeek.RowHeadersVisible = False
-        Me.dgvWeek.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvWeek.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal
-        Me.dgvWeek.Size = New System.Drawing.Size(703, 105)
-        Me.dgvWeek.TabIndex = 348
-        '
-        'Column1
-        '
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle3
-        Me.Column1.HeaderText = "Column1"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        Me.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column2
-        '
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle4
-        Me.Column2.HeaderText = "Column2"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        Me.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column3
-        '
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle5
-        Me.Column3.HeaderText = "Column3"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        Me.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column4
-        '
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column4.DefaultCellStyle = DataGridViewCellStyle6
-        Me.Column4.HeaderText = "Column4"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        Me.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column5
-        '
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle7
-        Me.Column5.HeaderText = "Column5"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        Me.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column6
-        '
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle8
-        Me.Column6.HeaderText = "Column6"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        Me.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column7
-        '
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column7.DefaultCellStyle = DataGridViewCellStyle9
-        Me.Column7.HeaderText = "Column7"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        Me.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'Last
         '
@@ -733,15 +488,15 @@ Partial Class EmployeeShiftEntryForm
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvEmpShiftList.BackgroundColor = System.Drawing.Color.White
         Me.dgvEmpShiftList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvEmpShiftList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_empIDShift, Me.c_EmpnameShift, Me.c_RowIDShift, Me.c_DateFrom, Me.c_DateTo, Me.c_TimeFrom, Me.c_TimeTo})
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvEmpShiftList.DefaultCellStyle = DataGridViewCellStyle12
+        Me.dgvEmpShiftList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_empIDShift, Me.c_EmpnameShift, Me.c_RowIDShift, Me.c_DateFrom, Me.c_DateTo, Me.c_TimeFrom, Me.c_TimeTo, Me.c_BreaktimeFrom, Me.c_BreaktimeTo})
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvEmpShiftList.DefaultCellStyle = DataGridViewCellStyle16
         Me.dgvEmpShiftList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvEmpShiftList.Location = New System.Drawing.Point(6, 248)
         Me.dgvEmpShiftList.Name = "dgvEmpShiftList"
@@ -750,56 +505,6 @@ Partial Class EmployeeShiftEntryForm
         Me.dgvEmpShiftList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvEmpShiftList.Size = New System.Drawing.Size(919, 184)
         Me.dgvEmpShiftList.TabIndex = 334
-        '
-        'c_empIDShift
-        '
-        Me.c_empIDShift.HeaderText = "Employee ID"
-        Me.c_empIDShift.Name = "c_empIDShift"
-        Me.c_empIDShift.ReadOnly = True
-        '
-        'c_EmpnameShift
-        '
-        Me.c_EmpnameShift.HeaderText = "Employee Name"
-        Me.c_EmpnameShift.Name = "c_EmpnameShift"
-        Me.c_EmpnameShift.ReadOnly = True
-        Me.c_EmpnameShift.Width = 150
-        '
-        'c_RowIDShift
-        '
-        Me.c_RowIDShift.HeaderText = "RowID"
-        Me.c_RowIDShift.Name = "c_RowIDShift"
-        Me.c_RowIDShift.ReadOnly = True
-        Me.c_RowIDShift.Visible = False
-        '
-        'c_DateFrom
-        '
-        DataGridViewCellStyle10.Format = "d"
-        DataGridViewCellStyle10.NullValue = Nothing
-        Me.c_DateFrom.DefaultCellStyle = DataGridViewCellStyle10
-        Me.c_DateFrom.HeaderText = "Effective Date From"
-        Me.c_DateFrom.Name = "c_DateFrom"
-        Me.c_DateFrom.ReadOnly = True
-        '
-        'c_DateTo
-        '
-        DataGridViewCellStyle11.Format = "d"
-        DataGridViewCellStyle11.NullValue = Nothing
-        Me.c_DateTo.DefaultCellStyle = DataGridViewCellStyle11
-        Me.c_DateTo.HeaderText = "Effective Date To"
-        Me.c_DateTo.Name = "c_DateTo"
-        Me.c_DateTo.ReadOnly = True
-        '
-        'c_TimeFrom
-        '
-        Me.c_TimeFrom.HeaderText = "Time From"
-        Me.c_TimeFrom.Name = "c_TimeFrom"
-        Me.c_TimeFrom.ReadOnly = True
-        '
-        'c_TimeTo
-        '
-        Me.c_TimeTo.HeaderText = "Time To"
-        Me.c_TimeTo.Name = "c_TimeTo"
-        Me.c_TimeTo.ReadOnly = True
         '
         'txtEmpID
         '
@@ -1167,9 +872,9 @@ Partial Class EmployeeShiftEntryForm
         '
         'DataGridViewTextBoxColumn4
         '
-        DataGridViewCellStyle13.Format = "d"
-        DataGridViewCellStyle13.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle17.Format = "d"
+        DataGridViewCellStyle17.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridViewTextBoxColumn4.HeaderText = "ShiftEncodingType"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
@@ -1177,9 +882,9 @@ Partial Class EmployeeShiftEntryForm
         '
         'DataGridViewTextBoxColumn5
         '
-        DataGridViewCellStyle14.Format = "d"
-        DataGridViewCellStyle14.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle18.Format = "d"
+        DataGridViewCellStyle18.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle18
         Me.DataGridViewTextBoxColumn5.HeaderText = "Shift Encoding Type"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.ReadOnly = True
@@ -1208,9 +913,9 @@ Partial Class EmployeeShiftEntryForm
         '
         'DataGridViewTextBoxColumn9
         '
-        DataGridViewCellStyle15.Format = "d"
-        DataGridViewCellStyle15.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle19.Format = "d"
+        DataGridViewCellStyle19.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle19
         Me.DataGridViewTextBoxColumn9.HeaderText = "Effective Date From"
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
         Me.DataGridViewTextBoxColumn9.ReadOnly = True
@@ -1218,13 +923,14 @@ Partial Class EmployeeShiftEntryForm
         '
         'DataGridViewTextBoxColumn10
         '
-        DataGridViewCellStyle16.Format = "d"
-        DataGridViewCellStyle16.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle20.Format = "d"
+        DataGridViewCellStyle20.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewTextBoxColumn10.HeaderText = "Effective Date To"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Visible = False
+        Me.DataGridViewTextBoxColumn10.Width = 80
         '
         'DataGridViewTextBoxColumn11
         '
@@ -1232,13 +938,352 @@ Partial Class EmployeeShiftEntryForm
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
         Me.DataGridViewTextBoxColumn11.ReadOnly = True
         Me.DataGridViewTextBoxColumn11.Visible = False
+        Me.DataGridViewTextBoxColumn11.Width = 180
         '
         'DataGridViewTextBoxColumn12
         '
         Me.DataGridViewTextBoxColumn12.HeaderText = "Time To"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
         Me.DataGridViewTextBoxColumn12.ReadOnly = True
+        Me.DataGridViewTextBoxColumn12.Visible = False
         Me.DataGridViewTextBoxColumn12.Width = 150
+        '
+        'DataGridViewTextBoxColumn13
+        '
+        Me.DataGridViewTextBoxColumn13.HeaderText = "ShiftEncodingType"
+        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        Me.DataGridViewTextBoxColumn13.ReadOnly = True
+        Me.DataGridViewTextBoxColumn13.Visible = False
+        '
+        'DataGridViewTextBoxColumn14
+        '
+        Me.DataGridViewTextBoxColumn14.HeaderText = "Shift Encoding Type"
+        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        Me.DataGridViewTextBoxColumn14.ReadOnly = True
+        Me.DataGridViewTextBoxColumn14.Width = 150
+        '
+        'c_EmployeeID
+        '
+        Me.c_EmployeeID.HeaderText = "Employee ID"
+        Me.c_EmployeeID.Name = "c_EmployeeID"
+        Me.c_EmployeeID.ReadOnly = True
+        Me.c_EmployeeID.Width = 80
+        '
+        'c_EmployeeName
+        '
+        Me.c_EmployeeName.HeaderText = "Employee Name"
+        Me.c_EmployeeName.Name = "c_EmployeeName"
+        Me.c_EmployeeName.ReadOnly = True
+        Me.c_EmployeeName.Width = 180
+        '
+        'c_ID
+        '
+        Me.c_ID.HeaderText = "RowID"
+        Me.c_ID.Name = "c_ID"
+        Me.c_ID.ReadOnly = True
+        Me.c_ID.Visible = False
+        '
+        'ShiftEncodingType
+        '
+        Me.ShiftEncodingType.HeaderText = "ShiftEncodingType"
+        Me.ShiftEncodingType.Name = "ShiftEncodingType"
+        Me.ShiftEncodingType.ReadOnly = True
+        Me.ShiftEncodingType.Visible = False
+        '
+        'ShiftEncodingTypeDisplayValue
+        '
+        Me.ShiftEncodingTypeDisplayValue.HeaderText = "Shift Encoding Type"
+        Me.ShiftEncodingTypeDisplayValue.Name = "ShiftEncodingTypeDisplayValue"
+        Me.ShiftEncodingTypeDisplayValue.ReadOnly = True
+        Me.ShiftEncodingTypeDisplayValue.Width = 150
+        '
+        'CustomColoredTabControl1
+        '
+        Me.CustomColoredTabControl1.Alignment = System.Windows.Forms.TabAlignment.Bottom
+        Me.CustomColoredTabControl1.Controls.Add(Me.TabPage1)
+        Me.CustomColoredTabControl1.Controls.Add(Me.TabPage2)
+        Me.CustomColoredTabControl1.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
+        Me.CustomColoredTabControl1.ItemSize = New System.Drawing.Size(152, 25)
+        Me.CustomColoredTabControl1.Location = New System.Drawing.Point(3, 70)
+        Me.CustomColoredTabControl1.Name = "CustomColoredTabControl1"
+        Me.CustomColoredTabControl1.SelectedIndex = 0
+        Me.CustomColoredTabControl1.Size = New System.Drawing.Size(710, 139)
+        Me.CustomColoredTabControl1.TabIndex = 349
+        '
+        'TabPage1
+        '
+        Me.TabPage1.Controls.Add(Me.Label5)
+        Me.TabPage1.Controls.Add(Me.dtpDateFrom)
+        Me.TabPage1.Controls.Add(Me.dtpDateTo)
+        Me.TabPage1.Controls.Add(Me.Label6)
+        Me.TabPage1.Controls.Add(Me.cboshiftlist)
+        Me.TabPage1.Controls.Add(Me.lblShiftEntry)
+        Me.TabPage1.Controls.Add(Me.chkrestday)
+        Me.TabPage1.Controls.Add(Me.chkNightShift)
+        Me.TabPage1.Controls.Add(Me.Label140)
+        Me.TabPage1.Location = New System.Drawing.Point(4, 4)
+        Me.TabPage1.Name = "TabPage1"
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage1.Size = New System.Drawing.Size(702, 106)
+        Me.TabPage1.TabIndex = 0
+        Me.TabPage1.Text = "By date               "
+        Me.TabPage1.UseVisualStyleBackColor = True
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.BackColor = System.Drawing.Color.Transparent
+        Me.Label5.Location = New System.Drawing.Point(17, 6)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(56, 13)
+        Me.Label5.TabIndex = 337
+        Me.Label5.Text = "Date From"
+        '
+        'dtpDateFrom
+        '
+        Me.dtpDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpDateFrom.Location = New System.Drawing.Point(20, 22)
+        Me.dtpDateFrom.Name = "dtpDateFrom"
+        Me.dtpDateFrom.Size = New System.Drawing.Size(105, 20)
+        Me.dtpDateFrom.TabIndex = 328
+        '
+        'dtpDateTo
+        '
+        Me.dtpDateTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpDateTo.Location = New System.Drawing.Point(146, 22)
+        Me.dtpDateTo.Name = "dtpDateTo"
+        Me.dtpDateTo.Size = New System.Drawing.Size(105, 20)
+        Me.dtpDateTo.TabIndex = 329
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.BackColor = System.Drawing.Color.Transparent
+        Me.Label6.Location = New System.Drawing.Point(143, 6)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(46, 13)
+        Me.Label6.TabIndex = 338
+        Me.Label6.Text = "Date To"
+        '
+        'cboshiftlist
+        '
+        Me.cboshiftlist.FormattingEnabled = True
+        Me.cboshiftlist.Location = New System.Drawing.Point(20, 62)
+        Me.cboshiftlist.Name = "cboshiftlist"
+        Me.cboshiftlist.Size = New System.Drawing.Size(231, 21)
+        Me.cboshiftlist.TabIndex = 332
+        '
+        'lblShiftEntry
+        '
+        Me.lblShiftEntry.AutoSize = True
+        Me.lblShiftEntry.Location = New System.Drawing.Point(257, 70)
+        Me.lblShiftEntry.Name = "lblShiftEntry"
+        Me.lblShiftEntry.Size = New System.Drawing.Size(163, 13)
+        Me.lblShiftEntry.TabIndex = 333
+        Me.lblShiftEntry.TabStop = True
+        Me.lblShiftEntry.Text = "Add Shift Entry/Select Shift Entry"
+        '
+        'chkrestday
+        '
+        Me.chkrestday.AutoSize = True
+        Me.chkrestday.Location = New System.Drawing.Point(338, 26)
+        Me.chkrestday.Name = "chkrestday"
+        Me.chkrestday.Size = New System.Drawing.Size(68, 17)
+        Me.chkrestday.TabIndex = 331
+        Me.chkrestday.Text = "Rest day"
+        Me.chkrestday.UseVisualStyleBackColor = True
+        '
+        'chkNightShift
+        '
+        Me.chkNightShift.AutoSize = True
+        Me.chkNightShift.Location = New System.Drawing.Point(257, 26)
+        Me.chkNightShift.Name = "chkNightShift"
+        Me.chkNightShift.Size = New System.Drawing.Size(75, 17)
+        Me.chkNightShift.TabIndex = 330
+        Me.chkNightShift.Text = "Night Shift"
+        Me.chkNightShift.UseVisualStyleBackColor = True
+        '
+        'Label140
+        '
+        Me.Label140.AutoSize = True
+        Me.Label140.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label140.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label140.Location = New System.Drawing.Point(3, 60)
+        Me.Label140.Name = "Label140"
+        Me.Label140.Size = New System.Drawing.Size(18, 24)
+        Me.Label140.TabIndex = 343
+        Me.Label140.Text = "*"
+        '
+        'TabPage2
+        '
+        Me.TabPage2.Controls.Add(Me.dgvWeek)
+        Me.TabPage2.Location = New System.Drawing.Point(4, 4)
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Size = New System.Drawing.Size(702, 106)
+        Me.TabPage2.TabIndex = 1
+        Me.TabPage2.Text = "By day"
+        Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'dgvWeek
+        '
+        Me.dgvWeek.AllowUserToAddRows = False
+        Me.dgvWeek.AllowUserToDeleteRows = False
+        Me.dgvWeek.AllowUserToResizeColumns = False
+        Me.dgvWeek.AllowUserToResizeRows = False
+        Me.dgvWeek.BackgroundColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvWeek.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.dgvWeek.ColumnHeadersHeight = 30
+        Me.dgvWeek.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.dgvWeek.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7})
+        Me.dgvWeek.Location = New System.Drawing.Point(0, 0)
+        Me.dgvWeek.Name = "dgvWeek"
+        Me.dgvWeek.ReadOnly = True
+        Me.dgvWeek.RowHeadersVisible = False
+        Me.dgvWeek.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.dgvWeek.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal
+        Me.dgvWeek.Size = New System.Drawing.Size(703, 105)
+        Me.dgvWeek.TabIndex = 348
+        '
+        'Column1
+        '
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle3
+        Me.Column1.HeaderText = "Column1"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        Me.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column2
+        '
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle4
+        Me.Column2.HeaderText = "Column2"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        Me.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column3
+        '
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle5
+        Me.Column3.HeaderText = "Column3"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        Me.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column4
+        '
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column4.DefaultCellStyle = DataGridViewCellStyle6
+        Me.Column4.HeaderText = "Column4"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        Me.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column5
+        '
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle7
+        Me.Column5.HeaderText = "Column5"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        Me.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column6
+        '
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle8
+        Me.Column6.HeaderText = "Column6"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        Me.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column7
+        '
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column7.DefaultCellStyle = DataGridViewCellStyle9
+        Me.Column7.HeaderText = "Column7"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        Me.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_empIDShift
+        '
+        Me.c_empIDShift.HeaderText = "Employee ID"
+        Me.c_empIDShift.Name = "c_empIDShift"
+        Me.c_empIDShift.ReadOnly = True
+        '
+        'c_EmpnameShift
+        '
+        Me.c_EmpnameShift.HeaderText = "Employee Name"
+        Me.c_EmpnameShift.Name = "c_EmpnameShift"
+        Me.c_EmpnameShift.ReadOnly = True
+        Me.c_EmpnameShift.Width = 150
+        '
+        'c_RowIDShift
+        '
+        Me.c_RowIDShift.HeaderText = "RowID"
+        Me.c_RowIDShift.Name = "c_RowIDShift"
+        Me.c_RowIDShift.ReadOnly = True
+        Me.c_RowIDShift.Visible = False
+        '
+        'c_DateFrom
+        '
+        DataGridViewCellStyle10.Format = "d"
+        DataGridViewCellStyle10.NullValue = Nothing
+        Me.c_DateFrom.DefaultCellStyle = DataGridViewCellStyle10
+        Me.c_DateFrom.HeaderText = "Effective Date From"
+        Me.c_DateFrom.Name = "c_DateFrom"
+        Me.c_DateFrom.ReadOnly = True
+        '
+        'c_DateTo
+        '
+        DataGridViewCellStyle11.Format = "d"
+        DataGridViewCellStyle11.NullValue = Nothing
+        Me.c_DateTo.DefaultCellStyle = DataGridViewCellStyle11
+        Me.c_DateTo.HeaderText = "Effective Date To"
+        Me.c_DateTo.Name = "c_DateTo"
+        Me.c_DateTo.ReadOnly = True
+        '
+        'c_TimeFrom
+        '
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.c_TimeFrom.DefaultCellStyle = DataGridViewCellStyle12
+        Me.c_TimeFrom.HeaderText = "Time From"
+        Me.c_TimeFrom.Name = "c_TimeFrom"
+        Me.c_TimeFrom.ReadOnly = True
+        '
+        'c_TimeTo
+        '
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.c_TimeTo.DefaultCellStyle = DataGridViewCellStyle13
+        Me.c_TimeTo.HeaderText = "Time To"
+        Me.c_TimeTo.Name = "c_TimeTo"
+        Me.c_TimeTo.ReadOnly = True
+        '
+        'c_BreaktimeFrom
+        '
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.c_BreaktimeFrom.DefaultCellStyle = DataGridViewCellStyle14
+        Me.c_BreaktimeFrom.HeaderText = "Breaktime From"
+        Me.c_BreaktimeFrom.Name = "c_BreaktimeFrom"
+        Me.c_BreaktimeFrom.ReadOnly = True
+        '
+        'c_BreaktimeTo
+        '
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.c_BreaktimeTo.DefaultCellStyle = DataGridViewCellStyle15
+        Me.c_BreaktimeTo.HeaderText = "Breaktime To"
+        Me.c_BreaktimeTo.Name = "c_BreaktimeTo"
+        Me.c_BreaktimeTo.ReadOnly = True
         '
         'EmployeeShiftEntryForm
         '
@@ -1262,11 +1307,6 @@ Partial Class EmployeeShiftEntryForm
         CType(Me.dgvEmpList, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.CustomColoredTabControl1.ResumeLayout(False)
-        Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout()
-        Me.TabPage2.ResumeLayout(False)
-        CType(Me.dgvWeek, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvEmpShiftList, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
@@ -1277,6 +1317,11 @@ Partial Class EmployeeShiftEntryForm
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
         Me.cmsDeleteShift.ResumeLayout(False)
+        Me.CustomColoredTabControl1.ResumeLayout(False)
+        Me.TabPage1.ResumeLayout(False)
+        Me.TabPage1.PerformLayout()
+        Me.TabPage2.ResumeLayout(False)
+        CType(Me.dgvWeek, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1348,13 +1393,6 @@ Partial Class EmployeeShiftEntryForm
     Friend WithEvents Column5 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column6 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column7 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_empIDShift As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_EmpnameShift As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_RowIDShift As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_DateFrom As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_DateTo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_TimeFrom As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_TimeTo As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents c_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents c_EmployeeName As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents c_ID As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -1387,4 +1425,15 @@ Partial Class EmployeeShiftEntryForm
     Friend WithEvents tsbtnBulkEditShift As System.Windows.Forms.ToolStripButton
     Friend WithEvents txtsrchEmpLName As Femiani.Forms.UI.Input.AutoCompleteTextBox
     Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents DataGridViewTextBoxColumn13 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn14 As DataGridViewTextBoxColumn
+    Friend WithEvents c_empIDShift As DataGridViewTextBoxColumn
+    Friend WithEvents c_EmpnameShift As DataGridViewTextBoxColumn
+    Friend WithEvents c_RowIDShift As DataGridViewTextBoxColumn
+    Friend WithEvents c_DateFrom As DataGridViewTextBoxColumn
+    Friend WithEvents c_DateTo As DataGridViewTextBoxColumn
+    Friend WithEvents c_TimeFrom As DataGridViewTextBoxColumn
+    Friend WithEvents c_TimeTo As DataGridViewTextBoxColumn
+    Friend WithEvents c_BreaktimeFrom As DataGridViewTextBoxColumn
+    Friend WithEvents c_BreaktimeTo As DataGridViewTextBoxColumn
 End Class

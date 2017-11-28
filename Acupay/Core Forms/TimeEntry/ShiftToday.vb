@@ -22,8 +22,8 @@
         Me.Shift = shift
         Me.ShiftDate = shiftDate
 
-        RangeStart = TimeUtility.RangeStart(shiftDate, shift.ShiftFrom)
-        RangeEnd = TimeUtility.RangeEnd(shiftDate, shift.ShiftFrom, shift.ShiftTo)
+        RangeStart = TimeUtility.RangeStart(shiftDate, shift.TimeFrom)
+        RangeEnd = TimeUtility.RangeEnd(shiftDate, shift.TimeFrom, shift.TimeTo)
 
         BreaktimeStart = TimeUtility.RangeStart(shiftDate, shift.BreaktimeFrom)
         BreaktimeEnd = TimeUtility.RangeEnd(shiftDate, shift.BreaktimeFrom, shift.BreaktimeTo)

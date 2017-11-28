@@ -41,4 +41,6 @@ Public Class PayrollContext
 
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
 
+    Public Overridable Property Shifts As DbSet(Of Shift)
+
 End Class

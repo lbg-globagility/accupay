@@ -16,15 +16,17 @@ SELECT
     es.RowID,
     es.EffectiveFrom,
     IF(es.EffectiveTo != es.EffectiveFrom, es.EffectiveTo, NULL),
-    COALESCE(TIME_FORMAT(s.TimeFrom, '%h:%i:%s %p'),'') timef,
-    COALESCE(TIME_FORMAT(s.TimeTo, '%h:%i:%s %p'),'') timet
+    COALESCE(TIME_FORMAT(s.TimeFrom, '%H:%i'), '') timef,
+    COALESCE(TIME_FORMAT(s.TimeTo, '%H:%i'), '') timet,
+    TIME_FORMAT(s.BreaktimeFrom, '%H:%i'),
+    TIME_FORMAT(s.BreaktimeTo, '%H:%i')
 FROM employeeshift es
 LEFT JOIN shift s ON es.ShiftID = s.RowID
 INNER JOIN employee ee ON es.EmployeeID = ee.RowID
-WHERE es.OrganizationID = OrganizID
-AND ee.RowID = EmpRowID
+WHERE es.OrganizationID = OrganizID AND
+    ee.RowID = EmpRowID
 ORDER BY es.EffectiveTo DESC, es.EffectiveFrom DESC
-LIMIT pagenumber,50;
+LIMIT pagenumber, 50;
 
 END//
 DELIMITER ;
