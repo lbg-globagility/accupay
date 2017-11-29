@@ -1427,9 +1427,27 @@ Public Class PayStub
         showAuditTrail.BringToFront()
     End Sub
 
-    Private Sub tsbtnPayrollSumma_Click1(sender As Object, e As EventArgs) Handles _
+    Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) _
+        Handles _
         DeclaredToolStripMenuItem2.Click,
         ActualToolStripMenuItem2.Click
+
+        Dim psefr As New PayrollSummaryExcelFormatReportProvider
+
+        Dim obj_sender = DirectCast(sender, ToolStripMenuItem)
+
+        Dim is_actual As Boolean = (obj_sender.Name = "ActualToolStripMenuItem2")
+
+        psefr.IsActual = is_actual
+
+        psefr.Run()
+
+    End Sub
+
+    Private Sub tsbtnPayrollSumma_Click1(sender As Object, e As EventArgs) _
+        'Handles _
+        'DeclaredToolStripMenuItem2.Click,
+        'ActualToolStripMenuItem2.Click
         '###########################################################################
 
         Try

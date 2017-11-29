@@ -330,6 +330,7 @@
     <Compile Include="Core Forms\Reports\Providers\LoanSummaryReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\PagIBIGMonthlyReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\PayrollLedgerReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\PayrollSummaryExcelFormatReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\PhilHealthReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\PostEmploymentClearanceReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\IReportProvider.vb" />
