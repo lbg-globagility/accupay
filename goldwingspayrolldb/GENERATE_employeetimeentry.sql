@@ -557,55 +557,6 @@ IF hasOvertime THEN
 
 END IF;
 
-/* First check if the duty start is above shift start to check if the employee is late. */
-IF dutyStart > shiftStart THEN
-
-    IF hasBreaktime THEN
-
-        IF shiftStart < breaktimeStart THEN
-            /*
-             * Make sure that the late period doesn't include part of the breaktime since that is not
-             * part of the required work hours.
-             */
-            SET @latePeriodEndBeforeBreaktime = LEAST(dutyStart, breaktimeStart);
-
-            SET lateHoursBeforeBreak = COMPUTE_TimeDifference(TIME(shiftStart), TIME(@latePeriodEndBeforeBreaktime));
-        END IF;
-
-        IF dutyStart > breaktimeEnd THEN
-            SET lateHoursAfterBreak = COMPUTE_TimeDifference(TIME(breaktimeEnd), TIME(dutyStart));
-        END IF;
-
-        SET lateHours = lateHoursBeforeBreak + lateHoursAfterBreak;
-    ELSE
-        SET lateHours = COMPUTE_TimeDifference(TIME(shiftStart), TIME(dutyStart));
-    END IF;
-
-END IF;
-
-/* First check if the duty ends before the shift ends to check if the employee committed undertime. */
-IF dutyEnd < shiftEnd THEN
-
-    IF hasBreaktime THEN
-
-        IF dutyEnd < breaktimeStart THEN
-            SET undertimeHoursBeforeBreak = COMPUTE_TimeDifference(TIME(dutyEnd), TIME(breaktimeStart));
-        END IF;
-
-        /*
-         * Calculate the remaining undertime that happened after breaktime.
-         */
-        SET @undertimePeriodStartAfterBreaktime = GREATEST(dutyEnd, breaktimeEnd);
-
-        SET undertimeHoursAfterBreak = COMPUTE_TimeDifference(TIME(@undertimePeriodStartAfterBreaktime), TIME(shiftEnd));
-
-        SET undertimeHours = undertimeHoursBeforeBreak + undertimeHoursAfterBreak;
-    ELSE
-        SET undertimeHours = COMPUTE_TimeDifference(TIME(dutyEnd), TIME(shiftEnd));
-    END IF;
-
-END IF;
-
 SELECT
     COUNT(elv.RowID) > 0,
     elv.LeaveStartTime,
@@ -615,13 +566,73 @@ FROM employeeleave elv
 WHERE elv.EmployeeID = ete_EmpRowID AND
     elv.`Status` = 'Approved' AND
     elv.OrganizationID = ete_OrganizID AND
-    ete_Date BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate
+    ete_Date BETWEEN elv.LeaveStartDate AND elv.LeaveEndDate AND
+    elv.LeaveType != 'Leave w/o Pay'
 LIMIT 1
 INTO
     hasLeave,
     leaveStartTime,
     leaveEndTime,
     leaveType;
+
+SET leaveStart = TIMESTAMP(dateToday, leaveStartTime);
+SET leaveEnd = TIMESTAMP(IF(leaveEndTime > leaveStartTime, dateToday, dateTomorrow), leaveEndTime);
+
+SET @coveredStart = LEAST(dutyStart, leaveStart);
+SET @coveredEnd = GREATEST(dutyEnd, leaveEnd);
+
+/*
+ * First check if the duty start is above shift start to check if the employee is late.
+ */
+IF @coveredStart > shiftStart THEN
+
+    IF hasBreaktime THEN
+
+        IF shiftStart < breaktimeStart THEN
+            /*
+             * Make sure that the late period doesn't include part of the breaktime since that is not
+             * part of the required work hours.
+             */
+            SET @latePeriodEndBeforeBreaktime = LEAST(@coveredStart, breaktimeStart);
+
+            SET lateHoursBeforeBreak = COMPUTE_TimeDifference(TIME(shiftStart), TIME(@latePeriodEndBeforeBreaktime));
+        END IF;
+
+        IF @coveredStart > breaktimeEnd THEN
+            SET lateHoursAfterBreak = COMPUTE_TimeDifference(TIME(breaktimeEnd), TIME(@coveredStart));
+        END IF;
+
+        SET lateHours = lateHoursBeforeBreak + lateHoursAfterBreak;
+    ELSE
+        SET lateHours = COMPUTE_TimeDifference(TIME(shiftStart), TIME(@coveredStart));
+    END IF;
+
+END IF;
+
+/*
+ * First check if the duty ends before the shift ends to check if the employee committed undertime.
+ */
+IF @coveredEnd < shiftEnd THEN
+
+    IF hasBreaktime THEN
+
+        IF @coveredEnd < breaktimeStart THEN
+            SET undertimeHoursBeforeBreak = COMPUTE_TimeDifference(TIME(@coveredEnd), TIME(breaktimeStart));
+        END IF;
+
+        /*
+         * Calculate the remaining undertime that happened after breaktime.
+         */
+        SET @undertimePeriodStartAfterBreaktime = GREATEST(@coveredEnd, breaktimeEnd);
+
+        SET undertimeHoursAfterBreak = COMPUTE_TimeDifference(TIME(@undertimePeriodStartAfterBreaktime), TIME(shiftEnd));
+
+        SET undertimeHours = undertimeHoursBeforeBreak + undertimeHoursAfterBreak;
+    ELSE
+        SET undertimeHours = COMPUTE_TimeDifference(TIME(@coveredEnd), TIME(shiftEnd));
+    END IF;
+
+END IF;
 
 IF NOT hasShift THEN
    SET regularHours = COMPUTE_TimeDifference(TIME(fullTimeIn), TIME(fullTimeOut));
@@ -639,9 +650,6 @@ IF isRestDay AND (regularHours > workingHours) THEN
 END IF;
 
 IF hasLeave THEN
-    SET leaveStart = TIMESTAMP(dateToday, leaveStartTime);
-    SET leaveEnd = TIMESTAMP(IF(leaveEndTime > leaveStartTime, dateToday, dateTomorrow), leaveEndTime);
-
     IF hasBreaktime THEN
         IF leaveStart < breaktimeStart THEN
             SET @leavePeriodEndBeforeBreaktime = LEAST(leaveEnd, breaktimeStart);
