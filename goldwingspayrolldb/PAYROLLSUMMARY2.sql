@@ -76,28 +76,28 @@ WHILE div_index < div_count DO
 	    e.RowID 'EmployeeRowID',
 	    e.EmployeeID `DatCol2`,
 	    # IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay) `DatCol21`,
-	    FORMAT(GetBasicPay(e.RowID, paypdatefrom, psi_undeclared, IFNULL(ete.`TotalExpectedHours`, 0)), decimal_size) `DatCol21`,
-	    FORMAT(IF(psi_undeclared, paystubactual.OvertimePay, paystub.OvertimePay), decimal_size) 'DatCol37',
-	    FORMAT(IF(psi_undeclared, paystubactual.NightDiffPay, paystub.NightDiffPay), decimal_size) 'DatCol35',
-	    FORMAT(IF(psi_undeclared, paystubactual.NightDiffOvertimePay, paystub.NightDiffOvertimePay), decimal_size) 'DatCol38',
-	    FORMAT(IF(psi_undeclared, paystubactual.HolidayPay, paystub.HolidayPay), decimal_size) 'DatCol36',
-	    FORMAT(IF(psi_undeclared, paystubactual.LateDeduction, paystub.LateDeduction), decimal_size) 'DatCol33',
-	    FORMAT(IF(psi_undeclared, paystubactual.UndertimeDeduction, paystub.UndertimeDeduction), decimal_size) 'DatCol34',
-	    FORMAT(IF(psi_undeclared, paystubactual.AbsenceDeduction, paystub.AbsenceDeduction), decimal_size) 'DatCol32',
-	    FORMAT(paystub.TotalBonus, decimal_size) `DatCol30`,
+	    ROUND(GetBasicPay(e.RowID, paypdatefrom, psi_undeclared, IFNULL(ete.`TotalExpectedHours`, 0)), decimal_size) `DatCol21`,
+	    ROUND(IF(psi_undeclared, paystubactual.OvertimePay, paystub.OvertimePay), decimal_size) 'DatCol37',
+	    ROUND(IF(psi_undeclared, paystubactual.NightDiffPay, paystub.NightDiffPay), decimal_size) 'DatCol35',
+	    ROUND(IF(psi_undeclared, paystubactual.NightDiffOvertimePay, paystub.NightDiffOvertimePay), decimal_size) 'DatCol38',
+	    ROUND(IF(psi_undeclared, paystubactual.HolidayPay, paystub.HolidayPay), decimal_size) 'DatCol36',
+	    ROUND(IF(psi_undeclared, paystubactual.LateDeduction, paystub.LateDeduction), decimal_size) 'DatCol33',
+	    ROUND(IF(psi_undeclared, paystubactual.UndertimeDeduction, paystub.UndertimeDeduction), decimal_size) 'DatCol34',
+	    ROUND(IF(psi_undeclared, paystubactual.AbsenceDeduction, paystub.AbsenceDeduction), decimal_size) 'DatCol32',
+	    ROUND(paystub.TotalBonus, decimal_size) `DatCol30`,
 	    paystub.TotalAllowance `DatCol31`,
-	    FORMAT(IF(psi_undeclared, paystubactual.TotalGrossSalary, paystub.TotalGrossSalary), decimal_size) `DatCol22`,
-	    FORMAT(IF(
+	    ROUND(IF(psi_undeclared, paystubactual.TotalGrossSalary, paystub.TotalGrossSalary), decimal_size) `DatCol22`,
+	    ROUND(IF(
 				        psi_undeclared,
 				        paystubactual.TotalNetSalary + IFNULL(agf.DailyFee, 0),
 				        paystub.TotalNetSalary + IFNULL(agf.DailyFee, 0)
 				    ), decimal_size) `DatCol23`,
-	    FORMAT(paystub.TotalTaxableSalary, decimal_size) `DatCol24`,
-	    FORMAT(paystub.TotalEmpSSS, decimal_size) `DatCol25`,
-	    FORMAT(paystub.TotalEmpPhilhealth, decimal_size) `DatCol27`,
-	    FORMAT(paystub.TotalEmpHDMF, decimal_size) `DatCol28`,
-	    FORMAT(paystub.TotalEmpWithholdingTax, decimal_size) `DatCol26`,
-	    FORMAT(paystub.TotalLoans, decimal_size) `DatCol29`,
+	    ROUND(paystub.TotalTaxableSalary, decimal_size) `DatCol24`,
+	    ROUND(paystub.TotalEmpSSS, decimal_size) `DatCol25`,
+	    ROUND(paystub.TotalEmpPhilhealth, decimal_size) `DatCol27`,
+	    ROUND(paystub.TotalEmpHDMF, decimal_size) `DatCol28`,
+	    ROUND(paystub.TotalEmpWithholdingTax, decimal_size) `DatCol26`,
+	    ROUND(paystub.TotalLoans, decimal_size) `DatCol29`,
 	    UCASE(CONCAT_WS(', ', e.LastName, e.FirstName, INITIALS(e.MiddleName,'. ','1'))) `DatCol3`,
 	    UCASE(e.FirstName) 'FirstName',
 	    INITIALS(e.MiddleName,'. ','1') 'MiddleName',
@@ -105,31 +105,32 @@ WHILE div_index < div_count DO
 	    UCASE(e.Surname) 'Surname',
 	    UCASE(p.PositionName) 'PositionName',
 	    UCASE(d.Name) `DatCol1`,
-	    FORMAT(IFNULL(agf.DailyFee,0), decimal_size) `DatCol39`,
-	    FORMAT(IFNULL(thirteenthmonthpay.Amount,0), decimal_size) `DatCol40`,
+	    ROUND(IFNULL(agf.DailyFee,0), decimal_size) `DatCol39`,
+	    ROUND(IFNULL(thirteenthmonthpay.Amount,0), decimal_size) `DatCol40`,
 	    CONCAT_WS(
 	        ' to ',
 	        DATE_FORMAT(paystub.PayFromDate, IF(YEAR(paystub.PayFromDate) = YEAR(paystub.PayToDate), '%c/%e', '%c/%e/%Y')),
 	        DATE_FORMAT(paystub.PayToDate,'%c/%e/%Y')
 	    ) `DatCol20`,
-	    FORMAT(paystub.RegularHours, decimal_size) `DatCol41`,
-	    FORMAT((IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) + IFNULL(thirteenthmonthpay.Amount,0) + IFNULL(agf.DailyFee, 0)), decimal_size) `DatCol42`,
-	    FORMAT(IF(
+	    ROUND(paystub.RegularHours, decimal_size) `DatCol41`,
+	    ROUND((IF(psi_undeclared, paystubactual.TotalNetSalary, paystub.TotalNetSalary) + IFNULL(thirteenthmonthpay.Amount,0) + IFNULL(agf.DailyFee, 0)), decimal_size) `DatCol42`,
+	    ROUND(IF(
 				        psi_undeclared,
 				        GetActualDailyRate(e.RowID, e.OrganizationID, paystub.PayFromDate),
 				        GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
 				    ), decimal_size) `DatCol43`,
-	    FORMAT(paystub.OvertimeHours, decimal_size) `DatCol44`,
-	    FORMAT(paystub.TotalAdjustments, decimal_size) `DatCol45`
+	    ROUND(paystub.OvertimeHours, decimal_size) `DatCol44`,
+	    ROUND(paystub.TotalAdjustments, decimal_size) `DatCol45`,
+	    ROUND(paystub.RestDayPay, decimal_size) `DatCol46`
 	FROM paystub
 	LEFT JOIN paystubactual
 	ON paystubactual.EmployeeID = paystub.EmployeeID AND
 	    paystubactual.PayPeriodID = paystub.PayPeriodID
-	LEFT JOIN employee e
+	INNER JOIN employee e
 	        ON e.RowID = paystub.EmployeeID
-	LEFT JOIN `position` p
+	INNER JOIN `position` p
 	        ON p.RowID = e.PositionID
-	LEFT JOIN division d
+	INNER JOIN division d
 	        ON d.RowID = p.DivisionId AND d.RowID = div_rowid
 	LEFT JOIN (
 	    SELECT
