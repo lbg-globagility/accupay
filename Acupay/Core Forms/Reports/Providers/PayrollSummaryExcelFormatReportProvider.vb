@@ -9,19 +9,20 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-                      "AA"}
+                      "AA", "AB"}
 
     Private column_headers() As String =
         New String() {"Code",
                       "Full name",
                       "Rate",
-                      "Hours",
-                      "Basic pay",
-                      "OT Hrs",
+                      "Hrs",
+                      "BasicPay",
+                      "OTHrs",
                       "OT",
                       "Holiday",
                       "NDiff",
                       "NDiff OT",
+                      "R.dayPay",
                       "UT",
                       "Late",
                       "Absent",
@@ -29,21 +30,24 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "Bonus",
                       "Gross",
                       "SSS",
-                      "PhilHealth",
-                      "PAGIBIG",
+                      "Ph.Health",
+                      "HDMF",
                       "Taxable",
                       "W.Tax",
                       "Loan",
-                      "A. fee",
-                      "Adjustment",
+                      "A.fee",
+                      "Adj.",
                       "Net",
                       "13th",
                       "Total"}
 
-    Private cell_mapped_value() As String =
+
+    Private cell_mapped_text_value() As String =
         New String() {"DatCol2",
-                      "DatCol3",
-                      "DatCol43",
+                      "DatCol3"}
+
+    Private cell_mapped_decim_value() As String =
+        New String() {"DatCol43",
                       "DatCol41",
                       "DatCol21",
                       "DatCol44",
@@ -51,6 +55,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "DatCol36",
                       "DatCol35",
                       "DatCol38",
+                      "DatCol46",
                       "DatCol34",
                       "DatCol33",
                       "DatCol32",
@@ -78,6 +83,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private font_size As Single = 8
 
+    Dim margin_size() As Decimal = New Decimal() {0.25D, 0.75D, 0.3D}
+
     Public Property Name As String = "" Implements IReportProvider.Name
 
     Property IsActual As Boolean
@@ -90,6 +97,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
     End Property
 
     Public Sub Run() Implements IReportProvider.Run
+
+        Static last_cell_column As String = basic_alphabet.Last
 
         Dim bool_result As Short = Convert.ToInt16(is_actual) 'Convert.ToInt16(SalaryActualDeclared)
 
@@ -136,7 +145,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                     Dim temp_file As String =
                         String.Concat(temp_path,
                                       orgNam,
-                                      report_name, "Report",
+                                      report_name, n_PayrollSummaDateSelection.cboStringParameter.Text.Replace(" ", ""), "Report",
                                       String.Concat(short_dates(0).Replace("/", "-"), "TO", short_dates(1).Replace("/", "-")),
                                       ".xlsx")
 
@@ -159,77 +168,147 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                         For Each dtbl As DataTable In ds.Tables
 
-                            Dim worksheet As ExcelWorksheet =
+                            Dim has_rows = (dtbl.Rows.Count > 0)
+
+                            If has_rows Then
+
+                                Dim worksheet As ExcelWorksheet =
                                     excl_pkg.Workbook.Worksheets.Add(String.Concat(report_name, ii))
 
-                            worksheet.Cells.Style.Font.Size = font_size
+                                worksheet.Cells.Style.Font.Size = font_size
 
-                            Dim cell1 = worksheet.Cells(1, one_value)
+                                Dim cell1 = worksheet.Cells(1, one_value)
 
-                            cell1.Value = orgNam.ToUpper
-                            cell1.Style.Font.Bold = True
+                                cell1.Value = orgNam.ToUpper
+                                cell1.Style.Font.Bold = True
 
-                            Dim cell2 = worksheet.Cells(2, one_value)
+                                Dim cell2 = worksheet.Cells(2, one_value)
 
-                            cell2.Value = date_range
+                                cell2.Value = date_range
 
-                            Dim row_indx As Integer = 5
+                                Dim row_indx As Integer = 5
 
-                            Dim col_index As Integer = one_value
+                                Dim col_index As Integer = one_value
 
-                            'For Each dtcol As DataColumn In dt.Columns
-                            '    worksheet.Cells(row_indx, col_index).Value = dtcol.ColumnName
-                            '    col_index += one_value
-                            'Next
-
-                            For Each str_header As String In column_headers
-                                Dim cell_row5 = worksheet.Cells(row_indx, col_index)
-                                cell_row5.Value = str_header
-                                cell_row5.Style.Font.Bold = True
-
-                                col_index += one_value
-                            Next
-
-                            row_indx += one_value
-
-                            For Each dtrow As DataRow In dtbl.Rows
-
-                                Dim cell3 = worksheet.Cells(3, one_value)
-
-                                cell3.Value =
-                                    String.Concat("Division: ", dtrow("DatCol1").ToString)
-
-                                Dim row_array = dtrow.ItemArray
-
-                                Dim i = 0
-
-                                'For Each rowval In row_array
-
+                                'For Each dtcol As DataColumn In dt.Columns
+                                '    worksheet.Cells(row_indx, col_index).Value = dtcol.ColumnName
+                                '    col_index += one_value
                                 'Next
 
-                                For Each cell_val As String In cell_mapped_value
+                                For Each str_header As String In column_headers
+                                    Dim cell_row5 = worksheet.Cells(row_indx, col_index)
+                                    cell_row5.Value = str_header
+                                    cell_row5.Style.Font.Bold = True
 
-                                    Dim excl_colrow As String =
-                                            String.Concat(basic_alphabet(i),
-                                                          row_indx)
-
-                                    Dim _cells = worksheet.Cells(excl_colrow)
-
-                                    _cells.Value = dtrow(cell_val)
-
-                                    i += one_value
-
+                                    col_index += one_value
                                 Next
 
                                 row_indx += one_value
 
-                            Next
+                                Dim details_start_rowindex = row_indx
 
-                            worksheet.Cells.AutoFitColumns(2.71, 22.71)
+                                Dim details_last_rowindex = 0
 
-                            excl_pkg.Save()
+                                Dim last_cell_range As String = String.Empty
 
-                            ii += 1
+                                For Each dtrow As DataRow In dtbl.Rows
+
+                                    Dim cell3 = worksheet.Cells(3, one_value)
+
+                                    Dim division_name = dtrow("DatCol1").ToString
+
+                                    cell3.Value =
+                                    String.Concat("Division: ", division_name)
+
+                                    If division_name.Length > 0 Then
+
+                                        worksheet.Name = division_name
+
+                                    End If
+
+                                    Dim row_array = dtrow.ItemArray
+
+                                    Dim i = 0
+
+                                    'For Each rowval In row_array
+
+                                    'Next
+
+                                    For Each cell_val As String In cell_mapped_text_value
+
+                                        Dim excl_colrow As String =
+                                            String.Concat(basic_alphabet(i),
+                                                          row_indx)
+
+                                        Dim _cells = worksheet.Cells(excl_colrow)
+
+                                        _cells.Value = dtrow(cell_val)
+
+                                        i += one_value
+
+                                    Next
+
+                                    '********************
+
+                                    For Each cell_val As String In cell_mapped_decim_value
+
+                                        Dim excl_colrow As String =
+                                            String.Concat(basic_alphabet(i),
+                                                          row_indx)
+
+                                        last_cell_range = basic_alphabet(i)
+
+                                        Dim _cells = worksheet.Cells(excl_colrow)
+
+                                        _cells.Value = dtrow(cell_val)
+
+                                        _cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+
+                                        i += one_value
+
+                                    Next
+
+                                    details_last_rowindex = row_indx
+
+                                    row_indx += one_value
+
+                                Next
+
+                                'last_cell_range = String.Concat(last_cell_range, (row_indx + 1))
+
+                                Dim sum_cell_range = String.Join(":",
+                                                                 String.Concat("C", row_indx),
+                                                                 String.Concat(last_cell_column, row_indx))
+                                ''FromRow, FromColumn, ToRow, ToColumn
+                                'worksheet.Cells(sum_cell_range).Formula = String.Format("SUBTOTAL(9,{0})") ', New ExcelAddress(2, 3, 4, 3).Address)
+
+                                worksheet.Cells(sum_cell_range).Formula =
+                                    String.Format("SUM({0})",
+                                                  New ExcelAddress(details_start_rowindex,
+                                                                   3,
+                                                                   details_last_rowindex,
+                                                                   3).Address) 'column_headers.Count
+
+                                worksheet.Cells(sum_cell_range).Style.Font.Bold = True
+
+                                worksheet.PrinterSettings.Orientation = eOrientation.Landscape
+
+                                worksheet.PrinterSettings.PaperSize = ePaperSize.Legal
+
+                                worksheet.PrinterSettings.TopMargin = margin_size(1)
+                                worksheet.PrinterSettings.BottomMargin = margin_size(1)
+                                worksheet.PrinterSettings.LeftMargin = margin_size(0)
+                                worksheet.PrinterSettings.RightMargin = margin_size(0)
+
+                                worksheet.Cells.AutoFitColumns(2, 22.71)
+
+                                worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
+
+                                excl_pkg.Save()
+
+                                ii += 1
+
+                            End If
 
                         Next
 
