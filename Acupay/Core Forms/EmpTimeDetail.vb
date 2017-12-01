@@ -963,7 +963,7 @@ Public Class EmpTimeDetail
         For Each timeEntry In timeEntries
             INSUPD_employeetimeentrydetails(
                 Nothing,
-                timeEntry.EmployeeID,
+                timeEntry.EmployeeNo,
                 timeEntry.TimeIn,
                 timeEntry.TimeOut,
                 timeEntry.DateOccurred,
