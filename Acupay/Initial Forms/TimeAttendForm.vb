@@ -87,8 +87,8 @@
     End Sub
 
     Sub TimeEntryLogsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeEntryLogsToolStripMenuItem.Click
-        ChangeForm(EmpTimeDetail, "Employee Time Entry logs")
-        previousForm = EmpTimeDetail
+        ChangeForm(TimeLogsForm, "Employee Time Entry logs")
+        previousForm = TimeLogsForm
     End Sub
 
     Sub TimeEntryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeEntryToolStripMenuItem.Click

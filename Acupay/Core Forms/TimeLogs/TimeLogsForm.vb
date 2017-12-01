@@ -4,7 +4,7 @@ Imports OfficeOpenXml
 Imports System.IO
 Imports System.Windows.Forms
 
-Public Class EmpTimeDetail
+Public Class TimeLogsForm
 
     Dim dattabLogs As New DataTable
 
