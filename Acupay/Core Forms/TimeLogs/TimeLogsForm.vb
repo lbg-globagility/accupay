@@ -6,6 +6,11 @@ Imports System.Windows.Forms
 
 Public Class TimeLogsForm
 
+    Public Enum TimeLogsFormat
+        Optimized = 0
+        Conventional = 1
+    End Enum
+
     Dim dattabLogs As New DataTable
 
     Dim dtTimeLogs As New DataTable
@@ -189,12 +194,11 @@ Public Class TimeLogsForm
     Private Sub tsbtnNew_Click(sender As Object, e As EventArgs) Handles tsbtnNew.Click
         Static employeeleaveRowID As Integer = -1
 
-        Static _bool As Boolean =
-            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+        Static _bool As Boolean = TimeLogsImportOption()
 
         Try
             Dim browsefile As OpenFileDialog = New OpenFileDialog()
-            browsefile.Filter = "Text Documents (*.txt)|*.txt" & _
+            browsefile.Filter = "Text Documents (*.txt)|*.txt" &
                                 "|All files (*.*)|*.*"
 
             If browsefile.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -207,7 +211,7 @@ Public Class TimeLogsForm
 
                 lblforballoon.Location = New Point(TabControl1.Location.X, lblforballoon.Location.Y)
 
-                InfoBalloon("Please wait a few moments.", _
+                InfoBalloon("Please wait a few moments.",
                           "Importing file...", lblforballoon, 0, -69)
 
                 lblforballoon.Location = New Point(balloon_x, lblforballoon.Location.Y)
@@ -235,6 +239,34 @@ Public Class TimeLogsForm
             'AddHandler dgvetentdet.SelectionChanged, AddressOf dgvetentdet_SelectionChanged
         End Try
     End Sub
+
+    Private Function TimeLogsImportOption() As TimeLogsFormat
+
+        Dim time_logformat As TimeLogsFormat
+
+        MessageBoxManager.OK = "Default"
+
+        MessageBoxManager.Cancel = "Optimized"
+
+        MessageBoxManager.Register()
+
+        Dim custom_prompt =
+            MessageBox.Show("Which format are you going to import ?",
+                            "", MessageBoxButtons.OKCancel,
+                            MessageBoxIcon.Question,
+                            MessageBoxDefaultButton.Button1)
+
+        If custom_prompt = Windows.Forms.DialogResult.OK Then
+            time_logformat = TimeLogsFormat.Conventional
+        ElseIf custom_prompt = Windows.Forms.DialogResult.Cancel Then
+            time_logformat = TimeLogsFormat.Optimized
+        End If
+
+        MessageBoxManager.Unregister()
+
+        Return time_logformat
+
+    End Function
 
     Dim pre_empnum, _
         pre_timin, _
