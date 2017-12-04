@@ -25,40 +25,6 @@ DECLARE thisyear INT(11);
 
 SET @timediffcount = 0.00;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 IF AllowanceFrequenzy = 'Monthly' THEN
 
     SELECT (`Half` = 0),
@@ -123,10 +89,11 @@ IF AllowanceFrequenzy = 'Monthly' THEN
 ELSEIF AllowanceFrequenzy = 'Semi-monthly' THEN
 
     SELECT i.*,
-        ii.AllowanceAmount - (SUM(i.HoursToLess) * ((i.AllowanceAmount / (i.WorkDaysPerYear / (i.PAYFREQDIV * 12))) / 8)) AS TotalAllowanceAmount
+        ii.AllowanceAmount - (SUM(i.HoursToLess) * ((i.AllowanceAmount / (i.WorkDaysPerYear / (i.PAYFREQDIV * 12))) / 8)) + SUM(i.HolidayAllowance) AS TotalAllowanceAmount
     FROM paystubitem_sum_semimon_allowance_group_prodid i
     INNER JOIN (
-        SELECT ea.*,
+        SELECT
+            ea.*,
             MIN(d.DateValue) AS DateRange1,
             MAX(d.DateValue) AS DateRange2
         FROM dates d
@@ -142,44 +109,9 @@ ELSEIF AllowanceFrequenzy = 'Semi-monthly' THEN
     ON i.EmployeeID = ii.EmployeeID AND
         i.OrganizationID = ii.OrganizationID AND
         i.`Date` BETWEEN ii.DateRange1 AND ii.DateRange2 AND
-        i.`Fixed` = 0
+        i.`Fixed` = FALSE
     GROUP BY i.EmployeeID,
         ii.RowID;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ELSEIF AllowanceFrequenzy = 'Daily' THEN
 
