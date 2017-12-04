@@ -166,149 +166,146 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                         Dim ii = 0
 
-                        For Each dtbl As DataTable In ds.Tables
+                        Dim tbl_withrows =
+                            ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0)
 
-                            Dim has_rows = (dtbl.Rows.Count > 0)
+                        For Each dtbl As DataTable In tbl_withrows
 
-                            If has_rows Then
-
-                                Dim worksheet As ExcelWorksheet =
+                            Dim worksheet As ExcelWorksheet =
                                     excl_pkg.Workbook.Worksheets.Add(String.Concat(report_name, ii))
 
-                                worksheet.Cells.Style.Font.Size = font_size
+                            worksheet.Cells.Style.Font.Size = font_size
 
-                                Dim cell1 = worksheet.Cells(1, one_value)
+                            Dim cell1 = worksheet.Cells(1, one_value)
 
-                                cell1.Value = orgNam.ToUpper
-                                cell1.Style.Font.Bold = True
+                            cell1.Value = orgNam.ToUpper
+                            cell1.Style.Font.Bold = True
 
-                                Dim cell2 = worksheet.Cells(2, one_value)
+                            Dim cell2 = worksheet.Cells(2, one_value)
 
-                                cell2.Value = date_range
+                            cell2.Value = date_range
 
-                                Dim row_indx As Integer = 5
+                            Dim row_indx As Integer = 5
 
-                                Dim col_index As Integer = one_value
+                            Dim col_index As Integer = one_value
 
-                                'For Each dtcol As DataColumn In dt.Columns
-                                '    worksheet.Cells(row_indx, col_index).Value = dtcol.ColumnName
-                                '    col_index += one_value
+                            'For Each dtcol As DataColumn In dt.Columns
+                            '    worksheet.Cells(row_indx, col_index).Value = dtcol.ColumnName
+                            '    col_index += one_value
+                            'Next
+
+                            For Each str_header As String In column_headers
+                                Dim cell_row5 = worksheet.Cells(row_indx, col_index)
+                                cell_row5.Value = str_header
+                                cell_row5.Style.Font.Bold = True
+
+                                col_index += one_value
+                            Next
+
+                            row_indx += one_value
+
+                            Dim details_start_rowindex = row_indx
+
+                            Dim details_last_rowindex = 0
+
+                            Dim last_cell_range As String = String.Empty
+
+                            For Each dtrow As DataRow In dtbl.Rows
+
+                                Dim cell3 = worksheet.Cells(3, one_value)
+
+                                Dim division_name = dtrow("DatCol1").ToString
+
+                                cell3.Value =
+                                    String.Concat("Division: ", division_name)
+
+                                If division_name.Length > 0 Then
+
+                                    worksheet.Name = division_name
+
+                                End If
+
+                                Dim row_array = dtrow.ItemArray
+
+                                Dim i = 0
+
+                                'For Each rowval In row_array
+
                                 'Next
 
-                                For Each str_header As String In column_headers
-                                    Dim cell_row5 = worksheet.Cells(row_indx, col_index)
-                                    cell_row5.Value = str_header
-                                    cell_row5.Style.Font.Bold = True
+                                For Each cell_val As String In cell_mapped_text_value
 
-                                    col_index += one_value
+                                    Dim excl_colrow As String =
+                                            String.Concat(basic_alphabet(i),
+                                                          row_indx)
+
+                                    Dim _cells = worksheet.Cells(excl_colrow)
+
+                                    _cells.Value = dtrow(cell_val)
+
+                                    i += one_value
+
                                 Next
+
+                                '********************
+
+                                For Each cell_val As String In cell_mapped_decim_value
+
+                                    Dim excl_colrow As String =
+                                            String.Concat(basic_alphabet(i),
+                                                          row_indx)
+
+                                    last_cell_range = basic_alphabet(i)
+
+                                    Dim _cells = worksheet.Cells(excl_colrow)
+
+                                    _cells.Value = dtrow(cell_val)
+
+                                    _cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+
+                                    i += one_value
+
+                                Next
+
+                                details_last_rowindex = row_indx
 
                                 row_indx += one_value
 
-                                Dim details_start_rowindex = row_indx
+                            Next
 
-                                Dim details_last_rowindex = 0
+                            'last_cell_range = String.Concat(last_cell_range, (row_indx + 1))
 
-                                Dim last_cell_range As String = String.Empty
-
-                                For Each dtrow As DataRow In dtbl.Rows
-
-                                    Dim cell3 = worksheet.Cells(3, one_value)
-
-                                    Dim division_name = dtrow("DatCol1").ToString
-
-                                    cell3.Value =
-                                    String.Concat("Division: ", division_name)
-
-                                    If division_name.Length > 0 Then
-
-                                        worksheet.Name = division_name
-
-                                    End If
-
-                                    Dim row_array = dtrow.ItemArray
-
-                                    Dim i = 0
-
-                                    'For Each rowval In row_array
-
-                                    'Next
-
-                                    For Each cell_val As String In cell_mapped_text_value
-
-                                        Dim excl_colrow As String =
-                                            String.Concat(basic_alphabet(i),
-                                                          row_indx)
-
-                                        Dim _cells = worksheet.Cells(excl_colrow)
-
-                                        _cells.Value = dtrow(cell_val)
-
-                                        i += one_value
-
-                                    Next
-
-                                    '********************
-
-                                    For Each cell_val As String In cell_mapped_decim_value
-
-                                        Dim excl_colrow As String =
-                                            String.Concat(basic_alphabet(i),
-                                                          row_indx)
-
-                                        last_cell_range = basic_alphabet(i)
-
-                                        Dim _cells = worksheet.Cells(excl_colrow)
-
-                                        _cells.Value = dtrow(cell_val)
-
-                                        _cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
-
-                                        i += one_value
-
-                                    Next
-
-                                    details_last_rowindex = row_indx
-
-                                    row_indx += one_value
-
-                                Next
-
-                                'last_cell_range = String.Concat(last_cell_range, (row_indx + 1))
-
-                                Dim sum_cell_range = String.Join(":",
+                            Dim sum_cell_range = String.Join(":",
                                                                  String.Concat("C", row_indx),
                                                                  String.Concat(last_cell_column, row_indx))
-                                ''FromRow, FromColumn, ToRow, ToColumn
-                                'worksheet.Cells(sum_cell_range).Formula = String.Format("SUBTOTAL(9,{0})") ', New ExcelAddress(2, 3, 4, 3).Address)
+                            ''FromRow, FromColumn, ToRow, ToColumn
+                            'worksheet.Cells(sum_cell_range).Formula = String.Format("SUBTOTAL(9,{0})") ', New ExcelAddress(2, 3, 4, 3).Address)
 
-                                worksheet.Cells(sum_cell_range).Formula =
+                            worksheet.Cells(sum_cell_range).Formula =
                                     String.Format("SUM({0})",
                                                   New ExcelAddress(details_start_rowindex,
                                                                    3,
                                                                    details_last_rowindex,
                                                                    3).Address) 'column_headers.Count
 
-                                worksheet.Cells(sum_cell_range).Style.Font.Bold = True
+                            worksheet.Cells(sum_cell_range).Style.Font.Bold = True
 
-                                worksheet.PrinterSettings.Orientation = eOrientation.Landscape
+                            worksheet.PrinterSettings.Orientation = eOrientation.Landscape
 
-                                worksheet.PrinterSettings.PaperSize = ePaperSize.Legal
+                            worksheet.PrinterSettings.PaperSize = ePaperSize.Legal
 
-                                worksheet.PrinterSettings.TopMargin = margin_size(1)
-                                worksheet.PrinterSettings.BottomMargin = margin_size(1)
-                                worksheet.PrinterSettings.LeftMargin = margin_size(0)
-                                worksheet.PrinterSettings.RightMargin = margin_size(0)
+                            worksheet.PrinterSettings.TopMargin = margin_size(1)
+                            worksheet.PrinterSettings.BottomMargin = margin_size(1)
+                            worksheet.PrinterSettings.LeftMargin = margin_size(0)
+                            worksheet.PrinterSettings.RightMargin = margin_size(0)
 
-                                worksheet.Cells.AutoFitColumns(2, 22.71)
+                            worksheet.Cells.AutoFitColumns(2, 22.71)
 
-                                worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
+                            worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
 
-                                excl_pkg.Save()
+                            excl_pkg.Save()
 
-                                ii += 1
-
-                            End If
+                            ii += 1
 
                         Next
 
