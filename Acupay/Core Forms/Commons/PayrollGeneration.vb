@@ -238,7 +238,7 @@ Public Class PayrollGeneration
             withholdingTaxTable As DataTable,
             products As IEnumerable(Of Product),
             paystubs As IEnumerable(Of AccuPay.Entity.Paystub),
-            Optional pay_stub_frm As PayStub = Nothing)
+            Optional pay_stub_frm As PayStubForm = Nothing)
 
         form_caller = pay_stub_frm
 

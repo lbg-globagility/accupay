@@ -3,7 +3,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports log4net
 
-Public Class PayStub
+Public Class PayStubForm
 
     Private _logger As ILog = LogManager.GetLogger("PayrollLogger")
 

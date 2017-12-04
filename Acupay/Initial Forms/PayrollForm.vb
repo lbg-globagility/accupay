@@ -82,8 +82,8 @@
 
     Sub PayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayrollToolStripMenuItem.Click
         'ChangeForm(PayrollGenerateForm)
-        ChangeForm(PayStub, "Employee Pay Slip")
-        previousForm = PayStub
+        ChangeForm(PayStubForm, "Employee Pay Slip")
+        previousForm = PayStubForm
     End Sub
 
     Private Sub BonusToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click

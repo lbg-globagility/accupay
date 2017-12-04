@@ -765,10 +765,10 @@
     <Compile Include="Core Forms\PayrollSummaDateSelection.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PayStub\PayStub.Designer.vb">
-      <DependentUpon>PayStub.vb</DependentUpon>
+    <Compile Include="Core Forms\PayStub\PayStubForm.Designer.vb">
+      <DependentUpon>PayStubForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\PayStub\PayStub.vb">
+    <Compile Include="Core Forms\PayStub\PayStubForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\PhiHealth.Designer.vb">
@@ -1569,8 +1569,8 @@
     <EmbeddedResource Include="Core Forms\PayrollSummaDateSelection.resx">
       <DependentUpon>PayrollSummaDateSelection.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\PayStub\PayStub.resx">
-      <DependentUpon>PayStub.vb</DependentUpon>
+    <EmbeddedResource Include="Core Forms\PayStub\PayStubForm.resx">
+      <DependentUpon>PayStubForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\PhiHealth.resx">
       <DependentUpon>PhiHealth.vb</DependentUpon>

@@ -577,7 +577,7 @@ Public Class MDIPrimaryForm
 
             ElseIf groupindex = 3 Then 'Payroll
                 If previousForm.Name = "Paystub" Then
-                    With PayStub
+                    With PayStubForm
                         .btnrefresh_Click(sndr, ee)
                     End With
                 End If
