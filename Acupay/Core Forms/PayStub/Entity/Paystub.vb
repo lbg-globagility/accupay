@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports Acupay
 
 Namespace Global.AccuPay.Entity
 
@@ -98,6 +99,9 @@ Namespace Global.AccuPay.Entity
         Public Property ThirteenthMonthInclusion As Boolean
 
         Public Property FirstTimeSalary As Boolean
+
+        <ForeignKey("EmployeeID")>
+        Public Overridable Property Employee As Employee
 
     End Class
 

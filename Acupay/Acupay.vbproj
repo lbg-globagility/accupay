@@ -313,6 +313,12 @@
     <Compile Include="Core Forms\OffSetting.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\PayStub\NewPayStubForm.Designer.vb">
+      <DependentUpon>NewPayStubForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\PayStub\NewPayStubForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Core Forms\Reports\LoanReportByType.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1376,6 +1382,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\PayStub\NewPayStubForm.resx">
+      <DependentUpon>NewPayStubForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Reports\LoanReportByType.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
