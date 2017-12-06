@@ -142,13 +142,14 @@ Partial Class ProductControlForm
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvproducts.DefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvproducts.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvproducts.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvproducts.Location = New System.Drawing.Point(12, 75)
+        Me.dgvproducts.Location = New System.Drawing.Point(0, 38)
         Me.dgvproducts.MultiSelect = False
         Me.dgvproducts.Name = "dgvproducts"
         Me.dgvproducts.RowHeadersWidth = 25
         Me.dgvproducts.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvproducts.Size = New System.Drawing.Size(677, 308)
+        Me.dgvproducts.Size = New System.Drawing.Size(701, 357)
         Me.dgvproducts.TabIndex = 0
         '
         'RowID
@@ -156,42 +157,49 @@ Partial Class ProductControlForm
         Me.RowID.HeaderText = "RowID"
         Me.RowID.Name = "RowID"
         Me.RowID.ReadOnly = True
+        Me.RowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.RowID.Visible = False
         '
         'SupplierID
         '
         Me.SupplierID.HeaderText = "SupplierID"
         Me.SupplierID.Name = "SupplierID"
+        Me.SupplierID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.SupplierID.Visible = False
         '
         'ProdName
         '
         Me.ProdName.HeaderText = "ProdName"
         Me.ProdName.Name = "ProdName"
+        Me.ProdName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.ProdName.Visible = False
         '
         'Description
         '
         Me.Description.HeaderText = "Description"
         Me.Description.Name = "Description"
+        Me.Description.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.Description.Visible = False
         '
         'PartNo
         '
         Me.PartNo.HeaderText = "PartNo"
         Me.PartNo.Name = "PartNo"
+        Me.PartNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.PartNo.Width = 159
         '
         'Category
         '
         Me.Category.HeaderText = "Category"
         Me.Category.Name = "Category"
+        Me.Category.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.Category.Visible = False
         '
         'CategoryID
         '
         Me.CategoryID.HeaderText = "CategoryID"
         Me.CategoryID.Name = "CategoryID"
+        Me.CategoryID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.CategoryID.Visible = False
         '
         'Status
@@ -199,7 +207,6 @@ Partial Class ProductControlForm
         Me.Status.HeaderText = "Status"
         Me.Status.Name = "Status"
         Me.Status.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Status.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.Status.Width = 141
         '
         'Fixed
@@ -212,144 +219,168 @@ Partial Class ProductControlForm
         '
         Me.UnitPrice.HeaderText = "UnitPrice"
         Me.UnitPrice.Name = "UnitPrice"
+        Me.UnitPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.UnitPrice.Visible = False
         '
         'VATPercent
         '
         Me.VATPercent.HeaderText = "VATPercent"
         Me.VATPercent.Name = "VATPercent"
+        Me.VATPercent.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.VATPercent.Visible = False
         '
         'FirstBillFlag
         '
         Me.FirstBillFlag.HeaderText = "FirstBillFlag"
         Me.FirstBillFlag.Name = "FirstBillFlag"
+        Me.FirstBillFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.FirstBillFlag.Visible = False
         '
         'SecondBillFlag
         '
         Me.SecondBillFlag.HeaderText = "SecondBillFlag"
         Me.SecondBillFlag.Name = "SecondBillFlag"
+        Me.SecondBillFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.SecondBillFlag.Visible = False
         '
         'ThirdBillFlag
         '
         Me.ThirdBillFlag.HeaderText = "ThirdBillFlag"
         Me.ThirdBillFlag.Name = "ThirdBillFlag"
+        Me.ThirdBillFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.ThirdBillFlag.Visible = False
         '
         'PDCFlag
         '
         Me.PDCFlag.HeaderText = "PDCFlag"
         Me.PDCFlag.Name = "PDCFlag"
+        Me.PDCFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.PDCFlag.Visible = False
         '
         'MonthlyBIllFlag
         '
         Me.MonthlyBIllFlag.HeaderText = "MonthlyBIllFlag"
         Me.MonthlyBIllFlag.Name = "MonthlyBIllFlag"
+        Me.MonthlyBIllFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.MonthlyBIllFlag.Visible = False
         '
         'PenaltyFlag
         '
         Me.PenaltyFlag.HeaderText = "PenaltyFlag"
         Me.PenaltyFlag.Name = "PenaltyFlag"
+        Me.PenaltyFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.PenaltyFlag.Visible = False
         '
         'WithholdingTaxPercent
         '
         Me.WithholdingTaxPercent.HeaderText = "WithholdingTaxPercent"
         Me.WithholdingTaxPercent.Name = "WithholdingTaxPercent"
+        Me.WithholdingTaxPercent.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.WithholdingTaxPercent.Visible = False
         '
         'CostPrice
         '
         Me.CostPrice.HeaderText = "CostPrice"
         Me.CostPrice.Name = "CostPrice"
+        Me.CostPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.CostPrice.Visible = False
         '
         'UnitOfMeasure
         '
         Me.UnitOfMeasure.HeaderText = "UnitOfMeasure"
         Me.UnitOfMeasure.Name = "UnitOfMeasure"
+        Me.UnitOfMeasure.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.UnitOfMeasure.Visible = False
         '
         'SKU
         '
         Me.SKU.HeaderText = "SKU"
         Me.SKU.Name = "SKU"
+        Me.SKU.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.SKU.Visible = False
         '
         'LeadTime
         '
         Me.LeadTime.HeaderText = "LeadTime"
         Me.LeadTime.Name = "LeadTime"
+        Me.LeadTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.LeadTime.Visible = False
         '
         'BarCode
         '
         Me.BarCode.HeaderText = "BarCode"
         Me.BarCode.Name = "BarCode"
+        Me.BarCode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.BarCode.Visible = False
         '
         'BusinessUnitID
         '
         Me.BusinessUnitID.HeaderText = "BusinessUnitID"
         Me.BusinessUnitID.Name = "BusinessUnitID"
+        Me.BusinessUnitID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.BusinessUnitID.Visible = False
         '
         'LastRcvdFromShipmentDate
         '
         Me.LastRcvdFromShipmentDate.HeaderText = "LastRcvdFromShipmentDate"
         Me.LastRcvdFromShipmentDate.Name = "LastRcvdFromShipmentDate"
+        Me.LastRcvdFromShipmentDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.LastRcvdFromShipmentDate.Visible = False
         '
         'LastRcvdFromShipmentCount
         '
         Me.LastRcvdFromShipmentCount.HeaderText = "LastRcvdFromShipmentCount"
         Me.LastRcvdFromShipmentCount.Name = "LastRcvdFromShipmentCount"
+        Me.LastRcvdFromShipmentCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.LastRcvdFromShipmentCount.Visible = False
         '
         'TotalShipmentCount
         '
         Me.TotalShipmentCount.HeaderText = "TotalShipmentCount"
         Me.TotalShipmentCount.Name = "TotalShipmentCount"
+        Me.TotalShipmentCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.TotalShipmentCount.Visible = False
         '
         'BookPageNo
         '
         Me.BookPageNo.HeaderText = "BookPageNo"
         Me.BookPageNo.Name = "BookPageNo"
+        Me.BookPageNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.BookPageNo.Visible = False
         '
         'BrandName
         '
         Me.BrandName.HeaderText = "BrandName"
         Me.BrandName.Name = "BrandName"
+        Me.BrandName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.BrandName.Visible = False
         '
         'LastPurchaseDate
         '
         Me.LastPurchaseDate.HeaderText = "LastPurchaseDate"
         Me.LastPurchaseDate.Name = "LastPurchaseDate"
+        Me.LastPurchaseDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.LastPurchaseDate.Visible = False
         '
         'LastSoldDate
         '
         Me.LastSoldDate.HeaderText = "LastSoldDate"
         Me.LastSoldDate.Name = "LastSoldDate"
+        Me.LastSoldDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.LastSoldDate.Visible = False
         '
         'LastSoldCount
         '
         Me.LastSoldCount.HeaderText = "LastSoldCount"
         Me.LastSoldCount.Name = "LastSoldCount"
+        Me.LastSoldCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.LastSoldCount.Visible = False
         '
         'ReOrderPoint
         '
         Me.ReOrderPoint.HeaderText = "ReOrderPoint"
         Me.ReOrderPoint.Name = "ReOrderPoint"
+        Me.ReOrderPoint.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.ReOrderPoint.Visible = False
         '
         'AllocateBelowSafetyFlag
@@ -357,49 +388,55 @@ Partial Class ProductControlForm
         Me.AllocateBelowSafetyFlag.HeaderText = "Included in 13th month pay"
         Me.AllocateBelowSafetyFlag.Name = "AllocateBelowSafetyFlag"
         Me.AllocateBelowSafetyFlag.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.AllocateBelowSafetyFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.AllocateBelowSafetyFlag.Width = 141
         '
         'Strength
         '
         Me.Strength.HeaderText = "Strength"
         Me.Strength.Name = "Strength"
+        Me.Strength.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.Strength.Visible = False
         '
         'UnitsBackordered
         '
         Me.UnitsBackordered.HeaderText = "UnitsBackordered"
         Me.UnitsBackordered.Name = "UnitsBackordered"
+        Me.UnitsBackordered.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.UnitsBackordered.Visible = False
         '
         'UnitsBackorderAsOf
         '
         Me.UnitsBackorderAsOf.HeaderText = "UnitsBackorderAsOf"
         Me.UnitsBackorderAsOf.Name = "UnitsBackorderAsOf"
+        Me.UnitsBackorderAsOf.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.UnitsBackorderAsOf.Visible = False
         '
         'DateLastInventoryCount
         '
         Me.DateLastInventoryCount.HeaderText = "DateLastInventoryCount"
         Me.DateLastInventoryCount.Name = "DateLastInventoryCount"
+        Me.DateLastInventoryCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DateLastInventoryCount.Visible = False
         '
         'TaxVAT
         '
         Me.TaxVAT.HeaderText = "TaxVAT"
         Me.TaxVAT.Name = "TaxVAT"
+        Me.TaxVAT.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.TaxVAT.Visible = False
         '
         'WithholdingTax
         '
         Me.WithholdingTax.HeaderText = "WithholdingTax"
         Me.WithholdingTax.Name = "WithholdingTax"
+        Me.WithholdingTax.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.WithholdingTax.Visible = False
         '
         'COAId
         '
         Me.COAId.HeaderText = "COAId"
         Me.COAId.Name = "COAId"
+        Me.COAId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.COAId.Visible = False
         '
         'lblforballoon
@@ -426,7 +463,8 @@ Partial Class ProductControlForm
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(331, 56)
+        Me.Label1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Label1.Location = New System.Drawing.Point(0, 25)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(39, 13)
         Me.Label1.TabIndex = 2
@@ -444,8 +482,8 @@ Partial Class ProductControlForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(701, 395)
-        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.dgvproducts)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.lblforballoon)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -472,45 +510,45 @@ Partial Class ProductControlForm
     Friend WithEvents DeleteToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents cmsBlank As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SupplierID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ProdName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Description As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PartNo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Category As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents CategoryID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Status As System.Windows.Forms.DataGridViewCheckBoxColumn
-    Friend WithEvents Fixed As System.Windows.Forms.DataGridViewCheckBoxColumn
-    Friend WithEvents UnitPrice As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents VATPercent As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents FirstBillFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SecondBillFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ThirdBillFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PDCFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents MonthlyBIllFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PenaltyFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents WithholdingTaxPercent As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents CostPrice As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents UnitOfMeasure As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SKU As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LeadTime As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents BarCode As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents BusinessUnitID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastRcvdFromShipmentDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastRcvdFromShipmentCount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents TotalShipmentCount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents BookPageNo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents BrandName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastPurchaseDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastSoldDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastSoldCount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ReOrderPoint As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents AllocateBelowSafetyFlag As System.Windows.Forms.DataGridViewCheckBoxColumn
-    Friend WithEvents Strength As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents UnitsBackordered As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents UnitsBackorderAsOf As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DateLastInventoryCount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents TaxVAT As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents WithholdingTax As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents COAId As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents RowID As DataGridViewTextBoxColumn
+    Friend WithEvents SupplierID As DataGridViewTextBoxColumn
+    Friend WithEvents ProdName As DataGridViewTextBoxColumn
+    Friend WithEvents Description As DataGridViewTextBoxColumn
+    Friend WithEvents PartNo As DataGridViewTextBoxColumn
+    Friend WithEvents Category As DataGridViewTextBoxColumn
+    Friend WithEvents CategoryID As DataGridViewTextBoxColumn
+    Friend WithEvents Status As DataGridViewCheckBoxColumn
+    Friend WithEvents Fixed As DataGridViewCheckBoxColumn
+    Friend WithEvents UnitPrice As DataGridViewTextBoxColumn
+    Friend WithEvents VATPercent As DataGridViewTextBoxColumn
+    Friend WithEvents FirstBillFlag As DataGridViewTextBoxColumn
+    Friend WithEvents SecondBillFlag As DataGridViewTextBoxColumn
+    Friend WithEvents ThirdBillFlag As DataGridViewTextBoxColumn
+    Friend WithEvents PDCFlag As DataGridViewTextBoxColumn
+    Friend WithEvents MonthlyBIllFlag As DataGridViewTextBoxColumn
+    Friend WithEvents PenaltyFlag As DataGridViewTextBoxColumn
+    Friend WithEvents WithholdingTaxPercent As DataGridViewTextBoxColumn
+    Friend WithEvents CostPrice As DataGridViewTextBoxColumn
+    Friend WithEvents UnitOfMeasure As DataGridViewTextBoxColumn
+    Friend WithEvents SKU As DataGridViewTextBoxColumn
+    Friend WithEvents LeadTime As DataGridViewTextBoxColumn
+    Friend WithEvents BarCode As DataGridViewTextBoxColumn
+    Friend WithEvents BusinessUnitID As DataGridViewTextBoxColumn
+    Friend WithEvents LastRcvdFromShipmentDate As DataGridViewTextBoxColumn
+    Friend WithEvents LastRcvdFromShipmentCount As DataGridViewTextBoxColumn
+    Friend WithEvents TotalShipmentCount As DataGridViewTextBoxColumn
+    Friend WithEvents BookPageNo As DataGridViewTextBoxColumn
+    Friend WithEvents BrandName As DataGridViewTextBoxColumn
+    Friend WithEvents LastPurchaseDate As DataGridViewTextBoxColumn
+    Friend WithEvents LastSoldDate As DataGridViewTextBoxColumn
+    Friend WithEvents LastSoldCount As DataGridViewTextBoxColumn
+    Friend WithEvents ReOrderPoint As DataGridViewTextBoxColumn
+    Friend WithEvents AllocateBelowSafetyFlag As DataGridViewCheckBoxColumn
+    Friend WithEvents Strength As DataGridViewTextBoxColumn
+    Friend WithEvents UnitsBackordered As DataGridViewTextBoxColumn
+    Friend WithEvents UnitsBackorderAsOf As DataGridViewTextBoxColumn
+    Friend WithEvents DateLastInventoryCount As DataGridViewTextBoxColumn
+    Friend WithEvents TaxVAT As DataGridViewTextBoxColumn
+    Friend WithEvents WithholdingTax As DataGridViewTextBoxColumn
+    Friend WithEvents COAId As DataGridViewTextBoxColumn
 End Class

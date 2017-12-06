@@ -108,8 +108,9 @@ Public Class ProductControlForm
 
                 .Parameters.AddWithValue("p_RowID", If(prod_rowID = Nothing, DBNull.Value, prod_rowID))
                 .Parameters.AddWithValue("p_Name", p_Name)
-                .Parameters.AddWithValue("p_OrganizationID", orgztnID)
+                .Parameters.AddWithValue("p_OrganizationID", orgztnID) 'orgztnID
                 .Parameters.AddWithValue("p_PartNo", p_PartNo)
+                .Parameters.AddWithValue("p_LastUpd", DBNull.Value)
                 .Parameters.AddWithValue("p_CreatedBy", z_User)
                 .Parameters.AddWithValue("p_LastUpdBy", z_User)
                 .Parameters.AddWithValue("p_Category", p_CategName)
@@ -170,8 +171,10 @@ Public Class ProductControlForm
 
                 datastatus = Convert.ToInt16(drow.Cells("Status").Value)
 
+                Dim has_no_rowid = CBool(drow.Cells("RowID").Value = Nothing)
+
                 Dim returnval =
-                    INS_product(drow.Cells("RowID").Value,
+                    INS_product(If(has_no_rowid, Nothing, drow.Cells("RowID").Value),
                                 drow.Cells("PartNo").Value,
                                 drow.Cells("PartNo").Value,
                                 n_categname,
@@ -179,7 +182,7 @@ Public Class ProductControlForm
                                 Convert.ToInt16(drow.Cells("Fixed").Value),
                                 Convert.ToInt16(drow.Cells("AllocateBelowSafetyFlag").Value))
 
-                If drow.Cells("RowID").Value = Nothing Then
+                If has_no_rowid Then
                     drow.Cells("RowID").Value = returnval
                 End If
 
@@ -214,12 +217,25 @@ Public Class ProductControlForm
 
         Dim selectAllProduct As New DataTable
 
-        selectAllProduct = retAsDatTbl("SELECT p.*, IF(p.`Status` = '0', 'No', 'Yes') AS IStatus" &
-                                       " FROM product p" &
-                                       " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND CategoryName='" & n_categname & "'" &
-                                       " WHERE p.OrganizationID='" & orgztnID & "'" &
-                                       " AND p.CategoryID=c.RowID" &
-                                       " AND p.ActiveData='1';")
+        'selectAllProduct = retAsDatTbl("SELECT p.*, IF(p.`Status` = '0', 'No', 'Yes') AS IStatus" & _
+        '                               " FROM product p" & _
+        '                               " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND CategoryName='" & n_categname & "'" & _
+        '                               " WHERE p.OrganizationID='" & orgztnID & "'" & _
+        '                               " AND p.CategoryID=c.RowID" & _
+        '                               " AND p.ActiveData='1';")
+
+        Dim allowance_typequery As String =
+            String.Concat("SELECT p.*, IF(p.`Status` = '0', 'No', 'Yes') `IStatus`",
+                          " FROM product p",
+                          " INNER JOIN category c ON c.RowID=p.CategoryID AND c.OrganizationID=p.OrganizationID AND CategoryName=?categ_name",
+                          " WHERE p.OrganizationID=?og_id",
+                          " AND p.CategoryID=c.RowID",
+                          " AND p.ActiveData='1';")
+
+        Dim sql As New SQL(allowance_typequery,
+                           n_categname, orgztnID)
+
+        selectAllProduct = sql.GetFoundRows.Tables(0)
 
         'dgvproducts.Rows.Clear()
 
