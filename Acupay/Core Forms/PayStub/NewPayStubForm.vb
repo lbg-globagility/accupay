@@ -17,6 +17,8 @@ Public Class NewPayStubForm
                 Where(Function(p) p.PayFromdate = _dateFrom).
                 Where(Function(p) p.PayToDate = _dateTo).
                 Where(Function(p) CBool(p.OrganizationID = z_OrganizationID)).
+                OrderBy(Function(p) p.Employee.LastName).
+                ThenBy(Function(p) p.Employee.FirstName).
                 ToList()
 
             Dim paystubModels = payStubs.Select(Function(p) New PayStubModel(p)).ToList()

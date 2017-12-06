@@ -50,7 +50,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property RestDayHours As Decimal
 
-        Public Property RestDaypay As Decimal
+        Public Property RestDayPay As Decimal
 
         Public Property LeavePay As Decimal
 
@@ -68,21 +68,36 @@ Namespace Global.AccuPay.Entity
 
         Public Property WorkPay As Decimal
 
-        Public Property TotalGrossSalary As Decimal
+        Public Property TotalBonus As Decimal
 
-        Public Property TotalNetSalary As Decimal
+        Public Property TotalAllowance As Decimal
 
-        Public Property TotalTaxableSalary As Decimal
+        <Column("TotalGrossSalary")>
+        Public Property GrossPay As Decimal
 
-        Public Property TotalEmpSSS As Decimal
+        <Column("TotalTaxableSalary")>
+        Public Property TaxableIncome As Decimal
 
-        Public Property TotalEmpWithholdingTax As Decimal
+        <Column("TotalEmpWithholdingTax")>
+        Public Property WithholdingTax As Decimal
 
-        Public Property TotalCompPhilhealth As Decimal
+        <Column("TotalEmpSSS")>
+        Public Property SssEmployeeShare As Decimal
 
-        Public Property TotalEmpHDMF As Decimal
+        <Column("TotalCompSSS")>
+        Public Property SssEmployerShare As Decimal
 
-        Public Property TotalCompHDMF As Decimal
+        <Column("TotalEmpPhilhealth")>
+        Public Property PhilHealthEmployeeShare As Decimal
+
+        <Column("TotalCompPhilhealth")>
+        Public Property PhilHealthEmployerShare As Decimal
+
+        <Column("TotalEmpHDMF")>
+        Public Property HdmfEmployeeShare As Decimal
+
+        <Column("TotalCompHDMF")>
+        Public Property HdmfEmployerShare As Decimal
 
         Public Property TotalVacationDaysLeft As Decimal
 
@@ -90,11 +105,10 @@ Namespace Global.AccuPay.Entity
 
         Public Property TotalLoans As Decimal
 
-        Public Property TotalBonus As Decimal
-
-        Public Property TotalAllowance As Decimal
-
         Public Property TotalAdjustments As Decimal
+
+        <Column("TotalNetSalary")>
+        Public Property NetPay As Decimal
 
         Public Property ThirteenthMonthInclusion As Boolean
 
