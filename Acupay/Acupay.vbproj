@@ -230,6 +230,7 @@
     </Compile>
     <Compile Include="Core Forms\Commons\AccuMath.vb" />
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
+    <Compile Include="Core Forms\Commons\ListOfValueCollection.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
     <Compile Include="Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
@@ -304,6 +305,7 @@
     <Compile Include="Core Forms\PayStub\Entity\Adjustment.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Allowance.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ThirteenthMonthPay.vb" />

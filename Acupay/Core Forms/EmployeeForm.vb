@@ -9161,7 +9161,15 @@ Public Class EmployeeForm
 
     Private _socialSecurityBracket As PayrollSys.SocialSecurityBracket
 
+    Private _philHealthDeductionType As String
+
     Private _philHealthBracket As PayrollSys.PhilHealthBracket
+
+    Private _philHealthContributionRate As Decimal
+
+    Private _philHealthMinimumContribution As Decimal
+
+    Private _philHealthMaximumContribution As Decimal
 
     Sub tbpSalary_Enter(sender As Object, e As EventArgs) Handles tbpSalary.Enter
         txtPhilHealthSal.ContextMenu = New ContextMenu
@@ -9247,6 +9255,19 @@ Public Class EmployeeForm
         End If
         tabIndx = 2 'TabControl1.SelectedIndex
         dgvEmp_SelectionChanged(sender, e)
+
+        Using context = New PayrollContext()
+            Dim listOfValues = context.ListOfValues.
+                Where(Function(l) l.Type = "PhilHealth").
+                ToList()
+
+            Dim values = New ListOfValueCollection(listOfValues)
+
+            _philHealthDeductionType = values.GetValue("DeductionType")
+            _philHealthContributionRate = If(values.GetDecimal("Rate"), 0)
+            _philHealthMinimumContribution = If(values.GetDecimal("MinimumContribution"), 0)
+            _philHealthMaximumContribution = If(values.GetDecimal("MaximumContribution"), 0)
+        End Using
     End Sub
 
     Private Sub ChangeSalaryFormContext(context As SalaryFormContext)
@@ -9671,13 +9692,11 @@ Public Class EmployeeForm
             txtSSSSal.Text = _socialSecurityBracket?.EmployeeContributionAmount.ToString()
 
             Dim philHealthContribution = 0D
-            If False Then
-                philHealthContribution = monthlyRate * 0.0275
-                Dim minimumPhilHealthContribution = 275.0
-                Dim maximumPhilHealthContribution = 1100.0
+            If _philHealthDeductionType = "Formula" Then
+                philHealthContribution = monthlyRate * (_philHealthContributionRate / 100)
 
-                philHealthContribution = {philHealthContribution, minimumPhilHealthContribution}.Max()
-                philHealthContribution = {philHealthContribution, maximumPhilHealthContribution}.Min()
+                philHealthContribution = {philHealthContribution, _philHealthMinimumContribution}.Max()
+                philHealthContribution = {philHealthContribution, _philHealthMaximumContribution}.Min()
                 philHealthContribution = AccuMath.Truncate(philHealthContribution, 2) / 2
             Else
                 philHealthContribution = ConvertToType(Of Decimal)(_philHealthBracket?.EmployeeShare)
