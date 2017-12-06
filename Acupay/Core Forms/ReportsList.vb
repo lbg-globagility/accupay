@@ -25,7 +25,8 @@ Public Class ReportsList
             New SSSMonthlyReportProvider(),
             New TaxReportProvider(),
             New PostEmploymentClearanceReportProvider(),
-            New AgencyFeeReportProvider()
+            New AgencyFeeReportProvider(),
+            New LateUTAbsentSummaryReportProvider()
         }
 
         For Each provider In providers
@@ -141,6 +142,10 @@ Public Class ReportsList
         '//wait 2 seconds to let the above command complete or the copy will still fail
         '//============================================================================
         System.Threading.Thread.Sleep(2000)
+
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
 
     End Sub
 
