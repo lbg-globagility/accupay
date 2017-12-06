@@ -9263,7 +9263,7 @@ Public Class EmployeeForm
 
             Dim values = New ListOfValueCollection(listOfValues)
 
-            _philHealthDeductionType = values.GetValue("DeductionType")
+            _philHealthDeductionType = If(values.GetValue("DeductionType"), "Bracket")
             _philHealthContributionRate = If(values.GetDecimal("Rate"), 0)
             _philHealthMinimumContribution = If(values.GetDecimal("MinimumContribution"), 0)
             _philHealthMaximumContribution = If(values.GetDecimal("MaximumContribution"), 0)
