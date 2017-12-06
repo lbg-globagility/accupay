@@ -9697,7 +9697,7 @@ Public Class EmployeeForm
 
                 philHealthContribution = {philHealthContribution, _philHealthMinimumContribution}.Max()
                 philHealthContribution = {philHealthContribution, _philHealthMaximumContribution}.Min()
-                philHealthContribution = AccuMath.Truncate(philHealthContribution, 2) / 2
+                philHealthContribution = AccuMath.Truncate(philHealthContribution, 2)
             Else
                 philHealthContribution = ConvertToType(Of Decimal)(_philHealthBracket?.EmployeeShare)
             End If
