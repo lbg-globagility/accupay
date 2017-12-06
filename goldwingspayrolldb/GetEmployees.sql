@@ -99,7 +99,8 @@ BEGIN
     ) et
     ON et.EmployeeID = e.RowID
     WHERE e.OrganizationID = $OrganizationID AND
-        $PayDateTo BETWEEN esal.EffectiveDateFrom AND COALESCE(esal.EffectiveDateTo, $PayDateTo)
+        $PayDateTo BETWEEN esal.EffectiveDateFrom AND COALESCE(esal.EffectiveDateTo, $PayDateTo) AND
+        e.EmploymentStatus NOT IN ('Resigned', 'Terminated')
     GROUP BY e.RowID
     ORDER BY e.LastName;
 
