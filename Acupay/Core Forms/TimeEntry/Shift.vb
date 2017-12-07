@@ -1,10 +1,27 @@
-﻿Public Class Shift
+﻿Option Strict On
 
+Imports System.ComponentModel.DataAnnotations
+Imports System.ComponentModel.DataAnnotations.Schema
+
+<Table("shift")>
+Public Class Shift
+
+    <Key>
     Public Property RowID As Integer?
 
-    Public Property ShiftFrom As TimeSpan?
+    Public Property OrganizationID As Integer?
 
-    Public Property ShiftTo As TimeSpan?
+    Public Property Created As Date
+
+    Public Property CreatedBy As Integer?
+
+    Public Property LastUpd As Date?
+
+    Public Property LastUpdBy As Integer?
+
+    Public Property TimeFrom As TimeSpan?
+
+    Public Property TimeTo As TimeSpan?
 
     Public Property BreaktimeFrom As TimeSpan?
 

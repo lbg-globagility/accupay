@@ -7,8 +7,10 @@ Imports System.Text.RegularExpressions
 
 Module TimeInTimeOutParserModule
 
-    Private dateDashFormat As String = "MM-dd-yyyy"
-    Private dateSlashFormat As String = "MM/dd/yyyy"
+    Private Const DateDashFormat As String = "M-d-yyyy"
+    Private Const DateSlashFormat As String = "M/d/yyyy"
+
+    Private Const DateValidationFormat As String = "^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{1,4})$"
 
     Class ParseTimeLogException
         Inherits Exception
@@ -27,13 +29,13 @@ Module TimeInTimeOutParserModule
     End Class
 
     Class FixedFormatTimeEntry
-        Public Property EmployeeID As Integer
+        Public Property EmployeeNo As String
         Public Property DateOccurred As Date
         Public Property TimeIn As String
         Public Property TimeOut As String
 
-        Public Sub New(employeeID As Integer, dateOccurred As Date, timeIn As String, timeOut As String)
-            Me.EmployeeID = employeeID
+        Public Sub New(employeeNo As String, dateOccurred As Date, timeIn As String, timeOut As String)
+            Me.EmployeeNo = employeeNo
             Me.DateOccurred = dateOccurred
             Me.TimeIn = timeIn
             Me.TimeOut = timeOut
@@ -90,6 +92,7 @@ Module TimeInTimeOutParserModule
 
                 Do
                     currentLine = reader.ReadLine()
+
                     ParseLine(currentLine, timeEntries)
                 Loop Until currentLine Is Nothing
             End Using
@@ -133,21 +136,29 @@ Module TimeInTimeOutParserModule
                     Return
                 End If
 
-                Dim parts = Regex.Split(Trim(line), "\s+")
+                ' Collapse and trim the whitespaces in the line
+                line = Trim(Regex.Replace(line, "\s+", " "))
+
+                Dim parts = Regex.Split(line, "\s+")
 
                 If parts.Length < 3 Then
                     Return
                 End If
 
-                Dim employeeID = CInt(Trim(parts(0)))
+                Dim employeeNo = Trim(parts(0))
 
-                Dim logDate = parts(1)
+                Dim logDate = Trim(parts(1))
+
+                ' Do a sanity check on the date, skip line if it's invalid
+                If Not Regex.IsMatch(logDate, DateValidationFormat) Then
+                    Return
+                End If
 
                 Dim dateFormat = String.Empty
                 If logDate.Contains("-") Then
-                    dateFormat = dateDashFormat
+                    dateFormat = DateDashFormat
                 ElseIf logDate.Contains("/") Then
-                    dateFormat = dateSlashFormat
+                    dateFormat = DateSlashFormat
                 End If
 
                 Dim dateOccurred = Date.ParseExact(logDate, dateFormat, CultureInfo.InvariantCulture)
@@ -155,11 +166,13 @@ Module TimeInTimeOutParserModule
                 Dim timeIn = Trim(parts(2))
                 Dim timeOut = If(parts.Length > 3, Trim(parts(3)), Nothing)
 
-                If Not String.IsNullOrEmpty(timeIn) Or Not String.IsNullOrEmpty(timeOut) Then
-                    timeEntries.Add(
-                            New FixedFormatTimeEntry(employeeID, dateOccurred, timeIn, timeOut)
-                        )
+                If String.IsNullOrEmpty(timeIn) And String.IsNullOrEmpty(timeOut) Then
+                    Return
                 End If
+
+                timeEntries.Add(
+                    New FixedFormatTimeEntry(employeeNo, dateOccurred, timeIn, timeOut)
+                )
             Catch ex As Exception
                 Throw New ParseTimeLogException(line, ex)
             End Try

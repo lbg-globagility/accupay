@@ -228,12 +228,17 @@
     Private Sub tsbtnSaveShift_Click(sender As Object, e As EventArgs) Handles tsbtnSaveShift.Click
         Dim timeFrom = dtpTimeFrom.Value.ToString("HH:mm")
         Dim timeTo = dtpTimeTo.Value.ToString("HH:mm")
+        Dim breaktimeFrom = dtpBreakTimeFrom.Tag
+        Dim breaktimeTo = dtpBreakTimeTo.Tag
+        Dim hasBreaktime = (breaktimeFrom IsNot Nothing) Or (breaktimeTo IsNot Nothing)
 
         Dim existingShifts As DataTable = getDataTableForSQL($"
             SELECT *
             FROM shift
             WHERE TimeFrom = '{timeFrom}' AND
                 TimeTo = '{timeTo}' AND
+                (BreaktimeFrom  = '{breaktimeFrom}' OR NOT {hasBreaktime}) AND
+                (BreaktimeTo = '{breaktimeTo}' OR NOT {hasBreaktime}) AND
                 OrganizationID = '{z_OrganizationID}'
         ")
 

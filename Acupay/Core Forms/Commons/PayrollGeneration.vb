@@ -238,7 +238,7 @@ Public Class PayrollGeneration
             withholdingTaxTable As DataTable,
             products As IEnumerable(Of Product),
             paystubs As IEnumerable(Of AccuPay.Entity.Paystub),
-            Optional pay_stub_frm As PayStub = Nothing)
+            Optional pay_stub_frm As PayStubForm = Nothing)
 
         form_caller = pay_stub_frm
 
@@ -829,16 +829,27 @@ Public Class PayrollGeneration
     End Function
 
     Private Sub CalculatePhilHealth(salary As DataRow)
-        Dim employeePhilHealthPerMonth = ValNoComma(salary("EmployeeShare"))
-        Dim employerPhilHealthPerMonth = ValNoComma(salary("EmployerShare"))
+        Dim totalContribution = ConvertToType(Of Decimal)(salary("PhilHealthDeduction"))
+        Dim halfContribution = AccuMath.Truncate(totalContribution / 2, 2)
+
+        ' Account for any division loss by putting the missing value to the employer share
+        Dim expectedTotal = halfContribution * 2
+        Dim remaining = 0D
+        If expectedTotal < totalContribution Then
+            remaining = totalContribution - expectedTotal
+        End If
+
+        Dim employeeShare = halfContribution
+        Dim employerShare = halfContribution + remaining
+
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
         If IsPhilHealthPaidOnFirstHalf() Or IsPhilHealthPaidOnEndOfTheMonth() Then
-            _payStub.TotalEmpPhilHealth = employeePhilHealthPerMonth
-            _payStub.TotalCompPhilHealth = employerPhilHealthPerMonth
+            _payStub.TotalEmpPhilHealth = employeeShare
+            _payStub.TotalCompPhilHealth = employerShare
         ElseIf IsPhilHealthPaidPerPayPeriod() Then
-            _payStub.TotalEmpPhilHealth = employeePhilHealthPerMonth / payPeriodsPerMonth
-            _payStub.TotalCompPhilHealth = employerPhilHealthPerMonth / payPeriodsPerMonth
+            _payStub.TotalEmpPhilHealth = employeeShare / payPeriodsPerMonth
+            _payStub.TotalCompPhilHealth = employerShare / payPeriodsPerMonth
         End If
     End Sub
 

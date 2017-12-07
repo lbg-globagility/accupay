@@ -6,8 +6,29 @@
 
 DROP FUNCTION IF EXISTS `INSUPD_employeesalary`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeesalary`(`esal_RowID` INT, `esal_EmployeeID` INT, `esal_CreatedBy` INT, `esal_LastUpdBy` INT, `esal_OrganizationID` INT, `esal_BasicPay` DECIMAL(11,6), `esal_Salary` DECIMAL(11,6), `esal_NoofDependents` INT, `esal_MaritalStatus` VARCHAR(50), `esal_PositionID` INT, `esal_EffectiveDateFrom` DATE, `esal_EffectiveDateTo` DATE, `esal_HDMFAmount` DECIMAL(10,2), `esal_PAGIBIGAmout` DECIMAL(10,2), `esal_TrueSalary` DECIMAL(10,2), `esal_IsDoneByImporting` TEXT, `esal_DiscardSSS` TINYINT, `esal_DiscardPhH` TINYINT
-, `esal_PaySocialSecurityID` INT, `esal_PayPhilHealthID` INT) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeesalary`(
+    `esal_RowID` INT,
+    `esal_EmployeeID` INT,
+    `esal_CreatedBy` INT,
+    `esal_LastUpdBy` INT,
+    `esal_OrganizationID` INT,
+    `esal_BasicPay` DECIMAL(11,6),
+    `esal_Salary` DECIMAL(11,6),
+    `esal_NoofDependents` INT,
+    `esal_MaritalStatus` VARCHAR(50),
+    `esal_PositionID` INT,
+    `esal_EffectiveDateFrom` DATE,
+    `esal_EffectiveDateTo` DATE,
+    `esal_HDMFAmount` DECIMAL(10,2),
+    `esal_PAGIBIGAmout` DECIMAL(10,2),
+    `esal_TrueSalary` DECIMAL(10,2),
+    `esal_IsDoneByImporting` TEXT,
+    `esal_DiscardSSS` TINYINT,
+    `esal_DiscardPhH` TINYINT,
+    `esal_PaySocialSecurityID` INT,
+    `esal_PayPhilHealthID` INT,
+    `esal_PhilHealthDeduction` DECIMAL(15, 4)
+) RETURNS int(11)
     DETERMINISTIC
 BEGIN
 
@@ -218,71 +239,79 @@ END IF;
 
 INSERT INTO employeesalary
 (
-    RowID
-    ,EmployeeID
-    ,Created
-    ,CreatedBy
-    ,OrganizationID
-    ,FilingStatusID
-    ,PaySocialSecurityID
-    ,PayPhilhealthID
-    ,HDMFAmount
-    ,BasicPay
-    ,Salary
-    ,BasicDailyPay
-    ,BasicHourlyPay
-    ,NoofDependents
-    ,MaritalStatus
-    ,PositionID
-    ,EffectiveDateFrom
-    ,EffectiveDateTo
-    ,TrueSalary
-    ,UndeclaredSalary, OverrideDiscardSSSContrib, OverrideDiscardPhilHealthContrib
-) SELECT
-    esal_RowID
-    ,esal_EmployeeID
-    ,CURRENT_TIMESTAMP()
-    ,esal_CreatedBy
-    ,esal_OrganizationID
-    ,EmpFStatID
-    ,esal_PaySocialSecurityID
-    ,esal_PayPhilHealthID
-    ,esal_HDMFAmount
-    ,esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType))
-    ,esal_Salary
-    ,esal_BasicDailyPay
-    ,esal_BasicHourlyPay
-    ,esal_NoofDependents
-    ,esal_MaritalStatus
-    ,esal_PositionID
-    ,esal_EffectiveDateFrom
-    ,esal_EffectiveDateTo
-    ,esal_TrueSalary
-    ,esal_TrueSalary - esal_Salary, esal_DiscardSSS, esal_DiscardPhH
-    FROM employee WHERE RowID=esal_EmployeeID AND OrganizationID=esal_OrganizationID
-ON
-DUPLICATE
-KEY
+    RowID,
+    EmployeeID,
+    Created,
+    CreatedBy,
+    OrganizationID,
+    FilingStatusID,
+    PaySocialSecurityID,
+    PayPhilhealthID,
+    HDMFAmount,
+    BasicPay,
+    Salary,
+    BasicDailyPay,
+    BasicHourlyPay,
+    NoofDependents,
+    MaritalStatus,
+    PositionID,
+    EffectiveDateFrom,
+    EffectiveDateTo,
+    TrueSalary,
+    UndeclaredSalary,
+    OverrideDiscardSSSContrib,
+    OverrideDiscardPhilHealthContrib,
+    PhilHealthDeduction
+)
+SELECT
+    esal_RowID,
+    esal_EmployeeID,
+    CURRENT_TIMESTAMP(),
+    esal_CreatedBy,
+    esal_OrganizationID,
+    EmpFStatID,
+    esal_PaySocialSecurityID,
+    esal_PayPhilHealthID,
+    esal_HDMFAmount,
+    esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType)),
+    esal_Salary,
+    esal_BasicDailyPay,
+    esal_BasicHourlyPay,
+    esal_NoofDependents,
+    esal_MaritalStatus,
+    esal_PositionID,
+    esal_EffectiveDateFrom,
+    esal_EffectiveDateTo,
+    esal_TrueSalary,
+    esal_TrueSalary - esal_Salary,
+    esal_DiscardSSS,
+    esal_DiscardPhH,
+    esal_PhilHealthDeduction
+FROM employee
+WHERE RowID = esal_EmployeeID AND
+    OrganizationID = esal_OrganizationID
+ON DUPLICATE KEY
 UPDATE
-    LastUpd=CURRENT_TIMESTAMP()
-    ,LastUpdBy=esal_LastUpdBy
-    ,FilingStatusID=EmpFStatID
-    ,PaySocialSecurityID=esal_PaySocialSecurityID
-    ,PayPhilhealthID=esal_PayPhilHealthID
-    ,HDMFAmount=IF(esal_HDMFAmount != 0,esal_HDMFAmount,hdmf_amt)
-    ,BasicPay=esal_Salary / IF(LOCATE(EmpType,CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType))
-    ,Salary=esal_Salary
-    ,BasicDailyPay=esal_BasicDailyPay
-    ,BasicHourlyPay=esal_BasicHourlyPay
-    ,NoofDependents=esal_NoofDependents
-    ,MaritalStatus=esal_MaritalStatus
-    ,PositionID=esal_PositionID
-    ,EffectiveDateFrom=esal_EffectiveDateFrom
-    ,TrueSalary=esal_TrueSalary
-    ,UndeclaredSalary=esal_TrueSalary - esal_Salary
-	 ,EffectiveDateTo=esal_EffectiveDateTo
-    ,OverrideDiscardSSSContrib          =esal_DiscardSSS
-    ,OverrideDiscardPhilHealthContrib=esal_DiscardPhH;
+    LastUpd = CURRENT_TIMESTAMP(),
+    LastUpdBy = esal_LastUpdBy,
+    FilingStatusID = EmpFStatID,
+    PaySocialSecurityID = esal_PaySocialSecurityID,
+    PayPhilhealthID = esal_PayPhilHealthID,
+    HDMFAmount = IF(esal_HDMFAmount != 0, esal_HDMFAmount, hdmf_amt),
+    BasicPay = esal_Salary / IF(LOCATE(EmpType, CONCAT('MonthlyFixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(EmpType)),
+    Salary = esal_Salary,
+    BasicDailyPay = esal_BasicDailyPay,
+    BasicHourlyPay = esal_BasicHourlyPay,
+    NoofDependents = esal_NoofDependents,
+    MaritalStatus = esal_MaritalStatus,
+    PositionID = esal_PositionID,
+    EffectiveDateFrom = esal_EffectiveDateFrom,
+    TrueSalary = esal_TrueSalary,
+    UndeclaredSalary = esal_TrueSalary - esal_Salary,
+    EffectiveDateTo = esal_EffectiveDateTo,
+    OverrideDiscardSSSContrib = esal_DiscardSSS,
+    OverrideDiscardPhilHealthContrib = esal_DiscardPhH,
+    PhilHealthDeduction = esal_PhilHealthDeduction;
 
 SELECT @@Identity AS id
 INTO esalID;

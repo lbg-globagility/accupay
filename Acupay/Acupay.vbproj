@@ -228,7 +228,9 @@
     <Compile Include="Auditing\Forms\TimeLogForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\Commons\AccuMath.vb" />
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
+    <Compile Include="Core Forms\Commons\ListOfValueCollection.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
     <Compile Include="Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
@@ -325,6 +327,7 @@
     <Compile Include="Core Forms\PayStub\Entity\Adjustment.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Allowance.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Position.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
@@ -335,6 +338,18 @@
     </Compile>
     <Compile Include="Core Forms\OffSetting.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core Forms\PayStub\NewPayStubForm.Designer.vb">
+      <DependentUpon>NewPayStubForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\PayStub\NewPayStubForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core Forms\Reports\AttendanceSheet2.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AttendanceSheet2.rpt</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Core Forms\Reports\LoanReportByType.vb">
       <AutoGen>True</AutoGen>
@@ -348,11 +363,13 @@
     <Compile Include="Core Forms\Reports\Providers\EmployeeOffenseReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\EmployeeProfilesReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\EmploymentRecordReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\LateUTAbsentSummaryReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\LeaveLedgerReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\LoanSummaryByTypeReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\LoanSummaryReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\PagIBIGMonthlyReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\PayrollLedgerReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\PayrollSummaryExcelFormatReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\PhilHealthReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\PostEmploymentClearanceReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\IReportProvider.vb" />
@@ -679,10 +696,10 @@
     <Compile Include="Core Forms\dutyshift.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\EmpTimeDetail.Designer.vb">
-      <DependentUpon>EmpTimeDetail.vb</DependentUpon>
+    <Compile Include="Core Forms\TimeLogs\TimeLogsForm.Designer.vb">
+      <DependentUpon>TimeLogsForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\EmpTimeDetail.vb">
+    <Compile Include="Core Forms\TimeLogs\TimeLogsForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\EmpTimeEntry.Designer.vb">
@@ -787,10 +804,10 @@
     <Compile Include="Core Forms\PayrollSummaDateSelection.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PayStub\PayStub.Designer.vb">
-      <DependentUpon>PayStub.vb</DependentUpon>
+    <Compile Include="Core Forms\PayStub\PayStubForm.Designer.vb">
+      <DependentUpon>PayStubForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\PayStub\PayStub.vb">
+    <Compile Include="Core Forms\PayStub\PayStubForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\PhiHealth.Designer.vb">
@@ -1223,7 +1240,7 @@
     <Compile Include="Core Forms\Commons\ReadSQLFunctionV2.vb" />
     <Compile Include="Core Forms\Commons\ReadSQLProcedureToDatatable.vb" />
     <Compile Include="Core Forms\Commons\SQLQueryToDatatable.vb" />
-    <Compile Include="Core Forms\Commons\TimeInTimeOutParser.vb" />
+    <Compile Include="Core Forms\TimeLogs\TimeInTimeOutParser.vb" />
     <Compile Include="Core Forms\Commons\TrapDecimalKey.vb" />
     <Compile Include="Core Forms\Commons\UserAccessRights.vb" />
     <Compile Include="Core Forms\viewtotallow.Designer.vb">
@@ -1408,6 +1425,13 @@
     <EmbeddedResource Include="Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\PayStub\NewPayStubForm.resx">
+      <DependentUpon>NewPayStubForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Reports\AttendanceSheet2.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AttendanceSheet2.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Reports\LoanReportByType.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>LoanReportByType.vb</LastGenOutput>
@@ -1549,8 +1573,8 @@
     <EmbeddedResource Include="Core Forms\dutyshift.resx">
       <DependentUpon>dutyshift.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\EmpTimeDetail.resx">
-      <DependentUpon>EmpTimeDetail.vb</DependentUpon>
+    <EmbeddedResource Include="Core Forms\TimeLogs\TimeLogsForm.resx">
+      <DependentUpon>TimeLogsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\EmpTimeEntry.resx">
       <DependentUpon>EmpTimeEntry.vb</DependentUpon>
@@ -1600,8 +1624,8 @@
     <EmbeddedResource Include="Core Forms\PayrollSummaDateSelection.resx">
       <DependentUpon>PayrollSummaDateSelection.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\PayStub\PayStub.resx">
-      <DependentUpon>PayStub.vb</DependentUpon>
+    <EmbeddedResource Include="Core Forms\PayStub\PayStubForm.resx">
+      <DependentUpon>PayStubForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\PhiHealth.resx">
       <DependentUpon>PhiHealth.vb</DependentUpon>

@@ -6,16 +6,15 @@
 
 DROP PROCEDURE IF EXISTS `paystub_payslip`;
 DELIMITER //
-CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `paystub_payslip`(
-	IN `OrganizID` INT,
-	IN `PayPeriodRowID` INT,
-	IN `IsActualFlag` CHAR(1)
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `paystub_payslip`(IN `OrganizID` INT, IN `PayPeriodRowID` INT, IN `IsActualFlag` CHAR(1)
 )
     DETERMINISTIC
 BEGIN
 
 DECLARE paydate_from DATE;
 DECLARE paydat_to DATE;
+
+DECLARE sec_per_hour INT(11) DEFAULT 3600;
 
 SELECT
     pp.PayFromDate,
@@ -82,22 +81,22 @@ SELECT
     ps.TotalEmpWithholdingTax AS `COL25`,
     ps.TotalLoans AS `COL26`,
     ps.TotalNetSalary AS `COL27`,
-    allowances.Names AS `COL28`,
+    allowances.`Names` AS `COL28`,
     allowances.PayAmounts AS `COL29`,
     ps.TotalAllowance AS `COL30`,
-    payStubLoans.Names AS `COL31`,
+    payStubLoans.`Names` AS `COL31`,
     payStubLoans.PayAmounts AS `COL32`,
     payStubLoans.TotalBalanceLeft AS `COl36`,
     ps.TotalLoans AS `COL33`,
     0 AS `COL34`,
     0 AS `COL35`,
-    adjustments.Names AS `COL37`,
+    adjustments.`Names` AS `COL37`,
     adjustments.PayAmounts AS `COL38`,
     (IFNULL(ete.VacationLeaveHours,0) + IFNULL(ete.SickLeaveHours,0) + IFNULL(ete.MaternityLeaveHours,0) + IFNULL(ete.OtherLeaveHours,0)) AS `COL40`,
     IFNULL(ete.Leavepayment,0) AS `COL41`,
     IFNULL(psiHoli.PayAmount,0) AS `COL42`,
     IFNULL(psiECOLA.PayAmount,0) AS `COL43`,
-    psiLeave.Names AS `COL44`,
+    psiLeave.`Names` AS `COL44`,
     psiLeave.Availed AS `COl45`,
     psiLeave.Balance AS `COL46`
 FROM (
@@ -195,7 +194,16 @@ LEFT JOIN (
         SUM(i.TaxableDailyBonus) AS TaxableDailyBonus,
         SUM(i.NonTaxableDailyBonus) AS NonTaxableDailyBonus,
         SUM(i.Leavepayment) AS Leavepayment,
-        SUM(sh.DivisorToDailyRate) AS TotalExpectedHours,
+        
+		  # SUM(sh.DivisorToDailyRate) AS TotalExpectedHours,
+        SUM(
+            IF((TIMESTAMPDIFF(SECOND ,CONCAT_DATETIME(i.`Date`, sh.TimeFrom), CONCAT_DATETIME(ADDDATE(i.`Date`, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo)) / sec_per_hour)
+				   > (i.RegularHoursWorked + (i.HoursLate + i.UndertimeHours))
+				   
+				   , (i.RegularHoursWorked + (i.HoursLate + i.UndertimeHours))
+					, sh.DivisorToDailyRate)
+		      ) `TotalExpectedHours`,
+		  
         SUM(IF(i.Absent > 0, sh.DivisorToDailyRate, 0)) AS AbsentHours
     FROM (
             SELECT
@@ -340,7 +348,7 @@ LEFT JOIN (
     ON p.RowID = psi.ProductID AND
         p.OrganizationID = psi.OrganizationID AND
         p.`Category` = 'Leave Type' AND
-        (p.PartNo = 'Sick leave' OR p.PartNo = 'Vacation leave')
+        p.PartNo = 'Vacation leave'
     INNER JOIN paystub ps
     ON ps.RowID = psi.PayStubID
     INNER JOIN (
@@ -349,7 +357,7 @@ LEFT JOIN (
             VacationLeaveHours,
             SickLeaveHours
         FROM employeetimeentry
-        WHERE Date BETWEEN paydate_from AND paydat_to
+        WHERE `Date` BETWEEN paydate_from AND paydat_to
         GROUP BY EmployeeID
     ) ete
     ON ete.EmployeeID = ps.EmployeeID
@@ -420,7 +428,7 @@ WHERE ps.OrganizationID=OrganizID AND
     ps.PayFromDate=paydate_from AND
     ps.PayToDate=paydat_to
 GROUP BY ps.EmployeeID
-ORDER BY e.LastName, e.FirstName, e.MiddleName;
+ORDER BY CONCAT(e.LastName, e.FirstName, e.MiddleName);
 
 END//
 DELIMITER ;

@@ -20,18 +20,18 @@ BEGIN
     SET month = DATE_FORMAT(paramDate, '%m');
 
     SELECT
-        employee.PhilHealthNo `DatCol1`,
+        emp.PhilHealthNo `DatCol1`,
         CONCAT(
-            employee.LastName,
+            emp.LastName,
             ',',
-            employee.FirstName,
-            IF(employee.MiddleName = '', '', ','),
-            INITIALS(employee.MiddleName, '. ', '1')
+            emp.FirstName,
+            IF(emp.MiddleName = '', '', ','),
+            INITIALS(emp.MiddleName, '. ', '1')
         ) AS `DatCol2`,
         paystubsummary.TotalEmpPhilHealth AS `DatCol3`,
         paystubsummary.TotalCompPhilHealth AS `DatCol4`,
         (paystubsummary.TotalEmpPhilHealth + paystubsummary.TotalCompPhilHealth) AS `DatCol5`
-    FROM employee
+    FROM employee emp
     LEFT JOIN (
         SELECT
             paystub.EmployeeID,
@@ -45,8 +45,9 @@ BEGIN
             payperiod.Month = month
         GROUP BY paystub.EmployeeID
     ) paystubsummary
-    ON paystubsummary.EmployeeID = employee.RowID
-    WHERE employee.OrganizationID = OrganizID;
+    ON paystubsummary.EmployeeID = emp.RowID
+    WHERE emp.OrganizationID = OrganizID
+    ORDER BY emp.LastName, emp.FirstName, emp.LastName;
 
 END//
 DELIMITER ;

@@ -9161,7 +9161,15 @@ Public Class EmployeeForm
 
     Private _socialSecurityBracket As PayrollSys.SocialSecurityBracket
 
+    Private _philHealthDeductionType As String
+
     Private _philHealthBracket As PayrollSys.PhilHealthBracket
+
+    Private _philHealthContributionRate As Decimal
+
+    Private _philHealthMinimumContribution As Decimal
+
+    Private _philHealthMaximumContribution As Decimal
 
     Sub tbpSalary_Enter(sender As Object, e As EventArgs) Handles tbpSalary.Enter
         txtPhilHealthSal.ContextMenu = New ContextMenu
@@ -9247,6 +9255,19 @@ Public Class EmployeeForm
         End If
         tabIndx = 2 'TabControl1.SelectedIndex
         dgvEmp_SelectionChanged(sender, e)
+
+        Using context = New PayrollContext()
+            Dim listOfValues = context.ListOfValues.
+                Where(Function(l) l.Type = "PhilHealth").
+                ToList()
+
+            Dim values = New ListOfValueCollection(listOfValues)
+
+            _philHealthDeductionType = If(values.GetValue("DeductionType"), "Bracket")
+            _philHealthContributionRate = If(values.GetDecimal("Rate"), 0)
+            _philHealthMinimumContribution = If(values.GetDecimal("MinimumContribution"), 0)
+            _philHealthMaximumContribution = If(values.GetDecimal("MaximumContribution"), 0)
+        End Using
     End Sub
 
     Private Sub ChangeSalaryFormContext(context As SalaryFormContext)
@@ -9381,7 +9402,8 @@ Public Class EmployeeForm
                         ValNoComma(txtTrueSal.Text),
                         "0",
                         _socialSecurityBracket?.RowID,
-                        _philHealthBracket?.RowID
+                        _philHealthBracket?.RowID,
+                        Val(Trim(txtPhilHealthSal.Text))
                     )
                 End If
             Next
@@ -9533,213 +9555,234 @@ Public Class EmployeeForm
             curr_salaryrow = Nothing
         End Try
 
-        If dgvemployeesalary.RowCount <> 0 And dgvEmp.RowCount <> 0 Then
-            If dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value <> Nothing Then
-                If sendr_name = "txtEmpDeclaSal" Or sendr_name = "txtToComputeSal" Then
-                    is_user_override_phh = False
-                    is_user_override_sss = False
+        If dgvemployeesalary.RowCount = 0 Or dgvEmp.RowCount = 0 Then
+            Return
+        End If
 
-                    listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+        If dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value Is Nothing Then
+            Return
+        End If
 
-                    Dim truefullsalary As String = ValNoComma(txtEmpDeclaSal.Text)
+        If sendr_name = "txtEmpDeclaSal" Or sendr_name = "txtToComputeSal" Then
+            is_user_override_phh = False
+            is_user_override_sss = False
 
-                    Dim emp_type = StrConv(txtEmp_type.Text, VbStrConv.ProperCase)
+            listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
 
-                    If emp_type = "Fixed" Or
+            Dim truefullsalary As String = ValNoComma(txtEmpDeclaSal.Text)
+
+            Dim emp_type = StrConv(txtEmp_type.Text, VbStrConv.ProperCase)
+
+            If emp_type = "Fixed" Or
                         emp_type = "Monthly" Then
 
-                        If txtpaytype.Text = "SEMI-MONTHLY" Then
+                If txtpaytype.Text = "SEMI-MONTHLY" Then
 
-                            txtTrueSal.Text = ValNoComma(txtEmpDeclaSal.Text) + ValNoComma(txtToComputeSal.Text)
+                    txtTrueSal.Text = ValNoComma(txtEmpDeclaSal.Text) + ValNoComma(txtToComputeSal.Text)
 
-                            Dim truehalfmonthsalary = truefullsalary / 2
+                    Dim truehalfmonthsalary = truefullsalary / 2
 
-                            txtBasicrateSal.Text = truehalfmonthsalary
-                        Else
-                            txtBasicrateSal.Text = truefullsalary
+                    txtBasicrateSal.Text = truehalfmonthsalary
+                Else
+                    txtBasicrateSal.Text = truefullsalary
 
-                        End If
+                End If
 
-                    ElseIf emp_type = "Daily" Then
-                        txtBasicrateSal.Text = truefullsalary
+            ElseIf emp_type = "Daily" Then
+                txtBasicrateSal.Text = truefullsalary
 
-                        txtTrueSal.Text = ValNoComma(txtEmpDeclaSal.Text) + ValNoComma(txtToComputeSal.Text)
+                txtTrueSal.Text = ValNoComma(txtEmpDeclaSal.Text) + ValNoComma(txtToComputeSal.Text)
 
-                    ElseIf emp_type = "Hourly" Then
-                        txtBasicrateSal.Text = truefullsalary
+            ElseIf emp_type = "Hourly" Then
+                txtBasicrateSal.Text = truefullsalary
 
-                        txtTrueSal.Text = ValNoComma(txtEmpDeclaSal.Text) + ValNoComma(txtToComputeSal.Text)
+                txtTrueSal.Text = ValNoComma(txtEmpDeclaSal.Text) + ValNoComma(txtToComputeSal.Text)
 
-                    ElseIf emp_type = "Weekly" Then
+            ElseIf emp_type = "Weekly" Then
 
-                        txtBasicrateSal.Text = truefullsalary
+                txtBasicrateSal.Text = truefullsalary
 
-                        txtTrueSal.Text = ValNoComma(txtEmpDeclaSal.Text) + ValNoComma(txtToComputeSal.Text)
+                txtTrueSal.Text = ValNoComma(txtEmpDeclaSal.Text) + ValNoComma(txtToComputeSal.Text)
 
-                    End If
+            End If
 
-                    Dim monthlyRate = 0D
+            Dim monthlyRate = 0D
 
-                    Dim _
-                    employee_dattab = New SQLQueryToDatatable("SELECT e.*" &
-                                                    ",IF(e.AgencyID IS NOT NULL, IFNULL(d.PhHealthDeductSchedAgency,d.PhHealthDeductSched), d.PhHealthDeductSched) AS PhHealthDeductSched" &
-                                                    ",IF(e.AgencyID IS NOT NULL, IFNULL(d.HDMFDeductSchedAgency,d.HDMFDeductSched), d.HDMFDeductSched) AS HDMFDeductSched" &
-                                                    ",IF(e.AgencyID IS NOT NULL, IFNULL(d.SSSDeductSchedAgency,d.SSSDeductSched), d.SSSDeductSched) AS SSSDeductSched" &
-                                                    ",IF(e.AgencyID IS NOT NULL, IFNULL(d.WTaxDeductSchedAgency,d.WTaxDeductSched), d.WTaxDeductSched) AS WTaxDeductSched" &
-                                                    ",PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) 'PAYFREQUENCY_DIVISOR'" &
-                                                    ",d.MinimumWageAmount" &
-                                                    " FROM" &
-                                                    " employee e" &
-                                                    " LEFT JOIN position p ON p.RowID=e.PositionID" &
-                                                    " LEFT JOIN `division` d ON d.RowID=p.DivisionId" &
-                                                    " LEFT JOIN agency ag ON ag.RowID=e.AgencyID" &
-                                                    " INNER JOIN payfrequency pf ON pf.RowID=e.PayFrequencyID" &
-                                                    " WHERE e.OrganizationID='" & orgztnID & "'" &
-                                                    " AND e.RowID='" & If(sameEmpID < 0, String.Empty, sameEmpID) & "'" &
-                                                    " LIMIT 1;").ResultTable
+            Dim employee_dattab = New SQLQueryToDatatable($"
+                    SELECT
+                        e.*,
+                        IF(e.AgencyID IS NOT NULL, IFNULL(d.PhHealthDeductSchedAgency, d.PhHealthDeductSched), d.PhHealthDeductSched) AS PhHealthDeductSched,
+                        IF(e.AgencyID IS NOT NULL, IFNULL(d.HDMFDeductSchedAgency, d.HDMFDeductSched), d.HDMFDeductSched) AS HDMFDeductSched,
+                        IF(e.AgencyID IS NOT NULL, IFNULL(d.SSSDeductSchedAgency, d.SSSDeductSched), d.SSSDeductSched) AS SSSDeductSched,
+                        IF(e.AgencyID IS NOT NULL, IFNULL(d.WTaxDeductSchedAgency, d.WTaxDeductSched), d.WTaxDeductSched) AS WTaxDeductSched,
+                        PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) 'PAYFREQUENCY_DIVISOR',
+                        d.MinimumWageAmount
+                    FROM employee e
+                    LEFT JOIN position p
+                           ON p.RowID = e.PositionID
+                    LEFT JOIN `division` d
+                           ON d.RowID = p.DivisionId
+                    LEFT JOIN agency ag
+                           ON ag.RowID = e.AgencyID
+                    INNER JOIN payfrequency pf
+                            ON pf.RowID = e.PayFrequencyID
+                    WHERE e.OrganizationID = '{orgztnID}' AND
+                        e.RowID = '{If(sameEmpID < 0, String.Empty, sameEmpID)}'
+                    LIMIT 1;
+                ").ResultTable
 
-                    Dim orgfulldays = 0 ' EXECQUER("SELECT WorkDaysPerYear FROM employee WHERE RowID='" & If(sameEmpID < 0, String.Empty, sameEmpID) & "';")
-                    Dim strHDMFDeductSched As String = ""
+            Dim orgfulldays = 0 ' EXECQUER("SELECT WorkDaysPerYear FROM employee WHERE RowID='" & If(sameEmpID < 0, String.Empty, sameEmpID) & "';")
+            Dim strHDMFDeductSched As String = ""
 
-                    For Each drow As DataRow In employee_dattab.Rows
-                        payfreqdivisor = ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
-                        orgfulldays = ValNoComma(drow("WorkDaysPerYear"))
+            For Each drow As DataRow In employee_dattab.Rows
+                payfreqdivisor = ValNoComma(drow("PAYFREQUENCY_DIVISOR"))
+                orgfulldays = ValNoComma(drow("WorkDaysPerYear"))
 
-                        If drow("PhHealthDeductSched").ToString = "End of the month" Then
-                            isorgPHHdeductsched = 0
-                        ElseIf drow("PhHealthDeductSched").ToString = "First half" Then
-                            isorgPHHdeductsched = 1
-                        ElseIf drow("PhHealthDeductSched").ToString = "Per pay period" Then
-                            isorgPHHdeductsched = 2
-                        End If
+                If drow("PhHealthDeductSched").ToString = "End of the month" Then
+                    isorgPHHdeductsched = 0
+                ElseIf drow("PhHealthDeductSched").ToString = "First half" Then
+                    isorgPHHdeductsched = 1
+                ElseIf drow("PhHealthDeductSched").ToString = "Per pay period" Then
+                    isorgPHHdeductsched = 2
+                End If
 
-                        If drow("SSSDeductSched").ToString = "End of the month" Then
-                            isorgSSSdeductsched = 0
-                        ElseIf drow("SSSDeductSched").ToString = "First half" Then
-                            isorgSSSdeductsched = 1
-                        ElseIf drow("SSSDeductSched").ToString = "Per pay period" Then
-                            isorgSSSdeductsched = 2
-                        End If
+                If drow("SSSDeductSched").ToString = "End of the month" Then
+                    isorgSSSdeductsched = 0
+                ElseIf drow("SSSDeductSched").ToString = "First half" Then
+                    isorgSSSdeductsched = 1
+                ElseIf drow("SSSDeductSched").ToString = "Per pay period" Then
+                    isorgSSSdeductsched = 2
+                End If
 
-                        If drow("HDMFDeductSched").ToString = "End of the month" Then
-                            isorgHDMFdeductsched = 0
-                        ElseIf drow("HDMFDeductSched").ToString = "First half" Then
-                            isorgHDMFdeductsched = 1
-                        ElseIf drow("HDMFDeductSched").ToString = "Per pay period" Then
-                            isorgHDMFdeductsched = 2
-                        End If
-                    Next
+                If drow("HDMFDeductSched").ToString = "End of the month" Then
+                    isorgHDMFdeductsched = 0
+                ElseIf drow("HDMFDeductSched").ToString = "First half" Then
+                    isorgHDMFdeductsched = 1
+                ElseIf drow("HDMFDeductSched").ToString = "Per pay period" Then
+                    isorgHDMFdeductsched = 2
+                End If
+            Next
 
-                    If emp_type = "Fixed" Or emp_type = "Monthly" Then
-                        monthlyRate = truefullsalary
-                    ElseIf emp_type = "Daily" Then
-                        monthlyRate = ValNoComma(txtBasicrateSal.Text)
-                        monthlyRate = monthlyRate * ValNoComma(orgfulldays)
-                        monthlyRate = monthlyRate / 12D
-                    ElseIf emp_type = "Hourly" Then
-                        monthlyRate = ValNoComma(txtBasicrateSal.Text)
-                    ElseIf emp_type = "Weekly" Then
-                        monthlyRate = ValNoComma((truefullsalary * 4.0))
-                    End If
+            If emp_type = "Fixed" Or emp_type = "Monthly" Then
+                monthlyRate = truefullsalary
+            ElseIf emp_type = "Daily" Then
+                monthlyRate = ValNoComma(txtBasicrateSal.Text)
+                monthlyRate = monthlyRate * ValNoComma(orgfulldays)
+                monthlyRate = monthlyRate / 12D
+            ElseIf emp_type = "Hourly" Then
+                monthlyRate = ValNoComma(txtBasicrateSal.Text)
+            ElseIf emp_type = "Weekly" Then
+                monthlyRate = ValNoComma((truefullsalary * 4.0))
+            End If
 
-                    Using context = New PayrollContext()
-                        Dim query = From s In context.SocialSecurityBrackets
-                                    Select s
-                                    Where s.RangeFromAmount <= monthlyRate And
+            Using context = New PayrollContext()
+                Dim query = From s In context.SocialSecurityBrackets
+                            Select s
+                            Where s.RangeFromAmount <= monthlyRate And
                                         monthlyRate <= s.RangeToAmount
-                        _socialSecurityBracket = query.FirstOrDefault()
+                _socialSecurityBracket = query.FirstOrDefault()
 
-                        Dim philHealthQuery = From p In context.PhilHealthBrackets
-                                              Select p
-                                              Where p.SalaryRangeFrom <= monthlyRate And
+                Dim philHealthQuery = From p In context.PhilHealthBrackets
+                                      Select p
+                                      Where p.SalaryRangeFrom <= monthlyRate And
                                                   monthlyRate <= p.SalaryRangeTo
-                        _philHealthBracket = philHealthQuery.FirstOrDefault()
-                    End Using
+                _philHealthBracket = philHealthQuery.FirstOrDefault()
+            End Using
 
-                    txtSSSSal.Text = _socialSecurityBracket?.EmployeeContributionAmount.ToString()
-                    txtPhilHealthSal.Text = _philHealthBracket?.EmployeeShare.ToString()
+            txtSSSSal.Text = _socialSecurityBracket?.EmployeeContributionAmount.ToString()
 
-                    Dim pagibig_amount = ValNoComma(txtPagibig.Text)
+            Dim philHealthContribution = 0D
+            If _philHealthDeductionType = "Formula" Then
+                philHealthContribution = monthlyRate * (_philHealthContributionRate / 100)
 
-                    Try
-                        If dgvemployeesalary.CurrentRow IsNot Nothing Then
-                            pagibig_amount = dgvemployeesalary.CurrentRow.Cells("TrueHDMFAmount").Value
-                        End If
-                    Catch ex As Exception
-                    End Try
+                philHealthContribution = {philHealthContribution, _philHealthMinimumContribution}.Max()
+                philHealthContribution = {philHealthContribution, _philHealthMaximumContribution}.Min()
+                philHealthContribution = AccuMath.Truncate(philHealthContribution, 2)
+            Else
+                philHealthContribution = ConvertToType(Of Decimal)(_philHealthBracket?.EmployeeShare)
+            End If
 
-                    txtPagibig.Text = pagibig_amount * payfreqdivisor
+            txtPhilHealthSal.Text = philHealthContribution
 
-                    If Val(txtPagibig.Text) <= pagibig_amount Then
-                        txtPagibig.Text = pagibig_amount '"100.00"
-                    End If
+            Dim pagibig_amount = ValNoComma(txtPagibig.Text)
 
-                    If isorgHDMFdeductsched = 0 _
+            Try
+                If dgvemployeesalary.CurrentRow IsNot Nothing Then
+                    pagibig_amount = dgvemployeesalary.CurrentRow.Cells("TrueHDMFAmount").Value
+                End If
+            Catch ex As Exception
+            End Try
+
+            txtPagibig.Text = pagibig_amount * payfreqdivisor
+
+            If Val(txtPagibig.Text) <= pagibig_amount Then
+                txtPagibig.Text = pagibig_amount '"100.00"
+            End If
+
+            If isorgHDMFdeductsched = 0 _
                         Or isorgHDMFdeductsched = 1 Then
 
-                        txtPagibig.Text = pagibig_amount '"100.00"
-                        payfreqdivisor = 1
-                    Else
-                        txtPagibig.Text = pagibig_amount / payfreqdivisor
-                    End If
+                txtPagibig.Text = pagibig_amount '"100.00"
+                payfreqdivisor = 1
+            Else
+                txtPagibig.Text = pagibig_amount / payfreqdivisor
+            End If
 
-                    '***********************************
+            '***********************************
 
-                ElseIf sendr_name = "txtBasicrateSal" Then
+        ElseIf sendr_name = "txtBasicrateSal" Then
 
-                    If dgvEmp.CurrentRow.Cells("Column34").Value = "Fixed" Then
-                        If dgvemployeesalary.CurrentRow.Cells("c_BasicPaySal").Value <> Trim(txtBasicrateSal.Text) Then
-                            listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
-                        End If
-
-                    ElseIf dgvEmp.CurrentRow.Cells("Column34").Value = "Daily" Then
-                        If dgvemployeesalary.CurrentRow.Cells("c_BasicDailyPaySal").Value <> Trim(txtBasicrateSal.Text) Then
-                            listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
-                        End If
-
-                    ElseIf dgvEmp.CurrentRow.Cells("Column34").Value = "Hourly" Then
-                        If dgvemployeesalary.CurrentRow.Cells("c_BasicHourlyPaySal").Value <> Trim(txtBasicrateSal.Text) Then
-                            listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
-                        End If
-
-                    End If
-
-                ElseIf sendr_name = "txtPhilHealthSal" Then
-                    If dgvemployeesalary.CurrentRow.Cells("c_philhealth").Value <> ValNoComma(txtPhilHealthSal.Text) Then
-                        listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
-                    End If
-                ElseIf sendr_name = "txtSSSSal" Then
-                    If dgvemployeesalary.CurrentRow.Cells("c_sss").Value <> ValNoComma(txtSSSSal.Text) Then
-                        listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
-                    End If
-
-                ElseIf sendr_name = "dptFromSal" Then
-                    If dgvemployeesalary.CurrentRow.Cells("c_fromdate").Value <> Format(CDate(dptFromSal.Value), "M/d/yyy") Then
-                        listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
-                    End If
-
-                    If is_encoded_asnew = False _
-                        And curr_salaryrow IsNot Nothing Then
-                        curr_salaryrow.Cells("c_fromdate").Value =
-                            Format(CDate(dptFromSal.Value), "M/d/yyy")
-                    End If
-
-                ElseIf sendr_name = "dtpToSal" Then
-                    If dgvemployeesalary.CurrentRow.Cells("c_todate").Value <> Format(CDate(dtpToSal.Value), "M/d/yyy") Then
-                        listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
-                    End If
-
-                    If is_encoded_asnew = False _
-                        And curr_salaryrow IsNot Nothing Then
-                        curr_salaryrow.Cells("c_todate").Value =
-                            Format(CDate(dtpToSal.Value), "M/d/yyy")
-                    End If
-
-                ElseIf sendr_name = "txtPagibig" Then
-                    If dgvemployeesalary.CurrentRow.Cells("c_pagibig").Value <> ValNoComma(txtPagibig.Text) Then
-                        listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
-                    End If
+            If dgvEmp.CurrentRow.Cells("Column34").Value = "Fixed" Then
+                If dgvemployeesalary.CurrentRow.Cells("c_BasicPaySal").Value <> Trim(txtBasicrateSal.Text) Then
+                    listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
                 End If
+
+            ElseIf dgvEmp.CurrentRow.Cells("Column34").Value = "Daily" Then
+                If dgvemployeesalary.CurrentRow.Cells("c_BasicDailyPaySal").Value <> Trim(txtBasicrateSal.Text) Then
+                    listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+                End If
+
+            ElseIf dgvEmp.CurrentRow.Cells("Column34").Value = "Hourly" Then
+                If dgvemployeesalary.CurrentRow.Cells("c_BasicHourlyPaySal").Value <> Trim(txtBasicrateSal.Text) Then
+                    listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+                End If
+
+            End If
+
+        ElseIf sendr_name = "txtPhilHealthSal" Then
+            If dgvemployeesalary.CurrentRow.Cells("c_philhealth").Value <> ValNoComma(txtPhilHealthSal.Text) Then
+                listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+            End If
+        ElseIf sendr_name = "txtSSSSal" Then
+            If dgvemployeesalary.CurrentRow.Cells("c_sss").Value <> ValNoComma(txtSSSSal.Text) Then
+                listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+            End If
+
+        ElseIf sendr_name = "dptFromSal" Then
+            If dgvemployeesalary.CurrentRow.Cells("c_fromdate").Value <> Format(CDate(dptFromSal.Value), "M/d/yyy") Then
+                listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+            End If
+
+            If is_encoded_asnew = False _
+                        And curr_salaryrow IsNot Nothing Then
+                curr_salaryrow.Cells("c_fromdate").Value =
+                            Format(CDate(dptFromSal.Value), "M/d/yyy")
+            End If
+
+        ElseIf sendr_name = "dtpToSal" Then
+            If dgvemployeesalary.CurrentRow.Cells("c_todate").Value <> Format(CDate(dtpToSal.Value), "M/d/yyy") Then
+                listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+            End If
+
+            If is_encoded_asnew = False _
+                        And curr_salaryrow IsNot Nothing Then
+                curr_salaryrow.Cells("c_todate").Value =
+                            Format(CDate(dtpToSal.Value), "M/d/yyy")
+            End If
+
+        ElseIf sendr_name = "txtPagibig" Then
+            If dgvemployeesalary.CurrentRow.Cells("c_pagibig").Value <> ValNoComma(txtPagibig.Text) Then
+                listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
             End If
         End If
     End Sub
@@ -10103,7 +10146,7 @@ Public Class EmployeeForm
                             AbsToComputeVal
                         )
 
-                        txtPhilHealthSal.Text = _philHealthBracket?.EmployeeShare.ToString()
+                        txtPhilHealthSal.Text = ConvertToType(Of Decimal)(drow("PhilHealthDeduction"))
                         txtSSSSal.Text = _socialSecurityBracket?.EmployeeContributionAmount.ToString()
                         txtPagibig.Text = Val(dgvemployeesalary.CurrentRow.Cells("c_pagibig").Value)
 
@@ -10148,9 +10191,10 @@ Public Class EmployeeForm
                               Optional esal_TrueSalary As Object = Nothing,
                               Optional esal_IsDoneByImporting As Object = "0",
                               Optional esal_PaySocialSecurityID As Integer? = Nothing,
-                              Optional esal_PayPhilHealthID As Integer? = Nothing) As Object
+                              Optional esal_PayPhilHealthID As Integer? = Nothing,
+                              Optional esal_PhilHealthDeduction As Decimal? = Nothing) As Object
 
-        Dim params(19, 2) As Object
+        Dim params(20, 1) As Object
 
         params(0, 0) = "esal_RowID"
         params(1, 0) = "esal_EmployeeID"
@@ -10173,6 +10217,7 @@ Public Class EmployeeForm
         params(17, 0) = "esal_DiscardPhH"
         params(18, 0) = "esal_PaySocialSecurityID"
         params(19, 0) = "esal_PayPhilHealthID"
+        params(20, 0) = "esal_PhilHealthDeduction"
 
         params(0, 1) = If(esal_RowID = Nothing, DBNull.Value, esal_RowID)
         params(1, 1) = esal_EmployeeID
@@ -10198,6 +10243,7 @@ Public Class EmployeeForm
         params(17, 1) = Convert.ToInt16(is_user_override_phh)
         params(18, 1) = esal_PaySocialSecurityID
         params(19, 1) = esal_PayPhilHealthID
+        params(20, 1) = esal_PhilHealthDeduction
 
         INSUPD_employeesalary = EXEC_INSUPD_PROCEDURE(params, "INSUPD_employeesalary", "esalID")
     End Function

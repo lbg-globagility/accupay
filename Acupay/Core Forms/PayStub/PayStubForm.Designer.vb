@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class PayStub
+Partial Class PayStubForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -26,7 +26,7 @@ Partial Class PayStub
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PayStub))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PayStubForm))
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -457,19 +457,8 @@ Partial Class PayStub
         Me.tsbtnDelEmpPayroll = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
-        Me.TabControl2 = New System.Windows.Forms.TabControl()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.Label60 = New System.Windows.Forms.Label()
-        Me.MaskedTextBox1 = New System.Windows.Forms.MaskedTextBox()
-        Me.ComboBox7 = New System.Windows.Forms.ComboBox()
-        Me.Label63 = New System.Windows.Forms.Label()
-        Me.TabPage3 = New System.Windows.Forms.TabPage()
-        Me.txtSimple = New System.Windows.Forms.TextBox()
-        Me.Label64 = New System.Windows.Forms.Label()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.Button3 = New System.Windows.Forms.Button()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.bgwPrintAllPaySlip = New System.ComponentModel.BackgroundWorker()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Panel5 = New System.Windows.Forms.Panel()
@@ -502,9 +491,6 @@ Partial Class PayStub
         CType(Me.dgvpaystubitem, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
-        Me.TabControl2.SuspendLayout()
-        Me.TabPage2.SuspendLayout()
-        Me.TabPage3.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.Panel5.SuspendLayout()
         Me.SuspendLayout()
@@ -4375,13 +4361,13 @@ Partial Class PayStub
         'DeclaredToolStripMenuItem2
         '
         Me.DeclaredToolStripMenuItem2.Name = "DeclaredToolStripMenuItem2"
-        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
+        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(152, 22)
         Me.DeclaredToolStripMenuItem2.Text = "Declared"
         '
         'ActualToolStripMenuItem2
         '
         Me.ActualToolStripMenuItem2.Name = "ActualToolStripMenuItem2"
-        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
+        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(152, 22)
         Me.ActualToolStripMenuItem2.Text = "Actual"
         '
         'ToolStripSeparator1
@@ -4451,112 +4437,6 @@ Partial Class PayStub
         Me.ToolStripButton2.Text = "ToolStripButton2"
         Me.ToolStripButton2.Visible = False
         '
-        'TabControl2
-        '
-        Me.TabControl2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl2.Controls.Add(Me.TabPage2)
-        Me.TabControl2.Controls.Add(Me.TabPage3)
-        Me.TabControl2.ItemSize = New System.Drawing.Size(62, 25)
-        Me.TabControl2.Location = New System.Drawing.Point(11, 11)
-        Me.TabControl2.Multiline = True
-        Me.TabControl2.Name = "TabControl2"
-        Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(235, 158)
-        Me.TabControl2.TabIndex = 176
-        Me.TabControl2.Visible = False
-        '
-        'TabPage2
-        '
-        Me.TabPage2.Controls.Add(Me.Label60)
-        Me.TabPage2.Controls.Add(Me.MaskedTextBox1)
-        Me.TabPage2.Controls.Add(Me.ComboBox7)
-        Me.TabPage2.Controls.Add(Me.Label63)
-        Me.TabPage2.Location = New System.Drawing.Point(4, 29)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(227, 125)
-        Me.TabPage2.TabIndex = 0
-        Me.TabPage2.Text = "       Common       "
-        Me.TabPage2.UseVisualStyleBackColor = True
-        '
-        'Label60
-        '
-        Me.Label60.AutoSize = True
-        Me.Label60.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label60.Location = New System.Drawing.Point(71, 75)
-        Me.Label60.Name = "Label60"
-        Me.Label60.Size = New System.Drawing.Size(53, 12)
-        Me.Label60.TabIndex = 53
-        Me.Label60.Text = "MM/dd/yyyy"
-        '
-        'MaskedTextBox1
-        '
-        Me.MaskedTextBox1.Location = New System.Drawing.Point(74, 52)
-        Me.MaskedTextBox1.Mask = "00/00/0000"
-        Me.MaskedTextBox1.Name = "MaskedTextBox1"
-        Me.MaskedTextBox1.Size = New System.Drawing.Size(121, 20)
-        Me.MaskedTextBox1.TabIndex = 52
-        Me.MaskedTextBox1.ValidatingType = GetType(Date)
-        '
-        'ComboBox7
-        '
-        Me.ComboBox7.FormattingEnabled = True
-        Me.ComboBox7.Items.AddRange(New Object() {"starts with", "contains like", "is exactly", "does not contain", "is empty null", "is not empty"})
-        Me.ComboBox7.Location = New System.Drawing.Point(74, 25)
-        Me.ComboBox7.Name = "ComboBox7"
-        Me.ComboBox7.Size = New System.Drawing.Size(92, 21)
-        Me.ComboBox7.TabIndex = 51
-        Me.ComboBox7.Visible = False
-        '
-        'Label63
-        '
-        Me.Label63.AutoSize = True
-        Me.Label63.Location = New System.Drawing.Point(9, 60)
-        Me.Label63.Name = "Label63"
-        Me.Label63.Size = New System.Drawing.Size(57, 13)
-        Me.Label63.TabIndex = 2
-        Me.Label63.Text = "Pay period"
-        '
-        'TabPage3
-        '
-        Me.TabPage3.Controls.Add(Me.txtSimple)
-        Me.TabPage3.Controls.Add(Me.Label64)
-        Me.TabPage3.Controls.Add(Me.ComboBox1)
-        Me.TabPage3.Location = New System.Drawing.Point(4, 29)
-        Me.TabPage3.Name = "TabPage3"
-        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(227, 125)
-        Me.TabPage3.TabIndex = 1
-        Me.TabPage3.Text = "       Simple       "
-        Me.TabPage3.UseVisualStyleBackColor = True
-        '
-        'txtSimple
-        '
-        Me.txtSimple.Location = New System.Drawing.Point(75, 52)
-        Me.txtSimple.Name = "txtSimple"
-        Me.txtSimple.Size = New System.Drawing.Size(121, 20)
-        Me.txtSimple.TabIndex = 58
-        '
-        'Label64
-        '
-        Me.Label64.AutoSize = True
-        Me.Label64.Location = New System.Drawing.Point(75, 36)
-        Me.Label64.Name = "Label64"
-        Me.Label64.Size = New System.Drawing.Size(76, 13)
-        Me.Label64.TabIndex = 4
-        Me.Label64.Text = "Search Criteria"
-        '
-        'ComboBox1
-        '
-        Me.ComboBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(75, 80)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(121, 20)
-        Me.ComboBox1.TabIndex = 59
-        Me.ComboBox1.Visible = False
-        '
         'ImageList1
         '
         Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
@@ -4579,16 +4459,6 @@ Partial Class PayStub
         Me.Button3.TextAlign = System.Drawing.ContentAlignment.TopLeft
         Me.Button3.UseVisualStyleBackColor = False
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(12, 175)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 178
-        Me.Button1.Text = "..."
-        Me.Button1.UseVisualStyleBackColor = True
-        Me.Button1.Visible = False
-        '
         'bgwPrintAllPaySlip
         '
         Me.bgwPrintAllPaySlip.WorkerReportsProgress = True
@@ -4597,10 +4467,8 @@ Partial Class PayStub
         'Panel4
         '
         Me.Panel4.Controls.Add(Me.Panel5)
-        Me.Panel4.Controls.Add(Me.Button1)
         Me.Panel4.Controls.Add(Me.dgvpayper)
         Me.Panel4.Controls.Add(Me.Button3)
-        Me.Panel4.Controls.Add(Me.TabControl2)
         Me.Panel4.Controls.Add(Me.btnrefresh)
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Left
         Me.Panel4.Location = New System.Drawing.Point(0, 21)
@@ -4673,11 +4541,6 @@ Partial Class PayStub
         CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
-        Me.TabControl2.ResumeLayout(False)
-        Me.TabPage2.ResumeLayout(False)
-        Me.TabPage2.PerformLayout()
-        Me.TabPage3.ResumeLayout(False)
-        Me.TabPage3.PerformLayout()
         Me.Panel4.ResumeLayout(False)
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
@@ -4913,20 +4776,9 @@ Partial Class PayStub
     Friend WithEvents tsSearch As System.Windows.Forms.ToolStripTextBox
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents tsbtnSearch As System.Windows.Forms.ToolStripButton
-    Friend WithEvents TabControl2 As System.Windows.Forms.TabControl
-    Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
-    Friend WithEvents ComboBox7 As System.Windows.Forms.ComboBox
-    Friend WithEvents Label63 As System.Windows.Forms.Label
-    Friend WithEvents TabPage3 As System.Windows.Forms.TabPage
-    Friend WithEvents txtSimple As System.Windows.Forms.TextBox
-    Friend WithEvents Label64 As System.Windows.Forms.Label
-    Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
-    Friend WithEvents MaskedTextBox1 As System.Windows.Forms.MaskedTextBox
     Friend WithEvents ImageList1 As System.Windows.Forms.ImageList
-    Friend WithEvents Label60 As System.Windows.Forms.Label
     Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
-    Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
     Friend WithEvents LinkLabel2 As System.Windows.Forms.LinkLabel
     Friend WithEvents LinkLabel3 As System.Windows.Forms.LinkLabel

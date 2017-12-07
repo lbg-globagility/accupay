@@ -14,17 +14,20 @@ DECLARE employeeRowID INT(11);
 DECLARE shiftRowID INT(11);
 DECLARE employeeshiftID INT(11);
 DECLARE restDay INT(11);
+DECLARE calcNightShift INT(11);
 
 SELECT
     RowID,
-    DayOfRest
+    DayOfRest,
+    CalcNightDiff
 FROM employee
 WHERE EmployeeID = i_EmployeeID
     AND OrganizationID = OrganizID
 LIMIT 1
 INTO
     employeeRowID,
-    restDay;
+    restDay,
+    calcNightShift;
 
 IF employeeRowID IS NOT NULL
     AND i_DateFrom IS NOT NULL THEN
@@ -95,7 +98,7 @@ IF employeeRowID IS NOT NULL
         ,shiftRowID
         ,i_DateFrom
         ,i_DateTo
-        ,'0'
+        ,calcNightShift
         ,0
     )
     ON DUPLICATE KEY

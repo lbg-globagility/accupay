@@ -218,22 +218,22 @@ Public Class SelectFromEmployee
         Else
             Dim NewRowIndx As Integer = Nothing
 
-            Dim firstIndx = EmpTimeDetail.dgvetentdet.CurrentRow.Index
+            Dim firstIndx = TimeLogsForm.dgvetentdet.CurrentRow.Index
 
-            Dim SecondIndx = (EmpTimeDetail.originalTimeEntryCount) '- 1)
+            Dim SecondIndx = (TimeLogsForm.originalTimeEntryCount) '- 1)
 
             If firstIndx >= SecondIndx Then
-                NewRowIndx = EmpTimeDetail.dgvetentdet.CurrentRow.Index
+                NewRowIndx = TimeLogsForm.dgvetentdet.CurrentRow.Index
 
-                If EmpTimeDetail.dgvetentdet.CurrentRow.IsNewRow Then
-                    EmpTimeDetail.dgvetentdet.Rows.Add()
+                If TimeLogsForm.dgvetentdet.CurrentRow.IsNewRow Then
+                    TimeLogsForm.dgvetentdet.Rows.Add()
                 End If
 
             Else
-                For Each dgvrow As DataGridViewRow In EmpTimeDetail.dgvetentdet.Rows
+                For Each dgvrow As DataGridViewRow In TimeLogsForm.dgvetentdet.Rows
                     If dgvrow.IsNewRow Then
                         NewRowIndx = dgvrow.Index
-                        EmpTimeDetail.dgvetentdet.Rows.Add()
+                        TimeLogsForm.dgvetentdet.Rows.Add()
                         Exit For
 
                     End If
@@ -242,9 +242,9 @@ Public Class SelectFromEmployee
 
             With dgvEmployee.CurrentRow
                 'EmpTimeDetail.dgvetentdet.Item("Column7", NewRowIndx).Value = 1
-                EmpTimeDetail.dgvetentdet.Item("Column2", NewRowIndx).Selected = True
+                TimeLogsForm.dgvetentdet.Item("Column2", NewRowIndx).Selected = True
 
-                EmpTimeDetail.dgvetentdet.Item("Column2", NewRowIndx).Value = .Cells("Column1").Value
+                TimeLogsForm.dgvetentdet.Item("Column2", NewRowIndx).Value = .Cells("Column1").Value
 
                 Dim employeefullname As String = .Cells("Column2").Value
 
@@ -265,7 +265,7 @@ Public Class SelectFromEmployee
 
                 employeefullname = .Cells("EmpFullname").Value
 
-                EmpTimeDetail.dgvetentdet.Item("Column11", NewRowIndx).Value = StrConv(employeefullname, VbStrConv.ProperCase) '.Cells("Column2").Value
+                TimeLogsForm.dgvetentdet.Item("Column11", NewRowIndx).Value = StrConv(employeefullname, VbStrConv.ProperCase) '.Cells("Column2").Value
 
             End With
 

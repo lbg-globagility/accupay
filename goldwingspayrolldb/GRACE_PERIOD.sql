@@ -15,17 +15,18 @@ DECLARE returnval TIME;
 DECLARE mindec_11 DECIMAL(10,2) DEFAULT 0;
 
 DECLARE mindec_12 DECIMAL(10,2) DEFAULT 0;
-IF GracePeriodValue IS NULL THEN SET GracePeriodValue = 0; END IF;
 
-IF Time_IN BETWEEN ADDDATE(ShiftTimeFrom, INTERVAL -8 HOUR) AND ADDDATE(ShiftTimeFrom, INTERVAL GracePeriodValue MINUTE) THEN
+IF GracePeriodValue IS NULL THEN
+    SET GracePeriodValue = 0;
+END IF;
+
+IF Time_IN BETWEEN ShiftTimeFrom AND ADDDATE(ShiftTimeFrom, INTERVAL GracePeriodValue MINUTE) THEN
 
     SET returnval = TIME_FORMAT(ShiftTimeFrom, '%H:%i:%s');
 
 ELSE
 
     SET returnval = TIME_FORMAT(Time_IN, '%H:%i:%s');
-
-
 
 END IF;
 

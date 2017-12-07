@@ -36,7 +36,7 @@ BEGIN
         SET nightDiffHours = COMPUTE_TimeDifference(TIME(nightDiffDutyStart), TIME(nightDiffDutyEnd));
     END IF;
 
-    RETURN nightDiffHours;
+    RETURN IFNULL(nightDiffHours, 0);
 
 END//
 DELIMITER ;

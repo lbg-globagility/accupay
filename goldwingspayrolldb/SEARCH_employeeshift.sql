@@ -13,7 +13,7 @@ BEGIN
 IF DivisionRowID > 0 THEN
 
     SELECT
-    CONCAT(e.LastName,',',e.FirstName,',',INITIALS(e.MiddleName,'.','1')) AS name
+    CONCAT(e.LastName, ', ', e.FirstName, ' ', INITIALS(e.MiddleName, '.', '1')) AS name
     , e.EmployeeID
     , e.RowID
     ,(esh.esdRowID IS NOT NULL) AS IsByDayEncoding
@@ -26,12 +26,12 @@ IF DivisionRowID > 0 THEN
     LEFT JOIN (SELECT RowID AS esdRowID,EmployeeID FROM employeeshiftbyday WHERE OrganizationID=OrganizID GROUP BY EmployeeID) esh ON esh.EmployeeID=e.RowID
     INNER JOIN (SELECT * FROM `position` WHERE OrganizationID=OrganizID AND DivisionID=DivisionRowID) pos ON pos.RowID=e.PositionID
 
-    ORDER BY e.RowID DESC;
+    ORDER BY e.LastName, e.FirstName, e.MiddleName;
 
 ELSE
 
     SELECT
-    CONCAT(e.LastName,',',e.FirstName,',',INITIALS(e.MiddleName,'.','1')) AS name
+    CONCAT(e.LastName, ', ', e.FirstName, ' ', INITIALS(e.MiddleName, '.', '1')) AS name
     , e.EmployeeID
     , e.RowID
     ,(esh.esdRowID IS NOT NULL) AS IsByDayEncoding
@@ -43,7 +43,7 @@ ELSE
             ) e
     LEFT JOIN (SELECT RowID AS esdRowID,EmployeeID FROM employeeshiftbyday WHERE OrganizationID=OrganizID GROUP BY EmployeeID) esh ON esh.EmployeeID=e.RowID
 
-    ORDER BY e.RowID DESC;
+    ORDER BY e.LastName, e.FirstName, e.MiddleName;
 
 END IF;
 
