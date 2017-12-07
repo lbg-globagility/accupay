@@ -32,7 +32,7 @@ IF defaultDivisID > 0 THEN
     END IF;
 
     INSERT INTO `position` (
-        RowID
+        RowID,
         PositionName,
         Created,
         CreatedBy,
