@@ -194,6 +194,7 @@ Partial Class MetroLogin
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(279, 65)
         Me.Panel1.TabIndex = 23
+        Me.Panel1.Visible = False
         '
         'LinkLabel1
         '
