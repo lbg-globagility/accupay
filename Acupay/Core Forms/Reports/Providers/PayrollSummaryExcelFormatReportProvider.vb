@@ -108,14 +108,17 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
 
+            Dim excel_custom_format As Boolean = Convert.ToBoolean(ExcelOptionFormat())
+
             Dim parameters =
                 New Object() {orgztnID,
                               n_PayrollSummaDateSelection.PayPeriodFromID,
                               n_PayrollSummaDateSelection.PayPeriodToID,
                               bool_result,
-                              n_PayrollSummaDateSelection.cboStringParameter.Text}
+                              n_PayrollSummaDateSelection.cboStringParameter.Text,
+                              excel_custom_format}
 
-            Dim sql_print_employee_profiles As New SQL("CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib);",
+            Dim sql_print_employee_profiles As New SQL("CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
                                                        parameters)
 
             Static one_value As Integer = 1
@@ -216,10 +219,10 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                                 Dim division_name = dtrow("DatCol1").ToString
 
-                                cell3.Value =
-                                    String.Concat("Division: ", division_name)
-
                                 If division_name.Length > 0 Then
+
+                                    cell3.Value =
+                                        String.Concat("Division: ", division_name)
 
                                     worksheet.Name = division_name
 
@@ -290,14 +293,18 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                             worksheet.Cells(sum_cell_range).Style.Font.Bold = True
 
-                            worksheet.PrinterSettings.Orientation = eOrientation.Landscape
+                            With worksheet.PrinterSettings
 
-                            worksheet.PrinterSettings.PaperSize = ePaperSize.Legal
+                                .Orientation = eOrientation.Landscape
 
-                            worksheet.PrinterSettings.TopMargin = margin_size(1)
-                            worksheet.PrinterSettings.BottomMargin = margin_size(1)
-                            worksheet.PrinterSettings.LeftMargin = margin_size(0)
-                            worksheet.PrinterSettings.RightMargin = margin_size(0)
+                                .PaperSize = ePaperSize.Legal
+
+                                .TopMargin = margin_size(1)
+                                .BottomMargin = margin_size(1)
+                                .LeftMargin = margin_size(0)
+                                .RightMargin = margin_size(0)
+
+                            End With
 
                             worksheet.Cells.AutoFitColumns(2, 22.71)
 
@@ -351,10 +358,69 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     End Function
 
+    Private Function ExcelOptionFormat() As ExcelOption
+
+        Dim result_value As ExcelOption
+
+        MessageBoxManager.OK = "(A)"
+
+        MessageBoxManager.Cancel = "(B)"
+
+        MessageBoxManager.Register()
+
+        Dim message_content As String =
+            String.Concat("Please select an option :", NewLiner(2),
+                          "A ) keep all in one sheet", NewLiner,
+                          "B ) separate sheet by department")
+
+        Dim custom_prompt =
+            MessageBox.Show(message_content,
+                            "Excel sheet format",
+                            MessageBoxButtons.OKCancel,
+                            MessageBoxIcon.None,
+                            MessageBoxDefaultButton.Button1)
+
+        If custom_prompt = Windows.Forms.DialogResult.OK Then
+            result_value = ExcelOption.KeepAllInOneSheet
+        Else 'If custom_prompt = Windows.Forms.DialogResult.Cancel Then
+            result_value = ExcelOption.SeparateEachDepartment
+        End If
+
+        MessageBoxManager.Unregister()
+
+        Return result_value
+
+    End Function
+
+    Private Function NewLiner(Optional repetition As Integer = 1) As String
+
+        Dim _result As String = String.Empty
+
+        Dim i = 0
+
+        While i < repetition
+
+            _result =
+                String.Concat(_result, Environment.NewLine)
+
+            i += 1
+
+        End While
+
+        Return _result
+
+    End Function
+
 End Class
 
-Public Enum SalaryActualization As Short
+Friend Enum SalaryActualization As Short
     Declared = 0
     Actual = 1
+
+End Enum
+
+Friend Enum ExcelOption As Short
+    SeparateEachDepartment = 0
+    KeepAllInOneSheet = 1
 
 End Enum
