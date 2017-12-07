@@ -4,7 +4,7 @@ $pwd = Read-Host 'password' -AsSecureString;
 
 $pwd = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd));
 
-Get-ChildItem ./goldwingspayrolldb |
+Get-ChildItem ./accupaydb |
 Foreach-Object {
     $filename = $_.FullName;
 
