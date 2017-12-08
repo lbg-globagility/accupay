@@ -31,6 +31,9 @@ Namespace Global.AccuPay.Entity
 
         Public Property LevelNumber As Integer
 
+        <ForeignKey("DivisionID")>
+        Public Overridable Property Division As Division
+
         <ForeignKey("JobLevelID")>
         Public Overridable Property JobLevel As JobLevel
 

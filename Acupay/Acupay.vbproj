@@ -326,6 +326,7 @@
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Adjustment.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Allowance.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Division.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />

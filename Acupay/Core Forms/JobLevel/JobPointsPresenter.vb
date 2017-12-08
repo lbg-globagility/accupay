@@ -118,9 +118,15 @@ Namespace Global.AccuPay.JobLevels
             End Get
         End Property
 
-        Public ReadOnly Property Name As String
+        Public ReadOnly Property LastName As String
             Get
-                Return $"{_employee.LastName}, {_employee.FirstName} {_employee.MiddleInitial}"
+                Return _employee.LastName
+            End Get
+        End Property
+
+        Public ReadOnly Property FirstName As String
+            Get
+                Return _employee.FirstName
             End Get
         End Property
 
@@ -136,6 +142,12 @@ Namespace Global.AccuPay.JobLevels
         Public ReadOnly Property CurrentPosition As String
             Get
                 Return _employee.Position?.Name
+            End Get
+        End Property
+
+        Public ReadOnly Property Division As String
+            Get
+                Return _employee.Position?.Division.Name
             End Get
         End Property
 

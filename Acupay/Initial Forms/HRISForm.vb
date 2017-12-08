@@ -271,7 +271,11 @@ Public Class HRISForm
     End Sub
 
     Private Sub HRISForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        If sys_ownr.CurrentSystemOwner <> SystemOwner.Hyundai Then
+            JobLevelToolStripMenuItem.Visible = False
+            JobCategoryToolStripMenuItem.Visible = False
+            PointsToolStripMenuItem.Visible = False
+        End If
     End Sub
 
     Private Sub AttachmentToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AttachmentToolStripMenuItem.Click
