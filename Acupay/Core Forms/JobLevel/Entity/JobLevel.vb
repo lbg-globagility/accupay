@@ -28,6 +28,10 @@ Namespace Global.AccuPay.JobLevels
 
         Public Property Points As Integer
 
+        Public Property SalaryRangeFrom As Decimal
+
+        Public Property SalaryRangeTo As Decimal
+
         <ForeignKey("JobCategoryID")>
         Public Overridable Property JobCategory As JobCategory
 

@@ -1,11 +1,17 @@
 ﻿Option Strict On
 
+Imports AccuPay.JobLevels
+
 Public Class JobPointsForm
     Implements JobPointsView
 
     Public Event JobPointsForm_OnLoad() Implements JobPointsView.OnLoad
 
-    Public Event JobPointsForm_EmployeeSelected(employee As Employee) Implements JobPointsView.EmployeeSelected
+    Public Event JobPointsForm_EmployeeSelected(employee As EmployeeModel) Implements JobPointsView.EmployeeSelected
+
+    Public Event JobPointsForm_EmployeeChanged(model As EmployeeModel) Implements JobPointsView.EmployeeChanged
+
+    Public Event JobPointsForm_SaveEmployees() Implements JobPointsView.SaveEmployees
 
     Public Sub New()
         InitializeComponent()
@@ -21,10 +27,8 @@ Public Class JobPointsForm
         EmployeeDataGridView.AutoGenerateColumns = False
     End Sub
 
-    Public Sub LoadEmployees(employees As ICollection(Of Employee)) Implements JobPointsView.LoadEmployees
-        EmployeeDataGridView.DataSource = employees.
-            Select(Function(e) New EmployeeModel(e)).
-            ToList()
+    Public Sub LoadEmployees(employees As ICollection(Of EmployeeModel)) Implements JobPointsView.LoadEmployees
+        EmployeeDataGridView.DataSource = employees
     End Sub
 
     Private Sub EmployeeDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeeDataGridView.SelectionChanged
@@ -34,63 +38,34 @@ Public Class JobPointsForm
             Return
         End If
 
-        RaiseEvent JobPointsForm_EmployeeSelected(employeeModel.Employee)
+        RaiseEvent JobPointsForm_EmployeeSelected(employeeModel)
     End Sub
 
-    Private Class EmployeeModel
+    Private Sub EmployeeDataGridView_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles EmployeeDataGridView.CellValueChanged
+        If e.RowIndex < 0 Then
+            Return
+        End If
 
-        Private _employee As Employee
+        Dim model = DirectCast(EmployeeDataGridView.Rows(e.RowIndex).DataBoundItem, EmployeeModel)
 
-        Public Sub New(employee As Employee)
-            _employee = employee
-        End Sub
+        If model Is Nothing Then
+            Return
+        End If
 
-        Public ReadOnly Property Employee As Employee
-            Get
-                Return _employee
-            End Get
-        End Property
+        RaiseEvent JobPointsForm_EmployeeChanged(model)
+    End Sub
 
-        Public ReadOnly Property EmployeeNo As String
-            Get
-                Return _employee.EmployeeNo
-            End Get
-        End Property
+    Private Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
+        RaiseEvent JobPointsForm_SaveEmployees()
+    End Sub
 
-        Public ReadOnly Property Name As String
-            Get
-                Return $"{_employee.LastName}, {_employee.FirstName} {_employee.MiddleInitial}"
-            End Get
-        End Property
+    Public Sub ShowSavedMessage() Implements JobPointsView.ShowSavedMessage
+        InfoBalloon("Successfully saved.", "", EmployeeDataGridView, dispo:=1)
+    End Sub
 
-        Public Property Points As Integer
-            Get
-                Return _employee.AdvancementPoints
-            End Get
-            Set(value As Integer)
-                _employee.AdvancementPoints = value
-            End Set
-        End Property
-
-        Public ReadOnly Property CurrentPosition As String
-            Get
-                Return _employee.Position?.Name
-            End Get
-        End Property
-
-        Public ReadOnly Property CurrentLevel As String
-            Get
-                Return _employee.Position?.JobLevel?.Name
-            End Get
-        End Property
-
-        Public ReadOnly Property RecommendedLevel As String
-            Get
-                Return String.Empty
-            End Get
-        End Property
-
-    End Class
+    Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
+        Close()
+    End Sub
 
 End Class
 
@@ -98,8 +73,11 @@ Public Interface JobPointsView
 
     Event OnLoad()
 
-    Event EmployeeSelected(employee As Employee)
+    Event EmployeeSelected(employee As EmployeeModel)
+    Event EmployeeChanged(model As EmployeeModel)
+    Event SaveEmployees()
 
-    Sub LoadEmployees(employees As ICollection(Of Employee))
+    Sub LoadEmployees(employees As ICollection(Of EmployeeModel))
+    Sub ShowSavedMessage()
 
 End Interface
