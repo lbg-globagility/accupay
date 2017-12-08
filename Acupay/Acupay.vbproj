@@ -244,6 +244,12 @@
     <Compile Include="Core Forms\Employee\BonusTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Core Forms\Employee\JobPointsTab.Designer.vb">
+      <DependentUpon>JobPointsTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Employee\JobPointsTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Core Forms\Employee\LeaveTab.Designer.vb">
       <DependentUpon>LeaveTab.vb</DependentUpon>
     </Compile>
@@ -300,13 +306,31 @@
     <Compile Include="Core Forms\Independent filing\OverTimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\JobLevel\Entity\JobCategory.vb" />
+    <Compile Include="Core Forms\JobLevel\Entity\JobLevel.vb" />
+    <Compile Include="Core Forms\JobLevel\Entity\JobPoint.vb" />
+    <Compile Include="Core Forms\JobLevel\JobLevelForm.Designer.vb">
+      <DependentUpon>JobLevelForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\JobLevel\JobLevelForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core Forms\JobLevel\JobPointsForm.Designer.vb">
+      <DependentUpon>JobPointsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\JobLevel\JobPointsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core Forms\JobLevel\JobPointsPresenter.vb" />
     <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Adjustment.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Allowance.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Division.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Position.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ThirteenthMonthPay.vb" />
     <Compile Include="Core Forms\PayStub\Entity\TimeEntry.vb" />
@@ -1363,6 +1387,9 @@
     <EmbeddedResource Include="Core Forms\Employee\BonusTab.resx">
       <DependentUpon>BonusTab.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Employee\JobPointsTab.resx">
+      <DependentUpon>JobPointsTab.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Employee\LeaveTab.resx">
       <DependentUpon>LeaveTab.vb</DependentUpon>
     </EmbeddedResource>
@@ -1389,6 +1416,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Independent filing\OverTimeForm.resx">
       <DependentUpon>OverTimeForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\JobLevel\JobLevelForm.resx">
+      <DependentUpon>JobLevelForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\JobLevel\JobPointsForm.resx">
+      <DependentUpon>JobPointsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>

@@ -1,10 +1,8 @@
-Imports System
-Imports System.Data.Entity
 Imports System.Data.Common
-Imports System.Linq
-
-Imports PayrollSys
+Imports System.Data.Entity
 Imports AccuPay.Entity
+Imports AccuPay.JobLevels
+Imports PayrollSys
 
 Public Class PayrollContext
     Inherits DbContext
@@ -40,6 +38,14 @@ Public Class PayrollContext
     Public Overridable Property Paystubs As DbSet(Of AccuPay.Entity.Paystub)
 
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
+
+    Public Overridable Property JobCategories As DbSet(Of JobCategory)
+
+    Public Overridable Property JobLevels As DbSet(Of JobLevel)
+
+    Public Overridable Property Position As DbSet(Of Position)
+
+    Public Overridable Property Employees As DbSet(Of Employee)
 
     Public Overridable Property Shifts As DbSet(Of Shift)
 
