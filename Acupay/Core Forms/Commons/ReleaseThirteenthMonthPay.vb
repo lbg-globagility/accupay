@@ -35,16 +35,6 @@ Public Class ReleaseThirteenthMonthPay
                     .CreatedBy = z_User,
                     .PayAmount = thirteenthMonthPay
                 })
-
-                ' Finally, update the paystub to reflect the new adjustment
-                Dim totalAdjustment = paystub.Adjustments.
-                    Select(Function(p) p.PayAmount).
-                    Aggregate(Function(acc, x) acc + x)
-
-                Dim oldAdjustment = paystub.TotalAdjustments
-
-                paystub.TotalAdjustments = totalAdjustment
-                paystub.NetPay = (paystub.NetPay - oldAdjustment) + paystub.TotalAdjustments
             Next
 
             context.SaveChanges()
