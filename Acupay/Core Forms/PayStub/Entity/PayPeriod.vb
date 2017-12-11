@@ -5,8 +5,8 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Namespace Global.AccuPay.Entity
 
-    <Table("paystubadjustment")>
-    Public Class Adjustment
+    <Table("payperiod")>
+    Public Class PayPeriod
 
         <Key>
         Public Property RowID As Integer?
@@ -17,22 +17,13 @@ Namespace Global.AccuPay.Entity
 
         Public Property CreatedBy As Integer?
 
-        Public Property LastUpd As Date
+        Public Property LastUpd As Date?
 
         Public Property LastUpdBy As Integer?
 
-        Public Property PayStubID As Integer?
+        Public Property PayFromDate As Date
 
-        Public Property ProductID As Integer?
-
-        Public Property PayAmount As Decimal
-
-        Public Property Comment As String
-
-        Public Property IsActual As Boolean
-
-        <ForeignKey("PayStubID")>
-        Public Overridable Property Paystub As Paystub
+        Public Property PayToDate As Date
 
     End Class
 

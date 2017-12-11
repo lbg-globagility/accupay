@@ -21,9 +21,15 @@ Namespace Global.AccuPay.Entity
 
         Public Property LastUpdBy As Integer?
 
+        <Column("PayStubID")>
         Public Property PaystubID As Integer?
 
+        Public Property BasicPay As Decimal
+
         Public Property Amount As Decimal
+
+        <ForeignKey("PaystubID")>
+        Public Overridable Property Paystub As Paystub
 
     End Class
 
