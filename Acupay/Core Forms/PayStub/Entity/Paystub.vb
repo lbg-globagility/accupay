@@ -117,6 +117,8 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("EmployeeID")>
         Public Overridable Property Employee As Employee
 
+        Public Overridable Property Adjustments As ICollection(Of Adjustment)
+
     End Class
 
 End Namespace

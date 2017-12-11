@@ -37,7 +37,11 @@ Public Class PayrollContext
 
     Public Overridable Property Paystubs As DbSet(Of AccuPay.Entity.Paystub)
 
+    Public Overridable Property PayPeriods As DbSet(Of PayPeriod)
+
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
+
+    Public Overridable Property ThirteenthMonthPays As DbSet(Of ThirteenthMonthPay)
 
     Public Overridable Property JobCategories As DbSet(Of JobCategory)
 

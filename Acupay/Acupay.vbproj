@@ -232,6 +232,7 @@
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\ListOfValueCollection.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
+    <Compile Include="Core Forms\Commons\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
     </Compile>
@@ -329,6 +330,7 @@
     <Compile Include="Core Forms\PayStub\Entity\Division.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\PayPeriod.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Position.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Product.vb" />

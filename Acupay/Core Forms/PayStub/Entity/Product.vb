@@ -32,10 +32,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property LastUpdBy As Integer?
 
-        <NotMapped>
         Public Property Category As String
 
-        <NotMapped>
         Public Property CategoryID As Integer?
 
         <NotMapped>

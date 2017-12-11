@@ -2466,10 +2466,17 @@ Public Class PayStubForm
                                               IsActualFlag)
     End Sub
 
-    Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-        Dim array_bgworks = array_bgwork.Cast(Of System.ComponentModel.BackgroundWorker).Where(Function(y) y.IsBusy)
+    Private Sub IncludeThirteenthMonthButton_Click(sender As Object, e As EventArgs) Handles IncludeThirteenthMonthButton.Click
+        Dim payPeriodSelector = New PayrollSummaDateSelection()
 
-        ToolStripButton1.Text = ValNoComma(array_bgworks.Count)
+        If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
+            Return
+        End If
+
+        Dim dateFrom = payPeriodSelector.DateFrom
+        Dim dateTo = payPeriodSelector.DateTo
+
+        Dim realse = New ReleaseThirteenthMonthPay(dateFrom, dateTo, paypRowID)
     End Sub
 
     Sub ProgressCounter(ByVal cnt As Integer)

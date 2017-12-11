@@ -578,8 +578,8 @@ INTO
 SET leaveStart = TIMESTAMP(dateToday, leaveStartTime);
 SET leaveEnd = TIMESTAMP(IF(leaveEndTime > leaveStartTime, dateToday, dateTomorrow), leaveEndTime);
 
-SET @coveredStart = LEAST(dutyStart, leaveStart);
-SET @coveredEnd = GREATEST(dutyEnd, leaveEnd);
+SET @coveredStart = IF(leaveStart IS NULL, dutyStart, LEAST(dutyStart, leaveStart));
+SET @coveredEnd = IF(leaveEnd IS NULL, dutyEnd, GREATEST(dutyEnd, leaveEnd));
 
 /*
  * First check if the duty start is above shift start to check if the employee is late.

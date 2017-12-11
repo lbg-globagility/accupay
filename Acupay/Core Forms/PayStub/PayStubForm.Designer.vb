@@ -450,13 +450,12 @@ Partial Class PayStubForm
         Me.DeclaredToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ActualToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.IncludeThirteenthMonthButton = New System.Windows.Forms.ToolStripButton()
         Me.tsSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.tsbtnSearch = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel8 = New System.Windows.Forms.ToolStripLabel()
         Me.tsbtnDelEmpPayroll = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.Button3 = New System.Windows.Forms.Button()
         Me.bgwPrintAllPaySlip = New System.ComponentModel.BackgroundWorker()
@@ -4279,7 +4278,7 @@ Partial Class PayStubForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtngenpayroll, Me.tsbtnprintpayslip, Me.tsbtnprintall, Me.tsbtnClose, Me.tsbtnPayrollSumma, Me.ToolStripSeparator1, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.tsbtnDelEmpPayroll, Me.ToolStripButton1, Me.ToolStripButton2})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtngenpayroll, Me.tsbtnprintpayslip, Me.tsbtnprintall, Me.tsbtnClose, Me.tsbtnPayrollSumma, Me.ToolStripSeparator1, Me.IncludeThirteenthMonthButton, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.tsbtnDelEmpPayroll})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1102, 25)
@@ -4361,19 +4360,27 @@ Partial Class PayStubForm
         'DeclaredToolStripMenuItem2
         '
         Me.DeclaredToolStripMenuItem2.Name = "DeclaredToolStripMenuItem2"
-        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(152, 22)
+        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
         Me.DeclaredToolStripMenuItem2.Text = "Declared"
         '
         'ActualToolStripMenuItem2
         '
         Me.ActualToolStripMenuItem2.Name = "ActualToolStripMenuItem2"
-        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(152, 22)
+        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
         Me.ActualToolStripMenuItem2.Text = "Actual"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        '
+        'IncludeThirteenthMonthButton
+        '
+        Me.IncludeThirteenthMonthButton.Image = CType(resources.GetObject("IncludeThirteenthMonthButton.Image"), System.Drawing.Image)
+        Me.IncludeThirteenthMonthButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.IncludeThirteenthMonthButton.Name = "IncludeThirteenthMonthButton"
+        Me.IncludeThirteenthMonthButton.Size = New System.Drawing.Size(114, 22)
+        Me.IncludeThirteenthMonthButton.Text = "Incl. 13th Month"
         '
         'tsSearch
         '
@@ -4417,25 +4424,6 @@ Partial Class PayStubForm
         Me.tsbtnDelEmpPayroll.Size = New System.Drawing.Size(23, 22)
         Me.tsbtnDelEmpPayroll.Text = "ToolStripButton1"
         Me.tsbtnDelEmpPayroll.ToolTipText = "Deletes only the selected" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "payroll of an employee"
-        '
-        'ToolStripButton1
-        '
-        Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(116, 22)
-        Me.ToolStripButton1.Text = "ToolStripButton1"
-        Me.ToolStripButton1.Visible = False
-        '
-        'ToolStripButton2
-        '
-        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton2.Text = "ToolStripButton2"
-        Me.ToolStripButton2.Visible = False
         '
         'ImageList1
         '
@@ -4491,7 +4479,7 @@ Partial Class PayStubForm
         '
         Me.Timer1.Interval = 2500
         '
-        'PayStub
+        'PayStubForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -4502,7 +4490,7 @@ Partial Class PayStubForm
         Me.Controls.Add(Me.Label25)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.KeyPreview = True
-        Me.Name = "PayStub"
+        Me.Name = "PayStubForm"
         Me.Text = "paystub"
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).EndInit()
         Me.cms1.ResumeLayout(False)
@@ -4947,8 +4935,7 @@ Partial Class PayStubForm
     Friend WithEvents IsAdjustmentActual As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Panel5 As System.Windows.Forms.Panel
     Friend WithEvents txtPaidLeave As System.Windows.Forms.TextBox
-    Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripButton2 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents IncludeThirteenthMonthButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents lblAgencyFee As System.Windows.Forms.Label
     Friend WithEvents txtAgencyFee As System.Windows.Forms.TextBox

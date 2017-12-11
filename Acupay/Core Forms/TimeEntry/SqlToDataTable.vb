@@ -1,14 +1,22 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports MySql.Data.MySqlClient
 
 Public Class SqlToDataTable
 
     Private _query As String
     Private _timeOut As Integer
+    Private _params As Dictionary(Of String, Object)
 
     Public Sub New(query As String, Optional timeOut As Integer = 0)
         _query = query
         _timeOut = timeOut
+    End Sub
+
+    Public Sub New(query As String, params As Dictionary(Of String, Object), Optional timeOut As Integer = 0)
+        Me.New(query, timeOut)
+        _params = params
     End Sub
 
     Public Function Read() As DataTable
@@ -17,6 +25,8 @@ Public Class SqlToDataTable
         Using connection = CreateConnection(),
             command = New MySqlCommand(_query, connection),
             adapter = New MySqlDataAdapter(command)
+
+            ApplyParameters(command)
 
             command.CommandType = CommandType.Text
             connection.Open()
@@ -34,6 +44,8 @@ Public Class SqlToDataTable
             command = New MySqlCommand(_query, connection),
             adapter = New MySqlDataAdapter(command)
 
+            ApplyParameters(command)
+
             command.CommandType = CommandType.Text
 
             Await connection.OpenAsync()
@@ -42,6 +54,14 @@ Public Class SqlToDataTable
 
         Return dataTable
     End Function
+
+    Private Sub ApplyParameters(command As MySqlCommand)
+        If _params IsNot Nothing Then
+            For Each pair In _params
+                command.Parameters.AddWithValue(pair.Key, pair.Value)
+            Next
+        End If
+    End Sub
 
     Private Function CreateConnection() As MySqlConnection
         Dim connectionString = String.Empty
