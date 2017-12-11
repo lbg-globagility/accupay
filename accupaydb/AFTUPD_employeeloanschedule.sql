@@ -104,8 +104,30 @@ INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldC
 
 END IF;
 
+# SET @is_uncharge_tobonus = (OLD.BonusID IS NOT NULL AND NEW.BonusID IS NULL);
+SET @is_uncharge_tobonus = (NEW.BonusID IS NULL);
 
+IF @is_charge_tobonust = TRUE THEN
 
+   UPDATE employeebonus eb
+	SET
+	# eb.RemainingBalance = (eb.RemainingBalance + NEW.DeductionAmount)
+	eb.RemainingBalance = (eb.RemainingBalance + (NEW.DeductionAmount * NEW.LoanPayPeriodLeft))
+	,eb.LastUpdBy = IFNULL(eb.LastUpdBy, eb.CreatedBy)
+	,eb.LastUpd = CURRENT_TIMESTAMP()
+	WHERE eb.RowID = OLD.BonusID
+	# AND NEW.BonusPotentialPaymentForLoan = 0
+	;
+
+	/*UPDATE employeebonus eb
+	SET
+	eb.RemainingBalance = (eb.RemainingBalance + (NEW.DeductionAmount * NEW.LoanPayPeriodLeft))
+	,eb.LastUpdBy = IFNULL(eb.LastUpdBy, eb.CreatedBy)
+	,eb.LastUpd = CURRENT_TIMESTAMP()
+	WHERE eb.RowID = OLD.BonusID
+	AND NEW.BonusPotentialPaymentForLoan = 1;*/
+	
+END IF;
 
 END//
 DELIMITER ;

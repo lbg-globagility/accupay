@@ -108,7 +108,7 @@ INNER JOIN employeebonus eb
 	        AND eb.OrganizationID = els.OrganizationID
 			  AND eb.RowID = els.BonusID
 
-LEFT JOIN (SELECT bld.RowID
+INNER JOIN (SELECT bld.RowID
            ,bld.LoanSchedID
            FROM bonusloandeduction bld
            INNER JOIN employeeloanschedule els
@@ -142,7 +142,7 @@ INNER JOIN employeebonus eb
 	        AND eb.OrganizationID = els.OrganizationID
 			  AND eb.RowID = els.BonusID
 
-LEFT JOIN (SELECT bld.RowID
+INNER JOIN (SELECT bld.RowID
            ,bld.LoanSchedID
            FROM bonusloandeduction bld
            INNER JOIN employeeloanschedule els

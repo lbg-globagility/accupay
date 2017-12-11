@@ -52,6 +52,14 @@ IF NEW.TotalBalanceLeft > NEW.TotalLoanAmount THEN
 
 END IF;
 
+SET @is_charge_tobonust = (OLD.BonusID IS NULL AND NEW.BonusID IS NOT NULL);
+
+IF @is_charge_tobonust = TRUE THEN
+	
+	SET NEW.LoanPayPeriodLeftForBonus = NEW.LoanPayPeriodLeft;
+	
+END IF;
+
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
