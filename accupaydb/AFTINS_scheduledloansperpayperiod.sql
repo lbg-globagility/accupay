@@ -4,16 +4,12 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-DROP TRIGGER IF EXISTS `BEFUPD_employeebonus`;
+DROP TRIGGER IF EXISTS `AFTINS_scheduledloansperpayperiod`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
-CREATE TRIGGER `BEFUPD_employeebonus` BEFORE UPDATE ON `employeebonus` FOR EACH ROW BEGIN
+CREATE TRIGGER `AFTINS_scheduledloansperpayperiod` AFTER INSERT ON `scheduledloansperpayperiod` FOR EACH ROW BEGIN
 
-DECLARE prevtotaldeduct DECIMAL(11,6);
 
-SET prevtotaldeduct = OLD.BonusAmount - OLD.RemainingBalance;
-
-# SET NEW.RemainingBalance = NEW.BonusAmount - prevtotaldeduct;
 
 END//
 DELIMITER ;

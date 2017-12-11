@@ -8293,6 +8293,9 @@ Public Class EmployeeForm
                 Next
             End If
         End If
+
+        chkboxChargeToBonus.Visible = (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
+
         tabIndx = 10 'TabControl1.SelectedIndex
         dgvEmp_SelectionChanged(sender, e)
     End Sub
@@ -8941,14 +8944,33 @@ Public Class EmployeeForm
             Dim bool_bonus_potent As Short = Convert.ToInt16(dict.Value(1))
             Dim row_id = dict.Key
 
-            Dim str_quer As String =
+            Dim str_quer As String = String.Empty
+
+            If bool_bonus_potent = 0 Then
+
+                str_quer =
                 String.Concat("UPDATE employeebonus eb",
                               " LEFT JOIN employeeloanschedule els ON els.BonusID=eb.RowID",
                               " SET eb.`Remarks`=", str_comment,
                               ",els.Comments=", str_comment,
                               ",els.BonusPotentialPaymentForLoan=", bool_bonus_potent,
-                              ",els.LoanPayPeriodLeftForBonus=IF(els.LoanPayPeriodLeftForBonus IS NULL, els.LoanPayPeriodLeft, els.LoanPayPeriodLeftForBonus)",
+                              ",els.LoanPayPeriodLeftForBonus=IF(IFNULL(els.LoanPayPeriodLeftForBonus, 0) = 0, els.LoanPayPeriodLeft, els.LoanPayPeriodLeftForBonus)",
+                              ",eb.RemainingBalance = (eb.RemainingBalance - els.DeductionAmount)",
                               " WHERE eb.RowID='", row_id, "';")
+
+            Else 'If bool_bonus_potent = 1 Then
+
+                str_quer =
+                String.Concat("UPDATE employeebonus eb",
+                              " LEFT JOIN employeeloanschedule els ON els.BonusID=eb.RowID",
+                              " SET eb.`Remarks`=", str_comment,
+                              ",els.Comments=", str_comment,
+                              ",els.BonusPotentialPaymentForLoan=", bool_bonus_potent,
+                              ",els.LoanPayPeriodLeftForBonus=IF(IFNULL(els.LoanPayPeriodLeftForBonus, 0) = 0, els.LoanPayPeriodLeft, els.LoanPayPeriodLeftForBonus)",
+                              ",eb.RemainingBalance = (eb.RemainingBalance - (els.DeductionAmount * els.LoanPayPeriodLeft))",
+                              " WHERE eb.RowID='", row_id, "';")
+
+            End If
 
             Dim exec_quer As New ExecuteQuery(str_quer)
             Dim exec_result = exec_quer.Result
@@ -17598,6 +17620,10 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub dgvEmp_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvEmp.CellContentClick
+
+    End Sub
+
+    Private Sub tbpLoans_Click(sender As Object, e As EventArgs) Handles tbpLoans.Click
 
     End Sub
 

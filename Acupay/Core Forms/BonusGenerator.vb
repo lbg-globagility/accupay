@@ -360,6 +360,36 @@ Public Class BonusGenerator
 
             Next
 
+            Dim params =
+                    New Object() {orgztnID,
+                    GeneratePayPeriodRowID,
+                    z_User}
+
+            Dim str_quer As String =
+                String.Concat("UPDATE employeeloanschedule els",
+                              " INNER JOIN bonusloandeduction b ON b.OrganizationID = ?og_rowid AND b.PayPeriodID = ?pp_rowid AND els.RowID = b.LoanSchedID AND els.OrganizationID = b.OrganizationID",
+                              " SET",
+                              " els.LastUpd = CURRENT_TIMESTAMP()",
+                              ", els.LastUpdBy = ?user_rowid",
+                              ", els.LoanPayPeriodLeft = (els.LoanPayPeriodLeft - els.LoanPayPeriodLeftForBonus)",
+                              ", els.TotalBalanceLeft = (els.TotalBalanceLeft - (els.DeductionAmount * els.LoanPayPeriodLeftForBonus))",
+                              " ;")
+
+            Dim sql As New SQL(str_quer,
+                               params)
+
+            Try
+
+                sql.ExecuteQuery()
+
+                If sql.HasError Then
+                    Throw sql.ErrorException
+                End If
+
+            Catch ex As Exception
+                MsgBox(getErrExcptn(ex, Name))
+            End Try
+
             'Dim TimeSpent As System.TimeSpan
             'TimeSpent = Now.Subtract(TimerStart)
             'MsgBox(TimeSpent.TotalSeconds & " seconds spent on this task")' TotalSeconds is a double data type

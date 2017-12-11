@@ -31,7 +31,7 @@ FROM (
     SELECT TRUE
     ,ebon.RowID
     ,IFNULL(p.PartNo,'') AS `Type`
-    ,COALESCE(ebon.BonusAmount,0) AS BonusAmount
+    ,IFNULL(ebon.BonusAmount,0) AS BonusAmount
     ,IFNULL(ebon.AllowanceFrequency,'') AS AllowanceFrequency
     ,IFNULL(DATE_FORMAT(ebon.EffectiveStartDate,'%m/%d/%Y'),'1/1/1900') AS EffectiveStartDate
     ,IFNULL(DATE_FORMAT(ebon.EffectiveEndDate,'%m/%d/%Y'),'1/1/1900') AS EffectiveEndDate
@@ -52,7 +52,7 @@ UNION
     SELECT FALSE
     ,ebon.RowID
     ,IFNULL(p.PartNo,'') AS `Type`
-    ,COALESCE(ebon.BonusAmount,0) AS BonusAmount
+    ,IFNULL(ebon.BonusAmount,0) AS BonusAmount
     ,IFNULL(ebon.AllowanceFrequency,'') AS AllowanceFrequency
     ,IFNULL(DATE_FORMAT(ebon.EffectiveStartDate,'%m/%d/%Y'),'1/1/1900') AS EffectiveStartDate
     ,IFNULL(DATE_FORMAT(ebon.EffectiveEndDate,'%m/%d/%Y'),'1/1/1900') AS EffectiveEndDate
@@ -73,7 +73,7 @@ UNION
     SELECT FALSE
     ,ebon.RowID
     ,IFNULL(p.PartNo,'') AS `Type`
-    ,COALESCE(ebon.BonusAmount,0) AS BonusAmount
+    ,IFNULL(ebon.BonusAmount,0) AS BonusAmount
     ,IFNULL(ebon.AllowanceFrequency,'') AS AllowanceFrequency
     ,IFNULL(DATE_FORMAT(ebon.EffectiveStartDate,'%m/%d/%Y'),'1/1/1900') AS EffectiveStartDate
     ,IFNULL(DATE_FORMAT(ebon.EffectiveEndDate,'%m/%d/%Y'),'1/1/1900') AS EffectiveEndDate
