@@ -5,7 +5,7 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Namespace Global.AccuPay.Entity
 
-    <Table("paystubadjustment")>
+    <Table("paystubadjustmentactual")>
     Public Class Adjustment
 
         <Key>
