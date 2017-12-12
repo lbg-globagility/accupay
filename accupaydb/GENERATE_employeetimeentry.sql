@@ -346,7 +346,7 @@ INTO
     workingHours;
 
 SET hasShift = (shifttimefrom IS NOT NULL) AND (shifttimeto IS NOT NULL);
-SET isRestDay = isShiftRestDay OR isDefaultRestDay;
+SET isRestDay = isShiftRestDay;
 
 SET workingHours = IF(hasShift, workingHours, STANDARD_WORKING_HOURS);
 
