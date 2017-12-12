@@ -354,6 +354,12 @@
       <DependentUpon>AttendanceSheet2.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Core Forms\Reports\FiledLeaveReport.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FiledLeaveReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Core Forms\Reports\LoanReportByType.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -366,6 +372,7 @@
     <Compile Include="Core Forms\Reports\Providers\EmployeeOffenseReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\EmployeeProfilesReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\EmploymentRecordReportProvider.vb" />
+    <Compile Include="Core Forms\Reports\Providers\FiledLeaveReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\LateUTAbsentSummaryReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\LeaveLedgerReportProvider.vb" />
     <Compile Include="Core Forms\Reports\Providers\LoanSummaryByTypeReportProvider.vb" />
@@ -1434,6 +1441,10 @@
     <EmbeddedResource Include="Core Forms\Reports\AttendanceSheet2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>AttendanceSheet2.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Reports\FiledLeaveReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>FiledLeaveReport.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Reports\LoanReportByType.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

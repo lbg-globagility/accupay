@@ -18,6 +18,7 @@ Public Class ReportsList
             New PagIBIGMonthlyReportProvider(),
             New ThirteenthMonthPayReportProvider(),
             New ThirteenthMonthSummaryReportProvider(),
+            New FiledLeaveReportProvider(),
             New LoanSummaryReportProvider(),
             New LoanSummaryByTypeReportProvider(),
             New EmployeeProfilesReportProvider(),
