@@ -10,17 +10,14 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `DEL_specificpaystubbonus`(IN `payst
     DETERMINISTIC
 BEGIN
 
-DECLARE IsFirstHalfOfMonth CHAR(1);
+DECLARE IsFirstHalfOfMonth
+        ,function_wrapper CHAR(1);
 
-DECLARE function_wrapper CHAR(1);
+DECLARE OrganizID
+        ,EmpRowID INT(11);
 
-DECLARE OrganizID INT(11);
-
-DECLARE EmpRowID INT(11);
-
-DECLARE _PayFromDate DATE;
-
-DECLARE _PayToDate DATE;
+DECLARE _PayFromDate
+        ,_PayToDate DATE;
 
 DECLARE payperiod_schedule VARCHAR(50);
 
@@ -33,7 +30,7 @@ ELSE
 END IF;
 
     # Bonus pays base on loan deduction amount
-    UPDATE employeeloanschedule els
+    /*UPDATE employeeloanschedule els
     INNER JOIN (SELECT *
                     FROM employeebonus
                     WHERE EmployeeID=EmpRowID
@@ -49,26 +46,30 @@ END IF;
     AND els.EmployeeID=EmpRowID
     AND els.DeductionSchedule IN (payperiod_schedule, 'Per pay period')
     AND (els.DedEffectiveDateFrom >= _PayFromDate OR els.DedEffectiveDateTo >= _PayFromDate)
-    AND (els.DedEffectiveDateFrom <= _PayToDate OR els.DedEffectiveDateTo <= _PayToDate);
+    AND (els.DedEffectiveDateFrom <= _PayToDate OR els.DedEffectiveDateTo <= _PayToDate);*/
 
     # Bonus pays full loan balance
+    ##############################
+    
     UPDATE employeeloanschedule els
     INNER JOIN (SELECT *
-                    FROM employeebonus
-                    WHERE EmployeeID=EmpRowID
-                    AND OrganizationID=OrganizID
-                    AND (EffectiveStartDate >= _PayFromDate OR EffectiveEndDate >= _PayFromDate)
-                    AND (EffectiveStartDate <= _PayToDate OR EffectiveEndDate <= _PayToDate)
+                FROM employeebonus
+                WHERE EmployeeID=EmpRowID
+                AND OrganizationID=OrganizID
+                AND (EffectiveStartDate >= _PayFromDate OR EffectiveEndDate >= _PayFromDate)
+                AND (EffectiveStartDate <= _PayToDate OR EffectiveEndDate <= _PayToDate)
     ) eb ON eb.RowID = els.BonusID
     SET
-    els.LoanPayPeriodLeft = els.LoanPayPeriodLeftForBonus
-	 ,els.TotalBalanceLeft = (els.TotalLoanAmount - ((els.NoOfPayPeriod - els.LoanPayPeriodLeftForBonus) * els.DeductionAmount))
+    els.LoanPayPeriodLeft = (els.LoanPayPeriodLeft + els.LoanPayPeriodLeftForBonus)
+	 ,els.TotalBalanceLeft = (els.TotalBalanceLeft + (LoanPayPeriodLeftForBonus * els.DeductionAmount))
+	 ,els.`Status` = 'In progress'
     WHERE els.OrganizationID=OrganizID
-    AND els.BonusPotentialPaymentForLoan = 1
+    # AND els.BonusPotentialPaymentForLoan = 1
     AND els.EmployeeID=EmpRowID
-    AND els.DeductionSchedule IN (payperiod_schedule, 'Per pay period')
-    AND (els.DedEffectiveDateFrom >= _PayFromDate OR els.DedEffectiveDateTo >= _PayFromDate)
-    AND (els.DedEffectiveDateFrom <= _PayToDate OR els.DedEffectiveDateTo <= _PayToDate);
+    # AND els.DeductionSchedule IN (payperiod_schedule, 'Per pay period')
+    # AND (els.DedEffectiveDateFrom >= _PayFromDate OR els.DedEffectiveDateTo >= _PayFromDate)
+    # AND (els.DedEffectiveDateFrom <= _PayToDate OR els.DedEffectiveDateTo <= _PayToDate)
+	 ;
 
 DELETE FROM paystubitembonus WHERE PayStubBonusID=paystubbonus_RowID;
 ALTER TABLE paystubitembonus AUTO_INCREMENT = 0;
