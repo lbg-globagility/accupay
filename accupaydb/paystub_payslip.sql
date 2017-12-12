@@ -98,7 +98,9 @@ SELECT
     IFNULL(psiECOLA.PayAmount,0) AS `COL43`,
     psiLeave.`Names` AS `COL44`,
     psiLeave.Availed AS `COl45`,
-    psiLeave.Balance AS `COL46`
+    psiLeave.Balance AS `COL46`,
+	 IFNULL(adjustments.`Names`, '') `COL90`,
+	 IFNULL(adjustments.`PayAmounts`, '') `COL91`
 FROM (
         SELECT
             RowID,
