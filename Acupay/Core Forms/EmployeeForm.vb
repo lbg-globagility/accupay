@@ -8293,6 +8293,9 @@ Public Class EmployeeForm
                 Next
             End If
         End If
+
+        chkboxChargeToBonus.Visible = (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
+
         tabIndx = 10 'TabControl1.SelectedIndex
         dgvEmp_SelectionChanged(sender, e)
     End Sub
@@ -17617,6 +17620,10 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub dgvEmp_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvEmp.CellContentClick
+
+    End Sub
+
+    Private Sub tbpLoans_Click(sender As Object, e As EventArgs) Handles tbpLoans.Click
 
     End Sub
 
