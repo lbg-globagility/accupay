@@ -25,8 +25,9 @@ ON pv.PositionID = p.RowID AND
 WHERE u.UserID = user_name AND
     u.`Password` = pass_word AND
     u.`Status` = 'Active'
-GROUP BY u.RowID, pv.ReadOnly
+GROUP BY u.RowID, pv.AllowedToAccess
 HAVING pv.AllowedToAccess = 'Y'
+ORDER BY FIELD(pv.AllowedToAccess, 'Y', 'N')
 INTO returnvaue, @Pv;
 
 IF returnvaue IS NULL THEN

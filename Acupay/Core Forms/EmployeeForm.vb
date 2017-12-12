@@ -4712,6 +4712,7 @@ Public Class EmployeeForm
                         'ToolStripButton2.Visible = 0
                         tsbtnNewLeave.Visible = 0
                         tsbtnSaveLeave.Visible = 0
+                        tsbtnDeletLeave.Visible = False
 
                         dontUpdateLeave = 1
                         Exit For
@@ -4721,6 +4722,8 @@ Public Class EmployeeForm
                         Else
                             tsbtnNewLeave.Visible = 1
                         End If
+
+                        tsbtnDeletLeave.Visible = (drow("Deleting").ToString = "Y")
 
                         If drow("Updates").ToString = "N" Then
                             dontUpdateLeave = 1
@@ -14320,22 +14323,16 @@ Public Class EmployeeForm
                     If drow("ReadOnly").ToString = "Y" Then
                         tsbtnNewOBF.Visible = 0
                         tsbtnSaveOBF.Visible = 0
+                        tsbtnDelOffBusi.Visible = 0
 
                         dontUpdateOBF = 1
                         Exit For
                     Else
-                        If drow("Creates").ToString = "N" Then
-                            tsbtnNewOBF.Visible = 0
-                        Else
-                            tsbtnNewOBF.Visible = 1
-                        End If
+                        tsbtnNewOBF.Visible = (drow("Creates").ToString = "Y")
 
-                        If drow("Updates").ToString = "N" Then
-                            dontUpdateOBF = 1
-                        Else
-                            dontUpdateOBF = 0
+                        tsbtnDelOffBusi.Visible = (drow("Deleting").ToString = "Y")
 
-                        End If
+                        dontUpdateOBF = (drow("Updates").ToString = "N")
                     End If
                 Next
             End If
@@ -18310,12 +18307,55 @@ Public Class EmployeeForm
 
     Private Sub tabctrlemp_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles tabctrlemp.Selecting
 
-        e.Cancel = (e.TabPage.Name = tbpPayslip.Name)
+        Dim is_tabpage_payslip As Boolean = (e.TabPage.Name = tbpPayslip.Name)
 
-        If e.Cancel Then
+        If is_tabpage_payslip Then
+
+            e.Cancel = is_tabpage_payslip
+
             MDIPrimaryForm.ToolStripButton5_Click(sender, New EventArgs)
 
             PayrollForm.PayrollToolStripMenuItem_Click(sender, New EventArgs)
+
+        Else
+            Dim view_name As String = String.Empty
+
+            Try
+                view_name = e.TabPage.AccessibleDescription.Trim
+            Catch ex As Exception
+                view_name = String.Empty
+            Finally
+                If view_name.Length > 0 Then
+
+                    Dim view_row_id = VIEW_privilege(view_name, orgztnID)
+
+                    Dim formuserprivilege = position_view_table.Select("ViewID = " & view_row_id)
+
+                    Dim bool_result As Boolean = False
+
+                    bool_result = (formuserprivilege.Count = 0)
+
+                    If bool_result = False Then
+
+                        For Each drow In formuserprivilege
+                            bool_result = (drow("ReadOnly").ToString = "Y")
+
+                            If bool_result = False Then
+
+                                bool_result = (drow("Creates").ToString = "N" _
+                                           And drow("Deleting").ToString = "N" _
+                                           And drow("Updates").ToString = "N")
+
+                            End If
+
+                        Next
+
+                    End If
+
+                    e.Cancel = bool_result
+
+                End If
+            End Try
 
         End If
 

@@ -2127,6 +2127,7 @@ Partial Class EmployeeForm
         '
         'tbpEmployee
         '
+        Me.tbpEmployee.AccessibleDescription = "Employee Personal Profile"
         Me.tbpEmployee.BackColor = System.Drawing.Color.White
         Me.tbpEmployee.Controls.Add(Me.SplitContainer2)
         Me.tbpEmployee.Controls.Add(Me.ToolStrip1)
@@ -3905,6 +3906,7 @@ Partial Class EmployeeForm
         '
         'tbpSalary
         '
+        Me.tbpSalary.AccessibleDescription = "Employee Salary"
         Me.tbpSalary.AutoScroll = True
         Me.tbpSalary.Controls.Add(Me.Panel8)
         Me.tbpSalary.Controls.Add(Me.ToolStrip13)
@@ -4571,6 +4573,7 @@ Partial Class EmployeeForm
         '
         'tbpAwards
         '
+        Me.tbpAwards.AccessibleDescription = "Employee Award"
         Me.tbpAwards.AutoScroll = True
         Me.tbpAwards.Controls.Add(Me.Panel17)
         Me.tbpAwards.Controls.Add(Me.ToolStrip2)
@@ -4796,6 +4799,7 @@ Partial Class EmployeeForm
         '
         'tbpCertifications
         '
+        Me.tbpCertifications.AccessibleDescription = "Employee Certification"
         Me.tbpCertifications.AutoScroll = True
         Me.tbpCertifications.Controls.Add(Me.Panel16)
         Me.tbpCertifications.Controls.Add(Me.ToolStrip3)
@@ -5110,6 +5114,7 @@ Partial Class EmployeeForm
         '
         'tbpLeave
         '
+        Me.tbpLeave.AccessibleDescription = "Employee Leave"
         Me.tbpLeave.AutoScroll = True
         Me.tbpLeave.Controls.Add(Me.Panel15)
         Me.tbpLeave.Controls.Add(Me.ToolStrip5)
@@ -6142,6 +6147,7 @@ Partial Class EmployeeForm
         '
         'tbpDiscipAct
         '
+        Me.tbpDiscipAct.AccessibleDescription = "Employee Disciplinary Action"
         Me.tbpDiscipAct.AutoScroll = True
         Me.tbpDiscipAct.Controls.Add(Me.Panel14)
         Me.tbpDiscipAct.Controls.Add(Me.ToolStrip8)
@@ -6544,6 +6550,7 @@ Partial Class EmployeeForm
         '
         'tbpEducBG
         '
+        Me.tbpEducBG.AccessibleDescription = "Employee Educational Background"
         Me.tbpEducBG.AutoScroll = True
         Me.tbpEducBG.Controls.Add(Me.Panel13)
         Me.tbpEducBG.Controls.Add(Me.Label48)
@@ -6986,6 +6993,7 @@ Partial Class EmployeeForm
         '
         'tbpPrevEmp
         '
+        Me.tbpPrevEmp.AccessibleDescription = "Employee Previous Employer"
         Me.tbpPrevEmp.AutoScroll = True
         Me.tbpPrevEmp.Controls.Add(Me.Panel12)
         Me.tbpPrevEmp.Controls.Add(Me.ToolStrip10)
@@ -7698,6 +7706,7 @@ Partial Class EmployeeForm
         '
         'tbpPromotion
         '
+        Me.tbpPromotion.AccessibleDescription = "Employee Promotion"
         Me.tbpPromotion.Controls.Add(Me.Panel11)
         Me.tbpPromotion.Controls.Add(Me.ToolStrip11)
         Me.tbpPromotion.Location = New System.Drawing.Point(4, 4)
@@ -8181,6 +8190,7 @@ Partial Class EmployeeForm
         '
         'tbpLoans
         '
+        Me.tbpLoans.AccessibleDescription = "Employee Loan Schedule"
         Me.tbpLoans.AutoScroll = True
         Me.tbpLoans.Controls.Add(Me.Panel10)
         Me.tbpLoans.Controls.Add(Me.ToolStrip12)
@@ -8893,6 +8903,7 @@ Partial Class EmployeeForm
         '
         'tbpLoanHist
         '
+        Me.tbpLoanHist.AccessibleDescription = "Employee Loan History"
         Me.tbpLoanHist.AutoScroll = True
         Me.tbpLoanHist.Controls.Add(Me.Panel9)
         Me.tbpLoanHist.Controls.Add(Me.ToolStrip14)
@@ -9244,6 +9255,7 @@ Partial Class EmployeeForm
         '
         'tbpPayslip
         '
+        Me.tbpPayslip.AccessibleDescription = "Employee Pay Slip"
         Me.tbpPayslip.AutoScroll = True
         Me.tbpPayslip.Controls.Add(Me.SplitContainer3)
         Me.tbpPayslip.Controls.Add(Me.ToolStrip16)
@@ -11620,6 +11632,7 @@ Partial Class EmployeeForm
         '
         'tbpempallow
         '
+        Me.tbpempallow.AccessibleDescription = "Employee Allowance"
         Me.tbpempallow.AutoScroll = True
         Me.tbpempallow.Controls.Add(Me.Panel6)
         Me.tbpempallow.Controls.Add(Me.ToolStrip17)
@@ -12132,6 +12145,7 @@ Partial Class EmployeeForm
         '
         'tbpEmpOT
         '
+        Me.tbpEmpOT.AccessibleDescription = "Employee Overtime"
         Me.tbpEmpOT.AutoScroll = True
         Me.tbpEmpOT.Controls.Add(Me.Panel5)
         Me.tbpEmpOT.Controls.Add(Me.ToolStrip18)
@@ -12862,6 +12876,7 @@ Partial Class EmployeeForm
         '
         'tbpOBF
         '
+        Me.tbpOBF.AccessibleDescription = "Official Business filing"
         Me.tbpOBF.AutoScroll = True
         Me.tbpOBF.Controls.Add(Me.Panel4)
         Me.tbpOBF.Controls.Add(Me.ToolStrip19)
@@ -13579,6 +13594,7 @@ Partial Class EmployeeForm
         '
         'tbpBonus
         '
+        Me.tbpBonus.AccessibleDescription = "Employee Bonus"
         Me.tbpBonus.AutoScroll = True
         Me.tbpBonus.Controls.Add(Me.Panel3)
         Me.tbpBonus.Controls.Add(Me.ToolStrip20)
@@ -14064,6 +14080,7 @@ Partial Class EmployeeForm
         '
         'tbpAttachment
         '
+        Me.tbpAttachment.AccessibleDescription = "Employee Attachment"
         Me.tbpAttachment.AutoScroll = True
         Me.tbpAttachment.Controls.Add(Me.Panel2)
         Me.tbpAttachment.Controls.Add(Me.ToolStrip21)
