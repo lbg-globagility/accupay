@@ -2031,6 +2031,7 @@ Partial Class EmployeeForm
         '
         'tbpempchklist
         '
+        Me.tbpempchklist.AccessibleDescription = "Employee Personal Profile"
         Me.tbpempchklist.Controls.Add(Me.panelchklist)
         Me.tbpempchklist.Controls.Add(Me.lblyourrequirement)
         Me.tbpempchklist.Controls.Add(Me.ToolStrip15)
@@ -2266,7 +2267,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 430)
-        Me.SplitContainer2.SplitterDistance = 179
+        Me.SplitContainer2.SplitterDistance = 176
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3539,7 +3540,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 217)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 220)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
