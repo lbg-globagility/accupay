@@ -96,12 +96,13 @@ IF is_keep_in_onesheet = TRUE THEN
 					        GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
 					    ), decimal_size) `DatCol43`,
 		    ROUND(paystub.OvertimeHours, decimal_size) `DatCol44`,
-		    ROUND(paystub.TotalAdjustments, decimal_size) `DatCol45`,
-		    ROUND(paystub.RestDayPay, decimal_size) `DatCol46`
+		    ROUND(IF(psi_undeclared = TRUE, paystubactual.TotalAdjustments, paystub.TotalAdjustments), decimal_size) `DatCol45`,
+		    ROUND(IF(psi_undeclared = TRUE, paystubactual.RestDayPay, paystub.RestDayPay), decimal_size) `DatCol46`
 		FROM paystub
 		LEFT JOIN paystubactual
 		ON paystubactual.EmployeeID = paystub.EmployeeID AND
-		    paystubactual.PayPeriodID = paystub.PayPeriodID
+		    paystubactual.PayPeriodID = paystub.PayPeriodID AND
+		    paystubactual.OrganizationID = paystub.OrganizationID
 		INNER JOIN employee e
 		        ON e.RowID = paystub.EmployeeID
 		INNER JOIN `position` p
@@ -239,8 +240,8 @@ ELSE
 					        GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
 					    ), decimal_size) `DatCol43`,
 		    ROUND(paystub.OvertimeHours, decimal_size) `DatCol44`,
-		    ROUND(paystub.TotalAdjustments, decimal_size) `DatCol45`,
-		    ROUND(paystub.RestDayPay, decimal_size) `DatCol46`
+		    ROUND(IF(psi_undeclared = TRUE, paystubactual.TotalAdjustments, paystub.TotalAdjustments), decimal_size) `DatCol45`,
+		    ROUND(IF(psi_undeclared = TRUE, paystubactual.RestDayPay, paystub.RestDayPay), decimal_size) `DatCol46`
 		FROM paystub
 		LEFT JOIN paystubactual
 		ON paystubactual.EmployeeID = paystub.EmployeeID AND
