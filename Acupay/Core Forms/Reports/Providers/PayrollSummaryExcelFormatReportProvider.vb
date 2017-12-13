@@ -165,12 +165,12 @@ Public Class PayrollSummaryExcelFormatReportProvider
                     'preferred_excel_font.Name = "Source Sans Pro Regular"
                     'preferred_excel_font.Name = preferred_font.Name
 
+                    Dim tbl_withrows =
+                            ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0)
+
                     Using excl_pkg = New ExcelPackage(newFile)
 
                         Dim ii = 0
-
-                        Dim tbl_withrows =
-                            ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0)
 
                         For Each dtbl As DataTable In tbl_withrows
 
@@ -318,7 +318,14 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                     End Using
 
-                    Process.Start(temp_file)
+                    If tbl_withrows.Count > 0 Then
+
+                        Process.Start(temp_file)
+
+                    Else
+                        MsgBox("No found record(s)", MsgBoxStyle.Information)
+
+                    End If
 
                 End If
             Catch ex As Exception
