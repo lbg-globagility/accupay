@@ -344,7 +344,11 @@ Public Class OffSetting
 
     End Sub
 
+    Const max_row_count = 20
+
     Private Sub dgvempoffset_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvempoffset.CellBeginEdit
+
+        e.Cancel = (e.RowIndex >= max_row_count)
 
     End Sub
 
@@ -695,12 +699,30 @@ Public Class OffSetting
 
                 dgvempoffset.EndEdit(True)
 
-                EXECQUER("DELETE FROM employeeoffset WHERE RowID = '" & dgvempoffset.CurrentRow.Cells("eosRowID").Value & "';" &
-                         "ALTER TABLE employeeoffset AUTO_INCREMENT = 0;")
+                Dim sel_dgvrows =
+                    dgvempoffset.Rows.OfType(Of DataGridViewRow).Where(Function(dgv) dgv.IsNewRow = False And dgv.Selected)
 
-                'c_RowIDLoan
+                Dim sel_count = (sel_dgvrows.Count - 1)
 
-                dgvempoffset.Rows.Remove(dgvempoffset.CurrentRow)
+                For i = 0 To sel_count
+
+                    Dim seldgv = sel_dgvrows(i)
+
+
+                    Dim str_quer As String =
+                        String.Concat("DELETE FROM employeeoffset WHERE RowID = ?offset_rowid;",
+                                      "ALTER TABLE employeeoffset AUTO_INCREMENT = 0;")
+
+                    Dim _params = New Object() {seldgv.Cells("eosRowID").Value}
+
+                    Dim sql As New SQL(str_quer,
+                                       _params)
+
+                    sql.ExecuteQuery()
+
+                    dgvempoffset.Rows.Remove(seldgv)
+
+                Next
 
                 lnk = New LinkLabel.Link
 
