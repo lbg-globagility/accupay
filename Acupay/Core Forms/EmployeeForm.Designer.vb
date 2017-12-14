@@ -1781,7 +1781,6 @@ Partial Class EmployeeForm
         'txtTIN
         '
         Me.txtTIN.Location = New System.Drawing.Point(399, 141)
-        Me.txtTIN.Mask = "000-000-000-000"
         Me.txtTIN.Name = "txtTIN"
         Me.txtTIN.ShortcutsEnabled = False
         Me.txtTIN.Size = New System.Drawing.Size(168, 20)
@@ -1800,7 +1799,6 @@ Partial Class EmployeeForm
         'txtSSS
         '
         Me.txtSSS.Location = New System.Drawing.Point(399, 167)
-        Me.txtSSS.Mask = "00-0000000-00"
         Me.txtSSS.Name = "txtSSS"
         Me.txtSSS.ShortcutsEnabled = False
         Me.txtSSS.Size = New System.Drawing.Size(168, 20)
@@ -1819,7 +1817,6 @@ Partial Class EmployeeForm
         'txtPIN
         '
         Me.txtPIN.Location = New System.Drawing.Point(399, 193)
-        Me.txtPIN.Mask = "0000-0000-0000"
         Me.txtPIN.Name = "txtPIN"
         Me.txtPIN.ShortcutsEnabled = False
         Me.txtPIN.Size = New System.Drawing.Size(168, 20)
@@ -1838,7 +1835,6 @@ Partial Class EmployeeForm
         'txtHDMF
         '
         Me.txtHDMF.Location = New System.Drawing.Point(399, 233)
-        Me.txtHDMF.Mask = "0000-0000-0000"
         Me.txtHDMF.Name = "txtHDMF"
         Me.txtHDMF.ShortcutsEnabled = False
         Me.txtHDMF.Size = New System.Drawing.Size(168, 20)
@@ -2267,7 +2263,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 430)
-        Me.SplitContainer2.SplitterDistance = 176
+        Me.SplitContainer2.SplitterDistance = 173
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3540,7 +3536,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 220)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 223)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
