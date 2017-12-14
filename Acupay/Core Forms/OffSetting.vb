@@ -72,7 +72,7 @@ Public Class OffSetting
 
                         If .Cells("eosRowID").Value = Nothing Then
 
-                            .Cells("eosRowID").Value = _
+                            .Cells("eosRowID").Value =
                                 INSUPD_employeeoffset(,
                                                     publicEmpRowID, .Cells("eosRowID").Value,
                                                     .Cells("eosStartTime").Value,
@@ -116,7 +116,7 @@ Public Class OffSetting
 
         tsbtnSave.Enabled = True
 
-        InfoBalloon("Successfully saved.", _
+        InfoBalloon("Successfully saved.",
                   "Successfully saved.", lblforballoon, 0, -69)
 
         lnk = New LinkLabel.Link
@@ -179,7 +179,7 @@ Public Class OffSetting
                     .Parameters.AddWithValue("eosStartTime", DBNull.Value)
 
                 Else
-                    Dim last_time = _
+                    Dim last_time =
                               Format(CDate(eosStartTime), "HH:mm")
 
                     .Parameters.AddWithValue("eosStartTime", last_time)
@@ -199,7 +199,7 @@ Public Class OffSetting
                     .Parameters.AddWithValue("eosEndTime", DBNull.Value)
 
                 Else
-                    Dim last_time = _
+                    Dim last_time =
                               Format(CDate(eosEndTime), "HH:mm")
 
                     .Parameters.AddWithValue("eosEndTime", last_time)
@@ -369,8 +369,8 @@ Public Class OffSetting
         Dim colName As String = dgvempoffset.Columns(e.ColumnIndex).Name
         Dim rowindx = e.RowIndex
 
-        Static num As Integer = If(reset_static = -1, _
-                                   -1, _
+        Static num As Integer = If(reset_static = -1,
+                                   -1,
                                    num)
 
         If dgvempoffset.RowCount <> 0 Then
@@ -415,8 +415,8 @@ Public Class OffSetting
                         Dim ampm As String = Nothing
 
                         Try
-                            If dateobj.ToString.Contains("A") Or _
-                        dateobj.ToString.Contains("P") Or _
+                            If dateobj.ToString.Contains("A") Or
+                        dateobj.ToString.Contains("P") Or
                         dateobj.ToString.Contains("M") Then
 
                                 ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -695,7 +695,7 @@ Public Class OffSetting
 
                 dgvempoffset.EndEdit(True)
 
-                EXECQUER("DELETE FROM employeeoffset WHERE RowID = '" & dgvempoffset.CurrentRow.Cells("eosRowID").Value & "';" & _
+                EXECQUER("DELETE FROM employeeoffset WHERE RowID = '" & dgvempoffset.CurrentRow.Cells("eosRowID").Value & "';" &
                          "ALTER TABLE employeeoffset AUTO_INCREMENT = 0;")
 
                 'c_RowIDLoan
