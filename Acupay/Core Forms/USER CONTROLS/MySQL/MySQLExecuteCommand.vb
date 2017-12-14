@@ -254,10 +254,10 @@ Public Class MySQLExecuteCommand
     End Sub
 
     Private Sub AssignError(excptn As Exception)
-        err = excptn
-        err_msg = excptn.Message
         has_error = True
 
+        err = excptn
+        err_msg = excptn.Message
     End Sub
 
     Public Sub Execute()

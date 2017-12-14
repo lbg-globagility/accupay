@@ -693,7 +693,7 @@ Public Class OffSetting
 
         If Not dgvempoffset.CurrentRow.IsNewRow Then
 
-            Dim result = MessageBox.Show("Are you sure you want to delete this off set ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+            Dim result = MessageBox.Show("Are you sure you want to delete the selected offset ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
 
             If result = DialogResult.Yes Then
 
