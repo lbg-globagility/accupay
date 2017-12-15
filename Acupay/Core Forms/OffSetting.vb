@@ -687,11 +687,14 @@ Public Class OffSetting
 
     Private Sub tsbtnDelete_Click(sender As Object, e As EventArgs) Handles tsbtnDelete.Click
 
+        dgvempoffset.EndEdit(True)
+
         tsbtnDelete.Enabled = False
 
         dgvempoffset.Focus()
 
         Dim sel_dgvrows =
+<<<<<<< HEAD
                     dgvempoffset.Rows.OfType(Of DataGridViewRow).Where(Function(dgv) dgv.IsNewRow = False And dgv.Selected)
 
         Dim selected_row_count = sel_dgvrows.Count
@@ -699,13 +702,23 @@ Public Class OffSetting
         Dim sel_count = (selected_row_count - 1)
 
         If sel_count > -1 Then
+=======
+            dgvempoffset.Rows.OfType(Of DataGridViewRow).Where(Function(dgv) dgv.IsNewRow = False And dgv.Selected)
+>>>>>>> refineoffsetfiling
 
+        Dim selected_row_count = sel_dgvrows.Count
+
+        Dim sel_count = (selected_row_count - 1)
+
+        If sel_count > -1 Then
+
+<<<<<<< HEAD
+=======
             Dim result = MessageBox.Show("Are you sure you want to delete the selected offset ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
 
             If result = DialogResult.Yes Then
 
-                dgvempoffset.EndEdit(True)
-
+>>>>>>> refineoffsetfiling
                 For i = 0 To sel_count
 
                     Dim seldgv = sel_dgvrows(i)
