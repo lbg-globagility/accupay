@@ -10219,58 +10219,66 @@ Public Class EmployeeForm
                               Optional esal_PayPhilHealthID As Integer? = Nothing,
                               Optional esal_PhilHealthDeduction As Decimal? = Nothing) As Object
 
-        Dim params(20, 1) As Object
-
-        params(0, 0) = "esal_RowID"
-        params(1, 0) = "esal_EmployeeID"
-        params(2, 0) = "esal_CreatedBy"
-        params(3, 0) = "esal_LastUpdBy"
-        params(4, 0) = "esal_OrganizationID"
-        params(5, 0) = "esal_BasicPay"
-        params(6, 0) = "esal_Salary"
-        params(7, 0) = "esal_NoofDependents"
-        params(8, 0) = "esal_MaritalStatus"
-        params(9, 0) = "esal_PositionID"
-        params(10, 0) = "esal_EffectiveDateFrom"
-        params(11, 0) = "esal_EffectiveDateTo"
-        params(12, 0) = "esal_HDMFAmount"
-        params(13, 0) = "esal_PAGIBIGAmout"
-        params(14, 0) = "esal_TrueSalary"
-        params(15, 0) = "esal_IsDoneByImporting"
-
-        params(16, 0) = "esal_DiscardSSS"
-        params(17, 0) = "esal_DiscardPhH"
-        params(18, 0) = "esal_PaySocialSecurityID"
-        params(19, 0) = "esal_PayPhilHealthID"
-        params(20, 0) = "esal_PhilHealthDeduction"
-
-        params(0, 1) = If(esal_RowID = Nothing, DBNull.Value, esal_RowID)
-        params(1, 1) = esal_EmployeeID
-        params(2, 1) = z_User 'CreatedBy
-        params(3, 1) = z_User 'LastUpdBy
-        params(4, 1) = orgztnID
-        params(5, 1) = esal_BasicPay
-        params(6, 1) = esal_Salary
-        params(7, 1) = esal_NoofDependents
-        params(8, 1) = esal_MaritalStatus
-        params(9, 1) = If(esal_PositionID = Nothing, DBNull.Value, esal_PositionID)
-        params(10, 1) = Format(CDate(esal_EffectiveDateFrom), "yyyy-MM-dd")
         Dim date_to = If(esal_EffectiveDateTo = Nothing, DBNull.Value, Format(CDate(esal_EffectiveDateTo), "yyyy-MM-dd"))
-        params(11, 1) = date_to
 
-        params(12, 1) = ValNoComma(txtPagibig.Text) * payfreqdivisor
-        params(13, 1) = ValNoComma(txtPagibig.Text) * payfreqdivisor
+        Dim _params =
+            New Object() {If(esal_RowID = Nothing, DBNull.Value, esal_RowID),
+            esal_EmployeeID,
+            z_User,
+            z_User,
+            orgztnID,
+            esal_BasicPay,
+            esal_Salary,
+            esal_NoofDependents,
+            esal_MaritalStatus,
+            If(esal_PositionID = Nothing, DBNull.Value, esal_PositionID),
+            Format(CDate(esal_EffectiveDateFrom), "yyyy-MM-dd"),
+            If(esal_EffectiveDateTo = Nothing, DBNull.Value, Format(CDate(esal_EffectiveDateTo), "yyyy-MM-dd")),
+            date_to,
+            (ValNoComma(txtPagibig.Text) * payfreqdivisor),
+            (ValNoComma(txtPagibig.Text) * payfreqdivisor),
+            If(esal_TrueSalary = Nothing, Val(esal_Salary), Val(esal_TrueSalary)),
+            esal_IsDoneByImporting,
+            Convert.ToInt16(is_user_override_sss),
+            Convert.ToInt16(is_user_override_phh),
+            esal_PaySocialSecurityID,
+            esal_PayPhilHealthID,
+            esal_PhilHealthDeduction}
 
-        params(14, 1) = If(esal_TrueSalary = Nothing, Val(esal_Salary), Val(esal_TrueSalary))
-        params(15, 1) = esal_IsDoneByImporting
+        Dim str_query As String =
+            String.Concat("SELECT INSUPD_employeesalary(",
+                          "?esal_RowID",
+                          ", ?esal_EmployeeID",
+                          ", ?esal_CreatedBy",
+                          ", ?esal_LastUpdBy",
+                          ", ?esal_OrganizationID",
+                          ", ?esal_BasicPay",
+                          ", ?esal_Salary",
+                          ", ?esal_NoofDependents",
+                          ", ?esal_MaritalStatus",
+                          ", ?esal_PositionID",
+                          ", ?esal_EffectiveDateFrom",
+                          ", ?esal_EffectiveDateTo",
+                          ", ?esal_HDMFAmount",
+                          ", ?esal_PAGIBIGAmout",
+                          ", ?esal_TrueSalary",
+                          ", ?esal_IsDoneByImporting",
+                          ", ?esal_DiscardSSS",
+                          ", ?esal_DiscardPhH",
+                          ", ?esal_PaySocialSecurityID",
+                          ", ?esal_PayPhilHealthID",
+                          ", ?esal_PhilHealthDeduction",
+                          ") `Result`;")
 
-        params(16, 1) = Convert.ToInt16(is_user_override_sss)
-        params(17, 1) = Convert.ToInt16(is_user_override_phh)
-        params(18, 1) = esal_PaySocialSecurityID
-        params(19, 1) = esal_PayPhilHealthID
-        params(20, 1) = esal_PhilHealthDeduction
 
-        INSUPD_employeesalary = EXEC_INSUPD_PROCEDURE(params, "INSUPD_employeesalary", "esalID")
+        Dim sql As New SQL(str_query, _params)
+
+        Dim returnvalue As Object = Nothing
+
+        returnvalue = sql.GetFoundRow
+
+        Return returnvalue
+
     End Function
 
     Private Sub txttruesalary_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtToComputeSal.KeyPress
@@ -17661,9 +17669,73 @@ Public Class EmployeeForm
 
     Function INSUPD_employee(ParamArray paramSetValue() As Object) As Object
 
-        Dim n_ReadSQLFunction As New ReadSQLFunction("INSUPD_employee_01", "returnval", paramSetValue)
+        Dim str_quer As String =
+            String.Concat("SELECT INSUPD_employee_01(",
+                          "?RID",
+                          ",?UserRowID",
+                          ",?OrganizID",
+                          ",?Salutat",
+                          ",?FName",
+                          ",?MName",
+                          ",?LName",
+                          ",?Surname",
+                          ",?EmpID",
+                          ",?TIN",
+                          ",?SSS",
+                          ",?HDMF",
+                          ",?PhH",
+                          ",?EmpStatus",
+                          ",?EmailAdd",
+                          ",?WorkNo",
+                          ",?HomeNo",
+                          ",?MobileNo",
+                          ",?HAddress",
+                          ",?Nick",
+                          ",?JTitle",
+                          ",?Gend",
+                          ",?EmpType",
+                          ",?MaritStat",
+                          ",?BDate",
+                          ",?Start_Date",
+                          ",?TerminatDate",
+                          ",?PositID",
+                          ",?PayFreqID",
+                          ",?NumDependent",
+                          ",?UTOverride",
+                          ",?OTOverride",
+                          ",?NewEmpFlag",
+                          ",?LeaveBal",
+                          ",?SickBal",
+                          ",?MaternBal",
+                          ",?LeaveAllow",
+                          ",?SickAllow",
+                          ",?MaternAllow",
+                          ",?Imag",
+                          ",?LeavePayPer",
+                          ",?SickPayPer",
+                          ",?MaternPayPer",
+                          ",?IsExemptAlphaList",
+                          ",?Work_DaysPerYear",
+                          ",?Day_Rest",
+                          ",?ATM_No",
+                          ",?OtherLeavePayPer",
+                          ",?Bank_Name",
+                          ",?Calc_Holiday",
+                          ",?Calc_SpecialHoliday",
+                          ",?Calc_NightDiff",
+                          ",?Calc_NightDiffOT",
+                          ",?Calc_RestDay",
+                          ",?Calc_RestDayOT",
+                          ",?PositionTextName",
+                          ");")
 
-        Return n_ReadSQLFunction.ReturnValue
+        Dim sql As New SQL(str_quer, paramSetValue)
+
+        Dim returnvalue As Object = Nothing
+
+        sql.ExecuteQuery()
+
+        Return returnvalue
 
     End Function
 
