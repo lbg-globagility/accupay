@@ -691,18 +691,20 @@ Public Class OffSetting
 
         dgvempoffset.Focus()
 
-        If Not dgvempoffset.CurrentRow.IsNewRow Then
+        Dim sel_dgvrows =
+                    dgvempoffset.Rows.OfType(Of DataGridViewRow).Where(Function(dgv) dgv.IsNewRow = False And dgv.Selected)
+
+        Dim selected_row_count = sel_dgvrows.Count
+
+        Dim sel_count = (selected_row_count - 1)
+
+        If sel_count > -1 Then
 
             Dim result = MessageBox.Show("Are you sure you want to delete the selected offset ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
 
             If result = DialogResult.Yes Then
 
                 dgvempoffset.EndEdit(True)
-
-                Dim sel_dgvrows =
-                    dgvempoffset.Rows.OfType(Of DataGridViewRow).Where(Function(dgv) dgv.IsNewRow = False And dgv.Selected)
-
-                Dim sel_count = (sel_dgvrows.Count - 1)
 
                 For i = 0 To sel_count
 

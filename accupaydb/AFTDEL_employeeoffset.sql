@@ -11,7 +11,8 @@ CREATE TRIGGER `AFTDEL_employeeoffset` AFTER DELETE ON `employeeoffset` FOR EACH
 
 UPDATE employee
 SET OffsetBalance=IFNULL(OffsetBalance,0) - COMPUTE_TimeDifference(OLD.StartTime,OLD.EndTime)
-WHERE RowID=OLD.EmployeeID;
+WHERE RowID=OLD.EmployeeID
+AND OLD.`Status` = 'Approved';
 
 SET GLOBAL event_scheduler = ON;
 
