@@ -10195,58 +10195,66 @@ Public Class EmployeeForm
                               Optional esal_PayPhilHealthID As Integer? = Nothing,
                               Optional esal_PhilHealthDeduction As Decimal? = Nothing) As Object
 
-        Dim params(20, 1) As Object
-
-        params(0, 0) = "esal_RowID"
-        params(1, 0) = "esal_EmployeeID"
-        params(2, 0) = "esal_CreatedBy"
-        params(3, 0) = "esal_LastUpdBy"
-        params(4, 0) = "esal_OrganizationID"
-        params(5, 0) = "esal_BasicPay"
-        params(6, 0) = "esal_Salary"
-        params(7, 0) = "esal_NoofDependents"
-        params(8, 0) = "esal_MaritalStatus"
-        params(9, 0) = "esal_PositionID"
-        params(10, 0) = "esal_EffectiveDateFrom"
-        params(11, 0) = "esal_EffectiveDateTo"
-        params(12, 0) = "esal_HDMFAmount"
-        params(13, 0) = "esal_PAGIBIGAmout"
-        params(14, 0) = "esal_TrueSalary"
-        params(15, 0) = "esal_IsDoneByImporting"
-
-        params(16, 0) = "esal_DiscardSSS"
-        params(17, 0) = "esal_DiscardPhH"
-        params(18, 0) = "esal_PaySocialSecurityID"
-        params(19, 0) = "esal_PayPhilHealthID"
-        params(20, 0) = "esal_PhilHealthDeduction"
-
-        params(0, 1) = If(esal_RowID = Nothing, DBNull.Value, esal_RowID)
-        params(1, 1) = esal_EmployeeID
-        params(2, 1) = z_User 'CreatedBy
-        params(3, 1) = z_User 'LastUpdBy
-        params(4, 1) = orgztnID
-        params(5, 1) = esal_BasicPay
-        params(6, 1) = esal_Salary
-        params(7, 1) = esal_NoofDependents
-        params(8, 1) = esal_MaritalStatus
-        params(9, 1) = If(esal_PositionID = Nothing, DBNull.Value, esal_PositionID)
-        params(10, 1) = Format(CDate(esal_EffectiveDateFrom), "yyyy-MM-dd")
         Dim date_to = If(esal_EffectiveDateTo = Nothing, DBNull.Value, Format(CDate(esal_EffectiveDateTo), "yyyy-MM-dd"))
-        params(11, 1) = date_to
 
-        params(12, 1) = ValNoComma(txtPagibig.Text) * payfreqdivisor
-        params(13, 1) = ValNoComma(txtPagibig.Text) * payfreqdivisor
+        Dim _params =
+            New Object() {If(esal_RowID = Nothing, DBNull.Value, esal_RowID),
+            esal_EmployeeID,
+            z_User,
+            z_User,
+            orgztnID,
+            esal_BasicPay,
+            esal_Salary,
+            esal_NoofDependents,
+            esal_MaritalStatus,
+            If(esal_PositionID = Nothing, DBNull.Value, esal_PositionID),
+            Format(CDate(esal_EffectiveDateFrom), "yyyy-MM-dd"),
+            If(esal_EffectiveDateTo = Nothing, DBNull.Value, Format(CDate(esal_EffectiveDateTo), "yyyy-MM-dd")),
+            date_to,
+            (ValNoComma(txtPagibig.Text) * payfreqdivisor),
+            (ValNoComma(txtPagibig.Text) * payfreqdivisor),
+            If(esal_TrueSalary = Nothing, Val(esal_Salary), Val(esal_TrueSalary)),
+            esal_IsDoneByImporting,
+            Convert.ToInt16(is_user_override_sss),
+            Convert.ToInt16(is_user_override_phh),
+            esal_PaySocialSecurityID,
+            esal_PayPhilHealthID,
+            esal_PhilHealthDeduction}
 
-        params(14, 1) = If(esal_TrueSalary = Nothing, Val(esal_Salary), Val(esal_TrueSalary))
-        params(15, 1) = esal_IsDoneByImporting
+        Dim str_query As String =
+            String.Concat("SELECT INSUPD_employeesalary(",
+                          "?esal_RowID",
+                          ", ?esal_EmployeeID",
+                          ", ?esal_CreatedBy",
+                          ", ?esal_LastUpdBy",
+                          ", ?esal_OrganizationID",
+                          ", ?esal_BasicPay",
+                          ", ?esal_Salary",
+                          ", ?esal_NoofDependents",
+                          ", ?esal_MaritalStatus",
+                          ", ?esal_PositionID",
+                          ", ?esal_EffectiveDateFrom",
+                          ", ?esal_EffectiveDateTo",
+                          ", ?esal_HDMFAmount",
+                          ", ?esal_PAGIBIGAmout",
+                          ", ?esal_TrueSalary",
+                          ", ?esal_IsDoneByImporting",
+                          ", ?esal_DiscardSSS",
+                          ", ?esal_DiscardPhH",
+                          ", ?esal_PaySocialSecurityID",
+                          ", ?esal_PayPhilHealthID",
+                          ", ?esal_PhilHealthDeduction",
+                          ") `Result`;")
 
-        params(16, 1) = Convert.ToInt16(is_user_override_sss)
-        params(17, 1) = Convert.ToInt16(is_user_override_phh)
-        params(18, 1) = esal_PaySocialSecurityID
-        params(19, 1) = esal_PayPhilHealthID
-        params(20, 1) = esal_PhilHealthDeduction
 
-        INSUPD_employeesalary = EXEC_INSUPD_PROCEDURE(params, "INSUPD_employeesalary", "esalID")
+        Dim sql As New SQL(str_query, _params)
+
+        Dim returnvalue As Object = Nothing
+
+        returnvalue = sql.GetFoundRow
+
+        Return returnvalue
+
     End Function
 
     Private Sub txttruesalary_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtToComputeSal.KeyPress
@@ -11679,14 +11687,19 @@ Public Class EmployeeForm
             once = 1
 
             txtallowamt.ContextMenu = New ContextMenu
+
             cboallowfreq.ContextMenu = New ContextMenu
+
             cboallowtype.ContextMenu = New ContextMenu
-            '48
+
+
             categallowID = EXECQUER("SELECT RowID FROM category WHERE OrganizationID=" & orgztnID & " AND CategoryName='" & "Allowance Type" & "' LIMIT 1;")
 
             If Val(categallowID) = 0 Then
                 categallowID = INSUPD_category(, "Allowance Type")
             End If
+
+
 
             enlistTheLists("SELECT CONCAT(COALESCE(p.PartNo,''),'@',p.RowID)" &
                            " FROM product p" &
@@ -11747,12 +11760,17 @@ Public Class EmployeeForm
                         End If
 
                     End If
+
                 Next
+
             End If
+
         End If
 
         tabIndx = 13 'TabControl1.SelectedIndex
+
         dgvEmp_SelectionChanged(sender, e)
+
     End Sub
 
     Private Sub tsbtnNewAllowance_Click(sender As Object, e As EventArgs) Handles tsbtnNewAllowance.Click
@@ -11766,7 +11784,9 @@ Public Class EmployeeForm
                 Exit For
             End If
         Next
+
         dgvempallowance_SelectionChanged(sender, e)
+
     End Sub
 
     Dim dontUpdateAllow As SByte = 0
@@ -11808,7 +11828,6 @@ Public Class EmployeeForm
             Exit Sub
         End If
 
-        'RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
         Static once As SByte = 0
 
@@ -11836,8 +11855,10 @@ Public Class EmployeeForm
                                                      .Cells("eall_Amount").Value,
                                                      .Cells("eall_ProdID").Value)
                         End If
+
                     End If
                 End If
+
             End With
         Next
 
@@ -11850,7 +11871,6 @@ Public Class EmployeeForm
             dgvEmp_SelectionChanged(sender, e)
 
         End If
-        'AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
     End Sub
 
@@ -11889,6 +11909,7 @@ Public Class EmployeeForm
         INSUPD_employeeallowance = EXEC_INSUPD_PROCEDURE(params,
                                                           "INSUPD_employeeallowance",
                                                           "eallow_RowID")
+
     End Function
 
     Private Sub ToolStripButton10_Click(sender As Object, e As EventArgs) Handles ToolStripButton10.Click
@@ -11903,6 +11924,10 @@ Public Class EmployeeForm
     Private Sub cboallowfreq_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboallowfreq.KeyPress, cboallowtype.KeyPress
 
         e.Handled = True
+
+    End Sub
+
+    Private Sub cboallowfreq_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboallowfreq.SelectedIndexChanged ', cboallowfreq.SelectedIndexChanged
 
     End Sub
 
@@ -11938,7 +11963,19 @@ Public Class EmployeeForm
 
                 lblreqstartdate.Visible = 0
                 lblreqenddate.Visible = 0
+
         End Select
+
+    End Sub
+
+    Private Sub cboallowfreq_GotFocus(sender As Object, e As EventArgs) Handles cboallowfreq.GotFocus
+
+        If dgvempallowance.RowCount = 1 Then
+
+        Else
+            dgvempallowance.Item("eall_Frequency", dgvallowRowindx).Selected = 1
+        End If
+
     End Sub
 
     Private Sub cboallowfreq_Leave(sender As Object, e As EventArgs) Handles cboallowfreq.Leave ', cboallowfreq.SelectedIndexChanged
@@ -11949,18 +11986,18 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempallowance.Rows.Add()
                 dgvallowRowindx = dgvempallowance.RowCount - 2
-                'dgvempallowance.Item("eall_Frequency", dgvallowRowindx).Selected = True
+
             End If
         Else
             If dgvempallowance.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempallowance.Rows.Add()
                     dgvallowRowindx = dgvempallowance.RowCount - 2
-                    'dgvempallowance.Item("eall_Frequency", dgvallowRowindx).Selected = True
+
                 End If
             Else
                 dgvallowRowindx = dgvempallowance.CurrentRow.Index
-                'dgvempallowance.Item("eall_Frequency", dgvallowRowindx).Selected = True
+
             End If
         End If
 
@@ -11995,6 +12032,7 @@ Public Class EmployeeForm
     Private Sub cboallowtype_GotFocus(sender As Object, e As EventArgs) Handles cboallowtype.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
+
         Else
             dgvempallowance.Item("eall_type", dgvallowRowindx).Selected = 1
         End If
@@ -12016,15 +12054,18 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempallowance.Rows.Add()
                 dgvallowRowindx = dgvempallowance.RowCount - 2
+
             End If
         Else
             If dgvempallowance.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempallowance.Rows.Add()
                     dgvallowRowindx = dgvempallowance.RowCount - 2
+
                 End If
             Else
                 dgvallowRowindx = dgvempallowance.CurrentRow.Index
+
             End If
         End If
 
@@ -12105,6 +12146,8 @@ Public Class EmployeeForm
                 m = 0
             End If
 
+            'ElseIf e_asc = 70 Or e_asc = 102 Then 'f
+            '    dtpallowstartdate.Value = CDate("Feb-" & dd & "-" & yyyy)
         ElseIf e_asc = 83 Or e_asc = 115 Then 's
             dtpallowstartdate.Value = CDate("Sep-" & dd & "-" & yyyy)
         ElseIf e_asc = 78 Or e_asc = 110 Then 'n
@@ -12176,6 +12219,8 @@ Public Class EmployeeForm
                 m = 0
             End If
 
+            'ElseIf e_asc = 70 Or e_asc = 102 Then 'f
+            '    dtpallowenddate.Value = CDate("Feb-" & dd & "-" & yyyy)
         ElseIf e_asc = 83 Or e_asc = 115 Then 's
             dtpallowenddate.Value = CDate("Sep-" & dd & "-" & yyyy)
         ElseIf e_asc = 78 Or e_asc = 110 Then 'n
@@ -12189,12 +12234,16 @@ Public Class EmployeeForm
         End If
     End Sub
 
+    Private Sub Label167_Click(sender As Object, e As EventArgs) Handles Label167.Click
+
+    End Sub
+
     Dim dtpallowstartdateval As Object = Nothing
 
     Dim empallow_daterangehasrecord
 
     Private Sub dtpallowstartdate_ValueChanged(sender As Object, e As EventArgs) 'Handles dtpallowstartdate.ValueChanged
-
+        'dtpallowstartdateval = dtpallowstartdate.Value
         empallow_daterangehasrecord = 0
         Dim date_range = DateDiff(DateInterval.Day, CDate(dtpallowstartdate.Value), CDate(dtpallowenddate.Value))
 
@@ -12214,29 +12263,31 @@ Public Class EmployeeForm
         If dgvempallowance.RowCount = 1 Then
 
         Else
-
             dgvempallowance.Item("eall_Start", dgvallowRowindx).Selected = 1
-
         End If
+
     End Sub
 
     Private Sub dtpallowstartdate_Leave(sender As Object, e As EventArgs) Handles dtpallowstartdate.Leave
-
+        'dtpallowstartdateval.ToString
         Dim thegetval = If(dtpallowstartdateval = Nothing, Trim(dtpallowstartdate.Value), Trim(dtpallowstartdateval))
 
         If dgvempallowance.RowCount = 1 Then
             If thegetval <> "" Then
                 dgvempallowance.Rows.Add()
                 dgvallowRowindx = dgvempallowance.RowCount - 2
+
             End If
         Else
             If dgvempallowance.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempallowance.Rows.Add()
                     dgvallowRowindx = dgvempallowance.RowCount - 2
+
                 End If
             Else
                 dgvallowRowindx = dgvempallowance.CurrentRow.Index
+
             End If
         End If
 
@@ -12258,11 +12309,17 @@ Public Class EmployeeForm
             Else
             End If
         End With
+
+    End Sub
+
+    Private Sub Label168_Click(sender As Object, e As EventArgs) Handles Label168.Click
+
     End Sub
 
     Dim dtpallowenddateval As Object = Nothing
 
     Private Sub dtpallowenddate_ValueChanged(sender As Object, e As EventArgs) 'Handles dtpallowenddate.ValueChanged
+        'dtpallowenddateval = dtpallowenddate.Value
         empallow_daterangehasrecord = 0
         Dim date_range = DateDiff(DateInterval.Day, CDate(dtpallowstartdate.Value), CDate(dtpallowenddate.Value))
 
@@ -12284,6 +12341,7 @@ Public Class EmployeeForm
         Else
             dgvempallowance.Item("eall_End", dgvallowRowindx).Selected = 1
         End If
+
     End Sub
 
     Private Sub dtpallowenddate_Leave(sender As Object, e As EventArgs) Handles dtpallowenddate.Leave
@@ -12294,15 +12352,18 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempallowance.Rows.Add()
                 dgvallowRowindx = dgvempallowance.RowCount - 2
+
             End If
         Else
             If dgvempallowance.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempallowance.Rows.Add()
                     dgvallowRowindx = dgvempallowance.RowCount - 2
+
                 End If
             Else
                 dgvallowRowindx = dgvempallowance.CurrentRow.Index
+
             End If
         End If
 
@@ -12324,9 +12385,14 @@ Public Class EmployeeForm
 
     End Sub
 
+    Private Sub txtallowamt_TextChanged(sender As Object, e As EventArgs) Handles txtallowamt.TextChanged
+
+    End Sub
+
     Private Sub txtallowamt_GotFocus(sender As Object, e As EventArgs) Handles txtallowamt.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
+
         Else
             dgvempallowance.Item("eall_Amount", dgvallowRowindx).Selected = 1
         End If
@@ -12341,15 +12407,18 @@ Public Class EmployeeForm
             If thegetval <> "" Then
                 dgvempallowance.Rows.Add()
                 dgvallowRowindx = dgvempallowance.RowCount - 2
+
             End If
         Else
             If dgvempallowance.CurrentRow.IsNewRow Then
                 If thegetval <> "" Then
                     dgvempallowance.Rows.Add()
                     dgvallowRowindx = dgvempallowance.RowCount - 2
+
                 End If
             Else
                 dgvallowRowindx = dgvempallowance.CurrentRow.Index
+
             End If
         End If
 
@@ -12411,6 +12480,10 @@ Public Class EmployeeForm
 
     End Sub
 
+    Private Sub dgvempallowance_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempallowance.CellContentClick
+
+    End Sub
+
     Public listofEditEmpAllow As New List(Of String)
 
     Private Sub dgvempallowance_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempallowance.CellEndEdit
@@ -12425,9 +12498,7 @@ Public Class EmployeeForm
             Else
             End If
 
-            If colname = "eall_Start" Or colname = "eall_End" Then
-
-            ElseIf colname = "eall_Type" Then
+            If colname = "eall_Type" Then
 
                 For Each strval In allowance_type
                     Dim strcompare = Trim(dgvempallowance.Item("eall_Type", e.RowIndex).Value)
@@ -12436,8 +12507,11 @@ Public Class EmployeeForm
                         Exit For
                     End If
                 Next
+
             End If
+
         End With
+
     End Sub
 
     Dim allowance_prevval(5) As Object
@@ -12530,8 +12604,6 @@ Public Class EmployeeForm
 
     Private Sub txtallowamt_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtallowamt.KeyPress
 
-        '*******************************CHANGES
-
         Dim e_KAsc As String = Asc(e.KeyChar)
 
         Static onedash As SByte = 0
@@ -12595,7 +12667,8 @@ Public Class EmployeeForm
     Private Sub tsbtnimportallowance_Click(sender As Object, e As EventArgs) Handles tsbtnimportallowance.Click
         Dim browsefile As New OpenFileDialog()
 
-        browsefile.Filter = str_ms_excel_file_extensn
+        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
 
         If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
 
@@ -12610,12 +12683,6 @@ Public Class EmployeeForm
                 Dim n_importallowance As New ImportAllowance(catchDatSet, Me)
 
                 Dim objNewThread As New Thread(AddressOf n_importallowance.DoImport)
-
-                Static indx As Integer = 0
-
-                indx += 1
-
-                objNewThread.Name = String.Concat("ImportAllowance", indx)
 
                 objNewThread.IsBackground = True
 
@@ -17578,9 +17645,73 @@ Public Class EmployeeForm
 
     Function INSUPD_employee(ParamArray paramSetValue() As Object) As Object
 
-        Dim n_ReadSQLFunction As New ReadSQLFunction("INSUPD_employee_01", "returnval", paramSetValue)
+        Dim str_quer As String =
+            String.Concat("SELECT INSUPD_employee_01(",
+                          "?RID",
+                          ",?UserRowID",
+                          ",?OrganizID",
+                          ",?Salutat",
+                          ",?FName",
+                          ",?MName",
+                          ",?LName",
+                          ",?Surname",
+                          ",?EmpID",
+                          ",?TIN",
+                          ",?SSS",
+                          ",?HDMF",
+                          ",?PhH",
+                          ",?EmpStatus",
+                          ",?EmailAdd",
+                          ",?WorkNo",
+                          ",?HomeNo",
+                          ",?MobileNo",
+                          ",?HAddress",
+                          ",?Nick",
+                          ",?JTitle",
+                          ",?Gend",
+                          ",?EmpType",
+                          ",?MaritStat",
+                          ",?BDate",
+                          ",?Start_Date",
+                          ",?TerminatDate",
+                          ",?PositID",
+                          ",?PayFreqID",
+                          ",?NumDependent",
+                          ",?UTOverride",
+                          ",?OTOverride",
+                          ",?NewEmpFlag",
+                          ",?LeaveBal",
+                          ",?SickBal",
+                          ",?MaternBal",
+                          ",?LeaveAllow",
+                          ",?SickAllow",
+                          ",?MaternAllow",
+                          ",?Imag",
+                          ",?LeavePayPer",
+                          ",?SickPayPer",
+                          ",?MaternPayPer",
+                          ",?IsExemptAlphaList",
+                          ",?Work_DaysPerYear",
+                          ",?Day_Rest",
+                          ",?ATM_No",
+                          ",?OtherLeavePayPer",
+                          ",?Bank_Name",
+                          ",?Calc_Holiday",
+                          ",?Calc_SpecialHoliday",
+                          ",?Calc_NightDiff",
+                          ",?Calc_NightDiffOT",
+                          ",?Calc_RestDay",
+                          ",?Calc_RestDayOT",
+                          ",?PositionTextName",
+                          ");")
 
-        Return n_ReadSQLFunction.ReturnValue
+        Dim sql As New SQL(str_quer, paramSetValue)
+
+        Dim returnvalue As Object = Nothing
+
+        sql.ExecuteQuery()
+
+        Return returnvalue
 
     End Function
 

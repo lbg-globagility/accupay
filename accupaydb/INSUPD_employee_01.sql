@@ -123,7 +123,7 @@ IF EmpID != '' THEN
         ,BDate
         ,Start_Date
         ,termin_date
-        ,INSUPD_position(NULL,PositionTextName,UserRowID,OrganizID,UserRowID,NULL,division_parentID)
+        ,INSUPD_position(NULL,PositionTextName,UserRowID,OrganizID,UserRowID,NULL,division_parentID, NULL)
         ,PayFreqID
         ,number_dependnt
         ,UTOverride

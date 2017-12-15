@@ -98,13 +98,18 @@
         End Set
     End Property
 
+    Private is_add_new As Boolean = False
+
+    Property IsAddNew As Boolean
+        Get
+            Return is_add_new
+        End Get
+        Set(value As Boolean)
+            is_add_new = value
+        End Set
+    End Property
+
     Protected Overrides Sub OnLoad(e As EventArgs)
-
-        '339
-
-        dgvAddress.Height += 30
-
-        Me.Width -= 30
 
         MyBase.OnLoad(e)
 
@@ -208,6 +213,10 @@
 
         End If
 
+        If is_add_new Then
+            Width = 355
+        End If
+
     End Sub
 
     Function INSUPD_address(Optional ad_RowID = Nothing,
@@ -219,34 +228,43 @@
                             Optional ad_Country = Nothing,
                             Optional ad_ZipCode = Nothing) As Object
 
+        Dim params =
+            New Object() {If(ad_RowID = Nothing, DBNull.Value, ad_RowID),
+            z_User,
+            ad_StreetAddress1,
+            ad_StreetAddress2,
+            ad_Barangay,
+            ad_CityTown,
+            ad_State,
+            ad_Country,
+            ad_ZipCode}
+
+        Dim str_sql_quer As String =
+            String.Concat("SELECT INSUPD_address(?ad_rowid",
+                          ", ?user_rowid",
+                          ", ?ad_street1",
+                          ", ?ad_street2",
+                          ", ?ad_brgy",
+                          ", ?ad_city",
+                          ", ?ad_state",
+                          ", ?ad_country",
+                          ", ?ad_zipcode) `Result`;")
+
+        Dim sql As New SQL(str_sql_quer,
+                           params)
+
         Dim returnvalue As Object = Nothing
 
-        Dim params(8, 2)
+        Try
 
-        params(0, 0) = "ad_RowID"
-        params(1, 0) = "ad_UserRowID"
-        params(2, 0) = "ad_StreetAddress1"
-        params(3, 0) = "ad_StreetAddress2"
-        params(4, 0) = "ad_Barangay"
-        params(5, 0) = "ad_CityTown"
-        params(6, 0) = "ad_State"
-        params(7, 0) = "ad_Country"
-        params(8, 0) = "ad_ZipCode"
+            returnvalue = sql.GetFoundRow
 
-        params(0, 1) = If(ad_RowID = Nothing, DBNull.Value, ad_RowID)
-        params(1, 1) = z_User
-        params(2, 1) = ad_StreetAddress1
-        params(3, 1) = ad_StreetAddress2
-        params(4, 1) = ad_Barangay
-        params(5, 1) = ad_CityTown
-        params(6, 1) = ad_State
-        params(7, 1) = ad_Country
-        params(8, 1) = ad_ZipCode
-
-        returnvalue = _
-        EXEC_INSUPD_PROCEDURE(params,
-                              "INSUPD_address",
-                              "returnvalue")
+            If sql.HasError Then
+                Throw sql.ErrorException
+            End If
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Name))
+        End Try
 
         Return returnvalue
 
@@ -279,6 +297,17 @@
         dgvAddress_SelectionChanged(dgvAddress, New EventArgs)
 
         AddHandler dgvAddress.SelectionChanged, AddressOf dgvAddress_SelectionChanged
+
+        Static once As Boolean = True
+
+        If once And is_add_new Then
+            once = False
+
+            tsbtnNewAddress_Click(tsbtnNewAddress, New EventArgs)
+
+            txtStreet.Focus()
+
+        End If
 
     End Sub
 
@@ -391,21 +420,15 @@
 
             .FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
 
-            .StartPosition = FormStartPosition.CenterScreen
-
+            .MaximizeBox = False
             .MinimizeBox = False
 
-            .MaximizeBox = False
+            .StartPosition = FormStartPosition.CenterScreen
 
-            .Width = 375
+            If is_add_new = False Then
+                .Width = 346
 
-            .Height += 30
-
-            dgvAddress.Anchor = AnchorStyles.None
-
-            dgvAddress.Location = New Point(25, 173)
-
-            dgvAddress.Height -= 30
+            End If
 
             '398,368
 

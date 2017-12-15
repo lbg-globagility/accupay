@@ -23,7 +23,7 @@ Partial Class AddressClass
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(AddressClass))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvAddress = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.adRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.adStreet = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -72,17 +72,17 @@ Partial Class AddressClass
         Me.dgvAddress.AllowUserToOrderColumns = True
         Me.dgvAddress.AllowUserToResizeColumns = False
         Me.dgvAddress.AllowUserToResizeRows = False
-        resources.ApplyResources(Me.dgvAddress, "dgvAddress")
         Me.dgvAddress.BackgroundColor = System.Drawing.Color.White
+        resources.ApplyResources(Me.dgvAddress, "dgvAddress")
         Me.dgvAddress.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.adRowID, Me.adStreet, Me.adStreet2, Me.adBrgy, Me.adCity, Me.adState, Me.adCountry, Me.adZip})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvAddress.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvAddress.DefaultCellStyle = DataGridViewCellStyle5
         Me.dgvAddress.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvAddress.MultiSelect = False
         Me.dgvAddress.Name = "dgvAddress"
@@ -160,10 +160,10 @@ Partial Class AddressClass
         '
         'Panel1
         '
-        resources.ApplyResources(Me.Panel1, "Panel1")
         Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel1.Controls.Add(Me.Panel2)
         Me.Panel1.Controls.Add(Me.ToolStrip1)
+        resources.ApplyResources(Me.Panel1, "Panel1")
         Me.Panel1.Name = "Panel1"
         '
         'Panel2
@@ -308,7 +308,6 @@ Partial Class AddressClass
         Me.Controls.Add(Me.autcomptxtaddress)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.dgvAddress)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.KeyPreview = True
         Me.Name = "AddressClass"
         CType(Me.dgvAddress, System.ComponentModel.ISupportInitialize).EndInit()

@@ -751,6 +751,8 @@ Public Class OrganizationForm
 
         Dim n_AddressClass As New AddressClass
 
+        n_AddressClass.IsAddNew = True
+
         If n_AddressClass.ShowDialog("") = Windows.Forms.DialogResult.OK Then
 
             Dim full_address = String.Empty

@@ -37,6 +37,16 @@ Public Class OffSetting
 
         dgvempoffset.ClearSelection()
 
+        If dgvempoffset.RowCount > max_row_count Then
+
+            lnk = New LinkLabel.Link
+
+            lnk.Name = "Nxt"
+
+            Pagination_Link(First, New LinkLabelLinkClickedEventArgs(lnk))
+
+        End If
+
         dgvempoffset.Focus()
 
         For Each dgvrow As DataGridViewRow In dgvempoffset.Rows
@@ -72,7 +82,7 @@ Public Class OffSetting
 
                         If .Cells("eosRowID").Value = Nothing Then
 
-                            .Cells("eosRowID").Value = _
+                            .Cells("eosRowID").Value =
                                 INSUPD_employeeoffset(,
                                                     publicEmpRowID, .Cells("eosRowID").Value,
                                                     .Cells("eosStartTime").Value,
@@ -116,7 +126,7 @@ Public Class OffSetting
 
         tsbtnSave.Enabled = True
 
-        InfoBalloon("Successfully saved.", _
+        InfoBalloon("Successfully saved.",
                   "Successfully saved.", lblforballoon, 0, -69)
 
         lnk = New LinkLabel.Link
@@ -179,7 +189,7 @@ Public Class OffSetting
                     .Parameters.AddWithValue("eosStartTime", DBNull.Value)
 
                 Else
-                    Dim last_time = _
+                    Dim last_time =
                               Format(CDate(eosStartTime), "HH:mm")
 
                     .Parameters.AddWithValue("eosStartTime", last_time)
@@ -199,7 +209,7 @@ Public Class OffSetting
                     .Parameters.AddWithValue("eosEndTime", DBNull.Value)
 
                 Else
-                    Dim last_time = _
+                    Dim last_time =
                               Format(CDate(eosEndTime), "HH:mm")
 
                     .Parameters.AddWithValue("eosEndTime", last_time)
@@ -344,7 +354,11 @@ Public Class OffSetting
 
     End Sub
 
+    Const max_row_count = 20
+
     Private Sub dgvempoffset_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvempoffset.CellBeginEdit
+
+        e.Cancel = (e.RowIndex >= max_row_count)
 
     End Sub
 
@@ -369,8 +383,8 @@ Public Class OffSetting
         Dim colName As String = dgvempoffset.Columns(e.ColumnIndex).Name
         Dim rowindx = e.RowIndex
 
-        Static num As Integer = If(reset_static = -1, _
-                                   -1, _
+        Static num As Integer = If(reset_static = -1,
+                                   -1,
                                    num)
 
         If dgvempoffset.RowCount <> 0 Then
@@ -415,8 +429,8 @@ Public Class OffSetting
                         Dim ampm As String = Nothing
 
                         Try
-                            If dateobj.ToString.Contains("A") Or _
-                        dateobj.ToString.Contains("P") Or _
+                            If dateobj.ToString.Contains("A") Or
+                        dateobj.ToString.Contains("P") Or
                         dateobj.ToString.Contains("M") Then
 
                                 ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -683,24 +697,44 @@ Public Class OffSetting
 
     Private Sub tsbtnDelete_Click(sender As Object, e As EventArgs) Handles tsbtnDelete.Click
 
+        dgvempoffset.EndEdit(True)
+
         tsbtnDelete.Enabled = False
 
         dgvempoffset.Focus()
 
-        If Not dgvempoffset.CurrentRow.IsNewRow Then
+        Dim sel_dgvrows =
+            dgvempoffset.Rows.OfType(Of DataGridViewRow).Where(Function(dgv) dgv.IsNewRow = False And dgv.Selected)
 
-            Dim result = MessageBox.Show("Are you sure you want to delete this off set ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+        Dim selected_row_count = sel_dgvrows.Count
+
+        Dim sel_count = (selected_row_count - 1)
+
+        If sel_count > -1 Then
+
+            Dim result = MessageBox.Show("Are you sure you want to delete the selected offset ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
 
             If result = DialogResult.Yes Then
 
-                dgvempoffset.EndEdit(True)
+                For i = 0 To sel_count
 
-                EXECQUER("DELETE FROM employeeoffset WHERE RowID = '" & dgvempoffset.CurrentRow.Cells("eosRowID").Value & "';" & _
-                         "ALTER TABLE employeeoffset AUTO_INCREMENT = 0;")
+                    Dim seldgv = sel_dgvrows(i)
 
-                'c_RowIDLoan
 
-                dgvempoffset.Rows.Remove(dgvempoffset.CurrentRow)
+                    Dim str_quer As String =
+                        String.Concat("DELETE FROM employeeoffset WHERE RowID = ?offset_rowid;",
+                                      "ALTER TABLE employeeoffset AUTO_INCREMENT = 0;")
+
+                    Dim _params = New Object() {seldgv.Cells("eosRowID").Value}
+
+                    Dim sql As New SQL(str_quer,
+                                       _params)
+
+                    sql.ExecuteQuery()
+
+                    dgvempoffset.Rows.Remove(seldgv)
+
+                Next
 
                 lnk = New LinkLabel.Link
 
