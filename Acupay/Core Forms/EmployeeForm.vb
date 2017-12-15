@@ -9086,18 +9086,13 @@ Public Class EmployeeForm
     End Sub
 
     Sub VIEW_employeeloanhistory(ByVal EmployeeRowID As Object)
-        Dim params(1, 2) As Object
+        Dim params = New Object(,) {
+            {"ehist_EmployeeID", EmployeeRowID},
+            {"ehist_OrganizationID", orgztnID},
+            {"ehist_LoanType", Nothing}
+        }
 
-        params(0, 0) = "ehist_EmployeeID"
-        params(1, 0) = "ehist_OrganizationID"
-
-        params(0, 1) = EmployeeRowID
-        params(1, 1) = orgztnID
-
-        EXEC_VIEW_PROCEDURE(params,
-                            "VIEW_employeeloanhistory",
-                            dgvloanhisto)
-
+        EXEC_VIEW_PROCEDURE(params, "VIEW_employeeloanhistory", dgvloanhisto)
     End Sub
 
     Private Sub GroupBox3_Enter(sender As Object, e As EventArgs) Handles GroupBox3.Enter
@@ -9124,32 +9119,13 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub cbohistoloantype_SelectedIndexChanged(sender As Object, e As EventArgs) 'Handles cbohistoloantype.SelectedIndexChanged
+        Dim params = New Object(,) {
+            {"ehist_EmployeeID", dgvEmp.CurrentRow.Cells("RowID").Value},
+            {"ehist_OrganizationID", orgztnID},
+            {"ehist_LoanType", cbohistoloantype.Text}
+        }
 
-        If dgvEmp.RowCount <> 0 Then
-
-            Dim dtloanhist As New DataTable
-
-            dtloanhist = retAsDatTbl("SELECT COALESCE(DATE_FORMAT(DeductionDate,'%m/%d/%Y'),'') 'DeductionDate'" &
-                                     ",COALESCE(DeductionAmount,0) 'DeductionAmount'" &
-                                     ",COALESCE(Status,'') 'Status'" &
-                                     ",COALESCE(Comments,'') 'Comments'" &
-                                     ",RowID" &
-                                     " FROM employeeloanhistory" &
-                                     " WHERE EmployeeID='" & dgvEmp.CurrentRow.Cells("RowID").Value & "'" &
-                                     " AND OrganizationID='" & orgztnID & "'" &
-                                     " AND Comments='" & cbohistoloantype.Text & "'" &
-                                     " ORDER BY DeductionDate DESC;")
-
-            dgvloanhisto.Rows.Clear()
-            For Each drow As DataRow In dtloanhist.Rows
-                dgvloanhisto.Rows.Add(drow("DeductionDate"),
-                                       drow("DeductionAmount"),
-                                       drow("Status"),
-                                       drow("Comments"),
-                                       drow("RowID"))
-
-            Next
-        End If
+        EXEC_VIEW_PROCEDURE(params, "VIEW_employeeloanhistory", dgvloanhisto)
     End Sub
 
 #End Region 'Loan History
