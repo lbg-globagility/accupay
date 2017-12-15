@@ -37,6 +37,16 @@ Public Class OffSetting
 
         dgvempoffset.ClearSelection()
 
+        If dgvempoffset.RowCount > max_row_count Then
+
+            lnk = New LinkLabel.Link
+
+            lnk.Name = "Nxt"
+
+            Pagination_Link(First, New LinkLabelLinkClickedEventArgs(lnk))
+
+        End If
+
         dgvempoffset.Focus()
 
         For Each dgvrow As DataGridViewRow In dgvempoffset.Rows
