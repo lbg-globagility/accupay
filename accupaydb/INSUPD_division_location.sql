@@ -16,19 +16,22 @@ DECLARE returnvalue INT(11);
         RowID,
         Name,
         OrganizationID,
-        CreatedBy
+        CreatedBy,
+        ParentDivisionID
     )
     VALUES (
         DivisionRowID,
         DivisionLocationName,
         OrganizID,
-        UserRowID
+        UserRowID,
+        NULL
     )
     ON DUPLICATE KEY
     UPDATE
         LastUpd = CURRENT_TIMESTAMP(),
         LastUpdBy = UserRowID,
-        Name = DivisionLocationName;
+        Name = DivisionLocationName,
+		  ParentDivisionID = NULL;
 
     SELECT @@Identity AS ID
     INTO returnvalue;
