@@ -32,6 +32,9 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("ProductID")>
         Public Overridable Property Product As Product
 
+        <ForeignKey("PaystubID")>
+        Public Overridable Property Paystub As Paystub
+
     End Class
 
 End Namespace

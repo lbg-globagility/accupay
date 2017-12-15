@@ -119,6 +119,8 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property Adjustments As ICollection(Of Adjustment)
 
+        Public Overridable Property PaystubItems As ICollection(Of PaystubItem)
+
     End Class
 
 End Namespace
