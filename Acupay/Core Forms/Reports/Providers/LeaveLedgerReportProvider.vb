@@ -18,12 +18,14 @@ Public Class LeaveLedgerReportProvider
         Dim dateTo = dateSelector.DateTo
 
         Dim params = New Object(,) {
-            {"OrganizationID", orgztnID},
-            {"PayDateFrom", dateSelector.DateFrom},
-            {"PayDateTo", dateSelector.DateTo}
+            {"OrganizID", orgztnID},
+            {"paramDateFrom", dateFrom},
+            {"paramDateTo", dateTo},
+            {"PayPeriodDateFromID", dateSelector.PayPeriodFromID},
+            {"PayPeriodDateToID", dateSelector.PayPeriodToID}
         }
 
-        Dim data = DirectCast(callProcAsDatTab(params, "RPT_FiledLeave"), DataTable)
+        Dim data = DirectCast(callProcAsDatTab(params, "RPT_leave_ledger"), DataTable)
 
         Dim report = New Employee_Leave_Ledger()
         report.SetDataSource(data)

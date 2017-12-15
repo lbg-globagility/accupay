@@ -22,6 +22,13 @@ DECLARE i_count INT(11) DEFAULT 0;
 DECLARE emp_count INT(11) DEFAULT 0;
 DECLARE emp_counts INT(11) DEFAULT 0;
 
+SET @exists = EXISTS(
+    SELECT RowID
+    FROM paystub
+    WHERE PayPeriodID = PayPeriodDateToID AND
+        OrganizationID = OrganizID
+    LIMIT 1
+);
 
 SELECT PayFrequencyID
 FROM organization
@@ -30,20 +37,27 @@ INTO payfreqID;
 
 IF payfreqID = 1 THEN
 
-    SELECT COUNT_pay_period(paramDateFrom,paramDateTo) INTO cnt;
+    SELECT COUNT_pay_period(
+        paramDateFrom,
+        paramDateTo
+    )
+    INTO cnt;
 
-    IF (SELECT EXISTS(SELECT RowID FROM paystub WHERE PayPeriodID=PayPeriodDateToID AND OrganizationID=OrganizID LIMIT 1)) = 1 THEN
+    SET @exists = TRUE;
+
+    IF @exists THEN
 
         SELECT
-            ee.EmployeeID,
-            CONCAT(ee.LastName,',',ee.FirstName, IF(ee.MiddleName='','',','),INITIALS(ee.MiddleName,'. ','1')) AS Fullname,
-            CONCAT(INITIALS(p.PartNo,'','1'),IF(LOCATE('Others',p.PartNo) > 0, 'L', '')) 'PartNo',
-            psi1.`EarnedHrs` AS EarnedHrs,
-            FORMAT(psi1.`EarnedHrs` / 8,2) AS EarnedDays,
-            IFNULL(FORMAT(SUM(IF(eelv.LeaveHrs >= 9, 8, eelv.LeaveHrs)),2),0.00) AS AvailHrs,
-            IFNULL(FORMAT(SUM(IF(eelv.LeaveHrs >= 9, 8, eelv.LeaveHrs)),2) / 8,0.00) AS AvailDays,
-            psi1.`EarnedHrs` - IFNULL(FORMAT(SUM(IF(eelv.LeaveHrs >= 9, 8, eelv.LeaveHrs)),2),0.00) 'BalHrs',
-            FORMAT((psi1.`EarnedHrs` - IFNULL(FORMAT(SUM(IF(eelv.LeaveHrs >= 9, 8, eelv.LeaveHrs)),2),0.00)) / 8,2) 'BalDays'
+            ee.RowID AS `DatCol1`,
+            ee.EmployeeID AS `DatCol2`,
+            CONCAT(ee.LastName, ', ', ee.FirstName, ' ', INITIALS(ee.MiddleName, '.', '1')) AS `DatCol3`,
+            CONCAT(INITIALS(p.PartNo, '', '1'), IF(LOCATE('Others', p.PartNo) > 0, 'L', '')) AS `DatCol12`,
+            psi1.`EarnedHrs` AS `DatCol13`,
+            FORMAT(psi1.`EarnedHrs` / 8, 2) AS `DatCol14`,
+            IFNULL(FORMAT(SUM(IF(eelv.LeaveHrs >= 9, 8, eelv.LeaveHrs)), 2), 0.00) AS `DatCol15`,
+            IFNULL(FORMAT(SUM(IF(eelv.LeaveHrs >= 9, 8, eelv.LeaveHrs)), 2) / 8, 0.00) AS `DatCol16`,
+            psi1.`EarnedHrs` - IFNULL(FORMAT(SUM(IF(eelv.LeaveHrs >= 9, 8, eelv.LeaveHrs)), 2), 0.00) AS `DatCol17`,
+            FORMAT((psi1.`EarnedHrs` - IFNULL(FORMAT(SUM(IF(eelv.LeaveHrs >= 9, 8, eelv.LeaveHrs)), 2), 0.00)) / 8, 2) AS `DatCol18`
         FROM paystubitem psi
         LEFT JOIN product p
         ON p.RowID = psi.ProductID AND
