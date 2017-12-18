@@ -33,7 +33,7 @@ SELECT
     IFNULL(l.LoanNumber, '') `LoanNumber`,
     IFNULL(FORMAT(l.TotalLoanAmount, 2), 0.00) `TotalLoanAmount`,
     IFNULL(FORMAT(s.TotalBalanceLeft, 2), 0.00) `TotalBalanceLeft`,
-    IFNULL(FORMAT(l.DeductionAmount, 2), 0.00) `DeductionAmount`,
+    IFNULL(FORMAT(s.DeductionAmount, 2), 0.00) `DeductionAmount`,
     IFNULL(FORMAT(l.DeductionPercentage, 2), 0.00) `DeductionPercentage`,
     IFNULL(l.DeductionSchedule, '') `DeductionSchedule`,
     IFNULL(l.NoOfPayPeriod, 0) `NoOfPayPeriod`,
