@@ -287,6 +287,12 @@
     <Compile Include="Core Forms\Employee\SalaryTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Core Forms\EmploymentPolicyForm.Designer.vb">
+      <DependentUpon>EmploymentPolicyForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\EmploymentPolicyForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
     <Compile Include="Core Forms\Government\SocialSecurityBracket.vb" />
     <Compile Include="Core Forms\Independent filing\LeaveForm.designer.vb">
@@ -1416,6 +1422,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Employee\SalaryTab.resx">
       <DependentUpon>SalaryTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\EmploymentPolicyForm.resx">
+      <DependentUpon>EmploymentPolicyForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\Independent filing\LeaveForm.resx">
       <DependentUpon>LeaveForm.vb</DependentUpon>

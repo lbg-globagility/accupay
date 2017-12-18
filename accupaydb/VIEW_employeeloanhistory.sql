@@ -6,22 +6,31 @@
 
 DROP PROCEDURE IF EXISTS `VIEW_employeeloanhistory`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `VIEW_employeeloanhistory`(IN `ehist_EmployeeID` INT, IN `ehist_OrganizationID` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `VIEW_employeeloanhistory`(
+    IN `ehist_EmployeeID` INT,
+    IN `ehist_OrganizationID` INT,
+    IN `ehist_LoanType` VARCHAR(50)
+)
     DETERMINISTIC
 BEGIN
 
 SELECT
-COALESCE(DATE_FORMAT(DeductionDate,'%m/%d/%Y'),'') 'DeductionDate'
-,COALESCE(DeductionAmount,0) 'DeductionAmount'
-,COALESCE(Status,'') 'Status'
-,COALESCE(Comments,'') 'Comments'
-,RowID
-FROM employeeloanhistory
-WHERE EmployeeID=ehist_EmployeeID
-AND OrganizationID=ehist_OrganizationID
-ORDER BY DeductionDate DESC;
-
-
+    COALESCE(DATE_FORMAT(pyp.PayToDate, '%m/%d/%Y'), '') AS `DeductionDate`,
+    COALESCE(ROUND(slp.DeductionAmount, 2), 0) AS `DeductionAmount`,
+    COALESCE(els.Status, '') AS `Status`,
+    COALESCE(prd.PartNo, '') AS `LoanType`,
+    slp.RowID
+FROM scheduledloansperpayperiod slp
+INNER JOIN employeeloanschedule els
+ON els.RowID = slp.EmployeeLoanRecordID
+INNER JOIN payperiod pyp
+ON pyp.RowiD = slp.PayPeriodID
+INNER JOIN product prd
+ON prd.RowID = els.LoanTypeID
+WHERE els.EmployeeID = ehist_EmployeeID AND
+    els.OrganizationID = ehist_OrganizationID AND
+    (ehist_LoanType IS NULL) OR prd.PartNo = ehist_LoanType
+ORDER BY pyp.PayToDate DESC;
 
 END//
 DELIMITER ;
