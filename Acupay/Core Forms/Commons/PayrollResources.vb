@@ -3,6 +3,7 @@
 Imports System.Data.Entity
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports PayrollSys
 
 ''' <summary>
 ''' Takes care of loading all the information needed to produce the payroll for a given pay period.
@@ -28,6 +29,12 @@ Public Class PayrollResources
     Private _fixedNonTaxableMonthlyAllowances As DataTable
 
     Private _products As IEnumerable(Of Product)
+
+    Private _socialSecurityBrackets As ICollection(Of SocialSecurityBracket)
+
+    Private _philHealthBrackets As ICollection(Of PhilHealthBracket)
+
+    Private _listOfValues As ICollection(Of ListOfValue)
 
     Private _paystubs As IEnumerable(Of AccuPay.Entity.Paystub)
 
@@ -81,6 +88,18 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property SocialSecurityBrackets As ICollection(Of SocialSecurityBracket)
+        Get
+            Return _socialSecurityBrackets
+        End Get
+    End Property
+
+    Public ReadOnly Property PhilHealthBrackets As ICollection(Of PhilHealthBracket)
+        Get
+            Return _philHealthBrackets
+        End Get
+    End Property
+
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = payPeriodID
         _payDateFrom = payDateFrom
@@ -100,7 +119,9 @@ Public Class PayrollResources
             loadSalariesTask,
             LoadProducts(),
             LoadFixedTaxableMonthlyAllowances(),
-            LoadFixedNonTaxableMonthlyAllowancesTask()
+            LoadFixedNonTaxableMonthlyAllowancesTask(),
+            LoadSocialSecurityBrackets(),
+            LoadPhilHealthBrackets()
         })
     End Function
 
@@ -285,6 +306,30 @@ Public Class PayrollResources
                         Where p.PayFromdate = _payDateFrom And p.PayToDate = _payDateTo
 
             _paystubs = Await query.ToListAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadSocialSecurityBrackets() As Task
+        Using context = New PayrollContext()
+            Dim query = From s In context.SocialSecurityBrackets
+
+            _socialSecurityBrackets = Await query.ToListAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadPhilHealthBrackets() As Task
+        Using context = New PayrollContext()
+            Dim query = From p In context.PhilHealthBrackets
+
+            _philHealthBrackets = Await query.ToListAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadSettings() As Task
+        Using context = New PayrollContext()
+            Dim query = From s In context.ListOfValues
+
+            _listOfValues = Await query.ToListAsync()
         End Using
     End Function
 

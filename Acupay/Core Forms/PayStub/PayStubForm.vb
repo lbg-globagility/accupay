@@ -1243,6 +1243,7 @@ Public Class PayStubForm
                         _withholdingTaxTable,
                         resources.Products,
                         resources.Paystubs,
+                        resources,
                         Me
                     )
 

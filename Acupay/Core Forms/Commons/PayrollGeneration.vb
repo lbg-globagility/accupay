@@ -3,6 +3,7 @@ Imports System.ComponentModel
 Imports AccuPay.Entity
 Imports log4net
 Imports MySql.Data.MySqlClient
+Imports PayrollSys
 
 Public Class PayrollGeneration
 
@@ -201,6 +202,10 @@ Public Class PayrollGeneration
 
     Private _paystubs As IEnumerable(Of AccuPay.Entity.Paystub)
 
+    Private _socialSecurityBrackets As IEnumerable(Of SocialSecurityBracket)
+
+    Private _philHealthBrackets As IEnumerable(Of PhilHealthBracket)
+
     Sub New(employees As DataRow,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
@@ -238,6 +243,7 @@ Public Class PayrollGeneration
             withholdingTaxTable As DataTable,
             products As IEnumerable(Of Product),
             paystubs As IEnumerable(Of AccuPay.Entity.Paystub),
+            resources As PayrollResources,
             Optional pay_stub_frm As PayStubForm = Nothing)
 
         form_caller = pay_stub_frm
@@ -291,6 +297,8 @@ Public Class PayrollGeneration
 
         _isFirstHalf = (payPeriodHalfNo = "1")
         _isEndOfMonth = (payPeriodHalfNo = "0")
+        _socialSecurityBrackets = resources.SocialSecurityBrackets
+        _philHealthBrackets = resources.PhilHealthBrackets
     End Sub
 
     Sub PayrollGeneration_BackgroundWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs)
@@ -807,6 +815,18 @@ Public Class PayrollGeneration
         Dim employerSssPerMonth = ValNoComma(salary("EmployerContributionAmount"))
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
+        If False Then
+            Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(
+                Function(s)
+                    Return s.RangeFromAmount <= _payStub.TotalGrossSalary And
+                        s.RangeToAmount >= _payStub.TotalGrossSalary
+                End Function
+            )
+
+            employeeSssPerMonth = socialSecurityBracket.EmployeeContributionAmount
+            employerSssPerMonth = socialSecurityBracket.EmployerContributionAmount
+        End If
+
         If IsSssPaidOnFirstHalf() Or IsSssPaidOnEndOfTheMonth() Then
             _payStub.TotalEmpSSS = employeeSssPerMonth
             _payStub.TotalCompSSS = employerSssPerMonth
@@ -830,6 +850,18 @@ Public Class PayrollGeneration
 
     Private Sub CalculatePhilHealth(salary As DataRow)
         Dim totalContribution = ConvertToType(Of Decimal)(salary("PhilHealthDeduction"))
+
+        If False Then
+            Dim philHealthBracket = _philHealthBrackets.FirstOrDefault(
+                Function(p)
+                    Return p.SalaryRangeFrom <= _payStub.TotalGrossSalary And
+                        p.SalaryRangeTo >= _payStub.TotalGrossSalary
+                End Function
+            )
+
+            totalContribution = If(philHealthBracket?.TotalMonthlyPremium, 0D)
+        End If
+
         Dim halfContribution = AccuMath.Truncate(totalContribution / 2, 2)
 
         ' Account for any division loss by putting the missing value to the employer share
