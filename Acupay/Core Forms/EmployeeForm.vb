@@ -9700,7 +9700,7 @@ Public Class EmployeeForm
                 philHealthContribution = {philHealthContribution, _philHealthMaximumContribution}.Min()
                 philHealthContribution = AccuMath.Truncate(philHealthContribution, 2)
             Else
-                philHealthContribution = ConvertToType(Of Decimal)(_philHealthBracket?.EmployeeShare)
+                philHealthContribution = ConvertToType(Of Decimal)(_philHealthBracket?.TotalMonthlyPremium)
             End If
 
             txtPhilHealthSal.Text = philHealthContribution
