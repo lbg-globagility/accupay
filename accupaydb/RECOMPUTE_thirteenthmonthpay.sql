@@ -212,14 +212,20 @@ END IF;
 
 UPDATE employeeloanschedule els
 INNER JOIN scheduledloansperpayperiod slp
-ON slp.EmployeeLoanRecordID = els.RowID AND
-    slp.PayPeriodID = PayPRowID AND
-    slp.OrganizationID = OrganizID
+ON slp.EmployeeLoanRecordID = els.RowID
+LEFT OUTER JOIN scheduledloansperpayperiod slp2
+ON (
+    els.RowID = slp2.EmployeeLoanRecordID AND
+    slp.PayPeriodID < slp2.PayPeriodID
+)
 SET
     els.LastUpd = CURRENT_TIMESTAMP(),
     els.LastUpdBy = UserRowID,
     els.LoanPayPeriodLeft = slp.LoanPayPeriodLeft,
-    els.TotalBalanceLeft = slp.TotalBalanceLeft;
+    els.TotalBalanceLeft = slp.TotalBalanceLeft
+WHERE slp2.RowID IS NULL AND
+    els.Status = 'In Progress' AND
+    slp.OrganizationID = @OrganizationID;
 
 END//
 DELIMITER ;
