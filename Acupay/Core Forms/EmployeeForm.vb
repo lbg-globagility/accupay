@@ -10209,7 +10209,6 @@ Public Class EmployeeForm
             esal_MaritalStatus,
             If(esal_PositionID = Nothing, DBNull.Value, esal_PositionID),
             Format(CDate(esal_EffectiveDateFrom), "yyyy-MM-dd"),
-            If(esal_EffectiveDateTo = Nothing, DBNull.Value, Format(CDate(esal_EffectiveDateTo), "yyyy-MM-dd")),
             date_to,
             (ValNoComma(txtPagibig.Text) * payfreqdivisor),
             (ValNoComma(txtPagibig.Text) * payfreqdivisor),
@@ -10252,6 +10251,14 @@ Public Class EmployeeForm
         Dim returnvalue As Object = Nothing
 
         returnvalue = sql.GetFoundRow
+
+        If sql.HasError Then
+            Try
+                Throw sql.ErrorException
+            Catch ex As Exception
+                MsgBox(getErrExcptn(ex, Name))
+            End Try
+        End If
 
         Return returnvalue
 
