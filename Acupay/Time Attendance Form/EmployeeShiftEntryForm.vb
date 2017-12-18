@@ -182,7 +182,6 @@ Public Class EmployeeShiftEntryForm
 
     Private Sub fillemployeeshiftSelected(Optional esh_RowID As Object = Nothing)
         cboshiftlist.SelectedIndex = -1
-        cboshiftlist.Text = ""
 
         If Not dgvEmpShiftList.Rows.Count = 0 Then
             Dim dt As New DataTable
@@ -252,20 +251,7 @@ Public Class EmployeeShiftEntryForm
         fillemplyeelist()
         fillemployeeshift()
         fillemployeeshiftSelected()
-
-        Using context = New PayrollContext()
-            Dim shifts = context.Shifts.
-                Where(Function(s) s.OrganizationID = z_OrganizationID).
-                OrderBy(Function(s) s.TimeFrom).
-                ThenBy(Function(s) s.TimeTo).
-                ToList()
-
-            _shiftModels = shifts.
-                Select(Function(s) New ShiftModel(s)).
-                ToList()
-
-            cboshiftlist.DataSource = _shiftModels
-        End Using
+        LoadShifts()
 
         view_ID = VIEW_privilege("Employee Shift", orgztnID)
 
@@ -306,6 +292,22 @@ Public Class EmployeeShiftEntryForm
                 End If
             Next
         End If
+    End Sub
+
+    Private Sub LoadShifts()
+        Using context = New PayrollContext()
+            Dim shifts = context.Shifts.
+                Where(Function(s) s.OrganizationID = z_OrganizationID).
+                OrderBy(Function(s) s.TimeFrom).
+                ThenBy(Function(s) s.TimeTo).
+                ToList()
+
+            _shiftModels = shifts.
+                Select(Function(s) New ShiftModel(s)).
+                ToList()
+
+            cboshiftlist.DataSource = _shiftModels
+        End Using
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
@@ -596,13 +598,11 @@ Public Class EmployeeShiftEntryForm
         If n_ShiftEntryForm.ShowDialog = Windows.Forms.DialogResult.OK Then
             If n_ShiftEntryForm.ShiftRowID <> Nothing Then
 
-                enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p'))" &
-                               " FROM shift" &
-                               " WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NOT NULL  AND TimeTo IS NOT NULL " &
-                               " ORDER BY TimeFrom,TimeTo;",
-                               cboshiftlist)
+                LoadShifts()
 
-                cboshiftlist.Text = Format(CDate(n_ShiftEntryForm.ShiftTimeFrom), machineShortTime) & " TO " & Format(CDate(n_ShiftEntryForm.ShiftTimeTo), machineShortTime)
+                cboshiftlist.SelectedItem = DirectCast(cboshiftlist.DataSource, ICollection(Of ShiftModel)).
+                    Where(Function(s) s.Shift.RowID = n_ShiftEntryForm.ShiftRowID).
+                    FirstOrDefault()
             End If
         End If
     End Sub
@@ -832,11 +832,7 @@ Public Class EmployeeShiftEntryForm
 
         backgroundworking = 0
 
-        enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', IF(TimeTo IS NULL, '', TIME_FORMAT(TimeTo,'%l:%i %p')))" &
-                       " FROM shift" &
-                       " WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NOT NULL  AND TimeTo IS NOT NULL " &
-                       " ORDER BY TimeFrom,TimeTo;",
-                       cboshiftlist)
+        LoadShifts()
 
         MDIPrimaryForm.Showmainbutton.Enabled = True
         Panel2.Enabled = True
