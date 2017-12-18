@@ -8,7 +8,7 @@ Public Class EmployeeShiftEntryForm
 
     Class ImportedShiftEntry
 
-        Public Property EmployeeID As Integer
+        Public Property EmployeeID As String
 
         Public Property TimeFrom As String
 
