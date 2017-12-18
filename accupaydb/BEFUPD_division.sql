@@ -23,7 +23,7 @@ IF count_min_wage = 0 THEN
 
     SELECT MIN(e.StartDate)
     FROM employee e
-    LEFT JOIN position pos
+    LEFT JOIN `position` pos
     ON pos.RowID = e.PositionID AND
         pos.DivisionId = NEW.RowID
     WHERE e.OrganizationID = NEW.OrganizationID
@@ -35,7 +35,7 @@ IF count_min_wage = 0 THEN
         WHERE RowID = NEW.OrganizationID
         INTO min_start_date_of_employee;
     END IF;
-
+    
     SELECT INSUPD_divisionminimumwage(
         NULL,
         NEW.OrganizationID,
@@ -50,6 +50,7 @@ IF count_min_wage = 0 THEN
         pp.OrganizationID = NEW.OrganizationID AND
         pp.TotalGrossSalary = 1 AND
         CURDATE() BETWEEN pp.PayFromDate AND pp.PayToDate
+    LIMIT 1
     INTO anyint;
 
 END IF;

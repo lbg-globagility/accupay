@@ -305,9 +305,9 @@ Public Class DivisionForm
                         chkbxautomaticOT.Tag)
 
             If cmbDivision.Text IsNot Nothing Then
-                Dim dvID As String = getStringItem("Select RowID from division Where Name = '" & txtname.Text & "' And OrganizationID = '" & z_OrganizationID & "'")
+                Dim dvID As String = getStringItem("Select RowID from division Where Name = '" & txtname.Text & "' And OrganizationID = '" & z_OrganizationID & "' AND ParentDivisionID IS NOT NULL LIMIT 1;")
                 Dim getdvID As Integer = Val(dvID)
-                Dim dv As String = getStringItem("Select RowID from division Where Name = '" & cmbDivision.Text & "' And OrganizationID = '" & z_OrganizationID & "'")
+                Dim dv As String = getStringItem("Select RowID from division Where Name = '" & cmbDivision.Text & "' And OrganizationID = '" & z_OrganizationID & "' AND ParentDivisionID IS NULL LIMIT 1;")
                 Dim getdv As Integer = Val(dv)
                 DirectCommand("UPDATE division SET ParentDivisionID = '" & getdv & "' Where RowID = '" & getdvID & "'")
             End If
@@ -345,9 +345,9 @@ Public Class DivisionForm
                         chkbxautomaticOT.Tag)
 
             If cmbDivision.Text IsNot Nothing Then
-                Dim dvID As String = getStringItem("Select RowID from division Where Name = '" & txtname.Text & "' And OrganizationID = '" & z_OrganizationID & "'")
+                Dim dvID As String = getStringItem("Select RowID from division Where Name = '" & txtname.Text & "' And OrganizationID = '" & z_OrganizationID & "' AND ParentDivisionID IS NOT NULL LIMIT 1;")
                 Dim getdvID As Integer = Val(dvID)
-                Dim dv As String = getStringItem("Select RowID from division Where Name = '" & cmbDivision.Text & "' And OrganizationID = '" & z_OrganizationID & "'")
+                Dim dv As String = getStringItem("Select RowID from division Where Name = '" & cmbDivision.Text & "' And OrganizationID = '" & z_OrganizationID & "' AND ParentDivisionID IS NULL LIMIT 1;")
                 Dim getdv As Integer = Val(dv)
                 DirectCommand("UPDATE division SET ParentDivisionID = '" & getdv & "' Where RowID = '" & getdvID & "'")
             End If
