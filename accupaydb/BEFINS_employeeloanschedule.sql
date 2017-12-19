@@ -37,6 +37,10 @@ IF LENGTH(TRIM(NEW.LoanName)) = 0 THEN
     SET NEW.LoanName = IFNULL((SELECT PartNo FROM product WHERE RowID=NEW.LoanTypeID),'');
 END IF;
 
+IF LCASE(NEW.DeductionSchedule) = 'end of the month' THEN
+	SET NEW.DeductionSchedule = 'End of the month';
+END IF;
+
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
