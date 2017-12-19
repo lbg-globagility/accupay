@@ -2367,6 +2367,14 @@ Public Class TimeLogsForm
                            param_values)
         sql.ExecuteQuery()
 
+        Try
+            If sql.HasError Then
+                Throw sql.ErrorException
+            End If
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Name))
+        End Try
+
     End Sub
 
     Private Sub bgworkTypicalImport_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkTypicalImport.ProgressChanged
