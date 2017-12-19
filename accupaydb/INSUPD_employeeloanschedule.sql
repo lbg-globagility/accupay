@@ -1,9 +1,16 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win32
+-- HeidiSQL Version:             8.3.0.4694
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for function accupaydb.INSUPD_employeeloanschedule
 DROP FUNCTION IF EXISTS `INSUPD_employeeloanschedule`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `INSUPD_employeeloanschedule`(`els_RowID` INT(11)
@@ -28,6 +35,10 @@ CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `INSUPD_employeeloanschedule`(`els_Ro
 BEGIN
 
 DECLARE returnvalue INT(11);
+
+DECLARE total_bal_left DECIMAL(11, 2);
+
+SET total_bal_left = IF(els_TotBalLeft = 0 AND els_RowID IS NULL, els_TotLoanAmt, els_TotBalLeft);
 
 INSERT INTO employeeloanschedule
 (
@@ -61,13 +72,13 @@ INSERT INTO employeeloanschedule
     ,els_DateFrom
     ,els_TotLoanAmt
     ,els_DeductSched
-    ,els_TotBalLeft
+    ,total_bal_left
     ,els_DeductAmt
     ,els_Status
     ,NULL
     ,els_DeductPerc
     ,(@count_of_payperiod := (els_TotLoanAmt / els_DeductAmt)) # els_NoOfPayPer
-    ,((els_TotBalLeft / els_TotLoanAmt) *  @count_of_payperiod)
+    ,((total_bal_left / els_TotLoanAmt) *  @count_of_payperiod)
     ,TRIM(els_Comments)
     ,els_BonusID
     ,TRIM(els_LoanName)
@@ -87,7 +98,6 @@ RETURN returnvalue;
 
 END//
 DELIMITER ;
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
