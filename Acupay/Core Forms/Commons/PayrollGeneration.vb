@@ -428,7 +428,7 @@ Public Class PayrollGeneration
                         loanTransaction.DeductionAmount = loanSchedule.DeductionAmount
                     End If
 
-                    loanTransaction.TotalBalanceLeft = loanSchedule.TotalBalanceLeft - loanTransaction.TotalBalanceLeft
+                    loanTransaction.TotalBalanceLeft = loanSchedule.TotalBalanceLeft - loanTransaction.DeductionAmount
 
                     newLoanTransactions.Add(loanTransaction)
                 Next
