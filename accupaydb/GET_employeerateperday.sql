@@ -6,19 +6,19 @@
 
 DROP FUNCTION IF EXISTS `GET_employeerateperday`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `GET_employeerateperday`(`EmpID` INT, `OrgID` INT, `paramDate` DATE) RETURNS decimal(11,6)
+CREATE DEFINER=`root`@`localhost` FUNCTION `GET_employeerateperday`(`EmpID` INT, `OrgID` INT, `paramDate` DATE) RETURNS DECIMAL(15, 4)
     DETERMINISTIC
 BEGIN
 
-DECLARE returnvalue DECIMAL(11,11);
+DECLARE returnvalue DECIMAL(15, 4);
 
-DECLARE hoursofduty DECIMAL(11,10);
+DECLARE hoursofduty DECIMAL(15, 4);
 
-DECLARE empBasicPay DECIMAL(11,7);
+DECLARE empBasicPay DECIMAL(15, 4);
 
-DECLARE dailyrate DECIMAL(11,7);
+DECLARE dailyrate DECIMAL(15, 4);
 
-DECLARE rateperhour DECIMAL(11,11);
+DECLARE rateperhour DECIMAL(15, 4);
 
 DECLARE numofweekthisyear INT(11) DEFAULT 53;
 
@@ -38,36 +38,45 @@ DECLARE emp_sal DECIMAL(11,6);
 
 DECLARE month_count_peryear INT(11) DEFAULT 12;
 
-SELECT ShiftID FROM employeeshift WHERE EmployeeID=EmpID AND OrganizationID=OrgID AND paramDate BETWEEN DATE(COALESCE(EffectiveFrom,DATE_FORMAT(CURRENT_TIMESTAMP(),'%Y-%m-%d'))) AND DATE(COALESCE(EffectiveTo,ADDDATE(CURRENT_TIMESTAMP(), INTERVAL 3 MONTH))) AND DATEDIFF(paramDate,EffectiveFrom) >= 0 AND COALESCE(RestDay,0)=0 ORDER BY DATEDIFF(DATE_FORMAT(paramDate,'%Y-%m-%d'),EffectiveFrom) LIMIT 1 INTO shiftRowID;
+SELECT ShiftID
+FROM employeeshift
+WHERE EmployeeID = EmpID AND
+      OrganizationID = OrgID AND
+      paramDate BETWEEN DATE(COALESCE(EffectiveFrom,DATE_FORMAT(CURRENT_TIMESTAMP(),'%Y-%m-%d'))) AND DATE(COALESCE(EffectiveTo,ADDDATE(CURRENT_TIMESTAMP(), INTERVAL 3 MONTH))) AND
+      DATEDIFF(paramDate,EffectiveFrom) >= 0 AND
+      COALESCE(RestDay, 0) = 0
+ORDER BY DATEDIFF(DATE_FORMAT(paramDate, '%Y-%m-%d'), EffectiveFrom)
+LIMIT 1
+INTO shiftRowID;
 
-SELECT SUBSTRING_INDEX(TIMEDIFF(TimeFrom,IF(TimeFrom>TimeTo,ADDTIME(TimeTo,'24:00:00'),TimeTo)),'-',-1) FROM shift WHERE RowID=shiftRowID INTO timedifference;
+SELECT SUBSTRING_INDEX(TIMEDIFF(TimeFrom, IF(TimeFrom > TimeTo, ADDTIME(TimeTo, '24:00:00'), TimeTo)), '-', -1)
+FROM shift
+WHERE RowID = shiftRowID
+INTO timedifference;
 
-SELECT COMPUTE_TimeDifference(TimeFrom,TimeTo) * 1.00000000000 FROM shift WHERE RowID=shiftRowID INTO hoursofduty;
+SELECT COMPUTE_TimeDifference(TimeFrom, TimeTo) * 1.0
+FROM shift
+WHERE RowID = shiftRowID
+INTO hoursofduty;
 
-
-
-IF hoursofduty > 8.00 OR hoursofduty IS NULL OR hoursofduty<=0 THEN
+IF hoursofduty > 8.00 OR hoursofduty IS NULL OR hoursofduty <= 0 THEN
 
     IF hoursofduty IS NULL THEN
-
         SET hoursofduty = 8;
-
     ELSE
-
         SET hoursofduty = hoursofduty - 1;
-
     END IF;
 
 END IF;
 
 SELECT
-    BasicPay * 1.00000000000,
-    Salary * 1.00000000000
+    BasicPay * 1.0,
+    Salary * 1.0
 FROM employeesalary
-WHERE EmployeeID=EmpID
-    AND OrganizationID=OrgID
-    AND paramDate BETWEEN EffectiveDateFrom AND IFNULL(EffectiveDateTo,paramDate)
-    AND DATEDIFF(paramDate,EffectiveDateFrom) >= 0
+WHERE EmployeeID = EmpID AND
+    OrganizationID = OrgID AND
+    paramDate BETWEEN EffectiveDateFrom AND IFNULL(EffectiveDateTo,paramDate) AND
+    DATEDIFF(paramDate,EffectiveDateFrom) >= 0
 ORDER BY DATEDIFF(DATE_FORMAT(paramDate,'%Y-%m-%d'),EffectiveDateFrom)
 LIMIT 1
 INTO
@@ -96,18 +105,18 @@ ELSE
     SET minnumday = DAY(LAST_DAY(paramDate)) - 15;
 END IF;
 
-SELECT GET_empworkdaysperyear(EmpID) * 1.00000000000
+SELECT GET_empworkdaysperyear(EmpID) * 1.0
 INTO org_workdaysofyear;
 
 IF emptype IN ('Fixed','Monthly') THEN
 
     IF PayFreqID = 1 THEN
 
-        SET dailyrate = org_workdaysofyear / 12.00000000000;
-        SET dailyrate = dailyrate / 2.00000000000;
+        SET dailyrate = org_workdaysofyear / 12.0;
+        SET dailyrate = dailyrate / 2.0;
         SET dailyrate = empBasicPay / dailyrate;
-        SET dailyrate = dailyrate * 1.00000000000;
-        SET dailyrate = ROUND(dailyrate,1);
+        SET dailyrate = dailyrate * 1.0;
+        SET dailyrate = ROUND(dailyrate, 1);
 
     ELSEIF PayFreqID = 2 THEN
 
