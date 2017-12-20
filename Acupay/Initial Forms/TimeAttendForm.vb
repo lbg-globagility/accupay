@@ -153,28 +153,4 @@
         previousForm = TimeEntrySummaryForm
     End Sub
 
-    Protected Overrides Sub OnLoad(e As EventArgs)
-        SummaryToolStripMenuItem.Visible = True
-
-        setProperInterfaceBaseOnCurrentSytemOwner()
-
-        MyBase.OnLoad(e)
-
-    End Sub
-
-    Private Sub setProperInterfaceBaseOnCurrentSytemOwner()
-
-        Dim isVisible As Boolean =
-            SummaryToolStripMenuItem.Visible
-
-        If isVisible Then
-
-            Static _bool As Boolean =
-                (sys_ownr.CurrentSystemOwner <> SystemOwner.Cinema2000)
-
-            SummaryToolStripMenuItem.Visible = _bool
-        End If
-
-    End Sub
-
 End Class
