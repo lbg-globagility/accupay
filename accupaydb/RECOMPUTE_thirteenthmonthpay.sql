@@ -230,7 +230,7 @@ WHERE slp2.RowID IS NULL AND
         els.Status = 'In Progress' OR
         pyp.PayFromDate >= month_firstdate
     ) AND
-    slp.OrganizationID = @OrganizationID;
+    slp.OrganizationID = OrganizID;
 
 END//
 DELIMITER ;
