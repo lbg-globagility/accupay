@@ -209,7 +209,7 @@ Public Class EmployeeShiftEntryForm
 
                     Dim selectedShift = _shiftModels.
                         FirstOrDefault(
-                            Function(s) s.Shift.RowID = shiftId
+                            Function(s) CBool(s.Shift.RowID = shiftId)
                         )
 
                     If selectedShift Is Nothing Then
