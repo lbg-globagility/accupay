@@ -6,11 +6,7 @@
 
 DROP FUNCTION IF EXISTS `GENERATE_employeetimeentry`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(
-    `ete_EmpRowID` INT,
-    `ete_OrganizID` INT,
-    `ete_Date` DATE,
-    `ete_UserRowID` INT
+CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(`ete_EmpRowID` INT, `ete_OrganizID` INT, `ete_Date` DATE, `ete_UserRowID` INT
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN
@@ -390,9 +386,10 @@ ELSE
 END IF;
 
 SELECT
-    etd.TimeIn,
+    GRACE_PERIOD(etd.TimeIn, shifttimefrom, e.LateGracePeriod),
     IF(e_UTOverride = 1, etd.TimeOut, IFNULL(sh.TimeTo, etd.TimeOut))
 FROM employeetimeentrydetails etd
+INNER JOIN employee e ON e.RowID=etd.EmployeeID
 LEFT JOIN employeeshift esh
 ON esh.OrganizationID = etd.OrganizationID AND
     esh.EmployeeID = etd.EmployeeID AND

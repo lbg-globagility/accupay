@@ -18,7 +18,8 @@ SELECT COUNT(RowID) FROM divisionminimumwage WHERE OrganizationID=OLD.Organizati
 IF count_min_wage <= 1 THEN
 
     SIGNAL specialty
-    SET MESSAGE_TEXT = 'Invalid delete. This department should\nhave at least one minimum wage amount.';
+    SET MESSAGE_TEXT = 'Invalid delete. This department should
+have at least one minimum wage amount.';
 
 END IF;
 

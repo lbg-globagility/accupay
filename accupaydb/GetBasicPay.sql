@@ -6,7 +6,7 @@
 
 DROP FUNCTION IF EXISTS `GetBasicPay`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `GetBasicPay`(`employeeID` INT, `payDate` DATE, `isActual` TINYINT(1), `workHours` DECIMAL(10, 4)) RETURNS DECIMAL(15,4)
+CREATE DEFINER=`root`@`localhost` FUNCTION `GetBasicPay`(`employeeID` INT, `payDate` DATE, `isActual` TINYINT(1), `workHours` DECIMAL(10, 4)) RETURNS decimal(15,4)
     DETERMINISTIC
 BEGIN
 

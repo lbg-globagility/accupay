@@ -218,18 +218,13 @@ ON (
     els.RowID = slp2.EmployeeLoanRecordID AND
     slp.PayPeriodID < slp2.PayPeriodID
 )
-INNER JOIN payperiod pyp
-ON pyp.RowID = slp.PayPeriodID
 SET
     els.LastUpd = CURRENT_TIMESTAMP(),
     els.LastUpdBy = UserRowID,
     els.LoanPayPeriodLeft = slp.LoanPayPeriodLeft,
     els.TotalBalanceLeft = slp.TotalBalanceLeft
 WHERE slp2.RowID IS NULL AND
-    (
-        els.Status = 'In Progress' OR
-        pyp.PayFromDate >= month_firstdate
-    ) AND
+    els.Status = 'In Progress' AND
     slp.OrganizationID = @OrganizationID;
 
 END//

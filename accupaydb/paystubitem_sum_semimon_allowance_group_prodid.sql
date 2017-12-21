@@ -6,8 +6,7 @@
 
 DROP VIEW IF EXISTS `paystubitem_sum_semimon_allowance_group_prodid`;
 DROP TABLE IF EXISTS `paystubitem_sum_semimon_allowance_group_prodid`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_semimon_allowance_group_prodid` AS
-    SELECT
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_semimon_allowance_group_prodid` AS SELECT
         et.RowID AS `etRowID`,
         (ea.ProductID) AS ProductID,
         et.EmployeeID,
@@ -110,8 +109,7 @@ UNION ALL
     INNER JOIN shift sh ON sh.RowID=es.ShiftID
     INNER JOIN employeeallowance ea ON ea.AllowanceFrequency='Semi-monthly' AND ea.EmployeeID=e.RowID AND ea.OrganizationID=e.OrganizationID AND et.`Date` BETWEEN ea.EffectiveStartDate AND ea.EffectiveEndDate
     INNER JOIN product p ON p.RowID=ea.ProductID
-    INNER JOIN payrate pr ON pr.RowID=et.PayRateID
-;
+    INNER JOIN payrate pr ON pr.RowID=et.PayRateID ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

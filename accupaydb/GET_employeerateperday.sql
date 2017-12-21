@@ -10,15 +10,15 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `GET_employeerateperday`(`EmpID` INT,
     DETERMINISTIC
 BEGIN
 
-DECLARE returnvalue DECIMAL(11,11);
+DECLARE returnvalue DECIMAL(15,4);
 
-DECLARE hoursofduty DECIMAL(11,10);
+DECLARE hoursofduty DECIMAL(15,4);
 
-DECLARE empBasicPay DECIMAL(11,7);
+DECLARE empBasicPay DECIMAL(15,4);
 
-DECLARE dailyrate DECIMAL(11,7);
+DECLARE dailyrate DECIMAL(15,4);
 
-DECLARE rateperhour DECIMAL(11,11);
+DECLARE rateperhour DECIMAL(15,4);
 
 DECLARE numofweekthisyear INT(11) DEFAULT 53;
 
@@ -26,7 +26,7 @@ DECLARE shiftRowID INT(11);
 
 DECLARE PayFreqID INT(11);
 
-DECLARE minnumday DECIMAL(11,7);
+DECLARE minnumday DECIMAL(15,4);
 
 DECLARE emptype VARCHAR(100);
 
@@ -34,7 +34,7 @@ DECLARE timedifference TIME;
 
 DECLARE org_workdaysofyear INT(11);
 
-DECLARE emp_sal DECIMAL(11,6);
+DECLARE emp_sal DECIMAL(15,4);
 
 DECLARE month_count_peryear INT(11) DEFAULT 12;
 
