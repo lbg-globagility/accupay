@@ -224,8 +224,11 @@ SET
     els.LoanPayPeriodLeft = slp.LoanPayPeriodLeft,
     els.TotalBalanceLeft = slp.TotalBalanceLeft
 WHERE slp2.RowID IS NULL AND
-    els.Status = 'In Progress' AND
-    slp.OrganizationID = @OrganizationID;
+    (
+        els.Status = 'In Progress' OR
+        pyp.PayFromDate >= month_firstdate
+    ) AND
+    slp.OrganizationID = OrganizID;
 
 END//
 DELIMITER ;

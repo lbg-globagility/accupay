@@ -11,20 +11,12 @@ CREATE TRIGGER `BEFUPD_employeeloanschedule` BEFORE UPDATE ON `employeeloansched
 
 DECLARE loan_amount_update DECIMAL(11,6);
 
-IF NEW.LoanPayPeriodLeft = 1 AND IFNULL(OLD.LoanPayPeriodLeft,0) > 1 THEN
+SET NEW.LoanPayPeriodLeft = CEIL(NEW.TotalBalanceLeft / NEW.DeductionAmount);
+
+IF OLD.LoanPayPeriodLeft <= 0 AND NEW.LoanPayPeriodLeft = 1 THEN
 
     SET loan_amount_update = NEW.TotalLoanAmount - (NEW.DeductionAmount * (NEW.NoOfPayPeriod - 1));
-
     SET NEW.DeductionAmount = loan_amount_update;
-
-    SET NEW.TotalBalanceLeft = loan_amount_update;
-
-ELSEIF OLD.LoanPayPeriodLeft <= 0 AND NEW.LoanPayPeriodLeft = 1 THEN
-
-    SET loan_amount_update = NEW.TotalLoanAmount - (NEW.DeductionAmount * (NEW.NoOfPayPeriod - 1));
-
-    SET NEW.DeductionAmount = loan_amount_update;
-
     SET NEW.`Status` = 'In progress';
 
 ELSEIF OLD.LoanPayPeriodLeft = 1 AND NEW.LoanPayPeriodLeft > 1 THEN
@@ -35,29 +27,20 @@ ELSEIF OLD.LoanPayPeriodLeft = 1 AND NEW.LoanPayPeriodLeft > 1 THEN
 
 END IF;
 
-IF NEW.LoanPayPeriodLeft <= 0 THEN
-
+IF NEW.TotalBalanceLeft <= 0 THEN
     SET NEW.`Status` = 'Complete';
-
-END IF;
-
-IF NEW.LoanPayPeriodLeft > NEW.NoOfPayPeriod THEN
-
-    SET NEW.LoanPayPeriodLeft = NEW.NoOfPayPeriod;
-
 END IF;
 
 IF NEW.TotalBalanceLeft > NEW.TotalLoanAmount THEN
     SET NEW.TotalBalanceLeft = OLD.TotalLoanAmount;
-
 END IF;
 
 SET @is_charge_tobonust = (OLD.BonusID IS NULL AND NEW.BonusID IS NOT NULL);
 
 IF @is_charge_tobonust = TRUE THEN
-	
+
 	SET NEW.LoanPayPeriodLeftForBonus = NEW.LoanPayPeriodLeft;
-	
+
 END IF;
 
 IF LCASE(NEW.DeductionSchedule) = 'end of the month' THEN
