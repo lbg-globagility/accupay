@@ -6,8 +6,16 @@
 
 DROP PROCEDURE IF EXISTS `PAYROLLSUMMARY2`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `PAYROLLSUMMARY2`(IN `ps_OrganizationID` INT, IN `ps_PayPeriodID1` INT, IN `ps_PayPeriodID2` INT, IN `psi_undeclared` CHAR(1), IN `strSalaryDistrib` VARCHAR(50)
-, IN `is_keep_in_onesheet` BOOL)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `PAYROLLSUMMARY2`(
+	IN `ps_OrganizationID` INT,
+	IN `ps_PayPeriodID1` INT,
+	IN `ps_PayPeriodID2` INT,
+	IN `psi_undeclared` CHAR(1),
+	IN `strSalaryDistrib` VARCHAR(50)
+,
+	IN `is_keep_in_onesheet` BOOL
+
+)
 BEGIN
 
 DECLARE paypdatefrom
@@ -127,27 +135,8 @@ IF is_keep_in_onesheet = TRUE THEN
 		    thirteenthmonthpay.PaystubID = IF(psi_undeclared, paystubactual.RowID, paystub.RowID)
 		
 		LEFT JOIN (SELECT et.EmployeeID
-		           # ,SUM(sh.DivisorToDailyRate) `TotalExpectedHours`
-		           ,SUM(
-							 IF((TIMESTAMPDIFF(SECOND
-							                   , CONCAT_DATETIME(et.`Date`, sh.TimeFrom)
-													 , CONCAT_DATETIME(ADDDATE(et.`Date`, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo)) / sec_per_hour)
-							    > (et.RegularHoursWorked + (et.HoursLate + et.UndertimeHours))
-								   
-								 , (et.RegularHoursWorked + (et.HoursLate + et.UndertimeHours))
-							   , sh.DivisorToDailyRate)
-					       ) `TotalExpectedHours`
-		           
-					  FROM employeetimeentry et
-					  INNER JOIN employee ee
-						       ON ee.RowID=et.EmployeeID
-								    AND ee.OrganizationID=et.OrganizationID
-									 AND ee.EmploymentStatus NOT IN ('Resigned', 'Terminated')
-					  INNER JOIN `position` pos ON pos.RowID=ee.PositionID AND pos.DivisionId = div_rowid
-					  INNER JOIN employeeshift esh
-						       ON esh.RowID=et.EmployeeShiftID
-					  INNER JOIN shift sh
-						       ON sh.RowID=esh.ShiftID
+		           ,SUM(et.TotalExpectedHours) `TotalExpectedHours`
+		           FROM expectedhours et
 					  WHERE et.OrganizationID = ps_OrganizationID
 					  AND et.`Date` BETWEEN min_paydatefrom AND max_paydateto
 					  GROUP BY et.EmployeeID) ete
@@ -270,27 +259,8 @@ ELSE
 		    thirteenthmonthpay.PaystubID = IF(psi_undeclared, paystubactual.RowID, paystub.RowID)
 		
 		LEFT JOIN (SELECT et.EmployeeID
-		           # ,SUM(sh.DivisorToDailyRate) `TotalExpectedHours`
-		           ,SUM(
-							 IF((TIMESTAMPDIFF(SECOND
-							                   , CONCAT_DATETIME(et.`Date`, sh.TimeFrom)
-													 , CONCAT_DATETIME(ADDDATE(et.`Date`, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo)) / sec_per_hour)
-							    > (et.RegularHoursWorked + (et.HoursLate + et.UndertimeHours))
-								   
-								 , (et.RegularHoursWorked + (et.HoursLate + et.UndertimeHours))
-							   , sh.DivisorToDailyRate)
-					       ) `TotalExpectedHours`
-		           
-					  FROM employeetimeentry et
-					  INNER JOIN employee ee
-						       ON ee.RowID=et.EmployeeID
-								    AND ee.OrganizationID=et.OrganizationID
-									 AND ee.EmploymentStatus NOT IN ('Resigned', 'Terminated')
-					  INNER JOIN `position` pos ON pos.RowID=ee.PositionID AND pos.DivisionId = div_rowid
-					  INNER JOIN employeeshift esh
-						       ON esh.RowID=et.EmployeeShiftID
-					  INNER JOIN shift sh
-						       ON sh.RowID=esh.ShiftID
+		           ,SUM(et.TotalExpectedHours) `TotalExpectedHours`
+		           FROM expectedhours et
 					  WHERE et.OrganizationID = ps_OrganizationID
 					  AND et.`Date` BETWEEN min_paydatefrom AND max_paydateto
 					  GROUP BY et.EmployeeID) ete
