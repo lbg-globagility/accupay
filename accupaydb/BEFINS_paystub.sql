@@ -34,18 +34,6 @@ INTO phhschced
 
 SET NEW.FirstTimeSalary = (SELECT (StartDate BETWEEN NEW.PayFromDate AND NEW.PayToDate) FROM employee WHERE RowID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID);
 
-SET @total_adj = 0.00;
-
-SELECT SUM(adj.PayAmount)
-FROM paystubadjustment adj
-WHERE adj.PayStubID=NEW.RowID
-AND adj.OrganizationID=NEW.OrganizationID
-INTO @total_adj;
-
-IF IFNULL(@total_adj, 0) != 0 THEN
-	SET NEW.TotalNetSalary = (NEW.TotalNetSalary + IFNULL(@total_adj, 0));
-END IF;
-
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
