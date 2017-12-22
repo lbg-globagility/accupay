@@ -12,7 +12,7 @@ BEGIN
 
 UPDATE employeeloanschedule els SET els.BonusID=NULL WHERE els.BonusID=bonus_RowID;
 
-DELETE FROM employeebonus WHERE RowID=bonus_RowID; ALTER TABLE employeebonus AUTO_INCREMENT = 0;
+DELETE FROM employeebonus WHERE RowID=bonus_RowID;
 
 END//
 DELIMITER ;

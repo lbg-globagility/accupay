@@ -44,7 +44,7 @@ IF atleast_one = '1' THEN
     AND et.EmployeeID=e.RowID
     AND et.`Date` BETWEEN FromPayDate AND ToPayDate;
 
-    DELETE FROM employeeleave_duplicate WHERE OrganizationID=OrganizID AND (LeaveStartDate >= FromPayDate OR LeaveEndDate >= FromPayDate) AND (LeaveStartDate <= ToPayDate OR LeaveEndDate <= ToPayDate);ALTER TABLE employeeleave_duplicate AUTO_INCREMENT = 0;
+    DELETE FROM employeeleave_duplicate WHERE OrganizationID=OrganizID AND (LeaveStartDate >= FromPayDate OR LeaveEndDate >= FromPayDate) AND (LeaveStartDate <= ToPayDate OR LeaveEndDate <= ToPayDate);
 
     INSERT INTO employeeleave_duplicate
     (

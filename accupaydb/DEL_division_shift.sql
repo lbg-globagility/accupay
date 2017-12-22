@@ -56,10 +56,6 @@ SET @esh_RowID = '';
 
         SET GLOBAL event_scheduler = ON;
 
-        ALTER TABLE employeeshift AUTO_INCREMENT = 0;
-
-
-
 SET group_concat_max_len = 1024;
 
 END//

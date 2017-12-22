@@ -26,7 +26,6 @@ IF atleast_one = '1' THEN
     WHERE OrganizationID=OrganizID
     AND (LeaveStartDate >= FromPayDate OR LeaveEndDate >= FromPayDate)
     AND (LeaveStartDate <= ToPayDate OR LeaveEndDate <= ToPayDate);
-    ALTER TABLE employeeleave AUTO_INCREMENT = 0;
 
     INSERT INTO employeeleave
     (

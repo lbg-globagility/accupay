@@ -44,10 +44,7 @@ AND LeaveEndDate = end_date
 AND LeaveStartTime = start_time
 AND LeaveEndTime = end_time;
 
-ALTER TABLE employeeleave_duplicate AUTO_INCREMENT = 0;
-
 DELETE FROM employeeleave WHERE RowID = leave_rowid;
-ALTER TABLE employeeleave AUTO_INCREMENT = 0;
 
 END//
 DELIMITER ;

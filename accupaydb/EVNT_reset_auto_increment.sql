@@ -8,14 +8,6 @@ DROP EVENT IF EXISTS `EVNT_reset_auto_increment`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` EVENT `EVNT_reset_auto_increment` ON SCHEDULE EVERY 1 SECOND STARTS '2016-03-07 08:00:00' ENDS '2037-03-07 17:08:33' ON COMPLETION PRESERVE ENABLE DO BEGIN
 
-CALL reset_auto_increment('employeeloanhistoitem');
-
-CALL reset_auto_increment('employeeoffset');
-
-CALL reset_auto_increment('employeeshift');
-
-
-
 END//
 DELIMITER ;
 
