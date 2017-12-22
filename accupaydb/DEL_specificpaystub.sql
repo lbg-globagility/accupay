@@ -158,23 +158,18 @@ WHERE tmp.PaystubID=paystub_RowID
 AND tmp.OrganizationID=og_RowID;
 
 DELETE FROM employeeloanhistory WHERE PayStubID=paystub_RowID;
-ALTER TABLE employeeloanhistory AUTO_INCREMENT = 0;
 
 DELETE FROM paystubitem WHERE PayStubID=paystub_RowID;
-ALTER TABLE paystubitem AUTO_INCREMENT = 0;
 
 DELETE FROM thirteenthmonthpay WHERE PayStubID=paystub_RowID;
-ALTER TABLE thirteenthmonthpay AUTO_INCREMENT = 0;
 
 DELETE FROM paystubadjustment WHERE PayStubID=paystub_RowID;
-ALTER TABLE paystubadjustment AUTO_INCREMENT = 0;
 
 DELETE FROM paystub WHERE RowID=paystub_RowID;
-ALTER TABLE paystub AUTO_INCREMENT = 0;
 
 DELETE FROM paystubactual WHERE EmployeeID=emp_RowID AND OrganizationID=og_RowID AND PayPeriodID=payperiod_rowid;
 
-DELETE FROM scheduledloansperpayperiod WHERE OrganizationID=og_RowID AND EmployeeID=emp_RowID AND PayPeriodID=payperiod_rowid; ALTER TABLE scheduledloansperpayperiod AUTO_INCREMENT = 0;
+DELETE FROM scheduledloansperpayperiod WHERE OrganizationID=og_RowID AND EmployeeID=emp_RowID AND PayPeriodID=payperiod_rowid;
 
 IF isRollback THEN
     ROLLBACK;

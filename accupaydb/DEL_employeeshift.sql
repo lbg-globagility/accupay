@@ -16,7 +16,6 @@ SET et.EmployeeShiftID = NULL
 WHERE et.EmployeeShiftID = eshrowid;
 
 DELETE FROM employeeshift WHERE RowID = eshrowid;
-ALTER TABLE employeeshift AUTO_INCREMENT = 0;
 
 END//
 DELIMITER ;

@@ -50,7 +50,7 @@ END IF;
 
     # Bonus pays full loan balance
     ##############################
-    
+
     UPDATE employeeloanschedule els
     INNER JOIN (SELECT *
                 FROM employeebonus
@@ -72,10 +72,8 @@ END IF;
 	 ;
 
 DELETE FROM paystubitembonus WHERE PayStubBonusID=paystubbonus_RowID;
-ALTER TABLE paystubitembonus AUTO_INCREMENT = 0;
 
 DELETE FROM paystubbonus WHERE RowID=paystubbonus_RowID;
-ALTER TABLE paystubbonus AUTO_INCREMENT = 0;
 
 END//
 DELIMITER ;

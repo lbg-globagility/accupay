@@ -9,21 +9,15 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `BEFUPD_employeeloanschedule` BEFORE UPDATE ON `employeeloanschedule` FOR EACH ROW BEGIN
 
-DECLARE loan_amount_update DECIMAL(11,6);
+DECLARE loan_amount_update DECIMAL(15, 4);
 
 SET NEW.LoanPayPeriodLeft = CEIL(NEW.TotalBalanceLeft / NEW.DeductionAmount);
 
 IF OLD.LoanPayPeriodLeft <= 0 AND NEW.LoanPayPeriodLeft = 1 THEN
 
-    SET loan_amount_update = NEW.TotalLoanAmount - (NEW.DeductionAmount * (NEW.NoOfPayPeriod - 1));
-    SET NEW.DeductionAmount = loan_amount_update;
-    SET NEW.`Status` = 'In progress';
-
-ELSEIF OLD.LoanPayPeriodLeft = 1 AND NEW.LoanPayPeriodLeft > 1 THEN
-
-    SET loan_amount_update = NEW.TotalLoanAmount / NEW.NoOfPayPeriod;
-
-    SET NEW.DeductionAmount = loan_amount_update;
+    IF NEW.`Status` = 'Complete' THEN
+        SET NEW.`Status` = 'In progress';
+    END IF;
 
 END IF;
 
@@ -39,12 +33,12 @@ SET @is_charge_tobonust = (OLD.BonusID IS NULL AND NEW.BonusID IS NOT NULL);
 
 IF @is_charge_tobonust = TRUE THEN
 
-	SET NEW.LoanPayPeriodLeftForBonus = NEW.LoanPayPeriodLeft;
+    SET NEW.LoanPayPeriodLeftForBonus = NEW.LoanPayPeriodLeft;
 
 END IF;
 
 IF LCASE(NEW.DeductionSchedule) = 'end of the month' THEN
-	SET NEW.DeductionSchedule = 'End of the month';
+    SET NEW.DeductionSchedule = 'End of the month';
 END IF;
 
 END//

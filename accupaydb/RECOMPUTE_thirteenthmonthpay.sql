@@ -213,6 +213,8 @@ END IF;
 UPDATE employeeloanschedule els
 INNER JOIN scheduledloansperpayperiod slp
 ON slp.EmployeeLoanRecordID = els.RowID
+INNER JOIN payperiod pyp
+ON pyp.RowID = slp.PayPeriodID
 LEFT OUTER JOIN scheduledloansperpayperiod slp2
 ON (
     els.RowID = slp2.EmployeeLoanRecordID AND

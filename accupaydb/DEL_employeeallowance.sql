@@ -10,7 +10,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `DEL_employeeallowance`(IN `EmpAllow
     DETERMINISTIC
 BEGIN
 
-DELETE FROM employeeallowance WHERE RowID=EmpAllowanceRowID; ALTER TABLE employeeallowance AUTO_INCREMENT = 0;
+DELETE FROM employeeallowance WHERE RowID=EmpAllowanceRowID;
 
 END//
 DELIMITER ;
