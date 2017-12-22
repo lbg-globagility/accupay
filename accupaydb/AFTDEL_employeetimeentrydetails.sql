@@ -16,6 +16,13 @@ WHERE (DATE(TimeStampLog) = DATE(OLD.TimeStampIn)
 AND EmployeeRowID = OLD.EmployeeID
 AND OrganizationID = OLD.OrganizationID;
 
+DELETE
+FROM timeentrylog
+WHERE (DATE(TimeStampLog) = DATE(OLD.TimeStampIn)
+       OR DATE(TimeStampLog) = DATE(OLD.TimeStampOut))
+AND EmployeeRowID = OLD.EmployeeID
+AND OrganizationID = OLD.OrganizationID;
+
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
