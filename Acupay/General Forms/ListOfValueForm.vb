@@ -435,8 +435,7 @@ Public Class ListOfValueForm
 
         If MsgBox("Are you sure you want to delete " & dglistofval.CurrentRow.Cells(c_display.Index).Value & "?", MsgBoxStyle.YesNo, "Deleting...") = MsgBoxResult.No Then
         Else
-            DirectCommand("Delete from listofval where RowID = '" & rowid & "';" &
-                          "ALTER TABLE listofval AUTO_INCREMENT = 0;")
+            DirectCommand("Delete from listofval where RowID = '" & rowid & "';")
             'filllistofvalues()
 
         End If

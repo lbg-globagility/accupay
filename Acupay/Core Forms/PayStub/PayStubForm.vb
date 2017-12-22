@@ -1774,8 +1774,7 @@ Public Class PayStubForm
             If prompt = Windows.Forms.DialogResult.Yes Then
                 Dim SQLTableName As String = If(dgvAdjustments.Item("IsAdjustmentActual", e.RowIndex).Value = 0, "paystubadjustment", "paystubadjustmentactual")
                 Dim del_quer As String =
-                    "DELETE FROM " & SQLTableName & " WHERE RowID='" & dgvAdjustments.Item("psaRowID", e.RowIndex).Value & "';" &
-                    "ALTER TABLE " & SQLTableName & " AUTO_INCREMENT = 0;"
+                    "DELETE FROM " & SQLTableName & " WHERE RowID='" & dgvAdjustments.Item("psaRowID", e.RowIndex).Value & "';"
                 n_ExecuteQuery = New ExecuteQuery(del_quer)
                 dgvAdjustments.Rows.Remove(dgvAdjustments.Rows(e.RowIndex))
                 dgvemployees_SelectionChanged(dgvemployees, New EventArgs)

@@ -194,7 +194,7 @@ Public Class TimeLogsForm
     Private Sub tsbtnNew_Click(sender As Object, e As EventArgs) Handles tsbtnNew.Click
         Static employeeleaveRowID As Integer = -1
 
-        Static _bool As Boolean = TimeLogsImportOption()
+        Dim _bool As Boolean = TimeLogsImportOption()
 
         Try
             Dim browsefile As OpenFileDialog = New OpenFileDialog()
@@ -2044,8 +2044,7 @@ Public Class TimeLogsForm
 
                 If result = DialogResult.Yes Then
 
-                    EXECQUER("DELETE FROM employeetimeentrydetails WHERE Created='" & .CurrentRow.Cells("createdmilit").Value & "';" & _
-                             "ALTER TABLE employeetimeentrydetails AUTO_INCREMENT = 0;")
+                    EXECQUER("DELETE FROM employeetimeentrydetails WHERE Created='" & .CurrentRow.Cells("createdmilit").Value & "';")
 
                     dgvetentd.Rows.Remove(.CurrentRow)
 
@@ -2209,8 +2208,7 @@ Public Class TimeLogsForm
 
                 .EndEdit(True)
 
-                EXECQUER("DELETE FROM employeetimeentrydetails WHERE RowID='" & .CurrentRow.Cells("Column1").Value & "';" &
-                          "ALTER TABLE employeetimeentrydetails AUTO_INCREMENT = 0;")
+                EXECQUER("DELETE FROM employeetimeentrydetails WHERE RowID='" & .CurrentRow.Cells("Column1").Value & "';")
 
                 .Rows.Remove(.CurrentRow)
 

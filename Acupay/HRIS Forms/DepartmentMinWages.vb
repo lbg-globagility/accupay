@@ -157,8 +157,7 @@
             If prompt = Windows.Forms.DialogResult.Yes Then
 
                 Dim n_ExecuteQuery As _
-                    New ExecuteQuery("DELETE FROM divisionminimumwage WHERE RowID='" & dgv_currRow.Cells("dmw_RowID").Value & "';" &
-                                     "ALTER TABLE divisionminimumwage AUTO_INCREMENT = 0;")
+                    New ExecuteQuery("DELETE FROM divisionminimumwage WHERE RowID='" & dgv_currRow.Cells("dmw_RowID").Value & "';")
 
                 If n_ExecuteQuery.HasError = False Then
 

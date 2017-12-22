@@ -1346,18 +1346,9 @@ Public Class DivisionForm
 
         bgworkShiftSaving.ReportProgress(75)
 
-        reset_employeeshift_ofthisdivision =
-            New ExecuteQuery("ALTER TABLE employeeshift AUTO_INCREMENT = 0;")
-
         bgworkShiftSaving.ReportProgress(80)
 
-        reset_employeeshift_ofthisdivision =
-            New ExecuteQuery("ALTER TABLE employeeshiftbyday AUTO_INCREMENT = 0;")
-
         bgworkShiftSaving.ReportProgress(85)
-
-        reset_employeeshift_ofthisdivision =
-            New ExecuteQuery("ALTER TABLE employeefirstweekshift AUTO_INCREMENT = 0;")
 
         bgworkShiftSaving.ReportProgress(99)
 
