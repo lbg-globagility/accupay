@@ -6,7 +6,7 @@
 
 DROP FUNCTION IF EXISTS `GetBasicPay`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `GetBasicPay`(`employeeID` INT, `payDate` DATE, `isActual` TINYINT(1), `workHours` DECIMAL(10, 4)) RETURNS decimal(15,4)
+CREATE DEFINER=`root`@`localhost` FUNCTION `GetBasicPay`(`employeeID` INT, `payDateFrom` DATE, `payDateTo` DATE, `isActual` TINYINT(1), `workHours` DECIMAL(10, 4)) RETURNS decimal(15,4)
     DETERMINISTIC
 BEGIN
 
@@ -44,8 +44,11 @@ SELECT IF(
 FROM employeesalary es
 WHERE es.EmployeeID = employeeID AND
     (
-        ((es.EffectiveDateTo IS NULL) AND payDate > es.EffectiveDateFrom) OR
-        (payDate BETWEEN es.EffectiveDateFrom AND es.EffectiveDateTo)
+        ((es.EffectiveDateTo IS NULL) AND payDateFrom > es.EffectiveDateFrom) OR
+        (
+            payDateFrom BETWEEN es.EffectiveDateFrom AND es.EffectiveDateTo OR
+            payDateTo BETWEEN es.EffectiveDateFrom AND es.EffectiveDateTo
+        )
     )
 LIMIT 1
 INTO salary;
