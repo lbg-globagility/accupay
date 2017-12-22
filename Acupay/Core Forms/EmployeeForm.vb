@@ -9275,16 +9275,16 @@ Public Class EmployeeForm
         Select Case context
             Case SalaryFormContext.NoneSelected
                 btnNewSal.Enabled = True
-                btnSaveSal.Enabled = False
-                grpbasicsalaryaddeduction.Enabled = False
+                'btnSaveSal.enabled = False
+                'grpbasicsalaryaddeduction.Enabled = False
             Case SalaryFormContext.NewSalary
                 btnNewSal.Enabled = False
-                btnSaveSal.Enabled = True
-                grpbasicsalaryaddeduction.Enabled = True
+                'btnSaveSal.enabled = True
+                'grpbasicsalaryaddeduction.Enabled = True
             Case SalaryFormContext.Selected
                 btnNewSal.Enabled = True
-                btnSaveSal.Enabled = True
-                grpbasicsalaryaddeduction.Enabled = True
+                'btnSaveSal.enabled = True
+                'grpbasicsalaryaddeduction.Enabled = True
         End Select
     End Sub
 
@@ -9295,15 +9295,15 @@ Public Class EmployeeForm
         dgvEmp.Enabled = boolresult
         dgvemployeesalary.Enabled = boolresult
 
-        grpbasicsalaryaddeduction.Enabled = Not boolresult
-        btnSaveSal.Enabled = Not boolresult
+        'grpbasicsalaryaddeduction.Enabled = Not boolresult
+        'btnSaveSal.enabled = Not boolresult
     End Sub
 
     Private Sub MakeNewEmployeeSalary(sender As Object, e As EventArgs) Handles btnNewSal.Click
         btnNewSal.Enabled = False
-        cleartextsal()
+        'cleartextsal()
 
-        If dgvEmp.RowCount <> 0 Then
+        If dgvEmp.RowCount > 0 Then
             Dim n_SQLQueryToDatatable As _
                 New SQLQueryToDatatable("SELECT es.*,CURDATE() AS Curdate" &
                                         ",(CURDATE() > es.EffectiveDateFrom) AS CurrDateIsGreater" &
@@ -9352,7 +9352,7 @@ Public Class EmployeeForm
             If dgvEmp.RowCount = 0 Then
                 btnNewSal.Enabled = True
 
-                grpbasicsalaryaddeduction.Enabled = False
+                'grpbasicsalaryaddeduction.Enabled = False
                 IsNewSal = 0
 
                 listofEditEmpSal.Clear()
@@ -9378,7 +9378,7 @@ Public Class EmployeeForm
             If dontUpdateSal = 1 Then
                 btnNewSal.Enabled = True
 
-                grpbasicsalaryaddeduction.Enabled = False
+                'grpbasicsalaryaddeduction.Enabled = False
                 IsNewSal = 0
 
                 listofEditEmpSal.Clear()
@@ -9418,7 +9418,7 @@ Public Class EmployeeForm
         End If
         btnNewSal.Enabled = True
 
-        grpbasicsalaryaddeduction.Enabled = False
+        'grpbasicsalaryaddeduction.Enabled = False
         IsNewSal = 0
 
         listofEditEmpSal.Clear()
@@ -9460,15 +9460,15 @@ Public Class EmployeeForm
 
     Private Sub btnCancelSal_Click(sender As Object, e As EventArgs) Handles btnCancelSal.Click
 
-        dptFromSal.MinDate = "1/1/1900"
+        'dptFromSal.MinDate = "1/1/1900"
 
-        dtpToSal.MinDate = "1/1/1900"
+        'dtpToSal.MinDate = "1/1/1900"
 
         dgvEmp_SelectionChanged(sender, e)
 
-        btnSaveSal.Enabled = True
+        'btnSaveSal.enabled = True
         btnNewSal.Enabled = True
-        grpbasicsalaryaddeduction.Enabled = False
+        'grpbasicsalaryaddeduction.Enabled = False
         IsNewSal = 0
 
         dgvEmp.Enabled = True
@@ -9556,19 +9556,21 @@ Public Class EmployeeForm
             curr_salaryrow = Nothing
         End Try
 
-        If dgvemployeesalary.RowCount = 0 Or dgvEmp.RowCount = 0 Then
-            Return
-        End If
+        Dim has_curr_dgvrow As Boolean = False
 
-        If dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value Is Nothing Then
-            Return
-        End If
+        Try
+
+            has_curr_dgvrow = (dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value IsNot Nothing)
+
+        Catch ex As Exception
+            has_curr_dgvrow = False
+        End Try
 
         If sendr_name = "txtEmpDeclaSal" Or sendr_name = "txtToComputeSal" Then
             is_user_override_phh = False
             is_user_override_sss = False
 
-            listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
+            If has_curr_dgvrow Then listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
 
             Dim truefullsalary As String = ValNoComma(txtEmpDeclaSal.Text)
 
@@ -9731,7 +9733,7 @@ Public Class EmployeeForm
 
             '***********************************
 
-        ElseIf sendr_name = "txtBasicrateSal" Then
+        ElseIf sendr_name = "txtBasicrateSal" And has_curr_dgvrow Then
 
             If dgvEmp.CurrentRow.Cells("Column34").Value = "Fixed" Then
                 If dgvemployeesalary.CurrentRow.Cells("c_BasicPaySal").Value <> Trim(txtBasicrateSal.Text) Then
@@ -9750,16 +9752,16 @@ Public Class EmployeeForm
 
             End If
 
-        ElseIf sendr_name = "txtPhilHealthSal" Then
+        ElseIf sendr_name = "txtPhilHealthSal" And has_curr_dgvrow Then
             If dgvemployeesalary.CurrentRow.Cells("c_philhealth").Value <> ValNoComma(txtPhilHealthSal.Text) Then
                 listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
             End If
-        ElseIf sendr_name = "txtSSSSal" Then
+        ElseIf sendr_name = "txtSSSSal" And has_curr_dgvrow Then
             If dgvemployeesalary.CurrentRow.Cells("c_sss").Value <> ValNoComma(txtSSSSal.Text) Then
                 listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
             End If
 
-        ElseIf sendr_name = "dptFromSal" Then
+        ElseIf sendr_name = "dptFromSal" And has_curr_dgvrow Then
             If dgvemployeesalary.CurrentRow.Cells("c_fromdate").Value <> Format(CDate(dptFromSal.Value), "M/d/yyy") Then
                 listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
             End If
@@ -9770,7 +9772,7 @@ Public Class EmployeeForm
                             Format(CDate(dptFromSal.Value), "M/d/yyy")
             End If
 
-        ElseIf sendr_name = "dtpToSal" Then
+        ElseIf sendr_name = "dtpToSal" And has_curr_dgvrow Then
             If dgvemployeesalary.CurrentRow.Cells("c_todate").Value <> Format(CDate(dtpToSal.Value), "M/d/yyy") Then
                 listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
             End If
@@ -9781,7 +9783,7 @@ Public Class EmployeeForm
                             Format(CDate(dtpToSal.Value), "M/d/yyy")
             End If
 
-        ElseIf sendr_name = "txtPagibig" Then
+        ElseIf sendr_name = "txtPagibig" And has_curr_dgvrow Then
             If dgvemployeesalary.CurrentRow.Cells("c_pagibig").Value <> ValNoComma(txtPagibig.Text) Then
                 listofEditEmpSal.Add(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
             End If
@@ -9822,16 +9824,16 @@ Public Class EmployeeForm
 
     Private Sub dptFromSal_ValueChanged(sender As Object, e As EventArgs) Handles dptFromSal.ValueChanged
         If grpbasicsalaryaddeduction.Enabled = True And btnNewSal.Enabled = False Then
-            dtpToSal.MinDate = dptFromSal.Value.AddDays(1)
+            'dtpToSal.MinDate = dptFromSal.Value.AddDays(1)
         End If
     End Sub
 
     Private Sub dgvemployeesalary_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployeesalary.CellClick
         If btnNewSal.Enabled = True Then
-            grpbasicsalaryaddeduction.Enabled = True
+            'grpbasicsalaryaddeduction.Enabled = True
 
             SelectSalary(dgvemployeesalary.CurrentRow.Cells(c_RowIDSal.Index).Value)
-            grpbasicsalaryaddeduction.Enabled = True
+            'grpbasicsalaryaddeduction.Enabled = True
             btnDelSal.Enabled = True
 
             txtpaytype.Enabled = True
@@ -9864,8 +9866,8 @@ Public Class EmployeeForm
         errprovidSal.SetError(dptFromSal, Nothing)
         errprovidSal.SetError(dtpToSal, Nothing)
 
-        dptFromSal.MinDate = Format(CDate("1/1/1900"), machineShortDateFormat)
-        dtpToSal.MinDate = Format(CDate("1/1/1900"), machineShortDateFormat)
+        'dptFromSal.MinDate = Format(CDate("1/1/1900"), machineShortDateFormat)
+        'dtpToSal.MinDate = Format(CDate("1/1/1900"), machineShortDateFormat)
 
         If dgvEmp.Enabled = False Then
             txtEmpDeclaSal.Enabled = True
@@ -9874,13 +9876,13 @@ Public Class EmployeeForm
             dptFromSal.Enabled = True
             dtpToSal.Enabled = True
         Else
-            txtpaytype.Enabled = False
-            txtEmp_type.Enabled = False
-            txtEmpDeclaSal.Enabled = False
+            'txtpaytype.Enabled = False
+            'txtEmp_type.Enabled = False
+            'txtEmpDeclaSal.Enabled = False
 
-            txtBasicrateSal.Enabled = False
-            dptFromSal.Enabled = False
-            dtpToSal.Enabled = False
+            'txtBasicrateSal.Enabled = False
+            'dptFromSal.Enabled = False
+            'dtpToSal.Enabled = False
         End If
 
         errprovidSal.SetError(dptFromSal, Nothing)
