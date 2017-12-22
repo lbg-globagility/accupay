@@ -3461,7 +3461,7 @@ Partial Class PayStubForm
         'btntotbon
         '
         Me.btntotbon.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btntotbon.Location = New System.Drawing.Point(359, 360)
+        Me.btntotbon.Location = New System.Drawing.Point(360, 396)
         Me.btntotbon.Name = "btntotbon"
         Me.btntotbon.Size = New System.Drawing.Size(21, 22)
         Me.btntotbon.TabIndex = 248
@@ -3483,7 +3483,7 @@ Partial Class PayStubForm
         'btntotallow
         '
         Me.btntotallow.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btntotallow.Location = New System.Drawing.Point(359, 313)
+        Me.btntotallow.Location = New System.Drawing.Point(360, 348)
         Me.btntotallow.Name = "btntotallow"
         Me.btntotallow.Size = New System.Drawing.Size(21, 22)
         Me.btntotallow.TabIndex = 246

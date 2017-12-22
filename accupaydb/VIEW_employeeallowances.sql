@@ -10,46 +10,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `VIEW_employeeallowances`(IN `eallow
     DETERMINISTIC
 BEGIN
 
-
-IF ExceptThisAllowance = '' THEN
-
+    /*
+     * Breakdown of daily allowances
+     */
     SELECT
-    psi.RowID
-    ,p.PartNo
-    ,ROUND(psi.PayAmount,2) AS PayAmount
-    ,'Monthly' AS Frequency
-    ,ps.PayFromDate
-    ,ps.PayToDate
-    ,IF(p.`Status` = '0', 'No', 'Yes') AS `Status`
-    ,p.RowID
-    FROM paystubitem psi
-    INNER JOIN product p ON p.RowID=psi.ProductID AND p.`Category`='Allowance Type'
-    INNER JOIN payperiod pyp ON pyp.PayFromDate=effective_datefrom AND pyp.PayToDate=effective_dateto AND pyp.OrganizationID=eallow_OrganizationID
-    INNER JOIN paystub ps ON ps.RowID=psi.PayStubID AND ps.EmployeeID=eallow_EmployeeID AND ps.OrganizationID=eallow_OrganizationID AND ps.PayPeriodID=pyp.RowID
-    WHERE IFNULL(psi.PayAmount,0)!=0;
-
-ELSE
-
-    SELECT
-    psi.RowID
-    ,p.PartNo
-    ,ROUND(psi.PayAmount,2) AS PayAmount
-    ,'Monthly' AS Frequency
-    ,ps.PayFromDate
-    ,ps.PayToDate
-    ,IF(p.`Status` = '0', 'No', 'Yes') AS `Status`
-    ,p.RowID
-    FROM paystubitem psi
-    INNER JOIN payperiod pyp ON pyp.PayFromDate=effective_datefrom AND pyp.PayToDate=effective_dateto AND pyp.OrganizationID=eallow_OrganizationID
-    INNER JOIN paystub ps ON ps.EmployeeID=eallow_EmployeeID AND ps.OrganizationID=eallow_OrganizationID AND ps.PayPeriodID=pyp.RowID AND psi.PayStubID=ps.RowID
-    INNER JOIN product p ON p.RowID=psi.ProductID
-    WHERE p.Category='Allowance Type'
-    AND p.PartNo != ExceptThisAllowance
-    AND IFNULL(psi.PayAmount,0)!=0;
-
-END IF;
-
-
+        prd.PartNo AS `PartNo`,
+        sum.Date AS `Date`,
+        sum.TotalAllowanceAmt AS `Amount`
+    FROM paystubitem_sum_daily_allowance_group_prodid sum
+    INNER JOIN product prd
+    ON prd.RowID = sum.ProductID
+    WHERE sum.EmployeeID = eallow_EmployeeID AND
+        sum.Date BETWEEN '2017-11-21' AND '2017-12-05'
+    ORDER BY prd.PartNo, sum.Date;
 
 END//
 DELIMITER ;
