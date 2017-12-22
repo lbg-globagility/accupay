@@ -21,7 +21,7 @@ BEGIN
     INNER JOIN product prd
     ON prd.RowID = sum.ProductID
     WHERE sum.EmployeeID = eallow_EmployeeID AND
-        sum.Date BETWEEN '2017-11-21' AND '2017-12-05'
+        sum.Date BETWEEN effective_datefrom AND effective_dateto
     ORDER BY prd.PartNo, sum.Date;
 
 END//
