@@ -9449,8 +9449,7 @@ Public Class EmployeeForm
                                      " AND es.OrganizationID='" & orgztnID & "';" &
                                      "UPDATE employeesalary SET LastUpd='1900-01-01 00:00:01',LastUpdBy='" & z_User & "' WHERE RowID='" & dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value & "';")
 
-                n_ExecuteQuery = New ExecuteQuery("DELETE FROM employeesalary WHERE RowID = '" & dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value & "';" &
-                                                  "ALTER TABLE employeesalary AUTO_INCREMENT = 0;")
+                n_ExecuteQuery = New ExecuteQuery("DELETE FROM employeesalary WHERE RowID = '" & dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value & "';")
 
                 dgvemployeesalary.Rows.Remove(dgvemployeesalary.CurrentRow)
             End If
@@ -13423,8 +13422,7 @@ Public Class EmployeeForm
 
                 dgvempOT.EndEdit(True)
 
-                EXECQUER("DELETE FROM employeeovertime WHERE RowID = '" & dgvempOT.CurrentRow.Cells("eot_RowID").Value & "';" &
-                         "ALTER TABLE employeeovertime AUTO_INCREMENT = 0;")
+                EXECQUER("DELETE FROM employeeovertime WHERE RowID = '" & dgvempOT.CurrentRow.Cells("eot_RowID").Value & "';")
 
                 dgvempOT.Rows.Remove(dgvempOT.CurrentRow)
 
@@ -15596,8 +15594,7 @@ Public Class EmployeeForm
                 dgvOBF.EndEdit(True)
 
                 Dim n_ExecuteQuery As _
-                    New ExecuteQuery("DELETE FROM employeeofficialbusiness WHERE RowID = '" & dgvOBF.CurrentRow.Cells("obf_RowID").Value & "';" &
-                                     "ALTER TABLE employeeofficialbusiness AUTO_INCREMENT = 0;")
+                    New ExecuteQuery("DELETE FROM employeeofficialbusiness WHERE RowID = '" & dgvOBF.CurrentRow.Cells("obf_RowID").Value & "';")
 
                 dgvOBF.Rows.Remove(dgvOBF.CurrentRow)
 
@@ -17476,8 +17473,7 @@ Public Class EmployeeForm
 
                     Next
 
-                    EXECQUER("DELETE FROM listofval WHERE `Type`='EmployeeDependent' AND Active='No';" &
-                             "ALTER TABLE listofval AUTO_INCREMENT = 0 ;")
+                    EXECQUER("DELETE FROM listofval WHERE `Type`='EmployeeDependent' AND Active='No';")
 
                 End If
 

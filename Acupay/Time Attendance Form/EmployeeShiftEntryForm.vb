@@ -538,8 +538,7 @@ Public Class EmployeeShiftEntryForm
                     Dim nothing_value =
                         New ExecuteQuery("DELETE FROM employeeshiftbyday" &
                                          " WHERE EmployeeID='" & dgvEmpList.Tag & "'" &
-                                         " AND OrganizationID='" & orgztnID & "';" &
-                                         " ALTER TABLE employeeshiftbyday AUTO_INCREMENT = 0;").Result
+                                         " AND OrganizationID='" & orgztnID & "';").Result
                 End If
 
                 For Each dgvcol As DataGridViewColumn In dgvWeek.Columns
@@ -810,8 +809,7 @@ Public Class EmployeeShiftEntryForm
         Next
 
         Return
-        EXECQUER("DELETE FROM shift WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NULL AND TimeTo IS NULL;" &
-                 "ALTER TABLE shift AUTO_INCREMENT = 0;")
+        EXECQUER("DELETE FROM shift WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NULL AND TimeTo IS NULL;")
     End Sub
 
     Private Sub bgEmpShiftImport_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgEmpShiftImport.ProgressChanged
@@ -1225,8 +1223,7 @@ Public Class EmployeeShiftEntryForm
 
             For Each strval In empshiftRowIDs
                 EXECQUER("UPDATE employeetimeentry SET EmployeeShiftID=NULL WHERE EmployeeShiftID='" & strval & "';" &
-                         "DELETE FROM employeeshift WHERE RowID='" & strval & "';" &
-                         "ALTER TABLE employeeshift AUTO_INCREMENT = 0;")
+                         "DELETE FROM employeeshift WHERE RowID='" & strval & "';")
             Next
 
             For Each rindx In row_index

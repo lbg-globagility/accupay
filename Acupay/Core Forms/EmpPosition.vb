@@ -777,8 +777,7 @@ Public Class EmpPosition
             EXECQUER(
                 String.Concat("UPDATE employee SET PositionID=NULL,LastUpdBy=", z_User, " WHERE PositionID='", selPositionID, "' AND OrganizationID=", orgztnID, ";",
                               "DELETE FROM `position_view` WHERE PositionID='", selPositionID, "';",
-                              "DELETE FROM position WHERE RowID='", selPositionID, "';",
-                              "ALTER TABLE position AUTO_INCREMENT = 0;"))
+                              "DELETE FROM position WHERE RowID='", selPositionID, "';"))
 
             positiontable = retAsDatTbl("SELECT *" &
                                         ",COALESCE((SELECT CONCAT('(',FirstName,IF(MiddleName IS NULL,'',CONCAT(' ',LEFT(MiddleName,1))),IF(LastName IS NULL,'',CONCAT(' ',LEFT(LastName,1))),')') FROM employee WHERE OrganizationID=" & orgztnID & " AND PositionID=p.RowID AND TerminationDate IS NULL),'(Open)') 'positionstats'" &

@@ -576,8 +576,7 @@ Public Class EmployeeShiftMassUpdate
 
         End If
 
-        EXECQUER("DELETE FROM shift WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NULL AND TimeTo IS NULL;" & _
-                 "ALTER TABLE shift AUTO_INCREMENT = 0;")
+        EXECQUER("DELETE FROM shift WHERE OrganizationID='" & orgztnID & "' AND TimeFrom IS NULL AND TimeTo IS NULL;")
 
     End Sub
 

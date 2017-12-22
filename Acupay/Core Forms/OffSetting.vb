@@ -722,8 +722,7 @@ Public Class OffSetting
 
 
                     Dim str_quer As String =
-                        String.Concat("DELETE FROM employeeoffset WHERE RowID = ?offset_rowid;",
-                                      "ALTER TABLE employeeoffset AUTO_INCREMENT = 0;")
+                        String.Concat("DELETE FROM employeeoffset WHERE RowID = ?offset_rowid;")
 
                     Dim _params = New Object() {seldgv.Cells("eosRowID").Value}
 
