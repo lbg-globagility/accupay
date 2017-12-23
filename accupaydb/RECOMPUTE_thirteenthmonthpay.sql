@@ -213,13 +213,12 @@ END IF;
 UPDATE employeeloanschedule els
 INNER JOIN scheduledloansperpayperiod slp
 ON slp.EmployeeLoanRecordID = els.RowID
-INNER JOIN payperiod pyp
-ON pyp.RowID = slp.PayPeriodID
 LEFT OUTER JOIN scheduledloansperpayperiod slp2
 ON (
     els.RowID = slp2.EmployeeLoanRecordID AND
     slp.PayPeriodID < slp2.PayPeriodID
 )
+INNER JOIN payperiod pyp ON pyp.RowID=slp.PayPeriodID
 SET
     els.LastUpd = CURRENT_TIMESTAMP(),
     els.LastUpdBy = UserRowID,
