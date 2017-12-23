@@ -132,14 +132,15 @@ INSERT INTO employeetimeentrydetails
 						ON tel.EmployeeRowID		=i.EmployeeID
 						AND tel.OrganizationID	=i.OrganizationID
 						AND tel.ImportID			=import_id
-						# AND tel.TimeStampLog BETWEEN i.`RealisticTimeRangeFrom` AND i.`RealisticTimeRangeTo`
-						AND tel.TimeStampLog BETWEEN i.`RealisticTimeRangeFrom` AND i.`RealisticTimeRangeFromHalf`
+						AND tel.TimeStampLog BETWEEN i.`RealisticTimeRangeFrom` AND i.`RealisticTimeRangeTo`
+						# AND tel.TimeStampLog BETWEEN i.`RealisticTimeRangeFrom` AND i.`RealisticTimeRangeFromHalf`
 						
 			LEFT JOIN timeentrylogs tlg
 						ON tlg.EmployeeRowID		=i.EmployeeID
 						AND tlg.OrganizationID	=i.OrganizationID
 						AND tlg.ImportID			=import_id
-						AND tlg.TimeStampLog BETWEEN i.`RealisticTimeRangeToHalf` AND i.`RealisticTimeRangeTo`
+						AND tlg.TimeStampLog BETWEEN i.`RealisticTimeRangeFrom` AND i.`RealisticTimeRangeTo`
+						# AND tlg.TimeStampLog BETWEEN i.`RealisticTimeRangeToHalf` AND i.`RealisticTimeRangeTo`
 						
 			GROUP BY i.EmployeeID, i.DateValue
 			ORDER BY i.EmployeeID, i.DateValue) etd
