@@ -185,8 +185,8 @@ Public Class TimeLogsForm
         param(3, 1) = firstName
         param(4, 1) = lastName
 
-        EXEC_VIEW_PROCEDURE(param, _
-                           "VIEW_employeetimeentrydetails", _
+        EXEC_VIEW_PROCEDURE(param,
+                           "VIEW_employeetimeentrydetails",
                            dgvetentdet)
 
     End Sub
@@ -268,10 +268,10 @@ Public Class TimeLogsForm
 
     End Function
 
-    Dim pre_empnum, _
-        pre_timin, _
-        pre_timout, _
-        pre_datelog, _
+    Dim pre_empnum,
+        pre_timin,
+        pre_timout,
+        pre_datelog,
         pre_schedtyp As String
 
     Sub filldattab(ByVal thefilepath As String)
@@ -280,10 +280,10 @@ Public Class TimeLogsForm
 
         Dim objReader As New System.IO.StreamReader(thefilepath)
 
-        Dim empnum, _
-            timin, _
-            timout, _
-            datelog, _
+        Dim empnum,
+            timin,
+            timout,
+            datelog,
             schedtyp As String
 
         Dim rowindx As Integer = 0
@@ -295,18 +295,18 @@ Public Class TimeLogsForm
 
             'With insRow
             If Trim(logval) <> "" Then
-                empnum = getStrBetween(Trim(logval), _
-                                           "", _
+                empnum = getStrBetween(Trim(logval),
+                                           "",
                                            ":")
 
                 empnum = Trim(empnum.Substring(0, empnum.Length - 2))
 
-                Dim prevlength = getStrBetween(Trim(logval), _
-                                           "", _
+                Dim prevlength = getStrBetween(Trim(logval),
+                                           "",
                                            ":").Length
 
-                datelog = StrReverse(getStrBetween(StrReverse(logval), _
-                                                       "", _
+                datelog = StrReverse(getStrBetween(StrReverse(logval),
+                                                       "",
                                                        "M"))
                 datelog = datelog.Substring(0, 8)
 
@@ -319,13 +319,13 @@ Public Class TimeLogsForm
 
                 datelog = CObj(Y & "-" & MM & "-" & dd)
 
-                schedtyp = getStrBetween(StrReverse(logval), _
-                                             "", _
+                schedtyp = getStrBetween(StrReverse(logval),
+                                             "",
                                              " ")
                 'MsgBox(logval)
 
                 If logval.Contains("I") Then
-                    timin = logval.Substring(prevlength - 2, _
+                    timin = logval.Substring(prevlength - 2,
                                                                 logval.Length - prevlength)
                     timin = MilitTime(timin)
 
@@ -334,7 +334,7 @@ Public Class TimeLogsForm
                 Else
                     timin = ""
 
-                    timout = logval.Substring(prevlength - 2, _
+                    timout = logval.Substring(prevlength - 2,
                                                                 logval.Length - prevlength)
                     timout = MilitTime(timout)
 
@@ -365,11 +365,11 @@ Public Class TimeLogsForm
                     '                                    schedtyp) 'drow("EmpNum")
 
                     'logval'etentRowID
-                    dattabLogs.Rows.Add(logval, _
-                                        empnum, _
-                                        timin, _
-                                        timout, _
-                                        datelog, _
+                    dattabLogs.Rows.Add(logval,
+                                        empnum,
+                                        timin,
+                                        timout,
+                                        datelog,
                                         schedtyp)
 
                     'dgvetentdet.Rows.Add(Nothing, _
@@ -467,10 +467,10 @@ Public Class TimeLogsForm
 
                 Dim redline = objReader.ReadLine()
 
-                Dim red_line = Trim(redline).Replace(vbTab, _
+                Dim red_line = Trim(redline).Replace(vbTab,
                                                 " ")
 
-                Dim strings = Split(red_line, _
+                Dim strings = Split(red_line,
                                     " ") 'vbTab
 
                 Dim ii = containCollection(strings)
@@ -498,9 +498,9 @@ Public Class TimeLogsForm
 
                     Dim iouioui = _array(array_maxcount)
 
-                    dtTimeLogs.Rows.Add(Employee_ID, _
-                                        getDataInList(ii, "date"), _
-                                        getDataInList(ii, "time"), _
+                    dtTimeLogs.Rows.Add(Employee_ID,
+                                        getDataInList(ii, "date"),
+                                        getDataInList(ii, "time"),
                                         String.Empty,
                                         _array(1),
                                         _array(array_maxcount),
@@ -509,9 +509,9 @@ Public Class TimeLogsForm
                     '0 as time out
                 Else
 
-                    dtTimeLogs.Rows.Add(Employee_ID, _
-                                        getDataInList(ii, "date"), _
-                                        getDataInList(ii, "time"), _
+                    dtTimeLogs.Rows.Add(Employee_ID,
+                                        getDataInList(ii, "date"),
+                                        getDataInList(ii, "time"),
                                         String.Empty,
                                         Nothing,
                                         Nothing,
@@ -528,7 +528,7 @@ Public Class TimeLogsForm
 
     End Sub
 
-    Function containCollection(ByVal lists() As String, _
+    Function containCollection(ByVal lists() As String,
                                Optional SplitDelimiter As String = " ") As List(Of String)
 
         Dim listContainer As New List(Of String)
@@ -557,7 +557,7 @@ Public Class TimeLogsForm
 
     End Function
 
-    Function getDataInList(ByVal listofstr As List(Of String), _
+    Function getDataInList(ByVal listofstr As List(Of String),
                            ByVal NameOfDataType As String) As Object
 
         Dim returnval = Nothing
@@ -685,13 +685,13 @@ Public Class TimeLogsForm
 
                 'MsgBox(Trim(StrReverse(StrReverse("3:15 AM").ToString.Substring(i, ("3:15 AM").ToString.Length - i))).Length)
 
-                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i, _
+                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i,
                                                                                   endtime.ToString.Length - i)
                                           )
                                )
 
-                amTime = If(getStrBetween(amTime, "", ":") = "12", _
-                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")), _
+                amTime = If(getStrBetween(amTime, "", ":") = "12",
+                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")),
                             amTime)
 
                 retrnObj = amTime
@@ -704,10 +704,10 @@ Public Class TimeLogsForm
 
     End Function
 
-    Dim emp_num, _
-        t_in, _
-        t_out, _
-        logdate, _
+    Dim emp_num,
+        t_in,
+        t_out,
+        logdate,
         typ As Object
 
     Dim emp_numb As String
@@ -798,13 +798,13 @@ Public Class TimeLogsForm
 
     Dim RegKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Control Panel\International", True)
 
-    Function INSUPD_employeetimeentrydetails(Optional etentd_RowID As Object = Nothing, _
-                                             Optional etentd_EmployeeID As Object = Nothing, _
-                                             Optional etentd_TimeIn As Object = Nothing, _
-                                             Optional etentd_TimeOut As Object = Nothing, _
-                                             Optional etentd_Date As Object = Nothing, _
-                                             Optional etentd_TimeScheduleType As Object = Nothing, _
-                                             Optional etentd_Created As Object = Nothing, _
+    Function INSUPD_employeetimeentrydetails(Optional etentd_RowID As Object = Nothing,
+                                             Optional etentd_EmployeeID As Object = Nothing,
+                                             Optional etentd_TimeIn As Object = Nothing,
+                                             Optional etentd_TimeOut As Object = Nothing,
+                                             Optional etentd_Date As Object = Nothing,
+                                             Optional etentd_TimeScheduleType As Object = Nothing,
+                                             Optional etentd_Created As Object = Nothing,
                                              Optional etentd_TimeEntryStatus As Object = Nothing,
                                              Optional EditAsUnique As String = "0",
                                              Optional Branch_Code As Object = Nothing,
@@ -824,15 +824,15 @@ Public Class TimeLogsForm
             once = 1
 
             mysql_date_format = New ExecuteQuery("SELECT @@date_format;").Result
-            
+
             vb_date_format = mysql_date_format.Replace("%", "")
-            
+
             vb_date_format = vb_date_format.Replace("Y", "y")
 
             vb_date_format = vb_date_format.Replace("m", "M")
 
             machineShortTime = RegKey.GetValue("sTimeFormat").ToString 'sShortTime
-            
+
             machineShortTime = machineShortTime.Replace("t", "").Trim
 
             machineShortTime = machineShortTime.Replace("h", "H").Trim
@@ -1263,7 +1263,7 @@ Public Class TimeLogsForm
         Dim balloon_x = lblforballoon.Location.X
 
         If e.Error IsNot Nothing Then
-            
+
             'MessageBox.Show("Error: " & e.Error.Message)
             MessageBox.Show(getErrExcptn(e.Error, Me.Name))
 
@@ -1364,12 +1364,12 @@ Public Class TimeLogsForm
 
             'End With
 
-            INSUPD_employeetimeentrydetails(, _
-                                            drow("EmploID"), _
-                                            drow("TIn"), _
-                                            drow("TOut"), _
-                                            drow("LogDate"), _
-                                            "", _
+            INSUPD_employeetimeentrydetails(,
+                                            drow("EmploID"),
+                                            drow("TIn"),
+                                            drow("TOut"),
+                                            drow("LogDate"),
+                                            "",
                                             currtimestamp, , "1",
                                             drow("BranchCode"),
                                             drow("DateTimeLogIn"),
@@ -1480,8 +1480,8 @@ Public Class TimeLogsForm
         Dim colName As String = dgvetentdet.Columns(e.ColumnIndex).Name
         Dim rowindx = e.RowIndex
 
-        Static num As Integer = If(reset_static = -1, _
-                                   -1, _
+        Static num As Integer = If(reset_static = -1,
+                                   -1,
                                    num)
 
         If dgvetentdet.RowCount <> 0 Then
@@ -1528,8 +1528,8 @@ Public Class TimeLogsForm
                         Dim ampm As String = Nothing
 
                         Try
-                            If dateobj.ToString.Contains("A") Or _
-                                dateobj.ToString.Contains("P") Or _
+                            If dateobj.ToString.Contains("A") Or
+                                dateobj.ToString.Contains("P") Or
                                 dateobj.ToString.Contains("M") Then
 
                                 ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -1608,8 +1608,8 @@ Public Class TimeLogsForm
         Dim colName As String = dgvetentdet.Columns(e.ColumnIndex).Name
         Dim rowindx = e.RowIndex
 
-        Static num As Integer = If(reset_static = -1, _
-                                   -1, _
+        Static num As Integer = If(reset_static = -1,
+                                   -1,
                                    num)
 
         If dgvetentdet.RowCount <> 0 Then
@@ -1654,8 +1654,8 @@ Public Class TimeLogsForm
                         Dim ampm As String = Nothing
 
                         Try
-                            If dateobj.ToString.Contains("A") Or _
-                        dateobj.ToString.Contains("P") Or _
+                            If dateobj.ToString.Contains("A") Or
+                        dateobj.ToString.Contains("P") Or
                         dateobj.ToString.Contains("M") Then
 
                                 ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -1722,7 +1722,7 @@ Public Class TimeLogsForm
 
     Dim pagination As Integer
 
-    Private Sub First_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles First.LinkClicked, Prev.LinkClicked, _
+    Private Sub First_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles First.LinkClicked, Prev.LinkClicked,
                                                                                                 Nxt.LinkClicked, Last.LinkClicked
 
         RemoveHandler dgvetentd.SelectionChanged, AddressOf dgvetentd_SelectionChanged
@@ -1868,33 +1868,33 @@ Public Class TimeLogsForm
                 If .IsNewRow = False Then
                     Dim RowID = Nothing
 
-                    Dim time_i = If(.Cells("Column3").Value = Nothing, _
-                                    Nothing, _
+                    Dim time_i = If(.Cells("Column3").Value = Nothing,
+                                    Nothing,
                                     Format(CDate(Trim(.Cells("Column3").Value)), "HH:mm:ss"))
 
-                    Dim time_o = If(.Cells("Column4").Value = Nothing, _
-                                    Nothing, _
+                    Dim time_o = If(.Cells("Column4").Value = Nothing,
+                                    Nothing,
                                     Format(CDate(Trim(.Cells("Column4").Value)), "HH:mm:ss"))
 
                     If listofEditRow.Contains(.Cells("Column1").Value) Then
                         Dim etent_date = Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd")
 
                         RowID = .Cells("Column1").Value
-                        INSUPD_employeetimeentrydetails(RowID, _
-                                                        .Cells("Column2").Value, _
-                                                        time_i, _
-                                                        time_o, _
-                                                        Trim(etent_date), _
+                        INSUPD_employeetimeentrydetails(RowID,
+                                                        .Cells("Column2").Value,
+                                                        time_i,
+                                                        time_o,
+                                                        Trim(etent_date),
                                                         .Cells("Column6").Value)
                     Else
                         If .Cells("Column1").Value = Nothing Then
-                            newRowID = _
-                            INSUPD_employeetimeentrydetails(, _
-                                                            .Cells("Column2").Value, _
-                                                            time_i, _
-                                                            time_o, _
-                                                            Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd"), _
-                                                            .Cells("Column6").Value, _
+                            newRowID =
+                            INSUPD_employeetimeentrydetails(,
+                                                            .Cells("Column2").Value,
+                                                            time_i,
+                                                            time_o,
+                                                            Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd"),
+                                                            .Cells("Column6").Value,
                                                             currtimestamp)
 
                             .Cells("Column1").Value = newRowID
@@ -1917,7 +1917,7 @@ Public Class TimeLogsForm
 
         reset_static = -1
 
-        InfoBalloon("Successfully saved.", _
+        InfoBalloon("Successfully saved.",
                   "Successfully saved.", lblforballoon, 0, -69)
 
         tsbtnCancel_Click(sender, e)
@@ -2062,8 +2062,8 @@ Public Class TimeLogsForm
 
     Private Sub dgvetentdet_Scroll(sender As Object, e As ScrollEventArgs) Handles dgvetentdet.Scroll
 
-        myEllipseButton(dgvetentdet, _
-                        "Column2", _
+        myEllipseButton(dgvetentdet,
+                        "Column2",
                         btnEmpID)
 
     End Sub
@@ -2086,8 +2086,8 @@ Public Class TimeLogsForm
 
         End If
 
-        myEllipseButton(dgvetentdet, _
-                        "Column2", _
+        myEllipseButton(dgvetentdet,
+                        "Column2",
                         btnEmpID)
 
     End Sub
