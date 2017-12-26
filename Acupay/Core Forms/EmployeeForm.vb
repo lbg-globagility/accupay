@@ -2418,10 +2418,6 @@ Public Class EmployeeForm
         AddHandler cboEmpType.SelectedValueChanged, AddressOf cboEmpType_SelectedIndexChanged
     End Sub
 
-    Private Sub cboEmpType_SelectedIndexChanged(sender As Object, e As EventArgs)
-        Throw New NotImplementedException()
-    End Sub
-
     Dim PayFreqE_asc As String
 
     Private Sub cboPayFreq_KeyPress(sender As Object, e As KeyPressEventArgs) 'Handles cboPayFreq.KeyPress
