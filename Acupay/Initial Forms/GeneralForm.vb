@@ -266,8 +266,8 @@
 
     Private Sub PayRateToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayRateToolStripMenuItem.Click
 
-        ChangeForm(Payrate, "Pay rate")
-        previousForm = Payrate
+        ChangeForm(PayRateForm, "Pay rate")
+        previousForm = PayRateForm
 
         'If FormLeft.Contains("Pay rate") Then
         '    FormLeft.Remove("Pay rate")
