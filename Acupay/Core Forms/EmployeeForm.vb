@@ -1813,8 +1813,6 @@ Public Class EmployeeForm
                         VIEW_employeechecklist(.Cells("RowID").Value)
                     Case 1 'Employee
 
-                        RemoveHandler cboEmpType.SelectedValueChanged, AddressOf cboEmpType_SelectedIndexChanged
-
                         txtNName.Text = .Cells("Column5").Value
                         txtDivisionName.Text = .Cells("Column7").Value
 
@@ -1970,7 +1968,6 @@ Public Class EmployeeForm
                             End If
                         End If
                         AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
-                        AddHandler cboEmpType.SelectedValueChanged, AddressOf cboEmpType_SelectedIndexChanged
                     Case 2 'Salary
                         'filingid, mStat, noofdepd
                         cleartextsal()
@@ -2379,8 +2376,6 @@ Public Class EmployeeForm
     Sub tsbtnNewEmp_Click(sender As Object, e As EventArgs) Handles tsbtnNewEmp.Click
         If tsbtnNewEmp.Visible = False Then : Exit Sub : End If
 
-        RemoveHandler cboEmpType.SelectedValueChanged, AddressOf cboEmpType_SelectedIndexChanged
-
         txtEmpID.Focus()
         tsbtnNewEmp.Enabled = False
         clearObjControl(SplitContainer2.Panel1)
@@ -2415,7 +2410,6 @@ Public Class EmployeeForm
         dtpempstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
         dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
         chkbxRevealInPayroll.Checked = False
-        AddHandler cboEmpType.SelectedValueChanged, AddressOf cboEmpType_SelectedIndexChanged
     End Sub
 
     Dim PayFreqE_asc As String
