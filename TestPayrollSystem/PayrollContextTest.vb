@@ -35,4 +35,11 @@ Public Class PayrollContextTest
         Assert.IsInstanceOf(Of PaystubItem)(paystubItem)
     End Sub
 
+    <Test>
+    Public Sub Should_Retrieve_Employee()
+        Dim employee = _context.Employees.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of Employee)(employee)
+    End Sub
+
 End Class
