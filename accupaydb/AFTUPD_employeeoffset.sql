@@ -11,18 +11,23 @@ CREATE TRIGGER `AFTUPD_employeeoffset` AFTER UPDATE ON `employeeoffset` FOR EACH
 
 DECLARE tothoursoffset DECIMAL(11,6);
 
+DECLARE prev_offset_hours DECIMAL(11,6);
 
+DECLARE sec_per_hour INT(11) DEFAULT 3600; # 60 seconds times 60 minutes
 
-IF OLD.`Status` != 'Approved' AND NEW.`Status` = 'Approved' THEN
+SET prev_offset_hours = TIMESTAMPDIFF(SECOND
+                               , CONCAT_DATETIME(OLD.StartDate, OLD.StartTime)
+										 , CONCAT_DATETIME(ADDDATE(OLD.StartDate, INTERVAL IS_TIMERANGE_REACHTOMORROW(OLD.StartTime, OLD.EndTime) DAY), OLD.EndTime)) / sec_per_hour;
 
-    SET tothoursoffset = COMPUTE_TimeDifference(NEW.StartTime,NEW.EndTime);
+SET tothoursoffset = TIMESTAMPDIFF(SECOND
+                               , CONCAT_DATETIME(NEW.StartDate, NEW.StartTime)
+										 , CONCAT_DATETIME(ADDDATE(NEW.StartDate, INTERVAL IS_TIMERANGE_REACHTOMORROW(NEW.StartTime, NEW.EndTime) DAY), NEW.EndTime)) / sec_per_hour;
 
-    UPDATE employee e
-    SET e.OffsetBalance = IFNULL(e.OffsetBalance,0) + tothoursoffset
-    ,e.LastUpdBy=NEW.CreatedBy
-    WHERE e.RowID = NEW.EmployeeID;
-
-END IF;
+UPDATE employee e
+SET e.OffsetBalance = ( IFNULL(e.OffsetBalance,0) + (IFNULL(tothoursoffset, 0) - IFNULL(prev_offset_hours, 0)) )
+,e.LastUpdBy=NEW.CreatedBy
+WHERE e.RowID = NEW.EmployeeID
+AND NEW.`Status` = 'Approved';
 
 END//
 DELIMITER ;
