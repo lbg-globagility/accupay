@@ -1,110 +1,42 @@
 ﻿Option Strict On
 
+Imports System.Data.Entity
+Imports AccuPay.Entity
+
 Public Class TimeEntryGenerator
 
-    Private _timeLog As TimeLog
+    Private _context As PayrollContext
 
-    Private _dutyStart As Date
+    Private _cutOffBegin As Date
 
-    Private _dutyEnd As Date
+    Private _cutOffEnd As Date
 
-    Private _shift As Shift
+    Public Sub Start()
+        Dim employees =
+            (From e In _context.Employees
+             Where e.OrganizationID = z_OrganizationID).
+            ToList()
 
-    Public _timeEntry As TimeEntry
+        Dim payRates =
+            (From p In _context.PayRates
+             Where p.OrganizationID = z_OrganizationID And
+                 p.RateDate >= _cutOffBegin And
+                 p.RateDate <= _cutOffEnd).
+            ToList()
 
-    Private _shiftToday As ShiftToday
-
-    Public Sub New(shift As Shift, timeLog As TimeLog)
-        _shift = shift
-        _timeLog = timeLog
-
-        _shiftToday = New ShiftToday(_shift, _timeLog.LogDate)
-        _timeEntry = New TimeEntry(_timeLog, _shiftToday)
+        For Each employee In employees
+            CalculateEmployee(employee)
+        Next
     End Sub
 
-    Public Sub ComputeAllHours()
-        ComputeRegularHours()
-    End Sub
-
-    Public Sub ComputeRegularHours()
-        Dim regularHours As TimeSpan
-
-        If _shiftToday.HasBreaktime Then
-            Dim hoursBeforeBreak As TimeSpan
-            Dim hoursAfterBreak As TimeSpan
-
-            If _timeEntry.DutyStart < _shiftToday.BreaktimeStart Then
-                Dim lastWorkBeforeBreaktimeStarts = {_timeEntry.DutyEnd, _shiftToday.BreaktimeStart}.Min()
-
-                hoursBeforeBreak = lastWorkBeforeBreaktimeStarts - _timeEntry.DutyStart
-            End If
-
-            If _timeEntry.DutyEnd > _shiftToday.BreaktimeEnd Then
-                Dim workStartAfterBreaktime = {_timeEntry.DutyStart, _shiftToday.BreaktimeEnd}.Max()
-
-                hoursAfterBreak = _timeEntry.DutyEnd - workStartAfterBreaktime
-            End If
-
-            regularHours = hoursBeforeBreak + hoursAfterBreak
-        Else
-            regularHours = _timeEntry.DutyEnd - _timeEntry.DutyStart
-        End If
-
-        _timeEntry.RegularHours = CDec(regularHours.TotalHours)
-    End Sub
-
-    Public Sub ComputerLateHours()
-        If _timeEntry.DutyStart < _shiftToday.RangeStart Then
-            Return
-        End If
-
-        Dim lateHours As TimeSpan
-
-        If _shiftToday.HasBreaktime Then
-            Dim hoursBeforeBreak As TimeSpan
-            Dim hoursAfterBreak As TimeSpan
-
-            If _shiftToday.RangeStart < _shiftToday.BreaktimeStart Then
-                Dim latePeriodEndBeforeBreaktime = {_timeEntry.DutyStart, _shiftToday.BreaktimeStart}.Min
-                hoursBeforeBreak = latePeriodEndBeforeBreaktime - _shiftToday.RangeStart
-            End If
-
-            If _timeEntry.DutyStart > _shiftToday.BreaktimeEnd Then
-                hoursAfterBreak = _timeEntry.DutyStart - _shiftToday.BreaktimeEnd
-            End If
-
-            lateHours = hoursBeforeBreak + hoursAfterBreak
-        Else
-            lateHours = _timeEntry.DutyStart - _shiftToday.RangeStart
-        End If
-
-        _timeEntry.LateHours = CDec(lateHours.TotalHours)
-    End Sub
-
-    Public Sub ComputeUndertimeHours()
-        If _timeEntry.DutyEnd > _shiftToday.RangeEnd Then
-            Return
-        End If
-
-        Dim undertimeHours As TimeSpan
-
-        If _shiftToday.HasBreaktime Then
-            Dim hoursBeforeBreak As TimeSpan
-            Dim hoursAfterBreak As TimeSpan
-
-            If _timeEntry.DutyEnd < _shiftToday.BreaktimeStart Then
-                hoursBeforeBreak = _shiftToday.BreaktimeStart - _timeEntry.DutyEnd
-            End If
-
-            Dim undertimePeriodStartAfterBreaktime = {_timeEntry.DutyEnd, _shiftToday.BreaktimeEnd}.Max
-            hoursAfterBreak = _shiftToday.RangeEnd - undertimePeriodStartAfterBreaktime
-
-            undertimeHours = hoursBeforeBreak + hoursAfterBreak
-        Else
-            undertimeHours = _shiftToday.RangeEnd - _timeEntry.DutyEnd
-        End If
-
-        _timeEntry.UndertimeHours = CDec(undertimeHours.TotalHours)
+    Private Sub CalculateEmployee(employee As Employee)
+        Dim shiftSchedules =
+            (From s In _context.ShiftSchedules.
+                 Include(Function(s) s.Shift)
+             Where s.EmployeeID = employee.RowID And
+                 s.EffectiveFrom <= _cutOffEnd And
+                 s.EffectiveTo >= _cutOffBegin).
+            ToList()
     End Sub
 
 End Class

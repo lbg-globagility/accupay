@@ -31,6 +31,9 @@ Namespace Global.AccuPay.Entity
 
         Public Property RestDay As Char
 
+        <ForeignKey("ShiftID")>
+        Public Overridable Property Shift As Shift
+
     End Class
 
 End Namespace
