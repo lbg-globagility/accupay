@@ -9,20 +9,19 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTINS_employeeoffset` AFTER INSERT ON `employeeoffset` FOR EACH ROW BEGIN
 
+DECLARE sec_per_hour INT(11) DEFAULT 3600; # 60 seconds times 60 minutes
+
 DECLARE tothoursoffset DECIMAL(11,6);
 
+SET tothoursoffset = TIMESTAMPDIFF(SECOND
+                               , CONCAT_DATETIME(NEW.StartDate, NEW.StartTime)
+										 , CONCAT_DATETIME(ADDDATE(NEW.StartDate, INTERVAL IS_TIMERANGE_REACHTOMORROW(NEW.StartTime, NEW.EndTime) DAY), NEW.EndTime)) / sec_per_hour;
 
-
-IF NEW.`Status` = 'Approved' THEN
-
-    SET tothoursoffset = COMPUTE_TimeDifference(NEW.StartTime,NEW.EndTime);
-
-    UPDATE employee e
-    SET e.OffsetBalance = IFNULL(e.OffsetBalance,0) + tothoursoffset
-    ,e.LastUpdBy=NEW.CreatedBy
-    WHERE e.RowID = NEW.EmployeeID;
-
-END IF;
+UPDATE employee e
+SET e.OffsetBalance = IFNULL(e.OffsetBalance,0) + IFNULL(tothoursoffset, 0)
+,e.LastUpdBy=NEW.CreatedBy
+WHERE e.RowID = NEW.EmployeeID
+AND NEW.`Status` = 'Approved';
 
 END//
 DELIMITER ;

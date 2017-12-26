@@ -9,8 +9,17 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTDEL_employeeoffset` AFTER DELETE ON `employeeoffset` FOR EACH ROW BEGIN
 
+DECLARE sec_per_hour INT(11) DEFAULT 3600; # 60 seconds times 60 minutes
+
+DECLARE offset_hrs DECIMAL(11, 2);
+
+SET offset_hrs = TIMESTAMPDIFF(SECOND
+                               , CONCAT_DATETIME(OLD.StartDate, OLD.StartTime)
+										 , CONCAT_DATETIME(ADDDATE(OLD.StartDate, INTERVAL IS_TIMERANGE_REACHTOMORROW(OLD.StartTime, OLD.EndTime) DAY), OLD.EndTime)) / sec_per_hour;
+
+
 UPDATE employee
-SET OffsetBalance=IFNULL(OffsetBalance,0) - COMPUTE_TimeDifference(OLD.StartTime,OLD.EndTime)
+SET OffsetBalance = (OffsetBalance - IFNULL(offset_hrs, 0))
 WHERE RowID=OLD.EmployeeID
 AND OLD.`Status` = 'Approved';
 
