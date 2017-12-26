@@ -336,6 +336,7 @@
     <Compile Include="Core Forms\PayStub\Entity\Division.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Organization.vb" />
     <Compile Include="Core Forms\PayStub\Entity\PayPeriod.vb" />
     <Compile Include="Core Forms\PayStub\Entity\PayRate.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />

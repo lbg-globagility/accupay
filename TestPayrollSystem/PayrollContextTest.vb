@@ -49,4 +49,11 @@ Public Class PayrollContextTest
         Assert.IsInstanceOf(Of PayRate)(payRate)
     End Sub
 
+    <Test>
+    Public Sub Should_Retrieve_Organization()
+        Dim organization = _context.Organizations.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of Organization)(organization)
+    End Sub
+
 End Class

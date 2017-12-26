@@ -57,4 +57,6 @@ Public Class PayrollContext
 
     Public Overridable Property PayRates As DbSet(Of PayRate)
 
+    Public Overridable Property Organizations As DbSet(Of Organization)
+
 End Class
