@@ -23,7 +23,8 @@ IF time_range_from IS NOT NULL
 						      AND HOUR(time_range_from) > HOUR(time_range_to))
 								
 						  OR (TIME_FORMAT(time_range_from, '%p') = TIME_FORMAT(time_range_to, '%p')
-						      AND SUBDATE(TIMESTAMP(TIME(0)), INTERVAL 1 SECOND) = SUBDATE(TIMESTAMP(MAKETIME(HOUR(time_range_from),0,0)), INTERVAL 1 SECOND));
+						      AND SUBDATE(TIMESTAMP(TIME(0)), INTERVAL 1 SECOND) = SUBDATE(TIMESTAMP(MAKETIME(HOUR(time_range_from),0,0)), INTERVAL 1 SECOND)
+						      AND HOUR(time_range_from) > HOUR(time_range_to));
 
 END IF;
 	
