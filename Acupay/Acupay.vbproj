@@ -356,6 +356,7 @@
     <Compile Include="Core Forms\PayStub\NewPayStubForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\PayStub\Entity\ShiftSchedule.vb" />
     <Compile Include="Core Forms\Reports\AttendanceSheet2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

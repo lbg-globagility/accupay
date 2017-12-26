@@ -59,4 +59,6 @@ Public Class PayrollContext
 
     Public Overridable Property Organizations As DbSet(Of Organization)
 
+    Public Overridable Property ShiftSchedules As DbSet(Of ShiftSchedule)
+
 End Class

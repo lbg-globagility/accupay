@@ -56,4 +56,11 @@ Public Class PayrollContextTest
         Assert.IsInstanceOf(Of Organization)(organization)
     End Sub
 
+    <Test>
+    Public Sub Should_Retrieve_ShiftSchedule()
+        Dim shiftSchedule = _context.ShiftSchedules.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of ShiftSchedule)(shiftSchedule)
+    End Sub
+
 End Class
