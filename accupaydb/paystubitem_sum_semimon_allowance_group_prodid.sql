@@ -50,10 +50,10 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_semi
         ) AS TotalAllowanceAmt,
         IF(
             pr.PayType = 'Special Non-Working Holiday' AND e.CalcSpecialHoliday = TRUE,
-            et.RegularHoursWorked * (ea.AllowanceAmount / (e.WorkDaysPerYear / 12 / 2) / sh.DivisorToDailyRate) * (pr.PayRate - 1),
+            IFNULL(et.RegularHoursWorked * (ea.AllowanceAmount / (e.WorkDaysPerYear / 12 / 2) / sh.DivisorToDailyRate) * (pr.PayRate - 1), 0),
             IF(
                 pr.PayType = 'Regular Holiday' AND e.CalcHoliday = TRUE,
-                et.RegularHoursWorked * (ea.AllowanceAmount / (e.WorkDaysPerYear / 12 / 2)) * (pr.PayRate - 1),
+                IFNULL(et.RegularHoursWorked * (ea.AllowanceAmount / (e.WorkDaysPerYear / 12 / 2)) * (pr.PayRate - 1), 0),
                 0
             )
         ) AS HolidayAllowance,

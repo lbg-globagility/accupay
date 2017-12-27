@@ -23,6 +23,12 @@ DECLARE firstdate DATE;
 DECLARE thismonth VARCHAR(2);
 DECLARE thisyear INT(11);
 
+DECLARE giveAllowanceForHoliday TINYINT(1) DEFAULT FALSE;
+
+SET giveAllowanceForHoliday = GetListOfValueOrDefault(
+    'Payroll Policy', 'allowances.holiday', FALSE
+);
+
 SET @timediffcount = 0.00;
 
 IF AllowanceFrequenzy = 'Monthly' THEN
@@ -89,7 +95,8 @@ IF AllowanceFrequenzy = 'Monthly' THEN
 ELSEIF AllowanceFrequenzy = 'Semi-monthly' THEN
 
     SELECT i.*,
-        ii.AllowanceAmount - (SUM(i.HoursToLess) * ((i.AllowanceAmount / (i.WorkDaysPerYear / (i.PAYFREQDIV * 12))) / 8)) + SUM(i.HolidayAllowance) AS TotalAllowanceAmount
+        ii.AllowanceAmount - (SUM(i.HoursToLess) * ((i.AllowanceAmount / (i.WorkDaysPerYear / (i.PAYFREQDIV * 12))) / 8)) +
+            IF(giveAllowanceForHoliday, SUM(i.HolidayAllowance), 0) AS TotalAllowanceAmount
     FROM paystubitem_sum_semimon_allowance_group_prodid i
     INNER JOIN (
         SELECT

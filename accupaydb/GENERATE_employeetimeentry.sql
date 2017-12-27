@@ -4,6 +4,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+DROP FUNCTION IF EXISTS `GENERATE_employeetimeentry`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `GENERATE_employeetimeentry`(`ete_EmpRowID` INT, `ete_OrganizID` INT, `ete_Date` DATE, `ete_UserRowID` INT
 ) RETURNS int(11)
@@ -593,14 +594,14 @@ IF hasLeave THEN
             SET @leavePeriodEndBeforeBreaktime = LEAST(leaveEnd, breaktimeStart);
 
             SET leaveHoursBeforeBreak = COMPUTE_TimeDifference(TIME(leaveStart), TIME(@leavePeriodEndBeforeBreaktime));
-        		
+
         END IF;
 
         IF leaveEnd > breaktimeEnd THEN
             SET @leavePeriodStartAfterBreaktime = GREATEST(breaktimeEnd, leaveStart);
 
             SET leaveHoursAfterBreak = COMPUTE_TimeDifference(TIME(@leavePeriodStartAfterBreaktime), TIME(leaveEnd));
-            
+
         END IF;
 
         SET leaveHours = leaveHoursBeforeBreak + leaveHoursAfterBreak;
@@ -611,7 +612,7 @@ IF hasLeave THEN
 													, CONCAT_DATETIME(ADDDATE(ete_Date
 											                                , INTERVAL IS_TIMERANGE_REACHTOMORROW(leaveStartTime, leaveEndTime) DAY)
 																			, leaveEndTime)) / sec_per_hour;
-			
+
     END IF;
 END IF;
 
