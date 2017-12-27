@@ -55,4 +55,10 @@ Public Class PayrollContext
 
     Public Overridable Property ListOfValues As DbSet(Of ListOfValue)
 
+    Public Overridable Property PayRates As DbSet(Of PayRate)
+
+    Public Overridable Property Organizations As DbSet(Of Organization)
+
+    Public Overridable Property ShiftSchedules As DbSet(Of ShiftSchedule)
+
 End Class

@@ -2,6 +2,7 @@
 
 Imports System.Data.Entity
 Imports Acupay
+Imports AccuPay.Entity
 Imports PayrollSys
 
 Namespace Global.AccuPay.JobLevels

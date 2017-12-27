@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class Payrate
+Partial Class PayRateForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -625,7 +625,7 @@ Partial Class Payrate
         Me.Panel1.Size = New System.Drawing.Size(1119, 487)
         Me.Panel1.TabIndex = 139
         '
-        'Payrate
+        'PayRateForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -635,7 +635,7 @@ Partial Class Payrate
         Me.Controls.Add(Me.Label25)
         Me.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.75!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
-        Me.Name = "Payrate"
+        Me.Name = "PayRateForm"
         Me.Text = "payrate"
         CType(Me.dgvpayrate, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip1.ResumeLayout(False)

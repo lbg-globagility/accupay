@@ -336,7 +336,9 @@
     <Compile Include="Core Forms\PayStub\Entity\Division.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Organization.vb" />
     <Compile Include="Core Forms\PayStub\Entity\PayPeriod.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\PayRate.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Position.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
@@ -354,6 +356,7 @@
     <Compile Include="Core Forms\PayStub\NewPayStubForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\PayStub\Entity\ShiftSchedule.vb" />
     <Compile Include="Core Forms\Reports\AttendanceSheet2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -425,6 +428,7 @@
     <Compile Include="Core Forms\TimeEntry\ShiftToday.vb" />
     <Compile Include="Core Forms\TimeEntry\SqlToDataTable.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntry.vb" />
+    <Compile Include="Core Forms\TimeEntry\TimeEntryCalculator.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntryGenerator.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryForm.Designer.vb">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
