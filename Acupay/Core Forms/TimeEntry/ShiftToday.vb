@@ -1,4 +1,6 @@
-﻿Public Class ShiftToday
+﻿Imports AccuPay.Entity
+
+Public Class ShiftToday
 
     Public ReadOnly Property RangeStart As Date
 

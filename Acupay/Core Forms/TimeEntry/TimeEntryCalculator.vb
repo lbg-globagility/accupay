@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Entity
+
 Public Class TimeEntryCalculator
 
     Private _timeLog As TimeLog

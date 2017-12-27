@@ -3,6 +3,7 @@ Imports System.IO
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
+Imports AccuPay.Entity
 
 Public Class EmployeeShiftEntryForm
 
