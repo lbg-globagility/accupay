@@ -1,0 +1,86 @@
+﻿Option Strict On
+
+Imports System.Text
+Imports Acupay
+Imports AccuPay.Entity
+
+<TestFixture>
+Public Class TimeEntryCalculatorTest
+
+    <Test>
+    Public Sub ShouldNotBeLate()
+        Dim calculator = New TimeEntryCalculator()
+
+        Dim workStart = Date.Parse("2017-01-01 08:30:00")
+        Dim workEnd = Date.Parse("2017-01-01 17:30:00")
+
+        Dim shift = New Shift() With {
+            .TimeFrom = TimeSpan.Parse("08:30"),
+            .TimeTo = TimeSpan.Parse("17:30")
+        }
+
+        Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
+
+        Dim result = calculator.ComputeLateHours(workStart, workEnd, currentShift)
+        Assert.AreEqual(0D, result)
+    End Sub
+
+    <Test>
+    Public Sub ShouldBeLate()
+        Dim calculator = New TimeEntryCalculator()
+
+        Dim workStart = Date.Parse("2017-01-01 09:00:00")
+        Dim workEnd = Date.Parse("2017-01-01 17:30:00")
+
+        Dim shift = New Shift() With {
+            .TimeFrom = TimeSpan.Parse("08:30"),
+            .TimeTo = TimeSpan.Parse("17:30")
+        }
+
+        Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
+
+        Dim result = calculator.ComputeLateHours(workStart, workEnd, currentShift)
+        Assert.AreEqual(0.5D, result)
+    End Sub
+
+    <Test>
+    Public Sub ShouldBeLateBreaktime()
+        Dim calculator = New TimeEntryCalculator()
+
+        Dim workStart = Date.Parse("2017-01-01 12:30:00")
+        Dim workEnd = Date.Parse("2017-01-01 16:30:00")
+
+        Dim shift = New Shift() With {
+            .TimeFrom = TimeSpan.Parse("08:30"),
+            .TimeTo = TimeSpan.Parse("17:30"),
+            .BreaktimeFrom = TimeSpan.Parse("12:00"),
+            .BreaktimeTo = TimeSpan.Parse("13:00")
+        }
+
+        Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
+
+        Dim result = calculator.ComputeLateHours(workStart, workEnd, currentShift)
+        Assert.AreEqual(3.5D, result)
+    End Sub
+
+    <Test>
+    Public Sub ShouldBeLateAfterBreaktime()
+        Dim calculator = New TimeEntryCalculator()
+
+        Dim workStart = Date.Parse("2017-01-01 14:00:00")
+        Dim workEnd = Date.Parse("2017-01-01 17:30:00")
+
+        Dim shift = New Shift() With {
+            .TimeFrom = TimeSpan.Parse("08:30"),
+            .TimeTo = TimeSpan.Parse("17:30"),
+            .BreaktimeFrom = TimeSpan.Parse("12:00"),
+            .BreaktimeTo = TimeSpan.Parse("13:00")
+        }
+
+        Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
+
+        Dim result = calculator.ComputeLateHours(workStart, workEnd, currentShift)
+        Assert.AreEqual(4.5D, result)
+    End Sub
+
+End Class

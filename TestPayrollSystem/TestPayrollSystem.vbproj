@@ -101,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PayrollContextTest.vb" />
+    <Compile Include="TimeEntryCalculatorTest.vb" />
     <Compile Include="TimeUtilityTest.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
