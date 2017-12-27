@@ -50,6 +50,7 @@ WHERE es.EmployeeID = employeeID AND
             payDateTo BETWEEN es.EffectiveDateFrom AND es.EffectiveDateTo
         )
     )
+ORDER BY es.EffectiveDateFrom DESC, es.EffectiveDateTo
 LIMIT 1
 INTO salary;
 
