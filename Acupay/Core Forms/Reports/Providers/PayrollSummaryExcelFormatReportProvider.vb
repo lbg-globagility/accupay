@@ -263,6 +263,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                                     Dim _cells = worksheet.Cells(excl_colrow)
 
                                     _cells.Value = dtrow(cell_val)
+                                    _cells.Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
 
                                     _cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
 
@@ -292,6 +293,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                                                                    3).Address) 'column_headers.Count
 
                             worksheet.Cells(sum_cell_range).Style.Font.Bold = True
+                            worksheet.Cells(sum_cell_range).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
 
                             With worksheet.PrinterSettings
 
@@ -306,7 +308,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                             End With
 
-                            worksheet.Cells.AutoFitColumns(2, 22.71)
+                            worksheet.Cells.AutoFitColumns()
 
                             worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
 
