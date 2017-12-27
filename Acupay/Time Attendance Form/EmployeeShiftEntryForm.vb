@@ -760,6 +760,11 @@ Public Class EmployeeShiftEntryForm
                     Dim timeOut = worksheet.Cells(row, 3).Text
                     Dim dateFrom = ParseDate(worksheet.Cells(row, 4).Text)
                     Dim dateTo = ParseDate(worksheet.Cells(row, 5).Text)
+
+                    If dateTo Is Nothing Then
+                        dateTo = dateFrom
+                    End If
+
                     Dim schedType = worksheet.Cells(row, 6).Text
 
                     Dim shiftEntry = New ImportedShiftEntry() With {
