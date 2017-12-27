@@ -63,4 +63,11 @@ Public Class PayrollContextTest
         Assert.IsInstanceOf(Of ShiftSchedule)(shiftSchedule)
     End Sub
 
+    <Test>
+    Public Sub Should_Retrieve_TimeEntry()
+        Dim timeEntry = _context.TimeEntries.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of TimeEntry)(timeEntry)
+    End Sub
+
 End Class

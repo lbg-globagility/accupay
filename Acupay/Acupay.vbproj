@@ -427,7 +427,6 @@
     <Compile Include="Core Forms\TimeEntry\Shift.vb" />
     <Compile Include="Core Forms\TimeEntry\ShiftToday.vb" />
     <Compile Include="Core Forms\TimeEntry\SqlToDataTable.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeEntry.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntryCalculator.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntryGenerator.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryForm.Designer.vb">

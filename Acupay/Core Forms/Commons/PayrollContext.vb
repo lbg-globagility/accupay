@@ -61,4 +61,6 @@ Public Class PayrollContext
 
     Public Overridable Property ShiftSchedules As DbSet(Of ShiftSchedule)
 
+    Public Overridable Property TimeEntries As DbSet(Of TimeEntry)
+
 End Class

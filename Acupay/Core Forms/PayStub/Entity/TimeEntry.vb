@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports Acupay
 
 Namespace Global.AccuPay.Entity
 
@@ -13,54 +14,45 @@ Namespace Global.AccuPay.Entity
 
         Public Property OrganizationID As Integer?
 
-        Public Property Created As Date
+        Public Property EmployeeID As Integer?
 
-        Public Property CreatedBy As Integer?
+        Public Property EmployeeShiftID As Integer?
 
-        Public Property LastUpd As Date
+        Public Property EmployeeSalaryID As Integer?
 
-        Public Property LastUpdBy As Integer?
+        Public Property PayRateID As Integer?
 
         <Column("Date")>
         Public Property EntryDate As Date
 
-        Public Property EmployeeShiftID As Integer?
+        <Column("RegularHoursWorked")>
+        Public Property RegularHours As Decimal
 
-        Public Property EmployeeID As Integer?
+        <Column("RegularHoursAmount")>
+        Public Property RegularPay As Decimal
 
-        Public Property EmployeeSalaryID As Integer?
+        <Column("OvertimeHoursWorked")>
+        Public Property OvertimeHours As Decimal
 
-        Public Property EmployeeFixedSalaryFlag As Char
+        <Column("OvertimeHoursAmount")>
+        Public Property OvertimePay As Decimal
 
-        Public Property RegularHoursWorked As Decimal
+        <Column("NightDifferentialHours")>
+        Public Property NightDiffHours As Decimal
 
-        Public Property RegularHoursAmount As Decimal
+        <Column("NightDiffHoursAmount")>
+        Public Property NightDiffPay As Decimal
 
-        Public Property TotalHoursWorked As Decimal
+        <Column("NightDifferentialOTHours")>
+        Public Property NightDiffOvertimeHours As Decimal
 
-        Public Property OvertimeHoursWorked As Decimal
+        <Column("NightDiffOTHoursAmount")>
+        Public Property NightDiffOvertimePay As Decimal
 
-        Public Property OvertimeHoursAmount As Decimal
+        Public Property RestDayHours As Decimal
 
-        Public Property UndertimeHours As Decimal
-
-        Public Property UndertimeHoursAmount As Decimal
-
-        Public Property NightDifferentialHours As Decimal
-
-        Public Property NightDiffHoursAmount As Decimal
-
-        Public Property NightDifferentialOTHours As Decimal
-
-        Public Property NightDiffOTHoursAmount As Decimal
-
-        Public Property HoursLate As Decimal
-
-        Public Property HoursLateAmount As Decimal
-
-        Public Property LateFlag As String
-
-        Public Property PayRateID As Integer?
+        <Column("RestDayAmount")>
+        Public Property RestDayPay As Decimal
 
         Public Property VacationLeaveHours As Decimal
 
@@ -70,27 +62,51 @@ Namespace Global.AccuPay.Entity
 
         Public Property OtherLeaveHours As Decimal
 
-        Public Property TotalDayPay As Decimal
+        <Column("Leavepayment")>
+        Public Property LeavePay As Decimal
 
-        Public Property Absent As Decimal
+        <Column("HolidayPayAmount")>
+        Public Property HolidayPay As Decimal
 
-        Public Property ChargeToDivisionID As Integer?
+        <Column("HoursLate")>
+        Public Property LateHours As Decimal
 
-        Public Property TaxableDailyAllowance As Decimal
+        <Column("HoursLateAmount")>
+        Public Property LateDeduction As Decimal
 
-        Public Property HolidayPayAmount As Decimal
+        Public Property UndertimeHours As Decimal
 
-        Public Property TaxableDailyBonus As Decimal
+        <Column("UndertimeHoursAmount")>
+        Public Property UndertimeDeduction As Decimal
 
-        Public Property NonTaxableDailyBonus As Decimal
+        <Column("Absent")>
+        Public Property AbsenceDeduction As Decimal
 
-        Public Property Leavepayment As Decimal
-
+        <Column("BasicDayPay")>
         Public Property BasicDayPay As Decimal
 
-        Public Property RestDayHours As Decimal
+        <Column("TotalDayPay")>
+        Public Property TotalDayPay As Decimal
 
-        Public Property RestDayAmount As Decimal
+        <NotMapped>
+        Public Property DutyStart As Date
+
+        <NotMapped>
+        Public Property DutyEnd As Date
+
+        <ForeignKey("EmployeeShiftID")>
+        Public Overridable Property ShiftSchedule As ShiftSchedule
+
+        Public Sub New()
+        End Sub
+
+        Public Sub New(timeLog As TimeLog, shiftToday As ShiftToday)
+            Dim timeIn = timeLog.FullTimeIn
+            Dim timeOut = timeLog.FullTimeOut
+
+            DutyStart = {timeIn, shiftToday.RangeStart}.Max
+            DutyEnd = {timeOut, shiftToday.RangeEnd}.Min
+        End Sub
 
     End Class
 
