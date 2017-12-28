@@ -9,14 +9,15 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-                      "AA", "AB"}
+                      "AA", "AB", "AC"}
 
     Private column_headers() As String =
         New String() {"Code",
                       "Full name",
                       "Rate",
-                      "Hrs",
                       "BasicPay",
+                      "Hrs",
+                      "Reg Pay",
                       "OTHrs",
                       "OT",
                       "Holiday",
@@ -48,8 +49,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private cell_mapped_decim_value() As String =
         New String() {"DatCol43",
-                      "DatCol41",
                       "DatCol21",
+                      "DatCol41",
+                      "DatCol47",
                       "DatCol44",
                       "DatCol37",
                       "DatCol36",

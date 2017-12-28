@@ -22,7 +22,7 @@ DECLARE paypdatefrom
         ,paypdateto
 		  ,min_paydatefrom
 		  ,max_paydateto DATE;
-		  
+
 DECLARE sec_per_hour INT(11) DEFAULT 3600;
 
 DECLARE payfreq_rowid
@@ -60,7 +60,8 @@ IF is_keep_in_onesheet = TRUE THEN
 		    e.RowID 'EmployeeRowID',
 		    e.EmployeeID `DatCol2`,
 		    # IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay) `DatCol21`,
-		    ROUND(GetBasicPay(e.RowID, paypdatefrom, psi_undeclared, IFNULL(ete.`TotalExpectedHours`, 0)), decimal_size) `DatCol21`,
+		    ROUND(GetBasicPay(e.RowID, paypdatefrom, paypdateto, psi_undeclared, IFNULL(ete.`TotalExpectedHours`, 0)), decimal_size) `DatCol21`,
+		    ROUND(IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay), decimal_size) `DatCol47`,
 		    ROUND(IF(psi_undeclared, paystubactual.OvertimePay, paystub.OvertimePay), decimal_size) 'DatCol37',
 		    ROUND(IF(psi_undeclared, paystubactual.NightDiffPay, paystub.NightDiffPay), decimal_size) 'DatCol35',
 		    ROUND(IF(psi_undeclared, paystubactual.NightDiffOvertimePay, paystub.NightDiffOvertimePay), decimal_size) 'DatCol38',
@@ -133,7 +134,7 @@ IF is_keep_in_onesheet = TRUE THEN
 		LEFT JOIN thirteenthmonthpay
 		ON thirteenthmonthpay.OrganizationID = paystub.OrganizationID AND
 		    thirteenthmonthpay.PaystubID = IF(psi_undeclared, paystubactual.RowID, paystub.RowID)
-		
+
 		LEFT JOIN (SELECT et.EmployeeID
 		           ,SUM(et.TotalExpectedHours) `TotalExpectedHours`
 		           FROM expectedhours et
@@ -141,7 +142,7 @@ IF is_keep_in_onesheet = TRUE THEN
 					  AND et.`Date` BETWEEN min_paydatefrom AND max_paydateto
 					  GROUP BY et.EmployeeID) ete
 		       ON ete.EmployeeID = paystub.EmployeeID
-		
+
 		WHERE paystub.OrganizationID = ps_OrganizationID AND
 		    (paystub.PayFromDate >= paypdatefrom OR paystub.PayToDate >= paypdatefrom) AND
 		    (paystub.PayFromDate <= paypdateto OR paystub.PayToDate <= paypdateto) AND
@@ -152,7 +153,7 @@ IF is_keep_in_onesheet = TRUE THEN
 			 -- If employee is paid monthly or daily, employee should have worked for the pay period to appear
 		    IF(e.EmployeeType IN ('Monthly', 'Daily'), paystub.RegularHours > 0, TRUE)
 		ORDER BY CONCAT(e.LastName, e.FirstName);
-		
+
 ELSE
 
 	SELECT COUNT(i.RowID)
@@ -163,11 +164,11 @@ ELSE
 			WHERE e.OrganizationID = ps_OrganizationID
 			GROUP BY dv.RowID) i
 	INTO div_count;
-	
+
 	SET div_index = 0;
-	
+
 	WHILE div_index < div_count DO
-		
+
 		SELECT i.`RowID`
 		FROM (SELECT dv.RowID
 				FROM employee e
@@ -178,9 +179,9 @@ ELSE
 				ORDER BY dv.Name) i
 		LIMIT div_index, 1
 		INTO div_rowid;
-		
+
 		# SELECT div_rowid;
-		
+
 		SELECT
 		    e.RowID 'EmployeeRowID',
 		    e.EmployeeID `DatCol2`,
@@ -257,7 +258,7 @@ ELSE
 		LEFT JOIN thirteenthmonthpay
 		ON thirteenthmonthpay.OrganizationID = paystub.OrganizationID AND
 		    thirteenthmonthpay.PaystubID = IF(psi_undeclared, paystubactual.RowID, paystub.RowID)
-		
+
 		LEFT JOIN (SELECT et.EmployeeID
 		           ,SUM(et.TotalExpectedHours) `TotalExpectedHours`
 		           FROM expectedhours et
@@ -265,7 +266,7 @@ ELSE
 					  AND et.`Date` BETWEEN min_paydatefrom AND max_paydateto
 					  GROUP BY et.EmployeeID) ete
 		       ON ete.EmployeeID = paystub.EmployeeID
-		
+
 		WHERE paystub.OrganizationID = ps_OrganizationID AND
 		    (paystub.PayFromDate >= paypdatefrom OR paystub.PayToDate >= paypdatefrom) AND
 		    (paystub.PayFromDate <= paypdateto OR paystub.PayToDate <= paypdateto) AND
@@ -276,13 +277,13 @@ ELSE
 			 -- If employee is paid monthly or daily, employee should have worked for the pay period to appear
 		    IF(e.EmployeeType IN ('Monthly', 'Daily'), paystub.RegularHours > 0, TRUE)
 		ORDER BY d.Name, e.LastName;
-	
+
 		SET div_index = (div_index + 1);
-		
+
 	END WHILE;
-	
+
 END IF;
-	
+
 END//
 DELIMITER ;
 
