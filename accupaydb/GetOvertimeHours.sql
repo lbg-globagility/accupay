@@ -96,34 +96,34 @@ FROM (
 				AND ot.OrganizationID = org_rowid
 				AND ot.OTStatus = approve_status
 				AND param_date BETWEEN ot.OTStartDate AND ot.OTEndDate
-				AND DATE(@shstarttime) < DATE(@shendtime)
+				AND STR_TO_DATE(DATE(@shstarttime), @@date_format) < STR_TO_DATE(DATE(@shendtime), @@date_format)
 
-				UNION
+			UNION
 
 				SELECT
 				ot.RowID, 'Query2' `Group`, d.DateValue,
 
-				@shstarttime := CONCAT_DATETIME(d.DateValue, sh.TimeFrom) `ShiftTimeFrom`
-				,@shendtime := CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo) `ShiftTimeTo`
+				@shstarttime1 := CONCAT_DATETIME(d.DateValue, sh.TimeFrom) `ShiftTimeFrom`
+				,@shendtime1 := CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo) `ShiftTimeTo`
 
 				,@starttime := IF(sh.TimeTo <= ot.OTStartTime
 								      AND sh.TimeTo <= ot.OTEndTime
 									  
-									  , CONCAT_DATETIME(DATE(@shendtime), ot.OTStartTime)
+									  , CONCAT_DATETIME(DATE(@shendtime1), ot.OTStartTime)
 									  , IF(sh.TimeFrom >= ot.OTStartTime
 									  AND sh.TimeFrom >= ot.OTEndTime
 									  
-											 , CONCAT_DATETIME(DATE(@shstarttime), ot.OTStartTime)
+											 , CONCAT_DATETIME(DATE(@shstarttime1), ot.OTStartTime)
 											 , CONCAT_DATETIME(d.DateValue, ot.OTStartTime)))
 				`StartTime`
 				,@endtime := IF(sh.TimeTo <= ot.OTStartTime
 								    AND sh.TimeTo <= ot.OTEndTime
 									  
-									  , CONCAT_DATETIME(DATE(@shendtime), ot.OTEndTime)
+									  , CONCAT_DATETIME(DATE(@shendtime1), ot.OTEndTime)
 									  , IF(sh.TimeFrom >= ot.OTStartTime
 									  AND sh.TimeFrom >= ot.OTEndTime
 									  
-											 , CONCAT_DATETIME(DATE(@shstarttime), ot.OTEndTime)
+											 , CONCAT_DATETIME(DATE(@shstarttime1), ot.OTEndTime)
 											 , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(ot.OTStartTime, ot.OTEndTime) DAY), ot.OTEndTime)))
 				`EndTime`
 
@@ -144,7 +144,7 @@ FROM (
 				,etd.TimeStampIn
 				,etd.TimeStampOut
 
-				,DATE(@shstarttime) < DATE(@shendtime) `CustomColumn`
+				,DATE(@shstarttime1) < DATE(@shendtime1) `CustomColumn`
 
 				FROM employeeovertime ot
 
@@ -167,7 +167,7 @@ FROM (
 				AND ot.OrganizationID = org_rowid
 				AND ot.OTStatus = approve_status
 				AND param_date BETWEEN ot.OTStartDate AND ot.OTEndDate
-				AND DATE(@shstarttime) = DATE(@shendtime)
+				AND STR_TO_DATE(DATE(@shstarttime1), @@date_format) = STR_TO_DATE(DATE(@shendtime1), @@date_format)
 		      ) ot
 		GROUP BY ot.RowID
 		ORDER BY ot.DateValue) i
