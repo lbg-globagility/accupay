@@ -100,7 +100,7 @@ Namespace Global.AccuPay.Entity
         Public Sub New()
         End Sub
 
-        Public Sub New(timeLog As TimeLog, shiftToday As ShiftToday)
+        Public Sub New(timeLog As TimeLog, shiftToday As CurrentShift)
             Dim timeIn = timeLog.FullTimeIn
             Dim timeOut = timeLog.FullTimeOut
 

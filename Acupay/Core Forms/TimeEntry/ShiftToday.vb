@@ -1,14 +1,16 @@
-﻿Imports AccuPay.Entity
+﻿Option Strict On
 
-Public Class ShiftToday
+Imports AccuPay.Entity
+
+Public Class CurrentShift
 
     Public ReadOnly Property RangeStart As Date
 
     Public ReadOnly Property RangeEnd As Date
 
-    Public ReadOnly Property BreaktimeStart As Date
+    Public ReadOnly Property BreaktimeStart As Date?
 
-    Public ReadOnly Property BreaktimeEnd As Date
+    Public ReadOnly Property BreaktimeEnd As Date?
 
     Public ReadOnly Property ShiftDate As Date
 
@@ -27,8 +29,10 @@ Public Class ShiftToday
         RangeStart = TimeUtility.RangeStart(shiftDate, shift.TimeFrom)
         RangeEnd = TimeUtility.RangeEnd(shiftDate, shift.TimeFrom, shift.TimeTo)
 
-        BreaktimeStart = TimeUtility.RangeStart(shiftDate, shift.BreaktimeFrom)
-        BreaktimeEnd = TimeUtility.RangeEnd(shiftDate, shift.BreaktimeFrom, shift.BreaktimeTo)
+        If shift.HasBreaktime Then
+            BreaktimeStart = TimeUtility.RangeStart(shiftDate, shift.BreaktimeFrom.Value)
+            BreaktimeEnd = TimeUtility.RangeEnd(shiftDate, shift.BreaktimeFrom.Value, shift.BreaktimeTo.Value)
+        End If
     End Sub
 
 End Class

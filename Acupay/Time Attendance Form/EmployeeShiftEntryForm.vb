@@ -1313,7 +1313,7 @@ Public Class EmployeeShiftEntryForm
 
         Public ReadOnly Property Display As String
             Get
-                Dim workPortion = $"{_shift.TimeFrom?.ToString(TimeFormat)} - {_shift.TimeTo?.ToString(TimeFormat)}"
+                Dim workPortion = $"{_shift.TimeFrom.ToString(TimeFormat)} - {_shift.TimeTo.ToString(TimeFormat)}"
 
                 If _shift.HasBreaktime Then
                     Dim breakPortion = $"{_shift.BreaktimeFrom?.ToString(TimeFormat)} - {_shift.BreaktimeTo?.ToString(TimeFormat)}"

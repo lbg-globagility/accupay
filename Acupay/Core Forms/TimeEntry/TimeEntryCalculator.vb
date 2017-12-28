@@ -14,15 +14,7 @@ Public Class TimeEntryCalculator
 
     Public _timeEntry As TimeEntry
 
-    Private _shiftToday As ShiftToday
-
-    Public Sub New(shift As Shift, timeLog As TimeLog)
-        _shift = shift
-        _timeLog = timeLog
-
-        _shiftToday = New ShiftToday(_shift, _timeLog.LogDate)
-        _timeEntry = New TimeEntry(_timeLog, _shiftToday)
-    End Sub
+    Private _shiftToday As CurrentShift
 
     Public Sub ComputeAllHours()
         ComputeRegularHours()
@@ -36,7 +28,7 @@ Public Class TimeEntryCalculator
             Dim hoursAfterBreak As TimeSpan
 
             If _timeEntry.DutyStart < _shiftToday.BreaktimeStart Then
-                Dim lastWorkBeforeBreaktimeStarts = {_timeEntry.DutyEnd, _shiftToday.BreaktimeStart}.Min()
+                Dim lastWorkBeforeBreaktimeStarts = {_timeEntry.DutyEnd, _shiftToday.BreaktimeStart.Value}.Min()
 
                 hoursBeforeBreak = lastWorkBeforeBreaktimeStarts - _timeEntry.DutyStart
             End If
@@ -44,7 +36,7 @@ Public Class TimeEntryCalculator
             If _timeEntry.DutyEnd > _shiftToday.BreaktimeEnd Then
                 Dim workStartAfterBreaktime = {_timeEntry.DutyStart, _shiftToday.BreaktimeEnd}.Max()
 
-                hoursAfterBreak = _timeEntry.DutyEnd - workStartAfterBreaktime
+                hoursAfterBreak = _timeEntry.DutyEnd - workStartAfterBreaktime.Value
             End If
 
             regularHours = hoursBeforeBreak + hoursAfterBreak
@@ -55,33 +47,32 @@ Public Class TimeEntryCalculator
         _timeEntry.RegularHours = CDec(regularHours.TotalHours)
     End Sub
 
-    Public Sub ComputerLateHours()
-        If _timeEntry.DutyStart < _shiftToday.RangeStart Then
-            Return
+    Public Function ComputeLateHours(workBegin As Date, workEnd As Date, shiftToday As CurrentShift) As Decimal
+        If workBegin < shiftToday.RangeStart Then
+            Return 0D
         End If
 
         Dim lateHours As TimeSpan
 
-        If _shiftToday.HasBreaktime Then
+        If shiftToday.HasBreaktime Then
             Dim hoursBeforeBreak As TimeSpan
-            Dim hoursAfterBreak As TimeSpan
-
-            If _shiftToday.RangeStart < _shiftToday.BreaktimeStart Then
-                Dim latePeriodEndBeforeBreaktime = {_timeEntry.DutyStart, _shiftToday.BreaktimeStart}.Min
-                hoursBeforeBreak = latePeriodEndBeforeBreaktime - _shiftToday.RangeStart
+            If shiftToday.RangeStart < shiftToday.BreaktimeStart Then
+                Dim latePeriodEndBeforeBreaktime = {workBegin, shiftToday.BreaktimeStart.Value}.Min
+                hoursBeforeBreak = latePeriodEndBeforeBreaktime - shiftToday.RangeStart
             End If
 
-            If _timeEntry.DutyStart > _shiftToday.BreaktimeEnd Then
-                hoursAfterBreak = _timeEntry.DutyStart - _shiftToday.BreaktimeEnd
+            Dim hoursAfterBreak As TimeSpan
+            If workBegin > shiftToday.BreaktimeEnd Then
+                hoursAfterBreak = workBegin - shiftToday.BreaktimeEnd.Value
             End If
 
             lateHours = hoursBeforeBreak + hoursAfterBreak
         Else
-            lateHours = _timeEntry.DutyStart - _shiftToday.RangeStart
+            lateHours = workBegin - shiftToday.RangeStart
         End If
 
-        _timeEntry.LateHours = CDec(lateHours.TotalHours)
-    End Sub
+        Return CDec(lateHours.TotalHours)
+    End Function
 
     Public Sub ComputeUndertimeHours()
         If _timeEntry.DutyEnd > _shiftToday.RangeEnd Then
@@ -95,11 +86,11 @@ Public Class TimeEntryCalculator
             Dim hoursAfterBreak As TimeSpan
 
             If _timeEntry.DutyEnd < _shiftToday.BreaktimeStart Then
-                hoursBeforeBreak = _shiftToday.BreaktimeStart - _timeEntry.DutyEnd
+                hoursBeforeBreak = _shiftToday.BreaktimeStart.Value - _timeEntry.DutyEnd
             End If
 
             Dim undertimePeriodStartAfterBreaktime = {_timeEntry.DutyEnd, _shiftToday.BreaktimeEnd}.Max
-            hoursAfterBreak = _shiftToday.RangeEnd - undertimePeriodStartAfterBreaktime
+            hoursAfterBreak = _shiftToday.RangeEnd - undertimePeriodStartAfterBreaktime.Value
 
             undertimeHours = hoursBeforeBreak + hoursAfterBreak
         Else

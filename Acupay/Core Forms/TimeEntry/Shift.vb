@@ -21,9 +21,9 @@ Namespace Global.AccuPay.Entity
 
         Public Property LastUpdBy As Integer?
 
-        Public Property TimeFrom As TimeSpan?
+        Public Property TimeFrom As TimeSpan
 
-        Public Property TimeTo As TimeSpan?
+        Public Property TimeTo As TimeSpan
 
         Public Property BreaktimeFrom As TimeSpan?
 
@@ -36,6 +36,20 @@ Namespace Global.AccuPay.Entity
                 Return BreaktimeFrom.HasValue And BreaktimeTo.HasValue
             End Get
         End Property
+
+        Public Sub New()
+        End Sub
+
+        Public Sub New(timeFrom As TimeSpan, timeTo As TimeSpan)
+            Me.TimeFrom = timeFrom
+            Me.TimeTo = timeTo
+        End Sub
+
+        Public Sub New(timeFrom As TimeSpan, timeTo As TimeSpan, breaktimeFrom As TimeSpan, breaktimeTo As TimeSpan)
+            Me.New(timeFrom, timeTo)
+            Me.BreaktimeFrom = breaktimeFrom
+            Me.BreaktimeTo = breaktimeTo
+        End Sub
 
     End Class
 
