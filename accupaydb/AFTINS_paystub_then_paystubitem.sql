@@ -16,11 +16,11 @@ DECLARE e_type VARCHAR(50);
 
 DECLARE IsFirstTimeSalary BOOLEAN;
 
-DECLARE totalWorkAmount DECIMAL(11,6);
+DECLARE totalWorkAmount DECIMAL(15,4);
 DECLARE empsalRowID INT(11);
 
 DECLARE actualrate DECIMAL(11,6);
-DECLARE actualgross DECIMAL(11,6);
+DECLARE actualgross DECIMAL(15,4);
 DECLARE basicAmount DECIMAL(15, 4);
 DECLARE totalAdditionalPay DECIMAL(15, 4);
 DECLARE totalDeductions DECIMAL(15, 4);
