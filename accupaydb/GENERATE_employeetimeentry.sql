@@ -388,9 +388,10 @@ ELSE
 END IF;
 
 SELECT
-    GRACE_PERIOD(etd.TimeIn, shifttimefrom, e.LateGracePeriod),
+    ( @_time_in := GRACE_PERIOD(etd.TimeIn, shifttimefrom, e.LateGracePeriod) ),
     IF(e_UTOverride = 1, etd.TimeOut, IFNULL(sh.TimeTo, etd.TimeOut)),
-    etd.TimeStampIn,
+    CONCAT_DATETIME(DATE(etd.TimeStampIn), @_time_in),
+    # etd.TimeStampIn,
     etd.TimeStampOut
 FROM employeetimeentrydetails etd
 INNER JOIN employee e ON e.RowID=etd.EmployeeID
@@ -495,6 +496,66 @@ IF shouldCalculateNightDifferential THEN
 END IF;
 
 SET hasOvertime = (otstartingtime IS NOT NULL) AND (otendingtime IS NOT NULL);
+
+IF hasOvertime THEN
+
+    SET overtimeDate = DATE(shiftEnd);
+
+    SET overtimeStart = TIMESTAMP(overtimeDate, otstartingtime);
+    SET overtimeEnd = TIMESTAMP(IF(otendingtime > otstartingtime, overtimeDate, dateTomorrow), otendingtime);
+
+    SET @preShiftOvertimeHours = 0;
+
+    /*
+     * Compute the overtime hours for pre-shift work.
+     */
+    IF overtimeStart < shiftStart THEN
+
+        /*
+         * Ensure that the overtime hours are not calculated until the employee has clocked in.
+         */
+        SET overtimeDutyStart = GREATEST(overtimeStart, fullTimeIn);
+
+        /*
+         * Ensure that the overtime hours stop computing when either the overtime has ended,
+         * the employee has clocked out, or the regular shift has already started.
+         */
+        SET overtimeDutyEnd = LEAST(overtimeEnd, fullTimeOut, shiftStart);
+
+        SET @preShiftOvertimeHours = COMPUTE_TimeDifference(TIME(overtimeDutyStart), TIME(overtimeDutyEnd));
+
+        IF shouldCalculateNightDifferential THEN
+            SET nightDiffOTHours =
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, nightDiffRangeStart, nightDiffRangeEnd) +
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd);
+        END IF;
+
+    END IF;
+
+    SET @postShiftOvertimeHours = 0;
+
+    /*
+     * Compute the overtime hours for post-shift work.
+     */
+    IF overtimeEnd > shiftEnd THEN
+
+        SET overtimeDutyStart = LEAST(
+            GREATEST(overtimeStart, fullTimeIn, shiftEnd),
+            fullTimeOut
+        );
+        SET overtimeDutyEnd = LEAST(overtimeEnd, fullTimeOut);
+
+        SET @postShiftOvertimeHours = COMPUTE_TimeDifference(TIME(overtimeDutyStart), TIME(overtimeDutyEnd));
+
+        IF shouldCalculateNightDifferential THEN
+            SET nightDiffOTHours = nightDiffOTHours +
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, nightDiffRangeStart, nightDiffRangeEnd) +
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd);
+        END IF;
+
+    END IF;
+    
+END IF;
 
 SELECT
     COUNT(elv.RowID) > 0,
