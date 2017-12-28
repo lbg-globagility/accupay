@@ -201,7 +201,11 @@ Public Class ListOfValueForm
                     curr_type = txtType.Text
 
                     rowid = .Item("RowID").ToString
-                    type = IIf(.Item("Active") = "Yes", True, False)
+                    Try
+                        type = IIf(.Item("Active") = "Yes", True, False)
+                    Catch ex As Exception
+                        MsgBox(getErrExcptn(ex, Name))
+                    End Try
                     If type = "True" Then
                         cmbStatus.Text = "Yes"
                     Else
