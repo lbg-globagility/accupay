@@ -390,7 +390,7 @@ END IF;
 SELECT
     GRACE_PERIOD(etd.TimeIn, shifttimefrom, e.LateGracePeriod),
     IF(e_UTOverride = 1, etd.TimeOut, IFNULL(sh.TimeTo, etd.TimeOut)),
-    etd.TimeStampIn,
+    CONCAT_DATETIME(DATE(etd.TimeStampIn), @_time_in),
     etd.TimeStampOut
 FROM employeetimeentrydetails etd
 INNER JOIN employee e ON e.RowID=etd.EmployeeID
