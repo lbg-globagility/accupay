@@ -1978,7 +1978,7 @@ Public Class EmployeeForm
                         'dgvemployeesalary.Focus()
                         fillSelectedEmpSalaryList(.Cells("RowID").Value)
                         If dgvemployeesalary.RowCount <> 0 Then
-                            dgvemployeesalary.Item("c_maritalStatus", 0).Selected = True
+                            dgvemployeesalary.Item("c_fromdate", 0).Selected = True
                         End If
 
 
