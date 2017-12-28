@@ -9890,9 +9890,11 @@ Public Class EmployeeForm
 
                 If SalariesOverlap(salary, comparedSalary) Then
                     'TODO make the overlapping salaries show in the form as warnings
-
-                    WarnBalloon("You have input a date range overlaps to employee's existing salary.", "Overlapping dates", lblforballoon, 0, -69)
-
+                    lblWarning.Text = "Warning: One or more of the employee's salary history is overlapping with another salary's date."
+                    lblWarning.Visible = True
+                    'WarnBalloon("You have input a date range overlaps to employee's existing salary.", "Overlapping dates", lblforballoon, 0, -69)
+                Else
+                    lblWarning.Visible = False
                 End If
             Next
         Next
