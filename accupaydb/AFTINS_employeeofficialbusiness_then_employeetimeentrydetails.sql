@@ -51,7 +51,7 @@ SET i=0;
             ,''
             ,''
             FROM dates d
-            INNER JOIN employeetimeentrydetails etd ON etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=d.DateValue
+            LEFT JOIN employeetimeentrydetails etd ON etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=d.DateValue
             WHERE d.DateValue BETWEEN NEW.OffBusStartDate AND NEW.OffBusEndDate
         ON
         DUPLICATE
