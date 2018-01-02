@@ -708,13 +708,14 @@ SET overtimeHours = GetOvertimeHours(ete_OrganizID, ete_EmpRowID, ete_Date);
 SET nightDiffHours = IFNULL(nightDiffHours, 0);
 SET nightDiffOTHours = IFNULL(nightDiffOTHours, 0);
 SET lateHours = IFNULL(lateHours, 0);
-SEt undertimeHours = IFNULL(undertimeHours, 0);
-
-
+SET undertimeHours = IFNULL(undertimeHours, 0);
 
 SET basicDayPay = regularHours * hourlyRate;
-
 SET isWorkingDay = NOT isRestDay;
+
+IF hasLeave AND isWorkingDay THEN
+    SET leavePay = IFNULL(leaveHours * hourlyRate, 0);
+END IF;
 
 -- b. If current day is before employment hiring date.
 IF ete_Date < e_StartDate THEN
@@ -758,20 +759,6 @@ IF ete_Date < e_StartDate THEN
     INTO timeEntryID;
 
 ELSEIF isRegularDay THEN
-
-    IF hasLeave AND isWorkingDay THEN
-        SET leavePay = IFNULL(leaveHours * hourlyRate, 0);
-    END IF;
-
-    SET @leave_hrs = IFNULL(leaveHours, 0);
-
-    IF (lateHours - @leave_hrs) > -1 THEN
-        SET lateHours = (lateHours - @leave_hrs);
-    END IF;
-
-    IF (undertimeHours - @leave_hrs) > -1 THEN
-        SET undertimeHours = (undertimeHours - @leave_hrs);
-    END IF;
 
     IF isWorkingDay THEN
         SET regularAmount = (regularHours * hourlyRate) * commonrate;
@@ -900,8 +887,8 @@ ELSEIF isHoliday THEN
         basicDayPay,
         7,
         NULL,
-        NULL,
-        NULL
+        leaveHours,
+        leavePay
     )
     INTO timeEntryID;
 

@@ -39,7 +39,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_dail
                     pr.PayType = 'Special Non-Working Holiday',
                     (
                         IF(
-                            et.RegularHoursWorked > 0,
+                            (et.VacationLeaveHours + et.SickLeaveHours + et.MaternityLeaveHours + et.OtherLeaveHours + et.RegularHoursWorked) > 0,
                             ea.AllowanceAmount,
                             0
                         )
@@ -59,7 +59,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_dail
                                 )
                             )
                         ),
-                        0 
+                        0
                     )
                 )
             )
