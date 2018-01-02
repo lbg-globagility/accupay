@@ -50,7 +50,7 @@ DECLARE e_DaysPerYear INT(11);
 
 DECLARE isEntitledToNightDiff BOOLEAN;
 DECLARE isEntitledToNightDiffOvertime BOOLEAN;
-DECLARE isEntitledToHolidayPay BOOLEAN;
+DECLARE isEntitledToRegularHoliday BOOLEAN;
 DECLARE isEntitledToSpecialNonWorkingHoliday BOOLEAN;
 DECLARE isEntitledToRestDay BOOLEAN;
 DECLARE isEntitledToRestDayOvertime BOOLEAN;
@@ -237,7 +237,7 @@ INTO
     e_UTOverride,
     e_OTOverride,
     e_DaysPerYear,
-    isEntitledToHolidayPay,
+    isEntitledToRegularHoliday,
     isEntitledToSpecialNonWorkingHoliday,
     isEntitledToNightDiff,
     isEntitledToNightDiffOvertime,
@@ -260,7 +260,7 @@ SELECT
         IF(
             PayType = 'Regular Holiday',
             IF(
-                isEntitledToHolidayPay,
+                isEntitledToRegularHoliday,
                 `PayRate`,
                 BASIC_RATE
             ),
@@ -554,7 +554,7 @@ IF hasOvertime THEN
         END IF;
 
     END IF;
-    
+
 END IF;
 
 SELECT
@@ -846,8 +846,12 @@ ELSEIF isHoliday THEN
         SET applicableHolidayRate = commonrate;
     END IF;
 
-    SET lateHours = 0.0;
-    SET undertimeHours = 0.0;
+    IF (isRegularHoliday AND isEntitledToRegularHoliday) OR
+       (isSpecialNonWorkingHoliday AND isEntitledToSpecialNonWorkingHoliday) THEN
+
+        SET lateHours = 0.0;
+        SET undertimeHours = 0.0;
+    END IF;
 
     IF isRegularHoliday THEN
 
