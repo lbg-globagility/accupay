@@ -476,7 +476,7 @@ END IF;
 /*
  * Make sure the regular hours doesn't go above the standard 8-hour workday.
  */
-SET regularHours = LEAST(regularHours, STANDARD_WORKING_HOURS);
+# SET regularHours = LEAST(regularHours, STANDARD_WORKING_HOURS);
 
 SET nightDiffRangeStart = TIMESTAMP(dateToday, nightDiffTimeFrom);
 SET nightDiffRangeEnd = TIMESTAMP(IF(nightDiffTimeTo > nightDiffTimeFrom, ete_Date, dateTomorrow), nightDiffTimeTo);
