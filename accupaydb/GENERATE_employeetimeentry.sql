@@ -840,6 +840,9 @@ ELSEIF isHoliday THEN
         SET undertimeHours = 0.0;
     END IF;
 
+    SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
+    SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
+
     IF isRegularHoliday THEN
 
         IF e_EmpType = 'Daily' THEN
@@ -854,7 +857,12 @@ ELSEIF isHoliday THEN
         SET holidayPay = 0;
     END IF;
 
-    SET ete_TotalDayPay = COALESCE(regularAmount, 0) + COALESCE(overtimeAmount, 0) + COALESCE(holidayPay, 0);
+    SET ete_TotalDayPay = COALESCE(regularAmount, 0) +
+                          COALESCE(overtimeAmount, 0) +
+                          COALESCE(nightDiffAmount, 0) +
+                          COALESCE(nightDiffOTAmount, 0) +
+                          COALESCE(holidayPay, 0) +
+                          COALESCE(leavePay, 0);
 
     SELECT INSUPD_employeetimeentries(
         timeEntryID,
@@ -878,15 +886,15 @@ ELSEIF isHoliday THEN
         regularAmount,
         overtimeAmount,
         (undertimeHours * hourlyRate),
-        (nightDiffHours * hourlyRate) * ndiffrate,
-        (nightDiffOTHours * hourlyRate) * ndiffotrate,
+        nightDiffAmount,
+        nightDiffOTAmount,
         (lateHours * hourlyRate),
         NULL,
         NULL,
         holidayPay,
         basicDayPay,
         7,
-        NULL,
+        leaveType,
         leaveHours,
         leavePay
     )
