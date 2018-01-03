@@ -41,6 +41,10 @@ IF LCASE(NEW.DeductionSchedule) = 'end of the month' THEN
     SET NEW.DeductionSchedule = 'End of the month';
 END IF;
 
+IF LCASE(NEW.DeductionSchedule) = 'first half' THEN
+    SET NEW.DeductionSchedule = 'First half';
+END IF;
+
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
