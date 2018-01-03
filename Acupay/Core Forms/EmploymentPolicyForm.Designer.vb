@@ -33,19 +33,19 @@ Partial Class EmploymentPolicyForm
         'DataGridView1
         '
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Location = New System.Drawing.Point(8, 8)
+        Me.DataGridView1.Location = New System.Drawing.Point(8, 48)
         Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.Size = New System.Drawing.Size(176, 704)
+        Me.DataGridView1.Size = New System.Drawing.Size(176, 664)
         Me.DataGridView1.TabIndex = 0
         '
         'TabControl1
         '
         Me.TabControl1.Controls.Add(Me.TabPage1)
         Me.TabControl1.Controls.Add(Me.TabPage2)
-        Me.TabControl1.Location = New System.Drawing.Point(192, 8)
+        Me.TabControl1.Location = New System.Drawing.Point(192, 48)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(760, 704)
+        Me.TabControl1.Size = New System.Drawing.Size(760, 664)
         Me.TabControl1.TabIndex = 1
         '
         'TabPage1
@@ -53,7 +53,7 @@ Partial Class EmploymentPolicyForm
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(752, 678)
+        Me.TabPage1.Size = New System.Drawing.Size(752, 638)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
         Me.TabPage1.UseVisualStyleBackColor = True

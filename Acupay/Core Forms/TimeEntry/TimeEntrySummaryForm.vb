@@ -12,6 +12,8 @@ Public Class TimeEntrySummaryForm
 
     Private Shared HoursPerDay As TimeSpan = New TimeSpan(24, 0, 0)
 
+    Private _selectedYear As Integer
+
     Private _weeklyPayPeriods As ICollection(Of PayPeriod)
 
     Private _semiMonthlyPayPeriods As ICollection(Of PayPeriod)
@@ -29,8 +31,12 @@ Public Class TimeEntrySummaryForm
     Private WithEvents timeEntDurationModal As TimEntduration
 
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' Default selected year is the current year
+        _selectedYear = Date.Today.Year
+
         Dim loadEmployeesTask = LoadEmployees()
         Dim loadPayPeriodsTask = LoadPayPeriods()
+        LoadYears()
     End Sub
 
     Private Async Function LoadEmployees() As Task
@@ -88,7 +94,7 @@ Public Class TimeEntrySummaryForm
     Public Async Function LoadPayPeriods() As Task
         Dim numOfRows = 2
 
-        _payPeriods = Await GetPayPeriods(z_OrganizationID, 2017, 1)
+        _payPeriods = Await GetPayPeriods(z_OrganizationID, _selectedYear, 1)
         payPeriodsDataGridView.Rows.Add(numOfRows)
 
         Dim monthRowCounters(11) As Integer
@@ -119,6 +125,11 @@ Public Class TimeEntrySummaryForm
             Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
             Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
             payPeriodsDataGridView.CurrentCell = payPeriodCell
+        End If
+
+        If _selectedPayPeriod IsNot payPeriodsDataGridView.CurrentCell Then
+            _selectedPayPeriod = DirectCast(payPeriodsDataGridView.CurrentCell.Value, PayPeriod)
+            LoadTimeEntries()
         End If
     End Function
 
@@ -175,6 +186,14 @@ Public Class TimeEntrySummaryForm
         Else
             timeEntriesDataGridView.DataSource = Await GetActualTimeEntries(_selectedEmployee, _selectedPayPeriod)
         End If
+    End Sub
+
+    Private Async Sub LoadYears()
+        Dim years = Await GetYears()
+        cboYears.ComboBox.DataSource = years
+        cboYears.ComboBox.SelectedItem = _selectedYear
+
+        AddHandler cboYears.SelectedIndexChanged, AddressOf cboYears_SelectedIndexChanged
     End Sub
 
     Private Async Function GetYears() As Task(Of ICollection(Of Integer))
@@ -657,5 +676,10 @@ Public Class TimeEntrySummaryForm
         End Property
 
     End Class
+
+    Private Sub cboYears_SelectedIndexChanged(sender As Object, e As EventArgs)
+        _selectedYear = DirectCast(cboYears.SelectedItem, Integer)
+        Dim task = LoadPayPeriods()
+    End Sub
 
 End Class
