@@ -26,7 +26,7 @@ Public Class EmployeeShiftEntryForm
     Dim IsNew As Integer = 0
     Dim rowid As Integer
 
-    Private _shiftModels As ICollection(Of ShiftModel)
+    Private _shiftModels As IList(Of ShiftModel)
 
     Dim RegKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Control Panel\International", True)
 
@@ -210,7 +210,7 @@ Public Class EmployeeShiftEntryForm
 
                     Dim selectedShift = _shiftModels.
                         FirstOrDefault(
-                            Function(s) CBool(s.Shift.RowID = shiftId)
+                            Function(s) Nullable.Equals(s.Shift?.RowID, shiftId)
                         )
 
                     If selectedShift Is Nothing Then
@@ -306,6 +306,9 @@ Public Class EmployeeShiftEntryForm
             _shiftModels = shifts.
                 Select(Function(s) New ShiftModel(s)).
                 ToList()
+
+            Dim emptyShiftModel = New ShiftModel(Nothing)
+            _shiftModels.Insert(0, emptyShiftModel)
 
             cboshiftlist.DataSource = _shiftModels
         End Using
@@ -418,7 +421,7 @@ Public Class EmployeeShiftEntryForm
             Case 0
                 Dim shiftModel = DirectCast(cboshiftlist.SelectedItem, ShiftModel)
 
-                Dim shiftId = If(shiftModel?.Shift.RowID Is Nothing, 0, shiftModel.Shift.RowID)
+                Dim shiftId = If(shiftModel?.Shift?.RowID Is Nothing, 0, shiftModel.Shift.RowID)
 
                 If chkrestday.Checked = 0 Then
 
@@ -446,12 +449,6 @@ Public Class EmployeeShiftEntryForm
 
                     Next
 
-                End If
-
-                If shiftId = 0 And chkrestday.Checked = False Then
-                    MsgBox("Please select a shift.", MsgBoxStyle.Exclamation, "System Message.")
-                    cboshiftlist.Focus()
-                    Exit Sub
                 End If
 
                 Dim nightshift As Integer
@@ -1313,6 +1310,10 @@ Public Class EmployeeShiftEntryForm
 
         Public ReadOnly Property Display As String
             Get
+                If _shift Is Nothing Then
+                    Return String.Empty
+                End If
+
                 Dim workPortion = $"{_shift.TimeFrom.ToString(TimeFormat)} - {_shift.TimeTo.ToString(TimeFormat)}"
 
                 If _shift.HasBreaktime Then
