@@ -14,7 +14,8 @@ DECLARE approve_status VARCHAR(50) DEFAULT 'Approved';
 
 DECLARE sec_per_hour INT(11) DEFAULT 3600;
 
-DECLARE returnvalue DECIMAL(15,4);
+DECLARE returnvalue
+        ,returnvalue1 DECIMAL(15,4);
 
 DECLARE datetime1
         ,datetime2
@@ -41,6 +42,167 @@ SET @starttime1 = NULL;
 SET @endtime = NULL;
 SET @endtime1 = NULL;
 
+/* PRE SHIFT OVERTIME */
+SELECT SUM(i.`Result`)
+# SELECT i.*
+FROM (
+      SELECT ot.*
+      FROM (SELECT
+				ot.RowID, 'Query1' `Group`, d.DateValue,
+
+				@shstarttime := CONCAT_DATETIME(d.DateValue, sh.TimeFrom) `ShiftTimeFrom`
+				,@shendtime := CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo) `ShiftTimeTo`
+
+				,@starttime := IF(sh.TimeFrom >= ot.OTStartTime
+									  AND sh.TimeFrom >= ot.OTEndTime
+									  
+											 , CONCAT_DATETIME(DATE(@shstarttime), ot.OTStartTime)
+											 , IF(sh.TimeTo <= ot.OTStartTime
+								      AND sh.TimeTo <= ot.OTEndTime
+									  
+									  , CONCAT_DATETIME(DATE(@shendtime), ot.OTStartTime)
+									  , CONCAT_DATETIME(d.DateValue, ot.OTStartTime)))
+				`StartTime`
+				,@endtime := IF(sh.TimeFrom >= ot.OTStartTime
+									  AND sh.TimeFrom >= ot.OTEndTime
+									  
+											 , CONCAT_DATETIME(DATE(@shstarttime), ot.OTEndTime)
+											 , IF(sh.TimeTo <= ot.OTStartTime
+								    AND sh.TimeTo <= ot.OTEndTime
+									  
+									  , CONCAT_DATETIME(DATE(@shendtime), ot.OTEndTime)
+							  
+									  , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(ot.OTStartTime, ot.OTEndTime) DAY), ot.OTEndTime))
+											 )
+				`EndTime`
+
+				, @g := DATE_FORMAT(GREATEST(etd.TimeStampIn, TIMESTAMP(@starttime)), @@datetime_format) `G`
+				, @l := DATE_FORMAT(LEAST(etd.TimeStampOut, TIMESTAMP(@endtime)), @@datetime_format) `L`
+
+				,   (TIMESTAMPDIFF(SECOND
+								   , TIMESTAMP(@g)
+										 , TIMESTAMP(@l)
+										 ) / sec_per_hour) `Result`
+
+				,ot.OTStartTime
+				,ot.OTEndTime
+
+				,sh.TimeFrom
+				,sh.TimeTo
+
+				,etd.TimeStampIn
+				,etd.TimeStampOut
+
+				,( @_istrue := STR_TO_DATE(DATE(@shstarttime), @@date_format) < STR_TO_DATE(DATE(@shendtime), @@date_format) ) `CustomColumn`
+
+				FROM employeeovertime ot
+
+				INNER JOIN dates d
+						ON d.DateValue BETWEEN ot.OTStartDate AND ot.OTEndDate
+						
+				INNER JOIN employeeshift esh
+						ON esh.EmployeeID=ot.EmployeeID
+							 AND esh.OrganizationID=ot.OrganizationID
+							 AND d.DateValue BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
+							 
+				INNER JOIN shift sh
+						ON sh.RowID=esh.ShiftID
+				INNER JOIN employeetimeentrydetails etd
+						ON etd.EmployeeID=ot.EmployeeID
+						   AND etd.OrganizationID=ot.OrganizationID
+						   AND etd.`Date`=d.DateValue
+						   
+				WHERE ot.EmployeeID = emp_rowid
+				AND ot.OrganizationID = org_rowid
+				AND ot.OTStatus = approve_status
+				AND param_date BETWEEN ot.OTStartDate AND ot.OTEndDate
+				# AND @_istrue = TRUE
+
+			UNION
+
+				SELECT
+				ot.RowID, 'Query2' `Group`, d.DateValue,
+
+				@shstarttime1 := CONCAT_DATETIME(d.DateValue, sh.TimeFrom) `ShiftTimeFrom`
+				,@shendtime1 := CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo) `ShiftTimeTo`
+
+				,@starttime1 := IF(sh.TimeFrom >= ot.OTStartTime
+									  AND sh.TimeFrom >= ot.OTEndTime
+									  
+											 , CONCAT_DATETIME(DATE(@shstarttime1), ot.OTStartTime)
+											 , IF(sh.TimeTo <= ot.OTStartTime
+								      AND sh.TimeTo <= ot.OTEndTime
+									  
+									  , CONCAT_DATETIME(DATE(@shendtime1), ot.OTStartTime)
+									  , CONCAT_DATETIME(d.DateValue, ot.OTStartTime)))
+				`StartTime`
+				,@endtime1 := IF(sh.TimeFrom >= ot.OTStartTime
+									  AND sh.TimeFrom >= ot.OTEndTime
+									  
+											 , CONCAT_DATETIME(DATE(@shstarttime1), ot.OTEndTime)
+											 , IF(sh.TimeTo <= ot.OTStartTime
+								    AND sh.TimeTo <= ot.OTEndTime
+									  
+									  , CONCAT_DATETIME(DATE(@shendtime1), ot.OTEndTime)
+							  
+									  , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(ot.OTStartTime, ot.OTEndTime) DAY), ot.OTEndTime))
+											 )
+				`EndTime`
+
+				, @g := DATE_FORMAT(GREATEST(etd.TimeStampIn, TIMESTAMP(@starttime1)), @@datetime_format) `G`
+				, @l := DATE_FORMAT(LEAST(etd.TimeStampOut, TIMESTAMP(@endtime1)), @@datetime_format) `L`
+
+				,   (TIMESTAMPDIFF(SECOND
+								   , TIMESTAMP(@g)
+										 , TIMESTAMP(@l)
+										 ) / sec_per_hour) `Result`
+
+				,ot.OTStartTime
+				,ot.OTEndTime
+
+				,sh.TimeFrom
+				,sh.TimeTo
+
+				,etd.TimeStampIn
+				,etd.TimeStampOut
+
+				,( @_istrue1 := STR_TO_DATE(DATE(@shstarttime1), @@date_format) = STR_TO_DATE(DATE(@shendtime1), @@date_format) ) `CustomColumn`
+
+				FROM employeeovertime ot
+
+				INNER JOIN dates d
+						ON d.DateValue BETWEEN ot.OTStartDate AND ot.OTEndDate
+						
+				INNER JOIN employeeshift esh
+						ON esh.EmployeeID=ot.EmployeeID
+							 AND esh.OrganizationID=ot.OrganizationID
+							 AND d.DateValue BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
+							 
+				INNER JOIN shift sh
+						ON sh.RowID=esh.ShiftID
+				INNER JOIN employeetimeentrydetails etd
+						ON etd.EmployeeID=ot.EmployeeID
+						   AND etd.OrganizationID=ot.OrganizationID
+						   AND etd.`Date`=d.DateValue
+						   
+				WHERE ot.EmployeeID = emp_rowid
+				AND ot.OrganizationID = org_rowid
+				AND ot.OTStatus = approve_status
+				AND param_date BETWEEN ot.OTStartDate AND ot.OTEndDate
+				# AND @_istrue1 = TRUE
+		      ) ot
+		WHERE ot.`Result` > 0
+		GROUP BY ot.RowID
+		ORDER BY ot.DateValue) i
+
+# WHERE i.`CustomColumn` = TRUE
+HAVING SUM(i.`Result`) > 0
+INTO returnvalue
+;
+
+# ##############################################################################
+
+/* POST SHIFT OVERTIME */
 SELECT SUM(i.`Result`)
 # SELECT i.*
 FROM (
@@ -78,7 +240,7 @@ FROM (
 				,   (TIMESTAMPDIFF(SECOND
 								   , TIMESTAMP(@g)
 										 , TIMESTAMP(@l)
-										 ) / sec_per_hour) `Result`
+										 ) / 3600) `Result`
 
 				,ot.OTStartTime
 				,ot.OTEndTime
@@ -149,7 +311,7 @@ FROM (
 				,   (TIMESTAMPDIFF(SECOND
 								   , TIMESTAMP(@g)
 										 , TIMESTAMP(@l)
-										 ) / sec_per_hour) `Result`
+										 ) / 3600) `Result`
 
 				,ot.OTStartTime
 				,ot.OTEndTime
@@ -183,17 +345,19 @@ FROM (
 				AND ot.OrganizationID = org_rowid
 				AND ot.OTStatus = approve_status
 				AND param_date BETWEEN ot.OTStartDate AND ot.OTEndDate
-				# AND @_istrue1 = TRUE
 		      ) ot
+		WHERE ot.`Result` > 0
 		GROUP BY ot.RowID
 		ORDER BY ot.DateValue) i
 
 # WHERE i.`CustomColumn` = TRUE
 HAVING SUM(i.`Result`) > 0
-INTO returnvalue
+INTO returnvalue1
 ;
 
-RETURN IFNULL(returnvalue, 0);
+# ##############################################################################
+
+RETURN ( IFNULL(returnvalue, 0) + IFNULL(returnvalue1, 0) );
 
 END//
 DELIMITER ;
