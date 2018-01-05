@@ -53,12 +53,14 @@ IF employeeRowID IS NOT NULL
                 ,CreatedBy
                 ,TimeFrom
                 ,TimeTo
+                ,Hidden
             ) VALUES (
                 OrganizID
                 ,CURRENT_TIMESTAMP()
                 ,CreatedLastUpdBy
                 ,i_TimeFrom
                 ,i_TimeTo
+                ,TRUE
             ) ON
             DUPLICATE
             KEY

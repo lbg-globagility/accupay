@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `employeeloanschedule` (
   `LoanNumber` varchar(50) DEFAULT NULL,
   `DedEffectiveDateFrom` date DEFAULT NULL,
   `DedEffectiveDateTo` date DEFAULT NULL,
+  `SubstituteEndDate` date DEFAULT NULL,
   `TotalLoanAmount` decimal(20,6) DEFAULT NULL,
   `DeductionSchedule` varchar(50) DEFAULT NULL COMMENT 'per payperiod',
   `TotalBalanceLeft` decimal(20,6) DEFAULT NULL,
