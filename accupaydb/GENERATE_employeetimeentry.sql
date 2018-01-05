@@ -718,6 +718,14 @@ ELSE
     SET absentHours = shiftHours;
 END IF;
 
+/*
+ * If the employee filed a leave for a day for which the leave hours is not enough,
+ * file the unaccounted hours as absent hours.
+ */
+IF hasLeave AND leaveHours < shiftHours THEN
+    SET absentHours = shiftHours - leaveHours;
+END IF;
+
 SET absentAmount = absentHours * hourlyRate;
 
 SELECT RowID
