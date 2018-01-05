@@ -31,6 +31,11 @@ DECLARE timestampI_date DATE;
 DECLARE timestampO_date DATE;
 
 
+SET NEW.TimeIn = PROPER_24HOUR(NEW.TimeIn);
+
+SET NEW.TimeOut = PROPER_24HOUR(NEW.TimeOut);
+
+
 SET timestampI_date = NEW.`Date`;
 
 SET timestampO_date = NEW.`Date`;
