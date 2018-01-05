@@ -38,7 +38,9 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeetimeentries`(
     `etent_No` INT,
     `etent_LeaveType` VARCHAR(50),
     `etent_LeaveHours` DECIMAL(15, 4),
-    `etent_LeavePay` DECIMAL(15, 4)
+    `etent_LeavePay` DECIMAL(15, 4),
+    `etent_AbsentHours` DECIMAL(15, 4),
+    `etent_AbsentAmount` DECIMAL(15, 4)
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN

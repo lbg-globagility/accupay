@@ -100,6 +100,8 @@ DECLARE shiftID INT(11);
 
 DECLARE workingHours INT(10) DEFAULT 0;
 
+DECLARE requiredToWorkLastWorkingDay BOOLEAN DEFAULT FALSE;
+
 DECLARE dateToday DATE;
 DECLARE dateTomorrow DATE;
 DECLARE dateYesterday DATE;
@@ -115,6 +117,7 @@ DECLARE shifttimefrom TIME;
 DECLARE shifttimeto TIME;
 DECLARE shiftStart DATETIME;
 DECLARE shiftEnd DATETIME;
+DECLARE shiftHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE hasShift BOOLEAN DEFAULT FALSE;
 DECLARE breaktimeStart DATETIME;
 DECLARE breaktimeEnd DATETIME;
@@ -133,6 +136,7 @@ DECLARE regularHoursBeforeBreak DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE regularHoursAfterBreak DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE regularHours DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE regularAmount DECIMAL(11, 6) DEFAULT 0.0;
+DECLARE hasWorked BOOLEAN DEFAULT FALSE;
 
 DECLARE og_ndtimefrom TIME DEFAULT NULL;
 DECLARE og_ndtimeto TIME DEFAULT NULL;
@@ -173,6 +177,7 @@ DECLARE restDayHours DECIMAL(15, 4);
 DECLARE restDayAmount DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE holidayPay DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE isExemptForHoliday BOOLEAN DEFAULT FALSE;
 
 DECLARE lateHoursBeforeBreak DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE lateHoursAfterBreak DECIMAL(11, 6) DEFAULT 0.0;
@@ -183,6 +188,9 @@ DECLARE undertimeHoursBeforeBreak DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE undertimeHoursAfterBreak DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE undertimeHours DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE undertimeAmount DECIMAL(15, 4) DEFAULT 0.0;
+
+DECLARE absentHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE absentAmount DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE hasLeave BOOLEAN DEFAULT FALSE;
 DECLARE leaveStartTime TIME;
@@ -249,6 +257,10 @@ INTO
     nightDiffTimeFrom,
     nightDiffTimeTo;
 
+SET requiredToWorkLastWorkingDay = GetListOfValueOrDefault(
+    'Payroll Policy', 'HolidayLastWorkingDayOrAbsent', FALSE
+);
+
 SELECT
     RowID,
     IF(
@@ -292,17 +304,17 @@ INTO
 SET isHoliday = isRegularHoliday OR isSpecialNonWorkingHoliday;
 SET isRegularDay = NOT isHoliday;
 
-SELECT
-    IFNULL((NightShift = '1'), FALSE)
-FROM employeeshift
-WHERE EmployeeID = ete_EmpRowID AND
-    OrganizationID = ete_OrganizID AND
-    ete_Date BETWEEN EffectiveFrom AND EffectiveTo AND
-    DATEDIFF(ete_Date, EffectiveFrom) >= 0
-ORDER BY DATEDIFF(ete_Date, EffectiveFrom)
-LIMIT 1
-INTO
-    isNightShift;
+-- SELECT
+--     IFNULL((NightShift = '1'), FALSE)
+-- FROM employeeshift
+-- WHERE EmployeeID = ete_EmpRowID AND
+--     OrganizationID = ete_OrganizID AND
+--     ete_Date BETWEEN EffectiveFrom AND EffectiveTo AND
+--     DATEDIFF(ete_Date, EffectiveFrom) >= 0
+-- ORDER BY DATEDIFF(ete_Date, EffectiveFrom)
+-- LIMIT 1
+-- INTO
+--     isNightShift;
 
 SELECT COUNT(RowID)
 FROM employeeovertime
@@ -324,10 +336,11 @@ SELECT
     sh.TimeTo,
     sh.BreakTimeFrom,
     sh.BreakTimeTo,
+    IFNULL(esh.NightShift = '1', FALSE),
     COALESCE(esh.RestDay, TRUE),
     sh.DivisorToDailyRate
 FROM employeeshift esh
-INNER JOIN shift sh
+LEFT JOIN shift sh
 ON sh.RowID = esh.ShiftID
 WHERE esh.EmployeeID = ete_EmpRowID AND
     esh.OrganizationID = ete_OrganizID AND
@@ -341,6 +354,7 @@ INTO
     shifttimeto,
     @sh_brktimeFr,
     @sh_brktimeTo,
+    isNightShift,
     isShiftRestDay,
     workingHours;
 
@@ -424,6 +438,16 @@ SET shiftEnd = TIMESTAMP(IF(shifttimeto > shifttimefrom, dateToday, dateTomorrow
 SET breaktimeStart = TIMESTAMP(IF(@sh_brktimeFr > shifttimefrom, dateToday, dateTomorrow), @sh_brktimeFr);
 SET breaktimeEnd = TIMESTAMP(IF(@sh_brktimeTo > shifttimefrom, dateToday, dateTomorrow), @sh_brktimeTo);
 
+SET hasBreaktime = (@sh_brktimeFr IS NOT NULL) AND (@sh_brktimeTo IS NOT NULL);
+
+IF hasBreaktime THEN
+    SET shiftHours =
+        COMPUTE_TimeDifference(TIME(shiftStart), TIME(breaktimeStart)) +
+        COMPUTE_TimeDifference(TIME(breaktimeEnd), TIME(shiftEnd));
+ELSE
+    SET shiftHours = COMPUTE_TimeDifference(TIME(shiftStart), TIME(shiftEnd));
+END IF;
+
 /*
  * The official work start is the time that is considered the employee has started working.
  * In this case, the work start is the time in, unless the employee went in early, then it should
@@ -436,8 +460,6 @@ SET dutyStart = GREATEST(fullTimeIn, shiftStart);
  * time out.
  */
 SET dutyEnd = LEAST(fullTimeOut, shiftEnd);
-
-SET hasBreaktime = (@sh_brktimeFr IS NOT NULL) AND (@sh_brktimeTo IS NOT NULL);
 
 /*
  * Calculate the regular hours worked for the day.
@@ -470,6 +492,8 @@ ELSE
      */
     SET regularHours = COMPUTE_TimeDifference(TIME(dutyStart), TIME(dutyEnd));
 END IF;
+
+SET hasWorked = regularHours > 0;
 
 SET nightDiffRangeStart = TIMESTAMP(dateToday, nightDiffTimeFrom);
 SET nightDiffRangeEnd = TIMESTAMP(IF(nightDiffTimeTo > nightDiffTimeFrom, ete_Date, dateTomorrow), nightDiffTimeTo);
@@ -673,10 +697,28 @@ END IF;
 SET ndiffrate = ndiffrate MOD 1;
 SET ndiffotrate = otrate * ndiffrate;
 
-SELECT GET_employeerateperday(ete_EmpRowID, ete_OrganizID, ete_Date)
+SELECT GET_employeerateperday(ete_EmpRowID, ete_OrganizID, dateToday)
 INTO dailyRate;
 
 SET hourlyRate = dailyRate / workingHours;
+
+SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(ete_EmpRowID, dateToday);
+
+/*
+ * Compute Absent hours
+ */
+SET isExemptForHoliday = (
+    (isHoliday AND (NOT requiredToWorkLastWorkingDay)) OR
+    (isHoliday AND hasWorkedLastWorkingDay)
+);
+
+IF hasWorked OR isRestDay OR isExemptForHoliday OR hasLeave THEN
+    SET absentHours = 0;
+ELSE
+    SET absentHours = shiftHours;
+END IF;
+
+SET absentAmount = absentHours * hourlyRate;
 
 SELECT RowID
 FROM employeetimeentry
@@ -811,8 +853,6 @@ ELSEIF isRegularDay THEN
     INTO timeEntryID;
 
 ELSEIF isHoliday THEN
-
-    SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(ete_EmpRowID, ete_Date);
 
     IF isRestDay THEN
         SET regularAmount = (regularHours * hourlyRate);
