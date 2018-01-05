@@ -83,7 +83,9 @@ INSERT INTO employeetimeentry
     SickLeaveHours,
     MaternityLeaveHours,
     OtherLeaveHours,
-    Leavepayment
+    Leavepayment,
+    AbsentHours,
+    Absent
 ) VALUES (
     etent_RowID,
     etent_OrganizationID,
@@ -119,7 +121,9 @@ INSERT INTO employeetimeentry
     IF(etent_LeaveType = 'Sick leave', etent_LeaveHours, 0),
     IF(etent_LeaveType = 'Maternity leave', etent_LeaveHours, 0),
     IF(etent_LeaveType = 'Other leave', etent_LeaveHours, 0),
-    etent_LeavePay
+    etent_LeavePay,
+    etent_AbsentHours,
+    etent_AbsentAmount
 )
 ON DUPLICATE KEY
 UPDATE
@@ -149,7 +153,9 @@ UPDATE
     SickLeaveHours = IF(etent_LeaveType = 'Sick leave', etent_LeaveHours, 0),
     MaternityLeaveHours = IF(etent_LeaveType = 'Maternity leave', etent_LeaveHours, 0),
     OtherLeaveHours = IF(etent_LeaveType = 'Other leave', etent_LeaveHours, 0),
-    Leavepayment = etent_LeavePay;
+    Leavepayment = etent_LeavePay,
+    AbsentHours = etent_AbsentHours,
+    Absent = etent_AbsentAmount;
 
 SELECT @@Identity AS id INTO etentID;
 

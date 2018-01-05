@@ -789,7 +789,9 @@ IF ete_Date < e_StartDate THEN
         1,
         NULL,
         NULL,
-        NULL
+        NULL,
+        0,
+        0
     )
     INTO timeEntryID;
 
@@ -848,7 +850,9 @@ ELSEIF isRegularDay THEN
         5,
         leaveType,
         leaveHours,
-        leavePay
+        leavePay,
+        absentHours,
+        absentAmount
     )
     INTO timeEntryID;
 
@@ -929,7 +933,9 @@ ELSEIF isHoliday THEN
         7,
         leaveType,
         leaveHours,
-        leavePay
+        leavePay,
+        absentHours,
+        absentAmount
     )
     INTO timeEntryID;
 
