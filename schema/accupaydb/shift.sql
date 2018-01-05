@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS `shift` (
   KEY `FK_BaseTables_user_2` (`LastUpdBy`),
   CONSTRAINT `shift_ibfk_1` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `shift_ibfk_2` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `shift_ibfk_3` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
+  CONSTRAINT `shift_ibfk_3` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
+  `Hidden` TINYINT(1) DEFAULT 0
 ) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

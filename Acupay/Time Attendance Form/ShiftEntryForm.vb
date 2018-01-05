@@ -49,6 +49,7 @@
                                      ", DivisorToDailyRate" &
                                      ", ADDTIME(TIMESTAMP(CURDATE()),BreakTimeFrom) AS BreakTimeFrom" &
                                      ", ADDTIME(TIMESTAMP(CURDATE()),BreakTimeTo) AS BreakTimeTo" &
+                                     ", Hidden" &
                                      ", RowID FROM shift WHERE OrganizationID = '" & z_OrganizationID & "' ORDER BY TIME_FORMAT(TimeFrom,'%p %H:%i:%s'),TIME_FORMAT(TimeTo,'%p %H:%i:%s');").ResultTable
         dgvshiftentry.Rows.Clear()
         For Each drow As DataRow In dt.Rows
@@ -61,6 +62,7 @@
 
                 dgvshiftentry.Rows.Item(n).Cells(breaktimefrom.Index).Value = If(IsDBNull(.Item("BreakTimeFrom")), Nothing, .Item("BreakTimeFrom"))
                 dgvshiftentry.Rows.Item(n).Cells(breaktimeto.Index).Value = If(IsDBNull(.Item("BreakTimeTo")), Nothing, .Item("BreakTimeTo"))
+                dgvshiftentry.Rows.Item(n).Cells(IsHidden.Index).Value = .Item("Hidden")
             End With
         Next
 
@@ -187,6 +189,7 @@
             End If
             chkHasLunchBreak.Checked = bool_result
             dgvshiftentry.Tag = dgvshiftentry.CurrentRow.Cells(c_rowid.Index).Value
+            chkHidden.Checked = Convert.ToInt16(dgvshiftentry.CurrentRow.Cells(IsHidden.Index).Value)
         Catch ex As Exception
             my_RowID = Nothing
             my_TimeFrom = Nothing
@@ -274,6 +277,7 @@
                     ", DivisorToDailyRate=" & ValNoComma(txtDivisorToDailyRate.Text) &
                     ", BreakTimeFrom=" & If(dtpBreakTimeFrom.Tag = Nothing, "NULL", ("'" & dtpBreakTimeFrom.Tag.ToString & "'")) &
                     ", BreakTimeTo=" & If(dtpBreakTimeTo.Tag = Nothing, "NULL", ("'" & dtpBreakTimeTo.Tag.ToString & "'")) &
+                    ", Hidden=" & Convert.ToInt16(chkHidden.Checked) &
                     " WHERE RowID = '" & dgvshiftentry.Tag & "';"
             Dim n_ExecuteQuery As New ExecuteQuery(str_quer)
             If n_ExecuteQuery.HasError = False Then
@@ -380,6 +384,14 @@
         MsgBox("hrs_shift is " & ValNoComma(hrs_shift) & vbNewLine &
                "hrs_break is " & ValNoComma(hrs_break) & vbNewLine &
                "and their difference is " & ValNoComma(hrs_shift) - ValNoComma(hrs_break))
+    End Sub
+
+    Private Sub chkHidden_CheckedChanged(sender As Object, e As EventArgs) Handles chkHidden.CheckedChanged
+
+    End Sub
+
+    Private Sub dgvshiftentry_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvshiftentry.CellContentClick
+
     End Sub
 
 End Class
