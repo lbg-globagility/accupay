@@ -26,6 +26,8 @@ DECLARE datetime1
         ,datetime5
         ,datetime6 DATETIME;
 
+DECLARE row_ids VARCHAR(255);
+
 
 SET @_istrue = FALSE;
 SET @_istrue1 = FALSE;
@@ -44,6 +46,7 @@ SET @endtime1 = NULL;
 
 /* PRE SHIFT OVERTIME */
 SELECT SUM(i.`Result`)
+, GROUP_CONCAT(i.RowID)
 # SELECT i.*
 FROM (
       SELECT ot.*
@@ -198,6 +201,7 @@ FROM (
 # WHERE i.`CustomColumn` = TRUE
 HAVING SUM(i.`Result`) > 0
 INTO returnvalue
+     ,row_ids
 ;
 
 # ##############################################################################
@@ -350,7 +354,7 @@ FROM (
 		GROUP BY ot.RowID
 		ORDER BY ot.DateValue) i
 
-# WHERE i.`CustomColumn` = TRUE
+WHERE FIND_IN_SET(i.RowID, IFNULL(row_ids, '')) = 0
 HAVING SUM(i.`Result`) > 0
 INTO returnvalue1
 ;
