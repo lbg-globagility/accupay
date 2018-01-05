@@ -106,6 +106,7 @@ DECLARE dateYesterday DATE;
 
 DECLARE etd_TimeIn TIME;
 DECLARE etd_TimeOut TIME;
+DECLARE actualTimeIn TIME;
 DECLARE fullTimeIn DATETIME;
 DECLARE fullTimeOut DATETIME;
 DECLARE hasTimeLogs BOOLEAN DEFAULT FALSE;
@@ -388,11 +389,8 @@ ELSE
 END IF;
 
 SELECT
-    ( @_time_in := GRACE_PERIOD(etd.TimeIn, shifttimefrom, e.LateGracePeriod) ),
-    IF(e_UTOverride = 1, etd.TimeOut, IFNULL(sh.TimeTo, etd.TimeOut)),
-    CONCAT_DATETIME(DATE(etd.TimeStampIn), @_time_in),
-    # etd.TimeStampIn,
-    etd.TimeStampOut
+    etd.TimeIn,
+    IF(e_UTOverride = 1, etd.TimeOut, IFNULL(sh.TimeTo, etd.TimeOut))
 FROM employeetimeentrydetails etd
 INNER JOIN employee e ON e.RowID=etd.EmployeeID
 LEFT JOIN employeeshift esh
@@ -407,18 +405,18 @@ WHERE etd.EmployeeID = ete_EmpRowID AND
 ORDER BY IFNULL(etd.LastUpd, etd.Created) DESC
 LIMIT 1
 INTO
-    etd_TimeIn,
-    etd_TimeOut, fullTimeIn, fullTimeOut;
+    actualTimeIn,
+    etd_TimeOut;
 
 SET dateToday = ete_Date;
 SET dateTomorrow = DATE_ADD(dateToday, INTERVAL 1 DAY);
 SET dateYesterday = DATE_SUB(dateToday, INTERVAL 1 DAY);
 
--- SELECT GRACE_PERIOD(etd_TimeIn, shifttimefrom, e_LateGracePeriod)
--- INTO etd_TimeIn;
+SELECT GRACE_PERIOD(actualTimeIn, shifttimefrom, e_LateGracePeriod)
+INTO etd_TimeIn;
 
-# SET fullTimeIn = TIMESTAMP(dateToday, etd_TimeIn);
-# SET fullTimeOut = TIMESTAMP(IF(etd_TimeOut > etd_TimeIn, dateToday, dateTomorrow), etd_TimeOut);
+SET fullTimeIn = TIMESTAMP(dateToday, etd_TimeIn);
+SET fullTimeOut = TIMESTAMP(IF(etd_TimeOut > etd_TimeIn, dateToday, dateTomorrow), etd_TimeOut);
 
 SET shiftStart = TIMESTAMP(dateToday, shifttimefrom);
 SET shiftEnd = TIMESTAMP(IF(shifttimeto > shifttimefrom, dateToday, dateTomorrow), shifttimeto);
@@ -472,11 +470,6 @@ ELSE
      */
     SET regularHours = COMPUTE_TimeDifference(TIME(dutyStart), TIME(dutyEnd));
 END IF;
-
-/*
- * Make sure the regular hours doesn't go above the standard 8-hour workday.
- */
-# SET regularHours = LEAST(regularHours, STANDARD_WORKING_HOURS);
 
 SET nightDiffRangeStart = TIMESTAMP(dateToday, nightDiffTimeFrom);
 SET nightDiffRangeEnd = TIMESTAMP(IF(nightDiffTimeTo > nightDiffTimeFrom, ete_Date, dateTomorrow), nightDiffTimeTo);
