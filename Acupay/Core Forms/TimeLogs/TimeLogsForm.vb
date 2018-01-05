@@ -244,9 +244,9 @@ Public Class TimeLogsForm
 
         Dim time_logformat As TimeLogsFormat
 
-        MessageBoxManager.OK = "Default"
+        MessageBoxManager.OK = "Alternating line"
 
-        MessageBoxManager.Cancel = "Optimized"
+        MessageBoxManager.Cancel = "Same line"
 
         MessageBoxManager.Register()
 
