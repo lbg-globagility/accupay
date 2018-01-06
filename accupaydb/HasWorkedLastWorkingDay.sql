@@ -53,8 +53,8 @@ BEGIN
     INTO
         regularHours,
         leaveHours;
-    
-    RETURN regularHours > 0 OR leaveHours > 0;
+
+    RETURN IFNULL(regularHours > 0 OR leaveHours > 0, FALSE);
 
 END//
 DELIMITER ;
