@@ -58,7 +58,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_semi
             )
         ) AS HolidayAllowance,
         ea.TaxableFlag,
-        (et.HoursLate + et.UndertimeHours) AS HoursToLess,
+        (et.HoursLate + et.UndertimeHours + et.AbsentHours) AS HoursToLess,
         ea.AllowanceAmount,
         e.WorkDaysPerYear,
         p.`Fixed`,
