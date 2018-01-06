@@ -52,6 +52,7 @@ DECLARE isEntitledToNightDiff BOOLEAN;
 DECLARE isEntitledToNightDiffOvertime BOOLEAN;
 DECLARE isEntitledToRegularHoliday BOOLEAN;
 DECLARE isEntitledToSpecialNonWorkingHoliday BOOLEAN;
+DECLARE isEntitledToHoliday BOOLEAN;
 DECLARE isEntitledToRestDay BOOLEAN;
 DECLARE isEntitledToRestDayOvertime BOOLEAN;
 
@@ -708,8 +709,14 @@ SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(ete_EmpRowID, dateToday);
  * Compute Absent hours
  */
 SET isExemptForHoliday = (
-    (isHoliday AND (NOT requiredToWorkLastWorkingDay)) OR
-    (isHoliday AND hasWorkedLastWorkingDay)
+    (
+        (isHoliday AND (NOT requiredToWorkLastWorkingDay)) OR
+        (isHoliday AND hasWorkedLastWorkingDay)
+    ) AND
+    (
+        (isRegularHoliday AND isEntitledToRegularHoliday) OR
+        (isSpecialNonWorkingHoliday AND isEntitledToSpecialNonWorkingHoliday)
+    )
 );
 
 IF hasWorked OR isRestDay OR isExemptForHoliday OR hasLeave THEN
@@ -722,8 +729,8 @@ END IF;
  * If the employee filed a leave for a day for which the leave hours is not enough,
  * file the unaccounted hours as absent hours.
  */
-IF hasLeave AND leaveHours < shiftHours THEN
-    SET absentHours = shiftHours - leaveHours;
+IF hasLeave AND (leaveHours + regularHours) < shiftHours THEN
+    SET absentHours = shiftHours - (leaveHours + regularHours);
 END IF;
 
 SET absentAmount = absentHours * hourlyRate;
