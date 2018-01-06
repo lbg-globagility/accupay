@@ -362,6 +362,25 @@ Partial Class EmployeeForm
         Me.Label139 = New System.Windows.Forms.Label()
         Me.txtFNameSal = New System.Windows.Forms.TextBox()
         Me.dgvemployeesalary = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_empID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_fromdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_todate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_EmpSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BasicDailyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BasicHourlyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_TrueSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BasicPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_sss = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_philhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_pagibig = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_maritalStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_noofdepd = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_empName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_PayType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_filingstatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_RowIDSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_ToComputeSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TrueHDMFAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtEmpIDSal = New System.Windows.Forms.TextBox()
         Me.ToolStrip13 = New System.Windows.Forms.ToolStrip()
         Me.btnNewSal = New System.Windows.Forms.ToolStripButton()
@@ -1484,25 +1503,6 @@ Partial Class EmployeeForm
         Me.Button3 = New System.Windows.Forms.Button()
         Me.bgworkImporting = New System.ComponentModel.BackgroundWorker()
         Me.Panel7 = New System.Windows.Forms.Panel()
-        Me.c_empID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_fromdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_todate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_EmpSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicDailyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicHourlyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_TrueSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_sss = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_philhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_pagibig = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_maritalStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_noofdepd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_empName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_PayType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_filingstatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_RowIDSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_ToComputeSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TrueHDMFAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.tabctrlemp.SuspendLayout()
         Me.tbpempchklist.SuspendLayout()
         Me.ToolStrip15.SuspendLayout()
@@ -2270,7 +2270,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 430)
-        Me.SplitContainer2.SplitterDistance = 161
+        Me.SplitContainer2.SplitterDistance = 155
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -2651,7 +2651,7 @@ Partial Class EmployeeForm
         '
         Me.cboDayOfRest.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboDayOfRest.FormattingEnabled = True
-        Me.cboDayOfRest.Items.AddRange(New Object() {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"})
+        Me.cboDayOfRest.Items.AddRange(New Object() {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"})
         Me.cboDayOfRest.Location = New System.Drawing.Point(128, 372)
         Me.cboDayOfRest.Name = "cboDayOfRest"
         Me.cboDayOfRest.Size = New System.Drawing.Size(168, 21)
@@ -3543,7 +3543,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 235)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 241)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -4341,6 +4341,144 @@ Partial Class EmployeeForm
         Me.dgvemployeesalary.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvemployeesalary.Size = New System.Drawing.Size(822, 318)
         Me.dgvemployeesalary.TabIndex = 11
+        '
+        'c_empID
+        '
+        Me.c_empID.HeaderText = "Employee ID"
+        Me.c_empID.Name = "c_empID"
+        Me.c_empID.ReadOnly = True
+        Me.c_empID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_empID.Visible = False
+        '
+        'c_fromdate
+        '
+        Me.c_fromdate.HeaderText = "Effectivity Date From"
+        Me.c_fromdate.Name = "c_fromdate"
+        Me.c_fromdate.ReadOnly = True
+        Me.c_fromdate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_todate
+        '
+        Me.c_todate.HeaderText = "Effectivity Date To"
+        Me.c_todate.Name = "c_todate"
+        Me.c_todate.ReadOnly = True
+        Me.c_todate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_EmpSal
+        '
+        Me.c_EmpSal.HeaderText = "Salary"
+        Me.c_EmpSal.Name = "c_EmpSal"
+        Me.c_EmpSal.ReadOnly = True
+        Me.c_EmpSal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_BasicDailyPaySal
+        '
+        Me.c_BasicDailyPaySal.HeaderText = "Daily Rate"
+        Me.c_BasicDailyPaySal.Name = "c_BasicDailyPaySal"
+        Me.c_BasicDailyPaySal.ReadOnly = True
+        Me.c_BasicDailyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_BasicHourlyPaySal
+        '
+        Me.c_BasicHourlyPaySal.HeaderText = "Hourly Rate"
+        Me.c_BasicHourlyPaySal.Name = "c_BasicHourlyPaySal"
+        Me.c_BasicHourlyPaySal.ReadOnly = True
+        Me.c_BasicHourlyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_TrueSal
+        '
+        Me.c_TrueSal.HeaderText = "True Salary"
+        Me.c_TrueSal.Name = "c_TrueSal"
+        Me.c_TrueSal.ReadOnly = True
+        Me.c_TrueSal.Visible = False
+        '
+        'c_BasicPaySal
+        '
+        Me.c_BasicPaySal.HeaderText = "Basic Pay"
+        Me.c_BasicPaySal.Name = "c_BasicPaySal"
+        Me.c_BasicPaySal.ReadOnly = True
+        Me.c_BasicPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_sss
+        '
+        Me.c_sss.HeaderText = "SSS"
+        Me.c_sss.Name = "c_sss"
+        Me.c_sss.ReadOnly = True
+        Me.c_sss.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_philhealth
+        '
+        Me.c_philhealth.HeaderText = "PhilHealth"
+        Me.c_philhealth.Name = "c_philhealth"
+        Me.c_philhealth.ReadOnly = True
+        Me.c_philhealth.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_pagibig
+        '
+        Me.c_pagibig.HeaderText = "Pag-IBIG"
+        Me.c_pagibig.Name = "c_pagibig"
+        Me.c_pagibig.ReadOnly = True
+        Me.c_pagibig.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_maritalStatus
+        '
+        Me.c_maritalStatus.HeaderText = "Marital Status"
+        Me.c_maritalStatus.Name = "c_maritalStatus"
+        Me.c_maritalStatus.ReadOnly = True
+        Me.c_maritalStatus.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_noofdepd
+        '
+        Me.c_noofdepd.HeaderText = "No Of Dependent"
+        Me.c_noofdepd.Name = "c_noofdepd"
+        Me.c_noofdepd.ReadOnly = True
+        Me.c_noofdepd.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'c_empName
+        '
+        Me.c_empName.HeaderText = "Employee Name"
+        Me.c_empName.Name = "c_empName"
+        Me.c_empName.ReadOnly = True
+        Me.c_empName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_empName.Visible = False
+        '
+        'c_PayType
+        '
+        Me.c_PayType.HeaderText = "Pay Type"
+        Me.c_PayType.Name = "c_PayType"
+        Me.c_PayType.ReadOnly = True
+        Me.c_PayType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_PayType.Visible = False
+        '
+        'c_filingstatus
+        '
+        Me.c_filingstatus.HeaderText = "Filing Status"
+        Me.c_filingstatus.Name = "c_filingstatus"
+        Me.c_filingstatus.ReadOnly = True
+        Me.c_filingstatus.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_filingstatus.Visible = False
+        '
+        'c_RowIDSal
+        '
+        Me.c_RowIDSal.HeaderText = "RowID"
+        Me.c_RowIDSal.Name = "c_RowIDSal"
+        Me.c_RowIDSal.ReadOnly = True
+        Me.c_RowIDSal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_RowIDSal.Visible = False
+        '
+        'c_ToComputeSal
+        '
+        Me.c_ToComputeSal.HeaderText = "DifferenceBetweenSal&TrueSal"
+        Me.c_ToComputeSal.Name = "c_ToComputeSal"
+        Me.c_ToComputeSal.ReadOnly = True
+        Me.c_ToComputeSal.Visible = False
+        '
+        'TrueHDMFAmount
+        '
+        Me.TrueHDMFAmount.HeaderText = "TrueHDMFAmount"
+        Me.TrueHDMFAmount.Name = "TrueHDMFAmount"
+        Me.TrueHDMFAmount.ReadOnly = True
+        Me.TrueHDMFAmount.Visible = False
         '
         'txtEmpIDSal
         '
@@ -15499,144 +15637,6 @@ Partial Class EmployeeForm
         Me.Panel7.Name = "Panel7"
         Me.Panel7.Size = New System.Drawing.Size(1231, 523)
         Me.Panel7.TabIndex = 151
-        '
-        'c_empID
-        '
-        Me.c_empID.HeaderText = "Employee ID"
-        Me.c_empID.Name = "c_empID"
-        Me.c_empID.ReadOnly = True
-        Me.c_empID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_empID.Visible = False
-        '
-        'c_fromdate
-        '
-        Me.c_fromdate.HeaderText = "Effectivity Date From"
-        Me.c_fromdate.Name = "c_fromdate"
-        Me.c_fromdate.ReadOnly = True
-        Me.c_fromdate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_todate
-        '
-        Me.c_todate.HeaderText = "Effectivity Date To"
-        Me.c_todate.Name = "c_todate"
-        Me.c_todate.ReadOnly = True
-        Me.c_todate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_EmpSal
-        '
-        Me.c_EmpSal.HeaderText = "Salary"
-        Me.c_EmpSal.Name = "c_EmpSal"
-        Me.c_EmpSal.ReadOnly = True
-        Me.c_EmpSal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_BasicDailyPaySal
-        '
-        Me.c_BasicDailyPaySal.HeaderText = "Daily Rate"
-        Me.c_BasicDailyPaySal.Name = "c_BasicDailyPaySal"
-        Me.c_BasicDailyPaySal.ReadOnly = True
-        Me.c_BasicDailyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_BasicHourlyPaySal
-        '
-        Me.c_BasicHourlyPaySal.HeaderText = "Hourly Rate"
-        Me.c_BasicHourlyPaySal.Name = "c_BasicHourlyPaySal"
-        Me.c_BasicHourlyPaySal.ReadOnly = True
-        Me.c_BasicHourlyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_TrueSal
-        '
-        Me.c_TrueSal.HeaderText = "True Salary"
-        Me.c_TrueSal.Name = "c_TrueSal"
-        Me.c_TrueSal.ReadOnly = True
-        Me.c_TrueSal.Visible = False
-        '
-        'c_BasicPaySal
-        '
-        Me.c_BasicPaySal.HeaderText = "Basic Pay"
-        Me.c_BasicPaySal.Name = "c_BasicPaySal"
-        Me.c_BasicPaySal.ReadOnly = True
-        Me.c_BasicPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_sss
-        '
-        Me.c_sss.HeaderText = "SSS"
-        Me.c_sss.Name = "c_sss"
-        Me.c_sss.ReadOnly = True
-        Me.c_sss.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_philhealth
-        '
-        Me.c_philhealth.HeaderText = "PhilHealth"
-        Me.c_philhealth.Name = "c_philhealth"
-        Me.c_philhealth.ReadOnly = True
-        Me.c_philhealth.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_pagibig
-        '
-        Me.c_pagibig.HeaderText = "Pag-IBIG"
-        Me.c_pagibig.Name = "c_pagibig"
-        Me.c_pagibig.ReadOnly = True
-        Me.c_pagibig.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_maritalStatus
-        '
-        Me.c_maritalStatus.HeaderText = "Marital Status"
-        Me.c_maritalStatus.Name = "c_maritalStatus"
-        Me.c_maritalStatus.ReadOnly = True
-        Me.c_maritalStatus.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_noofdepd
-        '
-        Me.c_noofdepd.HeaderText = "No Of Dependent"
-        Me.c_noofdepd.Name = "c_noofdepd"
-        Me.c_noofdepd.ReadOnly = True
-        Me.c_noofdepd.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_empName
-        '
-        Me.c_empName.HeaderText = "Employee Name"
-        Me.c_empName.Name = "c_empName"
-        Me.c_empName.ReadOnly = True
-        Me.c_empName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_empName.Visible = False
-        '
-        'c_PayType
-        '
-        Me.c_PayType.HeaderText = "Pay Type"
-        Me.c_PayType.Name = "c_PayType"
-        Me.c_PayType.ReadOnly = True
-        Me.c_PayType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_PayType.Visible = False
-        '
-        'c_filingstatus
-        '
-        Me.c_filingstatus.HeaderText = "Filing Status"
-        Me.c_filingstatus.Name = "c_filingstatus"
-        Me.c_filingstatus.ReadOnly = True
-        Me.c_filingstatus.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_filingstatus.Visible = False
-        '
-        'c_RowIDSal
-        '
-        Me.c_RowIDSal.HeaderText = "RowID"
-        Me.c_RowIDSal.Name = "c_RowIDSal"
-        Me.c_RowIDSal.ReadOnly = True
-        Me.c_RowIDSal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_RowIDSal.Visible = False
-        '
-        'c_ToComputeSal
-        '
-        Me.c_ToComputeSal.HeaderText = "DifferenceBetweenSal&TrueSal"
-        Me.c_ToComputeSal.Name = "c_ToComputeSal"
-        Me.c_ToComputeSal.ReadOnly = True
-        Me.c_ToComputeSal.Visible = False
-        '
-        'TrueHDMFAmount
-        '
-        Me.TrueHDMFAmount.HeaderText = "TrueHDMFAmount"
-        Me.TrueHDMFAmount.Name = "TrueHDMFAmount"
-        Me.TrueHDMFAmount.ReadOnly = True
-        Me.TrueHDMFAmount.Visible = False
         '
         'EmployeeForm
         '

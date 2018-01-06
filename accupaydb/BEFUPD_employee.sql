@@ -109,7 +109,7 @@ SET NEW.MaternityLeavePerPayPeriod=IFNULL(NEW.MaternityLeavePerPayPeriod,0);
 SET NEW.OtherLeavePerPayPeriod=IFNULL(NEW.OtherLeavePerPayPeriod,0);
 SET NEW.AlphaListExempted=IFNULL(NEW.AlphaListExempted,'0');
 SET NEW.WorkDaysPerYear=IFNULL(NEW.WorkDaysPerYear,313);
-SET NEW.DayOfRest=IFNULL(NEW.DayOfRest,'1');
+
 SET NEW.ATMNo=IFNULL(NEW.ATMNo,'');
 SET NEW.BankName=IFNULL(NEW.BankName,'');
 SET NEW.CalcHoliday=IFNULL(NEW.CalcHoliday,'1');

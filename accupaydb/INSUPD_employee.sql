@@ -134,7 +134,7 @@ INSERT INTO employee
     ,emplo_OtherLeavePerPayPeriod
     ,emplo_AlphaListExempted
     ,emplo_WorkDaysPerYear
-    ,IF(IFNULL(emplo_DayOfRest,'') IN ('','0'), '1', emplo_DayOfRest)
+    ,emplo_DayOfRest
     ,emplo_ATMNo
     ,emplo_BankName
     ,emplo_CalcHoliday
@@ -194,7 +194,7 @@ UPDATE
     ,OtherLeavePerPayPeriod=emplo_OtherLeavePerPayPeriod
     ,AlphaListExempted=emplo_AlphaListExempted
     ,WorkDaysPerYear=emplo_WorkDaysPerYear
-    ,DayOfRest=IF(IFNULL(emplo_DayOfRest,'') IN ('','0'), '1', emplo_DayOfRest)
+    ,DayOfRest=emplo_DayOfRest
     ,ATMNo=emplo_ATMNo
     ,BankName=emplo_BankName
     ,CalcHoliday=emplo_CalcHoliday

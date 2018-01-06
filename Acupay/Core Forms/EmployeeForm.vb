@@ -536,18 +536,43 @@ Public Class EmployeeForm
     Dim employeepix As New DataTable
 
     Sub loademployee(Optional q_empsearch As String = Nothing)
-        If q_empsearch = Nothing Then
+        'If q_empsearch = Nothing Then
 
-            dgvRowAdder(q_employee & " ORDER BY e.LastName, e.FirstName " &
-                        ",FIELD(e.EmploymentStatus,'Resigned','Terminated')" &
-                        ",FIELD(e.RevealInPayroll,'1','0') LIMIT " & pagination & ",100;", dgvEmp)
-            ''e.RowID DESC
-        Else
-            dgvRowAdder(q_employee & q_empsearch & " ORDER BY e.LastName, e.FirstName DESC" &
-                        ",FIELD(e.EmploymentStatus,'Resigned','Terminated')" &
-                        ",FIELD(e.RevealInPayroll,'1','0')", dgvEmp) ', Simple)
-            ''e.RowID DESC
-        End If
+        '    dgvRowAdder(q_employee & " ORDER BY e.LastName, e.FirstName " &
+        '                ",FIELD(e.EmploymentStatus,'Resigned','Terminated')" &
+        '                ",FIELD(e.RevealInPayroll,'1','0') LIMIT " & pagination & ",100;", dgvEmp)
+        '    ''e.RowID DESC
+        'Else
+        '    dgvRowAdder(q_employee & q_empsearch & " ORDER BY e.LastName, e.FirstName DESC" &
+        '                ",FIELD(e.EmploymentStatus,'Resigned','Terminated')" &
+        '                ",FIELD(e.RevealInPayroll,'1','0')", dgvEmp) ', Simple)
+        '    ''e.RowID DESC
+        'End If
+
+        'Dim q_search = searchCommon(ComboBox7, TextBox1,
+        '                                ComboBox8, TextBox15,
+        '                                ComboBox9, TextBox16,
+        '                                ComboBox10, TextBox17)
+
+        Dim param_array =
+            New Object() {orgztnID,
+            TextBox1.Text,
+            TextBox15.Text,
+            TextBox16.Text,
+            pagination}
+
+        Dim n_ReadSQLProcedureToDatatable As New _
+                ReadSQLProcedureToDatatable("SEARCH_employeeprofile",
+                                            param_array)
+        Dim dtemployee As New DataTable
+        dtemployee = n_ReadSQLProcedureToDatatable.ResultTable
+        dgvEmp.Rows.Clear()
+
+        For Each drow As DataRow In dtemployee.Rows
+            Dim rowArray = drow.ItemArray()
+            dgvEmp.Rows.Add(rowArray)
+        Next
+        dtemployee.Dispose()
 
         emp_rcount = dgvEmp.RowCount
 
@@ -712,6 +737,8 @@ Public Class EmployeeForm
 
         Dim new_eRowID = Nothing
         Try
+            Dim employee_restday = If(cboDayOfRest.SelectedIndex = 0, DBNull.Value, cboDayOfRest.SelectedIndex)
+
             Dim agensi_rowid = If(cboAgency.SelectedValue = Nothing, DBNull.Value, cboAgency.SelectedValue)
             positID = cboPosit.SelectedValue
             new_eRowID =
@@ -762,7 +789,7 @@ Public Class EmployeeForm
                            ValNoComma(txtothrallow.Text),
                            "0",
                            ValNoComma(txtWorkDaysPerYear.Text),
-                           If(cboDayOfRest.SelectedIndex <= 0, 1, cboDayOfRest.SelectedIndex + 1),
+                           employee_restday,
                            txtATM.Text.Trim,
                            cbobank.Text,
                            Convert.ToInt16(chkcalcHoliday.Checked),
@@ -1927,6 +1954,7 @@ Public Class EmployeeForm
 
                         chkAlphaListExempt.Checked = If(.Cells("AlphaExempted").Value = 0, True, False)
                         txtWorkDaysPerYear.Text = .Cells("WorkDaysPerYear").Value
+                        cboDayOfRest.Text = String.Empty
                         cboDayOfRest.Text = .Cells("DayOfRest").Value
                         txtATM.Text = .Cells("ATMNo").Value
                         txtothrpayp.Text = .Cells("OtherPayP").Value
@@ -17728,6 +17756,10 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub tbpLoans_Click(sender As Object, e As EventArgs) Handles tbpLoans.Click
+
+    End Sub
+
+    Private Sub cboDayOfRest_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboDayOfRest.SelectedIndexChanged
 
     End Sub
 
