@@ -16,7 +16,7 @@ DECLARE hoursofduty DECIMAL(15, 4);
 
 DECLARE empBasicPay DECIMAL(15, 4);
 
-DECLARE dailyrate DECIMAL(15, 4);
+DECLARE dailyrate DECIMAL(15, 6);
 
 DECLARE rateperhour DECIMAL(15, 4);
 
@@ -38,7 +38,7 @@ DECLARE emp_sal DECIMAL(15,4);
 
 DECLARE month_count_peryear INT(11) DEFAULT 12;
 
-SELECT ShiftID
+/*SELECT ShiftID
 FROM employeeshift
 WHERE EmployeeID = EmpID AND
       OrganizationID = OrgID AND
@@ -155,7 +155,17 @@ ELSEIF emptype = 'Hourly' THEN
     SET rateperhour = empBasicPay * hoursofduty;
     SET dailyrate = rateperhour;
 
-END IF;
+END IF;*/
+
+SELECT i.DailyRate
+FROM employeesalary_withdailyrate i
+WHERE i.EmployeeID = EmpID
+AND i.OrganizationID = OrgID
+AND paramDate BETWEEN i.EffectiveDateFrom AND IFNULL(i.EffectiveDateTo, paramDate)
+AND DATEDIFF(paramDate, i.EffectiveDateFrom) >= 0
+ORDER BY DATEDIFF(DATE_FORMAT(paramDate, @@date_format), i.EffectiveDateFrom)
+LIMIT 1
+INTO dailyrate;
 
 RETURN dailyrate;
 
