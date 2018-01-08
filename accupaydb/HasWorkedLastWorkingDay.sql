@@ -20,7 +20,9 @@ BEGIN
     DECLARE leaveHours DECIMAL(11, 6);
 
     SELECT
-        employeetimeentry.RegularHoursWorked,
+        IF(PayType IN ('Regular Holiday', 'Special Non-Working Holiday')
+		     , employeetimeentry.TotalDayPay
+			  , employeetimeentry.RegularHoursWorked) `RegularHoursWorked`,
         (
             employeetimeentry.SickLeaveHours +
             employeetimeentry.MaternityLeaveHours +
