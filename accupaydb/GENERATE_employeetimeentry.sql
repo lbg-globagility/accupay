@@ -317,6 +317,10 @@ SET isRegularDay = NOT isHoliday;
 -- INTO
 --     isNightShift;
 
+SELECT ofb.OffStartTime
+FROM employeeofficialbusiness ofb
+WHERE ofb.OffBusStartDate;
+
 SELECT COUNT(RowID)
 FROM employeeovertime
 WHERE EmployeeID = ete_EmpRowID AND

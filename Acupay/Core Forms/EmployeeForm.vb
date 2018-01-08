@@ -10,6 +10,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 
 Public Class EmployeeForm
+
     Private str_ms_excel_file_extensn As String =
         String.Concat("Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|",
                       "Microsoft Excel Documents 97-2003 (*.xls)|*.xls")
@@ -20,6 +21,7 @@ Public Class EmployeeForm
         SplitContainer2.SplitterWidth = 7
         MyBase.OnLoad(e)
     End Sub
+
 #Region "Employee Check list"
 
     Dim empchklist_columns As New AutoCompleteStringCollection
@@ -431,7 +433,9 @@ Public Class EmployeeForm
             End With
         End If
     End Sub
+
 #End Region
+
 #Region "Personal Profile"
 
     Public positn As New AutoCompleteStringCollection
@@ -1095,7 +1099,6 @@ Public Class EmployeeForm
             params(23, 1) = cboMaritStat.Text 'MaritStat
             params(24, 1) = Format(CDate(dtpempbdate.Value), "yyyy-MM-dd") 'BDate
             params(25, 1) = Format(CDate(dtpempstartdate.Value), "yyyy-MM-dd") 'Start_Date
-
 
             params(26, 1) = DBNull.Value 'If(termdate = "", DBNull.Value, Format(CDate(termdate), "yyyy-MM-dd"))
 
@@ -1815,7 +1818,7 @@ Public Class EmployeeForm
                                                              "",
                                                              "-" & StrConv(.Cells("Column21").Value,
                                                                            VbStrConv.ProperCase))
-                    '                                                       
+                    '
                     LastFirstMidName = .Cells("Column4").Value & ", " & .Cells("Column2").Value &
                         If(Trim(addtlWord) = Nothing, "", If(Trim(addtlWord) = ".", "", ", " & addtlWord))
 
@@ -2009,7 +2012,6 @@ Public Class EmployeeForm
                             dgvemployeesalary.Item("c_fromdate", 0).Selected = True
                         End If
 
-
                         txtFNameSal.Text = employeefullname
                         txtEmpIDSal.Text = subdetails '"ID# " & .Cells("Column1").Value
                         txtEmpIDSal.Tag = publicEmpRowID
@@ -2044,7 +2046,6 @@ Public Class EmployeeForm
 
                         If .Cells("Column19").Value = "Male" Then
                             rdMale.Checked = True
-
                         Else
                             rdFMale.Checked = True
 
@@ -2627,6 +2628,7 @@ Public Class EmployeeForm
         Catch ex As Exception
         End Try
     End Sub
+
     Private Sub dgvDepen_ColumnDisplayIndexChanged(sender As Object, e As DataGridViewColumnEventArgs) 'Handles dgvDepen.ColumnDisplayIndexChanged, dgvDepen.ColumnWidthChanged
         If dgvDepen.RowCount <> 0 Then
             With dgvDepen.CurrentRow
@@ -3421,8 +3423,6 @@ Public Class EmployeeForm
 
     Dim empcolcount As Integer
 
-
-
     Private Sub SplitContainer2_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles SplitContainer2.SplitterMoved
         InfoBalloon(, , lblforballoon1, , , 1)
     End Sub
@@ -4215,6 +4215,7 @@ Public Class EmployeeForm
     End Sub
 
 #End Region 'Personal Profile
+
 #Region "Awards"
 
     Dim view_IDAwar As Integer
@@ -4423,6 +4424,7 @@ Public Class EmployeeForm
     End Sub
 
 #End Region 'Awards
+
 #Region "Certifications"
 
     Dim view_IDCert As Integer
@@ -4664,6 +4666,7 @@ Public Class EmployeeForm
     End Sub
 
 #End Region 'Certifications
+
 #Region "Leave"
 
     Dim view_IDLeave As Integer
@@ -5192,7 +5195,6 @@ Public Class EmployeeForm
                         pbempleave.Image = ConvByteToImage(DirectCast(.Cells("elv_Image").Value, Byte()))
 
                         cboleavestatus.Text = prev_elv_Status
-
                     Else
                         clear()
                     End If
@@ -5254,7 +5256,6 @@ Public Class EmployeeForm
         If Val(dgvempleave.Item("elv_RowID", e.RowIndex).Value) <> 0 Then
 
             listofEditRowleave.Add(dgvempleave.Item("elv_RowID", e.RowIndex).Value)
-
         Else
         End If
 
@@ -5904,10 +5905,8 @@ Public Class EmployeeForm
             curr_leave_dgvrow = dgvempleave.CurrentRow
             has_valid_dgvrow = (curr_leave_dgvrow IsNot Nothing _
                                 And curr_leave_dgvrow.Cells("elv_RowID").Value = Nothing)
-
         Catch ex As Exception
             has_valid_dgvrow = False
-
         Finally
             If has_valid_dgvrow Then
                 Dim date_value = dtpstartdate.Value
@@ -6287,6 +6286,7 @@ Public Class EmployeeForm
     End Sub
 
 #End Region 'Leave
+
 #Region "Medical Profile"
 
     Dim view_IDMed As Integer
@@ -6443,6 +6443,7 @@ Public Class EmployeeForm
     End Sub
 
 #End Region 'Medical Profile
+
 #Region "Disciplinary Action"
 
     Dim IsNew As Integer
@@ -6775,6 +6776,7 @@ Public Class EmployeeForm
     End Sub
 
 #End Region 'Disciplinary Action
+
 #Region "Educational Background"
 
     Dim is_New As Integer = 0
@@ -7331,7 +7333,6 @@ Public Class EmployeeForm
     Dim view_IDPromot As Integer
     Dim rowidPromot As Integer
 
-
     Sub tbpPromotion_Enter(sender As Object, e As EventArgs) Handles tbpPromotion.Enter
 
         tabpageText(tabIndx)
@@ -7568,7 +7569,6 @@ Public Class EmployeeForm
                              " UNION SELECT PositionID FROM user WHERE OrganizationID='" & orgztnID &
                              "' GROUP BY PositionID);",
                              cmbto)
-
             Catch ex As Exception
                 MsgBox(ex.Message & vbNewLine & "Error in 'Position to'.")
             End Try
@@ -8056,7 +8056,6 @@ Public Class EmployeeForm
 
     Private Sub cmbfrom_SelectedIndexChanged(sender As Object, e As EventArgs) 'Handles cmbfrom.SelectedIndexChanged 'cmbfrom_SelectedIndexChanged
         Try
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name), , "Unexpected Message")
         End Try
@@ -8100,7 +8099,6 @@ Public Class EmployeeForm
         If cmbflg.Text = "Yes" Then
 
             If dgvEmp.RowCount <> 0 Then
-
             Else
                 txtempcurrbasicpay.Text = "0"
             End If
@@ -8978,7 +8976,6 @@ Public Class EmployeeForm
                               ",els.LoanPayPeriodLeftForBonus=IF(IFNULL(els.LoanPayPeriodLeftForBonus, 0) = 0, els.LoanPayPeriodLeft, els.LoanPayPeriodLeftForBonus)",
                               ",eb.RemainingBalance = (eb.RemainingBalance - els.DeductionAmount)",
                               " WHERE eb.RowID='", row_id, "';")
-
             Else 'If bool_bonus_potent = 1 Then
 
                 str_quer =
@@ -9578,7 +9575,6 @@ Public Class EmployeeForm
         Try
 
             has_curr_dgvrow = (dgvemployeesalary.CurrentRow.Cells("c_RowIDSal").Value IsNot Nothing)
-
         Catch ex As Exception
             has_curr_dgvrow = False
         End Try
@@ -9907,6 +9903,10 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub ValidateSalaryRanges(salaries As List(Of PayrollSys.Salary))
+        If salaries.Count <= 1 Then
+            lblWarning.Visible = False
+        End If
+
         For i = 0 To salaries.Count - 1
             Dim salary = salaries.Item(i)
 
@@ -9935,11 +9935,11 @@ Public Class EmployeeForm
         End If
 
         If salaryA.IsIndefinite And (Not salaryB.IsIndefinite) Then
-            Return salaryB.EffectiveDateTo <= salaryA.EffectiveDateFrom
+            Return salaryB.EffectiveDateTo >= salaryA.EffectiveDateFrom
         End If
 
         If salaryB.IsIndefinite And (Not salaryA.IsIndefinite) Then
-            Return salaryA.EffectiveDateTo <= salaryB.EffectiveDateFrom
+            Return salaryA.EffectiveDateTo >= salaryB.EffectiveDateFrom
         End If
 
         Return True
@@ -10268,7 +10268,6 @@ Public Class EmployeeForm
                           ", ?esal_PayPhilHealthID",
                           ", ?esal_PhilHealthDeduction",
                           ") `Result`;")
-
 
         Dim sql As New SQL(str_query, _params)
 
@@ -11174,7 +11173,6 @@ Public Class EmployeeForm
             crvwr.Refresh()
             crvwr.Show() '
             'TINNo
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name), , "Unexpected Message")
         End Try
@@ -11616,7 +11614,6 @@ Public Class EmployeeForm
             crvwr.Text = papy_string
             crvwr.Refresh()
             crvwr.Show()
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name), , "Unexpected Message")
         End Try
@@ -11723,14 +11720,11 @@ Public Class EmployeeForm
 
             cboallowtype.ContextMenu = New ContextMenu
 
-
             categallowID = EXECQUER("SELECT RowID FROM category WHERE OrganizationID=" & orgztnID & " AND CategoryName='" & "Allowance Type" & "' LIMIT 1;")
 
             If Val(categallowID) = 0 Then
                 categallowID = INSUPD_category(, "Allowance Type")
             End If
-
-
 
             enlistTheLists("SELECT CONCAT(COALESCE(p.PartNo,''),'@',p.RowID)" &
                            " FROM product p" &
@@ -11858,7 +11852,6 @@ Public Class EmployeeForm
             WarnBalloon("Please supply a valid date range.", "Invalid date range", lblforballoon, 0, -69)
             Exit Sub
         End If
-
 
         Static once As SByte = 0
 
@@ -12002,7 +11995,6 @@ Public Class EmployeeForm
     Private Sub cboallowfreq_GotFocus(sender As Object, e As EventArgs) Handles cboallowfreq.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
-
         Else
             dgvempallowance.Item("eall_Frequency", dgvallowRowindx).Selected = 1
         End If
@@ -12063,7 +12055,6 @@ Public Class EmployeeForm
     Private Sub cboallowtype_GotFocus(sender As Object, e As EventArgs) Handles cboallowtype.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
-
         Else
             dgvempallowance.Item("eall_type", dgvallowRowindx).Selected = 1
         End If
@@ -12292,7 +12283,6 @@ Public Class EmployeeForm
     Private Sub dtpallowstartdate_GotFocus(sender As Object, e As EventArgs) Handles dtpallowstartdate.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
-
         Else
             dgvempallowance.Item("eall_Start", dgvallowRowindx).Selected = 1
         End If
@@ -12368,7 +12358,6 @@ Public Class EmployeeForm
     Private Sub dtpallowenddate_GotFocus(sender As Object, e As EventArgs) Handles dtpallowenddate.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
-
         Else
             dgvempallowance.Item("eall_End", dgvallowRowindx).Selected = 1
         End If
@@ -12423,7 +12412,6 @@ Public Class EmployeeForm
     Private Sub txtallowamt_GotFocus(sender As Object, e As EventArgs) Handles txtallowamt.GotFocus
 
         If dgvempallowance.RowCount = 1 Then
-
         Else
             dgvempallowance.Item("eall_Amount", dgvallowRowindx).Selected = 1
         End If
@@ -13903,10 +13891,8 @@ Public Class EmployeeForm
             curr_ot_dgvrow = dgvempOT.CurrentRow
             has_valid_dgvrow = (curr_ot_dgvrow IsNot Nothing _
                                 And curr_ot_dgvrow.Cells("eot_RowID").Value = Nothing)
-
         Catch ex As Exception
             has_valid_dgvrow = False
-
         Finally
             If has_valid_dgvrow Then
                 Dim date_value = dtpstartdateEmpOT.Value
@@ -13991,7 +13977,6 @@ Public Class EmployeeForm
                     Dim _to = Format(CDate(dgvempOT.Item("eot_EndDate", dgvEmpOTRowindx).Value), "yyyy-MM-dd")
 
                     Dim invalidEmpOT = 0
-
 
                 End If
             Catch ex As Exception
@@ -15134,10 +15119,8 @@ Public Class EmployeeForm
             curr_ob_dgvrow = dgvOBF.CurrentRow
             has_valid_dgvrow = (curr_ob_dgvrow IsNot Nothing _
                                 And curr_ob_dgvrow.Cells("obf_RowID").Value = Nothing)
-
         Catch ex As Exception
             has_valid_dgvrow = False
-
         Finally
             If has_valid_dgvrow Then
                 Dim date_value = dtpstartdateOBF.Value
@@ -18455,7 +18438,6 @@ Public Class EmployeeForm
             MDIPrimaryForm.ToolStripButton5_Click(sender, New EventArgs)
 
             PayrollForm.PayrollToolStripMenuItem_Click(sender, New EventArgs)
-
         Else
             Dim view_name As String = String.Empty
 
@@ -18501,4 +18483,3 @@ Public Class EmployeeForm
     End Sub
 
 End Class
-
