@@ -578,7 +578,6 @@ Public Class PayStubForm
 
                 dgvemployees.Tag = .Cells("RowID").Value
 
-
                 txtFName.Text = .Cells("FirstName").Value
 
                 Dim addtlWord = Nothing
@@ -1884,7 +1883,7 @@ Public Class PayStubForm
                 .Parameters.Clear()
                 .CommandType = CommandType.StoredProcedure
                 .Parameters.AddWithValue("pa_EmployeeID", Me.currentEmployeeID)
-                If dgvpayper.RowCount > 0 Then
+                If dgvpayper.RowCount > 0 And dgvpayper.SelectedRows.Count > 0 Then
                     .Parameters.AddWithValue("pa_PayPeriodID", dgvpayper.SelectedRows(0).Cells(0).Value)
                 Else
                     .Parameters.AddWithValue("pa_PayPeriodID", DBNull.Value)
