@@ -6,19 +6,39 @@
 
 DROP FUNCTION IF EXISTS `INSUPD_employeeleave_indepen`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeeleave_indepen`(`elv_RowID` INT, `elv_OrganizationID` INT, `elv_LeaveStartTime` TIME, `elv_LeaveType` VARCHAR(50), `elv_CreatedBy` INT, `elv_LastUpdBy` INT, `elv_EmployeeID` INT, `elv_LeaveEndTime` TIME, `elv_LeaveStartDate` DATE, `elv_LeaveEndDate` DATE, `elv_Reason` VARCHAR(500), `elv_Comments` VARCHAR(2000), `elv_Image` LONGBLOB, `elv_Status` VARCHAR(50)) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeeleave_indepen`(
+    `elv_RowID` INT,
+    `elv_OrganizationID` INT,
+    `elv_LeaveStartTime` TIME,
+    `elv_LeaveType` VARCHAR(50),
+    `elv_CreatedBy` INT,
+    `elv_LastUpdBy` INT,
+    `elv_EmployeeID` INT,
+    `elv_LeaveEndTime` TIME,
+    `elv_LeaveStartDate` DATE,
+    `elv_LeaveEndDate` DATE,
+    `elv_Reason` VARCHAR(500),
+    `elv_Comments` VARCHAR(2000),
+    `elv_Image` LONGBLOB,
+    `elv_Status` VARCHAR(50)
+) RETURNS int(11)
     DETERMINISTIC
 BEGIN
 
 DECLARE empleaveID INT(11);
-
 DECLARE specialty CONDITION FOR SQLSTATE '45000';
-
 DECLARE emp_employment_stat TEXT;
+DECLARE allowLeave BOOLEAN DEFAULT FALSE;
 
-SELECT EmploymentStatus FROM employee WHERE RowID=elv_EmployeeID INTO emp_employment_stat;
+SELECT EmploymentStatus
+FROM employee
+WHERE RowID = elv_EmployeeID
+INTO emp_employment_stat;
 
-IF emp_employment_stat = 'Regular' THEN
+SET allowLeave = (emp_employment_stat = 'Regular') OR
+    (elv_LeaveType = 'Leave w/o Pay');
+
+IF allowLeave THEN
 
     INSERT INTO employeeleave
     (
