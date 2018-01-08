@@ -723,7 +723,7 @@ SET isExemptForHoliday = (
     )
 );
 
-IF hasWorked OR isRestDay OR isExemptForHoliday OR hasLeave THEN
+IF (NOT hasShift) OR hasWorked OR isRestDay OR isExemptForHoliday OR hasLeave THEN
     SET absentHours = 0;
 ELSE
     SET absentHours = shiftHours;
