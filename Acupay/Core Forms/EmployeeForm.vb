@@ -8226,6 +8226,8 @@ Public Class EmployeeForm
     Private interest_charging_amt As Double = 0
     Private threadArrayList As New List(Of Thread)
 
+    Const six_months_semi_annual = 12
+
     Sub tbpLoans_Enter(sender As Object, e As EventArgs) Handles tbpLoans.Enter
 
         tabpageText(tabIndx)
@@ -8733,59 +8735,57 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub txtnoofpayper_Leave(sender As Object, e As EventArgs) Handles txtnoofpayper.Leave
+
         If tsbtnNewLoan.Enabled = False Then
 
             txtnoofpayperleft.Text = txtnoofpayper.Text
 
             Dim numpayp = Val(txtnoofpayper.Text)
 
-            Dim loan_interest = 0
+            Dim loan_interest As Decimal = 0
 
             loan_interest = ValNoComma(txtloaninterest.Text)
 
-            If numpayp > 12 Then
+            Dim bool As Boolean =
+                If((numpayp > six_months_semi_annual) = True,
+                sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000,
+                True)
 
-                If txtloaninterest.Text.Trim.Length = 0 Then 'valnocomma(txtloaninterest.text) = loan_interest
+            If bool Then
+
+                If txtloaninterest.Text.Trim.Length = 0 Then
 
                     txtloaninterest.Text = loan_interest
 
                 End If
 
-                If ValNoComma(txtloaninterest.Text) > 1 Then
-
-                    loan_interest = ValNoComma(txtloaninterest.Text) / 100
-
-                    txtloaninterest.Text = loan_interest
-                Else
-
-                    loan_interest = ValNoComma(txtloaninterest.Text)
-
-                End If
+                loan_interest = ValNoComma(txtloaninterest.Text)
 
                 txtloanamt.Text = FormatNumber(Val(interest_charging_amt + (interest_charging_amt * loan_interest)), 2).Replace(",", "")
 
                 Dim loan_amt = interest_charging_amt / numpayp
                 Dim tot_loan = (ValNoComma(FormatNumber(loan_amt, 2)) * numpayp)
                 Dim roundoff_decim = Math.Round(tot_loan, 2)
-                If roundoff_decim < ValNoComma(txtloanamt.Text) Then
 
-                    loan_amt = loan_amt + 0.01
-
-                End If
 
                 loan_amt = (loan_amt + (loan_amt * loan_interest))
 
                 loan_amt = FormatNumber(loan_amt, 2).ToString.Replace(",", "")
 
-                txtdedamt.Text = loan_amt 'FormatNumber(loan_amt, 0).Replace(",", "")
+                txtdedamt.Text = loan_amt
 
                 txtdedamt_Leave(sender, e)
             Else
+                If sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000 Then
+                    InfoBalloon("Interest discarded if number of pay period is 6 months or lesser.",
+                                "Loan interest validation", Label367, (Label367.Width - 15), -60)
+                End If
+
                 loan_interest = 0
 
                 txtloaninterest.Text = 0
 
-                txtloanamt.Text = interest_charging_amt '+ (interest_charging_amt * loan_interest)
+                txtloanamt.Text = interest_charging_amt
 
                 Dim loan_amt = interest_charging_amt / numpayp
 
@@ -8793,17 +8793,15 @@ Public Class EmployeeForm
 
                 Dim roundoff_decim = Math.Round(tot_loan, 2)
 
-                If roundoff_decim < ValNoComma(txtloanamt.Text) Then
-
-                    loan_amt = loan_amt + 0.01
-
-                End If
 
                 loan_amt = FormatNumber(loan_amt, 2).ToString.Replace(",", "")
 
-                txtdedamt.Text = loan_amt 'FormatNumber(loan_amt, 2).Replace(",", "")
+                txtdedamt.Text = loan_amt
+
             End If
+
         End If
+
     End Sub
 
     Private Sub txtloaninterest_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtloaninterest.KeyPress
@@ -17743,6 +17741,14 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub cboDayOfRest_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboDayOfRest.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub txtloaninterest_TextChanged(sender As Object, e As EventArgs) Handles txtloaninterest.TextChanged
+
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs)
 
     End Sub
 
