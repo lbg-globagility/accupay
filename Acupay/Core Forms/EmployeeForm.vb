@@ -1528,6 +1528,8 @@ Public Class EmployeeForm
             InfoBalloon(, , Label234, , , 1)
             InfoBalloon(, , Label235, , , 1)
 
+            InfoBalloon(, , Label367, , , 1)
+
             WarnBalloon(, , cboloantype, , , 1)
 
             newPostion.Close()
@@ -2502,6 +2504,7 @@ Public Class EmployeeForm
                                              ",LastUpdBy='" & z_User & "'" &
                                              " WHERE RowID='" & publicEmpRowID & "';")
                         If n_ExecuteQuery.HasError = False Then
+                            First_LinkClicked(First, New LinkLabelLinkClickedEventArgs(New LinkLabel.Link()))
                             InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been updated successfully.", "Employee Update Successful", lblforballoon, 0, -69)
                         End If
                     Else
