@@ -7,16 +7,19 @@
 DROP VIEW IF EXISTS `employeesalary_withdailyrate`;
 DROP TABLE IF EXISTS `employeesalary_withdailyrate`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `employeesalary_withdailyrate` AS SELECT esa.*
-	,(esa.Salary
+	 ,ROUND(
+	 (esa.Salary
 	  / (e.WorkDaysPerYear
 	     / 12 # count of months per year
-		  )) `DailyRate`
+		  )), 6) `DailyRate`
+	, ROUND(esa.Salary, 6) `MonthlySalary`
 	FROM employeesalary esa
 	INNER JOIN employee e ON e.RowID=esa.EmployeeID AND e.EmployeeType IN ('Monthly', 'Fixed')
 	
 UNION
 	SELECT esa.*
-	,esa.BasicPay `DailyRate`
+	, ROUND(esa.BasicPay, 6) `DailyRate`
+	, ROUND( (esa.BasicPay * (e.WorkDaysPerYear / 12)) , 6) `MonthlySalary`
 	FROM employeesalary esa
 	INNER JOIN employee e ON e.RowID=esa.EmployeeID AND e.EmployeeType = 'Daily' ;
 
