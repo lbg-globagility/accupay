@@ -613,6 +613,7 @@ Public Class PayrollGeneration
             _payStub.RowID = command.Parameters("NewID").Value
 
             transaction.Commit()
+            transaction = Nothing
             command.Dispose()
             _connection.Close()
 
