@@ -30,7 +30,7 @@ SELECT
     CONCAT(e.EmployeeID, ' / ', e.LastName, ', ', e.FirstName, ' ', LEFT(e.MiddleName, 1)) AS `COL1`,
     CONCAT_WS(', ', e.LastName, e.FirstName, e.MiddleName) AS `COL69`,
     -- IF(IsActualFlag = 0, ete.RegularHoursAmount, ROUND(ete.RegularHoursAmount, 2)) AS `COL70`,
-    ROUND(GetBasicPay(e.RowID, paydate_from, IsActualFlag, ete.TotalExpectedHours), 2) AS `COL70`,
+    ROUND(GetBasicPay(e.RowID, paydate_from, paydat_to, IsActualFlag, ete.TotalExpectedHours), 2) AS `COL70`,
     (
         ROUND(IF(
             e.EmployeeType IN ('Fixed', 'Monthly'),
