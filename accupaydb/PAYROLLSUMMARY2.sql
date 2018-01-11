@@ -69,6 +69,7 @@ IF is_keep_in_onesheet = TRUE THEN
 		    ROUND(IF(psi_undeclared, paystubactual.LateDeduction, paystub.LateDeduction), decimal_size) 'DatCol33',
 		    ROUND(IF(psi_undeclared, paystubactual.UndertimeDeduction, paystub.UndertimeDeduction), decimal_size) 'DatCol34',
 		    ROUND(IF(psi_undeclared, paystubactual.AbsenceDeduction, paystub.AbsenceDeduction), decimal_size) 'DatCol32',
+			ROUND(IF(psi_undeclared, paystubactual.LeavePay, paystub.LeavePay), decimal_size) 'DatCol48',
 		    ROUND(paystub.TotalBonus, decimal_size) `DatCol30`,
 		    paystub.TotalAllowance `DatCol31`,
 		    ROUND(IF(psi_undeclared, paystubactual.TotalGrossSalary, paystub.TotalGrossSalary), decimal_size) `DatCol22`,

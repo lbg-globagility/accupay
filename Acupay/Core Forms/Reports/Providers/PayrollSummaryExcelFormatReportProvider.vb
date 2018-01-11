@@ -9,7 +9,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-                      "AA", "AB", "AC"}
+                      "AA", "AB", "AC", "AD"}
 
     Private column_headers() As String =
         New String() {"Code",
@@ -24,6 +24,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "NDiff",
                       "NDiff OT",
                       "R.dayPay",
+                      "Leave Pay",
                       "UT",
                       "Late",
                       "Absent",
@@ -58,6 +59,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "DatCol35",
                       "DatCol38",
                       "DatCol46",
+                      "DatCol48",
                       "DatCol34",
                       "DatCol33",
                       "DatCol32",
