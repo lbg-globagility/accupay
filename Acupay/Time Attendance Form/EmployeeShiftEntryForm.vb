@@ -598,7 +598,7 @@ Public Class EmployeeShiftEntryForm
                 LoadShifts()
 
                 cboshiftlist.SelectedItem = DirectCast(cboshiftlist.DataSource, ICollection(Of ShiftModel)).
-                    Where(Function(s) s.Shift.RowID = n_ShiftEntryForm.ShiftRowID).
+                    Where(Function(s) Equals(s.Shift?.RowID, n_ShiftEntryForm.ShiftRowID)).
                     FirstOrDefault()
             End If
         End If
