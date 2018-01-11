@@ -114,6 +114,9 @@ DECLARE fullTimeIn DATETIME;
 DECLARE fullTimeOut DATETIME;
 DECLARE hasTimeLogs BOOLEAN DEFAULT FALSE;
 
+DECLARE officialBusStartTime TIME;
+DECLARE officialBusEndTime TIME;
+
 DECLARE shifttimefrom TIME;
 DECLARE shifttimeto TIME;
 DECLARE shiftStart DATETIME;
@@ -305,18 +308,6 @@ INTO
 SET isHoliday = isRegularHoliday OR isSpecialNonWorkingHoliday;
 SET isRegularDay = NOT isHoliday;
 
--- SELECT
---     IFNULL((NightShift = '1'), FALSE)
--- FROM employeeshift
--- WHERE EmployeeID = ete_EmpRowID AND
---     OrganizationID = ete_OrganizID AND
---     ete_Date BETWEEN EffectiveFrom AND EffectiveTo AND
---     DATEDIFF(ete_Date, EffectiveFrom) >= 0
--- ORDER BY DATEDIFF(ete_Date, EffectiveFrom)
--- LIMIT 1
--- INTO
---     isNightShift;
-
 SELECT COUNT(RowID)
 FROM employeeovertime
 WHERE EmployeeID = ete_EmpRowID AND
@@ -426,6 +417,19 @@ INTO
 SET dateToday = ete_Date;
 SET dateTomorrow = DATE_ADD(dateToday, INTERVAL 1 DAY);
 SET dateYesterday = DATE_SUB(dateToday, INTERVAL 1 DAY);
+
+SELECT
+    MIN(ofb.OffBusStartTime),
+    MAX(ofb.OffBusEndTime)
+FROM employeeofficialbusiness ofb
+WHERE ofb.OffBusStartDate = dateToday AND
+    ofb.EmployeeID = ete_EmpRowID
+INTO
+    officialBusStartTime,
+    officialBusEndTime;
+
+SET actualTimeIn = IF(officialBusStartTime IS NULL, actualTimeIn, LEAST(actualTimeIn, officialBusStartTime));
+SET etd_TimeOut = IF(officialBusEndTime IS NULL, etd_TimeOut, GREATEST(etd_TimeOut, officialBusEndTime));
 
 SELECT GRACE_PERIOD(actualTimeIn, shifttimefrom, e_LateGracePeriod)
 INTO etd_TimeIn;
@@ -719,7 +723,7 @@ SET isExemptForHoliday = (
     )
 );
 
-IF hasWorked OR isRestDay OR isExemptForHoliday OR hasLeave THEN
+IF (NOT hasShift) OR hasWorked OR isRestDay OR isExemptForHoliday OR hasLeave THEN
     SET absentHours = 0;
 ELSE
     SET absentHours = shiftHours;

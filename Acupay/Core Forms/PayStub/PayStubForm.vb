@@ -578,7 +578,6 @@ Public Class PayStubForm
 
                 dgvemployees.Tag = .Cells("RowID").Value
 
-
                 txtFName.Text = .Cells("FirstName").Value
 
                 Dim addtlWord = Nothing
@@ -1884,7 +1883,7 @@ Public Class PayStubForm
                 .Parameters.Clear()
                 .CommandType = CommandType.StoredProcedure
                 .Parameters.AddWithValue("pa_EmployeeID", Me.currentEmployeeID)
-                If dgvpayper.RowCount > 0 Then
+                If dgvpayper.RowCount > 0 And dgvpayper.SelectedRows.Count > 0 Then
                     .Parameters.AddWithValue("pa_PayPeriodID", dgvpayper.SelectedRows(0).Cells(0).Value)
                 Else
                     .Parameters.AddWithValue("pa_PayPeriodID", DBNull.Value)
@@ -1960,8 +1959,8 @@ Public Class PayStubForm
                     basicPay = ValNoComma(drow("BasicPay"))
                     deductions = ValNoComma(drow("LateDeduction")) +
                         ValNoComma(drow("UndertimeDeduction")) +
-                        ValNoComma(drow("Absent")) +
-                        ValNoComma(drow("HolidayPay"))
+                        ValNoComma(drow("Absent")) '+
+                    'ValNoComma(drow("HolidayPay"))
                 End If
 
                 txtRegularPay.Text = FormatNumber(basicPay - deductions, 2)
@@ -2002,8 +2001,13 @@ Public Class PayStubForm
                 Else
                     thebasicpay = ValNoComma(drow("BasicPay"))
                     thelessamounts = ValNoComma(drow("LateDeduction")) + ValNoComma(drow("UndertimeDeduction")) + ValNoComma(drow("Absent"))
-                    Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
-                    lblSubtotal.Text = FormatNumber(all_regular + ValNoComma(drow("HolidayPay")), 2)
+                    'Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
+                    Dim all_regular = (thebasicpay - thelessamounts)
+                    lblSubtotal.Text =
+                        FormatNumber(all_regular + ValNoComma(drow("HolidayPay")) +
+                                     ValNoComma(drow("OvertimePay")) +
+                                     ValNoComma(drow("NightDiffPay")) +
+                                     ValNoComma(drow("NightDiffOvertimePay")), 2)
                 End If
             Else
                 lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
@@ -2128,8 +2132,8 @@ Public Class PayStubForm
                     thebasicpay = ValNoComma(drow("RegularHoursAmount"))
                 Else
                     thebasicpay = ValNoComma(drow("BasicPay"))
-                    thelessamounts = ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount")) + ValNoComma(drow("Absent")) _
-                        + ValNoComma(drow("HolidayPay"))
+                    thelessamounts = ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount")) + ValNoComma(drow("Absent")) '_
+                    '+ ValNoComma(drow("HolidayPay"))
                 End If
 
                 txthrsworkamt_U.Text = FormatNumber((thebasicpay - thelessamounts), 2)
@@ -2171,8 +2175,13 @@ Public Class PayStubForm
                 Else
                     thebasicpay = ValNoComma(drow("BasicPay"))
                     thelessamounts = ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount")) + ValNoComma(drow("Absent"))
-                    Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
-                    lblSubtotal.Text = FormatNumber(all_regular + ValNoComma(drow("HolidayPay")), 2)
+                    'Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
+                    Dim all_regular = (thebasicpay - thelessamounts)
+                    lblSubtotal.Text =
+                        FormatNumber(all_regular + ValNoComma(drow("HolidayPay")) +
+                                     ValNoComma(drow("OvertimePay")) +
+                                     ValNoComma(drow("NightDiffPay")) +
+                                     ValNoComma(drow("NightDiffOvertimePay")), 2)
                 End If
             Else
                 lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)

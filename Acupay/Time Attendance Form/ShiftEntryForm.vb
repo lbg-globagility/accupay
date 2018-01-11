@@ -226,6 +226,7 @@
         IsNew = 1
         tsbtnNewShift.Enabled = False
         dtpTimeFrom.Focus()
+        chkHasLunchBreak.Checked = False
     End Sub
 
     Private Sub tsbtnSaveShift_Click(sender As Object, e As EventArgs) Handles tsbtnSaveShift.Click
@@ -272,8 +273,6 @@
 
             Dim str_quer As String = "UPDATE shift SET LastUpd = CURRENT_TIMESTAMP()" &
                     ", LastUpdBy = '" & z_User & "'" &
-                    ", TimeFrom = '" & Format(CDate(dtpTimeFrom.Value), "HH:mm") & "'" &
-                    ", TimeTo = '" & Format(CDate(dtpTimeTo.Value), "HH:mm") & "'" &
                     ", DivisorToDailyRate=" & ValNoComma(txtDivisorToDailyRate.Text) &
                     ", BreakTimeFrom=" & If(dtpBreakTimeFrom.Tag = Nothing, "NULL", ("'" & dtpBreakTimeFrom.Tag.ToString & "'")) &
                     ", BreakTimeTo=" & If(dtpBreakTimeTo.Tag = Nothing, "NULL", ("'" & dtpBreakTimeTo.Tag.ToString & "'")) &
@@ -282,6 +281,12 @@
             Dim n_ExecuteQuery As New ExecuteQuery(str_quer)
             If n_ExecuteQuery.HasError = False Then
                 myBalloon("Successfully Updated", "Updating...", btnSave, , -65)
+            Else
+                Try
+                    Throw New Exception(n_ExecuteQuery.ErrorMessage)
+                Catch ex As Exception
+                    MsgBox(getErrExcptn(ex, Name))
+                End Try
             End If
             IsNew = 0
             fillshiftentry()

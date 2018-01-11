@@ -10,7 +10,7 @@ CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `INSUPD_timeentrylogs`(`OrganizID` IN
     DETERMINISTIC
 BEGIN
 DECLARE returnvalue INT(11) DEFAULT 0;
-DECLARE custom_datetimeformat VARCHAR(50) DEFAULT '%m-%d-%Y %H:%i';
+DECLARE custom_datetimeformat VARCHAR(50) DEFAULT '%m-%d-%Y %H:%i:%s';
 INSERT INTO timeentrylogs
 (
 	OrganizationID
@@ -30,7 +30,8 @@ ON
 DUPLICATE
 KEY
 UPDATE
-	LastUpd=CURRENT_TIMESTAMP();SELECT @@Identity AS ID INTO returnvalue;
+	LastUpd=CURRENT_TIMESTAMP()
+	,ImportID=Import_ID;SELECT @@Identity AS ID INTO returnvalue;
 	
 RETURN returnvalue;
 

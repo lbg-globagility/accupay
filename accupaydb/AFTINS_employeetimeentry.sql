@@ -48,6 +48,18 @@ DECLARE emprateperday DECIMAL(11,6);
 DECLARE breaktimeFrom TIME;
 DECLARE breaktimeTo TIME;
 
+DECLARE shouldPaySalaryAllowanceForOvertime BOOLEAN;
+DECLARE shouldPaySalaryAllowanceForNightDifferential BOOLEAN;
+DECLARE shouldPaySalaryAllowanceForNightDifferentialOvertime BOOLEAN;
+DECLARE shouldPaySalaryAllowanceForRestDay BOOLEAN;
+DECLARE shouldPaySalaryAllowanceForHolidayPay BOOLEAN;
+
+DECLARE overtimeHoursAmount DECIMAL(12, 6);
+DECLARE nightDiffAmount DECIMAL(12, 6);
+DECLARE nightDiffOvertimeAmount DECIMAL(12, 6);
+DECLARE restDayAmount DECIMAL(12, 6);
+DECLARE holidayPayAmount DECIMAL(12, 6);
+
 SELECT
     sh.BreakTimeFrom,
     sh.BreakTimeTo,
@@ -174,6 +186,68 @@ ELSE
     SET actualRegularHoursAmount = NEW.RegularHoursAmount;
 END IF;
 
+/* TODO: Make this faster by selecting the payroll policy settings only once for all employees. */
+
+/*
+ * Calculate the allowance salary for overtime work.
+ */
+SET shouldPaySalaryAllowanceForOvertime = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForOvertime', TRUE
+);
+
+SET overtimeHoursAmount = NEW.OvertimeHoursAmount;
+IF shouldPaySalaryAllowanceForOvertime THEN
+    SET overtimeHoursAmount = overtimeHoursAmount + (overtimeHoursAmount * actualrate);
+END IF;
+
+/*
+ * Calculate the allowance salary for night differential work.
+ */
+SET shouldPaySalaryAllowanceForNightDifferential = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForNightDifferential', TRUE
+);
+
+SET nightDiffAmount = NEW.NightDiffHoursAmount;
+IF shouldPaySalaryAllowanceForOvertime THEN
+    SET nightDiffAmount = nightDiffAmount + (nightDiffAmount * actualrate);
+END IF;
+
+/*
+ * Calculate the allowance salary for night differential overtime work.
+ */
+SET shouldPaySalaryAllowanceForNightDifferentialOvertime = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForNightDifferentialOvertime', TRUE
+);
+
+SET nightDiffOvertimeAmount = NEW.NightDiffOTHoursAmount;
+IF shouldPaySalaryAllowanceForOvertime THEN
+    SET nightDiffOvertimeAmount = nightDiffOvertimeAmount + (nightDiffOvertimeAmount * actualrate);
+END IF;
+
+/*
+ * Calculate the allowance salary for rest day work.
+ */
+SET shouldPaySalaryAllowanceForRestDay = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForRestDay', TRUE
+);
+
+SET restDayAmount = NEW.RestDayAmount;
+IF shouldPaySalaryAllowanceForRestDay THEN
+    SET restDayAmount = restDayAmount + (restDayAmount * actualrate);
+END IF;
+
+/*
+ * Calculate the allowance salary for holiday work (both for regular and special non-working holidays).
+ */
+SET shouldPaySalaryAllowanceForHolidayPay = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForHolidayPay', TRUE
+);
+
+SET holidayPayAmount = NEW.HolidayPayAmount;
+IF shouldPaySalaryAllowanceForHolidayPay THEN
+    SET holidayPayAmount = holidayPayAmount + (holidayPayAmount * actualrate);
+END IF;
+
 INSERT INTO employeetimeentryactual (
     RowID,
     OrganizationID,
@@ -222,7 +296,7 @@ VALUES (
     NEW.RegularHoursAmount + (NEW.RegularHoursAmount * actualrate),
     NEW.TotalHoursWorked,
     NEW.OvertimeHoursWorked,
-    NEW.OvertimeHoursAmount + (NEW.OvertimeHoursAmount * actualrate),
+    overtimeHoursAmount,
     NEW.UndertimeHours,
     NEW.UndertimeHoursAmount + (NEW.UndertimeHoursAmount * actualrate),
     NEW.NightDifferentialHours,
@@ -258,13 +332,13 @@ UPDATE
     RegularHoursAmount = NEW.RegularHoursAmount + (NEW.RegularHoursAmount * actualrate),
     TotalHoursWorked = NEW.TotalHoursWorked,
     OvertimeHoursWorked = NEW.OvertimeHoursWorked,
-    OvertimeHoursAmount = NEW.OvertimeHoursAmount + (NEW.OvertimeHoursAmount * actualrate),
+    OvertimeHoursAmount = overtimeHoursAmount,
     UndertimeHours = NEW.UndertimeHours,
     UndertimeHoursAmount = NEW.UndertimeHoursAmount + (NEW.UndertimeHoursAmount * actualrate),
     NightDifferentialHours = NEW.NightDifferentialHours,
-    NightDiffHoursAmount = NEW.NightDiffHoursAmount + (NEW.NightDiffHoursAmount * actualrate),
+    NightDiffHoursAmount = nightDiffAmount,
     NightDifferentialOTHours = NEW.NightDifferentialOTHours,
-    NightDiffOTHoursAmount = NEW.NightDiffOTHoursAmount + (NEW.NightDiffOTHoursAmount * actualrate),
+    NightDiffOTHoursAmount = nightDiffOvertimeAmount,
     HoursLate = NEW.HoursLate,
     HoursLateAmount = NEW.HoursLateAmount + (NEW.HoursLateAmount * actualrate),
     LateFlag = NEW.LateFlag,
@@ -277,10 +351,10 @@ UPDATE
     Absent = NEW.Absent * actualratepercent,
     ChargeToDivisionID = NEW.ChargeToDivisionID,
     Leavepayment = NEW.Leavepayment + (NEW.Leavepayment * actualrate),
-    HolidayPayAmount = NEW.HolidayPayAmount + (NEW.HolidayPayAmount * actualrate),
+    HolidayPayAmount = holidayPayAmount,
     BasicDayPay = NEW.BasicDayPay + (NEW.BasicDayPay * actualrate),
     RestDayHours = NEW.RestDayHours,
-    RestDayAmount = NEW.RestDayAmount + (NEW.RestDayAmount * actualrate);
+    RestDayAmount = restDayAmount;
 
 END//
 DELIMITER ;

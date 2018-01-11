@@ -336,9 +336,9 @@ UPDATE
     UndertimeHours = NEW.UndertimeHours,
     UndertimeHoursAmount = NEW.UndertimeHoursAmount + (NEW.UndertimeHoursAmount * actualrate),
     NightDifferentialHours = NEW.NightDifferentialHours,
-    NightDiffHoursAmount = NEW.NightDiffHoursAmount + (NEW.NightDiffHoursAmount * actualrate),
+    NightDiffHoursAmount = nightDiffAmount,
     NightDifferentialOTHours = NEW.NightDifferentialOTHours,
-    NightDiffOTHoursAmount = NEW.NightDiffOTHoursAmount + (NEW.NightDiffOTHoursAmount * actualrate),
+    NightDiffOTHoursAmount = nightDiffOvertimeAmount,
     HoursLate = NEW.HoursLate,
     HoursLateAmount = NEW.HoursLateAmount + (NEW.HoursLateAmount * actualrate),
     LateFlag = NEW.LateFlag,
@@ -351,10 +351,10 @@ UPDATE
     Absent = NEW.Absent * actualratepercent,
     ChargeToDivisionID = NEW.ChargeToDivisionID,
     Leavepayment = NEW.Leavepayment + (NEW.Leavepayment * actualrate),
-    HolidayPayAmount = NEW.HolidayPayAmount + (NEW.HolidayPayAmount * actualrate),
+    HolidayPayAmount = holidayPayAmount,
     BasicDayPay = NEW.BasicDayPay + (NEW.BasicDayPay * actualrate),
     RestDayHours = NEW.RestDayHours,
-    RestDayAmount = NEW.RestDayAmount + (NEW.RestDayAmount * actualrate);
+    RestDayAmount = restDayAmount;
 
 END//
 DELIMITER ;
