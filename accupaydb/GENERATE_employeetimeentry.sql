@@ -288,7 +288,7 @@ SELECT
     IF(isEntitledToNightDiff, NightDifferentialRate, 1),
     IF(isEntitledToNightDiffOvertime, NightDifferentialOTRate, 1),
     IF(isEntitledToRestDay, RestDayRate, 1),
-    IF(isEntitledToRestDayOvertime, RestDayOvertimeRate, 1),
+    IF(isEntitledToRestDayOvertime, RestDayOvertimeRate, OvertimeRate),
     (PayType = 'Regular Holiday'),
     (PayType = 'Special Non-Working Holiday')
 FROM payrate
