@@ -1,5 +1,4 @@
 ﻿Imports System.Collections.ObjectModel
-Imports System.ComponentModel
 Imports AccuPay.Entity
 Imports log4net
 Imports MySql.Data.MySqlClient
@@ -38,7 +37,7 @@ Public Class PayrollGeneration
 
         Public Property PayPeriodID As Integer?
 
-        Public Property EmployeeID As String
+        Public Property EmployeeID As Integer?
 
         Public Property PayFromDate As Date
 
@@ -202,9 +201,15 @@ Public Class PayrollGeneration
 
     Private _paystubs As IEnumerable(Of AccuPay.Entity.Paystub)
 
+    Private _previousPaystubs As IEnumerable(Of Paystub)
+
     Private _socialSecurityBrackets As IEnumerable(Of SocialSecurityBracket)
 
     Private _philHealthBrackets As IEnumerable(Of PhilHealthBracket)
+
+    Private _listOfValues As IList(Of ListOfValue)
+
+    Private _settings As ListOfValueCollection
 
     Sub New(employees As DataRow,
             payPeriodHalfNo As String,
@@ -299,6 +304,9 @@ Public Class PayrollGeneration
         _isEndOfMonth = (payPeriodHalfNo = "0")
         _socialSecurityBrackets = resources.SocialSecurityBrackets
         _philHealthBrackets = resources.PhilHealthBrackets
+
+        _listOfValues = resources.ListOfValues
+        _settings = New ListOfValueCollection(_listOfValues)
     End Sub
 
     Sub PayrollGeneration_BackgroundWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs)
@@ -486,6 +494,11 @@ Public Class PayrollGeneration
                     Dim sel_dtemployeefirsttimesalary = _employeeFirstTimeSalary.Select($"EmployeeID = '{_payStub.EmployeeID}'")
                     Dim employmentType = StrConv(employee("EmployeeType").ToString, VbStrConv.ProperCase)
 
+                    Dim previousPaystub = _previousPaystubs.
+                        Where(Function(p) p.EmployeeID = _payStub.EmployeeID).
+                        FirstOrDefault()
+
+                    Dim taxableIncome = 0D
                     If employmentType = SalaryType.Fixed Then
 
                         _payStub.WorkPay = basicPay + (_payStub.HolidayPay + _payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay)
@@ -496,32 +509,24 @@ Public Class PayrollGeneration
 
                         grossIncomeLastPayPeriod = basicPay + previousOvertimePay + previousNightDiffPay + previousNightDiffOTPay
 
-                        _payStub.TotalTaxableSalary = basicPay
+                        taxableIncome = basicPay
 
                     ElseIf employmentType = SalaryType.Monthly Then
 
                         If skipGovernmentDeductions Then
                             _payStub.WorkPay = ValNoComma(timeEntrySummary("TotalDayPay"))
-
-                            grossIncomeLastPayPeriod = ValNoComma(_previousTimeEntries.Compute("SUM(TotalDayPay)", $"EmployeeID = '{_payStub.EmployeeID}'"))
                         Else
                             Dim totalDeduction = _payStub.LateDeduction + _payStub.UndertimeDeduction + _payStub.AbsenceDeduction
                             Dim extraPay = _payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay + _payStub.RestDayPay + _payStub.HolidayPay
-
                             _payStub.WorkPay = (basicPay + extraPay) - totalDeduction
-                            _payStub.TotalTaxableSalary = basicPay
 
-                            If _previousTimeEntries.Select($"EmployeeID = '{_payStub.EmployeeID}'").Count > 0 Then
-                                grossIncomeLastPayPeriod = basicPay
+                            Dim taxablePolicy = If(_settings.GetValue("Payroll Policy", "paystub.taxableincome"), "Basic Pay")
+
+                            If taxablePolicy = "Gross Income" Then
+                                taxableIncome = _payStub.WorkPay
+                            Else
+                                taxableIncome = basicPay
                             End If
-
-                            Dim previousLateDeduction = ValNoComma(_previousTimeEntries.Compute("SUM(HoursLateAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-                            Dim previousUndertimeDeduction = ValNoComma(_previousTimeEntries.Compute("SUM(UndertimeHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-                            Dim previousAbsenceDeduction = ValNoComma(_previousTimeEntries.Compute("SUM(Absent)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-                            Dim totalPreviousDeduction = previousLateDeduction + previousUndertimeDeduction + previousAbsenceDeduction
-
-                            grossIncomeLastPayPeriod -= totalPreviousDeduction
-                            grossIncomeLastPayPeriod += ValNoComma(_previousTimeEntries.Compute("MIN(emtAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
                         End If
 
                     ElseIf employmentType = SalaryType.Daily Then
@@ -536,9 +541,9 @@ Public Class PayrollGeneration
                     governmentContributions = _payStub.TotalEmpSSS + _payStub.TotalEmpPhilHealth + _payStub.TotalEmpHDMF
 
                     If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
-                        _payStub.TotalTaxableSalary += _payStub.TotalTaxableSalary - governmentContributions
+                        _payStub.TotalTaxableSalary = taxableIncome - governmentContributions + previousPaystub.TaxableIncome
                     ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
-                        _payStub.TotalTaxableSalary += -governmentContributions
+                        _payStub.TotalTaxableSalary = taxableIncome - governmentContributions
                     End If
 
                     CalculateWithholdingTax()

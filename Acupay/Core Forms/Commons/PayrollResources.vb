@@ -36,7 +36,9 @@ Public Class PayrollResources
 
     Private _listOfValues As ICollection(Of ListOfValue)
 
-    Private _paystubs As IEnumerable(Of AccuPay.Entity.Paystub)
+    Private _paystubs As IEnumerable(Of Paystub)
+
+    Private _previousPaystubs As IEnumerable(Of Paystub)
 
     Private _isEndOfMonth As Boolean
 
@@ -88,6 +90,12 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property PreviousPaystubs As IEnumerable(Of Paystub)
+        Get
+            Return _previousPaystubs
+        End Get
+    End Property
+
     Public ReadOnly Property SocialSecurityBrackets As ICollection(Of SocialSecurityBracket)
         Get
             Return _socialSecurityBrackets
@@ -97,6 +105,12 @@ Public Class PayrollResources
     Public ReadOnly Property PhilHealthBrackets As ICollection(Of PhilHealthBracket)
         Get
             Return _philHealthBrackets
+        End Get
+    End Property
+
+    Public ReadOnly Property ListOfValues As ICollection(Of ListOfValue)
+        Get
+            Return _listOfValues
         End Get
     End Property
 
@@ -118,10 +132,12 @@ Public Class PayrollResources
             loadLoanTransactionsTask,
             loadSalariesTask,
             LoadProducts(),
+            LoadPreviousPaystubs(),
             LoadFixedTaxableMonthlyAllowances(),
             LoadFixedNonTaxableMonthlyAllowancesTask(),
             LoadSocialSecurityBrackets(),
-            LoadPhilHealthBrackets()
+            LoadPhilHealthBrackets(),
+            LoadSettings()
         })
     End Function
 
@@ -306,6 +322,18 @@ Public Class PayrollResources
                         Where p.PayFromdate = _payDateFrom And p.PayToDate = _payDateTo
 
             _paystubs = Await query.ToListAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadPreviousPaystubs() As Task
+        Dim previousCutoffEnd = _payDateFrom.AddDays(-1)
+
+        Using context = New PayrollContext()
+            Dim query = From p In context.Paystubs
+                        Where p.PayToDate = previousCutoffEnd And
+                            p.OrganizationID = z_OrganizationID
+
+            _previousPaystubs = Await query.ToListAsync()
         End Using
     End Function
 

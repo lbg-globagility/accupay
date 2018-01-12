@@ -11,12 +11,17 @@ Public Class ListOfValueCollection
     End Sub
 
     Public Function Exists(lic As String) As Boolean
-        Dim value = _values.FirstOrDefault(Function(f) f.LIC = lic)
+        Dim value = _values?.FirstOrDefault(Function(f) f.LIC = lic)
         Return value IsNot Nothing
     End Function
 
     Public Function GetValue(lic As String) As String
-        Dim value = _values.FirstOrDefault(Function(f) f.LIC = lic)
+        Dim value = _values?.FirstOrDefault(Function(f) f.LIC = lic)
+        Return value?.DisplayValue
+    End Function
+
+    Public Function GetValue(type As String, lic As String) As String
+        Dim value = _values?.FirstOrDefault(Function(f) f.LIC = lic And f.Type = type)
         Return value?.DisplayValue
     End Function
 
