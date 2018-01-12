@@ -158,10 +158,26 @@ ELSEIF emptype = 'Hourly' THEN
 END IF;*/
 
 SELECT i.DailyRate
-FROM employeesalary_withdailyrate i
-WHERE i.EmployeeID = EmpID
+# FROM employeesalary_withdailyrate i
+FROM (SELECT esa.*
+		 ,ROUND(
+		 (esa.Salary
+		  / (e.WorkDaysPerYear
+		     / 12 # count of months per year
+			  )), 6) `DailyRate`
+		FROM employeesalary esa
+		INNER JOIN employee e ON e.RowID=esa.EmployeeID AND e.EmployeeType IN ('Monthly', 'Fixed') AND e.RowID=EmpID AND e.OrganizationID=OrgID
+		
+	UNION
+		SELECT esa.*
+	   , ROUND(esa.BasicPay, 6) `DailyRate`
+		FROM employeesalary esa
+		INNER JOIN employee e ON e.RowID=esa.EmployeeID AND e.EmployeeType = 'Daily' AND e.RowID=EmpID AND e.OrganizationID=OrgID
+      ) i
+WHERE /*i.EmployeeID = EmpID
 AND i.OrganizationID = OrgID
-AND paramDate BETWEEN i.EffectiveDateFrom AND IFNULL(i.EffectiveDateTo, paramDate)
+AND */
+paramDate BETWEEN i.EffectiveDateFrom AND IFNULL(i.EffectiveDateTo, paramDate)
 AND DATEDIFF(paramDate, i.EffectiveDateFrom) >= 0
 ORDER BY DATEDIFF(DATE_FORMAT(paramDate, @@date_format), i.EffectiveDateFrom)
 LIMIT 1
