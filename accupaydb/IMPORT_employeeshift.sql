@@ -13,7 +13,8 @@ BEGIN
 DECLARE employeeRowID INT(11);
 DECLARE shiftRowID INT(11);
 DECLARE employeeshiftID INT(11);
-DECLARE restDay INT(11);
+DECLARE defaultRestDay INT(11);
+DECLARE isRestDay TINYINT(1) DEFAULT FALSE;
 DECLARE calcNightShift INT(11);
 
 SELECT
@@ -26,23 +27,22 @@ WHERE EmployeeID = i_EmployeeID
 LIMIT 1
 INTO
     employeeRowID,
-    restDay,
+    defaultRestDay,
     calcNightShift;
 
-IF employeeRowID IS NOT NULL
-    AND i_DateFrom IS NOT NULL THEN
+SET isRestDay = (i_DateFrom = i_DateTo) AND
+    (defaultRestDay = DAYOFWEEK(i_DateFrom));
 
-    IF (i_TimeFrom IS NULL AND i_TimeTo IS NULL)
-        OR (i_TimeFrom IS NULL OR i_TimeTo IS NULL) THEN
+IF (employeeRowID IS NOT NULL) AND (i_DateFrom IS NOT NULL) THEN
 
+    IF (i_TimeFrom IS NULL AND i_TimeTo IS NULL) OR (i_TimeFrom IS NULL OR i_TimeTo IS NULL) THEN
         SET shiftRowID = NULL;
-
     ELSE
         SELECT RowID
         FROM shift sh
-        WHERE sh.TimeFrom=i_TimeFrom
-            AND sh.TimeTo=i_TimeTo
-            AND sh.OrganizationID=OrganizID
+        WHERE sh.TimeFrom = i_TimeFrom AND
+            sh.TimeTo = i_TimeTo AND
+            sh.OrganizationID = OrganizID
         INTO shiftRowID;
 
         IF shiftRowID IS NULL THEN
@@ -65,7 +65,7 @@ IF employeeRowID IS NOT NULL
             DUPLICATE
             KEY
             UPDATE
-                LastUpd=CURRENT_TIMESTAMP();
+                LastUpd = CURRENT_TIMESTAMP();
 
             SELECT @@Identity AS Id INTO shiftRowID;
         END IF;
@@ -73,48 +73,44 @@ IF employeeRowID IS NOT NULL
 
     SELECT RowID
     FROM employeeshift
-    WHERE OrganizationID=OrganizID
-        AND EmployeeID=employeeRowID
-        AND EffectiveFrom=i_DateFrom
-        AND EffectiveTo=i_DateTo
+    WHERE OrganizationID = OrganizID AND
+        EmployeeID = employeeRowID AND
+        EffectiveFrom = i_DateFrom AND
+        EffectiveTo = i_DateTo
     INTO employeeshiftID;
 
-    INSERT INTO employeeshift
-    (
-        RowID
-        ,OrganizationID
-        ,Created
-        ,CreatedBy
-        ,EmployeeID
-        ,ShiftID
-        ,EffectiveFrom
-        ,EffectiveTo
-        ,NightShift
-        ,RestDay
-    ) VALUES (
-        employeeshiftID
-        ,OrganizID
-        ,CURRENT_TIMESTAMP()
-        ,CreatedLastUpdBy
-        ,employeeRowID
-        ,shiftRowID
-        ,i_DateFrom
-        ,i_DateTo
-        ,calcNightShift
-        ,0
+    INSERT INTO employeeshift (
+        RowID,
+        OrganizationID,
+        Created,
+        CreatedBy,
+        EmployeeID,
+        ShiftID,
+        EffectiveFrom,
+        EffectiveTo,
+        NightShift,
+        RestDay
+    )
+    VALUES (
+        employeeshiftID,
+        OrganizID,
+        CURRENT_TIMESTAMP(),
+        CreatedLastUpdBy,
+        employeeRowID,
+        shiftRowID,
+        i_DateFrom,
+        i_DateTo,
+        calcNightShift,
+        isRestDay
     )
     ON DUPLICATE KEY
     UPDATE
         ShiftID = shiftRowID,
-        RestDay = 0,
+        RestDay = isRestDay,
         LastUpdBy = CreatedLastUpdBy,
-        LastUpd=CURRENT_TIMESTAMP();
+        LastUpd = CURRENT_TIMESTAMP();
 
 END IF;
-
-
-
-
 
 END//
 DELIMITER ;
