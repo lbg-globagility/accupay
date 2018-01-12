@@ -823,7 +823,13 @@ ELSEIF isRegularDay THEN
         SET lateAmount = lateHours * hourlyRate;
         SET undertimeAmount = undertimeHours * hourlyRate;
     ELSEIF isRestDay THEN
-        SET restDayAmount = (regularHours * hourlyRate) * restday_rate;
+
+        IF e_EmpType = 'Monthly' THEN
+            SET restDayAmount = (regularHours * hourlyRate) * (restday_rate - 1);
+        ELSEIF e_EmpType = 'Daily' THEN
+            SET restDayAmount = (regularHours * hourlyRate) * restday_rate;
+        END IF;
+        
         SET overtimeAmount = (overtimeHours * hourlyRate) * restdayot_rate;
 
         SET lateHours = 0.0;
