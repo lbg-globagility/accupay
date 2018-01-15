@@ -671,6 +671,11 @@ IF isRestDay AND (regularHours > workingHours) THEN
     SET overtimeHours = @excessHours;
 END IF;
 
+IF isDefaultRestDay AND (NOT hasWorked) THEN
+    SET employeeShiftID = NULL;
+    SET hasShift = FALSE;
+END IF;
+
 IF hasLeave THEN
     IF hasBreaktime THEN
         IF leaveStart < breaktimeStart THEN
@@ -739,6 +744,20 @@ END IF;
 
 SET absentAmount = absentHours * hourlyRate;
 
+SET regularHours = IFNULL(regularHours, 0);
+SET overtimeHours = GetOvertimeHours(ete_OrganizID, ete_EmpRowID, ete_Date);
+SET nightDiffHours = IFNULL(nightDiffHours, 0);
+SET nightDiffOTHours = IFNULL(nightDiffOTHours, 0);
+SET lateHours = IFNULL(lateHours, 0);
+SET undertimeHours = IFNULL(undertimeHours, 0);
+
+SET basicDayPay = regularHours * hourlyRate;
+SET isWorkingDay = NOT isRestDay;
+
+IF hasLeave AND isWorkingDay THEN
+    SET leavePay = IFNULL(leaveHours * hourlyRate, 0);
+END IF;
+
 SELECT RowID
 FROM employeetimeentry
 WHERE EmployeeID = ete_EmpRowID AND
@@ -756,20 +775,6 @@ WHERE EmployeeID = ete_EmpRowID AND
 ORDER BY DATEDIFF(DATE_FORMAT(ete_Date,'%Y-%m-%d'),EffectiveDateFrom)
 LIMIT 1
 INTO esalRowID;
-
-SET regularHours = IFNULL(regularHours, 0);
-SET overtimeHours = GetOvertimeHours(ete_OrganizID, ete_EmpRowID, ete_Date);
-SET nightDiffHours = IFNULL(nightDiffHours, 0);
-SET nightDiffOTHours = IFNULL(nightDiffOTHours, 0);
-SET lateHours = IFNULL(lateHours, 0);
-SET undertimeHours = IFNULL(undertimeHours, 0);
-
-SET basicDayPay = regularHours * hourlyRate;
-SET isWorkingDay = NOT isRestDay;
-
-IF hasLeave AND isWorkingDay THEN
-    SET leavePay = IFNULL(leaveHours * hourlyRate, 0);
-END IF;
 
 -- b. If current day is before employment hiring date.
 IF ete_Date < e_StartDate THEN

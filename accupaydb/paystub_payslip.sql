@@ -73,7 +73,7 @@ SELECT
     IFNULL(ete.HolidayPayAmount, 0) AS `COL17`,
     (ps.TotalAllowance - IFNULL(psiECOLA.PayAmount, 0)) AS `COL18`,
     ps.TotalAdjustments `COL19`,
-    ps.TotalGrossSalary AS `COL20`,
+    (ps.TotalGrossSalary + ps.TotalAdjustments) AS `COL20`,
     ps.TotalEmpSSS AS `COL21`,
     ps.TotalEmpPhilhealth AS `COL22`,
     ps.TotalEmpHDMF AS `COL23`,
@@ -94,7 +94,7 @@ SELECT
     adjustments.PayAmounts AS `COL38`,
     (IFNULL(ete.VacationLeaveHours,0) + IFNULL(ete.SickLeaveHours,0) + IFNULL(ete.MaternityLeaveHours,0) + IFNULL(ete.OtherLeaveHours,0)) AS `COL40`,
     IFNULL(ete.Leavepayment,0) AS `COL41`,
-    IFNULL(psiHoli.PayAmount,0) AS `COL42`,
+    IFNULL(ps.HolidayPay,0) AS `COL42`,
     IFNULL(psiECOLA.PayAmount,0) AS `COL43`,
     psiLeave.`Names` AS `COL44`,
     psiLeave.Availed AS `COl45`,
@@ -110,6 +110,7 @@ FROM (
             TimeEntryID,
             PayFromDate,
             PayToDate,
+            HolidayPay,
             TotalGrossSalary,
             TotalNetSalary,
             TotalTaxableSalary,
@@ -139,6 +140,7 @@ FROM (
             TimeEntryID,
             PayFromDate,
             PayToDate,
+            HolidayPay,
             TotalGrossSalary,
             TotalNetSalary,
             TotalTaxableSalary,
@@ -196,16 +198,17 @@ LEFT JOIN (
         SUM(i.TaxableDailyBonus) AS TaxableDailyBonus,
         SUM(i.NonTaxableDailyBonus) AS NonTaxableDailyBonus,
         SUM(i.Leavepayment) AS Leavepayment,
-        
-		  # SUM(sh.DivisorToDailyRate) AS TotalExpectedHours,
         SUM(
-            IF((TIMESTAMPDIFF(SECOND ,CONCAT_DATETIME(i.`Date`, sh.TimeFrom), CONCAT_DATETIME(ADDDATE(i.`Date`, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo)) / sec_per_hour)
-				   > (i.RegularHoursWorked + (i.HoursLate + i.UndertimeHours))
-				   
-				   , (i.RegularHoursWorked + (i.HoursLate + i.UndertimeHours))
-					, sh.DivisorToDailyRate)
-		      ) `TotalExpectedHours`,
-		  
+            IF(
+                (
+                    (pyr.PayType = 'Regular Holiday') OR
+                    (pyr.PayType = 'Special Non-Working Holiday') OR
+                    (i.Leavepayment > 0)
+                ),
+                0,
+                sh.DivisorToDailyRate
+            )
+		) `TotalExpectedHours`,
         SUM(IF(i.Absent > 0, sh.DivisorToDailyRate, 0)) AS AbsentHours
     FROM (
             SELECT
@@ -292,6 +295,9 @@ LEFT JOIN (
     ON es.RowID = i.EmployeeShiftID
     INNER JOIN shift sh
     ON sh.RowID = es.ShiftID
+    INNER JOIN payrate pyr
+    ON pyr.Date = i.Date AND
+        pyr.OrganizationID = OrganizID
     GROUP BY i.EmployeeID
 ) ete
 ON ete.RowID IS NOT NULL AND
@@ -367,20 +373,6 @@ LEFT JOIN (
     GROUP BY psi.PayStubID
 ) psiLeave
 ON psiLeave.PayStubID = ps.RowID
-LEFT JOIN (
-    SELECT
-        psi.*,
-        p.PartNo AS ItemName
-    FROM paystubitem psi
-    INNER JOIN product p
-    ON p.RowID=psi.ProductID AND
-        p.OrganizationID=psi.OrganizationID AND
-        p.PartNo='Holiday pay'
-    WHERE psi.Undeclared=IsActualFlag AND
-        psi.OrganizationID=OrganizID AND
-        psi.PayAmount != 0
-) psiHoli
-ON psiHoli.PayStubID=ps.RowID
 LEFT JOIN (
     SELECT
         psi.*,
