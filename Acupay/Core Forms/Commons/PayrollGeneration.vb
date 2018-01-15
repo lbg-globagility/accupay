@@ -306,6 +306,7 @@ Public Class PayrollGeneration
         _philHealthBrackets = resources.PhilHealthBrackets
 
         _listOfValues = resources.ListOfValues
+        _previousPaystubs = resources.PreviousPaystubs
         _settings = New ListOfValueCollection(_listOfValues)
     End Sub
 
@@ -398,7 +399,7 @@ Public Class PayrollGeneration
             _hdmfDeductionSchedule = employee("HDMFDeductSched").ToString
             _withholdingTaxSchedule = employee("WTaxDeductSched").ToString
 
-            _payStub.EmployeeID = Trim(CStr(employee("RowID")))
+            _payStub.EmployeeID = Integer.Parse(employee("RowID"))
 
             Dim salary = _allSalaries.Select($"EmployeeID = '{_payStub.EmployeeID}'").FirstOrDefault()
 
@@ -494,11 +495,11 @@ Public Class PayrollGeneration
                     Dim sel_dtemployeefirsttimesalary = _employeeFirstTimeSalary.Select($"EmployeeID = '{_payStub.EmployeeID}'")
                     Dim employmentType = StrConv(employee("EmployeeType").ToString, VbStrConv.ProperCase)
 
-                    Dim previousPaystub = _previousPaystubs.
-                        Where(Function(p) p.EmployeeID = _payStub.EmployeeID).
+                    Dim previousPaystub = _previousPaystubs?.
+                        Where(Function(p) Nullable.Equals(p.EmployeeID, _payStub.EmployeeID)).
                         FirstOrDefault()
 
-                    Dim taxableIncome = 0D
+                    Dim currentTaxableIncome = 0D
                     If employmentType = SalaryType.Fixed Then
 
                         _payStub.WorkPay = basicPay + (_payStub.HolidayPay + _payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay)
@@ -509,7 +510,7 @@ Public Class PayrollGeneration
 
                         grossIncomeLastPayPeriod = basicPay + previousOvertimePay + previousNightDiffPay + previousNightDiffOTPay
 
-                        taxableIncome = basicPay
+                        currentTaxableIncome = basicPay
 
                     ElseIf employmentType = SalaryType.Monthly Then
 
@@ -523,9 +524,9 @@ Public Class PayrollGeneration
                             Dim taxablePolicy = If(_settings.GetValue("Payroll Policy", "paystub.taxableincome"), "Basic Pay")
 
                             If taxablePolicy = "Gross Income" Then
-                                taxableIncome = _payStub.WorkPay
+                                currentTaxableIncome = _payStub.WorkPay
                             Else
-                                taxableIncome = basicPay
+                                currentTaxableIncome = basicPay
                             End If
                         End If
 
@@ -539,11 +540,14 @@ Public Class PayrollGeneration
                     CalculateHdmf(salary)
 
                     governmentContributions = _payStub.TotalEmpSSS + _payStub.TotalEmpPhilHealth + _payStub.TotalEmpHDMF
+                    currentTaxableIncome = currentTaxableIncome - governmentContributions
+
+                    _payStub.TotalTaxableSalary = currentTaxableIncome
 
                     If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
-                        _payStub.TotalTaxableSalary = taxableIncome - governmentContributions + previousPaystub.TaxableIncome
+                        _payStub.TotalTaxableSalary = currentTaxableIncome + If(previousPaystub?.TaxableIncome, 0D)
                     ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
-                        _payStub.TotalTaxableSalary = taxableIncome - governmentContributions
+                        _payStub.TotalTaxableSalary = currentTaxableIncome
                     End If
 
                     CalculateWithholdingTax()
@@ -744,19 +748,19 @@ Public Class PayrollGeneration
         Dim noTaxSemiMonthlyBonuses = allNoTaxSemiMonthlyBonuses.Select($"EmployeeID = '{_payStub.EmployeeID}'")
         Dim noTaxMonthlyBonuses = allNoTaxMonthlyBonuses.Select($"EmployeeID = '{_payStub.EmployeeID}'")
         Dim workDaysPerYear = CInt(_employee("WorkDaysPerYear"))
-        Dim divisorMonthlys = If(
-                CInt(_employee("PayFrequencyID")) = 1,
-                2,
-                If(
-                    CInt(_employee("PayFrequencyID")) = 2,
-                    1,
-                    If(
-                        CInt(_employee("PayFrequencyID")) = 3,
-                        CInt(New MySQLExecuteQuery("SELECT COUNT(RowID) FROM employeetimeentry WHERE EmployeeID='" & _payStub.EmployeeID & "' AND Date BETWEEN '" & PayrollDateFrom & "' AND '" & PayrollDateTo & "' AND IFNULL(TotalDayPay,0)!=0 AND OrganizationID='" & orgztnID & "';").Result),
-                        numberofweeksthismonth
-                    )
-                )
-            )
+        'Dim divisorMonthlys = If(
+        '        CInt(_employee("PayFrequencyID")) = 1,
+        '        2,
+        '        If(
+        '            CInt(_employee("PayFrequencyID")) = 2,
+        '            1,
+        '            If(
+        '                CInt(_employee("PayFrequencyID")) = 3,
+        '                CInt(New MySQLExecuteQuery("SELECT COUNT(RowID) FROM employeetimeentry WHERE EmployeeID='" & _payStub.EmployeeID & "' AND Date BETWEEN '" & PayrollDateFrom & "' AND '" & PayrollDateTo & "' AND IFNULL(TotalDayPay,0)!=0 AND OrganizationID='" & orgztnID & "';").Result),
+        '                numberofweeksthismonth
+        '            )
+        '        )
+        '    )
 
         Dim totalTaxableBonus = 0D
 
@@ -809,8 +813,7 @@ Public Class PayrollGeneration
             valoncenotax_bon +
             valdaynotax_bon +
             valweeknotax_bon +
-            valsemimnotax_bon +
-            (valmonthnotax_bon / divisorMonthlys)
+            valsemimnotax_bon
         )
 
         _payStub.TotalBonus = totalTaxableBonus + totalNoTaxBonus
@@ -949,7 +952,7 @@ Public Class PayrollGeneration
             _payStub.TotalTaxableSalary = 0D
         End If
 
-        If _payStub.TotalTaxableSalary > 0D Then
+        If _payStub.TotalTaxableSalary > 0D And IsScheduledForTaxation() Then
             Dim maritalStatus = _employee("MaritalStatus").ToString
             Dim noOfDependents = _employee("NoOfDependents").ToString
 
@@ -993,6 +996,12 @@ Public Class PayrollGeneration
 
     Private Function IsWithholdingTaxPaidPerPayPeriod() As Boolean
         Return _withholdingTaxSchedule = ContributionSchedule.PerPayPeriod
+    End Function
+
+    Private Function IsScheduledForTaxation() As Boolean
+        Return (_isFirstHalf And IsWithholdingTaxPaidOnFirstHalf()) Or
+            (_isEndOfMonth And IsWithholdingTaxPaidOnEndOfTheMonth()) Or
+            IsWithholdingTaxPaidPerPayPeriod()
     End Function
 
     Private Function IsFirstPayperiodOfTheYear() As Boolean
