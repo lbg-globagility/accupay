@@ -390,7 +390,7 @@ ON psiECOLA.PayStubID=ps.RowID
 LEFT JOIN (
     SELECT
         REPLACE(GROUP_CONCAT(IFNULL(adjustment.ItemName, '')), ',', '\n') `Names`,
-        REPLACE(GROUP_CONCAT(IFNULL(adjustment.PayAmount, '')), ',', '\n') `PayAmounts`,
+        REPLACE(GROUP_CONCAT(IFNULL(ROUND(adjustment.PayAmount, 2), '')), ',', '\n') `PayAmounts`,
         adjustment.PayStubID
     FROM (
             SELECT
