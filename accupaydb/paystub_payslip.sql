@@ -42,7 +42,14 @@ SELECT
             ete.TotalExpectedHours
         ), 2)
     ) `COL71`,
-    ete.AbsentHours `COL72`,
+    IFNULL(ete.AbsentHours +
+        IF(
+            e.EmployeeType = 'Monthly',
+            (IFNULL(ete.VacationLeaveHours, 0) + IFNULL(ete.SickLeaveHours, 0) + IFNULL(ete.MaternityLeaveHours, 0) + IFNULL(ete.OtherLeaveHours, 0)),
+            0
+        ),
+        0
+    ) `COL72`,
     IF(IsActualFlag = 1, es.TrueSalary, es.Salary) `COL80`,
     0 AS `COL2`,
     ROUND(
@@ -58,7 +65,7 @@ SELECT
         2
     ) AS `COL3`,
     IFNULL(ete.UndertimeHours, 0) AS `COL4`,
-    IFNULL(ete.Absent, 0) AS `COL5`,
+    IFNULL(ete.Absent + IF(e.EmployeeType = 'Monthly', ete.Leavepayment, 0), 0) AS `COL5`,
     IFNULL(ete.HoursLate, 0) AS `COL6`,
     IFNULL(ete.HoursLateAmount, 0) AS `COL7`,
     IFNULL(ete.UndertimeHours, 0) AS `COL8`,
