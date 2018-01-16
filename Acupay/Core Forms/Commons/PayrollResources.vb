@@ -34,6 +34,8 @@ Public Class PayrollResources
 
     Private _philHealthBrackets As ICollection(Of PhilHealthBracket)
 
+    Private _withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket)
+
     Private _listOfValues As ICollection(Of ListOfValue)
 
     Private _paystubs As IEnumerable(Of Paystub)
@@ -108,6 +110,12 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property WithholdingTaxBrackets As ICollection(Of WithholdingTaxBracket)
+        Get
+            Return _withholdingTaxBrackets
+        End Get
+    End Property
+
     Public ReadOnly Property ListOfValues As ICollection(Of ListOfValue)
         Get
             Return _listOfValues
@@ -137,6 +145,7 @@ Public Class PayrollResources
             LoadFixedNonTaxableMonthlyAllowancesTask(),
             LoadSocialSecurityBrackets(),
             LoadPhilHealthBrackets(),
+            LoadWithholdingTaxBrackets(),
             LoadSettings()
         })
     End Function
@@ -350,6 +359,14 @@ Public Class PayrollResources
             Dim query = From p In context.PhilHealthBrackets
 
             _philHealthBrackets = Await query.ToListAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadWithholdingTaxBrackets() As Task
+        Using context = New PayrollContext()
+            Dim query = From w In context.WithholdingTaxBrackets
+
+            _withholdingTaxBrackets = Await query.ToListAsync()
         End Using
     End Function
 
