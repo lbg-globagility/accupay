@@ -70,4 +70,11 @@ Public Class PayrollContextTest
         Assert.IsInstanceOf(Of TimeEntry)(timeEntry)
     End Sub
 
+    <Test>
+    Public Sub Should_Retrieve_WithholdingTaxBracket()
+        Dim withholdingTaxBracket = _context.WithholdingTaxBrackets.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of WithholdingTaxBracket)(withholdingTaxBracket)
+    End Sub
+
 End Class

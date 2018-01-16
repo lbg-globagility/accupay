@@ -27,6 +27,8 @@ Public Class PayrollContext
 
     Public Overridable Property PhilHealthBrackets As DbSet(Of PhilHealthBracket)
 
+    Public Overridable Property WithholdingTaxBrackets As DbSet(Of WithholdingTaxBracket)
+
     Public Overridable Property LoanSchedules As DbSet(Of LoanSchedule)
 
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)

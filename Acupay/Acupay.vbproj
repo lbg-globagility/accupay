@@ -295,6 +295,7 @@
     </Compile>
     <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
     <Compile Include="Core Forms\Government\SocialSecurityBracket.vb" />
+    <Compile Include="Core Forms\Government\WithholdingTaxBracket.vb" />
     <Compile Include="Core Forms\Independent filing\LeaveForm.designer.vb">
       <DependentUpon>LeaveForm.vb</DependentUpon>
     </Compile>
