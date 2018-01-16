@@ -52,6 +52,20 @@ INTO startdate_ofpreviousmonth
 SELECT
 psa.RowID
 ,psa.PayPeriodID
+    ,pstb.RegularHours,
+    psa.RegularPay,
+    pstb.OvertimeHours,
+    psa.OvertimePay,
+    pstb.NightDiffHours,
+    psa.NightDiffPay,
+    pstb.NightDiffOvertimeHours,
+    psa.NightDiffOvertimePay,
+    pstb.RestDayHours,
+    psa.RestDayPay,
+    pstb.LateHours,
+    psa.LateDeduction,
+    pstb.UndertimeHours,
+    psa.UndertimeDeduction
 ,psa.TotalGrossSalary
 ,psa.TotalNetSalary
 ,psa.TotalTaxableSalary
@@ -100,6 +114,7 @@ psa.RowID
 ,SUM(IFNULL(ete.Leavepayment,0)) `PaidLeaveAmount`
 ,thirteenthmonthpay.Amount AS 'ThirteenthMonthPay'
 FROM paystubactual psa
+INNER JOIN paystub pstb ON pstb.OrganizationID=psa.OrganizationID AND pstb.EmployeeID=psa.EmployeeID AND pstb.PayPeriodID=psa.PayPeriodID
 INNER JOIN employee e ON e.RowID=psa.EmployeeID AND e.OrganizationID=psa.OrganizationID
 INNER JOIN payfrequency pf ON pf.RowID=e.PayFrequencyID
 INNER JOIN employeesalary es ON es.EmployeeID=psa.EmployeeID AND es.OrganizationID=psa.OrganizationID AND (es.EffectiveDateFrom >= psa.PayFromDate OR IFNULL(es.EffectiveDateTo,CURDATE()) >= psa.PayFromDate) AND (es.EffectiveDateFrom <= psa.PayToDate OR IFNULL(es.EffectiveDateTo,CURDATE()) <= psa.PayToDate)
