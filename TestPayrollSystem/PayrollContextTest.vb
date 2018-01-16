@@ -77,4 +77,11 @@ Public Class PayrollContextTest
         Assert.IsInstanceOf(Of WithholdingTaxBracket)(withholdingTaxBracket)
     End Sub
 
+    <Test>
+    Public Sub Should_Retrieve_PayPeriod()
+        Dim payPeriod = _context.PayPeriods.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of PayPeriod)(payPeriod)
+    End Sub
+
 End Class

@@ -172,6 +172,9 @@ Public Class PayrollGeneration
     Private form_caller As Form
 
     Private payPeriod As DataRow
+
+    Private _payPeriod As PayPeriod
+
     Private annualUnusedLeaves As DataTable
     Private unusedLeaveProductID As String
     Private existingUnusedLeaveAdjustments As DataTable
@@ -206,6 +209,8 @@ Public Class PayrollGeneration
     Private _socialSecurityBrackets As IEnumerable(Of SocialSecurityBracket)
 
     Private _philHealthBrackets As IEnumerable(Of PhilHealthBracket)
+
+    Private _withholdingTaxBrackets As IEnumerable(Of WithholdingTaxBracket)
 
     Private _listOfValues As IList(Of ListOfValue)
 
@@ -304,10 +309,12 @@ Public Class PayrollGeneration
         _isEndOfMonth = (payPeriodHalfNo = "0")
         _socialSecurityBrackets = resources.SocialSecurityBrackets
         _philHealthBrackets = resources.PhilHealthBrackets
+        _withholdingTaxBrackets = resources.WithholdingTaxBrackets
 
         _listOfValues = resources.ListOfValues
         _previousPaystubs = resources.PreviousPaystubs
         _settings = New ListOfValueCollection(_listOfValues)
+        _payPeriod = resources.PayPeriod
     End Sub
 
     Sub PayrollGeneration_BackgroundWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs)
@@ -952,39 +959,65 @@ Public Class PayrollGeneration
             _payStub.TotalTaxableSalary = 0D
         End If
 
-        If _payStub.TotalTaxableSalary > 0D And IsScheduledForTaxation() Then
-            Dim maritalStatus = _employee("MaritalStatus").ToString
-            Dim noOfDependents = _employee("NoOfDependents").ToString
-
-            Dim filingStatus = _filingStatuses _
-                .Select($"
-                    MaritalStatus = '{maritalStatus}' AND
-                    Dependent <= '{noOfDependents}'
-                ") _
-                .OrderByDescending(Function(f) CInt(f("Dependent"))) _
-                .FirstOrDefault()
-
-            Dim filingStatusID = 1
-            If filingStatus IsNot Nothing Then
-                filingStatusID = CInt(filingStatus("RowID"))
-            End If
-
-            Dim withholdingTaxBracket = _withholdingTaxTable.Select($"
-                    FilingStatusID = '{filingStatusID}' AND
-                    PayFrequencyID = '{payFrequencyID}' AND
-                    TaxableIncomeFromAmount <= {_payStub.TotalTaxableSalary} AND {_payStub.TotalTaxableSalary} <= TaxableIncomeToAmount
-                ") _
-                .FirstOrDefault()
-
-            If withholdingTaxBracket IsNot Nothing Then
-                Dim exemptionAmount = ValNoComma(withholdingTaxBracket("ExemptionAmount"))
-                Dim taxableIncomeFromAmount = ValNoComma(withholdingTaxBracket("TaxableIncomeFromAmount"))
-                Dim exemptionInExcessAmount = ValNoComma(withholdingTaxBracket("ExemptionInExcessAmount"))
-
-                _payStub.WithholdingTaxAmount = exemptionAmount + ((_payStub.TotalTaxableSalary - taxableIncomeFromAmount) * exemptionInExcessAmount)
-            End If
+        If Not (_payStub.TotalTaxableSalary > 0D And IsScheduledForTaxation()) Then
+            Return
         End If
+
+        Dim maritalStatus = _employee("MaritalStatus").ToString()
+        Dim noOfDependents = _employee("NoOfDependents").ToString()
+
+        Dim filingStatus = _filingStatuses.
+            Select($"
+                MaritalStatus = '{maritalStatus}' AND
+                Dependent <= '{noOfDependents}'
+            ").
+            OrderByDescending(Function(f) CInt(f("Dependent"))).
+            FirstOrDefault()
+
+        Dim filingStatusID = 1
+        If filingStatus IsNot Nothing Then
+            filingStatusID = CInt(filingStatus("RowID"))
+        End If
+
+        Dim bracket = GetMatchingTaxBracket(payFrequencyID, filingStatusID)
+
+        If bracket Is Nothing Then
+            Return
+        End If
+
+        Dim exemptionAmount = bracket.ExemptionAmount
+        Dim taxableIncomeFromAmount = bracket.TaxableIncomeFromAmount
+        Dim exemptionInExcessAmount = bracket.ExemptionInExcessAmount
+
+        Dim excessAmount = _payStub.TotalTaxableSalary - taxableIncomeFromAmount
+        _payStub.WithholdingTaxAmount = exemptionAmount + (excessAmount * exemptionInExcessAmount)
     End Sub
+
+    Private Function GetMatchingTaxBracket(payFrequencyID As Integer?, filingStatusID As Integer?) As WithholdingTaxBracket
+        Dim taxEffectivityDate = New Date(_payPeriod.Year, _payPeriod.Month, 1)
+
+        Dim possibleBrackets =
+            (From w In _withholdingTaxBrackets
+             Where w.PayFrequencyID = payFrequencyID And
+                 w.TaxableIncomeFromAmount <= _payStub.TotalTaxableSalary And
+                 _payStub.TotalTaxableSalary <= w.TaxableIncomeToAmount And
+                 w.EffectiveDateFrom <= taxEffectivityDate And
+                 taxEffectivityDate <= w.EffectiveDateTo
+             Select w).
+             ToList()
+
+        ' If there are more than one tax brackets that matches the previous list, filter by
+        ' the tax filing status.
+        If possibleBrackets.Count > 1 Then
+            Return possibleBrackets.
+                Where(Function(b) Nullable.Equals(b.FilingStatusID, filingStatusID)).
+                FirstOrDefault()
+        ElseIf possibleBrackets.Count = 1 Then
+            Return possibleBrackets.First()
+        End If
+
+        Return Nothing
+    End Function
 
     Private Function IsWithholdingTaxPaidOnFirstHalf() As Boolean
         Return _isFirstHalf And (_withholdingTaxSchedule = ContributionSchedule.FirstHalf)

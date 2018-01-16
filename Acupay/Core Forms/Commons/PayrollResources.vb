@@ -10,7 +10,7 @@ Imports PayrollSys
 ''' </summary>
 Public Class PayrollResources
 
-    Private _payPeriodID As String
+    Private _payPeriodID As Integer?
 
     Private _payDateFrom As Date
 
@@ -43,6 +43,8 @@ Public Class PayrollResources
     Private _previousPaystubs As IEnumerable(Of Paystub)
 
     Private _isEndOfMonth As Boolean
+
+    Private _payPeriod As PayPeriod
 
     Public ReadOnly Property TimeEntries As DataTable
         Get
@@ -122,8 +124,14 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property PayPeriod As PayPeriod
+        Get
+            Return _payPeriod
+        End Get
+    End Property
+
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
-        _payPeriodID = payPeriodID
+        _payPeriodID = Integer.Parse(payPeriodID)
         _payDateFrom = payDateFrom
         _payDateTo = payDateTo
     End Sub
@@ -146,7 +154,8 @@ Public Class PayrollResources
             LoadSocialSecurityBrackets(),
             LoadPhilHealthBrackets(),
             LoadWithholdingTaxBrackets(),
-            LoadSettings()
+            LoadSettings(),
+            LoadPayPeriod()
         })
     End Function
 
@@ -375,6 +384,15 @@ Public Class PayrollResources
             Dim query = From s In context.ListOfValues
 
             _listOfValues = Await query.ToListAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadPayPeriod() As Task
+        Using context = New PayrollContext()
+            Dim query = From p In context.PayPeriods
+                        Where p.RowID = _payPeriodID
+
+            _payPeriod = Await query.FirstOrDefaultAsync()
         End Using
     End Function
 
