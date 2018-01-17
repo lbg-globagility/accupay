@@ -196,11 +196,17 @@ Public Class PayrollGeneration
 
     Private numberofweeksthismonth As Integer
 
-    Private _vacationLeaveBalanceAmount As Integer
+    Private _vacationLeaveBalance As Decimal
 
-    Private _sickLeaveBalanceAmount As Integer
+    Private _sickLeaveBalance As Decimal
 
-    Private _sickLeaveHours As Integer
+    Private _otherLeaveBalance As Decimal
+
+    Private _sickLeaveUsed As Decimal
+
+    Private _vacationLeaveUsed As Decimal
+
+    Private _otherLeaveUsed As Decimal
 
     Private _paystubs As IEnumerable(Of AccuPay.Entity.Paystub)
 
@@ -494,8 +500,13 @@ Public Class PayrollGeneration
                     _payStub.UndertimeHours = ValNoComma(timeEntrySummary("UndertimeHours"))
                     _payStub.UndertimeDeduction = ValNoComma(timeEntrySummary("UndertimeHoursAmount"))
 
-                    _vacationLeaveBalanceAmount = _employee("LeaveBalance")
-                    _sickLeaveBalanceAmount = _employee("SickLeaveBalance")
+                    _vacationLeaveBalance = CDec(_employee("LeaveBalance"))
+                    _sickLeaveBalance = CDec(_employee("SickLeaveBalance"))
+                    _otherLeaveBalance = CDec(_employee("OtherLeaveBalance"))
+
+                    _vacationLeaveUsed = CDec(timeEntrySummary("VacationLeaveHours"))
+                    _sickLeaveUsed = CDec(timeEntrySummary("SickLeaveHours"))
+                    _otherLeaveUsed = CDec(timeEntrySummary("OtherLeaveHours"))
 
                     _payStub.AbsenceDeduction = ValNoComma(timeEntrySummary("Absent"))
 
@@ -641,11 +652,13 @@ Public Class PayrollGeneration
                     FirstOrDefault()
 
                 If vacationLeaveBalance Is Nothing Then
+                    Dim newBalance = _vacationLeaveBalance - _vacationLeaveUsed
+
                     vacationLeaveBalance = New PaystubItem() With {
                         .OrganizationID = z_OrganizationID,
                         .Created = Date.Now,
                         .ProductID = vacationLeaveProduct?.RowID,
-                        .PayAmount = _vacationLeaveBalanceAmount,
+                        .PayAmount = newBalance,
                         .PayStubID = _payStub.RowID
                     }
 
@@ -659,11 +672,13 @@ Public Class PayrollGeneration
                     FirstOrDefault()
 
                 If sickLeaveBalance Is Nothing Then
+                    Dim newBalance = _sickLeaveBalance - _sickLeaveUsed
+
                     sickLeaveBalance = New PaystubItem() With {
                         .OrganizationID = z_OrganizationID,
                         .Created = Date.Now,
                         .ProductID = sickLeaveProduct?.RowID,
-                        .PayAmount = _sickLeaveBalanceAmount,
+                        .PayAmount = newBalance,
                         .PayStubID = _payStub.RowID
                     }
 

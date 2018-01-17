@@ -184,31 +184,13 @@ Public Class PayrollResources
                 SUM(COALESCE(ete.Absent, 0)) AS 'Absent',
                 SUM(COALESCE(ete.VacationLeaveHours, 0)) AS 'VacationLeaveHours', 
                 SUM(COALESCE(ete.SickLeaveHours, 0)) As 'SickLeaveHours',
-                IFNULL(emt.emtAmount,0) AS emtAmount
+                SUM(COALESCE(ete.OtherLeaveHours, 0)) AS 'OtherLeaveHours'
             FROM employeetimeentry ete
             LEFT JOIN employee e
             ON e.RowID = ete.EmployeeID
             LEFT JOIN payrate pr
             ON pr.RowID = ete.PayRateID AND
                 pr.OrganizationID = ete.OrganizationID
-            LEFT JOIN (
-                SELECT
-                    ete.RowID,
-                    e.RowID AS eRowID,
-                    (SUM(ete.RegularHoursAmount) * (pr.`PayRate` - 1.0)) AS emtAmount
-                FROM employeetimeentry ete
-                INNER JOIN employee e
-                ON e.RowID = ete.EmployeeID AND
-                    e.OrganizationID = ete.OrganizationID AND
-                    (e.CalcSpecialHoliday = '1' OR e.CalcHoliday = '1')
-                INNER JOIN payrate pr
-                ON pr.RowID = ete.PayRateID AND
-                    pr.PayType != 'Regular Day'
-                WHERE ete.OrganizationID='@OrganizationID' AND
-                    ete.`Date` BETWEEN '@DateFrom' AND '@DateTo'
-            ) emt
-            ON emt.RowID IS NOT NULL AND
-                emt.eRowID = ete.EmployeeID
             WHERE ete.OrganizationID='@OrganizationID' AND
                 ete.Date BETWEEN IF('@DateFrom' < e.StartDate, e.StartDate, '@DateFrom') AND '@DateTo'
             GROUP BY ete.EmployeeID
