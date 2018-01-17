@@ -5,11 +5,16 @@ Imports AccuPay.Entity
 
 Public Class NewPayStubForm
 
-    Private _dateFrom As Date = New Date(2017, 7, 11)
-    Private _dateTo As Date = New Date(2017, 7, 25)
+    Private _dateFrom As Date = New Date(2017, 12, 21)
+    Private _dateTo As Date = New Date(2018, 1, 5)
+
+    Public Sub New()
+        InitializeComponent()
+        txtRegularHours.AutoSize = False
+    End Sub
 
     Public Sub NewPayStubForm_Load() Handles Me.Load
-        PayStubDataGridView.AutoGenerateColumns = False
+        dgvPaystubs.AutoGenerateColumns = False
 
         Using context = New PayrollContext()
             Dim payStubs = context.Paystubs.
@@ -23,14 +28,14 @@ Public Class NewPayStubForm
 
             Dim paystubModels = payStubs.Select(Function(p) New PayStubModel(p)).ToList()
 
-            PayStubDataGridView.DataSource = paystubModels
+            dgvPaystubs.DataSource = paystubModels
         End Using
     End Sub
 
-    Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles PayStubDataGridView.CellFormatting
-        Dim column As DataGridViewColumn = PayStubDataGridView.Columns(e.ColumnIndex)
+    Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvPaystubs.CellFormatting
+        Dim column As DataGridViewColumn = dgvPaystubs.Columns(e.ColumnIndex)
         If (column.DataPropertyName.Contains(".")) Then
-            Dim data As Object = PayStubDataGridView.Rows(e.RowIndex).DataBoundItem
+            Dim data As Object = dgvPaystubs.Rows(e.RowIndex).DataBoundItem
             Dim properties As String() = column.DataPropertyName.Split("."c)
 
             Dim i As Integer = 0
@@ -39,8 +44,45 @@ Public Class NewPayStubForm
                 i += 1
             End While
 
-            PayStubDataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = data
+            dgvPaystubs.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = data
         End If
+    End Sub
+
+    Private Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged
+        Dim paystubModel = DirectCast(dgvPaystubs.CurrentRow.DataBoundItem, PayStubModel)
+
+        If paystubModel Is Nothing Then
+            Return
+        End If
+
+        Dim paystub = paystubModel.Paystub
+
+        txtRegularHours.Text = CStr(paystub.RegularHours)
+        txtRegularPay.Text = CStr(paystub.RegularPay)
+
+        txtOvertimeHours.Text = CStr(paystub.OvertimeHours)
+        txtOvertimePay.Text = CStr(paystub.OvertimePay)
+
+        txtNightDiffHours.Text = CStr(paystub.NightDiffHours)
+        txtNightDiffPay.Text = CStr(paystub.NightDiffPay)
+
+        txtNightDiffOTHours.Text = CStr(paystub.NightDiffOvertimeHours)
+        txtNightDiffOTPay.Text = CStr(paystub.NightDiffOvertimePay)
+
+        txtRestDayHours.Text = CStr(paystub.RestDayHours)
+        txtRestDayPay.Text = CStr(paystub.RestDayPay)
+
+        txtLeavePay.Text = CStr(paystub.LeavePay)
+        txtHolidayPay.Text = CStr(paystub.HolidayPay)
+        txtTotalPay.Text = CStr(paystub.WorkPay)
+
+        txtLateHours.Text = CStr(paystub.LateHours)
+        txtLateAmount.Text = CStr(paystub.LateDeduction)
+
+        txtUndertimeHours.Text = CStr(paystub.UndertimeHours)
+        txtUndertimeAmount.Text = CStr(paystub.UndertimeDeduction)
+
+        txtAbsentDeduction.Text = CStr(paystub.AbsenceDeduction)
     End Sub
 
     Private Class PayStubModel
