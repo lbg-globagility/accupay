@@ -80,7 +80,7 @@ Namespace Global.AccuPay.Entity
         Public Property UndertimeDeduction As Decimal
 
         <Column("Absent")>
-        Public Property AbsenceDeduction As Decimal
+        Public Property AbsentDeduction As Decimal
 
         <Column("BasicDayPay")>
         Public Property BasicDayPay As Decimal

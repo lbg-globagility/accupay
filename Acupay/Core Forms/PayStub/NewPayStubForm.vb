@@ -8,12 +8,8 @@ Public Class NewPayStubForm
     Private _dateFrom As Date = New Date(2017, 12, 21)
     Private _dateTo As Date = New Date(2018, 1, 5)
 
-    Public Sub New()
-        InitializeComponent()
-        txtRegularHours.AutoSize = False
-    End Sub
-
     Public Sub NewPayStubForm_Load() Handles Me.Load
+        dgvTimeEntries.AutoGenerateColumns = False
         dgvPaystubs.AutoGenerateColumns = False
 
         Using context = New PayrollContext()
@@ -57,33 +53,52 @@ Public Class NewPayStubForm
 
         Dim paystub = paystubModel.Paystub
 
-        txtRegularHours.Text = CStr(paystub.RegularHours)
-        txtRegularPay.Text = CStr(paystub.RegularPay)
+        Dim timeEntries As IList(Of TimeEntry) = Nothing
+        Using context = New PayrollContext()
+            Dim query = context.TimeEntries.
+                Where(Function(t) _dateFrom <= t.EntryDate And t.EntryDate <= _dateTo).
+                Where(Function(t) Nullable.Equals(t.EmployeeID, paystub.EmployeeID))
 
-        txtOvertimeHours.Text = CStr(paystub.OvertimeHours)
-        txtOvertimePay.Text = CStr(paystub.OvertimePay)
+            timeEntries = query.ToList()
+        End Using
 
-        txtNightDiffHours.Text = CStr(paystub.NightDiffHours)
-        txtNightDiffPay.Text = CStr(paystub.NightDiffPay)
+        dgvTimeEntries.DataSource = timeEntries
 
-        txtNightDiffOTHours.Text = CStr(paystub.NightDiffOvertimeHours)
-        txtNightDiffOTPay.Text = CStr(paystub.NightDiffOvertimePay)
-
-        txtRestDayHours.Text = CStr(paystub.RestDayHours)
-        txtRestDayPay.Text = CStr(paystub.RestDayPay)
-
-        txtLeavePay.Text = CStr(paystub.LeavePay)
-        txtHolidayPay.Text = CStr(paystub.HolidayPay)
-        txtTotalPay.Text = CStr(paystub.WorkPay)
-
-        txtLateHours.Text = CStr(paystub.LateHours)
-        txtLateAmount.Text = CStr(paystub.LateDeduction)
-
-        txtUndertimeHours.Text = CStr(paystub.UndertimeHours)
-        txtUndertimeAmount.Text = CStr(paystub.UndertimeDeduction)
-
-        txtAbsentDeduction.Text = CStr(paystub.AbsenceDeduction)
+        DisplayPaystub(paystub)
     End Sub
+
+    Private Sub DisplayPaystub(paystub As Paystub)
+        txtRegularHours.Text = Format(paystub.RegularHours)
+        txtRegularPay.Text = Format(paystub.RegularPay)
+
+        txtOvertimeHours.Text = Format(paystub.OvertimeHours)
+        txtOvertimePay.Text = Format(paystub.OvertimePay)
+
+        txtNightDiffHours.Text = Format(paystub.NightDiffHours)
+        txtNightDiffPay.Text = Format(paystub.NightDiffPay)
+
+        txtNightDiffOTHours.Text = Format(paystub.NightDiffOvertimeHours)
+        txtNightDiffOTPay.Text = Format(paystub.NightDiffOvertimePay)
+
+        txtRestDayHours.Text = Format(paystub.RestDayHours)
+        txtRestDayPay.Text = Format(paystub.RestDayPay)
+
+        txtLeavePay.Text = Format(paystub.LeavePay)
+        txtHolidayPay.Text = Format(paystub.HolidayPay)
+        txtTotalPay.Text = Format(paystub.WorkPay)
+
+        txtLateHours.Text = Format(paystub.LateHours)
+        txtLateAmount.Text = Format(paystub.LateDeduction)
+
+        txtUndertimeHours.Text = Format(paystub.UndertimeHours)
+        txtUndertimeAmount.Text = Format(paystub.UndertimeDeduction)
+
+        txtAbsentDeduction.Text = Format(paystub.AbsenceDeduction)
+    End Sub
+
+    Private Function Format(value As Decimal) As String
+        Return String.Format("{0:#,###,##0.00;(#,###,##0.00);""""}", value)
+    End Function
 
     Private Class PayStubModel
 
@@ -107,4 +122,7 @@ Public Class NewPayStubForm
 
     End Class
 
+    Private Sub NewPayStubForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
 End Class
