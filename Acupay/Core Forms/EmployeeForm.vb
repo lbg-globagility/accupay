@@ -1864,6 +1864,8 @@ Public Class EmployeeForm
                         Else : cboPayFreq.Text = .Cells("Column22").Value
                         End If
 
+                        RemoveHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
+
                         If .Cells("Column20").Value = "" Then
                             cboEmpStat.SelectedIndex = -1
                             cboEmpStat.Text = ""
@@ -6588,6 +6590,7 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub lblAddFindingname_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblAddFindingname.LinkClicked
+
     End Sub
 
     Private Sub fillempdisciplinary()
