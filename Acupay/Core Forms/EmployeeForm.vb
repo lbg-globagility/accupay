@@ -1864,6 +1864,8 @@ Public Class EmployeeForm
                         Else : cboPayFreq.Text = .Cells("Column22").Value
                         End If
 
+                        RemoveHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
+
                         If .Cells("Column20").Value = "" Then
                             cboEmpStat.SelectedIndex = -1
                             cboEmpStat.Text = ""
@@ -6588,6 +6590,32 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub lblAddFindingname_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblAddFindingname.LinkClicked
+
+        Dim p As New ProdCtrlForm
+
+        With p
+
+            .Status.HeaderText = "Taxable Flag"
+
+            .PartNo.HeaderText = "Item Name"
+
+            .NameOfCategory = "Employee Disciplinary"
+
+            Dim dgv_cols =
+                .dgvproducts.Columns.Cast(Of DataGridViewColumn).Where(Function(dgcol) dgcol.Name <> "PartNo")
+
+            For Each dcol In dgv_cols
+                dcol.Visible = False
+            Next
+
+            If .ShowDialog = Windows.Forms.DialogResult.OK Then
+
+                fillfindingcombobox()
+
+            End If
+
+        End With
+
     End Sub
 
     Private Sub fillempdisciplinary()
