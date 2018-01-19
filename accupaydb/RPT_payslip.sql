@@ -23,6 +23,24 @@ DECLARE max_dependent INT(11);
 
 DECLARE text_cutoff_ordinal VARCHAR(50);
 
+DECLARE giveAllowanceForHoliday BOOL DEFAULT FALSE;
+
+DECLARE month_per_year
+        , default_min_workhour INT(11);
+
+SET month_per_year = 12; SET default_min_workhour = 8;
+
+# SET @perc0 = 0.00; SET @perc1 = @perc0; SET @counts0 = @perc0; SET @_amt = @perc0;
+
+SELECT
+EXISTS(SELECT l.RowID
+       FROM listofval l
+		 WHERE l.`Type` = 'Payroll Policy' AND
+		 l.LIC = 'allowances.holiday'
+		 AND l.DisplayValue = '1'
+		 LIMIT 1)
+INTO giveAllowanceForHoliday;
+
 SELECT MAX(fs.Dependent)
 FROM filingstatus fs
 INTO max_dependent;
@@ -112,13 +130,13 @@ SELECT ps.RowID
 ,ps.TotalAdjustments `COL39`
 
 ,CONCAT_WS('\n'
-           , IF(once_allow.`AllowanceNameList` IS NULL, '', REPLACE(once_allow.`AllowanceNameList`, ',', '\n'))
-			  , IF(day_allow.`AllowanceNameList` IS NULL, '', REPLACE(day_allow.`AllowanceNameList`, ',', '\n'))
-			  , IF(semimonth_allow.`AllowanceNameList` IS NULL, '', REPLACE(semimonth_allow.`AllowanceNameList`, ',', '\n'))) `COL28`
+           , IF(once_allow.`AllowanceNameList` IS NULL, '-', REPLACE(once_allow.`AllowanceNameList`, ',', '\n'))
+			  , IF(day_allow.`AllowanceNameList` IS NULL, '-', REPLACE(day_allow.`AllowanceNameList`, ',', '\n'))
+			  , IF(semimonth_allow.`AllowanceNameList` IS NULL, '-', REPLACE(semimonth_allow.`AllowanceNameList`, ',', '\n'))) `COL28`
 ,CONCAT_WS('\n'
-           , IF(once_allow.`AllowanceAmountList` IS NULL, '', REPLACE(once_allow.`AllowanceAmountList`, ',', '\n'))
-           , IF(day_allow.`AllowanceAmountList` IS NULL, '', REPLACE(day_allow.`AllowanceAmountList`, ',', '\n'))
-           , IF(semimonth_allow.`AllowanceAmountList` IS NULL, '', REPLACE(semimonth_allow.`AllowanceAmountList`, ',', '\n'))) `COL29`
+           , IF(once_allow.`AllowanceAmountList` IS NULL, '-', REPLACE(once_allow.`AllowanceAmountList`, ',', '\n'))
+           , IF(day_allow.`AllowanceAmountList` IS NULL, '-', REPLACE(day_allow.`AllowanceAmountList`, ',', '\n'))
+           , IF(semimonth_allow.`AllowanceAmountList` IS NULL, '-', REPLACE(semimonth_allow.`AllowanceAmountList`, ',', '\n'))) `COL29`
 
 ,ps.TotalAllowance `COL30`
 
@@ -275,8 +293,9 @@ LEFT JOIN (SELECT etlv.RowID
 	    ON etlv.EmployeeID=ps.EmployeeID
 
 LEFT JOIN (SELECT ea.*
-           ,GROUP_CONCAT(ea.AllowanceAmount) `AllowanceAmountList`
-           ,GROUP_CONCAT(p.PartNo) `AllowanceNameList`
+           ,GROUP_CONCAT( ea.AllowanceAmount ) `AllowanceAmountList`# DISTINCT
+           # ,GROUP_CONCAT(p.PartNo) `AllowanceNameList`
+           ,GROUP_CONCAT( p.PartNo ) `AllowanceNameList`
            FROM employeeallowance ea
            INNER JOIN product p ON p.RowID=ea.ProductID
 			  WHERE ea.OrganizationID=og_rowid
@@ -286,11 +305,12 @@ LEFT JOIN (SELECT ea.*
 			  GROUP BY ea.EmployeeID, ea.RowID) once_allow
        ON once_allow.EmployeeID=ps.EmployeeID
 
-LEFT JOIN (SELECT ea.*
+/*LEFT JOIN (SELECT ea.*
            ,(@perc0 := AVG(IFNULL(etn.`AttendancePercentage`, 0)))
            ,(@counts0 := COUNT(IFNULL(etn.RowID, 0)))
-           ,GROUP_CONCAT( ROUND((ea.AllowanceAmount * (IF(p.`Fixed` = 1, 1, @perc0) * @counts0)), 2) ) `AllowanceAmountList`
-           ,GROUP_CONCAT(p.PartNo) `AllowanceNameList`
+           ,GROUP_CONCAT( ( ROUND((ea.AllowanceAmount * (IF(p.`Fixed` = 1, 1, @perc0) * @counts0)), 2) ) ) `AllowanceAmountList`# DISTINCT
+           # ,GROUP_CONCAT(p.PartNo) `AllowanceNameList`
+           ,GROUP_CONCAT( p.PartNo ) `AllowanceNameList`
            FROM employeeallowance ea
            INNER JOIN product p ON p.RowID=ea.ProductID
            LEFT JOIN v_employeetimeentry_numbers etn
@@ -302,25 +322,64 @@ LEFT JOIN (SELECT ea.*
 			  AND ea.AllowanceFrequency='Daily'
 			  AND (ea.EffectiveStartDate >= date_from OR ea.EffectiveEndDate >= date_from)
 			  AND (ea.EffectiveStartDate <= date_to OR ea.EffectiveEndDate <= date_to)
-			  GROUP BY ea.EmployeeID, ea.RowID) day_allow
+			  GROUP BY ea.EmployeeID, ea.RowID
+			  ) day_allow
+       ON day_allow.EmployeeID=ps.EmployeeID*/
+
+LEFT JOIN (
+           SELECT ea.*
+		     ,GROUP_CONCAT( ea.`TheAmount` ) `AllowanceAmountList`
+		     ,GROUP_CONCAT( ea.PartNo ) `AllowanceNameList`
+		FROM (		      
+				SELECT ea.RowID
+				, ea.EmployeeID
+				, SUM(
+				  IF(prd.`Fixed`
+				     , ea.AllowanceAmount
+					  , ROUND(i.AttendancePercentage * ea.AllowanceAmount , 2)
+					  )
+					  ) `TheAmount`
+				, prd.PartNo
+				FROM v_employeetimeentry_numbers i
+				INNER JOIN employee e
+				        ON e.RowID=i.EmployeeID AND e.OrganizationID=i.OrganizationID AND e.EmploymentStatus NOT IN ('Resigned', 'Terminated')
+				INNER JOIN employeeallowance ea
+				        ON ea.AllowanceFrequency='Daily' AND ea.OrganizationID=i.OrganizationID AND ea.EmployeeID = i.EmployeeID AND i.`Date` BETWEEN date_from AND date_to
+				INNER JOIN product prd
+				        ON prd.RowID=ea.ProductID AND prd.OrganizationID=i.OrganizationID
+				WHERE i.OrganizationID=og_rowid
+				AND i.`Date` BETWEEN date_from AND date_to
+				GROUP BY ea.RowID
+		      ) ea
+		 GROUP BY ea.EmployeeID, ea.RowID
+			   ) day_allow
        ON day_allow.EmployeeID=ps.EmployeeID
 
-LEFT JOIN (SELECT ea.*
-           ,(@perc1 := AVG(IFNULL(etn.`AttendancePercentage`, 0)))
-           ,GROUP_CONCAT( ROUND((ea.AllowanceAmount * IF(p.`Fixed` = 1, 1, @perc1)), 2) ) `AllowanceAmountList`
-           ,GROUP_CONCAT(p.PartNo) `AllowanceNameList`
-           FROM employeeallowance ea
-           INNER JOIN product p ON p.RowID=ea.ProductID
-           LEFT JOIN v_employeetimeentry_numbers etn
-                  ON etn.EmployeeID=ea.EmployeeID
-                     AND etn.OrganizationID=ea.OrganizationID
-                     AND etn.PayPeriodID=pperiod_id
+LEFT JOIN (
+           SELECT ea.*
+		     ,GROUP_CONCAT( ea.`TheAmount` ) `AllowanceAmountList`
+		     ,GROUP_CONCAT( ea.PartNo ) `AllowanceNameList`
+		FROM (
+		     SELECT ea.eaRowID `RowID`, ea.EmployeeID
+		     # , (@perc1 := AVG(IFNULL(etn.`HoursDeduct` / etn.DivisorToDailyRate, 0)))
+		     /*, IF(p.`Fixed` = 1
+			       , ea.AllowanceAmount
+					 , ROUND(ea.AllowanceAmount
+					         - (ea.AllowanceAmount * AVG(IFNULL(etn.`HoursDeduct` / etn.DivisorToDailyRate, 0)))
+								, 2)
+             ) `TheAmount`*/
+           , ROUND( ( ea.AllowanceAmount - (SUM(ea.HoursToLess) * ((ea.AllowanceAmount / (ea.WorkDaysPerYear / (ea.PAYFREQDIV * month_per_year))) / default_min_workhour)) + IF(giveAllowanceForHoliday, SUM(ea.HolidayAllowance), 0) ), 2) `TheAmount`
+           
+		     , p.PartNo
+		     FROM paystubitem_sum_semimon_allowance_group_prodid ea
+		     INNER JOIN employee e ON e.RowID=ea.EmployeeID AND e.EmploymentStatus NOT IN ('Resigned', 'Terminated')
+		     INNER JOIN product p ON p.RowID=ea.ProductID
 			  WHERE ea.OrganizationID=og_rowid
-			  AND ea.AllowanceAmount != 0
-			  AND ea.AllowanceFrequency='Semi-monthly'
-			  AND (ea.EffectiveStartDate >= date_from OR ea.EffectiveEndDate >= date_from)
-			  AND (ea.EffectiveStartDate <= date_to OR ea.EffectiveEndDate <= date_to)
-			  GROUP BY ea.EmployeeID, ea.RowID) semimonth_allow
+			  AND ea.`Date` BETWEEN date_from AND date_to
+			  GROUP BY ea.eaRowID
+		     ) ea
+		GROUP BY ea.EmployeeID, ea.RowID
+			  ) semimonth_allow
        ON semimonth_allow.EmployeeID=ps.EmployeeID
 
 INNER JOIN (SELECT ps.RowID
