@@ -6,7 +6,43 @@
 
 DROP PROCEDURE IF EXISTS `SP_Division`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_Division`(IN `I_Name` VARCHAR(100), IN `I_TradeName` VARCHAR(100), IN `I_OrganizationID` INT(10), IN `I_MainPhone` VARCHAR(50), IN `I_FaxNumber` VARCHAR(50), IN `I_BusinessAddress` VARCHAR(1000), IN `I_ContactName` VARCHAR(200), IN `I_EmailAddress` VARCHAR(50), IN `I_AltEmailAddress` VARCHAR(50), IN `I_AltPhone` VARCHAR(50), IN `I_URL` VARCHAR(50), IN `I_TINNo` VARCHAR(50), IN `I_Created` DATETIME, IN `I_CreatedBy` INT(11), IN `I_LastUpd` DATETIME, IN `I_LastUpdBy` INT(11), IN `I_DivisionType` VARCHAR(50), IN `I_GracePeriod` DECIMAL(11,2), IN `I_WorkDaysPerYear` INT(11), IN `I_PhHealthDeductSched` VARCHAR(100), IN `I_HDMFDeductSched` VARCHAR(100), IN `I_SSSDeductSched` VARCHAR(100), IN `I_WTaxDeductSched` VARCHAR(100), IN `I_DefaultVacationLeave` DECIMAL(11,2), IN `I_DefaultSickLeave` DECIMAL(11,2), IN `I_DefaultMaternityLeave` DECIMAL(11,2), IN `I_DefaultPaternityLeave` DECIMAL(11,2), IN `I_DefaultOtherLeave` DECIMAL(11,2), IN `I_PayFrequencyID` INT, IN `I_PhHealthDeductSchedNoAgent` VARCHAR(50), IN `I_HDMFDeductSchedNoAgent` VARCHAR(50), IN `I_SSSDeductSchedNoAgent` VARCHAR(50), IN `I_WTaxDeductSchedNoAgent` VARCHAR(50), IN `I_MinimumWageAmount` DECIMAL(11,2), IN `I_AutomaticOT` CHAR(1))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_Division`(
+   IN `I_Name` VARCHAR(100),
+   IN `I_TradeName` VARCHAR(100),
+   IN `I_OrganizationID` INT(10),
+   IN `I_MainPhone` VARCHAR(50),
+   IN `I_FaxNumber` VARCHAR(50),
+   IN `I_BusinessAddress` VARCHAR(1000),
+   IN `I_ContactName` VARCHAR(200),
+   IN `I_EmailAddress` VARCHAR(50),
+   IN `I_AltEmailAddress` VARCHAR(50),
+   IN `I_AltPhone` VARCHAR(50),
+   IN `I_URL` VARCHAR(50),
+   IN `I_TINNo` VARCHAR(50),
+   IN `I_Created` DATETIME,
+   IN `I_CreatedBy` INT(11),
+   IN `I_LastUpd` DATETIME,
+   IN `I_LastUpdBy` INT(11),
+   IN `I_DivisionType` VARCHAR(50),
+   IN `I_GracePeriod` DECIMAL(11,2),
+   IN `I_WorkDaysPerYear` INT(11),
+   IN `I_PhHealthDeductSched` VARCHAR(100),
+   IN `I_HDMFDeductSched` VARCHAR(100),
+   IN `I_SSSDeductSched` VARCHAR(100),
+   IN `I_WTaxDeductSched` VARCHAR(100),
+   IN `I_DefaultVacationLeave` DECIMAL(11,2),
+   IN `I_DefaultSickLeave` DECIMAL(11,2),
+   IN `I_DefaultMaternityLeave` DECIMAL(11,2),
+   IN `I_DefaultPaternityLeave` DECIMAL(11,2),
+   IN `I_DefaultOtherLeave` DECIMAL(11,2),
+   IN `I_PayFrequencyID` INT,
+   IN `I_PhHealthDeductSchedNoAgent` VARCHAR(50),
+   IN `I_HDMFDeductSchedNoAgent` VARCHAR(50),
+   IN `I_SSSDeductSchedNoAgent` VARCHAR(50),
+   IN `I_WTaxDeductSchedNoAgent` VARCHAR(50),
+   IN `I_MinimumWageAmount` DECIMAL(11,2),
+   IN `I_AutomaticOT` CHAR(1),
+   IN `I_DivisionHeadID` INT(10))
     DETERMINISTIC
 BEGIN
 
@@ -48,7 +84,8 @@ INSERT INTO `division`
     SSSDeductSchedAgency,
     WTaxDeductSchedAgency,
     MinimumWageAmount,
-    AutomaticOvertimeFiling
+    AutomaticOvertimeFiling,
+    DivisionHeadID
 ) VALUES (
     I_Name,
     I_TradeName,
@@ -65,7 +102,7 @@ INSERT INTO `division`
     I_Created,
     I_CreatedBy,
     I_LastUpd,
-   I_LastUpdBy,
+    I_LastUpdBy,
     I_DivisionType,
     I_GracePeriod,
     I_WorkDaysPerYear,
@@ -84,7 +121,8 @@ INSERT INTO `division`
     I_SSSDeductSchedNoAgent,
     I_WTaxDeductSchedNoAgent,
     I_MinimumWageAmount,
-    I_AutomaticOT);
+    I_AutomaticOT,
+    I_DivisionHeadID);
 
 END//
 DELIMITER ;

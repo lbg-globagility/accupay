@@ -1272,42 +1272,43 @@ Module mdlStoredProcedure
         End With
         Return F_return
     End Function
-    Public Function SP_DivisionUpdate(ByVal Name As String, _
-                                 ByVal MainPhone As String, _
-                                 ByVal FaxNumber As String, _
-                                 ByVal EmailAddress As String, _
-                                 ByVal AltEmailAddress As String, _
-                                 ByVal AltPhone As String, _
-                                 ByVal URL As String, _
-                                 ByVal LastUpd As DateTime, _
-                                 ByVal LastUpdBy As Integer, _
-                                 ByVal TINNumber As String, _
-                                 ByVal Tradename As String, _
-                                 ByVal DivisionType As String, _
-                                 ByVal Businessaddr As String, _
-                                 ByVal Contactname As String, _
-                                 ByVal RowID As Integer,
-    ByVal I_GracePeriod As Object,
-    ByVal I_WorkDaysPerYear As Object,
-    ByVal I_PhHealthDeductSched As Object,
-    ByVal I_HDMFDeductSched As Object,
-    ByVal I_SSSDeductSched As Object,
-    ByVal I_WTaxDeductSched As Object,
-    ByVal I_DefaultVacationLeave As Object,
-    ByVal I_DefaultSickLeave As Object,
-    ByVal I_DefaultMaternityLeave As Object,
-    ByVal I_DefaultPaternityLeave As Object,
-    ByVal I_DefaultOtherLeave As Object,
-    ByVal I_PayFrequencyID As Object,
-    Optional I_PhHealthDeductSchedNoAgent As Object = Nothing,
-    Optional I_HDMFDeductSchedNoAgent As Object = Nothing,
-    Optional I_SSSDeductSchedNoAgent As Object = Nothing,
-    Optional I_WTaxDeductSchedNoAgent As Object = Nothing,
-    Optional I_MinimumWageAmount As Object = Nothing,
-    Optional I_AutomaticOT As Object = Nothing) As Boolean
+    Public Function SP_DivisionUpdate(ByVal Name As String,
+                                ByVal MainPhone As String,
+                                ByVal FaxNumber As String,
+                                ByVal EmailAddress As String,
+                                ByVal AltEmailAddress As String,
+                                ByVal AltPhone As String,
+                                ByVal URL As String,
+                                ByVal LastUpd As DateTime,
+                                ByVal LastUpdBy As Integer,
+                                ByVal TINNumber As String,
+                                ByVal Tradename As String,
+                                ByVal DivisionType As String,
+                                ByVal Businessaddr As String,
+                                ByVal Contactname As String,
+                                ByVal RowID As Integer,
+                                ByVal I_GracePeriod As Object,
+                                ByVal I_WorkDaysPerYear As Object,
+                                ByVal I_PhHealthDeductSched As Object,
+                                ByVal I_HDMFDeductSched As Object,
+                                ByVal I_SSSDeductSched As Object,
+                                ByVal I_WTaxDeductSched As Object,
+                                ByVal I_DefaultVacationLeave As Object,
+                                ByVal I_DefaultSickLeave As Object,
+                                ByVal I_DefaultMaternityLeave As Object,
+                                ByVal I_DefaultPaternityLeave As Object,
+                                ByVal I_DefaultOtherLeave As Object,
+                                ByVal I_PayFrequencyID As Object,
+                                Optional I_PhHealthDeductSchedNoAgent As Object = Nothing,
+                                Optional I_HDMFDeductSchedNoAgent As Object = Nothing,
+                                Optional I_SSSDeductSchedNoAgent As Object = Nothing,
+                                Optional I_WTaxDeductSchedNoAgent As Object = Nothing,
+                                Optional I_MinimumWageAmount As Object = Nothing,
+                                Optional I_AutomaticOT As Object = Nothing,
+                                Optional I_DivisionHeadID As Integer? = Nothing) As Boolean
 
         Dim F_return As Boolean = False
-        Dim SQL_command As MySqlCommand = _
+        Dim SQL_command As MySqlCommand =
                   New MySqlCommand("SP_DivisionUpdate", connection)
         With SQL_command
             Try
@@ -1346,9 +1347,10 @@ Module mdlStoredProcedure
                 .Parameters.AddWithValue("I_HDMFDeductSchedNoAgent", I_HDMFDeductSchedNoAgent)
                 .Parameters.AddWithValue("I_SSSDeductSchedNoAgent", I_SSSDeductSchedNoAgent)
                 .Parameters.AddWithValue("I_WTaxDeductSchedNoAgent", I_WTaxDeductSchedNoAgent)
-                
+
                 .Parameters.AddWithValue("I_MinimumWageAmount", I_MinimumWageAmount)
                 .Parameters.AddWithValue("I_AutomaticOT", I_AutomaticOT)
+                .Parameters.AddWithValue("I_DivisionHeadID", I_DivisionHeadID)
 
                 .CommandType = CommandType.StoredProcedure
                 F_return = (.ExecuteNonQuery > 0)
@@ -1362,44 +1364,45 @@ Module mdlStoredProcedure
         Return F_return
     End Function
 
-    Public Function SP_Division(ByVal Name As String, _
-                                 ByVal MainPhone As String, _
-                                 ByVal FaxNumber As String, _
-                                 ByVal EmailAddress As String, _
-                                 ByVal AltEmailAddress As String, _
-                                 ByVal AltPhone As String, _
-                                 ByVal URL As String, _
-                                 ByVal Created As DateTime, _
-                                 ByVal CreatedBy As Integer, _
-                                 ByVal LastUpd As DateTime, _
-                                 ByVal LastUpdBy As Integer, _
-                                 ByVal TINNumber As String, _
-                                 ByVal Tradename As String, _
-                                 ByVal DivisionType As String, _
-                                 ByVal Businessaddr As String, _
-                                 ByVal Contactname As String, _
-                                 ByVal OrgID As Integer,
-    ByVal I_GracePeriod As Object,
-    ByVal I_WorkDaysPerYear As Object,
-    ByVal I_PhHealthDeductSched As Object,
-    ByVal I_HDMFDeductSched As Object,
-    ByVal I_SSSDeductSched As Object,
-    ByVal I_WTaxDeductSched As Object,
-    ByVal I_DefaultVacationLeave As Object,
-    ByVal I_DefaultSickLeave As Object,
-    ByVal I_DefaultMaternityLeave As Object,
-    ByVal I_DefaultPaternityLeave As Object,
-    ByVal I_DefaultOtherLeave As Object,
-    ByVal I_PayFrequencyID As Object,
-    Optional I_PhHealthDeductSchedNoAgent As Object = Nothing,
-    Optional I_HDMFDeductSchedNoAgent As Object = Nothing,
-    Optional I_SSSDeductSchedNoAgent As Object = Nothing,
-    Optional I_WTaxDeductSchedNoAgent As Object = Nothing,
-    Optional I_MinimumWageAmount As Object = Nothing,
-    Optional I_AutomaticOT As Object = Nothing) As Boolean
+    Public Function SP_Division(ByVal Name As String,
+                                ByVal MainPhone As String,
+                                ByVal FaxNumber As String,
+                                ByVal EmailAddress As String,
+                                ByVal AltEmailAddress As String,
+                                ByVal AltPhone As String,
+                                ByVal URL As String,
+                                ByVal Created As DateTime,
+                                ByVal CreatedBy As Integer,
+                                ByVal LastUpd As DateTime,
+                                ByVal LastUpdBy As Integer,
+                                ByVal TINNumber As String,
+                                ByVal Tradename As String,
+                                ByVal DivisionType As String,
+                                ByVal Businessaddr As String,
+                                ByVal Contactname As String,
+                                ByVal OrgID As Integer,
+                                ByVal I_GracePeriod As Object,
+                                ByVal I_WorkDaysPerYear As Object,
+                                ByVal I_PhHealthDeductSched As Object,
+                                ByVal I_HDMFDeductSched As Object,
+                                ByVal I_SSSDeductSched As Object,
+                                ByVal I_WTaxDeductSched As Object,
+                                ByVal I_DefaultVacationLeave As Object,
+                                ByVal I_DefaultSickLeave As Object,
+                                ByVal I_DefaultMaternityLeave As Object,
+                                ByVal I_DefaultPaternityLeave As Object,
+                                ByVal I_DefaultOtherLeave As Object,
+                                ByVal I_PayFrequencyID As Object,
+                                Optional I_PhHealthDeductSchedNoAgent As Object = Nothing,
+                                Optional I_HDMFDeductSchedNoAgent As Object = Nothing,
+                                Optional I_SSSDeductSchedNoAgent As Object = Nothing,
+                                Optional I_WTaxDeductSchedNoAgent As Object = Nothing,
+                                Optional I_MinimumWageAmount As Object = Nothing,
+                                Optional I_AutomaticOT As Object = Nothing,
+                                Optional I_DivisionHeadID As Integer? = Nothing) As Boolean
 
         Dim F_return As Boolean = False
-        Dim SQL_command As MySqlCommand = _
+        Dim SQL_command As MySqlCommand =
                   New MySqlCommand("SP_Division", connection)
         With SQL_command
             Try
@@ -1440,9 +1443,10 @@ Module mdlStoredProcedure
                 .Parameters.AddWithValue("I_HDMFDeductSchedNoAgent", I_HDMFDeductSchedNoAgent)
                 .Parameters.AddWithValue("I_SSSDeductSchedNoAgent", I_SSSDeductSchedNoAgent)
                 .Parameters.AddWithValue("I_WTaxDeductSchedNoAgent", I_WTaxDeductSchedNoAgent)
-                
+
                 .Parameters.AddWithValue("I_MinimumWageAmount", I_MinimumWageAmount)
                 .Parameters.AddWithValue("I_AutomaticOT", I_AutomaticOT)
+                .Parameters.AddWithValue("I_DivisionHeadID", I_DivisionHeadID)
 
                 .CommandType = CommandType.StoredProcedure
                 F_return = (.ExecuteNonQuery > 0)

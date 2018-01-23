@@ -12,8 +12,7 @@ Namespace Global.AccuPay.Entity
         <Key>
         Public Property RowID As Integer?
 
-        <Column("PositionName")>
-        Public Property Name As String
+        Public Property OrganizationID As Integer?
 
         Public Property Created As Date
 
@@ -28,6 +27,9 @@ Namespace Global.AccuPay.Entity
         Public Property DivisionID As Integer?
 
         Public Property JobLevelID As Integer?
+
+        <Column("PositionName")>
+        Public Property Name As String
 
         Public Property LevelNumber As Integer
 

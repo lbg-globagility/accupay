@@ -23,15 +23,15 @@ Partial Class DivisionForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Last = New System.Windows.Forms.LinkLabel()
         Me.Nxt = New System.Windows.Forms.LinkLabel()
@@ -208,6 +208,7 @@ Partial Class DivisionForm
         Me.ToolStripButton7 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel4 = New System.Windows.Forms.ToolStripLabel()
         Me.tsProgresSavingShift = New System.Windows.Forms.ToolStripProgressBar()
+        Me.cboDivisionHead = New System.Windows.Forms.ComboBox()
         Me.CustomColoredTabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -571,6 +572,7 @@ Partial Class DivisionForm
         '
         Me.Panel1.AutoScroll = True
         Me.Panel1.BackColor = System.Drawing.Color.White
+        Me.Panel1.Controls.Add(Me.cboDivisionHead)
         Me.Panel1.Controls.Add(Me.LinkLabel1)
         Me.Panel1.Controls.Add(Me.chkbxautomaticOT)
         Me.Panel1.Controls.Add(Me.Label25)
@@ -1606,14 +1608,14 @@ Partial Class DivisionForm
         Me.dgvDivisionShift.BackgroundColor = System.Drawing.Color.White
         Me.dgvDivisionShift.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvDivisionShift.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.divshiftRowID, Me.divshiftTimeFrom, Me.divshiftTimeTo, Me.divshiftDateFrom, Me.divshiftDateTo, Me.divshiftRestDay})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDivisionShift.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDivisionShift.DefaultCellStyle = DataGridViewCellStyle10
         Me.dgvDivisionShift.Dock = System.Windows.Forms.DockStyle.Top
         Me.dgvDivisionShift.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvDivisionShift.Location = New System.Drawing.Point(0, 0)
@@ -1687,14 +1689,14 @@ Partial Class DivisionForm
         Me.dgvWeek.AllowUserToResizeColumns = False
         Me.dgvWeek.AllowUserToResizeRows = False
         Me.dgvWeek.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvWeek.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvWeek.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle11
         Me.dgvWeek.ColumnHeadersHeight = 30
         Me.dgvWeek.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvWeek.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7})
@@ -1709,8 +1711,8 @@ Partial Class DivisionForm
         '
         'Column1
         '
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle12
         Me.Column1.HeaderText = "Column1"
         Me.Column1.Name = "Column1"
         Me.Column1.ReadOnly = True
@@ -1718,8 +1720,8 @@ Partial Class DivisionForm
         '
         'Column2
         '
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle13
         Me.Column2.HeaderText = "Column2"
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
@@ -1727,8 +1729,8 @@ Partial Class DivisionForm
         '
         'Column3
         '
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle14
         Me.Column3.HeaderText = "Column3"
         Me.Column3.Name = "Column3"
         Me.Column3.ReadOnly = True
@@ -1736,8 +1738,8 @@ Partial Class DivisionForm
         '
         'Column4
         '
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column4.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column4.DefaultCellStyle = DataGridViewCellStyle15
         Me.Column4.HeaderText = "Column4"
         Me.Column4.Name = "Column4"
         Me.Column4.ReadOnly = True
@@ -1745,8 +1747,8 @@ Partial Class DivisionForm
         '
         'Column5
         '
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle16
         Me.Column5.HeaderText = "Column5"
         Me.Column5.Name = "Column5"
         Me.Column5.ReadOnly = True
@@ -1754,8 +1756,8 @@ Partial Class DivisionForm
         '
         'Column6
         '
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle17
         Me.Column6.HeaderText = "Column6"
         Me.Column6.Name = "Column6"
         Me.Column6.ReadOnly = True
@@ -1763,8 +1765,8 @@ Partial Class DivisionForm
         '
         'Column7
         '
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column7.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column7.DefaultCellStyle = DataGridViewCellStyle18
         Me.Column7.HeaderText = "Column7"
         Me.Column7.Name = "Column7"
         Me.Column7.ReadOnly = True
@@ -1865,6 +1867,16 @@ Partial Class DivisionForm
         Me.tsProgresSavingShift.Name = "tsProgresSavingShift"
         Me.tsProgresSavingShift.Size = New System.Drawing.Size(100, 22)
         Me.tsProgresSavingShift.Visible = False
+        '
+        'cboDivisionHead
+        '
+        Me.cboDivisionHead.DisplayMember = "Name"
+        Me.cboDivisionHead.FormattingEnabled = True
+        Me.cboDivisionHead.Location = New System.Drawing.Point(472, 499)
+        Me.cboDivisionHead.Name = "cboDivisionHead"
+        Me.cboDivisionHead.Size = New System.Drawing.Size(200, 21)
+        Me.cboDivisionHead.TabIndex = 394
+        Me.cboDivisionHead.ValueMember = "Name"
         '
         'DivisionForm
         '
@@ -2091,4 +2103,5 @@ Partial Class DivisionForm
     Friend WithEvents divshiftDateTo As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents divshiftRestDay As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
+    Friend WithEvents cboDivisionHead As ComboBox
 End Class

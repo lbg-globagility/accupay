@@ -1,4 +1,6 @@
 ﻿Imports Microsoft.Win32
+Imports AccuPay.Entity
+
 Public Class DivisionForm
 
     Dim ParentDivisions As New DataTable
@@ -35,6 +37,8 @@ Public Class DivisionForm
     Dim n_ShiftList As New ShiftList
 
     Private sys_ownr As New SystemOwner
+
+    Private _positions As IReadOnlyList(Of Position)
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -91,6 +95,18 @@ Public Class DivisionForm
 
         MyBase.OnLoad(e)
 
+        Using context = New PayrollContext()
+            Dim query = From p In context.Positions
+                        Where p.OrganizationID = z_OrganizationID
+                        Order By p.Name
+
+            Dim list = query.ToList()
+            list.Insert(0, New Position())
+
+            _positions = list.AsReadOnly()
+
+            cboDivisionHead.DataSource = _positions
+        End Using
     End Sub
 
     Private Sub LoadDivision()
@@ -302,7 +318,8 @@ Public Class DivisionForm
                         cbosssdeductsched2.Text,
                         cboTaxDeductSched2.Text,
                         txtminwage.Text,
-                        chkbxautomaticOT.Tag)
+                        chkbxautomaticOT.Tag,
+                        DirectCast(cboDivisionHead.SelectedItem, Position).RowID)
 
             If cmbDivision.Text IsNot Nothing Then
                 Dim dvID As String = getStringItem("Select RowID from division Where Name = '" & txtname.Text & "' And OrganizationID = '" & z_OrganizationID & "' AND ParentDivisionID IS NOT NULL LIMIT 1;")
@@ -342,7 +359,8 @@ Public Class DivisionForm
                         cbosssdeductsched2.Text,
                         cboTaxDeductSched2.Text,
                         txtminwage.Text,
-                        chkbxautomaticOT.Tag)
+                        chkbxautomaticOT.Tag,
+                        DirectCast(cboDivisionHead.SelectedItem, Position).RowID)
 
             If cmbDivision.Text IsNot Nothing Then
                 Dim dvID As String = getStringItem("Select RowID from division Where Name = '" & txtname.Text & "' And OrganizationID = '" & z_OrganizationID & "' AND ParentDivisionID IS NOT NULL LIMIT 1;")
@@ -724,6 +742,13 @@ Public Class DivisionForm
                 txtcontantname.Text = n_drow("ContactName").ToString
                 txtbusinessaddr.Text = n_drow("BusinessAddress").ToString
 
+                Dim positionID = ConvertToType(Of Integer?)(n_drow("DivisionHeadID"))
+                Dim positionId2 = CType("1", Integer)
+
+                Dim divisionHead = _positions.
+                    Where(Function(p) Nullable.Equals(p.RowID, positionID)).
+                    FirstOrDefault()
+                cboDivisionHead.SelectedItem = divisionHead
 
                 txtgraceperiod.Text = n_drow("GracePeriod").ToString
 
