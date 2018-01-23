@@ -36,7 +36,16 @@ Public Class DivisionForm
 
     Private sys_ownr As New SystemOwner
 
+    Private str_weeklydeduct_scheds As String =
+        String.Concat("SELECT DisplayValue",
+                      ",LIC",
+                      " FROM listofval",
+                      " WHERE `Type`='Government deduction schedule for weekly';")
+
     Protected Overrides Sub OnLoad(e As EventArgs)
+
+        PopulateComboBoxWithWeeklyGovtDeductScheds(tbpDefaultWeekly)
+        PopulateComboBoxWithWeeklyGovtDeductScheds(tbpAgencyWeekly)
 
         OjbAssignNoContextMenu(txtgraceperiod)
 
@@ -1497,6 +1506,35 @@ Public Class DivisionForm
             And TabControl1.SelectedIndex = 1)
 
         e.Cancel = _bool
+
+    End Sub
+
+    Private Sub PopulateComboBoxWithWeeklyGovtDeductScheds(tb_page As TabPage)
+
+        Dim sql As New SQL(str_weeklydeduct_scheds)
+
+        Dim dtcatch As New DataTable
+
+        dtcatch = sql.GetFoundRows.Tables(0)
+
+        Dim i = 0
+
+        Dim tbpage_cbox_controls = tb_page.Controls.OfType(Of ComboBox)()
+
+        For Each ctrol In tbpage_cbox_controls
+
+            dtcatch = New DataTable
+            dtcatch = sql.GetFoundRows.Tables(0).Copy
+            dtcatch.TableName = String.Concat("NewTable", i)
+
+            Dim str_col_name As String =
+                dtcatch.Columns(0).ColumnName
+
+            ctrol.DataSource = dtcatch
+            ctrol.ValueMember = str_col_name
+            ctrol.DisplayMember = str_col_name
+
+        Next
 
     End Sub
 
