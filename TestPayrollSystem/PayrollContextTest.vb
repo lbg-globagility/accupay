@@ -84,4 +84,11 @@ Public Class PayrollContextTest
         Assert.IsInstanceOf(Of PayPeriod)(payPeriod)
     End Sub
 
+    <Test>
+    Public Sub Should_Retrieve_Allowance()
+        Dim allowance = _context.Allowances.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of Allowance)(allowance)
+    End Sub
+
 End Class

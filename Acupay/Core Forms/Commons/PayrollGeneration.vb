@@ -222,6 +222,12 @@ Public Class PayrollGeneration
 
     Private _settings As ListOfValueCollection
 
+    Private _timeEntries2 As ICollection(Of TimeEntry)
+
+    Private _payRates As IReadOnlyDictionary(Of Date, PayRate)
+
+    Private _allowances As ICollection(Of Allowance)
+
     Sub New(employees As DataRow,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
@@ -321,6 +327,10 @@ Public Class PayrollGeneration
         _previousPaystubs = resources.PreviousPaystubs
         _settings = New ListOfValueCollection(_listOfValues)
         _payPeriod = resources.PayPeriod
+        _timeEntries2 = resources.TimeEntries2
+
+        _payRates = resources.PayRates.ToDictionary(Function(p) p.RateDate)
+        _allowances = resources.Allowances
     End Sub
 
     Sub PayrollGeneration_BackgroundWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs)

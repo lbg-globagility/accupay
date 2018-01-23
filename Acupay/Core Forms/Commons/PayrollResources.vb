@@ -20,6 +20,8 @@ Public Class PayrollResources
 
     Private _timeEntries As DataTable
 
+    Private _timeEntries2 As ICollection(Of TimeEntry)
+
     Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
 
     Private _loanTransactions As ICollection(Of PayrollSys.LoanTransaction)
@@ -46,9 +48,19 @@ Public Class PayrollResources
 
     Private _payPeriod As PayPeriod
 
+    Private _payRates As ICollection(Of PayRate)
+
+    Private _allowances As ICollection(Of Allowance)
+
     Public ReadOnly Property TimeEntries As DataTable
         Get
             Return _timeEntries
+        End Get
+    End Property
+
+    Public ReadOnly Property TimeEntries2 As ICollection(Of TimeEntry)
+        Get
+            Return _timeEntries2
         End Get
     End Property
 
@@ -130,6 +142,18 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property PayRates As ICollection(Of PayRate)
+        Get
+            Return _payRates
+        End Get
+    End Property
+
+    Public ReadOnly Property Allowances As ICollection(Of Allowance)
+        Get
+            Return _allowances
+        End Get
+    End Property
+
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = Integer.Parse(payPeriodID)
         _payDateFrom = payDateFrom
@@ -155,7 +179,10 @@ Public Class PayrollResources
             LoadPhilHealthBrackets(),
             LoadWithholdingTaxBrackets(),
             LoadSettings(),
-            LoadPayPeriod()
+            LoadPayPeriod(),
+            LoadPayRates(),
+            LoadAllowances(),
+            LoadTimeEntries2()
         })
     End Function
 
@@ -202,6 +229,18 @@ Public Class PayrollResources
             .Replace("@DateTo", _payDateTo.ToString("s"))
 
         _timeEntries = Await New SqlToDataTable(timeEntrySql).ReadAsync()
+    End Function
+
+    Private Async Function LoadTimeEntries2() As Task
+        Using context = New PayrollContext()
+            Dim query = From t In context.TimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
+                        Where t.OrganizationID = z_OrganizationID And
+                            t.EntryDate <= _payDateFrom And
+                            _payDateTo <= t.EntryDate
+                        Select t
+
+            _timeEntries2 = Await query.ToListAsync()
+        End Using
     End Function
 
     Private Async Function LoadLoanSchedules() As Task
@@ -375,6 +414,28 @@ Public Class PayrollResources
                         Where p.RowID = _payPeriodID
 
             _payPeriod = Await query.FirstOrDefaultAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadPayRates() As Task
+        Using context = New PayrollContext()
+            Dim query = From p In context.PayRates
+                        Where p.OrganizationID = z_OrganizationID And
+                            _payDateFrom <= p.RateDate And
+                            p.RateDate <= _payDateTo
+
+            _payRates = Await query.ToListAsync()
+        End Using
+    End Function
+
+    Private Async Function LoadAllowances() As Task
+        Using context = New PayrollContext()
+            Dim query = From a In context.Allowances
+                        Where a.EffectiveStartDate <= _payDateTo And
+                            _payDateFrom <= a.EffectiveEndDate And
+                            a.OrganizationID = z_OrganizationID
+
+            _allowances = Await query.ToListAsync()
         End Using
     End Function
 
