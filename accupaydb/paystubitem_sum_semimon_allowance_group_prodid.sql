@@ -6,7 +6,8 @@
 
 DROP VIEW IF EXISTS `paystubitem_sum_semimon_allowance_group_prodid`;
 DROP TABLE IF EXISTS `paystubitem_sum_semimon_allowance_group_prodid`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_semimon_allowance_group_prodid` AS SELECT
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_semimon_allowance_group_prodid` AS
+    SELECT
         et.RowID AS `etRowID`,
         ea.RowID `eaRowID`,
         (ea.ProductID) AS ProductID,
@@ -14,42 +15,6 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_semi
         et.OrganizationID,
         et.`Date`,
         0 AS Column1,
-        # GET_employeerateperday(et.EmployeeID, et.OrganizationID, et.`Date`) AS Column2,
-        esa.DailyRate AS Column2,
-        (
-            (
-                IF(
-                    pr.PayType = 'Regular Day',
-                    IF(
-                        et.TotalDayPay > et.RegularHoursAmount AND (et.VacationLeaveHours + et.SickLeaveHours + et.MaternityLeaveHours + et.OtherLeaveHours) > 0,
-                        IF(et.RegularHoursAmount = 0, et.TotalDayPay, et.RegularHoursAmount),
-                        IF(
-                            et.RegularHoursAmount > esa.DailyRate, # GET_employeerateperday(et.EmployeeID, et.OrganizationID, et.`Date`)
-                            esa.DailyRate, # GET_employeerateperday(et.EmployeeID, et.OrganizationID, et.`Date`)
-                            et.RegularHoursAmount
-                        )
-                    ),
-                    IF(
-                        pr.PayType = 'Special Non-Working Holiday' AND e.CalcSpecialHoliday = TRUE,
-                        IF(
-                            e.EmployeeType = 'Daily',
-                            (et.RegularHoursAmount / pr.`PayRate`),
-                            et.HolidayPayAmount
-                        ),
-                        IF(
-                            pr.PayType = 'Special Non-Working Holiday' AND e.CalcSpecialHoliday = FALSE,
-                            IF(e.EmployeeType = 'Daily', et.RegularHoursAmount, et.HolidayPayAmount),
-                            IF(
-                                pr.PayType = 'Regular Holiday' AND e.CalcHoliday = TRUE,
-                                et.HolidayPayAmount + ((et.VacationLeaveHours + et.SickLeaveHours + et.MaternityLeaveHours + et.OtherLeaveHours) * (esa.DailyRate # GET_employeerateperday(et.EmployeeID, et.OrganizationID, et.`Date`)
-                                / IFNULL(COMPUTE_TimeDifference(sh.TimeFrom, sh.TimeTo) - COMPUTE_TimeDifference(sh.BreakTimeFrom, sh.BreakTimeTo), 0))),
-                                0
-                            )
-                        )
-                    )
-                ) / esa.DailyRate # GET_employeerateperday(et.EmployeeID, et.OrganizationID, et.`Date`)
-            ) * (ea.AllowanceAmount / (e.WorkDaysPerYear / (PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) * 12)))
-        ) AS TotalAllowanceAmt,
         IF(
             pr.PayType = 'Special Non-Working Holiday' AND e.CalcSpecialHoliday = TRUE,
             IFNULL(et.RegularHoursWorked * (ea.AllowanceAmount / (e.WorkDaysPerYear / 12 / 2) / sh.DivisorToDailyRate) * (pr.PayRate - 1), 0),
@@ -87,20 +52,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `paystubitem_sum_semi
     INNER JOIN payrate pr
     ON pr.RowID = et.PayRateID
     
-    INNER JOIN employeesalary_withdailyrate esa ON esa.RowID=et.EmployeeSalaryID
-    
 UNION
     SELECT
         et.RowID AS `etRowID`,
         ea.RowID `eaRowID`,
         (ea.ProductID) AS ProductID,
-        et.EmployeeID,et.OrganizationID,et.`Date`,
+        et.EmployeeID,
+        et.OrganizationID,
+        et.`Date`,
         0 AS Column1,
-        esa.DailyRate AS Column2, # GET_employeerateperday(et.EmployeeID,et.OrganizationID,et.`Date`)
-        ROUND((ea.AllowanceAmount / (e.WorkDaysPerYear / (PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) * 12))),2)
-        - IFNULL(((et.HoursLate + et.UndertimeHours)
-            * (ROUND((ea.AllowanceAmount / (e.WorkDaysPerYear / (PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) * 12))),2)
-                / IFNULL(sh.DivisorToDailyRate,0))), 0) AS TotalAllowanceAmt,
         0 AS HolidayAllowance,
         ea.TaxableFlag,
         (et.HoursLate + et.UndertimeHours) AS HoursToLess,
@@ -115,9 +75,7 @@ UNION
     INNER JOIN shift sh ON sh.RowID=es.ShiftID
     INNER JOIN employeeallowance ea ON ea.AllowanceFrequency='Semi-monthly' AND ea.EmployeeID=e.RowID AND ea.OrganizationID=e.OrganizationID AND et.`Date` BETWEEN ea.EffectiveStartDate AND ea.EffectiveEndDate
     INNER JOIN product p ON p.RowID=ea.ProductID
-    INNER JOIN payrate pr ON pr.RowID=et.PayRateID 
-    
-    INNER JOIN employeesalary_withdailyrate esa ON esa.RowID=et.EmployeeSalaryID ;
+    INNER JOIN payrate pr ON pr.RowID=et.PayRateID ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
