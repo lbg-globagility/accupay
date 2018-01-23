@@ -13,12 +13,18 @@ DECLARE sec_per_hour INT(11) DEFAULT 3600; # 60 seconds times 60 minutes
 
 DECLARE tothoursoffset DECIMAL(11,6);
 
+DECLARE num_of_days DECIMAL(11,6);
+
 SET tothoursoffset = TIMESTAMPDIFF(SECOND
                                , CONCAT_DATETIME(NEW.StartDate, NEW.StartTime)
 										 , CONCAT_DATETIME(ADDDATE(NEW.StartDate, INTERVAL IS_TIMERANGE_REACHTOMORROW(NEW.StartTime, NEW.EndTime) DAY), NEW.EndTime)) / sec_per_hour;
 
+SET num_of_days = (DATEDIFF(NEW.EndDate, NEW.StartDate) + 1);
+
+IF num_of_days < 0 THEN SET num_of_days=1; END IF;
+
 UPDATE employee e
-SET e.OffsetBalance = IFNULL(e.OffsetBalance,0) + IFNULL(tothoursoffset, 0)
+SET e.OffsetBalance = IFNULL(e.OffsetBalance,0) + (IFNULL(tothoursoffset, 0) * num_of_days)
 ,e.LastUpdBy=NEW.CreatedBy
 WHERE e.RowID = NEW.EmployeeID
 AND NEW.`Status` = 'Approved';

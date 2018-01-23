@@ -348,8 +348,8 @@ LEFT JOIN (
                 IFNULL(
                     IF(
                         p.PartNo = 'Sick leave',
-                        ete.SickLeaveHours,
-                        ete.VacationLeaveHours
+                        (FORMAT(ete.SickLeaveHours / 8, 2)),
+                        (FORMAT(ete.VacationLeaveHours / 8, 2))
                     ),
                     ''
                 )
@@ -357,7 +357,7 @@ LEFT JOIN (
             ',',
             '\n'
         ) 'Availed',
-        REPLACE(GROUP_CONCAT(IFNULL(psi.PayAmount, 0)), ',', '\n') 'Balance'
+        REPLACE(GROUP_CONCAT(IFNULL(FORMAT(psi.PayAmount / 8, 2), 0)), ',', '\n') 'Balance'
     FROM paystubitem psi
     INNER JOIN product p
     ON p.RowID = psi.ProductID AND

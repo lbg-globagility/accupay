@@ -20,6 +20,8 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_employeetimeentry_
 	,sh.DivisorToDailyRate
 	,(et.RegularHoursWorked / sh.DivisorToDailyRate) `AttendancePercentage`
 	
+	,(et.HoursLate + et.UndertimeHours + et.AbsentHours) `HoursDeduct`
+	
 	FROM employeetimeentry et
 	INNER JOIN employeeshift esh ON esh.RowID=et.EmployeeShiftID
 	INNER JOIN shift sh ON sh.RowID=esh.ShiftID
@@ -36,6 +38,8 @@ UNION
 	,et.RegularHoursWorked
 	,sh.DivisorToDailyRate
 	,0 `AttendancePercentage`
+	
+	,(et.HoursLate + et.UndertimeHours + et.AbsentHours) `HoursDeduct`
 	
 	FROM employeetimeentry et
 	INNER JOIN employee e ON e.RowID=et.EmployeeID
@@ -56,6 +60,8 @@ UNION
 	,et.RegularHoursWorked
 	,sh.DivisorToDailyRate
 	,1 `AttendancePercentage`
+	
+	,(et.HoursLate + et.UndertimeHours + et.AbsentHours) `HoursDeduct`
 	
 	FROM employeetimeentry et
 	INNER JOIN employee e ON e.RowID=et.EmployeeID
@@ -78,6 +84,8 @@ UNION
 	,(et.RegularHoursAmount >= ( IF(e.EmployeeType = 'Daily'
 		                             , esa.BasicPay
 											  , ROUND((esa.Salary / (e.WorkDaysPerYear / 12)), 2)) )) `AttendancePercentage`
+	
+	,(et.HoursLate + et.UndertimeHours + et.AbsentHours) `HoursDeduct`
 	
 	FROM employeetimeentry et
 	INNER JOIN employee e ON e.RowID=et.EmployeeID
@@ -101,6 +109,8 @@ UNION
 		                             , esa.BasicPay
 											  , ROUND((esa.Salary / (e.WorkDaysPerYear / 12)), 2)) )) `AttendancePercentage`
 	
+	,(et.HoursLate + et.UndertimeHours + et.AbsentHours) `HoursDeduct`
+	
 	FROM employeetimeentry et
 	INNER JOIN employee e ON e.RowID=et.EmployeeID AND e.CalcSpecialHoliday = 0
 	INNER JOIN employeeshift esh ON esh.RowID=et.EmployeeShiftID
@@ -121,6 +131,8 @@ UNION
 	  >= ( IF(e.EmployeeType = 'Daily'
 	          , esa.BasicPay
 				 , ROUND((esa.Salary / (e.WorkDaysPerYear / 12)), 2)) )) `AttendancePercentage`
+	
+	,(et.HoursLate + et.UndertimeHours + et.AbsentHours) `HoursDeduct`
 	
 	FROM employeetimeentry et
 	INNER JOIN employee e ON e.RowID=et.EmployeeID AND e.CalcSpecialHoliday = 1

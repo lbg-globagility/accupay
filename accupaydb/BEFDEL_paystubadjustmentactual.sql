@@ -8,7 +8,7 @@ DROP TRIGGER IF EXISTS `BEFDEL_paystubadjustmentactual`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
 CREATE TRIGGER `BEFDEL_paystubadjustmentactual` BEFORE DELETE ON `paystubadjustmentactual` FOR EACH ROW BEGIN
-DECLARE valuetoreturn DECIMAL(11,6);
+DECLARE valuetoreturn DECIMAL(15,6);
 SET valuetoreturn = (OLD.PayAmount * -1);
     UPDATE paystubactual ps
 
