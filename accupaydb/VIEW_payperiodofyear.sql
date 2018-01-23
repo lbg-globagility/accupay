@@ -28,15 +28,17 @@ SELECT payp.RowID AS ppRowID
 ,payp.Half AS eom
 
 FROM payperiod payp
-INNER JOIN (SELECT *,FormatNumber AS FormatNum FROM paystub
-                WHERE FormatNumber = 0 AND OrganizationID=payp_OrganizationID
+INNER JOIN (    SELECT ps.*,FormatNumber AS FormatNum, e.PayFrequencyID FROM paystub ps
+                INNER JOIN employee e ON e.RowID=ps.EmployeeID
+				    WHERE FormatNumber = 0 AND ps.OrganizationID=payp_OrganizationID
             UNION
-                SELECT *,FormatNumber AS FormatNum FROM paystubbonus
-                WHERE FormatNumber = 1 AND OrganizationID=payp_OrganizationID
+                SELECT ps.*,FormatNumber AS FormatNum, e.PayFrequencyID FROM paystubbonus ps
+                INNER JOIN employee e ON e.RowID=ps.EmployeeID
+                WHERE FormatNumber = 1 AND ps.OrganizationID=payp_OrganizationID
                 ) payst ON payst.PayPeriodID=payp.RowID
 WHERE payp.OrganizationID=payp_OrganizationID
 AND payp.`Year`=YEAR(param_Date)
-AND payp.TotalGrossSalary=1
+AND payp.TotalGrossSalary = payst.PayFrequencyID
 GROUP BY payst.PayPeriodID
 ORDER BY payp.PayFromDate DESC,payp.PayToDate DESC;
 
