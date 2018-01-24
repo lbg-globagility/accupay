@@ -11,9 +11,7 @@ Public Class PayrollContextTest
 
     <SetUp>
     Public Sub SetUp()
-        Dim connection = DbProviderFactories.GetFactory("MySql.Data.MySqlClient").CreateConnection()
-        connection.ConnectionString = "server=127.0.0.1;user id=root;password=globagility;database=goldwingspayrolldb;"
-        _context = New PayrollContext(connection)
+        _context = New PayrollContext()
     End Sub
 
     <TearDown>
