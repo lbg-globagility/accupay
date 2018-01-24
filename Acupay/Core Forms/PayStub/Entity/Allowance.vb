@@ -17,7 +17,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property CreatedBy As Integer?
 
-        Public Property LastUpd As Date
+        Public Property LastUpd As Date?
 
         Public Property LastUpdBy As Integer?
 
@@ -29,7 +29,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property AllowanceFrequency As String
 
-        Public Property EffectiveEndDate As Date
+        Public Property EffectiveEndDate As Date?
 
         Public Property TaxableFlag As Char
 

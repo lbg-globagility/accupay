@@ -470,6 +470,13 @@ Public Class PayrollGeneration
 
             totalVacationDaysLeft = 0D
 
+            Dim allowances = _allowances.Where(Function(e) e.EmployeeID = _payStub.EmployeeID)
+            For Each allowance In allowances
+                If allowance.AllowanceFrequency = "Semi-monthly" Then
+                    CalculateAllowanceMonthlyBreakdown(allowance)
+                End If
+            Next
+
             CalculateAllowances()
             CalculateBonuses()
 
@@ -715,6 +722,28 @@ Public Class PayrollGeneration
                 End If
             End If
         End Try
+    End Sub
+
+    Private Sub CalculateAllowanceMonthlyBreakdown(allowance As Allowance)
+        Dim timeEntries = _timeEntries2.
+            Where(Function(t) t.EmployeeID = _payStub.EmployeeID)
+
+        Dim workDaysPerYear = CInt(_employee("WorkDaysPerYear"))
+        Dim workingDays = workDaysPerYear / 12 / 2
+        Dim dailyRate = allowance.AllowanceAmount / workingDays
+
+        Dim allowancesPerDay = New Collection(Of AllowancePerDay)
+        For Each timeEntry In timeEntries
+            Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
+            Dim hourlyRate = dailyRate / divisor
+
+            Dim deductibleHours = timeEntry.LateHours + timeEntry.UndertimeHours
+
+            Dim perDay = New AllowancePerDay()
+            perDay.Amount = -(hourlyRate * deductibleHours)
+
+            allowancesPerDay.Add(perDay)
+        Next
     End Sub
 
     Private Sub CalculateAllowances()

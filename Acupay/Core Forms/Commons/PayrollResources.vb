@@ -235,8 +235,8 @@ Public Class PayrollResources
         Using context = New PayrollContext()
             Dim query = From t In context.TimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
                         Where t.OrganizationID = z_OrganizationID And
-                            t.EntryDate <= _payDateFrom And
-                            _payDateTo <= t.EntryDate
+                            _payDateFrom <= t.EntryDate And
+                            t.EntryDate <= _payDateTo
                         Select t
 
             _timeEntries2 = Await query.ToListAsync()
@@ -395,6 +395,7 @@ Public Class PayrollResources
     Private Async Function LoadWithholdingTaxBrackets() As Task
         Using context = New PayrollContext()
             Dim query = From w In context.WithholdingTaxBrackets
+                        Select w
 
             _withholdingTaxBrackets = Await query.ToListAsync()
         End Using
