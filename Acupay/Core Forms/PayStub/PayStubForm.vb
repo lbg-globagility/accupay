@@ -345,17 +345,22 @@ Public Class PayStubForm
         Dim catchdt As New DataTable
         Dim param_array = New Object() {orgztnID,
                                         tsSearch.Text,
-                                        pagination}
+                                        pagination,
+                                        GetCurrentPayFrequencyType()}
 
         Dim n_ReadSQLProcedureToDatatable As New _
-            ReadSQLProcedureToDatatable("SEARCH_employee_paystub",
-                                        param_array)
+            SQL("CALL SEARCH_employee_paystub(?og_rowid, ?unified_search_string, ?page_number, ?text_pay_freq_sched);",
+                param_array)
 
-        catchdt = n_ReadSQLProcedureToDatatable.ResultTable
+        catchdt = n_ReadSQLProcedureToDatatable.GetFoundRows.Tables(0)
 
         dgvemployees.Rows.Clear()
 
-        PopulateDGVEmployee(catchdt)
+        For Each drow As DataRow In catchdt.Rows
+            Dim row_array = drow.ItemArray
+            dgvemployees.Rows.Add(row_array)
+        Next
+
         Static x As SByte = 0
 
         If x = 0 Then
@@ -400,6 +405,11 @@ Public Class PayStubForm
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+
+        Static str_pay_freq_sched As String = String.Empty
+
+        Static _year As Integer = 0
+
         If dgvpayper.RowCount > 0 Then
             With dgvpayper.CurrentRow
 
@@ -432,12 +442,35 @@ Public Class PayStubForm
 
                 Next
 
+                Dim str_sched_payfreq As String = Convert.ToString(.Cells("Column12").Value)
+
+                If str_pay_freq_sched <> str_sched_payfreq _
+                    And _year <> current_year Then
+
+                    str_pay_freq_sched = str_sched_payfreq
+
+                    _year = current_year
+
+                    Dim select_cutoff_payfrequency =
+                        tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Text = str_sched_payfreq)
+
+                    Console.WriteLine(select_cutoff_payfrequency.Count)
+
+                    For Each _tsbtn In select_cutoff_payfrequency
+                        PayFreq_Changed(_tsbtn, New EventArgs)
+
+                    Next
+
+                End If
+
             End With
-            If tsSearch.Text.Trim.Length > 0 Then
-                tsbtnSearch_Click(sender, New EventArgs)
-            Else
-                dgvemployees_SelectionChanged(dgvemployees, New EventArgs)
-            End If
+
+            'If tsSearch.Text.Trim.Length > 0 Then
+            '    tsbtnSearch_Click(sender, New EventArgs)
+            'Else
+            '    dgvemployees_SelectionChanged(dgvemployees, New EventArgs)
+            'End If
+
         Else
 
             numofweekdays = 0
@@ -551,7 +584,7 @@ Public Class PayStubForm
 
         Next
 
-        quer_empPayFreq = " AND pf.PayFrequencyType='" & pay_freqString & "' "
+        quer_empPayFreq = " And pf.PayFrequencyType='" & pay_freqString & "' "
 
         loademployee(quer_empPayFreq)
 
@@ -562,6 +595,10 @@ Public Class PayStubForm
         dgvemployees_SelectionChanged(sender, e)
 
         AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+    End Sub
+
+    Private Sub dgvemployees_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployees.CellContentClick
+
     End Sub
 
     Private Sub dgvemployees_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvemployees.SelectionChanged
@@ -1376,18 +1413,25 @@ Public Class PayStubForm
 
             pagination = 0
 
+
             Dim param_array = New Object() {orgztnID,
                                             tsSearch.Text,
-                                            pagination}
+                                            pagination,
+                                            GetCurrentPayFrequencyType()}
 
             Dim n_ReadSQLProcedureToDatatable As New _
-                ReadSQLProcedureToDatatable("SEARCH_employee_paystub",
-                                            param_array)
+                SQL("CALL SEARCH_employee_paystub(?og_rowid, ?unified_search_string, ?page_number, ?text_pay_freq_sched);",
+                    param_array)
 
-            dattabsearch = n_ReadSQLProcedureToDatatable.ResultTable
+            dattabsearch = n_ReadSQLProcedureToDatatable.GetFoundRows.Tables(0)
 
             dgvemployees.Rows.Clear()
-            PopulateDGVEmployee(dattabsearch)
+
+            For Each drow As DataRow In dattabsearch.Rows
+                Dim row_array = drow.ItemArray
+                dgvemployees.Rows.Add(row_array)
+            Next
+
             RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
             RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
             RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
@@ -1655,6 +1699,15 @@ Public Class PayStubForm
 
         senderObj.Font = selectedButtonFont
 
+        senderObj.Tag = 1
+
+        Dim select_cutoff_payfrequency =
+            tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Name <> senderObj.Name)
+
+        For Each _tsbtn In select_cutoff_payfrequency
+            _tsbtn.Tag = 0
+        Next
+
         Dim prev_selRowIndex = -1
 
         If dgvemployees.RowCount <> 0 Then
@@ -1667,31 +1720,8 @@ Public Class PayStubForm
 
         quer_empPayFreq = String.Empty
 
-        If tsSearch.Text.Trim.Length = 0 Then
-            tsbtnSearch_Click(sender, e)
+        tsbtnSearch_Click(sender, e)
 
-        ElseIf 1 = 2 Then 'ElseIf IsUserPressEnterToSearch Then
-
-            quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' AND e.EmployeeID='" & tsSearch.Text & "' "
-
-            loademployee(quer_empPayFreq)
-
-            If prev_selRowIndex <> -1 Then
-                If dgvemployees.RowCount > prev_selRowIndex Then
-                    dgvemployees.Item("EmployeeID", prev_selRowIndex).Selected = True
-                End If
-            End If
-
-            Static twice As SByte = 0
-
-            If twice < 1 Then
-
-                twice += 1
-
-            ElseIf twice = 1 Then
-                twice = 2
-            End If
-        End If
     End Sub
 
     '********************************************************
@@ -1933,17 +1963,19 @@ Public Class PayStubForm
 
         Dim EmployeeRowID = dgvemployees.Tag
 
-        Dim n_SQLQueryToDatatable As _
-            New ReadSQLProcedureToDatatable("VIEW_paystubitem_declared",
-                                            orgztnID,
-                                            EmployeeRowID,
-                                            paypFrom,
-                                            paypTo)
+        Dim _params = New Object() {orgztnID,
+                                    EmployeeRowID,
+                                    paypFrom,
+                                    paypTo}
 
-        Dim paystubactual = n_SQLQueryToDatatable.ResultTable
+        Dim n_SQLQueryToDatatable As _
+            New SQL("CALL VIEW_paystubitem_declared(?OrganizID, ?EmpRowID, ?pay_date_from, ?pay_date_to);",
+                    _params)
+
+        Dim paystubactual = n_SQLQueryToDatatable.GetFoundRows.Tables(0)
 
         For Each drow As DataRow In paystubactual.Rows
-            Dim psaItems = New SQLQueryToDatatable("CALL VIEW_paystubitem('" & ValNoComma(drow("RowID")) & "');").ResultTable
+            Dim psaItems = New SQL("CALL VIEW_paystubitem('" & ValNoComma(drow("RowID")) & "');").GetFoundRows.Tables(0)
 
             Dim strdouble = ValNoComma(drow("TrueSalary")) / ValNoComma(drow("PAYFREQUENCYDIVISOR")) 'BasicPay
 
@@ -2100,22 +2132,23 @@ Public Class PayStubForm
 
         Dim EmployeeRowID = dgvemployees.Tag
 
+        Dim _params = New Object() {orgztnID,
+                                    EmployeeRowID,
+                                    paypFrom,
+                                    paypTo}
+
         Dim n_SQLQueryToDatatable As _
-            New ReadSQLProcedureToDatatable("VIEW_paystubitem_actual",
-                                            orgztnID,
-                                            EmployeeRowID,
-                                            paypFrom,
-                                            paypTo)
+            New SQL("CALL VIEW_paystubitem_actual(?OrganizID, ?EmpRowID, ?pay_date_from, ?pay_date_to);", _params)
 
         Dim paystubactual As New DataTable
 
-        paystubactual = n_SQLQueryToDatatable.ResultTable
+        paystubactual = n_SQLQueryToDatatable.GetFoundRows.Tables(0)
 
         Dim psaItems As New DataTable
 
         For Each drow As DataRow In paystubactual.Rows
 
-            psaItems = New SQLQueryToDatatable("CALL VIEW_paystubitemundeclared('" & ValNoComma(drow("RowID")) & "');").ResultTable
+            psaItems = New SQL("CALL VIEW_paystubitemundeclared('" & ValNoComma(drow("RowID")) & "');").GetFoundRows.Tables(0)
 
             Dim strdouble = ValNoComma(drow("TrueSalary")) / ValNoComma(drow("PAYFREQUENCYDIVISOR")) 'BasicPay
 
@@ -2602,6 +2635,21 @@ Public Class PayStubForm
         e.Cancel = _bool
 
     End Sub
+
+    Private Function GetCurrentPayFrequencyType() As String
+
+        Dim select_cutoff_payfrequency =
+                tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Tag = 1)
+
+        Dim str_payfrequency_sched As String = "SEMI-MONTHLY"
+
+        For Each _tsbtn In select_cutoff_payfrequency
+            str_payfrequency_sched = _tsbtn.Text
+        Next
+
+        Return str_payfrequency_sched
+
+    End Function
 
 End Class
 
