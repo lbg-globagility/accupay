@@ -6,7 +6,7 @@
 
 DROP PROCEDURE IF EXISTS `SEARCH_employee_paystub`;
 DELIMITER //
-CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employee_paystub`(IN `og_rowid` INT, IN `unified_search_string` VARCHAR(50), IN `page_number` INT)
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employee_paystub`(IN `og_rowid` INT, IN `unified_search_string` VARCHAR(50), IN `page_number` INT, IN `text_pay_freq_sched` VARCHAR(50))
     DETERMINISTIC
 BEGIN
 
