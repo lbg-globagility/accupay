@@ -33,7 +33,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property TaxableFlag As Char
 
-        Public Property AllowanceAmount As Decimal
+        <Column("AllowanceAmount")>
+        Public Property Amount As Decimal
 
     End Class
 
