@@ -214,6 +214,8 @@ DECLARE hasWorkedLastWorkingDay BOOLEAN;
 
 DECLARE applicableHolidayRate DECIMAL(11, 6);
 
+DECLARE isRestDayInclusive BOOLEAN DEFAULT FALSE;
+
 DECLARE sec_per_hour INT(11) DEFAULT 3600;
 
 SELECT
@@ -263,6 +265,10 @@ INTO
 
 SET requiredToWorkLastWorkingDay = GetListOfValueOrDefault(
     'Payroll Policy', 'HolidayLastWorkingDayOrAbsent', FALSE
+);
+
+SET isRestDayInclusive = GetListOfValueOrDefault(
+    'Payroll Policy', 'restday.inclusiveofbasicpay', FALSE
 );
 
 SELECT
@@ -828,10 +834,10 @@ ELSEIF isRegularDay THEN
         SET lateAmount = lateHours * hourlyRate;
         SET undertimeAmount = undertimeHours * hourlyRate;
     ELSEIF isRestDay THEN
-
-        IF e_EmpType = 'Monthly' THEN
+    
+        IF isRestDayInclusive AND e_EmpType = 'Monthly' THEN
             SET restDayAmount = (regularHours * hourlyRate) * (restday_rate - 1);
-        ELSEIF e_EmpType = 'Daily' THEN
+        ELSE
             SET restDayAmount = (regularHours * hourlyRate) * restday_rate;
         END IF;
         
