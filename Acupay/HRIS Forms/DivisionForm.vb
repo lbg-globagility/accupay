@@ -36,6 +36,22 @@ Public Class DivisionForm
 
     Private sys_ownr As New SystemOwner
 
+    Private div_weeklydeduc_scheds As String =
+        String.Concat("SELECT SSSDeductionWeekSchedule",
+                      ",PhilhealthDeductionWeekSchedule",
+                      ",PagIbigDeductionWeekSchedule",
+                      ",WithholdingTaxDeductionWeekSchedule",
+                      " FROM division",
+                      " WHERE RowID=?div_rowid;")
+
+    Private div_weeklydeduc_withAgen_scheds As String =
+        String.Concat("SELECT SSSDeductionWeekwithAgenSchedule",
+                      ",PhilhealthDeductionWeekwithAgenSchedule",
+                      ",PagIbigDeductionWeekwithAgenSchedule",
+                      ",WithholdingTaxDeductionWeekwithAgenSchedule",
+                      " FROM division",
+                      " WHERE RowID=?div_rowid;")
+
     Private str_weeklydeduct_scheds As String =
         String.Concat("SELECT DisplayValue",
                       ",LIC",
@@ -311,7 +327,15 @@ Public Class DivisionForm
                         cbosssdeductsched2.Text,
                         cboTaxDeductSched2.Text,
                         txtminwage.Text,
-                        chkbxautomaticOT.Tag)
+                        Convert.ToInt16(chkbxautomaticOT.Checked),
+                        cboxSSSDeducSchedWeekly.SelectedValue,
+                        cboxPhHDeducSchedWeekly.SelectedValue,
+                        cboxHDMFDeducSchedWeekly.SelectedValue,
+                        cboxWTaxDeducSchedWeekly.SelectedValue,
+                        cboxSSSDeducSchedWeekly1.SelectedValue,
+                        cboxPhHDeducSchedWeekly1.SelectedValue,
+                        cboxHDMFDeducSchedWeekly1.SelectedValue,
+                        cboxWTaxDeducSchedWeekly1.SelectedValue)
 
             If cmbDivision.Text IsNot Nothing Then
                 Dim dvID As String = getStringItem("Select RowID from division Where Name = '" & txtname.Text & "' And OrganizationID = '" & z_OrganizationID & "' AND ParentDivisionID IS NOT NULL LIMIT 1;")
@@ -351,18 +375,40 @@ Public Class DivisionForm
                         cbosssdeductsched2.Text,
                         cboTaxDeductSched2.Text,
                         txtminwage.Text,
-                        chkbxautomaticOT.Tag)
+                        Convert.ToInt16(chkbxautomaticOT.Checked),
+                        cboxSSSDeducSchedWeekly.SelectedValue,
+                        cboxPhHDeducSchedWeekly.SelectedValue,
+                        cboxHDMFDeducSchedWeekly.SelectedValue,
+                        cboxWTaxDeducSchedWeekly.SelectedValue,
+                        cboxSSSDeducSchedWeekly1.SelectedValue,
+                        cboxPhHDeducSchedWeekly1.SelectedValue,
+                        cboxHDMFDeducSchedWeekly1.SelectedValue,
+                        cboxWTaxDeducSchedWeekly1.SelectedValue)
 
-            If cmbDivision.Text IsNot Nothing Then
-                Dim dvID As String = getStringItem("Select RowID from division Where Name = '" & txtname.Text & "' And OrganizationID = '" & z_OrganizationID & "' AND ParentDivisionID IS NOT NULL LIMIT 1;")
-                Dim getdvID As Integer = Val(dvID)
-                Dim dv As String = getStringItem("Select RowID from division Where Name = '" & cmbDivision.Text & "' And OrganizationID = '" & z_OrganizationID & "' AND ParentDivisionID IS NULL LIMIT 1;")
-                Dim getdv As Integer = Val(dv)
-                DirectCommand("UPDATE division SET ParentDivisionID = '" & getdv & "' Where RowID = '" & getdvID & "'")
+            Dim getdv As Integer = cmbDivision.SelectedValue
+
+            If getdv > 0 Then
+                Dim str_quer As String =
+                    String.Concat("SELECT RowID",
+                                  " FROM division",
+                                  " WHERE OrganizationID = ", orgztnID,
+                                  " AND Name = ?dv_name",
+                                  " LIMIT 1;")
+                Dim params =
+                    New Object() {txtname.Text.Trim}
+                Dim sql As New SQL(str_quer,
+                                   params)
+                Dim dvID As String = sql.GetFoundRow
+                If sql.HasError Then
+                    MsgBox(getErrExcptn(sql.ErrorException, Me.Name))
+                Else
+                    Dim getdvID As Integer = Val(dvID)
+
+                    DirectCommand("UPDATE division SET ParentDivisionID = '" & getdv & "' Where RowID = '" & getdvID & "';")
+                End If
             End If
 
             LoadDivision()
-            'filltreeview()
 
         End If
 
@@ -1533,6 +1579,91 @@ Public Class DivisionForm
             ctrol.DataSource = dtcatch
             ctrol.ValueMember = str_col_name
             ctrol.DisplayMember = str_col_name
+
+        Next
+
+    End Sub
+
+    Private Sub tbpAgencyWeekly_Enter(sender As Object, e As EventArgs) Handles tbpAgencyWeekly.Enter
+
+        Static once As Boolean = False
+
+        If once = False Then
+
+            once = True
+
+            'PopulateComboBoxWithWeeklyGovtDeductScheds(tbpAgencyWeekly)
+
+        Else
+
+        End If
+
+        ClearTabPageComboBox(tbpAgencyWeekly)
+
+        Dim sql As New SQL(div_weeklydeduc_withAgen_scheds,
+                            currentDivisionRowID)
+
+        Dim caught_dattabl As New DataTable
+
+        caught_dattabl = sql.GetFoundRows.Tables(0)
+
+        For Each drow As DataRow In caught_dattabl.Rows
+            cboxPhHDeducSchedWeekly1.Text =
+                Convert.ToString(drow("PhilhealthDeductionWeekwithAgenSchedule"))
+            cboxSSSDeducSchedWeekly1.Text =
+                Convert.ToString(drow("SSSDeductionWeekwithAgenSchedule"))
+            cboxHDMFDeducSchedWeekly1.Text =
+                Convert.ToString(drow("PagIbigDeductionWeekwithAgenSchedule"))
+            cboxWTaxDeducSchedWeekly1.Text =
+                Convert.ToString(drow("WithholdingTaxDeductionWeekwithAgenSchedule"))
+
+        Next
+
+    End Sub
+
+    Private Sub tbpDefaultWeekly_Enter(sender As Object, e As EventArgs) Handles tbpDefaultWeekly.Enter
+
+        Static once As Boolean = False
+
+        If once = False Then
+
+            once = True
+
+            'PopulateComboBoxWithWeeklyGovtDeductScheds(tbpDefaultWeekly)
+
+        Else
+
+        End If
+
+        ClearTabPageComboBox(tbpDefaultWeekly)
+
+        Dim sql As New SQL(div_weeklydeduc_scheds,
+                            currentDivisionRowID)
+
+        Dim caught_dattabl As New DataTable
+
+        caught_dattabl = sql.GetFoundRows.Tables(0)
+
+        For Each drow As DataRow In caught_dattabl.Rows
+            cboxPhHDeducSchedWeekly.Text =
+                Convert.ToString(drow("PhilhealthDeductionWeekSchedule"))
+            cboxSSSDeducSchedWeekly.Text =
+                Convert.ToString(drow("SSSDeductionWeekSchedule"))
+            cboxHDMFDeducSchedWeekly.Text =
+                Convert.ToString(drow("PagIbigDeductionWeekSchedule"))
+            cboxWTaxDeducSchedWeekly.Text =
+                Convert.ToString(drow("WithholdingTaxDeductionWeekSchedule"))
+
+        Next
+
+    End Sub
+
+    Private Sub ClearTabPageComboBox(tb_page As TabPage)
+
+        Dim tbpage_cbox_controls = tb_page.Controls.OfType(Of ComboBox)()
+
+        For Each ctrol In tbpage_cbox_controls
+            ctrol.Text = String.Empty
 
         Next
 

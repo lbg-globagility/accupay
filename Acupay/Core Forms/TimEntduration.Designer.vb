@@ -62,12 +62,12 @@ Partial Class TimEntduration
         Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.bgworkRECOMPUTE_employeeleave = New System.ComponentModel.BackgroundWorker()
         Me.cboxDivisions = New System.Windows.Forms.ComboBox()
         Me.Label124 = New System.Windows.Forms.Label()
         Me.lblgrouping = New System.Windows.Forms.Label()
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvpaypers, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -429,6 +429,18 @@ Partial Class TimEntduration
         Me.Panel1.Size = New System.Drawing.Size(547, 375)
         Me.Panel1.TabIndex = 284
         '
+        'CheckBox1
+        '
+        Me.CheckBox1.AutoSize = True
+        Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CheckBox1.Location = New System.Drawing.Point(315, 27)
+        Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(232, 17)
+        Me.CheckBox1.TabIndex = 286
+        Me.CheckBox1.Text = "Generate only the Resigned employee(s)"
+        Me.CheckBox1.UseVisualStyleBackColor = True
+        Me.CheckBox1.Visible = False
+        '
         'Panel2
         '
         Me.Panel2.Controls.Add(Me.linkNxt)
@@ -455,11 +467,11 @@ Partial Class TimEntduration
         'Label124
         '
         Me.Label124.AutoSize = True
-        Me.Label124.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label124.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label124.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label124.Location = New System.Drawing.Point(218, 382)
         Me.Label124.Name = "Label124"
-        Me.Label124.Size = New System.Drawing.Size(19, 23)
+        Me.Label124.Size = New System.Drawing.Size(18, 24)
         Me.Label124.TabIndex = 286
         Me.Label124.Text = "*"
         '
@@ -471,18 +483,6 @@ Partial Class TimEntduration
         Me.lblgrouping.Size = New System.Drawing.Size(36, 13)
         Me.lblgrouping.TabIndex = 287
         Me.lblgrouping.Text = "Group"
-        '
-        'CheckBox1
-        '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox1.Location = New System.Drawing.Point(315, 27)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(232, 17)
-        Me.CheckBox1.TabIndex = 286
-        Me.CheckBox1.Text = "Generate only the Resigned employee(s)"
-        Me.CheckBox1.UseVisualStyleBackColor = True
-        Me.CheckBox1.Visible = False
         '
         'TimEntduration
         '
