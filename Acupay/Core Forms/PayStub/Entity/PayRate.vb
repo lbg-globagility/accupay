@@ -43,6 +43,24 @@ Namespace Global.AccuPay.Entity
 
         Public Property RestDayOvertimeRate As Decimal
 
+        Public ReadOnly Property IsHoliday As Boolean
+            Get
+                Return IsSpecialNonWorkingHoliday Or IsRegularHoliday
+            End Get
+        End Property
+
+        Public ReadOnly Property IsSpecialNonWorkingHoliday As Boolean
+            Get
+                Return PayType = "Special Non-Working Holiday"
+            End Get
+        End Property
+
+        Public ReadOnly Property IsRegularHoliday As Boolean
+            Get
+                Return PayType = "Regular Holiday"
+            End Get
+        End Property
+
     End Class
 
 End Namespace

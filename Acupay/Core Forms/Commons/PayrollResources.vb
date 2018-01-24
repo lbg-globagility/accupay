@@ -16,6 +16,8 @@ Public Class PayrollResources
 
     Private _payDateTo As Date
 
+    Private _employees As ICollection(Of Employee)
+
     Private _salaries As DataTable
 
     Private _timeEntries As DataTable
@@ -51,6 +53,12 @@ Public Class PayrollResources
     Private _payRates As ICollection(Of PayRate)
 
     Private _allowances As ICollection(Of Allowance)
+
+    Public ReadOnly Property Employees As ICollection(Of Employee)
+        Get
+            Return _employees
+        End Get
+    End Property
 
     Public ReadOnly Property TimeEntries As DataTable
         Get
@@ -167,6 +175,7 @@ Public Class PayrollResources
         Dim loadLoanTransactionsTask = LoadLoanTransactions()
 
         Await Task.WhenAll({
+            LoadEmployees(),
             loadTimeEntriesTask,
             loadLoanSchedulesTask,
             loadLoanTransactionsTask,
@@ -184,6 +193,17 @@ Public Class PayrollResources
             LoadAllowances(),
             LoadTimeEntries2()
         })
+    End Function
+
+    Public Async Function LoadEmployees() As Task
+        Using context = New PayrollContext()
+            Dim query = From e In context.Employees
+                        Where e.OrganizationID = z_OrganizationID And
+                            e.EmploymentStatus <> "Resigned" And
+                            e.EmploymentStatus <> "Terminated"
+
+            _employees = Await query.ToListAsync()
+        End Using
     End Function
 
     Public Async Function LoadTimeEntries() As Task

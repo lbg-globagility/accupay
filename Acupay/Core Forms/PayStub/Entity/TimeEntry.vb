@@ -79,6 +79,8 @@ Namespace Global.AccuPay.Entity
         <Column("UndertimeHoursAmount")>
         Public Property UndertimeDeduction As Decimal
 
+        Public Property AbsentHours As Decimal
+
         <Column("Absent")>
         Public Property AbsentDeduction As Decimal
 
