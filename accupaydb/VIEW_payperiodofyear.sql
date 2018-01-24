@@ -23,7 +23,8 @@ SELECT payp.RowID AS ppRowID
 ,COALESCE(payp.TotalEmpPhilhealth,0) 'TotalEmpPhilhealth'
 ,COALESCE(payp.TotalCompPhilhealth,0) 'TotalCompPhilhealth'
 ,COALESCE(payp.TotalEmpHDMF,0) 'TotalEmpHDMF'
-,IF(payp.TotalGrossSalary = 4, 'WEEKLY', 'SEMI-MONTHLY') 'TotalCompHDMF'
+# ,IF(payp.TotalGrossSalary = 4, 'WEEKLY', 'SEMI-MONTHLY') 'TotalCompHDMF'
+, pf.PayFrequencyType `TotalCompHDMF`
 ,IF(DATE_FORMAT(NOW(),'%Y-%m-%d') BETWEEN payp.PayFromDate AND payp.PayToDate,'0',IF(DATE_FORMAT(NOW(),'%Y-%m-%d') > payp.PayFromDate,'-1','1')) 'now_origin'
 ,payp.Half AS eom
 
@@ -36,6 +37,7 @@ INNER JOIN (    SELECT ps.*,FormatNumber AS FormatNum, e.PayFrequencyID FROM pay
                 INNER JOIN employee e ON e.RowID=ps.EmployeeID
                 WHERE FormatNumber = 1 AND ps.OrganizationID=payp_OrganizationID
                 ) payst ON payst.PayPeriodID=payp.RowID
+INNER JOIN payfrequency pf ON pf.RowID=payp.TotalGrossSalary
 WHERE payp.OrganizationID=payp_OrganizationID
 AND payp.`Year`=YEAR(param_Date)
 AND payp.TotalGrossSalary = payst.PayFrequencyID
