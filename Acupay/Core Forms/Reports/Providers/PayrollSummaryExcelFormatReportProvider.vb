@@ -9,25 +9,31 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-                      "AA", "AB", "AC", "AD"}
+                      "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ"}
 
     Private column_headers() As String =
         New String() {"Code",
                       "Full name",
                       "Rate",
                       "BasicPay",
-                      "Hrs",
+                      "Reg Hrs",
                       "Reg Pay",
-                      "OTHrs",
-                      "OT",
+                      "OT Hrs",
+                      "OT Pay",
+                      "N.Diff Hrs",
+                      "N.Diff Pay",
+                      "N.DiffOT Hrs",
+                      "N.DiffOT Pay",
                       "Holiday",
-                      "NDiff",
-                      "NDiff OT",
-                      "R.dayPay",
+                      "R.Day Hrs",
+                      "R.Day Pay",
                       "Leave Pay",
-                      "UT",
-                      "Late",
-                      "Absent",
+                      "Late Hrs",
+                      "Late Amt",
+                      "UT Hrs",
+                      "UT Amt",
+                      "Absent Hrs",
+                      "Absent Amt",
                       "Allowance",
                       "Bonus",
                       "Gross",
@@ -40,7 +46,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "A.fee",
                       "Adj.",
                       "Net",
-                      "13th",
+                      "13th Month",
                       "Total"}
 
 
@@ -49,34 +55,40 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "DatCol3"}
 
     Private cell_mapped_decim_value() As String =
-        New String() {"DatCol43",
-                      "DatCol21",
-                      "DatCol41",
-                      "DatCol47",
-                      "DatCol44",
-                      "DatCol37",
-                      "DatCol36",
-                      "DatCol35",
-                      "DatCol38",
-                      "DatCol46",
-                      "DatCol48",
-                      "DatCol34",
-                      "DatCol33",
-                      "DatCol32",
-                      "DatCol31",
-                      "DatCol30",
-                      "DatCol22",
-                      "DatCol25",
-                      "DatCol27",
-                      "DatCol28",
-                      "DatCol24",
-                      "DatCol26",
-                      "DatCol29",
-                      "DatCol39",
-                      "DatCol45",
-                      "DatCol23",
-                      "DatCol40",
-                      "DatCol42"}
+        New String() {"Rate",
+                      "BasicPay",
+                      "RegularHours",
+                      "RegularPay",
+                      "OvertimeHours",
+                      "OvertimePay",
+                      "NightDiffHours",
+                      "NightDiffPay",
+                      "NightDiffOvertimeHours",
+                      "NightDiffOvertimePay",
+                      "HolidayPay",
+                      "RestDayHours",
+                      "RestDayPay",
+                      "LeavePay",
+                      "LateHours",
+                      "LateDeduction",
+                      "UndertimeHours",
+                      "UndertimeDeduction",
+                      "AbsentHours",
+                      "AbsentDeduction",
+                      "TotalAllowance",
+                      "TotalBonus",
+                      "GrossIncome",
+                      "SSS",
+                      "PhilHealth",
+                      "HDMF",
+                      "TaxableIncome",
+                      "WithholdingTax",
+                      "TotalLoans",
+                      "AgencyFee",
+                      "TotalAdjustments",
+                      "NetPay",
+                      "13thMonthPay",
+                      "Total"}
 
     Private is_actual As Boolean = False
 
@@ -267,7 +279,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                                     Dim _cells = worksheet.Cells(excl_colrow)
 
                                     _cells.Value = dtrow(cell_val)
-                                    _cells.Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
+                                    _cells.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
 
                                     _cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
 
