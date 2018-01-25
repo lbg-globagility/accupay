@@ -14,7 +14,7 @@ DECLARE anyint INT(11);
 UPDATE employee e
 INNER JOIN `position` ps
 ON ps.DivisionId = NEW.RowID
-SET e.PayFrequencyID = NEW.PayFrequencyID,
+SET # e.PayFrequencyID = NEW.PayFrequencyID,
     e.WorkDaysPerYear = NEW.WorkDaysPerYear,
     e.LateGracePeriod = NEW.GracePeriod,
     e.LastUpdBy = NEW.LastUpdBy
