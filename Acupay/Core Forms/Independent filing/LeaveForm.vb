@@ -308,14 +308,14 @@ Public Class LeaveForm
             MessageBox.Show("Background work cancelled.")
         Else
 
+            If TxtEmployeeNumber1.Exists Then
+                MsgBox("Leave successfully saved", MsgBoxStyle.Information)
+                Me.Close()
+            End If
+
         End If
 
         Panel1.Enabled = True
-
-        If TxtEmployeeNumber1.Exists Then
-            MsgBox("Leave successfully saved", MsgBoxStyle.Information)
-            Me.Close()
-        End If
 
     End Sub
 
@@ -556,6 +556,10 @@ Public Class LeaveForm
 
     Private Sub TxtEmployeeFullName1_Load(sender As Object, e As EventArgs) Handles TxtEmployeeFullName1.Load
 
+    End Sub
+
+    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+        Me.Close()
     End Sub
 
 End Class

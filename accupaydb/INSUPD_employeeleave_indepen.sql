@@ -29,6 +29,7 @@ DECLARE empleaveID INT(11);
 DECLARE specialty CONDITION FOR SQLSTATE '45000';
 DECLARE emp_employment_stat TEXT;
 DECLARE allowLeave BOOLEAN DEFAULT FALSE;
+DECLARE has_leave_balance BOOL DEFAULT FALSE;
 
 SELECT EmploymentStatus
 FROM employee
@@ -38,7 +39,44 @@ INTO emp_employment_stat;
 SET allowLeave = (emp_employment_stat = 'Regular') OR
     (elv_LeaveType = 'Leave w/o Pay');
 
-IF allowLeave THEN
+SELECT EXISTS
+(
+SELECT i.RowID
+FROM (
+	SELECT e.RowID
+	, e.LeaveBalance `BalanceLeave`
+	FROM employee e
+	WHERE e.RowID = elv_EmployeeID
+	AND e.OrganizationID = elv_OrganizationID
+	AND elv_LeaveType = 'Vacation leave'
+UNION
+	SELECT e.RowID
+	, e.SickLeaveBalance `BalanceLeave`
+	FROM employee e
+	WHERE e.RowID = elv_EmployeeID
+	AND e.OrganizationID = elv_OrganizationID
+	AND elv_LeaveType = 'Sick leave'
+UNION
+	SELECT e.RowID
+	, e.MaternityLeaveBalance `BalanceLeave`
+	FROM employee e
+	WHERE e.RowID = elv_EmployeeID
+	AND e.OrganizationID = elv_OrganizationID
+	# AND elv_LeaveType = 'Maternity/paternity leave'
+	AND LOCATE('aternity', elv_LeaveType) > 0
+UNION
+	SELECT e.RowID
+	, e.OtherLeaveBalance `BalanceLeave`
+	FROM employee e
+	WHERE e.RowID = elv_EmployeeID
+	AND e.OrganizationID = elv_OrganizationID
+	AND elv_LeaveType = 'Others'
+     ) i
+WHERE i.`BalanceLeave` > 0
+)
+INTO has_leave_balance;
+
+IF allowLeave AND has_leave_balance THEN
 
     INSERT INTO employeeleave
     (
@@ -137,6 +175,13 @@ IF allowLeave THEN
         ,Image=elv_Image
         ,`Status`=IF(elv_Status = '', 'Pending', elv_Status);
 
+ELSEIF has_leave_balance = FALSE THEN
+
+    SIGNAL specialty
+    SET MESSAGE_TEXT = 'Insufficient leave balance';
+    
+    SET empleaveID = 0;
+    
 ELSE
 
     SIGNAL specialty

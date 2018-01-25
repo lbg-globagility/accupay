@@ -2064,7 +2064,8 @@ Module myModule
             hasERR = 0
         Catch ex As Exception
             hasERR = 1
-            MsgBox(ex.Message & " " & ProcedureName, MsgBoxStyle.Critical, "ERROR")
+            MsgBox(String.Concat(ex.Message, Environment.NewLine, Environment.NewLine, ProcedureName),
+                   MsgBoxStyle.Critical, "ERROR")
         Finally
             conn.Close()
             cmd.Dispose()
