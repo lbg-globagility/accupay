@@ -48,6 +48,7 @@ Partial Class LeaveForm
         Me.Label25 = New System.Windows.Forms.Label()
         Me.bgSaving = New System.ComponentModel.BackgroundWorker()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.btnClose = New System.Windows.Forms.Button()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.cboxEmployees = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -261,9 +262,9 @@ Partial Class LeaveForm
         'btnApply
         '
         Me.btnApply.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnApply.Location = New System.Drawing.Point(699, 354)
+        Me.btnApply.Location = New System.Drawing.Point(708, 334)
         Me.btnApply.Name = "btnApply"
-        Me.btnApply.Size = New System.Drawing.Size(184, 61)
+        Me.btnApply.Size = New System.Drawing.Size(184, 54)
         Me.btnApply.TabIndex = 210
         Me.btnApply.Text = "&Done"
         Me.btnApply.UseVisualStyleBackColor = True
@@ -308,6 +309,7 @@ Partial Class LeaveForm
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.btnClose)
         Me.Panel1.Controls.Add(Me.Label9)
         Me.Panel1.Controls.Add(Me.cboxEmployees)
         Me.Panel1.Controls.Add(Me.Label7)
@@ -347,6 +349,15 @@ Partial Class LeaveForm
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(895, 427)
         Me.Panel1.TabIndex = 0
+        '
+        'btnClose
+        '
+        Me.btnClose.Location = New System.Drawing.Point(708, 394)
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.Size = New System.Drawing.Size(184, 30)
+        Me.btnClose.TabIndex = 268
+        Me.btnClose.Text = "Cancel"
+        Me.btnClose.UseVisualStyleBackColor = True
         '
         'Label9
         '
@@ -544,4 +555,5 @@ Partial Class LeaveForm
     Friend WithEvents bgwEmpNames As System.ComponentModel.BackgroundWorker
     Friend WithEvents cboxEmployees As System.Windows.Forms.ComboBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents btnClose As Button
 End Class
