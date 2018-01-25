@@ -55,6 +55,8 @@ DECLARE isEntitledToSpecialNonWorkingHoliday BOOLEAN;
 DECLARE isEntitledToHoliday BOOLEAN;
 DECLARE isEntitledToRestDay BOOLEAN;
 DECLARE isEntitledToRestDayOvertime BOOLEAN;
+DECLARE isCalculatingRegularHoliday BOOLEAN DEFAULT FALSE;
+DECLARE isCalculatingSpecialNonWorkingHoliday BOOLEAN DEFAULT FALSE;
 
 DECLARE isDayMatchRestDay BOOLEAN DEFAULT FALSE;
 
@@ -102,6 +104,7 @@ DECLARE shiftID INT(11);
 DECLARE workingHours DECIMAL(11,6) DEFAULT 0;#INT(10)
 
 DECLARE requiredToWorkLastWorkingDay BOOLEAN DEFAULT FALSE;
+DECLARE allowAbsenceOnHoliday BOOLEAN DEFAULT FALSE;
 
 DECLARE dateToday DATE;
 DECLARE dateTomorrow DATE;
@@ -271,6 +274,10 @@ SET isRestDayInclusive = GetListOfValueOrDefault(
     'Payroll Policy', 'restday.inclusiveofbasicpay', FALSE
 );
 
+SET allowAbsenceOnHoliday = GetListOfValueOrDefault(
+    'Payroll Policy', 'holiday.allowabsence', FALSE
+);
+
 SELECT
     RowID,
     IF(
@@ -311,6 +318,8 @@ INTO
     isRegularHoliday,
     isSpecialNonWorkingHoliday;
 
+SET isCalculatingRegularHoliday = isRegularHoliday AND isEntitledToRegularHoliday;
+SET isCalculatingSpecialNonWorkingHoliday = isSpecialNonWorkingHoliday AND isEntitledToSpecialNonWorkingHoliday;
 SET isHoliday = isRegularHoliday OR isSpecialNonWorkingHoliday;
 SET isRegularDay = NOT isHoliday;
 
@@ -718,19 +727,22 @@ INTO dailyRate;
 
 SET hourlyRate = dailyRate / workingHours;
 
+/******************************************************************************
+ ******************************************************************************
+ * ABSENT COMPUTATION
+ ******************************************************************************
+ ******************************************************************************/
 SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(ete_EmpRowID, dateToday);
 
-/*
- * Compute Absent hours
- */
 SET isExemptForHoliday = (
     (
         (isHoliday AND (NOT requiredToWorkLastWorkingDay)) OR
         (isHoliday AND hasWorkedLastWorkingDay)
     ) AND
     (
-        (isRegularHoliday AND isEntitledToRegularHoliday) OR
-        (isSpecialNonWorkingHoliday AND isEntitledToSpecialNonWorkingHoliday)
+        isCalculatingRegularHoliday OR
+        isCalculatingSpecialNonWorkingHoliday OR
+        (NOT allowAbsenceOnHoliday)
     )
 );
 
@@ -834,13 +846,13 @@ ELSEIF isRegularDay THEN
         SET lateAmount = lateHours * hourlyRate;
         SET undertimeAmount = undertimeHours * hourlyRate;
     ELSEIF isRestDay THEN
-    
+
         IF isRestDayInclusive AND e_EmpType = 'Monthly' THEN
             SET restDayAmount = (regularHours * hourlyRate) * (restday_rate - 1);
         ELSE
             SET restDayAmount = (regularHours * hourlyRate) * restday_rate;
         END IF;
-        
+
         SET overtimeAmount = (overtimeHours * hourlyRate) * restdayot_rate;
 
         SET lateHours = 0.0;
@@ -906,8 +918,8 @@ ELSEIF isHoliday THEN
         SET applicableHolidayRate = commonrate;
     END IF;
 
-    IF (isRegularHoliday AND isEntitledToRegularHoliday) OR
-       (isSpecialNonWorkingHoliday AND isEntitledToSpecialNonWorkingHoliday) THEN
+    IF isCalculatingRegularHoliday OR
+       isCalculatingSpecialNonWorkingHoliday THEN
 
         SET lateHours = 0.0;
         SET undertimeHours = 0.0;
