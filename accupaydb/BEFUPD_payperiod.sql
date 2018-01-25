@@ -11,13 +11,42 @@ CREATE TRIGGER `BEFUPD_payperiod` BEFORE UPDATE ON `payperiod` FOR EACH ROW BEGI
 
 DECLARE payfreq_divisor INT(11);
 
+DECLARE min_date
+        ,max_date
+		  ,last_friday_date DATE;
+
 IF NEW.TotalGrossSalary = 1 THEN
 
     SELECT PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) FROM payfrequency pf WHERE pf.RowID=NEW.TotalGrossSalary INTO payfreq_divisor;
 
     SET NEW.OrdinalValue = (NEW.`Month` * payfreq_divisor) - (NEW.`Half` * 1);
 
+ELSEIF NEW.TotalGrossSalary = 4 THEN
+
+	SELECT MIN(d.DateValue), MAX(d.DateValue)
+	FROM dates d
+	WHERE DATE_FORMAT(d.DateValue, '%Y%c') = CONCAT(NEW.`Year`, NEW.`Month`)
+	INTO min_date
+			,max_date;
+	
+	SELECT d.*
+	FROM dates d
+	WHERE d.DateValue BETWEEN min_date AND max_date
+	AND DAYNAME(d.DateValue)='Friday'
+	ORDER BY d.DateValue DESC
+	# LIMIT 1, 1 -- second to the last Friday of the month
+	LIMIT 1 -- last Friday of the month
+	INTO last_friday_date;
+	
+	IF OLD.IsLastFridayOfMonthFallsHere != (last_friday_date BETWEEN NEW.PayFromDate AND NEW.PayToDate) THEN
+	
+		SET NEW.IsLastFridayOfMonthFallsHere = (last_friday_date BETWEEN NEW.PayFromDate AND NEW.PayToDate);
+		SET NEW.IsLastFridayOfMonthFallsHere = IFNULL(NEW.IsLastFridayOfMonthFallsHere, 0);
+		
+	END IF;
+	
 END IF;
+
 
 
 
