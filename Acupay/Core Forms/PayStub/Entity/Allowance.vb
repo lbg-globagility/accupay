@@ -36,6 +36,9 @@ Namespace Global.AccuPay.Entity
         <Column("AllowanceAmount")>
         Public Property Amount As Decimal
 
+        <ForeignKey("ProductID")>
+        Public Overridable Property Product As Product
+
     End Class
 
 End Namespace

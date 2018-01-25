@@ -110,6 +110,12 @@ Namespace Global.AccuPay.Entity
             DutyEnd = {timeOut, shiftToday.RangeEnd}.Min
         End Sub
 
+        Public ReadOnly Property TotalLeaveHours As Decimal
+            Get
+                Return VacationLeaveHours + SickLeaveHours + MaternityLeaveHours + OtherLeaveHours
+            End Get
+        End Property
+
     End Class
 
 End Namespace

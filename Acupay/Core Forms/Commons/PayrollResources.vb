@@ -252,10 +252,12 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadTimeEntries2() As Task
+        Dim backDate = _payDateFrom.AddDays(-3)
+
         Using context = New PayrollContext()
             Dim query = From t In context.TimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
                         Where t.OrganizationID = z_OrganizationID And
-                            _payDateFrom <= t.EntryDate And
+                            backDate <= t.EntryDate And
                             t.EntryDate <= _payDateTo
                         Select t
 
@@ -451,7 +453,7 @@ Public Class PayrollResources
 
     Private Async Function LoadAllowances() As Task
         Using context = New PayrollContext()
-            Dim query = From a In context.Allowances
+            Dim query = From a In context.Allowances.Include(Function(a) a.Product)
                         Where a.EffectiveStartDate <= _payDateTo And
                             _payDateFrom <= a.EffectiveEndDate And
                             a.OrganizationID = z_OrganizationID
