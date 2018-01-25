@@ -91,13 +91,13 @@ ELSEIF NEW.TotalGrossSalary = 4 THEN
    
    # ###########################################################################
    
-	SELECT MIN(d.DateValue), MAX(d.DateValue)
+	/*SELECT MIN(d.DateValue), MAX(d.DateValue)
 	FROM dates d
 	WHERE DATE_FORMAT(d.DateValue, '%Y%c') = CONCAT(NEW.`Year`, NEW.`Month`)
 	INTO min_date
 			,max_date;
 	
-	SELECT d.*
+	SELECT d.DateValue
 	FROM dates d
 	WHERE d.DateValue BETWEEN min_date AND max_date
 	AND DAYNAME(d.DateValue)='Friday'
@@ -111,8 +111,10 @@ ELSEIF NEW.TotalGrossSalary = 4 THEN
 		SET NEW.IsLastFridayOfMonthFallsHere = (last_friday_date BETWEEN NEW.PayFromDate AND NEW.PayToDate);
 		SET NEW.IsLastFridayOfMonthFallsHere = IFNULL(NEW.IsLastFridayOfMonthFallsHere, 0);
 		
-	END IF;
+	END IF;*/
 	
+	SET NEW.IsLastFridayOfMonthFallsHere = IFNULL(NEW.IsLastFridayOfMonthFallsHere, 0);
+		
 END IF;
 
 
