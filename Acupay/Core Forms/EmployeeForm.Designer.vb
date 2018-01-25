@@ -2271,7 +2271,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 430)
-        Me.SplitContainer2.SplitterDistance = 149
+        Me.SplitContainer2.SplitterDistance = 146
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3003,7 +3003,6 @@ Partial Class EmployeeForm
         Me.Label316.Size = New System.Drawing.Size(39, 13)
         Me.Label316.TabIndex = 165
         Me.Label316.Text = "hour(s)"
-        Me.Label316.Visible = False
         '
         'txtothrallow
         '
@@ -3013,7 +3012,6 @@ Partial Class EmployeeForm
         Me.txtothrallow.Name = "txtothrallow"
         Me.txtothrallow.Size = New System.Drawing.Size(84, 20)
         Me.txtothrallow.TabIndex = 44
-        Me.txtothrallow.Visible = False
         '
         'Label317
         '
@@ -3023,7 +3021,6 @@ Partial Class EmployeeForm
         Me.Label317.Size = New System.Drawing.Size(38, 13)
         Me.Label317.TabIndex = 164
         Me.Label317.Text = "Others"
-        Me.Label317.Visible = False
         '
         'Label138
         '
@@ -3136,7 +3133,6 @@ Partial Class EmployeeForm
         Me.txtothrpayp.Name = "txtothrpayp"
         Me.txtothrpayp.Size = New System.Drawing.Size(84, 20)
         Me.txtothrpayp.TabIndex = 52
-        Me.txtothrpayp.Visible = False
         '
         'Label357
         '
@@ -3146,7 +3142,6 @@ Partial Class EmployeeForm
         Me.Label357.Size = New System.Drawing.Size(39, 13)
         Me.Label357.TabIndex = 167
         Me.Label357.Text = "hour(s)"
-        Me.Label357.Visible = False
         '
         'Label355
         '
@@ -3156,7 +3151,6 @@ Partial Class EmployeeForm
         Me.Label355.Size = New System.Drawing.Size(38, 13)
         Me.Label355.TabIndex = 165
         Me.Label355.Text = "Others"
-        Me.Label355.Visible = False
         '
         'Label160
         '
@@ -3541,7 +3535,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 247)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 250)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0

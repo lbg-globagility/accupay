@@ -17,6 +17,8 @@ DECLARE DAYTYPE_REGULAR_HOLIDAY VARCHAR(50) DEFAULT 'Regular Holiday';
 
 DECLARE STANDARD_WORKING_HOURS INT(10) DEFAULT 8;
 
+DECLARE SECONDS_PER_HOUR INT(11) DEFAULT 3600;
+
 /*
  * The standard rate is 100% or a multiplier of 1.0.
  */
@@ -55,6 +57,8 @@ DECLARE isEntitledToSpecialNonWorkingHoliday BOOLEAN;
 DECLARE isEntitledToHoliday BOOLEAN;
 DECLARE isEntitledToRestDay BOOLEAN;
 DECLARE isEntitledToRestDayOvertime BOOLEAN;
+DECLARE isCalculatingRegularHoliday BOOLEAN DEFAULT FALSE;
+DECLARE isCalculatingSpecialNonWorkingHoliday BOOLEAN DEFAULT FALSE;
 
 DECLARE isDayMatchRestDay BOOLEAN DEFAULT FALSE;
 
@@ -102,6 +106,7 @@ DECLARE shiftID INT(11);
 DECLARE workingHours DECIMAL(11,6) DEFAULT 0;#INT(10)
 
 DECLARE requiredToWorkLastWorkingDay BOOLEAN DEFAULT FALSE;
+DECLARE allowAbsenceOnHoliday BOOLEAN DEFAULT FALSE;
 
 DECLARE dateToday DATE;
 DECLARE dateTomorrow DATE;
@@ -126,7 +131,7 @@ DECLARE hasShift BOOLEAN DEFAULT FALSE;
 DECLARE breaktimeStart DATETIME;
 DECLARE breaktimeEnd DATETIME;
 DECLARE hasBreaktime BOOLEAN DEFAULT FALSE;
-DECLARE isNightShift BOOLEAN;
+DECLARE isNightShift BOOLEAN DEFAULT FALSE;
 
 DECLARE isRegularDay BOOLEAN DEFAULT FALSE;
 DECLARE isSpecialNonWorkingHoliday BOOLEAN DEFAULT FALSE;
@@ -153,31 +158,31 @@ DECLARE dawnNightDiffRangeEnd DATETIME;
 
 DECLARE nightDiffHours DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE nightDiffAmount DECIMAL(11, 6) DEFAULT 0.0;
-DECLARE isDutyOverlappedWithNightDifferential BOOLEAN;
-DECLARE shouldCalculateNightDifferential BOOLEAN;
+DECLARE isDutyOverlappedWithNightDifferential BOOLEAN DEFAULT FALSE;
+DECLARE shouldCalculateNightDifferential BOOLEAN DEFAULT FALSE;
 
 DECLARE otstartingtime TIME DEFAULT NULL;
 DECLARE otendingtime TIME DEFAULT NULL;
 DECLARE overtimeStart DATETIME;
 DECLARE overtimeEnd DATETIME;
 DECLARE overtimeDate DATE;
-DECLARE hasOvertime BOOLEAN;
+DECLARE hasOvertime BOOLEAN DEFAULT FALSE;
 
 DECLARE overtimeDutyStart DATETIME;
 DECLARE overtimeDutyEnd DATETIME;
-DECLARE overtimeHours DECIMAL(12, 6);
+DECLARE overtimeHours DECIMAL(12, 6) DEFAULT 0.0;
 DECLARE overtimeAmount DECIMAL(11, 6) DEFAULT 0.0;
 
 DECLARE nightDiffOTDutyStart DATETIME;
 DECLARE nightDiffOTDutyEnd DATETIME;
 DECLARE nightDiffOTHours DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE nightDiffOTAmount DECIMAL(11, 6) DEFAULT 0.0;
-DECLARE isOvertimeOverlappedNightDifferential BOOLEAN;
-DECLARE shouldCalculateNightDifferentialOvertime BOOLEAN;
+DECLARE isOvertimeOverlappedNightDifferential BOOLEAN DEFAULT FALSE;
+DECLARE shouldCalculateNightDifferentialOvertime BOOLEAN DEFAULT FALSE;
 
-DECLARE isDefaultRestDay BOOLEAN;
-DECLARE isShiftRestDay BOOLEAN;
-DECLARE restDayHours DECIMAL(15, 4);
+DECLARE isDefaultRestDay BOOLEAN DEFAULT FALSE;
+DECLARE isShiftRestDay BOOLEAN DEFAULT FALSE;
+DECLARE restDayHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE restDayAmount DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE holidayPay DECIMAL(15, 4) DEFAULT 0.0;
@@ -205,16 +210,16 @@ DECLARE leaveType VARCHAR(50);
 
 DECLARE leaveHoursBeforeBreak DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE leaveHoursAfterBreak DECIMAL(15, 4) DEFAULT 0.0;
-DECLARE leaveHours DECIMAL(15, 4);
+DECLARE leaveHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE leavePay DECIMAL(15, 4) DEFAULT 0.0;
 
-DECLARE basicDayPay DECIMAL(15, 4);
+DECLARE basicDayPay DECIMAL(15, 4) DEFAULT 0.0;
 
-DECLARE hasWorkedLastWorkingDay BOOLEAN;
+DECLARE hasWorkedLastWorkingDay BOOLEAN DEFAULT FALSE;
 
-DECLARE applicableHolidayRate DECIMAL(11, 6);
+DECLARE applicableHolidayRate DECIMAL(11, 6) DEFAULT 0.0;
 
-DECLARE sec_per_hour INT(11) DEFAULT 3600;
+DECLARE isRestDayInclusive BOOLEAN DEFAULT FALSE;
 
 SELECT
     e.EmploymentStatus,
@@ -265,6 +270,14 @@ SET requiredToWorkLastWorkingDay = GetListOfValueOrDefault(
     'Payroll Policy', 'HolidayLastWorkingDayOrAbsent', FALSE
 );
 
+SET isRestDayInclusive = GetListOfValueOrDefault(
+    'Payroll Policy', 'restday.inclusiveofbasicpay', FALSE
+);
+
+SET allowAbsenceOnHoliday = GetListOfValueOrDefault(
+    'Payroll Policy', 'holiday.allowabsence', FALSE
+);
+
 SELECT
     RowID,
     IF(
@@ -305,6 +318,8 @@ INTO
     isRegularHoliday,
     isSpecialNonWorkingHoliday;
 
+SET isCalculatingRegularHoliday = isRegularHoliday AND isEntitledToRegularHoliday;
+SET isCalculatingSpecialNonWorkingHoliday = isSpecialNonWorkingHoliday AND isEntitledToSpecialNonWorkingHoliday;
 SET isHoliday = isRegularHoliday OR isSpecialNonWorkingHoliday;
 SET isRegularDay = NOT isHoliday;
 
@@ -699,7 +714,7 @@ IF hasLeave THEN
 		                                 , CONCAT_DATETIME(ete_Date, leaveStartTime)
 													, CONCAT_DATETIME(ADDDATE(ete_Date
 											                                , INTERVAL IS_TIMERANGE_REACHTOMORROW(leaveStartTime, leaveEndTime) DAY)
-																			, leaveEndTime)) / sec_per_hour;
+																			, leaveEndTime)) / SECONDS_PER_HOUR;
 
     END IF;
 END IF;
@@ -712,19 +727,22 @@ INTO dailyRate;
 
 SET hourlyRate = dailyRate / workingHours;
 
+/******************************************************************************
+ ******************************************************************************
+ * ABSENT COMPUTATION
+ ******************************************************************************
+ ******************************************************************************/
 SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(ete_EmpRowID, dateToday);
 
-/*
- * Compute Absent hours
- */
 SET isExemptForHoliday = (
     (
         (isHoliday AND (NOT requiredToWorkLastWorkingDay)) OR
         (isHoliday AND hasWorkedLastWorkingDay)
     ) AND
     (
-        (isRegularHoliday AND isEntitledToRegularHoliday) OR
-        (isSpecialNonWorkingHoliday AND isEntitledToSpecialNonWorkingHoliday)
+        isCalculatingRegularHoliday OR
+        isCalculatingSpecialNonWorkingHoliday OR
+        (NOT allowAbsenceOnHoliday)
     )
 );
 
@@ -806,14 +824,14 @@ IF ete_Date < e_StartDate THEN
         0,
         0,
         0,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
+        0,
+        0,
+        0,
+        0,
         1,
         NULL,
-        NULL,
-        NULL,
+        0,
+        0,
         0,
         0
     )
@@ -829,12 +847,12 @@ ELSEIF isRegularDay THEN
         SET undertimeAmount = undertimeHours * hourlyRate;
     ELSEIF isRestDay THEN
 
-        IF e_EmpType = 'Monthly' THEN
+        IF isRestDayInclusive AND e_EmpType = 'Monthly' THEN
             SET restDayAmount = (regularHours * hourlyRate) * (restday_rate - 1);
-        ELSEIF e_EmpType = 'Daily' THEN
+        ELSE
             SET restDayAmount = (regularHours * hourlyRate) * restday_rate;
         END IF;
-        
+
         SET overtimeAmount = (overtimeHours * hourlyRate) * restdayot_rate;
 
         SET lateHours = 0.0;
@@ -900,8 +918,8 @@ ELSEIF isHoliday THEN
         SET applicableHolidayRate = commonrate;
     END IF;
 
-    IF (isRegularHoliday AND isEntitledToRegularHoliday) OR
-       (isSpecialNonWorkingHoliday AND isEntitledToSpecialNonWorkingHoliday) THEN
+    IF isCalculatingRegularHoliday OR
+       isCalculatingSpecialNonWorkingHoliday THEN
 
         SET lateHours = 0.0;
         SET undertimeHours = 0.0;
@@ -956,8 +974,8 @@ ELSEIF isHoliday THEN
         nightDiffAmount,
         nightDiffOTAmount,
         (lateHours * hourlyRate),
-        NULL,
-        NULL,
+        0,
+        0,
         holidayPay,
         basicDayPay,
         7,

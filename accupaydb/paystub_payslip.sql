@@ -77,7 +77,7 @@ SELECT
     IFNULL(ete.NightDifferentialHours, 0) AS `COL14`,
     IFNULL(ete.NightDiffHoursAmount, 0) AS `COL15`,
     0 AS `COL16`,
-    IFNULL(ete.HolidayPayAmount, 0) AS `COL17`,
+    IFNULL(ete.HolidayPayAmount, 0) + IFNULL(ete.RestDayAmount, 0) AS `COL17`,
     (ps.TotalAllowance - IFNULL(psiECOLA.PayAmount, 0)) AS `COL18`,
     ps.TotalAdjustments `COL19`,
     (ps.TotalGrossSalary + ps.TotalAdjustments) AS `COL20`,
@@ -205,6 +205,7 @@ LEFT JOIN (
         SUM(i.TaxableDailyBonus) AS TaxableDailyBonus,
         SUM(i.NonTaxableDailyBonus) AS NonTaxableDailyBonus,
         SUM(i.Leavepayment) AS Leavepayment,
+        SUM(i.RestDayAmount) AS RestDayAmount,
         SUM(
             IF(
                 (
@@ -252,7 +253,8 @@ LEFT JOIN (
                 HolidayPayAmount,
                 TaxableDailyBonus,
                 NonTaxableDailyBonus,
-                Leavepayment
+                Leavepayment,
+                RestDayAmount
             FROM employeetimeentry
             WHERE OrganizationID = OrganizID AND
                 IsActualFlag = 0 AND
@@ -292,7 +294,8 @@ LEFT JOIN (
                 HolidayPayAmount,
                 TaxableDailyBonus,
                 NonTaxableDailyBonus,
-                Leavepayment
+                Leavepayment,
+                RestDayAmount
             FROM employeetimeentryactual
             WHERE OrganizationID = OrganizID AND
                 IsActualFlag = 1 AND
@@ -369,8 +372,8 @@ LEFT JOIN (
     INNER JOIN (
         SELECT
             EmployeeID,
-            VacationLeaveHours,
-            SickLeaveHours
+            SUM(VacationLeaveHours) `VacationLeaveHours`,
+            SUM(SickLeaveHours) `SickLeaveHours`
         FROM employeetimeentry
         WHERE `Date` BETWEEN paydate_from AND paydat_to
         GROUP BY EmployeeID
