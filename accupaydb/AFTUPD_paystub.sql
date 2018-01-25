@@ -287,6 +287,7 @@ UPDATE
     NightDiffOvertimePay = nightDiffOvertimePay,
     RestDayPay = restDayPay,
     HolidayPay = holidayPay,
+    LeavePay = leavePay,
     LateDeduction = lateDeduction,
     UndertimeDeduction = undertimeDeduction,
     AbsenceDeduction = absenceDeduction,
