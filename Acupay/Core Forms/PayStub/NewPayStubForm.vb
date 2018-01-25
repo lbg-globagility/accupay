@@ -29,9 +29,11 @@ Public Class NewPayStubForm
     End Sub
 
     Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvPaystubs.CellFormatting
-        Dim column As DataGridViewColumn = dgvPaystubs.Columns(e.ColumnIndex)
+        Dim dataGridView = DirectCast(sender, DataGridView)
+
+        Dim column As DataGridViewColumn = dataGridView.Columns(e.ColumnIndex)
         If (column.DataPropertyName.Contains(".")) Then
-            Dim data As Object = dgvPaystubs.Rows(e.RowIndex).DataBoundItem
+            Dim data As Object = dataGridView.Rows(e.RowIndex).DataBoundItem
             Dim properties As String() = column.DataPropertyName.Split("."c)
 
             Dim i As Integer = 0
@@ -40,7 +42,7 @@ Public Class NewPayStubForm
                 i += 1
             End While
 
-            dgvPaystubs.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = data
+            dataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = data
         End If
     End Sub
 
@@ -122,7 +124,7 @@ Public Class NewPayStubForm
 
     End Class
 
-    Private Sub NewPayStubForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub PaystubTab_Click(sender As Object, e As EventArgs) Handles PaystubTab.Click
 
     End Sub
 End Class
