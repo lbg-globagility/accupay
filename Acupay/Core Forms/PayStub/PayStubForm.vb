@@ -2688,8 +2688,27 @@ Friend Class PrintAllPaySlipOfficialFormat
 
             Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
 
+            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgContact")
+            objText.Text = String.Empty
+
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgName")
             objText.Text = orgNam.ToUpper
+
+            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgAddress")
+            objText.Text =
+                Convert.ToString(New SQL(String.Concat("SELECT CONCAT_WS(', ',",
+                                                       "IF(LENGTH(TRIM(ad.StreetAddress1)) > 0, ad.StreetAddress1, NULL)",
+                                                       ",IF(LENGTH(TRIM(ad.StreetAddress2)) > 0, ad.StreetAddress2, NULL)",
+                                                       ",IF(LOCATE('city', ad.Barangay) > 0, IF(LENGTH(TRIM(ad.Barangay)) > 0, ad.Barangay, NULL), CONCAT('Brgy. ', TRIM(ad.Barangay)))",
+                                                       ",IF(LOCATE('city', ad.CityTown) > 0, IF(LENGTH(TRIM(ad.CityTown)) > 0, ad.CityTown, NULL), CONCAT(TRIM(ad.CityTown), ' city'))",
+                                                       ",IF(LENGTH(TRIM(ad.Country)) > 0, ad.Country, NULL)",
+                                                       ",IF(LENGTH(TRIM(ad.State)) > 0, ad.State, NULL)",
+                                                       ",IF(LENGTH(TRIM(ad.ZipCode)) > 0, ad.ZipCode, NULL)",
+                                                       ") `AddressText`",
+                                                       " FROM organization og",
+                                                       " INNER JOIN address ad ON ad.RowID=og.PrimaryAddressID",
+                                                       " WHERE og.RowID = ", orgztnID,
+                                                       ";")).GetFoundRow)
 
         End If
 
