@@ -372,8 +372,8 @@ LEFT JOIN (
     INNER JOIN (
         SELECT
             EmployeeID,
-            VacationLeaveHours,
-            SickLeaveHours
+            SUM(VacationLeaveHours) `VacationLeaveHours`,
+            SUM(SickLeaveHours) `SickLeaveHours`
         FROM employeetimeentry
         WHERE `Date` BETWEEN paydate_from AND paydat_to
         GROUP BY EmployeeID
