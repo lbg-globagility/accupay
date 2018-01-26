@@ -28,10 +28,6 @@ Public Class PayrollResources
 
     Private _loanTransactions As ICollection(Of PayrollSys.LoanTransaction)
 
-    Private _fixedTaxableMonthlyAllowances As DataTable
-
-    Private _fixedNonTaxableMonthlyAllowances As DataTable
-
     Private _products As IEnumerable(Of Product)
 
     Private _socialSecurityBrackets As ICollection(Of SocialSecurityBracket)
@@ -87,18 +83,6 @@ Public Class PayrollResources
     Public ReadOnly Property Salaries As DataTable
         Get
             Return _salaries
-        End Get
-    End Property
-
-    Public ReadOnly Property FixedTaxableMonthlyAllowances As DataTable
-        Get
-            Return _fixedTaxableMonthlyAllowances
-        End Get
-    End Property
-
-    Public ReadOnly Property FixedNonTaxableMonthlyAllowances As DataTable
-        Get
-            Return _fixedNonTaxableMonthlyAllowances
         End Get
     End Property
 
@@ -182,8 +166,6 @@ Public Class PayrollResources
             loadSalariesTask,
             LoadProducts(),
             LoadPreviousPaystubs(),
-            LoadFixedTaxableMonthlyAllowances(),
-            LoadFixedNonTaxableMonthlyAllowancesTask(),
             LoadSocialSecurityBrackets(),
             LoadPhilHealthBrackets(),
             LoadWithholdingTaxBrackets(),
@@ -306,69 +288,6 @@ Public Class PayrollResources
         _salaries = Await query.ReadAsync()
     End Function
 
-    Private Async Function LoadFixedTaxableMonthlyAllowances() As Task
-        Dim fixedTaxableMonthlyAllowanceSql = String.Empty
-
-        If _isEndOfMonth Then
-            fixedTaxableMonthlyAllowanceSql =
-            "SELECT ea.* " &
-            "FROM employeeallowance ea " &
-            "INNER JOIN product p " &
-            "ON p.RowID = ea.ProductID " &
-            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
-            "AND ea.AllowanceFrequency IN ('Monthly','Semi-monthly') " &
-            " AND (ea.EffectiveStartDate >= '" & _payDateFrom.ToString("s") & "' OR ea.EffectiveEndDate >= '" & _payDateFrom.ToString("s") & "')" &
-            " AND (ea.EffectiveStartDate <= '" & _payDateTo.ToString("s") & "' OR ea.EffectiveEndDate <= '" & _payDateTo.ToString("s") & "')" &
-            " AND p.`Fixed` = 1 " &
-            "AND p.`Status` = 1;"
-        Else
-            fixedTaxableMonthlyAllowanceSql =
-                "SELECT ea.* " &
-                "FROM employeeallowance ea " &
-                "INNER JOIN product p " &
-                "ON p.RowID = ea.ProductID " &
-                "WHERE ea.OrganizationID = '" & orgztnID & "' " &
-                "AND ea.AllowanceFrequency = 'Semi-monthly' " &
-                " AND (ea.EffectiveStartDate >= '" & _payDateFrom.ToString("s") & "' OR ea.EffectiveEndDate >= '" & _payDateFrom.ToString("s") & "')" &
-                " AND (ea.EffectiveStartDate <= '" & _payDateTo.ToString("s") & "' OR ea.EffectiveEndDate <= '" & _payDateTo.ToString("s") & "')" &
-                " AND p.`Fixed` = 1 " &
-                "AND p.`Status` = 1;"
-        End If
-
-        _fixedTaxableMonthlyAllowances = Await New SqlToDataTable(fixedTaxableMonthlyAllowanceSql).ReadAsync()
-    End Function
-
-    Private Async Function LoadFixedNonTaxableMonthlyAllowancesTask() As Task
-        Dim fixedNonTaxableMonthlyAllowanceSql = String.Empty
-        If _isEndOfMonth Then
-            fixedNonTaxableMonthlyAllowanceSql =
-            "SELECT ea.* " &
-            "FROM employeeallowance ea " &
-            "INNER JOIN product p " &
-            "On p.RowID = ea.ProductID " &
-            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
-            "AND ea.AllowanceFrequency IN ('Monthly','Semi-monthly') " &
-            " AND (ea.EffectiveStartDate >= '" & _payDateFrom.ToString("s") & "' OR ea.EffectiveEndDate >= '" & _payDateFrom.ToString("s") & "')" &
-            " AND (ea.EffectiveStartDate <= '" & _payDateTo.ToString("s") & "' OR ea.EffectiveEndDate <= '" & _payDateTo.ToString("s") & "')" &
-            " AND p.`Fixed` = 1 " &
-            "AND p.`Status` = 0;"
-        Else '                      'means first half of the month
-            fixedNonTaxableMonthlyAllowanceSql =
-            "SELECT ea.* " &
-            "FROM employeeallowance ea " &
-            "INNER JOIN product p " &
-            "ON p.RowID = ea.ProductID " &
-            "WHERE ea.OrganizationID = '" & orgztnID & "' " &
-            "AND ea.AllowanceFrequency = 'Semi-monthly' " &
-            " AND (ea.EffectiveStartDate >= '" & _payDateFrom.ToString("s") & "' OR ea.EffectiveEndDate >= '" & _payDateFrom.ToString("s") & "')" &
-            " AND (ea.EffectiveStartDate <= '" & _payDateTo.ToString("s") & "' OR ea.EffectiveEndDate <= '" & _payDateTo.ToString("s") & "')" &
-            " AND p.`Fixed` = 1 " &
-            "AND p.`Status` = 0;"
-        End If
-
-        _fixedNonTaxableMonthlyAllowances = Await New SqlToDataTable(fixedNonTaxableMonthlyAllowanceSql).ReadAsync()
-    End Function
-
     Private Async Function LoadProducts() As Task
         Using context = New PayrollContext()
             Dim query = From p In context.Products
@@ -453,10 +372,21 @@ Public Class PayrollResources
 
     Private Async Function LoadAllowances() As Task
         Using context = New PayrollContext()
+            ' Retrieve all allowances whose begin and end date spans the cutoff dates. Or in the case of
+            ' one time-allowances, allowances whose start date is between the cutoff dates.
             Dim query = From a In context.Allowances.Include(Function(a) a.Product)
-                        Where a.EffectiveStartDate <= _payDateTo And
-                            _payDateFrom <= a.EffectiveEndDate And
-                            a.OrganizationID = z_OrganizationID
+                        Where (
+                            (
+                                a.EffectiveStartDate <= _payDateTo And
+                                _payDateFrom <= a.EffectiveEndDate
+                            ) Or
+                            (
+                                _payDateFrom <= a.EffectiveStartDate And
+                                a.EffectiveStartDate <= _payDateTo And
+                                a.EffectiveEndDate Is Nothing
+                            )
+                        ) And
+                        a.OrganizationID = z_OrganizationID
 
             _allowances = Await query.ToListAsync()
         End Using

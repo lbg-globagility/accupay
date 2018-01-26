@@ -154,8 +154,6 @@ Public Class PayrollGeneration
             allWeeklyAllowances As DataTable,
             allNoTaxMonthlyAllowances As DataTable,
             allNoTaxWeeklyAllowances As DataTable,
-            allFixedTaxableMonthlyAllowances As DataTable,
-            allFixedNonTaxableMonthlyAllowances As DataTable,
             allDailyBonuses As DataTable,
             allMonthlyBonuses As DataTable,
             allOneTimeBonuses As DataTable,
@@ -194,8 +192,6 @@ Public Class PayrollGeneration
 
         Me.allNoTaxWeeklyAllowances = allNoTaxWeeklyAllowances
         Me.allNoTaxMonthlyAllowances = allNoTaxMonthlyAllowances
-        Me.allFixedTaxableMonthlyAllowances = allFixedTaxableMonthlyAllowances
-        Me.allFixedNonTaxableMonthlyAllowances = allFixedNonTaxableMonthlyAllowances
 
         Me.allOneTimeBonuses = allOneTimeBonuses
         Me.allDailyBonuses = allDailyBonuses

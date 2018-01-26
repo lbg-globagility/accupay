@@ -120,10 +120,6 @@ Public Class PayStubForm
 
     Dim notax_allowanceMonthly As New DataTable
 
-    Private _fixedTaxableMonthlyAllowances As DataTable
-
-    Private _fixedNonTaxableMonthlyAllowances As DataTable
-
     Dim emp_bonusSemiM As New DataTable
 
     Dim notax_bonusSemiM As New DataTable
@@ -790,8 +786,6 @@ Public Class PayStubForm
                 etent_totdaypay = resources.TimeEntries
                 _loanSchedules = resources.LoanSchedules
                 _loanTransactions = resources.LoanTransactions
-                _fixedNonTaxableMonthlyAllowances = resources.FixedNonTaxableMonthlyAllowances
-                _fixedTaxableMonthlyAllowances = resources.FixedTaxableMonthlyAllowances
 
                 Dim dailyallowfreq = "Daily"
 
@@ -1156,8 +1150,6 @@ Public Class PayStubForm
                         emp_allowanceWeekly,
                         notax_allowanceMonthly,
                         notax_allowanceWeekly,
-                        _fixedTaxableMonthlyAllowances,
-                        _fixedNonTaxableMonthlyAllowances,
                         emp_bonusDaily,
                         emp_bonusMonthly,
                         emp_bonusOnce,
