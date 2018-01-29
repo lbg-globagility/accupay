@@ -6783,6 +6783,31 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+
+        Dim selected_rows =
+            dgvDisciplinaryList.Rows.OfType(Of DataGridViewRow).Where(Function(dgvr) dgvr.Selected)
+
+        Dim selected_rowids = New List(Of String)
+
+        For Each dgvr As DataGridViewRow In selected_rows
+            selected_rowids.Add(Convert.ToString(dgvr.Cells("c_rowid").Value))
+        Next
+
+        If selected_rows.Count > 0 Then
+
+            Console.WriteLine("HERE")
+            Console.WriteLine(String.Join(", ", selected_rowids.ToArray))
+
+            Dim str_quer =
+                String.Concat("DELETE FROM employeedisciplinaryaction",
+                              " WHERE OrganizationID = ", orgztnID,
+                              " AND RowID IN (", String.Join(", ", selected_rowids.ToArray), ");")
+
+            Dim sql As New SQL(str_quer)
+            sql.ExecuteQuery()
+
+        End If
+
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
