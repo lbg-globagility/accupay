@@ -27,9 +27,11 @@ Namespace Global.AccuPay.Entity
 
         Public Property EffectiveTo As Date
 
-        Public Property NightShift As Char
+        <Column("NightShift")>
+        Public Property IsNightShift As Boolean
 
-        Public Property RestDay As Char
+        <Column("RestDay")>
+        Public Property IsRestDay As Boolean
 
         <ForeignKey("ShiftID")>
         Public Overridable Property Shift As Shift

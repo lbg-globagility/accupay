@@ -79,6 +79,8 @@ Namespace Global.AccuPay.Entity
         <Column("UndertimeHoursAmount")>
         Public Property UndertimeDeduction As Decimal
 
+        Public Property AbsentHours As Decimal
+
         <Column("Absent")>
         Public Property AbsentDeduction As Decimal
 
@@ -107,6 +109,12 @@ Namespace Global.AccuPay.Entity
             DutyStart = {timeIn, shiftToday.RangeStart}.Max
             DutyEnd = {timeOut, shiftToday.RangeEnd}.Min
         End Sub
+
+        Public ReadOnly Property TotalLeaveHours As Decimal
+            Get
+                Return VacationLeaveHours + SickLeaveHours + MaternityLeaveHours + OtherLeaveHours
+            End Get
+        End Property
 
     End Class
 

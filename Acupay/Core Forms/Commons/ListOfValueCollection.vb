@@ -20,9 +20,19 @@ Public Class ListOfValueCollection
         Return value?.DisplayValue
     End Function
 
-    Public Function GetValue(type As String, lic As String) As String
+    Public Function GetString(type As String, lic As String) As String
         Dim value = _values?.FirstOrDefault(Function(f) f.LIC = lic And f.Type = type)
         Return value?.DisplayValue
+    End Function
+
+    Public Function GetBoolean(type As String, lic As String) As Boolean
+        Dim value = GetListOfValue(type, lic)
+
+        Return If(
+            String.IsNullOrEmpty(value?.DisplayValue),
+            False,
+            Boolean.Parse(value?.DisplayValue)
+        )
     End Function
 
     Public Function GetString(lic As String) As String
@@ -32,6 +42,10 @@ Public Class ListOfValueCollection
     Public Function GetDecimal(lic As String) As Decimal?
         Dim value = GetValue(lic)
         Return If(value IsNot Nothing, Decimal.Parse(value), Nothing)
+    End Function
+
+    Private Function GetListOfValue(type As String, lic As String) As ListOfValue
+        Return _values?.FirstOrDefault(Function(f) f.Type = type And f.LIC = lic)
     End Function
 
 End Class

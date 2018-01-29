@@ -116,29 +116,13 @@ Public Class PayStubForm
 
     Dim notax_bonusOnce As New DataTable
 
-    Dim emp_allowanceDaily As New DataTable
-
-    Dim notax_allowanceDaily As New DataTable
-
     Dim emp_allowanceMonthly As New DataTable
 
     Dim notax_allowanceMonthly As New DataTable
 
-    Dim emp_allowanceOnce As New DataTable
-
-    Dim notax_allowanceOnce As New DataTable
-
-    Private _fixedTaxableMonthlyAllowances As DataTable
-
-    Private _fixedNonTaxableMonthlyAllowances As DataTable
-
     Dim emp_bonusSemiM As New DataTable
 
     Dim notax_bonusSemiM As New DataTable
-
-    Dim emp_allowanceSemiM As New DataTable
-
-    Dim notax_allowanceSemiM As New DataTable
 
     Dim emp_allowanceWeekly As New DataTable
 
@@ -843,28 +827,12 @@ Public Class PayStubForm
                 etent_totdaypay = resources.TimeEntries
                 _loanSchedules = resources.LoanSchedules
                 _loanTransactions = resources.LoanTransactions
-                _fixedNonTaxableMonthlyAllowances = resources.FixedNonTaxableMonthlyAllowances
-                _fixedTaxableMonthlyAllowances = resources.FixedTaxableMonthlyAllowances
 
                 Dim dailyallowfreq = "Daily"
 
                 If allowfreq.Count <> 0 Then
                     dailyallowfreq = If(allowfreq.Item(0).ToString = "", "Daily", allowfreq.Item(0).ToString)
                 End If
-
-                emp_allowanceDaily = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
-                                                                                       orgztnID,
-                                                                                       "Daily",
-                                                                                       "1",
-                                                                                       paypFrom,
-                                                                                       paypTo).ResultTable
-
-                notax_allowanceDaily = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
-                                                                                       orgztnID,
-                                                                                       "Daily",
-                                                                                       "0",
-                                                                                       paypFrom,
-                                                                                       paypTo).ResultTable
 
                 emp_bonusDaily = retAsDatTbl("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'" &
                                                                 ",EmployeeID" &
@@ -976,24 +944,6 @@ Public Class PayStubForm
                     onceallowfreq = If(allowfreq.Item(2).ToString = "", "One time", allowfreq.Item(2).ToString)
                 End If
 
-                emp_allowanceOnce = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
-                                                                " FROM employeeallowance" &
-                                                                " WHERE OrganizationID=" & orgztnID &
-                                                                " AND TaxableFlag='1'" &
-                                                                " AND AllowanceFrequency='" & onceallowfreq & "'" &
-                                                                " AND EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                                                " GROUP BY EmployeeID" &
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
-
-                notax_allowanceOnce = retAsDatTbl("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID" &
-                                                                " FROM employeeallowance" &
-                                                                " WHERE OrganizationID=" & orgztnID &
-                                                                " AND TaxableFlag='0'" &
-                                                                " AND AllowanceFrequency='" & onceallowfreq & "'" &
-                                                                " AND EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
-                                                                " GROUP BY EmployeeID" &
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
-
                 emp_bonusOnce = retAsDatTbl("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'" &
                                                               ",EmployeeID" &
                                                               " FROM employeebonus" &
@@ -1039,20 +989,6 @@ Public Class PayStubForm
                                                                 " AND EffectiveStartDate BETWEEN '" & paypFrom & "' AND '" & paypTo & "'" &
                                                                 " GROUP BY EmployeeID" &
                                                                 " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")
-
-                emp_allowanceSemiM = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
-                                                                                       orgztnID,
-                                                                                       "Semi-monthly",
-                                                                                       "1",
-                                                                                       paypFrom,
-                                                                                       paypTo).ResultTable
-
-                notax_allowanceSemiM = New ReadSQLProcedureToDatatable("GET_employee_allowanceofthisperiod",
-                                                                                       orgztnID,
-                                                                                       "Semi-monthly",
-                                                                                       "0",
-                                                                                       paypFrom,
-                                                                                       paypTo).ResultTable
 
                 Dim weeklyallowfreq = "Weekly"
 
@@ -1251,18 +1187,10 @@ Public Class PayStubForm
                         esal_dattab,
                         _loanSchedules,
                         _loanTransactions,
-                        emp_allowanceDaily,
                         emp_allowanceMonthly,
-                        emp_allowanceOnce,
-                        emp_allowanceSemiM,
                         emp_allowanceWeekly,
-                        notax_allowanceDaily,
                         notax_allowanceMonthly,
-                        notax_allowanceOnce,
-                        notax_allowanceSemiM,
                         notax_allowanceWeekly,
-                        _fixedTaxableMonthlyAllowances,
-                        _fixedNonTaxableMonthlyAllowances,
                         emp_bonusDaily,
                         emp_bonusMonthly,
                         emp_bonusOnce,

@@ -117,17 +117,17 @@ Namespace Global.AccuPay.Entity
 
         Public Property BankName As String
 
-        Public Property CalcHoliday As Char
+        Public Property CalcHoliday As Boolean
 
-        Public Property CalcSpecialHoliday As Char
+        Public Property CalcSpecialHoliday As Boolean
 
-        Public Property CalcNightDiff As Char
+        Public Property CalcNightDiff As Boolean
 
-        Public Property CalcNightDiffOT As Char
+        Public Property CalcNightDiffOT As Boolean
 
-        Public Property CalcRestDay As Char
+        Public Property CalcRestDay As Boolean
 
-        Public Property CalcRestDayOT As Char
+        Public Property CalcRestDayOT As Boolean
 
         Public Property DateRegularized As Date?
 

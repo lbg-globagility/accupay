@@ -65,4 +65,6 @@ Public Class PayrollContext
 
     Public Overridable Property TimeEntries As DbSet(Of TimeEntry)
 
+    Public Overridable Property Allowances As DbSet(Of Allowance)
+
 End Class

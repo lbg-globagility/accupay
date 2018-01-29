@@ -11,9 +11,7 @@ Public Class PayrollContextTest
 
     <SetUp>
     Public Sub SetUp()
-        Dim connection = DbProviderFactories.GetFactory("MySql.Data.MySqlClient").CreateConnection()
-        connection.ConnectionString = "server=127.0.0.1;user id=root;password=globagility;database=goldwingspayrolldb;"
-        _context = New PayrollContext(connection)
+        _context = New PayrollContext()
     End Sub
 
     <TearDown>
@@ -82,6 +80,13 @@ Public Class PayrollContextTest
         Dim payPeriod = _context.PayPeriods.FirstOrDefault()
 
         Assert.IsInstanceOf(Of PayPeriod)(payPeriod)
+    End Sub
+
+    <Test>
+    Public Sub Should_Retrieve_Allowance()
+        Dim allowance = _context.Allowances.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of Allowance)(allowance)
     End Sub
 
 End Class

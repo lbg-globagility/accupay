@@ -45,10 +45,8 @@ Namespace Global.AccuPay.Entity
         <NotMapped>
         Public Property Comments As String
 
-        <NotMapped>
         Public Property Status As String
 
-        <NotMapped>
         Public Property Fixed As Boolean
 
         <NotMapped>
@@ -149,6 +147,12 @@ Namespace Global.AccuPay.Entity
 
         <NotMapped>
         Public Property ActiveData As Char
+
+        Public ReadOnly Property IsTaxable As Boolean
+            Get
+                Return Status = "1"
+            End Get
+        End Property
 
     End Class
 
