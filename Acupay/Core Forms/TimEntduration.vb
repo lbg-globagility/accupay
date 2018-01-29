@@ -160,11 +160,11 @@ Public Class TimEntduration
 
     Dim unselectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
-    Dim quer_empPayFreq = ""
+    Dim quer_empPayFreq = "SEMI-MONTHLY"
 
     Sub PayFreq_Changed(sender As Object, e As EventArgs)
 
-        quer_empPayFreq = ""
+        quer_empPayFreq = "SEMI-MONTHLY"
 
         Dim senderObj As New ToolStripButton
 
@@ -230,10 +230,14 @@ Public Class TimEntduration
                  Optional PayFreqType As Object = "SEMI-MONTHLY")
         Dim dt_payp As New DataTable
 
-        dt_payp = New ReadSQLProcedureToDatatable("VIEW_payperiod",
-                                                  orgztnID,
-                                                  If(param_Date = Nothing, Year(Now) & "-01-01", Format(CDate(param_Date), "yyyy-MM-dd")),
-                                                  PayFreqType).ResultTable
+        Dim _params =
+            New Object() {orgztnID,
+                          If(param_Date = Nothing, Year(Now) & "-01-01", Format(CDate(param_Date), "yyyy-MM-dd")),
+                          PayFreqType}
+
+        dt_payp =
+            New SQL("CALL VIEW_payperiod(?og_rowid, ?param_date, ?str_payfreq_type);",
+                    _params).GetFoundRows.Tables(0)
 
         dgvpaypers.Rows.Clear()
 
@@ -609,6 +613,10 @@ Public Class TimEntduration
 
     Dim dayFrom As Object = Nothing
     Dim dayTo As Object = Nothing
+
+    Private Sub dgvpaypers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvpaypers.CellContentClick
+
+    End Sub
 
     Private Sub dgvpayper_SelectionChanged(sender As Object, e As EventArgs) Handles dgvpaypers.SelectionChanged 'dgvpayper
 

@@ -12,9 +12,9 @@ CREATE TRIGGER `AFTUPD_division` AFTER UPDATE ON `division` FOR EACH ROW BEGIN
 DECLARE anyint INT(11);
 
 UPDATE employee e
-INNER JOIN position ps
+INNER JOIN `position` ps
 ON ps.DivisionId = NEW.RowID
-SET e.PayFrequencyID = NEW.PayFrequencyID,
+SET # e.PayFrequencyID = NEW.PayFrequencyID,
     e.WorkDaysPerYear = NEW.WorkDaysPerYear,
     e.LateGracePeriod = NEW.GracePeriod,
     e.LastUpdBy = NEW.LastUpdBy
@@ -23,6 +23,39 @@ AND e.PositionID = ps.RowID;
 
 IF NEW.AutomaticOvertimeFiling = '1' THEN
      SET anyint = 0;
+END IF;
+
+IF OLD.SSSDeductionWeekSchedule != NEW.SSSDeductionWeekSchedule THEN
+	CALL UPD_WeeklyDeductionSched(NEW.OrganizationID, FALSE, 'sss', NEW.SSSDeductionWeekSchedule);
+END IF;
+
+IF OLD.PhilhealthDeductionWeekSchedule != NEW.PhilhealthDeductionWeekSchedule THEN
+	CALL UPD_WeeklyDeductionSched(NEW.OrganizationID, FALSE, 'philhealth', NEW.PhilhealthDeductionWeekSchedule);
+END IF;
+
+IF OLD.PagIbigDeductionWeekSchedule != NEW.PagIbigDeductionWeekSchedule THEN
+	CALL UPD_WeeklyDeductionSched(NEW.OrganizationID, FALSE, 'hdmf', NEW.PagIbigDeductionWeekSchedule);
+END IF;
+
+IF OLD.WithholdingTaxDeductionWeekSchedule != NEW.WithholdingTaxDeductionWeekSchedule THEN
+	CALL UPD_WeeklyDeductionSched(NEW.OrganizationID, FALSE, 'tax', NEW.WithholdingTaxDeductionWeekSchedule);
+END IF;
+
+
+IF OLD.SSSDeductionWeekwithAgenSchedule != NEW.SSSDeductionWeekwithAgenSchedule THEN
+	CALL UPD_WeeklyDeductionSched(NEW.OrganizationID, TRUE, 'sss', NEW.SSSDeductionWeekwithAgenSchedule);
+END IF;
+
+IF OLD.PhilhealthDeductionWeekwithAgenSchedule != NEW.PhilhealthDeductionWeekwithAgenSchedule THEN
+	CALL UPD_WeeklyDeductionSched(NEW.OrganizationID, TRUE, 'philhealth', NEW.PhilhealthDeductionWeekwithAgenSchedule);
+END IF;
+
+IF OLD.PagIbigDeductionWeekwithAgenSchedule != NEW.PagIbigDeductionWeekwithAgenSchedule THEN
+	CALL UPD_WeeklyDeductionSched(NEW.OrganizationID, TRUE, 'hdmf', NEW.PagIbigDeductionWeekwithAgenSchedule);
+END IF;
+
+IF OLD.WithholdingTaxDeductionWeekwithAgenSchedule != NEW.WithholdingTaxDeductionWeekwithAgenSchedule THEN
+	CALL UPD_WeeklyDeductionSched(NEW.OrganizationID, TRUE, 'tax', NEW.WithholdingTaxDeductionWeekwithAgenSchedule);
 END IF;
 
 END//

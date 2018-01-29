@@ -210,23 +210,23 @@ Public Class EmpTimeEntry
 
             dgvcalendar.Rows.Clear()
 
-            dattab = retAsDatTbl("SELECT prate.RowID,DAY(prate.Date) 'dateday'" & _
-                                 ", DAYOFWEEK(prate.Date) 'dayofwk'" & _
-                                 ", DAY(LAST_DAY(prate.Date)) 'maxday'" & _
-                                 ",COALESCE(prate.PayType,'') 'PayType'" & _
-                                 ",COALESCE(prate.Description,'') 'Description'" & _
-                                 ",COALESCE(prate.PayRate,1) 'PayRate'" & _
-                                 ",COALESCE(prate.OvertimeRate,1) 'OvertimeRate'" & _
-                                 ",COALESCE(prate.NightDifferentialRate,1) 'NightDifferentialRate'" & _
-                                 ",COALESCE(prate.NightDifferentialOTRate,1) 'NightDifferentialOTRate'" & _
-                                 ",COALESCE(prate.RestDayRate,1) 'RestDayRate'" & _
-                                 ",COALESCE(prate.RestDayOvertimeRate,1) 'RestDayOvertimeRate'" & _
-                                 ",DATE_FORMAT(prate.Date,'%m-%d-%Y') 'Date'" & _
-                                 " FROM payrate prate" & _
-                                 " WHERE prate.OrganizationID='" & orgztnID & "'" & _
-                                 " AND MONTH(prate.Date)=MONTH(NOW())" & _
-                                 " AND YEAR(prate.Date)=YEAR(NOW())" & _
-                                 " AND DAY(prate.Date)<=(SELECT IF(DAY(NOW())<=15,15,DAY(LAST_DAY(NOW()))));")
+            dattab = New SQL("SELECT prate.RowID,DAY(prate.Date) 'dateday'" &
+                                 ", DAYOFWEEK(prate.Date) 'dayofwk'" &
+                                 ", DAY(LAST_DAY(prate.Date)) 'maxday'" &
+                                 ",COALESCE(prate.PayType,'') 'PayType'" &
+                                 ",COALESCE(prate.Description,'') 'Description'" &
+                                 ",COALESCE(prate.PayRate,1) 'PayRate'" &
+                                 ",COALESCE(prate.OvertimeRate,1) 'OvertimeRate'" &
+                                 ",COALESCE(prate.NightDifferentialRate,1) 'NightDifferentialRate'" &
+                                 ",COALESCE(prate.NightDifferentialOTRate,1) 'NightDifferentialOTRate'" &
+                                 ",COALESCE(prate.RestDayRate,1) 'RestDayRate'" &
+                                 ",COALESCE(prate.RestDayOvertimeRate,1) 'RestDayOvertimeRate'" &
+                                 ",DATE_FORMAT(prate.Date,'%m-%d-%Y') 'Date'" &
+                                 " FROM payrate prate" &
+                                 " WHERE prate.OrganizationID='" & orgztnID & "'" &
+                                 " AND MONTH(prate.Date)=MONTH(NOW())" &
+                                 " AND YEAR(prate.Date)=YEAR(NOW())" &
+                                 " AND DAY(prate.Date)<=(SELECT IF(DAY(NOW())<=15,15,DAY(LAST_DAY(NOW()))));").GetFoundRows.Tables(0)
 
             'DISTINCT(DATE_FORMAT(DATE,'%m-%d-%Y')),
             Dim countofweek As Integer = 0
@@ -379,7 +379,7 @@ Public Class EmpTimeEntry
             ''    dgvRowAdder(q_employee & searchquery & " ORDER BY e.RowID DESC", dgvEmployi) ', Simple)
             str_fullsearch = q_employee & searchquery & " ORDER BY e.RowID DESC LIMIT " & pagination & "," & page_limiter & ";"
         End If
-        Dim catchdt = New SQLQueryToDatatable(str_fullsearch).ResultTable
+        Dim catchdt = New SQL(str_fullsearch).GetFoundRows.Tables(0)
         dgvEmployi.Rows.Clear()
         For Each drow As DataRow In catchdt.Rows
             Dim row_array = drow.ItemArray
@@ -1292,26 +1292,26 @@ Public Class EmpTimeEntry
                 dt_esh = New DataTable
                 '",COALESCE(DATE_FORMAT(esh.EffectiveFrom,'%m-%d-%Y'),MAKEDATE(YEAR(NOW()),1)) 'EffFrom'" & _
                 '",COALESCE(DATE_FORMAT(esh.EffectiveTo,'%m-%d-%Y'),DATE_FORMAT(MAKEDATE(YEAR(NOW()),DAYOFYEAR(DATE(CONCAT(YEAR(NOW()),'-12-',DAY(LAST_DAY(DATE(CONCAT(YEAR(NOW()),'-12-00')))))))),'%m-%d-%Y')) 'EffTo'" & _
-                dt_esh = retAsDatTbl("SELECT " & _
-                                     "esh.RowID 'esh_RowID'" & _
+                dt_esh = New SQL("SELECT " &
+                                     "esh.RowID 'esh_RowID'" &
                                      ",esh.EffectiveFrom AS EffFrom" &
                                      ",esh.EffectiveTo AS EffTo" &
-                                     ",COALESCE(sh.RowID,'') 'sh_RowID'" & _
-                                     ",COALESCE(TIME_FORMAT(sh.TimeFrom,'%r'),'') 'sh_TimeFrom'" & _
-                                     ",COALESCE(TIME_FORMAT(sh.TimeTo,'%r'),'') 'sh_TimeTo'" & _
-                                     ",COALESCE(TIME_FORMAT(sh.TimeFrom,'%H:%i:%s'),'') 'sh_TimeFromMILIT'" & _
-                                     ",COALESCE(TIME_FORMAT(sh.TimeTo,'%H:%i:%s'),'') 'sh_TimeToMILIT'" & _
-                                     ",COALESCE(esh.NightShift,'') 'NightShift'" & _
-                                     ",COALESCE((CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(sh.TimeFrom>sh.TimeTo,ADDTIME(sh.TimeTo, '24:00:00'),sh.TimeTo),'%H:%i:%s'),TIME_FORMAT(sh.TimeFrom,'%H:%i:%s')),':',1) AS INT)) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(sh.TimeFrom>sh.TimeTo,ADDTIME(sh.TimeTo, '24:00:00'),sh.TimeTo),'%H:%i:%s'),TIME_FORMAT(sh.TimeFrom,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),0) 'RegularHrsWork'" & _
-                                     " FROM employeeshift esh" & _
-                                     " LEFT JOIN shift sh ON sh.RowID=esh.ShiftID" & _
-                                     " WHERE esh.EmployeeID=" & dgvEmployi.CurrentRow.Cells("cemp_RowID").Value & _
-                                     " AND esh.OrganizationID=" & orgztnID & _
-                                     " AND COALESCE(esh.RestDay,0)=0" & _
-                                     " AND CAST('" & curr_YYYY & "-" & curr_mm & "-" & curr_dd & "' AS DATE)" & _
-                                     " BETWEEN COALESCE(esh.EffectiveFrom,DATE_ADD(DATE('" & curr_YYYY & "-" & curr_mm & "-" & curr_dd & "'), INTERVAL -1 MONTH))" & _
-                                     " AND COALESCE(esh.EffectiveTo,DATE_ADD(DATE('" & curr_YYYY & "-" & curr_mm & "-" & curr_dd & "'), INTERVAL 1 MONTH))" & _
-                                     " ORDER BY esh.EffectiveFrom DESC;")
+                                     ",COALESCE(sh.RowID,'') 'sh_RowID'" &
+                                     ",COALESCE(TIME_FORMAT(sh.TimeFrom,'%r'),'') 'sh_TimeFrom'" &
+                                     ",COALESCE(TIME_FORMAT(sh.TimeTo,'%r'),'') 'sh_TimeTo'" &
+                                     ",COALESCE(TIME_FORMAT(sh.TimeFrom,'%H:%i:%s'),'') 'sh_TimeFromMILIT'" &
+                                     ",COALESCE(TIME_FORMAT(sh.TimeTo,'%H:%i:%s'),'') 'sh_TimeToMILIT'" &
+                                     ",COALESCE(esh.NightShift,'') 'NightShift'" &
+                                     ",COALESCE((CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(sh.TimeFrom>sh.TimeTo,ADDTIME(sh.TimeTo, '24:00:00'),sh.TimeTo),'%H:%i:%s'),TIME_FORMAT(sh.TimeFrom,'%H:%i:%s')),':',1) AS INT)) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(IF(sh.TimeFrom>sh.TimeTo,ADDTIME(sh.TimeTo, '24:00:00'),sh.TimeTo),'%H:%i:%s'),TIME_FORMAT(sh.TimeFrom,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),0) 'RegularHrsWork'" &
+                                     " FROM employeeshift esh" &
+                                     " LEFT JOIN shift sh ON sh.RowID=esh.ShiftID" &
+                                     " WHERE esh.EmployeeID=" & dgvEmployi.CurrentRow.Cells("cemp_RowID").Value &
+                                     " AND esh.OrganizationID=" & orgztnID &
+                                     " AND COALESCE(esh.RestDay,0)=0" &
+                                     " AND CAST('" & curr_YYYY & "-" & curr_mm & "-" & curr_dd & "' AS DATE)" &
+                                     " BETWEEN COALESCE(esh.EffectiveFrom,DATE_ADD(DATE('" & curr_YYYY & "-" & curr_mm & "-" & curr_dd & "'), INTERVAL -1 MONTH))" &
+                                     " AND COALESCE(esh.EffectiveTo,DATE_ADD(DATE('" & curr_YYYY & "-" & curr_mm & "-" & curr_dd & "'), INTERVAL 1 MONTH))" &
+                                     " ORDER BY esh.EffectiveFrom DESC;").GetFoundRows.Tables(0)
                 'dgvcalendar.CurrentRow.Cells(curr_CalendCol).Value
                 '*******KUNG MAY GRACE TIME, THE HERE...**********
                 'SELECT ADDTIME('08:00:00', '00:15:00');' '00:15:00' sample ng grace time
@@ -1382,151 +1382,6 @@ Public Class EmpTimeEntry
                     Exit For
 
                 Next
-
-                'employeetimeentry
-                'End If
-
-                'Dim dt_etent As New DataTable
-
-                'Dim hrswrkd As Double
-
-                'Static firstrow As SByte = 0
-
-                'timeoutlastval = Nothing
-
-                'txthrsworkd.Text = 0
-                'txthrsOT.Text = 0
-                'txthrsUT.Text = 0
-
-                'txthrsabsent.Text = 0
-                'txtnightdiff.Text = 0
-                'txtnightdiffOT.Text = 0
-
-                'hrswrkd = 0
-
-                'cbolateabsent.SelectedIndex = -1
-                ''curr_TimeFromMILIT'curr_TimeToMILIT
-                ''curr_NightTimeFromMILIT'curr_NightTimeToMILIT
-
-                ''*******KUNG MAY GRACE TIME, THE HERE...**********
-                ''SELECT ADDTIME('08:00:00', '00:15:00');' '00:15:00' sample ng grace time
-                ''*************************************************
-
-                'dt_etent = retAsDatTbl("SELECT RowID" & _
-                '                       ", COALESCE(TIME_FORMAT(TimeIn,'%H:%i:%s'),'') 'TimeIn'" & _
-                '                       ", COALESCE(TIME_FORMAT(TimeOut,'%H:%i:%s'),'') 'TimeOut'" & _
-                '                       ", COALESCE(DATE_FORMAT(DATE,'%m-%d-%Y'),'') 'Date'" & _
-                '                       ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF('" & curr_TimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF('" & curr_TimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),'') 'IsLate'" & _
-                '                       ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & curr_TimeToMILIT & "'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & curr_TimeToMILIT & "'),':',-2),':',1) AS DECIMAL) / 60),'') 'IsUT'" & _
-                '                       ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'17:00:00'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'17:00:00'),':',-2),':',1) AS DECIMAL) / 60),'') 'OT'" & _
-                '                       ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'), TIME_FORMAT(TimeIn,'%H:%i:%s')),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'), TIME_FORMAT(TimeIn,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),0) 'HRS_workd'" & _
-                '                       ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF('" & curr_NightTimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF('" & curr_NightTimeFromMILIT & "', TIME_FORMAT(TimeIn,'%H:%i:%s')),':',-2),':',1) AS DECIMAL) / 60),'') 'IsLateNight'" & _
-                '                       ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & curr_NightTimeToMILIT & "'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & curr_NightTimeToMILIT & "'),':',-2),':',1) AS DECIMAL) / 60),'') 'IsUTNight'" & _
-                '                       ", COALESCE(CAST(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & curr_NightTimeToMILIT & "'),':',1) AS DECIMAL) + (CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(TIMEDIFF(TIME_FORMAT(TimeOut,'%H:%i:%s'),'" & curr_NightTimeToMILIT & "'),':',-2),':',1) AS DECIMAL) / 60),'') 'OTNight'" & _
-                '                       " FROM employeetimeentrydetails" & _
-                '                       " WHERE EmployeeID=" & dgvEmployi.CurrentRow.Cells("RowID").Value & _
-                '                       " AND DATE= DATE('" & curr_YYYY & "-" & curr_mm & "-" & dgvcalendar.CurrentRow.Cells(curr_CalendCol).Value & "') " & _
-                '                       " AND OrganizationID=" & orgztnID & _
-                '                       " ORDER BY RowID ASC;") '" ORDER BY DATE_FORMAT(Created,'%H') ASC;")
-
-                'Dim UTval, _
-                '    UTNightval, _
-                '    OTval, _
-                '    OTNightval, _
-                '    Lateval As Double
-
-                'For Each drows As DataRow In dt_etent.Rows
-
-                '    hrswrkd += Val(drows("HRS_workd")) 'Total Hour(s) worked
-
-                '    If firstrow = 0 Then
-                '        firstrow = 1
-
-                '        'txthrsUT.Text = UTval.ToString 'Total Undertime hour(s) 
-
-                '        If Val(drows("IsLateNight")) <= 0 Then
-                '            drows("IsLateNight") = drows("IsLateNight").ToString.Replace("-", "")
-                '            Lateval = Val(drows("IsLateNight"))
-                '        Else
-
-                '            If drows("IsLate").ToString.Contains("-") Then
-                '                'cbolateabsent.SelectedIndex = 1
-                '                'drows("IsLate") = drows("IsLate").ToString.Replace("-", "")
-                '                'Lateval = Val(drows("IsLate"))
-                '            Else
-                '                'cbolateabsent.SelectedIndex = -1
-                '            End If
-
-                '            'drows("IsLate") = drows("IsLate").ToString.Replace("-", "")
-                '            'UTval = Val(drows("IsLate"))
-                '        End If
-
-                '    End If
-                '    '*****************DAY SHIFT****************
-                '    If drows("IsUT").ToString.Contains("-") Then
-                '        drows("IsUT") = drows("IsUT").ToString.Replace("-", "")
-                '        UTval = Val(drows("IsUT"))
-                '    End If
-
-                '    If drows("OT").ToString.Contains("-") = False Then
-                '        drows("OT") = drows("OT").ToString.Replace("-", "")
-                '        OTval += Val(drows("OT"))
-                '    End If
-                '    '*****************DAY SHIFT****************
-
-                '    '*****************NIGHT SHIFT****************
-                '    If drows("IsUTNight").ToString.Contains("-") Then
-                '        drows("IsUTNight") = drows("IsUTNight").ToString.Replace("-", "")
-                '        UTNightval = Val(drows("IsUTNight"))
-                '    End If
-
-                '    If drows("OT").ToString.Contains("-") Then
-                '        drows("OTNight") = drows("OTNight").ToString.Replace("-", "")
-                '        OTNightval += Val(drows("OTNight"))
-                '    End If
-                '    '*****************NIGHT SHIFT****************
-
-                'Next
-
-                'firstrow = 0
-
-                'txthrsworkd.Text = hrswrkd
-
-                'If curr_TimeFromMILIT = Nothing _
-                '                    And curr_TimeToMILIT = Nothing Then 'SHIFT IS NOT DEFINED
-
-                '    txthrsworkd.Text = hrswrkd + OTval
-
-                '    If curr_NightTimeFromMILIT <> Nothing _
-                '                    And curr_NightTimeToMILIT <> Nothing Then 'NIGHT SHIFT
-
-                '        txthrsworkd.Text = hrswrkd
-
-                '        txtnightdiffOT.Text = OTNightval
-
-                '        txthrsUT.Text = UTNightval
-
-                '    End If
-                'ElseIf curr_TimeFromMILIT <> Nothing _
-                '                    And curr_TimeToMILIT <> Nothing Then 'DAY SHIFT
-
-                '    txthrsworkd.Text = hrswrkd
-
-                '    txthrsOT.Text = OTval
-
-                '    txthrsUT.Text = UTval
-
-                'End If
-
-                ''txthrsUT.Text = If(OTval > 0, 0, UTval)
-
-                ''********************
-                'cboOverUnderTime.SelectedIndex = If(OTval > 0 Or OTNightval > 0, 0, If(dt_etent.Rows.Count = 0, -1, 1))
-                ''DEPENDE PA ANG OVER TIME, 
-                ''EXAMPLE KUNG MAY APPROVAL PA BA? 
-                ''NO OVER TIME
-                '',KUNG MAY ALLOWABLE HOUR(S) FOR OVER TIME
-                ''********************
 
             End If
 
@@ -3839,8 +3694,23 @@ Public Class EmpTimeEntry
 
     End Sub
 
-    Sub unchkmenutimeent(Optional prev_tsbtn As Object = Nothing, _
-                     Optional prev_tsdrpdwnmenitm As Object = Nothing)
+    Sub unchkmenutimeent(Optional prev_tsbtn As Object = Nothing,
+                         Optional prev_tsdrpdwnmenitm As Object = Nothing)
+
+        Dim prev_tsmenuitem =
+            ToolStrip3.Items.OfType(Of ToolStripDropDownButton).Where(Function(tsddbtn) tsddbtn.DropDownItems.OfType(Of ToolStripMenuItem).Where(Function(ts) ts.Checked).Count > 0)
+
+        'prev_tsbtn = prev_tsmenuitem.First
+
+        For Each tsmenitm In prev_tsmenuitem
+            prev_tsbtn = tsmenitm
+            For Each tsmenitms As ToolStripMenuItem In tsmenitm.DropDownItems
+
+                tsmenitms.Checked = False
+                tsmenitms.BackColor = Color.Transparent
+
+            Next
+        Next
 
         If TypeOf prev_tsbtn Is ToolStripMenuItem Then
             prev_tsbtn.Checked = False
@@ -3862,7 +3732,7 @@ Public Class EmpTimeEntry
                     'DirectCast(static_obj, ToolStripDropDownItem).ForeColor = _
                     '        Color.Black
 
-                    DirectCast(static_obj, ToolStripDropDownItem).BackColor = _
+                    DirectCast(static_obj, ToolStripDropDownItem).BackColor =
                         Color.Transparent
 
                 End If
@@ -3874,7 +3744,7 @@ Public Class EmpTimeEntry
                 'DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).ForeColor = _
                 '        Color.White
 
-                DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).BackColor = _
+                DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).BackColor =
                     Color.FromArgb(51, 192, 255)
 
                 'MsgBox("If static_obj <> DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).Name Then")
@@ -3888,8 +3758,23 @@ Public Class EmpTimeEntry
 
     End Sub
 
-    Sub unckhkpreobj(Optional prev_tsbtn As Object = Nothing, _
+    Sub unckhkpreobj(Optional prev_tsbtn As Object = Nothing,
                      Optional prev_tsdrpdwnmenitm As Object = Nothing)
+
+        Dim prev_tsmenuitem =
+            ToolStrip3.Items.OfType(Of ToolStripDropDownButton).Where(Function(tsddbtn) tsddbtn.DropDownItems.OfType(Of ToolStripMenuItem).Where(Function(ts) ts.Checked).Count > 0)
+
+        'prev_tsbtn = prev_tsmenuitem.First
+
+        For Each tsmenitm In prev_tsmenuitem
+            prev_tsbtn = tsmenitm
+            For Each tsmenitms As ToolStripMenuItem In tsmenitm.DropDownItems
+
+                tsmenitms.Checked = False
+                tsmenitms.BackColor = Color.Transparent
+
+            Next
+        Next
 
         If TypeOf prev_tsbtn Is ToolStripMenuItem Then
             prev_tsbtn.Checked = False
@@ -3911,7 +3796,7 @@ Public Class EmpTimeEntry
                     'DirectCast(static_obj, ToolStripDropDownItem).ForeColor = _
                     '        Color.Black
 
-                    DirectCast(static_obj, ToolStripDropDownItem).BackColor = _
+                    DirectCast(static_obj, ToolStripDropDownItem).BackColor =
                         Color.Transparent
 
                 End If
@@ -3923,7 +3808,7 @@ Public Class EmpTimeEntry
                 'DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).ForeColor = _
                 '        Color.White
 
-                DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).BackColor = _
+                DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).BackColor =
                     Color.FromArgb(51, 192, 255)
 
                 'MsgBox("If static_obj <> DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).Name Then")
@@ -3937,8 +3822,8 @@ Public Class EmpTimeEntry
 
     End Sub
 
-    Sub current_month(ByVal monthindex As SByte, _
-                      sender As Object, _
+    Sub current_month(ByVal monthindex As SByte,
+                      sender As Object,
                       e As EventArgs)
 
         Select Case monthindex
@@ -4045,9 +3930,9 @@ Public Class EmpTimeEntry
         If TabControl1.SelectedIndex = 0 Then
 
         ElseIf TabControl1.SelectedIndex = 1 Then
-            
-            etentsummapaypID = Val(EXECQUER("SELECT RowID FROM payperiod WHERE PayFromDate='" & the_year & "-" & sel_month & "-" & If(firstbound.ToString.Length = 1, "0" & firstbound, firstbound) & _
-                                            "' AND PayToDate='" & the_year & "-" & sel_month & "-" & If(lastbound.ToString.Length = 1, "0" & lastbound, lastbound) & _
+
+            etentsummapaypID = Val(EXECQUER("SELECT RowID FROM payperiod WHERE PayFromDate='" & the_year & "-" & sel_month & "-" & If(firstbound.ToString.Length = 1, "0" & firstbound, firstbound) &
+                                            "' AND PayToDate='" & the_year & "-" & sel_month & "-" & If(lastbound.ToString.Length = 1, "0" & lastbound, lastbound) &
                                             "' AND OrganizationID=" & orgztnID & " LIMIT 1;"))
 
         End If
@@ -4167,17 +4052,17 @@ Public Class EmpTimeEntry
 
             Label3.Text = Format(CDate(today_date), "MMMM") & " " & tmpdate
 
-            Dim listoflastday = EXECQUER("SELECT CONCAT(DAY(LAST_DAY('" & tmpdate & "-01-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-02-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-03-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-04-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-05-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-06-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-07-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-08-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-09-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-10-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-11-01'))" & _
+            Dim listoflastday = EXECQUER("SELECT CONCAT(DAY(LAST_DAY('" & tmpdate & "-01-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-02-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-03-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-04-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-05-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-06-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-07-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-08-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-09-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-10-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-11-01'))" &
                                          ",',',DAY(LAST_DAY('" & tmpdate & "-12-01')));")
 
             Dim arrayoflastday = Split(listoflastday, ",")
@@ -4250,7 +4135,7 @@ Public Class EmpTimeEntry
             'lbllate.Visible = 1
             'lblundertime.Visible = 1
             'Label21.Visible = 1
-            
+
             RemoveHandler dgvdatesummary.SelectionChanged, AddressOf dgvdatesummary_SelectionChanged
 
             RemoveHandler dgvdatesummary.CurrentCellChanged, AddressOf dgvdatesummary_CurrentCellChanged
@@ -4317,7 +4202,7 @@ Public Class EmpTimeEntry
             dgvdatesummary.CurrentRow.Height = 230
             dgvdatesummary.Columns(column_name).Width = 230
 
-            timeentrysummfields(dgvdatesummary, _
+            timeentrysummfields(dgvdatesummary,
                                 column_name)
 
             If dgvdatesummary.CurrentRow.Cells(column_name).Value = Nothing Then
@@ -4414,22 +4299,22 @@ Public Class EmpTimeEntry
             If dgvdatesummary.CurrentRow.Cells(column_name).Value = Nothing Then
 
             Else
-                Dim selday = If(dgvdatesummary.CurrentRow.Cells(column_name).Value.ToString.Length = 1, _
-                                "0" & dgvdatesummary.CurrentRow.Cells(column_name).Value, _
+                Dim selday = If(dgvdatesummary.CurrentRow.Cells(column_name).Value.ToString.Length = 1,
+                                "0" & dgvdatesummary.CurrentRow.Cells(column_name).Value,
                                 dgvdatesummary.CurrentRow.Cells(column_name).Value)
 
                 Dim querydate = tmpdate & "-" & sel_month & "-" & selday
 
                 Dim etentsumma As New DataTable
 
-                etentsumma = retAsDatTbl("SELECT" & _
-" COALESCE((SELECT COUNT(EmployeeID) FROM paystub WHERE OrganizationID='" & orgztnID & "' AND '" & querydate & "' BETWEEN PayFromDate AND PayToDate),0) 'Published to Payroll'" & _
-",COALESCE((SELECT COUNT(EmployeeID) FROM employeetimeentry WHERE OrganizationID='" & orgztnID & "' AND Date='" & querydate & "' AND (RegularHoursWorked!=UndertimeHours OR NightDifferentialHours!=UndertimeHours)),0) 'Perfect attendance'" & _
-",COALESCE((SELECT COUNT(EmployeeID) FROM employeetimeentrydetails WHERE OrganizationID='" & orgztnID & "' AND Date='" & querydate & "' AND TimeEntryStatus='missing clock in'),0) 'Missing clock in'" & _
-",COALESCE((SELECT COUNT(EmployeeID) FROM employeetimeentrydetails WHERE OrganizationID='" & orgztnID & "' AND Date='" & querydate & "' AND TimeEntryStatus='missing clock out'),0) 'Missing clock out'" & _
-",0 'Duplicate clock in'" & _
-",0 'Duplicate clock out'" & _
-",COALESCE((SELECT COUNT(EmployeeID) FROM employeetimeentry WHERE OrganizationID='" & orgztnID & "' AND Date='" & querydate & "' AND COALESCE(HoursLate,0)>0),0) 'In late'" & _
+                etentsumma = retAsDatTbl("SELECT" &
+" COALESCE((SELECT COUNT(EmployeeID) FROM paystub WHERE OrganizationID='" & orgztnID & "' AND '" & querydate & "' BETWEEN PayFromDate AND PayToDate),0) 'Published to Payroll'" &
+",COALESCE((SELECT COUNT(EmployeeID) FROM employeetimeentry WHERE OrganizationID='" & orgztnID & "' AND Date='" & querydate & "' AND (RegularHoursWorked!=UndertimeHours OR NightDifferentialHours!=UndertimeHours)),0) 'Perfect attendance'" &
+",COALESCE((SELECT COUNT(EmployeeID) FROM employeetimeentrydetails WHERE OrganizationID='" & orgztnID & "' AND Date='" & querydate & "' AND TimeEntryStatus='missing clock in'),0) 'Missing clock in'" &
+",COALESCE((SELECT COUNT(EmployeeID) FROM employeetimeentrydetails WHERE OrganizationID='" & orgztnID & "' AND Date='" & querydate & "' AND TimeEntryStatus='missing clock out'),0) 'Missing clock out'" &
+",0 'Duplicate clock in'" &
+",0 'Duplicate clock out'" &
+",COALESCE((SELECT COUNT(EmployeeID) FROM employeetimeentry WHERE OrganizationID='" & orgztnID & "' AND Date='" & querydate & "' AND COALESCE(HoursLate,0)>0),0) 'In late'" &
 ",COALESCE((SELECT COUNT(EmployeeID) FROM employeetimeentry WHERE OrganizationID='" & orgztnID & "' AND Date='" & querydate & "' AND COALESCE(UndertimeHours,0)>0),0) 'Out early';")
 
                 '",COALESCE((SELECT COUNT(EmployeeID) FROM employeetimeentry WHERE OrganizationID='" & orgztnID & "' AND Date='" & querydate & "' AND RegularHoursWorked!=UndertimeHours),0) 'Perfect attendance'" & _
@@ -4474,8 +4359,8 @@ Public Class EmpTimeEntry
     Private Sub dgvcalendar_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles dgvcalendar.CellPainting
 
         If e.RowIndex = -1 Then
-            GridDrawCustomHeaderColumns(dgvcalendar, e, _
-             My.Resources.ColumnBGStyle005, _
+            GridDrawCustomHeaderColumns(dgvcalendar, e,
+             My.Resources.ColumnBGStyle005,
              DGVHeaderImageAlignments.FillCell)
 
         End If
@@ -4485,16 +4370,16 @@ Public Class EmpTimeEntry
     Private Sub dgvdatesummary_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles dgvdatesummary.CellPainting
 
         If e.RowIndex = -1 Then
-            GridDrawCustomHeaderColumns(dgvdatesummary, e, _
-             My.Resources.ColumnBGStyle005, _
+            GridDrawCustomHeaderColumns(dgvdatesummary, e,
+             My.Resources.ColumnBGStyle005,
              DGVHeaderImageAlignments.FillCell)
 
         End If
 
     End Sub
 
-    Private Sub GridDrawCustomHeaderColumns(ByVal dgv As DataGridView, _
-     ByVal e As DataGridViewCellPaintingEventArgs, ByVal img As Image, _
+    Private Sub GridDrawCustomHeaderColumns(ByVal dgv As DataGridView,
+     ByVal e As DataGridViewCellPaintingEventArgs, ByVal img As Image,
      ByVal Style As DGVHeaderImageAlignments)
 
         ' All of the graphical Processing is done here.
@@ -4502,28 +4387,28 @@ Public Class EmpTimeEntry
         ' Fill the BackGround with the BackGroud Color of Headers.
         ' This step is necessary, for transparent images, or what's behind
         ' would be painted instead.
-        gr.FillRectangle( _
-         New SolidBrush(dgv.ColumnHeadersDefaultCellStyle.BackColor), _
+        gr.FillRectangle(
+         New SolidBrush(dgv.ColumnHeadersDefaultCellStyle.BackColor),
          e.CellBounds)
         If img IsNot Nothing Then
             Select Case Style
                 Case DGVHeaderImageAlignments.FillCell
-                    gr.DrawImage( _
-                     img, e.CellBounds.X, e.CellBounds.Y, _
+                    gr.DrawImage(
+                     img, e.CellBounds.X, e.CellBounds.Y,
                      e.CellBounds.Width, e.CellBounds.Height)
                 Case DGVHeaderImageAlignments.SingleCentered
-                    gr.DrawImage(img, _
-                     ((e.CellBounds.Width - img.Width) \ 2) + e.CellBounds.X, _
-                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y, _
+                    gr.DrawImage(img,
+                     ((e.CellBounds.Width - img.Width) \ 2) + e.CellBounds.X,
+                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y,
                      img.Width, img.Height)
                 Case DGVHeaderImageAlignments.SingleLeft
-                    gr.DrawImage(img, e.CellBounds.X, _
-                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y, _
+                    gr.DrawImage(img, e.CellBounds.X,
+                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y,
                      img.Width, img.Height)
                 Case DGVHeaderImageAlignments.SingleRight
-                    gr.DrawImage(img, _
-                     (e.CellBounds.Width - img.Width) + e.CellBounds.X, _
-                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y, _
+                    gr.DrawImage(img,
+                     (e.CellBounds.Width - img.Width) + e.CellBounds.X,
+                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y,
                      img.Width, img.Height)
                 Case DGVHeaderImageAlignments.Tile
                     ' ********************************************************
@@ -4544,8 +4429,8 @@ Public Class EmpTimeEntry
                     Dim br As New TextureBrush(img, Drawing2D.WrapMode.Tile)
                     gr.FillRectangle(br, e.ClipBounds)
                 Case Else
-                    gr.DrawImage( _
-                     img, e.CellBounds.X, e.CellBounds.Y, _
+                    gr.DrawImage(
+                     img, e.CellBounds.X, e.CellBounds.Y,
                      e.ClipBounds.Width, e.CellBounds.Height)
             End Select
         End If
@@ -4601,15 +4486,15 @@ Public Class EmpTimeEntry
             Dim newForeColor = Color.FromArgb(0, 0, 0)
 
             With dgv.ColumnHeadersDefaultCellStyle
-                gr.DrawString(e.Value.ToString, .Font, _
+                gr.DrawString(e.Value.ToString, .Font,
                  New SolidBrush(newForeColor), e.CellBounds, sf)
             End With
         End Using
         e.Handled = True
     End Sub
 
-    Sub timeentrysummfields(ByVal dgv As DataGridView, _
-                        ByVal colName As String, _
+    Sub timeentrysummfields(ByVal dgv As DataGridView,
+                        ByVal colName As String,
                         Optional isVisb As SByte = 0)
 
         Static paypID As Object = Nothing
@@ -4791,17 +4676,17 @@ Public Class EmpTimeEntry
             curr_YYYY = tmpdate
             curr_mm = etent_month
 
-            Dim listoflastday = EXECQUER("SELECT CONCAT(DAY(LAST_DAY('" & tmpdate & "-01-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-02-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-03-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-04-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-05-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-06-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-07-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-08-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-09-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-10-01'))" & _
-                                         ",',',DAY(LAST_DAY('" & tmpdate & "-11-01'))" & _
+            Dim listoflastday = EXECQUER("SELECT CONCAT(DAY(LAST_DAY('" & tmpdate & "-01-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-02-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-03-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-04-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-05-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-06-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-07-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-08-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-09-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-10-01'))" &
+                                         ",',',DAY(LAST_DAY('" & tmpdate & "-11-01'))" &
                                          ",',',DAY(LAST_DAY('" & tmpdate & "-12-01')));")
 
             Dim arrayoflastday = Split(listoflastday, ",")
@@ -4845,40 +4730,50 @@ Public Class EmpTimeEntry
             If etent_month = "01" Then
                 drpdwnmenuitmbackcolor(janmonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstjan
                     firstjan_Click(sender, e)
                 Else
+                    prevtsbtn = secjan
                     secjan_Click(sender, e)
                 End If
 
             ElseIf etent_month = "02" Then
                 drpdwnmenuitmbackcolor(febmonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstfeb
                     firstfeb_Click(sender, e)
                 Else
+                    prevtsbtn = secfeb
                     secfeb_Click(sender, e)
                 End If
 
             ElseIf etent_month = "03" Then
                 drpdwnmenuitmbackcolor(marmonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstmar
                     firstmar_Click(sender, e)
                 Else
+                    prevtsbtn = secmar
                     secmar_Click(sender, e)
                 End If
 
             ElseIf etent_month = "04" Then
                 drpdwnmenuitmbackcolor(aprmonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstapr
                     firstapr_Click(sender, e)
                 Else
+                    prevtsbtn = secapr
                     secapr_Click(sender, e)
                 End If
 
             ElseIf etent_month = "05" Then
                 drpdwnmenuitmbackcolor(maymonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstmay
                     firstmay_Click(sender, e)
                 Else
+                    prevtsbtn = secmay
                     secmay_Click(sender, e)
                 End If
 
@@ -4886,56 +4781,70 @@ Public Class EmpTimeEntry
                 drpdwnmenuitmbackcolor(junmonth)
 
                 If etent_day <= 15 Then
+                    prevtsbtn = firstjun
                     firstjun_Click(sender, e)
                 Else
+                    prevtsbtn = secjun
                     secjun_Click(sender, e)
                 End If
 
             ElseIf etent_month = "07" Then
                 drpdwnmenuitmbackcolor(julmonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstjul
                     firstjul_Click(sender, e)
                 Else
+                    prevtsbtn = secjul
                     secjul_Click(sender, e)
                 End If
 
             ElseIf etent_month = "08" Then
                 drpdwnmenuitmbackcolor(augmonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstaug
                     firstaug_Click(sender, e)
                 Else
+                    prevtsbtn = secaug
                     secaug_Click(sender, e)
                 End If
 
             ElseIf etent_month = "09" Then
                 drpdwnmenuitmbackcolor(sepmonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstsep
                     firstsep_Click(sender, e)
                 Else
+                    prevtsbtn = secsep
                     secsep_Click(sender, e)
                 End If
 
             ElseIf etent_month = "10" Then
                 drpdwnmenuitmbackcolor(octmonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstoct
                     firstoct_Click(sender, e)
                 Else
+                    prevtsbtn = secoct
                     secoct_Click(sender, e)
                 End If
 
             ElseIf etent_month = "11" Then
                 drpdwnmenuitmbackcolor(novmonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstnov
                     firstnov_Click(sender, e)
                 Else
+                    prevtsbtn = secnov
                     secnov_Click(sender, e)
                 End If
 
             ElseIf etent_month = "12" Then
                 drpdwnmenuitmbackcolor(decmonth)
                 If etent_day <= 15 Then
+                    prevtsbtn = firstdec
                     firstdec_Click(sender, e)
                 Else
+                    prevtsbtn = secdec
                     secdec_Click(sender, e)
                 End If
 
@@ -4963,7 +4872,7 @@ Public Class EmpTimeEntry
                     'DirectCast(static_obj, ToolStripDropDownItem).ForeColor = _
                     '        Color.Black
 
-                    DirectCast(static_obj, ToolStripDropDownItem).BackColor = _
+                    DirectCast(static_obj, ToolStripDropDownItem).BackColor =
                         Color.Transparent
 
                 End If
@@ -4975,7 +4884,7 @@ Public Class EmpTimeEntry
                 'DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).ForeColor = _
                 '        Color.White
 
-                DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).BackColor = _
+                DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).BackColor =
                     Color.FromArgb(51, 192, 255)
 
                 'MsgBox("If static_obj <> DirectCast(prev_tsdrpdwnmenitm, ToolStripDropDownItem).Name Then")
@@ -5010,17 +4919,17 @@ Public Class EmpTimeEntry
 
         curr_YYYY = tmpdate
 
-        Dim listoflastday = EXECQUER("SELECT CONCAT(DAY(LAST_DAY('" & tmpdate & "-01-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-02-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-03-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-04-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-05-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-06-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-07-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-08-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-09-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-10-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-11-01'))" & _
+        Dim listoflastday = EXECQUER("SELECT CONCAT(DAY(LAST_DAY('" & tmpdate & "-01-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-02-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-03-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-04-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-05-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-06-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-07-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-08-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-09-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-10-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-11-01'))" &
                                      ",',',DAY(LAST_DAY('" & tmpdate & "-12-01')));")
 
         Dim arrayoflastday = Split(listoflastday, ",")
@@ -5075,17 +4984,17 @@ Public Class EmpTimeEntry
 
         curr_YYYY = tmpdate
 
-        Dim listoflastday = EXECQUER("SELECT CONCAT(DAY(LAST_DAY('" & tmpdate & "-01-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-02-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-03-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-04-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-05-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-06-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-07-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-08-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-09-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-10-01'))" & _
-                                     ",',',DAY(LAST_DAY('" & tmpdate & "-11-01'))" & _
+        Dim listoflastday = EXECQUER("SELECT CONCAT(DAY(LAST_DAY('" & tmpdate & "-01-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-02-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-03-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-04-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-05-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-06-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-07-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-08-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-09-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-10-01'))" &
+                                     ",',',DAY(LAST_DAY('" & tmpdate & "-11-01'))" &
                                      ",',',DAY(LAST_DAY('" & tmpdate & "-12-01')));")
 
         Dim arrayoflastday = Split(listoflastday, ",")
@@ -6875,11 +6784,11 @@ Public Class EmpTimeEntry
                                             TextBox16.Text,
                                             pagination}
 
-            Dim n_ReadSQLProcedureToDatatable As New  _
-                ReadSQLProcedureToDatatable("SEARCH_employeetimeentry",
-                                            param_array)
+            Dim n_ReadSQLProcedureToDatatable As New _
+                SQL("CALL SEARCH_employeetimeentry(?og_id, ?emp_id, ?emp_fname, ?emp_lname, ?page_number);",
+                    param_array)
 
-            dtemployee = n_ReadSQLProcedureToDatatable.ResultTable
+            dtemployee = n_ReadSQLProcedureToDatatable.GetFoundRows.Tables(0)
 
             dgvEmployi.Rows.Clear()
 

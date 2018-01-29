@@ -1238,15 +1238,15 @@ Module mdlStoredProcedure
         Return F_return
     End Function
 
-    Public Function I_Position(ByVal postname As String, _
-                                    ByVal Lastupd As DateTime, _
-                                    ByVal Created As DateTime, _
-                                    ByVal CreatedBy As Integer, _
-                                    ByVal OrgID As Integer, _
+    Public Function I_Position(ByVal postname As String,
+                                    ByVal Lastupd As DateTime,
+                                    ByVal Created As DateTime,
+                                    ByVal CreatedBy As Integer,
+                                    ByVal OrgID As Integer,
                                     ByVal LastUpdBy As Integer) As Boolean
 
         Dim F_return As Boolean = False
-        Dim SQL_command As MySqlCommand = _
+        Dim SQL_command As MySqlCommand =
                   New MySqlCommand("I_Position", connection)
         With SQL_command
             Try
@@ -1272,6 +1272,7 @@ Module mdlStoredProcedure
         End With
         Return F_return
     End Function
+
     Public Function SP_DivisionUpdate(ByVal Name As String,
                                 ByVal MainPhone As String,
                                 ByVal FaxNumber As String,
@@ -1305,7 +1306,15 @@ Module mdlStoredProcedure
                                 Optional I_WTaxDeductSchedNoAgent As Object = Nothing,
                                 Optional I_MinimumWageAmount As Object = Nothing,
                                 Optional I_AutomaticOT As Object = Nothing,
-                                Optional I_DivisionHeadID As Integer? = Nothing) As Boolean
+                                Optional I_DivisionHeadID As Integer? = Nothing,
+    Optional I_SSSDeductSchedWeekly As Object = Nothing,
+    Optional I_PhHealthDeductSchedWeekly As Object = Nothing,
+    Optional I_HDMFDeductSchedWeekly As Object = Nothing,
+    Optional I_WTaxDeductSchedWeekly As Object = Nothing,
+    Optional I_SSSDeductSchedwithAgentWeekly As Object = Nothing,
+    Optional I_PhHealthDeductSchedwithAgentWeekly As Object = Nothing,
+    Optional I_HDMFDeductSchedwithAgentWeekly As Object = Nothing,
+    Optional I_WTaxDeductSchedwithAgentWeekly As Object = Nothing) As Boolean
 
         Dim F_return As Boolean = False
         Dim SQL_command As MySqlCommand =
@@ -1352,12 +1361,22 @@ Module mdlStoredProcedure
                 .Parameters.AddWithValue("I_AutomaticOT", I_AutomaticOT)
                 .Parameters.AddWithValue("I_DivisionHeadID", I_DivisionHeadID)
 
+                .Parameters.AddWithValue("I_SSSDeductSchedWeekly", I_SSSDeductSchedWeekly)
+                .Parameters.AddWithValue("I_PhHealthDeductSchedWeekly", I_PhHealthDeductSchedWeekly)
+                .Parameters.AddWithValue("I_HDMFDeductSchedWeekly", I_HDMFDeductSchedWeekly)
+                .Parameters.AddWithValue("I_WTaxDeductSchedWeekly", I_WTaxDeductSchedWeekly)
+                .Parameters.AddWithValue("I_SSSDeductSchedwithAgentWeekly", I_SSSDeductSchedwithAgentWeekly)
+                .Parameters.AddWithValue("I_PhHealthDeductSchedwithAgentWeekly", I_PhHealthDeductSchedwithAgentWeekly)
+                .Parameters.AddWithValue("I_HDMFDeductSchedwithAgentWeekly", I_HDMFDeductSchedwithAgentWeekly)
+                .Parameters.AddWithValue("I_WTaxDeductSchedwithAgentWeekly", I_WTaxDeductSchedwithAgentWeekly)
+
                 .CommandType = CommandType.StoredProcedure
                 F_return = (.ExecuteNonQuery > 0)
 
             Catch ex As Exception
                 MsgBox(ex.Message, MsgBoxStyle.Critical, "Error SP_DivisionUpdate Stored Procedure")
             Finally
+                SQL_command.Dispose()
                 connection.Close()
             End Try
         End With
@@ -1399,7 +1418,15 @@ Module mdlStoredProcedure
                                 Optional I_WTaxDeductSchedNoAgent As Object = Nothing,
                                 Optional I_MinimumWageAmount As Object = Nothing,
                                 Optional I_AutomaticOT As Object = Nothing,
-                                Optional I_DivisionHeadID As Integer? = Nothing) As Boolean
+                                Optional I_DivisionHeadID As Integer? = Nothing,
+    Optional I_SSSDeductSchedWeekly As Object = Nothing,
+    Optional I_PhHealthDeductSchedWeekly As Object = Nothing,
+    Optional I_HDMFDeductSchedWeekly As Object = Nothing,
+    Optional I_WTaxDeductSchedWeekly As Object = Nothing,
+    Optional I_SSSDeductSchedwithAgentWeekly As Object = Nothing,
+    Optional I_PhHealthDeductSchedwithAgentWeekly As Object = Nothing,
+    Optional I_HDMFDeductSchedwithAgentWeekly As Object = Nothing,
+    Optional I_WTaxDeductSchedwithAgentWeekly As Object = Nothing) As Boolean
 
         Dim F_return As Boolean = False
         Dim SQL_command As MySqlCommand =
@@ -1448,12 +1475,22 @@ Module mdlStoredProcedure
                 .Parameters.AddWithValue("I_AutomaticOT", I_AutomaticOT)
                 .Parameters.AddWithValue("I_DivisionHeadID", I_DivisionHeadID)
 
+                .Parameters.AddWithValue("I_SSSDeductSchedWeekly", I_SSSDeductSchedWeekly)
+                .Parameters.AddWithValue("I_PhHealthDeductSchedWeekly", I_PhHealthDeductSchedWeekly)
+                .Parameters.AddWithValue("I_HDMFDeductSchedWeekly", I_HDMFDeductSchedWeekly)
+                .Parameters.AddWithValue("I_WTaxDeductSchedWeekly", I_WTaxDeductSchedWeekly)
+                .Parameters.AddWithValue("I_SSSDeductSchedwithAgentWeekly", I_SSSDeductSchedwithAgentWeekly)
+                .Parameters.AddWithValue("I_PhHealthDeductSchedwithAgentWeekly", I_PhHealthDeductSchedwithAgentWeekly)
+                .Parameters.AddWithValue("I_HDMFDeductSchedwithAgentWeekly", I_HDMFDeductSchedwithAgentWeekly)
+                .Parameters.AddWithValue("I_WTaxDeductSchedwithAgentWeekly", I_WTaxDeductSchedwithAgentWeekly)
+
                 .CommandType = CommandType.StoredProcedure
                 F_return = (.ExecuteNonQuery > 0)
 
             Catch ex As Exception
                 MsgBox(ex.Message, MsgBoxStyle.Critical, "Error SP_Division Stored Procedure")
             Finally
+                SQL_command.Dispose()
                 connection.Close()
             End Try
         End With

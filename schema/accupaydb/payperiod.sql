@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS `payperiod` (
   `HDMFContribSched` char(1) DEFAULT '0' COMMENT 'This flag only applies to ''Weekly'' employees,a sched to when the govt contrib be deducted',
   `OrdinalValue` int(11) DEFAULT '0',
   `MinWageValue` decimal(10,2) DEFAULT '481.00',
+  `WeekOridnalValue` tinyint(1) DEFAULT '0',
+  `IsLastFridayOfMonthFallsHere` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `Index 5` (`OrganizationID`,`PayFromDate`,`PayToDate`),
   KEY `FK_BaseTables_organization` (`OrganizationID`),

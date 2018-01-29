@@ -69,9 +69,9 @@ IF isotherformat = '0' THEN
         ,COALESCE(payp.TotalCompHDMF,0) 'TotalCompHDMF'
         ,IF(DATE_FORMAT(NOW(),'%Y-%m-%d') BETWEEN payp.PayFromDate AND payp.PayToDate,'0',IF(DATE_FORMAT(NOW(),'%Y-%m-%d') > payp.PayFromDate,'-1','1')) 'now_origin'
         ,IF(payp.Half = '0', '1', IF(payp.Half = '2', payp.Half, '0')) AS eom
-        ,SSSContribSched
-        ,PhHContribSched
-        ,HDMFContribSched
+        ,payp.SSSWeeklyContribSched
+        ,payp.PhHWeeklyContribSched
+        ,payp.HDMFWeeklyContribSched
         ,payp.MinWageValue
         FROM payperiod payp
         WHERE payp.OrganizationID=payp_OrganizationID

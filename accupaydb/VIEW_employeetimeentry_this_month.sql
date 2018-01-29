@@ -19,19 +19,22 @@ DECLARE monthlastdate DATE;
 SET custom_date = DATE_FORMAT(ParamDate,'%Y%c');
 
 
-SELECT PayFromDate FROM payperiod WHERE OrganizationID=OrganizID AND CONCAT(`Year`,`Month`)=custom_date ORDER BY PayFromDate,PayToDate LIMIT 1 INTO monthfirstdate;
+SELECT MIN(pp.PayFromDate), MAX(pp.PayToDate)
+FROM payperiod pp
+INNER JOIN employee e ON e.RowID=EmpRowID AND e.PayFrequencyID=pp.TotalGrossSalary
+WHERE pp.OrganizationID=OrganizID
+AND CONCAT(pp.`Year`,pp.`Month`)=custom_date# ORDER BY pp.PayFromDate, pp.PayToDate LIMIT 1
+INTO monthfirstdate, monthlastdate;
 
-SELECT PayToDate FROM payperiod WHERE OrganizationID=OrganizID AND CONCAT(`Year`,`Month`)=custom_date ORDER BY PayFromDate DESC,PayToDate DESC LIMIT 1 INTO monthlastdate;
-
-SELECT
-PayFromDate
-,PayToDate
+/*SELECT
+MIN(PayFromDate)
+,MAX(PayToDate)
 FROM payperiod
 WHERE OrganizationID=OrganizID
 AND ParamDate IN (PayFromDate,PayToDate)
 ORDER BY PayFromDate,PayToDate
 INTO monthfirstdate
-        ,monthlastdate;
+        ,monthlastdate;*/
 
 SELECT ete.*
 ,DATE_FORMAT(ete.`Date`,'%e') AS DateDay

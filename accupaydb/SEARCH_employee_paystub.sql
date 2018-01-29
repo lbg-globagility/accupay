@@ -6,7 +6,7 @@
 
 DROP PROCEDURE IF EXISTS `SEARCH_employee_paystub`;
 DELIMITER //
-CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employee_paystub`(IN `og_rowid` INT, IN `unified_search_string` VARCHAR(50), IN `page_number` INT)
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employee_paystub`(IN `og_rowid` INT, IN `unified_search_string` VARCHAR(50), IN `page_number` INT, IN `text_pay_freq_sched` VARCHAR(50))
     DETERMINISTIC
 BEGIN
 
@@ -61,11 +61,11 @@ SELECT e.RowID
 		  ,e.LastUpd `LastUpd`
 		  ,CONCAT_WS(uu.LastName, uu.FirstName) `LastUpdby`
 
-FROM (SELECT * FROM employee WHERE OrganizationID=og_rowid AND EmployeeID   =unified_search_string  AND LENGTH(unified_search_string) > 0
+FROM (SELECT * FROM employee WHERE OrganizationID=og_rowid AND EmployeeID   =unified_search_string  AND LENGTH(unified_search_string) > 0 AND EmploymentStatus NOT IN ('Resigned', 'Terminated')
     UNION
-        SELECT * FROM employee WHERE OrganizationID=og_rowid AND LastName       =unified_search_string  AND LENGTH(unified_search_string) > 0
+        SELECT * FROM employee WHERE OrganizationID=og_rowid AND LastName       =unified_search_string  AND LENGTH(unified_search_string) > 0 AND EmploymentStatus NOT IN ('Resigned', 'Terminated')
     UNION
-        SELECT * FROM employee WHERE OrganizationID=og_rowid AND FirstName  =unified_search_string  AND LENGTH(unified_search_string) > 0
+        SELECT * FROM employee WHERE OrganizationID=og_rowid AND FirstName  =unified_search_string  AND LENGTH(unified_search_string) > 0 AND EmploymentStatus NOT IN ('Resigned', 'Terminated')
     UNION
         SELECT * FROM employee WHERE OrganizationID=og_rowid AND LENGTH(TRIM(unified_search_string))=0
         ) e
@@ -73,7 +73,7 @@ FROM (SELECT * FROM employee WHERE OrganizationID=og_rowid AND EmployeeID   =uni
 LEFT JOIN `user` u              ON e.CreatedBy=u.RowID
 LEFT JOIN `user` uu             ON e.LastUpdBy=uu.RowID
 LEFT JOIN `position` pos        ON e.PositionID=pos.RowID
-LEFT JOIN payfrequency pf       ON e.PayFrequencyID=pf.RowID
+INNER JOIN payfrequency pf       ON e.PayFrequencyID=pf.RowID AND pf.PayFrequencyType = text_pay_freq_sched
 LEFT JOIN filingstatus fstat    ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents
 LEFT JOIN agency ag             ON ag.RowID=e.AgencyID
 LEFT JOIN division d                ON d.RowID=pos.DivisionId

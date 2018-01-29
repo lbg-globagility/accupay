@@ -23,15 +23,15 @@ Partial Class DivisionForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Last = New System.Windows.Forms.LinkLabel()
         Me.Nxt = New System.Windows.Forms.LinkLabel()
@@ -43,63 +43,55 @@ Partial Class DivisionForm
         Me.bgworkShiftSaving = New System.ComponentModel.BackgroundWorker()
         Me.bgworkUpdateEmployeeShiftIDOfEmployeetimeentry = New System.ComponentModel.BackgroundWorker()
         Me.bgworkDelDeptShift = New System.ComponentModel.BackgroundWorker()
-        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CustomColoredTabControl1 = New Acupay.CustomColoredTabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.cboDivisionHead = New System.Windows.Forms.ComboBox()
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
         Me.chkbxautomaticOT = New System.Windows.Forms.CheckBox()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.txtminwage = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.TabControl2 = New System.Windows.Forms.TabControl()
+        Me.tbpDefaultSemiMon = New System.Windows.Forms.TabPage()
         Me.Label64 = New System.Windows.Forms.Label()
-        Me.Label65 = New System.Windows.Forms.Label()
-        Me.lblhdmfdeductsched = New System.Windows.Forms.Label()
         Me.cboTaxDeductSched = New Acupay.cboListOfValue()
-        Me.Label69 = New System.Windows.Forms.Label()
-        Me.cbohdmfdeductsched = New Acupay.cboListOfValue()
-        Me.cbophhdeductsched = New Acupay.cboListOfValue()
+        Me.Label65 = New System.Windows.Forms.Label()
         Me.cbosssdeductsched = New Acupay.cboListOfValue()
+        Me.lblhdmfdeductsched = New System.Windows.Forms.Label()
+        Me.cbophhdeductsched = New Acupay.cboListOfValue()
+        Me.cbohdmfdeductsched = New Acupay.cboListOfValue()
+        Me.Label69 = New System.Windows.Forms.Label()
+        Me.tbpDefaultWeekly = New System.Windows.Forms.TabPage()
+        Me.cboxWTaxDeducSchedWeekly = New System.Windows.Forms.ComboBox()
+        Me.cboxHDMFDeducSchedWeekly = New System.Windows.Forms.ComboBox()
+        Me.cboxSSSDeducSchedWeekly = New System.Windows.Forms.ComboBox()
+        Me.cboxPhHDeducSchedWeekly = New System.Windows.Forms.ComboBox()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.Label31 = New System.Windows.Forms.Label()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.TabControl3 = New System.Windows.Forms.TabControl()
+        Me.tbpAgencySemiMon = New System.Windows.Forms.TabPage()
         Me.Label21 = New System.Windows.Forms.Label()
-        Me.Label22 = New System.Windows.Forms.Label()
-        Me.Label23 = New System.Windows.Forms.Label()
         Me.cboTaxDeductSched2 = New Acupay.cboListOfValue()
-        Me.Label24 = New System.Windows.Forms.Label()
-        Me.cbohdmfdeductsched2 = New Acupay.cboListOfValue()
-        Me.cbophhdeductsched2 = New Acupay.cboListOfValue()
+        Me.Label22 = New System.Windows.Forms.Label()
         Me.cbosssdeductsched2 = New Acupay.cboListOfValue()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.cbophhdeductsched2 = New Acupay.cboListOfValue()
+        Me.cbohdmfdeductsched2 = New Acupay.cboListOfValue()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.tbpAgencyWeekly = New System.Windows.Forms.TabPage()
+        Me.cboxWTaxDeducSchedWeekly1 = New System.Windows.Forms.ComboBox()
+        Me.cboxHDMFDeducSchedWeekly1 = New System.Windows.Forms.ComboBox()
+        Me.cboxSSSDeducSchedWeekly1 = New System.Windows.Forms.ComboBox()
+        Me.cboxPhHDeducSchedWeekly1 = New System.Windows.Forms.ComboBox()
+        Me.Label32 = New System.Windows.Forms.Label()
+        Me.Label33 = New System.Windows.Forms.Label()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.Label36 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.cbopayfrequency = New Acupay.cboListOfValue()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -208,13 +200,50 @@ Partial Class DivisionForm
         Me.ToolStripButton7 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel4 = New System.Windows.Forms.ToolStripLabel()
         Me.tsProgresSavingShift = New System.Windows.Forms.ToolStripProgressBar()
-        Me.cboDivisionHead = New System.Windows.Forms.ComboBox()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Label37 = New System.Windows.Forms.Label()
         Me.CustomColoredTabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
+        Me.TabControl2.SuspendLayout()
+        Me.tbpDefaultSemiMon.SuspendLayout()
+        Me.tbpDefaultWeekly.SuspendLayout()
         Me.TabPage3.SuspendLayout()
+        Me.TabControl3.SuspendLayout()
+        Me.tbpAgencySemiMon.SuspendLayout()
+        Me.tbpAgencyWeekly.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.TabPage4.SuspendLayout()
@@ -346,199 +375,6 @@ Partial Class DivisionForm
         Me.bgworkDelDeptShift.WorkerReportsProgress = True
         Me.bgworkDelDeptShift.WorkerSupportsCancellation = True
         '
-        'DataGridViewTextBoxColumn1
-        '
-        Me.DataGridViewTextBoxColumn1.HeaderText = "Name"
-        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        Me.DataGridViewTextBoxColumn1.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn2
-        '
-        Me.DataGridViewTextBoxColumn2.HeaderText = "Division Type"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn3
-        '
-        Me.DataGridViewTextBoxColumn3.HeaderText = "Parent Division"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn4
-        '
-        Me.DataGridViewTextBoxColumn4.HeaderText = "Column1"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        Me.DataGridViewTextBoxColumn4.Visible = False
-        '
-        'DataGridViewTextBoxColumn5
-        '
-        Me.DataGridViewTextBoxColumn5.HeaderText = "Trade Name"
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn6
-        '
-        Me.DataGridViewTextBoxColumn6.HeaderText = "Main Phone"
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        Me.DataGridViewTextBoxColumn6.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn7
-        '
-        Me.DataGridViewTextBoxColumn7.HeaderText = "Alt Main Phone"
-        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
-        Me.DataGridViewTextBoxColumn7.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn8
-        '
-        Me.DataGridViewTextBoxColumn8.HeaderText = "Email Address"
-        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-        Me.DataGridViewTextBoxColumn8.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn9
-        '
-        Me.DataGridViewTextBoxColumn9.HeaderText = "Alt Email Address"
-        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
-        Me.DataGridViewTextBoxColumn9.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn10
-        '
-        Me.DataGridViewTextBoxColumn10.HeaderText = "Fax No."
-        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
-        Me.DataGridViewTextBoxColumn10.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn11
-        '
-        Me.DataGridViewTextBoxColumn11.HeaderText = "Tin No."
-        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
-        Me.DataGridViewTextBoxColumn11.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn12
-        '
-        Me.DataGridViewTextBoxColumn12.HeaderText = "URL"
-        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
-        Me.DataGridViewTextBoxColumn12.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn13
-        '
-        Me.DataGridViewTextBoxColumn13.HeaderText = "Contact Name"
-        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
-        Me.DataGridViewTextBoxColumn13.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn14
-        '
-        Me.DataGridViewTextBoxColumn14.HeaderText = "Business Address"
-        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
-        Me.DataGridViewTextBoxColumn14.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn15
-        '
-        Me.DataGridViewTextBoxColumn15.HeaderText = "Grace Period"
-        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
-        Me.DataGridViewTextBoxColumn15.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn16
-        '
-        Me.DataGridViewTextBoxColumn16.HeaderText = "Work days per year"
-        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
-        Me.DataGridViewTextBoxColumn16.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn17
-        '
-        Me.DataGridViewTextBoxColumn17.HeaderText = "PhilHealth deduction sched"
-        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
-        Me.DataGridViewTextBoxColumn17.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn18
-        '
-        Me.DataGridViewTextBoxColumn18.HeaderText = "HDMF deduction schedule"
-        Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
-        Me.DataGridViewTextBoxColumn18.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn19
-        '
-        Me.DataGridViewTextBoxColumn19.HeaderText = "SSS deduction schedule"
-        Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
-        Me.DataGridViewTextBoxColumn19.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn20
-        '
-        Me.DataGridViewTextBoxColumn20.HeaderText = "Withholding tax deduction schedule"
-        Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
-        Me.DataGridViewTextBoxColumn20.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn21
-        '
-        Me.DataGridViewTextBoxColumn21.HeaderText = "Sick leave"
-        Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
-        Me.DataGridViewTextBoxColumn21.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn22
-        '
-        Me.DataGridViewTextBoxColumn22.HeaderText = "Vacation leave"
-        Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
-        Me.DataGridViewTextBoxColumn22.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn23
-        '
-        Me.DataGridViewTextBoxColumn23.HeaderText = "Maternity leave"
-        Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
-        Me.DataGridViewTextBoxColumn23.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn24
-        '
-        Me.DataGridViewTextBoxColumn24.HeaderText = "Paternity leave"
-        Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
-        Me.DataGridViewTextBoxColumn24.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn25
-        '
-        Me.DataGridViewTextBoxColumn25.HeaderText = "Other leave"
-        Me.DataGridViewTextBoxColumn25.Name = "DataGridViewTextBoxColumn25"
-        Me.DataGridViewTextBoxColumn25.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn26
-        '
-        Me.DataGridViewTextBoxColumn26.HeaderText = "Pay frequency"
-        Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
-        Me.DataGridViewTextBoxColumn26.ReadOnly = True
-        Me.DataGridViewTextBoxColumn26.Width = 120
-        '
-        'DataGridViewTextBoxColumn27
-        '
-        Me.DataGridViewTextBoxColumn27.HeaderText = "PayFrequencyRowID"
-        Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
-        Me.DataGridViewTextBoxColumn27.ReadOnly = True
-        Me.DataGridViewTextBoxColumn27.Visible = False
-        '
-        'DataGridViewTextBoxColumn28
-        '
-        Me.DataGridViewTextBoxColumn28.HeaderText = "Column1"
-        Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
-        Me.DataGridViewTextBoxColumn28.ReadOnly = True
-        Me.DataGridViewTextBoxColumn28.Visible = False
-        '
-        'DataGridViewTextBoxColumn29
-        '
-        Me.DataGridViewTextBoxColumn29.HeaderText = "Column2"
-        Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
-        Me.DataGridViewTextBoxColumn29.ReadOnly = True
-        Me.DataGridViewTextBoxColumn29.Visible = False
-        '
-        'DataGridViewTextBoxColumn30
-        '
-        Me.DataGridViewTextBoxColumn30.HeaderText = "Column3"
-        Me.DataGridViewTextBoxColumn30.Name = "DataGridViewTextBoxColumn30"
-        Me.DataGridViewTextBoxColumn30.ReadOnly = True
-        Me.DataGridViewTextBoxColumn30.Visible = False
-        '
-        'DataGridViewTextBoxColumn31
-        '
-        Me.DataGridViewTextBoxColumn31.HeaderText = "Column4"
-        Me.DataGridViewTextBoxColumn31.Name = "DataGridViewTextBoxColumn31"
-        Me.DataGridViewTextBoxColumn31.ReadOnly = True
-        Me.DataGridViewTextBoxColumn31.Visible = False
-        '
         'CustomColoredTabControl1
         '
         Me.CustomColoredTabControl1.Alignment = System.Windows.Forms.TabAlignment.Bottom
@@ -572,6 +408,7 @@ Partial Class DivisionForm
         '
         Me.Panel1.AutoScroll = True
         Me.Panel1.BackColor = System.Drawing.Color.White
+        Me.Panel1.Controls.Add(Me.Label37)
         Me.Panel1.Controls.Add(Me.cboDivisionHead)
         Me.Panel1.Controls.Add(Me.LinkLabel1)
         Me.Panel1.Controls.Add(Me.chkbxautomaticOT)
@@ -621,6 +458,16 @@ Partial Class DivisionForm
         Me.Panel1.Size = New System.Drawing.Size(717, 324)
         Me.Panel1.TabIndex = 318
         '
+        'cboDivisionHead
+        '
+        Me.cboDivisionHead.DisplayMember = "Name"
+        Me.cboDivisionHead.FormattingEnabled = True
+        Me.cboDivisionHead.Location = New System.Drawing.Point(442, 519)
+        Me.cboDivisionHead.Name = "cboDivisionHead"
+        Me.cboDivisionHead.Size = New System.Drawing.Size(244, 21)
+        Me.cboDivisionHead.TabIndex = 394
+        Me.cboDivisionHead.ValueMember = "Name"
+        '
         'LinkLabel1
         '
         Me.LinkLabel1.AutoEllipsis = True
@@ -636,7 +483,7 @@ Partial Class DivisionForm
         'chkbxautomaticOT
         '
         Me.chkbxautomaticOT.AutoSize = True
-        Me.chkbxautomaticOT.Location = New System.Drawing.Point(363, 472)
+        Me.chkbxautomaticOT.Location = New System.Drawing.Point(363, 496)
         Me.chkbxautomaticOT.Name = "chkbxautomaticOT"
         Me.chkbxautomaticOT.Size = New System.Drawing.Size(191, 17)
         Me.chkbxautomaticOT.TabIndex = 392
@@ -669,53 +516,57 @@ Partial Class DivisionForm
         Me.TabControl1.Location = New System.Drawing.Point(363, 260)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(316, 199)
+        Me.TabControl1.Size = New System.Drawing.Size(323, 230)
         Me.TabControl1.TabIndex = 389
         '
         'TabPage2
         '
-        Me.TabPage2.Controls.Add(Me.Label64)
-        Me.TabPage2.Controls.Add(Me.Label65)
-        Me.TabPage2.Controls.Add(Me.lblhdmfdeductsched)
-        Me.TabPage2.Controls.Add(Me.cboTaxDeductSched)
-        Me.TabPage2.Controls.Add(Me.Label69)
-        Me.TabPage2.Controls.Add(Me.cbohdmfdeductsched)
-        Me.TabPage2.Controls.Add(Me.cbophhdeductsched)
-        Me.TabPage2.Controls.Add(Me.cbosssdeductsched)
+        Me.TabPage2.Controls.Add(Me.TabControl2)
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(308, 173)
+        Me.TabPage2.Size = New System.Drawing.Size(315, 204)
         Me.TabPage2.TabIndex = 0
         Me.TabPage2.Text = "Default"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
+        'TabControl2
+        '
+        Me.TabControl2.Controls.Add(Me.tbpDefaultSemiMon)
+        Me.TabControl2.Controls.Add(Me.tbpDefaultWeekly)
+        Me.TabControl2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl2.Location = New System.Drawing.Point(3, 3)
+        Me.TabControl2.Name = "TabControl2"
+        Me.TabControl2.SelectedIndex = 0
+        Me.TabControl2.Size = New System.Drawing.Size(309, 198)
+        Me.TabControl2.TabIndex = 394
+        '
+        'tbpDefaultSemiMon
+        '
+        Me.tbpDefaultSemiMon.Controls.Add(Me.Label64)
+        Me.tbpDefaultSemiMon.Controls.Add(Me.cboTaxDeductSched)
+        Me.tbpDefaultSemiMon.Controls.Add(Me.Label65)
+        Me.tbpDefaultSemiMon.Controls.Add(Me.cbosssdeductsched)
+        Me.tbpDefaultSemiMon.Controls.Add(Me.lblhdmfdeductsched)
+        Me.tbpDefaultSemiMon.Controls.Add(Me.cbophhdeductsched)
+        Me.tbpDefaultSemiMon.Controls.Add(Me.cbohdmfdeductsched)
+        Me.tbpDefaultSemiMon.Controls.Add(Me.Label69)
+        Me.tbpDefaultSemiMon.Location = New System.Drawing.Point(4, 22)
+        Me.tbpDefaultSemiMon.Name = "tbpDefaultSemiMon"
+        Me.tbpDefaultSemiMon.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbpDefaultSemiMon.Size = New System.Drawing.Size(301, 172)
+        Me.tbpDefaultSemiMon.TabIndex = 0
+        Me.tbpDefaultSemiMon.Text = "SEMI-MONTHLY"
+        Me.tbpDefaultSemiMon.UseVisualStyleBackColor = True
+        '
         'Label64
         '
         Me.Label64.AutoSize = True
-        Me.Label64.Location = New System.Drawing.Point(6, 3)
+        Me.Label64.Location = New System.Drawing.Point(3, 3)
         Me.Label64.Name = "Label64"
         Me.Label64.Size = New System.Drawing.Size(151, 13)
         Me.Label64.TabIndex = 376
         Me.Label64.Text = "PhilHealth deduction shcedule"
-        '
-        'Label65
-        '
-        Me.Label65.AutoSize = True
-        Me.Label65.Location = New System.Drawing.Point(6, 46)
-        Me.Label65.Name = "Label65"
-        Me.Label65.Size = New System.Drawing.Size(124, 13)
-        Me.Label65.TabIndex = 379
-        Me.Label65.Text = "SSS deduction schedule"
-        '
-        'lblhdmfdeductsched
-        '
-        Me.lblhdmfdeductsched.AutoSize = True
-        Me.lblhdmfdeductsched.Location = New System.Drawing.Point(6, 89)
-        Me.lblhdmfdeductsched.Name = "lblhdmfdeductsched"
-        Me.lblhdmfdeductsched.Size = New System.Drawing.Size(146, 13)
-        Me.lblhdmfdeductsched.TabIndex = 380
-        Me.lblhdmfdeductsched.Text = "PAGIBIG deduction shcedule"
         '
         'cboTaxDeductSched
         '
@@ -723,44 +574,20 @@ Partial Class DivisionForm
         Me.cboTaxDeductSched.DropDownWidth = 121
         Me.cboTaxDeductSched.FormattingEnabled = True
         Me.cboTaxDeductSched.ListOfValueType = "Government deduction schedule"
-        Me.cboTaxDeductSched.Location = New System.Drawing.Point(106, 148)
+        Me.cboTaxDeductSched.Location = New System.Drawing.Point(103, 148)
         Me.cboTaxDeductSched.Name = "cboTaxDeductSched"
         Me.cboTaxDeductSched.OrderByColumn = CType(CSByte(0), SByte)
         Me.cboTaxDeductSched.Size = New System.Drawing.Size(195, 21)
         Me.cboTaxDeductSched.TabIndex = 385
         '
-        'Label69
+        'Label65
         '
-        Me.Label69.AutoSize = True
-        Me.Label69.Location = New System.Drawing.Point(6, 132)
-        Me.Label69.Name = "Label69"
-        Me.Label69.Size = New System.Drawing.Size(180, 13)
-        Me.Label69.TabIndex = 383
-        Me.Label69.Text = "Withholding Tax deduction shcedule"
-        '
-        'cbohdmfdeductsched
-        '
-        Me.cbohdmfdeductsched.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbohdmfdeductsched.DropDownWidth = 121
-        Me.cbohdmfdeductsched.FormattingEnabled = True
-        Me.cbohdmfdeductsched.ListOfValueType = "Government deduction schedule"
-        Me.cbohdmfdeductsched.Location = New System.Drawing.Point(106, 105)
-        Me.cbohdmfdeductsched.Name = "cbohdmfdeductsched"
-        Me.cbohdmfdeductsched.OrderByColumn = CType(CSByte(0), SByte)
-        Me.cbohdmfdeductsched.Size = New System.Drawing.Size(195, 21)
-        Me.cbohdmfdeductsched.TabIndex = 385
-        '
-        'cbophhdeductsched
-        '
-        Me.cbophhdeductsched.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbophhdeductsched.DropDownWidth = 121
-        Me.cbophhdeductsched.FormattingEnabled = True
-        Me.cbophhdeductsched.ListOfValueType = "Government deduction schedule"
-        Me.cbophhdeductsched.Location = New System.Drawing.Point(106, 19)
-        Me.cbophhdeductsched.Name = "cbophhdeductsched"
-        Me.cbophhdeductsched.OrderByColumn = CType(CSByte(0), SByte)
-        Me.cbophhdeductsched.Size = New System.Drawing.Size(195, 21)
-        Me.cbophhdeductsched.TabIndex = 385
+        Me.Label65.AutoSize = True
+        Me.Label65.Location = New System.Drawing.Point(3, 46)
+        Me.Label65.Name = "Label65"
+        Me.Label65.Size = New System.Drawing.Size(124, 13)
+        Me.Label65.TabIndex = 379
+        Me.Label65.Text = "SSS deduction schedule"
         '
         'cbosssdeductsched
         '
@@ -768,56 +595,192 @@ Partial Class DivisionForm
         Me.cbosssdeductsched.DropDownWidth = 121
         Me.cbosssdeductsched.FormattingEnabled = True
         Me.cbosssdeductsched.ListOfValueType = "Government deduction schedule"
-        Me.cbosssdeductsched.Location = New System.Drawing.Point(106, 62)
+        Me.cbosssdeductsched.Location = New System.Drawing.Point(103, 62)
         Me.cbosssdeductsched.Name = "cbosssdeductsched"
         Me.cbosssdeductsched.OrderByColumn = CType(CSByte(0), SByte)
         Me.cbosssdeductsched.Size = New System.Drawing.Size(195, 21)
         Me.cbosssdeductsched.TabIndex = 385
         '
+        'lblhdmfdeductsched
+        '
+        Me.lblhdmfdeductsched.AutoSize = True
+        Me.lblhdmfdeductsched.Location = New System.Drawing.Point(3, 89)
+        Me.lblhdmfdeductsched.Name = "lblhdmfdeductsched"
+        Me.lblhdmfdeductsched.Size = New System.Drawing.Size(146, 13)
+        Me.lblhdmfdeductsched.TabIndex = 380
+        Me.lblhdmfdeductsched.Text = "PAGIBIG deduction shcedule"
+        '
+        'cbophhdeductsched
+        '
+        Me.cbophhdeductsched.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbophhdeductsched.DropDownWidth = 121
+        Me.cbophhdeductsched.FormattingEnabled = True
+        Me.cbophhdeductsched.ListOfValueType = "Government deduction schedule"
+        Me.cbophhdeductsched.Location = New System.Drawing.Point(103, 19)
+        Me.cbophhdeductsched.Name = "cbophhdeductsched"
+        Me.cbophhdeductsched.OrderByColumn = CType(CSByte(0), SByte)
+        Me.cbophhdeductsched.Size = New System.Drawing.Size(195, 21)
+        Me.cbophhdeductsched.TabIndex = 385
+        '
+        'cbohdmfdeductsched
+        '
+        Me.cbohdmfdeductsched.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbohdmfdeductsched.DropDownWidth = 121
+        Me.cbohdmfdeductsched.FormattingEnabled = True
+        Me.cbohdmfdeductsched.ListOfValueType = "Government deduction schedule"
+        Me.cbohdmfdeductsched.Location = New System.Drawing.Point(103, 105)
+        Me.cbohdmfdeductsched.Name = "cbohdmfdeductsched"
+        Me.cbohdmfdeductsched.OrderByColumn = CType(CSByte(0), SByte)
+        Me.cbohdmfdeductsched.Size = New System.Drawing.Size(195, 21)
+        Me.cbohdmfdeductsched.TabIndex = 385
+        '
+        'Label69
+        '
+        Me.Label69.AutoSize = True
+        Me.Label69.Location = New System.Drawing.Point(3, 132)
+        Me.Label69.Name = "Label69"
+        Me.Label69.Size = New System.Drawing.Size(180, 13)
+        Me.Label69.TabIndex = 383
+        Me.Label69.Text = "Withholding Tax deduction shcedule"
+        '
+        'tbpDefaultWeekly
+        '
+        Me.tbpDefaultWeekly.Controls.Add(Me.cboxWTaxDeducSchedWeekly)
+        Me.tbpDefaultWeekly.Controls.Add(Me.cboxHDMFDeducSchedWeekly)
+        Me.tbpDefaultWeekly.Controls.Add(Me.cboxSSSDeducSchedWeekly)
+        Me.tbpDefaultWeekly.Controls.Add(Me.cboxPhHDeducSchedWeekly)
+        Me.tbpDefaultWeekly.Controls.Add(Me.Label28)
+        Me.tbpDefaultWeekly.Controls.Add(Me.Label29)
+        Me.tbpDefaultWeekly.Controls.Add(Me.Label30)
+        Me.tbpDefaultWeekly.Controls.Add(Me.Label31)
+        Me.tbpDefaultWeekly.Location = New System.Drawing.Point(4, 22)
+        Me.tbpDefaultWeekly.Name = "tbpDefaultWeekly"
+        Me.tbpDefaultWeekly.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbpDefaultWeekly.Size = New System.Drawing.Size(301, 172)
+        Me.tbpDefaultWeekly.TabIndex = 1
+        Me.tbpDefaultWeekly.Text = "WEEKLY"
+        Me.tbpDefaultWeekly.UseVisualStyleBackColor = True
+        '
+        'cboxWTaxDeducSchedWeekly
+        '
+        Me.cboxWTaxDeducSchedWeekly.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboxWTaxDeducSchedWeekly.FormattingEnabled = True
+        Me.cboxWTaxDeducSchedWeekly.Location = New System.Drawing.Point(103, 148)
+        Me.cboxWTaxDeducSchedWeekly.Name = "cboxWTaxDeducSchedWeekly"
+        Me.cboxWTaxDeducSchedWeekly.Size = New System.Drawing.Size(195, 21)
+        Me.cboxWTaxDeducSchedWeekly.TabIndex = 411
+        '
+        'cboxHDMFDeducSchedWeekly
+        '
+        Me.cboxHDMFDeducSchedWeekly.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboxHDMFDeducSchedWeekly.FormattingEnabled = True
+        Me.cboxHDMFDeducSchedWeekly.Location = New System.Drawing.Point(103, 105)
+        Me.cboxHDMFDeducSchedWeekly.Name = "cboxHDMFDeducSchedWeekly"
+        Me.cboxHDMFDeducSchedWeekly.Size = New System.Drawing.Size(195, 21)
+        Me.cboxHDMFDeducSchedWeekly.TabIndex = 410
+        '
+        'cboxSSSDeducSchedWeekly
+        '
+        Me.cboxSSSDeducSchedWeekly.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboxSSSDeducSchedWeekly.FormattingEnabled = True
+        Me.cboxSSSDeducSchedWeekly.Location = New System.Drawing.Point(103, 62)
+        Me.cboxSSSDeducSchedWeekly.Name = "cboxSSSDeducSchedWeekly"
+        Me.cboxSSSDeducSchedWeekly.Size = New System.Drawing.Size(195, 21)
+        Me.cboxSSSDeducSchedWeekly.TabIndex = 409
+        '
+        'cboxPhHDeducSchedWeekly
+        '
+        Me.cboxPhHDeducSchedWeekly.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboxPhHDeducSchedWeekly.FormattingEnabled = True
+        Me.cboxPhHDeducSchedWeekly.Location = New System.Drawing.Point(103, 19)
+        Me.cboxPhHDeducSchedWeekly.Name = "cboxPhHDeducSchedWeekly"
+        Me.cboxPhHDeducSchedWeekly.Size = New System.Drawing.Size(195, 21)
+        Me.cboxPhHDeducSchedWeekly.TabIndex = 408
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Location = New System.Drawing.Point(3, 3)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(151, 13)
+        Me.Label28.TabIndex = 404
+        Me.Label28.Text = "PhilHealth deduction shcedule"
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Location = New System.Drawing.Point(3, 46)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(124, 13)
+        Me.Label29.TabIndex = 405
+        Me.Label29.Text = "SSS deduction schedule"
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.Location = New System.Drawing.Point(3, 89)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(146, 13)
+        Me.Label30.TabIndex = 406
+        Me.Label30.Text = "PAGIBIG deduction shcedule"
+        '
+        'Label31
+        '
+        Me.Label31.AutoSize = True
+        Me.Label31.Location = New System.Drawing.Point(3, 132)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(180, 13)
+        Me.Label31.TabIndex = 407
+        Me.Label31.Text = "Withholding Tax deduction shcedule"
+        '
         'TabPage3
         '
-        Me.TabPage3.Controls.Add(Me.Label21)
-        Me.TabPage3.Controls.Add(Me.Label22)
-        Me.TabPage3.Controls.Add(Me.Label23)
-        Me.TabPage3.Controls.Add(Me.cboTaxDeductSched2)
-        Me.TabPage3.Controls.Add(Me.Label24)
-        Me.TabPage3.Controls.Add(Me.cbohdmfdeductsched2)
-        Me.TabPage3.Controls.Add(Me.cbophhdeductsched2)
-        Me.TabPage3.Controls.Add(Me.cbosssdeductsched2)
+        Me.TabPage3.Controls.Add(Me.TabControl3)
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(308, 173)
+        Me.TabPage3.Size = New System.Drawing.Size(315, 204)
         Me.TabPage3.TabIndex = 1
         Me.TabPage3.Text = "w/agency"
         Me.TabPage3.UseVisualStyleBackColor = True
         '
+        'TabControl3
+        '
+        Me.TabControl3.Controls.Add(Me.tbpAgencySemiMon)
+        Me.TabControl3.Controls.Add(Me.tbpAgencyWeekly)
+        Me.TabControl3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl3.Location = New System.Drawing.Point(3, 3)
+        Me.TabControl3.Name = "TabControl3"
+        Me.TabControl3.SelectedIndex = 0
+        Me.TabControl3.Size = New System.Drawing.Size(309, 198)
+        Me.TabControl3.TabIndex = 394
+        '
+        'tbpAgencySemiMon
+        '
+        Me.tbpAgencySemiMon.Controls.Add(Me.Label21)
+        Me.tbpAgencySemiMon.Controls.Add(Me.cboTaxDeductSched2)
+        Me.tbpAgencySemiMon.Controls.Add(Me.Label22)
+        Me.tbpAgencySemiMon.Controls.Add(Me.cbosssdeductsched2)
+        Me.tbpAgencySemiMon.Controls.Add(Me.Label23)
+        Me.tbpAgencySemiMon.Controls.Add(Me.cbophhdeductsched2)
+        Me.tbpAgencySemiMon.Controls.Add(Me.cbohdmfdeductsched2)
+        Me.tbpAgencySemiMon.Controls.Add(Me.Label24)
+        Me.tbpAgencySemiMon.Location = New System.Drawing.Point(4, 22)
+        Me.tbpAgencySemiMon.Name = "tbpAgencySemiMon"
+        Me.tbpAgencySemiMon.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbpAgencySemiMon.Size = New System.Drawing.Size(301, 172)
+        Me.tbpAgencySemiMon.TabIndex = 0
+        Me.tbpAgencySemiMon.Text = "SEMI-MONTHLY"
+        Me.tbpAgencySemiMon.UseVisualStyleBackColor = True
+        '
         'Label21
         '
         Me.Label21.AutoSize = True
-        Me.Label21.Location = New System.Drawing.Point(6, 3)
+        Me.Label21.Location = New System.Drawing.Point(3, 3)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(151, 13)
         Me.Label21.TabIndex = 386
         Me.Label21.Text = "PhilHealth deduction shcedule"
-        '
-        'Label22
-        '
-        Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(6, 46)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(124, 13)
-        Me.Label22.TabIndex = 387
-        Me.Label22.Text = "SSS deduction schedule"
-        '
-        'Label23
-        '
-        Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(6, 89)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(146, 13)
-        Me.Label23.TabIndex = 388
-        Me.Label23.Text = "PAGIBIG deduction shcedule"
         '
         'cboTaxDeductSched2
         '
@@ -825,44 +788,20 @@ Partial Class DivisionForm
         Me.cboTaxDeductSched2.DropDownWidth = 121
         Me.cboTaxDeductSched2.FormattingEnabled = True
         Me.cboTaxDeductSched2.ListOfValueType = "Government deduction schedule"
-        Me.cboTaxDeductSched2.Location = New System.Drawing.Point(106, 148)
+        Me.cboTaxDeductSched2.Location = New System.Drawing.Point(103, 148)
         Me.cboTaxDeductSched2.Name = "cboTaxDeductSched2"
         Me.cboTaxDeductSched2.OrderByColumn = CType(CSByte(0), SByte)
         Me.cboTaxDeductSched2.Size = New System.Drawing.Size(195, 21)
         Me.cboTaxDeductSched2.TabIndex = 390
         '
-        'Label24
+        'Label22
         '
-        Me.Label24.AutoSize = True
-        Me.Label24.Location = New System.Drawing.Point(6, 132)
-        Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(180, 13)
-        Me.Label24.TabIndex = 389
-        Me.Label24.Text = "Withholding Tax deduction shcedule"
-        '
-        'cbohdmfdeductsched2
-        '
-        Me.cbohdmfdeductsched2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbohdmfdeductsched2.DropDownWidth = 121
-        Me.cbohdmfdeductsched2.FormattingEnabled = True
-        Me.cbohdmfdeductsched2.ListOfValueType = "Government deduction schedule"
-        Me.cbohdmfdeductsched2.Location = New System.Drawing.Point(106, 105)
-        Me.cbohdmfdeductsched2.Name = "cbohdmfdeductsched2"
-        Me.cbohdmfdeductsched2.OrderByColumn = CType(CSByte(0), SByte)
-        Me.cbohdmfdeductsched2.Size = New System.Drawing.Size(195, 21)
-        Me.cbohdmfdeductsched2.TabIndex = 391
-        '
-        'cbophhdeductsched2
-        '
-        Me.cbophhdeductsched2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbophhdeductsched2.DropDownWidth = 121
-        Me.cbophhdeductsched2.FormattingEnabled = True
-        Me.cbophhdeductsched2.ListOfValueType = "Government deduction schedule"
-        Me.cbophhdeductsched2.Location = New System.Drawing.Point(106, 19)
-        Me.cbophhdeductsched2.Name = "cbophhdeductsched2"
-        Me.cbophhdeductsched2.OrderByColumn = CType(CSByte(0), SByte)
-        Me.cbophhdeductsched2.Size = New System.Drawing.Size(195, 21)
-        Me.cbophhdeductsched2.TabIndex = 392
+        Me.Label22.AutoSize = True
+        Me.Label22.Location = New System.Drawing.Point(3, 46)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(124, 13)
+        Me.Label22.TabIndex = 387
+        Me.Label22.Text = "SSS deduction schedule"
         '
         'cbosssdeductsched2
         '
@@ -870,11 +809,143 @@ Partial Class DivisionForm
         Me.cbosssdeductsched2.DropDownWidth = 121
         Me.cbosssdeductsched2.FormattingEnabled = True
         Me.cbosssdeductsched2.ListOfValueType = "Government deduction schedule"
-        Me.cbosssdeductsched2.Location = New System.Drawing.Point(106, 62)
+        Me.cbosssdeductsched2.Location = New System.Drawing.Point(103, 62)
         Me.cbosssdeductsched2.Name = "cbosssdeductsched2"
         Me.cbosssdeductsched2.OrderByColumn = CType(CSByte(0), SByte)
         Me.cbosssdeductsched2.Size = New System.Drawing.Size(195, 21)
         Me.cbosssdeductsched2.TabIndex = 393
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(3, 89)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(146, 13)
+        Me.Label23.TabIndex = 388
+        Me.Label23.Text = "PAGIBIG deduction shcedule"
+        '
+        'cbophhdeductsched2
+        '
+        Me.cbophhdeductsched2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbophhdeductsched2.DropDownWidth = 121
+        Me.cbophhdeductsched2.FormattingEnabled = True
+        Me.cbophhdeductsched2.ListOfValueType = "Government deduction schedule"
+        Me.cbophhdeductsched2.Location = New System.Drawing.Point(103, 19)
+        Me.cbophhdeductsched2.Name = "cbophhdeductsched2"
+        Me.cbophhdeductsched2.OrderByColumn = CType(CSByte(0), SByte)
+        Me.cbophhdeductsched2.Size = New System.Drawing.Size(195, 21)
+        Me.cbophhdeductsched2.TabIndex = 392
+        '
+        'cbohdmfdeductsched2
+        '
+        Me.cbohdmfdeductsched2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbohdmfdeductsched2.DropDownWidth = 121
+        Me.cbohdmfdeductsched2.FormattingEnabled = True
+        Me.cbohdmfdeductsched2.ListOfValueType = "Government deduction schedule"
+        Me.cbohdmfdeductsched2.Location = New System.Drawing.Point(103, 105)
+        Me.cbohdmfdeductsched2.Name = "cbohdmfdeductsched2"
+        Me.cbohdmfdeductsched2.OrderByColumn = CType(CSByte(0), SByte)
+        Me.cbohdmfdeductsched2.Size = New System.Drawing.Size(195, 21)
+        Me.cbohdmfdeductsched2.TabIndex = 391
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.Location = New System.Drawing.Point(3, 132)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(180, 13)
+        Me.Label24.TabIndex = 389
+        Me.Label24.Text = "Withholding Tax deduction shcedule"
+        '
+        'tbpAgencyWeekly
+        '
+        Me.tbpAgencyWeekly.Controls.Add(Me.cboxWTaxDeducSchedWeekly1)
+        Me.tbpAgencyWeekly.Controls.Add(Me.cboxHDMFDeducSchedWeekly1)
+        Me.tbpAgencyWeekly.Controls.Add(Me.cboxSSSDeducSchedWeekly1)
+        Me.tbpAgencyWeekly.Controls.Add(Me.cboxPhHDeducSchedWeekly1)
+        Me.tbpAgencyWeekly.Controls.Add(Me.Label32)
+        Me.tbpAgencyWeekly.Controls.Add(Me.Label33)
+        Me.tbpAgencyWeekly.Controls.Add(Me.Label34)
+        Me.tbpAgencyWeekly.Controls.Add(Me.Label36)
+        Me.tbpAgencyWeekly.Location = New System.Drawing.Point(4, 22)
+        Me.tbpAgencyWeekly.Name = "tbpAgencyWeekly"
+        Me.tbpAgencyWeekly.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbpAgencyWeekly.Size = New System.Drawing.Size(301, 172)
+        Me.tbpAgencyWeekly.TabIndex = 1
+        Me.tbpAgencyWeekly.Text = "WEEKLY"
+        Me.tbpAgencyWeekly.UseVisualStyleBackColor = True
+        '
+        'cboxWTaxDeducSchedWeekly1
+        '
+        Me.cboxWTaxDeducSchedWeekly1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboxWTaxDeducSchedWeekly1.FormattingEnabled = True
+        Me.cboxWTaxDeducSchedWeekly1.Location = New System.Drawing.Point(103, 148)
+        Me.cboxWTaxDeducSchedWeekly1.Name = "cboxWTaxDeducSchedWeekly1"
+        Me.cboxWTaxDeducSchedWeekly1.Size = New System.Drawing.Size(195, 21)
+        Me.cboxWTaxDeducSchedWeekly1.TabIndex = 427
+        '
+        'cboxHDMFDeducSchedWeekly1
+        '
+        Me.cboxHDMFDeducSchedWeekly1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboxHDMFDeducSchedWeekly1.FormattingEnabled = True
+        Me.cboxHDMFDeducSchedWeekly1.Location = New System.Drawing.Point(103, 105)
+        Me.cboxHDMFDeducSchedWeekly1.Name = "cboxHDMFDeducSchedWeekly1"
+        Me.cboxHDMFDeducSchedWeekly1.Size = New System.Drawing.Size(195, 21)
+        Me.cboxHDMFDeducSchedWeekly1.TabIndex = 426
+        '
+        'cboxSSSDeducSchedWeekly1
+        '
+        Me.cboxSSSDeducSchedWeekly1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboxSSSDeducSchedWeekly1.FormattingEnabled = True
+        Me.cboxSSSDeducSchedWeekly1.Location = New System.Drawing.Point(103, 62)
+        Me.cboxSSSDeducSchedWeekly1.Name = "cboxSSSDeducSchedWeekly1"
+        Me.cboxSSSDeducSchedWeekly1.Size = New System.Drawing.Size(195, 21)
+        Me.cboxSSSDeducSchedWeekly1.TabIndex = 425
+        '
+        'cboxPhHDeducSchedWeekly1
+        '
+        Me.cboxPhHDeducSchedWeekly1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboxPhHDeducSchedWeekly1.FormattingEnabled = True
+        Me.cboxPhHDeducSchedWeekly1.Location = New System.Drawing.Point(103, 19)
+        Me.cboxPhHDeducSchedWeekly1.Name = "cboxPhHDeducSchedWeekly1"
+        Me.cboxPhHDeducSchedWeekly1.Size = New System.Drawing.Size(195, 21)
+        Me.cboxPhHDeducSchedWeekly1.TabIndex = 424
+        '
+        'Label32
+        '
+        Me.Label32.AutoSize = True
+        Me.Label32.Location = New System.Drawing.Point(3, 3)
+        Me.Label32.Name = "Label32"
+        Me.Label32.Size = New System.Drawing.Size(151, 13)
+        Me.Label32.TabIndex = 420
+        Me.Label32.Text = "PhilHealth deduction shcedule"
+        '
+        'Label33
+        '
+        Me.Label33.AutoSize = True
+        Me.Label33.Location = New System.Drawing.Point(3, 46)
+        Me.Label33.Name = "Label33"
+        Me.Label33.Size = New System.Drawing.Size(124, 13)
+        Me.Label33.TabIndex = 421
+        Me.Label33.Text = "SSS deduction schedule"
+        '
+        'Label34
+        '
+        Me.Label34.AutoSize = True
+        Me.Label34.Location = New System.Drawing.Point(3, 89)
+        Me.Label34.Name = "Label34"
+        Me.Label34.Size = New System.Drawing.Size(146, 13)
+        Me.Label34.TabIndex = 422
+        Me.Label34.Text = "PAGIBIG deduction shcedule"
+        '
+        'Label36
+        '
+        Me.Label36.AutoSize = True
+        Me.Label36.Location = New System.Drawing.Point(3, 132)
+        Me.Label36.Name = "Label36"
+        Me.Label36.Size = New System.Drawing.Size(180, 13)
+        Me.Label36.TabIndex = 423
+        Me.Label36.Text = "Withholding Tax deduction shcedule"
         '
         'Label19
         '
@@ -1608,14 +1679,14 @@ Partial Class DivisionForm
         Me.dgvDivisionShift.BackgroundColor = System.Drawing.Color.White
         Me.dgvDivisionShift.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvDivisionShift.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.divshiftRowID, Me.divshiftTimeFrom, Me.divshiftTimeTo, Me.divshiftDateFrom, Me.divshiftDateTo, Me.divshiftRestDay})
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDivisionShift.DefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDivisionShift.DefaultCellStyle = DataGridViewCellStyle1
         Me.dgvDivisionShift.Dock = System.Windows.Forms.DockStyle.Top
         Me.dgvDivisionShift.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvDivisionShift.Location = New System.Drawing.Point(0, 0)
@@ -1689,14 +1760,14 @@ Partial Class DivisionForm
         Me.dgvWeek.AllowUserToResizeColumns = False
         Me.dgvWeek.AllowUserToResizeRows = False
         Me.dgvWeek.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvWeek.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvWeek.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvWeek.ColumnHeadersHeight = 30
         Me.dgvWeek.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvWeek.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7})
@@ -1711,8 +1782,8 @@ Partial Class DivisionForm
         '
         'Column1
         '
-        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle3
         Me.Column1.HeaderText = "Column1"
         Me.Column1.Name = "Column1"
         Me.Column1.ReadOnly = True
@@ -1720,8 +1791,8 @@ Partial Class DivisionForm
         '
         'Column2
         '
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle4
         Me.Column2.HeaderText = "Column2"
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
@@ -1729,8 +1800,8 @@ Partial Class DivisionForm
         '
         'Column3
         '
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle5
         Me.Column3.HeaderText = "Column3"
         Me.Column3.Name = "Column3"
         Me.Column3.ReadOnly = True
@@ -1738,8 +1809,8 @@ Partial Class DivisionForm
         '
         'Column4
         '
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column4.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column4.DefaultCellStyle = DataGridViewCellStyle6
         Me.Column4.HeaderText = "Column4"
         Me.Column4.Name = "Column4"
         Me.Column4.ReadOnly = True
@@ -1747,8 +1818,8 @@ Partial Class DivisionForm
         '
         'Column5
         '
-        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle7
         Me.Column5.HeaderText = "Column5"
         Me.Column5.Name = "Column5"
         Me.Column5.ReadOnly = True
@@ -1756,8 +1827,8 @@ Partial Class DivisionForm
         '
         'Column6
         '
-        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle8
         Me.Column6.HeaderText = "Column6"
         Me.Column6.Name = "Column6"
         Me.Column6.ReadOnly = True
@@ -1765,8 +1836,8 @@ Partial Class DivisionForm
         '
         'Column7
         '
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column7.DefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column7.DefaultCellStyle = DataGridViewCellStyle9
         Me.Column7.HeaderText = "Column7"
         Me.Column7.Name = "Column7"
         Me.Column7.ReadOnly = True
@@ -1868,15 +1939,207 @@ Partial Class DivisionForm
         Me.tsProgresSavingShift.Size = New System.Drawing.Size(100, 22)
         Me.tsProgresSavingShift.Visible = False
         '
-        'cboDivisionHead
+        'DataGridViewTextBoxColumn1
         '
-        Me.cboDivisionHead.DisplayMember = "Name"
-        Me.cboDivisionHead.FormattingEnabled = True
-        Me.cboDivisionHead.Location = New System.Drawing.Point(472, 499)
-        Me.cboDivisionHead.Name = "cboDivisionHead"
-        Me.cboDivisionHead.Size = New System.Drawing.Size(200, 21)
-        Me.cboDivisionHead.TabIndex = 394
-        Me.cboDivisionHead.ValueMember = "Name"
+        Me.DataGridViewTextBoxColumn1.HeaderText = "Name"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Division Type"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Parent Division"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Column1"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        Me.DataGridViewTextBoxColumn4.Visible = False
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Trade Name"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.HeaderText = "Main Phone"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Alt Main Phone"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn8
+        '
+        Me.DataGridViewTextBoxColumn8.HeaderText = "Email Address"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        Me.DataGridViewTextBoxColumn8.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn9
+        '
+        Me.DataGridViewTextBoxColumn9.HeaderText = "Alt Email Address"
+        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        Me.DataGridViewTextBoxColumn9.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn10
+        '
+        Me.DataGridViewTextBoxColumn10.HeaderText = "Fax No."
+        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        Me.DataGridViewTextBoxColumn10.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn11
+        '
+        Me.DataGridViewTextBoxColumn11.HeaderText = "Tin No."
+        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        Me.DataGridViewTextBoxColumn11.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn12
+        '
+        Me.DataGridViewTextBoxColumn12.HeaderText = "URL"
+        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        Me.DataGridViewTextBoxColumn12.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn13
+        '
+        Me.DataGridViewTextBoxColumn13.HeaderText = "Contact Name"
+        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        Me.DataGridViewTextBoxColumn13.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn14
+        '
+        Me.DataGridViewTextBoxColumn14.HeaderText = "Business Address"
+        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        Me.DataGridViewTextBoxColumn14.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn15
+        '
+        Me.DataGridViewTextBoxColumn15.HeaderText = "Grace Period"
+        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+        Me.DataGridViewTextBoxColumn15.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn16
+        '
+        Me.DataGridViewTextBoxColumn16.HeaderText = "Work days per year"
+        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+        Me.DataGridViewTextBoxColumn16.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn17
+        '
+        Me.DataGridViewTextBoxColumn17.HeaderText = "PhilHealth deduction sched"
+        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+        Me.DataGridViewTextBoxColumn17.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn18
+        '
+        Me.DataGridViewTextBoxColumn18.HeaderText = "HDMF deduction schedule"
+        Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+        Me.DataGridViewTextBoxColumn18.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn19
+        '
+        Me.DataGridViewTextBoxColumn19.HeaderText = "SSS deduction schedule"
+        Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
+        Me.DataGridViewTextBoxColumn19.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn20
+        '
+        Me.DataGridViewTextBoxColumn20.HeaderText = "Withholding tax deduction schedule"
+        Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
+        Me.DataGridViewTextBoxColumn20.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn21
+        '
+        Me.DataGridViewTextBoxColumn21.HeaderText = "Sick leave"
+        Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
+        Me.DataGridViewTextBoxColumn21.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn22
+        '
+        Me.DataGridViewTextBoxColumn22.HeaderText = "Vacation leave"
+        Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
+        Me.DataGridViewTextBoxColumn22.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn23
+        '
+        Me.DataGridViewTextBoxColumn23.HeaderText = "Maternity leave"
+        Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
+        Me.DataGridViewTextBoxColumn23.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn24
+        '
+        Me.DataGridViewTextBoxColumn24.HeaderText = "Paternity leave"
+        Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
+        Me.DataGridViewTextBoxColumn24.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn25
+        '
+        Me.DataGridViewTextBoxColumn25.HeaderText = "Other leave"
+        Me.DataGridViewTextBoxColumn25.Name = "DataGridViewTextBoxColumn25"
+        Me.DataGridViewTextBoxColumn25.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn26
+        '
+        Me.DataGridViewTextBoxColumn26.HeaderText = "Pay frequency"
+        Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
+        Me.DataGridViewTextBoxColumn26.ReadOnly = True
+        Me.DataGridViewTextBoxColumn26.Width = 120
+        '
+        'DataGridViewTextBoxColumn27
+        '
+        Me.DataGridViewTextBoxColumn27.HeaderText = "PayFrequencyRowID"
+        Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
+        Me.DataGridViewTextBoxColumn27.ReadOnly = True
+        Me.DataGridViewTextBoxColumn27.Visible = False
+        '
+        'DataGridViewTextBoxColumn28
+        '
+        Me.DataGridViewTextBoxColumn28.HeaderText = "Column1"
+        Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
+        Me.DataGridViewTextBoxColumn28.ReadOnly = True
+        Me.DataGridViewTextBoxColumn28.Visible = False
+        '
+        'DataGridViewTextBoxColumn29
+        '
+        Me.DataGridViewTextBoxColumn29.HeaderText = "Column2"
+        Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
+        Me.DataGridViewTextBoxColumn29.ReadOnly = True
+        Me.DataGridViewTextBoxColumn29.Visible = False
+        '
+        'DataGridViewTextBoxColumn30
+        '
+        Me.DataGridViewTextBoxColumn30.HeaderText = "Column3"
+        Me.DataGridViewTextBoxColumn30.Name = "DataGridViewTextBoxColumn30"
+        Me.DataGridViewTextBoxColumn30.ReadOnly = True
+        Me.DataGridViewTextBoxColumn30.Visible = False
+        '
+        'DataGridViewTextBoxColumn31
+        '
+        Me.DataGridViewTextBoxColumn31.HeaderText = "Column4"
+        Me.DataGridViewTextBoxColumn31.Name = "DataGridViewTextBoxColumn31"
+        Me.DataGridViewTextBoxColumn31.ReadOnly = True
+        Me.DataGridViewTextBoxColumn31.Visible = False
+        '
+        'Label37
+        '
+        Me.Label37.AutoSize = True
+        Me.Label37.Location = New System.Drawing.Point(363, 527)
+        Me.Label37.Name = "Label37"
+        Me.Label37.Size = New System.Drawing.Size(73, 13)
+        Me.Label37.TabIndex = 395
+        Me.Label37.Text = "Division Head"
         '
         'DivisionForm
         '
@@ -1903,9 +2166,17 @@ Partial Class DivisionForm
         Me.Panel1.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
-        Me.TabPage2.PerformLayout()
+        Me.TabControl2.ResumeLayout(False)
+        Me.tbpDefaultSemiMon.ResumeLayout(False)
+        Me.tbpDefaultSemiMon.PerformLayout()
+        Me.tbpDefaultWeekly.ResumeLayout(False)
+        Me.tbpDefaultWeekly.PerformLayout()
         Me.TabPage3.ResumeLayout(False)
-        Me.TabPage3.PerformLayout()
+        Me.TabControl3.ResumeLayout(False)
+        Me.tbpAgencySemiMon.ResumeLayout(False)
+        Me.tbpAgencySemiMon.PerformLayout()
+        Me.tbpAgencyWeekly.ResumeLayout(False)
+        Me.tbpAgencyWeekly.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         Me.ToolStrip1.ResumeLayout(False)
@@ -2104,4 +2375,27 @@ Partial Class DivisionForm
     Friend WithEvents divshiftRestDay As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
     Friend WithEvents cboDivisionHead As ComboBox
+    Private WithEvents TabControl2 As TabControl
+    Private WithEvents tbpDefaultSemiMon As TabPage
+    Private WithEvents tbpDefaultWeekly As TabPage
+    Friend WithEvents cboxWTaxDeducSchedWeekly As ComboBox
+    Friend WithEvents cboxHDMFDeducSchedWeekly As ComboBox
+    Friend WithEvents cboxSSSDeducSchedWeekly As ComboBox
+    Friend WithEvents cboxPhHDeducSchedWeekly As ComboBox
+    Friend WithEvents Label28 As Label
+    Friend WithEvents Label29 As Label
+    Friend WithEvents Label30 As Label
+    Friend WithEvents Label31 As Label
+    Private WithEvents TabControl3 As TabControl
+    Private WithEvents tbpAgencySemiMon As TabPage
+    Private WithEvents tbpAgencyWeekly As TabPage
+    Friend WithEvents cboxWTaxDeducSchedWeekly1 As ComboBox
+    Friend WithEvents cboxHDMFDeducSchedWeekly1 As ComboBox
+    Friend WithEvents cboxSSSDeducSchedWeekly1 As ComboBox
+    Friend WithEvents cboxPhHDeducSchedWeekly1 As ComboBox
+    Friend WithEvents Label32 As Label
+    Friend WithEvents Label33 As Label
+    Friend WithEvents Label34 As Label
+    Friend WithEvents Label36 As Label
+    Friend WithEvents Label37 As Label
 End Class
