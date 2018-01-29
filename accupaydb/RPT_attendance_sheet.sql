@@ -29,10 +29,10 @@ CONCAT_WS(' / ', ee.EmployeeID, CONCAT_WS(',', ee.LastName, ee.FirstName, INITIA
 FROM employeetimeentry ete
 LEFT JOIN employeeshift esh ON esh.RowID=ete.EmployeeShiftID
 LEFT JOIN shift sh ON sh.RowID=esh.ShiftID
-INNER JOIN employeetimeentrydetails etd ON etd.EmployeeID=ete.EmployeeID AND etd.OrganizationID=ete.OrganizationID AND etd.Date=ete.Date
+LEFT JOIN employeetimeentrydetails etd ON etd.EmployeeID=ete.EmployeeID AND etd.OrganizationID=ete.OrganizationID AND etd.Date=ete.Date
 LEFT JOIN employee ee ON ee.RowID=ete.EmployeeID
-WHERE ete.DATE BETWEEN FromDate AND ToDate AND ete.OrganizationID=OrganizationID
-AND etd.RowID IS NOT NULL
+WHERE ete.DATE BETWEEN FromDate AND ToDate AND
+    ete.OrganizationID=OrganizationID
 GROUP BY ete.RowID
 ORDER BY ete.Date,ee.LastName;
 
