@@ -32,6 +32,8 @@ Public Class ViewTimeEntryEmployeeLevel
 
     Private WithEvents timeEntDurationModal As TimEntduration
 
+    Private _selectedYear As Integer
+
     Sub New()
 
         ' This call is required by the designer.
@@ -42,6 +44,8 @@ Public Class ViewTimeEntryEmployeeLevel
     End Sub
 
     Sub ViewTimeEntryEmployeeLevel()
+        ' Default selected year is the current year
+        _selectedYear = Date.Today.Year
 
         cboOrganizations.ContextMenu = New ContextMenu
 
@@ -56,6 +60,8 @@ Public Class ViewTimeEntryEmployeeLevel
         Dim loadEmployeesTask = LoadEmployees()
 
         Dim loadPayPeriodsTask = LoadPayPeriods()
+
+        LoadYears()
 
     End Sub
 
@@ -156,7 +162,7 @@ Public Class ViewTimeEntryEmployeeLevel
     Public Async Function LoadPayPeriods() As Task
         Dim numOfRows = 2
 
-        _payPeriods = Await GetPayPeriods(z_OrganizationID, 2017, 1)
+        _payPeriods = Await GetPayPeriods(z_OrganizationID, _selectedYear, 1)
         payPeriodsDataGridView.Rows.Add(numOfRows)
 
         Dim monthRowCounters(11) As Integer
@@ -871,6 +877,19 @@ Public Class ViewTimeEntryEmployeeLevel
 
     Private Sub cboOrganizations_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboOrganizations.KeyPress
         e.Handled = True
+    End Sub
+
+    Private Async Sub LoadYears()
+        Dim years = Await GetYears()
+        cboYears.DataSource = years
+        cboYears.SelectedItem = _selectedYear
+
+        AddHandler cboYears.SelectedIndexChanged, AddressOf cboYears_SelectedIndexChanged
+    End Sub
+
+    Private Sub cboYears_SelectedIndexChanged(sender As Object, e As EventArgs)
+        _selectedYear = DirectCast(cboYears.SelectedItem, Integer)
+        Dim task = LoadPayPeriods()
     End Sub
 
 End Class

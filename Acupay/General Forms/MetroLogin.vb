@@ -720,14 +720,17 @@ Public Class MetroLogin
 
         Dim current_system_owner As String = sys_ownr.CurrentSystemOwner
 
-        If SystemOwner.Goldwings = current_system_owner _
-            Or SystemOwner.Cinema2000 = current_system_owner Then
+        Dim allowed_systemowners = New String() {SystemOwner.Hyundai}
+
+        Dim disallowed_systemowners = New String() {SystemOwner.Goldwings, SystemOwner.Cinema2000, SystemOwner.DefaultOwner}
+
+        If disallowed_systemowners.Contains(current_system_owner) Then
 
             Size = New Size(Size.Width, 319)
             PhotoImages.Location = New Point(242, 89)
             Panel1.Visible = False
 
-        ElseIf SystemOwner.Hyundai = current_system_owner Then
+        ElseIf allowed_systemowners.Contains(current_system_owner) Then
 
             Size = New Size(Size.Width, 371)
             PhotoImages.Location = New Point(242, 89)
