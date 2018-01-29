@@ -31,7 +31,7 @@ SET eob_dayrange = COALESCE(DATEDIFF(COALESCE(NEW.OffBusEndDate,NEW.OffBusStartD
 
 SET i=0;
 
-IF (OLD.OffBusStatus != 'Approved' AND NEW.OffBusStatus = 'Approved')
+/*IF (OLD.OffBusStatus != 'Approved' AND NEW.OffBusStatus = 'Approved')
     AND OLD.OffBusStartTime != NEW.OffBusStartTime
     AND OLD.OffBusEndTime != NEW.OffBusEndTime
     AND OLD.OffBusStartDate != NEW.OffBusStartDate
@@ -157,7 +157,7 @@ simple_loop: LOOP
 
 END LOOP simple_loop;
 
-END IF;
+END IF;*/
 
 
 

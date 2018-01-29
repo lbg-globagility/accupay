@@ -24,7 +24,7 @@ SET one_datetimestamp = (SELECT etd.Created FROM employeetimeentrydetails etd IN
 SET one_datetimestamp = IFNULL(one_datetimestamp,CURRENT_TIMESTAMP());
 SET i=0;
 
-    IF NEW.OffBusStatus = 'Approved' THEN
+    /*IF NEW.OffBusStatus = 'Approved' THEN
 
         SELECT CURRENT_TIMESTAMP() INTO one_datetimestamp;
 
@@ -64,7 +64,7 @@ SET i=0;
 
 
 
-    END IF;
+    END IF;*/
 
 SELECT RowID FROM `view` WHERE ViewName='Official Business filing' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 
