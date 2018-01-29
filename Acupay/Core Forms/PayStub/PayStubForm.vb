@@ -2632,7 +2632,9 @@ Friend Class PrintAllPaySlipOfficialFormat
 
         Static current_system_owner As String = sys_ownr.CurrentSystemOwner
 
-        If SystemOwner.Goldwings = current_system_owner Then
+        Dim some_systemowners = New String() {SystemOwner.Goldwings, SystemOwner.DefaultOwner}
+
+        If some_systemowners.Contains(current_system_owner) Then
 
             Dim n_SQLQueryToDatatable As _
             New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual & ");")
