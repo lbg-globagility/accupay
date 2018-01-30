@@ -22,6 +22,9 @@ Public Class ImportOvertime
         ',start_time
         ',end_date
         ',end_time
+
+        Dim listof_sql As New List(Of SQL)
+
         Try
 
 
@@ -36,7 +39,6 @@ Public Class ImportOvertime
                           ", ?start_time",
                           ", ?end_date",
                           ", ?end_time);")
-
 
             For Each dtTbl As DataTable In dt.Tables
 
@@ -57,6 +59,8 @@ Public Class ImportOvertime
 
                     sql.ExecuteQuery()
 
+                    listof_sql.Add(sql)
+
                     If sql.HasError Then
                         MsgBox(sql.ErrorMessage)
                     End If
@@ -65,6 +69,15 @@ Public Class ImportOvertime
             Next
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, "Import Overtime"))
+        Finally
+            Dim number_ofsql_error =
+                listof_sql.OfType(Of SQL).
+                Where(Function(_sql) _sql.HasError)
+
+            If number_ofsql_error.Count = 0 Then
+                MsgBox("Overtime successfully imported", MsgBoxStyle.Information)
+            End If
+
         End Try
 
     End Sub
