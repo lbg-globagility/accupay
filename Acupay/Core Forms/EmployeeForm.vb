@@ -6806,6 +6806,14 @@ Public Class EmployeeForm
             Dim sql As New SQL(str_quer)
             sql.ExecuteQuery()
 
+            If sql.HasError = False Then
+
+                For Each dgvr As DataGridViewRow In selected_rows
+                    dgvDisciplinaryList.Rows.Remove(dgvr)
+                Next
+
+            End If
+
         End If
 
     End Sub
