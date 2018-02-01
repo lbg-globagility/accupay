@@ -67,4 +67,6 @@ Public Class PayrollContext
 
     Public Overridable Property Allowances As DbSet(Of Allowance)
 
+    Public Overridable Property Leaves As DbSet(Of Leave)
+
 End Class

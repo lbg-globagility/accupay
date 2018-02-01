@@ -44,7 +44,6 @@ Partial Class LeaveForm
         Me.dtpstarttime = New System.Windows.Forms.DateTimePicker()
         Me.btnApply = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.bgSaving = New System.ComponentModel.BackgroundWorker()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -63,13 +62,15 @@ Partial Class LeaveForm
         Me.TxtEmployeeNumber1 = New Acupay.txtEmployeeNumber()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.bgwEmpNames = New System.ComponentModel.BackgroundWorker()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Panel1.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'dtpendate
         '
         Me.dtpendate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpendate.Location = New System.Drawing.Point(158, 190)
+        Me.dtpendate.Location = New System.Drawing.Point(120, 96)
         Me.dtpendate.Name = "dtpendate"
         Me.dtpendate.Size = New System.Drawing.Size(196, 25)
         Me.dtpendate.TabIndex = 204
@@ -77,7 +78,7 @@ Partial Class LeaveForm
         'dtpstartdate
         '
         Me.dtpstartdate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpstartdate.Location = New System.Drawing.Point(158, 156)
+        Me.dtpstartdate.Location = New System.Drawing.Point(120, 64)
         Me.dtpstartdate.Name = "dtpstartdate"
         Me.dtpstartdate.Size = New System.Drawing.Size(196, 25)
         Me.dtpstartdate.TabIndex = 203
@@ -89,7 +90,7 @@ Partial Class LeaveForm
         Me.cboleavetypes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboleavetypes.DropDownWidth = 150
         Me.cboleavetypes.FormattingEnabled = True
-        Me.cboleavetypes.Location = New System.Drawing.Point(158, 122)
+        Me.cboleavetypes.Location = New System.Drawing.Point(120, 32)
         Me.cboleavetypes.Name = "cboleavetypes"
         Me.cboleavetypes.Size = New System.Drawing.Size(196, 25)
         Me.cboleavetypes.TabIndex = 202
@@ -99,7 +100,7 @@ Partial Class LeaveForm
         Me.Label199.AutoSize = True
         Me.Label199.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label199.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label199.Location = New System.Drawing.Point(133, 190)
+        Me.Label199.Location = New System.Drawing.Point(96, 96)
         Me.Label199.Name = "Label199"
         Me.Label199.Size = New System.Drawing.Size(18, 24)
         Me.Label199.TabIndex = 208
@@ -111,7 +112,7 @@ Partial Class LeaveForm
         Me.Label198.AutoSize = True
         Me.Label198.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label198.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label198.Location = New System.Drawing.Point(133, 156)
+        Me.Label198.Location = New System.Drawing.Point(96, 64)
         Me.Label198.Name = "Label198"
         Me.Label198.Size = New System.Drawing.Size(18, 24)
         Me.Label198.TabIndex = 207
@@ -123,7 +124,7 @@ Partial Class LeaveForm
         Me.Label197.AutoSize = True
         Me.Label197.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label197.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label197.Location = New System.Drawing.Point(133, 258)
+        Me.Label197.Location = New System.Drawing.Point(96, 160)
         Me.Label197.Name = "Label197"
         Me.Label197.Size = New System.Drawing.Size(18, 24)
         Me.Label197.TabIndex = 206
@@ -135,7 +136,7 @@ Partial Class LeaveForm
         Me.Label196.AutoSize = True
         Me.Label196.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label196.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label196.Location = New System.Drawing.Point(133, 224)
+        Me.Label196.Location = New System.Drawing.Point(96, 128)
         Me.Label196.Name = "Label196"
         Me.Label196.Size = New System.Drawing.Size(18, 24)
         Me.Label196.TabIndex = 205
@@ -147,7 +148,7 @@ Partial Class LeaveForm
         Me.Label195.AutoSize = True
         Me.Label195.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label195.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label195.Location = New System.Drawing.Point(133, 122)
+        Me.Label195.Location = New System.Drawing.Point(96, 32)
         Me.Label195.Name = "Label195"
         Me.Label195.Size = New System.Drawing.Size(18, 24)
         Me.Label195.TabIndex = 204
@@ -157,7 +158,7 @@ Partial Class LeaveForm
         'Label32
         '
         Me.Label32.AutoSize = True
-        Me.Label32.Location = New System.Drawing.Point(388, 221)
+        Me.Label32.Location = New System.Drawing.Point(448, 150)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(64, 17)
         Me.Label32.TabIndex = 202
@@ -166,7 +167,7 @@ Partial Class LeaveForm
         'Label33
         '
         Me.Label33.AutoSize = True
-        Me.Label33.Location = New System.Drawing.Point(388, 132)
+        Me.Label33.Location = New System.Drawing.Point(451, 82)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(51, 17)
         Me.Label33.TabIndex = 201
@@ -174,53 +175,53 @@ Partial Class LeaveForm
         '
         'Label34
         '
-        Me.Label34.AutoSize = True
-        Me.Label34.Location = New System.Drawing.Point(54, 200)
+        Me.Label34.Location = New System.Drawing.Point(8, 96)
         Me.Label34.Name = "Label34"
-        Me.Label34.Size = New System.Drawing.Size(60, 17)
+        Me.Label34.Size = New System.Drawing.Size(88, 24)
         Me.Label34.TabIndex = 203
         Me.Label34.Text = "End date"
+        Me.Label34.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label35
         '
-        Me.Label35.AutoSize = True
-        Me.Label35.Location = New System.Drawing.Point(54, 166)
+        Me.Label35.Location = New System.Drawing.Point(8, 64)
         Me.Label35.Name = "Label35"
-        Me.Label35.Size = New System.Drawing.Size(65, 17)
+        Me.Label35.Size = New System.Drawing.Size(88, 24)
         Me.Label35.TabIndex = 200
         Me.Label35.Text = "Start date"
+        Me.Label35.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label36
         '
-        Me.Label36.AutoSize = True
-        Me.Label36.Location = New System.Drawing.Point(54, 132)
+        Me.Label36.Location = New System.Drawing.Point(8, 32)
         Me.Label36.Name = "Label36"
-        Me.Label36.Size = New System.Drawing.Size(70, 17)
+        Me.Label36.Size = New System.Drawing.Size(88, 24)
         Me.Label36.TabIndex = 199
         Me.Label36.Text = "Leave type"
+        Me.Label36.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label37
         '
-        Me.Label37.AutoSize = True
-        Me.Label37.Location = New System.Drawing.Point(54, 268)
+        Me.Label37.Location = New System.Drawing.Point(8, 160)
         Me.Label37.Name = "Label37"
-        Me.Label37.Size = New System.Drawing.Size(59, 17)
+        Me.Label37.Size = New System.Drawing.Size(88, 24)
         Me.Label37.TabIndex = 198
         Me.Label37.Text = "End time"
+        Me.Label37.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label38
         '
-        Me.Label38.AutoSize = True
-        Me.Label38.Location = New System.Drawing.Point(54, 234)
+        Me.Label38.Location = New System.Drawing.Point(8, 128)
         Me.Label38.Name = "Label38"
-        Me.Label38.Size = New System.Drawing.Size(64, 17)
+        Me.Label38.Size = New System.Drawing.Size(88, 24)
         Me.Label38.TabIndex = 197
         Me.Label38.Text = "Start time"
+        Me.Label38.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtcomments
         '
         Me.txtcomments.BackColor = System.Drawing.Color.White
-        Me.txtcomments.Location = New System.Drawing.Point(465, 211)
+        Me.txtcomments.Location = New System.Drawing.Point(528, 150)
         Me.txtcomments.MaxLength = 2000
         Me.txtcomments.Multiline = True
         Me.txtcomments.Name = "txtcomments"
@@ -231,7 +232,7 @@ Partial Class LeaveForm
         'txtreason
         '
         Me.txtreason.BackColor = System.Drawing.Color.White
-        Me.txtreason.Location = New System.Drawing.Point(465, 122)
+        Me.txtreason.Location = New System.Drawing.Point(528, 72)
         Me.txtreason.MaxLength = 500
         Me.txtreason.Multiline = True
         Me.txtreason.Name = "txtreason"
@@ -243,7 +244,7 @@ Partial Class LeaveForm
         '
         Me.dtpendtime.CustomFormat = "hh:mm tt"
         Me.dtpendtime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpendtime.Location = New System.Drawing.Point(158, 258)
+        Me.dtpendtime.Location = New System.Drawing.Point(120, 160)
         Me.dtpendtime.Name = "dtpendtime"
         Me.dtpendtime.ShowUpDown = True
         Me.dtpendtime.Size = New System.Drawing.Size(196, 25)
@@ -253,7 +254,7 @@ Partial Class LeaveForm
         '
         Me.dtpstarttime.CustomFormat = "hh:mm tt"
         Me.dtpstarttime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpstarttime.Location = New System.Drawing.Point(158, 224)
+        Me.dtpstarttime.Location = New System.Drawing.Point(120, 128)
         Me.dtpstarttime.Name = "dtpstarttime"
         Me.dtpstarttime.ShowUpDown = True
         Me.dtpstarttime.Size = New System.Drawing.Size(196, 25)
@@ -261,34 +262,22 @@ Partial Class LeaveForm
         '
         'btnApply
         '
-        Me.btnApply.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnApply.Location = New System.Drawing.Point(708, 334)
+        Me.btnApply.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnApply.Location = New System.Drawing.Point(544, 376)
         Me.btnApply.Name = "btnApply"
-        Me.btnApply.Size = New System.Drawing.Size(184, 54)
+        Me.btnApply.Size = New System.Drawing.Size(168, 40)
         Me.btnApply.TabIndex = 210
-        Me.btnApply.Text = "&Done"
+        Me.btnApply.Text = "&Send"
         Me.btnApply.UseVisualStyleBackColor = True
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(54, 96)
+        Me.Label1.Location = New System.Drawing.Point(56, 56)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(81, 17)
         Me.Label1.TabIndex = 213
         Me.Label1.Text = "Employee ID"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label2.Location = New System.Drawing.Point(133, 86)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(18, 24)
-        Me.Label2.TabIndex = 214
-        Me.Label2.Text = "*"
-        Me.ToolTip1.SetToolTip(Me.Label2, "This field is required")
         '
         'Label25
         '
@@ -297,7 +286,7 @@ Partial Class LeaveForm
         Me.Label25.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
         Me.Label25.Location = New System.Drawing.Point(0, 0)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(895, 22)
+        Me.Label25.Size = New System.Drawing.Size(896, 22)
         Me.Label25.TabIndex = 215
         Me.Label25.Text = "LEAVE FORM"
         Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -309,52 +298,27 @@ Partial Class LeaveForm
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.GroupBox1)
         Me.Panel1.Controls.Add(Me.btnClose)
         Me.Panel1.Controls.Add(Me.Label9)
         Me.Panel1.Controls.Add(Me.cboxEmployees)
         Me.Panel1.Controls.Add(Me.Label7)
         Me.Panel1.Controls.Add(Me.Label8)
         Me.Panel1.Controls.Add(Me.TxtEmployeeFullName1)
-        Me.Panel1.Controls.Add(Me.Label5)
-        Me.Panel1.Controls.Add(Me.Label6)
-        Me.Panel1.Controls.Add(Me.CboListOfValue1)
-        Me.Panel1.Controls.Add(Me.Label3)
-        Me.Panel1.Controls.Add(Me.cboOrganization)
-        Me.Panel1.Controls.Add(Me.Label4)
         Me.Panel1.Controls.Add(Me.TxtEmployeeNumber1)
-        Me.Panel1.Controls.Add(Me.Label2)
         Me.Panel1.Controls.Add(Me.Label1)
-        Me.Panel1.Controls.Add(Me.txtreason)
-        Me.Panel1.Controls.Add(Me.txtcomments)
         Me.Panel1.Controls.Add(Me.btnApply)
-        Me.Panel1.Controls.Add(Me.Label38)
-        Me.Panel1.Controls.Add(Me.dtpendtime)
-        Me.Panel1.Controls.Add(Me.Label37)
-        Me.Panel1.Controls.Add(Me.dtpstarttime)
-        Me.Panel1.Controls.Add(Me.Label36)
-        Me.Panel1.Controls.Add(Me.dtpendate)
-        Me.Panel1.Controls.Add(Me.Label35)
-        Me.Panel1.Controls.Add(Me.dtpstartdate)
-        Me.Panel1.Controls.Add(Me.Label34)
-        Me.Panel1.Controls.Add(Me.cboleavetypes)
-        Me.Panel1.Controls.Add(Me.Label33)
-        Me.Panel1.Controls.Add(Me.Label199)
-        Me.Panel1.Controls.Add(Me.Label32)
-        Me.Panel1.Controls.Add(Me.Label198)
-        Me.Panel1.Controls.Add(Me.Label195)
-        Me.Panel1.Controls.Add(Me.Label197)
-        Me.Panel1.Controls.Add(Me.Label196)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(0, 22)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(895, 427)
+        Me.Panel1.Size = New System.Drawing.Size(896, 427)
         Me.Panel1.TabIndex = 0
         '
         'btnClose
         '
-        Me.btnClose.Location = New System.Drawing.Point(708, 394)
+        Me.btnClose.Location = New System.Drawing.Point(720, 376)
         Me.btnClose.Name = "btnClose"
-        Me.btnClose.Size = New System.Drawing.Size(184, 30)
+        Me.btnClose.Size = New System.Drawing.Size(168, 40)
         Me.btnClose.TabIndex = 268
         Me.btnClose.Text = "Cancel"
         Me.btnClose.UseVisualStyleBackColor = True
@@ -383,7 +347,7 @@ Partial Class LeaveForm
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label7.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label7.Location = New System.Drawing.Point(133, 41)
+        Me.Label7.Location = New System.Drawing.Point(128, 16)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(18, 24)
         Me.Label7.TabIndex = 265
@@ -392,7 +356,7 @@ Partial Class LeaveForm
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(54, 47)
+        Me.Label8.Location = New System.Drawing.Point(48, 16)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(66, 17)
         Me.Label8.TabIndex = 264
@@ -405,7 +369,7 @@ Partial Class LeaveForm
         Me.TxtEmployeeFullName1.EmployeeTableColumnName = ""
         Me.TxtEmployeeFullName1.Enabled = False
         Me.TxtEmployeeFullName1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
-        Me.TxtEmployeeFullName1.Location = New System.Drawing.Point(158, 24)
+        Me.TxtEmployeeFullName1.Location = New System.Drawing.Point(160, 8)
         Me.TxtEmployeeFullName1.Name = "TxtEmployeeFullName1"
         Me.TxtEmployeeFullName1.Padding = New System.Windows.Forms.Padding(4)
         Me.TxtEmployeeFullName1.PopupWidth = 120
@@ -417,7 +381,7 @@ Partial Class LeaveForm
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(388, 96)
+        Me.Label5.Location = New System.Drawing.Point(451, 46)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(63, 17)
         Me.Label5.TabIndex = 218
@@ -429,7 +393,7 @@ Partial Class LeaveForm
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label6.Location = New System.Drawing.Point(446, 86)
+        Me.Label6.Location = New System.Drawing.Point(509, 36)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(18, 24)
         Me.Label6.TabIndex = 219
@@ -443,7 +407,7 @@ Partial Class LeaveForm
         Me.CboListOfValue1.DropDownWidth = 121
         Me.CboListOfValue1.FormattingEnabled = True
         Me.CboListOfValue1.ListOfValueType = "Leave Status"
-        Me.CboListOfValue1.Location = New System.Drawing.Point(158, 292)
+        Me.CboListOfValue1.Location = New System.Drawing.Point(120, 192)
         Me.CboListOfValue1.Name = "CboListOfValue1"
         Me.CboListOfValue1.OrderByColumn = CType(CSByte(0), SByte)
         Me.CboListOfValue1.Size = New System.Drawing.Size(196, 25)
@@ -452,7 +416,7 @@ Partial Class LeaveForm
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(54, 299)
+        Me.Label3.Location = New System.Drawing.Point(-40, 233)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(43, 17)
         Me.Label3.TabIndex = 216
@@ -465,7 +429,7 @@ Partial Class LeaveForm
         Me.cboOrganization.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboOrganization.DropDownWidth = 150
         Me.cboOrganization.FormattingEnabled = True
-        Me.cboOrganization.Location = New System.Drawing.Point(465, 88)
+        Me.cboOrganization.Location = New System.Drawing.Point(528, 38)
         Me.cboOrganization.Name = "cboOrganization"
         Me.cboOrganization.Size = New System.Drawing.Size(221, 25)
         Me.cboOrganization.TabIndex = 6
@@ -476,7 +440,7 @@ Partial Class LeaveForm
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label4.Location = New System.Drawing.Point(133, 289)
+        Me.Label4.Location = New System.Drawing.Point(96, 192)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(18, 24)
         Me.Label4.TabIndex = 217
@@ -487,7 +451,7 @@ Partial Class LeaveForm
         '
         Me.TxtEmployeeNumber1.BackColor = System.Drawing.Color.White
         Me.TxtEmployeeNumber1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
-        Me.TxtEmployeeNumber1.Location = New System.Drawing.Point(158, 74)
+        Me.TxtEmployeeNumber1.Location = New System.Drawing.Point(160, 56)
         Me.TxtEmployeeNumber1.MaxLength = 50
         Me.TxtEmployeeNumber1.Name = "TxtEmployeeNumber1"
         Me.TxtEmployeeNumber1.ReadOnly = True
@@ -498,12 +462,46 @@ Partial Class LeaveForm
         'bgwEmpNames
         '
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.cboleavetypes)
+        Me.GroupBox1.Controls.Add(Me.Label196)
+        Me.GroupBox1.Controls.Add(Me.Label197)
+        Me.GroupBox1.Controls.Add(Me.Label195)
+        Me.GroupBox1.Controls.Add(Me.Label198)
+        Me.GroupBox1.Controls.Add(Me.Label199)
+        Me.GroupBox1.Controls.Add(Me.Label34)
+        Me.GroupBox1.Controls.Add(Me.Label5)
+        Me.GroupBox1.Controls.Add(Me.dtpstartdate)
+        Me.GroupBox1.Controls.Add(Me.Label6)
+        Me.GroupBox1.Controls.Add(Me.Label35)
+        Me.GroupBox1.Controls.Add(Me.cboOrganization)
+        Me.GroupBox1.Controls.Add(Me.CboListOfValue1)
+        Me.GroupBox1.Controls.Add(Me.dtpendate)
+        Me.GroupBox1.Controls.Add(Me.txtreason)
+        Me.GroupBox1.Controls.Add(Me.Label3)
+        Me.GroupBox1.Controls.Add(Me.txtcomments)
+        Me.GroupBox1.Controls.Add(Me.Label36)
+        Me.GroupBox1.Controls.Add(Me.dtpstarttime)
+        Me.GroupBox1.Controls.Add(Me.Label33)
+        Me.GroupBox1.Controls.Add(Me.Label4)
+        Me.GroupBox1.Controls.Add(Me.Label32)
+        Me.GroupBox1.Controls.Add(Me.Label37)
+        Me.GroupBox1.Controls.Add(Me.dtpendtime)
+        Me.GroupBox1.Controls.Add(Me.Label38)
+        Me.GroupBox1.Location = New System.Drawing.Point(8, 104)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(880, 248)
+        Me.GroupBox1.TabIndex = 269
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Leave Form"
+        '
         'LeaveForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 17.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(895, 449)
+        Me.ClientSize = New System.Drawing.Size(896, 449)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.Label25)
         Me.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -513,6 +511,8 @@ Partial Class LeaveForm
         Me.Name = "LeaveForm"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -538,7 +538,6 @@ Partial Class LeaveForm
     Friend WithEvents btnApply As System.Windows.Forms.Button
     Friend WithEvents TxtEmployeeNumber1 As txtEmployeeNumber
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents bgSaving As System.ComponentModel.BackgroundWorker
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
@@ -556,4 +555,5 @@ Partial Class LeaveForm
     Friend WithEvents cboxEmployees As System.Windows.Forms.ComboBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents btnClose As Button
+    Friend WithEvents GroupBox1 As GroupBox
 End Class
