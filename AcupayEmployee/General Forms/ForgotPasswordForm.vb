@@ -69,13 +69,8 @@ Public Class ForgotPasswordForm
     End Sub
 
     Private Sub ForgotPasswordForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
         MetroLogin.Show()
-
         MetroLogin.BringToFront()
-
-        MetroLogin.txtbxUserID.Focus()
-
     End Sub
 
     Private Sub ForgotPasswordForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

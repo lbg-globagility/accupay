@@ -38,47 +38,6 @@ Public Class ImproperLogOut
 
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDone.Click
-
-        Dim isIdentical As Boolean = (txtPassword1.Text = txtPassword2.Text)
-
-        Dim hasErr As Boolean = False
-
-        If isIdentical Then
-
-            Dim password_text As String = txtPassword1.Text
-
-            'Task.Factory.StartNew(Sub()
-
-            '                      End Sub).ContinueWith(Sub()
-
-            '                                            End Sub, TaskScheduler.FromCurrentSynchronizationContext)
-
-            Dim n_EncryptData As New EncryptData(password_text)
-            z_User = MetroLogin.UserAuthentication(n_EncryptData.ResultValue)
-
-            If z_User > 0 Then
-
-                Me.DialogResult = Windows.Forms.DialogResult.OK
-
-            Else
-
-                hasErr = True
-
-            End If
-
-        Else
-            hasErr = True
-
-        End If
-
-        lblretry.Visible = hasErr
-        If hasErr Then
-            txtPassword1.Focus()
-        End If
-
-    End Sub
-
     Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
 
         If keyData = Keys.Escape Then
