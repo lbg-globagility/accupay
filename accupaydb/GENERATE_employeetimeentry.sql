@@ -438,13 +438,14 @@ SELECT
     MAX(ofb.OffBusEndTime)
 FROM employeeofficialbusiness ofb
 WHERE ofb.OffBusStartDate = dateToday AND
-    ofb.EmployeeID = ete_EmpRowID
+    ofb.EmployeeID = ete_EmpRowID AND
+    ofb.OffBusStatus = 'Approved'
 INTO
     officialBusStartTime,
     officialBusEndTime;
 
-SET actualTimeIn = IF(officialBusStartTime IS NULL, actualTimeIn, LEAST(actualTimeIn, officialBusStartTime));
-SET etd_TimeOut = IF(officialBusEndTime IS NULL, etd_TimeOut, GREATEST(etd_TimeOut, officialBusEndTime));
+SET actualTimeIn = COALESCE(LEAST(actualTimeIn, officialBusStartTime), actualTimeIn, officialBusStartTime);
+SET etd_TimeOut = COALESCE(GREATEST(etd_TimeOut, officialBusEndTime), etd_TimeOut, officialBusEndTime);
 
 SELECT GRACE_PERIOD(actualTimeIn, shifttimefrom, e_LateGracePeriod)
 INTO etd_TimeIn;
