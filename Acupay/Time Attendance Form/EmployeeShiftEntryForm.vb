@@ -187,19 +187,22 @@ Public Class EmployeeShiftEntryForm
         If Not dgvEmpShiftList.Rows.Count = 0 Then
             Dim dt As New DataTable
             Dim selRowID = If(esh_RowID = Nothing, dgvEmpShiftList.CurrentRow.Cells(c_RowIDShift.Index).Value, esh_RowID)
-            dt = getDataTableForSQL("select concat(COALESCE(ee.Lastname, ' '),' ', COALESCE(ee.Firstname, ' '), ' ', COALESCE(ee.MiddleName, ' ')) as name" &
-                                    ",ee.EmployeeID" &
-                                    ",es.EffectiveFrom" &
-                                    ",es.EffectiveTo" &
-                                    ",COALESCE(es.ShiftID,'') 'ShiftID'" &
-                                    ",es.ShiftID AS ShiftRowID" &
-                                    ",es.NightShift, es.RestDay" &
-                                    ",IFNULL(TIME_FORMAT(s.TimeFrom, '%l:%i %p'),'') timef" &
-                                    ",IFNULL(TIME_FORMAT(s.TimeTo, '%l:%i %p'),'') timet" &
-                                    ",es.RowID from employeeshift es " &
-                                    "left join shift s on es.ShiftID = s.RowID " &
-                                    "inner join employee ee on es.EmployeeID = ee.RowID " &
-                                    "where es.OrganizationID = '" & z_OrganizationID & "' And es.RowID = '" & selRowID & "';")
+            Dim query = $"
+                select concat(COALESCE(ee.Lastname, ' '),' ', COALESCE(ee.Firstname, ' '), ' ', COALESCE(ee.MiddleName, ' ')) as name
+                , ee.EmployeeID
+                ,es.EffectiveFrom
+                ,es.EffectiveTo
+                ,COALESCE(es.ShiftID,'') 'ShiftID'
+                ,es.ShiftID AS ShiftRowID
+                ,es.NightShift, es.RestDay
+                ,IFNULL(TIME_FORMAT(s.TimeFrom, '%l:%i %p'),'') timef
+                ,IFNULL(TIME_FORMAT(s.TimeTo, '%l:%i %p'),'') timet
+                ,es.RowID from employeeshift es
+                left join shift s on es.ShiftID = s.RowID
+                inner Join employee ee on es.EmployeeID = ee.RowID
+                where es.OrganizationID = '{z_OrganizationID}' And es.RowID = '{selRowID}';"
+
+            dt = getDataTableForSQL(query)
 
             For Each drow As DataRow In dt.Rows
                 With drow
@@ -223,7 +226,7 @@ Public Class EmployeeShiftEntryForm
                     dtpDateTo.Value = CDate(.Item("Effectiveto")).ToString(machineShortDateFormat)
                     lblShiftID.Text = .Item("ShiftID").ToString
                     chkNightShift.Checked = IIf(If(IsDBNull(.Item("NightShift")), 0, .Item("NightShift")) = "1", True, False)
-                    chkrestday.Checked = If(.Item("RestDay") = 1, 1, 0)
+                    chkrestday.Checked = .Item("RestDay")
                 End With
             Next
         End If
