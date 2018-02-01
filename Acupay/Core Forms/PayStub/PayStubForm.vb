@@ -428,24 +428,24 @@ Public Class PayStubForm
 
                 Dim str_sched_payfreq As String = Convert.ToString(.Cells("Column12").Value)
 
-                If str_pay_freq_sched <> str_sched_payfreq _
-                    And _year <> current_year Then
+                'If str_pay_freq_sched <> str_sched_payfreq _
+                '    And _year <> current_year Then
 
-                    str_pay_freq_sched = str_sched_payfreq
+                str_pay_freq_sched = str_sched_payfreq
 
-                    _year = current_year
+                _year = current_year
 
-                    Dim select_cutoff_payfrequency =
-                        tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Text = str_sched_payfreq)
+                Dim select_cutoff_payfrequency =
+                    tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Text = str_sched_payfreq)
 
-                    Console.WriteLine(select_cutoff_payfrequency.Count)
+                Console.WriteLine(select_cutoff_payfrequency.Count)
 
-                    For Each _tsbtn In select_cutoff_payfrequency
-                        PayFreq_Changed(_tsbtn, New EventArgs)
+                For Each _tsbtn In select_cutoff_payfrequency
+                    PayFreq_Changed(_tsbtn, New EventArgs)
 
-                    Next
+                Next
 
-                End If
+                'End If
 
             End With
 
