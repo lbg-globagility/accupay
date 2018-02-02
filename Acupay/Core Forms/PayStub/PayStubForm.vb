@@ -637,7 +637,7 @@ Public Class PayStubForm
                 currentEmployeeID = .Cells("EmployeeID").Value
 
                 txtEmpID.Text = "ID# " & .Cells("EmployeeID").Value &
-                            If(.Cells("Position").Value = Nothing,
+                            If(IsDBNull(.Cells("Position")),
                                                                "",
                                                                ", " & .Cells("Position").Value) &
                             If(.Cells("EmployeeType").Value = Nothing,
