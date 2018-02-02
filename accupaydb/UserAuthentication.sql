@@ -24,7 +24,8 @@ ON pv.PositionID = p.RowID AND
     pv.OrganizationID = p.OrganizationID
 WHERE u.UserID = user_name AND
     u.`Password` = pass_word AND
-    u.`Status` = 'Active'
+    u.`Status` = 'Active' AND
+    u.RowID != 0
 GROUP BY u.RowID, pv.AllowedToAccess
 HAVING pv.AllowedToAccess = 'Y'
 ORDER BY FIELD(pv.AllowedToAccess, 'Y', 'N')
