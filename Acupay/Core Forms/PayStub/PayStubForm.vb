@@ -116,10 +116,6 @@ Public Class PayStubForm
 
     Dim notax_bonusOnce As New DataTable
 
-    Dim emp_allowanceMonthly As New DataTable
-
-    Dim notax_allowanceMonthly As New DataTable
-
     Dim emp_bonusSemiM As New DataTable
 
     Dim notax_bonusSemiM As New DataTable
@@ -132,11 +128,7 @@ Public Class PayStubForm
 
     Dim notax_bonusWeekly As New DataTable
 
-    Dim prev_empTimeEntry As New DataTable
-
     Dim numofdaypresent As New DataTable
-
-    Dim emp_TardinessUndertime As New DataTable
 
     Private _withholdingTaxTable As DataTable
     Private _filingStatuses As DataTable
@@ -882,20 +874,6 @@ Public Class PayStubForm
                     monthlyallowfreq = If(allowfreq.Item(1).ToString = "", "Monthly", allowfreq.Item(1).ToString)
                 End If
 
-                emp_allowanceMonthly = New SQL("CALL GET_employee_allowanceofthisperiod(?og_rowid, ?_frequency, ?_taxable, ?date_from, ?date_to);",
-                                                                                       New Object() {orgztnID,
-                                                                                       "Monthly",
-                                                                                       "1",
-                                                                                       paypFrom,
-                                                                                       paypTo}).GetFoundRows.Tables(0)
-
-                notax_allowanceMonthly = New SQL("CALL GET_employee_allowanceofthisperiod(?og_rowid, ?_frequency, ?_taxable, ?date_from, ?date_to);",
-                                                                                       New Object() {orgztnID,
-                                                                                       "Monthly",
-                                                                                       "0",
-                                                                                       paypFrom,
-                                                                                       paypTo}).GetFoundRows.Tables(0)
-
                 emp_bonusMonthly = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
                                                                  ",EmployeeID",
                                                                 " FROM employeebonus",
@@ -1085,15 +1063,6 @@ Public Class PayStubForm
                 paramets(1, 1) = paypFrom
                 paramets(2, 1) = paypTo
 
-                emp_TardinessUndertime =
-                                      New SQL("CALL GETVIEW_employeeTardinessUndertime(?og_rowid, ?date_from, ?date_to);",
-                                              New Object() {orgztnID, paypFrom, paypTo}).GetFoundRows.Tables(0)
-
-                prev_empTimeEntry = New SQL("CALL GETVIEW_previousemployeetimeentry(?og_rowid, ?pp_rowid1, ?pp_rowid2);",
-                                                                                      New Object() {orgztnID,
-                                                                                      paypRowID,
-                                                                                      paypRowID}).GetFoundRows.Tables(0)
-
                 dtemployeefirsttimesalary =
                                       New SQL(String.Concat("SELECT COUNT(ete.RowID)",
                                                               ",ete.EmployeeID",
@@ -1187,9 +1156,7 @@ Public Class PayStubForm
                         esal_dattab,
                         _loanSchedules,
                         _loanTransactions,
-                        emp_allowanceMonthly,
                         emp_allowanceWeekly,
-                        notax_allowanceMonthly,
                         notax_allowanceWeekly,
                         emp_bonusDaily,
                         emp_bonusMonthly,
@@ -1204,7 +1171,6 @@ Public Class PayStubForm
                         numofdaypresent,
                         etent_totdaypay,
                         dtemployeefirsttimesalary,
-                        prev_empTimeEntry,
                         VeryFirstPayPeriodIDOfThisYear,
                         withthirteenthmonthpay,
                         _filingStatuses,

@@ -44,17 +44,8 @@ Public Class PayrollGeneration
 
     Private _allLoanTransactions As ICollection(Of PayrollSys.LoanTransaction)
 
-    Private allOneTimeAllowances As DataTable
-    Private allDailyAllowances As DataTable
-    Private allSemiMonthlyAllowances As DataTable
-    Private allMonthlyAllowances As DataTable
     Private allWeeklyAllowances As DataTable
-
-    Private allNoTaxOneTimeAllowances As DataTable
-    Private allNoTaxDailyAllowances As DataTable
     Private allNoTaxWeeklyAllowances As DataTable
-    Private allNoTaxSemiMonthlyAllowances As DataTable
-    Private allNoTaxMonthlyAllowances As DataTable
 
     Private allOneTimeBonuses As DataTable
     Private allDailyBonuses As DataTable
@@ -74,7 +65,6 @@ Public Class PayrollGeneration
     Private _numOfDayPresent As DataTable
     Private _allTimeEntries As DataTable
     Private _employeeFirstTimeSalary As DataTable
-    Private _previousTimeEntries As DataTable
     Private _VeryFirstPayPeriodIDOfThisYear As Object
     Private _withThirteenthMonthPay As SByte
 
@@ -150,9 +140,7 @@ Public Class PayrollGeneration
             allSalaries As DataTable,
             allLoanSchedules As ICollection(Of PayrollSys.LoanSchedule),
             allLoanTransactions As ICollection(Of PayrollSys.LoanTransaction),
-            allMonthlyAllowances As DataTable,
             allWeeklyAllowances As DataTable,
-            allNoTaxMonthlyAllowances As DataTable,
             allNoTaxWeeklyAllowances As DataTable,
             allDailyBonuses As DataTable,
             allMonthlyBonuses As DataTable,
@@ -167,7 +155,6 @@ Public Class PayrollGeneration
             numOfDayPresent As DataTable,
             allTimeEntries As DataTable,
             dtemployeefirsttimesalary As DataTable,
-            previousTimeEntries As DataTable,
             VeryFirstPayPeriodIDOfThisYear As Object,
             withThirteenthMonthPay As SByte,
             filingStatuses As DataTable,
@@ -188,10 +175,7 @@ Public Class PayrollGeneration
         _allLoanTransactions = allLoanTransactions
 
         Me.allWeeklyAllowances = allWeeklyAllowances
-        Me.allMonthlyAllowances = allMonthlyAllowances
-
         Me.allNoTaxWeeklyAllowances = allNoTaxWeeklyAllowances
-        Me.allNoTaxMonthlyAllowances = allNoTaxMonthlyAllowances
 
         Me.allOneTimeBonuses = allOneTimeBonuses
         Me.allDailyBonuses = allDailyBonuses
@@ -208,7 +192,6 @@ Public Class PayrollGeneration
         _numOfDayPresent = numOfDayPresent
         _allTimeEntries = allTimeEntries
         _employeeFirstTimeSalary = dtemployeefirsttimesalary
-        _previousTimeEntries = previousTimeEntries
         _VeryFirstPayPeriodIDOfThisYear = VeryFirstPayPeriodIDOfThisYear
         _withThirteenthMonthPay = withThirteenthMonthPay
 
@@ -252,29 +235,8 @@ Public Class PayrollGeneration
     End Sub
 
     Public Sub DoProcess()
-        Console.WriteLine("PayrolLGeneration - DoProcess")
         Try
-            Dim pause_process_message As String = String.Empty
-
-            'LoadCurrentPayperiod()
-            'LoadAnnualUnusedLeaves()
-            'LoadProductIDForUnusedLeave()
-            'LoadExistingUnusedLeaveAdjustments()
-            'ResetUnusedLeaveAdjustments()
-
-            'Dim sel_employee_dattab = _employees.Select("PositionID IS NULL")
-
-            'If sel_employee_dattab.Count > 0 Then
-            '    For Each drow In sel_employee_dattab
-            '        pause_process_message = "Employee '" & CStr(drow("EmployeeID")) & "' has no position." &
-            '            vbNewLine & "Please supply his/her position before proceeding to payroll."
-            '        'e.Cancel = True
-            '        'If bgworkgenpayroll.CancellationPending Then
-            '        '    bgworkgenpayroll.CancelAsync()
-            '        'End If
-            '    Next
-            'End If
-
+            Console.WriteLine($"Generate Paystub for #{_employee2.RowID} - {_employee2.LastName}, {_employee2.FirstName}")
             Dim date_to_use = If(CDate(PayrollDateFrom) > CDate(PayrollDateTo), CDate(PayrollDateFrom), CDate(PayrollDateTo))
             Dim dateStr_to_use = Format(date_to_use, "yyyy-MM-dd")
             numberofweeksthismonth = CInt(New MySQLExecuteQuery("SELECT `COUNTTHEWEEKS`('" & dateStr_to_use & "');").Result)
@@ -294,7 +256,6 @@ Public Class PayrollGeneration
             _payStub = New Paystub()
 
             Dim totalVacationDaysLeft = 0D
-            Dim grossIncomeLastPayPeriod = 0D
 
             _sssDeductionSchedule = _employee("SSSDeductSched").ToString
             _philHealthDeductionSchedule = _employee("PhHealthDeductSched").ToString
@@ -357,7 +318,6 @@ Public Class PayrollGeneration
 
             If timeEntrySummary IsNot Nothing Then
 
-                grossIncomeLastPayPeriod = 0D
                 totalVacationDaysLeft = 0D
 
                 If salary IsNot Nothing Then
@@ -413,12 +373,6 @@ Public Class PayrollGeneration
 
                         _payStub.WorkPay = basicPay + (_payStub.HolidayPay + _payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay)
 
-                        Dim previousOvertimePay = ValNoComma(_previousTimeEntries.Compute("SUM(OvertimeHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-                        Dim previousNightDiffPay = ValNoComma(_previousTimeEntries.Compute("SUM(NightDiffHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-                        Dim previousNightDiffOTPay = ValNoComma(_previousTimeEntries.Compute("SUM(NightDiffOTHoursAmount)", $"EmployeeID = '{_payStub.EmployeeID}'"))
-
-                        grossIncomeLastPayPeriod = basicPay + previousOvertimePay + previousNightDiffPay + previousNightDiffOTPay
-
                         currentTaxableIncome = basicPay
 
                     ElseIf _employee2.EmployeeType = SalaryType.Monthly Then
@@ -441,7 +395,6 @@ Public Class PayrollGeneration
 
                     ElseIf _employee2.EmployeeType = SalaryType.Daily Then
                         _payStub.WorkPay = ValNoComma(timeEntrySummary("TotalDayPay"))
-                        grossIncomeLastPayPeriod = ValNoComma(_previousTimeEntries.Compute("SUM(TotalDayPay)", $"EmployeeID = '{_payStub.EmployeeID}'"))
                     End If
 
                     CalculateSss(salary)
