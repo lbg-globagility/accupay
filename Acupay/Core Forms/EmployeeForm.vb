@@ -4916,8 +4916,7 @@ Public Class EmployeeForm
 
                 If r.IsNewRow = False Then
 
-                    If r.Cells("elv_StartTime").Value <> Nothing And r.Cells("elv_EndTime").Value <> Nothing _
-                        And r.Cells("elv_StartDate").Value <> Nothing And r.Cells("elv_EndDate").Value <> Nothing Then
+                    If r.Cells("elv_StartDate").Value <> Nothing And r.Cells("elv_EndDate").Value <> Nothing Then
 
                         param(0, 1) = DBNull.Value
                         param(1, 1) = orgztnID
