@@ -488,9 +488,7 @@ Partial Class EmployeeForm
         Me.txtslpaypLeave = New System.Windows.Forms.TextBox()
         Me.Label198 = New System.Windows.Forms.Label()
         Me.txtFNameLeave = New System.Windows.Forms.TextBox()
-        Me.Label197 = New System.Windows.Forms.Label()
         Me.txtEmpIDLeave = New System.Windows.Forms.TextBox()
-        Me.Label196 = New System.Windows.Forms.Label()
         Me.btnleavtyp = New System.Windows.Forms.Button()
         Me.Label195 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
@@ -2271,7 +2269,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 430)
-        Me.SplitContainer2.SplitterDistance = 302
+        Me.SplitContainer2.SplitterDistance = 299
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3535,7 +3533,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 94)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 97)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -5151,9 +5149,7 @@ Partial Class EmployeeForm
         Me.Panel15.Controls.Add(Me.TabControl4)
         Me.Panel15.Controls.Add(Me.Label198)
         Me.Panel15.Controls.Add(Me.txtFNameLeave)
-        Me.Panel15.Controls.Add(Me.Label197)
         Me.Panel15.Controls.Add(Me.txtEmpIDLeave)
-        Me.Panel15.Controls.Add(Me.Label196)
         Me.Panel15.Controls.Add(Me.btnleavtyp)
         Me.Panel15.Controls.Add(Me.Label195)
         Me.Panel15.Controls.Add(Me.Label32)
@@ -5628,17 +5624,6 @@ Partial Class EmployeeForm
         Me.txtFNameLeave.Size = New System.Drawing.Size(516, 28)
         Me.txtFNameLeave.TabIndex = 175
         '
-        'Label197
-        '
-        Me.Label197.AutoSize = True
-        Me.Label197.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label197.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label197.Location = New System.Drawing.Point(72, 198)
-        Me.Label197.Name = "Label197"
-        Me.Label197.Size = New System.Drawing.Size(18, 24)
-        Me.Label197.TabIndex = 185
-        Me.Label197.Text = "*"
-        '
         'txtEmpIDLeave
         '
         Me.txtEmpIDLeave.BackColor = System.Drawing.Color.White
@@ -5651,17 +5636,6 @@ Partial Class EmployeeForm
         Me.txtEmpIDLeave.ReadOnly = True
         Me.txtEmpIDLeave.Size = New System.Drawing.Size(516, 22)
         Me.txtEmpIDLeave.TabIndex = 170
-        '
-        'Label196
-        '
-        Me.Label196.AutoSize = True
-        Me.Label196.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label196.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label196.Location = New System.Drawing.Point(75, 172)
-        Me.Label196.Name = "Label196"
-        Me.Label196.Size = New System.Drawing.Size(18, 24)
-        Me.Label196.TabIndex = 184
-        Me.Label196.Text = "*"
         '
         'btnleavtyp
         '
@@ -16539,8 +16513,6 @@ Partial Class EmployeeForm
     Friend WithEvents txtFNameLoanhist As System.Windows.Forms.TextBox
     Friend WithEvents txtEmpIDLoanhist As System.Windows.Forms.TextBox
     Friend WithEvents Label195 As System.Windows.Forms.Label
-    Friend WithEvents Label196 As System.Windows.Forms.Label
-    Friend WithEvents Label197 As System.Windows.Forms.Label
     Friend WithEvents Label198 As System.Windows.Forms.Label
     Friend WithEvents Label199 As System.Windows.Forms.Label
     Friend WithEvents Label200 As System.Windows.Forms.Label

@@ -487,8 +487,13 @@ INTO
     leaveEndTime,
     leaveType;
 
-SET leaveStart = TIMESTAMP(dateToday, leaveStartTime);
-SET leaveEnd = TIMESTAMP(IF(leaveEndTime > leaveStartTime, dateToday, dateTomorrow), leaveEndTime);
+IF hasLeave THEN
+    SET leaveStartTime = COALESCE(leaveStartTime, shifttimefrom);
+    SET leaveEndTime = COALESCE(leaveEndTime, shifttimeto);
+
+    SET leaveStart = TIMESTAMP(dateToday, leaveStartTime);
+    SET leaveEnd = TIMESTAMP(IF(leaveEndTime > leaveStartTime, dateToday, dateTomorrow), leaveEndTime);
+END IF;
 
 SET @coveredStart = IF(leaveStart IS NULL, dutyStart, LEAST(dutyStart, leaveStart));
 SET @coveredEnd = IF(leaveEnd IS NULL, dutyEnd, GREATEST(dutyEnd, leaveEnd));
