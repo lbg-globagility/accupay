@@ -328,29 +328,24 @@ Public Class PayrollGeneration
 
                     Dim basicPay = ValNoComma(salary("BasicPay"))
 
-                    _payStub.RegularHours = ValNoComma(timeEntrySummary("RegularHoursWorked"))
+                    ComputeHours()
+
                     _payStub.RegularPay = ValNoComma(timeEntrySummary("RegularHoursAmount"))
 
-                    _payStub.OvertimeHours = ValNoComma(timeEntrySummary("OvertimeHoursWorked"))
                     _payStub.OvertimePay = ValNoComma(timeEntrySummary("OvertimeHoursAmount"))
 
-                    _payStub.NightDiffHours = ValNoComma(timeEntrySummary("NightDifferentialHours"))
                     _payStub.NightDiffPay = ValNoComma(timeEntrySummary("NightDiffHoursAmount"))
 
-                    _payStub.NightDiffOvertimeHours = ValNoComma(timeEntrySummary("NightDifferentialOTHours"))
                     _payStub.NightDiffOvertimePay = ValNoComma(timeEntrySummary("NightDiffOTHoursAmount"))
 
-                    _payStub.RestDayHours = ValNoComma(timeEntrySummary("RestDayHours"))
                     _payStub.RestDayPay = ValNoComma(timeEntrySummary("RestDayAmount"))
 
                     _payStub.LeavePay = ValNoComma(timeEntrySummary("Leavepayment"))
                     _payStub.HolidayPay = ValNoComma(timeEntrySummary("HolidayPayAmount"))
 
-                    _payStub.LateHours = ValNoComma(timeEntrySummary("HoursLate"))
                     _payStub.LateDeduction = ValNoComma(timeEntrySummary("HoursLateAmount"))
-
-                    _payStub.UndertimeHours = ValNoComma(timeEntrySummary("UndertimeHours"))
                     _payStub.UndertimeDeduction = ValNoComma(timeEntrySummary("UndertimeHoursAmount"))
+                    _payStub.AbsenceDeduction = ValNoComma(timeEntrySummary("Absent"))
 
                     _vacationLeaveBalance = _employee2.LeaveBalance
                     _sickLeaveBalance = _employee2.SickLeaveBalance
@@ -359,8 +354,6 @@ Public Class PayrollGeneration
                     _vacationLeaveUsed = CDec(timeEntrySummary("VacationLeaveHours"))
                     _sickLeaveUsed = CDec(timeEntrySummary("SickLeaveHours"))
                     _otherLeaveUsed = CDec(timeEntrySummary("OtherLeaveHours"))
-
-                    _payStub.AbsenceDeduction = ValNoComma(timeEntrySummary("Absent"))
 
                     Dim sel_dtemployeefirsttimesalary = _employeeFirstTimeSalary.Select($"EmployeeID = '{_payStub.EmployeeID}'")
 
@@ -454,12 +447,16 @@ Public Class PayrollGeneration
                 .AddWithValue("$NightDiffOvertimePay", _payStub.NightDiffOvertimePay)
                 .AddWithValue("$RestDayHours", _payStub.RestDayHours)
                 .AddWithValue("$RestDayPay", _payStub.RestDayPay)
+                .AddWithValue("$LeaveHours", _payStub.LeaveHours)
                 .AddWithValue("$LeavePay", _payStub.LeavePay)
+                .AddWithValue("$SpecialHolidayHours", _payStub.SpecialHolidayHours)
+                .AddWithValue("$RegularHolidayHours", _payStub.RegularHolidayHours)
                 .AddWithValue("$HolidayPay", _payStub.HolidayPay)
                 .AddWithValue("$LateHours", _payStub.LateHours)
                 .AddWithValue("$LateDeduction", _payStub.LateDeduction)
                 .AddWithValue("$UndertimeHours", _payStub.UndertimeHours)
                 .AddWithValue("$UndertimeDeduction", _payStub.UndertimeDeduction)
+                .AddWithValue("$AbsentHours", _payStub.AbsentHours)
                 .AddWithValue("$AbsenceDeduction", _payStub.AbsenceDeduction)
                 .AddWithValue("$WorkPay", _payStub.WorkPay)
                 .AddWithValue("pstub_TotalAllowance", _payStub.TotalAllowance)
@@ -549,6 +546,30 @@ Public Class PayrollGeneration
                 End If
             End If
         End Try
+    End Sub
+
+    Private Sub ComputeHours()
+        For Each timeEntry In _timeEntries2
+            Dim payRate = _payRates(timeEntry.EntryDate)
+
+            If payRate.IsRegularDay Then
+                _payStub.RegularHours += timeEntry.RegularHours
+                _payStub.RestDayHours += timeEntry.RestDayHours
+            ElseIf payRate.IsSpecialNonWorkingHoliday Then
+                _payStub.SpecialHolidayHours += timeEntry.RegularHours
+            ElseIf payRate.IsRegularHoliday Then
+                _payStub.RegularHolidayHours += timeEntry.RegularHours
+            End If
+
+            _payStub.OvertimeHours += timeEntry.OvertimeHours
+            _payStub.NightDiffHours += timeEntry.NightDiffHours
+            _payStub.NightDiffOvertimeHours += timeEntry.NightDiffOvertimeHours
+            _payStub.LeaveHours += timeEntry.TotalLeaveHours
+
+            _payStub.LateHours += timeEntry.LateHours
+            _payStub.UndertimeHours += timeEntry.UndertimeHours
+            _payStub.AbsentHours += timeEntry.AbsentHours
+        Next
     End Sub
 
     Private Function CalculateSemiMonthlyProratedAllowance(allowance As Allowance) As Decimal

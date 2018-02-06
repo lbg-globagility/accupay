@@ -52,7 +52,13 @@ Namespace Global.AccuPay.Entity
 
         Public Property RestDayPay As Decimal
 
+        Public Property LeaveHours As Decimal
+
         Public Property LeavePay As Decimal
+
+        Public Property SpecialHolidayHours As Decimal
+
+        Public Property RegularHolidayHours As Decimal
 
         Public Property HolidayPay As Decimal
 
@@ -63,6 +69,8 @@ Namespace Global.AccuPay.Entity
         Public Property UndertimeHours As Decimal
 
         Public Property UndertimeDeduction As Decimal
+
+        Public Property AbsentHours As Decimal
 
         Public Property AbsenceDeduction As Decimal
 

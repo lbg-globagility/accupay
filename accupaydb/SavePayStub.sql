@@ -6,7 +6,7 @@
 
 DROP FUNCTION IF EXISTS `SavePayStub`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `SavePayStub`(`pstub_RowID` INT, `pstub_OrganizationID` INT, `pstub_CreatedBy` INT, `pstub_LastUpdBy` INT, `pstub_PayPeriodID` INT, `pstub_EmployeeID` INT, `pstub_TimeEntryID` INT, `pstub_PayFromDate` DATE, `pstub_PayToDate` DATE, `$RegularHours` DECIMAL(15,4), `$RegularPay` DECIMAL(15,4), `$OvertimeHours` DECIMAL(15,4), `$OvertimePay` DECIMAL(15,4), `$NightDiffHours` DECIMAL(15,4), `$NightDiffPay` DECIMAL(15,4), `$NightDiffOvertimeHours` DECIMAL(15,4), `$NightDiffOvertimePay` DECIMAL(15,4), `$LateHours` DECIMAL(15,4), `$LateDeduction` DECIMAL(15,4), `$UndertimeHours` DECIMAL(15,4), `$UndertimeDeduction` DECIMAL(15,4), `$AbsenceDeduction` DECIMAL(15,4), `$RestDayHours` DECIMAL(15,4), `$RestDayPay` DECIMAL(15,4), `$LeavePay` DECIMAL(15,4), `$HolidayPay` DECIMAL(15,4), `$WorkPay` DECIMAL(15,4), `pstub_TotalGrossSalary` DECIMAL(15,4), `pstub_TotalNetSalary` DECIMAL(15,4), `pstub_TotalTaxableSalary` DECIMAL(15,4), `pstub_TotalEmpSSS` DECIMAL(15,4), `pstub_TotalCompSSS` DECIMAL(15,4), `pstub_TotalEmpPhilHealth` DECIMAL(15,4), `pstub_TotalCompPhilHealth` DECIMAL(15,4), `pstub_TotalEmpHDMF` DECIMAL(15,4), `pstub_TotalCompHDMF` DECIMAL(15,4), `pstub_TotalEmpWithholdingTax` DECIMAL(15,4), `pstub_TotalVacationDaysLeft` DECIMAL(15,4), `pstub_TotalLoans` DECIMAL(15,4), `pstub_TotalBonus` DECIMAL(15,4), `pstub_TotalAllowance` DECIMAL(15,4)
+CREATE DEFINER=`root`@`localhost` FUNCTION `SavePayStub`(`pstub_RowID` INT, `pstub_OrganizationID` INT, `pstub_CreatedBy` INT, `pstub_LastUpdBy` INT, `pstub_PayPeriodID` INT, `pstub_EmployeeID` INT, `pstub_TimeEntryID` INT, `pstub_PayFromDate` DATE, `pstub_PayToDate` DATE, `$RegularHours` DECIMAL(15,4), `$RegularPay` DECIMAL(15,4), `$OvertimeHours` DECIMAL(15,4), `$OvertimePay` DECIMAL(15,4), `$NightDiffHours` DECIMAL(15,4), `$NightDiffPay` DECIMAL(15,4), `$NightDiffOvertimeHours` DECIMAL(15,4), `$NightDiffOvertimePay` DECIMAL(15,4), `$LateHours` DECIMAL(15,4), `$LateDeduction` DECIMAL(15,4), `$UndertimeHours` DECIMAL(15,4), `$UndertimeDeduction` DECIMAL(15,4), `$AbsentHours` DECIMAL(15, 4), `$AbsenceDeduction` DECIMAL(15,4), `$RestDayHours` DECIMAL(15,4), `$RestDayPay` DECIMAL(15,4), `$LeaveHours` DECIMAL(15, 4), `$LeavePay` DECIMAL(15,4), `$SpecialHolidayHours` DECIMAL(15,4), `$RegularHolidayHours` DECIMAL(15,4), `$HolidayPay` DECIMAL(15,4), `$WorkPay` DECIMAL(15,4), `pstub_TotalGrossSalary` DECIMAL(15,4), `pstub_TotalNetSalary` DECIMAL(15,4), `pstub_TotalTaxableSalary` DECIMAL(15,4), `pstub_TotalEmpSSS` DECIMAL(15,4), `pstub_TotalCompSSS` DECIMAL(15,4), `pstub_TotalEmpPhilHealth` DECIMAL(15,4), `pstub_TotalCompPhilHealth` DECIMAL(15,4), `pstub_TotalEmpHDMF` DECIMAL(15,4), `pstub_TotalCompHDMF` DECIMAL(15,4), `pstub_TotalEmpWithholdingTax` DECIMAL(15,4), `pstub_TotalVacationDaysLeft` DECIMAL(15,4), `pstub_TotalLoans` DECIMAL(15,4), `pstub_TotalBonus` DECIMAL(15,4), `pstub_TotalAllowance` DECIMAL(15,4)
 
 
 
@@ -95,12 +95,16 @@ INSERT INTO paystub
     paystub.NightDiffOvertimePay,
     paystub.RestDayHours,
     paystub.RestDayPay,
+    paystub.LeaveHours,
     paystub.LeavePay,
+    paystub.SpecialHolidayHours,
+    paystub.RegularHolidayHours,
     paystub.HolidayPay,
     paystub.LateHours,
     paystub.LateDeduction,
     paystub.UndertimeHours,
     paystub.UndertimeDeduction,
+    paystub.AbsentHours,
     paystub.AbsenceDeduction,
     paystub.WorkPay,
     paystub.TotalGrossSalary,
@@ -140,12 +144,16 @@ VALUES
     $NightDiffOvertimePay,
     $RestDayHours,
     $RestDayPay,
+    $LeaveHours,
     $LeavePay,
+    $SpecialHolidayHours,
+    $RegularHolidayHours,
     $HolidayPay,
     $LateHours,
     $LateDeduction,
     $UndertimeHours,
     $UndertimeDeduction,
+    $AbsentHours,
     $AbsenceDeduction,
     $WorkPay,
     pstub_TotalGrossSalary,
@@ -184,12 +192,16 @@ UPDATE
     paystub.NightDiffOvertimePay = $NightDiffOvertimePay,
     paystub.RestDayHours = $RestDayHours,
     paystub.RestDayPay = $RestDayPay,
+    paystub.LeaveHours = $LeaveHours,
     paystub.LeavePay = $LeavePay,
+    paystub.SpecialHolidayHours = $SpecialHolidayHours,
+    paystub.RegularHolidayHours = $RegularHolidayHours,
     paystub.HolidayPay = $HolidayPay,
     paystub.LateHours = $LateHours,
     paystub.LateDeduction = $LateDeduction,
     paystub.UndertimeHours = $UndertimeHours,
     paystub.UndertimeDeduction = $UndertimeDeduction,
+    paystub.AbsentHours = $AbsentHours,
     paystub.AbsenceDeduction = $AbsenceDeduction,
     paystub.WorkPay = $WorkPay,
     paystub.TotalGrossSalary = pstub_TotalGrossSalary,
