@@ -707,12 +707,27 @@ END IF;
 
 /******************************************************************************
  ******************************************************************************
+ * Compute the Holiday hours
+ ******************************************************************************
+ ******************************************************************************/
+SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(ete_EmpRowID, dateToday);
+
+IF isCalculatingRegularHoliday OR isCalculatingSpecialNonWorkingHoliday THEN
+    SET lateHours = 0.0;
+    Set undertimeHours = 0.0;
+END IF;
+
+/******************************************************************************
+ ******************************************************************************
  * Compute the Rest day hours
  ******************************************************************************
  ******************************************************************************/
 IF isRestDay AND isEntitledToRestDay THEN
     SET restDayHours = regularHours;
     SET regularHours = 0.0;
+
+    SET undertimeHours = 0.0;
+    SET lateHours = 0.0;
 END IF;
 
 /*
@@ -769,8 +784,6 @@ END IF;
  * Compute the Absent hours
  ******************************************************************************
  ******************************************************************************/
-SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(ete_EmpRowID, dateToday);
-
 SET isExemptForHoliday = (
     (
         (isHoliday AND (NOT requiredToWorkLastWorkingDay)) OR
@@ -905,9 +918,6 @@ ELSEIF isRegularDay THEN
         END IF;
 
         SET overtimeAmount = (overtimeHours * hourlyRate) * restdayot_rate;
-
-        SET lateHours = 0.0;
-        SET undertimeHours = 0.0;
     END IF;
 
     SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
@@ -967,13 +977,6 @@ ELSEIF isHoliday THEN
         SET overtimeAmount = (overtimeHours * hourlyRate) * otrate;
 
         SET applicableHolidayRate = commonrate;
-    END IF;
-
-    IF isCalculatingRegularHoliday OR
-       isCalculatingSpecialNonWorkingHoliday THEN
-
-        SET lateHours = 0.0;
-        SET undertimeHours = 0.0;
     END IF;
 
     SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
