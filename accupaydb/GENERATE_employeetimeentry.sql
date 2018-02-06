@@ -705,6 +705,16 @@ IF hasOvertime THEN
 
 END IF;
 
+/******************************************************************************
+ ******************************************************************************
+ * Compute the Rest day hours
+ ******************************************************************************
+ ******************************************************************************/
+IF isRestDay AND isEntitledToRestDay THEN
+    SET restDayHours = regularHours;
+    SET regularHours = 0.0;
+END IF;
+
 /*
  * If the hours worked is in excess of the working hours, put that extra hours into
  * overtime.
@@ -721,6 +731,11 @@ IF isDefaultRestDay AND (NOT hasWorked) THEN
     SET hasShift = FALSE;
 END IF;
 
+/******************************************************************************
+ ******************************************************************************
+ * Compute the Leave hours
+ ******************************************************************************
+ ******************************************************************************/
 IF hasLeave THEN
     IF hasBreaktime THEN
         IF leaveStart < breaktimeStart THEN
@@ -782,6 +797,11 @@ IF hasLeave AND (leaveHours + regularHours) < shiftHours THEN
     SET absentHours = shiftHours - (leaveHours + regularHours);
 END IF;
 
+/******************************************************************************
+ ******************************************************************************
+ * Compute the Absent hours
+ ******************************************************************************
+ ******************************************************************************/
 SET regularHours = IFNULL(regularHours, 0);
 SET overtimeHours = GetOvertimeHours(ete_OrganizID, ete_EmpRowID, ete_Date);
 SET nightDiffHours = IFNULL(nightDiffHours, 0);
@@ -879,9 +899,9 @@ ELSEIF isRegularDay THEN
     ELSEIF isRestDay THEN
 
         IF isRestDayInclusive AND e_EmpType = 'Monthly' THEN
-            SET restDayAmount = (regularHours * hourlyRate) * (restday_rate - 1);
+            SET restDayAmount = (restDayHours * hourlyRate) * (restday_rate - 1);
         ELSE
-            SET restDayAmount = (regularHours * hourlyRate) * restday_rate;
+            SET restDayAmount = (restDayHours * hourlyRate) * restday_rate;
         END IF;
 
         SET overtimeAmount = (overtimeHours * hourlyRate) * restdayot_rate;
