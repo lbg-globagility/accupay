@@ -846,7 +846,7 @@ INTO esalRowID;
  ******************************************************************************
  ******************************************************************************/
 SET ndiffrate = ndiffrate MOD 1;
-SET ndiffotrate = otrate * ndiffrate;
+SET ndiffotrate = ndiffotrate - otrate;
 
 SET dailyRate = GET_employeerateperday(ete_EmpRowID, ete_OrganizID, dateToday);
 SET hourlyRate = dailyRate / workingHours;
