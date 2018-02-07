@@ -249,6 +249,8 @@ Public Class TimeEntrySummaryForm
                 employeetimeentry.Absent,
                 employeetimeentry.TotalHoursWorked,
                 employeetimeentry.TotalDayPay,
+                ofb.OffBusStartTime,
+                ofb.OffBusEndTime,
                 payrate.PayType
             FROM employeetimeentry
             LEFT JOIN (
@@ -266,6 +268,9 @@ Public Class TimeEntrySummaryForm
                 employeetimeentrydetails.Created = latest.Created
             LEFT JOIN employeeshift
             ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
+            LEFT JOIN employeeofficialbusiness ofb
+            ON ofb.OffBusStartDate = employeetimeentry.Date AND
+                ofb.EmployeeID = employeetimeentry.EmployeeID
             LEFT JOIN shift
             ON shift.RowID = employeeshift.ShiftID
             LEFT JOIN payrate
@@ -300,6 +305,8 @@ Public Class TimeEntrySummaryForm
                     .TimeOut = reader.GetValue(Of TimeSpan?)("TimeOut"),
                     .ShiftFrom = reader.GetValue(Of TimeSpan?)("ShiftFrom"),
                     .ShiftTo = reader.GetValue(Of TimeSpan?)("ShiftTo"),
+                    .OBStartTime = reader.GetValue(Of TimeSpan?)("OffBusStartTime"),
+                    .OBEndTime = reader.GetValue(Of TimeSpan?)("OffBusEndTime"),
                     .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
                     .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
                     .NightDiffHours = reader.GetValue(Of Decimal)("NightDifferentialHours"),
@@ -378,7 +385,9 @@ Public Class TimeEntrySummaryForm
                 employeetimeentryactual.HolidayPayAmount,
                 employeetimeentryactual.Absent,
                 employeetimeentryactual.TotalHoursWorked,
-                employeetimeentryactual.TotalDayPay
+                employeetimeentryactual.TotalDayPay,
+                ofb.OffBusStartTime,
+                ofb.OffBusEndTime
             FROM employeetimeentryactual
             LEFT JOIN (
                 SELECT EmployeeID, Date, MAX(Created) Created
@@ -395,6 +404,9 @@ Public Class TimeEntrySummaryForm
                 employeetimeentrydetails.Created = latest.Created
             LEFT JOIN employeeshift
             ON employeeshift.RowID = employeetimeentryactual.EmployeeShiftID
+            LEFT JOIN employeeofficialbusiness ofb
+            ON ofb.OffBusStartDate = employeetimeentryactual.Date AND
+                ofb.EmployeeID = employeetimeentryactual.EmployeeID
             LEFT JOIN shift
             ON shift.RowID = employeeshift.ShiftID
             WHERE employeetimeentryactual.EmployeeID = @EmployeeID AND
@@ -426,6 +438,8 @@ Public Class TimeEntrySummaryForm
                     .TimeOut = reader.GetValue(Of TimeSpan?)("TimeOut"),
                     .ShiftFrom = reader.GetValue(Of TimeSpan?)("ShiftFrom"),
                     .ShiftTo = reader.GetValue(Of TimeSpan?)("ShiftTo"),
+                    .OBStartTime = reader.GetValue(Of TimeSpan?)("OffBusStartTime"),
+                    .OBEndTime = reader.GetValue(Of TimeSpan?)("OffBusEndTime"),
                     .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
                     .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
                     .NightDiffHours = reader.GetValue(Of Decimal)("NightDifferentialHours"),
@@ -613,6 +627,8 @@ Public Class TimeEntrySummaryForm
         Public Property TimeOut As TimeSpan?
         Public Property ShiftFrom As TimeSpan?
         Public Property ShiftTo As TimeSpan?
+        Public Property OBStartTime As TimeSpan?
+        Public Property OBEndTime As TimeSpan?
         Public Property RegularHours As Decimal
         Public Property RegularAmount As Decimal
         Public Property NightDiffHours As Decimal
@@ -654,6 +670,18 @@ Public Class TimeEntrySummaryForm
         Public ReadOnly Property ShiftToDisplay As Date?
             Get
                 Return ConvertToDate(ShiftTo)
+            End Get
+        End Property
+
+        Public ReadOnly Property OBStartTimeDisplay As Date?
+            Get
+                Return ConvertToDate(OBStartTime)
+            End Get
+        End Property
+
+        Public ReadOnly Property OBEndTimeDisplay As Date?
+            Get
+                Return ConvertToDate(OBEndTime)
             End Get
         End Property
 
