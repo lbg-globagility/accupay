@@ -54,6 +54,10 @@ Namespace Global.AccuPay.Entity
         <Column("RestDayAmount")>
         Public Property RestDayPay As Decimal
 
+        Public Property RestDayOTHours As Decimal
+
+        Public Property RestDayOTPay As Decimal
+
         Public Property VacationLeaveHours As Decimal
 
         Public Property SickLeaveHours As Decimal

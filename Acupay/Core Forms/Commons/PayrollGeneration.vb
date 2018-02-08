@@ -374,7 +374,14 @@ Public Class PayrollGeneration
                             _payStub.WorkPay = ValNoComma(timeEntrySummary("TotalDayPay"))
                         Else
                             Dim totalDeduction = _payStub.LateDeduction + _payStub.UndertimeDeduction + _payStub.AbsenceDeduction
-                            Dim extraPay = _payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay + _payStub.RestDayPay + _payStub.HolidayPay
+                            Dim extraPay =
+                                _payStub.OvertimePay +
+                                _payStub.NightDiffPay +
+                                _payStub.NightDiffOvertimePay +
+                                _payStub.RestDayPay +
+                                _payStub.RestDayOTPay +
+                                _payStub.HolidayPay
+
                             _payStub.WorkPay = (basicPay + extraPay) - totalDeduction
 
                             Dim taxablePolicy = If(_settings.GetString("Payroll Policy", "paystub.taxableincome"), "Basic Pay")
@@ -447,6 +454,8 @@ Public Class PayrollGeneration
                 .AddWithValue("$NightDiffOvertimePay", _payStub.NightDiffOvertimePay)
                 .AddWithValue("$RestDayHours", _payStub.RestDayHours)
                 .AddWithValue("$RestDayPay", _payStub.RestDayPay)
+                .AddWithValue("$RestDayOTHours", _payStub.RestDayOTHours)
+                .AddWithValue("$RestDayOTPay", _payStub.RestDayOTPay)
                 .AddWithValue("$LeaveHours", _payStub.LeaveHours)
                 .AddWithValue("$LeavePay", _payStub.LeavePay)
                 .AddWithValue("$SpecialHolidayHours", _payStub.SpecialHolidayHours)
@@ -554,7 +563,6 @@ Public Class PayrollGeneration
 
             If payRate.IsRegularDay Then
                 _payStub.RegularHours += timeEntry.RegularHours
-                _payStub.RestDayHours += timeEntry.RestDayHours
             ElseIf payRate.IsSpecialNonWorkingHoliday Then
                 _payStub.SpecialHolidayHours += timeEntry.RegularHours
             ElseIf payRate.IsRegularHoliday Then
@@ -562,8 +570,15 @@ Public Class PayrollGeneration
             End If
 
             _payStub.OvertimeHours += timeEntry.OvertimeHours
+            _payStub.OvertimePay += timeEntry.OvertimePay
             _payStub.NightDiffHours += timeEntry.NightDiffHours
+            _payStub.NightDiffPay += timeEntry.NightDiffPay
+            _payStub.NightDiffOvertimePay += timeEntry.NightDiffOvertimePay
             _payStub.NightDiffOvertimeHours += timeEntry.NightDiffOvertimeHours
+            _payStub.RestDayHours += timeEntry.RestDayHours
+            _payStub.RestDayPay += timeEntry.RestDayPay
+            _payStub.RestDayOTHours += timeEntry.RestDayOTHours
+            _payStub.RestDayOTPay += timeEntry.RestDayOTPay
             _payStub.LeaveHours += timeEntry.TotalLeaveHours
 
             _payStub.LateHours += timeEntry.LateHours
@@ -623,7 +638,7 @@ Public Class PayrollGeneration
                 Dim isRestDay = If(timeEntry.ShiftSchedule?.IsRestDay, False)
 
                 If isRestDay Then
-                    amount = If(timeEntry.RegularHours > 0, dailyRate, 0)
+                    amount = If(timeEntry.RestDayHours > 0, dailyRate, 0)
                 Else
                     amount = timeEntry.RegularHours * hourlyRate
                 End If

@@ -1105,7 +1105,7 @@ Public Class PayStubForm
 
     Private Sub LoadingPayrollDataOnError(t As Task)
         _logger.Error("Error loading one of the payroll data.", t.Exception)
-        MsgBox("Error loading", "Sorry, but something went wrong while loading the payroll data for computation.")
+        MsgBox("Something went wrong while loading the payroll data needed for computation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
         Me.Enabled = True
     End Sub
 

@@ -52,6 +52,10 @@ Namespace Global.AccuPay.Entity
 
         Public Property RestDayPay As Decimal
 
+        Public Property RestDayOTHours As Decimal
+
+        Public Property RestDayOTPay As Decimal
+
         Public Property LeaveHours As Decimal
 
         Public Property LeavePay As Decimal
