@@ -689,7 +689,7 @@ Public Class PayrollGeneration
         Dim totalMonthlyAllowance = 0D
 
         For Each allowance In _allowances
-            If allowance.AllowanceFrequency = "One-time" Then
+            If allowance.AllowanceFrequency = "One time" Then
                 totalOneTimeAllowance += allowance.Amount
             ElseIf allowance.AllowanceFrequency = "Daily" Then
                 totalDailyAllowance += CalculateDailyProratedAllowance(allowance)
