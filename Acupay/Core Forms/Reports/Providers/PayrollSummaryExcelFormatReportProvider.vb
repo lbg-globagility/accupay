@@ -9,7 +9,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-                      "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ"}
+                      "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK"}
 
     Private column_headers() As String =
         New String() {"Code",
@@ -27,6 +27,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "Holiday",
                       "R.Day Hrs",
                       "R.Day Pay",
+                      "Leave Hrs",
                       "Leave Pay",
                       "Late Hrs",
                       "Late Amt",
@@ -68,6 +69,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "HolidayPay",
                       "RestDayHours",
                       "RestDayPay",
+                      "LeaveHours",
                       "LeavePay",
                       "LateHours",
                       "LateDeduction",
