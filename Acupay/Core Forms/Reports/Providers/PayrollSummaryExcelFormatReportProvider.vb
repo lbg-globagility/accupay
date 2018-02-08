@@ -9,7 +9,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-                      "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK"}
+                      "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO"}
 
     Private column_headers() As String =
         New String() {"Code",
@@ -24,9 +24,13 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "N.Diff Pay",
                       "N.DiffOT Hrs",
                       "N.DiffOT Pay",
-                      "Holiday",
                       "R.Day Hrs",
                       "R.Day Pay",
+                      "R.DayOT Hrs",
+                      "R.DayOT Pay",
+                      "R.Hol Hrs",
+                      "S.Hol Hrs",
+                      "Holiday",
                       "Leave Hrs",
                       "Leave Pay",
                       "Late Hrs",
@@ -44,7 +48,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "Taxable",
                       "W.Tax",
                       "Loan",
-                      "A.fee",
+                      "A.Fee",
                       "Adj.",
                       "Net",
                       "13th Month",
@@ -66,9 +70,13 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "NightDiffPay",
                       "NightDiffOvertimeHours",
                       "NightDiffOvertimePay",
-                      "HolidayPay",
                       "RestDayHours",
                       "RestDayPay",
+                      "RestDayOTHours",
+                      "RestDayOTPay",
+                      "SpecialHolidayHours",
+                      "RegularHolidayHours",
+                      "HolidayPay",
                       "LeaveHours",
                       "LeavePay",
                       "LateHours",
