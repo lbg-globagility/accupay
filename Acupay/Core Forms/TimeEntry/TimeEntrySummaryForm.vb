@@ -239,6 +239,8 @@ Public Class TimeEntrySummaryForm
                 employeetimeentry.NightDiffOTHoursAmount,
                 employeetimeentry.RestDayHours,
                 employeetimeentry.RestDayAmount,
+                employeetimeentry.RestDayOTHours,
+                employeetimeentry.RestDayOTPay,
                 employeetimeentry.LeavePayment,
                 employeetimeentry.HoursLate,
                 employeetimeentry.HoursLateAmount,
@@ -317,6 +319,8 @@ Public Class TimeEntrySummaryForm
                     .NightDiffOTAmount = reader.GetValue(Of Decimal)("NightDiffOTHoursAmount"),
                     .RestDayHours = reader.GetValue(Of Decimal)("RestDayHours"),
                     .RestDayAmount = reader.GetValue(Of Decimal)("RestDayAmount"),
+                    .RestDayOTHours = reader.GetValue(Of Decimal)("RestDayOTHours"),
+                    .RestDayOTPay = reader.GetValue(Of Decimal)("RestDayOTPay"),
                     .LateHours = reader.GetValue(Of Decimal)("HoursLate"),
                     .LateAmount = reader.GetValue(Of Decimal)("HoursLateAmount"),
                     .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
@@ -338,6 +342,8 @@ Public Class TimeEntrySummaryForm
                 totalTimeEntry.NightDiffOTAmount += timeEntry.NightDiffOTAmount
                 totalTimeEntry.RestDayHours += timeEntry.RestDayHours
                 totalTimeEntry.RestDayAmount += timeEntry.RestDayAmount
+                totalTimeEntry.RestDayOTHours += timeEntry.RestDayOTHours
+                totalTimeEntry.RestDayOTPay += timeEntry.RestDayOTPay
                 totalTimeEntry.HolidayPay += timeEntry.HolidayPay
                 totalTimeEntry.LeavePay += timeEntry.LeavePay
                 totalTimeEntry.LateHours += timeEntry.LateHours
@@ -376,6 +382,8 @@ Public Class TimeEntrySummaryForm
                 employeetimeentryactual.NightDiffOTHoursAmount,
                 employeetimeentryactual.RestDayHours,
                 employeetimeentryactual.RestDayAmount,
+                employeetimeentryactual.RestDayOTHours,
+                employeetimeentryactual.RestDayOTPay,
                 employeetimeentryactual.LeavePayment,
                 employeetimeentryactual.HoursLate,
                 employeetimeentryactual.HoursLateAmount,
@@ -450,6 +458,8 @@ Public Class TimeEntrySummaryForm
                     .NightDiffOTAmount = reader.GetValue(Of Decimal)("NightDiffOTHoursAmount"),
                     .RestDayHours = reader.GetValue(Of Decimal)("RestDayHours"),
                     .RestDayAmount = reader.GetValue(Of Decimal)("RestDayAmount"),
+                    .RestDayOTHours = reader.GetValue(Of Decimal)("RestDayOTHours"),
+                    .RestDayOTPay = reader.GetValue(Of Decimal)("RestDayOTPay"),
                     .LateHours = reader.GetValue(Of Decimal)("HoursLate"),
                     .LateAmount = reader.GetValue(Of Decimal)("HoursLateAmount"),
                     .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
@@ -471,6 +481,8 @@ Public Class TimeEntrySummaryForm
                 totalTimeEntry.NightDiffOTAmount += timeEntry.NightDiffOTAmount
                 totalTimeEntry.RestDayHours += timeEntry.RestDayHours
                 totalTimeEntry.RestDayAmount += timeEntry.RestDayAmount
+                totalTimeEntry.RestDayOTHours += timeEntry.RestDayOTHours
+                totalTimeEntry.RestDayOTPay += timeEntry.RestDayOTPay
                 totalTimeEntry.HolidayPay += timeEntry.HolidayPay
                 totalTimeEntry.LeavePay += timeEntry.LeavePay
                 totalTimeEntry.LateHours += timeEntry.LateHours
@@ -639,6 +651,8 @@ Public Class TimeEntrySummaryForm
         Public Property NightDiffOTAmount As Decimal
         Public Property RestDayHours As Decimal
         Public Property RestDayAmount As Decimal
+        Public Property RestDayOTHours As Decimal
+        Public Property RestDayOTPay As Decimal
         Public Property LeavePay As Decimal
         Public Property HolidayPay As Decimal
         Public Property UndertimeHours As Decimal

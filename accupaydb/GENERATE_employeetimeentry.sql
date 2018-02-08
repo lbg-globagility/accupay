@@ -27,7 +27,7 @@ DECLARE BASIC_RATE DECIMAL(15, 4) DEFAULT 1.0;
 DECLARE returnvalue INT(11);
 
 DECLARE isRestDay TEXT;
-DECLARe isWorkingDay BOOLEAN;
+DECLARE isWorkingDay BOOLEAN;
 
 DECLARE yester_TotDayPay DECIMAL(11,2);
 DECLARE yester_TotHrsWorkd DECIMAL(11,2);
@@ -90,7 +90,8 @@ DECLARE esalRowID INT(11);
 
 DECLARE payrateRowID INT(11);
 
-DECLARE ete_TotalDayPay DECIMAL(11,6);
+DECLARE totalHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE totalDayPay DECIMAL(11,6) DEFAULT 0.0;
 
 DECLARE OTCount INT(11) DEFAULT 0;
 
@@ -183,6 +184,8 @@ DECLARE isDefaultRestDay BOOLEAN DEFAULT FALSE;
 DECLARE isShiftRestDay BOOLEAN DEFAULT FALSE;
 DECLARE restDayHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE restDayAmount DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE restDayOTHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE restDayOTPay DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE holidayPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE isExemptForHoliday BOOLEAN DEFAULT FALSE;
@@ -705,6 +708,8 @@ IF hasOvertime THEN
 
 END IF;
 
+SET overtimeHours = GetOvertimeHours(ete_OrganizID, ete_EmpRowID, ete_Date);
+
 /******************************************************************************
  ******************************************************************************
  * Compute the Holiday hours
@@ -725,6 +730,9 @@ END IF;
 IF isRestDay AND isEntitledToRestDay THEN
     SET restDayHours = regularHours;
     SET regularHours = 0.0;
+
+    SET restDayOTHours = overtimeHours;
+    SET overtimeHours = 0.0;
 
     SET undertimeHours = 0.0;
     SET lateHours = 0.0;
@@ -816,7 +824,7 @@ END IF;
  ******************************************************************************
  ******************************************************************************/
 SET regularHours = IFNULL(regularHours, 0);
-SET overtimeHours = GetOvertimeHours(ete_OrganizID, ete_EmpRowID, ete_Date);
+SET overtimeHours =IFNULL(overtimeHours, 0);
 SET nightDiffHours = IFNULL(nightDiffHours, 0);
 SET nightDiffOTHours = IFNULL(nightDiffOTHours, 0);
 SET lateHours = IFNULL(lateHours, 0);
@@ -861,7 +869,7 @@ END IF;
 -- b. If current day is before employment hiring date.
 IF ete_Date < e_StartDate THEN
 
-    SET ete_TotalDayPay = 0.0;
+    SET totalDayPay = 0.0;
 
     SELECT INSUPD_employeetimeentries(
         timeEntryID,
@@ -880,7 +888,9 @@ IF ete_Date < e_StartDate THEN
         nightDiffOTHours,
         lateHours,
         payrateRowID,
-        ete_TotalDayPay,
+        totalDayPay,
+        0,
+        0,
         0,
         0,
         0,
@@ -920,12 +930,18 @@ ELSEIF isRegularDay THEN
         SET overtimeAmount = (overtimeHours * hourlyRate) * restdayot_rate;
     END IF;
 
+    SET restDayOTPay = restDayOTHours * hourlyRate * restdayot_rate;
+
     SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
     SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
 
-    SET ete_TotalDayPay = regularAmount + overtimeAmount +
-                          nightDiffAmount + nightDiffOTAmount +
-                          restDayAmount + leavePay;
+    SET totalHours = regularHours + overtimeHours +
+                     restDayHours + restDayOTHours;
+
+    SET totalDayPay = regularAmount + overtimeAmount +
+                      nightDiffAmount + nightDiffOTAmount +
+                      restDayAmount + restDayOTPay +
+                      leavePay;
 
     SELECT INSUPD_employeetimeentries(
         timeEntryID,
@@ -944,8 +960,8 @@ ELSEIF isRegularDay THEN
         nightDiffOTHours,
         lateHours,
         payrateRowID,
-        ete_TotalDayPay,
-        regularHours + overtimeHours,
+        totalDayPay,
+        totalHours,
         regularAmount,
         overtimeAmount,
         undertimeAmount,
@@ -954,6 +970,8 @@ ELSEIF isRegularDay THEN
         lateAmount,
         restDayHours,
         restDayAmount,
+        restDayOTHours,
+        restDayOTPay,
         0,
         basicDayPay,
         5,
@@ -996,7 +1014,7 @@ ELSEIF isHoliday THEN
         SET holidayPay = 0;
     END IF;
 
-    SET ete_TotalDayPay = COALESCE(regularAmount, 0) +
+    SET totalDayPay = COALESCE(regularAmount, 0) +
                           COALESCE(overtimeAmount, 0) +
                           COALESCE(nightDiffAmount, 0) +
                           COALESCE(nightDiffOTAmount, 0) +
@@ -1020,7 +1038,7 @@ ELSEIF isHoliday THEN
         nightDiffOTHours,
         lateHours,
         payrateRowID,
-        ete_TotalDayPay,
+        totalDayPay,
         regularHours + overtimeHours,
         regularAmount,
         overtimeAmount,
@@ -1030,6 +1048,8 @@ ELSEIF isHoliday THEN
         (lateHours * hourlyRate),
         0,
         0,
+        restDayOTHours,
+        restDayOTPay,
         holidayPay,
         basicDayPay,
         7,

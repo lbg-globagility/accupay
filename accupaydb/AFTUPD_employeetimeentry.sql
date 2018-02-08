@@ -282,7 +282,9 @@ INSERT INTO employeetimeentryactual (
     HolidayPayAmount,
     BasicDayPay,
     RestDayHours,
-    RestDayAmount
+    RestDayAmount,
+    RestDayOTHours,
+    RestDayOTPay
 )
 VALUES (
     NEW.RowID,
@@ -318,7 +320,9 @@ VALUES (
     NEW.HolidayPayAmount + (NEW.HolidayPayAmount * actualrate),
     NEW.BasicDayPay + (NEW.BasicDayPay * actualrate),
     NEW.RestDayHours,
-    New.RestDayAmount + (NEW.RestDayAmount * actualrate)
+    NEW.RestDayAmount + (NEW.RestDayAmount * actualrate),
+    NEW.RestDayOTHours,
+    NEW.RestDayOTPay + (NEW.RestDayOTPay * actualrate)
 )
 ON DUPLICATE KEY
 UPDATE
@@ -354,7 +358,9 @@ UPDATE
     HolidayPayAmount = holidayPayAmount,
     BasicDayPay = NEW.BasicDayPay + (NEW.BasicDayPay * actualrate),
     RestDayHours = NEW.RestDayHours,
-    RestDayAmount = restDayAmount;
+    RestDayAmount = restDayAmount,
+    RestDayOTHours = NEW.RestDayOTHours,
+    RestDayOTPay = NEW.RestDayOTPay + (NEW.RestDayOTPay * actualrate);
 
 END//
 DELIMITER ;
