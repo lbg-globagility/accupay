@@ -25,15 +25,16 @@ Partial Class PayrollForm
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.PayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BonusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PanelPayroll = New System.Windows.Forms.Panel()
         Me.WithholdingTaxToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PanelPayroll = New System.Windows.Forms.Panel()
+        Me.PaystubExperimentalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PayrollToolStripMenuItem, Me.BonusToolStripMenuItem, Me.WithholdingTaxToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PayrollToolStripMenuItem, Me.BonusToolStripMenuItem, Me.WithholdingTaxToolStripMenuItem, Me.PaystubExperimentalToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -52,6 +53,12 @@ Partial Class PayrollForm
         Me.BonusToolStripMenuItem.Size = New System.Drawing.Size(52, 20)
         Me.BonusToolStripMenuItem.Text = "Bonus"
         '
+        'WithholdingTaxToolStripMenuItem
+        '
+        Me.WithholdingTaxToolStripMenuItem.Name = "WithholdingTaxToolStripMenuItem"
+        Me.WithholdingTaxToolStripMenuItem.Size = New System.Drawing.Size(105, 20)
+        Me.WithholdingTaxToolStripMenuItem.Text = "Withholding Tax"
+        '
         'PanelPayroll
         '
         Me.PanelPayroll.Dock = System.Windows.Forms.DockStyle.Fill
@@ -60,11 +67,11 @@ Partial Class PayrollForm
         Me.PanelPayroll.Size = New System.Drawing.Size(1006, 446)
         Me.PanelPayroll.TabIndex = 3
         '
-        'WithholdingTaxToolStripMenuItem
+        'PaystubExperimentalToolStripMenuItem
         '
-        Me.WithholdingTaxToolStripMenuItem.Name = "WithholdingTaxToolStripMenuItem"
-        Me.WithholdingTaxToolStripMenuItem.Size = New System.Drawing.Size(106, 20)
-        Me.WithholdingTaxToolStripMenuItem.Text = "Withholding Tax"
+        Me.PaystubExperimentalToolStripMenuItem.Name = "PaystubExperimentalToolStripMenuItem"
+        Me.PaystubExperimentalToolStripMenuItem.Size = New System.Drawing.Size(140, 20)
+        Me.PaystubExperimentalToolStripMenuItem.Text = "Paystub (Experimental)"
         '
         'PayrollForm
         '
@@ -88,4 +95,5 @@ Partial Class PayrollForm
     Friend WithEvents PanelPayroll As System.Windows.Forms.Panel
     Friend WithEvents BonusToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents WithholdingTaxToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents PaystubExperimentalToolStripMenuItem As ToolStripMenuItem
 End Class

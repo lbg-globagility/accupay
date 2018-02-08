@@ -5,8 +5,8 @@ Imports AccuPay.Entity
 
 Public Class NewPayStubForm
 
-    Private _dateFrom As Date = New Date(2017, 12, 21)
-    Private _dateTo As Date = New Date(2018, 1, 5)
+    Private _dateFrom As Date = New Date(2017, 1, 1)
+    Private _dateTo As Date = New Date(2017, 1, 15)
 
     Public Sub NewPayStubForm_Load() Handles Me.Load
         dgvTimeEntries.AutoGenerateColumns = False
@@ -85,21 +85,41 @@ Public Class NewPayStubForm
         txtRestDayHours.Text = Format(paystub.RestDayHours)
         txtRestDayPay.Text = Format(paystub.RestDayPay)
 
-        txtLeavePay.Text = Format(paystub.LeavePay)
+        txtRestDayOTHours.Text = Format(paystub.RestDayOTHours)
+        txtRestDayOTPay.Text = Format(paystub.RestDayOTPay)
+
         txtHolidayPay.Text = Format(paystub.HolidayPay)
-        txtTotalPay.Text = Format(paystub.WorkPay)
+
+        txtLeaveHours.Text = Format(paystub.LeaveHours)
+        txtLeavePay.Text = Format(paystub.LeavePay)
 
         txtLateHours.Text = Format(paystub.LateHours)
-        txtLateAmount.Text = Format(paystub.LateDeduction)
+        txtLateAmount.Text = Format(-paystub.LateDeduction)
 
         txtUndertimeHours.Text = Format(paystub.UndertimeHours)
-        txtUndertimeAmount.Text = Format(paystub.UndertimeDeduction)
+        txtUndertimeAmount.Text = Format(-paystub.UndertimeDeduction)
 
-        txtAbsentDeduction.Text = Format(paystub.AbsenceDeduction)
+        txtAbsentHours.Text = Format(paystub.AbsentHours)
+        txtAbsentDeduction.Text = Format(-paystub.AbsenceDeduction)
+
+        txtTotalEarnings.Text = Format(paystub.WorkPay)
+
+        txtTotalAllowance.Text = Format(paystub.TotalAllowance)
+        txtGrossPay.Text = Format(paystub.GrossPay)
+
+        txtSss.Text = Format(-paystub.SssEmployeeShare)
+        txtPhilHealth.Text = Format(-paystub.PhilHealthEmployeeShare)
+        txtPagIbig.Text = Format(-paystub.HdmfEmployeeShare)
+
+        txtTaxable.Text = Format(paystub.TaxableIncome)
+        txtWithholdingTax.Text = Format(-paystub.WithholdingTax)
+        txtTotalLoan.Text = Format(-paystub.TotalLoans)
+
+        txtNetPay.Text = Format(paystub.NetPay)
     End Sub
 
     Private Function Format(value As Decimal) As String
-        Return String.Format("{0:#,###,##0.00;(#,###,##0.00);""""}", value)
+        Return String.Format("{0:#,###,##0.00;(#,###,##0.00);""-""}", value)
     End Function
 
     Private Class PayStubModel
@@ -124,7 +144,4 @@ Public Class NewPayStubForm
 
     End Class
 
-    Private Sub PaystubTab_Click(sender As Object, e As EventArgs) Handles PaystubTab.Click
-
-    End Sub
 End Class
