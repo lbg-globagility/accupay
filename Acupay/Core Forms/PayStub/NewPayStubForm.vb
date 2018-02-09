@@ -88,7 +88,9 @@ Public Class NewPayStubForm
         txtRestDayOTHours.Text = Format(paystub.RestDayOTHours)
         txtRestDayOTPay.Text = Format(paystub.RestDayOTPay)
 
-        txtHolidayPay.Text = Format(paystub.HolidayPay)
+        txtSpecialHolidayHours.Text = Format(paystub.SpecialHolidayHours)
+        txtRegularHolidayHours.Text = Format(paystub.RegularHolidayHours)
+        txtRegularHolidayPay.Text = Format(paystub.HolidayPay)
 
         txtLeaveHours.Text = Format(paystub.LeaveHours)
         txtLeavePay.Text = Format(paystub.LeavePay)
