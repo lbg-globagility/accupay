@@ -250,6 +250,8 @@ Public Class TimeEntrySummaryForm
                 employeetimeentry.SickLeaveHours,
                 employeetimeentry.OtherLeaveHours,
                 employeetimeentry.Leavepayment,
+                employeetimeentry.SpecialHolidayHours,
+                employeetimeentry.RegularHolidayHours,
                 employeetimeentry.HolidayPayAmount,
                 employeetimeentry.AbsentHours,
                 employeetimeentry.Absent,
@@ -343,6 +345,8 @@ Public Class TimeEntrySummaryForm
                     .SickLeaveHours = reader.GetValue(Of Decimal)("SickLeaveHours"),
                     .OtherLeaveHours = reader.GetValue(Of Decimal)("OtherLeaveHours"),
                     .LeavePay = reader.GetValue(Of Decimal)("Leavepayment"),
+                    .SpecialHolidayHours = reader.GetValue(Of Decimal)("SpecialHolidayHours"),
+                    .RegularHolidayHours = reader.GetValue(Of Decimal)("RegularHolidayHours"),
                     .HolidayPay = reader.GetValue(Of Decimal)("HolidayPayAmount"),
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
@@ -360,6 +364,8 @@ Public Class TimeEntrySummaryForm
                 totalTimeEntry.RestDayAmount += timeEntry.RestDayAmount
                 totalTimeEntry.RestDayOTHours += timeEntry.RestDayOTHours
                 totalTimeEntry.RestDayOTPay += timeEntry.RestDayOTPay
+                totalTimeEntry.SpecialHolidayHours += timeEntry.SpecialHolidayHours
+                totalTimeEntry.RegularHolidayHours += timeEntry.RegularHolidayHours
                 totalTimeEntry.HolidayPay += timeEntry.HolidayPay
                 totalTimeEntry.VacationLeaveHours += timeEntry.VacationLeaveHours
                 totalTimeEntry.SickLeaveHours += timeEntry.SickLeaveHours
@@ -675,6 +681,8 @@ Public Class TimeEntrySummaryForm
         Public Property RestDayAmount As Decimal
         Public Property RestDayOTHours As Decimal
         Public Property RestDayOTPay As Decimal
+        Public Property SpecialHolidayHours As Decimal
+        Public Property RegularHolidayHours As Decimal
         Public Property HolidayPay As Decimal
         Public Property VacationLeaveHours As Decimal
         Public Property SickLeaveHours As Decimal
