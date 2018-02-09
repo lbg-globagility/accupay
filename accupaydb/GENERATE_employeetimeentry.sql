@@ -498,9 +498,6 @@ IF hasLeave THEN
     SET leaveEnd = TIMESTAMP(IF(leaveEndTime > leaveStartTime, dateToday, dateTomorrow), leaveEndTime);
 END IF;
 
-SET @coveredStart = IF(leaveStart IS NULL, dutyStart, LEAST(dutyStart, leaveStart));
-SET @coveredEnd = IF(leaveEnd IS NULL, dutyEnd, GREATEST(dutyEnd, leaveEnd));
-
 /*
  * The official work start is the time that is considered the employee has started working.
  * In this case, the work start is the time in, unless the employee went in early, then it should
@@ -513,6 +510,9 @@ SET dutyStart = GREATEST(fullTimeIn, shiftStart);
  * time out.
  */
 SET dutyEnd = LEAST(fullTimeOut, shiftEnd);
+
+SET @coveredStart = IF(leaveStart IS NULL, dutyStart, LEAST(dutyStart, leaveStart));
+SET @coveredEnd = IF(leaveEnd IS NULL, dutyEnd, GREATEST(dutyEnd, leaveEnd));
 
 /******************************************************************************
  ******************************************************************************
