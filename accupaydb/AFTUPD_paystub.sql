@@ -33,7 +33,7 @@ DECLARE overtimePay DECIMAL(15, 4);
 DECLARE nightDiffPay DECIMAL(15, 4);
 DECLARE nightDiffOvertimePay DECIMAL(15, 4);
 DECLARE restDayPay DECIMAL(15, 4);
-DECLARE restDayOTPay DECIMAL(15, 4);
+DECLARE $restDayOTPay DECIMAL(15, 4);
 DECLARE leavePay DECIMAL(15, 4);
 DECLARE holidayPay DECIMAL(15, 4);
 DECLARE lateDeduction DECIMAL(15, 4);
@@ -89,7 +89,7 @@ INTO
     nightDiffPay,
     nightDiffOvertimePay,
     restDayPay,
-    restDayOTPay,
+    $restDayOTPay,
     holidayPay,
     leavePay,
     lateDeduction,
@@ -291,7 +291,7 @@ UPDATE
     NightDiffPay = nightDiffPay,
     NightDiffOvertimePay = nightDiffOvertimePay,
     RestDayPay = restDayPay,
-    RestDayOTPay = restDayOTPay,
+    RestDayOTPay = $restDayOTPay,
     HolidayPay = holidayPay,
     LeavePay = leavePay,
     LateDeduction = lateDeduction,

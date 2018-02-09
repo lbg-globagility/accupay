@@ -343,6 +343,7 @@
     <Compile Include="Core Forms\PayStub\Entity\PayPeriod.vb" />
     <Compile Include="Core Forms\PayStub\Entity\PayRate.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\PaystubActual.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Position.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ThirteenthMonthPay.vb" />
