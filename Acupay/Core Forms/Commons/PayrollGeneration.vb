@@ -640,7 +640,7 @@ Public Class PayrollGeneration
                 If isRestDay Then
                     amount = If(timeEntry.RestDayHours > 0, dailyRate, 0)
                 Else
-                    amount = timeEntry.RegularHours * hourlyRate
+                    amount = (timeEntry.RegularHours + timeEntry.TotalLeaveHours) * hourlyRate
                 End If
             ElseIf payRate.IsSpecialNonWorkingHoliday Then
                 Dim countableHours = timeEntry.RegularHours + timeEntry.TotalLeaveHours
