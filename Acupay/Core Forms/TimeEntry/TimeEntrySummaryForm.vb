@@ -253,6 +253,8 @@ Public Class TimeEntrySummaryForm
                 employeetimeentry.TotalDayPay,
                 ofb.OffBusStartTime,
                 ofb.OffBusEndTime,
+                ot.OTStartTime,
+                ot.OTEndTIme,
                 payrate.PayType
             FROM employeetimeentry
             LEFT JOIN (
@@ -273,6 +275,10 @@ Public Class TimeEntrySummaryForm
             LEFT JOIN employeeofficialbusiness ofb
             ON ofb.OffBusStartDate = employeetimeentry.Date AND
                 ofb.EmployeeID = employeetimeentry.EmployeeID
+            LEFT JOIN employeeovertime ot
+            ON ot.OTStartDate = employeetimeentry.Date AND
+                ot.EmployeeID = employeetimeentry.EmployeeID AND
+                ot.OTStatus = 'Approved'
             LEFT JOIN shift
             ON shift.RowID = employeeshift.ShiftID
             LEFT JOIN payrate
@@ -309,6 +315,8 @@ Public Class TimeEntrySummaryForm
                     .ShiftTo = reader.GetValue(Of TimeSpan?)("ShiftTo"),
                     .OBStartTime = reader.GetValue(Of TimeSpan?)("OffBusStartTime"),
                     .OBEndTime = reader.GetValue(Of TimeSpan?)("OffBusEndTime"),
+                    .OTStartTime = reader.GetValue(Of TimeSpan?)("OTStartTime"),
+                    .OTEndTime = reader.GetValue(Of TimeSpan?)("OTEndTime"),
                     .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
                     .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
                     .NightDiffHours = reader.GetValue(Of Decimal)("NightDifferentialHours"),
@@ -641,6 +649,8 @@ Public Class TimeEntrySummaryForm
         Public Property ShiftTo As TimeSpan?
         Public Property OBStartTime As TimeSpan?
         Public Property OBEndTime As TimeSpan?
+        Public Property OTStartTime As TimeSpan?
+        Public Property OTEndTime As TimeSpan?
         Public Property RegularHours As Decimal
         Public Property RegularAmount As Decimal
         Public Property NightDiffHours As Decimal
@@ -686,6 +696,19 @@ Public Class TimeEntrySummaryForm
                 Return ConvertToDate(ShiftTo)
             End Get
         End Property
+
+        Public ReadOnly Property OTStartTimeDisplay As Date?
+            Get
+                Return ConvertToDate(OTStartTime)
+            End Get
+        End Property
+
+        Public ReadOnly Property OTEndTimeDisplay As Date?
+            Get
+                Return ConvertToDate(OTEndTime)
+            End Get
+        End Property
+
 
         Public ReadOnly Property OBStartTimeDisplay As Date?
             Get
