@@ -246,8 +246,12 @@ Public Class TimeEntrySummaryForm
                 employeetimeentry.HoursLateAmount,
                 employeetimeentry.UndertimeHours,
                 employeetimeentry.UndertimeHoursAmount,
+                employeetimeentry.VacationLeaveHours,
+                employeetimeentry.SickLeaveHours,
+                employeetimeentry.OtherLeaveHours,
                 employeetimeentry.Leavepayment,
                 employeetimeentry.HolidayPayAmount,
+                employeetimeentry.AbsentHours,
                 employeetimeentry.Absent,
                 employeetimeentry.TotalHoursWorked,
                 employeetimeentry.TotalDayPay,
@@ -333,7 +337,11 @@ Public Class TimeEntrySummaryForm
                     .LateAmount = reader.GetValue(Of Decimal)("HoursLateAmount"),
                     .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
                     .UndertimeAmount = reader.GetValue(Of Decimal)("UndertimeHoursAmount"),
+                    .AbsentHours = reader.GetValue(Of Decimal)("AbsentHours"),
                     .AbsentAmount = reader.GetValue(Of Decimal)("Absent"),
+                    .VacationLeaveHours = reader.GetValue(Of Decimal)("VacationLeaveHours"),
+                    .SickLeaveHours = reader.GetValue(Of Decimal)("SickLeaveHours"),
+                    .OtherLeaveHours = reader.GetValue(Of Decimal)("OtherLeaveHours"),
                     .LeavePay = reader.GetValue(Of Decimal)("Leavepayment"),
                     .HolidayPay = reader.GetValue(Of Decimal)("HolidayPayAmount"),
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
@@ -353,11 +361,15 @@ Public Class TimeEntrySummaryForm
                 totalTimeEntry.RestDayOTHours += timeEntry.RestDayOTHours
                 totalTimeEntry.RestDayOTPay += timeEntry.RestDayOTPay
                 totalTimeEntry.HolidayPay += timeEntry.HolidayPay
+                totalTimeEntry.VacationLeaveHours += timeEntry.VacationLeaveHours
+                totalTimeEntry.SickLeaveHours += timeEntry.SickLeaveHours
+                totalTimeEntry.OtherLeaveHours += timeEntry.OtherLeaveHours
                 totalTimeEntry.LeavePay += timeEntry.LeavePay
                 totalTimeEntry.LateHours += timeEntry.LateHours
                 totalTimeEntry.LateAmount += timeEntry.LateAmount
                 totalTimeEntry.UndertimeHours += timeEntry.UndertimeHours
                 totalTimeEntry.UndertimeAmount += timeEntry.UndertimeAmount
+                totalTimeEntry.AbsentHours += timeEntry.AbsentHours
                 totalTimeEntry.AbsentAmount += timeEntry.AbsentAmount
                 totalTimeEntry.TotalHoursWorked += timeEntry.TotalHoursWorked
                 totalTimeEntry.TotalDayPay += timeEntry.TotalDayPay
@@ -663,12 +675,16 @@ Public Class TimeEntrySummaryForm
         Public Property RestDayAmount As Decimal
         Public Property RestDayOTHours As Decimal
         Public Property RestDayOTPay As Decimal
-        Public Property LeavePay As Decimal
         Public Property HolidayPay As Decimal
+        Public Property VacationLeaveHours As Decimal
+        Public Property SickLeaveHours As Decimal
+        Public Property OtherLeaveHours As Decimal
+        Public Property LeavePay As Decimal
         Public Property UndertimeHours As Decimal
         Public Property UndertimeAmount As Decimal
         Public Property LateHours As Decimal
         Public Property LateAmount As Decimal
+        Public Property AbsentHours As Decimal
         Public Property AbsentAmount As Decimal
         Public Property TotalHoursWorked As Decimal
         Public Property TotalDayPay As Decimal
@@ -719,6 +735,12 @@ Public Class TimeEntrySummaryForm
         Public ReadOnly Property OBEndTimeDisplay As Date?
             Get
                 Return ConvertToDate(OBEndTime)
+            End Get
+        End Property
+
+        Public ReadOnly Property LeaveHours As Decimal
+            Get
+                Return VacationLeaveHours + SickLeaveHours + OtherLeaveHours
             End Get
         End Property
 
