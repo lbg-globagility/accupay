@@ -31,6 +31,7 @@ INTO
     calcNightShift;
 
 SET isRestDay = (i_DateFrom = i_DateTo) AND
+    IFNULL(defaultRestDay, FALSE) AND
     (defaultRestDay = DAYOFWEEK(i_DateFrom));
 
 IF (employeeRowID IS NOT NULL) AND (i_DateFrom IS NOT NULL) THEN
