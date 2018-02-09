@@ -16,13 +16,15 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `HasWorkedLastWorkingDay`(
 ) RETURNS tinyint(1)
 BEGIN
 
-    DECLARE regularHours DECIMAL(11, 6);
+    DECLARE hoursWorked DECIMAL(11, 6);
     DECLARE leaveHours DECIMAL(11, 6);
 
     SELECT
-        IF(PayType IN ('Regular Holiday', 'Special Non-Working Holiday')
-		     , employeetimeentry.TotalDayPay
-			  , employeetimeentry.RegularHoursWorked) `RegularHoursWorked`,
+        IF(
+            PayType IN ('Regular Holiday', 'Special Non-Working Holiday'),
+            employeetimeentry.TotalDayPay,
+            (employeetimeentry.RegularHoursWorked + employeetimeentry.RestDayHours)
+        ) `HoursWorked`,
         (
             employeetimeentry.SickLeaveHours +
             employeetimeentry.MaternityLeaveHours +
@@ -53,10 +55,10 @@ BEGIN
     ORDER BY employeetimeentry.Date DESC
     LIMIT 1
     INTO
-        regularHours,
+        hoursWorked,
         leaveHours;
 
-    RETURN IFNULL(regularHours > 0 OR leaveHours > 0, FALSE);
+    RETURN IFNULL(hoursWorked > 0 OR leaveHours > 0, FALSE);
 
 END//
 DELIMITER ;
