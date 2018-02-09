@@ -330,23 +330,6 @@ Public Class PayrollGeneration
 
                     ComputeHours()
 
-                    _payStub.RegularPay = ValNoComma(timeEntrySummary("RegularHoursAmount"))
-
-                    _payStub.OvertimePay = ValNoComma(timeEntrySummary("OvertimeHoursAmount"))
-
-                    _payStub.NightDiffPay = ValNoComma(timeEntrySummary("NightDiffHoursAmount"))
-
-                    _payStub.NightDiffOvertimePay = ValNoComma(timeEntrySummary("NightDiffOTHoursAmount"))
-
-                    _payStub.RestDayPay = ValNoComma(timeEntrySummary("RestDayAmount"))
-
-                    _payStub.LeavePay = ValNoComma(timeEntrySummary("Leavepayment"))
-                    _payStub.HolidayPay = ValNoComma(timeEntrySummary("HolidayPayAmount"))
-
-                    _payStub.LateDeduction = ValNoComma(timeEntrySummary("HoursLateAmount"))
-                    _payStub.UndertimeDeduction = ValNoComma(timeEntrySummary("UndertimeHoursAmount"))
-                    _payStub.AbsenceDeduction = ValNoComma(timeEntrySummary("Absent"))
-
                     _vacationLeaveBalance = _employee2.LeaveBalance
                     _sickLeaveBalance = _employee2.SickLeaveBalance
                     _otherLeaveBalance = _employee2.OtherLeaveBalance
@@ -561,14 +544,8 @@ Public Class PayrollGeneration
         For Each timeEntry In _timeEntries2
             Dim payRate = _payRates(timeEntry.EntryDate)
 
-            If payRate.IsRegularDay Then
-                _payStub.RegularHours += timeEntry.RegularHours
-            ElseIf payRate.IsSpecialNonWorkingHoliday Then
-                _payStub.SpecialHolidayHours += timeEntry.RegularHours
-            ElseIf payRate.IsRegularHoliday Then
-                _payStub.RegularHolidayHours += timeEntry.RegularHours
-            End If
-
+            _payStub.RegularHours += timeEntry.RegularHours
+            _payStub.RegularPay += timeEntry.RegularPay
             _payStub.OvertimeHours += timeEntry.OvertimeHours
             _payStub.OvertimePay += timeEntry.OvertimePay
             _payStub.NightDiffHours += timeEntry.NightDiffHours
@@ -579,11 +556,18 @@ Public Class PayrollGeneration
             _payStub.RestDayPay += timeEntry.RestDayPay
             _payStub.RestDayOTHours += timeEntry.RestDayOTHours
             _payStub.RestDayOTPay += timeEntry.RestDayOTPay
+            _payStub.SpecialHolidayHours += timeEntry.SpecialHolidayHours
+            _payStub.RegularHolidayHours += timeEntry.RegularHolidayHours
+            _payStub.HolidayPay += timeEntry.HolidayPay
             _payStub.LeaveHours += timeEntry.TotalLeaveHours
+            _payStub.LeavePay += timeEntry.LeavePay
 
             _payStub.LateHours += timeEntry.LateHours
+            _payStub.LateDeduction += timeEntry.LateDeduction
             _payStub.UndertimeHours += timeEntry.UndertimeHours
+            _payStub.UndertimeDeduction += timeEntry.UndertimeDeduction
             _payStub.AbsentHours += timeEntry.AbsentHours
+            _payStub.AbsenceDeduction += timeEntry.AbsentDeduction
         Next
     End Sub
 
@@ -643,11 +627,11 @@ Public Class PayrollGeneration
                     amount = (timeEntry.RegularHours + timeEntry.TotalLeaveHours) * hourlyRate
                 End If
             ElseIf payRate.IsSpecialNonWorkingHoliday Then
-                Dim countableHours = timeEntry.RegularHours + timeEntry.TotalLeaveHours
+                Dim countableHours = timeEntry.RegularHours + timeEntry.SpecialHolidayHours + timeEntry.TotalLeaveHours
 
                 amount = If(countableHours > 0, dailyRate, 0D)
             ElseIf payRate.IsRegularHoliday Then
-                amount = timeEntry.RegularHours * hourlyRate
+                amount = (timeEntry.RegularHours + timeEntry.RegularHolidayHours) * hourlyRate
 
                 If HasWorkedLastWorkingDay(timeEntry) Then
                     amount += dailyRate

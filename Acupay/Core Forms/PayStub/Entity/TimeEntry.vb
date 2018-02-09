@@ -69,6 +69,10 @@ Namespace Global.AccuPay.Entity
         <Column("Leavepayment")>
         Public Property LeavePay As Decimal
 
+        Public Property SpecialHolidayHours As Decimal
+
+        Public Property RegularHolidayHours As Decimal
+
         <Column("HolidayPayAmount")>
         Public Property HolidayPay As Decimal
 
