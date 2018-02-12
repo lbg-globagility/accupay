@@ -363,7 +363,8 @@ Public Class PayrollGeneration
                                 _payStub.NightDiffOvertimePay +
                                 _payStub.RestDayPay +
                                 _payStub.RestDayOTPay +
-                                _payStub.HolidayPay
+                                _payStub.SpecialHolidayPay +
+                                _payStub.RegularHolidayPay
 
                             _payStub.WorkPay = (basicPay + extraPay) - totalDeduction
 
@@ -442,7 +443,9 @@ Public Class PayrollGeneration
                 .AddWithValue("$LeaveHours", _payStub.LeaveHours)
                 .AddWithValue("$LeavePay", _payStub.LeavePay)
                 .AddWithValue("$SpecialHolidayHours", _payStub.SpecialHolidayHours)
+                .AddWithValue("$SpecialHolidayPay", _payStub.SpecialHolidayPay)
                 .AddWithValue("$RegularHolidayHours", _payStub.RegularHolidayHours)
+                .AddWithValue("$RegularHolidayPay", _payStub.RegularHolidayPay)
                 .AddWithValue("$HolidayPay", _payStub.HolidayPay)
                 .AddWithValue("$LateHours", _payStub.LateHours)
                 .AddWithValue("$LateDeduction", _payStub.LateDeduction)
@@ -557,7 +560,10 @@ Public Class PayrollGeneration
             _payStub.RestDayOTHours += timeEntry.RestDayOTHours
             _payStub.RestDayOTPay += timeEntry.RestDayOTPay
             _payStub.SpecialHolidayHours += timeEntry.SpecialHolidayHours
+            _payStub.SpecialHolidayPay += timeEntry.SpecialHolidayPay
             _payStub.RegularHolidayHours += timeEntry.RegularHolidayHours
+            _payStub.RegularHolidayPay += timeEntry.RegularHolidayPay
+
             _payStub.HolidayPay += timeEntry.HolidayPay
             _payStub.LeaveHours += timeEntry.TotalLeaveHours
             _payStub.LeavePay += timeEntry.LeavePay
