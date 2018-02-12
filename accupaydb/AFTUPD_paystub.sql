@@ -170,7 +170,6 @@ ELSEIF e_type = 'Monthly' AND NOT IsFirstTimeSalary THEN
         overtimePay +
         nightDiffPay +
         nightDiffOvertimePay +
-        holidayPay +
         _restDayPay +
         _restDayOTPay +
         _specialHolidayPay +
