@@ -347,14 +347,14 @@ Public Class PayrollGeneration
                     Dim currentTaxableIncome = 0D
                     If _employee2.EmployeeType = SalaryType.Fixed Then
 
-                        _payStub.WorkPay = basicPay + (_payStub.HolidayPay + _payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay)
+                        _payStub.TotalEarnings = basicPay + (_payStub.HolidayPay + _payStub.OvertimePay + _payStub.NightDiffPay + _payStub.NightDiffOvertimePay)
 
                         currentTaxableIncome = basicPay
 
                     ElseIf _employee2.EmployeeType = SalaryType.Monthly Then
 
                         If isFirstPay Then
-                            _payStub.WorkPay = ValNoComma(timeEntrySummary("TotalDayPay"))
+                            _payStub.TotalEarnings = ValNoComma(timeEntrySummary("TotalDayPay"))
                         Else
                             Dim totalDeduction = _payStub.LateDeduction + _payStub.UndertimeDeduction + _payStub.AbsenceDeduction
                             Dim extraPay =
@@ -366,19 +366,19 @@ Public Class PayrollGeneration
                                 _payStub.SpecialHolidayPay +
                                 _payStub.RegularHolidayPay
 
-                            _payStub.WorkPay = (basicPay + extraPay) - totalDeduction
+                            _payStub.TotalEarnings = (basicPay + extraPay) - totalDeduction
 
                             Dim taxablePolicy = If(_settings.GetString("Payroll Policy", "paystub.taxableincome"), "Basic Pay")
 
                             If taxablePolicy = "Gross Income" Then
-                                currentTaxableIncome = _payStub.WorkPay
+                                currentTaxableIncome = _payStub.TotalEarnings
                             Else
                                 currentTaxableIncome = basicPay
                             End If
                         End If
 
                     ElseIf _employee2.EmployeeType = SalaryType.Daily Then
-                        _payStub.WorkPay = ValNoComma(timeEntrySummary("TotalDayPay"))
+                        _payStub.TotalEarnings = ValNoComma(timeEntrySummary("TotalDayPay"))
                     End If
 
                     CalculateSss(salary)
@@ -400,7 +400,7 @@ Public Class PayrollGeneration
                 End If
             End If
 
-            _payStub.GrossPay = _payStub.WorkPay + _payStub.TotalBonus + _payStub.TotalAllowance
+            _payStub.GrossPay = _payStub.TotalEarnings + _payStub.TotalBonus + _payStub.TotalAllowance
             _payStub.NetPay = _payStub.GrossPay - (governmentContributions + _payStub.TotalLoans + _payStub.WithholdingTax)
 
             Dim vacationLeaveProduct = _products.Where(Function(p) p.PartNo = "Vacation leave").FirstOrDefault()
@@ -453,7 +453,7 @@ Public Class PayrollGeneration
                 .AddWithValue("$UndertimeDeduction", _payStub.UndertimeDeduction)
                 .AddWithValue("$AbsentHours", _payStub.AbsentHours)
                 .AddWithValue("$AbsenceDeduction", _payStub.AbsenceDeduction)
-                .AddWithValue("$WorkPay", _payStub.WorkPay)
+                .AddWithValue("$WorkPay", _payStub.TotalEarnings)
                 .AddWithValue("pstub_TotalAllowance", _payStub.TotalAllowance)
                 .AddWithValue("pstub_TotalBonus", _payStub.TotalBonus)
                 .AddWithValue("pstub_TotalGrossSalary", _payStub.GrossPay)

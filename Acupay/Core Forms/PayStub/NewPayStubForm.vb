@@ -5,6 +5,8 @@ Imports AccuPay.Entity
 
 Public Class NewPayStubForm
 
+    Private _isActual As Boolean = False
+
     Private _dateFrom As Date = New Date(2017, 1, 1)
     Private _dateTo As Date = New Date(2017, 1, 15)
 
@@ -13,16 +15,24 @@ Public Class NewPayStubForm
         dgvPaystubs.AutoGenerateColumns = False
 
         Using context = New PayrollContext()
-            Dim payStubs = context.Paystubs.
-                Include(Function(p) p.Employee).
-                Where(Function(p) p.PayFromdate = _dateFrom).
-                Where(Function(p) p.PayToDate = _dateTo).
-                Where(Function(p) CBool(p.OrganizationID = z_OrganizationID)).
-                OrderBy(Function(p) p.Employee.LastName).
-                ThenBy(Function(p) p.Employee.FirstName).
-                ToList()
+            Dim query =
+                (From p In context.Paystubs
+                 Join pa In context.PaystubActuals
+                    On p.PayPeriodID Equals pa.PayPeriodID And
+                     p.EmployeeID Equals pa.EmployeeID
+                 Where p.PayFromdate = _dateFrom And
+                     p.PayToDate = _dateTo And
+                     p.OrganizationID = z_OrganizationID
+                 Order By p.Employee.LastName,
+                     p.Employee.FirstName
+                 Select New With {.Paystub = p, .PaystubActual = pa, .Employee = p.Employee}
+                )
 
-            Dim paystubModels = payStubs.Select(Function(p) New PayStubModel(p)).ToList()
+            Dim paystubs = query.ToList()
+
+            Dim paystubModels = paystubs.Select(
+                Function(p) New PayStubModel(p.Employee, p.Paystub, p.PaystubActual)
+            ).ToList()
 
             dgvPaystubs.DataSource = paystubModels
         End Using
@@ -54,6 +64,7 @@ Public Class NewPayStubForm
         End If
 
         Dim paystub = paystubModel.Paystub
+        Dim paystubActual = paystubModel.PaystubActual
 
         Dim timeEntries As IList(Of TimeEntry) = Nothing
         Using context = New PayrollContext()
@@ -66,58 +77,60 @@ Public Class NewPayStubForm
 
         dgvTimeEntries.DataSource = timeEntries
 
-        DisplayPaystub(paystub)
+        DisplayPaystub(paystub, paystubActual)
     End Sub
 
-    Private Sub DisplayPaystub(paystub As Paystub)
-        txtRegularHours.Text = Format(paystub.RegularHours)
-        txtRegularPay.Text = Format(paystub.RegularPay)
+    Private Sub DisplayPaystub(declared As Paystub, actual As PaystubActual)
+        txtRegularHours.Text = Format(declared.RegularHours)
+        txtRegularPay.Text = Format(declared.RegularPay)
 
-        txtOvertimeHours.Text = Format(paystub.OvertimeHours)
-        txtOvertimePay.Text = Format(paystub.OvertimePay)
+        txtOvertimeHours.Text = Format(declared.OvertimeHours)
+        txtOvertimePay.Text = Format(If(_isActual, actual.OvertimePay, declared.OvertimePay))
 
-        txtNightDiffHours.Text = Format(paystub.NightDiffHours)
-        txtNightDiffPay.Text = Format(paystub.NightDiffPay)
+        txtNightDiffHours.Text = Format(declared.NightDiffHours)
+        txtNightDiffPay.Text = Format(If(_isActual, actual.NightDiffPay, declared.NightDiffPay))
 
-        txtNightDiffOTHours.Text = Format(paystub.NightDiffOvertimeHours)
-        txtNightDiffOTPay.Text = Format(paystub.NightDiffOvertimePay)
+        txtNightDiffOTHours.Text = Format(declared.NightDiffOvertimeHours)
+        txtNightDiffOTPay.Text = Format(If(_isActual, actual.NightDiffOvertimePay, declared.NightDiffOvertimePay))
 
-        txtRestDayHours.Text = Format(paystub.RestDayHours)
-        txtRestDayPay.Text = Format(paystub.RestDayPay)
+        txtRestDayHours.Text = Format(declared.RestDayHours)
+        txtRestDayPay.Text = Format(If(_isActual, actual.RestDayPay, declared.RestDayPay))
 
-        txtRestDayOTHours.Text = Format(paystub.RestDayOTHours)
-        txtRestDayOTPay.Text = Format(paystub.RestDayOTPay)
+        txtRestDayOTHours.Text = Format(declared.RestDayOTHours)
+        txtRestDayOTPay.Text = Format(If(_isActual, actual.RestDayOTPay, declared.RestDayOTPay))
 
-        txtSpecialHolidayHours.Text = Format(paystub.SpecialHolidayHours)
-        txtRegularHolidayHours.Text = Format(paystub.RegularHolidayHours)
-        txtRegularHolidayPay.Text = Format(paystub.HolidayPay)
+        txtSpecialHolidayHours.Text = Format(declared.SpecialHolidayHours)
+        txtSpecialHolidayPay.Text = Format(If(_isActual, actual.SpecialHolidayPay, declared.SpecialHolidayPay))
 
-        txtLeaveHours.Text = Format(paystub.LeaveHours)
-        txtLeavePay.Text = Format(paystub.LeavePay)
+        txtRegularHolidayHours.Text = Format(declared.RegularHolidayHours)
+        txtRegularHolidayPay.Text = Format(If(_isActual, actual.RegularHolidayPay, declared.RegularHolidayPay))
 
-        txtLateHours.Text = Format(paystub.LateHours)
-        txtLateAmount.Text = Format(-paystub.LateDeduction)
+        txtLeaveHours.Text = Format(declared.LeaveHours)
+        txtLeavePay.Text = Format(declared.LeavePay)
 
-        txtUndertimeHours.Text = Format(paystub.UndertimeHours)
-        txtUndertimeAmount.Text = Format(-paystub.UndertimeDeduction)
+        txtLateHours.Text = Format(declared.LateHours)
+        txtLateAmount.Text = Format(-declared.LateDeduction)
 
-        txtAbsentHours.Text = Format(paystub.AbsentHours)
-        txtAbsentDeduction.Text = Format(-paystub.AbsenceDeduction)
+        txtUndertimeHours.Text = Format(declared.UndertimeHours)
+        txtUndertimeAmount.Text = Format(-declared.UndertimeDeduction)
 
-        txtTotalEarnings.Text = Format(paystub.WorkPay)
+        txtAbsentHours.Text = Format(declared.AbsentHours)
+        txtAbsentDeduction.Text = Format(-declared.AbsenceDeduction)
 
-        txtTotalAllowance.Text = Format(paystub.TotalAllowance)
-        txtGrossPay.Text = Format(paystub.GrossPay)
+        txtTotalEarnings.Text = Format(declared.TotalEarnings)
 
-        txtSss.Text = Format(-paystub.SssEmployeeShare)
-        txtPhilHealth.Text = Format(-paystub.PhilHealthEmployeeShare)
-        txtPagIbig.Text = Format(-paystub.HdmfEmployeeShare)
+        txtTotalAllowance.Text = Format(declared.TotalAllowance)
+        txtGrossPay.Text = Format(If(_isActual, actual.GrossPay, declared.GrossPay))
 
-        txtTaxable.Text = Format(paystub.TaxableIncome)
-        txtWithholdingTax.Text = Format(-paystub.WithholdingTax)
-        txtTotalLoan.Text = Format(-paystub.TotalLoans)
+        txtSss.Text = Format(-declared.SssEmployeeShare)
+        txtPhilHealth.Text = Format(-declared.PhilHealthEmployeeShare)
+        txtPagIbig.Text = Format(-declared.HdmfEmployeeShare)
 
-        txtNetPay.Text = Format(paystub.NetPay)
+        txtTaxable.Text = Format(declared.TaxableIncome)
+        txtWithholdingTax.Text = Format(-declared.WithholdingTax)
+        txtTotalLoan.Text = Format(-declared.TotalLoans)
+
+        txtNetPay.Text = Format(If(_isActual, actual.GrossPay, declared.NetPay))
     End Sub
 
     Private Function Format(value As Decimal) As String
@@ -126,23 +139,17 @@ Public Class NewPayStubForm
 
     Private Class PayStubModel
 
-        Private _paystub As Paystub
+        Public ReadOnly Property Employee As Employee
 
         Public ReadOnly Property Paystub As Paystub
-            Get
-                Return _paystub
-            End Get
-        End Property
 
-        Public Sub New(paystub As Paystub)
-            _paystub = paystub
+        Public ReadOnly Property PaystubActual As PaystubActual
+
+        Public Sub New(employee As Employee, paystub As Paystub, paystubActual As PaystubActual)
+            Me.Employee = employee
+            Me.Paystub = paystub
+            Me.PaystubActual = paystubActual
         End Sub
-
-        Public ReadOnly Property EmployeeName As String
-            Get
-                Return $"{_paystub.Employee.LastName}, {_paystub.Employee.FirstName}"
-            End Get
-        End Property
 
     End Class
 

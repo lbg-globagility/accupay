@@ -82,7 +82,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property AbsenceDeduction As Decimal
 
-        Public Property WorkPay As Decimal
+        <Column("WorkPay")>
+        Public Property TotalEarnings As Decimal
 
         Public Property TotalBonus As Decimal
 

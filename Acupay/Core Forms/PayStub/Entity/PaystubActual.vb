@@ -14,19 +14,11 @@ Namespace Global.AccuPay.Entity
 
         Public Property OrganizationID As Integer?
 
-        Public Property Created As Date
-
-        Public Property CreatedBy As Integer?
-
-        Public Property LastUpd As Date?
-
-        Public Property LastUpdBy As Integer?
-
         Public Property PayPeriodID As Integer?
 
         Public Property EmployeeID As Integer?
 
-        Public Property PayFromdate As Date
+        Public Property PayFromDate As Date
 
         Public Property PayToDate As Date
 
@@ -44,6 +36,10 @@ Namespace Global.AccuPay.Entity
 
         Public Property LeavePay As Decimal
 
+        Public Property SpecialHolidayPay As Decimal
+
+        Public Property RegularHolidayPay As Decimal
+
         Public Property HolidayPay As Decimal
 
         Public Property LateDeduction As Decimal
@@ -51,8 +47,6 @@ Namespace Global.AccuPay.Entity
         Public Property UndertimeDeduction As Decimal
 
         Public Property AbsenceDeduction As Decimal
-
-        Public Property WorkPay As Decimal
 
         <Column("TotalGrossSalary")>
         Public Property GrossPay As Decimal
