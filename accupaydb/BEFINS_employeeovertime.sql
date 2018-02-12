@@ -32,7 +32,7 @@ IF eshiftID IS NOT NULL THEN
         SELECT IF(
             ADDTIME(sh.TimeTo, SEC_TO_TIME(60)) = NEW.OTStartTime OR sh.TimeTo = NEW.OTStartTime,
             sh.TimeTo,
-            TIME_FORMAT(NEW.OTStartTime, @@time_format)
+            IF(HOUR(NEW.OTStartTime) = 24, TIME_FORMAT(NEW.OTStartTime, '00:%i:%s'), TIME_FORMAT(NEW.OTStartTime, @@time_format))
         )
         FROM shift sh
         WHERE sh.RowID = eshiftID
