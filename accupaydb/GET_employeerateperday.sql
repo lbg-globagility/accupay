@@ -167,7 +167,7 @@ FROM (SELECT esa.*
 			  )), 6) `DailyRate`
 		FROM employeesalary esa
 		INNER JOIN employee e ON e.RowID=esa.EmployeeID AND e.EmployeeType IN ('Monthly', 'Fixed') AND e.RowID=EmpID AND e.OrganizationID=OrgID
-		
+
 	UNION
 		SELECT esa.*
 	   , ROUND(esa.BasicPay, 6) `DailyRate`
@@ -183,7 +183,7 @@ ORDER BY DATEDIFF(DATE_FORMAT(paramDate, @@date_format), i.EffectiveDateFrom)
 LIMIT 1
 INTO dailyrate;
 
-RETURN dailyrate;
+RETURN IFNULL(dailyrate, 0);
 
 END//
 DELIMITER ;
