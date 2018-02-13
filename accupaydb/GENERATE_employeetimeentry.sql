@@ -867,7 +867,7 @@ INTO esalRowID;
  * COMPUTE PAY
  ******************************************************************************
  ******************************************************************************/
-SET ndiffrate = ndiffrate MOD 1;
+SET ndiffrate = ndiffrate - commonrate;
 SET ndiffotrate = ndiffotrate - otrate;
 
 SET dailyRate = GET_employeerateperday(ete_EmpRowID, ete_OrganizID, dateToday);
