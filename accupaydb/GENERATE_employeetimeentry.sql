@@ -1031,8 +1031,8 @@ ELSEIF isHoliday THEN
 
     SET holidayPay = specialHolidayPay + regularHolidayPay;
 
-    SET overtimeAmount = overtimeHours * otrate;
-    SET restDayOTPay = restDayOTHours * restdayot_rate;
+    SET overtimeAmount = (overtimeHours * hourlyRate) * otrate;
+    SET restDayOTPay = (restDayOTHours * hourlyRate) * restdayot_rate;
     SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
     SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
 
