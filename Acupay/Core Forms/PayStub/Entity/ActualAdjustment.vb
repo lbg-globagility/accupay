@@ -5,8 +5,8 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Namespace Global.AccuPay.Entity
 
-    <Table("paystubadjustment")>
-    Public Class Adjustment
+    <Table("paystubadjustmentactual")>
+    Public Class ActualAdjustment
 
         <Key>
         Public Property RowID As Integer?
@@ -25,8 +25,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property ProductID As Integer?
 
-        <Column("PayAmount")>
-        Public Property Amount As Decimal
+        Public Property PayAmount As Decimal
 
         Public Property Comment As String
 

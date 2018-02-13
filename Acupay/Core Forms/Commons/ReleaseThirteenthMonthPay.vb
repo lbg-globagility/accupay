@@ -29,7 +29,7 @@ Public Class ReleaseThirteenthMonthPay
                 Dim thirteenthMonthPay = CDec(row("ThirteenthMonthPay"))
 
                 ' Add the new thirteenth pay as an adjustment to the paystub
-                paystub.Adjustments.Add(New Adjustment() With {
+                paystub.Adjustments.Add(New ActualAdjustment() With {
                     .ProductID = product.RowID,
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,
