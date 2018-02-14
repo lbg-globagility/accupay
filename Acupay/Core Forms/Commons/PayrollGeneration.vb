@@ -135,6 +135,8 @@ Public Class PayrollGeneration
 
     Private _allowances As ICollection(Of Allowance)
 
+    Private _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
+
     Sub New(employee As DataRow,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
@@ -428,6 +430,10 @@ Public Class PayrollGeneration
                     context.Paystubs.Add(_paystub)
                 End If
 
+                ' Delete and replace the old allowanceItems with the newly recalculated ones
+                context.Set(Of AllowanceItem).RemoveRange(_paystub.AllowanceItems)
+                _paystub.AllowanceItems = _allowanceItems
+
                 Dim vacationLeaveBalance =
                     (From p In context.PaystubItems
                      Where p.Product.PartNo = "Vacation leave" And
@@ -643,37 +649,39 @@ Public Class PayrollGeneration
     End Function
 
     Private Sub CalculateAllowances()
-        Dim totalOneTimeAllowance = 0D
-        Dim totalDailyAllowance = 0D
-        Dim totalSemiMonthlyAllowance = 0D
-        Dim totalMonthlyAllowance = 0D
-
         For Each allowance In _allowances
+            Dim item = New AllowanceItem() With {
+                .OrganizationID = z_OrganizationID,
+                .Created = Date.Now,
+                .LastUpd = Date.Now,
+                .CreatedBy = z_User,
+                .LastUpdBy = z_User,
+                .PayPeriodID = PayPeriodID,
+                .AllowanceID = allowance.RowID
+            }
+
             If allowance.AllowanceFrequency = "One time" Then
-                totalOneTimeAllowance += allowance.Amount
+                item.Amount = allowance.Amount
             ElseIf allowance.AllowanceFrequency = "Daily" Then
-                totalDailyAllowance += CalculateDailyProratedAllowance(allowance)
+                item.Amount = CalculateDailyProratedAllowance(allowance)
             ElseIf allowance.AllowanceFrequency = "Semi-monthly" Then
                 If allowance.Product.Fixed Then
-                    totalSemiMonthlyAllowance += allowance.Amount
+                    item.Amount = allowance.Amount
                 Else
-                    totalSemiMonthlyAllowance += CalculateSemiMonthlyProratedAllowance(allowance)
+                    item.Amount = CalculateSemiMonthlyProratedAllowance(allowance)
                 End If
             ElseIf allowance.AllowanceFrequency = "Monthly" Then
                 If allowance.Product.Fixed And _isEndOfMonth Then
-                    totalMonthlyAllowance += allowance.Amount
+                    item.Amount = allowance.Amount
                 End If
+            Else
+                item = Nothing
             End If
+
+            _allowanceItems.Add(item)
         Next
 
-        Dim totalAllowance = (
-            totalOneTimeAllowance +
-            totalDailyAllowance +
-            totalSemiMonthlyAllowance +
-            totalMonthlyAllowance
-        )
-
-        _paystub.TotalAllowance = totalAllowance
+        _paystub.TotalAllowance = _allowanceItems.Sum(Function(a) a.Amount)
     End Sub
 
     Private Sub CalculateBonuses()
