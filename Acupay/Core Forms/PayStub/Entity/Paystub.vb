@@ -140,6 +140,12 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property PaystubItems As ICollection(Of PaystubItem)
 
+        Public Sub New()
+            Adjustments = New List(Of Adjustment)
+            ActualAdjustments = New List(Of ActualAdjustment)
+            PaystubItems = New List(Of PaystubItem)
+        End Sub
+
     End Class
 
 End Namespace
