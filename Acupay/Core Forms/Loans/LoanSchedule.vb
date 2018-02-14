@@ -1,6 +1,8 @@
-﻿Imports System.Collections.Generic
+﻿Option Strict On
+
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports Acupay
 
 Namespace Global.PayrollSys
 
@@ -38,13 +40,39 @@ Namespace Global.PayrollSys
 
         Public Property NoOfPayPeriod As Decimal
 
-        Public Property LoanPayPeriodLeft As Decimal
+        Public Property LoanPayPeriodLeft As Integer
 
         Public Property Comments As String
 
         Public Property LoanName As String
 
         Public Overridable Property LoanTransactions As ICollection(Of LoanTransaction)
+
+        Public Sub Credit(payPeriodID As Integer?)
+            Dim currentDeductionAmount = If(DeductionAmount > TotalBalanceLeft, TotalBalanceLeft, DeductionAmount)
+            Dim newBalance = If(LastEntry()?.TotalBalance, TotalBalanceLeft) - currentDeductionAmount
+
+            Dim transaction = New LoanTransaction() With {
+                .Created = Date.Now,
+                .LastUpd = Date.Now,
+                .OrganizationID = z_OrganizationID,
+                .EmployeeID = EmployeeID,
+                .PayPeriodID = payPeriodID,
+                .LoanPayPeriodLeft = LoanPayPeriodLeft - 1,
+                .TotalBalance = newBalance,
+                .Amount = currentDeductionAmount
+            }
+
+            LoanTransactions.Add(transaction)
+        End Sub
+
+        Public Function LastEntry() As LoanTransaction
+            Return LoanTransactions.LastOrDefault()
+        End Function
+
+        Public Sub Rollback()
+            LoanTransactions.Remove(LastEntry())
+        End Sub
 
     End Class
 

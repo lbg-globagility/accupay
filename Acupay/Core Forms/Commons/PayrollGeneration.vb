@@ -269,7 +269,7 @@ Public Class PayrollGeneration
             Dim loanTransactions = _allLoanTransactions.Where(Function(t) t.EmployeeID = _payStub.EmployeeID)
 
             If loanTransactions.Count > 0 Then
-                _payStub.TotalLoans = loanTransactions.Aggregate(0D, Function(total, t) total + t.DeductionAmount)
+                _payStub.TotalLoans = loanTransactions.Aggregate(0D, Function(total, t) total + t.Amount)
             Else
                 Dim acceptedLoans As String() = {}
                 If _isFirstHalf Then
@@ -295,17 +295,17 @@ Public Class PayrollGeneration
                     }
 
                     If loanSchedule.DeductionAmount > loanSchedule.TotalBalanceLeft Then
-                        loanTransaction.DeductionAmount = loanSchedule.TotalBalanceLeft
+                        loanTransaction.Amount = loanSchedule.TotalBalanceLeft
                     Else
-                        loanTransaction.DeductionAmount = loanSchedule.DeductionAmount
+                        loanTransaction.Amount = loanSchedule.DeductionAmount
                     End If
 
-                    loanTransaction.TotalBalanceLeft = loanSchedule.TotalBalanceLeft - loanTransaction.DeductionAmount
+                    loanTransaction.TotalBalance = loanSchedule.TotalBalanceLeft - loanTransaction.Amount
 
                     newLoanTransactions.Add(loanTransaction)
                 Next
 
-                _payStub.TotalLoans = newLoanTransactions.Aggregate(0D, Function(total, x) x.DeductionAmount + total)
+                _payStub.TotalLoans = newLoanTransactions.Aggregate(0D, Function(total, x) x.Amount + total)
             End If
 
             totalVacationDaysLeft = 0D
@@ -409,12 +409,9 @@ Public Class PayrollGeneration
             _connection = New MySqlConnection(mysql_conn_text)
             Dim command = New MySqlCommand("SavePayStub", _connection, transaction)
 
-            If _connection.State = ConnectionState.Closed Then
-                _connection.Open()
-            End If
+            _connection.Open()
 
             transaction = _connection.BeginTransaction()
-            command.CommandTimeout = 5000
             command.CommandType = CommandType.StoredProcedure
 
             With command.Parameters

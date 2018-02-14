@@ -58,6 +58,7 @@ DECLARE overtimeHoursAmount DECIMAL(12, 6);
 DECLARE nightDiffAmount DECIMAL(12, 6);
 DECLARE nightDiffOvertimeAmount DECIMAL(12, 6);
 DECLARE restDayAmount DECIMAL(12, 6);
+DECLARE hoursWorked DECIMAL(12, 6) DEFAULT 0.0;
 DECLARE _specialHolidayPay DECIMAL(15, 4);
 DECLARE _regularHolidayPay DECIMAL(15, 4);
 DECLARE _holidayPay DECIMAL(12, 6);
@@ -115,8 +116,10 @@ INTO payType;
 
 SET isHoliday = (payType = 'Regular Holiday') OR (payType = 'Special Non-Working Holiday');
 
+SET hoursWorked = NEW.RegularHoursWorked + NEW.RestDayHours + NEW.SpecialHolidayHours + NEW.RegularHolidayHours;
+
 IF  (AgencyRowID IS NOT NULL) AND
-    (NEW.RegularHoursWorked > 0) THEN
+    (hoursWorked > 0) THEN
 
     SELECT agf.RowID
     FROM agencyfee agf
@@ -137,7 +140,7 @@ IF  (AgencyRowID IS NOT NULL) AND
         DivisionRowID,
         NEW.RowID,
         NEW.`Date`,
-        (ag_fee / divisorToHourlyRate) * NEW.RegularHoursWorked
+        (ag_fee / divisorToHourlyRate) * hoursWorked
     )
     INTO anyint;
 
