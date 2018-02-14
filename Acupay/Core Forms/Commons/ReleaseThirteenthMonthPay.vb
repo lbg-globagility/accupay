@@ -10,7 +10,7 @@ Public Class ReleaseThirteenthMonthPay
 
         Using context = New PayrollContext()
             Dim paystubs =
-                (From p In context.Paystubs.Include(Function(p) p.Adjustments)
+                (From p In context.Paystubs.Include(Function(p) p.ActualAdjustments)
                  Where p.PayPeriodID = currentPeriodID).
                  ToList()
 
@@ -29,7 +29,7 @@ Public Class ReleaseThirteenthMonthPay
                 Dim thirteenthMonthPay = CDec(row("ThirteenthMonthPay"))
 
                 ' Add the new thirteenth pay as an adjustment to the paystub
-                paystub.Adjustments.Add(New ActualAdjustment() With {
+                paystub.ActualAdjustments.Add(New ActualAdjustment() With {
                     .ProductID = product.RowID,
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,

@@ -92,7 +92,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property Paystubs As IEnumerable(Of AccuPay.Entity.Paystub)
+    Public ReadOnly Property Paystubs As IEnumerable(Of Paystub)
         Get
             Return _paystubs
         End Get
@@ -146,6 +146,8 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property Adjustments As ICollection(Of Adjustment)
+
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = Integer.Parse(payPeriodID)
         _payDateFrom = payDateFrom
@@ -164,6 +166,7 @@ Public Class PayrollResources
             loadLoanSchedulesTask,
             loadLoanTransactionsTask,
             loadSalariesTask,
+            LoadPaystubs(),
             LoadProducts(),
             LoadPreviousPaystubs(),
             LoadSocialSecurityBrackets(),
