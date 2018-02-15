@@ -29,7 +29,6 @@ SELECT
     e.RowID,
     CONCAT(e.EmployeeID, ' / ', e.LastName, ', ', e.FirstName, ' ', LEFT(e.MiddleName, 1)) AS `COL1`,
     CONCAT_WS(', ', e.LastName, e.FirstName, e.MiddleName) AS `COL69`,
-    -- IF(IsActualFlag = 0, ete.RegularHoursAmount, ROUND(ete.RegularHoursAmount, 2)) AS `COL70`,
     ROUND(GetBasicPay(e.RowID, paydate_from, paydat_to, IsActualFlag, ete.TotalExpectedHours), 2) AS `COL70`,
     (
         ROUND(IF(
@@ -73,7 +72,7 @@ SELECT
     0 AS `COL10`,
     0 AS `COL11`,
     IFNULL(ete.OvertimeHoursWorked, 0) AS `COL12`,
-    IFNULL(ete.OvertimeHoursAmount, 0) AS `COL13`,
+    IFNULL(ete.OvertimeHoursAmount, 0) + IFNULL(ete.NightDiffOTHoursAmount, 0) AS `COL13`,
     IFNULL(ete.NightDifferentialHours, 0) AS `COL14`,
     IFNULL(ete.NightDiffHoursAmount, 0) AS `COL15`,
     0 AS `COL16`,
@@ -101,13 +100,13 @@ SELECT
     adjustments.PayAmounts AS `COL38`,
     (IFNULL(ete.VacationLeaveHours,0) + IFNULL(ete.SickLeaveHours,0) + IFNULL(ete.MaternityLeaveHours,0) + IFNULL(ete.OtherLeaveHours,0)) AS `COL40`,
     IFNULL(ete.Leavepayment,0) AS `COL41`,
-    IFNULL(ps.HolidayPay,0) AS `COL42`,
+    IFNULL(ps.HolidayPay, 0) + IFNULL(ete.RestDayAmount, 0) AS `COL42`,
     IFNULL(psiECOLA.PayAmount,0) AS `COL43`,
     psiLeave.`Names` AS `COL44`,
     psiLeave.Availed AS `COl45`,
     psiLeave.Balance AS `COL46`,
-	 IFNULL(adjustments.`Names`, '') `COL90`,
-	 IFNULL(adjustments.`PayAmounts`, '') `COL91`
+    IFNULL(adjustments.`Names`, '') `COL90`,
+    IFNULL(adjustments.`PayAmounts`, '') `COL91`
 FROM (
         SELECT
             RowID,
@@ -211,7 +210,8 @@ LEFT JOIN (
                 (
                     (pyr.PayType = 'Regular Holiday') OR
                     (pyr.PayType = 'Special Non-Working Holiday') OR
-                    (i.Leavepayment > 0)
+                    (i.Leavepayment > 0) OR
+                    es.RestDay = TRUE
                 ),
                 0,
                 sh.DivisorToDailyRate
