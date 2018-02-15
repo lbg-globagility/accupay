@@ -417,6 +417,12 @@
       <DependentUpon>HyundaiPayslip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Core Forms\rpt\HyundaiPayslip1.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HyundaiPayslip1.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Core Forms\rpt\LoanReports.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1478,6 +1484,10 @@
     <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HyundaiPayslip.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HyundaiPayslip1.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\rpt\LoanReports.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

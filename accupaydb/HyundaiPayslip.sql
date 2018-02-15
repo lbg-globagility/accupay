@@ -43,6 +43,8 @@ INTO date_from
 	  ,max_date_thisyear
 	  ,text_cutoff_ordinal;
 
+SET @even_num = 0;
+
 SELECT ps.RowID
 ,e.EmployeeID `COL1`
 ,CONCAT_WS(', ', e.LastName, e.FirstName) `COL2`
@@ -86,15 +88,16 @@ SELECT ps.RowID
 
 
 
-,CONCAT_WS('\n'
+/*,CONCAT_WS('\n'
            , IF(once_allow.`AllowanceNameList` IS NULL, '', REPLACE(once_allow.`AllowanceNameList`, ',', '\n'))
 			  , IF(day_allow.`AllowanceNameList` IS NULL, '', REPLACE(day_allow.`AllowanceNameList`, ',', '\n'))
 			  , IF(semimonth_allow.`AllowanceNameList` IS NULL, '', REPLACE(semimonth_allow.`AllowanceNameList`, ',', '\n'))) `COL16`
 ,CONCAT_WS('\n'
            , IF(once_allow.`AllowanceAmountList` IS NULL, '', REPLACE(once_allow.`AllowanceAmountList`, ',', '\n'))
            , IF(day_allow.`AllowanceAmountList` IS NULL, '', REPLACE(day_allow.`AllowanceAmountList`, ',', '\n'))
-           , IF(semimonth_allow.`AllowanceAmountList` IS NULL, '', REPLACE(semimonth_allow.`AllowanceAmountList`, ',', '\n'))) `COL18`
-
+           , IF(semimonth_allow.`AllowanceAmountList` IS NULL, '', REPLACE(semimonth_allow.`AllowanceAmountList`, ',', '\n'))) `COL18`*/
+,IF(ai.`AllowanceNameList` IS NULL, '', REPLACE(ai.`AllowanceNameList`, ',', '\n')) `COL16`
+,IF(ai.`AllowanceAmountList` IS NULL, '', REPLACE(ai.`AllowanceAmountList`, ',', '\n')) `COL18`
 
 
 
@@ -133,6 +136,8 @@ SELECT ps.RowID
 ,CONCAT('Dept: ', dv.Name) `COL100`
 
 ,is_endofmonth `IsEndOfMonth`
+
+, e.EmployeeID `COL50`
 
 FROM paystub ps
 
@@ -174,7 +179,8 @@ INNER JOIN employeesalary esa
 								LIMIT 1)
 
 LEFT JOIN (SELECT slp.*
-           ,GROUP_CONCAT(CONCAT('  ', p.PartNo)) `LoanNameList`
+           # ,GROUP_CONCAT(CONCAT('  ', CUSTOM_ABBREVIATE(p.PartNo) )) `LoanNameList`
+           ,GROUP_CONCAT(CONCAT('  ', p.PartNo )) `LoanNameList`
            ,GROUP_CONCAT(ROUND(slp.DeductionAmount, 2)) `LoanDeductList`
            ,GROUP_CONCAT(ROUND(slp.TotalBalanceLeft, 2)) `LoanBalanceList`
            FROM scheduledloansperpayperiod slp
@@ -225,9 +231,9 @@ LEFT JOIN (SELECT etlv.RowID
 			  GROUP BY etlv.EmployeeID) etlv
 	    ON etlv.EmployeeID=ps.EmployeeID
 
-LEFT JOIN (SELECT ea.*
+/*LEFT JOIN (SELECT ea.*
            ,GROUP_CONCAT(ea.AllowanceAmount) `AllowanceAmountList`
-           ,GROUP_CONCAT(p.PartNo) `AllowanceNameList`
+           ,GROUP_CONCAT( CUSTOM_ABBREVIATE(p.PartNo) ) `AllowanceNameList`
            FROM employeeallowance ea
            INNER JOIN product p ON p.RowID=ea.ProductID
 			  WHERE ea.OrganizationID=og_rowid
@@ -241,7 +247,7 @@ LEFT JOIN (SELECT ea.*
            ,(@perc0 := AVG(IFNULL(etn.`AttendancePercentage`, 0)))
            ,(@counts0 := COUNT(IFNULL(etn.RowID, 0)))
            ,GROUP_CONCAT( ROUND((ea.AllowanceAmount * (IF(p.`Fixed` = 1, 1, @perc0) * @counts0)), 2) ) `AllowanceAmountList`
-           ,GROUP_CONCAT(p.PartNo) `AllowanceNameList`
+           ,GROUP_CONCAT( CUSTOM_ABBREVIATE(p.PartNo) ) `AllowanceNameList`
            FROM employeeallowance ea
            INNER JOIN product p ON p.RowID=ea.ProductID
            LEFT JOIN v_employeetimeentry_numbers etn
@@ -259,7 +265,7 @@ LEFT JOIN (SELECT ea.*
 LEFT JOIN (SELECT ea.*
            ,(@perc1 := AVG(IFNULL(etn.`AttendancePercentage`, 0)))
            ,GROUP_CONCAT( ROUND((ea.AllowanceAmount * IF(p.`Fixed` = 1, 1, @perc1)), 2) ) `AllowanceAmountList`
-           ,GROUP_CONCAT(p.PartNo) `AllowanceNameList`
+           ,GROUP_CONCAT( CUSTOM_ABBREVIATE(p.PartNo) ) `AllowanceNameList`
            FROM employeeallowance ea
            INNER JOIN product p ON p.RowID=ea.ProductID
            LEFT JOIN v_employeetimeentry_numbers etn
@@ -272,7 +278,19 @@ LEFT JOIN (SELECT ea.*
 			  AND (ea.EffectiveStartDate >= date_from OR ea.EffectiveEndDate >= date_from)
 			  AND (ea.EffectiveStartDate <= date_to OR ea.EffectiveEndDate <= date_to)
 			  GROUP BY ea.EmployeeID) semimonth_allow
-       ON semimonth_allow.EmployeeID=ps.EmployeeID
+       ON semimonth_allow.EmployeeID=ps.EmployeeID*/
+LEFT JOIN (SELECT ai.*
+           , GROUP_CONCAT( ROUND(ai.Amount, 2) ) `AllowanceAmountList`
+           # , GROUP_CONCAT( CUSTOM_ABBREVIATE(p.PartNo) ) `AllowanceNameList`
+           , GROUP_CONCAT( p.PartNo ) `AllowanceNameList`
+           FROM allowanceitem ai
+           INNER JOIN employeeallowance ea ON ea.RowID=ai.AllowanceID
+           INNER JOIN product p ON p.RowID=ea.ProductID
+           WHERE ai.OrganizationID = og_rowid
+			  AND ai.PayPeriodID = pperiod_id
+			  GROUP BY ai.PaystubID
+			  ) ai
+       ON ai.PaystubID=ps.RowID
 
 INNER JOIN (SELECT ps.RowID
             ,ps.EmployeeID
