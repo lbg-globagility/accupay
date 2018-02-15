@@ -72,7 +72,7 @@ SELECT
     0 AS `COL10`,
     0 AS `COL11`,
     IFNULL(ete.OvertimeHoursWorked, 0) AS `COL12`,
-    IFNULL(ete.OvertimeHoursAmount, 0) + IFNULL(ete.NightDiffOTHoursAmount, 0) AS `COL13`,
+    IFNULL(ete.OvertimeHoursAmount, 0) + IFNULL(ete.NightDiffOTHoursAmount, 0) + IFNULL(ete.RestDayOTPay, 0) AS `COL13`,
     IFNULL(ete.NightDifferentialHours, 0) AS `COL14`,
     IFNULL(ete.NightDiffHoursAmount, 0) AS `COL15`,
     0 AS `COL16`,
@@ -205,6 +205,7 @@ LEFT JOIN (
         SUM(i.NonTaxableDailyBonus) AS NonTaxableDailyBonus,
         SUM(i.Leavepayment) AS Leavepayment,
         SUM(i.RestDayAmount) AS RestDayAmount,
+        SUM(i.RestDayOTPay) AS RestDayOTPay,
         SUM(
             IF(
                 (
@@ -254,7 +255,8 @@ LEFT JOIN (
                 TaxableDailyBonus,
                 NonTaxableDailyBonus,
                 Leavepayment,
-                RestDayAmount
+                RestDayAmount,
+                RestDayOTPay
             FROM employeetimeentry
             WHERE OrganizationID = OrganizID AND
                 IsActualFlag = 0 AND
@@ -295,7 +297,8 @@ LEFT JOIN (
                 TaxableDailyBonus,
                 NonTaxableDailyBonus,
                 Leavepayment,
-                RestDayAmount
+                RestDayAmount,
+                RestDayOTPay
             FROM employeetimeentryactual
             WHERE OrganizationID = OrganizID AND
                 IsActualFlag = 1 AND
