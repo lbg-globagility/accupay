@@ -872,7 +872,7 @@ SET ndiffotrate = ndiffotrate - otrate;
 
 SET dailyRate = GET_employeerateperday(ete_EmpRowID, ete_OrganizID, dateToday);
 SET hourlyRate = dailyRate / workingHours;
-SET basicDayPay = regularHours * hourlyRate;
+SET basicDayPay = (regularHours + restDayHours + specialHolidayHours + regularHolidayHours) * hourlyRate;
 
 SET absentAmount = absentHours * hourlyRate;
 
