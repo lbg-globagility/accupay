@@ -738,10 +738,10 @@ Public Class EmployeeForm
                 image_object = DBNull.Value
             End If
         End If
-
+        Static null_index() As Integer = {-1, 0}
         Dim new_eRowID = Nothing
         Try
-            Dim employee_restday = If(cboDayOfRest.SelectedIndex = 0, DBNull.Value, cboDayOfRest.SelectedIndex)
+            Dim employee_restday = If(null_index.Contains(cboDayOfRest.SelectedIndex), DBNull.Value, cboDayOfRest.SelectedIndex)
 
             Dim agensi_rowid = If(cboAgency.SelectedValue = Nothing, DBNull.Value, cboAgency.SelectedValue)
             positID = cboPosit.SelectedValue
