@@ -2612,7 +2612,8 @@ Friend Class PrintAllPaySlipOfficialFormat
 
             catchdt = _sql.GetFoundRows.Tables(0)
 
-            rptdoc = New HyundaiPayslip
+            'rptdoc = New HyundaiPayslip
+            rptdoc = New HyundaiPayslip1
 
             Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
 
