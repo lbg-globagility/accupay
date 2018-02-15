@@ -75,4 +75,6 @@ Public Class PayrollContext
 
     Public Overridable Property ActualAdjustments As DbSet(Of ActualAdjustment)
 
+    Public Overridable Property LeaveLedgers As DbSet(Of LeaveLedger)
+
 End Class
