@@ -341,6 +341,7 @@
     <Compile Include="Core Forms\PayStub\Entity\AllowancePerDay.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Division.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Leave.vb" />
     <Compile Include="Core Forms\PayStub\Entity\LeaveLedger.vb" />
     <Compile Include="Core Forms\PayStub\Entity\LeaveTransaction.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />

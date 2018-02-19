@@ -21,15 +21,11 @@ Namespace Global.AccuPay.Entity
 
         Public Property LastUpdBy As Integer?
 
-        Public Property LastTransactionID As Integer?
+        Public Property EmployeeID As Integer?
 
         Public Property ProductID As Integer?
 
-        Public Property CutoffBegin As Date
-
-        Public Property CutoffEnd As Date
-
-        Public Property Amount As Decimal
+        Public Property LastTransactionID As Integer?
 
         <ForeignKey("ProductID")>
         Public Overridable Property Product As Product

@@ -77,4 +77,8 @@ Public Class PayrollContext
 
     Public Overridable Property LeaveLedgers As DbSet(Of LeaveLedger)
 
+    Public Overridable Property LeaveTransactions As DbSet(Of LeaveTransaction)
+
+    Public Overridable Property Leaves As DbSet(Of Leave)
+
 End Class

@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.Data.Entity
 Imports AccuPay.Entity
 Imports log4net
 Imports MySql.Data.MySqlClient
@@ -434,6 +435,8 @@ Public Class PayrollGeneration
                 context.Set(Of AllowanceItem).RemoveRange(_paystub.AllowanceItems)
                 _paystub.AllowanceItems = _allowanceItems
 
+                UpdateLeaveLedger(context)
+
                 Dim vacationLeaveBalance =
                     (From p In context.PaystubItems
                      Where p.Product.PartNo = "Vacation leave" And
@@ -682,6 +685,54 @@ Public Class PayrollGeneration
         Next
 
         _paystub.TotalAllowance = _allowanceItems.Sum(Function(a) a.Amount)
+    End Sub
+
+    Private Sub UpdateLeaveLedger(db As PayrollContext)
+        Dim leaves = (From l In db.Leaves
+                      Where PayrollDateFrom <= l.StartDate And
+                            l.StartDate <= PayrollDateTo And
+                            l.EmployeeID = _employee2.RowID
+                      Select l).ToList()
+
+        Dim leaveIds = leaves.Select(Function(l) l.RowID)
+
+        Dim transactions = (From t In db.LeaveTransactions
+                            Where leaveIds.Contains(t.ReferenceID)).ToList()
+
+        Dim ledgers = (From l In db.LeaveLedgers.
+                           Include(Function(l) l.Product).
+                           Include(Function(l) l.LastTransaction)
+                       Where l.EmployeeID = _employee2.RowID).
+                       ToList()
+
+        Dim newLeaveTransactions = New List(Of LeaveTransaction)
+        For Each leave In leaves
+            ' If a transaction has already been made for the current leave, skip the current leave.
+            If transactions.Any(Function(t) t.ReferenceID = leave.RowID) Then
+                Continue For
+            Else
+                Dim ledger = ledgers.FirstOrDefault(
+                    Function(l) l.Product.PartNo = leave.LeaveType)
+
+                Dim timeEntry = _timeEntries2.FirstOrDefault(
+                    Function(t) t.EntryDate = leave.StartDate)
+
+                Dim newTransaction = New LeaveTransaction() With {
+                    .OrganizationID = z_OrganizationID,
+                    .Created = Date.Now,
+                    .EmployeeID = leave.EmployeeID,
+                    .PayPeriodID = PayPeriodID,
+                    .ReferenceID = leave.RowID,
+                    .TransactionDate = Date.Today,
+                    .Type = LeaveTransactionType.Debit,
+                    .Amount = timeEntry.TotalLeaveHours,
+                    .Balance = If(ledger?.LastTransaction?.Balance, 0) - timeEntry.TotalLeaveHours
+                }
+
+                ledger.LeaveTransactions.Add(newTransaction)
+                ledger.LastTransaction = newTransaction
+            End If
+        Next
     End Sub
 
     Private Sub CalculateBonuses()

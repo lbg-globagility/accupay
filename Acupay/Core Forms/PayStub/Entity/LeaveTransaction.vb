@@ -5,6 +5,14 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Namespace Global.AccuPay.Entity
 
+    Public Class LeaveTransactionType
+
+        Public Const Credit As String = "Credit"
+
+        Public Const Debit As String = "Debit"
+
+    End Class
+
     <Table("leavetransaction")>
     Public Class LeaveTransaction
 
@@ -17,7 +25,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property CreatedBy As Integer?
 
-        Public Property LastUpd As DateTime
+        Public Property LastUpd As DateTime?
 
         Public Property LastUpdBy As Integer?
 
@@ -26,6 +34,12 @@ Namespace Global.AccuPay.Entity
         Public Property LeaveLedgerID As Integer?
 
         Public Property PayPeriodID As Integer?
+
+        Public Property ReferenceID As Integer?
+
+        Public Property TransactionDate As Date
+
+        Public Property Type As String
 
         Public Property Balance As Decimal
 
