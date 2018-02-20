@@ -82,6 +82,8 @@ DECLARE ndiffotrate DECIMAL(11,6);
 DECLARE restday_rate DECIMAL(11,6);
 
 DECLARE restdayot_rate DECIMAL(11,6);
+DECLARE _restDayNDRate DECIMAL(10, 4) DEFAULT 0.0;
+DECLARE _restDayNDOTRate DECIMAL(10, 4) DEFAULT 0.0;
 
 
 DECLARE employeeShiftID INT(11);
@@ -309,6 +311,8 @@ SELECT
     IF(isEntitledToNightDiffOvertime, NightDifferentialOTRate, 1),
     IF(isEntitledToRestDay, RestDayRate, 1),
     IF(isEntitledToRestDayOvertime, RestDayOvertimeRate, OvertimeRate),
+    RestDayNDRate,
+    RestDayNDOTRate,
     (PayType = 'Regular Holiday'),
     (PayType = 'Special Non-Working Holiday')
 FROM payrate
@@ -322,6 +326,8 @@ INTO
     ndiffotrate,
     restday_rate,
     restdayot_rate,
+    _restDayNDRate,
+    _restDayNDOTRate,
     isRegularHoliday,
     isSpecialNonWorkingHoliday;
 
@@ -937,6 +943,9 @@ ELSEIF isRegularDay THEN
 
         SET lateAmount = lateHours * hourlyRate;
         SET undertimeAmount = undertimeHours * hourlyRate;
+
+        SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
+        SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
     ELSEIF isRestDay THEN
 
         IF isRestDayInclusive AND e_EmpType = 'Monthly' THEN
@@ -946,12 +955,14 @@ ELSEIF isRegularDay THEN
         END IF;
 
         SET overtimeAmount = (overtimeHours * hourlyRate) * restdayot_rate;
+
+        SET nightDiffAmount = (nightDiffHours * hourlyRate) * _restDayNDRate;
+        SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * _restDayNDOTRate;
     END IF;
 
     SET restDayOTPay = restDayOTHours * hourlyRate * restdayot_rate;
 
-    SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
-    SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
+
 
     SET totalHours = regularHours + overtimeHours +
                      restDayHours + restDayOTHours;
