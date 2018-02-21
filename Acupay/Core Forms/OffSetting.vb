@@ -43,7 +43,8 @@ Public Class OffSetting
 
             lnk.Name = "Nxt"
 
-            Pagination_Link(First, New LinkLabelLinkClickedEventArgs(lnk))
+            'Pagination_Link(First, New LinkLabelLinkClickedEventArgs(lnk))
+            lnkFirst_LinkClicked(lnkNxt, New LinkLabelLinkClickedEventArgs(lnk))
 
         End If
 
