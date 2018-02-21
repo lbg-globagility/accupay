@@ -50,16 +50,21 @@ Public Class OffSetting
 
         dgvempoffset.Focus()
 
-        For Each dgvrow As DataGridViewRow In dgvempoffset.Rows
-            If dgvrow.IsNewRow Then
+        dgvempoffset.CurrentCell =
+            dgvempoffset.Rows.OfType(Of DataGridViewRow).
+            Where(Function(dgr) dgr.IsNewRow).
+            LastOrDefault.Cells(eosStartTime.Name)
 
-                dgvrow.Cells("eosStartTime").Selected = True
+        'For Each dgvrow As DataGridViewRow In dgvempoffset.Rows
+        '    If dgvrow.IsNewRow Then
 
-                Exit For
+        '        dgvrow.Cells("eosStartTime").Selected = True
 
-            End If
+        '        Exit For
 
-        Next
+        '    End If
+
+        'Next
 
     End Sub
 
