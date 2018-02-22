@@ -32,10 +32,11 @@ DECLARE IsFirstHalfOfMonth CHAR(1);
 
 DECLARE payperiod_rowid INT(11);
 
-
-DECLARE isRollback BOOL DEFAULT 0;
-
-DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET isRollback = 1;
+DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
 
 START TRANSACTION;
 
@@ -50,11 +51,11 @@ FROM paystub ps
 INNER JOIN payperiod pp ON pp.RowID=ps.PayPeriodID
 WHERE ps.RowID=paystub_RowID
 INTO emp_RowID
-        ,og_RowID
-        ,paydate_from
-        ,paydate_to
-        ,IsFirstHalfOfMonth
-        ,payperiod_rowid;
+    ,og_RowID
+    ,paydate_from
+    ,paydate_to
+    ,IsFirstHalfOfMonth
+    ,payperiod_rowid;
 
 SELECT
 psi.PayAmount
@@ -123,8 +124,8 @@ IF IsFirstHalfOfMonth = '1' THEN
     AND els.EmployeeID IS NULL
 
     AND els.DeductionSchedule IN ('First half','Per pay period')
-    AND (els.DedEffectiveDateFrom >= pp.PayFromDate OR IFNULL(els.SubstituteEndDate,els.DedEffectiveDateTo) >= pp.PayFromDate)
-    AND (els.DedEffectiveDateFrom <= pp.PayToDate OR IFNULL(els.SubstituteEndDate,els.DedEffectiveDateTo) <= pp.PayToDate);
+    AND (els.DedEffectiveDateFrom >= pp.PayFromDate)
+    AND (els.DedEffectiveDateFrom <= pp.PayToDate);
 ELSE
 
     UPDATE employeeloanschedule els
@@ -138,8 +139,8 @@ ELSE
     AND els.EmployeeID IS NULL
 
     AND els.DeductionSchedule IN ('End of the month','Per pay period')
-    AND (els.DedEffectiveDateFrom >= pp.PayFromDate OR IFNULL(els.SubstituteEndDate,els.DedEffectiveDateTo) >= pp.PayFromDate)
-    AND (els.DedEffectiveDateFrom <= pp.PayToDate OR IFNULL(els.SubstituteEndDate,els.DedEffectiveDateTo) <= pp.PayToDate);
+    AND (els.DedEffectiveDateFrom >= pp.PayFromDate)
+    AND (els.DedEffectiveDateFrom <= pp.PayToDate);
 END IF;
 
     UPDATE employeeloanschedule els
@@ -173,13 +174,7 @@ DELETE FROM paystubactual WHERE EmployeeID=emp_RowID AND OrganizationID=og_RowID
 
 DELETE FROM scheduledloansperpayperiod WHERE OrganizationID=og_RowID AND EmployeeID=emp_RowID AND PayPeriodID=payperiod_rowid;
 
-IF isRollback THEN
-    ROLLBACK;
-
-ELSE
-    COMMIT;
-
-END IF;
+COMMIT;
 
 END//
 DELIMITER ;
