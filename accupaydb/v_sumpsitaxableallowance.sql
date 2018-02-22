@@ -6,7 +6,7 @@
 
 DROP VIEW IF EXISTS `v_sumpsitaxableallowance`;
 DROP TABLE IF EXISTS `v_sumpsitaxableallowance`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_sumpsitaxableallowance` AS SELECT
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_sumpsitaxableallowance` AS SELECT
 psi.RowID AS psiRowID
 ,psi.PayAmount
 ,psi.OrganizationID

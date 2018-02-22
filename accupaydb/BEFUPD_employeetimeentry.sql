@@ -51,82 +51,6 @@ SET NEW.NightDiffOTHoursAmount = IFNULL(NEW.NightDiffOTHoursAmount, 0);
 SET NEW.HoursLate = IFNULL(NEW.HoursLate, 0);
 SET NEW.HoursLateAmount = IFNULL(NEW.HoursLateAmount, 0);
 
--- SET hasWorked = NEW.RegularHoursWorked > 0;
-
--- SELECT GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, NEW.`Date`)
--- INTO dailyRate;
-
--- SELECT
---     (pr.PayType = 'Regular Holiday' AND e.CalcHoliday = '1' AND e.StartDate <= NEW.`Date`),
---     (pr.PayType = 'Special Non-Working Holiday' AND e.CalcSpecialHoliday = '1' AND e.StartDate <= NEW.`Date`)
--- FROM payrate pr
--- INNER JOIN employee e
--- ON e.RowID = NEW.EmployeeID
--- INNER JOIN (
---     SELECT RowID
---     FROM employeesalary
---     WHERE EmployeeID = NEW.EmployeeID AND
---         OrganizationID = NEW.OrganizationID AND
---         NEW.`Date` BETWEEN EffectiveDateFrom AND IFNULL(EffectiveDateTo, NEW.`Date`)
---     LIMIT 1
--- ) es
--- ON es.RowID > 0
--- WHERE pr.RowID=NEW.PayRateID
--- INTO
---     isRegularHoliday,
---     isSpecialNonWorkingHoliday;
-
--- SET isHoliday = isRegularHoliday OR isSpecialNonWorkingHoliday;
-
--- SET leaveHours = NEW.VacationLeaveHours + NEW.SickLeaveHours + NEW.MaternityLeaveHours + NEW.OtherLeaveHours;
--- SET hasLeave = leaveHours > 0;
-
--- SELECT (e.DayOfRest = DAYOFWEEK(NEW.`Date`))
--- FROM employee e
--- WHERE e.RowID = NEW.EmployeeID
--- INTO isDefaultRestDay;
-
--- SELECT
---     esh.RowID IS NOT NULL,
---     COALESCE(esh.RestDay, FALSE)
--- FROM employeeshift esh
--- WHERE esh.EmployeeID = NEW.EmployeeID AND
---     esh.OrganizationID = NEW.OrganizationID AND
---     NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
--- LIMIT 1
--- INTO
---     hasShift,
---     isShiftRestDay;
-
--- -- If there is no shift set for the day, assume that it's a rest day.
--- SET isShiftRestDay = IF(hasShift, isShiftRestDay, TRUE);
--- SET isRestDay = isShiftRestDay OR isDefaultRestDay;
-
--- SET requiredToWorkLastWorkingDay = GetListOfValueOrDefault(
---     'Payroll Policy', 'HolidayLastWorkingDayOrAbsent', FALSE
--- );
-
--- SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(NEW.EmployeeID, NEW.Date);
-
--- SET isExemptForHoliday = (
---     (isHoliday AND (NOT requiredToWorkLastWorkingDay)) OR
---     (isHoliday AND hasWorkedLastWorkingDay)
--- );
-
--- IF hasWorked OR isRestDay OR isExemptForHoliday OR hasLeave THEN
---     SET NEW.AbsentHours = 0;
---     SET NEW.Absent = 0;
--- ELSE
---     SET NEW.AbsentHours = STANDARD_WORKING_HOURS;
---     SET NEW.Absent = dailyRate;
--- END IF;
-
--- SET NEW.Absent = IFNULL(NEW.Absent, 0);
-
--- IF isDefaultRestDay = '1' AND COALESCE(NEW.RegularHoursWorked, 0) = 0 THEN
---     SET NEW.EmployeeShiftID = NULL;
--- END IF;
-
 IF NEW.TaxableDailyAllowance IS NULL THEN
     SET NEW.TaxableDailyAllowance = 0;
 END IF;
@@ -155,9 +79,6 @@ END IF;
 IF NEW.Leavepayment < 0 THEN
     SET NEW.Leavepayment = 0;
     SET NEW.TotalDayPay = 0;
-    -- SET NEW.Absent = NEW.Leavepayment * -1;
--- ELSEIF NEW.Leavepayment > 0 THEN
-    -- SET NEW.Absent = 0;
 END IF;
 
 END//

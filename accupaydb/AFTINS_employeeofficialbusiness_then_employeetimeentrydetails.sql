@@ -24,48 +24,6 @@ SET one_datetimestamp = (SELECT etd.Created FROM employeetimeentrydetails etd IN
 SET one_datetimestamp = IFNULL(one_datetimestamp,CURRENT_TIMESTAMP());
 SET i=0;
 
-    /*IF NEW.OffBusStatus = 'Approved' THEN
-
-        SELECT CURRENT_TIMESTAMP() INTO one_datetimestamp;
-
-        INSERT INTO employeetimeentrydetails
-        (
-            RowID
-            ,OrganizationID
-            ,Created
-            ,CreatedBy
-            ,EmployeeID
-            ,TimeIn
-            ,TimeOut
-            ,`Date`
-            ,TimeScheduleType
-            ,TimeEntryStatus
-        ) SELECT etd.RowID
-            ,NEW.OrganizationID
-            ,one_datetimestamp
-            ,NEW.CreatedBy
-            ,NEW.EmployeeID
-            ,NEW.OffBusStartTime
-            ,NEW.OffBusEndTime
-            ,d.DateValue
-            ,''
-            ,''
-            FROM dates d
-            LEFT JOIN employeetimeentrydetails etd ON etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date`=d.DateValue
-            WHERE d.DateValue BETWEEN NEW.OffBusStartDate AND NEW.OffBusEndDate
-        ON
-        DUPLICATE
-        KEY
-        UPDATE
-            LastUpd = CURRENT_TIMESTAMP()
-            ,LastUpdBy = NEW.CreatedBy
-            ,TimeIn = IFNULL(NEW.OffBusStartTime,etd.TimeIn)
-            ,TimeOut = IFNULL(NEW.OffBusEndTime,etd.TimeOut);
-
-
-
-    END IF;*/
-
 SELECT RowID FROM `view` WHERE ViewName='Official Business filing' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 
 INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed

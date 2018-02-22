@@ -5,16 +5,8 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 DROP VIEW IF EXISTS `expectedhours`;
-CREATE TABLE `expectedhours` (
-	`EmployeeID` INT(10) NULL,
-	`OrganizationID` INT(10) NOT NULL,
-	`Date` DATE NOT NULL COMMENT 'time entry date',
-	`TotalExpectedHours` DECIMAL(12,2) NULL
-) ENGINE=MyISAM;
-
-DROP VIEW IF EXISTS `expectedhours`;
 DROP TABLE IF EXISTS `expectedhours`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `expectedhours` AS SELECT et.EmployeeID
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `expectedhours` AS SELECT et.EmployeeID
 , et.OrganizationID
 , et.`Date`
 ,	 IF((TIMESTAMPDIFF(SECOND

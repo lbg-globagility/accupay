@@ -6,7 +6,7 @@
 
 DROP VIEW IF EXISTS `vw_disciplinarymemouserdetails`;
 DROP TABLE IF EXISTS `vw_disciplinarymemouserdetails`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `vw_disciplinarymemouserdetails` AS SELECT
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_disciplinarymemouserdetails` AS SELECT
     U.RowID AS 'UserID',
     U.FirstName,
     U.MiddleName,
