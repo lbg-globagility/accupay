@@ -9,15 +9,18 @@ Namespace Global.AccuPay.Entity
     Public Class ActualAdjustment
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property Created As Date
 
         Public Property CreatedBy As Integer?
 
-        Public Property LastUpd As Date
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
+        Public Property LastUpd As Date?
 
         Public Property LastUpdBy As Integer?
 

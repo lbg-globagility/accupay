@@ -10,6 +10,7 @@ Namespace Global.AccuPay.Entity
     Public Class PaystubActual
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?

@@ -9,12 +9,15 @@ Namespace Global.AccuPay.Entity
     Public Class ShiftSchedule
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property Created As Date
 
         Public Property CreatedBy As Integer?
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
         Public Property LastUpd As Date?
 
         Public Property LastUpdBy As Integer?

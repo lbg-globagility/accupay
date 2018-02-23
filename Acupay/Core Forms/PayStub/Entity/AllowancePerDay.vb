@@ -9,6 +9,7 @@ Namespace Global.AccuPay.Entity
     Public Class AllowancePerDay
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property AllowanceID As Integer?
