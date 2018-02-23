@@ -24,7 +24,7 @@ Namespace Global.AccuPay.Entity
         Public Property PayRateID As Integer?
 
         <Column("Date")>
-        Public Property EntryDate As Date
+        Public Property [Date] As Date
 
         <Column("RegularHoursWorked")>
         Public Property RegularHours As Decimal

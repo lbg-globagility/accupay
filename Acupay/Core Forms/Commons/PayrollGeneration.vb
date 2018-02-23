@@ -223,7 +223,7 @@ Public Class PayrollGeneration
 
         _timeEntries2 = resources.TimeEntries2.
             Where(Function(t) t.EmployeeID = _employee2.RowID).
-            Where(Function(t) _payPeriod.PayFromDate <= t.EntryDate And t.EntryDate <= _payPeriod.PayToDate).
+            Where(Function(t) _payPeriod.PayFromDate <= t.Date And t.Date <= _payPeriod.PayToDate).
             ToList()
 
         _payRates = resources.PayRates.ToDictionary(Function(p) p.RateDate)
@@ -560,7 +560,7 @@ Public Class PayrollGeneration
             Dim additionalAmount = 0D
             Dim giveAllowanceDuringHolidays = _settings.GetBoolean("Payroll Policy", "allowances.holiday")
             If giveAllowanceDuringHolidays Then
-                Dim payRate = _payRates(timeEntry.EntryDate)
+                Dim payRate = _payRates(timeEntry.Date)
 
                 If (payRate.IsSpecialNonWorkingHoliday And _employee2.CalcSpecialHoliday) Or
                    (payRate.IsRegularHoliday And _employee2.CalcHoliday) Then
@@ -587,7 +587,7 @@ Public Class PayrollGeneration
             Dim hourlyRate = dailyRate / divisor
 
             Dim amount = 0D
-            Dim payRate = _payRates(timeEntry.EntryDate)
+            Dim payRate = _payRates(timeEntry.Date)
             If payRate.IsRegularDay Then
                 Dim isRestDay = If(timeEntry.ShiftSchedule?.IsRestDay, False)
 
@@ -609,7 +609,7 @@ Public Class PayrollGeneration
             End If
 
             Dim perDay = New AllowancePerDay()
-            perDay.EntryDate = timeEntry.EntryDate
+            perDay.EntryDate = timeEntry.Date
             perDay.Amount = amount
             allowancesPerDay.Add(perDay)
         Next
@@ -623,10 +623,10 @@ Public Class PayrollGeneration
     End Function
 
     Private Function HasWorkedLastWorkingDay(current As TimeEntry) As Boolean
-        Dim lastPotentialEntry = current.EntryDate.AddDays(-3)
+        Dim lastPotentialEntry = current.Date.AddDays(-3)
 
         Dim lastTimeEntries = _previousTimeEntries2.
-            Where(Function(t) lastPotentialEntry <= t.EntryDate And t.EntryDate <= current.EntryDate).
+            Where(Function(t) lastPotentialEntry <= t.Date And t.Date <= current.Date).
             Reverse().
             ToList()
 
@@ -640,7 +640,7 @@ Public Class PayrollGeneration
                 Return True
             End If
 
-            Dim payRate = _payRates(lastTimeEntry.EntryDate)
+            Dim payRate = _payRates(lastTimeEntry.Date)
             If payRate.IsHoliday And (lastTimeEntry.TotalDayPay > 0D) Then
                 Return True
             End If
@@ -715,7 +715,7 @@ Public Class PayrollGeneration
                     FirstOrDefault(Function(l) l.Product.PartNo = leave.LeaveType)
 
                 Dim timeEntry = _timeEntries2.
-                    FirstOrDefault(Function(t) t.EntryDate = leave.StartDate)
+                    FirstOrDefault(Function(t) t.Date = leave.StartDate)
 
                 If timeEntry Is Nothing Then
                     Continue For

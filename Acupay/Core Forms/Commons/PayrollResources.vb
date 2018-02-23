@@ -247,8 +247,8 @@ Public Class PayrollResources
             Using context = New PayrollContext()
                 Dim query = From t In context.TimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
                             Where t.OrganizationID = z_OrganizationID And
-                                backDate <= t.EntryDate And
-                                t.EntryDate <= _payDateTo
+                                backDate <= t.Date And
+                                t.Date <= _payDateTo
                             Select t
 
                 _timeEntries2 = Await query.ToListAsync()
