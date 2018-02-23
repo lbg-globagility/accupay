@@ -876,6 +876,9 @@ INTO esalRowID;
 SET ndiffrate = ndiffrate - commonrate;
 SET ndiffotrate = ndiffotrate - otrate;
 
+SET _restDayNDRate = _restDayNDRate - restday_rate;
+SET _restDayNDOTRate = _restDayNDOTRate - restdayot_rate;
+
 SET dailyRate = GET_employeerateperday(ete_EmpRowID, ete_OrganizID, dateToday);
 SET hourlyRate = dailyRate / workingHours;
 SET basicDayPay = (regularHours + restDayHours + specialHolidayHours + regularHolidayHours) * hourlyRate;
@@ -1020,8 +1023,14 @@ ELSEIF isHoliday THEN
 
     IF isWorkingDay THEN
         SET applicableHolidayRate = commonrate;
+
+        SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
+        SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
     ELSEIF isRestDay THEN
         SET applicableHolidayRate = restday_rate;
+
+        SET nightDiffAmount = (nightDiffHours * hourlyRate) * _restDayNDRate;
+        SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * _restDayNDOTRate;
     END IF;
 
     SET regularAmount = regularHours * hourlyRate;
@@ -1044,8 +1053,6 @@ ELSEIF isHoliday THEN
 
     SET overtimeAmount = (overtimeHours * hourlyRate) * otrate;
     SET restDayOTPay = (restDayOTHours * hourlyRate) * restdayot_rate;
-    SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
-    SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
 
     SET totalDayPay = COALESCE(regularAmount, 0) +
                       COALESCE(overtimeAmount, 0) +
