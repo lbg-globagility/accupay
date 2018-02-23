@@ -711,11 +711,15 @@ Public Class PayrollGeneration
             If transactions.Any(Function(t) t.ReferenceID = leave.RowID) Then
                 Continue For
             Else
-                Dim ledger = ledgers.FirstOrDefault(
-                    Function(l) l.Product.PartNo = leave.LeaveType)
+                Dim ledger = ledgers.
+                    FirstOrDefault(Function(l) l.Product.PartNo = leave.LeaveType)
 
-                Dim timeEntry = _timeEntries2.FirstOrDefault(
-                    Function(t) t.EntryDate = leave.StartDate)
+                Dim timeEntry = _timeEntries2.
+                    FirstOrDefault(Function(t) t.EntryDate = leave.StartDate)
+
+                If timeEntry Is Nothing Then
+                    Continue For
+                End If
 
                 Dim newTransaction = New LeaveTransaction() With {
                     .OrganizationID = z_OrganizationID,
