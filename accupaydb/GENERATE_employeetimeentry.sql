@@ -191,8 +191,12 @@ DECLARE restDayOTPay DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE regularHolidayHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE regularHolidayPay DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE _regularHolidayOTHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE _regularHolidayOTPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE specialHolidayHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE specialHolidayPay DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE _specialHolidayOTHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE _specialHolidayOTPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE holidayPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE isExemptForHoliday BOOLEAN DEFAULT FALSE;
 DECLARE isHolidayPayInclusive BOOLEAN DEFAULT FALSE;
@@ -735,11 +739,14 @@ IF isCalculatingRegularHoliday OR isCalculatingSpecialNonWorkingHoliday THEN
 
     IF isRegularHoliday THEN
         SET regularHolidayHours = regularHours;
+        SET _regularHolidayOTHours = overtimeHours;
     ELSEIF isSpecialNonWorkingHoliday THEN
         SET specialHolidayHours = regularHours;
+        SET _specialHolidayOTHours = overtimeHours;
     END IF;
 
     SET regularHours = 0.0;
+    SET overtimeHours = 0.0;
 END IF;
 
 /******************************************************************************
@@ -929,6 +936,10 @@ IF ete_Date < e_StartDate THEN
         0,
         0,
         0,
+        0,
+        0,
+        0,
+        0,
         1,
         NULL,
         0,
@@ -964,8 +975,6 @@ ELSEIF isRegularDay THEN
     END IF;
 
     SET restDayOTPay = restDayOTHours * hourlyRate * restdayot_rate;
-
-
 
     SET totalHours = regularHours + overtimeHours +
                      restDayHours + restDayOTHours;
@@ -1006,8 +1015,12 @@ ELSEIF isRegularDay THEN
         restDayOTPay,
         specialHolidayHours,
         specialHolidayPay,
+        _specialHolidayOTHours,
+        _specialHolidayOTPay,
         regularHolidayHours,
         regularHolidayPay,
+        _regularHolidayOTHours,
+        _regularHolidayOTPay,
         0,
         basicDayPay,
         5,
@@ -1051,7 +1064,12 @@ ELSEIF isHoliday THEN
 
     SET holidayPay = specialHolidayPay + regularHolidayPay;
 
+    SET _specialHolidayOTPay = (_specialHolidayOTHours * hourlyRate) * otrate;
+    SET _regularHolidayOTPay = (_regularHolidayOTHours * hourlyRate) * otrate;
+
+    /** DEPRECATE: to be replaced with _special and _regular holiday ot pay */
     SET overtimeAmount = (overtimeHours * hourlyRate) * otrate;
+
     SET restDayOTPay = (restDayOTHours * hourlyRate) * restdayot_rate;
 
     SET totalDayPay = COALESCE(regularAmount, 0) +
@@ -1093,8 +1111,12 @@ ELSEIF isHoliday THEN
         restDayOTPay,
         specialHolidayHours,
         specialHolidayPay,
+        _specialHolidayOTHours,
+        _specialHolidayOTPay,
         regularHolidayHours,
         regularHolidayPay,
+        _regularHolidayOTHours,
+        _regularHolidayOTPay,
         holidayPay,
         basicDayPay,
         7,
