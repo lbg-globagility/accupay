@@ -45,10 +45,10 @@ Namespace Global.AccuPay.Entity
         Public Property NightDiffPay As Decimal
 
         <Column("NightDifferentialOTHours")>
-        Public Property NightDiffOvertimeHours As Decimal
+        Public Property NightDiffOTHours As Decimal
 
         <Column("NightDiffOTHoursAmount")>
-        Public Property NightDiffOvertimePay As Decimal
+        Public Property NightDiffOTPay As Decimal
 
         Public Property RestDayHours As Decimal
 
@@ -74,9 +74,17 @@ Namespace Global.AccuPay.Entity
 
         Public Property SpecialHolidayPay As Decimal
 
+        Public Property SpecialHolidayOTHours As Decimal
+
+        Public Property SpecialHolidayOTPay As Decimal
+
         Public Property RegularHolidayHours As Decimal
 
         Public Property RegularHolidayPay As Decimal
+
+        Public Property RegularHolidayOTHours As Decimal
+
+        Public Property RegularHolidayOTPay As Decimal
 
         <Column("HolidayPayAmount")>
         Public Property HolidayPay As Decimal

@@ -67,9 +67,17 @@ Namespace Global.AccuPay.Entity
 
         Public Property SpecialHolidayPay As Decimal
 
+        Public Property SpecialHolidayOTHours As Decimal
+
+        Public Property SpecialHolidayOTPay As Decimal
+
         Public Property RegularHolidayHours As Decimal
 
         Public Property RegularHolidayPay As Decimal
+
+        Public Property RegularHolidayOTHours As Decimal
+
+        Public Property RegularHolidayOTPay As Decimal
 
         Public Property HolidayPay As Decimal
 

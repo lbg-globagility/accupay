@@ -36,7 +36,9 @@ DECLARE _restDayPay DECIMAL(15, 4);
 DECLARE _restDayOTPay DECIMAL(15, 4);
 DECLARE leavePay DECIMAL(15, 4);
 DECLARE _specialHolidayPay DECIMAL(15, 4);
+DECLARE _specialHolidayOTPay DECIMAL(15, 4);
 DECLARE _regularHolidayPay DECIMAL(15, 4);
+DECLARE _regularHolidayOTPay DECIMAL(15, 4);
 DECLARE holidayPay DECIMAL(15, 4);
 DECLARE lateDeduction DECIMAL(15, 4);
 DECLARE undertimeDeduction DECIMAL(15, 4);
@@ -75,7 +77,9 @@ SELECT
     SUM(RestDayAmount),
     SUM(RestDayOTPay),
     SUM(SpecialHolidayPay),
+    SUM(SpecialHolidayOTPay),
     SUM(RegularHolidayPay),
+    SUM(RegularHolidayOTPay),
     SUM(HolidayPayAmount),
     SUM(Leavepayment),
     SUM(HoursLateAmount),
@@ -95,7 +99,9 @@ INTO
     _restDayPay,
     _restDayOTPay,
     _specialHolidayPay,
+    _specialHolidayOTPay,
     _regularHolidayPay,
+    _regularHolidayOTPay,
     holidayPay,
     leavePay,
     lateDeduction,
@@ -173,7 +179,9 @@ ELSEIF e_type = 'Monthly' AND NOT IsFirstTimeSalary THEN
         _restDayPay +
         _restDayOTPay +
         _specialHolidayPay +
-        _regularHolidayPay;
+        _specialHolidayOTPay +
+        _regularHolidayPay +
+        _regularHolidayOTPay;
 
     SET totalDeductions = lateDeduction + undertimeDeduction + absenceDeduction;
 
@@ -233,7 +241,9 @@ INSERT INTO paystubactual
     RestDayPay,
     RestDayOTPay,
     SpecialHolidayPay,
+    SpecialHolidayOTPay,
     RegularHolidayPay,
+    RegularHolidayOTPay,
     HolidayPay,
     LeavePay,
     LateDeduction,
@@ -272,7 +282,9 @@ VALUES (
     _restDayPay,
     restDayOTPay,
     _specialHolidayPay,
+    _specialHolidayOTPay,
     _regularHolidayPay,
+    _regularHolidayOTPay,
     holidayPay,
     leavePay,
     lateDeduction,
@@ -311,7 +323,9 @@ UPDATE
     RestDayPay = _restDayPay,
     RestDayOTPay = _restDayOTPay,
     SpecialHolidayPay = _specialHolidayPay,
+    SpecialHolidayOTPay = _specialHolidayOTPay,
     RegularHolidayPay = _regularHolidayPay,
+    RegularHolidayOTPay = _regularHolidayOTPay,
     HolidayPay = holidayPay,
     LeavePay = leavePay,
     LateDeduction = lateDeduction,

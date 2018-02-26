@@ -60,7 +60,9 @@ DECLARE nightDiffOvertimeAmount DECIMAL(12, 6);
 DECLARE restDayAmount DECIMAL(12, 6);
 DECLARE hoursWorked DECIMAL(12, 6) DEFAULT 0.0;
 DECLARE _specialHolidayPay DECIMAL(15, 4);
+DECLARE _specialHolidayOTPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE _regularHolidayPay DECIMAL(15, 4);
+DECLARE _regularHolidayOTPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE _holidayPay DECIMAL(12, 6);
 
 SELECT
@@ -184,7 +186,6 @@ SELECT `GET_employeeundeclaredsalarypercent`(
 )
 INTO actualratepercent;
 
-
 IF isRestDay THEN
     SET actualRegularHoursAmount = NEW.RegularHoursAmount + (undeclaredSalary / divisorToHourlyRate * NEW.RegularHoursWorked);
 ELSE
@@ -249,7 +250,9 @@ SET shouldPaySalaryAllowanceForHolidayPay = GetListOfValueOrDefault(
 );
 
 SET _specialHolidayPay = NEW.SpecialHolidayPay;
+SET _specialHolidayOTPay = NEW.SpecialHolidayOTPay;
 SET _regularHolidayPay = NEW.RegularHolidayPay;
+SET _regularHolidayOTPay = NEW.RegularHolidayOTPay;
 SET _holidayPay = NEW.HolidayPayAmount;
 
 IF shouldPaySalaryAllowanceForHolidayPay THEN
@@ -257,6 +260,9 @@ IF shouldPaySalaryAllowanceForHolidayPay THEN
 
     SET _specialHolidayPay = _specialHolidayPay + (_specialHolidayPay * actualrate);
     SET _regularHolidayPay = _regularHolidayPay + (_regularHolidayPay * actualrate);
+
+    SET _specialHolidayOTPay = _specialHolidayOTPay + (_specialHolidayOTPay * actualrate);
+    SET _regularHolidayOTPay = _regularHolidayOTPay + (_regularHolidayOTPay * actualrate);
 END IF;
 
 INSERT INTO employeetimeentryactual (
@@ -291,7 +297,9 @@ INSERT INTO employeetimeentryactual (
     ChargeToDivisionID,
     Leavepayment,
     SpecialHolidayPay,
+    SpecialHolidayOTPay,
     RegularHolidayPay,
+    RegularHolidayOTPay,
     HolidayPayAmount,
     BasicDayPay,
     RestDayHours,
@@ -331,7 +339,9 @@ VALUES (
     NEW.ChargeToDivisionID,
     NEW.Leavepayment + (NEW.Leavepayment * actualrate),
     _specialHolidayPay,
+    _specialHolidayOTPay,
     _regularHolidayPay,
+    _regularHolidayOTPay,
     _holidayPay,
     NEW.BasicDayPay + (NEW.BasicDayPay * actualrate),
     NEW.RestDayHours,
@@ -371,7 +381,9 @@ UPDATE
     ChargeToDivisionID = NEW.ChargeToDivisionID,
     Leavepayment = NEW.Leavepayment + (NEW.Leavepayment * actualrate),
     SpecialHolidayPay = _specialHolidayPay,
+    SpecialHolidayOTPay = _specialHolidayOTPay,
     RegularHolidayPay = _regularHolidayPay,
+    RegularHolidayOTPay = _regularHolidayOTPay,
     HolidayPayAmount = _holidayPay,
     BasicDayPay = NEW.BasicDayPay + (NEW.BasicDayPay * actualrate),
     RestDayHours = NEW.RestDayHours,

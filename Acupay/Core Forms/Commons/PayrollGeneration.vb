@@ -510,8 +510,8 @@ Public Class PayrollGeneration
             .NightDiffHours = _timeEntries2.Sum(Function(t) t.NightDiffHours)
             .NightDiffPay = _timeEntries2.Sum(Function(t) t.NightDiffPay)
 
-            .NightDiffOvertimeHours = _timeEntries2.Sum(Function(t) t.NightDiffOvertimeHours)
-            .NightDiffOvertimePay = _timeEntries2.Sum(Function(t) t.NightDiffOvertimePay)
+            .NightDiffOvertimeHours = _timeEntries2.Sum(Function(t) t.NightDiffOTHours)
+            .NightDiffOvertimePay = _timeEntries2.Sum(Function(t) t.NightDiffOTPay)
 
             .RestDayHours = _timeEntries2.Sum(Function(t) t.RestDayHours)
             .RestDayPay = _timeEntries2.Sum(Function(t) t.RestDayPay)
@@ -522,8 +522,14 @@ Public Class PayrollGeneration
             .SpecialHolidayHours = _timeEntries2.Sum(Function(t) t.SpecialHolidayHours)
             .SpecialHolidayPay = _timeEntries2.Sum(Function(t) t.SpecialHolidayPay)
 
+            .SpecialHolidayOTHours = _timeEntries2.Sum(Function(t) t.SpecialHolidayOTHours)
+            .SpecialHolidayOTPay = _timeEntries2.Sum(Function(t) t.SpecialHolidayOTPay)
+
             .RegularHolidayHours = _timeEntries2.Sum(Function(t) t.RegularHolidayHours)
             .RegularHolidayPay = _timeEntries2.Sum(Function(t) t.RegularHolidayPay)
+
+            .RegularHolidayOTHours = _timeEntries2.Sum(Function(t) t.RegularHolidayOTHours)
+            .RegularHolidayOTPay = _timeEntries2.Sum(Function(t) t.RegularHolidayOTPay)
 
             .HolidayPay = _timeEntries2.Sum(Function(t) t.HolidayPay)
 
