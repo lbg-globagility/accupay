@@ -19,7 +19,7 @@ Public Class ReportsList
             New ThirteenthMonthPayReportProvider(),
             New ThirteenthMonthSummaryReportProvider(),
             New FiledLeaveReportProvider(),
-            New LoanSummaryReportProvider(),
+            New LoanSummaryByEmployeeReportProvider(),
             New LoanSummaryByTypeReportProvider(),
             New EmployeeProfilesReportProvider(),
             New PhilHealthReportProvider(),
