@@ -30,9 +30,9 @@ Public Class NewPayStubForm
 
             Dim paystubs = query.ToList()
 
-            Dim paystubModels = paystubs.Select(
-                Function(p) New PayStubModel(p.Employee, p.Paystub, p.PaystubActual)
-            ).ToList()
+            Dim paystubModels = paystubs.
+                Select(Function(p) New PayStubModel(p.Employee, p.Paystub, p.PaystubActual)).
+                ToList()
 
             dgvPaystubs.DataSource = paystubModels
         End Using
@@ -69,7 +69,7 @@ Public Class NewPayStubForm
         Dim timeEntries As IList(Of TimeEntry) = Nothing
         Using context = New PayrollContext()
             Dim query = context.TimeEntries.
-                Where(Function(t) _dateFrom <= t.EntryDate And t.EntryDate <= _dateTo).
+                Where(Function(t) _dateFrom <= t.Date And t.Date <= _dateTo).
                 Where(Function(t) Nullable.Equals(t.EmployeeID, paystub.EmployeeID))
 
             timeEntries = query.ToList()
