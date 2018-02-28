@@ -252,8 +252,12 @@ Public Class TimeEntrySummaryForm
                 employeetimeentry.Leavepayment,
                 employeetimeentry.SpecialHolidayHours,
                 employeetimeentry.SpecialHolidayPay,
+                employeetimeentry.SpecialHolidayOTHours,
+                employeetimeentry.SpecialHolidayOTPay,
                 employeetimeentry.RegularHolidayHours,
                 employeetimeentry.RegularHolidayPay,
+                employeetimeentry.RegularHolidayOTHours,
+                employeetimeentry.RegularHolidayOTPay,
                 employeetimeentry.HolidayPayAmount,
                 employeetimeentry.AbsentHours,
                 employeetimeentry.Absent,
@@ -349,8 +353,12 @@ Public Class TimeEntrySummaryForm
                     .LeavePay = reader.GetValue(Of Decimal)("Leavepayment"),
                     .SpecialHolidayHours = reader.GetValue(Of Decimal)("SpecialHolidayHours"),
                     .SpecialHolidayPay = reader.GetValue(Of Decimal)("SpecialHolidayPay"),
+                    .SpecialHolidayOTHours = reader.GetValue(Of Decimal)("SpecialHolidayOTHours"),
+                    .SpecialHolidayOTPay = reader.GetValue(Of Decimal)("SpecialHolidayOTPay"),
                     .RegularHolidayPay = reader.GetValue(Of Decimal)("RegularHolidayPay"),
                     .RegularHolidayHours = reader.GetValue(Of Decimal)("RegularHolidayHours"),
+                    .RegularHolidayOTHours = reader.GetValue(Of Decimal)("RegularHolidayOTHours"),
+                    .RegularHolidayOTPay = reader.GetValue(Of Decimal)("RegularHolidayOTPay"),
                     .HolidayPay = reader.GetValue(Of Decimal)("HolidayPayAmount"),
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
@@ -371,8 +379,12 @@ Public Class TimeEntrySummaryForm
                     .RestDayOTPay += timeEntry.RestDayOTPay
                     .SpecialHolidayHours += timeEntry.SpecialHolidayHours
                     .SpecialHolidayPay += timeEntry.SpecialHolidayPay
+                    .SpecialHolidayOTHours += timeEntry.SpecialHolidayOTHours
+                    .SpecialHolidayOTPay += timeEntry.SpecialHolidayOTPay
                     .RegularHolidayHours += timeEntry.RegularHolidayHours
                     .RegularHolidayPay += timeEntry.RegularHolidayPay
+                    .RegularHolidayOTHours += timeEntry.RegularHolidayOTHours
+                    .RegularHolidayOTPay += timeEntry.RegularHolidayOTPay
                     .HolidayPay += timeEntry.HolidayPay
                     .VacationLeaveHours += timeEntry.VacationLeaveHours
                     .SickLeaveHours += timeEntry.SickLeaveHours
@@ -691,8 +703,12 @@ Public Class TimeEntrySummaryForm
         Public Property RestDayOTPay As Decimal
         Public Property SpecialHolidayHours As Decimal
         Public Property SpecialHolidayPay As Decimal
+        Public Property SpecialHolidayOTHours As Decimal
+        Public Property SpecialHolidayOTPay As Decimal
         Public Property RegularHolidayHours As Decimal
         Public Property RegularHolidayPay As Decimal
+        Public Property RegularHolidayOTHours As Decimal
+        Public Property RegularHolidayOTPay As Decimal
         Public Property HolidayPay As Decimal
         Public Property VacationLeaveHours As Decimal
         Public Property SickLeaveHours As Decimal
