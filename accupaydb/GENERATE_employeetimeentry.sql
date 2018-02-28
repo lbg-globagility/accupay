@@ -1077,6 +1077,8 @@ ELSEIF isHoliday THEN
                       COALESCE(nightDiffAmount, 0) +
                       COALESCE(nightDiffOTAmount, 0) +
                       COALESCE(restDayOTPay, 0) +
+                      COALESCE(_specialHolidayOTPay, 0) +
+                      COALESCE(_regularHolidayOTPay, 0) +
                       COALESCE(holidayPay, 0) +
                       COALESCE(leavePay, 0);
 
