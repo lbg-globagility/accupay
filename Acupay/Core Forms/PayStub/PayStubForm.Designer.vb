@@ -4328,14 +4328,14 @@ Partial Class PayStubForm
         'DeclaredToolStripMenuItem1
         '
         Me.DeclaredToolStripMenuItem1.Name = "DeclaredToolStripMenuItem1"
-        Me.DeclaredToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
+        Me.DeclaredToolStripMenuItem1.Size = New System.Drawing.Size(120, 22)
         Me.DeclaredToolStripMenuItem1.Tag = "0"
         Me.DeclaredToolStripMenuItem1.Text = "Declared"
         '
         'ActualToolStripMenuItem1
         '
         Me.ActualToolStripMenuItem1.Name = "ActualToolStripMenuItem1"
-        Me.ActualToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
+        Me.ActualToolStripMenuItem1.Size = New System.Drawing.Size(120, 22)
         Me.ActualToolStripMenuItem1.Tag = "1"
         Me.ActualToolStripMenuItem1.Text = "Actual"
         '
@@ -4360,13 +4360,13 @@ Partial Class PayStubForm
         'DeclaredToolStripMenuItem2
         '
         Me.DeclaredToolStripMenuItem2.Name = "DeclaredToolStripMenuItem2"
-        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
+        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(152, 22)
         Me.DeclaredToolStripMenuItem2.Text = "Declared"
         '
         'ActualToolStripMenuItem2
         '
         Me.ActualToolStripMenuItem2.Name = "ActualToolStripMenuItem2"
-        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
+        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(152, 22)
         Me.ActualToolStripMenuItem2.Text = "Actual"
         '
         'ToolStripSeparator1

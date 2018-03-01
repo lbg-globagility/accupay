@@ -589,19 +589,6 @@ Public Class EmpPosition
         loademployee(selPositionID)
     End Sub
 
-    Private Sub cboDivis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboDivis.KeyPress
-        Dim e_asc As String = Asc(e.KeyChar)
-
-        If e_asc = 8 Then
-            e.Handled = False
-            cboDivis.Text = ""
-        Else
-            e.Handled = True 'TrapCharKey(e_asc)
-
-        End If
-
-    End Sub
-
     Private Sub cboDivis_SelectedIndexChanged(sender As Object, e As EventArgs) 'Handles cboDivis.SelectedIndexChanged
         If cboDivis.SelectedIndex = -1 Then
         Else
@@ -662,8 +649,14 @@ Public Class EmpPosition
 
     Private Sub tsbtnSavePosition_Click(sender As Object, e As EventArgs) Handles tsbtnSavePosition.Click
 
+        Dim tv_nodes =
+                tv2.Nodes.OfType(Of TreeNode).
+                Where(Function(tn) tn.Text.Contains("Location") Or tn.Text.Contains("Department"))
+
         Dim str_tn_fullpath As String =
-            tv2.SelectedNode.FullPath
+            tv_nodes.OfType(Of TreeNode).
+            Where(Function(tn) tn.Name = cboDivLoc.SelectedValue).
+            FirstOrDefault.FullPath
 
         tbpPosition.Focus()
 
@@ -924,8 +917,7 @@ Public Class EmpPosition
         End If
     End Sub
 
-    Private Sub DivisionLocation_Changed(sender As Object, e As EventArgs) Handles cboDivLoc.SelectedIndexChanged
-
+    Private Sub cboDivLoc_Leave(sender As Object, e As EventArgs) Handles cboDivLoc.Leave
         Dim str_quer_sub_division As String =
             String.Concat("SELECT d.RowID",
                           ",d.Name",
@@ -940,6 +932,10 @@ Public Class EmpPosition
         cboDivis.DisplayMember = dt.Columns(1).ColumnName
         cboDivis.ValueMember = dt.Columns(0).ColumnName
         cboDivis.DataSource = dt
+    End Sub
+
+    Private Sub DivisionLocation_Changed(sender As Object, e As EventArgs) Handles cboDivLoc.SelectedIndexChanged
+
     End Sub
 
     Private Sub bgworkautcompsearch_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkautcompsearch.DoWork

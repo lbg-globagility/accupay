@@ -24,7 +24,7 @@ Partial Class EmpPosition
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmpPosition))
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.tv2 = New System.Windows.Forms.TreeView()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.btnRefresh = New System.Windows.Forms.Button()
@@ -32,6 +32,7 @@ Partial Class EmpPosition
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tbpPosition = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.JobLevelLabel = New System.Windows.Forms.Label()
         Me.JobLevelComboBox = New System.Windows.Forms.ComboBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -107,7 +108,6 @@ Partial Class EmpPosition
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.autcomptxtposition = New Femiani.Forms.UI.Input.AutoCompleteTextBox()
         Me.bgworkautcompsearch = New System.ComponentModel.BackgroundWorker()
-        Me.JobLevelLabel = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tbpPosition.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -219,6 +219,15 @@ Partial Class EmpPosition
         Me.Panel1.Size = New System.Drawing.Size(573, 372)
         Me.Panel1.TabIndex = 108
         '
+        'JobLevelLabel
+        '
+        Me.JobLevelLabel.AutoSize = True
+        Me.JobLevelLabel.Location = New System.Drawing.Point(336, 16)
+        Me.JobLevelLabel.Name = "JobLevelLabel"
+        Me.JobLevelLabel.Size = New System.Drawing.Size(53, 13)
+        Me.JobLevelLabel.TabIndex = 184
+        Me.JobLevelLabel.Text = "Job Level"
+        '
         'JobLevelComboBox
         '
         Me.JobLevelComboBox.DisplayMember = "Name"
@@ -311,14 +320,14 @@ Partial Class EmpPosition
         Me.dgvemployees.BackgroundColor = System.Drawing.Color.White
         Me.dgvemployees.ColumnHeadersHeight = 34
         Me.dgvemployees.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.EmployeeID, Me.FirstName, Me.MiddleName, Me.LastName, Me.Surname, Me.NickName, Me.MaritStat, Me.NoOfDepen, Me.Bdate, Me.Startdate, Me.JobTitle, Me.Position, Me.Salutation, Me.TIN, Me.SSSNo, Me.HDMFNo, Me.PHHNo, Me.WorkNo, Me.HomeNo, Me.MobileNo, Me.HomeAdd, Me.EmailAdd, Me.Gender, Me.EmploymentStat, Me.PayFreq, Me.UndertimeOverride, Me.OvertimeOverride, Me.PositionID, Me.PayFreqID, Me.EmployeeType, Me.LeaveBal, Me.SickBal, Me.MaternBal, Me.LeaveAllow, Me.SickAllow, Me.MaternAllow, Me.Leavepayp, Me.Sickpayp, Me.Maternpayp, Me.fstatRowID, Me.Image, Me.creation, Me.createdby, Me.lastupd, Me.lastupdby})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle1
         Me.dgvemployees.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvemployees.Location = New System.Drawing.Point(9, 150)
         Me.dgvemployees.MultiSelect = False
@@ -805,15 +814,6 @@ Partial Class EmpPosition
         '
         Me.bgworkautcompsearch.WorkerReportsProgress = True
         Me.bgworkautcompsearch.WorkerSupportsCancellation = True
-        '
-        'JobLevelLabel
-        '
-        Me.JobLevelLabel.AutoSize = True
-        Me.JobLevelLabel.Location = New System.Drawing.Point(336, 16)
-        Me.JobLevelLabel.Name = "JobLevelLabel"
-        Me.JobLevelLabel.Size = New System.Drawing.Size(53, 13)
-        Me.JobLevelLabel.TabIndex = 184
-        Me.JobLevelLabel.Text = "Job Level"
         '
         'EmpPosition
         '
