@@ -51,8 +51,8 @@ SELECT e.RowID
         ,IFNULL(pos.RowID,'')                       `PositionID`
         ,IFNULL(e.PayFrequencyID,'')                `PayFrequencyID`
         ,e.EmployeeType
-        ,vacationLeaveTransaction.Balance `LeaveBalance`
-        ,sickLeaveTransaction.Balance `SickLeaveBalance`
+        ,IFNULL(vacationLeaveTransaction.Balance, 0) `LeaveBalance`
+        ,IFNULL(sickLeaveTransaction.Balance, 0) `SickLeaveBalance`
         ,e.MaternityLeaveBalance
         ,e.LeaveAllowance
         ,e.SickLeaveAllowance
