@@ -75,7 +75,7 @@ Public Class PayrollGeneration
 
     Private _filingStatuses As DataTable
 
-    Private Delegate Sub NotifyMainWindow(ByVal progress_index As Integer)
+    Private Delegate Sub NotifyMainWindow(success As Boolean)
 
     Private _notifyMainWindow As NotifyMainWindow
 
@@ -245,9 +245,11 @@ Public Class PayrollGeneration
             numberofweeksthismonth = CInt(New MySQLExecuteQuery("SELECT `COUNTTHEWEEKS`('" & dateStr_to_use & "');").Result)
 
             GeneratePayStub()
+            form_caller.BeginInvoke(_notifyMainWindow, True)
         Catch ex As Exception
             Console.WriteLine(getErrExcptn(ex, "PayrollGeneration - Error"))
             logger.Error("DoProcess", ex)
+            form_caller.BeginInvoke(_notifyMainWindow, False)
         End Try
     End Sub
 
@@ -484,7 +486,7 @@ Public Class PayrollGeneration
                 context.SaveChanges()
             End Using
 
-            form_caller.BeginInvoke(_notifyMainWindow, 1)
+
         Catch ex As Exception
             If transaction IsNot Nothing Then
                 transaction.Rollback()
