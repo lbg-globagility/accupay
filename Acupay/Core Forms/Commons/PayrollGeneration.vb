@@ -382,7 +382,9 @@ Public Class PayrollGeneration
                                 _paystub.RestDayPay +
                                 _paystub.RestDayOTPay +
                                 _paystub.SpecialHolidayPay +
-                                _paystub.RegularHolidayPay
+                                _paystub.SpecialHolidayOTPay +
+                                _paystub.RegularHolidayPay +
+                                _paystub.RegularHolidayOTPay
 
                             _paystub.TotalEarnings = (basicPay + extraPay) - totalDeduction
 

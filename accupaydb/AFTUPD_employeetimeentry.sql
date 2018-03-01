@@ -9,11 +9,9 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTUPD_employeetimeentry` AFTER UPDATE ON `employeetimeentry` FOR EACH ROW BEGIN
 
-
 DECLARE auditRowID INT(11);
 
 DECLARE viewID INT(11);
-
 
 DECLARE AgencyRowID INT(11);
 
@@ -21,17 +19,7 @@ DECLARE EmpPositionRowID INT(11);
 
 DECLARE DivisionRowID INT(11);
 
-DECLARE ag_fee DECIMAL(11,6);
-
-DECLARE isShiftRestDay TINYINT(1);
-DECLARE dayOfRest INT(11);
-DECLARE actualRegularHoursAmount DECIMAL(11, 6);
-DECLARE isRestDay TINYINT(1);
-DECLARE undeclaredSalary DECIMAL(20, 6);
-
-DECLARE payType VARCHAR(50);
-
-DECLARE isHoliday TINYINT(1);
+DECLARE _agencyFeeAmount DECIMAL(11, 6);
 
 DECLARE anyint INT(11);
 
@@ -40,59 +28,33 @@ DECLARE agfRowID INT(11);
 DECLARE divisorToHourlyRate DECIMAL(11, 6);
 
 DECLARE actualrate DECIMAL(11,5);
-
 DECLARE actualratepercent DECIMAL(11,5);
 
-DECLARE emprateperday DECIMAL(11,6);
+DECLARE _isAllowancePayableForOvertime BOOLEAN DEFAULT FALSE;
+DECLARE _isAllowancePayableForNightDiff BOOLEAN DEFAULT FALSE;
+DECLARE _isAllowancePayableForNightDiffOT BOOLEAN DEFAULT FALSE;
+DECLARE _isAllowancePayableForRestDay BOOLEAN DEFAULT FALSE;
+DECLARE _isAllowancePayableForHoliday BOOLEAN DEFAULT FALSE;
 
-DECLARE breaktimeFrom TIME;
-DECLARE breaktimeTo TIME;
-
-DECLARE shouldPaySalaryAllowanceForOvertime BOOLEAN;
-DECLARE shouldPaySalaryAllowanceForNightDifferential BOOLEAN;
-DECLARE shouldPaySalaryAllowanceForNightDifferentialOvertime BOOLEAN;
-DECLARE shouldPaySalaryAllowanceForRestDay BOOLEAN;
-DECLARE shouldPaySalaryAllowanceForHolidayPay BOOLEAN;
-
-DECLARE overtimeHoursAmount DECIMAL(12, 6);
-DECLARE nightDiffAmount DECIMAL(12, 6);
-DECLARE nightDiffOvertimeAmount DECIMAL(12, 6);
-DECLARE restDayAmount DECIMAL(12, 6);
 DECLARE hoursWorked DECIMAL(12, 6) DEFAULT 0.0;
-DECLARE _specialHolidayPay DECIMAL(15, 4);
+DECLARE overtimeHoursAmount DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE nightDiffAmount DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE nightDiffOvertimeAmount DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE restDayAmount DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE _specialHolidayPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE _specialHolidayOTPay DECIMAL(15, 4) DEFAULT 0.0;
-DECLARE _regularHolidayPay DECIMAL(15, 4);
+DECLARE _regularHolidayPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE _regularHolidayOTPay DECIMAL(15, 4) DEFAULT 0.0;
-DECLARE _holidayPay DECIMAL(12, 6);
+DECLARE _holidayPay DECIMAL(12, 6); /* Deprecated */
 
 SELECT
-    sh.BreakTimeFrom,
-    sh.BreakTimeTo,
     sh.DivisorToDailyRate
 FROM employeeshift esh
 INNER JOIN shift sh
 ON sh.RowID = esh.ShiftID
 WHERE esh.RowID = NEW.EmployeeShiftID
 INTO
-    breaktimeFrom,
-    breaktimeTo,
     divisorToHourlyRate;
-
-SELECT
-    COALESCE(employeeshift.RestDay, FALSE),
-    employee.DayOfRest
-FROM employeeshift
-INNER JOIN employee
-ON employee.RowID = employeeshift.EmployeeID
-WHERE employeeshift.RowID = NEW.EmployeeShiftID AND
-    NEW.Date BETWEEN employeeshift.EffectiveFrom AND employeeshift.EffectiveTo
-LIMIT 1
-INTO
-    isShiftRestDay,
-    dayOfRest;
-
-SET isRestDay = (DAYOFWEEK(NEW.Date) = dayOfRest) OR isShiftRestDay;
-SET isRestDay = isShiftRestDay;
 
 SELECT
     e.AgencyID,
@@ -109,14 +71,7 @@ INTO
     AgencyRowID,
     EmpPositionRowID,
     DivisionRowID,
-    ag_fee;
-
-SELECT payrate.PayType
-FROM payrate
-WHERE payrate.RowID = NEW.PayRateID
-INTO payType;
-
-SET isHoliday = (payType = 'Regular Holiday') OR (payType = 'Special Non-Working Holiday');
+    _agencyFeeAmount;
 
 SET hoursWorked = NEW.RegularHoursWorked + NEW.RestDayHours + NEW.SpecialHolidayHours + NEW.RegularHolidayHours;
 
@@ -142,7 +97,7 @@ IF  (AgencyRowID IS NOT NULL) AND
         DivisionRowID,
         NEW.RowID,
         NEW.`Date`,
-        (ag_fee / divisorToHourlyRate) * hoursWorked
+        (_agencyFeeAmount / divisorToHourlyRate) * hoursWorked
     )
     INTO anyint;
 
@@ -161,8 +116,7 @@ END IF;
 
 SELECT
     (es.UndeclaredSalary / es.Salary) AS UndeclaredPercent,
-    (es.UndeclaredSalary / es.Salary) AS ActualPercent,
-    es.UndeclaredSalary
+    (es.UndeclaredSalary / es.Salary) AS ActualPercent
 FROM employeesalary es
 WHERE es.EmployeeID=NEW.EmployeeID
 AND es.OrganizationID=NEW.OrganizationID
@@ -170,13 +124,9 @@ AND NEW.`Date` BETWEEN es.EffectiveDateFrom AND IFNULL(es.EffectiveDateTo,NEW.`D
 LIMIT 1
 INTO
     actualrate,
-    actualratepercent,
-    undeclaredSalary;
+    actualratepercent;
 
 SET actualrate = IFNULL(actualrate, 0);
-
-SELECT GET_employeerateperday(NEW.EmployeeID, NEW.OrganizationID, NEW.`Date`)
-INTO emprateperday;
 
 SELECT `GET_employeeundeclaredsalarypercent`(
     NEW.EmployeeID,
@@ -186,77 +136,66 @@ SELECT `GET_employeeundeclaredsalarypercent`(
 )
 INTO actualratepercent;
 
-IF isRestDay THEN
-    SET actualRegularHoursAmount = NEW.RegularHoursAmount + (undeclaredSalary / divisorToHourlyRate * NEW.RegularHoursWorked);
-ELSE
-    SET actualRegularHoursAmount = NEW.RegularHoursAmount;
-END IF;
-
 /* TODO: Make this faster by selecting the payroll policy settings only once for all employees. */
 
 /*
  * Calculate the allowance salary for overtime work.
  */
-SET shouldPaySalaryAllowanceForOvertime = GetListOfValueOrDefault(
-    'Payroll Policy', 'PaySalaryAllowanceForOvertime', TRUE
-);
+SET _isAllowancePayableForOvertime = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForOvertime', TRUE);
 
 SET overtimeHoursAmount = NEW.OvertimeHoursAmount;
-IF shouldPaySalaryAllowanceForOvertime THEN
+IF _isAllowancePayableForOvertime THEN
     SET overtimeHoursAmount = overtimeHoursAmount + (overtimeHoursAmount * actualrate);
 END IF;
 
 /*
  * Calculate the allowance salary for night differential work.
  */
-SET shouldPaySalaryAllowanceForNightDifferential = GetListOfValueOrDefault(
-    'Payroll Policy', 'PaySalaryAllowanceForNightDifferential', TRUE
-);
+SET _isAllowancePayableForNightDiff = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForNightDifferential', TRUE);
 
 SET nightDiffAmount = NEW.NightDiffHoursAmount;
-IF shouldPaySalaryAllowanceForOvertime THEN
+IF _isAllowancePayableForOvertime THEN
     SET nightDiffAmount = nightDiffAmount + (nightDiffAmount * actualrate);
 END IF;
 
 /*
  * Calculate the allowance salary for night differential overtime work.
  */
-SET shouldPaySalaryAllowanceForNightDifferentialOvertime = GetListOfValueOrDefault(
-    'Payroll Policy', 'PaySalaryAllowanceForNightDifferentialOvertime', TRUE
-);
+SET _isAllowancePayableForNightDiffOT = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForNightDifferentialOvertime', TRUE);
 
 SET nightDiffOvertimeAmount = NEW.NightDiffOTHoursAmount;
-IF shouldPaySalaryAllowanceForOvertime THEN
+IF _isAllowancePayableForOvertime THEN
     SET nightDiffOvertimeAmount = nightDiffOvertimeAmount + (nightDiffOvertimeAmount * actualrate);
 END IF;
 
 /*
  * Calculate the allowance salary for rest day work.
  */
-SET shouldPaySalaryAllowanceForRestDay = GetListOfValueOrDefault(
-    'Payroll Policy', 'PaySalaryAllowanceForRestDay', TRUE
-);
+SET _isAllowancePayableForRestDay = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForRestDay', TRUE);
 
 SET restDayAmount = NEW.RestDayAmount;
-IF shouldPaySalaryAllowanceForRestDay THEN
+IF _isAllowancePayableForRestDay THEN
     SET restDayAmount = restDayAmount + (restDayAmount * actualrate);
 END IF;
 
 /*
  * Calculate the allowance salary for holiday work (both for regular and special non-working holidays).
  */
-SET shouldPaySalaryAllowanceForHolidayPay = GetListOfValueOrDefault(
-    'Payroll Policy', 'PaySalaryAllowanceForHolidayPay', TRUE
-);
+SET _isAllowancePayableForHoliday = GetListOfValueOrDefault(
+    'Payroll Policy', 'PaySalaryAllowanceForHolidayPay', TRUE);
 
 SET _specialHolidayPay = NEW.SpecialHolidayPay;
 SET _specialHolidayOTPay = NEW.SpecialHolidayOTPay;
 SET _regularHolidayPay = NEW.RegularHolidayPay;
 SET _regularHolidayOTPay = NEW.RegularHolidayOTPay;
-SET _holidayPay = NEW.HolidayPayAmount;
+SET _holidayPay = NEW.HolidayPayAmount; /* Deprecated */
 
-IF shouldPaySalaryAllowanceForHolidayPay THEN
-    SET _holidayPay = _holidayPay + (_holidayPay * actualrate);
+IF _isAllowancePayableForHoliday THEN
+    SET _holidayPay = _holidayPay + (_holidayPay * actualrate); /* Deprecated */
 
     SET _specialHolidayPay = _specialHolidayPay + (_specialHolidayPay * actualrate);
     SET _regularHolidayPay = _regularHolidayPay + (_regularHolidayPay * actualrate);

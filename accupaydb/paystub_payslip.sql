@@ -71,8 +71,16 @@ SELECT
     IFNULL(ete.UndertimeHoursAmount,0) AS `COL9`,
     0 AS `COL10`,
     0 AS `COL11`,
-    IFNULL(ete.OvertimeHoursWorked, 0) AS `COL12`,
-    IFNULL(ete.OvertimeHoursAmount, 0) + IFNULL(ete.NightDiffOTHoursAmount, 0) + IFNULL(ete.RestDayOTPay, 0) AS `COL13`,
+    (
+        IFNULL(ete.OvertimeHoursWorked, 0)
+     ) AS `COL12`,
+    (
+        IFNULL(ete.OvertimeHoursAmount, 0) +
+        IFNULL(ete.NightDiffOTHoursAmount, 0) +
+        IFNULL(ete.RestDayOTPay, 0) +
+        IFNULL(ps.SpecialHolidayOTPay, 0) +
+        IFNULL(ps.RegularHolidayOTPay, 0)
+     ) AS `COL13`,
     IFNULL(ete.NightDifferentialHours, 0) AS `COL14`,
     IFNULL(ete.NightDiffHoursAmount, 0) AS `COL15`,
     0 AS `COL16`,
@@ -117,6 +125,8 @@ FROM (
             PayFromDate,
             PayToDate,
             HolidayPay,
+            SpecialHolidayOTPay,
+            RegularHolidayOTPay,
             TotalGrossSalary,
             TotalNetSalary,
             TotalTaxableSalary,
@@ -147,6 +157,8 @@ FROM (
             PayFromDate,
             PayToDate,
             HolidayPay,
+            SpecialHolidayOTPay,
+            RegularHolidayOTPay,
             TotalGrossSalary,
             TotalNetSalary,
             TotalTaxableSalary,
