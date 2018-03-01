@@ -10,9 +10,11 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_position`(`pos_RowID` INT, `p
     DETERMINISTIC
 BEGIN
 
-DECLARE positID INT(11);
+DECLARE positID
+        ,defaultDivisID
+        , indx INT(11);
 
-DECLARE defaultDivisID INT(11);
+DECLARE default_division_name VARCHAR(50) DEFAULT 'Default Division';
 
 SELECT COUNT(RowID)
 FROM `division`
@@ -64,7 +66,25 @@ IF defaultDivisID > 0 THEN
 
     SELECT @@Identity AS Id
     INTO positID;
-
+    
+	SET @og_count = (SELECT COUNT(RowID) FROM organization og WHERE og.NoPurpose = '0' AND og.RowID != pos_OrganizationID);
+	
+	SET @_index = 0;
+	
+	WHILE @_index < @og_count DO
+		
+		SET indx =  @_index;
+		
+		SET @og_rowid = (SELECT RowID FROM organization og WHERE og.NoPurpose = '0' AND og.RowID != pos_OrganizationID LIMIT indx, 1);
+		
+		SELECT RowID FROM division WHERE Name = default_division_name AND OrganizationID=@og_rowid AND ParentDivisionID IS NOT NULL ORDER BY RowID LIMIT 1 INTO pos_DivisionId;
+		
+		CALL INSUPD_position(NULL, pos_PositionName, pos_CreatedBy, @og_rowid, pos_LastUpdBy, NULL, pos_DivisionId);
+		
+		SET @_index = @_index + 1;
+		
+	END WHILE;
+	
 ELSE
 
     INSERT INTO `division`
