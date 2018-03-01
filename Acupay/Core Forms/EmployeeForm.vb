@@ -18007,7 +18007,8 @@ Public Class EmployeeForm
 
     Private Sub txtWorkHoursPerWeek_KeyPress(sender As Object, e As KeyPressEventArgs) Handles _
                                                                                                 txtWorkDaysPerYear.KeyPress
-        e.Handled = TrapNumKey(Asc(e.KeyChar))
+        'e.Handled = TrapNumKey(Asc(e.KeyChar))
+        e.Handled = New TrapDecimalKey(Asc(e.KeyChar), txtWorkDaysPerYear.Text).ResultTrap
 
     End Sub
 
