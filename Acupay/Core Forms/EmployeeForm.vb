@@ -9060,7 +9060,7 @@ Public Class EmployeeForm
     ''' Deletes the loan schedule the user has requested.
     ''' </summary>
     Private Sub DeleteLoanSchedule(sender As Object, e As EventArgs) Handles DeleteLoanScheduleButton.Click
-        Console.WriteLine("DeleteLoanSchedule")
+
         Dim loanScheduleID As Integer
         If Not Integer.TryParse(dgvLoanList.CurrentRow.Cells(c_RowIDLoan.Index).Value, loanScheduleID) Then
             MsgBox("Sorry, but something has gone awry. Please contact Globagility, Inc. if you see this error message.")
