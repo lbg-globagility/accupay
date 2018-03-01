@@ -92,6 +92,9 @@ Public Class PayStubForm
     Public paypPayFreqID As String = Nothing
     Public isEndOfMonth As String = 0
 
+    Private _successfulPaystubs As Integer = 0
+    Private _failedPaystubs As Integer = 0
+
     Const max_count_per_page As Integer = 1
 
     Dim currentEmployeeID As String = Nothing
@@ -1146,6 +1149,9 @@ Public Class PayStubForm
 
             Timer1.Enabled = True
             Timer1.Start()
+
+            _successfulPaystubs = 0
+            _failedPaystubs = 0
 
             Parallel.ForEach(
                 employeeRows,
@@ -2419,8 +2425,15 @@ Public Class PayStubForm
         Dim realse = New ReleaseThirteenthMonthPay(dateFrom, dateTo, paypRowID)
     End Sub
 
-    Sub ProgressCounter(ByVal cnt As Integer)
+    Sub ProgressCounter(success As Boolean)
+        If success Then
+            Interlocked.Increment(_successfulPaystubs)
+        Else
+            Interlocked.Increment(_failedPaystubs)
+        End If
+
         Interlocked.Increment(progress_precentage)
+
         Dim compute_percentage As Integer = (progress_precentage / payroll_emp_count) * 100
         MDIPrimaryForm.systemprogressbar.Value = compute_percentage
 
@@ -2431,6 +2444,8 @@ Public Class PayStubForm
                 Dim n_ExecSQLProcedure As New _
                     ExecSQLProcedure("RECOMPUTE_thirteenthmonthpay",
                                      param_array)
+
+                MsgBox($"Payroll generation is done. Sucessful paystubs: {_successfulPaystubs}. Failed paystubs {_failedPaystubs}", MsgBoxStyle.OkOnly)
 
                 dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
             Case Else

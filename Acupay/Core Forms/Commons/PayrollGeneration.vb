@@ -75,7 +75,7 @@ Public Class PayrollGeneration
 
     Private _filingStatuses As DataTable
 
-    Private Delegate Sub NotifyMainWindow(ByVal progress_index As Integer)
+    Private Delegate Sub NotifyMainWindow(success As Boolean)
 
     Private _notifyMainWindow As NotifyMainWindow
 
@@ -245,9 +245,11 @@ Public Class PayrollGeneration
             numberofweeksthismonth = CInt(New MySQLExecuteQuery("SELECT `COUNTTHEWEEKS`('" & dateStr_to_use & "');").Result)
 
             GeneratePayStub()
+            form_caller.BeginInvoke(_notifyMainWindow, True)
         Catch ex As Exception
             Console.WriteLine(getErrExcptn(ex, "PayrollGeneration - Error"))
             logger.Error("DoProcess", ex)
+            form_caller.BeginInvoke(_notifyMainWindow, False)
         End Try
     End Sub
 
@@ -484,7 +486,7 @@ Public Class PayrollGeneration
                 context.SaveChanges()
             End Using
 
-            form_caller.BeginInvoke(_notifyMainWindow, 1)
+
         Catch ex As Exception
             If transaction IsNot Nothing Then
                 transaction.Rollback()
@@ -549,7 +551,7 @@ Public Class PayrollGeneration
         End With
     End Sub
 
-    Private Function CalculateSemiMonthlyProratedAllowance(allowance As Allowance) As Decimal
+    Private Function CalculateSemiMonthlyProratedAllowance(allowance As Allowance) As AllowanceItem
         Dim workDaysPerYear = _employee2.WorkDaysPerYear
         Dim workingDays = CDec(workDaysPerYear / CalendarConstants.MonthsInAYear / CalendarConstants.SemiMonthlyPayPeriodsPerMonth)
         Dim dailyRate = allowance.Amount / workingDays
@@ -576,17 +578,29 @@ Public Class PayrollGeneration
                 End If
             End If
 
-            Dim perDay = New AllowancePerDay()
-            perDay.Amount = deductionAmount + additionalAmount
-            allowancesPerDay.Add(perDay)
+            allowancesPerDay.Add(New AllowancePerDay() With {
+                .Date = timeEntry.Date,
+                .Amount = deductionAmount + additionalAmount
+            })
         Next
 
         Dim sumTotalOfDays = allowancesPerDay.Sum(Function(a) a.Amount)
         Dim baseAllowance = allowance.Amount
-        Return baseAllowance + sumTotalOfDays
+
+        Dim allowanceItem = New AllowanceItem() With {
+            .OrganizationID = z_OrganizationID,
+            .CreatedBy = z_User,
+            .LastUpdBy = z_User,
+            .PayPeriodID = PayPeriodID,
+            .AllowanceID = allowance.RowID,
+            .Amount = baseAllowance + sumTotalOfDays,
+            .AllowancesPerDay = allowancesPerDay
+        }
+
+        Return allowanceItem
     End Function
 
-    Private Function CalculateDailyProratedAllowance(allowance As Allowance) As Decimal
+    Private Function CalculateDailyProratedAllowance(allowance As Allowance) As AllowanceItem
         Dim dailyRate = allowance.Amount
 
         Dim allowancesPerDay = New Collection(Of AllowancePerDay)
@@ -616,14 +630,25 @@ Public Class PayrollGeneration
                 End If
             End If
 
-            Dim perDay = New AllowancePerDay()
-            perDay.EntryDate = timeEntry.Date
-            perDay.Amount = amount
-            allowancesPerDay.Add(perDay)
+            allowancesPerDay.Add(New AllowancePerDay() With {
+                .Date = timeEntry.Date,
+                .Amount = amount
+            })
         Next
 
         Dim totalAmount = allowancesPerDay.Sum(Function(a) a.Amount)
-        Return totalAmount
+
+        Dim allowanceItem = New AllowanceItem() With {
+            .OrganizationID = z_OrganizationID,
+            .CreatedBy = z_User,
+            .LastUpdBy = z_User,
+            .PayPeriodID = PayPeriodID,
+            .AllowanceID = allowance.RowID,
+            .Amount = totalAmount,
+            .AllowancesPerDay = allowancesPerDay
+        }
+
+        Return allowanceItem
     End Function
 
     Private Function CalculateOneTimeAllowances(allowance As Allowance)
@@ -674,12 +699,12 @@ Public Class PayrollGeneration
             If allowance.AllowanceFrequency = "One time" Then
                 item.Amount = allowance.Amount
             ElseIf allowance.AllowanceFrequency = "Daily" Then
-                item.Amount = CalculateDailyProratedAllowance(allowance)
+                item = CalculateDailyProratedAllowance(allowance)
             ElseIf allowance.AllowanceFrequency = "Semi-monthly" Then
                 If allowance.Product.Fixed Then
                     item.Amount = allowance.Amount
                 Else
-                    item.Amount = CalculateSemiMonthlyProratedAllowance(allowance)
+                    item = CalculateSemiMonthlyProratedAllowance(allowance)
                 End If
             ElseIf allowance.AllowanceFrequency = "Monthly" Then
                 If allowance.Product.Fixed And _isEndOfMonth Then
