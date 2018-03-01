@@ -41,6 +41,8 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("PayPeriodID")>
         Public Overridable Property PayPeriod As PayPeriod
 
+        Public Overridable Property AllowancesPerDay As IList(Of AllowancePerDay)
+
     End Class
 
 End Namespace
