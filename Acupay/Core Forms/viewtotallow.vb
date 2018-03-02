@@ -26,31 +26,73 @@
                                Optional num_weekdays As Object = Nothing,
                                Optional AllowanceExcept As String = Nothing)
 
-        Dim param(4, 2) As Object
+        Static employee_rowid As Integer = eallow_EmployeeID
 
-        'param(0, 0) = "eallow_EmployeeID"
-        'param(1, 0) = "eallow_OrganizationID"
-        'param(2, 0) = "effectivedatefrom"
-        'param(3, 0) = "effectivedateto"
-        'param(4, 0) = "numweekdays"
+        Static from_date As Object = datefrom
+        Static to_date As Object = dateto
 
-        param(0, 0) = "eallow_EmployeeID"
-        param(1, 0) = "eallow_OrganizationID"
-        param(2, 0) = "effective_datefrom"
-        param(3, 0) = "effective_dateto"
-        param(4, 0) = "ExceptThisAllowance"
+        Dim params =
+            New Object() {orgztnID,
+            employee_rowid,
+            from_date,
+            to_date,
+            ComboBox2.Text,
+            ComboBox1.Text}
 
-        param(0, 1) = eallow_EmployeeID
-        param(1, 1) = orgztnID
-        param(2, 1) = datefrom
-        param(3, 1) = If(dateto = Nothing, DBNull.Value, dateto)
-        param(4, 1) = If(AllowanceExcept = Nothing, String.Empty, AllowanceExcept)
+        Dim sql As New SQL("CALL VIEW_allowanceperday(?og_rowid, ?e_rowid, ?from_date, ?to_date, ?allowance_frequency, ?allowance_name);",
+                           params)
 
-        'param(4, 1) = Val(num_weekdays)
+        Try
+            Dim dt As New DataTable
+            dt = sql.GetFoundRows.Tables(0)
 
-        EXEC_VIEW_PROCEDURE(param,
-                           "VIEW_employeeallowances",
-                           dgvempallowance, , 1) 'VIEW_employeeallowance_indate
+            If sql.HasError Then
+                Throw sql.ErrorException
+            Else
+                dgvempallowance.Rows.Clear()
+                For Each drow As DataRow In dt.Rows
+                    Dim row_array = drow.ItemArray
+
+                    dgvempallowance.Rows.Add(row_array)
+                Next
+            End If
+
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Name))
+        Finally
+
+            Static once As Boolean = True
+            If once Then
+                once = False
+
+                Dim _types =
+                (From row
+                 In dgvempallowance.Rows.OfType(Of DataGridViewRow)
+                 Group By val = Convert.ToString(row.Cells(eall_Type.Name).Value)
+                     Into Group
+                 Where val IsNot Nothing
+                 Select val)
+
+                'ComboBox1.DataSource = _types.ToList
+                ComboBox1.Items.AddRange(_types.ToList.ToArray)
+
+                'Dim _frequencies =
+                '(From row
+                ' In dgvempallowance.Rows.OfType(Of DataGridViewRow)
+                ' Group By val = Convert.ToString(row.Cells(AllowanceFrequency.Name).Value)
+                '     Into Group
+                ' Where val IsNot Nothing
+                ' Select val)
+
+                'ComboBox2.DataSource = _frequencies.ToList
+
+                For Each cbox In Panel1.Controls.OfType(Of ComboBox)()
+                    cbox.SelectedIndex = -1
+                    AddHandler cbox.SelectedIndexChanged, AddressOf ComboBox1_SelectedIndexChanged
+                Next
+
+            End If
+        End Try
 
     End Sub
 
@@ -62,6 +104,11 @@
         If e.KeyCode = Keys.Escape Then
             Me.Close()
         End If
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs)
+
+        VIEW_employeeallowance_indate()
     End Sub
 
 End Class

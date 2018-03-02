@@ -1232,7 +1232,7 @@ Public Class PayStubForm
         With viewtotallow
             .Show()
             .BringToFront()
-            If dgvemployees.RowCount <> 0 Then
+            If dgvemployees.RowCount > 0 Then
 
                 .VIEW_employeeallowance_indate(dgvemployees.CurrentRow.Cells("RowID").Value,
                                         paypFrom,
