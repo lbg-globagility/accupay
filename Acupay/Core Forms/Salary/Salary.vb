@@ -30,7 +30,8 @@ Namespace Global.PayrollSys
         <Column("Salary")>
         Public Property Amount As Decimal
 
-        Public Property UndeclaredSalary As Decimal
+        <Column("UndeclaredSalary")>
+        Public Property AllowanceAmount As Decimal
 
         Public Property BasicDailyPay As Decimal
 

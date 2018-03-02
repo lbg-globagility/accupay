@@ -139,6 +139,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property OffsetBalance As Decimal
 
+        Public Property Image As Byte()
+
         Public ReadOnly Property MiddleInitial As String
             Get
                 Return If(String.IsNullOrEmpty(MiddleName), Nothing, MiddleName.Substring(0, 1))
