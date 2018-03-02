@@ -152,6 +152,9 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("PositionID")>
         Public Overridable Property Position As Position
 
+        <ForeignKey("PayFrequencyID")>
+        Public Overridable Property PayFrequency As PayFrequency
+
     End Class
 
 End Namespace

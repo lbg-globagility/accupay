@@ -233,8 +233,10 @@
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\ListOfValueCollection.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
+    <Compile Include="Core Forms\Commons\PayrollTools.vb" />
     <Compile Include="Core Forms\Commons\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Core Forms\Commons\Calendar.vb" />
+    <Compile Include="Core Forms\Commons\TypeTools.vb" />
     <Compile Include="Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
     </Compile>
@@ -346,6 +348,7 @@
     <Compile Include="Core Forms\PayStub\Entity\LeaveTransaction.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Organization.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\PayFrequency.vb" />
     <Compile Include="Core Forms\PayStub\Entity\PayPeriod.vb" />
     <Compile Include="Core Forms\PayStub\Entity\PayRate.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />

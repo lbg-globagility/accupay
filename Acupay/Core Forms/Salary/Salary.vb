@@ -7,7 +7,18 @@ Namespace Global.PayrollSys
     Public Class Salary
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
+
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
+        Public Property Created As Date
+
+        Public Property CreatedBy As Integer?
+
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
+        Public Property LastUpd As Date?
+
+        Public Property LastUpdBy As Integer?
 
         Public Property EmployeeID As Integer?
 
@@ -21,29 +32,36 @@ Namespace Global.PayrollSys
 
         Public Property PayPhilHealthID As Integer?
 
-        Public Property HDMFAmount As Decimal
+        Public Property PhilHealthDeduction As Decimal
 
-        Public Property TrueSalary As Decimal
+        Public Property HDMFAmount As Decimal
 
         Public Property BasicPay As Decimal
 
         <Column("Salary")>
-        Public Property Amount As Decimal
+        Public Property BasicSalary As Decimal
 
         <Column("UndeclaredSalary")>
-        Public Property AllowanceAmount As Decimal
+        Public Property AllowanceSalary As Decimal
 
-        Public Property BasicDailyPay As Decimal
+        <Column("TrueSalary")>
+        Public Property TotalSalary As Decimal
 
-        Public Property BasicHourlyPay As Decimal
+        <Column("BasicDailyPay")>
+        Public Property DailyRate As Decimal
+
+        <Column("BasicHourlyPay")>
+        Public Property HourlyRate As Decimal
 
         Public Property NoOfDependents As Integer
 
         Public Property MaritalStatus As String
 
-        Public Property EffectiveDateFrom As Date
+        <Column("EffectiveDateFrom")>
+        Public Property EffectiveFrom As Date
 
-        Public Property EffectiveDateTo As Date?
+        <Column("EffectiveDateTo")>
+        Public Property EffectiveTo As Date?
 
         Public Property OverrideDiscardSSSContrib As Boolean
 
@@ -51,7 +69,7 @@ Namespace Global.PayrollSys
 
         Public ReadOnly Property IsIndefinite As Boolean
             Get
-                Return Not EffectiveDateTo.HasValue
+                Return Not EffectiveTo.HasValue
             End Get
         End Property
 

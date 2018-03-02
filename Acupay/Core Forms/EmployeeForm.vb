@@ -1839,7 +1839,7 @@ Public Class EmployeeForm
                 Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                 Dim employee As Employee = Nothing
                 Using context = New PayrollContext()
-                    employee = (From emp In context.Employees
+                    employee = (From emp In context.Employees.Include(Function(emp) emp.PayFrequency)
                                 Where emp.RowID = employeeID).
                                FirstOrDefault()
                 End Using
@@ -10006,16 +10006,16 @@ Public Class EmployeeForm
 
     Private Function SalariesOverlap(salaryA As PayrollSys.Salary, salaryB As PayrollSys.Salary) As Boolean
         If (Not salaryA.IsIndefinite) And (Not salaryB.IsIndefinite) Then
-            Return salaryA.EffectiveDateFrom <= salaryB.EffectiveDateTo And
-                salaryB.EffectiveDateFrom <= salaryA.EffectiveDateTo
+            Return salaryA.EffectiveFrom <= salaryB.EffectiveTo And
+                salaryB.EffectiveFrom <= salaryA.EffectiveTo
         End If
 
         If salaryA.IsIndefinite And (Not salaryB.IsIndefinite) Then
-            Return salaryB.EffectiveDateTo >= salaryA.EffectiveDateFrom
+            Return salaryB.EffectiveTo >= salaryA.EffectiveFrom
         End If
 
         If salaryB.IsIndefinite And (Not salaryA.IsIndefinite) Then
-            Return salaryA.EffectiveDateTo >= salaryB.EffectiveDateFrom
+            Return salaryA.EffectiveTo >= salaryB.EffectiveFrom
         End If
 
         Return True
