@@ -81,7 +81,7 @@ Namespace Global.AccuPay.JobLevels
                  From s In _context.Salaries.Where(Function(s) CBool(e.RowID = s.EmployeeID)).DefaultIfEmpty()
                  From s2 In _context.Salaries.Where(Function(s2) CBool(
                      s2.EmployeeID = s.EmployeeID And
-                     s.EffectiveDateFrom < s2.EffectiveDateFrom
+                     s.EffectiveFrom < s2.EffectiveFrom
                  )).DefaultIfEmpty()
                  Where e.OrganizationID = z_OrganizationID And
                      s2.RowID Is Nothing
@@ -170,7 +170,7 @@ Namespace Global.AccuPay.JobLevels
 
         Public ReadOnly Property CurrentSalary As Decimal?
             Get
-                Return _salary?.TrueSalary
+                Return _salary?.TotalSalary
             End Get
         End Property
 
