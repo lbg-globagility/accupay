@@ -860,6 +860,8 @@ Public Class PayrollGeneration
         Dim employeeSssPerMonth = ValNoComma(salary("EmployeeContributionAmount"))
         Dim employerSssPerMonth = ValNoComma(salary("EmployerContributionAmount"))
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
+        Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
+        Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
         If False Then
             Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(
@@ -873,13 +875,46 @@ Public Class PayrollGeneration
             employerSssPerMonth = socialSecurityBracket.EmployerContributionAmount
         End If
 
-        If IsSssPaidOnFirstHalf() Or IsSssPaidOnEndOfTheMonth() Then
-            _paystub.SssEmployeeShare = employeeSssPerMonth
-            _paystub.SssEmployerShare = employerSssPerMonth
-        ElseIf IsSssPaidPerPayPeriod() Then
-            _paystub.SssEmployeeShare = employeeSssPerMonth / payPeriodsPerMonth
-            _paystub.SssEmployerShare = employerSssPerMonth / payPeriodsPerMonth
+        If is_weekly Then
+            Dim is_deduct_sched_to_thisperiod As Boolean = False
+
+            Dim pp = New Collection(Of PayPeriod)
+
+            If is_under_agency Then
+                Using context = New PayrollContext()
+                    Dim query = From p In context.PayPeriods
+                                Where p.RowID = _PayPeriodID
+
+                    is_deduct_sched_to_thisperiod =
+                        Convert.ToBoolean(query.FirstOrDefault.SSSWeeklyAgentContribSched)
+                End Using
+            Else
+                Using context = New PayrollContext()
+                    Dim query = From p In context.PayPeriods
+                                Where p.RowID = _PayPeriodID
+
+                    is_deduct_sched_to_thisperiod =
+                        Convert.ToBoolean(query.FirstOrDefault.SSSWeeklyContribSched)
+                End Using
+            End If
+
+            If is_deduct_sched_to_thisperiod Then
+                _paystub.SssEmployeeShare = employeeSssPerMonth
+                _paystub.SssEmployerShare = employerSssPerMonth
+            Else
+                _paystub.SssEmployeeShare = 0
+                _paystub.SssEmployerShare = 0
+            End If
+        Else
+            If IsSssPaidOnFirstHalf() Or IsSssPaidOnEndOfTheMonth() Then
+                _paystub.SssEmployeeShare = employeeSssPerMonth
+                _paystub.SssEmployerShare = employerSssPerMonth
+            ElseIf IsSssPaidPerPayPeriod() Then
+                _paystub.SssEmployeeShare = employeeSssPerMonth / payPeriodsPerMonth
+                _paystub.SssEmployerShare = employerSssPerMonth / payPeriodsPerMonth
+            End If
         End If
+
     End Sub
 
     Private Function IsSssPaidOnFirstHalf() As Boolean
@@ -896,6 +931,8 @@ Public Class PayrollGeneration
 
     Private Sub CalculatePhilHealth(salary As DataRow)
         Dim totalContribution = ConvertToType(Of Decimal)(salary("PhilHealthDeduction"))
+        Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
+        Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
         If False Then
             Dim philHealthBracket = _philHealthBrackets.FirstOrDefault(
@@ -922,12 +959,45 @@ Public Class PayrollGeneration
 
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
-        If IsPhilHealthPaidOnFirstHalf() Or IsPhilHealthPaidOnEndOfTheMonth() Then
-            _paystub.PhilHealthEmployeeShare = employeeShare
-            _paystub.PhilHealthEmployerShare = employerShare
-        ElseIf IsPhilHealthPaidPerPayPeriod() Then
-            _paystub.PhilHealthEmployeeShare = employeeShare / payPeriodsPerMonth
-            _paystub.PhilHealthEmployerShare = employerShare / payPeriodsPerMonth
+
+        If is_weekly Then
+            Dim is_deduct_sched_to_thisperiod As Boolean = False
+
+            Dim pp = New Collection(Of PayPeriod)
+
+            If is_under_agency Then
+                Using context = New PayrollContext()
+                    Dim query = From p In context.PayPeriods
+                                Where p.RowID = _PayPeriodID
+
+                    is_deduct_sched_to_thisperiod =
+                        Convert.ToBoolean(query.FirstOrDefault.PhHWeeklyAgentContribSched)
+                End Using
+            Else
+                Using context = New PayrollContext()
+                    Dim query = From p In context.PayPeriods
+                                Where p.RowID = _PayPeriodID
+
+                    is_deduct_sched_to_thisperiod =
+                        Convert.ToBoolean(query.FirstOrDefault.PhHWeeklyContribSched)
+                End Using
+            End If
+
+            If is_deduct_sched_to_thisperiod Then
+                _paystub.PhilHealthEmployeeShare = employeeShare
+                _paystub.PhilHealthEmployerShare = employerShare
+            Else
+                _paystub.PhilHealthEmployeeShare = 0
+                _paystub.PhilHealthEmployerShare = 0
+            End If
+        Else
+            If IsPhilHealthPaidOnFirstHalf() Or IsPhilHealthPaidOnEndOfTheMonth() Then
+                _paystub.PhilHealthEmployeeShare = employeeShare
+                _paystub.PhilHealthEmployerShare = employerShare
+            ElseIf IsPhilHealthPaidPerPayPeriod() Then
+                _paystub.PhilHealthEmployeeShare = employeeShare / payPeriodsPerMonth
+                _paystub.PhilHealthEmployerShare = employerShare / payPeriodsPerMonth
+            End If
         End If
     End Sub
 
@@ -947,13 +1017,48 @@ Public Class PayrollGeneration
         Dim employeeHdmfPerMonth = ValNoComma(salary("HDMFAmount"))
         Dim employerHdmfPerMonth = 100D
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
+        Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
+        Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
-        If IsHdmfPaidOnFirstHalf() Or IsHdmfPaidOnEndOfTheMonth() Then
-            _paystub.HdmfEmployeeShare = employeeHdmfPerMonth
-            _paystub.HdmfEmployerShare = employerHdmfPerMonth
-        ElseIf IsHdmfPaidPerPayPeriod() Then
-            _paystub.HdmfEmployeeShare = employeeHdmfPerMonth / payPeriodsPerMonth
-            _paystub.HdmfEmployerShare = employerHdmfPerMonth / payPeriodsPerMonth
+
+        If is_weekly Then
+            Dim is_deduct_sched_to_thisperiod As Boolean = False
+
+            Dim pp = New Collection(Of PayPeriod)
+
+            If is_under_agency Then
+                Using context = New PayrollContext()
+                    Dim query = From p In context.PayPeriods
+                                Where p.RowID = _PayPeriodID
+
+                    is_deduct_sched_to_thisperiod =
+                        Convert.ToBoolean(query.FirstOrDefault.HDMFWeeklyAgentContribSched)
+                End Using
+            Else
+                Using context = New PayrollContext()
+                    Dim query = From p In context.PayPeriods
+                                Where p.RowID = _PayPeriodID
+
+                    is_deduct_sched_to_thisperiod =
+                        Convert.ToBoolean(query.FirstOrDefault.HDMFWeeklyContribSched)
+                End Using
+            End If
+
+            If is_deduct_sched_to_thisperiod Then
+                _paystub.HdmfEmployeeShare = employeeHdmfPerMonth
+                _paystub.HdmfEmployerShare = employerHdmfPerMonth
+            Else
+                _paystub.HdmfEmployeeShare = 0
+                _paystub.HdmfEmployerShare = 0
+            End If
+        Else
+            If IsHdmfPaidOnFirstHalf() Or IsHdmfPaidOnEndOfTheMonth() Then
+                _paystub.HdmfEmployeeShare = employeeHdmfPerMonth
+                _paystub.HdmfEmployerShare = employerHdmfPerMonth
+            ElseIf IsHdmfPaidPerPayPeriod() Then
+                _paystub.HdmfEmployeeShare = employeeHdmfPerMonth / payPeriodsPerMonth
+                _paystub.HdmfEmployerShare = employerHdmfPerMonth / payPeriodsPerMonth
+            End If
         End If
     End Sub
 
@@ -971,6 +1076,8 @@ Public Class PayrollGeneration
 
     Private Sub CalculateWithholdingTax()
         Dim payFrequencyID As Integer
+        Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
+        Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
         If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
             payFrequencyID = PayFrequency.Monthly
@@ -1020,7 +1127,39 @@ Public Class PayrollGeneration
         Dim exemptionInExcessAmount = bracket.ExemptionInExcessAmount
 
         Dim excessAmount = _paystub.TaxableIncome - taxableIncomeFromAmount
-        _paystub.WithholdingTax = exemptionAmount + (excessAmount * exemptionInExcessAmount)
+
+
+        If is_weekly Then
+            Dim is_deduct_sched_to_thisperiod As Boolean = False
+
+            Dim pp = New Collection(Of PayPeriod)
+
+            If is_under_agency Then
+                Using context = New PayrollContext()
+                    Dim query = From p In context.PayPeriods
+                                Where p.RowID = _PayPeriodID
+
+                    is_deduct_sched_to_thisperiod =
+                        Convert.ToBoolean(query.FirstOrDefault.WTaxWeeklyAgentContribSched)
+                End Using
+            Else
+                Using context = New PayrollContext()
+                    Dim query = From p In context.PayPeriods
+                                Where p.RowID = _PayPeriodID
+
+                    is_deduct_sched_to_thisperiod =
+                        Convert.ToBoolean(query.FirstOrDefault.WTaxWeeklyContribSched)
+                End Using
+            End If
+
+            If is_deduct_sched_to_thisperiod Then
+                _paystub.WithholdingTax = exemptionAmount + (excessAmount * exemptionInExcessAmount)
+            Else
+                _paystub.WithholdingTax = 0
+            End If
+        Else
+            _paystub.WithholdingTax = exemptionAmount + (excessAmount * exemptionInExcessAmount)
+        End If
     End Sub
 
     Private Function GetMatchingTaxBracket(payFrequencyID As Integer?, filingStatusID As Integer?) As WithholdingTaxBracket

@@ -28,7 +28,8 @@ IF isotherformat = '0' THEN
         ,COALESCE(DATE_FORMAT(payp.PayFromDate,'%c/%e/%Y'),'') 'Pay period from'
         ,COALESCE(DATE_FORMAT(payp.PayToDate,'%c/%e/%Y'),'') 'Pay period to'
         ,COALESCE(payp.TotalGrossSalary,0) 'TotalGrossSalary'
-        ,COALESCE(payp.TotalNetSalary,0) 'TotalNetSalary'
+        # ,COALESCE(payp.TotalNetSalary,0) 'TotalNetSalary'
+        ,payp.`Month` `TotalNetSalary`
         ,COALESCE(payp.TotalEmpSSS,0) 'TotalEmpSSS'
         ,COALESCE(payp.TotalEmpWithholdingTax,0) 'TotalEmpWithholdingTax'
         ,COALESCE(payp.TotalCompSSS,0) 'TotalCompSSS'
@@ -59,7 +60,8 @@ IF isotherformat = '0' THEN
         ,COALESCE(DATE_FORMAT(payp.PayFromDate,'%c/%e/%Y'),'') 'Pay period from'
         ,COALESCE(DATE_FORMAT(payp.PayToDate,'%c/%e/%Y'),'') 'Pay period to'
         ,COALESCE(payp.TotalGrossSalary,0) 'TotalGrossSalary'
-        ,COALESCE(payp.TotalNetSalary,0) 'TotalNetSalary'
+        # ,COALESCE(payp.TotalNetSalary,0) 'TotalNetSalary'
+        ,payp.`Month` `TotalNetSalary`
         ,COALESCE(payp.TotalEmpSSS,0) 'TotalEmpSSS'
         ,COALESCE(payp.TotalEmpWithholdingTax,0) 'TotalEmpWithholdingTax'
         ,COALESCE(payp.TotalCompSSS,0) 'TotalCompSSS'
