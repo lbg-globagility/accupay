@@ -28,11 +28,21 @@ Public Class SalaryTab
 
     Private _philHealthMaximumContribution As Decimal
 
+    Public Sub New()
+        InitializeComponent()
+        dgvSalaries.AutoGenerateColumns = False
+    End Sub
+
     Public Sub SetEmployee(employee As Employee)
+        If _mode = FormMode.Creating Then
+            EnableSalaryGrid()
+        End If
+
         _employee = employee
         txtPayFrequency.Text = employee.PayFrequency.Type
         txtSalaryType.Text = employee.EmployeeType
-        txtFullname.Text = $"{employee.LastName}, {employee.FirstName}"
+        txtFullname.Text = $"{employee.FirstName} {employee.LastName}"
+        txtEmployeeID.Text = $"ID# {employee.EmployeeNo}, {employee?.Position.Name}, {employee.EmployeeType} Salary"
         pbEmployee.Image = ConvByteToImage(employee.Image)
 
         ChangeMode(FormMode.NoneSelected)
@@ -40,10 +50,14 @@ Public Class SalaryTab
     End Sub
 
     Private Sub SalaryTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        dgvSalaries.AutoGenerateColumns = False
+        If DesignMode Then
+            Return
+        End If
+
         LoadSocialSecurityBrackets()
         LoadPhilHealthBrackets()
         ChangeMode(FormMode.Disabled)
+        LoadSalaries()
     End Sub
 
     Private Sub ChangeMode(mode As FormMode)
@@ -74,10 +88,14 @@ Public Class SalaryTab
     End Sub
 
     Private Sub LoadSalaries()
+        If _employee Is Nothing Then
+            Return
+        End If
+
         Using context = New PayrollContext()
-            _salaries = context.
-                Salaries.Where(Function(s) Nullable.Equals(s.EmployeeID, _employee.RowID)).
-                ToList()
+            _salaries = (From s In context.Salaries
+                         Where s.EmployeeID = _employee.RowID).
+                         ToList()
         End Using
 
         dgvSalaries.DataSource = _salaries
@@ -107,6 +125,8 @@ Public Class SalaryTab
     End Sub
 
     Private Sub DisplaySalary()
+        dtpEffectiveFrom.Value = _currentSalary.EffectiveFrom
+        dtpEffectiveTo.Value = If(_currentSalary.EffectiveTo, _currentSalary.EffectiveFrom.AddYears(100))
         txtAmount.Text = CStr(_currentSalary.BasicSalary)
         txtAllowance.Text = CStr(_currentSalary.AllowanceSalary)
         txtBasicPay.Text = CStr(_currentSalary.BasicPay)
@@ -115,12 +135,18 @@ Public Class SalaryTab
     End Sub
 
     Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
+        Dim latestSalary = _salaries.
+            OrderBy(Function(s) s.EffectiveTo).
+            LastOrDefault()
+
         _currentSalary = New Salary() With {
             .OrganizationID = z_OrganizationID,
             .CreatedBy = z_User,
             .EmployeeID = _employee.RowID,
             .PositionID = _employee.PositionID,
-            .HDMFAmount = StandardPagIbigContribution
+            .HDMFAmount = StandardPagIbigContribution,
+            .EffectiveFrom = Date.Today,
+            .EffectiveTo = .EffectiveFrom.AddYears(100)
         }
 
         DisableSalaryGrid()
@@ -165,7 +191,7 @@ Public Class SalaryTab
 
                 context.SaveChanges()
             Catch ex As Exception
-
+                MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
             End Try
         End Using
 
@@ -174,11 +200,25 @@ Public Class SalaryTab
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        Throw New NotImplementedException()
+        Dim result = MsgBox("Are you sure you want to delete this salary?", MsgBoxStyle.YesNo, "Delete Salary")
+
+        If result = MsgBoxResult.Yes Then
+            Using context = New PayrollContext()
+                context.Salaries.Attach(_currentSalary)
+                context.Salaries.Remove(_currentSalary)
+                context.SaveChanges()
+            End Using
+
+            LoadSalaries()
+        End If
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-        EnableSalaryGrid()
+        If _mode = FormMode.Creating Then
+            EnableSalaryGrid()
+        ElseIf _mode = FormMode.Editing Then
+            LoadSalaries()
+        End If
     End Sub
 
     Private Sub SelectSalary(salary As Salary)
@@ -215,7 +255,7 @@ Public Class SalaryTab
     End Sub
 
     Private Sub UpdateSss(monthlyRate As Decimal)
-        Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(
+        Dim socialSecurityBracket = _socialSecurityBrackets?.FirstOrDefault(
                     Function(s) s.RangeFromAmount <= monthlyRate And monthlyRate <= s.RangeToAmount)
 
         _currentSalary.PaySocialSecurityID = socialSecurityBracket?.RowID
@@ -231,7 +271,7 @@ Public Class SalaryTab
             philHealthContribution = {philHealthContribution, _philHealthMaximumContribution}.Min()
             philHealthContribution = AccuMath.Truncate(philHealthContribution, 2)
         Else
-            Dim philHealthBracket = _philHealthBrackets.FirstOrDefault(
+            Dim philHealthBracket = _philHealthBrackets?.FirstOrDefault(
                 Function(p) p.SalaryRangeFrom <= monthlyRate And monthlyRate <= p.SalaryRangeTo)
 
             _currentSalary.PayPhilHealthID = philHealthBracket?.RowID
@@ -260,3 +300,5 @@ Public Class SalaryTab
     End Enum
 
 End Class
+
+

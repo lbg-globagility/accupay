@@ -1839,7 +1839,9 @@ Public Class EmployeeForm
                 Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                 Dim employee As Employee = Nothing
                 Using context = New PayrollContext()
-                    employee = (From emp In context.Employees.Include(Function(emp) emp.PayFrequency)
+                    employee = (From emp In context.Employees.
+                                    Include(Function(emp) emp.PayFrequency).
+                                    Include(Function(emp) emp.Position)
                                 Where emp.RowID = employeeID).
                                FirstOrDefault()
                 End Using
@@ -3632,6 +3634,9 @@ Public Class EmployeeForm
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabctrlemp.SelectedIndexChanged
         Label25.Text = Trim(tabctrlemp.SelectedTab.Text)
 
+        If tabctrlemp.SelectedTab Is tbpNewSalary Then
+            dgvEmp_SelectionChanged(sender, e)
+        End If
     End Sub
 
     Dim emp_ralation As New AutoCompleteStringCollection
@@ -4235,6 +4240,10 @@ Public Class EmployeeForm
     End Sub
 
 #End Region 'Personal Profile
+
+    'Sub tbpNewSalary_Enter(sender As Object, e As EventArgs) Handles tbpNewSalary.Enter
+    '    dgvEmp_SelectionChanged(sender, e)
+    'End Sub
 
 #Region "Awards"
 
