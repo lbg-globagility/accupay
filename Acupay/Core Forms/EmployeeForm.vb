@@ -9092,17 +9092,29 @@ Public Class EmployeeForm
         End If
 
         Try
-            Using context = New PayrollContext()
-                Dim loanSchedule = context.LoanSchedules.Find(loanScheduleID)
+            Dim prompt =
+                MessageBox.Show("Do you want to delete this loan ?",
+                                "Confirm deletion",
+                                MessageBoxButtons.YesNoCancel,
+                                MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button2)
 
-                If loanSchedule.LoanTransactions.Count() > 0 Then
-                    MsgBox("Sorry, but you can't delete a loan that has already started.")
-                    Return
-                End If
+            If prompt = DialogResult.Yes Then
+                Using context = New PayrollContext()
+                    Dim loanSchedule = context.LoanSchedules.Find(loanScheduleID)
 
-                context.LoanSchedules.Remove(loanSchedule)
-                context.SaveChanges()
-            End Using
+                    If loanSchedule.LoanTransactions.Count() > 0 Then
+                        MsgBox("Sorry, but you can't delete a loan that has already started.")
+                        Return
+                    End If
+
+                    context.LoanSchedules.Remove(loanSchedule)
+                    context.SaveChanges()
+                End Using
+                Dim curr_row = dgvLoanList.CurrentRow
+                dgvLoanList.Rows.Remove(curr_row)
+            End If
+
         Catch ex As Exception
             Throw New Exception($"Failed to delete loan schedule #{loanScheduleID}.", ex)
         End Try

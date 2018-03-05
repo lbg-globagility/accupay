@@ -179,22 +179,35 @@ Public Class selectPayPeriod
     Sub VIEW_payp(Optional param_Date As Object = Nothing, _
                   Optional PayFreqType As Object = Nothing)
 
-        Dim params(3, 2) As Object
+        'Dim params(3, 2) As Object
 
-        params(0, 0) = "payp_OrganizationID"
-        params(1, 0) = "param_Date"
-        params(2, 0) = "isotherformat"
-        params(3, 0) = "PayFreqType"
+        'params(0, 0) = "payp_OrganizationID"
+        'params(1, 0) = "param_Date"
+        'params(2, 0) = "isotherformat"
+        'params(3, 0) = "PayFreqType"
 
-        params(0, 1) = orgztnID
-        params(1, 1) = If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01")
-        params(2, 1) = "0"
-        params(3, 1) = PayFreqType
+        'params(0, 1) = orgztnID
+        'params(1, 1) = If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01")
+        'params(2, 1) = "0"
+        'params(3, 1) = PayFreqType
 
-        EXEC_VIEW_PROCEDURE(params, _
-                            "VIEW_payp", _
-                            dgvpaypers)
+        'EXEC_VIEW_PROCEDURE(params,
+        '                    "VIEW_payp",
+        '                    dgvpaypers)
+        Dim _params =
+            New Object() {orgztnID,
+            If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01"),
+            0,
+            PayFreqType}
 
+        dgvpaypers.Rows.Clear()
+        Dim sql As New SQL("CALL VIEW_payp(?og_rowid, ?param_date, ?isotherformat, ?payfreqtype);", _params)
+        Dim dt As New DataTable
+        dt = sql.GetFoundRows.Tables(0)
+        For Each drow As DataRow In dt.Rows
+            Dim row_array = drow.ItemArray
+            dgvpaypers.Rows.Add(row_array)
+        Next
     End Sub
 
     Private Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
@@ -681,6 +694,26 @@ Public Class selectPayPeriod
         Me.DialogResult = Windows.Forms.DialogResult.OK
 
         Me.Close()
+
+    End Sub
+
+    Private Sub dgvpaypers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles dgvpaypers.RowsAdded
+
+        Dim month_column_name As String = Column5.Name
+
+        Dim is_even As Boolean = ((dgvpaypers.Item(month_column_name, e.RowIndex).Value Mod 2) = 0)
+
+        Dim row_bg_color As Color
+
+        If is_even Then
+            row_bg_color = Color.LightGray
+        Else
+            row_bg_color = Color.FromArgb(255, 255, 255)
+        End If
+
+        'dgvpaypers.Item(month_column_name, e.RowIndex).Style.BackColor = row_bg_color
+
+        dgvpaypers.Rows(e.RowIndex).DefaultCellStyle.BackColor = row_bg_color
 
     End Sub
 

@@ -39,6 +39,16 @@ Namespace Global.AccuPay.Entity
 
         Public Property OrdinalValue As Integer
 
+        Public Property SSSWeeklyContribSched As Boolean
+        Public Property PhHWeeklyContribSched As Boolean
+        Public Property HDMFWeeklyContribSched As Boolean
+        Public Property WTaxWeeklyContribSched As Boolean
+
+        Public Property SSSWeeklyAgentContribSched As Boolean
+        Public Property PhHWeeklyAgentContribSched As Boolean
+        Public Property HDMFWeeklyAgentContribSched As Boolean
+        Public Property WTaxWeeklyAgentContribSched As Boolean
+
     End Class
 
 End Namespace

@@ -79,8 +79,10 @@ ELSEIF employeeType = 'Daily' THEN
 
         RETURN (salary / 8) * workHours;
     ELSEIF payFrequency = PAYFREQUENCY_WEEKLY THEN
-        SIGNAL SQLSTATE '01000'
-            SET MESSAGE_TEXT = '`GetBasicPay()` has not been implemented for weekly pay frequency of daily employees.';
+	     
+        RETURN (salary / 8) * workHours;
+        /*SIGNAL SQLSTATE '01000'
+            SET MESSAGE_TEXT = '`GetBasicPay()` has not been implemented for weekly pay frequency of daily employees.';*/
     ELSEIF payFrequency = PAYFREQUENCY_DAILY THEN
         SIGNAL SQLSTATE '01000'
             SET MESSAGE_TEXT = '`GetBasicPay()` has not been implemented for daily pay frequency of daily employees.';

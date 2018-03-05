@@ -14,7 +14,8 @@ DECLARE payp_RowID INT(11);
 
 DECLARE ReturnDate DATE;
 
-DECLARE paypFrom_RowID INT(11);
+DECLARE paypFrom_RowID
+        , payfreq_rowid INT(11);
 
 DECLARE startdate_month CHAR(2);
 
@@ -22,35 +23,35 @@ DECLARE startdate_year CHAR(4);
 
 DECLARE OrganizID INT(11);
 
-SELECT OrganizationID FROM employee WHERE RowID=Employee_RowID INTO OrganizID;
+SELECT OrganizationID, PayFrequencyID FROM employee WHERE RowID=Employee_RowID INTO OrganizID, payfreq_rowid;
 
 
 SET @i=0;
 
-SELECT RowID,`Month`,`Year` FROM payperiod WHERE EmpLoanEffectiveDateFrom BETWEEN PayFromDate AND PayToDate AND OrganizationID=OrganizID INTO paypFrom_RowID,startdate_month,startdate_year;
+SELECT RowID,`Month`,`Year` FROM payperiod WHERE EmpLoanEffectiveDateFrom BETWEEN PayFromDate AND PayToDate AND OrganizationID=OrganizID AND TotalGrossSalary = payfreq_rowid INTO paypFrom_RowID,startdate_month,startdate_year;
 
 IF LoanDeductSched = 'Per pay period' THEN
     SET LoanDeductSched = 'Per pay period';
 
-    SELECT PayToDate FROM (SELECT RowID,PayToDate,(SELECT @i := @i + 1) `Rank` FROM payperiod WHERE RowID >= paypFrom_RowID LIMIT EmpLoanNoOfPayPeriod) AS `DateRank` WHERE IF(EmpLoanNoOfPayPeriod > `DateRank`.`Rank`, `DateRank`.`Rank`=@i, `DateRank`.`Rank`=EmpLoanNoOfPayPeriod) INTO ReturnDate;
+    SELECT PayToDate FROM (SELECT RowID,PayToDate,(SELECT @i := @i + 1) `Rank` FROM payperiod WHERE RowID >= paypFrom_RowID AND TotalGrossSalary = payfreq_rowid AND OrganizationID = OrganizID LIMIT EmpLoanNoOfPayPeriod) AS `DateRank` WHERE IF(EmpLoanNoOfPayPeriod > `DateRank`.`Rank`, `DateRank`.`Rank`=@i, `DateRank`.`Rank`=EmpLoanNoOfPayPeriod) INTO ReturnDate;
 
 ELSEIF LoanDeductSched = 'End of the month' THEN
     SET LoanDeductSched = 'End of the month';
 
-    SELECT PayToDate FROM (SELECT RowID,PayToDate,(SELECT @i := @i + 1) `Rank` FROM payperiod WHERE RowID >= paypFrom_RowID AND `Half`='0' LIMIT EmpLoanNoOfPayPeriod) AS `DateRank` WHERE IF(EmpLoanNoOfPayPeriod > `DateRank`.`Rank`, `DateRank`.`Rank`=@i, `DateRank`.`Rank`=EmpLoanNoOfPayPeriod) INTO ReturnDate;
+    SELECT PayToDate FROM (SELECT RowID,PayToDate,(SELECT @i := @i + 1) `Rank` FROM payperiod WHERE RowID >= paypFrom_RowID AND `Half`='0' AND TotalGrossSalary = payfreq_rowid AND OrganizationID = OrganizID LIMIT EmpLoanNoOfPayPeriod) AS `DateRank` WHERE IF(EmpLoanNoOfPayPeriod > `DateRank`.`Rank`, `DateRank`.`Rank`=@i, `DateRank`.`Rank`=EmpLoanNoOfPayPeriod) INTO ReturnDate;
 
 ELSEIF LoanDeductSched = 'First half' THEN
     SET LoanDeductSched = 'First half';
 
-    SELECT PayToDate FROM (SELECT RowID,PayToDate,(SELECT @i := @i + 1) `Rank` FROM payperiod WHERE RowID >= paypFrom_RowID AND `Half`='1' LIMIT EmpLoanNoOfPayPeriod) AS `DateRank` WHERE IF(EmpLoanNoOfPayPeriod > `DateRank`.`Rank`, `DateRank`.`Rank`=@i, `DateRank`.`Rank`=EmpLoanNoOfPayPeriod) INTO ReturnDate;
+    SELECT PayToDate FROM (SELECT RowID,PayToDate,(SELECT @i := @i + 1) `Rank` FROM payperiod WHERE RowID >= paypFrom_RowID AND `Half`='1' AND TotalGrossSalary = payfreq_rowid AND OrganizationID = OrganizID LIMIT EmpLoanNoOfPayPeriod) AS `DateRank` WHERE IF(EmpLoanNoOfPayPeriod > `DateRank`.`Rank`, `DateRank`.`Rank`=@i, `DateRank`.`Rank`=EmpLoanNoOfPayPeriod) INTO ReturnDate;
 
 END IF;
 
 IF ReturnDate IS NULL THEN
 
-    SELECT RowID FROM payperiod WHERE ADDDATE(EmpLoanEffectiveDateFrom, INTERVAL 1 YEAR) BETWEEN PayFromDate AND PayToDate AND OrganizationID=OrganizID INTO paypFrom_RowID;
+    SELECT RowID FROM payperiod WHERE ADDDATE(EmpLoanEffectiveDateFrom, INTERVAL 1 YEAR) BETWEEN PayFromDate AND PayToDate AND OrganizationID=OrganizID AND TotalGrossSalary = payfreq_rowid INTO paypFrom_RowID;
 
-    SELECT PayToDate FROM (SELECT RowID,PayToDate,(SELECT @i := @i + 1) `Rank` FROM payperiod WHERE RowID >= paypFrom_RowID LIMIT EmpLoanNoOfPayPeriod) AS `DateRank` WHERE IF(EmpLoanNoOfPayPeriod > `DateRank`.`Rank`, `DateRank`.`Rank`=@i, `DateRank`.`Rank`=EmpLoanNoOfPayPeriod) INTO ReturnDate;
+    SELECT PayToDate FROM (SELECT RowID,PayToDate,(SELECT @i := @i + 1) `Rank` FROM payperiod WHERE RowID >= paypFrom_RowID AND TotalGrossSalary = payfreq_rowid AND OrganizationID = OrganizID LIMIT EmpLoanNoOfPayPeriod) AS `DateRank` WHERE IF(EmpLoanNoOfPayPeriod > `DateRank`.`Rank`, `DateRank`.`Rank`=@i, `DateRank`.`Rank`=EmpLoanNoOfPayPeriod) INTO ReturnDate;
 
     SET ReturnDate = SUBDATE(ReturnDate, INTERVAL 1 YEAR);
 
