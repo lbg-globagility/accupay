@@ -23,102 +23,139 @@ Partial Class NewPayStubForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle52 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle38 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle40 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle41 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle42 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle43 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle44 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle45 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle46 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle47 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle48 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle49 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle50 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle51 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle221 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle189 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle190 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle191 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle192 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle193 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle194 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle195 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle196 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle197 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle198 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle199 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle200 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle201 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle202 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle203 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle204 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle205 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle206 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle207 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle208 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle209 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle210 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle211 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle212 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle213 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle214 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle215 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle216 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle217 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle218 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle219 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle220 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle240 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle222 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle223 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle224 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle225 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle226 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle227 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle228 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle229 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle230 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle231 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle232 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle233 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle234 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle235 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle236 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle237 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle238 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle239 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(NewPayStubForm))
-        Dim DataGridViewCellStyle53 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle54 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle55 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle56 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle57 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle58 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle59 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle60 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle61 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle62 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle63 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle64 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle65 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle66 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle67 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle68 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle69 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle70 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle71 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle72 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle73 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle74 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle75 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle76 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle77 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle78 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle79 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle80 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle81 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle82 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle83 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle84 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle85 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle86 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle87 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle88 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle89 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle90 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle91 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle92 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle93 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle94 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle241 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle242 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle243 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle244 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle245 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle246 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle247 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle248 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle249 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle250 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle251 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle252 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle253 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle254 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle255 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle256 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle257 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle258 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle259 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle260 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle261 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle262 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle263 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle264 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle265 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle266 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle267 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle268 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle269 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle270 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle271 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle272 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle273 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle274 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle275 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle276 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle277 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle278 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle279 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle280 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle281 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle282 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvPaystubs = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column39 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column40 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column41 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column42 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column43 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.PaystubTab = New System.Windows.Forms.TabPage()
         Me.txtTotalAmount = New System.Windows.Forms.TextBox()
@@ -153,7 +190,9 @@ Partial Class NewPayStubForm
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label32 = New System.Windows.Forms.Label()
         Me.Label30 = New System.Windows.Forms.Label()
+        Me.Label33 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -178,9 +217,13 @@ Partial Class NewPayStubForm
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtTotalEarnings = New System.Windows.Forms.TextBox()
         Me.txtTotalHours = New System.Windows.Forms.TextBox()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.txtSpecialHolidayPay = New System.Windows.Forms.TextBox()
+        Me.TextBox6 = New System.Windows.Forms.TextBox()
         Me.txtRegularHolidayPay = New System.Windows.Forms.TextBox()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.txtSpecialHolidayHours = New System.Windows.Forms.TextBox()
+        Me.TextBox5 = New System.Windows.Forms.TextBox()
         Me.txtRegularHolidayHours = New System.Windows.Forms.TextBox()
         Me.txtLeavePay = New System.Windows.Forms.TextBox()
         Me.txtLeaveHours = New System.Windows.Forms.TextBox()
@@ -273,43 +316,8 @@ Partial Class NewPayStubForm
         Me.DataGridViewTextBoxColumn58 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn59 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn60 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column39 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column40 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column41 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column42 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column43 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.Label35 = New System.Windows.Forms.Label()
         CType(Me.dgvPaystubs, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.PaystubTab.SuspendLayout()
@@ -333,39 +341,429 @@ Partial Class NewPayStubForm
         Me.dgvPaystubs.ColumnHeadersHeight = 34
         Me.dgvPaystubs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvPaystubs.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column37, Me.Column1, Me.Column30, Me.Column9, Me.Column2, Me.Column18, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8, Me.Column38, Me.Column39, Me.Column10, Me.Column40, Me.Column11, Me.Column41, Me.Column42, Me.Column12, Me.Column13, Me.Column15, Me.Column14, Me.Column43, Me.Column16, Me.Column17, Me.Column19, Me.Column21, Me.Column22, Me.Column23, Me.Column24, Me.Column20, Me.Column25, Me.Column26, Me.Column29, Me.Column27, Me.Column28})
-        DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle33.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle33.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle33.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle33.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle33.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvPaystubs.DefaultCellStyle = DataGridViewCellStyle33
-        Me.dgvPaystubs.Dock = System.Windows.Forms.DockStyle.Fill
+        DataGridViewCellStyle221.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle221.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle221.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle221.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle221.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle221.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle221.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvPaystubs.DefaultCellStyle = DataGridViewCellStyle221
         Me.dgvPaystubs.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvPaystubs.Location = New System.Drawing.Point(10, 10)
+        Me.dgvPaystubs.Location = New System.Drawing.Point(8, 8)
         Me.dgvPaystubs.MultiSelect = False
         Me.dgvPaystubs.Name = "dgvPaystubs"
         Me.dgvPaystubs.ReadOnly = True
         Me.dgvPaystubs.RowHeadersWidth = 25
         Me.dgvPaystubs.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvPaystubs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvPaystubs.Size = New System.Drawing.Size(940, 246)
+        Me.dgvPaystubs.Size = New System.Drawing.Size(240, 680)
         Me.dgvPaystubs.TabIndex = 1
+        '
+        'Column37
+        '
+        Me.Column37.DataPropertyName = "Employee.EmployeeNo"
+        Me.Column37.Frozen = True
+        Me.Column37.HeaderText = "Employee No"
+        Me.Column37.Name = "Column37"
+        Me.Column37.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "Employee.LastName"
+        Me.Column1.Frozen = True
+        Me.Column1.HeaderText = "Last Name"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column30
+        '
+        Me.Column30.DataPropertyName = "Employee.FirstName"
+        Me.Column30.Frozen = True
+        Me.Column30.HeaderText = "First Name"
+        Me.Column30.Name = "Column30"
+        Me.Column30.ReadOnly = True
+        '
+        'Column9
+        '
+        Me.Column9.HeaderText = "Basic Pay"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
+        Me.Column9.Width = 80
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "Paystub.RegularPay"
+        DataGridViewCellStyle189.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle189.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        DataGridViewCellStyle189.NullValue = Nothing
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle189
+        Me.Column2.HeaderText = "Reg Amt"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        Me.Column2.Width = 80
+        '
+        'Column18
+        '
+        Me.Column18.DataPropertyName = "Paystub.RegularHours"
+        DataGridViewCellStyle190.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle190.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column18.DefaultCellStyle = DataGridViewCellStyle190
+        Me.Column18.HeaderText = "Reg Hrs"
+        Me.Column18.Name = "Column18"
+        Me.Column18.ReadOnly = True
+        Me.Column18.Width = 80
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "Paystub.OvertimeHours"
+        DataGridViewCellStyle191.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle191.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle191
+        Me.Column3.HeaderText = "OT Hrs"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        Me.Column3.Width = 80
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "Paystub.OvertimePay"
+        DataGridViewCellStyle192.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle192.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column4.DefaultCellStyle = DataGridViewCellStyle192
+        Me.Column4.HeaderText = "OT Amt"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        Me.Column4.Width = 80
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "Paystub.NightDiffHours"
+        DataGridViewCellStyle193.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle193.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle193
+        Me.Column5.HeaderText = "N.Diff Hrs"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        Me.Column5.Width = 80
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "Paystub.NightDiffPay"
+        DataGridViewCellStyle194.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle194.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle194
+        Me.Column6.HeaderText = "N.Diff Amt"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        Me.Column6.Width = 80
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "Paystub.NightDiffOvertimeHours"
+        DataGridViewCellStyle195.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle195.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column7.DefaultCellStyle = DataGridViewCellStyle195
+        Me.Column7.HeaderText = "N.Diff OT Hrs"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        Me.Column7.Width = 80
+        '
+        'Column8
+        '
+        Me.Column8.DataPropertyName = "Paystub.NightDiffOvertimePay"
+        DataGridViewCellStyle196.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle196.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column8.DefaultCellStyle = DataGridViewCellStyle196
+        Me.Column8.HeaderText = "N.Diff OT Amt"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        Me.Column8.Width = 80
+        '
+        'Column38
+        '
+        Me.Column38.DataPropertyName = "Paystub.SpecialHolidayHours"
+        DataGridViewCellStyle197.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle197.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column38.DefaultCellStyle = DataGridViewCellStyle197
+        Me.Column38.HeaderText = "S.Hol Hrs"
+        Me.Column38.Name = "Column38"
+        Me.Column38.ReadOnly = True
+        Me.Column38.Width = 80
+        '
+        'Column39
+        '
+        Me.Column39.DataPropertyName = "Paystub.RegularHolidayHours"
+        DataGridViewCellStyle198.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle198.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column39.DefaultCellStyle = DataGridViewCellStyle198
+        Me.Column39.HeaderText = "R.Hol Hrs"
+        Me.Column39.Name = "Column39"
+        Me.Column39.ReadOnly = True
+        Me.Column39.Width = 80
+        '
+        'Column10
+        '
+        Me.Column10.DataPropertyName = "Paystub.HolidayPay"
+        DataGridViewCellStyle199.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle199.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column10.DefaultCellStyle = DataGridViewCellStyle199
+        Me.Column10.HeaderText = "Holiday"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        Me.Column10.Width = 80
+        '
+        'Column40
+        '
+        Me.Column40.DataPropertyName = "Paystub.RestDayHours"
+        DataGridViewCellStyle200.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle200.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column40.DefaultCellStyle = DataGridViewCellStyle200
+        Me.Column40.HeaderText = "R.Day Hrs"
+        Me.Column40.Name = "Column40"
+        Me.Column40.ReadOnly = True
+        Me.Column40.Width = 80
+        '
+        'Column11
+        '
+        Me.Column11.DataPropertyName = "Paystub.RestDayPay"
+        DataGridViewCellStyle201.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle201.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column11.DefaultCellStyle = DataGridViewCellStyle201
+        Me.Column11.HeaderText = "R.Day Pay"
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        Me.Column11.Width = 80
+        '
+        'Column41
+        '
+        Me.Column41.DataPropertyName = "Paystub.RestDayOTHours"
+        DataGridViewCellStyle202.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle202.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column41.DefaultCellStyle = DataGridViewCellStyle202
+        Me.Column41.HeaderText = "R.DayOT Hrs"
+        Me.Column41.Name = "Column41"
+        Me.Column41.ReadOnly = True
+        Me.Column41.Width = 80
+        '
+        'Column42
+        '
+        Me.Column42.DataPropertyName = "Paystub.RestDayOTPay"
+        DataGridViewCellStyle203.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle203.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column42.DefaultCellStyle = DataGridViewCellStyle203
+        Me.Column42.HeaderText = "R.DayOT Pay"
+        Me.Column42.Name = "Column42"
+        Me.Column42.ReadOnly = True
+        Me.Column42.Width = 80
+        '
+        'Column12
+        '
+        Me.Column12.DataPropertyName = "Paystub.LateHours"
+        DataGridViewCellStyle204.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle204.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column12.DefaultCellStyle = DataGridViewCellStyle204
+        Me.Column12.HeaderText = "Late Hrs"
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
+        Me.Column12.Width = 80
+        '
+        'Column13
+        '
+        Me.Column13.DataPropertyName = "Paystub.LateDeduction"
+        DataGridViewCellStyle205.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle205.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column13.DefaultCellStyle = DataGridViewCellStyle205
+        Me.Column13.HeaderText = "Late Amt"
+        Me.Column13.Name = "Column13"
+        Me.Column13.ReadOnly = True
+        Me.Column13.Width = 80
+        '
+        'Column15
+        '
+        Me.Column15.DataPropertyName = "Paystub.UndertimeHours"
+        DataGridViewCellStyle206.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle206.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column15.DefaultCellStyle = DataGridViewCellStyle206
+        Me.Column15.HeaderText = "UT Hrs"
+        Me.Column15.Name = "Column15"
+        Me.Column15.ReadOnly = True
+        Me.Column15.Width = 80
+        '
+        'Column14
+        '
+        Me.Column14.DataPropertyName = "Paystub.UndertimeDeduction"
+        DataGridViewCellStyle207.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle207.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column14.DefaultCellStyle = DataGridViewCellStyle207
+        Me.Column14.HeaderText = "UT Amt"
+        Me.Column14.Name = "Column14"
+        Me.Column14.ReadOnly = True
+        Me.Column14.Width = 80
+        '
+        'Column43
+        '
+        Me.Column43.DataPropertyName = "Paystub.AbsentHours"
+        DataGridViewCellStyle208.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle208.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column43.DefaultCellStyle = DataGridViewCellStyle208
+        Me.Column43.HeaderText = "Absent Hrs"
+        Me.Column43.Name = "Column43"
+        Me.Column43.ReadOnly = True
+        Me.Column43.Width = 80
+        '
+        'Column16
+        '
+        Me.Column16.DataPropertyName = "Paystub.AbsenceDeduction"
+        DataGridViewCellStyle209.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle209.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column16.DefaultCellStyle = DataGridViewCellStyle209
+        Me.Column16.HeaderText = "Absent Amt"
+        Me.Column16.Name = "Column16"
+        Me.Column16.ReadOnly = True
+        Me.Column16.Width = 80
+        '
+        'Column17
+        '
+        Me.Column17.DataPropertyName = "Paystub.TotalEarnings"
+        DataGridViewCellStyle210.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle210.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column17.DefaultCellStyle = DataGridViewCellStyle210
+        Me.Column17.HeaderText = "Total Pay"
+        Me.Column17.Name = "Column17"
+        Me.Column17.ReadOnly = True
+        Me.Column17.Width = 80
+        '
+        'Column19
+        '
+        Me.Column19.DataPropertyName = "Paystub.TotalAllowance"
+        DataGridViewCellStyle211.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle211.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column19.DefaultCellStyle = DataGridViewCellStyle211
+        Me.Column19.HeaderText = "Allowance"
+        Me.Column19.Name = "Column19"
+        Me.Column19.ReadOnly = True
+        Me.Column19.Width = 80
+        '
+        'Column21
+        '
+        Me.Column21.DataPropertyName = "Paystub.GrossPay"
+        DataGridViewCellStyle212.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle212.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column21.DefaultCellStyle = DataGridViewCellStyle212
+        Me.Column21.HeaderText = "Gross Pay"
+        Me.Column21.Name = "Column21"
+        Me.Column21.ReadOnly = True
+        Me.Column21.Width = 80
+        '
+        'Column22
+        '
+        Me.Column22.DataPropertyName = "Paystub.SssEmployeeShare"
+        DataGridViewCellStyle213.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle213.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column22.DefaultCellStyle = DataGridViewCellStyle213
+        Me.Column22.HeaderText = "SSS"
+        Me.Column22.Name = "Column22"
+        Me.Column22.ReadOnly = True
+        Me.Column22.Width = 80
+        '
+        'Column23
+        '
+        Me.Column23.DataPropertyName = "Paystub.PhilHealthEmployeeShare"
+        DataGridViewCellStyle214.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle214.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column23.DefaultCellStyle = DataGridViewCellStyle214
+        Me.Column23.HeaderText = "PhilHealth"
+        Me.Column23.Name = "Column23"
+        Me.Column23.ReadOnly = True
+        Me.Column23.Width = 80
+        '
+        'Column24
+        '
+        Me.Column24.DataPropertyName = "Paystub.HdmfEmployeeShare"
+        DataGridViewCellStyle215.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle215.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column24.DefaultCellStyle = DataGridViewCellStyle215
+        Me.Column24.HeaderText = "Pag-IBIG"
+        Me.Column24.Name = "Column24"
+        Me.Column24.ReadOnly = True
+        Me.Column24.Width = 80
+        '
+        'Column20
+        '
+        Me.Column20.DataPropertyName = "Paystub.TotalLoans"
+        DataGridViewCellStyle216.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle216.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column20.DefaultCellStyle = DataGridViewCellStyle216
+        Me.Column20.HeaderText = "Loan"
+        Me.Column20.Name = "Column20"
+        Me.Column20.ReadOnly = True
+        Me.Column20.Width = 80
+        '
+        'Column25
+        '
+        Me.Column25.DataPropertyName = "Paystub.TaxableIncome"
+        DataGridViewCellStyle217.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle217.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column25.DefaultCellStyle = DataGridViewCellStyle217
+        Me.Column25.HeaderText = "Taxable"
+        Me.Column25.Name = "Column25"
+        Me.Column25.ReadOnly = True
+        Me.Column25.Width = 80
+        '
+        'Column26
+        '
+        Me.Column26.DataPropertyName = "Paystub.WithholdingTax"
+        DataGridViewCellStyle218.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle218.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column26.DefaultCellStyle = DataGridViewCellStyle218
+        Me.Column26.HeaderText = "With. Tax"
+        Me.Column26.Name = "Column26"
+        Me.Column26.ReadOnly = True
+        Me.Column26.Width = 80
+        '
+        'Column29
+        '
+        Me.Column29.DataPropertyName = "Paystub.TotalAdjustments"
+        DataGridViewCellStyle219.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle219.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column29.DefaultCellStyle = DataGridViewCellStyle219
+        Me.Column29.HeaderText = "Adjust."
+        Me.Column29.Name = "Column29"
+        Me.Column29.ReadOnly = True
+        Me.Column29.Width = 80
+        '
+        'Column27
+        '
+        Me.Column27.DataPropertyName = "Paystub.NetPay"
+        DataGridViewCellStyle220.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle220.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column27.DefaultCellStyle = DataGridViewCellStyle220
+        Me.Column27.HeaderText = "Net Pay"
+        Me.Column27.Name = "Column27"
+        Me.Column27.ReadOnly = True
+        Me.Column27.Width = 80
+        '
+        'Column28
+        '
+        Me.Column28.HeaderText = "13th Month"
+        Me.Column28.Name = "Column28"
+        Me.Column28.ReadOnly = True
+        Me.Column28.Width = 80
         '
         'TabControl1
         '
         Me.TabControl1.Controls.Add(Me.PaystubTab)
         Me.TabControl1.Controls.Add(Me.TimeEntryTab)
-        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControl1.Location = New System.Drawing.Point(0, 0)
+        Me.TabControl1.Location = New System.Drawing.Point(8, 8)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(940, 429)
+        Me.TabControl1.Size = New System.Drawing.Size(680, 664)
         Me.TabControl1.TabIndex = 2
         '
         'PaystubTab
         '
+        Me.PaystubTab.AutoScroll = True
         Me.PaystubTab.Controls.Add(Me.txtTotalAmount)
         Me.PaystubTab.Controls.Add(Me.txt13thMonthPay)
         Me.PaystubTab.Controls.Add(Me.txtNetPay)
@@ -382,6 +780,8 @@ Partial Class NewPayStubForm
         Me.PaystubTab.Controls.Add(Me.txtPagIbig)
         Me.PaystubTab.Controls.Add(Me.txtPhilHealth)
         Me.PaystubTab.Controls.Add(Me.txtSss)
+        Me.PaystubTab.Controls.Add(Me.Label35)
+        Me.PaystubTab.Controls.Add(Me.Label34)
         Me.PaystubTab.Controls.Add(Me.Label14)
         Me.PaystubTab.Controls.Add(Me.Label13)
         Me.PaystubTab.Controls.Add(Me.Label12)
@@ -398,7 +798,9 @@ Partial Class NewPayStubForm
         Me.PaystubTab.Controls.Add(Me.Label7)
         Me.PaystubTab.Controls.Add(Me.Label9)
         Me.PaystubTab.Controls.Add(Me.Label8)
+        Me.PaystubTab.Controls.Add(Me.Label32)
         Me.PaystubTab.Controls.Add(Me.Label30)
+        Me.PaystubTab.Controls.Add(Me.Label33)
         Me.PaystubTab.Controls.Add(Me.Label6)
         Me.PaystubTab.Controls.Add(Me.Label29)
         Me.PaystubTab.Controls.Add(Me.Label5)
@@ -423,9 +825,13 @@ Partial Class NewPayStubForm
         Me.PaystubTab.Controls.Add(Me.Label1)
         Me.PaystubTab.Controls.Add(Me.txtTotalEarnings)
         Me.PaystubTab.Controls.Add(Me.txtTotalHours)
+        Me.PaystubTab.Controls.Add(Me.TextBox2)
         Me.PaystubTab.Controls.Add(Me.txtSpecialHolidayPay)
+        Me.PaystubTab.Controls.Add(Me.TextBox6)
         Me.PaystubTab.Controls.Add(Me.txtRegularHolidayPay)
+        Me.PaystubTab.Controls.Add(Me.TextBox1)
         Me.PaystubTab.Controls.Add(Me.txtSpecialHolidayHours)
+        Me.PaystubTab.Controls.Add(Me.TextBox5)
         Me.PaystubTab.Controls.Add(Me.txtRegularHolidayHours)
         Me.PaystubTab.Controls.Add(Me.txtLeavePay)
         Me.PaystubTab.Controls.Add(Me.txtLeaveHours)
@@ -444,7 +850,7 @@ Partial Class NewPayStubForm
         Me.PaystubTab.Location = New System.Drawing.Point(4, 24)
         Me.PaystubTab.Name = "PaystubTab"
         Me.PaystubTab.Padding = New System.Windows.Forms.Padding(3)
-        Me.PaystubTab.Size = New System.Drawing.Size(932, 401)
+        Me.PaystubTab.Size = New System.Drawing.Size(672, 636)
         Me.PaystubTab.TabIndex = 0
         Me.PaystubTab.Text = "Paystub"
         Me.PaystubTab.UseVisualStyleBackColor = True
@@ -453,7 +859,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTotalAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTotalAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalAmount.Location = New System.Drawing.Point(344, 296)
+        Me.txtTotalAmount.Location = New System.Drawing.Point(104, 456)
         Me.txtTotalAmount.Name = "txtTotalAmount"
         Me.txtTotalAmount.ReadOnly = True
         Me.txtTotalAmount.Size = New System.Drawing.Size(80, 22)
@@ -465,7 +871,7 @@ Partial Class NewPayStubForm
         '
         Me.txt13thMonthPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txt13thMonthPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txt13thMonthPay.Location = New System.Drawing.Point(344, 272)
+        Me.txt13thMonthPay.Location = New System.Drawing.Point(104, 432)
         Me.txt13thMonthPay.Name = "txt13thMonthPay"
         Me.txt13thMonthPay.ReadOnly = True
         Me.txt13thMonthPay.Size = New System.Drawing.Size(80, 22)
@@ -477,7 +883,7 @@ Partial Class NewPayStubForm
         '
         Me.txtNetPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtNetPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNetPay.Location = New System.Drawing.Point(344, 240)
+        Me.txtNetPay.Location = New System.Drawing.Point(104, 400)
         Me.txtNetPay.Name = "txtNetPay"
         Me.txtNetPay.ReadOnly = True
         Me.txtNetPay.Size = New System.Drawing.Size(80, 22)
@@ -489,8 +895,9 @@ Partial Class NewPayStubForm
         '
         Me.TextBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox4.Location = New System.Drawing.Point(840, 80)
+        Me.TextBox4.Location = New System.Drawing.Point(104, 584)
         Me.TextBox4.Name = "TextBox4"
+        Me.TextBox4.ReadOnly = True
         Me.TextBox4.Size = New System.Drawing.Size(80, 22)
         Me.TextBox4.TabIndex = 22
         Me.TextBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -500,7 +907,7 @@ Partial Class NewPayStubForm
         '
         Me.txtWithholdingTax.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtWithholdingTax.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWithholdingTax.Location = New System.Drawing.Point(344, 192)
+        Me.txtWithholdingTax.Location = New System.Drawing.Point(104, 352)
         Me.txtWithholdingTax.Name = "txtWithholdingTax"
         Me.txtWithholdingTax.ReadOnly = True
         Me.txtWithholdingTax.Size = New System.Drawing.Size(80, 22)
@@ -512,7 +919,7 @@ Partial Class NewPayStubForm
         '
         Me.txtGrossPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtGrossPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGrossPay.Location = New System.Drawing.Point(344, 56)
+        Me.txtGrossPay.Location = New System.Drawing.Point(152, 216)
         Me.txtGrossPay.Name = "txtGrossPay"
         Me.txtGrossPay.ReadOnly = True
         Me.txtGrossPay.Size = New System.Drawing.Size(80, 22)
@@ -524,7 +931,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTotalAllowance.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTotalAllowance.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalAllowance.Location = New System.Drawing.Point(344, 32)
+        Me.txtTotalAllowance.Location = New System.Drawing.Point(152, 192)
         Me.txtTotalAllowance.Name = "txtTotalAllowance"
         Me.txtTotalAllowance.ReadOnly = True
         Me.txtTotalAllowance.Size = New System.Drawing.Size(80, 22)
@@ -536,8 +943,9 @@ Partial Class NewPayStubForm
         '
         Me.TextBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox7.Location = New System.Drawing.Point(840, 32)
+        Me.TextBox7.Location = New System.Drawing.Point(104, 536)
         Me.TextBox7.Name = "TextBox7"
+        Me.TextBox7.ReadOnly = True
         Me.TextBox7.Size = New System.Drawing.Size(80, 22)
         Me.TextBox7.TabIndex = 22
         Me.TextBox7.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -547,8 +955,9 @@ Partial Class NewPayStubForm
         '
         Me.TextBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox3.Location = New System.Drawing.Point(840, 56)
+        Me.TextBox3.Location = New System.Drawing.Point(104, 560)
         Me.TextBox3.Name = "TextBox3"
+        Me.TextBox3.ReadOnly = True
         Me.TextBox3.Size = New System.Drawing.Size(80, 22)
         Me.TextBox3.TabIndex = 22
         Me.TextBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -558,7 +967,7 @@ Partial Class NewPayStubForm
         '
         Me.txtBasicPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtBasicPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtBasicPay.Location = New System.Drawing.Point(176, 280)
+        Me.txtBasicPay.Location = New System.Drawing.Point(176, 32)
         Me.txtBasicPay.Name = "txtBasicPay"
         Me.txtBasicPay.ReadOnly = True
         Me.txtBasicPay.Size = New System.Drawing.Size(80, 22)
@@ -570,7 +979,7 @@ Partial Class NewPayStubForm
         '
         Me.txtBasicHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtBasicHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtBasicHours.Location = New System.Drawing.Point(88, 280)
+        Me.txtBasicHours.Location = New System.Drawing.Point(88, 32)
         Me.txtBasicHours.Name = "txtBasicHours"
         Me.txtBasicHours.ReadOnly = True
         Me.txtBasicHours.Size = New System.Drawing.Size(80, 22)
@@ -582,7 +991,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTotalLoan.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTotalLoan.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalLoan.Location = New System.Drawing.Point(344, 216)
+        Me.txtTotalLoan.Location = New System.Drawing.Point(104, 376)
         Me.txtTotalLoan.Name = "txtTotalLoan"
         Me.txtTotalLoan.ReadOnly = True
         Me.txtTotalLoan.Size = New System.Drawing.Size(80, 22)
@@ -594,7 +1003,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTaxable.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTaxable.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTaxable.Location = New System.Drawing.Point(344, 168)
+        Me.txtTaxable.Location = New System.Drawing.Point(104, 328)
         Me.txtTaxable.Name = "txtTaxable"
         Me.txtTaxable.ReadOnly = True
         Me.txtTaxable.Size = New System.Drawing.Size(80, 22)
@@ -606,7 +1015,7 @@ Partial Class NewPayStubForm
         '
         Me.txtPagIbig.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtPagIbig.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPagIbig.Location = New System.Drawing.Point(344, 136)
+        Me.txtPagIbig.Location = New System.Drawing.Point(104, 296)
         Me.txtPagIbig.Name = "txtPagIbig"
         Me.txtPagIbig.ReadOnly = True
         Me.txtPagIbig.Size = New System.Drawing.Size(80, 22)
@@ -618,7 +1027,7 @@ Partial Class NewPayStubForm
         '
         Me.txtPhilHealth.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtPhilHealth.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPhilHealth.Location = New System.Drawing.Point(344, 112)
+        Me.txtPhilHealth.Location = New System.Drawing.Point(104, 272)
         Me.txtPhilHealth.Name = "txtPhilHealth"
         Me.txtPhilHealth.ReadOnly = True
         Me.txtPhilHealth.Size = New System.Drawing.Size(80, 22)
@@ -630,7 +1039,7 @@ Partial Class NewPayStubForm
         '
         Me.txtSss.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtSss.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSss.Location = New System.Drawing.Point(344, 88)
+        Me.txtSss.Location = New System.Drawing.Point(104, 248)
         Me.txtSss.Name = "txtSss"
         Me.txtSss.ReadOnly = True
         Me.txtSss.Size = New System.Drawing.Size(80, 22)
@@ -640,7 +1049,7 @@ Partial Class NewPayStubForm
         '
         'Label14
         '
-        Me.Label14.Location = New System.Drawing.Point(176, 8)
+        Me.Label14.Location = New System.Drawing.Point(432, 8)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(80, 24)
         Me.Label14.TabIndex = 21
@@ -649,7 +1058,7 @@ Partial Class NewPayStubForm
         '
         'Label13
         '
-        Me.Label13.Location = New System.Drawing.Point(88, 8)
+        Me.Label13.Location = New System.Drawing.Point(344, 8)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(80, 24)
         Me.Label13.TabIndex = 20
@@ -658,7 +1067,7 @@ Partial Class NewPayStubForm
         '
         'Label12
         '
-        Me.Label12.Location = New System.Drawing.Point(8, 352)
+        Me.Label12.Location = New System.Drawing.Point(8, 104)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(72, 24)
         Me.Label12.TabIndex = 19
@@ -667,7 +1076,7 @@ Partial Class NewPayStubForm
         '
         'Label11
         '
-        Me.Label11.Location = New System.Drawing.Point(8, 328)
+        Me.Label11.Location = New System.Drawing.Point(8, 80)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(72, 24)
         Me.Label11.TabIndex = 19
@@ -676,7 +1085,7 @@ Partial Class NewPayStubForm
         '
         'Label10
         '
-        Me.Label10.Location = New System.Drawing.Point(8, 304)
+        Me.Label10.Location = New System.Drawing.Point(8, 56)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(72, 24)
         Me.Label10.TabIndex = 19
@@ -687,7 +1096,7 @@ Partial Class NewPayStubForm
         '
         Me.txtDeductionAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtDeductionAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDeductionAmount.Location = New System.Drawing.Point(176, 376)
+        Me.txtDeductionAmount.Location = New System.Drawing.Point(176, 128)
         Me.txtDeductionAmount.Name = "txtDeductionAmount"
         Me.txtDeductionAmount.ReadOnly = True
         Me.txtDeductionAmount.Size = New System.Drawing.Size(80, 22)
@@ -699,7 +1108,7 @@ Partial Class NewPayStubForm
         '
         Me.txtDeductionHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtDeductionHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDeductionHours.Location = New System.Drawing.Point(88, 376)
+        Me.txtDeductionHours.Location = New System.Drawing.Point(88, 128)
         Me.txtDeductionHours.Name = "txtDeductionHours"
         Me.txtDeductionHours.ReadOnly = True
         Me.txtDeductionHours.Size = New System.Drawing.Size(80, 22)
@@ -711,7 +1120,7 @@ Partial Class NewPayStubForm
         '
         Me.txtAbsentDeduction.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtAbsentDeduction.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAbsentDeduction.Location = New System.Drawing.Point(176, 352)
+        Me.txtAbsentDeduction.Location = New System.Drawing.Point(176, 104)
         Me.txtAbsentDeduction.Name = "txtAbsentDeduction"
         Me.txtAbsentDeduction.ReadOnly = True
         Me.txtAbsentDeduction.Size = New System.Drawing.Size(80, 22)
@@ -723,7 +1132,7 @@ Partial Class NewPayStubForm
         '
         Me.txtAbsentHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtAbsentHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAbsentHours.Location = New System.Drawing.Point(88, 352)
+        Me.txtAbsentHours.Location = New System.Drawing.Point(88, 104)
         Me.txtAbsentHours.Name = "txtAbsentHours"
         Me.txtAbsentHours.ReadOnly = True
         Me.txtAbsentHours.Size = New System.Drawing.Size(80, 22)
@@ -735,7 +1144,7 @@ Partial Class NewPayStubForm
         '
         Me.txtUndertimeAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtUndertimeAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUndertimeAmount.Location = New System.Drawing.Point(176, 328)
+        Me.txtUndertimeAmount.Location = New System.Drawing.Point(176, 80)
         Me.txtUndertimeAmount.Name = "txtUndertimeAmount"
         Me.txtUndertimeAmount.ReadOnly = True
         Me.txtUndertimeAmount.Size = New System.Drawing.Size(80, 22)
@@ -747,7 +1156,7 @@ Partial Class NewPayStubForm
         '
         Me.txtUndertimeHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtUndertimeHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUndertimeHours.Location = New System.Drawing.Point(88, 328)
+        Me.txtUndertimeHours.Location = New System.Drawing.Point(88, 80)
         Me.txtUndertimeHours.Name = "txtUndertimeHours"
         Me.txtUndertimeHours.ReadOnly = True
         Me.txtUndertimeHours.Size = New System.Drawing.Size(80, 22)
@@ -759,7 +1168,7 @@ Partial Class NewPayStubForm
         '
         Me.txtLateAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtLateAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLateAmount.Location = New System.Drawing.Point(176, 304)
+        Me.txtLateAmount.Location = New System.Drawing.Point(176, 56)
         Me.txtLateAmount.Name = "txtLateAmount"
         Me.txtLateAmount.ReadOnly = True
         Me.txtLateAmount.Size = New System.Drawing.Size(80, 22)
@@ -771,7 +1180,7 @@ Partial Class NewPayStubForm
         '
         Me.txtLateHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtLateHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLateHours.Location = New System.Drawing.Point(88, 304)
+        Me.txtLateHours.Location = New System.Drawing.Point(88, 56)
         Me.txtLateHours.Name = "txtLateHours"
         Me.txtLateHours.ReadOnly = True
         Me.txtLateHours.Size = New System.Drawing.Size(80, 22)
@@ -781,7 +1190,7 @@ Partial Class NewPayStubForm
         '
         'Label7
         '
-        Me.Label7.Location = New System.Drawing.Point(8, 176)
+        Me.Label7.Location = New System.Drawing.Point(264, 176)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(72, 24)
         Me.Label7.TabIndex = 10
@@ -791,7 +1200,7 @@ Partial Class NewPayStubForm
         'Label9
         '
         Me.Label9.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(8, 376)
+        Me.Label9.Location = New System.Drawing.Point(8, 128)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(72, 24)
         Me.Label9.TabIndex = 9
@@ -801,25 +1210,43 @@ Partial Class NewPayStubForm
         'Label8
         '
         Me.Label8.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(8, 248)
+        Me.Label8.Location = New System.Drawing.Point(264, 296)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(72, 24)
         Me.Label8.TabIndex = 9
         Me.Label8.Text = "Subtotal"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
+        'Label32
+        '
+        Me.Label32.Location = New System.Drawing.Point(264, 224)
+        Me.Label32.Name = "Label32"
+        Me.Label32.Size = New System.Drawing.Size(72, 24)
+        Me.Label32.TabIndex = 9
+        Me.Label32.Text = "S.Hol OT"
+        Me.Label32.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
         'Label30
         '
-        Me.Label30.Location = New System.Drawing.Point(8, 200)
+        Me.Label30.Location = New System.Drawing.Point(264, 200)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(72, 24)
         Me.Label30.TabIndex = 9
         Me.Label30.Text = "S.Holiday"
         Me.Label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
+        'Label33
+        '
+        Me.Label33.Location = New System.Drawing.Point(264, 272)
+        Me.Label33.Name = "Label33"
+        Me.Label33.Size = New System.Drawing.Size(72, 24)
+        Me.Label33.TabIndex = 9
+        Me.Label33.Text = "R.Hol OT"
+        Me.Label33.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
         'Label6
         '
-        Me.Label6.Location = New System.Drawing.Point(8, 224)
+        Me.Label6.Location = New System.Drawing.Point(264, 248)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(72, 24)
         Me.Label6.TabIndex = 9
@@ -828,16 +1255,16 @@ Partial Class NewPayStubForm
         '
         'Label29
         '
-        Me.Label29.Location = New System.Drawing.Point(8, 152)
+        Me.Label29.Location = New System.Drawing.Point(264, 152)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(72, 24)
         Me.Label29.TabIndex = 8
-        Me.Label29.Text = "Rest Day OT"
+        Me.Label29.Text = "R.Day OT"
         Me.Label29.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label5
         '
-        Me.Label5.Location = New System.Drawing.Point(8, 128)
+        Me.Label5.Location = New System.Drawing.Point(264, 128)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(72, 24)
         Me.Label5.TabIndex = 8
@@ -846,7 +1273,7 @@ Partial Class NewPayStubForm
         '
         'Label4
         '
-        Me.Label4.Location = New System.Drawing.Point(8, 104)
+        Me.Label4.Location = New System.Drawing.Point(264, 104)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(72, 24)
         Me.Label4.TabIndex = 8
@@ -855,7 +1282,7 @@ Partial Class NewPayStubForm
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(8, 56)
+        Me.Label3.Location = New System.Drawing.Point(264, 56)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(72, 24)
         Me.Label3.TabIndex = 8
@@ -865,17 +1292,17 @@ Partial Class NewPayStubForm
         'Label31
         '
         Me.Label31.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label31.Location = New System.Drawing.Point(264, 296)
+        Me.Label31.Location = New System.Drawing.Point(24, 456)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(72, 24)
         Me.Label31.TabIndex = 6
-        Me.Label31.Text = "Total Amt"
+        Me.Label31.Text = "Total Pay"
         Me.Label31.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label28
         '
         Me.Label28.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label28.Location = New System.Drawing.Point(264, 272)
+        Me.Label28.Location = New System.Drawing.Point(24, 432)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(72, 24)
         Me.Label28.TabIndex = 6
@@ -884,7 +1311,7 @@ Partial Class NewPayStubForm
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(8, 80)
+        Me.Label2.Location = New System.Drawing.Point(264, 80)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(72, 24)
         Me.Label2.TabIndex = 7
@@ -894,7 +1321,7 @@ Partial Class NewPayStubForm
         'Label20
         '
         Me.Label20.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label20.Location = New System.Drawing.Point(264, 240)
+        Me.Label20.Location = New System.Drawing.Point(24, 400)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(72, 24)
         Me.Label20.TabIndex = 6
@@ -903,7 +1330,7 @@ Partial Class NewPayStubForm
         '
         'Label25
         '
-        Me.Label25.Location = New System.Drawing.Point(760, 80)
+        Me.Label25.Location = New System.Drawing.Point(24, 584)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(72, 24)
         Me.Label25.TabIndex = 6
@@ -912,7 +1339,8 @@ Partial Class NewPayStubForm
         '
         'Label23
         '
-        Me.Label23.Location = New System.Drawing.Point(264, 32)
+        Me.Label23.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label23.Location = New System.Drawing.Point(72, 192)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(72, 24)
         Me.Label23.TabIndex = 6
@@ -921,7 +1349,7 @@ Partial Class NewPayStubForm
         '
         'Label26
         '
-        Me.Label26.Location = New System.Drawing.Point(8, 280)
+        Me.Label26.Location = New System.Drawing.Point(8, 32)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(72, 24)
         Me.Label26.TabIndex = 6
@@ -930,7 +1358,7 @@ Partial Class NewPayStubForm
         '
         'Label19
         '
-        Me.Label19.Location = New System.Drawing.Point(264, 192)
+        Me.Label19.Location = New System.Drawing.Point(24, 352)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(72, 24)
         Me.Label19.TabIndex = 6
@@ -939,7 +1367,7 @@ Partial Class NewPayStubForm
         '
         'Label27
         '
-        Me.Label27.Location = New System.Drawing.Point(760, 32)
+        Me.Label27.Location = New System.Drawing.Point(24, 536)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(72, 24)
         Me.Label27.TabIndex = 6
@@ -948,7 +1376,7 @@ Partial Class NewPayStubForm
         '
         'Label22
         '
-        Me.Label22.Location = New System.Drawing.Point(264, 216)
+        Me.Label22.Location = New System.Drawing.Point(24, 376)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(72, 24)
         Me.Label22.TabIndex = 6
@@ -957,7 +1385,7 @@ Partial Class NewPayStubForm
         '
         'Label24
         '
-        Me.Label24.Location = New System.Drawing.Point(760, 56)
+        Me.Label24.Location = New System.Drawing.Point(24, 560)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(72, 24)
         Me.Label24.TabIndex = 6
@@ -966,7 +1394,8 @@ Partial Class NewPayStubForm
         '
         'Label21
         '
-        Me.Label21.Location = New System.Drawing.Point(264, 56)
+        Me.Label21.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label21.Location = New System.Drawing.Point(72, 216)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(72, 24)
         Me.Label21.TabIndex = 6
@@ -975,7 +1404,7 @@ Partial Class NewPayStubForm
         '
         'Label18
         '
-        Me.Label18.Location = New System.Drawing.Point(264, 168)
+        Me.Label18.Location = New System.Drawing.Point(24, 328)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(72, 24)
         Me.Label18.TabIndex = 6
@@ -984,7 +1413,7 @@ Partial Class NewPayStubForm
         '
         'Label17
         '
-        Me.Label17.Location = New System.Drawing.Point(264, 136)
+        Me.Label17.Location = New System.Drawing.Point(24, 296)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(72, 24)
         Me.Label17.TabIndex = 6
@@ -993,7 +1422,7 @@ Partial Class NewPayStubForm
         '
         'Label16
         '
-        Me.Label16.Location = New System.Drawing.Point(264, 112)
+        Me.Label16.Location = New System.Drawing.Point(24, 272)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(72, 24)
         Me.Label16.TabIndex = 6
@@ -1002,7 +1431,7 @@ Partial Class NewPayStubForm
         '
         'Label15
         '
-        Me.Label15.Location = New System.Drawing.Point(264, 88)
+        Me.Label15.Location = New System.Drawing.Point(24, 248)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(72, 24)
         Me.Label15.TabIndex = 6
@@ -1011,7 +1440,7 @@ Partial Class NewPayStubForm
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(8, 32)
+        Me.Label1.Location = New System.Drawing.Point(264, 32)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(72, 24)
         Me.Label1.TabIndex = 6
@@ -1022,7 +1451,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTotalEarnings.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTotalEarnings.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalEarnings.Location = New System.Drawing.Point(176, 248)
+        Me.txtTotalEarnings.Location = New System.Drawing.Point(432, 296)
         Me.txtTotalEarnings.Name = "txtTotalEarnings"
         Me.txtTotalEarnings.ReadOnly = True
         Me.txtTotalEarnings.Size = New System.Drawing.Size(80, 22)
@@ -1034,7 +1463,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTotalHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTotalHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalHours.Location = New System.Drawing.Point(88, 248)
+        Me.txtTotalHours.Location = New System.Drawing.Point(344, 296)
         Me.txtTotalHours.Name = "txtTotalHours"
         Me.txtTotalHours.ReadOnly = True
         Me.txtTotalHours.Size = New System.Drawing.Size(80, 22)
@@ -1042,11 +1471,23 @@ Partial Class NewPayStubForm
         Me.txtTotalHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.txtTotalHours.WordWrap = False
         '
+        'TextBox2
+        '
+        Me.TextBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.TextBox2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox2.Location = New System.Drawing.Point(432, 224)
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.ReadOnly = True
+        Me.TextBox2.Size = New System.Drawing.Size(80, 22)
+        Me.TextBox2.TabIndex = 5
+        Me.TextBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.TextBox2.WordWrap = False
+        '
         'txtSpecialHolidayPay
         '
         Me.txtSpecialHolidayPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtSpecialHolidayPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSpecialHolidayPay.Location = New System.Drawing.Point(176, 200)
+        Me.txtSpecialHolidayPay.Location = New System.Drawing.Point(432, 200)
         Me.txtSpecialHolidayPay.Name = "txtSpecialHolidayPay"
         Me.txtSpecialHolidayPay.ReadOnly = True
         Me.txtSpecialHolidayPay.Size = New System.Drawing.Size(80, 22)
@@ -1054,11 +1495,23 @@ Partial Class NewPayStubForm
         Me.txtSpecialHolidayPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.txtSpecialHolidayPay.WordWrap = False
         '
+        'TextBox6
+        '
+        Me.TextBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.TextBox6.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox6.Location = New System.Drawing.Point(432, 272)
+        Me.TextBox6.Name = "TextBox6"
+        Me.TextBox6.ReadOnly = True
+        Me.TextBox6.Size = New System.Drawing.Size(80, 22)
+        Me.TextBox6.TabIndex = 5
+        Me.TextBox6.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.TextBox6.WordWrap = False
+        '
         'txtRegularHolidayPay
         '
         Me.txtRegularHolidayPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRegularHolidayPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegularHolidayPay.Location = New System.Drawing.Point(176, 224)
+        Me.txtRegularHolidayPay.Location = New System.Drawing.Point(432, 248)
         Me.txtRegularHolidayPay.Name = "txtRegularHolidayPay"
         Me.txtRegularHolidayPay.ReadOnly = True
         Me.txtRegularHolidayPay.Size = New System.Drawing.Size(80, 22)
@@ -1066,11 +1519,23 @@ Partial Class NewPayStubForm
         Me.txtRegularHolidayPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.txtRegularHolidayPay.WordWrap = False
         '
+        'TextBox1
+        '
+        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox1.Location = New System.Drawing.Point(344, 224)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.ReadOnly = True
+        Me.TextBox1.Size = New System.Drawing.Size(80, 22)
+        Me.TextBox1.TabIndex = 5
+        Me.TextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.TextBox1.WordWrap = False
+        '
         'txtSpecialHolidayHours
         '
         Me.txtSpecialHolidayHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtSpecialHolidayHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSpecialHolidayHours.Location = New System.Drawing.Point(88, 200)
+        Me.txtSpecialHolidayHours.Location = New System.Drawing.Point(344, 200)
         Me.txtSpecialHolidayHours.Name = "txtSpecialHolidayHours"
         Me.txtSpecialHolidayHours.ReadOnly = True
         Me.txtSpecialHolidayHours.Size = New System.Drawing.Size(80, 22)
@@ -1078,11 +1543,23 @@ Partial Class NewPayStubForm
         Me.txtSpecialHolidayHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.txtSpecialHolidayHours.WordWrap = False
         '
+        'TextBox5
+        '
+        Me.TextBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.TextBox5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox5.Location = New System.Drawing.Point(344, 272)
+        Me.TextBox5.Name = "TextBox5"
+        Me.TextBox5.ReadOnly = True
+        Me.TextBox5.Size = New System.Drawing.Size(80, 22)
+        Me.TextBox5.TabIndex = 5
+        Me.TextBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.TextBox5.WordWrap = False
+        '
         'txtRegularHolidayHours
         '
         Me.txtRegularHolidayHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRegularHolidayHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegularHolidayHours.Location = New System.Drawing.Point(88, 224)
+        Me.txtRegularHolidayHours.Location = New System.Drawing.Point(344, 248)
         Me.txtRegularHolidayHours.Name = "txtRegularHolidayHours"
         Me.txtRegularHolidayHours.ReadOnly = True
         Me.txtRegularHolidayHours.Size = New System.Drawing.Size(80, 22)
@@ -1094,7 +1571,7 @@ Partial Class NewPayStubForm
         '
         Me.txtLeavePay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtLeavePay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLeavePay.Location = New System.Drawing.Point(176, 176)
+        Me.txtLeavePay.Location = New System.Drawing.Point(432, 176)
         Me.txtLeavePay.Name = "txtLeavePay"
         Me.txtLeavePay.ReadOnly = True
         Me.txtLeavePay.Size = New System.Drawing.Size(80, 22)
@@ -1106,7 +1583,7 @@ Partial Class NewPayStubForm
         '
         Me.txtLeaveHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtLeaveHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLeaveHours.Location = New System.Drawing.Point(88, 176)
+        Me.txtLeaveHours.Location = New System.Drawing.Point(344, 176)
         Me.txtLeaveHours.Name = "txtLeaveHours"
         Me.txtLeaveHours.ReadOnly = True
         Me.txtLeaveHours.Size = New System.Drawing.Size(80, 22)
@@ -1118,7 +1595,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRestDayOTPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRestDayOTPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRestDayOTPay.Location = New System.Drawing.Point(176, 152)
+        Me.txtRestDayOTPay.Location = New System.Drawing.Point(432, 152)
         Me.txtRestDayOTPay.Name = "txtRestDayOTPay"
         Me.txtRestDayOTPay.ReadOnly = True
         Me.txtRestDayOTPay.Size = New System.Drawing.Size(80, 22)
@@ -1130,7 +1607,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRestDayPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRestDayPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRestDayPay.Location = New System.Drawing.Point(176, 128)
+        Me.txtRestDayPay.Location = New System.Drawing.Point(432, 128)
         Me.txtRestDayPay.Name = "txtRestDayPay"
         Me.txtRestDayPay.ReadOnly = True
         Me.txtRestDayPay.Size = New System.Drawing.Size(80, 22)
@@ -1142,7 +1619,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRestDayOTHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRestDayOTHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRestDayOTHours.Location = New System.Drawing.Point(88, 152)
+        Me.txtRestDayOTHours.Location = New System.Drawing.Point(344, 152)
         Me.txtRestDayOTHours.Name = "txtRestDayOTHours"
         Me.txtRestDayOTHours.ReadOnly = True
         Me.txtRestDayOTHours.Size = New System.Drawing.Size(80, 22)
@@ -1154,7 +1631,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRestDayHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRestDayHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRestDayHours.Location = New System.Drawing.Point(88, 128)
+        Me.txtRestDayHours.Location = New System.Drawing.Point(344, 128)
         Me.txtRestDayHours.Name = "txtRestDayHours"
         Me.txtRestDayHours.ReadOnly = True
         Me.txtRestDayHours.Size = New System.Drawing.Size(80, 22)
@@ -1166,7 +1643,7 @@ Partial Class NewPayStubForm
         '
         Me.txtNightDiffOTPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtNightDiffOTPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNightDiffOTPay.Location = New System.Drawing.Point(176, 104)
+        Me.txtNightDiffOTPay.Location = New System.Drawing.Point(432, 104)
         Me.txtNightDiffOTPay.Name = "txtNightDiffOTPay"
         Me.txtNightDiffOTPay.ReadOnly = True
         Me.txtNightDiffOTPay.Size = New System.Drawing.Size(80, 22)
@@ -1178,7 +1655,7 @@ Partial Class NewPayStubForm
         '
         Me.txtNightDiffOTHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtNightDiffOTHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNightDiffOTHours.Location = New System.Drawing.Point(88, 104)
+        Me.txtNightDiffOTHours.Location = New System.Drawing.Point(344, 104)
         Me.txtNightDiffOTHours.Name = "txtNightDiffOTHours"
         Me.txtNightDiffOTHours.ReadOnly = True
         Me.txtNightDiffOTHours.Size = New System.Drawing.Size(80, 22)
@@ -1190,7 +1667,7 @@ Partial Class NewPayStubForm
         '
         Me.txtNightDiffPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtNightDiffPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNightDiffPay.Location = New System.Drawing.Point(176, 56)
+        Me.txtNightDiffPay.Location = New System.Drawing.Point(432, 56)
         Me.txtNightDiffPay.Name = "txtNightDiffPay"
         Me.txtNightDiffPay.ReadOnly = True
         Me.txtNightDiffPay.Size = New System.Drawing.Size(80, 22)
@@ -1202,7 +1679,7 @@ Partial Class NewPayStubForm
         '
         Me.txtOvertimePay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtOvertimePay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOvertimePay.Location = New System.Drawing.Point(176, 80)
+        Me.txtOvertimePay.Location = New System.Drawing.Point(432, 80)
         Me.txtOvertimePay.Name = "txtOvertimePay"
         Me.txtOvertimePay.ReadOnly = True
         Me.txtOvertimePay.Size = New System.Drawing.Size(80, 22)
@@ -1214,7 +1691,7 @@ Partial Class NewPayStubForm
         '
         Me.txtNightDiffHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtNightDiffHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNightDiffHours.Location = New System.Drawing.Point(88, 56)
+        Me.txtNightDiffHours.Location = New System.Drawing.Point(344, 56)
         Me.txtNightDiffHours.Name = "txtNightDiffHours"
         Me.txtNightDiffHours.ReadOnly = True
         Me.txtNightDiffHours.Size = New System.Drawing.Size(80, 22)
@@ -1226,7 +1703,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRegularPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRegularPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegularPay.Location = New System.Drawing.Point(176, 32)
+        Me.txtRegularPay.Location = New System.Drawing.Point(432, 32)
         Me.txtRegularPay.Name = "txtRegularPay"
         Me.txtRegularPay.ReadOnly = True
         Me.txtRegularPay.Size = New System.Drawing.Size(80, 22)
@@ -1238,7 +1715,7 @@ Partial Class NewPayStubForm
         '
         Me.txtOvertimeHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtOvertimeHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOvertimeHours.Location = New System.Drawing.Point(88, 80)
+        Me.txtOvertimeHours.Location = New System.Drawing.Point(344, 80)
         Me.txtOvertimeHours.Name = "txtOvertimeHours"
         Me.txtOvertimeHours.ReadOnly = True
         Me.txtOvertimeHours.Size = New System.Drawing.Size(80, 22)
@@ -1250,7 +1727,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRegularHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRegularHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegularHours.Location = New System.Drawing.Point(88, 32)
+        Me.txtRegularHours.Location = New System.Drawing.Point(344, 32)
         Me.txtRegularHours.Name = "txtRegularHours"
         Me.txtRegularHours.ReadOnly = True
         Me.txtRegularHours.Size = New System.Drawing.Size(80, 22)
@@ -1280,14 +1757,14 @@ Partial Class NewPayStubForm
         Me.dgvTimeEntries.ColumnHeadersHeight = 34
         Me.dgvTimeEntries.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvTimeEntries.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column36, Me.Column34, Me.Column35, Me.Column32, Me.Column33, Me.DataGridViewTextBoxColumn33, Me.DataGridViewTextBoxColumn35, Me.DataGridViewTextBoxColumn34, Me.DataGridViewTextBoxColumn36, Me.DataGridViewTextBoxColumn37, Me.DataGridViewTextBoxColumn38, Me.DataGridViewTextBoxColumn39, Me.DataGridViewTextBoxColumn40, Me.DataGridViewTextBoxColumn41, Me.DataGridViewTextBoxColumn42, Me.DataGridViewTextBoxColumn43, Me.Column31, Me.DataGridViewTextBoxColumn44, Me.DataGridViewTextBoxColumn45, Me.DataGridViewTextBoxColumn46, Me.DataGridViewTextBoxColumn47, Me.DataGridViewTextBoxColumn48, Me.DataGridViewTextBoxColumn49})
-        DataGridViewCellStyle52.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle52.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle52.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle52.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle52.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle52.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle52.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvTimeEntries.DefaultCellStyle = DataGridViewCellStyle52
+        DataGridViewCellStyle240.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle240.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle240.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle240.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle240.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle240.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle240.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvTimeEntries.DefaultCellStyle = DataGridViewCellStyle240
         Me.dgvTimeEntries.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvTimeEntries.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvTimeEntries.Location = New System.Drawing.Point(3, 3)
@@ -1334,9 +1811,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn33
         '
         Me.DataGridViewTextBoxColumn33.DataPropertyName = "Paystub.TaxableIncome"
-        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle34.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn33.DefaultCellStyle = DataGridViewCellStyle34
+        DataGridViewCellStyle222.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle222.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn33.DefaultCellStyle = DataGridViewCellStyle222
         Me.DataGridViewTextBoxColumn33.HeaderText = "Basic Pay"
         Me.DataGridViewTextBoxColumn33.Name = "DataGridViewTextBoxColumn33"
         Me.DataGridViewTextBoxColumn33.ReadOnly = True
@@ -1345,9 +1822,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn35
         '
         Me.DataGridViewTextBoxColumn35.DataPropertyName = "RegularHours"
-        DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle35.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn35.DefaultCellStyle = DataGridViewCellStyle35
+        DataGridViewCellStyle223.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle223.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn35.DefaultCellStyle = DataGridViewCellStyle223
         Me.DataGridViewTextBoxColumn35.HeaderText = "Reg Hrs"
         Me.DataGridViewTextBoxColumn35.Name = "DataGridViewTextBoxColumn35"
         Me.DataGridViewTextBoxColumn35.ReadOnly = True
@@ -1356,10 +1833,10 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn34
         '
         Me.DataGridViewTextBoxColumn34.DataPropertyName = "RegularPay"
-        DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle36.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        DataGridViewCellStyle36.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn34.DefaultCellStyle = DataGridViewCellStyle36
+        DataGridViewCellStyle224.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle224.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        DataGridViewCellStyle224.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn34.DefaultCellStyle = DataGridViewCellStyle224
         Me.DataGridViewTextBoxColumn34.HeaderText = "Reg Amt"
         Me.DataGridViewTextBoxColumn34.Name = "DataGridViewTextBoxColumn34"
         Me.DataGridViewTextBoxColumn34.ReadOnly = True
@@ -1368,9 +1845,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn36
         '
         Me.DataGridViewTextBoxColumn36.DataPropertyName = "OvertimeHours"
-        DataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle37.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn36.DefaultCellStyle = DataGridViewCellStyle37
+        DataGridViewCellStyle225.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle225.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn36.DefaultCellStyle = DataGridViewCellStyle225
         Me.DataGridViewTextBoxColumn36.HeaderText = "OT Hrs"
         Me.DataGridViewTextBoxColumn36.Name = "DataGridViewTextBoxColumn36"
         Me.DataGridViewTextBoxColumn36.ReadOnly = True
@@ -1379,9 +1856,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn37
         '
         Me.DataGridViewTextBoxColumn37.DataPropertyName = "OvertimePay"
-        DataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle38.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn37.DefaultCellStyle = DataGridViewCellStyle38
+        DataGridViewCellStyle226.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle226.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn37.DefaultCellStyle = DataGridViewCellStyle226
         Me.DataGridViewTextBoxColumn37.HeaderText = "OT Amt"
         Me.DataGridViewTextBoxColumn37.Name = "DataGridViewTextBoxColumn37"
         Me.DataGridViewTextBoxColumn37.ReadOnly = True
@@ -1390,9 +1867,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn38
         '
         Me.DataGridViewTextBoxColumn38.DataPropertyName = "NightDiffHours"
-        DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle39.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn38.DefaultCellStyle = DataGridViewCellStyle39
+        DataGridViewCellStyle227.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle227.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn38.DefaultCellStyle = DataGridViewCellStyle227
         Me.DataGridViewTextBoxColumn38.HeaderText = "N.Diff Hrs"
         Me.DataGridViewTextBoxColumn38.Name = "DataGridViewTextBoxColumn38"
         Me.DataGridViewTextBoxColumn38.ReadOnly = True
@@ -1401,9 +1878,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn39
         '
         Me.DataGridViewTextBoxColumn39.DataPropertyName = "NightDiffPay"
-        DataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle40.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn39.DefaultCellStyle = DataGridViewCellStyle40
+        DataGridViewCellStyle228.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle228.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn39.DefaultCellStyle = DataGridViewCellStyle228
         Me.DataGridViewTextBoxColumn39.HeaderText = "N.Diff Amt"
         Me.DataGridViewTextBoxColumn39.Name = "DataGridViewTextBoxColumn39"
         Me.DataGridViewTextBoxColumn39.ReadOnly = True
@@ -1412,9 +1889,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn40
         '
         Me.DataGridViewTextBoxColumn40.DataPropertyName = "NightDiffOvertimeHours"
-        DataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle41.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn40.DefaultCellStyle = DataGridViewCellStyle41
+        DataGridViewCellStyle229.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle229.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn40.DefaultCellStyle = DataGridViewCellStyle229
         Me.DataGridViewTextBoxColumn40.HeaderText = "N.Diff OT Hrs"
         Me.DataGridViewTextBoxColumn40.Name = "DataGridViewTextBoxColumn40"
         Me.DataGridViewTextBoxColumn40.ReadOnly = True
@@ -1423,9 +1900,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn41
         '
         Me.DataGridViewTextBoxColumn41.DataPropertyName = "NightDiffOvertimePay"
-        DataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle42.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn41.DefaultCellStyle = DataGridViewCellStyle42
+        DataGridViewCellStyle230.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle230.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn41.DefaultCellStyle = DataGridViewCellStyle230
         Me.DataGridViewTextBoxColumn41.HeaderText = "N.Diff OT Amt"
         Me.DataGridViewTextBoxColumn41.Name = "DataGridViewTextBoxColumn41"
         Me.DataGridViewTextBoxColumn41.ReadOnly = True
@@ -1434,9 +1911,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn42
         '
         Me.DataGridViewTextBoxColumn42.DataPropertyName = "HolidayPay"
-        DataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle43.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn42.DefaultCellStyle = DataGridViewCellStyle43
+        DataGridViewCellStyle231.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle231.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn42.DefaultCellStyle = DataGridViewCellStyle231
         Me.DataGridViewTextBoxColumn42.HeaderText = "Holiday"
         Me.DataGridViewTextBoxColumn42.Name = "DataGridViewTextBoxColumn42"
         Me.DataGridViewTextBoxColumn42.ReadOnly = True
@@ -1445,9 +1922,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn43
         '
         Me.DataGridViewTextBoxColumn43.DataPropertyName = "RestDayPay"
-        DataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle44.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn43.DefaultCellStyle = DataGridViewCellStyle44
+        DataGridViewCellStyle232.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle232.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn43.DefaultCellStyle = DataGridViewCellStyle232
         Me.DataGridViewTextBoxColumn43.HeaderText = "Rest Day"
         Me.DataGridViewTextBoxColumn43.Name = "DataGridViewTextBoxColumn43"
         Me.DataGridViewTextBoxColumn43.ReadOnly = True
@@ -1456,9 +1933,9 @@ Partial Class NewPayStubForm
         'Column31
         '
         Me.Column31.DataPropertyName = "LeavePay"
-        DataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle45.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column31.DefaultCellStyle = DataGridViewCellStyle45
+        DataGridViewCellStyle233.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle233.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column31.DefaultCellStyle = DataGridViewCellStyle233
         Me.Column31.HeaderText = "Leave Pay"
         Me.Column31.Name = "Column31"
         Me.Column31.ReadOnly = True
@@ -1467,9 +1944,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn44
         '
         Me.DataGridViewTextBoxColumn44.DataPropertyName = "LateHours"
-        DataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle46.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn44.DefaultCellStyle = DataGridViewCellStyle46
+        DataGridViewCellStyle234.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle234.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn44.DefaultCellStyle = DataGridViewCellStyle234
         Me.DataGridViewTextBoxColumn44.HeaderText = "Late Hrs"
         Me.DataGridViewTextBoxColumn44.Name = "DataGridViewTextBoxColumn44"
         Me.DataGridViewTextBoxColumn44.ReadOnly = True
@@ -1478,9 +1955,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn45
         '
         Me.DataGridViewTextBoxColumn45.DataPropertyName = "LateDeduction"
-        DataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle47.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn45.DefaultCellStyle = DataGridViewCellStyle47
+        DataGridViewCellStyle235.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle235.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn45.DefaultCellStyle = DataGridViewCellStyle235
         Me.DataGridViewTextBoxColumn45.HeaderText = "Late Amt"
         Me.DataGridViewTextBoxColumn45.Name = "DataGridViewTextBoxColumn45"
         Me.DataGridViewTextBoxColumn45.ReadOnly = True
@@ -1489,9 +1966,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn46
         '
         Me.DataGridViewTextBoxColumn46.DataPropertyName = "UndertimeHours"
-        DataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle48.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn46.DefaultCellStyle = DataGridViewCellStyle48
+        DataGridViewCellStyle236.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle236.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn46.DefaultCellStyle = DataGridViewCellStyle236
         Me.DataGridViewTextBoxColumn46.HeaderText = "UT Hrs"
         Me.DataGridViewTextBoxColumn46.Name = "DataGridViewTextBoxColumn46"
         Me.DataGridViewTextBoxColumn46.ReadOnly = True
@@ -1500,9 +1977,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn47
         '
         Me.DataGridViewTextBoxColumn47.DataPropertyName = "UndertimeDeduction"
-        DataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle49.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn47.DefaultCellStyle = DataGridViewCellStyle49
+        DataGridViewCellStyle237.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle237.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn47.DefaultCellStyle = DataGridViewCellStyle237
         Me.DataGridViewTextBoxColumn47.HeaderText = "UT Amt"
         Me.DataGridViewTextBoxColumn47.Name = "DataGridViewTextBoxColumn47"
         Me.DataGridViewTextBoxColumn47.ReadOnly = True
@@ -1511,9 +1988,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn48
         '
         Me.DataGridViewTextBoxColumn48.DataPropertyName = "AbsentDeduction"
-        DataGridViewCellStyle50.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle50.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn48.DefaultCellStyle = DataGridViewCellStyle50
+        DataGridViewCellStyle238.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle238.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn48.DefaultCellStyle = DataGridViewCellStyle238
         Me.DataGridViewTextBoxColumn48.HeaderText = "Absent"
         Me.DataGridViewTextBoxColumn48.Name = "DataGridViewTextBoxColumn48"
         Me.DataGridViewTextBoxColumn48.ReadOnly = True
@@ -1522,9 +1999,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn49
         '
         Me.DataGridViewTextBoxColumn49.DataPropertyName = "TotalDayPay"
-        DataGridViewCellStyle51.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle51.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn49.DefaultCellStyle = DataGridViewCellStyle51
+        DataGridViewCellStyle239.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle239.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn49.DefaultCellStyle = DataGridViewCellStyle239
         Me.DataGridViewTextBoxColumn49.HeaderText = "Total Pay"
         Me.DataGridViewTextBoxColumn49.Name = "DataGridViewTextBoxColumn49"
         Me.DataGridViewTextBoxColumn49.ReadOnly = True
@@ -1578,16 +2055,16 @@ Partial Class NewPayStubForm
         '
         'txtSearch
         '
+        Me.txtSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtSearch.Name = "txtSearch"
         Me.txtSearch.Size = New System.Drawing.Size(100, 25)
         '
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.TabControl1)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel1.Location = New System.Drawing.Point(10, 256)
+        Me.Panel1.Location = New System.Drawing.Point(256, 8)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(940, 429)
+        Me.Panel1.Size = New System.Drawing.Size(694, 680)
         Me.Panel1.TabIndex = 4
         '
         'Panel2
@@ -1612,9 +2089,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn2
         '
         Me.DataGridViewTextBoxColumn2.DataPropertyName = "Paystub.RegularAmount"
-        DataGridViewCellStyle53.Format = "N2"
-        DataGridViewCellStyle53.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle53
+        DataGridViewCellStyle241.Format = "N2"
+        DataGridViewCellStyle241.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle241
         Me.DataGridViewTextBoxColumn2.Frozen = True
         Me.DataGridViewTextBoxColumn2.HeaderText = "Regular Amount"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
@@ -1623,10 +2100,10 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn3
         '
         Me.DataGridViewTextBoxColumn3.DataPropertyName = "Paystub.RegularPay"
-        DataGridViewCellStyle54.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle54.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        DataGridViewCellStyle54.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle54
+        DataGridViewCellStyle242.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle242.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        DataGridViewCellStyle242.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle242
         Me.DataGridViewTextBoxColumn3.Frozen = True
         Me.DataGridViewTextBoxColumn3.HeaderText = "OT Hrs"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
@@ -1636,10 +2113,10 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "Paystub.RegularHours"
-        DataGridViewCellStyle55.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle55.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        DataGridViewCellStyle55.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle55
+        DataGridViewCellStyle243.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle243.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        DataGridViewCellStyle243.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle243
         Me.DataGridViewTextBoxColumn4.HeaderText = "OT Amt"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
@@ -1648,8 +2125,8 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn5
         '
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "Paystub.OvertimeHours"
-        DataGridViewCellStyle56.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle56
+        DataGridViewCellStyle244.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle244
         Me.DataGridViewTextBoxColumn5.HeaderText = "ND Hrs"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.ReadOnly = True
@@ -1658,9 +2135,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn6
         '
         Me.DataGridViewTextBoxColumn6.DataPropertyName = "Paystub.OvertimePay"
-        DataGridViewCellStyle57.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle57.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle57
+        DataGridViewCellStyle245.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle245.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle245
         Me.DataGridViewTextBoxColumn6.HeaderText = "ND Amt"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.ReadOnly = True
@@ -1669,8 +2146,8 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Paystub.NightDiffHours"
-        DataGridViewCellStyle58.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle58
+        DataGridViewCellStyle246.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle246
         Me.DataGridViewTextBoxColumn7.HeaderText = "NDOT Hrs"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -1679,9 +2156,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn8
         '
         Me.DataGridViewTextBoxColumn8.DataPropertyName = "Paystub.NightDiffPay"
-        DataGridViewCellStyle59.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle59.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle59
+        DataGridViewCellStyle247.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle247.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle247
         Me.DataGridViewTextBoxColumn8.HeaderText = "NDOT Amt"
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
         Me.DataGridViewTextBoxColumn8.ReadOnly = True
@@ -1690,8 +2167,8 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn9
         '
         Me.DataGridViewTextBoxColumn9.DataPropertyName = "Paystub.NightDiffOvertimeHours"
-        DataGridViewCellStyle60.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle60
+        DataGridViewCellStyle248.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle248
         Me.DataGridViewTextBoxColumn9.HeaderText = "NDOT Hrs"
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
         Me.DataGridViewTextBoxColumn9.ReadOnly = True
@@ -1700,9 +2177,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn10
         '
         Me.DataGridViewTextBoxColumn10.DataPropertyName = "Paystub.NightDiffOvertimePay"
-        DataGridViewCellStyle61.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle61.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle61
+        DataGridViewCellStyle249.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle249.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle249
         Me.DataGridViewTextBoxColumn10.HeaderText = "NDOT Amt"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
@@ -1711,9 +2188,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn11
         '
         Me.DataGridViewTextBoxColumn11.DataPropertyName = "Paystub.HolidayPay"
-        DataGridViewCellStyle62.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle62.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle62
+        DataGridViewCellStyle250.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle250.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle250
         Me.DataGridViewTextBoxColumn11.HeaderText = "Holiday"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
         Me.DataGridViewTextBoxColumn11.ReadOnly = True
@@ -1722,9 +2199,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn12
         '
         Me.DataGridViewTextBoxColumn12.DataPropertyName = "Paystub.RestDayPay"
-        DataGridViewCellStyle63.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle63.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle63
+        DataGridViewCellStyle251.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle251.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle251
         Me.DataGridViewTextBoxColumn12.HeaderText = "Rest Day"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
         Me.DataGridViewTextBoxColumn12.ReadOnly = True
@@ -1733,9 +2210,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn13
         '
         Me.DataGridViewTextBoxColumn13.DataPropertyName = "Paystub.LateHours"
-        DataGridViewCellStyle64.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle64.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle64
+        DataGridViewCellStyle252.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle252.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle252
         Me.DataGridViewTextBoxColumn13.HeaderText = "Late Hrs"
         Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
         Me.DataGridViewTextBoxColumn13.ReadOnly = True
@@ -1744,9 +2221,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn14
         '
         Me.DataGridViewTextBoxColumn14.DataPropertyName = "Paystub.LateDeduction"
-        DataGridViewCellStyle65.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle65.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle65
+        DataGridViewCellStyle253.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle253.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle253
         Me.DataGridViewTextBoxColumn14.HeaderText = "Late Amt"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
         Me.DataGridViewTextBoxColumn14.ReadOnly = True
@@ -1755,9 +2232,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn15
         '
         Me.DataGridViewTextBoxColumn15.DataPropertyName = "Paystub.UndertimeHours"
-        DataGridViewCellStyle66.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle66.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle66
+        DataGridViewCellStyle254.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle254.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle254
         Me.DataGridViewTextBoxColumn15.HeaderText = "UT Hrs"
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
         Me.DataGridViewTextBoxColumn15.ReadOnly = True
@@ -1766,9 +2243,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn16
         '
         Me.DataGridViewTextBoxColumn16.DataPropertyName = "Paystub.UndertimeDeduction"
-        DataGridViewCellStyle67.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle67.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle67
+        DataGridViewCellStyle255.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle255.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle255
         Me.DataGridViewTextBoxColumn16.HeaderText = "UT Amt"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
         Me.DataGridViewTextBoxColumn16.ReadOnly = True
@@ -1777,9 +2254,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn17
         '
         Me.DataGridViewTextBoxColumn17.DataPropertyName = "Paystub.AbsenceDeduction"
-        DataGridViewCellStyle68.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle68.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle68
+        DataGridViewCellStyle256.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle256.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle256
         Me.DataGridViewTextBoxColumn17.HeaderText = "Absent"
         Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
         Me.DataGridViewTextBoxColumn17.ReadOnly = True
@@ -1788,9 +2265,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn18
         '
         Me.DataGridViewTextBoxColumn18.DataPropertyName = "Paystub.WorkPay"
-        DataGridViewCellStyle69.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle69.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle69
+        DataGridViewCellStyle257.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle257.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle257
         Me.DataGridViewTextBoxColumn18.HeaderText = "Total Pay"
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
         Me.DataGridViewTextBoxColumn18.ReadOnly = True
@@ -1799,9 +2276,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn19
         '
         Me.DataGridViewTextBoxColumn19.DataPropertyName = "Paystub.TotalAllowance"
-        DataGridViewCellStyle70.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle70.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle70
+        DataGridViewCellStyle258.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle258.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle258
         Me.DataGridViewTextBoxColumn19.HeaderText = "Allowance"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.ReadOnly = True
@@ -1810,9 +2287,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn20
         '
         Me.DataGridViewTextBoxColumn20.DataPropertyName = "Paystub.GrossPay"
-        DataGridViewCellStyle71.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle71.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn20.DefaultCellStyle = DataGridViewCellStyle71
+        DataGridViewCellStyle259.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle259.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn20.DefaultCellStyle = DataGridViewCellStyle259
         Me.DataGridViewTextBoxColumn20.HeaderText = "Gross Pay"
         Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
         Me.DataGridViewTextBoxColumn20.ReadOnly = True
@@ -1821,9 +2298,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn21
         '
         Me.DataGridViewTextBoxColumn21.DataPropertyName = "Paystub.SSSEmployeeShare"
-        DataGridViewCellStyle72.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle72.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn21.DefaultCellStyle = DataGridViewCellStyle72
+        DataGridViewCellStyle260.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle260.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn21.DefaultCellStyle = DataGridViewCellStyle260
         Me.DataGridViewTextBoxColumn21.HeaderText = "SSS"
         Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
         Me.DataGridViewTextBoxColumn21.ReadOnly = True
@@ -1832,9 +2309,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn22
         '
         Me.DataGridViewTextBoxColumn22.DataPropertyName = "Paystub.PhilHealthEmployeeShare"
-        DataGridViewCellStyle73.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle73.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn22.DefaultCellStyle = DataGridViewCellStyle73
+        DataGridViewCellStyle261.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle261.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn22.DefaultCellStyle = DataGridViewCellStyle261
         Me.DataGridViewTextBoxColumn22.HeaderText = "PhilHealth"
         Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
         Me.DataGridViewTextBoxColumn22.ReadOnly = True
@@ -1843,9 +2320,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn23
         '
         Me.DataGridViewTextBoxColumn23.DataPropertyName = "Paystub.HDMFEmployeeShare"
-        DataGridViewCellStyle74.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle74.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn23.DefaultCellStyle = DataGridViewCellStyle74
+        DataGridViewCellStyle262.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle262.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn23.DefaultCellStyle = DataGridViewCellStyle262
         Me.DataGridViewTextBoxColumn23.HeaderText = "Pag-IBIG"
         Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
         Me.DataGridViewTextBoxColumn23.ReadOnly = True
@@ -1854,9 +2331,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn24
         '
         Me.DataGridViewTextBoxColumn24.DataPropertyName = "Paystub.TotalLoans"
-        DataGridViewCellStyle75.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle75.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn24.DefaultCellStyle = DataGridViewCellStyle75
+        DataGridViewCellStyle263.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle263.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn24.DefaultCellStyle = DataGridViewCellStyle263
         Me.DataGridViewTextBoxColumn24.HeaderText = "Loans"
         Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
         Me.DataGridViewTextBoxColumn24.ReadOnly = True
@@ -1865,9 +2342,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn25
         '
         Me.DataGridViewTextBoxColumn25.DataPropertyName = "Paystub.TaxableIncome"
-        DataGridViewCellStyle76.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle76.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn25.DefaultCellStyle = DataGridViewCellStyle76
+        DataGridViewCellStyle264.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle264.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn25.DefaultCellStyle = DataGridViewCellStyle264
         Me.DataGridViewTextBoxColumn25.HeaderText = "Taxable"
         Me.DataGridViewTextBoxColumn25.Name = "DataGridViewTextBoxColumn25"
         Me.DataGridViewTextBoxColumn25.ReadOnly = True
@@ -1876,9 +2353,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn26
         '
         Me.DataGridViewTextBoxColumn26.DataPropertyName = "Paystub.WithholdingTax"
-        DataGridViewCellStyle77.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle77.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle77
+        DataGridViewCellStyle265.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle265.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle265
         Me.DataGridViewTextBoxColumn26.HeaderText = "With. Tax"
         Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
         Me.DataGridViewTextBoxColumn26.ReadOnly = True
@@ -1887,9 +2364,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn27
         '
         Me.DataGridViewTextBoxColumn27.DataPropertyName = "Paystub.TotalAdjustments"
-        DataGridViewCellStyle78.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle78.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn27.DefaultCellStyle = DataGridViewCellStyle78
+        DataGridViewCellStyle266.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle266.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn27.DefaultCellStyle = DataGridViewCellStyle266
         Me.DataGridViewTextBoxColumn27.HeaderText = "Adjust."
         Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
         Me.DataGridViewTextBoxColumn27.ReadOnly = True
@@ -1898,9 +2375,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn28
         '
         Me.DataGridViewTextBoxColumn28.DataPropertyName = "Paystub.NetPay"
-        DataGridViewCellStyle79.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle79.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn28.DefaultCellStyle = DataGridViewCellStyle79
+        DataGridViewCellStyle267.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle267.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn28.DefaultCellStyle = DataGridViewCellStyle267
         Me.DataGridViewTextBoxColumn28.HeaderText = "Net Pay"
         Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
         Me.DataGridViewTextBoxColumn28.ReadOnly = True
@@ -1909,9 +2386,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn29
         '
         Me.DataGridViewTextBoxColumn29.DataPropertyName = "Paystub.NetPay"
-        DataGridViewCellStyle80.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle80.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn29.DefaultCellStyle = DataGridViewCellStyle80
+        DataGridViewCellStyle268.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle268.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn29.DefaultCellStyle = DataGridViewCellStyle268
         Me.DataGridViewTextBoxColumn29.HeaderText = "Thirteenth Month"
         Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
         Me.DataGridViewTextBoxColumn29.ReadOnly = True
@@ -1920,9 +2397,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn30
         '
         Me.DataGridViewTextBoxColumn30.DataPropertyName = "Paystub.NetPay"
-        DataGridViewCellStyle81.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle81.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn30.DefaultCellStyle = DataGridViewCellStyle81
+        DataGridViewCellStyle269.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle269.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn30.DefaultCellStyle = DataGridViewCellStyle269
         Me.DataGridViewTextBoxColumn30.HeaderText = "Thirteenth Month"
         Me.DataGridViewTextBoxColumn30.Name = "DataGridViewTextBoxColumn30"
         Me.DataGridViewTextBoxColumn30.ReadOnly = True
@@ -1931,9 +2408,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn31
         '
         Me.DataGridViewTextBoxColumn31.DataPropertyName = "EntryDate"
-        DataGridViewCellStyle82.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle82.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn31.DefaultCellStyle = DataGridViewCellStyle82
+        DataGridViewCellStyle270.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle270.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn31.DefaultCellStyle = DataGridViewCellStyle270
         Me.DataGridViewTextBoxColumn31.HeaderText = "Date"
         Me.DataGridViewTextBoxColumn31.Name = "DataGridViewTextBoxColumn31"
         Me.DataGridViewTextBoxColumn31.ReadOnly = True
@@ -1942,9 +2419,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn32
         '
         Me.DataGridViewTextBoxColumn32.DataPropertyName = "EntryDate"
-        DataGridViewCellStyle83.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle83.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn32.DefaultCellStyle = DataGridViewCellStyle83
+        DataGridViewCellStyle271.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle271.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn32.DefaultCellStyle = DataGridViewCellStyle271
         Me.DataGridViewTextBoxColumn32.HeaderText = "Shift From"
         Me.DataGridViewTextBoxColumn32.Name = "DataGridViewTextBoxColumn32"
         Me.DataGridViewTextBoxColumn32.ReadOnly = True
@@ -1953,9 +2430,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn50
         '
         Me.DataGridViewTextBoxColumn50.DataPropertyName = "UndertimeHours"
-        DataGridViewCellStyle84.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle84.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn50.DefaultCellStyle = DataGridViewCellStyle84
+        DataGridViewCellStyle272.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle272.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn50.DefaultCellStyle = DataGridViewCellStyle272
         Me.DataGridViewTextBoxColumn50.HeaderText = "UT Hrs"
         Me.DataGridViewTextBoxColumn50.Name = "DataGridViewTextBoxColumn50"
         Me.DataGridViewTextBoxColumn50.ReadOnly = True
@@ -1964,9 +2441,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn51
         '
         Me.DataGridViewTextBoxColumn51.DataPropertyName = "UndertimeDeduction"
-        DataGridViewCellStyle85.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle85.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn51.DefaultCellStyle = DataGridViewCellStyle85
+        DataGridViewCellStyle273.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle273.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn51.DefaultCellStyle = DataGridViewCellStyle273
         Me.DataGridViewTextBoxColumn51.HeaderText = "UT Amt"
         Me.DataGridViewTextBoxColumn51.Name = "DataGridViewTextBoxColumn51"
         Me.DataGridViewTextBoxColumn51.ReadOnly = True
@@ -1975,9 +2452,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn52
         '
         Me.DataGridViewTextBoxColumn52.DataPropertyName = "AbsentDeduction"
-        DataGridViewCellStyle86.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle86.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn52.DefaultCellStyle = DataGridViewCellStyle86
+        DataGridViewCellStyle274.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle274.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn52.DefaultCellStyle = DataGridViewCellStyle274
         Me.DataGridViewTextBoxColumn52.HeaderText = "Absent"
         Me.DataGridViewTextBoxColumn52.Name = "DataGridViewTextBoxColumn52"
         Me.DataGridViewTextBoxColumn52.ReadOnly = True
@@ -1986,9 +2463,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn53
         '
         Me.DataGridViewTextBoxColumn53.DataPropertyName = "TotalDayPay"
-        DataGridViewCellStyle87.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle87.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn53.DefaultCellStyle = DataGridViewCellStyle87
+        DataGridViewCellStyle275.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle275.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn53.DefaultCellStyle = DataGridViewCellStyle275
         Me.DataGridViewTextBoxColumn53.HeaderText = "Total Pay"
         Me.DataGridViewTextBoxColumn53.Name = "DataGridViewTextBoxColumn53"
         Me.DataGridViewTextBoxColumn53.ReadOnly = True
@@ -1997,9 +2474,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn54
         '
         Me.DataGridViewTextBoxColumn54.DataPropertyName = "TotalDayPay"
-        DataGridViewCellStyle88.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle88.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn54.DefaultCellStyle = DataGridViewCellStyle88
+        DataGridViewCellStyle276.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle276.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn54.DefaultCellStyle = DataGridViewCellStyle276
         Me.DataGridViewTextBoxColumn54.HeaderText = "Total Pay"
         Me.DataGridViewTextBoxColumn54.Name = "DataGridViewTextBoxColumn54"
         Me.DataGridViewTextBoxColumn54.ReadOnly = True
@@ -2008,9 +2485,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn55
         '
         Me.DataGridViewTextBoxColumn55.DataPropertyName = "LateHours"
-        DataGridViewCellStyle89.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle89.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn55.DefaultCellStyle = DataGridViewCellStyle89
+        DataGridViewCellStyle277.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle277.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn55.DefaultCellStyle = DataGridViewCellStyle277
         Me.DataGridViewTextBoxColumn55.HeaderText = "Late Hrs"
         Me.DataGridViewTextBoxColumn55.Name = "DataGridViewTextBoxColumn55"
         Me.DataGridViewTextBoxColumn55.Width = 60
@@ -2018,9 +2495,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn56
         '
         Me.DataGridViewTextBoxColumn56.DataPropertyName = "LateDeduction"
-        DataGridViewCellStyle90.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle90.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn56.DefaultCellStyle = DataGridViewCellStyle90
+        DataGridViewCellStyle278.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle278.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn56.DefaultCellStyle = DataGridViewCellStyle278
         Me.DataGridViewTextBoxColumn56.HeaderText = "Late Amt"
         Me.DataGridViewTextBoxColumn56.Name = "DataGridViewTextBoxColumn56"
         Me.DataGridViewTextBoxColumn56.Width = 60
@@ -2028,9 +2505,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn57
         '
         Me.DataGridViewTextBoxColumn57.DataPropertyName = "UndertimeHours"
-        DataGridViewCellStyle91.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle91.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn57.DefaultCellStyle = DataGridViewCellStyle91
+        DataGridViewCellStyle279.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle279.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn57.DefaultCellStyle = DataGridViewCellStyle279
         Me.DataGridViewTextBoxColumn57.HeaderText = "UT Hrs"
         Me.DataGridViewTextBoxColumn57.Name = "DataGridViewTextBoxColumn57"
         Me.DataGridViewTextBoxColumn57.Width = 60
@@ -2038,9 +2515,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn58
         '
         Me.DataGridViewTextBoxColumn58.DataPropertyName = "UndertimeDeduction"
-        DataGridViewCellStyle92.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle92.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn58.DefaultCellStyle = DataGridViewCellStyle92
+        DataGridViewCellStyle280.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle280.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn58.DefaultCellStyle = DataGridViewCellStyle280
         Me.DataGridViewTextBoxColumn58.HeaderText = "UT Amt"
         Me.DataGridViewTextBoxColumn58.Name = "DataGridViewTextBoxColumn58"
         Me.DataGridViewTextBoxColumn58.Width = 60
@@ -2048,9 +2525,9 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn59
         '
         Me.DataGridViewTextBoxColumn59.DataPropertyName = "AbsentDeduction"
-        DataGridViewCellStyle93.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle93.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn59.DefaultCellStyle = DataGridViewCellStyle93
+        DataGridViewCellStyle281.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle281.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn59.DefaultCellStyle = DataGridViewCellStyle281
         Me.DataGridViewTextBoxColumn59.HeaderText = "Absent"
         Me.DataGridViewTextBoxColumn59.Name = "DataGridViewTextBoxColumn59"
         Me.DataGridViewTextBoxColumn59.Width = 60
@@ -2058,403 +2535,30 @@ Partial Class NewPayStubForm
         'DataGridViewTextBoxColumn60
         '
         Me.DataGridViewTextBoxColumn60.DataPropertyName = "TotalDayPay"
-        DataGridViewCellStyle94.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle94.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn60.DefaultCellStyle = DataGridViewCellStyle94
+        DataGridViewCellStyle282.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle282.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn60.DefaultCellStyle = DataGridViewCellStyle282
         Me.DataGridViewTextBoxColumn60.HeaderText = "Total Pay"
         Me.DataGridViewTextBoxColumn60.Name = "DataGridViewTextBoxColumn60"
         Me.DataGridViewTextBoxColumn60.Width = 60
         '
-        'Column37
-        '
-        Me.Column37.DataPropertyName = "Employee.EmployeeNo"
-        Me.Column37.Frozen = True
-        Me.Column37.HeaderText = "Employee No"
-        Me.Column37.Name = "Column37"
-        Me.Column37.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "Employee.LastName"
-        Me.Column1.Frozen = True
-        Me.Column1.HeaderText = "Last Name"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column30
-        '
-        Me.Column30.DataPropertyName = "Employee.FirstName"
-        Me.Column30.Frozen = True
-        Me.Column30.HeaderText = "First Name"
-        Me.Column30.Name = "Column30"
-        Me.Column30.ReadOnly = True
-        '
-        'Column9
-        '
-        Me.Column9.HeaderText = "Basic Pay"
-        Me.Column9.Name = "Column9"
-        Me.Column9.ReadOnly = True
-        Me.Column9.Width = 80
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "Paystub.RegularPay"
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle1.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle1
-        Me.Column2.HeaderText = "Reg Amt"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        Me.Column2.Width = 80
-        '
-        'Column18
-        '
-        Me.Column18.DataPropertyName = "Paystub.RegularHours"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle2.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column18.DefaultCellStyle = DataGridViewCellStyle2
-        Me.Column18.HeaderText = "Reg Hrs"
-        Me.Column18.Name = "Column18"
-        Me.Column18.ReadOnly = True
-        Me.Column18.Width = 80
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "Paystub.OvertimeHours"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle3.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle3
-        Me.Column3.HeaderText = "OT Hrs"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        Me.Column3.Width = 80
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "Paystub.OvertimePay"
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle4.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column4.DefaultCellStyle = DataGridViewCellStyle4
-        Me.Column4.HeaderText = "OT Amt"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        Me.Column4.Width = 80
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "Paystub.NightDiffHours"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle5.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle5
-        Me.Column5.HeaderText = "N.Diff Hrs"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        Me.Column5.Width = 80
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "Paystub.NightDiffPay"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle6
-        Me.Column6.HeaderText = "N.Diff Amt"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        Me.Column6.Width = 80
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "Paystub.NightDiffOvertimeHours"
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle7.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column7.DefaultCellStyle = DataGridViewCellStyle7
-        Me.Column7.HeaderText = "N.Diff OT Hrs"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        Me.Column7.Width = 80
-        '
-        'Column8
-        '
-        Me.Column8.DataPropertyName = "Paystub.NightDiffOvertimePay"
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle8.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column8.DefaultCellStyle = DataGridViewCellStyle8
-        Me.Column8.HeaderText = "N.Diff OT Amt"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        Me.Column8.Width = 80
-        '
-        'Column38
-        '
-        Me.Column38.DataPropertyName = "Paystub.SpecialHolidayHours"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle9.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column38.DefaultCellStyle = DataGridViewCellStyle9
-        Me.Column38.HeaderText = "S.Hol Hrs"
-        Me.Column38.Name = "Column38"
-        Me.Column38.ReadOnly = True
-        Me.Column38.Width = 80
-        '
-        'Column39
-        '
-        Me.Column39.DataPropertyName = "Paystub.RegularHolidayHours"
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle10.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column39.DefaultCellStyle = DataGridViewCellStyle10
-        Me.Column39.HeaderText = "R.Hol Hrs"
-        Me.Column39.Name = "Column39"
-        Me.Column39.ReadOnly = True
-        Me.Column39.Width = 80
-        '
-        'Column10
-        '
-        Me.Column10.DataPropertyName = "Paystub.HolidayPay"
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle11.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column10.DefaultCellStyle = DataGridViewCellStyle11
-        Me.Column10.HeaderText = "Holiday"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        Me.Column10.Width = 80
-        '
-        'Column40
-        '
-        Me.Column40.DataPropertyName = "Paystub.RestDayHours"
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle12.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column40.DefaultCellStyle = DataGridViewCellStyle12
-        Me.Column40.HeaderText = "R.Day Hrs"
-        Me.Column40.Name = "Column40"
-        Me.Column40.ReadOnly = True
-        Me.Column40.Width = 80
-        '
-        'Column11
-        '
-        Me.Column11.DataPropertyName = "Paystub.RestDayPay"
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle13.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column11.DefaultCellStyle = DataGridViewCellStyle13
-        Me.Column11.HeaderText = "R.Day Pay"
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        Me.Column11.Width = 80
-        '
-        'Column41
-        '
-        Me.Column41.DataPropertyName = "Paystub.RestDayOTHours"
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle14.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column41.DefaultCellStyle = DataGridViewCellStyle14
-        Me.Column41.HeaderText = "R.DayOT Hrs"
-        Me.Column41.Name = "Column41"
-        Me.Column41.ReadOnly = True
-        Me.Column41.Width = 80
-        '
-        'Column42
-        '
-        Me.Column42.DataPropertyName = "Paystub.RestDayOTPay"
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle15.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column42.DefaultCellStyle = DataGridViewCellStyle15
-        Me.Column42.HeaderText = "R.DayOT Pay"
-        Me.Column42.Name = "Column42"
-        Me.Column42.ReadOnly = True
-        Me.Column42.Width = 80
-        '
-        'Column12
-        '
-        Me.Column12.DataPropertyName = "Paystub.LateHours"
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle16.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column12.DefaultCellStyle = DataGridViewCellStyle16
-        Me.Column12.HeaderText = "Late Hrs"
-        Me.Column12.Name = "Column12"
-        Me.Column12.ReadOnly = True
-        Me.Column12.Width = 80
-        '
-        'Column13
-        '
-        Me.Column13.DataPropertyName = "Paystub.LateDeduction"
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle17.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column13.DefaultCellStyle = DataGridViewCellStyle17
-        Me.Column13.HeaderText = "Late Amt"
-        Me.Column13.Name = "Column13"
-        Me.Column13.ReadOnly = True
-        Me.Column13.Width = 80
-        '
-        'Column15
-        '
-        Me.Column15.DataPropertyName = "Paystub.UndertimeHours"
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle18.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column15.DefaultCellStyle = DataGridViewCellStyle18
-        Me.Column15.HeaderText = "UT Hrs"
-        Me.Column15.Name = "Column15"
-        Me.Column15.ReadOnly = True
-        Me.Column15.Width = 80
-        '
-        'Column14
-        '
-        Me.Column14.DataPropertyName = "Paystub.UndertimeDeduction"
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle19.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column14.DefaultCellStyle = DataGridViewCellStyle19
-        Me.Column14.HeaderText = "UT Amt"
-        Me.Column14.Name = "Column14"
-        Me.Column14.ReadOnly = True
-        Me.Column14.Width = 80
-        '
-        'Column43
-        '
-        Me.Column43.DataPropertyName = "Paystub.AbsentHours"
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle20.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column43.DefaultCellStyle = DataGridViewCellStyle20
-        Me.Column43.HeaderText = "Absent Hrs"
-        Me.Column43.Name = "Column43"
-        Me.Column43.ReadOnly = True
-        Me.Column43.Width = 80
-        '
-        'Column16
-        '
-        Me.Column16.DataPropertyName = "Paystub.AbsenceDeduction"
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle21.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column16.DefaultCellStyle = DataGridViewCellStyle21
-        Me.Column16.HeaderText = "Absent Amt"
-        Me.Column16.Name = "Column16"
-        Me.Column16.ReadOnly = True
-        Me.Column16.Width = 80
-        '
-        'Column17
-        '
-        Me.Column17.DataPropertyName = "Paystub.TotalEarnings"
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle22.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column17.DefaultCellStyle = DataGridViewCellStyle22
-        Me.Column17.HeaderText = "Total Pay"
-        Me.Column17.Name = "Column17"
-        Me.Column17.ReadOnly = True
-        Me.Column17.Width = 80
-        '
-        'Column19
-        '
-        Me.Column19.DataPropertyName = "Paystub.TotalAllowance"
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle23.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column19.DefaultCellStyle = DataGridViewCellStyle23
-        Me.Column19.HeaderText = "Allowance"
-        Me.Column19.Name = "Column19"
-        Me.Column19.ReadOnly = True
-        Me.Column19.Width = 80
-        '
-        'Column21
-        '
-        Me.Column21.DataPropertyName = "Paystub.GrossPay"
-        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle24.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column21.DefaultCellStyle = DataGridViewCellStyle24
-        Me.Column21.HeaderText = "Gross Pay"
-        Me.Column21.Name = "Column21"
-        Me.Column21.ReadOnly = True
-        Me.Column21.Width = 80
-        '
-        'Column22
-        '
-        Me.Column22.DataPropertyName = "Paystub.SssEmployeeShare"
-        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle25.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column22.DefaultCellStyle = DataGridViewCellStyle25
-        Me.Column22.HeaderText = "SSS"
-        Me.Column22.Name = "Column22"
-        Me.Column22.ReadOnly = True
-        Me.Column22.Width = 80
-        '
-        'Column23
-        '
-        Me.Column23.DataPropertyName = "Paystub.PhilHealthEmployeeShare"
-        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle26.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column23.DefaultCellStyle = DataGridViewCellStyle26
-        Me.Column23.HeaderText = "PhilHealth"
-        Me.Column23.Name = "Column23"
-        Me.Column23.ReadOnly = True
-        Me.Column23.Width = 80
-        '
-        'Column24
-        '
-        Me.Column24.DataPropertyName = "Paystub.HdmfEmployeeShare"
-        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle27.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column24.DefaultCellStyle = DataGridViewCellStyle27
-        Me.Column24.HeaderText = "Pag-IBIG"
-        Me.Column24.Name = "Column24"
-        Me.Column24.ReadOnly = True
-        Me.Column24.Width = 80
-        '
-        'Column20
-        '
-        Me.Column20.DataPropertyName = "Paystub.TotalLoans"
-        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle28.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column20.DefaultCellStyle = DataGridViewCellStyle28
-        Me.Column20.HeaderText = "Loan"
-        Me.Column20.Name = "Column20"
-        Me.Column20.ReadOnly = True
-        Me.Column20.Width = 80
-        '
-        'Column25
-        '
-        Me.Column25.DataPropertyName = "Paystub.TaxableIncome"
-        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle29.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column25.DefaultCellStyle = DataGridViewCellStyle29
-        Me.Column25.HeaderText = "Taxable"
-        Me.Column25.Name = "Column25"
-        Me.Column25.ReadOnly = True
-        Me.Column25.Width = 80
-        '
-        'Column26
-        '
-        Me.Column26.DataPropertyName = "Paystub.WithholdingTax"
-        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle30.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column26.DefaultCellStyle = DataGridViewCellStyle30
-        Me.Column26.HeaderText = "With. Tax"
-        Me.Column26.Name = "Column26"
-        Me.Column26.ReadOnly = True
-        Me.Column26.Width = 80
-        '
-        'Column29
-        '
-        Me.Column29.DataPropertyName = "Paystub.TotalAdjustments"
-        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle31.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column29.DefaultCellStyle = DataGridViewCellStyle31
-        Me.Column29.HeaderText = "Adjust."
-        Me.Column29.Name = "Column29"
-        Me.Column29.ReadOnly = True
-        Me.Column29.Width = 80
-        '
-        'Column27
-        '
-        Me.Column27.DataPropertyName = "Paystub.NetPay"
-        DataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle32.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column27.DefaultCellStyle = DataGridViewCellStyle32
-        Me.Column27.HeaderText = "Net Pay"
-        Me.Column27.Name = "Column27"
-        Me.Column27.ReadOnly = True
-        Me.Column27.Width = 80
-        '
-        'Column28
-        '
-        Me.Column28.HeaderText = "13th Month"
-        Me.Column28.Name = "Column28"
-        Me.Column28.ReadOnly = True
-        Me.Column28.Width = 80
+        'Label34
+        '
+        Me.Label34.Location = New System.Drawing.Point(88, 8)
+        Me.Label34.Name = "Label34"
+        Me.Label34.Size = New System.Drawing.Size(80, 24)
+        Me.Label34.TabIndex = 20
+        Me.Label34.Text = "Hours"
+        Me.Label34.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label35
+        '
+        Me.Label35.Location = New System.Drawing.Point(176, 8)
+        Me.Label35.Name = "Label35"
+        Me.Label35.Size = New System.Drawing.Size(80, 24)
+        Me.Label35.TabIndex = 21
+        Me.Label35.Text = "Amount"
+        Me.Label35.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'NewPayStubForm
         '
@@ -2676,4 +2780,12 @@ Partial Class NewPayStubForm
     Friend WithEvents Column29 As DataGridViewTextBoxColumn
     Friend WithEvents Column27 As DataGridViewTextBoxColumn
     Friend WithEvents Column28 As DataGridViewTextBoxColumn
+    Friend WithEvents Label32 As Label
+    Friend WithEvents Label33 As Label
+    Friend WithEvents TextBox2 As TextBox
+    Friend WithEvents TextBox6 As TextBox
+    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents TextBox5 As TextBox
+    Friend WithEvents Label35 As Label
+    Friend WithEvents Label34 As Label
 End Class

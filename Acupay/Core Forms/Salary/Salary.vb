@@ -67,11 +67,20 @@ Namespace Global.PayrollSys
 
         Public Property OverrideDiscardPhilHealthContrib As Boolean
 
+        Public ReadOnly Property SSSDeduction As Decimal
+            Get
+                Return If(SocialSecurityBracket?.EmployeeContributionAmount, 0)
+            End Get
+        End Property
+
         Public ReadOnly Property IsIndefinite As Boolean
             Get
                 Return Not EffectiveTo.HasValue
             End Get
         End Property
+
+        <ForeignKey("PaySocialSecurityID")>
+        Public Overridable Property SocialSecurityBracket As SocialSecurityBracket
 
     End Class
 

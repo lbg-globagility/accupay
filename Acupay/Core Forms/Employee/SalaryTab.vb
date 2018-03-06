@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Linq
+Imports System.Data.Entity
 Imports AccuPay.Entity
 Imports PayrollSys
 
@@ -8,7 +9,7 @@ Public Class SalaryTab
 
     Private Const StandardPagIbigContribution As Decimal = 100
 
-    Private _mode As FormMode = FormMode.NoneSelected
+    Private _mode As FormMode = FormMode.Empty
 
     Private _employee As Employee
 
@@ -28,6 +29,42 @@ Public Class SalaryTab
 
     Private _philHealthMaximumContribution As Decimal
 
+    Public Property BasicSalary As Decimal
+        Get
+            Return TypeTools.ParseDecimal(txtAmount.Text)
+        End Get
+        Set(value As Decimal)
+            txtAmount.Text = CStr(value)
+        End Set
+    End Property
+
+    Public Property AllowanceSalary As Decimal
+        Get
+            Return TypeTools.ParseDecimal(txtAllowance.Text)
+        End Get
+        Set(value As Decimal)
+            txtAllowance.Text = CStr(value)
+        End Set
+    End Property
+
+    Public Property Sss As Decimal?
+        Get
+            Return TypeTools.ParseDecimalOrNull(txtSss.Text)
+        End Get
+        Set(value As Decimal?)
+            txtSss.Text = CStr(value)
+        End Set
+    End Property
+
+    Public Property PhilHealth As Decimal?
+        Get
+            Return TypeTools.ParseDecimalOrNull(txtPhilHealth.Text)
+        End Get
+        Set(value As Decimal?)
+            txtPhilHealth.Text = CStr(value)
+        End Set
+    End Property
+
     Public Sub New()
         InitializeComponent()
         dgvSalaries.AutoGenerateColumns = False
@@ -45,7 +82,7 @@ Public Class SalaryTab
         txtEmployeeID.Text = $"ID# {employee.EmployeeNo}, {employee?.Position.Name}, {employee.EmployeeType} Salary"
         pbEmployee.Image = ConvByteToImage(employee.Image)
 
-        ChangeMode(FormMode.NoneSelected)
+        ChangeMode(FormMode.Empty)
         LoadSalaries()
     End Sub
 
@@ -69,7 +106,7 @@ Public Class SalaryTab
                 btnSave.Enabled = False
                 btnDelete.Enabled = False
                 btnCancel.Enabled = False
-            Case FormMode.NoneSelected
+            Case FormMode.Empty
                 btnNew.Enabled = True
                 btnSave.Enabled = False
                 btnDelete.Enabled = False
@@ -93,12 +130,34 @@ Public Class SalaryTab
         End If
 
         Using context = New PayrollContext()
-            _salaries = (From s In context.Salaries
+            _salaries = (From s In context.Salaries.Include(Function(s) s.SocialSecurityBracket)
                          Where s.EmployeeID = _employee.RowID).
                          ToList()
         End Using
 
+        RemoveHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
         dgvSalaries.DataSource = _salaries
+
+        If _currentSalary IsNot Nothing Then
+            Dim oldSalary = _currentSalary
+            _currentSalary = Nothing
+
+            For Each row As DataGridViewRow In dgvSalaries.Rows
+                Dim salary = DirectCast(row.DataBoundItem, Salary)
+                If oldSalary.RowID = salary.RowID Then
+                    _currentSalary = oldSalary
+                    dgvSalaries.CurrentCell = row.Cells(0)
+                    row.Selected = True
+                    Exit For
+                End If
+            Next
+        End If
+
+        If _currentSalary Is Nothing Then
+            SelectSalary(_salaries.FirstOrDefault())
+        End If
+
+        AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
     End Sub
 
     Private Sub LoadSocialSecurityBrackets()
@@ -124,14 +183,30 @@ Public Class SalaryTab
         End Using
     End Sub
 
+    Private Sub ClearForm()
+        dtpEffectiveFrom.Value = Date.Today
+        dtpEffectiveTo.Value = Date.Today
+        txtAmount.Text = String.Empty
+        txtAllowance.Text = String.Empty
+        txtTotalSalary.Text = String.Empty
+        txtBasicPay.Text = String.Empty
+        txtSss.Text = String.Empty
+        txtPhilHealth.Text = String.Empty
+        txtPagIbig.Text = String.Empty
+    End Sub
+
     Private Sub DisplaySalary()
+        RemoveHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
         dtpEffectiveFrom.Value = _currentSalary.EffectiveFrom
         dtpEffectiveTo.Value = If(_currentSalary.EffectiveTo, _currentSalary.EffectiveFrom.AddYears(100))
         txtAmount.Text = CStr(_currentSalary.BasicSalary)
         txtAllowance.Text = CStr(_currentSalary.AllowanceSalary)
+        txtTotalSalary.Text = CStr(_currentSalary.TotalSalary)
         txtBasicPay.Text = CStr(_currentSalary.BasicPay)
+        txtSss.Text = CStr(If(_currentSalary.SocialSecurityBracket?.EmployeeContributionAmount, 0))
         txtPhilHealth.Text = CStr(_currentSalary.PhilHealthDeduction)
         txtPagIbig.Text = CStr(_currentSalary.HDMFAmount)
+        AddHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
     End Sub
 
     Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
@@ -170,16 +245,6 @@ Public Class SalaryTab
     End Sub
 
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        With _currentSalary
-            .BasicSalary = TypeTools.ParseDecimal(txtAmount.Text)
-            .AllowanceSalary = TypeTools.ParseDecimal(txtAllowance.Text)
-            .TotalSalary = (.BasicSalary + .AllowanceSalary)
-            .EffectiveFrom = dtpEffectiveFrom.Value
-            .EffectiveTo = dtpEffectiveTo.Value
-            .PhilHealthDeduction = TypeTools.ParseDecimal(txtPhilHealth.Text)
-            .HDMFAmount = TypeTools.ParseDecimal(txtPagIbig.Text)
-        End With
-
         Using context = New PayrollContext()
             Try
                 If _currentSalary.RowID.HasValue Then
@@ -189,12 +254,22 @@ Public Class SalaryTab
                     context.Salaries.Add(_currentSalary)
                 End If
 
+                With _currentSalary
+                    .BasicSalary = TypeTools.ParseDecimal(txtAmount.Text)
+                    .AllowanceSalary = TypeTools.ParseDecimal(txtAllowance.Text)
+                    .TotalSalary = (.BasicSalary + .AllowanceSalary)
+                    .EffectiveFrom = dtpEffectiveFrom.Value
+                    .EffectiveTo = dtpEffectiveTo.Value
+                    .PhilHealthDeduction = TypeTools.ParseDecimal(txtPhilHealth.Text)
+                    .SocialSecurityBracket = DirectCast(txtSss.Tag, SocialSecurityBracket)
+                    .HDMFAmount = TypeTools.ParseDecimal(txtPagIbig.Text)
+                End With
+
                 context.SaveChanges()
             Catch ex As Exception
                 MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
             End Try
         End Using
-
         LoadSalaries()
         ChangeMode(FormMode.Editing)
     End Sub
@@ -215,17 +290,29 @@ Public Class SalaryTab
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         If _mode = FormMode.Creating Then
+            SelectSalary(Nothing)
             EnableSalaryGrid()
         ElseIf _mode = FormMode.Editing Then
             LoadSalaries()
+        End If
+
+        If _currentSalary Is Nothing Then
+            ChangeMode(FormMode.Empty)
+        Else
+            ChangeMode(FormMode.Editing)
         End If
     End Sub
 
     Private Sub SelectSalary(salary As Salary)
         _currentSalary = salary
 
-        ChangeMode(FormMode.Editing)
-        DisplaySalary()
+        If _currentSalary Is Nothing Then
+            ClearForm()
+            ChangeMode(FormMode.Empty)
+        Else
+            ChangeMode(FormMode.Editing)
+            DisplaySalary()
+        End If
     End Sub
 
     Private Sub dgvSalaries_SelectionChanged(sender As Object, e As EventArgs) Handles dgvSalaries.SelectionChanged
@@ -250,6 +337,10 @@ Public Class SalaryTab
             monthlyRate = salary
         End If
 
+        If _currentSalary Is Nothing Then
+            Return
+        End If
+
         UpdateSss(monthlyRate)
         UpdatePhilHealth(monthlyRate)
     End Sub
@@ -258,7 +349,7 @@ Public Class SalaryTab
         Dim socialSecurityBracket = _socialSecurityBrackets?.FirstOrDefault(
                     Function(s) s.RangeFromAmount <= monthlyRate And monthlyRate <= s.RangeToAmount)
 
-        _currentSalary.PaySocialSecurityID = socialSecurityBracket?.RowID
+        txtSss.Tag = socialSecurityBracket
         txtSss.Text = socialSecurityBracket?.EmployeeContributionAmount.ToString()
     End Sub
 
@@ -287,18 +378,15 @@ Public Class SalaryTab
 
         Select Case e.KeyCode
             Case Keys.Back, Keys.D0, Keys.NumPad0
-                _currentSalary.PaySocialSecurityID = Nothing
                 txtSss.Text = ""
         End Select
     End Sub
 
     Private Enum FormMode
         Disabled
-        NoneSelected
+        Empty
         Creating
         Editing
     End Enum
 
 End Class
-
-
