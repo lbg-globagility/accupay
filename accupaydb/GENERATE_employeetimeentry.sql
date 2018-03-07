@@ -728,6 +728,22 @@ SET overtimeHours = GetOvertimeHours(ete_OrganizID, ete_EmpRowID, ete_Date);
 
 /******************************************************************************
  ******************************************************************************
+ * Compute the Rest day hours
+ ******************************************************************************
+ ******************************************************************************/
+IF isRestDay AND isEntitledToRestDay THEN
+    SET restDayHours = regularHours;
+    SET regularHours = 0.0;
+
+    SET restDayOTHours = overtimeHours;
+    SET overtimeHours = 0.0;
+
+    SET undertimeHours = 0.0;
+    SET lateHours = 0.0;
+END IF;
+
+/******************************************************************************
+ ******************************************************************************
  * Compute the Holiday hours
  ******************************************************************************
  ******************************************************************************/
@@ -747,22 +763,6 @@ IF isCalculatingRegularHoliday OR isCalculatingSpecialNonWorkingHoliday THEN
 
     SET regularHours = 0.0;
     SET overtimeHours = 0.0;
-END IF;
-
-/******************************************************************************
- ******************************************************************************
- * Compute the Rest day hours
- ******************************************************************************
- ******************************************************************************/
-IF isRestDay AND isEntitledToRestDay THEN
-    SET restDayHours = regularHours;
-    SET regularHours = 0.0;
-
-    SET restDayOTHours = overtimeHours;
-    SET overtimeHours = 0.0;
-
-    SET undertimeHours = 0.0;
-    SET lateHours = 0.0;
 END IF;
 
 /*
