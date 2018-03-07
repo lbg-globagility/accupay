@@ -728,22 +728,6 @@ SET overtimeHours = GetOvertimeHours(ete_OrganizID, ete_EmpRowID, ete_Date);
 
 /******************************************************************************
  ******************************************************************************
- * Compute the Rest day hours
- ******************************************************************************
- ******************************************************************************/
-IF isRestDay AND isEntitledToRestDay THEN
-    SET restDayHours = regularHours;
-    SET regularHours = 0.0;
-
-    SET restDayOTHours = overtimeHours;
-    SET overtimeHours = 0.0;
-
-    SET undertimeHours = 0.0;
-    SET lateHours = 0.0;
-END IF;
-
-/******************************************************************************
- ******************************************************************************
  * Compute the Holiday hours
  ******************************************************************************
  ******************************************************************************/
@@ -763,6 +747,22 @@ IF isCalculatingRegularHoliday OR isCalculatingSpecialNonWorkingHoliday THEN
 
     SET regularHours = 0.0;
     SET overtimeHours = 0.0;
+END IF;
+
+/******************************************************************************
+ ******************************************************************************
+ * Compute the Rest day hours
+ ******************************************************************************
+ ******************************************************************************/
+IF isRestDay AND isEntitledToRestDay THEN
+    SET restDayHours = regularHours;
+    SET regularHours = 0.0;
+
+    SET restDayOTHours = overtimeHours;
+    SET overtimeHours = 0.0;
+
+    SET undertimeHours = 0.0;
+    SET lateHours = 0.0;
 END IF;
 
 /*
@@ -1039,11 +1039,17 @@ ELSEIF isHoliday THEN
 
         SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
         SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
+
+        SET _specialHolidayOTPay = (_specialHolidayOTHours * hourlyRate) * otrate;
+        SET _regularHolidayOTPay = (_regularHolidayOTHours * hourlyRate) * otrate;
     ELSEIF isRestDay THEN
         SET applicableHolidayRate = restday_rate;
 
         SET nightDiffAmount = (nightDiffHours * hourlyRate) * _restDayNDRate;
         SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * _restDayNDOTRate;
+
+        SET _specialHolidayOTPay = (_specialHolidayOTHours * hourlyRate) * restdayot_rate;
+        SET _regularHolidayOTPay = (_regularHolidayOTHours * hourlyRate) * restdayot_rate;
     END IF;
 
     SET regularAmount = regularHours * hourlyRate;
@@ -1065,12 +1071,8 @@ ELSEIF isHoliday THEN
 
     SET holidayPay = specialHolidayPay + regularHolidayPay;
 
-    SET _specialHolidayOTPay = (_specialHolidayOTHours * hourlyRate) * otrate;
-    SET _regularHolidayOTPay = (_regularHolidayOTHours * hourlyRate) * otrate;
-
     /** DEPRECATE: to be replaced with _special and _regular holiday ot pay */
     SET overtimeAmount = (overtimeHours * hourlyRate) * otrate;
-
     SET restDayOTPay = (restDayOTHours * hourlyRate) * restdayot_rate;
 
     SET totalDayPay = COALESCE(regularAmount, 0) +

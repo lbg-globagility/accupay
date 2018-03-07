@@ -1354,7 +1354,7 @@ Partial Class PayStubForm
         '
         'txtRestDayHours
         '
-        Me.txtRestDayHours.Location = New System.Drawing.Point(128, 242)
+        Me.txtRestDayHours.Location = New System.Drawing.Point(125, 242)
         Me.txtRestDayHours.Name = "txtRestDayHours"
         Me.txtRestDayHours.Size = New System.Drawing.Size(100, 20)
         Me.txtRestDayHours.TabIndex = 533
@@ -1371,7 +1371,7 @@ Partial Class PayStubForm
         '
         'txtRestDayAmount
         '
-        Me.txtRestDayAmount.Location = New System.Drawing.Point(248, 242)
+        Me.txtRestDayAmount.Location = New System.Drawing.Point(251, 242)
         Me.txtRestDayAmount.Name = "txtRestDayAmount"
         Me.txtRestDayAmount.Size = New System.Drawing.Size(100, 20)
         Me.txtRestDayAmount.TabIndex = 531

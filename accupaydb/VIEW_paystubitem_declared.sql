@@ -64,7 +64,10 @@ SELECT
     psa.RegularHours,
     psa.RegularPay,
     psa.OvertimeHours,
-    psa.OvertimePay,
+    (psa.OvertimePay
+	  + IFNULL(ete.SpecialHolidayOTPay, 0)
+	  + IFNULL(ete.RestDayOTPay, 0)
+	  ) `OvertimePay`,
     psa.NightDiffHours,
     psa.NightDiffPay,
     psa.NightDiffOvertimeHours,
@@ -161,7 +164,10 @@ LEFT JOIN (
         SUM(etea.TotalDayPay) AS TotalDayPay,
         SUM(etea.Absent) AS Absent,
         SUM(etea.Leavepayment) AS Leavepayment,
-        SUM(agencyfee.DailyFee) AS TotalAgencyFee
+        SUM(agencyfee.DailyFee) AS TotalAgencyFee,
+        SUM(etea.SpecialHolidayPay) `SpecialHolidayPay`,
+		  SUM(etea.SpecialHolidayOTPay) `SpecialHolidayOTPay`,
+		  SUM(etea.RestDayOTPay) `RestDayOTPay`
     FROM employeetimeentry etea
     INNER JOIN payrate pr
     ON pr.RowID = etea.PayRateID

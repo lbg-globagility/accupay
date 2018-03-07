@@ -1914,7 +1914,7 @@ Public Class PayStubForm
             txtNightDiffOvertimePay.Text = FormatNumber(ValNoComma(drow("NightDiffOvertimePay")), 2)
 
             txtRestDayHours.Text = ValNoComma(drow("RestDayHours"))
-            txtRestDayAmount.Text = ValNoComma(drow("RestDayPay"))
+            txtRestDayAmount.Text = FormatNumber(ValNoComma(drow("RestDayPay")), 2)
 
             txtHolidayHours.Text = 0.0
             txtHolidayPay.Text = FormatNumber(ValNoComma(drow("HolidayPay")), 2)
@@ -2134,7 +2134,7 @@ Public Class PayStubForm
             txttotut_U.Text = ValNoComma(drow("UndertimeHours"))
             txttotutamt_U.Text = FormatNumber(ValNoComma((drow("UndertimeHoursAmount"))), 2)
 
-            txtRestDayAmount.Text = FormatNumber(ValNoComma(drow("RestDayPay")), 0)
+            txtRestDayAmount.Text = FormatNumber(ValNoComma(drow("RestDayPay")), 2)
 
             Dim miscsubtotal = ValNoComma(drow("Absent")) + ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount"))
             lblsubtotmisc.Text = FormatNumber(ValNoComma((miscsubtotal)), 2)
