@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports System.Linq
 Imports System.Data.Entity
 Imports AccuPay.Entity
 Imports PayrollSys
@@ -131,7 +130,8 @@ Public Class SalaryTab
 
         Using context = New PayrollContext()
             _salaries = (From s In context.Salaries.Include(Function(s) s.SocialSecurityBracket)
-                         Where s.EmployeeID = _employee.RowID).
+                         Where s.EmployeeID = _employee.RowID
+                         Order By s.EffectiveFrom Descending).
                          ToList()
         End Using
 
@@ -273,7 +273,6 @@ Public Class SalaryTab
                 End If
 
                 context.SaveChanges()
-                InfoBalloon("Successful", "Successful checklist", CType(btnSave, IWin32Window), btnSave.Width, -69)
             Catch ex As Exception
                 MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
                 Throw
