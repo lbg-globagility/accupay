@@ -14,6 +14,48 @@ DECLARE payrateID INT(11);
 
 DECLARE yester_date DATE;
 
+DECLARE rdayndrate_str
+        ,rdayndotrate_str TEXT;
+
+DECLARE rdayndrate
+        ,rdayndotrate DECIMAL(11, 4);
+
+DECLARE rdayndrate_default DECIMAL(11, 4) DEFAULT 1.43;
+DECLARE rdayndotrate_default DECIMAL(11, 4) DEFAULT 1.859;
+
+SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(lv.DisplayValue, ',', -2), ',', 1) `RDayNDRate`
+, SUBSTRING_INDEX(SUBSTRING_INDEX(lv.DisplayValue, ',', -1), ',', 1) `RDayNDOTRate`
+# , lv.DisplayValue
+FROM listofval lv
+WHERE lv.`Type` = 'Pay rate'
+AND lv.ParentLIC = prate_PayType
+LIMIT 1
+INTO rdayndrate_str
+     ,rdayndotrate_str;
+
+IF LENGTH(IFNULL(rdayndrate_str, '')) = 0 THEN
+
+	SET rdayndrate = rdayndrate_default;
+ELSE
+
+	SET rdayndrate = CONCAT_WS('.'
+	                           , LEFT(rdayndrate_str, 1)
+	                           , RIGHT(rdayndrate_str, (LENGTH(rdayndrate_str) - 1))
+	                           );
+END IF;
+
+
+IF LENGTH(IFNULL(rdayndotrate_str, '')) = 0 THEN
+
+	SET rdayndotrate = rdayndotrate_default;
+ELSE
+
+	SET rdayndotrate = CONCAT_WS('.'
+	                             , LEFT(rdayndotrate_str, 1)
+	                             , RIGHT(rdayndotrate_str, (LENGTH(rdayndotrate_str) - 1))
+										  );
+END IF;
+
 IF prate_PayType IN ('Regular Holiday', 'Special Non-Working Holiday') THEN
     SET yester_date = SUBDATE(prate_Date, INTERVAL 1 DAY);
 
@@ -41,6 +83,8 @@ INSERT INTO payrate
     ,RestDayRate
     ,DayBefore
     ,RestDayOvertimeRate
+	 , RestDayNDRate
+    , RestDayNDOTRate
 ) VALUES (
     prate_RowID
     ,prate_OrganizationID
@@ -57,6 +101,8 @@ INSERT INTO payrate
     ,prate_RestDayRate
     ,yester_date
     ,prate_RestDayOvertimeRate
+    , rdayndrate
+    , rdayndotrate
 ) ON
 DUPLICATE
 KEY
@@ -71,8 +117,11 @@ UPDATE
     ,NightDifferentialOTRate=prate_NightDifferentialOTRate
     ,RestDayRate=prate_RestDayRate
     ,DayBefore=yester_date
-    ,RestDayOvertimeRate=prate_RestDayOvertimeRate;SELECT @@Identity AS id INTO payrateID;
-
+    ,RestDayOvertimeRate=prate_RestDayOvertimeRate
+	 , RestDayNDRate = rdayndrate
+    , RestDayNDOTRate = rdayndotrate
+	 ;SELECT @@Identity AS id INTO payrateID;
+	 
 RETURN payrateID;
 
 END//
