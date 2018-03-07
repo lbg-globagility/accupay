@@ -1047,6 +1047,7 @@ ELSEIF isHoliday THEN
     END IF;
 
     SET regularAmount = regularHours * hourlyRate;
+    SET restDayAmount = restDayHours * hourlyRate * restday_rate;
 
     IF isCalculatingSpecialNonWorkingHoliday THEN
         SET applicableHolidayRate = IF(isHolidayPayInclusive, applicableHolidayRate - 1, applicableHolidayRate);
