@@ -247,11 +247,10 @@ Public Class SalaryTab
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         Using context = New PayrollContext()
             Try
-                If _currentSalary.RowID.HasValue Then
-                    _currentSalary.LastUpdBy = z_User
-                    context.Entry(_currentSalary).State = Entity.EntityState.Modified
-                Else
-                    context.Salaries.Add(_currentSalary)
+                Dim socialSecurityBracket = DirectCast(txtSss.Tag, SocialSecurityBracket)
+
+                If socialSecurityBracket IsNot Nothing Then
+                    context.Entry(socialSecurityBracket).State = Entity.EntityState.Unchanged
                 End If
 
                 With _currentSalary
@@ -261,13 +260,23 @@ Public Class SalaryTab
                     .EffectiveFrom = dtpEffectiveFrom.Value
                     .EffectiveTo = dtpEffectiveTo.Value
                     .PhilHealthDeduction = TypeTools.ParseDecimal(txtPhilHealth.Text)
-                    .SocialSecurityBracket = DirectCast(txtSss.Tag, SocialSecurityBracket)
+                    .PaySocialSecurityID = SocialSecurityBracket?.RowID
+                    .SocialSecurityBracket = SocialSecurityBracket
                     .HDMFAmount = TypeTools.ParseDecimal(txtPagIbig.Text)
                 End With
 
+                If _currentSalary.RowID.HasValue Then
+                    _currentSalary.LastUpdBy = z_User
+                    context.Entry(_currentSalary).State = Entity.EntityState.Modified
+                Else
+                    context.Salaries.Add(_currentSalary)
+                End If
+
                 context.SaveChanges()
+                InfoBalloon("Successful", "Successful checklist", CType(btnSave, IWin32Window), btnSave.Width, -69)
             Catch ex As Exception
                 MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
+                Throw
             End Try
         End Using
         LoadSalaries()
@@ -378,6 +387,7 @@ Public Class SalaryTab
 
         Select Case e.KeyCode
             Case Keys.Back, Keys.D0, Keys.NumPad0
+                txtSss.Tag = Nothing
                 txtSss.Text = ""
         End Select
     End Sub
