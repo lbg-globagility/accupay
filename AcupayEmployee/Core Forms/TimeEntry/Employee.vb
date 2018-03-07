@@ -141,7 +141,7 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property MiddleInitial As String
             Get
-                Return If(String.IsNullOrEmpty(MiddleName), Nothing, MiddleName.Substring(0, 1))
+                Return If(String.IsNullOrEmpty(MiddleName), Nothing, $"{MiddleName.Substring(0, 1)}.")
             End Get
         End Property
 

@@ -1,5 +1,7 @@
 ﻿Imports System.Threading
 Imports Femiani.Forms.UI.Input
+Imports AccuPay.Entity
+Imports System.Data.Entity
 
 Public Class LeaveForm
 
@@ -61,6 +63,40 @@ Public Class LeaveForm
             Panel1.Enabled = False
             bgSaving.RunWorkerAsync()
         End If
+    End Sub
+
+    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnApply.Click
+        Try
+            Using context = New PayrollContext()
+                Dim employee = context.Employees.
+                    FirstOrDefault(Function(emp) emp.RowID = e_rowid)
+
+                Dim leave = New Leave() With {
+                    .OrganizationID = employee.OrganizationID,
+                    .CreatedBy = 0,
+                    .LeaveType = cboleavetypes.Tag(1),
+                    .EmployeeID = employee.RowID,
+                    .StartTime = dtpstarttime.Value.TimeOfDay,
+                    .EndTime = dtpendtime.Value.TimeOfDay,
+                    .StartDate = dtpstartdate.Value,
+                    .EndDate = dtpendate.Value,
+                    .Reason = txtreason.Text,
+                    .Comments = txtcomments.Text,
+                    .Status = "Pending"
+                }
+
+                Dim ledger = context.LeaveLedgers.
+                    Where(Function(l) l.EmployeeID = e_rowid).
+                    Where(Function(l) l.Product.Name = leave.LeaveType).
+                    FirstOrDefault()
+
+                If ledger Is Nothing Then
+                    Throw New Exception($"Sorry but we can't find your {leave.LeaveType} leave ledger.")
+                End If
+            End Using
+        Catch ex As Exception
+            MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Failed to save leave")
+        End Try
     End Sub
 
     Function INSUPD_employeeleave() As Object
@@ -242,7 +278,6 @@ Public Class LeaveForm
         ElseIf e.Cancelled Then
 
             MessageBox.Show("Background work cancelled.")
-
         Else
 
             TxtEmployeeFullName1.Enabled = True

@@ -5,8 +5,8 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Namespace Global.AccuPay.Entity
 
-    <Table("employeeleave")>
-    Public Class Leave
+    <Table("leaveledger")>
+    Public Class LeaveLedger
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
@@ -26,29 +26,18 @@ Namespace Global.AccuPay.Entity
 
         Public Property EmployeeID As Integer?
 
-        Public Property LeaveType As String
+        Public Property ProductID As Integer?
 
-        Public Property LeaveHours As Decimal
+        Public Property LastTransactionID As Integer?
 
-        <Column("LeaveStartTime")>
-        Public Property StartTime As TimeSpan?
+        <ForeignKey("ProductID")>
+        Public Overridable Property Product As Product
 
-        <Column("LeaveEndTime")>
-        Public Property EndTime As TimeSpan?
+        <ForeignKey("LastTransactionID")>
+        Public Overridable Property LastTransaction As LeaveTransaction
 
-        <Column("LeaveStartDate")>
-        Public Property StartDate As Date
-
-        <Column("LeaveEndDate")>
-        Public Property EndDate As Date?
-
-        Public Property Reason As String
-
-        Public Property Comments As String
-
-        Public Property Image As Byte()
-
-        Public Property Status As String
+        <InverseProperty("LeaveLedger")>
+        Public Overridable Property LeaveTransactions As IList(Of LeaveTransaction)
 
     End Class
 
