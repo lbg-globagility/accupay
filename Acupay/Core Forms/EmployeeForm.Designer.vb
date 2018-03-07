@@ -488,9 +488,7 @@ Partial Class EmployeeForm
         Me.txtslpaypLeave = New System.Windows.Forms.TextBox()
         Me.Label198 = New System.Windows.Forms.Label()
         Me.txtFNameLeave = New System.Windows.Forms.TextBox()
-        Me.Label197 = New System.Windows.Forms.Label()
         Me.txtEmpIDLeave = New System.Windows.Forms.TextBox()
-        Me.Label196 = New System.Windows.Forms.Label()
         Me.btnleavtyp = New System.Windows.Forms.Button()
         Me.Label195 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
@@ -1161,9 +1159,7 @@ Partial Class EmployeeForm
         Me.Label204 = New System.Windows.Forms.Label()
         Me.cboEmpOTtypes = New System.Windows.Forms.ComboBox()
         Me.btndlEmpOTfile = New System.Windows.Forms.Button()
-        Me.Label202 = New System.Windows.Forms.Label()
         Me.txtFNameEmpOT = New System.Windows.Forms.TextBox()
-        Me.Label201 = New System.Windows.Forms.Label()
         Me.txtEmpIDEmpOT = New System.Windows.Forms.TextBox()
         Me.Label200 = New System.Windows.Forms.Label()
         Me.btnEmpOTtyp = New System.Windows.Forms.Button()
@@ -1342,6 +1338,8 @@ Partial Class EmployeeForm
         Me.tsbtnCancelAtta = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton16 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton34 = New System.Windows.Forms.ToolStripButton()
+        Me.tbpNewSalary = New System.Windows.Forms.TabPage()
+        Me.SalaryTab = New Acupay.SalaryTab()
         Me.imglstchklist = New System.Windows.Forms.ImageList(Me.components)
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
@@ -1630,6 +1628,7 @@ Partial Class EmployeeForm
         CType(Me.dgvempatta, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pbatta, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip21.SuspendLayout()
+        Me.tbpNewSalary.SuspendLayout()
         Me.TabControl2.SuspendLayout()
         Me.TabPage2.SuspendLayout()
         Me.TabPage3.SuspendLayout()
@@ -2024,6 +2023,7 @@ Partial Class EmployeeForm
         Me.tabctrlemp.Controls.Add(Me.tbpOBF)
         Me.tabctrlemp.Controls.Add(Me.tbpBonus)
         Me.tabctrlemp.Controls.Add(Me.tbpAttachment)
+        Me.tabctrlemp.Controls.Add(Me.tbpNewSalary)
         Me.tabctrlemp.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
         Me.tabctrlemp.ItemSize = New System.Drawing.Size(152, 25)
         Me.tabctrlemp.Location = New System.Drawing.Point(360, 2)
@@ -2139,7 +2139,7 @@ Partial Class EmployeeForm
         Me.tbpEmployee.Location = New System.Drawing.Point(4, 4)
         Me.tbpEmployee.Name = "tbpEmployee"
         Me.tbpEmployee.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpEmployee.Size = New System.Drawing.Size(860, 461)
+        Me.tbpEmployee.Size = New System.Drawing.Size(860, 486)
         Me.tbpEmployee.TabIndex = 0
         Me.tbpEmployee.Text = "PERSON"
         '
@@ -2270,8 +2270,8 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.txtCell)
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
-        Me.SplitContainer2.Size = New System.Drawing.Size(854, 430)
-        Me.SplitContainer2.SplitterDistance = 302
+        Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
+        Me.SplitContainer2.SplitterDistance = 312
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3535,7 +3535,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 94)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 109)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -3909,7 +3909,7 @@ Partial Class EmployeeForm
         Me.tbpSalary.Location = New System.Drawing.Point(4, 4)
         Me.tbpSalary.Name = "tbpSalary"
         Me.tbpSalary.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpSalary.Size = New System.Drawing.Size(860, 461)
+        Me.tbpSalary.Size = New System.Drawing.Size(860, 486)
         Me.tbpSalary.TabIndex = 10
         Me.tbpSalary.Text = "SALARY"
         Me.tbpSalary.UseVisualStyleBackColor = True
@@ -3927,7 +3927,7 @@ Partial Class EmployeeForm
         Me.Panel8.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel8.Location = New System.Drawing.Point(3, 28)
         Me.Panel8.Name = "Panel8"
-        Me.Panel8.Size = New System.Drawing.Size(854, 430)
+        Me.Panel8.Size = New System.Drawing.Size(854, 455)
         Me.Panel8.TabIndex = 349
         '
         'Label319
@@ -4588,7 +4588,7 @@ Partial Class EmployeeForm
         Me.tbpAwards.Location = New System.Drawing.Point(4, 4)
         Me.tbpAwards.Name = "tbpAwards"
         Me.tbpAwards.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpAwards.Size = New System.Drawing.Size(860, 461)
+        Me.tbpAwards.Size = New System.Drawing.Size(860, 486)
         Me.tbpAwards.TabIndex = 1
         Me.tbpAwards.Text = "AWARD"
         Me.tbpAwards.UseVisualStyleBackColor = True
@@ -4604,7 +4604,7 @@ Partial Class EmployeeForm
         Me.Panel17.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel17.Location = New System.Drawing.Point(3, 28)
         Me.Panel17.Name = "Panel17"
-        Me.Panel17.Size = New System.Drawing.Size(854, 430)
+        Me.Panel17.Size = New System.Drawing.Size(854, 455)
         Me.Panel17.TabIndex = 159
         '
         'Label320
@@ -4814,7 +4814,7 @@ Partial Class EmployeeForm
         Me.tbpCertifications.Location = New System.Drawing.Point(4, 4)
         Me.tbpCertifications.Name = "tbpCertifications"
         Me.tbpCertifications.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpCertifications.Size = New System.Drawing.Size(860, 461)
+        Me.tbpCertifications.Size = New System.Drawing.Size(860, 486)
         Me.tbpCertifications.TabIndex = 2
         Me.tbpCertifications.Text = "CERTI"
         Me.tbpCertifications.UseVisualStyleBackColor = True
@@ -4831,7 +4831,7 @@ Partial Class EmployeeForm
         Me.Panel16.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel16.Location = New System.Drawing.Point(3, 28)
         Me.Panel16.Name = "Panel16"
-        Me.Panel16.Size = New System.Drawing.Size(854, 430)
+        Me.Panel16.Size = New System.Drawing.Size(854, 455)
         Me.Panel16.TabIndex = 170
         '
         'Label322
@@ -5130,7 +5130,7 @@ Partial Class EmployeeForm
         Me.tbpLeave.Location = New System.Drawing.Point(4, 4)
         Me.tbpLeave.Name = "tbpLeave"
         Me.tbpLeave.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpLeave.Size = New System.Drawing.Size(860, 461)
+        Me.tbpLeave.Size = New System.Drawing.Size(860, 486)
         Me.tbpLeave.TabIndex = 3
         Me.tbpLeave.Text = "LEAVE"
         Me.tbpLeave.UseVisualStyleBackColor = True
@@ -5151,9 +5151,7 @@ Partial Class EmployeeForm
         Me.Panel15.Controls.Add(Me.TabControl4)
         Me.Panel15.Controls.Add(Me.Label198)
         Me.Panel15.Controls.Add(Me.txtFNameLeave)
-        Me.Panel15.Controls.Add(Me.Label197)
         Me.Panel15.Controls.Add(Me.txtEmpIDLeave)
-        Me.Panel15.Controls.Add(Me.Label196)
         Me.Panel15.Controls.Add(Me.btnleavtyp)
         Me.Panel15.Controls.Add(Me.Label195)
         Me.Panel15.Controls.Add(Me.Label32)
@@ -5180,7 +5178,7 @@ Partial Class EmployeeForm
         Me.Panel15.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel15.Location = New System.Drawing.Point(3, 28)
         Me.Panel15.Name = "Panel15"
-        Me.Panel15.Size = New System.Drawing.Size(854, 430)
+        Me.Panel15.Size = New System.Drawing.Size(854, 455)
         Me.Panel15.TabIndex = 188
         '
         'Label345
@@ -5628,17 +5626,6 @@ Partial Class EmployeeForm
         Me.txtFNameLeave.Size = New System.Drawing.Size(516, 28)
         Me.txtFNameLeave.TabIndex = 175
         '
-        'Label197
-        '
-        Me.Label197.AutoSize = True
-        Me.Label197.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label197.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label197.Location = New System.Drawing.Point(72, 198)
-        Me.Label197.Name = "Label197"
-        Me.Label197.Size = New System.Drawing.Size(18, 24)
-        Me.Label197.TabIndex = 185
-        Me.Label197.Text = "*"
-        '
         'txtEmpIDLeave
         '
         Me.txtEmpIDLeave.BackColor = System.Drawing.Color.White
@@ -5651,17 +5638,6 @@ Partial Class EmployeeForm
         Me.txtEmpIDLeave.ReadOnly = True
         Me.txtEmpIDLeave.Size = New System.Drawing.Size(516, 22)
         Me.txtEmpIDLeave.TabIndex = 170
-        '
-        'Label196
-        '
-        Me.Label196.AutoSize = True
-        Me.Label196.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label196.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label196.Location = New System.Drawing.Point(75, 172)
-        Me.Label196.Name = "Label196"
-        Me.Label196.Size = New System.Drawing.Size(18, 24)
-        Me.Label196.TabIndex = 184
-        Me.Label196.Text = "*"
         '
         'btnleavtyp
         '
@@ -6162,7 +6138,7 @@ Partial Class EmployeeForm
         Me.tbpDiscipAct.Location = New System.Drawing.Point(4, 4)
         Me.tbpDiscipAct.Name = "tbpDiscipAct"
         Me.tbpDiscipAct.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpDiscipAct.Size = New System.Drawing.Size(860, 461)
+        Me.tbpDiscipAct.Size = New System.Drawing.Size(860, 486)
         Me.tbpDiscipAct.TabIndex = 5
         Me.tbpDiscipAct.Text = "DISCIP"
         Me.tbpDiscipAct.UseVisualStyleBackColor = True
@@ -6193,7 +6169,7 @@ Partial Class EmployeeForm
         Me.Panel14.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel14.Location = New System.Drawing.Point(3, 28)
         Me.Panel14.Name = "Panel14"
-        Me.Panel14.Size = New System.Drawing.Size(854, 430)
+        Me.Panel14.Size = New System.Drawing.Size(854, 455)
         Me.Panel14.TabIndex = 338
         '
         'LinkLabel3
@@ -6565,7 +6541,7 @@ Partial Class EmployeeForm
         Me.tbpEducBG.Location = New System.Drawing.Point(4, 4)
         Me.tbpEducBG.Name = "tbpEducBG"
         Me.tbpEducBG.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpEducBG.Size = New System.Drawing.Size(860, 461)
+        Me.tbpEducBG.Size = New System.Drawing.Size(860, 486)
         Me.tbpEducBG.TabIndex = 6
         Me.tbpEducBG.Text = "EDUC"
         Me.tbpEducBG.UseVisualStyleBackColor = True
@@ -6598,7 +6574,7 @@ Partial Class EmployeeForm
         Me.Panel13.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel13.Location = New System.Drawing.Point(3, 28)
         Me.Panel13.Name = "Panel13"
-        Me.Panel13.Size = New System.Drawing.Size(854, 430)
+        Me.Panel13.Size = New System.Drawing.Size(854, 455)
         Me.Panel13.TabIndex = 349
         '
         'Label327
@@ -7007,7 +6983,7 @@ Partial Class EmployeeForm
         Me.tbpPrevEmp.Location = New System.Drawing.Point(4, 4)
         Me.tbpPrevEmp.Name = "tbpPrevEmp"
         Me.tbpPrevEmp.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpPrevEmp.Size = New System.Drawing.Size(860, 461)
+        Me.tbpPrevEmp.Size = New System.Drawing.Size(860, 486)
         Me.tbpPrevEmp.TabIndex = 7
         Me.tbpPrevEmp.Text = "PREV EMP"
         Me.tbpPrevEmp.UseVisualStyleBackColor = True
@@ -7025,7 +7001,7 @@ Partial Class EmployeeForm
         Me.Panel12.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel12.Location = New System.Drawing.Point(3, 28)
         Me.Panel12.Name = "Panel12"
-        Me.Panel12.Size = New System.Drawing.Size(854, 430)
+        Me.Panel12.Size = New System.Drawing.Size(854, 455)
         Me.Panel12.TabIndex = 352
         '
         'Label329
@@ -7719,7 +7695,7 @@ Partial Class EmployeeForm
         Me.tbpPromotion.Location = New System.Drawing.Point(4, 4)
         Me.tbpPromotion.Name = "tbpPromotion"
         Me.tbpPromotion.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpPromotion.Size = New System.Drawing.Size(860, 461)
+        Me.tbpPromotion.Size = New System.Drawing.Size(860, 486)
         Me.tbpPromotion.TabIndex = 8
         Me.tbpPromotion.Text = "PROMOT"
         Me.tbpPromotion.UseVisualStyleBackColor = True
@@ -7757,7 +7733,7 @@ Partial Class EmployeeForm
         Me.Panel11.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel11.Location = New System.Drawing.Point(3, 28)
         Me.Panel11.Name = "Panel11"
-        Me.Panel11.Size = New System.Drawing.Size(854, 430)
+        Me.Panel11.Size = New System.Drawing.Size(854, 455)
         Me.Panel11.TabIndex = 386
         '
         'Label331
@@ -8204,7 +8180,7 @@ Partial Class EmployeeForm
         Me.tbpLoans.Location = New System.Drawing.Point(4, 4)
         Me.tbpLoans.Name = "tbpLoans"
         Me.tbpLoans.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpLoans.Size = New System.Drawing.Size(860, 461)
+        Me.tbpLoans.Size = New System.Drawing.Size(860, 486)
         Me.tbpLoans.TabIndex = 9
         Me.tbpLoans.Text = "LOAN SCH"
         Me.tbpLoans.UseVisualStyleBackColor = True
@@ -8263,7 +8239,7 @@ Partial Class EmployeeForm
         Me.Panel10.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel10.Location = New System.Drawing.Point(3, 28)
         Me.Panel10.Name = "Panel10"
-        Me.Panel10.Size = New System.Drawing.Size(854, 430)
+        Me.Panel10.Size = New System.Drawing.Size(854, 455)
         Me.Panel10.TabIndex = 385
         '
         'chkboxChargeToBonus
@@ -8939,7 +8915,7 @@ Partial Class EmployeeForm
         Me.tbpLoanHist.Location = New System.Drawing.Point(4, 4)
         Me.tbpLoanHist.Name = "tbpLoanHist"
         Me.tbpLoanHist.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpLoanHist.Size = New System.Drawing.Size(860, 461)
+        Me.tbpLoanHist.Size = New System.Drawing.Size(860, 486)
         Me.tbpLoanHist.TabIndex = 11
         Me.tbpLoanHist.Text = "LOAN HIST"
         Me.tbpLoanHist.UseVisualStyleBackColor = True
@@ -8969,7 +8945,7 @@ Partial Class EmployeeForm
         Me.Panel9.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel9.Location = New System.Drawing.Point(3, 28)
         Me.Panel9.Name = "Panel9"
-        Me.Panel9.Size = New System.Drawing.Size(854, 430)
+        Me.Panel9.Size = New System.Drawing.Size(854, 455)
         Me.Panel9.TabIndex = 386
         '
         'GroupBox3
@@ -9291,7 +9267,7 @@ Partial Class EmployeeForm
         Me.tbpPayslip.Location = New System.Drawing.Point(4, 4)
         Me.tbpPayslip.Name = "tbpPayslip"
         Me.tbpPayslip.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpPayslip.Size = New System.Drawing.Size(860, 461)
+        Me.tbpPayslip.Size = New System.Drawing.Size(860, 486)
         Me.tbpPayslip.TabIndex = 12
         Me.tbpPayslip.Text = "PAYSLIP"
         Me.tbpPayslip.UseVisualStyleBackColor = True
@@ -9315,7 +9291,7 @@ Partial Class EmployeeForm
         'SplitContainer3.Panel2
         '
         Me.SplitContainer3.Panel2.Controls.Add(Me.PanelPayslip)
-        Me.SplitContainer3.Size = New System.Drawing.Size(854, 430)
+        Me.SplitContainer3.Size = New System.Drawing.Size(854, 455)
         Me.SplitContainer3.SplitterDistance = 230
         Me.SplitContainer3.TabIndex = 171
         '
@@ -9607,7 +9583,7 @@ Partial Class EmployeeForm
         Me.PanelPayslip.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelPayslip.Location = New System.Drawing.Point(0, 0)
         Me.PanelPayslip.Name = "PanelPayslip"
-        Me.PanelPayslip.Size = New System.Drawing.Size(618, 428)
+        Me.PanelPayslip.Size = New System.Drawing.Size(618, 453)
         Me.PanelPayslip.TabIndex = 170
         '
         'dgvempallowans
@@ -11668,7 +11644,7 @@ Partial Class EmployeeForm
         Me.tbpempallow.Location = New System.Drawing.Point(4, 4)
         Me.tbpempallow.Name = "tbpempallow"
         Me.tbpempallow.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpempallow.Size = New System.Drawing.Size(860, 461)
+        Me.tbpempallow.Size = New System.Drawing.Size(860, 486)
         Me.tbpempallow.TabIndex = 14
         Me.tbpempallow.Text = "ALLOW"
         Me.tbpempallow.UseVisualStyleBackColor = True
@@ -11702,7 +11678,7 @@ Partial Class EmployeeForm
         Me.Panel6.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel6.Location = New System.Drawing.Point(3, 28)
         Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(854, 430)
+        Me.Panel6.Size = New System.Drawing.Size(854, 455)
         Me.Panel6.TabIndex = 359
         '
         'Label337
@@ -12182,7 +12158,7 @@ Partial Class EmployeeForm
         Me.tbpEmpOT.Location = New System.Drawing.Point(4, 4)
         Me.tbpEmpOT.Name = "tbpEmpOT"
         Me.tbpEmpOT.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpEmpOT.Size = New System.Drawing.Size(860, 461)
+        Me.tbpEmpOT.Size = New System.Drawing.Size(860, 486)
         Me.tbpEmpOT.TabIndex = 15
         Me.tbpEmpOT.Text = "EMP OT"
         Me.tbpEmpOT.UseVisualStyleBackColor = True
@@ -12205,9 +12181,7 @@ Partial Class EmployeeForm
         Me.Panel5.Controls.Add(Me.Label204)
         Me.Panel5.Controls.Add(Me.cboEmpOTtypes)
         Me.Panel5.Controls.Add(Me.btndlEmpOTfile)
-        Me.Panel5.Controls.Add(Me.Label202)
         Me.Panel5.Controls.Add(Me.txtFNameEmpOT)
-        Me.Panel5.Controls.Add(Me.Label201)
         Me.Panel5.Controls.Add(Me.txtEmpIDEmpOT)
         Me.Panel5.Controls.Add(Me.Label200)
         Me.Panel5.Controls.Add(Me.btnEmpOTtyp)
@@ -12233,7 +12207,7 @@ Partial Class EmployeeForm
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel5.Location = New System.Drawing.Point(3, 28)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(854, 430)
+        Me.Panel5.Size = New System.Drawing.Size(854, 455)
         Me.Panel5.TabIndex = 194
         '
         'lnkLastOT
@@ -12394,17 +12368,6 @@ Partial Class EmployeeForm
         Me.btndlEmpOTfile.Text = "Download"
         Me.btndlEmpOTfile.UseVisualStyleBackColor = True
         '
-        'Label202
-        '
-        Me.Label202.AutoSize = True
-        Me.Label202.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label202.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label202.Location = New System.Drawing.Point(72, 198)
-        Me.Label202.Name = "Label202"
-        Me.Label202.Size = New System.Drawing.Size(18, 24)
-        Me.Label202.TabIndex = 190
-        Me.Label202.Text = "*"
-        '
         'txtFNameEmpOT
         '
         Me.txtFNameEmpOT.BackColor = System.Drawing.Color.White
@@ -12417,17 +12380,6 @@ Partial Class EmployeeForm
         Me.txtFNameEmpOT.ReadOnly = True
         Me.txtFNameEmpOT.Size = New System.Drawing.Size(516, 28)
         Me.txtFNameEmpOT.TabIndex = 175
-        '
-        'Label201
-        '
-        Me.Label201.AutoSize = True
-        Me.Label201.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label201.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label201.Location = New System.Drawing.Point(75, 172)
-        Me.Label201.Name = "Label201"
-        Me.Label201.Size = New System.Drawing.Size(18, 24)
-        Me.Label201.TabIndex = 189
-        Me.Label201.Text = "*"
         '
         'txtEmpIDEmpOT
         '
@@ -14427,6 +14379,25 @@ Partial Class EmployeeForm
         Me.ToolStripButton34.Text = "ToolStripButton1"
         Me.ToolStripButton34.ToolTipText = "Show audit trails"
         '
+        'tbpNewSalary
+        '
+        Me.tbpNewSalary.Controls.Add(Me.SalaryTab)
+        Me.tbpNewSalary.Location = New System.Drawing.Point(4, 4)
+        Me.tbpNewSalary.Name = "tbpNewSalary"
+        Me.tbpNewSalary.Size = New System.Drawing.Size(860, 461)
+        Me.tbpNewSalary.TabIndex = 19
+        Me.tbpNewSalary.Text = "Salary"
+        Me.tbpNewSalary.UseVisualStyleBackColor = True
+        '
+        'SalaryTab
+        '
+        Me.SalaryTab.BackColor = System.Drawing.Color.White
+        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
+        Me.SalaryTab.Name = "SalaryTab"
+        Me.SalaryTab.Size = New System.Drawing.Size(860, 461)
+        Me.SalaryTab.TabIndex = 0
+        '
         'imglstchklist
         '
         Me.imglstchklist.ImageStream = CType(resources.GetObject("imglstchklist.ImageStream"), System.Windows.Forms.ImageListStreamer)
@@ -15847,6 +15818,7 @@ Partial Class EmployeeForm
         CType(Me.pbatta, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip21.ResumeLayout(False)
         Me.ToolStrip21.PerformLayout()
+        Me.tbpNewSalary.ResumeLayout(False)
         Me.TabControl2.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
         Me.TabPage2.PerformLayout()
@@ -16539,13 +16511,9 @@ Partial Class EmployeeForm
     Friend WithEvents txtFNameLoanhist As System.Windows.Forms.TextBox
     Friend WithEvents txtEmpIDLoanhist As System.Windows.Forms.TextBox
     Friend WithEvents Label195 As System.Windows.Forms.Label
-    Friend WithEvents Label196 As System.Windows.Forms.Label
-    Friend WithEvents Label197 As System.Windows.Forms.Label
     Friend WithEvents Label198 As System.Windows.Forms.Label
     Friend WithEvents Label199 As System.Windows.Forms.Label
     Friend WithEvents Label200 As System.Windows.Forms.Label
-    Friend WithEvents Label201 As System.Windows.Forms.Label
-    Friend WithEvents Label202 As System.Windows.Forms.Label
     Friend WithEvents Label203 As System.Windows.Forms.Label
     Friend WithEvents Label205 As System.Windows.Forms.Label
     Friend WithEvents Label206 As System.Windows.Forms.Label
@@ -17258,4 +17226,6 @@ Partial Class EmployeeForm
     Friend WithEvents c_ToComputeSal As DataGridViewTextBoxColumn
     Friend WithEvents TrueHDMFAmount As DataGridViewTextBoxColumn
     Friend WithEvents Label367 As Label
+    Friend WithEvents tbpNewSalary As TabPage
+    Friend WithEvents SalaryTab As SalaryTab
 End Class

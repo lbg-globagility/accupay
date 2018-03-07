@@ -233,7 +233,10 @@
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\ListOfValueCollection.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
+    <Compile Include="Core Forms\Commons\PayrollTools.vb" />
     <Compile Include="Core Forms\Commons\ReleaseThirteenthMonthPay.vb" />
+    <Compile Include="Core Forms\Commons\Calendar.vb" />
+    <Compile Include="Core Forms\Commons\TypeTools.vb" />
     <Compile Include="Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
     </Compile>
@@ -333,16 +336,23 @@
     <Compile Include="Core Forms\JobLevel\JobPointsPresenter.vb" />
     <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\ActualAdjustment.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Adjustment.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Allowance.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\AllowanceItem.vb" />
     <Compile Include="Core Forms\PayStub\Entity\AllowancePerDay.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Division.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\Leave.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\LeaveLedger.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\LeaveTransaction.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Organization.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\PayFrequency.vb" />
     <Compile Include="Core Forms\PayStub\Entity\PayPeriod.vb" />
     <Compile Include="Core Forms\PayStub\Entity\PayRate.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\PaystubActual.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Position.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ThirteenthMonthPay.vb" />
@@ -409,6 +419,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>HyundaiPayslip.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core Forms\rpt\HyundaiPayslip1.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HyundaiPayslip1.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Core Forms\rpt\LoanReports.vb">
@@ -1472,6 +1488,10 @@
     <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HyundaiPayslip.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HyundaiPayslip1.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\rpt\LoanReports.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

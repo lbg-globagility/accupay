@@ -6,7 +6,7 @@
 
 DROP VIEW IF EXISTS `v_sumthirteenthmonthpay`;
 DROP TABLE IF EXISTS `v_sumthirteenthmonthpay`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_sumthirteenthmonthpay` AS SELECT
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_sumthirteenthmonthpay` AS SELECT
 tmp.RowID
 ,tmp.OrganizationID
 ,tmp.PaystubID

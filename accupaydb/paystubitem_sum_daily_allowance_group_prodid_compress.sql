@@ -5,23 +5,8 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 DROP VIEW IF EXISTS `paystubitem_sum_daily_allowance_group_prodid_compress`;
-CREATE TABLE `paystubitem_sum_daily_allowance_group_prodid_compress` (
-	`etRowID` INT(10) NOT NULL,
-	`eaRowID` INT(10) NOT NULL,
-	`ProductID` INT(10) NULL,
-	`EmployeeID` INT(10) NULL,
-	`OrganizationID` INT(10) NOT NULL,
-	`Date` DATE NOT NULL COMMENT 'time entry date',
-	`Column1` INT(1) NOT NULL,
-	`TaxableFlag` CHAR(50) NULL COLLATE 'latin1_swedish_ci',
-	`PayType` VARCHAR(50) NULL COMMENT 'Regular, Holiday, Special Holiday, etc.' COLLATE 'latin1_swedish_ci',
-	`TotalAllowanceAmt` DECIMAL(30,8) NULL,
-	`Fixed` TINYINT(1) NULL
-) ENGINE=MyISAM;
-
-DROP VIEW IF EXISTS `paystubitem_sum_daily_allowance_group_prodid_compress`;
 DROP TABLE IF EXISTS `paystubitem_sum_daily_allowance_group_prodid_compress`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `paystubitem_sum_daily_allowance_group_prodid_compress` AS SELECT
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `paystubitem_sum_daily_allowance_group_prodid_compress` AS SELECT
     DISTINCT(et.RowID) AS `etRowID`,
     ea.RowID AS `eaRowID`,
     (ea.ProductID) AS ProductID,
@@ -109,7 +94,7 @@ ON ea.AllowanceFrequency = 'Daily' AND
 INNER JOIN product p
 ON p.RowID = ea.ProductID
 INNER JOIN payrate pr
-ON pr.RowID = et.PayRateID;
+ON pr.RowID = et.PayRateID ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

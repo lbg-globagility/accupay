@@ -6,7 +6,7 @@
 
 DROP VIEW IF EXISTS `payperiod_totalperiods`;
 DROP TABLE IF EXISTS `payperiod_totalperiods`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` VIEW `payperiod_totalperiods` AS SELECT *,COUNT(RowID) `ppcount` FROM payperiod pp GROUP BY pp.OrganizationID,pp.TotalGrossSalary,pp.`Year` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `payperiod_totalperiods` AS SELECT *,COUNT(RowID) `ppcount` FROM payperiod pp GROUP BY pp.OrganizationID,pp.TotalGrossSalary,pp.`Year` ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

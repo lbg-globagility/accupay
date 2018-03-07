@@ -239,16 +239,34 @@ Public Class TimeEntrySummaryForm
                 employeetimeentry.NightDiffOTHoursAmount,
                 employeetimeentry.RestDayHours,
                 employeetimeentry.RestDayAmount,
+                employeetimeentry.RestDayOTHours,
+                employeetimeentry.RestDayOTPay,
                 employeetimeentry.LeavePayment,
                 employeetimeentry.HoursLate,
                 employeetimeentry.HoursLateAmount,
                 employeetimeentry.UndertimeHours,
                 employeetimeentry.UndertimeHoursAmount,
+                employeetimeentry.VacationLeaveHours,
+                employeetimeentry.SickLeaveHours,
+                employeetimeentry.OtherLeaveHours,
                 employeetimeentry.Leavepayment,
+                employeetimeentry.SpecialHolidayHours,
+                employeetimeentry.SpecialHolidayPay,
+                employeetimeentry.SpecialHolidayOTHours,
+                employeetimeentry.SpecialHolidayOTPay,
+                employeetimeentry.RegularHolidayHours,
+                employeetimeentry.RegularHolidayPay,
+                employeetimeentry.RegularHolidayOTHours,
+                employeetimeentry.RegularHolidayOTPay,
                 employeetimeentry.HolidayPayAmount,
+                employeetimeentry.AbsentHours,
                 employeetimeentry.Absent,
                 employeetimeentry.TotalHoursWorked,
                 employeetimeentry.TotalDayPay,
+                ofb.OffBusStartTime,
+                ofb.OffBusEndTime,
+                ot.OTStartTime,
+                ot.OTEndTIme,
                 payrate.PayType
             FROM employeetimeentry
             LEFT JOIN (
@@ -266,6 +284,13 @@ Public Class TimeEntrySummaryForm
                 employeetimeentrydetails.Created = latest.Created
             LEFT JOIN employeeshift
             ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
+            LEFT JOIN employeeofficialbusiness ofb
+            ON ofb.OffBusStartDate = employeetimeentry.Date AND
+                ofb.EmployeeID = employeetimeentry.EmployeeID
+            LEFT JOIN employeeovertime ot
+            ON ot.OTStartDate = employeetimeentry.Date AND
+                ot.EmployeeID = employeetimeentry.EmployeeID AND
+                ot.OTStatus = 'Approved'
             LEFT JOIN shift
             ON shift.RowID = employeeshift.ShiftID
             LEFT JOIN payrate
@@ -300,6 +325,10 @@ Public Class TimeEntrySummaryForm
                     .TimeOut = reader.GetValue(Of TimeSpan?)("TimeOut"),
                     .ShiftFrom = reader.GetValue(Of TimeSpan?)("ShiftFrom"),
                     .ShiftTo = reader.GetValue(Of TimeSpan?)("ShiftTo"),
+                    .OBStartTime = reader.GetValue(Of TimeSpan?)("OffBusStartTime"),
+                    .OBEndTime = reader.GetValue(Of TimeSpan?)("OffBusEndTime"),
+                    .OTStartTime = reader.GetValue(Of TimeSpan?)("OTStartTime"),
+                    .OTEndTime = reader.GetValue(Of TimeSpan?)("OTEndTime"),
                     .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
                     .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
                     .NightDiffHours = reader.GetValue(Of Decimal)("NightDifferentialHours"),
@@ -310,36 +339,66 @@ Public Class TimeEntrySummaryForm
                     .NightDiffOTAmount = reader.GetValue(Of Decimal)("NightDiffOTHoursAmount"),
                     .RestDayHours = reader.GetValue(Of Decimal)("RestDayHours"),
                     .RestDayAmount = reader.GetValue(Of Decimal)("RestDayAmount"),
+                    .RestDayOTHours = reader.GetValue(Of Decimal)("RestDayOTHours"),
+                    .RestDayOTPay = reader.GetValue(Of Decimal)("RestDayOTPay"),
                     .LateHours = reader.GetValue(Of Decimal)("HoursLate"),
                     .LateAmount = reader.GetValue(Of Decimal)("HoursLateAmount"),
                     .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
                     .UndertimeAmount = reader.GetValue(Of Decimal)("UndertimeHoursAmount"),
+                    .AbsentHours = reader.GetValue(Of Decimal)("AbsentHours"),
                     .AbsentAmount = reader.GetValue(Of Decimal)("Absent"),
+                    .VacationLeaveHours = reader.GetValue(Of Decimal)("VacationLeaveHours"),
+                    .SickLeaveHours = reader.GetValue(Of Decimal)("SickLeaveHours"),
+                    .OtherLeaveHours = reader.GetValue(Of Decimal)("OtherLeaveHours"),
                     .LeavePay = reader.GetValue(Of Decimal)("Leavepayment"),
+                    .SpecialHolidayHours = reader.GetValue(Of Decimal)("SpecialHolidayHours"),
+                    .SpecialHolidayPay = reader.GetValue(Of Decimal)("SpecialHolidayPay"),
+                    .SpecialHolidayOTHours = reader.GetValue(Of Decimal)("SpecialHolidayOTHours"),
+                    .SpecialHolidayOTPay = reader.GetValue(Of Decimal)("SpecialHolidayOTPay"),
+                    .RegularHolidayPay = reader.GetValue(Of Decimal)("RegularHolidayPay"),
+                    .RegularHolidayHours = reader.GetValue(Of Decimal)("RegularHolidayHours"),
+                    .RegularHolidayOTHours = reader.GetValue(Of Decimal)("RegularHolidayOTHours"),
+                    .RegularHolidayOTPay = reader.GetValue(Of Decimal)("RegularHolidayOTPay"),
                     .HolidayPay = reader.GetValue(Of Decimal)("HolidayPayAmount"),
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
                 }
 
-                totalTimeEntry.RegularHours += timeEntry.RegularHours
-                totalTimeEntry.RegularAmount += timeEntry.RegularAmount
-                totalTimeEntry.OvertimeHours += timeEntry.OvertimeHours
-                totalTimeEntry.OvertimeAmount += timeEntry.OvertimeAmount
-                totalTimeEntry.NightDiffHours += timeEntry.NightDiffHours
-                totalTimeEntry.NightDiffAmount += timeEntry.NightDiffAmount
-                totalTimeEntry.NightDiffOTHours += timeEntry.NightDiffOTHours
-                totalTimeEntry.NightDiffOTAmount += timeEntry.NightDiffOTAmount
-                totalTimeEntry.RestDayHours += timeEntry.RestDayHours
-                totalTimeEntry.RestDayAmount += timeEntry.RestDayAmount
-                totalTimeEntry.HolidayPay += timeEntry.HolidayPay
-                totalTimeEntry.LeavePay += timeEntry.LeavePay
-                totalTimeEntry.LateHours += timeEntry.LateHours
-                totalTimeEntry.LateAmount += timeEntry.LateAmount
-                totalTimeEntry.UndertimeHours += timeEntry.UndertimeHours
-                totalTimeEntry.UndertimeAmount += timeEntry.UndertimeAmount
-                totalTimeEntry.AbsentAmount += timeEntry.AbsentAmount
-                totalTimeEntry.TotalHoursWorked += timeEntry.TotalHoursWorked
-                totalTimeEntry.TotalDayPay += timeEntry.TotalDayPay
+                With totalTimeEntry
+                    .RegularHours += timeEntry.RegularHours
+                    .RegularAmount += timeEntry.RegularAmount
+                    .OvertimeHours += timeEntry.OvertimeHours
+                    .OvertimeAmount += timeEntry.OvertimeAmount
+                    .NightDiffHours += timeEntry.NightDiffHours
+                    .NightDiffAmount += timeEntry.NightDiffAmount
+                    .NightDiffOTHours += timeEntry.NightDiffOTHours
+                    .NightDiffOTAmount += timeEntry.NightDiffOTAmount
+                    .RestDayHours += timeEntry.RestDayHours
+                    .RestDayAmount += timeEntry.RestDayAmount
+                    .RestDayOTHours += timeEntry.RestDayOTHours
+                    .RestDayOTPay += timeEntry.RestDayOTPay
+                    .SpecialHolidayHours += timeEntry.SpecialHolidayHours
+                    .SpecialHolidayPay += timeEntry.SpecialHolidayPay
+                    .SpecialHolidayOTHours += timeEntry.SpecialHolidayOTHours
+                    .SpecialHolidayOTPay += timeEntry.SpecialHolidayOTPay
+                    .RegularHolidayHours += timeEntry.RegularHolidayHours
+                    .RegularHolidayPay += timeEntry.RegularHolidayPay
+                    .RegularHolidayOTHours += timeEntry.RegularHolidayOTHours
+                    .RegularHolidayOTPay += timeEntry.RegularHolidayOTPay
+                    .HolidayPay += timeEntry.HolidayPay
+                    .VacationLeaveHours += timeEntry.VacationLeaveHours
+                    .SickLeaveHours += timeEntry.SickLeaveHours
+                    .OtherLeaveHours += timeEntry.OtherLeaveHours
+                    .LeavePay += timeEntry.LeavePay
+                    .LateHours += timeEntry.LateHours
+                    .LateAmount += timeEntry.LateAmount
+                    .UndertimeHours += timeEntry.UndertimeHours
+                    .UndertimeAmount += timeEntry.UndertimeAmount
+                    .AbsentHours += timeEntry.AbsentHours
+                    .AbsentAmount += timeEntry.AbsentAmount
+                    .TotalHoursWorked += timeEntry.TotalHoursWorked
+                    .TotalDayPay += timeEntry.TotalDayPay
+                End With
 
                 timeEntries.Add(timeEntry)
             End While
@@ -353,53 +412,71 @@ Public Class TimeEntrySummaryForm
     Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
         Dim sql = <![CDATA[
             SELECT
-                employeetimeentryactual.RowID,
-                employeetimeentryactual.Date,
+                eta.RowID,
+                eta.Date,
                 employeetimeentrydetails.TimeIn,
                 employeetimeentrydetails.TimeOut,
                 shift.TimeFrom AS ShiftFrom,
                 shift.TimeTo AS ShiftTo,
-                employeetimeentryactual.RegularHoursWorked,
-                employeetimeentryactual.RegularHoursAmount,
-                employeetimeentryactual.NightDifferentialHours,
-                employeetimeentryactual.NightDiffHoursAmount,
-                employeetimeentryactual.OvertimeHoursWorked,
-                employeetimeentryactual.OvertimeHoursAmount,
-                employeetimeentryactual.NightDifferentialOTHours,
-                employeetimeentryactual.NightDiffOTHoursAmount,
-                employeetimeentryactual.RestDayHours,
-                employeetimeentryactual.RestDayAmount,
-                employeetimeentryactual.LeavePayment,
-                employeetimeentryactual.HoursLate,
-                employeetimeentryactual.HoursLateAmount,
-                employeetimeentryactual.UndertimeHours,
-                employeetimeentryactual.UndertimeHoursAmount,
-                employeetimeentryactual.Leavepayment,
-                employeetimeentryactual.HolidayPayAmount,
-                employeetimeentryactual.Absent,
-                employeetimeentryactual.TotalHoursWorked,
-                employeetimeentryactual.TotalDayPay
-            FROM employeetimeentryactual
+                eta.RegularHoursWorked,
+                eta.RegularHoursAmount,
+                eta.NightDifferentialHours,
+                eta.NightDiffHoursAmount,
+                eta.OvertimeHoursWorked,
+                eta.OvertimeHoursAmount,
+                eta.NightDifferentialOTHours,
+                eta.NightDiffOTHoursAmount,
+                eta.RestDayHours,
+                eta.RestDayAmount,
+                eta.RestDayOTHours,
+                eta.RestDayOTPay,
+                ete.SpecialHolidayHours,
+                eta.SpecialHolidayPay,
+                ete.SpecialHolidayOTHours,
+                eta.SpecialHolidayOTPay,
+                ete.RegularHolidayHours,
+                eta.RegularHolidayPay,
+                ete.RegularHolidayOTHours,
+                eta.RegularHolidayOTPay,
+                eta.LeavePayment,
+                eta.HoursLate,
+                eta.HoursLateAmount,
+                eta.UndertimeHours,
+                eta.UndertimeHoursAmount,
+                eta.Leavepayment,
+                eta.HolidayPayAmount,
+                eta.Absent,
+                eta.TotalHoursWorked,
+                eta.TotalDayPay,
+                ofb.OffBusStartTime,
+                ofb.OffBusEndTime
+            FROM employeetimeentryactual eta
+            LEFT JOIN employeetimeentry ete
+            ON ete.EmployeeID = eta.EmployeeID AND
+                ete.Date = eta.Date
             LEFT JOIN (
                 SELECT EmployeeID, Date, MAX(Created) Created
                 FROM employeetimeentrydetails
                 WHERE Date BETWEEN @DateFrom AND @DateTo
                 GROUP BY EmployeeID, Date
             ) latest
-            ON latest.EmployeeID = employeetimeentryactual.EmployeeID AND
-                latest.Date = employeetimeentryactual.Date
+            ON latest.EmployeeID = eta.EmployeeID AND
+                latest.Date = eta.Date
             LEFT JOIN employeetimeentrydetails
-            ON employeetimeentrydetails.Date = employeetimeentryactual.Date AND
-                employeetimeentrydetails.OrganizationID = employeetimeentryactual.OrganizationID AND
-                employeetimeentrydetails.EmployeeID = employeetimeentryactual.EmployeeID AND
+            ON employeetimeentrydetails.Date = eta.Date AND
+                employeetimeentrydetails.OrganizationID = eta.OrganizationID AND
+                employeetimeentrydetails.EmployeeID = eta.EmployeeID AND
                 employeetimeentrydetails.Created = latest.Created
             LEFT JOIN employeeshift
-            ON employeeshift.RowID = employeetimeentryactual.EmployeeShiftID
+            ON employeeshift.RowID = eta.EmployeeShiftID
+            LEFT JOIN employeeofficialbusiness ofb
+            ON ofb.OffBusStartDate = eta.Date AND
+                ofb.EmployeeID = eta.EmployeeID
             LEFT JOIN shift
             ON shift.RowID = employeeshift.ShiftID
-            WHERE employeetimeentryactual.EmployeeID = @EmployeeID AND
-                employeetimeentryactual.`Date` BETWEEN @DateFrom AND @DateTo
-            ORDER BY employeetimeentryactual.`Date`;
+            WHERE eta.EmployeeID = @EmployeeID AND
+                eta.`Date` BETWEEN @DateFrom AND @DateTo
+            ORDER BY eta.`Date`;
         ]]>.Value
 
         Dim timeEntries = New Collection(Of TimeEntry)
@@ -426,6 +503,8 @@ Public Class TimeEntrySummaryForm
                     .TimeOut = reader.GetValue(Of TimeSpan?)("TimeOut"),
                     .ShiftFrom = reader.GetValue(Of TimeSpan?)("ShiftFrom"),
                     .ShiftTo = reader.GetValue(Of TimeSpan?)("ShiftTo"),
+                    .OBStartTime = reader.GetValue(Of TimeSpan?)("OffBusStartTime"),
+                    .OBEndTime = reader.GetValue(Of TimeSpan?)("OffBusEndTime"),
                     .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
                     .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
                     .NightDiffHours = reader.GetValue(Of Decimal)("NightDifferentialHours"),
@@ -436,6 +515,16 @@ Public Class TimeEntrySummaryForm
                     .NightDiffOTAmount = reader.GetValue(Of Decimal)("NightDiffOTHoursAmount"),
                     .RestDayHours = reader.GetValue(Of Decimal)("RestDayHours"),
                     .RestDayAmount = reader.GetValue(Of Decimal)("RestDayAmount"),
+                    .RestDayOTHours = reader.GetValue(Of Decimal)("RestDayOTHours"),
+                    .RestDayOTPay = reader.GetValue(Of Decimal)("RestDayOTPay"),
+                    .SpecialHolidayHours = reader.GetValue(Of Decimal)("SpecialHolidayHours"),
+                    .SpecialHolidayPay = reader.GetValue(Of Decimal)("SpecialHolidayPay"),
+                    .SpecialHolidayOTHours = reader.GetValue(Of Decimal)("SpecialHolidayOTHours"),
+                    .SpecialHolidayOTPay = reader.GetValue(Of Decimal)("SpecialHolidayOTPay"),
+                    .RegularHolidayHours = reader.GetValue(Of Decimal)("RegularHolidayHours"),
+                    .RegularHolidayPay = reader.GetValue(Of Decimal)("RegularHolidayPay"),
+                    .RegularHolidayOTHours = reader.GetValue(Of Decimal)("RegularHolidayOTHours"),
+                    .RegularHolidayOTPay = reader.GetValue(Of Decimal)("RegularHolidayOTPay"),
                     .LateHours = reader.GetValue(Of Decimal)("HoursLate"),
                     .LateAmount = reader.GetValue(Of Decimal)("HoursLateAmount"),
                     .UndertimeHours = reader.GetValue(Of Decimal)("UndertimeHours"),
@@ -457,6 +546,16 @@ Public Class TimeEntrySummaryForm
                 totalTimeEntry.NightDiffOTAmount += timeEntry.NightDiffOTAmount
                 totalTimeEntry.RestDayHours += timeEntry.RestDayHours
                 totalTimeEntry.RestDayAmount += timeEntry.RestDayAmount
+                totalTimeEntry.RestDayOTHours += timeEntry.RestDayOTHours
+                totalTimeEntry.RestDayOTPay += timeEntry.RestDayOTPay
+                totalTimeEntry.SpecialHolidayHours += timeEntry.SpecialHolidayHours
+                totalTimeEntry.SpecialHolidayPay += timeEntry.SpecialHolidayPay
+                totalTimeEntry.SpecialHolidayOTHours += timeEntry.SpecialHolidayOTHours
+                totalTimeEntry.SpecialHolidayOTPay += timeEntry.SpecialHolidayOTPay
+                totalTimeEntry.RegularHolidayHours += timeEntry.RegularHolidayHours
+                totalTimeEntry.RegularHolidayPay += timeEntry.RegularHolidayPay
+                totalTimeEntry.RegularHolidayOTHours += timeEntry.RegularHolidayOTHours
+                totalTimeEntry.RegularHolidayOTPay += timeEntry.RegularHolidayOTPay
                 totalTimeEntry.HolidayPay += timeEntry.HolidayPay
                 totalTimeEntry.LeavePay += timeEntry.LeavePay
                 totalTimeEntry.LateHours += timeEntry.LateHours
@@ -613,6 +712,10 @@ Public Class TimeEntrySummaryForm
         Public Property TimeOut As TimeSpan?
         Public Property ShiftFrom As TimeSpan?
         Public Property ShiftTo As TimeSpan?
+        Public Property OBStartTime As TimeSpan?
+        Public Property OBEndTime As TimeSpan?
+        Public Property OTStartTime As TimeSpan?
+        Public Property OTEndTime As TimeSpan?
         Public Property RegularHours As Decimal
         Public Property RegularAmount As Decimal
         Public Property NightDiffHours As Decimal
@@ -623,12 +726,26 @@ Public Class TimeEntrySummaryForm
         Public Property NightDiffOTAmount As Decimal
         Public Property RestDayHours As Decimal
         Public Property RestDayAmount As Decimal
-        Public Property LeavePay As Decimal
+        Public Property RestDayOTHours As Decimal
+        Public Property RestDayOTPay As Decimal
+        Public Property SpecialHolidayHours As Decimal
+        Public Property SpecialHolidayPay As Decimal
+        Public Property SpecialHolidayOTHours As Decimal
+        Public Property SpecialHolidayOTPay As Decimal
+        Public Property RegularHolidayHours As Decimal
+        Public Property RegularHolidayPay As Decimal
+        Public Property RegularHolidayOTHours As Decimal
+        Public Property RegularHolidayOTPay As Decimal
         Public Property HolidayPay As Decimal
+        Public Property VacationLeaveHours As Decimal
+        Public Property SickLeaveHours As Decimal
+        Public Property OtherLeaveHours As Decimal
+        Public Property LeavePay As Decimal
         Public Property UndertimeHours As Decimal
         Public Property UndertimeAmount As Decimal
         Public Property LateHours As Decimal
         Public Property LateAmount As Decimal
+        Public Property AbsentHours As Decimal
         Public Property AbsentAmount As Decimal
         Public Property TotalHoursWorked As Decimal
         Public Property TotalDayPay As Decimal
@@ -654,6 +771,37 @@ Public Class TimeEntrySummaryForm
         Public ReadOnly Property ShiftToDisplay As Date?
             Get
                 Return ConvertToDate(ShiftTo)
+            End Get
+        End Property
+
+        Public ReadOnly Property OTStartTimeDisplay As Date?
+            Get
+                Return ConvertToDate(OTStartTime)
+            End Get
+        End Property
+
+        Public ReadOnly Property OTEndTimeDisplay As Date?
+            Get
+                Return ConvertToDate(OTEndTime)
+            End Get
+        End Property
+
+
+        Public ReadOnly Property OBStartTimeDisplay As Date?
+            Get
+                Return ConvertToDate(OBStartTime)
+            End Get
+        End Property
+
+        Public ReadOnly Property OBEndTimeDisplay As Date?
+            Get
+                Return ConvertToDate(OBEndTime)
+            End Get
+        End Property
+
+        Public ReadOnly Property LeaveHours As Decimal
+            Get
+                Return VacationLeaveHours + SickLeaveHours + OtherLeaveHours
             End Get
         End Property
 

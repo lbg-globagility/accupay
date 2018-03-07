@@ -6,7 +6,7 @@
 
 DROP VIEW IF EXISTS `paystubadjustwithproductname`;
 DROP TABLE IF EXISTS `paystubadjustwithproductname`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `paystubadjustwithproductname` AS SELECT psj.*
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `paystubadjustwithproductname` AS SELECT psj.*
 ,p.PartNo `AdjustmentName`
 ,FALSE `AsActual`
 FROM paystubadjustment psj

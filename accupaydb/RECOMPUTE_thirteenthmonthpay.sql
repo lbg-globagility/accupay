@@ -99,7 +99,6 @@ IF ispayperiodendofmonth IS NOT NULL THEN
             SELECT
                 (
                     timeEntrySummary.BasicAmount +
-                    (timeEntrySummary.TotalOvertimeHours * (es.UndeclaredSalary / HOURS_IN_A_WORKDAY) * overtimeRate) +
                     timeEntrySummary.TotalLeavePay
                 ) AS BasicAmount,
                 e.RowID AS EmployeeID,
@@ -109,7 +108,6 @@ IF ispayperiodendofmonth IS NOT NULL THEN
                 SELECT
                     ete.EmployeeID AS EmployeeID,
                     SUM(ete.BasicDayPay) AS BasicAmount,
-                    SUM(ete.OvertimeHoursWorked) AS TotalOvertimeHours,
                     SUM(ete.Leavepayment) AS TotalLeavePay
                 FROM employeetimeentryactual ete
                 LEFT JOIN employeeshift esh
@@ -141,7 +139,6 @@ IF ispayperiodendofmonth IS NOT NULL THEN
                 SELECT
                     ete.EmployeeID AS EmployeeID,
                     SUM(ete.BasicDayPay) AS BasicAmount,
-                    SUM(ete.OvertimeHoursWorked) AS TotalOvertimeHours,
                     SUM(ete.Leavepayment) AS TotalLeavePay
                 FROM employeetimeentry ete
                 LEFT JOIN employeeshift esh

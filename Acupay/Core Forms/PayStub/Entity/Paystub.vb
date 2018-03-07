@@ -10,14 +10,17 @@ Namespace Global.AccuPay.Entity
     Public Class Paystub
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property Created As Date
 
         Public Property CreatedBy As Integer?
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
         Public Property LastUpd As Date?
 
         Public Property LastUpdBy As Integer?
@@ -52,7 +55,29 @@ Namespace Global.AccuPay.Entity
 
         Public Property RestDayPay As Decimal
 
+        Public Property RestDayOTHours As Decimal
+
+        Public Property RestDayOTPay As Decimal
+
+        Public Property LeaveHours As Decimal
+
         Public Property LeavePay As Decimal
+
+        Public Property SpecialHolidayHours As Decimal
+
+        Public Property SpecialHolidayPay As Decimal
+
+        Public Property SpecialHolidayOTHours As Decimal
+
+        Public Property SpecialHolidayOTPay As Decimal
+
+        Public Property RegularHolidayHours As Decimal
+
+        Public Property RegularHolidayPay As Decimal
+
+        Public Property RegularHolidayOTHours As Decimal
+
+        Public Property RegularHolidayOTPay As Decimal
 
         Public Property HolidayPay As Decimal
 
@@ -64,9 +89,12 @@ Namespace Global.AccuPay.Entity
 
         Public Property UndertimeDeduction As Decimal
 
+        Public Property AbsentHours As Decimal
+
         Public Property AbsenceDeduction As Decimal
 
-        Public Property WorkPay As Decimal
+        <Column("WorkPay")>
+        Public Property TotalEarnings As Decimal
 
         Public Property TotalBonus As Decimal
 
@@ -119,7 +147,18 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property Adjustments As ICollection(Of Adjustment)
 
+        Public Overridable Property ActualAdjustments As ICollection(Of ActualAdjustment)
+
         Public Overridable Property PaystubItems As ICollection(Of PaystubItem)
+
+        Public Overridable Property AllowanceItems As IList(Of AllowanceItem)
+
+        Public Sub New()
+            Adjustments = New List(Of Adjustment)
+            ActualAdjustments = New List(Of ActualAdjustment)
+            PaystubItems = New List(Of PaystubItem)
+            AllowanceItems = New List(Of AllowanceItem)
+        End Sub
 
     End Class
 

@@ -5,19 +5,22 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Namespace Global.AccuPay.Entity
 
-    <Table("paystubadjustmentactual")>
+    <Table("paystubadjustment")>
     Public Class Adjustment
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property Created As Date
 
         Public Property CreatedBy As Integer?
 
-        Public Property LastUpd As Date
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
+        Public Property LastUpd As Date?
 
         Public Property LastUpdBy As Integer?
 
@@ -25,7 +28,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property ProductID As Integer?
 
-        Public Property PayAmount As Decimal
+        <Column("PayAmount")>
+        Public Property Amount As Decimal
 
         Public Property Comment As String
 

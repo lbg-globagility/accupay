@@ -89,4 +89,18 @@ Public Class PayrollContextTest
         Assert.IsInstanceOf(Of Allowance)(allowance)
     End Sub
 
+    <Test>
+    Public Sub Should_Retrieve_LeaveLedger()
+        Dim leaveLedger = _context.LeaveLedgers.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of LeaveLedger)(leaveLedger)
+    End Sub
+
+    <Test>
+    Public Sub Should_Retrieve_Leave()
+        Dim leave = _context.Leaves.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of Leave)(leave)
+    End Sub
+
 End Class

@@ -27,7 +27,7 @@ DECLARE BASIC_RATE DECIMAL(15, 4) DEFAULT 1.0;
 DECLARE returnvalue INT(11);
 
 DECLARE isRestDay TEXT;
-DECLARe isWorkingDay BOOLEAN;
+DECLARE isWorkingDay BOOLEAN;
 
 DECLARE yester_TotDayPay DECIMAL(11,2);
 DECLARE yester_TotHrsWorkd DECIMAL(11,2);
@@ -82,6 +82,8 @@ DECLARE ndiffotrate DECIMAL(11,6);
 DECLARE restday_rate DECIMAL(11,6);
 
 DECLARE restdayot_rate DECIMAL(11,6);
+DECLARE _restDayNDRate DECIMAL(10, 4) DEFAULT 0.0;
+DECLARE _restDayNDOTRate DECIMAL(10, 4) DEFAULT 0.0;
 
 
 DECLARE employeeShiftID INT(11);
@@ -90,7 +92,8 @@ DECLARE esalRowID INT(11);
 
 DECLARE payrateRowID INT(11);
 
-DECLARE ete_TotalDayPay DECIMAL(11,6);
+DECLARE totalHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE totalDayPay DECIMAL(11,6) DEFAULT 0.0;
 
 DECLARE OTCount INT(11) DEFAULT 0;
 
@@ -183,9 +186,20 @@ DECLARE isDefaultRestDay BOOLEAN DEFAULT FALSE;
 DECLARE isShiftRestDay BOOLEAN DEFAULT FALSE;
 DECLARE restDayHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE restDayAmount DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE restDayOTHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE restDayOTPay DECIMAL(15, 4) DEFAULT 0.0;
 
+DECLARE regularHolidayHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE regularHolidayPay DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE _regularHolidayOTHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE _regularHolidayOTPay DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE specialHolidayHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE specialHolidayPay DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE _specialHolidayOTHours DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE _specialHolidayOTPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE holidayPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE isExemptForHoliday BOOLEAN DEFAULT FALSE;
+DECLARE isHolidayPayInclusive BOOLEAN DEFAULT FALSE;
 
 DECLARE lateHoursBeforeBreak DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE lateHoursAfterBreak DECIMAL(11, 6) DEFAULT 0.0;
@@ -301,6 +315,8 @@ SELECT
     IF(isEntitledToNightDiffOvertime, NightDifferentialOTRate, 1),
     IF(isEntitledToRestDay, RestDayRate, 1),
     IF(isEntitledToRestDayOvertime, RestDayOvertimeRate, OvertimeRate),
+    RestDayNDRate,
+    RestDayNDOTRate,
     (PayType = 'Regular Holiday'),
     (PayType = 'Special Non-Working Holiday')
 FROM payrate
@@ -314,12 +330,15 @@ INTO
     ndiffotrate,
     restday_rate,
     restdayot_rate,
+    _restDayNDRate,
+    _restDayNDOTRate,
     isRegularHoliday,
     isSpecialNonWorkingHoliday;
 
 SET isCalculatingRegularHoliday = isRegularHoliday AND isEntitledToRegularHoliday;
 SET isCalculatingSpecialNonWorkingHoliday = isSpecialNonWorkingHoliday AND isEntitledToSpecialNonWorkingHoliday;
 SET isHoliday = isRegularHoliday OR isSpecialNonWorkingHoliday;
+SET isHolidayPayInclusive = (e_EmpType = 'Monthly');
 SET isRegularDay = NOT isHoliday;
 
 SELECT COUNT(RowID)
@@ -438,13 +457,14 @@ SELECT
     MAX(ofb.OffBusEndTime)
 FROM employeeofficialbusiness ofb
 WHERE ofb.OffBusStartDate = dateToday AND
-    ofb.EmployeeID = ete_EmpRowID
+    ofb.EmployeeID = ete_EmpRowID AND
+    ofb.OffBusStatus = 'Approved'
 INTO
     officialBusStartTime,
     officialBusEndTime;
 
-SET actualTimeIn = IF(officialBusStartTime IS NULL, actualTimeIn, LEAST(actualTimeIn, officialBusStartTime));
-SET etd_TimeOut = IF(officialBusEndTime IS NULL, etd_TimeOut, GREATEST(etd_TimeOut, officialBusEndTime));
+SET actualTimeIn = COALESCE(LEAST(actualTimeIn, officialBusStartTime), actualTimeIn, officialBusStartTime);
+SET etd_TimeOut = COALESCE(GREATEST(etd_TimeOut, officialBusEndTime), etd_TimeOut, officialBusEndTime);
 
 SELECT GRACE_PERIOD(actualTimeIn, shifttimefrom, e_LateGracePeriod)
 INTO etd_TimeIn;
@@ -486,11 +506,13 @@ INTO
     leaveEndTime,
     leaveType;
 
-SET leaveStart = TIMESTAMP(dateToday, leaveStartTime);
-SET leaveEnd = TIMESTAMP(IF(leaveEndTime > leaveStartTime, dateToday, dateTomorrow), leaveEndTime);
+IF hasLeave THEN
+    SET leaveStartTime = COALESCE(leaveStartTime, shifttimefrom);
+    SET leaveEndTime = COALESCE(leaveEndTime, shifttimeto);
 
-SET @coveredStart = IF(leaveStart IS NULL, dutyStart, LEAST(dutyStart, leaveStart));
-SET @coveredEnd = IF(leaveEnd IS NULL, dutyEnd, GREATEST(dutyEnd, leaveEnd));
+    SET leaveStart = TIMESTAMP(dateToday, leaveStartTime);
+    SET leaveEnd = TIMESTAMP(IF(leaveEndTime > leaveStartTime, dateToday, dateTomorrow), leaveEndTime);
+END IF;
 
 /*
  * The official work start is the time that is considered the employee has started working.
@@ -504,6 +526,9 @@ SET dutyStart = GREATEST(fullTimeIn, shiftStart);
  * time out.
  */
 SET dutyEnd = LEAST(fullTimeOut, shiftEnd);
+
+SET @coveredStart = IF(leaveStart IS NULL, dutyStart, LEAST(dutyStart, leaveStart));
+SET @coveredEnd = IF(leaveEnd IS NULL, dutyEnd, GREATEST(dutyEnd, leaveEnd));
 
 /******************************************************************************
  ******************************************************************************
@@ -699,6 +724,47 @@ IF hasOvertime THEN
 
 END IF;
 
+SET overtimeHours = GetOvertimeHours(ete_OrganizID, ete_EmpRowID, ete_Date);
+
+/******************************************************************************
+ ******************************************************************************
+ * Compute the Rest day hours
+ ******************************************************************************
+ ******************************************************************************/
+IF isRestDay AND isEntitledToRestDay THEN
+    SET restDayHours = regularHours;
+    SET regularHours = 0.0;
+
+    SET restDayOTHours = overtimeHours;
+    SET overtimeHours = 0.0;
+
+    SET undertimeHours = 0.0;
+    SET lateHours = 0.0;
+END IF;
+
+/******************************************************************************
+ ******************************************************************************
+ * Compute the Holiday hours
+ ******************************************************************************
+ ******************************************************************************/
+SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(ete_EmpRowID, dateToday);
+
+IF isCalculatingRegularHoliday OR isCalculatingSpecialNonWorkingHoliday THEN
+    SET lateHours = 0.0;
+    Set undertimeHours = 0.0;
+
+    IF isRegularHoliday THEN
+        SET regularHolidayHours = regularHours;
+        SET _regularHolidayOTHours = overtimeHours;
+    ELSEIF isSpecialNonWorkingHoliday THEN
+        SET specialHolidayHours = regularHours;
+        SET _specialHolidayOTHours = overtimeHours;
+    END IF;
+
+    SET regularHours = 0.0;
+    SET overtimeHours = 0.0;
+END IF;
+
 /*
  * If the hours worked is in excess of the working hours, put that extra hours into
  * overtime.
@@ -715,6 +781,11 @@ IF isDefaultRestDay AND (NOT hasWorked) THEN
     SET hasShift = FALSE;
 END IF;
 
+/******************************************************************************
+ ******************************************************************************
+ * Compute the Leave hours
+ ******************************************************************************
+ ******************************************************************************/
 IF hasLeave THEN
     IF hasBreaktime THEN
         IF leaveStart < breaktimeStart THEN
@@ -748,8 +819,6 @@ END IF;
  * Compute the Absent hours
  ******************************************************************************
  ******************************************************************************/
-SET hasWorkedLastWorkingDay = HasWorkedLastWorkingDay(ete_EmpRowID, dateToday);
-
 SET isExemptForHoliday = (
     (
         (isHoliday AND (NOT requiredToWorkLastWorkingDay)) OR
@@ -776,8 +845,13 @@ IF hasLeave AND (leaveHours + regularHours) < shiftHours THEN
     SET absentHours = shiftHours - (leaveHours + regularHours);
 END IF;
 
+/******************************************************************************
+ ******************************************************************************
+ * Compute the Absent hours
+ ******************************************************************************
+ ******************************************************************************/
 SET regularHours = IFNULL(regularHours, 0);
-SET overtimeHours = GetOvertimeHours(ete_OrganizID, ete_EmpRowID, ete_Date);
+SET overtimeHours =IFNULL(overtimeHours, 0);
 SET nightDiffHours = IFNULL(nightDiffHours, 0);
 SET nightDiffOTHours = IFNULL(nightDiffOTHours, 0);
 SET lateHours = IFNULL(lateHours, 0);
@@ -806,12 +880,15 @@ INTO esalRowID;
  * COMPUTE PAY
  ******************************************************************************
  ******************************************************************************/
-SET ndiffrate = ndiffrate MOD 1;
-SET ndiffotrate = otrate * ndiffrate;
+SET ndiffrate = ndiffrate - commonrate;
+SET ndiffotrate = ndiffotrate - otrate;
+
+SET _restDayNDRate = _restDayNDRate - restday_rate;
+SET _restDayNDOTRate = _restDayNDOTRate - restdayot_rate;
 
 SET dailyRate = GET_employeerateperday(ete_EmpRowID, ete_OrganizID, dateToday);
 SET hourlyRate = dailyRate / workingHours;
-SET basicDayPay = regularHours * hourlyRate;
+SET basicDayPay = (regularHours + restDayHours + specialHolidayHours + regularHolidayHours) * hourlyRate;
 
 SET absentAmount = absentHours * hourlyRate;
 
@@ -822,7 +899,7 @@ END IF;
 -- b. If current day is before employment hiring date.
 IF ete_Date < e_StartDate THEN
 
-    SET ete_TotalDayPay = 0.0;
+    SET totalDayPay = 0.0;
 
     SELECT INSUPD_employeetimeentries(
         timeEntryID,
@@ -841,7 +918,17 @@ IF ete_Date < e_StartDate THEN
         nightDiffOTHours,
         lateHours,
         payrateRowID,
-        ete_TotalDayPay,
+        totalDayPay,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         0,
         0,
         0,
@@ -870,26 +957,32 @@ ELSEIF isRegularDay THEN
 
         SET lateAmount = lateHours * hourlyRate;
         SET undertimeAmount = undertimeHours * hourlyRate;
+
+        SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
+        SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
     ELSEIF isRestDay THEN
 
         IF isRestDayInclusive AND e_EmpType = 'Monthly' THEN
-            SET restDayAmount = (regularHours * hourlyRate) * (restday_rate - 1);
+            SET restDayAmount = (restDayHours * hourlyRate) * (restday_rate - 1);
         ELSE
-            SET restDayAmount = (regularHours * hourlyRate) * restday_rate;
+            SET restDayAmount = (restDayHours * hourlyRate) * restday_rate;
         END IF;
 
         SET overtimeAmount = (overtimeHours * hourlyRate) * restdayot_rate;
 
-        SET lateHours = 0.0;
-        SET undertimeHours = 0.0;
+        SET nightDiffAmount = (nightDiffHours * hourlyRate) * _restDayNDRate;
+        SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * _restDayNDOTRate;
     END IF;
 
-    SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
-    SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
+    SET restDayOTPay = restDayOTHours * hourlyRate * restdayot_rate;
 
-    SET ete_TotalDayPay = regularAmount + overtimeAmount +
-                          nightDiffAmount + nightDiffOTAmount +
-                          restDayAmount + leavePay;
+    SET totalHours = regularHours + overtimeHours +
+                     restDayHours + restDayOTHours;
+
+    SET totalDayPay = regularAmount + overtimeAmount +
+                      nightDiffAmount + nightDiffOTAmount +
+                      restDayAmount + restDayOTPay +
+                      leavePay;
 
     SELECT INSUPD_employeetimeentries(
         timeEntryID,
@@ -908,8 +1001,8 @@ ELSEIF isRegularDay THEN
         nightDiffOTHours,
         lateHours,
         payrateRowID,
-        ete_TotalDayPay,
-        regularHours + overtimeHours,
+        totalDayPay,
+        totalHours,
         regularAmount,
         overtimeAmount,
         undertimeAmount,
@@ -918,6 +1011,16 @@ ELSEIF isRegularDay THEN
         lateAmount,
         restDayHours,
         restDayAmount,
+        restDayOTHours,
+        restDayOTPay,
+        specialHolidayHours,
+        specialHolidayPay,
+        _specialHolidayOTHours,
+        _specialHolidayOTPay,
+        regularHolidayHours,
+        regularHolidayPay,
+        _regularHolidayOTHours,
+        _regularHolidayOTPay,
         0,
         basicDayPay,
         5,
@@ -931,48 +1034,54 @@ ELSEIF isRegularDay THEN
 
 ELSEIF isHoliday THEN
 
-    IF isRestDay THEN
-        SET regularAmount = (regularHours * hourlyRate);
-        SET overtimeAmount = (overtimeHours * hourlyRate) * restdayot_rate;
-
-        SET applicableHolidayRate = restday_rate;
-    ELSE
-        SET regularAmount = (regularHours * hourlyRate);
-        SET overtimeAmount = (overtimeHours * hourlyRate) * otrate;
-
+    IF isWorkingDay THEN
         SET applicableHolidayRate = commonrate;
+
+        SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
+        SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
+    ELSEIF isRestDay THEN
+        SET applicableHolidayRate = restday_rate;
+
+        SET nightDiffAmount = (nightDiffHours * hourlyRate) * _restDayNDRate;
+        SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * _restDayNDOTRate;
     END IF;
 
-    IF isCalculatingRegularHoliday OR
-       isCalculatingSpecialNonWorkingHoliday THEN
+    SET regularAmount = regularHours * hourlyRate;
+    SET restDayAmount = restDayHours * hourlyRate * restday_rate;
 
-        SET lateHours = 0.0;
-        SET undertimeHours = 0.0;
+    IF isCalculatingSpecialNonWorkingHoliday THEN
+        SET applicableHolidayRate = IF(isHolidayPayInclusive, applicableHolidayRate - 1, applicableHolidayRate);
+
+        SET specialHolidayPay = specialHolidayHours * hourlyRate * applicableHolidayRate;
     END IF;
 
-    SET nightDiffAmount = (nightDiffHours * hourlyRate) * ndiffrate;
-    SET nightDiffOTAmount = (nightDiffOTHours * hourlyRate) * ndiffotrate;
+    IF isCalculatingRegularHoliday THEN
+        SET regularHolidayPay = regularHolidayHours * hourlyRate;
 
-    IF isRegularHoliday THEN
-
-        IF e_EmpType = 'Daily' THEN
-            SET holidayPay = IF(hasWorkedLastWorkingDay, dailyRate, 0);
-        ELSEIF e_EmpType = 'Monthly' THEN
-            SET holidayPay = regularAmount * (applicableHolidayRate - 1);
+        IF NOT isHolidayPayInclusive THEN
+            SET regularHolidayPay = regularHolidayPay + IF(hasWorkedLastWorkingDay, dailyRate, 0);
         END IF;
-
-    ELSEIF isSpecialNonWorkingHoliday THEN
-        SET holidayPay = regularAmount * (applicableHolidayRate - 1);
-    ELSE
-        SET holidayPay = 0;
     END IF;
 
-    SET ete_TotalDayPay = COALESCE(regularAmount, 0) +
-                          COALESCE(overtimeAmount, 0) +
-                          COALESCE(nightDiffAmount, 0) +
-                          COALESCE(nightDiffOTAmount, 0) +
-                          COALESCE(holidayPay, 0) +
-                          COALESCE(leavePay, 0);
+    SET holidayPay = specialHolidayPay + regularHolidayPay;
+
+    SET _specialHolidayOTPay = (_specialHolidayOTHours * hourlyRate) * otrate;
+    SET _regularHolidayOTPay = (_regularHolidayOTHours * hourlyRate) * otrate;
+
+    /** DEPRECATE: to be replaced with _special and _regular holiday ot pay */
+    SET overtimeAmount = (overtimeHours * hourlyRate) * otrate;
+
+    SET restDayOTPay = (restDayOTHours * hourlyRate) * restdayot_rate;
+
+    SET totalDayPay = COALESCE(regularAmount, 0) +
+                      COALESCE(overtimeAmount, 0) +
+                      COALESCE(nightDiffAmount, 0) +
+                      COALESCE(nightDiffOTAmount, 0) +
+                      COALESCE(restDayOTPay, 0) +
+                      COALESCE(_specialHolidayOTPay, 0) +
+                      COALESCE(_regularHolidayOTPay, 0) +
+                      COALESCE(holidayPay, 0) +
+                      COALESCE(leavePay, 0);
 
     SELECT INSUPD_employeetimeentries(
         timeEntryID,
@@ -991,7 +1100,7 @@ ELSEIF isHoliday THEN
         nightDiffOTHours,
         lateHours,
         payrateRowID,
-        ete_TotalDayPay,
+        totalDayPay,
         regularHours + overtimeHours,
         regularAmount,
         overtimeAmount,
@@ -999,8 +1108,18 @@ ELSEIF isHoliday THEN
         nightDiffAmount,
         nightDiffOTAmount,
         (lateHours * hourlyRate),
-        0,
-        0,
+        restDayHours,
+        restDayAmount,
+        restDayOTHours,
+        restDayOTPay,
+        specialHolidayHours,
+        specialHolidayPay,
+        _specialHolidayOTHours,
+        _specialHolidayOTPay,
+        regularHolidayHours,
+        regularHolidayPay,
+        _regularHolidayOTHours,
+        _regularHolidayOTPay,
         holidayPay,
         basicDayPay,
         7,

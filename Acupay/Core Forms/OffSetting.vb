@@ -43,22 +43,28 @@ Public Class OffSetting
 
             lnk.Name = "Nxt"
 
-            Pagination_Link(First, New LinkLabelLinkClickedEventArgs(lnk))
+            'Pagination_Link(First, New LinkLabelLinkClickedEventArgs(lnk))
+            lnkFirst_LinkClicked(lnkNxt, New LinkLabelLinkClickedEventArgs(lnk))
 
         End If
 
         dgvempoffset.Focus()
 
-        For Each dgvrow As DataGridViewRow In dgvempoffset.Rows
-            If dgvrow.IsNewRow Then
+        dgvempoffset.CurrentCell =
+            dgvempoffset.Rows.OfType(Of DataGridViewRow).
+            Where(Function(dgr) dgr.IsNewRow).
+            LastOrDefault.Cells(eosStartTime.Name)
 
-                dgvrow.Cells("eosStartTime").Selected = True
+        'For Each dgvrow As DataGridViewRow In dgvempoffset.Rows
+        '    If dgvrow.IsNewRow Then
 
-                Exit For
+        '        dgvrow.Cells("eosStartTime").Selected = True
 
-            End If
+        '        Exit For
 
-        Next
+        '    End If
+
+        'Next
 
     End Sub
 

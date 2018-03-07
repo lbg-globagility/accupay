@@ -9,14 +9,17 @@ Namespace Global.AccuPay.Entity
     Public Class Division
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property Created As Date
 
         Public Property CreatedBy As Integer?
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
         Public Property LastUpd As Date?
 
         Public Property LastUpdBy As Integer?

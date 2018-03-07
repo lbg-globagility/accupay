@@ -4,10 +4,12 @@
 'Imports Emgu.CV.
 'Imports Tesseract.Interop
 Imports System.Text.RegularExpressions
+Imports System.Data.Entity
 Imports MySql.Data.MySqlClient
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.Entity
 
 Public Class EmployeeForm
 
@@ -738,10 +740,10 @@ Public Class EmployeeForm
                 image_object = DBNull.Value
             End If
         End If
-
+        Static null_index() As Integer = {-1, 0}
         Dim new_eRowID = Nothing
         Try
-            Dim employee_restday = If(cboDayOfRest.SelectedIndex = 0, DBNull.Value, cboDayOfRest.SelectedIndex)
+            Dim employee_restday = If(null_index.Contains(cboDayOfRest.SelectedIndex), DBNull.Value, cboDayOfRest.SelectedIndex)
 
             Dim agensi_rowid = If(cboAgency.SelectedValue = Nothing, DBNull.Value, cboAgency.SelectedValue)
             positID = cboPosit.SelectedValue
@@ -1834,361 +1836,376 @@ Public Class EmployeeForm
 
                 End If
 
-                Select Case tabIndx
-                    Case 0
-                        txtEmpIDChk.Text = subdetails '"ID# " & .Cells("Column1").Value
+                Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                Dim employee As Employee = Nothing
+                Using context = New PayrollContext()
+                    employee = (From emp In context.Employees.
+                                    Include(Function(emp) emp.PayFrequency).
+                                    Include(Function(emp) emp.Position)
+                                Where emp.RowID = employeeID).
+                               FirstOrDefault()
+                End Using
 
-                        txtFNameChk.Text = employeefullname
-                        pbEmpPicChk.Image = Nothing
-                        pbEmpPicChk.Image = EmployeeImage
-                        lblyourrequirement.Text = .Cells("Column2").Value & "'s requirements"
-                        VIEW_employeechecklist(.Cells("RowID").Value)
-                    Case 1 'Employee
+                Dim selectedTab = tabctrlemp.SelectedTab
 
-                        txtNName.Text = .Cells("Column5").Value
-                        txtDivisionName.Text = .Cells("Column7").Value
+                If selectedTab Is tbpempchklist Then
 
-                        If .Cells("Column6").Value = Nothing Then
-                            dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
+                    txtEmpIDChk.Text = subdetails '"ID# " & .Cells("Column1").Value
+
+                    txtFNameChk.Text = employeefullname
+                    pbEmpPicChk.Image = Nothing
+                    pbEmpPicChk.Image = EmployeeImage
+                    lblyourrequirement.Text = .Cells("Column2").Value & "'s requirements"
+                    VIEW_employeechecklist(.Cells("RowID").Value)
+
+                ElseIf selectedTab Is tbpEmployee Then 'Employee
+
+                    txtNName.Text = .Cells("Column5").Value
+                    txtDivisionName.Text = .Cells("Column7").Value
+
+                    If .Cells("Column6").Value = Nothing Then
+                        dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
+                    Else
+                        dtpempbdate.Value = Format(CDate(.Cells("Column6").Value), machineShortDateFormat)
+                    End If
+
+                    txtTIN.Text = .Cells("Column10").Value : txtSSS.Text = .Cells("Column11").Value
+                    txtHDMF.Text = .Cells("Column12").Value : txtPIN.Text = .Cells("Column13").Value
+                    txtWorkPhne.Text = .Cells("Column15").Value : txtHomePhne.Text = .Cells("Column16").Value
+                    txtMobPhne.Text = .Cells("Column17").Value : txtHomeAddr.Text = .Cells("Column18").Value
+                    txtemail.Text = .Cells("Column14").Value
+
+                    If .Cells("Column22").Value = "" Then : cboPayFreq.SelectedIndex = -1 : cboPayFreq.Text = ""
+                    Else : cboPayFreq.Text = .Cells("Column22").Value
+                    End If
+
+                    RemoveHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
+
+                    If .Cells("Column20").Value = "" Then
+                        cboEmpStat.SelectedIndex = -1
+                        cboEmpStat.Text = ""
+                    Else
+                        cboEmpStat.Text = .Cells("Column20").Value
+                    End If
+
+                    reloadPositName(.Cells("Column29").Value)  ': cboPosit.Text = .Cells("Column8").Value
+
+                    cboPosit.Text = .Cells("Column8").Value
+
+                    AddHandler cboPosit.SelectedIndexChanged, AddressOf cboPosit_SelectedIndexChanged
+
+                    If .Cells("Column9").Value = "" Then
+                        cboSalut.SelectedIndex = -1
+                        cboSalut.Text = ""
+                    Else
+                        cboSalut.Text = .Cells("Column9").Value
+                    End If
+                    '"UndertimeOverride" = "Column23" : "OvertimeOverride" = "Column24"
+                    '"Creation date" = "Column25" : "Created by" = "Column26"
+                    '"Last update" = "Column27" : "Last Update by" = "Column28"
+                    If .Cells("Column31").Value = "" Then
+                        cboMaritStat.SelectedIndex = -1
+                        cboMaritStat.Text = ""
+                    Else
+                        cboMaritStat.Text = .Cells("Column31").Value
+                    End If
+
+                    cboEmpType.SelectedIndex = -1
+                    cboEmpType.Text = ""
+
+                    cboEmpType.Text = .Cells("Column34").Value
+
+                    txtNumDepen.Text = Val(.Cells("Column32").Value)
+                    If .Cells("Column19").Value = "Male" Then
+                        rdMale.Checked = True
+                    Else
+                        rdFMale.Checked = True
+                    End If
+                    noCurrCellChange = 0
+                    dtpempstartdate.Value = CDate(.Cells("colstartdate").Value) '.ToString.Replace("-", "/")
+
+                    pbemppic.Image = Nothing
+                    pbemppic.Image = EmployeeImage
+                    txtEmpID.Text = .Cells("Column1").Value
+                    txtFName.Text = .Cells("Column2").Value
+                    txtMName.Text = .Cells("Column3").Value
+                    txtLName.Text = .Cells("Column4").Value
+                    txtSName.Text = .Cells("Column21").Value
+
+                    Static case_one As Integer = -1
+                    If case_one <> sameEmpID Then
+                        case_one = sameEmpID
+                        VIEW_employeedependents(.Cells("RowID").Value)
+                        dependentitemcount = dgvDepen.RowCount - 1
+                    ElseIf case_one = sameEmpID Then
+                        VIEW_employeedependents(.Cells("RowID").Value)
+                    Else
+                        If dgvDepen.RowCount = 1 Then
                         Else
-                            dtpempbdate.Value = Format(CDate(.Cells("Column6").Value), machineShortDateFormat)
-                        End If
 
-                        txtTIN.Text = .Cells("Column10").Value : txtSSS.Text = .Cells("Column11").Value
-                        txtHDMF.Text = .Cells("Column12").Value : txtPIN.Text = .Cells("Column13").Value
-                        txtWorkPhne.Text = .Cells("Column15").Value : txtHomePhne.Text = .Cells("Column16").Value
-                        txtMobPhne.Text = .Cells("Column17").Value : txtHomeAddr.Text = .Cells("Column18").Value
-                        txtemail.Text = .Cells("Column14").Value
-
-                        If .Cells("Column22").Value = "" Then : cboPayFreq.SelectedIndex = -1 : cboPayFreq.Text = ""
-                        Else : cboPayFreq.Text = .Cells("Column22").Value
-                        End If
-
-                        RemoveHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
-
-                        If .Cells("Column20").Value = "" Then
-                            cboEmpStat.SelectedIndex = -1
-                            cboEmpStat.Text = ""
-                        Else
-                            cboEmpStat.Text = .Cells("Column20").Value
-                        End If
-
-                        reloadPositName(.Cells("Column29").Value)  ': cboPosit.Text = .Cells("Column8").Value
-
-                        cboPosit.Text = .Cells("Column8").Value
-
-                        AddHandler cboPosit.SelectedIndexChanged, AddressOf cboPosit_SelectedIndexChanged
-
-                        If .Cells("Column9").Value = "" Then
-                            cboSalut.SelectedIndex = -1
-                            cboSalut.Text = ""
-                        Else
-                            cboSalut.Text = .Cells("Column9").Value
-                        End If
-                        '"UndertimeOverride" = "Column23" : "OvertimeOverride" = "Column24"
-                        '"Creation date" = "Column25" : "Created by" = "Column26"
-                        '"Last update" = "Column27" : "Last Update by" = "Column28"
-                        If .Cells("Column31").Value = "" Then
-                            cboMaritStat.SelectedIndex = -1
-                            cboMaritStat.Text = ""
-                        Else
-                            cboMaritStat.Text = .Cells("Column31").Value
-                        End If
-
-                        cboEmpType.SelectedIndex = -1
-                        cboEmpType.Text = ""
-
-                        cboEmpType.Text = .Cells("Column34").Value
-
-                        txtNumDepen.Text = Val(.Cells("Column32").Value)
-                        If .Cells("Column19").Value = "Male" Then
-                            rdMale.Checked = True
-                        Else
-                            rdFMale.Checked = True
-                        End If
-                        noCurrCellChange = 0
-                        dtpempstartdate.Value = CDate(.Cells("colstartdate").Value) '.ToString.Replace("-", "/")
-
-                        pbemppic.Image = Nothing
-                        pbemppic.Image = EmployeeImage
-                        txtEmpID.Text = .Cells("Column1").Value
-                        txtFName.Text = .Cells("Column2").Value
-                        txtMName.Text = .Cells("Column3").Value
-                        txtLName.Text = .Cells("Column4").Value
-                        txtSName.Text = .Cells("Column21").Value
-
-                        Static case_one As Integer = -1
-                        If case_one <> sameEmpID Then
-                            case_one = sameEmpID
-                            VIEW_employeedependents(.Cells("RowID").Value)
-                            dependentitemcount = dgvDepen.RowCount - 1
-                        ElseIf case_one = sameEmpID Then
-                            VIEW_employeedependents(.Cells("RowID").Value)
-                        Else
-                            If dgvDepen.RowCount = 1 Then
-                            Else
-
-                                If dgvDepen.CurrentRow.Index >= dependentitemcount Then
-                                    ''MsgBox("If")
-                                    If dependentitemcount = -1 Then
-                                        VIEW_employeedependents(.Cells("RowID").Value)
-                                        dependentitemcount = dgvDepen.RowCount - 1
-                                    End If
-                                Else
-                                    ''MsgBox("else")
-                                    dgvDepen.Rows.Clear()
+                            If dgvDepen.CurrentRow.Index >= dependentitemcount Then
+                                ''MsgBox("If")
+                                If dependentitemcount = -1 Then
                                     VIEW_employeedependents(.Cells("RowID").Value)
                                     dependentitemcount = dgvDepen.RowCount - 1
                                 End If
-
+                            Else
+                                ''MsgBox("else")
+                                dgvDepen.Rows.Clear()
+                                VIEW_employeedependents(.Cells("RowID").Value)
+                                dependentitemcount = dgvDepen.RowCount - 1
                             End If
-                        End If
-
-                        txtvlallow.Text = .Cells("Column36").Value
-                        txtslallow.Text = .Cells("slallowance").Value
-                        txtmlallow.Text = .Cells("mlallowance").Value
-
-                        txtvlbal.Text = .Cells("Column35").Value
-                        txtslbal.Text = .Cells("slbalance").Value
-                        txtmlbal.Text = .Cells("mlbalance").Value
-
-                        txtvlpayp.Text = .Cells("Column33").Value
-                        txtslpayp.Text = .Cells("slpayp").Value
-                        txtmlpayp.Text = .Cells("mlpayp").Value
-
-                        chkutflag.Checked = If(.Cells("Column23").Value = 1, True, False)
-                        chkotflag.Checked = If(.Cells("Column24").Value = 1, True, False)
-
-                        chkAlphaListExempt.Checked = If(.Cells("AlphaExempted").Value = 0, True, False)
-                        txtWorkDaysPerYear.Text = .Cells("WorkDaysPerYear").Value
-                        cboDayOfRest.Text = String.Empty
-                        cboDayOfRest.Text = .Cells("DayOfRest").Value
-                        txtATM.Text = .Cells("ATMNo").Value
-                        txtothrpayp.Text = .Cells("OtherPayP").Value
-                        txtothrallow.Text = .Cells("OtherLeaveAllowance").Value
-                        txtothrbal.Text = .Cells("OtherLeaveBalance").Value
-                        If .Cells("ATMNo").Value = Nothing Then
-                            rdbCash.Checked = True
-                            rdbDirectDepo.Checked = False
-                        Else
-                            rdbCash.Checked = False
-                            rdbDirectDepo.Checked = True
-                        End If
-
-                        rdbDirectDepo_CheckedChanged(rdbDirectDepo, New EventArgs)
-
-                        chkcalcHoliday.Checked = Convert.ToInt16(.Cells("CalcHoliday").Value) 'If(.Cells("CalcHoliday").Value = "Y", True, False)
-                        chkcalcSpclHoliday.Checked = Convert.ToInt16(.Cells("CalcSpecialHoliday").Value) 'If(.Cells("CalcSpecialHoliday").Value = "Y", True, False)
-                        chkcalcNightDiff.Checked = Convert.ToInt16(.Cells("CalcNightDiff").Value) 'If(.Cells("CalcNightDiff").Value = "Y", True, False)
-                        chkcalcNightDiffOT.Checked = Convert.ToInt16(.Cells("CalcNightDiffOT").Value) 'If(.Cells("CalcNightDiffOT").Value = "Y", True, False)
-                        chkcalcRestDay.Checked = Convert.ToInt16(.Cells("CalcRestDay").Value) 'If(.Cells("CalcRestDay").Value = "Y", True, False)
-                        chkcalcRestDayOT.Checked = Convert.ToInt16(.Cells("CalcRestDayOT").Value) 'If(.Cells("CalcRestDayOT").Value = "Y", True, False)
-
-                        chkbxRevealInPayroll.Checked =
-                            (Not CBool(Convert.ToInt16(.Cells("RevealInPayroll").Value)))
-
-                        txtUTgrace.Text = .Cells("LateGracePeriod").Value 'AgencyName
-                        cboAgency.Text = .Cells("AgencyName").Value
-
-                        Dim n_fdsfd As _
-                            New ExecuteQuery("SELECT CONCAT(IFNULL(DATE_FORMAT(DateEvaluated,@@date_format),''),',',IFNULL(DATE_FORMAT(DateRegularized,@@date_format),'')) FROM employee WHERE RowID='" & publicEmpRowID & "';")
-                        If n_fdsfd.Result = Nothing Then
-                        Else
-                            Dim date_value_string = Split(CStr(n_fdsfd.Result), ",")
-                            If date_value_string(0).Length > 0 Then
-                                MaskedTextBox1.Text = CDate(date_value_string(0)).ToShortDateString
-                            End If
-                            If date_value_string(1).Length > 0 Then
-                                MaskedTextBox2.Text = CDate(date_value_string(1)).ToShortDateString
-                            End If
-                        End If
-                        AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
-                    Case 2 'Salary
-                        'filingid, mStat, noofdepd
-                        cleartextsal()
-
-                        filingid = .Cells("fstatRowID").Value
-                        mStat = .Cells("Column31").Value
-                        noofdepd = .Cells("Column32").Value
-                        'dgvemployeesalary.Focus()
-                        fillSelectedEmpSalaryList(.Cells("RowID").Value)
-                        If dgvemployeesalary.RowCount <> 0 Then
-                            dgvemployeesalary.Item("c_fromdate", 0).Selected = True
-                        End If
-
-                        txtFNameSal.Text = employeefullname
-                        txtEmpIDSal.Text = subdetails '"ID# " & .Cells("Column1").Value
-                        txtEmpIDSal.Tag = publicEmpRowID
-
-                        pbEmpPicSal.Image = Nothing
-                        txtpaytype.Text = .Cells("Column22").Value
-                        txtEmp_type.Text = .Cells("Column34").Value
-                        pbEmpPicSal.Image = EmployeeImage
-
-                        If dgvemployeesalary.RowCount <> 0 Then
-                            dgvemployeesalary_CellClick(dgvemployeesalary, New DataGridViewCellEventArgs(3, 0))
-                        End If
-                    Case 3 'Awards
-                        txtEmpIDAwar.Text = subdetails '"ID# " & .Cells("Column1").Value
-
-                        txtFNameAwar.Text = employeefullname
-                        pbEmpPicAwar.Image = Nothing
-                        pbEmpPicAwar.Image = EmployeeImage
-                        listofEditRowAward.Clear()
-                        VIEW_employeeawards(.Cells("RowID").Value)
-                    Case 4 'Certifications
-                        txtFNameCert.Text = employeefullname
-                        txtEmpIDCert.Text = subdetails '"ID# " & .Cells("Column1").Value
-
-                        pbEmpPicCert.Image = Nothing
-                        pbEmpPicCert.Image = EmployeeImage
-                        listofEditRowCert.Clear()
-                        VIEW_employeecertification(.Cells("RowID").Value)
-                    Case 5 'Leave
-                        txtFNameLeave.Text = employeefullname
-                        txtEmpIDLeave.Text = subdetails '"ID# " & .Cells("Column1").Value
-
-                        If .Cells("Column19").Value = "Male" Then
-                            rdMale.Checked = True
-                        Else
-                            rdFMale.Checked = True
 
                         End If
+                    End If
 
-                        txtvlallowLeave.Text = .Cells("Column36").Value
-                        txtslallowLeave.Text = .Cells("slallowance").Value
-                        txtmlallowleave.Text = .Cells("mlallowance").Value
+                    txtvlallow.Text = .Cells("Column36").Value
+                    txtslallow.Text = .Cells("slallowance").Value
+                    txtmlallow.Text = .Cells("mlallowance").Value
 
-                        txtvlbalLeave.Text = .Cells("Column35").Value
-                        txtslbalLeave.Text = .Cells("slbalance").Value
-                        txtmlbalLeave.Text = .Cells("mlbalance").Value
+                    txtvlbal.Text = .Cells("Column35").Value
+                    txtslbal.Text = .Cells("slbalance").Value
+                    txtmlbal.Text = .Cells("mlbalance").Value
 
-                        txtvlpaypLeave.Text = .Cells("Column33").Value
-                        txtslpaypLeave.Text = .Cells("slpayp").Value
-                        txtmlpaypLeave.Text = .Cells("mlpayp").Value
+                    txtvlpayp.Text = .Cells("Column33").Value
+                    txtslpayp.Text = .Cells("slpayp").Value
+                    txtmlpayp.Text = .Cells("mlpayp").Value
 
-                        pbEmpPicLeave.Image = Nothing
-                        pbEmpPicLeave.Image = EmployeeImage
-                        listofEditRowleave.Clear()
-                        VIEW_employeeleave(.Cells("RowID").Value)
-                        dgvempleave_SelectionChanged(sender, e)
-                    Case 6 'Disciplinary Action
-                        controlclear()
-                        controlfalseDiscipAct()
-                        fillempdisciplinary()
-                        txtFNameDiscip.Text = employeefullname
-                        txtEmpIDDiscip.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    chkutflag.Checked = If(.Cells("Column23").Value = 1, True, False)
+                    chkotflag.Checked = If(.Cells("Column24").Value = 1, True, False)
 
-                        pbEmpPicDiscip.Image = Nothing
-                        pbEmpPicDiscip.Image = EmployeeImage
-                    Case 7 'Educational Background
-                        fillselectRowID()
-                        fillselecteducback()
-                        txtFNameEduc.Text = employeefullname
-                        txtEmpIDEduc.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    chkAlphaListExempt.Checked = If(.Cells("AlphaExempted").Value = 0, True, False)
+                    txtWorkDaysPerYear.Text = .Cells("WorkDaysPerYear").Value
+                    cboDayOfRest.Text = String.Empty
+                    cboDayOfRest.Text = .Cells("DayOfRest").Value
+                    txtATM.Text = .Cells("ATMNo").Value
+                    txtothrpayp.Text = .Cells("OtherPayP").Value
+                    txtothrallow.Text = .Cells("OtherLeaveAllowance").Value
+                    txtothrbal.Text = .Cells("OtherLeaveBalance").Value
+                    If .Cells("ATMNo").Value = Nothing Then
+                        rdbCash.Checked = True
+                        rdbDirectDepo.Checked = False
+                    Else
+                        rdbCash.Checked = False
+                        rdbDirectDepo.Checked = True
+                    End If
 
-                        pbEmpPicEduc.Image = Nothing
-                        pbEmpPicEduc.Image = EmployeeImage
-                    Case 8 'Previous Employer
-                        txtFNamePrevEmp.Text = employeefullname
-                        txtEmpIDPrevEmp.Text = subdetails
-                        pbEmpPicPrevEmp.Image = Nothing
-                        pbEmpPicPrevEmp.Image = EmployeeImage
-                        cleartextboxPrevEmp()
-                        fillemployerlist()
-                    Case 9 'Promotion
-                        'controlfalsePromot()
-                        fillpromotions()
-                        'fillselectedpromotions()
-                        txtFNamePromot.Text = employeefullname
-                        txtEmpIDPromot.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    rdbDirectDepo_CheckedChanged(rdbDirectDepo, New EventArgs)
 
-                        pbEmpPicPromot.Image = Nothing
-                        pbEmpPicPromot.Image = EmployeeImage
-                        txtpositfrompromot.Text = ""
-                        cmbto.Text = ""
-                        txtempcurrbasicpay.Text = "0"
-                        txtReasonPromot.Text = ""
-                        cmbfrom.Text = txtpositfrompromot.Text
-                        cmbfrom_SelectedIndexChanged(sender, e)
+                    chkcalcHoliday.Checked = Convert.ToInt16(.Cells("CalcHoliday").Value) 'If(.Cells("CalcHoliday").Value = "Y", True, False)
+                    chkcalcSpclHoliday.Checked = Convert.ToInt16(.Cells("CalcSpecialHoliday").Value) 'If(.Cells("CalcSpecialHoliday").Value = "Y", True, False)
+                    chkcalcNightDiff.Checked = Convert.ToInt16(.Cells("CalcNightDiff").Value) 'If(.Cells("CalcNightDiff").Value = "Y", True, False)
+                    chkcalcNightDiffOT.Checked = Convert.ToInt16(.Cells("CalcNightDiffOT").Value) 'If(.Cells("CalcNightDiffOT").Value = "Y", True, False)
+                    chkcalcRestDay.Checked = Convert.ToInt16(.Cells("CalcRestDay").Value) 'If(.Cells("CalcRestDay").Value = "Y", True, False)
+                    chkcalcRestDayOT.Checked = Convert.ToInt16(.Cells("CalcRestDayOT").Value) 'If(.Cells("CalcRestDayOT").Value = "Y", True, False)
 
-                        cmbto.Enabled = 0
-                        dtpEffectivityDate.Enabled = 0
-                        cmbflg.Enabled = 0
+                    chkbxRevealInPayroll.Checked =
+                        (Not CBool(Convert.ToInt16(.Cells("RevealInPayroll").Value)))
 
-                        Label82.Visible = False
-                        lblpeso.Visible = False
-                        txtbasicpay.Visible = False
-                        RemoveHandler cmbflg.SelectedIndexChanged, AddressOf cmbflg_SelectedIndexChanged
-                        Label142.Text = "Current salary"
-                    Case 10 'Loan Schedule
-                        txtFNameLoan.Text = employeefullname
-                        txtEmpIDLoan.Text = subdetails
-                        pbEmpPicLoan.Image = Nothing
-                        pbEmpPicLoan.Image = EmployeeImage
-                        TextBox7.Text = .Cells("Column1").Value
-                        dgvLoanList.Rows.Clear()
-                        fillloadsched()
-                        fillloadschedselected()
-                    Case 11 'Loan History
+                    txtUTgrace.Text = .Cells("LateGracePeriod").Value 'AgencyName
+                    cboAgency.Text = .Cells("AgencyName").Value
 
-                        txtFNameLoanhist.Text = employeefullname
-                        txtEmpIDLoanhist.Text = subdetails
-                        pbEmpPicLoanhist.Image = Nothing
-                        pbEmpPicLoanhist.Image = EmployeeImage
-                        VIEW_employeeloanhistory(.Cells("RowID").Value)
-                        dgvloanhisto_SelectionChanged(sender, e)
+                    Dim n_fdsfd As _
+                        New ExecuteQuery("SELECT CONCAT(IFNULL(DATE_FORMAT(DateEvaluated,@@date_format),''),',',IFNULL(DATE_FORMAT(DateRegularized,@@date_format),'')) FROM employee WHERE RowID='" & publicEmpRowID & "';")
+                    If n_fdsfd.Result = Nothing Then
+                    Else
+                        Dim date_value_string = Split(CStr(n_fdsfd.Result), ",")
+                        If date_value_string(0).Length > 0 Then
+                            MaskedTextBox1.Text = CDate(date_value_string(0)).ToShortDateString
+                        End If
+                        If date_value_string(1).Length > 0 Then
+                            MaskedTextBox2.Text = CDate(date_value_string(1)).ToShortDateString
+                        End If
+                    End If
+                    AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
+                ElseIf selectedTab Is tbpSalary Then 'Salary
+                    'filingid, mStat, noofdepd
+                    cleartextsal()
 
-                    Case 12 'Pay slip history
-                        dgvpayper_SelectionChanged(sender, e)
-                    Case 13 'Employee Allowance
-                        RemoveHandler dgvempallowance.SelectionChanged, AddressOf dgvempallowance_SelectionChanged
-                        pbEmpPicAllow.Image = Nothing
-                        txtFNameAllow.Text = employeefullname
-                        txtEmpIDAllow.Text = subdetails
-                        pbEmpPicAllow.Image = EmployeeImage
-                        VIEW_employeeallowance(.Cells("RowID").Value)
-                        dgvempallowance_SelectionChanged(sender, e)
+                    filingid = .Cells("fstatRowID").Value
+                    mStat = .Cells("Column31").Value
+                    noofdepd = .Cells("Column32").Value
+                    'dgvemployeesalary.Focus()
+                    fillSelectedEmpSalaryList(.Cells("RowID").Value)
+                    If dgvemployeesalary.RowCount <> 0 Then
+                        dgvemployeesalary.Item("c_fromdate", 0).Selected = True
+                    End If
 
-                        AddHandler dgvempallowance.SelectionChanged, AddressOf dgvempallowance_SelectionChanged
-                        dgvempallowance_SelectionChanged1(sender, New EventArgs)
-                    Case 14 'Employee Overtime
-                        txtFNameEmpOT.Text = employeefullname
-                        txtEmpIDEmpOT.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    txtFNameSal.Text = employeefullname
+                    txtEmpIDSal.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    txtEmpIDSal.Tag = publicEmpRowID
 
-                        pbEmpPicEmpOT.Image = Nothing
-                        pbEmpPicEmpOT.Image = EmployeeImage
-                        listofEditRowEmpOT.Clear()
-                        VIEW_employeeOT(.Cells("RowID").Value)
-                        dgvEmpOT_SelectionChanged(sender, e)
-                    Case 15 'Official Business filing
-                        RemoveHandler cboOBFstatus.SelectedIndexChanged, AddressOf cboOBFstatus_SelectedIndexChanged
-                        txtFNameOBF.Text = employeefullname
-                        txtEmpIDOBF.Text = subdetails '"ID# " & .Cells("Column1").Value
-                        pbEmpPicOBF.Image = Nothing
-                        pbEmpPicOBF.Image = EmployeeImage
-                        listofEditRowOBF.Clear()
-                        dgvOBF.Rows.Clear()
-                        VIEW_employeeoffbusi(.Cells("RowID").Value)
-                        dgvOBF_SelectionChanged(sender, e)
-                        AddHandler cboOBFstatus.SelectedIndexChanged, AddressOf cboOBFstatus_SelectedIndexChanged
-                    Case 16 'Bonus
-                        txtFNameBon.Text = employeefullname
-                        txtEmpIDBon.Text = subdetails '"ID# " & .Cells("Column1").Value
-                        pbEmpPicBon.Image = Nothing
-                        pbEmpPicBon.Image = EmployeeImage
-                        listofEditRowBon.Clear()
-                        VIEW_employeebonus(.Cells("RowID").Value)
-                        dgvempbon_SelectionChanged(sender, e)
-                    Case 17 'Attachment
-                        txtFNameAtta.Text = employeefullname
-                        txtEmpIDAtta.Text = subdetails '"ID# " & .Cells("Column1").Value
-                        pbEmpPicAtta.Image = Nothing
-                        pbEmpPicAtta.Image = EmployeeImage
-                        listofEditRoweatt.Clear()
-                        VIEW_employeeattachments(.Cells("RowID").Value)
-                        dgvempatta_SelectionChanged(sender, e)
-                End Select
+                    pbEmpPicSal.Image = Nothing
+                    txtpaytype.Text = .Cells("Column22").Value
+                    txtEmp_type.Text = .Cells("Column34").Value
+                    pbEmpPicSal.Image = EmployeeImage
+
+                    If dgvemployeesalary.RowCount <> 0 Then
+                        dgvemployeesalary_CellClick(dgvemployeesalary, New DataGridViewCellEventArgs(3, 0))
+                    End If
+                ElseIf selectedTab Is tbpAwards Then
+                    txtEmpIDAwar.Text = subdetails '"ID# " & .Cells("Column1").Value
+
+                    txtFNameAwar.Text = employeefullname
+                    pbEmpPicAwar.Image = Nothing
+                    pbEmpPicAwar.Image = EmployeeImage
+                    listofEditRowAward.Clear()
+                    VIEW_employeeawards(.Cells("RowID").Value)
+                ElseIf selectedTab Is tbpCertifications Then
+                    txtFNameCert.Text = employeefullname
+                    txtEmpIDCert.Text = subdetails '"ID# " & .Cells("Column1").Value
+
+                    pbEmpPicCert.Image = Nothing
+                    pbEmpPicCert.Image = EmployeeImage
+                    listofEditRowCert.Clear()
+                    VIEW_employeecertification(.Cells("RowID").Value)
+                ElseIf selectedTab Is tbpLeave Then
+                    txtFNameLeave.Text = employeefullname
+                    txtEmpIDLeave.Text = subdetails '"ID# " & .Cells("Column1").Value
+
+                    If .Cells("Column19").Value = "Male" Then
+                        rdMale.Checked = True
+                    Else
+                        rdFMale.Checked = True
+
+                    End If
+
+                    txtvlallowLeave.Text = .Cells("Column36").Value
+                    txtslallowLeave.Text = .Cells("slallowance").Value
+                    txtmlallowleave.Text = .Cells("mlallowance").Value
+
+                    txtvlbalLeave.Text = .Cells("Column35").Value
+                    txtslbalLeave.Text = .Cells("slbalance").Value
+                    txtmlbalLeave.Text = .Cells("mlbalance").Value
+
+                    txtvlpaypLeave.Text = .Cells("Column33").Value
+                    txtslpaypLeave.Text = .Cells("slpayp").Value
+                    txtmlpaypLeave.Text = .Cells("mlpayp").Value
+
+                    pbEmpPicLeave.Image = Nothing
+                    pbEmpPicLeave.Image = EmployeeImage
+                    listofEditRowleave.Clear()
+                    VIEW_employeeleave(.Cells("RowID").Value)
+                    dgvempleave_SelectionChanged(sender, e)
+                ElseIf selectedTab Is tbpDiscipAct Then
+                    controlclear()
+                    controlfalseDiscipAct()
+                    fillempdisciplinary()
+                    txtFNameDiscip.Text = employeefullname
+                    txtEmpIDDiscip.Text = subdetails '"ID# " & .Cells("Column1").Value
+
+                    pbEmpPicDiscip.Image = Nothing
+                    pbEmpPicDiscip.Image = EmployeeImage
+                ElseIf selectedTab Is tbpEducBG Then
+                    fillselectRowID()
+                    fillselecteducback()
+                    txtFNameEduc.Text = employeefullname
+                    txtEmpIDEduc.Text = subdetails '"ID# " & .Cells("Column1").Value
+
+                    pbEmpPicEduc.Image = Nothing
+                    pbEmpPicEduc.Image = EmployeeImage
+                ElseIf selectedTab Is tbpPrevEmp Then
+                    txtFNamePrevEmp.Text = employeefullname
+                    txtEmpIDPrevEmp.Text = subdetails
+                    pbEmpPicPrevEmp.Image = Nothing
+                    pbEmpPicPrevEmp.Image = EmployeeImage
+                    cleartextboxPrevEmp()
+                    fillemployerlist()
+                ElseIf selectedTab Is tbpPromotion Then 'Promotion
+                    'controlfalsePromot()
+                    fillpromotions()
+                    'fillselectedpromotions()
+                    txtFNamePromot.Text = employeefullname
+                    txtEmpIDPromot.Text = subdetails '"ID# " & .Cells("Column1").Value
+
+                    pbEmpPicPromot.Image = Nothing
+                    pbEmpPicPromot.Image = EmployeeImage
+                    txtpositfrompromot.Text = ""
+                    cmbto.Text = ""
+                    txtempcurrbasicpay.Text = "0"
+                    txtReasonPromot.Text = ""
+                    cmbfrom.Text = txtpositfrompromot.Text
+                    cmbfrom_SelectedIndexChanged(sender, e)
+
+                    cmbto.Enabled = 0
+                    dtpEffectivityDate.Enabled = 0
+                    cmbflg.Enabled = 0
+
+                    Label82.Visible = False
+                    lblpeso.Visible = False
+                    txtbasicpay.Visible = False
+                    RemoveHandler cmbflg.SelectedIndexChanged, AddressOf cmbflg_SelectedIndexChanged
+                    Label142.Text = "Current salary"
+                ElseIf selectedTab Is tbpLoans Then 'Loan Schedule
+                    txtFNameLoan.Text = employeefullname
+                    txtEmpIDLoan.Text = subdetails
+                    pbEmpPicLoan.Image = Nothing
+                    pbEmpPicLoan.Image = EmployeeImage
+                    TextBox7.Text = .Cells("Column1").Value
+                    dgvLoanList.Rows.Clear()
+                    fillloadsched()
+                    fillloadschedselected()
+                ElseIf selectedTab Is tbpLoanHist Then 'Loan History
+
+                    txtFNameLoanhist.Text = employeefullname
+                    txtEmpIDLoanhist.Text = subdetails
+                    pbEmpPicLoanhist.Image = Nothing
+                    pbEmpPicLoanhist.Image = EmployeeImage
+                    VIEW_employeeloanhistory(.Cells("RowID").Value)
+                    dgvloanhisto_SelectionChanged(sender, e)
+
+                ElseIf selectedTab Is tbpPayslip Then 'Pay slip history
+                    dgvpayper_SelectionChanged(sender, e)
+                ElseIf selectedTab Is tbpempallow Then 'Employee Allowance
+                    RemoveHandler dgvempallowance.SelectionChanged, AddressOf dgvempallowance_SelectionChanged
+                    pbEmpPicAllow.Image = Nothing
+                    txtFNameAllow.Text = employeefullname
+                    txtEmpIDAllow.Text = subdetails
+                    pbEmpPicAllow.Image = EmployeeImage
+                    VIEW_employeeallowance(.Cells("RowID").Value)
+                    dgvempallowance_SelectionChanged(sender, e)
+
+                    AddHandler dgvempallowance.SelectionChanged, AddressOf dgvempallowance_SelectionChanged
+                    dgvempallowance_SelectionChanged1(sender, New EventArgs)
+                ElseIf selectedTab Is tbpEmpOT Then 'Employee Overtime
+                    txtFNameEmpOT.Text = employeefullname
+                    txtEmpIDEmpOT.Text = subdetails '"ID# " & .Cells("Column1").Value
+
+                    pbEmpPicEmpOT.Image = Nothing
+                    pbEmpPicEmpOT.Image = EmployeeImage
+                    listofEditRowEmpOT.Clear()
+                    VIEW_employeeOT(.Cells("RowID").Value)
+                    dgvEmpOT_SelectionChanged(sender, e)
+                ElseIf selectedTab Is tbpOBF Then 'Official Business filing
+                    RemoveHandler cboOBFstatus.SelectedIndexChanged, AddressOf cboOBFstatus_SelectedIndexChanged
+                    txtFNameOBF.Text = employeefullname
+                    txtEmpIDOBF.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    pbEmpPicOBF.Image = Nothing
+                    pbEmpPicOBF.Image = EmployeeImage
+                    listofEditRowOBF.Clear()
+                    dgvOBF.Rows.Clear()
+                    VIEW_employeeoffbusi(.Cells("RowID").Value)
+                    dgvOBF_SelectionChanged(sender, e)
+                    AddHandler cboOBFstatus.SelectedIndexChanged, AddressOf cboOBFstatus_SelectedIndexChanged
+                ElseIf selectedTab Is tbpBonus Then 'Bonus
+                    txtFNameBon.Text = employeefullname
+                    txtEmpIDBon.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    pbEmpPicBon.Image = Nothing
+                    pbEmpPicBon.Image = EmployeeImage
+                    listofEditRowBon.Clear()
+                    VIEW_employeebonus(.Cells("RowID").Value)
+                    dgvempbon_SelectionChanged(sender, e)
+                ElseIf selectedTab Is tbpAttachment Then 'Attachment
+                    txtFNameAtta.Text = employeefullname
+                    txtEmpIDAtta.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    pbEmpPicAtta.Image = Nothing
+                    pbEmpPicAtta.Image = EmployeeImage
+                    listofEditRoweatt.Clear()
+                    VIEW_employeeattachments(.Cells("RowID").Value)
+                    dgvempatta_SelectionChanged(sender, e)
+                ElseIf selectedTab Is tbpNewSalary Then
+                    SalaryTab.SetEmployee(employee)
+                End If
 
                 MDIPrimaryForm.lblCreatedBy.Text = .Cells("Column26").Value
                 MDIPrimaryForm.lblCreatedDate.Text = .Cells("Column25").Value
@@ -3617,6 +3634,9 @@ Public Class EmployeeForm
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabctrlemp.SelectedIndexChanged
         Label25.Text = Trim(tabctrlemp.SelectedTab.Text)
 
+        If tabctrlemp.SelectedTab Is tbpNewSalary Then
+            dgvEmp_SelectionChanged(sender, e)
+        End If
     End Sub
 
     Dim emp_ralation As New AutoCompleteStringCollection
@@ -4220,6 +4240,10 @@ Public Class EmployeeForm
     End Sub
 
 #End Region 'Personal Profile
+
+    'Sub tbpNewSalary_Enter(sender As Object, e As EventArgs) Handles tbpNewSalary.Enter
+    '    dgvEmp_SelectionChanged(sender, e)
+    'End Sub
 
 #Region "Awards"
 
@@ -4916,8 +4940,7 @@ Public Class EmployeeForm
 
                 If r.IsNewRow = False Then
 
-                    If r.Cells("elv_StartTime").Value <> Nothing And r.Cells("elv_EndTime").Value <> Nothing _
-                        And r.Cells("elv_StartDate").Value <> Nothing And r.Cells("elv_EndDate").Value <> Nothing Then
+                    If r.Cells("elv_StartDate").Value <> Nothing And r.Cells("elv_EndDate").Value <> Nothing Then
 
                         param(0, 1) = DBNull.Value
                         param(1, 1) = orgztnID
@@ -9060,7 +9083,8 @@ Public Class EmployeeForm
     ''' <summary>
     ''' Deletes the loan schedule the user has requested.
     ''' </summary>
-    Private Sub DeleteLoanSchedule() Handles DeleteLoanScheduleButton.Click
+    Private Sub DeleteLoanSchedule(sender As Object, e As EventArgs) Handles DeleteLoanScheduleButton.Click
+
         Dim loanScheduleID As Integer
         If Not Integer.TryParse(dgvLoanList.CurrentRow.Cells(c_RowIDLoan.Index).Value, loanScheduleID) Then
             MsgBox("Sorry, but something has gone awry. Please contact Globagility, Inc. if you see this error message.")
@@ -9068,17 +9092,29 @@ Public Class EmployeeForm
         End If
 
         Try
-            Using context = New PayrollContext()
-                Dim loanSchedule = context.LoanSchedules.Find(loanScheduleID)
+            Dim prompt =
+                MessageBox.Show("Do you want to delete this loan ?",
+                                "Confirm deletion",
+                                MessageBoxButtons.YesNoCancel,
+                                MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button2)
 
-                If loanSchedule.LoanTransactions.Count() > 0 Then
-                    MsgBox("Sorry, but you can't delete a loan that has already started.")
-                    Return
-                End If
+            If prompt = DialogResult.Yes Then
+                Using context = New PayrollContext()
+                    Dim loanSchedule = context.LoanSchedules.Find(loanScheduleID)
 
-                context.LoanSchedules.Remove(loanSchedule)
-                context.SaveChanges()
-            End Using
+                    If loanSchedule.LoanTransactions.Count() > 0 Then
+                        MsgBox("Sorry, but you can't delete a loan that has already started.")
+                        Return
+                    End If
+
+                    context.LoanSchedules.Remove(loanSchedule)
+                    context.SaveChanges()
+                End Using
+                Dim curr_row = dgvLoanList.CurrentRow
+                dgvLoanList.Rows.Remove(curr_row)
+            End If
+
         Catch ex As Exception
             Throw New Exception($"Failed to delete loan schedule #{loanScheduleID}.", ex)
         End Try
@@ -9992,16 +10028,16 @@ Public Class EmployeeForm
 
     Private Function SalariesOverlap(salaryA As PayrollSys.Salary, salaryB As PayrollSys.Salary) As Boolean
         If (Not salaryA.IsIndefinite) And (Not salaryB.IsIndefinite) Then
-            Return salaryA.EffectiveDateFrom <= salaryB.EffectiveDateTo And
-                salaryB.EffectiveDateFrom <= salaryA.EffectiveDateTo
+            Return salaryA.EffectiveFrom <= salaryB.EffectiveTo And
+                salaryB.EffectiveFrom <= salaryA.EffectiveTo
         End If
 
         If salaryA.IsIndefinite And (Not salaryB.IsIndefinite) Then
-            Return salaryB.EffectiveDateTo >= salaryA.EffectiveDateFrom
+            Return salaryB.EffectiveTo >= salaryA.EffectiveFrom
         End If
 
         If salaryB.IsIndefinite And (Not salaryA.IsIndefinite) Then
-            Return salaryA.EffectiveDateTo >= salaryB.EffectiveDateFrom
+            Return salaryA.EffectiveTo >= salaryB.EffectiveFrom
         End If
 
         Return True
@@ -13014,8 +13050,7 @@ Public Class EmployeeForm
 
                 If r.IsNewRow = False Then
 
-                    If r.Cells("eot_StartTime").Value <> Nothing And r.Cells("eot_EndTime").Value <> Nothing _
-                        And r.Cells("eot_StartDate").Value <> Nothing Then ' And r.Cells("eot_EndDate").Value <> Nothing
+                    If r.Cells("eot_StartDate").Value <> Nothing Then
 
                         param(0, 1) = DBNull.Value
                         param(1, 1) = orgztnID
@@ -18009,7 +18044,8 @@ Public Class EmployeeForm
 
     Private Sub txtWorkHoursPerWeek_KeyPress(sender As Object, e As KeyPressEventArgs) Handles _
                                                                                                 txtWorkDaysPerYear.KeyPress
-        e.Handled = TrapNumKey(Asc(e.KeyChar))
+        'e.Handled = TrapNumKey(Asc(e.KeyChar))
+        e.Handled = New TrapDecimalKey(Asc(e.KeyChar), txtWorkDaysPerYear.Text).ResultTrap
 
     End Sub
 

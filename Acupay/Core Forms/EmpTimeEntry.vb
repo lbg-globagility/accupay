@@ -801,7 +801,7 @@ Public Class EmpTimeEntry
 
                         txtshftEffTo.Text = .Cells("ShiftEffectiveDateTo").Value
 
-                        chkrest.Checked = Convert.ToInt16(.Cells("IsDayOfRest").Value)
+                        chkrest.Checked = ConvertToType(Of Boolean)(.Cells("IsDayOfRest").Value)
 
                         txtempbasicpay.Text = .Cells("esBasicPay").Value
 

@@ -25,20 +25,36 @@ Partial Class viewtotallow
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvempallowance = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.ComboBox2 = New System.Windows.Forms.ComboBox()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eall_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eall_Start = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AllowanceFrequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'dgvempallowance
         '
         Me.dgvempallowance.AllowUserToAddRows = False
         Me.dgvempallowance.AllowUserToDeleteRows = False
-        Me.dgvempallowance.AllowUserToOrderColumns = True
+        Me.dgvempallowance.AllowUserToResizeColumns = False
+        Me.dgvempallowance.AllowUserToResizeRows = False
         Me.dgvempallowance.BackgroundColor = System.Drawing.Color.White
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
@@ -49,7 +65,7 @@ Partial Class viewtotallow
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvempallowance.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvempallowance.ColumnHeadersHeight = 34
-        Me.dgvempallowance.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eall_Type, Me.eall_Start, Me.eall_Amount})
+        Me.dgvempallowance.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.eall_Type, Me.eall_Start, Me.eall_Amount, Me.AllowanceFrequency})
         DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -58,8 +74,9 @@ Partial Class viewtotallow
         DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle4
+        Me.dgvempallowance.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvempallowance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempallowance.Location = New System.Drawing.Point(12, 12)
+        Me.dgvempallowance.Location = New System.Drawing.Point(0, 45)
         Me.dgvempallowance.MultiSelect = False
         Me.dgvempallowance.Name = "dgvempallowance"
         Me.dgvempallowance.ReadOnly = True
@@ -71,8 +88,99 @@ Partial Class viewtotallow
         DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvempallowance.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
-        Me.dgvempallowance.Size = New System.Drawing.Size(784, 450)
+        Me.dgvempallowance.Size = New System.Drawing.Size(808, 429)
         Me.dgvempallowance.TabIndex = 0
+        '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.ComboBox2)
+        Me.Panel1.Controls.Add(Me.ComboBox1)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(808, 45)
+        Me.Panel1.TabIndex = 1
+        '
+        'ComboBox2
+        '
+        Me.ComboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox2.FormattingEnabled = True
+        Me.ComboBox2.Location = New System.Drawing.Point(611, 12)
+        Me.ComboBox2.Name = "ComboBox2"
+        Me.ComboBox2.Size = New System.Drawing.Size(121, 21)
+        Me.ComboBox2.TabIndex = 0
+        Me.ComboBox2.Visible = False
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Items.AddRange(New Object() {""})
+        Me.ComboBox1.Location = New System.Drawing.Point(66, 12)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
+        Me.ComboBox1.TabIndex = 0
+        '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        Me.DataGridViewTextBoxColumn1.Visible = False
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Name"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        Me.DataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn2.Width = 182
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        DataGridViewCellStyle6.Format = "d"
+        DataGridViewCellStyle6.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle6
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Date"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        Me.DataGridViewTextBoxColumn3.Width = 180
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle7.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        DataGridViewCellStyle7.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle7
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Amount"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        Me.DataGridViewTextBoxColumn4.Visible = False
+        Me.DataGridViewTextBoxColumn4.Width = 181
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle8.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        DataGridViewCellStyle8.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle8
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Allowance Frequency"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        Me.DataGridViewTextBoxColumn5.Width = 181
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.HeaderText = "Allowance Frequency"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.Width = 181
+        '
+        'RowID
+        '
+        Me.RowID.HeaderText = "RowID"
+        Me.RowID.Name = "RowID"
+        Me.RowID.ReadOnly = True
+        Me.RowID.Visible = False
         '
         'eall_Type
         '
@@ -80,7 +188,7 @@ Partial Class viewtotallow
         Me.eall_Type.Name = "eall_Type"
         Me.eall_Type.ReadOnly = True
         Me.eall_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eall_Type.Width = 247
+        Me.eall_Type.Width = 182
         '
         'eall_Start
         '
@@ -90,6 +198,7 @@ Partial Class viewtotallow
         Me.eall_Start.HeaderText = "Date"
         Me.eall_Start.Name = "eall_Start"
         Me.eall_Start.ReadOnly = True
+        Me.eall_Start.Width = 180
         '
         'eall_Amount
         '
@@ -100,7 +209,14 @@ Partial Class viewtotallow
         Me.eall_Amount.HeaderText = "Amount"
         Me.eall_Amount.Name = "eall_Amount"
         Me.eall_Amount.ReadOnly = True
-        Me.eall_Amount.Width = 247
+        Me.eall_Amount.Width = 181
+        '
+        'AllowanceFrequency
+        '
+        Me.AllowanceFrequency.HeaderText = "Allowance Frequency"
+        Me.AllowanceFrequency.Name = "AllowanceFrequency"
+        Me.AllowanceFrequency.ReadOnly = True
+        Me.AllowanceFrequency.Width = 181
         '
         'viewtotallow
         '
@@ -109,6 +225,7 @@ Partial Class viewtotallow
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(194, Byte), Integer), CType(CType(183, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(808, 474)
         Me.Controls.Add(Me.dgvempallowance)
+        Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.KeyPreview = True
         Me.MaximizeBox = False
@@ -117,11 +234,23 @@ Partial Class viewtotallow
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Employee Allowance"
         CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
     Friend WithEvents dgvempallowance As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents ComboBox2 As ComboBox
+    Friend WithEvents ComboBox1 As ComboBox
+    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
+    Friend WithEvents RowID As DataGridViewTextBoxColumn
     Friend WithEvents eall_Type As DataGridViewTextBoxColumn
     Friend WithEvents eall_Start As DataGridViewTextBoxColumn
     Friend WithEvents eall_Amount As DataGridViewTextBoxColumn
+    Friend WithEvents AllowanceFrequency As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
 End Class

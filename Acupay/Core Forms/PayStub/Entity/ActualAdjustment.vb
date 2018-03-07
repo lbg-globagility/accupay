@@ -1,0 +1,42 @@
+﻿Option Strict On
+
+Imports System.ComponentModel.DataAnnotations
+Imports System.ComponentModel.DataAnnotations.Schema
+
+Namespace Global.AccuPay.Entity
+
+    <Table("paystubadjustmentactual")>
+    Public Class ActualAdjustment
+
+        <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
+        Public Property RowID As Integer?
+
+        Public Property OrganizationID As Integer?
+
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
+        Public Property Created As Date
+
+        Public Property CreatedBy As Integer?
+
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
+        Public Property LastUpd As Date?
+
+        Public Property LastUpdBy As Integer?
+
+        Public Property PayStubID As Integer?
+
+        Public Property ProductID As Integer?
+
+        Public Property PayAmount As Decimal
+
+        Public Property Comment As String
+
+        Public Property IsActual As Boolean
+
+        <ForeignKey("PayStubID")>
+        Public Overridable Property Paystub As Paystub
+
+    End Class
+
+End Namespace

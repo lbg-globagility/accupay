@@ -37,7 +37,9 @@ Public Class PayrollContext
 
     Public Overridable Property Products As DbSet(Of Product)
 
-    Public Overridable Property Paystubs As DbSet(Of AccuPay.Entity.Paystub)
+    Public Overridable Property Paystubs As DbSet(Of Paystub)
+
+    Public Overridable Property PaystubActuals As DbSet(Of PaystubActual)
 
     Public Overridable Property PayPeriods As DbSet(Of PayPeriod)
 
@@ -66,5 +68,17 @@ Public Class PayrollContext
     Public Overridable Property TimeEntries As DbSet(Of TimeEntry)
 
     Public Overridable Property Allowances As DbSet(Of Allowance)
+
+    'Public Overridable Property AllowanceItems As DbSet(Of AllowanceItem)
+
+    Public Overridable Property Adjustments As DbSet(Of Adjustment)
+
+    Public Overridable Property ActualAdjustments As DbSet(Of ActualAdjustment)
+
+    Public Overridable Property LeaveLedgers As DbSet(Of LeaveLedger)
+
+    Public Overridable Property LeaveTransactions As DbSet(Of LeaveTransaction)
+
+    Public Overridable Property Leaves As DbSet(Of Leave)
 
 End Class

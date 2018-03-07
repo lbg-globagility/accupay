@@ -26,7 +26,6 @@ DECLARE pay_freq_type VARCHAR(50);
 
 SET NEW.FilingStatusID = IFNULL(NEW.FilingStatusID, 1);
 
-
 SELECT
     e.EmploymentStatus,
     e.EmployeeType,
@@ -47,48 +46,6 @@ INTO
     pay_freq_type;
 
 SET NEW.BasicPay = NEW.Salary / IF(LOCATE(e_type,CONCAT(pay_freq_type,'Fixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(e_type));
-
-SELECT EXISTS(
-        SELECT RowID
-        FROM employeeallowance
-        WHERE (DATE_FORMAT(Created, '%Y-%m-%d') = CURDATE() OR DATE_FORMAT(LastUpd, '%Y-%m-%d') = CURDATE()) AND
-            EmployeeID = NEW.EmployeeID AND
-            OrganizationID = NEW.OrganizationID AND
-            (EffectiveStartDate >= NEW.EffectiveDateFrom OR EffectiveEndDate >= NEW.EffectiveDateFrom) AND
-            (EffectiveStartDate <= IFNULL(NEW.EffectiveDateTo, CURDATE()) OR EffectiveEndDate <= IFNULL(NEW.EffectiveDateTo, CURDATE()))
-    UNION ALL
-        SELECT RowID
-        FROM employeeallowance
-        WHERE (DATE_FORMAT(Created, '%Y-%m-%d') = CURDATE() OR DATE_FORMAT(LastUpd, '%Y-%m-%d') = CURDATE()) AND
-            EmployeeID = NEW.EmployeeID AND
-            OrganizationID = NEW.OrganizationID AND
-            (EffectiveStartDate <= NEW.EffectiveDateFrom OR EffectiveEndDate <= NEW.EffectiveDateFrom) AND
-            (EffectiveStartDate >= IFNULL(NEW.EffectiveDateTo,CURDATE()) OR EffectiveEndDate >= IFNULL(NEW.EffectiveDateTo, CURDATE()))
-)
-INTO hasadditionalamount;
-
-
-IF e_type = 'Daily' THEN
-    SET NEW.PaySocialSecurityID = (
-        SELECT RowID
-        FROM paysocialsecurity
-        WHERE ((NEW.BasicPay * e_workdayyear) / 12.00) BETWEEN RangeFromAmount AND RangeToAmount AND
-            NEW.OverrideDiscardSSSContrib = 0
-        LIMIT 1
-    );
-
-    SET NEW.PayPhilhealthID = (
-        SELECT RowID
-        FROM payphilhealth
-        WHERE ((NEW.BasicPay * e_workdayyear) / 12.00) BETWEEN SalaryRangeFrom AND SalaryRangeTo AND
-            NEW.OverrideDiscardPhilHealthContrib = 0
-        LIMIT 1
-    );
-END IF;
-
-IF IFNULL(NEW.UndeclaredSalary,0) = 0 THEN
-    SET NEW.UndeclaredSalary = IFNULL(NEW.TrueSalary - NEW.`Salary`,0);
-END IF;
 
 END//
 DELIMITER ;

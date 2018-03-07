@@ -6,7 +6,7 @@
 
 DROP VIEW IF EXISTS `employeesalary_withdailyrate`;
 DROP TABLE IF EXISTS `employeesalary_withdailyrate`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `employeesalary_withdailyrate` AS SELECT esa.*
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `employeesalary_withdailyrate` AS SELECT esa.*
 	 ,ROUND(
 	 (esa.Salary
 	  / (e.WorkDaysPerYear

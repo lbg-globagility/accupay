@@ -6,7 +6,7 @@
 
 DROP VIEW IF EXISTS `v_employeetimeentry_numbers`;
 DROP TABLE IF EXISTS `v_employeetimeentry_numbers`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_employeetimeentry_numbers` AS SELECT et.RowID
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_employeetimeentry_numbers` AS SELECT et.RowID
 	,et.OrganizationID
 	,et.`Date`
 	,pp.RowID `PayPeriodID`

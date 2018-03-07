@@ -9,6 +9,7 @@ Namespace Global.AccuPay.Entity
     Public Class Product
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property SupplierID As Integer?
@@ -21,8 +22,10 @@ Namespace Global.AccuPay.Entity
 
         Public Property PartNo As String
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property Created As Date
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
         Public Property LastUpd As Date?
 
         <NotMapped>

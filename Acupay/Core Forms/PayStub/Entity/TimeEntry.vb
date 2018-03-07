@@ -10,6 +10,7 @@ Namespace Global.AccuPay.Entity
     Public Class TimeEntry
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?
@@ -23,7 +24,7 @@ Namespace Global.AccuPay.Entity
         Public Property PayRateID As Integer?
 
         <Column("Date")>
-        Public Property EntryDate As Date
+        Public Property [Date] As Date
 
         <Column("RegularHoursWorked")>
         Public Property RegularHours As Decimal
@@ -44,15 +45,19 @@ Namespace Global.AccuPay.Entity
         Public Property NightDiffPay As Decimal
 
         <Column("NightDifferentialOTHours")>
-        Public Property NightDiffOvertimeHours As Decimal
+        Public Property NightDiffOTHours As Decimal
 
         <Column("NightDiffOTHoursAmount")>
-        Public Property NightDiffOvertimePay As Decimal
+        Public Property NightDiffOTPay As Decimal
 
         Public Property RestDayHours As Decimal
 
         <Column("RestDayAmount")>
         Public Property RestDayPay As Decimal
+
+        Public Property RestDayOTHours As Decimal
+
+        Public Property RestDayOTPay As Decimal
 
         Public Property VacationLeaveHours As Decimal
 
@@ -64,6 +69,22 @@ Namespace Global.AccuPay.Entity
 
         <Column("Leavepayment")>
         Public Property LeavePay As Decimal
+
+        Public Property SpecialHolidayHours As Decimal
+
+        Public Property SpecialHolidayPay As Decimal
+
+        Public Property SpecialHolidayOTHours As Decimal
+
+        Public Property SpecialHolidayOTPay As Decimal
+
+        Public Property RegularHolidayHours As Decimal
+
+        Public Property RegularHolidayPay As Decimal
+
+        Public Property RegularHolidayOTHours As Decimal
+
+        Public Property RegularHolidayOTPay As Decimal
 
         <Column("HolidayPayAmount")>
         Public Property HolidayPay As Decimal

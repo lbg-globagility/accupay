@@ -28,9 +28,11 @@ Namespace Global.PayrollSys
 
         Public Property LoanPayPeriodLeft As Integer
 
-        Public Property TotalBalanceLeft As Decimal
+        <Column("TotalBalanceLeft")>
+        Public Property TotalBalance As Decimal
 
-        Public Property DeductionAmount As Decimal
+        <Column("DeductionAmount")>
+        Public Property Amount As Decimal
 
         <ForeignKey("LoanScheduleID")>
         Public Overridable Property LoanSchedule As LoanSchedule

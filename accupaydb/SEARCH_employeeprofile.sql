@@ -51,8 +51,8 @@ SELECT e.RowID
         ,IFNULL(pos.RowID,'')                       `PositionID`
         ,IFNULL(e.PayFrequencyID,'')                `PayFrequencyID`
         ,e.EmployeeType
-        ,e.LeaveBalance
-        ,e.SickLeaveBalance
+        ,IFNULL(vacationLeaveTransaction.Balance, 0) `LeaveBalance`
+        ,IFNULL(sickLeaveTransaction.Balance, 0) `SickLeaveBalance`
         ,e.MaternityLeaveBalance
         ,e.LeaveAllowance
         ,e.SickLeaveAllowance
@@ -97,6 +97,22 @@ LEFT JOIN payfrequency pf       ON e.PayFrequencyID=pf.RowID
 LEFT JOIN filingstatus fstat    ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents
 LEFT JOIN agency ag             ON ag.RowID=e.AgencyID
 LEFT JOIN division d                ON d.RowID=pos.DivisionId
+LEFT JOIN product vacationLeaveProduct
+ON vacationLeaveProduct.PartNo = 'Vacation leave' AND
+    vacationLeaveProduct.OrganizationID = og_id
+LEFT JOIN leaveledger vacationLeaveLedger
+ON vacationLeaveLedger.ProductID = vacationLeaveProduct.RowID AND
+    vacationLeaveLedger.EmployeeID = e.RowID
+LEFT JOIN leavetransaction vacationLeaveTransaction
+ON vacationLeaveTransaction.RowID = vacationLeaveLedger.LastTransactionID
+LEFT JOIN product sickLeaveProduct
+ON sickLeaveProduct.PartNo = 'Sick leave' AND
+    sickLeaveProduct.OrganizationID = og_id
+LEFT JOIN leaveledger sickLeaveLedger
+ON sickLeaveLedger.ProductID = sickLeaveProduct.RowID AND
+    sickLeaveLedger.EmployeeID = e.RowID
+LEFT JOIN leavetransaction sickLeaveTransaction
+ON sickLeaveTransaction.RowID = sickLeaveLedger.LastTransactionID
 
 ORDER BY e.LastName, e.FirstName
 LIMIT page_number, max_count_per_page;

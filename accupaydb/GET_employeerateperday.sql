@@ -6,7 +6,7 @@
 
 DROP FUNCTION IF EXISTS `GET_employeerateperday`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `GET_employeerateperday`(`EmpID` INT, `OrgID` INT, `paramDate` DATE) RETURNS DECIMAL(15, 6)
+CREATE DEFINER=`root`@`localhost` FUNCTION `GET_employeerateperday`(`EmpID` INT, `OrgID` INT, `paramDate` DATE) RETURNS decimal(15,6)
     DETERMINISTIC
 BEGIN
 
@@ -167,7 +167,7 @@ FROM (SELECT esa.*
 			  )), 6) `DailyRate`
 		FROM employeesalary esa
 		INNER JOIN employee e ON e.RowID=esa.EmployeeID AND e.EmployeeType IN ('Monthly', 'Fixed') AND e.RowID=EmpID AND e.OrganizationID=OrgID
-		
+
 	UNION
 		SELECT esa.*
 	   , ROUND(esa.BasicPay, 6) `DailyRate`
@@ -183,7 +183,7 @@ ORDER BY DATEDIFF(DATE_FORMAT(paramDate, @@date_format), i.EffectiveDateFrom)
 LIMIT 1
 INTO dailyrate;
 
-RETURN dailyrate;
+RETURN IFNULL(dailyrate, 0);
 
 END//
 DELIMITER ;

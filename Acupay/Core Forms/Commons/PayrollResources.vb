@@ -28,7 +28,7 @@ Public Class PayrollResources
 
     Private _loanTransactions As ICollection(Of PayrollSys.LoanTransaction)
 
-    Private _products As IEnumerable(Of Product)
+    Private _products As ICollection(Of Product)
 
     Private _socialSecurityBrackets As ICollection(Of SocialSecurityBracket)
 
@@ -38,9 +38,9 @@ Public Class PayrollResources
 
     Private _listOfValues As ICollection(Of ListOfValue)
 
-    Private _paystubs As IEnumerable(Of Paystub)
+    Private _paystubs As ICollection(Of Paystub)
 
-    Private _previousPaystubs As IEnumerable(Of Paystub)
+    Private _previousPaystubs As ICollection(Of Paystub)
 
     Private _isEndOfMonth As Boolean
 
@@ -86,19 +86,19 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property Products As IEnumerable(Of Product)
+    Public ReadOnly Property Products As ICollection(Of Product)
         Get
             Return _products
         End Get
     End Property
 
-    Public ReadOnly Property Paystubs As IEnumerable(Of AccuPay.Entity.Paystub)
+    Public ReadOnly Property Paystubs As ICollection(Of Paystub)
         Get
             Return _paystubs
         End Get
     End Property
 
-    Public ReadOnly Property PreviousPaystubs As IEnumerable(Of Paystub)
+    Public ReadOnly Property PreviousPaystubs As ICollection(Of Paystub)
         Get
             Return _previousPaystubs
         End Get
@@ -146,6 +146,8 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property Adjustments As ICollection(Of Adjustment)
+
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = Integer.Parse(payPeriodID)
         _payDateFrom = payDateFrom
@@ -164,6 +166,7 @@ Public Class PayrollResources
             loadLoanSchedulesTask,
             loadLoanTransactionsTask,
             loadSalariesTask,
+            LoadPaystubs(),
             LoadProducts(),
             LoadPreviousPaystubs(),
             LoadSocialSecurityBrackets(),
@@ -244,8 +247,8 @@ Public Class PayrollResources
             Using context = New PayrollContext()
                 Dim query = From t In context.TimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
                             Where t.OrganizationID = z_OrganizationID And
-                                backDate <= t.EntryDate And
-                                t.EntryDate <= _payDateTo
+                                backDate <= t.Date And
+                                t.Date <= _payDateTo
                             Select t
 
                 _timeEntries2 = Await query.ToListAsync()
@@ -323,7 +326,7 @@ Public Class PayrollResources
     Private Async Function LoadPaystubs() As Task
         Try
             Using context = New PayrollContext()
-                Dim query = From p In context.Paystubs
+                Dim query = From p In context.Paystubs.Include(Function(p) p.Adjustments)
                             Where p.PayFromdate = _payDateFrom And p.PayToDate = _payDateTo
 
                 _paystubs = Await query.ToListAsync()

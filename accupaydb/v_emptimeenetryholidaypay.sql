@@ -6,7 +6,7 @@
 
 DROP VIEW IF EXISTS `v_emptimeenetryholidaypay`;
 DROP TABLE IF EXISTS `v_emptimeenetryholidaypay`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_emptimeenetryholidaypay` AS SELECT ete.*
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_emptimeenetryholidaypay` AS SELECT ete.*
 ,pr.PayType
 ,pr.`PayRate`
 ,pr.OvertimeRate

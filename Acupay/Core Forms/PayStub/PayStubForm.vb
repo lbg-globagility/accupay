@@ -92,6 +92,9 @@ Public Class PayStubForm
     Public paypPayFreqID As String = Nothing
     Public isEndOfMonth As String = 0
 
+    Private _successfulPaystubs As Integer = 0
+    Private _failedPaystubs As Integer = 0
+
     Const max_count_per_page As Integer = 1
 
     Dim currentEmployeeID As String = Nothing
@@ -116,10 +119,6 @@ Public Class PayStubForm
 
     Dim notax_bonusOnce As New DataTable
 
-    Dim emp_allowanceMonthly As New DataTable
-
-    Dim notax_allowanceMonthly As New DataTable
-
     Dim emp_bonusSemiM As New DataTable
 
     Dim notax_bonusSemiM As New DataTable
@@ -132,11 +131,7 @@ Public Class PayStubForm
 
     Dim notax_bonusWeekly As New DataTable
 
-    Dim prev_empTimeEntry As New DataTable
-
     Dim numofdaypresent As New DataTable
-
-    Dim emp_TardinessUndertime As New DataTable
 
     Private _withholdingTaxTable As DataTable
     Private _filingStatuses As DataTable
@@ -428,24 +423,24 @@ Public Class PayStubForm
 
                 Dim str_sched_payfreq As String = Convert.ToString(.Cells("Column12").Value)
 
-                If str_pay_freq_sched <> str_sched_payfreq _
-                    And _year <> current_year Then
+                'If str_pay_freq_sched <> str_sched_payfreq _
+                '    And _year <> current_year Then
 
-                    str_pay_freq_sched = str_sched_payfreq
+                str_pay_freq_sched = str_sched_payfreq
 
-                    _year = current_year
+                _year = current_year
 
-                    Dim select_cutoff_payfrequency =
-                        tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Text = str_sched_payfreq)
+                Dim select_cutoff_payfrequency =
+                    tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Text = str_sched_payfreq)
 
-                    Console.WriteLine(select_cutoff_payfrequency.Count)
+                Console.WriteLine(select_cutoff_payfrequency.Count)
 
-                    For Each _tsbtn In select_cutoff_payfrequency
-                        PayFreq_Changed(_tsbtn, New EventArgs)
+                For Each _tsbtn In select_cutoff_payfrequency
+                    PayFreq_Changed(_tsbtn, New EventArgs)
 
-                    Next
+                Next
 
-                End If
+                'End If
 
             End With
 
@@ -637,7 +632,7 @@ Public Class PayStubForm
                 currentEmployeeID = .Cells("EmployeeID").Value
 
                 txtEmpID.Text = "ID# " & .Cells("EmployeeID").Value &
-                            If(.Cells("Position").Value = Nothing,
+                            If(IsDBNull(.Cells("Position")),
                                                                "",
                                                                ", " & .Cells("Position").Value) &
                             If(.Cells("EmployeeType").Value = Nothing,
@@ -882,20 +877,6 @@ Public Class PayStubForm
                     monthlyallowfreq = If(allowfreq.Item(1).ToString = "", "Monthly", allowfreq.Item(1).ToString)
                 End If
 
-                emp_allowanceMonthly = New SQL("CALL GET_employee_allowanceofthisperiod(?og_rowid, ?_frequency, ?_taxable, ?date_from, ?date_to);",
-                                                                                       New Object() {orgztnID,
-                                                                                       "Monthly",
-                                                                                       "1",
-                                                                                       paypFrom,
-                                                                                       paypTo}).GetFoundRows.Tables(0)
-
-                notax_allowanceMonthly = New SQL("CALL GET_employee_allowanceofthisperiod(?og_rowid, ?_frequency, ?_taxable, ?date_from, ?date_to);",
-                                                                                       New Object() {orgztnID,
-                                                                                       "Monthly",
-                                                                                       "0",
-                                                                                       paypFrom,
-                                                                                       paypTo}).GetFoundRows.Tables(0)
-
                 emp_bonusMonthly = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
                                                                  ",EmployeeID",
                                                                 " FROM employeebonus",
@@ -1085,15 +1066,6 @@ Public Class PayStubForm
                 paramets(1, 1) = paypFrom
                 paramets(2, 1) = paypTo
 
-                emp_TardinessUndertime =
-                                      New SQL("CALL GETVIEW_employeeTardinessUndertime(?og_rowid, ?date_from, ?date_to);",
-                                              New Object() {orgztnID, paypFrom, paypTo}).GetFoundRows.Tables(0)
-
-                prev_empTimeEntry = New SQL("CALL GETVIEW_previousemployeetimeentry(?og_rowid, ?pp_rowid1, ?pp_rowid2);",
-                                                                                      New Object() {orgztnID,
-                                                                                      paypRowID,
-                                                                                      paypRowID}).GetFoundRows.Tables(0)
-
                 dtemployeefirsttimesalary =
                                       New SQL(String.Concat("SELECT COUNT(ete.RowID)",
                                                               ",ete.EmployeeID",
@@ -1136,7 +1108,7 @@ Public Class PayStubForm
 
     Private Sub LoadingPayrollDataOnError(t As Task)
         _logger.Error("Error loading one of the payroll data.", t.Exception)
-        MsgBox("Error loading", "Sorry, but something went wrong while loading the payroll data for computation.")
+        MsgBox("Something went wrong while loading the payroll data needed for computation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
         Me.Enabled = True
     End Sub
 
@@ -1178,6 +1150,9 @@ Public Class PayStubForm
             Timer1.Enabled = True
             Timer1.Start()
 
+            _successfulPaystubs = 0
+            _failedPaystubs = 0
+
             Parallel.ForEach(
                 employeeRows,
                 Sub(employeeRow)
@@ -1187,9 +1162,7 @@ Public Class PayStubForm
                         esal_dattab,
                         _loanSchedules,
                         _loanTransactions,
-                        emp_allowanceMonthly,
                         emp_allowanceWeekly,
-                        notax_allowanceMonthly,
                         notax_allowanceWeekly,
                         emp_bonusDaily,
                         emp_bonusMonthly,
@@ -1204,7 +1177,6 @@ Public Class PayStubForm
                         numofdaypresent,
                         etent_totdaypay,
                         dtemployeefirsttimesalary,
-                        prev_empTimeEntry,
                         VeryFirstPayPeriodIDOfThisYear,
                         withthirteenthmonthpay,
                         _filingStatuses,
@@ -1260,7 +1232,7 @@ Public Class PayStubForm
         With viewtotallow
             .Show()
             .BringToFront()
-            If dgvemployees.RowCount <> 0 Then
+            If dgvemployees.RowCount > 0 Then
 
                 .VIEW_employeeallowance_indate(dgvemployees.CurrentRow.Cells("RowID").Value,
                                         paypFrom,
@@ -2453,8 +2425,15 @@ Public Class PayStubForm
         Dim realse = New ReleaseThirteenthMonthPay(dateFrom, dateTo, paypRowID)
     End Sub
 
-    Sub ProgressCounter(ByVal cnt As Integer)
+    Sub ProgressCounter(success As Boolean)
+        If success Then
+            Interlocked.Increment(_successfulPaystubs)
+        Else
+            Interlocked.Increment(_failedPaystubs)
+        End If
+
         Interlocked.Increment(progress_precentage)
+
         Dim compute_percentage As Integer = (progress_precentage / payroll_emp_count) * 100
         MDIPrimaryForm.systemprogressbar.Value = compute_percentage
 
@@ -2465,6 +2444,8 @@ Public Class PayStubForm
                 Dim n_ExecSQLProcedure As New _
                     ExecSQLProcedure("RECOMPUTE_thirteenthmonthpay",
                                      param_array)
+
+                MsgBox($"Payroll generation is done. Sucessful paystubs: {_successfulPaystubs}. Failed paystubs {_failedPaystubs}", MsgBoxStyle.OkOnly)
 
                 dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
             Case Else
@@ -2646,7 +2627,8 @@ Friend Class PrintAllPaySlipOfficialFormat
 
             catchdt = _sql.GetFoundRows.Tables(0)
 
-            rptdoc = New HyundaiPayslip
+            'rptdoc = New HyundaiPayslip
+            rptdoc = New HyundaiPayslip1
 
             Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
 

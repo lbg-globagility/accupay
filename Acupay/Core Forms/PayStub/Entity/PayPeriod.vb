@@ -9,14 +9,17 @@ Namespace Global.AccuPay.Entity
     Public Class PayPeriod
 
         <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property Created As Date
 
         Public Property CreatedBy As Integer?
 
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
         Public Property LastUpd As Date?
 
         Public Property LastUpdBy As Integer?
@@ -35,6 +38,16 @@ Namespace Global.AccuPay.Entity
         Public Property Half As Integer
 
         Public Property OrdinalValue As Integer
+
+        Public Property SSSWeeklyContribSched As Boolean
+        Public Property PhHWeeklyContribSched As Boolean
+        Public Property HDMFWeeklyContribSched As Boolean
+        Public Property WTaxWeeklyContribSched As Boolean
+
+        Public Property SSSWeeklyAgentContribSched As Boolean
+        Public Property PhHWeeklyAgentContribSched As Boolean
+        Public Property HDMFWeeklyAgentContribSched As Boolean
+        Public Property WTaxWeeklyAgentContribSched As Boolean
 
     End Class
 

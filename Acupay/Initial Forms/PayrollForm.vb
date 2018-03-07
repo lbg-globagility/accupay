@@ -70,12 +70,6 @@
 
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
-        Finally
-            Dim listOfForms = PanelPayroll.Controls.Cast(Of Form).Where(Function(i) i.Name <> Formname.Name)
-            For Each pb As Form In listOfForms 'PanelTimeAttend.Controls.OfType(Of Form)() 'KeyPreview'Enabled
-                'If Formname.Name = pb.Name Then : Continue For : Else : pb.Enabled = False : End If
-                pb.Enabled = False
-            Next
         End Try
 
     End Sub
@@ -157,6 +151,11 @@
 
         End If
 
+    End Sub
+
+    Private Sub PaystubExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PaystubExperimentalToolStripMenuItem.Click
+        ChangeForm(NewPayStubForm, "Employee Pay Slip")
+        previousForm = NewPayStubForm
     End Sub
 
 End Class

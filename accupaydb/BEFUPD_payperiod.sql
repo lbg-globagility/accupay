@@ -23,7 +23,7 @@ IF NEW.TotalGrossSalary = 1 THEN
 
 ELSEIF NEW.TotalGrossSalary = 4 THEN
    
-   /*
+   
    
 	SET NEW.Half = 2; # set this record as a typical week of the month
 
@@ -39,7 +39,7 @@ ELSEIF NEW.TotalGrossSalary = 4 THEN
 	WHERE i.`RowID`=NEW.RowID
 	INTO @week_ordinal_value;
 	
-	SET NEW.WeekOridnalValue = @week_ordinal_value;
+	SET NEW.WeekOrdinalValue = @week_ordinal_value;
 		
 	SET @rec_count = 0;
 	SET @indx_firsthalf = 0;
@@ -66,7 +66,8 @@ ELSEIF NEW.TotalGrossSalary = 4 THEN
 	INTO @pp_rowid;
 		
 	IF NEW.RowID = @pp_rowid THEN
-		SET NEW.Half = 1; # set this record as first half the month
+		# SET NEW.Half = 1; # set this record as first half the month
+		SET NEW.Half = 0;
 		
 	END IF;
 	
@@ -83,15 +84,16 @@ ELSEIF NEW.TotalGrossSalary = 4 THEN
 	INTO @pp_rowid;
 		
 	IF NEW.RowID = @pp_rowid THEN
-		SET NEW.Half = 0; # set this record as end of the month
+		# SET NEW.Half = 0; # set this record as end of the month
+		SET NEW.Half = 1;
 		
 	END IF;
 	
-   */
+   
    
    # ###########################################################################
    
-	/*SELECT MIN(d.DateValue), MAX(d.DateValue)
+	SELECT MIN(d.DateValue), MAX(d.DateValue)
 	FROM dates d
 	WHERE DATE_FORMAT(d.DateValue, '%Y%c') = CONCAT(NEW.`Year`, NEW.`Month`)
 	INTO min_date
@@ -111,7 +113,7 @@ ELSEIF NEW.TotalGrossSalary = 4 THEN
 		SET NEW.IsLastFridayOfMonthFallsHere = (last_friday_date BETWEEN NEW.PayFromDate AND NEW.PayToDate);
 		SET NEW.IsLastFridayOfMonthFallsHere = IFNULL(NEW.IsLastFridayOfMonthFallsHere, 0);
 		
-	END IF;*/
+	END IF;
 	
 	SET NEW.IsLastFridayOfMonthFallsHere = IFNULL(NEW.IsLastFridayOfMonthFallsHere, 0);
 		

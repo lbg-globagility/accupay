@@ -1,0 +1,44 @@
+﻿Option Strict On
+
+Imports AccuPay
+
+<TestFixture>
+Public Class CalendarTest
+
+    <TestCase("6:30 AM")>
+    <TestCase("6:30 a")>
+    <TestCase("630 a")>
+    <TestCase("6:30")>
+    <TestCase("630")>
+    <TestCase("6 30")>
+    <TestCase("6.30")>
+    Public Sub Should_Parse_TimeSpan_Of_Format(text As String)
+        Dim expected = New TimeSpan(6, 30, 0)
+        Dim result = Calendar.ToTimespan(text)
+
+        Assert.AreEqual(expected, result)
+    End Sub
+
+    <TestCase("6:30 AM", "06:30")>
+    <TestCase("6:30 PM", "18:30")>
+    <TestCase("12:00 AM", "00:00")>
+    <TestCase("12:00 PM", "12:00")>
+    Public Sub Should_Parse_TimeSpan_Of_Correct_Clock(text As String, correct As String)
+        Dim expected = TimeSpan.Parse(correct)
+        Dim result = Calendar.ToTimespan(text)
+
+        Assert.AreEqual(expected, result)
+    End Sub
+
+    <TestCase("")>
+    <TestCase("  ")>
+    <TestCase("2500")>
+    <TestCase("63")>
+    <TestCase("22:30 AM")>
+    Public Sub Should_Fail_And_Return_Null(text As String)
+        Dim expected = Calendar.ToTimespan(text)
+
+        Assert.IsNull(expected)
+    End Sub
+
+End Class

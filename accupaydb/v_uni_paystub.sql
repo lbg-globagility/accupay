@@ -6,7 +6,7 @@
 
 DROP VIEW IF EXISTS `v_uni_paystub`;
 DROP TABLE IF EXISTS `v_uni_paystub`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` VIEW `v_uni_paystub` AS SELECT
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_uni_paystub` AS SELECT
         RowID,
         OrganizationID,
         PayPeriodID,
