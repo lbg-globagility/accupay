@@ -188,7 +188,7 @@ Public Class ListOfValueForm
         If dt.Rows.Count > 0 Then
             For Each drow As DataRow In dt.Rows
                 With drow
-                    Dim type As String
+                    Dim type As String = String.Empty
                     txtDescription.Text = .Item("Description").ToString
 
                     txtDescription.SelectionStart = 1
