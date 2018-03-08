@@ -15,18 +15,22 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `GetEmployees`(
 BEGIN
 
     DECLARE i
-	         , payfreq_rowid INT(11) DEFAULT 0;
+	         , payfreq_rowid
+	         , payfreqrowid INT(11) DEFAULT 0;
     DECLARE max_limit INT(11);
     DECLARE page_num INT(11) DEFAULT 50;
     DECLARE max_val INT(11) DEFAULT 0;
     
     SELECT pp.TotalGrossSalary
+    , pf.RowID
     FROM payperiod pp
+    INNER JOIN payfrequency pf ON pf.PayFrequencyType = 'WEEKLY'
     WHERE pp.OrganizationID = $OrganizationID
     AND pp.PayFromDate = $PayDateFrom
     AND pp.PayToDate = $PayDateTo
     LIMIT 1
-    INTO payfreq_rowid;
+    INTO payfreq_rowid
+	      ,payfreqrowid;
     
     SELECT
         e.RowID,
@@ -42,7 +46,7 @@ BEGIN
         e.SickLeaveBalance,
         e.MaternityLeaveBalance,
         e.OtherLeaveBalance,
-        (e.PayFrequencyID = payfreq_rowid) `IsWeeklyPaid`,
+        (e.PayFrequencyID = payfreqrowid) `IsWeeklyPaid`,
         (e.AgencyID IS NOT NULL) `IsUnderAgency`,
         IF(
             e.AgencyID IS NOT NULL,
