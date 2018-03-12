@@ -841,7 +841,7 @@ END IF;
  * If the employee filed a leave for a day for which the leave hours is not enough,
  * file the unaccounted hours as absent hours.
  */
-IF hasLeave AND (leaveHours + regularHours + lateHours + undertimeHours) < shiftHours THEN
+IF hasLeave AND (leaveHours + regularHours + regularHolidayHours + specialHolidayHours + lateHours + undertimeHours) < shiftHours THEN
     SET absentHours = shiftHours - (leaveHours + regularHours);
 END IF;
 
@@ -1071,8 +1071,8 @@ ELSEIF isHoliday THEN
 
     SET holidayPay = specialHolidayPay + regularHolidayPay;
 
-																			  
-																			  
+
+
 
     /** DEPRECATE: to be replaced with _special and _regular holiday ot pay */
     SET overtimeAmount = (overtimeHours * hourlyRate) * otrate;
