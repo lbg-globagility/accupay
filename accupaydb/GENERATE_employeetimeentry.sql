@@ -203,7 +203,7 @@ DECLARE isHolidayPayInclusive BOOLEAN DEFAULT FALSE;
 
 DECLARE lateHoursBeforeBreak DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE lateHoursAfterBreak DECIMAL(11, 6) DEFAULT 0.0;
-DECLARE lateHours DECIMAL(11, 2) DEFAULT 0.0;
+DECLARE lateHours DECIMAL(11, 6) DEFAULT 0.0;
 DECLARE lateAmount DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE undertimeHoursBeforeBreak DECIMAL(11, 6) DEFAULT 0.0;
@@ -841,7 +841,7 @@ END IF;
  * If the employee filed a leave for a day for which the leave hours is not enough,
  * file the unaccounted hours as absent hours.
  */
-IF hasLeave AND (leaveHours + regularHours) < shiftHours THEN
+IF hasLeave AND (leaveHours + regularHours + lateHours + undertimeHours) < shiftHours THEN
     SET absentHours = shiftHours - (leaveHours + regularHours);
 END IF;
 
@@ -1071,8 +1071,12 @@ ELSEIF isHoliday THEN
 
     SET holidayPay = specialHolidayPay + regularHolidayPay;
 
+																			  
+																			  
+
     /** DEPRECATE: to be replaced with _special and _regular holiday ot pay */
     SET overtimeAmount = (overtimeHours * hourlyRate) * otrate;
+
     SET restDayOTPay = (restDayOTHours * hourlyRate) * restdayot_rate;
 
     SET totalDayPay = COALESCE(regularAmount, 0) +
