@@ -1059,10 +1059,12 @@ ELSEIF isHoliday THEN
         SET applicableHolidayRate = IF(isHolidayPayInclusive, applicableHolidayRate - 1, applicableHolidayRate);
 
         SET specialHolidayPay = specialHolidayHours * hourlyRate * applicableHolidayRate;
+        SET leavePay = leaveHours * hourlyRate * applicableHolidayRate;
     END IF;
 
     IF isCalculatingRegularHoliday THEN
         SET regularHolidayPay = regularHolidayHours * hourlyRate;
+        SET leavePay = leaveHours * hourlyRate;
 
         IF NOT isHolidayPayInclusive THEN
             SET regularHolidayPay = regularHolidayPay + IF(hasWorkedLastWorkingDay, dailyRate, 0);
@@ -1070,9 +1072,6 @@ ELSEIF isHoliday THEN
     END IF;
 
     SET holidayPay = specialHolidayPay + regularHolidayPay;
-
-
-
 
     /** DEPRECATE: to be replaced with _special and _regular holiday ot pay */
     SET overtimeAmount = (overtimeHours * hourlyRate) * otrate;

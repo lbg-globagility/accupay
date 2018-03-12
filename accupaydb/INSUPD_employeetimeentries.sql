@@ -150,7 +150,7 @@ INSERT INTO employeetimeentry
     IF(etent_LeaveType = 'Vacation leave', etent_LeaveHours, 0),
     IF(etent_LeaveType = 'Sick leave', etent_LeaveHours, 0),
     IF(etent_LeaveType = 'Maternity leave', etent_LeaveHours, 0),
-    IF(etent_LeaveType = 'Other leave', etent_LeaveHours, 0),
+    IF(etent_LeaveType = 'Others', etent_LeaveHours, 0),
     etent_LeavePay,
     etent_AbsentHours,
     etent_AbsentAmount
@@ -192,7 +192,7 @@ UPDATE
     VacationLeaveHours = IF(etent_LeaveType = 'Vacation leave', etent_LeaveHours, 0),
     SickLeaveHours = IF(etent_LeaveType = 'Sick leave', etent_LeaveHours, 0),
     MaternityLeaveHours = IF(etent_LeaveType = 'Maternity leave', etent_LeaveHours, 0),
-    OtherLeaveHours = IF(etent_LeaveType = 'Other leave', etent_LeaveHours, 0),
+    OtherLeaveHours = IF(etent_LeaveType = 'Others', etent_LeaveHours, 0),
     Leavepayment = etent_LeavePay,
     AbsentHours = etent_AbsentHours,
     Absent = etent_AbsentAmount;
