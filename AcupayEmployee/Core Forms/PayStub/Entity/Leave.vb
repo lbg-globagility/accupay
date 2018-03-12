@@ -50,6 +50,12 @@ Namespace Global.AccuPay.Entity
 
         Public Property Status As String
 
+        Public ReadOnly Property IsPaid As Boolean
+            Get
+                Return LeaveType <> "Leave w/o Pay"
+            End Get
+        End Property
+
     End Class
 
 End Namespace

@@ -54,18 +54,9 @@ Public Class LeaveForm
         bgwEmpNames.RunWorkerAsync()
     End Sub
 
-    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click
+    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnApply.Click
         btnApply.Focus()
 
-        If TxtEmployeeNumber1.Exists _
-            And TxtEmployeeFullName1.Exists Then
-
-            Panel1.Enabled = False
-            bgSaving.RunWorkerAsync()
-        End If
-    End Sub
-
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnApply.Click
         Try
             Using context = New PayrollContext()
                 Dim employee = context.Employees.
@@ -85,94 +76,32 @@ Public Class LeaveForm
                     .Status = "Pending"
                 }
 
-                Dim ledger = context.LeaveLedgers.
+                Dim ledger = context.LeaveLedgers.Include(Function(l) l.LastTransaction).
                     Where(Function(l) l.EmployeeID = e_rowid).
                     Where(Function(l) l.Product.Name = leave.LeaveType).
                     FirstOrDefault()
 
-                If ledger Is Nothing Then
-                    Throw New Exception($"Sorry but we can't find your {leave.LeaveType} leave ledger.")
+                If leave.IsPaid Then
+                    If ledger Is Nothing Then
+                        MsgBox($"Sorry, but we can't find your {leave.LeaveType} leave ledger. Please contact management.")
+                        Return
+                    End If
+
+                    If ledger.LastTransaction Is Nothing Or ledger.LastTransaction.Balance <= 0 Then
+                        MsgBox($"Sorry, but you don't have anymore remaining balance for {leave.LeaveType} leaves. Please contact management.")
+                        Return
+                    End If
                 End If
+
+                context.Leaves.Add(leave)
+                context.SaveChanges()
+
+                MsgBox("Leave has been submitted.", MsgBoxStyle.OkOnly, "Leave Submitted")
+                Close()
             End Using
         Catch ex As Exception
             MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Failed to save leave")
         End Try
-    End Sub
-
-    Function INSUPD_employeeleave() As Object
-        Dim param(14, 2) As Object
-
-        param(0, 0) = "elv_RowID"
-        param(1, 0) = "elv_OrganizationID"
-        param(2, 0) = "elv_LeaveStartTime"
-        param(3, 0) = "elv_LeaveType"
-        param(4, 0) = "elv_CreatedBy"
-        param(5, 0) = "elv_LastUpdBy"
-        param(6, 0) = "elv_EmployeeID"
-        param(7, 0) = "elv_LeaveEndTime"
-        param(8, 0) = "elv_LeaveStartDate"
-        param(9, 0) = "elv_LeaveEndDate"
-        param(10, 0) = "elv_Reason"
-        param(11, 0) = "elv_Comments"
-        param(12, 0) = "elv_Image"
-        param(13, 0) = "elv_Status"
-        param(14, 0) = "elv_OverrideLeaveBal"
-
-        param(0, 1) = If(LeaveRowID = Nothing, DBNull.Value, LeaveRowID)
-        param(1, 1) = EXECQUER("SELECT OrganizationID FROM employee WHERE RowID='" & e_rowid & "';") 'TxtEmployeeNumber1.RowIDValue
-        'previous_orgID
-
-        param(2, 1) = dtpstarttime.Value.ToString("HH:mm:00")
-
-        'param(3, 1) = LeaveTypeValue 'Leave type
-        param(3, 1) = cboleavetypes.Tag(1) 'Leave type
-        param(4, 1) = If(z_User = 0, DBNull.Value, z_User)
-        param(5, 1) = param(4, 1) 'z_User
-        param(6, 1) = e_rowid 'TxtEmployeeNumber1.RowIDValue 'n_EmployeeRowID
-
-        param(7, 1) = dtpendtime.Value.ToString("HH:mm:00")
-        param(8, 1) = dtpstartdate.Value.ToString("yyyy-MM-dd") 'Start date
-        param(9, 1) = dtpendate.Value.ToString("yyyy-MM-dd") 'End date
-        param(10, 1) = Trim(txtreason.Text) 'Reason
-        param(11, 1) = Trim(txtcomments.Text) 'Comments
-
-        Dim imageobj As Object = DBNull.Value
-        param(12, 1) = imageobj
-        param(13, 1) = If(LeaveStatusValue = Nothing, "Pending", LeaveStatusValue) 'CboListOfValue1.Text
-
-        Dim leavetypeRowID = If(cboleavetypes.Tag(0) Is Nothing, DBNull.Value,
-                                If(cboleavetypes.Tag(0) = Nothing, DBNull.Value, cboleavetypes.Tag(0)))
-
-        param(14, 1) = 0
-
-        Return EXEC_INSUPD_PROCEDURE(param,
-                                      "INSUPD_employeeleave_indepen",
-                                      "empleaveID")
-    End Function
-
-    Private Sub bgSaving_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgSaving.DoWork
-        'LeaveRowID
-        If LeaveRowID = Nothing Then
-            LeaveRowID =
-                INSUPD_employeeleave()
-        Else
-            INSUPD_employeeleave()
-        End If
-    End Sub
-
-    Private Sub bgSaving_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgSaving.RunWorkerCompleted
-        If e.Error IsNot Nothing Then
-            MessageBox.Show("Error: " & e.Error.Message)
-        ElseIf e.Cancelled Then
-            MessageBox.Show("Background work cancelled.")
-        Else
-            If TxtEmployeeNumber1.Exists Then
-                MsgBox("Leave successfully saved", MsgBoxStyle.Information)
-                Me.Close()
-            End If
-        End If
-
-        Panel1.Enabled = True
     End Sub
 
     Private Sub TxtEmployeeNumber1_Leave(sender As Object, e As EventArgs) Handles TxtEmployeeNumber1.Leave
