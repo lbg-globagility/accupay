@@ -816,44 +816,39 @@ Public Class EmpPosition
                              Optional pos_DivisionId As Object = Nothing,
                              Optional jobLevelID As Integer? = Nothing) As Object
         Dim return_value = Nothing
+
+        Dim params =
+            New Object() {If(pos_RowID = Nothing, DBNull.Value, pos_RowID),
+                           Trim(pos_PositionName),
+                           z_User,
+                           orgztnID,
+                           z_User,
+                           If(pos_ParentPositionID = Nothing, DBNull.Value, pos_ParentPositionID),
+                           If(pos_DivisionId = Nothing, DBNull.Value, pos_DivisionId),
+                           jobLevelID}
+
+        Dim sql As New SQL(
+            String.Concat("SELECT INSUPD_position(",
+                          "?pos_RowID",
+                          ", ?pos_PositionName",
+                          ", ?pos_CreatedBy",
+                          ", ?pos_OrganizationID",
+                          ", ?pos_LastUpdBy",
+                          ", ?pos_ParentPositionID",
+                          ", ?pos_DivisionId",
+                          ", ?pos_JobLevelID) `Result`;"),
+            params)
+
         Try
-            If conn.State = ConnectionState.Open Then : conn.Close() : End If
-
-            cmd = New MySqlCommand("INSUPD_position", conn)
-
-            conn.Open()
-
-            With cmd
-                .Parameters.Clear()
-
-                .CommandType = CommandType.StoredProcedure
-
-                .Parameters.Add("positID", MySqlDbType.Int32)
-
-                .Parameters.AddWithValue("pos_RowID", If(pos_RowID = Nothing, DBNull.Value, pos_RowID))
-                .Parameters.AddWithValue("pos_PositionName", Trim(pos_PositionName))
-                .Parameters.AddWithValue("pos_CreatedBy", z_User)
-                .Parameters.AddWithValue("pos_OrganizationID", orgztnID)
-                .Parameters.AddWithValue("pos_LastUpdBy", z_User)
-                .Parameters.AddWithValue("pos_ParentPositionID", If(pos_ParentPositionID = Nothing, DBNull.Value, pos_ParentPositionID))
-                .Parameters.AddWithValue("pos_DivisionId", If(pos_DivisionId = Nothing, DBNull.Value, pos_DivisionId))
-                .Parameters.AddWithValue("pos_JobLevelID", jobLevelID)
-
-                .Parameters("positID").Direction = ParameterDirection.ReturnValue
-
-                Dim datread As MySqlDataReader
-
-                datread = .ExecuteReader()
-
-                return_value = datread(0) 'INSUPD_position
-
-            End With
+            If sql.HasError Then
+                Throw sql.ErrorException
+            Else
+                return_value = sql.GetFoundRow
+            End If
         Catch ex As Exception
-            MsgBox(ex.Message & " " & "INSUPD_position", , "Error")
-        Finally
-            conn.Close()
-            cmd.Dispose()
+            MsgBox(ex.Message, MsgBoxStyle.Critical)
         End Try
+
         Return return_value
     End Function
 
