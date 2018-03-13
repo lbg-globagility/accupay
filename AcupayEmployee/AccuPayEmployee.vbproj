@@ -291,6 +291,7 @@
     <Compile Include="Core Forms\USER CONTROLS\ImportAllowance.vb" />
     <Compile Include="Core Forms\USER CONTROLS\ImportOB.vb" />
     <Compile Include="Core Forms\USER CONTROLS\ImportOvertime.vb" />
+    <Compile Include="Core Forms\USER CONTROLS\MySQL\DatabaseConnect.vb" />
     <Compile Include="Core Forms\USER CONTROLS\MySQL\IMySQLCommander.vb" />
     <Compile Include="Core Forms\USER CONTROLS\MySQL\MySQLCommander.vb" />
     <Compile Include="Core Forms\USER CONTROLS\MySQL\MySQLExecuteCommand.vb" />
@@ -432,7 +433,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.manifest" />
     <None Include="log4.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
