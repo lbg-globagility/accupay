@@ -1388,6 +1388,12 @@
     <Compile Include="Time Attendance Form\EmployeeShiftMassUpdate.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Time Attendance Form\MassOvertimeForm.Designer.vb">
+      <DependentUpon>MassOvertimeForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Time Attendance Form\MassOvertimeForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Time Attendance Form\PayrollGenerateForm.Designer.vb">
       <DependentUpon>PayrollGenerateForm.vb</DependentUpon>
     </Compile>
@@ -1968,6 +1974,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Time Attendance Form\EmployeeShiftMassUpdate.resx">
       <DependentUpon>EmployeeShiftMassUpdate.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Time Attendance Form\MassOvertimeForm.resx">
+      <DependentUpon>MassOvertimeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Time Attendance Form\PayrollGenerateForm.resx">
       <DependentUpon>PayrollGenerateForm.vb</DependentUpon>
