@@ -121,6 +121,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Dim margin_size() As Decimal = New Decimal() {0.25D, 0.75D, 0.3D}
 
+    Private sys_ownr As New SystemOwner
+
     Public Property Name As String = "" Implements IReportProvider.Name
 
     Property IsActual As Boolean
@@ -133,6 +135,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
     End Property
 
     Public Sub Run() Implements IReportProvider.Run
+
+        Dim is_goldwings As Boolean = (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
 
         Static last_cell_column As String = basic_alphabet.Last
 
@@ -330,6 +334,28 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                             worksheet.Cells(sum_cell_range).Style.Font.Bold = True
                             worksheet.Cells(sum_cell_range).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
+
+                            If is_goldwings Then
+                                Dim signatur_field_index As Integer = (row_indx + 1)
+                                With worksheet
+                                    .Cells(String.Concat("A", signatur_field_index)).Value = "Prepared by: "
+                                    .Cells(String.Join(":",
+                                                       String.Concat("A", signatur_field_index),
+                                                       String.Concat("B", signatur_field_index))).Merge = True
+
+                                    signatur_field_index += 1
+                                    .Cells(String.Concat("A", signatur_field_index)).Value = "Audited by: "
+                                    .Cells(String.Join(":",
+                                                       String.Concat("A", signatur_field_index),
+                                                       String.Concat("B", signatur_field_index))).Merge = True
+
+                                    signatur_field_index += 1
+                                    .Cells(String.Concat("A", signatur_field_index)).Value = "Approved by: "
+                                    .Cells(String.Join(":",
+                                                       String.Concat("A", signatur_field_index),
+                                                       String.Concat("B", signatur_field_index))).Merge = True
+                                End With
+                            End If
 
                             With worksheet.PrinterSettings
 
