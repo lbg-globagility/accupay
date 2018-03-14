@@ -35,12 +35,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: ".\bin\Debug\AccuPaySelfService.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\AccuPaySelfService.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\AccuPaySelfService.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\AccuPaySelfService.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\AccuPaySelfService.vshost.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\AccuPaySelfService.vshost.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\AccuPaySelfService.vshost.exe.manifest"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\AccuPaySelfService.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\Aga.Controls.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\app.config"; DestDir: "{app}"; Flags: ignoreversion
