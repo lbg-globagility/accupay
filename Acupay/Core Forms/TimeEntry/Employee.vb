@@ -147,6 +147,18 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property IsDaily As Boolean
+            Get
+                Return (EmployeeType = "Daily")
+            End Get
+        End Property
+
+        Public ReadOnly Property IsMonthly As Boolean
+            Get
+                Return (EmployeeType = "Monthly")
+            End Get
+        End Property
+
         Public Property AdvancementPoints As Integer
 
         <ForeignKey("PositionID")>

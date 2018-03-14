@@ -138,6 +138,8 @@ Public Class PayrollGeneration
 
     Private _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
+    Private _actualtimeentries As ICollection(Of ActualTimeEntry)
+
     Sub New(employee As DataRow,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
@@ -224,6 +226,10 @@ Public Class PayrollGeneration
         _timeEntries2 = resources.TimeEntries2.
             Where(Function(t) t.EmployeeID = _employee2.RowID).
             Where(Function(t) _payPeriod.PayFromDate <= t.Date And t.Date <= _payPeriod.PayToDate).
+            ToList()
+
+        _actualtimeentries = resources.ActualTimeEntries.
+            Where(Function(t) t.EmployeeID = _employee2.RowID).
             ToList()
 
         _payRates = resources.PayRates.ToDictionary(Function(p) p.RateDate)
@@ -483,6 +489,8 @@ Public Class PayrollGeneration
 
                 context.LoanTransactions.AddRange(newLoanTransactions)
 
+                ComputeThirteenthMonthPay(salary)
+
                 context.SaveChanges()
             End Using
 
@@ -501,6 +509,44 @@ Public Class PayrollGeneration
                 End If
             End If
         End Try
+    End Sub
+
+    Private Sub ComputeThirteenthMonthPay(salaryrow As DataRow)
+
+        If _paystub.ThirteenthMonthPay Is Nothing Then
+            _paystub.ThirteenthMonthPay = New ThirteenthMonthPay() With {.OrganizationID = z_OrganizationID,
+                .CreatedBy = z_User}
+        Else
+            _paystub.ThirteenthMonthPay = New ThirteenthMonthPay() With {.LastUpdBy = z_User}
+        End If
+
+        Dim contractual_employment_statuses =
+            New String() {"Contractual", "SERVICE CONTRACT"}
+
+        Dim month_count = 12
+
+        Dim basicpay_13month As Decimal = 0
+
+        If _employee2.IsDaily Then
+
+            basicpay_13month =
+                If(contractual_employment_statuses.Contains(_employee2.EmploymentStatus),
+                _timeEntries2.Sum(Function(t) t.BasicDayPay + t.LeavePay),
+                _actualtimeentries.Sum(Function(t) t.BasicDayPay + t.LeavePay))
+
+        ElseIf _employee2.IsMonthly Then
+            Dim basic_salary = Convert.ToDecimal(salaryrow("BasicPay"))
+
+            basicpay_13month =
+                (basic_salary -
+                _actualtimeentries.Sum(Function(t) t.LateDeduction + t.UndertimeDeduction + t.AbsentDeduction))
+
+        End If
+
+        _paystub.ThirteenthMonthPay.BasicPay = basicpay_13month
+
+        _paystub.ThirteenthMonthPay.Amount = (basicpay_13month / month_count)
+
     End Sub
 
     Private Sub ComputeHours()

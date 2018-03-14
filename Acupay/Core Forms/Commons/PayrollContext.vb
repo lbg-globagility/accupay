@@ -81,4 +81,6 @@ Public Class PayrollContext
 
     Public Overridable Property Leaves As DbSet(Of Leave)
 
+    Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
+
 End Class

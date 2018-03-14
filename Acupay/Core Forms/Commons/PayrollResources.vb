@@ -24,6 +24,8 @@ Public Class PayrollResources
 
     Private _timeEntries2 As ICollection(Of TimeEntry)
 
+    Private _actualtimeentries As ICollection(Of ActualTimeEntry)
+
     Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
 
     Private _loanTransactions As ICollection(Of PayrollSys.LoanTransaction)
@@ -146,6 +148,12 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property ActualTimeEntries As ICollection(Of ActualTimeEntry)
+        Get
+            Return _actualtimeentries
+        End Get
+    End Property
+
     Public ReadOnly Property Adjustments As ICollection(Of Adjustment)
 
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
@@ -176,7 +184,8 @@ Public Class PayrollResources
             LoadPayPeriod(),
             LoadPayRates(),
             LoadAllowances(),
-            LoadTimeEntries2()
+            LoadTimeEntries2(),
+            LoadActualTimeEntries()
         })
     End Function
 
@@ -255,6 +264,23 @@ Public Class PayrollResources
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("TimeEntries", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadActualTimeEntries() As Task
+
+        Try
+            Using context = New PayrollContext()
+                Dim query = From t In context.ActualTimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
+                            Where t.OrganizationID = z_OrganizationID And
+                                _payDateFrom <= t.Date And
+                                t.Date <= _payDateTo
+                            Select t
+
+                _actualtimeentries = Await query.ToListAsync()
+            End Using
+        Catch ex As Exception
+            Throw New ResourceLoadingException("ActualTimeEntries", ex)
         End Try
     End Function
 

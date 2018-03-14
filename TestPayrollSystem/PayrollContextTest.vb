@@ -103,4 +103,11 @@ Public Class PayrollContextTest
         Assert.IsInstanceOf(Of Leave)(leave)
     End Sub
 
+    <Test>
+    Public Sub Should_Retrieve_ActuaTimeEntries()
+        Dim actual_timeentry = _context.ActualTimeEntries.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of ActualTimeEntry)(actual_timeentry)
+    End Sub
+
 End Class

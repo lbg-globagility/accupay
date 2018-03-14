@@ -337,6 +337,7 @@
     <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
     <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ActualAdjustment.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\ActualTimeEntry.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Adjustment.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Allowance.vb" />
     <Compile Include="Core Forms\PayStub\Entity\AllowanceItem.vb" />
