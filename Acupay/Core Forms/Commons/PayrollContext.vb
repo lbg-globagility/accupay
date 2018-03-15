@@ -63,6 +63,8 @@ Public Class PayrollContext
 
     Public Overridable Property Organizations As DbSet(Of Organization)
 
+    Public Overridable Property Divisions As DbSet(Of Division)
+
     Public Overridable Property ShiftSchedules As DbSet(Of ShiftSchedule)
 
     Public Overridable Property TimeEntries As DbSet(Of TimeEntry)
@@ -80,5 +82,7 @@ Public Class PayrollContext
     Public Overridable Property LeaveTransactions As DbSet(Of LeaveTransaction)
 
     Public Overridable Property Leaves As DbSet(Of Leave)
+
+    Public Overridable Property Overtimes As DbSet(Of Overtime)
 
 End Class

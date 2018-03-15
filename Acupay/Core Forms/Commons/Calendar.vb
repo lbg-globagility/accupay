@@ -2,7 +2,7 @@
 
 Imports System.Text.RegularExpressions
 
-Namespace Global.AccuPay
+Namespace Global.AccuPay.Tools
 
     Public Class Calendar
 

@@ -153,4 +153,9 @@
         previousForm = TimeEntrySummaryForm
     End Sub
 
+    Private Sub OvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
+        ChangeForm(MassOvertimeForm, "Employee Time Entry Logs")
+        previousForm = MassOvertimeForm
+    End Sub
+
 End Class

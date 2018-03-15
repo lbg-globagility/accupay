@@ -1,24 +1,43 @@
-﻿Option Strict On
+﻿
+Option Strict On
 
+Imports System.ComponentModel.DataAnnotations
+Imports System.ComponentModel.DataAnnotations.Schema
+
+<Table("employeeovertime")>
 Public Class Overtime
 
-    Public Property OvertimeDate As Date
+    <Key>
+    <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
+    Public Property RowID As Integer?
 
-    Public Property StartTime As TimeSpan
+    Public Property OrganizationID As Integer?
 
-    Public Property EndTime As TimeSpan
+    <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
+    Public Property Created As DateTime
 
+    Public Property CreatedBy As Integer?
+
+    <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
+    Public Property LastUpd As DateTime?
+
+    Public Property EmployeeID As Integer?
+
+    Public Property OTStartTime As TimeSpan?
+
+    Public Property OTEndTime As TimeSpan?
+
+    Public Property OTStartDate As Date
+
+    Public Property OTEndDate As Date
+
+    <NotMapped>
     Public Property RangeStart As Date
 
+    <NotMapped>
     Public Property RangeEnd As Date
 
-    Public Sub New(overtimeDate As Date, startTime As TimeSpan, endTime As TimeSpan)
-        Me.OvertimeDate = overtimeDate
-        Me.StartTime = startTime
-        Me.EndTime = endTime
-
-        RangeStart = TimeUtility.RangeStart(overtimeDate, startTime)
-        RangeEnd = TimeUtility.RangeEnd(overtimeDate, startTime, endTime)
+    Public Sub New()
     End Sub
 
 End Class

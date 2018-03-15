@@ -103,4 +103,11 @@ Public Class PayrollContextTest
         Assert.IsInstanceOf(Of Leave)(leave)
     End Sub
 
+    <Test>
+    Public Sub Should_Retrieve_Overtime()
+        Dim overtime = _context.Overtimes.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of Overtime)(overtime)
+    End Sub
+
 End Class
