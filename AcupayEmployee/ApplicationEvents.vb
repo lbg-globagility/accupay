@@ -25,27 +25,6 @@ Namespace My
         End Sub
 
         Private Sub MyApplication_Shutdown(sender As Object, e As EventArgs) Handles Me.Shutdown
-            If MachineLocalization IsNot Nothing Then
-
-                Thread.Sleep(1000)
-
-                Try
-
-                    For Each drow As DataRow In MachineLocalization.Rows
-
-                        Thread.Sleep(100)
-
-                    Next
-
-                Catch ex As Exception
-                    MsgBox(ex, MyBase.ToString)
-
-                Finally
-                    MachineLocalization.Dispose()
-
-                End Try
-
-            End If
         End Sub
 
         Private Sub MyApplication_Startup(sender As Object, e As ApplicationServices.StartupEventArgs) Handles Me.Startup
@@ -71,31 +50,7 @@ Namespace My
                     EXECQUER("CALL SET_group_concat_max_len();")
                 End If
             End Try
-
-            custom_mysqldateformat = "%" & machineShortDateFormat.Replace("/", "/%")
-
-            custom_mysqldateformat = custom_mysqldateformat.ToLower
-
-            If custom_mysqldateformat.Contains("yyyy") Then
-                custom_mysqldateformat = custom_mysqldateformat.Replace("yyyy", "Y")
-            ElseIf custom_mysqldateformat.Contains("yy") Then
-                custom_mysqldateformat = custom_mysqldateformat.Replace("yy", "Y")
-            End If
-
-            If custom_mysqldateformat.Contains("mm") Then
-                custom_mysqldateformat = custom_mysqldateformat.Replace("mm", "c")
-            ElseIf custom_mysqldateformat.Contains("m") Then
-                custom_mysqldateformat = custom_mysqldateformat.Replace("m", "c")
-            End If
-
-            If custom_mysqldateformat.Contains("dd") Then
-                custom_mysqldateformat = custom_mysqldateformat.Replace("dd", "e")
-            ElseIf custom_mysqldateformat.Contains("d") Then
-                custom_mysqldateformat = custom_mysqldateformat.Replace("d", "e")
-            End If
         End Sub
-
-        Dim main_process As Process
 
         Private Sub MyApplication_StartupNextInstance(sender As Object, e As ApplicationServices.StartupNextInstanceEventArgs) Handles Me.StartupNextInstance
         End Sub

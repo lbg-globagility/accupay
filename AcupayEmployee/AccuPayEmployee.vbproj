@@ -332,12 +332,6 @@
     <Compile Include="Core Forms\USER CONTROLS\DataGridViewDateColumn.vb" />
     <Compile Include="Core Forms\USER CONTROLS\DataGridViewNumberColumn.vb" />
     <Compile Include="Core Forms\USER CONTROLS\DataGridViewTimeColumn.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\DiscipAction.designer.vb">
-      <DependentUpon>DiscipAction.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\DiscipAction.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Core Forms\USER CONTROLS\TextBoxDateTime.Designer.vb">
       <DependentUpon>TextBoxDateTime.vb</DependentUpon>
     </Compile>
@@ -365,7 +359,6 @@
     <Compile Include="Core Forms\Commons\ExecSQLMultiDimArrProcedure.vb" />
     <Compile Include="Core Forms\Commons\ExecSQLProcedure.vb" />
     <Compile Include="Core Forms\Commons\ExecuteQuery.vb" />
-    <Compile Include="Core Forms\Commons\FileObserver.vb" />
     <Compile Include="Core Forms\Commons\ImportLoans.vb" />
     <Compile Include="Core Forms\Commons\KillAppCatcher.vb" />
     <Compile Include="Core Forms\Commons\myModule.vb" />
@@ -415,9 +408,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="General Forms\MetroLogin.resx">
       <DependentUpon>MetroLogin.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\USER CONTROLS\DiscipAction.resx">
-      <DependentUpon>DiscipAction.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\USER CONTROLS\TextBoxDateTime.resx">
       <DependentUpon>TextBoxDateTime.vb</DependentUpon>
