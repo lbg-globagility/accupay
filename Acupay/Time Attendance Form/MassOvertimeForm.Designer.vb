@@ -41,9 +41,13 @@ Partial Class MassOvertimeForm
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TimeTextBox2 = New Acupay.TimeTextBox()
-        Me.TimeTextBox1 = New Acupay.TimeTextBox()
-        Me.UserTreeView = New Acupay.AccuPayTreeView()
+        Me.EndTimeTextBox = New Acupay.TimeTextBox()
+        Me.StartTimeTextBox = New Acupay.TimeTextBox()
+        Me.EmployeeTreeView = New Acupay.AccuPayTreeView()
+        Me.ApplyButton = New System.Windows.Forms.Button()
+        Me.SaveButton = New System.Windows.Forms.Button()
+        Me.EmployeeTextBox = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         CType(Me.OvertimeDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -163,39 +167,77 @@ Partial Class MassOvertimeForm
         Me.DataGridViewTextBoxColumn6.HeaderText = "OT End"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         '
-        'TimeTextBox2
+        'EndTimeTextBox
         '
-        Me.TimeTextBox2.Location = New System.Drawing.Point(760, 8)
-        Me.TimeTextBox2.Name = "TimeTextBox2"
-        Me.TimeTextBox2.Size = New System.Drawing.Size(100, 20)
-        Me.TimeTextBox2.TabIndex = 7
+        Me.EndTimeTextBox.Location = New System.Drawing.Point(632, 8)
+        Me.EndTimeTextBox.Name = "EndTimeTextBox"
+        Me.EndTimeTextBox.Size = New System.Drawing.Size(100, 20)
+        Me.EndTimeTextBox.TabIndex = 7
         '
-        'TimeTextBox1
+        'StartTimeTextBox
         '
-        Me.TimeTextBox1.Location = New System.Drawing.Point(528, 8)
-        Me.TimeTextBox1.Name = "TimeTextBox1"
-        Me.TimeTextBox1.Size = New System.Drawing.Size(100, 20)
-        Me.TimeTextBox1.TabIndex = 7
+        Me.StartTimeTextBox.Location = New System.Drawing.Point(528, 8)
+        Me.StartTimeTextBox.Name = "StartTimeTextBox"
+        Me.StartTimeTextBox.Size = New System.Drawing.Size(100, 20)
+        Me.StartTimeTextBox.TabIndex = 7
         '
-        'UserTreeView
+        'EmployeeTreeView
         '
-        Me.UserTreeView.CheckBoxes = True
-        Me.UserTreeView.Location = New System.Drawing.Point(8, 8)
-        Me.UserTreeView.Name = "UserTreeView"
-        Me.UserTreeView.Size = New System.Drawing.Size(224, 576)
-        Me.UserTreeView.TabIndex = 1
+        Me.EmployeeTreeView.CheckBoxes = True
+        Me.EmployeeTreeView.Location = New System.Drawing.Point(8, 64)
+        Me.EmployeeTreeView.Name = "EmployeeTreeView"
+        Me.EmployeeTreeView.Size = New System.Drawing.Size(224, 520)
+        Me.EmployeeTreeView.TabIndex = 1
+        '
+        'ApplyButton
+        '
+        Me.ApplyButton.Location = New System.Drawing.Point(736, 8)
+        Me.ApplyButton.Name = "ApplyButton"
+        Me.ApplyButton.Size = New System.Drawing.Size(56, 23)
+        Me.ApplyButton.TabIndex = 8
+        Me.ApplyButton.Text = "Apply"
+        Me.ApplyButton.UseVisualStyleBackColor = True
+        '
+        'SaveButton
+        '
+        Me.SaveButton.Location = New System.Drawing.Point(800, 8)
+        Me.SaveButton.Name = "SaveButton"
+        Me.SaveButton.Size = New System.Drawing.Size(56, 23)
+        Me.SaveButton.TabIndex = 9
+        Me.SaveButton.Text = "Save"
+        Me.SaveButton.UseVisualStyleBackColor = True
+        '
+        'EmployeeTextBox
+        '
+        Me.EmployeeTextBox.Location = New System.Drawing.Point(8, 40)
+        Me.EmployeeTextBox.Name = "EmployeeTextBox"
+        Me.EmployeeTextBox.Size = New System.Drawing.Size(224, 20)
+        Me.EmployeeTextBox.TabIndex = 10
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(8, 8)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(100, 24)
+        Me.Label1.TabIndex = 11
+        Me.Label1.Text = "Search"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'MassOvertimeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(871, 597)
-        Me.Controls.Add(Me.TimeTextBox2)
-        Me.Controls.Add(Me.TimeTextBox1)
+        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.EmployeeTextBox)
+        Me.Controls.Add(Me.SaveButton)
+        Me.Controls.Add(Me.ApplyButton)
+        Me.Controls.Add(Me.EndTimeTextBox)
+        Me.Controls.Add(Me.StartTimeTextBox)
         Me.Controls.Add(Me.OvertimeDataGridView)
         Me.Controls.Add(Me.ToDatePicker)
         Me.Controls.Add(Me.FromDatePicker)
-        Me.Controls.Add(Me.UserTreeView)
+        Me.Controls.Add(Me.EmployeeTreeView)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "MassOvertimeForm"
         Me.Text = "MassOvertimeForm"
@@ -205,7 +247,7 @@ Partial Class MassOvertimeForm
 
     End Sub
 
-    Friend WithEvents UserTreeView As AccuPayTreeView
+    Friend WithEvents EmployeeTreeView As AccuPayTreeView
     Friend WithEvents FromDatePicker As DateTimePicker
     Friend WithEvents ToDatePicker As DateTimePicker
     Friend WithEvents OvertimeDataGridView As DataGridView
@@ -221,6 +263,10 @@ Partial Class MassOvertimeForm
     Friend WithEvents Column6 As DataGridViewTextBoxColumn
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
-    Friend WithEvents TimeTextBox1 As TimeTextBox
-    Friend WithEvents TimeTextBox2 As TimeTextBox
+    Friend WithEvents StartTimeTextBox As TimeTextBox
+    Friend WithEvents EndTimeTextBox As TimeTextBox
+    Friend WithEvents ApplyButton As Button
+    Friend WithEvents SaveButton As Button
+    Friend WithEvents EmployeeTextBox As TextBox
+    Friend WithEvents Label1 As Label
 End Class

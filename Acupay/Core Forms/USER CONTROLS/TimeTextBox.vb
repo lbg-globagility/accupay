@@ -13,13 +13,19 @@ Public Class TimeTextBox
 
     Private Const WM_NCPAINT As Integer = &H85
 
-    Private _hasErrors As Boolean
+    Private _hasError As Boolean
 
     Private _value As TimeSpan?
 
     Public ReadOnly Property Value As TimeSpan?
         Get
             Return _value
+        End Get
+    End Property
+
+    Public ReadOnly Property HasError As Boolean
+        Get
+            Return _hasError
         End Get
     End Property
 
@@ -33,12 +39,12 @@ Public Class TimeTextBox
             Return
         End If
 
-        Dim _value = Calendar.ToTimespan(Text)
+        _value = Calendar.ToTimespan(Text)
         If _value.HasValue Then
             Text = _value.Value.ToString("hh\:mm")
         End If
 
-        _hasErrors = (Not _value.HasValue) And (Not String.IsNullOrWhiteSpace(Text))
+        _hasError = (Not _value.HasValue) And (Not String.IsNullOrWhiteSpace(Text))
 
         MyBase.OnLeave(e)
     End Sub
@@ -49,7 +55,7 @@ Public Class TimeTextBox
             Return
         End If
 
-        If m.Msg = WM_NCPAINT And _hasErrors Then
+        If m.Msg = WM_NCPAINT And _hasError Then
             Dim dc = GetWindowDC(Handle)
             Using g = Graphics.FromHdc(dc)
                 g.DrawRectangle(Pens.Red, 0, 0, Width - 1, Height - 1)

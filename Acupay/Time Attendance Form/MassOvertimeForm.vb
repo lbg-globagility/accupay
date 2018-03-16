@@ -18,14 +18,32 @@ Public Class MassOvertimeForm
         End Get
     End Property
 
+    Public ReadOnly Property StartTime As TimeSpan?
+        Get
+            Return StartTimeTextBox.Value
+        End Get
+    End Property
+
+    Public ReadOnly Property EndTime As TimeSpan?
+        Get
+            Return EndTimeTextBox.Value
+        End Get
+    End Property
+
+    Public ReadOnly Property IsTimeValid As Boolean
+        Get
+            Return Not StartTimeTextBox.HasError And Not EndTimeTextBox.HasError
+        End Get
+    End Property
+
     Public Sub New()
         InitializeComponent()
         _presenter = New MassOvertimePresenter(Me)
     End Sub
 
     Public Sub ShowEmployees(divisions As ICollection(Of Division), employees As ICollection(Of Employee))
-        UserTreeView.BeginUpdate()
-        UserTreeView.Nodes.Clear()
+        EmployeeTreeView.BeginUpdate()
+        EmployeeTreeView.Nodes.Clear()
 
         Dim parentDivisions = divisions.Where(Function(d) d.IsRoot)
 
@@ -59,24 +77,24 @@ Public Class MassOvertimeForm
                 parentNode.Nodes.Add(childNode)
             Next
 
-            UserTreeView.Nodes.Add(parentNode)
+            EmployeeTreeView.Nodes.Add(parentNode)
         Next
 
-        UserTreeView.ExpandAll()
-        UserTreeView.EndUpdate()
+        EmployeeTreeView.ExpandAll()
+        EmployeeTreeView.EndUpdate()
     End Sub
 
-    Private Sub UserTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs)
-        RemoveHandler UserTreeView.AfterCheck, AddressOf UserTreeView_AfterCheck
+    Private Sub EmployeeTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs)
+        RemoveHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
         SetCheck(e.Node)
         SetParent(e.Node)
         _presenter.RefreshOvertime()
-        AddHandler UserTreeView.AfterCheck, AddressOf UserTreeView_AfterCheck
+        AddHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
 
     Public Function GetActiveEmployees() As IList(Of Employee)
         Dim list = New List(Of Employee)
-        For Each node As TreeNode In UserTreeView.Nodes
+        For Each node As TreeNode In EmployeeTreeView.Nodes
             TraverseNodes(node, list)
         Next
         Return list
@@ -124,7 +142,7 @@ Public Class MassOvertimeForm
 
     Private Sub MassOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _presenter.Load()
-        AddHandler UserTreeView.AfterCheck, AddressOf UserTreeView_AfterCheck
+        AddHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
 
     Public Function CreateDataTable() As DataTable
@@ -151,11 +169,25 @@ Public Class MassOvertimeForm
         _presenter.RefreshOvertime()
     End Sub
 
+    Public Sub RefreshDataGrid()
+        OvertimeDataGridView.Refresh()
+    End Sub
+
+    Private Sub ApplyButton_Click(sender As Object, e As EventArgs) Handles ApplyButton.Click
+        _presenter.ApplyToOvertimes()
+    End Sub
+
+    Private Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
+        _presenter.SaveOvertimes()
+    End Sub
+
 End Class
 
 Public Class MassOvertimePresenter
 
     Private _view As MassOvertimeForm
+
+    Private _overtimes As DataTable
 
     Public Sub New(view As MassOvertimeForm)
         _view = view
@@ -203,7 +235,7 @@ Public Class MassOvertimePresenter
         Dim dateTo = _view.DateTo
         Dim employees = _view.GetActiveEmployees()
 
-        Dim data = _view.CreateDataTable()
+        _overtimes = _view.CreateDataTable()
 
         Dim overtimesByEmployee = LoadOvertimes(dateFrom, dateTo, employees)
 
@@ -215,17 +247,34 @@ Public Class MassOvertimePresenter
                 Dim overtime = overtimesOfEmployee?.
                     FirstOrDefault(Function(o) o.OTStartDate = currentDate)
 
-                Dim newRow = data.NewRow()
+                Dim newRow = _overtimes.NewRow()
                 newRow.Item("EmployeeNo") = employee.EmployeeNo
                 newRow.Item("Name") = employee.Fullname
                 newRow.Item("Date") = currentDate
                 newRow.Item("OTStart") = If(overtime?.OTStartTime, DBNull.Value)
                 newRow.Item("OTEnd") = If(overtime?.OTEndTime, DBNull.Value)
-                data.Rows.Add(newRow)
+                _overtimes.Rows.Add(newRow)
             Next
         Next
 
-        _view.ShowOvertimes(data)
+        _view.ShowOvertimes(_overtimes)
+    End Sub
+
+    Public Sub ApplyToOvertimes()
+        If Not _view.IsTimeValid Then
+            Return
+        End If
+
+        For Each row As DataRow In _overtimes.Rows
+            row.Item("OTStart") = If(_view.StartTime, DBNull.Value)
+            row.Item("OTEnd") = If(_view.EndTime, DBNull.Value)
+        Next
+
+        _view.RefreshDataGrid()
+    End Sub
+
+    Public Sub SaveOvertimes()
+
     End Sub
 
     Public Iterator Function EachDay(from As DateTime, thru As DateTime) As IEnumerable(Of DateTime)
