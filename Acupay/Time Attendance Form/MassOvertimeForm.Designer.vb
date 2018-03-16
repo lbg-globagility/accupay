@@ -22,19 +22,17 @@ Partial Class MassOvertimeForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle40 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle38 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.FromDatePicker = New System.Windows.Forms.DateTimePicker()
         Me.ToDatePicker = New System.Windows.Forms.DateTimePicker()
         Me.OvertimeDataGridView = New System.Windows.Forms.DataGridView()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ApplyButton = New System.Windows.Forms.Button()
+        Me.SaveButton = New System.Windows.Forms.Button()
+        Me.EmployeeTextBox = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -43,28 +41,34 @@ Partial Class MassOvertimeForm
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EndTimeTextBox = New Acupay.TimeTextBox()
         Me.StartTimeTextBox = New Acupay.TimeTextBox()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeTreeView = New Acupay.AccuPayTreeView()
-        Me.ApplyButton = New System.Windows.Forms.Button()
-        Me.SaveButton = New System.Windows.Forms.Button()
-        Me.EmployeeTextBox = New System.Windows.Forms.TextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
         CType(Me.OvertimeDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'FromDatePicker
         '
         Me.FromDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.FromDatePicker.Location = New System.Drawing.Point(240, 8)
+        Me.FromDatePicker.Location = New System.Drawing.Point(240, 32)
         Me.FromDatePicker.Name = "FromDatePicker"
-        Me.FromDatePicker.Size = New System.Drawing.Size(136, 20)
+        Me.FromDatePicker.Size = New System.Drawing.Size(128, 20)
         Me.FromDatePicker.TabIndex = 4
         '
         'ToDatePicker
         '
         Me.ToDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.ToDatePicker.Location = New System.Drawing.Point(384, 8)
+        Me.ToDatePicker.Location = New System.Drawing.Point(376, 32)
         Me.ToDatePicker.Name = "ToDatePicker"
-        Me.ToDatePicker.Size = New System.Drawing.Size(136, 20)
+        Me.ToDatePicker.Size = New System.Drawing.Size(128, 20)
         Me.ToDatePicker.TabIndex = 5
         '
         'OvertimeDataGridView
@@ -72,55 +76,45 @@ Partial Class MassOvertimeForm
         Me.OvertimeDataGridView.AllowUserToAddRows = False
         Me.OvertimeDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.OvertimeDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column5, Me.Column4, Me.Column3, Me.Column6, Me.Column1, Me.Column2})
-        Me.OvertimeDataGridView.Location = New System.Drawing.Point(240, 40)
+        Me.OvertimeDataGridView.Location = New System.Drawing.Point(240, 56)
         Me.OvertimeDataGridView.Name = "OvertimeDataGridView"
-        Me.OvertimeDataGridView.Size = New System.Drawing.Size(616, 544)
+        Me.OvertimeDataGridView.Size = New System.Drawing.Size(624, 528)
         Me.OvertimeDataGridView.TabIndex = 6
         '
-        'Column5
+        'ApplyButton
         '
-        Me.Column5.DataPropertyName = "EmployeeNo"
-        Me.Column5.HeaderText = "Employee No"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
+        Me.ApplyButton.Location = New System.Drawing.Point(720, 32)
+        Me.ApplyButton.Name = "ApplyButton"
+        Me.ApplyButton.Size = New System.Drawing.Size(72, 23)
+        Me.ApplyButton.TabIndex = 8
+        Me.ApplyButton.Text = "Apply"
+        Me.ApplyButton.UseVisualStyleBackColor = True
         '
-        'Column4
+        'SaveButton
         '
-        Me.Column4.DataPropertyName = "Name"
-        Me.Column4.HeaderText = "Name"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
+        Me.SaveButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.SaveButton.Location = New System.Drawing.Point(792, 32)
+        Me.SaveButton.Name = "SaveButton"
+        Me.SaveButton.Size = New System.Drawing.Size(72, 23)
+        Me.SaveButton.TabIndex = 9
+        Me.SaveButton.Text = "Save"
+        Me.SaveButton.UseVisualStyleBackColor = True
         '
-        'Column3
+        'EmployeeTextBox
         '
-        Me.Column3.DataPropertyName = "Date"
-        DataGridViewCellStyle5.Format = "MM/dd/yyyy"
-        DataGridViewCellStyle5.NullValue = Nothing
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle5
-        Me.Column3.HeaderText = "Date"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
+        Me.EmployeeTextBox.Location = New System.Drawing.Point(8, 32)
+        Me.EmployeeTextBox.Name = "EmployeeTextBox"
+        Me.EmployeeTextBox.Size = New System.Drawing.Size(224, 20)
+        Me.EmployeeTextBox.TabIndex = 10
         '
-        'Column6
+        'Label1
         '
-        Me.Column6.DataPropertyName = "Date"
-        DataGridViewCellStyle6.Format = "ddd"
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle6
-        Me.Column6.HeaderText = "Day"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "OTStart"
-        Me.Column1.HeaderText = "OT Start"
-        Me.Column1.Name = "Column1"
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "OTEnd"
-        Me.Column2.HeaderText = "OT End"
-        Me.Column2.Name = "Column2"
+        Me.Label1.Location = New System.Drawing.Point(8, 8)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(100, 16)
+        Me.Label1.TabIndex = 11
+        Me.Label1.Text = "Search"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'DataGridViewTextBoxColumn1
         '
@@ -139,9 +133,9 @@ Partial Class MassOvertimeForm
         'DataGridViewTextBoxColumn3
         '
         Me.DataGridViewTextBoxColumn3.DataPropertyName = "Date"
-        DataGridViewCellStyle7.Format = "mm/dd/yyyy"
-        DataGridViewCellStyle7.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle39.Format = "mm/dd/yyyy"
+        DataGridViewCellStyle39.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle39
         Me.DataGridViewTextBoxColumn3.HeaderText = "Date"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         Me.DataGridViewTextBoxColumn3.ReadOnly = True
@@ -149,8 +143,8 @@ Partial Class MassOvertimeForm
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "OTStart"
-        DataGridViewCellStyle8.Format = "ddd"
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle40.Format = "ddd"
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle40
         Me.DataGridViewTextBoxColumn4.HeaderText = "OT Start"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
@@ -169,65 +163,112 @@ Partial Class MassOvertimeForm
         '
         'EndTimeTextBox
         '
-        Me.EndTimeTextBox.Location = New System.Drawing.Point(632, 8)
+        Me.EndTimeTextBox.Location = New System.Drawing.Point(616, 32)
         Me.EndTimeTextBox.Name = "EndTimeTextBox"
-        Me.EndTimeTextBox.Size = New System.Drawing.Size(100, 20)
+        Me.EndTimeTextBox.Size = New System.Drawing.Size(96, 20)
         Me.EndTimeTextBox.TabIndex = 7
         '
         'StartTimeTextBox
         '
-        Me.StartTimeTextBox.Location = New System.Drawing.Point(528, 8)
+        Me.StartTimeTextBox.Location = New System.Drawing.Point(512, 32)
         Me.StartTimeTextBox.Name = "StartTimeTextBox"
-        Me.StartTimeTextBox.Size = New System.Drawing.Size(100, 20)
+        Me.StartTimeTextBox.Size = New System.Drawing.Size(96, 20)
         Me.StartTimeTextBox.TabIndex = 7
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "EmployeeNo"
+        Me.Column5.HeaderText = "Employee No"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "Name"
+        Me.Column4.HeaderText = "Name"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "Date"
+        DataGridViewCellStyle37.Format = "MM/dd/yyyy"
+        DataGridViewCellStyle37.NullValue = Nothing
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle37
+        Me.Column3.HeaderText = "Date"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "Date"
+        DataGridViewCellStyle38.Format = "ddd"
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle38
+        Me.Column6.HeaderText = "Day"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "StartTime"
+        Me.Column1.HeaderText = "OT Start"
+        Me.Column1.Name = "Column1"
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "EndTime"
+        Me.Column2.HeaderText = "OT End"
+        Me.Column2.Name = "Column2"
         '
         'EmployeeTreeView
         '
         Me.EmployeeTreeView.CheckBoxes = True
-        Me.EmployeeTreeView.Location = New System.Drawing.Point(8, 64)
+        Me.EmployeeTreeView.Location = New System.Drawing.Point(8, 56)
         Me.EmployeeTreeView.Name = "EmployeeTreeView"
-        Me.EmployeeTreeView.Size = New System.Drawing.Size(224, 520)
+        Me.EmployeeTreeView.Size = New System.Drawing.Size(224, 528)
         Me.EmployeeTreeView.TabIndex = 1
         '
-        'ApplyButton
+        'Label2
         '
-        Me.ApplyButton.Location = New System.Drawing.Point(736, 8)
-        Me.ApplyButton.Name = "ApplyButton"
-        Me.ApplyButton.Size = New System.Drawing.Size(56, 23)
-        Me.ApplyButton.TabIndex = 8
-        Me.ApplyButton.Text = "Apply"
-        Me.ApplyButton.UseVisualStyleBackColor = True
+        Me.Label2.Location = New System.Drawing.Point(240, 8)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(128, 16)
+        Me.Label2.TabIndex = 12
+        Me.Label2.Text = "Date From"
         '
-        'SaveButton
+        'Label3
         '
-        Me.SaveButton.Location = New System.Drawing.Point(800, 8)
-        Me.SaveButton.Name = "SaveButton"
-        Me.SaveButton.Size = New System.Drawing.Size(56, 23)
-        Me.SaveButton.TabIndex = 9
-        Me.SaveButton.Text = "Save"
-        Me.SaveButton.UseVisualStyleBackColor = True
+        Me.Label3.Location = New System.Drawing.Point(376, 8)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(128, 16)
+        Me.Label3.TabIndex = 13
+        Me.Label3.Text = "Date To"
         '
-        'EmployeeTextBox
+        'Label4
         '
-        Me.EmployeeTextBox.Location = New System.Drawing.Point(8, 40)
-        Me.EmployeeTextBox.Name = "EmployeeTextBox"
-        Me.EmployeeTextBox.Size = New System.Drawing.Size(224, 20)
-        Me.EmployeeTextBox.TabIndex = 10
+        Me.Label4.Location = New System.Drawing.Point(512, 8)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(96, 16)
+        Me.Label4.TabIndex = 13
+        Me.Label4.Text = "Start Time"
         '
-        'Label1
+        'Label5
         '
-        Me.Label1.Location = New System.Drawing.Point(8, 8)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(100, 24)
-        Me.Label1.TabIndex = 11
-        Me.Label1.Text = "Search"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label5.Location = New System.Drawing.Point(616, 8)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(96, 16)
+        Me.Label5.TabIndex = 13
+        Me.Label5.Text = "End Time"
         '
         'MassOvertimeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(871, 597)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.EmployeeTextBox)
         Me.Controls.Add(Me.SaveButton)
@@ -257,16 +298,20 @@ Partial Class MassOvertimeForm
     Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
-    Friend WithEvents Column5 As DataGridViewTextBoxColumn
-    Friend WithEvents Column4 As DataGridViewTextBoxColumn
-    Friend WithEvents Column3 As DataGridViewTextBoxColumn
-    Friend WithEvents Column6 As DataGridViewTextBoxColumn
-    Friend WithEvents Column1 As DataGridViewTextBoxColumn
-    Friend WithEvents Column2 As DataGridViewTextBoxColumn
     Friend WithEvents StartTimeTextBox As TimeTextBox
     Friend WithEvents EndTimeTextBox As TimeTextBox
     Friend WithEvents ApplyButton As Button
     Friend WithEvents SaveButton As Button
     Friend WithEvents EmployeeTextBox As TextBox
     Friend WithEvents Label1 As Label
+    Friend WithEvents Column5 As DataGridViewTextBoxColumn
+    Friend WithEvents Column4 As DataGridViewTextBoxColumn
+    Friend WithEvents Column3 As DataGridViewTextBoxColumn
+    Friend WithEvents Column6 As DataGridViewTextBoxColumn
+    Friend WithEvents Column1 As DataGridViewTextBoxColumn
+    Friend WithEvents Column2 As DataGridViewTextBoxColumn
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Label5 As Label
 End Class

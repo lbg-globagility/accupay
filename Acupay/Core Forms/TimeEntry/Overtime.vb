@@ -7,6 +7,10 @@ Imports System.ComponentModel.DataAnnotations.Schema
 <Table("employeeovertime")>
 Public Class Overtime
 
+    Public Const StatusApproved = "Approved"
+
+    Public Const StatusPending = "Pending"
+
     <Key>
     <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
     Public Overridable Property RowID As Integer?
@@ -33,6 +37,8 @@ Public Class Overtime
 
     Public Overridable Property OTEndDate As Date
 
+    Public Overridable Property Status As String
+
     <NotMapped>
     Public Overridable Property RangeStart As Date
 
@@ -40,6 +46,7 @@ Public Class Overtime
     Public Overridable Property RangeEnd As Date
 
     Public Sub New()
+        Status = StatusPending
     End Sub
 
 End Class

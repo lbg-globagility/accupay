@@ -9,7 +9,7 @@ Public Class NHibernateTest
 
     <Test>
     Public Sub Should_Get_Overtime()
-        Dim factory = SessionFactory.CreateSessionFactory()
+        Dim factory = SessionFactory.Instance
 
         Dim overtime As Overtime
         Using session = factory.OpenSession()

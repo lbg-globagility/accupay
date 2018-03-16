@@ -1,6 +1,9 @@
-﻿Imports AccuPay.Entity
+﻿Option Strict On
+
+Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports System.Data.Entity
+Imports System.Threading.Tasks
 
 Public Class MassOvertimeForm
 
@@ -38,6 +41,7 @@ Public Class MassOvertimeForm
 
     Public Sub New()
         InitializeComponent()
+        OvertimeDataGridView.AutoGenerateColumns = False
         _presenter = New MassOvertimePresenter(Me)
     End Sub
 
@@ -63,7 +67,7 @@ Public Class MassOvertimeForm
                 }
 
                 Dim childEmployees = employees.
-                    Where(Function(e) e.Position.Division.RowID = childDivision.RowID)
+                    Where(Function(e) Nullable.Equals(e.Position.Division.RowID, childDivision.RowID))
                 For Each childEmployee In childEmployees
                     Dim employeeNode = New TreeNode() With {
                         .Name = childEmployee.Fullname,
@@ -145,19 +149,11 @@ Public Class MassOvertimeForm
         AddHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
 
-    Public Function CreateDataTable() As DataTable
-        Dim dataTable = New DataTable()
-
-        dataTable.Columns.Add("EmployeeNo", GetType(String))
-        dataTable.Columns.Add("Name", GetType(String))
-        dataTable.Columns.Add("Date", GetType(Date))
-        dataTable.Columns.Add("OTStart", GetType(TimeSpan))
-        dataTable.Columns.Add("OTEnd", GetType(TimeSpan))
-
-        Return dataTable
-    End Function
-
     Public Sub ShowOvertimes(overtimes As DataTable)
+        OvertimeDataGridView.DataSource = overtimes
+    End Sub
+
+    Public Sub ShowOvertimes(overtimes As List(Of OvertimeModel))
         OvertimeDataGridView.DataSource = overtimes
     End Sub
 
@@ -177,8 +173,11 @@ Public Class MassOvertimeForm
         _presenter.ApplyToOvertimes()
     End Sub
 
-    Private Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
-        _presenter.SaveOvertimes()
+    Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
+        SaveButton.Enabled = False
+        Await _presenter.SaveOvertimes()
+        _presenter.RefreshOvertime()
+        SaveButton.Enabled = True
     End Sub
 
 End Class
@@ -187,7 +186,7 @@ Public Class MassOvertimePresenter
 
     Private _view As MassOvertimeForm
 
-    Private _overtimes As DataTable
+    Private _models As List(Of OvertimeModel)
 
     Public Sub New(view As MassOvertimeForm)
         _view = view
@@ -203,7 +202,7 @@ Public Class MassOvertimePresenter
     Private Function LoadDivisions() As ICollection(Of Division)
         Using context = New PayrollContext()
             Return context.Divisions.
-                Where(Function(d) d.OrganizationID = z_OrganizationID).
+                Where(Function(d) Nullable.Equals(d.OrganizationID, z_OrganizationID)).
                 ToList()
         End Using
     End Function
@@ -211,7 +210,7 @@ Public Class MassOvertimePresenter
     Private Function LoadEmployees() As ICollection(Of Employee)
         Using context = New PayrollContext()
             Return context.Employees.Include(Function(e) e.Position.Division).
-                Where(Function(e) e.OrganizationID = z_OrganizationID).
+                Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
                 OrderBy(Function(e) e.LastName).
                 ThenBy(Function(e) e.FirstName).
                 ToList()
@@ -221,11 +220,12 @@ Public Class MassOvertimePresenter
     Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Overtime))
         Dim employeeIds = employees.Select(Function(e) e.RowID).ToList()
 
-        Using context = New PayrollContext()
-            Return context.Overtimes.
-                Where(Function(o) dateFrom <= o.OTStartDate And o.OTStartDate <= dateTo).
-                Where(Function(o) employeeIds.Contains(o.EmployeeID)).
-                GroupBy(Function(o) o.EmployeeID).
+        Using session = SessionFactory.Instance.OpenSession()
+            Return session.Query(Of Overtime).
+                Where(Function(x) employeeIds.Contains(x.EmployeeID)).
+                Where(Function(x) dateFrom.Date <= x.OTStartDate).
+                Where(Function(x) x.OTStartDate <= dateTo.Date).
+                GroupBy(Function(x) x.EmployeeID).
                 ToList()
         End Using
     End Function
@@ -235,29 +235,33 @@ Public Class MassOvertimePresenter
         Dim dateTo = _view.DateTo
         Dim employees = _view.GetActiveEmployees()
 
-        _overtimes = _view.CreateDataTable()
-
         Dim overtimesByEmployee = LoadOvertimes(dateFrom, dateTo, employees)
+
+        _models = New List(Of OvertimeModel)
 
         For Each employee In employees
             Dim overtimesOfEmployee = overtimesByEmployee.
-                FirstOrDefault(Function(g) g.Key = employee.RowID)
+                FirstOrDefault(Function(g) Nullable.Equals(g.Key, employee.RowID))
 
-            For Each currentDate In EachDay(dateFrom, dateTo)
+            For Each currentDate In Calendar.EachDay(dateFrom, dateTo)
                 Dim overtime = overtimesOfEmployee?.
                     FirstOrDefault(Function(o) o.OTStartDate = currentDate)
 
-                Dim newRow = _overtimes.NewRow()
-                newRow.Item("EmployeeNo") = employee.EmployeeNo
-                newRow.Item("Name") = employee.Fullname
-                newRow.Item("Date") = currentDate
-                newRow.Item("OTStart") = If(overtime?.OTStartTime, DBNull.Value)
-                newRow.Item("OTEnd") = If(overtime?.OTEndTime, DBNull.Value)
-                _overtimes.Rows.Add(newRow)
+                Dim model = New OvertimeModel() With {
+                    .EmployeeID = employee.RowID,
+                    .EmployeeNo = employee.EmployeeNo,
+                    .Name = employee.Fullname,
+                    .Date = currentDate,
+                    .StartTime = overtime?.OTStartTime,
+                    .EndTime = overtime?.OTEndTime,
+                    .Overtime = overtime
+                }
+
+                _models.Add(model)
             Next
         Next
 
-        _view.ShowOvertimes(_overtimes)
+        _view.ShowOvertimes(_models)
     End Sub
 
     Public Sub ApplyToOvertimes()
@@ -265,24 +269,88 @@ Public Class MassOvertimePresenter
             Return
         End If
 
-        For Each row As DataRow In _overtimes.Rows
-            row.Item("OTStart") = If(_view.StartTime, DBNull.Value)
-            row.Item("OTEnd") = If(_view.EndTime, DBNull.Value)
+        For Each model In _models
+            model.StartTime = _view.StartTime
+            model.EndTime = _view.EndTime
         Next
 
         _view.RefreshDataGrid()
     End Sub
 
-    Public Sub SaveOvertimes()
+    Public Async Function SaveOvertimes() As Task
+        Using session = SessionFactory.Instance.OpenSession(),
+            transaction = session.BeginTransaction()
 
-    End Sub
+            For Each model In _models
+                Dim overtime = model.Overtime
 
-    Public Iterator Function EachDay(from As DateTime, thru As DateTime) As IEnumerable(Of DateTime)
-        Dim day = from.Date
-        While day.Date <= thru.Date
-            Yield day
-            day = day.AddDays(1)
-        End While
+                If model.IsNew Then
+                    overtime = New Overtime() With {
+                        .EmployeeID = model.EmployeeID,
+                        .OrganizationID = z_OrganizationID,
+                        .CreatedBy = z_User,
+                        .OTStartDate = model.Date,
+                        .OTEndDate = model.Date,
+                        .Status = Overtime.StatusApproved
+                    }
+                ElseIf model.IsUpdate Then
+                    overtime.LastUpdBy = z_User
+                End If
+
+                If model.IsNew Or model.IsUpdate Then
+                    overtime.OTStartTime = model.StartTime
+                    overtime.OTEndTime = model.EndTime
+
+                    Await session.SaveOrUpdateAsync(overtime)
+                ElseIf model.IsDelete Then
+                    Await session.DeleteAsync(overtime)
+                End If
+            Next
+
+            Await transaction.CommitAsync()
+        End Using
     End Function
+
+End Class
+
+Public Class OvertimeModel
+
+    Public Property EmployeeID As Integer?
+
+    Public Property EmployeeNo As String
+
+    Public Property Name As String
+
+    Public Property [Date] As Date
+
+    Public Property StartTime As TimeSpan?
+
+    Public Property EndTime As TimeSpan?
+
+    Public Property Overtime As Overtime
+
+    Public ReadOnly Property HasValue As Boolean
+        Get
+            Return StartTime IsNot Nothing Or EndTime IsNot Nothing
+        End Get
+    End Property
+
+    Public ReadOnly Property IsNew As Boolean
+        Get
+            Return Overtime Is Nothing And HasValue
+        End Get
+    End Property
+
+    Public ReadOnly Property IsDelete As Boolean
+        Get
+            Return Overtime IsNot Nothing And (Not HasValue)
+        End Get
+    End Property
+
+    Public ReadOnly Property IsUpdate As Boolean
+        Get
+            Return Overtime IsNot Nothing And HasValue
+        End Get
+    End Property
 
 End Class

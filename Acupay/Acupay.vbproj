@@ -1449,6 +1449,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo - Copy.ico" />
+    <None Include="Resources\loading-icon.gif" />
+    <None Include="Resources\ajax-loader.gif" />
     <EmbeddedResource Include="Auditing\Forms\TimeLogForm.resx">
       <DependentUpon>TimeLogForm.vb</DependentUpon>
     </EmbeddedResource>
