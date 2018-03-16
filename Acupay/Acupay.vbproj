@@ -111,6 +111,10 @@
     <Reference Include="Aga.Controls">
       <HintPath>References\Aga.Controls.dll</HintPath>
     </Reference>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr3.Runtime.3.5.1\lib\net40-client\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CollapsibleGroupBox">
       <HintPath>References\CollapsibleGroupBox.dll</HintPath>
     </Reference>
@@ -156,6 +160,10 @@
       <HintPath>..\packages\FluentNHibernate.2.1.0\lib\net461\FluentNHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.4.0.2\lib\net461\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -189,8 +197,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MySqlBackup.NET.2.0.8\lib\net45\MySqlBackup.dll</HintPath>
     </Reference>
+    <Reference Include="NHibernate, Version=5.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHibernate.5.0.3\lib\net461\NHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OCRTools">
       <HintPath>References\OCRTools.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.Linq.2.1.2\lib\net45\Remotion.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Remotion.Linq.EagerFetching, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.Linq.EagerFetching.2.1.0\lib\net45\Remotion.Linq.EagerFetching.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -202,6 +222,8 @@
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
@@ -483,6 +505,8 @@
     <Compile Include="Core Forms\USER CONTROLS\TimeTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Database\Mappings\OvertimeMap.vb" />
+    <Compile Include="Database\SessionFactory.vb" />
     <Compile Include="Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
     </Compile>
