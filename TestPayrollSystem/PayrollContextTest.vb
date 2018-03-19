@@ -2,7 +2,7 @@
 
 Imports System.Data.Common
 Imports AccuPay.Entity
-Imports Acupay
+Imports AccuPay
 
 <TestFixture>
 Public Class PayrollContextTest
