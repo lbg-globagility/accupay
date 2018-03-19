@@ -27,8 +27,8 @@ Partial Class TimeAttendForm
         Me.TimeEntryLogsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimeEntryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PanelTimeAttend = New System.Windows.Forms.Panel()
         Me.OvertimeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PanelTimeAttend = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -66,6 +66,13 @@ Partial Class TimeAttendForm
         Me.SummaryToolStripMenuItem.Size = New System.Drawing.Size(70, 20)
         Me.SummaryToolStripMenuItem.Text = "Summary"
         '
+        'OvertimeToolStripMenuItem
+        '
+        Me.OvertimeToolStripMenuItem.Name = "OvertimeToolStripMenuItem"
+        Me.OvertimeToolStripMenuItem.Size = New System.Drawing.Size(73, 20)
+        Me.OvertimeToolStripMenuItem.Text = "Overtimes"
+        Me.OvertimeToolStripMenuItem.Visible = False
+        '
         'PanelTimeAttend
         '
         Me.PanelTimeAttend.Dock = System.Windows.Forms.DockStyle.Fill
@@ -73,12 +80,6 @@ Partial Class TimeAttendForm
         Me.PanelTimeAttend.Name = "PanelTimeAttend"
         Me.PanelTimeAttend.Size = New System.Drawing.Size(1006, 446)
         Me.PanelTimeAttend.TabIndex = 3
-        '
-        'OvertimeToolStripMenuItem
-        '
-        Me.OvertimeToolStripMenuItem.Name = "OvertimeToolStripMenuItem"
-        Me.OvertimeToolStripMenuItem.Size = New System.Drawing.Size(73, 20)
-        Me.OvertimeToolStripMenuItem.Text = "Overtimes"
         '
         'TimeAttendForm
         '

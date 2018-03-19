@@ -257,6 +257,7 @@
     <Compile Include="Core Forms\Commons\AccuMath.vb" />
     <Compile Include="Core Forms\Commons\CalendarConstants.vb" />
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
+    <Compile Include="Core Forms\Commons\FeatureList.vb" />
     <Compile Include="Core Forms\Commons\ListOfValueCollection.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
     <Compile Include="Core Forms\Commons\PayrollTools.vb" />
@@ -2062,6 +2063,7 @@
     </None>
     <None Include="log4.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="My Project\app.manifest" />
     <None Include="packages.config" />
