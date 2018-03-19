@@ -37,9 +37,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: ".\bin\Debug\AccuPaySelfService.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\AccuPaySelfService.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\AccuPaySelfService.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\AccuPaySelfService.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\Aga.Controls.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\app.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\CollapsibleGroupBox.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\CrystalDecisions.CrystalReports.Engine.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\CrystalDecisions.ReportAppServer.ClientDoc.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -60,17 +58,12 @@ Source: ".\bin\Debug\CrystalDecisions.Windows.Forms.dll"; DestDir: "{app}"; Flag
 Source: ".\bin\Debug\DevComponents.DotNetBar2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\EntityFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\EntityFramework.SqlServer.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\EntityFramework.SqlServer.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\EntityFramework.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\EPPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\EPPlus.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\EWSoftware.ListControls.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\Femiani.Forms.UI.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\FlashControlV71.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\log.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\log4.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\log4net.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\log4net.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\MessageBoxManager.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\MetroFramework.Design.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\MetroFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -79,7 +72,6 @@ Source: ".\bin\Debug\MySql.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\MySql.Data.Entity.EF6.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\MySqlBackup.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\OCRTools.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\payroll.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\ShockwaveFlashObjects.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\stdole.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
