@@ -2,7 +2,7 @@
 
 Imports System.Text.RegularExpressions
 
-Namespace Global.AccuPay
+Namespace Global.AccuPay.Tools
 
     Public Class Calendar
 
@@ -63,6 +63,14 @@ Namespace Global.AccuPay
         Private Shared Function IsPm(clock As String) As Boolean
             Return String.Equals(clock, "pm", StringComparison.OrdinalIgnoreCase) Or
                 String.Equals(clock, "p", StringComparison.OrdinalIgnoreCase)
+        End Function
+
+        Public Shared Iterator Function EachDay(from As Date, thru As Date) As IEnumerable(Of Date)
+            Dim day = from.Date
+            While day.Date <= thru.Date
+                Yield day
+                day = day.AddDays(1)
+            End While
         End Function
 
     End Class

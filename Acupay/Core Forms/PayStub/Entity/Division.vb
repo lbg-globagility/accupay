@@ -26,6 +26,21 @@ Namespace Global.AccuPay.Entity
 
         Public Property Name As String
 
+        Public Property ParentDivisionID As Integer?
+
+        <ForeignKey("ParentDivisionID")>
+        Public Overridable Property ParentDivision As Division
+
+        Public ReadOnly Property IsRoot As Boolean
+            Get
+                Return ParentDivisionID Is Nothing
+            End Get
+        End Property
+
+        Public Function IsParent(division As Division) As Boolean
+            Return Nullable.Equals(ParentDivisionID, division.RowID)
+        End Function
+
     End Class
 
 End Namespace

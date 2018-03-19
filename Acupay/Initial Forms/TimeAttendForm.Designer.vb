@@ -27,6 +27,7 @@ Partial Class TimeAttendForm
         Me.TimeEntryLogsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimeEntryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OvertimeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelTimeAttend = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -34,7 +35,7 @@ Partial Class TimeAttendForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TimeEntToolStripMenuItem, Me.TimeEntryLogsToolStripMenuItem, Me.TimeEntryToolStripMenuItem, Me.SummaryToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TimeEntToolStripMenuItem, Me.TimeEntryLogsToolStripMenuItem, Me.TimeEntryToolStripMenuItem, Me.SummaryToolStripMenuItem, Me.OvertimeToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -64,6 +65,13 @@ Partial Class TimeAttendForm
         Me.SummaryToolStripMenuItem.Name = "SummaryToolStripMenuItem"
         Me.SummaryToolStripMenuItem.Size = New System.Drawing.Size(70, 20)
         Me.SummaryToolStripMenuItem.Text = "Summary"
+        '
+        'OvertimeToolStripMenuItem
+        '
+        Me.OvertimeToolStripMenuItem.Name = "OvertimeToolStripMenuItem"
+        Me.OvertimeToolStripMenuItem.Size = New System.Drawing.Size(73, 20)
+        Me.OvertimeToolStripMenuItem.Text = "Overtimes"
+        Me.OvertimeToolStripMenuItem.Visible = False
         '
         'PanelTimeAttend
         '
@@ -96,4 +104,5 @@ Partial Class TimeAttendForm
     Friend WithEvents TimeEntryLogsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TimeEntryToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SummaryToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents OvertimeToolStripMenuItem As ToolStripMenuItem
 End Class

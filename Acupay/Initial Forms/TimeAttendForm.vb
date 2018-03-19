@@ -1,4 +1,7 @@
-﻿Public Class TimeAttendForm
+﻿Imports System.Collections.Specialized
+Imports System.Configuration
+
+Public Class TimeAttendForm
 
     Public emp_ft_col As String = New ExecuteQuery("SELECT GROUP_CONCAT(CONCAT('e.',ii.COLUMN_NAME)) AS Result FROM information_schema.STATISTICS ii WHERE ii.INDEX_TYPE='FULLTEXT' AND ii.TABLE_SCHEMA='" & sys_db & "' AND ii.TABLE_NAME='employee' ORDER BY ii.SEQ_IN_INDEX;").Result
 
@@ -116,23 +119,24 @@
     End Sub
 
     Private Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        Dim checker = FeatureListChecker.Instance
+        OvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
     End Sub
 
     Sub reloadViewPrivilege()
 
-        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" & _
-                                             " RowID" & _
-                                             " FROM position_view" & _
+        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" &
+                                             " RowID" &
+                                             " FROM position_view" &
                                              " WHERE OrganizationID='" & orgztnID & "'" &
-                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" & _
+                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" &
                                              " OR DATE_FORMAT(LastUpd,@@date_format) = CURDATE()));")
 
         If hasPositionViewUpdate = "1" Then
 
-            position_view_table = retAsDatTbl("SELECT *" & _
-                                              " FROM position_view" & _
-                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" & _
+            position_view_table = retAsDatTbl("SELECT *" &
+                                              " FROM position_view" &
+                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" &
                                               " AND OrganizationID='" & orgztnID & "';")
 
         End If
@@ -151,6 +155,11 @@
     Private Sub SummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SummaryToolStripMenuItem.Click
         ChangeForm(TimeEntrySummaryForm, "Employee Time Entry logs")
         previousForm = TimeEntrySummaryForm
+    End Sub
+
+    Private Sub OvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
+        ChangeForm(MassOvertimeForm, "Employee Time Entry Logs")
+        previousForm = MassOvertimeForm
     End Sub
 
 End Class

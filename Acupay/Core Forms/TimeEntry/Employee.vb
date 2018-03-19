@@ -147,6 +147,12 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property Fullname As String
+            Get
+                Return $"{LastName}, {FirstName} {MiddleInitial}"
+            End Get
+        End Property
+
         Public Property AdvancementPoints As Integer
 
         <ForeignKey("PositionID")>
