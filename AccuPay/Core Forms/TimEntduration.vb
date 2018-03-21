@@ -326,104 +326,19 @@ Public Class TimEntduration
             dgvpayper_SelectionChanged(sender, e)
         End If
 
-        'Dim blankTimeOut =
-        '    EXECQUER($"
-        '        SELECT COUNT(etd.RowID)
-        '        FROM employeetimeentrydetails etd
-        '        WHERE etd.OrganizationID = {orgztnID} AND
-        '            etd.EmployeeID IS NOT NULL AND
-        '            (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='') AND
-        '            etd.`Date` BETWEEN '{MYSQLDateFormat(CDate(selectdayFrom))}' AND '{MYSQLDateFormat(CDate(selectdayTo))}'
-        '        LIMIT 1;
-        '    ")
+        Dim listOfValues As ListOfValueCollection = Nothing
+        Using context = New PayrollContext()
+            Dim lovs = context.ListOfValues.Where(Function(l) l.Type = "Payroll Policy").ToList()
+            listOfValues = New ListOfValueCollection(lovs)
+        End Using
 
-        Dim blankSql = String.Empty
-        If IsDBNull(cboxDivisions.Tag) Then
-            blankSql = $"
-                SELECT COUNT(etd.RowID)
-                FROM employeetimeentrydetails etd
-                WHERE etd.OrganizationID = {orgztnID} AND
-                    etd.EmployeeID IS NOT NULL AND
-                    (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='') AND
-                    etd.`Date` BETWEEN '{MYSQLDateFormat(CDate(selectdayFrom))}' AND '{MYSQLDateFormat(CDate(selectdayTo))}'
-                LIMIT 1;
-            "
-        Else
-            blankSql = $"
-                SELECT COUNT(etd.RowID)
-                FROM employeetimeentrydetails etd
-                INNER JOIN employee ee
-                ON ee.RowID = etd.EmployeeID
-                INNER JOIN position p
-                ON p.RowID = ee.PositionID
-                INNER JOIN division d
-                ON d.RowID = p.DivisionID
-                WHERE etd.OrganizationID = {orgztnID} AND
-                    etd.EmployeeID IS NOT NULL AND
-                    (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='') AND
-                    etd.`Date` BETWEEN '{MYSQLDateFormat(CDate(selectdayFrom))}' AND '{MYSQLDateFormat(CDate(selectdayTo))}' AND
-                    d.RowID = {ValNoComma(cboxDivisions.Tag)}
-                LIMIT 1;
-            "
-        End If
+        If Not listOfValues.GetBoolean("Payroll Policy", "timeinonly") Then
+            Dim isValid = CheckForBlankTimeLogs()
 
-        Dim blankTimeOut = EXECQUER(blankSql)
-
-        If blankTimeOut >= 1 Then
-
-            Me.BringToFront()
-
-            Dim n_BlankTimeEntryLogs As New BlankTimeEntryLogs(dayFrom, dayTo)
-
-            If n_BlankTimeEntryLogs.ShowDialog("") = Windows.Forms.DialogResult.OK Then
-
-                Button1_Click(Button1, New EventArgs)
-
-            End If
-
-            Exit Sub
-
-        ElseIf blankTimeOut = 0 Then
-
-            Dim sql = String.Empty
-
-            If IsDBNull(cboxDivisions.Tag) Then
-                sql = ($"
-                    SELECT EXISTS(
-                        SELECT etd.RowID
-                        FROM employeetimeentrydetails etd
-                        INNER JOIN employee e ON e.RowID=etd.EmployeeID AND e.OrganizationID=etd.OrganizationID
-                        INNER JOIN `position` pos ON pos.RowID=e.PositionID
-                        WHERE etd.OrganizationID='{orgztnID}' AND
-                            etd.`Date` BETWEEN '{Format(CDate(selectdayFrom), "yyyy-MM-dd")}' AND '{Format(CDate(selectdayTo), "yyyy-MM-dd")}'
-                    );
-                ")
-            Else
-                sql = ($"
-                    SELECT EXISTS(
-                        SELECT etd.RowID
-                        FROM employeetimeentrydetails etd
-                        INNER JOIN employee e ON e.RowID=etd.EmployeeID AND e.OrganizationID=etd.OrganizationID
-                        INNER JOIN division dv ON dv.RowID={ValNoComma(cboxDivisions.Tag)}
-                        INNER JOIN `position` pos ON pos.RowID=e.PositionID AND pos.DivisionId=dv.RowID
-                        WHERE etd.OrganizationID='{orgztnID}' AND
-                            etd.`Date` BETWEEN '{Format(CDate(selectdayFrom), "yyyy-MM-dd")}' AND '{Format(CDate(selectdayTo), "yyyy-MM-dd")}'
-                    );
-                ")
-            End If
-
-            Dim hasTimeLogs As Boolean = EXECQUER(sql)
-
-            If Not hasTimeLogs Then
-                MsgBox("There are no time logs within this pay period." & vbNewLine &
-                       "Please prepare the time logs first.",
-                       MsgBoxStyle.Information,
-                       "")
+            If Not isValid Then
                 Exit Sub
             End If
         End If
-
-        'compute_employeetimeentry()
 
         progbar.Value = 0
 
@@ -452,6 +367,100 @@ Public Class TimEntduration
         bgworkRECOMPUTE_employeeleave.RunWorkerAsync()
 
     End Sub
+
+    Private Function CheckForBlankTimeLogs() As Boolean
+        Dim divisionId As Integer? = If(IsDBNull(cboxDivisions.Tag), CType(Nothing, Integer?), ValNoComma(cboxDivisions.Tag))
+
+        Dim dateFrom = CDate(selectdayFrom)
+        Dim dateTo = CDate(selectdayTo)
+
+        Dim blankSql = String.Empty
+        If divisionId.HasValue Then
+            blankSql = $"
+                SELECT COUNT(etd.RowID)
+                FROM employeetimeentrydetails etd
+                INNER JOIN employee ee
+                ON ee.RowID = etd.EmployeeID
+                INNER JOIN position p
+                ON p.RowID = ee.PositionID
+                INNER JOIN division d
+                ON d.RowID = p.DivisionID
+                WHERE etd.OrganizationID = {orgztnID} AND
+                    etd.EmployeeID IS NOT NULL AND
+                    (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='') AND
+                    etd.`Date` BETWEEN '{dateFrom.ToString("s")}' AND '{dateTo.ToString("s")}' AND
+                    d.RowID = {divisionId}
+                LIMIT 1;
+            "
+        Else
+            blankSql = $"
+                SELECT COUNT(etd.RowID)
+                FROM employeetimeentrydetails etd
+                WHERE etd.OrganizationID = {orgztnID} AND
+                    etd.EmployeeID IS NOT NULL AND
+                    (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='') AND
+                    etd.`Date` BETWEEN '{dateFrom.ToString("s")}' AND '{dateTo.ToString("s")}'
+                LIMIT 1;
+            "
+        End If
+
+        Dim blankTimeOut = EXECQUER(blankSql)
+
+        If blankTimeOut >= 1 Then
+
+            Me.BringToFront()
+
+            Dim n_BlankTimeEntryLogs As New BlankTimeEntryLogs(dayFrom, dayTo)
+
+            If n_BlankTimeEntryLogs.ShowDialog("") = Windows.Forms.DialogResult.OK Then
+                Button1_Click(Button1, New EventArgs)
+            End If
+
+            Return False
+
+        ElseIf blankTimeOut = 0 Then
+
+            Dim sql = String.Empty
+
+            If divisionId.HasValue Then
+                sql = ($"
+                    SELECT EXISTS(
+                        SELECT etd.RowID
+                        FROM employeetimeentrydetails etd
+                        INNER JOIN employee e ON e.RowID=etd.EmployeeID AND e.OrganizationID=etd.OrganizationID
+                        INNER JOIN division dv ON dv.RowID={divisionId}
+                        INNER JOIN `position` pos ON pos.RowID=e.PositionID AND pos.DivisionId=dv.RowID
+                        WHERE etd.OrganizationID='{orgztnID}' AND
+                            etd.`Date` BETWEEN '{dateFrom.ToString("s")}' AND '{dateTo.ToString("s")}'
+                    );
+                ")
+            Else
+                sql = ($"
+                    SELECT EXISTS(
+                        SELECT etd.RowID
+                        FROM employeetimeentrydetails etd
+                        INNER JOIN employee e ON e.RowID=etd.EmployeeID AND e.OrganizationID=etd.OrganizationID
+                        INNER JOIN `position` pos ON pos.RowID=e.PositionID
+                        WHERE etd.OrganizationID='{orgztnID}' AND
+                            etd.`Date` BETWEEN '{dateFrom.ToString("s")}' AND '{dateTo.ToString("s")}'
+                    );
+                ")
+            End If
+
+            Dim hasTimeLogs As Boolean = EXECQUER(sql)
+
+            If Not hasTimeLogs Then
+                MsgBox("There are no time logs within this pay period." & vbNewLine &
+                       "Please prepare the time logs first.",
+                       MsgBoxStyle.Information,
+                       "")
+
+                Return False
+            End If
+        End If
+
+        Return True
+    End Function
 
     'FIRST_METHOD
     Private Sub bgWork_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgWork.DoWork

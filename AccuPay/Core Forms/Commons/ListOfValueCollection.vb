@@ -25,12 +25,12 @@ Public Class ListOfValueCollection
         Return value?.DisplayValue
     End Function
 
-    Public Function GetBoolean(type As String, lic As String) As Boolean
+    Public Function GetBoolean(type As String, lic As String, Optional [default] As Boolean = False) As Boolean
         Dim value = GetListOfValue(type, lic)
 
         Return If(
             String.IsNullOrEmpty(value?.DisplayValue),
-            False,
+            [default],
             Boolean.Parse(value?.DisplayValue)
         )
     End Function
