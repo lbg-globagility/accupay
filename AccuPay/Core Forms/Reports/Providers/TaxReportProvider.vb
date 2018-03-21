@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Entity
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class TaxReportProvider
@@ -14,23 +15,31 @@ Public Class TaxReportProvider
             Return
         End If
 
-        Dim params(2, 2) As Object
+        Dim month = CDate(n_selectMonth.MonthFirstDate)
 
-        params(0, 0) = "OrganizID"
-        params(1, 0) = "paramDateFrom"
-        params(2, 0) = "paramDateTo"
+        Dim payPeriods As List(Of payperiod)
+        Using context = New PayrollContext()
+            payPeriods = context.PayPeriods.
+                Where(Function(p) p.Month = month.Month).
+                Where(Function(p) p.Year = month.Year).
+                OrderBy(Function(p) p.PayFromDate).
+                ToList()
+        End Using
 
-        params(0, 1) = orgztnID
-        params(1, 1) = Format(CDate(n_selectMonth.MonthFirstDate), "yyyy-MM-dd")
-        params(2, 1) = Format(CDate(n_selectMonth.MonthLastDate), "yyyy-MM-dd")
+        Dim dateFrom = payPeriods.First().PayFromDate
+        Dim dateTo = payPeriods.Last().PayToDate
 
-        Dim date_from = Format(CDate(n_selectMonth.MonthValue), "MMMM  yyyy")
+        Dim params = New Object(,) {
+            {"OrganizID", orgztnID},
+            {"paramDateFrom", dateFrom.ToString("s")},
+            {"paramDateTo", dateTo.ToString("s")}
+        }
 
         Dim data = callProcAsDatTab(params, "RPT_Tax_Monthly")
 
-        Dim report = New Tax_Monthly_Report
+        Dim report = New Tax_Monthly_Report()
         Dim objText = DirectCast(report.ReportDefinition.Sections(1).ReportObjects("Text2"), TextObject)
-        objText.Text = "for the month of  " & date_from
+        objText.Text = "For the month of  " & dateFrom.ToString("MMMM yyyy")
 
         report.SetDataSource(data)
 
