@@ -1,13 +1,16 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports System.Collections.ReadOnlyCollectionBase
+Imports System.Collections.Generic
+Imports System.Collections.ObjectModel
 
 Public Class ListOfValueCollection
 
-    Private _values As ICollection(Of ListOfValue)
+    Private _values As IReadOnlyList(Of ListOfValue)
 
-    Public Sub New(values As ICollection(Of ListOfValue))
-        _values = values
+    Public Sub New(values As IEnumerable(Of ListOfValue))
+        _values = New ReadOnlyCollection(Of ListOfValue)(values.ToList)
     End Sub
 
     Public Function Exists(lic As String) As Boolean
@@ -28,11 +31,16 @@ Public Class ListOfValueCollection
     Public Function GetBoolean(type As String, lic As String, Optional [default] As Boolean = False) As Boolean
         Dim value = GetListOfValue(type, lic)
 
-        Return If(
-            String.IsNullOrEmpty(value?.DisplayValue),
-            [default],
-            Boolean.Parse(value?.DisplayValue)
-        )
+        If String.IsNullOrEmpty(value?.DisplayValue) Then
+            Return [default]
+        End If
+
+        If IsNumeric(value?.DisplayValue) Then
+            Return Convert.ToBoolean(
+                Convert.ToInt32(value?.DisplayValue))
+        End If
+
+        Return Convert.ToBoolean(value?.DisplayValue)
     End Function
 
     Public Function GetString(lic As String) As String
