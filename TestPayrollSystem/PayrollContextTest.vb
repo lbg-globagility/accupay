@@ -2,7 +2,7 @@
 
 Imports System.Data.Common
 Imports AccuPay.Entity
-Imports Acupay
+Imports AccuPay
 
 <TestFixture>
 Public Class PayrollContextTest
@@ -101,6 +101,13 @@ Public Class PayrollContextTest
         Dim leave = _context.Leaves.FirstOrDefault()
 
         Assert.IsInstanceOf(Of Leave)(leave)
+    End Sub
+
+    <Test>
+    Public Sub Should_Retrieve_Overtime()
+        Dim overtime = _context.Overtimes.FirstOrDefault()
+
+        Assert.IsInstanceOf(Of Overtime)(overtime)
     End Sub
 
 End Class

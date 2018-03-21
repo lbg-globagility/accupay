@@ -110,6 +110,7 @@ DECLARE workingHours DECIMAL(11,6) DEFAULT 0;#INT(10)
 
 DECLARE requiredToWorkLastWorkingDay BOOLEAN DEFAULT FALSE;
 DECLARE allowAbsenceOnHoliday BOOLEAN DEFAULT FALSE;
+DECLARE timeInOnly BOOLEAN DEFAULT FALSE;
 
 DECLARE dateToday DATE;
 DECLARE dateTomorrow DATE;
@@ -278,6 +279,10 @@ INTO
     e_PositionID,
     nightDiffTimeFrom,
     nightDiffTimeTo;
+
+SET timeInOnly = GetListOfValueOrDefault(
+    'Payrolll Policy', 'timeinonly', FALSE
+);
 
 SET requiredToWorkLastWorkingDay = GetListOfValueOrDefault(
     'Payroll Policy', 'HolidayLastWorkingDayOrAbsent', FALSE
@@ -874,6 +879,14 @@ WHERE EmployeeID = ete_EmpRowID AND
 ORDER BY DATEDIFF(DATE_FORMAT(ete_Date,'%Y-%m-%d'),EffectiveDateFrom)
 LIMIT 1
 INTO esalRowID;
+
+IF timeInOnly THEN
+    IF actualTimeIn IS NOT NULL THEN
+        SET regularHours = STANDARD_WORKING_HOURS;
+        SET lateHours = 0;
+        SET undertimeHours = 0;
+    END IF;
+END IF;
 
 /******************************************************************************
  ******************************************************************************

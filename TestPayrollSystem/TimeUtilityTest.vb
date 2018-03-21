@@ -1,5 +1,5 @@
 ﻿Imports System.Text
-Imports Acupay
+Imports AccuPay
 
 <TestFixture>
 Public Class TimeUtilityTest
