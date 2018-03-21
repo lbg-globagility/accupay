@@ -373,7 +373,9 @@ Public Class PayrollGeneration
 
                     ElseIf _employee2.EmployeeType = SalaryType.Monthly Then
 
-                        If isFirstPay Then
+                        Dim isFirstPayAsDailyRule = _settings.GetBoolean("Payroll Policy", "isfirstsalarydaily")
+
+                        If isFirstPay And isFirstPayAsDailyRule Then
                             _paystub.TotalEarnings = ValNoComma(timeEntrySummary("TotalDayPay"))
                         Else
                             Dim totalDeduction = _paystub.LateDeduction + _paystub.UndertimeDeduction + _paystub.AbsenceDeduction
