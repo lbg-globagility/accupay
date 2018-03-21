@@ -40,7 +40,7 @@ IF defaultDivisID > 0 THEN
         CreatedBy,
         OrganizationID,
         LastUpdBy,
-        ParentPositionID,
+        # ParentPositionID,
         DivisionId,
         JobLevelID
     )
@@ -51,7 +51,7 @@ IF defaultDivisID > 0 THEN
         pos_CreatedBy,
         pos_OrganizationID,
         pos_LastUpdBy,
-        pos_ParentPositionID,
+        # pos_ParentPositionID,
         pos_DivisionId,
         pos_JobLevelID
     )
@@ -60,7 +60,7 @@ IF defaultDivisID > 0 THEN
         PositionName = pos_PositionName,
         LastUpd = CURRENT_TIMESTAMP(),
         LastUpdBy = pos_LastUpdBy,
-        ParentPositionID = pos_ParentPositionID,
+        # ParentPositionID = pos_ParentPositionID,
         DivisionId = pos_DivisionId,
         JobLevelID = pos_JobLevelID;
 
@@ -115,7 +115,7 @@ ELSE
         ,CreatedBy
         ,OrganizationID
         ,LastUpdBy
-        ,ParentPositionID
+        # ,ParentPositionID
         ,DivisionId
     ) VALUES (
         pos_RowID
@@ -124,7 +124,7 @@ ELSE
         ,pos_CreatedBy
         ,pos_OrganizationID
         ,pos_LastUpdBy
-        ,pos_ParentPositionID
+        # ,pos_ParentPositionID
         ,defaultDivisID
     ) ON
     DUPLICATE
@@ -133,7 +133,7 @@ ELSE
         PositionName=pos_PositionName
         ,LastUpd=CURRENT_TIMESTAMP()
         ,LastUpdBy=pos_LastUpdBy
-        ,ParentPositionID=pos_ParentPositionID
+        # ,ParentPositionID=pos_ParentPositionID
         ,DivisionId=defaultDivisID;SELECT @@Identity AS Id INTO positID;
 
 END IF;
