@@ -281,7 +281,7 @@ INTO
     nightDiffTimeTo;
 
 SET timeInOnly = GetListOfValueOrDefault(
-    'Payrolll Policy', 'timeinonly', FALSE
+    'Payroll Policy', 'timeinonly', FALSE
 );
 
 SET requiredToWorkLastWorkingDay = GetListOfValueOrDefault(
