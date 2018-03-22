@@ -47,6 +47,10 @@ INTO
 
 SET NEW.BasicPay = NEW.Salary / IF(LOCATE(e_type,CONCAT(pay_freq_type,'Fixed')) > 0, PAYFREQUENCY_DIVISOR(pay_freq_type), PAYFREQUENCY_DIVISOR(e_type));
 
+IF NEW.PhilHealthDeduction IS NULL THEN
+	SET NEW.PhilHealthDeduction = 0;
+END IF;
+
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;

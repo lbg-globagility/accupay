@@ -41,6 +41,10 @@ IF IFNULL(NEW.UndeclaredSalary,0) = 0 THEN
     SET NEW.UndeclaredSalary = IFNULL(NEW.TrueSalary - NEW.`Salary`,0);
 END IF;
 
+IF NEW.PhilHealthDeduction IS NULL THEN
+	SET NEW.PhilHealthDeduction = 0;
+END IF;
+
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
