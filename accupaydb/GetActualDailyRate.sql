@@ -28,7 +28,7 @@ DECLARE PayFreqID INT(11);
 
 DECLARE emptype VARCHAR(100);
 
-DECLARE workDaysPerYear INT(11);
+DECLARE _workDaysPerYear DECIMAL(10, 4);
 DECLARE workDaysInMonth DECIMAL(10, 4);
 
 DECLARE basicSalary DECIMAL(15, 4);
@@ -81,10 +81,16 @@ SET fullSalary = basicSalary + allowanceSalary;
 
 SET empBasicPay = COALESCE(empBasicPay, 0);
 
-SELECT PayFrequencyID, EmployeeType
+SELECT
+    PayFrequencyID,
+    EmployeeType,
+    WorkDaysPerYear
 FROM employee
 WHERE RowID = EmpID
-INTO PayFreqID, emptype;
+INTO
+    PayFreqID,
+    emptype,
+    _workDaysPerYear;
 
 SELECT
     PayFrequencyID,
@@ -95,14 +101,11 @@ INTO
     PayFreqID,
     numofweekthisyear;
 
-SELECT GET_empworkdaysperyear(EmpID) * 1.0
-INTO workDaysPerYear;
-
 IF emptype IN ('Fixed', 'Monthly') THEN
 
     IF PayFreqID = PAYFREQUENCY_SEMIMONTHLY THEN
 
-        SET workDaysInMonth = workDaysPerYear / 12.0;
+        SET workDaysInMonth = _workDaysPerYear / 12.0;
 
         SET dailyrate = fullSalary / workDaysInMonth;
 
@@ -128,8 +131,8 @@ IF emptype IN ('Fixed', 'Monthly') THEN
                     )
                 )
             ) <= 28,
-            (empBasicPay * numofweekthisyear) / workDaysPerYear,
-            (empBasicPay * numofweekthisyear) / (workDaysPerYear + 1)
+            (empBasicPay * numofweekthisyear) / _workDaysPerYear,
+            (empBasicPay * numofweekthisyear) / (_workDaysPerYear + 1)
         );
 
     END IF;

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AccuPay"
-#define MyAppVersion "1.7.10"
+#define MyAppVersion "1.7.11"
 #define MyAppPublisher "Globagility, Inc."
 #define MyAppURL "http://www.globagilityinc.com/"
 #define MyAppExeName "AccuPay.exe"
@@ -34,60 +34,64 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: ".\Acupay\bin\Debug\AccuPay.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\Aga.Controls.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CollapsibleGroupBox.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.CrystalReports.Engine.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.ClientDoc.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.CommLayer.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.CommonControls.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.CommonObjectModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.Controllers.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.CubeDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.DataDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.DataSetConversion.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.ObjectFactory.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.Prompting.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.ReportDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportAppServer.XmlSerialize.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.ReportSource.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.Shared.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\CrystalDecisions.Windows.Forms.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\DevComponents.DotNetBar2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\EntityFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\EntityFramework.SqlServer.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\EntityFramework.SqlServer.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\EntityFramework.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\EWSoftware.ListControls.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\Femiani.Forms.UI.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\FlashControlV71.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\AccuPay.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\AccuPay.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\AccuPay.vshost.exe"; DestDir: "{app}"; Flags: ignoreversion
-; Source: ".\Acupay\bin\Debug\GoldWingsPayrollSys.vshost.exe.manifest"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\AccuPay.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\log4net.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\log4net.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\log4.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\MessageBoxManager.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\MetroFramework.Design.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\MetroFramework.Fonts.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\MetroFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
-; Source: ".\Acupay\bin\Debug\Microsoft.Office.Interop.Excel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\MySql.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\MySql.Data.Entity.EF6.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\MySqlBackup.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\OCRTools.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\ShockwaveFlashObjects.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\stdole.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ".\AccuPay\bin\Debug\AccuPay.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Aga.Controls.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Antlr3.Runtime.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CollapsibleGroupBox.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.CrystalReports.Engine.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.ClientDoc.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.CommLayer.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.CommonControls.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.CommonObjectModel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.Controllers.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.CubeDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.DataDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.DataSetConversion.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.ObjectFactory.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.Prompting.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.ReportDefModel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportAppServer.XmlSerialize.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.ReportSource.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.Shared.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\CrystalDecisions.Windows.Forms.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\DevComponents.DotNetBar2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\EntityFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\EntityFramework.SqlServer.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\EntityFramework.SqlServer.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\EntityFramework.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\EWSoftware.ListControls.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Femiani.Forms.UI.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\FlashControlV71.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\FluentNHibernate.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Iesi.Collections.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\AccuPay.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\AccuPay.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\AccuPay.vshost.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\AccuPay.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\log4net.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\log4net.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\log4.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\MessageBoxManager.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\MetroFramework.Design.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\MetroFramework.Fonts.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\MetroFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\MySql.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\MySql.Data.Entity.EF6.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\MySqlBackup.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\NHibernate.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\OCRTools.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Remotion.Linq.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Remotion.Linq.EagerFetching.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\ShockwaveFlashObjects.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\stdole.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
-Source: ".\Acupay\Resources\*.xlsx"; DestDir: "{app}\Resources"; Flags: ignoreversion
+Source: ".\AccuPay\Resources\*.xlsx"; DestDir: "{app}\Resources"; Flags: ignoreversion
 
-Source: ".\Acupay\bin\Debug\EPPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\Acupay\Resources\SourceSansPro-Regular.ttf"; DestDir: "{fonts}"; FontInstall: "Source Sans Pro"; Flags: onlyifdoesntexist uninsneveruninstall
+Source: ".\AccuPay\bin\Debug\EPPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\Resources\SourceSansPro-Regular.ttf"; DestDir: "{fonts}"; FontInstall: "Source Sans Pro"; Flags: onlyifdoesntexist uninsneveruninstall
 
-Source: ".\Acupay\bin\Debug\Core Forms\rpt\*.rpt"; DestDir: "{app}\Core Forms\rpt"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Core Forms\rpt\*.rpt"; DestDir: "{app}\Core Forms\rpt"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

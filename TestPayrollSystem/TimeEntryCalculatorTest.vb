@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Text
-Imports Acupay
+Imports AccuPay
 Imports AccuPay.Entity
 
 <TestFixture>

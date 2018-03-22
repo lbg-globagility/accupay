@@ -1,0 +1,165 @@
+﻿Imports System.Collections.Specialized
+Imports System.Configuration
+
+Public Class TimeAttendForm
+
+    Public emp_ft_col As String = New ExecuteQuery("SELECT GROUP_CONCAT(CONCAT('e.',ii.COLUMN_NAME)) AS Result FROM information_schema.STATISTICS ii WHERE ii.INDEX_TYPE='FULLTEXT' AND ii.TABLE_SCHEMA='" & sys_db & "' AND ii.TABLE_NAME='employee' ORDER BY ii.SEQ_IN_INDEX;").Result
+
+    Public listTimeAttendForm As New List(Of String)
+
+    Private sys_ownr As New SystemOwner
+
+    Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
+
+        reloadViewPrivilege()
+
+        Dim view_ID = ValNoComma(VIEW_privilege(ViewName, orgztnID))
+
+        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
+
+        If formuserprivilege.Count > 0 Then
+
+            For Each drow In formuserprivilege
+                'If drow("ReadOnly").ToString = "Y" Then
+                If drow("AllowedToAccess").ToString = "N" Then
+
+                    'ChangeForm(Formname)
+                    'previousForm = Formname
+
+                    'Exit For
+                    Exit Sub
+                Else
+                    If drow("Creates").ToString = "Y" _
+                        Or drow("Updates").ToString = "Y" _
+                        Or drow("Deleting").ToString = "Y" _
+                        Or drow("ReadOnly").ToString = "Y" Then
+                        'And drow("Updates").ToString = "Y" Then
+
+                        'ChangeForm(Formname)
+                        'previousForm = Formname
+                        Exit For
+                    Else
+                        Exit Sub
+                    End If
+
+                End If
+
+            Next
+
+        Else
+            Exit Sub
+        End If
+
+        Try
+            Application.DoEvents()
+            Dim FName As String = Formname.Name 'Formname.KeyPreview = False 'True
+            Formname.TopLevel = False
+            Formname.Enabled = True
+            If listTimeAttendForm.Contains(FName) Then
+                'Formname.Show()
+                'Formname.BringToFront()
+                'Formname.Focus()
+            Else
+                PanelTimeAttend.Controls.Add(Formname)
+                listTimeAttendForm.Add(Formname.Name)
+                Formname.Refresh()
+                'Formname.Location = New Point((PanelTimeAttend.Width / 2) - (Formname.Width / 2), (PanelTimeAttend.Height / 2) - (Formname.Height / 2))
+                'Formname.Anchor = AnchorStyles.Top And AnchorStyles.Bottom And AnchorStyles.Right And AnchorStyles.Left
+                'Formname.WindowState = FormWindowState.Maximized
+                Formname.Dock = DockStyle.Fill
+            End If
+            Formname.Show()
+            Formname.BringToFront()
+            Formname.Focus()
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Me.Name))
+        Finally
+            Dim listOfForms = PanelTimeAttend.Controls.Cast(Of Form).Where(Function(i) i.Name <> Formname.Name)
+            For Each pb As Form In listOfForms 'PanelTimeAttend.Controls.OfType(Of Form)() 'KeyPreview'Enabled
+                'If Formname.Name = pb.Name Then : Continue For : Else : pb.Enabled = False : End If
+                pb.Enabled = False
+            Next
+        End Try
+    End Sub
+
+    Private Sub TimeEntToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeEntToolStripMenuItem.Click
+        'ChangeForm(AttendanceTimeEntryForm)
+        'EmployeeShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
+        ChangeForm(EmployeeShiftEntryForm, "Employee Shift")
+        previousForm = EmployeeShiftEntryForm
+    End Sub
+
+    Sub TimeEntryLogsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeEntryLogsToolStripMenuItem.Click
+        ChangeForm(TimeLogsForm, "Employee Time Entry logs")
+        previousForm = TimeLogsForm
+    End Sub
+
+    Sub TimeEntryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeEntryToolStripMenuItem.Click
+
+        ChangeForm(EmpTimeEntry, "Employee Time Entry")
+        previousForm = EmpTimeEntry
+        'EmpTimeEntry.TabControl1.SelectedIndex = 0
+        'EmpTimeEntry.tbpemptimeent_Enter(sender, e)
+        'RemoveHandler EmpTimeEntry.dgvEmployi.SelectionChanged, AddressOf EmpTimeEntry.dgvEmployi_SelectionChanged
+        EmpTimeEntry.dgvEmployi_SelectionChanged(sender, e)
+
+        AddHandler EmpTimeEntry.dgvEmployi.SelectionChanged, AddressOf EmpTimeEntry.dgvEmployi_SelectionChanged
+
+    End Sub
+
+    Private Sub TimeAttendForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+
+        For Each objctrl As Control In PanelTimeAttend.Controls
+            If TypeOf objctrl Is Form Then
+                DirectCast(objctrl, Form).Close()
+
+            End If
+        Next
+
+    End Sub
+
+    Private Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim checker = FeatureListChecker.Instance
+        OvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
+    End Sub
+
+    Sub reloadViewPrivilege()
+
+        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" &
+                                             " RowID" &
+                                             " FROM position_view" &
+                                             " WHERE OrganizationID='" & orgztnID & "'" &
+                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" &
+                                             " OR DATE_FORMAT(LastUpd,@@date_format) = CURDATE()));")
+
+        If hasPositionViewUpdate = "1" Then
+
+            position_view_table = retAsDatTbl("SELECT *" &
+                                              " FROM position_view" &
+                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" &
+                                              " AND OrganizationID='" & orgztnID & "';")
+
+        End If
+
+    End Sub
+
+    Private Sub PanelTimeAttend_ControlRemoved(sender As Object, e As ControlEventArgs) Handles PanelTimeAttend.ControlRemoved
+        Dim listOfForms = PanelTimeAttend.Controls.Cast(Of Form)()
+        For Each pb As Form In listOfForms 'PanelTimeAttend.Controls.OfType(Of Form)() 'KeyPreview'Enabled
+            'If Formname.Name = pb.Name Then : Continue For : Else : pb.Enabled = False : End If
+            pb.Enabled = True
+            Exit For
+        Next
+    End Sub
+
+    Private Sub SummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SummaryToolStripMenuItem.Click
+        ChangeForm(TimeEntrySummaryForm, "Employee Time Entry logs")
+        previousForm = TimeEntrySummaryForm
+    End Sub
+
+    Private Sub OvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
+        ChangeForm(MassOvertimeForm, "Employee Time Entry Logs")
+        previousForm = MassOvertimeForm
+    End Sub
+
+End Class
