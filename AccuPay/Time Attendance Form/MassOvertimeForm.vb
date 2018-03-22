@@ -45,7 +45,7 @@ Public Class MassOvertimeForm
         _presenter = New MassOvertimePresenter(Me)
     End Sub
 
-    Public Sub ShowEmployees(divisions As ICollection(Of Division), employees As ICollection(Of Employee))
+    Public Sub ShowEmployees(divisions As IEnumerable(Of Division), employees As IEnumerable(Of Employee))
         EmployeeTreeView.BeginUpdate()
         EmployeeTreeView.Nodes.Clear()
 
@@ -147,6 +147,7 @@ Public Class MassOvertimeForm
     Private Sub MassOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _presenter.Load()
         AddHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
+        AddHandler EmployeeSearchTextBox.TextChanged, AddressOf EmployeeSearchTextBox_TextChanged
     End Sub
 
     Public Sub ShowOvertimes(overtimes As DataTable)
@@ -180,9 +181,17 @@ Public Class MassOvertimeForm
         SaveButton.Enabled = True
     End Sub
 
+    Private Sub EmployeeSearchTextBox_TextChanged(sender As Object, e As EventArgs)
+        _presenter.FilterEmployees(EmployeeSearchTextBox.Text)
+    End Sub
+
 End Class
 
 Public Class MassOvertimePresenter
+
+    Private _employees As IList(Of Employee)
+
+    Private _divisions As IList(Of Division)
 
     Private _view As MassOvertimeForm
 
@@ -193,13 +202,13 @@ Public Class MassOvertimePresenter
     End Sub
 
     Public Sub Load()
-        Dim divisions = LoadDivisions()
-        Dim employees = LoadEmployees()
+        _divisions = LoadDivisions()
+        _employees = LoadEmployees()
 
-        _view.ShowEmployees(divisions, employees)
+        _view.ShowEmployees(_divisions, _employees)
     End Sub
 
-    Private Function LoadDivisions() As ICollection(Of Division)
+    Private Function LoadDivisions() As IList(Of Division)
         Using context = New PayrollContext()
             Return context.Divisions.
                 Where(Function(d) Nullable.Equals(d.OrganizationID, z_OrganizationID)).
@@ -207,7 +216,7 @@ Public Class MassOvertimePresenter
         End Using
     End Function
 
-    Private Function LoadEmployees() As ICollection(Of Employee)
+    Private Function LoadEmployees() As IList(Of Employee)
         Using context = New PayrollContext()
             Return context.Employees.Include(Function(e) e.Position.Division).
                 Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
@@ -229,6 +238,24 @@ Public Class MassOvertimePresenter
                 ToList()
         End Using
     End Function
+
+    Public Async Sub FilterEmployees(needle As String)
+        Dim match =
+            Function(employee As Employee) As Boolean
+                Dim contains = employee.Fullname.ToLower().Contains(needle)
+                Dim reverseName = ($"{employee.LastName} {employee.FirstName}").ToLower()
+                Dim containsReverseName = reverseName.Contains(needle)
+
+                Return contains Or containsReverseName
+            End Function
+
+        Dim employees = Await Task.Run(
+            Function()
+                Return _employees.Where(match).ToList()
+            End Function)
+
+        _view.ShowEmployees(_divisions, employees)
+    End Sub
 
     Public Sub RefreshOvertime()
         Dim dateFrom = _view.DateFrom
