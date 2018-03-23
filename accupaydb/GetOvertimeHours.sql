@@ -57,25 +57,25 @@ FROM (
 				,@shendtime := CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo) `ShiftTimeTo`
 
 				,@starttime := IF(sh.TimeFrom >= ot.OTStartTime
-									  AND sh.TimeFrom >= ot.OTEndTime
+									  AND sh.TimeFrom >= IFNULL(ot.OTEndTime, sh.TimeFrom)
 									  
 											 , CONCAT_DATETIME(DATE(@shstarttime), ot.OTStartTime)
 											 , IF(sh.TimeTo <= ot.OTStartTime
-								      AND sh.TimeTo <= ot.OTEndTime
+								      AND sh.TimeTo <= IFNULL(ot.OTEndTime, sh.TimeFrom)
 									  
 									  , CONCAT_DATETIME(DATE(@shendtime), ot.OTStartTime)
 									  , CONCAT_DATETIME(d.DateValue, ot.OTStartTime)))
 				`StartTime`
 				,@endtime := IF(sh.TimeFrom >= ot.OTStartTime
-									  AND sh.TimeFrom >= ot.OTEndTime
+									  AND sh.TimeFrom >= IFNULL(ot.OTEndTime, sh.TimeFrom)
 									  
-											 , CONCAT_DATETIME(DATE(@shstarttime), ot.OTEndTime)
+											 , CONCAT_DATETIME(DATE(@shstarttime), IFNULL(ot.OTEndTime, sh.TimeFrom))
 											 , IF(sh.TimeTo <= ot.OTStartTime
-								    AND sh.TimeTo <= ot.OTEndTime
+								    AND sh.TimeTo <= IFNULL(ot.OTEndTime, sh.TimeFrom)
 									  
-									  , CONCAT_DATETIME(DATE(@shendtime), ot.OTEndTime)
+									  , CONCAT_DATETIME(DATE(@shendtime), IFNULL(ot.OTEndTime, sh.TimeFrom))
 							  
-									  , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(ot.OTStartTime, ot.OTEndTime) DAY), ot.OTEndTime))
+									  , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(ot.OTStartTime, IFNULL(ot.OTEndTime, sh.TimeFrom)) DAY), IFNULL(ot.OTEndTime, sh.TimeFrom)))
 											 )
 				`EndTime`
 
@@ -88,7 +88,7 @@ FROM (
 										 ) / sec_per_hour) `Result`
 
 				,ot.OTStartTime
-				,ot.OTEndTime
+				,IFNULL(ot.OTEndTime, sh.TimeFrom)
 
 				,sh.TimeFrom
 				,sh.TimeTo
@@ -130,25 +130,25 @@ FROM (
 				,@shendtime1 := CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo) `ShiftTimeTo`
 
 				,@starttime1 := IF(sh.TimeFrom >= ot.OTStartTime
-									  AND sh.TimeFrom >= ot.OTEndTime
+									  AND sh.TimeFrom >= IFNULL(ot.OTEndTime, sh.TimeFrom)
 									  
 											 , CONCAT_DATETIME(DATE(@shstarttime1), ot.OTStartTime)
 											 , IF(sh.TimeTo <= ot.OTStartTime
-								      AND sh.TimeTo <= ot.OTEndTime
+								      AND sh.TimeTo <= IFNULL(ot.OTEndTime, sh.TimeFrom)
 									  
 									  , CONCAT_DATETIME(DATE(@shendtime1), ot.OTStartTime)
 									  , CONCAT_DATETIME(d.DateValue, ot.OTStartTime)))
 				`StartTime`
 				,@endtime1 := IF(sh.TimeFrom >= ot.OTStartTime
-									  AND sh.TimeFrom >= ot.OTEndTime
+									  AND sh.TimeFrom >= IFNULL(ot.OTEndTime, sh.TimeFrom)
 									  
-											 , CONCAT_DATETIME(DATE(@shstarttime1), ot.OTEndTime)
+											 , CONCAT_DATETIME(DATE(@shstarttime1), IFNULL(ot.OTEndTime, sh.TimeFrom))
 											 , IF(sh.TimeTo <= ot.OTStartTime
-								    AND sh.TimeTo <= ot.OTEndTime
+								    AND sh.TimeTo <= IFNULL(ot.OTEndTime, sh.TimeFrom)
 									  
-									  , CONCAT_DATETIME(DATE(@shendtime1), ot.OTEndTime)
+									  , CONCAT_DATETIME(DATE(@shendtime1), IFNULL(ot.OTEndTime, sh.TimeFrom))
 							  
-									  , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(ot.OTStartTime, ot.OTEndTime) DAY), ot.OTEndTime))
+									  , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(ot.OTStartTime, IFNULL(ot.OTEndTime, sh.TimeFrom)) DAY), IFNULL(ot.OTEndTime, sh.TimeFrom)))
 											 )
 				`EndTime`
 
@@ -161,7 +161,7 @@ FROM (
 										 ) / sec_per_hour) `Result`
 
 				,ot.OTStartTime
-				,ot.OTEndTime
+				,IFNULL(ot.OTEndTime, sh.TimeFrom)
 
 				,sh.TimeFrom
 				,sh.TimeTo
@@ -217,25 +217,25 @@ FROM (
 				@shstarttime := CONCAT_DATETIME(d.DateValue, sh.TimeFrom) `ShiftTimeFrom`
 				,@shendtime := CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo) `ShiftTimeTo`
 
-				,@starttime := IF(sh.TimeTo <= ot.OTStartTime
+				,@starttime := IF(sh.TimeTo <= IFNULL(ot.OTStartTime, sh.TimeTo)
 								      AND sh.TimeTo <= ot.OTEndTime
 									  
-									  , CONCAT_DATETIME(DATE(@shendtime), ot.OTStartTime)
-									  , IF(sh.TimeFrom >= ot.OTStartTime
+									  , CONCAT_DATETIME(DATE(@shendtime), IFNULL(ot.OTStartTime, sh.TimeTo))
+									  , IF(sh.TimeFrom >= IFNULL(ot.OTStartTime, sh.TimeTo)
 									  AND sh.TimeFrom >= ot.OTEndTime
 									  
-											 , CONCAT_DATETIME(DATE(@shstarttime), ot.OTStartTime)
-											 , CONCAT_DATETIME(d.DateValue, ot.OTStartTime)))
+											 , CONCAT_DATETIME(DATE(@shstarttime), IFNULL(ot.OTStartTime, sh.TimeTo))
+											 , CONCAT_DATETIME(d.DateValue, IFNULL(ot.OTStartTime, sh.TimeTo))))
 				`StartTime`
-				,@endtime := IF(sh.TimeTo <= ot.OTStartTime
+				,@endtime := IF(sh.TimeTo <= IFNULL(ot.OTStartTime, sh.TimeTo)
 								    AND sh.TimeTo <= ot.OTEndTime
 									  
 									  , CONCAT_DATETIME(DATE(@shendtime), ot.OTEndTime)
-									  , IF(sh.TimeFrom >= ot.OTStartTime
+									  , IF(sh.TimeFrom >= IFNULL(ot.OTStartTime, sh.TimeTo)
 									  AND sh.TimeFrom >= ot.OTEndTime
 									  
 											 , CONCAT_DATETIME(DATE(@shstarttime), ot.OTEndTime)
-											 , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(ot.OTStartTime, ot.OTEndTime) DAY), ot.OTEndTime)))
+											 , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(IFNULL(ot.OTStartTime, sh.TimeTo), ot.OTEndTime) DAY), ot.OTEndTime)))
 				`EndTime`
 
 				, @g := DATE_FORMAT(GREATEST(etd.TimeStampIn, TIMESTAMP(@starttime)), @@datetime_format) `G`
@@ -246,7 +246,7 @@ FROM (
 										 , TIMESTAMP(@l)
 										 ) / 3600) `Result`
 
-				,ot.OTStartTime
+				,IFNULL(ot.OTStartTime, sh.TimeTo)
 				,ot.OTEndTime
 
 				,sh.TimeFrom
@@ -288,25 +288,25 @@ FROM (
 				@shstarttime1 := CONCAT_DATETIME(d.DateValue, sh.TimeFrom) `ShiftTimeFrom`
 				,@shendtime1 := CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) DAY), sh.TimeTo) `ShiftTimeTo`
 
-				,@starttime1 := IF(sh.TimeTo <= ot.OTStartTime
+				,@starttime1 := IF(sh.TimeTo <= IFNULL(ot.OTStartTime, sh.TimeTo)
 								      AND sh.TimeTo <= ot.OTEndTime
 									  
-									  , CONCAT_DATETIME(DATE(@shendtime1), ot.OTStartTime)
-									  , IF(sh.TimeFrom >= ot.OTStartTime
+									  , CONCAT_DATETIME(DATE(@shendtime1), IFNULL(ot.OTStartTime, sh.TimeTo))
+									  , IF(sh.TimeFrom >= IFNULL(ot.OTStartTime, sh.TimeTo)
 									  AND sh.TimeFrom >= ot.OTEndTime
 									  
-											 , CONCAT_DATETIME(DATE(@shstarttime1), ot.OTStartTime)
-											 , CONCAT_DATETIME(d.DateValue, ot.OTStartTime)))
+											 , CONCAT_DATETIME(DATE(@shstarttime1), IFNULL(ot.OTStartTime, sh.TimeTo))
+											 , CONCAT_DATETIME(d.DateValue, IFNULL(ot.OTStartTime, sh.TimeTo))))
 				`StartTime`
-				,@endtime1 := IF(sh.TimeTo <= ot.OTStartTime
+				,@endtime1 := IF(sh.TimeTo <= IFNULL(ot.OTStartTime, sh.TimeTo)
 								    AND sh.TimeTo <= ot.OTEndTime
 									  
 									  , CONCAT_DATETIME(DATE(@shendtime1), ot.OTEndTime)
-									  , IF(sh.TimeFrom >= ot.OTStartTime
+									  , IF(sh.TimeFrom >= IFNULL(ot.OTStartTime, sh.TimeTo)
 									  AND sh.TimeFrom >= ot.OTEndTime
 									  
 											 , CONCAT_DATETIME(DATE(@shstarttime1), ot.OTEndTime)
-											 , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(ot.OTStartTime, ot.OTEndTime) DAY), ot.OTEndTime)))
+											 , CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL IS_TIMERANGE_REACHTOMORROW(IFNULL(ot.OTStartTime, sh.TimeTo), ot.OTEndTime) DAY), ot.OTEndTime)))
 				`EndTime`
 
 				, @g := DATE_FORMAT(GREATEST(etd.TimeStampIn, TIMESTAMP(@starttime1)), @@datetime_format) `G`
@@ -317,7 +317,7 @@ FROM (
 										 , TIMESTAMP(@l)
 										 ) / 3600) `Result`
 
-				,ot.OTStartTime
+				,IFNULL(ot.OTStartTime, sh.TimeTo)
 				,ot.OTEndTime
 
 				,sh.TimeFrom
