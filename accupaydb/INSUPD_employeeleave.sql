@@ -16,8 +16,8 @@ DECLARE specialty CONDITION FOR SQLSTATE '45000';
 
 DECLARE emp_employment_stat TEXT;
 
-SELECT EmploymentStatus FROM employee WHERE RowID=elv_EmployeeID INTO emp_employment_stat;
-
+# SELECT EmploymentStatus FROM employee WHERE RowID=elv_EmployeeID INTO emp_employment_stat;
+SET emp_employment_stat = 'Regular';
 IF emp_employment_stat = 'Regular' THEN
 
     INSERT INTO employeeleave
