@@ -153,7 +153,7 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property AllowanceItems As IList(Of AllowanceItem)
 
-        <InverseProperty("Paystub")>
+        <NotMapped>
         Public Overridable Property ThirteenthMonthPay As ThirteenthMonthPay
 
         Public Sub New()

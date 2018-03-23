@@ -508,6 +508,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Database\Mappings\OvertimeMap.vb" />
+    <Compile Include="Database\Mappings\PaystubMap.vb" />
+    <Compile Include="Database\Mappings\ThirteenthMonthPayMap.vb" />
     <Compile Include="Database\SessionFactory.vb" />
     <Compile Include="Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>

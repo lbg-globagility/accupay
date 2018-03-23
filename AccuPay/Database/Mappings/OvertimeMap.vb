@@ -1,4 +1,6 @@
-﻿Imports FluentNHibernate.Mapping
+﻿Option Strict On
+
+Imports FluentNHibernate.Mapping
 
 Public Class OvertimeMap
     Inherits ClassMap(Of Overtime)
