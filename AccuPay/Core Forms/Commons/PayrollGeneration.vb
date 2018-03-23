@@ -860,7 +860,7 @@ Public Class PayrollGeneration
 
     Private Sub CalculateSss(salary As DataRow)
         Dim employeeSssPerMonth = ValNoComma(salary("EmployeeContributionAmount"))
-        Dim employerSssPerMonth = ValNoComma(salary("EmployerContributionAmount"))
+        Dim employerSssPerMonth = If(employeeSssPerMonth = 0, 0, ValNoComma(salary("EmployerContributionAmount")))
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
         Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
@@ -1017,7 +1017,7 @@ Public Class PayrollGeneration
 
     Private Sub CalculateHdmf(salary As DataRow)
         Dim employeeHdmfPerMonth = ValNoComma(salary("HDMFAmount"))
-        Dim employerHdmfPerMonth = 100D
+        Dim employerHdmfPerMonth = If(employeeHdmfPerMonth = 0, 0, employeeHdmfPerMonth)
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
         Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
