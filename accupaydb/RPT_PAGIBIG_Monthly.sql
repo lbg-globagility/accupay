@@ -20,7 +20,7 @@ BEGIN
     SET month = DATE_FORMAT(paramDate, '%m');
 
     SELECT
-        employee.PhilHealthNo `DatCol1`,
+        employee.HDMFNo `DatCol1`,
         CONCAT(
             employee.LastName,
             ',',
@@ -46,7 +46,9 @@ BEGIN
         GROUP BY paystub.EmployeeID
     ) paystubsummary
     ON paystubsummary.EmployeeID = employee.RowID
-    WHERE employee.OrganizationID = OrganizID;
+    WHERE employee.OrganizationID = OrganizID
+	 ORDER BY CONCAT(employee.LastName, employee.FirstName)
+	 ;
 
 END//
 DELIMITER ;
