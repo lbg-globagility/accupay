@@ -82,7 +82,7 @@ SELECT ps.RowID
                     , @basic_sal
 						  , IF(e.EmployeeType = 'Monthly'
                          , (@basic_sal - (ps.LateDeduction + ps.UndertimeDeduction + ps.AbsenceDeduction))
-                         , IFNULL(et.`RegularHoursAmount`, 0)))
+                         , IFNULL(ps.RegularPay, 0)))
 						  ) `ActualRegular`
 ,FORMAT(@act_regular, 2) `COL3`
 ,IFNULL(FORMAT(et.RegularHoursWorked, 2), 0) `COL2`
@@ -199,7 +199,7 @@ FROM paystub ps
 INNER JOIN employee e
         ON e.RowID=ps.EmployeeID
 		     AND e.OrganizationID=ps.OrganizationID
-		     AND e.EmploymentStatus NOT IN ('Resigned', 'Terminated')
+		     AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 INNER JOIN `position` pos
         ON pos.RowID=e.PositionID
 		     AND pos.OrganizationID=e.OrganizationID
@@ -330,26 +330,17 @@ LEFT JOIN (
            SELECT ea.*
 		     ,GROUP_CONCAT( ea.`TheAmount` ) `AllowanceAmountList`
 		     ,GROUP_CONCAT( ea.PartNo ) `AllowanceNameList`
-		FROM (		      
-				SELECT ea.RowID
+		FROM (
+		      SELECT ai.AllowanceID `RowID`
 				, ea.EmployeeID
-				, SUM(
-				  IF(prd.`Fixed`
-				     , ea.AllowanceAmount
-					  , ROUND(i.AttendancePercentage * ea.AllowanceAmount , 2)
-					  )
-					  ) `TheAmount`
-				, prd.PartNo
-				FROM v_employeetimeentry_numbers i
-				INNER JOIN employee e
-				        ON e.RowID=i.EmployeeID AND e.OrganizationID=i.OrganizationID AND e.EmploymentStatus NOT IN ('Resigned', 'Terminated')
-				INNER JOIN employeeallowance ea
-				        ON ea.AllowanceFrequency='Daily' AND ea.OrganizationID=i.OrganizationID AND ea.EmployeeID = i.EmployeeID AND i.`Date` BETWEEN date_from AND date_to
-				INNER JOIN product prd
-				        ON prd.RowID=ea.ProductID AND prd.OrganizationID=i.OrganizationID
-				WHERE i.OrganizationID=og_rowid
-				AND i.`Date` BETWEEN date_from AND date_to
-				GROUP BY ea.RowID
+				, ROUND(ai.Amount, 2) `TheAmount`
+				, p.PartNo
+				FROM allowanceitem ai
+				INNER JOIN employeeallowance ea ON ea.RowID=ai.AllowanceID AND ea.AllowanceFrequency='Daily'
+				INNER JOIN product p ON p.RowID=ea.ProductID
+				WHERE ai.PayPeriodID = pperiod_id
+				AND ai.OrganizationID = og_rowid
+				AND ai.Amount > 0
 		      ) ea
 		 GROUP BY ea.EmployeeID, ea.RowID
 			   ) day_allow
@@ -372,7 +363,7 @@ LEFT JOIN (
            
 		     , p.PartNo
 		     FROM paystubitem_sum_semimon_allowance_group_prodid ea
-		     INNER JOIN employee e ON e.RowID=ea.EmployeeID AND e.EmploymentStatus NOT IN ('Resigned', 'Terminated')
+		     INNER JOIN employee e ON e.RowID=ea.EmployeeID AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 		     INNER JOIN product p ON p.RowID=ea.ProductID
 			  WHERE ea.OrganizationID=og_rowid
 			  AND ea.`Date` BETWEEN date_from AND date_to
@@ -399,6 +390,7 @@ INNER JOIN (SELECT ps.RowID
 WHERE ps.OrganizationID=og_rowid
 		AND ps.PayPeriodID=pperiod_id
 
+GROUP BY ps.RowID
 ORDER BY CONCAT(e.LastName, e.FirstName)
 ;
 

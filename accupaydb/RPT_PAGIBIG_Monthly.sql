@@ -46,7 +46,9 @@ BEGIN
         GROUP BY paystub.EmployeeID
     ) paystubsummary
     ON paystubsummary.EmployeeID = employee.RowID
-    WHERE employee.OrganizationID = OrganizID;
+    WHERE employee.OrganizationID = OrganizID
+	 ORDER BY CONCAT(employee.LastName, employee.FirstName)
+	 ;
 
 END//
 DELIMITER ;
