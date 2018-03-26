@@ -3,6 +3,7 @@
 Imports System.Data.Entity
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports NHibernate.Linq
 Imports PayrollSys
 
 ''' <summary>
@@ -351,11 +352,13 @@ Public Class PayrollResources
 
     Private Async Function LoadPaystubs() As Task
         Try
-            Using context = New PayrollContext()
-                Dim query = From p In context.Paystubs.Include(Function(p) p.Adjustments)
-                            Where p.PayFromdate = _payDateFrom And p.PayToDate = _payDateTo
+            Using session = SessionFactory.Instance.OpenSession()
+                Dim query = session.Query(Of Paystub).
+                    Where(Function(p) p.PayFromdate = _payDateFrom).
+                    Where(Function(p) p.PayToDate = _payDateTo).
+                    Where(Function(p) CBool(p.OrganizationID = z_OrganizationID))
 
-                _paystubs = Await query.ToListAsync()
+                _paystubs = Await LinqExtensionMethods.ToListAsync(query)
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("Paystubs", ex)

@@ -1,13 +1,13 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
 Imports FluentNHibernate.Mapping
+Imports AccuPay.Entity
 
-Public Class ThirteenthMonthPayMap
-    Inherits ClassMap(Of ThirteenthMonthPay)
+Public Class AllowanceItemMap
+    Inherits ClassMap(Of AllowanceItem)
 
     Public Sub New()
-        Table("thirteenthmonthpay")
+        Table("allowanceitem")
 
         Id(Function(x) x.RowID).GeneratedBy.Increment()
         Map(Function(x) x.OrganizationID)
@@ -16,10 +16,10 @@ Public Class ThirteenthMonthPayMap
         Map(Function(x) x.LastUpd).Generated.Always()
         Map(Function(x) x.LastUpdBy)
 
-        Map(Function(x) x.BasicPay)
+        Map(Function(x) x.PaystubID)
+        Map(Function(x) x.AllowanceID)
+        Map(Function(x) x.PayPeriodID)
         Map(Function(x) x.Amount)
-
-        References(Function(x) x.Paystub, "PaystubID").Unique()
     End Sub
 
 End Class

@@ -18,35 +18,35 @@ Namespace Global.AccuPay.Entity
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property RowID As Integer?
+        Public Overridable Property RowID As Integer?
 
-        Public Property OrganizationID As Integer?
+        Public Overridable Property OrganizationID As Integer?
 
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property Created As DateTime
+        Public Overridable Property Created As DateTime
 
-        Public Property CreatedBy As Integer?
+        Public Overridable Property CreatedBy As Integer?
 
         <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
-        Public Property LastUpd As DateTime?
+        Public Overridable Property LastUpd As DateTime?
 
-        Public Property LastUpdBy As Integer?
+        Public Overridable Property LastUpdBy As Integer?
 
-        Public Property EmployeeID As Integer?
+        Public Overridable Property EmployeeID As Integer?
 
-        Public Property LeaveLedgerID As Integer?
+        Public Overridable Property LeaveLedgerID As Integer?
 
-        Public Property PayPeriodID As Integer?
+        Public Overridable Property PayPeriodID As Integer?
 
-        Public Property ReferenceID As Integer?
+        Public Overridable Property ReferenceID As Integer?
 
-        Public Property TransactionDate As Date
+        Public Overridable Property TransactionDate As Date
 
-        Public Property Type As String
+        Public Overridable Property Type As String
 
-        Public Property Balance As Decimal
+        Public Overridable Property Balance As Decimal
 
-        Public Property Amount As Decimal
+        Public Overridable Property Amount As Decimal
 
         <ForeignKey("EmployeeID")>
         Public Overridable Property Employee As Employee

@@ -15,7 +15,17 @@ Public Class SessionFactory
                 Db.MySQLConfiguration.Standard.ConnectionString(connectionString)).
             Mappings(
                 Sub(m)
-                    m.FluentMappings.AddFromAssemblyOf(Of OvertimeMap)()
+                    m.FluentMappings.
+                        AddFromAssemblyOf(Of AllowanceItemMap)().
+                        AddFromAssemblyOf(Of AllowancePerDayMap)().
+                        AddFromAssemblyOf(Of LeaveLedgerMap)().
+                        AddFromAssemblyOf(Of LeaveMap)().
+                        AddFromAssemblyOf(Of LeaveTransactionMap)().
+                        AddFromAssemblyOf(Of LoanTransactionMap)().
+                        AddFromAssemblyOf(Of OvertimeMap)().
+                        AddFromAssemblyOf(Of PaystubItemMap)().
+                        AddFromAssemblyOf(Of PaystubMap)().
+                        AddFromAssemblyOf(Of ThirteenthMonthPayMap)()
                 End Sub).
             BuildSessionFactory()
     End Function

@@ -10,13 +10,13 @@ Namespace Global.AccuPay.Entity
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property RowID As Integer?
+        Public Overridable Property RowID As Integer?
 
-        Public Property AllowanceItemID As Integer?
+        Public Overridable Property AllowanceItemID As Integer?
 
-        Public Property [Date] As Date
+        Public Overridable Property [Date] As Date
 
-        Public Property Amount As Decimal
+        Public Overridable Property Amount As Decimal
 
         <ForeignKey("AllowanceItemID")>
         Public Overridable Property AllowanceItem As AllowanceItem

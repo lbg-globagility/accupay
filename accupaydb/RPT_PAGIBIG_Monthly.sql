@@ -20,7 +20,7 @@ BEGIN
     SET month = DATE_FORMAT(paramDate, '%m');
 
     SELECT
-        employee.PhilHealthNo `DatCol1`,
+        employee.HDMFNo `DatCol1`,
         CONCAT(
             employee.LastName,
             ',',

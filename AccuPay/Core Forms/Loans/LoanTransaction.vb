@@ -7,32 +7,32 @@ Namespace Global.PayrollSys
     Public Class LoanTransaction
 
         <Key>
-        Public Property RowID As Integer?
+        Public Overridable Property RowID As Integer?
 
-        Public Property Created As Date
+        Public Overridable Property Created As Date
 
-        Public Property CreatedBy As Integer?
+        Public Overridable Property CreatedBy As Integer?
 
-        Public Property LastUpd As Date
+        Public Overridable Property LastUpd As Date
 
-        Public Property LastUpdBy As Integer?
+        Public Overridable Property LastUpdBy As Integer?
 
-        Public Property OrganizationID As Integer?
+        Public Overridable Property OrganizationID As Integer?
 
-        Public Property PayPeriodID As Integer?
+        Public Overridable Property PayPeriodID As Integer?
 
-        Public Property EmployeeID As Integer?
+        Public Overridable Property EmployeeID As Integer?
 
         <Column("EmployeeLoanRecordID")>
-        Public Property LoanScheduleID As Integer?
+        Public Overridable Property LoanScheduleID As Integer?
 
-        Public Property LoanPayPeriodLeft As Integer
+        Public Overridable Property LoanPayPeriodLeft As Integer
 
         <Column("TotalBalanceLeft")>
-        Public Property TotalBalance As Decimal
+        Public Overridable Property TotalBalance As Decimal
 
         <Column("DeductionAmount")>
-        Public Property Amount As Decimal
+        Public Overridable Property Amount As Decimal
 
         <ForeignKey("LoanScheduleID")>
         Public Overridable Property LoanSchedule As LoanSchedule

@@ -9,11 +9,12 @@ Public Class PaystubMap
     Public Sub New()
         Table("paystub")
 
-        Id(Function(x) x.RowID)
+        Id(Function(x) x.RowID).GeneratedBy.Increment()
         Map(Function(x) x.OrganizationID)
         Map(Function(x) x.Created).Generated.Insert()
         Map(Function(x) x.CreatedBy)
         Map(Function(x) x.LastUpd).Generated.Always()
+        Map(Function(x) x.LastUpdBy)
 
         Map(Function(x) x.PayPeriodID)
         Map(Function(x) x.EmployeeID)
@@ -71,7 +72,8 @@ Public Class PaystubMap
         Map(Function(x) x.ThirteenthMonthInclusion)
         Map(Function(x) x.FirstTimeSalary)
 
-        HasOne(Function(x) x.ThirteenthMonthPay).Cascade.All()
+        HasOne(Function(x) x.ThirteenthMonthPay).PropertyRef(Function(x) x.Paystub).Cascade.All()
+        HasMany(Function(x) x.AllowanceItems).Cascade.All()
     End Sub
 
 End Class

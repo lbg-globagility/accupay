@@ -507,7 +507,15 @@
     <Compile Include="Core Forms\USER CONTROLS\TimeTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Database\Mappings\AllowanceItemMap.vb" />
+    <Compile Include="Database\Mappings\AllowancePerDayMap.vb" />
+    <Compile Include="Database\Mappings\BaseEntityMap.vb" />
+    <Compile Include="Database\Mappings\LeaveLedgerMap.vb" />
+    <Compile Include="Database\Mappings\LeaveMap.vb" />
+    <Compile Include="Database\Mappings\LeaveTransactionMap.vb" />
+    <Compile Include="Database\Mappings\LoanTransactionMap.vb" />
     <Compile Include="Database\Mappings\OvertimeMap.vb" />
+    <Compile Include="Database\Mappings\PaystubItemMap.vb" />
     <Compile Include="Database\Mappings\PaystubMap.vb" />
     <Compile Include="Database\Mappings\ThirteenthMonthPayMap.vb" />
     <Compile Include="Database\SessionFactory.vb" />
