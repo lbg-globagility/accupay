@@ -10,26 +10,26 @@ Namespace Global.AccuPay.Entity
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property RowID As Integer?
+        Public Overridable Property RowID As Integer?
 
-        Public Property OrganizationID As Integer?
+        Public Overridable Property OrganizationID As Integer?
 
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property Created As Date
+        Public Overridable Property Created As Date
 
-        Public Property CreatedBy As Integer?
+        Public Overridable Property CreatedBy As Integer?
 
         <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
-        Public Property LastUpd As Date?
+        Public Overridable Property LastUpd As Date?
 
-        Public Property LastUpdBy As Integer?
+        Public Overridable Property LastUpdBy As Integer?
 
         <Column("PayStubID")>
-        Public Property PaystubID As Integer?
+        Public Overridable Property PaystubID As Integer?
 
-        Public Property BasicPay As Decimal
+        Public Overridable Property BasicPay As Decimal
 
-        Public Property Amount As Decimal
+        Public Overridable Property Amount As Decimal
 
         <ForeignKey("PaystubID")>
         Public Overridable Property Paystub As Paystub
