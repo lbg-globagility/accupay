@@ -369,7 +369,9 @@ Public Class TimEntduration
     End Sub
 
     Private Function CheckForBlankTimeLogs() As Boolean
-        Dim divisionId As Integer? = If(IsDBNull(cboxDivisions.Tag), CType(Nothing, Integer?), ValNoComma(cboxDivisions.Tag))
+        Dim no_divisionId As Integer?
+        Dim _bool As Boolean = IsDBNull(cboxDivisions.Tag)
+        Dim divisionId As Integer? = If(_bool, no_divisionId, Convert.ToInt32(cboxDivisions.Tag))
 
         Dim dateFrom = CDate(selectdayFrom)
         Dim dateTo = CDate(selectdayTo)
