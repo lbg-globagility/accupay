@@ -24,8 +24,6 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property LastUpdBy As Integer?
 
-        Public Overridable Property PaystubID As Integer?
-
         Public Overridable Property AllowanceID As Integer?
 
         Public Overridable Property PayPeriodID As Integer?
@@ -35,13 +33,20 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("AllowanceID")>
         Public Overridable Property Allowance As Allowance
 
-        <ForeignKey("PaystubID")>
         Public Overridable Property Paystub As Paystub
 
         <ForeignKey("PayPeriodID")>
         Public Overridable Property PayPeriod As PayPeriod
 
         Public Overridable Property AllowancesPerDay As IList(Of AllowancePerDay)
+
+        Public Overridable Sub AddPerDay([date] As Date, amount As Decimal)
+            Dim perDay = New AllowancePerDay([date], amount)
+            perDay.AllowanceItem = Me
+            AllowancesPerDay.Add(perDay)
+
+            Me.Amount += perDay.Amount
+        End Sub
 
     End Class
 

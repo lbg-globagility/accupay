@@ -439,6 +439,11 @@ Public Class PayrollGeneration
             Using session = SessionFactory.Instance.OpenSession(),
                 trans = session.BeginTransaction()
 
+                _paystub = session.Merge(_paystub)
+
+                session.Delete("from AllowanceItem a where a.Paystub.RowID = ?", _paystub.RowID, NHibernate.NHibernateUtil.Int32)
+                _paystub.AllowanceItems = _allowanceItems
+
                 ComputeThirteenthMonthPay(salary)
 
                 session.SaveOrUpdate(_paystub)
@@ -616,7 +621,16 @@ Public Class PayrollGeneration
         Dim workingDays = CDec(workDaysPerYear / CalendarConstants.MonthsInAYear / CalendarConstants.SemiMonthlyPayPeriodsPerMonth)
         Dim dailyRate = allowance.Amount / workingDays
 
-        Dim allowancesPerDay = New Collection(Of AllowancePerDay)
+        Dim allowanceItem = New AllowanceItem() With {
+            .OrganizationID = z_OrganizationID,
+            .CreatedBy = z_User,
+            .LastUpdBy = z_User,
+            .Paystub = _paystub,
+            .PayPeriodID = PayPeriodID,
+            .AllowanceID = allowance.RowID,
+            .Amount = allowance.Amount
+        }
+
         For Each timeEntry In _timeEntries2
             Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
             Dim hourlyRate = dailyRate / divisor
@@ -638,24 +652,8 @@ Public Class PayrollGeneration
                 End If
             End If
 
-            allowancesPerDay.Add(New AllowancePerDay() With {
-                .Date = timeEntry.Date,
-                .Amount = deductionAmount + additionalAmount
-            })
+            allowanceItem.AddPerDay(timeEntry.Date, deductionAmount + additionalAmount)
         Next
-
-        Dim sumTotalOfDays = allowancesPerDay.Sum(Function(a) a.Amount)
-        Dim baseAllowance = allowance.Amount
-
-        Dim allowanceItem = New AllowanceItem() With {
-            .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
-            .LastUpdBy = z_User,
-            .PayPeriodID = PayPeriodID,
-            .AllowanceID = allowance.RowID,
-            .Amount = baseAllowance + sumTotalOfDays,
-            .AllowancesPerDay = allowancesPerDay
-        }
 
         Return allowanceItem
     End Function
@@ -663,7 +661,15 @@ Public Class PayrollGeneration
     Private Function CalculateDailyProratedAllowance(allowance As Allowance) As AllowanceItem
         Dim dailyRate = allowance.Amount
 
-        Dim allowancesPerDay = New Collection(Of AllowancePerDay)
+        Dim allowanceItem = New AllowanceItem() With {
+            .OrganizationID = z_OrganizationID,
+            .CreatedBy = z_User,
+            .LastUpdBy = z_User,
+            .Paystub = _paystub,
+            .PayPeriodID = PayPeriodID,
+            .AllowanceID = allowance.RowID
+        }
+
         For Each timeEntry In _timeEntries2
             Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
             Dim hourlyRate = dailyRate / divisor
@@ -690,23 +696,8 @@ Public Class PayrollGeneration
                 End If
             End If
 
-            allowancesPerDay.Add(New AllowancePerDay() With {
-                .Date = timeEntry.Date,
-                .Amount = amount
-            })
+            allowanceItem.AddPerDay(timeEntry.Date, amount)
         Next
-
-        Dim totalAmount = allowancesPerDay.Sum(Function(a) a.Amount)
-
-        Dim allowanceItem = New AllowanceItem() With {
-            .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
-            .LastUpdBy = z_User,
-            .PayPeriodID = PayPeriodID,
-            .AllowanceID = allowance.RowID,
-            .Amount = totalAmount,
-            .AllowancesPerDay = allowancesPerDay
-        }
 
         Return allowanceItem
     End Function

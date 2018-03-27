@@ -21,6 +21,14 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("AllowanceItemID")>
         Public Overridable Property AllowanceItem As AllowanceItem
 
+        Protected Sub New()
+        End Sub
+
+        Public Sub New([date] As Date, amount As Decimal)
+            Me.Date = [date]
+            Me.Amount = amount
+        End Sub
+
     End Class
 
 End Namespace

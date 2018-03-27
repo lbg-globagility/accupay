@@ -16,10 +16,11 @@ Public Class AllowanceItemMap
         Map(Function(x) x.LastUpd).Generated.Always()
         Map(Function(x) x.LastUpdBy)
 
-        Map(Function(x) x.PaystubID)
         Map(Function(x) x.AllowanceID)
         Map(Function(x) x.PayPeriodID)
         Map(Function(x) x.Amount)
+
+        References(Function(x) x.Paystub).Column("PaystubID")
     End Sub
 
 End Class
