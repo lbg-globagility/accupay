@@ -914,6 +914,9 @@ Public Class PayrollGeneration
             ElseIf IsSssPaidPerPayPeriod() Then
                 _paystub.SssEmployeeShare = employeeSssPerMonth / payPeriodsPerMonth
                 _paystub.SssEmployerShare = employerSssPerMonth / payPeriodsPerMonth
+            Else
+                _paystub.SssEmployeeShare = 0
+                _paystub.SssEmployerShare = 0
             End If
         End If
 
@@ -999,6 +1002,9 @@ Public Class PayrollGeneration
             ElseIf IsPhilHealthPaidPerPayPeriod() Then
                 _paystub.PhilHealthEmployeeShare = employeeShare / payPeriodsPerMonth
                 _paystub.PhilHealthEmployerShare = employerShare / payPeriodsPerMonth
+            Else
+                _paystub.PhilHealthEmployeeShare = 0
+                _paystub.PhilHealthEmployerShare = 0
             End If
         End If
     End Sub
@@ -1060,6 +1066,9 @@ Public Class PayrollGeneration
             ElseIf IsHdmfPaidPerPayPeriod() Then
                 _paystub.HdmfEmployeeShare = employeeHdmfPerMonth / payPeriodsPerMonth
                 _paystub.HdmfEmployerShare = employerHdmfPerMonth / payPeriodsPerMonth
+            Else
+                _paystub.HdmfEmployeeShare = 0
+                _paystub.HdmfEmployerShare = 0
             End If
         End If
     End Sub
