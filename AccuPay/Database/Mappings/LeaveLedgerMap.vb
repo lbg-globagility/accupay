@@ -9,7 +9,7 @@ Public Class LeaveLedgerMap
     Public Sub New()
         Table("leaveledger")
 
-        Id(Function(x) x.RowID).GeneratedBy.Increment()
+        Id(Function(x) x.RowID).GeneratedBy.Identity()
         Map(Function(x) x.OrganizationID)
         Map(Function(x) x.Created).Generated.Insert()
         Map(Function(x) x.CreatedBy)

@@ -24,14 +24,10 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property LastUpdBy As Integer?
 
-        <Column("PayStubID")>
-        Public Overridable Property PaystubID As Integer?
-
         Public Overridable Property BasicPay As Decimal
 
         Public Overridable Property Amount As Decimal
 
-        <ForeignKey("PaystubID")>
         Public Overridable Property Paystub As Paystub
 
     End Class

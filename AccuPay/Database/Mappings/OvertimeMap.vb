@@ -8,7 +8,7 @@ Public Class OvertimeMap
     Public Sub New()
         Table("employeeovertime")
 
-        Id(Function(x) x.RowID).GeneratedBy.Increment()
+        Id(Function(x) x.RowID).GeneratedBy.Identity()
         Map(Function(x) x.OrganizationID)
         Map(Function(x) x.CreatedBy)
         Map(Function(x) x.LastUpdBy)

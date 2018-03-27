@@ -9,7 +9,7 @@ Public Class ThirteenthMonthPayMap
     Public Sub New()
         Table("thirteenthmonthpay")
 
-        Id(Function(x) x.RowID).GeneratedBy.Increment()
+        Id(Function(x) x.RowID).GeneratedBy.Identity()
         Map(Function(x) x.OrganizationID)
         Map(Function(x) x.Created).Generated.Insert()
         Map(Function(x) x.CreatedBy)
