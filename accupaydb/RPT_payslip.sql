@@ -230,6 +230,7 @@ LEFT JOIN (SELECT ete.EmployeeID
            WHERE ete.OrganizationID = og_rowid
            AND ete.`Date` BETWEEN date_from AND date_to
            AND ete.AsActual = FALSE
+			  GROUP BY ete.EmployeeID
            ) et
        ON et.EmployeeID=ps.EmployeeID
 
