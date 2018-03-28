@@ -2652,6 +2652,13 @@ Friend Class PrintAllPaySlipOfficialFormat
 
             Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
 
+            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("payperiod")
+            objText.Text =
+                Convert.ToString(
+                New SQL(String.Concat("SELECT",
+                                      " CONCAT('Payroll period ', DATE_FORMAT(pp.PayFromDate, '%c/%e/%Y'), ' to ', DATE_FORMAT(pp.PayToDate, '%c/%e/%Y')) `Result`",
+                                      " FROM payperiod pp WHERE pp.RowID=", n_PayPeriodRowID, ";")).GetFoundRow)
+
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgContact")
             objText.Text = String.Empty
 
