@@ -13,3 +13,9 @@ Public Enum SssCalculationBasis
     GrossPay
     BasicSalary
 End Enum
+
+Public Enum PhilHealthCalculationBasis
+    Earnings
+    GrossPay
+    BasicSalary
+End Enum
