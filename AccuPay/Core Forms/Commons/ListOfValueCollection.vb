@@ -28,6 +28,10 @@ Public Class ListOfValueCollection
         Return value?.DisplayValue
     End Function
 
+    Public Function GetSublist(type As String) As ListOfValueCollection
+        Return New ListOfValueCollection(_values.Where(Function(l) l.Type = type))
+    End Function
+
     Public Function GetString(name As String, Optional [default] As String = "") As String
         Dim names = Split(name)
         Return GetString(names.Item1, names.Item2, [default])
