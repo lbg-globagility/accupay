@@ -227,6 +227,7 @@ DECLARE leaveHoursAfterBreak DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE leaveHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE leavePay DECIMAL(15, 4) DEFAULT 0.0;
 
+DECLARE _basicHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE basicDayPay DECIMAL(15, 4) DEFAULT 0.0;
 
 DECLARE hasWorkedLastWorkingDay BOOLEAN DEFAULT FALSE;
@@ -819,6 +820,8 @@ IF hasLeave THEN
     END IF;
 END IF;
 
+SET _basicHours = leaveHours + regularHours + regularHolidayHours + specialHolidayHours + lateHours + undertimeHours;
+
 /******************************************************************************
  ******************************************************************************
  * Compute the Absent hours
@@ -846,8 +849,8 @@ END IF;
  * If the employee filed a leave for a day for which the leave hours is not enough,
  * file the unaccounted hours as absent hours.
  */
-IF hasLeave AND (leaveHours + regularHours + regularHolidayHours + specialHolidayHours + lateHours + undertimeHours) < shiftHours THEN
-    SET absentHours = shiftHours - (leaveHours + regularHours);
+IF hasLeave AND (_basicHours < shiftHours) THEN
+    SET absentHours = shiftHours - _basicHours;
 END IF;
 
 /******************************************************************************

@@ -23,9 +23,43 @@ Public Class ListOfValueCollection
         Return value?.DisplayValue
     End Function
 
-    Public Function GetString(type As String, lic As String) As String
+    Public Function GetValue(type As String, lic As String) As String
+        Dim value = _values?.FirstOrDefault(Function(f) f.Type = type And f.LIC = lic)
+        Return value?.DisplayValue
+    End Function
+
+    Public Function GetSublist(type As String) As ListOfValueCollection
+        Return New ListOfValueCollection(_values.Where(Function(l) l.Type = type))
+    End Function
+
+    Public Function GetString(name As String, Optional [default] As String = "") As String
+        Dim names = Split(name)
+        Return GetString(names.Item1, names.Item2, [default])
+    End Function
+
+    Public Function GetString(type As String, lic As String, Optional [default] As String = "") As String
         Dim value = _values?.FirstOrDefault(Function(f) f.LIC = lic And f.Type = type)
         Return value?.DisplayValue
+    End Function
+
+    Public Function GetEnum(Of T As {Structure})(name As String, Optional [default] As T = Nothing) As T
+        Dim names = Split(name)
+        Return GetEnum(Of T)(names.Item1, names.Item2, [default])
+    End Function
+
+    Public Function GetEnum(Of T As {Structure})(type As String, lic As String, Optional [default] As T = Nothing) As T
+        Dim value = GetValue(type, lic)
+
+        If value Is Nothing Then
+            Return [default]
+        End If
+
+        Return Enums(Of T).Parse(value)
+    End Function
+
+    Public Function GetBoolean(name As String, Optional [default] As Boolean = False) As Boolean
+        Dim names = Split(name)
+        Return GetBoolean(names.Item1, names.Item2, [default])
     End Function
 
     Public Function GetBoolean(type As String, lic As String, Optional [default] As Boolean = False) As Boolean
@@ -43,13 +77,17 @@ Public Class ListOfValueCollection
         Return Convert.ToBoolean(value?.DisplayValue)
     End Function
 
-    Public Function GetString(lic As String) As String
-        Return GetValue(lic)
-    End Function
-
     Public Function GetDecimal(lic As String) As Decimal?
         Dim value = GetValue(lic)
         Return If(value IsNot Nothing, Decimal.Parse(value), Nothing)
+    End Function
+
+    Private Function Split(name As String) As Tuple(Of String, String)
+        Dim names = name.Split({"."}, 2, StringSplitOptions.RemoveEmptyEntries)
+        Dim type = names(0)
+        Dim lic = names(1)
+
+        Return New Tuple(Of String, String)(type, lic)
     End Function
 
     Private Function GetListOfValue(type As String, lic As String) As ListOfValue

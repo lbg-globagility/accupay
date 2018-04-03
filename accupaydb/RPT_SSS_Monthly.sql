@@ -58,6 +58,7 @@ BEGIN
     LEFT JOIN paysocialsecurity
     ON paysocialsecurity.EmployeeContributionAmount = paystubsummary.TotalEmpSSS
     WHERE employee.OrganizationID = OrganizID
+    AND FIND_IN_SET(employee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
     ORDER BY employee.LastName, employee.FirstName;
 
 END//

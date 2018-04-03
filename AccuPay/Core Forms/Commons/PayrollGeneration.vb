@@ -93,6 +93,8 @@ Public Class PayrollGeneration
 
     Private _paystub As Paystub
 
+    Private _previousPaystub As Paystub
+
     Private _products As IEnumerable(Of Product)
 
     Private _philHealthDeductionSchedule As String
@@ -216,6 +218,10 @@ Public Class PayrollGeneration
 
         _listOfValues = resources.ListOfValues
         _previousPaystubs = resources.PreviousPaystubs
+
+        _previousPaystub = resources.PreviousPaystubs.FirstOrDefault(
+            Function(p) p.EmployeeID = _employee2.RowID)
+
         _settings = New ListOfValueCollection(_listOfValues)
         _payPeriod = resources.PayPeriod
 
@@ -398,7 +404,7 @@ Public Class PayrollGeneration
 
                             _paystub.TotalEarnings = (basicPay + extraPay) - totalDeduction
 
-                            Dim taxablePolicy = If(_settings.GetString("Payroll Policy", "paystub.taxableincome"), "Basic Pay")
+                            Dim taxablePolicy = If(_settings.GetString("Payroll Policy.paystub.taxableincome"), "Basic Pay")
 
                             If taxablePolicy = "Gross Income" Then
                                 currentTaxableIncome = _paystub.TotalEarnings
@@ -908,45 +914,51 @@ Public Class PayrollGeneration
     End Sub
 
     Private Sub CalculateSss(salary As DataRow)
-        Dim employeeSssPerMonth = ValNoComma(salary("EmployeeContributionAmount"))
-        Dim employerSssPerMonth = ValNoComma(salary("EmployerContributionAmount"))
-        Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
         Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
-        If False Then
-            Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(
-                Function(s)
-                    Return s.RangeFromAmount <= _paystub.GrossPay And
-                        s.RangeToAmount >= _paystub.GrossPay
-                End Function
-            )
+        Dim findSocialSecurityBracket =
+            Function(amount As Decimal) _socialSecurityBrackets.FirstOrDefault(
+                Function(s) s.RangeFromAmount <= amount And s.RangeToAmount >= amount)
 
-            employeeSssPerMonth = socialSecurityBracket.EmployeeContributionAmount
-            employerSssPerMonth = socialSecurityBracket.EmployerContributionAmount
+        Dim sssCalculation = _settings.GetEnum("Payroll Policy.sss_calculation_basis", SssCalculationBasis.BasicSalary)
+
+        Dim isSssProrated =
+            (sssCalculation = SssCalculationBasis.Earnings) Or
+            (sssCalculation = SssCalculationBasis.GrossPay)
+
+        Dim employeeSssPerMonth = 0D
+        Dim employerSssPerMonth = 0D
+
+        If isSssProrated Then
+            Dim socialSecurityBracket As SocialSecurityBracket = Nothing
+
+            If sssCalculation = SssCalculationBasis.Earnings Then
+                Dim totalEarnings = If(_previousPaystub?.TotalEarnings + _paystub.TotalEarnings, 0)
+
+                socialSecurityBracket = findSocialSecurityBracket(totalEarnings)
+            ElseIf sssCalculation = SssCalculationBasis.GrossPay Then
+                Dim totalGrossPay = If(_previousPaystub?.GrossPay + _paystub.GrossPay, 0)
+
+                socialSecurityBracket = findSocialSecurityBracket(totalGrossPay)
+            End If
+
+            If socialSecurityBracket IsNot Nothing Then
+                employeeSssPerMonth = socialSecurityBracket?.EmployeeContributionAmount
+                employerSssPerMonth = socialSecurityBracket?.EmployerContributionAmount
+            End If
+        ElseIf sssCalculation = SssCalculationBasis.BasicSalary Then
+            employeeSssPerMonth = ValNoComma(salary("EmployeeContributionAmount"))
+            employerSssPerMonth = If(employeeSssPerMonth = 0, 0, ValNoComma(salary("EmployerContributionAmount")))
         End If
 
         If is_weekly Then
-            Dim is_deduct_sched_to_thisperiod As Boolean = False
-
-            Dim pp = New Collection(Of PayPeriod)
+            Dim is_deduct_sched_to_thisperiod = False
 
             If is_under_agency Then
-                Using context = New PayrollContext()
-                    Dim query = From p In context.PayPeriods
-                                Where p.RowID = _PayPeriodID
-
-                    is_deduct_sched_to_thisperiod =
-                        Convert.ToBoolean(query.FirstOrDefault.SSSWeeklyAgentContribSched)
-                End Using
+                is_deduct_sched_to_thisperiod = _payPeriod.SSSWeeklyAgentContribSched
             Else
-                Using context = New PayrollContext()
-                    Dim query = From p In context.PayPeriods
-                                Where p.RowID = _PayPeriodID
-
-                    is_deduct_sched_to_thisperiod =
-                        Convert.ToBoolean(query.FirstOrDefault.SSSWeeklyContribSched)
-                End Using
+                is_deduct_sched_to_thisperiod = _payPeriod.SSSWeeklyContribSched
             End If
 
             If is_deduct_sched_to_thisperiod Then
@@ -961,11 +973,15 @@ Public Class PayrollGeneration
                 _paystub.SssEmployeeShare = employeeSssPerMonth
                 _paystub.SssEmployerShare = employerSssPerMonth
             ElseIf IsSssPaidPerPayPeriod() Then
+                Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
+
                 _paystub.SssEmployeeShare = employeeSssPerMonth / payPeriodsPerMonth
                 _paystub.SssEmployerShare = employerSssPerMonth / payPeriodsPerMonth
+            Else
+                _paystub.SssEmployeeShare = 0
+                _paystub.SssEmployerShare = 0
             End If
         End If
-
     End Sub
 
     Private Function IsSssPaidOnFirstHalf() As Boolean
@@ -981,19 +997,28 @@ Public Class PayrollGeneration
     End Function
 
     Private Sub CalculatePhilHealth(salary As DataRow)
-        Dim totalContribution = ConvertToType(Of Decimal)(salary("PhilHealthDeduction"))
-        Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
-        Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
+        Dim philHealthCalculation = _settings.GetEnum(
+            "PhilHealth.CalculationBasis",
+            PhilHealthCalculationBasis.BasicSalary)
 
-        If False Then
-            Dim philHealthBracket = _philHealthBrackets.FirstOrDefault(
-                Function(p)
-                    Return p.SalaryRangeFrom <= _paystub.GrossPay And
-                        p.SalaryRangeTo >= _paystub.GrossPay
-                End Function
-            )
+        Dim isPhilHealthProrated =
+            (philHealthCalculation = PhilHealthCalculationBasis.Earnings) Or
+            (philHealthCalculation = PhilHealthCalculationBasis.GrossPay)
 
-            totalContribution = If(philHealthBracket?.TotalMonthlyPremium, 0D)
+        Dim totalContribution = 0D
+        If philHealthCalculation = PhilHealthCalculationBasis.BasicSalary Then
+            ' If philHealth calculation is based on the basic salary, get it from the salary record
+            totalContribution = ConvertToType(Of Decimal)(salary("PhilHealthDeduction"))
+        ElseIf isPhilHealthProrated Then
+            Dim basisPay = 0D
+
+            If philHealthCalculation = PhilHealthCalculationBasis.Earnings Then
+                basisPay = _paystub.TotalEarnings + _previousPaystub.TotalEarnings
+            ElseIf philHealthCalculation = PhilHealthCalculationBasis.GrossPay Then
+                basisPay = _paystub.GrossPay + _previousPaystub.GrossPay
+            End If
+
+            totalContribution = ComputePhilHealth(basisPay)
         End If
 
         Dim halfContribution = AccuMath.Truncate(totalContribution / 2, 2)
@@ -1010,6 +1035,8 @@ Public Class PayrollGeneration
 
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
+        Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
+        Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
         If is_weekly Then
             Dim is_deduct_sched_to_thisperiod As Boolean = False
@@ -1048,9 +1075,32 @@ Public Class PayrollGeneration
             ElseIf IsPhilHealthPaidPerPayPeriod() Then
                 _paystub.PhilHealthEmployeeShare = employeeShare / payPeriodsPerMonth
                 _paystub.PhilHealthEmployerShare = employerShare / payPeriodsPerMonth
+            Else
+                _paystub.PhilHealthEmployeeShare = 0
+                _paystub.PhilHealthEmployerShare = 0
             End If
         End If
     End Sub
+
+    Private Function ComputePhilHealth(basis As Decimal) As Decimal
+        Dim findPhilHealthBracket =
+            Function(amount As Decimal) _philHealthBrackets.FirstOrDefault(
+                Function(p) p.SalaryRangeFrom <= amount And
+                    p.SalaryRangeTo >= amount)
+
+        Dim philHealthSettings = _settings.GetSublist("PhilHealth")
+
+        Dim minimum = philHealthSettings.GetDecimal("MinimumContribution")
+        Dim maximum = philHealthSettings.GetDecimal("MaximumContribution")
+        Dim rate = philHealthSettings.GetDecimal("Rate")
+
+        ' Contribution should be bounded by the minimum and maximum
+        Dim contribution = {{basis * rate, minimum}.Max(), maximum}.Min()
+        ' Truncate to the nearest cent
+        contribution = AccuMath.Truncate(contribution, 2)
+
+        Return contribution
+    End Function
 
     Private Function IsPhilHealthPaidOnFirstHalf() As Boolean
         Return _isFirstHalf And (_philHealthDeductionSchedule = ContributionSchedule.FirstHalf)
@@ -1066,7 +1116,7 @@ Public Class PayrollGeneration
 
     Private Sub CalculateHdmf(salary As DataRow)
         Dim employeeHdmfPerMonth = ValNoComma(salary("HDMFAmount"))
-        Dim employerHdmfPerMonth = 100D
+        Dim employerHdmfPerMonth = If(employeeHdmfPerMonth = 0, 0, employeeHdmfPerMonth)
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
         Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
@@ -1109,6 +1159,9 @@ Public Class PayrollGeneration
             ElseIf IsHdmfPaidPerPayPeriod() Then
                 _paystub.HdmfEmployeeShare = employeeHdmfPerMonth / payPeriodsPerMonth
                 _paystub.HdmfEmployerShare = employerHdmfPerMonth / payPeriodsPerMonth
+            Else
+                _paystub.HdmfEmployeeShare = 0
+                _paystub.HdmfEmployerShare = 0
             End If
         End If
     End Sub

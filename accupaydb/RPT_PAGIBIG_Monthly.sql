@@ -46,7 +46,10 @@ BEGIN
         GROUP BY paystub.EmployeeID
     ) paystubsummary
     ON paystubsummary.EmployeeID = employee.RowID
-    WHERE employee.OrganizationID = OrganizID;
+    WHERE employee.OrganizationID = OrganizID
+    AND FIND_IN_SET(employee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+	 ORDER BY CONCAT(employee.LastName, employee.FirstName)
+	 ;
 
 END//
 DELIMITER ;

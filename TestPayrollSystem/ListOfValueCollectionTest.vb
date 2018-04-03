@@ -28,6 +28,22 @@ Public Class ListOfValueCollectionTest
         Assert.AreEqual(False, answer)
     End Sub
 
+    <Test>
+    Public Sub SimpleNameShouldReturnBoolean()
+        Dim listOfValues = CreateListOfValue("true")
+        Dim answer = listOfValues.GetBoolean("sampletype.samplelic")
+
+        Assert.AreEqual(True, answer)
+    End Sub
+
+    <Test>
+    Public Sub SimpleNameShouldReturnStringHello()
+        Dim listOfValues = CreateListOfValue("Hello")
+        Dim answer = listOfValues.GetString("sampletype.samplelic")
+
+        Assert.AreEqual("Hello", answer)
+    End Sub
+
     Private Function CreateListOfValue(value As String) As ListOfValueCollection
         Return New ListOfValueCollection(New List(Of ListOfValue) From {
             New ListOfValue() With {
