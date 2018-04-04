@@ -21,6 +21,7 @@ Public Class AllowanceItemMap
         Map(Function(x) x.Amount)
 
         References(Function(x) x.Paystub).Column("PaystubID")
+        HasMany(Function(x) x.AllowancesPerDay).Inverse().Cascade.All()
     End Sub
 
 End Class

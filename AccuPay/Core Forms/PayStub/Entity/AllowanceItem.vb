@@ -40,6 +40,10 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property AllowancesPerDay As IList(Of AllowancePerDay)
 
+        Public Sub New()
+            AllowancesPerDay = New List(Of AllowancePerDay)
+        End Sub
+
         Public Overridable Sub AddPerDay([date] As Date, amount As Decimal)
             Dim perDay = New AllowancePerDay([date], amount)
             perDay.AllowanceItem = Me

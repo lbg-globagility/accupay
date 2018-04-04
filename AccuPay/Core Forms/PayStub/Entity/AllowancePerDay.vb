@@ -12,8 +12,6 @@ Namespace Global.AccuPay.Entity
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Overridable Property RowID As Integer?
 
-        Public Overridable Property AllowanceItemID As Integer?
-
         Public Overridable Property [Date] As Date
 
         Public Overridable Property Amount As Decimal
