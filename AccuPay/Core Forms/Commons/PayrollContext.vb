@@ -1,6 +1,7 @@
 Imports System.Data.Common
 Imports System.Data.Entity
 Imports AccuPay.Entity
+Imports AccuPay.Loans
 Imports AccuPay.JobLevels
 Imports PayrollSys
 
@@ -30,8 +31,6 @@ Public Class PayrollContext
     Public Overridable Property WithholdingTaxBrackets As DbSet(Of WithholdingTaxBracket)
 
     Public Overridable Property LoanSchedules As DbSet(Of LoanSchedule)
-
-    Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
 
     Public Overridable Property TimeLogs As DbSet(Of TimeLog)
 
@@ -70,8 +69,6 @@ Public Class PayrollContext
     Public Overridable Property TimeEntries As DbSet(Of TimeEntry)
 
     Public Overridable Property Allowances As DbSet(Of Allowance)
-
-    'Public Overridable Property AllowanceItems As DbSet(Of AllowanceItem)
 
     Public Overridable Property Adjustments As DbSet(Of Adjustment)
 

@@ -1,7 +1,7 @@
 ﻿Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.ComponentModel.DataAnnotations
 
-Namespace Global.PayrollSys
+Namespace Global.AccuPay.Loans
 
     <Table("scheduledloansperpayperiod")>
     Public Class LoanTransaction
@@ -22,9 +22,6 @@ Namespace Global.PayrollSys
         Public Overridable Property PayPeriodID As Integer?
 
         Public Overridable Property EmployeeID As Integer?
-
-        <Column("EmployeeLoanRecordID")>
-        Public Overridable Property LoanScheduleID As Integer?
 
         Public Overridable Property LoanPayPeriodLeft As Integer
 

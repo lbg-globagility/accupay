@@ -1,7 +1,10 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Data.Entity
 Imports AccuPay.Entity
+Imports AccuPay.Loans
 Imports log4net
+Imports NHibernate
+Imports NHibernate.Linq
 Imports MySql.Data.MySqlClient
 Imports PayrollSys
 
@@ -26,7 +29,7 @@ Public Class PayrollGeneration
         Public Const PerPayPeriod As String = "Per pay period"
     End Class
 
-    Public Property PayrollDateFrom As String
+    Public Property payrollDateFrom As String
 
     Public Property PayrollDateTo As String
 
@@ -41,9 +44,9 @@ Public Class PayrollGeneration
     Private _isEndOfMonth As Boolean
     Private _allSalaries As DataTable
 
-    Private _allLoanSchedules As ICollection(Of PayrollSys.LoanSchedule)
+    Private _allLoanSchedules As ICollection(Of LoanSchedule)
 
-    Private _allLoanTransactions As ICollection(Of PayrollSys.LoanTransaction)
+    Private _allLoanTransactions As ICollection(Of LoanTransaction)
 
     Private allWeeklyAllowances As DataTable
     Private allNoTaxWeeklyAllowances As DataTable
@@ -145,8 +148,8 @@ Public Class PayrollGeneration
     Sub New(employee As DataRow,
             payPeriodHalfNo As String,
             allSalaries As DataTable,
-            allLoanSchedules As ICollection(Of PayrollSys.LoanSchedule),
-            allLoanTransactions As ICollection(Of PayrollSys.LoanTransaction),
+            allLoanSchedules As ICollection(Of LoanSchedule),
+            allLoanTransactions As ICollection(Of LoanTransaction),
             allWeeklyAllowances As DataTable,
             allNoTaxWeeklyAllowances As DataTable,
             allDailyBonuses As DataTable,
@@ -252,7 +255,7 @@ Public Class PayrollGeneration
     Public Sub DoProcess()
         Try
             Console.WriteLine($"Generate Paystub for #{_employee2.RowID} - {_employee2.LastName}, {_employee2.FirstName}")
-            Dim date_to_use = If(CDate(PayrollDateFrom) > CDate(PayrollDateTo), CDate(PayrollDateFrom), CDate(PayrollDateTo))
+            Dim date_to_use = If(CDate(payrollDateFrom) > CDate(PayrollDateTo), CDate(payrollDateFrom), CDate(PayrollDateTo))
             Dim dateStr_to_use = Format(date_to_use, "yyyy-MM-dd")
             numberofweeksthismonth = CInt(New MySQLExecuteQuery("SELECT `COUNTTHEWEEKS`('" & dateStr_to_use & "');").Result)
 
@@ -267,7 +270,7 @@ Public Class PayrollGeneration
 
     Private Sub GeneratePayStub()
         Dim transaction As MySqlTransaction = Nothing
-        Dim newLoanTransactions = New Collection(Of PayrollSys.LoanTransaction)
+        Dim newLoanTransactions = New Collection(Of LoanTransaction)
 
         Try
             _paystub = _paystubs.FirstOrDefault(
@@ -280,7 +283,7 @@ Public Class PayrollGeneration
                     .LastUpdBy = z_User,
                     .EmployeeID = _employee2.RowID,
                     .PayPeriodID = PayPeriodID,
-                    .PayFromdate = PayrollDateFrom,
+                    .PayFromdate = payrollDateFrom,
                     .PayToDate = PayrollDateTo
                 }
             End If
@@ -314,13 +317,13 @@ Public Class PayrollGeneration
                     ToList()
 
                 For Each loanSchedule In loanSchedules
-                    Dim loanTransaction = New PayrollSys.LoanTransaction() With {
+                    Dim loanTransaction = New LoanTransaction() With {
                         .Created = Date.Now(),
                         .LastUpd = Date.Now(),
                         .OrganizationID = z_OrganizationID,
                         .EmployeeID = _paystub.EmployeeID,
                         .PayPeriodID = PayPeriodID,
-                        .LoanScheduleID = loanSchedule.RowID,
+                        .LoanSchedule = loanSchedule,
                         .LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft - 1
                     }
 
@@ -445,12 +448,50 @@ Public Class PayrollGeneration
             Using session = SessionFactory.Instance.OpenSession(),
                 trans = session.BeginTransaction()
 
+                UpdateLeaveLedger(session)
+
                 _paystub = session.Merge(_paystub)
 
                 session.Delete("from AllowanceItem a where a.Paystub.RowID = ?", _paystub.RowID, NHibernate.NHibernateUtil.Int32)
                 _paystub.AllowanceItems = _allowanceItems
 
                 ComputeThirteenthMonthPay(salary)
+
+                Dim vacationLeaveBalance = session.Query(Of PaystubItem).
+                    Where(Function(p) p.Product.PartNo = "Vacation leave").
+                    Where(Function(p) CBool(p.Paystub.RowID = _paystub.RowID)).
+                    FirstOrDefault()
+
+                If vacationLeaveBalance Is Nothing Then
+                    Dim newBalance = _vacationLeaveBalance - _vacationLeaveUsed
+
+                    vacationLeaveBalance = New PaystubItem() With {
+                        .OrganizationID = z_OrganizationID,
+                        .ProductID = vacationLeaveProduct?.RowID,
+                        .PayAmount = newBalance,
+                        .Paystub = _paystub
+                    }
+
+                    _paystub.PaystubItems.Add(vacationLeaveBalance)
+                End If
+
+                Dim sickLeaveBalance = session.Query(Of PaystubItem).
+                    Where(Function(p) p.Product.PartNo = "Sick leave").
+                    Where(Function(p) CBool(p.Paystub.RowID = _paystub.RowID)).
+                    FirstOrDefault()
+
+                If sickLeaveBalance Is Nothing Then
+                    Dim newBalance = _sickLeaveBalance - _sickLeaveUsed
+
+                    sickLeaveBalance = New PaystubItem() With {
+                        .OrganizationID = z_OrganizationID,
+                        .ProductID = sickLeaveProduct?.RowID,
+                        .PayAmount = newBalance,
+                        .Paystub = _paystub
+                    }
+
+                    _paystub.PaystubItems.Add(sickLeaveBalance)
+                End If
 
                 session.SaveOrUpdate(_paystub)
 
@@ -460,67 +501,6 @@ Public Class PayrollGeneration
 
                 trans.Commit()
             End Using
-
-            'Using context = New PayrollContext()
-            '    If _paystub.RowID.HasValue Then
-            '        context.Entry(_paystub).State = EntityState.Modified
-            '    Else
-            '        context.Paystubs.Add(_paystub)
-            '    End If
-
-            '    ' Delete and replace the old allowanceItems with the newly recalculated ones
-            '    context.Set(Of AllowanceItem).RemoveRange(_paystub.AllowanceItems)
-            '    _paystub.AllowanceItems = _allowanceItems
-
-            '    UpdateLeaveLedger(context)
-
-            '    Dim vacationLeaveBalance =
-            '        (From p In context.PaystubItems
-            '         Where p.Product.PartNo = "Vacation leave" And
-            '            p.PayStubID = _paystub.RowID).
-            '        FirstOrDefault()
-
-            '    If vacationLeaveBalance Is Nothing Then
-            '        Dim newBalance = _vacationLeaveBalance - _vacationLeaveUsed
-
-            '        vacationLeaveBalance = New PaystubItem() With {
-            '            .OrganizationID = z_OrganizationID,
-            '            .Created = Date.Now,
-            '            .ProductID = vacationLeaveProduct?.RowID,
-            '            .PayAmount = newBalance,
-            '            .PayStubID = _paystub.RowID
-            '        }
-
-            '        _paystub.PaystubItems.Add(vacationLeaveBalance)
-            '    End If
-
-            '    Dim sickLeaveBalance =
-            '        (From p In context.PaystubItems
-            '         Where p.Product.PartNo = "Sick leave" And
-            '            p.PayStubID = _paystub.RowID).
-            '        FirstOrDefault()
-
-            '    If sickLeaveBalance Is Nothing Then
-            '        Dim newBalance = _sickLeaveBalance - _sickLeaveUsed
-
-            '        sickLeaveBalance = New PaystubItem() With {
-            '            .OrganizationID = z_OrganizationID,
-            '            .Created = Date.Now,
-            '            .ProductID = sickLeaveProduct?.RowID,
-            '            .PayAmount = newBalance,
-            '            .PayStubID = _paystub.RowID
-            '        }
-
-            '        _paystub.PaystubItems.Add(sickLeaveBalance)
-            '    End If
-
-            '    context.LoanTransactions.AddRange(newLoanTransactions)
-
-            '    ComputeThirteenthMonthPay(salary)
-
-            '    context.SaveChanges()
-            'End Using
-
         Catch ex As Exception
             If transaction IsNot Nothing Then
                 transaction.Rollback()
@@ -777,23 +757,24 @@ Public Class PayrollGeneration
         _paystub.TotalAllowance = _allowanceItems.Sum(Function(a) a.Amount)
     End Sub
 
-    Private Sub UpdateLeaveLedger(db As PayrollContext)
-        Dim leaves = (From l In db.Leaves
-                      Where PayrollDateFrom <= l.StartDate And
-                            l.StartDate <= PayrollDateTo And
-                            l.EmployeeID = _employee2.RowID
-                      Select l).ToList()
+    Private Sub UpdateLeaveLedger(session As ISession)
+        Dim leaves = session.Query(Of Leave).
+            Where(Function(l) _payPeriod.PayFromDate <= l.StartDate).
+            Where(Function(l) l.StartDate <= _payPeriod.PayToDate).
+            Where(Function(l) CBool(l.EmployeeID = _employee2.RowID)).
+            ToList()
 
         Dim leaveIds = leaves.Select(Function(l) l.RowID)
 
-        Dim transactions = (From t In db.LeaveTransactions
+        Dim transactions = (From t In session.Query(Of LeaveTransaction)
                             Where leaveIds.Contains(t.ReferenceID)).ToList()
 
-        Dim ledgers = (From l In db.LeaveLedgers.
-                           Include(Function(l) l.Product).
-                           Include(Function(l) l.LastTransaction)
-                       Where l.EmployeeID = _employee2.RowID).
-                       ToList()
+        Dim employeeId = _employee2.RowID
+        Dim ledgers = session.Query(Of LeaveLedger).
+            Include(Function(x) x.Product).
+            Include(Function(x) x.LastTransaction).
+            Where(Function(x) CBool(x.EmployeeID = employeeId)).
+            ToList()
 
         Dim newLeaveTransactions = New List(Of LeaveTransaction)
         For Each leave In leaves

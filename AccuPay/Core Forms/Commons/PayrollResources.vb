@@ -3,6 +3,7 @@
 Imports System.Data.Entity
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Loans
 Imports NHibernate.Linq
 Imports PayrollSys
 
@@ -27,9 +28,9 @@ Public Class PayrollResources
 
     Private _actualtimeentries As ICollection(Of ActualTimeEntry)
 
-    Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
+    Private _loanSchedules As ICollection(Of LoanSchedule)
 
-    Private _loanTransactions As ICollection(Of PayrollSys.LoanTransaction)
+    Private _loanTransactions As ICollection(Of LoanTransaction)
 
     Private _products As ICollection(Of Product)
 
@@ -71,13 +72,13 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property LoanSchedules As ICollection(Of PayrollSys.LoanSchedule)
+    Public ReadOnly Property LoanSchedules As ICollection(Of LoanSchedule)
         Get
             Return _loanSchedules
         End Get
     End Property
 
-    Public ReadOnly Property LoanTransactions As ICollection(Of PayrollSys.LoanTransaction)
+    Public ReadOnly Property LoanTransactions As ICollection(Of LoanTransaction)
         Get
             Return _loanTransactions
         End Get
@@ -303,12 +304,12 @@ Public Class PayrollResources
 
     Private Async Function LoadLoanTransactions() As Task
         Try
-            Using context = New PayrollContext()
-                Dim query = From t In context.LoanTransactions
-                            Select t
-                            Where t.OrganizationID = z_OrganizationID And
-                                t.PayPeriodID = CType(_payPeriodID, Integer?)
-                _loanTransactions = Await query.ToListAsync()
+            Using session = SessionFactory.Instance.OpenSession()
+                Dim query = session.Query(Of LoanTransaction).
+                    Where(Function(x) CBool(x.OrganizationID = z_OrganizationID)).
+                    Where(Function(x) CBool(x.PayPeriodID = _payPeriodID))
+
+                _loanTransactions = Await LinqExtensionMethods.ToListAsync(query)
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("LoanTransactions", ex)

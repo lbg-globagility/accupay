@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports FluentNHibernate.Mapping
-Imports PayrollSys
+Imports AccuPay.Loans
 
 Public Class LoanTransactionMap
     Inherits ClassMap(Of LoanTransaction)
@@ -18,10 +18,11 @@ Public Class LoanTransactionMap
 
         Map(Function(x) x.PayPeriodID)
         Map(Function(x) x.EmployeeID)
-        Map(Function(x) x.LoanScheduleID).Column("EmployeeLoanRecordID")
         Map(Function(x) x.LoanPayPeriodLeft)
-        Map(Function(X) X.TotalBalance).Column("TotalBalanceLeft")
+        Map(Function(x) x.TotalBalance).Column("TotalBalanceLeft")
         Map(Function(x) x.Amount).Column("DeductionAmount")
+
+        References(Function(x) x.LoanSchedule).Column("EmployeeLoanRecordID")
     End Sub
 
 End Class

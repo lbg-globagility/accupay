@@ -1,6 +1,7 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.Loans
 Imports log4net
 
 Public Class PayStubForm
@@ -82,9 +83,9 @@ Public Class PayStubForm
 
     Dim n_VeryFirstPayPeriodIDOfThisYear As Object = Nothing
 
-    Private _loanSchedules As ICollection(Of PayrollSys.LoanSchedule)
+    Private _loanSchedules As ICollection(Of LoanSchedule)
 
-    Private _loanTransactions As ICollection(Of PayrollSys.LoanTransaction)
+    Private _loanTransactions As ICollection(Of LoanTransaction)
 
     Public paypFrom As String = Nothing
     Public paypTo As String = Nothing
@@ -1188,7 +1189,7 @@ Public Class PayStubForm
                     )
 
                     With generator
-                        .PayrollDateFrom = paypFrom
+                        .payrollDateFrom = paypFrom
                         .PayrollDateTo = paypTo
                         .PayPeriodID = paypRowID
                     End With

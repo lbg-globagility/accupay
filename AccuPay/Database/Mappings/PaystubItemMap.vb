@@ -16,10 +16,11 @@ Public Class PaystubItemMap
         Map(Function(x) x.LastUpd).Generated.Always()
         Map(Function(x) x.LastUpdBy)
 
-        Map(Function(x) x.PayStubID)
-        Map(Function(x) x.ProductID)
         Map(Function(x) x.PayAmount)
         Map(Function(x) x.Undeclared)
+
+        References(Function(x) x.Product).Column("ProductID")
+        References(Function(x) x.Paystub).Column("PayStubID")
     End Sub
 
 End Class

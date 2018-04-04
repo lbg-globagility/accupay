@@ -10,148 +10,148 @@ Namespace Global.AccuPay.Entity
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property RowID As Integer?
+        Public Overridable Property RowID As Integer?
 
-        Public Property SupplierID As Integer?
+        Public Overridable Property SupplierID As Integer?
 
-        Public Property Name As String
+        Public Overridable Property Name As String
 
-        Public Property OrganizationID As Integer?
+        Public Overridable Property OrganizationID As Integer?
 
-        Public Property Description As String
+        Public Overridable Property Description As String
 
-        Public Property PartNo As String
+        Public Overridable Property PartNo As String
 
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property Created As Date
+        Public Overridable Property Created As Date
 
         <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
-        Public Property LastUpd As Date?
+        Public Overridable Property LastUpd As Date?
 
         <NotMapped>
-        Public Property LastArrivedQty As Integer?
+        Public Overridable Property LastArrivedQty As Integer?
 
-        Public Property CreatedBy As Integer?
+        Public Overridable Property CreatedBy As Integer?
 
-        Public Property LastUpdBy As Integer?
+        Public Overridable Property LastUpdBy As Integer?
 
-        Public Property Category As String
+        Public Overridable Property Category As String
 
-        Public Property CategoryID As Integer?
-
-        <NotMapped>
-        Public Property AccountingAccountID As Integer?
+        Public Overridable Property CategoryID As Integer?
 
         <NotMapped>
-        Public Property Catalog As String
+        Public Overridable Property AccountingAccountID As Integer?
 
         <NotMapped>
-        Public Property Comments As String
-
-        Public Property Status As String
-
-        Public Property Fixed As Boolean
+        Public Overridable Property Catalog As String
 
         <NotMapped>
-        Public Property UnitPrice As Decimal
+        Public Overridable Property Comments As String
+
+        Public Overridable Property Status As String
+
+        Public Overridable Property Fixed As Boolean
 
         <NotMapped>
-        Public Property VATPercent As Decimal
+        Public Overridable Property UnitPrice As Decimal
 
         <NotMapped>
-        Public Property FirstBillFlag As Char
+        Public Overridable Property VATPercent As Decimal
 
         <NotMapped>
-        Public Property SecondBillFlag As Char
+        Public Overridable Property FirstBillFlag As Char
 
         <NotMapped>
-        Public Property ThirdBillFlag As Char
+        Public Overridable Property SecondBillFlag As Char
 
         <NotMapped>
-        Public Property PDCFlag As Char
+        Public Overridable Property ThirdBillFlag As Char
 
         <NotMapped>
-        Public Property MonthlyBIllFlag As Char
+        Public Overridable Property PDCFlag As Char
 
         <NotMapped>
-        Public Property PenaltyFlag As Char
+        Public Overridable Property MonthlyBIllFlag As Char
 
         <NotMapped>
-        Public Property WithholdingTaxPercent As Decimal
+        Public Overridable Property PenaltyFlag As Char
 
         <NotMapped>
-        Public Property CostPrice As Decimal
+        Public Overridable Property WithholdingTaxPercent As Decimal
 
         <NotMapped>
-        Public Property UnitOfMeasure As String
+        Public Overridable Property CostPrice As Decimal
 
         <NotMapped>
-        Public Property SKU As String
+        Public Overridable Property UnitOfMeasure As String
 
         <NotMapped>
-        Public Property LeadTime As Integer?
+        Public Overridable Property SKU As String
 
         <NotMapped>
-        Public Property BarCode As String
+        Public Overridable Property LeadTime As Integer?
 
         <NotMapped>
-        Public Property BusinessUnitID As Integer?
+        Public Overridable Property BarCode As String
 
         <NotMapped>
-        Public Property LastRcvdFromShipmentDate As Date
+        Public Overridable Property BusinessUnitID As Integer?
 
         <NotMapped>
-        Public Property LastRcvdFromShipmentCount As Integer?
+        Public Overridable Property LastRcvdFromShipmentDate As Date
 
         <NotMapped>
-        Public Property TotalShipmentCount As Integer?
+        Public Overridable Property LastRcvdFromShipmentCount As Integer?
 
         <NotMapped>
-        Public Property BookPageNo As String
+        Public Overridable Property TotalShipmentCount As Integer?
 
         <NotMapped>
-        Public Property BrandName As String
+        Public Overridable Property BookPageNo As String
 
         <NotMapped>
-        Public Property LastPurchaseDate As Date
+        Public Overridable Property BrandName As String
 
         <NotMapped>
-        Public Property LastSoldDate As Date
+        Public Overridable Property LastPurchaseDate As Date
 
         <NotMapped>
-        Public Property LastSoldCount As Integer?
+        Public Overridable Property LastSoldDate As Date
 
         <NotMapped>
-        Public Property ReOrderPoint As Integer?
+        Public Overridable Property LastSoldCount As Integer?
 
         <NotMapped>
-        Public Property AllocateBelowSafetyFlag As Char
+        Public Overridable Property ReOrderPoint As Integer?
 
         <NotMapped>
-        Public Property Strength As String
+        Public Overridable Property AllocateBelowSafetyFlag As Char
 
         <NotMapped>
-        Public Property UnitsBackordered As Integer?
+        Public Overridable Property Strength As String
 
         <NotMapped>
-        Public Property UnitsBackorderAsOf As Date
+        Public Overridable Property UnitsBackordered As Integer?
 
         <NotMapped>
-        Public Property DateLastInventoryCount As Date
+        Public Overridable Property UnitsBackorderAsOf As Date
 
         <NotMapped>
-        Public Property TaxVAT As Decimal
+        Public Overridable Property DateLastInventoryCount As Date
 
         <NotMapped>
-        Public Property WithholdingTax As Decimal
+        Public Overridable Property TaxVAT As Decimal
 
         <NotMapped>
-        Public Property COAId As Integer?
+        Public Overridable Property WithholdingTax As Decimal
 
         <NotMapped>
-        Public Property ActiveData As Char
+        Public Overridable Property COAId As Integer?
 
-        Public ReadOnly Property IsTaxable As Boolean
+        <NotMapped>
+        Public Overridable Property ActiveData As Char
+
+        Public Overridable ReadOnly Property IsTaxable As Boolean
             Get
                 Return Status = "1"
             End Get

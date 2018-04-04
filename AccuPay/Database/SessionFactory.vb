@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
-Imports FluentNHibernate.Automapping
 Imports FluentNHibernate.Cfg
 Imports NHibernate
+Imports AccuPay.Database.Mappings
 
 Public Class SessionFactory
 
@@ -21,6 +21,7 @@ Public Class SessionFactory
                         AddFromAssemblyOf(Of LeaveLedgerMap)().
                         AddFromAssemblyOf(Of LeaveMap)().
                         AddFromAssemblyOf(Of LeaveTransactionMap)().
+                        AddFromAssemblyOf(Of LoanScheduleMap)().
                         AddFromAssemblyOf(Of LoanTransactionMap)().
                         AddFromAssemblyOf(Of OvertimeMap)().
                         AddFromAssemblyOf(Of PaystubItemMap)().

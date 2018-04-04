@@ -17,8 +17,9 @@ Public Class LeaveLedgerMap
         Map(Function(x) x.LastUpdBy)
 
         Map(Function(x) x.EmployeeID)
-        Map(Function(x) x.ProductID)
-        Map(Function(x) x.LastTransactionID)
+
+        References(Function(x) x.LastTransaction).Column("LastTransactionID")
+        References(Function(x) x.Product).Column("ProductID")
     End Sub
 
 End Class
