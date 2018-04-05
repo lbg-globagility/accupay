@@ -83,10 +83,6 @@ Public Class PayStubForm
 
     Dim n_VeryFirstPayPeriodIDOfThisYear As Object = Nothing
 
-    Private _loanSchedules As ICollection(Of LoanSchedule)
-
-    Private _loanTransactions As ICollection(Of LoanTransaction)
-
     Public paypFrom As String = Nothing
     Public paypTo As String = Nothing
     Public paypRowID As String = Nothing
@@ -104,37 +100,10 @@ Public Class PayStubForm
 
     Dim employee_dattab As New DataTable
 
-    Dim esal_dattab As New DataTable
-
-    Dim etent_totdaypay As New DataTable
-
-    Dim emp_bonusDaily As New DataTable
-
-    Dim notax_bonusDaily As New DataTable
-
-    Dim emp_bonusMonthly As New DataTable
-
-    Dim notax_bonusMonthly As New DataTable
-
-    Dim emp_bonusOnce As New DataTable
-
-    Dim notax_bonusOnce As New DataTable
-
-    Dim emp_bonusSemiM As New DataTable
-
-    Dim notax_bonusSemiM As New DataTable
-
     Dim emp_allowanceWeekly As New DataTable
 
     Dim notax_allowanceWeekly As New DataTable
 
-    Dim emp_bonusWeekly As New DataTable
-
-    Dim notax_bonusWeekly As New DataTable
-
-    Dim numofdaypresent As New DataTable
-
-    Private _withholdingTaxTable As DataTable
     Private _filingStatuses As DataTable
 
     Public numofweekdays As Integer
@@ -142,10 +111,6 @@ Public Class PayStubForm
     Public numofweekends As Integer
 
     Public withthirteenthmonthpay As SByte = 0
-
-    Dim empthirteenmonthtable As New DataTable
-
-    Dim dtemployeefirsttimesalary As New DataTable
 
     Private thread_max As Integer = 5
 
@@ -176,13 +141,9 @@ Public Class PayStubForm
 
     Dim rptdocAll As New rptAllDecUndecPaySlip
 
-    Dim array_bgwork(1) As System.ComponentModel.BackgroundWorker
-
     Dim payroll_emp_count As Integer = 0
 
     Dim progress_precentage As Integer = 0
-
-    Dim indxStartBatch As Integer = 0
 
     Private sys_ownr As New SystemOwner
 
@@ -820,183 +781,6 @@ Public Class PayStubForm
                 Dim resources = New PayrollResources(paypRowID, CDate(paypFrom), CDate(paypTo))
                 Dim resourcesTask = resources.Load()
                 resourcesTask.Wait()
-                etent_totdaypay = resources.TimeEntries
-                _loanSchedules = resources.LoanSchedules
-                _loanTransactions = resources.LoanTransactions
-
-                Dim dailyallowfreq = "Daily"
-
-                If allowfreq.Count <> 0 Then
-                    dailyallowfreq = If(allowfreq.Item(0).ToString = "", "Daily", allowfreq.Item(0).ToString)
-                End If
-
-                emp_bonusDaily = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
-                                                                ",EmployeeID",
-                                                                ",(DATEDIFF('", paypTo, "',EffectiveStartDate) + 1) 'bonusmultiplier'",
-                                                                " FROM employeebonus",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='1'",
-                                                                " AND AllowanceFrequency='", dailyallowfreq, "'",
-                                                                " AND IF(EffectiveStartDate > '", paypFrom, "' AND EffectiveEndDate > '", paypTo, "'",
-                                                                ", EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveStartDate < '", paypFrom, "' AND EffectiveEndDate < '", paypTo, "'",
-                                                                ", EffectiveEndDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveStartDate <= '", paypFrom, "' AND EffectiveEndDate >= '", paypTo, "'",
-                                                                ", '", paypTo, "' BETWEEN EffectiveStartDate AND EffectiveEndDate",
-                                                                ", IF(EffectiveStartDate >= '", paypFrom, "' AND EffectiveEndDate <= '", paypTo, "'",
-                                                                ", EffectiveEndDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveEndDate IS NULL",
-                                                                ", EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", EffectiveStartDate >= '", paypFrom, "' AND EffectiveEndDate <= '", paypTo, "'",
-                                                                ")))))",
-                                                                " GROUP BY EmployeeID;")).GetFoundRows.Tables(0)
-
-                notax_bonusDaily = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
-                                                                ",EmployeeID",
-                                                                ",(DATEDIFF('", paypTo, "',EffectiveStartDate) + 1) 'bonusmultiplier'",
-                                                                " FROM employeebonus",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='0'",
-                                                                " AND AllowanceFrequency='", dailyallowfreq, "'",
-                                                                " AND IF(EffectiveStartDate > '", paypFrom, "' AND EffectiveEndDate > '", paypTo, "'",
-                                                                ", EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveStartDate < '", paypFrom, "' AND EffectiveEndDate < '", paypTo, "'",
-                                                                ", EffectiveEndDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveStartDate <= '", paypFrom, "' AND EffectiveEndDate >= '", paypTo, "'",
-                                                                ", '", paypTo, "' BETWEEN EffectiveStartDate AND EffectiveEndDate",
-                                                                ", IF(EffectiveStartDate >= '", paypFrom, "' AND EffectiveEndDate <= '", paypTo, "'",
-                                                                ", EffectiveEndDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveEndDate IS NULL",
-                                                                ", EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", EffectiveStartDate >= '", paypFrom, "' AND EffectiveEndDate <= '", paypTo, "'",
-                                                                ")))))",
-                                                                " GROUP BY EmployeeID;")).GetFoundRows.Tables(0)
-
-                Dim monthlyallowfreq = "Monthly"
-
-                If allowfreq.Count <> 0 Then
-                    monthlyallowfreq = If(allowfreq.Item(1).ToString = "", "Monthly", allowfreq.Item(1).ToString)
-                End If
-
-                emp_bonusMonthly = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
-                                                                 ",EmployeeID",
-                                                                " FROM employeebonus",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='1'",
-                                                                " AND AllowanceFrequency='", monthlyallowfreq, "'",
-                                                                " AND IF(EffectiveStartDate > '", paypFrom, "' AND EffectiveEndDate > '", paypTo, "'",
-                                                                ", EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveStartDate < '", paypFrom, "' AND EffectiveEndDate < '", paypTo, "'",
-                                                                ", EffectiveEndDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveStartDate <= '", paypFrom, "' AND EffectiveEndDate >= '", paypTo, "'",
-                                                                ", '", paypTo, "' BETWEEN EffectiveStartDate AND EffectiveEndDate",
-                                                                ", IF(EffectiveStartDate >= '", paypFrom, "' AND EffectiveEndDate <= '", paypTo, "'",
-                                                                ", EffectiveEndDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveEndDate IS NULL",
-                                                                ", EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", EffectiveStartDate >= '", paypFrom, "' AND EffectiveEndDate <= '", paypTo, "'",
-                                                                ")))))",
-                                                                " GROUP BY EmployeeID",
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
-
-                notax_bonusMonthly = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
-                                                                 ",EmployeeID",
-                                                                " FROM employeebonus",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='0'",
-                                                                " AND AllowanceFrequency='", monthlyallowfreq, "'",
-                                                                " AND IF(EffectiveStartDate > '", paypFrom, "' AND EffectiveEndDate > '", paypTo, "'",
-                                                                ", EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveStartDate < '", paypFrom, "' AND EffectiveEndDate < '", paypTo, "'",
-                                                                ", EffectiveEndDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveStartDate <= '", paypFrom, "' AND EffectiveEndDate >= '", paypTo, "'",
-                                                                ", '", paypTo, "' BETWEEN EffectiveStartDate AND EffectiveEndDate",
-                                                                ", IF(EffectiveStartDate >= '", paypFrom, "' AND EffectiveEndDate <= '", paypTo, "'",
-                                                                ", EffectiveEndDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", IF(EffectiveEndDate IS NULL",
-                                                                ", EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                ", EffectiveStartDate >= '", paypFrom, "' AND EffectiveEndDate <= '", paypTo, "'",
-                                                                ")))))",
-                                                                " GROUP BY EmployeeID",
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
-
-                Dim onceallowfreq = "One time"
-
-                If allowfreq.Count <> 0 Then
-                    onceallowfreq = If(allowfreq.Item(2).ToString = "", "One time", allowfreq.Item(2).ToString)
-                End If
-
-                emp_bonusOnce = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
-                                                              ",EmployeeID",
-                                                              " FROM employeebonus",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='1'",
-                                                                " AND AllowanceFrequency='", onceallowfreq, "'",
-                                                                " AND EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                " GROUP BY EmployeeID",
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
-
-                notax_bonusOnce = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
-                                                              ",EmployeeID",
-                                                              " FROM employeebonus",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='0'",
-                                                                " AND AllowanceFrequency='", onceallowfreq, "'",
-                                                                " AND EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                " GROUP BY EmployeeID",
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
-
-                Dim semimallowfreq = "Semi-monthly"
-
-                If allowfreq.Count <> 0 Then
-                    semimallowfreq = If(allowfreq.Item(3).ToString = "", "Semi-monthly", allowfreq.Item(3).ToString)
-                End If
-
-                emp_bonusSemiM = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
-                                                              ",EmployeeID",
-                                                              " FROM employeebonus",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='1'",
-                                                                " AND AllowanceFrequency='", semimallowfreq, "'",
-                                                                " AND EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                " GROUP BY EmployeeID",
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
-
-                notax_bonusSemiM = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
-                                                              ",EmployeeID",
-                                                              " FROM employeebonus",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='0'",
-                                                                " AND AllowanceFrequency='", semimallowfreq, "'",
-                                                                " AND EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                " GROUP BY EmployeeID",
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
-
-                Dim weeklyallowfreq = "Weekly"
-
-                If allowfreq.Count <> 0 Then
-                    weeklyallowfreq = If(allowfreq.Item(4).ToString = "", "Weekly", allowfreq.Item(4).ToString)
-                End If
-
-                emp_bonusWeekly = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
-                                                              ",EmployeeID",
-                                                              " FROM employeebonus",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='1'",
-                                                                " AND AllowanceFrequency='", semimallowfreq, "'",
-                                                                " AND EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                " GROUP BY EmployeeID",
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
-
-                notax_bonusWeekly = New SQL(String.Concat("SELECT SUM(COALESCE(BonusAmount,0)) 'BonusAmount'",
-                                                              ",EmployeeID",
-                                                              " FROM employeebonus",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='0'",
-                                                                " AND AllowanceFrequency='", semimallowfreq, "'",
-                                                                " AND EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                " GROUP BY EmployeeID",
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
 
                 emp_allowanceWeekly = New SQL(String.Concat("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID",
                                                                 " FROM employeeallowance",
@@ -1016,69 +800,7 @@ Public Class PayStubForm
                                                                 " GROUP BY EmployeeID",
                                                                 " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
 
-                _withholdingTaxTable = New SqlToDataTable("SELECT * FROM paywithholdingtax;").Read()
                 _filingStatuses = New SqlToDataTable("SELECT * FROM filingstatus;").Read()
-
-                esal_dattab = resources.Salaries
-
-                numofdaypresent = New SQL(String.Concat("SELECT COUNT(RowID) 'DaysAttended'",
-                                                                ",SUM((TIME_TO_SEC(TIMEDIFF(TimeOut,TimeIn)) / 60) / 60) 'SumHours'",
-                                                                ",EmployeeID",
-                                                                " FROM employeetimeentrydetails",
-                                                                " WHERE OrganizationID=", orgztnID, "",
-                                                                " AND Date BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                " GROUP BY EmployeeID;")).GetFoundRows.Tables(0)
-
-                If withthirteenthmonthpay = 1 Then
-
-                    Dim params(1, 2) As Object
-
-                    params(0, 0) = "param_OrganizationID"
-                    params(1, 0) = "param_year"
-
-                    params(0, 1) = orgztnID
-                    params(1, 1) = paypTo
-
-                    empthirteenmonthtable =
-                                                  New SQL("CALL GET_Attended_Months(?og_rowid, ?date_to);",
-                                                          New Object() {orgztnID, paypTo}).GetFoundRows.Tables(0)
-                Else
-                    empthirteenmonthtable = Nothing
-
-                End If
-
-                Dim param(2, 2) As Object
-
-                param(0, 0) = "OrganizID"
-                param(1, 0) = "etentDateFrom"
-                param(2, 0) = "etentDateTo"
-
-                param(0, 1) = orgztnID
-                param(1, 1) = paypFrom
-                param(2, 1) = paypTo
-
-                Dim paramets(2, 2) As Object
-
-                paramets(0, 0) = "OrganizID"
-                paramets(1, 0) = "payp_FromDate"
-                paramets(2, 0) = "payp_ToDate"
-
-                paramets(0, 1) = orgztnID
-                paramets(1, 1) = paypFrom
-                paramets(2, 1) = paypTo
-
-                dtemployeefirsttimesalary =
-                                      New SQL(String.Concat("SELECT COUNT(ete.RowID)",
-                                                              ",ete.EmployeeID",
-                                                              " FROM employeetimeentry ete",
-                                                              " INNER JOIN employee e ON ete.EmployeeID=e.RowID AND e.EmployeeType='Daily'",
-                                                              " WHERE ete.TotalDayPay!=0",
-                                                              " AND ete.OrganizationID='", orgztnID, "'",
-                                                              " AND ete.`Date`",
-                                                              " BETWEEN '", paypFrom, "'",
-                                                              " AND '", paypTo, "'",
-                                                              " GROUP BY ete.EmployeeID",
-                                                              " HAVING COUNT(ete.RowID) < 5;")).GetFoundRows.Tables(0)
 
                 Return resources
             End Function,
@@ -1101,7 +823,6 @@ Public Class PayStubForm
     End Sub
 
     Private Sub LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources))
-        indxStartBatch = 0
         progress_precentage = 0
 
         ThreadingPayrollGeneration(t.Result)
@@ -1160,39 +881,12 @@ Public Class PayStubForm
                     Dim generator = New PayrollGeneration(
                         employeeRow,
                         isEndOfMonth,
-                        esal_dattab,
-                        _loanSchedules,
-                        _loanTransactions,
                         emp_allowanceWeekly,
                         notax_allowanceWeekly,
-                        emp_bonusDaily,
-                        emp_bonusMonthly,
-                        emp_bonusOnce,
-                        emp_bonusSemiM,
-                        emp_bonusWeekly,
-                        notax_bonusDaily,
-                        notax_bonusMonthly,
-                        notax_bonusOnce,
-                        notax_bonusSemiM,
-                        notax_bonusWeekly,
-                        numofdaypresent,
-                        etent_totdaypay,
-                        dtemployeefirsttimesalary,
-                        VeryFirstPayPeriodIDOfThisYear,
-                        withthirteenthmonthpay,
                         _filingStatuses,
-                        _withholdingTaxTable,
-                        resources.Products,
-                        resources.Paystubs,
                         resources,
                         Me
                     )
-
-                    With generator
-                        .payrollDateFrom = paypFrom
-                        .PayrollDateTo = paypTo
-                        .PayPeriodID = paypRowID
-                    End With
 
                     generator.DoProcess()
                 End Sub
@@ -2460,7 +2154,6 @@ Public Class PayStubForm
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        indxStartBatch += thread_max
         Console.WriteLine("batch has finished...")
 
         If progress_precentage = payroll_emp_count Then

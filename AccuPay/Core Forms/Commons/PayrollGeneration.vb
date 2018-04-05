@@ -12,34 +12,10 @@ Public Class PayrollGeneration
 
     Private Shared logger As ILog = LogManager.GetLogger("PayrollLogger")
 
-    Private Class PayFrequency
-        Public Const SemiMonthly As Integer = 1
-        Public Const Monthly As Integer = 2
-    End Class
-
-    Private Class SalaryType
-        Public Const Fixed As String = "Fixed"
-        Public Const Monthly As String = "Monthly"
-        Public Const Daily As String = "Daily"
-    End Class
-
-    Private Class ContributionSchedule
-        Public Const FirstHalf As String = "First half"
-        Public Const EndOfTheMonth As String = "End of the month"
-        Public Const PerPayPeriod As String = "Per pay period"
-    End Class
-
-    Public Property payrollDateFrom As String
-
-    Public Property PayrollDateTo As String
-
-    Public Property PayPeriodID As String
-
     Private _employee As DataRow
 
     Private _employee2 As Employee
 
-    Private isEndOfMonth2 As String
     Private _isFirstHalf As Boolean
     Private _isEndOfMonth As Boolean
     Private _allSalaries As DataTable
@@ -51,30 +27,7 @@ Public Class PayrollGeneration
     Private allWeeklyAllowances As DataTable
     Private allNoTaxWeeklyAllowances As DataTable
 
-    Private allOneTimeBonuses As DataTable
-    Private allDailyBonuses As DataTable
-    Private allWeeklyBonuses As DataTable
-    Private allSemiMonthlyBonuses As DataTable
-    Private allMonthlyBonuses As DataTable
-
-    Private allNoTaxOneTimeBonuses As DataTable
-    Private allNoTaxDailyBonuses As DataTable
-    Private allNoTaxWeeklyBonuses As DataTable
-    Private allNoTaxSemiMonthlyBonuses As DataTable
-    Private allNoTaxMonthlyBonuses As DataTable
-
-    Private allFixedTaxableMonthlyAllowances As DataTable
-    Private allFixedNonTaxableMonthlyAllowances As DataTable
-
-    Private _numOfDayPresent As DataTable
-    Private _allTimeEntries As DataTable
-    Private _employeeFirstTimeSalary As DataTable
-    Private _VeryFirstPayPeriodIDOfThisYear As Object
-    Private _withThirteenthMonthPay As SByte
-
     Private _previousTimeEntries2 As ICollection(Of TimeEntry)
-
-    Private _withholdingTaxTable As DataTable
 
     Private _filingStatuses As DataTable
 
@@ -84,15 +37,11 @@ Public Class PayrollGeneration
 
     Private form_caller As Form
 
-    Private payPeriod As DataRow
-
     Private _payPeriod As PayPeriod
 
     Private annualUnusedLeaves As DataTable
     Private unusedLeaveProductID As String
     Private existingUnusedLeaveAdjustments As DataTable
-
-    Private agencyFeeSummary As DataTable
 
     Private _paystub As Paystub
 
@@ -105,33 +54,11 @@ Public Class PayrollGeneration
     Private _hdmfDeductionSchedule As String
     Private _withholdingTaxSchedule As String
 
-    Private _connection As MySqlConnection
-
-    Private numberofweeksthismonth As Integer
-
-    Private _vacationLeaveBalance As Decimal
-
-    Private _sickLeaveBalance As Decimal
-
-    Private _otherLeaveBalance As Decimal
-
-    Private _sickLeaveUsed As Decimal
-
-    Private _vacationLeaveUsed As Decimal
-
-    Private _otherLeaveUsed As Decimal
-
-    Private _paystubs As IEnumerable(Of Paystub)
-
-    Private _previousPaystubs As IEnumerable(Of Paystub)
-
     Private _socialSecurityBrackets As IEnumerable(Of SocialSecurityBracket)
 
     Private _philHealthBrackets As IEnumerable(Of PhilHealthBracket)
 
     Private _withholdingTaxBrackets As IEnumerable(Of WithholdingTaxBracket)
-
-    Private _listOfValues As IList(Of ListOfValue)
 
     Private _settings As ListOfValueCollection
 
@@ -147,30 +74,9 @@ Public Class PayrollGeneration
 
     Sub New(employee As DataRow,
             payPeriodHalfNo As String,
-            allSalaries As DataTable,
-            allLoanSchedules As ICollection(Of LoanSchedule),
-            allLoanTransactions As ICollection(Of LoanTransaction),
             allWeeklyAllowances As DataTable,
             allNoTaxWeeklyAllowances As DataTable,
-            allDailyBonuses As DataTable,
-            allMonthlyBonuses As DataTable,
-            allOneTimeBonuses As DataTable,
-            allSemiMonthlyBonuses As DataTable,
-            allWeeklyBonuses As DataTable,
-            allNoTaxDailyBonuses As DataTable,
-            allNoTaxMonthlyBonuses As DataTable,
-            allNoTaxOneTimeBonuses As DataTable,
-            allNoTaxSemiMonthlyBonuses As DataTable,
-            allNoTaxWeeklyBonuses As DataTable,
-            numOfDayPresent As DataTable,
-            allTimeEntries As DataTable,
-            dtemployeefirsttimesalary As DataTable,
-            VeryFirstPayPeriodIDOfThisYear As Object,
-            withThirteenthMonthPay As SByte,
             filingStatuses As DataTable,
-            withholdingTaxTable As DataTable,
-            products As IEnumerable(Of Product),
-            paystubs As IEnumerable(Of Paystub),
             resources As PayrollResources,
             Optional pay_stub_frm As PayStubForm = Nothing)
         form_caller = pay_stub_frm
@@ -179,39 +85,21 @@ Public Class PayrollGeneration
         _employee2 = resources.Employees.
             FirstOrDefault(Function(e) e.RowID.ToString() = _employee("RowID"))
 
-        isEndOfMonth2 = payPeriodHalfNo
-        Me._allSalaries = allSalaries
-        _allLoanSchedules = allLoanSchedules
-        _allLoanTransactions = allLoanTransactions
+        Me._allSalaries = resources.Salaries
+        _allLoanSchedules = resources.LoanSchedules
+        _allLoanTransactions = resources.LoanTransactions
 
         Me.allWeeklyAllowances = allWeeklyAllowances
         Me.allNoTaxWeeklyAllowances = allNoTaxWeeklyAllowances
 
-        Me.allOneTimeBonuses = allOneTimeBonuses
-        Me.allDailyBonuses = allDailyBonuses
-        Me.allWeeklyBonuses = allWeeklyBonuses
-        Me.allSemiMonthlyBonuses = allSemiMonthlyBonuses
-        Me.allMonthlyBonuses = allMonthlyBonuses
-
-        Me.allNoTaxOneTimeBonuses = allNoTaxOneTimeBonuses
-        Me.allNoTaxDailyBonuses = allNoTaxDailyBonuses
-        Me.allNoTaxWeeklyBonuses = allNoTaxWeeklyBonuses
-        Me.allNoTaxSemiMonthlyBonuses = allNoTaxSemiMonthlyBonuses
-        Me.allNoTaxMonthlyBonuses = allNoTaxMonthlyBonuses
-
-        _numOfDayPresent = numOfDayPresent
-        _allTimeEntries = allTimeEntries
-        _employeeFirstTimeSalary = dtemployeefirsttimesalary
-        _VeryFirstPayPeriodIDOfThisYear = VeryFirstPayPeriodIDOfThisYear
-        _withThirteenthMonthPay = withThirteenthMonthPay
-
         _filingStatuses = filingStatuses
-        _withholdingTaxTable = withholdingTaxTable
 
         _notifyMainWindow = AddressOf pay_stub_frm.ProgressCounter
 
-        _products = products
-        _paystubs = resources.Paystubs
+        _products = resources.Products
+
+        _paystub = resources.Paystubs.FirstOrDefault(
+            Function(p) Nullable.Equals(p.EmployeeID, _employee2.RowID))
 
         _isFirstHalf = (payPeriodHalfNo = "1")
         _isEndOfMonth = (payPeriodHalfNo = "0")
@@ -219,20 +107,17 @@ Public Class PayrollGeneration
         _philHealthBrackets = resources.PhilHealthBrackets
         _withholdingTaxBrackets = resources.WithholdingTaxBrackets
 
-        _listOfValues = resources.ListOfValues
-        _previousPaystubs = resources.PreviousPaystubs
-
         _previousPaystub = resources.PreviousPaystubs.FirstOrDefault(
             Function(p) p.EmployeeID = _employee2.RowID)
 
-        _settings = New ListOfValueCollection(_listOfValues)
+        _settings = New ListOfValueCollection(resources.ListOfValues)
         _payPeriod = resources.PayPeriod
 
-        _previousTimeEntries2 = resources.TimeEntries2.
+        _previousTimeEntries2 = resources.TimeEntries.
             Where(Function(t) t.EmployeeID = _employee2.RowID).
             ToList()
 
-        _timeEntries2 = resources.TimeEntries2.
+        _timeEntries2 = resources.TimeEntries.
             Where(Function(t) t.EmployeeID = _employee2.RowID).
             Where(Function(t) _payPeriod.PayFromDate <= t.Date And t.Date <= _payPeriod.PayToDate).
             ToList()
@@ -255,9 +140,6 @@ Public Class PayrollGeneration
     Public Sub DoProcess()
         Try
             Console.WriteLine($"Generate Paystub for #{_employee2.RowID} - {_employee2.LastName}, {_employee2.FirstName}")
-            Dim date_to_use = If(CDate(payrollDateFrom) > CDate(PayrollDateTo), CDate(payrollDateFrom), CDate(PayrollDateTo))
-            Dim dateStr_to_use = Format(date_to_use, "yyyy-MM-dd")
-            numberofweeksthismonth = CInt(New MySQLExecuteQuery("SELECT `COUNTTHEWEEKS`('" & dateStr_to_use & "');").Result)
 
             GeneratePayStub()
             form_caller.BeginInvoke(_notifyMainWindow, True)
@@ -269,26 +151,18 @@ Public Class PayrollGeneration
     End Sub
 
     Private Sub GeneratePayStub()
-        Dim transaction As MySqlTransaction = Nothing
-        Dim newLoanTransactions = New Collection(Of LoanTransaction)
-
         Try
-            _paystub = _paystubs.FirstOrDefault(
-                Function(p) Nullable.Equals(p.EmployeeID, _employee2.RowID))
-
             If _paystub Is Nothing Then
                 _paystub = New Paystub() With {
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,
                     .LastUpdBy = z_User,
                     .EmployeeID = _employee2.RowID,
-                    .PayPeriodID = PayPeriodID,
-                    .PayFromdate = payrollDateFrom,
-                    .PayToDate = PayrollDateTo
+                    .PayPeriodID = _payPeriod.RowID,
+                    .PayFromdate = _payPeriod.PayFromDate,
+                    .PayToDate = _payPeriod.PayToDate
                 }
             End If
-
-            Dim totalVacationDaysLeft = 0D
 
             _sssDeductionSchedule = _employee("SSSDeductSched").ToString
             _philHealthDeductionSchedule = _employee("PhHealthDeductSched").ToString
@@ -300,9 +174,10 @@ Public Class PayrollGeneration
             Dim salary = _allSalaries.Select($"EmployeeID = '{_paystub.EmployeeID}'").FirstOrDefault()
 
             Dim loanTransactions = _allLoanTransactions.Where(Function(t) t.EmployeeID = _paystub.EmployeeID)
+            Dim newLoanTransactions = New Collection(Of LoanTransaction)
 
             If loanTransactions.Count > 0 Then
-                _paystub.TotalLoans = loanTransactions.Aggregate(0D, Function(total, t) total + t.Amount)
+                _paystub.TotalLoans = loanTransactions.Sum(Function(t) t.Amount)
             Else
                 Dim acceptedLoans As String() = {}
                 If _isFirstHalf Then
@@ -322,7 +197,7 @@ Public Class PayrollGeneration
                         .LastUpd = Date.Now(),
                         .OrganizationID = z_OrganizationID,
                         .EmployeeID = _paystub.EmployeeID,
-                        .PayPeriodID = PayPeriodID,
+                        .PayPeriodID = _payPeriod.RowID,
                         .LoanSchedule = loanSchedule,
                         .LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft - 1
                     }
@@ -341,43 +216,19 @@ Public Class PayrollGeneration
                 _paystub.TotalLoans = newLoanTransactions.Aggregate(0D, Function(total, x) x.Amount + total)
             End If
 
-            totalVacationDaysLeft = 0D
-
             CalculateAllowances()
-            CalculateBonuses()
 
             _paystub.TotalAdjustments = If(_paystub?.Adjustments.Sum(Function(a) a.Amount), 0)
 
             Dim governmentContributions = 0D
-            Dim timeEntrySummary = _allTimeEntries.Select($"EmployeeID = '{_paystub.EmployeeID}'").FirstOrDefault()
 
-            If timeEntrySummary IsNot Nothing Then
-
-                totalVacationDaysLeft = 0D
+            If _timeEntries2.Count > 0 Then
 
                 If salary IsNot Nothing Then
-
-                    Dim isFirstPay =
-                        _payPeriod.PayFromDate <= _employee2.StartDate And
-                        _employee2.StartDate <= _payPeriod.PayToDate
 
                     Dim basicPay = ValNoComma(salary("BasicPay"))
 
                     ComputeHours()
-
-                    _vacationLeaveBalance = _employee2.LeaveBalance
-                    _sickLeaveBalance = _employee2.SickLeaveBalance
-                    _otherLeaveBalance = _employee2.OtherLeaveBalance
-
-                    _vacationLeaveUsed = CDec(timeEntrySummary("VacationLeaveHours"))
-                    _sickLeaveUsed = CDec(timeEntrySummary("SickLeaveHours"))
-                    _otherLeaveUsed = CDec(timeEntrySummary("OtherLeaveHours"))
-
-                    Dim sel_dtemployeefirsttimesalary = _employeeFirstTimeSalary.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-
-                    Dim previousPaystub = _previousPaystubs?.
-                        Where(Function(p) Nullable.Equals(p.EmployeeID, _paystub.EmployeeID)).
-                        FirstOrDefault()
 
                     Dim currentTaxableIncome = 0D
                     If _employee2.EmployeeType = SalaryType.Fixed Then
@@ -390,8 +241,12 @@ Public Class PayrollGeneration
 
                         Dim isFirstPayAsDailyRule = _settings.GetBoolean("Payroll Policy", "isfirstsalarydaily")
 
+                        Dim isFirstPay =
+                            _payPeriod.PayFromDate <= _employee2.StartDate And
+                            _employee2.StartDate <= _payPeriod.PayToDate
+
                         If isFirstPay And isFirstPayAsDailyRule Then
-                            _paystub.TotalEarnings = ValNoComma(timeEntrySummary("TotalDayPay"))
+                            _paystub.TotalEarnings = _timeEntries2.Sum(Function(t) t.TotalDayPay)
                         Else
                             Dim totalDeduction = _paystub.LateDeduction + _paystub.UndertimeDeduction + _paystub.AbsenceDeduction
                             Dim extraPay =
@@ -417,7 +272,7 @@ Public Class PayrollGeneration
                         End If
 
                     ElseIf _employee2.EmployeeType = SalaryType.Daily Then
-                        _paystub.TotalEarnings = ValNoComma(timeEntrySummary("TotalDayPay"))
+                        _paystub.TotalEarnings = _timeEntries2.Sum(Function(t) t.TotalDayPay)
                     End If
 
                     CalculateSss(salary)
@@ -430,7 +285,7 @@ Public Class PayrollGeneration
                     _paystub.TaxableIncome = currentTaxableIncome
 
                     If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
-                        _paystub.TaxableIncome = currentTaxableIncome + If(previousPaystub?.TaxableIncome, 0D)
+                        _paystub.TaxableIncome = currentTaxableIncome + If(_previousPaystub?.TaxableIncome, 0D)
                     ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
                         _paystub.TaxableIncome = currentTaxableIncome
                     End If
@@ -463,7 +318,8 @@ Public Class PayrollGeneration
                     FirstOrDefault()
 
                 If vacationLeaveBalance Is Nothing Then
-                    Dim newBalance = _vacationLeaveBalance - _vacationLeaveUsed
+                    Dim vacationLeaveUsed = _timeEntries2.Sum(Function(t) t.VacationLeaveHours)
+                    Dim newBalance = _employee2.LeaveBalance - vacationLeaveUsed
 
                     vacationLeaveBalance = New PaystubItem() With {
                         .OrganizationID = z_OrganizationID,
@@ -481,7 +337,8 @@ Public Class PayrollGeneration
                     FirstOrDefault()
 
                 If sickLeaveBalance Is Nothing Then
-                    Dim newBalance = _sickLeaveBalance - _sickLeaveUsed
+                    Dim sickLeaveUsed = _timeEntries2.Sum(Function(t) t.SickLeaveHours)
+                    Dim newBalance = _employee2.SickLeaveBalance - sickLeaveUsed
 
                     sickLeaveBalance = New PaystubItem() With {
                         .OrganizationID = z_OrganizationID,
@@ -502,18 +359,7 @@ Public Class PayrollGeneration
                 trans.Commit()
             End Using
         Catch ex As Exception
-            If transaction IsNot Nothing Then
-                transaction.Rollback()
-            End If
-
             Throw New Exception($"Failure to generate paystub for employee {_paystub.EmployeeID}", ex)
-        Finally
-            If _connection IsNot Nothing Then
-                If _connection.State = ConnectionState.Open Then
-                    _connection.Close()
-                    _connection.Dispose()
-                End If
-            End If
         End Try
     End Sub
 
@@ -524,9 +370,7 @@ Public Class PayrollGeneration
                 .CreatedBy = z_User
             }
         Else
-            With _paystub.ThirteenthMonthPay
-                .LastUpdBy = z_User
-            End With
+            _paystub.ThirteenthMonthPay.LastUpdBy = z_User
         End If
 
         Dim contractual_employment_statuses =
@@ -535,7 +379,6 @@ Public Class PayrollGeneration
         Dim basicpay_13month = 0D
 
         If _employee2.IsDaily Then
-
             basicpay_13month =
                 If(contractual_employment_statuses.Contains(_employee2.EmploymentStatus),
                 _timeEntries2.Sum(Function(t) t.BasicDayPay + t.LeavePay),
@@ -612,7 +455,7 @@ Public Class PayrollGeneration
             .CreatedBy = z_User,
             .LastUpdBy = z_User,
             .Paystub = _paystub,
-            .PayPeriodID = PayPeriodID,
+            .PayPeriodID = _payPeriod.RowID,
             .AllowanceID = allowance.RowID,
             .Amount = allowance.Amount
         }
@@ -652,7 +495,7 @@ Public Class PayrollGeneration
             .CreatedBy = z_User,
             .LastUpdBy = z_User,
             .Paystub = _paystub,
-            .PayPeriodID = PayPeriodID,
+            .PayPeriodID = _payPeriod.RowID,
             .AllowanceID = allowance.RowID
         }
 
@@ -729,7 +572,7 @@ Public Class PayrollGeneration
                 .LastUpd = Date.Now,
                 .CreatedBy = z_User,
                 .LastUpdBy = z_User,
-                .PayPeriodID = PayPeriodID,
+                .PayPeriodID = _payPeriod.RowID,
                 .AllowanceID = allowance.RowID
             }
 
@@ -796,7 +639,7 @@ Public Class PayrollGeneration
                     .OrganizationID = z_OrganizationID,
                     .Created = Date.Now,
                     .EmployeeID = leave.EmployeeID,
-                    .PayPeriodID = PayPeriodID,
+                    .PayPeriodID = _payPeriod.RowID,
                     .ReferenceID = leave.RowID,
                     .TransactionDate = Date.Today,
                     .Type = LeaveTransactionType.Debit,
@@ -808,90 +651,6 @@ Public Class PayrollGeneration
                 ledger.LastTransaction = newTransaction
             End If
         Next
-    End Sub
-
-    Private Sub CalculateBonuses()
-        Dim oneTimeBonuses = allOneTimeBonuses.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-        Dim dailyBonuses = allDailyBonuses.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-        Dim weeklyBonuses = allWeeklyBonuses.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-        Dim semiMonthlyBonuses = allSemiMonthlyBonuses.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-        Dim monthlyBonuses = allMonthlyBonuses.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-
-        Dim noTaxOneBonuses = allNoTaxOneTimeBonuses.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-        Dim noTaxDailyBonuses = allNoTaxDailyBonuses.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-        Dim noTaxWeeklyBonuses = allNoTaxWeeklyBonuses.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-        Dim noTaxSemiMonthlyBonuses = allNoTaxSemiMonthlyBonuses.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-        Dim noTaxMonthlyBonuses = allNoTaxMonthlyBonuses.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-        Dim workDaysPerYear = _employee2.WorkDaysPerYear
-        'Dim divisorMonthlys = If(
-        '        CInt(_employee("PayFrequencyID")) = 1,
-        '        2,
-        '        If(
-        '            CInt(_employee("PayFrequencyID")) = 2,
-        '            1,
-        '            If(
-        '                CInt(_employee("PayFrequencyID")) = 3,
-        '                CInt(New MySQLExecuteQuery("SELECT COUNT(RowID) FROM employeetimeentry WHERE EmployeeID='" & _payStub.EmployeeID & "' AND Date BETWEEN '" & PayrollDateFrom & "' AND '" & PayrollDateTo & "' AND IFNULL(TotalDayPay,0)!=0 AND OrganizationID='" & orgztnID & "';").Result),
-        '                numberofweeksthismonth
-        '            )
-        '        )
-        '    )
-
-        Dim totalTaxableBonus = 0D
-
-        Dim valdaynotax_bon = 0D
-        For Each drowdaybon In noTaxDailyBonuses
-            valdaynotax_bon = ValNoComma(drowdaybon("BonusAmount"))
-
-            If _employee2.EmployeeType = "Fixed" Then
-                valdaynotax_bon = valdaynotax_bon * workDaysPerYear 'numofweekends
-            Else
-                Dim daymultiplier = _numOfDayPresent.Select($"EmployeeID = '{_paystub.EmployeeID}'")
-                For Each drowdaymultip In daymultiplier
-                    Dim i_val = CInt(drowdaymultip("DaysAttended"))
-                    valdaynotax_bon = valdaynotax_bon * i_val
-                    Exit For
-                Next
-
-            End If
-
-            Exit For
-        Next
-
-        Dim valmonthnotax_bon = 0D
-
-        If isEndOfMonth2 = "1" Then
-
-            For Each drowmonbon In noTaxMonthlyBonuses
-                'valmonthnotax_bon = drowmonbon("BonusAmount")
-            Next
-
-        End If
-
-        Dim valoncenotax_bon = 0D
-        For Each drowoncebon In noTaxOneBonuses
-            'valoncenotax_bon = drowoncebon("BonusAmount")
-        Next
-
-        Dim valsemimnotax_bon = 0D
-        For Each drowsemimbon In noTaxSemiMonthlyBonuses
-            'valoncenotax_bon = drowsemimbon("BonusAmount")
-        Next
-
-        Dim valweeknotax_bon = 0D
-        For Each drowweekbon In noTaxWeeklyBonuses
-            'valoncenotax_bon = drowweekbon("BonusAmount")
-        Next
-
-        'this is non-taxable
-        Dim totalNoTaxBonus = (
-            valoncenotax_bon +
-            valdaynotax_bon +
-            valweeknotax_bon +
-            valsemimnotax_bon
-        )
-
-        _paystub.TotalBonus = totalTaxableBonus + totalNoTaxBonus
     End Sub
 
     Private Sub CalculateSss(salary As DataRow)
@@ -1020,27 +779,10 @@ Public Class PayrollGeneration
         Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
         If is_weekly Then
-            Dim is_deduct_sched_to_thisperiod As Boolean = False
-
-            Dim pp = New Collection(Of PayPeriod)
-
-            If is_under_agency Then
-                Using context = New PayrollContext()
-                    Dim query = From p In context.PayPeriods
-                                Where p.RowID = _PayPeriodID
-
-                    is_deduct_sched_to_thisperiod =
-                        Convert.ToBoolean(query.FirstOrDefault.PhHWeeklyAgentContribSched)
-                End Using
-            Else
-                Using context = New PayrollContext()
-                    Dim query = From p In context.PayPeriods
-                                Where p.RowID = _PayPeriodID
-
-                    is_deduct_sched_to_thisperiod =
-                        Convert.ToBoolean(query.FirstOrDefault.PhHWeeklyContribSched)
-                End Using
-            End If
+            Dim is_deduct_sched_to_thisperiod = If(
+                is_under_agency,
+                _payPeriod.PhHWeeklyAgentContribSched,
+                _payPeriod.PhHWeeklyContribSched)
 
             If is_deduct_sched_to_thisperiod Then
                 _paystub.PhilHealthEmployeeShare = employeeShare
@@ -1102,29 +844,11 @@ Public Class PayrollGeneration
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
         Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
-
         If is_weekly Then
-            Dim is_deduct_sched_to_thisperiod As Boolean = False
-
-            Dim pp = New Collection(Of PayPeriod)
-
-            If is_under_agency Then
-                Using context = New PayrollContext()
-                    Dim query = From p In context.PayPeriods
-                                Where p.RowID = _PayPeriodID
-
-                    is_deduct_sched_to_thisperiod =
-                        Convert.ToBoolean(query.FirstOrDefault.HDMFWeeklyAgentContribSched)
-                End Using
-            Else
-                Using context = New PayrollContext()
-                    Dim query = From p In context.PayPeriods
-                                Where p.RowID = _PayPeriodID
-
-                    is_deduct_sched_to_thisperiod =
-                        Convert.ToBoolean(query.FirstOrDefault.HDMFWeeklyContribSched)
-                End Using
-            End If
+            Dim is_deduct_sched_to_thisperiod = If(
+                is_under_agency,
+                _payPeriod.HDMFWeeklyAgentContribSched,
+                _payPeriod.HDMFWeeklyContribSched)
 
             If is_deduct_sched_to_thisperiod Then
                 _paystub.HdmfEmployeeShare = employeeHdmfPerMonth
@@ -1213,29 +937,11 @@ Public Class PayrollGeneration
 
         Dim excessAmount = _paystub.TaxableIncome - taxableIncomeFromAmount
 
-
         If is_weekly Then
-            Dim is_deduct_sched_to_thisperiod As Boolean = False
-
-            Dim pp = New Collection(Of PayPeriod)
-
-            If is_under_agency Then
-                Using context = New PayrollContext()
-                    Dim query = From p In context.PayPeriods
-                                Where p.RowID = _PayPeriodID
-
-                    is_deduct_sched_to_thisperiod =
-                        Convert.ToBoolean(query.FirstOrDefault.WTaxWeeklyAgentContribSched)
-                End Using
-            Else
-                Using context = New PayrollContext()
-                    Dim query = From p In context.PayPeriods
-                                Where p.RowID = _PayPeriodID
-
-                    is_deduct_sched_to_thisperiod =
-                        Convert.ToBoolean(query.FirstOrDefault.WTaxWeeklyContribSched)
-                End Using
-            End If
+            Dim is_deduct_sched_to_thisperiod = If(
+                is_under_agency,
+                _payPeriod.WTaxWeeklyAgentContribSched,
+                _payPeriod.WTaxWeeklyContribSched)
 
             If is_deduct_sched_to_thisperiod Then
                 _paystub.WithholdingTax = exemptionAmount + (excessAmount * exemptionInExcessAmount)
@@ -1292,11 +998,11 @@ Public Class PayrollGeneration
     End Function
 
     Private Function IsFirstPayperiodOfTheYear() As Boolean
-        If Me.payPeriod Is Nothing Then
+        If _payPeriod Is Nothing Then
             Return False
         End If
 
-        Return CInt(Me.payPeriod("OrdinalValue")) = 1
+        Return _payPeriod.OrdinalValue = 1
     End Function
 
     Private Sub LoadAnnualUnusedLeaves()
@@ -1307,7 +1013,7 @@ Public Class PayrollGeneration
                 AND Year = @Year;
         ]]>.Value
 
-        Dim currentYear = CInt(Me.payPeriod("Year"))
+        Dim currentYear = _payPeriod.Year
         Dim previousYear = currentYear - 1
 
         sql = sql.Replace("@OrganizationID", CStr(z_OrganizationID)) _
@@ -1332,22 +1038,9 @@ Public Class PayrollGeneration
 
         sql = sql.Replace("@ProductID", unusedLeaveProductID) _
             .Replace("@OrganizationID", CStr(z_OrganizationID)) _
-            .Replace("@PayPeriodID", PayPeriodID)
+            .Replace("@PayPeriodID", _payPeriod.RowID)
 
         Me.existingUnusedLeaveAdjustments = GetDatatable(sql)
-    End Sub
-
-    Private Sub LoadCurrentPayperiod()
-        Dim sql = <![CDATA[
-            SELECT Year, OrdinalValue
-            FROM payperiod
-            WHERE RowID = @PayPeriodID;
-        ]]>.Value
-
-        sql = sql.Replace("@PayPeriodID", Me.PayPeriodID)
-
-        Dim results = GetDatatable(sql)
-        Me.payPeriod = results(0)
     End Sub
 
     Private Sub LoadProductIDForUnusedLeave()
@@ -1379,7 +1072,7 @@ Public Class PayrollGeneration
 
         sql = sql.Replace("@ProductID", unusedLeaveProductID) _
             .Replace("@OrganizationID", CStr(z_OrganizationID)) _
-            .Replace("@PayPeriodID", PayPeriodID)
+            .Replace("@PayPeriodID", _payPeriod.RowID)
 
         EXECQUER(sql)
     End Sub
@@ -1438,168 +1131,26 @@ Public Class PayrollGeneration
             adjustmentAmount,
             remarks,
             employeeOID,
-            Me.PayPeriodID,
+            _payPeriod.RowID,
             payStubAdjustmentID
         )
     End Sub
 
-End Class
+    Private Class PayFrequency
+        Public Const SemiMonthly As Integer = 1
+        Public Const Monthly As Integer = 2
+    End Class
 
-Friend Class MySQLExecuteQuery
+    Private Class SalaryType
+        Public Const Fixed As String = "Fixed"
+        Public Const Monthly As String = "Monthly"
+        Public Const Daily As String = "Daily"
+    End Class
 
-    Private priv_conn As New MySqlConnection
-
-    Private priv_da As New MySqlDataAdapter
-
-    Private priv_cmd As New MySqlCommand
-
-    Private getResult As Object
-
-    Dim dr As MySqlDataReader
-
-    Sub New(ByVal cmdsql As String,
-            Optional cmd_time_out As Integer = 0)
-
-        Static except_this_string() As String = {"CALL", "UPDATE", "DELETE"}
-
-        'Dim n_DataBaseConnection As New DataBaseConnection
-
-        If cmd_time_out > 0 Then
-            'n_DataBaseConnection.GetStringMySQLConnectionString
-            priv_conn.ConnectionString = mysql_conn_text &
-                "default command timeout=" & cmd_time_out & ";"
-        Else
-            'n_DataBaseConnection.GetStringMySQLConnectionString
-            priv_conn.ConnectionString = mysql_conn_text
-
-        End If
-
-        Try
-
-            If priv_conn.State = ConnectionState.Open Then : priv_conn.Close() : End If
-
-            priv_conn.Open()
-
-            priv_cmd = New MySqlCommand
-
-            With priv_cmd
-
-                .CommandType = CommandType.Text
-
-                .Connection = priv_conn
-
-                .CommandText = cmdsql
-
-                If cmd_time_out > 0 Then
-                    .CommandTimeout = cmd_time_out
-                End If
-
-                If cmdsql.Contains("CALL") Then
-
-                    .ExecuteNonQuery()
-
-                ElseIf FindingWordsInString(cmdsql,
-                                            except_this_string) Then
-
-                    .ExecuteNonQuery()
-                Else
-
-                    dr = .ExecuteReader()
-
-                End If
-
-            End With
-
-            If cmdsql.Contains("CALL") Then
-                getResult = Nothing
-            ElseIf FindingWordsInString(cmdsql,
-                                        except_this_string) Then
-                getResult = Nothing
-            Else
-
-                If dr.Read = True Then
-
-                    If IsDBNull(dr(0)) Then
-                        getResult = String.Empty
-                    Else
-                        getResult = dr(0)
-
-                    End If
-                Else
-                    getResult = Nothing
-
-                End If
-
-            End If
-        Catch ex As Exception
-
-            _hasError = True
-            _error_message = getErrExcptn(ex, MyBase.ToString)
-            'MsgBox(_error_message, , cmdsql)
-            Console.WriteLine(_error_message)
-        Finally
-
-            If dr IsNot Nothing Then
-                dr.Close()
-                dr.Dispose()
-            End If
-
-            priv_conn.Close()
-
-            priv_cmd.Dispose()
-
-        End Try
-
-    End Sub
-
-    Property Result As Object
-
-        Get
-            Return getResult
-
-        End Get
-
-        Set(value As Object)
-            getResult = value
-
-        End Set
-
-    End Property
-
-    Sub ExecuteQuery()
-
-    End Sub
-
-    Dim _hasError As Boolean = False
-
-    Property HasError As Boolean
-
-        Get
-            Return _hasError
-
-        End Get
-
-        Set(value As Boolean)
-            _hasError = value
-
-        End Set
-
-    End Property
-
-    Dim _error_message As String = String.Empty
-
-    Property ErrorMessage As String
-
-        Get
-            Return _error_message
-
-        End Get
-
-        Set(value As String)
-            _error_message = value
-
-        End Set
-
-    End Property
+    Private Class ContributionSchedule
+        Public Const FirstHalf As String = "First half"
+        Public Const EndOfTheMonth As String = "End of the month"
+        Public Const PerPayPeriod As String = "Per pay period"
+    End Class
 
 End Class

@@ -22,9 +22,7 @@ Public Class PayrollResources
 
     Private _salaries As DataTable
 
-    Private _timeEntries As DataTable
-
-    Private _timeEntries2 As ICollection(Of TimeEntry)
+    Private _timeEntries As ICollection(Of TimeEntry)
 
     Private _actualtimeentries As ICollection(Of ActualTimeEntry)
 
@@ -60,15 +58,9 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property TimeEntries As DataTable
+    Public ReadOnly Property TimeEntries As ICollection(Of TimeEntry)
         Get
             Return _timeEntries
-        End Get
-    End Property
-
-    Public ReadOnly Property TimeEntries2 As ICollection(Of TimeEntry)
-        Get
-            Return _timeEntries2
         End Get
     End Property
 
@@ -156,8 +148,6 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property Adjustments As ICollection(Of Adjustment)
-
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = Integer.Parse(payPeriodID)
         _payDateFrom = payDateFrom
@@ -165,14 +155,12 @@ Public Class PayrollResources
     End Sub
 
     Public Async Function Load() As Task
-        Dim loadTimeEntriesTask = LoadTimeEntries()
         Dim loadSalariesTask = LoadSalaries()
         Dim loadLoanSchedulesTask = LoadLoanSchedules()
         Dim loadLoanTransactionsTask = LoadLoanTransactions()
 
         Await Task.WhenAll({
             LoadEmployees(),
-            loadTimeEntriesTask,
             loadLoanSchedulesTask,
             loadLoanTransactionsTask,
             loadSalariesTask,
@@ -186,7 +174,7 @@ Public Class PayrollResources
             LoadPayPeriod(),
             LoadPayRates(),
             LoadAllowances(),
-            LoadTimeEntries2(),
+            LoadTimeEntries(),
             LoadActualTimeEntries()
         })
     End Function
@@ -206,52 +194,7 @@ Public Class PayrollResources
         End Try
     End Function
 
-    Public Async Function LoadTimeEntries() As Task
-        Dim timeEntrySql = <![CDATA[
-            SELECT
-                SUM(COALESCE(ete.TotalDayPay,0)) 'TotalDayPay',
-                ete.EmployeeID,
-                ete.Date,
-                SUM(COALESCE(ete.RegularHoursAmount, 0)) 'RegularHoursAmount',
-                SUM(COALESCE(ete.RegularHoursWorked, 0)) 'RegularHoursWorked',
-                SUM(COALESCE(ete.OvertimeHoursWorked, 0)) 'OvertimeHoursWorked',
-                SUM(COALESCE(ete.OvertimeHoursAmount, 0)) 'OvertimeHoursAmount',
-                SUM(COALESCE(ete.NightDifferentialHours, 0)) 'NightDifferentialHours',
-                SUM(COALESCE(ete.NightDiffHoursAmount, 0)) 'NightDiffHoursAmount',
-                SUM(COALESCE(ete.NightDifferentialOTHours, 0)) 'NightDifferentialOTHours',
-                SUM(COALESCE(ete.NightDiffOTHoursAmount, 0)) 'NightDiffOTHoursAmount',
-                SUM(COALESCE(ete.RestDayHours, 0)) 'RestDayHours',
-                SUM(COALESCE(ete.RestDayAmount, 0)) 'RestDayAmount',
-                SUM(COALESCE(ete.Leavepayment, 0)) 'Leavepayment',
-                SUM(COALESCE(ete.HolidayPayAmount, 0)) 'HolidayPayAmount',
-                SUM(COALESCE(ete.HoursLate, 0)) 'HoursLate',
-                SUM(COALESCE(ete.HoursLateAmount, 0)) 'HoursLateAmount',
-                SUM(COALESCE(ete.UndertimeHours, 0)) 'UndertimeHours',
-                SUM(COALESCE(ete.UndertimeHoursAmount, 0)) 'UndertimeHoursAmount',
-                SUM(COALESCE(ete.Absent, 0)) AS 'Absent',
-                SUM(COALESCE(ete.VacationLeaveHours, 0)) AS 'VacationLeaveHours', 
-                SUM(COALESCE(ete.SickLeaveHours, 0)) As 'SickLeaveHours',
-                SUM(COALESCE(ete.OtherLeaveHours, 0)) AS 'OtherLeaveHours'
-            FROM employeetimeentry ete
-            LEFT JOIN employee e
-            ON e.RowID = ete.EmployeeID
-            LEFT JOIN payrate pr
-            ON pr.RowID = ete.PayRateID AND
-                pr.OrganizationID = ete.OrganizationID
-            WHERE ete.OrganizationID='@OrganizationID' AND
-                ete.Date BETWEEN IF('@DateFrom' < e.StartDate, e.StartDate, '@DateFrom') AND '@DateTo'
-            GROUP BY ete.EmployeeID
-            ORDER BY ete.EmployeeID;
-        ]]>.Value
-
-        timeEntrySql = timeEntrySql.Replace("@OrganizationID", orgztnID) _
-            .Replace("@DateFrom", _payDateFrom.ToString("s")) _
-            .Replace("@DateTo", _payDateTo.ToString("s"))
-
-        _timeEntries = Await New SqlToDataTable(timeEntrySql).ReadAsync()
-    End Function
-
-    Private Async Function LoadTimeEntries2() As Task
+    Private Async Function LoadTimeEntries() As Task
         Dim backDate = _payDateFrom.AddDays(-3)
 
         Try
@@ -262,7 +205,7 @@ Public Class PayrollResources
                                 t.Date <= _payDateTo
                             Select t
 
-                _timeEntries2 = Await query.ToListAsync()
+                _timeEntries = Await query.ToListAsync()
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("TimeEntries", ex)
@@ -270,7 +213,6 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadActualTimeEntries() As Task
-
         Try
             Using context = New PayrollContext()
                 Dim query = From t In context.ActualTimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
