@@ -139,7 +139,17 @@ Namespace Global.AccuPay.Entity
 
         Public Property OffsetBalance As Decimal
 
+        Public Property AgencyID As Integer?
+
         Public Property Image As Byte()
+
+        Public Property AdvancementPoints As Integer
+
+        <ForeignKey("PositionID")>
+        Public Overridable Property Position As Position
+
+        <ForeignKey("PayFrequencyID")>
+        Public Overridable Property PayFrequency As PayFrequency
 
         Public ReadOnly Property MiddleInitial As String
             Get
@@ -165,13 +175,11 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
-        Public Property AdvancementPoints As Integer
-
-        <ForeignKey("PositionID")>
-        Public Overridable Property Position As Position
-
-        <ForeignKey("PayFrequencyID")>
-        Public Overridable Property PayFrequency As PayFrequency
+        Public ReadOnly Property IsUnderAgency As Boolean
+            Get
+                Return AgencyID.HasValue
+            End Get
+        End Property
 
     End Class
 

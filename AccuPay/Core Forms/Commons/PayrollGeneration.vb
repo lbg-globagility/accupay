@@ -655,7 +655,6 @@ Public Class PayrollGeneration
 
     Private Sub CalculateSss(salary As DataRow)
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
-        Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
         Dim findSocialSecurityBracket =
             Function(amount As Decimal) _socialSecurityBrackets.FirstOrDefault(
@@ -695,7 +694,7 @@ Public Class PayrollGeneration
         If is_weekly Then
             Dim is_deduct_sched_to_thisperiod = False
 
-            If is_under_agency Then
+            If _employee2.IsUnderAgency Then
                 is_deduct_sched_to_thisperiod = _payPeriod.SSSWeeklyAgentContribSched
             Else
                 is_deduct_sched_to_thisperiod = _payPeriod.SSSWeeklyContribSched
@@ -776,11 +775,10 @@ Public Class PayrollGeneration
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
 
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
-        Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
         If is_weekly Then
             Dim is_deduct_sched_to_thisperiod = If(
-                is_under_agency,
+                _employee2.IsUnderAgency,
                 _payPeriod.PhHWeeklyAgentContribSched,
                 _payPeriod.PhHWeeklyContribSched)
 
@@ -842,11 +840,10 @@ Public Class PayrollGeneration
         Dim employerHdmfPerMonth = If(employeeHdmfPerMonth = 0, 0, employeeHdmfPerMonth)
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
-        Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
         If is_weekly Then
             Dim is_deduct_sched_to_thisperiod = If(
-                is_under_agency,
+                _employee2.IsUnderAgency,
                 _payPeriod.HDMFWeeklyAgentContribSched,
                 _payPeriod.HDMFWeeklyContribSched)
 
@@ -886,7 +883,6 @@ Public Class PayrollGeneration
     Private Sub CalculateWithholdingTax()
         Dim payFrequencyID As Integer
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
-        Dim is_under_agency As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsUnderAgency")))
 
         If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
             payFrequencyID = PayFrequency.Monthly
@@ -939,7 +935,7 @@ Public Class PayrollGeneration
 
         If is_weekly Then
             Dim is_deduct_sched_to_thisperiod = If(
-                is_under_agency,
+                _employee2.IsUnderAgency,
                 _payPeriod.WTaxWeeklyAgentContribSched,
                 _payPeriod.WTaxWeeklyContribSched)
 
