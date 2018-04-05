@@ -17,13 +17,14 @@ Public Class LeaveTransactionMap
         Map(Function(x) x.LastUpdBy)
 
         Map(Function(x) x.EmployeeID)
-        Map(Function(x) x.LeaveLedgerID)
         Map(Function(x) x.PayPeriodID)
         Map(Function(x) x.ReferenceID)
         Map(Function(x) x.TransactionDate)
         Map(Function(x) x.Type)
         Map(Function(x) x.Balance)
         Map(Function(x) x.Amount)
+
+        References(Function(x) x.LeaveLedger).Column("LeaveLedgerID")
     End Sub
 
 End Class

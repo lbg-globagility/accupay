@@ -312,12 +312,12 @@ Public Class PayrollResources
         Dim previousCutoffEnd = _payDateFrom.AddDays(-1)
 
         Try
-            Using context = New PayrollContext()
-                Dim query = From p In context.Paystubs
-                            Where p.PayToDate = previousCutoffEnd And
-                                p.OrganizationID = z_OrganizationID
+            Using session = SessionFactory.Instance.OpenSession()
+                Dim query = session.Query(Of Paystub).
+                    Where(Function(p) p.PayToDate = previousCutoffEnd).
+                    Where(Function(p) CBool(p.OrganizationID = z_OrganizationID))
 
-                _previousPaystubs = Await query.ToListAsync()
+                _previousPaystubs = Await LinqExtensionMethods.ToListAsync(query)
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("PreviousPaystubs", ex)

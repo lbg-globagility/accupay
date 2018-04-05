@@ -18,6 +18,8 @@ Public Class LeaveLedgerMap
 
         Map(Function(x) x.EmployeeID)
 
+        HasMany(Function(x) x.LeaveTransactions).Inverse().Cascade.All()
+
         References(Function(x) x.LastTransaction).Column("LastTransactionID")
         References(Function(x) x.Product).Column("ProductID")
     End Sub
