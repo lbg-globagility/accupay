@@ -303,12 +303,21 @@ Public Class PayrollGeneration
             Using session = SessionFactory.Instance.OpenSession(),
                 trans = session.BeginTransaction()
 
+                session.FlushMode = FlushMode.Commit
+
                 UpdateLeaveLedger(session)
 
-                _paystub = session.Merge(_paystub)
+                If _paystub.RowID IsNot Nothing Then
+                    _paystub = session.Merge(_paystub)
+                End If
 
                 session.Delete("from AllowanceItem a where a.Paystub.RowID = ?", _paystub.RowID, NHibernate.NHibernateUtil.Int32)
-                _paystub.AllowanceItems = _allowanceItems
+
+                _paystub.AllowanceItems.Clear()
+                For Each allowanceItem In _allowanceItems
+                    _paystub.AllowanceItems.Add(allowanceItem)
+                Next
+                '_paystub.AllowanceItems = _allowanceItems
 
                 ComputeThirteenthMonthPay(salary)
 
@@ -353,7 +362,7 @@ Public Class PayrollGeneration
                 session.SaveOrUpdate(_paystub)
 
                 For Each newLoanTransaction In newLoanTransactions
-                    session.Save(newLoanTransactions)
+                    session.Save(newLoanTransaction)
                 Next
 
                 trans.Commit()
