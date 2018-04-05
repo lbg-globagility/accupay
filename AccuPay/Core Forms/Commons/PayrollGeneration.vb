@@ -549,13 +549,21 @@ Public Class PayrollGeneration
                 Continue For
             End If
 
-            If lastTimeEntry?.ShiftSchedule.IsRestDay And (lastTimeEntry.TotalDayPay > 0D) Then
-                Return True
+            If lastTimeEntry?.ShiftSchedule.IsRestDay Then
+                If lastTimeEntry.TotalDayPay > 0 Then
+                    Return True
+                End If
+
+                Continue For
             End If
 
             Dim payRate = _payRates(lastTimeEntry.Date)
-            If payRate.IsHoliday And (lastTimeEntry.TotalDayPay > 0D) Then
-                Return True
+            If payRate.IsHoliday Then
+                If lastTimeEntry.TotalDayPay > 0 Then
+                    Return True
+                End If
+
+                Continue For
             End If
 
             Return lastTimeEntry.RegularHours > 0 Or lastTimeEntry.TotalLeaveHours > 0
@@ -573,7 +581,8 @@ Public Class PayrollGeneration
                 .CreatedBy = z_User,
                 .LastUpdBy = z_User,
                 .PayPeriodID = _payPeriod.RowID,
-                .AllowanceID = allowance.RowID
+                .AllowanceID = allowance.RowID,
+                .Paystub = _paystub
             }
 
             If allowance.AllowanceFrequency = "One time" Then
