@@ -44,7 +44,8 @@ IF (employeeRowID IS NOT NULL) AND (i_DateFrom IS NOT NULL) THEN
         WHERE sh.TimeFrom = i_TimeFrom AND
             sh.TimeTo = i_TimeTo AND
             sh.OrganizationID = OrganizID
-        INTO shiftRowID;
+        LIMIT 1
+		  INTO shiftRowID;
 
         IF shiftRowID IS NULL THEN
             INSERT INTO shift
@@ -78,7 +79,8 @@ IF (employeeRowID IS NOT NULL) AND (i_DateFrom IS NOT NULL) THEN
         EmployeeID = employeeRowID AND
         EffectiveFrom = i_DateFrom AND
         EffectiveTo = i_DateTo
-    INTO employeeshiftID;
+    LIMIT 1
+	 INTO employeeshiftID;
 
     INSERT INTO employeeshift (
         RowID,
