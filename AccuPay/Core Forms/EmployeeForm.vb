@@ -10,6 +10,7 @@ Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Loans
 
 Public Class EmployeeForm
 
@@ -9084,8 +9085,8 @@ Public Class EmployeeForm
     ''' Deletes the loan schedule the user has requested.
     ''' </summary>
     Private Sub DeleteLoanSchedule(sender As Object, e As EventArgs) Handles DeleteLoanScheduleButton.Click
-
         Dim loanScheduleID As Integer
+
         If Not Integer.TryParse(dgvLoanList.CurrentRow.Cells(c_RowIDLoan.Index).Value, loanScheduleID) Then
             MsgBox("Sorry, but something has gone awry. Please contact Globagility, Inc. if you see this error message.")
             Return
@@ -9100,21 +9101,21 @@ Public Class EmployeeForm
                                 MessageBoxDefaultButton.Button2)
 
             If prompt = DialogResult.Yes Then
-                Using context = New PayrollContext()
-                    Dim loanSchedule = context.LoanSchedules.Find(loanScheduleID)
+                Using session = SessionFactory.Instance.OpenSession()
+                    Dim loanSchedule = session.Get(Of LoanSchedule)(loanScheduleID)
 
                     If loanSchedule.LoanTransactions.Count() > 0 Then
                         MsgBox("Sorry, but you can't delete a loan that has already started.")
                         Return
                     End If
 
-                    context.LoanSchedules.Remove(loanSchedule)
-                    context.SaveChanges()
+                    session.Delete(loanSchedule)
+                    session.Flush()
                 End Using
+
                 Dim curr_row = dgvLoanList.CurrentRow
                 dgvLoanList.Rows.Remove(curr_row)
             End If
-
         Catch ex As Exception
             Throw New Exception($"Failed to delete loan schedule #{loanScheduleID}.", ex)
         End Try

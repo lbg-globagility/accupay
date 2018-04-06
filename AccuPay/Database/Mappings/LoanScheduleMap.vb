@@ -9,6 +9,8 @@ Namespace Global.AccuPay.Database.Mappings
         Inherits ClassMap(Of LoanSchedule)
 
         Public Sub New()
+            Table("employeeloanschedule")
+
             Id(Function(x) x.RowID).GeneratedBy.Identity()
             Map(Function(x) x.OrganizationID)
 
@@ -28,6 +30,8 @@ Namespace Global.AccuPay.Database.Mappings
             Map(Function(x) x.LoanPayPeriodLeft)
             Map(Function(x) x.Comments)
             Map(Function(x) x.LoanName)
+
+            HasMany(Function(x) x.LoanTransactions).Inverse().Cascade.All()
         End Sub
 
     End Class
