@@ -94,7 +94,7 @@ VALUES
     I_DedEffectiveDateFrom,
     PAYTODATE_OF_NoOfPayPeriod(I_DedEffectiveDateFrom, I_NoOfPayPeriod, I_EmployeeID, I_DeductionSchedule),
     I_TotalLoanAmount,
-    IF(strloantype IN ('Cash Advance','BIR'), 'End of the month', I_DeductionSchedule),
+    I_DeductionSchedule,
     I_TotalLoanAmount,
     I_DeductionAmount,
     I_Status,
