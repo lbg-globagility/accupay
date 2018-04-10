@@ -31,6 +31,10 @@ Namespace Global.AccuPay.Entity
 
         Public Property DivisorToDailyRate As Decimal
 
+        Public Property ShiftHours As Decimal
+
+        Public Property WorkHours As Decimal
+
         Public ReadOnly Property HasBreaktime As Boolean
             Get
                 Return BreaktimeFrom.HasValue And BreaktimeTo.HasValue
