@@ -9093,20 +9093,28 @@ Public Class EmployeeForm
         End If
 
         Try
-            Dim prompt =
-                MessageBox.Show("Do you want to delete this loan ?",
-                                "Confirm deletion",
-                                MessageBoxButtons.YesNoCancel,
-                                MessageBoxIcon.Question,
-                                MessageBoxDefaultButton.Button2)
+            Dim prompt = MessageBox.Show(
+                "Do you want to delete this loan ?",
+                "Confirm deletion",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2)
 
             If prompt = DialogResult.Yes Then
                 Using session = SessionFactory.Instance.OpenSession()
                     Dim loanSchedule = session.Get(Of LoanSchedule)(loanScheduleID)
 
                     If loanSchedule.LoanTransactions.Count() > 0 Then
-                        MsgBox("Sorry, but you can't delete a loan that has already started.")
-                        Return
+                        Dim secondPrompt = MessageBox.Show(
+                            "This loan has already started, are you sure you want to delete this loan? Doing this might affect previous cutoffs.",
+                            "Confirm deletion",
+                            MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question,
+                            MessageBoxDefaultButton.Button2)
+
+                        If secondPrompt <> DialogResult.Yes Then
+                            Return
+                        End If
                     End If
 
                     session.Delete(loanSchedule)
