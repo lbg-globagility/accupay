@@ -530,7 +530,13 @@ Public Class PayrollGeneration
                 amount = (timeEntry.RegularHours + timeEntry.RegularHolidayHours) * hourlyRate
 
                 If HasWorkedLastWorkingDay(timeEntry) Then
-                    amount += dailyRate
+                    If _settings.GetString("AllowancePolicy.CalculationType") = "Hourly" Then
+                        Dim workHours = If(timeEntry.ShiftSchedule?.Shift?.WorkHours, 8D)
+
+                        amount += {workHours * hourlyRate, dailyRate}.Max()
+                    Else
+                        amount += dailyRate
+                    End If
                 End If
             End If
 
