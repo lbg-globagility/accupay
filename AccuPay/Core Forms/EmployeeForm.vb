@@ -9093,6 +9093,7 @@ Public Class EmployeeForm
         End If
 
         Try
+            loanScheduleID = Convert.ToInt32(dgvLoanList.CurrentRow.Cells(c_RowIDLoan.Index).Value)
             Dim prompt = MessageBox.Show(
                 "Do you want to delete this loan ?",
                 "Confirm deletion",
