@@ -58,10 +58,10 @@ IF hasupdate = 0 THEN
     AND (ADDDATE(e.StartDate, INTERVAL 2 YEAR) <= curr_year
             OR ADDDATE(e.StartDate, INTERVAL 1 YEAR) BETWEEN minimum_date AND custom_maximum_date);
 
-
-
+    CALL UPD_leavebalance_newlyjoinedemployee(OrganizID, CURDATE(), NULL);
+    
     INSERT INTO userupdateleavebalancelog(OrganizationID,Created,UserID,YearValue) VALUES (OrganizID,CURRENT_TIMESTAMP(),UserRowID,curr_year) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
-
+    
 END IF;
 
 END//
