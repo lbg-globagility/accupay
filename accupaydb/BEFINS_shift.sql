@@ -22,6 +22,10 @@ DECLARE shift_total_hours INT(11);
 
 DECLARE is_even BOOL DEFAULT FALSE;
 
+DECLARE sh_hrs, work_hrs, br_hrs DECIMAL(10, 2) DEFAULT 0;
+
+DECLARE is_reach_tomorrow BOOL DEFAULT FALSE;
+
 SET shift_timestamp_from = CONCAT_DATETIME(CURDATE(), NEW.TimeFrom);
 
 SET shift_total_hours =
@@ -44,6 +48,25 @@ END IF;
 SET NEW.BreakTimeFrom = TIME(sh_timestamp_from);
 
 SET NEW.BreakTimeTo = TIME( ADDDATE(sh_timestamp_from, INTERVAL default_break_hour HOUR) );
+
+# ##############################################################################
+
+SET is_reach_tomorrow = IS_TIMERANGE_REACHTOMORROW(NEW.TimeFrom, NEW.TimeTo);
+
+SET sh_hrs = TIMESTAMPDIFF(SECOND
+                           , CONCAT_DATETIME(CURDATE(), NEW.TimeFrom)
+                           , ADDDATE(CONCAT_DATETIME(CURDATE(), NEW.TimeTo), INTERVAL is_reach_tomorrow DAY)) / sec_per_hour;
+
+SET NEW.ShiftHours = IFNULL(sh_hrs, 0);
+
+
+SET is_reach_tomorrow = IS_TIMERANGE_REACHTOMORROW(NEW.BreakTimeFrom, NEW.BreakTimeTo);
+
+SET br_hrs = TIMESTAMPDIFF(SECOND
+                           , CONCAT_DATETIME(CURDATE(), NEW.BreakTimeFrom)
+                           , ADDDATE(CONCAT_DATETIME(CURDATE(), NEW.BreakTimeTo), INTERVAL is_reach_tomorrow DAY)) / sec_per_hour;
+
+SET NEW.WorkHours = NEW.ShiftHours - IFNULL(br_hrs, 0);
 
 END//
 DELIMITER ;
