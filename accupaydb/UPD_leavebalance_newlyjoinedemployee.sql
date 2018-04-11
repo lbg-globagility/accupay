@@ -1,20 +1,15 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.5-10.0.12-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win32
--- HeidiSQL Version:             8.3.0.4694
--- --------------------------------------------------------
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for procedure accupaydb.UPD_leavebalance_newlyjoinedemployee
 DROP PROCEDURE IF EXISTS `UPD_leavebalance_newlyjoinedemployee`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UPD_leavebalance_newlyjoinedemployee`(IN `og_rowid` INT, IN `param_date` DATE, IN `e_rowid` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UPD_leavebalance_newlyjoinedemployee`(IN `og_rowid` INT, IN `param_date` DATE, IN `e_rowid` INT, IN `user_rowid` INT)
 BEGIN
+
+DECLARE leave_type TEXT DEFAULT 'Leave type';
 
 IF e_rowid IS NULL THEN
 
@@ -53,6 +48,7 @@ IF e_rowid IS NULL THEN
 					WHERE e.DateRegularized IS NOT NULL
 					AND e.OrganizationID = og_rowid
 					AND YEAR(e.DateRegularized) = YEAR(param_date)
+					AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 					GROUP BY e.RowID
 	        /**/) ee ON ee.RowID = e.RowID #AND ee.`IsDateRegularizedThisYear` = TRUE
 	
@@ -62,6 +58,86 @@ IF e_rowid IS NULL THEN
 	, e.OtherLeaveBalance = ee.`OLeaveBal`
 	, e.MaternityLeaveBalance = ee.`MLeaveBal`
 	WHERE e.OrganizationID = og_rowid
+	;
+	
+	INSERT INTO leavetransaction(OrganizationID,Created,CreatedBy,EmployeeID,ReferenceID,LeaveLedgerID,PayPeriodID,TransactionDate,`Type`,Balance,Amount,Comments)
+	SELECT
+	p.OrganizationID
+	, CURRENT_TIMESTAMP()
+	, user_rowid
+	, ee.RowID
+	, NULL
+	, ll.RowID
+	, ee.`PayPeriodID`
+	, ee.PayFromDate
+	, 'Credit'
+	, IF(p.PartNo = 'Vacation leave'
+	     , ee.`VLeaveBal`
+		  , IF(p.PartNo = 'Sick leave'
+		       , ee.`SLeaveBal`
+				 , IF(p.PartNo = 'Maternity/paternity leave'
+				      , ee.`MLeaveBal`
+						, IF(p.PartNo = 'Others'
+						     , ee.`OLeaveBal`
+							  , 0) # 'Leave w/o Pay'
+							  )))
+	, 0
+	, p.PartNo
+	
+	FROM product p
+	
+	INNER JOIN (
+	            SELECT
+					e.RowID
+					, pp.`Year`
+					, pp.RowID `PayPeriodID`
+					, STR_TO_DATE(MAX(pyp.PayToDate), @@date_format) `MaxPayToDate`
+					, (e.DateRegularized BETWEEN param_date AND MAX(pyp.PayToDate)) `IsDateRegularizedThisYear`
+					
+					, pp.OrdinalValue
+					, pp.PayFromDate, pp.PayToDate
+
+					, (@_count := MAX(pyp.OrdinalValue)) `CountRecord`
+					
+					, (@_ctr := ((@_count - pp.OrdinalValue) + 1)) `CountRec`
+					
+					, ROUND((e.LeaveAllowance * ( @_ctr / @_count )), 2) `VLeaveBal`
+					, ROUND((e.SickLeaveAllowance * ( @_ctr / @_count )), 2) `SLeaveBal`
+					, ROUND((e.OtherLeaveAllowance * ( @_ctr / @_count )), 2) `OLeaveBal`
+					, ROUND((e.MaternityLeaveAllowance * ( @_ctr / @_count )), 2) `MLeaveBal`
+					
+					FROM employee e
+					INNER JOIN payperiod pp ON pp.TotalGrossSalary = e.PayFrequencyID AND pp.OrganizationID = e.OrganizationID AND e.DateRegularized BETWEEN pp.PayFromDate AND pp.PayToDate
+					
+					INNER JOIN payperiod pyp ON pyp.OrganizationID = pp.OrganizationID AND pyp.TotalGrossSalary = pp.TotalGrossSalary AND pyp.`Year` = pp.`Year`
+					
+					WHERE e.DateRegularized IS NOT NULL
+					AND e.OrganizationID = og_rowid
+					AND YEAR(e.DateRegularized) = YEAR(param_date)
+					AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+					GROUP BY e.RowID
+	            ) ee ON ee.RowID > 0 #AND ee.`IsDateRegularizedThisYear` = TRUE
+	
+	INNER JOIN leaveledger ll
+	        ON ll.OrganizationID = p.OrganizationID
+			     AND ll.ProductID = p.RowID
+			     AND ll.EmployeeID = ee.RowID
+	
+	WHERE p.OrganizationID=og_rowid
+	AND p.`Category`=leave_type
+	;
+	
+	UPDATE leaveledger ll
+	INNER JOIN leavetransaction lt
+	        ON lt.Created = @curr_timestamp
+			     AND lt.OrganizationID=ll.OrganizationID
+			     AND lt.EmployeeID = ll.EmployeeID
+			     # AND lt.LeaveLedgerID = ll.RowID
+	SET
+	ll.LastTransactionID = lt.RowID
+	, ll.LastUpd = @curr_timestamp
+	, ll.LastUpdBy = user_rowid
+	WHERE ll.OrganizationID = og_rowid
 	;
 	
 	# ###################################################################################
@@ -139,6 +215,7 @@ ELSEIF e_rowid IS NOT NULL THEN
 					AND e.DateRegularized IS NOT NULL
 					AND e.OrganizationID = og_rowid
 					AND YEAR(e.DateRegularized) = YEAR(param_date)
+					AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 					GROUP BY e.RowID
 	            ) ee ON ee.RowID = e.RowID #AND ee.`IsDateRegularizedThisYear` = TRUE
 	
@@ -148,6 +225,87 @@ ELSEIF e_rowid IS NOT NULL THEN
 	, e.OtherLeaveBalance = ee.`OLeaveBal`
 	, e.MaternityLeaveBalance = ee.`MLeaveBal`
 	WHERE e.OrganizationID = og_rowid
+	;
+	
+	INSERT INTO leavetransaction(OrganizationID,Created,CreatedBy,EmployeeID,ReferenceID,LeaveLedgerID,PayPeriodID,TransactionDate,`Type`,Balance,Amount,Comments)
+	SELECT
+	p.OrganizationID
+	, CURRENT_TIMESTAMP()
+	, user_rowid
+	, ee.RowID
+	, NULL
+	, ll.RowID
+	, ee.`PayPeriodID`
+	, ee.PayFromDate
+	, 'Credit'
+	, IF(p.PartNo = 'Vacation leave'
+	     , ee.`VLeaveBal`
+		  , IF(p.PartNo = 'Sick leave'
+		       , ee.`SLeaveBal`
+				 , IF(p.PartNo = 'Maternity/paternity leave'
+				      , ee.`MLeaveBal`
+						, IF(p.PartNo = 'Others'
+						     , ee.`OLeaveBal`
+							  , 0) # 'Leave w/o Pay'
+							  )))
+	, 0
+	, p.PartNo
+	
+	FROM product p
+	
+	INNER JOIN (
+	            SELECT
+					e.RowID
+					, pp.`Year`
+					, pp.RowID `PayPeriodID`
+					, STR_TO_DATE(MAX(pyp.PayToDate), @@date_format) `MaxPayToDate`
+					, (e.DateRegularized BETWEEN param_date AND MAX(pyp.PayToDate)) `IsDateRegularizedThisYear`
+					
+					, pp.OrdinalValue
+					, pp.PayFromDate, pp.PayToDate
+
+					, (@_count := MAX(pyp.OrdinalValue)) `CountRecord`
+					
+					, (@_ctr := ((@_count - pp.OrdinalValue) + 1)) `CountRec`
+					
+					, ROUND((e.LeaveAllowance * ( @_ctr / @_count )), 2) `VLeaveBal`
+					, ROUND((e.SickLeaveAllowance * ( @_ctr / @_count )), 2) `SLeaveBal`
+					, ROUND((e.OtherLeaveAllowance * ( @_ctr / @_count )), 2) `OLeaveBal`
+					, ROUND((e.MaternityLeaveAllowance * ( @_ctr / @_count )), 2) `MLeaveBal`
+					
+					FROM employee e
+					INNER JOIN payperiod pp ON pp.TotalGrossSalary = e.PayFrequencyID AND pp.OrganizationID = e.OrganizationID AND e.DateRegularized BETWEEN pp.PayFromDate AND pp.PayToDate
+					
+					INNER JOIN payperiod pyp ON pyp.OrganizationID = pp.OrganizationID AND pyp.TotalGrossSalary = pp.TotalGrossSalary AND pyp.`Year` = pp.`Year`
+					
+					WHERE e.RowID = e_rowid
+					AND e.DateRegularized IS NOT NULL
+					AND e.OrganizationID = og_rowid
+					AND YEAR(e.DateRegularized) = YEAR(param_date)
+					AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+					GROUP BY e.RowID
+	            ) ee ON ee.RowID > 0 #AND ee.`IsDateRegularizedThisYear` = TRUE
+	
+	INNER JOIN leaveledger ll
+	        ON ll.OrganizationID = p.OrganizationID
+			     AND ll.ProductID = p.RowID
+			     AND ll.EmployeeID = ee.RowID
+	
+	WHERE p.OrganizationID=og_rowid
+	AND p.`Category`=leave_type
+	;
+	
+	UPDATE leaveledger ll
+	INNER JOIN leavetransaction lt
+	        ON lt.Created = @curr_timestamp
+			     AND lt.OrganizationID=ll.OrganizationID
+			     AND lt.EmployeeID = ll.EmployeeID
+			     AND lt.EmployeeID = e_rowid
+	SET
+	ll.LastTransactionID = lt.RowID
+	, ll.LastUpd = @curr_timestamp
+	, ll.LastUpdBy = user_rowid
+	WHERE ll.OrganizationID = og_rowid
 	;
 	
 	# ###################################################################################
@@ -194,6 +352,7 @@ END IF;
 
 END//
 DELIMITER ;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
