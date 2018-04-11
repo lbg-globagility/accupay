@@ -1083,7 +1083,7 @@ ELSEIF isHoliday THEN
         SET leavePay = leaveHours * hourlyRate;
 
         IF NOT isHolidayPayInclusive THEN
-            SET regularHolidayPay = regularHolidayPay + IF(hasWorkedLastWorkingDay, dailyRate, 0);
+            SET regularHolidayPay = regularHolidayPay + IF(hasWorkedLastWorkingDay, (shiftHours * hourlyRate), 0);
         END IF;
     END IF;
 
