@@ -60,10 +60,12 @@ IF e_rowid IS NULL THEN
 	WHERE e.OrganizationID = og_rowid
 	;
 	
+	SET @curr_timestamp = CURRENT_TIMESTAMP();
+	
 	INSERT INTO leavetransaction(OrganizationID,Created,CreatedBy,EmployeeID,ReferenceID,LeaveLedgerID,PayPeriodID,TransactionDate,`Type`,Balance,Amount,Comments)
 	SELECT
 	p.OrganizationID
-	, CURRENT_TIMESTAMP()
+	, @curr_timestamp
 	, user_rowid
 	, ee.RowID
 	, NULL
@@ -132,7 +134,7 @@ IF e_rowid IS NULL THEN
 	        ON lt.Created = @curr_timestamp
 			     AND lt.OrganizationID=ll.OrganizationID
 			     AND lt.EmployeeID = ll.EmployeeID
-			     # AND lt.LeaveLedgerID = ll.RowID
+			     AND lt.LeaveLedgerID = ll.RowID
 	SET
 	ll.LastTransactionID = lt.RowID
 	, ll.LastUpd = @curr_timestamp
@@ -140,47 +142,99 @@ IF e_rowid IS NULL THEN
 	WHERE ll.OrganizationID = og_rowid
 	;
 	
-	# ###################################################################################
 	/*
-	UPDATE employee e
+	TO DO : prioritize sick leave balance, always borrow from VL to fill sick leave balance
+	*/
+	INSERT INTO leavetransaction(OrganizationID,Created,CreatedBy,EmployeeID,ReferenceID,LeaveLedgerID,PayPeriodID,TransactionDate,`Type`,Balance,Amount,Comments)
+	SELECT
+	p.OrganizationID
+	, ADDDATE(@curr_timestamp, INTERVAL 1 SECOND)
+	, user_rowid
+	, ee.RowID
+	, NULL
+	, ll.RowID
+	, ee.`PayPeriodID`
+	, ee.PayFromDate
+	, IF(p.PartNo = 'Sick leave', 'Credit', 'Debit')
+	, IF(p.PartNo = 'Vacation leave'
+	     , ee.`VLeaveBal`
+		  , ee.`SLeaveBal`)
+	, ABS( (ee.`SLeaveBal` - ee.SickLeaveAllowance) )
+	, p.PartNo
+	
+	FROM product p
+	
 	INNER JOIN (
 	            SELECT
-					# e.*
 					e.RowID
 					, pp.`Year`
-					# , (@max_date := STR_TO_DATE(MAX(pyp.PayToDate), @@date_format)) `MaxPayToDate`
+					, pp.RowID `PayPeriodID`
 					, STR_TO_DATE(MAX(pyp.PayToDate), @@date_format) `MaxPayToDate`
-					# , (e.DateRegularized BETWEEN param_date AND STR_TO_DATE(MAX(pyp.PayToDate), @@date_format)) `IsDateRegularizedThisYear`
 					, (e.DateRegularized BETWEEN param_date AND MAX(pyp.PayToDate)) `IsDateRegularizedThisYear`
 					
-					, (@_count := COUNT(pyp.RowID)) `CountRecord`
+					, pp.OrdinalValue
+					, pp.PayFromDate, pp.PayToDate
+
+					, (@_count := MAX(pyp.OrdinalValue)) `CountRecord`
 					
-					, e.LeaveAllowance `VLeaveBal`
-					, e.SickLeaveAllowance `SLeaveBal`
-					, e.OtherLeaveAllowance `OLeaveBal`
-					, e.MaternityLeaveAllowance `MLeaveBal`
+					, (@_ctr := ((@_count - pp.OrdinalValue) + 1)) `CountRec`
+					
+					, e.LeaveAllowance
+					, e.SickLeaveAllowance
+					
+					, ROUND((e.LeaveAllowance * ( @_ctr / @_count )), 2) `VLeaveBal`
+					, ROUND((e.SickLeaveAllowance * ( @_ctr / @_count )), 2) `SLeaveBal`
+					, ROUND((e.OtherLeaveAllowance * ( @_ctr / @_count )), 2) `OLeaveBal`
+					, ROUND((e.MaternityLeaveAllowance * ( @_ctr / @_count )), 2) `MLeaveBal`
 					
 					FROM employee e
 					INNER JOIN payperiod pp ON pp.TotalGrossSalary = e.PayFrequencyID AND pp.OrganizationID = e.OrganizationID AND e.DateRegularized BETWEEN pp.PayFromDate AND pp.PayToDate
-					
-					# INNER JOIN payperiod ppd ON ppd.TotalGrossSalary = e.PayFrequencyID AND ppd.OrganizationID = e.OrganizationID AND param_date BETWEEN ppd.PayFromDate AND ppd.PayToDate
 					
 					INNER JOIN payperiod pyp ON pyp.OrganizationID = pp.OrganizationID AND pyp.TotalGrossSalary = pp.TotalGrossSalary AND pyp.`Year` = pp.`Year`
 					
 					WHERE e.DateRegularized IS NOT NULL
 					AND e.OrganizationID = og_rowid
-					AND YEAR(e.DateRegularized) < YEAR(param_date)
+					AND YEAR(e.DateRegularized) = YEAR(param_date)
+					AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 					GROUP BY e.RowID
-	            ) ee ON ee.RowID = e.RowID
+	            ) ee ON ee.RowID > 0 #AND ee.`IsDateRegularizedThisYear` = TRUE
 	
-	SET
-	e.LeaveBalance = ee.`VLeaveBal`
-	, e.SickLeaveBalance = ee.`SLeaveBal`
-	, e.OtherLeaveBalance = ee.`OLeaveBal`
-	, e.MaternityLeaveBalance = ee.`MLeaveBal`
-	WHERE e.OrganizationID = og_rowid
+	INNER JOIN leaveledger ll
+	        ON ll.OrganizationID = p.OrganizationID
+			     AND ll.ProductID = p.RowID
+			     AND ll.EmployeeID = ee.RowID
+	
+	WHERE p.OrganizationID=og_rowid
+	AND p.`Category`=leave_type
+	AND p.PartNo IN ('Vacation leave', 'Sick leave')
+	AND (IF(p.PartNo = 'Vacation leave', ee.`VLeaveBal`, ee.`SLeaveBal`) != 0
+	     AND ABS( (ee.`SLeaveBal` - ee.SickLeaveAllowance) ) != 0)
 	;
+	
+	UPDATE leaveledger ll
+	INNER JOIN leavetransaction lt
+	        ON lt.Created = ADDDATE(@curr_timestamp, INTERVAL 1 SECOND)
+			     AND lt.OrganizationID=ll.OrganizationID
+			     AND lt.EmployeeID = ll.EmployeeID
+			     AND lt.LeaveLedgerID = ll.RowID
+	SET
+	ll.LastTransactionID = lt.RowID
+	, ll.LastUpd = ADDDATE(@curr_timestamp, INTERVAL 1 SECOND)
+	, ll.LastUpdBy = user_rowid
+	WHERE ll.OrganizationID = og_rowid
+	;
+	
+	# #######################################################################
+	# #######################################################################
+	
+	/*
+	- after credited pro-rated leave balances
+	- gather all filed leaves and debit those to the credited leave balances
+	- make an insert statement for leavetransaction
+	- and update leaveledger to latest
 	*/
+	CALL UPD_leaveledger_newjoinedemployee(og_rowid, param_date, e_rowid, user_rowid);
+	
 ELSEIF e_rowid IS NOT NULL THEN
 
 	UPDATE employee e
