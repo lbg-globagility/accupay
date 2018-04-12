@@ -344,7 +344,7 @@ INTO
 SET isCalculatingRegularHoliday = isRegularHoliday AND isEntitledToRegularHoliday;
 SET isCalculatingSpecialNonWorkingHoliday = isSpecialNonWorkingHoliday AND isEntitledToSpecialNonWorkingHoliday;
 SET isHoliday = isRegularHoliday OR isSpecialNonWorkingHoliday;
-SET isHolidayPayInclusive = (e_EmpType = 'Monthly');
+SET isHolidayPayInclusive = (e_EmpType = 'Monthly' OR e_EmpType = 'Fixed');
 SET isRegularDay = NOT isHoliday;
 
 SELECT COUNT(RowID)
