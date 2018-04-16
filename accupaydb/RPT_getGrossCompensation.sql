@@ -38,7 +38,7 @@ SELECT es.*
     WHERE tmp.OrganizationID=OrganizID AND tmp.EmployeeID=es.EmployeeID AND (GET_paytodatepayperiod(OrganizID,FirstDateOfFinancialYear,e.PayFrequencyID) <= tmp.PayFromDate OR GET_paytodatepayperiod(OrganizID,FirstDateOfFinancialYear,e.PayFrequencyID) <= tmp.PayToDate) AND (GET_paytodatepayperiod(OrganizID,LastDateOfFinancialYear,e.PayFrequencyID) >= tmp.PayFromDate OR GET_paytodatepayperiod(OrganizID,LastDateOfFinancialYear,e.PayFrequencyID) >= tmp.PayToDate)),0) AS ThirteenthMonthPay
 ,SUM(eal.TotalAllowance) AS TotalAllowance
 FROM employeesalary es
-LEFT JOIN employee e ON e.RowID=es.EmployeeID
+LEFT JOIN employee e ON e.RowID=es.EmployeeID AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 LEFT JOIN paysocialsecurity pss ON pss.RowID=es.PaySocialSecurityID
 LEFT JOIN payphilhealth phh ON phh.RowID=es.PayPhilhealthID
 LEFT JOIN (SELECT ea.*

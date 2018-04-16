@@ -28,7 +28,8 @@ LEFT JOIN employeetimeentry ete
        ON ete.Date = lev.LeaveStartDate AND
           ete.EmployeeID = lev.EmployeeID
 WHERE emp.OrganizationID = OrganizationID AND
-      lev.LeaveStartDate BETWEEN PayDateFrom AND PayDateTo;
+      lev.LeaveStartDate BETWEEN PayDateFrom AND PayDateTo
+		AND FIND_IN_SET(emp.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0;
 
 END//
 DELIMITER ;

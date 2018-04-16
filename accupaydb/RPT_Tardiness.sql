@@ -31,7 +31,7 @@ e.EmployeeID
 ,COUNT(ete.`Date`) 'DateCount'
 ,diffdate
 FROM employeetimeentry ete
-INNER JOIN employee e ON e.RowID=ete.EmployeeID
+INNER JOIN employee e ON e.RowID=ete.EmployeeID AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 WHERE ete.OrganizationID=OrganizID
 AND ete.`Date` BETWEEN DateLateFrom AND DateLateTo
 AND ete.HoursLate > 0.25

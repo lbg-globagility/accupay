@@ -46,7 +46,7 @@ SELECT d.Name
 , psi3.PayAmount AS EcolaAmount
 FROM agencyfee agf
 INNER JOIN `division` d ON d.RowID=agf.DivisionID
-INNER JOIN employee e ON e.RowID=agf.EmployeeID
+INNER JOIN employee e ON e.RowID=agf.EmployeeID AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 INNER JOIN employeetimeentry ete ON ete.RowID=agf.TimeEntryID
 INNER JOIN employeeshift esh ON esh.RowID=ete.EmployeeShiftID AND esh.RestDay='0'
 INNER JOIN shift sh ON sh.RowID=esh.ShiftID

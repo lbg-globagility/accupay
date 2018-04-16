@@ -19,7 +19,8 @@ INNER JOIN paystub ps
 ON ps.RowID = ttmp.PaystubID
 INNER JOIN employee e
 ON e.RowID = ps.EmployeeID AND
-    e.OrganizationID = OrganizID
+    e.OrganizationID = OrganizID AND
+    FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 INNER JOIN payperiod pyp
 ON pyp.RowID = ps.PayPeriodID AND
     pyp.OrganizationID = OrganizID

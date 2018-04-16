@@ -27,7 +27,7 @@ LEFT JOIN (
                 AND (OffBusStartDate >= OBDateFrom OR OffBusEndDate >= OBDateFrom)
                 AND (OffBusStartDate <= OBDateTo OR OffBusEndDate <= OBDateTo)
              ) ob ON ob.EmployeeID=eob.EmployeeID AND ob.OrganizationID=eob.OrganizationID
-INNER JOIN employee e ON e.RowID=eob.EmployeeID
+INNER JOIN employee e ON e.RowID=eob.EmployeeID AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 WHERE eob.OrganizationID=OrganizID
 AND (eob.OffBusStartDate >= OBDateFrom OR eob.OffBusEndDate >= OBDateFrom)
 AND (eob.OffBusStartDate <= OBDateTo OR eob.OffBusEndDate <= OBDateTo)

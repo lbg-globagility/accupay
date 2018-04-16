@@ -32,7 +32,7 @@ FROM employeetimeentry et
 INNER JOIN employee e
         ON e.RowID=et.EmployeeID
 		     AND e.OrganizationID=et.OrganizationID
-			  # AND e.EmploymentStatus NOT IN ('Resigned', 'Terminated')
+		     AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 			  AND e.EmploymentStatus = 'Regular'
 			  AND e.AgencyID IS NULL
 INNER JOIN `position` pos
