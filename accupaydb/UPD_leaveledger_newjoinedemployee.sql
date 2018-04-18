@@ -17,6 +17,11 @@ DECLARE vl_text
         ,ol_text
         ,lwp_text TEXT;
    
+DECLARE is_hyundai_sysown BOOL DEFAULT FALSE;
+	
+	SELECT EXISTS(SELECT so.RowID FROM systemowner so WHERE so.Name='Hyundai' AND so.IsCurrentOwner='1')
+	INTO is_hyundai_sysown;
+
 	SET vl_text = 'Vacation leave';
 	SET sl_text = 'Sick leave';
 	SET ml_text = 'Maternity/paternity leave';
@@ -84,7 +89,7 @@ DECLARE vl_text
 									FROM employeetimeentry et
 									INNER JOIN (
 									            SELECT e.*
-													, pp.PayFromDate
+													, IF(is_hyundai_sysown, MAKEDATE(pp.`Year`, 1), pp.PayFromDate) `PayFromDate`
 													, MAX(ppd.PayToDate) `PayToDate`
 													, PROPERCASE(CONCAT_WS(', ', e.LastName, e.FirstName)) `FullName`
 													FROM employee e

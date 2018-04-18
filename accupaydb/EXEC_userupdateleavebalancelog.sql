@@ -22,6 +22,11 @@ DECLARE curr_year YEAR;
 
 DECLARE leave_type TEXT DEFAULT 'Leave type';
 
+DECLARE is_hyundai_sysown BOOL DEFAULT FALSE;
+
+SELECT EXISTS(SELECT so.RowID FROM systemowner so WHERE so.Name='Hyundai' AND so.IsCurrentOwner='1')
+INTO is_hyundai_sysown;
+
 SET curr_year = YEAR(CURDATE());
 
 CALL PreserveLastYearsLeave(OrganizID, UserRowID, curr_year - 1);
@@ -35,7 +40,7 @@ IF hasupdate = 0 THEN
     SELECT MAX(ps.PayToDate) FROM paystub ps INNER JOIN payperiod pp ON pp.RowID=ps.PayPeriodID AND pp.`Year`=curr_year AND pp.OrganizationID=ps.OrganizationID WHERE ps.OrganizationID=OrganizID INTO maximum_date;
 
     SET minimum_date = IFNULL(minimum_date, MAKEDATE(curr_year, 1));
-
+    
     SET custom_maximum_date = IFNULL(maximum_date, ADDDATE(SUBDATE(minimum_date, INTERVAL 1 DAY), INTERVAL 1 YEAR));
 
     UPDATE employee e
@@ -47,7 +52,7 @@ IF hasupdate = 0 THEN
                     FROM employeetimeentry et
                     WHERE et.OrganizationID=OrganizID
                     AND (et.VacationLeaveHours + et.SickLeaveHours + et.MaternityLeaveHours + et.OtherLeaveHours) > 0
-                    AND et.`Date` BETWEEN minimum_date AND custom_maximum_date
+                    AND et.`Date` BETWEEN IF(is_hyundai_sysown, MAKEDATE(curr_year, 1), minimum_date) AND custom_maximum_date
                     GROUP BY et.EmployeeID) ete ON ete.RowID IS NOT NULL AND ete.EmployeeID=e.RowID
     SET
     e.LeaveBalance=e.LeaveAllowance - IFNULL(ete.VacationLeaveHours,0)
@@ -118,7 +123,7 @@ IF hasupdate = 0 THEN
                     FROM employeetimeentry et
                     WHERE et.OrganizationID=OrganizID
                     AND (et.VacationLeaveHours + et.SickLeaveHours + et.MaternityLeaveHours + et.OtherLeaveHours) > 0
-                    AND et.`Date` BETWEEN minimum_date AND custom_maximum_date
+                    AND et.`Date` BETWEEN IF(is_hyundai_sysown, MAKEDATE(curr_year, 1), minimum_date) AND custom_maximum_date
                     GROUP BY et.EmployeeID) ete ON ete.RowID IS NOT NULL AND ete.EmployeeID=e.RowID
    
 	INNER JOIN leaveledger ll
