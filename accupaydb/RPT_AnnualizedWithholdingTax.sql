@@ -69,7 +69,7 @@ ps.RowID
 ,IFNULL((SELECT SUM(ete.TotalDayPay) FROM employeetimeentry ete WHERE ete.OrganizationID=OrganizID AND ete.EmployeeID=ps.EmployeeID AND ete.`Date` BETWEEN ps.PayFromDate AND ps.PayToDate) * IF(IsActual = '0', 1, (GET_employeeundeclaredsalarypercent(ps.EmployeeID,OrganizID,ps.PayFromDate,ps.PayToDate) + 1)),0) AS TotalDayPay
 ,GET_employeeundeclaredsalarypercent(ps.EmployeeID,OrganizID,ps.PayFromDate,ps.PayToDate) AS employeeundeclaredsalarypercent
 FROM paystub ps
-INNER JOIN employee e ON e.RowID=ps.EmployeeID
+INNER JOIN employee e ON e.RowID=ps.EmployeeID AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 
 
 

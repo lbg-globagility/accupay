@@ -47,6 +47,7 @@ BEGIN
     ) paystubsummary
     ON paystubsummary.EmployeeID = emp.RowID
     WHERE emp.OrganizationID = OrganizID
+    AND FIND_IN_SET(emp.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
     ORDER BY emp.LastName, emp.FirstName, emp.LastName;
 
 END//

@@ -27,6 +27,7 @@ e.EmployeeID `DatCol1`
 FROM employeepreviousemployer pe
 INNER JOIN employee e
         ON e.RowID=pe.EmployeeID AND e.OrganizationID=pe.OrganizationID
+        AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 WHERE pe.OrganizationID=OrganizatID
 ORDER BY CONCAT(e.LastName, e.FirstName)
          ,STR_TO_DATE(@date_from, @@date_format) DESC

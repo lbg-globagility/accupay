@@ -55,8 +55,11 @@ IF hasupdate = 0 THEN
     ,e.LastUpd=CURRENT_TIMESTAMP()
     ,e.LastUpdBy=UserRowID
     WHERE e.OrganizationID=OrganizID
-    AND (ADDDATE(e.StartDate, INTERVAL 2 YEAR) <= curr_year
-            OR ADDDATE(e.StartDate, INTERVAL 1 YEAR) BETWEEN minimum_date AND custom_maximum_date);
+    /*AND (ADDDATE(e.StartDate, INTERVAL 2 YEAR) <= curr_year
+            OR ADDDATE(e.StartDate, INTERVAL 1 YEAR) BETWEEN minimum_date AND custom_maximum_date)*/
+    AND (YEAR(IFNULL(e.DateRegularized, ADDDATE(e.StartDate, INTERVAL 2 YEAR))) <= curr_year
+            OR IFNULL(e.DateRegularized, ADDDATE(e.StartDate, INTERVAL 1 YEAR)) BETWEEN minimum_date AND custom_maximum_date)
+	 ;
 
     CALL UPD_leavebalance_newlyjoinedemployee(OrganizID, CURDATE(), NULL, UserRowID);
     

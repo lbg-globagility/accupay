@@ -67,7 +67,8 @@ IF payfreqID = 1 THEN
             ps.OrganizationID = psi.OrganizationID
         LEFT JOIN employee ee
         ON ee.RowID = ps.EmployeeID AND
-            ee.OrganizationID = psi.OrganizationID
+            ee.OrganizationID = psi.OrganizationID AND
+            FIND_IN_SET(ee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
         LEFT JOIN (
             SELECT
                 RowID,
