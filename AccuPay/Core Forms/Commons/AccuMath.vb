@@ -11,4 +11,19 @@
         Return Math.Truncate(value * x) / x
     End Function
 
+    ''' <summary>
+    ''' Perform a commercial rounding away from zero.
+    ''' 
+    ''' ex:
+    ''' 1.284 -> 1.28
+    ''' 1.285 -> 1.29
+    ''' 1.286 -> 1.29
+    ''' </summary>
+    ''' <param name="value"></param>
+    ''' <param name="places"></param>
+    ''' <returns></returns>
+    Public Shared Function CommercialRound(value As Decimal, Optional places As Integer = 2) As Decimal
+        Return Math.Round(value, places, MidpointRounding.AwayFromZero)
+    End Function
+
 End Class

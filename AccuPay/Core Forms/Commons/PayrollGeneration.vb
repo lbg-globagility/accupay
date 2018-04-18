@@ -62,7 +62,7 @@ Public Class PayrollGeneration
 
     Private _settings As ListOfValueCollection
 
-    Private _timeEntries2 As ICollection(Of TimeEntry)
+    Private _timeEntries As ICollection(Of TimeEntry)
 
     Private _payRates As IReadOnlyDictionary(Of Date, PayRate)
 
@@ -117,7 +117,7 @@ Public Class PayrollGeneration
             Where(Function(t) t.EmployeeID = _employee2.RowID).
             ToList()
 
-        _timeEntries2 = resources.TimeEntries.
+        _timeEntries = resources.TimeEntries.
             Where(Function(t) t.EmployeeID = _employee2.RowID).
             Where(Function(t) _payPeriod.PayFromDate <= t.Date And t.Date <= _payPeriod.PayToDate).
             ToList()
@@ -222,7 +222,7 @@ Public Class PayrollGeneration
 
             Dim governmentContributions = 0D
 
-            If _timeEntries2.Count > 0 Then
+            If _timeEntries.Count > 0 Then
 
                 If salary IsNot Nothing Then
 
@@ -246,7 +246,7 @@ Public Class PayrollGeneration
                             _employee2.StartDate <= _payPeriod.PayToDate
 
                         If isFirstPay And isFirstPayAsDailyRule Then
-                            _paystub.TotalEarnings = _timeEntries2.Sum(Function(t) t.TotalDayPay)
+                            _paystub.TotalEarnings = _timeEntries.Sum(Function(t) t.TotalDayPay)
                         Else
                             Dim totalDeduction = _paystub.LateDeduction + _paystub.UndertimeDeduction + _paystub.AbsenceDeduction
                             Dim extraPay =
@@ -272,7 +272,7 @@ Public Class PayrollGeneration
                         End If
 
                     ElseIf _employee2.EmployeeType = SalaryType.Daily Then
-                        _paystub.TotalEarnings = _timeEntries2.Sum(Function(t) t.TotalDayPay)
+                        _paystub.TotalEarnings = _timeEntries.Sum(Function(t) t.TotalDayPay)
                     End If
 
                     CalculateSss(salary)
@@ -295,7 +295,7 @@ Public Class PayrollGeneration
             End If
 
             _paystub.GrossPay = _paystub.TotalEarnings + _paystub.TotalBonus + _paystub.TotalAllowance
-            _paystub.NetPay = _paystub.GrossPay - (governmentContributions + _paystub.TotalLoans + _paystub.WithholdingTax)
+            _paystub.NetPay = AccuMath.CommercialRound(_paystub.GrossPay - (governmentContributions + _paystub.TotalLoans + _paystub.WithholdingTax))
 
             Dim vacationLeaveProduct = _products.Where(Function(p) p.PartNo = "Vacation leave").FirstOrDefault()
             Dim sickLeaveProduct = _products.Where(Function(p) p.PartNo = "Sick leave").FirstOrDefault()
@@ -327,7 +327,7 @@ Public Class PayrollGeneration
                     FirstOrDefault()
 
                 If vacationLeaveBalance Is Nothing Then
-                    Dim vacationLeaveUsed = _timeEntries2.Sum(Function(t) t.VacationLeaveHours)
+                    Dim vacationLeaveUsed = _timeEntries.Sum(Function(t) t.VacationLeaveHours)
                     Dim newBalance = _employee2.LeaveBalance - vacationLeaveUsed
 
                     vacationLeaveBalance = New PaystubItem() With {
@@ -346,7 +346,7 @@ Public Class PayrollGeneration
                     FirstOrDefault()
 
                 If sickLeaveBalance Is Nothing Then
-                    Dim sickLeaveUsed = _timeEntries2.Sum(Function(t) t.SickLeaveHours)
+                    Dim sickLeaveUsed = _timeEntries.Sum(Function(t) t.SickLeaveHours)
                     Dim newBalance = _employee2.SickLeaveBalance - sickLeaveUsed
 
                     sickLeaveBalance = New PaystubItem() With {
@@ -390,7 +390,7 @@ Public Class PayrollGeneration
         If _employee2.IsDaily Then
             basicpay_13month =
                 If(contractual_employment_statuses.Contains(_employee2.EmploymentStatus),
-                _timeEntries2.Sum(Function(t) t.BasicDayPay + t.LeavePay),
+                _timeEntries.Sum(Function(t) t.BasicDayPay + t.LeavePay),
                 _actualtimeentries.Sum(Function(t) t.BasicDayPay + t.LeavePay))
 
         ElseIf _employee2.IsMonthly Then
@@ -407,51 +407,49 @@ Public Class PayrollGeneration
     End Sub
 
     Private Sub ComputeHours()
-        With _paystub
-            .RegularHours = _timeEntries2.Sum(Function(t) t.RegularHours)
-            .RegularPay = _timeEntries2.Sum(Function(t) t.RegularPay)
+        _paystub.RegularHours = _timeEntries.Sum(Function(t) t.RegularHours)
+        _paystub.RegularPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RegularPay))
 
-            .OvertimeHours = _timeEntries2.Sum(Function(t) t.OvertimeHours)
-            .OvertimePay = _timeEntries2.Sum(Function(t) t.OvertimePay)
+        _paystub.OvertimeHours = _timeEntries.Sum(Function(t) t.OvertimeHours)
+        _paystub.OvertimePay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.OvertimePay))
 
-            .NightDiffHours = _timeEntries2.Sum(Function(t) t.NightDiffHours)
-            .NightDiffPay = _timeEntries2.Sum(Function(t) t.NightDiffPay)
+        _paystub.NightDiffHours = _timeEntries.Sum(Function(t) t.NightDiffHours)
+        _paystub.NightDiffPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.NightDiffPay))
 
-            .NightDiffOvertimeHours = _timeEntries2.Sum(Function(t) t.NightDiffOTHours)
-            .NightDiffOvertimePay = _timeEntries2.Sum(Function(t) t.NightDiffOTPay)
+        _paystub.NightDiffOvertimeHours = _timeEntries.Sum(Function(t) t.NightDiffOTHours)
+        _paystub.NightDiffOvertimePay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.NightDiffOTPay))
 
-            .RestDayHours = _timeEntries2.Sum(Function(t) t.RestDayHours)
-            .RestDayPay = _timeEntries2.Sum(Function(t) t.RestDayPay)
+        _paystub.RestDayHours = _timeEntries.Sum(Function(t) t.RestDayHours)
+        _paystub.RestDayPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RestDayPay))
 
-            .RestDayOTHours = _timeEntries2.Sum(Function(t) t.RestDayOTHours)
-            .RestDayOTPay = _timeEntries2.Sum(Function(t) t.RestDayOTPay)
+        _paystub.RestDayOTHours = _timeEntries.Sum(Function(t) t.RestDayOTHours)
+        _paystub.RestDayOTPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RestDayOTPay))
 
-            .SpecialHolidayHours = _timeEntries2.Sum(Function(t) t.SpecialHolidayHours)
-            .SpecialHolidayPay = _timeEntries2.Sum(Function(t) t.SpecialHolidayPay)
+        _paystub.SpecialHolidayHours = _timeEntries.Sum(Function(t) t.SpecialHolidayHours)
+        _paystub.SpecialHolidayPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.SpecialHolidayPay))
 
-            .SpecialHolidayOTHours = _timeEntries2.Sum(Function(t) t.SpecialHolidayOTHours)
-            .SpecialHolidayOTPay = _timeEntries2.Sum(Function(t) t.SpecialHolidayOTPay)
+        _paystub.SpecialHolidayOTHours = _timeEntries.Sum(Function(t) t.SpecialHolidayOTHours)
+        _paystub.SpecialHolidayOTPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.SpecialHolidayOTPay))
 
-            .RegularHolidayHours = _timeEntries2.Sum(Function(t) t.RegularHolidayHours)
-            .RegularHolidayPay = _timeEntries2.Sum(Function(t) t.RegularHolidayPay)
+        _paystub.RegularHolidayHours = _timeEntries.Sum(Function(t) t.RegularHolidayHours)
+        _paystub.RegularHolidayPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RegularHolidayPay))
 
-            .RegularHolidayOTHours = _timeEntries2.Sum(Function(t) t.RegularHolidayOTHours)
-            .RegularHolidayOTPay = _timeEntries2.Sum(Function(t) t.RegularHolidayOTPay)
+        _paystub.RegularHolidayOTHours = _timeEntries.Sum(Function(t) t.RegularHolidayOTHours)
+        _paystub.RegularHolidayOTPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RegularHolidayOTPay))
 
-            .HolidayPay = _timeEntries2.Sum(Function(t) t.HolidayPay)
+        _paystub.HolidayPay = _timeEntries.Sum(Function(t) t.HolidayPay)
 
-            .LeaveHours = _timeEntries2.Sum(Function(t) t.TotalLeaveHours)
-            .LeavePay = _timeEntries2.Sum(Function(t) t.LeavePay)
+        _paystub.LeaveHours = _timeEntries.Sum(Function(t) t.TotalLeaveHours)
+        _paystub.LeavePay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.LeavePay))
 
-            .LateHours = _timeEntries2.Sum(Function(t) t.LateHours)
-            .LateDeduction = _timeEntries2.Sum(Function(t) t.LateDeduction)
+        _paystub.LateHours = _timeEntries.Sum(Function(t) t.LateHours)
+        _paystub.LateDeduction = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.LateDeduction))
 
-            .UndertimeHours = _timeEntries2.Sum(Function(t) t.UndertimeHours)
-            .UndertimeDeduction = _timeEntries2.Sum(Function(t) t.UndertimeDeduction)
+        _paystub.UndertimeHours = _timeEntries.Sum(Function(t) t.UndertimeHours)
+        _paystub.UndertimeDeduction = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.UndertimeDeduction))
 
-            .AbsentHours = _timeEntries2.Sum(Function(t) t.AbsentHours)
-            .AbsenceDeduction = _timeEntries2.Sum(Function(t) t.AbsentDeduction)
-        End With
+        _paystub.AbsentHours = _timeEntries.Sum(Function(t) t.AbsentHours)
+        _paystub.AbsenceDeduction = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.AbsentDeduction))
     End Sub
 
     Private Function CalculateSemiMonthlyProratedAllowance(allowance As Allowance) As AllowanceItem
@@ -469,7 +467,7 @@ Public Class PayrollGeneration
             .Amount = allowance.Amount
         }
 
-        For Each timeEntry In _timeEntries2
+        For Each timeEntry In _timeEntries
             Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
             Dim hourlyRate = dailyRate / divisor
 
@@ -508,7 +506,7 @@ Public Class PayrollGeneration
             .AllowanceID = allowance.RowID
         }
 
-        For Each timeEntry In _timeEntries2
+        For Each timeEntry In _timeEntries
             Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
             Dim hourlyRate = dailyRate / divisor
 
@@ -652,7 +650,7 @@ Public Class PayrollGeneration
                 Dim ledger = ledgers.
                     FirstOrDefault(Function(l) l.Product.PartNo = leave.LeaveType)
 
-                Dim timeEntry = _timeEntries2.
+                Dim timeEntry = _timeEntries.
                     FirstOrDefault(Function(t) t.Date = leave.StartDate)
 
                 If timeEntry Is Nothing Then
