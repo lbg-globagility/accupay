@@ -619,7 +619,7 @@ Public Class PayrollGeneration
             _allowanceItems.Add(item)
         Next
 
-        _paystub.TotalAllowance = _allowanceItems.Sum(Function(a) a.Amount)
+        _paystub.TotalAllowance = AccuMath.CommercialRound(_allowanceItems.Sum(Function(a) a.Amount))
     End Sub
 
     Private Sub UpdateLeaveLedger(session As ISession)
