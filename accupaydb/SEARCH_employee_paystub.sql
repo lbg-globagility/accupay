@@ -61,13 +61,13 @@ SELECT e.RowID
 		  ,e.LastUpd `LastUpd`
 		  ,CONCAT_WS(uu.LastName, uu.FirstName) `LastUpdby`
 
-FROM (SELECT * FROM employee WHERE OrganizationID=og_rowid AND EmployeeID   =unified_search_string  AND LENGTH(unified_search_string) > 0 AND EmploymentStatus NOT IN ('Resigned', 'Terminated')
+FROM (SELECT * FROM employee WHERE OrganizationID=og_rowid AND EmployeeID   =unified_search_string  AND LENGTH(unified_search_string) > 0 AND FIND_IN_SET(EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
     UNION
-        SELECT * FROM employee WHERE OrganizationID=og_rowid AND LastName       =unified_search_string  AND LENGTH(unified_search_string) > 0 AND EmploymentStatus NOT IN ('Resigned', 'Terminated')
+        SELECT * FROM employee WHERE OrganizationID=og_rowid AND LastName       =unified_search_string  AND LENGTH(unified_search_string) > 0 AND FIND_IN_SET(EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
     UNION
-        SELECT * FROM employee WHERE OrganizationID=og_rowid AND FirstName  =unified_search_string  AND LENGTH(unified_search_string) > 0 AND EmploymentStatus NOT IN ('Resigned', 'Terminated')
+        SELECT * FROM employee WHERE OrganizationID=og_rowid AND FirstName  =unified_search_string  AND LENGTH(unified_search_string) > 0 AND FIND_IN_SET(EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
     UNION
-        SELECT * FROM employee WHERE OrganizationID=og_rowid AND LENGTH(TRIM(unified_search_string))=0
+        SELECT * FROM employee WHERE OrganizationID=og_rowid AND LENGTH(TRIM(unified_search_string))=0 AND FIND_IN_SET(EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
         ) e
 
 LEFT JOIN `user` u              ON e.CreatedBy=u.RowID
