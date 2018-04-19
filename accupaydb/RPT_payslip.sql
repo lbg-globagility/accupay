@@ -142,6 +142,9 @@ SELECT ps.RowID
 
 ,IF(slp.`LoanNameList` IS NULL, '', REPLACE(slp.`LoanNameList`, ',', '\n')) `COL31`
 ,IF(slp.`LoanDeductList` IS NULL, '', REPLACE(slp.`LoanDeductList`, ',', '\n')) `COL32`
+,IF(slp.`LoanBalance` IS NULL, '', REPLACE(slp.`LoanBalance`, ',', '\n')) `COL40`
+,IFNULL(slp.`TotalLoanBal`, 0) `COL50`
+# `LoanBalance` `TotalLoanBal`
 
 ,ps.TotalLoans `COL33`
 
@@ -247,6 +250,9 @@ INNER JOIN employeesalary esa
 LEFT JOIN (SELECT slp.*
            ,GROUP_CONCAT(CONCAT('  ', p.PartNo)) `LoanNameList`
            ,GROUP_CONCAT(ROUND(slp.DeductionAmount, 2)) `LoanDeductList`
+           ,GROUP_CONCAT(ROUND(slp.DeductionAmount, 2)) `LoanBalance`
+           ,ROUND(SUM(slp.DeductionAmount), 2) `TotalLoanBal`
+           
            FROM scheduledloansperpayperiod slp
            INNER JOIN employeeloanschedule els
                    ON els.RowID=slp.EmployeeLoanRecordID
