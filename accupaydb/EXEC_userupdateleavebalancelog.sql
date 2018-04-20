@@ -20,6 +20,13 @@ DECLARE custom_maximum_date DATE;
 
 DECLARE curr_year YEAR;
 
+DECLARE leave_type TEXT DEFAULT 'Leave type';
+
+DECLARE is_hyundai_sysown BOOL DEFAULT FALSE;
+
+SELECT EXISTS(SELECT so.RowID FROM systemowner so WHERE so.Name='Hyundai' AND so.IsCurrentOwner='1')
+INTO is_hyundai_sysown;
+
 SET curr_year = YEAR(CURDATE());
 
 CALL PreserveLastYearsLeave(OrganizID, UserRowID, curr_year - 1);
@@ -33,7 +40,7 @@ IF hasupdate = 0 THEN
     SELECT MAX(ps.PayToDate) FROM paystub ps INNER JOIN payperiod pp ON pp.RowID=ps.PayPeriodID AND pp.`Year`=curr_year AND pp.OrganizationID=ps.OrganizationID WHERE ps.OrganizationID=OrganizID INTO maximum_date;
 
     SET minimum_date = IFNULL(minimum_date, MAKEDATE(curr_year, 1));
-
+    
     SET custom_maximum_date = IFNULL(maximum_date, ADDDATE(SUBDATE(minimum_date, INTERVAL 1 DAY), INTERVAL 1 YEAR));
 
     UPDATE employee e
@@ -45,7 +52,7 @@ IF hasupdate = 0 THEN
                     FROM employeetimeentry et
                     WHERE et.OrganizationID=OrganizID
                     AND (et.VacationLeaveHours + et.SickLeaveHours + et.MaternityLeaveHours + et.OtherLeaveHours) > 0
-                    AND et.`Date` BETWEEN minimum_date AND custom_maximum_date
+                    AND et.`Date` BETWEEN IF(is_hyundai_sysown, MAKEDATE(curr_year, 1), minimum_date) AND custom_maximum_date
                     GROUP BY et.EmployeeID) ete ON ete.RowID IS NOT NULL AND ete.EmployeeID=e.RowID
     SET
     e.LeaveBalance=e.LeaveAllowance - IFNULL(ete.VacationLeaveHours,0)
@@ -60,7 +67,88 @@ IF hasupdate = 0 THEN
     AND (YEAR(IFNULL(e.DateRegularized, ADDDATE(e.StartDate, INTERVAL 2 YEAR))) <= curr_year
             OR IFNULL(e.DateRegularized, ADDDATE(e.StartDate, INTERVAL 1 YEAR)) BETWEEN minimum_date AND custom_maximum_date)
 	 ;
-
+	 
+	 # #############################################################################
+	 SET @curr_timestamp = CURRENT_TIMESTAMP();
+	 INSERT INTO leavetransaction(OrganizationID,Created,CreatedBy,EmployeeID,ReferenceID,LeaveLedgerID,PayPeriodID,TransactionDate,Balance,Amount,`Type`,Comments)
+	SELECT
+	p.OrganizationID
+	, @curr_timestamp
+	, UserRowID
+	, e.RowID
+	, NULL
+	, ll.RowID
+	, pp.RowID
+	, pp.PayFromDate
+	, IF(p.PartNo = 'Vacation leave'
+	     , e.LeaveBalance
+		  , IF(p.PartNo = 'Sick leave'
+		       , e.SickLeaveBalance
+				 , IF(p.PartNo = 'Maternity/paternity leave'
+				      , e.MaternityLeaveBalance
+						, IF(p.PartNo = 'Others'
+						     , e.OtherLeaveBalance
+							  , 0) # 'Leave w/o Pay'
+							  )))
+	, (@lv_hrs :=
+	   IF(p.PartNo = 'Vacation leave'
+	     , IFNULL(ete.VacationLeaveHours, 0)
+		  , IF(p.PartNo = 'Sick leave'
+		       , IFNULL(ete.SickLeaveHours, 0)
+				 , IF(p.PartNo = 'Maternity/paternity leave'
+				      , IFNULL(ete.MaternityLeaveHours, 0)
+						, IF(p.PartNo = 'Others'
+						     , IFNULL(ete.OtherLeaveHours, 0)
+							  , 0) # 'Leave w/o Pay'
+							  )))
+	   )
+	, IF(IFNULL(@lv_hrs, 0) > 0, 'Debit', 'Credit')
+	, p.PartNo
+	
+	FROM product p
+	
+	INNER JOIN employee e
+	        ON e.OrganizationID = p.OrganizationID
+			     AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+			     AND (YEAR(IFNULL(e.DateRegularized, ADDDATE(e.StartDate, INTERVAL 2 YEAR))) <= curr_year
+                   OR IFNULL(e.DateRegularized, ADDDATE(e.StartDate, INTERVAL 1 YEAR)) BETWEEN minimum_date AND custom_maximum_date)
+   
+   INNER JOIN payperiod pp ON pp.OrganizationID = e.OrganizationID AND pp.TotalGrossSalary = e.PayFrequencyID AND minimum_date BETWEEN pp.PayFromDate AND pp.PayToDate
+   
+    LEFT JOIN (SELECT et.RowID,et.EmployeeID
+                    ,SUM(et.VacationLeaveHours) AS VacationLeaveHours
+                    ,SUM(et.SickLeaveHours) AS SickLeaveHours
+                    ,SUM(et.MaternityLeaveHours) AS MaternityLeaveHours
+                    ,SUM(et.OtherLeaveHours) AS OtherLeaveHours
+                    FROM employeetimeentry et
+                    WHERE et.OrganizationID=OrganizID
+                    AND (et.VacationLeaveHours + et.SickLeaveHours + et.MaternityLeaveHours + et.OtherLeaveHours) > 0
+                    AND et.`Date` BETWEEN IF(is_hyundai_sysown, MAKEDATE(curr_year, 1), minimum_date) AND custom_maximum_date
+                    GROUP BY et.EmployeeID) ete ON ete.RowID IS NOT NULL AND ete.EmployeeID=e.RowID
+   
+	INNER JOIN leaveledger ll
+	        ON ll.OrganizationID = p.OrganizationID
+			     AND ll.ProductID = p.RowID
+			     AND ll.EmployeeID = e.RowID
+	
+	WHERE p.OrganizationID=OrganizID
+	AND p.`Category`=leave_type
+	;
+	
+	UPDATE leaveledger ll
+	INNER JOIN leavetransaction lt
+	        ON lt.Created = @curr_timestamp
+			     AND lt.OrganizationID=ll.OrganizationID
+			     AND lt.EmployeeID = ll.EmployeeID
+			     AND lt.LeaveLedgerID = ll.RowID
+	SET
+	ll.LastTransactionID = lt.RowID
+	, ll.LastUpd = @curr_timestamp
+	, ll.LastUpdBy = UserRowID
+	WHERE ll.OrganizationID = OrganizID
+	;
+	 # #############################################################################
+	 
     CALL UPD_leavebalance_newlyjoinedemployee(OrganizID, CURDATE(), NULL, UserRowID);
     
     INSERT INTO userupdateleavebalancelog(OrganizationID,Created,UserID,YearValue) VALUES (OrganizID,CURRENT_TIMESTAMP(),UserRowID,curr_year) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();

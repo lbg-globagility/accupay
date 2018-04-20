@@ -22,7 +22,7 @@ SELECT
     ) `DatCol3`,
     FORMAT(SUM(IFNULL(slp.DeductionAmount, 0)), 2) `DatCol4`,
     FORMAT(els.TotalLoanAmount, 2) `DatCol5`,
-    FORMAT(els.TotalBalanceLeft, 2) `DatCol6`
+    FORMAT(slp.TotalBalanceLeft, 2) `DatCol6`
 FROM scheduledloansperpayperiod slp
 INNER JOIN employeeloanschedule els
 ON els.RowID = slp.EmployeeLoanRecordID
