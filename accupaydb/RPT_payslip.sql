@@ -28,9 +28,13 @@ DECLARE giveAllowanceForHoliday BOOL DEFAULT FALSE;
 DECLARE month_per_year
         , default_min_workhour INT(11);
 
+DECLARE leave_transac_rowids TINYTEXT;
+
 SET month_per_year = 12; SET default_min_workhour = 8;
 
 # SET @perc0 = 0.00; SET @perc1 = @perc0; SET @counts0 = @perc0; SET @_amt = @perc0;
+
+SELECT LeaveTransactionRowIdsWithinCutOff(og_rowid, pperiod_id) INTO leave_transac_rowids;
 
 SELECT
 EXISTS(SELECT l.RowID
@@ -147,6 +151,9 @@ SELECT ps.RowID
 # `LoanBalance` `TotalLoanBal`
 
 ,ps.TotalLoans `COL33`
+
+,IF(lt.`LeaveTypes` IS NULL, '', REPLACE(lt.`LeaveTypes`, ',', '\n')) `COL34`
+,IF(lt.`BalanceLeave` IS NULL, '', REPLACE(lt.`BalanceLeave`, ',', '\n')) `COL35`
 
 # ######################
 
@@ -393,6 +400,18 @@ INNER JOIN (SELECT ps.RowID
             GROUP BY ps.EmployeeID
             ) pstub
         ON pstub.EmployeeID=ps.EmployeeID
+
+LEFT JOIN (SELECT lt.*
+			  , GROUP_CONCAT(p.PartNo) `LeaveTypes`
+           , GROUP_CONCAT(lt.Balance) `BalanceLeave`
+			  FROM leavetransaction lt
+			  INNER JOIN leaveledger ll ON ll.LastTransactionID=lt.RowID
+			  INNER JOIN product p ON p.RowID=ll.ProductID
+			  WHERE FIND_IN_SET(lt.RowID, leave_transac_rowids) > 0
+			  AND lt.OrganizationID = og_rowid
+			  AND lt.Balance > -1
+			  GROUP BY lt.EmployeeID
+           ) lt ON lt.EmployeeID = e.RowID
 
 WHERE ps.OrganizationID=og_rowid
 		AND ps.PayPeriodID=pperiod_id
