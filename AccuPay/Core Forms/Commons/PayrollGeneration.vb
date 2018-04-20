@@ -836,7 +836,7 @@ Public Class PayrollGeneration
 
         Dim minimum = philHealthSettings.GetDecimal("MinimumContribution")
         Dim maximum = philHealthSettings.GetDecimal("MaximumContribution")
-        Dim rate = philHealthSettings.GetDecimal("Rate")
+        Dim rate = philHealthSettings.GetDecimal("Rate") / 100
 
         ' Contribution should be bounded by the minimum and maximum
         Dim contribution = {{basis * rate, minimum}.Max(), maximum}.Min()
