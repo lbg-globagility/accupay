@@ -173,7 +173,8 @@ Public Class PayrollGeneration
 
             Dim salary = _allSalaries.Select($"EmployeeID = '{_paystub.EmployeeID}'").FirstOrDefault()
 
-            Dim loanTransactions = _allLoanTransactions.Where(Function(t) t.EmployeeID = _paystub.EmployeeID)
+            Dim loanTransactions = _allLoanTransactions.
+                Where(Function(t) Nullable.Equals(t.EmployeeID, _paystub.EmployeeID))
             Dim newLoanTransactions = New Collection(Of LoanTransaction)
 
             If loanTransactions.Count > 0 Then
@@ -187,7 +188,7 @@ Public Class PayrollGeneration
                 End If
 
                 Dim loanSchedules = _allLoanSchedules.
-                    Where(Function(l) l.EmployeeID = _paystub.EmployeeID).
+                    Where(Function(l) Nullable.Equals(l.EmployeeID, _paystub.EmployeeID)).
                     Where(Function(l) acceptedLoans.Contains(l.DeductionSchedule)).
                     ToList()
 
@@ -226,7 +227,7 @@ Public Class PayrollGeneration
 
                 If salary IsNot Nothing Then
 
-                    Dim basicPay = ValNoComma(salary("BasicPay"))
+                    Dim basicPay = CDec(ValNoComma(salary("BasicPay")))
 
                     ComputeHours()
 
@@ -544,7 +545,7 @@ Public Class PayrollGeneration
         Return allowanceItem
     End Function
 
-    Private Function CalculateOneTimeAllowances(allowance As Allowance)
+    Private Function CalculateOneTimeAllowances(allowance As Allowance) As Decimal
         Return allowance.Amount
     End Function
 
@@ -644,7 +645,7 @@ Public Class PayrollGeneration
         Dim newLeaveTransactions = New List(Of LeaveTransaction)
         For Each leave In leaves
             ' If a transaction has already been made for the current leave, skip the current leave.
-            If transactions.Any(Function(t) t.ReferenceID = leave.RowID) Then
+            If transactions.Any(Function(t) Nullable.Equals(t.ReferenceID, leave.RowID)) Then
                 Continue For
             Else
                 Dim ledger = ledgers.
@@ -682,7 +683,7 @@ Public Class PayrollGeneration
             Function(amount As Decimal) _socialSecurityBrackets.FirstOrDefault(
                 Function(s) s.RangeFromAmount <= amount And s.RangeToAmount >= amount)
 
-        Dim sssCalculation = _settings.GetEnum("Payroll Policy.sss_calculation_basis", SssCalculationBasis.BasicSalary)
+        Dim sssCalculation = _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
 
         Dim isSssProrated =
             (sssCalculation = SssCalculationBasis.Earnings) Or
@@ -695,11 +696,11 @@ Public Class PayrollGeneration
             Dim socialSecurityBracket As SocialSecurityBracket = Nothing
 
             If sssCalculation = SssCalculationBasis.Earnings Then
-                Dim totalEarnings = If(_previousPaystub?.TotalEarnings + _paystub.TotalEarnings, 0)
+                Dim totalEarnings = If(_previousPaystub?.TotalEarnings, 0) + _paystub.TotalEarnings
 
                 socialSecurityBracket = findSocialSecurityBracket(totalEarnings)
             ElseIf sssCalculation = SssCalculationBasis.GrossPay Then
-                Dim totalGrossPay = If(_previousPaystub?.GrossPay + _paystub.GrossPay, 0)
+                Dim totalGrossPay = If(_previousPaystub?.GrossPay, 0) + _paystub.GrossPay
 
                 socialSecurityBracket = findSocialSecurityBracket(totalGrossPay)
             End If
@@ -774,9 +775,9 @@ Public Class PayrollGeneration
             Dim basisPay = 0D
 
             If philHealthCalculation = PhilHealthCalculationBasis.Earnings Then
-                basisPay = _paystub.TotalEarnings + _previousPaystub.TotalEarnings
+                basisPay = If(_previousPaystub?.TotalEarnings, 0) + _paystub.TotalEarnings
             ElseIf philHealthCalculation = PhilHealthCalculationBasis.GrossPay Then
-                basisPay = _paystub.GrossPay + _previousPaystub.GrossPay
+                basisPay = If(_previousPaystub?.GrossPay, 0) + _paystub.GrossPay
             End If
 
             totalContribution = ComputePhilHealth(basisPay)
@@ -794,7 +795,7 @@ Public Class PayrollGeneration
         Dim employeeShare = halfContribution
         Dim employerShare = halfContribution + remaining
 
-        Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
+        Dim payPeriodsPerMonth = CDec(ValNoComma(_employee("PAYFREQUENCY_DIVISOR")))
 
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
 

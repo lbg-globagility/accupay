@@ -77,7 +77,11 @@ Public Class ListOfValueCollection
         Return Convert.ToBoolean(value?.DisplayValue)
     End Function
 
-    Public Function GetDecimal(lic As String) As Decimal?
+    Public Function GetDecimal(lic As String, Optional [default] As Decimal = 0) As Decimal
+        Return If(GetDecimalOrNull(lic), [default])
+    End Function
+
+    Public Function GetDecimalOrNull(lic As String) As Decimal?
         Dim value = GetValue(lic)
         Return If(value IsNot Nothing, Decimal.Parse(value), Nothing)
     End Function
