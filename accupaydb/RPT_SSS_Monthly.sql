@@ -40,7 +40,7 @@ BEGIN
         paysocialsecurity.EmployeeECAmount AS `DatCol5`,
         (paystubsummary.TotalEmpSSS + paystubsummary.TotalCompSSS) AS `DatCol6`
     FROM employee
-    LEFT JOIN (
+    INNER JOIN (
         SELECT
             SUM(paystub.TotalEmpSSS) AS TotalEmpSSS,
             SUM(paystub.TotalCompSSS) AS TotalCompSSS,
