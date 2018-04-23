@@ -2134,15 +2134,15 @@ Public Class PayStubForm
 
         Select Case compute_percentage
             Case 100
-                'Dim param_array = New Object() {orgztnID, paypRowID, z_User}
+                Dim param_array = New Object() {orgztnID, paypRowID, z_User}
 
-                'Static strquery_recompute_13monthpay As String =
-                '    "CALL RECOMPUTE_thirteenthmonthpay(?OrganizID, ?PayPRowID, ?UserRowID);"
+                Static strquery_recompute_13monthpay As String =
+                    "call recompute_thirteenthmonthpay(?organizid, ?payprowid, ?userrowid);"
 
-                'Dim n_ExecSQLProcedure As New _
-                '    SQL(strquery_recompute_13monthpay,
-                '        param_array)
-                'n_ExecSQLProcedure.ExecuteQuery()
+                Dim n_ExecSQLProcedure As New _
+                    SQL(strquery_recompute_13monthpay,
+                        param_array)
+                n_ExecSQLProcedure.ExecuteQuery()
 
                 MsgBox($"Payroll generation is done. Sucessful paystubs: {_successfulPaystubs}. Failed paystubs {_failedPaystubs}", MsgBoxStyle.OkOnly)
 
