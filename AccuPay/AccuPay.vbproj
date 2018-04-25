@@ -501,6 +501,7 @@
     <Compile Include="Core Forms\USER CONTROLS\TimeTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Database\Mappings\AdjustmentMap.vb" />
     <Compile Include="Database\Mappings\AllowanceItemMap.vb" />
     <Compile Include="Database\Mappings\AllowancePerDayMap.vb" />
     <Compile Include="Database\Mappings\BaseEntityMap.vb" />

@@ -75,6 +75,7 @@ Public Class PaystubMap
         HasOne(Function(x) x.ThirteenthMonthPay).PropertyRef(Function(x) x.Paystub).Cascade.All()
         HasMany(Function(x) x.AllowanceItems).Inverse().Cascade.All()
         HasMany(Function(x) x.PaystubItems).Inverse().Cascade.All()
+        HasMany(Function(x) x.Adjustments).Inverse().Cascade.All()
     End Sub
 
 End Class

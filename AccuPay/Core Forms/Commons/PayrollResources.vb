@@ -297,6 +297,7 @@ Public Class PayrollResources
         Try
             Using session = SessionFactory.Instance.OpenSession()
                 Dim query = session.Query(Of Paystub).
+                    Fetch(Function(p) p.Adjustments).
                     Where(Function(p) p.PayFromdate = _payDateFrom).
                     Where(Function(p) p.PayToDate = _payDateTo).
                     Where(Function(p) CBool(p.OrganizationID = z_OrganizationID))
