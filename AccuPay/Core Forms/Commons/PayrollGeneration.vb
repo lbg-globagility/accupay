@@ -4,8 +4,6 @@ Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports log4net
 Imports NHibernate
-Imports NHibernate.Linq
-Imports MySql.Data.MySqlClient
 Imports PayrollSys
 
 Public Class PayrollGeneration
@@ -963,12 +961,12 @@ Public Class PayrollGeneration
                 _payPeriod.WTaxWeeklyContribSched)
 
             If is_deduct_sched_to_thisperiod Then
-                _paystub.WithholdingTax = exemptionAmount + (excessAmount * exemptionInExcessAmount)
+                _paystub.WithholdingTax = AccuMath.CommercialRound(exemptionAmount + (excessAmount * exemptionInExcessAmount))
             Else
                 _paystub.WithholdingTax = 0
             End If
         Else
-            _paystub.WithholdingTax = exemptionAmount + (excessAmount * exemptionInExcessAmount)
+            _paystub.WithholdingTax = AccuMath.CommercialRound(exemptionAmount + (excessAmount * exemptionInExcessAmount))
         End If
     End Sub
 
