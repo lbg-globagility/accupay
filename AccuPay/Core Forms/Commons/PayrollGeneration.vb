@@ -783,15 +783,20 @@ Public Class PayrollGeneration
 
         Dim halfContribution = AccuMath.Truncate(totalContribution / 2, 2)
 
+        Dim philHealthNoRemainder = _settings.GetBoolean("PhilHealth.Remainder", True)
+
+        Dim remainder = 0D
         ' Account for any division loss by putting the missing value to the employer share
-        Dim expectedTotal = halfContribution * 2
-        Dim remaining = 0D
-        If expectedTotal < totalContribution Then
-            remaining = totalContribution - expectedTotal
+        If philHealthNoRemainder Then
+            Dim expectedTotal = halfContribution * 2
+
+            If expectedTotal < totalContribution Then
+                remainder = totalContribution - expectedTotal
+            End If
         End If
 
         Dim employeeShare = halfContribution
-        Dim employerShare = halfContribution + remaining
+        Dim employerShare = halfContribution + remainder
 
         Dim payPeriodsPerMonth = CDec(ValNoComma(_employee("PAYFREQUENCY_DIVISOR")))
 
