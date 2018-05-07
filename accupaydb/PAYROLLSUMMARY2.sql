@@ -87,7 +87,11 @@ IF is_keep_in_onesheet = TRUE THEN
 			paystub.RestDayOTHours `RestDayOTHours`,
 			ROUND(IF(psi_undeclared, paystubactual.RestDayOTPay, paystub.RestDayOTPay), decimal_size) `RestDayOTPay`,
 			paystub.LeaveHours `LeaveHours`,
-			ROUND(IF(psi_undeclared, paystubactual.LeavePay, paystub.LeavePay), decimal_size) 'LeavePay',
+			IF(
+				e.EmployeeType = 'Daily',
+				ROUND(IF(psi_undeclared, paystubactual.LeavePay, paystub.LeavePay), decimal_size),
+				0
+			) 'LeavePay',
 			-paystub.LateHours `LateHours`,
 		    ROUND(IF(psi_undeclared, -paystubactual.LateDeduction, -paystub.LateDeduction), decimal_size) 'LateDeduction',
 		 	-paystub.UndertimeHours `UndertimeHours`,
@@ -231,7 +235,11 @@ ELSE
 			paystub.RestDayOTHours `RestDayOTHours`,
 			ROUND(IF(psi_undeclared, paystubactual.RestDayOTPay, paystub.RestDayOTPay), decimal_size) `RestDayOTPay`,
 			paystub.LeaveHours `LeaveHours`,
-			ROUND(IF(psi_undeclared, paystubactual.LeavePay, paystub.LeavePay), decimal_size) 'LeavePay',
+			IF(
+				e.EmployeeType = 'Daily',
+				ROUND(IF(psi_undeclared, paystubactual.LeavePay, paystub.LeavePay), decimal_size),
+				0
+			) 'LeavePay',
 			-paystub.LateHours `LateHours`,
 		    ROUND(IF(psi_undeclared, -paystubactual.LateDeduction, -paystub.LateDeduction), decimal_size) 'LateDeduction',
 		 	-paystub.UndertimeHours `UndertimeHours`,
