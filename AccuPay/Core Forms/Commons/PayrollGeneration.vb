@@ -381,23 +381,23 @@ Public Class PayrollGeneration
             _paystub.ThirteenthMonthPay.LastUpdBy = z_User
         End If
 
-        Dim contractual_employment_statuses =
-            New String() {"Contractual", "SERVICE CONTRACT"}
+        Dim contractual_employment_statuses = New String() {"Contractual", "SERVICE CONTRACT"}
 
         Dim basicpay_13month = 0D
 
         If _employee2.IsDaily Then
-            basicpay_13month =
-                If(contractual_employment_statuses.Contains(_employee2.EmploymentStatus),
+            basicpay_13month = If(
+                contractual_employment_statuses.Contains(_employee2.EmploymentStatus),
                 _timeEntries.Sum(Function(t) t.BasicDayPay + t.LeavePay),
                 _actualtimeentries.Sum(Function(t) t.BasicDayPay + t.LeavePay))
 
         ElseIf _employee2.IsMonthly Then
-            Dim basic_salary = Convert.ToDecimal(salaryrow("BasicPay"))
+            Dim trueSalary = Convert.ToDecimal(salaryrow("TrueSalary"))
+            Dim basicPay = trueSalary / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
 
-            basicpay_13month =
-                (basic_salary -
-                _actualtimeentries.Sum(Function(t) t.LateDeduction + t.UndertimeDeduction + t.AbsentDeduction))
+            Dim totalDeductions = _actualtimeentries.Sum(Function(t) t.LateDeduction + t.UndertimeDeduction + t.AbsentDeduction)
+
+            basicpay_13month = (basicPay - totalDeductions)
         End If
 
         _paystub.ThirteenthMonthPay.BasicPay = basicpay_13month
