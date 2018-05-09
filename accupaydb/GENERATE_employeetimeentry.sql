@@ -15,7 +15,7 @@ DECLARE DAYTYPE_REGULAR_WORKING_DAY VARCHAR(50) DEFAULT 'Regular Working Day';
 DECLARE DAYTYPE_SPECIAL_NON_WORKING_HOLIDAY VARCHAR(50) DEFAULT 'Special Non-Working Holiday';
 DECLARE DAYTYPE_REGULAR_HOLIDAY VARCHAR(50) DEFAULT 'Regular Holiday';
 
-DECLARE STANDARD_WORKING_HOURS INT(10) DEFAULT 8;
+DECLARE STANDARD_WORKING_HOURS DECIMAL(10, 4) DEFAULT 8.0;
 
 DECLARE SECONDS_PER_HOUR INT(11) DEFAULT 3600;
 
@@ -190,6 +190,7 @@ DECLARE restDayAmount DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE restDayOTHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE restDayOTPay DECIMAL(15, 4) DEFAULT 0.0;
 
+DECLARE _holidayCalculationType VARCHAR(50);
 DECLARE regularHolidayHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE regularHolidayPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE _regularHolidayOTHours DECIMAL(15, 4) DEFAULT 0.0;
@@ -198,6 +199,7 @@ DECLARE specialHolidayHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE specialHolidayPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE _specialHolidayOTHours DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE _specialHolidayOTPay DECIMAL(15, 4) DEFAULT 0.0;
+DECLARE _basicHolidayPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE holidayPay DECIMAL(15, 4) DEFAULT 0.0;
 DECLARE isExemptForHoliday BOOLEAN DEFAULT FALSE;
 DECLARE isHolidayPayInclusive BOOLEAN DEFAULT FALSE;
@@ -295,6 +297,10 @@ SET isRestDayInclusive = GetListOfValueOrDefault(
 
 SET allowAbsenceOnHoliday = GetListOfValueOrDefault(
     'Payroll Policy', 'holiday.allowabsence', FALSE
+);
+
+SET _holidayCalculationType = GetListOfValueOrDefault(
+    'Payroll Policy', 'HolidayPay', 'Daily'
 );
 
 SELECT
@@ -486,12 +492,16 @@ SET breaktimeEnd = TIMESTAMP(IF(@sh_brktimeTo > shifttimefrom, dateToday, dateTo
 
 SET hasBreaktime = (@sh_brktimeFr IS NOT NULL) AND (@sh_brktimeTo IS NOT NULL);
 
-IF hasBreaktime THEN
-    SET shiftHours =
-        COMPUTE_TimeDifference(TIME(shiftStart), TIME(breaktimeStart)) +
-        COMPUTE_TimeDifference(TIME(breaktimeEnd), TIME(shiftEnd));
+IF hasShift THEN
+    IF hasBreaktime THEN
+        SET shiftHours =
+            COMPUTE_TimeDifference(TIME(shiftStart), TIME(breaktimeStart)) +
+            COMPUTE_TimeDifference(TIME(breaktimeEnd), TIME(shiftEnd));
+    ELSE
+        SET shiftHours = COMPUTE_TimeDifference(TIME(shiftStart), TIME(shiftEnd));
+    END IF;
 ELSE
-    SET shiftHours = COMPUTE_TimeDifference(TIME(shiftStart), TIME(shiftEnd));
+    SET shiftHours = STANDARD_WORKING_HOURS;
 END IF;
 
 SELECT
@@ -1082,8 +1092,14 @@ ELSEIF isHoliday THEN
         SET regularHolidayPay = regularHolidayHours * hourlyRate;
         SET leavePay = leaveHours * hourlyRate;
 
+        IF _holidayCalculationType = 'Hourly' THEN
+            SET _basicHolidayPay = shiftHours * hourlyRate;
+        ELSE
+            SET _basicHolidayPay = dailyRate;
+        END IF;
+
         IF NOT isHolidayPayInclusive THEN
-            SET regularHolidayPay = regularHolidayPay + IF(hasWorkedLastWorkingDay, (shiftHours * hourlyRate), 0);
+            SET regularHolidayPay = regularHolidayPay + IF(hasWorkedLastWorkingDay, _basicHolidayPay, 0);
         END IF;
     END IF;
 
