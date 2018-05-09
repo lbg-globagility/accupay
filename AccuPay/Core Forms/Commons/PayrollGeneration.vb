@@ -388,8 +388,12 @@ Public Class PayrollGeneration
         If _employee2.IsDaily Then
             basicpay_13month = If(
                 contractual_employment_statuses.Contains(_employee2.EmploymentStatus),
-                _timeEntries.Sum(Function(t) t.BasicDayPay + t.LeavePay),
-                _actualtimeentries.Sum(Function(t) t.BasicDayPay + t.LeavePay))
+                _timeEntries.
+                    Where(Function(t) Not If(t.ShiftSchedule?.IsRestDay, False)).
+                    Sum(Function(t) t.BasicDayPay + t.LeavePay),
+                _actualtimeentries.
+                    Where(Function(t) Not If(t.ShiftSchedule?.IsRestDay, False)).
+                    Sum(Function(t) t.BasicDayPay + t.LeavePay))
 
         ElseIf _employee2.IsMonthly Then
             Dim trueSalary = Convert.ToDecimal(salaryrow("TrueSalary"))
