@@ -36,6 +36,30 @@ Public Class NewPayStubForm
 
             dgvPaystubs.DataSource = paystubModels
         End Using
+
+        LoadPayperiods()
+    End Sub
+
+    Private Sub LoadPayperiods()
+        Dim payPeriods As IList(Of PayPeriod) = Nothing
+
+        Using context = New PayrollContext()
+            Dim query =
+                (From p In context.PayPeriods
+                 Join ps In context.Paystubs On p.RowID Equals ps.PayPeriodID
+                 Where p.OrganizationID = z_OrganizationID
+                 Group By p.RowID Into x = Group
+                 Select x.Distinct().FirstOrDefault().p)
+
+            payPeriods = query.ToList()
+        End Using
+
+        cboPayPeriods.DataSource = payPeriods.Select(
+            Function(t) New With {
+                .Display = t.RowID,
+                .Item = t
+            }
+        ).ToList()
     End Sub
 
     Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvPaystubs.CellFormatting

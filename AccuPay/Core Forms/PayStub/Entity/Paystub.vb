@@ -145,10 +145,13 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("EmployeeID")>
         Public Overridable Property Employee As Employee
 
+        <NotMapped>
         Public Overridable Property Adjustments As ICollection(Of Adjustment)
 
+        <NotMapped>
         Public Overridable Property ActualAdjustments As ICollection(Of ActualAdjustment)
 
+        <NotMapped>
         Public Overridable Property PaystubItems As ICollection(Of PaystubItem)
 
         <NotMapped>
