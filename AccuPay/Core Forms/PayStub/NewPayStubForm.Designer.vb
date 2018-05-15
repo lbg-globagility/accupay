@@ -275,6 +275,7 @@ Partial Class NewPayStubForm
         Me.txtSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.cboPayPeriods = New System.Windows.Forms.ComboBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -318,7 +319,6 @@ Partial Class NewPayStubForm
         Me.DataGridViewTextBoxColumn58 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn59 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn60 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cboPayPeriods = New System.Windows.Forms.ComboBox()
         CType(Me.dgvPaystubs, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.PaystubTab.SuspendLayout()
@@ -860,7 +860,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTotalAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTotalAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalAmount.Location = New System.Drawing.Point(104, 456)
+        Me.txtTotalAmount.Location = New System.Drawing.Point(520, 560)
         Me.txtTotalAmount.Name = "txtTotalAmount"
         Me.txtTotalAmount.ReadOnly = True
         Me.txtTotalAmount.Size = New System.Drawing.Size(80, 22)
@@ -872,7 +872,7 @@ Partial Class NewPayStubForm
         '
         Me.txt13thMonthPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txt13thMonthPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txt13thMonthPay.Location = New System.Drawing.Point(104, 432)
+        Me.txt13thMonthPay.Location = New System.Drawing.Point(520, 536)
         Me.txt13thMonthPay.Name = "txt13thMonthPay"
         Me.txt13thMonthPay.ReadOnly = True
         Me.txt13thMonthPay.Size = New System.Drawing.Size(80, 22)
@@ -884,7 +884,7 @@ Partial Class NewPayStubForm
         '
         Me.txtNetPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtNetPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNetPay.Location = New System.Drawing.Point(104, 400)
+        Me.txtNetPay.Location = New System.Drawing.Point(520, 504)
         Me.txtNetPay.Name = "txtNetPay"
         Me.txtNetPay.ReadOnly = True
         Me.txtNetPay.Size = New System.Drawing.Size(80, 22)
@@ -896,7 +896,7 @@ Partial Class NewPayStubForm
         '
         Me.TextBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox4.Location = New System.Drawing.Point(104, 584)
+        Me.TextBox4.Location = New System.Drawing.Point(336, 448)
         Me.TextBox4.Name = "TextBox4"
         Me.TextBox4.ReadOnly = True
         Me.TextBox4.Size = New System.Drawing.Size(80, 22)
@@ -908,7 +908,7 @@ Partial Class NewPayStubForm
         '
         Me.txtWithholdingTax.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtWithholdingTax.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtWithholdingTax.Location = New System.Drawing.Point(104, 352)
+        Me.txtWithholdingTax.Location = New System.Drawing.Point(520, 456)
         Me.txtWithholdingTax.Name = "txtWithholdingTax"
         Me.txtWithholdingTax.ReadOnly = True
         Me.txtWithholdingTax.Size = New System.Drawing.Size(80, 22)
@@ -920,7 +920,7 @@ Partial Class NewPayStubForm
         '
         Me.txtGrossPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtGrossPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtGrossPay.Location = New System.Drawing.Point(152, 216)
+        Me.txtGrossPay.Location = New System.Drawing.Point(168, 536)
         Me.txtGrossPay.Name = "txtGrossPay"
         Me.txtGrossPay.ReadOnly = True
         Me.txtGrossPay.Size = New System.Drawing.Size(80, 22)
@@ -932,7 +932,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTotalAllowance.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTotalAllowance.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalAllowance.Location = New System.Drawing.Point(152, 192)
+        Me.txtTotalAllowance.Location = New System.Drawing.Point(168, 512)
         Me.txtTotalAllowance.Name = "txtTotalAllowance"
         Me.txtTotalAllowance.ReadOnly = True
         Me.txtTotalAllowance.Size = New System.Drawing.Size(80, 22)
@@ -944,7 +944,7 @@ Partial Class NewPayStubForm
         '
         Me.TextBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox7.Location = New System.Drawing.Point(104, 536)
+        Me.TextBox7.Location = New System.Drawing.Point(336, 400)
         Me.TextBox7.Name = "TextBox7"
         Me.TextBox7.ReadOnly = True
         Me.TextBox7.Size = New System.Drawing.Size(80, 22)
@@ -956,7 +956,7 @@ Partial Class NewPayStubForm
         '
         Me.TextBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox3.Location = New System.Drawing.Point(104, 560)
+        Me.TextBox3.Location = New System.Drawing.Point(336, 424)
         Me.TextBox3.Name = "TextBox3"
         Me.TextBox3.ReadOnly = True
         Me.TextBox3.Size = New System.Drawing.Size(80, 22)
@@ -968,7 +968,7 @@ Partial Class NewPayStubForm
         '
         Me.txtBasicPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtBasicPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtBasicPay.Location = New System.Drawing.Point(176, 32)
+        Me.txtBasicPay.Location = New System.Drawing.Point(192, 352)
         Me.txtBasicPay.Name = "txtBasicPay"
         Me.txtBasicPay.ReadOnly = True
         Me.txtBasicPay.Size = New System.Drawing.Size(80, 22)
@@ -980,7 +980,7 @@ Partial Class NewPayStubForm
         '
         Me.txtBasicHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtBasicHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtBasicHours.Location = New System.Drawing.Point(88, 32)
+        Me.txtBasicHours.Location = New System.Drawing.Point(104, 352)
         Me.txtBasicHours.Name = "txtBasicHours"
         Me.txtBasicHours.ReadOnly = True
         Me.txtBasicHours.Size = New System.Drawing.Size(80, 22)
@@ -992,7 +992,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTotalLoan.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTotalLoan.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalLoan.Location = New System.Drawing.Point(104, 376)
+        Me.txtTotalLoan.Location = New System.Drawing.Point(520, 480)
         Me.txtTotalLoan.Name = "txtTotalLoan"
         Me.txtTotalLoan.ReadOnly = True
         Me.txtTotalLoan.Size = New System.Drawing.Size(80, 22)
@@ -1004,7 +1004,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTaxable.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTaxable.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTaxable.Location = New System.Drawing.Point(104, 328)
+        Me.txtTaxable.Location = New System.Drawing.Point(520, 432)
         Me.txtTaxable.Name = "txtTaxable"
         Me.txtTaxable.ReadOnly = True
         Me.txtTaxable.Size = New System.Drawing.Size(80, 22)
@@ -1016,7 +1016,7 @@ Partial Class NewPayStubForm
         '
         Me.txtPagIbig.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtPagIbig.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPagIbig.Location = New System.Drawing.Point(104, 296)
+        Me.txtPagIbig.Location = New System.Drawing.Point(520, 400)
         Me.txtPagIbig.Name = "txtPagIbig"
         Me.txtPagIbig.ReadOnly = True
         Me.txtPagIbig.Size = New System.Drawing.Size(80, 22)
@@ -1028,7 +1028,7 @@ Partial Class NewPayStubForm
         '
         Me.txtPhilHealth.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtPhilHealth.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPhilHealth.Location = New System.Drawing.Point(104, 272)
+        Me.txtPhilHealth.Location = New System.Drawing.Point(520, 376)
         Me.txtPhilHealth.Name = "txtPhilHealth"
         Me.txtPhilHealth.ReadOnly = True
         Me.txtPhilHealth.Size = New System.Drawing.Size(80, 22)
@@ -1040,7 +1040,7 @@ Partial Class NewPayStubForm
         '
         Me.txtSss.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtSss.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSss.Location = New System.Drawing.Point(104, 248)
+        Me.txtSss.Location = New System.Drawing.Point(520, 352)
         Me.txtSss.Name = "txtSss"
         Me.txtSss.ReadOnly = True
         Me.txtSss.Size = New System.Drawing.Size(80, 22)
@@ -1050,7 +1050,7 @@ Partial Class NewPayStubForm
         '
         'Label35
         '
-        Me.Label35.Location = New System.Drawing.Point(176, 8)
+        Me.Label35.Location = New System.Drawing.Point(192, 328)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(80, 24)
         Me.Label35.TabIndex = 21
@@ -1059,7 +1059,7 @@ Partial Class NewPayStubForm
         '
         'Label34
         '
-        Me.Label34.Location = New System.Drawing.Point(88, 8)
+        Me.Label34.Location = New System.Drawing.Point(104, 328)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(80, 24)
         Me.Label34.TabIndex = 20
@@ -1068,7 +1068,7 @@ Partial Class NewPayStubForm
         '
         'Label14
         '
-        Me.Label14.Location = New System.Drawing.Point(432, 8)
+        Me.Label14.Location = New System.Drawing.Point(176, 8)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(80, 24)
         Me.Label14.TabIndex = 21
@@ -1077,7 +1077,7 @@ Partial Class NewPayStubForm
         '
         'Label13
         '
-        Me.Label13.Location = New System.Drawing.Point(344, 8)
+        Me.Label13.Location = New System.Drawing.Point(88, 8)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(80, 24)
         Me.Label13.TabIndex = 20
@@ -1086,7 +1086,7 @@ Partial Class NewPayStubForm
         '
         'Label12
         '
-        Me.Label12.Location = New System.Drawing.Point(8, 104)
+        Me.Label12.Location = New System.Drawing.Point(24, 424)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(72, 24)
         Me.Label12.TabIndex = 19
@@ -1095,7 +1095,7 @@ Partial Class NewPayStubForm
         '
         'Label11
         '
-        Me.Label11.Location = New System.Drawing.Point(8, 80)
+        Me.Label11.Location = New System.Drawing.Point(24, 400)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(72, 24)
         Me.Label11.TabIndex = 19
@@ -1104,7 +1104,7 @@ Partial Class NewPayStubForm
         '
         'Label10
         '
-        Me.Label10.Location = New System.Drawing.Point(8, 56)
+        Me.Label10.Location = New System.Drawing.Point(24, 376)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(72, 24)
         Me.Label10.TabIndex = 19
@@ -1115,7 +1115,7 @@ Partial Class NewPayStubForm
         '
         Me.txtDeductionAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtDeductionAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDeductionAmount.Location = New System.Drawing.Point(176, 128)
+        Me.txtDeductionAmount.Location = New System.Drawing.Point(192, 448)
         Me.txtDeductionAmount.Name = "txtDeductionAmount"
         Me.txtDeductionAmount.ReadOnly = True
         Me.txtDeductionAmount.Size = New System.Drawing.Size(80, 22)
@@ -1127,7 +1127,7 @@ Partial Class NewPayStubForm
         '
         Me.txtDeductionHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtDeductionHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDeductionHours.Location = New System.Drawing.Point(88, 128)
+        Me.txtDeductionHours.Location = New System.Drawing.Point(104, 448)
         Me.txtDeductionHours.Name = "txtDeductionHours"
         Me.txtDeductionHours.ReadOnly = True
         Me.txtDeductionHours.Size = New System.Drawing.Size(80, 22)
@@ -1139,7 +1139,7 @@ Partial Class NewPayStubForm
         '
         Me.txtAbsentDeduction.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtAbsentDeduction.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAbsentDeduction.Location = New System.Drawing.Point(176, 104)
+        Me.txtAbsentDeduction.Location = New System.Drawing.Point(192, 424)
         Me.txtAbsentDeduction.Name = "txtAbsentDeduction"
         Me.txtAbsentDeduction.ReadOnly = True
         Me.txtAbsentDeduction.Size = New System.Drawing.Size(80, 22)
@@ -1151,7 +1151,7 @@ Partial Class NewPayStubForm
         '
         Me.txtAbsentHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtAbsentHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAbsentHours.Location = New System.Drawing.Point(88, 104)
+        Me.txtAbsentHours.Location = New System.Drawing.Point(104, 424)
         Me.txtAbsentHours.Name = "txtAbsentHours"
         Me.txtAbsentHours.ReadOnly = True
         Me.txtAbsentHours.Size = New System.Drawing.Size(80, 22)
@@ -1163,7 +1163,7 @@ Partial Class NewPayStubForm
         '
         Me.txtUndertimeAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtUndertimeAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUndertimeAmount.Location = New System.Drawing.Point(176, 80)
+        Me.txtUndertimeAmount.Location = New System.Drawing.Point(192, 400)
         Me.txtUndertimeAmount.Name = "txtUndertimeAmount"
         Me.txtUndertimeAmount.ReadOnly = True
         Me.txtUndertimeAmount.Size = New System.Drawing.Size(80, 22)
@@ -1175,7 +1175,7 @@ Partial Class NewPayStubForm
         '
         Me.txtUndertimeHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtUndertimeHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUndertimeHours.Location = New System.Drawing.Point(88, 80)
+        Me.txtUndertimeHours.Location = New System.Drawing.Point(104, 400)
         Me.txtUndertimeHours.Name = "txtUndertimeHours"
         Me.txtUndertimeHours.ReadOnly = True
         Me.txtUndertimeHours.Size = New System.Drawing.Size(80, 22)
@@ -1187,7 +1187,7 @@ Partial Class NewPayStubForm
         '
         Me.txtLateAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtLateAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLateAmount.Location = New System.Drawing.Point(176, 56)
+        Me.txtLateAmount.Location = New System.Drawing.Point(192, 376)
         Me.txtLateAmount.Name = "txtLateAmount"
         Me.txtLateAmount.ReadOnly = True
         Me.txtLateAmount.Size = New System.Drawing.Size(80, 22)
@@ -1199,7 +1199,7 @@ Partial Class NewPayStubForm
         '
         Me.txtLateHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtLateHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLateHours.Location = New System.Drawing.Point(88, 56)
+        Me.txtLateHours.Location = New System.Drawing.Point(104, 376)
         Me.txtLateHours.Name = "txtLateHours"
         Me.txtLateHours.ReadOnly = True
         Me.txtLateHours.Size = New System.Drawing.Size(80, 22)
@@ -1209,7 +1209,7 @@ Partial Class NewPayStubForm
         '
         'Label7
         '
-        Me.Label7.Location = New System.Drawing.Point(264, 176)
+        Me.Label7.Location = New System.Drawing.Point(8, 176)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(72, 24)
         Me.Label7.TabIndex = 10
@@ -1219,7 +1219,7 @@ Partial Class NewPayStubForm
         'Label9
         '
         Me.Label9.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(8, 128)
+        Me.Label9.Location = New System.Drawing.Point(24, 448)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(72, 24)
         Me.Label9.TabIndex = 9
@@ -1229,7 +1229,7 @@ Partial Class NewPayStubForm
         'Label8
         '
         Me.Label8.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(264, 296)
+        Me.Label8.Location = New System.Drawing.Point(8, 296)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(72, 24)
         Me.Label8.TabIndex = 9
@@ -1238,7 +1238,7 @@ Partial Class NewPayStubForm
         '
         'Label32
         '
-        Me.Label32.Location = New System.Drawing.Point(264, 224)
+        Me.Label32.Location = New System.Drawing.Point(8, 224)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(72, 24)
         Me.Label32.TabIndex = 9
@@ -1247,7 +1247,7 @@ Partial Class NewPayStubForm
         '
         'Label30
         '
-        Me.Label30.Location = New System.Drawing.Point(264, 200)
+        Me.Label30.Location = New System.Drawing.Point(8, 200)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(72, 24)
         Me.Label30.TabIndex = 9
@@ -1256,7 +1256,7 @@ Partial Class NewPayStubForm
         '
         'Label33
         '
-        Me.Label33.Location = New System.Drawing.Point(264, 272)
+        Me.Label33.Location = New System.Drawing.Point(8, 272)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(72, 24)
         Me.Label33.TabIndex = 9
@@ -1265,7 +1265,7 @@ Partial Class NewPayStubForm
         '
         'Label6
         '
-        Me.Label6.Location = New System.Drawing.Point(264, 248)
+        Me.Label6.Location = New System.Drawing.Point(8, 248)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(72, 24)
         Me.Label6.TabIndex = 9
@@ -1274,7 +1274,7 @@ Partial Class NewPayStubForm
         '
         'Label29
         '
-        Me.Label29.Location = New System.Drawing.Point(264, 152)
+        Me.Label29.Location = New System.Drawing.Point(8, 152)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(72, 24)
         Me.Label29.TabIndex = 8
@@ -1283,7 +1283,7 @@ Partial Class NewPayStubForm
         '
         'Label5
         '
-        Me.Label5.Location = New System.Drawing.Point(264, 128)
+        Me.Label5.Location = New System.Drawing.Point(8, 128)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(72, 24)
         Me.Label5.TabIndex = 8
@@ -1292,7 +1292,7 @@ Partial Class NewPayStubForm
         '
         'Label4
         '
-        Me.Label4.Location = New System.Drawing.Point(264, 104)
+        Me.Label4.Location = New System.Drawing.Point(8, 104)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(72, 24)
         Me.Label4.TabIndex = 8
@@ -1301,7 +1301,7 @@ Partial Class NewPayStubForm
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(264, 56)
+        Me.Label3.Location = New System.Drawing.Point(8, 56)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(72, 24)
         Me.Label3.TabIndex = 8
@@ -1311,7 +1311,7 @@ Partial Class NewPayStubForm
         'Label31
         '
         Me.Label31.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label31.Location = New System.Drawing.Point(24, 456)
+        Me.Label31.Location = New System.Drawing.Point(440, 560)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(72, 24)
         Me.Label31.TabIndex = 6
@@ -1321,7 +1321,7 @@ Partial Class NewPayStubForm
         'Label28
         '
         Me.Label28.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label28.Location = New System.Drawing.Point(24, 432)
+        Me.Label28.Location = New System.Drawing.Point(440, 536)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(72, 24)
         Me.Label28.TabIndex = 6
@@ -1330,7 +1330,7 @@ Partial Class NewPayStubForm
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(264, 80)
+        Me.Label2.Location = New System.Drawing.Point(8, 80)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(72, 24)
         Me.Label2.TabIndex = 7
@@ -1340,7 +1340,7 @@ Partial Class NewPayStubForm
         'Label20
         '
         Me.Label20.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label20.Location = New System.Drawing.Point(24, 400)
+        Me.Label20.Location = New System.Drawing.Point(440, 504)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(72, 24)
         Me.Label20.TabIndex = 6
@@ -1349,7 +1349,7 @@ Partial Class NewPayStubForm
         '
         'Label25
         '
-        Me.Label25.Location = New System.Drawing.Point(24, 584)
+        Me.Label25.Location = New System.Drawing.Point(256, 448)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(72, 24)
         Me.Label25.TabIndex = 6
@@ -1359,7 +1359,7 @@ Partial Class NewPayStubForm
         'Label23
         '
         Me.Label23.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label23.Location = New System.Drawing.Point(72, 192)
+        Me.Label23.Location = New System.Drawing.Point(88, 512)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(72, 24)
         Me.Label23.TabIndex = 6
@@ -1368,7 +1368,7 @@ Partial Class NewPayStubForm
         '
         'Label26
         '
-        Me.Label26.Location = New System.Drawing.Point(8, 32)
+        Me.Label26.Location = New System.Drawing.Point(24, 352)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(72, 24)
         Me.Label26.TabIndex = 6
@@ -1377,7 +1377,7 @@ Partial Class NewPayStubForm
         '
         'Label19
         '
-        Me.Label19.Location = New System.Drawing.Point(24, 352)
+        Me.Label19.Location = New System.Drawing.Point(440, 456)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(72, 24)
         Me.Label19.TabIndex = 6
@@ -1386,7 +1386,7 @@ Partial Class NewPayStubForm
         '
         'Label27
         '
-        Me.Label27.Location = New System.Drawing.Point(24, 536)
+        Me.Label27.Location = New System.Drawing.Point(256, 400)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(72, 24)
         Me.Label27.TabIndex = 6
@@ -1395,7 +1395,7 @@ Partial Class NewPayStubForm
         '
         'Label22
         '
-        Me.Label22.Location = New System.Drawing.Point(24, 376)
+        Me.Label22.Location = New System.Drawing.Point(440, 480)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(72, 24)
         Me.Label22.TabIndex = 6
@@ -1404,7 +1404,7 @@ Partial Class NewPayStubForm
         '
         'Label24
         '
-        Me.Label24.Location = New System.Drawing.Point(24, 560)
+        Me.Label24.Location = New System.Drawing.Point(256, 424)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(72, 24)
         Me.Label24.TabIndex = 6
@@ -1414,7 +1414,7 @@ Partial Class NewPayStubForm
         'Label21
         '
         Me.Label21.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label21.Location = New System.Drawing.Point(72, 216)
+        Me.Label21.Location = New System.Drawing.Point(88, 536)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(72, 24)
         Me.Label21.TabIndex = 6
@@ -1423,7 +1423,7 @@ Partial Class NewPayStubForm
         '
         'Label18
         '
-        Me.Label18.Location = New System.Drawing.Point(24, 328)
+        Me.Label18.Location = New System.Drawing.Point(440, 432)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(72, 24)
         Me.Label18.TabIndex = 6
@@ -1432,7 +1432,7 @@ Partial Class NewPayStubForm
         '
         'Label17
         '
-        Me.Label17.Location = New System.Drawing.Point(24, 296)
+        Me.Label17.Location = New System.Drawing.Point(440, 400)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(72, 24)
         Me.Label17.TabIndex = 6
@@ -1441,7 +1441,7 @@ Partial Class NewPayStubForm
         '
         'Label16
         '
-        Me.Label16.Location = New System.Drawing.Point(24, 272)
+        Me.Label16.Location = New System.Drawing.Point(440, 376)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(72, 24)
         Me.Label16.TabIndex = 6
@@ -1450,7 +1450,7 @@ Partial Class NewPayStubForm
         '
         'Label15
         '
-        Me.Label15.Location = New System.Drawing.Point(24, 248)
+        Me.Label15.Location = New System.Drawing.Point(440, 352)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(72, 24)
         Me.Label15.TabIndex = 6
@@ -1459,7 +1459,7 @@ Partial Class NewPayStubForm
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(264, 32)
+        Me.Label1.Location = New System.Drawing.Point(8, 32)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(72, 24)
         Me.Label1.TabIndex = 6
@@ -1470,7 +1470,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTotalEarnings.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTotalEarnings.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalEarnings.Location = New System.Drawing.Point(432, 296)
+        Me.txtTotalEarnings.Location = New System.Drawing.Point(176, 296)
         Me.txtTotalEarnings.Name = "txtTotalEarnings"
         Me.txtTotalEarnings.ReadOnly = True
         Me.txtTotalEarnings.Size = New System.Drawing.Size(80, 22)
@@ -1482,7 +1482,7 @@ Partial Class NewPayStubForm
         '
         Me.txtTotalHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtTotalHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTotalHours.Location = New System.Drawing.Point(344, 296)
+        Me.txtTotalHours.Location = New System.Drawing.Point(88, 296)
         Me.txtTotalHours.Name = "txtTotalHours"
         Me.txtTotalHours.ReadOnly = True
         Me.txtTotalHours.Size = New System.Drawing.Size(80, 22)
@@ -1494,7 +1494,7 @@ Partial Class NewPayStubForm
         '
         Me.TextBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox2.Location = New System.Drawing.Point(432, 224)
+        Me.TextBox2.Location = New System.Drawing.Point(176, 224)
         Me.TextBox2.Name = "TextBox2"
         Me.TextBox2.ReadOnly = True
         Me.TextBox2.Size = New System.Drawing.Size(80, 22)
@@ -1506,7 +1506,7 @@ Partial Class NewPayStubForm
         '
         Me.txtSpecialHolidayPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtSpecialHolidayPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSpecialHolidayPay.Location = New System.Drawing.Point(432, 200)
+        Me.txtSpecialHolidayPay.Location = New System.Drawing.Point(176, 200)
         Me.txtSpecialHolidayPay.Name = "txtSpecialHolidayPay"
         Me.txtSpecialHolidayPay.ReadOnly = True
         Me.txtSpecialHolidayPay.Size = New System.Drawing.Size(80, 22)
@@ -1518,7 +1518,7 @@ Partial Class NewPayStubForm
         '
         Me.TextBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox6.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox6.Location = New System.Drawing.Point(432, 272)
+        Me.TextBox6.Location = New System.Drawing.Point(176, 272)
         Me.TextBox6.Name = "TextBox6"
         Me.TextBox6.ReadOnly = True
         Me.TextBox6.Size = New System.Drawing.Size(80, 22)
@@ -1530,7 +1530,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRegularHolidayPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRegularHolidayPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegularHolidayPay.Location = New System.Drawing.Point(432, 248)
+        Me.txtRegularHolidayPay.Location = New System.Drawing.Point(176, 248)
         Me.txtRegularHolidayPay.Name = "txtRegularHolidayPay"
         Me.txtRegularHolidayPay.ReadOnly = True
         Me.txtRegularHolidayPay.Size = New System.Drawing.Size(80, 22)
@@ -1542,7 +1542,7 @@ Partial Class NewPayStubForm
         '
         Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(344, 224)
+        Me.TextBox1.Location = New System.Drawing.Point(88, 224)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ReadOnly = True
         Me.TextBox1.Size = New System.Drawing.Size(80, 22)
@@ -1554,7 +1554,7 @@ Partial Class NewPayStubForm
         '
         Me.txtSpecialHolidayHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtSpecialHolidayHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSpecialHolidayHours.Location = New System.Drawing.Point(344, 200)
+        Me.txtSpecialHolidayHours.Location = New System.Drawing.Point(88, 200)
         Me.txtSpecialHolidayHours.Name = "txtSpecialHolidayHours"
         Me.txtSpecialHolidayHours.ReadOnly = True
         Me.txtSpecialHolidayHours.Size = New System.Drawing.Size(80, 22)
@@ -1566,7 +1566,7 @@ Partial Class NewPayStubForm
         '
         Me.TextBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.TextBox5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox5.Location = New System.Drawing.Point(344, 272)
+        Me.TextBox5.Location = New System.Drawing.Point(88, 272)
         Me.TextBox5.Name = "TextBox5"
         Me.TextBox5.ReadOnly = True
         Me.TextBox5.Size = New System.Drawing.Size(80, 22)
@@ -1578,7 +1578,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRegularHolidayHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRegularHolidayHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegularHolidayHours.Location = New System.Drawing.Point(344, 248)
+        Me.txtRegularHolidayHours.Location = New System.Drawing.Point(88, 248)
         Me.txtRegularHolidayHours.Name = "txtRegularHolidayHours"
         Me.txtRegularHolidayHours.ReadOnly = True
         Me.txtRegularHolidayHours.Size = New System.Drawing.Size(80, 22)
@@ -1590,7 +1590,7 @@ Partial Class NewPayStubForm
         '
         Me.txtLeavePay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtLeavePay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLeavePay.Location = New System.Drawing.Point(432, 176)
+        Me.txtLeavePay.Location = New System.Drawing.Point(176, 176)
         Me.txtLeavePay.Name = "txtLeavePay"
         Me.txtLeavePay.ReadOnly = True
         Me.txtLeavePay.Size = New System.Drawing.Size(80, 22)
@@ -1602,7 +1602,7 @@ Partial Class NewPayStubForm
         '
         Me.txtLeaveHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtLeaveHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLeaveHours.Location = New System.Drawing.Point(344, 176)
+        Me.txtLeaveHours.Location = New System.Drawing.Point(88, 176)
         Me.txtLeaveHours.Name = "txtLeaveHours"
         Me.txtLeaveHours.ReadOnly = True
         Me.txtLeaveHours.Size = New System.Drawing.Size(80, 22)
@@ -1614,7 +1614,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRestDayOTPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRestDayOTPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRestDayOTPay.Location = New System.Drawing.Point(432, 152)
+        Me.txtRestDayOTPay.Location = New System.Drawing.Point(176, 152)
         Me.txtRestDayOTPay.Name = "txtRestDayOTPay"
         Me.txtRestDayOTPay.ReadOnly = True
         Me.txtRestDayOTPay.Size = New System.Drawing.Size(80, 22)
@@ -1626,7 +1626,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRestDayPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRestDayPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRestDayPay.Location = New System.Drawing.Point(432, 128)
+        Me.txtRestDayPay.Location = New System.Drawing.Point(176, 128)
         Me.txtRestDayPay.Name = "txtRestDayPay"
         Me.txtRestDayPay.ReadOnly = True
         Me.txtRestDayPay.Size = New System.Drawing.Size(80, 22)
@@ -1638,7 +1638,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRestDayOTHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRestDayOTHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRestDayOTHours.Location = New System.Drawing.Point(344, 152)
+        Me.txtRestDayOTHours.Location = New System.Drawing.Point(88, 152)
         Me.txtRestDayOTHours.Name = "txtRestDayOTHours"
         Me.txtRestDayOTHours.ReadOnly = True
         Me.txtRestDayOTHours.Size = New System.Drawing.Size(80, 22)
@@ -1650,7 +1650,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRestDayHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRestDayHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRestDayHours.Location = New System.Drawing.Point(344, 128)
+        Me.txtRestDayHours.Location = New System.Drawing.Point(88, 128)
         Me.txtRestDayHours.Name = "txtRestDayHours"
         Me.txtRestDayHours.ReadOnly = True
         Me.txtRestDayHours.Size = New System.Drawing.Size(80, 22)
@@ -1662,7 +1662,7 @@ Partial Class NewPayStubForm
         '
         Me.txtNightDiffOTPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtNightDiffOTPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNightDiffOTPay.Location = New System.Drawing.Point(432, 104)
+        Me.txtNightDiffOTPay.Location = New System.Drawing.Point(176, 104)
         Me.txtNightDiffOTPay.Name = "txtNightDiffOTPay"
         Me.txtNightDiffOTPay.ReadOnly = True
         Me.txtNightDiffOTPay.Size = New System.Drawing.Size(80, 22)
@@ -1674,7 +1674,7 @@ Partial Class NewPayStubForm
         '
         Me.txtNightDiffOTHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtNightDiffOTHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNightDiffOTHours.Location = New System.Drawing.Point(344, 104)
+        Me.txtNightDiffOTHours.Location = New System.Drawing.Point(88, 104)
         Me.txtNightDiffOTHours.Name = "txtNightDiffOTHours"
         Me.txtNightDiffOTHours.ReadOnly = True
         Me.txtNightDiffOTHours.Size = New System.Drawing.Size(80, 22)
@@ -1686,7 +1686,7 @@ Partial Class NewPayStubForm
         '
         Me.txtNightDiffPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtNightDiffPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNightDiffPay.Location = New System.Drawing.Point(432, 56)
+        Me.txtNightDiffPay.Location = New System.Drawing.Point(176, 56)
         Me.txtNightDiffPay.Name = "txtNightDiffPay"
         Me.txtNightDiffPay.ReadOnly = True
         Me.txtNightDiffPay.Size = New System.Drawing.Size(80, 22)
@@ -1698,7 +1698,7 @@ Partial Class NewPayStubForm
         '
         Me.txtOvertimePay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtOvertimePay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOvertimePay.Location = New System.Drawing.Point(432, 80)
+        Me.txtOvertimePay.Location = New System.Drawing.Point(176, 80)
         Me.txtOvertimePay.Name = "txtOvertimePay"
         Me.txtOvertimePay.ReadOnly = True
         Me.txtOvertimePay.Size = New System.Drawing.Size(80, 22)
@@ -1710,7 +1710,7 @@ Partial Class NewPayStubForm
         '
         Me.txtNightDiffHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtNightDiffHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNightDiffHours.Location = New System.Drawing.Point(344, 56)
+        Me.txtNightDiffHours.Location = New System.Drawing.Point(88, 56)
         Me.txtNightDiffHours.Name = "txtNightDiffHours"
         Me.txtNightDiffHours.ReadOnly = True
         Me.txtNightDiffHours.Size = New System.Drawing.Size(80, 22)
@@ -1722,7 +1722,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRegularPay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRegularPay.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegularPay.Location = New System.Drawing.Point(432, 32)
+        Me.txtRegularPay.Location = New System.Drawing.Point(176, 32)
         Me.txtRegularPay.Name = "txtRegularPay"
         Me.txtRegularPay.ReadOnly = True
         Me.txtRegularPay.Size = New System.Drawing.Size(80, 22)
@@ -1734,7 +1734,7 @@ Partial Class NewPayStubForm
         '
         Me.txtOvertimeHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtOvertimeHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtOvertimeHours.Location = New System.Drawing.Point(344, 80)
+        Me.txtOvertimeHours.Location = New System.Drawing.Point(88, 80)
         Me.txtOvertimeHours.Name = "txtOvertimeHours"
         Me.txtOvertimeHours.ReadOnly = True
         Me.txtOvertimeHours.Size = New System.Drawing.Size(80, 22)
@@ -1746,7 +1746,7 @@ Partial Class NewPayStubForm
         '
         Me.txtRegularHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtRegularHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegularHours.Location = New System.Drawing.Point(344, 32)
+        Me.txtRegularHours.Location = New System.Drawing.Point(88, 32)
         Me.txtRegularHours.Name = "txtRegularHours"
         Me.txtRegularHours.ReadOnly = True
         Me.txtRegularHours.Size = New System.Drawing.Size(80, 22)
@@ -2080,6 +2080,8 @@ Partial Class NewPayStubForm
         '
         'Panel1
         '
+        Me.Panel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Panel1.Controls.Add(Me.TabControl1)
         Me.Panel1.Location = New System.Drawing.Point(256, 8)
         Me.Panel1.Name = "Panel1"
@@ -2097,6 +2099,15 @@ Partial Class NewPayStubForm
         Me.Panel2.Padding = New System.Windows.Forms.Padding(10)
         Me.Panel2.Size = New System.Drawing.Size(960, 695)
         Me.Panel2.TabIndex = 4
+        '
+        'cboPayPeriods
+        '
+        Me.cboPayPeriods.DisplayMember = "Display"
+        Me.cboPayPeriods.FormattingEnabled = True
+        Me.cboPayPeriods.Location = New System.Drawing.Point(8, 8)
+        Me.cboPayPeriods.Name = "cboPayPeriods"
+        Me.cboPayPeriods.Size = New System.Drawing.Size(240, 23)
+        Me.cboPayPeriods.TabIndex = 23
         '
         'DataGridViewTextBoxColumn1
         '
@@ -2561,15 +2572,6 @@ Partial Class NewPayStubForm
         Me.DataGridViewTextBoxColumn60.HeaderText = "Total Pay"
         Me.DataGridViewTextBoxColumn60.Name = "DataGridViewTextBoxColumn60"
         Me.DataGridViewTextBoxColumn60.Width = 60
-        '
-        'cboPayPeriods
-        '
-        Me.cboPayPeriods.DisplayMember = "Display"
-        Me.cboPayPeriods.FormattingEnabled = True
-        Me.cboPayPeriods.Location = New System.Drawing.Point(8, 8)
-        Me.cboPayPeriods.Name = "cboPayPeriods"
-        Me.cboPayPeriods.Size = New System.Drawing.Size(240, 23)
-        Me.cboPayPeriods.TabIndex = 23
         '
         'NewPayStubForm
         '
