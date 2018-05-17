@@ -396,6 +396,12 @@ INTO
     workingHours;
 
 SET hasShift = (shifttimefrom IS NOT NULL) AND (shifttimeto IS NOT NULL);
+
+IF hasShift THEN
+    SET shifttimefrom = TIME_FORMAT(shifttimefrom, "%H:%i:00");
+    SET shifttimeto =  TIME_FORMAT(shifttimeto, "%H:%i:00");
+END IF;
+
 SET isRestDay = isShiftRestDay;
 SET isWorkingDay = NOT isRestDay;
 
