@@ -20,9 +20,14 @@ DECLARE sh_hrs, work_hrs, br_hrs DECIMAL(10, 2) DEFAULT 0;
 
  
 DECLARE is_reach_tomorrow BOOL DEFAULT FALSE;
- 
 
- 
+DECLARE custom_timeformat TEXT DEFAULT '%H:%i:00';
+
+SET NEW.TimeFrom = TIME_FORMAT(NEW.TimeFrom, custom_timeformat);
+SET NEW.TimeTo = TIME_FORMAT(NEW.TimeTo, custom_timeformat);
+SET NEW.BreakTimeFrom = TIME_FORMAT(NEW.BreakTimeFrom, custom_timeformat);
+SET NEW.BreakTimeTo = TIME_FORMAT(NEW.BreakTimeTo, custom_timeformat);
+
 /*
  
  * execute the ff. query to make BEFUPD_shift works :
