@@ -258,7 +258,7 @@ LEFT JOIN (SELECT slp.*
            ,GROUP_CONCAT(CONCAT('  ', p.PartNo)) `LoanNameList`
            ,GROUP_CONCAT(ROUND(slp.DeductionAmount, 2)) `LoanDeductList`
            ,GROUP_CONCAT(ROUND(slp.TotalBalanceLeft, 2)) `LoanBalance`
-           ,ROUND(SUM(slp.DeductionAmount), 2) `TotalLoanBal`
+           ,ROUND(SUM(slp.TotalBalanceLeft), 2) `TotalLoanBal`
            
            FROM scheduledloansperpayperiod slp
            INNER JOIN employeeloanschedule els
