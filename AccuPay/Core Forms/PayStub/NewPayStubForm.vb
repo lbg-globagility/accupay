@@ -14,6 +14,11 @@ Public Class NewPayStubForm
         dgvTimeEntries.AutoGenerateColumns = False
         dgvPaystubs.AutoGenerateColumns = False
 
+        LoadPayperiods()
+        LoadPaystubs()
+    End Sub
+
+    Private Async Sub LoadPaystubs()
         Using context = New PayrollContext()
             Dim query =
                 (From p In context.Paystubs
@@ -28,7 +33,7 @@ Public Class NewPayStubForm
                  Select New With {.Paystub = p, .PaystubActual = pa, .Employee = p.Employee}
                 )
 
-            Dim paystubs = query.ToList()
+            Dim paystubs = Await query.ToListAsync()
 
             Dim paystubModels = paystubs.
                 Select(Function(p) New PayStubModel(p.Employee, p.Paystub, p.PaystubActual)).
@@ -36,6 +41,26 @@ Public Class NewPayStubForm
 
             dgvPaystubs.DataSource = paystubModels
         End Using
+    End Sub
+
+    Private Async Sub LoadPayperiods()
+        Dim payPeriods As IList(Of PayPeriod) = Nothing
+
+        Using context = New PayrollContext()
+            Dim query =
+                (From p In context.PayPeriods
+                 Join ps In context.Paystubs On p.RowID Equals ps.PayPeriodID
+                 Where p.OrganizationID = z_OrganizationID
+                 Order By p.PayFromDate Descending
+                 Group By p.RowID Into x = Group
+                 Select x.Distinct().FirstOrDefault().p)
+
+            payPeriods = Await query.ToListAsync()
+        End Using
+
+        cboPayPeriods.DataSource = payPeriods.
+            Select(Function(t) New PayPeriodModel(t)).
+            ToList()
     End Sub
 
     Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvPaystubs.CellFormatting
@@ -56,28 +81,32 @@ Public Class NewPayStubForm
         End If
     End Sub
 
-    Private Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged
-        Dim paystubModel = DirectCast(dgvPaystubs.CurrentRow.DataBoundItem, PayStubModel)
+    Private Async Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged
+        Try
+            Dim paystubModel = DirectCast(dgvPaystubs.CurrentRow.DataBoundItem, PayStubModel)
 
-        If paystubModel Is Nothing Then
-            Return
-        End If
+            If paystubModel Is Nothing Then
+                Return
+            End If
 
-        Dim paystub = paystubModel.Paystub
-        Dim paystubActual = paystubModel.PaystubActual
+            Dim paystub = paystubModel.Paystub
+            Dim paystubActual = paystubModel.PaystubActual
 
-        Dim timeEntries As IList(Of TimeEntry) = Nothing
-        Using context = New PayrollContext()
-            Dim query = context.TimeEntries.
-                Where(Function(t) _dateFrom <= t.Date And t.Date <= _dateTo).
-                Where(Function(t) Nullable.Equals(t.EmployeeID, paystub.EmployeeID))
+            Dim timeEntries As IList(Of TimeEntry) = Nothing
+            Using context = New PayrollContext()
+                Dim query = context.TimeEntries.
+                    Where(Function(t) _dateFrom <= t.Date And t.Date <= _dateTo).
+                    Where(Function(t) Nullable.Equals(t.EmployeeID, paystub.EmployeeID))
 
-            timeEntries = query.ToList()
-        End Using
+                timeEntries = Await query.ToListAsync()
+            End Using
 
-        dgvTimeEntries.DataSource = timeEntries
+            dgvTimeEntries.DataSource = timeEntries
 
-        DisplayPaystub(paystub, paystubActual)
+            DisplayPaystub(paystub, paystubActual)
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub DisplayPaystub(declared As Paystub, actual As PaystubActual)
@@ -137,6 +166,19 @@ Public Class NewPayStubForm
         Return String.Format("{0:#,###,##0.00;(#,###,##0.00);""-""}", value)
     End Function
 
+    Private Sub cboPayPeriods_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboPayPeriods.SelectedIndexChanged
+        Dim payPeriodModel = DirectCast(cboPayPeriods.SelectedItem, PayPeriodModel)
+
+        If payPeriodModel Is Nothing Then
+            Return
+        End If
+
+        Dim payPeriod = payPeriodModel.Item
+        _dateFrom = payPeriod.PayFromDate
+        _dateTo = payPeriod.PayToDate
+        LoadPaystubs()
+    End Sub
+
     Private Class PayStubModel
 
         Public ReadOnly Property Employee As Employee
@@ -151,6 +193,16 @@ Public Class NewPayStubForm
             Me.PaystubActual = paystubActual
         End Sub
 
+    End Class
+
+    Public Class PayPeriodModel
+        Public Property Display As String
+        Public Property Item As PayPeriod
+
+        Public Sub New(payPeriod As PayPeriod)
+            Display = $"{payPeriod.PayFromDate.ToString("MM/dd/yyyy")} {payPeriod.PayToDate.ToString("MM/dd/yyyy")}"
+            Item = payPeriod
+        End Sub
     End Class
 
 End Class
