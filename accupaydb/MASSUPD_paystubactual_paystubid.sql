@@ -1,0 +1,29 @@
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+DROP PROCEDURE IF EXISTS `MASSUPD_paystubactual_paystubid`;
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `MASSUPD_paystubactual_paystubid`()
+BEGIN
+
+UPDATE paystubactual psa
+INNER JOIN paystub ps
+        ON ps.OrganizationID=psa.OrganizationID
+		     AND ps.EmployeeID=psa.EmployeeID
+			  AND ps.PayPeriodID=psa.EmployeeID
+INNER JOIN employee e
+        ON e.RowID=ps.EmployeeID
+		     AND e.OrganizationID=ps.OrganizationID
+			  AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+SET psa.PayStubID = ps.RowID
+;
+
+END//
+DELIMITER ;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
