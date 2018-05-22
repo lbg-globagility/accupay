@@ -1774,7 +1774,7 @@ Public Class PayStubForm
             End If
             'Over time
             txttotothrs_U.Text = ValNoComma(drow("OvertimeHoursWorked"))
-            txttototamt_U.Text = FormatNumber(ValNoComma((drow("OvertimeHoursAmount"))), 2)
+            txttototamt_U.Text = FormatNumber(ValNoComma((drow("OvertimePay"))), 2)
             'Night differential
             txttotnightdiffhrs_U.Text = ValNoComma(drow("NightDifferentialHours"))
             txttotnightdiffamt_U.Text = FormatNumber(ValNoComma((drow("NightDiffHoursAmount"))), 2)

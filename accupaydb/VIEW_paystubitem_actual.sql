@@ -55,10 +55,11 @@ psa.RowID
     ,pstb.RegularHours,
     psa.RegularPay,
     pstb.OvertimeHours,
-    (psa.OvertimePay
+    /*(psa.OvertimePay
 	  + IFNULL(ete.SpecialHolidayOTPay, 0)
 	  + IFNULL(ete.RestDayOTPay, 0)
-	  ) `OvertimePay`,
+	  ) `OvertimePay`,*/
+	  psa.OvertimePay,
     (psa.OvertimePay
 	  + IFNULL(ete.SpecialHolidayOTPay, 0)
 	  + IFNULL(ete.RestDayOTPay, 0)) `OvertimeHoursAmount`,

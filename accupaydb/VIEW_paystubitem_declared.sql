@@ -64,10 +64,11 @@ SELECT
     psa.RegularHours,
     psa.RegularPay,
     psa.OvertimeHours,
-    (psa.OvertimePay
+    /*(psa.OvertimePay
 	  + IFNULL(ete.SpecialHolidayOTPay, 0)
 	  + IFNULL(ete.RestDayOTPay, 0)
-	  ) `OvertimePay`,
+	  ) `OvertimePay`,*/
+	  psa.OvertimePay,
     psa.NightDiffHours,
     psa.NightDiffPay,
     psa.NightDiffOvertimeHours,
