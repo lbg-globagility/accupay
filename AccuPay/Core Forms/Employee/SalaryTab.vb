@@ -260,8 +260,8 @@ Public Class SalaryTab
                     .EffectiveFrom = dtpEffectiveFrom.Value
                     .EffectiveTo = dtpEffectiveTo.Value
                     .PhilHealthDeduction = TypeTools.ParseDecimal(txtPhilHealth.Text)
-                    .PaySocialSecurityID = SocialSecurityBracket?.RowID
-                    .SocialSecurityBracket = SocialSecurityBracket
+                    .PaySocialSecurityID = socialSecurityBracket?.RowID
+                    .SocialSecurityBracket = socialSecurityBracket
                     .HDMFAmount = TypeTools.ParseDecimal(txtPagIbig.Text)
                 End With
 
@@ -339,10 +339,13 @@ Public Class SalaryTab
         Dim monthlyRate = 0D
         If _employee.EmployeeType = "Daily" Then
             monthlyRate = salary * PayrollTools.GetWorkDaysPerMonth(_employee.WorkDaysPerYear)
-        ElseIf _employee.EmployeeType = "Monthly" Then
+            txtBasicPay.Text = salary.ToString()
+        ElseIf _employee.EmployeeType = "Monthly" Or _employee.EmployeeType = "Fixed" Then
             monthlyRate = salary
-        ElseIf _employee.EmployeeType = "Fixed" Then
-            monthlyRate = salary
+
+            If _employee.PayFrequency.Type = "SEMI-MONTHLY" Then
+
+            End If
         End If
 
         If _currentSalary Is Nothing Then
@@ -351,6 +354,10 @@ Public Class SalaryTab
 
         UpdateSss(monthlyRate)
         UpdatePhilHealth(monthlyRate)
+    End Sub
+
+    Private Sub UpdateBasicPay()
+
     End Sub
 
     Private Sub UpdateSss(monthlyRate As Decimal)
@@ -379,6 +386,12 @@ Public Class SalaryTab
         End If
 
         txtPhilHealth.Text = CStr(philHealthContribution)
+    End Sub
+
+    Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
+        Using dialog = New ImportSalaryForm()
+            dialog.ShowDialog()
+        End Using
     End Sub
 
     Private Sub txtSss_KeyDown(sender As Object, e As KeyEventArgs) Handles txtSss.KeyDown

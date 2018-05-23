@@ -13,7 +13,7 @@ Namespace Global.PayrollSys
 
         Public Property CreatedBy As Integer?
 
-        Public Property LastUpd As Date
+        Public Property LastUpd As Date?
 
         Public Property LastUpdBy As Integer?
 

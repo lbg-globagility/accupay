@@ -1,27 +1,24 @@
 ﻿Option Strict On
 
 Imports System.IO
+Imports System.Reflection
 Imports AccuPay.Utils
 Imports OfficeOpenXml
 
-Namespace Global.AccuPay
+Namespace Global.Globagility.AccuPay.Salaries
 
     Public Class ExcelParser(Of T As {Class, New})
 
-        Private _worksheetName As String
+        Private ReadOnly _worksheetName As String
 
         Public Sub New(worksheetName As String)
             _worksheetName = worksheetName
         End Sub
 
-        Public Sub Read(filePath As String)
-            Dim stream = New MemoryStream()
+        Public Function Read(filePath As String) As IList(Of T)
+            Dim stream = GetFileContents(filePath)
 
-            Using fileStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
-                fileStream.CopyTo(stream)
-            End Using
-
-            Dim salaryRecords As List(Of T) = Nothing
+            Dim records As List(Of T) = Nothing
 
             Using excel = New ExcelPackage(stream)
                 Dim worksheet = excel.Workbook.Worksheets(_worksheetName)
@@ -45,7 +42,7 @@ Namespace Global.AccuPay
                     Skip(1).
                     Select(Function(cfg) cfg.Select(Function(g) g.Value).ToList())
 
-                salaryRecords = rowValues.
+                records = rowValues.
                     Select(
                         Function(row)
                             Dim newRecord = New T()
@@ -57,25 +54,13 @@ Namespace Global.AccuPay
                                     End If
 
                                     Dim originalValue = row(column.Index)
-                                    Dim prop = tprops.First(
+                                    Dim prop = tprops.FirstOrDefault(
                                         Function(t)
                                             Return StringUtils.ToPascal(t.Name) = StringUtils.ToPascal(column.Name)
                                         End Function)
 
-                                    If TypeOf originalValue Is Double Then
-                                        Dim value = DirectCast(originalValue, Double)
-
-                                        If prop.PropertyType Is GetType(Double) Then
-                                            prop.SetValue(newRecord, value)
-                                        ElseIf prop.PropertyType Is GetType(Decimal) Then
-                                            prop.SetValue(newRecord, CDec(value))
-                                        ElseIf prop.PropertyType Is GetType(Integer) Then
-                                            prop.SetValue(newRecord, CInt(value))
-                                        ElseIf prop.PropertyType Is GetType(Date) Then
-                                            prop.SetValue(newRecord, Date.FromOADate(value))
-                                        End If
-                                    Else
-                                        prop.SetValue(newRecord, originalValue)
+                                    If prop IsNot Nothing Then
+                                        ParseValue(newRecord, prop, originalValue)
                                     End If
                                 End Sub)
 
@@ -83,6 +68,36 @@ Namespace Global.AccuPay
                         End Function).
                     ToList()
             End Using
+
+            Return records
+        End Function
+
+        Private Function GetFileContents(filePath As String) As Stream
+            Dim contents = New MemoryStream()
+
+            Using fileStream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+                fileStream.CopyTo(contents)
+            End Using
+
+            Return contents
+        End Function
+
+        Private Sub ParseValue(newRecord As T, prop As PropertyInfo, originalValue As Object)
+            If TypeOf originalValue Is Double Then
+                Dim value = DirectCast(originalValue, Double)
+
+                If prop.PropertyType Is GetType(Double) Then
+                    prop.SetValue(newRecord, value)
+                ElseIf prop.PropertyType Is GetType(Decimal) Then
+                    prop.SetValue(newRecord, CDec(value))
+                ElseIf prop.PropertyType Is GetType(Integer) Then
+                    prop.SetValue(newRecord, CInt(value))
+                ElseIf prop.PropertyType Is GetType(Date) Or prop.PropertyType Is GetType(Date?) Then
+                    prop.SetValue(newRecord, Date.FromOADate(value))
+                End If
+            Else
+                prop.SetValue(newRecord, originalValue)
+            End If
         End Sub
 
     End Class

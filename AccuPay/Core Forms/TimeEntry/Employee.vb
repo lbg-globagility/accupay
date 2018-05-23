@@ -169,6 +169,12 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property IsFixed As Boolean
+            Get
+                Return (EmployeeType = "Fixed")
+            End Get
+        End Property
+
         Public ReadOnly Property Fullname As String
             Get
                 Return $"{LastName}, {FirstName} {MiddleInitial}"
