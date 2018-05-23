@@ -115,6 +115,9 @@
       <HintPath>..\packages\Antlr3.Runtime.3.5.1\lib\net40-client\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="CollapsibleGroupBox">
       <HintPath>References\CollapsibleGroupBox.dll</HintPath>
     </Reference>
@@ -172,6 +175,7 @@
     <Reference Include="MetroFramework.Fonts">
       <HintPath>References\MetroFramework.Fonts.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -319,6 +323,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
+    <Compile Include="Core Forms\Government\PhilHealthCalculator.vb" />
     <Compile Include="Core Forms\Government\SocialSecurityBracket.vb" />
     <Compile Include="Core Forms\Government\WithholdingTaxBracket.vb" />
     <Compile Include="Core Forms\Independent filing\LeaveForm.designer.vb">
@@ -462,7 +467,16 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Core Forms\rpt\ThirteenthMonthPayReportProvider.vb" />
+    <Compile Include="Core Forms\Salary\ImportSalaryForm.Designer.vb">
+      <DependentUpon>ImportSalaryForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\Salary\ImportSalaryForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Core Forms\Salary\Salary.vb" />
+    <Compile Include="Core Forms\Commons\ExcelParser.vb" />
+    <Compile Include="Core Forms\Salary\SalaryImporter.vb" />
+    <Compile Include="Core Forms\Salary\SalaryRowRecord.vb" />
     <Compile Include="Core Forms\TimeEntry\Employee.vb" />
     <Compile Include="Core Forms\TimeEntry\Overtime.vb" />
     <Compile Include="Core Forms\TimeEntry\Shift.vb" />
@@ -501,6 +515,7 @@
     <Compile Include="Core Forms\USER CONTROLS\TimeTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Core Forms\Utils\StringUtils.vb" />
     <Compile Include="Database\Mappings\AdjustmentMap.vb" />
     <Compile Include="Database\Mappings\AllowanceItemMap.vb" />
     <Compile Include="Database\Mappings\AllowancePerDayMap.vb" />
@@ -1458,6 +1473,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo - Copy.ico" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\loading-icon.gif" />
     <None Include="Resources\ajax-loader.gif" />
     <EmbeddedResource Include="Auditing\Forms\TimeLogForm.resx">
@@ -1555,6 +1571,9 @@
     <EmbeddedResource Include="Core Forms\rpt\ThirteenthMonthPayDetailSummary.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>ThirteenthMonthPayDetailSummary.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\Salary\ImportSalaryForm.resx">
+      <DependentUpon>ImportSalaryForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\TimeEntry\TimeEntrySummaryForm.resx">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>

@@ -395,7 +395,7 @@ Public Class PayrollGeneration
                     Where(Function(t) Not If(t.ShiftSchedule?.IsRestDay, False)).
                     Sum(Function(t) t.BasicDayPay + t.LeavePay))
 
-        ElseIf _employee2.IsMonthly Then
+        ElseIf _employee2.IsMonthly Or _employee2.IsFixed Then
             Dim trueSalary = Convert.ToDecimal(salaryrow("TrueSalary"))
             Dim basicPay = trueSalary / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
 
