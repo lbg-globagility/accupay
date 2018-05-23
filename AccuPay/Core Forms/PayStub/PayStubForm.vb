@@ -415,7 +415,6 @@ Public Class PayStubForm
             'Else
             '    dgvemployees_SelectionChanged(dgvemployees, New EventArgs)
             'End If
-
         Else
 
             numofweekdays = 0
@@ -881,22 +880,24 @@ Public Class PayStubForm
             _successfulPaystubs = 0
             _failedPaystubs = 0
 
-            Parallel.ForEach(
-                employeeRows,
-                Sub(employeeRow)
-                    Dim generator = New PayrollGeneration(
-                        employeeRow,
-                        isEndOfMonth,
-                        emp_allowanceWeekly,
-                        notax_allowanceWeekly,
-                        _filingStatuses,
-                        resources,
-                        Me
-                    )
+            Task.Run(
+                Sub()
+                    Parallel.ForEach(
+                        employeeRows,
+                        Sub(employeeRow)
+                            Dim generator = New PayrollGeneration(
+                                employeeRow,
+                                isEndOfMonth,
+                                emp_allowanceWeekly,
+                                notax_allowanceWeekly,
+                                _filingStatuses,
+                                resources,
+                                Me
+                            )
 
-                    generator.DoProcess()
-                End Sub
-            )
+                            generator.DoProcess()
+                        End Sub)
+                End Sub)
         Catch ex As Exception
             _logger.Error("Error loading the employees", ex)
         End Try
@@ -1013,7 +1014,6 @@ Public Class PayStubForm
             Dim dattabsearch As New DataTable
 
             pagination = 0
-
 
             Dim param_array = New Object() {orgztnID,
                                             tsSearch.Text,
@@ -1598,142 +1598,142 @@ Public Class PayStubForm
 
             Dim psaItems = New SQL("CALL VIEW_paystubitem('" & ValNoComma(drow("RowID")) & "');").GetFoundRows.Tables(0)
 
-                Dim strdouble = ValNoComma(drow("TrueSalary")) / ValNoComma(drow("PAYFREQUENCYDIVISOR")) 'BasicPay
+            Dim strdouble = ValNoComma(drow("TrueSalary")) / ValNoComma(drow("PAYFREQUENCYDIVISOR")) 'BasicPay
 
-                txtBasicPay.Text = FormatNumber(ValNoComma(strdouble), 2)
+            txtBasicPay.Text = FormatNumber(ValNoComma(strdouble), 2)
 
-                txtRegularHours.Text = ValNoComma(drow("RegularHours"))
+            txtRegularHours.Text = ValNoComma(drow("RegularHours"))
 
-                If drow("EmployeeType").ToString = "Fixed" Then
-                    txtRegularPay.Text = FormatNumber(ValNoComma(strdouble), 2)
-                ElseIf drow("EmployeeType").ToString = "Monthly" Then
-                    Dim basicPay = ValNoComma(drow("BasicPay"))
-                    Dim deductions = 0.0
+            If drow("EmployeeType").ToString = "Fixed" Then
+                txtRegularPay.Text = FormatNumber(ValNoComma(strdouble), 2)
+            ElseIf drow("EmployeeType").ToString = "Monthly" Then
+                Dim basicPay = ValNoComma(drow("BasicPay"))
+                Dim deductions = 0.0
 
-                    If drow("FirstTimeSalary").ToString = "1" Then
-                        basicPay = ValNoComma(drow("RegularPay"))
-                    Else
-                        basicPay = ValNoComma(drow("BasicPay"))
-                        deductions = ValNoComma(drow("LateDeduction")) +
-                        ValNoComma(drow("UndertimeDeduction")) +
-                        ValNoComma(drow("Absent")) '+
-                        'ValNoComma(drow("HolidayPay"))
-                    End If
-
-                    txtRegularPay.Text = FormatNumber(basicPay - deductions, 2)
-                ElseIf drow("EmployeeType").ToString = "Daily" Then
-                    txtRegularPay.Text = FormatNumber(ValNoComma(drow("RegularPay")), 2)
-                End If
-
-                txtOvertimeHours.Text = ValNoComma(drow("OvertimeHours"))
-                txtOvertimePay.Text = FormatNumber(ValNoComma(drow("OvertimePay")), 2)
-
-                txtNightDiffHours.Text = ValNoComma(drow("NightDiffHours"))
-                txtNightDiffPay.Text = FormatNumber(ValNoComma(drow("NightDiffPay")), 2)
-
-                txtNightDiffOvertimeHours.Text = ValNoComma(drow("NightDiffOvertimeHours"))
-                txtNightDiffOvertimePay.Text = FormatNumber(ValNoComma(drow("NightDiffOvertimePay")), 2)
-
-                txtRestDayHours.Text = ValNoComma(drow("RestDayHours"))
-                txtRestDayAmount.Text = FormatNumber(ValNoComma(drow("RestDayPay")), 2)
-
-                txtHolidayHours.Text = 0.0
-                txtHolidayPay.Text = FormatNumber(ValNoComma(drow("HolidayPay")), 2)
-
-                Dim sumallbasic = ValNoComma(drow("RegularPay")) +
-                              ValNoComma(drow("OvertimePay")) +
-                              ValNoComma(drow("NightDiffPay")) +
-                              ValNoComma(drow("NightDiffOvertimePay")) +
-                              ValNoComma(drow("HolidayPay"))
-
-                If drow("EmployeeType").ToString = "Fixed" Then
-                    lblSubtotal.Text = FormatNumber(ValNoComma(strdouble), 2)
-                ElseIf drow("EmployeeType").ToString = "Monthly" Then
-                    Dim thebasicpay = ValNoComma(drow("BasicPay"))
-                    Dim thelessamounts = ValNoComma(0)
-
-                    If drow("FirstTimeSalary").ToString = "1" Then
-                        thebasicpay = ValNoComma(drow("RegularPay"))
-                        lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
-                    Else
-                        thebasicpay = ValNoComma(drow("BasicPay"))
-                        thelessamounts = ValNoComma(drow("LateDeduction")) + ValNoComma(drow("UndertimeDeduction")) + ValNoComma(drow("Absent"))
-                        'Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
-                        Dim all_regular = (thebasicpay - thelessamounts)
-                        lblSubtotal.Text =
-                        FormatNumber(all_regular + ValNoComma(drow("HolidayPay")) +
-                                     ValNoComma(drow("OvertimePay")) +
-                                     ValNoComma(drow("NightDiffPay")) +
-                                     ValNoComma(drow("NightDiffOvertimePay")), 2)
-                    End If
+                If drow("FirstTimeSalary").ToString = "1" Then
+                    basicPay = ValNoComma(drow("RegularPay"))
                 Else
-                    lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
-
+                    basicPay = ValNoComma(drow("BasicPay"))
+                    deductions = ValNoComma(drow("LateDeduction")) +
+                    ValNoComma(drow("UndertimeDeduction")) +
+                    ValNoComma(drow("Absent")) '+
+                    'ValNoComma(drow("HolidayPay"))
                 End If
 
-                'Absent
-                txttotabsent.Text = 0.0
-                txttotabsentamt.Text = FormatNumber(ValNoComma((drow("Absent"))), 2)
-                'Tardiness / late
-                txttottardi.Text = ValNoComma(drow("LateHours"))
-                txttottardiamt.Text = FormatNumber(ValNoComma((drow("LateDeduction"))), 2)
-                'Undertime
-                txttotut.Text = ValNoComma(drow("UndertimeHours"))
-                txttotutamt.Text = FormatNumber(ValNoComma((drow("UndertimeDeduction"))), 2)
+                txtRegularPay.Text = FormatNumber(basicPay - deductions, 2)
+            ElseIf drow("EmployeeType").ToString = "Daily" Then
+                txtRegularPay.Text = FormatNumber(ValNoComma(drow("RegularPay")), 2)
+            End If
 
-                Dim miscsubtotal = ValNoComma(drow("Absent")) + ValNoComma(drow("LateDeduction")) + ValNoComma(drow("UndertimeDeduction"))
-                lblsubtotmisc.Text = FormatNumber(ValNoComma((miscsubtotal)), 2)
+            txtOvertimeHours.Text = ValNoComma(drow("OvertimeHours"))
+            txtOvertimePay.Text = FormatNumber(ValNoComma(drow("OvertimePay")), 2)
 
-                'Allowance
-                txtemptotallow.Text = FormatNumber(ValNoComma((drow("TotalAllowance"))), 2)
-                'Bonus
-                txtemptotbon.Text = FormatNumber(ValNoComma((drow("TotalBonus"))), 2)
-                'Gross
-                txtgrosssal.Text = FormatNumber(ValNoComma((drow("TotalGrossSalary"))), 2)
+            txtNightDiffHours.Text = ValNoComma(drow("NightDiffHours"))
+            txtNightDiffPay.Text = FormatNumber(ValNoComma(drow("NightDiffPay")), 2)
 
-                'SSS
-                txtempsss.Text = FormatNumber(ValNoComma((drow("TotalEmpSSS"))), 2)
-                'PhilHealth
-                txtempphh.Text = FormatNumber(ValNoComma((drow("TotalEmpPhilhealth"))), 2)
-                'PAGIBIG
-                txtemphdmf.Text = FormatNumber(ValNoComma((drow("TotalEmpHDMF"))), 2)
+            txtNightDiffOvertimeHours.Text = ValNoComma(drow("NightDiffOvertimeHours"))
+            txtNightDiffOvertimePay.Text = FormatNumber(ValNoComma(drow("NightDiffOvertimePay")), 2)
 
-                'Taxable salary
-                txttaxabsal.Text = FormatNumber(ValNoComma((drow("TotalTaxableSalary"))), 2)
-                'Withholding taxS
-                txtempwtax.Text = FormatNumber(ValNoComma((drow("TotalEmpWithholdingTax"))), 2)
-                'Loans
-                txtemptotloan.Text = FormatNumber(ValNoComma((drow("TotalLoans"))), 2)
-                'Adjustments
-                txtTotalAdjustments.Text = FormatNumber(ValNoComma((drow("TotalAdjustments"))), 2)
+            txtRestDayHours.Text = ValNoComma(drow("RestDayHours"))
+            txtRestDayAmount.Text = FormatNumber(ValNoComma(drow("RestDayPay")), 2)
 
-                Dim totalAgencyFee = ValNoComma(drow("TotalAgencyFee"))
-                txtAgencyFee.Text = FormatNumber(totalAgencyFee, 2)
+            txtHolidayHours.Text = 0.0
+            txtHolidayPay.Text = FormatNumber(ValNoComma(drow("HolidayPay")), 2)
 
-                Dim thirteenthMonthPay = ValNoComma(drow("ThirteenthMonthPay"))
-                txtThirteenthMonthPay.Text = FormatNumber(thirteenthMonthPay, 2)
+            Dim sumallbasic = ValNoComma(drow("RegularPay")) +
+                          ValNoComma(drow("OvertimePay")) +
+                          ValNoComma(drow("NightDiffPay")) +
+                          ValNoComma(drow("NightDiffOvertimePay")) +
+                          ValNoComma(drow("HolidayPay"))
 
-                Dim totalNetSalary = ValNoComma(drow("TotalNetSalary")) + totalAgencyFee
-                'Net
-                txtnetsal.Text = FormatNumber(totalNetSalary, 2)
+            If drow("EmployeeType").ToString = "Fixed" Then
+                lblSubtotal.Text = FormatNumber(ValNoComma(strdouble), 2)
+            ElseIf drow("EmployeeType").ToString = "Monthly" Then
+                Dim thebasicpay = ValNoComma(drow("BasicPay"))
+                Dim thelessamounts = ValNoComma(0)
 
-                Dim totalNetPay = totalNetSalary + thirteenthMonthPay
-                txtTotalNetPay.Text = FormatNumber(totalNetPay, 2)
+                If drow("FirstTimeSalary").ToString = "1" Then
+                    thebasicpay = ValNoComma(drow("RegularPay"))
+                    lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
+                Else
+                    thebasicpay = ValNoComma(drow("BasicPay"))
+                    thelessamounts = ValNoComma(drow("LateDeduction")) + ValNoComma(drow("UndertimeDeduction")) + ValNoComma(drow("Absent"))
+                    'Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
+                    Dim all_regular = (thebasicpay - thelessamounts)
+                    lblSubtotal.Text =
+                    FormatNumber(all_regular + ValNoComma(drow("HolidayPay")) +
+                                 ValNoComma(drow("OvertimePay")) +
+                                 ValNoComma(drow("NightDiffPay")) +
+                                 ValNoComma(drow("NightDiffOvertimePay")), 2)
+                End If
+            Else
+                lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
 
-                'LEAVE BALANCES
-                txtvlbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Vacation leave'")) ' -
-                txtslbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Sick leave'")) ' -
-                txtmlbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Maternity/paternity leave'")) ' -
-                txtPaidLeave.Text = FormatNumber(ValNoComma(drow("PaidLeaveAmount")), 2)
+            End If
+
+            'Absent
+            txttotabsent.Text = 0.0
+            txttotabsentamt.Text = FormatNumber(ValNoComma((drow("Absent"))), 2)
+            'Tardiness / late
+            txttottardi.Text = ValNoComma(drow("LateHours"))
+            txttottardiamt.Text = FormatNumber(ValNoComma((drow("LateDeduction"))), 2)
+            'Undertime
+            txttotut.Text = ValNoComma(drow("UndertimeHours"))
+            txttotutamt.Text = FormatNumber(ValNoComma((drow("UndertimeDeduction"))), 2)
+
+            Dim miscsubtotal = ValNoComma(drow("Absent")) + ValNoComma(drow("LateDeduction")) + ValNoComma(drow("UndertimeDeduction"))
+            lblsubtotmisc.Text = FormatNumber(ValNoComma((miscsubtotal)), 2)
+
+            'Allowance
+            txtemptotallow.Text = FormatNumber(ValNoComma((drow("TotalAllowance"))), 2)
+            'Bonus
+            txtemptotbon.Text = FormatNumber(ValNoComma((drow("TotalBonus"))), 2)
+            'Gross
+            txtgrosssal.Text = FormatNumber(ValNoComma((drow("TotalGrossSalary"))), 2)
+
+            'SSS
+            txtempsss.Text = FormatNumber(ValNoComma((drow("TotalEmpSSS"))), 2)
+            'PhilHealth
+            txtempphh.Text = FormatNumber(ValNoComma((drow("TotalEmpPhilhealth"))), 2)
+            'PAGIBIG
+            txtemphdmf.Text = FormatNumber(ValNoComma((drow("TotalEmpHDMF"))), 2)
+
+            'Taxable salary
+            txttaxabsal.Text = FormatNumber(ValNoComma((drow("TotalTaxableSalary"))), 2)
+            'Withholding taxS
+            txtempwtax.Text = FormatNumber(ValNoComma((drow("TotalEmpWithholdingTax"))), 2)
+            'Loans
+            txtemptotloan.Text = FormatNumber(ValNoComma((drow("TotalLoans"))), 2)
+            'Adjustments
+            txtTotalAdjustments.Text = FormatNumber(ValNoComma((drow("TotalAdjustments"))), 2)
+
+            Dim totalAgencyFee = ValNoComma(drow("TotalAgencyFee"))
+            txtAgencyFee.Text = FormatNumber(totalAgencyFee, 2)
+
+            Dim thirteenthMonthPay = ValNoComma(drow("ThirteenthMonthPay"))
+            txtThirteenthMonthPay.Text = FormatNumber(thirteenthMonthPay, 2)
+
+            Dim totalNetSalary = ValNoComma(drow("TotalNetSalary")) + totalAgencyFee
+            'Net
+            txtnetsal.Text = FormatNumber(totalNetSalary, 2)
+
+            Dim totalNetPay = totalNetSalary + thirteenthMonthPay
+            txtTotalNetPay.Text = FormatNumber(totalNetPay, 2)
+
+            'LEAVE BALANCES
+            txtvlbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Vacation leave'")) ' -
+            txtslbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Sick leave'")) ' -
+            txtmlbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Maternity/paternity leave'")) ' -
+            txtPaidLeave.Text = FormatNumber(ValNoComma(drow("PaidLeaveAmount")), 2)
 
             For Each txtbx In txtbxField
                 txtbx.Text = If(IsDBNull(drow(txtbx.AccessibleDescription)), 0.0, drow(txtbx.AccessibleDescription))
             Next
 
             Exit For
-            Next
+        Next
 
-            paystubactual.Dispose()
+        paystubactual.Dispose()
         UpdateAdjustmentDetails(Convert.ToInt16(DirectCast(sender, TabPage).Tag))
     End Sub
 
