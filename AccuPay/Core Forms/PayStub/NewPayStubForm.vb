@@ -7,6 +7,11 @@ Public Class NewPayStubForm
 
     Private _isActual As Boolean = False
 
+    Private _paystubModels As IEnumerable(Of PayStubModel)
+
+    Private _paystub As Paystub
+    Private _paystubActual As PaystubActual
+
     Private _dateFrom As Date = New Date(2017, 1, 1)
     Private _dateTo As Date = New Date(2017, 1, 15)
 
@@ -35,11 +40,11 @@ Public Class NewPayStubForm
 
             Dim paystubs = Await query.ToListAsync()
 
-            Dim paystubModels = paystubs.
+            _paystubModels = paystubs.
                 Select(Function(p) New PayStubModel(p.Employee, p.Paystub, p.PaystubActual)).
                 ToList()
 
-            dgvPaystubs.DataSource = paystubModels
+            dgvPaystubs.DataSource = _paystubModels
         End Using
     End Sub
 
@@ -51,7 +56,6 @@ Public Class NewPayStubForm
                 (From p In context.PayPeriods
                  Join ps In context.Paystubs On p.RowID Equals ps.PayPeriodID
                  Where p.OrganizationID = z_OrganizationID
-                 Order By p.PayFromDate Descending
                  Group By p.RowID Into x = Group
                  Select x.Distinct().FirstOrDefault().p)
 
@@ -60,10 +64,11 @@ Public Class NewPayStubForm
 
         cboPayPeriods.DataSource = payPeriods.
             Select(Function(t) New PayPeriodModel(t)).
+            OrderByDescending(Function(t) t.Item.PayFromDate).
             ToList()
     End Sub
 
-    Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvPaystubs.CellFormatting
+    Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvPaystubs.CellFormatting, DataGridViewX1.CellFormatting
         Dim dataGridView = DirectCast(sender, DataGridView)
 
         Dim column As DataGridViewColumn = dataGridView.Columns(e.ColumnIndex)
@@ -81,7 +86,7 @@ Public Class NewPayStubForm
         End If
     End Sub
 
-    Private Async Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged
+    Private Async Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged, DataGridViewX1.SelectionChanged
         Try
             Dim paystubModel = DirectCast(dgvPaystubs.CurrentRow.DataBoundItem, PayStubModel)
 
@@ -138,13 +143,21 @@ Public Class NewPayStubForm
         txtLeavePay.Text = Format(declared.LeavePay)
 
         txtLateHours.Text = Format(declared.LateHours)
-        txtLateAmount.Text = Format(-declared.LateDeduction)
+        txtLateAmount.Text = Format(-If(_isActual, actual.LateDeduction, declared.LateDeduction))
 
         txtUndertimeHours.Text = Format(declared.UndertimeHours)
-        txtUndertimeAmount.Text = Format(-declared.UndertimeDeduction)
+        txtUndertimeAmount.Text = Format(-If(_isActual, actual.UndertimeDeduction, declared.UndertimeDeduction))
 
         txtAbsentHours.Text = Format(declared.AbsentHours)
-        txtAbsentDeduction.Text = Format(-declared.AbsenceDeduction)
+        txtAbsentDeduction.Text = Format(-If(_isActual, actual.AbsenceDeduction, declared.AbsenceDeduction))
+
+        txtDeductionHours.Text = Format(declared.LateHours + declared.UndertimeHours + declared.AbsentHours)
+
+        Dim deductedAmount = If(
+            _isActual,
+            actual.LateDeduction + actual.UndertimeDeduction + actual.AbsenceDeduction,
+            declared.LateDeduction + declared.UndertimeDeduction + declared.AbsenceDeduction)
+        txtDeductionAmount.Text = Format(-deductedAmount)
 
         txtTotalEarnings.Text = Format(declared.TotalEarnings)
 
@@ -159,12 +172,33 @@ Public Class NewPayStubForm
         txtWithholdingTax.Text = Format(-declared.WithholdingTax)
         txtTotalLoan.Text = Format(-declared.TotalLoans)
 
-        txtNetPay.Text = Format(If(_isActual, actual.GrossPay, declared.NetPay))
+        txtNetPay.Text = Format(If(_isActual, actual.NetPay, declared.NetPay))
     End Sub
 
     Private Function Format(value As Decimal) As String
         Return String.Format("{0:#,###,##0.00;(#,###,##0.00);""-""}", value)
     End Function
+
+    Private Sub TextBoxSearch_TextChanged(sender As Object, e As EventArgs) Handles TextBoxSearch.TextChanged
+        If _paystubModels Is Nothing Then
+            Return
+        End If
+
+        Dim needle = TextBoxSearch.Text.ToLower()
+
+        Dim matches =
+            Function(employee As Employee)
+                Dim containsEmployeeId = employee.EmployeeNo.ToLower().Contains(needle)
+                Dim containsFullName = employee.Fullname.ToLower().Contains(needle)
+
+                Dim reverseFullName = employee.LastName.ToLower() + " " + employee.FirstName.ToLower()
+                Dim containsFullNameInReverse = reverseFullName.Contains(needle)
+
+                Return containsEmployeeId Or containsFullName Or containsFullNameInReverse
+            End Function
+
+        dgvPaystubs.DataSource = _paystubModels.Where(Function(p) matches(p.Employee)).ToList()
+    End Sub
 
     Private Sub cboPayPeriods_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboPayPeriods.SelectedIndexChanged
         Dim payPeriodModel = DirectCast(cboPayPeriods.SelectedItem, PayPeriodModel)
@@ -177,6 +211,10 @@ Public Class NewPayStubForm
         _dateFrom = payPeriod.PayFromDate
         _dateTo = payPeriod.PayToDate
         LoadPaystubs()
+    End Sub
+
+    Private Sub btnActualToggle_Click(sender As Object, e As EventArgs) Handles btnActualToggle.Click
+        _isActual = Not _isActual
     End Sub
 
     Private Class PayStubModel
@@ -196,13 +234,16 @@ Public Class NewPayStubForm
     End Class
 
     Public Class PayPeriodModel
+
         Public Property Display As String
+
         Public Property Item As PayPeriod
 
         Public Sub New(payPeriod As PayPeriod)
             Display = $"{payPeriod.PayFromDate.ToString("MM/dd/yyyy")} {payPeriod.PayToDate.ToString("MM/dd/yyyy")}"
             Item = payPeriod
         End Sub
+
     End Class
 
 End Class
