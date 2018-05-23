@@ -388,12 +388,14 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadPayRates() As Task
+        Dim cutoffStart = _payDateFrom.AddDays(-3)
+
         Try
             Using context = New PayrollContext()
                 Dim query = From p In context.PayRates
                             Where p.OrganizationID = z_OrganizationID And
-                                _payDateFrom <= p.RateDate And
-                                p.RateDate <= _payDateTo
+                               cutoffStart <= p.RateDate And
+                               p.RateDate <= _payDateTo
 
                 _payRates = Await query.ToListAsync()
             End Using

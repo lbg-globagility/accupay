@@ -17,7 +17,6 @@ INNER JOIN paystub ps
 INNER JOIN employee e
         ON e.RowID=ps.EmployeeID
 		     AND e.OrganizationID=ps.OrganizationID
-			  AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 SET psa.PayStubID = ps.RowID
 ;
 
