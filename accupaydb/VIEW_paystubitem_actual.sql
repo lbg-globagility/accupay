@@ -54,21 +54,9 @@ psa.RowID
 ,psa.PayPeriodID
     ,pstb.RegularHours,
     psa.RegularPay,
-	 (ete.OvertimeHoursWorked
-	  + ete.RegularHolidayOTHours
-	  + ete.SpecialHolidayOTHours
-	  + ete.RestDayOTHours
-	  ) `OvertimeHours`,
-    (psa.OvertimePay
-     + psa.RegularHolidayOTPay
-     + psa.SpecialHolidayOTPay
-     + psa.RestDayOTPay
-	  ) `OvertimePay`,
-    (psa.OvertimePay
-     + psa.RegularHolidayOTPay
-     + psa.SpecialHolidayOTPay
-     + psa.RestDayOTPay
-	  ) `OvertimeHoursAmount`,
+	 ete.OvertimeHoursWorked `OvertimeHours`,
+    psa.OvertimePay `OvertimePay`,
+    psa.OvertimePay `OvertimeHoursAmount`,
     pstb.NightDiffHours,
     psa.NightDiffPay,
     pstb.NightDiffOvertimeHours,
