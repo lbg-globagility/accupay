@@ -8,7 +8,6 @@ DROP TRIGGER IF EXISTS `AFTINS_paystub_then_paystubitem`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
 CREATE TRIGGER `AFTINS_paystub_then_paystubitem` AFTER INSERT ON `paystub` FOR EACH ROW BEGIN
-
 DECLARE product_rowid INT(11);
 
 DECLARE e_startdate DATE;
@@ -21,27 +20,33 @@ DECLARE empsalRowID INT(11);
 
 DECLARE actualrate DECIMAL(11,6);
 DECLARE actualgross DECIMAL(15,4);
-DECLARE basicAmount DECIMAL(15, 4);
-DECLARE totalAdditionalPay DECIMAL(15, 4);
-DECLARE totalDeductions DECIMAL(15, 4);
 
 DECLARE pftype VARCHAR(50);
 
-DECLARE $vacationLeaveHours DECIMAL(15, 4);
-DECLARE $sickLeaveHours DECIMAL(15, 4);
-DECLARE $otherLeaveHours DECIMAL(15, 4);
-DECLARE $maternityLeaveHours DECIMAL(15, 4);
+DECLARE basicAmount DECIMAL(15, 4);
+DECLARE totalAdditionalPay DECIMAL(15, 4);
+DECLARE totalDeductions DECIMAL(15, 4);
 
 DECLARE regularPay DECIMAL(15, 4);
 DECLARE overtimePay DECIMAL(15, 4);
 DECLARE nightDiffPay DECIMAL(15, 4);
 DECLARE nightDiffOvertimePay DECIMAL(15, 4);
-DECLARE restDayPay DECIMAL(15, 4);
+DECLARE _restDayPay DECIMAL(15, 4);
+DECLARE _restDayOTPay DECIMAL(15, 4);
 DECLARE leavePay DECIMAL(15, 4);
+DECLARE _specialHolidayPay DECIMAL(15, 4);
+DECLARE _specialHolidayOTPay DECIMAL(15, 4);
+DECLARE _regularHolidayPay DECIMAL(15, 4);
+DECLARE _regularHolidayOTPay DECIMAL(15, 4);
 DECLARE holidayPay DECIMAL(15, 4);
 DECLARE lateDeduction DECIMAL(15, 4);
 DECLARE undertimeDeduction DECIMAL(15, 4);
 DECLARE absenceDeduction DECIMAL(15, 4);
+
+DECLARE $vacationLeaveHours DECIMAL(15, 4);
+DECLARE $sickLeaveHours DECIMAL(15, 4);
+DECLARE $otherLeaveHours DECIMAL(15, 4);
+DECLARE $maternityLeaveHours DECIMAL(15, 4);
 
 SELECT GET_employeeundeclaredsalarypercent(
     NEW.EmployeeID,
@@ -69,32 +74,42 @@ SELECT (e_startdate BETWEEN NEW.PayFromDate AND NEW.PayToDate)
 INTO IsFirstTimeSalary;
 
 SELECT
-    SUM(t.RegularHoursAmount),
-    SUM(t.OvertimeHoursAmount),
-    SUM(t.NightDiffHoursAmount),
-    SUM(t.NightDiffOTHoursAmount),
-    SUM(t.RestDayAmount),
-    SUM(t.HolidayPayAmount),
-    SUM(t.Leavepayment),
-    SUM(t.HoursLateAmount),
-    SUM(t.UndertimeHoursAmount),
-    SUM(t.Absent),
-    SUM(t.TotalDayPay),
+    SUM(RegularHoursAmount),
+    SUM(OvertimeHoursAmount),
+    SUM(NightDiffHoursAmount),
+    SUM(NightDiffOTHoursAmount),
+    SUM(RestDayAmount),
+    SUM(RestDayOTPay),
+    SUM(SpecialHolidayPay),
+    SUM(SpecialHolidayOTPay),
+    SUM(RegularHolidayPay),
+    SUM(RegularHolidayOTPay),
+    SUM(HolidayPayAmount),
+    SUM(Leavepayment),
+    SUM(HoursLateAmount),
+    SUM(UndertimeHoursAmount),
+    SUM(Absent),
+    SUM(TotalDayPay),
     SUM(t.VacationLeaveHours),
     SUM(t.SickLeaveHours),
     SUM(t.MaternityLeaveHours),
     SUM(t.OtherLeaveHours),
-    t.EmployeeSalaryID
-FROM employeetimeentryactual t
-WHERE t.OrganizationID = NEW.OrganizationID AND
-    t.EmployeeID = NEW.EmployeeID AND
-    t.`Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
+    EmployeeSalaryID
+FROM employeetimeentryactual
+WHERE OrganizationID = NEW.OrganizationID AND
+    EmployeeID = NEW.EmployeeID AND
+    `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
 INTO
     regularPay,
     overtimePay,
     nightDiffPay,
     nightDiffOvertimePay,
-    restDayPay,
+    _restDayPay,
+    _restDayOTPay,
+    _specialHolidayPay,
+    _specialHolidayOTPay,
+    _regularHolidayPay,
+    _regularHolidayOTPay,
     holidayPay,
     leavePay,
     lateDeduction,
@@ -169,7 +184,17 @@ ELSEIF e_type = 'Monthly' AND NOT IsFirstTimeSalary THEN
     LIMIT 1
     INTO basicAmount;
 
-    SET totalAdditionalPay = overtimePay + nightDiffPay + nightDiffOvertimePay + holidayPay + restDayPay;
+    SET totalAdditionalPay =
+        overtimePay +
+        nightDiffPay +
+        nightDiffOvertimePay +
+        _restDayPay +
+        _restDayOTPay +
+        _specialHolidayPay +
+        _specialHolidayOTPay +
+        _regularHolidayPay +
+        _regularHolidayOTPay;
+
     SET totalDeductions = lateDeduction + undertimeDeduction + absenceDeduction;
 
     SET totalWorkAmount = basicAmount + totalAdditionalPay - totalDeductions;
@@ -233,6 +258,11 @@ INSERT INTO paystubactual
     NightDiffPay,
     NightDiffOvertimePay,
     RestDayPay,
+    RestDayOTPay,
+    SpecialHolidayPay,
+    SpecialHolidayOTPay,
+    RegularHolidayPay,
+    RegularHolidayOTPay,
     HolidayPay,
     LeavePay,
     LateDeduction,
@@ -268,7 +298,12 @@ VALUES (
     overtimePay,
     nightDiffPay,
     nightDiffOvertimePay,
-    restDayPay,
+    _restDayPay,
+    restDayOTPay,
+    _specialHolidayPay,
+    _specialHolidayOTPay,
+    _regularHolidayPay,
+    _regularHolidayOTPay,
     holidayPay,
     leavePay,
     lateDeduction,
@@ -304,8 +339,14 @@ UPDATE
     OvertimePay = overtimePay,
     NightDiffPay = nightDiffPay,
     NightDiffOvertimePay = nightDiffOvertimePay,
-    RestDayPay = restDayPay,
+    RestDayPay = _restDayPay,
+    RestDayOTPay = _restDayOTPay,
+    SpecialHolidayPay = _specialHolidayPay,
+    SpecialHolidayOTPay = _specialHolidayOTPay,
+    RegularHolidayPay = _regularHolidayPay,
+    RegularHolidayOTPay = _regularHolidayOTPay,
     HolidayPay = holidayPay,
+    LeavePay = leavePay,
     LateDeduction = lateDeduction,
     UndertimeDeduction = undertimeDeduction,
     AbsenceDeduction = absenceDeduction,
@@ -326,7 +367,6 @@ UPDATE
     TotalAdjustments = (NEW.TotalAdjustments + @totaladjust_actual),
     ThirteenthMonthInclusion = NEW.ThirteenthMonthInclusion,
     FirstTimeSalary = NEW.FirstTimeSalary;
-
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
