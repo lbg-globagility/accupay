@@ -63,12 +63,21 @@ SELECT
     psa.PayPeriodID,
     psa.RegularHours,
     psa.RegularPay,
-    psa.OvertimeHours,
-    /*(psa.OvertimePay
-	  + IFNULL(ete.SpecialHolidayOTPay, 0)
-	  + IFNULL(ete.RestDayOTPay, 0)
-	  ) `OvertimePay`,*/
-	  psa.OvertimePay,
+	 (ete.OvertimeHoursWorked
+	  + ete.RegularHolidayOTHours
+	  + ete.SpecialHolidayOTHours
+	  + ete.RestDayOTHours
+	  ) `OvertimeHours`,
+    (psa.OvertimePay
+     + psa.RegularHolidayOTPay
+     + psa.SpecialHolidayOTPay
+     + psa.RestDayOTPay
+	  ) `OvertimePay`,
+    (psa.OvertimePay
+     + psa.RegularHolidayOTPay
+     + psa.SpecialHolidayOTPay
+     + psa.RestDayOTPay
+	  ) `OvertimeHoursAmount`,
     psa.NightDiffHours,
     psa.NightDiffPay,
     psa.NightDiffOvertimeHours,
@@ -154,21 +163,34 @@ ON es.EmployeeID = psa.EmployeeID AND
     (es.EffectiveDateFrom <= psa.PayToDate OR IFNULL(es.EffectiveDateTo,CURDATE()) <= psa.PayToDate)
 LEFT JOIN thirteenthmonthpay
 ON thirteenthmonthpay.PaystubID = psa.RowID
-LEFT JOIN (
-    SELECT
-        etea.RowID AS eteRowID,
-        SUM(etea.TotalHoursWorked) AS TotalHoursWorked,
-        SUM(etea.VacationLeaveHours) AS VacationLeaveHours,
-        SUM(etea.SickLeaveHours) AS SickLeaveHours,
-        SUM(etea.MaternityLeaveHours) AS MaternityLeaveHours,
-        SUM(etea.OtherLeaveHours) AS OtherLeaveHours,
-        SUM(etea.TotalDayPay) AS TotalDayPay,
-        SUM(etea.Absent) AS Absent,
-        SUM(etea.Leavepayment) AS Leavepayment,
-        SUM(agencyfee.DailyFee) AS TotalAgencyFee,
-        SUM(etea.SpecialHolidayPay) `SpecialHolidayPay`,
-		  SUM(etea.SpecialHolidayOTPay) `SpecialHolidayOTPay`,
-		  SUM(etea.RestDayOTPay) `RestDayOTPay`
+LEFT JOIN (SELECT etea.RowID AS eteRowID
+           , SUM(etea.RegularHoursWorked) AS RegularHoursWorked
+           , SUM(etea.RegularHoursAmount) AS RegularHoursAmount
+           , SUM(etea.TotalHoursWorked) AS TotalHoursWorked
+           , SUM(etea.OvertimeHoursWorked) AS OvertimeHoursWorked
+           , SUM(etea.OvertimeHoursAmount) AS OvertimeHoursAmount
+           , SUM(etea.UndertimeHours) AS UndertimeHours
+           , SUM(etea.UndertimeHoursAmount) AS UndertimeHoursAmount
+           , SUM(etea.NightDifferentialHours) AS NightDifferentialHours
+           , SUM(etea.NightDiffHoursAmount) AS NightDiffHoursAmount
+           , SUM(etea.NightDifferentialOTHours) AS NightDifferentialOTHours
+           , SUM(etea.NightDiffOTHoursAmount) AS NightDiffOTHoursAmount
+           , SUM(etea.HoursLate) AS HoursLate
+           , SUM(etea.HoursLateAmount) AS HoursLateAmount
+           , SUM(etea.VacationLeaveHours) AS VacationLeaveHours
+           , SUM(etea.SickLeaveHours) AS SickLeaveHours
+           , SUM(etea.MaternityLeaveHours) AS MaternityLeaveHours
+           , SUM(etea.OtherLeaveHours) AS OtherLeaveHours
+           , SUM(etea.TotalDayPay) AS TotalDayPay
+           , SUM(etea.Absent) AS Absent
+           , SUM(etea.Leavepayment) AS Leavepayment
+           , SUM(agencyfee.DailyFee) `TotalAgencyFee`
+			  , SUM(etea.SpecialHolidayPay) `SpecialHolidayPay`
+			  , SUM(etea.SpecialHolidayOTPay) `SpecialHolidayOTPay`
+			  , SUM(etea.RestDayOTPay) `RestDayOTPay`
+			  , SUM(etea.RegularHolidayOTHours) `RegularHolidayOTHours`
+			  , SUM(etea.SpecialHolidayOTHours) `SpecialHolidayOTHours`
+			  , SUM(etea.RestDayOTHours) `RestDayOTHours`
     FROM employeetimeentry etea
     INNER JOIN payrate pr
     ON pr.RowID = etea.PayRateID

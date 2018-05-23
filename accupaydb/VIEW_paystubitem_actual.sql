@@ -54,15 +54,21 @@ psa.RowID
 ,psa.PayPeriodID
     ,pstb.RegularHours,
     psa.RegularPay,
-    pstb.OvertimeHours,
-    /*(psa.OvertimePay
-	  + IFNULL(ete.SpecialHolidayOTPay, 0)
-	  + IFNULL(ete.RestDayOTPay, 0)
-	  ) `OvertimePay`,*/
-	  psa.OvertimePay,
+	 (ete.OvertimeHoursWorked
+	  + ete.RegularHolidayOTHours
+	  + ete.SpecialHolidayOTHours
+	  + ete.RestDayOTHours
+	  ) `OvertimeHours`,
     (psa.OvertimePay
-	  + IFNULL(ete.SpecialHolidayOTPay, 0)
-	  + IFNULL(ete.RestDayOTPay, 0)) `OvertimeHoursAmount`,
+     + psa.RegularHolidayOTPay
+     + psa.SpecialHolidayOTPay
+     + psa.RestDayOTPay
+	  ) `OvertimePay`,
+    (psa.OvertimePay
+     + psa.RegularHolidayOTPay
+     + psa.SpecialHolidayOTPay
+     + psa.RestDayOTPay
+	  ) `OvertimeHoursAmount`,
     pstb.NightDiffHours,
     psa.NightDiffPay,
     pstb.NightDiffOvertimeHours,
@@ -152,12 +158,14 @@ LEFT JOIN (SELECT etea.RowID AS eteRowID
 					 , SUM(etea.SpecialHolidayPay) `SpecialHolidayPay`
 					 , SUM(etea.SpecialHolidayOTPay) `SpecialHolidayOTPay`
 					 , SUM(etea.RestDayOTPay) `RestDayOTPay`
+					 , SUM(et.RegularHolidayOTHours) `RegularHolidayOTHours`
+					 , SUM(et.SpecialHolidayOTHours) `SpecialHolidayOTHours`
+					 , SUM(et.RestDayOTHours) `RestDayOTHours`
                 FROM employeetimeentryactual etea
+                INNER JOIN employeetimeentry et ON et.EmployeeID=etea.EmployeeID AND et.OrganizationID=etea.OrganizationID AND et.`Date`=etea.`Date`
                 INNER JOIN payrate pr ON pr.RowID=etea.PayRateID
-                LEFT JOIN agencyfee
-                    ON agencyfee.EmployeeID = etea.EmployeeID
-                    AND agencyfee.TimeEntryDate = etea.Date
-                LEFT JOIN (SELECT SUM(psi.PayAmount) `PayAmount` FROM paystubitem psi INNER JOIN product p ON p.RowID=psi.ProductID AND p.PartNo='Holiday pay' AND psi.Undeclared=1 INNER JOIN paystub ps ON ps.EmployeeID=EmpRowID AND ps.OrganizationID=OrganizID AND ps.PayFromDate=pay_date_from AND ps.PayToDate=pay_date_to AND ps.RowID=psi.PayStubID INNER JOIN employee e ON e.RowID=ps.EmployeeID AND e.OrganizationID=ps.OrganizationID AND e.EmployeeType IN ('Daily','Monthly')) i ON i.PayAmount IS NULL OR i.PayAmount IS NOT NULL
+                LEFT JOIN agencyfee ON agencyfee.EmployeeID = etea.EmployeeID AND agencyfee.TimeEntryDate = etea.`Date`
+                # LEFT JOIN (SELECT SUM(psi.PayAmount) `PayAmount` FROM paystubitem psi INNER JOIN product p ON p.RowID=psi.ProductID AND p.PartNo='Holiday pay' AND psi.Undeclared=1 INNER JOIN paystub ps ON ps.EmployeeID=EmpRowID AND ps.OrganizationID=OrganizID AND ps.PayFromDate=pay_date_from AND ps.PayToDate=pay_date_to AND ps.RowID=psi.PayStubID INNER JOIN employee e ON e.RowID=ps.EmployeeID AND e.OrganizationID=ps.OrganizationID AND e.EmployeeType IN ('Daily','Monthly')) i ON i.PayAmount IS NULL OR i.PayAmount IS NOT NULL
 
                 WHERE etea.EmployeeID=EmpRowID
                 AND etea.OrganizationID=OrganizID
