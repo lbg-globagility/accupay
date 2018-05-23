@@ -125,7 +125,10 @@ psa.RowID
 ,e.EmployeeType
 ,(e.StartDate BETWEEN pay_date_from AND pay_date_to) AS FirstTimeSalary
 ,SUM(IFNULL(ete.Leavepayment,0)) `PaidLeaveAmount`
-,thirteenthmonthpay.Amount AS 'ThirteenthMonthPay'
+,thirteenthmonthpay.Amount AS 'ThirteenthMonthPay',
+    psa.SpecialHolidayOTPay,
+    psa.RegularHolidayOTPay,
+    psa.RegularHolidayPay
 FROM paystubactual psa
 INNER JOIN paystub pstb ON pstb.OrganizationID=psa.OrganizationID AND pstb.EmployeeID=psa.EmployeeID AND pstb.PayPeriodID=psa.PayPeriodID
 INNER JOIN employee e ON e.RowID=psa.EmployeeID AND e.OrganizationID=psa.OrganizationID
@@ -161,6 +164,9 @@ LEFT JOIN (SELECT etea.RowID AS eteRowID
 					 , SUM(et.RegularHolidayOTHours) `RegularHolidayOTHours`
 					 , SUM(et.SpecialHolidayOTHours) `SpecialHolidayOTHours`
 					 , SUM(et.RestDayOTHours) `RestDayOTHours`
+					 , SUM(IFNULL(et.RegularHolidayHours, 0)) `RegularHolidayHours`
+					 , SUM(IFNULL(et.SpecialHolidayHours,0)) `SpecialHolidayHours`
+					 , SUM(IFNULL(et.RestDayHours,0)) `RestDayHours`
                 FROM employeetimeentryactual etea
                 INNER JOIN employeetimeentry et ON et.EmployeeID=etea.EmployeeID AND et.OrganizationID=etea.OrganizationID AND et.`Date`=etea.`Date`
                 INNER JOIN payrate pr ON pr.RowID=etea.PayRateID

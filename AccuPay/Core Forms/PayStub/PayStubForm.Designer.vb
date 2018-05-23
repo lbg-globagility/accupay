@@ -137,13 +137,36 @@ Partial Class PayStubForm
         Me.LinkLabel4 = New System.Windows.Forms.LinkLabel()
         Me.Label59 = New System.Windows.Forms.Label()
         Me.pbEmpPicChk = New System.Windows.Forms.PictureBox()
+        Me.Panel6 = New System.Windows.Forms.Panel()
+        Me.txttotholidayhrs_U = New System.Windows.Forms.TextBox()
+        Me.txtRestDayOtHour = New System.Windows.Forms.TextBox()
+        Me.Label63 = New System.Windows.Forms.Label()
+        Me.Label102 = New System.Windows.Forms.Label()
+        Me.txtSpecHoliOtPay = New System.Windows.Forms.TextBox()
         Me.txtRestDayHours = New System.Windows.Forms.TextBox()
+        Me.Label97 = New System.Windows.Forms.Label()
+        Me.txtRestDayOtPay = New System.Windows.Forms.TextBox()
+        Me.Label76 = New System.Windows.Forms.Label()
         Me.Label96 = New System.Windows.Forms.Label()
+        Me.txtHoliOtHour = New System.Windows.Forms.TextBox()
         Me.txtRestDayAmount = New System.Windows.Forms.TextBox()
+        Me.txtSpecHoliPay = New System.Windows.Forms.TextBox()
+        Me.Label99 = New System.Windows.Forms.Label()
+        Me.Label98 = New System.Windows.Forms.Label()
+        Me.Label100 = New System.Windows.Forms.Label()
+        Me.Label101 = New System.Windows.Forms.Label()
+        Me.txtSpecHoliHour = New System.Windows.Forms.TextBox()
+        Me.txtHoliOtPay = New System.Windows.Forms.TextBox()
+        Me.txtSpecHoliOtHour = New System.Windows.Forms.TextBox()
+        Me.Label64 = New System.Windows.Forms.Label()
+        Me.txttotholidayamt_U = New System.Windows.Forms.TextBox()
+        Me.Label60 = New System.Windows.Forms.Label()
+        Me.Label80 = New System.Windows.Forms.Label()
         Me.Label95 = New System.Windows.Forms.Label()
         Me.Label67 = New System.Windows.Forms.Label()
         Me.txttaxabsal = New System.Windows.Forms.TextBox()
         Me.txtThirteenthMonthPay = New System.Windows.Forms.TextBox()
+        Me.Label53 = New System.Windows.Forms.Label()
         Me.txtAgencyFee = New System.Windows.Forms.TextBox()
         Me.txtTotalAdjustments = New System.Windows.Forms.TextBox()
         Me.txtemptotloan = New System.Windows.Forms.TextBox()
@@ -169,7 +192,6 @@ Partial Class PayStubForm
         Me.txttottardi = New System.Windows.Forms.TextBox()
         Me.Label52 = New System.Windows.Forms.Label()
         Me.Label16 = New System.Windows.Forms.Label()
-        Me.Label53 = New System.Windows.Forms.Label()
         Me.txttotut = New System.Windows.Forms.TextBox()
         Me.Label54 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
@@ -185,9 +207,7 @@ Partial Class PayStubForm
         Me.txttotutamt = New System.Windows.Forms.TextBox()
         Me.txtNightDiffOvertimePay = New System.Windows.Forms.TextBox()
         Me.Label51 = New System.Windows.Forms.Label()
-        Me.Label18 = New System.Windows.Forms.Label()
         Me.Label50 = New System.Windows.Forms.Label()
-        Me.txtHolidayHours = New System.Windows.Forms.TextBox()
         Me.Label49 = New System.Windows.Forms.Label()
         Me.Label58 = New System.Windows.Forms.Label()
         Me.txtBasicPay = New System.Windows.Forms.TextBox()
@@ -200,7 +220,6 @@ Partial Class PayStubForm
         Me.txtNightDiffHours = New System.Windows.Forms.TextBox()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.txtNightDiffOvertimeHours = New System.Windows.Forms.TextBox()
-        Me.txtHolidayPay = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.txtRegularHours = New System.Windows.Forms.TextBox()
@@ -215,7 +234,6 @@ Partial Class PayStubForm
         Me.txthrswork_U = New System.Windows.Forms.TextBox()
         Me.Label69 = New System.Windows.Forms.Label()
         Me.Label70 = New System.Windows.Forms.Label()
-        Me.txttotholidayamt_U = New System.Windows.Forms.TextBox()
         Me.txttotutamt_U = New System.Windows.Forms.TextBox()
         Me.txttotnightdiffothrs_U = New System.Windows.Forms.TextBox()
         Me.txttottardiamt_U = New System.Windows.Forms.TextBox()
@@ -236,18 +254,17 @@ Partial Class PayStubForm
         Me.Label75 = New System.Windows.Forms.Label()
         Me.txttotabsent_U = New System.Windows.Forms.TextBox()
         Me.Label92 = New System.Windows.Forms.Label()
-        Me.txttotholidayhrs_U = New System.Windows.Forms.TextBox()
-        Me.Label76 = New System.Windows.Forms.Label()
         Me.txttotnightdiffotamt_U = New System.Windows.Forms.TextBox()
         Me.txttotnightdiffamt_U = New System.Windows.Forms.TextBox()
         Me.txttototamt_U = New System.Windows.Forms.TextBox()
         Me.Label77 = New System.Windows.Forms.Label()
         Me.Label78 = New System.Windows.Forms.Label()
         Me.Label79 = New System.Windows.Forms.Label()
-        Me.Label80 = New System.Windows.Forms.Label()
         Me.Label81 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
         Me.Label65 = New System.Windows.Forms.Label()
         Me.Label66 = New System.Windows.Forms.Label()
+        Me.txtHolidayHours = New System.Windows.Forms.TextBox()
         Me.btnSaveAdjustments = New System.Windows.Forms.Button()
         Me.Label62 = New System.Windows.Forms.Label()
         Me.dgvAdjustments = New DevComponents.DotNetBar.Controls.DataGridViewX()
@@ -288,6 +305,7 @@ Partial Class PayStubForm
         Me.bon_End = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bonus_taxable = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.txtHolidayPay = New System.Windows.Forms.TextBox()
         Me.lblsubtotmisc = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label48 = New System.Windows.Forms.Label()
@@ -473,6 +491,7 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
         CType(Me.pbEmpPicChk, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel6.SuspendLayout()
         Me.tabEarned.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage4.SuspendLayout()
@@ -984,7 +1003,7 @@ Partial Class PayStubForm
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(389, 645)
+        Me.Label2.Location = New System.Drawing.Point(389, 591)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(93, 24)
         Me.Label2.TabIndex = 171
@@ -994,7 +1013,7 @@ Partial Class PayStubForm
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(14, 465)
+        Me.Label1.Location = New System.Drawing.Point(14, 558)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(91, 13)
         Me.Label1.TabIndex = 170
@@ -1174,13 +1193,12 @@ Partial Class PayStubForm
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.AutoScroll = True
-        Me.SplitContainer1.Panel2.Controls.Add(Me.txtRestDayHours)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.Label96)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.txtRestDayAmount)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.Panel6)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label95)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label67)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txttaxabsal)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtThirteenthMonthPay)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.Label53)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtAgencyFee)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalAdjustments)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtemptotloan)
@@ -1198,8 +1216,10 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.LinkLabel5)
         Me.SplitContainer1.Panel2.Controls.Add(Me.btndiscardchanges)
         Me.SplitContainer1.Panel2.Controls.Add(Me.tabEarned)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.Label18)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label65)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label66)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.txtHolidayHours)
         Me.SplitContainer1.Panel2.Controls.Add(Me.btnSaveAdjustments)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label62)
         Me.SplitContainer1.Panel2.Controls.Add(Me.dgvAdjustments)
@@ -1207,6 +1227,7 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.dgvLoanList)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label37)
         Me.SplitContainer1.Panel2.Controls.Add(Me.dgvempbon)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.txtHolidayPay)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblsubtotmisc)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label5)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label48)
@@ -1352,35 +1373,281 @@ Partial Class PayStubForm
         Me.pbEmpPicChk.TabIndex = 164
         Me.pbEmpPicChk.TabStop = False
         '
+        'Panel6
+        '
+        Me.Panel6.Controls.Add(Me.txttotholidayhrs_U)
+        Me.Panel6.Controls.Add(Me.txtRestDayOtHour)
+        Me.Panel6.Controls.Add(Me.Label63)
+        Me.Panel6.Controls.Add(Me.Label102)
+        Me.Panel6.Controls.Add(Me.txtSpecHoliOtPay)
+        Me.Panel6.Controls.Add(Me.txtRestDayHours)
+        Me.Panel6.Controls.Add(Me.Label97)
+        Me.Panel6.Controls.Add(Me.txtRestDayOtPay)
+        Me.Panel6.Controls.Add(Me.Label76)
+        Me.Panel6.Controls.Add(Me.Label96)
+        Me.Panel6.Controls.Add(Me.txtHoliOtHour)
+        Me.Panel6.Controls.Add(Me.txtRestDayAmount)
+        Me.Panel6.Controls.Add(Me.txtSpecHoliPay)
+        Me.Panel6.Controls.Add(Me.Label99)
+        Me.Panel6.Controls.Add(Me.Label98)
+        Me.Panel6.Controls.Add(Me.Label100)
+        Me.Panel6.Controls.Add(Me.Label101)
+        Me.Panel6.Controls.Add(Me.txtSpecHoliHour)
+        Me.Panel6.Controls.Add(Me.txtHoliOtPay)
+        Me.Panel6.Controls.Add(Me.txtSpecHoliOtHour)
+        Me.Panel6.Controls.Add(Me.Label64)
+        Me.Panel6.Controls.Add(Me.txttotholidayamt_U)
+        Me.Panel6.Controls.Add(Me.Label60)
+        Me.Panel6.Controls.Add(Me.Label80)
+        Me.Panel6.Location = New System.Drawing.Point(8, 219)
+        Me.Panel6.Name = "Panel6"
+        Me.Panel6.Size = New System.Drawing.Size(359, 152)
+        Me.Panel6.TabIndex = 534
+        '
+        'txttotholidayhrs_U
+        '
+        Me.txttotholidayhrs_U.AccessibleDescription = "RegularHolidayHours"
+        Me.txttotholidayhrs_U.BackColor = System.Drawing.Color.White
+        Me.txttotholidayhrs_U.Location = New System.Drawing.Point(117, 9)
+        Me.txttotholidayhrs_U.Name = "txttotholidayhrs_U"
+        Me.txttotholidayhrs_U.ReadOnly = True
+        Me.txttotholidayhrs_U.ShortcutsEnabled = False
+        Me.txttotholidayhrs_U.Size = New System.Drawing.Size(100, 20)
+        Me.txttotholidayhrs_U.TabIndex = 307
+        Me.txttotholidayhrs_U.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txtRestDayOtHour
+        '
+        Me.txtRestDayOtHour.AccessibleDescription = "RestDayOTHours"
+        Me.txtRestDayOtHour.Location = New System.Drawing.Point(117, 124)
+        Me.txtRestDayOtHour.Name = "txtRestDayOtHour"
+        Me.txtRestDayOtHour.Size = New System.Drawing.Size(100, 20)
+        Me.txtRestDayOtHour.TabIndex = 533
+        Me.txtRestDayOtHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label63
+        '
+        Me.Label63.AutoSize = True
+        Me.Label63.Location = New System.Drawing.Point(6, 39)
+        Me.Label63.Name = "Label63"
+        Me.Label63.Size = New System.Drawing.Size(81, 13)
+        Me.Label63.TabIndex = 311
+        Me.Label63.Text = "Reg holiday ot :"
+        '
+        'Label102
+        '
+        Me.Label102.AutoSize = True
+        Me.Label102.Location = New System.Drawing.Point(6, 128)
+        Me.Label102.Name = "Label102"
+        Me.Label102.Size = New System.Drawing.Size(67, 13)
+        Me.Label102.TabIndex = 532
+        Me.Label102.Text = "Rest day ot :"
+        '
+        'txtSpecHoliOtPay
+        '
+        Me.txtSpecHoliOtPay.AccessibleDescription = "SpecialHolidayOTPay"
+        Me.txtSpecHoliOtPay.BackColor = System.Drawing.Color.White
+        Me.txtSpecHoliOtPay.Location = New System.Drawing.Point(243, 78)
+        Me.txtSpecHoliOtPay.Name = "txtSpecHoliOtPay"
+        Me.txtSpecHoliOtPay.ReadOnly = True
+        Me.txtSpecHoliOtPay.ShortcutsEnabled = False
+        Me.txtSpecHoliOtPay.Size = New System.Drawing.Size(100, 20)
+        Me.txtSpecHoliOtPay.TabIndex = 303
+        Me.txtSpecHoliOtPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
         'txtRestDayHours
         '
-        Me.txtRestDayHours.Location = New System.Drawing.Point(125, 242)
+        Me.txtRestDayHours.AccessibleDescription = "RestDayHours"
+        Me.txtRestDayHours.Location = New System.Drawing.Point(117, 101)
         Me.txtRestDayHours.Name = "txtRestDayHours"
         Me.txtRestDayHours.Size = New System.Drawing.Size(100, 20)
         Me.txtRestDayHours.TabIndex = 533
         Me.txtRestDayHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'Label97
+        '
+        Me.Label97.AutoSize = True
+        Me.Label97.Location = New System.Drawing.Point(6, 62)
+        Me.Label97.Name = "Label97"
+        Me.Label97.Size = New System.Drawing.Size(74, 13)
+        Me.Label97.TabIndex = 311
+        Me.Label97.Text = "Spec holiday :"
+        '
+        'txtRestDayOtPay
+        '
+        Me.txtRestDayOtPay.AccessibleDescription = "RestDayOTPay"
+        Me.txtRestDayOtPay.Location = New System.Drawing.Point(243, 124)
+        Me.txtRestDayOtPay.Name = "txtRestDayOtPay"
+        Me.txtRestDayOtPay.Size = New System.Drawing.Size(100, 20)
+        Me.txtRestDayOtPay.TabIndex = 531
+        Me.txtRestDayOtPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label76
+        '
+        Me.Label76.AutoSize = True
+        Me.Label76.Location = New System.Drawing.Point(6, 16)
+        Me.Label76.Name = "Label76"
+        Me.Label76.Size = New System.Drawing.Size(69, 13)
+        Me.Label76.TabIndex = 306
+        Me.Label76.Text = "Reg holiday :"
+        '
         'Label96
         '
         Me.Label96.AutoSize = True
-        Me.Label96.Location = New System.Drawing.Point(8, 242)
+        Me.Label96.Location = New System.Drawing.Point(6, 105)
         Me.Label96.Name = "Label96"
-        Me.Label96.Size = New System.Drawing.Size(72, 13)
+        Me.Label96.Size = New System.Drawing.Size(55, 13)
         Me.Label96.TabIndex = 532
-        Me.Label96.Text = "Rest Day Pay"
+        Me.Label96.Text = "Rest day :"
+        '
+        'txtHoliOtHour
+        '
+        Me.txtHoliOtHour.AccessibleDescription = "RegularHolidayOTHours"
+        Me.txtHoliOtHour.BackColor = System.Drawing.Color.White
+        Me.txtHoliOtHour.Location = New System.Drawing.Point(117, 32)
+        Me.txtHoliOtHour.Name = "txtHoliOtHour"
+        Me.txtHoliOtHour.ReadOnly = True
+        Me.txtHoliOtHour.ShortcutsEnabled = False
+        Me.txtHoliOtHour.Size = New System.Drawing.Size(100, 20)
+        Me.txtHoliOtHour.TabIndex = 312
+        Me.txtHoliOtHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txtRestDayAmount
         '
-        Me.txtRestDayAmount.Location = New System.Drawing.Point(251, 242)
+        Me.txtRestDayAmount.AccessibleDescription = "RestDayPay"
+        Me.txtRestDayAmount.Location = New System.Drawing.Point(243, 101)
         Me.txtRestDayAmount.Name = "txtRestDayAmount"
         Me.txtRestDayAmount.Size = New System.Drawing.Size(100, 20)
         Me.txtRestDayAmount.TabIndex = 531
         Me.txtRestDayAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'txtSpecHoliPay
+        '
+        Me.txtSpecHoliPay.AccessibleDescription = "SpecialHolidayPay"
+        Me.txtSpecHoliPay.BackColor = System.Drawing.Color.White
+        Me.txtSpecHoliPay.Location = New System.Drawing.Point(243, 55)
+        Me.txtSpecHoliPay.Name = "txtSpecHoliPay"
+        Me.txtSpecHoliPay.ReadOnly = True
+        Me.txtSpecHoliPay.ShortcutsEnabled = False
+        Me.txtSpecHoliPay.Size = New System.Drawing.Size(100, 20)
+        Me.txtSpecHoliPay.TabIndex = 303
+        Me.txtSpecHoliPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label99
+        '
+        Me.Label99.AutoSize = True
+        Me.Label99.Location = New System.Drawing.Point(6, 85)
+        Me.Label99.Name = "Label99"
+        Me.Label99.Size = New System.Drawing.Size(83, 13)
+        Me.Label99.TabIndex = 311
+        Me.Label99.Text = "Spec holiday ot:"
+        '
+        'Label98
+        '
+        Me.Label98.AutoSize = True
+        Me.Label98.Location = New System.Drawing.Point(223, 81)
+        Me.Label98.Name = "Label98"
+        Me.Label98.Size = New System.Drawing.Size(14, 13)
+        Me.Label98.TabIndex = 301
+        Me.Label98.Text = "₱"
+        '
+        'Label100
+        '
+        Me.Label100.AutoSize = True
+        Me.Label100.Location = New System.Drawing.Point(223, 104)
+        Me.Label100.Name = "Label100"
+        Me.Label100.Size = New System.Drawing.Size(14, 13)
+        Me.Label100.TabIndex = 301
+        Me.Label100.Text = "₱"
+        '
+        'Label101
+        '
+        Me.Label101.AutoSize = True
+        Me.Label101.Location = New System.Drawing.Point(223, 127)
+        Me.Label101.Name = "Label101"
+        Me.Label101.Size = New System.Drawing.Size(14, 13)
+        Me.Label101.TabIndex = 301
+        Me.Label101.Text = "₱"
+        '
+        'txtSpecHoliHour
+        '
+        Me.txtSpecHoliHour.AccessibleDescription = "SpecialHolidayHours"
+        Me.txtSpecHoliHour.BackColor = System.Drawing.Color.White
+        Me.txtSpecHoliHour.Location = New System.Drawing.Point(117, 55)
+        Me.txtSpecHoliHour.Name = "txtSpecHoliHour"
+        Me.txtSpecHoliHour.ReadOnly = True
+        Me.txtSpecHoliHour.ShortcutsEnabled = False
+        Me.txtSpecHoliHour.Size = New System.Drawing.Size(100, 20)
+        Me.txtSpecHoliHour.TabIndex = 312
+        Me.txtSpecHoliHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txtHoliOtPay
+        '
+        Me.txtHoliOtPay.AccessibleDescription = "RegularHolidayOTPay"
+        Me.txtHoliOtPay.BackColor = System.Drawing.Color.White
+        Me.txtHoliOtPay.Location = New System.Drawing.Point(243, 32)
+        Me.txtHoliOtPay.Name = "txtHoliOtPay"
+        Me.txtHoliOtPay.ReadOnly = True
+        Me.txtHoliOtPay.ShortcutsEnabled = False
+        Me.txtHoliOtPay.Size = New System.Drawing.Size(100, 20)
+        Me.txtHoliOtPay.TabIndex = 303
+        Me.txtHoliOtPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txtSpecHoliOtHour
+        '
+        Me.txtSpecHoliOtHour.AccessibleDescription = "SpecialHolidayOTHours"
+        Me.txtSpecHoliOtHour.BackColor = System.Drawing.Color.White
+        Me.txtSpecHoliOtHour.Location = New System.Drawing.Point(117, 78)
+        Me.txtSpecHoliOtHour.Name = "txtSpecHoliOtHour"
+        Me.txtSpecHoliOtHour.ReadOnly = True
+        Me.txtSpecHoliOtHour.ShortcutsEnabled = False
+        Me.txtSpecHoliOtHour.Size = New System.Drawing.Size(100, 20)
+        Me.txtSpecHoliOtHour.TabIndex = 312
+        Me.txtSpecHoliOtHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label64
+        '
+        Me.Label64.AutoSize = True
+        Me.Label64.Location = New System.Drawing.Point(223, 58)
+        Me.Label64.Name = "Label64"
+        Me.Label64.Size = New System.Drawing.Size(14, 13)
+        Me.Label64.TabIndex = 301
+        Me.Label64.Text = "₱"
+        '
+        'txttotholidayamt_U
+        '
+        Me.txttotholidayamt_U.AccessibleDescription = "RegularHolidayPay"
+        Me.txttotholidayamt_U.BackColor = System.Drawing.Color.White
+        Me.txttotholidayamt_U.Location = New System.Drawing.Point(243, 9)
+        Me.txttotholidayamt_U.Name = "txttotholidayamt_U"
+        Me.txttotholidayamt_U.ReadOnly = True
+        Me.txttotholidayamt_U.ShortcutsEnabled = False
+        Me.txttotholidayamt_U.Size = New System.Drawing.Size(100, 20)
+        Me.txttotholidayamt_U.TabIndex = 317
+        Me.txttotholidayamt_U.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label60
+        '
+        Me.Label60.AutoSize = True
+        Me.Label60.Location = New System.Drawing.Point(223, 35)
+        Me.Label60.Name = "Label60"
+        Me.Label60.Size = New System.Drawing.Size(14, 13)
+        Me.Label60.TabIndex = 301
+        Me.Label60.Text = "₱"
+        '
+        'Label80
+        '
+        Me.Label80.AutoSize = True
+        Me.Label80.Location = New System.Drawing.Point(223, 12)
+        Me.Label80.Name = "Label80"
+        Me.Label80.Size = New System.Drawing.Size(14, 13)
+        Me.Label80.TabIndex = 302
+        Me.Label80.Text = "₱"
+        '
         'Label95
         '
         Me.Label95.AutoSize = True
-        Me.Label95.Location = New System.Drawing.Point(610, 620)
+        Me.Label95.Location = New System.Drawing.Point(610, 566)
         Me.Label95.Name = "Label95"
         Me.Label95.Size = New System.Drawing.Size(14, 13)
         Me.Label95.TabIndex = 530
@@ -1390,7 +1657,7 @@ Partial Class PayStubForm
         '
         Me.Label67.AutoSize = True
         Me.Label67.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label67.Location = New System.Drawing.Point(389, 582)
+        Me.Label67.Location = New System.Drawing.Point(389, 528)
         Me.Label67.Name = "Label67"
         Me.Label67.Size = New System.Drawing.Size(116, 13)
         Me.Label67.TabIndex = 509
@@ -1402,7 +1669,7 @@ Partial Class PayStubForm
         Me.txttaxabsal.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txttaxabsal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txttaxabsal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txttaxabsal.Location = New System.Drawing.Point(630, 430)
+        Me.txttaxabsal.Location = New System.Drawing.Point(630, 376)
         Me.txttaxabsal.Name = "txttaxabsal"
         Me.txttaxabsal.ReadOnly = True
         Me.txttaxabsal.ShortcutsEnabled = False
@@ -1416,7 +1683,7 @@ Partial Class PayStubForm
         Me.txtThirteenthMonthPay.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtThirteenthMonthPay.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtThirteenthMonthPay.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtThirteenthMonthPay.Location = New System.Drawing.Point(631, 620)
+        Me.txtThirteenthMonthPay.Location = New System.Drawing.Point(631, 566)
         Me.txtThirteenthMonthPay.Name = "txtThirteenthMonthPay"
         Me.txtThirteenthMonthPay.ReadOnly = True
         Me.txtThirteenthMonthPay.ShortcutsEnabled = False
@@ -1424,13 +1691,23 @@ Partial Class PayStubForm
         Me.txtThirteenthMonthPay.TabIndex = 528
         Me.txtThirteenthMonthPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'Label53
+        '
+        Me.Label53.AutoSize = True
+        Me.Label53.Location = New System.Drawing.Point(231, 198)
+        Me.Label53.Name = "Label53"
+        Me.Label53.Size = New System.Drawing.Size(14, 13)
+        Me.Label53.TabIndex = 176
+        Me.Label53.Text = "₱"
+        Me.Label53.Visible = False
+        '
         'txtAgencyFee
         '
         Me.txtAgencyFee.BackColor = System.Drawing.Color.White
         Me.txtAgencyFee.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtAgencyFee.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtAgencyFee.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtAgencyFee.Location = New System.Drawing.Point(632, 544)
+        Me.txtAgencyFee.Location = New System.Drawing.Point(632, 490)
         Me.txtAgencyFee.Name = "txtAgencyFee"
         Me.txtAgencyFee.ReadOnly = True
         Me.txtAgencyFee.ShortcutsEnabled = False
@@ -1444,7 +1721,7 @@ Partial Class PayStubForm
         Me.txtTotalAdjustments.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtTotalAdjustments.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtTotalAdjustments.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtTotalAdjustments.Location = New System.Drawing.Point(632, 582)
+        Me.txtTotalAdjustments.Location = New System.Drawing.Point(632, 528)
         Me.txtTotalAdjustments.Name = "txtTotalAdjustments"
         Me.txtTotalAdjustments.ReadOnly = True
         Me.txtTotalAdjustments.ShortcutsEnabled = False
@@ -1458,7 +1735,7 @@ Partial Class PayStubForm
         Me.txtemptotloan.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtemptotloan.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtemptotloan.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtemptotloan.Location = New System.Drawing.Point(630, 506)
+        Me.txtemptotloan.Location = New System.Drawing.Point(630, 452)
         Me.txtemptotloan.Name = "txtemptotloan"
         Me.txtemptotloan.ReadOnly = True
         Me.txtemptotloan.ShortcutsEnabled = False
@@ -1472,7 +1749,7 @@ Partial Class PayStubForm
         Me.txtempwtax.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtempwtax.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtempwtax.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtempwtax.Location = New System.Drawing.Point(630, 468)
+        Me.txtempwtax.Location = New System.Drawing.Point(630, 414)
         Me.txtempwtax.Name = "txtempwtax"
         Me.txtempwtax.ReadOnly = True
         Me.txtempwtax.ShortcutsEnabled = False
@@ -1484,7 +1761,7 @@ Partial Class PayStubForm
         '
         Me.Label93.AutoSize = True
         Me.Label93.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label93.Location = New System.Drawing.Point(387, 620)
+        Me.Label93.Location = New System.Drawing.Point(387, 566)
         Me.Label93.Name = "Label93"
         Me.Label93.Size = New System.Drawing.Size(133, 13)
         Me.Label93.TabIndex = 527
@@ -1493,7 +1770,7 @@ Partial Class PayStubForm
         'Label85
         '
         Me.Label85.AutoSize = True
-        Me.Label85.Location = New System.Drawing.Point(610, 674)
+        Me.Label85.Location = New System.Drawing.Point(610, 620)
         Me.Label85.Name = "Label85"
         Me.Label85.Size = New System.Drawing.Size(14, 13)
         Me.Label85.TabIndex = 526
@@ -1505,7 +1782,7 @@ Partial Class PayStubForm
         Me.txtTotalNetPay.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtTotalNetPay.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtTotalNetPay.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtTotalNetPay.Location = New System.Drawing.Point(632, 674)
+        Me.txtTotalNetPay.Location = New System.Drawing.Point(632, 620)
         Me.txtTotalNetPay.Name = "txtTotalNetPay"
         Me.txtTotalNetPay.ReadOnly = True
         Me.txtTotalNetPay.ShortcutsEnabled = False
@@ -1517,7 +1794,7 @@ Partial Class PayStubForm
         '
         Me.lblTotalNetPay.AutoSize = True
         Me.lblTotalNetPay.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalNetPay.Location = New System.Drawing.Point(389, 674)
+        Me.lblTotalNetPay.Location = New System.Drawing.Point(389, 620)
         Me.lblTotalNetPay.Name = "lblTotalNetPay"
         Me.lblTotalNetPay.Size = New System.Drawing.Size(88, 13)
         Me.lblTotalNetPay.TabIndex = 523
@@ -1526,7 +1803,7 @@ Partial Class PayStubForm
         'Label87
         '
         Me.Label87.AutoSize = True
-        Me.Label87.Location = New System.Drawing.Point(610, 544)
+        Me.Label87.Location = New System.Drawing.Point(610, 490)
         Me.Label87.Name = "Label87"
         Me.Label87.Size = New System.Drawing.Size(14, 13)
         Me.Label87.TabIndex = 522
@@ -1536,7 +1813,7 @@ Partial Class PayStubForm
         '
         Me.lblAgencyFee.AutoSize = True
         Me.lblAgencyFee.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblAgencyFee.Location = New System.Drawing.Point(389, 544)
+        Me.lblAgencyFee.Location = New System.Drawing.Point(389, 490)
         Me.lblAgencyFee.Name = "lblAgencyFee"
         Me.lblAgencyFee.Size = New System.Drawing.Size(82, 13)
         Me.lblAgencyFee.TabIndex = 520
@@ -1546,7 +1823,7 @@ Partial Class PayStubForm
         '
         Me.Label14.AutoSize = True
         Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(387, 506)
+        Me.Label14.Location = New System.Drawing.Point(387, 452)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(76, 13)
         Me.Label14.TabIndex = 194
@@ -1555,7 +1832,7 @@ Partial Class PayStubForm
         'Label32
         '
         Me.Label32.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label32.Location = New System.Drawing.Point(390, 489)
+        Me.Label32.Location = New System.Drawing.Point(390, 435)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(367, 13)
         Me.Label32.TabIndex = 242
@@ -1566,7 +1843,7 @@ Partial Class PayStubForm
         '
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(387, 468)
+        Me.Label6.Location = New System.Drawing.Point(387, 414)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(103, 13)
         Me.Label6.TabIndex = 180
@@ -1576,7 +1853,7 @@ Partial Class PayStubForm
         '
         Me.txtPaidLeave.BackColor = System.Drawing.Color.White
         Me.txtPaidLeave.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtPaidLeave.Location = New System.Drawing.Point(251, 282)
+        Me.txtPaidLeave.Location = New System.Drawing.Point(251, 375)
         Me.txtPaidLeave.Name = "txtPaidLeave"
         Me.txtPaidLeave.ReadOnly = True
         Me.txtPaidLeave.ShortcutsEnabled = False
@@ -1590,7 +1867,7 @@ Partial Class PayStubForm
         Me.LinkLabel5.AutoSize = True
         Me.LinkLabel5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LinkLabel5.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.LinkLabel5.Location = New System.Drawing.Point(1252, 67)
+        Me.LinkLabel5.Location = New System.Drawing.Point(1252, 3)
         Me.LinkLabel5.Name = "LinkLabel5"
         Me.LinkLabel5.Size = New System.Drawing.Size(120, 13)
         Me.LinkLabel5.TabIndex = 515
@@ -1602,7 +1879,7 @@ Partial Class PayStubForm
         '
         Me.btndiscardchanges.Image = CType(resources.GetObject("btndiscardchanges.Image"), System.Drawing.Image)
         Me.btndiscardchanges.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btndiscardchanges.Location = New System.Drawing.Point(881, 243)
+        Me.btndiscardchanges.Location = New System.Drawing.Point(881, 179)
         Me.btndiscardchanges.Name = "btndiscardchanges"
         Me.btndiscardchanges.Padding = New System.Windows.Forms.Padding(6, 0, 0, 0)
         Me.btndiscardchanges.Size = New System.Drawing.Size(118, 34)
@@ -1620,7 +1897,7 @@ Partial Class PayStubForm
         Me.tabEarned.Location = New System.Drawing.Point(3, 3)
         Me.tabEarned.Name = "tabEarned"
         Me.tabEarned.SelectedIndex = 0
-        Me.tabEarned.Size = New System.Drawing.Size(734, 234)
+        Me.tabEarned.Size = New System.Drawing.Size(734, 207)
         Me.tabEarned.TabIndex = 513
         '
         'TabPage1
@@ -1632,7 +1909,6 @@ Partial Class PayStubForm
         Me.TabPage1.Controls.Add(Me.txttottardi)
         Me.TabPage1.Controls.Add(Me.Label52)
         Me.TabPage1.Controls.Add(Me.Label16)
-        Me.TabPage1.Controls.Add(Me.Label53)
         Me.TabPage1.Controls.Add(Me.txttotut)
         Me.TabPage1.Controls.Add(Me.Label54)
         Me.TabPage1.Controls.Add(Me.Label15)
@@ -1648,9 +1924,7 @@ Partial Class PayStubForm
         Me.TabPage1.Controls.Add(Me.txttotutamt)
         Me.TabPage1.Controls.Add(Me.txtNightDiffOvertimePay)
         Me.TabPage1.Controls.Add(Me.Label51)
-        Me.TabPage1.Controls.Add(Me.Label18)
         Me.TabPage1.Controls.Add(Me.Label50)
-        Me.TabPage1.Controls.Add(Me.txtHolidayHours)
         Me.TabPage1.Controls.Add(Me.Label49)
         Me.TabPage1.Controls.Add(Me.Label58)
         Me.TabPage1.Controls.Add(Me.txtBasicPay)
@@ -1663,7 +1937,6 @@ Partial Class PayStubForm
         Me.TabPage1.Controls.Add(Me.txtNightDiffHours)
         Me.TabPage1.Controls.Add(Me.Label23)
         Me.TabPage1.Controls.Add(Me.txtNightDiffOvertimeHours)
-        Me.TabPage1.Controls.Add(Me.txtHolidayPay)
         Me.TabPage1.Controls.Add(Me.Label20)
         Me.TabPage1.Controls.Add(Me.Label19)
         Me.TabPage1.Controls.Add(Me.txtRegularHours)
@@ -1671,7 +1944,7 @@ Partial Class PayStubForm
         Me.TabPage1.Location = New System.Drawing.Point(4, 29)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(726, 201)
+        Me.TabPage1.Size = New System.Drawing.Size(726, 174)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Tag = "0"
         Me.TabPage1.Text = "DECLARED               "
@@ -1682,7 +1955,7 @@ Partial Class PayStubForm
         Me.Panel2.BackColor = System.Drawing.Color.Black
         Me.Panel2.Location = New System.Drawing.Point(373, 1)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(1, 199)
+        Me.Panel2.Size = New System.Drawing.Size(1, 174)
         Me.Panel2.TabIndex = 515
         '
         'txttotabsent
@@ -1743,15 +2016,6 @@ Partial Class PayStubForm
         Me.Label16.Size = New System.Drawing.Size(59, 13)
         Me.Label16.TabIndex = 205
         Me.Label16.Text = "Tardiness :"
-        '
-        'Label53
-        '
-        Me.Label53.AutoSize = True
-        Me.Label53.Location = New System.Drawing.Point(224, 179)
-        Me.Label53.Name = "Label53"
-        Me.Label53.Size = New System.Drawing.Size(14, 13)
-        Me.Label53.TabIndex = 176
-        Me.Label53.Text = "₱"
         '
         'txttotut
         '
@@ -1905,15 +2169,6 @@ Partial Class PayStubForm
         Me.Label51.TabIndex = 271
         Me.Label51.Text = "₱"
         '
-        'Label18
-        '
-        Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(5, 183)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(68, 13)
-        Me.Label18.TabIndex = 200
-        Me.Label18.Text = "Holiday pay :"
-        '
         'Label50
         '
         Me.Label50.AutoSize = True
@@ -1922,17 +2177,6 @@ Partial Class PayStubForm
         Me.Label50.Size = New System.Drawing.Size(14, 13)
         Me.Label50.TabIndex = 270
         Me.Label50.Text = "₱"
-        '
-        'txtHolidayHours
-        '
-        Me.txtHolidayHours.BackColor = System.Drawing.Color.White
-        Me.txtHolidayHours.Location = New System.Drawing.Point(118, 176)
-        Me.txtHolidayHours.Name = "txtHolidayHours"
-        Me.txtHolidayHours.ReadOnly = True
-        Me.txtHolidayHours.ShortcutsEnabled = False
-        Me.txtHolidayHours.Size = New System.Drawing.Size(100, 20)
-        Me.txtHolidayHours.TabIndex = 201
-        Me.txtHolidayHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label49
         '
@@ -1964,7 +2208,7 @@ Partial Class PayStubForm
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(5, 79)
+        Me.Label8.Location = New System.Drawing.Point(7, 79)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(50, 13)
         Me.Label8.TabIndex = 210
@@ -1997,7 +2241,7 @@ Partial Class PayStubForm
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(5, 105)
+        Me.Label11.Location = New System.Drawing.Point(7, 105)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(55, 13)
         Me.Label11.TabIndex = 213
@@ -2017,7 +2261,7 @@ Partial Class PayStubForm
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(5, 131)
+        Me.Label22.Location = New System.Drawing.Point(7, 131)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(89, 13)
         Me.Label22.TabIndex = 216
@@ -2037,7 +2281,7 @@ Partial Class PayStubForm
         'Label23
         '
         Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(5, 157)
+        Me.Label23.Location = New System.Drawing.Point(7, 157)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(107, 13)
         Me.Label23.TabIndex = 219
@@ -2053,17 +2297,6 @@ Partial Class PayStubForm
         Me.txtNightDiffOvertimeHours.Size = New System.Drawing.Size(100, 20)
         Me.txtNightDiffOvertimeHours.TabIndex = 220
         Me.txtNightDiffOvertimeHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtHolidayPay
-        '
-        Me.txtHolidayPay.BackColor = System.Drawing.Color.White
-        Me.txtHolidayPay.Location = New System.Drawing.Point(244, 176)
-        Me.txtHolidayPay.Name = "txtHolidayPay"
-        Me.txtHolidayPay.ReadOnly = True
-        Me.txtHolidayPay.ShortcutsEnabled = False
-        Me.txtHolidayPay.Size = New System.Drawing.Size(100, 20)
-        Me.txtHolidayPay.TabIndex = 232
-        Me.txtHolidayPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label20
         '
@@ -2118,7 +2351,6 @@ Partial Class PayStubForm
         Me.TabPage4.Controls.Add(Me.txthrswork_U)
         Me.TabPage4.Controls.Add(Me.Label69)
         Me.TabPage4.Controls.Add(Me.Label70)
-        Me.TabPage4.Controls.Add(Me.txttotholidayamt_U)
         Me.TabPage4.Controls.Add(Me.txttotutamt_U)
         Me.TabPage4.Controls.Add(Me.txttotnightdiffothrs_U)
         Me.TabPage4.Controls.Add(Me.txttottardiamt_U)
@@ -2139,20 +2371,17 @@ Partial Class PayStubForm
         Me.TabPage4.Controls.Add(Me.Label75)
         Me.TabPage4.Controls.Add(Me.txttotabsent_U)
         Me.TabPage4.Controls.Add(Me.Label92)
-        Me.TabPage4.Controls.Add(Me.txttotholidayhrs_U)
-        Me.TabPage4.Controls.Add(Me.Label76)
         Me.TabPage4.Controls.Add(Me.txttotnightdiffotamt_U)
         Me.TabPage4.Controls.Add(Me.txttotnightdiffamt_U)
         Me.TabPage4.Controls.Add(Me.txttototamt_U)
         Me.TabPage4.Controls.Add(Me.Label77)
         Me.TabPage4.Controls.Add(Me.Label78)
         Me.TabPage4.Controls.Add(Me.Label79)
-        Me.TabPage4.Controls.Add(Me.Label80)
         Me.TabPage4.Controls.Add(Me.Label81)
         Me.TabPage4.Location = New System.Drawing.Point(4, 29)
         Me.TabPage4.Name = "TabPage4"
         Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(726, 201)
+        Me.TabPage4.Size = New System.Drawing.Size(726, 174)
         Me.TabPage4.TabIndex = 1
         Me.TabPage4.Tag = "1"
         Me.TabPage4.Text = "ACTUAL"
@@ -2163,7 +2392,7 @@ Partial Class PayStubForm
         Me.Panel3.BackColor = System.Drawing.Color.Black
         Me.Panel3.Location = New System.Drawing.Point(373, 1)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(1, 199)
+        Me.Panel3.Size = New System.Drawing.Size(1, 174)
         Me.Panel3.TabIndex = 516
         '
         'Label82
@@ -2244,17 +2473,6 @@ Partial Class PayStubForm
         Me.Label70.TabIndex = 318
         Me.Label70.Text = "Total hours"
         '
-        'txttotholidayamt_U
-        '
-        Me.txttotholidayamt_U.BackColor = System.Drawing.Color.White
-        Me.txttotholidayamt_U.Location = New System.Drawing.Point(244, 176)
-        Me.txttotholidayamt_U.Name = "txttotholidayamt_U"
-        Me.txttotholidayamt_U.ReadOnly = True
-        Me.txttotholidayamt_U.ShortcutsEnabled = False
-        Me.txttotholidayamt_U.Size = New System.Drawing.Size(100, 20)
-        Me.txttotholidayamt_U.TabIndex = 317
-        Me.txttotholidayamt_U.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
         'txttotutamt_U
         '
         Me.txttotutamt_U.BackColor = System.Drawing.Color.White
@@ -2291,7 +2509,7 @@ Partial Class PayStubForm
         'Label71
         '
         Me.Label71.AutoSize = True
-        Me.Label71.Location = New System.Drawing.Point(5, 157)
+        Me.Label71.Location = New System.Drawing.Point(7, 157)
         Me.Label71.Name = "Label71"
         Me.Label71.Size = New System.Drawing.Size(107, 13)
         Me.Label71.TabIndex = 315
@@ -2332,7 +2550,7 @@ Partial Class PayStubForm
         'Label72
         '
         Me.Label72.AutoSize = True
-        Me.Label72.Location = New System.Drawing.Point(5, 131)
+        Me.Label72.Location = New System.Drawing.Point(7, 131)
         Me.Label72.Name = "Label72"
         Me.Label72.Size = New System.Drawing.Size(89, 13)
         Me.Label72.TabIndex = 313
@@ -2371,7 +2589,7 @@ Partial Class PayStubForm
         'Label73
         '
         Me.Label73.AutoSize = True
-        Me.Label73.Location = New System.Drawing.Point(5, 105)
+        Me.Label73.Location = New System.Drawing.Point(7, 105)
         Me.Label73.Name = "Label73"
         Me.Label73.Size = New System.Drawing.Size(55, 13)
         Me.Label73.TabIndex = 311
@@ -2391,7 +2609,7 @@ Partial Class PayStubForm
         'Label74
         '
         Me.Label74.AutoSize = True
-        Me.Label74.Location = New System.Drawing.Point(5, 79)
+        Me.Label74.Location = New System.Drawing.Point(7, 79)
         Me.Label74.Name = "Label74"
         Me.Label74.Size = New System.Drawing.Size(50, 13)
         Me.Label74.TabIndex = 310
@@ -2456,26 +2674,6 @@ Partial Class PayStubForm
         Me.Label92.TabIndex = 272
         Me.Label92.Text = "Absent :"
         '
-        'txttotholidayhrs_U
-        '
-        Me.txttotholidayhrs_U.BackColor = System.Drawing.Color.White
-        Me.txttotholidayhrs_U.Location = New System.Drawing.Point(118, 176)
-        Me.txttotholidayhrs_U.Name = "txttotholidayhrs_U"
-        Me.txttotholidayhrs_U.ReadOnly = True
-        Me.txttotholidayhrs_U.ShortcutsEnabled = False
-        Me.txttotholidayhrs_U.Size = New System.Drawing.Size(100, 20)
-        Me.txttotholidayhrs_U.TabIndex = 307
-        Me.txttotholidayhrs_U.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label76
-        '
-        Me.Label76.AutoSize = True
-        Me.Label76.Location = New System.Drawing.Point(5, 183)
-        Me.Label76.Name = "Label76"
-        Me.Label76.Size = New System.Drawing.Size(68, 13)
-        Me.Label76.TabIndex = 306
-        Me.Label76.Text = "Holiday pay :"
-        '
         'txttotnightdiffotamt_U
         '
         Me.txttotnightdiffotamt_U.BackColor = System.Drawing.Color.White
@@ -2536,15 +2734,6 @@ Partial Class PayStubForm
         Me.Label79.TabIndex = 299
         Me.Label79.Text = "₱"
         '
-        'Label80
-        '
-        Me.Label80.AutoSize = True
-        Me.Label80.Location = New System.Drawing.Point(224, 179)
-        Me.Label80.Name = "Label80"
-        Me.Label80.Size = New System.Drawing.Size(14, 13)
-        Me.Label80.TabIndex = 302
-        Me.Label80.Text = "₱"
-        '
         'Label81
         '
         Me.Label81.AutoSize = True
@@ -2554,10 +2743,20 @@ Partial Class PayStubForm
         Me.Label81.TabIndex = 298
         Me.Label81.Text = "₱"
         '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(12, 202)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(68, 13)
+        Me.Label18.TabIndex = 200
+        Me.Label18.Text = "Holiday pay :"
+        Me.Label18.Visible = False
+        '
         'Label65
         '
         Me.Label65.AutoSize = True
-        Me.Label65.Location = New System.Drawing.Point(610, 582)
+        Me.Label65.Location = New System.Drawing.Point(610, 528)
         Me.Label65.Name = "Label65"
         Me.Label65.Size = New System.Drawing.Size(14, 13)
         Me.Label65.TabIndex = 512
@@ -2566,19 +2765,31 @@ Partial Class PayStubForm
         'Label66
         '
         Me.Label66.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label66.Location = New System.Drawing.Point(392, 565)
+        Me.Label66.Location = New System.Drawing.Point(392, 511)
         Me.Label66.Name = "Label66"
         Me.Label66.Size = New System.Drawing.Size(367, 13)
         Me.Label66.TabIndex = 511
         Me.Label66.Text = "---------------------------------------------------------------------------------" &
     "----------------------"
         '
+        'txtHolidayHours
+        '
+        Me.txtHolidayHours.BackColor = System.Drawing.Color.White
+        Me.txtHolidayHours.Location = New System.Drawing.Point(125, 195)
+        Me.txtHolidayHours.Name = "txtHolidayHours"
+        Me.txtHolidayHours.ReadOnly = True
+        Me.txtHolidayHours.ShortcutsEnabled = False
+        Me.txtHolidayHours.Size = New System.Drawing.Size(100, 20)
+        Me.txtHolidayHours.TabIndex = 201
+        Me.txtHolidayHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtHolidayHours.Visible = False
+        '
         'btnSaveAdjustments
         '
         Me.btnSaveAdjustments.Enabled = False
         Me.btnSaveAdjustments.Image = Global.AccuPay.My.Resources.Resources.Add
         Me.btnSaveAdjustments.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnSaveAdjustments.Location = New System.Drawing.Point(746, 243)
+        Me.btnSaveAdjustments.Location = New System.Drawing.Point(746, 179)
         Me.btnSaveAdjustments.Name = "btnSaveAdjustments"
         Me.btnSaveAdjustments.Size = New System.Drawing.Size(129, 34)
         Me.btnSaveAdjustments.TabIndex = 508
@@ -2590,7 +2801,7 @@ Partial Class PayStubForm
         '
         Me.Label62.AutoSize = True
         Me.Label62.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label62.Location = New System.Drawing.Point(743, 67)
+        Me.Label62.Location = New System.Drawing.Point(743, 3)
         Me.Label62.Name = "Label62"
         Me.Label62.Size = New System.Drawing.Size(75, 13)
         Me.Label62.TabIndex = 507
@@ -2620,7 +2831,7 @@ Partial Class PayStubForm
         DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvAdjustments.DefaultCellStyle = DataGridViewCellStyle7
         Me.dgvAdjustments.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvAdjustments.Location = New System.Drawing.Point(746, 83)
+        Me.dgvAdjustments.Location = New System.Drawing.Point(746, 19)
         Me.dgvAdjustments.MultiSelect = False
         Me.dgvAdjustments.Name = "dgvAdjustments"
         DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
@@ -2712,7 +2923,7 @@ Partial Class PayStubForm
         DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle11
         Me.dgvempallowance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempallowance.Location = New System.Drawing.Point(510, 712)
+        Me.dgvempallowance.Location = New System.Drawing.Point(510, 805)
         Me.dgvempallowance.MultiSelect = False
         Me.dgvempallowance.Name = "dgvempallowance"
         Me.dgvempallowance.ReadOnly = True
@@ -2812,7 +3023,7 @@ Partial Class PayStubForm
         DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvLoanList.DefaultCellStyle = DataGridViewCellStyle14
         Me.dgvLoanList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvLoanList.Location = New System.Drawing.Point(264, 712)
+        Me.dgvLoanList.Location = New System.Drawing.Point(264, 805)
         Me.dgvLoanList.Name = "dgvLoanList"
         Me.dgvLoanList.ReadOnly = True
         Me.dgvLoanList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -2891,7 +3102,7 @@ Partial Class PayStubForm
         '
         Me.Label37.AutoSize = True
         Me.Label37.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label37.Location = New System.Drawing.Point(387, 278)
+        Me.Label37.Location = New System.Drawing.Point(387, 224)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(66, 13)
         Me.Label37.TabIndex = 254
@@ -2922,7 +3133,7 @@ Partial Class PayStubForm
         DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle17
         Me.dgvempbon.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempbon.Location = New System.Drawing.Point(18, 712)
+        Me.dgvempbon.Location = New System.Drawing.Point(18, 805)
         Me.dgvempbon.MultiSelect = False
         Me.dgvempbon.Name = "dgvempbon"
         Me.dgvempbon.ReadOnly = True
@@ -2998,13 +3209,25 @@ Partial Class PayStubForm
         Me.bon_ProdID.ReadOnly = True
         Me.bon_ProdID.Visible = False
         '
+        'txtHolidayPay
+        '
+        Me.txtHolidayPay.BackColor = System.Drawing.Color.White
+        Me.txtHolidayPay.Location = New System.Drawing.Point(251, 195)
+        Me.txtHolidayPay.Name = "txtHolidayPay"
+        Me.txtHolidayPay.ReadOnly = True
+        Me.txtHolidayPay.ShortcutsEnabled = False
+        Me.txtHolidayPay.Size = New System.Drawing.Size(100, 20)
+        Me.txtHolidayPay.TabIndex = 232
+        Me.txtHolidayPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtHolidayPay.Visible = False
+        '
         'lblsubtotmisc
         '
         Me.lblsubtotmisc.BackColor = System.Drawing.Color.White
         Me.lblsubtotmisc.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.lblsubtotmisc.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.lblsubtotmisc.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.lblsubtotmisc.Location = New System.Drawing.Point(630, 269)
+        Me.lblsubtotmisc.Location = New System.Drawing.Point(630, 215)
         Me.lblsubtotmisc.Name = "lblsubtotmisc"
         Me.lblsubtotmisc.ReadOnly = True
         Me.lblsubtotmisc.ShortcutsEnabled = False
@@ -3025,7 +3248,7 @@ Partial Class PayStubForm
         'Label48
         '
         Me.Label48.AutoSize = True
-        Me.Label48.Location = New System.Drawing.Point(610, 270)
+        Me.Label48.Location = New System.Drawing.Point(610, 216)
         Me.Label48.Name = "Label48"
         Me.Label48.Size = New System.Drawing.Size(14, 13)
         Me.Label48.TabIndex = 268
@@ -3034,7 +3257,7 @@ Partial Class PayStubForm
         'Label47
         '
         Me.Label47.AutoSize = True
-        Me.Label47.Location = New System.Drawing.Point(610, 320)
+        Me.Label47.Location = New System.Drawing.Point(610, 266)
         Me.Label47.Name = "Label47"
         Me.Label47.Size = New System.Drawing.Size(14, 13)
         Me.Label47.TabIndex = 267
@@ -3043,7 +3266,7 @@ Partial Class PayStubForm
         'Label46
         '
         Me.Label46.AutoSize = True
-        Me.Label46.Location = New System.Drawing.Point(610, 346)
+        Me.Label46.Location = New System.Drawing.Point(610, 292)
         Me.Label46.Name = "Label46"
         Me.Label46.Size = New System.Drawing.Size(14, 13)
         Me.Label46.TabIndex = 267
@@ -3052,7 +3275,7 @@ Partial Class PayStubForm
         'Label45
         '
         Me.Label45.AutoSize = True
-        Me.Label45.Location = New System.Drawing.Point(610, 372)
+        Me.Label45.Location = New System.Drawing.Point(610, 318)
         Me.Label45.Name = "Label45"
         Me.Label45.Size = New System.Drawing.Size(14, 13)
         Me.Label45.TabIndex = 266
@@ -3061,7 +3284,7 @@ Partial Class PayStubForm
         'Label44
         '
         Me.Label44.AutoSize = True
-        Me.Label44.Location = New System.Drawing.Point(610, 506)
+        Me.Label44.Location = New System.Drawing.Point(610, 452)
         Me.Label44.Name = "Label44"
         Me.Label44.Size = New System.Drawing.Size(14, 13)
         Me.Label44.TabIndex = 265
@@ -3070,7 +3293,7 @@ Partial Class PayStubForm
         'Label43
         '
         Me.Label43.AutoSize = True
-        Me.Label43.Location = New System.Drawing.Point(233, 400)
+        Me.Label43.Location = New System.Drawing.Point(233, 493)
         Me.Label43.Name = "Label43"
         Me.Label43.Size = New System.Drawing.Size(14, 13)
         Me.Label43.TabIndex = 264
@@ -3079,7 +3302,7 @@ Partial Class PayStubForm
         'Label41
         '
         Me.Label41.AutoSize = True
-        Me.Label41.Location = New System.Drawing.Point(610, 468)
+        Me.Label41.Location = New System.Drawing.Point(610, 414)
         Me.Label41.Name = "Label41"
         Me.Label41.Size = New System.Drawing.Size(14, 13)
         Me.Label41.TabIndex = 262
@@ -3088,7 +3311,7 @@ Partial Class PayStubForm
         'Label40
         '
         Me.Label40.AutoSize = True
-        Me.Label40.Location = New System.Drawing.Point(610, 430)
+        Me.Label40.Location = New System.Drawing.Point(610, 376)
         Me.Label40.Name = "Label40"
         Me.Label40.Size = New System.Drawing.Size(14, 13)
         Me.Label40.TabIndex = 261
@@ -3110,7 +3333,7 @@ Partial Class PayStubForm
         DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvpaystubitm.DefaultCellStyle = DataGridViewCellStyle19
         Me.dgvpaystubitm.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvpaystubitm.Location = New System.Drawing.Point(-228, 712)
+        Me.dgvpaystubitm.Location = New System.Drawing.Point(-228, 805)
         Me.dgvpaystubitm.MultiSelect = False
         Me.dgvpaystubitm.Name = "dgvpaystubitm"
         Me.dgvpaystubitm.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -3149,7 +3372,7 @@ Partial Class PayStubForm
         Me.lblSubtotal.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.lblSubtotal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.lblSubtotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.lblSubtotal.Location = New System.Drawing.Point(253, 303)
+        Me.lblSubtotal.Location = New System.Drawing.Point(253, 396)
         Me.lblSubtotal.Name = "lblSubtotal"
         Me.lblSubtotal.ReadOnly = True
         Me.lblSubtotal.ShortcutsEnabled = False
@@ -3160,7 +3383,7 @@ Partial Class PayStubForm
         'Label30
         '
         Me.Label30.AutoSize = True
-        Me.Label30.Location = New System.Drawing.Point(14, 282)
+        Me.Label30.Location = New System.Drawing.Point(14, 375)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(63, 13)
         Me.Label30.TabIndex = 251
@@ -3461,7 +3684,7 @@ Partial Class PayStubForm
         'btntotbon
         '
         Me.btntotbon.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btntotbon.Location = New System.Drawing.Point(360, 396)
+        Me.btntotbon.Location = New System.Drawing.Point(360, 489)
         Me.btntotbon.Name = "btntotbon"
         Me.btntotbon.Size = New System.Drawing.Size(21, 22)
         Me.btntotbon.TabIndex = 248
@@ -3472,7 +3695,7 @@ Partial Class PayStubForm
         'btntotloan
         '
         Me.btntotloan.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btntotloan.Location = New System.Drawing.Point(736, 503)
+        Me.btntotloan.Location = New System.Drawing.Point(736, 449)
         Me.btntotloan.Name = "btntotloan"
         Me.btntotloan.Size = New System.Drawing.Size(21, 22)
         Me.btntotloan.TabIndex = 247
@@ -3483,7 +3706,7 @@ Partial Class PayStubForm
         'btntotallow
         '
         Me.btntotallow.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btntotallow.Location = New System.Drawing.Point(360, 348)
+        Me.btntotallow.Location = New System.Drawing.Point(360, 441)
         Me.btntotallow.Name = "btntotallow"
         Me.btntotallow.Size = New System.Drawing.Size(21, 22)
         Me.btntotallow.TabIndex = 246
@@ -3494,7 +3717,7 @@ Partial Class PayStubForm
         'Label35
         '
         Me.Label35.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label35.Location = New System.Drawing.Point(390, 527)
+        Me.Label35.Location = New System.Drawing.Point(390, 473)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(367, 13)
         Me.Label35.TabIndex = 245
@@ -3504,7 +3727,7 @@ Partial Class PayStubForm
         'Label34
         '
         Me.Label34.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label34.Location = New System.Drawing.Point(390, 451)
+        Me.Label34.Location = New System.Drawing.Point(390, 397)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(367, 13)
         Me.Label34.TabIndex = 244
@@ -3514,7 +3737,7 @@ Partial Class PayStubForm
         'Label33
         '
         Me.Label33.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label33.Location = New System.Drawing.Point(390, 400)
+        Me.Label33.Location = New System.Drawing.Point(390, 346)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(367, 13)
         Me.Label33.TabIndex = 243
@@ -3524,7 +3747,7 @@ Partial Class PayStubForm
         'Label26
         '
         Me.Label26.Font = New System.Drawing.Font("Segoe UI", 6.75!)
-        Me.Label26.Location = New System.Drawing.Point(390, 294)
+        Me.Label26.Location = New System.Drawing.Point(390, 240)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(367, 13)
         Me.Label26.TabIndex = 241
@@ -3534,7 +3757,7 @@ Partial Class PayStubForm
         'Label24
         '
         Me.Label24.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label24.Location = New System.Drawing.Point(15, 431)
+        Me.Label24.Location = New System.Drawing.Point(15, 524)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(365, 13)
         Me.Label24.TabIndex = 240
@@ -3544,7 +3767,7 @@ Partial Class PayStubForm
         'Label21
         '
         Me.Label21.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label21.Location = New System.Drawing.Point(15, 328)
+        Me.Label21.Location = New System.Drawing.Point(15, 421)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(365, 13)
         Me.Label21.TabIndex = 239
@@ -3556,7 +3779,7 @@ Partial Class PayStubForm
         Me.TabControl3.Controls.Add(Me.tbpleavebal)
         Me.TabControl3.Controls.Add(Me.tbpleaveallow)
         Me.TabControl3.Controls.Add(Me.tbpleavepayp)
-        Me.TabControl3.Location = New System.Drawing.Point(17, 546)
+        Me.TabControl3.Location = New System.Drawing.Point(17, 639)
         Me.TabControl3.Name = "TabControl3"
         Me.TabControl3.SelectedIndex = 0
         Me.TabControl3.Size = New System.Drawing.Size(291, 141)
@@ -3884,7 +4107,7 @@ Partial Class PayStubForm
         '
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label29.Location = New System.Drawing.Point(14, 312)
+        Me.Label29.Location = New System.Drawing.Point(14, 405)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(66, 13)
         Me.Label29.TabIndex = 230
@@ -3896,7 +4119,7 @@ Partial Class PayStubForm
         Me.txtemptotbon.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtemptotbon.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtemptotbon.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtemptotbon.Location = New System.Drawing.Point(253, 399)
+        Me.txtemptotbon.Location = New System.Drawing.Point(253, 492)
         Me.txtemptotbon.Name = "txtemptotbon"
         Me.txtemptotbon.ReadOnly = True
         Me.txtemptotbon.ShortcutsEnabled = False
@@ -3908,7 +4131,7 @@ Partial Class PayStubForm
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(14, 406)
+        Me.Label13.Location = New System.Drawing.Point(14, 499)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(83, 13)
         Me.Label13.TabIndex = 197
@@ -3920,7 +4143,7 @@ Partial Class PayStubForm
         Me.txtemptotallow.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtemptotallow.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtemptotallow.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtemptotallow.Location = New System.Drawing.Point(253, 352)
+        Me.txtemptotallow.Location = New System.Drawing.Point(253, 445)
         Me.txtemptotallow.Name = "txtemptotallow"
         Me.txtemptotallow.ReadOnly = True
         Me.txtemptotallow.ShortcutsEnabled = False
@@ -3932,7 +4155,7 @@ Partial Class PayStubForm
         '
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(14, 362)
+        Me.Label12.Location = New System.Drawing.Point(14, 455)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(106, 13)
         Me.Label12.TabIndex = 199
@@ -3941,7 +4164,7 @@ Partial Class PayStubForm
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(387, 324)
+        Me.Label7.Location = New System.Drawing.Point(387, 270)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(83, 13)
         Me.Label7.TabIndex = 181
@@ -3950,7 +4173,7 @@ Partial Class PayStubForm
         'txtempsss
         '
         Me.txtempsss.BackColor = System.Drawing.Color.White
-        Me.txtempsss.Location = New System.Drawing.Point(630, 317)
+        Me.txtempsss.Location = New System.Drawing.Point(630, 263)
         Me.txtempsss.Name = "txtempsss"
         Me.txtempsss.ReadOnly = True
         Me.txtempsss.ShortcutsEnabled = False
@@ -3961,7 +4184,7 @@ Partial Class PayStubForm
         'txtempphh
         '
         Me.txtempphh.BackColor = System.Drawing.Color.White
-        Me.txtempphh.Location = New System.Drawing.Point(630, 343)
+        Me.txtempphh.Location = New System.Drawing.Point(630, 289)
         Me.txtempphh.Name = "txtempphh"
         Me.txtempphh.ReadOnly = True
         Me.txtempphh.ShortcutsEnabled = False
@@ -3972,7 +4195,7 @@ Partial Class PayStubForm
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(387, 350)
+        Me.Label9.Location = New System.Drawing.Point(387, 296)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(110, 13)
         Me.Label9.TabIndex = 186
@@ -3981,7 +4204,7 @@ Partial Class PayStubForm
         'txtemphdmf
         '
         Me.txtemphdmf.BackColor = System.Drawing.Color.White
-        Me.txtemphdmf.Location = New System.Drawing.Point(630, 369)
+        Me.txtemphdmf.Location = New System.Drawing.Point(630, 315)
         Me.txtemphdmf.Name = "txtemphdmf"
         Me.txtemphdmf.ReadOnly = True
         Me.txtemphdmf.ShortcutsEnabled = False
@@ -3992,7 +4215,7 @@ Partial Class PayStubForm
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(387, 376)
+        Me.Label10.Location = New System.Drawing.Point(387, 322)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(105, 13)
         Me.Label10.TabIndex = 191
@@ -4002,7 +4225,7 @@ Partial Class PayStubForm
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(387, 430)
+        Me.Label3.Location = New System.Drawing.Point(387, 376)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(104, 13)
         Me.Label3.TabIndex = 179
@@ -4015,7 +4238,7 @@ Partial Class PayStubForm
         Me.txtnetsal.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtnetsal.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!)
         Me.txtnetsal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtnetsal.Location = New System.Drawing.Point(631, 645)
+        Me.txtnetsal.Location = New System.Drawing.Point(631, 591)
         Me.txtnetsal.Name = "txtnetsal"
         Me.txtnetsal.ReadOnly = True
         Me.txtnetsal.ShortcutsEnabled = False
@@ -4029,7 +4252,7 @@ Partial Class PayStubForm
         Me.txtgrosssal.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtgrosssal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtgrosssal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtgrosssal.Location = New System.Drawing.Point(253, 455)
+        Me.txtgrosssal.Location = New System.Drawing.Point(253, 548)
         Me.txtgrosssal.Name = "txtgrosssal"
         Me.txtgrosssal.ReadOnly = True
         Me.txtgrosssal.ShortcutsEnabled = False
@@ -4230,7 +4453,7 @@ Partial Class PayStubForm
         'Label39
         '
         Me.Label39.AutoSize = True
-        Me.Label39.Location = New System.Drawing.Point(233, 458)
+        Me.Label39.Location = New System.Drawing.Point(233, 551)
         Me.Label39.Name = "Label39"
         Me.Label39.Size = New System.Drawing.Size(14, 13)
         Me.Label39.TabIndex = 260
@@ -4239,7 +4462,7 @@ Partial Class PayStubForm
         'Label38
         '
         Me.Label38.AutoSize = True
-        Me.Label38.Location = New System.Drawing.Point(233, 353)
+        Me.Label38.Location = New System.Drawing.Point(233, 446)
         Me.Label38.Name = "Label38"
         Me.Label38.Size = New System.Drawing.Size(14, 13)
         Me.Label38.TabIndex = 259
@@ -4248,7 +4471,7 @@ Partial Class PayStubForm
         'Label36
         '
         Me.Label36.AutoSize = True
-        Me.Label36.Location = New System.Drawing.Point(233, 304)
+        Me.Label36.Location = New System.Drawing.Point(233, 397)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(14, 13)
         Me.Label36.TabIndex = 176
@@ -4257,7 +4480,7 @@ Partial Class PayStubForm
         'Label94
         '
         Me.Label94.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label94.Location = New System.Drawing.Point(392, 603)
+        Me.Label94.Location = New System.Drawing.Point(392, 549)
         Me.Label94.Name = "Label94"
         Me.Label94.Size = New System.Drawing.Size(367, 13)
         Me.Label94.TabIndex = 529
@@ -4268,7 +4491,7 @@ Partial Class PayStubForm
         '
         Me.Label42.AutoSize = True
         Me.Label42.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label42.Location = New System.Drawing.Point(609, 645)
+        Me.Label42.Location = New System.Drawing.Point(609, 591)
         Me.Label42.Name = "Label42"
         Me.Label42.Size = New System.Drawing.Size(23, 24)
         Me.Label42.TabIndex = 263
@@ -4507,6 +4730,8 @@ Partial Class PayStubForm
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
         CType(Me.pbEmpPicChk, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel6.ResumeLayout(False)
+        Me.Panel6.PerformLayout()
         Me.tabEarned.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.TabPage1.PerformLayout()
@@ -4951,4 +5176,22 @@ Partial Class PayStubForm
     Friend WithEvents Label96 As Label
     Friend WithEvents txtRestDayAmount As TextBox
     Friend WithEvents txtRestDayHours As TextBox
+    Friend WithEvents txtRestDayOtHour As TextBox
+    Friend WithEvents Label102 As Label
+    Friend WithEvents txtRestDayOtPay As TextBox
+    Friend WithEvents Label60 As Label
+    Friend WithEvents Label64 As Label
+    Friend WithEvents txtSpecHoliOtHour As TextBox
+    Friend WithEvents txtHoliOtPay As TextBox
+    Friend WithEvents txtSpecHoliHour As TextBox
+    Friend WithEvents Label101 As Label
+    Friend WithEvents Label100 As Label
+    Friend WithEvents Label98 As Label
+    Friend WithEvents Label99 As Label
+    Friend WithEvents txtSpecHoliPay As TextBox
+    Friend WithEvents txtHoliOtHour As TextBox
+    Friend WithEvents Label97 As Label
+    Friend WithEvents txtSpecHoliOtPay As TextBox
+    Friend WithEvents Label63 As Label
+    Friend WithEvents Panel6 As Panel
 End Class
