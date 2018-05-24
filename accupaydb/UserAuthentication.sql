@@ -29,6 +29,7 @@ WHERE u.UserID = user_name AND
 GROUP BY u.RowID, pv.AllowedToAccess
 HAVING pv.AllowedToAccess = 'Y'
 ORDER BY FIELD(pv.AllowedToAccess, 'Y', 'N')
+LIMIT 1
 INTO returnvaue, @Pv;
 
 IF returnvaue IS NULL THEN
