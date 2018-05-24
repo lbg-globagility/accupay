@@ -64,18 +64,7 @@ Public Class PayStubForm
 
     Public current_year As String = CDate(dbnow).Year
 
-    Dim new_conn As New MySqlConnection
-    Dim new_cmd As New MySqlCommand
-
     Dim pagination As Integer = 0
-
-    Dim orgpayfreqID As String
-
-    Dim govdeducsched As New AutoCompleteStringCollection
-
-    Dim allowfreq As New AutoCompleteStringCollection
-
-    Dim prodPartNo As New DataTable
 
     Dim employeepicture As New DataTable
 
@@ -96,8 +85,6 @@ Public Class PayStubForm
 
     Dim currentEmployeeID As String = Nothing
 
-    Dim LastFirstMidName As String = Nothing
-
     Dim employee_dattab As New DataTable
 
     Dim emp_allowanceWeekly As New DataTable
@@ -112,21 +99,9 @@ Public Class PayStubForm
 
     Public withthirteenthmonthpay As SByte = 0
 
-    Private thread_max As Integer = 5
-
     Const max_rec_perpage As Integer = 1
 
-    Dim emp_list_batcount As Integer = 0
-
-    Dim pause_process_message = String.Empty
-
     Dim IsUserPressEnterToSearch As Boolean = False
-
-    Dim dtempalldistrib As New DataTable
-
-    Dim rptdattab As New DataTable
-
-    Dim PayrollSummaChosenData As String = String.Empty
 
     Dim selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
@@ -141,9 +116,9 @@ Public Class PayStubForm
 
     Dim rptdocAll As New rptAllDecUndecPaySlip
 
-    Dim payroll_emp_count As Integer = 0
+    Dim _totalPaystubs As Integer = 0
 
-    Dim progress_precentage As Integer = 0
+    Dim _finishedPaystubs As Integer = 0
 
     Private sys_ownr As New SystemOwner
 
@@ -202,27 +177,16 @@ Public Class PayStubForm
 
         viewID = VIEW_privilege("Employee Pay Slip", orgztnID)
 
-        new_conn.ConnectionString = db_connectinstring 'conn.ConnectionString
-
         VIEW_payperiodofyear()
 
         dgvpayper.Focus()
 
-        orgpayfreqID = EXECQUER("SELECT COALESCE(PayFrequencyID,'') FROM organization WHERE RowID=" & orgztnID & ";")
-
-        enlistTheLists("SELECT DisplayValue FROM listofval WHERE `Type`='Government deduction schedule' AND Active='Yes' ORDER BY OrderBy;", govdeducsched)
-
         linkPrev.Text = "← " & (current_year - 1)
         linkNxt.Text = (current_year + 1) & " →"
-
-        prodPartNo = retAsDatTbl("SELECT PartNo FROM product WHERE OrganizationID=" & orgztnID & ";")
 
         If dgvemployees.RowCount <> 0 Then
             dgvemployees.Item("EmployeeID", 0).Selected = 1
         End If
-
-        enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Allowance Frequency' AND Active='Yes' ORDER BY OrderBy;",
-                       allowfreq) 'Daily'Monthly'One time'Semi-monthly'Weely
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & viewID)
 
@@ -389,9 +353,6 @@ Public Class PayStubForm
 
                 Dim str_sched_payfreq As String = Convert.ToString(.Cells("Column12").Value)
 
-                'If str_pay_freq_sched <> str_sched_payfreq _
-                '    And _year <> current_year Then
-
                 str_pay_freq_sched = str_sched_payfreq
 
                 _year = current_year
@@ -399,22 +360,12 @@ Public Class PayStubForm
                 Dim select_cutoff_payfrequency =
                     tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Text = str_sched_payfreq)
 
-                Console.WriteLine(select_cutoff_payfrequency.Count)
-
                 For Each _tsbtn In select_cutoff_payfrequency
                     PayFreq_Changed(_tsbtn, New EventArgs)
 
                 Next
 
-                'End If
-
             End With
-
-            'If tsSearch.Text.Trim.Length > 0 Then
-            '    tsbtnSearch_Click(sender, New EventArgs)
-            'Else
-            '    dgvemployees_SelectionChanged(dgvemployees, New EventArgs)
-            'End If
         Else
 
             numofweekdays = 0
@@ -541,10 +492,6 @@ Public Class PayStubForm
         AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
     End Sub
 
-    Private Sub dgvemployees_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployees.CellContentClick
-
-    End Sub
-
     Private Sub dgvemployees_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvemployees.SelectionChanged
 
         btnSaveAdjustments.Enabled = False
@@ -585,9 +532,6 @@ Public Class PayStubForm
                     txtFName.Text &= addtlWord
 
                 End If
-
-                LastFirstMidName = .Cells("LastName").Value & ", " & .Cells("FirstName").Value &
-                    If(Trim(addtlWord) = Nothing, "", If(Trim(addtlWord) = ".", "", ", " & addtlWord))
 
                 txtFName.Text = txtFName.Text & " " & .Cells("LastName").Value
 
@@ -685,8 +629,6 @@ Public Class PayStubForm
         Else
             sameEmpID = -1
 
-            LastFirstMidName = Nothing
-
             currentEmployeeID = Nothing
 
             pbEmpPicChk.Image = Nothing
@@ -777,7 +719,7 @@ Public Class PayStubForm
     End Sub
 
     Sub genpayroll(Optional PayFreqRowID As Object = Nothing)
-        Dim loadTask = Task.Factory.StartNew(Of PayrollResources)(
+        Dim loadTask = Task.Factory.StartNew(
             Function()
                 If paypFrom = Nothing And paypTo = Nothing Then
                     Return Nothing
@@ -828,8 +770,6 @@ Public Class PayStubForm
     End Sub
 
     Private Sub LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources))
-        progress_precentage = 0
-
         ThreadingPayrollGeneration(t.Result)
     End Sub
 
@@ -840,8 +780,7 @@ Public Class PayStubForm
     End Sub
 
     Private Sub ThreadingPayrollGeneration(resources As PayrollResources)
-        Timer1.Stop()
-        Timer1.Enabled = False
+        _finishedPaystubs = 0
 
         Try
             Dim employees As DataTable = Nothing
@@ -866,16 +805,13 @@ Public Class PayStubForm
 
                     employees = dataSet.Tables(0)
 
-                    payroll_emp_count = employees.Rows.Count
+                    _totalPaystubs = employees.Rows.Count
 
                     Me.Enabled = False
                 End If
             End Using
 
             Dim employeeRows = employees.Rows.Cast(Of DataRow)
-
-            Timer1.Enabled = True
-            Timer1.Start()
 
             _successfulPaystubs = 0
             _failedPaystubs = 0
@@ -1090,90 +1026,6 @@ Public Class PayStubForm
         psefr.IsActual = is_actual
 
         psefr.Run()
-
-    End Sub
-
-    Private Sub tsbtnPayrollSumma_Click1(sender As Object, e As EventArgs) _
-        'Handles _
-        'DeclaredToolStripMenuItem2.Click,
-        'ActualToolStripMenuItem2.Click
-        '###########################################################################
-
-        Try
-            Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
-
-            n_PayrollSummaDateSelection.ReportIndex = 6
-
-            If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                Dim obj_sender = DirectCast(sender, ToolStripMenuItem)
-
-                Dim is_actual As Boolean = (obj_sender.Name = "ActualToolStripMenuItem2")
-
-                Dim str_saldistrib As String = n_PayrollSummaDateSelection.cboStringParameter.Text
-
-                Dim param_array = New Object() {orgztnID,
-                                                n_PayrollSummaDateSelection.PayPeriodFromID,
-                                                n_PayrollSummaDateSelection.PayPeriodToID,
-                                                Convert.ToInt16(is_actual),
-                                                str_saldistrib}
-
-                Dim n_ReadSQLProcedureToDatatable As New _
-                    ReadSQLProcedureToDatatable("PAYROLLSUMMARY",
-                                                param_array)
-
-                Dim datatab As New DataTable
-
-                datatab = n_ReadSQLProcedureToDatatable.ResultTable
-
-                If datatab Is Nothing Then
-                Else
-
-                    Dim rptdoc As New PayrollSumma
-
-                    rptdoc.SetDataSource(datatab)
-
-                    Dim crvwr As New CrysRepForm
-
-                    crvwr.crysrepvwr.ReportSource = rptdoc
-
-                    Dim papy_string = ""
-
-                    papy_string = "for the period of " & Format(CDate(n_PayrollSummaDateSelection.DateFrom), machineShortDateFormat) &
-                        If(paypTo = Nothing, "", " to " & Format(CDate(n_PayrollSummaDateSelection.DateTo), machineShortDateFormat))
-
-                    Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
-
-                    objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
-
-                    objText.Text = orgNam
-
-                    objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgaddress")
-
-                    Dim obj_value = EXECQUER(String.Concat("SELECT CONCAT_WS(', ', ad.StreetAddress1, ad.StreetAddress2, ad.CityTown, ad.Country, ad.State, ad.ZipCode, ad.Barangay) `Result`",
-                                                           " FROM organization og",
-                                                           " LEFT JOIN address ad ON ad.RowID=og.PrimaryAddressID",
-                                                           " WHERE og.RowID=", orgztnID, ";"))
-
-                    If obj_value = Nothing Then
-                    Else
-                        objText.Text = CStr(obj_value)
-                    End If
-
-                    PayrollSummaChosenData = obj_sender.Text
-
-                    crvwr.Text = papy_string & " (" & PayrollSummaChosenData.ToUpper & ")"
-
-                    crvwr.Refresh()
-
-                    crvwr.Show()
-
-                End If
-
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
 
     End Sub
 
@@ -1568,10 +1420,6 @@ Public Class PayStubForm
             Dim txtboxSender = DirectCast(sender, TextBox)
             txtboxSender.Text = FormatNumber(txtboxSender.Text, 2)
         End If
-    End Sub
-
-    Private Sub FormatNumberToTwoDecimal()
-
     End Sub
 
     Private Sub TabPage1_Enter1(sender As Object, e As EventArgs) Handles TabPage1.Enter 'DECLARED
@@ -2040,7 +1888,6 @@ Public Class PayStubForm
         UpdateAdjustmentDetails(Convert.ToInt16(tabEarned.SelectedIndex)) 'Josh
 
         btnSaveAdjustments.Enabled = False
-
     End Sub
 
     Private Sub LinkLabel5_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel5.LinkClicked
@@ -2163,40 +2010,29 @@ Public Class PayStubForm
             Interlocked.Increment(_failedPaystubs)
         End If
 
-        Interlocked.Increment(progress_precentage)
+        Interlocked.Increment(_finishedPaystubs)
 
-        Dim compute_percentage As Integer = (progress_precentage / payroll_emp_count) * 100
-        MDIPrimaryForm.systemprogressbar.Value = compute_percentage
+        Dim percentComplete As Integer = (_finishedPaystubs / _totalPaystubs) * 100
+        MDIPrimaryForm.systemprogressbar.Value = percentComplete
 
-        Select Case compute_percentage
-            Case 100
-                Dim param_array = New Object() {orgztnID, paypRowID, z_User}
+        If percentComplete = 100 Then
+            Dim param_array = New Object() {orgztnID, paypRowID, z_User}
 
-                Static strquery_recompute_13monthpay As String =
-                    "call recompute_thirteenthmonthpay(?organizid, ?payprowid, ?userrowid);"
+            Static strquery_recompute_13monthpay As String =
+                "call recompute_thirteenthmonthpay(?organizid, ?payprowid, ?userrowid);"
 
-                Dim n_ExecSQLProcedure As New _
-                    SQL(strquery_recompute_13monthpay,
-                        param_array)
-                n_ExecSQLProcedure.ExecuteQuery()
+            Dim n_ExecSQLProcedure As New _
+                SQL(strquery_recompute_13monthpay,
+                    param_array)
+            n_ExecSQLProcedure.ExecuteQuery()
 
-                MsgBox($"Payroll generation is done. Sucessful paystubs: {_successfulPaystubs}. Failed paystubs {_failedPaystubs}", MsgBoxStyle.OkOnly)
+            MsgBox($"Payroll generation is done. Sucessful paystubs: {_successfulPaystubs}. Failed paystubs {_failedPaystubs}", MsgBoxStyle.OkOnly)
 
-                dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
-            Case Else
-        End Select
-
-        Console.WriteLine(String.Concat("#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@ ", compute_percentage, "% complete"))
-    End Sub
-
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        Console.WriteLine("batch has finished...")
-
-        If progress_precentage = payroll_emp_count Then
-            Timer1.Stop()
             Me.Enabled = True
-            Timer1.Enabled = False
+            dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
         End If
+
+        Console.WriteLine(String.Concat("#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@ ", percentComplete, "% complete"))
     End Sub
 
     Private Sub PopulateDGVEmployee(dat_tbl As DataTable)
