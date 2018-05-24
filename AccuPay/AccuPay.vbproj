@@ -475,7 +475,6 @@
     </Compile>
     <Compile Include="Core Forms\Salary\Salary.vb" />
     <Compile Include="Core Forms\Commons\ExcelParser.vb" />
-    <Compile Include="Core Forms\Salary\SalaryImporter.vb" />
     <Compile Include="Core Forms\Salary\SalaryRowRecord.vb" />
     <Compile Include="Core Forms\TimeEntry\Employee.vb" />
     <Compile Include="Core Forms\TimeEntry\Overtime.vb" />
