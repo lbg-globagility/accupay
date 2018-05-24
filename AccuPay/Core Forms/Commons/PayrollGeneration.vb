@@ -230,9 +230,21 @@ Public Class PayrollGeneration
                     ComputeHours()
 
                     Dim currentTaxableIncome = 0D
+
                     If _employee2.EmployeeType = SalaryType.Fixed Then
 
-                        _paystub.TotalEarnings = basicPay + (_paystub.HolidayPay + _paystub.OvertimePay + _paystub.NightDiffPay + _paystub.NightDiffOvertimePay)
+                        Dim extraPay =
+                            _paystub.OvertimePay +
+                            _paystub.NightDiffPay +
+                            _paystub.NightDiffOvertimePay +
+                            _paystub.RestDayPay +
+                            _paystub.RestDayOTPay +
+                            _paystub.SpecialHolidayPay +
+                            _paystub.SpecialHolidayOTPay +
+                            _paystub.RegularHolidayPay +
+                            _paystub.RegularHolidayOTPay
+
+                        _paystub.TotalEarnings = basicPay + extraPay
 
                         currentTaxableIncome = basicPay
 
