@@ -1473,7 +1473,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo - Copy.ico" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\loading-icon.gif" />
     <None Include="Resources\ajax-loader.gif" />
     <EmbeddedResource Include="Auditing\Forms\TimeLogForm.resx">
