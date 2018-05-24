@@ -115,6 +115,9 @@ Public Class NewPayStubForm
     End Sub
 
     Private Sub DisplayPaystub(declared As Paystub, actual As PaystubActual)
+        txtBasicHours.Text = Format(declared.BasicHours)
+        txtBasicPay.Text = Format(declared.BasicPay)
+
         txtRegularHours.Text = Format(declared.RegularHours)
         txtRegularPay.Text = Format(declared.RegularPay)
 

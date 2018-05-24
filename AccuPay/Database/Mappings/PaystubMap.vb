@@ -22,6 +22,8 @@ Public Class PaystubMap
         Map(Function(x) x.PayFromdate)
         Map(Function(x) x.PayToDate)
 
+        Map(Function(x) x.BasicHours)
+        Map(Function(x) x.BasicPay)
         Map(Function(x) x.RegularHours)
         Map(Function(x) x.RegularPay)
         Map(Function(x) x.OvertimeHours)

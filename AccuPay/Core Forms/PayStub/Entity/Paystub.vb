@@ -35,6 +35,10 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property PayToDate As Date
 
+        Public Overridable Property BasicHours As Decimal
+
+        Public Overridable Property BasicPay As Decimal
+
         Public Overridable Property RegularHours As Decimal
 
         Public Overridable Property RegularPay As Decimal

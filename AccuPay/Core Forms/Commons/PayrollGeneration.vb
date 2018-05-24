@@ -221,18 +221,53 @@ Public Class PayrollGeneration
 
             Dim governmentContributions = 0D
 
-            If _timeEntries.Count > 0 Then
+            If (_timeEntries.Count > 0) And (salary IsNot Nothing) Then
 
-                If salary IsNot Nothing Then
+                Dim basicPay = CDec(ValNoComma(salary("BasicPay")))
 
-                    Dim basicPay = CDec(ValNoComma(salary("BasicPay")))
+                ComputeHours()
 
-                    ComputeHours()
+                Dim currentTaxableIncome = 0D
 
-                    Dim currentTaxableIncome = 0D
+                If _employee2.IsMonthly Or _employee2.IsFixed Then
+                    If _employee2.WorkDaysPerYear > 0 Then
+                        Dim workDaysPerPayPeriod = _employee2.WorkDaysPerYear / CalendarConstants.MonthsInAYear / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
 
-                    If _employee2.EmployeeType = SalaryType.Fixed Then
+                        _paystub.BasicHours = workDaysPerPayPeriod * 8
+                    End If
 
+                    _paystub.BasicPay = basicPay
+                End If
+
+                If _employee2.EmployeeType = SalaryType.Fixed Then
+
+                    Dim extraPay =
+                        _paystub.OvertimePay +
+                        _paystub.NightDiffPay +
+                        _paystub.NightDiffOvertimePay +
+                        _paystub.RestDayPay +
+                        _paystub.RestDayOTPay +
+                        _paystub.SpecialHolidayPay +
+                        _paystub.SpecialHolidayOTPay +
+                        _paystub.RegularHolidayPay +
+                        _paystub.RegularHolidayOTPay
+
+                    _paystub.TotalEarnings = basicPay + extraPay
+
+                    currentTaxableIncome = basicPay
+
+                ElseIf _employee2.EmployeeType = SalaryType.Monthly Then
+
+                    Dim isFirstPayAsDailyRule = _settings.GetBoolean("Payroll Policy", "isfirstsalarydaily")
+
+                    Dim isFirstPay =
+                        _payPeriod.PayFromDate <= _employee2.StartDate And
+                        _employee2.StartDate <= _payPeriod.PayToDate
+
+                    If isFirstPay And isFirstPayAsDailyRule Then
+                        _paystub.TotalEarnings = _timeEntries.Sum(Function(t) t.TotalDayPay)
+                    Else
+                        Dim totalDeduction = _paystub.LateDeduction + _paystub.UndertimeDeduction + _paystub.AbsenceDeduction
                         Dim extraPay =
                             _paystub.OvertimePay +
                             _paystub.NightDiffPay +
@@ -244,65 +279,41 @@ Public Class PayrollGeneration
                             _paystub.RegularHolidayPay +
                             _paystub.RegularHolidayOTPay
 
-                        _paystub.TotalEarnings = basicPay + extraPay
+                        _paystub.TotalEarnings = (basicPay + extraPay) - totalDeduction
 
-                        currentTaxableIncome = basicPay
+                        Dim taxablePolicy = If(_settings.GetString("Payroll Policy.paystub.taxableincome"), "Basic Pay")
 
-                    ElseIf _employee2.EmployeeType = SalaryType.Monthly Then
-
-                        Dim isFirstPayAsDailyRule = _settings.GetBoolean("Payroll Policy", "isfirstsalarydaily")
-
-                        Dim isFirstPay =
-                            _payPeriod.PayFromDate <= _employee2.StartDate And
-                            _employee2.StartDate <= _payPeriod.PayToDate
-
-                        If isFirstPay And isFirstPayAsDailyRule Then
-                            _paystub.TotalEarnings = _timeEntries.Sum(Function(t) t.TotalDayPay)
+                        If taxablePolicy = "Gross Income" Then
+                            currentTaxableIncome = _paystub.TotalEarnings
                         Else
-                            Dim totalDeduction = _paystub.LateDeduction + _paystub.UndertimeDeduction + _paystub.AbsenceDeduction
-                            Dim extraPay =
-                                _paystub.OvertimePay +
-                                _paystub.NightDiffPay +
-                                _paystub.NightDiffOvertimePay +
-                                _paystub.RestDayPay +
-                                _paystub.RestDayOTPay +
-                                _paystub.SpecialHolidayPay +
-                                _paystub.SpecialHolidayOTPay +
-                                _paystub.RegularHolidayPay +
-                                _paystub.RegularHolidayOTPay
-
-                            _paystub.TotalEarnings = (basicPay + extraPay) - totalDeduction
-
-                            Dim taxablePolicy = If(_settings.GetString("Payroll Policy.paystub.taxableincome"), "Basic Pay")
-
-                            If taxablePolicy = "Gross Income" Then
-                                currentTaxableIncome = _paystub.TotalEarnings
-                            Else
-                                currentTaxableIncome = basicPay
-                            End If
+                            currentTaxableIncome = basicPay
                         End If
-
-                    ElseIf _employee2.EmployeeType = SalaryType.Daily Then
-                        _paystub.TotalEarnings = _timeEntries.Sum(Function(t) t.TotalDayPay)
                     End If
 
-                    CalculateSss(salary)
-                    CalculatePhilHealth(salary)
-                    CalculateHdmf(salary)
+                ElseIf _employee2.EmployeeType = SalaryType.Daily Then
+                    _paystub.BasicHours = _timeEntries.
+                        Where(Function(t) Not If(t.ShiftSchedule?.IsRestDay, True)).
+                        Sum(Function(t) t.ShiftSchedule?.Shift?.WorkHours)
 
-                    governmentContributions = _paystub.SssEmployeeShare + _paystub.PhilHealthEmployeeShare + _paystub.HdmfEmployeeShare
-                    currentTaxableIncome = currentTaxableIncome - governmentContributions
+                    _paystub.BasicPay = _timeEntries.Sum(Function(t) t.BasicDayPay)
 
-                    _paystub.TaxableIncome = currentTaxableIncome
-
-                    If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
-                        _paystub.TaxableIncome = currentTaxableIncome + If(_previousPaystub?.TaxableIncome, 0D)
-                    ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
-                        _paystub.TaxableIncome = currentTaxableIncome
-                    End If
-
-                    CalculateWithholdingTax()
+                    _paystub.TotalEarnings = _timeEntries.Sum(Function(t) t.TotalDayPay)
                 End If
+
+                CalculateSss(salary)
+                CalculatePhilHealth(salary)
+                CalculateHdmf(salary)
+
+                governmentContributions = _paystub.SssEmployeeShare + _paystub.PhilHealthEmployeeShare + _paystub.HdmfEmployeeShare
+                currentTaxableIncome = currentTaxableIncome - governmentContributions
+
+                If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
+                    _paystub.TaxableIncome = currentTaxableIncome + If(_previousPaystub?.TaxableIncome, 0D)
+                ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
+                    _paystub.TaxableIncome = currentTaxableIncome
+                End If
+
+                CalculateWithholdingTax()
             End If
 
             _paystub.GrossPay = _paystub.TotalEarnings + _paystub.TotalBonus + _paystub.TotalAllowance
