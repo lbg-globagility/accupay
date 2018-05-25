@@ -22,6 +22,8 @@ Public Class PayrollResources
 
     Private _salaries As DataTable
 
+    Private _salaries2 As ICollection(Of Salary)
+
     Private _timeEntries As ICollection(Of TimeEntry)
 
     Private _actualtimeentries As ICollection(Of ActualTimeEntry)
@@ -79,6 +81,12 @@ Public Class PayrollResources
     Public ReadOnly Property Salaries As DataTable
         Get
             Return _salaries
+        End Get
+    End Property
+
+    Public ReadOnly Property Salaries2 As ICollection(Of Salary)
+        Get
+            Return _salaries2
         End Get
     End Property
 
@@ -163,6 +171,7 @@ Public Class PayrollResources
             LoadEmployees(),
             loadLoanSchedulesTask,
             loadLoanTransactionsTask,
+            LoadSalaries2(),
             loadSalariesTask,
             LoadPaystubs(),
             LoadProducts(),
@@ -276,6 +285,24 @@ Public Class PayrollResources
             ")
 
             _salaries = Await query.ReadAsync()
+        Catch ex As Exception
+            Throw New ResourceLoadingException("Salaries", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadSalaries2() As Task
+        Dim today = DateTime.Today
+
+        Try
+            Using context = New PayrollContext()
+                Dim query = context.Salaries.
+                    Where(Function(s) s.EffectiveFrom >= _payDateFrom Or If(s.EffectiveTo, today) >= _payDateFrom).
+                    Where(Function(s) s.EffectiveFrom <= _payDateTo Or If(s.EffectiveTo, today) <= _payDateTo).
+                    GroupBy(Function(s) s.EmployeeID).
+                    Select(Function(g) g.FirstOrDefault())
+
+                _salaries2 = Await query.ToListAsync()
+            End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("Salaries", ex)
         End Try
