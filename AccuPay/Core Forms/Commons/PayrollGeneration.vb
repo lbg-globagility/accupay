@@ -539,10 +539,10 @@ Public Class PayrollGeneration
             Dim amount = 0D
             Dim payRate = _payRates(timeEntry.Date)
             If payRate.IsRegularDay Then
-                Dim isRestDay = If(timeEntry.ShiftSchedule?.IsRestDay, False)
+                Dim isRestDay = timeEntry.RestDayHours > 0
 
                 If isRestDay Then
-                    amount = If(timeEntry.RestDayHours > 0, dailyRate, 0)
+                    amount = dailyRate
                 Else
                     amount = (timeEntry.RegularHours + timeEntry.TotalLeaveHours) * hourlyRate
                 End If
