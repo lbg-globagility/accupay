@@ -10,7 +10,9 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `ComputeNightDiffHours`(
     `$dutyStart` DATETIME,
     `$dutyEnd` DATETIME,
     `$nightDiffRangeStart` DATETIME,
-    `$nightDiffRangeEnd` DATETIME
+    `$nightDiffRangeEnd` DATETIME,
+    `$breaktimeStart` DATETIME,
+    `$breaktimeEnd` DATETIME
 ) RETURNS decimal(15,4)
     DETERMINISTIC
 BEGIN
@@ -19,6 +21,7 @@ BEGIN
     DECLARE nightDiffDutyEnd DATETIME;
     DECLARE isDutyOverlappingNightDifferential TINYINT(1);
     DECLARE nightDiffHours DECIMAL(15, 4) DEFAULT 0.0;
+    DECLARE hasBreaktime BOOLEAN DEFAULT FALSE;
 
     /*
      * Let's first check if the employee even worked during the night
@@ -33,7 +36,17 @@ BEGIN
         SET nightDiffDutyStart = GREATEST($dutyStart, $nightDiffRangeStart);
         SET nightDiffDutyEnd = LEAST($dutyEnd, $nightDiffRangeEnd);
 
-        SET nightDiffHours = COMPUTE_TimeDifference(TIME(nightDiffDutyStart), TIME(nightDiffDutyEnd));
+        SET hasBreaktime =
+            ($breaktimeStart IS NOT NULL AND $breaktimeEnd IS NOT NULL) AND
+            (nightDiffDutyStart < $breaktimeEnd AND $breaktimeStart < nightDiffDutyEnd);
+
+        IF hasBreaktime THEN
+            SET nightDiffHours =
+                COMPUTE_TimeDifference(TIME(nightDiffDutyStart), TIME($breaktimeStart)) +
+                COMPUTE_TimeDifference(TIME($breaktimeEnd), TIME(nightDiffDutyEnd));
+        ELSE
+            SET nightDiffHours = COMPUTE_TimeDifference(TIME(nightDiffDutyStart), TIME(nightDiffDutyEnd));
+        END IF;
     END IF;
 
     RETURN IFNULL(nightDiffHours, 0);

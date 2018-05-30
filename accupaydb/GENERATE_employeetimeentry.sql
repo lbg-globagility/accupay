@@ -675,8 +675,8 @@ SET shouldCalculateNightDifferential = (
 
 IF shouldCalculateNightDifferential THEN
     SET nightDiffHours =
-        ComputeNightDiffHours(dutyStart, dutyEnd, nightDiffRangeStart, nightDiffRangeEnd) +
-        ComputeNightDiffHours(dutyStart, dutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd);
+        ComputeNightDiffHours(dutyStart, dutyEnd, nightDiffRangeStart, nightDiffRangeEnd, breaktimeStart, breaktimeEnd) +
+        ComputeNightDiffHours(dutyStart, dutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd, breaktimeStart, breaktimeEnd);
 END IF;
 
 /******************************************************************************
@@ -715,8 +715,8 @@ IF hasOvertime THEN
 
         IF shouldCalculateNightDifferential THEN
             SET nightDiffOTHours =
-                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, nightDiffRangeStart, nightDiffRangeEnd) +
-                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd);
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, nightDiffRangeStart, nightDiffRangeEnd, NULL, NULL) +
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd, NULL, NULL);
         END IF;
 
     END IF;
@@ -738,8 +738,8 @@ IF hasOvertime THEN
 
         IF shouldCalculateNightDifferential THEN
             SET nightDiffOTHours = nightDiffOTHours +
-                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, nightDiffRangeStart, nightDiffRangeEnd) +
-                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd);
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, nightDiffRangeStart, nightDiffRangeEnd, NULL, NULL) +
+                ComputeNightDiffHours(overtimeDutyStart, overtimeDutyEnd, dawnNightDiffRangeStart, dawnNightDiffRangeEnd, NULL, NULL);
         END IF;
 
     END IF;
