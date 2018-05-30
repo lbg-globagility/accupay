@@ -446,6 +446,14 @@ ELSE
 
 END IF;
 
+IF otstartingtime IS NULL AND otendingtime IS NOT NULL THEN
+    SET otstartingtime = shifttimeto;
+END IF;
+
+IF otendingtime IS NULL AND otstartingtime IS NOT NULL THEN
+    SET otendingtime = shifttimefrom;
+END IF;
+
 SELECT
     etd.TimeIn,
     IF(e_UTOverride = 1, etd.TimeOut, IFNULL(sh.TimeTo, etd.TimeOut))
