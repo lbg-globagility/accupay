@@ -74,31 +74,31 @@ SELECT (e_startdate BETWEEN NEW.PayFromDate AND NEW.PayToDate)
 INTO IsFirstTimeSalary;
 
 SELECT
-    SUM(RegularHoursAmount),
-    SUM(OvertimeHoursAmount),
-    SUM(NightDiffHoursAmount),
-    SUM(NightDiffOTHoursAmount),
-    SUM(RestDayAmount),
-    SUM(RestDayOTPay),
-    SUM(SpecialHolidayPay),
-    SUM(SpecialHolidayOTPay),
-    SUM(RegularHolidayPay),
-    SUM(RegularHolidayOTPay),
-    SUM(HolidayPayAmount),
-    SUM(Leavepayment),
-    SUM(HoursLateAmount),
-    SUM(UndertimeHoursAmount),
-    SUM(Absent),
+    SUM(t.RegularHoursAmount),
+    SUM(t.OvertimeHoursAmount),
+    SUM(t.NightDiffHoursAmount),
+    SUM(t.NightDiffOTHoursAmount),
+    SUM(t.RestDayAmount),
+    SUM(t.RestDayOTPay),
+    SUM(t.SpecialHolidayPay),
+    SUM(t.SpecialHolidayOTPay),
+    SUM(t.RegularHolidayPay),
+    SUM(t.RegularHolidayOTPay),
+    SUM(t.HolidayPayAmount),
+    SUM(t.Leavepayment),
+    SUM(t.HoursLateAmount),
+    SUM(t.UndertimeHoursAmount),
+    SUM(t.Absent),
     SUM(TotalDayPay),
     SUM(t.VacationLeaveHours),
     SUM(t.SickLeaveHours),
     SUM(t.MaternityLeaveHours),
     SUM(t.OtherLeaveHours),
-    EmployeeSalaryID
-FROM employeetimeentryactual
-WHERE OrganizationID = NEW.OrganizationID AND
-    EmployeeID = NEW.EmployeeID AND
-    `Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
+    t.EmployeeSalaryID
+FROM employeetimeentryactual t
+WHERE t.OrganizationID = NEW.OrganizationID AND
+    t.EmployeeID = NEW.EmployeeID AND
+    t.`Date` BETWEEN NEW.PayFromDate AND NEW.PayToDate
 INTO
     regularPay,
     overtimePay,
