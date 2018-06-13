@@ -117,7 +117,6 @@ DECLARE dateTomorrow DATE;
 DECLARE dateYesterday DATE;
 
 DECLARE etd_TimeIn TIME;
-DECLARE etd_TimeOut TIME;
 DECLARE actualTimeIn TIME;
 DECLARE fullTimeIn DATETIME;
 DECLARE fullTimeOut DATETIME;
@@ -125,6 +124,8 @@ DECLARE hasTimeLogs BOOLEAN DEFAULT FALSE;
 
 DECLARE officialBusStartTime TIME;
 DECLARE officialBusEndTime TIME;
+DECLARE offBusinessStart DATETIME;
+DECLARE offBusinessEnd DATETIME;
 
 DECLARE shifttimefrom TIME;
 DECLARE shifttimeto TIME;
@@ -456,7 +457,8 @@ END IF;
 
 SELECT
     etd.TimeIn,
-    IF(e_UTOverride = 1, etd.TimeOut, IFNULL(sh.TimeTo, etd.TimeOut))
+    etd.TimeStampIn,
+    etd.TimeStampOut
 FROM employeetimeentrydetails etd
 INNER JOIN employee e ON e.RowID=etd.EmployeeID
 LEFT JOIN employeeshift esh
@@ -472,7 +474,8 @@ ORDER BY IFNULL(etd.LastUpd, etd.Created) DESC
 LIMIT 1
 INTO
     actualTimeIn,
-    etd_TimeOut;
+    fullTimeIn,
+    fullTimeOut;
 
 SET dateToday = ete_Date;
 SET dateTomorrow = DATE_ADD(dateToday, INTERVAL 1 DAY);
@@ -489,14 +492,22 @@ INTO
     officialBusStartTime,
     officialBusEndTime;
 
+SET offBusinessStart = TIMESTAMP(dateToday, officialBusStartTime);
+SET offBusinessEnd = TIMESTAMP(IF(officialBusEndTime > officialBusStartTime, dateToday, dateTomorrow), officialBusEndTime);
+
+IF NOT ISNULL(offBusinessStart) THEN
+    SET fullTimeIn = LEAST(fullTimeIn, offBusinessStart);
+END IF;
+
+IF NOT ISNULL(offBusinessEnd) THEN
+    SET fullTimeOut = GREATEST(fullTimeOut, offBusinessEnd);
+END IF;
+
 SET actualTimeIn = COALESCE(LEAST(actualTimeIn, officialBusStartTime), actualTimeIn, officialBusStartTime);
-SET etd_TimeOut = COALESCE(GREATEST(etd_TimeOut, officialBusEndTime), etd_TimeOut, officialBusEndTime);
 
-SELECT GRACE_PERIOD(actualTimeIn, shifttimefrom, e_LateGracePeriod)
-INTO etd_TimeIn;
-
-SET fullTimeIn = TIMESTAMP(dateToday, etd_TimeIn);
-SET fullTimeOut = TIMESTAMP(IF(etd_TimeOut > etd_TimeIn, dateToday, dateTomorrow), etd_TimeOut);
+/* Apply grace period to the time in */
+SELECT TIMESTAMP(DATE(fullTimeIn), GRACE_PERIOD(TIME(fullTimeIn), shifttimefrom, e_LateGracePeriod))
+INTO fullTimeIn;
 
 SET shiftStart = TIMESTAMP(dateToday, shifttimefrom);
 SET shiftEnd = TIMESTAMP(IF(shifttimeto > shifttimefrom, dateToday, dateTomorrow), shifttimeto);
