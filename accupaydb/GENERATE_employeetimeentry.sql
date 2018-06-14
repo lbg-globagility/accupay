@@ -496,11 +496,11 @@ SET offBusinessStart = TIMESTAMP(dateToday, officialBusStartTime);
 SET offBusinessEnd = TIMESTAMP(IF(officialBusEndTime > officialBusStartTime, dateToday, dateTomorrow), officialBusEndTime);
 
 IF NOT ISNULL(offBusinessStart) THEN
-    SET fullTimeIn = LEAST(fullTimeIn, offBusinessStart);
+    SET fullTimeIn = IF(fullTimeIn IS NULL, offBusinessStart, LEAST(fullTimeIn, offBusinessStart));    
 END IF;
 
 IF NOT ISNULL(offBusinessEnd) THEN
-    SET fullTimeOut = GREATEST(fullTimeOut, offBusinessEnd);
+    SET fullTimeOut = IF(fullTimeOut IS NULL, offBusinessEnd, GREATEST(fullTimeOut, offBusinessEnd));
 END IF;
 
 SET actualTimeIn = COALESCE(LEAST(actualTimeIn, officialBusStartTime), actualTimeIn, officialBusStartTime);
