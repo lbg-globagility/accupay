@@ -387,9 +387,10 @@ Public Class TimEntduration
                 ON p.RowID = ee.PositionID
                 INNER JOIN division d
                 ON d.RowID = p.DivisionID
+                LEFT JOIN employeeofficialbusiness ob ON ob.EmployeeID=etd.EmployeeID AND etd.`Date` BETWEEN ob.OffBusStartDate AND ob.OffBusEndDate
                 WHERE etd.OrganizationID = {orgztnID} AND
                     etd.EmployeeID IS NOT NULL AND
-                    (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='') AND
+                    (IFNULL(IFNULL(etd.TimeIn, ob.OffBusStartTime),'')='' OR IFNULL(IFNULL(etd.TimeOut, ob.OffBusEndTime),'')='') AND
                     etd.`Date` BETWEEN '{dateFrom.ToString("s")}' AND '{dateTo.ToString("s")}' AND
                     d.RowID = {divisionId}
                 LIMIT 1;
@@ -398,9 +399,10 @@ Public Class TimEntduration
             blankSql = $"
                 SELECT COUNT(etd.RowID)
                 FROM employeetimeentrydetails etd
+                LEFT JOIN employeeofficialbusiness ob ON ob.EmployeeID=etd.EmployeeID AND etd.`Date` BETWEEN ob.OffBusStartDate AND ob.OffBusEndDate
                 WHERE etd.OrganizationID = {orgztnID} AND
                     etd.EmployeeID IS NOT NULL AND
-                    (IFNULL(etd.TimeIn,'')='' OR IFNULL(etd.TimeOut,'')='') AND
+                    (IFNULL(IFNULL(etd.TimeIn, ob.OffBusStartTime),'')='' OR IFNULL(IFNULL(etd.TimeOut, ob.OffBusEndTime),'')='') AND
                     etd.`Date` BETWEEN '{dateFrom.ToString("s")}' AND '{dateTo.ToString("s")}'
                 LIMIT 1;
             "
