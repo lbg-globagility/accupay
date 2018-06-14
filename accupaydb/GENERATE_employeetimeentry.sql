@@ -493,7 +493,7 @@ INTO
     officialBusEndTime;
 
 SET offBusinessStart = TIMESTAMP(dateToday, officialBusStartTime);
-SET offBusinessEnd = TIMESTAMP(IF(officialBusEndTime > officialBusStartTime, dateToday, dateTomorrow), officialBusEndTime);
+SET offBusinessEnd = TIMESTAMP(IF(officialBusEndTime > officialBusStartTime OR ISNULL(officialBusStartTime), dateToday, dateTomorrow), officialBusEndTime);
 
 IF NOT ISNULL(offBusinessStart) THEN
     SET fullTimeIn = IF(fullTimeIn IS NULL, offBusinessStart, LEAST(fullTimeIn, offBusinessStart));    
