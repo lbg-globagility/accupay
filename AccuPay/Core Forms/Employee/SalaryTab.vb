@@ -204,6 +204,7 @@ Public Class SalaryTab
         txtTotalSalary.Text = CStr(_currentSalary.TotalSalary)
         txtBasicPay.Text = CStr(_currentSalary.BasicPay)
         txtSss.Text = CStr(If(_currentSalary.SocialSecurityBracket?.EmployeeContributionAmount, 0))
+        txtSss.Tag = _currentSalary.SocialSecurityBracket
         txtPhilHealth.Text = CStr(_currentSalary.PhilHealthDeduction)
         txtPagIbig.Text = CStr(_currentSalary.HDMFAmount)
         AddHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
