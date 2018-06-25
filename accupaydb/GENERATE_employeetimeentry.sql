@@ -1114,7 +1114,7 @@ ELSEIF isHoliday THEN
     END IF;
 
     IF isCalculatingRegularHoliday THEN
-        SET regularHolidayPay = regularHolidayHours * hourlyRate;
+        SET regularHolidayPay = regularHolidayHours * hourlyRate * (applicableHolidayRate - 1);
         SET leavePay = leaveHours * hourlyRate;
 
         IF _holidayCalculationType = 'Hourly' THEN
