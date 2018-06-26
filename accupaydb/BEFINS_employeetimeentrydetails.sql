@@ -58,12 +58,12 @@ END IF;
 
 
 
-SET NEW.TimeStampIn = ADDTIME(TIMESTAMP(timestampI_date),NEW.TimeIn);
-SET NEW.TimeStampOut = ADDTIME(TIMESTAMP(timestampO_date),NEW.TimeOut);
+# SET NEW.TimeStampIn = ADDTIME(TIMESTAMP(timestampI_date),NEW.TimeIn);
+# SET NEW.TimeStampOut = ADDTIME(TIMESTAMP(timestampO_date),NEW.TimeOut);
 
-IF NEW.TimeStampIn IS NOT NULL THEN SELECT INSUPD_timeentrylog(NEW.OrganizationID,EmployeeID,NEW.TimeStampIn,1) FROM employee WHERE RowID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID INTO anyint; END IF;
+# IF NEW.TimeStampIn IS NOT NULL THEN SELECT INSUPD_timeentrylog(NEW.OrganizationID,EmployeeID,NEW.TimeStampIn,1) FROM employee WHERE RowID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID INTO anyint; END IF;
 
-IF NEW.TimeStampOut IS NOT NULL THEN SELECT INSUPD_timeentrylog(NEW.OrganizationID,EmployeeID,NEW.TimeStampOut,1) FROM employee WHERE RowID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID INTO anyint; END IF;
+# IF NEW.TimeStampOut IS NOT NULL THEN SELECT INSUPD_timeentrylog(NEW.OrganizationID,EmployeeID,NEW.TimeStampOut,1) FROM employee WHERE RowID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID INTO anyint; END IF;
 
 END//
 DELIMITER ;
