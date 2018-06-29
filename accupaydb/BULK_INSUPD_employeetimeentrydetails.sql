@@ -75,14 +75,16 @@ SET @add_14hours = 50400; # (total_secs_per_hour * 14)
 					,SUBDATE(CONCAT_DATETIME(d.DateValue, sh.TimeFrom), INTERVAL @less_5hours SECOND) `RealisticTimeRangeFrom`
 					,ADDDATE(CONCAT_DATETIME(d.DateValue, sh.TimeFrom), INTERVAL CAST(@comput_sec1 AS INT) SECOND) `RealisticTimeRangeFromHalf`
 					
-					,ADDDATE(CONCAT_DATETIME(d.DateValue, sh.TimeTo), INTERVAL @add_14hours SECOND) `RealisticTimeRangeTo`
-					/*,IFNULL(CONCAT_DATETIME(ADDDATE(d.DateValue, INTERVAL 1 DAY), s.TimeFrom)
-					        , ADDDATE(CONCAT_DATETIME(d.DateValue, sh.TimeTo), INTERVAL @add_14hours SECOND)) `RealisticTimeRangeTo`*/
+					# ,ADDDATE(CONCAT_DATETIME(d.DateValue, sh.TimeTo), INTERVAL @add_14hours SECOND) `RealisticTimeRangeTo`
+					/**/,IFNULL(s.DateTimeFrom
+					        , ADDDATE(CONCAT_DATETIME(d.DateValue, sh.TimeTo), INTERVAL @add_14hours SECOND)) `RealisticTimeRangeTo`
 					,SUBDATE(CONCAT_DATETIME(d.DateValue, sh.TimeTo), INTERVAL CAST((@comput_sec1-less_one_second) AS INT) SECOND) `RealisticTimeRangeToHalf`
 					
 					FROM employeeshift esh
 					INNER JOIN dates d ON d.DateValue BETWEEN esh.EffectiveFrom AND esh.EffectiveTo
 					INNER JOIN shift sh ON sh.RowID=esh.ShiftID AND IS_TIMERANGE_REACHTOMORROW(sh.TimeFrom, sh.TimeTo) = FALSE
+					
+					LEFT JOIN employeeshift_withshiftimestamp s ON s.EmployeeID=esh.EmployeeID AND s.DateValue=ADDDATE(d.DateValue, INTERVAL 1 DAY)
 					
 					WHERE esh.OrganizationID=organiz_rowid
 				
