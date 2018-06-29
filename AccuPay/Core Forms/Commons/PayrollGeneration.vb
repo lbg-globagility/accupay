@@ -277,6 +277,8 @@ Public Class PayrollGeneration
                     _paystub.TaxableIncome = currentTaxableIncome + If(_previousPaystub?.TaxableIncome, 0D)
                 ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
                     _paystub.TaxableIncome = currentTaxableIncome
+                Else
+                    _paystub.TaxableIncome = currentTaxableIncome
                 End If
 
                 CalculateWithholdingTax()
