@@ -886,6 +886,7 @@ Public Class PayrollGeneration
         End If
 
         If Not (_paystub.TaxableIncome > 0D And IsScheduledForTaxation()) Then
+            _paystub.WithholdingTax = 0
             Return
         End If
 
