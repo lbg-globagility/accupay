@@ -8,6 +8,8 @@ Imports PayrollSys
 
 Public Class PayrollGeneration
 
+    Private Const PagibigEmployerAmount As Decimal = 100
+
     Private Shared logger As ILog = LogManager.GetLogger("PayrollLogger")
 
     Private _employee As DataRow
@@ -819,7 +821,7 @@ Public Class PayrollGeneration
 
     Private Sub CalculateHdmf(salary As DataRow)
         Dim employeeHdmfPerMonth = ValNoComma(salary("HDMFAmount"))
-        Dim employerHdmfPerMonth = If(employeeHdmfPerMonth = 0, 0, employeeHdmfPerMonth)
+        Dim employerHdmfPerMonth = If(employeeHdmfPerMonth = 0, 0, PagibigEmployerAmount)
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
 
