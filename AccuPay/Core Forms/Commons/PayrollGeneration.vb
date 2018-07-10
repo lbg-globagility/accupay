@@ -325,7 +325,7 @@ Public Class PayrollGeneration
 
                     vacationLeaveBalance = New PaystubItem() With {
                         .OrganizationID = z_OrganizationID,
-                        .ProductID = vacationLeaveProduct?.RowID,
+                        .Product = vacationLeaveProduct,
                         .PayAmount = newBalance,
                         .Paystub = _paystub
                     }
@@ -344,7 +344,7 @@ Public Class PayrollGeneration
 
                     sickLeaveBalance = New PaystubItem() With {
                         .OrganizationID = z_OrganizationID,
-                        .ProductID = sickLeaveProduct?.RowID,
+                        .Product = sickLeaveProduct,
                         .PayAmount = newBalance,
                         .Paystub = _paystub
                     }
