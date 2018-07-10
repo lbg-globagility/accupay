@@ -29,6 +29,9 @@ Public Class Overtime
 
     Public Overridable Property EmployeeID As Integer?
 
+    <Column("OTType")>
+    Public Overridable Property Type As String
+
     Public Overridable Property OTStartTime As TimeSpan?
 
     Public Overridable Property OTEndTime As TimeSpan?

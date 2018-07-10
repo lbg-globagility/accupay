@@ -1195,7 +1195,6 @@ ELSEIF isHoliday THEN
 
 END IF;
 
-
 SET returnvalue = timeEntryID;
 
 RETURN yes_true;

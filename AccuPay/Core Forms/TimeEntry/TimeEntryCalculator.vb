@@ -100,4 +100,14 @@ Public Class TimeEntryCalculator
         _timeEntry.UndertimeHours = CDec(undertimeHours.TotalHours)
     End Sub
 
+    Public Sub ComputeOvertimeHours(workBegin As Date, workEnd As Date)
+        Dim overtime = New Overtime()
+
+        Dim shiftInterval = New TimeInterval(_shiftToday.RangeStart, _shiftToday.RangeEnd)
+        Dim overtimeInterval = New TimeInterval(overtime.RangeStart, overtime.RangeEnd)
+        Dim workInterval = New TimeInterval(workBegin, workEnd)
+
+        Dim overtimeWorked = workInterval.Intersect(overtimeInterval)
+    End Sub
+
 End Class

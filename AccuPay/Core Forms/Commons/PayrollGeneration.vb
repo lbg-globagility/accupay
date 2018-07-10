@@ -463,28 +463,28 @@ Public Class PayrollGeneration
             .Amount = allowance.Amount
         }
 
-        For Each timeEntry In _timeEntries
-            Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
+        For Each TimeEntry In _timeEntries
+            Dim divisor = If(TimeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
             Dim hourlyRate = dailyRate / divisor
 
             Dim deductionHours =
-                timeEntry.LateHours +
-                timeEntry.UndertimeHours +
-                timeEntry.AbsentHours
+                TimeEntry.LateHours +
+                TimeEntry.UndertimeHours +
+                TimeEntry.AbsentHours
             Dim deductionAmount = -(hourlyRate * deductionHours)
 
             Dim additionalAmount = 0D
             Dim giveAllowanceDuringHolidays = _settings.GetBoolean("Payroll Policy", "allowances.holiday")
             If giveAllowanceDuringHolidays Then
-                Dim payRate = _payRates(timeEntry.Date)
+                Dim payRate = _payRates(TimeEntry.Date)
 
                 If (payRate.IsSpecialNonWorkingHoliday And _employee2.CalcSpecialHoliday) Or
                    (payRate.IsRegularHoliday And _employee2.CalcHoliday) Then
-                    additionalAmount = timeEntry.RegularHours * hourlyRate * (payRate.CommonRate - 1D)
+                    additionalAmount = TimeEntry.RegularHours * hourlyRate * (payRate.CommonRate - 1D)
                 End If
             End If
 
-            allowanceItem.AddPerDay(timeEntry.Date, deductionAmount + additionalAmount)
+            allowanceItem.AddPerDay(TimeEntry.Date, deductionAmount + additionalAmount)
         Next
 
         Return allowanceItem
@@ -506,30 +506,30 @@ Public Class PayrollGeneration
             .AllowanceID = allowance.RowID
         }
 
-        For Each timeEntry In _timeEntries
-            Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
+        For Each TimeEntry In _timeEntries
+            Dim divisor = If(TimeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
             Dim hourlyRate = dailyRate / divisor
 
             Dim amount = 0D
-            Dim payRate = _payRates(timeEntry.Date)
+            Dim payRate = _payRates(TimeEntry.Date)
             If payRate.IsRegularDay Then
-                Dim isRestDay = timeEntry.RestDayHours > 0
+                Dim isRestDay = TimeEntry.RestDayHours > 0
 
                 If isRestDay Then
                     amount = dailyRate
                 Else
-                    amount = (timeEntry.RegularHours + timeEntry.TotalLeaveHours) * hourlyRate
+                    amount = (TimeEntry.RegularHours + TimeEntry.TotalLeaveHours) * hourlyRate
                 End If
             ElseIf payRate.IsSpecialNonWorkingHoliday Then
-                Dim countableHours = timeEntry.RegularHours + timeEntry.SpecialHolidayHours + timeEntry.TotalLeaveHours
+                Dim countableHours = TimeEntry.RegularHours + TimeEntry.SpecialHolidayHours + TimeEntry.TotalLeaveHours
 
                 amount = If(countableHours > 0, dailyRate, 0D)
             ElseIf payRate.IsRegularHoliday Then
-                amount = (timeEntry.RegularHours + timeEntry.RegularHolidayHours) * hourlyRate
+                amount = (TimeEntry.RegularHours + TimeEntry.RegularHolidayHours) * hourlyRate
 
-                If HasWorkedLastWorkingDay(timeEntry) Then
+                If HasWorkedLastWorkingDay(TimeEntry) Then
                     If _settings.GetString("AllowancePolicy.CalculationType") = "Hourly" Then
-                        Dim workHours = If(timeEntry.ShiftSchedule?.Shift?.WorkHours, 8D)
+                        Dim workHours = If(TimeEntry.ShiftSchedule?.Shift?.WorkHours, 8D)
 
                         amount += {workHours * hourlyRate, dailyRate}.Max()
                     Else
@@ -538,7 +538,7 @@ Public Class PayrollGeneration
                 End If
             End If
 
-            allowanceItem.AddPerDay(timeEntry.Date, amount)
+            allowanceItem.AddPerDay(TimeEntry.Date, amount)
         Next
 
         Return allowanceItem
