@@ -48,7 +48,7 @@ Public Class TimeEntryCalculator
     End Sub
 
     Public Function ComputeLateHours(workBegin As Date, workEnd As Date, shiftToday As CurrentShift) As Decimal
-        If workBegin < shiftToday.RangeStart Then
+        If workBegin < shiftToday.Start Then
             Return 0D
         End If
 
@@ -56,9 +56,9 @@ Public Class TimeEntryCalculator
 
         If shiftToday.HasBreaktime Then
             Dim hoursBeforeBreak As TimeSpan
-            If shiftToday.RangeStart < shiftToday.BreaktimeStart Then
+            If shiftToday.Start < shiftToday.BreaktimeStart Then
                 Dim latePeriodEndBeforeBreaktime = {workBegin, shiftToday.BreaktimeStart.Value}.Min
-                hoursBeforeBreak = latePeriodEndBeforeBreaktime - shiftToday.RangeStart
+                hoursBeforeBreak = latePeriodEndBeforeBreaktime - shiftToday.Start
             End If
 
             Dim hoursAfterBreak As TimeSpan
@@ -68,14 +68,14 @@ Public Class TimeEntryCalculator
 
             lateHours = hoursBeforeBreak + hoursAfterBreak
         Else
-            lateHours = workBegin - shiftToday.RangeStart
+            lateHours = workBegin - shiftToday.Start
         End If
 
         Return CDec(lateHours.TotalHours)
     End Function
 
     Public Sub ComputeUndertimeHours()
-        If _timeEntry.DutyEnd > _shiftToday.RangeEnd Then
+        If _timeEntry.DutyEnd > _shiftToday.End Then
             Return
         End If
 
@@ -90,24 +90,35 @@ Public Class TimeEntryCalculator
             End If
 
             Dim undertimePeriodStartAfterBreaktime = {_timeEntry.DutyEnd, _shiftToday.BreaktimeEnd}.Max
-            hoursAfterBreak = _shiftToday.RangeEnd - undertimePeriodStartAfterBreaktime.Value
+            hoursAfterBreak = _shiftToday.End - undertimePeriodStartAfterBreaktime.Value
 
             undertimeHours = hoursBeforeBreak + hoursAfterBreak
         Else
-            undertimeHours = _shiftToday.RangeEnd - _timeEntry.DutyEnd
+            undertimeHours = _shiftToday.End - _timeEntry.DutyEnd
         End If
 
         _timeEntry.UndertimeHours = CDec(undertimeHours.TotalHours)
     End Sub
 
-    Public Sub ComputeOvertimeHours(workBegin As Date, workEnd As Date)
-        Dim overtime = New Overtime()
+    Public Function ComputeUndertimeHours2(workBegin As Date, workEnd As Date, shift As CurrentShift) As Decimal
+        Dim periodWorked = New TimeInterval(workBegin, workEnd)
+        Dim shiftPeriod = New TimeInterval(shift.Start, shift.End)
 
-        Dim shiftInterval = New TimeInterval(_shiftToday.RangeStart, _shiftToday.RangeEnd)
-        Dim overtimeInterval = New TimeInterval(overtime.RangeStart, overtime.RangeEnd)
-        Dim workInterval = New TimeInterval(workBegin, workEnd)
 
-        Dim overtimeWorked = workInterval.Intersect(overtimeInterval)
-    End Sub
+
+        Return 0
+    End Function
+
+    Public Function ComputeOvertimeHours(workBegin As Date, workEnd As Date, overtime As Overtime, shift As CurrentShift) As Decimal
+        Dim overtimeStart = If(overtime.Start, shift.End)
+        Dim overtimeEnd = If(overtime.End, shift.Start)
+
+        Dim overtimeRecognized = New TimeInterval(overtimeStart, overtimeEnd)
+        Dim worked = New TimeInterval(workBegin, workEnd)
+
+        Dim overtimeWorked = worked.Intersect(overtimeRecognized)
+
+        Return CDec(overtimeWorked.Length.TotalHours)
+    End Function
 
 End Class

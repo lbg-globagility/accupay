@@ -127,8 +127,8 @@ Namespace Global.AccuPay.Entity
             Dim timeIn = timeLog.FullTimeIn
             Dim timeOut = timeLog.FullTimeOut
 
-            DutyStart = {timeIn, shiftToday.RangeStart}.Max
-            DutyEnd = {timeOut, shiftToday.RangeEnd}.Min
+            DutyStart = {timeIn, shiftToday.Start}.Max
+            DutyEnd = {timeOut, shiftToday.End}.Min
         End Sub
 
         Public ReadOnly Property TotalLeaveHours As Decimal
