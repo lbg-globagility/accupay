@@ -2,7 +2,7 @@
 
 Namespace Global.AccuPay
 
-    Public Class TimeInterval
+    Public Class TimePeriod
 
         Public ReadOnly Start As Date
 
@@ -23,15 +23,36 @@ Namespace Global.AccuPay
             Return (Start <= moment) And (moment <= [End])
         End Function
 
-        Public Function Overlaps(timeInterval As TimeInterval) As Boolean
-            Return Me.Start <= timeInterval.End And
-                Me.End >= timeInterval.Start
+        Public Function Intersects(period As TimePeriod) As Boolean
+            Return Me.Start <= period.End And
+                Me.End >= period.Start
         End Function
 
-        Public Function Intersect(timeInterval As TimeInterval) As TimeInterval
-            Return New TimeInterval(
-                {Me.Start, timeInterval.Start}.Max(),
-                {Me.End, timeInterval.End}.Min())
+        Public Function Overlap(period As TimePeriod) As TimePeriod
+            Return New TimePeriod(
+                {Me.Start, period.Start}.Max(),
+                {Me.End, period.End}.Min())
+        End Function
+
+        Public Function Difference(period As TimePeriod) As IList(Of TimePeriod)
+            If Not Intersects(period) Then
+                Return New List(Of TimePeriod) From {Me}
+            End If
+
+            Dim periods = New List(Of TimePeriod)
+            If Start < period.Start Then
+                periods.Add(New TimePeriod(Start, period.Start))
+            End If
+
+            If [End] > period.End Then
+                periods.Add(New TimePeriod(period.End, [End]))
+            End If
+
+            Return periods
+        End Function
+
+        Public Overrides Function ToString() As String
+            Return $"{Start.ToString()} to {[End].ToString()}"
         End Function
 
     End Class

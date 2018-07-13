@@ -130,6 +130,7 @@
   <ItemGroup>
     <Compile Include="CalendarTest.vb" />
     <Compile Include="EnumsTest.vb" />
+    <Compile Include="LateHoursTest.vb" />
     <Compile Include="ListOfValueCollectionTest.vb" />
     <Compile Include="NHibernateTest.vb" />
     <Compile Include="OvertimeHoursTest.vb" />
