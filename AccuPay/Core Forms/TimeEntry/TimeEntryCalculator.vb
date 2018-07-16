@@ -76,8 +76,16 @@ Public Class TimeEntryCalculator
     End Function
 
     Public Function ComputeOvertimeHours(workBegin As Date, workEnd As Date, overtime As Overtime, shift As CurrentShift) As Decimal
-        Dim overtimeStart = If(overtime.Start, shift.End)
-        Dim overtimeEnd = If(overtime.End, shift.Start)
+        Dim otStartTime = If(overtime.OTStartTime, shift.End.TimeOfDay)
+        Dim otEndTime = If(overtime.OTEndTime, shift.Start.TimeOfDay)
+
+        Dim overtimeStart = overtime.OTStartDate.Add(otStartTime)
+        Dim nextDay = overtime.OTStartDate.AddDays(1)
+
+        Dim overtimeEnd = If(
+            otEndTime > otStartTime,
+            overtime.OTStartDate.Add(otEndTime),
+            nextDay.Add(otEndTime))
 
         Dim overtimeRecognized = New TimePeriod(overtimeStart, overtimeEnd)
         Dim worked = New TimePeriod(workBegin, workEnd)
