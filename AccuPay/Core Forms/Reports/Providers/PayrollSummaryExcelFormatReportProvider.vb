@@ -117,7 +117,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private preferred_excel_font As ExcelFont
 
-    Private font_size As Single = 8
+    Private Const FontSize As Single = 8
 
     Dim margin_size() As Decimal = New Decimal() {0.25D, 0.75D, 0.3D}
 
@@ -135,22 +135,23 @@ Public Class PayrollSummaryExcelFormatReportProvider
     End Property
 
     Public Sub Run() Implements IReportProvider.Run
-
         Dim is_goldwings As Boolean = (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
 
         Static last_cell_column As String = basic_alphabet.Last
 
-        Dim bool_result As Short = Convert.ToInt16(is_actual) 'Convert.ToInt16(SalaryActualDeclared)
+        Dim bool_result As Short = Convert.ToInt16(is_actual)
 
         Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
 
         n_PayrollSummaDateSelection.ReportIndex = 6
 
-        If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
+        If n_PayrollSummaDateSelection.ShowDialog <> Windows.Forms.DialogResult.OK Then
+            Return
+        End If
 
-            Dim excel_custom_format As Boolean = Convert.ToBoolean(ExcelOptionFormat())
+        Dim excel_custom_format = Convert.ToBoolean(ExcelOptionFormat())
 
-            Dim parameters =
+        Dim parameters =
                 New Object() {orgztnID,
                               n_PayrollSummaDateSelection.PayPeriodFromID,
                               n_PayrollSummaDateSelection.PayPeriodToID,
@@ -158,246 +159,194 @@ Public Class PayrollSummaryExcelFormatReportProvider
                               n_PayrollSummaDateSelection.cboStringParameter.Text,
                               excel_custom_format}
 
-            Dim sql_print_employee_profiles As New SQL("CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
-                                                       parameters)
+        Dim sql_print_employee_profiles As New SQL(
+            "CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
+            parameters)
 
-            Static one_value As Integer = 1
+        Static one_value As Integer = 1
 
-            Try
+        Try
+            Dim ds = sql_print_employee_profiles.GetFoundRows
 
-                Dim ds As New DataSet
+            If sql_print_employee_profiles.HasError Then
+                Throw sql_print_employee_profiles.ErrorException
+            Else
+                Static report_name As String = "PayrollSummary"
+                Static temp_path As String = Path.GetTempPath()
 
-                'Dim dt As New DataTable
-
-                'dt = sql_print_employee_profiles.GetFoundRows.Tables(0)
-                ds = sql_print_employee_profiles.GetFoundRows
-
-                If sql_print_employee_profiles.HasError Then
-
-                    Throw sql_print_employee_profiles.ErrorException
-                Else
-
-                    Static report_name As String = "PayrollSummary"
-
-                    Static temp_path As String = Path.GetTempPath()
-
-                    Dim short_dates() As String =
+                Dim short_dates() As String =
                         New String() {CDate(n_PayrollSummaDateSelection.DateFrom).ToShortDateString,
                                       CDate(n_PayrollSummaDateSelection.DateTo).ToShortDateString}
 
-                    Dim temp_file As String =
+                Dim temp_file As String =
                         String.Concat(temp_path,
                                       orgNam,
                                       report_name, n_PayrollSummaDateSelection.cboStringParameter.Text.Replace(" ", ""), "Report",
                                       String.Concat(short_dates(0).Replace("/", "-"), "TO", short_dates(1).Replace("/", "-")),
                                       ".xlsx")
 
-                    Dim date_range As String =
+                Dim date_range As String =
                         String.Concat("for the period of ", short_dates(0), " to ", short_dates(1))
 
-                    Dim newFile = New FileInfo(temp_file)
+                Dim newFile = New FileInfo(temp_file)
 
-                    If newFile.Exists Then
-                        newFile.Delete()
-                        newFile = New FileInfo(temp_file)
-                    End If
+                If newFile.Exists Then
+                    newFile.Delete()
+                    newFile = New FileInfo(temp_file)
+                End If
 
-                    'preferred_excel_font.Name = "Source Sans Pro Regular"
-                    'preferred_excel_font.Name = preferred_font.Name
-
-                    Dim tbl_withrows =
+                Dim tbl_withrows =
                             ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0)
 
-                    Using excl_pkg = New ExcelPackage(newFile)
+                Using excel = New ExcelPackage(newFile)
+                    Dim divisionNo = 0
 
-                        Dim ii = 0
+                    For Each employeeTable As DataTable In tbl_withrows
+                        Dim worksheet = excel.Workbook.Worksheets.Add(String.Concat(report_name, divisionNo))
 
-                        For Each dtbl As DataTable In tbl_withrows
+                        worksheet.Cells.Style.Font.Size = FontSize
 
-                            Dim worksheet As ExcelWorksheet =
-                                    excl_pkg.Workbook.Worksheets.Add(String.Concat(report_name, ii))
+                        Dim organizationCell = worksheet.Cells(1, one_value)
+                        organizationCell.Value = orgNam.ToUpper
+                        organizationCell.Style.Font.Bold = True
 
-                            worksheet.Cells.Style.Font.Size = font_size
+                        Dim dateCell = worksheet.Cells(2, one_value)
+                        dateCell.Value = date_range
 
-                            Dim cell1 = worksheet.Cells(1, one_value)
+                        Dim row_indx As Integer = 5
+                        Dim col_index As Integer = one_value
 
-                            cell1.Value = orgNam.ToUpper
-                            cell1.Style.Font.Bold = True
+                        For Each str_header As String In column_headers
+                            Dim cell_row5 = worksheet.Cells(row_indx, col_index)
+                            cell_row5.Value = str_header
+                            cell_row5.Style.Font.Bold = True
 
-                            Dim cell2 = worksheet.Cells(2, one_value)
+                            col_index += one_value
+                        Next
 
-                            cell2.Value = date_range
+                        row_indx += one_value
 
-                            Dim row_indx As Integer = 5
+                        Dim details_start_rowindex = row_indx
 
-                            Dim col_index As Integer = one_value
+                        Dim details_last_rowindex = 0
 
-                            'For Each dtcol As DataColumn In dt.Columns
-                            '    worksheet.Cells(row_indx, col_index).Value = dtcol.ColumnName
-                            '    col_index += one_value
-                            'Next
+                        Dim last_cell_range As String = String.Empty
 
-                            For Each str_header As String In column_headers
-                                Dim cell_row5 = worksheet.Cells(row_indx, col_index)
-                                cell_row5.Value = str_header
-                                cell_row5.Style.Font.Bold = True
+                        For Each employeeRow As DataRow In employeeTable.Rows
 
-                                col_index += one_value
+                            Dim cell3 = worksheet.Cells(3, one_value)
+                            Dim division_name = employeeRow("DatCol1").ToString
+
+                            If division_name.Length > 0 Then
+                                cell3.Value = String.Concat("Division: ", division_name)
+
+                                worksheet.Name = division_name
+                            End If
+
+                            Dim row_array = employeeRow.ItemArray
+
+                            Dim i = 0
+                            For Each cell_val As String In cell_mapped_text_value
+                                Dim excl_colrow = String.Concat(basic_alphabet(i), row_indx)
+
+                                Dim _cells = worksheet.Cells(excl_colrow)
+                                _cells.Value = employeeRow(cell_val)
+
+                                i += one_value
                             Next
 
+                            '********************
+
+                            For Each cell_val As String In cell_mapped_decim_value
+
+                                Dim excl_colrow = String.Concat(basic_alphabet(i), row_indx)
+
+                                last_cell_range = basic_alphabet(i)
+
+                                Dim _cells = worksheet.Cells(excl_colrow)
+                                _cells.Value = employeeRow(cell_val)
+                                _cells.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
+                                _cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+
+                                i += one_value
+                            Next
+
+                            details_last_rowindex = row_indx
                             row_indx += one_value
+                        Next
 
-                            Dim details_start_rowindex = row_indx
-
-                            Dim details_last_rowindex = 0
-
-                            Dim last_cell_range As String = String.Empty
-
-                            For Each dtrow As DataRow In dtbl.Rows
-
-                                Dim cell3 = worksheet.Cells(3, one_value)
-
-                                Dim division_name = dtrow("DatCol1").ToString
-
-                                If division_name.Length > 0 Then
-
-                                    cell3.Value =
-                                        String.Concat("Division: ", division_name)
-
-                                    worksheet.Name = division_name
-
-                                End If
-
-                                Dim row_array = dtrow.ItemArray
-
-                                Dim i = 0
-
-                                'For Each rowval In row_array
-
-                                'Next
-
-                                For Each cell_val As String In cell_mapped_text_value
-
-                                    Dim excl_colrow As String =
-                                            String.Concat(basic_alphabet(i),
-                                                          row_indx)
-
-                                    Dim _cells = worksheet.Cells(excl_colrow)
-
-                                    _cells.Value = dtrow(cell_val)
-
-                                    i += one_value
-
-                                Next
-
-                                '********************
-
-                                For Each cell_val As String In cell_mapped_decim_value
-
-                                    Dim excl_colrow As String =
-                                            String.Concat(basic_alphabet(i),
-                                                          row_indx)
-
-                                    last_cell_range = basic_alphabet(i)
-
-                                    Dim _cells = worksheet.Cells(excl_colrow)
-
-                                    _cells.Value = dtrow(cell_val)
-                                    _cells.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
-
-                                    _cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
-
-                                    i += one_value
-
-                                Next
-
-                                details_last_rowindex = row_indx
-
-                                row_indx += one_value
-
-                            Next
-
-                            'last_cell_range = String.Concat(last_cell_range, (row_indx + 1))
-
-                            Dim sum_cell_range = String.Join(":",
+                        Dim sum_cell_range = String.Join(":",
                                                                  String.Concat("C", row_indx),
                                                                  String.Concat(last_cell_column, row_indx))
-                            ''FromRow, FromColumn, ToRow, ToColumn
-                            'worksheet.Cells(sum_cell_range).Formula = String.Format("SUBTOTAL(9,{0})") ', New ExcelAddress(2, 3, 4, 3).Address)
 
-                            worksheet.Cells(sum_cell_range).Formula =
+                        worksheet.Cells(sum_cell_range).Formula =
                                     String.Format("SUM({0})",
                                                   New ExcelAddress(details_start_rowindex,
                                                                    3,
                                                                    details_last_rowindex,
-                                                                   3).Address) 'column_headers.Count
+                                                                   3).Address)
 
-                            worksheet.Cells(sum_cell_range).Style.Font.Bold = True
-                            worksheet.Cells(sum_cell_range).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
+                        worksheet.Cells(sum_cell_range).Style.Font.Bold = True
+                        worksheet.Cells(sum_cell_range).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
 
-                            If is_goldwings Then
-                                Dim signatur_field_index As Integer = (row_indx + 1)
-                                With worksheet
-                                    .Cells(String.Concat("A", signatur_field_index)).Value = "Prepared by: "
-                                    .Cells(String.Join(":",
-                                                       String.Concat("A", signatur_field_index),
-                                                       String.Concat("B", signatur_field_index))).Merge = True
+                        If is_goldwings Then
+                            RenderSignatureFields(worksheet, row_indx)
+                        End If
 
-                                    signatur_field_index += 1
-                                    .Cells(String.Concat("A", signatur_field_index)).Value = "Audited by: "
-                                    .Cells(String.Join(":",
-                                                       String.Concat("A", signatur_field_index),
-                                                       String.Concat("B", signatur_field_index))).Merge = True
+                        SetDefaultPrinterSettings(worksheet.PrinterSettings)
 
-                                    signatur_field_index += 1
-                                    .Cells(String.Concat("A", signatur_field_index)).Value = "Approved by: "
-                                    .Cells(String.Join(":",
-                                                       String.Concat("A", signatur_field_index),
-                                                       String.Concat("B", signatur_field_index))).Merge = True
-                                End With
-                            End If
+                        worksheet.Cells.AutoFitColumns()
+                        worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
 
-                            With worksheet.PrinterSettings
+                        divisionNo += 1
+                    Next
 
-                                .Orientation = eOrientation.Landscape
+                    excel.Save()
+                End Using
 
-                                .PaperSize = ePaperSize.Legal
-
-                                .TopMargin = margin_size(1)
-                                .BottomMargin = margin_size(1)
-                                .LeftMargin = margin_size(0)
-                                .RightMargin = margin_size(0)
-
-                            End With
-
-                            worksheet.Cells.AutoFitColumns()
-
-                            worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
-
-                            excl_pkg.Save()
-
-                            ii += 1
-
-                        Next
-
-                    End Using
-
-                    If tbl_withrows.Count > 0 Then
-
-                        Process.Start(temp_file)
-
-                    Else
-                        MsgBox("No found record(s)", MsgBoxStyle.Information)
-
-                    End If
-
+                If tbl_withrows.Count > 0 Then
+                    Process.Start(temp_file)
+                Else
+                    MsgBox("No found record(s)", MsgBoxStyle.Information)
                 End If
-            Catch ex As Exception
-                MsgBox(getErrExcptn(ex, Me.Name))
-            End Try
+            End If
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Me.Name))
+        End Try
+    End Sub
 
-        End If
+    Private Sub RenderSignatureFields(worksheet As ExcelWorksheet, startIdx As Integer)
+        Dim signatur_field_index As Integer = (startIdx + 1)
 
+        With worksheet
+            .Cells(String.Concat("A", signatur_field_index)).Value = "Prepared by: "
+            .Cells(String.Join(":",
+                                   String.Concat("A", signatur_field_index),
+                                   String.Concat("B", signatur_field_index))).Merge = True
+
+            signatur_field_index += 1
+            .Cells(String.Concat("A", signatur_field_index)).Value = "Audited by: "
+            .Cells(String.Join(":",
+                                   String.Concat("A", signatur_field_index),
+                                   String.Concat("B", signatur_field_index))).Merge = True
+
+            signatur_field_index += 1
+            .Cells(String.Concat("A", signatur_field_index)).Value = "Approved by: "
+            .Cells(String.Join(":",
+                                   String.Concat("A", signatur_field_index),
+                                   String.Concat("B", signatur_field_index))).Merge = True
+        End With
+    End Sub
+
+    Private Sub SetDefaultPrinterSettings(settings As ExcelPrinterSettings)
+        With settings
+            .Orientation = eOrientation.Landscape
+            .PaperSize = ePaperSize.Legal
+            .TopMargin = margin_size(1)
+            .BottomMargin = margin_size(1)
+            .LeftMargin = margin_size(0)
+            .RightMargin = margin_size(0)
+        End With
     End Sub
 
     Private Function SalaryActualDeclared() As SalaryActualization
@@ -487,11 +436,9 @@ End Class
 Friend Enum SalaryActualization As Short
     Declared = 0
     Actual = 1
-
 End Enum
 
 Friend Enum ExcelOption As Short
     SeparateEachDepartment = 0
     KeepAllInOneSheet = 1
-
 End Enum
