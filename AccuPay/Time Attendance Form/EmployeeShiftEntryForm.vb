@@ -752,7 +752,7 @@ Public Class EmployeeShiftEntryForm
                 For row = startRow.Row To endRow.Row
                     Dim employeeID = worksheet.Cells(row, 1).Text
 
-                    If String.IsNullOrEmpty(employeeID) Or (Not IsNumeric(employeeID)) Then
+                    If String.IsNullOrEmpty(employeeID) Or (row = 1) Then
                         Continue For
                     End If
 
