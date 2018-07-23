@@ -927,18 +927,13 @@ Public Class PayStubForm
 
     Private Sub tsSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tsSearch.KeyPress
         Dim e_asc As String = Asc(e.KeyChar)
+
         IsUserPressEnterToSearch = (e_asc = 13)
         If IsUserPressEnterToSearch Then
             Dim search_string_len = tsSearch.Text.Trim.Length
             IsUserPressEnterToSearch = (search_string_len > 0)
             tsbtnSearch_Click(sender, e)
-        Else
-            Dim keypressresult = TrapCharKey(e_asc) And TrapNumKey(e_asc)
-
-            e.Handled = keypressresult
-
         End If
-
     End Sub
 
     Private Sub tsbtnSearch_Click(sender As Object, e As EventArgs) Handles tsbtnSearch.Click
