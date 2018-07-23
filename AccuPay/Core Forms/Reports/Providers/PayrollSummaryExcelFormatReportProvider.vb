@@ -218,8 +218,10 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                         For Each dtbl As DataTable In tbl_withrows
 
+                            work_sheet_name = String.Concat(report_name, ii)
+
                             Dim worksheet As ExcelWorksheet =
-                                    excl_pkg.Workbook.Worksheets.Add(String.Concat(report_name, ii))
+                                    excl_pkg.Workbook.Worksheets.Add(work_sheet_name)
 
                             worksheet.Cells.Style.Font.Size = font_size
 
@@ -259,6 +261,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                             Dim sheet_index = one_value
 
+                            Static department_name As String = String.Empty
+
                             For Each dtrow As DataRow In dtbl.Rows
 
                                 Dim cell3 = worksheet.Cells(3, one_value)
@@ -268,7 +272,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
                                 cell3.Value =
                                         String.Concat("Division: ", division_name)
 
-                                If division_name.Length > 0 Then
+                                If division_name.Length > 0 And department_name <> division_name Then
+
+                                    department_name = division_name
 
                                     If created_worksheet_names.Contains(division_name) Then
                                         division_name = String.Concat(dtrow("DatCol1").ToString, sheet_index)
@@ -277,15 +283,12 @@ Public Class PayrollSummaryExcelFormatReportProvider
                                         sheet_index = one_value
                                     End If
 
-                                    If work_sheet_name <> division_name Then
+                                    worksheet.Name = division_name
 
-                                        work_sheet_name = division_name
+                                    work_sheet_name = division_name
 
-                                        worksheet.Name = division_name
+                                    created_worksheet_names.Add(division_name)
 
-                                        created_worksheet_names.Add(division_name)
-
-                                    End If
                                 End If
 
                                 Dim row_array = dtrow.ItemArray
@@ -336,6 +339,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
                                 row_indx += one_value
 
                             Next
+
+                            department_name = String.Empty
 
                             'last_cell_range = String.Concat(last_cell_range, (row_indx + 1))
 
@@ -489,9 +494,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         Dim i = 0
 
-        While i < repetition
+        While i <repetition
 
-            _result =
+                    _result=
                 String.Concat(_result, Environment.NewLine)
 
             i += 1
