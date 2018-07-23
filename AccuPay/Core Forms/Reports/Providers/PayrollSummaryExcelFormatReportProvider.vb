@@ -212,6 +212,10 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                         Dim ii = 0
 
+                        Dim created_worksheet_names = New List(Of String)
+
+                        Static work_sheet_name As String = String.Empty
+
                         For Each dtbl As DataTable In tbl_withrows
 
                             Dim worksheet As ExcelWorksheet =
@@ -253,19 +257,35 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                             Dim last_cell_range As String = String.Empty
 
+                            Dim sheet_index = one_value
+
                             For Each dtrow As DataRow In dtbl.Rows
 
                                 Dim cell3 = worksheet.Cells(3, one_value)
 
                                 Dim division_name = dtrow("DatCol1").ToString
 
-                                If division_name.Length > 0 Then
-
-                                    cell3.Value =
+                                cell3.Value =
                                         String.Concat("Division: ", division_name)
 
-                                    worksheet.Name = division_name
+                                If division_name.Length > 0 Then
 
+                                    If created_worksheet_names.Contains(division_name) Then
+                                        division_name = String.Concat(dtrow("DatCol1").ToString, sheet_index)
+                                        sheet_index += one_value
+                                    Else
+                                        sheet_index = one_value
+                                    End If
+
+                                    If work_sheet_name <> division_name Then
+
+                                        work_sheet_name = division_name
+
+                                        worksheet.Name = division_name
+
+                                        created_worksheet_names.Add(division_name)
+
+                                    End If
                                 End If
 
                                 Dim row_array = dtrow.ItemArray
