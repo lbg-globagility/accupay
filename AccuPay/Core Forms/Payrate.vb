@@ -12,16 +12,6 @@ Public Class PayRateForm
             End If
         End If
 
-        'If FormLeft.Contains("Pay rate") Then
-        '    FormLeft.Remove("Pay rate")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.Text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
         showAuditTrail.Close()
 
         GeneralForm.listGeneralForm.Remove(Me.Name)
@@ -29,12 +19,6 @@ Public Class PayRateForm
     End Sub
 
     Private Sub Form8_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'dbconn()
-
-        'TextBox5.ContextMenu = New ContextMenu
-
-        'view_ID = VIEW_privilege(Me.Text, orgztnID)
-
         loadpayrate()
 
         enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Holiday Type' ORDER BY DisplayValue;", cbopaytype)
@@ -84,20 +68,6 @@ Public Class PayRateForm
                     dontUpdate = 1
                     Exit For
                 Else
-                    'If drow("Creates").ToString = "N" Then
-                    '    'ToolStripButton2.Visible = 0
-                    '    dontCreate = 1
-                    'Else
-                    '    dontCreate = 0
-                    '    'ToolStripButton2.Visible = 1
-                    'End If
-
-                    'If drow("Deleting").ToString = "N" Then
-                    '    ToolStripButton3.Visible = 0
-                    'Else
-                    '    ToolStripButton3.Visible = 1
-                    'End If
-
                     If drow("Updates").ToString = "N" Then
                         dontUpdate = 1
                     Else
@@ -260,9 +230,6 @@ Public Class PayRateForm
 
         End If
 
-        'For Each drow As DataRow In dattab.Rows
-
-        'Next
         For Each dgvr As DataGridViewRow In dgvpayrate.Rows
             If dgvr.Cells("Column1").Value = Nothing _
            And dgvr.Cells("Column2").Value = Nothing _
@@ -447,7 +414,6 @@ Public Class PayRateForm
             hideObjFields()
         End If
 
-        'myEllipseButton(DataGridView1, currColName, TextBox1)
         addhndlrTextChangeEditEvent()
     End Sub
 
@@ -460,14 +426,6 @@ Public Class PayRateForm
 
             CellIndexLeave = e.ColumnIndex
             dgvpayrate.Columns(e.ColumnIndex).Width = 95
-
-            'If dgvisLlostfocus = 0 Then
-            '    DataGridView1_CurrentCellChanged(sender, e)
-
-            'Else
-
-            'End If
-
         End If
     End Sub
 
@@ -478,10 +436,6 @@ Public Class PayRateForm
         If dgvpayrate.RowCount <> 0 Then
             dgvisLlostfocus = 1
 
-            'If dgvisLlostfocus = 0 Then
-            '    DataGridView1_CurrentCellChanged(sender, e)
-
-            'Else
             dgvpayrate.CurrentRow.Height = 295
 
             If dgvpayrate.CurrentRow.Index = dgvpayrate.RowCount - 1 _
@@ -512,14 +466,9 @@ Public Class PayRateForm
                 once = -1
 
             End If
-
-            'End If
-
         Else
             dgvisLlostfocus = 0
-
         End If
-
     End Sub
 
     Dim RowIndexLeave = 0
@@ -528,41 +477,17 @@ Public Class PayRateForm
         RowIndexLeave = -1
 
         If dgvpayrate.RowCount <> 0 Then
-
             RowIndexLeave = e.RowIndex
             dgvpayrate.Rows(e.RowIndex).Height = 95
-
-            'If dgvisLlostfocus = 0 Then
-            '    DataGridView1_CurrentCellChanged(sender, e)
-
-            'Else
-
-            'End If
-
         End If
-
     End Sub
 
     Sub ObjectFields(ByVal dgv As DataGridView, _
                         ByVal colName As String, _
                         Optional isVisb As SByte = 0)
-        'cbopaytype, _
-        '                       txtdescrptn, _
-        '                       txtpayrate, _
-        '                       txtotrate, _
-        '                       txtnightdiffrate, _
-        '                       txtnightdiffotrate)
 
         Try
             If dgv.CurrentRow.Cells(colName).Selected Then
-
-                'If dgv.Columns(colName).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells Then
-                '    Dim wid As Integer = dgv.Columns(colName).Width
-
-                '    Dim x As Integer = dgv.Columns(colName).Width + 25
-                '    dgv.Columns(colName).AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-                '    dgv.Columns(colName).Width = x
-                'End If
 
                 Dim rect As Rectangle = dgv.GetCellDisplayRectangle(dgv.CurrentRow.Cells(colName).ColumnIndex, dgv.CurrentRow.Cells(colName).RowIndex, True)
 
@@ -631,66 +556,12 @@ Public Class PayRateForm
                 txtrestotrate.Parent = dgv
                 txtrestotrate.Location = New Point(rect.Right - txtrestotrate.Width, rect.Top + 270) '192
                 txtrestotrate.Visible = If(isVisb = 0, True, False)
-
-                'Label17
-                'txtrestrate
-            Else
-                'hideObjFields()
             End If
         Catch ex As Exception
-            'MsgBox(ex.Message & " ERR_NO 77-10 : myEllipseButton")
         End Try
     End Sub
 
-#Region "INSUPD_payrate"
-    'Sub INSUPD_payrate(Optional prate_Date As Object = Nothing)
-    '    'prate_RowID()
-    '    'prate_OrganizationID()
-    '    'prate_CreatedBy()
-    '    'prate_LastUpdBy()
-    '    'prate_Date()
-    '    'prate_PayType()
-    '    'prate_Description()
-    '    'prate_PayRate()
-    '    'prate_OvertimeRate()
-    '    'prate_NightDifferentialRate()
-    '    'prate_NightDifferentialOTRate()
-
-    '    Dim params(10, 2) As Object
-
-    '    params(0, 0) = "prate_RowID"
-    '    params(1, 0) = "prate_OrganizationID"
-    '    params(2, 0) = "prate_CreatedBy"
-    '    params(3, 0) = "prate_LastUpdBy" ' Index was outside the bounds of the array.
-    '    params(4, 0) = "prate_Date"
-    '    params(5, 0) = "prate_PayType"
-    '    params(6, 0) = "prate_Description"
-    '    params(7, 0) = "prate_PayRate"
-    '    params(8, 0) = "prate_OvertimeRate"
-    '    params(9, 0) = "prate_NightDifferentialRate"
-    '    params(10, 0) = "prate_NightDifferentialOTRate"
-
-    '    params(0, 1) = DBNull.Value
-    '    params(1, 1) = orgztnID
-    '    params(2, 1) = 1
-    '    params(3, 1) = 1
-    '    params(4, 1) = prate_Date
-    '    params(5, 1) = DBNull.Value
-    '    params(6, 1) = DBNull.Value
-    '    params(7, 1) = DBNull.Value
-    '    params(8, 1) = DBNull.Value
-    '    params(9, 1) = DBNull.Value
-    '    params(10, 1) = DBNull.Value
-
-    '    EXEC_INSUPD_PROCEDURE(params, _
-    '                          "INSUPD_payrate", _
-    '                          "payrateID")
-
-    'End Sub
-#End Region
-
     Sub hideObjFields()
-
         cbopaytype.Visible = False
         txtdescrptn.Visible = False
         txtpayrate.Visible = False
@@ -708,7 +579,6 @@ Public Class PayRateForm
         Label16.Visible = False
         Label17.Visible = False
         Label18.Visible = False
-
     End Sub
 
     Dim searchdate As Object
@@ -717,7 +587,6 @@ Public Class PayRateForm
 
     Private Sub TextBox5_GotFocus(sender As Object, e As EventArgs) Handles TextBox5.GotFocus, cbomonth.GotFocus, Button2.GotFocus
         dgvisLlostfocus = 1
-        'hideObjFields()
         DataGridView1_CurrentCellChanged(sender, e)
         DataGridView1_SelectionChanged(sender, e)
     End Sub
@@ -740,48 +609,15 @@ Public Class PayRateForm
         End If
     End Sub
 
-    'Private Sub TextBox_Leave(sender As Object, e As EventArgs) 'Handles TextBox2.Leave, TextBox3.Leave, TextBox4.Leave
-
-    '    Dim objsender As String = DirectCast(sender, TextBox).Name
-    '    'Dim txtval As Object = DirectCast(DirectCast(sender, TextBox).Text, Object)
-    '    Try
-    '        If objsender = "TextBox2" Then
-    '            If TextBox2.Text <> "" Then
-    '                TextBox2.Text = Format(CDate(TextBox2.Text), "MM-dd-yyyy")
-    '            End If
-    '        ElseIf objsender = "TextBox3" Then
-    '            If TextBox3.Text <> "" Then
-    '                TextBox3.Text = Format(CDate(TextBox3.Text), "dd")
-    '            End If
-    '        ElseIf objsender = "TextBox4" Then
-    '            If TextBox4.Text <> "" Then
-    '                TextBox4.Text = Format(CDate(TextBox4.Text), "yyyy")
-    '            End If
-    '        End If
-
-    '    Catch ex As Exception
-    '        MsgBox(ex.Message)
-    '        Return
-    '    End Try
-    'End Sub
-
     Private Sub TextBox5_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TextBox5.KeyPress
         Dim e_KChar As String = Asc(e.KeyChar)
-        e.Handled = TrapNumKey(e_KChar)
-    End Sub
-
-    Private Sub TextBox5_TextChanged(sender As Object, e As EventArgs) Handles TextBox5.TextChanged
-
+        e.Handled = TrapDecimKey(e_KChar)
     End Sub
 
     Private Sub TextBox5_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBox5.KeyDown, cbomonth.KeyDown
-
         If e.KeyCode = Keys.Enter Then
-
             rmvhandlr()
-
             Button2_Click(sender, e)
-
         ElseIf e.KeyCode = Keys.Up Then
             TextBox5.Text = Val(TextBox5.Text) + 1
             TextBox5.SelectionStart = TextBox5.TextLength
@@ -789,29 +625,21 @@ Public Class PayRateForm
             TextBox5.Text = Val(TextBox5.Text) - 1
             TextBox5.SelectionStart = TextBox5.TextLength
         End If
-
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         rmvhandlr()
 
-        'For Each r As DataGridViewRow In dgvpayrate.Rows
-        '    r.Height = 95
-        'Next
-
         For Each r As DataGridViewColumn In dgvpayrate.Columns
             r.Width = 95
         Next
 
-        'hideObjFields()
         Try
             If Trim(cbomonth.Text) <> "" Then
-                'TextBox5.Text = Format(CDate(TextBox5.Text), "MMMM yyyy")
 
                 searchdate = cbomonth.Text & " " & TextBox5.Text
                 searchdate = Format(CDate(searchdate), "MMMM yyyy")
                 loadpayrate(searchdate)
-                'loadpayrate(TextBox5.Text)
             Else
                 loadpayrate()
             End If
@@ -833,13 +661,6 @@ Public Class PayRateForm
             Exit Sub
         End If
         rmvhandlr()
-        '.Columns.Add("currPayrateID")
-        '.Columns.Add("currPayrate")
-        '.Columns.Add("Dscrptn")
-        '.Columns.Add("PayType")
-        '.Columns.Add("OTRate")
-        '.Columns.Add("NightDiffRate")
-        '.Columns.Add("NightDiffOTRate")
 
         Dim curr_rowindx, curr_colindx As Integer
 
@@ -870,15 +691,15 @@ Public Class PayRateForm
 
             'USUALLY UPDATE FUNCTION
 
-            INSUPD_payrate(drow("currPayrateID"), _
-                           drow("pratedate"), _
-                           drow("PayType"), _
-                           drow("Dscrptn"), _
-                           drow("currPayrate"), _
-                           drow("OTRate"), _
-                           drow("NightDiffRate"), _
-                           drow("NightDiffOTRate"), _
-                           drow("RestDayRate"), _
+            INSUPD_payrate(drow("currPayrateID"),
+                           drow("pratedate"),
+                           drow("PayType"),
+                           drow("Dscrptn"),
+                           drow("currPayrate"),
+                           drow("OTRate"),
+                           drow("NightDiffRate"),
+                           drow("NightDiffOTRate"),
+                           drow("RestDayRate"),
                            drow("RestDayOTRate")) 'drow("RestDayRate")
 
         Next
@@ -892,21 +713,18 @@ Public Class PayRateForm
             dgvpayrate.Item(curr_colindx, curr_rowindx).Selected = True
         End If
 
-        'loadpayrate()
-
         addhandlr(sender, e)
-
     End Sub
 
-    Sub INSUPD_payrate(Optional prate_RowID As Object = Nothing, _
-                       Optional prate_Date As Object = Nothing, _
-                       Optional prate_PayType As Object = Nothing, _
-                       Optional prate_Description As Object = Nothing, _
-                       Optional prate_PayRate As Object = Nothing, _
-                       Optional prate_OvertimeRate As Object = Nothing, _
-                       Optional prate_NightDifferentialRate As Object = Nothing, _
-                       Optional prate_NightDifferentialOTRate As Object = Nothing, _
-                       Optional RestDayRate As Object = Nothing, _
+    Sub INSUPD_payrate(Optional prate_RowID As Object = Nothing,
+                       Optional prate_Date As Object = Nothing,
+                       Optional prate_PayType As Object = Nothing,
+                       Optional prate_Description As Object = Nothing,
+                       Optional prate_PayRate As Object = Nothing,
+                       Optional prate_OvertimeRate As Object = Nothing,
+                       Optional prate_NightDifferentialRate As Object = Nothing,
+                       Optional prate_NightDifferentialOTRate As Object = Nothing,
+                       Optional RestDayRate As Object = Nothing,
                        Optional prate_RestDayOvertimeRate As Object = Nothing)
 
         Dim params(12, 2) As Object
@@ -939,14 +757,9 @@ Public Class PayRateForm
         params(11, 1) = If(RestDayRate = Nothing, 1.3, RestDayRate)
         params(12, 1) = If(prate_RestDayOvertimeRate = Nothing, 1.69, prate_RestDayOvertimeRate)
 
-        EXEC_INSUPD_PROCEDURE(params, _
-                              "INSUPD_payrate", _
+        EXEC_INSUPD_PROCEDURE(params,
+                              "INSUPD_payrate",
                               "payrateID") 'voyager, face to face
-
-    End Sub
-
-    Private Sub txtdescrptn_TextChanged(sender As Object, e As EventArgs) Handles txtdescrptn.TextChanged
-
     End Sub
 
     Sub addhndlrTextChangeEditEvent()
@@ -958,13 +771,6 @@ Public Class PayRateForm
         AddHandler txtnightdiffotrate.TextChanged, AddressOf ComboBox1_TextChanged
         AddHandler txtrestrate.TextChanged, AddressOf ComboBox1_TextChanged
         AddHandler txtrestotrate.TextChanged, AddressOf ComboBox1_TextChanged
-
-        '
-        'AddHandler txtpayrate.Leave, AddressOf txt_Leave
-        'AddHandler txtotrate.Leave, AddressOf txt_Leave
-        'AddHandler txtnightdiffrate.Leave, AddressOf txt_Leave
-        'AddHandler txtnightdiffotrate.Leave, AddressOf txt_Leave
-
     End Sub
 
     Sub rmvhndlrTextChangeEditEvent()
@@ -976,42 +782,13 @@ Public Class PayRateForm
         RemoveHandler txtnightdiffotrate.TextChanged, AddressOf ComboBox1_TextChanged
         RemoveHandler txtrestrate.TextChanged, AddressOf ComboBox1_TextChanged
         AddHandler txtrestotrate.TextChanged, AddressOf ComboBox1_TextChanged
-
-        'RemoveHandler txtpayrate.Leave, AddressOf txt_Leave
-        'RemoveHandler txtotrate.Leave, AddressOf txt_Leave
-        'RemoveHandler txtnightdiffrate.Leave, AddressOf txt_Leave
-        'RemoveHandler txtnightdiffotrate.Leave, AddressOf txt_Leave
-
     End Sub
 
     Dim editedpayrate As New AutoCompleteStringCollection
 
     Dim tbleditedpayrate As New DataTable
-    'Dim currPayrateID, _
-    '    currPayrate, _
-    '    Dscrptn, _
-    '    PayType, _
-    '    OTRate, _
-    '    NightDiffRate, _
-    '    NightDiffOTRate As String
+
     Private Sub ComboBox1_TextChanged(sender As Object, e As EventArgs) 'Handles ComboBox1.TextChanged, TextBox1.TextChanged, TextBox2.TextChanged, _
-        '                                                               'TextBox3.TextChanged, TextBox4.TextChanged, TextBox6.TextChanged
-
-        'Static x As SByte = 0
-        'If x = 0 Then
-        '    x = 1
-        '    With tbleditedpayrate
-        '        .Columns.Add("currPayrateID")
-        '        .Columns.Add("currPayrate")
-        '        .Columns.Add("Dscrptn")
-        '        .Columns.Add("PayType")
-        '        .Columns.Add("OTRate")
-        '        .Columns.Add("NightDiffRate")
-        '        .Columns.Add("NightDiffOTRate")
-
-        '    End With
-        'End If
-
         If dgvpayrate.RowCount <> 0 Then
 
             If dgvpayrate.CurrentRow.Cells(dgvpayrate.CurrentCell.ColumnIndex).Value <> Nothing Then
@@ -1028,8 +805,8 @@ Public Class PayRateForm
                 Dim nRow As DataRow
                 nRow = tbleditedpayrate.NewRow
 
-                Dim indx_day As String = If(dgvpayrate.CurrentRow.Cells(currColName).Value.ToString.Length = 1, _
-                                            "0" & dgvpayrate.CurrentRow.Cells(currColName).Value, _
+                Dim indx_day As String = If(dgvpayrate.CurrentRow.Cells(currColName).Value.ToString.Length = 1,
+                                            "0" & dgvpayrate.CurrentRow.Cells(currColName).Value,
                                             dgvpayrate.CurrentRow.Cells(currColName).Value)
 
                 Dim selrow() As DataRow = dattab.Select("Date='" & monthindx & "-" & indx_day & "-" & TextBox5.Text & "'")
@@ -1064,21 +841,15 @@ Public Class PayRateForm
                 'editedpayrate.Add(1)
 
             End If
-
         Else
-
-
         End If
-
     End Sub
 
-    Private Sub txtpayrate_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtpayrate.KeyPress, txtotrate.KeyPress, _
-                                                                                      txtnightdiffrate.KeyPress, txtnightdiffotrate.KeyPress, _
+    Private Sub txtpayrate_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtpayrate.KeyPress, txtotrate.KeyPress,
+                                                                                      txtnightdiffrate.KeyPress, txtnightdiffotrate.KeyPress,
                                                                                       txtrestrate.KeyPress, txtrestotrate.KeyPress
-
         Dim e_KChar As String = Asc(e.KeyChar)
-        e.Handled = TrapNumKey(e_KChar)
-
+        e.Handled = TrapDecimKey(e_KChar)
     End Sub
 
     Private Sub DataGridView1_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles dgvpayrate.ColumnWidthChanged
@@ -1092,14 +863,11 @@ Public Class PayRateForm
         If dgvpayrate.RowCount <> 0 Then
             Dim currColName As String = dgvpayrate.Columns(dgvpayrate.CurrentCell.ColumnIndex).Name
             ObjectFields(dgvpayrate, currColName)
-
         End If
     End Sub
 
     Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
-
         tbleditedpayrate.Rows.Clear()
-
     End Sub
 
     Private Sub Form8_ResizeEnd(sender As Object, e As EventArgs) 'Handles Me.ResizeEnd
@@ -1118,7 +886,6 @@ Public Class PayRateForm
     End Sub
 
     Private Sub cbopaytype_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbopaytype.SelectedIndexChanged
-
         Dim holidaypayrate = EXECQUER("SELECT DisplayValue FROM listofval WHERE ParentLIC='" & Trim(cbopaytype.Text) & "' AND Type='Pay rate';")
 
         Dim ratevalues = Split(holidaypayrate, ",")
@@ -1174,14 +941,10 @@ Public Class PayRateForm
             Catch ex As Exception
                 txtrestotrate.Text = 100
             End Try
-
         End If
-
     End Sub
 
     Private Sub txt_Leave(sender As Object, e As EventArgs) 'Handles txtpayrate.Leave, txtotrate.Leave, _
-        'txtnightdiffrate.Leave, txtnightdiffotrate.Leave
-
         Dim txtsender As TextBox = New TextBox
         txtsender = DirectCast(sender, TextBox)
 
@@ -1197,35 +960,24 @@ Public Class PayRateForm
             ElseIf sender_name = "txtnightdiffotrate" Then
                 txtnightdiffotrate.Text = 100
             End If
-        Else
-
         End If
-
     End Sub
 
     Dim monthindx As String
 
     Private Sub cbomonth_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbomonth.SelectedIndexChanged, cbomonth.SelectedValueChanged
-
         rmvhandlr()
-
         monthindx = cbomonth.SelectedIndex + 1
-
         monthindx = If(monthindx.Length = 1, "0" & monthindx, monthindx)
-
         Button2_Click(sender, e)
-
     End Sub
 
     Private Sub dgvpayrate_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles dgvpayrate.CellPainting
-
         If e.RowIndex = -1 Then
-            GridDrawCustomHeaderColumns(dgvpayrate, e, _
-             My.Resources.ColumnBGStyle005, _
+            GridDrawCustomHeaderColumns(dgvpayrate, e,
+             My.Resources.ColumnBGStyle005,
              DGVHeaderImageAlignments.FillCell)
-
         End If
-
     End Sub
 
     Private Sub GridDrawCustomHeaderColumns(ByVal dgv As DataGridView, _
@@ -1242,22 +994,22 @@ Public Class PayRateForm
         If img IsNot Nothing Then
             Select Case Style
                 Case DGVHeaderImageAlignments.FillCell
-                    gr.DrawImage( _
-                     img, e.CellBounds.X, e.CellBounds.Y, _
+                    gr.DrawImage(
+                     img, e.CellBounds.X, e.CellBounds.Y,
                      e.CellBounds.Width, e.CellBounds.Height)
                 Case DGVHeaderImageAlignments.SingleCentered
-                    gr.DrawImage(img, _
-                     ((e.CellBounds.Width - img.Width) \ 2) + e.CellBounds.X, _
-                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y, _
+                    gr.DrawImage(img,
+                     ((e.CellBounds.Width - img.Width) \ 2) + e.CellBounds.X,
+                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y,
                      img.Width, img.Height)
                 Case DGVHeaderImageAlignments.SingleLeft
-                    gr.DrawImage(img, e.CellBounds.X, _
-                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y, _
+                    gr.DrawImage(img, e.CellBounds.X,
+                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y,
                      img.Width, img.Height)
                 Case DGVHeaderImageAlignments.SingleRight
-                    gr.DrawImage(img, _
-                     (e.CellBounds.Width - img.Width) + e.CellBounds.X, _
-                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y, _
+                    gr.DrawImage(img,
+                     (e.CellBounds.Width - img.Width) + e.CellBounds.X,
+                     ((e.CellBounds.Height - img.Height) \ 2) + e.CellBounds.Y,
                      img.Width, img.Height)
                 Case DGVHeaderImageAlignments.Tile
                     ' ********************************************************
@@ -1278,12 +1030,12 @@ Public Class PayRateForm
                     Dim br As New TextureBrush(img, Drawing2D.WrapMode.Tile)
                     gr.FillRectangle(br, e.ClipBounds)
                 Case Else
-                    gr.DrawImage( _
-                     img, e.CellBounds.X, e.CellBounds.Y, _
+                    gr.DrawImage(
+                     img, e.CellBounds.X, e.CellBounds.Y,
                      e.ClipBounds.Width, e.CellBounds.Height)
             End Select
         End If
-        'e.PaintContent(e.CellBounds)
+
         If e.Value Is Nothing Then
             e.Handled = True
             Return
@@ -1319,20 +1071,10 @@ Public Class PayRateForm
                         .Alignment = StringAlignment.Far
                         .LineAlignment = StringAlignment.Near
                 End Select
-                ' This part could be handled...
-                'Select Case dgv.ColumnHeadersDefaultCellStyle.WrapMode
-                '	Case DataGridViewTriState.False
-                '		.FormatFlags = StringFormatFlags.NoWrap
-                '	Case DataGridViewTriState.NotSet
-                '		.FormatFlags = StringFormatFlags.NoWrap
-                '	Case DataGridViewTriState.True
-                '		.FormatFlags = StringFormatFlags.FitBlackBox
-                'End Select
+
                 .HotkeyPrefix = Drawing.Text.HotkeyPrefix.None
                 .Trimming = StringTrimming.None
             End With
-
-            'Microsoft Sans Serif, 24pt, style=Bold
 
             Dim newFont = New System.Drawing.Font("Segoe UI", 9.75!, FontStyle.Bold)
 
@@ -1346,68 +1088,40 @@ Public Class PayRateForm
         e.Handled = True
     End Sub
 
-    Private Sub Panel1_LostFocus(sender As Object, e As EventArgs)
-        'hideObjFields()
-    End Sub
-
     Private Sub dgvpayrate_Leave(sender As Object, e As EventArgs) Handles dgvpayrate.Leave
-
-        'hideObjFields()
-
         If dgvpayrate.RowCount <> 0 Then
-
             If dgvisLlostfocus = 1 Then
-
                 If CellIndexLeave = -1 Then
-
                 Else
                     dgvpayrate.Columns(CellIndexLeave).Width = 230
-
                 End If
 
                 If RowIndexLeave = -1 Then
-
                 Else
                     dgvpayrate.Rows(RowIndexLeave).Height = 295
-
                 End If
-
             Else
-
-                Dim dgvcellargs As New DataGridViewCellEventArgs(dgvpayrate.CurrentCell.ColumnIndex, _
+                Dim dgvcellargs As New DataGridViewCellEventArgs(dgvpayrate.CurrentCell.ColumnIndex,
                                                                  dgvpayrate.CurrentRow.Index)
 
                 DataGridView1_RowLeave(sender, dgvcellargs)
                 DataGridView1_CellLeave(sender, dgvcellargs)
-
             End If
-
         Else
             dgvisLlostfocus = 0
-
         End If
-
-    End Sub
-
-    Private Sub txtnightdiffotrate_TextChanged(sender As Object, e As EventArgs) Handles txtnightdiffotrate.TextChanged
-
     End Sub
 
     Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_ID)
-
         showAuditTrail.BringToFront()
-
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
         Dim numberone = 1
 
         If numberone = 1 Then
-
             Exit Sub
         End If
 
@@ -1431,7 +1145,6 @@ Public Class PayRateForm
         Next
 
         MsgBox("Done inserting payrates.", MsgBoxStyle.Information, "Finish")
-
     End Sub
 
     Private Sub Panel2_Enter(sender As Object, e As EventArgs) Handles Panel2.Enter
@@ -1442,7 +1155,7 @@ Public Class PayRateForm
             once = 1
 
             For Each objctrl As Control In Panel2.Controls
-                If TypeOf objctrl Is TextBox Or _
+                If TypeOf objctrl Is TextBox Or
                     TypeOf objctrl Is ComboBox Then
                     OjbAssignNoContextMenu(objctrl)
                 Else
@@ -1451,13 +1164,7 @@ Public Class PayRateForm
             Next
 
             cbopaytype.ContextMenu = New ContextMenu
-
         End If
-
-    End Sub
-
-    Private Sub Panel2_Paint(sender As Object, e As PaintEventArgs) Handles Panel2.Paint
-
     End Sub
 
 End Class
