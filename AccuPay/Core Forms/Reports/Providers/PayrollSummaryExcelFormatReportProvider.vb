@@ -376,9 +376,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         Dim i = 0
 
-        While i < repetition
+        While i <repetition
 
-            _result =
+                    _result=
                 String.Concat(_result, Environment.NewLine)
 
             i += 1

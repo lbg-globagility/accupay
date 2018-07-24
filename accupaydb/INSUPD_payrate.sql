@@ -6,7 +6,21 @@
 
 DROP FUNCTION IF EXISTS `INSUPD_payrate`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_payrate`(`prate_RowID` INT, `prate_OrganizationID` INT, `prate_CreatedBy` INT, `prate_LastUpdBy` INT, `prate_Date` DATE, `prate_PayType` VARCHAR(50), `prate_Description` VARCHAR(50), `prate_PayRate` DECIMAL(10,2), `prate_OvertimeRate` DECIMAL(10,2), `prate_NightDifferentialRate` DECIMAL(10,2), `prate_NightDifferentialOTRate` DECIMAL(10,2), `prate_RestDayRate` DECIMAL(10,2), `prate_RestDayOvertimeRate` DECIMAL(10,2)) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_payrate`(
+    `prate_RowID` INT,
+    `prate_OrganizationID` INT,
+    `prate_CreatedBy` INT,
+    `prate_LastUpdBy` INT,
+    `prate_Date` DATE,
+    `prate_PayType` VARCHAR(50),
+    `prate_Description` VARCHAR(50),
+    `prate_PayRate` DECIMAL(10, 4),
+    `prate_OvertimeRate` DECIMAL(10, 4),
+    `prate_NightDifferentialRate` DECIMAL(10, 4),
+    `prate_NightDifferentialOTRate` DECIMAL(10, 4),
+    `prate_RestDayRate` DECIMAL(10, 4),
+    `prate_RestDayOvertimeRate` DECIMAL(10, 4)
+) RETURNS int(11)
     DETERMINISTIC
 BEGIN
 
