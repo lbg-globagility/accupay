@@ -107,8 +107,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
             "CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
             parameters)
 
-        Static one_value As Integer = 1
-
         Try
             Dim ds = sql_print_employee_profiles.GetFoundRows
 
@@ -144,21 +142,31 @@ Public Class PayrollSummaryExcelFormatReportProvider
             Using excel = New ExcelPackage(newFile)
                 Dim divisionNo = 0
 
+                Dim subTotalRows = New List(Of Integer)
+
+                Dim worksheet = excel.Workbook.Worksheets.Add(String.Concat(report_name, divisionNo))
+                worksheet.Cells.Style.Font.Size = FontSize
+
+                Dim organizationCell = worksheet.Cells(1, 1)
+                organizationCell.Value = orgNam.ToUpper
+                organizationCell.Style.Font.Bold = True
+
+                Dim dateCell = worksheet.Cells(2, 1)
+                dateCell.Value = date_range
+
+                Dim rowIndex As Integer = 4
+
                 For Each employeeTable As DataTable In tbl_withrows
-                    Dim worksheet = excel.Workbook.Worksheets.Add(String.Concat(report_name, divisionNo))
+                    Dim divisionCell = worksheet.Cells(rowIndex, 1)
+                    Dim firstEmployee = employeeTable.AsEnumerable().FirstOrDefault()
+                    Dim divisionName = firstEmployee("DatCol1").ToString
+                    If divisionName.Length > 0 Then
+                        divisionCell.Value = String.Concat("Division: ", divisionName)
+                    End If
 
-                    worksheet.Cells.Style.Font.Size = FontSize
+                    rowIndex += 1
 
-                    Dim organizationCell = worksheet.Cells(1, one_value)
-                    organizationCell.Value = orgNam.ToUpper
-                    organizationCell.Style.Font.Bold = True
-
-                    Dim dateCell = worksheet.Cells(2, one_value)
-                    dateCell.Value = date_range
-
-                    Dim rowIndex As Integer = 5
-                    Dim columnIndex As Integer = one_value
-
+                    Dim columnIndex As Integer = 1
                     For Each column In reportColumns
                         Dim headerCell = worksheet.Cells(rowIndex, columnIndex)
                         headerCell.Value = column.Name
@@ -167,22 +175,17 @@ Public Class PayrollSummaryExcelFormatReportProvider
                         columnIndex += 1
                     Next
 
-                    rowIndex += one_value
+                    rowIndex += 1
 
                     Dim details_start_rowindex = rowIndex
                     Dim details_last_rowindex = 0
 
                     For Each employeeRow As DataRow In employeeTable.Rows
-                        Dim cell3 = worksheet.Cells(3, one_value)
-                        Dim division_name = employeeRow("DatCol1").ToString
+                        If divisionName.Length > 0 Then
+                            divisionCell.Value = String.Concat("Division: ", divisionName)
 
-                        If division_name.Length > 0 Then
-                            cell3.Value = String.Concat("Division: ", division_name)
-
-                            worksheet.Name = division_name
+                            worksheet.Name = divisionName
                         End If
-
-                        Dim row_array = employeeRow.ItemArray
 
                         Dim letters = GenerateAlphabet.GetEnumerator()
                         For Each reportColumn In reportColumns.Zip(basic_alphabet, Function(c, a) New With {.Column = c, .Alphabet = a})
@@ -202,31 +205,42 @@ Public Class PayrollSummaryExcelFormatReportProvider
                         Next
 
                         details_last_rowindex = rowIndex
-                        rowIndex += one_value
+                        rowIndex += 1
                     Next
 
-                    Dim sum_cell_range = String.Join(
+                    Dim subTotalCellRange = String.Join(
                         ":",
                         String.Concat("C", rowIndex),
                         String.Concat(last_cell_column, rowIndex))
 
-                    worksheet.Cells(sum_cell_range).Formula = String.Format(
+                    subTotalRows.Add(rowIndex)
+
+                    worksheet.Cells(subTotalCellRange).Formula = String.Format(
                         "SUM({0})",
                         New ExcelAddress(
                             details_start_rowindex, 3,
                             details_last_rowindex, 3).Address)
 
-                    worksheet.Cells(sum_cell_range).Style.Font.Bold = True
-                    worksheet.Cells(sum_cell_range).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
-
-                    RenderSignatureFields(worksheet, rowIndex)
-                    SetDefaultPrinterSettings(worksheet.PrinterSettings)
+                    worksheet.Cells(subTotalCellRange).Style.Font.Bold = True
+                    worksheet.Cells(subTotalCellRange).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
+                    worksheet.Cells(subTotalCellRange).Style.Border.Top.Style = ExcelBorderStyle.Thin
 
                     worksheet.Cells.AutoFitColumns()
                     worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
 
+                    rowIndex += 3
+
                     divisionNo += 1
                 Next
+
+                Dim grandTotalRange = String.Join(":", String.Concat("C", rowIndex), String.Concat(last_cell_column, rowIndex))
+                worksheet.Cells(grandTotalRange).Formula = String.Format("SUM({0})", String.Join(",", subTotalRows.Select(Function(s) $"C{s}")))
+                worksheet.Cells(grandTotalRange).Style.Border.Top.Style = ExcelBorderStyle.Double
+                worksheet.Cells(grandTotalRange).Style.Font.Bold = True
+                worksheet.Cells(grandTotalRange).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
+
+                RenderSignatureFields(worksheet, rowIndex)
+                SetDefaultPrinterSettings(worksheet.PrinterSettings)
 
                 excel.Save()
             End Using
@@ -376,9 +390,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         Dim i = 0
 
-        While i <repetition
+        While i < repetition
 
-                    _result=
+            _result =
                 String.Concat(_result, Environment.NewLine)
 
             i += 1
