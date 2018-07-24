@@ -212,10 +212,16 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                         Dim ii = 0
 
+                        Dim created_worksheet_names = New List(Of String)
+
+                        Static work_sheet_name As String = String.Empty
+
                         For Each dtbl As DataTable In tbl_withrows
 
+                            work_sheet_name = String.Concat(report_name, ii)
+
                             Dim worksheet As ExcelWorksheet =
-                                    excl_pkg.Workbook.Worksheets.Add(String.Concat(report_name, ii))
+                                    excl_pkg.Workbook.Worksheets.Add(work_sheet_name)
 
                             worksheet.Cells.Style.Font.Size = font_size
 
@@ -253,18 +259,35 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                             Dim last_cell_range As String = String.Empty
 
+                            Dim sheet_index = one_value
+
+                            Static department_name As String = String.Empty
+
                             For Each dtrow As DataRow In dtbl.Rows
 
                                 Dim cell3 = worksheet.Cells(3, one_value)
 
                                 Dim division_name = dtrow("DatCol1").ToString
 
-                                If division_name.Length > 0 Then
-
-                                    cell3.Value =
+                                cell3.Value =
                                         String.Concat("Division: ", division_name)
 
+                                If division_name.Length > 0 And department_name <> division_name Then
+
+                                    department_name = division_name
+
+                                    If created_worksheet_names.Contains(division_name) Then
+                                        division_name = String.Concat(dtrow("DatCol1").ToString, sheet_index)
+                                        sheet_index += one_value
+                                    Else
+                                        sheet_index = one_value
+                                    End If
+
                                     worksheet.Name = division_name
+
+                                    work_sheet_name = division_name
+
+                                    created_worksheet_names.Add(division_name)
 
                                 End If
 
@@ -316,6 +339,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
                                 row_indx += one_value
 
                             Next
+
+                            department_name = String.Empty
 
                             'last_cell_range = String.Concat(last_cell_range, (row_indx + 1))
 
@@ -469,9 +494,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         Dim i = 0
 
-        While i < repetition
+        While i <repetition
 
-            _result =
+                    _result=
                 String.Concat(_result, Environment.NewLine)
 
             i += 1
