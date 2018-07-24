@@ -14,104 +14,54 @@ Public Class PayrollSummaryExcelFormatReportProvider
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
                       "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT"}
 
-    Private ReadOnly columns As IReadOnlyCollection(Of Column) = New ReadOnlyCollection(Of Column)({
-        New Column("Code", "DatCol2", ColumnType.Text),
-        New Column("Full Name", "DatCol3", ColumnType.Text),
-        New Column("Rate", "Rate"),
-        New Column("Basic Pay", "BasicPay"),
-        New Column("Reg Hrs", "RegularHours"),
-        New Column("Reg Pay", "RegularPay"),
-        New Column("OT Hrs", "OvertimeHours"),
-        New Column("OT Pay", "OvertimePay"),
-        New Column("ND Hrs", "NightDiffHours"),
-        New Column("ND Pay", "NightDiffPay"),
-        New Column("NDOT Hrs", "NightDiffOvertimeHours"),
-        New Column("NDOT Pay", "NightDiffOvertimePay"),
-        New Column("R.Day Hrs", "RestDayHours"),
-        New Column("R.Day Pay", "RestDayPay"),
-        New Column("R.DayOT Hrs", "RestDayOTHours"),
-        New Column("R.DayOT Pay", "RestDayOTPay"),
-        New Column("S.Hol Hrs", "SpecialHolidayHours"),
-        New Column("S.Hol Pay", "SpecialHolidayPay"),
-        New Column("S.HolOT Hrs", "SpecialHolidayOTHours"),
-        New Column("S.HolOT Pay", "SpecialHolidayOTPay"),
-        New Column("R.Hol Hrs", "RegularHolidayHours"),
-        New Column("R.Hol Pay", "RegularHolidayPay"),
-        New Column("R.HolOT Hrs", "RegularHolidayOTHours"),
-        New Column("R.HolOT Pay", "RegularHolidayOTPay"),
-        New Column("Leave Hrs", "LeaveHours"),
-        New Column("Leave Pay", "LeavePay"),
-        New Column("Late Hrs", "LateHours"),
-        New Column("Late Amt", "LateDeduction"),
-        New Column("UT Hrs", "UndertimeHours"),
-        New Column("UT Amt", "UndertimeDeduction"),
-        New Column("Absent Hrs", "AbsentHours"),
-        New Column("Absent Amt", "AbsentDeduction"),
-        New Column("Allowance", "TotalAllowance"),
-        New Column("Bonus", "TotalBonus"),
-        New Column("Gross", "GrossIncome"),
-        New Column("SSS", "SSS"),
-        New Column("Ph.Health", "PhilHealth"),
-        New Column("HDMF", "HDMF"),
-        New Column("Taxable", "TaxableIncome"),
-        New Column("W.Tax", "WithholdingTax"),
-        New Column("Loan", "TotalLoans"),
-        New Column("A.Fee", "AgencyFee"),
-        New Column("Adj.", "TotalAdjustments"),
-        New Column("Net", "NetPay"),
-        New Column("13th Month", "13thMonthPay"),
-        New Column("Total", "Total")
+    Private ReadOnly reportColumns As IReadOnlyCollection(Of ReportColumn) = New ReadOnlyCollection(Of ReportColumn)({
+        New ReportColumn("Code", "DatCol2", ColumnType.Text),
+        New ReportColumn("Full Name", "DatCol3", ColumnType.Text),
+        New ReportColumn("Rate", "Rate"),
+        New ReportColumn("Basic Pay", "BasicPay"),
+        New ReportColumn("Reg Hrs", "RegularHours"),
+        New ReportColumn("Reg Pay", "RegularPay"),
+        New ReportColumn("OT Hrs", "OvertimeHours"),
+        New ReportColumn("OT Pay", "OvertimePay"),
+        New ReportColumn("ND Hrs", "NightDiffHours"),
+        New ReportColumn("ND Pay", "NightDiffPay"),
+        New ReportColumn("NDOT Hrs", "NightDiffOvertimeHours"),
+        New ReportColumn("NDOT Pay", "NightDiffOvertimePay"),
+        New ReportColumn("R.Day Hrs", "RestDayHours"),
+        New ReportColumn("R.Day Pay", "RestDayPay"),
+        New ReportColumn("R.DayOT Hrs", "RestDayOTHours"),
+        New ReportColumn("R.DayOT Pay", "RestDayOTPay"),
+        New ReportColumn("S.Hol Hrs", "SpecialHolidayHours"),
+        New ReportColumn("S.Hol Pay", "SpecialHolidayPay"),
+        New ReportColumn("S.HolOT Hrs", "SpecialHolidayOTHours"),
+        New ReportColumn("S.HolOT Pay", "SpecialHolidayOTPay"),
+        New ReportColumn("R.Hol Hrs", "RegularHolidayHours"),
+        New ReportColumn("R.Hol Pay", "RegularHolidayPay"),
+        New ReportColumn("R.HolOT Hrs", "RegularHolidayOTHours"),
+        New ReportColumn("R.HolOT Pay", "RegularHolidayOTPay"),
+        New ReportColumn("Leave Hrs", "LeaveHours"),
+        New ReportColumn("Leave Pay", "LeavePay"),
+        New ReportColumn("Late Hrs", "LateHours"),
+        New ReportColumn("Late Amt", "LateDeduction"),
+        New ReportColumn("UT Hrs", "UndertimeHours"),
+        New ReportColumn("UT Amt", "UndertimeDeduction"),
+        New ReportColumn("Absent Hrs", "AbsentHours"),
+        New ReportColumn("Absent Amt", "AbsentDeduction"),
+        New ReportColumn("Allowance", "TotalAllowance"),
+        New ReportColumn("Bonus", "TotalBonus"),
+        New ReportColumn("Gross", "GrossIncome"),
+        New ReportColumn("SSS", "SSS"),
+        New ReportColumn("Ph.Health", "PhilHealth"),
+        New ReportColumn("HDMF", "HDMF"),
+        New ReportColumn("Taxable", "TaxableIncome"),
+        New ReportColumn("W.Tax", "WithholdingTax"),
+        New ReportColumn("Loan", "TotalLoans"),
+        New ReportColumn("A.Fee", "AgencyFee"),
+        New ReportColumn("Adj.", "TotalAdjustments"),
+        New ReportColumn("Net", "NetPay"),
+        New ReportColumn("13th Month", "13thMonthPay"),
+        New ReportColumn("Total", "Total")
     })
-
-    Private cell_mapped_text_value() As String =
-        New String() {"DatCol2",
-                      "DatCol3"}
-
-    Private cell_mapped_decim_value() As String =
-        New String() {"Rate",
-                      "BasicPay",
-                      "RegularHours",
-                      "RegularPay",
-                      "OvertimeHours",
-                      "OvertimePay",
-                      "NightDiffHours",
-                      "NightDiffPay",
-                      "NightDiffOvertimeHours",
-                      "NightDiffOvertimePay",
-                      "RestDayHours",
-                      "RestDayPay",
-                      "RestDayOTHours",
-                      "RestDayOTPay",
-                      "SpecialHolidayHours",
-                      "SpecialHolidayPay",
-                      "SpecialHolidayOTHours",
-                      "SpecialHolidayOTPay",
-                      "RegularHolidayHours",
-                      "RegularHolidayPay",
-                      "RegularHolidayOTHours",
-                      "RegularHolidayOTPay",
-                      "LeaveHours",
-                      "LeavePay",
-                      "LateHours",
-                      "LateDeduction",
-                      "UndertimeHours",
-                      "UndertimeDeduction",
-                      "AbsentHours",
-                      "AbsentDeduction",
-                      "TotalAllowance",
-                      "TotalBonus",
-                      "GrossIncome",
-                      "SSS",
-                      "PhilHealth",
-                      "HDMF",
-                      "TaxableIncome",
-                      "WithholdingTax",
-                      "TotalLoans",
-                      "AgencyFee",
-                      "TotalAdjustments",
-                      "NetPay",
-                      "13thMonthPay",
-                      "Total"}
 
     Private ReadOnly preferred_font As Font = New System.Drawing.Font(
         "Source Sans Pro",
@@ -126,7 +76,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private sys_ownr As New SystemOwner
 
-    Private Property IsActual As Boolean
+    Public Property IsActual As Boolean
 
     Public Sub Run() Implements IReportProvider.Run
         Dim is_goldwings As Boolean = (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
@@ -135,9 +85,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         Dim bool_result As Short = Convert.ToInt16(IsActual)
 
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
-
-        n_PayrollSummaDateSelection.ReportIndex = 6
+        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection With {
+            .ReportIndex = 6
+        }
 
         If n_PayrollSummaDateSelection.ShowDialog <> Windows.Forms.DialogResult.OK Then
             Return
@@ -206,20 +156,20 @@ Public Class PayrollSummaryExcelFormatReportProvider
                     Dim dateCell = worksheet.Cells(2, one_value)
                     dateCell.Value = date_range
 
-                    Dim row_indx As Integer = 5
-                    Dim col_index As Integer = one_value
+                    Dim rowIndex As Integer = 5
+                    Dim columnIndex As Integer = one_value
 
-                    For Each column In columns
-                        Dim headerCell = worksheet.Cells(row_indx, col_index)
+                    For Each column In reportColumns
+                        Dim headerCell = worksheet.Cells(rowIndex, columnIndex)
                         headerCell.Value = column.Name
                         headerCell.Style.Font.Bold = True
 
-                        col_index += 1
+                        columnIndex += 1
                     Next
 
-                    row_indx += one_value
+                    rowIndex += one_value
 
-                    Dim details_start_rowindex = row_indx
+                    Dim details_start_rowindex = rowIndex
                     Dim details_last_rowindex = 0
 
                     For Each employeeRow As DataRow In employeeTable.Rows
@@ -234,35 +184,31 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                         Dim row_array = employeeRow.ItemArray
 
-                        Dim i = 0
-                        For Each cell_val As String In cell_mapped_text_value
-                            Dim excl_colrow = String.Concat(basic_alphabet(i), row_indx)
+                        Dim letters = GenerateAlphabet.GetEnumerator()
+                        For Each reportColumn In reportColumns.Zip(basic_alphabet, Function(c, a) New With {.Column = c, .Alphabet = a})
+                            letters.MoveNext()
+                            Dim alphabet = letters.Current
 
-                            Dim _cells = worksheet.Cells(excl_colrow)
-                            _cells.Value = employeeRow(cell_val)
+                            Dim column = $"{alphabet}{rowIndex}"
 
-                            i += one_value
+                            Dim cell = worksheet.Cells(column)
+                            Dim sourceName = reportColumn.Column.SourceName
+                            cell.Value = employeeRow(sourceName)
+
+                            If reportColumn.Column.Type = ColumnType.Numeric Then
+                                cell.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
+                                cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+                            End If
                         Next
 
-                        For Each cell_val As String In cell_mapped_decim_value
-                            Dim excl_colrow = String.Concat(basic_alphabet(i), row_indx)
-
-                            Dim _cells = worksheet.Cells(excl_colrow)
-                            _cells.Value = employeeRow(cell_val)
-                            _cells.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
-                            _cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
-
-                            i += one_value
-                        Next
-
-                        details_last_rowindex = row_indx
-                        row_indx += one_value
+                        details_last_rowindex = rowIndex
+                        rowIndex += one_value
                     Next
 
                     Dim sum_cell_range = String.Join(
                         ":",
-                        String.Concat("C", row_indx),
-                        String.Concat(last_cell_column, row_indx))
+                        String.Concat("C", rowIndex),
+                        String.Concat(last_cell_column, rowIndex))
 
                     worksheet.Cells(sum_cell_range).Formula = String.Format(
                         "SUM({0})",
@@ -273,10 +219,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                     worksheet.Cells(sum_cell_range).Style.Font.Bold = True
                     worksheet.Cells(sum_cell_range).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
 
-                    If is_goldwings Then
-                        RenderSignatureFields(worksheet, row_indx)
-                    End If
-
+                    RenderSignatureFields(worksheet, rowIndex)
                     SetDefaultPrinterSettings(worksheet.PrinterSettings)
 
                     worksheet.Cells.AutoFitColumns()
@@ -297,6 +240,38 @@ Public Class PayrollSummaryExcelFormatReportProvider
             MsgBox(getErrExcptn(ex, Me.Name))
         End Try
     End Sub
+
+    Private Iterator Function GenerateAlphabet() As IEnumerable(Of String)
+        Dim letter = "A"
+
+        While True
+            Yield letter
+
+            Dim firstLetter = ""
+            Dim currentLetter = ""
+
+            Dim isMultiCharacter = letter.Length > 1
+            If isMultiCharacter Then
+                firstLetter = letter.Chars(0)
+                currentLetter = letter.Chars(1)
+            Else
+                currentLetter = letter.Chars(0)
+            End If
+
+            Dim letterAsAscii = Asc(currentLetter)
+            If letterAsAscii >= Asc("Z") Then
+                If firstLetter = "" Then
+                    firstLetter = "A"
+                Else
+                    firstLetter = Chr(Asc(firstLetter) + 1)
+                End If
+
+                letter = $"{firstLetter}A"
+            Else
+                letter = $"{firstLetter}{Chr(letterAsAscii + 1)}"
+            End If
+        End While
+    End Function
 
     Private Sub RenderSignatureFields(worksheet As ExcelWorksheet, startIdx As Integer)
         Dim signatur_field_index As Integer = (startIdx + 1)
@@ -414,8 +389,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     End Function
 
-    Private Class Column
-        Public Sub New(name As String, source As String, Optional type As ColumnType = Nothing)
+    Private Class ReportColumn
+        Public Sub New(name As String, source As String, Optional type As ColumnType = ColumnType.Numeric)
             Me.Name = name
             Me.SourceName = source
             Me.Type = type
