@@ -1,156 +1,101 @@
 ﻿Option Strict On
+
+Imports System.Collections.ObjectModel
 Imports System.IO
-Imports CrystalDecisions.CrystalReports.Engine
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
 Public Class PayrollSummaryExcelFormatReportProvider
     Implements IReportProvider
 
+    Public Property Name As String = "" Implements IReportProvider.Name
+
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
                       "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT"}
 
-    Private column_headers() As String =
-        New String() {"Code",
-                      "Full name",
-                      "Rate",
-                      "BasicPay",
-                      "Reg Hrs",
-                      "Reg Pay",
-                      "OT Hrs",
-                      "OT Pay",
-                      "N.Diff Hrs",
-                      "N.Diff Pay",
-                      "N.DiffOT Hrs",
-                      "N.DiffOT Pay",
-                      "R.Day Hrs",
-                      "R.Day Pay",
-                      "R.DayOT Hrs",
-                      "R.DayOT Pay",
-                      "S.Hol Hrs",
-                      "S.Hol Pay",
-                      "S.HolOT Hrs",
-                      "S.HolOT Pay",
-                      "R.Hol Hrs",
-                      "R.Hol Pay",
-                      "R.HolOT Hrs",
-                      "R.HolOT Pay",
-                      "Leave Hrs",
-                      "Leave Pay",
-                      "Late Hrs",
-                      "Late Amt",
-                      "UT Hrs",
-                      "UT Amt",
-                      "Absent Hrs",
-                      "Absent Amt",
-                      "Allowance",
-                      "Bonus",
-                      "Gross",
-                      "SSS",
-                      "Ph.Health",
-                      "HDMF",
-                      "Taxable",
-                      "W.Tax",
-                      "Loan",
-                      "A.Fee",
-                      "Adj.",
-                      "Net",
-                      "13th Month",
-                      "Total"}
+    Private ReadOnly reportColumns As IReadOnlyCollection(Of ReportColumn) = New ReadOnlyCollection(Of ReportColumn)({
+        New ReportColumn("Code", "DatCol2", ColumnType.Text),
+        New ReportColumn("Full Name", "DatCol3", ColumnType.Text),
+        New ReportColumn("Rate", "Rate"),
+        New ReportColumn("Basic Pay", "BasicPay"),
+        New ReportColumn("Reg Hrs", "RegularHours"),
+        New ReportColumn("Reg Pay", "RegularPay"),
+        New ReportColumn("OT Hrs", "OvertimeHours"),
+        New ReportColumn("OT Pay", "OvertimePay"),
+        New ReportColumn("ND Hrs", "NightDiffHours"),
+        New ReportColumn("ND Pay", "NightDiffPay"),
+        New ReportColumn("NDOT Hrs", "NightDiffOvertimeHours"),
+        New ReportColumn("NDOT Pay", "NightDiffOvertimePay"),
+        New ReportColumn("R.Day Hrs", "RestDayHours"),
+        New ReportColumn("R.Day Pay", "RestDayPay"),
+        New ReportColumn("R.DayOT Hrs", "RestDayOTHours"),
+        New ReportColumn("R.DayOT Pay", "RestDayOTPay"),
+        New ReportColumn("S.Hol Hrs", "SpecialHolidayHours"),
+        New ReportColumn("S.Hol Pay", "SpecialHolidayPay"),
+        New ReportColumn("S.HolOT Hrs", "SpecialHolidayOTHours"),
+        New ReportColumn("S.HolOT Pay", "SpecialHolidayOTPay"),
+        New ReportColumn("R.Hol Hrs", "RegularHolidayHours"),
+        New ReportColumn("R.Hol Pay", "RegularHolidayPay"),
+        New ReportColumn("R.HolOT Hrs", "RegularHolidayOTHours"),
+        New ReportColumn("R.HolOT Pay", "RegularHolidayOTPay"),
+        New ReportColumn("Leave Hrs", "LeaveHours"),
+        New ReportColumn("Leave Pay", "LeavePay"),
+        New ReportColumn("Late Hrs", "LateHours"),
+        New ReportColumn("Late Amt", "LateDeduction"),
+        New ReportColumn("UT Hrs", "UndertimeHours"),
+        New ReportColumn("UT Amt", "UndertimeDeduction"),
+        New ReportColumn("Absent Hrs", "AbsentHours"),
+        New ReportColumn("Absent Amt", "AbsentDeduction"),
+        New ReportColumn("Allowance", "TotalAllowance"),
+        New ReportColumn("Bonus", "TotalBonus"),
+        New ReportColumn("Gross", "GrossIncome"),
+        New ReportColumn("SSS", "SSS"),
+        New ReportColumn("Ph.Health", "PhilHealth"),
+        New ReportColumn("HDMF", "HDMF"),
+        New ReportColumn("Taxable", "TaxableIncome"),
+        New ReportColumn("W.Tax", "WithholdingTax"),
+        New ReportColumn("Loan", "TotalLoans"),
+        New ReportColumn("A.Fee", "AgencyFee"),
+        New ReportColumn("Adj.", "TotalAdjustments"),
+        New ReportColumn("Net", "NetPay"),
+        New ReportColumn("13th Month", "13thMonthPay"),
+        New ReportColumn("Total", "Total")
+    })
 
+    Private ReadOnly preferred_font As Font = New System.Drawing.Font(
+        "Source Sans Pro",
+        8.25!,
+        System.Drawing.FontStyle.Regular,
+        System.Drawing.GraphicsUnit.Point,
+        CType(0, Byte))
 
-    Private cell_mapped_text_value() As String =
-        New String() {"DatCol2",
-                      "DatCol3"}
+    Private Const FontSize As Single = 8
 
-    Private cell_mapped_decim_value() As String =
-        New String() {"Rate",
-                      "BasicPay",
-                      "RegularHours",
-                      "RegularPay",
-                      "OvertimeHours",
-                      "OvertimePay",
-                      "NightDiffHours",
-                      "NightDiffPay",
-                      "NightDiffOvertimeHours",
-                      "NightDiffOvertimePay",
-                      "RestDayHours",
-                      "RestDayPay",
-                      "RestDayOTHours",
-                      "RestDayOTPay",
-                      "SpecialHolidayHours",
-                      "SpecialHolidayPay",
-                      "SpecialHolidayOTHours",
-                      "SpecialHolidayOTPay",
-                      "RegularHolidayHours",
-                      "RegularHolidayPay",
-                      "RegularHolidayOTHours",
-                      "RegularHolidayOTPay",
-                      "LeaveHours",
-                      "LeavePay",
-                      "LateHours",
-                      "LateDeduction",
-                      "UndertimeHours",
-                      "UndertimeDeduction",
-                      "AbsentHours",
-                      "AbsentDeduction",
-                      "TotalAllowance",
-                      "TotalBonus",
-                      "GrossIncome",
-                      "SSS",
-                      "PhilHealth",
-                      "HDMF",
-                      "TaxableIncome",
-                      "WithholdingTax",
-                      "TotalLoans",
-                      "AgencyFee",
-                      "TotalAdjustments",
-                      "NetPay",
-                      "13thMonthPay",
-                      "Total"}
-
-    Private is_actual As Boolean = False
-
-    Private preferred_font As Font =
-        New System.Drawing.Font("Source Sans Pro", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-
-    Private preferred_excel_font As ExcelFont
-
-    Private font_size As Single = 8
-
-    Dim margin_size() As Decimal = New Decimal() {0.25D, 0.75D, 0.3D}
+    Private ReadOnly margin_size() As Decimal = New Decimal() {0.25D, 0.75D, 0.3D}
 
     Private sys_ownr As New SystemOwner
 
-    Public Property Name As String = "" Implements IReportProvider.Name
-
-    Property IsActual As Boolean
-        Get
-            Return is_actual
-        End Get
-        Set(value As Boolean)
-            is_actual = value
-        End Set
-    End Property
+    Public Property IsActual As Boolean
 
     Public Sub Run() Implements IReportProvider.Run
-
         Dim is_goldwings As Boolean = (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
 
         Static last_cell_column As String = basic_alphabet.Last
 
-        Dim bool_result As Short = Convert.ToInt16(is_actual) 'Convert.ToInt16(SalaryActualDeclared)
+        Dim bool_result As Short = Convert.ToInt16(IsActual)
 
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
+        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection With {
+            .ReportIndex = 6
+        }
 
-        n_PayrollSummaDateSelection.ReportIndex = 6
+        If n_PayrollSummaDateSelection.ShowDialog <> Windows.Forms.DialogResult.OK Then
+            Return
+        End If
 
-        If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
+        Dim excel_custom_format = Convert.ToBoolean(ExcelOptionFormat())
 
-            Dim excel_custom_format As Boolean = Convert.ToBoolean(ExcelOptionFormat())
-
-            Dim parameters =
+        Dim parameters =
                 New Object() {orgztnID,
                               n_PayrollSummaDateSelection.PayPeriodFromID,
                               n_PayrollSummaDateSelection.PayPeriodToID,
@@ -158,271 +103,230 @@ Public Class PayrollSummaryExcelFormatReportProvider
                               n_PayrollSummaDateSelection.cboStringParameter.Text,
                               excel_custom_format}
 
-            Dim sql_print_employee_profiles As New SQL("CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
-                                                       parameters)
+        Dim sql_print_employee_profiles As New SQL(
+            "CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
+            parameters)
 
-            Static one_value As Integer = 1
+        Try
+            Dim ds = sql_print_employee_profiles.GetFoundRows
 
-            Try
+            If sql_print_employee_profiles.HasError Then
+                Throw sql_print_employee_profiles.ErrorException
+            End If
 
-                Dim ds As New DataSet
+            Static report_name As String = "PayrollSummary"
+            Static temp_path As String = Path.GetTempPath()
 
-                'Dim dt As New DataTable
+            Dim short_dates() As String = New String() {
+                CDate(n_PayrollSummaDateSelection.DateFrom).ToShortDateString,
+                CDate(n_PayrollSummaDateSelection.DateTo).ToShortDateString}
 
-                'dt = sql_print_employee_profiles.GetFoundRows.Tables(0)
-                ds = sql_print_employee_profiles.GetFoundRows
-
-                If sql_print_employee_profiles.HasError Then
-
-                    Throw sql_print_employee_profiles.ErrorException
-                Else
-
-                    Static report_name As String = "PayrollSummary"
-
-                    Static temp_path As String = Path.GetTempPath()
-
-                    Dim short_dates() As String =
-                        New String() {CDate(n_PayrollSummaDateSelection.DateFrom).ToShortDateString,
-                                      CDate(n_PayrollSummaDateSelection.DateTo).ToShortDateString}
-
-                    Dim temp_file As String =
+            Dim temp_file As String =
                         String.Concat(temp_path,
                                       orgNam,
                                       report_name, n_PayrollSummaDateSelection.cboStringParameter.Text.Replace(" ", ""), "Report",
                                       String.Concat(short_dates(0).Replace("/", "-"), "TO", short_dates(1).Replace("/", "-")),
                                       ".xlsx")
 
-                    Dim date_range As String =
-                        String.Concat("for the period of ", short_dates(0), " to ", short_dates(1))
+            Dim date_range As String = String.Concat("For the period of ", short_dates(0), " to ", short_dates(1))
 
-                    Dim newFile = New FileInfo(temp_file)
+            Dim newFile = New FileInfo(temp_file)
 
-                    If newFile.Exists Then
-                        newFile.Delete()
-                        newFile = New FileInfo(temp_file)
+            If newFile.Exists Then
+                newFile.Delete()
+                newFile = New FileInfo(temp_file)
+            End If
+
+            Dim divisionsWithEmployees = ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0)
+
+            Using excel = New ExcelPackage(newFile)
+                Dim subTotalRows = New List(Of Integer)
+
+                Dim worksheet = excel.Workbook.Worksheets.Add(report_name)
+                worksheet.Cells.Style.Font.Size = FontSize
+
+                Dim organizationCell = worksheet.Cells(1, 1)
+                organizationCell.Value = orgNam.ToUpper
+                organizationCell.Style.Font.Bold = True
+
+                Dim dateCell = worksheet.Cells(2, 1)
+                dateCell.Value = date_range
+
+                Dim rowIndex As Integer = 4
+
+                For Each employeesInDivision As DataTable In divisionsWithEmployees
+                    Dim divisionCell = worksheet.Cells(rowIndex, 1)
+                    Dim firstEmployee = employeesInDivision.AsEnumerable().FirstOrDefault()
+                    Dim divisionName = firstEmployee("DatCol1").ToString
+                    If divisionName.Length > 0 Then
+                        divisionCell.Value = divisionName
+                        divisionCell.Style.Font.Italic = True
                     End If
 
-                    'preferred_excel_font.Name = "Source Sans Pro Regular"
-                    'preferred_excel_font.Name = preferred_font.Name
+                    rowIndex += 1
 
-                    Dim tbl_withrows =
-                            ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0)
+                    RenderColumnHeaders(worksheet, rowIndex)
 
-                    Using excl_pkg = New ExcelPackage(newFile)
+                    rowIndex += 1
 
-                        Dim ii = 0
+                    Dim employeesStartIndex = rowIndex
+                    Dim employeesLastIndex = 0
 
-                        Dim created_worksheet_names = New List(Of String)
+                    For Each employeeRow As DataRow In employeesInDivision.Rows
+                        Dim letters = GenerateAlphabet.GetEnumerator()
 
-                        Static work_sheet_name As String = String.Empty
+                        For Each reportColumn In reportColumns
+                            letters.MoveNext()
+                            Dim alphabet = letters.Current
 
-                        For Each dtbl As DataTable In tbl_withrows
+                            Dim column = $"{alphabet}{rowIndex}"
 
-                            work_sheet_name = String.Concat(report_name, ii)
+                            Dim cell = worksheet.Cells(column)
+                            Dim sourceName = reportColumn.SourceName
+                            cell.Value = employeeRow(sourceName)
 
-                            Dim worksheet As ExcelWorksheet =
-                                    excl_pkg.Workbook.Worksheets.Add(work_sheet_name)
-
-                            worksheet.Cells.Style.Font.Size = font_size
-
-                            Dim cell1 = worksheet.Cells(1, one_value)
-
-                            cell1.Value = orgNam.ToUpper
-                            cell1.Style.Font.Bold = True
-
-                            Dim cell2 = worksheet.Cells(2, one_value)
-
-                            cell2.Value = date_range
-
-                            Dim row_indx As Integer = 5
-
-                            Dim col_index As Integer = one_value
-
-                            'For Each dtcol As DataColumn In dt.Columns
-                            '    worksheet.Cells(row_indx, col_index).Value = dtcol.ColumnName
-                            '    col_index += one_value
-                            'Next
-
-                            For Each str_header As String In column_headers
-                                Dim cell_row5 = worksheet.Cells(row_indx, col_index)
-                                cell_row5.Value = str_header
-                                cell_row5.Style.Font.Bold = True
-
-                                col_index += one_value
-                            Next
-
-                            row_indx += one_value
-
-                            Dim details_start_rowindex = row_indx
-
-                            Dim details_last_rowindex = 0
-
-                            Dim last_cell_range As String = String.Empty
-
-                            Dim sheet_index = one_value
-
-                            Static department_name As String = String.Empty
-
-                            For Each dtrow As DataRow In dtbl.Rows
-
-                                Dim cell3 = worksheet.Cells(3, one_value)
-
-                                Dim division_name = dtrow("DatCol1").ToString
-
-                                cell3.Value =
-                                        String.Concat("Division: ", division_name)
-
-                                If division_name.Length > 0 And department_name <> division_name Then
-
-                                    department_name = division_name
-
-                                    If created_worksheet_names.Contains(division_name) Then
-                                        division_name = String.Concat(dtrow("DatCol1").ToString, sheet_index)
-                                        sheet_index += one_value
-                                    Else
-                                        sheet_index = one_value
-                                    End If
-
-                                    worksheet.Name = division_name
-
-                                    work_sheet_name = division_name
-
-                                    created_worksheet_names.Add(division_name)
-
-                                End If
-
-                                Dim row_array = dtrow.ItemArray
-
-                                Dim i = 0
-
-                                'For Each rowval In row_array
-
-                                'Next
-
-                                For Each cell_val As String In cell_mapped_text_value
-
-                                    Dim excl_colrow As String =
-                                            String.Concat(basic_alphabet(i),
-                                                          row_indx)
-
-                                    Dim _cells = worksheet.Cells(excl_colrow)
-
-                                    _cells.Value = dtrow(cell_val)
-
-                                    i += one_value
-
-                                Next
-
-                                '********************
-
-                                For Each cell_val As String In cell_mapped_decim_value
-
-                                    Dim excl_colrow As String =
-                                            String.Concat(basic_alphabet(i),
-                                                          row_indx)
-
-                                    last_cell_range = basic_alphabet(i)
-
-                                    Dim _cells = worksheet.Cells(excl_colrow)
-
-                                    _cells.Value = dtrow(cell_val)
-                                    _cells.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
-
-                                    _cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
-
-                                    i += one_value
-
-                                Next
-
-                                details_last_rowindex = row_indx
-
-                                row_indx += one_value
-
-                            Next
-
-                            department_name = String.Empty
-
-                            'last_cell_range = String.Concat(last_cell_range, (row_indx + 1))
-
-                            Dim sum_cell_range = String.Join(":",
-                                                                 String.Concat("C", row_indx),
-                                                                 String.Concat(last_cell_column, row_indx))
-                            ''FromRow, FromColumn, ToRow, ToColumn
-                            'worksheet.Cells(sum_cell_range).Formula = String.Format("SUBTOTAL(9,{0})") ', New ExcelAddress(2, 3, 4, 3).Address)
-
-                            worksheet.Cells(sum_cell_range).Formula =
-                                    String.Format("SUM({0})",
-                                                  New ExcelAddress(details_start_rowindex,
-                                                                   3,
-                                                                   details_last_rowindex,
-                                                                   3).Address) 'column_headers.Count
-
-                            worksheet.Cells(sum_cell_range).Style.Font.Bold = True
-                            worksheet.Cells(sum_cell_range).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
-
-                            If is_goldwings Then
-                                Dim signatur_field_index As Integer = (row_indx + 1)
-                                With worksheet
-                                    .Cells(String.Concat("A", signatur_field_index)).Value = "Prepared by: "
-                                    .Cells(String.Join(":",
-                                                       String.Concat("A", signatur_field_index),
-                                                       String.Concat("B", signatur_field_index))).Merge = True
-
-                                    signatur_field_index += 1
-                                    .Cells(String.Concat("A", signatur_field_index)).Value = "Audited by: "
-                                    .Cells(String.Join(":",
-                                                       String.Concat("A", signatur_field_index),
-                                                       String.Concat("B", signatur_field_index))).Merge = True
-
-                                    signatur_field_index += 1
-                                    .Cells(String.Concat("A", signatur_field_index)).Value = "Approved by: "
-                                    .Cells(String.Join(":",
-                                                       String.Concat("A", signatur_field_index),
-                                                       String.Concat("B", signatur_field_index))).Merge = True
-                                End With
+                            If reportColumn.Type = ColumnType.Numeric Then
+                                cell.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
+                                cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
                             End If
-
-                            With worksheet.PrinterSettings
-
-                                .Orientation = eOrientation.Landscape
-
-                                .PaperSize = ePaperSize.Legal
-
-                                .TopMargin = margin_size(1)
-                                .BottomMargin = margin_size(1)
-                                .LeftMargin = margin_size(0)
-                                .RightMargin = margin_size(0)
-
-                            End With
-
-                            worksheet.Cells.AutoFitColumns()
-
-                            worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
-
-                            excl_pkg.Save()
-
-                            ii += 1
-
                         Next
 
-                    End Using
+                        employeesLastIndex = rowIndex
+                        rowIndex += 1
+                    Next
 
-                    If tbl_withrows.Count > 0 Then
+                    Dim subTotalCellRange = String.Join(
+                        ":",
+                        String.Concat("C", rowIndex),
+                        String.Concat(last_cell_column, rowIndex))
 
-                        Process.Start(temp_file)
+                    subTotalRows.Add(rowIndex)
 
-                    Else
-                        MsgBox("No found record(s)", MsgBoxStyle.Information)
+                    RenderSubTotal(worksheet, subTotalCellRange, employeesStartIndex, employeesLastIndex)
 
-                    End If
+                    rowIndex += 2
+                Next
 
+                worksheet.Cells.AutoFitColumns()
+                worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
+
+                rowIndex += 1
+
+                RenderGrandTotal(worksheet, rowIndex, last_cell_column, subTotalRows)
+
+                rowIndex += 1
+
+                RenderSignatureFields(worksheet, rowIndex)
+                SetDefaultPrinterSettings(worksheet.PrinterSettings)
+
+                excel.Save()
+            End Using
+
+            If divisionsWithEmployees.Count > 0 Then
+                Process.Start(temp_file)
+            Else
+                MsgBox("No found record(s)", MsgBoxStyle.Information)
+            End If
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Me.Name))
+        End Try
+    End Sub
+
+    Private Iterator Function GenerateAlphabet() As IEnumerable(Of String)
+        Dim letter = "A"
+
+        While True
+            Yield letter
+
+            Dim firstLetter = ""
+            Dim currentLetter = ""
+
+            Dim isMultiCharacter = letter.Length > 1
+            If isMultiCharacter Then
+                firstLetter = letter.Chars(0)
+                currentLetter = letter.Chars(1)
+            Else
+                currentLetter = letter.Chars(0)
+            End If
+
+            Dim letterAsAscii = Asc(currentLetter)
+            If letterAsAscii >= Asc("Z") Then
+                If firstLetter = "" Then
+                    firstLetter = "A"
+                Else
+                    firstLetter = Chr(Asc(firstLetter) + 1)
                 End If
-            Catch ex As Exception
-                MsgBox(getErrExcptn(ex, Me.Name))
-            End Try
 
-        End If
+                letter = $"{firstLetter}A"
+            Else
+                letter = $"{firstLetter}{Chr(letterAsAscii + 1)}"
+            End If
+        End While
+    End Function
 
+    Private Sub RenderColumnHeaders(worksheet As ExcelWorksheet, rowIndex As Integer)
+        Dim columnIndex As Integer = 1
+        For Each column In reportColumns
+            Dim headerCell = worksheet.Cells(rowIndex, columnIndex)
+            headerCell.Value = column.Name
+            headerCell.Style.Font.Bold = True
+            headerCell.Style.Fill.PatternType = ExcelFillStyle.Solid
+            headerCell.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 217, 217))
+
+            columnIndex += 1
+        Next
+    End Sub
+
+    Private Sub RenderSubTotal(worksheet As ExcelWorksheet, subTotalCellRange As String, employeesStartIndex As Integer, employeesLastIndex As Integer)
+        worksheet.Cells(subTotalCellRange).Formula = String.Format(
+                        "SUM({0})",
+                        New ExcelAddress(employeesStartIndex, 3, employeesLastIndex, 3).Address)
+
+        worksheet.Cells(subTotalCellRange).Style.Font.Bold = True
+        worksheet.Cells(subTotalCellRange).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
+        worksheet.Cells(subTotalCellRange).Style.Border.Top.Style = ExcelBorderStyle.Thin
+    End Sub
+
+    Private Sub RenderGrandTotal(worksheet As ExcelWorksheet, rowIndex As Integer, last_cell_column As String, subTotalRows As IEnumerable(Of Integer))
+        Dim grandTotalRange = String.Join(":", String.Concat("C", rowIndex), String.Concat(last_cell_column, rowIndex))
+        worksheet.Cells(grandTotalRange).Formula = String.Format("SUM({0})", String.Join(",", subTotalRows.Select(Function(s) $"C{s}")))
+        worksheet.Cells(grandTotalRange).Style.Border.Top.Style = ExcelBorderStyle.Double
+        worksheet.Cells(grandTotalRange).Style.Font.Bold = True
+        worksheet.Cells(grandTotalRange).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
+    End Sub
+
+    Private Sub RenderSignatureFields(worksheet As ExcelWorksheet, startIdx As Integer)
+        Dim signatur_field_index As Integer = (startIdx + 1)
+
+        With worksheet
+            .Cells(String.Concat("A", signatur_field_index)).Value = "Prepared by: "
+            .Cells(String.Join(":",
+                                   String.Concat("A", signatur_field_index),
+                                   String.Concat("B", signatur_field_index))).Merge = True
+
+            signatur_field_index += 1
+            .Cells(String.Concat("A", signatur_field_index)).Value = "Audited by: "
+            .Cells(String.Join(":",
+                                   String.Concat("A", signatur_field_index),
+                                   String.Concat("B", signatur_field_index))).Merge = True
+
+            signatur_field_index += 1
+            .Cells(String.Concat("A", signatur_field_index)).Value = "Approved by: "
+            .Cells(String.Join(":",
+                                   String.Concat("A", signatur_field_index),
+                                   String.Concat("B", signatur_field_index))).Merge = True
+        End With
+    End Sub
+
+    Private Sub SetDefaultPrinterSettings(settings As ExcelPrinterSettings)
+        With settings
+            .Orientation = eOrientation.Landscape
+            .PaperSize = ePaperSize.Legal
+            .TopMargin = margin_size(1)
+            .BottomMargin = margin_size(1)
+            .LeftMargin = margin_size(0)
+            .RightMargin = margin_size(0)
+        End With
     End Sub
 
     Private Function SalaryActualDeclared() As SalaryActualization
@@ -494,9 +398,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         Dim i = 0
 
-        While i <repetition
+        While i < repetition
 
-                    _result=
+            _result =
                 String.Concat(_result, Environment.NewLine)
 
             i += 1
@@ -507,16 +411,31 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     End Function
 
+    Private Class ReportColumn
+        Public Sub New(name As String, source As String, Optional type As ColumnType = ColumnType.Numeric)
+            Me.Name = name
+            Me.SourceName = source
+            Me.Type = type
+        End Sub
+
+        Public Property Name As String
+        Public Property Type As ColumnType
+        Public Property SourceName As String
+    End Class
+
+    Private Enum ColumnType
+        Text
+        Numeric
+    End Enum
+
 End Class
 
 Friend Enum SalaryActualization As Short
     Declared = 0
     Actual = 1
-
 End Enum
 
 Friend Enum ExcelOption As Short
     SeparateEachDepartment = 0
     KeepAllInOneSheet = 1
-
 End Enum
