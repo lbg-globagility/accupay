@@ -1,7 +1,7 @@
 ﻿Option Strict On
+
 Imports System.Collections.ObjectModel
 Imports System.IO
-Imports CrystalDecisions.CrystalReports.Engine
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -137,14 +137,12 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 newFile = New FileInfo(temp_file)
             End If
 
-            Dim tbl_withrows = ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0)
+            Dim divisionsWithEmployees = ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0)
 
             Using excel = New ExcelPackage(newFile)
-                Dim divisionNo = 0
-
                 Dim subTotalRows = New List(Of Integer)
 
-                Dim worksheet = excel.Workbook.Worksheets.Add(String.Concat(report_name, divisionNo))
+                Dim worksheet = excel.Workbook.Worksheets.Add(report_name)
                 worksheet.Cells.Style.Font.Size = FontSize
 
                 Dim organizationCell = worksheet.Cells(1, 1)
@@ -156,55 +154,44 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                 Dim rowIndex As Integer = 4
 
-                For Each employeeTable As DataTable In tbl_withrows
+                For Each employeesInDivision As DataTable In divisionsWithEmployees
                     Dim divisionCell = worksheet.Cells(rowIndex, 1)
-                    Dim firstEmployee = employeeTable.AsEnumerable().FirstOrDefault()
+                    Dim firstEmployee = employeesInDivision.AsEnumerable().FirstOrDefault()
                     Dim divisionName = firstEmployee("DatCol1").ToString
                     If divisionName.Length > 0 Then
-                        divisionCell.Value = String.Concat("Division: ", divisionName)
+                        divisionCell.Value = divisionName
+                        divisionCell.Style.Font.Italic = True
                     End If
 
                     rowIndex += 1
 
-                    Dim columnIndex As Integer = 1
-                    For Each column In reportColumns
-                        Dim headerCell = worksheet.Cells(rowIndex, columnIndex)
-                        headerCell.Value = column.Name
-                        headerCell.Style.Font.Bold = True
-
-                        columnIndex += 1
-                    Next
+                    RenderColumnHeaders(worksheet, rowIndex)
 
                     rowIndex += 1
 
-                    Dim details_start_rowindex = rowIndex
-                    Dim details_last_rowindex = 0
+                    Dim employeesStartIndex = rowIndex
+                    Dim employeesLastIndex = 0
 
-                    For Each employeeRow As DataRow In employeeTable.Rows
-                        If divisionName.Length > 0 Then
-                            divisionCell.Value = String.Concat("Division: ", divisionName)
-
-                            worksheet.Name = divisionName
-                        End If
-
+                    For Each employeeRow As DataRow In employeesInDivision.Rows
                         Dim letters = GenerateAlphabet.GetEnumerator()
-                        For Each reportColumn In reportColumns.Zip(basic_alphabet, Function(c, a) New With {.Column = c, .Alphabet = a})
+
+                        For Each reportColumn In reportColumns
                             letters.MoveNext()
                             Dim alphabet = letters.Current
 
                             Dim column = $"{alphabet}{rowIndex}"
 
                             Dim cell = worksheet.Cells(column)
-                            Dim sourceName = reportColumn.Column.SourceName
+                            Dim sourceName = reportColumn.SourceName
                             cell.Value = employeeRow(sourceName)
 
-                            If reportColumn.Column.Type = ColumnType.Numeric Then
+                            If reportColumn.Type = ColumnType.Numeric Then
                                 cell.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
                                 cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
                             End If
                         Next
 
-                        details_last_rowindex = rowIndex
+                        employeesLastIndex = rowIndex
                         rowIndex += 1
                     Next
 
@@ -215,29 +202,19 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                     subTotalRows.Add(rowIndex)
 
-                    worksheet.Cells(subTotalCellRange).Formula = String.Format(
-                        "SUM({0})",
-                        New ExcelAddress(
-                            details_start_rowindex, 3,
-                            details_last_rowindex, 3).Address)
+                    RenderSubTotal(worksheet, subTotalCellRange, employeesStartIndex, employeesLastIndex)
 
-                    worksheet.Cells(subTotalCellRange).Style.Font.Bold = True
-                    worksheet.Cells(subTotalCellRange).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
-                    worksheet.Cells(subTotalCellRange).Style.Border.Top.Style = ExcelBorderStyle.Thin
-
-                    worksheet.Cells.AutoFitColumns()
-                    worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
-
-                    rowIndex += 3
-
-                    divisionNo += 1
+                    rowIndex += 2
                 Next
 
-                Dim grandTotalRange = String.Join(":", String.Concat("C", rowIndex), String.Concat(last_cell_column, rowIndex))
-                worksheet.Cells(grandTotalRange).Formula = String.Format("SUM({0})", String.Join(",", subTotalRows.Select(Function(s) $"C{s}")))
-                worksheet.Cells(grandTotalRange).Style.Border.Top.Style = ExcelBorderStyle.Double
-                worksheet.Cells(grandTotalRange).Style.Font.Bold = True
-                worksheet.Cells(grandTotalRange).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
+                worksheet.Cells.AutoFitColumns()
+                worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
+
+                rowIndex += 1
+
+                RenderGrandTotal(worksheet, rowIndex, last_cell_column, subTotalRows)
+
+                rowIndex += 1
 
                 RenderSignatureFields(worksheet, rowIndex)
                 SetDefaultPrinterSettings(worksheet.PrinterSettings)
@@ -245,7 +222,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 excel.Save()
             End Using
 
-            If tbl_withrows.Count > 0 Then
+            If divisionsWithEmployees.Count > 0 Then
                 Process.Start(temp_file)
             Else
                 MsgBox("No found record(s)", MsgBoxStyle.Information)
@@ -286,6 +263,37 @@ Public Class PayrollSummaryExcelFormatReportProvider
             End If
         End While
     End Function
+
+    Private Sub RenderColumnHeaders(worksheet As ExcelWorksheet, rowIndex As Integer)
+        Dim columnIndex As Integer = 1
+        For Each column In reportColumns
+            Dim headerCell = worksheet.Cells(rowIndex, columnIndex)
+            headerCell.Value = column.Name
+            headerCell.Style.Font.Bold = True
+            headerCell.Style.Fill.PatternType = ExcelFillStyle.Solid
+            headerCell.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 217, 217))
+
+            columnIndex += 1
+        Next
+    End Sub
+
+    Private Sub RenderSubTotal(worksheet As ExcelWorksheet, subTotalCellRange As String, employeesStartIndex As Integer, employeesLastIndex As Integer)
+        worksheet.Cells(subTotalCellRange).Formula = String.Format(
+                        "SUM({0})",
+                        New ExcelAddress(employeesStartIndex, 3, employeesLastIndex, 3).Address)
+
+        worksheet.Cells(subTotalCellRange).Style.Font.Bold = True
+        worksheet.Cells(subTotalCellRange).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
+        worksheet.Cells(subTotalCellRange).Style.Border.Top.Style = ExcelBorderStyle.Thin
+    End Sub
+
+    Private Sub RenderGrandTotal(worksheet As ExcelWorksheet, rowIndex As Integer, last_cell_column As String, subTotalRows As IEnumerable(Of Integer))
+        Dim grandTotalRange = String.Join(":", String.Concat("C", rowIndex), String.Concat(last_cell_column, rowIndex))
+        worksheet.Cells(grandTotalRange).Formula = String.Format("SUM({0})", String.Join(",", subTotalRows.Select(Function(s) $"C{s}")))
+        worksheet.Cells(grandTotalRange).Style.Border.Top.Style = ExcelBorderStyle.Double
+        worksheet.Cells(grandTotalRange).Style.Font.Bold = True
+        worksheet.Cells(grandTotalRange).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
+    End Sub
 
     Private Sub RenderSignatureFields(worksheet As ExcelWorksheet, startIdx As Integer)
         Dim signatur_field_index As Integer = (startIdx + 1)
