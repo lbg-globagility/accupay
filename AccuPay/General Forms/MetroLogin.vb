@@ -399,17 +399,7 @@ Public Class MetroLogin
 
                 End If
 
-                If Convert.ToInt16(n_ReadSQLFunction.ReturnValue) = 1 Then
 
-                    If ImproperLogOut.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                    Else
-                        btnlogin.Enabled = True
-                        Exit Sub
-
-                    End If
-
-                End If
 
                 err_count = 0 'resets the failed log in attempt count
 
