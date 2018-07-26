@@ -15,7 +15,8 @@
     Private my_TimeFrom = Nothing
 
     Private my_TimeTo = Nothing
-
+    Dim Selector As String = ""
+    Dim SecondSelector As String = ""
     Property ShiftRowID As Object
         Get
             Return my_RowID
@@ -44,6 +45,12 @@
     End Property
 
     Private Sub fillshiftentry()
+        Dim maxidonshift As DataTable = getDataTableForSQL($"
+                SELECT  MAX(RowId)   
+                FROM shift 
+                WHERE
+                    OrganizationID = '{z_OrganizationID}'
+                ")
         Dim dt As New DataTable
         dt = New SQLQueryToDatatable("SELECT TIME_FORMAT(TimeFrom, '%h:%i %p') timef, TIME_FORMAT(TimeTo, '%h:%i %p') timet" &
                                      ", DivisorToDailyRate" &
@@ -52,11 +59,29 @@
                                      ", Hidden" &
                                      ", RowID FROM shift WHERE OrganizationID = '" & z_OrganizationID & "' ORDER BY TIME_FORMAT(TimeFrom,'%p %H:%i:%s'),TIME_FORMAT(TimeTo,'%p %H:%i:%s');").ResultTable
         dgvshiftentry.Rows.Clear()
+
+        Dim maxid As Integer = Convert.ToInt32(maxidonshift.Rows(0).Item(0).ToString)
+
+        'Dim maxidresult As Integer = 830
+
         For Each drow As DataRow In dt.Rows
             Dim n As Integer = dgvshiftentry.Rows.Add()
             With drow
                 dgvshiftentry.Rows.Item(n).Cells(c_timef.Index).Value = .Item("timef").ToString
+                dgvshiftentry.Rows.Item(n).Cells(c_timef.Index).Value = .Item("timef").ToString
                 dgvshiftentry.Rows.Item(n).Cells(c_timet.Index).Value = .Item("timet").ToString
+
+                If .Item("RowID").ToString = SecondSelector Then
+                    dgvshiftentry.Rows(n).Selected = True
+                    dgvshiftentry.CurrentCell = dgvshiftentry.Rows(n).Cells(0)
+
+
+
+                ElseIf IsNew = 1 And .Item("RowID").ToString = maxid.ToString Then
+                    dgvshiftentry.Rows(n).Selected = True
+                    dgvshiftentry.CurrentCell = dgvshiftentry.Rows(n).Cells(0)
+                End If
+
                 dgvshiftentry.Rows.Item(n).Cells(c_rowid.Index).Value = .Item("RowID").ToString
                 dgvshiftentry.Item("DivisorToDailyRate", n).Value = ValNoComma(.Item("DivisorToDailyRate"))
 
@@ -65,6 +90,19 @@
                 dgvshiftentry.Rows.Item(n).Cells(IsHidden.Index).Value = .Item("Hidden")
             End With
         Next
+
+
+        SecondSelector = 0
+
+
+
+        'If Selector = Nothing Then
+
+        'Else
+        '    dgvshiftentry.Rows(Convert.ToUInt32(Selector)).Selected = True
+        '    dgvshiftentry.CurrentCell = dgvshiftentry.Rows(Convert.ToUInt32(Selector)).Cells(0)
+        'End If
+
 
     End Sub
 
@@ -190,6 +228,9 @@
             chkHasLunchBreak.Checked = bool_result
             dgvshiftentry.Tag = dgvshiftentry.CurrentRow.Cells(c_rowid.Index).Value
             chkHidden.Checked = Convert.ToInt16(dgvshiftentry.CurrentRow.Cells(IsHidden.Index).Value)
+
+            Selector = dgvshiftentry.CurrentCell.RowIndex
+            SecondSelector = dgvshiftentry.CurrentRow.Cells(c_rowid.Index).Value
         Catch ex As Exception
             my_RowID = Nothing
             my_TimeFrom = Nothing
@@ -224,10 +265,34 @@
 
     Sub tsbtnNewShift_Click(sender As Object, e As EventArgs) Handles tsbtnNewShift.Click
         IsNew = 1
+
         tsbtnNewShift.Enabled = False
         dtpTimeFrom.Focus()
-        chkHasLunchBreak.Checked = False
+        chkHasLunchBreak.Checked = True
     End Sub
+
+    Sub Updatequery()
+        Dim str_quer As String = "UPDATE shift SET LastUpd = CURRENT_TIMESTAMP()" &
+                        ", LastUpdBy = '" & z_User & "'" &
+                        ", TimeFrom=" & "'" & dtpTimeFrom.Value.ToString("hh:mm") & "'" &
+                         ", TimeTo=" & "'" & dtpTimeTo.Value.ToString("hh:mm") & "'" &
+                       ", BreakTimeFrom=" & If(chkHasLunchBreak.Checked, ("'" & dtpBreakTimeFrom.Tag.ToString & "'"), "NULL") &
+                       ", BreakTimeTo=" & If(chkHasLunchBreak.Checked, ("'" & dtpBreakTimeTo.Tag.ToString & "'"), "NULL") &
+                        ", Hidden=" & Convert.ToInt16(chkHidden.Checked) &
+                        " WHERE RowID = '" & dgvshiftentry.Tag & "';"
+        Dim n_ExecuteQuery As New ExecuteQuery(str_quer)
+
+        If n_ExecuteQuery.HasError = False Then
+            myBalloon("Successfully Updated", "Updating...", btnSave, , -65)
+        Else
+            Try
+                Throw New Exception(n_ExecuteQuery.ErrorMessage)
+            Catch ex As Exception
+                MsgBox(getErrExcptn(ex, Name))
+            End Try
+        End If
+    End Sub
+
 
     Private Sub tsbtnSaveShift_Click(sender As Object, e As EventArgs) Handles tsbtnSaveShift.Click
         Dim timeFrom = dtpTimeFrom.Value.ToString("HH:mm")
@@ -247,52 +312,191 @@
         ")
 
         If IsNew = 1 Then
+
+
+            ' /test fix bugs
+
             Dim timeFrom12Hour = dtpTimeFrom.Value.ToString("hh:mm")
             Dim timeTo12Hour = dtpTimeTo.Value.ToString("hh:mm")
 
-            If existingShifts.Rows.Count > 0 Then
-                MsgBox($"A shift from {timeFrom12Hour} to {timeTo12Hour} already exists.", MsgBoxStyle.Exclamation, "Shift already exists")
-                Return
+            Dim breaktimeFrom12Hour = dtpBreakTimeFrom.Value.ToString("hh:mm")
+            Dim breaktimeto12Hour = dtpBreakTimeTo.Value.ToString("hh:mm")
+
+
+            ' Has a lunch break
+            If chkHasLunchBreak.Checked Then
+
+                Dim existingShifts4updatehaslunch As DataTable = getDataTableForSQL($"
+                SELECT *
+                FROM shift
+                WHERE TimeFrom = '{timeFrom}' AND
+                    TimeTo = '{timeTo}' AND
+                    BreaktimeFrom  = '{breaktimeFrom}' AND
+                    BreaktimeTo = '{breaktimeTo}'  AND
+                    OrganizationID = '{z_OrganizationID}'
+                ")
+
+                If existingShifts4updatehaslunch.Rows.Count > 0 Then
+                    MsgBox($"A shift from {timeFrom12Hour} to {timeTo12Hour} and breaktime from {breaktimeFrom12Hour} to {breaktimeto12Hour} already exists.", MsgBoxStyle.Exclamation, "Shift already exists")
+                    Return
+                Else
+
+                    sp_shift(z_datetime, z_User, z_datetime, z_OrganizationID, z_User, dtpTimeFrom.Value, dtpTimeTo.Value)
+
+                    myBalloon("successfully save", "saving...", btnSave, , -65)
+                    Dim shiftid As String = getStringItem("select max(rowid) from shift")
+                    Dim getshiftid As Integer = Val(shiftid)
+
+                    fillshiftentry()
+                    IsNew = 0
+
+                End If
+            Else
+                Dim existingShifts4updatehasnolunch As DataTable = getDataTableForSQL($"
+                SELECT *
+                FROM shift
+                WHERE TimeFrom = '{timeFrom}' AND
+                TimeTo = '{timeTo}' AND            
+                BreaktimeFrom IS NULL  AND
+                BreaktimeTo IS NULL  AND
+                 
+                    OrganizationID = '{z_OrganizationID}'
+                ")
+
+                If existingShifts4updatehasnolunch.Rows.Count > 0 Then
+                    MsgBox($"A shift from {timeFrom12Hour} to {timeTo12Hour} already exists.  ", MsgBoxStyle.Exclamation, "Shift already exists")
+
+                    Return
+                Else
+                    sp_shift(z_datetime, z_User, z_datetime, z_OrganizationID, z_User, dtpTimeFrom.Value, dtpTimeTo.Value)
+
+                    myBalloon("successfully save", "saving...", btnSave, , -65)
+                    Dim shiftid As String = getStringItem("select max(rowid) from shift")
+                    Dim getshiftid As Integer = Val(shiftid)
+
+                    fillshiftentry()
+                    IsNew = 0
+
+                End If
             End If
 
-            sp_shift(z_datetime, z_User, z_datetime, z_OrganizationID, z_User, dtpTimeFrom.Value, dtpTimeTo.Value)
+            ' END Has a lunch break
 
-            myBalloon("Successfully Save", "Saving...", btnSave, , -65)
-            Dim shiftid As String = getStringItem("Select MAX(RowID) From Shift")
-            Dim getshiftid As Integer = Val(shiftid)
+            ' /end test fix bugs
+
+            'Dim timeFrom12Hour = dtpTimeFrom.Value.ToString("hh:mm")
+            'Dim timeTo12Hour = dtpTimeTo.Value.ToString("hh:mm")
+
+            'If existingShifts.Rows.Count > 0 Then
+            '    MsgBox($"A shift from {timeFrom12Hour} to {timeTo12Hour} already exists.", MsgBoxStyle.Exclamation, "Shift already exists")
+            '    Return
+            'End If
+
+            'sp_shift(z_datetime, z_User, z_datetime, z_OrganizationID, z_User, dtpTimeFrom.Value, dtpTimeTo.Value)
+
+            'myBalloon("Successfully Save", "Saving...", btnSave, , -65)
+            'Dim shiftid As String = getStringItem("Select MAX(RowID) From Shift")
+            'Dim getshiftid As Integer = Val(shiftid)
             'EmployeeShiftEntryForm.lblShiftID.Text = getshiftid
             'EmployeeShiftEntryForm.dtpTimeFrom.Text = dgvshiftentry.CurrentRow.Cells(c_timef.Index).Value
             'EmployeeShiftEntryForm.dtpTimeTo.Text = dgvshiftentry.CurrentRow.Cells(c_timet.Index).Value
-            IsNew = 0
-            fillshiftentry()
+            'IsNew = 0
+            'fillshiftentry()
             'Me.Hide()
         Else
             If dontUpdate = 1 Then
                 Exit Sub
             End If
 
-            Dim str_quer As String = "UPDATE shift SET LastUpd = CURRENT_TIMESTAMP()" &
-                    ", LastUpdBy = '" & z_User & "'" &
-                    ", DivisorToDailyRate=" & ValNoComma(txtDivisorToDailyRate.Text) &
-                    ", BreakTimeFrom=" & If(dtpBreakTimeFrom.Tag = Nothing, "NULL", ("'" & dtpBreakTimeFrom.Tag.ToString & "'")) &
-                    ", BreakTimeTo=" & If(dtpBreakTimeTo.Tag = Nothing, "NULL", ("'" & dtpBreakTimeTo.Tag.ToString & "'")) &
-                    ", Hidden=" & Convert.ToInt16(chkHidden.Checked) &
-                    " WHERE RowID = '" & dgvshiftentry.Tag & "';"
-            Dim n_ExecuteQuery As New ExecuteQuery(str_quer)
-            If n_ExecuteQuery.HasError = False Then
-                myBalloon("Successfully Updated", "Updating...", btnSave, , -65)
+            ' /test fix bugs
+
+            Dim timeFrom12Hour = dtpTimeFrom.Value.ToString("hh:mm")
+            Dim timeTo12Hour = dtpTimeTo.Value.ToString("hh:mm")
+
+            Dim breaktimeFrom12Hour = dtpBreakTimeFrom.Value.ToString("hh:mm")
+            Dim breaktimeto12Hour = dtpBreakTimeTo.Value.ToString("hh:mm")
+
+
+            ' Has a lunch break
+            If chkHasLunchBreak.Checked Then
+
+                Dim existingShifts4updatehaslunch As DataTable = getDataTableForSQL($"
+                SELECT *
+                FROM shift
+                WHERE TimeFrom = '{timeFrom}' AND
+                    TimeTo = '{timeTo}' AND
+                    BreaktimeFrom  = '{breaktimeFrom}' AND
+                    BreaktimeTo = '{breaktimeTo}'  AND
+                    OrganizationID = '{z_OrganizationID}'
+                ")
+
+                If existingShifts4updatehaslunch.Rows.Count > 0 Then
+                    MsgBox($"A shift from {timeFrom12Hour} to {timeTo12Hour} and breaktime from {breaktimeFrom12Hour} to {breaktimeto12Hour} already exists.", MsgBoxStyle.Exclamation, "Shift already exists")
+                    Return
+                Else
+
+                    Updatequery()
+                    IsNew = 0
+                    fillshiftentry()
+
+                End If
             Else
-                Try
-                    Throw New Exception(n_ExecuteQuery.ErrorMessage)
-                Catch ex As Exception
-                    MsgBox(getErrExcptn(ex, Name))
-                End Try
+                Dim existingShifts4updatehasnolunch As DataTable = getDataTableForSQL($"
+                SELECT *
+                FROM shift
+                WHERE TimeFrom = '{timeFrom}' AND
+                TimeTo = '{timeTo}' AND            
+                BreaktimeFrom IS NULL  AND
+                BreaktimeTo IS NULL  AND
+                 
+                    OrganizationID = '{z_OrganizationID}'
+                ")
+
+                If existingShifts4updatehasnolunch.Rows.Count > 0 Then
+                    MsgBox($"A shift from {timeFrom12Hour} to {timeTo12Hour} already exists. ", MsgBoxStyle.Exclamation, "Shift already exists")
+
+                    Return
+                Else
+                    Updatequery()
+                    IsNew = 0
+                    fillshiftentry()
+
+                End If
             End If
-            IsNew = 0
-            fillshiftentry()
+
+            ' END Has a lunch break
+
+            ' /end test fix bugs
+
+
+
+            '/previous codes
+            'Dim str_quer As String = "UPDATE shift SET LastUpd = CURRENT_TIMESTAMP()" &
+            '        ", LastUpdBy = '" & z_User & "'" &
+            '        ", DivisorToDailyRate=" & ValNoComma(txtDivisorToDailyRate.Text) &
+            '        ", BreakTimeFrom=" & If(dtpBreakTimeFrom.Tag = Nothing, "NULL", ("'" & dtpBreakTimeFrom.Tag.ToString & "'")) &
+            '        ", BreakTimeTo=" & If(dtpBreakTimeTo.Tag = Nothing, "NULL", ("'" & dtpBreakTimeTo.Tag.ToString & "'")) &
+            '        ", Hidden=" & Convert.ToInt16(chkHidden.Checked) &
+            '        " WHERE RowID = '" & dgvshiftentry.Tag & "';"
+            'Dim n_ExecuteQuery As New ExecuteQuery(str_quer)
+
+
+
+            'If n_ExecuteQuery.HasError = False Then
+            '    myBalloon("Successfully Updated", "Updating...", btnSave, , -65)
+            'Else
+            '    Try
+            '        Throw New Exception(n_ExecuteQuery.ErrorMessage)
+            '    Catch ex As Exception
+            '        MsgBox(getErrExcptn(ex, Name))
+            '    End Try
+            'End If
+            'IsNew = 0
+            'fillshiftentry()
+            '/ end previous codes
         End If
 
-        tsbtnNewShift.Enabled = True
+            tsbtnNewShift.Enabled = True
     End Sub
 
     Private Sub tsbtnCancelShift_Click(sender As Object, e As EventArgs) Handles tsbtnCancelShift.Click
@@ -399,4 +603,11 @@
 
     End Sub
 
+    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+
+    End Sub
+
+    Private Sub dtpBreakTimeFrom_ValueChanged_1(sender As Object, e As EventArgs) Handles dtpBreakTimeFrom.ValueChanged
+
+    End Sub
 End Class
