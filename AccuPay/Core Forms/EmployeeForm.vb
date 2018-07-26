@@ -9102,8 +9102,8 @@ Public Class EmployeeForm
                 MessageBoxDefaultButton.Button2)
 
             If prompt = DialogResult.Yes Then
-                Using session = SessionFactory.Instance.OpenSession()
-                    Dim loanSchedule = session.Get(Of LoanSchedule)(loanScheduleID)
+                Using context = New PayrollContext()
+                    Dim loanSchedule = context.LoanSchedules.Find(loanScheduleID)
 
                     If loanSchedule.LoanTransactions.Count() > 0 Then
                         Dim secondPrompt = MessageBox.Show(
@@ -9118,8 +9118,8 @@ Public Class EmployeeForm
                         End If
                     End If
 
-                    session.Delete(loanSchedule)
-                    session.Flush()
+                    context.LoanSchedules.Remove(loanSchedule)
+                    context.SaveChanges()
                 End Using
 
                 Dim curr_row = dgvLoanList.CurrentRow

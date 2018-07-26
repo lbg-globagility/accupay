@@ -229,12 +229,12 @@ Public Class MassOvertimePresenter
     Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Overtime))
         Dim employeeIds = employees.Select(Function(e) e.RowID).ToList()
 
-        Using session = SessionFactory.Instance.OpenSession()
-            Return session.Query(Of Overtime).
-                Where(Function(x) employeeIds.Contains(x.EmployeeID)).
-                Where(Function(x) dateFrom.Date <= x.OTStartDate).
-                Where(Function(x) x.OTStartDate <= dateTo.Date).
-                GroupBy(Function(x) x.EmployeeID).
+        Using context = New PayrollContext()
+            Return context.Overtimes.
+                Where(Function(o) employeeIds.Contains(o.EmployeeID)).
+                Where(Function(o) dateFrom.Date <= o.OTStartDate).
+                Where(Function(o) o.OTStartDate <= dateTo.Date).
+                GroupBy(Function(o) o.EmployeeID).
                 ToList()
         End Using
     End Function
@@ -305,9 +305,7 @@ Public Class MassOvertimePresenter
     End Sub
 
     Public Async Function SaveOvertimes() As Task
-        Using session = SessionFactory.Instance.OpenSession(),
-            transaction = session.BeginTransaction()
-
+        Using context = New PayrollContext()
             For Each model In _models
                 Dim overtime = model.Overtime
 
@@ -328,13 +326,17 @@ Public Class MassOvertimePresenter
                     overtime.OTStartTime = model.StartTime
                     overtime.OTEndTime = model.EndTime
 
-                    Await session.SaveOrUpdateAsync(overtime)
+                    If model.IsNew Then
+                        context.Overtimes.Add(overtime)
+                    Else
+                        context.Entry(overtime).State = EntityState.Modified
+                    End If
                 ElseIf model.IsDelete Then
-                    Await session.DeleteAsync(overtime)
+                    context.Overtimes.Remove(overtime)
                 End If
             Next
 
-            Await transaction.CommitAsync()
+            Await context.SaveChangesAsync()
         End Using
     End Function
 

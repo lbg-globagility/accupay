@@ -32,6 +32,8 @@ Public Class PayrollContext
 
     Public Overridable Property LoanSchedules As DbSet(Of LoanSchedule)
 
+    Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
+
     Public Overridable Property TimeLogs As DbSet(Of TimeLog)
 
     Public Overridable Property Products As DbSet(Of Product)
@@ -83,5 +85,14 @@ Public Class PayrollContext
     Public Overridable Property Overtimes As DbSet(Of Overtime)
 
     Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
+
+
+    Protected Overrides Sub OnModelCreating(modelBuilder As DbModelBuilder)
+        MyBase.OnModelCreating(modelBuilder)
+
+        modelBuilder.Entity(Of Paystub).
+            HasOptional(Function(p) p.ThirteenthMonthPay).
+            WithRequired(Function(t) t.Paystub)
+    End Sub
 
 End Class

@@ -255,12 +255,12 @@ Public Class PayrollResources
 
     Private Async Function LoadLoanTransactions() As Task
         Try
-            Using session = SessionFactory.Instance.OpenSession()
-                Dim query = session.Query(Of LoanTransaction).
-                    Where(Function(x) CBool(x.OrganizationID = z_OrganizationID)).
-                    Where(Function(x) CBool(x.PayPeriodID = _payPeriodID))
+            Using context = New PayrollContext()
+                Dim query = context.LoanTransactions.
+                    Where(Function(l) CBool(l.OrganizationID = z_OrganizationID)).
+                    Where(Function(l) CBool(l.PayPeriodID = _payPeriodID))
 
-                _loanTransactions = Await LinqExtensionMethods.ToListAsync(query)
+                _loanTransactions = Await query.ToListAsync()
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("LoanTransactions", ex)
@@ -322,14 +322,13 @@ Public Class PayrollResources
 
     Private Async Function LoadPaystubs() As Task
         Try
-            Using session = SessionFactory.Instance.OpenSession()
-                Dim query = session.Query(Of Paystub).
-                    Fetch(Function(p) p.Adjustments).
+            Using context = New PayrollContext()
+                Dim query = context.Paystubs.Include(Function(p) p.Adjustments).
                     Where(Function(p) p.PayFromdate = _payDateFrom).
                     Where(Function(p) p.PayToDate = _payDateTo).
                     Where(Function(p) CBool(p.OrganizationID = z_OrganizationID))
 
-                _paystubs = Await LinqExtensionMethods.ToListAsync(query)
+                _paystubs = Await query.ToListAsync()
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("Paystubs", ex)
@@ -340,12 +339,12 @@ Public Class PayrollResources
         Dim previousCutoffEnd = _payDateFrom.AddDays(-1)
 
         Try
-            Using session = SessionFactory.Instance.OpenSession()
-                Dim query = session.Query(Of Paystub).
+            Using context = New PayrollContext()
+                Dim query = context.Paystubs.
                     Where(Function(p) p.PayToDate = previousCutoffEnd).
                     Where(Function(p) CBool(p.OrganizationID = z_OrganizationID))
 
-                _previousPaystubs = Await LinqExtensionMethods.ToListAsync(query)
+                _previousPaystubs = Await query.ToListAsync()
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("PreviousPaystubs", ex)
