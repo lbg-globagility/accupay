@@ -663,8 +663,14 @@ Public Class PayrollGeneration
                 employerSssPerMonth = socialSecurityBracket?.EmployerContributionAmount
             End If
         ElseIf sssCalculation = SssCalculationBasis.BasicSalary Then
-            employeeSssPerMonth = ValNoComma(salary("EmployeeContributionAmount"))
-            employerSssPerMonth = If(employeeSssPerMonth = 0, 0, ValNoComma(salary("EmployerContributionAmount")))
+            Dim socialSecurityId = CInt(salary("PaySocialSecurityID"))
+
+            Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(Function(s) s.RowID = socialSecurityId)
+
+            If socialSecurityBracket IsNot Nothing Then
+                employeeSssPerMonth = socialSecurityBracket.EmployeeContributionAmount
+                employerSssPerMonth = socialSecurityBracket.EmployerContributionAmount + socialSecurityBracket.EmployeeECAmount
+            End If
         End If
 
         If is_weekly Then
