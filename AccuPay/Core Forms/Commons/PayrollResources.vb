@@ -1,11 +1,9 @@
 ﻿Option Strict On
 
-Imports System.Data.Entity
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
-Imports NHibernate.Linq
 Imports PayrollSys
 
 ''' <summary>
@@ -324,7 +322,9 @@ Public Class PayrollResources
     Private Async Function LoadPaystubs() As Task
         Try
             Using context = New PayrollContext()
-                Dim query = context.Paystubs.Include(Function(p) p.Adjustments).
+                Dim query = context.Paystubs.
+                    Include(Function(p) p.Adjustments).
+                    Include(Function(p) p.ThirteenthMonthPay).
                     Where(Function(p) p.PayFromdate = _payDateFrom).
                     Where(Function(p) p.PayToDate = _payDateTo).
                     Where(Function(p) CBool(p.OrganizationID = z_OrganizationID))
@@ -405,7 +405,7 @@ Public Class PayrollResources
         Try
             Using context = New PayrollContext()
                 Dim query = From p In context.PayPeriods
-                            Where p.RowID = _payPeriodID
+                            Where CBool(p.RowID = _payPeriodID)
 
                 _payPeriod = Await query.FirstOrDefaultAsync()
             End Using
@@ -440,7 +440,7 @@ Public Class PayrollResources
                             Where (
                                 (
                                     a.EffectiveStartDate <= _payDateTo And
-                                    _payDateFrom <= a.EffectiveEndDate
+                                    CBool(_payDateFrom <= a.EffectiveEndDate)
                                 ) Or
                                 (
                                     _payDateFrom <= a.EffectiveStartDate And
@@ -448,7 +448,7 @@ Public Class PayrollResources
                                     a.EffectiveEndDate Is Nothing
                                 )
                             ) And
-                            a.OrganizationID = z_OrganizationID
+                            CBool(a.OrganizationID = z_OrganizationID)
 
                 _allowances = Await query.ToListAsync()
             End Using

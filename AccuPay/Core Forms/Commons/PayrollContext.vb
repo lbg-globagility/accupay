@@ -79,6 +79,11 @@ Public Class PayrollContext
 
     Protected Overrides Sub OnModelCreating(modelBuilder As ModelBuilder)
         MyBase.OnModelCreating(modelBuilder)
+
+        modelBuilder.Entity(Of Paystub).
+            HasOne(Function(p) p.ThirteenthMonthPay).
+            WithOne(Function(t) t.Paystub).
+            HasForeignKey(Of ThirteenthMonthPay)(Function(t) t.PaystubID)
     End Sub
 
 End Class

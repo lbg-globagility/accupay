@@ -351,9 +351,7 @@ Public Class PayrollGeneration
                     context.LoanTransactions.Add(newLoanTransaction)
                 Next
 
-                context.SaveChanges()
-
-                ComputeThirteenthMonthPay(salary, context)
+                ComputeThirteenthMonthPay(salary)
 
                 context.SaveChanges()
             End Using
@@ -1025,9 +1023,7 @@ Public Class PayrollGeneration
         Return newLoanTransactions
     End Function
 
-    Private Sub ComputeThirteenthMonthPay(salaryrow As DataRow, context As PayrollContext)
-        'Dim thirteenthMonthPay = context.ThirteenthMonthPays.Where(Function(t) t.PaystubID).FirstOrDefault()
-
+    Private Sub ComputeThirteenthMonthPay(salaryrow As DataRow)
         If _paystub.ThirteenthMonthPay Is Nothing Then
             _paystub.ThirteenthMonthPay = New ThirteenthMonthPay() With {
                 .OrganizationID = z_OrganizationID,
@@ -1062,6 +1058,7 @@ Public Class PayrollGeneration
 
         _paystub.ThirteenthMonthPay.BasicPay = basicpay_13month
         _paystub.ThirteenthMonthPay.Amount = (basicpay_13month / CalendarConstants.MonthsInAYear)
+        _paystub.ThirteenthMonthPay.Paystub = _paystub
     End Sub
 
     Private Class PayFrequency
