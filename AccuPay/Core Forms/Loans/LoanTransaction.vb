@@ -25,6 +25,9 @@ Namespace Global.AccuPay.Loans
 
         Public Overridable Property LoanPayPeriodLeft As Integer
 
+        <Column("EmployeeLoanRecordID")>
+        Public Overridable Property LoanScheduleID As Integer
+
         <Column("TotalBalanceLeft")>
         Public Overridable Property TotalBalance As Decimal
 

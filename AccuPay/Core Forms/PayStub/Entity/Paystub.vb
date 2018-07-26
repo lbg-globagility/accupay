@@ -11,146 +11,145 @@ Namespace Global.AccuPay.Entity
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Overridable Property RowID As Integer?
+        Public Property RowID As Integer?
 
-        Public Overridable Property OrganizationID As Integer?
+        Public Property OrganizationID As Integer?
 
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Overridable Property Created As Date
+        Public Property Created As Date
 
-        Public Overridable Property CreatedBy As Integer?
+        Public Property CreatedBy As Integer?
 
         <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
-        Public Overridable Property LastUpd As Date?
+        Public Property LastUpd As Date?
 
-        Public Overridable Property LastUpdBy As Integer?
+        Public Property LastUpdBy As Integer?
 
-        Public Overridable Property PayPeriodID As Integer?
+        Public Property PayPeriodID As Integer?
 
-        Public Overridable Property EmployeeID As Integer?
+        Public Property EmployeeID As Integer?
 
-        Public Overridable Property TimeEntryID As Integer?
+        Public Property TimeEntryID As Integer?
 
-        Public Overridable Property PayFromdate As Date
+        Public Property PayFromdate As Date
 
-        Public Overridable Property PayToDate As Date
+        Public Property PayToDate As Date
 
-        Public Overridable Property BasicHours As Decimal
+        Public Property BasicHours As Decimal
 
-        Public Overridable Property BasicPay As Decimal
+        Public Property BasicPay As Decimal
 
-        Public Overridable Property RegularHours As Decimal
+        Public Property RegularHours As Decimal
 
-        Public Overridable Property RegularPay As Decimal
+        Public Property RegularPay As Decimal
 
-        Public Overridable Property OvertimeHours As Decimal
+        Public Property OvertimeHours As Decimal
 
-        Public Overridable Property OvertimePay As Decimal
+        Public Property OvertimePay As Decimal
 
-        Public Overridable Property NightDiffHours As Decimal
+        Public Property NightDiffHours As Decimal
 
-        Public Overridable Property NightDiffPay As Decimal
+        Public Property NightDiffPay As Decimal
 
-        Public Overridable Property NightDiffOvertimeHours As Decimal
+        Public Property NightDiffOvertimeHours As Decimal
 
-        Public Overridable Property NightDiffOvertimePay As Decimal
+        Public Property NightDiffOvertimePay As Decimal
 
-        Public Overridable Property RestDayHours As Decimal
+        Public Property RestDayHours As Decimal
 
-        Public Overridable Property RestDayPay As Decimal
+        Public Property RestDayPay As Decimal
 
-        Public Overridable Property RestDayOTHours As Decimal
+        Public Property RestDayOTHours As Decimal
 
-        Public Overridable Property RestDayOTPay As Decimal
+        Public Property RestDayOTPay As Decimal
 
-        Public Overridable Property LeaveHours As Decimal
+        Public Property LeaveHours As Decimal
 
-        Public Overridable Property LeavePay As Decimal
+        Public Property LeavePay As Decimal
 
-        Public Overridable Property SpecialHolidayHours As Decimal
+        Public Property SpecialHolidayHours As Decimal
 
-        Public Overridable Property SpecialHolidayPay As Decimal
+        Public Property SpecialHolidayPay As Decimal
 
-        Public Overridable Property SpecialHolidayOTHours As Decimal
+        Public Property SpecialHolidayOTHours As Decimal
 
-        Public Overridable Property SpecialHolidayOTPay As Decimal
+        Public Property SpecialHolidayOTPay As Decimal
 
-        Public Overridable Property RegularHolidayHours As Decimal
+        Public Property RegularHolidayHours As Decimal
 
-        Public Overridable Property RegularHolidayPay As Decimal
+        Public Property RegularHolidayPay As Decimal
 
-        Public Overridable Property RegularHolidayOTHours As Decimal
+        Public Property RegularHolidayOTHours As Decimal
 
-        Public Overridable Property RegularHolidayOTPay As Decimal
+        Public Property RegularHolidayOTPay As Decimal
 
-        Public Overridable Property HolidayPay As Decimal
+        Public Property HolidayPay As Decimal
 
-        Public Overridable Property LateHours As Decimal
+        Public Property LateHours As Decimal
 
-        Public Overridable Property LateDeduction As Decimal
+        Public Property LateDeduction As Decimal
 
-        Public Overridable Property UndertimeHours As Decimal
+        Public Property UndertimeHours As Decimal
 
-        Public Overridable Property UndertimeDeduction As Decimal
+        Public Property UndertimeDeduction As Decimal
 
-        Public Overridable Property AbsentHours As Decimal
+        Public Property AbsentHours As Decimal
 
-        Public Overridable Property AbsenceDeduction As Decimal
+        Public Property AbsenceDeduction As Decimal
 
         <Column("WorkPay")>
-        Public Overridable Property TotalEarnings As Decimal
+        Public Property TotalEarnings As Decimal
 
-        Public Overridable Property TotalBonus As Decimal
+        Public Property TotalBonus As Decimal
 
-        Public Overridable Property TotalAllowance As Decimal
+        Public Property TotalAllowance As Decimal
 
         <Column("TotalGrossSalary")>
-        Public Overridable Property GrossPay As Decimal
+        Public Property GrossPay As Decimal
 
         <Column("TotalTaxableSalary")>
-        Public Overridable Property TaxableIncome As Decimal
+        Public Property TaxableIncome As Decimal
 
         <Column("TotalEmpWithholdingTax")>
-        Public Overridable Property WithholdingTax As Decimal
+        Public Property WithholdingTax As Decimal
 
         <Column("TotalEmpSSS")>
-        Public Overridable Property SssEmployeeShare As Decimal
+        Public Property SssEmployeeShare As Decimal
 
         <Column("TotalCompSSS")>
-        Public Overridable Property SssEmployerShare As Decimal
+        Public Property SssEmployerShare As Decimal
 
         <Column("TotalEmpPhilhealth")>
-        Public Overridable Property PhilHealthEmployeeShare As Decimal
+        Public Property PhilHealthEmployeeShare As Decimal
 
         <Column("TotalCompPhilhealth")>
-        Public Overridable Property PhilHealthEmployerShare As Decimal
+        Public Property PhilHealthEmployerShare As Decimal
 
         <Column("TotalEmpHDMF")>
-        Public Overridable Property HdmfEmployeeShare As Decimal
+        Public Property HdmfEmployeeShare As Decimal
 
         <Column("TotalCompHDMF")>
-        Public Overridable Property HdmfEmployerShare As Decimal
+        Public Property HdmfEmployerShare As Decimal
 
-        Public Overridable Property TotalVacationDaysLeft As Decimal
+        Public Property TotalVacationDaysLeft As Decimal
 
-        Public Overridable Property TotalUndeclaredSalary As Decimal
+        Public Property TotalUndeclaredSalary As Decimal
 
-        Public Overridable Property TotalLoans As Decimal
+        Public Property TotalLoans As Decimal
 
-        Public Overridable Property TotalAdjustments As Decimal
+        Public Property TotalAdjustments As Decimal
 
         <Column("TotalNetSalary")>
-        Public Overridable Property NetPay As Decimal
+        Public Property NetPay As Decimal
 
-        Public Overridable Property ThirteenthMonthInclusion As Boolean
+        Public Property ThirteenthMonthInclusion As Boolean
 
-        Public Overridable Property FirstTimeSalary As Boolean
+        Public Property FirstTimeSalary As Boolean
 
         <ForeignKey("EmployeeID")>
-        Public Overridable Property Employee As Employee
+        Public Property Employee As Employee
 
-        <NotMapped>
-        Public Overridable Property Adjustments As ICollection(Of Adjustment)
+        Public Property Adjustments As ICollection(Of Adjustment)
 
         <NotMapped>
         Public Overridable Property ActualAdjustments As ICollection(Of ActualAdjustment)
@@ -161,7 +160,6 @@ Namespace Global.AccuPay.Entity
         <NotMapped>
         Public Overridable Property AllowanceItems As IList(Of AllowanceItem)
 
-        <NotMapped>
         Public Overridable Property ThirteenthMonthPay As ThirteenthMonthPay
 
         Public Sub New()

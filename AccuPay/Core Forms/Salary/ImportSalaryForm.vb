@@ -5,6 +5,7 @@ Imports Globagility.AccuPay.Salaries
 Imports AccuPay.Entity
 Imports Globagility.AccuPay.Government
 Imports System.Data.Entity
+Imports Microsoft.EntityFrameworkCore
 
 Public Class ImportSalaryForm
 

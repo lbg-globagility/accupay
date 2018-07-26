@@ -1,6 +1,7 @@
 ﻿Imports System.ComponentModel
 Imports AccuPay.JobLevels
 Imports System.Data.Entity
+Imports Microsoft.EntityFrameworkCore
 
 Public Class JobLevelForm
 

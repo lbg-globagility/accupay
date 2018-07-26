@@ -26,6 +26,8 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property ProductID As Integer?
 
+        Public Overridable Property PaystubID As Integer?
+
         <Column("PayAmount")>
         Public Overridable Property Amount As Decimal
 
@@ -33,6 +35,7 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property IsActual As Boolean
 
+        <ForeignKey("PaystubID")>
         Public Overridable Property Paystub As Paystub
 
     End Class

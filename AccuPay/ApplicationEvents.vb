@@ -51,7 +51,6 @@ Namespace My
         Private Sub MyApplication_Startup(sender As Object, e As ApplicationServices.StartupEventArgs) Handles Me.Startup
             Try
                 Using context = New PayrollContext()
-                    context.Database.Initialize(False)
                 End Using
             Catch ex As Exception
                 MsgBox("A serious error occured while trying to initializing the database.", MsgBoxStyle.OkOnly, "Database Error")
