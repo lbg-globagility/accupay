@@ -3,6 +3,7 @@ Imports System.Data.Entity
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports log4net
+Imports Microsoft.EntityFrameworkCore
 Imports NHibernate
 Imports PayrollSys
 

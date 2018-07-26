@@ -49,7 +49,7 @@ Public Class SqlToDataTable
             command.CommandType = CommandType.Text
 
             Await connection.OpenAsync()
-            Await adapter.FillAsync(dataTable)
+            adapter.Fill(dataTable)
         End Using
 
         Return dataTable

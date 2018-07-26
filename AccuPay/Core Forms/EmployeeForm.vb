@@ -11,6 +11,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
+Imports Microsoft.EntityFrameworkCore
 
 Public Class EmployeeForm
 
@@ -1843,7 +1844,7 @@ Public Class EmployeeForm
                     employee = (From emp In context.Employees.
                                     Include(Function(emp) emp.PayFrequency).
                                     Include(Function(emp) emp.Position)
-                                Where emp.RowID = employeeID).
+                                Where CBool(emp.RowID = employeeID)).
                                FirstOrDefault()
                 End Using
 

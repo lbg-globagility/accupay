@@ -77,11 +77,11 @@ Namespace Global.AccuPay.Entity
 
         Public Property NoOfDependents As Integer?
 
-        Public Property UndertimeOverride As String
+        Public Property UndertimeOverride As Boolean
 
-        Public Property OvertimeOverride As String
+        Public Property OvertimeOverride As Boolean
 
-        Public Property NewEmployeeFlag As String
+        Public Property NewEmployeeFlag As Boolean
 
         Public Property LeaveBalance As Decimal
 
@@ -107,11 +107,11 @@ Namespace Global.AccuPay.Entity
 
         Public Property OtherLeavePerPayPeriod As Decimal
 
-        Public Property AlphalistExempted As Char
+        Public Property AlphalistExempted As Boolean
 
         Public Property WorkDaysPerYear As Integer
 
-        Public Property DayOfRest As String
+        Public Property DayOfRest As Integer?
 
         Public Property AtmNo As String
 
@@ -133,7 +133,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property DateEvaluated As Date?
 
-        Public Property RevealInPayroll As Char
+        Public Property RevealInPayroll As Boolean
 
         Public Property LateGracePeriod As Decimal
 

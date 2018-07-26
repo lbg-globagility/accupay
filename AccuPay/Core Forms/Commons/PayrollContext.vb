@@ -4,22 +4,13 @@ Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.JobLevels
 Imports PayrollSys
+Imports Microsoft.EntityFrameworkCore
 
 Public Class PayrollContext
     Inherits DbContext
 
-    Private Shared Function GetConnection() As DbConnection
-        Dim connection = DbProviderFactories.GetFactory("MySql.Data.MySqlClient").CreateConnection()
-        connection.ConnectionString = connectionString
-        Return connection
-    End Function
-
-    Public Sub New()
-        MyBase.New(GetConnection(), True)
-    End Sub
-
-    Public Sub New(connection As DbConnection)
-        MyBase.New(connection, True)
+    Protected Overrides Sub OnConfiguring(optionsBuilder As DbContextOptionsBuilder)
+        optionsBuilder.UseMySql(connectionString)
     End Sub
 
     Public Overridable Property Salaries As DbSet(Of Salary)
@@ -86,13 +77,8 @@ Public Class PayrollContext
 
     Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
 
-
-    Protected Overrides Sub OnModelCreating(modelBuilder As DbModelBuilder)
+    Protected Overrides Sub OnModelCreating(modelBuilder As ModelBuilder)
         MyBase.OnModelCreating(modelBuilder)
-
-        modelBuilder.Entity(Of Paystub).
-            HasOptional(Function(p) p.ThirteenthMonthPay).
-            WithRequired(Function(t) t.Paystub)
     End Sub
 
 End Class

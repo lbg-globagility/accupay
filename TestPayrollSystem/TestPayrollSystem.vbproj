@@ -108,7 +108,6 @@
     <Compile Include="EnumsTest.vb" />
     <Compile Include="ListOfValueCollectionTest.vb" />
     <Compile Include="NHibernateTest.vb" />
-    <Compile Include="PayrollContextTest.vb" />
     <Compile Include="TimeEntryCalculatorTest.vb" />
     <Compile Include="TimeUtilityTest.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

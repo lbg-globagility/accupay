@@ -4,6 +4,7 @@ Imports System.Data.Entity
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
+Imports Microsoft.EntityFrameworkCore
 Imports NHibernate.Linq
 Imports PayrollSys
 

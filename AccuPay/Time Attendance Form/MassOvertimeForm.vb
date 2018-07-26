@@ -2,6 +2,7 @@
 
 Imports AccuPay.Entity
 Imports AccuPay.Tools
+Imports Microsoft.EntityFrameworkCore
 Imports System.Data.Entity
 Imports System.Threading.Tasks
 
