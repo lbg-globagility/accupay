@@ -11,6 +11,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
+Imports Microsoft.EntityFrameworkCore
 
 Public Class EmployeeForm
 
@@ -1843,7 +1844,7 @@ Public Class EmployeeForm
                     employee = (From emp In context.Employees.
                                     Include(Function(emp) emp.PayFrequency).
                                     Include(Function(emp) emp.Position)
-                                Where emp.RowID = employeeID).
+                                Where CBool(emp.RowID = employeeID)).
                                FirstOrDefault()
                 End Using
 
@@ -9102,8 +9103,8 @@ Public Class EmployeeForm
                 MessageBoxDefaultButton.Button2)
 
             If prompt = DialogResult.Yes Then
-                Using session = SessionFactory.Instance.OpenSession()
-                    Dim loanSchedule = session.Get(Of LoanSchedule)(loanScheduleID)
+                Using context = New PayrollContext()
+                    Dim loanSchedule = context.LoanSchedules.Find(loanScheduleID)
 
                     If loanSchedule.LoanTransactions.Count() > 0 Then
                         Dim secondPrompt = MessageBox.Show(
@@ -9118,8 +9119,8 @@ Public Class EmployeeForm
                         End If
                     End If
 
-                    session.Delete(loanSchedule)
-                    session.Flush()
+                    context.LoanSchedules.Remove(loanSchedule)
+                    context.SaveChanges()
                 End Using
 
                 Dim curr_row = dgvLoanList.CurrentRow

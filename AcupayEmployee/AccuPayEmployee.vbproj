@@ -181,10 +181,6 @@
       <HintPath>..\packages\MySql.Data.Entity.6.9.9\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MySqlBackup, Version=2.0.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MySqlBackup.NET.2.0.8\lib\net45\MySqlBackup.dll</HintPath>
-    </Reference>
     <Reference Include="OCRTools">
       <HintPath>References\OCRTools.dll</HintPath>
     </Reference>

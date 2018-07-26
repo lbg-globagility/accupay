@@ -95,7 +95,7 @@ Public Class MySQLExecuteCommand
 
             Dim mysql_transac As MySqlTransaction
 
-            mysql_transac = prepared_mysqlcmd.Connection.BeginTransaction
+            'mysql_transac = prepared_mysqlcmd.Connection.BeginTransaction
 
             Try
 
@@ -104,10 +104,10 @@ Public Class MySQLExecuteCommand
 
                 dat_adap.Fill(datset_result)
 
-                mysql_transac.Commit()
+                'mysql_transac.Commit()
 
             Catch ex As Exception
-                mysql_transac.Rollback()
+                'mysql_transac.Rollback()
 
                 AssignError(ex)
 

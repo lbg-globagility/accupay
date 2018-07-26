@@ -8,7 +8,6 @@ Namespace Global.AccuPay.Entity
     <Table("thirteenthmonthpay")>
     Public Class ThirteenthMonthPay
 
-        <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Overridable Property RowID As Integer?
 
@@ -27,6 +26,9 @@ Namespace Global.AccuPay.Entity
         Public Overridable Property BasicPay As Decimal
 
         Public Overridable Property Amount As Decimal
+
+        <Key>
+        Public Property PaystubID As Integer?
 
         Public Overridable Property Paystub As Paystub
 

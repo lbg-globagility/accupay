@@ -3,6 +3,7 @@ Imports System.Data.Entity
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports log4net
+Imports Microsoft.EntityFrameworkCore
 Imports NHibernate
 Imports PayrollSys
 
@@ -294,27 +295,21 @@ Public Class PayrollGeneration
             Dim vacationLeaveProduct = _products.Where(Function(p) p.PartNo = "Vacation leave").FirstOrDefault()
             Dim sickLeaveProduct = _products.Where(Function(p) p.PartNo = "Sick leave").FirstOrDefault()
 
-            Using session = SessionFactory.Instance.OpenSession(),
-                trans = session.BeginTransaction()
+            Using context = New PayrollContext()
+                UpdateLeaveLedger(context)
 
-                session.FlushMode = FlushMode.Commit
-
-                UpdateLeaveLedger(session)
-
-                If _paystub.RowID IsNot Nothing Then
-                    _paystub = session.Merge(_paystub)
+                If _paystub.RowID.HasValue Then
+                    context.Entry(_paystub).State = EntityState.Modified
+                Else
+                    context.Paystubs.Add(_paystub)
                 End If
-
-                session.Delete("from AllowanceItem a where a.Paystub.RowID = ?", _paystub.RowID, NHibernate.NHibernateUtil.Int32)
 
                 _paystub.AllowanceItems.Clear()
                 For Each allowanceItem In _allowanceItems
                     _paystub.AllowanceItems.Add(allowanceItem)
                 Next
 
-                ComputeThirteenthMonthPay(salary)
-
-                Dim vacationLeaveBalance = session.Query(Of PaystubItem).
+                Dim vacationLeaveBalance = context.PaystubItems.
                     Where(Function(p) p.Product.PartNo = "Vacation leave").
                     Where(Function(p) CBool(p.Paystub.RowID = _paystub.RowID)).
                     FirstOrDefault()
@@ -333,7 +328,7 @@ Public Class PayrollGeneration
                     _paystub.PaystubItems.Add(vacationLeaveBalance)
                 End If
 
-                Dim sickLeaveBalance = session.Query(Of PaystubItem).
+                Dim sickLeaveBalance = context.PaystubItems.
                     Where(Function(p) p.Product.PartNo = "Sick leave").
                     Where(Function(p) CBool(p.Paystub.RowID = _paystub.RowID)).
                     FirstOrDefault()
@@ -352,13 +347,13 @@ Public Class PayrollGeneration
                     _paystub.PaystubItems.Add(sickLeaveBalance)
                 End If
 
-                session.SaveOrUpdate(_paystub)
-
                 For Each newLoanTransaction In newLoanTransactions
-                    session.Save(newLoanTransaction)
+                    context.LoanTransactions.Add(newLoanTransaction)
                 Next
 
-                trans.Commit()
+                ComputeThirteenthMonthPay(salary)
+
+                context.SaveChanges()
             End Using
         Catch ex As Exception
             Throw New Exception($"Failure to generate paystub for employee {_paystub.EmployeeID}", ex)
@@ -581,8 +576,8 @@ Public Class PayrollGeneration
         Return False
     End Function
 
-    Private Sub UpdateLeaveLedger(session As ISession)
-        Dim leaves = session.Query(Of Leave).
+    Private Sub UpdateLeaveLedger(context As PayrollContext)
+        Dim leaves = context.Leaves.
             Where(Function(l) _payPeriod.PayFromDate <= l.StartDate).
             Where(Function(l) l.StartDate <= _payPeriod.PayToDate).
             Where(Function(l) CBool(l.EmployeeID = _employee2.RowID)).
@@ -590,11 +585,11 @@ Public Class PayrollGeneration
 
         Dim leaveIds = leaves.Select(Function(l) l.RowID)
 
-        Dim transactions = (From t In session.Query(Of LeaveTransaction)
+        Dim transactions = (From t In context.LeaveTransactions
                             Where leaveIds.Contains(t.ReferenceID)).ToList()
 
         Dim employeeId = _employee2.RowID
-        Dim ledgers = session.Query(Of LeaveLedger).
+        Dim ledgers = context.LeaveLedgers.
             Include(Function(x) x.Product).
             Include(Function(x) x.LastTransaction).
             Where(Function(x) CBool(x.EmployeeID = employeeId)).
@@ -1007,7 +1002,7 @@ Public Class PayrollGeneration
                     .OrganizationID = z_OrganizationID,
                     .EmployeeID = _paystub.EmployeeID,
                     .PayPeriodID = _payPeriod.RowID,
-                    .LoanSchedule = loanSchedule,
+                    .LoanScheduleID = loanSchedule.RowID,
                     .LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft - 1
                 }
 

@@ -24,7 +24,7 @@ Namespace Global.AccuPay.Loans
 
         Public Overridable Property DedEffectiveDateFrom As Date
 
-        Public Overridable Property DedEffectiveDateTo As Date
+        Public Overridable Property DedEffectiveDateTo As Date?
 
         Public Overridable Property TotalLoanAmount As Decimal
 

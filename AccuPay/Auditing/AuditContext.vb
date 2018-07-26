@@ -1,6 +1,7 @@
 Imports System
 Imports System.Data.Entity
 Imports System.Linq
+Imports Microsoft.EntityFrameworkCore
 
 Namespace Auditing
 
@@ -8,7 +9,6 @@ Namespace Auditing
         Inherits DbContext
 
         Public Sub New()
-            MyBase.New("name=AuditContext")
         End Sub
 
         Public Overridable Property Views As DbSet(Of View)
