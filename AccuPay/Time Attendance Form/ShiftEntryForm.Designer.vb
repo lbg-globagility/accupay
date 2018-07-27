@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class ShiftEntryForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,16 +20,25 @@ Partial Class ShiftEntryForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.dtpTimeTo = New System.Windows.Forms.DateTimePicker()
         Me.dtpTimeFrom = New System.Windows.Forms.DateTimePicker()
         Me.dgvshiftentry = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_timef = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_timet = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DivisorToDailyRate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.breaktimefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.breaktimeto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.IsHidden = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btnSave = New System.Windows.Forms.Button()
         Me.btnDelete = New System.Windows.Forms.Button()
         Me.btnNew = New System.Windows.Forms.Button()
@@ -40,6 +49,7 @@ Partial Class ShiftEntryForm
         Me.tsbtnCloseShift = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.chkHidden = New System.Windows.Forms.CheckBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -57,14 +67,7 @@ Partial Class ShiftEntryForm
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_timef = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_timet = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DivisorToDailyRate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.breaktimefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.breaktimeto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.IsHidden = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.chkHidden = New System.Windows.Forms.CheckBox()
+        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvshiftentry, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -137,6 +140,57 @@ Partial Class ShiftEntryForm
         Me.dgvshiftentry.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvshiftentry.Size = New System.Drawing.Size(383, 258)
         Me.dgvshiftentry.TabIndex = 345
+        '
+        'c_timef
+        '
+        Me.c_timef.HeaderText = "Time From"
+        Me.c_timef.Name = "c_timef"
+        Me.c_timef.ReadOnly = True
+        '
+        'c_timet
+        '
+        Me.c_timet.HeaderText = "Time To"
+        Me.c_timet.Name = "c_timet"
+        Me.c_timet.ReadOnly = True
+        '
+        'DivisorToDailyRate
+        '
+        Me.DivisorToDailyRate.HeaderText = "DivisorToDailyRate"
+        Me.DivisorToDailyRate.Name = "DivisorToDailyRate"
+        Me.DivisorToDailyRate.ReadOnly = True
+        Me.DivisorToDailyRate.Visible = False
+        '
+        'c_rowid
+        '
+        Me.c_rowid.HeaderText = "RowID"
+        Me.c_rowid.Name = "c_rowid"
+        Me.c_rowid.ReadOnly = True
+        Me.c_rowid.Visible = False
+        '
+        'breaktimefrom
+        '
+        DataGridViewCellStyle1.Format = "t"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.breaktimefrom.DefaultCellStyle = DataGridViewCellStyle1
+        Me.breaktimefrom.HeaderText = "Breaktime From"
+        Me.breaktimefrom.Name = "breaktimefrom"
+        Me.breaktimefrom.ReadOnly = True
+        '
+        'breaktimeto
+        '
+        DataGridViewCellStyle2.Format = "t"
+        DataGridViewCellStyle2.NullValue = Nothing
+        Me.breaktimeto.DefaultCellStyle = DataGridViewCellStyle2
+        Me.breaktimeto.HeaderText = "Breaktime To"
+        Me.breaktimeto.Name = "breaktimeto"
+        Me.breaktimeto.ReadOnly = True
+        '
+        'IsHidden
+        '
+        Me.IsHidden.HeaderText = "Is Hidden"
+        Me.IsHidden.Name = "IsHidden"
+        Me.IsHidden.ReadOnly = True
+        Me.IsHidden.Visible = False
         '
         'btnSave
         '
@@ -245,6 +299,16 @@ Partial Class ShiftEntryForm
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(665, 403)
         Me.Panel1.TabIndex = 350
+        '
+        'chkHidden
+        '
+        Me.chkHidden.AutoSize = True
+        Me.chkHidden.Location = New System.Drawing.Point(441, 115)
+        Me.chkHidden.Name = "chkHidden"
+        Me.chkHidden.Size = New System.Drawing.Size(60, 17)
+        Me.chkHidden.TabIndex = 377
+        Me.chkHidden.Text = "Hidden"
+        Me.chkHidden.UseVisualStyleBackColor = True
         '
         'Button1
         '
@@ -363,98 +427,58 @@ Partial Class ShiftEntryForm
         '
         Me.DataGridViewTextBoxColumn1.HeaderText = "Time From"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Width = 149
         '
         'DataGridViewTextBoxColumn2
         '
         Me.DataGridViewTextBoxColumn2.HeaderText = "Time To"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
         Me.DataGridViewTextBoxColumn2.Width = 148
         '
         'DataGridViewTextBoxColumn3
         '
         Me.DataGridViewTextBoxColumn3.HeaderText = "DivisorToDailyRate"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
         Me.DataGridViewTextBoxColumn3.Visible = False
         '
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
         Me.DataGridViewTextBoxColumn4.Visible = False
         '
         'DataGridViewTextBoxColumn5
         '
+        DataGridViewCellStyle4.Format = "t"
+        DataGridViewCellStyle4.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridViewTextBoxColumn5.HeaderText = "breaktimefrom"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
         Me.DataGridViewTextBoxColumn5.Visible = False
+        Me.DataGridViewTextBoxColumn5.Width = 85
         '
         'DataGridViewTextBoxColumn6
         '
+        DataGridViewCellStyle5.Format = "t"
+        DataGridViewCellStyle5.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle5
         Me.DataGridViewTextBoxColumn6.HeaderText = "breaktimeto"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
         Me.DataGridViewTextBoxColumn6.Visible = False
+        Me.DataGridViewTextBoxColumn6.Width = 85
         '
-        'c_timef
+        'DataGridViewTextBoxColumn7
         '
-        Me.c_timef.HeaderText = "Time From"
-        Me.c_timef.Name = "c_timef"
-        Me.c_timef.ReadOnly = True
-        '
-        'c_timet
-        '
-        Me.c_timet.HeaderText = "Time To"
-        Me.c_timet.Name = "c_timet"
-        Me.c_timet.ReadOnly = True
-        '
-        'DivisorToDailyRate
-        '
-        Me.DivisorToDailyRate.HeaderText = "DivisorToDailyRate"
-        Me.DivisorToDailyRate.Name = "DivisorToDailyRate"
-        Me.DivisorToDailyRate.ReadOnly = True
-        Me.DivisorToDailyRate.Visible = False
-        '
-        'c_rowid
-        '
-        Me.c_rowid.HeaderText = "RowID"
-        Me.c_rowid.Name = "c_rowid"
-        Me.c_rowid.ReadOnly = True
-        Me.c_rowid.Visible = False
-        '
-        'breaktimefrom
-        '
-        DataGridViewCellStyle1.Format = "t"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.breaktimefrom.DefaultCellStyle = DataGridViewCellStyle1
-        Me.breaktimefrom.HeaderText = "Breaktime From"
-        Me.breaktimefrom.Name = "breaktimefrom"
-        Me.breaktimefrom.ReadOnly = True
-        '
-        'breaktimeto
-        '
-        DataGridViewCellStyle2.Format = "t"
-        DataGridViewCellStyle2.NullValue = Nothing
-        Me.breaktimeto.DefaultCellStyle = DataGridViewCellStyle2
-        Me.breaktimeto.HeaderText = "Breaktime To"
-        Me.breaktimeto.Name = "breaktimeto"
-        Me.breaktimeto.ReadOnly = True
-        '
-        'IsHidden
-        '
-        Me.IsHidden.HeaderText = "Is Hidden"
-        Me.IsHidden.Name = "IsHidden"
-        Me.IsHidden.ReadOnly = True
-        Me.IsHidden.Visible = False
-        '
-        'chkHidden
-        '
-        Me.chkHidden.AutoSize = True
-        Me.chkHidden.Location = New System.Drawing.Point(441, 115)
-        Me.chkHidden.Name = "chkHidden"
-        Me.chkHidden.Size = New System.Drawing.Size(60, 17)
-        Me.chkHidden.TabIndex = 377
-        Me.chkHidden.Text = "Hidden"
-        Me.chkHidden.UseVisualStyleBackColor = True
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Is Hidden"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.ReadOnly = True
+        Me.DataGridViewTextBoxColumn7.Visible = False
         '
         'ShiftEntryForm
         '
@@ -519,4 +543,5 @@ Partial Class ShiftEntryForm
     Friend WithEvents breaktimeto As DataGridViewTextBoxColumn
     Friend WithEvents IsHidden As DataGridViewTextBoxColumn
     Friend WithEvents chkHidden As CheckBox
+    Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
 End Class

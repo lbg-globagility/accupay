@@ -595,6 +595,7 @@ Public Class EmployeeShiftEntryForm
         n_ShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
         n_ShiftEntryForm.StartPosition = FormStartPosition.CenterScreen
 
+
         If n_ShiftEntryForm.ShowDialog = Windows.Forms.DialogResult.OK Then
             If n_ShiftEntryForm.ShiftRowID <> Nothing Then
 
