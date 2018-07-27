@@ -84,6 +84,10 @@ Public Class PayrollContext
             HasOne(Function(p) p.ThirteenthMonthPay).
             WithOne(Function(t) t.Paystub).
             HasForeignKey(Of ThirteenthMonthPay)(Function(t) t.PaystubID)
+
+        modelBuilder.Entity(Of Paystub).
+            HasMany(Function(p) p.AllowanceItems).
+            WithOne(Function(a) a.Paystub)
     End Sub
 
 End Class

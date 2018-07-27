@@ -131,7 +131,7 @@ Public Class SalaryTab
 
         Using context = New PayrollContext()
             _salaries = (From s In context.Salaries.Include(Function(s) s.SocialSecurityBracket)
-                         Where s.EmployeeID = _employee.RowID
+                         Where CBool(s.EmployeeID = _employee.RowID)
                          Order By s.EffectiveFrom Descending).
                          ToList()
         End Using

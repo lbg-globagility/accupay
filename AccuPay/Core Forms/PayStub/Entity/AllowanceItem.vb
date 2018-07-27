@@ -28,6 +28,9 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property PayPeriodID As Integer?
 
+        <ForeignKey("Paystub")>
+        Public Overridable Property PaystubID As Integer?
+
         Public Overridable Property Amount As Decimal
 
         <ForeignKey("AllowanceID")>

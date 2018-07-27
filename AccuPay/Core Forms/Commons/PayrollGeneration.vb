@@ -304,10 +304,10 @@ Public Class PayrollGeneration
                     context.Paystubs.Add(_paystub)
                 End If
 
-                _paystub.AllowanceItems.Clear()
-                For Each allowanceItem In _allowanceItems
-                    _paystub.AllowanceItems.Add(allowanceItem)
-                Next
+                context.Entry(_paystub).Collection(Function(p) p.AllowanceItems).Load()
+                context.Set(Of AllowanceItem).RemoveRange(_paystub.AllowanceItems)
+
+                _paystub.AllowanceItems = _allowanceItems
 
                 Dim vacationLeaveBalance = context.PaystubItems.
                     Where(Function(p) p.Product.PartNo = "Vacation leave").
@@ -663,7 +663,7 @@ Public Class PayrollGeneration
                 employerSssPerMonth = socialSecurityBracket?.EmployerContributionAmount
             End If
         ElseIf sssCalculation = SssCalculationBasis.BasicSalary Then
-            Dim socialSecurityId = CInt(salary("PaySocialSecurityID"))
+            Dim socialSecurityId = TypeTools.ParseIntOrNull(salary("PaySocialSecurityID"))
 
             Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(Function(s) s.RowID = socialSecurityId)
 
