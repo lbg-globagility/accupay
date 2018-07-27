@@ -15,8 +15,9 @@
     Private my_TimeFrom = Nothing
 
     Private my_TimeTo = Nothing
-    Dim Selector As String = ""
+
     Dim SecondSelector As String = ""
+
     Property ShiftRowID As Object
         Get
             Return my_RowID
@@ -71,15 +72,16 @@
                 dgvshiftentry.Rows.Item(n).Cells(c_timef.Index).Value = .Item("timef").ToString
                 dgvshiftentry.Rows.Item(n).Cells(c_timet.Index).Value = .Item("timet").ToString
 
-                If .Item("RowID").ToString = SecondSelector Then
-                    dgvshiftentry.Rows(n).Selected = True
-                    dgvshiftentry.CurrentCell = dgvshiftentry.Rows(n).Cells(0)
-
-
-
-                ElseIf IsNew = 1 And .Item("RowID").ToString = maxid.ToString Then
-                    dgvshiftentry.Rows(n).Selected = True
-                    dgvshiftentry.CurrentCell = dgvshiftentry.Rows(n).Cells(0)
+                If IsNew = 0 Then
+                    If .Item("RowID").ToString = SecondSelector Then
+                        dgvshiftentry.Rows(n).Selected = True
+                        dgvshiftentry.CurrentCell = dgvshiftentry.Rows(n).Cells(0)
+                    End If
+                ElseIf IsNew = 1 Then
+                        If .Item("RowID").ToString = maxid.ToString Then
+                        dgvshiftentry.Rows(n).Selected = True
+                        dgvshiftentry.CurrentCell = dgvshiftentry.Rows(n).Cells(0)
+                    End If
                 End If
 
                 dgvshiftentry.Rows.Item(n).Cells(c_rowid.Index).Value = .Item("RowID").ToString
@@ -92,8 +94,8 @@
         Next
 
 
-        SecondSelector = 0
-
+        'SecondSelector = 0
+        'maxid = 0
 
 
         'If Selector = Nothing Then
@@ -229,7 +231,7 @@
             dgvshiftentry.Tag = dgvshiftentry.CurrentRow.Cells(c_rowid.Index).Value
             chkHidden.Checked = Convert.ToInt16(dgvshiftentry.CurrentRow.Cells(IsHidden.Index).Value)
 
-            Selector = dgvshiftentry.CurrentCell.RowIndex
+
             SecondSelector = dgvshiftentry.CurrentRow.Cells(c_rowid.Index).Value
         Catch ex As Exception
             my_RowID = Nothing
@@ -261,6 +263,8 @@
     Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
         IsNew = 1
         btnNew.Enabled = False
+
+
     End Sub
 
     Sub tsbtnNewShift_Click(sender As Object, e As EventArgs) Handles tsbtnNewShift.Click
@@ -268,7 +272,7 @@
 
         tsbtnNewShift.Enabled = False
         dtpTimeFrom.Focus()
-        chkHasLunchBreak.Checked = True
+        chkHasLunchBreak.Checked = False
     End Sub
 
     Sub Updatequery()
@@ -377,6 +381,7 @@
                     fillshiftentry()
                     IsNew = 0
 
+
                 End If
             End If
 
@@ -436,8 +441,9 @@
                 Else
 
                     Updatequery()
-                    IsNew = 0
                     fillshiftentry()
+                    IsNew = 0
+
 
                 End If
             Else
@@ -458,8 +464,9 @@
                     Return
                 Else
                     Updatequery()
-                    IsNew = 0
+
                     fillshiftentry()
+                    IsNew = 0
 
                 End If
             End If
@@ -503,6 +510,8 @@
         tsbtnNewShift.Enabled = True
 
         IsNew = 0
+
+
         fillshiftentry()
 
         If dgvshiftentry.RowCount <> 0 Then
