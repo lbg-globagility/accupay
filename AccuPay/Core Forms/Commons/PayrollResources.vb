@@ -19,9 +19,7 @@ Public Class PayrollResources
 
     Private _employees As ICollection(Of Employee)
 
-    Private _salaries As DataTable
-
-    Private _salaries2 As ICollection(Of Salary)
+    Private _salaries As ICollection(Of Salary)
 
     Private _timeEntries As ICollection(Of TimeEntry)
 
@@ -77,15 +75,9 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property Salaries As DataTable
+    Public ReadOnly Property Salaries As ICollection(Of Salary)
         Get
             Return _salaries
-        End Get
-    End Property
-
-    Public ReadOnly Property Salaries2 As ICollection(Of Salary)
-        Get
-            Return _salaries2
         End Get
     End Property
 
@@ -162,7 +154,6 @@ Public Class PayrollResources
     End Sub
 
     Public Async Function Load() As Task
-        Dim loadSalariesTask = LoadSalaries()
         Dim loadLoanSchedulesTask = LoadLoanSchedules()
         Dim loadLoanTransactionsTask = LoadLoanTransactions()
 
@@ -170,8 +161,7 @@ Public Class PayrollResources
             LoadEmployees(),
             loadLoanSchedulesTask,
             loadLoanTransactionsTask,
-            LoadSalaries2(),
-            loadSalariesTask,
+            LoadSalaries(),
             LoadPaystubs(),
             LoadProducts(),
             LoadPreviousPaystubs(),
@@ -267,25 +257,6 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadSalaries() As Task
-        Try
-            Dim query = New SqlToDataTable($"
-                SELECT
-                    *
-                FROM employeesalary
-                WHERE OrganizationID = {orgztnID} AND
-                    (EffectiveDateFrom >= '{_payDateFrom.ToString("s")}' OR IFNULL(EffectiveDateTo,CURDATE()) >= '{_payDateFrom.ToString("s")}') AND
-                    (EffectiveDateFrom <= '{_payDateTo.ToString("s")}' OR IFNULL(EffectiveDateTo,CURDATE()) <= '{_payDateTo.ToString("s")}')
-                GROUP BY EmployeeID
-                ORDER BY DATEDIFF(CURDATE(), EffectiveDateFrom);
-            ")
-
-            _salaries = Await query.ReadAsync()
-        Catch ex As Exception
-            Throw New ResourceLoadingException("Salaries", ex)
-        End Try
-    End Function
-
-    Private Async Function LoadSalaries2() As Task
         Dim today = DateTime.Today
 
         Try
@@ -293,10 +264,11 @@ Public Class PayrollResources
                 Dim query = context.Salaries.
                     Where(Function(s) s.EffectiveFrom >= _payDateFrom Or If(s.EffectiveTo, today) >= _payDateFrom).
                     Where(Function(s) s.EffectiveFrom <= _payDateTo Or If(s.EffectiveTo, today) <= _payDateTo).
+                    Where(Function(s) CBool(s.OrganizationID = z_OrganizationID)).
                     GroupBy(Function(s) s.EmployeeID).
                     Select(Function(g) g.FirstOrDefault())
 
-                _salaries2 = Await query.ToListAsync()
+                _salaries = Await query.ToListAsync()
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("Salaries", ex)

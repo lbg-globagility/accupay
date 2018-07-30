@@ -17,9 +17,10 @@ Public Class PayrollGeneration
 
     Private _employee2 As Employee
 
+    Private _salary As Salary
+
     Private _isFirstHalf As Boolean
     Private _isEndOfMonth As Boolean
-    Private _allSalaries As DataTable
 
     Private _allLoanSchedules As ICollection(Of LoanSchedule)
 
@@ -88,7 +89,6 @@ Public Class PayrollGeneration
         _employee2 = resources.Employees.
             FirstOrDefault(Function(e) e.RowID.ToString() = _employee("RowID"))
 
-        Me._allSalaries = resources.Salaries
         _allLoanSchedules = resources.LoanSchedules
         _allLoanTransactions = resources.LoanTransactions
 
@@ -98,6 +98,8 @@ Public Class PayrollGeneration
         _filingStatuses = filingStatuses
 
         _notifyMainWindow = AddressOf pay_stub_frm.ProgressCounter
+
+        _salary = resources.Salaries.FirstOrDefault(Function(s) s.EmployeeID = _employee2.RowID)
 
         _products = resources.Products
 
@@ -175,17 +177,15 @@ Public Class PayrollGeneration
 
             _paystub.EmployeeID = _employee2.RowID
 
-            Dim salary = _allSalaries.Select($"EmployeeID = '{_paystub.EmployeeID}'").FirstOrDefault()
-
             CalculateAllowances()
 
             _paystub.TotalAdjustments = If(_paystub?.Adjustments.Sum(Function(a) a.Amount), 0)
 
             Dim governmentContributions = 0D
 
-            If (_timeEntries.Count > 0) And (salary IsNot Nothing) Then
+            If (_timeEntries.Count > 0) And (_salary IsNot Nothing) Then
 
-                Dim basicPay = CDec(ValNoComma(salary("BasicPay")))
+                Dim basicPay = _salary.BasicPay
 
                 ComputeHours()
 
@@ -273,9 +273,9 @@ Public Class PayrollGeneration
                         _paystub.LeavePay
                 End If
 
-                CalculateSss(salary)
-                CalculatePhilHealth(salary)
-                CalculateHdmf(salary)
+                CalculateSss()
+                CalculatePhilHealth()
+                CalculateHdmf()
 
                 governmentContributions = _paystub.SssEmployeeShare + _paystub.PhilHealthEmployeeShare + _paystub.HdmfEmployeeShare
                 currentTaxableIncome = currentTaxableIncome - governmentContributions
@@ -355,7 +355,7 @@ Public Class PayrollGeneration
                     context.LoanTransactions.Add(newLoanTransaction)
                 Next
 
-                ComputeThirteenthMonthPay(salary)
+                ComputeThirteenthMonthPay()
 
                 context.SaveChanges()
             End Using
@@ -647,7 +647,7 @@ Public Class PayrollGeneration
         Next
     End Sub
 
-    Private Sub CalculateSss(salary As DataRow)
+    Private Sub CalculateSss()
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
 
         Dim findSocialSecurityBracket =
@@ -681,7 +681,7 @@ Public Class PayrollGeneration
                 employerSssPerMonth = socialSecurityBracket?.EmployerContributionAmount
             End If
         ElseIf sssCalculation = SssCalculationBasis.BasicSalary Then
-            Dim socialSecurityId = TypeTools.ParseIntOrNull(salary("PaySocialSecurityID"))
+            Dim socialSecurityId = _salary.PaySocialSecurityID
 
             Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(Function(s) s.RowID = socialSecurityId)
 
@@ -735,7 +735,7 @@ Public Class PayrollGeneration
         Return _sssDeductionSchedule = ContributionSchedule.PerPayPeriod
     End Function
 
-    Private Sub CalculatePhilHealth(salary As DataRow)
+    Private Sub CalculatePhilHealth()
         Dim philHealthCalculation = _settings.GetEnum(
             "PhilHealth.CalculationBasis",
             PhilHealthCalculationBasis.BasicSalary)
@@ -747,7 +747,7 @@ Public Class PayrollGeneration
         Dim totalContribution = 0D
         If philHealthCalculation = PhilHealthCalculationBasis.BasicSalary Then
             ' If philHealth calculation is based on the basic salary, get it from the salary record
-            totalContribution = ConvertToType(Of Decimal)(salary("PhilHealthDeduction"))
+            totalContribution = _salary.PhilHealthDeduction
         ElseIf isPhilHealthProrated Then
             Dim basisPay = 0D
 
@@ -840,8 +840,8 @@ Public Class PayrollGeneration
         Return _philHealthDeductionSchedule = ContributionSchedule.PerPayPeriod
     End Function
 
-    Private Sub CalculateHdmf(salary As DataRow)
-        Dim employeeHdmfPerMonth = ValNoComma(salary("HDMFAmount"))
+    Private Sub CalculateHdmf()
+        Dim employeeHdmfPerMonth = _salary.HDMFAmount
         Dim employerHdmfPerMonth = If(employeeHdmfPerMonth = 0, 0, PagibigEmployerAmount)
         Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
         Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
@@ -1047,7 +1047,7 @@ Public Class PayrollGeneration
         Return newLoanTransactions
     End Function
 
-    Private Sub ComputeThirteenthMonthPay(salaryrow As DataRow)
+    Private Sub ComputeThirteenthMonthPay()
         If _paystub.ThirteenthMonthPay Is Nothing Then
             _paystub.ThirteenthMonthPay = New ThirteenthMonthPay() With {
                 .OrganizationID = z_OrganizationID,
@@ -1072,7 +1072,7 @@ Public Class PayrollGeneration
                     Sum(Function(t) t.BasicDayPay + t.LeavePay))
 
         ElseIf _employee2.IsMonthly Or _employee2.IsFixed Then
-            Dim trueSalary = Convert.ToDecimal(salaryrow("TrueSalary"))
+            Dim trueSalary = _salary.TotalSalary
             Dim basicPay = trueSalary / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
 
             Dim totalDeductions = _actualtimeentries.Sum(Function(t) t.LateDeduction + t.UndertimeDeduction + t.AbsentDeduction)
