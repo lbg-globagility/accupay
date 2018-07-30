@@ -129,7 +129,7 @@ Public Class NewPayStubForm
         txtNightDiffPay.Text = Format(If(_isActual, actual.NightDiffPay, declared.NightDiffPay))
 
         txtNightDiffOTHours.Text = Format(declared.NightDiffOvertimeHours)
-        txtNightDiffOTPay.Text = Format(If(_isActual, actual.NightDiffOvertimePay, declared.NightDiffOvertimePay))
+        txtNightDiffOTPay.Text = Format(If(_isActual, actual.NightDiffOTPay, declared.NightDiffOvertimePay))
 
         txtRestDayHours.Text = Format(declared.RestDayHours)
         txtRestDayPay.Text = Format(If(_isActual, actual.RestDayPay, declared.RestDayPay))

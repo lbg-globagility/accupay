@@ -15,6 +15,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property OrganizationID As Integer?
 
+        Public Property PaystubID As Integer?
+
         Public Property PayPeriodID As Integer?
 
         Public Property EmployeeID As Integer?
@@ -29,7 +31,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property NightDiffPay As Decimal
 
-        Public Property NightDiffOvertimePay As Decimal
+        <Column("NightDiffOvertimePay")>
+        Public Property NightDiffOTPay As Decimal
 
         Public Property RestDayPay As Decimal
 
