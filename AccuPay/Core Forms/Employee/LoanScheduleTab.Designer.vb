@@ -22,16 +22,16 @@ Partial Class LoanScheduleTab
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtnNewLoan = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnSaveLoan = New System.Windows.Forms.ToolStripButton()
+        Me.btnNew = New System.Windows.Forms.ToolStripButton()
+        Me.btnSave = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel5 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
-        Me.DeleteLoanScheduleButton = New System.Windows.Forms.ToolStripButton()
+        Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator10 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripButton23 = New System.Windows.Forms.ToolStripButton()
+        Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton24 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnImportLoans = New System.Windows.Forms.ToolStripButton()
@@ -107,28 +107,28 @@ Partial Class LoanScheduleTab
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.White
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewLoan, Me.tsbtnSaveLoan, Me.ToolStripLabel5, Me.ToolStripSeparator9, Me.DeleteLoanScheduleButton, Me.ToolStripSeparator10, Me.ToolStripButton23, Me.ToolStripButton24, Me.ToolStripButton25, Me.tsbtnImportLoans})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel5, Me.ToolStripSeparator9, Me.btnDelete, Me.ToolStripSeparator10, Me.btnCancel, Me.ToolStripButton24, Me.ToolStripButton25, Me.tsbtnImportLoans})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(1031, 25)
         Me.ToolStrip12.TabIndex = 328
         Me.ToolStrip12.Text = "ToolStrip12"
         '
-        'tsbtnNewLoan
+        'btnNew
         '
-        Me.tsbtnNewLoan.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.tsbtnNewLoan.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnNewLoan.Name = "tsbtnNewLoan"
-        Me.tsbtnNewLoan.Size = New System.Drawing.Size(115, 22)
-        Me.tsbtnNewLoan.Text = "&New Loan Sched"
+        Me.btnNew.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnNew.Name = "btnNew"
+        Me.btnNew.Size = New System.Drawing.Size(115, 22)
+        Me.btnNew.Text = "&New Loan Sched"
         '
-        'tsbtnSaveLoan
+        'btnSave
         '
-        Me.tsbtnSaveLoan.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.tsbtnSaveLoan.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnSaveLoan.Name = "tsbtnSaveLoan"
-        Me.tsbtnSaveLoan.Size = New System.Drawing.Size(115, 22)
-        Me.tsbtnSaveLoan.Text = "&Save Loan Sched"
+        Me.btnSave.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnSave.Name = "btnSave"
+        Me.btnSave.Size = New System.Drawing.Size(115, 22)
+        Me.btnSave.Text = "&Save Loan Sched"
         '
         'ToolStripLabel5
         '
@@ -141,26 +141,26 @@ Partial Class LoanScheduleTab
         Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
         Me.ToolStripSeparator9.Size = New System.Drawing.Size(6, 25)
         '
-        'DeleteLoanScheduleButton
+        'btnDelete
         '
-        Me.DeleteLoanScheduleButton.Image = Global.AccuPay.My.Resources.Resources.deleteuser
-        Me.DeleteLoanScheduleButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.DeleteLoanScheduleButton.Name = "DeleteLoanScheduleButton"
-        Me.DeleteLoanScheduleButton.Size = New System.Drawing.Size(124, 22)
-        Me.DeleteLoanScheduleButton.Text = "&Delete Loan Sched"
+        Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.deleteuser
+        Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnDelete.Name = "btnDelete"
+        Me.btnDelete.Size = New System.Drawing.Size(124, 22)
+        Me.btnDelete.Text = "&Delete Loan Sched"
         '
         'ToolStripSeparator10
         '
         Me.ToolStripSeparator10.Name = "ToolStripSeparator10"
         Me.ToolStripSeparator10.Size = New System.Drawing.Size(6, 25)
         '
-        'ToolStripButton23
+        'btnCancel
         '
-        Me.ToolStripButton23.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.ToolStripButton23.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton23.Name = "ToolStripButton23"
-        Me.ToolStripButton23.Size = New System.Drawing.Size(63, 22)
-        Me.ToolStripButton23.Text = "Cancel"
+        Me.btnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(63, 22)
+        Me.btnCancel.Text = "Cancel"
         '
         'ToolStripButton24
         '
@@ -381,24 +381,24 @@ Partial Class LoanScheduleTab
         Me.dgvLoanList.AllowUserToDeleteRows = False
         Me.dgvLoanList.AllowUserToResizeRows = False
         Me.dgvLoanList.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvLoanList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvLoanList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvLoanList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvLoanList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_loanno, Me.c_totloanamt, Me.c_totballeft, Me.c_dedamt, Me.c_DedPercent, Me.c_dedsched, Me.c_noofpayperiod, Me.c_noofpayperiodleft, Me.c_dedeffectivedatefrom, Me.c_RemarksLoan, Me.c_RowIDLoan, Me.c_status, Me.c_loantype, Me.LoanHasBonus})
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvLoanList.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvLoanList.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvLoanList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvLoanList.Location = New System.Drawing.Point(32, 287)
         Me.dgvLoanList.MultiSelect = False
@@ -803,13 +803,13 @@ Partial Class LoanScheduleTab
         Me.Label350.TabIndex = 507
         Me.Label350.Text = "*"
         '
-        'LoanSchedule
+        'LoanScheduleTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.Controls.Add(Me.Panel10)
         Me.Controls.Add(Me.ToolStrip12)
-        Me.Name = "LoanSchedule"
+        Me.Name = "LoanScheduleTab"
         Me.Size = New System.Drawing.Size(1031, 519)
         Me.ToolStrip12.ResumeLayout(False)
         Me.ToolStrip12.PerformLayout()
@@ -823,13 +823,13 @@ Partial Class LoanScheduleTab
     End Sub
 
     Friend WithEvents ToolStrip12 As ToolStrip
-    Friend WithEvents tsbtnNewLoan As ToolStripButton
-    Friend WithEvents tsbtnSaveLoan As ToolStripButton
+    Friend WithEvents btnNew As ToolStripButton
+    Friend WithEvents btnSave As ToolStripButton
     Friend WithEvents ToolStripLabel5 As ToolStripLabel
     Friend WithEvents ToolStripSeparator9 As ToolStripSeparator
-    Friend WithEvents DeleteLoanScheduleButton As ToolStripButton
+    Friend WithEvents btnDelete As ToolStripButton
     Friend WithEvents ToolStripSeparator10 As ToolStripSeparator
-    Friend WithEvents ToolStripButton23 As ToolStripButton
+    Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents ToolStripButton24 As ToolStripButton
     Friend WithEvents ToolStripButton25 As ToolStripButton
     Friend WithEvents tsbtnImportLoans As ToolStripButton
