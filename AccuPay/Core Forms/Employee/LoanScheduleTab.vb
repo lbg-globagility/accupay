@@ -8,10 +8,15 @@ Imports PayrollSys
 
 
 Public Class LoanScheduleTab
+
+    Dim empNo As Integer = 1
+    Dim orgId As Integer = 1
+
     Private _mode As FormMode = FormMode.Empty
 
     Private _employee As Employee
     Private _loanschedules As List(Of LoanSchedule)
+    Private _productlist As List(Of Product)
 
     Private _currentLoanschedule As LoanSchedule
 
@@ -51,15 +56,22 @@ Public Class LoanScheduleTab
 
 
     Private Sub LoadLoanSched()
-        If _employee Is Nothing Then
-            Return
-        End If
+        'If _employee Is Nothing Then
+        '    Return
+        'End If
+
+        'Using context = New PayrollContext()
+        '    _loanschedules = (From s In context.LoanSchedules
+        '                      Where CBool(s.EmployeeID = _employee.RowID)
+        '                      Order By s.DedEffectiveDateFrom Descending).
+        '                 ToList()
+        'End Using
 
         Using context = New PayrollContext()
             _loanschedules = (From s In context.LoanSchedules
-                              Where CBool(s.EmployeeID = _employee.RowID)
+                              Where CBool(s.EmployeeID = empNo)
                               Order By s.DedEffectiveDateFrom Descending).
-                         ToList()
+                              ToList()
         End Using
 
         RemoveHandler dgvLoanList.SelectionChanged, AddressOf dgvLoanList_SelectionChanged
@@ -105,17 +117,16 @@ Public Class LoanScheduleTab
             Return
         End If
 
-        'SelectLoanSchedule(loansched)
+        SelectLoanSchedule(loansched)
     End Sub
-
+    'Not use for now
     Public Sub SetEmployee(employee As Employee)
         If _mode = FormMode.Creating Then
             EnableLoanScheduleGrid()
         End If
 
+
         _employee = employee
-        'txtPayFrequency.Text = employee.PayFrequency.Type
-        'txtSalaryType.Text = employee.EmployeeType
         txtFNameLoan.Text = $"{employee.FirstName} {employee.LastName}"
         txtEmpIDLoan.Text = $"ID# {employee.EmployeeNo}, {employee?.Position.Name}, {employee.EmployeeType} Salary"
         pbEmpPicLoan.Image = ConvByteToImage(employee.Image)
@@ -123,6 +134,11 @@ Public Class LoanScheduleTab
         ChangeMode(FormMode.Empty)
         LoadLoanSched()
 
+    End Sub
+    Private Sub DisableLoanScheduleGrid()
+        RemoveHandler dgvLoanList.SelectionChanged, AddressOf dgvLoanList_SelectionChanged
+        dgvLoanList.ClearSelection()
+        dgvLoanList.CurrentCell = Nothing
     End Sub
 
     Private Sub EnableLoanScheduleGrid()
@@ -154,40 +170,24 @@ Public Class LoanScheduleTab
     End Sub
 
     Private Sub DisplayLoan()
-        'RemoveHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
-        'dtpEffectiveFrom.Value = _currentLoanschedule.EffectiveFrom
 
-        'dtpEffectiveTo.Value = If(_currentLoanschedule.EffectiveTo, _currentLoanschedule.EffectiveFrom.AddYears(100))
-        'txtAmount.Text = CStr(_currentLoanschedule.BasicSalary)
-        'txtAllowance.Text = CStr(_currentLoanschedule.AllowanceSalary)
-        'txtTotalSalary.Text = CStr(_currentLoanschedule.TotalSalary)
-        'txtBasicPay.Text = CStr(_currentLoanschedule.BasicPay)
-        'txtSss.Text = CStr(If(_currentLoanschedule.SocialSecurityBracket?.EmployeeContributionAmount, 0))
-        'txtSss.Tag = _currentLoanschedule.SocialSecurityBracket
-        'txtPhilHealth.Text = CStr(_currentLoanschedule.PhilHealthDeduction)
-        'txtPagIbig.Text = CStr(_currentLoanschedule.HDMFAmount)
-        'AddHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
 
+        cboloantype.SelectedItem = _currentLoanschedule.LoanTypeID
 
         datefrom.Value = _currentLoanschedule.DedEffectiveDateFrom
-
-        dateto.Value = If(_currentLoanschedule.DedEffectiveDateTo, _currentLoanschedule.DedEffectiveDateFrom.AddYears(100))
-
-        cboloantype.SelectedValue = String.Empty
-        cmbStatus.SelectedValue = String.Empty
-        cmbdedsched.SelectedValue = String.Empty
-
+        'dateto.Value = If(_currentLoanschedule.DedEffectiveDateTo, _currentLoanschedule.DedEffectiveDateFrom.AddYears(1))
+        cmbStatus.SelectedItem = _currentLoanschedule.Status
+        cmbdedsched.SelectedItem = _currentLoanschedule.DeductionSchedule
+        cboloantype.SelectedItem = _currentLoanschedule.LoanName
         txtloannumber.Text = CStr(_currentLoanschedule.LoanNumber)
         txtbal.Text = CStr(_currentLoanschedule.TotalBalanceLeft)
         txtnoofpayper.Text = CStr(_currentLoanschedule.NoOfPayPeriod)
         txtnoofpayperleft.Text = CStr(_currentLoanschedule.LoanPayPeriodLeft)
-
-        txtloaninterest.Text = CStr(_currentLoanschedule.TotalBalanceLeft)
-
+        txtloanamt.Text = CStr(_currentLoanschedule.TotalLoanAmount)
+        txtloaninterest.Text = CStr(_currentLoanschedule.DeductionPercentage)
         TextBox6.Text = CStr(_currentLoanschedule.Comments)
-
-        txtdedpercent.Text = CStr(_currentLoanschedule.TotalBalanceLeft)
-        txtdedamt.Text = CStr(_currentLoanschedule.TotalBalanceLeft)
+        'txtdedpercent.Text = CStr(_currentLoanschedule.DeductionPercentage)
+        txtdedamt.Text = CStr(_currentLoanschedule.DeductionAmount)
         chkboxChargeToBonus.Checked = False
         rdbpercent.Checked = False
 
@@ -200,5 +200,64 @@ Public Class LoanScheduleTab
         Editing
     End Enum
 
+    Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
+        Dim latestloan = _loanschedules.
+          OrderBy(Function(s) s.DedEffectiveDateTo).
+          LastOrDefault()
 
+        _currentLoanschedule = New LoanSchedule() With {
+            .OrganizationID = z_OrganizationID,
+            .EmployeeID = _employee.RowID,
+            .DedEffectiveDateFrom = CDate(datefrom.Value),
+            .DedEffectiveDateTo = .DedEffectiveDateFrom.AddYears(1)
+        }
+
+        DisableLoanScheduleGrid()
+        ChangeMode(FormMode.Creating)
+        DisplayLoan()
+    End Sub
+
+    Private Sub pbEmpPicLoan_Click(sender As Object, e As EventArgs) Handles pbEmpPicLoan.Click
+
+        cmbStatus.Items.Clear()
+        cmbStatus.Items.Add("Complete")
+        cmbStatus.Items.Add("In Progress")
+        cmbStatus.Items.Add("Cancelled")
+        cmbStatus.Items.Add("On Hold")
+
+        cmbdedsched.Items.Clear()
+        cmbdedsched.Items.Add("Per pay period")
+        cmbdedsched.Items.Add("First half")
+        cmbdedsched.Items.Add("End of the month")
+
+        cboloantype.Items.Clear()
+        Using context = New PayrollContext()
+            _productlist = (From pro In context.Products
+                            Where pro.OrganizationID = orgId And pro.CategoryID = 10).ToList()
+
+        End Using
+
+        For Each strval In _productlist
+            cboloantype.Items.Add(strval.PartNo)
+        Next
+
+
+        Using context = New PayrollContext()
+            Dim listOfValues = (From emp In context.Employees.
+                                    Include(Function(emp) emp.Position)
+                                Where CBool(emp.RowID = empNo)).
+                               FirstOrDefault()
+
+
+
+            txtFNameLoan.Text = $"{listOfValues.FirstName} {listOfValues.LastName}"
+            txtEmpIDLoan.Text = $"ID# {listOfValues.EmployeeNo}, {listOfValues?.Position.Name}, {listOfValues.EmployeeType} Salary"
+            pbEmpPicLoan.Image = ConvByteToImage(listOfValues.Image)
+
+        End Using
+
+        LoadLoanSched()
+
+
+    End Sub
 End Class
