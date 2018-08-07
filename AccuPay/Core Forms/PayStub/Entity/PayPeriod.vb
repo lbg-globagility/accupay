@@ -49,6 +49,18 @@ Namespace Global.AccuPay.Entity
         Public Property HDMFWeeklyAgentContribSched As Boolean
         Public Property WTaxWeeklyAgentContribSched As Boolean
 
+        Public ReadOnly Property IsFirstHalf As Boolean
+            Get
+                Return Half = 1
+            End Get
+        End Property
+
+        Public ReadOnly Property IsEndOfTheMonth As Boolean
+            Get
+                Return Half = 0
+            End Get
+        End Property
+
     End Class
 
 End Namespace

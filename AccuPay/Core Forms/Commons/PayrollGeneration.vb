@@ -273,7 +273,9 @@ Public Class PayrollGeneration
                         _paystub.LeavePay
                 End If
 
-                CalculateSss()
+                Dim socialSecurityCalculator = New SssCalculator(_socialSecurityBrackets)
+                socialSecurityCalculator.Calculate(_sssDeductionSchedule, _settings, _paystub, _previousPaystub, _salary, _employee, _employee2, _payPeriod)
+
                 CalculatePhilHealth()
                 CalculateHdmf()
 
@@ -646,94 +648,6 @@ Public Class PayrollGeneration
             End If
         Next
     End Sub
-
-    Private Sub CalculateSss()
-        Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
-
-        Dim findSocialSecurityBracket =
-            Function(amount As Decimal) _socialSecurityBrackets.FirstOrDefault(
-                Function(s) s.RangeFromAmount <= amount And s.RangeToAmount >= amount)
-
-        Dim sssCalculation = _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
-
-        Dim isSssProrated =
-            (sssCalculation = SssCalculationBasis.Earnings) Or
-            (sssCalculation = SssCalculationBasis.GrossPay)
-
-        Dim employeeSssPerMonth = 0D
-        Dim employerSssPerMonth = 0D
-
-        If isSssProrated Then
-            Dim socialSecurityBracket As SocialSecurityBracket = Nothing
-
-            If sssCalculation = SssCalculationBasis.Earnings Then
-                Dim totalEarnings = If(_previousPaystub?.TotalEarnings, 0) + _paystub.TotalEarnings
-
-                socialSecurityBracket = findSocialSecurityBracket(totalEarnings)
-            ElseIf sssCalculation = SssCalculationBasis.GrossPay Then
-                Dim totalGrossPay = If(_previousPaystub?.GrossPay, 0) + _paystub.GrossPay
-
-                socialSecurityBracket = findSocialSecurityBracket(totalGrossPay)
-            End If
-
-            If socialSecurityBracket IsNot Nothing Then
-                employeeSssPerMonth = socialSecurityBracket?.EmployeeContributionAmount
-                employerSssPerMonth = socialSecurityBracket?.EmployerContributionAmount
-            End If
-        ElseIf sssCalculation = SssCalculationBasis.BasicSalary Then
-            Dim socialSecurityId = _salary.PaySocialSecurityID
-
-            Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(Function(s) s.RowID = socialSecurityId)
-
-            If socialSecurityBracket IsNot Nothing Then
-                employeeSssPerMonth = socialSecurityBracket.EmployeeContributionAmount
-                employerSssPerMonth = socialSecurityBracket.EmployerContributionAmount + socialSecurityBracket.EmployeeECAmount
-            End If
-        End If
-
-        If is_weekly Then
-            Dim is_deduct_sched_to_thisperiod = False
-
-            If _employee2.IsUnderAgency Then
-                is_deduct_sched_to_thisperiod = _payPeriod.SSSWeeklyAgentContribSched
-            Else
-                is_deduct_sched_to_thisperiod = _payPeriod.SSSWeeklyContribSched
-            End If
-
-            If is_deduct_sched_to_thisperiod Then
-                _paystub.SssEmployeeShare = employeeSssPerMonth
-                _paystub.SssEmployerShare = employerSssPerMonth
-            Else
-                _paystub.SssEmployeeShare = 0
-                _paystub.SssEmployerShare = 0
-            End If
-        Else
-            If IsSssPaidOnFirstHalf() Or IsSssPaidOnEndOfTheMonth() Then
-                _paystub.SssEmployeeShare = employeeSssPerMonth
-                _paystub.SssEmployerShare = employerSssPerMonth
-            ElseIf IsSssPaidPerPayPeriod() Then
-                Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
-
-                _paystub.SssEmployeeShare = employeeSssPerMonth / payPeriodsPerMonth
-                _paystub.SssEmployerShare = employerSssPerMonth / payPeriodsPerMonth
-            Else
-                _paystub.SssEmployeeShare = 0
-                _paystub.SssEmployerShare = 0
-            End If
-        End If
-    End Sub
-
-    Private Function IsSssPaidOnFirstHalf() As Boolean
-        Return _isFirstHalf And (_sssDeductionSchedule = ContributionSchedule.FirstHalf)
-    End Function
-
-    Private Function IsSssPaidOnEndOfTheMonth() As Boolean
-        Return _isEndOfMonth And (_sssDeductionSchedule = ContributionSchedule.EndOfTheMonth)
-    End Function
-
-    Private Function IsSssPaidPerPayPeriod() As Boolean
-        Return _sssDeductionSchedule = ContributionSchedule.PerPayPeriod
-    End Function
 
     Private Sub CalculatePhilHealth()
         Dim philHealthCalculation = _settings.GetEnum(
