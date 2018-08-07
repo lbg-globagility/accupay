@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class LoanScheduleTab
     Inherits System.Windows.Forms.UserControl
 
     'UserControl overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,18 +20,18 @@ Partial Class LoanScheduleTab
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtnNewLoan = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnSaveLoan = New System.Windows.Forms.ToolStripButton()
+        Me.btnNew = New System.Windows.Forms.ToolStripButton()
+        Me.btnSave = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel5 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
-        Me.DeleteLoanScheduleButton = New System.Windows.Forms.ToolStripButton()
+        Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator10 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripButton23 = New System.Windows.Forms.ToolStripButton()
+        Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton24 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnImportLoans = New System.Windows.Forms.ToolStripButton()
@@ -50,20 +50,6 @@ Partial Class LoanScheduleTab
         Me.Label221 = New System.Windows.Forms.Label()
         Me.Label220 = New System.Windows.Forms.Label()
         Me.dgvLoanList = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_loanno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_totloanamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_totballeft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_DedPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedsched = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_noofpayperiod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_noofpayperiodleft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedeffectivedatefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_RemarksLoan = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_RowIDLoan = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_status = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_loantype = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LoanHasBonus = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtFNameLoan = New System.Windows.Forms.TextBox()
         Me.TextBox7 = New System.Windows.Forms.TextBox()
         Me.txtEmpIDLoan = New System.Windows.Forms.TextBox()
@@ -97,6 +83,34 @@ Partial Class LoanScheduleTab
         Me.Label94 = New System.Windows.Forms.Label()
         Me.Label349 = New System.Windows.Forms.Label()
         Me.Label350 = New System.Windows.Forms.Label()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_LoanNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_TotalLoanAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_TotalBalanceLeft = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_DeductionAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_DeductionPercentage = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_DeductionSchedule = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_NoOfPayPeriod = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip12.SuspendLayout()
         Me.Panel10.SuspendLayout()
         CType(Me.pbEmpPicLoan, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -107,28 +121,28 @@ Partial Class LoanScheduleTab
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.White
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewLoan, Me.tsbtnSaveLoan, Me.ToolStripLabel5, Me.ToolStripSeparator9, Me.DeleteLoanScheduleButton, Me.ToolStripSeparator10, Me.ToolStripButton23, Me.ToolStripButton24, Me.ToolStripButton25, Me.tsbtnImportLoans})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel5, Me.ToolStripSeparator9, Me.btnDelete, Me.ToolStripSeparator10, Me.btnCancel, Me.ToolStripButton24, Me.ToolStripButton25, Me.tsbtnImportLoans})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(1031, 25)
         Me.ToolStrip12.TabIndex = 328
         Me.ToolStrip12.Text = "ToolStrip12"
         '
-        'tsbtnNewLoan
+        'btnNew
         '
-        Me.tsbtnNewLoan.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.tsbtnNewLoan.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnNewLoan.Name = "tsbtnNewLoan"
-        Me.tsbtnNewLoan.Size = New System.Drawing.Size(115, 22)
-        Me.tsbtnNewLoan.Text = "&New Loan Sched"
+        Me.btnNew.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnNew.Name = "btnNew"
+        Me.btnNew.Size = New System.Drawing.Size(115, 22)
+        Me.btnNew.Text = "&New Loan Sched"
         '
-        'tsbtnSaveLoan
+        'btnSave
         '
-        Me.tsbtnSaveLoan.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.tsbtnSaveLoan.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnSaveLoan.Name = "tsbtnSaveLoan"
-        Me.tsbtnSaveLoan.Size = New System.Drawing.Size(115, 22)
-        Me.tsbtnSaveLoan.Text = "&Save Loan Sched"
+        Me.btnSave.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnSave.Name = "btnSave"
+        Me.btnSave.Size = New System.Drawing.Size(115, 22)
+        Me.btnSave.Text = "&Save Loan Sched"
         '
         'ToolStripLabel5
         '
@@ -141,26 +155,26 @@ Partial Class LoanScheduleTab
         Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
         Me.ToolStripSeparator9.Size = New System.Drawing.Size(6, 25)
         '
-        'DeleteLoanScheduleButton
+        'btnDelete
         '
-        Me.DeleteLoanScheduleButton.Image = Global.AccuPay.My.Resources.Resources.deleteuser
-        Me.DeleteLoanScheduleButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.DeleteLoanScheduleButton.Name = "DeleteLoanScheduleButton"
-        Me.DeleteLoanScheduleButton.Size = New System.Drawing.Size(124, 22)
-        Me.DeleteLoanScheduleButton.Text = "&Delete Loan Sched"
+        Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.deleteuser
+        Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnDelete.Name = "btnDelete"
+        Me.btnDelete.Size = New System.Drawing.Size(124, 22)
+        Me.btnDelete.Text = "&Delete Loan Sched"
         '
         'ToolStripSeparator10
         '
         Me.ToolStripSeparator10.Name = "ToolStripSeparator10"
         Me.ToolStripSeparator10.Size = New System.Drawing.Size(6, 25)
         '
-        'ToolStripButton23
+        'btnCancel
         '
-        Me.ToolStripButton23.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.ToolStripButton23.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton23.Name = "ToolStripButton23"
-        Me.ToolStripButton23.Size = New System.Drawing.Size(63, 22)
-        Me.ToolStripButton23.Text = "Cancel"
+        Me.btnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(63, 22)
+        Me.btnCancel.Text = "Cancel"
         '
         'ToolStripButton24
         '
@@ -379,26 +393,27 @@ Partial Class LoanScheduleTab
         '
         Me.dgvLoanList.AllowUserToAddRows = False
         Me.dgvLoanList.AllowUserToDeleteRows = False
+        Me.dgvLoanList.AllowUserToOrderColumns = True
         Me.dgvLoanList.AllowUserToResizeRows = False
         Me.dgvLoanList.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvLoanList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvLoanList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvLoanList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvLoanList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_loanno, Me.c_totloanamt, Me.c_totballeft, Me.c_dedamt, Me.c_DedPercent, Me.c_dedsched, Me.c_noofpayperiod, Me.c_noofpayperiodleft, Me.c_dedeffectivedatefrom, Me.c_RemarksLoan, Me.c_RowIDLoan, Me.c_status, Me.c_loantype, Me.LoanHasBonus})
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvLoanList.DefaultCellStyle = DataGridViewCellStyle6
+        Me.dgvLoanList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_LoanNumber, Me.c_TotalLoanAmount, Me.c_TotalBalanceLeft, Me.c_DeductionAmount, Me.c_DeductionPercentage, Me.c_DeductionSchedule, Me.c_NoOfPayPeriod, Me.c_Comments, Me.c_RowID, Me.c_Status})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvLoanList.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvLoanList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvLoanList.Location = New System.Drawing.Point(32, 287)
         Me.dgvLoanList.MultiSelect = False
@@ -408,92 +423,6 @@ Partial Class LoanScheduleTab
         Me.dgvLoanList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvLoanList.Size = New System.Drawing.Size(824, 334)
         Me.dgvLoanList.TabIndex = 366
-        '
-        'c_loanno
-        '
-        Me.c_loanno.HeaderText = "Loan Number"
-        Me.c_loanno.Name = "c_loanno"
-        Me.c_loanno.ReadOnly = True
-        '
-        'c_totloanamt
-        '
-        Me.c_totloanamt.HeaderText = "Total Loan Amount"
-        Me.c_totloanamt.Name = "c_totloanamt"
-        Me.c_totloanamt.ReadOnly = True
-        '
-        'c_totballeft
-        '
-        Me.c_totballeft.HeaderText = "Total Balance Left"
-        Me.c_totballeft.Name = "c_totballeft"
-        Me.c_totballeft.ReadOnly = True
-        '
-        'c_dedamt
-        '
-        Me.c_dedamt.HeaderText = "Deduction Amount"
-        Me.c_dedamt.Name = "c_dedamt"
-        Me.c_dedamt.ReadOnly = True
-        '
-        'c_DedPercent
-        '
-        Me.c_DedPercent.HeaderText = "Deduction Percentage"
-        Me.c_DedPercent.Name = "c_DedPercent"
-        Me.c_DedPercent.ReadOnly = True
-        '
-        'c_dedsched
-        '
-        Me.c_dedsched.HeaderText = "Deduction Schedule"
-        Me.c_dedsched.Name = "c_dedsched"
-        Me.c_dedsched.ReadOnly = True
-        '
-        'c_noofpayperiod
-        '
-        Me.c_noofpayperiod.HeaderText = "No of pay period"
-        Me.c_noofpayperiod.Name = "c_noofpayperiod"
-        Me.c_noofpayperiod.ReadOnly = True
-        '
-        'c_noofpayperiodleft
-        '
-        Me.c_noofpayperiodleft.HeaderText = "No of pay period left"
-        Me.c_noofpayperiodleft.Name = "c_noofpayperiodleft"
-        Me.c_noofpayperiodleft.ReadOnly = True
-        '
-        'c_dedeffectivedatefrom
-        '
-        Me.c_dedeffectivedatefrom.HeaderText = "Deduction date from"
-        Me.c_dedeffectivedatefrom.Name = "c_dedeffectivedatefrom"
-        Me.c_dedeffectivedatefrom.ReadOnly = True
-        '
-        'c_RemarksLoan
-        '
-        Me.c_RemarksLoan.HeaderText = "Remarks"
-        Me.c_RemarksLoan.Name = "c_RemarksLoan"
-        Me.c_RemarksLoan.ReadOnly = True
-        '
-        'c_RowIDLoan
-        '
-        Me.c_RowIDLoan.HeaderText = "RowiD"
-        Me.c_RowIDLoan.Name = "c_RowIDLoan"
-        Me.c_RowIDLoan.ReadOnly = True
-        Me.c_RowIDLoan.Visible = False
-        '
-        'c_status
-        '
-        Me.c_status.HeaderText = "Status"
-        Me.c_status.Name = "c_status"
-        Me.c_status.ReadOnly = True
-        '
-        'c_loantype
-        '
-        Me.c_loantype.HeaderText = "Loan type"
-        Me.c_loantype.Name = "c_loantype"
-        Me.c_loantype.ReadOnly = True
-        '
-        'LoanHasBonus
-        '
-        Me.LoanHasBonus.HeaderText = "LoanHasBonus"
-        Me.LoanHasBonus.Name = "LoanHasBonus"
-        Me.LoanHasBonus.ReadOnly = True
-        Me.LoanHasBonus.Visible = False
         '
         'txtFNameLoan
         '
@@ -550,6 +479,7 @@ Partial Class LoanScheduleTab
         Me.lnklblloantype.TabIndex = 354
         Me.lnklblloantype.TabStop = True
         Me.lnklblloantype.Text = "Add"
+        Me.lnklblloantype.Visible = False
         '
         'txtloannumber
         '
@@ -678,7 +608,6 @@ Partial Class LoanScheduleTab
         'cmbStatus
         '
         Me.cmbStatus.FormattingEnabled = True
-        Me.cmbStatus.Items.AddRange(New Object() {"In Progress", "On hold"})
         Me.cmbStatus.Location = New System.Drawing.Point(273, 220)
         Me.cmbStatus.MaxLength = 50
         Me.cmbStatus.Name = "cmbStatus"
@@ -803,13 +732,189 @@ Partial Class LoanScheduleTab
         Me.Label350.TabIndex = 507
         Me.Label350.Text = "*"
         '
-        'LoanSchedule
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "Loan Number"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Total Loan Amount"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Total Balance Left"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Deduction Amount"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Deduction Percentage"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.HeaderText = "Deduction Schedule"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.HeaderText = "No of pay period"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn8
+        '
+        Me.DataGridViewTextBoxColumn8.HeaderText = "No of pay period left"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        Me.DataGridViewTextBoxColumn8.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn9
+        '
+        Me.DataGridViewTextBoxColumn9.HeaderText = "Deduction date from"
+        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        Me.DataGridViewTextBoxColumn9.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn10
+        '
+        Me.DataGridViewTextBoxColumn10.HeaderText = "Remarks"
+        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        Me.DataGridViewTextBoxColumn10.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn11
+        '
+        Me.DataGridViewTextBoxColumn11.HeaderText = "RowiD"
+        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        Me.DataGridViewTextBoxColumn11.ReadOnly = True
+        Me.DataGridViewTextBoxColumn11.Visible = False
+        '
+        'DataGridViewTextBoxColumn12
+        '
+        Me.DataGridViewTextBoxColumn12.HeaderText = "Status"
+        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        Me.DataGridViewTextBoxColumn12.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn13
+        '
+        Me.DataGridViewTextBoxColumn13.HeaderText = "Loan type"
+        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        Me.DataGridViewTextBoxColumn13.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn14
+        '
+        Me.DataGridViewTextBoxColumn14.HeaderText = "LoanHasBonus"
+        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        Me.DataGridViewTextBoxColumn14.ReadOnly = True
+        Me.DataGridViewTextBoxColumn14.Visible = False
+        '
+        'DataGridViewTextBoxColumn15
+        '
+        Me.DataGridViewTextBoxColumn15.HeaderText = "Column14"
+        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+        '
+        'DataGridViewTextBoxColumn16
+        '
+        Me.DataGridViewTextBoxColumn16.HeaderText = "Column15"
+        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+        '
+        'DataGridViewTextBoxColumn17
+        '
+        Me.DataGridViewTextBoxColumn17.HeaderText = "Column16"
+        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+        '
+        'DataGridViewTextBoxColumn18
+        '
+        Me.DataGridViewTextBoxColumn18.HeaderText = "Column17"
+        Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+        '
+        'c_LoanNumber
+        '
+        Me.c_LoanNumber.DataPropertyName = "LoanNumber"
+        Me.c_LoanNumber.HeaderText = "LoanNumber"
+        Me.c_LoanNumber.Name = "c_LoanNumber"
+        Me.c_LoanNumber.ReadOnly = True
+        '
+        'c_TotalLoanAmount
+        '
+        Me.c_TotalLoanAmount.DataPropertyName = "TotalLoanAmount"
+        Me.c_TotalLoanAmount.HeaderText = "Total Loan Amount"
+        Me.c_TotalLoanAmount.Name = "c_TotalLoanAmount"
+        Me.c_TotalLoanAmount.ReadOnly = True
+        '
+        'c_TotalBalanceLeft
+        '
+        Me.c_TotalBalanceLeft.DataPropertyName = "TotalBalanceLeft"
+        Me.c_TotalBalanceLeft.HeaderText = "Total Balance Left"
+        Me.c_TotalBalanceLeft.Name = "c_TotalBalanceLeft"
+        Me.c_TotalBalanceLeft.ReadOnly = True
+        '
+        'c_DeductionAmount
+        '
+        Me.c_DeductionAmount.DataPropertyName = "DeductionAmount"
+        Me.c_DeductionAmount.HeaderText = "Deduction Amount"
+        Me.c_DeductionAmount.Name = "c_DeductionAmount"
+        Me.c_DeductionAmount.ReadOnly = True
+        '
+        'c_DeductionPercentage
+        '
+        Me.c_DeductionPercentage.DataPropertyName = "DeductionPercentage"
+        Me.c_DeductionPercentage.HeaderText = "Deduction Percentage"
+        Me.c_DeductionPercentage.Name = "c_DeductionPercentage"
+        Me.c_DeductionPercentage.ReadOnly = True
+        '
+        'c_DeductionSchedule
+        '
+        Me.c_DeductionSchedule.DataPropertyName = "DeductionSchedule"
+        Me.c_DeductionSchedule.HeaderText = "Deduction Schedule"
+        Me.c_DeductionSchedule.Name = "c_DeductionSchedule"
+        Me.c_DeductionSchedule.ReadOnly = True
+        '
+        'c_NoOfPayPeriod
+        '
+        Me.c_NoOfPayPeriod.DataPropertyName = "NoOfPayPeriod"
+        Me.c_NoOfPayPeriod.HeaderText = "No Of Pay Period"
+        Me.c_NoOfPayPeriod.Name = "c_NoOfPayPeriod"
+        Me.c_NoOfPayPeriod.ReadOnly = True
+        '
+        'c_Comments
+        '
+        Me.c_Comments.DataPropertyName = "Comments"
+        Me.c_Comments.HeaderText = "Remarks"
+        Me.c_Comments.Name = "c_Comments"
+        Me.c_Comments.ReadOnly = True
+        '
+        'c_RowID
+        '
+        Me.c_RowID.DataPropertyName = "RowID"
+        Me.c_RowID.HeaderText = "RowID"
+        Me.c_RowID.Name = "c_RowID"
+        Me.c_RowID.ReadOnly = True
+        '
+        'c_Status
+        '
+        Me.c_Status.DataPropertyName = "Status"
+        Me.c_Status.HeaderText = "Status"
+        Me.c_Status.Name = "c_Status"
+        Me.c_Status.ReadOnly = True
+        '
+        'LoanScheduleTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.Controls.Add(Me.Panel10)
         Me.Controls.Add(Me.ToolStrip12)
-        Me.Name = "LoanSchedule"
+        Me.Name = "LoanScheduleTab"
         Me.Size = New System.Drawing.Size(1031, 519)
         Me.ToolStrip12.ResumeLayout(False)
         Me.ToolStrip12.PerformLayout()
@@ -823,13 +928,13 @@ Partial Class LoanScheduleTab
     End Sub
 
     Friend WithEvents ToolStrip12 As ToolStrip
-    Friend WithEvents tsbtnNewLoan As ToolStripButton
-    Friend WithEvents tsbtnSaveLoan As ToolStripButton
+    Friend WithEvents btnNew As ToolStripButton
+    Friend WithEvents btnSave As ToolStripButton
     Friend WithEvents ToolStripLabel5 As ToolStripLabel
     Friend WithEvents ToolStripSeparator9 As ToolStripSeparator
-    Friend WithEvents DeleteLoanScheduleButton As ToolStripButton
+    Friend WithEvents btnDelete As ToolStripButton
     Friend WithEvents ToolStripSeparator10 As ToolStripSeparator
-    Friend WithEvents ToolStripButton23 As ToolStripButton
+    Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents ToolStripButton24 As ToolStripButton
     Friend WithEvents ToolStripButton25 As ToolStripButton
     Friend WithEvents tsbtnImportLoans As ToolStripButton
@@ -848,20 +953,6 @@ Partial Class LoanScheduleTab
     Friend WithEvents Label221 As Label
     Friend WithEvents Label220 As Label
     Friend WithEvents dgvLoanList As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents c_loanno As DataGridViewTextBoxColumn
-    Friend WithEvents c_totloanamt As DataGridViewTextBoxColumn
-    Friend WithEvents c_totballeft As DataGridViewTextBoxColumn
-    Friend WithEvents c_dedamt As DataGridViewTextBoxColumn
-    Friend WithEvents c_DedPercent As DataGridViewTextBoxColumn
-    Friend WithEvents c_dedsched As DataGridViewTextBoxColumn
-    Friend WithEvents c_noofpayperiod As DataGridViewTextBoxColumn
-    Friend WithEvents c_noofpayperiodleft As DataGridViewTextBoxColumn
-    Friend WithEvents c_dedeffectivedatefrom As DataGridViewTextBoxColumn
-    Friend WithEvents c_RemarksLoan As DataGridViewTextBoxColumn
-    Friend WithEvents c_RowIDLoan As DataGridViewTextBoxColumn
-    Friend WithEvents c_status As DataGridViewTextBoxColumn
-    Friend WithEvents c_loantype As DataGridViewTextBoxColumn
-    Friend WithEvents LoanHasBonus As DataGridViewTextBoxColumn
     Friend WithEvents txtFNameLoan As TextBox
     Friend WithEvents TextBox7 As TextBox
     Friend WithEvents txtEmpIDLoan As TextBox
@@ -895,4 +986,32 @@ Partial Class LoanScheduleTab
     Friend WithEvents Label94 As Label
     Friend WithEvents Label349 As Label
     Friend WithEvents Label350 As Label
+    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn12 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn13 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn14 As DataGridViewTextBoxColumn
+    Friend WithEvents c_LoanNumber As DataGridViewTextBoxColumn
+    Friend WithEvents c_TotalLoanAmount As DataGridViewTextBoxColumn
+    Friend WithEvents c_TotalBalanceLeft As DataGridViewTextBoxColumn
+    Friend WithEvents c_DeductionAmount As DataGridViewTextBoxColumn
+    Friend WithEvents c_DeductionPercentage As DataGridViewTextBoxColumn
+    Friend WithEvents c_DeductionSchedule As DataGridViewTextBoxColumn
+    Friend WithEvents c_NoOfPayPeriod As DataGridViewTextBoxColumn
+    Friend WithEvents c_Comments As DataGridViewTextBoxColumn
+    Friend WithEvents c_RowID As DataGridViewTextBoxColumn
+    Friend WithEvents c_Status As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn15 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn16 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn17 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn18 As DataGridViewTextBoxColumn
 End Class

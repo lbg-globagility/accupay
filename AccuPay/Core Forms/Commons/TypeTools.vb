@@ -2,6 +2,10 @@
 
 Public Class TypeTools
 
+    Public Shared Function ParseIntOrNull(text As DBNull) As Integer?
+        Return Nothing
+    End Function
+
     Public Shared Function ParseIntOrNull(text As String) As Integer?
         If String.IsNullOrWhiteSpace(text) Then
             Return Nothing
