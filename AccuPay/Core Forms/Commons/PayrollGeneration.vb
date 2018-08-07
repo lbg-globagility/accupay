@@ -277,7 +277,8 @@ Public Class PayrollGeneration
                 Dim philHealthCalculator = New PhilHealthCalculator(_philHealthBrackets)
                 philHealthCalculator.Calculate(_philHealthDeductionSchedule, _settings, _salary, _paystub, _previousPaystub, _employee, _employee2, _payPeriod)
 
-                CalculateHdmf()
+                Dim hdmfCalculator = New HdmfCalculator()
+                hdmfCalculator.Calculate(_hdmfDeductionSchedule, _salary, _paystub, _employee, _employee2, _payPeriod)
 
                 governmentContributions = _paystub.SssEmployeeShare + _paystub.PhilHealthEmployeeShare + _paystub.HdmfEmployeeShare
                 currentTaxableIncome = currentTaxableIncome - governmentContributions
@@ -648,51 +649,6 @@ Public Class PayrollGeneration
             End If
         Next
     End Sub
-
-    Private Sub CalculateHdmf()
-        Dim employeeHdmfPerMonth = _salary.HDMFAmount
-        Dim employerHdmfPerMonth = If(employeeHdmfPerMonth = 0, 0, PagibigEmployerAmount)
-        Dim payPeriodsPerMonth = ValNoComma(_employee("PAYFREQUENCY_DIVISOR"))
-        Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
-
-        If is_weekly Then
-            Dim is_deduct_sched_to_thisperiod = If(
-                _employee2.IsUnderAgency,
-                _payPeriod.HDMFWeeklyAgentContribSched,
-                _payPeriod.HDMFWeeklyContribSched)
-
-            If is_deduct_sched_to_thisperiod Then
-                _paystub.HdmfEmployeeShare = employeeHdmfPerMonth
-                _paystub.HdmfEmployerShare = employerHdmfPerMonth
-            Else
-                _paystub.HdmfEmployeeShare = 0
-                _paystub.HdmfEmployerShare = 0
-            End If
-        Else
-            If IsHdmfPaidOnFirstHalf() Or IsHdmfPaidOnEndOfTheMonth() Then
-                _paystub.HdmfEmployeeShare = employeeHdmfPerMonth
-                _paystub.HdmfEmployerShare = employerHdmfPerMonth
-            ElseIf IsHdmfPaidPerPayPeriod() Then
-                _paystub.HdmfEmployeeShare = employeeHdmfPerMonth / payPeriodsPerMonth
-                _paystub.HdmfEmployerShare = employerHdmfPerMonth / payPeriodsPerMonth
-            Else
-                _paystub.HdmfEmployeeShare = 0
-                _paystub.HdmfEmployerShare = 0
-            End If
-        End If
-    End Sub
-
-    Private Function IsHdmfPaidOnFirstHalf() As Boolean
-        Return _isFirstHalf And (_hdmfDeductionSchedule = ContributionSchedule.FirstHalf)
-    End Function
-
-    Private Function IsHdmfPaidOnEndOfTheMonth() As Boolean
-        Return _isEndOfMonth And (_hdmfDeductionSchedule = ContributionSchedule.EndOfTheMonth)
-    End Function
-
-    Private Function IsHdmfPaidPerPayPeriod() As Boolean
-        Return _hdmfDeductionSchedule = ContributionSchedule.PerPayPeriod
-    End Function
 
     Private Sub CalculateWithholdingTax()
         Dim payFrequencyID As Integer

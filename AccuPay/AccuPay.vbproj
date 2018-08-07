@@ -319,6 +319,7 @@
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\Enums.vb" />
     <Compile Include="Core Forms\Commons\FeatureList.vb" />
+    <Compile Include="Core Forms\Commons\HdmfCalculator.vb" />
     <Compile Include="Core Forms\Commons\ListOfValueCollection.vb" />
     <Compile Include="Core Forms\Commons\PayrollConstants.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
