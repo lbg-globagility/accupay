@@ -1,10 +1,8 @@
-﻿Imports System.Collections.ObjectModel
-Imports System.Data.Entity
-Imports AccuPay.Entity
+﻿Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
-Imports NHibernate
+Imports AccuPay.Payroll
 Imports PayrollSys
 
 Public Class PayrollGeneration
@@ -276,7 +274,9 @@ Public Class PayrollGeneration
                 Dim socialSecurityCalculator = New SssCalculator(_socialSecurityBrackets)
                 socialSecurityCalculator.Calculate(_sssDeductionSchedule, _settings, _paystub, _previousPaystub, _salary, _employee, _employee2, _payPeriod)
 
-                CalculatePhilHealth()
+                Dim philHealthCalculator = New PhilHealthCalculator(_philHealthBrackets)
+                philHealthCalculator.Calculate(_philHealthDeductionSchedule, _settings, _salary, _paystub, _previousPaystub, _employee, _employee2, _payPeriod)
+
                 CalculateHdmf()
 
                 governmentContributions = _paystub.SssEmployeeShare + _paystub.PhilHealthEmployeeShare + _paystub.HdmfEmployeeShare
@@ -648,111 +648,6 @@ Public Class PayrollGeneration
             End If
         Next
     End Sub
-
-    Private Sub CalculatePhilHealth()
-        Dim philHealthCalculation = _settings.GetEnum(
-            "PhilHealth.CalculationBasis",
-            PhilHealthCalculationBasis.BasicSalary)
-
-        Dim isPhilHealthProrated =
-            (philHealthCalculation = PhilHealthCalculationBasis.Earnings) Or
-            (philHealthCalculation = PhilHealthCalculationBasis.GrossPay)
-
-        Dim totalContribution = 0D
-        If philHealthCalculation = PhilHealthCalculationBasis.BasicSalary Then
-            ' If philHealth calculation is based on the basic salary, get it from the salary record
-            totalContribution = _salary.PhilHealthDeduction
-        ElseIf isPhilHealthProrated Then
-            Dim basisPay = 0D
-
-            If philHealthCalculation = PhilHealthCalculationBasis.Earnings Then
-                basisPay = If(_previousPaystub?.TotalEarnings, 0) + _paystub.TotalEarnings
-            ElseIf philHealthCalculation = PhilHealthCalculationBasis.GrossPay Then
-                basisPay = If(_previousPaystub?.GrossPay, 0) + _paystub.GrossPay
-            End If
-
-            totalContribution = ComputePhilHealth(basisPay)
-        End If
-
-        Dim halfContribution = AccuMath.Truncate(totalContribution / 2, 2)
-
-        Dim philHealthNoRemainder = _settings.GetBoolean("PhilHealth.Remainder", True)
-
-        Dim remainder = 0D
-        ' Account for any division loss by putting the missing value to the employer share
-        If philHealthNoRemainder Then
-            Dim expectedTotal = halfContribution * 2
-
-            If expectedTotal < totalContribution Then
-                remainder = totalContribution - expectedTotal
-            End If
-        End If
-
-        Dim employeeShare = halfContribution
-        Dim employerShare = halfContribution + remainder
-
-        Dim payPeriodsPerMonth = CDec(ValNoComma(_employee("PAYFREQUENCY_DIVISOR")))
-
-        Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
-
-        If is_weekly Then
-            Dim is_deduct_sched_to_thisperiod = If(
-                _employee2.IsUnderAgency,
-                _payPeriod.PhHWeeklyAgentContribSched,
-                _payPeriod.PhHWeeklyContribSched)
-
-            If is_deduct_sched_to_thisperiod Then
-                _paystub.PhilHealthEmployeeShare = employeeShare
-                _paystub.PhilHealthEmployerShare = employerShare
-            Else
-                _paystub.PhilHealthEmployeeShare = 0
-                _paystub.PhilHealthEmployerShare = 0
-            End If
-        Else
-            If IsPhilHealthPaidOnFirstHalf() Or IsPhilHealthPaidOnEndOfTheMonth() Then
-                _paystub.PhilHealthEmployeeShare = employeeShare
-                _paystub.PhilHealthEmployerShare = employerShare
-            ElseIf IsPhilHealthPaidPerPayPeriod() Then
-                _paystub.PhilHealthEmployeeShare = employeeShare / payPeriodsPerMonth
-                _paystub.PhilHealthEmployerShare = employerShare / payPeriodsPerMonth
-            Else
-                _paystub.PhilHealthEmployeeShare = 0
-                _paystub.PhilHealthEmployerShare = 0
-            End If
-        End If
-    End Sub
-
-    Private Function ComputePhilHealth(basis As Decimal) As Decimal
-        Dim findPhilHealthBracket =
-            Function(amount As Decimal) _philHealthBrackets.FirstOrDefault(
-                Function(p) p.SalaryRangeFrom <= amount And
-                    p.SalaryRangeTo >= amount)
-
-        Dim philHealthSettings = _settings.GetSublist("PhilHealth")
-
-        Dim minimum = philHealthSettings.GetDecimal("MinimumContribution")
-        Dim maximum = philHealthSettings.GetDecimal("MaximumContribution")
-        Dim rate = philHealthSettings.GetDecimal("Rate") / 100
-
-        ' Contribution should be bounded by the minimum and maximum
-        Dim contribution = {{basis * rate, minimum}.Max(), maximum}.Min()
-        ' Truncate to the nearest cent
-        contribution = AccuMath.Truncate(contribution, 2)
-
-        Return contribution
-    End Function
-
-    Private Function IsPhilHealthPaidOnFirstHalf() As Boolean
-        Return _isFirstHalf And (_philHealthDeductionSchedule = ContributionSchedule.FirstHalf)
-    End Function
-
-    Private Function IsPhilHealthPaidOnEndOfTheMonth() As Boolean
-        Return _isEndOfMonth And (_philHealthDeductionSchedule = ContributionSchedule.EndOfTheMonth)
-    End Function
-
-    Private Function IsPhilHealthPaidPerPayPeriod() As Boolean
-        Return _philHealthDeductionSchedule = ContributionSchedule.PerPayPeriod
-    End Function
 
     Private Sub CalculateHdmf()
         Dim employeeHdmfPerMonth = _salary.HDMFAmount

@@ -323,6 +323,7 @@
     <Compile Include="Core Forms\Commons\PayrollConstants.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
     <Compile Include="Core Forms\Commons\PayrollTools.vb" />
+    <Compile Include="Core Forms\Commons\PhilHealthCalculator.vb" />
     <Compile Include="Core Forms\Commons\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Core Forms\Commons\Calendar.vb" />
     <Compile Include="Core Forms\Commons\SssCalculator.vb" />
