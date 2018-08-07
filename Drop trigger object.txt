@@ -1,0 +1,18 @@
+USE information_schema;
+
+SET @databaseName = 'accupaydb_cinema2k';
+
+SELECT
+CONCAT('DROP TRIGGER ', @databaseName, '.`', i.TRIGGER_NAME, '`;') `Result`
+FROM information_schema.`TRIGGERS` i
+WHERE i.`TRIGGER_SCHEMA` = @databaseName;
+
+SELECT
+CONCAT('DROP ', i.ROUTINE_TYPE, ' ', @databaseName, '.`', i.ROUTINE_NAME, '`;') `Result`
+FROM information_schema.ROUTINES i
+WHERE i.ROUTINE_SCHEMA = @databaseName;
+
+SELECT
+CONCAT('DROP ', i.TABLE_TYPE, ' ', @databaseName, '.`', i.`TABLE_NAME`, '`;') `Result`
+FROM information_schema.`TABLES` i
+WHERE i.TABLE_SCHEMA=@databaseName AND i.TABLE_TYPE = 'VIEW';
