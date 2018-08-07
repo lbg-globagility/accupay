@@ -329,6 +329,7 @@
     <Compile Include="Core Forms\Commons\Calendar.vb" />
     <Compile Include="Core Forms\Commons\SssCalculator.vb" />
     <Compile Include="Core Forms\Commons\TypeTools.vb" />
+    <Compile Include="Core Forms\Commons\WithholdingTaxCalculator.vb" />
     <Compile Include="Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
     </Compile>

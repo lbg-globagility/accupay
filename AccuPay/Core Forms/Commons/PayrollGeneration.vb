@@ -291,7 +291,8 @@ Public Class PayrollGeneration
                     _paystub.TaxableIncome = currentTaxableIncome
                 End If
 
-                CalculateWithholdingTax()
+                Dim withholdingTaxCalculator = New WithholdingTaxCalculator(_filingStatuses, _withholdingTaxBrackets)
+                withholdingTaxCalculator.Calculate(_withholdingTaxSchedule, _employee, _paystub, _employee2, _payPeriod)
             End If
 
             Dim newLoanTransactions = ComputeLoans()
@@ -650,102 +651,6 @@ Public Class PayrollGeneration
         Next
     End Sub
 
-    Private Sub CalculateWithholdingTax()
-        Dim payFrequencyID As Integer
-        Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
-
-        If IsWithholdingTaxPaidOnFirstHalf() Or IsWithholdingTaxPaidOnEndOfTheMonth() Then
-            payFrequencyID = PayFrequency.Monthly
-        ElseIf IsWithholdingTaxPaidPerPayPeriod() Then
-            payFrequencyID = PayFrequency.SemiMonthly
-        End If
-
-        ' Round the daily rate to two decimal places since amounts in the 3rd decimal place
-        ' isn't significant enough to warrant the employee to be taxable.
-        Dim dailyRate = Math.Round(ValNoComma(_employee("EmpRatePerDay")), 2)
-
-        Dim minimumWage = ValNoComma(_employee("MinimumWageAmount"))
-        Dim isMinimumWageEarner = dailyRate <= minimumWage
-
-        If isMinimumWageEarner Then
-            _paystub.TaxableIncome = 0D
-        End If
-
-        If Not (_paystub.TaxableIncome > 0D And IsScheduledForTaxation()) Then
-            _paystub.WithholdingTax = 0
-            Return
-        End If
-
-        Dim maritalStatus = _employee2.MaritalStatus
-        Dim noOfDependents = _employee2.NoOfDependents
-
-        Dim filingStatus = _filingStatuses.
-            Select($"
-                MaritalStatus = '{maritalStatus}' AND
-                Dependent <= '{noOfDependents}'
-            ").
-            OrderByDescending(Function(f) CInt(f("Dependent"))).
-            FirstOrDefault()
-
-        Dim filingStatusID = 1
-        If filingStatus IsNot Nothing Then
-            filingStatusID = CInt(filingStatus("RowID"))
-        End If
-
-        Dim bracket = GetMatchingTaxBracket(payFrequencyID, filingStatusID)
-
-        If bracket Is Nothing Then
-            Return
-        End If
-
-        Dim exemptionAmount = bracket.ExemptionAmount
-        Dim taxableIncomeFromAmount = bracket.TaxableIncomeFromAmount
-        Dim exemptionInExcessAmount = bracket.ExemptionInExcessAmount
-
-        Dim excessAmount = _paystub.TaxableIncome - taxableIncomeFromAmount
-
-        If is_weekly Then
-            Dim is_deduct_sched_to_thisperiod = If(
-                _employee2.IsUnderAgency,
-                _payPeriod.WTaxWeeklyAgentContribSched,
-                _payPeriod.WTaxWeeklyContribSched)
-
-            If is_deduct_sched_to_thisperiod Then
-                _paystub.WithholdingTax = AccuMath.CommercialRound(exemptionAmount + (excessAmount * exemptionInExcessAmount))
-            Else
-                _paystub.WithholdingTax = 0
-            End If
-        Else
-            _paystub.WithholdingTax = AccuMath.CommercialRound(exemptionAmount + (excessAmount * exemptionInExcessAmount))
-        End If
-    End Sub
-
-    Private Function GetMatchingTaxBracket(payFrequencyID As Integer?, filingStatusID As Integer?) As WithholdingTaxBracket
-        Dim taxEffectivityDate = New Date(_payPeriod.Year, _payPeriod.Month, 1)
-
-        Dim possibleBrackets =
-            (From w In _withholdingTaxBrackets
-             Where w.PayFrequencyID = payFrequencyID And
-                 w.TaxableIncomeFromAmount <= _paystub.TaxableIncome And
-                 _paystub.TaxableIncome <= w.TaxableIncomeToAmount And
-                 w.EffectiveDateFrom <= taxEffectivityDate And
-                 taxEffectivityDate <= w.EffectiveDateTo
-             Select w).
-             ToList()
-
-        ' If there are more than one tax brackets that matches the previous list, filter by
-        ' the tax filing status.
-        If possibleBrackets.Count > 1 Then
-            Return possibleBrackets.
-                Where(Function(b) Nullable.Equals(b.FilingStatusID, filingStatusID)).
-                FirstOrDefault()
-        ElseIf possibleBrackets.Count = 1 Then
-            Return possibleBrackets.First()
-        End If
-
-        Return Nothing
-    End Function
-
     Private Function IsWithholdingTaxPaidOnFirstHalf() As Boolean
         Return _isFirstHalf And (_withholdingTaxSchedule = ContributionSchedule.FirstHalf)
     End Function
@@ -756,12 +661,6 @@ Public Class PayrollGeneration
 
     Private Function IsWithholdingTaxPaidPerPayPeriod() As Boolean
         Return _withholdingTaxSchedule = ContributionSchedule.PerPayPeriod
-    End Function
-
-    Private Function IsScheduledForTaxation() As Boolean
-        Return (_isFirstHalf And IsWithholdingTaxPaidOnFirstHalf()) Or
-            (_isEndOfMonth And IsWithholdingTaxPaidOnEndOfTheMonth()) Or
-            IsWithholdingTaxPaidPerPayPeriod()
     End Function
 
     Private Function ComputeLoans() As IList(Of LoanTransaction)
