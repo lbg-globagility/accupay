@@ -38,7 +38,7 @@ Public Class SssCalculator
         ElseIf sssCalculation = SssCalculationBasis.BasicSalary Then
             Dim socialSecurityId = salary.PaySocialSecurityID
 
-            Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(Function(s) CBool(s.RowID = socialSecurityId))
+            Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(Function(s) Nullable.Equals(s.RowID, socialSecurityId))
 
             employeeSssPerMonth = If(socialSecurityBracket?.EmployeeContributionAmount, 0)
             employerSssPerMonth = If(socialSecurityBracket?.EmployerContributionAmount + socialSecurityBracket?.EmployeeECAmount, 0)
