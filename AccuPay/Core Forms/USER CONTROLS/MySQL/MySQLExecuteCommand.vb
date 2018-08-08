@@ -52,7 +52,7 @@ Public Class MySQLExecuteCommand
             Try
 
                 ''prepared_mysqlcmd
-
+                prepared_mysqlcmd.Transaction = mysql_transac
                 dat_reader = prepared_mysqlcmd.ExecuteReader
 
                 Do While dat_reader.Read
@@ -69,12 +69,10 @@ Public Class MySQLExecuteCommand
                 dat_reader.Dispose()
 
                 mysql_transac.Commit()
-
             Catch ex As Exception
                 mysql_transac.Rollback()
 
                 AssignError(ex)
-
             Finally
 
                 DisposeCommand()
@@ -95,22 +93,20 @@ Public Class MySQLExecuteCommand
 
             Dim mysql_transac As MySqlTransaction
 
-            'mysql_transac = prepared_mysqlcmd.Connection.BeginTransaction
+            mysql_transac = prepared_mysqlcmd.Connection.BeginTransaction
 
             Try
-
+                prepared_mysqlcmd.Transaction = mysql_transac
                 dat_adap.SelectCommand = prepared_mysqlcmd
                 'dat_adap.SelectCommand = Me.PrepareMySQLCommand
 
                 dat_adap.Fill(datset_result)
 
-                'mysql_transac.Commit()
-
+                mysql_transac.Commit()
             Catch ex As Exception
-                'mysql_transac.Rollback()
+                mysql_transac.Rollback()
 
                 AssignError(ex)
-
             Finally
 
                 DisposeCommand()
@@ -183,7 +179,6 @@ Public Class MySQLExecuteCommand
                     '    .CommandType = CommandType.StoredProcedure
 
                     'End If
-
                 Catch ex As Exception
                     .CommandType = CommandType.StoredProcedure
 
@@ -231,7 +226,6 @@ Public Class MySQLExecuteCommand
                 End If
 
             End With
-
         Catch ex As Exception
 
             AssignError(ex)
@@ -273,12 +267,10 @@ Public Class MySQLExecuteCommand
             prepared_mysqlcmd.ExecuteNonQuery()
 
             mysql_transac.Commit()
-
         Catch ex As Exception
             mysql_transac.Rollback()
 
             AssignError(ex)
-
         Finally
 
             DisposeCommand()
