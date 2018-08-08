@@ -126,10 +126,10 @@ Public Class HRISForm
     End Sub
 
     Private Sub EmpSalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EmpSalToolStripMenuItem.Click
-        EmployeeForm.tabctrlemp.SelectedIndex = 2
-        EmployeeForm.tabIndx = 2
+        EmployeeForm.tabctrlemp.SelectedIndex = 18
+        EmployeeForm.tabIndx = 18
         ChangeForm(EmployeeForm, "Employee Salary")
-        EmployeeForm.tbpSalary.Focus()
+        EmployeeForm.tbpNewSalary.Focus()
         'Employee.tbpSalary_Enter(sender, e)
     End Sub
 

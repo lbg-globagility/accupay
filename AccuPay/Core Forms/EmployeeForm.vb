@@ -18548,6 +18548,8 @@ Public Class EmployeeForm
 
         Dim is_tabpage_payslip As Boolean = (e.TabPage.Name = tbpPayslip.Name)
 
+        Dim isOldSalaryTab = (e.TabPage.Name = tbpSalary.Name)
+
         If is_tabpage_payslip Then
 
             e.Cancel = is_tabpage_payslip
@@ -18555,6 +18557,16 @@ Public Class EmployeeForm
             MDIPrimaryForm.ToolStripButton5_Click(sender, New EventArgs)
 
             PayrollForm.PayrollToolStripMenuItem_Click(sender, New EventArgs)
+        ElseIf isOldSalaryTab Then
+            Dim index = 0
+            For Each tabPage In tabctrlemp.TabPages
+                If tabPage Is tbpNewSalary Then
+                    Exit For
+                End If
+                index += 1
+            Next
+
+            tabctrlemp.SelectedIndex = index
         Else
             Dim view_name As String = String.Empty
 
