@@ -109,6 +109,7 @@
     <Compile Include="ListOfValueCollectionTest.vb" />
     <Compile Include="NHibernateTest.vb" />
     <Compile Include="TimeEntryCalculatorTest.vb" />
+    <Compile Include="TimeImporter.vb" />
     <Compile Include="TimeUtilityTest.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
