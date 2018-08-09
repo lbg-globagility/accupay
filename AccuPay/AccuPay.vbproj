@@ -229,6 +229,7 @@
     <Reference Include="MySqlConnector, Version=0.42.3.0, Culture=neutral, PublicKeyToken=d33d3e53aa5f8c92, processorArchitecture=MSIL">
       <HintPath>..\packages\MySqlConnector.0.42.3\lib\net461\MySqlConnector.dll</HintPath>
     </Reference>
+    <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -328,6 +329,7 @@
     <Compile Include="Core Forms\Commons\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Core Forms\Commons\Calendar.vb" />
     <Compile Include="Core Forms\Commons\SssCalculator.vb" />
+    <Compile Include="Core Forms\Commons\TimeAttendanceAnalyzer.vb" />
     <Compile Include="Core Forms\Commons\TypeTools.vb" />
     <Compile Include="Core Forms\Commons\WithholdingTaxCalculator.vb" />
     <Compile Include="Core Forms\Employee\AllowanceTab.Designer.vb">
