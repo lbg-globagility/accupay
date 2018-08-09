@@ -568,6 +568,7 @@
     <Compile Include="Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\TimeLogs\NewImporter.vb" />
     <Compile Include="Core Forms\USER CONTROLS\AccuPayTreeView.vb">
       <SubType>Component</SubType>
     </Compile>
