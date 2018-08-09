@@ -37,6 +37,7 @@ Public Class Overtime
 
     Public Overridable Property OTEndDate As Date
 
+    <Column("OTStatus")>
     Public Overridable Property Status As String
 
     <NotMapped>
