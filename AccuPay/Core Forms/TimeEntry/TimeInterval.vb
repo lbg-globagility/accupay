@@ -14,6 +14,12 @@ Namespace Global.AccuPay
             End Get
         End Property
 
+        Public ReadOnly Property TotalHours As Decimal
+            Get
+                Return CDec(Length.TotalHours)
+            End Get
+        End Property
+
         Public Sub New(start As Date, [end] As Date)
             Me.Start = start
             Me.End = [end]

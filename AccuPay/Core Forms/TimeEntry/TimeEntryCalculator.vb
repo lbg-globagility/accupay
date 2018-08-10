@@ -61,6 +61,19 @@ Public Class TimeEntryCalculator
         Return CDec(undertimePeriod.Length.TotalHours)
     End Function
 
+    Public Function ComputeNightDiffHours(workBegin As Date, workEnd As Date, nightDiffStart As Date, nightDiffEnd As Date) As Decimal
+        Dim workPeriod = New TimePeriod(workBegin, workEnd)
+        Dim nightDiffPeriod = New TimePeriod(nightDiffStart, nightDiffEnd)
+
+        If Not workPeriod.Intersects(nightDiffPeriod) Then
+            Return 0D
+        End If
+
+        Dim nightWorked = workPeriod.Overlap(nightDiffPeriod)
+
+        Return nightWorked.TotalHours
+    End Function
+
     Public Function ComputeOvertimeHours(workBegin As Date, workEnd As Date, overtime As Overtime, shift As CurrentShift) As Decimal
         Dim otStartTime = If(overtime.OTStartTime, shift.End.TimeOfDay)
         Dim otEndTime = If(overtime.OTEndTime, shift.Start.TimeOfDay)
