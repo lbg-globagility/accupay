@@ -110,7 +110,6 @@
     <Compile Include="ListOfValueCollectionTest.vb" />
     <Compile Include="NHibernateTest.vb" />
     <Compile Include="OvertimeHoursTest.vb" />
-    <Compile Include="PayrollContextTest.vb" />
     <Compile Include="TimeEntryCalculatorTest.vb" />
     <Compile Include="TimeImporter.vb" />
     <Compile Include="TimeUtilityTest.vb" />
