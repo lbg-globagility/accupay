@@ -92,6 +92,15 @@ Public Class TimeEntryCalculator
 
         Dim overtimeWorked = worked.Overlap(overtimeRecognized)
 
+        If overtimeWorked Is Nothing Then
+            overtimeStart = nextDay.Add(otStartTime)
+            overtimeEnd = nextDay.Add(otEndTime)
+
+            overtimeRecognized = New TimePeriod(overtimeStart, overtimeEnd)
+
+            overtimeWorked = worked.Overlap(overtimeRecognized)
+        End If
+
         Return CDec(overtimeWorked.Length.TotalHours)
     End Function
 

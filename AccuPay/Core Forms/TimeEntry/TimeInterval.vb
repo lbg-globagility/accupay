@@ -29,6 +29,10 @@ Namespace Global.AccuPay
         End Function
 
         Public Function Overlap(period As TimePeriod) As TimePeriod
+            If Not Intersects(period) Then
+                Return Nothing
+            End If
+
             Return New TimePeriod(
                 {Me.Start, period.Start}.Max(),
                 {Me.End, period.End}.Min())

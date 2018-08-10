@@ -68,6 +68,20 @@ Public Class OvertimeHoursTest
             expected:=expected)
     End Sub
 
+    <TestCase("17:00", "4:00", 2)>
+    <TestCase("17:00", "3:30", 1.5)>
+    <TestCase("17:00", "4:30", 2)>
+    Public Sub Should_Calculate_Overtimes_Staring_On_Midnight(timeIn As String, timeOut As String, expected As Decimal)
+        CorrectOvertimeHours(
+            shiftStartTime:="17:00",
+            shiftEndTime:="2:00",
+            otStartTime:="2:00",
+            otEndTime:="4:00",
+            timeIn:=timeIn,
+            timeOut:=timeOut,
+            expected:=expected)
+    End Sub
+
     <TestCase("6:30", "17:30", 2)>
     <TestCase("7:00", "17:30", 1.5)>
     <TestCase("6:00", "17:30", 2)>
