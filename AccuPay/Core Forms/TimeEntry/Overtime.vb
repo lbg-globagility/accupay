@@ -29,6 +29,9 @@ Public Class Overtime
 
     Public Overridable Property EmployeeID As Integer?
 
+    <Column("OTType")>
+    Public Overridable Property Type As String
+
     Public Overridable Property OTStartTime As TimeSpan?
 
     Public Overridable Property OTEndTime As TimeSpan?
@@ -41,10 +44,10 @@ Public Class Overtime
     Public Overridable Property Status As String
 
     <NotMapped>
-    Public Overridable Property RangeStart As Date
+    Public Overridable Property Start As Date?
 
     <NotMapped>
-    Public Overridable Property RangeEnd As Date
+    Public Overridable Property [End] As Date?
 
     Public Sub New()
         Status = StatusPending

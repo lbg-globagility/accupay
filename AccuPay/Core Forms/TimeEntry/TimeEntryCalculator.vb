@@ -5,74 +5,90 @@ Imports Microsoft.EntityFrameworkCore
 
 Public Class TimeEntryCalculator
 
-    Public Sub Calculate(employee As Employee, dateToday As Date)
-        Using context = New PayrollContext()
-            Dim timeLog = context.TimeLogs.
-                Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).FirstOrDefault()
+    Public Function ComputeRegularHours(workStart As Date, workEnd As Date, currentShift As CurrentShift) As Decimal
+        Dim workPeriod = New TimePeriod(workStart, workEnd)
+        Dim shiftPeriod = New TimePeriod(currentShift.Start, currentShift.End)
 
-            Dim shiftSchedule = context.ShiftSchedules.
-                Include(Function(s) s.Shift).
-                Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
-                Where(Function(s) s.EffectiveFrom <= dateToday And dateToday <= s.EffectiveTo).
-                FirstOrDefault()
+        Dim coveredPeriod = workPeriod.Overlap(shiftPeriod)
 
-            Dim payRate = context.PayRates.
-                Where(Function(p) p.RateDate = dateToday).
-                Where(Function(p) Nullable.Equals(p.OrganizationID, employee.OrganizationID)).
-                FirstOrDefault()
+        If currentShift.HasBreaktime() Then
+            Dim breakPeriod = New TimePeriod(currentShift.BreaktimeStart.Value, currentShift.BreaktimeEnd.Value)
+            Dim coveredPeriods = coveredPeriod.Difference(breakPeriod)
 
-            Dim dateTomorrow = dateToday.AddDays(1)
-            Dim timeIn = timeLog.TimeIn
-            Dim timeOut = timeLog.TimeOut
+            Return coveredPeriods.Sum(Function(c) CDec(c.Length.TotalHours))
+        End If
 
-            Dim workStart = CombineDateAndTime(dateToday, timeLog.TimeIn.Value)
-            Dim workEnd = CombineDateAndTime(If(timeOut > timeIn, dateToday, dateTomorrow), timeOut.Value)
-
-            Dim shiftTimeStart = shiftSchedule.Shift.TimeFrom
-            Dim shiftTimeTo = shiftSchedule.Shift.TimeTo
-
-            Dim shiftStart = CombineDateAndTime(dateToday, shiftTimeStart)
-            Dim shiftEnd = CombineDateAndTime(If(shiftTimeTo > shiftTimeStart, dateToday, dateTomorrow), shiftTimeTo)
-
-            Dim breakTimeStart = shiftSchedule.Shift.BreaktimeFrom
-            Dim breakTimeEnd = shiftSchedule.Shift.BreaktimeTo
-            Dim hasBreaktime = (breakTimeStart IsNot Nothing) And (breakTimeEnd IsNot Nothing)
-
-            Dim breakStart = CombineDateAndTime(If(breakTimeStart > shiftTimeStart, dateToday, dateTomorrow), breakTimeStart.Value)
-            Dim breakEnd = CombineDateAndTime(If(breakTimeEnd > shiftTimeStart, dateToday, dateTomorrow), breakTimeEnd.Value)
-
-            Dim dutyStart = {workStart, shiftStart}.Max()
-            Dim dutyEnd = {workEnd, shiftEnd}.Min()
-
-            Dim lateHours = 0D
-
-            If dutyStart > shiftStart Then
-                If hasBreaktime Then
-                    Dim hoursLateBeforeBreak = 0D
-                    Dim hoursLateAfterBreak = 0D
-
-                    If shiftStart < breakStart Then
-                        hoursLateBeforeBreak = ComputeHours(shiftStart, {dutyStart, breakStart}.Min())
-                    End If
-
-                    If dutyStart > breakEnd Then
-                        hoursLateAfterBreak = ComputeHours(breakEnd, dutyStart)
-                    End If
-
-                    lateHours = hoursLateBeforeBreak + hoursLateAfterBreak
-                Else
-                    lateHours = ComputeHours(shiftStart, dutyStart)
-                End If
-            End If
-        End Using
-    End Sub
-
-    Private Function ComputeHours(start As Date, [end] As Date) As Decimal
-        Return CDec(([end] - start).TotalHours)
+        Return CDec(coveredPeriod.Length.TotalHours)
     End Function
 
-    Private Function CombineDateAndTime([date] As DateTime, time As TimeSpan) As DateTime
-        Return [date].Add(time)
+    Public Function ComputeLateHours(workStart As Date, workEnd As Date, currentShift As CurrentShift) As Decimal
+        Dim workPeriod = New TimePeriod(workStart, workEnd)
+        Dim shiftPeriod = New TimePeriod(currentShift.Start, currentShift.End)
+
+        If workPeriod.Start <= shiftPeriod.Start Then
+            Return 0
+        End If
+
+        Dim latePeriod = New TimePeriod(shiftPeriod.Start, workPeriod.Start)
+
+        If currentShift.HasBreaktime Then
+            Dim breakPeriod = New TimePeriod(currentShift.BreaktimeStart.Value, currentShift.BreaktimeEnd.Value)
+            Dim latePeriods = latePeriod.Difference(breakPeriod)
+
+            Return latePeriods.Sum(Function(l) CDec(l.Length.TotalHours))
+        End If
+
+        Return CDec(latePeriod.Length.TotalHours)
+    End Function
+
+    Public Function ComputeUndertimeHours(workBegin As Date, workEnd As Date, shift As CurrentShift) As Decimal
+        Dim periodWorked = New TimePeriod(workBegin, workEnd)
+        Dim shiftPeriod = New TimePeriod(shift.Start, shift.End)
+
+        If periodWorked.End >= shiftPeriod.End Then
+            Return 0
+        End If
+
+        Dim undertimePeriod = New TimePeriod(periodWorked.End, shiftPeriod.End)
+
+        If shift.HasBreaktime Then
+            Dim breakPeriod = New TimePeriod(shift.BreaktimeStart.Value, shift.BreaktimeEnd.Value)
+            Dim undertimePeriods = undertimePeriod.Difference(breakPeriod)
+
+            Return undertimePeriods.Sum(Function(u) CDec(u.Length.TotalHours))
+        End If
+
+        Return CDec(undertimePeriod.Length.TotalHours)
+    End Function
+
+    Public Function ComputeOvertimeHours(workBegin As Date, workEnd As Date, overtime As Overtime, shift As CurrentShift) As Decimal
+        Dim otStartTime = If(overtime.OTStartTime, shift.End.TimeOfDay)
+        Dim otEndTime = If(overtime.OTEndTime, shift.Start.TimeOfDay)
+
+        Dim overtimeStart = overtime.OTStartDate.Add(otStartTime)
+        Dim nextDay = overtime.OTStartDate.AddDays(1)
+
+        Dim overtimeEnd = If(
+            otEndTime > otStartTime,
+            overtime.OTStartDate.Add(otEndTime),
+            nextDay.Add(otEndTime))
+
+        Dim overtimeRecognized = New TimePeriod(overtimeStart, overtimeEnd)
+        Dim worked = New TimePeriod(workBegin, workEnd)
+
+        Dim overtimeWorked = worked.Overlap(overtimeRecognized)
+
+        ' If overtime worked is nothing, perhaps the overtime was meant to happen in the next day past midnight.
+        If overtimeWorked Is Nothing Then
+            overtimeStart = nextDay.Add(otStartTime)
+            overtimeEnd = nextDay.Add(otEndTime)
+
+            overtimeRecognized = New TimePeriod(overtimeStart, overtimeEnd)
+
+            overtimeWorked = worked.Overlap(overtimeRecognized)
+        End If
+
+        Return CDec(overtimeWorked.Length.TotalHours)
     End Function
 
 End Class
