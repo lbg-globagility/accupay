@@ -4,21 +4,6 @@ Imports AccuPay.Entity
 
 Public Class TimeEntryCalculator
 
-    Private _timeLog As TimeLog
-
-    Private _dutyStart As Date
-
-    Private _dutyEnd As Date
-
-    Private _shift As Shift
-
-    Public _timeEntry As TimeEntry
-
-    Private _shiftToday As CurrentShift
-
-    Public Sub ComputeAllHours()
-    End Sub
-
     Public Function ComputeRegularHours(workStart As Date, workEnd As Date, currentShift As CurrentShift) As Decimal
         Dim workPeriod = New TimePeriod(workStart, workEnd)
         Dim shiftPeriod = New TimePeriod(currentShift.Start, currentShift.End)
@@ -92,6 +77,7 @@ Public Class TimeEntryCalculator
 
         Dim overtimeWorked = worked.Overlap(overtimeRecognized)
 
+        ' If overtime worked is nothing, perhaps the overtime was meant to happen in the next day past midnight.
         If overtimeWorked Is Nothing Then
             overtimeStart = nextDay.Add(otStartTime)
             overtimeEnd = nextDay.Add(otEndTime)
