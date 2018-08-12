@@ -576,10 +576,8 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Private Sub generateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles generateTimeEntryButton.Click
-        Return
-        timeEntDurationModal = New TimEntduration(DateTime.Today)
-
-        timeEntDurationModal.ShowDialog()
+        Dim generator = New TimeEntryGenerator(New Date(2018, 6, 6), New Date(2018, 6, 20))
+        generator.Start()
     End Sub
 
     Private Sub DoneGenerating() Handles timeEntDurationModal.DoneGenerating

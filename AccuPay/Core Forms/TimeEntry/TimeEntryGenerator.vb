@@ -2,42 +2,58 @@
 
 Imports System.Data.Entity
 Imports AccuPay.Entity
+Imports AccuPay.Tools
 Imports Microsoft.EntityFrameworkCore
 
 Public Class TimeEntryGenerator
 
-    Private _context As PayrollContext
+    Private ReadOnly _cutoffStart As Date
 
-    Private _cutOffBegin As Date
+    Private ReadOnly _cutoffEnd As Date
 
-    Private _cutOffEnd As Date
+    Public Sub New(cutoffStart As Date, cutoffEnd As Date)
+        _cutoffStart = cutoffStart
+        _cutoffEnd = cutoffEnd
+    End Sub
 
     Public Sub Start()
-        Dim employees =
-            (From e In _context.Employees
-             Where e.OrganizationID = z_OrganizationID).
-            ToList()
+        Dim employees As IList(Of Employee) = Nothing
+        Dim organization As Organization = Nothing
 
-        Dim payRates =
-            (From p In _context.PayRates
-             Where p.OrganizationID = z_OrganizationID And
-                 p.RateDate >= _cutOffBegin And
-                 p.RateDate <= _cutOffEnd).
-            ToList()
+        Using context = New PayrollContext()
+            employees =
+                (From e In context.Employees
+                 Where e.OrganizationID = z_OrganizationID).
+                ToList()
+
+            organization = context.Organizations.
+                FirstOrDefault(Function(o) Nullable.Equals(o.RowID, z_OrganizationID))
+
+            Dim payRates =
+                (From p In context.PayRates
+                 Where p.OrganizationID = z_OrganizationID And
+                     p.RateDate >= _cutoffStart And
+                     p.RateDate <= _cutoffEnd).
+                ToList()
+
+        End Using
 
         For Each employee In employees
-            CalculateEmployee(employee)
+            CalculateEmployee(employee, organization)
         Next
     End Sub
 
-    Private Sub CalculateEmployee(employee As Employee)
-        Dim shiftSchedules =
-            (From s In _context.ShiftSchedules.
-                 Include(Function(s) s.Shift)
-             Where s.EmployeeID = employee.RowID And
-                 s.EffectiveFrom <= _cutOffEnd And
-                 s.EffectiveTo >= _cutOffBegin).
-            ToList()
-    End Sub
+    Private Function CalculateEmployee(employee As Employee, organization As Organization) As IList(Of TimeEntry)
+        Dim dayCalculator = New DayCalculator()
+
+        Dim timeEntries = New List(Of TimeEntry)
+
+        For Each day In Calendar.EachDay(_cutoffStart, _cutoffEnd)
+            Dim timeEntry = dayCalculator.Compute(employee, day, organization)
+            timeEntries.Add(timeEntry)
+        Next
+
+        Return timeEntries
+    End Function
 
 End Class

@@ -25,6 +25,15 @@ Namespace Global.AccuPay
             Me.End = [end]
         End Sub
 
+        Public Shared Function FromTime(from As TimeSpan, [to] As TimeSpan, [date] As DateTime) As TimePeriod
+            Dim dateFrom = [date].Add(from)
+
+            Dim nextDay = [date].AddDays(1)
+            Dim dateTo = If([to] > from, [date].Add([to]), nextDay.Add([to]))
+
+            Return New TimePeriod(dateFrom, dateTo)
+        End Function
+
         Public Function Contains(moment As Date) As Boolean
             Return (Start <= moment) And (moment <= [End])
         End Function

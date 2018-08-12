@@ -58,9 +58,7 @@ Public Class TimeEntryCalculator
         Return undertimePeriod.TotalHours
     End Function
 
-    Public Function ComputeNightDiffHours(workPeriod As TimePeriod, nightDiffStart As Date, nightDiffEnd As Date) As Decimal
-        Dim nightDiffPeriod = New TimePeriod(nightDiffStart, nightDiffEnd)
-
+    Public Function ComputeNightDiffHours(workPeriod As TimePeriod, nightDiffPeriod As TimePeriod) As Decimal
         If Not workPeriod.Intersects(nightDiffPeriod) Then
             Return 0D
         End If
@@ -96,7 +94,7 @@ Public Class TimeEntryCalculator
             overtimeWorked = workPeriod.Overlap(overtimeRecognized)
         End If
 
-        Return overtimeWorked.TotalHours
+        Return If(overtimeWorked?.TotalHours, 0)
     End Function
 
 End Class

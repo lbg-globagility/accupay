@@ -47,23 +47,13 @@ Public Class CurrentShift
         Me.Shift = shift
         Me.Date = [date]
 
-        Dim nextDay = [date].AddDays(1)
-
-        Dim shiftStart = Calendar.Create([date], shift.TimeFrom)
-        Dim shiftEnd = Calendar.Create(If(shift.TimeTo > shift.TimeFrom, [date], nextDay), shift.TimeTo)
-
-        Me.ShiftPeriod = New TimePeriod(shiftStart, shiftEnd)
+        Me.ShiftPeriod = TimePeriod.FromTime(shift.TimeFrom, shift.TimeTo, [date])
 
         If shift.HasBreaktime Then
-            Dim breaktimeStart = Calendar.Create(
-                If(shift.BreaktimeFrom > shift.TimeFrom, [date], nextDay),
-                shift.BreaktimeFrom.Value)
+            Dim nextDay = [date].AddDays(1)
+            Dim breakDate = If(shift.BreaktimeFrom > shift.TimeFrom, [date], nextDay)
 
-            Dim breaktimeEnd = Calendar.Create(
-                If(shift.BreaktimeTo > shift.TimeFrom, [date], nextDay),
-                shift.BreaktimeTo.Value)
-
-            Me.BreakPeriod = New TimePeriod(breaktimeStart, breaktimeEnd)
+            Me.BreakPeriod = TimePeriod.FromTime(shift.BreaktimeFrom.Value, shift.BreaktimeTo.Value, breakDate)
         End If
     End Sub
 
