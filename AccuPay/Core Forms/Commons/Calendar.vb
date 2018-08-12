@@ -65,6 +65,14 @@ Namespace Global.AccuPay.Tools
                 String.Equals(clock, "p", StringComparison.OrdinalIgnoreCase)
         End Function
 
+        Public Shared Function Create(datePortion As DateTime, timePortion As TimeSpan?) As DateTime
+            If timePortion Is Nothing Then
+                Return datePortion
+            End If
+
+            Return datePortion.Add(timePortion.Value)
+        End Function
+
         Public Shared Iterator Function EachDay(from As Date, thru As Date) As IEnumerable(Of Date)
             Dim day = from.Date
             While day.Date <= thru.Date

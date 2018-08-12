@@ -34,6 +34,14 @@ Namespace Global.AccuPay
                 Me.End >= period.Start
         End Function
 
+        Public Function EarlierThan(period As TimePeriod) As Boolean
+            Return Me.Start <= period.Start
+        End Function
+
+        Public Function LaterThan(period As TimePeriod) As Boolean
+            Return Me.End >= period.End
+        End Function
+
         Public Function Overlap(period As TimePeriod) As TimePeriod
             If Not Intersects(period) Then
                 Return Nothing

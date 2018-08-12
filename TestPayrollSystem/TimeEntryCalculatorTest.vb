@@ -13,6 +13,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim workStart = Date.Parse("2017-01-01 08:30:00")
         Dim workEnd = Date.Parse("2017-01-01 17:30:00")
+        Dim workPeriod = New TimePeriod(workStart, workEnd)
 
         Dim shift = New Shift() With {
             .TimeFrom = TimeSpan.Parse("08:30"),
@@ -21,7 +22,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
 
-        Dim result = calculator.ComputeLateHours(workStart, workEnd, currentShift)
+        Dim result = calculator.ComputeLateHours(workPeriod, currentShift)
         Assert.AreEqual(0D, result)
     End Sub
 
@@ -31,6 +32,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim workStart = Date.Parse("2017-01-01 09:00:00")
         Dim workEnd = Date.Parse("2017-01-01 17:30:00")
+        Dim workPeriod = New TimePeriod(workStart, workEnd)
 
         Dim shift = New Shift() With {
             .TimeFrom = TimeSpan.Parse("08:30"),
@@ -39,7 +41,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
 
-        Dim result = calculator.ComputeLateHours(workStart, workEnd, currentShift)
+        Dim result = calculator.ComputeLateHours(workPeriod, currentShift)
         Assert.AreEqual(0.5D, result)
     End Sub
 
@@ -49,6 +51,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim workStart = Date.Parse("2017-01-01 12:30:00")
         Dim workEnd = Date.Parse("2017-01-01 16:30:00")
+        Dim workPeriod = New TimePeriod(workStart, workEnd)
 
         Dim shift = New Shift() With {
             .TimeFrom = TimeSpan.Parse("08:30"),
@@ -59,7 +62,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
 
-        Dim result = calculator.ComputeLateHours(workStart, workEnd, currentShift)
+        Dim result = calculator.ComputeLateHours(workPeriod, currentShift)
         Assert.AreEqual(3.5D, result)
     End Sub
 
@@ -69,6 +72,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim workStart = Date.Parse("2017-01-01 14:00:00")
         Dim workEnd = Date.Parse("2017-01-01 17:30:00")
+        Dim workPeriod = New TimePeriod(workStart, workEnd)
 
         Dim shift = New Shift() With {
             .TimeFrom = TimeSpan.Parse("08:30"),
@@ -79,7 +83,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
 
-        Dim result = calculator.ComputeLateHours(workStart, workEnd, currentShift)
+        Dim result = calculator.ComputeLateHours(workPeriod, currentShift)
         Assert.AreEqual(4.5D, result)
     End Sub
 

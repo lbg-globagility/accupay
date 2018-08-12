@@ -123,14 +123,6 @@ Namespace Global.AccuPay.Entity
         Public Sub New()
         End Sub
 
-        Public Sub New(timeLog As TimeLog, shiftToday As CurrentShift)
-            Dim timeIn = timeLog.FullTimeIn
-            Dim timeOut = timeLog.FullTimeOut
-
-            DutyStart = {timeIn, shiftToday.Start}.Max
-            DutyEnd = {timeOut, shiftToday.End}.Min
-        End Sub
-
         Public ReadOnly Property TotalLeaveHours As Decimal
             Get
                 Return VacationLeaveHours + SickLeaveHours + MaternityLeaveHours + OtherLeaveHours

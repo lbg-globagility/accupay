@@ -130,8 +130,9 @@ Public Class OvertimeHoursTest
 
         Dim workStart = TimeUtility.RangeStart(today, TimeSpan.Parse(timeIn))
         Dim workEnd = TimeUtility.RangeEnd(today, TimeSpan.Parse(timeIn), TimeSpan.Parse(timeOut))
+        Dim workPeriod = New TimePeriod(workStart, workEnd)
 
-        Dim result = _calculator.ComputeOvertimeHours(workStart, workEnd, overtime, currentShift)
+        Dim result = _calculator.ComputeOvertimeHours(workPeriod, overtime, currentShift)
 
         Assert.That(result, [Is].EqualTo(expected))
     End Sub
