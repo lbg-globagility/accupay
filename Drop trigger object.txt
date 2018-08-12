@@ -5,13 +5,13 @@ SET @databaseName = 'accupaydb_cinema2k';
 SELECT
 CONCAT('DROP TRIGGER ', @databaseName, '.`', i.TRIGGER_NAME, '`;') `Result`
 FROM information_schema.`TRIGGERS` i
-WHERE i.`TRIGGER_SCHEMA` = @databaseName;
-
+WHERE i.`TRIGGER_SCHEMA` = @databaseName
+UNION
 SELECT
 CONCAT('DROP ', i.ROUTINE_TYPE, ' ', @databaseName, '.`', i.ROUTINE_NAME, '`;') `Result`
 FROM information_schema.ROUTINES i
-WHERE i.ROUTINE_SCHEMA = @databaseName;
-
+WHERE i.ROUTINE_SCHEMA = @databaseName
+UNION
 SELECT
 CONCAT('DROP ', i.TABLE_TYPE, ' ', @databaseName, '.`', i.`TABLE_NAME`, '`;') `Result`
 FROM information_schema.`TABLES` i
