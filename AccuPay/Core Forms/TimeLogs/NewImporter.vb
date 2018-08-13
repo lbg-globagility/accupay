@@ -10,17 +10,19 @@ Public Class TimeLogsReader
 
     Public Function Import(filename As String) As IList(Of TimeAttendanceLog)
         Dim logs = New List(Of TimeAttendanceLog)
-
+        Dim line As String
         Using fileStream = New FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
             stream = New StreamReader(fileStream)
+            Do
+                line = stream.ReadLine()
 
-            Dim line = stream.ReadLine()
+                Dim log = ParseLine(line)
 
-            Dim log = ParseLine(line)
+                If log IsNot Nothing Then
+                    logs.Add(log)
+                End If
 
-            If log IsNot Nothing Then
-                logs.Add(log)
-            End If
+            Loop Until line Is Nothing
         End Using
 
         Return logs

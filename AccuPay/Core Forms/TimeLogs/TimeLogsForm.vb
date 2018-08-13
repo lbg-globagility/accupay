@@ -163,6 +163,7 @@ Public Class TimeLogsForm
             Dim row_array = drow.ItemArray
             dgvetentd.Rows.Add(row_array)
         Next
+        MsgBox(orgztnID & " " & pagination)
         catchdt.Dispose()
     End Sub
 
@@ -941,6 +942,8 @@ Public Class TimeLogsForm
 
                 End If
 
+
+
                 .Parameters("etentdID").Direction = ParameterDirection.ReturnValue
 
                 Dim datread As MySqlDataReader
@@ -1006,7 +1009,7 @@ Public Class TimeLogsForm
                 Nothing,
                 Nothing,
                 Nothing
-            )
+)
         Next
 
         bgworkImport.ReportProgress(100)
@@ -1879,15 +1882,48 @@ Public Class TimeLogsForm
                     If listofEditRow.Contains(.Cells("Column1").Value) Then
                         Dim etent_date = Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd")
 
-                        RowID = .Cells("Column1").Value
-                        INSUPD_employeetimeentrydetails(RowID,
+                        Dim dateout = Nothing
+
+
+                        If IsDBNull(.Cells("Column13").Value) Then
+
+                            dateout = Nothing
+
+
+
+                        Else
+                            If IsDBNull(.Cells("Column11")) Then
+                                dateout = Nothing
+
+                            Else
+
+                                dateout = Format(CDate(.Cells("Column13").Value), "yyyy-MM-dd")
+
+                            End If
+
+                        End If
+
+
+                        Dim timeout = Format(CDate(Trim(.Cells("Column4").Value)), "HH:mm:ss")
+                            Dim timestampinout = dateout & " " & timeout
+
+                            Dim datein = Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd")
+                            Dim timein = Format(CDate(Trim(.Cells("Column3").Value)), "HH:mm:ss")
+                            Dim timestampin = datein & " " & timein
+
+
+                            RowID = .Cells("Column1").Value
+                            INSUPD_employeetimeentrydetails(RowID,
                                                         .Cells("Column2").Value,
                                                         time_i,
                                                         time_o,
                                                         Trim(etent_date),
-                                                        .Cells("Column6").Value)
+                                                        .Cells("Column6").Value,,,,, timestampin, timestampinout)
+
+
+
                     Else
-                        If .Cells("Column1").Value = Nothing Then
+                            If .Cells("Column1").Value = Nothing Then
                             newRowID =
                             INSUPD_employeetimeentrydetails(,
                                                             .Cells("Column2").Value,
@@ -2264,15 +2300,17 @@ Public Class TimeLogsForm
 
             Using excelPackage = New ExcelPackage(file)
                 Dim worksheet = excelPackage.Workbook.Worksheets.Add("Time logs")
-                worksheet.Column(6).Style.Numberformat.Format = "mm/dd/yyyy"
+                worksheet.Column(5).Style.Numberformat.Format = "mm/dd/yyyy"
+                worksheet.Column(7).Style.Numberformat.Format = "mm/dd/yyyy"
 
                 worksheet.Cells("A1").Value = "Employee ID"
                 worksheet.Cells("B1").Value = "Name"
                 worksheet.Cells("C1").Value = "Shift"
                 worksheet.Cells("D1").Value = "Time In"
-                worksheet.Cells("E1").Value = "Time Out"
-                worksheet.Cells("F1").Value = "Date"
-                worksheet.Cells("G1").Value = "Schedule Type"
+                worksheet.Cells("E1").Value = "Date In"
+                worksheet.Cells("F1").Value = "Time Out"
+                worksheet.Cells("G1").Value = "Date Out"
+                worksheet.Cells("H1").Value = "Schedule Type"
 
                 Dim i = 2
                 For Each row As DataGridViewRow In dgvetentdet.Rows
@@ -2283,6 +2321,7 @@ Public Class TimeLogsForm
                     worksheet.Cells($"E{i}").Value = row.Cells(6).Value
                     worksheet.Cells($"F{i}").Value = row.Cells(7).Value
                     worksheet.Cells($"G{i}").Value = row.Cells(8).Value
+                    worksheet.Cells($"H{i}").Value = row.Cells(9).Value
 
                     i += 1
                 Next
