@@ -109,7 +109,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property AlphalistExempted As Boolean
 
-        Public Property WorkDaysPerYear As Integer
+        Public Property WorkDaysPerYear As Decimal
 
         Public Property DayOfRest As Integer?
 
