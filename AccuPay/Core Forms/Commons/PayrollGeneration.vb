@@ -613,6 +613,7 @@ Public Class PayrollGeneration
         Dim employeeId = _employee2.RowID
         Dim ledgers = context.LeaveLedgers.
             Include(Function(x) x.Product).
+            Include(Function(x) x.LeaveTransactions).
             Include(Function(x) x.LastTransaction).
             Where(Function(x) CBool(x.EmployeeID = employeeId)).
             ToList()
