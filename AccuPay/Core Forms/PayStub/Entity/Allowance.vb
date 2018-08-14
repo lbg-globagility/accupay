@@ -32,7 +32,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property AllowanceFrequency As String
 
-        Public Property EffectiveEndDate As Date?
+        Public Property EffectiveEndDate As Date
 
         Public Property TaxableFlag As Char
 
