@@ -163,7 +163,7 @@ Public Class TimeLogsForm
             Dim row_array = drow.ItemArray
             dgvetentd.Rows.Add(row_array)
         Next
-        MsgBox(orgztnID & " " & pagination)
+  
         catchdt.Dispose()
     End Sub
 

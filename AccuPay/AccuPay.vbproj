@@ -564,6 +564,9 @@
     <Compile Include="Core Forms\Commons\PayrollResources.vb" />
     <Compile Include="Core Forms\Commons\TimeUtility.vb" />
     <Compile Include="Core Forms\Commons\SqlReaderExtensions.vb" />
+    <Compile Include="Core Forms\TimeEntry\TimeLogInOut.vb" />
+    <Compile Include="Core Forms\TimeEntry\TimeLogsTempIn.vb" />
+    <Compile Include="Core Forms\TimeEntry\TimeLogsTempOut.vb" />
     <Compile Include="Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.designer.vb">
       <DependentUpon>ViewTimeEntryEmployeeLevel.vb</DependentUpon>
     </Compile>

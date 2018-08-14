@@ -12,23 +12,36 @@ Public Class TimeImporter
         Dim filename = "C:\Users\GLOBAL-H\Desktop\Ondevilla\1_attlog.dat"
 
         Dim logs = importer.Import(filename)
-
+        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
         Dim record = logs.Count
+
+
+
+
+
 
         Dim employeeShifts = New List(Of ShiftSchedule)
 
 
         Dim employeeshift = New ShiftSchedule() With {
             .EffectiveFrom = Date.Parse("2018-06-01"),
+            .EffectiveTo = Date.Parse("2018-06-01"),
             .Shift = New Shift() With {
             .TimeFrom = TimeSpan.Parse("08:00:00"),
-            .TimeTo = TimeSpan.Parse("05:00:00")
+            .TimeTo = TimeSpan.Parse("17:00:00")
             }
         }
+        '.EffectiveFrom = Date.Parse("2018-06-01"),
+
+
         employeeShifts.Add(employeeshift)
 
+
+
+
         Dim analyzer = New TimeAttendanceAnalyzer()
-        Dim results = analyzer.Analyze(logs, employeeShifts)
+        Dim results = analyzer.AnalyzeMe(logs, employeeShifts)
+        'Dim results = analyzer.Analyze(logs, employeeShifts)
 
         Dim firstresult = results.Item(0)
 
