@@ -26,23 +26,18 @@ Public Class NewPayStubForm
 
     Private Async Sub LoadPaystubs()
         Using context = New PayrollContext()
-            Dim query =
-                (From p In context.Paystubs
-                 Join pa In context.PaystubActuals
-                    On p.PayPeriodID Equals pa.PayPeriodID And
-                     p.EmployeeID Equals pa.EmployeeID
-                 Where p.PayFromdate = _dateFrom And
-                     p.PayToDate = _dateTo And
-                     p.OrganizationID = z_OrganizationID
-                 Order By p.Employee.LastName,
-                     p.Employee.FirstName
-                 Select New With {.Paystub = p, .PaystubActual = pa, .Employee = p.Employee}
-                )
+            Dim query = context.Paystubs.Include(Function(p) p.Employee).
+                Where(Function(p) p.PayFromdate = _dateFrom).
+                Where(Function(p) p.PayToDate = _dateTo).
+                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                OrderBy(Function(p) p.Employee.LastName).
+                ThenBy(Function(p) p.Employee.FirstName).
+                Select(Function(p) New With {.Paystub = p, .Employee = p.Employee})
 
             Dim paystubs = Await query.ToListAsync()
 
             _paystubModels = paystubs.
-                Select(Function(p) New PayStubModel(p.Employee, p.Paystub, p.PaystubActual)).
+                Select(Function(p) New PayStubModel(p.Employee, p.Paystub, Nothing)).
                 ToList()
 
             dgvPaystubs.DataSource = _paystubModels
