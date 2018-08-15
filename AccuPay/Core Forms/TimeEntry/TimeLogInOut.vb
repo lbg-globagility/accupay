@@ -13,7 +13,7 @@ Public Class TimeLogInOut
 
     Public Property OrganizationID As Integer?
 
-    Public Property EmployeeID As Integer?
+    Public Property EmployeeID As String
 
     <Column("Date")>
     Public Property LogDate As Date

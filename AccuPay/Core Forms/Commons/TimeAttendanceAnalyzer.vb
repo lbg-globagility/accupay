@@ -1,221 +1,237 @@
 ﻿Option Strict On
+
+Imports System.Linq
 Imports AccuPay.Entity
 
 Public Class TimeAttendanceAnalyzer
 
-
-    Public Function AnalyzeMe(logs As IList(Of TimeAttendanceLog), employeeshifts As IList(Of ShiftSchedule)) As IList(Of TimeLogInOut)
-
+    Public Function FourHoursRule(logs As IList(Of TimeAttendanceLog), employeeShifts As IList(Of ShiftSchedule)) As IList(Of TimeLogInOut)
 
         Dim list = New List(Of TimeLogInOut)
-        Dim listin = New List(Of TimeLogsTempIn)
-        Dim listout = New List(Of TimeLogsTempOut)
+        Dim listIn = New List(Of TimeLogsTempIn)
+        Dim listOut = New List(Of TimeLogsTempOut)
 
+        Dim shift4HoursBefore = employeeShifts.FirstOrDefault.Shift.TimeFrom.Add(TimeSpan.FromHours(-4))
+        Dim shift4HoursAfter = employeeShifts.FirstOrDefault.Shift.TimeFrom.Add(TimeSpan.FromHours(4))
 
         For Each log In logs
-            Dim itemin = New TimeLogsTempIn
-            Dim itemout = New TimeLogsTempOut
-            Dim itemlist = New TimeLogInOut
-
-            Dim shift4hoursbefore = employeeshifts.FirstOrDefault.Shift.TimeFrom.Add(TimeSpan.FromHours(-4))
-            Dim shift4hoursafter = employeeshifts.FirstOrDefault.Shift.TimeFrom.Add(TimeSpan.FromHours(4))
+            Dim itemIn = New TimeLogsTempIn
+            Dim itemOut = New TimeLogsTempOut
+            Dim itemList = New TimeLogInOut
 
             Dim a = log
-            Dim Item4hoursbefore As DateTime = Nothing
-            Dim Item4hoursafter As DateTime = Nothing
-            Dim Outonly As DateTime = Nothing
-            Dim EndOfTheDay As DateTime = Nothing
-
-
-
+            Dim item4HoursBefore As DateTime = Nothing
+            Dim item4HoursAfter As DateTime = Nothing
+            Dim outOnly As DateTime = Nothing
+            Dim endOfTheDay As DateTime = Nothing
 
             ' CHECK LISTIN AND LISTOUT TO INITIALIZE
 
-            If (listin.Count = 0 And listout.Count <> 0) Then
-                Dim DateOut As Date = CDate(listout.LastOrDefault().DateOut)
-                Outonly = DateOut.Date.Add(shift4hoursbefore)
-                Item4hoursbefore = a.DateTime.Date.Add(shift4hoursbefore)
-                Item4hoursafter = a.DateTime.Date.Add(shift4hoursafter)
+            If (listIn.Count = 0 And listOut.Count <> 0) Then
+                Dim dateOut As Date = CDate(listOut.LastOrDefault().DateOut)
+                outOnly = dateOut.Date.Add(shift4HoursBefore)
+                item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
 
-            ElseIf listin.Count <> 0 Then
-                Dim DateIn As Date = CDate(listin.FirstOrDefault().DateIn)
-                EndOfTheDay = DateIn.AddDays(1).Date.Add(shift4hoursbefore)
-                Item4hoursbefore = DateIn.Date.Add(shift4hoursbefore)
-                Item4hoursafter = DateIn.Date.Add(shift4hoursafter)
-
+            ElseIf listIn.Count <> 0 Then
+                Dim dateIn As Date = CDate(listIn.FirstOrDefault().DateIn)
+                endOfTheDay = dateIn.AddDays(1).Date.Add(shift4HoursBefore)
+                item4HoursBefore = dateIn.Date.Add(shift4HoursBefore)
+                item4HoursAfter = dateIn.Date.Add(shift4HoursAfter)
             Else
-                Item4hoursbefore = a.DateTime.Date.Add(shift4hoursbefore)
-                Item4hoursafter = a.DateTime.Date.Add(shift4hoursafter)
+                item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
 
             End If
             ' END CHECK LISTIN AND LISTOUT TO INITIALIZE
 
             ' CHECK EMPLOYEE NUMBER IF NOT THE SAME TO STORE TO LIST
-            If listin.Count <> 0 And listout.Count <> 0 Then
-                If CInt(a.EmployeeNo) <> listout.LastOrDefault().EmployeeID Then
-                    itemlist.DateIn = listin.FirstOrDefault().DateIn
-                    itemlist.DateOut = listout.LastOrDefault().DateOut
-                    itemlist.TimeIn = listin.FirstOrDefault().TimeIn
-                    itemlist.TimeOut = listout.LastOrDefault().TimeOut
-                    If listin.FirstOrDefault().EmployeeID = listout.LastOrDefault().EmployeeID Then
-                        itemlist.EmployeeID = listin.FirstOrDefault().EmployeeID
+            If listIn.Count <> 0 And listOut.Count <> 0 Then
+                If a.EmployeeNo <> listOut.LastOrDefault().EmployeeID Then
+                    itemList.DateIn = listIn.FirstOrDefault().DateIn
+                    itemList.DateOut = listOut.LastOrDefault().DateOut
+                    itemList.TimeIn = listIn.FirstOrDefault().TimeIn
+                    itemList.TimeOut = listOut.LastOrDefault().TimeOut
+                    If listIn.FirstOrDefault().EmployeeID = listOut.LastOrDefault().EmployeeID Then
+                        itemList.EmployeeID = listIn.FirstOrDefault().EmployeeID
                     End If
-                    list.Add(itemlist)
+                    itemList.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+                    list.Add(itemList)
 
-                    listin.Clear()
-                    listout.Clear()
+                    listIn.Clear()
+                    listOut.Clear()
 
-
-                    Item4hoursbefore = a.DateTime.Date.Add(shift4hoursbefore)
-                    Item4hoursafter = a.DateTime.Date.Add(shift4hoursafter)
+                    item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                    item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
                 End If
-            ElseIf listin.Count <> 0 And listout.Count = 0 Then
-                If CInt(a.EmployeeNo) <> listin.FirstOrDefault().EmployeeID Then
-                    itemlist.DateIn = listin.FirstOrDefault().DateIn
-                    itemlist.DateOut = Nothing
-                    itemlist.TimeIn = listin.FirstOrDefault().TimeIn
-                    itemlist.TimeOut = Nothing
-                    itemlist.EmployeeID = listin.FirstOrDefault().EmployeeID
-                    list.Add(itemlist)
+            ElseIf listIn.Count <> 0 And listOut.Count = 0 Then
+                If a.EmployeeNo <> listIn.FirstOrDefault().EmployeeID Then
+                    itemList.DateIn = listIn.FirstOrDefault().DateIn
+                    itemList.DateOut = Nothing
+                    itemList.TimeIn = listIn.FirstOrDefault().TimeIn
+                    itemList.TimeOut = Nothing
+                    itemList.EmployeeID = listIn.FirstOrDefault().EmployeeID
 
-                    listin.Clear()
-                    listout.Clear()
+                    itemList.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+
+                    list.Add(itemList)
+
+                    listIn.Clear()
+                    listOut.Clear()
                     '//if clear initialize
 
-                    Item4hoursbefore = a.DateTime.Date.Add(shift4hoursbefore)
-                    Item4hoursafter = a.DateTime.Date.Add(shift4hoursafter)
+                    item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                    item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
                 End If
-            ElseIf listin.Count = 0 And listout.Count <> 0 Then
-                If CInt(a.EmployeeNo) <> listout.LastOrDefault().EmployeeID Then
-                    itemlist.DateIn = Nothing
-                    itemlist.DateOut = listout.LastOrDefault().DateOut
-                    itemlist.TimeIn = Nothing
-                    itemlist.TimeOut = listout.LastOrDefault().TimeOut
-                    itemlist.EmployeeID = listout.LastOrDefault().EmployeeID
-                    list.Add(itemlist)
+            ElseIf listIn.Count = 0 And listOut.Count <> 0 Then
+                If a.EmployeeNo <> listOut.LastOrDefault().EmployeeID Then
+                    itemList.DateIn = Nothing
+                    itemList.DateOut = listOut.LastOrDefault().DateOut
+                    itemList.TimeIn = Nothing
+                    itemList.TimeOut = listOut.LastOrDefault().TimeOut
+                    itemList.EmployeeID = listOut.LastOrDefault().EmployeeID
 
-                    listin.Clear()
-                    listout.Clear()
+                    If listOut.LastOrDefault().TimeOut <= shift4HoursBefore Then
+                        itemList.LogDate = CDate(listOut.FirstOrDefault().DateOut).AddDays(-1).Date.Add(TimeSpan.Parse("00:00:00"))
+                    Else
+                        itemList.LogDate = CDate(listOut.FirstOrDefault().DateOut).Date.Add(TimeSpan.Parse("00:00:00"))
+                    End If
+
+                    list.Add(itemList)
+
+                    listIn.Clear()
+                    listOut.Clear()
 
                     '//if clear initialize
-                    Item4hoursbefore = a.DateTime.Date.Add(shift4hoursbefore)
-                    Item4hoursafter = a.DateTime.Date.Add(shift4hoursafter)
+                    item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                    item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
                 End If
             Else
-
 
             End If
             ' END CHECK EMPLOYEE NUMBER IF NOT THE SAME TO STORE TO LIST
 
             '  CHECK LISTIN AND LISTOUT AND CURRENT DATA ITERATED TO BE COMPARE AT END OF THE DAY TO STORE LIST
 
-            If listin.Count <> 0 And listout.Count <> 0 And EndOfTheDay <= a.DateTime Then
-                itemlist.DateIn = listin.FirstOrDefault().DateIn
-                itemlist.DateOut = listout.LastOrDefault().DateOut
-                itemlist.TimeIn = listin.FirstOrDefault().TimeIn
-                itemlist.TimeOut = listout.LastOrDefault().TimeOut
+            If listIn.Count <> 0 And listOut.Count <> 0 And endOfTheDay <= a.DateTime Then
+                itemList.DateIn = listIn.FirstOrDefault().DateIn
+                itemList.DateOut = listOut.LastOrDefault().DateOut
+                itemList.TimeIn = listIn.FirstOrDefault().TimeIn
+                itemList.TimeOut = listOut.LastOrDefault().TimeOut
 
-                If listin.FirstOrDefault().EmployeeID = listout.LastOrDefault().EmployeeID Then
-                    itemlist.EmployeeID = listin.FirstOrDefault().EmployeeID
+                If listIn.FirstOrDefault().EmployeeID = listOut.LastOrDefault().EmployeeID Then
+                    itemList.EmployeeID = listIn.FirstOrDefault().EmployeeID
+                End If
+                itemList.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+                list.Add(itemList)
+
+                listIn.Clear()
+                listOut.Clear()
+                '//if clear initialize
+
+                item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
+
+            ElseIf listIn.Count <> 0 And listOut.Count = 0 And endOfTheDay <= a.DateTime Then
+                itemList.DateIn = listIn.FirstOrDefault().DateIn
+                itemList.DateOut = Nothing
+                itemList.TimeIn = listIn.FirstOrDefault().TimeIn
+                itemList.TimeOut = Nothing
+                itemList.EmployeeID = listIn.FirstOrDefault().EmployeeID
+                itemList.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+                list.Add(itemList)
+
+                listIn.Clear()
+                listOut.Clear()
+                '//if clear initialize
+
+                item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
+
+            ElseIf listIn.Count = 0 And listOut.Count <> 0 And outOnly <= a.DateTime Then
+                itemList.DateIn = Nothing
+                itemList.DateOut = listOut.LastOrDefault().DateOut
+                itemList.TimeIn = Nothing
+                itemList.TimeOut = listOut.LastOrDefault().TimeOut
+                itemList.EmployeeID = listOut.LastOrDefault().EmployeeID
+                If listOut.LastOrDefault().TimeOut < shift4HoursBefore Then
+                    itemList.LogDate = CDate(listOut.FirstOrDefault().DateOut).AddDays(-1).Date.Add(TimeSpan.Parse("00:00:00"))
+                Else
+                    itemList.LogDate = CDate(listOut.FirstOrDefault().DateOut).Date.Add(TimeSpan.Parse("00:00:00"))
                 End If
 
-                list.Add(itemlist)
+                list.Add(itemList)
 
-                listin.Clear()
-                listout.Clear()
+                listIn.Clear()
+                listOut.Clear()
                 '//if clear initialize
 
-                Item4hoursbefore = a.DateTime.Date.Add(shift4hoursbefore)
-                Item4hoursafter = a.DateTime.Date.Add(shift4hoursafter)
-
-            ElseIf listin.Count <> 0 And listout.Count = 0 And EndOfTheDay <= a.DateTime Then
-                itemlist.DateIn = listin.FirstOrDefault().DateIn
-                itemlist.DateOut = Nothing
-                itemlist.TimeIn = listin.FirstOrDefault().TimeIn
-                itemlist.TimeOut = Nothing
-                itemlist.EmployeeID = listin.FirstOrDefault().EmployeeID
-                list.Add(itemlist)
-
-                listin.Clear()
-                listout.Clear()
-                '//if clear initialize
-
-                Item4hoursbefore = a.DateTime.Date.Add(shift4hoursbefore)
-                Item4hoursafter = a.DateTime.Date.Add(shift4hoursafter)
-
-            ElseIf listin.Count = 0 And listout.Count <> 0 And Outonly <= a.DateTime Then
-                itemlist.DateIn = Nothing
-                itemlist.DateOut = listout.LastOrDefault().DateOut
-                itemlist.TimeIn = Nothing
-                itemlist.TimeOut = listout.LastOrDefault().TimeOut
-                itemlist.EmployeeID = listout.LastOrDefault().EmployeeID
-                list.Add(itemlist)
-
-                listin.Clear()
-                listout.Clear()
-                '//if clear initialize
-
-                Item4hoursbefore = a.DateTime.Date.Add(shift4hoursbefore)
-                Item4hoursafter = a.DateTime.Date.Add(shift4hoursafter)
+                item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
             Else
 
             End If
             'END CHECK LISTIN AND LISTOUT AND CURRENT DATA ITERATED TO BE COMPARE AT END OF THE DAY TO STORE LIST
 
             'STORE IN AND sTORE OUT
-            If a.DateTime >= Item4hoursbefore And a.DateTime <= Item4hoursafter Then
-                itemin.TimeIn = a.DateTime.TimeOfDay
-                itemin.DateIn = a.DateTime
-                itemin.EmployeeID = CInt(a.EmployeeNo)
-                listin.Add(itemin)
+            If a.DateTime >= item4HoursBefore And a.DateTime <= item4HoursAfter Then
+                itemIn.TimeIn = a.DateTime.TimeOfDay
+                itemIn.DateIn = a.DateTime
+                itemIn.EmployeeID = a.EmployeeNo
+                listIn.Add(itemIn)
             Else
-                itemout.TimeOut = a.DateTime.TimeOfDay
-                itemout.DateOut = a.DateTime
-                itemout.EmployeeID = CInt(a.EmployeeNo)
-                listout.Add(itemout)
+                itemOut.TimeOut = a.DateTime.TimeOfDay
+                itemOut.DateOut = a.DateTime
+                itemOut.EmployeeID = a.EmployeeNo
+                listOut.Add(itemOut)
             End If
-
-
-
 
         Next
         ' IF END OF RANGE OF ITERATED ROW HAS LISTIN OR LISTOUT
-        Dim itemlistexcess = New TimeLogInOut
+        Dim itemListExcess = New TimeLogInOut
 
-        If listin.Count <> 0 And listout.Count = 0 Then
-            itemlistexcess.DateIn = listin.FirstOrDefault().DateIn
-            itemlistexcess.TimeIn = listin.FirstOrDefault().TimeIn
-            itemlistexcess.DateOut = Nothing
-            itemlistexcess.TimeOut = Nothing
-            itemlistexcess.EmployeeID = listin.FirstOrDefault().EmployeeID
-            list.Add(itemlistexcess)
-            listin.Clear()
-            listout.Clear()
+        If listIn.Count <> 0 And listOut.Count = 0 Then
+            itemListExcess.DateIn = listIn.FirstOrDefault().DateIn
+            itemListExcess.TimeIn = listIn.FirstOrDefault().TimeIn
+            itemListExcess.DateOut = Nothing
+            itemListExcess.TimeOut = Nothing
+            itemListExcess.EmployeeID = listIn.FirstOrDefault().EmployeeID
+            itemListExcess.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+            list.Add(itemListExcess)
+            listIn.Clear()
+            listOut.Clear()
         End If
 
-        If listout.Count <> 0 And listin.Count = 0 Then
-            itemlistexcess.DateOut = listout.LastOrDefault().DateOut
-            itemlistexcess.TimeOut = listout.LastOrDefault().TimeOut
-            itemlistexcess.DateIn = Nothing
-            itemlistexcess.TimeIn = Nothing
-            itemlistexcess.EmployeeID = listout.LastOrDefault().EmployeeID
-            list.Add(itemlistexcess)
-            listin.Clear()
-            listout.Clear()
-
-        End If
-
-        If listout.Count <> 0 And listin.Count <> 0 Then
-            itemlistexcess.DateOut = listout.LastOrDefault().DateOut
-            itemlistexcess.TimeOut = listout.LastOrDefault().TimeOut
-            itemlistexcess.DateIn = listin.FirstOrDefault().DateIn
-            itemlistexcess.TimeIn = listin.FirstOrDefault().TimeIn
-            If listin.FirstOrDefault().EmployeeID = listout.LastOrDefault().EmployeeID Then
-                itemlistexcess.EmployeeID = listin.FirstOrDefault().EmployeeID
+        If listOut.Count <> 0 And listIn.Count = 0 Then
+            itemListExcess.DateOut = listOut.LastOrDefault().DateOut
+            itemListExcess.TimeOut = listOut.LastOrDefault().TimeOut
+            itemListExcess.DateIn = Nothing
+            itemListExcess.TimeIn = Nothing
+            itemListExcess.EmployeeID = listOut.LastOrDefault().EmployeeID
+            If listOut.LastOrDefault().TimeOut < shift4HoursBefore Then
+                itemListExcess.LogDate = CDate(listOut.FirstOrDefault().DateOut).AddDays(-1).Date.Add(TimeSpan.Parse("00:00:00"))
+            Else
+                itemListExcess.LogDate = CDate(listOut.FirstOrDefault().DateOut).Date.Add(TimeSpan.Parse("00:00:00"))
             End If
-            list.Add(itemlistexcess)
-            listin.Clear()
-            listout.Clear()
+
+            list.Add(itemListExcess)
+            listIn.Clear()
+            listOut.Clear()
+
+        End If
+
+        If listOut.Count <> 0 And listIn.Count <> 0 Then
+            itemListExcess.DateOut = listOut.LastOrDefault().DateOut
+            itemListExcess.TimeOut = listOut.LastOrDefault().TimeOut
+            itemListExcess.DateIn = listIn.FirstOrDefault().DateIn
+            itemListExcess.TimeIn = listIn.FirstOrDefault().TimeIn
+            itemListExcess.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+            If listIn.FirstOrDefault().EmployeeID = listOut.LastOrDefault().EmployeeID Then
+                itemListExcess.EmployeeID = listIn.FirstOrDefault().EmployeeID
+            End If
+            list.Add(itemListExcess)
+            listIn.Clear()
+            listOut.Clear()
 
         End If
         ' END IF END OF RANGE OF ITERATED ROW HAS LISTIN OR LISTOUT
@@ -223,8 +239,314 @@ Public Class TimeAttendanceAnalyzer
         Return list
     End Function
 
+    Public Function FourHoursRuleBasedOnEmployeeShift(logs As IList(Of TimeAttendanceLog), employeeShifts As IList(Of ShiftSchedule)) As IList(Of TimeLogInOut)
+
+        Dim list = New List(Of TimeLogInOut)
+        Dim listIn = New List(Of TimeLogsTempIn)
+        Dim listOut = New List(Of TimeLogsTempOut)
+
+        For Each employeeShift In employeeShifts
+
+            Dim shift4HoursBefore = employeeShift.Shift.TimeFrom.Add(TimeSpan.FromHours(-4))
+            Dim shift4HoursAfter = employeeShift.Shift.TimeFrom.Add(TimeSpan.FromHours(4))
+            Dim effectiveFrom = employeeShift.EffectiveFrom.Date
+
+            For Each log In logs
+                Dim itemIn = New TimeLogsTempIn
+                Dim itemOut = New TimeLogsTempOut
+                Dim itemList = New TimeLogInOut
+
+                Dim a = log
+                Dim item4HoursBefore As DateTime = Nothing
+                Dim item4HoursAfter As DateTime = Nothing
+                Dim outOnly As DateTime = Nothing
+                Dim endOfTheDay As DateTime = Nothing
+
+                ' CHECK LISTIN AND LISTOUT TO INITIALIZE
+
+                If (listIn.Count = 0 And listOut.Count <> 0) Then
+                    Dim dateOut As Date = CDate(listOut.LastOrDefault().DateOut)
+                    outOnly = dateOut.Date.Add(shift4HoursBefore)
+                    item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                    item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
+
+                ElseIf listIn.Count <> 0 Then
+                    Dim dateIn As Date = CDate(listIn.FirstOrDefault().DateIn)
+                    endOfTheDay = dateIn.AddDays(1).Date.Add(shift4HoursBefore)
+                    item4HoursBefore = dateIn.Date.Add(shift4HoursBefore)
+                    item4HoursAfter = dateIn.Date.Add(shift4HoursAfter)
+                Else
+                    item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                    item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
+
+                End If
+                ' END CHECK LISTIN AND LISTOUT TO INITIALIZE
+                If listIn.Count = 0 And listOut.Count = 0 Then
+
+                    If a.DateTime >= effectiveFrom.Date.Add(shift4HoursBefore) And a.DateTime <= effectiveFrom.Date.Add(shift4HoursAfter) Then
+                        'in
+                    ElseIf a.DateTime > effectiveFrom.Date.Add(shift4HoursAfter) And a.DateTime < effectiveFrom.AddDays(1).Date.Add(shift4HoursBefore) Then
+                        'out
+                    Else
+
+                        Continue For
+
+                    End If
+
+                ElseIf listIn.Count <> 0 And listOut.Count = 0 Then
+                    If a.DateTime < endOfTheDay Then
+                        'in
+                    Else
+
+                        Continue For
+
+                    End If
+
+                ElseIf listIn.Count = 0 And listOut.Count <> 0 Then
+                    If a.DateTime >= effectiveFrom.Date.Add(shift4HoursBefore) And a.DateTime <= effectiveFrom.Date.Add(shift4HoursAfter) Then
+                        'in
+                    ElseIf effectiveFrom.AddDays(1).Date.Add(shift4HoursBefore) >= a.DateTime Then
+                        'out
+                    Else
+
+                        Continue For
+
+                    End If
+                Else
+                    If a.DateTime >= effectiveFrom.Date.Add(shift4HoursBefore) And a.DateTime <= effectiveFrom.Date.Add(shift4HoursAfter) Then
+                        'in
+                    ElseIf effectiveFrom.AddDays(1).Date.Add(shift4HoursBefore) > a.DateTime Then
+                        'out
+                    ElseIf effectiveFrom.AddDays(1).Date.Add(shift4HoursBefore) > a.DateTime Then
+                        'out
+                    Else
+
+                        Continue For
+
+                    End If
+
+                End If
+
+                ' CHECK EMPLOYEE NUMBER IF NOT THE SAME TO STORE TO LIST
+                If listIn.Count <> 0 And listOut.Count <> 0 Then
+                    If a.EmployeeNo <> listOut.LastOrDefault().EmployeeID Then
+                        itemList.DateIn = listIn.FirstOrDefault().DateIn
+                        itemList.DateOut = listOut.LastOrDefault().DateOut
+                        itemList.TimeIn = listIn.FirstOrDefault().TimeIn
+                        itemList.TimeOut = listOut.LastOrDefault().TimeOut
+                        If listIn.FirstOrDefault().EmployeeID = listOut.LastOrDefault().EmployeeID Then
+                            itemList.EmployeeID = listIn.FirstOrDefault().EmployeeID
+                        End If
+                        itemList.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+                        list.Add(itemList)
+
+                        listIn.Clear()
+                        listOut.Clear()
+
+                        item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                        item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
+                    End If
+                ElseIf listIn.Count <> 0 And listOut.Count = 0 Then
+                    If a.EmployeeNo <> listIn.FirstOrDefault().EmployeeID Then
+                        itemList.DateIn = listIn.FirstOrDefault().DateIn
+                        itemList.DateOut = Nothing
+                        itemList.TimeIn = listIn.FirstOrDefault().TimeIn
+                        itemList.TimeOut = Nothing
+                        itemList.EmployeeID = listIn.FirstOrDefault().EmployeeID
+
+                        itemList.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+
+                        list.Add(itemList)
+
+                        listIn.Clear()
+                        listOut.Clear()
+                        '//if clear initialize
+
+                        item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                        item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
+                    End If
+                ElseIf listIn.Count = 0 And listOut.Count <> 0 Then
+                    If a.EmployeeNo <> listOut.LastOrDefault().EmployeeID Then
+                        itemList.DateIn = Nothing
+                        itemList.DateOut = listOut.LastOrDefault().DateOut
+                        itemList.TimeIn = Nothing
+                        itemList.TimeOut = listOut.LastOrDefault().TimeOut
+                        itemList.EmployeeID = listOut.LastOrDefault().EmployeeID
+
+                        If listOut.LastOrDefault().TimeOut <= shift4HoursBefore Then
+                            itemList.LogDate = CDate(listOut.FirstOrDefault().DateOut).AddDays(-1).Date.Add(TimeSpan.Parse("00:00:00"))
+                        Else
+                            itemList.LogDate = CDate(listOut.FirstOrDefault().DateOut).Date.Add(TimeSpan.Parse("00:00:00"))
+                        End If
+
+                        list.Add(itemList)
+
+                        listIn.Clear()
+                        listOut.Clear()
+
+                        '//if clear initialize
+                        item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                        item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
+                    End If
+                Else
+
+                End If
+                ' END CHECK EMPLOYEE NUMBER IF NOT THE SAME TO STORE TO LIST
+
+                '  CHECK LISTIN AND LISTOUT AND CURRENT DATA ITERATED TO BE COMPARE AT END OF THE DAY TO STORE LIST
+
+                If listIn.Count <> 0 And listOut.Count <> 0 And endOfTheDay <= a.DateTime Then
+                    itemList.DateIn = listIn.FirstOrDefault().DateIn
+                    itemList.DateOut = listOut.LastOrDefault().DateOut
+                    itemList.TimeIn = listIn.FirstOrDefault().TimeIn
+                    itemList.TimeOut = listOut.LastOrDefault().TimeOut
+
+                    If listIn.FirstOrDefault().EmployeeID = listOut.LastOrDefault().EmployeeID Then
+                        itemList.EmployeeID = listIn.FirstOrDefault().EmployeeID
+                    End If
+                    itemList.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+                    list.Add(itemList)
+
+                    listIn.Clear()
+                    listOut.Clear()
+                    '//if clear initialize
+
+                    item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                    item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
+
+                ElseIf listIn.Count <> 0 And listOut.Count = 0 And endOfTheDay <= a.DateTime Then
+                    itemList.DateIn = listIn.FirstOrDefault().DateIn
+                    itemList.DateOut = Nothing
+                    itemList.TimeIn = listIn.FirstOrDefault().TimeIn
+                    itemList.TimeOut = Nothing
+                    itemList.EmployeeID = listIn.FirstOrDefault().EmployeeID
+                    itemList.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+                    list.Add(itemList)
+
+                    listIn.Clear()
+                    listOut.Clear()
+                    '//if clear initialize
+
+                    item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                    item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
+
+                ElseIf listIn.Count = 0 And listOut.Count <> 0 And outOnly <= a.DateTime Then
+                    itemList.DateIn = Nothing
+                    itemList.DateOut = listOut.LastOrDefault().DateOut
+                    itemList.TimeIn = Nothing
+                    itemList.TimeOut = listOut.LastOrDefault().TimeOut
+                    itemList.EmployeeID = listOut.LastOrDefault().EmployeeID
+                    If listOut.LastOrDefault().TimeOut < shift4HoursBefore Then
+                        itemList.LogDate = CDate(listOut.FirstOrDefault().DateOut).AddDays(-1).Date.Add(TimeSpan.Parse("00:00:00"))
+                    Else
+                        itemList.LogDate = CDate(listOut.FirstOrDefault().DateOut).Date.Add(TimeSpan.Parse("00:00:00"))
+                    End If
+
+                    list.Add(itemList)
+
+                    listIn.Clear()
+                    listOut.Clear()
+                    '//if clear initialize
+
+                    item4HoursBefore = a.DateTime.Date.Add(shift4HoursBefore)
+                    item4HoursAfter = a.DateTime.Date.Add(shift4HoursAfter)
+                Else
+
+                End If
+                'END CHECK LISTIN AND LISTOUT AND CURRENT DATA ITERATED TO BE COMPARE AT END OF THE DAY TO STORE LIST
+
+                'STORE IN AND sTORE OUT
+                If a.DateTime >= item4HoursBefore And a.DateTime <= item4HoursAfter Then
+                    itemIn.TimeIn = a.DateTime.TimeOfDay
+                    itemIn.DateIn = a.DateTime
+                    itemIn.EmployeeID = a.EmployeeNo
+                    listIn.Add(itemIn)
+                Else
+                    itemOut.TimeOut = a.DateTime.TimeOfDay
+                    itemOut.DateOut = a.DateTime
+                    itemOut.EmployeeID = a.EmployeeNo
+                    listOut.Add(itemOut)
+                End If
+
+            Next
+            ' IF END OF RANGE OF ITERATED ROW HAS LISTIN OR LISTOUT
+            Dim itemListExcess = New TimeLogInOut
+
+            If listIn.Count <> 0 And listOut.Count = 0 Then
+                If effectiveFrom.Date.Add(shift4HoursAfter) >= listIn.FirstOrDefault().DateIn And
+                    effectiveFrom.Date.Add(shift4HoursBefore) <= listIn.FirstOrDefault().DateIn Then
+
+                    itemListExcess.DateIn = listIn.FirstOrDefault().DateIn
+                    itemListExcess.TimeIn = listIn.FirstOrDefault().TimeIn
+                    itemListExcess.DateOut = Nothing
+                    itemListExcess.TimeOut = Nothing
+                    itemListExcess.EmployeeID = listIn.FirstOrDefault().EmployeeID
+                    itemListExcess.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+                    list.Add(itemListExcess)
+                    listIn.Clear()
+                    listOut.Clear()
+                Else
+                    listIn.Clear()
+                    listOut.Clear()
+                End If
 
 
 
+            End If
+
+            If listOut.Count <> 0 And listIn.Count = 0 Then
+                If effectiveFrom.AddDays(1).Date.Add(shift4HoursBefore) >= listOut.LastOrDefault().DateOut Then
+                    itemListExcess.DateOut = listOut.LastOrDefault().DateOut
+                    itemListExcess.TimeOut = listOut.LastOrDefault().TimeOut
+                    itemListExcess.DateIn = Nothing
+                    itemListExcess.TimeIn = Nothing
+                    itemListExcess.EmployeeID = listOut.LastOrDefault().EmployeeID
+                    If listOut.LastOrDefault().TimeOut < shift4HoursBefore Then
+                        itemListExcess.LogDate = CDate(listOut.FirstOrDefault().DateOut).AddDays(-1).Date.Add(TimeSpan.Parse("00:00:00"))
+                    Else
+                        itemListExcess.LogDate = CDate(listOut.FirstOrDefault().DateOut).Date.Add(TimeSpan.Parse("00:00:00"))
+                    End If
+
+                    list.Add(itemListExcess)
+                    listIn.Clear()
+                    listOut.Clear()
+                Else
+                    listIn.Clear()
+                    listOut.Clear()
+                End If
+
+
+            End If
+
+            If listOut.Count <> 0 And listIn.Count <> 0 Then
+
+                If effectiveFrom.Date.Add(shift4HoursAfter) >= listIn.FirstOrDefault().DateIn And
+                    effectiveFrom.Date.Add(shift4HoursBefore) <= listIn.FirstOrDefault().DateIn And
+                    effectiveFrom.AddDays(1).Date.Add(shift4HoursBefore) >= listOut.LastOrDefault().DateOut Then
+                    itemListExcess.DateOut = listOut.LastOrDefault().DateOut
+                    itemListExcess.TimeOut = listOut.LastOrDefault().TimeOut
+                    itemListExcess.DateIn = listIn.FirstOrDefault().DateIn
+                    itemListExcess.TimeIn = listIn.FirstOrDefault().TimeIn
+                    itemListExcess.LogDate = CDate(listIn.FirstOrDefault().DateIn).Date.Add(TimeSpan.Parse("00:00:00"))
+                    If listIn.FirstOrDefault().EmployeeID = listOut.LastOrDefault().EmployeeID Then
+                        itemListExcess.EmployeeID = listIn.FirstOrDefault().EmployeeID
+                    End If
+                    list.Add(itemListExcess)
+                    listIn.Clear()
+                    listOut.Clear()
+                Else
+                    listIn.Clear()
+                    listOut.Clear()
+
+                End If
+
+
+            End If
+            ' END IF END OF RANGE OF ITERATED ROW HAS LISTIN OR LISTOUT
+
+        Next
+
+        Return list
+    End Function
 
 End Class
