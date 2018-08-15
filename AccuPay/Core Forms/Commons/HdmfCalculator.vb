@@ -15,7 +15,9 @@ Namespace Global.AccuPay.Payroll
 
         Private Const PagibigEmployerAmount As Decimal = 100
 
-        Public Sub Calculate(deductionSchedule As String, salary As Salary, paystub As Paystub, _employee As DataRow, employee2 As Employee, payperiod As PayPeriod)
+        Public Sub Calculate(salary As Salary, paystub As Paystub, _employee As DataRow, employee2 As Employee, payperiod As PayPeriod)
+            Dim deductionSchedule = _employee("HDMFDeductSched").ToString
+
             Dim employeeHdmfPerMonth = salary.HDMFAmount
             Dim employerHdmfPerMonth = If(employeeHdmfPerMonth = 0, 0, PagibigEmployerAmount)
             Dim payPeriodsPerMonth = CDec(ValNoComma(_employee("PAYFREQUENCY_DIVISOR")))

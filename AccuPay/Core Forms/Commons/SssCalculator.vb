@@ -17,7 +17,9 @@ Public Class SssCalculator
         _socialSecurityBrackets = socialSecurityBrackets
     End Sub
 
-    Public Sub Calculate(deductionSchedule As String, settings As ListOfValueCollection, paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As DataRow, employee2 As Employee, payperiod As PayPeriod)
+    Public Sub Calculate(settings As ListOfValueCollection, paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As DataRow, employee2 As Employee, payperiod As PayPeriod)
+        Dim deductionSchedule = employee("SSSDeductSched").ToString
+
         Dim isWeekly As Boolean = Convert.ToBoolean(Convert.ToInt16(employee("IsWeeklyPaid")))
 
         Dim sssCalculation = settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
