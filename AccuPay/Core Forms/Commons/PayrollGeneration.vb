@@ -317,43 +317,7 @@ Public Class PayrollGeneration
 
                 _paystub.AllowanceItems = _allowanceItems
 
-                Dim vacationLeaveBalance = context.PaystubItems.
-                    Where(Function(p) p.Product.PartNo = "Vacation leave").
-                    Where(Function(p) CBool(p.Paystub.RowID = _paystub.RowID)).
-                    FirstOrDefault()
-
-                If vacationLeaveBalance Is Nothing Then
-                    Dim vacationLeaveUsed = _timeEntries.Sum(Function(t) t.VacationLeaveHours)
-                    Dim newBalance = _employee2.LeaveBalance - vacationLeaveUsed
-
-                    vacationLeaveBalance = New PaystubItem() With {
-                        .OrganizationID = z_OrganizationID,
-                        .Product = vacationLeaveProduct,
-                        .PayAmount = newBalance,
-                        .Paystub = _paystub
-                    }
-
-                    _paystub.PaystubItems.Add(vacationLeaveBalance)
-                End If
-
-                Dim sickLeaveBalance = context.PaystubItems.
-                    Where(Function(p) p.Product.PartNo = "Sick leave").
-                    Where(Function(p) CBool(p.Paystub.RowID = _paystub.RowID)).
-                    FirstOrDefault()
-
-                If sickLeaveBalance Is Nothing Then
-                    Dim sickLeaveUsed = _timeEntries.Sum(Function(t) t.SickLeaveHours)
-                    Dim newBalance = _employee2.SickLeaveBalance - sickLeaveUsed
-
-                    sickLeaveBalance = New PaystubItem() With {
-                        .OrganizationID = z_OrganizationID,
-                        .Product = sickLeaveProduct,
-                        .PayAmount = newBalance,
-                        .Paystub = _paystub
-                    }
-
-                    _paystub.PaystubItems.Add(sickLeaveBalance)
-                End If
+                UpdatePaystubItems(context)
 
                 For Each newLoanTransaction In newLoanTransactions
                     context.LoanTransactions.Add(newLoanTransaction)
@@ -711,6 +675,48 @@ Public Class PayrollGeneration
 
         Return newLoanTransactions
     End Function
+
+    Private Sub UpdatePaystubItems(context As PayrollContext)
+        Dim vacationLeaveProduct = _products.Where(Function(p) p.PartNo = "Vacation leave").FirstOrDefault()
+        Dim sickLeaveProduct = _products.Where(Function(p) p.PartNo = "Sick leave").FirstOrDefault()
+
+        context.Entry(_paystub).Collection(Function(p) p.PaystubItems).Load()
+        context.Set(Of PaystubItem).RemoveRange(_paystub.PaystubItems)
+
+        Dim vacationLeaveBalance = context.PaystubItems.
+            Where(Function(p) p.Product.PartNo = "Vacation leave").
+            Where(Function(p) CBool(p.Paystub.RowID = _paystub.RowID)).
+            FirstOrDefault()
+
+        Dim vacationLeaveUsed = _timeEntries.Sum(Function(t) t.VacationLeaveHours)
+        Dim newBalance = _employee2.LeaveBalance - vacationLeaveUsed
+
+        vacationLeaveBalance = New PaystubItem() With {
+            .OrganizationID = z_OrganizationID,
+            .ProductID = vacationLeaveProduct.RowID,
+            .PayAmount = newBalance,
+            .Paystub = _paystub
+        }
+
+        _paystub.PaystubItems.Add(vacationLeaveBalance)
+
+        Dim sickLeaveBalance = context.PaystubItems.
+            Where(Function(p) p.Product.PartNo = "Sick leave").
+            Where(Function(p) CBool(p.Paystub.RowID = _paystub.RowID)).
+            FirstOrDefault()
+
+        Dim sickLeaveUsed = _timeEntries.Sum(Function(t) t.SickLeaveHours)
+        Dim newBalance2 = _employee2.SickLeaveBalance - sickLeaveUsed
+
+        sickLeaveBalance = New PaystubItem() With {
+            .OrganizationID = z_OrganizationID,
+            .ProductID = sickLeaveProduct.RowID,
+            .PayAmount = newBalance2,
+            .Paystub = _paystub
+        }
+
+        _paystub.PaystubItems.Add(sickLeaveBalance)
+    End Sub
 
     Private Sub ComputeThirteenthMonthPay()
         If _paystub.ThirteenthMonthPay Is Nothing Then
