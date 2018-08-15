@@ -3,6 +3,9 @@
 Imports AccuPay
 Imports AccuPay.Entity
 
+
+
+
 <TestFixture>
 Public Class TimeImporter
 
@@ -13,6 +16,15 @@ Public Class TimeImporter
 
         Dim logs = importer.Import(filename)
         logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
+        Dim employeeLists = logs.GroupBy(Function(z) z.EmployeeNo).ToList
+        Dim employeeSpecificCounts = New List(Of TimeEmployeeNo)
+        For Each employeeList In employeeLists
+            Dim employeeSpecific = New TimeEmployeeNo
+            employeeSpecific.EmployeeID = employeeList.Key
+            employeeSpecificCounts.Add(employeeSpecific)
+        Next
+
+
         Dim record = logs.Count
 
         Dim employeeShifts = New List(Of ShiftSchedule)
@@ -84,8 +96,8 @@ Public Class TimeImporter
 
         Dim analyzer = New TimeAttendanceAnalyzer()
         'Dim results = analyzer.FourHoursRule(logs, employeeShifts)
-        Dim results = analyzer.FourHoursRuleBasedOnEmployeeShift(logs, employeeShifts)
-
+        'Dim results = analyzer.FourHoursRuleBasedOnEmployeeShift(logs, employeeShifts)
+        Dim results = analyzer.FourHoursRuleBasedOnEmployeeShiftFinalTest(logs, employeeShifts, employeeSpecificCounts)
         AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
         AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
         AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
@@ -113,3 +125,4 @@ Public Class TimeImporter
     End Sub
 
 End Class
+
