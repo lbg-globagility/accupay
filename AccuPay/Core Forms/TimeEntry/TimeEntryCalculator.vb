@@ -58,14 +58,24 @@ Public Class TimeEntryCalculator
         Return undertimePeriod.TotalHours
     End Function
 
-    Public Function ComputeNightDiffHours(workPeriod As TimePeriod, nightDiffPeriod As TimePeriod) As Decimal
+    Public Function ComputeNightDiffHours(workPeriod As TimePeriod, currentShift As CurrentShift, nightDiffPeriod As TimePeriod) As Decimal
         If Not workPeriod.Intersects(nightDiffPeriod) Then
             Return 0D
         End If
 
         Dim nightWorked = workPeriod.Overlap(nightDiffPeriod)
 
-        Return nightWorked.TotalHours
+        Dim nightDiffHours = 0D
+        If currentShift.HasBreaktime Then
+            Dim breakPeriod = currentShift.BreakPeriod
+            Dim nightWorkedPeriods = nightWorked.Difference(breakPeriod)
+
+            nightDiffHours = nightWorkedPeriods.Sum(Function(n) n.TotalHours)
+        Else
+            nightDiffHours = nightWorked.TotalHours
+        End If
+
+        Return nightDiffHours
     End Function
 
     Public Function ComputeOvertimeHours(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift) As Decimal
@@ -95,6 +105,16 @@ Public Class TimeEntryCalculator
         End If
 
         Return If(overtimeWorked?.TotalHours, 0)
+    End Function
+
+    Public Function ComputeLeaveHours(leavePeriod As TimePeriod, currentShift As CurrentShift) As Decimal
+        If currentShift.HasBreaktime() Then
+            Dim breakPeriod = currentShift.BreakPeriod
+
+            Return leavePeriod.Difference(breakPeriod).Sum(Function(l) l.TotalHours)
+        End If
+
+        Return leavePeriod.TotalHours
     End Function
 
 End Class
