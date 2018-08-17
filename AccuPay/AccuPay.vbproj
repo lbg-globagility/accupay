@@ -442,6 +442,7 @@
     <Compile Include="Core Forms\PayStub\Entity\Leave.vb" />
     <Compile Include="Core Forms\PayStub\Entity\LeaveLedger.vb" />
     <Compile Include="Core Forms\PayStub\Entity\LeaveTransaction.vb" />
+    <Compile Include="Core Forms\PayStub\Entity\LeaveType.vb" />
     <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
     <Compile Include="Core Forms\PayStub\Entity\Organization.vb" />
     <Compile Include="Core Forms\PayStub\Entity\PayFrequency.vb" />

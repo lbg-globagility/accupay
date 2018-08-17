@@ -64,7 +64,7 @@ Public Class DayCalculator
 
             timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift)
 
-            Dim coveredPeriod As TimePeriod = dutyPeriod
+            Dim coveredPeriod = dutyPeriod
 
             If leaves.Any() Then
                 Dim leave = leaves.FirstOrDefault()
@@ -146,6 +146,60 @@ Public Class DayCalculator
             timeEntry.AbsentHours = 0
         Else
             timeEntry.AbsentHours = employeeShift.Shift.WorkHours
+        End If
+
+        Dim dailyRate = 0D
+        If employee.IsDaily Then
+            dailyRate = salary.BasicSalary
+        ElseIf employee.IsMonthly Or employee.IsFixed Then
+            dailyRate = salary.BasicSalary / (employee.WorkDaysPerYear / 12)
+        End If
+
+        Dim hourlyRate = dailyRate / 8
+
+        If currentDate < employee.StartDate Then
+            timeEntry.RegularHours = 0
+            timeEntry.OvertimeHours = 0
+            timeEntry.NightDiffHours = 0
+            timeEntry.NightDiffOTHours = 0
+            timeEntry.RegularHolidayHours = 0
+            timeEntry.RegularHolidayOTHours = 0
+            timeEntry.SpecialHolidayHours = 0
+            timeEntry.SpecialHolidayOTHours = 0
+            timeEntry.RestDayHours = 0
+            timeEntry.RestDayOTHours = 0
+            timeEntry.VacationLeaveHours = 0
+            timeEntry.SickLeaveHours = 0
+            timeEntry.MaternityLeaveHours = 0
+            timeEntry.OtherLeaveHours = 0
+            timeEntry.UndertimeHours = 0
+            timeEntry.LateHours = 0
+            timeEntry.AbsentHours = 0
+        ElseIf Not payrate.IsHoliday Then
+
+            If employeeShift.IsRestDay Then
+
+                Dim isRestDayInclusive = _settings.GetBoolean("Payroll Policy.restday.inclusiveofbasicpay")
+
+                If isRestDayInclusive And employee.IsMonthly Or employee.IsFixed Then
+                    timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * (payrate.RestDayRate - 1)
+                Else
+                    timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * payrate.RestDayRate
+                End If
+
+                timeEntry.RestDayOTPay = timeEntry.RestDayOTHours * hourlyRate * payrate.RestDayOvertimeRate
+            Else
+                timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate
+                timeEntry.OvertimeHours = timeEntry.OvertimeHours * hourlyRate * payrate.OvertimeRate
+                timeEntry.NightDiffHours = timeEntry.NightDiffHours * hourlyRate * payrate.NightDifferentialRate
+                timeEntry.NightDiffOTHours = timeEntry.NightDiffOTHours * hourlyRate * payrate.NightDifferentialOTRate
+
+                timeEntry.LateDeduction = timeEntry.LateHours * hourlyRate
+                timeEntry.UndertimeDeduction = timeEntry.UndertimeHours * hourlyRate
+            End If
+
+        ElseIf payrate.IsHoliday Then
+
         End If
 
         Return timeEntry
