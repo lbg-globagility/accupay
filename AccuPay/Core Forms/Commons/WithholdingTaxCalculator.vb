@@ -15,7 +15,34 @@ Namespace Global.AccuPay.Payroll
             _withholdingTaxBrackets = withholdingTaxBrackets
         End Sub
 
-        Public Sub Calculate(deductionSchedule As String, employee As DataRow, paystub As Paystub, employee2 As Employee, payperiod As PayPeriod)
+        Public Sub Calculate(settings As ListOfValueCollection, employee As DataRow, paystub As Paystub, previousPaystub As Paystub, employee2 As Employee, payperiod As PayPeriod)
+            Dim currentTaxableIncome = 0D
+
+            If employee2.EmployeeType = SalaryType.Fixed Then
+                currentTaxableIncome = paystub.BasicPay
+            ElseIf employee2.EmployeeType = SalaryType.Monthly Then
+                Dim taxablePolicy = If(settings.GetString("Payroll Policy.paystub.taxableincome"), "Basic Pay")
+
+                If taxablePolicy = "Gross Income" Then
+                    currentTaxableIncome = paystub.TotalEarnings
+                Else
+                    currentTaxableIncome = paystub.BasicPay
+                End If
+            End If
+
+            Dim governmentContributions = paystub.SssEmployeeShare + paystub.PhilHealthEmployeeShare + paystub.HdmfEmployeeShare
+            currentTaxableIncome = currentTaxableIncome - governmentContributions
+
+            Dim deductionSchedule = employee("SSSDeductSched").ToString
+
+            If IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) Or IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
+                paystub.TaxableIncome = currentTaxableIncome + If(previousPaystub?.TaxableIncome, 0)
+            ElseIf IsWithholdingTaxPaidPerPayPeriod(deductionSchedule) Then
+                paystub.TaxableIncome = currentTaxableIncome
+            Else
+                paystub.TaxableIncome = currentTaxableIncome
+            End If
+
             Dim payFrequencyID As Integer
 
             If IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) Or IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
@@ -139,6 +166,12 @@ Namespace Global.AccuPay.Payroll
             Public Const FirstHalf As String = "First half"
             Public Const EndOfTheMonth As String = "End of the month"
             Public Const PerPayPeriod As String = "Per pay period"
+        End Class
+
+        Private Class SalaryType
+            Public Const Fixed As String = "Fixed"
+            Public Const Monthly As String = "Monthly"
+            Public Const Daily As String = "Daily"
         End Class
 
     End Class

@@ -402,21 +402,11 @@ Public Class PayrollResources
     Private Async Function LoadAllowances() As Task
         Try
             Using context = New PayrollContext()
-                ' Retrieve all allowances whose begin and end date spans the cutoff dates. Or in the case of
-                ' one time-allowances, allowances whose start date is between the cutoff dates.
-                Dim query = From a In context.Allowances.Include(Function(a) a.Product)
-                            Where (
-                                (
-                                    a.EffectiveStartDate <= _payDateTo And
-                                    CBool(_payDateFrom <= a.EffectiveEndDate)
-                                ) Or
-                                (
-                                    _payDateFrom <= a.EffectiveStartDate And
-                                    a.EffectiveStartDate <= _payDateTo And
-                                    a.EffectiveEndDate Is Nothing
-                                )
-                            ) And
-                            CBool(a.OrganizationID = z_OrganizationID)
+                ' Retrieve all allowances whose begin and end date spans the cutoff dates.
+                Dim query = context.Allowances.Include(Function(a) a.Product).
+                    Where(Function(a) a.EffectiveStartDate <= _payDateTo).
+                    Where(Function(a) _payDateFrom <= a.EffectiveEndDate).
+                    Where(Function(a) Nullable.Equals(a.OrganizationID, z_OrganizationID))
 
                 _allowances = Await query.ToListAsync()
             End Using

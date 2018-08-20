@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AccuPay"
-#define MyAppVersion "1.9.2"
+#define MyAppVersion "1.9.4"
 #define MyAppPublisher "Globagility, Inc."
 #define MyAppURL "http://www.globagilityinc.com/"
 #define MyAppExeName "AccuPay.exe"

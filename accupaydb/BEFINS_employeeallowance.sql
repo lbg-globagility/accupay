@@ -19,6 +19,11 @@ IF NEW.EffectiveEndDate < win_form_datetimepicker_mindate THEN
 	SET NEW.EffectiveEndDate = win_form_datetimepicker_mindate;
 END IF;
 
+/* If allowance is one time, ensure end date is the same as start date */
+IF NEW.AllowanceFrequency = 'One time' THEN
+	SET NEW.EffectiveStartDate = NEW.EffectiveEndDate;
+END IF;
+
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;

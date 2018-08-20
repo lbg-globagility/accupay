@@ -154,7 +154,6 @@ Namespace Global.AccuPay.Entity
         <NotMapped>
         Public Overridable Property ActualAdjustments As ICollection(Of ActualAdjustment)
 
-        <NotMapped>
         Public Overridable Property PaystubItems As ICollection(Of PaystubItem)
 
         Public Overridable Property AllowanceItems As IList(Of AllowanceItem)

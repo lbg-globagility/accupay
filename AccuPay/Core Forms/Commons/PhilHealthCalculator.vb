@@ -19,7 +19,9 @@ Namespace Global.AccuPay.Payroll
             _philHealthBrackets = philHealthBrackets
         End Sub
 
-        Public Sub Calculate(deductionSchedule As String, settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As DataRow, employee2 As Employee, payperiod As PayPeriod)
+        Public Sub Calculate(settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As DataRow, employee2 As Employee, payperiod As PayPeriod)
+            Dim deductionSchedule = employee("PhHealthDeductSched").ToString
+
             Dim philHealthCalculation = settings.GetEnum(
                 "PhilHealth.CalculationBasis",
                 PhilHealthCalculationBasis.BasicSalary)
