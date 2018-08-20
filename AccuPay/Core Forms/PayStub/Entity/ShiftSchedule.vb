@@ -36,6 +36,12 @@ Namespace Global.AccuPay.Entity
         <Column("RestDay")>
         Public Property IsRestDay As Boolean
 
+        Public ReadOnly Property IsWorkingDay As Boolean
+            Get
+                Return Not IsRestDay
+            End Get
+        End Property
+
         <ForeignKey("ShiftID")>
         Public Overridable Property Shift As Shift
 

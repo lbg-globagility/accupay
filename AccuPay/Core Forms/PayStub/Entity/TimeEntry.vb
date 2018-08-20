@@ -108,6 +108,9 @@ Namespace Global.AccuPay.Entity
         <Column("BasicDayPay")>
         Public Property BasicDayPay As Decimal
 
+        <Column("TotalHoursWorked")>
+        Public Property TotalHours As Decimal
+
         <Column("TotalDayPay")>
         Public Property TotalDayPay As Decimal
 

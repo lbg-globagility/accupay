@@ -46,6 +46,10 @@ Namespace Global.AccuPay.Entity
 
         Public Property RestDayOvertimeRate As Decimal
 
+        Public Property RestDayNDRate As Decimal
+
+        Public Property RestDayNDOTRate As Decimal
+
         Public ReadOnly Property IsRegularDay As Boolean
             Get
                 Return PayType = "Regular Day"

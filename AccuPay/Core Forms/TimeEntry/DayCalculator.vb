@@ -15,7 +15,12 @@ Public Class DayCalculator
         _settings = settings
     End Sub
 
-    Public Function Compute(employee As Employee, currentDate As DateTime, organization As Organization, salary As Salary) As TimeEntry
+    Public Function Compute(employee As Employee,
+                            currentDate As DateTime,
+                            organization As Organization,
+                            salary As Salary,
+                            currentTimeEntries As IReadOnlyCollection(Of TimeEntry),
+                            oldTimeEntries As IList(Of TimeEntry)) As TimeEntry
         Dim timeEntry = New TimeEntry() With {
             .EmployeeID = employee.RowID,
             .OrganizationID = organization.RowID,
@@ -23,7 +28,7 @@ Public Class DayCalculator
         }
 
         Dim timeLog As TimeLog = Nothing
-        Dim employeeShift As ShiftSchedule = Nothing
+        Dim shiftSchedule As ShiftSchedule = Nothing
         Dim overtimes As IList(Of Overtime) = Nothing
         Dim leaves As IList(Of Leave) = Nothing
 
@@ -31,7 +36,7 @@ Public Class DayCalculator
             timeLog = context.TimeLogs.
                 SingleOrDefault(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID) And t.LogDate = currentDate)
 
-            employeeShift = context.ShiftSchedules.
+            shiftSchedule = context.ShiftSchedules.
                 Include(Function(s) s.Shift).
                 Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
                 FirstOrDefault(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo)
@@ -43,21 +48,23 @@ Public Class DayCalculator
 
             leaves = context.Leaves.
                 Where(Function(l) Nullable.Equals(l.EmployeeID, employee.RowID)).
-                Where(Function(l) l.StartDate <= currentDate).
+                Where(Function(l) l.StartDate = currentDate).
                 Where(Function(l) l.Status = "Approved").
                 ToList()
         End Using
 
-        Dim hasShift = employeeShift IsNot Nothing
+        Dim hasShift = shiftSchedule IsNot Nothing
 
         Dim previousDay = currentDate.AddDays(-1)
         Dim calculator = New TimeEntryCalculator()
+
+        timeEntry.ShiftSchedule = shiftSchedule
 
         Dim hasTimeLog = timeLog IsNot Nothing
         Dim payrate = _payrateCalendar.Find(currentDate)
         If hasTimeLog And hasShift Then
             Dim logPeriod = TimePeriod.FromTime(timeLog.TimeIn.Value, timeLog.TimeOut.Value, currentDate)
-            Dim currentShift = New CurrentShift(employeeShift.Shift, currentDate)
+            Dim currentShift = New CurrentShift(shiftSchedule.Shift, currentDate)
 
             Dim shiftPeriod = currentShift.ShiftPeriod
             Dim dutyPeriod = shiftPeriod.Overlap(logPeriod)
@@ -93,7 +100,7 @@ Public Class DayCalculator
             timeEntry.OvertimeHours = overtimes.Sum(
                 Function(o) calculator.ComputeOvertimeHours(logPeriod, o, currentShift))
 
-            If employee.CalcNightDiff And employeeShift.IsNightShift Then
+            If employee.CalcNightDiff And shiftSchedule.IsNightShift Then
                 Dim nightDiffPeriod = GetNightDiffPeriod(organization, currentDate)
                 Dim dawnDiffPeriod = GetNightDiffPeriod(organization, previousDay)
 
@@ -120,7 +127,7 @@ Public Class DayCalculator
                 timeEntry.UndertimeHours = 0
             End If
 
-            If employeeShift.IsRestDay And employee.CalcRestDay Then
+            If shiftSchedule.IsRestDay And employee.CalcRestDay Then
                 timeEntry.RestDayHours = timeEntry.RegularHours
                 timeEntry.RegularHours = 0
 
@@ -132,20 +139,19 @@ Public Class DayCalculator
             End If
         End If
 
-        Dim hasWorkedLastWorkingDay = False
         Dim requiredToWorkLastWorkingDay = _settings.GetBoolean("Payroll Policy.HolidayLastWorkingDayOrAbsent", False)
         Dim allowanceAbsenceOnHoliday = _settings.GetBoolean("Payroll Policy.holiday.allowabsence", False)
         Dim isCalculatingRegularHoliday = payrate.IsRegularHoliday And employee.CalcHoliday
         Dim isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday And employee.CalcSpecialHoliday
 
         Dim isExemptDueToHoliday =
-            (payrate.IsHoliday And (Not requiredToWorkLastWorkingDay Or hasWorkedLastWorkingDay)) And
+            (payrate.IsHoliday And (Not requiredToWorkLastWorkingDay Or HasWorkedLastWorkingDay(currentDate, currentTimeEntries))) And
             (isCalculatingRegularHoliday Or isCalculatingSpecialHoliday Or Not allowanceAbsenceOnHoliday)
 
-        If (Not hasShift) Or (timeEntry.RegularHours > 0) Or isExemptDueToHoliday Or employeeShift.IsRestDay Or leaves.Any() Then
+        If (Not hasShift) Or (timeEntry.RegularHours > 0) Or isExemptDueToHoliday Or shiftSchedule?.IsRestDay Or leaves.Any() Then
             timeEntry.AbsentHours = 0
         Else
-            timeEntry.AbsentHours = employeeShift.Shift.WorkHours
+            timeEntry.AbsentHours = shiftSchedule.Shift.WorkHours
         End If
 
         Dim dailyRate = 0D
@@ -177,8 +183,14 @@ Public Class DayCalculator
             timeEntry.AbsentHours = 0
         ElseIf Not payrate.IsHoliday Then
 
-            If employeeShift.IsRestDay Then
-
+            If shiftSchedule?.IsWorkingDay Then
+                timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate
+                timeEntry.OvertimePay = timeEntry.OvertimeHours * hourlyRate * payrate.OvertimeRate
+                timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * payrate.NightDifferentialRate
+                timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * payrate.NightDifferentialOTRate
+                timeEntry.LateDeduction = timeEntry.LateHours * hourlyRate
+                timeEntry.UndertimeDeduction = timeEntry.UndertimeHours * hourlyRate
+            Else
                 Dim isRestDayInclusive = _settings.GetBoolean("Payroll Policy.restday.inclusiveofbasicpay")
 
                 If isRestDayInclusive And employee.IsMonthly Or employee.IsFixed Then
@@ -188,21 +200,136 @@ Public Class DayCalculator
                 End If
 
                 timeEntry.RestDayOTPay = timeEntry.RestDayOTHours * hourlyRate * payrate.RestDayOvertimeRate
-            Else
-                timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate
-                timeEntry.OvertimeHours = timeEntry.OvertimeHours * hourlyRate * payrate.OvertimeRate
-                timeEntry.NightDiffHours = timeEntry.NightDiffHours * hourlyRate * payrate.NightDifferentialRate
-                timeEntry.NightDiffOTHours = timeEntry.NightDiffOTHours * hourlyRate * payrate.NightDifferentialOTRate
-
-                timeEntry.LateDeduction = timeEntry.LateHours * hourlyRate
-                timeEntry.UndertimeDeduction = timeEntry.UndertimeHours * hourlyRate
+                timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * payrate.RestDayNDRate
+                timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * payrate.RestDayNDOTRate
             End If
+
+            timeEntry.TotalHours =
+                timeEntry.RegularHours +
+                timeEntry.NightDiffHours +
+                timeEntry.OvertimeHours +
+                timeEntry.RestDayHours +
+                timeEntry.RestDayOTHours
+
+            timeEntry.TotalDayPay =
+                timeEntry.RegularPay +
+                timeEntry.OvertimePay +
+                timeEntry.NightDiffPay +
+                timeEntry.NightDiffOTPay +
+                timeEntry.RestDayPay +
+                timeEntry.RestDayOTPay +
+                timeEntry.LeavePay
 
         ElseIf payrate.IsHoliday Then
 
+            Dim isHolidayPayInclusive = employee.IsMonthly Or employee.IsFixed
+            Dim holidayRate = 0D
+
+            If shiftSchedule?.IsWorkingDay Then
+                holidayRate = payrate.CommonRate
+
+                timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * payrate.NightDifferentialRate
+                timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * payrate.NightDifferentialOTRate
+                timeEntry.SpecialHolidayOTPay = timeEntry.SpecialHolidayOTHours * hourlyRate * payrate.OvertimeRate
+                timeEntry.RegularHolidayOTPay = timeEntry.RegularHolidayOTHours * hourlyRate * payrate.OvertimeRate
+            ElseIf shiftSchedule?.IsRestDay Then
+                holidayRate = payrate.RestDayRate
+
+                timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * payrate.RestDayNDRate
+                timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * payrate.RestDayNDOTRate
+                timeEntry.SpecialHolidayOTPay = timeEntry.SpecialHolidayOTHours * hourlyRate * payrate.RestDayOvertimeRate
+                timeEntry.RegularHolidayOTPay = timeEntry.RegularHolidayOTHours * hourlyRate * payrate.RestDayOvertimeRate
+            End If
+
+            timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate
+            timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * payrate.RestDayRate
+            timeEntry.RestDayOTPay = timeEntry.RestDayOTHours * hourlyRate * payrate.RestDayOvertimeRate
+
+            If employee.CalcSpecialHoliday And payrate.IsSpecialNonWorkingHoliday Then
+                holidayRate = If(isHolidayPayInclusive, holidayRate - 1, holidayRate)
+
+                timeEntry.SpecialHolidayPay = timeEntry.SpecialHolidayHours * hourlyRate * holidayRate
+                timeEntry.LeavePay = timeEntry.TotalLeaveHours * hourlyRate * holidayRate
+            ElseIf employee.CalcHoliday And payrate.IsRegularHoliday Then
+                timeEntry.RegularHolidayPay = timeEntry.RegularHolidayHours * hourlyRate * (holidayRate - 1)
+                timeEntry.LeavePay = timeEntry.TotalLeaveHours * hourlyRate
+
+                Dim holidayCalculationType = _settings.GetString("Payroll Policy.HolidayPay", "Daily")
+
+                Dim basicHolidayPay = 0D
+                If holidayCalculationType = "Hourly" Then
+                    basicHolidayPay = shiftSchedule.Shift.WorkHours * hourlyRate
+                ElseIf holidayCalculationType = "Daily" Then
+                    basicHolidayPay = dailyRate
+                End If
+
+                If Not isHolidayPayInclusive Then
+                    timeEntry.RegularHolidayPay = timeEntry.RegularHolidayPay + If(HasWorkedLastWorkingDay(currentDate, currentTimeEntries), basicHolidayPay, 0)
+                End If
+            End If
+
+            timeEntry.TotalHours =
+                timeEntry.RegularHours +
+                timeEntry.OvertimeHours +
+                timeEntry.RestDayHours +
+                timeEntry.RestDayOTHours +
+                timeEntry.SpecialHolidayHours +
+                timeEntry.SpecialHolidayOTHours +
+                timeEntry.RegularHolidayHours +
+                timeEntry.RegularHolidayOTHours
+
+            timeEntry.TotalDayPay =
+                timeEntry.RegularPay +
+                timeEntry.OvertimePay +
+                timeEntry.NightDiffPay +
+                timeEntry.NightDiffOTPay +
+                timeEntry.RestDayPay +
+                timeEntry.RestDayOTPay +
+                timeEntry.SpecialHolidayPay +
+                timeEntry.SpecialHolidayOTPay +
+                timeEntry.RegularHolidayPay +
+                timeEntry.RegularHolidayOTPay +
+                timeEntry.LeavePay
         End If
 
         Return timeEntry
+    End Function
+
+    Private Function HasWorkedLastWorkingDay(current As Date, currentTimeEntries As IReadOnlyCollection(Of TimeEntry)) As Boolean
+        Dim lastPotentialEntry = current.Date.AddDays(-3)
+
+        Dim lastTimeEntries = currentTimeEntries.
+            Where(Function(t) lastPotentialEntry <= t.Date And t.Date <= current.Date).
+            Reverse().
+            ToList()
+
+        For Each lastTimeEntry In lastTimeEntries
+            ' If employee has no shift set for the day, it's not a working day.
+            If lastTimeEntry?.ShiftSchedule?.Shift Is Nothing Then
+                Continue For
+            End If
+
+            If lastTimeEntry?.ShiftSchedule.IsRestDay Then
+                If lastTimeEntry.TotalDayPay > 0 Then
+                    Return True
+                End If
+
+                Continue For
+            End If
+
+            Dim payRate = _payrateCalendar.Find(lastTimeEntry.Date)
+            If payRate.IsHoliday Then
+                If lastTimeEntry.TotalDayPay > 0 Then
+                    Return True
+                End If
+
+                Continue For
+            End If
+
+            Return lastTimeEntry.RegularHours > 0 Or lastTimeEntry.TotalLeaveHours > 0
+        Next
+
+        Return False
     End Function
 
     Public Function GetLeavePeriod(leave As Leave, currentShift As CurrentShift) As TimePeriod

@@ -50,20 +50,28 @@ Public Class TimeEntryGenerator
     End Sub
 
     Private Function CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection) As IList(Of TimeEntry)
-        Dim dayCalculator = New DayCalculator(settings, payrateCalendar)
-
-        Dim timeEntries = New List(Of TimeEntry)
-
+        Dim oldTimeEntries As IList(Of TimeEntry) = Nothing
         Dim salary As Salary = Nothing
         Using context = New PayrollContext()
             salary = context.Salaries.
                 Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
                 Where(Function(s) s.EffectiveFrom <= _cutoffStart And _cutoffStart <= If(s.EffectiveTo, _cutoffStart)).
                 FirstOrDefault()
+
+            Dim previousCutoff = _cutoffStart.AddDays(-3)
+            oldTimeEntries = context.TimeEntries.
+                Include(Function(t) t.ShiftSchedule.Shift).
+                Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
+                Where(Function(t) previousCutoff <= t.Date And t.Date <= _cutoffEnd).
+                ToList()
         End Using
 
+        Dim dayCalculator = New DayCalculator(settings, payrateCalendar)
+        oldTimeEntries = If(oldTimeEntries, New List(Of TimeEntry))
+
+        Dim timeEntries = New List(Of TimeEntry)
         For Each day In Calendar.EachDay(_cutoffStart, _cutoffEnd)
-            Dim timeEntry = dayCalculator.Compute(employee, day, organization, salary)
+            Dim timeEntry = dayCalculator.Compute(employee, day, organization, salary, timeEntries.AsReadOnly(), oldTimeEntries)
             timeEntries.Add(timeEntry)
         Next
 
