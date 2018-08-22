@@ -25,8 +25,9 @@ IF etd_EmployeeNumber = '' THEN
     ,CONCAT(e.LastName,',',e.FirstName, IF(e.MiddleName='','',','),INITIALS(e.MiddleName,'. ','1')) 'Fullname'
     ,COALESCE((SELECT CONCAT(COALESCE(CONCAT(SUBSTRING_INDEX(TIME_FORMAT(shft.TimeFrom,'%r'),':',2),' ',SUBSTRING_INDEX(TIME_FORMAT(shft.TimeFrom,'%r'),' ',-1)),''),' to ',COALESCE(CONCAT(SUBSTRING_INDEX(TIME_FORMAT(shft.TimeTo,'%r'),':',2),' ',SUBSTRING_INDEX(TIME_FORMAT(shft.TimeTo,'%r'),' ',-1)),'')) FROM shift shft LEFT JOIN employeeshift esh ON esh.ShiftID=shft.RowID WHERE esh.EmployeeID=etentd.EmployeeID AND etentd.`Date` BETWEEN DATE(COALESCE(esh.EffectiveFrom,DATE_FORMAT(CURRENT_TIMESTAMP(),'%Y-%m-%d'))) AND DATE(COALESCE(esh.EffectiveTo,ADDDATE(CURRENT_TIMESTAMP(), INTERVAL 1 MONTH))) ORDER BY DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),esh.EffectiveFrom) LIMIT 1),'') 'EmployeeShift'
     ,COALESCE(CONCAT(SUBSTRING_INDEX(TIME_FORMAT(etentd.TimeIn,'%r'),':',2),TIME_FORMAT(etentd.TimeIn,' %p')),'') 'TimeIn'
-    ,COALESCE(CONCAT(SUBSTRING_INDEX(TIME_FORMAT(etentd.TimeOut,'%r'),':',2),TIME_FORMAT(etentd.TimeOut,' %p')),'') 'TimeOut'
     ,CAST(IFNULL(etentd.`Date`,'1900-01-01') AS DATE) AS `Date`
+    ,COALESCE(CONCAT(SUBSTRING_INDEX(TIME_FORMAT(etentd.TimeOut,'%r'),':',2),TIME_FORMAT(etentd.TimeOut,' %p')),'') 'TimeOut'
+    ,CAST(IF(DATE(etentd.`TimeStampIn`) <> DATE(etentd.`TimeStampOut`),DATE(etentd.`TimeStampOut`),"") as DATE) AS `Date`
     ,COALESCE(etentd.TimeScheduleType,'') 'TimeScheduleType'
     ,COALESCE(etentd.TimeEntryStatus,'') 'TimeEntryStatus'
     FROM employeetimeentrydetails etentd
@@ -45,8 +46,9 @@ ELSE
     ,CONCAT(e.LastName,',',e.FirstName, IF(e.MiddleName='','',','),INITIALS(e.MiddleName,'. ','1')) 'Fullname'
     ,COALESCE((SELECT CONCAT(COALESCE(CONCAT(SUBSTRING_INDEX(TIME_FORMAT(shft.TimeFrom,'%r'),':',2),' ',SUBSTRING_INDEX(TIME_FORMAT(shft.TimeFrom,'%r'),' ',-1)),''),' to ',COALESCE(CONCAT(SUBSTRING_INDEX(TIME_FORMAT(shft.TimeTo,'%r'),':',2),' ',SUBSTRING_INDEX(TIME_FORMAT(shft.TimeTo,'%r'),' ',-1)),'')) FROM shift shft LEFT JOIN employeeshift esh ON esh.ShiftID=shft.RowID WHERE esh.EmployeeID=etentd.EmployeeID AND etentd.`Date` BETWEEN DATE(COALESCE(esh.EffectiveFrom,DATE_FORMAT(CURRENT_TIMESTAMP(),'%Y-%m-%d'))) AND DATE(COALESCE(esh.EffectiveTo,ADDDATE(CURRENT_TIMESTAMP(), INTERVAL 1 MONTH))) ORDER BY DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),esh.EffectiveFrom) LIMIT 1),'') 'EmployeeShift'
     ,COALESCE(CONCAT(SUBSTRING_INDEX(TIME_FORMAT(etentd.TimeIn,'%r'),':',2),TIME_FORMAT(etentd.TimeIn,' %p')),'') 'TimeIn'
-    ,COALESCE(CONCAT(SUBSTRING_INDEX(TIME_FORMAT(etentd.TimeOut,'%r'),':',2),TIME_FORMAT(etentd.TimeOut,' %p')),'') 'TimeOut'
     ,CAST(IFNULL(etentd.`Date`,'1900-01-01') AS DATE) AS `Date`
+    ,COALESCE(CONCAT(SUBSTRING_INDEX(TIME_FORMAT(etentd.TimeOut,'%r'),':',2),TIME_FORMAT(etentd.TimeOut,' %p')),'') 'TimeOut'
+	 ,CAST(IF(DATE(etentd.`TimeStampIn`) <> DATE(etentd.`TimeStampOut`),DATE(etentd.`TimeStampOut`),"") as DATE) AS `Date`
     ,COALESCE(etentd.TimeScheduleType,'') 'TimeScheduleType'
     ,COALESCE(etentd.TimeEntryStatus,'') 'TimeEntryStatus'
     FROM employeetimeentrydetails etentd
