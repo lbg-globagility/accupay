@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports System.Data.Entity
 Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports Microsoft.EntityFrameworkCore
