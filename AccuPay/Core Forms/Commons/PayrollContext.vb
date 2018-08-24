@@ -5,13 +5,12 @@ Imports AccuPay.Loans
 Imports AccuPay.JobLevels
 Imports PayrollSys
 Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.Extensions.Logging
 
 Public Class PayrollContext
     Inherits DbContext
 
-    Protected Overrides Sub OnConfiguring(optionsBuilder As DbContextOptionsBuilder)
-        optionsBuilder.UseMySql(connectionString)
-    End Sub
+    Private ReadOnly _loggerFactory As ILoggerFactory
 
     Public Overridable Property Salaries As DbSet(Of Salary)
 
@@ -76,6 +75,19 @@ Public Class PayrollContext
     Public Overridable Property Overtimes As DbSet(Of Overtime)
 
     Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
+
+    Public Sub New()
+    End Sub
+
+    Public Sub New(loggerFactory As ILoggerFactory)
+        _loggerFactory = loggerFactory
+    End Sub
+
+    Protected Overrides Sub OnConfiguring(optionsBuilder As DbContextOptionsBuilder)
+        optionsBuilder.UseMySql(connectionString)
+        optionsBuilder.UseLoggerFactory(_loggerFactory)
+        optionsBuilder.EnableSensitiveDataLogging()
+    End Sub
 
     Protected Overrides Sub OnModelCreating(modelBuilder As ModelBuilder)
         MyBase.OnModelCreating(modelBuilder)
