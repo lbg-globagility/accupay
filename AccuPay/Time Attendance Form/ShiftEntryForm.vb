@@ -278,8 +278,8 @@
     Sub Updatequery()
         Dim str_quer As String = "UPDATE shift SET LastUpd = CURRENT_TIMESTAMP()" &
                         ", LastUpdBy = '" & z_User & "'" &
-                        ", TimeFrom=" & "'" & dtpTimeFrom.Value.ToString("hh:mm") & "'" &
-                         ", TimeTo=" & "'" & dtpTimeTo.Value.ToString("hh:mm") & "'" &
+                        ", TimeFrom=" & "'" & dtpTimeFrom.Value.ToString("HH:mm") & "'" &
+                         ", TimeTo=" & "'" & dtpTimeTo.Value.ToString("HH:mm") & "'" &
                        ", BreakTimeFrom=" & If(chkHasLunchBreak.Checked, ("'" & dtpBreakTimeFrom.Tag.ToString & "'"), "NULL") &
                        ", BreakTimeTo=" & If(chkHasLunchBreak.Checked, ("'" & dtpBreakTimeTo.Tag.ToString & "'"), "NULL") &
                         ", Hidden=" & Convert.ToInt16(chkHidden.Checked) &
