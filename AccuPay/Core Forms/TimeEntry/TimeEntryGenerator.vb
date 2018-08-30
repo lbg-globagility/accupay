@@ -31,10 +31,12 @@ Public Class TimeEntryGenerator
             organization = context.Organizations.
                 FirstOrDefault(Function(o) Nullable.Equals(o.RowID, z_OrganizationID))
 
+            Dim previousCutoff = _cutoffStart.AddDays(-3)
+
             Dim payRates =
                 (From p In context.PayRates
                  Where p.OrganizationID = z_OrganizationID And
-                     p.RateDate >= _cutoffStart And
+                     p.RateDate >= previousCutoff And
                      p.RateDate <= _cutoffEnd).
                 ToList()
 
@@ -48,8 +50,8 @@ Public Class TimeEntryGenerator
         Next
     End Sub
 
-    Private Function CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection) As IList(Of TimeEntry)
-        Dim oldTimeEntries As IList(Of TimeEntry) = Nothing
+    Private Sub CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection)
+        Dim previousTimeEntries As IList(Of TimeEntry) = Nothing
         Dim salary As Salary = Nothing
         Using context = New PayrollContext()
             salary = context.Salaries.
@@ -58,7 +60,8 @@ Public Class TimeEntryGenerator
                 FirstOrDefault()
 
             Dim previousCutoff = _cutoffStart.AddDays(-3)
-            oldTimeEntries = context.TimeEntries.
+
+            previousTimeEntries = context.TimeEntries.
                 Include(Function(t) t.ShiftSchedule.Shift).
                 Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
                 Where(Function(t) previousCutoff <= t.Date And t.Date <= _cutoffEnd).
@@ -66,15 +69,25 @@ Public Class TimeEntryGenerator
         End Using
 
         Dim dayCalculator = New DayCalculator(settings, payrateCalendar)
-        oldTimeEntries = If(oldTimeEntries, New List(Of TimeEntry))
 
         Dim timeEntries = New List(Of TimeEntry)
-        For Each day In Calendar.EachDay(_cutoffStart, _cutoffEnd)
-            Dim timeEntry = dayCalculator.Compute(employee, day, organization, salary, timeEntries.AsReadOnly(), oldTimeEntries)
+        For Each currentDate In Calendar.EachDay(_cutoffStart, _cutoffEnd)
+            Dim timeEntry = dayCalculator.Compute(employee, currentDate, organization, salary, previousTimeEntries)
+
             timeEntries.Add(timeEntry)
         Next
 
-        Return timeEntries
-    End Function
+        Using context = New PayrollContext()
+            For Each timeEntry In timeEntries
+                If timeEntry.RowID.HasValue Then
+                    context.Entry(timeEntry).State = EntityState.Modified
+                Else
+                    context.TimeEntries.Add(timeEntry)
+                End If
+            Next
+
+            context.SaveChanges()
+        End Using
+    End Sub
 
 End Class

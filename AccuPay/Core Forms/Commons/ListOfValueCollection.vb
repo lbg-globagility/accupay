@@ -34,10 +34,22 @@ Public Class ListOfValueCollection
 
     Public Function GetString(name As String, Optional [default] As String = "") As String
         Dim names = Split(name)
-        Return GetString(names.Item1, names.Item2, [default])
+        Return GetStringValue(names.Item1, names.Item2)
     End Function
 
-    Public Function GetString(type As String, lic As String, Optional [default] As String = "") As String
+    Public Function GetStringOrNull(name As String) As String
+        Dim names = Split(name)
+
+        Return GetStringValue(names.Item1, names.Item2)
+    End Function
+
+    Public Function GetStringOrDefault(name As String, Optional [default] As String = "") As String
+        Dim names = Split(name)
+
+        Return If(GetStringValue(names.Item1, names.Item2), [default])
+    End Function
+
+    Private Function GetStringValue(type As String, lic As String) As String
         Dim value = _values?.FirstOrDefault(Function(f) f.LIC = lic And f.Type = type)
         Return value?.DisplayValue
     End Function
