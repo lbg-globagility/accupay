@@ -216,6 +216,11 @@ Public Class NewPayStubForm
         _isActual = Not _isActual
     End Sub
 
+    Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+        Dim exporter = New ExportBankFile(_dateFrom, _dateTo)
+        exporter.Extract()
+    End Sub
+
     Private Class PayStubModel
 
         Public ReadOnly Property Employee As Employee
