@@ -68,8 +68,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Resources\AccuPay.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -315,10 +314,14 @@
     <Compile Include="Auditing\Forms\TimeLogForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core Forms\BankExports\BankExporterFactory.vb" />
+    <Compile Include="Core Forms\BankExports\BDOBankExporter.vb" />
+    <Compile Include="Core Forms\BankExports\IBankExporter.vb" />
     <Compile Include="Core Forms\Commons\AccuMath.vb" />
     <Compile Include="Core Forms\Commons\CalendarConstants.vb" />
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\Enums.vb" />
+    <Compile Include="Core Forms\Commons\ExportBankFile.vb" />
     <Compile Include="Core Forms\Commons\FeatureList.vb" />
     <Compile Include="Core Forms\Commons\HdmfCalculator.vb" />
     <Compile Include="Core Forms\Commons\ListOfValueCollection.vb" />
@@ -1536,6 +1539,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo - Copy.ico" />
+    <None Include="Resources\AccuPay.ico" />
+    <None Include="Resources\AccuPayLogo.ico" />
     <None Include="Resources\loading-icon.gif" />
     <None Include="Resources\ajax-loader.gif" />
     <EmbeddedResource Include="Auditing\Forms\TimeLogForm.resx">

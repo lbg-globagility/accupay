@@ -268,6 +268,10 @@ Public Class PayrollGeneration
 
                 If _paystub.RowID.HasValue Then
                     context.Entry(_paystub).State = EntityState.Modified
+
+                    If _paystub.ThirteenthMonthPay IsNot Nothing Then
+                        context.Entry(_paystub.ThirteenthMonthPay).State = EntityState.Modified
+                    End If
                 Else
                     context.Paystubs.Add(_paystub)
                 End If

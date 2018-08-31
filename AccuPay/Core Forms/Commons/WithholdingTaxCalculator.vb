@@ -33,7 +33,7 @@ Namespace Global.AccuPay.Payroll
             Dim governmentContributions = paystub.SssEmployeeShare + paystub.PhilHealthEmployeeShare + paystub.HdmfEmployeeShare
             currentTaxableIncome = currentTaxableIncome - governmentContributions
 
-            Dim deductionSchedule = employee("SSSDeductSched").ToString
+            Dim deductionSchedule = employee("WTaxDeductSched").ToString
 
             If IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) Or IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
                 paystub.TaxableIncome = currentTaxableIncome + If(previousPaystub?.TaxableIncome, 0)

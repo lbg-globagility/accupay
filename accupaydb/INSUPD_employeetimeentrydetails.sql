@@ -6,22 +6,7 @@
 
 DROP FUNCTION IF EXISTS `INSUPD_employeetimeentrydetails`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeetimeentrydetails`(
-	`etentd_RowID` INT,
-	`etentd_OrganizationID` INT,
-	`etentd_CreatedBy` INT,
-	`etentd_Created` DATETIME,
-	`etentd_LastUpdBy` INT,
-	`etentd_EmployeeID` VARCHAR(50),
-	`etentd_TimeIn` TIME,
-	`etentd_TimeOut` TIME,
-	`etentd_Date` DATE,
-	`etentd_TimeScheduleType` VARCHAR(50),
-	`etentd_TimeEntryStatus` VARCHAR(50),
-	`EditAsUnique` CHAR(1),
-	`Branch_Code` VARCHAR(150),
-	`DateTimeLogIn` VARCHAR(150),
-	`DateTimeLogOut` VARCHAR(150)
+CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeetimeentrydetails`(`etentd_RowID` INT, `etentd_OrganizationID` INT, `etentd_CreatedBy` INT, `etentd_Created` DATETIME, `etentd_LastUpdBy` INT, `etentd_EmployeeID` VARCHAR(50), `etentd_TimeIn` TIME, `etentd_TimeOut` TIME, `etentd_Date` DATE, `etentd_TimeScheduleType` VARCHAR(50), `etentd_TimeEntryStatus` VARCHAR(50), `EditAsUnique` CHAR(1), `Branch_Code` VARCHAR(150), `DateTimeLogIn` VARCHAR(150), `DateTimeLogOut` VARCHAR(150)
 
 
 
@@ -35,8 +20,6 @@ DECLARE etentdID INT(11) DEFAULT -1;
 DECLARE branch_rowid INT(11);
 
 SET EditAsUnique = 0;
-
-
 
 
 
@@ -200,7 +183,8 @@ ELSE
             ),
             branch_rowid,
             TIMESTAMP(ADDDATE(DateTimeLogIn, INTERVAL 0 SECOND)),
-            TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND))
+     			TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND))
+            
     
     
     
@@ -241,12 +225,15 @@ ELSE
         `Date` = etentd_Date,
         TimeScheduleType = etentd_TimeScheduleType,
         ChargeToDivisionID = branch_rowid,
-        TimeStampIn = TIMESTAMP(ADDDATE(DateTimeLogIn, INTERVAL 0 SECOND)),
-        TimeStampOut = TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND));
-
+        TimeStampIn = DateTimeLogIn,
+        TimeStampOut = DateTimeLogOut ;
+	
     SELECT @@Identity AS id
     INTO etentdID;
+	
+	
 
+	 
     END IF;
 END IF;
 

@@ -103,7 +103,7 @@ IF isAutomaticOvertimeFiling THEN
                 NEW.CreatedBy,
                 NEW.EmployeeID,
                 'Overtime',
-                ADDTIME(sh_timeto,'00:00:01'),
+                sh_timeto,
                 NEW.TimeOut,
                 NEW.`Date`,
                 NEW.`Date`,
@@ -120,10 +120,10 @@ IF isAutomaticOvertimeFiling THEN
 
         UPDATE employeeovertime
         SET
-            OTStartTime = ADDTIME(sh_timeto,'00:00:01'),
+            OTStartTime = sh_timeto,
             OTEndTime = NEW.TimeOut,
             LastUpd = IFNULL(
-                ADDTIME(LastUpd, '00:00:01'),
+                LastUpd,
                 CURRENT_TIMESTAMP()
             ),
             LastUpdBy=NEW.CreatedBy
