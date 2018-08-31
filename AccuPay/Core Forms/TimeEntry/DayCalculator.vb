@@ -108,6 +108,10 @@ Public Class DayCalculator
                 timeEntry.NightDiffHours =
                     calculator.ComputeNightDiffHours(dutyPeriod, currentShift, nightDiffPeriod) +
                     calculator.ComputeNightDiffHours(dutyPeriod, currentShift, dawnDiffPeriod)
+
+                timeEntry.NightDiffOTHours = overtimes.Sum(
+                    Function(o) calculator.ComputeNightDiffOTHours(logPeriod, o, currentShift, nightDiffPeriod) +
+                        calculator.ComputeNightDiffOTHours(logPeriod, o, currentShift, dawnDiffPeriod))
             End If
 
             If (employee.CalcHoliday And payrate.IsRegularHoliday) Or

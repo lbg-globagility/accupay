@@ -79,6 +79,20 @@ Public Class TimeEntryCalculator
     End Function
 
     Public Function ComputeOvertimeHours(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift) As Decimal
+        Dim overtimeWorked = GetOvertimeWorked(workPeriod, overtime, shift)
+
+        Return If(overtimeWorked?.TotalHours, 0)
+    End Function
+
+    Public Function ComputeNightDiffOTHours(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift, nightDiffPeriod As TimePeriod) As Decimal
+        Dim overtimeWorked = GetOvertimeWorked(workPeriod, overtime, shift)
+
+        Dim nightOvertimeWorked = overtimeWorked?.Overlap(nightDiffPeriod)
+
+        Return If(nightOvertimeWorked?.TotalHours, 0)
+    End Function
+
+    Private Function GetOvertimeWorked(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift) As TimePeriod
         Dim otStartTime = If(overtime.OTStartTime, shift.End.TimeOfDay)
         Dim otEndTime = If(overtime.OTEndTime, shift.Start.TimeOfDay)
 
@@ -104,7 +118,7 @@ Public Class TimeEntryCalculator
             overtimeWorked = workPeriod.Overlap(overtimeRecognized)
         End If
 
-        Return If(overtimeWorked?.TotalHours, 0)
+        Return overtimeWorked
     End Function
 
     Public Function ComputeLeaveHours(leavePeriod As TimePeriod, currentShift As CurrentShift) As Decimal
