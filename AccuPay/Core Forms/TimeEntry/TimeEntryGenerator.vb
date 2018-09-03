@@ -68,11 +68,11 @@ Public Class TimeEntryGenerator
                 ToList()
         End Using
 
-        Dim dayCalculator = New DayCalculator(settings, payrateCalendar)
+        Dim dayCalculator = New DayCalculator(organization, settings, payrateCalendar, employee)
 
         Dim timeEntries = New List(Of TimeEntry)
         For Each currentDate In Calendar.EachDay(_cutoffStart, _cutoffEnd)
-            Dim timeEntry = dayCalculator.Compute(employee, currentDate, organization, salary, previousTimeEntries)
+            Dim timeEntry = dayCalculator.Compute(currentDate, salary, previousTimeEntries)
 
             timeEntries.Add(timeEntry)
         Next
