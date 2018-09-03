@@ -73,7 +73,8 @@ Public Class DayCalculator
         Dim hasTimeLog = timeLog IsNot Nothing
         Dim payrate = _payrateCalendar.Find(currentDate)
         If hasTimeLog And currentShift.HasShift Then
-            Dim logPeriod = TimePeriod.FromTime(timeLog.TimeIn.Value, timeLog.TimeOut.Value, currentDate)
+            Dim logPeriod = GetLogPeriod(timeLog, currentShift, currentDate)
+
             Dim shiftPeriod = currentShift.ShiftPeriod
             Dim dutyPeriod = shiftPeriod.Overlap(logPeriod)
 
@@ -304,6 +305,23 @@ Public Class DayCalculator
         Next
 
         Return False
+    End Function
+
+    Public Function GetLogPeriod(timeLog As TimeLog, currentShift As CurrentShift, currentDate As Date) As TimePeriod
+        Dim logPeriod = TimePeriod.FromTime(timeLog.TimeIn.Value, timeLog.TimeOut.Value, currentDate)
+
+        If currentShift.HasShift Then
+            Dim graceTime = _employee.LateGracePeriod
+
+            Dim shiftStart = currentShift.ShiftPeriod.Start
+            Dim gracePeriod = New TimePeriod(shiftStart, shiftStart.AddMinutes(graceTime))
+
+            If gracePeriod.Contains(logPeriod.Start) Then
+                logPeriod = TimePeriod.FromTime(shiftStart.TimeOfDay, timeLog.TimeOut.Value, currentDate)
+            End If
+        End If
+
+        Return logPeriod
     End Function
 
     Public Function GetLeavePeriod(leave As Leave, currentShift As CurrentShift) As TimePeriod
