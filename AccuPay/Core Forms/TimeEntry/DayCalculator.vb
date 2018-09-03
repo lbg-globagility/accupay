@@ -30,6 +30,9 @@ Public Class DayCalculator
             }
         End If
 
+        timeEntry.ResetHours()
+        timeEntry.ResetPay()
+
         Dim timeLog As TimeLog = Nothing
         Dim shiftSchedule As ShiftSchedule = Nothing
         Dim overtimes As IList(Of Overtime) = Nothing
@@ -181,23 +184,10 @@ Public Class DayCalculator
             timeEntry.SpecialHolidayHours) * hourlyRate
 
         If currentDate < employee.StartDate Then
-            timeEntry.RegularHours = 0
-            timeEntry.OvertimeHours = 0
-            timeEntry.NightDiffHours = 0
-            timeEntry.NightDiffOTHours = 0
-            timeEntry.RegularHolidayHours = 0
-            timeEntry.RegularHolidayOTHours = 0
-            timeEntry.SpecialHolidayHours = 0
-            timeEntry.SpecialHolidayOTHours = 0
-            timeEntry.RestDayHours = 0
-            timeEntry.RestDayOTHours = 0
-            timeEntry.VacationLeaveHours = 0
-            timeEntry.SickLeaveHours = 0
-            timeEntry.MaternityLeaveHours = 0
-            timeEntry.OtherLeaveHours = 0
-            timeEntry.UndertimeHours = 0
-            timeEntry.LateHours = 0
-            timeEntry.AbsentHours = 0
+
+            timeEntry.ResetHours()
+            timeEntry.ResetPay()
+
         ElseIf Not payrate.IsHoliday Then
 
             If currentShift.IsWorkingDay Then
@@ -221,21 +211,8 @@ Public Class DayCalculator
                 timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * restDayNDOTRate
             End If
 
-            timeEntry.TotalHours =
-                timeEntry.RegularHours +
-                timeEntry.NightDiffHours +
-                timeEntry.OvertimeHours +
-                timeEntry.RestDayHours +
-                timeEntry.RestDayOTHours
-
-            timeEntry.TotalDayPay =
-                timeEntry.RegularPay +
-                timeEntry.OvertimePay +
-                timeEntry.NightDiffPay +
-                timeEntry.NightDiffOTPay +
-                timeEntry.RestDayPay +
-                timeEntry.RestDayOTPay +
-                timeEntry.LeavePay
+            timeEntry.ComputeTotalHours()
+            timeEntry.ComputeTotalPay()
 
         ElseIf payrate.IsHoliday Then
 
@@ -285,28 +262,8 @@ Public Class DayCalculator
                 End If
             End If
 
-            timeEntry.TotalHours =
-                timeEntry.RegularHours +
-                timeEntry.OvertimeHours +
-                timeEntry.RestDayHours +
-                timeEntry.RestDayOTHours +
-                timeEntry.SpecialHolidayHours +
-                timeEntry.SpecialHolidayOTHours +
-                timeEntry.RegularHolidayHours +
-                timeEntry.RegularHolidayOTHours
-
-            timeEntry.TotalDayPay =
-                timeEntry.RegularPay +
-                timeEntry.OvertimePay +
-                timeEntry.NightDiffPay +
-                timeEntry.NightDiffOTPay +
-                timeEntry.RestDayPay +
-                timeEntry.RestDayOTPay +
-                timeEntry.SpecialHolidayPay +
-                timeEntry.SpecialHolidayOTPay +
-                timeEntry.RegularHolidayPay +
-                timeEntry.RegularHolidayOTPay +
-                timeEntry.LeavePay
+            timeEntry.ComputeTotalHours()
+            timeEntry.ComputeTotalPay()
         End If
 
         Return timeEntry

@@ -132,6 +132,73 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public Sub ComputeTotalHours()
+            TotalHours =
+                RegularHours +
+                OvertimeHours +
+                RestDayHours +
+                RestDayOTHours +
+                SpecialHolidayHours +
+                SpecialHolidayOTHours +
+                RegularHolidayHours +
+                RegularHolidayOTHours
+        End Sub
+
+        Public Sub ComputeTotalPay()
+            TotalDayPay =
+               RegularPay +
+               OvertimePay +
+               NightDiffPay +
+               NightDiffOTPay +
+               RestDayPay +
+               RestDayOTPay +
+               SpecialHolidayPay +
+               SpecialHolidayOTPay +
+               RegularHolidayPay +
+               RegularHolidayOTPay +
+               LeavePay
+        End Sub
+
+        Public Sub ResetHours()
+            RegularHours = 0
+            OvertimeHours = 0
+            NightDiffHours = 0
+            NightDiffOTHours = 0
+            RestDayHours = 0
+            RestDayOTHours = 0
+            VacationLeaveHours = 0
+            SickLeaveHours = 0
+            MaternityLeaveHours = 0
+            OtherLeaveHours = 0
+            SpecialHolidayHours = 0
+            SpecialHolidayOTHours = 0
+            RegularHolidayHours = 0
+            RegularHolidayOTHours = 0
+            LateHours = 0
+            UndertimeHours = 0
+            AbsentHours = 0
+            TotalHours = 0
+        End Sub
+
+        Public Sub ResetPay()
+            BasicDayPay = 0
+            RegularPay = 0
+            OvertimePay = 0
+            NightDiffPay = 0
+            NightDiffOTPay = 0
+            RestDayPay = 0
+            RestDayOTPay = 0
+            LeavePay = 0
+            SpecialHolidayPay = 0
+            SpecialHolidayOTPay = 0
+            RegularHolidayPay = 0
+            RegularHolidayOTPay = 0
+            LateDeduction = 0
+            UndertimeDeduction = 0
+            AbsentDeduction = 0
+            TotalDayPay = 0
+        End Sub
+
     End Class
 
 End Namespace
