@@ -174,6 +174,12 @@ Public Class DayCalculator
         Dim restDayNDRate = payrate.RestDayNDRate - payrate.RestDayRate
         Dim restDayNDOTRate = payrate.RestDayNDOTRate - payrate.RestDayOvertimeRate
 
+        timeEntry.BasicDayPay = (
+            timeEntry.RegularHours +
+            timeEntry.RestDayHours +
+            timeEntry.RegularHolidayHours +
+            timeEntry.SpecialHolidayHours) * hourlyRate
+
         If currentDate < employee.StartDate Then
             timeEntry.RegularHours = 0
             timeEntry.OvertimeHours = 0
