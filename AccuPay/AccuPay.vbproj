@@ -560,6 +560,7 @@
     <Compile Include="Core Forms\TimeEntry\TimeEmployeeNo.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntryCalculator.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntryGenerator.vb" />
+    <Compile Include="Core Forms\TimeEntry\TimeEntryPolicy.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryForm.Designer.vb">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
     </Compile>

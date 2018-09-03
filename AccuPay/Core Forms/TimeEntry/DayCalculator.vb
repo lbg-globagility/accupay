@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay
 Imports AccuPay.Entity
@@ -11,12 +11,14 @@ Public Class DayCalculator
     Private ReadOnly _settings As ListOfValueCollection
     Private ReadOnly _organization As Organization
     Private ReadOnly _employee As Employee
+    Private ReadOnly _policy As TimeEntryPolicy
 
     Public Sub New(organization As Organization, settings As ListOfValueCollection, payrateCalendar As PayratesCalendar, employee As Employee)
         _payrateCalendar = payrateCalendar
         _settings = settings
         _organization = organization
         _employee = employee
+        _policy = New TimeEntryPolicy(settings)
     End Sub
 
     Public Function Compute(currentDate As DateTime,
@@ -149,14 +151,12 @@ Public Class DayCalculator
             End If
         End If
 
-        Dim requiredToWorkLastWorkingDay = _settings.GetBoolean("Payroll Policy.HolidayLastWorkingDayOrAbsent", False)
-        Dim allowanceAbsenceOnHoliday = _settings.GetBoolean("Payroll Policy.holiday.allowabsence", False)
         Dim isCalculatingRegularHoliday = payrate.IsRegularHoliday And _employee.CalcHoliday
         Dim isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday
 
         Dim isExemptDueToHoliday =
-            (payrate.IsHoliday And (Not requiredToWorkLastWorkingDay Or HasWorkedLastWorkingDay(currentDate, oldTimeEntries))) And
-            (isCalculatingRegularHoliday Or isCalculatingSpecialHoliday Or Not allowanceAbsenceOnHoliday)
+            (payrate.IsHoliday And (Not _policy.RequiredToWorkLastDay Or HasWorkedLastWorkingDay(currentDate, oldTimeEntries))) And
+            (isCalculatingRegularHoliday Or isCalculatingSpecialHoliday Or Not _policy.AbsencesOnHoliday)
 
         If (Not currentShift.HasShift) Or (timeEntry.RegularHours > 0) Or isExemptDueToHoliday Or currentShift.IsRestDay Or leaves.Any() Then
             timeEntry.AbsentHours = 0
@@ -200,9 +200,7 @@ Public Class DayCalculator
                 timeEntry.LateDeduction = timeEntry.LateHours * hourlyRate
                 timeEntry.UndertimeDeduction = timeEntry.UndertimeHours * hourlyRate
             ElseIf currentShift.IsRestDay Then
-                Dim isRestDayInclusive = _settings.GetBoolean("Payroll Policy.restday.inclusiveofbasicpay")
-
-                If isRestDayInclusive And _employee.IsMonthly Or _employee.IsFixed Then
+                If _policy.RestDayInclusive And _employee.IsMonthly Or _employee.IsFixed Then
                     timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * (payrate.RestDayRate - 1)
                 Else
                     timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * payrate.RestDayRate
