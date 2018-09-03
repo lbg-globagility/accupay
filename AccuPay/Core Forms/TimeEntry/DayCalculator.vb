@@ -104,6 +104,17 @@ Public Class DayCalculator
             End If
 
             timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift)
+
+            If _policy.LateHoursRoundingUp Then
+                Dim lateHours = timeEntry.LateHours
+
+                If lateHours > 0.5 And lateHours <= 1 Then
+                    timeEntry.LateHours = 1
+                ElseIf lateHours >= 2 And lateHours <= 4 Then
+                    timeEntry.LateHours = 4
+                End If
+            End If
+
             timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift)
 
             timeEntry.OvertimeHours = overtimes.Sum(
