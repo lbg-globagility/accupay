@@ -1,4 +1,4 @@
-Option Strict On
+﻿Option Strict On
 
 Imports AccuPay
 Imports AccuPay.Entity
@@ -212,7 +212,7 @@ Public Class DayCalculator
                 timeEntry.LateDeduction = timeEntry.LateHours * hourlyRate
                 timeEntry.UndertimeDeduction = timeEntry.UndertimeHours * hourlyRate
             ElseIf currentShift.IsRestDay Then
-                If _policy.RestDayInclusive And _employee.IsMonthly Or _employee.IsFixed Then
+                If _policy.RestDayInclusive And (_employee.IsMonthly Or _employee.IsFixed) Then
                     timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * (payrate.RestDayRate - 1)
                 Else
                     timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * payrate.RestDayRate
