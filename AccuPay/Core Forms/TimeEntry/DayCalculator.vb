@@ -72,94 +72,97 @@ Public Class DayCalculator
 
         Dim hasTimeLog = timeLog IsNot Nothing
         Dim payrate = _payrateCalendar.Find(currentDate)
+
         If hasTimeLog And currentShift.HasShift Then
             Dim logPeriod = GetLogPeriod(timeLog, currentShift, currentDate)
 
             Dim shiftPeriod = currentShift.ShiftPeriod
             Dim dutyPeriod = shiftPeriod.Overlap(logPeriod)
 
-            timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift)
+            If dutyPeriod IsNot Nothing Then
+                timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift)
 
-            Dim coveredPeriod = dutyPeriod
+                Dim coveredPeriod = dutyPeriod
 
-            If leaves.Any() Then
-                Dim leave = leaves.FirstOrDefault()
-                Dim leavePeriod = GetLeavePeriod(leave, currentShift)
+                If leaves.Any() Then
+                    Dim leave = leaves.FirstOrDefault()
+                    Dim leavePeriod = GetLeavePeriod(leave, currentShift)
 
-                coveredPeriod = New TimePeriod(
-                    {dutyPeriod.Start, leavePeriod.Start}.Min(),
-                    {dutyPeriod.End, leavePeriod.End}.Max())
+                    coveredPeriod = New TimePeriod(
+                        {dutyPeriod.Start, leavePeriod.Start}.Min(),
+                        {dutyPeriod.End, leavePeriod.End}.Max())
 
-                Dim leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift)
-                Select Case leave.LeaveType
-                    Case LeaveType.Sick
-                        timeEntry.SickLeaveHours = leaveHours
-                    Case LeaveType.Vacation
-                        timeEntry.VacationLeaveHours = leaveHours
-                    Case LeaveType.Maternity
-                        timeEntry.MaternityLeaveHours = leaveHours
-                    Case LeaveType.Others
-                        timeEntry.OtherLeaveHours = leaveHours
-                End Select
-            End If
-
-            timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift)
-
-            If _policy.LateHoursRoundingUp Then
-                Dim lateHours = timeEntry.LateHours
-
-                If lateHours > 0.5 And lateHours <= 1 Then
-                    timeEntry.LateHours = 1
-                ElseIf lateHours >= 2 And lateHours <= 4 Then
-                    timeEntry.LateHours = 4
+                    Dim leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift)
+                    Select Case leave.LeaveType
+                        Case LeaveType.Sick
+                            timeEntry.SickLeaveHours = leaveHours
+                        Case LeaveType.Vacation
+                            timeEntry.VacationLeaveHours = leaveHours
+                        Case LeaveType.Maternity
+                            timeEntry.MaternityLeaveHours = leaveHours
+                        Case LeaveType.Others
+                            timeEntry.OtherLeaveHours = leaveHours
+                    End Select
                 End If
-            End If
 
-            timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift)
+                timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift)
 
-            timeEntry.OvertimeHours = overtimes.Sum(
+                If _policy.LateHoursRoundingUp Then
+                    Dim lateHours = timeEntry.LateHours
+
+                    If lateHours > 0.5 And lateHours <= 1 Then
+                        timeEntry.LateHours = 1
+                    ElseIf lateHours >= 2 And lateHours <= 4 Then
+                        timeEntry.LateHours = 4
+                    End If
+                End If
+
+                timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift)
+
+                timeEntry.OvertimeHours = overtimes.Sum(
                 Function(o) calculator.ComputeOvertimeHours(logPeriod, o, currentShift))
 
-            If _employee.CalcNightDiff And currentShift.IsNightShift Then
-                Dim nightDiffPeriod = GetNightDiffPeriod(currentDate)
-                Dim dawnDiffPeriod = GetNightDiffPeriod(previousDay)
+                If _employee.CalcNightDiff And currentShift.IsNightShift Then
+                    Dim nightDiffPeriod = GetNightDiffPeriod(currentDate)
+                    Dim dawnDiffPeriod = GetNightDiffPeriod(previousDay)
 
-                timeEntry.NightDiffHours =
+                    timeEntry.NightDiffHours =
                     calculator.ComputeNightDiffHours(dutyPeriod, currentShift, nightDiffPeriod) +
                     calculator.ComputeNightDiffHours(dutyPeriod, currentShift, dawnDiffPeriod)
 
-                timeEntry.NightDiffOTHours = overtimes.Sum(
+                    timeEntry.NightDiffOTHours = overtimes.Sum(
                     Function(o) calculator.ComputeNightDiffOTHours(logPeriod, o, currentShift, nightDiffPeriod) +
                         calculator.ComputeNightDiffOTHours(logPeriod, o, currentShift, dawnDiffPeriod))
-            End If
-
-            If (_employee.CalcHoliday And payrate.IsRegularHoliday) Or
-               (_employee.CalcSpecialHoliday And payrate.IsSpecialNonWorkingHoliday) Then
-
-                If payrate.IsRegularHoliday Then
-                    timeEntry.RegularHolidayHours = timeEntry.RegularHours
-                    timeEntry.RegularHolidayOTHours = timeEntry.OvertimeHours
-                ElseIf payrate.IsSpecialNonWorkingHoliday Then
-                    timeEntry.SpecialHolidayHours = timeEntry.RegularHours
-                    timeEntry.SpecialHolidayOTHours = timeEntry.OvertimeHours
                 End If
 
-                timeEntry.RegularHours = 0
-                timeEntry.OvertimeHours = 0
+                If (_employee.CalcHoliday And payrate.IsRegularHoliday) Or
+               (_employee.CalcSpecialHoliday And payrate.IsSpecialNonWorkingHoliday) Then
 
-                timeEntry.LateHours = 0
-                timeEntry.UndertimeHours = 0
-            End If
+                    If payrate.IsRegularHoliday Then
+                        timeEntry.RegularHolidayHours = timeEntry.RegularHours
+                        timeEntry.RegularHolidayOTHours = timeEntry.OvertimeHours
+                    ElseIf payrate.IsSpecialNonWorkingHoliday Then
+                        timeEntry.SpecialHolidayHours = timeEntry.RegularHours
+                        timeEntry.SpecialHolidayOTHours = timeEntry.OvertimeHours
+                    End If
 
-            If currentShift.IsRestDay And _employee.CalcRestDay Then
-                timeEntry.RestDayHours = timeEntry.RegularHours
-                timeEntry.RegularHours = 0
+                    timeEntry.RegularHours = 0
+                    timeEntry.OvertimeHours = 0
 
-                timeEntry.RestDayOTHours = timeEntry.OvertimeHours
-                timeEntry.OvertimeHours = 0
+                    timeEntry.LateHours = 0
+                    timeEntry.UndertimeHours = 0
+                End If
 
-                timeEntry.UndertimeHours = 0
-                timeEntry.LateHours = 0
+                If currentShift.IsRestDay And _employee.CalcRestDay Then
+                    timeEntry.RestDayHours = timeEntry.RegularHours
+                    timeEntry.RegularHours = 0
+
+                    timeEntry.RestDayOTHours = timeEntry.OvertimeHours
+                    timeEntry.OvertimeHours = 0
+
+                    timeEntry.UndertimeHours = 0
+                    timeEntry.LateHours = 0
+                End If
             End If
         End If
 
