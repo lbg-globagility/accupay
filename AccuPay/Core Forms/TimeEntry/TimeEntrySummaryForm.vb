@@ -576,9 +576,24 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Private Sub generateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles generateTimeEntryButton.Click
-        Dim generator = New TimeEntryGenerator(New Date(2018, 6, 6), New Date(2018, 6, 20))
-        generator.Start()
-        MsgBox("Start")
+        Dim startDate As Date
+        Dim endDate As Date
+        Dim result As DialogResult
+
+        Using dialog = New DateRangePickerDialog()
+            result = dialog.ShowDialog()
+
+            If result = DialogResult.OK Then
+                startDate = dialog.Start
+                endDate = dialog.End
+            End If
+        End Using
+
+        If result = DialogResult.OK Then
+            Dim generator = New TimeEntryGenerator(startDate, endDate)
+            generator.Start()
+            MsgBox("Finished generation.")
+        End If
     End Sub
 
     Private Sub DoneGenerating() Handles timeEntDurationModal.DoneGenerating

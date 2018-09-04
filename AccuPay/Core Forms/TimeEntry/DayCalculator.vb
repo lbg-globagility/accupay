@@ -178,9 +178,9 @@ Public Class DayCalculator
 
         Dim dailyRate = 0D
         If _employee.IsDaily Then
-            dailyRate = salary.BasicSalary
+            dailyRate = If(salary?.BasicSalary, 0)
         ElseIf _employee.IsMonthly Or _employee.IsFixed Then
-            dailyRate = salary.BasicSalary / (_employee.WorkDaysPerYear / 12)
+            dailyRate = If(salary?.BasicSalary, 0) / (_employee.WorkDaysPerYear / 12)
         End If
 
         Dim hourlyRate = dailyRate / 8
