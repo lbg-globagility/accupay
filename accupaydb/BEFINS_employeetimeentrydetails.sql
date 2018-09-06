@@ -9,62 +9,56 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `BEFINS_employeetimeentrydetails` BEFORE INSERT ON `employeetimeentrydetails` FOR EACH ROW BEGIN
 
-DECLARE ultifirsttime TIME DEFAULT '00:00:00';
-
-DECLARE ultilasttime TIME DEFAULT TIME(TIME_FORMAT(TIMESTAMPADD(SECOND,-1,TIMESTAMP(DATE_FORMAT(CURDATE(),CONCAT(@@date_format,' ',ultifirsttime)))), @@time_format));
-
-DECLARE timestampI_date DATE;
-
-DECLARE timestampO_date DATE;
-
 DECLARE anyint INT(11);
 
+DECLARE $dateIn DATE;
+DECLARE $dateOut DATE;
 
 SET NEW.TimeIn = PROPER_24HOUR(NEW.TimeIn);
-
 SET NEW.TimeOut = PROPER_24HOUR(NEW.TimeOut);
 
+SET $dateIn = NEW.`Date`;
+SET $dateOut = NEW.`Date`;
 
-SET timestampI_date = NEW.`Date`;
+IF NEW.TimeIn IS NOT NULL AND NEW.TimeOut IS NOT NULL THEN
 
-SET timestampO_date = NEW.`Date`;
+    IF NEW.TimeIn > NEW.TimeOut THEN
 
-IF NEW.TimeIn IS NOT NULL && NEW.TimeIn IS NOT NULL THEN
-
-
-    IF (TIME_FORMAT(NEW.TimeIn,'%p')='AM' AND TIME_FORMAT(NEW.TimeOut,'%p')='AM')
-            AND ultifirsttime <= NEW.TimeIn AND ultifirsttime <= NEW.TimeOut THEN
-        SET timestampI_date = NEW.`Date`;
-        SET timestampO_date = ADDDATE(NEW.`Date`, INTERVAL 1 DAY);
-
-
-
-
-
-
-    ELSEIF (TIME_FORMAT(NEW.TimeIn,'%p')='PM' AND TIME_FORMAT(NEW.TimeOut,'%p')='AM')
-            AND ultilasttime BETWEEN NEW.TimeIn AND ADDTIME(NEW.TimeOut,'24:00:00') THEN
-        SET timestampI_date = NEW.`Date`;
-        SET timestampO_date = ADDDATE(NEW.`Date`, INTERVAL 1 DAY);
+        SET $dateIn = NEW.`Date`;
+        SET $dateOut = ADDDATE(NEW.`Date`, INTERVAL 1 DAY);
 
     END IF;
 
 END IF;
 
+IF NEW.TimeStampIn IS NULL THEN
+    SET NEW.TimeStampIn = TIMESTAMP($dateIn, NEW.TimeIn);
+END IF;
 
+IF NEW.TimeStampOut IS NULL THEN
+    SET NEW.TimeStampOut = TIMESTAMP($dateOut, NEW.TimeOut);
+END IF;
 
+SELECT INSUPD_timeentrylog(
+    NEW.OrganizationID,
+    EmployeeID,
+    NEW.TimeStampIn,
+    1
+)
+FROM employee
+WHERE RowID = NEW.EmployeeID AND
+    OrganizationID = NEW.OrganizationID
+INTO anyint;
 
-
-
-SET @timestamp_out = GREATEST(IFNULL(NEW.TimeStampOut, ADDTIME(TIMESTAMP(timestampO_date),NEW.TimeOut))
-                              , ADDTIME(TIMESTAMP(timestampO_date),NEW.TimeOut));
-
-SET NEW.TimeStampIn = ADDTIME(TIMESTAMP(timestampI_date),NEW.TimeIn);
-SET NEW.TimeStampOut = @timestamp_out; # ADDTIME(TIMESTAMP(timestampO_date),NEW.TimeOut);
-
-IF NEW.TimeStampIn IS NOT NULL THEN SELECT INSUPD_timeentrylog(NEW.OrganizationID,EmployeeID,NEW.TimeStampIn,1) FROM employee WHERE RowID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID INTO anyint; END IF;
-
-IF NEW.TimeStampOut IS NOT NULL THEN SELECT INSUPD_timeentrylog(NEW.OrganizationID,EmployeeID,NEW.TimeStampOut,1) FROM employee WHERE RowID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID INTO anyint; END IF;
+SELECT INSUPD_timeentrylog(
+    NEW.OrganizationID,
+    EmployeeID,
+    NEW.TimeStampOut,
+    1)
+FROM employee
+WHERE RowID = NEW.EmployeeID AND
+    OrganizationID = NEW.OrganizationID
+INTO anyint;
 
 END//
 DELIMITER ;

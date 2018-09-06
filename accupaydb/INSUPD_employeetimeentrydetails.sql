@@ -6,11 +6,22 @@
 
 DROP FUNCTION IF EXISTS `INSUPD_employeetimeentrydetails`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeetimeentrydetails`(`etentd_RowID` INT, `etentd_OrganizationID` INT, `etentd_CreatedBy` INT, `etentd_Created` DATETIME, `etentd_LastUpdBy` INT, `etentd_EmployeeID` VARCHAR(50), `etentd_TimeIn` TIME, `etentd_TimeOut` TIME, `etentd_Date` DATE, `etentd_TimeScheduleType` VARCHAR(50), `etentd_TimeEntryStatus` VARCHAR(50), `EditAsUnique` CHAR(1), `Branch_Code` VARCHAR(150), `DateTimeLogIn` VARCHAR(150), `DateTimeLogOut` VARCHAR(150)
-
-
-
-
+CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeetimeentrydetails`(
+    `etentd_RowID` INT,
+    `etentd_OrganizationID` INT,
+    `etentd_CreatedBy` INT,
+    `etentd_Created` DATETIME,
+    `etentd_LastUpdBy` INT,
+    `etentd_EmployeeID` VARCHAR(50),
+    `etentd_TimeIn` TIME,
+    `etentd_TimeOut` TIME,
+    `etentd_Date` DATE,
+    `etentd_TimeScheduleType` VARCHAR(50),
+    `etentd_TimeEntryStatus` VARCHAR(50),
+    `EditAsUnique` CHAR(1),
+    `Branch_Code` VARCHAR(150),
+    `DateTimeLogIn` VARCHAR(150),
+    `DateTimeLogOut` VARCHAR(150)
 ) RETURNS int(11)
     DETERMINISTIC
 BEGIN
@@ -19,21 +30,16 @@ DECLARE etentdID INT(11) DEFAULT -1;
 
 DECLARE branch_rowid INT(11);
 
+DECLARE $employeeId INT(11) DEFAULT NULL;
+
+SET $employeeId =
+    SELECT RowID
+    FROM employee
+    WHERE OrganizationID = etentd_OrganizationID AND
+        EmployeeID = etentd_EmployeeID
+    LIMIT 1;
+
 SET EditAsUnique = 0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 IF IFNULL(Branch_Code,'') != '' THEN
     INSERT INTO branch(
@@ -56,87 +62,11 @@ END IF;
 SELECT RowID
 FROM branch
 WHERE OrganizationID = etentd_OrganizationID AND
-    BranchCode = IFNULL(Branch_Code,'')
+    BranchCode = IFNULL(Branch_Code, '')
 LIMIT 1
 INTO branch_rowid;
 
-IF EditAsUnique = '1' AND EXISTS(
-        SELECT RowID
-        FROM employee
-        WHERE OrganizationID = etentd_OrganizationID AND
-            EmployeeID = etentd_EmployeeID
-        LIMIT 1
-    ) = '1' THEN
-
-    SET @noop = TRUE;
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-
-ELSE
-    IF EXISTS(
-        SELECT RowID
-        FROM employee
-        WHERE OrganizationID = etentd_OrganizationID AND
-            EmployeeID = etentd_EmployeeID
-        LIMIT 1
-    ) = '1' THEN
+IF $employeeId IS NOT NULL THEN
 
     INSERT INTO employeetimeentrydetails(
         RowID,
@@ -153,69 +83,31 @@ ELSE
         TimeStampIn,
         TimeStampOut
     )
-        SELECT
-            etentd_RowID,
-            etentd_OrganizationID,
-            etentd_Created,
-            etentd_CreatedBy,
-            (
-                SELECT RowID
-                FROM employee
-                WHERE OrganizationID = etentd_OrganizationID AND
-                    EmployeeID = etentd_EmployeeID
-                LIMIT 1
-            ),
-            etentd_TimeIn,
-            etentd_TimeOut,
-            etentd_Date,
-            etentd_TimeScheduleType,
-            IFNULL(
-                etentd_TimeEntryStatus,
+    SELECT
+        etentd_RowID,
+        etentd_OrganizationID,
+        etentd_Created,
+        etentd_CreatedBy,
+        $employeeId,
+        etentd_TimeIn,
+        etentd_TimeOut,
+        etentd_Date,
+        etentd_TimeScheduleType,
+        IFNULL(
+            etentd_TimeEntryStatus,
+            IF(
+                IFNULL(etentd_TimeIn, '') = '',
+                'missing clock in',
                 IF(
-                    IFNULL(etentd_TimeIn, '') = '',
-                    'missing clock in',
-                    IF(
-                        IFNULL(etentd_TimeOut, '') = '',
-                        'missing clock out',
-                        ''
-                    )
+                    IFNULL(etentd_TimeOut, '') = '',
+                    'missing clock out',
+                    ''
                 )
-            ),
-            branch_rowid,
-            TIMESTAMP(ADDDATE(DateTimeLogIn, INTERVAL 0 SECOND)),
-     			TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND))
-            
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+            )
+        ),
+        branch_rowid,
+        TIMESTAMP(ADDDATE(DateTimeLogIn, INTERVAL 0 SECOND)),
+        TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND))
     ON DUPLICATE KEY
     UPDATE
         LastUpd = CURRENT_TIMESTAMP(),
@@ -226,15 +118,10 @@ ELSE
         TimeScheduleType = etentd_TimeScheduleType,
         ChargeToDivisionID = branch_rowid,
         TimeStampIn = DateTimeLogIn,
-        TimeStampOut = DateTimeLogOut ;
+        TimeStampOut = DateTimeLogOut;
 	
     SELECT @@Identity AS id
     INTO etentdID;
-	
-	
-
-	 
-    END IF;
 END IF;
 
 RETURN etentdID;
