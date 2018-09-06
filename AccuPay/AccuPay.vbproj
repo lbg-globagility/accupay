@@ -567,6 +567,12 @@
     <Compile Include="Core Forms\TimeEntry\TimeEntryCalculator.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntryGenerator.vb" />
     <Compile Include="Core Forms\TimeEntry\TimeEntryPolicy.vb" />
+    <Compile Include="Core Forms\TimeEntry\TimeEntryProgressDialog.Designer.vb">
+      <DependentUpon>TimeEntryProgressDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Core Forms\TimeEntry\TimeEntryProgressDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryForm.Designer.vb">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
     </Compile>
@@ -1651,6 +1657,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\TimeEntry\DateRangePickerDialog.resx">
       <DependentUpon>DateRangePickerDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core Forms\TimeEntry\TimeEntryProgressDialog.resx">
+      <DependentUpon>TimeEntryProgressDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Core Forms\TimeEntry\TimeEntrySummaryForm.resx">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>

@@ -594,6 +594,9 @@ Public Class TimeEntrySummaryForm
             generator.Start()
             MsgBox("Finished generation.")
         End If
+
+        Dim progressDialog = New TimeEntryProgressDialog()
+        progressDialog.Show()
     End Sub
 
     Private Sub DoneGenerating() Handles timeEntDurationModal.DoneGenerating
