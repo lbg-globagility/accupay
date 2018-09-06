@@ -26,6 +26,12 @@ Public Class TimeEntryPolicy
         End Get
     End Property
 
+    Public ReadOnly Property RespectDefaultRestDay As Boolean
+        Get
+            Return _settings.GetBoolean("RestDay.RespectDefaultRestDay")
+        End Get
+    End Property
+
     Public ReadOnly Property RestDayInclusive As Boolean
         Get
             Return _settings.GetBoolean("Payroll Policy.restday.inclusiveofbasicpay")

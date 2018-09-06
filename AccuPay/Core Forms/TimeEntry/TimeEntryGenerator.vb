@@ -53,6 +53,12 @@ Public Class TimeEntryGenerator
     Private Sub CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection)
         Dim previousTimeEntries As IList(Of TimeEntry) = Nothing
         Dim salary As Salary = Nothing
+
+        Dim timeLogs As IList(Of TimeLog) = Nothing
+        Dim shiftSchedules As IList(Of ShiftSchedule) = Nothing
+        Dim overtimesInCutoff As IList(Of Overtime) = Nothing
+        Dim leavesInCutoff As IList(Of Leave) = Nothing
+
         Using context = New PayrollContext()
             salary = context.Salaries.
                 Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
@@ -66,13 +72,47 @@ Public Class TimeEntryGenerator
                 Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
                 Where(Function(t) previousCutoff <= t.Date And t.Date <= _cutoffEnd).
                 ToList()
+
+            timeLogs = context.TimeLogs.
+                Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
+                Where(Function(t) _cutoffStart <= t.LogDate And t.LogDate <= _cutoffEnd).
+                ToList()
+
+            shiftSchedules = context.ShiftSchedules.
+                Include(Function(s) s.Shift).
+                Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
+                Where(Function(s) s.EffectiveFrom <= _cutoffEnd And _cutoffStart <= s.EffectiveTo).
+                ToList()
+
+            overtimesInCutoff = context.Overtimes.
+                Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
+                Where(Function(o) o.OTStartDate <= _cutoffEnd And _cutoffStart <= o.OTEndDate).
+                ToList()
+
+            leavesInCutoff = context.Leaves.
+                Where(Function(l) Nullable.Equals(l.EmployeeID, employee.RowID)).
+                Where(Function(l) _cutoffStart <= l.StartDate And l.StartDate <= _cutoffEnd).
+                Where(Function(l) l.Status = "Approved").
+                ToList()
         End Using
 
         Dim dayCalculator = New DayCalculator(organization, settings, payrateCalendar, employee)
 
         Dim timeEntries = New List(Of TimeEntry)
         For Each currentDate In Calendar.EachDay(_cutoffStart, _cutoffEnd)
-            Dim timeEntry = dayCalculator.Compute(currentDate, salary, previousTimeEntries)
+            Dim timelog = timeLogs.FirstOrDefault(Function(t) t.LogDate = currentDate)
+            Dim shiftSchedule = shiftSchedules.FirstOrDefault(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo)
+            Dim overtimes = overtimesInCutoff.Where(Function(o) o.OTStartDate <= currentDate And currentDate <= o.OTEndDate).ToList()
+            Dim leaves = leavesInCutoff.Where(Function(l) l.StartDate = currentDate).ToList()
+
+            Dim timeEntry = dayCalculator.Compute(
+                currentDate,
+                salary,
+                previousTimeEntries,
+                shiftSchedule,
+                timelog,
+                overtimes,
+                leaves)
 
             timeEntries.Add(timeEntry)
         Next

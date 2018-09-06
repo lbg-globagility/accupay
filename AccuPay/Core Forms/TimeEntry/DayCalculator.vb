@@ -23,7 +23,11 @@ Public Class DayCalculator
 
     Public Function Compute(currentDate As DateTime,
                             salary As Salary,
-                            oldTimeEntries As IList(Of TimeEntry)) As TimeEntry
+                            oldTimeEntries As IList(Of TimeEntry),
+                            shiftSchedule As ShiftSchedule,
+                            timeLog As TimeLog,
+                            overtimes As IList(Of Overtime),
+                            leaves As IList(Of Leave)) As TimeEntry
         Dim timeEntry = oldTimeEntries.Where(Function(t) t.Date = currentDate).SingleOrDefault()
 
         If timeEntry Is Nothing Then
@@ -36,32 +40,6 @@ Public Class DayCalculator
 
         timeEntry.ResetHours()
         timeEntry.ResetPay()
-
-        Dim timeLog As TimeLog = Nothing
-        Dim shiftSchedule As ShiftSchedule = Nothing
-        Dim overtimes As IList(Of Overtime) = Nothing
-        Dim leaves As IList(Of Leave) = Nothing
-
-        Using context = New PayrollContext()
-            timeLog = context.TimeLogs.
-                FirstOrDefault(Function(t) Nullable.Equals(t.EmployeeID, _employee.RowID) And t.LogDate = currentDate)
-
-            shiftSchedule = context.ShiftSchedules.
-                Include(Function(s) s.Shift).
-                Where(Function(s) Nullable.Equals(s.EmployeeID, _employee.RowID)).
-                FirstOrDefault(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo)
-
-            overtimes = context.Overtimes.
-                Where(Function(o) Nullable.Equals(o.EmployeeID, _employee.RowID)).
-                Where(Function(o) o.OTStartDate <= currentDate And currentDate <= o.OTEndDate).
-                ToList()
-
-            leaves = context.Leaves.
-                Where(Function(l) Nullable.Equals(l.EmployeeID, _employee.RowID)).
-                Where(Function(l) l.StartDate = currentDate).
-                Where(Function(l) l.Status = "Approved").
-                ToList()
-        End Using
 
         Dim previousDay = currentDate.AddDays(-1)
         Dim calculator = New TimeEntryCalculator()
