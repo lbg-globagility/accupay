@@ -33,11 +33,11 @@ DECLARE branch_rowid INT(11);
 DECLARE $employeeId INT(11) DEFAULT NULL;
 
 SET $employeeId =
-    SELECT RowID
+    (SELECT RowID
     FROM employee
     WHERE OrganizationID = etentd_OrganizationID AND
         EmployeeID = etentd_EmployeeID
-    LIMIT 1;
+    LIMIT 1);
 
 SET EditAsUnique = 0;
 
