@@ -74,6 +74,8 @@ Public Class PayrollContext
 
     Public Overridable Property Overtimes As DbSet(Of Overtime)
 
+    Public Overridable Property OfficialBusinesses As DbSet(Of OfficialBusiness)
+
     Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
 
     Public Sub New()
