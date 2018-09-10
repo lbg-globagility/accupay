@@ -22,7 +22,9 @@ Partial Class TimeEntryProgressDialog
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.CompletionProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.ProgressTimer = New System.Windows.Forms.Timer(Me.components)
         Me.SuspendLayout()
         '
         'CompletionProgressBar
@@ -32,6 +34,11 @@ Partial Class TimeEntryProgressDialog
         Me.CompletionProgressBar.Size = New System.Drawing.Size(352, 23)
         Me.CompletionProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous
         Me.CompletionProgressBar.TabIndex = 0
+        '
+        'ProgressTimer
+        '
+        Me.ProgressTimer.Enabled = True
+        Me.ProgressTimer.Interval = 500
         '
         'TimeEntryProgressDialog
         '
@@ -46,4 +53,5 @@ Partial Class TimeEntryProgressDialog
     End Sub
 
     Friend WithEvents CompletionProgressBar As ProgressBar
+    Friend WithEvents ProgressTimer As Timer
 End Class

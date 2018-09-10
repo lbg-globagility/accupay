@@ -47,6 +47,9 @@ Public Class DayCalculator
         timeEntry.EmployeeShiftID = shiftSchedule?.RowID
 
         Dim currentShift = New CurrentShift(shiftSchedule, currentDate)
+        If _policy.RespectDefaultRestDay Then
+            currentShift.SetDefaultRestDay(_employee.DayOfRest)
+        End If
 
         Dim hasTimeLog = timeLog IsNot Nothing
         Dim payrate = _payrateCalendar.Find(currentDate)
@@ -96,6 +99,8 @@ Public Class DayCalculator
                 End If
 
                 timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift)
+
+                timeEntry.RegularHours = currentShift.WorkingHours - timeEntry.LateHours - timeEntry.UndertimeHours
 
                 timeEntry.OvertimeHours = overtimes.Sum(
                 Function(o) calculator.ComputeOvertimeHours(logPeriod, o, currentShift))

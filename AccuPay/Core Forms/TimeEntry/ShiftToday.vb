@@ -7,6 +7,8 @@ Public Class CurrentShift
 
     Public Const StandardWorkingHours As Decimal = 8
 
+    Private _defaultRestDay As Integer?
+
     Public ReadOnly Property Start As Date
         Get
             Return ShiftPeriod.Start
@@ -61,7 +63,14 @@ Public Class CurrentShift
 
     Public ReadOnly Property IsRestDay As Boolean
         Get
-            Return If(ShiftSchedule?.IsRestDay, False)
+            Dim isRestDayOffset = If(ShiftSchedule?.IsRestDay, False)
+
+            Dim isDefaultRestDay = False
+            If _defaultRestDay.HasValue Then
+                isDefaultRestDay = (_defaultRestDay.Value - 1) = Me.Date.DayOfWeek
+            End If
+
+            Return (isRestDayOffset And (Not isDefaultRestDay)) Or ((Not isRestDayOffset) And isDefaultRestDay)
         End Get
     End Property
 
@@ -98,6 +107,10 @@ Public Class CurrentShift
     Public Sub New(shiftSchedule As ShiftSchedule, [date] As DateTime)
         Me.New(shiftSchedule?.Shift, [date])
         Me.ShiftSchedule = shiftSchedule
+    End Sub
+
+    Public Sub SetDefaultRestDay(dayOfWeek As Integer?)
+        _defaultRestDay = dayOfWeek
     End Sub
 
 End Class

@@ -28,7 +28,7 @@ Public Class TimeEntryPolicy
 
     Public ReadOnly Property RespectDefaultRestDay As Boolean
         Get
-            Return _settings.GetBoolean("RestDay.RespectDefaultRestDay")
+            Return _settings.GetBoolean("RestDayPolicy.RespectDefaultRestDay")
         End Get
     End Property
 

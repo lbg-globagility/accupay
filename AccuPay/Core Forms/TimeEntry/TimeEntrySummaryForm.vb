@@ -591,12 +591,11 @@ Public Class TimeEntrySummaryForm
 
         If result = DialogResult.OK Then
             Dim generator = New TimeEntryGenerator(startDate, endDate)
-            generator.Start()
-            MsgBox("Finished generation.")
-        End If
+            Dim progressDialog = New TimeEntryProgressDialog(generator)
 
-        Dim progressDialog = New TimeEntryProgressDialog()
-        progressDialog.Show()
+            Task.Run(Async Function() Await generator.StartAsync())
+            progressDialog.Show()
+        End If
     End Sub
 
     Private Sub DoneGenerating() Handles timeEntDurationModal.DoneGenerating
