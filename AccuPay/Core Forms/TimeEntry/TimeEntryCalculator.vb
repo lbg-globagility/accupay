@@ -78,18 +78,32 @@ Public Class TimeEntryCalculator
         Return nightDiffHours
     End Function
 
-    Public Function ComputeOvertimeHours(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift) As Decimal
+    Public Function ComputeOvertimeHours(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift, breaktime As TimePeriod) As Decimal
         Dim overtimeWorked = GetOvertimeWorked(workPeriod, overtime, shift)
 
-        Return If(overtimeWorked?.TotalHours, 0)
+        Dim overtimeHours As Decimal?
+        If breaktime IsNot Nothing Then
+            overtimeHours = overtimeWorked?.Difference(breaktime).Sum(Function(o) o.TotalHours)
+        Else
+            overtimeHours = overtimeWorked?.TotalHours
+        End If
+
+        Return If(overtimeHours, 0)
     End Function
 
-    Public Function ComputeNightDiffOTHours(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift, nightDiffPeriod As TimePeriod) As Decimal
+    Public Function ComputeNightDiffOTHours(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift, nightDiffPeriod As TimePeriod, breaktime As TimePeriod) As Decimal
         Dim overtimeWorked = GetOvertimeWorked(workPeriod, overtime, shift)
 
         Dim nightOvertimeWorked = overtimeWorked?.Overlap(nightDiffPeriod)
 
-        Return If(nightOvertimeWorked?.TotalHours, 0)
+        Dim nightDiffOTHours As Decimal?
+        If breaktime IsNot Nothing Then
+            nightDiffOTHours = nightOvertimeWorked?.Difference(breaktime).Sum(Function(o) o.TotalHours)
+        Else
+            nightDiffOTHours = nightOvertimeWorked?.TotalHours
+        End If
+
+        Return If(nightDiffOTHours, 0)
     End Function
 
     Private Function GetOvertimeWorked(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift) As TimePeriod

@@ -103,8 +103,15 @@ Public Class DayCalculator
 
                 timeEntry.RegularHours = currentShift.WorkingHours - timeEntry.LateHours - timeEntry.UndertimeHours
 
+                Dim nightBreaktime As TimePeriod = Nothing
+                If _policy.HasNightBreaktime Then
+                    nightBreaktime = New TimePeriod(
+                        currentDate.Add(TimeSpan.Parse("21:00")),
+                        currentDate.Add(TimeSpan.Parse("22:00")))
+                End If
+
                 timeEntry.OvertimeHours = overtimes.Sum(
-                Function(o) calculator.ComputeOvertimeHours(logPeriod, o, currentShift))
+                    Function(o) calculator.ComputeOvertimeHours(logPeriod, o, currentShift, nightBreaktime))
 
                 If _employee.CalcNightDiff And currentShift.IsNightShift Then
                     Dim nightDiffPeriod = GetNightDiffPeriod(currentDate)
@@ -115,12 +122,12 @@ Public Class DayCalculator
                     calculator.ComputeNightDiffHours(dutyPeriod, currentShift, dawnDiffPeriod)
 
                     timeEntry.NightDiffOTHours = overtimes.Sum(
-                    Function(o) calculator.ComputeNightDiffOTHours(logPeriod, o, currentShift, nightDiffPeriod) +
-                        calculator.ComputeNightDiffOTHours(logPeriod, o, currentShift, dawnDiffPeriod))
+                        Function(o) calculator.ComputeNightDiffOTHours(logPeriod, o, currentShift, nightDiffPeriod, nightBreaktime) +
+                            calculator.ComputeNightDiffOTHours(logPeriod, o, currentShift, dawnDiffPeriod, nightBreaktime))
                 End If
 
                 If (_employee.CalcHoliday And payrate.IsRegularHoliday) Or
-               (_employee.CalcSpecialHoliday And payrate.IsSpecialNonWorkingHoliday) Then
+                    (_employee.CalcSpecialHoliday And payrate.IsSpecialNonWorkingHoliday) Then
 
                     If payrate.IsRegularHoliday Then
                         timeEntry.RegularHolidayHours = timeEntry.RegularHours
@@ -138,6 +145,10 @@ Public Class DayCalculator
                 End If
 
                 If currentShift.IsRestDay And _employee.CalcRestDay Then
+                    If _policy.IgnoreShiftOnRestDay Then
+                        timeEntry.RegularHours = logPeriod.TotalHours
+                    End If
+
                     timeEntry.RestDayHours = timeEntry.RegularHours
                     timeEntry.RegularHours = 0
 
