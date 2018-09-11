@@ -561,6 +561,7 @@
     <Compile Include="Core Forms\TimeEntry\Employee.vb" />
     <Compile Include="Core Forms\TimeEntry\OfficialBusiness.vb" />
     <Compile Include="Core Forms\TimeEntry\Overtime.vb" />
+    <Compile Include="Core Forms\TimeEntry\ProgressMeter.vb" />
     <Compile Include="Core Forms\TimeEntry\Shift.vb" />
     <Compile Include="Core Forms\TimeEntry\ShiftToday.vb" />
     <Compile Include="Core Forms\TimeEntry\SqlToDataTable.vb" />
