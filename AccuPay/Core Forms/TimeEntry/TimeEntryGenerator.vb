@@ -33,7 +33,7 @@ Public Class TimeEntryGenerator
         _cutoffEnd = cutoffEnd
     End Sub
 
-    Public Async Function StartAsync() As Task(Of ObservableCollection(Of Integer))
+    Public Sub Start()
         Dim employees As IList(Of Employee) = Nothing
         Dim organization As Organization = Nothing
         Dim payrateCalendar As PayratesCalendar = Nothing
@@ -66,18 +66,13 @@ Public Class TimeEntryGenerator
 
         _total = employees.Count
 
-        Await Task.Run(
-            Sub()
-                Parallel.ForEach(employees,
-                    Sub(employee)
-                        CalculateEmployee(employee, organization, payrateCalendar, settings)
+        Parallel.ForEach(employees,
+            Sub(employee)
+                CalculateEmployee(employee, organization, payrateCalendar, settings)
 
-                        Interlocked.Increment(_finished)
-                    End Sub)
+                Interlocked.Increment(_finished)
             End Sub)
-
-        Return progress
-    End Function
+    End Sub
 
     Private Sub CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection)
         Dim previousTimeEntries As IList(Of TimeEntry) = Nothing
@@ -85,6 +80,7 @@ Public Class TimeEntryGenerator
         Dim timeLogs As IList(Of TimeLog) = Nothing
         Dim shiftSchedules As IList(Of ShiftSchedule) = Nothing
         Dim overtimesInCutoff As IList(Of Overtime) = Nothing
+        Dim officialBusinesses As IList(Of OfficialBusiness) = Nothing
         Dim leavesInCutoff As IList(Of Leave) = Nothing
 
         Using context = New PayrollContext()
@@ -93,6 +89,7 @@ Public Class TimeEntryGenerator
             timeLogs = GetTimeLogs(context, employee)
             shiftSchedules = GetShifts(context, employee)
             overtimesInCutoff = GetOvertimes(context, employee)
+            officialBusinesses = GetOfficialBusinesses(context, employee)
             leavesInCutoff = GetLeaves(context, employee)
         End Using
 
@@ -104,6 +101,7 @@ Public Class TimeEntryGenerator
             Dim shiftSchedule = shiftSchedules.FirstOrDefault(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo)
             Dim overtimes = overtimesInCutoff.Where(Function(o) o.OTStartDate <= currentDate And currentDate <= o.OTEndDate).ToList()
             Dim leaves = leavesInCutoff.Where(Function(l) l.StartDate = currentDate).ToList()
+            Dim officialBusiness = officialBusinesses.FirstOrDefault(Function(o) o.StartDate = currentDate)
 
             Dim timeEntry = dayCalculator.Compute(
                 currentDate,
@@ -112,6 +110,7 @@ Public Class TimeEntryGenerator
                 shiftSchedule,
                 timelog,
                 overtimes,
+                officialBusiness,
                 leaves)
 
             timeEntries.Add(timeEntry)
@@ -169,6 +168,14 @@ Public Class TimeEntryGenerator
         Return context.Overtimes.
             Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
             Where(Function(o) o.OTStartDate <= _cutoffEnd And _cutoffStart <= o.OTEndDate).
+            ToList()
+    End Function
+
+    Private Function GetOfficialBusinesses(context As PayrollContext, employee As Employee) As IList(Of OfficialBusiness)
+        Return context.OfficialBusinesses.
+            Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
+            Where(Function(o) o.StartDate <= _cutoffEnd And _cutoffStart <= o.EndDate).
+            Where(Function(o) o.Status = OfficialBusiness.StatusApproved).
             ToList()
     End Function
 

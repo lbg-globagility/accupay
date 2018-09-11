@@ -5,6 +5,7 @@ Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports log4net
+Imports System.Threading
 
 Public Class TimeEntrySummaryForm
 
@@ -593,12 +594,21 @@ Public Class TimeEntrySummaryForm
             Dim generator = New TimeEntryGenerator(startDate, endDate)
             Dim progressDialog = New TimeEntryProgressDialog(generator)
 
-            Task.Run(Async Function() Await generator.StartAsync())
+            Task.Run(Sub() generator.Start()).
+                ContinueWith(
+                    Sub() DoneGenerating(progressDialog),
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnRanToCompletion,
+                    TaskScheduler.FromCurrentSynchronizationContext)
+
             progressDialog.Show()
         End If
     End Sub
 
-    Private Sub DoneGenerating() Handles timeEntDurationModal.DoneGenerating
+    Private Sub DoneGenerating(dialog As TimeEntryProgressDialog)
+        dialog.Close()
+        dialog.Dispose()
+        MsgBox("Done")
     End Sub
 
     Private Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged

@@ -27,6 +27,7 @@ Public Class DayCalculator
                             shiftSchedule As ShiftSchedule,
                             timeLog As TimeLog,
                             overtimes As IList(Of Overtime),
+                            officialBusiness As OfficialBusiness,
                             leaves As IList(Of Leave)) As TimeEntry
         Dim timeEntry = oldTimeEntries.Where(Function(t) t.Date = currentDate).SingleOrDefault()
 
@@ -51,11 +52,11 @@ Public Class DayCalculator
             currentShift.SetDefaultRestDay(_employee.DayOfRest)
         End If
 
-        Dim hasTimeLog = timeLog IsNot Nothing
+        Dim hasTimeLog = timeLog IsNot Nothing Or officialBusiness IsNot Nothing
         Dim payrate = _payrateCalendar.Find(currentDate)
 
         If hasTimeLog And currentShift.HasShift Then
-            Dim logPeriod = GetLogPeriod(timeLog, currentShift, currentDate)
+            Dim logPeriod = GetLogPeriod(timeLog, officialBusiness, currentShift, currentDate)
 
             Dim shiftPeriod = currentShift.ShiftPeriod
             Dim dutyPeriod = shiftPeriod.Overlap(logPeriod)
@@ -304,8 +305,16 @@ Public Class DayCalculator
         Return False
     End Function
 
-    Public Function GetLogPeriod(timeLog As TimeLog, currentShift As CurrentShift, currentDate As Date) As TimePeriod
-        Dim logPeriod = TimePeriod.FromTime(timeLog.TimeIn.Value, timeLog.TimeOut.Value, currentDate)
+    Public Function GetLogPeriod(timeLog As TimeLog, officialBusiness As OfficialBusiness, currentShift As CurrentShift, currentDate As Date) As TimePeriod
+        Dim appliedIn = {timeLog?.TimeIn, officialBusiness?.StartTime}.
+            Where(Function(i) i.HasValue).
+            Min()
+
+        Dim appliedOut = {timeLog?.TimeOut, officialBusiness?.EndTime}.
+            Where(Function(i) i.HasValue).
+            Max()
+
+        Dim logPeriod = TimePeriod.FromTime(appliedIn.Value, appliedOut.Value, currentDate)
 
         If currentShift.HasShift Then
             Dim graceTime = _employee.LateGracePeriod
@@ -314,7 +323,7 @@ Public Class DayCalculator
             Dim gracePeriod = New TimePeriod(shiftStart, shiftStart.AddMinutes(graceTime))
 
             If gracePeriod.Contains(logPeriod.Start) Then
-                logPeriod = TimePeriod.FromTime(shiftStart.TimeOfDay, timeLog.TimeOut.Value, currentDate)
+                logPeriod = TimePeriod.FromTime(shiftStart.TimeOfDay, appliedOut.Value, currentDate)
             End If
         End If
 
