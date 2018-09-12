@@ -476,7 +476,13 @@ Public Class PayrollGeneration
             ElseIf payRate.IsRegularHoliday Then
                 amount = (timeEntry.RegularHours + timeEntry.RegularHolidayHours) * hourlyRate
 
-                If HasWorkedLastWorkingDay(timeEntry) Or _employee2.IsFixed Then
+                Dim exemption = _settings.GetBoolean("AllowancePolicy.HolidayAllowanceForMonthly")
+
+                Dim giveAllowance =
+                    HasWorkedLastWorkingDay(timeEntry) Or
+                    ((_employee2.IsFixed Or _employee2.IsMonthly) And exemption)
+
+                If giveAllowance Then
                     If _settings.GetString("AllowancePolicy.CalculationType") = "Hourly" Then
                         Dim workHours = If(timeEntry.ShiftSchedule?.Shift?.WorkHours, 8D)
 
