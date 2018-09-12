@@ -224,82 +224,92 @@ Public Class TimeEntrySummaryForm
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
         Dim sql = <![CDATA[
             SELECT
-                employeetimeentry.RowID,
-                employeetimeentry.Date,
-                employeetimeentrydetails.TimeIn,
-                employeetimeentrydetails.TimeOut,
+                ete.RowID,
+                ete.Date,
+                etd.TimeIn,
+                etd.TimeOut,
+                etd.RowID,
                 shift.TimeFrom AS ShiftFrom,
                 shift.TimeTo AS ShiftTo,
-                employeetimeentry.RegularHoursWorked,
-                employeetimeentry.RegularHoursAmount,
-                employeetimeentry.NightDifferentialHours,
-                employeetimeentry.NightDiffHoursAmount,
-                employeetimeentry.OvertimeHoursWorked,
-                employeetimeentry.OvertimeHoursAmount,
-                employeetimeentry.NightDifferentialOTHours,
-                employeetimeentry.NightDiffOTHoursAmount,
-                employeetimeentry.RestDayHours,
-                employeetimeentry.RestDayAmount,
-                employeetimeentry.RestDayOTHours,
-                employeetimeentry.RestDayOTPay,
-                employeetimeentry.LeavePayment,
-                employeetimeentry.HoursLate,
-                employeetimeentry.HoursLateAmount,
-                employeetimeentry.UndertimeHours,
-                employeetimeentry.UndertimeHoursAmount,
-                employeetimeentry.VacationLeaveHours,
-                employeetimeentry.SickLeaveHours,
-                employeetimeentry.OtherLeaveHours,
-                employeetimeentry.Leavepayment,
-                employeetimeentry.SpecialHolidayHours,
-                employeetimeentry.SpecialHolidayPay,
-                employeetimeentry.SpecialHolidayOTHours,
-                employeetimeentry.SpecialHolidayOTPay,
-                employeetimeentry.RegularHolidayHours,
-                employeetimeentry.RegularHolidayPay,
-                employeetimeentry.RegularHolidayOTHours,
-                employeetimeentry.RegularHolidayOTPay,
-                employeetimeentry.HolidayPayAmount,
-                employeetimeentry.AbsentHours,
-                employeetimeentry.Absent,
-                employeetimeentry.TotalHoursWorked,
-                employeetimeentry.TotalDayPay,
+                ete.RegularHoursWorked,
+                ete.RegularHoursAmount,
+                ete.NightDifferentialHours,
+                ete.NightDiffHoursAmount,
+                ete.OvertimeHoursWorked,
+                ete.OvertimeHoursAmount,
+                ete.NightDifferentialOTHours,
+                ete.NightDiffOTHoursAmount,
+                ete.RestDayHours,
+                ete.RestDayAmount,
+                ete.RestDayOTHours,
+                ete.RestDayOTPay,
+                ete.LeavePayment,
+                ete.HoursLate,
+                ete.HoursLateAmount,
+                ete.UndertimeHours,
+                ete.UndertimeHoursAmount,
+                ete.VacationLeaveHours,
+                ete.SickLeaveHours,
+                ete.OtherLeaveHours,
+                ete.Leavepayment,
+                ete.SpecialHolidayHours,
+                ete.SpecialHolidayPay,
+                ete.SpecialHolidayOTHours,
+                ete.SpecialHolidayOTPay,
+                ete.RegularHolidayHours,
+                ete.RegularHolidayPay,
+                ete.RegularHolidayOTHours,
+                ete.RegularHolidayOTPay,
+                ete.HolidayPayAmount,
+                ete.AbsentHours,
+                ete.Absent,
+                ete.TotalHoursWorked,
+                ete.TotalDayPay,
                 ofb.OffBusStartTime,
                 ofb.OffBusEndTime,
                 ot.OTStartTime,
                 ot.OTEndTIme,
                 payrate.PayType
-            FROM employeetimeentry
+            FROM employeetimeentry ete
             LEFT JOIN (
                 SELECT EmployeeID, Date, MAX(Created) Created
                 FROM employeetimeentrydetails
                 WHERE Date BETWEEN @DateFrom AND @DateTo
                 GROUP BY EmployeeID, Date
             ) latest
-            ON latest.EmployeeID = employeetimeentry.EmployeeID AND
-                latest.Date = employeetimeentry.Date
-            LEFT JOIN employeetimeentrydetails
-            ON employeetimeentrydetails.Date = employeetimeentry.Date AND
-                employeetimeentrydetails.OrganizationID = employeetimeentry.OrganizationID AND
-                employeetimeentrydetails.EmployeeID = employeetimeentry.EmployeeID AND
-                employeetimeentrydetails.Created = latest.Created
+            ON latest.EmployeeID = ete.EmployeeID AND
+                latest.Date = ete.Date
+            LEFT JOIN employeetimeentrydetails etd
+            ON etd.Date = ete.Date AND
+                etd.OrganizationID = ete.OrganizationID AND
+                etd.EmployeeID = ete.EmployeeID AND
+                etd.Created = latest.Created
             LEFT JOIN employeeshift
-            ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
+            ON employeeshift.RowID = ete.EmployeeShiftID
+            LEFT JOIN (
+                SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
+                FROM employeeofficialbusiness
+                WHERE OffBusStartDate BETWEEN @DateFrom AND @DateTo
+                GROUP BY EmployeeID, Date
+            ) latestOb
+            ON latestOb.EmployeeID = ete.EmployeeID AND
+                latestOb.Date = ete.Date
             LEFT JOIN employeeofficialbusiness ofb
-            ON ofb.OffBusStartDate = employeetimeentry.Date AND
-                ofb.EmployeeID = employeetimeentry.EmployeeID
+            ON ofb.OffBusStartDate = ete.Date AND
+                ofb.EmployeeID = ete.EmployeeID AND
+                ofb.Created = latestOb.Created
             LEFT JOIN employeeovertime ot
-            ON ot.OTStartDate = employeetimeentry.Date AND
-                ot.EmployeeID = employeetimeentry.EmployeeID AND
+            ON ot.OTStartDate = ete.Date AND
+                ot.EmployeeID = ete.EmployeeID AND
                 ot.OTStatus = 'Approved'
             LEFT JOIN shift
             ON shift.RowID = employeeshift.ShiftID
             LEFT JOIN payrate
-            ON payrate.Date = employeetimeentry.Date AND
-                payrate.OrganizationID = employeetimeentry.OrganizationID
-            WHERE employeetimeentry.EmployeeID = @EmployeeID AND
-                employeetimeentry.`Date` BETWEEN @DateFrom AND @DateTo
-            ORDER BY employeetimeentry.`Date`;
+            ON payrate.Date = ete.Date AND
+                payrate.OrganizationID = ete.OrganizationID
+            WHERE ete.EmployeeID = @EmployeeID AND
+                ete.`Date` BETWEEN @DateFrom AND @DateTo
+            ORDER BY ete.`Date`;
         ]]>.Value
 
         Dim timeEntries = New Collection(Of TimeEntry)
