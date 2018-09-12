@@ -451,30 +451,30 @@ Public Class PayrollGeneration
             .AllowanceID = allowance.RowID
         }
 
-        For Each TimeEntry In _timeEntries
-            Dim divisor = If(TimeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
+        For Each timeEntry In _timeEntries
+            Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
             Dim hourlyRate = dailyRate / divisor
 
             Dim amount = 0D
-            Dim payRate = _payRates(TimeEntry.Date)
+            Dim payRate = _payRates(timeEntry.Date)
             If payRate.IsRegularDay Then
-                Dim isRestDay = TimeEntry.RestDayHours > 0
+                Dim isRestDay = timeEntry.RestDayHours > 0
 
                 If isRestDay Then
                     amount = dailyRate
                 Else
-                    amount = (TimeEntry.RegularHours + TimeEntry.TotalLeaveHours) * hourlyRate
+                    amount = (timeEntry.RegularHours + timeEntry.TotalLeaveHours) * hourlyRate
                 End If
             ElseIf payRate.IsSpecialNonWorkingHoliday Then
-                Dim countableHours = TimeEntry.RegularHours + TimeEntry.SpecialHolidayHours + TimeEntry.TotalLeaveHours
+                Dim countableHours = timeEntry.RegularHours + timeEntry.SpecialHolidayHours + timeEntry.TotalLeaveHours
 
                 amount = If(countableHours > 0, dailyRate, 0D)
             ElseIf payRate.IsRegularHoliday Then
-                amount = (TimeEntry.RegularHours + TimeEntry.RegularHolidayHours) * hourlyRate
+                amount = (timeEntry.RegularHours + timeEntry.RegularHolidayHours) * hourlyRate
 
-                If HasWorkedLastWorkingDay(TimeEntry) Then
+                If HasWorkedLastWorkingDay(timeEntry) Or _employee2.IsFixed Then
                     If _settings.GetString("AllowancePolicy.CalculationType") = "Hourly" Then
-                        Dim workHours = If(TimeEntry.ShiftSchedule?.Shift?.WorkHours, 8D)
+                        Dim workHours = If(timeEntry.ShiftSchedule?.Shift?.WorkHours, 8D)
 
                         amount += {workHours * hourlyRate, dailyRate}.Max()
                     Else
@@ -483,7 +483,7 @@ Public Class PayrollGeneration
                 End If
             End If
 
-            allowanceItem.AddPerDay(TimeEntry.Date, amount)
+            allowanceItem.AddPerDay(timeEntry.Date, amount)
         Next
 
         Return allowanceItem
