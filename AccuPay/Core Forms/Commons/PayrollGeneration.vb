@@ -452,6 +452,10 @@ Public Class PayrollGeneration
         }
 
         For Each timeEntry In _timeEntries
+            If timeEntry.Date > allowance.EffectiveEndDate Then
+                Continue For
+            End If
+
             Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
             Dim hourlyRate = dailyRate / divisor
 
