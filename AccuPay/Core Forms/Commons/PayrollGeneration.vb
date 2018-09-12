@@ -452,7 +452,7 @@ Public Class PayrollGeneration
         }
 
         For Each timeEntry In _timeEntries
-            If timeEntry.Date > allowance.EffectiveEndDate Then
+            If Not (allowance.EffectiveStartDate <= timeEntry.Date And timeEntry.Date <= allowance.EffectiveEndDate) Then
                 Continue For
             End If
 
