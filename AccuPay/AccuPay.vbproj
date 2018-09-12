@@ -319,6 +319,7 @@
     <Compile Include="Core Forms\BankExports\IBankExporter.vb" />
     <Compile Include="Core Forms\Commons\AccuMath.vb" />
     <Compile Include="Core Forms\Commons\CalendarConstants.vb" />
+    <Compile Include="Core Forms\Commons\DailyAllowanceCalculator.vb" />
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\Enums.vb" />
     <Compile Include="Core Forms\Commons\ExportBankFile.vb" />
