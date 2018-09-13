@@ -314,1129 +314,1129 @@
     <Compile Include="Auditing\Forms\TimeLogForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\BankExports\BankExporterFactory.vb" />
-    <Compile Include="Core Forms\BankExports\BDOBankExporter.vb" />
-    <Compile Include="Core Forms\BankExports\IBankExporter.vb" />
-    <Compile Include="Core Forms\Commons\AccuMath.vb" />
-    <Compile Include="Core Forms\Commons\CalendarConstants.vb" />
-    <Compile Include="Core Forms\Commons\DailyAllowanceCalculator.vb" />
-    <Compile Include="Core Forms\Commons\DebugUtility.vb" />
-    <Compile Include="Core Forms\Commons\Enums.vb" />
-    <Compile Include="Core Forms\Commons\ExportBankFile.vb" />
-    <Compile Include="Core Forms\Commons\FeatureList.vb" />
-    <Compile Include="Core Forms\Commons\HdmfCalculator.vb" />
-    <Compile Include="Core Forms\Commons\ListOfValueCollection.vb" />
-    <Compile Include="Core Forms\Commons\PayratesCalendar.vb" />
-    <Compile Include="Core Forms\Commons\PayrollConstants.vb" />
-    <Compile Include="Core Forms\Commons\PayrollContext.vb" />
-    <Compile Include="Core Forms\Commons\PayrollTools.vb" />
-    <Compile Include="Core Forms\Commons\PhilHealthCalculator.vb" />
-    <Compile Include="Core Forms\Commons\ReleaseThirteenthMonthPay.vb" />
-    <Compile Include="Core Forms\Commons\Calendar.vb" />
-    <Compile Include="Core Forms\Commons\SssCalculator.vb" />
-    <Compile Include="Core Forms\Commons\TimeAttendanceAnalyzer.vb" />
-    <Compile Include="Core Forms\Commons\TypeTools.vb" />
-    <Compile Include="Core Forms\Commons\WithholdingTaxCalculator.vb" />
-    <Compile Include="Core Forms\Employee\AllowanceTab.Designer.vb">
+    <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
+    <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
+    <Compile Include="Domain\BankExports\IBankExporter.vb" />
+    <Compile Include="Domain\Commons\AccuMath.vb" />
+    <Compile Include="Domain\Commons\CalendarConstants.vb" />
+    <Compile Include="Domain\Commons\DailyAllowanceCalculator.vb" />
+    <Compile Include="Domain\Commons\DebugUtility.vb" />
+    <Compile Include="Domain\Commons\Enums.vb" />
+    <Compile Include="Domain\BankExports\ExportBankFile.vb" />
+    <Compile Include="Domain\Commons\FeatureList.vb" />
+    <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
+    <Compile Include="Domain\Commons\ListOfValueCollection.vb" />
+    <Compile Include="Domain\Commons\PayratesCalendar.vb" />
+    <Compile Include="Domain\Commons\PayrollConstants.vb" />
+    <Compile Include="Domain\Commons\PayrollContext.vb" />
+    <Compile Include="Domain\Commons\PayrollTools.vb" />
+    <Compile Include="Domain\Payroll\PhilHealthCalculator.vb" />
+    <Compile Include="Domain\Payroll\ReleaseThirteenthMonthPay.vb" />
+    <Compile Include="Domain\Commons\Calendar.vb" />
+    <Compile Include="Domain\Payroll\SssCalculator.vb" />
+    <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
+    <Compile Include="Core\Utilities\TypeTools.vb" />
+    <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
+    <Compile Include="Views\Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Employee\AllowanceTab.vb">
+    <Compile Include="Views\Core Forms\Employee\AllowanceTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\Employee\BonusTab.Designer.vb">
+    <Compile Include="Views\Core Forms\Employee\BonusTab.Designer.vb">
       <DependentUpon>BonusTab.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Employee\BonusTab.vb">
+    <Compile Include="Views\Core Forms\Employee\BonusTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\Employee\JobPointsTab.Designer.vb">
+    <Compile Include="Views\Core Forms\Employee\JobPointsTab.Designer.vb">
       <DependentUpon>JobPointsTab.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Employee\JobPointsTab.vb">
+    <Compile Include="Views\Core Forms\Employee\JobPointsTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\Employee\LeaveTab.Designer.vb">
+    <Compile Include="Views\Core Forms\Employee\LeaveTab.Designer.vb">
       <DependentUpon>LeaveTab.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Employee\LeaveTab.vb">
+    <Compile Include="Views\Core Forms\Employee\LeaveTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\Employee\LoanScheduleTab.Designer.vb">
+    <Compile Include="Views\Core Forms\Employee\LoanScheduleTab.Designer.vb">
       <DependentUpon>LoanScheduleTab.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Employee\LoanScheduleTab.vb">
+    <Compile Include="Views\Core Forms\Employee\LoanScheduleTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\Employee\OfficialBusinessTab.Designer.vb">
+    <Compile Include="Views\Core Forms\Employee\OfficialBusinessTab.Designer.vb">
       <DependentUpon>OfficialBusinessTab.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Employee\OfficialBusinessTab.vb">
+    <Compile Include="Views\Core Forms\Employee\OfficialBusinessTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\Employee\OvertimeTab.Designer.vb">
+    <Compile Include="Views\Core Forms\Employee\OvertimeTab.Designer.vb">
       <DependentUpon>OvertimeTab.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Employee\OvertimeTab.vb">
+    <Compile Include="Views\Core Forms\Employee\OvertimeTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\Employee\PersonalProfileTab.Designer.vb">
+    <Compile Include="Views\Core Forms\Employee\PersonalProfileTab.Designer.vb">
       <DependentUpon>PersonalProfileTab.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Employee\PersonalProfileTab.vb">
+    <Compile Include="Views\Core Forms\Employee\PersonalProfileTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\Employee\SalaryTab.Designer.vb">
+    <Compile Include="Views\Core Forms\Employee\SalaryTab.Designer.vb">
       <DependentUpon>SalaryTab.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Employee\SalaryTab.vb">
+    <Compile Include="Views\Core Forms\Employee\SalaryTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\EmploymentPolicyForm.Designer.vb">
+    <Compile Include="Views\Core Forms\EmploymentPolicyForm.Designer.vb">
       <DependentUpon>EmploymentPolicyForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\EmploymentPolicyForm.vb">
+    <Compile Include="Views\Core Forms\EmploymentPolicyForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
-    <Compile Include="Core Forms\Government\PhilHealthCalculator.vb" />
-    <Compile Include="Core Forms\Government\SocialSecurityBracket.vb" />
-    <Compile Include="Core Forms\Government\WithholdingTaxBracket.vb" />
-    <Compile Include="Core Forms\Independent filing\LeaveForm.designer.vb">
+    <Compile Include="Domain\Government\PhilHealthBracket.vb" />
+    <Compile Include="Domain\Government\PhilHealthCalculator.vb" />
+    <Compile Include="Domain\Government\SocialSecurityBracket.vb" />
+    <Compile Include="Domain\Government\WithholdingTaxBracket.vb" />
+    <Compile Include="Views\Core Forms\Independent filing\LeaveForm.designer.vb">
       <DependentUpon>LeaveForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Independent filing\LeaveForm.vb">
+    <Compile Include="Views\Core Forms\Independent filing\LeaveForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Independent filing\OBFForm.designer.vb">
+    <Compile Include="Views\Core Forms\Independent filing\OBFForm.designer.vb">
       <DependentUpon>OBFForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Independent filing\OBFForm.vb">
+    <Compile Include="Views\Core Forms\Independent filing\OBFForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Independent filing\OverTimeForm.designer.vb">
+    <Compile Include="Views\Core Forms\Independent filing\OverTimeForm.designer.vb">
       <DependentUpon>OverTimeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Independent filing\OverTimeForm.vb">
+    <Compile Include="Views\Core Forms\Independent filing\OverTimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\JobLevel\Entity\JobCategory.vb" />
-    <Compile Include="Core Forms\JobLevel\Entity\JobLevel.vb" />
-    <Compile Include="Core Forms\JobLevel\Entity\JobPoint.vb" />
-    <Compile Include="Core Forms\JobLevel\JobLevelForm.Designer.vb">
+    <Compile Include="Domain\JobLevels\JobCategory.vb" />
+    <Compile Include="Domain\JobLevels\JobLevel.vb" />
+    <Compile Include="Domain\JobLevels\JobPoint.vb" />
+    <Compile Include="Views\Core Forms\JobLevel\JobLevelForm.Designer.vb">
       <DependentUpon>JobLevelForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\JobLevel\JobLevelForm.vb">
+    <Compile Include="Views\Core Forms\JobLevel\JobLevelForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\JobLevel\JobPointsForm.Designer.vb">
+    <Compile Include="Views\Core Forms\JobLevel\JobPointsForm.Designer.vb">
       <DependentUpon>JobPointsForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\JobLevel\JobPointsForm.vb">
+    <Compile Include="Views\Core Forms\JobLevel\JobPointsForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\JobLevel\JobPointsPresenter.vb" />
-    <Compile Include="Core Forms\Loans\LoanSchedule.vb" />
-    <Compile Include="Core Forms\Loans\LoanTransaction.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\ActualAdjustment.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\ActualTimeEntry.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\Adjustment.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\Allowance.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\AllowanceItem.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\AllowancePerDay.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\Division.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\Item.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\Leave.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\LeaveLedger.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\LeaveTransaction.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\LeaveType.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\ListOfValue.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\Organization.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\PayFrequency.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\PayPeriod.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\PayRate.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\Paystub.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\PaystubActual.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\Position.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\Product.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\ThirteenthMonthPay.vb" />
-    <Compile Include="Core Forms\PayStub\Entity\TimeEntry.vb" />
-    <Compile Include="Core Forms\OffSetting.designer.vb">
+    <Compile Include="Views\Core Forms\JobLevel\JobPointsPresenter.vb" />
+    <Compile Include="Domain\Loans\LoanSchedule.vb" />
+    <Compile Include="Domain\Loans\LoanTransaction.vb" />
+    <Compile Include="Domain\Paystubs\ActualAdjustment.vb" />
+    <Compile Include="Domain\TimeEntry\ActualTimeEntry.vb" />
+    <Compile Include="Domain\Paystubs\Adjustment.vb" />
+    <Compile Include="Domain\Paystubs\Allowance.vb" />
+    <Compile Include="Domain\Paystubs\AllowanceItem.vb" />
+    <Compile Include="Domain\Paystubs\AllowancePerDay.vb" />
+    <Compile Include="Domain\Paystubs\Division.vb" />
+    <Compile Include="Domain\Paystubs\Item.vb" />
+    <Compile Include="Domain\Leaves\Leave.vb" />
+    <Compile Include="Domain\Leaves\LeaveLedger.vb" />
+    <Compile Include="Domain\Leaves\LeaveTransaction.vb" />
+    <Compile Include="Domain\Leaves\LeaveType.vb" />
+    <Compile Include="Domain\Paystubs\ListOfValue.vb" />
+    <Compile Include="Domain\Paystubs\Organization.vb" />
+    <Compile Include="Domain\Paystubs\PayFrequency.vb" />
+    <Compile Include="Domain\Paystubs\PayPeriod.vb" />
+    <Compile Include="Domain\Paystubs\PayRate.vb" />
+    <Compile Include="Domain\Paystubs\Paystub.vb" />
+    <Compile Include="Domain\Paystubs\PaystubActual.vb" />
+    <Compile Include="Domain\Paystubs\Position.vb" />
+    <Compile Include="Domain\Paystubs\Product.vb" />
+    <Compile Include="Domain\Paystubs\ThirteenthMonthPay.vb" />
+    <Compile Include="Domain\TimeEntry\TimeEntry.vb" />
+    <Compile Include="Views\Core Forms\OffSetting.designer.vb">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\OffSetting.vb">
+    <Compile Include="Views\Core Forms\OffSetting.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PayStub\NewPayStubForm.Designer.vb">
+    <Compile Include="Views\Core Forms\PayStub\NewPayStubForm.Designer.vb">
       <DependentUpon>NewPayStubForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\PayStub\NewPayStubForm.vb">
+    <Compile Include="Views\Core Forms\PayStub\NewPayStubForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PayStub\Entity\ShiftSchedule.vb" />
-    <Compile Include="Core Forms\Reports\AttendanceSheet2.vb">
+    <Compile Include="Domain\Shifts\ShiftSchedule.vb" />
+    <Compile Include="Reports\Reports\AttendanceSheet2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AttendanceSheet2.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\FiledLeaveReport.vb">
+    <Compile Include="Reports\Reports\FiledLeaveReport.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>FiledLeaveReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\LoanReportByType.vb">
+    <Compile Include="Reports\Reports\LoanReportByType.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LoanReportByType.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Providers\AgencyFeeReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\AttendanceSheetReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\EmployeeIdentificationNumberReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\EmployeeOffenseReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\EmployeeProfilesReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\EmploymentRecordReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\FiledLeaveReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\LateUTAbsentSummaryReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\LeaveLedgerReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\LoanSummaryByTypeReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\LoanSummaryReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\PagIBIGMonthlyReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\PayrollLedgerReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\PayrollSummaryExcelFormatReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\PhilHealthReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\PostEmploymentClearanceReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\IReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\SalaryIncreaseHistoryReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\SSSMonthlyReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\TaxReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\Providers\ThirteenthMonthSummaryReportProvider.vb" />
-    <Compile Include="Core Forms\Reports\ThirteenthMonthSummary.vb">
+    <Compile Include="Reports\Reports\Providers\AgencyFeeReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\AttendanceSheetReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\EmployeeIdentificationNumberReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\EmployeeOffenseReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\EmployeeProfilesReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\EmploymentRecordReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\FiledLeaveReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LateUTAbsentSummaryReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LeaveLedgerReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LoanSummaryByTypeReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LoanSummaryReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\PagIBIGMonthlyReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\PayrollLedgerReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\PayrollSummaryExcelFormatReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\PhilHealthReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\PostEmploymentClearanceReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\IReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\SalaryIncreaseHistoryReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\SSSMonthlyReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\TaxReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\ThirteenthMonthSummaryReportProvider.vb" />
+    <Compile Include="Reports\Reports\ThirteenthMonthSummary.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ThirteenthMonthSummary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\HyundaiPayslip.vb">
+    <Compile Include="Reports\rpt\rpt\HyundaiPayslip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>HyundaiPayslip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\HyundaiPayslip1.vb">
+    <Compile Include="Reports\rpt\rpt\HyundaiPayslip1.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>HyundaiPayslip1.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\LoanReports.vb">
+    <Compile Include="Reports\rpt\rpt\LoanReports.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LoanReports.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\ThirteenthMonthPayDetailSummary.vb">
+    <Compile Include="Reports\rpt\rpt\ThirteenthMonthPayDetailSummary.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ThirteenthMonthPayDetailSummary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\ThirteenthMonthPayReportProvider.vb" />
-    <Compile Include="Core Forms\Salary\ImportSalaryForm.Designer.vb">
+    <Compile Include="Reports\rpt\rpt\ThirteenthMonthPayReportProvider.vb" />
+    <Compile Include="Views\Core Forms\Salary\ImportSalaryForm.Designer.vb">
       <DependentUpon>ImportSalaryForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Salary\ImportSalaryForm.vb">
+    <Compile Include="Views\Core Forms\Salary\ImportSalaryForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Salary\Salary.vb" />
-    <Compile Include="Core Forms\Commons\ExcelParser.vb" />
-    <Compile Include="Core Forms\Salary\SalaryRowRecord.vb" />
-    <Compile Include="Core Forms\TimeEntry\DateRangePickerDialog.Designer.vb">
+    <Compile Include="Domain\Salaries\Salary.vb" />
+    <Compile Include="Core\Utilities\Excel\ExcelParser.vb" />
+    <Compile Include="Domain\Salaries\SalaryRowRecord.vb" />
+    <Compile Include="Views\Core Forms\TimeEntry\DateRangePickerDialog.Designer.vb">
       <DependentUpon>DateRangePickerDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\TimeEntry\DateRangePickerDialog.vb">
+    <Compile Include="Views\Core Forms\TimeEntry\DateRangePickerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\TimeEntry\DayCalculator.vb" />
-    <Compile Include="Core Forms\TimeEntry\Employee.vb" />
-    <Compile Include="Core Forms\TimeEntry\OfficialBusiness.vb" />
-    <Compile Include="Core Forms\TimeEntry\Overtime.vb" />
-    <Compile Include="Core Forms\TimeEntry\ProgressMeter.vb" />
-    <Compile Include="Core Forms\TimeEntry\Shift.vb" />
-    <Compile Include="Core Forms\TimeEntry\ShiftToday.vb" />
-    <Compile Include="Core Forms\TimeEntry\SqlToDataTable.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeEmployeeNo.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeEntryCalculator.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeEntryGenerator.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeEntryPolicy.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeEntryProgressDialog.Designer.vb">
+    <Compile Include="Domain\TimeEntry\DayCalculator.vb" />
+    <Compile Include="Domain\Employees\Employee.vb" />
+    <Compile Include="Domain\TimeEntry\OfficialBusiness.vb" />
+    <Compile Include="Domain\TimeEntry\Overtime.vb" />
+    <Compile Include="Domain\TimeEntry\ProgressMeter.vb" />
+    <Compile Include="Domain\Shifts\Shift.vb" />
+    <Compile Include="Domain\TimeEntry\ShiftToday.vb" />
+    <Compile Include="Core\DB\SqlToDataTable.vb" />
+    <Compile Include="Domain\TimeEntry\TimeEmployeeNo.vb" />
+    <Compile Include="Domain\TimeEntry\TimeEntryCalculator.vb" />
+    <Compile Include="Domain\TimeEntry\TimeEntryGenerator.vb" />
+    <Compile Include="Domain\TimeEntry\TimeEntryPolicy.vb" />
+    <Compile Include="Views\Core Forms\TimeEntry\TimeEntryProgressDialog.Designer.vb">
       <DependentUpon>TimeEntryProgressDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\TimeEntry\TimeEntryProgressDialog.vb">
+    <Compile Include="Views\Core Forms\TimeEntry\TimeEntryProgressDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryForm.Designer.vb">
+    <Compile Include="Views\Core Forms\TimeEntry\TimeEntrySummaryForm.Designer.vb">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryForm.vb">
+    <Compile Include="Views\Core Forms\TimeEntry\TimeEntrySummaryForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeInterval.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeLog.vb" />
-    <Compile Include="Core Forms\Commons\PayrollResources.vb" />
-    <Compile Include="Core Forms\Commons\TimeUtility.vb" />
-    <Compile Include="Core Forms\Commons\SqlReaderExtensions.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeLogInOut.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeLogsTempIn.vb" />
-    <Compile Include="Core Forms\TimeEntry\TimeLogsTempOut.vb" />
-    <Compile Include="Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.designer.vb">
+    <Compile Include="Views\Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
+    <Compile Include="Domain\TimeEntry\TimeInterval.vb" />
+    <Compile Include="Domain\TimeLogs\TimeLog.vb" />
+    <Compile Include="Domain\Payroll\PayrollResources.vb" />
+    <Compile Include="Core\Utilities\TimeUtility.vb" />
+    <Compile Include="Core\DB\SqlReaderExtensions.vb" />
+    <Compile Include="Domain\TimeLogs\TimeLogInOut.vb" />
+    <Compile Include="Domain\TimeEntry\TimeLogsTempIn.vb" />
+    <Compile Include="Domain\TimeEntry\TimeLogsTempOut.vb" />
+    <Compile Include="Views\Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.designer.vb">
       <DependentUpon>ViewTimeEntryEmployeeLevel.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.vb">
+    <Compile Include="Views\Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\TimeLogs\NewImporter.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\AccuPayTreeView.vb">
+    <Compile Include="Domain\TimeLogs\NewImporter.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\AccuPayTreeView.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\ImportAllowance.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\ImportOB.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\ImportOvertime.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\MySQL\IMySQLCommander.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\MySQL\MySQLCommander.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\MySQL\MySQLExecuteCommand.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\MySQL\SQL.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\SystemOwner.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\TimeTextBox.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\ImportAllowance.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\ImportOB.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\ImportOvertime.vb" />
+    <Compile Include="Core\DB\MySQL\IMySQLCommander.vb" />
+    <Compile Include="Core\DB\MySQL\MySQLCommander.vb" />
+    <Compile Include="Core\DB\MySQL\MySQLExecuteCommand.vb" />
+    <Compile Include="Core\DB\MySQL\SQL.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\SystemOwner.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\TimeTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Utils\StringUtils.vb" />
-    <Compile Include="Initial Forms\AboutUs.Designer.vb">
+    <Compile Include="Core\Utilities\StringUtils.vb" />
+    <Compile Include="Views\Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
     </Compile>
-    <Compile Include="Initial Forms\AboutUs.vb">
+    <Compile Include="Views\Initial Forms\AboutUs.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\AllowanceTypeForm.Designer.vb">
+    <Compile Include="Views\Core Forms\AllowanceTypeForm.Designer.vb">
       <DependentUpon>AllowanceTypeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\AllowanceTypeForm.vb">
+    <Compile Include="Views\Core Forms\AllowanceTypeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\EmployeeForm.Designer.vb">
+    <Compile Include="Views\Core Forms\EmployeeForm.Designer.vb">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\EmployeeForm.vb">
+    <Compile Include="Views\Core Forms\EmployeeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\PayrollSumma.vb">
+    <Compile Include="Reports\rpt\rpt\PayrollSumma.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PayrollSumma.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Commons\SeparateLineTimeParser.vb" />
-    <Compile Include="General Forms\ImproperLogOut.Designer.vb">
+    <Compile Include="Domain\Commons\SeparateLineTimeParser.vb" />
+    <Compile Include="Views\General Forms\ImproperLogOut.Designer.vb">
       <DependentUpon>ImproperLogOut.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\ImproperLogOut.vb">
+    <Compile Include="Views\General Forms\ImproperLogOut.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Alphalist\AlphalistGeneration.vb" />
-    <Compile Include="Core Forms\Alphalist\TaxYearDialog.Designer.vb">
+    <Compile Include="Views\Core Forms\Alphalist\AlphalistGeneration.vb" />
+    <Compile Include="Views\Core Forms\Alphalist\TaxYearDialog.Designer.vb">
       <DependentUpon>TaxYearDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Alphalist\TaxYearDialog.vb">
+    <Compile Include="Views\Core Forms\Alphalist\TaxYearDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Alphalist\WithholdingTax.Designer.vb">
+    <Compile Include="Views\Core Forms\Alphalist\WithholdingTax.Designer.vb">
       <DependentUpon>WithholdingTax.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Alphalist\WithholdingTax.vb">
+    <Compile Include="Views\Core Forms\Alphalist\WithholdingTax.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ApplicationEvents.vb" />
-    <Compile Include="General Forms\AddListOfValueForm.Designer.vb">
+    <Compile Include="Views\General Forms\AddListOfValueForm.Designer.vb">
       <DependentUpon>AddListOfValueForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\AddListOfValueForm.vb">
+    <Compile Include="Views\General Forms\AddListOfValueForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="General Forms\AddPostionForm.Designer.vb">
+    <Compile Include="Views\General Forms\AddPostionForm.Designer.vb">
       <DependentUpon>AddPostionForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\AddPostionForm.vb">
+    <Compile Include="Views\General Forms\AddPostionForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="General Forms\Address.designer.vb">
+    <Compile Include="Views\General Forms\Address.designer.vb">
       <DependentUpon>Address.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\Address.vb">
+    <Compile Include="Views\General Forms\Address.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="General Forms\AddressForm.Designer.vb">
+    <Compile Include="Views\General Forms\AddressForm.Designer.vb">
       <DependentUpon>AddressForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\AddressForm.vb">
+    <Compile Include="Views\General Forms\AddressForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="General Forms\Agency.designer.vb">
+    <Compile Include="Views\General Forms\Agency.designer.vb">
       <DependentUpon>Agency.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\Agency.vb">
+    <Compile Include="Views\General Forms\Agency.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="General Forms\AreaForm.designer.vb">
+    <Compile Include="Views\General Forms\AreaForm.designer.vb">
       <DependentUpon>AreaForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\AreaForm.vb">
+    <Compile Include="Views\General Forms\AreaForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="General Forms\AuditTrailForm.Designer.vb">
+    <Compile Include="Views\General Forms\AuditTrailForm.Designer.vb">
       <DependentUpon>AuditTrailForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\AuditTrailForm.vb">
+    <Compile Include="Views\General Forms\AuditTrailForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="General Forms\BranchForm.Designer.vb">
+    <Compile Include="Views\General Forms\BranchForm.Designer.vb">
       <DependentUpon>BranchForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\BranchForm.vb">
+    <Compile Include="Views\General Forms\BranchForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="General Forms\BranchHierarchyForm.designer.vb">
+    <Compile Include="Views\General Forms\BranchHierarchyForm.designer.vb">
       <DependentUpon>BranchHierarchyForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\BranchHierarchyForm.vb">
+    <Compile Include="Views\General Forms\BranchHierarchyForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="General Forms\ForgotPasswordForm.designer.vb">
+    <Compile Include="Views\General Forms\ForgotPasswordForm.designer.vb">
       <DependentUpon>ForgotPasswordForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\ForgotPasswordForm.vb">
+    <Compile Include="Views\General Forms\ForgotPasswordForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="General Forms\MetroLogin.designer.vb">
+    <Compile Include="Views\General Forms\MetroLogin.designer.vb">
       <DependentUpon>MetroLogin.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\MetroLogin.vb">
+    <Compile Include="Views\General Forms\MetroLogin.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HRIS Forms\DepartmentMinWages.Designer.vb">
+    <Compile Include="Views\HRIS Forms\DepartmentMinWages.Designer.vb">
       <DependentUpon>DepartmentMinWages.vb</DependentUpon>
     </Compile>
-    <Compile Include="HRIS Forms\DepartmentMinWages.vb">
+    <Compile Include="Views\HRIS Forms\DepartmentMinWages.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HRIS Forms\DivisionForm.Designer.vb">
+    <Compile Include="Views\HRIS Forms\DivisionForm.Designer.vb">
       <DependentUpon>DivisionForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="HRIS Forms\DivisionForm.vb">
+    <Compile Include="Views\HRIS Forms\DivisionForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HRIS Forms\LoanScheduleForm.Designer.vb">
+    <Compile Include="Views\HRIS Forms\LoanScheduleForm.Designer.vb">
       <DependentUpon>LoanScheduleForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="HRIS Forms\LoanScheduleForm.vb">
+    <Compile Include="Views\HRIS Forms\LoanScheduleForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Initial Forms\FormReports.designer.vb">
+    <Compile Include="Views\Initial Forms\FormReports.designer.vb">
       <DependentUpon>FormReports.vb</DependentUpon>
     </Compile>
-    <Compile Include="Initial Forms\FormReports.vb">
+    <Compile Include="Views\Initial Forms\FormReports.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Initial Forms\GeneralForm.Designer.vb">
+    <Compile Include="Views\Initial Forms\GeneralForm.Designer.vb">
       <DependentUpon>GeneralForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Initial Forms\GeneralForm.vb">
+    <Compile Include="Views\Initial Forms\GeneralForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Initial Forms\HomeForm.Designer.vb">
+    <Compile Include="Views\Initial Forms\HomeForm.Designer.vb">
       <DependentUpon>HomeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Initial Forms\HomeForm.vb">
+    <Compile Include="Views\Initial Forms\HomeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Initial Forms\HRISForm.Designer.vb">
+    <Compile Include="Views\Initial Forms\HRISForm.Designer.vb">
       <DependentUpon>HRISForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Initial Forms\HRISForm.vb">
+    <Compile Include="Views\Initial Forms\HRISForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Initial Forms\MDIPrimaryForm.Designer.vb">
+    <Compile Include="Views\Initial Forms\MDIPrimaryForm.Designer.vb">
       <DependentUpon>MDIPrimaryForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Initial Forms\MDIPrimaryForm.vb">
+    <Compile Include="Views\Initial Forms\MDIPrimaryForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Initial Forms\PayrollForm.Designer.vb">
+    <Compile Include="Views\Initial Forms\PayrollForm.Designer.vb">
       <DependentUpon>PayrollForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Initial Forms\PayrollForm.vb">
+    <Compile Include="Views\Initial Forms\PayrollForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Initial Forms\TimeAttendForm.Designer.vb">
+    <Compile Include="Views\Initial Forms\TimeAttendForm.Designer.vb">
       <DependentUpon>TimeAttendForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Initial Forms\TimeAttendForm.vb">
+    <Compile Include="Views\Initial Forms\TimeAttendForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\AddressClass.designer.vb">
+    <Compile Include="Views\Core Forms\AddressClass.designer.vb">
       <DependentUpon>AddressClass.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\AddressClass.vb">
+    <Compile Include="Views\Core Forms\AddressClass.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\BIR_1601CForm.Designer.vb">
+    <Compile Include="Views\Core Forms\BIR_1601CForm.Designer.vb">
       <DependentUpon>BIR_1601CForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\BIR_1601CForm.vb">
+    <Compile Include="Views\Core Forms\BIR_1601CForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\BonusGenerator.Designer.vb">
+    <Compile Include="Views\Core Forms\BonusGenerator.Designer.vb">
       <DependentUpon>BonusGenerator.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\BonusGenerator.vb">
+    <Compile Include="Views\Core Forms\BonusGenerator.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\CopyRightExpirationPrompt.Designer.vb">
+    <Compile Include="Views\Core Forms\CopyRightExpirationPrompt.Designer.vb">
       <DependentUpon>CopyRightExpirationPrompt.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\CopyRightExpirationPrompt.vb">
+    <Compile Include="Views\Core Forms\CopyRightExpirationPrompt.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\CrysRepForm.Designer.vb">
+    <Compile Include="Views\Core Forms\CrysRepForm.Designer.vb">
       <DependentUpon>CrysRepForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\CrysRepForm.vb">
+    <Compile Include="Views\Core Forms\CrysRepForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\CrysVwr.Designer.vb">
+    <Compile Include="Views\Core Forms\CrysVwr.Designer.vb">
       <DependentUpon>CrysVwr.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\CrysVwr.vb">
+    <Compile Include="Views\Core Forms\CrysVwr.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Dataset\AlphalistDataset.Designer.vb">
+    <Compile Include="Views\Core Forms\Dataset\AlphalistDataset.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AlphalistDataset.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Dataset\AlphalistDataset.vb">
+    <Compile Include="Views\Core Forms\Dataset\AlphalistDataset.vb">
       <DependentUpon>AlphalistDataset.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Dataset\DS1.Designer.vb">
+    <Compile Include="Views\Core Forms\Dataset\DS1.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DS1.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Dataset\DS1.vb">
+    <Compile Include="Views\Core Forms\Dataset\DS1.vb">
       <DependentUpon>DS1.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Dataset\memoUserDetailsDataset.Designer.vb">
+    <Compile Include="Views\Core Forms\Dataset\memoUserDetailsDataset.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>memoUserDetailsDataset.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Dataset\memoUserDetailsDataset.vb">
+    <Compile Include="Views\Core Forms\Dataset\memoUserDetailsDataset.vb">
       <DependentUpon>memoUserDetailsDataset.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\EmployeeBonusControl.Designer.vb">
+    <Compile Include="Views\Core Forms\EmployeeBonusControl.Designer.vb">
       <DependentUpon>EmployeeBonusControl.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\EmployeeBonusControl.vb">
+    <Compile Include="Views\Core Forms\EmployeeBonusControl.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\EmployeeBonusForm.designer.vb">
+    <Compile Include="Views\Core Forms\EmployeeBonusForm.designer.vb">
       <DependentUpon>EmployeeBonusForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\EmployeeBonusForm.vb">
+    <Compile Include="Views\Core Forms\EmployeeBonusForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\EmployeeSelection.designer.vb">
+    <Compile Include="Views\Core Forms\EmployeeSelection.designer.vb">
       <DependentUpon>EmployeeSelection.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\EmployeeSelection.vb">
+    <Compile Include="Views\Core Forms\EmployeeSelection.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\EmpPosition.Designer.vb">
+    <Compile Include="Views\Core Forms\EmpPosition.Designer.vb">
       <DependentUpon>EmpPosition.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\EmpPosition.vb">
+    <Compile Include="Views\Core Forms\EmpPosition.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\dutyshift.Designer.vb">
+    <Compile Include="Views\Core Forms\dutyshift.Designer.vb">
       <DependentUpon>dutyshift.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\dutyshift.vb">
+    <Compile Include="Views\Core Forms\dutyshift.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\TimeLogs\TimeLogsForm.Designer.vb">
+    <Compile Include="Views\Core Forms\TimeLogsForm.Designer.vb">
       <DependentUpon>TimeLogsForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\TimeLogs\TimeLogsForm.vb">
+    <Compile Include="Views\Core Forms\TimeLogsForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\EmpTimeEntry.Designer.vb">
+    <Compile Include="Views\Core Forms\EmpTimeEntry.Designer.vb">
       <DependentUpon>EmpTimeEntry.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\EmpTimeEntry.vb">
+    <Compile Include="Views\Core Forms\EmpTimeEntry.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\BlankTimeEntryLogs.Designer.vb">
+    <Compile Include="Views\Core Forms\BlankTimeEntryLogs.Designer.vb">
       <DependentUpon>BlankTimeEntryLogs.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\BlankTimeEntryLogs.vb">
+    <Compile Include="Views\Core Forms\BlankTimeEntryLogs.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\importWithholdingTax.Designer.vb">
+    <Compile Include="Views\Core Forms\importWithholdingTax.Designer.vb">
       <DependentUpon>importWithholdingTax.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\importWithholdingTax.vb">
+    <Compile Include="Views\Core Forms\importWithholdingTax.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Josh_CrysRepForm.Designer.vb">
+    <Compile Include="Views\Core Forms\Josh_CrysRepForm.Designer.vb">
       <DependentUpon>Josh_CrysRepForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Josh_CrysRepForm.vb">
+    <Compile Include="Views\Core Forms\Josh_CrysRepForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\leavetype.Designer.vb">
+    <Compile Include="Views\Core Forms\leavetype.Designer.vb">
       <DependentUpon>leavetype.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\leavetype.vb">
+    <Compile Include="Views\Core Forms\leavetype.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\LoanCancellation.designer.vb">
+    <Compile Include="Views\Core Forms\LoanCancellation.designer.vb">
       <DependentUpon>LoanCancellation.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\LoanCancellation.vb">
+    <Compile Include="Views\Core Forms\LoanCancellation.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\LoanType.Designer.vb">
+    <Compile Include="Views\Core Forms\LoanType.Designer.vb">
       <DependentUpon>LoanType.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\LoanType.vb">
+    <Compile Include="Views\Core Forms\LoanType.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\newEmpStat.Designer.vb">
+    <Compile Include="Views\Core Forms\newEmpStat.Designer.vb">
       <DependentUpon>newEmpStat.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\newEmpStat.vb">
+    <Compile Include="Views\Core Forms\newEmpStat.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\newEmpType.Designer.vb">
+    <Compile Include="Views\Core Forms\newEmpType.Designer.vb">
       <DependentUpon>newEmpType.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\newEmpType.vb">
+    <Compile Include="Views\Core Forms\newEmpType.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\newPostion.Designer.vb">
+    <Compile Include="Views\Core Forms\newPostion.Designer.vb">
       <DependentUpon>newPostion.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\newPostion.vb">
+    <Compile Include="Views\Core Forms\newPostion.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\newProdAllowa.Designer.vb">
+    <Compile Include="Views\Core Forms\newProdAllowa.Designer.vb">
       <DependentUpon>newProdAllowa.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\newProdAllowa.vb">
+    <Compile Include="Views\Core Forms\newProdAllowa.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\newProdBonus.Designer.vb">
+    <Compile Include="Views\Core Forms\newProdBonus.Designer.vb">
       <DependentUpon>newProdBonus.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\newProdBonus.vb">
+    <Compile Include="Views\Core Forms\newProdBonus.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\OrganizationPrompt.Designer.vb">
+    <Compile Include="Views\Core Forms\OrganizationPrompt.Designer.vb">
       <DependentUpon>OrganizationPrompt.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\OrganizationPrompt.vb">
+    <Compile Include="Views\Core Forms\OrganizationPrompt.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\payFreqSelectn.Designer.vb">
+    <Compile Include="Views\Core Forms\payFreqSelectn.Designer.vb">
       <DependentUpon>payFreqSelectn.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\payFreqSelectn.vb">
+    <Compile Include="Views\Core Forms\payFreqSelectn.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PayPeriodSelector.Designer.vb">
+    <Compile Include="Views\Core Forms\PayPeriodSelector.Designer.vb">
       <DependentUpon>PayPeriodSelector.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\PayPeriodSelector.vb">
+    <Compile Include="Views\Core Forms\PayPeriodSelector.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Payrate.Designer.vb">
+    <Compile Include="Views\Core Forms\Payrate.Designer.vb">
       <DependentUpon>Payrate.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\Payrate.vb">
+    <Compile Include="Views\Core Forms\Payrate.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PayrollSummaDateSelection.Designer.vb">
+    <Compile Include="Views\Core Forms\PayrollSummaDateSelection.Designer.vb">
       <DependentUpon>PayrollSummaDateSelection.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\PayrollSummaDateSelection.vb">
+    <Compile Include="Views\Core Forms\PayrollSummaDateSelection.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PayStub\PayStubForm.Designer.vb">
+    <Compile Include="Views\Core Forms\PayStub\PayStubForm.Designer.vb">
       <DependentUpon>PayStubForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\PayStub\PayStubForm.vb">
+    <Compile Include="Views\Core Forms\PayStub\PayStubForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PhiHealth.Designer.vb">
+    <Compile Include="Views\Core Forms\PhiHealth.Designer.vb">
       <DependentUpon>PhiHealth.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\PhiHealth.vb">
+    <Compile Include="Views\Core Forms\PhiHealth.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\ProdCtrlForm.designer.vb">
+    <Compile Include="Views\Core Forms\ProdCtrlForm.designer.vb">
       <DependentUpon>ProdCtrlForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\ProdCtrlForm.vb">
+    <Compile Include="Views\Core Forms\ProdCtrlForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\ProductControlForm.designer.vb">
+    <Compile Include="Views\Core Forms\ProductControlForm.designer.vb">
       <DependentUpon>ProductControlForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\ProductControlForm.vb">
+    <Compile Include="Views\Core Forms\ProductControlForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\promptyear.Designer.vb">
+    <Compile Include="Views\Core Forms\promptyear.Designer.vb">
       <DependentUpon>promptyear.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\promptyear.vb">
+    <Compile Include="Views\Core Forms\promptyear.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\ReportsForm.Designer.vb">
+    <Compile Include="Views\Core Forms\ReportsForm.Designer.vb">
       <DependentUpon>ReportsForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\ReportsForm.vb">
+    <Compile Include="Views\Core Forms\ReportsForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\ReportsList.Designer.vb">
+    <Compile Include="Views\Core Forms\ReportsList.Designer.vb">
       <DependentUpon>ReportsList.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\ReportsList.vb">
+    <Compile Include="Views\Core Forms\ReportsList.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Alphalist.vb">
+    <Compile Include="Reports\Reports\Alphalist.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Alphalist.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Alphalistv2.vb">
+    <Compile Include="Reports\Reports\Alphalistv2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Alphalistv2.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Attendance Sheet.vb">
+    <Compile Include="Reports\Reports\Attendance Sheet.vb">
       <DependentUpon>Attendance Sheet.rpt</DependentUpon>
       <SubType>Component</SubType>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee 13th Month Pay Report.vb">
+    <Compile Include="Reports\Reports\Employee 13th Month Pay Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee 13th Month Pay Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee Citizenship.vb">
+    <Compile Include="Reports\Reports\Employee Citizenship.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee Citizenship.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee Leave Ledger.vb">
+    <Compile Include="Reports\Reports\Employee Leave Ledger.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee Leave Ledger.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee Loan Report.vb">
+    <Compile Include="Reports\Reports\Employee Loan Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee Loan Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee Personal Information.vb">
+    <Compile Include="Reports\Reports\Employee Personal Information.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee Personal Information.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee Skills.vb">
+    <Compile Include="Reports\Reports\Employee Skills.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee Skills.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee%27s 13th Month Pay Report.vb">
+    <Compile Include="Reports\Reports\Employee%27s 13th Month Pay Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s 13th Month Pay Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee%27s Dialect.vb">
+    <Compile Include="Reports\Reports\Employee%27s Dialect.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Dialect.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee%27s Employment Record.vb">
+    <Compile Include="Reports\Reports\Employee%27s Employment Record.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Employment Record.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee%27s History of Salary Increase.vb">
+    <Compile Include="Reports\Reports\Employee%27s History of Salary Increase.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s History of Salary Increase.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee%27s Identification Number.vb">
+    <Compile Include="Reports\Reports\Employee%27s Identification Number.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Identification Number.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee%27s Offenses.vb">
+    <Compile Include="Reports\Reports\Employee%27s Offenses.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Offenses.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee%27s Payroll Ledger.vb">
+    <Compile Include="Reports\Reports\Employee%27s Payroll Ledger.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Payroll Ledger.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee%27s Religion.vb">
+    <Compile Include="Reports\Reports\Employee%27s Religion.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Religion.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Employee%27s Spouse Information.vb">
+    <Compile Include="Reports\Reports\Employee%27s Spouse Information.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employee%27s Spouse Information.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Loan Report.vb">
+    <Compile Include="Reports\Reports\Loan Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Loan Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Pagibig Monthly Report.vb">
+    <Compile Include="Reports\Reports\Pagibig Monthly Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Pagibig Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Payroll Summary Report.vb">
+    <Compile Include="Reports\Reports\Payroll Summary Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Payroll Summary Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Phil Health Monthly Report.vb">
+    <Compile Include="Reports\Reports\Phil Health Monthly Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Phil Health Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\SSS Monthly Report.vb">
+    <Compile Include="Reports\Reports\SSS Monthly Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SSS Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\Reports\Tax Monthly Report.vb">
+    <Compile Include="Reports\Reports\Tax Monthly Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Tax Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\1601C_BIR.vb">
+    <Compile Include="Reports\rpt\rpt\1601C_BIR.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>1601C_BIR.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\ActualReports\HalfPaySlipActual.vb">
+    <Compile Include="Reports\rpt\rpt\ActualReports\HalfPaySlipActual.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>HalfPaySlipActual.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\ActualReports\PayrollSummaActual.vb">
+    <Compile Include="Reports\rpt\rpt\ActualReports\PayrollSummaActual.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PayrollSummaActual.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\ActualReports\prntAllPaySlipActual.vb">
+    <Compile Include="Reports\rpt\rpt\ActualReports\prntAllPaySlipActual.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>prntAllPaySlipActual.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\BIR2316.vb">
+    <Compile Include="Reports\rpt\rpt\BIR2316.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BIR2316.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\discplinaryActions.vb">
+    <Compile Include="Reports\rpt\rpt\discplinaryActions.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>discplinaryActions.rpt</DependentUpon>
       <SubType>Component</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="Core Forms\rpt\HalfPaySlip.vb">
+    <Compile Include="Reports\rpt\rpt\HalfPaySlip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>HalfPaySlip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\MemoTemplate.vb">
+    <Compile Include="Reports\rpt\rpt\MemoTemplate.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MemoTemplate.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\OBFReport.vb">
+    <Compile Include="Reports\rpt\rpt\OBFReport.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>OBFReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\OfficialPaySlipFormat.vb">
+    <Compile Include="Reports\rpt\rpt\OfficialPaySlipFormat.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>OfficialPaySlipFormat.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\onepagefouremployeepayslip.vb">
+    <Compile Include="Reports\rpt\rpt\onepagefouremployeepayslip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>onepagefouremployeepayslip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\PaySlipHalfPage.vb">
+    <Compile Include="Reports\rpt\rpt\PaySlipHalfPage.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PaySlipHalfPage.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\printallpayslipotherformat.vb">
+    <Compile Include="Reports\rpt\rpt\printallpayslipotherformat.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>printallpayslipotherformat.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\prntAllPaySlip.vb">
+    <Compile Include="Reports\rpt\rpt\prntAllPaySlip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>prntAllPaySlip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\prntPaySlip.vb">
+    <Compile Include="Reports\rpt\rpt\prntPaySlip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>prntPaySlip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\QuadrantPaySlip.vb">
+    <Compile Include="Reports\rpt\rpt\QuadrantPaySlip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>QuadrantPaySlip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\rptAllDecUndecPaySlip.vb">
+    <Compile Include="Reports\rpt\rpt\rptAllDecUndecPaySlip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>rptAllDecUndecPaySlip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\rptDecUndecPaySlip.vb">
+    <Compile Include="Reports\rpt\rpt\rptDecUndecPaySlip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>rptDecUndecPaySlip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\SSS_R52.vb">
+    <Compile Include="Reports\rpt\rpt\SSS_R52.vb">
       <DependentUpon>SSS_R5.rpt</DependentUpon>
       <SubType>Component</SubType>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Core Forms\rpt\TardinessReport.vb">
+    <Compile Include="Reports\rpt\rpt\TardinessReport.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TardinessReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\rpt\TwoEmpIn1PaySlip.vb">
+    <Compile Include="Reports\rpt\rpt\TwoEmpIn1PaySlip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TwoEmpIn1PaySlip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\SelectFromEmployee.Designer.vb">
+    <Compile Include="Views\Core Forms\SelectFromEmployee.Designer.vb">
       <DependentUpon>SelectFromEmployee.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\SelectFromEmployee.vb">
+    <Compile Include="Views\Core Forms\SelectFromEmployee.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\selectMonth.Designer.vb">
+    <Compile Include="Views\Core Forms\selectMonth.Designer.vb">
       <DependentUpon>selectMonth.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\selectMonth.vb">
+    <Compile Include="Views\Core Forms\selectMonth.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\PayStub\selectPayPeriod.Designer.vb">
+    <Compile Include="Views\Core Forms\PayStub\selectPayPeriod.Designer.vb">
       <DependentUpon>selectPayPeriod.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\PayStub\selectPayPeriod.vb">
+    <Compile Include="Views\Core Forms\PayStub\selectPayPeriod.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\SetEmployeeEndDate.Designer.vb">
+    <Compile Include="Views\Core Forms\SetEmployeeEndDate.Designer.vb">
       <DependentUpon>SetEmployeeEndDate.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\SetEmployeeEndDate.vb">
+    <Compile Include="Views\Core Forms\SetEmployeeEndDate.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\ShiftList.designer.vb">
+    <Compile Include="Views\Core Forms\ShiftList.designer.vb">
       <DependentUpon>ShiftList.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\ShiftList.vb">
+    <Compile Include="Views\Core Forms\ShiftList.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\ShiftTemplater.Designer.vb">
+    <Compile Include="Views\Core Forms\ShiftTemplater.Designer.vb">
       <DependentUpon>ShiftTemplater.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\ShiftTemplater.vb">
+    <Compile Include="Views\Core Forms\ShiftTemplater.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\showAuditTrail.Designer.vb">
+    <Compile Include="Views\Core Forms\showAuditTrail.Designer.vb">
       <DependentUpon>showAuditTrail.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\showAuditTrail.vb">
+    <Compile Include="Views\Core Forms\showAuditTrail.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\SSSCntrib.Designer.vb">
+    <Compile Include="Views\Core Forms\SSSCntrib.Designer.vb">
       <DependentUpon>SSSCntrib.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\SSSCntrib.vb">
+    <Compile Include="Views\Core Forms\SSSCntrib.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\TimEntduration.Designer.vb">
+    <Compile Include="Views\Core Forms\TimEntduration.Designer.vb">
       <DependentUpon>TimEntduration.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\TimEntduration.vb">
+    <Compile Include="Views\Core Forms\TimEntduration.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\cboListOfValue.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\cboListOfValue.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\CustomColoredTabControl.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\CustomColoredTabControl.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\CustomDatePicker.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\CustomDatePicker.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\CustomPictureBox.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\CustomPictureBox.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\DataGridViewDateColumn.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\DataGridViewNumberColumn.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\DataGridViewTimeColumn.vb" />
-    <Compile Include="Core Forms\USER CONTROLS\DiscipAction.designer.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\DataGridViewDateColumn.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\DataGridViewNumberColumn.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\DataGridViewTimeColumn.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\DiscipAction.designer.vb">
       <DependentUpon>DiscipAction.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\DiscipAction.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\DiscipAction.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\TextBoxDateTime.Designer.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\TextBoxDateTime.Designer.vb">
       <DependentUpon>TextBoxDateTime.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\TextBoxDateTime.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\TextBoxDateTime.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\TrialForm.Designer.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\TrialForm.Designer.vb">
       <DependentUpon>TrialForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\TrialForm.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\TrialForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\txtEmployeeFullName.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\txtEmployeeFullName.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\txtEmployeeNumber.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\txtEmployeeNumber.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\txtIDOfEmployee.Designer.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.Designer.vb">
       <DependentUpon>txtIDOfEmployee.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\txtIDOfEmployee.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Core Forms\USER CONTROLS\txtPlaceHolder.vb">
+    <Compile Include="Views\Core Forms\USER CONTROLS\txtPlaceHolder.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core Forms\userprivil.Designer.vb">
+    <Compile Include="Views\Core Forms\userprivil.Designer.vb">
       <DependentUpon>userprivil.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\userprivil.vb">
+    <Compile Include="Views\Core Forms\userprivil.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\Commons\CountDownExpiration.vb" />
-    <Compile Include="Core Forms\Commons\DataBaseConnection.vb" />
-    <Compile Include="Core Forms\Commons\ExcelWriter.vb" />
-    <Compile Include="Core Forms\Commons\ExecSQLMultiDimArrProcedure.vb" />
-    <Compile Include="Core Forms\Commons\ExecSQLProcedure.vb" />
-    <Compile Include="Core Forms\Commons\ExecuteQuery.vb" />
-    <Compile Include="Core Forms\Commons\FileObserver.vb" />
-    <Compile Include="Core Forms\Commons\ImportLoans.vb" />
-    <Compile Include="Core Forms\Commons\KillAppCatcher.vb" />
-    <Compile Include="Core Forms\Commons\myModule.vb" />
-    <Compile Include="Core Forms\Commons\PayrollGeneration.vb" />
-    <Compile Include="Core Forms\Commons\ReadSQLFunction.vb" />
-    <Compile Include="Core Forms\Commons\ReadSQLFunctionV2.vb" />
-    <Compile Include="Core Forms\Commons\ReadSQLProcedureToDatatable.vb" />
-    <Compile Include="Core Forms\Commons\SQLQueryToDatatable.vb" />
-    <Compile Include="Core Forms\TimeLogs\TimeInTimeOutParser.vb" />
-    <Compile Include="Core Forms\Commons\TrapDecimalKey.vb" />
-    <Compile Include="Core Forms\Commons\UserAccessRights.vb" />
-    <Compile Include="Core Forms\viewtotallow.Designer.vb">
+    <Compile Include="Domain\Commons\CountDownExpiration.vb" />
+    <Compile Include="Core\DB\DataBaseConnection.vb" />
+    <Compile Include="Core\Utilities\Excel\ExcelWriter.vb" />
+    <Compile Include="Core\DB\ExecSQLMultiDimArrProcedure.vb" />
+    <Compile Include="Core\DB\ExecSQLProcedure.vb" />
+    <Compile Include="Core\DB\ExecuteQuery.vb" />
+    <Compile Include="Domain\Commons\FileObserver.vb" />
+    <Compile Include="Domain\Loans\ImportLoans.vb" />
+    <Compile Include="Domain\Commons\KillAppCatcher.vb" />
+    <Compile Include="Domain\Commons\myModule.vb" />
+    <Compile Include="Domain\Payroll\PayrollGeneration.vb" />
+    <Compile Include="Core\DB\ReadSQLFunction.vb" />
+    <Compile Include="Core\DB\ReadSQLFunctionV2.vb" />
+    <Compile Include="Core\DB\ReadSQLProcedureToDatatable.vb" />
+    <Compile Include="Core\DB\SQLQueryToDatatable.vb" />
+    <Compile Include="Domain\TimeLogs\TimeInTimeOutParser.vb" />
+    <Compile Include="Domain\Commons\TrapDecimalKey.vb" />
+    <Compile Include="Domain\Commons\UserAccessRights.vb" />
+    <Compile Include="Views\Core Forms\viewtotallow.Designer.vb">
       <DependentUpon>viewtotallow.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\viewtotallow.vb">
+    <Compile Include="Views\Core Forms\viewtotallow.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\viewtotbon.Designer.vb">
+    <Compile Include="Views\Core Forms\viewtotbon.Designer.vb">
       <DependentUpon>viewtotbon.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\viewtotbon.vb">
+    <Compile Include="Views\Core Forms\viewtotbon.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core Forms\viewtotloan.Designer.vb">
+    <Compile Include="Views\Core Forms\viewtotloan.Designer.vb">
       <DependentUpon>viewtotloan.vb</DependentUpon>
     </Compile>
-    <Compile Include="Core Forms\viewtotloan.vb">
+    <Compile Include="Views\Core Forms\viewtotloan.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Reports\rpt\CrystalReport1.vb">
@@ -1450,18 +1450,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DSReportList.xsd</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\ListOfValueForm.Designer.vb">
+    <Compile Include="Views\General Forms\ListOfValueForm.Designer.vb">
       <DependentUpon>ListOfValueForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\ListOfValueForm.vb">
+    <Compile Include="Views\General Forms\ListOfValueForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Modules\mdlStoredProcedure.vb" />
-    <Compile Include="Modules\mdlValidation.vb" />
-    <Compile Include="General Forms\OrganizationForm.Designer.vb">
+    <Compile Include="Core\Modules\mdlStoredProcedure.vb" />
+    <Compile Include="Core\Modules\mdlValidation.vb" />
+    <Compile Include="Views\General Forms\OrganizationForm.Designer.vb">
       <DependentUpon>OrganizationForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\OrganizationForm.vb">
+    <Compile Include="Views\General Forms\OrganizationForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Reports\Report Forms\PFF-053Form.Designer.vb">
@@ -1482,10 +1482,10 @@
       <DependentUpon>CrystalReport2.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="HRIS Forms\Revised_Withholding_Tax_Tables.vb">
+    <Compile Include="Views\HRIS Forms\Revised_Withholding_Tax_Tables.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HRIS Forms\Revised_Withholding_Tax_Tables.Designer.vb">
+    <Compile Include="Views\HRIS Forms\Revised_Withholding_Tax_Tables.Designer.vb">
       <DependentUpon>Revised_Withholding_Tax_Tables.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
@@ -1516,40 +1516,40 @@
       <DependentUpon>rptRF-1.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="General Forms\UsersForm.Designer.vb">
+    <Compile Include="Views\General Forms\UsersForm.Designer.vb">
       <DependentUpon>UsersForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="General Forms\UsersForm.vb">
+    <Compile Include="Views\General Forms\UsersForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Time Attendance Form\EmployeeShiftMassUpdate.designer.vb">
+    <Compile Include="Views\Time Attendance Form\EmployeeShiftMassUpdate.designer.vb">
       <DependentUpon>EmployeeShiftMassUpdate.vb</DependentUpon>
     </Compile>
-    <Compile Include="Time Attendance Form\EmployeeShiftMassUpdate.vb">
+    <Compile Include="Views\Time Attendance Form\EmployeeShiftMassUpdate.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Time Attendance Form\MassOvertimeForm.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\MassOvertimeForm.Designer.vb">
       <DependentUpon>MassOvertimeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Time Attendance Form\MassOvertimeForm.vb">
+    <Compile Include="Views\Time Attendance Form\MassOvertimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Time Attendance Form\PayrollGenerateForm.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\PayrollGenerateForm.Designer.vb">
       <DependentUpon>PayrollGenerateForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Time Attendance Form\PayrollGenerateForm.vb">
+    <Compile Include="Views\Time Attendance Form\PayrollGenerateForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Time Attendance Form\ShiftEntryForm.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\ShiftEntryForm.Designer.vb">
       <DependentUpon>ShiftEntryForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Time Attendance Form\ShiftEntryForm.vb">
+    <Compile Include="Views\Time Attendance Form\ShiftEntryForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Time Attendance Form\EmployeeShiftEntryForm.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\EmployeeShiftEntryForm.Designer.vb">
       <DependentUpon>EmployeeShiftEntryForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Time Attendance Form\EmployeeShiftEntryForm.vb">
+    <Compile Include="Views\Time Attendance Form\EmployeeShiftEntryForm.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
@@ -1562,537 +1562,537 @@
     <EmbeddedResource Include="Auditing\Forms\TimeLogForm.resx">
       <DependentUpon>TimeLogForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\AllowanceTypeForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\AllowanceTypeForm.resx">
       <DependentUpon>AllowanceTypeForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\EmployeeForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\EmployeeForm.resx">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Employee\AllowanceTab.resx">
+    <EmbeddedResource Include="Views\Core Forms\Employee\AllowanceTab.resx">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Employee\BonusTab.resx">
+    <EmbeddedResource Include="Views\Core Forms\Employee\BonusTab.resx">
       <DependentUpon>BonusTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Employee\JobPointsTab.resx">
+    <EmbeddedResource Include="Views\Core Forms\Employee\JobPointsTab.resx">
       <DependentUpon>JobPointsTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Employee\LeaveTab.resx">
+    <EmbeddedResource Include="Views\Core Forms\Employee\LeaveTab.resx">
       <DependentUpon>LeaveTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Employee\LoanScheduleTab.resx">
+    <EmbeddedResource Include="Views\Core Forms\Employee\LoanScheduleTab.resx">
       <DependentUpon>LoanScheduleTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Employee\OfficialBusinessTab.resx">
+    <EmbeddedResource Include="Views\Core Forms\Employee\OfficialBusinessTab.resx">
       <DependentUpon>OfficialBusinessTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Employee\OvertimeTab.resx">
+    <EmbeddedResource Include="Views\Core Forms\Employee\OvertimeTab.resx">
       <DependentUpon>OvertimeTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Employee\PersonalProfileTab.resx">
+    <EmbeddedResource Include="Views\Core Forms\Employee\PersonalProfileTab.resx">
       <DependentUpon>PersonalProfileTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Employee\SalaryTab.resx">
+    <EmbeddedResource Include="Views\Core Forms\Employee\SalaryTab.resx">
       <DependentUpon>SalaryTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\EmploymentPolicyForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\EmploymentPolicyForm.resx">
       <DependentUpon>EmploymentPolicyForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Independent filing\LeaveForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\Independent filing\LeaveForm.resx">
       <DependentUpon>LeaveForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Independent filing\OBFForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\Independent filing\OBFForm.resx">
       <DependentUpon>OBFForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Independent filing\OverTimeForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\Independent filing\OverTimeForm.resx">
       <DependentUpon>OverTimeForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\JobLevel\JobLevelForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\JobLevel\JobLevelForm.resx">
       <DependentUpon>JobLevelForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\JobLevel\JobPointsForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\JobLevel\JobPointsForm.resx">
       <DependentUpon>JobPointsForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\OffSetting.resx">
+    <EmbeddedResource Include="Views\Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\PayStub\NewPayStubForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\PayStub\NewPayStubForm.resx">
       <DependentUpon>NewPayStubForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\AttendanceSheet2.rpt">
+    <EmbeddedResource Include="Reports\Reports\AttendanceSheet2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>AttendanceSheet2.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\FiledLeaveReport.rpt">
+    <EmbeddedResource Include="Reports\Reports\FiledLeaveReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>FiledLeaveReport.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\LoanReportByType.rpt">
+    <EmbeddedResource Include="Reports\Reports\LoanReportByType.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>LoanReportByType.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\ThirteenthMonthSummary.rpt">
+    <EmbeddedResource Include="Reports\Reports\ThirteenthMonthSummary.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>ThirteenthMonthSummary.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\HyundaiPayslip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HyundaiPayslip.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\HyundaiPayslip1.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\HyundaiPayslip1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HyundaiPayslip1.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\LoanReports.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\LoanReports.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>LoanReports.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\PayrollSumma.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\PayrollSumma.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PayrollSumma.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\ThirteenthMonthPayDetailSummary.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\ThirteenthMonthPayDetailSummary.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>ThirteenthMonthPayDetailSummary.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Salary\ImportSalaryForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\Salary\ImportSalaryForm.resx">
       <DependentUpon>ImportSalaryForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\TimeEntry\DateRangePickerDialog.resx">
+    <EmbeddedResource Include="Views\Core Forms\TimeEntry\DateRangePickerDialog.resx">
       <DependentUpon>DateRangePickerDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\TimeEntry\TimeEntryProgressDialog.resx">
+    <EmbeddedResource Include="Views\Core Forms\TimeEntry\TimeEntryProgressDialog.resx">
       <DependentUpon>TimeEntryProgressDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\TimeEntry\TimeEntrySummaryForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\TimeEntry\TimeEntrySummaryForm.resx">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.resx">
+    <EmbeddedResource Include="Views\Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.resx">
       <DependentUpon>ViewTimeEntryEmployeeLevel.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\ImproperLogOut.resx">
+    <EmbeddedResource Include="Views\General Forms\ImproperLogOut.resx">
       <DependentUpon>ImproperLogOut.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Alphalist\TaxYearDialog.resx">
+    <EmbeddedResource Include="Views\Core Forms\Alphalist\TaxYearDialog.resx">
       <DependentUpon>TaxYearDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Alphalist\WithholdingTax.resx">
+    <EmbeddedResource Include="Views\Core Forms\Alphalist\WithholdingTax.resx">
       <DependentUpon>WithholdingTax.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\AddListOfValueForm.resx">
+    <EmbeddedResource Include="Views\General Forms\AddListOfValueForm.resx">
       <DependentUpon>AddListOfValueForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\AddPostionForm.resx">
+    <EmbeddedResource Include="Views\General Forms\AddPostionForm.resx">
       <DependentUpon>AddPostionForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\Address.resx">
+    <EmbeddedResource Include="Views\General Forms\Address.resx">
       <DependentUpon>Address.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\AddressForm.resx">
+    <EmbeddedResource Include="Views\General Forms\AddressForm.resx">
       <DependentUpon>AddressForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\Agency.resx">
+    <EmbeddedResource Include="Views\General Forms\Agency.resx">
       <DependentUpon>Agency.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\AreaForm.resx">
+    <EmbeddedResource Include="Views\General Forms\AreaForm.resx">
       <DependentUpon>AreaForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\AuditTrailForm.resx">
+    <EmbeddedResource Include="Views\General Forms\AuditTrailForm.resx">
       <DependentUpon>AuditTrailForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\BranchForm.resx">
+    <EmbeddedResource Include="Views\General Forms\BranchForm.resx">
       <DependentUpon>BranchForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\BranchHierarchyForm.resx">
+    <EmbeddedResource Include="Views\General Forms\BranchHierarchyForm.resx">
       <DependentUpon>BranchHierarchyForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\ForgotPasswordForm.resx">
+    <EmbeddedResource Include="Views\General Forms\ForgotPasswordForm.resx">
       <DependentUpon>ForgotPasswordForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\MetroLogin.resx">
+    <EmbeddedResource Include="Views\General Forms\MetroLogin.resx">
       <DependentUpon>MetroLogin.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="HRIS Forms\DepartmentMinWages.resx">
+    <EmbeddedResource Include="Views\HRIS Forms\DepartmentMinWages.resx">
       <DependentUpon>DepartmentMinWages.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="HRIS Forms\DivisionForm.resx">
+    <EmbeddedResource Include="Views\HRIS Forms\DivisionForm.resx">
       <DependentUpon>DivisionForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="HRIS Forms\LoanScheduleForm.resx">
+    <EmbeddedResource Include="Views\HRIS Forms\LoanScheduleForm.resx">
       <DependentUpon>LoanScheduleForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Initial Forms\AboutUs.resx">
+    <EmbeddedResource Include="Views\Initial Forms\AboutUs.resx">
       <DependentUpon>AboutUs.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Initial Forms\FormReports.resx">
+    <EmbeddedResource Include="Views\Initial Forms\FormReports.resx">
       <DependentUpon>FormReports.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Initial Forms\GeneralForm.resx">
+    <EmbeddedResource Include="Views\Initial Forms\GeneralForm.resx">
       <DependentUpon>GeneralForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Initial Forms\HomeForm.resx">
+    <EmbeddedResource Include="Views\Initial Forms\HomeForm.resx">
       <DependentUpon>HomeForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Initial Forms\HRISForm.resx">
+    <EmbeddedResource Include="Views\Initial Forms\HRISForm.resx">
       <DependentUpon>HRISForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Initial Forms\MDIPrimaryForm.resx">
+    <EmbeddedResource Include="Views\Initial Forms\MDIPrimaryForm.resx">
       <DependentUpon>MDIPrimaryForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Initial Forms\PayrollForm.resx">
+    <EmbeddedResource Include="Views\Initial Forms\PayrollForm.resx">
       <DependentUpon>PayrollForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Initial Forms\TimeAttendForm.resx">
+    <EmbeddedResource Include="Views\Initial Forms\TimeAttendForm.resx">
       <DependentUpon>TimeAttendForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\AddressClass.resx">
+    <EmbeddedResource Include="Views\Core Forms\AddressClass.resx">
       <DependentUpon>AddressClass.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\BIR_1601CForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\BIR_1601CForm.resx">
       <DependentUpon>BIR_1601CForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\BlankTimeEntryLogs.resx">
+    <EmbeddedResource Include="Views\Core Forms\BlankTimeEntryLogs.resx">
       <DependentUpon>BlankTimeEntryLogs.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\BonusGenerator.resx">
+    <EmbeddedResource Include="Views\Core Forms\BonusGenerator.resx">
       <DependentUpon>BonusGenerator.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\CopyRightExpirationPrompt.resx">
+    <EmbeddedResource Include="Views\Core Forms\CopyRightExpirationPrompt.resx">
       <DependentUpon>CopyRightExpirationPrompt.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\CrysRepForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\CrysRepForm.resx">
       <DependentUpon>CrysRepForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\CrysVwr.resx">
+    <EmbeddedResource Include="Views\Core Forms\CrysVwr.resx">
       <DependentUpon>CrysVwr.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\EmployeeBonusControl.resx">
+    <EmbeddedResource Include="Views\Core Forms\EmployeeBonusControl.resx">
       <DependentUpon>EmployeeBonusControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\EmployeeBonusForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\EmployeeBonusForm.resx">
       <DependentUpon>EmployeeBonusForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\EmployeeSelection.resx">
+    <EmbeddedResource Include="Views\Core Forms\EmployeeSelection.resx">
       <DependentUpon>EmployeeSelection.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\EmpPosition.resx">
+    <EmbeddedResource Include="Views\Core Forms\EmpPosition.resx">
       <DependentUpon>EmpPosition.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\dutyshift.resx">
+    <EmbeddedResource Include="Views\Core Forms\dutyshift.resx">
       <DependentUpon>dutyshift.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\TimeLogs\TimeLogsForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\TimeLogsForm.resx">
       <DependentUpon>TimeLogsForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\EmpTimeEntry.resx">
+    <EmbeddedResource Include="Views\Core Forms\EmpTimeEntry.resx">
       <DependentUpon>EmpTimeEntry.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\importWithholdingTax.resx">
+    <EmbeddedResource Include="Views\Core Forms\importWithholdingTax.resx">
       <DependentUpon>importWithholdingTax.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Josh_CrysRepForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\Josh_CrysRepForm.resx">
       <DependentUpon>Josh_CrysRepForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\leavetype.resx">
+    <EmbeddedResource Include="Views\Core Forms\leavetype.resx">
       <DependentUpon>leavetype.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\LoanCancellation.resx">
+    <EmbeddedResource Include="Views\Core Forms\LoanCancellation.resx">
       <DependentUpon>LoanCancellation.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\LoanType.resx">
+    <EmbeddedResource Include="Views\Core Forms\LoanType.resx">
       <DependentUpon>LoanType.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\newEmpStat.resx">
+    <EmbeddedResource Include="Views\Core Forms\newEmpStat.resx">
       <DependentUpon>newEmpStat.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\newEmpType.resx">
+    <EmbeddedResource Include="Views\Core Forms\newEmpType.resx">
       <DependentUpon>newEmpType.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\newPostion.resx">
+    <EmbeddedResource Include="Views\Core Forms\newPostion.resx">
       <DependentUpon>newPostion.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\newProdAllowa.resx">
+    <EmbeddedResource Include="Views\Core Forms\newProdAllowa.resx">
       <DependentUpon>newProdAllowa.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\newProdBonus.resx">
+    <EmbeddedResource Include="Views\Core Forms\newProdBonus.resx">
       <DependentUpon>newProdBonus.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\OrganizationPrompt.resx">
+    <EmbeddedResource Include="Views\Core Forms\OrganizationPrompt.resx">
       <DependentUpon>OrganizationPrompt.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\payFreqSelectn.resx">
+    <EmbeddedResource Include="Views\Core Forms\payFreqSelectn.resx">
       <DependentUpon>payFreqSelectn.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\PayPeriodSelector.resx">
+    <EmbeddedResource Include="Views\Core Forms\PayPeriodSelector.resx">
       <DependentUpon>PayPeriodSelector.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Payrate.resx">
+    <EmbeddedResource Include="Views\Core Forms\Payrate.resx">
       <DependentUpon>Payrate.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\PayrollSummaDateSelection.resx">
+    <EmbeddedResource Include="Views\Core Forms\PayrollSummaDateSelection.resx">
       <DependentUpon>PayrollSummaDateSelection.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\PayStub\PayStubForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\PayStub\PayStubForm.resx">
       <DependentUpon>PayStubForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\PhiHealth.resx">
+    <EmbeddedResource Include="Views\Core Forms\PhiHealth.resx">
       <DependentUpon>PhiHealth.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\ProdCtrlForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\ProdCtrlForm.resx">
       <DependentUpon>ProdCtrlForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\ProductControlForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\ProductControlForm.resx">
       <DependentUpon>ProductControlForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\promptyear.resx">
+    <EmbeddedResource Include="Views\Core Forms\promptyear.resx">
       <DependentUpon>promptyear.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\ReportsForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\ReportsForm.resx">
       <DependentUpon>ReportsForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\ReportsList.resx">
+    <EmbeddedResource Include="Views\Core Forms\ReportsList.resx">
       <DependentUpon>ReportsList.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Alphalist.rpt">
+    <EmbeddedResource Include="Reports\Reports\Alphalist.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Alphalist.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Alphalistv2.rpt">
+    <EmbeddedResource Include="Reports\Reports\Alphalistv2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Alphalistv2.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Attendance Sheet.rpt">
+    <EmbeddedResource Include="Reports\Reports\Attendance Sheet.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Attendance Sheet.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee 13th Month Pay Report.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee 13th Month Pay Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee 13th Month Pay Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee Citizenship.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee Citizenship.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee Citizenship.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee Leave Ledger.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee Leave Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee Leave Ledger.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee Loan Report.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee Loan Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee Loan Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee Personal Information.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee Personal Information.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee Personal Information.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee Skills.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee Skills.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee Skills.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee%27s 13th Month Pay Report.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee%27s 13th Month Pay Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s 13th Month Pay Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Dialect.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee%27s Dialect.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Dialect.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Employment Record.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee%27s Employment Record.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Employment Record.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee%27s History of Salary Increase.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee%27s History of Salary Increase.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s History of Salary Increase.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Identification Number.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee%27s Identification Number.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Identification Number.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Offenses.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee%27s Offenses.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Offenses.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Payroll Ledger.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee%27s Payroll Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Payroll Ledger.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Religion.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee%27s Religion.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Religion.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Employee%27s Spouse Information.rpt">
+    <EmbeddedResource Include="Reports\Reports\Employee%27s Spouse Information.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Spouse Information.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Loan Report.rpt">
+    <EmbeddedResource Include="Reports\Reports\Loan Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Loan Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Pagibig Monthly Report.rpt">
+    <EmbeddedResource Include="Reports\Reports\Pagibig Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Pagibig Monthly Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Payroll Summary Report.rpt">
+    <EmbeddedResource Include="Reports\Reports\Payroll Summary Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Payroll Summary Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Phil Health Monthly Report.rpt">
+    <EmbeddedResource Include="Reports\Reports\Phil Health Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Phil Health Monthly Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\SSS Monthly Report.rpt">
+    <EmbeddedResource Include="Reports\Reports\SSS Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>SSS Monthly Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\Reports\Tax Monthly Report.rpt">
+    <EmbeddedResource Include="Reports\Reports\Tax Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Tax Monthly Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\1601C_BIR.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\1601C_BIR.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>1601C_BIR.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\ActualReports\HalfPaySlipActual.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\ActualReports\HalfPaySlipActual.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HalfPaySlipActual.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\ActualReports\PayrollSummaActual.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\ActualReports\PayrollSummaActual.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PayrollSummaActual.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\ActualReports\prntAllPaySlipActual.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\ActualReports\prntAllPaySlipActual.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>prntAllPaySlipActual.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\BIR2316.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\BIR2316.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>BIR2316.vb</LastGenOutput>
     </EmbeddedResource>
-    <Content Include="Core Forms\rpt\discplinaryActions.rpt">
+    <Content Include="Reports\rpt\rpt\discplinaryActions.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>discplinaryActions.vb</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Core Forms\rpt\HalfPaySlip.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\HalfPaySlip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HalfPaySlip.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\MemoTemplate.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\MemoTemplate.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>MemoTemplate.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\OBFReport.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\OBFReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>OBFReport.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\OfficialPaySlipFormat.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\OfficialPaySlipFormat.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>OfficialPaySlipFormat.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\onepagefouremployeepayslip.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\onepagefouremployeepayslip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>onepagefouremployeepayslip.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\PaySlipHalfPage.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\PaySlipHalfPage.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PaySlipHalfPage.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\printallpayslipotherformat.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\printallpayslipotherformat.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>printallpayslipotherformat.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\prntAllPaySlip.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\prntAllPaySlip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>prntAllPaySlip.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\prntPaySlip.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\prntPaySlip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>prntPaySlip.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\QuadrantPaySlip.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\QuadrantPaySlip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>QuadrantPaySlip.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\rptAllDecUndecPaySlip.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\rptAllDecUndecPaySlip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptAllDecUndecPaySlip.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\rptDecUndecPaySlip.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\rptDecUndecPaySlip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptDecUndecPaySlip.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\SSS_R5.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\SSS_R5.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>SSS_R52.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\TardinessReport.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\TardinessReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>TardinessReport.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\rpt\TwoEmpIn1PaySlip.rpt">
+    <EmbeddedResource Include="Reports\rpt\rpt\TwoEmpIn1PaySlip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>TwoEmpIn1PaySlip.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\SelectFromEmployee.resx">
+    <EmbeddedResource Include="Views\Core Forms\SelectFromEmployee.resx">
       <DependentUpon>SelectFromEmployee.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\selectMonth.resx">
+    <EmbeddedResource Include="Views\Core Forms\selectMonth.resx">
       <DependentUpon>selectMonth.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\PayStub\selectPayPeriod.resx">
+    <EmbeddedResource Include="Views\Core Forms\PayStub\selectPayPeriod.resx">
       <DependentUpon>selectPayPeriod.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\SetEmployeeEndDate.resx">
+    <EmbeddedResource Include="Views\Core Forms\SetEmployeeEndDate.resx">
       <DependentUpon>SetEmployeeEndDate.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\ShiftList.resx">
+    <EmbeddedResource Include="Views\Core Forms\ShiftList.resx">
       <DependentUpon>ShiftList.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\ShiftTemplater.resx">
+    <EmbeddedResource Include="Views\Core Forms\ShiftTemplater.resx">
       <DependentUpon>ShiftTemplater.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\showAuditTrail.resx">
+    <EmbeddedResource Include="Views\Core Forms\showAuditTrail.resx">
       <DependentUpon>showAuditTrail.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\SSSCntrib.resx">
+    <EmbeddedResource Include="Views\Core Forms\SSSCntrib.resx">
       <DependentUpon>SSSCntrib.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\TimEntduration.resx">
+    <EmbeddedResource Include="Views\Core Forms\TimEntduration.resx">
       <DependentUpon>TimEntduration.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\USER CONTROLS\DiscipAction.resx">
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\DiscipAction.resx">
       <DependentUpon>DiscipAction.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\USER CONTROLS\TextBoxDateTime.resx">
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\TextBoxDateTime.resx">
       <DependentUpon>TextBoxDateTime.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\USER CONTROLS\TrialForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\TrialForm.resx">
       <DependentUpon>TrialForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\USER CONTROLS\txtIDOfEmployee.resx">
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.resx">
       <DependentUpon>txtIDOfEmployee.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\userprivil.resx">
+    <EmbeddedResource Include="Views\Core Forms\userprivil.resx">
       <DependentUpon>userprivil.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\viewtotallow.resx">
+    <EmbeddedResource Include="Views\Core Forms\viewtotallow.resx">
       <DependentUpon>viewtotallow.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\viewtotbon.resx">
+    <EmbeddedResource Include="Views\Core Forms\viewtotbon.resx">
       <DependentUpon>viewtotbon.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Core Forms\viewtotloan.resx">
+    <EmbeddedResource Include="Views\Core Forms\viewtotloan.resx">
       <DependentUpon>viewtotloan.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\rpt\CrystalReport1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>CrystalReport1.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\ListOfValueForm.resx">
+    <EmbeddedResource Include="Views\General Forms\ListOfValueForm.resx">
       <DependentUpon>ListOfValueForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\OrganizationForm.resx">
+    <EmbeddedResource Include="Views\General Forms\OrganizationForm.resx">
       <DependentUpon>OrganizationForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Report Forms\PFF-053Form.resx">
@@ -2105,7 +2105,7 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>CrystalReport2.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="HRIS Forms\Revised_Withholding_Tax_Tables.resx">
+    <EmbeddedResource Include="Views\HRIS Forms\Revised_Withholding_Tax_Tables.resx">
       <DependentUpon>Revised_Withholding_Tax_Tables.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -2122,59 +2122,59 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptRF-1.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="General Forms\UsersForm.resx">
+    <EmbeddedResource Include="Views\General Forms\UsersForm.resx">
       <DependentUpon>UsersForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Time Attendance Form\EmployeeShiftMassUpdate.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\EmployeeShiftMassUpdate.resx">
       <DependentUpon>EmployeeShiftMassUpdate.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Time Attendance Form\MassOvertimeForm.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\MassOvertimeForm.resx">
       <DependentUpon>MassOvertimeForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Time Attendance Form\PayrollGenerateForm.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\PayrollGenerateForm.resx">
       <DependentUpon>PayrollGenerateForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Time Attendance Form\ShiftEntryForm.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\ShiftEntryForm.resx">
       <DependentUpon>ShiftEntryForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Time Attendance Form\EmployeeShiftEntryForm.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\EmployeeShiftEntryForm.resx">
       <DependentUpon>EmployeeShiftEntryForm.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="app.manifest" />
-    <None Include="Core Forms\Dataset\AlphalistDataset.xsc">
+    <None Include="Views\Core Forms\Dataset\AlphalistDataset.xsc">
       <DependentUpon>AlphalistDataset.xsd</DependentUpon>
     </None>
-    <None Include="Core Forms\Dataset\AlphalistDataset.xsd">
+    <None Include="Views\Core Forms\Dataset\AlphalistDataset.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>AlphalistDataset.Designer.vb</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Core Forms\Dataset\AlphalistDataset.xss">
+    <None Include="Views\Core Forms\Dataset\AlphalistDataset.xss">
       <DependentUpon>AlphalistDataset.xsd</DependentUpon>
     </None>
-    <None Include="Core Forms\Dataset\DS1.xsc">
+    <None Include="Views\Core Forms\Dataset\DS1.xsc">
       <DependentUpon>DS1.xsd</DependentUpon>
     </None>
-    <None Include="Core Forms\Dataset\DS1.xsd">
+    <None Include="Views\Core Forms\Dataset\DS1.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>DS1.Designer.vb</LastGenOutput>
     </None>
-    <None Include="Core Forms\Dataset\DS1.xss">
+    <None Include="Views\Core Forms\Dataset\DS1.xss">
       <DependentUpon>DS1.xsd</DependentUpon>
     </None>
-    <None Include="Core Forms\Dataset\memoUserDetailsDataset.xsc">
+    <None Include="Views\Core Forms\Dataset\memoUserDetailsDataset.xsc">
       <DependentUpon>memoUserDetailsDataset.xsd</DependentUpon>
     </None>
-    <None Include="Core Forms\Dataset\memoUserDetailsDataset.xsd">
+    <None Include="Views\Core Forms\Dataset\memoUserDetailsDataset.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>memoUserDetailsDataset.Designer.vb</LastGenOutput>
     </None>
-    <None Include="Core Forms\Dataset\memoUserDetailsDataset.xss">
+    <None Include="Views\Core Forms\Dataset\memoUserDetailsDataset.xss">
       <DependentUpon>memoUserDetailsDataset.xsd</DependentUpon>
     </None>
     <None Include="log4.config">
