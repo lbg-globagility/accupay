@@ -111,6 +111,7 @@ DECLARE workingHours DECIMAL(11,6) DEFAULT 0;#INT(10)
 DECLARE requiredToWorkLastWorkingDay BOOLEAN DEFAULT FALSE;
 DECLARE allowAbsenceOnHoliday BOOLEAN DEFAULT FALSE;
 DECLARE timeInOnly BOOLEAN DEFAULT FALSE;
+DECLARE $requireWorkLastDayForFullPay BOOLEAN DEFAULT FALSE;
 
 DECLARE dateToday DATE;
 DECLARE dateTomorrow DATE;
@@ -302,6 +303,10 @@ SET allowAbsenceOnHoliday = GetListOfValueOrDefault(
 
 SET _holidayCalculationType = GetListOfValueOrDefault(
     'Payroll Policy', 'HolidayPay', 'Daily'
+);
+
+SET $requireWorkLastDayForFullPay = GetListOfValueOrDefault(
+    'HolidayPolicy', 'RequireWorkLastDayForFullPay', FALSE
 );
 
 SELECT
@@ -1124,7 +1129,10 @@ ELSEIF isHoliday THEN
         END IF;
 
         IF NOT isHolidayPayInclusive THEN
-            SET regularHolidayPay = regularHolidayPay + IF(hasWorkedLastWorkingDay, _basicHolidayPay, 0);
+            SET regularHolidayPay = regularHolidayPay + IF(
+                (hasWorkedLastWorkingDay OR (NOT $requireWorkLastDayForFullPay)),
+                _basicHolidayPay,
+                0);
         END IF;
     END IF;
 
