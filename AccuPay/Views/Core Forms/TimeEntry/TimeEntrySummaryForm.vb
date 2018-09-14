@@ -13,6 +13,11 @@ Public Class TimeEntrySummaryForm
 
     Private Shared HoursPerDay As TimeSpan = New TimeSpan(24, 0, 0)
 
+    Private Shared OptionalColumns As List(Of String) = New List(Of String) From {
+        "SpecialHolidayHours",
+        "SpecialHolidayPay"
+    }
+
     Private _selectedYear As Integer
 
     Private _weeklyPayPeriods As ICollection(Of PayPeriod)
@@ -183,10 +188,48 @@ Public Class TimeEntrySummaryForm
         timeEntriesDataGridView.AutoGenerateColumns = False
 
         If _declared Then
-            timeEntriesDataGridView.DataSource = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
+            Dim timeEntries = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
+            timeEntriesDataGridView.DataSource = timeEntries
         Else
-            timeEntriesDataGridView.DataSource = Await GetActualTimeEntries(_selectedEmployee, _selectedPayPeriod)
+            Dim timeEntries = Await GetActualTimeEntries(_selectedEmployee, _selectedPayPeriod)
+            timeEntriesDataGridView.DataSource = timeEntries
         End If
+    End Sub
+
+    Private Sub SetVisibleColumns(timeEntries As ICollection(Of TimeEntry))
+        timeEntriesDataGridView.SuspendLayout()
+
+        ColumnOBStart.Visible = timeEntries.Any(Function(t) t.OBStartTime.HasValue)
+        ColumnOBEnd.Visible = timeEntries.Any(Function(t) t.OBEndTime.HasValue)
+
+        ColumnOTStart.Visible = timeEntries.Any(Function(t) t.OTStartTime.HasValue)
+        ColumnOTEnd.Visible = timeEntries.Any(Function(t) t.OTEndTime.HasValue)
+
+        ColumnNDiffHrs.Visible = timeEntries.Any(Function(t) t.NightDiffHours > 0)
+        ColumnNDiffPay.Visible = timeEntries.Any(Function(t) t.NightDiffAmount > 0)
+
+        ColumnNDiffOTHrs.Visible = timeEntries.Any(Function(t) t.NightDiffOTHours > 0)
+        ColumnNDiffOTPay.Visible = timeEntries.Any(Function(t) t.NightDiffOTAmount > 0)
+
+        ColumnRDayHrs.Visible = timeEntries.Any(Function(t) t.RestDayHours > 0)
+        ColumnRDayPay.Visible = timeEntries.Any(Function(t) t.RestDayAmount > 0)
+
+        ColumnRDayOTHrs.Visible = timeEntries.Any(Function(t) t.RestDayOTHours > 0)
+        ColumnRDayOTPay.Visible = timeEntries.Any(Function(t) t.RestDayOTPay > 0)
+
+        ColumnSHolHrs.Visible = timeEntries.Any(Function(t) t.SpecialHolidayHours > 0)
+        ColumnSHolPay.Visible = timeEntries.Any(Function(t) t.SpecialHolidayPay > 0)
+
+        ColumnSHolOTHrs.Visible = timeEntries.Any(Function(t) t.SpecialHolidayOTHours > 0)
+        ColumnSHolOTPay.Visible = timeEntries.Any(Function(t) t.SpecialHolidayOTPay > 0)
+
+        ColumnRHolHrs.Visible = timeEntries.Any(Function(t) t.RegularHolidayHours > 0)
+        ColumnRHolPay.Visible = timeEntries.Any(Function(t) t.RegularHolidayPay > 0)
+
+        ColumnRHolOTHrs.Visible = timeEntries.Any(Function(t) t.RegularHolidayOTHours > 0)
+        ColumnRHolOTPay.Visible = timeEntries.Any(Function(t) t.RegularHolidayOTPay > 0)
+
+        timeEntriesDataGridView.ResumeLayout()
     End Sub
 
     Private Async Sub LoadYears()
