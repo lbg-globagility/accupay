@@ -32,7 +32,7 @@ Public Class TimeEntrySummaryForm
 
     Private _selectedPayPeriod As PayPeriod
 
-    Private _declared As Boolean = True
+    Private _actual As Boolean = True
 
     Private WithEvents timeEntDurationModal As TimEntduration
 
@@ -187,13 +187,14 @@ Public Class TimeEntrySummaryForm
 
         timeEntriesDataGridView.AutoGenerateColumns = False
 
-        If _declared Then
-            Dim timeEntries = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
-            timeEntriesDataGridView.DataSource = timeEntries
+        Dim timeEntries As ICollection(Of TimeEntry)
+        If _actual Then
+            timeEntries = Await GetActualTimeEntries(_selectedEmployee, _selectedPayPeriod)
         Else
-            Dim timeEntries = Await GetActualTimeEntries(_selectedEmployee, _selectedPayPeriod)
-            timeEntriesDataGridView.DataSource = timeEntries
+            timeEntries = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
         End If
+
+        timeEntriesDataGridView.DataSource = timeEntries
     End Sub
 
     Private Sub SetVisibleColumns(timeEntries As ICollection(Of TimeEntry))
@@ -737,14 +738,16 @@ Public Class TimeEntrySummaryForm
         End If
     End Function
 
-    Private Sub declaredButton_Click(sender As Object, e As EventArgs) Handles declaredButton.Click
-        _declared = Not _declared
+    Private Sub actualButtonn_Click(sender As Object, e As EventArgs) Handles actualButton.Click
+        _actual = Not _actual
 
-        If _declared Then
-            declaredButton.Text = "Actual"
-        Else
-            declaredButton.Text = "Declared"
-        End If
+        actualButton.Checked = _actual
+
+        'If _actual Then
+        '    actualButton.Text = "Actual"
+        'Else
+        '    actualButton.Text = "Declared"
+        'End If
 
         LoadTimeEntries()
     End Sub
