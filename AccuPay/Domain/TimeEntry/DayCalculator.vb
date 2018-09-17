@@ -195,6 +195,8 @@ Public Class DayCalculator
             timeEntry.RegularHolidayHours +
             timeEntry.SpecialHolidayHours) * hourlyRate
 
+        timeEntry.AbsentDeduction = timeEntry.AbsentHours * hourlyRate
+
         If currentDate < _employee.StartDate Then
 
             timeEntry.ResetHours()
