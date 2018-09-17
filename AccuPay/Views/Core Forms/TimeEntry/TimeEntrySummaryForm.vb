@@ -9,6 +9,9 @@ Imports System.Threading
 
 Public Class TimeEntrySummaryForm
 
+    Private Const Clock24HourFormat As String = "HH:mm"
+    Private Const Clock12HourFormat As String = "hh:mm tt"
+
     Private Shared _logger As ILog = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
 
     Private Shared HoursPerDay As TimeSpan = New TimeSpan(24, 0, 0)
@@ -33,6 +36,8 @@ Public Class TimeEntrySummaryForm
     Private _selectedPayPeriod As PayPeriod
 
     Private _actual As Boolean = True
+
+    Private _amPm As Boolean = False
 
     Private WithEvents timeEntDurationModal As TimEntduration
 
@@ -524,9 +529,18 @@ Public Class TimeEntrySummaryForm
                 employeetimeentrydetails.Created = latest.Created
             LEFT JOIN employeeshift
             ON employeeshift.RowID = eta.EmployeeShiftID
+            LEFT JOIN (
+                SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
+                FROM employeeofficialbusiness
+                WHERE OffBusStartDate BETWEEN @DateFrom AND @DateTo
+                GROUP BY EmployeeID, Date
+            ) latestOb
+            ON latestOb.EmployeeID = ete.EmployeeID AND
+                latestOb.Date = ete.Date
             LEFT JOIN employeeofficialbusiness ofb
             ON ofb.OffBusStartDate = eta.Date AND
-                ofb.EmployeeID = eta.EmployeeID
+                ofb.EmployeeID = eta.EmployeeID AND
+                latestOb.Created = ofb.Created
             LEFT JOIN shift
             ON shift.RowID = employeeshift.ShiftID
             WHERE eta.EmployeeID = @EmployeeID AND
@@ -743,13 +757,31 @@ Public Class TimeEntrySummaryForm
 
         actualButton.Checked = _actual
 
-        'If _actual Then
-        '    actualButton.Text = "Actual"
-        'Else
-        '    actualButton.Text = "Declared"
-        'End If
-
         LoadTimeEntries()
+    End Sub
+
+    Private Sub btnAmPm_Click(sender As Object, e As EventArgs) Handles btnAmPm.Click
+        _amPm = Not _amPm
+
+        If _amPm Then
+            ColumnShiftFrom.DefaultCellStyle.Format = Clock12HourFormat
+            ColumnShiftTo.DefaultCellStyle.Format = Clock12HourFormat
+            ColumnTimeIn.DefaultCellStyle.Format = Clock12HourFormat
+            ColumnTimeOut.DefaultCellStyle.Format = Clock12HourFormat
+            ColumnOTStart.DefaultCellStyle.Format = Clock12HourFormat
+            ColumnOTEnd.DefaultCellStyle.Format = Clock12HourFormat
+            ColumnOBStart.DefaultCellStyle.Format = Clock12HourFormat
+            ColumnOBEnd.DefaultCellStyle.Format = Clock12HourFormat
+        Else
+            ColumnShiftFrom.DefaultCellStyle.Format = Clock24HourFormat
+            ColumnShiftTo.DefaultCellStyle.Format = Clock24HourFormat
+            ColumnTimeIn.DefaultCellStyle.Format = Clock24HourFormat
+            ColumnTimeOut.DefaultCellStyle.Format = Clock24HourFormat
+            ColumnOTStart.DefaultCellStyle.Format = Clock24HourFormat
+            ColumnOTEnd.DefaultCellStyle.Format = Clock24HourFormat
+            ColumnOBStart.DefaultCellStyle.Format = Clock24HourFormat
+            ColumnOBEnd.DefaultCellStyle.Format = Clock24HourFormat
+        End If
     End Sub
 
     Private Class PayPeriod

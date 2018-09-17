@@ -358,6 +358,7 @@ Partial Class TimeEntrySummaryForm
         Me.col_tue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_mon = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_sun = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnAmPm = New System.Windows.Forms.ToolStripButton()
         CType(Me.employeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
@@ -442,7 +443,7 @@ Partial Class TimeEntrySummaryForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.generateTimeEntryButton, Me.tsbtnrecalc, Me.tsbtnCloseempawar, Me.tsbtnAudittrail, Me.cboYears, Me.ToolStripSeparator14, Me.actualButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.generateTimeEntryButton, Me.tsbtnrecalc, Me.tsbtnCloseempawar, Me.tsbtnAudittrail, Me.cboYears, Me.ToolStripSeparator14, Me.actualButton, Me.btnAmPm})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(846, 25)
@@ -2548,6 +2549,15 @@ Partial Class TimeEntrySummaryForm
         Me.col_sun.ReadOnly = True
         Me.col_sun.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
+        'btnAmPm
+        '
+        Me.btnAmPm.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.btnAmPm.Image = CType(resources.GetObject("btnAmPm.Image"), System.Drawing.Image)
+        Me.btnAmPm.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnAmPm.Name = "btnAmPm"
+        Me.btnAmPm.Size = New System.Drawing.Size(53, 22)
+        Me.btnAmPm.Text = "AM/PM"
+        '
         'TimeEntrySummaryForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2812,4 +2822,5 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents ColumnRemarks As DataGridViewTextBoxColumn
     Friend WithEvents Panel2 As Panel
     Friend WithEvents ToolStripSeparator14 As ToolStripSeparator
+    Friend WithEvents btnAmPm As ToolStripButton
 End Class
