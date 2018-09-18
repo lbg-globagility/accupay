@@ -126,6 +126,19 @@ Namespace Global.AccuPay.Entity
         Public Sub New()
         End Sub
 
+        Public Sub SetLeaveHours(type As String, leaveHours As Decimal)
+            Select Case type
+                Case LeaveType.Sick
+                    SickLeaveHours = leaveHours
+                Case LeaveType.Vacation
+                    VacationLeaveHours = leaveHours
+                Case LeaveType.Maternity
+                    MaternityLeaveHours = leaveHours
+                Case LeaveType.Others
+                    OtherLeaveHours = leaveHours
+            End Select
+        End Sub
+
         Public ReadOnly Property TotalLeaveHours As Decimal
             Get
                 Return VacationLeaveHours + SickLeaveHours + MaternityLeaveHours + OtherLeaveHours

@@ -75,16 +75,7 @@ Public Class DayCalculator
                         {dutyPeriod.End, leavePeriod.End}.Max())
 
                     Dim leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift)
-                    Select Case leave.LeaveType
-                        Case LeaveType.Sick
-                            timeEntry.SickLeaveHours = leaveHours
-                        Case LeaveType.Vacation
-                            timeEntry.VacationLeaveHours = leaveHours
-                        Case LeaveType.Maternity
-                            timeEntry.MaternityLeaveHours = leaveHours
-                        Case LeaveType.Others
-                            timeEntry.OtherLeaveHours = leaveHours
-                    End Select
+                    timeEntry.SetLeaveHours(leave.LeaveType, leaveHours)
                 End If
 
                 timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift)
@@ -174,6 +165,23 @@ Public Class DayCalculator
             timeEntry.AbsentHours = currentShift.WorkingHours
         End If
 
+        If Not hasTimeLog And leaves.Any() Then
+            Dim leave = leaves.FirstOrDefault()
+            Dim leavePeriod = GetLeavePeriod(leave, currentShift)
+            Dim leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift)
+
+            timeEntry.SetLeaveHours(leave.LeaveType, leaveHours)
+        End If
+
+        If leaves.Any() Then
+            Dim requiredHours = currentShift.WorkingHours
+            Dim missingHours = requiredHours - (timeEntry.TotalLeaveHours + timeEntry.RegularHours)
+
+            If missingHours > 0 Then
+                timeEntry.UndertimeHours += missingHours
+            End If
+        End If
+
         Dim dailyRate = 0D
         If _employee.IsDaily Then
             dailyRate = If(salary?.BasicSalary, 0)
@@ -196,6 +204,8 @@ Public Class DayCalculator
             timeEntry.SpecialHolidayHours) * hourlyRate
 
         timeEntry.AbsentDeduction = timeEntry.AbsentHours * hourlyRate
+
+        timeEntry.LeavePay = timeEntry.TotalLeaveHours * hourlyRate
 
         If currentDate < _employee.StartDate Then
 
