@@ -35,9 +35,9 @@ Public Class TimeEntrySummaryForm
 
     Private _selectedPayPeriod As PayPeriod
 
-    Private _actual As Boolean = True
+    Private _isActual As Boolean = False
 
-    Private _amPm As Boolean = False
+    Private _isAmPm As Boolean = False
 
     Private WithEvents timeEntDurationModal As TimEntduration
 
@@ -193,7 +193,7 @@ Public Class TimeEntrySummaryForm
         timeEntriesDataGridView.AutoGenerateColumns = False
 
         Dim timeEntries As ICollection(Of TimeEntry)
-        If _actual Then
+        If _isActual Then
             timeEntries = Await GetActualTimeEntries(_selectedEmployee, _selectedPayPeriod)
         Else
             timeEntries = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
@@ -753,17 +753,19 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Private Sub actualButtonn_Click(sender As Object, e As EventArgs) Handles actualButton.Click
-        _actual = Not _actual
+        _isActual = Not _isActual
 
-        actualButton.Checked = _actual
+        actualButton.Checked = _isActual
 
         LoadTimeEntries()
     End Sub
 
     Private Sub btnAmPm_Click(sender As Object, e As EventArgs) Handles btnAmPm.Click
-        _amPm = Not _amPm
+        _isAmPm = Not _isAmPm
 
-        If _amPm Then
+        btnAmPm.Checked = _isAmPm
+
+        If _isAmPm Then
             ColumnShiftFrom.DefaultCellStyle.Format = Clock12HourFormat
             ColumnShiftTo.DefaultCellStyle.Format = Clock12HourFormat
             ColumnTimeIn.DefaultCellStyle.Format = Clock12HourFormat
