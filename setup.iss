@@ -234,18 +234,48 @@ Source: ".\AccuPay\bin\Debug\System.Xml.XPath.XDocument.dll"; DestDir: "{app}"; 
 Source: ".\AccuPay\Resources\*.xlsx"; DestDir: "{app}\Resources"; Flags: ignoreversion
 Source: ".\AccuPay\Resources\SourceSansPro-Regular.ttf"; DestDir: "{fonts}"; FontInstall: "Source Sans Pro"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: ".\AccuPay\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: ".\AccuPay\bin\Debug\Core Forms\rpt\*.rpt"; DestDir: "{app}\Core Forms\rpt"; Flags: ignoreversion
+; Source: ".\AccuPay\bin\Debug\Core Forms\rpt\*.rpt"; DestDir: "{app}\Core Forms\rpt"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+
+[Code]
+var
+  Page: TInputQueryWizardPage;
+  UserName, UserCompany: String;
+
+function GetHost(Param: string): string;
+begin
+  Result := Page.Values[0];
+end;
+
+function GetDatabase(Param: string): string;
+begin
+  Result := Page.Values[1];
+end;
+
+procedure InitializeWizard();
+begin
+  Page := CreateInputQueryPage(wpWelcome,
+  'Database Information', 'Database to connect to',
+  'Please specify the database host and name, then click Next.');
+
+  { Add items (False means it's not a password edit) }
+  Page.Add('Host:', False);
+  Page.Add('Database:', False);
+
+  { Set initial values (optional) }
+  Page.Values[0] := ExpandConstant('localhost');
+  Page.Values[1] := ExpandConstant('');
+end;
 
 [Registry]
 
 Root: HKLM; Subkey: "SOFTWARE\Globagility";
 Root: HKLM; Subkey: "SOFTWARE\Globagility\DBConn";
 
-Root: HKLM; Subkey: "SOFTWARE\Globagility\DBConn\GoldWings";  Flags: createvalueifdoesntexist;	ValueType: string; ValueName: "database"; ValueData: "goldwingspayrolldb"
-Root: HKLM; Subkey: "SOFTWARE\Globagility\DBConn\GoldWings";  Flags: createvalueifdoesntexist;	ValueType: string; ValueName: "password"; ValueData: "globagility"
-Root: HKLM; Subkey: "SOFTWARE\Globagility\DBConn\GoldWings";  Flags: createvalueifdoesntexist;	ValueType: string; ValueName: "server"; ValueData: "localhost"
+Root: HKLM; Subkey: "SOFTWARE\Globagility\DBConn\GoldWings";  Flags: createvalueifdoesntexist;	ValueType: string; ValueName: "server"; ValueData: "{code:GetHost}"
+Root: HKLM; Subkey: "SOFTWARE\Globagility\DBConn\GoldWings";  Flags: createvalueifdoesntexist;	ValueType: string; ValueName: "database"; ValueData: "{code:GetDatabase}"
 Root: HKLM; Subkey: "SOFTWARE\Globagility\DBConn\GoldWings";  Flags: createvalueifdoesntexist;	ValueType: string; ValueName: "user id"; ValueData: "root"
+Root: HKLM; Subkey: "SOFTWARE\Globagility\DBConn\GoldWings";  Flags: createvalueifdoesntexist;	ValueType: string; ValueName: "password"; ValueData: "globagility"
 Root: HKLM; Subkey: "SOFTWARE\Globagility\DBConn\GoldWings";  ValueType: string; ValueName: "apppath"; ValueData: "{app}"
 
 Root: "HKLM"; Subkey: "SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers\";  Flags: createvalueifdoesntexist;	ValueType: String; ValueName: "{app}\{#MyAppExeName}"; ValueData: "RUNASADMIN";
