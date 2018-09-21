@@ -9,9 +9,19 @@ Imports AccuPay.Entity
 Public Class TimeLog
 
     <Key>
+    <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
     Public Property RowID As Integer?
 
     Public Property OrganizationID As Integer?
+
+    Public Property Created As Date
+
+    Public Property CreatedBy As Integer?
+
+    <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
+    Public Property LastUpd As Date?
+
+    Public Property LastUpdBy As Date?
 
     Public Property EmployeeID As Integer?
 
@@ -25,18 +35,6 @@ Public Class TimeLog
     Public ReadOnly Property HasLogs As Boolean
         Get
             Return TimeIn.HasValue And TimeOut.HasValue
-        End Get
-    End Property
-
-    Public ReadOnly Property FullTimeIn As Date
-        Get
-            Return TimeUtility.RangeStart(LogDate, TimeIn.Value)
-        End Get
-    End Property
-
-    Public ReadOnly Property FullTimeOut As Date
-        Get
-            Return TimeUtility.RangeEnd(LogDate, TimeIn.Value, TimeOut.Value)
         End Get
     End Property
 

@@ -655,9 +655,8 @@ Public Class TimeLogsForm
 
                 Dim datread As MySqlDataReader
 
-                datread = .ExecuteReader() '.ExecuteScalar()
-                'INSUPD_employeetimeentrydetails
-                return_value = datread(0) 'Return value'CType(.ExecuteScalar(), Integer)
+                datread = .ExecuteReader()
+                return_value = datread(0)
 
             End With
         Catch ex As Exception
@@ -675,23 +674,46 @@ Public Class TimeLogsForm
         Dim parser = New TimeInTimeOutParser()
         Dim timeEntries = parser.Parse(thefilepath)
 
-        Dim db_curr_timestamp = New ExecuteQuery("SELECT DATE_FORMAT(CURRENT_TIMESTAMP(), @@datetime_format);").Result
+        Dim timeLogsByEmployee = timeEntries.
+            GroupBy(Function(t) t.EmployeeNo).
+            ToList()
 
-        For Each timeEntry In timeEntries
-            INSUPD_employeetimeentrydetails(
-                Nothing,
-                timeEntry.EmployeeNo,
-                timeEntry.TimeIn,
-                timeEntry.TimeOut,
-                timeEntry.DateOccurred,
-                Nothing,
-                db_curr_timestamp,
-                Nothing,
-                "1",
-                Nothing,
-                Nothing,
-                Nothing)
-        Next
+        Using context = New PayrollContext()
+            Dim dateCreated = Date.Now
+
+            For Each timeLogs In timeLogsByEmployee
+                Dim employee = context.Employees.
+                    Where(Function(et) et.EmployeeNo = timeLogs.Key).
+                    Where(Function(et) Nullable.Equals(et.OrganizationID, z_OrganizationID)).
+                    FirstOrDefault()
+
+                If employee Is Nothing Then
+                    Continue For
+                End If
+
+                For Each timeLog In timeLogs
+                    Dim t = New TimeLog() With {
+                        .OrganizationID = z_OrganizationID,
+                        .EmployeeID = employee.RowID,
+                        .Created = dateCreated,
+                        .CreatedBy = z_User,
+                        .LogDate = timeLog.DateOccurred
+                    }
+
+                    If Not String.IsNullOrWhiteSpace(timeLog.TimeIn) Then
+                        t.TimeIn = TimeSpan.Parse(timeLog.TimeIn)
+                    End If
+
+                    If Not String.IsNullOrWhiteSpace(timeLog.TimeOut) Then
+                        t.TimeOut = TimeSpan.Parse(timeLog.TimeOut)
+                    End If
+
+                    context.TimeLogs.Add(t)
+                Next
+            Next
+
+            context.SaveChanges()
+        End Using
 
         bgworkImport.ReportProgress(100)
         Return
