@@ -1,8 +1,7 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Imports System.IO
 Imports Microsoft.Win32
+Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
-Imports System.IO
-Imports System.Windows.Forms
 
 Public Class TimeLogsForm
 
@@ -27,10 +26,6 @@ Public Class TimeLogsForm
         "SELECT INSUPD_timeentrylogs(?og_id, ?emp_unique_key, ?timestamp_log, ?max_importid);"
 
     Private Sub Form8_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'dbconn()
-
-        'view_ID = VIEW_privilege(Me.Text, orgztnID)
-
         With dattabLogs.Columns
             .Add("logging")
 
@@ -92,7 +87,6 @@ Public Class TimeLogsForm
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
                     tsbtnNew.Visible = 0
                     tsbtnSave.Visible = 0
                     tsbtndel.Visible = 0
@@ -124,35 +118,11 @@ Public Class TimeLogsForm
         End If
 
         dgvetentd.Focus()
-
         TabPage1.Focus()
-
     End Sub
 
     Sub loademployeetimeentrydetails(Optional pagination As Integer = 0)
-
         Static once As Integer = -1
-        'filltable
-        'dgvRowAdder("SELECT DATE_FORMAT(etdet.Created,'%m/%d/%Y %h:%i %p') 'Created'" & _
-        '            ",DATE_FORMAT(etdet.Created,'%Y-%m-%d %H:%i:%s') 'createdmilit'" & _
-        '          ",COALESCE(CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))),'') 'Created by'" & _
-        '          ",COALESCE(DATE_FORMAT(etdet.LastUpd,'%b-%d-%Y'),'') 'Last Update'" & _
-        '          ",COALESCE((SELECT CONCAT(CONCAT(UCASE(LEFT(FirstName, 1)), SUBSTRING(FirstName, 2)),' ',CONCAT(UCASE(LEFT(LastName, 1)), SUBSTRING(LastName, 2))) FROM user WHERE RowID=etdet.LastUpd),'') 'Last update by'" & _
-        '          " FROM employeetimeentrydetails etdet" & _
-        '          " LEFT JOIN user u ON etdet.CreatedBy=u.RowID" & _
-        '          " WHERE etdet.OrganizationID=" & orgztnID & _
-        '          " GROUP BY etdet.Created " & _
-        '          " ORDER BY etdet.RowID DESC LIMIT " & pagination & ",100;", _
-        '          dgvetentd) 'DATE_FORMAT(etdet.Created,'%b-%d-%Y %H:%m%:%s')
-        'If once <> 1 Then
-        '    once = 1
-        '    With dgvetentd
-        '        .Columns("Created by").Visible = False
-
-        '        .Columns("Last Update").Visible = False
-        '        .Columns("Last Update by").Visible = False
-        '    End With
-        'End If
 
         dgvetentd.Rows.Clear()
         Dim n_SQLQueryToDatatable As _
@@ -163,7 +133,7 @@ Public Class TimeLogsForm
             Dim row_array = drow.ItemArray
             dgvetentd.Rows.Add(row_array)
         Next
-  
+
         catchdt.Dispose()
     End Sub
 
@@ -189,7 +159,6 @@ Public Class TimeLogsForm
         EXEC_VIEW_PROCEDURE(param,
                            "VIEW_employeetimeentrydetails",
                            dgvetentdet)
-
     End Sub
 
     Private Sub tsbtnNew_Click(sender As Object, e As EventArgs) Handles tsbtnNew.Click
@@ -226,7 +195,6 @@ Public Class TimeLogsForm
                 If _bool Then
 
                     bgworkTypicalImport.RunWorkerAsync()
-
                 Else
 
                     bgworkImport.RunWorkerAsync()
@@ -237,7 +205,6 @@ Public Class TimeLogsForm
         Catch ex As Exception
             MsgBox(ex.Message & " Error on file initialization")
         Finally
-            'AddHandler dgvetentdet.SelectionChanged, AddressOf dgvetentdet_SelectionChanged
         End Try
     End Sub
 
@@ -276,7 +243,6 @@ Public Class TimeLogsForm
         pre_schedtyp As String
 
     Sub filldattab(ByVal thefilepath As String)
-
         dattabLogs.Rows.Clear()
 
         Dim objReader As New System.IO.StreamReader(thefilepath)
@@ -290,11 +256,8 @@ Public Class TimeLogsForm
         Dim rowindx As Integer = 0
 
         Do While objReader.Peek() >= 0
-
             Dim logval = objReader.ReadLine()
-            'Dim insRow = dattabLogs.Rows.Add(objReader.ReadLine())
 
-            'With insRow
             If Trim(logval) <> "" Then
                 empnum = getStrBetween(Trim(logval),
                                            "",
@@ -323,29 +286,18 @@ Public Class TimeLogsForm
                 schedtyp = getStrBetween(StrReverse(logval),
                                              "",
                                              " ")
-                'MsgBox(logval)
 
                 If logval.Contains("I") Then
                     timin = logval.Substring(prevlength - 2,
                                                                 logval.Length - prevlength)
                     timin = MilitTime(timin)
-
                     timout = ""
-
                 Else
                     timin = ""
-
                     timout = logval.Substring(prevlength - 2,
                                                                 logval.Length - prevlength)
                     timout = MilitTime(timout)
-
                 End If
-
-                'pre_empnum = empnum
-                'pre_timin = timin
-                'pre_timout = timout
-                'pre_datelog = datelog
-                'pre_schedtyp = schedtyp
 
                 Dim isTimeIn As SByte = If(timin <> "", 1, 0)
 
@@ -357,15 +309,6 @@ Public Class TimeLogsForm
                     pre_datelog = datelog
                     pre_schedtyp = schedtyp
 
-                    'Dim etentRowID = _
-                    '    INSUPD_employeetimeentrydetails(, _
-                    '                                    4, _
-                    '                                    timin, _
-                    '                                    timout, _
-                    '                                    datelog, _
-                    '                                    schedtyp) 'drow("EmpNum")
-
-                    'logval'etentRowID
                     dattabLogs.Rows.Add(logval,
                                         empnum,
                                         timin,
@@ -373,73 +316,15 @@ Public Class TimeLogsForm
                                         datelog,
                                         schedtyp)
 
-                    'dgvetentdet.Rows.Add(Nothing, _
-                    '                       empnum, _
-                    '                       timin, _
-                    '                       timout, _
-                    '                       datelog, _
-                    '                       schedtyp)
-
-                    'For Each drow As DataRow In dattabLogs.Rows
-                    '    'etentd_RowID = _
-                    '    INSUPD_employeetimeentrydetails(, _
-                    '                                    4, _
-                    '                                    drow("TI"), _
-                    '                                    drow("TO"), _
-                    '                                    drow("Date"), _
-                    '                                    drow("Type")) 'drow("EmpNum")
-
-                    'Next
-
                 Else
-
                     If pre_empnum = empnum _
                         And pre_datelog = datelog Then
 
                         dattabLogs.Rows(dattabLogs.Rows.Count - 1)("TO") = timout
-                        'dattabLogs.Rows(dattabLogs.Rows.Count - 1)("") = 1
-
                     End If
                 End If
-
-                ''*******************************************
-                'If rowindx = 0 Then
-                'Else
-                '    With dattabLogs.Rows(rowindx - 1)
-                '        .Item("TI") = If(.Item("TI").ToString = "", _
-                '                         pre_timin, _
-                '                         .Item("TI"))
-
-                '        .Item("TO") = If(.Item("TO").ToString = "", _
-                '                         pre_timout, _
-                '                         .Item("TI"))
-                '    End With
-
-                '    pre_timin = timin
-                '    pre_timout = timout
-
-                'End If
-
-                'dattabLogs.Rows.Add(logval, _
-                '                    empnum, _
-                '                    timin, _
-                '                    timout, _
-                '                    datelog, _
-                '                    schedtyp)
-
-                'rowindx += 1
-                ''*******************************************
-
             Else
-                '.Item("EmpNum") = Nothing
-                '.Item("TI") = Nothing
-                '.Item("TO") = Nothing
-                '.Item("Date") = Nothing
-                '.Item("Type") = Nothing
             End If
-
-            'End With
-
         Loop
 
         objReader.Close()
@@ -448,15 +333,6 @@ Public Class TimeLogsForm
     End Sub
 
     Sub fillDTTimeLog(Optional pathoffile As String = Nothing)
-
-        'With dtTimeLogs.Columns
-
-        '.Add("EmpID", Type.GetType("System.String"))
-        '.Add("TimeLog", Type.GetType("System.String"))
-        '.Add("DateLog", Type.GetType("System.String"))
-        '.Add("TypeLog", Type.GetType("System.String"))
-
-        'End With
         Dim timelogImportID = ValNoComma(New ExecuteQuery("SELECT MAX(ImportID) FROM timeentrylog;").Result) + 1
         If pathoffile <> Nothing Then
 
@@ -478,12 +354,7 @@ Public Class TimeLogsForm
 
                 Dim Employee_ID = ii.Item(0)
                 Dim DateTimeLogStamp = ii.Item(1) & " " & ii.Item(2)
-                ''For Each strval As String In ii
-                'MsgBox(ii.Item(0) & vbNewLine & _
-                '        getDataInList(ii, "date") & vbNewLine & _
-                '        getDataInList(ii, "time"))
-                ''Next
-                'Dim INSUPD_timeentrylog As New ExecuteQuery("SELECT INSUPD_timeentrylog('" & orgztnID & "','" & Employee_ID & "','" & DateTimeLogStamp & "','" & timelogImportID & "');")
+
                 If redline.Contains("TI") _
                     Or redline.Contains("TO") Then
 
@@ -567,8 +438,6 @@ Public Class TimeLogsForm
 
             For Each strval As String In listofstr
                 Try
-                    'returnval = CDate(strval)
-
                     If strval.Length = 10 Then
 
                         If strval.Contains("-") Then
@@ -582,7 +451,6 @@ Public Class TimeLogsForm
                         End If
 
                     End If
-
                 Catch ex As Exception
                     returnval = Nothing
                     Continue For
@@ -604,7 +472,6 @@ Public Class TimeLogsForm
                     Else
                         Continue For
                     End If
-
                 Catch ex As Exception
                     returnval = Nothing
                     Continue For
@@ -614,43 +481,7 @@ Public Class TimeLogsForm
         End If
 
         Return returnval
-
     End Function
-
-    Private Sub Button2_Click(sender As Object, e As EventArgs) 'Handles Button2.Click
-        If Not bgworkImport.IsBusy Then
-            'DataGridView1.Rows.Clear()
-            'DataGridView1.Columns.Clear()
-
-            'dgvetentdet.DataSource = dattabLogs
-
-            'BackgroundWorker1.RunWorkerAsync()
-
-            'For Each drow As DataRow In dattabLogs.Rows
-            '    For Each c As DataColumn In dattabLogs.Columns
-
-            '    Next
-            'Next
-            MsgBox("not busy")
-        Else
-            MsgBox("busy")
-            'Button2_Click(sender, e)
-        End If
-
-    End Sub
-
-    Private Sub BackgroundWorker1_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs)
-        'If e.Error IsNot Nothing Then
-        '    MessageBox.Show("Error: " & e.Error.Message)
-        'ElseIf e.Cancelled Then
-        '    'MessageBox.Show("Word counting canceled.") '& vbNewLine & e.Result.ToString)
-        '    MessageBox.Show("Background work cancelled.") '& vbNewLine & e.Result.ToString)
-        'Else
-        '    'MessageBox.Show("Finished counting words.") ' & vbNewLine & e.Result.ToString)
-        '    MessageBox.Show("Importing finished successfully.") ' & vbNewLine & e.Result.ToString)
-        'End If
-
-    End Sub
 
     Function MilitTime(ByVal timeval As Object) As Object
 
@@ -680,12 +511,6 @@ Public Class TimeLogsForm
 
                 endtime = endtime.ToString.Replace("A", "")
 
-                'Dim i As Integer = StrReverse("3:15 AM").ToString.IndexOf(" ")
-
-                ''endtime = endtime.ToString.Replace("A", "")
-
-                'MsgBox(Trim(StrReverse(StrReverse("3:15 AM").ToString.Substring(i, ("3:15 AM").ToString.Length - i))).Length)
-
                 Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i,
                                                                                   endtime.ToString.Length - i)
                                           )
@@ -712,90 +537,6 @@ Public Class TimeLogsForm
         typ As Object
 
     Dim emp_numb As String
-
-    Private Sub Button3_Click(sender As Object, e As EventArgs) ' Handles Button3.Click
-
-        'Dim etentd_RowID As Integer = Nothing
-
-        'Dim distinctlogdate As New List(Of String)
-
-        'Dim issamedate As String = Nothing
-        'For Each drow As DataRow In dattabLogs.Rows
-        '    If issamedate <> drow("Date").ToString Then
-        '        distinctlogdate.Add(drow("Date").ToString)
-        '    End If
-        'Next
-
-        'For Each d_date In distinctlogdate
-
-        '    Dim selrow = dattabLogs.Select("Date='" & d_date & "'")
-
-        '    For Each drw In selrow
-        '        For Each c As DataColumn In dattabLogs.Columns
-        '            'MsgBox(drw(c).ToString)
-        '            If emp_numb <> drw("EmpNum").ToString Then
-        '                emp_numb = drw("EmpNum").ToString
-
-        '                If t_out <> drw("TO").ToString Then
-        '                    t_out = drw("TO").ToString
-
-        '                End If
-
-        '            End If
-        '        Next
-        '    Next
-
-        'Next
-
-        'For Each drow As DataRow In dattabLogs.Rows
-
-        '    'etentd_RowID = _
-        '    INSUPD_employeetimeentrydetails(, _
-        '                                    4, _
-        '                                    drow("TI"), _
-        '                                    drow("TO"), _
-        '                                    drow("Date"), _
-        '                                    drow("Type")) 'drow("EmpNum")
-
-        '    'If emp_num <> drow("EmpNum").ToString _
-        '    '        And logdate <> drow("Date").ToString Then
-
-        '    '    emp_num = drow("EmpNum").ToString
-        '    '    t_in = drow("TI").ToString
-        '    '    t_out = drow("TO").ToString
-        '    '    logdate = drow("Date").ToString
-        '    '    typ = drow("Type").ToString
-
-        '    '    If drow("TO").ToString = "" Then
-        '    '        'etentd_RowID = _
-        '    '        INSUPD_employeetimeentrydetails(etentd_RowID, _
-        '    '                                        4, _
-        '    '                                        drow("TI"), _
-        '    '                                        drow("TO"), _
-        '    '                                        drow("Date"), _
-        '    '                                        drow("Type")) 'drow("EmpNum")
-        '    '    End If
-
-        '    'Else
-        '    '    If drow("EmpNum").ToString = emp_num _
-        '    '        And drow("Date").ToString = logdate Then
-
-        '    '        If drow("TO").ToString = "" Then
-        '    '            'etentd_RowID = _
-        '    '            INSUPD_employeetimeentrydetails(etentd_RowID, _
-        '    '                                            4, _
-        '    '                                            drow("TI"), _
-        '    '                                            drow("TO"), _
-        '    '                                            drow("Date"), _
-        '    '                                            drow("Type")) 'drow("EmpNum")
-        '    '        End If
-
-        '    '    End If
-
-        '    'End If
-
-        'Next
-    End Sub
 
     Dim RegKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Control Panel\International", True)
 
@@ -832,7 +573,7 @@ Public Class TimeLogsForm
 
             vb_date_format = vb_date_format.Replace("m", "M")
 
-            machineShortTime = RegKey.GetValue("sTimeFormat").ToString 'sShortTime
+            machineShortTime = RegKey.GetValue("sTimeFormat").ToString
 
             machineShortTime = machineShortTime.Replace("t", "").Trim
 
@@ -842,30 +583,6 @@ Public Class TimeLogsForm
 
         Dim params(9, 2) As Object
 
-        'params(0, 0) = "etentd_RowID"
-        'params(1, 0) = "etentd_OrganizationID"
-        'params(2, 0) = "etentd_CreatedBy"
-        'params(3, 0) = "etentd_LastUpdBy"
-        'params(4, 0) = "etentd_EmployeeID"
-        'params(5, 0) = "etentd_TimeIn"
-        'params(6, 0) = "etentd_TimeOut"
-        'params(7, 0) = "etentd_Date"
-        'params(8, 0) = "etentd_TimeScheduleType"
-
-        'params(0, 1) = If(etentd_RowID = Nothing, DBNull.Value, etentd_RowID)
-        'params(1, 1) = orgztnID
-        'params(2, 1) = 2 'CreatedBy
-        'params(3, 1) = 2 'LastUpdBy
-        'params(4, 1) = If(etentd_EmployeeID = Nothing, DBNull.Value, etentd_EmployeeID)
-        'params(5, 1) = If(etentd_TimeIn = Nothing, DBNull.Value, etentd_TimeIn)
-        'params(6, 1) = If(etentd_TimeOut = Nothing, DBNull.Value, etentd_TimeOut)
-        'params(7, 1) = etentd_Date
-        'params(8, 1) = If(etentd_TimeScheduleType = Nothing, DBNull.Value, etentd_TimeScheduleType)
-
-        'INSUPD_employeetimeentrydetails = _
-        '    EXEC_INSUPD_PROCEDURE(params, _
-        '                          "INSUPD_employeetimeentrydetails", _
-        '                          "etentdID")
         Dim return_value = Nothing
         Try
             If conn.State = ConnectionState.Open Then : conn.Close() : End If
@@ -878,10 +595,6 @@ Public Class TimeLogsForm
                 .CommandType = CommandType.StoredProcedure
 
                 .Parameters.Add("etentdID", MySqlDbType.Int32)
-
-                'Dim rowid = If(etentd_RowID = Nothing, DBNull.Value, etentd_RowID)
-
-                'MsgBox(rowid.ToString)
 
                 .Parameters.AddWithValue("etentd_RowID", If(etentd_RowID = Nothing, DBNull.Value, etentd_RowID))
                 .Parameters.AddWithValue("etentd_OrganizationID", orgztnID)
@@ -910,10 +623,8 @@ Public Class TimeLogsForm
 
                 .Parameters.AddWithValue("EditAsUnique", EditAsUnique)
 
-
                 If IsDBNull(Branch_Code) Then
                     .Parameters.AddWithValue("Branch_Code", Branch_Code)
-
                 Else
                     .Parameters.AddWithValue("Branch_Code", If(Branch_Code = Nothing, DBNull.Value, Branch_Code))
 
@@ -923,7 +634,6 @@ Public Class TimeLogsForm
 
                 If IsDBNull(DateTimeLogIn) Then
                     .Parameters.AddWithValue("DateTimeLogIn", DateTimeLogIn)
-
                 Else
 
                     .Parameters.AddWithValue("DateTimeLogIn", If(DateTimeLogIn = Nothing, DBNull.Value,
@@ -934,15 +644,12 @@ Public Class TimeLogsForm
 
                 If IsDBNull(DateTimeLogOut) Then
                     .Parameters.AddWithValue("DateTimeLogOut", DateTimeLogOut)
-
                 Else
                     .Parameters.AddWithValue("DateTimeLogOut", If(DateTimeLogOut = Nothing, DBNull.Value,
                                                                  String.Concat(Format(CDate(DateTimeLogOut),
                                                                                       custom_datetimeformat))))
 
                 End If
-
-
 
                 .Parameters("etentdID").Direction = ParameterDirection.ReturnValue
 
@@ -963,32 +670,7 @@ Public Class TimeLogsForm
     End Function
 
     Private Sub bgworkImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkImport.DoWork
-
         backgroundworking = 1
-
-        'filldattab(thefilepath)
-
-        'For Each drow As DataRow In dattabLogs.Rows
-        '    'etentd_RowID = _
-        '    INSUPD_employeetimeentrydetails(, _
-        '                                    4, _
-        '                                    drow("TI"), _
-        '                                    drow("TO"), _
-        '                                    drow("Date"), _
-        '                                    drow("Type")) 'drow("EmpNum")
-
-        'Next
-
-        '**************************************************
-
-        'With dtTimeLogs.Columns
-
-        '.Add("EmpID", Type.GetType("System.String"))
-        '.Add("TimeLog", Type.GetType("System.String"))
-        '.Add("DateLog", Type.GetType("System.String"))
-        '.Add("TypeLog", Type.GetType("System.String"))
-
-        'End With
 
         Dim parser = New TimeInTimeOutParser()
         Dim timeEntries = parser.Parse(thefilepath)
@@ -1008,255 +690,18 @@ Public Class TimeLogsForm
                 "1",
                 Nothing,
                 Nothing,
-                Nothing
-)
+                Nothing)
         Next
 
         bgworkImport.ReportProgress(100)
-
         Return
 
-
-        'fillDTTimeLog(thefilepath)
-
         dtImport.Rows.Clear()
-
-        '**************************************************
-
-        'Dim distinctID = dtTimeLogs.DefaultView.ToTable(True, "EmpID")
-
-        'Dim distinctDateLog = dtTimeLogs.DefaultView.ToTable(True, "DateLog")
-
-        'Dim EmpIDAndDate As String = String.Empty
-
-        'Dim timeOne As String = String.Empty
-
-        'Dim timeTwo As String = String.Empty
-
-        'Dim distinctID_RowCount = distinctID.Rows.Count
-
-        'Dim loop_indx = 1
-
-        'For Each drow As DataRow In distinctID.Rows
-
-        '    If IsDBNull(drow(0)) Then
-        '        Continue For
-        '    ElseIf drow(0) = Nothing Then
-        '        Continue For
-        '    Else
-
-        '        For Each d_row As DataRow In distinctDateLog.Rows
-
-        '            Dim empsel_dtTimeLogs = dtTimeLogs.Select("EmpID = '" & drow(0) & "' AND DateLog = '" & d_row(0) & "'")
-
-        '            If empsel_dtTimeLogs.Count = 0 Then
-        '                Continue For
-        '            ElseIf empsel_dtTimeLogs.Count = 1 Then
-
-        '                If empsel_dtTimeLogs(0)("Tag") Is Nothing Then
-
-        '                    timeOne = If(IsDBNull(empsel_dtTimeLogs(0)("TimeLog")), "", empsel_dtTimeLogs(0)("TimeLog"))
-
-        '                    dtImport.Rows.Add(drow(0), _
-        '                                      empsel_dtTimeLogs(0)("TimeLog"), _
-        '                                      Nothing, _
-        '                                      d_row(0))
-
-        '                Else
-
-        '                    Dim fsdfsd = empsel_dtTimeLogs(0)("DateTimeLog")
-
-        '                    If ValNoComma(empsel_dtTimeLogs(0)("Tag")) = 1 Then 'Time in
-
-        '                        dtImport.Rows.Add(drow(0), _
-        '                                          empsel_dtTimeLogs(0)("TimeLog"), _
-        '                                          Nothing, _
-        '                                          d_row(0),
-        '                                          empsel_dtTimeLogs(0)("DateTimeLog"),
-        '                                          Nothing, _
-        '                                          empsel_dtTimeLogs(0)("BranchCode"))
-
-        '                    ElseIf ValNoComma(empsel_dtTimeLogs(0)("Tag")) = 0 Then 'Time out
-
-        '                        dtImport.Rows.Add(drow(0), _
-        '                                          Nothing, _
-        '                                          empsel_dtTimeLogs(0)("TimeLog"), _
-        '                                          d_row(0),
-        '                                          Nothing, _
-        '                                          empsel_dtTimeLogs(0)("DateTimeLog"),
-        '                                          empsel_dtTimeLogs(0)("BranchCode"))
-
-        '                    End If
-
-        '                End If
-
-        '            ElseIf empsel_dtTimeLogs.Count > 1 Then
-
-        '                Dim lastrow_indx = empsel_dtTimeLogs.Count - 1
-
-        '                timeOne = If(IsDBNull(empsel_dtTimeLogs(0)("TimeLog")), "", empsel_dtTimeLogs(0)("TimeLog"))
-
-        '                timeTwo = If(IsDBNull(empsel_dtTimeLogs(lastrow_indx)("TimeLog")), "", empsel_dtTimeLogs(lastrow_indx)("TimeLog"))
-
-        '                dtImport.Rows.Add(drow(0), _
-        '                                  timeOne, _
-        '                                  timeTwo, _
-        '                                  d_row(0),
-        '                                  empsel_dtTimeLogs(0)("DateTimeLog"),
-        '                                  empsel_dtTimeLogs(lastrow_indx)("DateTimeLog"),
-        '                                  empsel_dtTimeLogs(lastrow_indx)("BranchCode"))
-
-        '                Dim fsdfsd = empsel_dtTimeLogs(0)("DateTimeLog")
-
-        '                Dim fsdfsdff = empsel_dtTimeLogs(lastrow_indx)("DateTimeLog")
-
-        '            End If
-
-        '        Next
-
-        '    End If
-
-        '    bgworkImport.ReportProgress(CInt(50 * loop_indx / distinctID_RowCount), "")
-
-        '    loop_indx += 1
-
-        'Next
-
-        'For Each drow As DataRow In distinctID.Rows
-
-        '    Dim myselect = From selrow In dtTimeLogs
-        '                   Where selrow.Field(Of String)("EmpID") = drow(0)
-        '                   Order By selrow.Field(Of String)("DateLog") Ascending
-
-        '    Dim successtwo = 0
-
-        '    Dim prev_date = Nothing
-
-        '    For Each drw As DataRow In myselect
-
-        '        If EmpIDAndDate <> drw(0).ToString & drw(1).ToString Then
-
-        '            EmpIDAndDate = drw(0).ToString & drw(1).ToString
-
-        '            If successtwo = 1 Then
-
-        '                successtwo = 1
-
-        '                'Try
-        '                '    timeOne = If(CDate(drw(2)) > CDate(timeOne), timeOne, drw(2))
-        '                'Catch ex As Exception
-        '                '    timeOne = Nothing
-        '                'End Try
-
-        '                'Try
-        '                '    timeTwo = If(CDate(drw(2)) > CDate(timeOne), drw(2), timeOne)
-        '                'Catch ex As Exception
-        '                '    timeTwo = timeOne
-        '                'End Try
-
-        '                'Dim selectexist = dtImport.Select("EmploID='" & drw(0).ToString & "' AND LogDate='" & drw(1).ToString & "'")
-
-        '                dtImport.Rows.Add(drw(0).ToString, _
-        '                                  timeOne, _
-        '                                  timeTwo, _
-        '                                  drw(1).ToString)
-
-        '            ElseIf successtwo = 2 Then
-
-        '                successtwo = 0
-
-        '                dtImport.Rows.Add(drw(0).ToString, _
-        '                                  timeOne, _
-        '                                  timeTwo, _
-        '                                  prev_date) 'drw(1).ToString
-
-        '            Else
-        '                successtwo = 1
-
-        '            End If
-
-        '            prev_date = drw(1)
-
-        '            If IsDBNull(drw(2)) Then
-        '                timeOne = String.Empty
-        '            Else
-        '                timeOne = drw(2).ToString
-        '            End If
-
-        '        Else
-
-        '            'timeOne = If(CDate(drw(2)) > CDate(timeOne), timeOne, drw(2))
-
-        '            'timeTwo = If(CDate(drw(2)) > CDate(timeOne), drw(2), timeOne)
-
-        '            If IsDBNull(drw(2)) Then
-        '                timeTwo = String.Empty
-        '            Else
-        '                timeTwo = drw(2).ToString
-        '            End If
-
-        '            'dtImport.Rows.Add(drw(0).ToString, _
-        '            '                  timeOne, _
-        '            '                  timeTwo, _
-        '            '                  drw(1).ToString)
-
-        '            'With dtImport.Columns
-
-        '            '    .Add("EmploID", Type.GetType("System.String"))
-        '            '    .Add("TIn", Type.GetType("System.String"))
-        '            '    .Add("TOut", Type.GetType("System.String"))
-        '            '    .Add("LogDate", Type.GetType("System.String"))
-
-        '            'End With
-
-        '            successtwo = 2
-
-        '        End If
-
-        '        'MsgBox(drw(0).ToString & vbNewLine & _
-        '        '       drw(1).ToString & vbNewLine & _
-        '        '       drw(2).ToString)
-
-        '    Next
-
-        '    'MsgBox("NEXT")
-
-        'Next
-
-        '**************************************************
-
-        'Dim names = From row In dtTimeLogs.AsEnumerable()
-        '            Select row.Field(Of String)("EmpID") Distinct
-
-        ''For Each strval In names.ToList
-        'MsgBox(names.ToList.Count)
-
-        ''Next
-
-        '**************************************************
-
-        'Dim GroupedSum = From userentry In dtTimeLogs
-        '                Group userentry By key = userentry.Field(Of String)("EmpID") Into Group _
-        '                Select ProductID = key, SumVal = Group.Sum(Function(p) p("Value"))
-
-        'For Each strr In GroupedSum.ToList
-        '    MsgBox(strr.ToString)
-        '    '    'MsgBox(strr.ProductID & vbNewLine & strr.SumVal)
-
-        '    '    INSUPD_paystubitem(, paystubID, strr.ProductID, strr.SumVal)
-
-        '    '    includedallowance.Add(strr.ProductID)
-
-        'Next
-
     End Sub
 
     Private Sub bgworkImport_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkImport.ProgressChanged
-
         Threading.Thread.Sleep(0)
-
         ToolStripProgressBar1.Value = CType(e.ProgressPercentage, Integer)
-
     End Sub
 
     Dim progress_value = 0
@@ -1279,23 +724,9 @@ Public Class TimeLogsForm
             MessageBox.Show("Background work cancelled.")
 
             tsbtnNew.Enabled = True
-
         Else
 
             lblforballoon.Location = New Point(TabControl1.Location.X, lblforballoon.Location.Y)
-
-            'If dgvetentd.RowCount = 0 Then
-            '    dgvetentd.Rows.Add(Format(CDate(dbnow), "MMM-dd-yyyy"))
-            'Else
-            '    If dgvetentd.RowCount >= 10 Then
-            '        dgvetentd.Rows.Remove(dgvetentd.Rows(9))
-            '        dgvetentd.Rows.Insert(0, 1)
-            '        dgvetentd.Item(0, 0).Value = Format(CDate(dbnow), "MMM-dd-yyyy")
-            '    Else
-            '        dgvetentd.Rows.Insert(0, 1)
-            '        dgvetentd.Item(0, 0).Value = Format(CDate(dbnow), "MMM-dd-yyyy")
-            '    End If
-            'End If
 
             dgvetentdet.Rows.Clear()
 
@@ -1310,62 +741,15 @@ Public Class TimeLogsForm
     End Sub
 
     Private Sub bgworkInsertImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkInsertImport.DoWork
-
         backgroundworking = 1
-
-        'With dtTimeLogs.Columns
-
-        '.Add("EmpID", Type.GetType("System.String"))
-        '.Add("TimeLog", Type.GetType("System.String"))
-        '.Add("DateLog", Type.GetType("System.String"))
-        '.Add("TypeLog", Type.GetType("System.String"))
-
-        'End With
 
         Dim currtimestamp = Format(CDate(EXECQUER("SELECT CURRENT_TIMESTAMP();")), "yyyy-MM-dd HH:mm:ss")
 
-
-        'With dtImport.Columns
-
-        '    .Add("EmploID", Type.GetType("System.String"))
-        '    .Add("TIn", Type.GetType("System.String"))
-        '    .Add("TOut", Type.GetType("System.String"))
-        '    .Add("LogDate", Type.GetType("System.String"))
-
-        'End With
         Dim lastbound = dtImport.Rows.Count 'dattabLogs
 
         Dim indx = 1
 
         For Each drow As DataRow In dtImport.Rows 'dattabLogs
-
-            'INSUPD_employeetimeentrydetails(, _
-            '                                drow("EmpNum"), _
-            '                                drow("TI"), _
-            '                                drow("TO"), _
-            '                                drow("Date"), _
-            '                                drow("Type"), _
-            '                                currtimestamp) 'drow("EmpNum")
-
-            'MsgBox(drow("EmploID") & vbNewLine & _
-            '        drow("TIn") & vbNewLine & _
-            '        drow("TOut") & vbNewLine & _
-            '        drow("LogDate"))
-
-            'With dtImport.Columns
-
-            '    .Add("EmploID", Type.GetType("System.String"))
-            '    .Add("TIn", Type.GetType("System.String"))
-            '    .Add("TOut", Type.GetType("System.String"))
-            '    .Add("LogDate", Type.GetType("System.String"))
-
-            '    .Add("DateTimeLogIn", Type.GetType("System.String"))
-
-            '    .Add("DateTimeLogOut", Type.GetType("System.String"))
-
-            '    .Add("BranchCode", Type.GetType("System.String"))
-
-            'End With
 
             INSUPD_employeetimeentrydetails(,
                                             drow("EmploID"),
@@ -1378,12 +762,6 @@ Public Class TimeLogsForm
                                             drow("DateTimeLogIn"),
                                             drow("DateTimeLogOut"))
 
-            'IO.File.AppendAllText(IO.Path.GetTempPath() & "aaa.txt", _
-            '                      drow("EmploID").ToString & " " & _
-            '                      drow("TIn").ToString & " " & _
-            '                      drow("TOut").ToString & " " & _
-            '                      drow("LogDate").ToString & Environment.NewLine)
-
             Dim progressvalue = CInt((indx / lastbound) * 50)
 
             bgworkInsertImport.ReportProgress(progressvalue)
@@ -1393,30 +771,10 @@ Public Class TimeLogsForm
         Next
 
         EXECQUER("UPDATE employeetimeentrydetails SET TimeScheduleType='' WHERE TimeScheduleType IS NULL AND OrganizationID='" & orgztnID & "';")
-
-        'For Each drow As DataRow In dattabLogs.Rows
-        '    'drow("logging").ToString
-        '    dgvetentdet.Rows.Add(Nothing, _
-        '                         drow("EmpNum").ToString, _
-        '                         drow("TI").ToString, _
-        '                         drow("TO").ToString, _
-        '                         Format(CDate(drow("Date")), "MM-dd-yyyy"),    _
-        '                         drow("Type").ToString)
-
-        '    'INSUPD_employeetimeentrydetails(, _
-        '    '                                4, _
-        '    '                                drow("TI"), _
-        '    '                                drow("TO"), _
-        '    '                                drow("Date"), _
-        '    '                                drow("Type")) 'drow("EmpNum")
-        'Next
-
     End Sub
 
     Private Sub bgworkInsertImport_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkInsertImport.ProgressChanged
-
         ToolStripProgressBar1.Value = progress_value + CType(e.ProgressPercentage, Integer)
-
     End Sub
 
     Private Sub bgworkInsertImport_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) _
@@ -1435,7 +793,6 @@ Public Class TimeLogsForm
             MessageBox.Show("Background work cancelled.")
 
             tsbtnNew.Enabled = True
-
         Else
 
             loademployeetimeentrydetails(0)
@@ -1467,10 +824,6 @@ Public Class TimeLogsForm
 
     End Sub
 
-    Private Sub dgvetentdet_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvetentdet.CellContentClick
-
-    End Sub
-
     Dim haserrinput As SByte
 
     Dim listofEditRow As New AutoCompleteStringCollection
@@ -1478,7 +831,6 @@ Public Class TimeLogsForm
     Dim reset_static As SByte = -1
 
     Private Sub dgvetentdet_CellEndEdit1(sender As Object, e As DataGridViewCellEventArgs) 'Handles dgvetentdet.CellEndEdit
-
         dgvetentdet.ShowCellErrors = True
         Dim colName As String = dgvetentdet.Columns(e.ColumnIndex).Name
         Dim rowindx = e.RowIndex
@@ -1491,15 +843,8 @@ Public Class TimeLogsForm
             With dgvetentdet
 
                 If Val(dgvetentdet.Item("Column1", e.RowIndex).Value) <> 0 Then
-                    'If num <> Val(dgvetentdet.Item("Column1", e.RowIndex).Value) Then
-                    '    num = Val(dgvetentdet.Item("Column1", e.RowIndex).Value)
                     listofEditRow.Add(dgvetentdet.Item("Column1", e.RowIndex).Value)
-                    'End If
-                Else
-
                 End If
-
-                'Column3'Column4'Column5
 
                 If (colName = "Column5") Then
 
@@ -1546,10 +891,6 @@ Public Class TimeLogsForm
                                 dateobj &= ampm
 
                             End If
-                            '    dateobj = getStrBetween(dateobj.ToString, "", " ")
-                            '    Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm")
-                            '    dgvempleave.Item(colName, rowIndx).Value = valtime.ToLongTimeString
-                            'Else
 
                             Dim modified_format = If(dateobj_len = 5, "h:mm tt", "hh:mm:ss tt")
 
@@ -1559,10 +900,7 @@ Public Class TimeLogsForm
                             Else
                                 dgvetentdet.Item(colName, rowindx).Value = Trim(valtime.ToLongTimeString.Substring(0, (dateobj_len - 1))) & ampm
                             End If
-                            'End If
-                            'valtime = DateTime.Parse(e.FormattedValue)
-                            'valtime = valtime.ToLongTimeString
-                            'Format(valtime, "hh:mm tt")
+
                             haserrinput = 0
 
                             dgvetentdet.Item(colName, rowindx).ErrorText = Nothing
@@ -1573,10 +911,7 @@ Public Class TimeLogsForm
                                 dateobj = dateobj.ToString.Replace(" ", ":")
 
                                 Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm:ss")
-                                'valtime = DateTime.Parse(e.FormattedValue)
-                                'valtime = valtime.ToLongTimeString
                                 dgvetentdet.Item(colName, rowindx).Value = valtime.ToLongTimeString
-                                'Format(valtime, "hh:mm tt")
                                 haserrinput = 0
 
                                 dgvetentdet.Item(colName, rowindx).ErrorText = Nothing
@@ -1590,18 +925,10 @@ Public Class TimeLogsForm
 
                         dgvetentdet.Item(colName, rowindx).ErrorText = Nothing
                     End If
-                    'Else 'Column6
-                    '    haserrinput = 0
-                    '    dgvetentdet.Item(colName, rowindx).ErrorText = Nothing
                 End If
 
             End With
         End If
-
-        'dgvetentdet.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells
-        'dgvetentdet.AutoResizeRow(e.RowIndex)
-        'dgvetentdet.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
-
     End Sub
 
     Private Sub dgvetentdet_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvetentdet.CellEndEdit
@@ -1619,15 +946,8 @@ Public Class TimeLogsForm
             With dgvetentdet
 
                 If Val(dgvetentdet.Item("Column1", e.RowIndex).Value) <> 0 Then
-                    'If num <> Val(dgvetentdet.Item("Column1", e.RowIndex).Value) Then
-                    '    num = Val(dgvetentdet.Item("Column1", e.RowIndex).Value)
                     listofEditRow.Add(dgvetentdet.Item("Column1", e.RowIndex).Value)
-                    'End If
-                Else
-
                 End If
-
-                'Column3'Column4'Column5
 
                 If (colName = "Column5") Then
 
@@ -1668,20 +988,14 @@ Public Class TimeLogsForm
                                 dateobj = dateobj.ToString.Replace(" ", ":")
 
                             End If
-                            '    dateobj = getStrBetween(dateobj.ToString, "", " ")
-                            '    Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm")
-                            '    dgvempleave.Item(colName, rowIndx).Value = valtime.ToShortTimeString
-                            'Else
+
                             Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm tt")
                             If ampm = Nothing Then
                                 dgvetentdet.Item(colName, rowindx).Value = valtime.ToShortTimeString
                             Else
                                 dgvetentdet.Item(colName, rowindx).Value = Trim(valtime.ToShortTimeString.Substring(0, 5)) & ampm
                             End If
-                            'End If
-                            'valtime = DateTime.Parse(e.FormattedValue)
-                            'valtime = valtime.ToShortTimeString
-                            'Format(valtime, "hh:mm tt")
+
                             haserrinput = 0
 
                             dgvetentdet.Item(colName, rowindx).ErrorText = Nothing
@@ -1692,10 +1006,7 @@ Public Class TimeLogsForm
                                 dateobj = dateobj.ToString.Replace(" ", ":")
 
                                 Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm")
-                                'valtime = DateTime.Parse(e.FormattedValue)
-                                'valtime = valtime.ToShortTimeString
                                 dgvetentdet.Item(colName, rowindx).Value = valtime.ToShortTimeString
-                                'Format(valtime, "hh:mm tt")
                                 haserrinput = 0
 
                                 dgvetentdet.Item(colName, rowindx).ErrorText = Nothing
@@ -1709,18 +1020,10 @@ Public Class TimeLogsForm
 
                         dgvetentdet.Item(colName, rowindx).ErrorText = Nothing
                     End If
-                    'Else 'Column6
-                    '    haserrinput = 0
-                    '    dgvetentdet.Item(colName, rowindx).ErrorText = Nothing
                 End If
 
             End With
         End If
-
-        'dgvetentdet.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells
-        'dgvetentdet.AutoResizeRow(e.RowIndex)
-        'dgvetentdet.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
-
     End Sub
 
     Dim pagination As Integer
@@ -1744,20 +1047,13 @@ Public Class TimeLogsForm
         ElseIf sendrname = "Last" Then
             Dim lastpage = Val(EXECQUER("SELECT COUNT(DISTINCT(Created)) / 100 FROM employeetimeentrydetails WHERE OrganizationID=" & orgztnID & ";"))
 
-
-
             Dim remender = lastpage Mod 1
 
             pagination = (lastpage - remender) * 100
 
             If pagination - 100 < 100 Then
-                'pagination = 0
 
             End If
-
-            'pagination = If(lastpage - 100 >= 100, _
-            '                lastpage - 100, _
-            '                lastpage)
 
         End If
 
@@ -1766,7 +1062,6 @@ Public Class TimeLogsForm
         dgvetentd_SelectionChanged(sender, e)
 
         AddHandler dgvetentd.SelectionChanged, AddressOf dgvetentd_SelectionChanged
-
     End Sub
 
     Private Sub ToolStripButton4_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
@@ -1774,46 +1069,8 @@ Public Class TimeLogsForm
     End Sub
 
     Private Sub Form8_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
         If backgroundworking = 1 Then
-
             e.Cancel = True
-
-            'Dim prompt = MessageBox.Show("Do you want to log out ?", "Confirm logging out", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
-
-            'If prompt = MsgBoxResult.Yes Then
-
-            '    MDIPrimaryForm.Showmainbutton.Enabled = True
-
-            '    If bgworkImport.IsBusy Then
-            '        bgworkImport.CancelAsync()
-            '    End If
-
-            '    If bgworkInsertImport.IsBusy Then
-            '        bgworkInsertImport.CancelAsync()
-            '    End If
-
-            '    InfoBalloon(, , lblforballoon, , , 1)
-
-            '    If previousForm IsNot Nothing Then
-            '        If previousForm.Name = Me.Name Then
-            '            previousForm = Nothing
-            '        End If
-            '    End If
-
-            '    showAuditTrail.Close()
-            '    SelectFromEmployee.Close()
-
-            '    TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
-
-            '    e.Cancel = False
-
-            'Else
-
-            '    e.Cancel = True
-
-            'End If
-
         Else
 
             InfoBalloon(, , lblforballoon, , , 1)
@@ -1825,13 +1082,9 @@ Public Class TimeLogsForm
             End If
 
             showAuditTrail.Close()
-
             SelectFromEmployee.Close()
-
             TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
-
         End If
-
     End Sub
 
     Dim newRowID
@@ -1839,7 +1092,6 @@ Public Class TimeLogsForm
     Dim dontUpdate As SByte = 0
 
     Private Sub tsbtnSave_Click(sender As Object, e As EventArgs) Handles tsbtnSave.Click
-
         dgvetentdet.EndEdit(True)
 
         If dontUpdate = 1 Then
@@ -1856,16 +1108,11 @@ Public Class TimeLogsForm
         Dim currtimestamp = Nothing
 
         If dgvetentd.RowCount <> 0 Then
-
             currtimestamp = Format(CDate(dgvetentd.CurrentRow.Cells("createdmilit").Value), "yyyy-MM-dd HH:mm:ss")
-
         Else
-
             currtimestamp = Format(CDate(EXECQUER("SELECT CURRENT_TIMESTAMP();")), "yyyy-MM-dd HH:mm:ss")
-
         End If
-        ', _
-        '                                    currtimestamp
+
         For Each dgrow As DataGridViewRow In dgvetentdet.Rows
             With dgrow
                 If .IsNewRow = False Then
@@ -1884,17 +1131,12 @@ Public Class TimeLogsForm
 
                         Dim dateout = Nothing
 
-
                         If IsDBNull(.Cells("Column13").Value) Then
 
                             dateout = Nothing
-
-
-
                         Else
                             If IsDBNull(.Cells("Column11")) Then
                                 dateout = Nothing
-
                             Else
 
                                 dateout = Format(CDate(.Cells("Column13").Value), "yyyy-MM-dd")
@@ -1903,27 +1145,22 @@ Public Class TimeLogsForm
 
                         End If
 
-
                         Dim timeout = Format(CDate(Trim(.Cells("Column4").Value)), "HH:mm:ss")
-                            Dim timestampinout = dateout & " " & timeout
+                        Dim timestampinout = dateout & " " & timeout
 
-                            Dim datein = Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd")
-                            Dim timein = Format(CDate(Trim(.Cells("Column3").Value)), "HH:mm:ss")
-                            Dim timestampin = datein & " " & timein
+                        Dim datein = Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd")
+                        Dim timein = Format(CDate(Trim(.Cells("Column3").Value)), "HH:mm:ss")
+                        Dim timestampin = datein & " " & timein
 
-
-                            RowID = .Cells("Column1").Value
-                            INSUPD_employeetimeentrydetails(RowID,
-                                                        .Cells("Column2").Value,
-                                                        time_i,
-                                                        time_o,
-                                                        Trim(etent_date),
-                                                        .Cells("Column6").Value,,,,, timestampin, timestampinout)
-
-
-
+                        RowID = .Cells("Column1").Value
+                        INSUPD_employeetimeentrydetails(RowID,
+                                                    .Cells("Column2").Value,
+                                                    time_i,
+                                                    time_o,
+                                                    Trim(etent_date),
+                                                    .Cells("Column6").Value,,,,, timestampin, timestampinout)
                     Else
-                            If .Cells("Column1").Value = Nothing Then
+                        If .Cells("Column1").Value = Nothing Then
                             newRowID =
                             INSUPD_employeetimeentrydetails(,
                                                             .Cells("Column2").Value,
@@ -1938,12 +1175,6 @@ Public Class TimeLogsForm
 
                     End If
 
-                    'Dim afsfa = CDate("").DayOfWeek
-
-                    'If .Cells("Column1").Value = Nothing Then
-                    '    .Cells("Column1").Value = newRowID
-                    'End If
-
                 End If
             End With
 
@@ -1957,11 +1188,6 @@ Public Class TimeLogsForm
                   "Successfully saved.", lblforballoon, 0, -69)
 
         tsbtnCancel_Click(sender, e)
-
-    End Sub
-
-    Private Sub dgvetentd_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvetentd.CellContentClick
-
     End Sub
 
     Public originalTimeEntryCount As Integer = Nothing
@@ -1975,18 +1201,14 @@ Public Class TimeLogsForm
 
         With dgvetentd
             If .RowCount <> 0 Then
-                'If backgroundworking = 1 Then
-                If backgroundworking = 0 Then 'ToolStripProgressBar1.Visible = False 
-
+                If backgroundworking = 0 Then
                     VIEWemployeetimeentrydetails(.CurrentRow.Cells("createdmilit").Value,
                                                  TextBox1.Text.Trim,
                                                  txtFirstName.Text.Trim,
                                                  txtLastName.Text.Trim)
 
                     originalTimeEntryCount = dgvetentdet.RowCount - 1
-
                 End If
-
             Else
                 originalTimeEntryCount = 0
 
@@ -2001,11 +1223,9 @@ Public Class TimeLogsForm
     End Sub
 
     Private Sub tsbtnCancel_Click(sender As Object, e As EventArgs) Handles tsbtnCancel.Click
-
         Dim r_indx, c_indx
 
         If dgvetentdet.RowCount <> 1 Then
-
             r_indx = dgvetentdet.CurrentRow.Index
             c_indx = dgvetentdet.CurrentCell.ColumnIndex
 
@@ -2017,12 +1237,9 @@ Public Class TimeLogsForm
         Else
             dgvetentd_SelectionChanged(sender, e)
         End If
-
     End Sub
 
     Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
-        'MsgBox(DateDiff(DateInterval.Minute, CDate("18:02:00"), CDate("18:00:00")))
-
         If Button3.Image.Tag = 1 Then
             Button3.Image = Nothing
             Button3.Image = My.Resources.r_arrow
@@ -2042,71 +1259,43 @@ Public Class TimeLogsForm
 
             dgvetentd.Width = pointX
         End If
-
-        'Dim inputval = InputBox("Please input time", "")
-
-        'MsgBox(MilitTime(inputval.ToString).ToString)
-
     End Sub
 
     Private Sub dgvetentd_GotFocus(sender As Object, e As EventArgs) Handles dgvetentd.GotFocus
-
         If dgvetentd.RowCount <> 0 Then
-
             If backgroundworking = 0 Then
-
                 tsbtndel.Enabled = True
-
             End If
-
         Else
-
             tsbtndel.Enabled = False
-
         End If
-
     End Sub
 
     Private Sub dgvetentd_LostFocus(sender As Object, e As EventArgs) Handles dgvetentd.LostFocus
-
         tsbtndel.Enabled = False
     End Sub
 
     Private Sub tsbtndel_Click(sender As Object, e As EventArgs) Handles tsbtndel.Click
         With dgvetentd
             If .RowCount <> 0 Then
-
                 Dim result = MessageBox.Show("Are you sure you want to delete ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
 
                 If result = DialogResult.Yes Then
-
                     EXECQUER("DELETE FROM employeetimeentrydetails WHERE Created='" & .CurrentRow.Cells("createdmilit").Value & "';")
-
                     dgvetentd.Rows.Remove(.CurrentRow)
-
                 End If
-
             End If
-
         End With
-
-    End Sub
-
-    Private Sub dgvetentdet_RowMinimumHeightChanged(sender As Object, e As DataGridViewRowEventArgs) Handles dgvetentdet.RowMinimumHeightChanged
-
     End Sub
 
     Private Sub dgvetentdet_Scroll(sender As Object, e As ScrollEventArgs) Handles dgvetentdet.Scroll
-
         myEllipseButton(dgvetentdet,
                         "Column2",
                         btnEmpID)
-
     End Sub
 
     Private Sub dgvetentdet_SelectionChanged(sender As Object, e As EventArgs) Handles dgvetentdet.SelectionChanged
         If dgvetentdet.RowCount = 1 Then
-
         Else
             With dgvetentdet.CurrentRow
                 .Cells("Column2").ReadOnly = True
@@ -2115,43 +1304,29 @@ Public Class TimeLogsForm
                     .Cells("Column2").ReadOnly = False
                 Else
                     myEllipseButton(dgvetentdet, "Column2", btnEmpID)
-
                 End If
-
             End With
-
         End If
 
         myEllipseButton(dgvetentdet,
                         "Column2",
                         btnEmpID)
-
     End Sub
 
     Private Sub btnEmpID_Click(sender As Object, e As EventArgs) Handles btnEmpID.Click
-
         With SelectFromEmployee
-
             .Show()
-
             .BringToFront()
-
         End With
-
     End Sub
 
     Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-
         showAuditTrail.Show()
-
         showAuditTrail.loadAudTrail(view_ID)
-
         showAuditTrail.BringToFront()
-
     End Sub
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
-
         RemoveHandler dgvetentd.SelectionChanged, AddressOf dgvetentd_SelectionChanged
 
         Dim selrowindx As Integer = Nothing
@@ -2168,114 +1343,62 @@ Public Class TimeLogsForm
         End If
 
         dgvetentd_SelectionChanged(sender, e)
-
         AddHandler dgvetentd.SelectionChanged, AddressOf dgvetentd_SelectionChanged
-
-    End Sub
-
-    Private Sub ToolStripProgressBar1_Click(sender As Object, e As EventArgs) Handles ToolStripProgressBar1.Click
-
     End Sub
 
     Private Sub ToolStripProgressBar1_VisibleChanged(sender As Object, e As EventArgs) Handles ToolStripProgressBar1.VisibleChanged
-
         Dim boolVisib = Not ToolStripProgressBar1.Visible
-
-
         tsbtnSave.Enabled = boolVisib
-
         tsbtndel.Enabled = boolVisib
-
         tsbtnCancel.Enabled = boolVisib
-
         MDIPrimaryForm.Showmainbutton.Enabled = boolVisib
-
         TimeAttendForm.MenuStrip1.Enabled = boolVisib
-
         Button4.Enabled = boolVisib
-
         tsbtnAudittrail.Enabled = boolVisib
-
         First.Enabled = boolVisib
-
         Prev.Enabled = boolVisib
-
         Nxt.Enabled = boolVisib
-
         Last.Enabled = boolVisib
-
         btnEmpID.Enabled = boolVisib
-
-
     End Sub
 
     Private Sub ContextMenuStrip2_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip2.Opening
-
-        'DeleteRowToolStripMenuItem
-
         If dgvetentdet.RowCount = 1 Then
-
             DeleteRowToolStripMenuItem.Enabled = False
-
         ElseIf dgvetentdet.CurrentRow.IsNewRow Then
-
             DeleteRowToolStripMenuItem.Enabled = False
-
         Else
             DeleteRowToolStripMenuItem.Enabled = True
-
         End If
-
-    End Sub
-
-    Private Sub bgworkTypicalImport_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgworkTypicalImport.RunWorkerCompleted
-
     End Sub
 
     Private Sub DeleteRowToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeleteRowToolStripMenuItem.Click
-
         Dim result = MessageBox.Show("Are you sure you want to delete this item ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
 
         If result = DialogResult.Yes Then
-
             With dgvetentdet
-
                 .Focus()
-
                 .EndEdit(True)
 
                 EXECQUER("DELETE FROM employeetimeentrydetails WHERE RowID='" & .CurrentRow.Cells("Column1").Value & "';")
-
                 .Rows.Remove(.CurrentRow)
-
             End With
-
         End If
-
     End Sub
 
     Private Sub Search_KeyPress(sender As Object, e As KeyPressEventArgs) Handles ComboBox7.KeyPress, TextBox1.KeyPress,
                                                                                     ComboBox8.KeyPress, txtFirstName.KeyPress,
                                                                                     ComboBox9.KeyPress, txtLastName.KeyPress,
                                                                                     ComboBox10.KeyPress, TextBox17.KeyPress
-
         Dim e_asc = Asc(e.KeyChar)
 
         If e_asc = 13 Then
             Button4_Click(sender, e)
-
         End If
-
-    End Sub
-
-    Private Sub cboxsearchpayperiod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboxsearchpayperiod.SelectedIndexChanged
-
     End Sub
 
     Private Sub cboxsearchmonth_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboxsearchmonth.SelectedIndexChanged
-
         If cboxsearchmonth.SelectedIndex > -1 Then
-
             Dim month_index = cboxsearchmonth.SelectedIndex + 1
 
             Dim n_SQLQueryToDatatable As _
@@ -2285,9 +1408,7 @@ Public Class TimeLogsForm
                                         " AND TotalGrossSalary=1" &
                                         " AND `Month`='" & month_index & "'" &
                                         " AND `Year`='';")
-
         End If
-
     End Sub
 
     Private Sub tsbtnExportReportTimeLogs_Click(sender As Object, e As EventArgs) Handles tsbtnExportReportTimeLogs.Click
@@ -2333,7 +1454,6 @@ Public Class TimeLogsForm
     End Sub
 
     Private Function ImportConventionalFormatTimeLogs() As Integer
-
         Dim return_value As Integer = 0
 
         Dim max_importid = New SQL(String.Concat("SELECT MAX(ImportID) FROM timeentrylogs WHERE OrganizationID=", orgztnID, ";")).GetFoundRow
@@ -2347,8 +1467,6 @@ Public Class TimeLogsForm
         Dim i = 1
 
         Dim line_content_count As Integer = timeEntries.Count
-
-        Console.WriteLine(line_content_count)
 
         For Each timeEntry In timeEntries
 
@@ -2369,9 +1487,7 @@ Public Class TimeLogsForm
             sql.ExecuteQuery()
 
             If sql.HasError Then
-
                 MsgBox(sql.ErrorMessage)
-
             End If
 
             return_value = ((i / line_content_count) * 100)
@@ -2380,18 +1496,13 @@ Public Class TimeLogsForm
                 ReportProgress(return_value)
 
             i += 1
-
         Next
 
-        'Return return_value
         Return max_importid
-
     End Function
 
     Private Sub bgworkTypicalImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkTypicalImport.DoWork
-
-        Dim import_id =
-            ImportConventionalFormatTimeLogs()
+        Dim import_id = ImportConventionalFormatTimeLogs()
 
         Dim param_values =
             New Object() {orgztnID,
@@ -2411,24 +1522,19 @@ Public Class TimeLogsForm
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Name))
         End Try
-
     End Sub
 
     Private Sub bgworkTypicalImport_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkTypicalImport.ProgressChanged
-
         ToolStripProgressBar1.Value = e.ProgressPercentage
-
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
-
         Static _bool As Boolean =
             (sys_ownr.CurrentSystemOwner <> SystemOwner.Cinema2000)
 
         tsbtnExportReportTimeLogs.Visible = _bool
 
         MyBase.OnLoad(e)
-
     End Sub
 
 End Class
