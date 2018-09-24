@@ -21,7 +21,7 @@ Public Class TimeLog
     <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
     Public Property LastUpd As Date?
 
-    Public Property LastUpdBy As Date?
+    Public Property LastUpdBy As Integer?
 
     Public Property EmployeeID As Integer?
 
