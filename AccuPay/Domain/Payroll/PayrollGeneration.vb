@@ -115,7 +115,7 @@ Public Class PayrollGeneration
             Where(Function(t) t.EmployeeID = _employee2.RowID).
             ToList()
 
-        _payRates = resources.PayRates.ToDictionary(Function(p) p.RateDate)
+        _payRates = resources.PayRates.ToDictionary(Function(p) p.Date)
 
         _allowances = resources.Allowances.
             Where(Function(a) a.EmployeeID = _employee2.RowID).

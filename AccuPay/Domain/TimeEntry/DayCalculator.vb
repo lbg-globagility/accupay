@@ -1,8 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay
 Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
 
 Public Class DayCalculator
@@ -155,8 +153,10 @@ Public Class DayCalculator
         Dim isCalculatingRegularHoliday = payrate.IsRegularHoliday And _employee.CalcHoliday
         Dim isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday
 
+        Dim hasWorkedLastDay = HasWorkedLastWorkingDay(currentDate, oldTimeEntries)
+
         Dim isExemptDueToHoliday =
-            (payrate.IsHoliday And (Not _policy.RequiredToWorkLastDay Or HasWorkedLastWorkingDay(currentDate, oldTimeEntries))) And
+            (payrate.IsHoliday And (Not _policy.RequiredToWorkLastDay Or hasWorkedLastDay)) And
             (isCalculatingRegularHoliday Or isCalculatingSpecialHoliday Or Not _policy.AbsencesOnHoliday)
 
         If (Not currentShift.HasShift) Or (timeEntry.RegularHours > 0) Or isExemptDueToHoliday Or currentShift.IsRestDay Or leaves.Any() Then
@@ -182,6 +182,12 @@ Public Class DayCalculator
             End If
         End If
 
+        ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay)
+
+        Return timeEntry
+    End Function
+
+    Private Sub ComputePay(timeEntry As TimeEntry, currentDate As Date, currentShift As CurrentShift, salary As Salary, payrate As PayRate, hasWorkedLastDay As Boolean)
         Dim dailyRate = 0D
         If _employee.IsDaily Then
             dailyRate = If(salary?.BasicSalary, 0)
@@ -280,16 +286,14 @@ Public Class DayCalculator
                 End If
 
                 If Not isHolidayPayInclusive Then
-                    timeEntry.RegularHolidayPay = timeEntry.RegularHolidayPay + If(HasWorkedLastWorkingDay(currentDate, oldTimeEntries), basicHolidayPay, 0)
+                    timeEntry.RegularHolidayPay = timeEntry.RegularHolidayPay + If(hasWorkedLastDay, basicHolidayPay, 0)
                 End If
             End If
 
             timeEntry.ComputeTotalHours()
             timeEntry.ComputeTotalPay()
         End If
-
-        Return timeEntry
-    End Function
+    End Sub
 
     Private Function HasWorkedLastWorkingDay(current As Date, currentTimeEntries As IList(Of TimeEntry)) As Boolean
         Dim lastPotentialEntry = current.Date.AddDays(-3)

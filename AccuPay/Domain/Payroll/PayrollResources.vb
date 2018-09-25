@@ -389,8 +389,8 @@ Public Class PayrollResources
             Using context = New PayrollContext()
                 Dim query = From p In context.PayRates
                             Where p.OrganizationID = z_OrganizationID And
-                               cutoffStart <= p.RateDate And
-                               p.RateDate <= _payDateTo
+                               cutoffStart <= p.Date And
+                               p.Date <= _payDateTo
 
                 _payRates = Await query.ToListAsync()
             End Using

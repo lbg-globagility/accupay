@@ -53,8 +53,8 @@ Public Class TimeEntryGenerator
             Dim payRates =
                 (From p In context.PayRates
                  Where p.OrganizationID = z_OrganizationID And
-                     p.RateDate >= previousCutoff And
-                     p.RateDate <= _cutoffEnd).
+                     p.Date >= previousCutoff And
+                     p.Date <= _cutoffEnd).
                 ToList()
 
             payrateCalendar = New PayratesCalendar(payRates)
@@ -97,7 +97,7 @@ Public Class TimeEntryGenerator
 
         Dim timeEntries = New List(Of TimeEntry)
         For Each currentDate In Calendar.EachDay(_cutoffStart, _cutoffEnd)
-            Dim timelog = timeLogs.FirstOrDefault(Function(t) t.LogDate = currentDate)
+            Dim timelog = timeLogs.OrderByDescending(Function(t) t.LastUpd).FirstOrDefault(Function(t) t.LogDate = currentDate)
             Dim shiftSchedule = shiftSchedules.FirstOrDefault(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo)
             Dim overtimes = overtimesInCutoff.Where(Function(o) o.OTStartDate <= currentDate And currentDate <= o.OTEndDate).ToList()
             Dim leaves = leavesInCutoff.Where(Function(l) l.StartDate = currentDate).ToList()

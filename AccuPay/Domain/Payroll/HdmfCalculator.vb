@@ -20,16 +20,23 @@ Namespace Global.AccuPay.Payroll
 
             Dim employeeHdmfPerMonth = salary.HDMFAmount
             Dim employerHdmfPerMonth = If(employeeHdmfPerMonth = 0, 0, PagibigEmployerAmount)
-            Dim payPeriodsPerMonth = CDec(ValNoComma(_employee("PAYFREQUENCY_DIVISOR")))
-            Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
 
-            If is_weekly Then
-                Dim is_deduct_sched_to_thisperiod = If(
+            If deductionSchedule = ContributionSchedule.PerPayPeriod Then
+                Dim payPeriodsPerMonth = CDec(ValNoComma(_employee("PAYFREQUENCY_DIVISOR")))
+
+                employeeHdmfPerMonth = payPeriodsPerMonth
+                employerHdmfPerMonth = payPeriodsPerMonth
+            End If
+
+            Dim isWeekly As Boolean = Convert.ToBoolean(Convert.ToInt16(_employee("IsWeeklyPaid")))
+
+            If isWeekly Then
+                Dim isOnScheduleForDeduction = If(
                     employee2.IsUnderAgency,
                     payperiod.HDMFWeeklyAgentContribSched,
                     payperiod.HDMFWeeklyContribSched)
 
-                If is_deduct_sched_to_thisperiod Then
+                If isOnScheduleForDeduction Then
                     paystub.HdmfEmployeeShare = employeeHdmfPerMonth
                     paystub.HdmfEmployerShare = employerHdmfPerMonth
                 Else
@@ -37,12 +44,12 @@ Namespace Global.AccuPay.Payroll
                     paystub.HdmfEmployerShare = 0
                 End If
             Else
-                If IsHdmfPaidOnFirstHalf(deductionSchedule, payperiod) Or IsHdmfPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
+                If IsHdmfPaidOnFirstHalf(deductionSchedule, payperiod) Or
+                    IsHdmfPaidOnEndOfTheMonth(deductionSchedule, payperiod) Or
+                    IsHdmfPaidPerPayPeriod(deductionSchedule) Then
+
                     paystub.HdmfEmployeeShare = employeeHdmfPerMonth
                     paystub.HdmfEmployerShare = employerHdmfPerMonth
-                ElseIf IsHdmfPaidPerPayPeriod(deductionSchedule) Then
-                    paystub.HdmfEmployeeShare = employeeHdmfPerMonth / payPeriodsPerMonth
-                    paystub.HdmfEmployerShare = employerHdmfPerMonth / payPeriodsPerMonth
                 Else
                     paystub.HdmfEmployeeShare = 0
                     paystub.HdmfEmployerShare = 0

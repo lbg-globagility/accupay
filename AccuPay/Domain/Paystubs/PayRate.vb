@@ -27,7 +27,7 @@ Namespace Global.AccuPay.Entity
         Public Property DayBefore As Date?
 
         <Column("Date")>
-        Public Property RateDate As Date
+        Public Property [Date] As Date
 
         Public Property PayType As String
 
