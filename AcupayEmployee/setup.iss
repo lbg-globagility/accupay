@@ -36,7 +36,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: ".\bin\Debug\AccuPaySelfService.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\AccuPaySelfService.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\AccuPaySelfService.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\Aga.Controls.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\CollapsibleGroupBox.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\CrystalDecisions.CrystalReports.Engine.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -70,7 +69,6 @@ Source: ".\bin\Debug\MetroFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\MetroFramework.Fonts.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\MySql.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\MySql.Data.Entity.EF6.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\Debug\MySqlBackup.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\OCRTools.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\ShockwaveFlashObjects.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\bin\Debug\stdole.dll"; DestDir: "{app}"; Flags: ignoreversion
