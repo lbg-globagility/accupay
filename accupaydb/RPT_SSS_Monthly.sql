@@ -9,15 +9,12 @@ DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_SSS_Monthly`(
 	IN `OrganizID` INT,
 	IN `paramDate` DATE
-
-
-
 )
     DETERMINISTIC
 BEGIN
 
-    DECLARE month INT(10);
     DECLARE year INT(10);
+    DECLARE month INT(10);
 
     SET month = DATE_FORMAT(paramDate, '%m');
     SET year = DATE_FORMAT(paramDate, '%Y');
@@ -58,7 +55,6 @@ BEGIN
     LEFT JOIN paysocialsecurity
     ON paysocialsecurity.EmployeeContributionAmount = paystubsummary.TotalEmpSSS
     WHERE employee.OrganizationID = OrganizID
-    AND FIND_IN_SET(employee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
     ORDER BY employee.LastName, employee.FirstName;
 
 END//

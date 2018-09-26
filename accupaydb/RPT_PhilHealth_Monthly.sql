@@ -32,7 +32,7 @@ BEGIN
         paystubsummary.TotalCompPhilHealth AS `DatCol4`,
         (paystubsummary.TotalEmpPhilHealth + paystubsummary.TotalCompPhilHealth) AS `DatCol5`
     FROM employee emp
-    LEFT JOIN (
+    INNER JOIN (
         SELECT
             paystub.EmployeeID,
             SUM(paystub.TotalEmpPhilhealth) 'TotalEmpPhilHealth',
@@ -47,8 +47,7 @@ BEGIN
     ) paystubsummary
     ON paystubsummary.EmployeeID = emp.RowID
     WHERE emp.OrganizationID = OrganizID
-    AND FIND_IN_SET(emp.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
-    ORDER BY emp.LastName, emp.FirstName, emp.LastName;
+    ORDER BY emp.LastName, emp.FirstName;
 
 END//
 DELIMITER ;
