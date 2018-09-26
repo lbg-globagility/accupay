@@ -344,4 +344,9 @@ Public Class HRISForm
         previousForm = JobPointsForm
     End Sub
 
+    Private Sub EmployeeExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EmployeeExperimentalToolStripMenuItem.Click
+        ChangeForm(NewEmployeeForm, "Position")
+        previousForm = NewEmployeeForm
+    End Sub
+
 End Class
