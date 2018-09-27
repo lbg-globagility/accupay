@@ -6,7 +6,21 @@ Public Class NewEmployeeForm
 
     Public Event Init()
     Public Event EmployeeSelected(employeeId As Integer?)
-    Public Event Search(term As String)
+    Public Event EmployeeRefresh()
+    Public Event ActiveChanged()
+    Public Event Search()
+
+    Public ReadOnly Property IsActive As Boolean
+        Get
+            Return ActiveCheckBox.Checked
+        End Get
+    End Property
+
+    Public ReadOnly Property Term As String
+        Get
+            Return SearchTextBox.Text
+        End Get
+    End Property
 
     Public Sub New()
         InitializeComponent()
@@ -19,15 +33,16 @@ Public Class NewEmployeeForm
     End Sub
 
     Private Sub InitComponents()
-        DataGridView1.AutoGenerateColumns = False
+        EmployeeDataGridView.AutoGenerateColumns = False
+        ActiveCheckBox.Checked = True
     End Sub
 
     Public Sub SetEmployees(employees As IList(Of Employee))
-        DataGridView1.DataSource = employees
+        EmployeeDataGridView.DataSource = employees
     End Sub
 
-    Private Sub DataGridView1_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridView1.SelectionChanged
-        Dim employee = DirectCast(DataGridView1.CurrentRow.DataBoundItem, Employee)
+    Private Sub EmployeeDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeeDataGridView.SelectionChanged
+        Dim employee = DirectCast(EmployeeDataGridView.CurrentRow.DataBoundItem, Employee)
 
         If employee Is Nothing Then
             Return
@@ -36,8 +51,16 @@ Public Class NewEmployeeForm
         RaiseEvent EmployeeSelected(employee.RowID)
     End Sub
 
-    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
-        RaiseEvent Search(TextBox1.Text)
+    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchTextBox.TextChanged
+        RaiseEvent Search()
+    End Sub
+
+    Private Sub ActiveCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ActiveCheckBox.CheckedChanged
+        RaiseEvent ActiveChanged()
+    End Sub
+
+    Private Sub RefreshButton_Click(sender As Object, e As EventArgs) Handles RefreshButton.Click
+        RaiseEvent EmployeeRefresh()
     End Sub
 
 End Class
