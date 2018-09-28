@@ -157,6 +157,7 @@ Partial Class PersonalInfoTab
         '
         Me.CboEmployeeType.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CboEmployeeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CboEmployeeType.FormattingEnabled = True
         Me.CboEmployeeType.Items.AddRange(New Object() {"", "Daily", "Monthly", "Fixed"})
         Me.CboEmployeeType.Location = New System.Drawing.Point(136, 72)
@@ -473,7 +474,9 @@ Partial Class PersonalInfoTab
         '
         Me.CboRestDay.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CboRestDay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CboRestDay.FormattingEnabled = True
+        Me.CboRestDay.Items.AddRange(New Object() {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"})
         Me.CboRestDay.Location = New System.Drawing.Point(464, 440)
         Me.CboRestDay.Name = "CboRestDay"
         Me.CboRestDay.Size = New System.Drawing.Size(168, 21)
@@ -690,6 +693,7 @@ Partial Class PersonalInfoTab
         '
         'CboSalutation
         '
+        Me.CboSalutation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CboSalutation.FormattingEnabled = True
         Me.CboSalutation.Location = New System.Drawing.Point(136, 192)
         Me.CboSalutation.Name = "CboSalutation"

@@ -49,7 +49,7 @@ Public Class PersonalInfoTab
 
         'P ay frequency
         'Status
-        CboEmployeeType.SelectedValue = employee.EmployeeType
+        CboEmployeeType.Text = employee.EmployeeType
         DtpStartDate.Value = employee.StartDate
         DtpEvaluationDate.Checked = employee.DateEvaluated.HasValue
         If employee.DateEvaluated.HasValue Then
@@ -59,7 +59,8 @@ Public Class PersonalInfoTab
         If employee.DateRegularized.HasValue Then
             DtpRegularizationDate.Value = employee.DateRegularized.Value
         End If
-        'Rest day
+
+        CboRestDay.Text = If(employee.DayOfRest.HasValue, WeekdayName(employee.DayOfRest.Value), String.Empty)
     End Sub
 
     Public Async Function GetPositions() As Task(Of IList(Of PositionDto))
@@ -70,6 +71,7 @@ Public Class PersonalInfoTab
             Dim positions = Await Task.Run(
                 Function() context.Positions.
                     Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                    OrderBy(Function(p) p.Name).
                     ToList())
 
             positionDtos.AddRange(positions.Select(Function(p) New PositionDto(p)))
