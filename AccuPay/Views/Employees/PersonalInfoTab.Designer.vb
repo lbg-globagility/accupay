@@ -82,13 +82,13 @@ Partial Class PersonalInfoTab
         Me.RbFemale = New System.Windows.Forms.RadioButton()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.CboSalutation = New System.Windows.Forms.ComboBox()
+        Me.Label30 = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
-        Me.CboSalutation = New System.Windows.Forms.ComboBox()
-        Me.Label30 = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -158,6 +158,7 @@ Partial Class PersonalInfoTab
         Me.CboEmployeeType.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CboEmployeeType.FormattingEnabled = True
+        Me.CboEmployeeType.Items.AddRange(New Object() {"", "Daily", "Monthly", "Fixed"})
         Me.CboEmployeeType.Location = New System.Drawing.Point(136, 72)
         Me.CboEmployeeType.Name = "CboEmployeeType"
         Me.CboEmployeeType.Size = New System.Drawing.Size(168, 21)
@@ -687,6 +688,23 @@ Partial Class PersonalInfoTab
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Personal Info"
         '
+        'CboSalutation
+        '
+        Me.CboSalutation.FormattingEnabled = True
+        Me.CboSalutation.Location = New System.Drawing.Point(136, 192)
+        Me.CboSalutation.Name = "CboSalutation"
+        Me.CboSalutation.Size = New System.Drawing.Size(168, 21)
+        Me.CboSalutation.TabIndex = 12
+        '
+        'Label30
+        '
+        Me.Label30.Location = New System.Drawing.Point(8, 192)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(128, 24)
+        Me.Label30.TabIndex = 1
+        Me.Label30.Text = "Salutation"
+        Me.Label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
         'GroupBox2
         '
         Me.GroupBox2.Controls.Add(Me.DtpStartDate)
@@ -768,23 +786,6 @@ Partial Class PersonalInfoTab
         Me.GroupBox6.TabIndex = 11
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "ID Info"
-        '
-        'CboSalutation
-        '
-        Me.CboSalutation.FormattingEnabled = True
-        Me.CboSalutation.Location = New System.Drawing.Point(136, 192)
-        Me.CboSalutation.Name = "CboSalutation"
-        Me.CboSalutation.Size = New System.Drawing.Size(168, 21)
-        Me.CboSalutation.TabIndex = 12
-        '
-        'Label30
-        '
-        Me.Label30.Location = New System.Drawing.Point(8, 192)
-        Me.Label30.Name = "Label30"
-        Me.Label30.Size = New System.Drawing.Size(128, 24)
-        Me.Label30.TabIndex = 1
-        Me.Label30.Text = "Salutation"
-        Me.Label30.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'PersonalInfoTab
         '

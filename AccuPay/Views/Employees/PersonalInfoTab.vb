@@ -6,6 +6,18 @@ Imports Microsoft.EntityFrameworkCore
 
 Public Class PersonalInfoTab
 
+    Private Sub PersonalInfoTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If DesignMode Then
+            Return
+        End If
+
+        LoadPositions()
+    End Sub
+
+    Public Async Sub LoadPositions()
+        CboPosition.DataSource = Await GetPositions()
+    End Sub
+
     Public Sub SetEmployee(employee As Employee)
         TxtEmployeeNo.Text = employee.EmployeeNo
         TxtLastName.Text = employee.LastName
@@ -27,6 +39,7 @@ Public Class PersonalInfoTab
 
         'Division
         'Position
+        CboPosition.SelectedValue = employee.PositionID
         'Agency
 
         TxtTIN.Text = employee.TinNo
@@ -36,7 +49,7 @@ Public Class PersonalInfoTab
 
         'P ay frequency
         'Status
-        'Type
+        CboEmployeeType.SelectedValue = employee.EmployeeType
         DtpStartDate.Value = employee.StartDate
         DtpEvaluationDate.Checked = employee.DateEvaluated.HasValue
         If employee.DateEvaluated.HasValue Then
@@ -49,12 +62,42 @@ Public Class PersonalInfoTab
         'Rest day
     End Sub
 
-    Public Async Function GetPositions() As Task(Of IList(Of Position))
+    Public Async Function GetPositions() As Task(Of IList(Of PositionDto))
+        Dim positionDtos = New List(Of PositionDto) From {
+            New PositionDto(Nothing)}
+
         Using context = New PayrollContext()
-            Return Await context.Positions.
-                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                ToListAsync()
+            Dim positions = Await Task.Run(
+                Function() context.Positions.
+                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                    ToList())
+
+            positionDtos.AddRange(positions.Select(Function(p) New PositionDto(p)))
         End Using
+
+        Return positionDtos
     End Function
+
+    Public Class PositionDto
+
+        Private ReadOnly _position As Position
+
+        Public Sub New(position As Position)
+            _position = position
+        End Sub
+
+        Public ReadOnly Property RowID As Integer?
+            Get
+                Return _position?.RowID
+            End Get
+        End Property
+
+        Public ReadOnly Property Name As String
+            Get
+                Return _position?.Name
+            End Get
+        End Property
+
+    End Class
 
 End Class
