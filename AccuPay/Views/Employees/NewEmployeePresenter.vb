@@ -40,6 +40,18 @@ Public Class NewEmployeePresenter
         _view.SetEmployees(employees)
     End Sub
 
+    Private Async Sub OnEmployeeSelected(employeeId As Integer?) Handles _view.EmployeeSelected
+        Dim employee As Employee = Nothing
+
+        Using context = New PayrollContext()
+            employee = Await context.Employees.FindAsync(employeeId)
+        End Using
+
+        If employee IsNot Nothing Then
+            _view.SetEmployee(employee)
+        End If
+    End Sub
+
     Private Async Function FilterEmployees(term As String) As Task(Of IList(Of Employee))
         term = term.ToLower()
 

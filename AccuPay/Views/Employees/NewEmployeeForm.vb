@@ -22,13 +22,9 @@ Public Class NewEmployeeForm
         End Get
     End Property
 
-    Public Sub New()
-        InitializeComponent()
-        Dim presenter = New NewEmployeePresenter(Me)
-    End Sub
-
     Private Sub NewEmployeeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         InitComponents()
+        Dim presenter = New NewEmployeePresenter(Me)
         RaiseEvent Init()
     End Sub
 
@@ -39,6 +35,10 @@ Public Class NewEmployeeForm
 
     Public Sub SetEmployees(employees As IList(Of Employee))
         EmployeeDataGridView.DataSource = employees
+    End Sub
+
+    Public Sub SetEmployee(employee As Employee)
+        PersonalInfoTab.SetEmployee(employee)
     End Sub
 
     Private Sub EmployeeDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeeDataGridView.SelectionChanged

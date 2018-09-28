@@ -627,6 +627,18 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Employees\NewEmployeePresenter.vb" />
+    <Compile Include="Views\Employees\PersonalInfoTab.Designer.vb">
+      <DependentUpon>PersonalInfoTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Employees\PersonalInfoTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Employees\SalaryTab2.Designer.vb">
+      <DependentUpon>SalaryTab2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Employees\SalaryTab2.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
     </Compile>
@@ -1689,6 +1701,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Employees\NewEmployeeForm.resx">
       <DependentUpon>NewEmployeeForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Employees\PersonalInfoTab.resx">
+      <DependentUpon>PersonalInfoTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Employees\SalaryTab2.resx">
+      <DependentUpon>SalaryTab2.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\ImproperLogOut.resx">
       <DependentUpon>ImproperLogOut.vb</DependentUpon>

@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class NewEmployeeForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class NewEmployeeForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.EmployeeDataGridView = New System.Windows.Forms.DataGridView()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -29,12 +29,18 @@ Partial Class NewEmployeeForm
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
         Me.RefreshButton = New System.Windows.Forms.Button()
+        Me.ActiveCheckBox = New System.Windows.Forms.CheckBox()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.PersonalInfoTab = New AccuPay.PersonalInfoTab()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ActiveCheckBox = New System.Windows.Forms.CheckBox()
         CType(Me.EmployeeDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
+        Me.TabControl1.SuspendLayout()
+        Me.TabPage1.SuspendLayout()
         Me.SuspendLayout()
         '
         'EmployeeDataGridView
@@ -92,14 +98,70 @@ Partial Class NewEmployeeForm
         Me.SearchTextBox.Size = New System.Drawing.Size(324, 20)
         Me.SearchTextBox.TabIndex = 0
         '
-        'Button1
+        'RefreshButton
         '
         Me.RefreshButton.Location = New System.Drawing.Point(280, 72)
-        Me.RefreshButton.Name = "Button1"
+        Me.RefreshButton.Name = "RefreshButton"
         Me.RefreshButton.Size = New System.Drawing.Size(75, 24)
         Me.RefreshButton.TabIndex = 2
         Me.RefreshButton.Text = "Refresh"
         Me.RefreshButton.UseVisualStyleBackColor = True
+        '
+        'ActiveCheckBox
+        '
+        Me.ActiveCheckBox.Checked = True
+        Me.ActiveCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ActiveCheckBox.Location = New System.Drawing.Point(8, 72)
+        Me.ActiveCheckBox.Name = "ActiveCheckBox"
+        Me.ActiveCheckBox.Size = New System.Drawing.Size(80, 24)
+        Me.ActiveCheckBox.TabIndex = 3
+        Me.ActiveCheckBox.Text = "Active only"
+        Me.ActiveCheckBox.UseVisualStyleBackColor = True
+        '
+        'TabControl1
+        '
+        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TabControl1.Appearance = System.Windows.Forms.TabAppearance.FlatButtons
+        Me.TabControl1.Controls.Add(Me.TabPage1)
+        Me.TabControl1.Controls.Add(Me.TabPage2)
+        Me.TabControl1.Location = New System.Drawing.Point(360, 8)
+        Me.TabControl1.Name = "TabControl1"
+        Me.TabControl1.Padding = New System.Drawing.Point(16, 8)
+        Me.TabControl1.SelectedIndex = 0
+        Me.TabControl1.Size = New System.Drawing.Size(832, 544)
+        Me.TabControl1.TabIndex = 4
+        '
+        'TabPage1
+        '
+        Me.TabPage1.Controls.Add(Me.PersonalInfoTab)
+        Me.TabPage1.Location = New System.Drawing.Point(4, 35)
+        Me.TabPage1.Name = "TabPage1"
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage1.Size = New System.Drawing.Size(824, 505)
+        Me.TabPage1.TabIndex = 0
+        Me.TabPage1.Text = "Personal"
+        Me.TabPage1.UseVisualStyleBackColor = True
+        '
+        'PersonalInfoTab
+        '
+        Me.PersonalInfoTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PersonalInfoTab.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PersonalInfoTab.Location = New System.Drawing.Point(3, 3)
+        Me.PersonalInfoTab.Name = "PersonalInfoTab"
+        Me.PersonalInfoTab.Size = New System.Drawing.Size(818, 499)
+        Me.PersonalInfoTab.TabIndex = 0
+        '
+        'TabPage2
+        '
+        Me.TabPage2.Location = New System.Drawing.Point(4, 35)
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Size = New System.Drawing.Size(824, 505)
+        Me.TabPage2.TabIndex = 1
+        Me.TabPage2.Text = "Salary"
+        Me.TabPage2.UseVisualStyleBackColor = True
         '
         'DataGridViewTextBoxColumn1
         '
@@ -119,22 +181,12 @@ Partial Class NewEmployeeForm
         Me.DataGridViewTextBoxColumn3.HeaderText = "First Name"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         '
-        'ActiveCheckBox
-        '
-        Me.ActiveCheckBox.Checked = True
-        Me.ActiveCheckBox.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.ActiveCheckBox.Location = New System.Drawing.Point(8, 72)
-        Me.ActiveCheckBox.Name = "ActiveCheckBox"
-        Me.ActiveCheckBox.Size = New System.Drawing.Size(64, 24)
-        Me.ActiveCheckBox.TabIndex = 3
-        Me.ActiveCheckBox.Text = "Active"
-        Me.ActiveCheckBox.UseVisualStyleBackColor = True
-        '
         'NewEmployeeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1200, 560)
+        Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.ActiveCheckBox)
         Me.Controls.Add(Me.RefreshButton)
         Me.Controls.Add(Me.GroupBox1)
@@ -145,6 +197,8 @@ Partial Class NewEmployeeForm
         CType(Me.EmployeeDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        Me.TabControl1.ResumeLayout(False)
+        Me.TabPage1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -160,4 +214,8 @@ Partial Class NewEmployeeForm
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
     Friend WithEvents ActiveCheckBox As CheckBox
+    Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents TabPage1 As TabPage
+    Friend WithEvents TabPage2 As TabPage
+    Friend WithEvents PersonalInfoTab As PersonalInfoTab
 End Class
