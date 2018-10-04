@@ -1,6 +1,6 @@
 ﻿Imports Femiani.Forms.UI.Input
 
-Public Class Agency
+Public Class AgencyForm
 
     Public ReadOnly Property ViewIdentification As Object
 

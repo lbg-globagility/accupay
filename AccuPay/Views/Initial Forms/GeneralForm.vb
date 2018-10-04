@@ -307,12 +307,12 @@
 
     Private Sub AgencyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AgencyToolStripMenuItem.Click
 
-        Dim n_UserAccessRights As New UserAccessRights(Agency.ViewIdentification)
+        Dim n_UserAccessRights As New UserAccessRights(AgencyForm.ViewIdentification)
 
         'If n_UserAccessRights.ResultValue(AccessRightName.HasReadOnly) Then
         '    'Agency
-        ChangeForm(Agency, "Agency")
-        previousForm = Agency
+        ChangeForm(AgencyForm, "Agency")
+        previousForm = AgencyForm
 
         'End If
 

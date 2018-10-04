@@ -314,6 +314,8 @@
     <Compile Include="Auditing\Forms\TimeLogForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Domain\AgencyFees\Agency.vb" />
+    <Compile Include="Domain\AgencyFees\AgencyFee.vb" />
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
@@ -708,10 +710,10 @@
     <Compile Include="Views\General Forms\AddressForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\General Forms\Agency.designer.vb">
-      <DependentUpon>Agency.vb</DependentUpon>
+    <Compile Include="Views\General Forms\AgencyForm.designer.vb">
+      <DependentUpon>AgencyForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\General Forms\Agency.vb">
+    <Compile Include="Views\General Forms\AgencyForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\General Forms\AreaForm.designer.vb">
@@ -1729,8 +1731,8 @@
     <EmbeddedResource Include="Views\General Forms\AddressForm.resx">
       <DependentUpon>AddressForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\Agency.resx">
-      <DependentUpon>Agency.vb</DependentUpon>
+    <EmbeddedResource Include="Views\General Forms\AgencyForm.resx">
+      <DependentUpon>AgencyForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\AreaForm.resx">
       <DependentUpon>AreaForm.vb</DependentUpon>
