@@ -336,6 +336,7 @@
     <Compile Include="Domain\Payroll\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Domain\Commons\Calendar.vb" />
     <Compile Include="Domain\Payroll\SssCalculator.vb" />
+    <Compile Include="Domain\TimeEntry\AgencyFeeCalculator.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
     <Compile Include="Core\Utilities\TypeTools.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />

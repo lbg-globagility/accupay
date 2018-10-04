@@ -38,11 +38,16 @@ Public Class TimeEntryGenerator
         Dim organization As Organization = Nothing
         Dim payrateCalendar As PayratesCalendar = Nothing
         Dim settings As ListOfValueCollection = Nothing
+        Dim agencies As IList(Of Agency) = Nothing
 
         Using context = New PayrollContext()
             employees =
                 (From e In context.Employees
                  Where e.OrganizationID = z_OrganizationID).
+                ToList()
+
+            agencies = context.Agencies.
+                Where(Function(a) Nullable.Equals(a.OrganizationID, z_OrganizationID)).
                 ToList()
 
             organization = context.Organizations.
@@ -68,13 +73,13 @@ Public Class TimeEntryGenerator
 
         Parallel.ForEach(employees,
             Sub(employee)
-                CalculateEmployee(employee, organization, payrateCalendar, settings)
+                CalculateEmployee(employee, organization, payrateCalendar, settings, agencies)
 
                 Interlocked.Increment(_finished)
             End Sub)
     End Sub
 
-    Private Sub CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection)
+    Private Sub CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection, agencies As IList(Of Agency))
         Dim previousTimeEntries As IList(Of TimeEntry) = Nothing
         Dim salary As Salary = Nothing
         Dim timeLogs As IList(Of TimeLog) = Nothing
@@ -82,6 +87,7 @@ Public Class TimeEntryGenerator
         Dim overtimesInCutoff As IList(Of Overtime) = Nothing
         Dim officialBusinesses As IList(Of OfficialBusiness) = Nothing
         Dim leavesInCutoff As IList(Of Leave) = Nothing
+        Dim agencyFees As IList(Of AgencyFee) = Nothing
 
         Using context = New PayrollContext()
             salary = GetSalary(context, employee)
@@ -91,6 +97,7 @@ Public Class TimeEntryGenerator
             overtimesInCutoff = GetOvertimes(context, employee)
             officialBusinesses = GetOfficialBusinesses(context, employee)
             leavesInCutoff = GetLeaves(context, employee)
+            agencyFees = GetAgencyFees(context, employee)
         End Using
 
         Dim dayCalculator = New DayCalculator(organization, settings, payrateCalendar, employee)
@@ -116,8 +123,16 @@ Public Class TimeEntryGenerator
             timeEntries.Add(timeEntry)
         Next
 
+        If employee.IsUnderAgency Then
+            Dim agency = agencies.SingleOrDefault(Function(a) Nullable.Equals(a.RowID, employee.AgencyID))
+
+            Dim agencyCalculator = New AgencyFeeCalculator(employee, agency, agencyFees)
+            agencyFees = agencyCalculator.Compute(timeEntries)
+        End If
+
         Using context = New PayrollContext()
             AddTimeEntriesToContext(context, timeEntries)
+            AddAgencyFeesToContext(context, agencyFees)
             context.SaveChanges()
         End Using
     End Sub
@@ -131,6 +146,23 @@ Public Class TimeEntryGenerator
             End If
         Next
     End Sub
+
+    Private Sub AddAgencyFeesToContext(context As PayrollContext, agencyFees As IList(Of AgencyFee))
+        For Each agencyFee In agencyFees
+            If agencyFee.RowID.HasValue Then
+                context.Entry(agencyFee).State = EntityState.Modified
+            Else
+                context.AgencyFees.Add(agencyFee)
+            End If
+        Next
+    End Sub
+
+    Private Function GetAgencyFees(context As PayrollContext, employee As Employee) As IList(Of AgencyFee)
+        Return context.AgencyFees.
+            Where(Function(a) Nullable.Equals(a.EmployeeID, employee.RowID)).
+            Where(Function(a) _cutoffStart <= a.Date And a.Date <= _cutoffEnd).
+            ToList()
+    End Function
 
     Private Function GetSalary(context As PayrollContext, employee As Employee) As Salary
         Return context.Salaries.
