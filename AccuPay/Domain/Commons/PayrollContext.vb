@@ -12,6 +12,10 @@ Public Class PayrollContext
 
     Private ReadOnly _loggerFactory As ILoggerFactory
 
+    Public Overridable Property Agencies As DbSet(Of Agency)
+
+    Public Overridable Property AgencyFees As DbSet(Of AgencyFee)
+
     Public Overridable Property Salaries As DbSet(Of Salary)
 
     Public Overridable Property SocialSecurityBrackets As DbSet(Of SocialSecurityBracket)
