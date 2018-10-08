@@ -81,6 +81,7 @@ Public Class TimeEntryGenerator
 
     Private Sub CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection, agencies As IList(Of Agency))
         Dim previousTimeEntries As IList(Of TimeEntry) = Nothing
+        Dim actualTimeEntries As IList(Of ActualTimeEntry) = Nothing
         Dim salary As Salary = Nothing
         Dim timeLogs As IList(Of TimeLog) = Nothing
         Dim shiftSchedules As IList(Of ShiftSchedule) = Nothing
@@ -92,6 +93,7 @@ Public Class TimeEntryGenerator
         Using context = New PayrollContext()
             salary = GetSalary(context, employee)
             previousTimeEntries = GetTimeEntries(context, employee)
+            actualTimeEntries = GetActualTimeEntries(context, employee)
             timeLogs = GetTimeLogs(context, employee)
             shiftSchedules = GetShifts(context, employee)
             overtimesInCutoff = GetOvertimes(context, employee)
@@ -130,8 +132,23 @@ Public Class TimeEntryGenerator
             agencyFees = agencyCalculator.Compute(timeEntries)
         End If
 
+        For Each timeEntry In timeEntries
+            Dim actualTimeEntry = actualTimeEntries.FirstOrDefault(Function(t) t.Date = timeEntry.Date)
+
+            If actualTimeEntry Is Nothing Then
+                actualTimeEntry = New ActualTimeEntry() With {
+                    .EmployeeID = timeEntry.EmployeeID,
+                    .OrganizationID = timeEntry.OrganizationID,
+                    .[Date] = timeEntry.Date
+                }
+
+                actualTimeEntries.Add(actualTimeEntry)
+            End If
+        Next
+
         Using context = New PayrollContext()
             AddTimeEntriesToContext(context, timeEntries)
+            AddActualTimeEntriesToContext(context, actualTimeEntries)
             AddAgencyFeesToContext(context, agencyFees)
             context.SaveChanges()
         End Using
@@ -143,6 +160,16 @@ Public Class TimeEntryGenerator
                 context.Entry(timeEntry).State = EntityState.Modified
             Else
                 context.TimeEntries.Add(timeEntry)
+            End If
+        Next
+    End Sub
+
+    Private Sub AddActualTimeEntriesToContext(context As PayrollContext, actualTimeEntries As IList(Of ActualTimeEntry))
+        For Each actualTimeEntry In actualTimeEntries
+            If actualTimeEntry.RowID.HasValue Then
+                context.Entry(actualTimeEntry).State = EntityState.Modified
+            Else
+                context.ActualTimeEntries.Add(actualTimeEntry)
             End If
         Next
     End Sub
@@ -178,6 +205,13 @@ Public Class TimeEntryGenerator
             Include(Function(t) t.ShiftSchedule.Shift).
             Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             Where(Function(t) previousCutoff <= t.Date And t.Date <= _cutoffEnd).
+            ToList()
+    End Function
+
+    Private Function GetActualTimeEntries(context As PayrollContext, employee As Employee) As IList(Of ActualTimeEntry)
+        Return context.ActualTimeEntries.
+            Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
+            Where(Function(t) _cutoffStart <= t.Date And t.Date <= _cutoffEnd).
             ToList()
     End Function
 
