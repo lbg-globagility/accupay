@@ -108,7 +108,7 @@ SELECT
     adjustments.PayAmounts AS `COL38`,
     (IFNULL(ete.VacationLeaveHours,0) + IFNULL(ete.SickLeaveHours,0) + IFNULL(ete.MaternityLeaveHours,0) + IFNULL(ete.OtherLeaveHours,0)) AS `COL40`,
     IFNULL(ete.Leavepayment,0) AS `COL41`,
-    IFNULL(ps.HolidayPay, 0) + IFNULL(ete.RestDayAmount, 0) AS `COL42`,
+	 IFNULL(ps.HolidayPay, 0) + IFNULL(ps.RestDayPay, 0) AS `COL42`,
     IFNULL(psiECOLA.PayAmount,0) AS `COL43`,
     psiLeave.`Names` AS `COL44`,
     psiLeave.Availed AS `COl45`,
@@ -143,7 +143,8 @@ FROM (
             TotalAllowance,
             TotalAdjustments,
             ThirteenthMonthInclusion,
-            FirstTimeSalary
+            FirstTimeSalary,
+            RestDayPay
         FROM paystub
         WHERE IsActualFlag = 0 AND
             OrganizationID = OrganizID
@@ -175,7 +176,8 @@ FROM (
             TotalAllowance,
             TotalAdjustments,
             ThirteenthMonthInclusion,
-            FirstTimeSalary
+            FirstTimeSalary,
+            RestDayPay
         FROM paystubactual
         WHERE IsActualFlag = 1 AND
             OrganizationID = OrganizID
