@@ -20,9 +20,9 @@ Public Class ActualTimeEntryCalculator
         Dim actualTimeEntries = New List(Of ActualTimeEntry)
 
         Dim allowanceRate = If(
-            _salary.BasicSalary = 0,
+            If(_salary?.BasicSalary, 0) = 0,
             0D,
-            _salary.AllowanceSalary / _salary.BasicSalary)
+            If(_salary?.AllowanceSalary, 0) / If(_salary?.BasicSalary, 0))
 
         For Each timeEntry In timeEntries
             Dim actualTimeEntry = _actualTimeEntries.FirstOrDefault(Function(t) t.Date = timeEntry.Date)

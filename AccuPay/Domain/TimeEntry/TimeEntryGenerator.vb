@@ -41,9 +41,8 @@ Public Class TimeEntryGenerator
         Dim agencies As IList(Of Agency) = Nothing
 
         Using context = New PayrollContext()
-            employees =
-                (From e In context.Employees
-                 Where e.OrganizationID = z_OrganizationID).
+            employees = context.Employees.
+                Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
                 ToList()
 
             agencies = context.Agencies.
@@ -101,6 +100,12 @@ Public Class TimeEntryGenerator
             leavesInCutoff = GetLeaves(context, employee)
             agencyFees = GetAgencyFees(context, employee)
         End Using
+
+        If employee.EmploymentStatus = "Resigned" OrElse employee.EmploymentStatus = "Terminated" Then
+            If Not previousTimeEntries.Any() Then
+                Return
+            End If
+        End If
 
         Dim dayCalculator = New DayCalculator(organization, settings, payrateCalendar, employee)
 
