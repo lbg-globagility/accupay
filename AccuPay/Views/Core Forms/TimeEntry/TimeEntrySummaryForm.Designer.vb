@@ -138,6 +138,7 @@ Partial Class TimeEntrySummaryForm
         Me.cboYears = New System.Windows.Forms.ToolStripComboBox()
         Me.ToolStripSeparator14 = New System.Windows.Forms.ToolStripSeparator()
         Me.actualButton = New System.Windows.Forms.ToolStripButton()
+        Me.btnAmPm = New System.Windows.Forms.ToolStripButton()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.searchTextBox = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
@@ -258,6 +259,8 @@ Partial Class TimeEntrySummaryForm
         Me.ToolStripSeparator13 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsbtnNxt = New System.Windows.Forms.ToolStripButton()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.ctxtmenstrpTimeEntry = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.DeleteShiftToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -358,7 +361,6 @@ Partial Class TimeEntrySummaryForm
         Me.col_tue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_mon = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_sun = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.btnAmPm = New System.Windows.Forms.ToolStripButton()
         CType(Me.employeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
@@ -367,6 +369,7 @@ Partial Class TimeEntrySummaryForm
         CType(Me.timeEntriesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.payPeriodsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
+        Me.ctxtmenstrpTimeEntry.SuspendLayout()
         Me.SuspendLayout()
         '
         'employeesDataGridView
@@ -506,6 +509,15 @@ Partial Class TimeEntrySummaryForm
         Me.actualButton.Name = "actualButton"
         Me.actualButton.Size = New System.Drawing.Size(45, 22)
         Me.actualButton.Text = "Actual"
+        '
+        'btnAmPm
+        '
+        Me.btnAmPm.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.btnAmPm.Image = CType(resources.GetObject("btnAmPm.Image"), System.Drawing.Image)
+        Me.btnAmPm.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnAmPm.Name = "btnAmPm"
+        Me.btnAmPm.Size = New System.Drawing.Size(53, 22)
+        Me.btnAmPm.Text = "AM/PM"
         '
         'Label29
         '
@@ -1558,6 +1570,18 @@ Partial Class TimeEntrySummaryForm
         Me.Panel2.Size = New System.Drawing.Size(352, 56)
         Me.Panel2.TabIndex = 139
         '
+        'ctxtmenstrpTimeEntry
+        '
+        Me.ctxtmenstrpTimeEntry.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeleteShiftToolStripMenuItem})
+        Me.ctxtmenstrpTimeEntry.Name = "ctxtmenstrpTimeEntry"
+        Me.ctxtmenstrpTimeEntry.Size = New System.Drawing.Size(143, 26)
+        '
+        'DeleteShiftToolStripMenuItem
+        '
+        Me.DeleteShiftToolStripMenuItem.Name = "DeleteShiftToolStripMenuItem"
+        Me.DeleteShiftToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
+        Me.DeleteShiftToolStripMenuItem.Text = "Delete shift..."
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
@@ -2549,15 +2573,6 @@ Partial Class TimeEntrySummaryForm
         Me.col_sun.ReadOnly = True
         Me.col_sun.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'btnAmPm
-        '
-        Me.btnAmPm.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.btnAmPm.Image = CType(resources.GetObject("btnAmPm.Image"), System.Drawing.Image)
-        Me.btnAmPm.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnAmPm.Name = "btnAmPm"
-        Me.btnAmPm.Size = New System.Drawing.Size(53, 22)
-        Me.btnAmPm.Text = "AM/PM"
-        '
         'TimeEntrySummaryForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2584,6 +2599,7 @@ Partial Class TimeEntrySummaryForm
         CType(Me.payPeriodsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        Me.ctxtmenstrpTimeEntry.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2823,4 +2839,6 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents Panel2 As Panel
     Friend WithEvents ToolStripSeparator14 As ToolStripSeparator
     Friend WithEvents btnAmPm As ToolStripButton
+    Friend WithEvents ctxtmenstrpTimeEntry As ContextMenuStrip
+    Friend WithEvents DeleteShiftToolStripMenuItem As ToolStripMenuItem
 End Class

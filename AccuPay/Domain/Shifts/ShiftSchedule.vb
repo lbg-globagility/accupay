@@ -22,6 +22,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property LastUpdBy As Integer?
 
+        Public Property OrganizationID As Integer
+
         Public Property EmployeeID As Integer?
 
         Public Property ShiftID As Integer?

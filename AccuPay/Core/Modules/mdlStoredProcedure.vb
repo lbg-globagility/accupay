@@ -145,20 +145,20 @@ Module mdlStoredProcedure
 
     End Function
 
-    Public Function sp_employeeshiftentry(ByVal Created As DateTime, _
-                                      ByVal CreatedBy As Integer, _
-                                      ByVal LastUpD As DateTime, _
-                                      ByVal OrganizationID As Integer, _
-                                      ByVal lastupdby As Integer, _
-                                      ByVal Effectivefrom As Date, _
-                                      ByVal Effectiveto As Date, _
-                                      ByVal EmployeeID As Integer, _
-                                      ByVal ShiftID As Integer, _
-                                      ByVal nightshift As String, _
+    Public Function sp_employeeshiftentry(ByVal Created As DateTime,
+                                      ByVal CreatedBy As Integer,
+                                      ByVal LastUpD As DateTime,
+                                      ByVal OrganizationID As Integer,
+                                      ByVal lastupdby As Integer,
+                                      ByVal Effectivefrom As Date,
+                                      ByVal Effectiveto As Date,
+                                      ByVal EmployeeID As Integer,
+                                      ByVal ShiftID As Integer,
+                                      ByVal nightshift As Boolean,
                                       Optional restday As String = Nothing)
 
         Dim F_return As Boolean = False
-        Dim SQL_command As MySqlCommand = _
+        Dim SQL_command As MySqlCommand =
                   New MySqlCommand("sp_employeeshiftentry", connection)
         With SQL_command
             Try

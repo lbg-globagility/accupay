@@ -6,6 +6,8 @@ Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports log4net
 Imports System.Threading
+Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Entity
 
 Public Class TimeEntrySummaryForm
 
@@ -38,6 +40,8 @@ Public Class TimeEntrySummaryForm
     Private _isActual As Boolean = False
 
     Private _isAmPm As Boolean = False
+
+    Private _currentTimeEntryDate As Date
 
     Private WithEvents timeEntDurationModal As TimEntduration
 
@@ -946,4 +950,106 @@ Public Class TimeEntrySummaryForm
         Dim task = LoadPayPeriods()
     End Sub
 
+    Private Sub timeEntriesDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles timeEntriesDataGridView.CellMouseDown
+        Dim hasRows = timeEntriesDataGridView.Rows.Count > 0
+        If e.Button = Windows.Forms.MouseButtons.Right _
+            And hasRows Then
+
+            Dim negaOne = -1
+            If e.ColumnIndex > negaOne And e.RowIndex > negaOne Then
+                timeEntriesDataGridView.Focus()
+                timeEntriesDataGridView.Item(e.ColumnIndex, e.RowIndex).Selected = True
+
+                ctxtmenstrpTimeEntry.Show(MousePosition, ToolStripDropDownDirection.Default)
+            End If
+        End If
+    End Sub
+
+    Private Async Sub DeleteShiftToolStripMenuItem_ClickAsync(sender As Object, e As EventArgs) Handles DeleteShiftToolStripMenuItem.Click
+        If timeEntriesDataGridView.Rows.Count > 0 Then
+            Dim dateTimeValue = timeEntriesDataGridView.CurrentRow?.Cells(ColumnDate.Name).Value
+
+            Dim hasDateSelected = dateTimeValue IsNot Nothing
+
+            If hasDateSelected Then
+                Dim dateValue = DirectCast(dateTimeValue, Date)
+                Dim employeeRowId = Convert.ToInt32(_selectedEmployee.RowID)
+
+                Using context = New PayrollContext()
+                    Dim shiftRecord = Await context.ShiftSchedules.
+                        Where(Function(esh) Nullable.Equals(esh.EmployeeID, employeeRowId) _
+                                And (esh.EffectiveFrom <= dateValue And dateValue <= esh.EffectiveTo)).FirstOrDefaultAsync()
+
+                    If shiftRecord IsNot Nothing Then
+                        Dim orgId = Convert.ToInt32(orgztnID)
+
+                        Dim eTimeEntry = Await context.TimeEntries.
+                            Where(Function(et) Nullable.Equals(et.EmployeeID, employeeRowId) _
+                                    And Nullable.Equals(et.OrganizationID, orgId) _
+                                    And et.Date = dateValue).FirstOrDefaultAsync
+                        Dim hasTimeEntry = eTimeEntry IsNot Nothing
+
+                        Dim isShiftServeOneDay = (DateDiff("d", shiftRecord.EffectiveFrom, shiftRecord.EffectiveTo) = 0)
+                        If isShiftServeOneDay Then
+                            context.ShiftSchedules.Remove(shiftRecord)
+                        Else
+
+                            Dim primaryDiff = DateDiff("d", shiftRecord.EffectiveFrom, dateValue)
+                            Dim ultiDiff = DateDiff("d", dateValue, shiftRecord.EffectiveTo)
+
+                            Dim isLead = primaryDiff = 0
+                            Dim isTrail = ultiDiff = 0
+
+                            Dim effectDateFrom = shiftRecord.EffectiveFrom
+                            Dim effectDateTo = shiftRecord.EffectiveTo
+
+                            If isLead Then
+                                shiftRecord.EffectiveFrom = effectDateFrom.AddDays(1)
+                            End If
+
+                            If isTrail Then
+                                shiftRecord.EffectiveTo = effectDateTo.AddDays(-1)
+                            End If
+
+                            Dim isDoesntSatisfy = isLead = False And isTrail = False
+
+                            If isDoesntSatisfy Then
+                                shiftRecord.EffectiveTo = dateValue.AddDays(-1)
+
+                                Dim newShiftSched = New ShiftSchedule With {
+                                .EffectiveFrom = dateValue.AddDays(1),
+                                .EffectiveTo = effectDateTo,
+                                .EmployeeID = shiftRecord.EmployeeID,
+                                .ShiftID = shiftRecord.ShiftID,
+                                .IsNightShift = shiftRecord.IsNightShift,
+                                .OrganizationID = orgId,
+                                .CreatedBy = z_User,
+                                .LastUpdBy = z_User
+                            }
+
+                                context.ShiftSchedules.Add(newShiftSched)
+                            End If
+
+                        End If
+
+                        If hasTimeEntry Then
+                            eTimeEntry.EmployeeShiftID = Nothing
+                        End If
+
+                        Await context.SaveChangesAsync()
+                    End If
+                End Using
+            End If
+        Else
+            _currentTimeEntryDate = Date.Now
+        End If
+    End Sub
+
+    Private Sub timeEntriesDataGridView_SelectionChangedAsync(sender As Object, e As EventArgs) Handles timeEntriesDataGridView.SelectionChanged
+
+    End Sub
+
+    Private Sub timeEntriesDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles timeEntriesDataGridView.CellContentClick
+
+    End Sub
 End Class

@@ -454,12 +454,12 @@ Public Class EmployeeShiftEntryForm
 
                 End If
 
-                Dim nightshift As Integer
-                If chkNightShift.Checked = True Then
-                    nightshift = 1
-                Else
-                    nightshift = 0
-                End If
+                Dim employeeRowId = dgvEmpList.CurrentRow.Cells(c_ID.Index).Value
+                Dim isCalcNightDiff As Boolean = CalculatesNightDiff(employeeRowId)
+
+                chkNightShift.Checked = isCalcNightDiff
+
+                Dim nightshift = isCalcNightDiff
 
                 If IsNew = 1 Then
                     '                                                                                                                                                                 'Val(lblShiftID.Text)
@@ -486,7 +486,7 @@ Public Class EmployeeShiftEntryForm
                                                            ",'" & dtpDateFrom.Value.ToString("yyyy-MM-dd") & "'" &
                                                            ",'" & dtpDateTo.Value.ToString("yyyy-MM-dd") & "'" &
                                                            ",'" & shiftId & "'" &
-                                                           ",'" & nightshift & "'" &
+                                                           "," & nightshift &
                                                            ",'" & isrestday & "'" &
                                                            ");")
 
@@ -589,6 +589,13 @@ Public Class EmployeeShiftEntryForm
 
         dtpDateFrom.MinDate = CDate("1/1/1753").ToShortDateString
     End Sub
+
+    Private Shared Function CalculatesNightDiff(employeeRowId As Integer) As Boolean
+        Dim strQuery = String.Concat("SELECT EXISTS(SELECT RowID FROM employee WHERE RowID=", employeeRowId, " AND CalcNightDiff = 1);")
+        Dim calcsNightDiff = New SQL(strQuery).GetFoundRow
+        Dim isCalcNightDiff = Convert.ToBoolean(CInt(calcsNightDiff))
+        Return isCalcNightDiff
+    End Function
 
     Private Sub lblShiftEntry_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblShiftEntry.LinkClicked
         Dim n_ShiftEntryForm As New ShiftEntryForm
