@@ -102,7 +102,10 @@ Public Class TimeEntryGenerator
         End Using
 
         If employee.EmploymentStatus = "Resigned" OrElse employee.EmploymentStatus = "Terminated" Then
-            If Not previousTimeEntries.Any() Then
+            Dim currentTimeEntries = previousTimeEntries.
+                Where(Function(t) _cutoffStart <= t.Date And t.Date <= _cutoffEnd)
+
+            If Not currentTimeEntries.Any() Then
                 Return
             End If
         End If
