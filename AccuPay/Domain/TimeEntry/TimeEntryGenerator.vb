@@ -132,19 +132,8 @@ Public Class TimeEntryGenerator
             agencyFees = agencyCalculator.Compute(timeEntries)
         End If
 
-        For Each timeEntry In timeEntries
-            Dim actualTimeEntry = actualTimeEntries.FirstOrDefault(Function(t) t.Date = timeEntry.Date)
-
-            If actualTimeEntry Is Nothing Then
-                actualTimeEntry = New ActualTimeEntry() With {
-                    .EmployeeID = timeEntry.EmployeeID,
-                    .OrganizationID = timeEntry.OrganizationID,
-                    .[Date] = timeEntry.Date
-                }
-
-                actualTimeEntries.Add(actualTimeEntry)
-            End If
-        Next
+        Dim actualTimeEntryCalculator = New ActualTimeEntryCalculator(salary, actualTimeEntries, New ActualTimeEntryPolicy(settings))
+        actualTimeEntries = actualTimeEntryCalculator.Compute(timeEntries)
 
         Using context = New PayrollContext()
             AddTimeEntriesToContext(context, timeEntries)
