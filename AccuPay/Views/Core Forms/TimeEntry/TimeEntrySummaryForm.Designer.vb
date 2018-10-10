@@ -144,6 +144,7 @@ Partial Class TimeEntrySummaryForm
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tbpemptimeent = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.timeEntriesDataGridView = New System.Windows.Forms.DataGridView()
         Me.ColumnRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -569,11 +570,22 @@ Partial Class TimeEntrySummaryForm
         Me.Panel1.AutoScroll = True
         Me.Panel1.Controls.Add(Me.timeEntriesDataGridView)
         Me.Panel1.Controls.Add(Me.payPeriodsDataGridView)
+        Me.Panel1.Controls.Add(Me.Button1)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(3, 28)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(846, 447)
         Me.Panel1.TabIndex = 486
+        '
+        'Button1
+        '
+        Me.Button1.Enabled = False
+        Me.Button1.Location = New System.Drawing.Point(0, 460)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 140
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'timeEntriesDataGridView
         '
@@ -600,7 +612,7 @@ Partial Class TimeEntrySummaryForm
         Me.timeEntriesDataGridView.Name = "timeEntriesDataGridView"
         Me.timeEntriesDataGridView.ReadOnly = True
         Me.timeEntriesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.timeEntriesDataGridView.Size = New System.Drawing.Size(846, 361)
+        Me.timeEntriesDataGridView.Size = New System.Drawing.Size(829, 397)
         Me.timeEntriesDataGridView.TabIndex = 494
         '
         'ColumnRowID
@@ -1107,7 +1119,7 @@ Partial Class TimeEntrySummaryForm
         Me.payPeriodsDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.payPeriodsDataGridView.RowTemplate.Height = 95
         Me.payPeriodsDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.None
-        Me.payPeriodsDataGridView.Size = New System.Drawing.Size(846, 86)
+        Me.payPeriodsDataGridView.Size = New System.Drawing.Size(829, 86)
         Me.payPeriodsDataGridView.TabIndex = 493
         '
         'Column8
@@ -1574,13 +1586,13 @@ Partial Class TimeEntrySummaryForm
         '
         Me.ctxtmenstrpTimeEntry.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeleteShiftToolStripMenuItem})
         Me.ctxtmenstrpTimeEntry.Name = "ctxtmenstrpTimeEntry"
-        Me.ctxtmenstrpTimeEntry.Size = New System.Drawing.Size(143, 26)
+        Me.ctxtmenstrpTimeEntry.Size = New System.Drawing.Size(193, 26)
         '
         'DeleteShiftToolStripMenuItem
         '
         Me.DeleteShiftToolStripMenuItem.Name = "DeleteShiftToolStripMenuItem"
-        Me.DeleteShiftToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
-        Me.DeleteShiftToolStripMenuItem.Text = "Delete shift..."
+        Me.DeleteShiftToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.DeleteShiftToolStripMenuItem.Text = "Delete shift schedule..."
         '
         'DataGridViewTextBoxColumn1
         '
@@ -2841,4 +2853,5 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents btnAmPm As ToolStripButton
     Friend WithEvents ctxtmenstrpTimeEntry As ContextMenuStrip
     Friend WithEvents DeleteShiftToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Button1 As Button
 End Class
