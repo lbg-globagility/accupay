@@ -967,7 +967,9 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub DeleteShiftToolStripMenuItem_ClickAsync(sender As Object, e As EventArgs) Handles DeleteShiftToolStripMenuItem.Click
         If timeEntriesDataGridView.Rows.Count > 0 Then
-            Dim dateTimeValue = timeEntriesDataGridView.CurrentRow?.Cells(ColumnDate.Name).Value
+            Dim currentRow = timeEntriesDataGridView.CurrentRow
+
+            Dim dateTimeValue = currentRow?.Cells(ColumnDate.Name).Value
 
             Dim hasDateSelected = dateTimeValue IsNot Nothing
 
@@ -976,17 +978,27 @@ Public Class TimeEntrySummaryForm
                 Dim employeeRowId = Convert.ToInt32(_selectedEmployee.RowID)
 
                 Using context = New PayrollContext()
-                    Dim shiftRecord = Await context.ShiftSchedules.
-                        Where(Function(esh) Nullable.Equals(esh.EmployeeID, employeeRowId) _
-                                And (esh.EffectiveFrom <= dateValue And dateValue <= esh.EffectiveTo)).FirstOrDefaultAsync()
+
+                    Dim eTimeEntry = Await context.TimeEntries.
+                            Where(Function(et) Nullable.Equals(et.EmployeeID, employeeRowId)).
+                            Where(Function(et) et.Date = dateValue).FirstOrDefaultAsync()
+
+                    Dim shiftRecord = Await context.ShiftSchedules.FindAsync(eTimeEntry.EmployeeShiftID)
 
                     If shiftRecord IsNot Nothing Then
+                        Dim balloon As New ToolTip() With {
+                            .ToolTipTitle = "Delete shift schedule",
+                            .UseFading = True,
+                            .UseAnimation = True,
+                            .ShowAlways = True,
+                            .IsBalloon = True,
+                            .ToolTipIcon = ToolTipIcon.Info
+                        }
+                        balloon.Show("Please wait a few moment while deleting", Button1, 3000)
+                        InfoBalloon()
                         Dim orgId = Convert.ToInt32(orgztnID)
 
-                        Dim eTimeEntry = Await context.TimeEntries.
-                            Where(Function(et) Nullable.Equals(et.EmployeeID, employeeRowId) _
-                                    And Nullable.Equals(et.OrganizationID, orgId) _
-                                    And et.Date = dateValue).FirstOrDefaultAsync
+
                         Dim hasTimeEntry = eTimeEntry IsNot Nothing
 
                         Dim isShiftServeOneDay = (DateDiff("d", shiftRecord.EffectiveFrom, shiftRecord.EffectiveTo) = 0)
@@ -1005,27 +1017,30 @@ Public Class TimeEntrySummaryForm
 
                             If isLead Then
                                 shiftRecord.EffectiveFrom = effectDateFrom.AddDays(1)
+                                shiftRecord.LastUpdBy = z_User
                             End If
 
                             If isTrail Then
                                 shiftRecord.EffectiveTo = effectDateTo.AddDays(-1)
+                                shiftRecord.LastUpdBy = z_User
                             End If
 
                             Dim isDoesntSatisfy = isLead = False And isTrail = False
 
                             If isDoesntSatisfy Then
                                 shiftRecord.EffectiveTo = dateValue.AddDays(-1)
+                                shiftRecord.LastUpdBy = z_User
 
                                 Dim newShiftSched = New ShiftSchedule With {
-                                .EffectiveFrom = dateValue.AddDays(1),
-                                .EffectiveTo = effectDateTo,
-                                .EmployeeID = shiftRecord.EmployeeID,
-                                .ShiftID = shiftRecord.ShiftID,
-                                .IsNightShift = shiftRecord.IsNightShift,
-                                .OrganizationID = orgId,
-                                .CreatedBy = z_User,
-                                .LastUpdBy = z_User
-                            }
+                                    .EffectiveFrom = dateValue.AddDays(1),
+                                    .EffectiveTo = effectDateTo,
+                                    .EmployeeID = shiftRecord.EmployeeID,
+                                    .ShiftID = shiftRecord.ShiftID,
+                                    .IsNightShift = shiftRecord.IsNightShift,
+                                    .OrganizationID = orgId,
+                                    .CreatedBy = z_User,
+                                    .LastUpdBy = z_User
+                                }
 
                                 context.ShiftSchedules.Add(newShiftSched)
                             End If
@@ -1036,7 +1051,27 @@ Public Class TimeEntrySummaryForm
                             eTimeEntry.EmployeeShiftID = Nothing
                         End If
 
-                        Await context.SaveChangesAsync()
+                        Try
+                            Await context.SaveChangesAsync()
+
+                            'MsgBox("Shift schedule deleted successfully.", MsgBoxStyle.Information)
+                            balloon.ToolTipTitle = "Shift schedule deleted successfully"
+                            balloon.Show("Done!", Button1)
+
+                            _selectedPayPeriod = Nothing
+                            payPeriodDataGridView_SelectionChanged(timeEntriesDataGridView, New EventArgs)
+
+                        Catch ex As Exception
+                            _logger.Error("Error deleting shift schedule.", ex)
+                            MsgBox(String.Concat("Something went wrong when deleting shift schedule.", vbNewLine, "Please contact Globagility Inc. for assistance."),
+                                   MsgBoxStyle.OkOnly,
+                                   "Time entry summary form")
+                            'Finally
+                            '    If hasDateSelected _
+                            '        And currentRow.Index < timeEntriesDataGridView.Rows.Count Then
+                            '        timeEntriesDataGridView.Item(ColumnDate.Name, currentRow.Index).Selected = True
+                            '    End If
+                        End Try
                     End If
                 End Using
             End If
