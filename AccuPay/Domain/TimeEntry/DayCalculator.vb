@@ -53,8 +53,12 @@ Public Class DayCalculator
         Dim hasTimeLog = timeLog IsNot Nothing Or officialBusiness IsNot Nothing
         Dim payrate = _payrateCalendar.Find(currentDate)
 
+        Dim logPeriod As TimePeriod = Nothing
         If hasTimeLog And currentShift.HasShift Then
-            Dim logPeriod = GetLogPeriod(timeLog, officialBusiness, currentShift, currentDate)
+            logPeriod = GetLogPeriod(timeLog, officialBusiness, currentShift, currentDate)
+        End If
+
+        If logPeriod IsNot Nothing Then
 
             Dim shiftPeriod = currentShift.ShiftPeriod
             Dim dutyPeriod = shiftPeriod.Overlap(logPeriod)
@@ -341,6 +345,9 @@ Public Class DayCalculator
             Where(Function(i) i.HasValue).
             Max()
 
+        If Not appliedIn.HasValue Or Not appliedOut.HasValue Then
+            Return Nothing
+        End If
         Dim logPeriod = TimePeriod.FromTime(appliedIn.Value, appliedOut.Value, currentDate)
 
         If currentShift.HasShift Then
