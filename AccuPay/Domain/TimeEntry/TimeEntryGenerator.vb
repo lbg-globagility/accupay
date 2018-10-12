@@ -14,6 +14,16 @@ Public Class TimeEntryGenerator
 
     Private ReadOnly _cutoffEnd As Date
 
+    Private _timeEntries As IList(Of TimeEntry)
+    Private _actualTimeEntries As IList(Of ActualTimeEntry)
+    Private _timeLogs As IList(Of TimeLog)
+    Private _overtimes As IList(Of Overtime)
+    Private _leaves As IList(Of Leave)
+    Private _officialBusinesses As IList(Of OfficialBusiness)
+    Private _agencyFees As IList(Of AgencyFee)
+    Private _shiftSchedules As IList(Of ShiftSchedule)
+    Private _salaries As IList(Of Salary)
+
     Private _total As Integer
 
     Private _finished As Integer
@@ -52,7 +62,53 @@ Public Class TimeEntryGenerator
             organization = context.Organizations.
                 FirstOrDefault(Function(o) Nullable.Equals(o.RowID, z_OrganizationID))
 
+            _salaries = context.Salaries.
+                Where(Function(s) s.EffectiveFrom <= _cutoffStart And _cutoffStart <= If(s.EffectiveTo, _cutoffStart)).
+                ToList()
+
             Dim previousCutoff = _cutoffStart.AddDays(-3)
+            _timeEntries = context.TimeEntries.
+                Include(Function(t) t.ShiftSchedule.Shift).
+                Where(Function(t) Nullable.Equals(t.OrganizationID, z_OrganizationID)).
+                Where(Function(t) previousCutoff <= t.Date And t.Date <= _cutoffEnd).
+                ToList()
+
+            _actualTimeEntries = context.ActualTimeEntries.
+                Where(Function(a) _cutoffStart <= a.Date And a.Date <= _cutoffEnd).
+                ToList()
+
+            _timeLogs = context.TimeLogs.
+                Where(Function(t) Nullable.Equals(t.OrganizationID, z_OrganizationID)).
+                Where(Function(t) _cutoffStart <= t.LogDate And t.LogDate <= _cutoffEnd).
+                ToList()
+
+            _leaves = context.Leaves.
+                Where(Function(l) Nullable.Equals(l.OrganizationID, z_OrganizationID)).
+                Where(Function(l) _cutoffStart <= l.StartDate And l.StartDate <= _cutoffEnd).
+                Where(Function(l) l.Status = "Approved").
+                ToList()
+
+            _overtimes = context.Overtimes.
+                Where(Function(o) Nullable.Equals(o.OrganizationID, z_OrganizationID)).
+                Where(Function(o) _cutoffStart <= o.OTStartDate And o.OTStartDate <= _cutoffEnd).
+                ToList()
+
+            _officialBusinesses = context.OfficialBusinesses.
+                Where(Function(o) Nullable.Equals(o.OrganizationID, z_OrganizationID)).
+                Where(Function(o) o.StartDate <= _cutoffEnd And _cutoffStart <= o.EndDate).
+                Where(Function(o) o.Status = OfficialBusiness.StatusApproved).
+                ToList()
+
+            _agencyFees = context.AgencyFees.
+                Where(Function(a) Nullable.Equals(a.OrganizationID, z_OrganizationID)).
+                Where(Function(a) _cutoffStart <= a.Date And a.Date <= _cutoffEnd).
+                ToList()
+
+            _shiftSchedules = context.ShiftSchedules.
+                Include(Function(s) s.Shift).
+                Where(Function(s) Nullable.Equals(s.OrganizationID, z_OrganizationID)).
+                Where(Function(s) s.EffectiveFrom <= _cutoffEnd And _cutoffStart <= s.EffectiveTo).
+                ToList()
 
             Dim payRates =
                 (From p In context.PayRates
@@ -79,27 +135,40 @@ Public Class TimeEntryGenerator
     End Sub
 
     Private Sub CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection, agencies As IList(Of Agency))
-        Dim previousTimeEntries As IList(Of TimeEntry) = Nothing
-        Dim actualTimeEntries As IList(Of ActualTimeEntry) = Nothing
-        Dim salary As Salary = Nothing
-        Dim timeLogs As IList(Of TimeLog) = Nothing
-        Dim shiftSchedules As IList(Of ShiftSchedule) = Nothing
-        Dim overtimesInCutoff As IList(Of Overtime) = Nothing
-        Dim officialBusinesses As IList(Of OfficialBusiness) = Nothing
-        Dim leavesInCutoff As IList(Of Leave) = Nothing
-        Dim agencyFees As IList(Of AgencyFee) = Nothing
+        Dim previousTimeEntries As IList(Of TimeEntry) = _timeEntries.
+            Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
+            ToList()
 
-        Using context = New PayrollContext()
-            salary = GetSalary(context, employee)
-            previousTimeEntries = GetTimeEntries(context, employee)
-            actualTimeEntries = GetActualTimeEntries(context, employee)
-            timeLogs = GetTimeLogs(context, employee)
-            shiftSchedules = GetShifts(context, employee)
-            overtimesInCutoff = GetOvertimes(context, employee)
-            officialBusinesses = GetOfficialBusinesses(context, employee)
-            leavesInCutoff = GetLeaves(context, employee)
-            agencyFees = GetAgencyFees(context, employee)
-        End Using
+        Dim actualTimeEntries As IList(Of ActualTimeEntry) = _actualTimeEntries.
+            Where(Function(a) Nullable.Equals(a.EmployeeID, employee.RowID)).
+            ToList()
+
+        Dim salary As Salary = _salaries.
+            FirstOrDefault(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID))
+
+        Dim timeLogs As IList(Of TimeLog) = _timeLogs.
+            Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
+            ToList()
+
+        Dim shiftSchedules As IList(Of ShiftSchedule) = _shiftSchedules.
+            Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
+            ToList()
+
+        Dim overtimesInCutoff As IList(Of Overtime) = _overtimes.
+            Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
+            ToList()
+
+        Dim officialBusinesses As IList(Of OfficialBusiness) = _officialBusinesses.
+            Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
+            ToList()
+
+        Dim leavesInCutoff As IList(Of Leave) = _leaves.
+            Where(Function(l) Nullable.Equals(l.EmployeeID, employee.RowID)).
+            ToList()
+
+        Dim agencyFees As IList(Of AgencyFee) = _agencyFees.
+            Where(Function(a) Nullable.Equals(a.EmployeeID, employee.RowID)).
+            ToList()
 
         If employee.EmploymentStatus = "Resigned" OrElse employee.EmploymentStatus = "Terminated" Then
             Dim currentTimeEntries = previousTimeEntries.
