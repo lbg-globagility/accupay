@@ -105,6 +105,9 @@ Namespace Global.AccuPay.Entity
         <Column("Absent")>
         Public Property AbsentDeduction As Decimal
 
+        <NotMapped>
+        Public Property BasicHours As Decimal
+
         <Column("BasicDayPay")>
         Public Property BasicDayPay As Decimal
 
@@ -173,6 +176,7 @@ Namespace Global.AccuPay.Entity
         End Sub
 
         Public Sub ResetHours()
+            BasicHours = 0
             RegularHours = 0
             OvertimeHours = 0
             NightDiffHours = 0

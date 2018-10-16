@@ -3,6 +3,7 @@
 Imports System.Data.Entity
 Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
+Imports PayrollSys
 
 Public Class NewPayStubForm
 
@@ -82,7 +83,11 @@ Public Class NewPayStubForm
         End If
     End Sub
 
-    Private Async Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged, DataGridViewX1.SelectionChanged
+    Private Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged, DataGridViewX1.SelectionChanged
+        SelectPaystub()
+    End Sub
+
+    Private Async Sub SelectPaystub()
         Try
             Dim paystubModel = DirectCast(dgvPaystubs.CurrentRow.DataBoundItem, PayStubModel)
 
@@ -92,6 +97,7 @@ Public Class NewPayStubForm
 
             Dim paystub = paystubModel.Paystub
             Dim paystubActual = paystubModel.PaystubActual
+            Dim salary As Salary = Nothing
 
             Dim timeEntries As IList(Of TimeEntry) = Nothing
             Using context = New PayrollContext()
@@ -100,17 +106,47 @@ Public Class NewPayStubForm
                     Where(Function(t) Nullable.Equals(t.EmployeeID, paystub.EmployeeID))
 
                 timeEntries = Await query.ToListAsync()
+
+                paystubActual = Await context.PaystubActuals.
+                    Where(Function(p) Nullable.Equals(p.EmployeeID, paystub.EmployeeID)).
+                    Where(Function(p) Nullable.Equals(p.PayPeriodID, paystub.PayPeriodID)).
+                    FirstOrDefaultAsync()
+
+                salary = Await context.Salaries.
+                    Where(Function(s) Nullable.Equals(s.EmployeeID, paystub.EmployeeID)).
+                    Where(Function(s) s.EffectiveFrom <= paystub.PayFromdate).
+                    Where(Function(s) paystub.PayFromdate <= If(s.EffectiveTo, paystub.PayFromdate)).
+                    FirstOrDefaultAsync()
             End Using
 
             dgvTimeEntries.DataSource = timeEntries
 
-            DisplayPaystub(paystub, paystubActual)
+            DisplayPaystub(paystub, paystubActual, salary)
         Catch ex As Exception
 
         End Try
     End Sub
 
-    Private Sub DisplayPaystub(declared As Paystub, actual As PaystubActual)
+    Private Sub DisplayPaystub(declared As Paystub, actual As PaystubActual, salary As Salary)
+        If salary IsNot Nothing Then
+            Dim employee = declared.Employee
+
+            Dim amount = If(_isActual, salary.TotalSalary, salary.BasicSalary)
+
+            Dim dailyRate = 0D
+            If employee.IsMonthly Or employee.IsFixed Then
+                dailyRate = amount / employee.WorkDaysPerYear / 12
+            Else
+                dailyRate = amount
+            End If
+
+            Dim hourlyRate = dailyRate
+
+            TxtSalary.Text = Format(amount)
+            TxtDailyRate.Text = Format(dailyRate)
+            TxtHourlyRate.Text = Format(hourlyRate)
+        End If
+
         txtBasicHours.Text = Format(declared.BasicHours)
         txtBasicPay.Text = Format(declared.BasicPay)
 
@@ -141,16 +177,16 @@ Public Class NewPayStubForm
         txtLeaveHours.Text = Format(declared.LeaveHours)
         txtLeavePay.Text = Format(declared.LeavePay)
 
-        txtLateHours.Text = Format(declared.LateHours)
+        txtLateHours.Text = Format(-declared.LateHours)
         txtLateAmount.Text = Format(-If(_isActual, actual.LateDeduction, declared.LateDeduction))
 
-        txtUndertimeHours.Text = Format(declared.UndertimeHours)
+        txtUndertimeHours.Text = Format(-declared.UndertimeHours)
         txtUndertimeAmount.Text = Format(-If(_isActual, actual.UndertimeDeduction, declared.UndertimeDeduction))
 
-        txtAbsentHours.Text = Format(declared.AbsentHours)
+        txtAbsentHours.Text = Format(-declared.AbsentHours)
         txtAbsentDeduction.Text = Format(-If(_isActual, actual.AbsenceDeduction, declared.AbsenceDeduction))
 
-        txtDeductionHours.Text = Format(declared.LateHours + declared.UndertimeHours + declared.AbsentHours)
+        txtDeductionHours.Text = Format(-(declared.LateHours + declared.UndertimeHours + declared.AbsentHours))
 
         Dim deductedAmount = If(
             _isActual,
@@ -214,6 +250,7 @@ Public Class NewPayStubForm
 
     Private Sub btnActualToggle_Click(sender As Object, e As EventArgs) Handles btnActualToggle.Click
         _isActual = Not _isActual
+        SelectPaystub()
     End Sub
 
     Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click

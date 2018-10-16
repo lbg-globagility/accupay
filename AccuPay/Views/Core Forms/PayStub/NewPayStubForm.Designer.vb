@@ -165,12 +165,12 @@ Partial Class NewPayStubForm
         Me.txtTotalAmount = New System.Windows.Forms.TextBox()
         Me.txt13thMonthPay = New System.Windows.Forms.TextBox()
         Me.txtNetPay = New System.Windows.Forms.TextBox()
-        Me.TextBox4 = New System.Windows.Forms.TextBox()
+        Me.TxtHourlyRate = New System.Windows.Forms.TextBox()
         Me.txtWithholdingTax = New System.Windows.Forms.TextBox()
         Me.txtGrossPay = New System.Windows.Forms.TextBox()
         Me.txtTotalAllowance = New System.Windows.Forms.TextBox()
-        Me.TextBox7 = New System.Windows.Forms.TextBox()
-        Me.TextBox3 = New System.Windows.Forms.TextBox()
+        Me.TxtSalary = New System.Windows.Forms.TextBox()
+        Me.TxtDailyRate = New System.Windows.Forms.TextBox()
         Me.txtBasicPay = New System.Windows.Forms.TextBox()
         Me.txtBasicHours = New System.Windows.Forms.TextBox()
         Me.TextBox8 = New System.Windows.Forms.TextBox()
@@ -276,6 +276,7 @@ Partial Class NewPayStubForm
         Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.btnActualToggle = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
@@ -324,7 +325,6 @@ Partial Class NewPayStubForm
         Me.DataGridViewTextBoxColumn58 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn59 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn60 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         CType(Me.dgvPaystubs, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.PaystubTab.SuspendLayout()
@@ -781,12 +781,12 @@ Partial Class NewPayStubForm
         Me.PaystubTab.Controls.Add(Me.txtTotalAmount)
         Me.PaystubTab.Controls.Add(Me.txt13thMonthPay)
         Me.PaystubTab.Controls.Add(Me.txtNetPay)
-        Me.PaystubTab.Controls.Add(Me.TextBox4)
+        Me.PaystubTab.Controls.Add(Me.TxtHourlyRate)
         Me.PaystubTab.Controls.Add(Me.txtWithholdingTax)
         Me.PaystubTab.Controls.Add(Me.txtGrossPay)
         Me.PaystubTab.Controls.Add(Me.txtTotalAllowance)
-        Me.PaystubTab.Controls.Add(Me.TextBox7)
-        Me.PaystubTab.Controls.Add(Me.TextBox3)
+        Me.PaystubTab.Controls.Add(Me.TxtSalary)
+        Me.PaystubTab.Controls.Add(Me.TxtDailyRate)
         Me.PaystubTab.Controls.Add(Me.txtBasicPay)
         Me.PaystubTab.Controls.Add(Me.txtBasicHours)
         Me.PaystubTab.Controls.Add(Me.TextBox8)
@@ -954,17 +954,17 @@ Partial Class NewPayStubForm
         Me.txtNetPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.txtNetPay.WordWrap = False
         '
-        'TextBox4
+        'TxtHourlyRate
         '
-        Me.TextBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox4.Location = New System.Drawing.Point(336, 8)
-        Me.TextBox4.Name = "TextBox4"
-        Me.TextBox4.ReadOnly = True
-        Me.TextBox4.Size = New System.Drawing.Size(80, 22)
-        Me.TextBox4.TabIndex = 22
-        Me.TextBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.TextBox4.WordWrap = False
+        Me.TxtHourlyRate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.TxtHourlyRate.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TxtHourlyRate.Location = New System.Drawing.Point(336, 8)
+        Me.TxtHourlyRate.Name = "TxtHourlyRate"
+        Me.TxtHourlyRate.ReadOnly = True
+        Me.TxtHourlyRate.Size = New System.Drawing.Size(80, 22)
+        Me.TxtHourlyRate.TabIndex = 22
+        Me.TxtHourlyRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.TxtHourlyRate.WordWrap = False
         '
         'txtWithholdingTax
         '
@@ -1002,29 +1002,29 @@ Partial Class NewPayStubForm
         Me.txtTotalAllowance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.txtTotalAllowance.WordWrap = False
         '
-        'TextBox7
+        'TxtSalary
         '
-        Me.TextBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox7.Location = New System.Drawing.Point(56, 8)
-        Me.TextBox7.Name = "TextBox7"
-        Me.TextBox7.ReadOnly = True
-        Me.TextBox7.Size = New System.Drawing.Size(80, 22)
-        Me.TextBox7.TabIndex = 22
-        Me.TextBox7.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.TextBox7.WordWrap = False
+        Me.TxtSalary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.TxtSalary.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TxtSalary.Location = New System.Drawing.Point(56, 8)
+        Me.TxtSalary.Name = "TxtSalary"
+        Me.TxtSalary.ReadOnly = True
+        Me.TxtSalary.Size = New System.Drawing.Size(80, 22)
+        Me.TxtSalary.TabIndex = 22
+        Me.TxtSalary.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.TxtSalary.WordWrap = False
         '
-        'TextBox3
+        'TxtDailyRate
         '
-        Me.TextBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.TextBox3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox3.Location = New System.Drawing.Point(192, 8)
-        Me.TextBox3.Name = "TextBox3"
-        Me.TextBox3.ReadOnly = True
-        Me.TextBox3.Size = New System.Drawing.Size(80, 22)
-        Me.TextBox3.TabIndex = 22
-        Me.TextBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.TextBox3.WordWrap = False
+        Me.TxtDailyRate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.TxtDailyRate.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TxtDailyRate.Location = New System.Drawing.Point(192, 8)
+        Me.TxtDailyRate.Name = "TxtDailyRate"
+        Me.TxtDailyRate.ReadOnly = True
+        Me.TxtDailyRate.Size = New System.Drawing.Size(80, 22)
+        Me.TxtDailyRate.TabIndex = 22
+        Me.TxtDailyRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.TxtDailyRate.WordWrap = False
         '
         'txtBasicPay
         '
@@ -1142,7 +1142,7 @@ Partial Class NewPayStubForm
         '
         'Label12
         '
-        Me.Label12.Location = New System.Drawing.Point(8, 144)
+        Me.Label12.Location = New System.Drawing.Point(8, 152)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(72, 24)
         Me.Label12.TabIndex = 19
@@ -1151,7 +1151,7 @@ Partial Class NewPayStubForm
         '
         'Label11
         '
-        Me.Label11.Location = New System.Drawing.Point(8, 120)
+        Me.Label11.Location = New System.Drawing.Point(8, 128)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(72, 24)
         Me.Label11.TabIndex = 19
@@ -1160,7 +1160,7 @@ Partial Class NewPayStubForm
         '
         'Label10
         '
-        Me.Label10.Location = New System.Drawing.Point(8, 96)
+        Me.Label10.Location = New System.Drawing.Point(8, 104)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(72, 24)
         Me.Label10.TabIndex = 19
@@ -1171,7 +1171,7 @@ Partial Class NewPayStubForm
         '
         Me.txtDeductionAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtDeductionAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDeductionAmount.Location = New System.Drawing.Point(176, 168)
+        Me.txtDeductionAmount.Location = New System.Drawing.Point(176, 176)
         Me.txtDeductionAmount.Name = "txtDeductionAmount"
         Me.txtDeductionAmount.ReadOnly = True
         Me.txtDeductionAmount.Size = New System.Drawing.Size(80, 22)
@@ -1183,7 +1183,7 @@ Partial Class NewPayStubForm
         '
         Me.txtDeductionHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtDeductionHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtDeductionHours.Location = New System.Drawing.Point(88, 168)
+        Me.txtDeductionHours.Location = New System.Drawing.Point(88, 176)
         Me.txtDeductionHours.Name = "txtDeductionHours"
         Me.txtDeductionHours.ReadOnly = True
         Me.txtDeductionHours.Size = New System.Drawing.Size(80, 22)
@@ -1195,7 +1195,7 @@ Partial Class NewPayStubForm
         '
         Me.txtAbsentDeduction.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtAbsentDeduction.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAbsentDeduction.Location = New System.Drawing.Point(176, 144)
+        Me.txtAbsentDeduction.Location = New System.Drawing.Point(176, 152)
         Me.txtAbsentDeduction.Name = "txtAbsentDeduction"
         Me.txtAbsentDeduction.ReadOnly = True
         Me.txtAbsentDeduction.Size = New System.Drawing.Size(80, 22)
@@ -1207,7 +1207,7 @@ Partial Class NewPayStubForm
         '
         Me.txtAbsentHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtAbsentHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtAbsentHours.Location = New System.Drawing.Point(88, 144)
+        Me.txtAbsentHours.Location = New System.Drawing.Point(88, 152)
         Me.txtAbsentHours.Name = "txtAbsentHours"
         Me.txtAbsentHours.ReadOnly = True
         Me.txtAbsentHours.Size = New System.Drawing.Size(80, 22)
@@ -1219,7 +1219,7 @@ Partial Class NewPayStubForm
         '
         Me.txtUndertimeAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtUndertimeAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUndertimeAmount.Location = New System.Drawing.Point(176, 120)
+        Me.txtUndertimeAmount.Location = New System.Drawing.Point(176, 128)
         Me.txtUndertimeAmount.Name = "txtUndertimeAmount"
         Me.txtUndertimeAmount.ReadOnly = True
         Me.txtUndertimeAmount.Size = New System.Drawing.Size(80, 22)
@@ -1231,7 +1231,7 @@ Partial Class NewPayStubForm
         '
         Me.txtUndertimeHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtUndertimeHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUndertimeHours.Location = New System.Drawing.Point(88, 120)
+        Me.txtUndertimeHours.Location = New System.Drawing.Point(88, 128)
         Me.txtUndertimeHours.Name = "txtUndertimeHours"
         Me.txtUndertimeHours.ReadOnly = True
         Me.txtUndertimeHours.Size = New System.Drawing.Size(80, 22)
@@ -1243,7 +1243,7 @@ Partial Class NewPayStubForm
         '
         Me.txtLateAmount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtLateAmount.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLateAmount.Location = New System.Drawing.Point(176, 96)
+        Me.txtLateAmount.Location = New System.Drawing.Point(176, 104)
         Me.txtLateAmount.Name = "txtLateAmount"
         Me.txtLateAmount.ReadOnly = True
         Me.txtLateAmount.Size = New System.Drawing.Size(80, 22)
@@ -1255,7 +1255,7 @@ Partial Class NewPayStubForm
         '
         Me.txtLateHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.txtLateHours.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtLateHours.Location = New System.Drawing.Point(88, 96)
+        Me.txtLateHours.Location = New System.Drawing.Point(88, 104)
         Me.txtLateHours.Name = "txtLateHours"
         Me.txtLateHours.ReadOnly = True
         Me.txtLateHours.Size = New System.Drawing.Size(80, 22)
@@ -1275,7 +1275,7 @@ Partial Class NewPayStubForm
         'Label9
         '
         Me.Label9.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(8, 168)
+        Me.Label9.Location = New System.Drawing.Point(8, 176)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(72, 24)
         Me.Label9.TabIndex = 9
@@ -2137,6 +2137,15 @@ Partial Class NewPayStubForm
         Me.btnActualToggle.Size = New System.Drawing.Size(96, 22)
         Me.btnActualToggle.Text = "Actual/Declared"
         '
+        'ToolStripButton3
+        '
+        Me.ToolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.ToolStripButton3.Image = CType(resources.GetObject("ToolStripButton3.Image"), System.Drawing.Image)
+        Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton3.Name = "ToolStripButton3"
+        Me.ToolStripButton3.Size = New System.Drawing.Size(73, 22)
+        Me.ToolStripButton3.Text = "Export Bank"
+        '
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.TabControl1)
@@ -2649,15 +2658,6 @@ Partial Class NewPayStubForm
         Me.DataGridViewTextBoxColumn60.Name = "DataGridViewTextBoxColumn60"
         Me.DataGridViewTextBoxColumn60.Width = 60
         '
-        'ToolStripButton3
-        '
-        Me.ToolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.ToolStripButton3.Image = CType(resources.GetObject("ToolStripButton3.Image"), System.Drawing.Image)
-        Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton3.Name = "ToolStripButton3"
-        Me.ToolStripButton3.Size = New System.Drawing.Size(73, 22)
-        Me.ToolStripButton3.Text = "Export Bank"
-        '
         'NewPayStubForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -2817,14 +2817,14 @@ Partial Class NewPayStubForm
     Friend WithEvents txtTotalLoan As TextBox
     Friend WithEvents Label23 As Label
     Friend WithEvents Label22 As Label
-    Friend WithEvents TextBox4 As TextBox
-    Friend WithEvents TextBox3 As TextBox
+    Friend WithEvents TxtHourlyRate As TextBox
+    Friend WithEvents TxtDailyRate As TextBox
     Friend WithEvents txtBasicHours As TextBox
     Friend WithEvents Label25 As Label
     Friend WithEvents Label26 As Label
     Friend WithEvents Label24 As Label
     Friend WithEvents txtBasicPay As TextBox
-    Friend WithEvents TextBox7 As TextBox
+    Friend WithEvents TxtSalary As TextBox
     Friend WithEvents Label27 As Label
     Friend WithEvents txt13thMonthPay As TextBox
     Friend WithEvents Label28 As Label
