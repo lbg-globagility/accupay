@@ -35,7 +35,7 @@ Namespace Global.Globagility.AccuPay.Salaries
 
                 Dim colNames = groups.
                     First().
-                    Select(Function(col, index) New With {.Name = col.Value.ToString(), .Index = index}).
+                    Select(Function(col, index) New Column With {.Name = col.Value.ToString(), .Index = index}).
                     ToList()
 
                 Dim rowValues = groups.
@@ -43,33 +43,33 @@ Namespace Global.Globagility.AccuPay.Salaries
                     Select(Function(cfg) cfg.Select(Function(g) g.Value).ToList())
 
                 records = rowValues.
-                    Select(
-                        Function(row)
-                            Dim newRecord = New T()
-
-                            colNames.ForEach(
-                                Sub(column)
-                                    If column.Index >= row.Count Then
-                                        Return
-                                    End If
-
-                                    Dim originalValue = row(column.Index)
-                                    Dim prop = tprops.FirstOrDefault(
-                                        Function(t)
-                                            Return StringUtils.ToPascal(t.Name) = StringUtils.ToPascal(column.Name)
-                                        End Function)
-
-                                    If prop IsNot Nothing Then
-                                        ParseValue(newRecord, prop, originalValue)
-                                    End If
-                                End Sub)
-
-                            Return newRecord
-                        End Function).
+                    Select(Function(row) ParseRow(row, colNames, tprops)).
                     ToList()
             End Using
 
             Return records
+        End Function
+
+        Private Function ParseRow(row As List(Of Object), colNames As IList(Of Column), tprops As List(Of PropertyInfo)) As T
+            Dim newRecord = New T()
+
+            For Each column In colNames
+                If column.Index >= row.Count Then
+                    Continue For
+                End If
+
+                Dim originalValue = row(column.Index)
+                Dim prop = tprops.FirstOrDefault(
+                    Function(t)
+                        Return StringUtils.ToPascal(t.Name) = StringUtils.ToPascal(column.Name)
+                    End Function)
+
+                If prop IsNot Nothing Then
+                    ParseValue(newRecord, prop, originalValue)
+                End If
+            Next
+
+            Return newRecord
         End Function
 
         Private Function GetFileContents(filePath As String) As Stream
@@ -94,11 +94,19 @@ Namespace Global.Globagility.AccuPay.Salaries
                     prop.SetValue(newRecord, CInt(value))
                 ElseIf prop.PropertyType Is GetType(Date) Or prop.PropertyType Is GetType(Date?) Then
                     prop.SetValue(newRecord, Date.FromOADate(value))
+                ElseIf prop.PropertyType Is GetType(String) Then
+                    prop.SetValue(newRecord, CStr(value))
                 End If
             Else
                 prop.SetValue(newRecord, originalValue)
             End If
         End Sub
+
+        Private Class Column
+            Public Property Name As String
+
+            Public Property Index As Integer
+        End Class
 
     End Class
 
