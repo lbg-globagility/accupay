@@ -9,6 +9,8 @@ Public Class DateRangePickerDialog
 
     Private _currentPayperiod As PayPeriod
 
+    Private _payperiodModels As IList(Of PayperiodModel)
+
     Private _payperiods As IList(Of PayPeriod)
 
     Private _year As Integer = 2018
@@ -40,24 +42,18 @@ Public Class DateRangePickerDialog
                 ToListAsync()
         End Using
 
-        PayperiodsDataGridView.DataSource = _payperiods
+        _payperiodModels = _payperiods.Select(Function(p) New PayperiodModel(p)).ToList()
+
+        PayperiodsDataGridView.DataSource = _payperiodModels
     End Sub
 
     Private Sub PayperiodsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles PayperiodsDataGridView.SelectionChanged
-        Dim payperiod = DirectCast(PayperiodsDataGridView.CurrentRow.DataBoundItem, PayPeriod)
+        Dim payperiod = DirectCast(PayperiodsDataGridView.CurrentRow.DataBoundItem, PayperiodModel)
 
-        _currentPayperiod = payperiod
+        _currentPayperiod = payperiod.PayPeriod
 
         _start = payperiod.PayFromDate
         _end = payperiod.PayToDate
-    End Sub
-
-    Private Sub DateTimePicker1_ValueChanged(sender As Object, e As EventArgs) Handles DateTimePicker1.ValueChanged
-        _start = DateTimePicker1.Value.Date
-    End Sub
-
-    Private Sub DateTimePicker2_ValueChanged(sender As Object, e As EventArgs) Handles DateTimePicker2.ValueChanged
-        _end = DateTimePicker2.Value.Date
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -67,5 +63,49 @@ Public Class DateRangePickerDialog
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         DialogResult = DialogResult.Cancel
     End Sub
+
+    Private Class PayperiodModel
+
+        Public ReadOnly PayPeriod As PayPeriod
+
+        Public Sub New(payperiod As PayPeriod)
+            Me.PayPeriod = payperiod
+        End Sub
+
+        Public ReadOnly Property PayFromDate As Date
+            Get
+                Return PayPeriod.PayFromDate
+            End Get
+        End Property
+
+        Public ReadOnly Property PayToDate As Date
+            Get
+                Return PayPeriod.PayToDate
+            End Get
+        End Property
+
+        Public ReadOnly Property Period As String
+            Get
+                If PayPeriod.IsMonthly Then
+                    Dim month = New Date(PayPeriod.Year, PayPeriod.Month, 1)
+                    Dim halfNo = String.Empty
+
+                    If PayPeriod.IsFirstHalf Then
+                        halfNo = "1st Half"
+                    ElseIf PayPeriod.IsEndOfTheMonth Then
+                        halfNo = "2nd Half"
+                    End If
+
+                    Return $"{month.ToString("MMM")} {halfNo}"
+                ElseIf PayPeriod.IsWeekly Then
+                    ' Not implemented yet
+                    Return String.Empty
+                Else
+                    Return String.Empty
+                End If
+            End Get
+        End Property
+
+    End Class
 
 End Class
