@@ -179,6 +179,10 @@ Public Class TimeEntryGenerator
             End If
         End If
 
+        If Not (timeLogs.Any() Or leavesInCutoff.Any() Or officialBusinesses.Any()) AndAlso (Not employee.IsFixed) Then
+            Return
+        End If
+
         Dim dayCalculator = New DayCalculator(organization, settings, payrateCalendar, employee)
 
         Dim timeEntries = New List(Of TimeEntry)
