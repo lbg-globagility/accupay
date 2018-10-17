@@ -52,7 +52,9 @@ Public Class SalaryTab
             Return TypeTools.ParseDecimalOrNull(txtSss.Text)
         End Get
         Set(value As Decimal?)
-            txtSss.Text = CStr(value)
+            If value.HasValue Then
+                txtSss.Text = CStr(value)
+            End If
         End Set
     End Property
 
@@ -61,7 +63,9 @@ Public Class SalaryTab
             Return TypeTools.ParseDecimalOrNull(txtPhilHealth.Text)
         End Get
         Set(value As Decimal?)
-            txtPhilHealth.Text = CStr(value)
+            If value.HasValue Then
+                txtPhilHealth.Text = CStr(value)
+            End If
         End Set
     End Property
 
@@ -95,6 +99,8 @@ Public Class SalaryTab
         LoadPhilHealthBrackets()
         ChangeMode(FormMode.Disabled)
         LoadSalaries()
+
+        AddHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
     End Sub
 
     Private Sub ChangeMode(mode As FormMode)
@@ -335,7 +341,7 @@ Public Class SalaryTab
         SelectSalary(salary)
     End Sub
 
-    Private Sub txtAmount_TextChanged(sender As Object, e As EventArgs) Handles txtAmount.TextChanged
+    Private Sub txtAmount_TextChanged(sender As Object, e As EventArgs)
         Dim salary = TypeTools.ParseDecimal(txtAmount.Text)
 
         Dim monthlyRate = 0D
