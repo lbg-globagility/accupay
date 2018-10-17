@@ -167,6 +167,51 @@ Public Class SalaryTab
         AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
     End Sub
 
+
+    Private Sub ValidateSalaryRanges(salaries As List(Of PayrollSys.Salary))
+        If salaries.Count <= 1 Then
+            'lblWarning.Visible = False
+        End If
+
+        For i = 0 To salaries.Count - 1
+            Dim salary = salaries.Item(i)
+
+            For j = i + 1 To salaries.Count - 1
+                Dim comparedSalary = salaries.Item(j)
+                If salary.RowID = comparedSalary.RowID Then
+                    Continue For
+                End If
+
+                If SalariesOverlap(salary, comparedSalary) Then
+                    'TODO make the overlapping salaries show in the form as warnings
+                    'lblWarning.Text = "Warning: One or more of the employee's salary history is overlapping with another salary's date."
+                    'lblWarning.Visible = True
+                    'WarnBalloon("You have input a date range overlaps to employee's existing salary.", "Overlapping dates", lblforballoon, 0, -69)
+                Else
+                    'lblWarning.Visible = False
+                End If
+            Next
+        Next
+    End Sub
+
+    Private Function SalariesOverlap(salaryA As PayrollSys.Salary, salaryB As PayrollSys.Salary) As Boolean
+        'If (Not salaryA.IsIndefinite) And (Not salaryB.IsIndefinite) Then
+        '    Return salaryA.EffectiveFrom <= salaryB.EffectiveTo And
+        '        salaryB.EffectiveFrom <= salaryA.EffectiveTo
+        'End If
+
+        'If salaryA.IsIndefinite And (Not salaryB.IsIndefinite) Then
+        '    Return salaryB.EffectiveTo >= salaryA.EffectiveFrom
+        'End If
+
+        'If salaryB.IsIndefinite And (Not salaryA.IsIndefinite) Then
+        '    Return salaryA.EffectiveTo >= salaryB.EffectiveFrom
+        'End If
+
+        Return True
+    End Function
+
+
     Private Sub LoadSocialSecurityBrackets()
         Using context = New PayrollContext()
             _socialSecurityBrackets = context.SocialSecurityBrackets.ToList()
