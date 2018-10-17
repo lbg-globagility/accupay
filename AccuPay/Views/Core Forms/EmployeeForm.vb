@@ -634,6 +634,12 @@ Public Class EmployeeForm
         End If
     End Sub
 
+    Public Sub Print201(sender As Object, e As EventArgs) Handles ToolStripButton22.Click
+        Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+        Dim provider = New Employee201ReportProvider(employeeID)
+        provider.Run()
+    End Sub
+
     Dim empBDate As String
     Dim dontUpdateEmp As SByte = 0
 
