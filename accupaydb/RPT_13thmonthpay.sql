@@ -6,27 +6,33 @@
 
 DROP PROCEDURE IF EXISTS `RPT_13thmonthpay`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_13thmonthpay`(IN `OrganizID` INT, IN `paramYear` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_13thmonthpay`(IN `$organizationID` INT, IN `$dateFrom` Date, IN `$dateTo` Date)
     DETERMINISTIC
 BEGIN
 
+DECLARE $endDateFrom DATE;
+
+SET $endDateFrom = (
+    SELECT PayFromDate
+    FROM payperiod p
+    WHERE p.PayToDate = $dateTo AND
+        p.OrganizationID = $organizationID);
+
 SELECT
     e.EmployeeID AS DatCol1,
-    CONCAT_WS(', ',IF(e.LastName = '', NULL, e.LastName),e.FirstName) AS DatCol2,
-    FORMAT(SUM(ttmp.Amount),2) AS DatCol3
-FROM thirteenthmonthpay ttmp
-INNER JOIN paystub ps
-ON ps.RowID = ttmp.PaystubID
+    CONCAT_WS(', ',IF(e.LastName = '', NULL, e.LastName), e.FirstName) AS DatCol2,
+    FORMAT(SUM(t.BasicPay), 2) AS DatCol3,
+    FORMAT(SUM(t.Amount), 2) AS DatCol4
+FROM thirteenthmonthpay t
+INNER JOIN paystub p
+ON p.RowID = t.PaystubID
 INNER JOIN employee e
-ON e.RowID = ps.EmployeeID AND
-    e.OrganizationID = OrganizID AND
+ON e.RowID = p.EmployeeID AND
+    e.OrganizationID = $organizationID AND
     FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
-INNER JOIN payperiod pyp
-ON pyp.RowID = ps.PayPeriodID AND
-    pyp.OrganizationID = OrganizID
-WHERE ttmp.OrganizationID = OrganizID AND
-    YEAR(ps.PayFromDate) = paramYear
-GROUP BY ps.EmployeeID;
+WHERE t.OrganizationID = $organizationID AND
+    p.PayFromDate BETWEEN $dateFrom AND $endDateFrom
+GROUP BY p.EmployeeID;
 
 END//
 DELIMITER ;

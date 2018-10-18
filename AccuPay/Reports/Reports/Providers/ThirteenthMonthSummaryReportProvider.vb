@@ -6,15 +6,19 @@ Public Class ThirteenthMonthSummaryReportProvider
     Public Property Name As String = "Thirteenth Month Summary" Implements IReportProvider.Name
 
     Public Sub Run() Implements IReportProvider.Run
-        Dim promptYear = New promptyear()
+        Dim payperiodSelector As New PayrollSummaDateSelection()
 
-        If Not promptYear.ShowDialog = Windows.Forms.DialogResult.OK Then
+        If Not payperiodSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return
         End If
 
+        Dim dateFrom = payperiodSelector.DateFrom
+        Dim dateTo = payperiodSelector.DateTo
+
         Dim params = New Object(,) {
-            {"OrganizID", orgztnID},
-            {"paramYear", promptYear.YearValue}
+            {"$organizationID", orgztnID},
+            {"$dateFrom", dateFrom},
+            {"$dateTo", dateTo}
         }
 
         Dim data = callProcAsDatTab(params, "RPT_13thmonthpay")

@@ -68,7 +68,7 @@ LEFT JOIN employeeallowance ea
 
 WHERE ttmp.OrganizationID=OrganizID
 GROUP BY ps.RowID
-ORDER BY CONCAT(e.LastName, e.FirstName), pyp.OrdinalValue
+ORDER BY CONCAT(e.LastName, e.FirstName), pyp.Year, pyp.OrdinalValue
 ;
 
 END//
