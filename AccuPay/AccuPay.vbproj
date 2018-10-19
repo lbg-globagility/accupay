@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -645,6 +645,7 @@
     <Compile Include="Views\Employees\PersonalInfoTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Employees\SalaryPresenter.vb" />
     <Compile Include="Views\Employees\SalaryTab2.Designer.vb">
       <DependentUpon>SalaryTab2.vb</DependentUpon>
     </Compile>
