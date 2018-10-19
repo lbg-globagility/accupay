@@ -1,11 +1,11 @@
 ﻿Option Strict On
-Imports Acupay
+
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class ThirteenthMonthPayReportProvider
     Implements IReportProvider
 
-    Public Property Name As String = "Employee's 13th Month Pay Report" Implements IReportProvider.Name
+    Public Property Name As String = "Thirteenth Month Pay (Detailed)" Implements IReportProvider.Name
 
     Public Sub Run() Implements IReportProvider.Run
 

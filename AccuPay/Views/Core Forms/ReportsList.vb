@@ -1,33 +1,31 @@
-﻿Imports System.Xml.XPath
+﻿Option Strict On
+
 Imports System.Collections.ObjectModel
-Imports CrystalDecisions.CrystalReports.Engine
-Imports System.IO
-Imports System.Text.RegularExpressions
 
 Public Class ReportsList
 
     Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim providers = New Collection(Of IReportProvider) From {
-            New AttendanceSheetReportProvider(),
             New SalaryIncreaseHistoryReportProvider(),
             New EmploymentRecordReportProvider(),
+            New EmployeeProfilesReportProvider(),
+            New PostEmploymentClearanceReportProvider(),
             New EmployeeIdentificationNumberReportProvider(),
             New EmployeeOffenseReportProvider(),
             New PayrollLedgerReportProvider(),
             New LeaveLedgerReportProvider(),
-            New PagIBIGMonthlyReportProvider(),
-            New ThirteenthMonthPayReportProvider(),
-            New ThirteenthMonthSummaryReportProvider(),
             New FiledLeaveReportProvider(),
             New LoanSummaryByEmployeeReportProvider(),
             New LoanSummaryByTypeReportProvider(),
-            New EmployeeProfilesReportProvider(),
-            New PhilHealthReportProvider(),
             New SSSMonthlyReportProvider(),
+            New PhilHealthReportProvider(),
+            New PagIBIGMonthlyReportProvider(),
             New TaxReportProvider(),
-            New PostEmploymentClearanceReportProvider(),
-            New AgencyFeeReportProvider(),
-            New LateUTAbsentSummaryReportProvider()
+            New ThirteenthMonthPayReportProvider(),
+            New ThirteenthMonthSummaryReportProvider(),
+            New AttendanceSheetReportProvider(),
+            New LateUTAbsentSummaryReportProvider(),
+            New AgencyFeeReportProvider()
         }
 
         For Each provider In providers
@@ -82,72 +80,6 @@ Public Class ReportsList
                 MsgBox($"Report Is Not Yet Done: {ex.Message}", MsgBoxStyle.OkOnly)
             End Try
         End If
-    End Sub
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
-        Button1.Enabled = False
-
-        Dim rptdoc As ReportDocument
-
-        rptdoc = New Crystal_Report11601C_BIR
-
-        Static n_dt As New DataTable
-
-        Static once As SByte = 0
-
-        If once = 0 Then
-
-            For ii = 1 To 120
-
-                Dim n_dcol As New DataColumn
-
-                n_dcol.ColumnName = "COL" & ii
-
-                n_dt.Columns.Add(n_dcol)
-
-            Next
-
-        End If
-
-        rptdoc.SetDataSource(n_dt)
-
-        Dim crvwr As New CrysRepForm
-
-        crvwr.crysrepvwr.ReportSource = rptdoc
-
-        Dim papy_string = ""
-
-        crvwr.Text = papy_string
-
-        crvwr.Show()
-
-        Button1.Enabled = True
-
-    End Sub
-
-    Private Sub Open_Remote_Connection(Optional strComputer As String = "GLOBAL-A-PC\Users\Public\Downloads\Test1.txt",
-                                       Optional strUsername As String = Nothing,
-                                       Optional strPassword As String = Nothing)
-        '//====================================================================================
-        '//using NET USE to open a connection to the remote computer
-        '//with the specified credentials. if we dont do this first, File.Copy will fail
-        '//====================================================================================
-        Dim ProcessStartInfo As New System.Diagnostics.ProcessStartInfo
-        ProcessStartInfo.FileName = "net"
-        ProcessStartInfo.Arguments = "use \\" & strComputer & "\c$ /USER:" & strUsername & " " & strPassword
-        ProcessStartInfo.WindowStyle = ProcessWindowStyle.Maximized 'Hidden
-        System.Diagnostics.Process.Start(ProcessStartInfo)
-
-        '//============================================================================
-        '//wait 2 seconds to let the above command complete or the copy will still fail
-        '//============================================================================
-        System.Threading.Thread.Sleep(2000)
-
-    End Sub
-
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-
     End Sub
 
 End Class
