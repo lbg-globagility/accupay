@@ -90,9 +90,11 @@ Public Class PayrollContext
     End Sub
 
     Protected Overrides Sub OnConfiguring(optionsBuilder As DbContextOptionsBuilder)
-        optionsBuilder.UseMySql(connectionString)
-        optionsBuilder.UseLoggerFactory(_loggerFactory)
-        optionsBuilder.EnableSensitiveDataLogging()
+        optionsBuilder.
+            UseMySql(connectionString).
+            UseLoggerFactory(_loggerFactory).
+            UseLazyLoadingProxies().
+            EnableSensitiveDataLogging()
     End Sub
 
     Protected Overrides Sub OnModelCreating(modelBuilder As ModelBuilder)

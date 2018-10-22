@@ -147,9 +147,9 @@ Namespace Global.AccuPay.Entity
         Public Property FirstTimeSalary As Boolean
 
         <ForeignKey("EmployeeID")>
-        Public Property Employee As Employee
+        Public Overridable Property Employee As Employee
 
-        Public Property Adjustments As ICollection(Of Adjustment)
+        Public Overridable Property Adjustments As ICollection(Of Adjustment)
 
         <NotMapped>
         Public Overridable Property ActualAdjustments As ICollection(Of ActualAdjustment)
