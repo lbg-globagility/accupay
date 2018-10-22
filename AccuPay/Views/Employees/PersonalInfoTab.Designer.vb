@@ -89,11 +89,13 @@ Partial Class PersonalInfoTab
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
+        Me.GroupBox7.SuspendLayout()
         Me.SuspendLayout()
         '
         'TxtEmployeeNo
@@ -248,7 +250,7 @@ Partial Class PersonalInfoTab
         '
         'Label13
         '
-        Me.Label13.Location = New System.Drawing.Point(336, 440)
+        Me.Label13.Location = New System.Drawing.Point(8, 24)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(128, 24)
         Me.Label13.TabIndex = 1
@@ -477,7 +479,7 @@ Partial Class PersonalInfoTab
         Me.CboRestDay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CboRestDay.FormattingEnabled = True
         Me.CboRestDay.Items.AddRange(New Object() {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"})
-        Me.CboRestDay.Location = New System.Drawing.Point(464, 440)
+        Me.CboRestDay.Location = New System.Drawing.Point(136, 24)
         Me.CboRestDay.Name = "CboRestDay"
         Me.CboRestDay.Size = New System.Drawing.Size(168, 21)
         Me.CboRestDay.TabIndex = 3
@@ -791,17 +793,28 @@ Partial Class PersonalInfoTab
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "ID Info"
         '
+        'GroupBox7
+        '
+        Me.GroupBox7.BackColor = System.Drawing.SystemColors.Control
+        Me.GroupBox7.Controls.Add(Me.CboRestDay)
+        Me.GroupBox7.Controls.Add(Me.Label13)
+        Me.GroupBox7.Location = New System.Drawing.Point(328, 440)
+        Me.GroupBox7.Name = "GroupBox7"
+        Me.GroupBox7.Size = New System.Drawing.Size(312, 56)
+        Me.GroupBox7.TabIndex = 12
+        Me.GroupBox7.TabStop = False
+        Me.GroupBox7.Text = "Rest Day"
+        '
         'PersonalInfoTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.GroupBox7)
         Me.Controls.Add(Me.GroupBox6)
         Me.Controls.Add(Me.GroupBox5)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
-        Me.Controls.Add(Me.CboRestDay)
-        Me.Controls.Add(Me.Label13)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Name = "PersonalInfoTab"
         Me.Size = New System.Drawing.Size(815, 560)
@@ -813,6 +826,7 @@ Partial Class PersonalInfoTab
         Me.GroupBox5.PerformLayout()
         Me.GroupBox6.ResumeLayout(False)
         Me.GroupBox6.PerformLayout()
+        Me.GroupBox7.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -884,4 +898,5 @@ Partial Class PersonalInfoTab
     Friend WithEvents GroupBox6 As GroupBox
     Friend WithEvents CboSalutation As ComboBox
     Friend WithEvents Label30 As Label
+    Friend WithEvents GroupBox7 As GroupBox
 End Class

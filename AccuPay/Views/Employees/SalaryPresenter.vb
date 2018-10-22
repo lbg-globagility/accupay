@@ -8,16 +8,16 @@ Namespace Global.AccuPay.Views.Employees
 
     Public Class SalaryPresenter
 
+        Private Const StandardPagIbigContribution As Decimal = 100
+
         Private WithEvents _view As SalaryTab2
+
         Private _employee As Employee
-        Private _salaries As List(Of Salary)
-        Private StandardPagIbigContribution As Decimal = 100
-        Private _philHealthDeductionType As String
-        Private _philHealthContributionRate As Decimal
-        Private _philHealthMinimumContribution As Decimal
-        Private _philHealthMaximumContribution As Decimal
-        Private _philHealthBrackets As List(Of PhilHealthBracket)
+
+        Private _philHealthPolicy As PhilHealthPolicy
+
         Private _currentSalary As Salary
+
         Private _socialSecurityBrackets As List(Of SocialSecurityBracket)
 
         Public Sub New(view As SalaryTab2)
@@ -27,6 +27,13 @@ Namespace Global.AccuPay.Views.Employees
         Private Sub OnLoad() Handles _view.Init
             LoadPhilHealthBrackets()
             LoadSocialSecurityBrackets()
+            _view.ChangeMode(SalaryTab2.Mode.Disabled)
+        End Sub
+
+        Private Sub OnSelectedEmployee(employee As Employee) Handles _view.SelectEmployee
+            _employee = employee
+            _view.ShowEmployee(employee)
+            LoadSalaries()
         End Sub
 
         Private Sub OnNew() Handles _view.NewSalary
@@ -42,6 +49,7 @@ Namespace Global.AccuPay.Views.Employees
 
             _view.DisplaySalary(salary)
             _view.DisableSalarySelection()
+            _view.ChangeMode(SalaryTab2.Mode.Creating)
         End Sub
 
         Private Sub OnCancel() Handles _view.CancelChanges
@@ -114,6 +122,12 @@ Namespace Global.AccuPay.Views.Employees
             UpdatePhilHealth(monthlyRate)
         End Sub
 
+        Private Sub OnSalarySelected(salary As Salary) Handles _view.SelectSalary
+            _currentSalary = salary
+
+            _view.DisplaySalary(_currentSalary)
+        End Sub
+
         Private Sub LoadPhilHealthBrackets()
             Using context = New PayrollContext()
                 Dim listOfValues = context.ListOfValues.
@@ -122,12 +136,13 @@ Namespace Global.AccuPay.Views.Employees
 
                 Dim values = New ListOfValueCollection(listOfValues)
 
-                _philHealthDeductionType = If(values.GetValue("DeductionType"), "Bracket")
-                _philHealthContributionRate = values.GetDecimal("Rate")
-                _philHealthMinimumContribution = values.GetDecimal("MinimumContribution")
-                _philHealthMaximumContribution = values.GetDecimal("MaximumContribution")
-
-                _philHealthBrackets = context.PhilHealthBrackets.ToList()
+                _philHealthPolicy = New PhilHealthPolicy() With {
+                    .DeductionType = values.GetStringOrDefault("DeductionType", "Bracket"),
+                    .ContributionRate = values.GetDecimal("Rate"),
+                    .MinimumContribution = values.GetDecimal("MinimumContribution"),
+                    .MaximumContribution = values.GetDecimal("MaximumContribution"),
+                    .Brackets = context.PhilHealthBrackets.ToList()
+                }
             End Using
         End Sub
 
@@ -139,12 +154,18 @@ Namespace Global.AccuPay.Views.Employees
             Dim salaries As IList(Of Salary)
 
             Using context = New PayrollContext()
-                salaries = (From s In context.Salaries.Include(Function(s) s.SocialSecurityBracket)
-                            Where CBool(s.EmployeeID = _employee.RowID)
-                            Order By s.EffectiveFrom Descending).
-                             ToList()
+                salaries = context.Salaries.
+                    Include(Function(s) s.SocialSecurityBracket).
+                    Where(Function(s) Nullable.Equals(s.EmployeeID, _employee.RowID)).
+                    OrderByDescending(Function(s) s.EffectiveFrom).
+                    ToList()
             End Using
 
+            If _currentSalary Is Nothing Then
+                _currentSalary = salaries.FirstOrDefault()
+            End If
+
+            _view.DisplaySalary(_currentSalary)
             _view.DisplaySalaries(salaries)
 
             If _currentSalary IsNot Nothing Then
@@ -167,14 +188,14 @@ Namespace Global.AccuPay.Views.Employees
 
         Private Sub UpdatePhilHealth(monthlyRate As Decimal)
             Dim philHealthContribution = 0D
-            If _philHealthDeductionType = "Formula" Then
-                philHealthContribution = monthlyRate * (_philHealthContributionRate / 100)
+            If _philHealthPolicy.DeductionType = "Formula" Then
+                philHealthContribution = monthlyRate * (_philHealthPolicy.ContributionRate / 100)
 
-                philHealthContribution = {philHealthContribution, _philHealthMinimumContribution}.Max()
-                philHealthContribution = {philHealthContribution, _philHealthMaximumContribution}.Min()
+                philHealthContribution = {philHealthContribution, _philHealthPolicy.MinimumContribution}.Max()
+                philHealthContribution = {philHealthContribution, _philHealthPolicy.MaximumContribution}.Min()
                 philHealthContribution = AccuMath.Truncate(philHealthContribution, 2)
             Else
-                Dim philHealthBracket = _philHealthBrackets?.FirstOrDefault(
+                Dim philHealthBracket = _philHealthPolicy.Brackets?.FirstOrDefault(
                     Function(p) p.SalaryRangeFrom <= monthlyRate And monthlyRate <= p.SalaryRangeTo)
 
                 _currentSalary.PayPhilHealthID = philHealthBracket?.RowID
@@ -184,6 +205,20 @@ Namespace Global.AccuPay.Views.Employees
 
             _view.PhilHealth = philHealthContribution
         End Sub
+
+        Private Class PhilHealthPolicy
+
+            Public Property DeductionType As String
+
+            Public Property ContributionRate As Decimal
+
+            Public Property MinimumContribution As Decimal
+
+            Public Property MaximumContribution As Decimal
+
+            Public Property Brackets As List(Of PhilHealthBracket)
+
+        End Class
 
     End Class
 

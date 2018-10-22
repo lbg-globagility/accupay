@@ -34,6 +34,7 @@ Partial Class NewEmployeeForm
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.PersonalInfoTab = New AccuPay.PersonalInfoTab()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.SalaryTab21 = New AccuPay.SalaryTab2()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -41,6 +42,7 @@ Partial Class NewEmployeeForm
         Me.GroupBox1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
+        Me.TabPage2.SuspendLayout()
         Me.SuspendLayout()
         '
         'EmployeeDataGridView
@@ -54,6 +56,7 @@ Partial Class NewEmployeeForm
         Me.EmployeeDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.EmployeeDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3})
         Me.EmployeeDataGridView.Location = New System.Drawing.Point(8, 104)
+        Me.EmployeeDataGridView.MultiSelect = False
         Me.EmployeeDataGridView.Name = "EmployeeDataGridView"
         Me.EmployeeDataGridView.ReadOnly = True
         Me.EmployeeDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -155,13 +158,27 @@ Partial Class NewEmployeeForm
         '
         'TabPage2
         '
+        Me.TabPage2.Controls.Add(Me.SalaryTab21)
         Me.TabPage2.Location = New System.Drawing.Point(4, 35)
         Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage2.Size = New System.Drawing.Size(824, 505)
         Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "Salary"
+        Me.TabPage2.Text = "Salaries"
         Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'SalaryTab21
+        '
+        Me.SalaryTab21.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab21.BackColor = System.Drawing.Color.White
+        Me.SalaryTab21.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab21.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SalaryTab21.Location = New System.Drawing.Point(0, 0)
+        Me.SalaryTab21.Name = "SalaryTab21"
+        Me.SalaryTab21.PagIBIG = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab21.PhilHealth = Nothing
+        Me.SalaryTab21.Size = New System.Drawing.Size(824, 505)
+        Me.SalaryTab21.Sss = Nothing
+        Me.SalaryTab21.TabIndex = 0
         '
         'DataGridViewTextBoxColumn1
         '
@@ -199,6 +216,7 @@ Partial Class NewEmployeeForm
         Me.GroupBox1.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
+        Me.TabPage2.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -216,6 +234,7 @@ Partial Class NewEmployeeForm
     Friend WithEvents ActiveCheckBox As CheckBox
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TabPage1 As TabPage
-    Friend WithEvents TabPage2 As TabPage
     Friend WithEvents PersonalInfoTab As PersonalInfoTab
+    Friend WithEvents TabPage2 As TabPage
+    Friend WithEvents SalaryTab21 As SalaryTab2
 End Class

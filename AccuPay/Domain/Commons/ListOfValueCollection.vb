@@ -34,7 +34,9 @@ Public Class ListOfValueCollection
 
     Public Function GetString(name As String, Optional [default] As String = "") As String
         Dim names = Split(name)
-        Return GetStringValue(names.Item1, names.Item2)
+        Dim value = GetStringValue(names.Item1, names.Item2)
+
+        Return If(value, [default])
     End Function
 
     Public Function GetStringOrNull(name As String) As String
@@ -50,7 +52,14 @@ Public Class ListOfValueCollection
     End Function
 
     Private Function GetStringValue(type As String, lic As String) As String
-        Dim value = _values?.FirstOrDefault(Function(f) f.LIC = lic And f.Type = type)
+        Dim value As ListOfValue = Nothing
+
+        If type Is Nothing Then
+            value = _values?.FirstOrDefault(Function(f) f.LIC = lic)
+        Else
+            value = _values?.FirstOrDefault(Function(f) f.LIC = lic And f.Type = type)
+        End If
+
         Return value?.DisplayValue
     End Function
 
@@ -100,10 +109,18 @@ Public Class ListOfValueCollection
 
     Private Function Split(name As String) As Tuple(Of String, String)
         Dim names = name.Split({"."}, 2, StringSplitOptions.RemoveEmptyEntries)
-        Dim type = names(0)
-        Dim lic = names(1)
+        If names.Count = 2 Then
+            Dim type = names(0)
+            Dim lic = names(1)
 
-        Return New Tuple(Of String, String)(type, lic)
+            Return New Tuple(Of String, String)(type, lic)
+        ElseIf names.Count = 1 Then
+            Dim lic = names(0)
+
+            Return New Tuple(Of String, String)(Nothing, lic)
+        End If
+
+        Return New Tuple(Of String, String)(Nothing, Nothing)
     End Function
 
     Private Function GetListOfValue(type As String, lic As String) As ListOfValue

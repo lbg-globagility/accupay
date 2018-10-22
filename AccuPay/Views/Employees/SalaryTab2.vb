@@ -22,7 +22,7 @@ Public Class SalaryTab2
 
     Public Event CancelChanges()
 
-    Private _mode As SalaryViewMode = SalaryViewMode.Empty
+    Private _mode As Mode = Mode.Empty
 
     Public ReadOnly Property EffectiveFrom As Date
         Get
@@ -87,23 +87,6 @@ Public Class SalaryTab2
         dgvSalaries.AutoGenerateColumns = False
     End Sub
 
-    Public Sub SetEmployee(employee As Employee)
-        If _mode = SalaryViewMode.Creating Then
-            EnableSalaryGrid()
-        End If
-
-        RaiseEvent SelectEmployee(employee)
-        ChangeMode(SalaryViewMode.Empty)
-    End Sub
-
-    Public Sub ShowEmployee(employee As Employee)
-        txtPayFrequency.Text = employee.PayFrequency.Type
-        txtSalaryType.Text = employee.EmployeeType
-        txtFullname.Text = $"{employee.FirstName} {employee.LastName}"
-        txtEmployeeID.Text = $"ID# {employee.EmployeeNo}, {employee?.Position.Name}, {employee.EmployeeType} Salary"
-        pbEmployee.Image = ConvByteToImage(employee.Image)
-    End Sub
-
     Private Sub SalaryTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If DesignMode Then
             Return
@@ -112,26 +95,43 @@ Public Class SalaryTab2
         RaiseEvent Init()
     End Sub
 
-    Public Sub ChangeMode(mode As SalaryViewMode)
+    Public Sub SetEmployee(employee As Employee)
+        If _mode = Mode.Creating Then
+            EnableSalaryGrid()
+        End If
+
+        RaiseEvent SelectEmployee(employee)
+        ChangeMode(Mode.Empty)
+    End Sub
+
+    Public Sub ShowEmployee(employee As Employee)
+        txtPayFrequency.Text = employee.PayFrequency?.Type
+        txtSalaryType.Text = employee.EmployeeType
+        txtFullname.Text = $"{employee.FirstName} {employee.LastName}"
+        txtEmployeeID.Text = $"ID# {employee.EmployeeNo}, {employee?.Position?.Name}, {employee.EmployeeType} Salary"
+        pbEmployee.Image = ConvByteToImage(employee.Image)
+    End Sub
+
+    Public Sub ChangeMode(mode As Mode)
         _mode = mode
 
         Select Case _mode
-            Case SalaryViewMode.Disabled
+            Case Mode.Disabled
                 btnNew.Enabled = False
                 btnSave.Enabled = False
                 btnDelete.Enabled = False
                 btnCancel.Enabled = False
-            Case SalaryViewMode.Empty
+            Case Mode.Empty
                 btnNew.Enabled = True
                 btnSave.Enabled = False
                 btnDelete.Enabled = False
                 btnCancel.Enabled = False
-            Case SalaryViewMode.Creating
+            Case Mode.Creating
                 btnNew.Enabled = False
                 btnSave.Enabled = True
                 btnDelete.Enabled = False
                 btnCancel.Enabled = True
-            Case SalaryViewMode.Editing
+            Case Mode.Editing
                 btnNew.Enabled = True
                 btnSave.Enabled = True
                 btnDelete.Enabled = True
@@ -269,7 +269,7 @@ Public Class SalaryTab2
         End Select
     End Sub
 
-    Public Enum SalaryViewMode
+    Public Enum Mode
         Disabled
         Empty
         Creating

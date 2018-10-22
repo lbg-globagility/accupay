@@ -5,9 +5,13 @@ Imports AccuPay.Entity
 Public Class NewEmployeeForm
 
     Public Event Init()
+
     Public Event EmployeeSelected(employeeId As Integer?)
+
     Public Event EmployeeRefresh()
+
     Public Event ActiveChanged()
+
     Public Event Search()
 
     Public ReadOnly Property IsActive As Boolean
@@ -39,6 +43,7 @@ Public Class NewEmployeeForm
 
     Public Sub SetEmployee(employee As Employee)
         PersonalInfoTab.SetEmployee(employee)
+        SalaryTab21.SetEmployee(employee)
     End Sub
 
     Private Sub EmployeeDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeeDataGridView.SelectionChanged
