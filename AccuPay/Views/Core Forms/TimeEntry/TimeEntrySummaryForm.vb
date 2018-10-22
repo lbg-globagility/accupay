@@ -325,7 +325,7 @@ Public Class TimeEntrySummaryForm
                 payrate.PayType
             FROM employeetimeentry ete
             LEFT JOIN (
-                SELECT EmployeeID, Date, MAX(Created) Created
+                SELECT EmployeeID, Date, MAX(RowID) RowID
                 FROM employeetimeentrydetails
                 WHERE Date BETWEEN @DateFrom AND @DateTo
                 GROUP BY EmployeeID, Date
@@ -336,7 +336,7 @@ Public Class TimeEntrySummaryForm
             ON etd.Date = ete.Date AND
                 etd.OrganizationID = ete.OrganizationID AND
                 etd.EmployeeID = ete.EmployeeID AND
-                etd.Created = latest.Created
+                etd.RowID = latest.RowID
             LEFT JOIN employeeshift
             ON employeeshift.RowID = ete.EmployeeShiftID
             LEFT JOIN (
@@ -906,7 +906,6 @@ Public Class TimeEntrySummaryForm
             End Get
         End Property
 
-
         Public ReadOnly Property OBStartTimeDisplay As Date?
             Get
                 Return ConvertToDate(OBStartTime)
@@ -998,7 +997,6 @@ Public Class TimeEntrySummaryForm
                         InfoBalloon()
                         Dim orgId = Convert.ToInt32(orgztnID)
 
-
                         Dim hasTimeEntry = eTimeEntry IsNot Nothing
 
                         Dim isShiftServeOneDay = (DateDiff("d", shiftRecord.EffectiveFrom, shiftRecord.EffectiveTo) = 0)
@@ -1060,7 +1058,6 @@ Public Class TimeEntrySummaryForm
 
                             _selectedPayPeriod = Nothing
                             payPeriodDataGridView_SelectionChanged(timeEntriesDataGridView, New EventArgs)
-
                         Catch ex As Exception
                             _logger.Error("Error deleting shift schedule.", ex)
                             MsgBox(String.Concat("Something went wrong when deleting shift schedule.", vbNewLine, "Please contact Globagility Inc. for assistance."),
@@ -1087,4 +1084,5 @@ Public Class TimeEntrySummaryForm
     Private Sub timeEntriesDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles timeEntriesDataGridView.CellContentClick
 
     End Sub
+
 End Class
