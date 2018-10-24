@@ -93,7 +93,6 @@ Public Class PayrollContext
         optionsBuilder.
             UseMySql(connectionString).
             UseLoggerFactory(_loggerFactory).
-            UseLazyLoadingProxies().
             EnableSensitiveDataLogging()
     End Sub
 

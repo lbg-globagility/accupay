@@ -16,6 +16,8 @@ Public Class SalaryTab2
 
     Public Event DeleteSalary()
 
+    Public Event DeleteSss()
+
     Public Event SelectSalary(salary As Salary)
 
     Public Event SalaryChanged(amount As Decimal)
@@ -23,6 +25,12 @@ Public Class SalaryTab2
     Public Event CancelChanges()
 
     Private _mode As Mode = Mode.Empty
+
+    Public ReadOnly Property CurrentMode As Mode
+        Get
+            Return _mode
+        End Get
+    End Property
 
     Public ReadOnly Property EffectiveFrom As Date
         Get
@@ -32,7 +40,11 @@ Public Class SalaryTab2
 
     Public ReadOnly Property EffectiveTo As Date?
         Get
-            Return If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, Nothing)
+            If dtpEffectiveTo.Checked Then
+                Return dtpEffectiveTo.Value
+            Else
+                Return Nothing
+            End If
         End Get
     End Property
 
@@ -51,6 +63,15 @@ Public Class SalaryTab2
         End Get
         Set(value As Decimal)
             txtAllowance.Text = CStr(value)
+        End Set
+    End Property
+
+    Public Property BasicPay As Decimal
+        Get
+            Return TypeTools.ParseDecimal(txtBasicPay.Text)
+        End Get
+        Set(value As Decimal)
+            txtBasicPay.Text = CStr(value)
         End Set
     End Property
 
@@ -84,7 +105,7 @@ Public Class SalaryTab2
     Public Sub New()
         Dim presenter = New SalaryPresenter(Me)
         InitializeComponent()
-        dgvSalaries.AutoGenerateColumns = False
+        DataGridView1.AutoGenerateColumns = False
     End Sub
 
     Private Sub SalaryTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -97,11 +118,10 @@ Public Class SalaryTab2
 
     Public Sub SetEmployee(employee As Employee)
         If _mode = Mode.Creating Then
-            EnableSalaryGrid()
+            EnableSalarySelection()
         End If
 
         RaiseEvent SelectEmployee(employee)
-        ChangeMode(Mode.Empty)
     End Sub
 
     Public Sub ShowEmployee(employee As Employee)
@@ -140,9 +160,10 @@ Public Class SalaryTab2
     End Sub
 
     Public Sub DisplaySalaries(salaries As IList(Of Salary))
-        RemoveHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
-        dgvSalaries.DataSource = salaries
-        AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
+        RemoveHandler DataGridView1.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
+        DataGridView1.DataSource = salaries
+        DataGridView1.DataSource = salaries
+        AddHandler DataGridView1.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
     End Sub
 
     Public Sub ActivateSelectedSalary(selectedSalary As Salary)
@@ -150,12 +171,14 @@ Public Class SalaryTab2
             Return
         End If
 
-        For Each row As DataGridViewRow In dgvSalaries.Rows
+        For Each row As DataGridViewRow In DataGridView1.Rows
             Dim comparedSalary = DirectCast(row.DataBoundItem, Salary)
 
             If selectedSalary.RowID = comparedSalary.RowID Then
-                dgvSalaries.CurrentCell = row.Cells(0)
+                RemoveHandler DataGridView1.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
+                DataGridView1.CurrentCell = row.Cells(0)
                 row.Selected = True
+                AddHandler DataGridView1.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
                 Exit For
             End If
         Next
@@ -198,17 +221,16 @@ Public Class SalaryTab2
     End Sub
 
     Public Sub DisableSalarySelection()
-        RemoveHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
-        dgvSalaries.ClearSelection()
-        dgvSalaries.CurrentCell = Nothing
+        RemoveHandler DataGridView1.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
+        DataGridView1.ClearSelection()
+        DataGridView1.CurrentCell = Nothing
     End Sub
 
-    Private Sub EnableSalaryGrid()
-        AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
+    Public Sub EnableSalarySelection()
+        AddHandler DataGridView1.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
 
-        If dgvSalaries.Rows.Count > 0 Then
-            dgvSalaries.Item(0, 0).Selected = True
-            'SelectSalary2(DirectCast(dgvSalaries.CurrentRow.DataBoundItem, Salary))
+        If DataGridView1.Rows.Count > 0 Then
+            DataGridView1.Item(0, 0).Selected = True
         End If
     End Sub
 
@@ -216,7 +238,7 @@ Public Class SalaryTab2
         RaiseEvent SaveSalary()
     End Sub
 
-    Private Sub btnDelete_Click(sender As Object, e As EventArgs)
+    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim result = MsgBox("Are you sure you want to delete this salary?", MsgBoxStyle.YesNo, "Delete Salary")
 
         If result = MsgBoxResult.Yes Then
@@ -224,22 +246,12 @@ Public Class SalaryTab2
         End If
     End Sub
 
-    Private Sub btnCancel_Click(sender As Object, e As EventArgs)
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         RaiseEvent CancelChanges()
-
-        'If _mode = SalaryViewMode.Creating Then
-        '    EnableSalaryGrid()
-        'End If
-
-        'If _currentSalary Is Nothing Then
-        '    ChangeMode(SalaryViewMode.Empty)
-        'Else
-        '    ChangeMode(SalaryViewMode.Editing)
-        'End If
     End Sub
 
     Private Sub dgvSalaries_SelectionChanged(sender As Object, e As EventArgs)
-        Dim salary = DirectCast(dgvSalaries.CurrentRow?.DataBoundItem, Salary)
+        Dim salary = DirectCast(DataGridView1.CurrentRow?.DataBoundItem, Salary)
 
         If salary Is Nothing Then
             Return
@@ -259,13 +271,12 @@ Public Class SalaryTab2
         End Using
     End Sub
 
-    Private Sub TxtSss_KeyDown(sender As Object, e As KeyEventArgs)
+    Private Sub TxtSss_KeyDown(sender As Object, e As KeyEventArgs) Handles txtSss.KeyDown
         e.Handled = True
 
         Select Case e.KeyCode
             Case Keys.Back, Keys.D0, Keys.NumPad0
-                txtSss.Tag = Nothing
-                txtSss.Text = ""
+                RaiseEvent DeleteSss()
         End Select
     End Sub
 

@@ -6,6 +6,8 @@ Imports System.Threading.Tasks
 
 Public Class NewEmployeePresenter
 
+    Private _currentEmployee As Employee
+
     Private _employees As IList(Of Employee)
 
     Private WithEvents _view As NewEmployeeForm
@@ -40,16 +42,24 @@ Public Class NewEmployeePresenter
         _view.SetEmployees(employees)
     End Sub
 
-    Private Async Sub OnEmployeeSelected(employeeId As Integer?) Handles _view.EmployeeSelected
-        Dim employee As Employee = Nothing
-
+    Private Async Sub OnEmployeeSelected(employeeID As Integer?) Handles _view.EmployeeSelected
         Using context = New PayrollContext()
-            employee = Await context.Employees.FindAsync(employeeId)
+            _currentEmployee = Await context.Employees.
+                Include(Function(e) e.PayFrequency).
+                SingleOrDefaultAsync(Function(e) Nullable.Equals(e.RowID, employeeID))
         End Using
 
-        If employee IsNot Nothing Then
-            _view.SetEmployee(employee)
+        If _currentEmployee IsNot Nothing Then
+            _view.SetEmployee(_currentEmployee)
         End If
+    End Sub
+
+    Private Sub OnTabChanged() Handles _view.TabChanged
+        If _currentEmployee Is Nothing Then
+            Return
+        End If
+
+        _view.SetEmployee(_currentEmployee)
     End Sub
 
     Private Async Function FilterEmployees(term As String) As Task(Of IList(Of Employee))

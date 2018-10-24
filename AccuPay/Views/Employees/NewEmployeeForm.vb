@@ -14,6 +14,8 @@ Public Class NewEmployeeForm
 
     Public Event Search()
 
+    Public Event TabChanged()
+
     Public ReadOnly Property IsActive As Boolean
         Get
             Return ActiveCheckBox.Checked
@@ -42,8 +44,11 @@ Public Class NewEmployeeForm
     End Sub
 
     Public Sub SetEmployee(employee As Employee)
-        PersonalInfoTab.SetEmployee(employee)
-        SalaryTab21.SetEmployee(employee)
+        If TabControl1.SelectedTab Is TabPage1 Then
+            PersonalInfoTab.SetEmployee(employee)
+        ElseIf TabControl1.SelectedTab Is TabPage2 Then
+            SalaryTab21.SetEmployee(employee)
+        End If
     End Sub
 
     Private Sub EmployeeDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeeDataGridView.SelectionChanged
@@ -66,6 +71,10 @@ Public Class NewEmployeeForm
 
     Private Sub RefreshButton_Click(sender As Object, e As EventArgs) Handles RefreshButton.Click
         RaiseEvent EmployeeRefresh()
+    End Sub
+
+    Private Sub TabControl1_Selected(sender As Object, e As TabControlEventArgs) Handles TabControl1.Selected
+        RaiseEvent TabChanged()
     End Sub
 
 End Class

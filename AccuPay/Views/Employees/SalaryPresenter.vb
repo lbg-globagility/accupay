@@ -16,9 +16,11 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _philHealthPolicy As PhilHealthPolicy
 
-        Private _currentSalary As Salary
+        Private _socialSecurityPolicy As SocialSecurityPolicy
 
-        Private _socialSecurityBrackets As List(Of SocialSecurityBracket)
+        Private _salaries As IList(Of Salary)
+
+        Private _currentSalary As Salary
 
         Public Sub New(view As SalaryTab2)
             _view = view
@@ -37,7 +39,7 @@ Namespace Global.AccuPay.Views.Employees
         End Sub
 
         Private Sub OnNew() Handles _view.NewSalary
-            Dim salary = New Salary() With {
+            _currentSalary = New Salary() With {
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
                 .EmployeeID = _employee.RowID,
@@ -47,13 +49,20 @@ Namespace Global.AccuPay.Views.Employees
                 .EffectiveTo = Nothing
             }
 
-            _view.DisplaySalary(salary)
+            _view.DisplaySalary(_currentSalary)
             _view.DisableSalarySelection()
             _view.ChangeMode(SalaryTab2.Mode.Creating)
         End Sub
 
         Private Sub OnCancel() Handles _view.CancelChanges
-
+            If _view.CurrentMode = SalaryTab2.Mode.Creating Then
+                _currentSalary = _salaries.FirstOrDefault()
+                _view.DisplaySalary(_currentSalary)
+                _view.ChangeMode(SalaryTab2.Mode.Editing)
+                _view.EnableSalarySelection()
+            ElseIf _view.CurrentMode = SalaryTab2.Mode.Editing Then
+                _view.DisplaySalary(_currentSalary)
+            End If
         End Sub
 
         Private Sub OnDelete() Handles _view.DeleteSalary
@@ -62,6 +71,8 @@ Namespace Global.AccuPay.Views.Employees
                 context.Salaries.Remove(_currentSalary)
                 context.SaveChanges()
             End Using
+            _currentSalary = Nothing
+            LoadSalaries()
         End Sub
 
         Private Sub OnSave() Handles _view.SaveSalary
@@ -72,12 +83,14 @@ Namespace Global.AccuPay.Views.Employees
                     Dim socialSecurityBracket = context.SocialSecurityBrackets.
                         FirstOrDefault(Function(s) s.EmployeeContributionAmount = sssAmount)
 
+                    Dim effectiveTo = _view.EffectiveTo
+
                     With _currentSalary
                         .BasicSalary = _view.BasicSalary
                         .AllowanceSalary = _view.AllowanceSalary
                         .TotalSalary = (.BasicSalary + .AllowanceSalary)
                         .EffectiveFrom = _view.EffectiveFrom
-                        .EffectiveTo = _view.EffectiveTo
+                        .EffectiveTo = effectiveTo
                         .PhilHealthDeduction = If(_view.PhilHealth, 0D)
                         .PaySocialSecurityID = socialSecurityBracket?.RowID
                         .SocialSecurityBracket = socialSecurityBracket
@@ -102,15 +115,17 @@ Namespace Global.AccuPay.Views.Employees
 
         Private Sub OnAmountChanged(amount As Decimal) Handles _view.SalaryChanged
             Dim monthlyRate = 0D
+            Dim basicPay = 0D
 
             If _employee.IsDaily Then
                 monthlyRate = amount * PayrollTools.GetWorkDaysPerMonth(_employee.WorkDaysPerYear)
-                _view.BasicSalary = amount
-            ElseIf _employee.EmployeeType = "Monthly" Or _employee.EmployeeType = "Fixed" Then
+
+                basicPay = amount
+            ElseIf _employee.IsMonthly Or _employee.IsFixed Then
                 monthlyRate = amount
 
-                If _employee.PayFrequency.Type = "SEMI-MONTHLY" Then
-
+                If _employee.PayFrequency.IsSemiMonthly Then
+                    basicPay = monthlyRate / 2
                 End If
             End If
 
@@ -118,6 +133,7 @@ Namespace Global.AccuPay.Views.Employees
                 Return
             End If
 
+            _view.BasicPay = basicPay
             UpdateSss(monthlyRate)
             UpdatePhilHealth(monthlyRate)
         End Sub
@@ -125,7 +141,12 @@ Namespace Global.AccuPay.Views.Employees
         Private Sub OnSalarySelected(salary As Salary) Handles _view.SelectSalary
             _currentSalary = salary
 
+            _view.ChangeMode(SalaryTab2.Mode.Editing)
             _view.DisplaySalary(_currentSalary)
+        End Sub
+
+        Private Sub OnSssDelete() Handles _view.DeleteSss
+            _view.Sss = Nothing
         End Sub
 
         Private Sub LoadPhilHealthBrackets()
@@ -136,13 +157,12 @@ Namespace Global.AccuPay.Views.Employees
 
                 Dim values = New ListOfValueCollection(listOfValues)
 
-                _philHealthPolicy = New PhilHealthPolicy() With {
-                    .DeductionType = values.GetStringOrDefault("DeductionType", "Bracket"),
-                    .ContributionRate = values.GetDecimal("Rate"),
-                    .MinimumContribution = values.GetDecimal("MinimumContribution"),
-                    .MaximumContribution = values.GetDecimal("MaximumContribution"),
-                    .Brackets = context.PhilHealthBrackets.ToList()
-                }
+                _philHealthPolicy = New PhilHealthPolicy(
+                    values.GetStringOrDefault("DeductionType", "Bracket"),
+                    values.GetDecimal("Rate"),
+                    values.GetDecimal("MinimumContribution"),
+                    values.GetDecimal("MaximumContribution"),
+                    context.PhilHealthBrackets.ToList())
             End Using
         End Sub
 
@@ -151,72 +171,109 @@ Namespace Global.AccuPay.Views.Employees
                 Return
             End If
 
-            Dim salaries As IList(Of Salary)
-
             Using context = New PayrollContext()
-                salaries = context.Salaries.
+                _salaries = context.Salaries.
                     Include(Function(s) s.SocialSecurityBracket).
                     Where(Function(s) Nullable.Equals(s.EmployeeID, _employee.RowID)).
                     OrderByDescending(Function(s) s.EffectiveFrom).
                     ToList()
             End Using
 
-            If _currentSalary Is Nothing Then
-                _currentSalary = salaries.FirstOrDefault()
+            If _currentSalary Is Nothing OrElse _currentSalary.EmployeeID <> _employee.RowID Then
+                _currentSalary = _salaries.FirstOrDefault()
             End If
 
-            _view.DisplaySalary(_currentSalary)
-            _view.DisplaySalaries(salaries)
+            _view.DisplaySalaries(_salaries)
 
             If _currentSalary IsNot Nothing Then
+                _view.DisplaySalary(_currentSalary)
                 _view.ActivateSelectedSalary(_currentSalary)
+                _view.ChangeMode(SalaryTab2.Mode.Editing)
+            Else
+                _view.ChangeMode(SalaryTab2.Mode.Empty)
             End If
         End Sub
 
         Private Sub LoadSocialSecurityBrackets()
             Using context = New PayrollContext()
-                _socialSecurityBrackets = context.SocialSecurityBrackets.ToList()
+                Dim socialSecurityBrackets = context.SocialSecurityBrackets.ToList()
+
+                _socialSecurityPolicy = New SocialSecurityPolicy(socialSecurityBrackets)
             End Using
         End Sub
 
         Private Sub UpdateSss(monthlyRate As Decimal)
-            Dim socialSecurityBracket = _socialSecurityBrackets?.FirstOrDefault(
-                    Function(s) s.RangeFromAmount <= monthlyRate And monthlyRate <= s.RangeToAmount)
+            Dim bracket = _socialSecurityPolicy.GetBracket(monthlyRate)
 
-            _view.Sss = socialSecurityBracket.EmployeeContributionAmount
+            _view.Sss = bracket?.EmployeeContributionAmount
         End Sub
 
         Private Sub UpdatePhilHealth(monthlyRate As Decimal)
-            Dim philHealthContribution = 0D
-            If _philHealthPolicy.DeductionType = "Formula" Then
-                philHealthContribution = monthlyRate * (_philHealthPolicy.ContributionRate / 100)
-
-                philHealthContribution = {philHealthContribution, _philHealthPolicy.MinimumContribution}.Max()
-                philHealthContribution = {philHealthContribution, _philHealthPolicy.MaximumContribution}.Min()
-                philHealthContribution = AccuMath.Truncate(philHealthContribution, 2)
-            Else
-                Dim philHealthBracket = _philHealthPolicy.Brackets?.FirstOrDefault(
-                    Function(p) p.SalaryRangeFrom <= monthlyRate And monthlyRate <= p.SalaryRangeTo)
-
-                _currentSalary.PayPhilHealthID = philHealthBracket?.RowID
-
-                philHealthContribution = If(philHealthBracket?.TotalMonthlyPremium, 0)
-            End If
+            Dim philHealthContribution = _philHealthPolicy.GetContribution(monthlyRate)
 
             _view.PhilHealth = philHealthContribution
         End Sub
 
         Private Class PhilHealthPolicy
 
-            Public Property DeductionType As String
+            Private Property _deductionType As String
 
-            Public Property ContributionRate As Decimal
+            Private Property _contributionRate As Decimal
 
-            Public Property MinimumContribution As Decimal
+            Private Property _minimumContribution As Decimal
 
-            Public Property MaximumContribution As Decimal
+            Private Property _maximumContribution As Decimal
 
-            Public Property Brackets As List(Of PhilHealthBracket)
+            Private Property _brackets As IList(Of PhilHealthBracket)
+
+            Public Sub New(deductionType As String,
+                           contributionRate As Decimal,
+                           minimumContribution As Decimal,
+                           maximumContribution As Decimal,
+                           brackets As IList(Of PhilHealthBracket))
+                _deductionType = deductionType
+                _contributionRate = contributionRate
+                _minimumContribution = minimumContribution
+                _maximumContribution = maximumContribution
+                _brackets = brackets
+            End Sub
+
+            Public Function GetContribution(monthlyRate As Decimal) As Decimal
+                Dim contribution = 0D
+
+                If _deductionType = "Formula" Then
+                    contribution = monthlyRate * (_contributionRate / 100)
+
+                    contribution = {contribution, _minimumContribution}.Max()
+                    contribution = {contribution, _maximumContribution}.Min()
+
+                    contribution = AccuMath.Truncate(contribution, 2)
+                Else
+                    Dim philHealthBracket = _brackets?.FirstOrDefault(
+                        Function(p) p.SalaryRangeFrom <= monthlyRate And monthlyRate <= p.SalaryRangeTo)
+
+                    contribution = If(philHealthBracket?.TotalMonthlyPremium, 0)
+                End If
+
+                Return contribution
+            End Function
+
+        End Class
+
+        Private Class SocialSecurityPolicy
+
+            Public _socialSecurityBrackets As IList(Of SocialSecurityBracket)
+
+            Public Sub New(socialSecurityBrackets As IList(Of SocialSecurityBracket))
+                _socialSecurityBrackets = socialSecurityBrackets
+            End Sub
+
+            Public Function GetBracket(monthlyRate As Decimal) As SocialSecurityBracket
+                Dim socialSecurityBracket = _socialSecurityBrackets?.FirstOrDefault(
+                        Function(s) s.RangeFromAmount <= monthlyRate And monthlyRate <= s.RangeToAmount)
+
+                Return socialSecurityBracket
+            End Function
 
         End Class
 
