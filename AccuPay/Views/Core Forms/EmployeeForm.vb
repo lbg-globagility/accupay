@@ -8855,7 +8855,6 @@ Public Class EmployeeForm
                 Dim tot_loan = (ValNoComma(FormatNumber(loan_amt, 2)) * numpayp)
                 Dim roundoff_decim = Math.Round(tot_loan, 2)
 
-
                 loan_amt = (loan_amt + (loan_amt * loan_interest))
 
                 loan_amt = FormatNumber(loan_amt, 2).ToString.Replace(",", "")
@@ -8880,7 +8879,6 @@ Public Class EmployeeForm
                 Dim tot_loan = (ValNoComma(FormatNumber(loan_amt, 2)) * numpayp)
 
                 Dim roundoff_decim = Math.Round(tot_loan, 2)
-
 
                 loan_amt = FormatNumber(loan_amt, 2).ToString.Replace(",", "")
 
@@ -9103,9 +9101,11 @@ Public Class EmployeeForm
 
             If prompt = DialogResult.Yes Then
                 Using context = New PayrollContext()
-                    Dim loanSchedule = context.LoanSchedules.Find(loanScheduleID)
+                    Dim loanSchedule = context.LoanSchedules.
+                        Include(Function(l) l.LoanTransactions).
+                        SingleOrDefault(Function(l) Nullable.Equals(l.RowID, loanScheduleID))
 
-                    If loanSchedule.LoanTransactions.Count() > 0 Then
+                    If loanSchedule.LoanTransactions.Any() Then
                         Dim secondPrompt = MessageBox.Show(
                             "This loan has already started, are you sure you want to delete this loan? Doing this might affect previous cutoffs.",
                             "Confirm deletion",
