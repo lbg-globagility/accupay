@@ -13,9 +13,7 @@ Public Class PaystubPresenter
 
     Private _paystubs As IList(Of Paystub)
 
-    Private _dateFrom As Date
-
-    Private _dateTo As Date
+    Private _isActual As Boolean
 
     Private WithEvents _view As PaystubView
 
@@ -58,8 +56,12 @@ Public Class PaystubPresenter
         End Using
 
         _view.ShowAdjustments(adjustments)
-        _view.ShowSalary(_currentPaystub.Employee, salary)
-        _view.ShowPaystub(_currentPaystub, Nothing)
+        _view.ShowSalary(_currentPaystub.Employee, salary, _isActual)
+        _view.ShowPaystub(_currentPaystub, Nothing, _isActual)
+    End Sub
+
+    Private Sub OnToogleActual() Handles _view.ToggleActual
+        _isActual = Not _isActual
     End Sub
 
     Private Sub OnSearch(term As String) Handles _view.Search

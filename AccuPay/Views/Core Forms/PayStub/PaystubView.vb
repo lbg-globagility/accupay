@@ -16,11 +16,6 @@ Public Class PaystubView
 
     Public Event ToggleActual()
 
-    Private _isActual As Boolean = False
-
-    Private _dateFrom As Date = New Date(2017, 1, 1)
-    Private _dateTo As Date = New Date(2017, 1, 15)
-
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
@@ -43,12 +38,12 @@ Public Class PaystubView
         dgvPaystubs.DataSource = paystubModels
     End Sub
 
-    Public Sub ShowSalary(employee As Employee, salary As Salary)
+    Public Sub ShowSalary(employee As Employee, salary As Salary, isActual As Boolean)
         If salary Is Nothing Then
             Return
         End If
 
-        Dim amount = If(_isActual, salary.TotalSalary, salary.BasicSalary)
+        Dim amount = If(isActual, salary.TotalSalary, salary.BasicSalary)
 
         Dim dailyRate = 0D
         If employee.IsMonthly Or employee.IsFixed Then
@@ -75,7 +70,7 @@ Public Class PaystubView
         dgvTimeEntries.DataSource = timeEntries
     End Sub
 
-    Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvPaystubs.CellFormatting, dgvAdjustments.CellFormatting
+    Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvPaystubs.CellFormatting
         Dim dataGridView = DirectCast(sender, DataGridView)
 
         Dim column As DataGridViewColumn = dataGridView.Columns(e.ColumnIndex)
@@ -93,7 +88,7 @@ Public Class PaystubView
         End If
     End Sub
 
-    Private Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged, dgvAdjustments.SelectionChanged
+    Private Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged
         Try
             Dim paystubModel = DirectCast(dgvPaystubs.CurrentRow.DataBoundItem, PayStubModel)
 
@@ -109,7 +104,7 @@ Public Class PaystubView
         End Try
     End Sub
 
-    Public Sub ShowPaystub(declared As Paystub, actual As PaystubActual)
+    Public Sub ShowPaystub(declared As Paystub, actual As PaystubActual, isActual As Boolean)
         txtBasicHours.Text = Format(declared.BasicHours)
         txtBasicPay.Text = Format(declared.BasicPay)
 
@@ -117,42 +112,42 @@ Public Class PaystubView
         txtRegularPay.Text = Format(declared.RegularPay)
 
         txtOvertimeHours.Text = Format(declared.OvertimeHours)
-        txtOvertimePay.Text = Format(If(_isActual, actual.OvertimePay, declared.OvertimePay))
+        txtOvertimePay.Text = Format(If(isActual, actual.OvertimePay, declared.OvertimePay))
 
         txtNightDiffHours.Text = Format(declared.NightDiffHours)
-        txtNightDiffPay.Text = Format(If(_isActual, actual.NightDiffPay, declared.NightDiffPay))
+        txtNightDiffPay.Text = Format(If(isActual, actual.NightDiffPay, declared.NightDiffPay))
 
         txtNightDiffOTHours.Text = Format(declared.NightDiffOvertimeHours)
-        txtNightDiffOTPay.Text = Format(If(_isActual, actual.NightDiffOTPay, declared.NightDiffOvertimePay))
+        txtNightDiffOTPay.Text = Format(If(isActual, actual.NightDiffOTPay, declared.NightDiffOvertimePay))
 
         txtRestDayHours.Text = Format(declared.RestDayHours)
-        txtRestDayPay.Text = Format(If(_isActual, actual.RestDayPay, declared.RestDayPay))
+        txtRestDayPay.Text = Format(If(isActual, actual.RestDayPay, declared.RestDayPay))
 
         txtRestDayOTHours.Text = Format(declared.RestDayOTHours)
-        txtRestDayOTPay.Text = Format(If(_isActual, actual.RestDayOTPay, declared.RestDayOTPay))
+        txtRestDayOTPay.Text = Format(If(isActual, actual.RestDayOTPay, declared.RestDayOTPay))
 
         txtSpecialHolidayHours.Text = Format(declared.SpecialHolidayHours)
-        txtSpecialHolidayPay.Text = Format(If(_isActual, actual.SpecialHolidayPay, declared.SpecialHolidayPay))
+        txtSpecialHolidayPay.Text = Format(If(isActual, actual.SpecialHolidayPay, declared.SpecialHolidayPay))
 
         txtRegularHolidayHours.Text = Format(declared.RegularHolidayHours)
-        txtRegularHolidayPay.Text = Format(If(_isActual, actual.RegularHolidayPay, declared.RegularHolidayPay))
+        txtRegularHolidayPay.Text = Format(If(isActual, actual.RegularHolidayPay, declared.RegularHolidayPay))
 
         txtLeaveHours.Text = Format(declared.LeaveHours)
         txtLeavePay.Text = Format(declared.LeavePay)
 
         txtLateHours.Text = Format(declared.LateHours)
-        txtLateAmount.Text = Format(-If(_isActual, actual.LateDeduction, declared.LateDeduction))
+        txtLateAmount.Text = Format(-If(isActual, actual.LateDeduction, declared.LateDeduction))
 
         txtUndertimeHours.Text = Format(declared.UndertimeHours)
-        txtUndertimeAmount.Text = Format(-If(_isActual, actual.UndertimeDeduction, declared.UndertimeDeduction))
+        txtUndertimeAmount.Text = Format(-If(isActual, actual.UndertimeDeduction, declared.UndertimeDeduction))
 
         txtAbsentHours.Text = Format(declared.AbsentHours)
-        txtAbsentDeduction.Text = Format(-If(_isActual, actual.AbsenceDeduction, declared.AbsenceDeduction))
+        txtAbsentDeduction.Text = Format(-If(isActual, actual.AbsenceDeduction, declared.AbsenceDeduction))
 
         txtDeductionHours.Text = Format(declared.LateHours + declared.UndertimeHours + declared.AbsentHours)
 
         Dim deductedAmount = If(
-            _isActual,
+            isActual,
             actual.LateDeduction + actual.UndertimeDeduction + actual.AbsenceDeduction,
             declared.LateDeduction + declared.UndertimeDeduction + declared.AbsenceDeduction)
         txtDeductionAmount.Text = Format(-deductedAmount)
@@ -160,7 +155,7 @@ Public Class PaystubView
         txtTotalEarnings.Text = Format(declared.TotalEarnings)
 
         txtTotalAllowance.Text = Format(declared.TotalAllowance)
-        txtGrossPay.Text = Format(If(_isActual, actual.GrossPay, declared.GrossPay))
+        txtGrossPay.Text = Format(If(isActual, actual.GrossPay, declared.GrossPay))
 
         txtSss.Text = Format(-declared.SssEmployeeShare)
         txtPhilHealth.Text = Format(-declared.PhilHealthEmployeeShare)
@@ -170,7 +165,7 @@ Public Class PaystubView
         txtWithholdingTax.Text = Format(-declared.WithholdingTax)
         txtTotalLoan.Text = Format(-declared.TotalLoans)
 
-        txtNetPay.Text = Format(If(_isActual, actual.NetPay, declared.NetPay))
+        txtNetPay.Text = Format(If(isActual, actual.NetPay, declared.NetPay))
     End Sub
 
     Public Sub ShowAdjustments(adjustments As IList(Of Adjustment))
@@ -196,11 +191,14 @@ Public Class PaystubView
     End Sub
 
     Private Sub btnActualToggle_Click(sender As Object, e As EventArgs) Handles btnActualToggle.Click
-        _isActual = Not _isActual
+        RaiseEvent ToggleActual()
     End Sub
 
     Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
-        Dim exporter = New ExportBankFile(_dateFrom, _dateTo)
+        Dim dateFrom As Date = New Date(2017, 1, 1)
+        Dim dateTo As Date = New Date(2017, 1, 15)
+
+        Dim exporter = New ExportBankFile(dateFrom, dateTo)
         exporter.Extract()
     End Sub
 
