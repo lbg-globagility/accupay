@@ -336,6 +336,7 @@
     <Compile Include="Domain\Commons\AccuMath.vb" />
     <Compile Include="Domain\Commons\CalendarConstants.vb" />
     <Compile Include="Domain\Commons\DailyAllowanceCalculator.vb" />
+    <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\Commons\DebugUtility.vb" />
     <Compile Include="Domain\Commons\Enums.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
