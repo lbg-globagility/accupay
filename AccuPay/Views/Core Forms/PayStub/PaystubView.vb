@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.ComponentModel
 Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
@@ -16,18 +17,15 @@ Public Class PaystubView
 
     Public Event ToggleActual()
 
+    Private WithEvents _adjustmentSource As BindingSource
+
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
         ' Add any initialization after the InitializeComponent() call.
         Dim presenter = New PaystubPresenter(Me)
-    End Sub
-
-    Public Sub NewPayStubForm_Load() Handles Me.Load
-        dgvTimeEntries.AutoGenerateColumns = False
-        dgvPaystubs.AutoGenerateColumns = False
-
-        RaiseEvent Init()
+        _adjustmentSource = New BindingSource()
+        _adjustmentSource.AllowNew = True
     End Sub
 
     Public Sub ShowPaystubs(paystubs As IList(Of Paystub))
@@ -68,40 +66,6 @@ Public Class PaystubView
 
     Public Sub ShowTimeEntries(timeEntries As IList(Of TimeEntry))
         dgvTimeEntries.DataSource = timeEntries
-    End Sub
-
-    Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvPaystubs.CellFormatting
-        Dim dataGridView = DirectCast(sender, DataGridView)
-
-        Dim column As DataGridViewColumn = dataGridView.Columns(e.ColumnIndex)
-        If (column.DataPropertyName.Contains(".")) Then
-            Dim data As Object = dataGridView.Rows(e.RowIndex).DataBoundItem
-            Dim properties As String() = column.DataPropertyName.Split("."c)
-
-            Dim i As Integer = 0
-            While i < properties.Length And data IsNot Nothing
-                data = data.GetType().GetProperty(properties(i)).GetValue(data)
-                i += 1
-            End While
-
-            dataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = data
-        End If
-    End Sub
-
-    Private Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged
-        Try
-            Dim paystubModel = DirectCast(dgvPaystubs.CurrentRow.DataBoundItem, PayStubModel)
-
-            If paystubModel Is Nothing Then
-                Return
-            End If
-
-            Dim paystub = paystubModel.Paystub
-
-            RaiseEvent SelectPaystub(paystub)
-        Catch ex As Exception
-
-        End Try
     End Sub
 
     Public Sub ShowPaystub(declared As Paystub, actual As PaystubActual, isActual As Boolean)
@@ -169,7 +133,78 @@ Public Class PaystubView
     End Sub
 
     Public Sub ShowAdjustments(adjustments As IList(Of Adjustment))
-        dgvAdjustments.DataSource = adjustments
+        Dim adjustmentModels = adjustments.
+            Select(Function(a) New AdjustmentModel() With {
+                .Name = a.Product.Name,
+                .Amount = a.Amount,
+                .Remarks = a.Comment
+            }).
+            ToList()
+
+        _adjustmentSource.DataSource = adjustmentModels
+    End Sub
+
+    Private Sub dataGridView1_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs)
+        Dim column As Integer = dgvAdjustments.CurrentCell.ColumnIndex
+        Dim headerText As String = dgvAdjustments.Columns(column).HeaderText
+
+        If (headerText.Equals("Name")) Then
+            Dim tb As TextBox = DirectCast(e.Control, TextBox)
+
+            If (tb IsNot Nothing) Then
+                tb.AutoCompleteMode = AutoCompleteMode.SuggestAppend
+                'tb.AutoCompleteCustomSource = AutoCompleteLoad()
+                tb.AutoCompleteSource = AutoCompleteSource.CustomSource
+            End If
+        End If
+    End Sub
+
+    Private Sub NewPayStubForm_Load() Handles Me.Load
+        dgvTimeEntries.AutoGenerateColumns = False
+        dgvPaystubs.AutoGenerateColumns = False
+        dgvAdjustments.DataSource = _adjustmentSource
+
+        RaiseEvent Init()
+    End Sub
+
+    Private Sub PayStubDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvPaystubs.CellFormatting
+        Dim dataGridView = DirectCast(sender, DataGridView)
+
+        Dim column As DataGridViewColumn = dataGridView.Columns(e.ColumnIndex)
+        If (column.DataPropertyName.Contains(".")) Then
+            Dim data As Object = dataGridView.Rows(e.RowIndex).DataBoundItem
+            Dim properties As String() = column.DataPropertyName.Split("."c)
+
+            Dim i As Integer = 0
+            While i < properties.Length And data IsNot Nothing
+                data = data.GetType().GetProperty(properties(i)).GetValue(data)
+                i += 1
+            End While
+
+            dataGridView.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = data
+        End If
+    End Sub
+
+    Private Sub dgvPaystubs_SelectionChanged(sender As Object, e As EventArgs) Handles dgvPaystubs.SelectionChanged
+        Try
+            Dim paystubModel = DirectCast(dgvPaystubs.CurrentRow.DataBoundItem, PayStubModel)
+
+            If paystubModel Is Nothing Then
+                Return
+            End If
+
+            Dim paystub = paystubModel.Paystub
+
+            RaiseEvent SelectPaystub(paystub)
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub OnAdjustmentAdding(sender As Object, e As AddingNewEventArgs) Handles _adjustmentSource.AddingNew
+        Dim newAdjustment = New AdjustmentModel()
+
+        e.NewObject = newAdjustment
     End Sub
 
     Private Function Format(value As Decimal) As String
@@ -201,6 +236,16 @@ Public Class PaystubView
         Dim exporter = New ExportBankFile(dateFrom, dateTo)
         exporter.Extract()
     End Sub
+
+    Public Class AdjustmentModel
+
+        Public Property Name As String
+
+        Public Property Amount As Decimal
+
+        Public Property Remarks As String
+
+    End Class
 
     Private Class PayStubModel
 

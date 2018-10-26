@@ -158,6 +158,7 @@ Partial Class PaystubView
         Me.Column28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.PaystubTab = New System.Windows.Forms.TabPage()
+        Me.dgvAdjustments = New System.Windows.Forms.DataGridView()
         Me.txtTotalAmount = New System.Windows.Forms.TextBox()
         Me.txt13thMonthPay = New System.Windows.Forms.TextBox()
         Me.txtNetPay = New System.Windows.Forms.TextBox()
@@ -321,13 +322,13 @@ Partial Class PaystubView
         Me.DataGridViewTextBoxColumn58 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn59 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn60 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvAdjustments = New System.Windows.Forms.DataGridView()
-        Me.Column44 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column44 = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
         Me.Column45 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column46 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvPaystubs, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.PaystubTab.SuspendLayout()
+        CType(Me.dgvAdjustments, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TimeEntryTab.SuspendLayout()
         CType(Me.dgvTimeEntries, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DS1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -336,7 +337,6 @@ Partial Class PaystubView
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
-        CType(Me.dgvAdjustments, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'dgvPaystubs
@@ -868,6 +868,15 @@ Partial Class PaystubView
         Me.PaystubTab.TabIndex = 0
         Me.PaystubTab.Text = "Paystub"
         Me.PaystubTab.UseVisualStyleBackColor = True
+        '
+        'dgvAdjustments
+        '
+        Me.dgvAdjustments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvAdjustments.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column44, Me.Column45, Me.Column46})
+        Me.dgvAdjustments.Location = New System.Drawing.Point(264, 392)
+        Me.dgvAdjustments.Name = "dgvAdjustments"
+        Me.dgvAdjustments.Size = New System.Drawing.Size(408, 150)
+        Me.dgvAdjustments.TabIndex = 23
         '
         'txtTotalAmount
         '
@@ -2609,27 +2618,22 @@ Partial Class PaystubView
         Me.DataGridViewTextBoxColumn60.Name = "DataGridViewTextBoxColumn60"
         Me.DataGridViewTextBoxColumn60.Width = 60
         '
-        'dgvAdjustments
-        '
-        Me.dgvAdjustments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvAdjustments.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column44, Me.Column45, Me.Column46})
-        Me.dgvAdjustments.Location = New System.Drawing.Point(440, 8)
-        Me.dgvAdjustments.Name = "dgvAdjustments"
-        Me.dgvAdjustments.Size = New System.Drawing.Size(232, 150)
-        Me.dgvAdjustments.TabIndex = 23
-        '
         'Column44
         '
+        Me.Column44.DataPropertyName = "Name"
         Me.Column44.HeaderText = "Name"
         Me.Column44.Name = "Column44"
+        Me.Column44.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         '
         'Column45
         '
+        Me.Column45.DataPropertyName = "Amount"
         Me.Column45.HeaderText = "Amount"
         Me.Column45.Name = "Column45"
         '
         'Column46
         '
+        Me.Column46.DataPropertyName = "Remarks"
         Me.Column46.HeaderText = "Remarks"
         Me.Column46.Name = "Column46"
         '
@@ -2648,6 +2652,7 @@ Partial Class PaystubView
         Me.TabControl1.ResumeLayout(False)
         Me.PaystubTab.ResumeLayout(False)
         Me.PaystubTab.PerformLayout()
+        CType(Me.dgvAdjustments, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TimeEntryTab.ResumeLayout(False)
         CType(Me.dgvTimeEntries, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DS1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2658,7 +2663,6 @@ Partial Class PaystubView
         Me.Panel2.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
-        CType(Me.dgvAdjustments, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2868,7 +2872,7 @@ Partial Class PaystubView
     Friend WithEvents Label34 As Label
     Friend WithEvents ToolStripButton3 As ToolStripButton
     Friend WithEvents dgvAdjustments As DataGridView
-    Friend WithEvents Column44 As DataGridViewTextBoxColumn
+    Friend WithEvents Column44 As EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn
     Friend WithEvents Column45 As DataGridViewTextBoxColumn
     Friend WithEvents Column46 As DataGridViewTextBoxColumn
 End Class

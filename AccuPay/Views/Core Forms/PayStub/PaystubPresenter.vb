@@ -113,6 +113,7 @@ Public Class PaystubPresenter
 
         Public Async Function GetAdjustments(paystub As Paystub) As Task(Of IList(Of Adjustment))
             Dim query = _context.Adjustments.
+                Include(Function(a) a.Product).
                 Where(Function(t) Nullable.Equals(t.PaystubID, paystub.RowID))
 
             Return Await query.ToListAsync()
