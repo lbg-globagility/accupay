@@ -203,6 +203,8 @@ Public Class TimeEntrySummaryForm
             timeEntries = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
         End If
 
+        SetVisibleColumns(timeEntries)
+
         timeEntriesDataGridView.DataSource = timeEntries
     End Sub
 
