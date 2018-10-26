@@ -255,6 +255,10 @@ Public Class PayrollGeneration
 
             Dim newLoanTransactions = ComputeLoans()
 
+            If _paystub.TotalEarnings < 0 Then
+                _paystub.TotalEarnings = 0
+            End If
+
             _paystub.GrossPay = _paystub.TotalEarnings + _paystub.TotalBonus + _paystub.TotalAllowance
 
             Dim governmentContributions = _paystub.SssEmployeeShare + _paystub.PhilHealthEmployeeShare + _paystub.HdmfEmployeeShare
@@ -601,7 +605,7 @@ Public Class PayrollGeneration
             Dim acceptedLoans As String() = {}
             If _payPeriod.IsFirstHalf Then
                 acceptedLoans = {"Per pay period", "First half"}
-            ElseIf _payperiod.IsEndOfTheMonth Then
+            ElseIf _payPeriod.IsEndOfTheMonth Then
                 acceptedLoans = {"Per pay period", "End of the month"}
             End If
 
