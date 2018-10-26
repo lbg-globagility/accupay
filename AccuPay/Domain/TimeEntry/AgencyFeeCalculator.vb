@@ -31,13 +31,9 @@ Public Class AgencyFeeCalculator
                     .Date = timeEntry.Date}
             End If
 
-            Dim basicHours =
-                (timeEntry.RegularHours +
-                timeEntry.RestDayHours +
-                timeEntry.SpecialHolidayHours +
-                timeEntry.RegularHolidayHours)
-
-            agencyFee.Amount = (_agency.Fee / HoursPerDay) * basicHours
+            Dim basicHours = AccuMath.CommercialRound(timeEntry.BasicHours)
+            Dim hourlyFee = _agency.Fee / HoursPerDay
+            agencyFee.Amount = basicHours * hourlyFee
 
             agencyFees.Add(agencyFee)
         Next

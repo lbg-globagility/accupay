@@ -13,7 +13,7 @@
 
     ''' <summary>
     ''' Perform a commercial rounding away from zero.
-    ''' 
+    '''
     ''' ex:
     ''' 1.284 -> 1.28
     ''' 1.285 -> 1.29
