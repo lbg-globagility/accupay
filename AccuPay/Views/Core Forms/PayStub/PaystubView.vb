@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel
 Imports AccuPay.Entity
+Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
 
@@ -24,8 +25,9 @@ Public Class PaystubView
         InitializeComponent()
         ' Add any initialization after the InitializeComponent() call.
         Dim presenter = New PaystubPresenter(Me)
-        _adjustmentSource = New BindingSource()
-        _adjustmentSource.AllowNew = True
+        _adjustmentSource = New BindingSource With {
+            .AllowNew = True
+        }
     End Sub
 
     Public Sub ShowPaystubs(paystubs As IList(Of Paystub))
@@ -133,6 +135,28 @@ Public Class PaystubView
         txtNetPay.Text = Format(If(isActual, actual.NetPay, declared.NetPay))
     End Sub
 
+    Public Sub ShowAllowanceItems(allowanceItems As IList(Of AllowanceItem))
+        Dim allowanceItemModels = allowanceItems.
+            Select(Function(a) New AllowanceItemModel() With {
+                .Name = a.Allowance.Product.PartNo,
+                .Amount = a.Amount
+            }).
+            ToList()
+
+        dgvAllowances.DataSource = allowanceItemModels
+    End Sub
+
+    Public Sub ShowLoanTransactions(loanTransactions As IList(Of LoanTransaction))
+        Dim loanTransactionModels = loanTransactions.
+            Select(Function(l) New LoanTransactionModel() With {
+                .Name = l.LoanSchedule.LoanType.PartNo,
+                .Amount = l.Amount,
+                .Balance = l.TotalBalance
+            }).ToList()
+
+        dgvLoanTransactions.DataSource = loanTransactionModels
+    End Sub
+
     Public Sub ShowAdjustments(adjustments As IList(Of Adjustment))
         Dim adjustmentModels = adjustments.
             Select(Function(a) New AdjustmentModel() With {
@@ -163,6 +187,9 @@ Public Class PaystubView
     Private Sub NewPayStubForm_Load() Handles Me.Load
         dgvTimeEntries.AutoGenerateColumns = False
         dgvPaystubs.AutoGenerateColumns = False
+        dgvAllowances.AutoGenerateColumns = False
+        dgvLoanTransactions.AutoGenerateColumns = False
+
         dgvAdjustments.DataSource = _adjustmentSource
 
         RaiseEvent Init()
@@ -238,6 +265,14 @@ Public Class PaystubView
         exporter.Extract()
     End Sub
 
+    Public Class AllowanceItemModel
+
+        Public Property Name As String
+
+        Public Property Amount As Decimal
+
+    End Class
+
     Public Class AdjustmentModel
 
         Public Property Name As String
@@ -245,6 +280,16 @@ Public Class PaystubView
         Public Property Amount As Decimal
 
         Public Property Remarks As String
+
+    End Class
+
+    Public Class LoanTransactionModel
+
+        Public Property Name As String
+
+        Public Property Amount As Decimal
+
+        Public Property Balance As Decimal
 
     End Class
 
@@ -271,9 +316,29 @@ Public Class PaystubView
         Public Property Item As PayPeriod
 
         Public Sub New(payPeriod As PayPeriod)
-            Display = $"{payPeriod.PayFromDate.ToString("MM/dd/yyyy")} {payPeriod.PayToDate.ToString("MM/dd/yyyy")}"
             Item = payPeriod
+            Display = $"{GetPeriod()} - {payPeriod.PayFromDate.ToString("MM/dd/yyyy")} to {payPeriod.PayToDate.ToString("MM/dd/yyyy")}"
         End Sub
+
+        Public Function GetPeriod() As String
+            If Item.IsMonthly Then
+                Dim month = New Date(Item.Year, Item.Month, 1)
+                Dim halfNo = String.Empty
+
+                If Item.IsFirstHalf Then
+                    halfNo = "1st Half"
+                ElseIf Item.IsEndOfTheMonth Then
+                    halfNo = "2nd Half"
+                End If
+
+                Return $"{month.ToString("MMM")} {halfNo}"
+            ElseIf Item.IsWeekly Then
+                ' Not implemented yet
+                Return String.Empty
+            Else
+                Return String.Empty
+            End If
+        End Function
 
     End Class
 

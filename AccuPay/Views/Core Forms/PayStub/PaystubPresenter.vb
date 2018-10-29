@@ -2,6 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
 
@@ -50,14 +51,21 @@ Public Class PaystubPresenter
 
         Dim salary As Salary = Nothing
         Dim adjustments As IList(Of Adjustment) = Nothing
+        Dim allowanceItems As IList(Of AllowanceItem) = Nothing
+        Dim loanTransactions As IList(Of LoanTransaction) = Nothing
+
         Using repository = New Repository()
             salary = Await repository.GetSalary(_currentPaystub)
             adjustments = Await repository.GetAdjustments(_currentPaystub)
+            allowanceItems = Await repository.GetAllowanceItems(_currentPaystub.RowID)
+            loanTransactions = Await repository.GetLoanTransactions(_currentPaystub.PayPeriodID, _currentPaystub.EmployeeID)
         End Using
 
-        _view.ShowAdjustments(adjustments)
         _view.ShowSalary(_currentPaystub.Employee, salary, _isActual)
         _view.ShowPaystub(_currentPaystub, Nothing, _isActual)
+        _view.ShowAllowanceItems(allowanceItems)
+        _view.ShowLoanTransactions(loanTransactions)
+        _view.ShowAdjustments(adjustments)
     End Sub
 
     Private Sub OnToogleActual() Handles _view.ToggleActual
@@ -107,6 +115,28 @@ Public Class PaystubPresenter
             Dim query = _context.TimeEntries.
                 Where(Function(t) dateFrom <= t.Date And t.Date <= dateTo).
                 Where(Function(t) Nullable.Equals(t.EmployeeID, employeeID))
+
+            Return Await query.ToListAsync()
+        End Function
+
+        Public Async Function GetAllowanceItems(paystubID As Integer?) As Task(Of IList(Of AllowanceItem))
+            Dim query = _context.Paystubs.
+                Include(Function(p) p.AllowanceItems).
+                    ThenInclude(Function(a) a.Allowance).
+                        ThenInclude(Function(p) p.Product).
+                Where(Function(p) Nullable.Equals(p.RowID, paystubID))
+
+            Dim paystub = Await query.SingleOrDefaultAsync()
+
+            Return paystub.AllowanceItems
+        End Function
+
+        Public Async Function GetLoanTransactions(payperiodID As Integer?, employeeID As Integer?) As Task(Of IList(Of LoanTransaction))
+            Dim query = _context.LoanTransactions.
+                Include(Function(l) l.LoanSchedule).
+                    ThenInclude(Function(s) s.LoanType).
+                Where(Function(l) Nullable.Equals(l.PayPeriodID, payperiodID)).
+                Where(Function(l) Nullable.Equals(l.EmployeeID, employeeID))
 
             Return Await query.ToListAsync()
         End Function
