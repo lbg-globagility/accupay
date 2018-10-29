@@ -127,6 +127,7 @@ Public Class PaystubView
 
         txtTaxable.Text = Format(declared.TaxableIncome)
         txtWithholdingTax.Text = Format(-declared.WithholdingTax)
+        txtTotalAdjustments.Text = Format(If(isActual, actual.TotalAdjustments, declared.TotalAdjustments))
         txtTotalLoan.Text = Format(-declared.TotalLoans)
 
         txtNetPay.Text = Format(If(isActual, actual.NetPay, declared.NetPay))
