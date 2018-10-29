@@ -235,6 +235,8 @@ Public Class SalaryTab2
     End Sub
 
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+        Me.Focus()
+
         RaiseEvent SaveSalary()
     End Sub
 
