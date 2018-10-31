@@ -50,7 +50,7 @@ SELECT
         0
     ) `COL72`,
     IF(IsActualFlag = 1, es.TrueSalary, es.Salary) `COL80`,
-    0 AS `COL2`,
+    0 AS `COL2`, -- Deprecated
     ROUND(
         IF(
             e.EmployeeType IN ('Fixed', 'Monthly'),
@@ -62,53 +62,53 @@ SELECT
             IFNULL(ete.RegularHoursAmount, 0)
         ),
         2
-    ) AS `COL3`,
-    IFNULL(ete.UndertimeHours, 0) AS `COL4`,
+    ) AS `COL3`, -- Deprecated
+    IFNULL(ete.UndertimeHours, 0) AS `COL4`, -- Deprecated
     IFNULL(ete.Absent + IF(e.EmployeeType = 'Monthly', ete.Leavepayment, 0), 0) AS `COL5`,
     IFNULL(ete.HoursLate, 0) AS `COL6`,
-    IFNULL(ete.HoursLateAmount, 0) AS `COL7`,
+    IFNULL(ps.LateDeduction, 0) AS `COL7`,
     IFNULL(ete.UndertimeHours, 0) AS `COL8`,
-    IFNULL(ete.UndertimeHoursAmount,0) AS `COL9`,
-    0 AS `COL10`,
-    0 AS `COL11`,
+    IFNULL(ps.UndertimeDeduction, 0) AS `COL9`,
+    0 AS `COL10`, -- Deprecated
+    0 AS `COL11`, -- Deprecated
     (
         IFNULL(ete.OvertimeHoursWorked, 0)
      ) AS `COL12`,
     (
-        IFNULL(ete.OvertimeHoursAmount, 0) +
-        IFNULL(ete.NightDiffOTHoursAmount, 0) +
-        IFNULL(ete.RestDayOTPay, 0) +
+        IFNULL(ps.OvertimePay, 0) +
+        IFNULL(ps.NightDiffOvertimePay, 0) +
+        IFNULL(ps.RestDayOTPay, 0) +
         IFNULL(ps.SpecialHolidayOTPay, 0) +
         IFNULL(ps.RegularHolidayOTPay, 0)
      ) AS `COL13`,
     IFNULL(ete.NightDifferentialHours, 0) AS `COL14`,
-    IFNULL(ete.NightDiffHoursAmount, 0) AS `COL15`,
-    0 AS `COL16`,
-    IFNULL(ete.HolidayPayAmount, 0) + IFNULL(ete.RestDayAmount, 0) AS `COL17`,
+    IFNULL(ps.NightDiffPay, 0) AS `COL15`,
+    0 AS `COL16`, -- Deprecated
+    IFNULL(ete.HolidayPayAmount, 0) + IFNULL(ete.RestDayAmount, 0) AS `COL17`, -- Deprecated
     (ps.TotalAllowance - IFNULL(psiECOLA.PayAmount, 0)) AS `COL18`,
     ps.TotalAdjustments `COL19`,
     (ps.TotalGrossSalary + ps.TotalAdjustments) AS `COL20`,
     ps.TotalEmpSSS AS `COL21`,
     ps.TotalEmpPhilhealth AS `COL22`,
     ps.TotalEmpHDMF AS `COL23`,
-    ps.TotalTaxableSalary AS `COL24`,
+    ps.TotalTaxableSalary AS `COL24`, -- Deprecated
     ps.TotalEmpWithholdingTax AS `COL25`,
     ps.TotalLoans AS `COL26`,
     ps.TotalNetSalary AS `COL27`,
-    allowances.`Names` AS `COL28`,
-    allowances.PayAmounts AS `COL29`,
-    ps.TotalAllowance AS `COL30`,
+    allowances.`Names` AS `COL28`, -- Deprecated
+    allowances.PayAmounts AS `COL29`, -- Deprecated
+    ps.TotalAllowance AS `COL30`, -- Deprecated
     payStubLoans.`Names` AS `COL31`,
     payStubLoans.PayAmounts AS `COL32`,
     payStubLoans.TotalBalanceLeft AS `COl36`,
-    ps.TotalLoans AS `COL33`,
-    0 AS `COL34`,
-    0 AS `COL35`,
-    adjustments.`Names` AS `COL37`,
-    adjustments.PayAmounts AS `COL38`,
+    ps.TotalLoans AS `COL33`, -- Deprecated
+    0 AS `COL34`, -- Deprecated
+    0 AS `COL35`, -- Deprecated
+    adjustments.`Names` AS `COL37`, -- Deprecated
+    adjustments.PayAmounts AS `COL38`,-- Deprecated
     (IFNULL(ete.VacationLeaveHours,0) + IFNULL(ete.SickLeaveHours,0) + IFNULL(ete.MaternityLeaveHours,0) + IFNULL(ete.OtherLeaveHours,0)) AS `COL40`,
     IFNULL(ete.Leavepayment,0) AS `COL41`,
-	 IFNULL(ps.HolidayPay, 0) + IFNULL(ps.RestDayPay, 0) AS `COL42`,
+	IFNULL(ps.HolidayPay, 0) + IFNULL(ps.RestDayPay, 0) AS `COL42`,
     IFNULL(psiECOLA.PayAmount,0) AS `COL43`,
     psiLeave.`Names` AS `COL44`,
     psiLeave.Availed AS `COl45`,
@@ -125,8 +125,14 @@ FROM (
             PayFromDate,
             PayToDate,
             HolidayPay,
+            OvertimePay,
+            NightDiffPay,
+            NightDiffOvertimePay,
+            RestDayOTPay,
             SpecialHolidayOTPay,
             RegularHolidayOTPay,
+            LateDeduction,
+            UndertimeDeduction,
             TotalGrossSalary,
             TotalNetSalary,
             TotalTaxableSalary,
@@ -158,8 +164,14 @@ FROM (
             PayFromDate,
             PayToDate,
             HolidayPay,
+            OvertimePay,
+            NightDiffPay,
+            NightDiffOvertimePay,
+            RestDayOTPay,
             SpecialHolidayOTPay,
             RegularHolidayOTPay,
+            LateDeduction,
+            UndertimeDeduction,
             TotalGrossSalary,
             TotalNetSalary,
             TotalTaxableSalary,
@@ -198,15 +210,11 @@ LEFT JOIN (
         SUM(i.RegularHoursAmount) AS RegularHoursAmount,
         SUM(i.TotalHoursWorked) AS TotalHoursWorked,
         SUM(i.OvertimeHoursWorked) AS OvertimeHoursWorked,
-        SUM(i.OvertimeHoursAmount) AS OvertimeHoursAmount,
         SUM(i.UndertimeHours) AS UndertimeHours,
         SUM(i.UndertimeHoursAmount) AS UndertimeHoursAmount,
         SUM(i.NightDifferentialHours) AS NightDifferentialHours,
-        SUM(i.NightDiffHoursAmount) AS NightDiffHoursAmount,
         SUM(i.NightDifferentialOTHours) AS NightDifferentialOTHours,
-        SUM(i.NightDiffOTHoursAmount) AS NightDiffOTHoursAmount,
         SUM(i.HoursLate) AS HoursLate,
-        SUM(i.HoursLateAmount) AS HoursLateAmount,
         SUM(i.VacationLeaveHours) AS VacationLeaveHours,
         SUM(i.SickLeaveHours) AS SickLeaveHours,
         SUM(i.MaternityLeaveHours) AS MaternityLeaveHours,
@@ -219,7 +227,6 @@ LEFT JOIN (
         SUM(i.NonTaxableDailyBonus) AS NonTaxableDailyBonus,
         SUM(i.Leavepayment) AS Leavepayment,
         SUM(i.RestDayAmount) AS RestDayAmount,
-        SUM(i.RestDayOTPay) AS RestDayOTPay,
         SUM(
             IF(
                 (
@@ -246,15 +253,12 @@ LEFT JOIN (
                 RegularHoursAmount,
                 TotalHoursWorked,
                 OvertimeHoursWorked,
-                OvertimeHoursAmount,
                 UndertimeHours,
                 UndertimeHoursAmount,
                 NightDifferentialHours,
                 NightDiffHoursAmount,
                 NightDifferentialOTHours,
-                NightDiffOTHoursAmount,
                 HoursLate,
-                HoursLateAmount,
                 LateFlag,
                 PayRateID,
                 VacationLeaveHours,
@@ -269,8 +273,7 @@ LEFT JOIN (
                 TaxableDailyBonus,
                 NonTaxableDailyBonus,
                 Leavepayment,
-                RestDayAmount,
-                RestDayOTPay
+                RestDayAmount
             FROM employeetimeentry
             WHERE OrganizationID = OrganizID AND
                 IsActualFlag = 0 AND
@@ -288,15 +291,12 @@ LEFT JOIN (
                 RegularHoursAmount,
                 TotalHoursWorked,
                 OvertimeHoursWorked,
-                OvertimeHoursAmount,
                 UndertimeHours,
                 UndertimeHoursAmount,
                 NightDifferentialHours,
                 NightDiffHoursAmount,
                 NightDifferentialOTHours,
-                NightDiffOTHoursAmount,
                 HoursLate,
-                HoursLateAmount,
                 LateFlag,
                 PayRateID,
                 VacationLeaveHours,
@@ -311,8 +311,7 @@ LEFT JOIN (
                 TaxableDailyBonus,
                 NonTaxableDailyBonus,
                 Leavepayment,
-                RestDayAmount,
-                RestDayOTPay
+                RestDayAmount
             FROM employeetimeentryactual
             WHERE OrganizationID = OrganizID AND
                 IsActualFlag = 1 AND
