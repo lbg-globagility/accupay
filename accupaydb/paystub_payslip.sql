@@ -50,41 +50,21 @@ SELECT
         0
     ) `COL72`,
     IF(IsActualFlag = 1, es.TrueSalary, es.Salary) `COL80`,
-    0 AS `COL2`, -- Deprecated
-    ROUND(
-        IF(
-            e.EmployeeType IN ('Fixed', 'Monthly'),
-            (es.BasicPay * IF(
-                IsActualFlag = 0,
-                1,
-                (es.TrueSalary / es.Salary)
-            )),
-            IFNULL(ete.RegularHoursAmount, 0)
-        ),
-        2
-    ) AS `COL3`, -- Deprecated
-    IFNULL(ete.UndertimeHours, 0) AS `COL4`, -- Deprecated
-    IFNULL(ete.Absent + IF(e.EmployeeType = 'Monthly', ete.Leavepayment, 0), 0) AS `COL5`,
+    IFNULL(ps.AbsenceDeduction + IF(e.EmployeeType = 'Monthly', ps.LeavePay, 0), 0) AS `COL5`,
     IFNULL(ete.HoursLate, 0) AS `COL6`,
     IFNULL(ps.LateDeduction, 0) AS `COL7`,
     IFNULL(ete.UndertimeHours, 0) AS `COL8`,
     IFNULL(ps.UndertimeDeduction, 0) AS `COL9`,
-    0 AS `COL10`, -- Deprecated
-    0 AS `COL11`, -- Deprecated
-    (
-        IFNULL(ete.OvertimeHoursWorked, 0)
-     ) AS `COL12`,
+    IFNULL(ete.OvertimeHoursWorked, 0) AS `COL12`,
     (
         IFNULL(ps.OvertimePay, 0) +
         IFNULL(ps.NightDiffOvertimePay, 0) +
         IFNULL(ps.RestDayOTPay, 0) +
         IFNULL(ps.SpecialHolidayOTPay, 0) +
         IFNULL(ps.RegularHolidayOTPay, 0)
-     ) AS `COL13`,
+    ) AS `COL13`,
     IFNULL(ete.NightDifferentialHours, 0) AS `COL14`,
     IFNULL(ps.NightDiffPay, 0) AS `COL15`,
-    0 AS `COL16`, -- Deprecated
-    IFNULL(ete.HolidayPayAmount, 0) + IFNULL(ete.RestDayAmount, 0) AS `COL17`, -- Deprecated
     (ps.TotalAllowance - IFNULL(psiECOLA.PayAmount, 0)) AS `COL18`,
     ps.TotalAdjustments `COL19`,
     (ps.TotalGrossSalary + ps.TotalAdjustments) AS `COL20`,
@@ -101,13 +81,10 @@ SELECT
     payStubLoans.`Names` AS `COL31`,
     payStubLoans.PayAmounts AS `COL32`,
     payStubLoans.TotalBalanceLeft AS `COl36`,
-    ps.TotalLoans AS `COL33`, -- Deprecated
-    0 AS `COL34`, -- Deprecated
-    0 AS `COL35`, -- Deprecated
     adjustments.`Names` AS `COL37`, -- Deprecated
     adjustments.PayAmounts AS `COL38`,-- Deprecated
     (IFNULL(ete.VacationLeaveHours,0) + IFNULL(ete.SickLeaveHours,0) + IFNULL(ete.MaternityLeaveHours,0) + IFNULL(ete.OtherLeaveHours,0)) AS `COL40`,
-    IFNULL(ete.Leavepayment,0) AS `COL41`,
+    IFNULL(ps.LeavePay, 0) AS `COL41`,
 	IFNULL(ps.HolidayPay, 0) + IFNULL(ps.RestDayPay, 0) AS `COL42`,
     IFNULL(psiECOLA.PayAmount,0) AS `COL43`,
     psiLeave.`Names` AS `COL44`,
@@ -121,7 +98,6 @@ FROM (
             OrganizationID,
             PayPeriodID,
             EmployeeID,
-            TimeEntryID,
             PayFromDate,
             PayToDate,
             HolidayPay,
@@ -131,25 +107,21 @@ FROM (
             RestDayOTPay,
             SpecialHolidayOTPay,
             RegularHolidayOTPay,
+            LeavePay,
             LateDeduction,
             UndertimeDeduction,
+            AbsenceDeduction,
             TotalGrossSalary,
             TotalNetSalary,
             TotalTaxableSalary,
             TotalEmpSSS,
             TotalEmpWithholdingTax,
-            TotalCompSSS,
             TotalEmpPhilhealth,
-            TotalCompPhilhealth,
             TotalEmpHDMF,
-            TotalCompHDMF,
-            TotalVacationDaysLeft,
             TotalLoans,
             TotalBonus,
             TotalAllowance,
             TotalAdjustments,
-            ThirteenthMonthInclusion,
-            FirstTimeSalary,
             RestDayPay
         FROM paystub
         WHERE IsActualFlag = 0 AND
@@ -160,7 +132,6 @@ FROM (
             OrganizationID,
             PayPeriodID,
             EmployeeID,
-            TimeEntryID,
             PayFromDate,
             PayToDate,
             HolidayPay,
@@ -170,25 +141,21 @@ FROM (
             RestDayOTPay,
             SpecialHolidayOTPay,
             RegularHolidayOTPay,
+            LeavePay,
             LateDeduction,
             UndertimeDeduction,
+            AbsenceDeduction,
             TotalGrossSalary,
             TotalNetSalary,
             TotalTaxableSalary,
             TotalEmpSSS,
             TotalEmpWithholdingTax,
-            TotalCompSSS,
             TotalEmpPhilhealth,
-            TotalCompPhilhealth,
             TotalEmpHDMF,
-            TotalCompHDMF,
-            TotalVacationDaysLeft,
             TotalLoans,
             TotalBonus,
             TotalAllowance,
             TotalAdjustments,
-            ThirteenthMonthInclusion,
-            FirstTimeSalary,
             RestDayPay
         FROM paystubactual
         WHERE IsActualFlag = 1 AND
@@ -206,12 +173,9 @@ LEFT JOIN (
     SELECT
         i.RowID,
         i.EmployeeID,
-        SUM(i.RegularHoursWorked) AS RegularHoursWorked,
-        SUM(i.RegularHoursAmount) AS RegularHoursAmount,
         SUM(i.TotalHoursWorked) AS TotalHoursWorked,
         SUM(i.OvertimeHoursWorked) AS OvertimeHoursWorked,
         SUM(i.UndertimeHours) AS UndertimeHours,
-        SUM(i.UndertimeHoursAmount) AS UndertimeHoursAmount,
         SUM(i.NightDifferentialHours) AS NightDifferentialHours,
         SUM(i.NightDifferentialOTHours) AS NightDifferentialOTHours,
         SUM(i.HoursLate) AS HoursLate,
@@ -219,14 +183,6 @@ LEFT JOIN (
         SUM(i.SickLeaveHours) AS SickLeaveHours,
         SUM(i.MaternityLeaveHours) AS MaternityLeaveHours,
         SUM(i.OtherLeaveHours) AS OtherLeaveHours,
-        SUM(i.TotalDayPay) AS TotalDayPay,
-        SUM(i.Absent) AS Absent,
-        SUM(i.TaxableDailyAllowance) AS TaxableDailyAllowance,
-        SUM(i.HolidayPayAmount) AS HolidayPayAmount,
-        SUM(i.TaxableDailyBonus) AS TaxableDailyBonus,
-        SUM(i.NonTaxableDailyBonus) AS NonTaxableDailyBonus,
-        SUM(i.Leavepayment) AS Leavepayment,
-        SUM(i.RestDayAmount) AS RestDayAmount,
         SUM(
             IF(
                 (
@@ -240,83 +196,7 @@ LEFT JOIN (
             )
 		) `TotalExpectedHours`,
         SUM(IF(i.Absent > 0, sh.DivisorToDailyRate, 0)) AS AbsentHours
-    FROM (
-            SELECT
-                RowID,
-                OrganizationID,
-                `Date`,
-                EmployeeShiftID,
-                EmployeeID,
-                EmployeeSalaryID,
-                EmployeeFixedSalaryFlag,
-                RegularHoursWorked,
-                RegularHoursAmount,
-                TotalHoursWorked,
-                OvertimeHoursWorked,
-                UndertimeHours,
-                UndertimeHoursAmount,
-                NightDifferentialHours,
-                NightDiffHoursAmount,
-                NightDifferentialOTHours,
-                HoursLate,
-                LateFlag,
-                PayRateID,
-                VacationLeaveHours,
-                SickLeaveHours,
-                MaternityLeaveHours,
-                OtherLeaveHours,
-                TotalDayPay,
-                Absent,
-                ChargeToDivisionID,
-                TaxableDailyAllowance,
-                HolidayPayAmount,
-                TaxableDailyBonus,
-                NonTaxableDailyBonus,
-                Leavepayment,
-                RestDayAmount
-            FROM employeetimeentry
-            WHERE OrganizationID = OrganizID AND
-                IsActualFlag = 0 AND
-                `Date` BETWEEN paydate_from AND paydat_to
-        UNION
-            SELECT
-                RowID,
-                OrganizationID,
-                `Date`,
-                EmployeeShiftID,
-                EmployeeID,
-                EmployeeSalaryID,
-                EmployeeFixedSalaryFlag,
-                RegularHoursWorked,
-                RegularHoursAmount,
-                TotalHoursWorked,
-                OvertimeHoursWorked,
-                UndertimeHours,
-                UndertimeHoursAmount,
-                NightDifferentialHours,
-                NightDiffHoursAmount,
-                NightDifferentialOTHours,
-                HoursLate,
-                LateFlag,
-                PayRateID,
-                VacationLeaveHours,
-                SickLeaveHours,
-                MaternityLeaveHours,
-                OtherLeaveHours,
-                TotalDayPay,
-                Absent,
-                ChargeToDivisionID,
-                TaxableDailyAllowance,
-                HolidayPayAmount,
-                TaxableDailyBonus,
-                NonTaxableDailyBonus,
-                Leavepayment,
-                RestDayAmount
-            FROM employeetimeentryactual
-            WHERE OrganizationID = OrganizID AND
-                IsActualFlag = 1 AND
-                `Date` BETWEEN paydate_from AND paydat_to
-    ) i
+    FROM employeetimeentry i
     INNER JOIN employeeshift es
     ON es.RowID = i.EmployeeShiftID
     INNER JOIN shift sh
@@ -324,10 +204,12 @@ LEFT JOIN (
     INNER JOIN payrate pyr
     ON pyr.Date = i.Date AND
         pyr.OrganizationID = OrganizID
+    WHERE i.OrganizationID = OrganizID AND
+        i.`Date` BETWEEN paydate_from AND paydat_to
     GROUP BY i.EmployeeID
 ) ete
 ON ete.RowID IS NOT NULL AND
-    ete.EmployeeID=ps.EmployeeID
+    ete.EmployeeID = ps.EmployeeID
 LEFT JOIN (
     SELECT
         REPLACE(GROUP_CONCAT(IFNULL(product.PartNo, '')), ',', '\n') 'Names',
@@ -444,9 +326,9 @@ LEFT JOIN (
     GROUP BY adjustment.PayStubID
 ) adjustments
 ON adjustments.PayStubID = ps.RowID
-WHERE ps.OrganizationID=OrganizID AND
-    ps.PayFromDate=paydate_from AND
-    ps.PayToDate=paydat_to
+WHERE ps.OrganizationID = OrganizID AND
+    ps.PayFromDate = paydate_from AND
+    ps.PayToDate = paydat_to
 GROUP BY ps.EmployeeID
 ORDER BY CONCAT(e.LastName, e.FirstName, e.MiddleName);
 
