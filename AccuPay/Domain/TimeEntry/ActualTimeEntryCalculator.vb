@@ -74,10 +74,10 @@ Public Class ActualTimeEntryCalculator
             actualTimeEntry.RegularHolidayPay = timeEntry.RegularHolidayPay
             actualTimeEntry.RegularHolidayOTPay = timeEntry.RegularHolidayOTPay
             If _policy.AllowanceForHoliday Then
-                actualTimeEntry.SpecialHolidayPay += timeEntry.SpecialHolidayPay
-                actualTimeEntry.SpecialHolidayOTPay += timeEntry.SpecialHolidayOTPay
-                actualTimeEntry.RegularHolidayPay += timeEntry.RegularHolidayPay
-                actualTimeEntry.RegularHolidayOTPay += timeEntry.RegularHolidayOTPay
+                actualTimeEntry.SpecialHolidayPay += timeEntry.SpecialHolidayPay * allowanceRate
+                actualTimeEntry.SpecialHolidayOTPay += timeEntry.SpecialHolidayOTPay * allowanceRate
+                actualTimeEntry.RegularHolidayPay += timeEntry.RegularHolidayPay * allowanceRate
+                actualTimeEntry.RegularHolidayOTPay += timeEntry.RegularHolidayOTPay * allowanceRate
             End If
 
             actualTimeEntry.TotalDayPay = timeEntry.TotalDayPay + (timeEntry.TotalDayPay * allowanceRate)
