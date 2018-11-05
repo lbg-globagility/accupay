@@ -109,6 +109,7 @@ Public Class PayrollGeneration
         _timeEntries = resources.TimeEntries.
             Where(Function(t) t.EmployeeID = _employee2.RowID).
             Where(Function(t) _payPeriod.PayFromDate <= t.Date And t.Date <= _payPeriod.PayToDate).
+            OrderBy(Function(t) t.Date).
             ToList()
 
         _actualtimeentries = resources.ActualTimeEntries.
@@ -220,9 +221,7 @@ Public Class PayrollGeneration
                     End If
 
                 ElseIf _employee2.EmployeeType = SalaryType.Daily Then
-                    _paystub.BasicHours = _timeEntries.
-                        Where(Function(t) Not If(t.ShiftSchedule?.IsRestDay, True)).
-                        Sum(Function(t) t.ShiftSchedule?.Shift?.WorkHours)
+                    ComputeBasicHours()
 
                     _paystub.BasicPay = _timeEntries.Sum(Function(t) t.BasicDayPay)
 
@@ -298,6 +297,26 @@ Public Class PayrollGeneration
         Catch ex As Exception
             Throw New Exception($"Failure to generate paystub for employee {_paystub.EmployeeID}", ex)
         End Try
+    End Sub
+
+    Private Sub ComputeBasicHours()
+        Dim basicHours = 0D
+
+        For Each timeEntry In _timeEntries
+            Dim isDefaultRestDay =
+                (_employee2.DayOfRest IsNot Nothing) AndAlso
+                (_employee2.DayOfRest.Value - 1) = timeEntry.Date.DayOfWeek
+
+            Dim isRestDayOffset = If(timeEntry.ShiftSchedule?.IsRestDay, False)
+
+            Dim payrate = _payRates(timeEntry.Date)
+            Dim isRestDay = isDefaultRestDay Xor isRestDayOffset
+            If Not (isRestDay Or (timeEntry.TotalLeaveHours > 0) Or payrate.IsRegularHoliday Or payrate.IsSpecialNonWorkingHoliday) Then
+                basicHours += If(timeEntry.ShiftSchedule?.Shift?.WorkHours, 0)
+            End If
+        Next
+
+        _paystub.BasicHours = basicHours
     End Sub
 
     Private Sub ComputeHours()
