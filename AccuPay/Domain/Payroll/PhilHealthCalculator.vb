@@ -19,8 +19,8 @@ Namespace Global.AccuPay.Payroll
             _philHealthBrackets = philHealthBrackets
         End Sub
 
-        Public Sub Calculate(settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As DataRow, employee2 As Employee, payperiod As PayPeriod)
-            Dim deductionSchedule = employee("PhHealthDeductSched").ToString
+        Public Sub Calculate(settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod)
+            Dim deductionSchedule = employee.PhilHealthSchedule
 
             Dim philHealthCalculation = settings.GetEnum(
                 "PhilHealth.CalculationBasis",
@@ -63,13 +63,9 @@ Namespace Global.AccuPay.Payroll
             Dim employeeShare = halfContribution
             Dim employerShare = halfContribution + remainder
 
-            Dim payPeriodsPerMonth = CDec(ValNoComma(employee("PAYFREQUENCY_DIVISOR")))
-
-            Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(employee("IsWeeklyPaid")))
-
-            If is_weekly Then
+            If employee.IsWeeklyPaid Then
                 Dim is_deduct_sched_to_thisperiod = If(
-                    employee2.IsUnderAgency,
+                    employee.IsUnderAgency,
                     payperiod.PhHWeeklyAgentContribSched,
                     payperiod.PhHWeeklyContribSched)
 
@@ -85,8 +81,8 @@ Namespace Global.AccuPay.Payroll
                     paystub.PhilHealthEmployeeShare = employeeShare
                     paystub.PhilHealthEmployerShare = employerShare
                 ElseIf IsPhilHealthPaidPerPayPeriod(deductionSchedule) Then
-                    paystub.PhilHealthEmployeeShare = employeeShare / payPeriodsPerMonth
-                    paystub.PhilHealthEmployerShare = employerShare / payPeriodsPerMonth
+                    paystub.PhilHealthEmployeeShare = employeeShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
+                    paystub.PhilHealthEmployerShare = employerShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
                 Else
                     paystub.PhilHealthEmployeeShare = 0
                     paystub.PhilHealthEmployerShare = 0

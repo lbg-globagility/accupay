@@ -28,6 +28,30 @@ Namespace Global.AccuPay.Entity
 
         Public Property ParentDivisionID As Integer?
 
+        <Column("SSSDeductSched")>
+        Public Property SssDeductionSchedule As String
+
+        <Column("SSSDeductSchedAgency")>
+        Public Property AgencySssDeductionSchedule As String
+
+        <Column("PhHealthDeductSched")>
+        Public Property PhilHealthDeductionSchedule As String
+
+        <Column("PhHealthDeductSchedAgency")>
+        Public Property AgencyPhilHealthDeductionSchedule As String
+
+        <Column("HDMFDeductSched")>
+        Public Property PagIBIGDeductionSchedule As String
+
+        <Column("HDMFDeductSchedAgency")>
+        Public Property AgencyPagIBIGDeductionSchedule As String
+
+        <Column("WTaxDeductSched")>
+        Public Property WithholdingTaxSchedule As String
+
+        <Column("WTaxDeductSchedAgency")>
+        Public Property AgencyWithholdingTaxSchedule As String
+
         <ForeignKey("ParentDivisionID")>
         Public Overridable Property ParentDivision As Division
 

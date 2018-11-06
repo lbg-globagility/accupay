@@ -160,6 +160,39 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property ThirteenthMonthPay As ThirteenthMonthPay
 
+        Public ReadOnly Property AdditionalPay As Decimal
+            Get
+                Return (
+                    OvertimePay +
+                    NightDiffPay +
+                    NightDiffOvertimePay +
+                    RestDayPay +
+                    RestDayOTPay +
+                    SpecialHolidayPay +
+                    SpecialHolidayOTPay +
+                    RegularHolidayPay +
+                    RegularHolidayOTPay)
+            End Get
+        End Property
+
+        Public ReadOnly Property BasicDeductions As Decimal
+            Get
+                Return LateDeduction + UndertimeDeduction + AbsenceDeduction
+            End Get
+        End Property
+
+        Public ReadOnly Property GovernmentDeductions As Decimal
+            Get
+                Return SssEmployeeShare + PhilHealthEmployeeShare + HdmfEmployeeShare
+            End Get
+        End Property
+
+        Public ReadOnly Property NetDeductions As Decimal
+            Get
+                Return GovernmentDeductions + TotalLoans + WithholdingTax
+            End Get
+        End Property
+
         Public Sub New()
             Adjustments = New List(Of Adjustment)
             ActualAdjustments = New List(Of ActualAdjustment)

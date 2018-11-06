@@ -42,6 +42,30 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("ProductID")>
         Public Overridable Property Product As Product
 
+        Public ReadOnly Property IsOneTime As Boolean
+            Get
+                Return AllowanceFrequency = "One time"
+            End Get
+        End Property
+
+        Public ReadOnly Property IsDaily As Boolean
+            Get
+                Return AllowanceFrequency = "Daily"
+            End Get
+        End Property
+
+        Public ReadOnly Property IsSemiMonthly As Boolean
+            Get
+                Return AllowanceFrequency = "Semi-monthly"
+            End Get
+        End Property
+
+        Public ReadOnly Property IsMonthly As Boolean
+            Get
+                Return AllowanceFrequency = "Monthly"
+            End Get
+        End Property
+
     End Class
 
 End Namespace

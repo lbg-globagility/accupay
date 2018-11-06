@@ -17,10 +17,8 @@ Public Class SssCalculator
         _socialSecurityBrackets = socialSecurityBrackets
     End Sub
 
-    Public Sub Calculate(settings As ListOfValueCollection, paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As DataRow, employee2 As Employee, payperiod As PayPeriod)
-        Dim deductionSchedule = employee("SSSDeductSched").ToString
-
-        Dim isWeekly As Boolean = Convert.ToBoolean(Convert.ToInt16(employee("IsWeeklyPaid")))
+    Public Sub Calculate(settings As ListOfValueCollection, paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As Employee, payperiod As PayPeriod)
+        Dim deductionSchedule = employee.SssSchedule
 
         Dim sssCalculation = settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
 
@@ -46,8 +44,8 @@ Public Class SssCalculator
             employerSssPerMonth = If(socialSecurityBracket?.EmployerContributionAmount + socialSecurityBracket?.EmployeeECAmount, 0)
         End If
 
-        If isWeekly Then
-            Dim shouldDeduct = If(employee2.IsUnderAgency, payperiod.SSSWeeklyAgentContribSched, payperiod.SSSWeeklyContribSched)
+        If employee.IsWeeklyPaid Then
+            Dim shouldDeduct = If(employee.IsUnderAgency, payperiod.SSSWeeklyAgentContribSched, payperiod.SSSWeeklyContribSched)
 
             If shouldDeduct Then
                 paystub.SssEmployeeShare = employeeSssPerMonth
@@ -61,10 +59,8 @@ Public Class SssCalculator
                 paystub.SssEmployeeShare = employeeSssPerMonth
                 paystub.SssEmployerShare = employerSssPerMonth
             ElseIf IsSssPaidPerPayPeriod(deductionSchedule) Then
-                Dim payPeriodsPerMonth = CDec(employee("PAYFREQUENCY_DIVISOR"))
-
-                paystub.SssEmployeeShare = employeeSssPerMonth / payPeriodsPerMonth
-                paystub.SssEmployerShare = employerSssPerMonth / payPeriodsPerMonth
+                paystub.SssEmployeeShare = employeeSssPerMonth / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
+                paystub.SssEmployerShare = employerSssPerMonth / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
             Else
                 paystub.SssEmployeeShare = 0
                 paystub.SssEmployerShare = 0

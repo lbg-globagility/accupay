@@ -175,6 +175,12 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property IsWeeklyPaid As Boolean
+            Get
+                Return PayFrequencyID.Value = 4
+            End Get
+        End Property
+
         Public ReadOnly Property Fullname As String
             Get
                 Return $"{LastName}, {FirstName} {MiddleInitial}"
@@ -184,6 +190,42 @@ Namespace Global.AccuPay.Entity
         Public ReadOnly Property IsUnderAgency As Boolean
             Get
                 Return AgencyID.HasValue
+            End Get
+        End Property
+
+        Public ReadOnly Property SssSchedule As String
+            Get
+                Return If(
+                    IsUnderAgency,
+                    Position?.Division?.AgencySssDeductionSchedule,
+                    Position?.Division?.SssDeductionSchedule)
+            End Get
+        End Property
+
+        Public ReadOnly Property PhilHealthSchedule As String
+            Get
+                Return If(
+                    IsUnderAgency,
+                    Position?.Division?.AgencyPhilHealthDeductionSchedule,
+                    Position?.Division?.PhilHealthDeductionSchedule)
+            End Get
+        End Property
+
+        Public ReadOnly Property PagIBIGSchedule As String
+            Get
+                Return If(
+                    IsUnderAgency,
+                    Position?.Division?.AgencyPagIBIGDeductionSchedule,
+                    Position?.Division?.PagIBIGDeductionSchedule)
+            End Get
+        End Property
+
+        Public ReadOnly Property WithholdingTaxSchedule As String
+            Get
+                Return If(
+                    IsUnderAgency,
+                    Position?.Division?.AgencyWithholdingTaxSchedule,
+                    Position?.Division?.WithholdingTaxSchedule)
             End Get
         End Property
 

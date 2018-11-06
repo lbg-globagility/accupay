@@ -34,61 +34,12 @@ BEGIN
     
     SELECT
         e.RowID,
-        e.EmployeeID,
-        e.MaritalStatus,
-        e.NoOfDependents,
-        e.PayFrequencyID,
-        e.EmployeeType,
-        e.EmploymentStatus,
-        e.WorkDaysPerYear,
-        e.PositionID,
-        e.LeaveBalance,
-        e.SickLeaveBalance,
-        e.MaternityLeaveBalance,
-        e.OtherLeaveBalance,
-        (e.PayFrequencyID = payfreqrowid) `IsWeeklyPaid`,
-        (e.AgencyID IS NOT NULL) `IsUnderAgency`,
-        IF(
-            e.AgencyID IS NOT NULL,
-            IFNULL(
-                d.PhHealthDeductSchedAgency,
-                d.PhHealthDeductSched
-            ),
-            d.PhHealthDeductSched
-        ) AS PhHealthDeductSched,
-        IF(
-            e.AgencyID IS NOT NULL,
-            IFNULL(
-                d.HDMFDeductSchedAgency,
-                d.HDMFDeductSched
-            ),
-            d.HDMFDeductSched
-        ) AS HDMFDeductSched,
-        IF(
-            e.AgencyID IS NOT NULL,
-            IFNULL(
-                d.SSSDeductSchedAgency,
-                d.SSSDeductSched
-            ),
-            d.SSSDeductSched
-        ) AS SSSDeductSched,
-        IF(
-            e.AgencyID IS NOT NULL,
-            IFNULL(
-                d.WTaxDeductSchedAgency,
-                d.WTaxDeductSched
-            ),
-            d.WTaxDeductSched
-        ) AS WTaxDeductSched,
-        PAYFREQUENCY_DIVISOR(pf.PayFrequencyType) 'PAYFREQUENCY_DIVISOR',
         IFNULL(dmw.Amount,d.MinimumWageAmount) AS MinimumWageAmount,
-        (e.StartDate BETWEEN $PayDateFrom AND $PayDateTo) AS IsFirstTimeSalary,
         IF(
             e.EmployeeType = 'Daily',
             esal.BasicPay,
             esal.Salary / (e.WorkDaysPerYear / 12)
-        ) `EmpRatePerDay`,
-        IFNULL(et.`etcount`, 0) AS StartingAttendanceCount
+        ) `EmpRatePerDay`
     FROM employee e
     LEFT JOIN employeesalary esal
     ON e.RowID = esal.EmployeeID
@@ -104,19 +55,10 @@ BEGIN
     ON dmw.OrganizationID = e.OrganizationID AND
         dmw.DivisionID = d.RowID AND
         $PayDateTo BETWEEN dmw.EffectiveDateFrom AND dmw.EffectiveDateTo
-    LEFT JOIN (
-        SELECT COUNT(RowID) `etcount`, EmployeeID
-        FROM employeetimeentry
-        WHERE TotalDayPay != 0 AND
-            OrganizationID = $OrganizationID AND
-            `Date` BETWEEN $PayDateFrom AND $PayDateTo
-        GROUP BY EmployeeID
-    ) et
-    ON et.EmployeeID = e.RowID
     WHERE e.OrganizationID = $OrganizationID AND
         $PayDateTo BETWEEN esal.EffectiveDateFrom AND COALESCE(esal.EffectiveDateTo, $PayDateTo) AND
-        e.EmploymentStatus NOT IN ('Resigned', 'Terminated')
-        AND e.PayFrequencyID = payfreq_rowid
+        e.EmploymentStatus NOT IN ('Resigned', 'Terminated') AND
+        e.PayFrequencyID = payfreq_rowid
     GROUP BY e.RowID
     ORDER BY e.LastName;
 

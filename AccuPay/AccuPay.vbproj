@@ -332,12 +332,14 @@
     <Compile Include="Domain\Commons\Enums.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
+    <Compile Include="Domain\Commons\SemiMonthlyAllowanceCalculator.vb" />
     <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
     <Compile Include="Domain\Commons\ListOfValueCollection.vb" />
     <Compile Include="Domain\Commons\PayratesCalendar.vb" />
     <Compile Include="Domain\Commons\PayrollConstants.vb" />
     <Compile Include="Domain\Commons\PayrollContext.vb" />
     <Compile Include="Domain\Commons\PayrollTools.vb" />
+    <Compile Include="Domain\Payroll\PayrollException.vb" />
     <Compile Include="Domain\Payroll\PhilHealthCalculator.vb" />
     <Compile Include="Domain\Payroll\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Domain\Commons\Calendar.vb" />
@@ -482,6 +484,12 @@
       <DependentUpon>OffSetting.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\OffSetting.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\PayStub\PayrollResultDialog.Designer.vb">
+      <DependentUpon>PayrollResultDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\PayStub\PayrollResultDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\PayStub\PaystubView.Designer.vb">
@@ -1664,6 +1672,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\PayStub\PayrollResultDialog.resx">
+      <DependentUpon>PayrollResultDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayStub\PaystubView.resx">
       <DependentUpon>PaystubView.vb</DependentUpon>

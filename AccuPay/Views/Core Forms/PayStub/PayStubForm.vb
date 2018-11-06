@@ -3,6 +3,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Loans
 Imports log4net
+Imports System.Collections.Concurrent
 
 Public Class PayStubForm
 
@@ -78,6 +79,8 @@ Public Class PayStubForm
     Public paypPayFreqID As String = Nothing
     Public isEndOfMonth As String = 0
 
+    Private _totalPaystubs As Integer = 0
+    Private _finishedPaystubs As Integer = 0
     Private _successfulPaystubs As Integer = 0
     Private _failedPaystubs As Integer = 0
 
@@ -90,8 +93,6 @@ Public Class PayStubForm
     Dim emp_allowanceWeekly As New DataTable
 
     Dim notax_allowanceWeekly As New DataTable
-
-    Private _filingStatuses As DataTable
 
     Public numofweekdays As Integer
 
@@ -116,11 +117,9 @@ Public Class PayStubForm
 
     Dim rptdocAll As New rptAllDecUndecPaySlip
 
-    Dim _totalPaystubs As Integer = 0
-
-    Dim _finishedPaystubs As Integer = 0
-
     Private sys_ownr As New SystemOwner
+
+    Private _results As BlockingCollection(Of PayrollGeneration.Result)
 
     Property VeryFirstPayPeriodIDOfThisYear As Object
         Get
@@ -747,8 +746,6 @@ Public Class PayStubForm
                                                                 " GROUP BY EmployeeID",
                                                                 " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
 
-                _filingStatuses = New SqlToDataTable("SELECT * FROM filingstatus;").Read()
-
                 Return resources
             End Function,
             0
@@ -815,6 +812,7 @@ Public Class PayStubForm
 
             _successfulPaystubs = 0
             _failedPaystubs = 0
+            _results = New BlockingCollection(Of PayrollGeneration.Result)()
 
             Task.Run(
                 Sub()
@@ -823,10 +821,8 @@ Public Class PayStubForm
                         Sub(employeeRow)
                             Dim generator = New PayrollGeneration(
                                 employeeRow,
-                                isEndOfMonth,
                                 emp_allowanceWeekly,
                                 notax_allowanceWeekly,
-                                _filingStatuses,
                                 resources,
                                 Me
                             )
@@ -1998,30 +1994,33 @@ Public Class PayStubForm
         Dim realse = New ReleaseThirteenthMonthPay(dateFrom, dateTo, paypRowID)
     End Sub
 
-    Sub ProgressCounter(success As Boolean)
-        If success Then
+    Sub ProgressCounter(result As PayrollGeneration.Result)
+        If result.Status = PayrollGeneration.ResultStatus.Success Then
             Interlocked.Increment(_successfulPaystubs)
         Else
             Interlocked.Increment(_failedPaystubs)
         End If
 
         Interlocked.Increment(_finishedPaystubs)
+        _results.Add(result)
 
         Dim percentComplete As Integer = (_finishedPaystubs / _totalPaystubs) * 100
         MDIPrimaryForm.systemprogressbar.Value = percentComplete
 
-        If percentComplete = 100 Then
+        If _finishedPaystubs = _totalPaystubs Then
             Dim param_array = New Object() {orgztnID, paypRowID, z_User}
 
             Static strquery_recompute_13monthpay As String =
                 "call recompute_thirteenthmonthpay(?organizid, ?payprowid, ?userrowid);"
 
-            Dim n_ExecSQLProcedure As New _
-                SQL(strquery_recompute_13monthpay,
-                    param_array)
+            Dim n_ExecSQLProcedure = New SQL(strquery_recompute_13monthpay, param_array)
             n_ExecSQLProcedure.ExecuteQuery()
 
-            MsgBox($"Payroll generation is done. Sucessful paystubs: {_successfulPaystubs}. Failed paystubs {_failedPaystubs}", MsgBoxStyle.OkOnly)
+            Dim dialog = New PayrollResultDialog(_results.ToList())
+            dialog.Owner = Me
+            dialog.ShowDialog()
+
+            'MsgBox($"Payroll generation is done. Sucessful paystubs: {_successfulPaystubs}. Failed paystubs {_failedPaystubs}", MsgBoxStyle.OkOnly)
 
             Me.Enabled = True
             dgvpayper_SelectionChanged(dgvpayper, New EventArgs)

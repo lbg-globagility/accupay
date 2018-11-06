@@ -4,12 +4,19 @@ Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.Extensions.Logging
+Imports Microsoft.Extensions.Logging.Console
 Imports PayrollSys
 
 ''' <summary>
 ''' Takes care of loading all the information needed to produce the payroll for a given pay period.
 ''' </summary>
 Public Class PayrollResources
+
+    Dim logger As LoggerFactory = New LoggerFactory(
+        {
+            New ConsoleLoggerProvider(Function(__, logLevel) logLevel = LogLevel.Information, True)
+        })
 
     Private _payPeriodID As Integer?
 
@@ -50,6 +57,8 @@ Public Class PayrollResources
     Private _payRates As ICollection(Of PayRate)
 
     Private _allowances As ICollection(Of Allowance)
+
+    Private _filingStatuses As DataTable
 
     Public ReadOnly Property Employees As ICollection(Of Employee)
         Get
@@ -147,6 +156,12 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property FilingStatuses As DataTable
+        Get
+            Return _filingStatuses
+        End Get
+    End Property
+
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = Integer.Parse(payPeriodID)
         _payDateFrom = payDateFrom
@@ -154,13 +169,10 @@ Public Class PayrollResources
     End Sub
 
     Public Async Function Load() As Task
-        Dim loadLoanSchedulesTask = LoadLoanSchedules()
-        Dim loadLoanTransactionsTask = LoadLoanTransactions()
-
         Await Task.WhenAll({
             LoadEmployees(),
-            loadLoanSchedulesTask,
-            loadLoanTransactionsTask,
+            LoadLoanSchedules(),
+            LoadLoanTransactions(),
             LoadSalaries(),
             LoadPaystubs(),
             LoadProducts(),
@@ -173,17 +185,18 @@ Public Class PayrollResources
             LoadPayRates(),
             LoadAllowances(),
             LoadTimeEntries(),
-            LoadActualTimeEntries()
+            LoadActualTimeEntries(),
+            LoadFilingStatuses()
         })
     End Function
 
     Public Async Function LoadEmployees() As Task
         Try
             Using context = New PayrollContext()
-                Dim query = From e In context.Employees
-                            Where e.OrganizationID = z_OrganizationID And
-                                e.EmploymentStatus <> "Resigned" And
-                                e.EmploymentStatus <> "Terminated"
+                Dim query = context.Employees.
+                    Include(Function(e) e.Position.Division).
+                    Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
+                    Where(Function(e) e.EmploymentStatus <> "Resigned" AndAlso e.EmploymentStatus <> "Terminated")
 
                 _employees = Await query.ToListAsync()
             End Using
@@ -198,8 +211,8 @@ Public Class PayrollResources
         Try
             Using context = New PayrollContext()
                 Dim query = From t In context.TimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
-                            Where t.OrganizationID = z_OrganizationID And
-                                backDate <= t.Date And
+                            Where t.OrganizationID.Value = z_OrganizationID AndAlso
+                                backDate <= t.Date AndAlso
                                 t.Date <= _payDateTo
                             Select t
 
@@ -214,8 +227,8 @@ Public Class PayrollResources
         Try
             Using context = New PayrollContext()
                 Dim query = From t In context.ActualTimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
-                            Where t.OrganizationID = z_OrganizationID And
-                                _payDateFrom <= t.Date And
+                            Where t.OrganizationID.Value = z_OrganizationID AndAlso
+                                _payDateFrom <= t.Date AndAlso
                                 t.Date <= _payDateTo
                             Select t
 
@@ -228,13 +241,13 @@ Public Class PayrollResources
 
     Private Async Function LoadLoanSchedules() As Task
         Try
-            Using context = New PayrollContext()
+            Using context = New PayrollContext(logger)
                 Dim query = From l In context.LoanSchedules
                             Select l
-                            Where l.OrganizationID = z_OrganizationID And
-                                                          l.DedEffectiveDateFrom <= _payDateTo And
-                                                          l.Status = "In Progress" And
-                                                          l.BonusID Is Nothing
+                            Where l.OrganizationID.Value = z_OrganizationID AndAlso
+                                l.DedEffectiveDateFrom <= _payDateTo AndAlso
+                                l.Status = "In Progress" AndAlso
+                                l.BonusID Is Nothing
                 _loanSchedules = Await query.ToListAsync()
             End Using
         Catch ex As Exception
@@ -246,7 +259,7 @@ Public Class PayrollResources
         Try
             Using context = New PayrollContext()
                 Dim query = context.LoanTransactions.
-                    Where(Function(l) CBool(l.OrganizationID = z_OrganizationID)).
+                    Where(Function(l) l.OrganizationID.Value = z_OrganizationID).
                     Where(Function(l) CBool(l.PayPeriodID = _payPeriodID))
 
                 _loanTransactions = Await query.ToListAsync()
@@ -260,11 +273,11 @@ Public Class PayrollResources
         Dim today = DateTime.Today
 
         Try
-            Using context = New PayrollContext()
+            Using context = New PayrollContext(logger)
                 Dim query = context.Salaries.
-                    Where(Function(s) s.EffectiveFrom >= _payDateFrom Or If(s.EffectiveTo, today) >= _payDateFrom).
-                    Where(Function(s) s.EffectiveFrom <= _payDateTo Or If(s.EffectiveTo, today) <= _payDateTo).
-                    Where(Function(s) CBool(s.OrganizationID = z_OrganizationID)).
+                    Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
+                    Where(Function(s) (s.EffectiveFrom <= _payDateTo AndAlso _payDateFrom <= s.EffectiveTo.Value) OrElse
+                        (s.EffectiveTo Is Nothing AndAlso s.EffectiveFrom <= _payDateTo)).
                     GroupBy(Function(s) s.EmployeeID).
                     Select(Function(g) g.FirstOrDefault())
 
@@ -279,7 +292,8 @@ Public Class PayrollResources
         Try
             Using context = New PayrollContext()
                 Dim query = From p In context.Products
-                            Where p.OrganizationID = z_OrganizationID
+                            Where p.OrganizationID.Value = z_OrganizationID
+
                 _products = Await query.ToListAsync()
             End Using
         Catch ex As Exception
@@ -295,7 +309,7 @@ Public Class PayrollResources
                     Include(Function(p) p.ThirteenthMonthPay).
                     Where(Function(p) p.PayFromdate = _payDateFrom).
                     Where(Function(p) p.PayToDate = _payDateTo).
-                    Where(Function(p) CBool(p.OrganizationID = z_OrganizationID))
+                    Where(Function(p) p.OrganizationID.Value = z_OrganizationID)
 
                 _paystubs = Await query.ToListAsync()
             End Using
@@ -311,7 +325,7 @@ Public Class PayrollResources
             Using context = New PayrollContext()
                 Dim query = context.Paystubs.
                     Where(Function(p) p.PayToDate = previousCutoffEnd).
-                    Where(Function(p) CBool(p.OrganizationID = z_OrganizationID))
+                    Where(Function(p) p.OrganizationID.Value = z_OrganizationID)
 
                 _previousPaystubs = Await query.ToListAsync()
             End Using
@@ -324,6 +338,7 @@ Public Class PayrollResources
         Try
             Using context = New PayrollContext()
                 Dim query = From s In context.SocialSecurityBrackets
+                            Select s
 
                 _socialSecurityBrackets = Await query.ToListAsync()
             End Using
@@ -336,6 +351,7 @@ Public Class PayrollResources
         Try
             Using context = New PayrollContext()
                 Dim query = From p In context.PhilHealthBrackets
+                            Select p
 
                 _philHealthBrackets = Await query.ToListAsync()
             End Using
@@ -371,9 +387,9 @@ Public Class PayrollResources
 
     Private Async Function LoadPayPeriod() As Task
         Try
-            Using context = New PayrollContext()
+            Using context = New PayrollContext(logger)
                 Dim query = From p In context.PayPeriods
-                            Where CBool(p.RowID = _payPeriodID)
+                            Where Nullable.Equals(p.RowID, _payPeriodID)
 
                 _payPeriod = Await query.FirstOrDefaultAsync()
             End Using
@@ -386,11 +402,11 @@ Public Class PayrollResources
         Dim cutoffStart = _payDateFrom.AddDays(-3)
 
         Try
-            Using context = New PayrollContext()
+            Using context = New PayrollContext(logger)
                 Dim query = From p In context.PayRates
-                            Where p.OrganizationID = z_OrganizationID And
-                               cutoffStart <= p.Date And
-                               p.Date <= _payDateTo
+                            Where p.OrganizationID.Value = z_OrganizationID AndAlso
+                                cutoffStart <= p.Date AndAlso
+                                p.Date <= _payDateTo
 
                 _payRates = Await query.ToListAsync()
             End Using
@@ -401,17 +417,29 @@ Public Class PayrollResources
 
     Private Async Function LoadAllowances() As Task
         Try
-            Using context = New PayrollContext()
+            Using context = New PayrollContext(logger)
                 ' Retrieve all allowances whose begin and end date spans the cutoff dates.
                 Dim query = context.Allowances.Include(Function(a) a.Product).
+                    Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
                     Where(Function(a) a.EffectiveStartDate <= _payDateTo).
-                    Where(Function(a) _payDateFrom <= a.EffectiveEndDate).
-                    Where(Function(a) Nullable.Equals(a.OrganizationID, z_OrganizationID))
+                    Where(Function(a) _payDateFrom <= a.EffectiveEndDate)
 
                 _allowances = Await query.ToListAsync()
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("Allowances", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadFilingStatuses() As Task
+        Try
+            Using context = New PayrollContext()
+                _filingStatuses = Await (
+                    New SqlToDataTable("SELECT * FROM filingstatus;").
+                        ReadAsync())
+            End Using
+        Catch ex As Exception
+            Throw New ResourceLoadingException("Filing Statuses", ex)
         End Try
     End Function
 

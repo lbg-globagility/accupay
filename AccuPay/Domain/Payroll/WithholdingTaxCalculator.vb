@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports PayrollSys
 
 Namespace Global.AccuPay.Payroll
 
@@ -15,7 +16,7 @@ Namespace Global.AccuPay.Payroll
             _withholdingTaxBrackets = withholdingTaxBrackets
         End Sub
 
-        Public Sub Calculate(settings As ListOfValueCollection, employee As DataRow, paystub As Paystub, previousPaystub As Paystub, employee2 As Employee, payperiod As PayPeriod)
+        Public Sub Calculate(settings As ListOfValueCollection, employee As DataRow, paystub As Paystub, previousPaystub As Paystub, employee2 As Employee, payperiod As PayPeriod, salary As Salary)
             Dim currentTaxableIncome = 0D
 
             If employee2.EmployeeType = SalaryType.Fixed Then
@@ -30,10 +31,9 @@ Namespace Global.AccuPay.Payroll
                 End If
             End If
 
-            Dim governmentContributions = paystub.SssEmployeeShare + paystub.PhilHealthEmployeeShare + paystub.HdmfEmployeeShare
-            currentTaxableIncome = currentTaxableIncome - governmentContributions
+            currentTaxableIncome = currentTaxableIncome - paystub.GovernmentDeductions
 
-            Dim deductionSchedule = employee("WTaxDeductSched").ToString
+            Dim deductionSchedule = employee2.WithholdingTaxSchedule
 
             If IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) Or IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
                 paystub.TaxableIncome = currentTaxableIncome + If(previousPaystub?.TaxableIncome, 0)
@@ -43,33 +43,67 @@ Namespace Global.AccuPay.Payroll
                 paystub.TaxableIncome = currentTaxableIncome
             End If
 
-            Dim payFrequencyID As Integer
+            ' Round the daily rate to two decimal places since amounts in the 3rd decimal place
+            ' isn't significant enough to warrant the employee to be taxable.
+            Dim dailyRate = If(
+                employee2.IsDaily,
+                salary.BasicSalary,
+                salary.BasicSalary / (employee2.WorkDaysPerYear / 12))
 
+            Dim minimumWage = ValNoComma(employee("MinimumWageAmount"))
+            Dim isMinimumWageEarner = dailyRate <= minimumWage
+
+            If isMinimumWageEarner Then
+                paystub.TaxableIncome = 0
+            End If
+
+            If Not (paystub.TaxableIncome > 0D And IsScheduledForTaxation(deductionSchedule, payperiod)) Then
+                paystub.TaxableIncome = 0
+                paystub.WithholdingTax = 0
+                Return
+            End If
+
+            Dim payFrequencyID As Integer
             If IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) Or IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
                 payFrequencyID = PayFrequency.Monthly
             ElseIf IsWithholdingTaxPaidPerPayPeriod(deductionSchedule) Then
                 payFrequencyID = PayFrequency.SemiMonthly
             End If
 
-            ' Round the daily rate to two decimal places since amounts in the 3rd decimal place
-            ' isn't significant enough to warrant the employee to be taxable.
-            Dim dailyRate = Math.Round(ValNoComma(employee("EmpRatePerDay")), 2)
+            Dim filingStatusID = GetFilingStatusID(employee2.MaritalStatus, employee2.NoOfDependents)
 
-            Dim minimumWage = ValNoComma(employee("MinimumWageAmount"))
-            Dim isMinimumWageEarner = dailyRate <= minimumWage
+            Dim bracket = GetMatchingTaxBracket(payFrequencyID, filingStatusID, paystub, payperiod)
 
-            If isMinimumWageEarner Then
-                paystub.TaxableIncome = 0D
-            End If
-
-            If Not (paystub.TaxableIncome > 0D And IsScheduledForTaxation(deductionSchedule, payperiod)) Then
-                paystub.WithholdingTax = 0
+            If bracket Is Nothing Then
+                paystub.TaxableIncome = 0
                 Return
             End If
 
-            Dim maritalStatus = employee2.MaritalStatus
-            Dim noOfDependents = employee2.NoOfDependents
+            Dim exemptionAmount = bracket.ExemptionAmount
+            Dim taxableIncomeFromAmount = bracket.TaxableIncomeFromAmount
+            Dim exemptionInExcessAmount = bracket.ExemptionInExcessAmount
 
+            Dim excessAmount = paystub.TaxableIncome - taxableIncomeFromAmount
+
+            Dim taxAmount = AccuMath.CommercialRound(exemptionAmount + (excessAmount * exemptionInExcessAmount))
+
+            If employee2.IsWeeklyPaid Then
+                Dim is_deduct_sched_to_thisperiod = If(
+                    employee2.IsUnderAgency,
+                    payperiod.WTaxWeeklyAgentContribSched,
+                    payperiod.WTaxWeeklyContribSched)
+
+                If is_deduct_sched_to_thisperiod Then
+                    paystub.WithholdingTax = taxAmount
+                Else
+                    paystub.WithholdingTax = 0
+                End If
+            Else
+                paystub.WithholdingTax = taxAmount
+            End If
+        End Sub
+
+        Private Function GetFilingStatusID(maritalStatus As String, noOfDependents As Integer?) As Integer
             Dim filingStatus = _filingStatuses.
                 Select($"
                     MaritalStatus = '{maritalStatus}' AND
@@ -83,35 +117,8 @@ Namespace Global.AccuPay.Payroll
                 filingStatusID = CInt(filingStatus("RowID"))
             End If
 
-            Dim bracket = GetMatchingTaxBracket(payFrequencyID, filingStatusID, paystub, payperiod)
-
-            If bracket Is Nothing Then
-                Return
-            End If
-
-            Dim exemptionAmount = bracket.ExemptionAmount
-            Dim taxableIncomeFromAmount = bracket.TaxableIncomeFromAmount
-            Dim exemptionInExcessAmount = bracket.ExemptionInExcessAmount
-
-            Dim excessAmount = paystub.TaxableIncome - taxableIncomeFromAmount
-
-            Dim is_weekly As Boolean = Convert.ToBoolean(Convert.ToInt16(employee("IsWeeklyPaid")))
-
-            If is_weekly Then
-                Dim is_deduct_sched_to_thisperiod = If(
-                    employee2.IsUnderAgency,
-                    payperiod.WTaxWeeklyAgentContribSched,
-                    payperiod.WTaxWeeklyContribSched)
-
-                If is_deduct_sched_to_thisperiod Then
-                    paystub.WithholdingTax = AccuMath.CommercialRound(exemptionAmount + (excessAmount * exemptionInExcessAmount))
-                Else
-                    paystub.WithholdingTax = 0
-                End If
-            Else
-                paystub.WithholdingTax = AccuMath.CommercialRound(exemptionAmount + (excessAmount * exemptionInExcessAmount))
-            End If
-        End Sub
+            Return filingStatusID
+        End Function
 
         Private Function GetMatchingTaxBracket(payFrequencyID As Integer?, filingStatusID As Integer?, _paystub As Paystub, _payperiod As PayPeriod) As WithholdingTaxBracket
             Dim taxEffectivityDate = New Date(_payperiod.Year, _payperiod.Month, 1)
