@@ -6,6 +6,8 @@ Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.Extensions.Logging
+Imports Microsoft.Extensions.Logging.Console
 Imports PayrollSys
 
 Public Class TimeEntryGenerator
@@ -52,68 +54,70 @@ Public Class TimeEntryGenerator
 
         Using context = New PayrollContext()
             employees = context.Employees.
-                Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
+                Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
                 ToList()
 
             agencies = context.Agencies.
-                Where(Function(a) Nullable.Equals(a.OrganizationID, z_OrganizationID)).
+                Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
                 ToList()
 
             organization = context.Organizations.
-                FirstOrDefault(Function(o) Nullable.Equals(o.RowID, z_OrganizationID))
+                SingleOrDefault(Function(o) o.RowID.Value = z_OrganizationID)
 
             _salaries = context.Salaries.
-                Where(Function(s) s.EffectiveFrom <= _cutoffStart And _cutoffStart <= If(s.EffectiveTo, _cutoffStart)).
+                Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
+                Where(Function(s) s.EffectiveFrom <= _cutoffStart AndAlso _cutoffStart <= If(s.EffectiveTo, _cutoffStart)).
                 ToList()
 
             Dim previousCutoff = _cutoffStart.AddDays(-3)
             _timeEntries = context.TimeEntries.
                 Include(Function(t) t.ShiftSchedule.Shift).
-                Where(Function(t) Nullable.Equals(t.OrganizationID, z_OrganizationID)).
-                Where(Function(t) previousCutoff <= t.Date And t.Date <= _cutoffEnd).
+                Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
+                Where(Function(t) previousCutoff <= t.Date AndAlso t.Date <= _cutoffEnd).
                 ToList()
 
             _actualTimeEntries = context.ActualTimeEntries.
-                Where(Function(a) _cutoffStart <= a.Date And a.Date <= _cutoffEnd).
+                Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
+                Where(Function(a) _cutoffStart <= a.Date AndAlso a.Date <= _cutoffEnd).
                 ToList()
 
             _timeLogs = context.TimeLogs.
-                Where(Function(t) Nullable.Equals(t.OrganizationID, z_OrganizationID)).
-                Where(Function(t) _cutoffStart <= t.LogDate And t.LogDate <= _cutoffEnd).
+                Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
+                Where(Function(t) _cutoffStart <= t.LogDate AndAlso t.LogDate <= _cutoffEnd).
                 ToList()
 
             _leaves = context.Leaves.
-                Where(Function(l) Nullable.Equals(l.OrganizationID, z_OrganizationID)).
-                Where(Function(l) _cutoffStart <= l.StartDate And l.StartDate <= _cutoffEnd).
+                Where(Function(l) l.OrganizationID.Value = z_OrganizationID).
+                Where(Function(l) _cutoffStart <= l.StartDate AndAlso l.StartDate <= _cutoffEnd).
                 Where(Function(l) l.Status = "Approved").
                 ToList()
 
             _overtimes = context.Overtimes.
-                Where(Function(o) Nullable.Equals(o.OrganizationID, z_OrganizationID)).
-                Where(Function(o) _cutoffStart <= o.OTStartDate And o.OTStartDate <= _cutoffEnd).
+                Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
+                Where(Function(o) _cutoffStart <= o.OTStartDate AndAlso o.OTStartDate <= _cutoffEnd).
                 ToList()
 
             _officialBusinesses = context.OfficialBusinesses.
-                Where(Function(o) Nullable.Equals(o.OrganizationID, z_OrganizationID)).
-                Where(Function(o) o.StartDate <= _cutoffEnd And _cutoffStart <= o.EndDate).
+                Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
+                Where(Function(o) o.StartDate <= _cutoffEnd AndAlso _cutoffStart <= o.EndDate).
                 Where(Function(o) o.Status = OfficialBusiness.StatusApproved).
                 ToList()
 
             _agencyFees = context.AgencyFees.
-                Where(Function(a) Nullable.Equals(a.OrganizationID, z_OrganizationID)).
-                Where(Function(a) _cutoffStart <= a.Date And a.Date <= _cutoffEnd).
+                Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
+                Where(Function(a) _cutoffStart <= a.Date AndAlso a.Date <= _cutoffEnd).
                 ToList()
 
             _shiftSchedules = context.ShiftSchedules.
                 Include(Function(s) s.Shift).
-                Where(Function(s) Nullable.Equals(s.OrganizationID, z_OrganizationID)).
-                Where(Function(s) s.EffectiveFrom <= _cutoffEnd And _cutoffStart <= s.EffectiveTo).
+                Where(Function(s) s.OrganizationID = z_OrganizationID).
+                Where(Function(s) s.EffectiveFrom <= _cutoffEnd AndAlso _cutoffStart <= s.EffectiveTo).
                 ToList()
 
             Dim payRates =
                 (From p In context.PayRates
-                 Where p.OrganizationID = z_OrganizationID And
-                     p.Date >= previousCutoff And
+                 Where p.OrganizationID.Value = z_OrganizationID AndAlso
+                     p.Date >= previousCutoff AndAlso
                      p.Date <= _cutoffEnd).
                 ToList()
 
