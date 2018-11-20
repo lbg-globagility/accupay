@@ -43,6 +43,8 @@ Public Class DailyAllowanceCalculator
 
                 If isRestDay Then
                     amount = dailyRate
+                ElseIf allowance.Product.Fixed Then
+                    amount = dailyRate
                 Else
                     amount = (timeEntry.RegularHours + timeEntry.TotalLeaveHours) * hourlyRate
                 End If
