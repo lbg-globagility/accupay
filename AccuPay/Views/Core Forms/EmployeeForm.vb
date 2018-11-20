@@ -8541,7 +8541,7 @@ Public Class EmployeeForm
         chkboxChargeToBonus.Checked = tsbtnNewLoan.Enabled
     End Sub
 
-    Private Sub tsbtnSaveLoan_Click(sender As Object, e As EventArgs) Handles tsbtnSaveLoan.Click
+    Private Async Sub tsbtnSaveLoan_Click(sender As Object, e As EventArgs) Handles tsbtnSaveLoan.Click
         pbEmpPicLoan.Focus() 'And txtdedpercent.Text = ""
 
         txtloanamt.Focus()
@@ -8602,11 +8602,32 @@ Public Class EmployeeForm
             If dontUpdateLoan = 1 Then
                 Exit Sub
             End If
-            SP_UpdateLoadSchedule(z_User, z_datetime, Val(txtloannumber.Text), datefrom.Value.ToString("yyyy-MM-dd"), dateto.Value.ToString("yyyy-MM-dd"),
-                                 Val(txtloanamt.Text.Replace(",", "")), "", Val(txtdedamt.Text.Replace(",", "")),
-                                 Val(txtnoofpayper.Text), Trim(TextBox6.Text), cmbStatus.Text, 0, dgvLoanList.CurrentRow.Cells(c_RowIDLoan.Index).Value,
-                                 loantypeID,
-                                 cmbdedsched.Text, chkboxChargeToBonus.Tag) 'CDec(txtdedpercent.Text)'cmbdedsched.Text
+
+            Using context = New PayrollContext()
+                Dim rowId = Convert.ToInt32(dgvLoanList.CurrentRow.Cells(c_RowIDLoan.Index).Value)
+                Dim loan = Await context.LoanSchedules.Where(Function(l) l.RowID.Value = rowId).SingleOrDefaultAsync()
+
+                With loan
+                    If cmbStatus.Enabled Then
+                        .LoanNumber = txtloannumber.Text.Trim()
+                        .DedEffectiveDateFrom = datefrom.Value
+                        .DedEffectiveDateTo = dateto.Value
+                        .TotalLoanAmount = Convert.ToDecimal(txtloanamt.Text.Replace(",", ""))
+                        .DeductionSchedule = cmbdedsched.Text
+                        .DeductionAmount = Convert.ToDecimal(txtdedamt.Text.Replace(",", ""))
+                        .Status = cmbStatus.Text
+                        .DeductionPercentage = Convert.ToDecimal(txtloaninterest.Text.Replace(",", ""))
+                        .NoOfPayPeriod = Convert.ToDecimal(txtnoofpayper.Text.Replace(",", ""))
+                        .LoanTypeID = Convert.ToInt32(loantypeID)
+                    Else
+                        .Status = cmbStatus.Text
+                    End If
+                    .Comments = TextBox6.Text.Trim()
+                End With
+
+                Await context.SaveChangesAsync()
+            End Using
+
             fillloadsched()
             fillloadschedselected()
             SaveBonusCommentsRegardsToLoan()

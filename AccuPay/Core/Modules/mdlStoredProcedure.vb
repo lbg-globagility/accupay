@@ -663,29 +663,29 @@ Module mdlStoredProcedure
     '`DeductionPercentage` DECIMAL(10,2),
     '`NoOfPayPeriod` DECIMAL(10,2),
     '`Comments` VARCHAR(2000)
-    Public Function SP_LoadSchedule(ByVal Createdby As Integer, _
-                                  ByVal LastUpdby As Integer, _
-                                  ByVal Created As DateTime, _
-                                  ByVal LastUpd As DateTime, _
-                                  ByVal LoanNumber As Integer, _
-                                  ByVal DedEffectiveDateFrom As Date, _
-                                  ByVal DedEffectiveDateTo As Date, _
-                                  ByVal orgid As Integer, _
-                                  ByVal empid As Integer, _
-                                  ByVal TotalLoanAmount As Double, _
-                                  ByVal DeductionSchedule As String, _
-                                  ByVal TotalBalanceLeft As Double, _
-                                  ByVal DeductionAmount As Double, _
-                                  ByVal noofpayperiod As Double, _
-                                  ByVal Comments As String, _
-                                  ByVal Status As String, _
-                                  ByVal DeductionPercentage As Double, _
-                                  Optional LoanTypeID As String = Nothing, _
+    Public Function SP_LoadSchedule(ByVal Createdby As Integer,
+                                  ByVal LastUpdby As Integer,
+                                  ByVal Created As DateTime,
+                                  ByVal LastUpd As DateTime,
+                                  ByVal LoanNumber As Integer,
+                                  ByVal DedEffectiveDateFrom As Date,
+                                  ByVal DedEffectiveDateTo As Date,
+                                  ByVal orgid As Integer,
+                                  ByVal empid As Integer,
+                                  ByVal TotalLoanAmount As Double,
+                                  ByVal DeductionSchedule As String,
+                                  ByVal TotalBalanceLeft As Double,
+                                  ByVal DeductionAmount As Double,
+                                  ByVal noofpayperiod As Double,
+                                  ByVal Comments As String,
+                                  ByVal Status As String,
+                                  ByVal DeductionPercentage As Double,
+                                  Optional LoanTypeID As String = Nothing,
                                   Optional DeductionSched As String = Nothing,
                                   Optional BonusRow_ID As Object = Nothing) As Boolean
 
         Dim F_return As Boolean = False
-        Dim SQL_command As MySqlCommand = _
+        Dim SQL_command As MySqlCommand =
                   New MySqlCommand("sp_empschedule", connection)
         With SQL_command
             Try
