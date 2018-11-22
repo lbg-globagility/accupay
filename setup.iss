@@ -222,7 +222,7 @@ begin
 end;
 
 procedure InitializeWizard();
-var databaseName: String;
+var databaseName, serverName: String;
 begin
   Page := CreateInputQueryPage(wpWelcome,
   'Database Information', 'Database to connect to',
@@ -233,7 +233,13 @@ begin
   Page.Add('Database:', False);
 
   { Set initial values (optional) }
-  Page.Values[0] := ExpandConstant('localhost');
+  begin    
+    if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Globagility\DBConn\GoldWings',
+       'server', serverName) then
+    begin
+    end;
+  end;
+  Page.Values[0] := ExpandConstant(serverName);
 
   begin    
     if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Globagility\DBConn\GoldWings',
