@@ -356,6 +356,12 @@
       <DependentUpon>EmployeeProfile.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\Reports\LoanReportByTypePerPage.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoanReportByTypePerPage.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\Providers\Employee201ReportProvider.vb" />
     <Compile Include="Views\Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
@@ -1618,6 +1624,10 @@
     <EmbeddedResource Include="Reports\Reports\EmployeeProfile.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>EmployeeProfile.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\LoanReportByTypePerPage.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LoanReportByTypePerPage.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\AllowanceTypeForm.resx">
       <DependentUpon>AllowanceTypeForm.vb</DependentUpon>

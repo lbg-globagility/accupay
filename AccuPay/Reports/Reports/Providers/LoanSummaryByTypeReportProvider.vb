@@ -14,6 +14,18 @@ Public Class LoanSummaryByTypeReportProvider
             Return
         End If
 
+        Dim report As ReportClass
+        report = New LoanReportByType()
+
+        Dim pagingStylePrompt =
+            MsgBox("Do you want to print separate pages every Loan Type ?",
+                   MsgBoxStyle.YesNo,
+                   String.Concat("Print ", Name, " report"))
+
+        If pagingStylePrompt = MsgBoxResult.Yes Then
+            report = New LoanReportByTypePerPage()
+        End If
+
         Dim dateFrom = CDate(dateSelector.DateFrom)
         Dim dateTo = CDate(dateSelector.DateTo)
 
@@ -25,7 +37,7 @@ Public Class LoanSummaryByTypeReportProvider
 
         Dim data = DirectCast(callProcAsDatTab(params, "RPT_LoansByType"), DataTable)
 
-        Dim report = New LoanReportByType()
+
         report.SetDataSource(data)
 
         Dim dateFromTitle = dateFrom.ToString("MMMM d, yyyy")
