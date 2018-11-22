@@ -217,7 +217,7 @@ Public Class PayrollGeneration
             socialSecurityCalculator.Calculate(_settings, _paystub, _previousPaystub, _salary, _employee2, _payPeriod)
 
             Dim philHealthCalculator = New PhilHealthCalculator(_philHealthBrackets)
-            philHealthCalculator.Calculate(_settings, _salary, _paystub, _previousPaystub, _employee2, _payPeriod)
+            philHealthCalculator.Calculate(_settings, _salary, _paystub, _previousPaystub, _employee2, _payPeriod, _allowances)
 
             Dim hdmfCalculator = New HdmfCalculator()
             hdmfCalculator.Calculate(_salary, _paystub, _employee2, _payPeriod)

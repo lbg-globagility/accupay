@@ -18,4 +18,5 @@ Public Enum PhilHealthCalculationBasis
     Earnings
     GrossPay
     BasicSalary
+    BasicAndEcola
 End Enum

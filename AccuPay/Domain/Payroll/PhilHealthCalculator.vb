@@ -15,11 +15,13 @@ Namespace Global.AccuPay.Payroll
 
         Private ReadOnly _philHealthBrackets As IList(Of PhilHealthBracket)
 
+        Private ReadOnly ecolaName As String = "ecola"
+
         Public Sub New(philHealthBrackets As IList(Of PhilHealthBracket))
             _philHealthBrackets = philHealthBrackets
         End Sub
 
-        Public Sub Calculate(settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod)
+        Public Sub Calculate(settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, allowances As ICollection(Of Allowance))
             Dim deductionSchedule = employee.PhilHealthSchedule
 
             Dim philHealthCalculation = settings.GetEnum(
@@ -34,6 +36,20 @@ Namespace Global.AccuPay.Payroll
             If philHealthCalculation = PhilHealthCalculationBasis.BasicSalary Then
                 ' If philHealth calculation is based on the basic salary, get it from the salary record
                 totalContribution = salary.PhilHealthDeduction
+            ElseIf philHealthCalculation = PhilHealthCalculationBasis.BasicAndEcola Then
+                totalContribution = salary.PhilHealthDeduction
+
+                Dim ecolas = allowances.Any(Function(ea) ea.Product.PartNo.ToLower() = ecolaName)
+                If ecolas Then
+                    Dim ecola = allowances.FirstOrDefault(Function(ea) ea.Product.PartNo.ToLower() = ecolaName)
+
+                    Dim phHSetting = settings.GetSublist("PhilHealth")
+                    Dim rate = phHSetting.GetDecimal("Rate") / 100
+
+                    Dim ecolaPhHContribAmount = (ecola.Amount * (employee.WorkDaysPerYear / CalendarConstants.MonthsInAYear)) * rate
+                    totalContribution += ecolaPhHContribAmount
+                End If
+
             ElseIf isPhilHealthProrated Then
                 Dim basisPay = 0D
 
