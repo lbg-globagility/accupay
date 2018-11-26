@@ -21,7 +21,7 @@ END IF;
 
 /* If allowance is one time, ensure end date is the same as start date */
 IF NEW.AllowanceFrequency = 'One time' THEN
-	SET NEW.EffectiveStartDate = NEW.EffectiveEndDate;
+	SET NEW.EffectiveEndDate = NEW.EffectiveStartDate;
 END IF;
 
 END//
