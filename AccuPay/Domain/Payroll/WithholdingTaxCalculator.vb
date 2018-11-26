@@ -58,7 +58,6 @@ Namespace Global.AccuPay.Payroll
             End If
 
             If Not (paystub.TaxableIncome > 0D And IsScheduledForTaxation(deductionSchedule, payperiod)) Then
-                paystub.TaxableIncome = 0
                 paystub.WithholdingTax = 0
                 Return
             End If
