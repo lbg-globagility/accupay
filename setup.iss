@@ -202,7 +202,7 @@ Source: ".\AccuPay\bin\Debug\System.Xml.XPath.XDocument.dll"; DestDir: "{app}"; 
 
 Source: ".\AccuPay\Resources\*.xlsx"; DestDir: "{app}\Resources"; Flags: ignoreversion
 Source: ".\AccuPay\Resources\SourceSansPro-Regular.ttf"; DestDir: "{fonts}"; FontInstall: "Source Sans Pro"; Flags: onlyifdoesntexist uninsneveruninstall
-Source: ".\AccuPay\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+; Source: ".\AccuPay\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; Source: ".\AccuPay\bin\Debug\Core Forms\rpt\*.rpt"; DestDir: "{app}\Core Forms\rpt"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
