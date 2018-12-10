@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `employeebonus` (
   `TaxableFlag` char(50) DEFAULT NULL,
   `BonusAmount` decimal(10,2) DEFAULT NULL,
   `RemainingBalance` decimal(11,6) DEFAULT '0.000000',
+  `Remarks` VARCHAR(255) NULL DEFAULT '',
   PRIMARY KEY (`RowID`),
   KEY `FK_BaseTables_organization` (`OrganizationID`),
   KEY `FK_BaseTables_user` (`CreatedBy`),
