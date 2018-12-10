@@ -78,7 +78,7 @@ IF emp_group_name = '1' THEN
                 IF empOTRowID IS NOT NULL THEN
 
                     UPDATE employeeovertime
-                    SET OTStatus='Approved', OTStartTime = ADDTIME(sh_timeto,'00:00:01'), OTEndTime = NEW.TimeOut
+                    SET OTStatus='Approved', OTStartTime = sh_timeto, OTEndTime = NEW.TimeOut
                     ,Comments=''
                     ,LastUpd=CURRENT_TIMESTAMP()
                     ,LastUpdBy=NEW.LastUpdBy
@@ -87,7 +87,7 @@ IF emp_group_name = '1' THEN
 
                 ELSE
 
-                    SELECT INSUPD_employeeOT(NULL,NEW.OrganizationID,NEW.CreatedBy,NEW.CreatedBy,NEW.EmployeeID,'Overtime',ADDTIME(sh_timeto,'00:00:01'),NEW.TimeOut,NEW.`Date`,NEW.`Date`,'Approved','',today_timeout,NULL) INTO anyint;
+                    SELECT INSUPD_employeeOT(NULL,NEW.OrganizationID,NEW.CreatedBy,NEW.CreatedBy,NEW.EmployeeID,'Overtime',sh_timeto,NEW.TimeOut,NEW.`Date`,NEW.`Date`,'Approved','',today_timeout,NULL) INTO anyint;
 
                 END IF;
 
@@ -129,7 +129,7 @@ IF emp_group_name = '1' THEN
 
     END IF;
 
-    UPDATE employeeovertime SET OTStartTime = ADDTIME(sh_timeto,'00:00:01'), OTEndTime = NEW.TimeOut, LastUpd=IFNULL(ADDTIME(LastUpd, '00:00:01'),CURRENT_TIMESTAMP()), LastUpdBy=NEW.CreatedBy WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND NEW.`Date` BETWEEN OTStartDate AND OTEndDate AND sh_timeto IS NOT NULL;
+    UPDATE employeeovertime SET OTStartTime = sh_timeto, OTEndTime = NEW.TimeOut, LastUpd=IFNULL(ADDTIME(LastUpd, '00:00:01'),CURRENT_TIMESTAMP()), LastUpdBy=NEW.CreatedBy WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND NEW.`Date` BETWEEN OTStartDate AND OTEndDate AND sh_timeto IS NOT NULL;
 
 END IF;
 
