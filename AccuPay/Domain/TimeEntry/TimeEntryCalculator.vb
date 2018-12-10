@@ -113,6 +113,10 @@ Public Class TimeEntryCalculator
         Dim overtimeStart = overtime.OTStartDate.Add(otStartTime)
         Dim nextDay = overtime.OTStartDate.AddDays(1)
 
+        If otEndTime = otStartTime Then
+            Return Nothing
+        End If
+
         Dim overtimeEnd = If(
             otEndTime > otStartTime,
             overtime.OTStartDate.Add(otEndTime),
