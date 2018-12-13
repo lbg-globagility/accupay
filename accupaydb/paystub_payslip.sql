@@ -68,7 +68,7 @@ SELECT
     ps.NightDiffHours `COL14`,
     IF(IsActualFlag, psa.NightDiffPay, ps.NightDiffPay) `COL15`,
     (ps.TotalAllowance - IFNULL(psiECOLA.PayAmount, 0)) `COL18`,
-    ps.TotalAdjustments `COL19`,
+    IF(IsActualFlag = TRUE, psa.TotalAdjustments, ps.TotalAdjustments) `COL19`,
     IF(
         IsActualFlag,
         psa.TotalGrossSalary + psa.TotalAdjustments,
