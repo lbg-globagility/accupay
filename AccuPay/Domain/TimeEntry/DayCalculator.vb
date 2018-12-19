@@ -11,12 +11,21 @@ Public Class DayCalculator
     Private ReadOnly _employee As Employee
     Private ReadOnly _policy As TimeEntryPolicy
 
+    Private ReadOnly _minutesPerHour As Decimal = 60
+    Private _lateSkipCountRounding As Boolean = False
+    Private _lateSkipCount As Decimal = 0
+
     Public Sub New(organization As Organization, settings As ListOfValueCollection, payrateCalendar As PayratesCalendar, employee As Employee)
         _payrateCalendar = payrateCalendar
         _settings = settings
         _organization = organization
         _employee = employee
         _policy = New TimeEntryPolicy(settings)
+
+        _lateSkipCountRounding = _policy.LateSkipCountRounding
+        If _lateSkipCountRounding Then
+            _lateSkipCount = Convert.ToDecimal(settings.GetValue("SkipCount"))
+        End If
     End Sub
 
     Public Function Compute(currentDate As DateTime,
@@ -109,6 +118,8 @@ Public Class DayCalculator
                     End If
                 End If
 
+                timeEntry = LatePolicySkipCountHours(timeEntry, currentShift, calculator, coveredPeriod)
+
                 timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift)
 
                 timeEntry.RegularHours = currentShift.WorkingHours - (timeEntry.LateHours + timeEntry.UndertimeHours)
@@ -138,6 +149,40 @@ Public Class DayCalculator
         ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves)
         ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry)
     End Sub
+
+    Private Function LatePolicySkipCountHours(timeEntry As TimeEntry, currentShift As CurrentShift, calculator As TimeEntryCalculator, coveredPeriod As TimePeriod) As TimeEntry
+        If _lateSkipCountRounding Then
+            Dim lateMinutes = calculator.ComputeLateHours2(coveredPeriod, currentShift)
+
+            Dim empGracePeriod = _employee.LateGracePeriod
+            Dim empGracePeriodHrs = empGracePeriod / _minutesPerHour
+            Dim hasNoGracePeriod = empGracePeriod = 0
+            If Not hasNoGracePeriod _
+                And lateMinutes > empGracePeriod Then
+
+                Dim properValue = Math.Ceiling(lateMinutes / empGracePeriod)
+                Dim lessOne = properValue - 1
+                Dim properLateHours = lessOne * _lateSkipCount
+
+                timeEntry.LateHours = properLateHours / _minutesPerHour
+            End If
+        End If
+
+        Return timeEntry
+    End Function
+
+    Private Function Skipper(repeater As Integer, startCount As Decimal) As Decimal
+        Dim initialValaue = startCount + 1
+
+        Dim index = repeater - 1
+        Dim i = 0
+        While i < index
+            initialValaue += startCount
+            i += 1
+        End While
+
+        Return initialValaue
+    End Function
 
     Private Sub ComputePay(timeEntry As TimeEntry,
                            currentDate As Date,

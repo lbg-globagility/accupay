@@ -39,6 +39,25 @@ Public Class TimeEntryCalculator
         Return latePeriod.TotalHours
     End Function
 
+    Public Function ComputeLateHours2(workPeriod As TimePeriod, currentShift As CurrentShift) As Decimal
+        Dim shiftPeriod = currentShift.ShiftPeriod
+
+        If workPeriod.EarlierThan(shiftPeriod) Then
+            Return 0
+        End If
+
+        Dim latePeriod = New TimePeriod(shiftPeriod.Start, workPeriod.Start)
+
+        If currentShift.HasBreaktime Then
+            Dim breakPeriod = currentShift.BreakPeriod
+            Dim latePeriods = latePeriod.Difference(breakPeriod)
+
+            Return latePeriods.Sum(Function(l) l.TotalMinutes)
+        End If
+
+        Return latePeriod.TotalMinutes
+    End Function
+
     Public Function ComputeUndertimeHours(workPeriod As TimePeriod, currentShift As CurrentShift) As Decimal
         Dim shiftPeriod = currentShift.ShiftPeriod
 
