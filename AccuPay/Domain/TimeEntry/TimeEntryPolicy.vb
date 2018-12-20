@@ -20,6 +20,12 @@ Public Class TimeEntryPolicy
         End Get
     End Property
 
+    Public ReadOnly Property OvertimeSkipCountRounding As Boolean
+        Get
+            Return _settings.GetBoolean("OvertimeHours.SkipCountRounding")
+        End Get
+    End Property
+
     Public ReadOnly Property AbsencesOnHoliday As Boolean
         Get
             Return _settings.GetBoolean("Payroll Policy.holiday.allowabsence")

@@ -14,6 +14,8 @@ Public Class DayCalculator
     Private ReadOnly _minutesPerHour As Decimal = 60
     Private _lateSkipCountRounding As Boolean = False
     Private _lateSkipCount As Decimal = 0
+    Private _overtimeSkipCountRounding As Boolean = False
+    Private _overtimeSkipCount As Decimal = 0
 
     Public Sub New(organization As Organization, settings As ListOfValueCollection, payrateCalendar As PayratesCalendar, employee As Employee)
         _payrateCalendar = payrateCalendar
@@ -25,6 +27,11 @@ Public Class DayCalculator
         _lateSkipCountRounding = _policy.LateSkipCountRounding
         If _lateSkipCountRounding Then
             _lateSkipCount = Convert.ToDecimal(settings.GetValue("SkipCount"))
+        End If
+
+        _overtimeSkipCountRounding = _policy.OvertimeSkipCountRounding
+        If _overtimeSkipCountRounding Then
+            _overtimeSkipCount = Convert.ToDecimal(settings.GetValue("OvertimeSkipCount"))
         End If
     End Sub
 
@@ -118,7 +125,7 @@ Public Class DayCalculator
                     End If
                 End If
 
-                timeEntry = LatePolicySkipCountHours(timeEntry, currentShift, calculator, coveredPeriod)
+                timeEntry = LateSchemeSkipCountHours(timeEntry, currentShift, calculator, coveredPeriod)
 
                 timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift)
 
@@ -133,6 +140,8 @@ Public Class DayCalculator
 
                 timeEntry.OvertimeHours = overtimes.Sum(
                     Function(o) calculator.ComputeOvertimeHours(logPeriod, o, currentShift, nightBreaktime))
+
+                timeEntry = OvertimeSchemeSkipCountHours(timeEntry, overtimes, currentShift, calculator, logPeriod, nightBreaktime)
 
                 ComputeNightDiffHours(timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime)
                 ComputeHolidayHours(payrate, timeEntry)
@@ -150,9 +159,40 @@ Public Class DayCalculator
         ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry)
     End Sub
 
-    Private Function LatePolicySkipCountHours(timeEntry As TimeEntry, currentShift As CurrentShift, calculator As TimeEntryCalculator, coveredPeriod As TimePeriod) As TimeEntry
+    Private Function OvertimeSchemeSkipCountHours(timeEntry As TimeEntry, overtimes As IList(Of Overtime), currentShift As CurrentShift, calculator As TimeEntryCalculator, logPeriod As TimePeriod, nightBreaktime As TimePeriod) As TimeEntry
+        If _overtimeSkipCountRounding Then
+            Dim overtimeMinutes = overtimes.Sum(
+            Function(o) calculator.ComputeOvertimeMinutes(logPeriod, o, currentShift, nightBreaktime))
+
+            Dim empGracePeriod = _employee.LateGracePeriod
+            Dim empGracePeriodHrs = empGracePeriod / _minutesPerHour
+            Dim hasNoGracePeriod = empGracePeriod = 0
+            Dim hasGracePeriod = Not hasNoGracePeriod
+
+            If hasGracePeriod _
+                And overtimeMinutes > empGracePeriod Then
+
+                Dim properValue = Math.Ceiling(overtimeMinutes / empGracePeriod)
+                Dim lessOne = properValue - 1
+                Dim properLateHours = lessOne * _overtimeSkipCount
+
+                timeEntry.OvertimeHours = properLateHours / _minutesPerHour
+            ElseIf hasGracePeriod _
+                And overtimeMinutes <= empGracePeriod Then
+
+                timeEntry.OvertimeHours = 0
+            End If
+        End If
+
+        Return timeEntry
+    End Function
+
+    Private Function LateSchemeSkipCountHours(timeEntry As TimeEntry,
+                                              currentShift As CurrentShift,
+                                              calculator As TimeEntryCalculator,
+                                              coveredPeriod As TimePeriod) As TimeEntry
         If _lateSkipCountRounding Then
-            Dim lateMinutes = calculator.ComputeLateHours2(coveredPeriod, currentShift)
+            Dim lateMinutes = calculator.ComputeLateMinutes(coveredPeriod, currentShift)
 
             Dim empGracePeriod = _employee.LateGracePeriod
             Dim empGracePeriodHrs = empGracePeriod / _minutesPerHour

@@ -39,7 +39,7 @@ Public Class TimeEntryCalculator
         Return latePeriod.TotalHours
     End Function
 
-    Public Function ComputeLateHours2(workPeriod As TimePeriod, currentShift As CurrentShift) As Decimal
+    Public Function ComputeLateMinutes(workPeriod As TimePeriod, currentShift As CurrentShift) As Decimal
         Dim shiftPeriod = currentShift.ShiftPeriod
 
         If workPeriod.EarlierThan(shiftPeriod) Then
@@ -105,6 +105,19 @@ Public Class TimeEntryCalculator
             overtimeHours = overtimeWorked?.Difference(breaktime).Sum(Function(o) o.TotalHours)
         Else
             overtimeHours = overtimeWorked?.TotalHours
+        End If
+
+        Return If(overtimeHours, 0)
+    End Function
+
+    Public Function ComputeOvertimeMinutes(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift, breaktime As TimePeriod) As Decimal
+        Dim overtimeWorked = GetOvertimeWorked(workPeriod, overtime, shift)
+
+        Dim overtimeHours As Decimal?
+        If breaktime IsNot Nothing Then
+            overtimeHours = overtimeWorked?.Difference(breaktime).Sum(Function(o) o.TotalMinutes)
+        Else
+            overtimeHours = overtimeWorked?.TotalMinutes
         End If
 
         Return If(overtimeHours, 0)
