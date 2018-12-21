@@ -363,6 +363,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\Providers\Employee201ReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\PayrollLedgerExcelFormatReportProvider.vb" />
     <Compile Include="Views\Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
     </Compile>

@@ -1,13 +1,16 @@
-﻿Option Strict On
-
+﻿
 Imports System.Collections.ObjectModel
 Imports System.IO
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
-Public Class PayrollSummaryExcelFormatReportProvider
+Public Class PayrollLedgerExcelFormatReportProvider
     Implements IReportProvider
 
+    Private fromPeriodId As Integer
+    Private toPeriodId As Integer
+    Private actualSwitch As Boolean
+    Private dateFrom, dateTo As Date
     Public Property Name As String = "" Implements IReportProvider.Name
 
     Private basic_alphabet() As String =
@@ -15,8 +18,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
                       "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT"}
 
     Private ReadOnly reportColumns As IReadOnlyCollection(Of ReportColumn) = New ReadOnlyCollection(Of ReportColumn)({
-        New ReportColumn("Code", "DatCol2", ColumnType.Text),
-        New ReportColumn("Full Name", "DatCol3", ColumnType.Text),
+        New ReportColumn("FROM", "From", ColumnType.Text),
+        New ReportColumn("TO", "To", ColumnType.Text),
         New ReportColumn("Rate", "Rate"),
         New ReportColumn("Basic Pay", "BasicPay"),
         New ReportColumn("Reg Hrs", "RegularHours"),
@@ -74,34 +77,28 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private ReadOnly margin_size() As Decimal = New Decimal() {0.25D, 0.75D, 0.3D}
 
-    Private sys_ownr As New SystemOwner
-
     Public Property IsActual As Boolean
 
+    Public Sub New(FromPayPeriodId As Integer, ToPayPeriodId As Integer, IsActual As Boolean, PayDateFrom As Date, PayDateTo As Date)
+        fromPeriodId = FromPayPeriodId
+        toPeriodId = ToPayPeriodId
+
+        actualSwitch = IsActual
+
+        dateFrom = PayDateFrom
+        dateTo = PayDateTo
+    End Sub
+
     Public Sub Run() Implements IReportProvider.Run
-        Dim is_goldwings As Boolean = (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
-
         Static last_cell_column As String = basic_alphabet.Last
-
-        Dim bool_result As Short = Convert.ToInt16(IsActual)
-
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection With {
-            .ReportIndex = 6
-        }
-
-        If n_PayrollSummaDateSelection.ShowDialog <> DialogResult.OK Then
-            Return
-        End If
-
-        Dim excel_custom_format = Convert.ToBoolean(ExcelOptionFormat())
 
         Dim parameters =
                 New Object() {orgztnID,
-                              n_PayrollSummaDateSelection.PayPeriodFromID,
-                              n_PayrollSummaDateSelection.PayPeriodToID,
-                              bool_result,
-                              n_PayrollSummaDateSelection.cboStringParameter.Text,
-                              excel_custom_format}
+                              fromPeriodId,
+                              toPeriodId,
+                              actualSwitch,
+                              DBNull.Value,
+                              True}
 
         Dim sql_print_employee_profiles As New SQL(
             "CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
@@ -118,13 +115,13 @@ Public Class PayrollSummaryExcelFormatReportProvider
             Static temp_path As String = Path.GetTempPath()
 
             Dim short_dates() As String = New String() {
-                CDate(n_PayrollSummaDateSelection.DateFrom).ToShortDateString,
-                CDate(n_PayrollSummaDateSelection.DateTo).ToShortDateString}
+                CDate(dateFrom).ToShortDateString,
+                CDate(dateTo).ToShortDateString}
 
             Dim temp_file As String =
                         String.Concat(temp_path,
                                       orgNam,
-                                      report_name, n_PayrollSummaDateSelection.cboStringParameter.Text.Replace(" ", ""), "Report",
+                                      "Report",
                                       String.Concat(short_dates(0).Replace("/", "-"), "TO", short_dates(1).Replace("/", "-")),
                                       ".xlsx")
 
@@ -137,7 +134,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 newFile = New FileInfo(temp_file)
             End If
 
-            Dim divisionsWithEmployees = ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0)
+            Dim divisionsWithEmployees = ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0).FirstOrDefault
 
             Using excel = New ExcelPackage(newFile)
                 Dim subTotalRows = New List(Of Integer)
@@ -152,27 +149,50 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 Dim dateCell = worksheet.Cells(2, 1)
                 dateCell.Value = date_range
 
-                Dim rowIndex As Integer = 4
+                Dim rowIndex As Integer = 3
 
-                For Each employeesInDivision As DataTable In divisionsWithEmployees
-                    Dim divisionCell = worksheet.Cells(rowIndex, 1)
-                    Dim firstEmployee = employeesInDivision.AsEnumerable().FirstOrDefault()
-                    Dim divisionName = firstEmployee("DatCol1").ToString
-                    If divisionName.Length > 0 Then
-                        divisionCell.Value = divisionName
-                        divisionCell.Style.Font.Italic = True
-                    End If
+                Dim empoyeeNo = "0"
+
+                Dim rows = divisionsWithEmployees.Rows
+
+                Dim employeeList = divisionsWithEmployees.AsEnumerable().GroupBy(Function(row) row.Field(Of String)("DatCol2")).[Select](Function(grp) grp.First())
+
+                For Each employeesInDivision As DataRow In employeeList
+
+                    RenderColumnHeaders(worksheet, rowIndex)
 
                     rowIndex += 1
 
-                    RenderColumnHeaders(worksheet, rowIndex)
+                    empoyeeNo = employeesInDivision("DatCol2").ToString
+
+                    Dim payrolls = rows.OfType(Of DataRow).Where(Function(e) Equals(empoyeeNo, e("DatCol2")))
+                    Dim firstEmployee = payrolls.FirstOrDefault()
+
+                    Dim employeeNoCell = worksheet.Cells(rowIndex, 2)
+                    Dim employeeNoCellHeader = worksheet.Cells(rowIndex, 1)
+                    employeeNoCellHeader.Value = "EMPLOYEE ID"
+
+                    employeeNoCell.Value = empoyeeNo
+                    employeeNoCellHeader.Style.Font.Bold = True
+
+                    rowIndex += 1
+
+                    Dim empoyeeFullName = firstEmployee("DatCol3").ToString
+
+                    Dim employeeNameCell = worksheet.Cells(rowIndex, 2)
+                    Dim employeeNameCellHeader = worksheet.Cells(rowIndex, 1)
+                    If empoyeeFullName.Length > 0 Then
+                        employeeNameCell.Value = empoyeeFullName
+                    End If
+                    employeeNameCellHeader.Value = "EMPLOYEE NAME"
+                    employeeNameCellHeader.Style.Font.Bold = True
 
                     rowIndex += 1
 
                     Dim employeesStartIndex = rowIndex
                     Dim employeesLastIndex = 0
 
-                    For Each employeeRow As DataRow In employeesInDivision.Rows
+                    For Each employeeRow As DataRow In payrolls
                         Dim letters = GenerateAlphabet.GetEnumerator()
 
                         For Each reportColumn In reportColumns
@@ -208,7 +228,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 Next
 
                 worksheet.Cells.AutoFitColumns()
-                worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
+                worksheet.Cells("A1").AutoFitColumns(4.9, 12.28)
 
                 rowIndex += 1
 
@@ -222,7 +242,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 excel.Save()
             End Using
 
-            If divisionsWithEmployees.Count > 0 Then
+            If divisionsWithEmployees.Rows.Count > 0 Then
                 Process.Start(temp_file)
             Else
                 MsgBox("No found record(s)", MsgBoxStyle.Information)
@@ -358,40 +378,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     End Function
 
-    Private Function ExcelOptionFormat() As ExcelOption
-
-        Dim result_value As ExcelOption
-
-        MessageBoxManager.OK = "(A)"
-
-        MessageBoxManager.Cancel = "(B)"
-
-        MessageBoxManager.Register()
-
-        Dim message_content As String =
-            String.Concat("Please select an option :", NewLiner(2),
-                          "A ) keep all in one sheet", NewLiner,
-                          "B ) separate sheet by department")
-
-        Dim custom_prompt =
-            MessageBox.Show(message_content,
-                            "Excel sheet format",
-                            MessageBoxButtons.OKCancel,
-                            MessageBoxIcon.None,
-                            MessageBoxDefaultButton.Button1)
-
-        If custom_prompt = Windows.Forms.DialogResult.OK Then
-            result_value = ExcelOption.KeepAllInOneSheet
-        Else 'If custom_prompt = Windows.Forms.DialogResult.Cancel Then
-            result_value = ExcelOption.SeparateEachDepartment
-        End If
-
-        MessageBoxManager.Unregister()
-
-        Return result_value
-
-    End Function
-
     Private Function NewLiner(Optional repetition As Integer = 1) As String
 
         Dim _result As String = String.Empty
@@ -429,13 +415,3 @@ Public Class PayrollSummaryExcelFormatReportProvider
     End Enum
 
 End Class
-
-Friend Enum SalaryActualization As Short
-    Declared = 0
-    Actual = 1
-End Enum
-
-Friend Enum ExcelOption As Short
-    SeparateEachDepartment = 0
-    KeepAllInOneSheet = 1
-End Enum

@@ -457,16 +457,16 @@ Partial Class PayStubForm
         Me.Label42 = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.tsbtngenpayroll = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnprintpayslip = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.DeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsbtnprintall = New System.Windows.Forms.ToolStripDropDownButton()
         Me.DeclaredToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ActualToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnPayrollSumma = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.DeclaredToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsbtnDeclaredSummary = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsbtnActualSummary = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.tsbtnDeclaredLedger = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsbtnActualLedger = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.IncludeThirteenthMonthButton = New System.Windows.Forms.ToolStripButton()
         Me.tsSearch = New System.Windows.Forms.ToolStripTextBox()
@@ -474,6 +474,9 @@ Partial Class PayStubForm
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel8 = New System.Windows.Forms.ToolStripLabel()
         Me.tsbtnDelEmpPayroll = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnprintpayslip = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.DeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.Button3 = New System.Windows.Forms.Button()
         Me.bgwPrintAllPaySlip = New System.ComponentModel.BackgroundWorker()
@@ -4501,7 +4504,7 @@ Partial Class PayStubForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtngenpayroll, Me.tsbtnprintpayslip, Me.tsbtnprintall, Me.tsbtnClose, Me.tsbtnPayrollSumma, Me.ToolStripSeparator1, Me.IncludeThirteenthMonthButton, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.tsbtnDelEmpPayroll})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtngenpayroll, Me.tsbtnprintall, Me.tsbtnClose, Me.tsbtnPayrollSumma, Me.ToolStripDropDownButton1, Me.ToolStripSeparator1, Me.IncludeThirteenthMonthButton, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.tsbtnDelEmpPayroll, Me.tsbtnprintpayslip})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1102, 25)
@@ -4515,30 +4518,6 @@ Partial Class PayStubForm
         Me.tsbtngenpayroll.Name = "tsbtngenpayroll"
         Me.tsbtngenpayroll.Size = New System.Drawing.Size(113, 22)
         Me.tsbtngenpayroll.Text = "Ge&nerate Payroll"
-        '
-        'tsbtnprintpayslip
-        '
-        Me.tsbtnprintpayslip.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem, Me.ActualToolStripMenuItem})
-        Me.tsbtnprintpayslip.Image = CType(resources.GetObject("tsbtnprintpayslip.Image"), System.Drawing.Image)
-        Me.tsbtnprintpayslip.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnprintpayslip.Name = "tsbtnprintpayslip"
-        Me.tsbtnprintpayslip.Size = New System.Drawing.Size(104, 22)
-        Me.tsbtnprintpayslip.Text = "&Print pay slip"
-        Me.tsbtnprintpayslip.Visible = False
-        '
-        'DeclaredToolStripMenuItem
-        '
-        Me.DeclaredToolStripMenuItem.Name = "DeclaredToolStripMenuItem"
-        Me.DeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem.Tag = "0"
-        Me.DeclaredToolStripMenuItem.Text = "Declared"
-        '
-        'ActualToolStripMenuItem
-        '
-        Me.ActualToolStripMenuItem.Name = "ActualToolStripMenuItem"
-        Me.ActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem.Tag = "1"
-        Me.ActualToolStripMenuItem.Text = "Actual"
         '
         'tsbtnprintall
         '
@@ -4574,24 +4553,47 @@ Partial Class PayStubForm
         '
         'tsbtnPayrollSumma
         '
-        Me.tsbtnPayrollSumma.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem2, Me.ActualToolStripMenuItem2})
+        Me.tsbtnPayrollSumma.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnDeclaredSummary, Me.tsbtnActualSummary})
         Me.tsbtnPayrollSumma.Image = CType(resources.GetObject("tsbtnPayrollSumma.Image"), System.Drawing.Image)
         Me.tsbtnPayrollSumma.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnPayrollSumma.Name = "tsbtnPayrollSumma"
         Me.tsbtnPayrollSumma.Size = New System.Drawing.Size(154, 22)
         Me.tsbtnPayrollSumma.Text = "Print Payroll Summary"
         '
-        'DeclaredToolStripMenuItem2
+        'tsbtnDeclaredSummary
         '
-        Me.DeclaredToolStripMenuItem2.Name = "DeclaredToolStripMenuItem2"
-        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem2.Text = "Declared"
+        Me.tsbtnDeclaredSummary.Name = "tsbtnDeclaredSummary"
+        Me.tsbtnDeclaredSummary.Size = New System.Drawing.Size(180, 22)
+        Me.tsbtnDeclaredSummary.Tag = "False"
+        Me.tsbtnDeclaredSummary.Text = "Declared"
         '
-        'ActualToolStripMenuItem2
+        'tsbtnActualSummary
         '
-        Me.ActualToolStripMenuItem2.Name = "ActualToolStripMenuItem2"
-        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem2.Text = "Actual"
+        Me.tsbtnActualSummary.Name = "tsbtnActualSummary"
+        Me.tsbtnActualSummary.Size = New System.Drawing.Size(180, 22)
+        Me.tsbtnActualSummary.Tag = "True"
+        Me.tsbtnActualSummary.Text = "Actual"
+        '
+        'ToolStripDropDownButton1
+        '
+        Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnDeclaredLedger, Me.tsbtnActualLedger})
+        Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
+        Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(139, 22)
+        Me.ToolStripDropDownButton1.Text = "Print Payroll Ledger"
+        '
+        'tsbtnDeclaredLedger
+        '
+        Me.tsbtnDeclaredLedger.Name = "tsbtnDeclaredLedger"
+        Me.tsbtnDeclaredLedger.Size = New System.Drawing.Size(120, 22)
+        Me.tsbtnDeclaredLedger.Text = "Declared"
+        '
+        'tsbtnActualLedger
+        '
+        Me.tsbtnActualLedger.Name = "tsbtnActualLedger"
+        Me.tsbtnActualLedger.Size = New System.Drawing.Size(120, 22)
+        Me.tsbtnActualLedger.Text = "Actual"
         '
         'ToolStripSeparator1
         '
@@ -4648,6 +4650,30 @@ Partial Class PayStubForm
         Me.tsbtnDelEmpPayroll.Size = New System.Drawing.Size(23, 22)
         Me.tsbtnDelEmpPayroll.Text = "ToolStripButton1"
         Me.tsbtnDelEmpPayroll.ToolTipText = "Deletes only the selected" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "payroll of an employee"
+        '
+        'tsbtnprintpayslip
+        '
+        Me.tsbtnprintpayslip.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem, Me.ActualToolStripMenuItem})
+        Me.tsbtnprintpayslip.Image = CType(resources.GetObject("tsbtnprintpayslip.Image"), System.Drawing.Image)
+        Me.tsbtnprintpayslip.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnprintpayslip.Name = "tsbtnprintpayslip"
+        Me.tsbtnprintpayslip.Size = New System.Drawing.Size(104, 22)
+        Me.tsbtnprintpayslip.Text = "&Print pay slip"
+        Me.tsbtnprintpayslip.Visible = False
+        '
+        'DeclaredToolStripMenuItem
+        '
+        Me.DeclaredToolStripMenuItem.Name = "DeclaredToolStripMenuItem"
+        Me.DeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.DeclaredToolStripMenuItem.Tag = "0"
+        Me.DeclaredToolStripMenuItem.Text = "Declared"
+        '
+        'ActualToolStripMenuItem
+        '
+        Me.ActualToolStripMenuItem.Name = "ActualToolStripMenuItem"
+        Me.ActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.ActualToolStripMenuItem.Tag = "1"
+        Me.ActualToolStripMenuItem.Text = "Actual"
         '
         'ImageList1
         '
@@ -5082,8 +5108,8 @@ Partial Class PayStubForm
     Friend WithEvents DeclaredToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ActualToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents tsbtnPayrollSumma As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents DeclaredToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ActualToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents tsbtnDeclaredSummary As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents tsbtnActualSummary As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents btndiscardchanges As System.Windows.Forms.Button
     Friend WithEvents LinkLabel5 As System.Windows.Forms.LinkLabel
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
@@ -5194,4 +5220,7 @@ Partial Class PayStubForm
     Friend WithEvents txtSpecHoliOtPay As TextBox
     Friend WithEvents Label63 As Label
     Friend WithEvents Panel6 As Panel
+    Friend WithEvents ToolStripDropDownButton1 As ToolStripDropDownButton
+    Friend WithEvents tsbtnDeclaredLedger As ToolStripMenuItem
+    Friend WithEvents tsbtnActualLedger As ToolStripMenuItem
 End Class

@@ -1005,14 +1005,14 @@ Public Class PayStubForm
 
     Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) _
         Handles _
-        DeclaredToolStripMenuItem2.Click,
-        ActualToolStripMenuItem2.Click
+        tsbtnDeclaredSummary.Click,
+        tsbtnActualSummary.Click
 
         Dim psefr As New PayrollSummaryExcelFormatReportProvider
 
         Dim obj_sender = DirectCast(sender, ToolStripMenuItem)
 
-        Dim is_actual As Boolean = (obj_sender.Name = "ActualToolStripMenuItem2")
+        Dim is_actual As Boolean = (obj_sender.Name = tsbtnActualSummary.Name)
 
         psefr.IsActual = is_actual
 
@@ -2123,6 +2123,29 @@ Public Class PayStubForm
         Return str_payfrequency_sched
 
     End Function
+
+    Private Sub tsbtnPrintPayrollLedger_Click(sender As ToolStripMenuItem, e As EventArgs) _
+        Handles tsbtnDeclaredLedger.Click, tsbtnActualLedger.Click
+
+        Dim periodSelector As New PayrollSummaDateSelection With {
+            .ReportIndex = 6
+        }
+
+        If periodSelector.ShowDialog <> DialogResult.OK Then
+            Return
+        End If
+
+        Dim isActual = sender.Name = tsbtnActualLedger.Name
+
+        Dim payrollLedger As _
+            New PayrollLedgerExcelFormatReportProvider(periodSelector.PayPeriodFromID,
+                                                       periodSelector.PayPeriodToID,
+                                                       isActual,
+                                                       periodSelector.DateFrom,
+                                                       periodSelector.DateTo)
+
+        payrollLedger.Run()
+    End Sub
 
 End Class
 
