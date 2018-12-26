@@ -82,6 +82,8 @@ Public Class PayrollContext
 
     Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
 
+    Public Overridable Property DivisionMinimumWages As DbSet(Of DivisionMinimumWage)
+
     Public Sub New()
     End Sub
 

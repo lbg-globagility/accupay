@@ -58,6 +58,8 @@ Public Class PayrollResources
 
     Private _allowances As ICollection(Of Allowance)
 
+    Private _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
+
     Private _filingStatuses As DataTable
 
     Public ReadOnly Property Employees As ICollection(Of Employee)
@@ -162,6 +164,12 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property DivisionMinimumWages As ICollection(Of DivisionMinimumWage)
+        Get
+            Return _divisionMinimumWages
+        End Get
+    End Property
+
     Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = Integer.Parse(payPeriodID)
         _payDateFrom = payDateFrom
@@ -186,7 +194,8 @@ Public Class PayrollResources
             LoadAllowances(),
             LoadTimeEntries(),
             LoadActualTimeEntries(),
-            LoadFilingStatuses()
+            LoadFilingStatuses(),
+            LoadDivisionMinimumWages()
         })
     End Function
 
@@ -440,6 +449,19 @@ Public Class PayrollResources
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("Filing Statuses", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadDivisionMinimumWages() As Task
+        Try
+            Using context = New PayrollContext()
+                _divisionMinimumWages = Await context.DivisionMinimumWages.
+                    Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
+                    Where(Function(t) t.EffectiveDateFrom <= _payDateTo AndAlso _payDateTo <= t.EffectiveDateTo).
+                    ToListAsync()
+            End Using
+        Catch ex As Exception
+            Throw New ResourceLoadingException("DivisionMinimumWage", ex)
         End Try
     End Function
 

@@ -11,12 +11,15 @@ Namespace Global.AccuPay.Payroll
 
         Private ReadOnly _withholdingTaxBrackets As IList(Of WithholdingTaxBracket)
 
-        Public Sub New(filingStatuses As DataTable, withholdingTaxBrackets As IList(Of WithholdingTaxBracket))
+        Private ReadOnly _divisionMinimumWages As IList(Of DivisionMinimumWage)
+
+        Public Sub New(filingStatuses As DataTable, withholdingTaxBrackets As IList(Of WithholdingTaxBracket), divisionMinimumWages As IList(Of DivisionMinimumWage))
             _filingStatuses = filingStatuses
             _withholdingTaxBrackets = withholdingTaxBrackets
+            _divisionMinimumWages = divisionMinimumWages
         End Sub
 
-        Public Sub Calculate(settings As ListOfValueCollection, employee As DataRow, paystub As Paystub, previousPaystub As Paystub, employee2 As Employee, payperiod As PayPeriod, salary As Salary)
+        Public Sub Calculate(settings As ListOfValueCollection, paystub As Paystub, previousPaystub As Paystub, employee2 As Employee, payperiod As PayPeriod, salary As Salary)
             Dim currentTaxableIncome = 0D
 
             If employee2.EmployeeType = SalaryType.Fixed Then
@@ -43,14 +46,19 @@ Namespace Global.AccuPay.Payroll
                 paystub.TaxableIncome = currentTaxableIncome
             End If
 
-            ' Round the daily rate to two decimal places since amounts in the 3rd decimal place
-            ' isn't significant enough to warrant the employee to be taxable.
             Dim dailyRate = If(
                 employee2.IsDaily,
                 salary.BasicSalary,
                 salary.BasicSalary / (employee2.WorkDaysPerYear / 12))
 
-            Dim minimumWage = ValNoComma(employee("MinimumWageAmount"))
+            ' Round the daily rate to two decimal places since amounts in the 3rd decimal place
+            ' isn't significant enough to warrant the employee to be taxable.
+            dailyRate = Math.Round(dailyRate, 2)
+
+            Dim divisionMinimumWage = _divisionMinimumWages?.
+                FirstOrDefault(Function(t) CBool(t.DivisionID = employee2.Position?.DivisionID))
+
+            Dim minimumWage = If(divisionMinimumWage?.Amount, 0)
             Dim isMinimumWageEarner = dailyRate <= minimumWage
 
             If isMinimumWageEarner Then
