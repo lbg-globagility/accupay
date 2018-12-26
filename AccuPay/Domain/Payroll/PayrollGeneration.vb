@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Entity
+﻿Option Strict On
+
+Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
 Imports log4net
@@ -44,11 +46,11 @@ Public Class PayrollGeneration
 
     Private _products As IEnumerable(Of Product)
 
-    Private _socialSecurityBrackets As IEnumerable(Of SocialSecurityBracket)
+    Private _socialSecurityBrackets As ICollection(Of SocialSecurityBracket)
 
-    Private _philHealthBrackets As IEnumerable(Of PhilHealthBracket)
+    Private _philHealthBrackets As ICollection(Of PhilHealthBracket)
 
-    Private _withholdingTaxBrackets As IEnumerable(Of WithholdingTaxBracket)
+    Private _withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket)
 
     Private _settings As ListOfValueCollection
 
@@ -83,7 +85,8 @@ Public Class PayrollGeneration
 
         _notifyMainWindow = AddressOf pay_stub_frm.ProgressCounter
 
-        _salary = resources.Salaries.FirstOrDefault(Function(s) s.EmployeeID = _employee.RowID)
+        _salary = resources.Salaries.
+            FirstOrDefault(Function(s) CBool(s.EmployeeID = _employee.RowID))
 
         _products = resources.Products
 
@@ -95,29 +98,29 @@ Public Class PayrollGeneration
         _withholdingTaxBrackets = resources.WithholdingTaxBrackets
 
         _previousPaystub = resources.PreviousPaystubs.FirstOrDefault(
-            Function(p) p.EmployeeID = _employee.RowID)
+            Function(p) CBool(p.EmployeeID = _employee.RowID))
 
         _settings = New ListOfValueCollection(resources.ListOfValues)
         _payPeriod = resources.PayPeriod
 
         _previousTimeEntries2 = resources.TimeEntries.
-            Where(Function(t) t.EmployeeID = _employee.RowID).
+            Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             ToList()
 
         _timeEntries = resources.TimeEntries.
-            Where(Function(t) t.EmployeeID = _employee.RowID).
+            Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             Where(Function(t) _payPeriod.PayFromDate <= t.Date And t.Date <= _payPeriod.PayToDate).
             OrderBy(Function(t) t.Date).
             ToList()
 
         _actualtimeentries = resources.ActualTimeEntries.
-            Where(Function(t) t.EmployeeID = _employee.RowID).
+            Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             ToList()
 
         _payRates = resources.PayRates.ToDictionary(Function(p) p.Date)
 
         _allowances = resources.Allowances.
-            Where(Function(a) a.EmployeeID = _employee.RowID).
+            Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
             ToList()
     End Sub
 
@@ -476,7 +479,7 @@ Public Class PayrollGeneration
                     .OrganizationID = z_OrganizationID,
                     .EmployeeID = _paystub.EmployeeID,
                     .PayPeriodID = _payPeriod.RowID,
-                    .LoanScheduleID = loanSchedule.RowID,
+                    .LoanScheduleID = loanSchedule.RowID.Value,
                     .LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft - 1
                 }
 

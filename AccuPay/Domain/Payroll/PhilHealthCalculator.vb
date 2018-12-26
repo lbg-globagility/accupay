@@ -13,11 +13,11 @@ Namespace Global.AccuPay.Payroll
             Public Const PerPayPeriod As String = "Per pay period"
         End Class
 
-        Private ReadOnly _philHealthBrackets As IList(Of PhilHealthBracket)
+        Private ReadOnly _philHealthBrackets As ICollection(Of PhilHealthBracket)
 
         Private ReadOnly ecolaName As String = "ecola"
 
-        Public Sub New(philHealthBrackets As IList(Of PhilHealthBracket))
+        Public Sub New(philHealthBrackets As ICollection(Of PhilHealthBracket))
             _philHealthBrackets = philHealthBrackets
         End Sub
 

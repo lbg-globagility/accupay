@@ -16,7 +16,7 @@ Public Class SemiMonthlyAllowanceCalculator
 
     Private _settings As ListOfValueCollection
 
-    Public Sub New(settings As ListOfValueCollection, employee As Employee, paystub As Paystub, payperiod As PayPeriod, payrates As IReadOnlyDictionary(Of Date, PayRate), timeEntries As IList(Of TimeEntry))
+    Public Sub New(settings As ListOfValueCollection, employee As Employee, paystub As Paystub, payperiod As PayPeriod, payrates As IReadOnlyDictionary(Of Date, PayRate), timeEntries As ICollection(Of TimeEntry))
         _employee = employee
         _paystub = paystub
         _payperiod = payperiod

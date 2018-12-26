@@ -9,11 +9,11 @@ Namespace Global.AccuPay.Payroll
 
         Private ReadOnly _filingStatuses As DataTable
 
-        Private ReadOnly _withholdingTaxBrackets As IList(Of WithholdingTaxBracket)
+        Private ReadOnly _withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket)
 
-        Private ReadOnly _divisionMinimumWages As IList(Of DivisionMinimumWage)
+        Private ReadOnly _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
 
-        Public Sub New(filingStatuses As DataTable, withholdingTaxBrackets As IList(Of WithholdingTaxBracket), divisionMinimumWages As IList(Of DivisionMinimumWage))
+        Public Sub New(filingStatuses As DataTable, withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket), divisionMinimumWages As ICollection(Of DivisionMinimumWage))
             _filingStatuses = filingStatuses
             _withholdingTaxBrackets = withholdingTaxBrackets
             _divisionMinimumWages = divisionMinimumWages

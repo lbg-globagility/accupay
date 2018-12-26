@@ -11,9 +11,9 @@ Public Class SssCalculator
         Public Const PerPayPeriod As String = "Per pay period"
     End Class
 
-    Private ReadOnly _socialSecurityBrackets As IList(Of SocialSecurityBracket)
+    Private ReadOnly _socialSecurityBrackets As ICollection(Of SocialSecurityBracket)
 
-    Public Sub New(socialSecurityBrackets As IList(Of SocialSecurityBracket))
+    Public Sub New(socialSecurityBrackets As ICollection(Of SocialSecurityBracket))
         _socialSecurityBrackets = socialSecurityBrackets
     End Sub
 
