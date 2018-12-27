@@ -424,12 +424,16 @@ Public Class PayrollGeneration
                 Dim ledger = ledgers.
                     FirstOrDefault(Function(l) l.Product.PartNo = leave.LeaveType)
 
+                'retrieves the time entries within leave date range
                 Dim timeEntry = _timeEntries.
-                    FirstOrDefault(Function(t) t.Date = leave.StartDate)
+                    Where(Function(t) t.Date >= leave.StartDate And t.Date <= leave.EndDate)
 
                 If timeEntry Is Nothing Then
                     Continue For
                 End If
+
+                'summate the leave hours
+                Dim totalLeaveHours = timeEntry.Sum(Function(t) t.TotalLeaveHours)
 
                 Dim newTransaction = New LeaveTransaction() With {
                     .OrganizationID = z_OrganizationID,
@@ -439,8 +443,8 @@ Public Class PayrollGeneration
                     .ReferenceID = leave.RowID,
                     .TransactionDate = Date.Today,
                     .Type = LeaveTransactionType.Debit,
-                    .Amount = timeEntry.TotalLeaveHours,
-                    .Balance = If(ledger?.LastTransaction?.Balance, 0) - timeEntry.TotalLeaveHours
+                    .Amount = totalLeaveHours,
+                    .Balance = If(ledger?.LastTransaction?.Balance, 0) - totalLeaveHours
                 }
 
                 ledger.LeaveTransactions.Add(newTransaction)
