@@ -22,7 +22,7 @@ Partial Class PayrollSummaDateSelection
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpayperiod = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -48,10 +48,17 @@ Partial Class PayrollSummaDateSelection
         Me.WeeklyTab = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.panelSalarySwitch = New System.Windows.Forms.Panel()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
+        Me.Panel3 = New System.Windows.Forms.Panel()
         CType(Me.dgvpayperiod, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        Me.panelSalarySwitch.SuspendLayout()
+        Me.Panel3.SuspendLayout()
         Me.SuspendLayout()
         '
         'dgvpayperiod
@@ -66,14 +73,14 @@ Partial Class PayrollSummaDateSelection
         Me.dgvpayperiod.ColumnHeadersHeight = 34
         Me.dgvpayperiod.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvpayperiod.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column6, Me.Column7, Me.Column4, Me.Column5})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpayperiod.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvpayperiod.DefaultCellStyle = DataGridViewCellStyle5
         Me.dgvpayperiod.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvpayperiod.Location = New System.Drawing.Point(12, 41)
         Me.dgvpayperiod.MultiSelect = False
@@ -141,7 +148,7 @@ Partial Class PayrollSummaDateSelection
         '
         'btnClose
         '
-        Me.btnClose.Location = New System.Drawing.Point(300, 7)
+        Me.btnClose.Location = New System.Drawing.Point(359, 7)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(75, 35)
         Me.btnClose.TabIndex = 9
@@ -150,7 +157,7 @@ Partial Class PayrollSummaDateSelection
         '
         'btnOK
         '
-        Me.btnOK.Location = New System.Drawing.Point(219, 7)
+        Me.btnOK.Location = New System.Drawing.Point(278, 7)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(75, 35)
         Me.btnOK.TabIndex = 8
@@ -184,7 +191,7 @@ Partial Class PayrollSummaDateSelection
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(3, 7)
+        Me.Label1.Location = New System.Drawing.Point(12, 7)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(36, 13)
         Me.Label1.TabIndex = 9
@@ -193,7 +200,7 @@ Partial Class PayrollSummaDateSelection
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(13, 29)
+        Me.Label2.Location = New System.Drawing.Point(22, 29)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(26, 13)
         Me.Label2.TabIndex = 10
@@ -202,7 +209,7 @@ Partial Class PayrollSummaDateSelection
         'DateFromLabel
         '
         Me.DateFromLabel.AutoSize = True
-        Me.DateFromLabel.Location = New System.Drawing.Point(45, 7)
+        Me.DateFromLabel.Location = New System.Drawing.Point(54, 7)
         Me.DateFromLabel.Name = "DateFromLabel"
         Me.DateFromLabel.Size = New System.Drawing.Size(65, 13)
         Me.DateFromLabel.TabIndex = 11
@@ -211,7 +218,7 @@ Partial Class PayrollSummaDateSelection
         'DateToLabel
         '
         Me.DateToLabel.AutoSize = True
-        Me.DateToLabel.Location = New System.Drawing.Point(45, 29)
+        Me.DateToLabel.Location = New System.Drawing.Point(54, 29)
         Me.DateToLabel.Name = "DateToLabel"
         Me.DateToLabel.Size = New System.Drawing.Size(55, 13)
         Me.DateToLabel.TabIndex = 12
@@ -220,7 +227,7 @@ Partial Class PayrollSummaDateSelection
         'cboStringParameter
         '
         Me.cboStringParameter.FormattingEnabled = True
-        Me.cboStringParameter.Location = New System.Drawing.Point(177, 445)
+        Me.cboStringParameter.Location = New System.Drawing.Point(177, 9)
         Me.cboStringParameter.Name = "cboStringParameter"
         Me.cboStringParameter.Size = New System.Drawing.Size(176, 21)
         Me.cboStringParameter.TabIndex = 7
@@ -230,7 +237,7 @@ Partial Class PayrollSummaDateSelection
         '
         Me.TextBox1.BackColor = System.Drawing.Color.White
         Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.TextBox1.Location = New System.Drawing.Point(53, 453)
+        Me.TextBox1.Location = New System.Drawing.Point(47, 17)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ReadOnly = True
         Me.TextBox1.Size = New System.Drawing.Size(100, 13)
@@ -243,7 +250,7 @@ Partial Class PayrollSummaDateSelection
         Me.Label360.AutoSize = True
         Me.Label360.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label360.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label360.Location = New System.Drawing.Point(152, 445)
+        Me.Label360.Location = New System.Drawing.Point(153, 9)
         Me.Label360.Name = "Label360"
         Me.Label360.Size = New System.Drawing.Size(18, 24)
         Me.Label360.TabIndex = 520
@@ -306,17 +313,72 @@ Partial Class PayrollSummaDateSelection
         '
         'Panel2
         '
-        Me.Panel2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Panel2.Controls.Add(Me.DateFromLabel)
         Me.Panel2.Controls.Add(Me.DateToLabel)
         Me.Panel2.Controls.Add(Me.Label1)
         Me.Panel2.Controls.Add(Me.Label2)
         Me.Panel2.Controls.Add(Me.btnOK)
         Me.Panel2.Controls.Add(Me.btnClose)
-        Me.Panel2.Location = New System.Drawing.Point(59, 499)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel2.Location = New System.Drawing.Point(0, 502)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(387, 46)
+        Me.Panel2.Size = New System.Drawing.Size(446, 46)
         Me.Panel2.TabIndex = 524
+        '
+        'panelSalarySwitch
+        '
+        Me.panelSalarySwitch.Controls.Add(Me.Label3)
+        Me.panelSalarySwitch.Controls.Add(Me.RadioButton2)
+        Me.panelSalarySwitch.Controls.Add(Me.RadioButton1)
+        Me.panelSalarySwitch.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.panelSalarySwitch.Location = New System.Drawing.Point(0, 472)
+        Me.panelSalarySwitch.Name = "panelSalarySwitch"
+        Me.panelSalarySwitch.Size = New System.Drawing.Size(446, 30)
+        Me.panelSalarySwitch.TabIndex = 525
+        Me.panelSalarySwitch.Visible = False
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(251, 9)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(16, 13)
+        Me.Label3.TabIndex = 2
+        Me.Label3.Text = "or"
+        '
+        'RadioButton2
+        '
+        Me.RadioButton2.AutoSize = True
+        Me.RadioButton2.Location = New System.Drawing.Point(278, 7)
+        Me.RadioButton2.Name = "RadioButton2"
+        Me.RadioButton2.Size = New System.Drawing.Size(55, 17)
+        Me.RadioButton2.TabIndex = 1
+        Me.RadioButton2.Text = "Actual"
+        Me.RadioButton2.UseVisualStyleBackColor = True
+        '
+        'RadioButton1
+        '
+        Me.RadioButton1.AutoSize = True
+        Me.RadioButton1.Checked = True
+        Me.RadioButton1.Location = New System.Drawing.Point(177, 7)
+        Me.RadioButton1.Name = "RadioButton1"
+        Me.RadioButton1.Size = New System.Drawing.Size(68, 17)
+        Me.RadioButton1.TabIndex = 0
+        Me.RadioButton1.TabStop = True
+        Me.RadioButton1.Text = "Declared"
+        Me.RadioButton1.UseVisualStyleBackColor = True
+        '
+        'Panel3
+        '
+        Me.Panel3.Controls.Add(Me.cboStringParameter)
+        Me.Panel3.Controls.Add(Me.Label360)
+        Me.Panel3.Controls.Add(Me.TextBox1)
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel3.Location = New System.Drawing.Point(0, 436)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(446, 36)
+        Me.Panel3.TabIndex = 526
+        Me.Panel3.Visible = False
         '
         'PayrollSummaDateSelection
         '
@@ -324,12 +386,11 @@ Partial Class PayrollSummaDateSelection
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(446, 568)
+        Me.Controls.Add(Me.Panel3)
+        Me.Controls.Add(Me.panelSalarySwitch)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.Label360)
-        Me.Controls.Add(Me.TextBox1)
-        Me.Controls.Add(Me.cboStringParameter)
         Me.Controls.Add(Me.dgvpayperiod)
         Me.Controls.Add(Me.TabControl1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -344,8 +405,11 @@ Partial Class PayrollSummaDateSelection
         Me.Panel1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        Me.panelSalarySwitch.ResumeLayout(False)
+        Me.panelSalarySwitch.PerformLayout()
+        Me.Panel3.ResumeLayout(False)
+        Me.Panel3.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
     Friend WithEvents dgvpayperiod As DevComponents.DotNetBar.Controls.DataGridViewX
@@ -373,4 +437,9 @@ Partial Class PayrollSummaDateSelection
     Friend WithEvents Column5 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents Panel2 As Panel
+    Friend WithEvents panelSalarySwitch As Panel
+    Friend WithEvents RadioButton1 As RadioButton
+    Friend WithEvents RadioButton2 As RadioButton
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Panel3 As Panel
 End Class
