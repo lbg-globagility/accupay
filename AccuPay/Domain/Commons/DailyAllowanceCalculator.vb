@@ -8,15 +8,15 @@ Public Class DailyAllowanceCalculator
 
     Private _previousTimeEntries2 As ICollection(Of TimeEntry)
 
-    Private _payrates As IDictionary(Of Date, PayRate)
+    Private _payrates As IReadOnlyDictionary(Of Date, PayRate)
 
-    Public Sub New(settings As ListOfValueCollection, payrates As IDictionary(Of Date, PayRate), previousTimeEntries2 As ICollection(Of TimeEntry))
+    Public Sub New(settings As ListOfValueCollection, payrates As IReadOnlyDictionary(Of Date, PayRate), previousTimeEntries2 As ICollection(Of TimeEntry))
         _settings = settings
         _payrates = payrates
         _previousTimeEntries2 = previousTimeEntries2
     End Sub
 
-    Public Function Compute(payperiod As PayPeriod, allowance As Allowance, employee As Employee, paystub As Paystub, timeEntries As IList(Of TimeEntry)) As AllowanceItem
+    Public Function Compute(payperiod As PayPeriod, allowance As Allowance, employee As Employee, paystub As Paystub, timeEntries As ICollection(Of TimeEntry)) As AllowanceItem
         Dim dailyRate = allowance.Amount
 
         Dim allowanceItem = New AllowanceItem() With {

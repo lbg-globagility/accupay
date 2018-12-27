@@ -91,8 +91,8 @@ SELECT
     IF(IsActualFlag, psa.LeavePay, ps.LeavePay) `COL41`,
 	IF(
         IsActualFlag,
-        psa.HolidayPay + psa.RestDayPay,
-        ps.HolidayPay + ps.RestDayPay
+        psa.RegularHolidayPay + psa.SpecialHolidayPay + psa.RestDayPay,
+        ps.RegularHolidayPay + ps.SpecialHolidayPay + ps.RestDayPay
     ) `COL42`,
     IFNULL(psiECOLA.PayAmount, 0) `COL43`,
     psiLeave.`Names` `COL44`,

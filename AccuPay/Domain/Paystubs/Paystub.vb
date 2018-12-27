@@ -155,7 +155,7 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property PaystubItems As ICollection(Of PaystubItem)
 
-        Public Overridable Property AllowanceItems As IList(Of AllowanceItem)
+        Public Overridable Property AllowanceItems As ICollection(Of AllowanceItem)
 
         Public Overridable Property ThirteenthMonthPay As ThirteenthMonthPay
 

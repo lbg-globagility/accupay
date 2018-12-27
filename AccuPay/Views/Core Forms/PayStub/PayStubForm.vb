@@ -780,36 +780,9 @@ Public Class PayStubForm
         _finishedPaystubs = 0
 
         Try
-            Dim employees As DataTable = Nothing
+            Me.Enabled = False
 
-            Using connection = New MySqlConnection(mysql_conn_text),
-                command = New MySqlCommand("GetEmployees", connection)
-
-                If Me.Enabled Then
-                    Dim dataSet = New DataSet()
-
-                    With command
-                        .Connection.Open()
-                        .CommandType = CommandType.StoredProcedure
-                        .Parameters.Clear()
-                        .Parameters.AddWithValue("$OrganizationID", orgztnID)
-                        .Parameters.AddWithValue("$PayDateFrom", paypFrom)
-                        .Parameters.AddWithValue("$PayDateTo", paypTo)
-                    End With
-
-                    Dim adapter = New MySqlDataAdapter(command)
-                    adapter.Fill(dataSet)
-
-                    employees = dataSet.Tables(0)
-
-                    _totalPaystubs = employees.Rows.Count
-
-                    Me.Enabled = False
-                End If
-            End Using
-
-            Dim employeeRows = employees.Rows.Cast(Of DataRow)
-
+            _totalPaystubs = resources.Employees.Count
             _successfulPaystubs = 0
             _failedPaystubs = 0
             _results = New BlockingCollection(Of PayrollGeneration.Result)()
@@ -817,10 +790,10 @@ Public Class PayStubForm
             Task.Run(
                 Sub()
                     Parallel.ForEach(
-                        employeeRows,
-                        Sub(employeeRow)
+                        resources.Employees,
+                        Sub(employee)
                             Dim generator = New PayrollGeneration(
-                                employeeRow,
+                                employee,
                                 emp_allowanceWeekly,
                                 notax_allowanceWeekly,
                                 resources,
@@ -2016,11 +1989,10 @@ Public Class PayStubForm
             Dim n_ExecSQLProcedure = New SQL(strquery_recompute_13monthpay, param_array)
             n_ExecSQLProcedure.ExecuteQuery()
 
-            Dim dialog = New PayrollResultDialog(_results.ToList())
-            dialog.Owner = Me
+            Dim dialog = New PayrollResultDialog(_results.ToList()) With {
+                .Owner = Me
+            }
             dialog.ShowDialog()
-
-            'MsgBox($"Payroll generation is done. Sucessful paystubs: {_successfulPaystubs}. Failed paystubs {_failedPaystubs}", MsgBoxStyle.OkOnly)
 
             Me.Enabled = True
             dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
