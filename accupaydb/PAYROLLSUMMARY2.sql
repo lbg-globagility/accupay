@@ -32,6 +32,12 @@ DECLARE payfreq_rowid
 
 DECLARE decimal_size INT(11) DEFAULT 2;
 
+DECLARE customDateFormat VARCHAR(50) DEFAULT '%m/%d/%Y';
+
+DECLARE isNullSalaryDistribType BOOL DEFAULT FALSE;
+
+SET isNullSalaryDistribType = strSalaryDistrib IS NULL;
+
 SELECT
     PayFromDate,
     TotalGrossSalary
@@ -128,6 +134,9 @@ IF is_keep_in_onesheet = TRUE THEN
 		        DATE_FORMAT(paystub.PayFromDate, IF(YEAR(paystub.PayFromDate) = YEAR(paystub.PayToDate), '%c/%e', '%c/%e/%Y')),
 		        DATE_FORMAT(paystub.PayToDate,'%c/%e/%Y')
 		    ) `DatCol20`
+		
+		, DATE_FORMAT(paystub.PayFromDate, customDateFormat) `From`
+		, DATE_FORMAT(paystub.PayToDate, customDateFormat) `To`
 		FROM paystub
 		LEFT JOIN paystubactual
 		ON paystubactual.EmployeeID = paystub.EmployeeID AND
@@ -168,9 +177,11 @@ IF is_keep_in_onesheet = TRUE THEN
 		    (paystub.PayFromDate >= paypdatefrom OR paystub.PayToDate >= paypdatefrom) AND
 		    (paystub.PayFromDate <= paypdateto OR paystub.PayToDate <= paypdateto) AND
 		    # LENGTH(IFNULL(TRIM(e.ATMNo), '')) = IF(strSalaryDistrib = 'Cash', 0, LENGTH(IFNULL(TRIM(e.ATMNo), ''))) AND
-		    IF(strSalaryDistrib = 'Cash'
-		       , (LENGTH(IFNULL(TRIM(e.ATMNo), '')) = 0)
-		       , (LENGTH(IFNULL(TRIM(e.ATMNo), '')) > 0)) = TRUE AND
+		    IF(isNullSalaryDistribType
+			    , TRUE
+				 , IF(strSalaryDistrib = 'Cash'
+				 		, (LENGTH(IFNULL(TRIM(e.ATMNo), '')) = 0)
+						, (LENGTH(IFNULL(TRIM(e.ATMNo), '')) > 0))) = TRUE AND
 			 -- If employee is paid monthly or daily, employee should have worked for the pay period to appear
 		    IF(e.EmployeeType IN ('Monthly', 'Daily'), paystub.WorkPay > 0, TRUE) # RegularHours
 		ORDER BY CONCAT(e.LastName, e.FirstName);
