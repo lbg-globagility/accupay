@@ -429,7 +429,7 @@ Public Class PayrollGeneration
 
                 'retrieves the time entries within leave date range
                 Dim timeEntry = _timeEntries.
-                    Where(Function(t) t.Date >= leave.StartDate And t.Date <= leave.EndDate)
+                    Where(Function(t) CBool(t.Date >= leave.StartDate And t.Date <= leave.EndDate))
 
                 If timeEntry Is Nothing Then
                     Continue For
