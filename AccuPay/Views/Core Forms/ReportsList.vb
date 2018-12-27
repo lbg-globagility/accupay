@@ -12,7 +12,6 @@ Public Class ReportsList
             New PostEmploymentClearanceReportProvider(),
             New EmployeeIdentificationNumberReportProvider(),
             New EmployeeOffenseReportProvider(),
-            New PayrollLedgerReportProvider(),
             New LeaveLedgerReportProvider(),
             New FiledLeaveReportProvider(),
             New LoanSummaryByEmployeeReportProvider(),
@@ -25,8 +24,10 @@ Public Class ReportsList
             New ThirteenthMonthSummaryReportProvider(),
             New AttendanceSheetReportProvider(),
             New LateUTAbsentSummaryReportProvider(),
-            New AgencyFeeReportProvider()
+            New AgencyFeeReportProvider(),
+            New PayrollLedgerExcelFormatReportProvider()
         }
+        'New PayrollLedgerReportProvider(),
 
         For Each provider In providers
             Dim dataTable = New SqlToDataTable($"
