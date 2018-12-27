@@ -26,6 +26,12 @@
         End Get
     End Property
 
+    Public ReadOnly Property IsActual As Boolean
+        Get
+            Return RadioButton2.Checked
+        End Get
+    End Property
+
     Public Property PayPeriodID As Object
 
     Private _payPeriodFrom As PayPeriod

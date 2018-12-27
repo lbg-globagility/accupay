@@ -7,11 +7,11 @@ Imports OfficeOpenXml.Style
 Public Class PayrollLedgerExcelFormatReportProvider
     Implements IReportProvider
 
-    Private fromPeriodId As Integer
-    Private toPeriodId As Integer
+    Private fromPeriodId, toPeriodId As Integer
     Private actualSwitch As Boolean
     Private dateFrom, dateTo As Date
-    Public Property Name As String = "" Implements IReportProvider.Name
+
+    Public Property Name As String = "Payroll Ledger" Implements IReportProvider.Name
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
@@ -79,6 +79,10 @@ Public Class PayrollLedgerExcelFormatReportProvider
 
     Public Property IsActual As Boolean
 
+    Public Sub New()
+
+    End Sub
+
     Public Sub New(FromPayPeriodId As Integer, ToPayPeriodId As Integer, IsActual As Boolean, PayDateFrom As Date, PayDateTo As Date)
         fromPeriodId = FromPayPeriodId
         toPeriodId = ToPayPeriodId
@@ -89,8 +93,37 @@ Public Class PayrollLedgerExcelFormatReportProvider
         dateTo = PayDateTo
     End Sub
 
+    Private Function ParameterAssignment() As Boolean
+        Dim boolResult As Boolean = False
+
+        If fromPeriodId = 0 Then
+            Dim periodSelector As New PayrollSummaDateSelection()
+
+            periodSelector.Panel3.Visible = False
+            periodSelector.panelSalarySwitch.Visible = True
+            periodSelector.Label5.Visible = False
+
+            boolResult = periodSelector.ShowDialog = DialogResult.OK
+
+            fromPeriodId = periodSelector.PayPeriodFromID
+            toPeriodId = periodSelector.PayPeriodToID
+
+            actualSwitch = periodSelector.IsActual
+
+            dateFrom = periodSelector.DateFrom
+            dateTo = periodSelector.DateTo
+
+        End If
+
+        Return boolResult
+    End Function
+
     Public Sub Run() Implements IReportProvider.Run
         Static last_cell_column As String = basic_alphabet.Last
+
+        If ParameterAssignment() = False Then
+            Return
+        End If
 
         Dim parameters =
                 New Object() {orgztnID,

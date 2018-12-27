@@ -2124,29 +2124,6 @@ Public Class PayStubForm
 
     End Function
 
-    Private Sub tsbtnPrintPayrollLedger_Click(sender As ToolStripMenuItem, e As EventArgs) _
-        Handles tsbtnDeclaredLedger.Click, tsbtnActualLedger.Click
-
-        Dim periodSelector As New PayrollSummaDateSelection With {
-            .ReportIndex = 6
-        }
-
-        If periodSelector.ShowDialog <> DialogResult.OK Then
-            Return
-        End If
-
-        Dim isActual = sender.Name = tsbtnActualLedger.Name
-
-        Dim payrollLedger As _
-            New PayrollLedgerExcelFormatReportProvider(periodSelector.PayPeriodFromID,
-                                                       periodSelector.PayPeriodToID,
-                                                       isActual,
-                                                       periodSelector.DateFrom,
-                                                       periodSelector.DateTo)
-
-        payrollLedger.Run()
-    End Sub
-
 End Class
 
 Friend Class PrintAllPaySlipOfficialFormat

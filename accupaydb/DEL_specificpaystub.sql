@@ -110,47 +110,13 @@ WHERE e.RowID=emp_RowID
 AND ADDDATE(e.StartDate, INTERVAL 1 YEAR) BETWEEN paydate_from AND paydate_to;
 
 
-
-IF IsFirstHalfOfMonth = '1' THEN
-
-    UPDATE employeeloanschedule els
-    INNER JOIN payperiod pp ON pp.RowID=payperiod_rowid
-    SET
-    els.LoanPayPeriodLeft = els.LoanPayPeriodLeft + 1
-    ,els.TotalBalanceLeft = els.TotalBalanceLeft + els.DeductionAmount
-    ,els.`Status`='In Progress'
-    WHERE els.OrganizationID=og_RowID AND els.BonusID IS NULL
-
-    AND els.EmployeeID IS NULL
-
-    AND els.DeductionSchedule IN ('First half','Per pay period')
-    AND (els.DedEffectiveDateFrom >= pp.PayFromDate)
-    AND (els.DedEffectiveDateFrom <= pp.PayToDate);
-ELSE
-
-    UPDATE employeeloanschedule els
-    INNER JOIN payperiod pp ON pp.RowID=payperiod_rowid
-    SET
-    els.LoanPayPeriodLeft = els.LoanPayPeriodLeft + 1
-    ,els.TotalBalanceLeft = els.TotalBalanceLeft + els.DeductionAmount
-    ,els.`Status`='In Progress'
-    WHERE els.OrganizationID=og_RowID AND els.BonusID IS NULL
-
-    AND els.EmployeeID IS NULL
-
-    AND els.DeductionSchedule IN ('End of the month','Per pay period')
-    AND (els.DedEffectiveDateFrom >= pp.PayFromDate)
-    AND (els.DedEffectiveDateFrom <= pp.PayToDate);
-END IF;
-
     UPDATE employeeloanschedule els
     INNER JOIN scheduledloansperpayperiod slp ON slp.EmployeeLoanRecordID=els.RowID AND slp.PayPeriodID=payperiod_rowid AND slp.OrganizationID=els.OrganizationID AND slp.EmployeeID=els.EmployeeID
     SET
-    els.LoanPayPeriodLeft = els.LoanPayPeriodLeft + 1
-    ,els.TotalBalanceLeft = els.TotalBalanceLeft + els.DeductionAmount
-    ,els.`Status`='In Progress'
-    WHERE els.OrganizationID=og_RowID AND els.BonusID IS NULL
-    AND els.EmployeeID=emp_RowID;
+    els.TotalBalanceLeft = els.TotalBalanceLeft + slp.DeductionAmount
+    ,els.LastUpdBy = IFNULL(els.LastUpdBy, els.CreatedBy)
+    WHERE els.OrganizationID = og_RowID
+    AND els.EmployeeID = emp_RowID;
 
 
 UPDATE thirteenthmonthpay tmp
