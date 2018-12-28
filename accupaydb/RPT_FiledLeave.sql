@@ -13,23 +13,39 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_FiledLeave`(
 )
 BEGIN
 
+DECLARE defaultWorkHour INT(11) DEFAULT 8;
+
+SET @leaveHours = 0.00;
+
 SELECT emp.RowID AS `DatCol1`,
        emp.EmployeeID AS `DatCol2`,
-       CONCAT(emp.LastName, ', ', emp.FirstName, ' ', SUBSTR(emp.MiddleName, 1, 1)) AS `DatCol3`,
-       DAYNAME(lev.LeaveStartDate) AS `DatCol11`,
-       DATE_FORMAT(lev.LeaveStartDate, '%m/%d/%Y') AS `DatCol12`,
+       CONCAT_WS(', ', emp.LastName, emp.FirstName, SUBSTR(emp.MiddleName, 1, 1)) AS `DatCol3`,
+       DAYNAME(ete.`Date`) AS `DatCol11`,
+       DATE_FORMAT(ete.`Date`, '%m/%d/%Y') AS `DatCol12`,
        lev.LeaveType AS `DatCol13`,
-       (IFNULL(ete.SickLeaveHours, 0) + IFNULL(ete.VacationLeaveHours, 0)) AS `DatCol14`,
+       @leaveHours := (IFNULL(ete.SickLeaveHours, 0)
+		                 + IFNULL(ete.VacationLeaveHours, 0)
+		                 + IFNULL(ete.OtherLeaveHours, 0)) AS `DatCol14`,
+       (@leaveHours / defaultWorkHour) `DatCol15`,
        lev.Reason AS `DatCol16`
 FROM employee emp
-LEFT JOIN employeeleave lev
-       ON lev.EmployeeID = emp.RowID
-LEFT JOIN employeetimeentry ete
-       ON ete.Date = lev.LeaveStartDate AND
-          ete.EmployeeID = lev.EmployeeID
+INNER JOIN employeeleave lev
+        ON lev.EmployeeID = emp.RowID
+INNER JOIN employeetimeentry ete
+        ON ete.`Date` BETWEEN lev.LeaveStartDate AND lev.LeaveEndDate
+           AND ete.EmployeeID = lev.EmployeeID
+INNER JOIN employeeshift esh
+        ON esh.RowID=ete.EmployeeShiftID
+INNER JOIN shift sh
+        ON sh.RowID=esh.ShiftID
 WHERE emp.OrganizationID = OrganizationID AND
       lev.LeaveStartDate BETWEEN PayDateFrom AND PayDateTo
-		AND FIND_IN_SET(emp.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0;
+		# AND FIND_IN_SET(emp.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+		AND (IFNULL(ete.SickLeaveHours, 0)
+		     + IFNULL(ete.VacationLeaveHours, 0)
+			  + IFNULL(ete.OtherLeaveHours, 0)) != 0
+ORDER BY CONCAT(emp.LastName,emp.FirstName), ete.`Date`
+;
 
 END//
 DELIMITER ;
