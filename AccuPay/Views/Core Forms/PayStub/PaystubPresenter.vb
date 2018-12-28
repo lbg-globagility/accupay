@@ -50,19 +50,21 @@ Public Class PaystubPresenter
         _currentPaystub = paystub
 
         Dim salary As Salary = Nothing
-        Dim adjustments As IList(Of Adjustment) = Nothing
-        Dim allowanceItems As IList(Of AllowanceItem) = Nothing
-        Dim loanTransactions As IList(Of LoanTransaction) = Nothing
+        Dim paystubActual As PaystubActual = Nothing
+        Dim adjustments As ICollection(Of Adjustment) = Nothing
+        Dim allowanceItems As ICollection(Of AllowanceItem) = Nothing
+        Dim loanTransactions As ICollection(Of LoanTransaction) = Nothing
 
         Using repository = New Repository()
             salary = Await repository.GetSalary(_currentPaystub)
+            paystubActual = Await repository.GetPaystubActual(_currentPaystub)
             adjustments = Await repository.GetAdjustments(_currentPaystub)
             allowanceItems = Await repository.GetAllowanceItems(_currentPaystub.RowID)
             loanTransactions = Await repository.GetLoanTransactions(_currentPaystub.PayPeriodID, _currentPaystub.EmployeeID)
         End Using
 
         _view.ShowSalary(_currentPaystub.Employee, salary, _isActual)
-        _view.ShowPaystub(_currentPaystub, Nothing, _isActual)
+        _view.ShowPaystub(_currentPaystub, paystubActual, _isActual)
         _view.ShowAllowanceItems(allowanceItems)
         _view.ShowLoanTransactions(loanTransactions)
         _view.ShowAdjustments(adjustments)
@@ -70,6 +72,7 @@ Public Class PaystubPresenter
 
     Private Sub OnToogleActual() Handles _view.ToggleActual
         _isActual = Not _isActual
+        OnPaystubSelected(_currentPaystub)
     End Sub
 
     Private Sub OnSearch(term As String) Handles _view.Search
@@ -111,6 +114,13 @@ Public Class PaystubPresenter
             Return Await query.FirstOrDefaultAsync()
         End Function
 
+        Public Async Function GetPaystubActual(paystub As Paystub) As Task(Of PaystubActual)
+            Dim query = _context.PaystubActuals.
+                Where(Function(t) t.RowID.Value = paystub.RowID.Value)
+
+            Return Await query.FirstOrDefaultAsync()
+        End Function
+
         Public Async Function GetTimeEntries(employeeID As Integer?, dateFrom As Date, dateTo As Date) As Task(Of IList(Of TimeEntry))
             Dim query = _context.TimeEntries.
                 Where(Function(t) dateFrom <= t.Date And t.Date <= dateTo).
@@ -119,7 +129,7 @@ Public Class PaystubPresenter
             Return Await query.ToListAsync()
         End Function
 
-        Public Async Function GetAllowanceItems(paystubID As Integer?) As Task(Of IList(Of AllowanceItem))
+        Public Async Function GetAllowanceItems(paystubID As Integer?) As Task(Of ICollection(Of AllowanceItem))
             Dim query = _context.Paystubs.
                 Include(Function(p) p.AllowanceItems).
                     ThenInclude(Function(a) a.Allowance).

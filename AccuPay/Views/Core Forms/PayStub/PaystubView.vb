@@ -135,7 +135,7 @@ Public Class PaystubView
         txtNetPay.Text = Format(If(isActual, actual.NetPay, declared.NetPay))
     End Sub
 
-    Public Sub ShowAllowanceItems(allowanceItems As IList(Of AllowanceItem))
+    Public Sub ShowAllowanceItems(allowanceItems As ICollection(Of AllowanceItem))
         Dim allowanceItemModels = allowanceItems.
             Select(Function(a) New AllowanceItemModel() With {
                 .Name = a.Allowance.Product.PartNo,
@@ -146,7 +146,7 @@ Public Class PaystubView
         dgvAllowances.DataSource = allowanceItemModels
     End Sub
 
-    Public Sub ShowLoanTransactions(loanTransactions As IList(Of LoanTransaction))
+    Public Sub ShowLoanTransactions(loanTransactions As ICollection(Of LoanTransaction))
         Dim loanTransactionModels = loanTransactions.
             Select(Function(l) New LoanTransactionModel() With {
                 .Name = l.LoanSchedule.LoanType.PartNo,
@@ -157,7 +157,7 @@ Public Class PaystubView
         dgvLoanTransactions.DataSource = loanTransactionModels
     End Sub
 
-    Public Sub ShowAdjustments(adjustments As IList(Of Adjustment))
+    Public Sub ShowAdjustments(adjustments As ICollection(Of Adjustment))
         Dim adjustmentModels = adjustments.
             Select(Function(a) New AdjustmentModel() With {
                 .Name = a.Product.Name,
@@ -263,6 +263,20 @@ Public Class PaystubView
 
         Dim exporter = New ExportBankFile(dateFrom, dateTo)
         exporter.Extract()
+    End Sub
+
+    Private Sub DeclaredToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem.Click
+        Dim report = New PayrollSummaryExcelFormatReportProvider With {
+            .IsActual = False
+        }
+        report.Run()
+    End Sub
+
+    Private Sub ActualToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ActualToolStripMenuItem.Click
+        Dim report = New PayrollSummaryExcelFormatReportProvider With {
+            .IsActual = True
+        }
+        report.Run()
     End Sub
 
     Public Class AllowanceItemModel

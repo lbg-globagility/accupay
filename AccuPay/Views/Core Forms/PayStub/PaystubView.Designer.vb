@@ -56,6 +56,10 @@ Partial Class PaystubView
         Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle56 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle38 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -118,10 +122,6 @@ Partial Class PaystubView
         Dim DataGridViewCellStyle96 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle97 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle98 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvPaystubs = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -164,8 +164,14 @@ Partial Class PaystubView
         Me.PaystubTab = New System.Windows.Forms.TabPage()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.dgvAllowances = New System.Windows.Forms.DataGridView()
+        Me.AutoCompleteTextBoxColumn2 = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
+        Me.DataGridViewTextBoxColumn63 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.dgvLoanTransactions = New System.Windows.Forms.DataGridView()
+        Me.AutoCompleteTextBoxColumn1 = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
+        Me.Column48 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn61 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column47 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
@@ -285,6 +291,9 @@ Partial Class PaystubView
         Me.DatTab1BindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.DeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.btnActualToggle = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
@@ -338,12 +347,6 @@ Partial Class PaystubView
         Me.DataGridViewTextBoxColumn58 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn59 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn60 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AutoCompleteTextBoxColumn2 = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
-        Me.DataGridViewTextBoxColumn63 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AutoCompleteTextBoxColumn1 = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
-        Me.Column48 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn61 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column47 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvPaystubs, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.PaystubTab.SuspendLayout()
@@ -922,6 +925,24 @@ Partial Class PaystubView
         Me.dgvAllowances.Size = New System.Drawing.Size(512, 160)
         Me.dgvAllowances.TabIndex = 23
         '
+        'AutoCompleteTextBoxColumn2
+        '
+        Me.AutoCompleteTextBoxColumn2.DataPropertyName = "Name"
+        Me.AutoCompleteTextBoxColumn2.HeaderText = "Name"
+        Me.AutoCompleteTextBoxColumn2.Name = "AutoCompleteTextBoxColumn2"
+        Me.AutoCompleteTextBoxColumn2.ReadOnly = True
+        Me.AutoCompleteTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'DataGridViewTextBoxColumn63
+        '
+        Me.DataGridViewTextBoxColumn63.DataPropertyName = "Amount"
+        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle34.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn63.DefaultCellStyle = DataGridViewCellStyle34
+        Me.DataGridViewTextBoxColumn63.HeaderText = "Amount"
+        Me.DataGridViewTextBoxColumn63.Name = "DataGridViewTextBoxColumn63"
+        Me.DataGridViewTextBoxColumn63.ReadOnly = True
+        '
         'GroupBox2
         '
         Me.GroupBox2.Controls.Add(Me.dgvLoanTransactions)
@@ -948,6 +969,43 @@ Partial Class PaystubView
         Me.dgvLoanTransactions.ReadOnly = True
         Me.dgvLoanTransactions.Size = New System.Drawing.Size(512, 160)
         Me.dgvLoanTransactions.TabIndex = 23
+        '
+        'AutoCompleteTextBoxColumn1
+        '
+        Me.AutoCompleteTextBoxColumn1.DataPropertyName = "Name"
+        Me.AutoCompleteTextBoxColumn1.HeaderText = "Name"
+        Me.AutoCompleteTextBoxColumn1.Name = "AutoCompleteTextBoxColumn1"
+        Me.AutoCompleteTextBoxColumn1.ReadOnly = True
+        Me.AutoCompleteTextBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'Column48
+        '
+        DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle35.Format = "#,###,##0.00;(#,###,##0.00);""""-"""""
+        Me.Column48.DefaultCellStyle = DataGridViewCellStyle35
+        Me.Column48.HeaderText = "Prev. Balance"
+        Me.Column48.Name = "Column48"
+        Me.Column48.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn61
+        '
+        Me.DataGridViewTextBoxColumn61.DataPropertyName = "Amount"
+        DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle36.Format = "(#,###,##0.00);#,###,##0.00;""""-"""""
+        Me.DataGridViewTextBoxColumn61.DefaultCellStyle = DataGridViewCellStyle36
+        Me.DataGridViewTextBoxColumn61.HeaderText = "Paid Amount"
+        Me.DataGridViewTextBoxColumn61.Name = "DataGridViewTextBoxColumn61"
+        Me.DataGridViewTextBoxColumn61.ReadOnly = True
+        '
+        'Column47
+        '
+        Me.Column47.DataPropertyName = "Balance"
+        DataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle37.Format = "#,###,##0.00;(#,###,##0.00);""""-"""""
+        Me.Column47.DefaultCellStyle = DataGridViewCellStyle37
+        Me.Column47.HeaderText = "Rem. Balance"
+        Me.Column47.Name = "Column47"
+        Me.Column47.ReadOnly = True
         '
         'GroupBox1
         '
@@ -2196,7 +2254,7 @@ Partial Class PaystubView
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.ToolStripButton1, Me.btnActualToggle, Me.ToolStripButton3})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.ToolStripDropDownButton1, Me.ToolStripButton1, Me.btnActualToggle, Me.ToolStripButton3})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1280, 25)
@@ -2211,6 +2269,28 @@ Partial Class PaystubView
         Me.ToolStripButton2.Name = "ToolStripButton2"
         Me.ToolStripButton2.Size = New System.Drawing.Size(108, 22)
         Me.ToolStripButton2.Text = "Generate Paystubs"
+        '
+        'ToolStripDropDownButton1
+        '
+        Me.ToolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem, Me.ActualToolStripMenuItem})
+        Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
+        Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(94, 22)
+        Me.ToolStripDropDownButton1.Text = "Payroll Report"
+        '
+        'DeclaredToolStripMenuItem
+        '
+        Me.DeclaredToolStripMenuItem.Name = "DeclaredToolStripMenuItem"
+        Me.DeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DeclaredToolStripMenuItem.Text = "Declared"
+        '
+        'ActualToolStripMenuItem
+        '
+        Me.ActualToolStripMenuItem.Name = "ActualToolStripMenuItem"
+        Me.ActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ActualToolStripMenuItem.Text = "Actual"
         '
         'ToolStripButton1
         '
@@ -2768,61 +2848,6 @@ Partial Class PaystubView
         Me.DataGridViewTextBoxColumn60.Name = "DataGridViewTextBoxColumn60"
         Me.DataGridViewTextBoxColumn60.Width = 60
         '
-        'AutoCompleteTextBoxColumn2
-        '
-        Me.AutoCompleteTextBoxColumn2.DataPropertyName = "Name"
-        Me.AutoCompleteTextBoxColumn2.HeaderText = "Name"
-        Me.AutoCompleteTextBoxColumn2.Name = "AutoCompleteTextBoxColumn2"
-        Me.AutoCompleteTextBoxColumn2.ReadOnly = True
-        Me.AutoCompleteTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'DataGridViewTextBoxColumn63
-        '
-        Me.DataGridViewTextBoxColumn63.DataPropertyName = "Amount"
-        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle34.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn63.DefaultCellStyle = DataGridViewCellStyle34
-        Me.DataGridViewTextBoxColumn63.HeaderText = "Amount"
-        Me.DataGridViewTextBoxColumn63.Name = "DataGridViewTextBoxColumn63"
-        Me.DataGridViewTextBoxColumn63.ReadOnly = True
-        '
-        'AutoCompleteTextBoxColumn1
-        '
-        Me.AutoCompleteTextBoxColumn1.DataPropertyName = "Name"
-        Me.AutoCompleteTextBoxColumn1.HeaderText = "Name"
-        Me.AutoCompleteTextBoxColumn1.Name = "AutoCompleteTextBoxColumn1"
-        Me.AutoCompleteTextBoxColumn1.ReadOnly = True
-        Me.AutoCompleteTextBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'Column48
-        '
-        DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle35.Format = "#,###,##0.00;(#,###,##0.00);""""-"""""
-        Me.Column48.DefaultCellStyle = DataGridViewCellStyle35
-        Me.Column48.HeaderText = "Prev. Balance"
-        Me.Column48.Name = "Column48"
-        Me.Column48.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn61
-        '
-        Me.DataGridViewTextBoxColumn61.DataPropertyName = "Amount"
-        DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle36.Format = "(#,###,##0.00);#,###,##0.00;""""-"""""
-        Me.DataGridViewTextBoxColumn61.DefaultCellStyle = DataGridViewCellStyle36
-        Me.DataGridViewTextBoxColumn61.HeaderText = "Paid Amount"
-        Me.DataGridViewTextBoxColumn61.Name = "DataGridViewTextBoxColumn61"
-        Me.DataGridViewTextBoxColumn61.ReadOnly = True
-        '
-        'Column47
-        '
-        Me.Column47.DataPropertyName = "Balance"
-        DataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle37.Format = "#,###,##0.00;(#,###,##0.00);""""-"""""
-        Me.Column47.DefaultCellStyle = DataGridViewCellStyle37
-        Me.Column47.HeaderText = "Rem. Balance"
-        Me.Column47.Name = "Column47"
-        Me.Column47.ReadOnly = True
-        '
         'PaystubView
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -3081,4 +3106,7 @@ Partial Class PaystubView
     Friend WithEvents Column48 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn61 As DataGridViewTextBoxColumn
     Friend WithEvents Column47 As DataGridViewTextBoxColumn
+    Friend WithEvents ToolStripDropDownButton1 As ToolStripDropDownButton
+    Friend WithEvents DeclaredToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ActualToolStripMenuItem As ToolStripMenuItem
 End Class
