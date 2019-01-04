@@ -25,7 +25,8 @@ Public Class ReportsList
             New AttendanceSheetReportProvider(),
             New LateUTAbsentSummaryReportProvider(),
             New AgencyFeeReportProvider(),
-            New PayrollLedgerExcelFormatReportProvider()
+            New PayrollLedgerExcelFormatReportProvider(),
+            New LoanLedgerReportProvider()
         }
         'New PayrollLedgerReportProvider(),
 

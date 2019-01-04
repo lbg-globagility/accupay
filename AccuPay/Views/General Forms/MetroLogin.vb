@@ -13,8 +13,8 @@ Public Class MetroLogin
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         'dbconn()
-        'Dim dfdssd As New LoanLedgerReportProvider()
-        'dfdssd.Run()
+        Dim dfdssd As New LoanLedgerReportProvider()
+        dfdssd.Run()
 
         Task.Factory.StartNew(Sub()
 
