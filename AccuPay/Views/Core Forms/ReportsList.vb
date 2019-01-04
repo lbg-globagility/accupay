@@ -57,7 +57,7 @@ Public Class ReportsList
     End Sub
 
     Private Sub lvMainMenu_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles lvMainMenu.MouseDoubleClick
-        If lvMainMenu.Items.Count > 0 And e.Button = Windows.Forms.MouseButtons.Left Then
+        If lvMainMenu.Items.Count > 0 Then
             report_maker()
         End If
     End Sub

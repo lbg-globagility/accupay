@@ -94,17 +94,15 @@ Public Class PayrollLedgerExcelFormatReportProvider
     End Sub
 
     Private Function ParameterAssignment() As Boolean
-        Dim boolResult As Boolean = False
+        Dim boolResult As Boolean = True
 
-        If fromPeriodId = 0 Then
-            Dim periodSelector As New PayrollSummaDateSelection()
+        Dim periodSelector As New PayrollSummaDateSelection()
 
-            periodSelector.Panel3.Visible = False
-            periodSelector.panelSalarySwitch.Visible = True
-            periodSelector.Label5.Visible = False
+        periodSelector.Panel3.Visible = False
+        periodSelector.panelSalarySwitch.Visible = True
+        periodSelector.Label5.Visible = False
 
-            boolResult = periodSelector.ShowDialog = DialogResult.OK
-
+        If periodSelector.ShowDialog = DialogResult.OK Then
             fromPeriodId = periodSelector.PayPeriodFromID
             toPeriodId = periodSelector.PayPeriodToID
 
@@ -113,6 +111,8 @@ Public Class PayrollLedgerExcelFormatReportProvider
             dateFrom = periodSelector.DateFrom
             dateTo = periodSelector.DateTo
 
+        Else
+            boolResult = False
         End If
 
         Return boolResult
@@ -144,7 +144,7 @@ Public Class PayrollLedgerExcelFormatReportProvider
                 Throw sql_print_employee_profiles.ErrorException
             End If
 
-            Static report_name As String = "PayrollSummary"
+            Static report_name As String = "PayrollLedger"
             Static temp_path As String = Path.GetTempPath()
 
             Dim short_dates() As String = New String() {
@@ -167,7 +167,8 @@ Public Class PayrollLedgerExcelFormatReportProvider
                 newFile = New FileInfo(temp_file)
             End If
 
-            Dim divisionsWithEmployees = ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0).FirstOrDefault
+            'Dim divisionsWithEmployees = ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0).FirstOrDefault
+            Dim divisionsWithEmployees = ds.Tables.OfType(Of DataTable).FirstOrDefault
 
             Using excel = New ExcelPackage(newFile)
                 Dim subTotalRows = New List(Of Integer)
