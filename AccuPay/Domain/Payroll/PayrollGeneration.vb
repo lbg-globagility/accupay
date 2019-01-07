@@ -403,6 +403,7 @@ Public Class PayrollGeneration
             Where(Function(l) _payPeriod.PayFromDate <= l.StartDate).
             Where(Function(l) l.StartDate <= _payPeriod.PayToDate).
             Where(Function(l) CBool(l.EmployeeID = _employee.RowID)).
+            OrderBy(Function(l) l.StartDate).
             ToList()
 
         Dim leaveIds = leaves.Select(Function(l) l.RowID)
@@ -438,13 +439,15 @@ Public Class PayrollGeneration
                 'summate the leave hours
                 Dim totalLeaveHours = timeEntry.Sum(Function(t) t.TotalLeaveHours)
 
+                Dim transactionDate = If(IsDBNull(leave.EndDate), leave.StartDate, leave.EndDate)
+
                 Dim newTransaction = New LeaveTransaction() With {
                     .OrganizationID = z_OrganizationID,
                     .Created = Date.Now,
                     .EmployeeID = leave.EmployeeID,
                     .PayPeriodID = _payPeriod.RowID,
                     .ReferenceID = leave.RowID,
-                    .TransactionDate = Date.Today,
+                    .TransactionDate = transactionDate.Value,
                     .Type = LeaveTransactionType.Debit,
                     .Amount = totalLeaveHours,
                     .Balance = If(ledger?.LastTransaction?.Balance, 0) - totalLeaveHours

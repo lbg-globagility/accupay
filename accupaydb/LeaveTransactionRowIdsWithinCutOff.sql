@@ -19,43 +19,40 @@ BEGIN
 
 DECLARE return_value TINYTEXT;
 
+DECLARE ppYear, ppMonth INT(11);
+
+DECLARE isFirstHalf TINYINT(1) DEFAULT 0;
+
 SET SESSION group_concat_max_len = 102400;
 
-SELECT GROUP_CONCAT(i.`RowID`) `Result`
-FROM (SELECT
-		MAX(lt.RowID) `RowID`
-				
-		, e.EmployeeID
-		, CONCAT_WS(', ', e.LastName, e.FirstName) `FullName`
-		
-		, lt.Balance
-		, lt.Amount
-		
-		, pp.PayFromDate
-		, pp.PayToDate
-		
-		, prd.PartNo
-		
-		, ppd.OrdinalValue
-		# , pp.OrdinalValue
-		# , MAX(pp.OrdinalValue) `OrdinalValue`
-		
-		, lt.PayPeriodID
+SELECT pp.`Year`
+, pp.`Month`
+, (pp.Half = 1) `isFirstHalf`
+FROM payperiod pp
+WHERE pp.RowID=payperiod_rowid
+INTO ppYear, ppMonth, isFirstHalf
+;
 
-		FROM leavetransaction lt
-		
-		INNER JOIN employee e ON e.RowID=lt.EmployeeID
-		INNER JOIN payperiod ppd ON ppd.RowID=payperiod_rowid
-		INNER JOIN payperiod pp ON pp.RowID=lt.PayPeriodID AND pp.`Year`=ppd.`Year` AND ppd.OrdinalValue >= pp.OrdinalValue
-		
-		INNER JOIN leaveledger ll ON ll.RowID=lt.LeaveLedgerID
-		INNER JOIN product prd ON prd.RowID=ll.ProductID AND prd.PartNo IN ('Vacation leave', 'Sick leave')
-		
-		WHERE lt.OrganizationID = organiz_rowid
-		GROUP BY e.RowID
-		HAVING MAX(pp.OrdinalValue) <= ppd.OrdinalValue
-		ORDER BY CONCAT(e.LastName, e.FirstName), pp.OrdinalValue
-		) i
+SELECT
+GROUP_CONCAT(lt.RowID)
+FROM (SELECT
+		lt.EmployeeID
+		, lt.LeaveLedgerID
+		, MAX(ppd.OrdinalValue) `MaxOrdinalValue`
+		FROM payperiod pp
+		INNER JOIN leavetransaction lt ON lt.OrganizationID=organiz_rowid AND lt.LeaveLedgerID IS NOT NULL
+		INNER JOIN payperiod ppd ON ppd.RowID=lt.PayPeriodID AND ppd.OrdinalValue <= pp.OrdinalValue
+		WHERE pp.`Year`=ppYear
+		AND pp.`Month`=ppMonth
+		AND pp.Half=isFirstHalf
+		AND pp.TotalGrossSalary=1
+		AND pp.OrganizationID=lt.OrganizationID
+		GROUP BY lt.EmployeeID, lt.LeaveLedgerID) i
+INNER JOIN payperiod pp ON pp.`Year`=ppYear AND pp.OrdinalValue=i.MaxOrdinalValue
+INNER JOIN leavetransaction lt ON lt.LeaveLedgerID=i.LeaveLedgerID AND lt.PayPeriodID=pp.RowID
+INNER JOIN leaveledger ll ON ll.LastTransactionID=lt.RowID AND ll.RowID=i.LeaveLedgerID
+INNER JOIN employee e ON e.RowID=ll.EmployeeID
+INNER JOIN product p ON p.RowID=ll.ProductID AND p.PartNo IN ('Sick leave', 'Vacation leave')
 INTO return_value
 ;
 
