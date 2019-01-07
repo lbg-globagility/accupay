@@ -13,7 +13,7 @@ Public Class DateRangePickerDialog
 
     Private _payperiods As IList(Of PayPeriod)
 
-    Private _year As Integer = 2018
+    Public Year As Integer = Date.Today.Year
 
     Private _start As Date
 
@@ -34,9 +34,18 @@ Public Class DateRangePickerDialog
     Private Async Sub DateRangePickerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PayperiodsDataGridView.AutoGenerateColumns = False
 
+        Await LoadPayPeriods()
+
+        lblYear.Text = Convert.ToString(Year)
+
+        btnDecrementYear.Text = String.Concat("← ", (Year - 1))
+        btnIncrementYear.Text = String.Concat((Year + 1), " →")
+    End Sub
+
+    Private Async Function LoadPayPeriods() As Threading.Tasks.Task
         Using context = New PayrollContext()
             _payperiods = Await context.PayPeriods.
-                Where(Function(p) p.Year = _year).
+                Where(Function(p) p.Year = Year).
                 Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
                 Where(Function(p) Nullable.Equals(p.PayFrequencyID, _payFrequencyId)).
                 ToListAsync()
@@ -45,7 +54,7 @@ Public Class DateRangePickerDialog
         _payperiodModels = _payperiods.Select(Function(p) New PayperiodModel(p)).ToList()
 
         PayperiodsDataGridView.DataSource = _payperiodModels
-    End Sub
+    End Function
 
     Private Sub PayperiodsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles PayperiodsDataGridView.SelectionChanged
         Dim payperiod = DirectCast(PayperiodsDataGridView.CurrentRow.DataBoundItem, PayperiodModel)
@@ -107,5 +116,21 @@ Public Class DateRangePickerDialog
         End Property
 
     End Class
+
+    Private Async Sub lblDecrementIncrementYear_ClickedAsync(sender As Object, e As EventArgs) _
+        Handles btnDecrementYear.Click, btnIncrementYear.Click
+
+        Dim linkLabel = DirectCast(sender, Button)
+        Dim factor = Convert.ToInt32(linkLabel.Tag)
+
+        Year = Year + factor
+
+        lblYear.Text = Convert.ToString(Year)
+
+        Await LoadPayPeriods()
+
+        btnDecrementYear.Text = String.Concat("← ", (Year - 1))
+        btnIncrementYear.Text = String.Concat((Year + 1), " →")
+    End Sub
 
 End Class
