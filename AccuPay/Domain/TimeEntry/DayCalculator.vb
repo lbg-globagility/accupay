@@ -455,7 +455,11 @@ Public Class DayCalculator
                 Continue For
             End If
 
-            If lastTimeEntry?.ShiftSchedule.IsRestDay Then
+            Dim isDefaultDayOff = _employee.DayOfRest = CInt(lastTimeEntry?.Date.DayOfWeek) + 1
+            Dim isShiftRestDay = If(lastTimeEntry?.ShiftSchedule.IsRestDay, False)
+
+            If isShiftRestDay Xor isDefaultDayOff Then
+
                 If lastTimeEntry.TotalDayPay > 0 Then
                     Return True
                 End If
@@ -471,6 +475,8 @@ Public Class DayCalculator
 
                 Continue For
             End If
+
+            Dim isAbsent = lastTimeEntry.AbsentDeduction > 0
 
             Return lastTimeEntry.RegularHours > 0 Or lastTimeEntry.TotalLeaveHours > 0
         Next
