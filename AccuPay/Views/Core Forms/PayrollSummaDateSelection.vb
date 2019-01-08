@@ -39,24 +39,29 @@
     Private _payPeriodTo As PayPeriod
 
     Protected Overrides Sub OnLoad(e As EventArgs)
+        Dim boolResult = True
+
         Select Case ReportIndex
 
             Case 4 'Employee Loan Report
 
-                cboStringParameter.Visible = True
-                TextBox1.Visible = True
-                Label360.Visible = True
-                Label5.Visible = True
+                cboStringParameter.Visible = boolResult
+                TextBox1.Visible = boolResult
+                Label360.Visible = boolResult
+                Label5.Visible = boolResult
+
                 enlistToCboBox("SELECT p.PartNo" &
                                " FROM product p" &
                                " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND c.CategoryName='Loan Type'" &
                                " WHERE p.CategoryID=c.RowID" &
                                " AND p.OrganizationID=" & orgztnID & ";",
                                cboStringParameter)
+
                 cboStringParameter.DropDownStyle = ComboBoxStyle.DropDownList
                 TextBox1.Text = "Loan Type"
 
             Case 6 'Payroll Summary Report
+                Panel3.Visible = boolResult
 
                 TextBox1.Visible = True
                 Label360.Visible = True
