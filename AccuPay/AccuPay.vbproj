@@ -334,6 +334,7 @@
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Domain\Commons\SemiMonthlyAllowanceCalculator.vb" />
     <Compile Include="Domain\Leaves\LeaveConvertible.vb" />
+    <Compile Include="Domain\Payroll\CashOutUnusedLeave.vb" />
     <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
     <Compile Include="Domain\Commons\ListOfValueCollection.vb" />
     <Compile Include="Domain\Commons\PayratesCalendar.vb" />
