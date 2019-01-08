@@ -15,6 +15,7 @@ CREATE TABLE `latestleaveledger` (
 	`EmployeeID` INT(10) NULL,
 	`ProductID` INT(10) NULL,
 	`LastTransactionID` INT(10) NULL,
+	`LeaveType` VARCHAR(200) NOT NULL COMMENT 'unique part number for this product' COLLATE 'latin1_swedish_ci',
 	`ReferenceID` INT(10) NULL,
 	`PayPeriodID` INT(10) NULL,
 	`LeaveLedgerID` INT(10) NULL,
@@ -29,6 +30,7 @@ CREATE TABLE `latestleaveledger` (
 DROP VIEW IF EXISTS `latestleaveledger`;
 DROP TABLE IF EXISTS `latestleaveledger`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `latestleaveledger` AS SELECT ll.*
+, p.PartNo `LeaveType`
 
 , lt.ReferenceID
 , lt.PayPeriodID
@@ -41,6 +43,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 , pp.PayFromDate
 , pp.PayToDate
 FROM leaveledger ll
+INNER JOIN employee e ON e.RowID=ll.EmployeeID
 INNER JOIN product p ON p.RowID=ll.ProductID
 INNER JOIN leavetransaction lt ON lt.LeaveLedgerID=ll.RowID
 INNER JOIN payperiod pp ON pp.RowID=lt.PayPeriodID ;

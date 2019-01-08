@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class PayStubForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class PayStubForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -464,11 +464,9 @@ Partial Class PayStubForm
         Me.tsbtnPayrollSumma = New System.Windows.Forms.ToolStripDropDownButton()
         Me.tsbtnDeclaredSummary = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsbtnActualSummary = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.tsbtnDeclaredLedger = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsbtnActualLedger = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.IncludeThirteenthMonthButton = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnCashOutUnusedLeaves = New System.Windows.Forms.ToolStripButton()
         Me.tsSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.tsbtnSearch = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
@@ -4504,7 +4502,7 @@ Partial Class PayStubForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtngenpayroll, Me.tsbtnprintall, Me.tsbtnClose, Me.tsbtnPayrollSumma, Me.ToolStripDropDownButton1, Me.ToolStripSeparator1, Me.IncludeThirteenthMonthButton, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.tsbtnDelEmpPayroll, Me.tsbtnprintpayslip})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtngenpayroll, Me.tsbtnprintall, Me.tsbtnClose, Me.tsbtnPayrollSumma, Me.ToolStripSeparator1, Me.IncludeThirteenthMonthButton, Me.tsbtnCashOutUnusedLeaves, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.tsbtnDelEmpPayroll, Me.tsbtnprintpayslip})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1102, 25)
@@ -4574,28 +4572,6 @@ Partial Class PayStubForm
         Me.tsbtnActualSummary.Tag = "True"
         Me.tsbtnActualSummary.Text = "Actual"
         '
-        'ToolStripDropDownButton1
-        '
-        Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnDeclaredLedger, Me.tsbtnActualLedger})
-        Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
-        Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(139, 22)
-        Me.ToolStripDropDownButton1.Text = "Print Payroll Ledger"
-        Me.ToolStripDropDownButton1.Visible = False
-        '
-        'tsbtnDeclaredLedger
-        '
-        Me.tsbtnDeclaredLedger.Name = "tsbtnDeclaredLedger"
-        Me.tsbtnDeclaredLedger.Size = New System.Drawing.Size(120, 22)
-        Me.tsbtnDeclaredLedger.Text = "Declared"
-        '
-        'tsbtnActualLedger
-        '
-        Me.tsbtnActualLedger.Name = "tsbtnActualLedger"
-        Me.tsbtnActualLedger.Size = New System.Drawing.Size(120, 22)
-        Me.tsbtnActualLedger.Text = "Actual"
-        '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
@@ -4608,6 +4584,17 @@ Partial Class PayStubForm
         Me.IncludeThirteenthMonthButton.Name = "IncludeThirteenthMonthButton"
         Me.IncludeThirteenthMonthButton.Size = New System.Drawing.Size(114, 22)
         Me.IncludeThirteenthMonthButton.Text = "Incl. 13th Month"
+        Me.IncludeThirteenthMonthButton.ToolTipText = "Include 13th Month Pay"
+        '
+        'tsbtnCashOutUnusedLeaves
+        '
+        Me.tsbtnCashOutUnusedLeaves.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.tsbtnCashOutUnusedLeaves.Image = CType(resources.GetObject("tsbtnCashOutUnusedLeaves.Image"), System.Drawing.Image)
+        Me.tsbtnCashOutUnusedLeaves.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnCashOutUnusedLeaves.Name = "tsbtnCashOutUnusedLeaves"
+        Me.tsbtnCashOutUnusedLeaves.Size = New System.Drawing.Size(23, 22)
+        Me.tsbtnCashOutUnusedLeaves.Text = "ToolStripButton1"
+        Me.tsbtnCashOutUnusedLeaves.ToolTipText = "Cash out unused leaves"
         '
         'tsSearch
         '
@@ -5221,7 +5208,5 @@ Partial Class PayStubForm
     Friend WithEvents txtSpecHoliOtPay As TextBox
     Friend WithEvents Label63 As Label
     Friend WithEvents Panel6 As Panel
-    Friend WithEvents ToolStripDropDownButton1 As ToolStripDropDownButton
-    Friend WithEvents tsbtnDeclaredLedger As ToolStripMenuItem
-    Friend WithEvents tsbtnActualLedger As ToolStripMenuItem
+    Friend WithEvents tsbtnCashOutUnusedLeaves As ToolStripButton
 End Class
