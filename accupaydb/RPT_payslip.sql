@@ -98,6 +98,15 @@ SELECT ps.RowID
 ,IFNULL(FORMAT(et.UndertimeHours, 2), 0) `COL8`
 ,IFNULL(FORMAT(et.UndertimeHoursAmount, 2), 0) `COL9`
 
+,IFNULL(FORMAT(et.RestDayHours, 2), 0) `COL41`
+,IFNULL(FORMAT(et.RestDayAmount, 2), 0) `COL42`
+
+,IFNULL(FORMAT(et.NightDifferentialOTHours, 2), 0) `COL43`
+,IFNULL(FORMAT(et.NightDiffOTHoursAmount, 2), 0) `COL44`
+
+,IFNULL(FORMAT(et.RestDayOTHours, 2), 0) `COL10`
+,IFNULL(FORMAT(et.RestDayOTPay, 2), 0) `COL11`
+
 ,IFNULL(FORMAT(et.OvertimeHoursWorked, 2), 0) `COL12`
 ,IFNULL(FORMAT(et.OvertimeHoursAmount, 2), 0) `COL13`
 
@@ -236,6 +245,14 @@ LEFT JOIN (SELECT ete.EmployeeID
            ,SUM(ete.NightDiffHoursAmount) `NightDiffHoursAmount`
            ,SUM(ete.HolidayPayAmount) `HolidayPayAmount`
            ,SUM(ete.Absent) `Absent`
+           
+			  ,SUM(ete.RestDayHours) `RestDayHours`
+			  ,SUM(ete.RestDayAmount) `RestDayAmount`
+			  ,SUM(ete.RestDayOTHours) `RestDayOTHours`
+			  ,SUM(ete.RestDayOTPay) `RestDayOTPay`
+			  
+			  ,SUM(ete.NightDifferentialOTHours) `NightDifferentialOTHours`
+			  ,SUM(ete.NightDiffOTHoursAmount) `NightDiffOTHoursAmount`
            FROM v_uni_employeetimeentry ete
            WHERE ete.OrganizationID = og_rowid
            AND ete.`Date` BETWEEN date_from AND date_to

@@ -334,6 +334,7 @@
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Domain\Commons\SemiMonthlyAllowanceCalculator.vb" />
     <Compile Include="Domain\Leaves\LeaveConvertible.vb" />
+    <Compile Include="Domain\Payroll\CashOutUnusedLeave.vb" />
     <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
     <Compile Include="Domain\Commons\ListOfValueCollection.vb" />
     <Compile Include="Domain\Commons\PayratesCalendar.vb" />
@@ -345,6 +346,7 @@
     <Compile Include="Domain\Payroll\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Domain\Commons\Calendar.vb" />
     <Compile Include="Domain\Payroll\SssCalculator.vb" />
+    <Compile Include="Domain\Paystubs\Category.vb" />
     <Compile Include="Domain\Paystubs\DivisionMinimumWage.vb" />
     <Compile Include="Domain\TimeEntry\ActualTimeEntryCalculator.vb" />
     <Compile Include="Domain\TimeEntry\ActualTimeEntryPolicy.vb" />

@@ -30,6 +30,8 @@ Public Class PayrollContext
 
     Public Overridable Property TimeLogs As DbSet(Of TimeLog)
 
+    Public Overridable Property Categories As DbSet(Of Category)
+
     Public Overridable Property Products As DbSet(Of Product)
 
     Public Overridable Property Paystubs As DbSet(Of Paystub)

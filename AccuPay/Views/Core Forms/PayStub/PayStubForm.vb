@@ -2096,6 +2096,24 @@ Public Class PayStubForm
 
     End Function
 
+    Private Sub tsbtnCashOutUnusedLeaves_Click(sender As Object, e As EventArgs) Handles tsbtnCashOutUnusedLeaves.Click
+        If paypRowID = 0 Then
+            MsgBox("Please select a generated payroll.", MsgBoxStyle.Exclamation)
+            Return
+        End If
+
+        Dim payPeriodSelector = New PayrollSummaDateSelection()
+
+        If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
+            Return
+        End If
+
+        Dim dateFromId = payPeriodSelector.PayPeriodFromID
+        Dim dateToId = payPeriodSelector.PayPeriodToID
+
+        Dim cashOut = New CashOutUnusedLeave(dateFromId, dateToId, paypRowID)
+        cashOut.Execute()
+    End Sub
 End Class
 
 Friend Class PrintAllPaySlipOfficialFormat
