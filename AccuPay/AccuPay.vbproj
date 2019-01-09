@@ -621,6 +621,13 @@
     <Compile Include="Domain\TimeEntry\TimeEntryCalculator.vb" />
     <Compile Include="Domain\TimeEntry\TimeEntryGenerator.vb" />
     <Compile Include="Domain\TimeEntry\TimeEntryPolicy.vb" />
+    <Compile Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.Designer.vb">
+      <DependentUpon>PreviewLeaveBalanceForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\TimeEntry\RenewLeaveBalancePolicy.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\TimeEntryProgressDialog.Designer.vb">
       <DependentUpon>TimeEntryProgressDialog.vb</DependentUpon>
     </Compile>
@@ -1749,6 +1756,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeEntry\DateRangePickerDialog.resx">
       <DependentUpon>DateRangePickerDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.resx">
+      <DependentUpon>PreviewLeaveBalanceForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeEntry\TimeEntryProgressDialog.resx">
       <DependentUpon>TimeEntryProgressDialog.vb</DependentUpon>

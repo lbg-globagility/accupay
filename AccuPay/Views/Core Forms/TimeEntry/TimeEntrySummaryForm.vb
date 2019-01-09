@@ -1087,4 +1087,9 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
+    Private Sub tstbnResetLeaveBalance_Click(sender As Object, e As EventArgs) Handles tstbnResetLeaveBalance.Click
+        Dim form As New PreviewLeaveBalanceForm
+        form.ShowDialog()
+    End Sub
+
 End Class
