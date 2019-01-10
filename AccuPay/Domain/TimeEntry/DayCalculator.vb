@@ -335,8 +335,8 @@ Public Class DayCalculator
             Dim dawnDiffPeriod = GetNightDiffPeriod(previousDay)
 
             timeEntry.NightDiffHours =
-                calculator.ComputeNightDiffHours(dutyPeriod, currentShift, nightDiffPeriod) +
-                calculator.ComputeNightDiffHours(dutyPeriod, currentShift, dawnDiffPeriod)
+                calculator.ComputeNightDiffHours(dutyPeriod, currentShift, nightDiffPeriod, _policy.HasNightBreaktime) +
+                calculator.ComputeNightDiffHours(dutyPeriod, currentShift, dawnDiffPeriod, _policy.HasNightBreaktime)
 
             timeEntry.NightDiffOTHours = overtimes.Sum(
                 Function(o) calculator.ComputeNightDiffOTHours(logPeriod, o, currentShift, nightDiffPeriod, nightBreaktime) +

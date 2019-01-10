@@ -77,7 +77,7 @@ Public Class TimeEntryCalculator
         Return undertimePeriod.TotalHours
     End Function
 
-    Public Function ComputeNightDiffHours(workPeriod As TimePeriod, currentShift As CurrentShift, nightDiffPeriod As TimePeriod) As Decimal
+    Public Function ComputeNightDiffHours(workPeriod As TimePeriod, currentShift As CurrentShift, nightDiffPeriod As TimePeriod, shouldBreakTime As Boolean) As Decimal
         If Not workPeriod.Intersects(nightDiffPeriod) Then
             Return 0D
         End If
@@ -85,7 +85,8 @@ Public Class TimeEntryCalculator
         Dim nightWorked = workPeriod.Overlap(nightDiffPeriod)
 
         Dim nightDiffHours = 0D
-        If currentShift.HasBreaktime Then
+
+        If shouldBreakTime AndAlso currentShift.HasBreaktime Then
             Dim breakPeriod = currentShift.BreakPeriod
             Dim nightWorkedPeriods = nightWorked.Difference(breakPeriod)
 

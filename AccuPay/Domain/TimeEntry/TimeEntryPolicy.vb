@@ -14,6 +14,12 @@ Public Class TimeEntryPolicy
         End Get
     End Property
 
+    Public ReadOnly Property NightDiffBreakTime As Boolean
+        Get
+            Return _settings.GetBoolean("NightDiffPolicy.HasBreakTime")
+        End Get
+    End Property
+
     Public ReadOnly Property LateSkipCountRounding As Boolean
         Get
             Return _settings.GetBoolean("LateHours.SkipCountRounding")
