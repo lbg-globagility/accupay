@@ -544,7 +544,7 @@ Partial Class PayStubForm
         Me.dgvpayper.RowHeadersWidth = 25
         Me.dgvpayper.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvpayper.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvpayper.Size = New System.Drawing.Size(235, 423)
+        Me.dgvpayper.Size = New System.Drawing.Size(235, 295)
         Me.dgvpayper.TabIndex = 0
         '
         'Column1
@@ -682,7 +682,7 @@ Partial Class PayStubForm
         Me.Label25.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
         Me.Label25.Location = New System.Drawing.Point(0, 0)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(1370, 21)
+        Me.Label25.Size = New System.Drawing.Size(1229, 21)
         Me.Label25.TabIndex = 139
         Me.Label25.Text = "PAYROLL"
         Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1140,7 +1140,7 @@ Partial Class PayStubForm
         Me.TabControl1.Location = New System.Drawing.Point(254, 21)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1116, 654)
+        Me.TabControl1.Size = New System.Drawing.Size(975, 526)
         Me.TabControl1.TabIndex = 0
         '
         'tbppayroll
@@ -1150,7 +1150,7 @@ Partial Class PayStubForm
         Me.tbppayroll.Location = New System.Drawing.Point(4, 4)
         Me.tbppayroll.Name = "tbppayroll"
         Me.tbppayroll.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbppayroll.Size = New System.Drawing.Size(1108, 621)
+        Me.tbppayroll.Size = New System.Drawing.Size(967, 493)
         Me.tbppayroll.TabIndex = 0
         Me.tbppayroll.Text = "PAYROLL               "
         Me.tbppayroll.UseVisualStyleBackColor = True
@@ -1161,7 +1161,7 @@ Partial Class PayStubForm
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(3, 28)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1102, 590)
+        Me.Panel1.Size = New System.Drawing.Size(961, 462)
         Me.Panel1.TabIndex = 176
         '
         'SplitContainer1
@@ -1277,8 +1277,8 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label36)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label94)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label42)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1102, 590)
-        Me.SplitContainer1.SplitterDistance = 310
+        Me.SplitContainer1.Size = New System.Drawing.Size(961, 462)
+        Me.SplitContainer1.SplitterDistance = 242
         Me.SplitContainer1.TabIndex = 0
         '
         'tstrip
@@ -4505,7 +4505,7 @@ Partial Class PayStubForm
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtngenpayroll, Me.tsbtnprintall, Me.tsbtnClose, Me.tsbtnPayrollSumma, Me.ToolStripSeparator1, Me.IncludeThirteenthMonthButton, Me.tsbtnCashOutUnusedLeaves, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.tsbtnDelEmpPayroll, Me.tsbtnprintpayslip})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1102, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(961, 25)
         Me.ToolStrip1.TabIndex = 175
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -4593,7 +4593,7 @@ Partial Class PayStubForm
         Me.tsbtnCashOutUnusedLeaves.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCashOutUnusedLeaves.Name = "tsbtnCashOutUnusedLeaves"
         Me.tsbtnCashOutUnusedLeaves.Size = New System.Drawing.Size(23, 22)
-        Me.tsbtnCashOutUnusedLeaves.Text = "ToolStripButton1"
+        Me.tsbtnCashOutUnusedLeaves.Text = "Cash Out Unused Leaves"
         Me.tsbtnCashOutUnusedLeaves.ToolTipText = "Cash out unused leaves"
         '
         'tsSearch
@@ -4699,7 +4699,7 @@ Partial Class PayStubForm
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Left
         Me.Panel4.Location = New System.Drawing.Point(0, 21)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(254, 654)
+        Me.Panel4.Size = New System.Drawing.Size(254, 526)
         Me.Panel4.TabIndex = 179
         '
         'Panel5
@@ -4708,7 +4708,7 @@ Partial Class PayStubForm
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel5.Controls.Add(Me.linkPrev)
         Me.Panel5.Controls.Add(Me.linkNxt)
-        Me.Panel5.Location = New System.Drawing.Point(10, 627)
+        Me.Panel5.Location = New System.Drawing.Point(10, 499)
         Me.Panel5.Name = "Panel5"
         Me.Panel5.Size = New System.Drawing.Size(235, 20)
         Me.Panel5.TabIndex = 179
@@ -4722,7 +4722,7 @@ Partial Class PayStubForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(234, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(1370, 675)
+        Me.ClientSize = New System.Drawing.Size(1229, 547)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.Panel4)
         Me.Controls.Add(Me.Label25)

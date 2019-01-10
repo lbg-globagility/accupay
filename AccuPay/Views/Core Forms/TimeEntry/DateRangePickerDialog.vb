@@ -19,6 +19,8 @@ Public Class DateRangePickerDialog
 
     Private _end As Date
 
+    Private _rowId As Integer
+
     Public ReadOnly Property Start As Date
         Get
             Return _start
@@ -28,6 +30,12 @@ Public Class DateRangePickerDialog
     Public ReadOnly Property [End] As Date
         Get
             Return _end
+        End Get
+    End Property
+
+    Public ReadOnly Property Id As Integer
+        Get
+            Return _rowId
         End Get
     End Property
 
@@ -61,6 +69,8 @@ Public Class DateRangePickerDialog
 
         _currentPayperiod = payperiod.PayPeriod
 
+        _rowId = payperiod.RowID
+
         _start = payperiod.PayFromDate
         _end = payperiod.PayToDate
     End Sub
@@ -80,6 +90,12 @@ Public Class DateRangePickerDialog
         Public Sub New(payperiod As PayPeriod)
             Me.PayPeriod = payperiod
         End Sub
+
+        Public ReadOnly Property RowID As Integer
+            Get
+                Return PayPeriod.RowID.Value
+            End Get
+        End Property
 
         Public ReadOnly Property PayFromDate As Date
             Get
