@@ -518,6 +518,10 @@ Public Class DayCalculator
 
         Dim leavePeriod = TimePeriod.FromTime(startTime, endTime, currentShift.Date)
 
+        If Not currentShift.HasShift Then
+            Return leavePeriod
+        End If
+
         If Not currentShift.ShiftPeriod.Intersects(leavePeriod) Then
             Dim nextDay = currentShift.Date.AddDays(1)
             leavePeriod = TimePeriod.FromTime(startTime, endTime, nextDay)

@@ -670,7 +670,7 @@ Public Class TimeEntrySummaryForm
 
             Task.Run(Sub() generator.Start()).
                 ContinueWith(
-                    Sub() DoneGenerating(progressDialog),
+                    Sub() DoneGenerating(progressDialog, generator),
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext)
@@ -679,10 +679,19 @@ Public Class TimeEntrySummaryForm
         End If
     End Sub
 
-    Private Sub DoneGenerating(dialog As TimeEntryProgressDialog)
+    Private Sub DoneGenerating(dialog As TimeEntryProgressDialog, generator As TimeEntryGenerator)
         dialog.Close()
         dialog.Dispose()
-        MsgBox("Done")
+
+        Dim msgBoxText As String = "Done"
+
+        If generator.ErrorCount > 0 Then
+            Dim errorCount = generator.ErrorCount
+            msgBoxText = String.Concat("Done, with ", errorCount, If(errorCount = 1, " error", " errors."))
+        End If
+
+        MsgBox(msgBoxText)
+
     End Sub
 
     Private Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
