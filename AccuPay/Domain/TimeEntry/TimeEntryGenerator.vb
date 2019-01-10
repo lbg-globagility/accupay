@@ -5,12 +5,14 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Tools
+Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Logging
 Imports Microsoft.Extensions.Logging.Console
 Imports PayrollSys
 
 Public Class TimeEntryGenerator
+    Private Shared logger As ILog = LogManager.GetLogger("TimeEntryLogger")
 
     Private ReadOnly _cutoffStart As Date
 
@@ -29,6 +31,14 @@ Public Class TimeEntryGenerator
     Private _total As Integer
 
     Private _finished As Integer
+
+    Private _errors As Integer
+
+    Public ReadOnly Property ErrorCount As Integer
+        Get
+            Return _errors
+        End Get
+    End Property
 
     Public ReadOnly Property Progress As Integer
         Get
@@ -133,7 +143,12 @@ Public Class TimeEntryGenerator
 
         Parallel.ForEach(employees,
             Sub(employee)
-                CalculateEmployee(employee, organization, payrateCalendar, settings, agencies)
+                Try
+                    CalculateEmployee(employee, organization, payrateCalendar, settings, agencies)
+                Catch ex As Exception
+                    logger.Error(employee.EmployeeNo, ex)
+                    _errors += 1
+                End Try
 
                 Interlocked.Increment(_finished)
             End Sub)
@@ -192,23 +207,30 @@ Public Class TimeEntryGenerator
 
         Dim timeEntries = New List(Of TimeEntry)
         For Each currentDate In Calendar.EachDay(_cutoffStart, _cutoffEnd)
-            Dim timelog = timeLogs.OrderByDescending(Function(t) t.LastUpd).FirstOrDefault(Function(t) t.LogDate = currentDate)
-            Dim shiftSchedule = shiftSchedules.FirstOrDefault(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo)
-            Dim overtimes = overtimesInCutoff.Where(Function(o) o.OTStartDate <= currentDate And currentDate <= o.OTEndDate).ToList()
-            Dim leaves = leavesInCutoff.Where(Function(l) l.StartDate = currentDate).ToList()
-            Dim officialBusiness = officialBusinesses.FirstOrDefault(Function(o) o.StartDate = currentDate)
 
-            Dim timeEntry = dayCalculator.Compute(
-                currentDate,
-                salary,
-                previousTimeEntries,
-                shiftSchedule,
-                timelog,
-                overtimes,
-                officialBusiness,
-                leaves)
+            Try
+                Dim timelog = timeLogs.OrderByDescending(Function(t) t.LastUpd).FirstOrDefault(Function(t) t.LogDate = currentDate)
+                Dim shiftSchedule = shiftSchedules.FirstOrDefault(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo)
+                Dim overtimes = overtimesInCutoff.Where(Function(o) o.OTStartDate <= currentDate And currentDate <= o.OTEndDate).ToList()
+                Dim leaves = leavesInCutoff.Where(Function(l) l.StartDate = currentDate).ToList()
+                Dim officialBusiness = officialBusinesses.FirstOrDefault(Function(o) o.StartDate = currentDate)
 
-            timeEntries.Add(timeEntry)
+                Dim timeEntry = dayCalculator.Compute(
+                    currentDate,
+                    salary,
+                    previousTimeEntries,
+                    shiftSchedule,
+                    timelog,
+                    overtimes,
+                    officialBusiness,
+                    leaves)
+
+                timeEntries.Add(timeEntry)
+
+            Catch ex As Exception
+                Throw New Exception(currentDate.ToString(), ex)
+            End Try
+
         Next
 
         If employee.IsUnderAgency Then
