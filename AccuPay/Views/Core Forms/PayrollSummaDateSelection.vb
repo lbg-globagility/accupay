@@ -1,6 +1,15 @@
-﻿Public Class PayrollSummaDateSelection
+﻿Imports System.Collections.ObjectModel
+Imports System.Threading.Tasks
+Imports AccuPay.Entity
+Imports MySql.Data.MySqlClient
+
+Public Class PayrollSummaDateSelection
 
     Public Property ReportIndex As Integer
+
+    Private _showLoanType As Boolean = False
+
+    Private _loanTypeId As Integer?
 
     Public ReadOnly Property PayPeriodFromID As Integer?
         Get
@@ -30,6 +39,24 @@
         Get
             Return RadioButton2.Checked
         End Get
+    End Property
+
+    Public Property ShowLoanType As Boolean
+        Get
+            Return _showLoanType
+        End Get
+        Set(value As Boolean)
+            _showLoanType = value
+        End Set
+    End Property
+
+    Public Property LoanTypeId As Integer?
+        Get
+            Return _loanTypeId
+        End Get
+        Set(value As Integer?)
+            _loanTypeId = value
+        End Set
     End Property
 
     Public Property PayPeriodID As Object
@@ -79,8 +106,65 @@
                 Me.Height = 578
         End Select
 
+        If _showLoanType Then
+            LoadLoanTypesAsync()
+            Panel5.Visible = _showLoanType
+
+            AddHandler cboxLoanType.SelectedIndexChanged, AddressOf cboxLoanType_SelectedIndexChanged
+        End If
+
         MyBase.OnLoad(e)
     End Sub
+
+    Private Async Sub LoadLoanTypesAsync()
+        Dim loanTypes = Await GetLoanTypes()
+
+        cboxLoanType.DataSource = loanTypes.ToList()
+    End Sub
+
+    Private Async Function GetLoanTypes() As Task(Of ICollection(Of Product))
+        'Select Case NULL `RowID`, 'All' `PartNo`
+        '        UNION
+        '    Select Case i.RowID, i.PartNo
+        '            FROM() i
+        Dim sql = <![CDATA[
+                    SELECT p.PartNo, p.RowID
+                    FROM category c
+                    INNER JOIN product p ON p.CategoryID=c.RowID AND p.OrganizationID=c.OrganizationID AND p.ActiveData=TRUE
+                    WHERE c.OrganizationID = @orgId
+                    AND c.CategoryName='Loan Type'
+                    ORDER BY p.PartNo
+                    ;
+        ]]>.Value
+
+        Dim products = New Collection(Of Product)
+        Dim noRowId As Integer?
+
+        Using connection As New MySqlConnection(connectionString),
+            command As New MySqlCommand(sql, connection)
+
+            command.Parameters.AddWithValue("@orgId", CStr(z_OrganizationID))
+
+            Await connection.OpenAsync()
+
+            Dim reader = Await command.ExecuteReaderAsync()
+
+            products.Insert(0, New Product() With {.RowID = noRowId, .PartNo = "All"})
+            While Await reader.ReadAsync()
+                Dim partNo = reader.GetValue(Of String)("PartNo")
+                Dim rowId = reader.GetValue(Of String)("RowID")
+
+                Dim product = New Product() With {
+                    .PartNo = partNo,
+                    .RowID = rowId
+                }
+
+                products.Add(product)
+            End While
+        End Using
+
+        Return products
+    End Function
 
     '**********************
     Dim yearnow As Integer = CDate(dbnow).Year
@@ -276,6 +360,7 @@
 
     Dim faultFontStyle As Font = New System.Drawing.Font("Segoe UI Semilight", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
+
     Private Sub SemiMonthlyTab_Enter(sender As Object, e As EventArgs) Handles SemiMonthlyTab.Enter
         VIEW_payp(, SemiMonthlyTab.Text.Trim)
     End Sub
@@ -301,5 +386,9 @@
         End Function
 
     End Class
+
+    Private Sub cboxLoanType_SelectedIndexChanged(sender As Object, e As EventArgs)
+        _loanTypeId = cboxLoanType.SelectedValue
+    End Sub
 
 End Class

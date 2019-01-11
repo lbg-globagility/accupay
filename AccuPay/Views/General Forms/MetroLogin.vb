@@ -8,73 +8,7 @@ Imports System.Xml
 
 Public Class MetroLogin
 
-    'Public n_FileObserver As New FileObserver(sys_apppath)
-
     Protected Overrides Sub OnLoad(e As EventArgs)
-
-        'dbconn()
-
-        Task.Factory.StartNew(Sub()
-
-                                  'Write_XML()
-
-                              End Sub).ContinueWith(Sub()
-
-                                                        'Dim xmdoc As XDocument = XDocument.Load(xm_datafile)
-
-                                                        ''Console.WriteLine(String.Concat("# # # # # # # #", Environment.NewLine,
-                                                        ''                                xmdoc, Environment.NewLine,
-                                                        ''                                "# # # # # # # #"))
-
-                                                        ''# #############################
-                                                        ''encoding="utf-8" 
-                                                        'Dim doc As XDocument = _
-                                                        '    <?xml version="1.0" standalone="yes"?>
-                                                        '    <!--This is a comment-->
-                                                        '    <Root>
-                                                        '        <%= From el In xmdoc.<root>.Elements _
-                                                        '            Where CStr(el) _
-                                                        '            Select el %>
-                                                        '    </Root>
-
-                                                        ''.StartsWith("data")
-
-                                                        'Console.WriteLine("#############################")
-
-                                                        'For Each xmnod In doc.Nodes
-
-                                                        '    Console.WriteLine(xmnod.ToString())
-
-                                                        'Next
-
-                                                        '# #############################
-                                                        'Read_XML()
-                                                        '# #############################
-
-                                                    End Sub, TaskScheduler.FromCurrentSynchronizationContext)
-
-        'Dim objReader As New System.IO.StreamReader("D:\DOWNLOADS\logfile 02.21.17 to 03.05.17.txt")
-
-        ''ExecSQLMultiDimArrProcedure
-
-        'Dim i As Integer = objReader.Peek()
-
-        'Dim log_readlin(i) As String
-
-        'Dim sdfsdf As New ArrayList
-
-        'Do While objReader.Peek() >= 0
-
-        '    Dim rl As String = Convert.ToString(objReader.ReadLine())
-
-        '    sdfsdf.Add(rl)
-
-        'Loop
-
-        'Console.WriteLine(sdfsdf.Count)
-
-        'objReader.Close()
-        'objReader.Dispose()
 
         ReloadOrganization()
 
