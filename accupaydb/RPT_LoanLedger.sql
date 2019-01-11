@@ -105,7 +105,7 @@ ELSE
 	
 	WHERE slp.OrganizationID = orgId
 	AND FIND_IN_SET(slp.PayPeriodID, @periodIds) > 0
-	ORDER BY CONCAT(e.LastName, e.FirstName, e.MiddleName), p.PartNo, pp.`Year`, pp.`Month`, pp.OrdinalValue
+	ORDER BY CONCAT(e.LastName, e.FirstName, e.MiddleName), slp.EmployeeLoanRecordID, p.PartNo, pp.`Year`, pp.`Month`, pp.OrdinalValue
 	;
 
 END IF;

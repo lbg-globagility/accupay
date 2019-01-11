@@ -35,14 +35,30 @@ Public Class LoanLedgerReportProvider
         WHERE og.RowID = ?ogId;"
 
     Public Sub Run() Implements IReportProvider.Run
+        Dim payPeriodSelector = New PayrollSummaDateSelection() With {.ShowLoanType = True}
 
-        Dim data = New SQL("CALL RPT_LoanLedger();").GetFoundRows.Tables.OfType(Of DataTable).FirstOrDefault
+        If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
+            Return
+        End If
+
+        Dim periodFromId = payPeriodSelector.PayPeriodFromID
+        Dim periodToId = payPeriodSelector.PayPeriodToID
+        Dim loanTypeId As Object = DBNull.Value
+        If payPeriodSelector.LoanTypeId IsNot Nothing Then
+            loanTypeId = payPeriodSelector.LoanTypeId
+        End If
+
+        Dim params = New Object() {z_OrganizationID, periodFromId, periodToId, loanTypeId}
+
+        Dim ds = New SQL("CALL `RPT_LoanLedger`(?orgId, ?payPeriodFromId, ?payPeriodToId, ?loanTypeId);",
+                         params).GetFoundRows
+        Dim data = ds.Tables(0)
 
         Dim report = New LoanLedgerReport()
         report.SetDataSource(data)
 
         Dim sql As New SQL(orgNameAddressSql,
-                           New Object() {2}) 'orgztnID
+                           New Object() {z_OrganizationID})
         Dim result = Convert.ToString(sql.GetFoundRow)
         Dim splitValues = Split(result, Chr(10))
 
