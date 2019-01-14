@@ -5,6 +5,8 @@ Imports MySql.Data.MySqlClient
 
 Public Class CashOutUnusedLeave
 
+    Private Const _defaultWorkHours As Decimal = 8.0
+
     Private _settings As ListOfValueCollection
 
     'Private _adjUnusedVacationLeave As String = String.Join(Space(1), "Unused", LeaveType.Vacation.ToString(), "Leaves")
@@ -183,6 +185,8 @@ Public Class CashOutUnusedLeave
     Public Sub Execute()
         _leaveLedger = GetLatestLeaveLedger()
 
+        Dim payperiod As New PayPeriod
+
         If _isVLOnly And _asAdjustment Then
 
             Dim success As Boolean = False
@@ -193,8 +197,18 @@ Public Class CashOutUnusedLeave
                      Where p.PayPeriodID.Value = _currentPeriodId And p.OrganizationID = _organizationId).
                      ToList()
 
+                payperiod = context.PayPeriods.Where(Function(pp) Equals(pp.RowID.Value, _currentPeriodId)).FirstOrDefault
+
                 For Each row As DataRow In _leaveLedger.Rows
                     Dim employeePrimKey = Convert.ToInt32(row("EmployeeID"))
+                    Dim llRowId = Convert.ToInt32(row("RowID"))
+
+                    Dim ll As New LeaveLedger With {.RowID = llRowId, .EmployeeID = employeePrimKey}
+
+                    Dim unusedLeaveAmount = Convert.ToDecimal(row("Balance")) * Convert.ToDecimal(row("HourlyRate"))
+
+                    Dim leaveBalance = Convert.ToDecimal(row("Balance"))
+                    Dim leaveDayBalance = leaveBalance / _defaultWorkHours
 
                     Dim paystub = paystubs.Where(Function(p) Equals(p.EmployeeID.Value, employeePrimKey)).FirstOrDefault
 
@@ -204,13 +218,9 @@ Public Class CashOutUnusedLeave
 
                         paystub.ActualAdjustments.Clear()
 
-                        Dim unusedLeaveAmount = Convert.ToDecimal(row("Balance")) * Convert.ToDecimal(row("HourlyRate"))
-
-                        Dim leaveBalance = Convert.ToDecimal(row("Balance"))
-
                         Dim aa As New ActualAdjustment With {
                         .Created = Date.Now,
-                        .Comment = String.Concat(leaveBalance, If(leaveBalance > 1, " hours", " hour"), " balance"),
+                        .Comment = String.Concat(leaveDayBalance, If(leaveDayBalance > 1, " days", " day")),
                         .CreatedBy = z_User,
                         .IsActual = True,
                         .LastUpd = Date.Now,
@@ -226,7 +236,11 @@ Public Class CashOutUnusedLeave
                         For Each adj In adjustmentsExceptUnusedLeave
                             paystub.ActualAdjustments.Add(adj)
                         Next
+
+                        CreateLeaveTransaction(context, LeaveTransactionType.Debit, ll, payperiod, leaveBalance)
+
                     Else
+
                         Continue For
                     End If
                 Next
@@ -238,7 +252,10 @@ Public Class CashOutUnusedLeave
             If success Then
                 Dim strCutOff As String
                 Using context = New PayrollContext()
-                    Dim payperiod = context.PayPeriods.Where(Function(pp) Equals(pp.RowID.Value, _currentPeriodId)).FirstOrDefault
+                    If payperiod Is Nothing Then
+                        payperiod = context.PayPeriods.Where(Function(pp) Equals(pp.RowID.Value, _currentPeriodId)).FirstOrDefault
+                    End If
+
                     strCutOff = String.Join(" to ", payperiod.PayFromDate.ToShortDateString, payperiod.PayToDate.ToShortDateString)
                 End Using
                 MsgBox(String.Concat("Unused leaves were successfully computed.", vbNewLine, "Please generate the ", strCutOff, " payroll."), MsgBoxStyle.Information)
@@ -248,6 +265,64 @@ Public Class CashOutUnusedLeave
         End If
 
     End Sub
+
+    Private Sub ZeroOutEmployeeLeaveBalance(context As PayrollContext, employeeRowId As Integer)
+        Dim employee = context.Employees.Where(Function(e) Nullable.Equals(e.RowID, employeeRowId)).FirstOrDefault
+
+        If employee IsNot Nothing Then
+            With employee
+                .LeaveBalance = 0
+                .SickLeaveBalance = 0
+            End With
+
+        End If
+
+    End Sub
+
+    Private Function CreateLeaveTransaction(context As PayrollContext, leaveTransactionType As LeaveTransactionType, leaveLedger As LeaveLedger, payPeriod As PayPeriod, unusedLeaveHours As Decimal) As LeaveTransaction
+        Dim employeeRowId = leaveLedger.EmployeeID
+
+        Dim lt = context.LeaveTransactions.
+            Where(Function(lTrans) Nullable.Equals(lTrans.OrganizationID, z_OrganizationID)).
+            Where(Function(lTrans) Nullable.Equals(lTrans.EmployeeID, employeeRowId)).
+            Where(Function(lTrans) Nullable.Equals(lTrans.LeaveLedgerID, leaveLedger.RowID)).
+            Where(Function(lTrans) Nullable.Equals(lTrans.PayPeriodID, payPeriod.RowID)).
+            Where(Function(lTrans) Equals(lTrans.Type, leaveTransactionType.ToString())).
+            Where(Function(lTrans) Equals(lTrans.Balance, 0)).
+            Where(Function(lTrans) Equals(lTrans.Amount, unusedLeaveHours)).
+            Where(Function(lTrans) Equals(lTrans.TransactionDate, payPeriod.PayToDate)).
+            FirstOrDefault
+
+        If lt Is Nothing Then
+            lt = New LeaveTransaction With {
+                .OrganizationID = z_OrganizationID,
+                .Created = Date.Now,
+                .CreatedBy = z_User,
+                .LastUpd = Date.Now,
+                .LastUpdBy = z_User,
+                .EmployeeID = employeeRowId,
+                .LeaveLedgerID = leaveLedger.RowID,
+                .PayPeriodID = payPeriod.RowID,
+                .ReferenceID = Nothing,
+                .TransactionDate = payPeriod.PayToDate,
+                .Type = leaveTransactionType.ToString(),
+                .Balance = 0,
+                .Amount = unusedLeaveHours
+                }
+
+            context.LeaveTransactions.Add(lt)
+
+            ZeroOutEmployeeLeaveBalance(context, employeeRowId)
+
+        End If
+
+        Return lt
+    End Function
+
+    Enum LeaveTransactionType
+        Credit
+        Debit
+    End Enum
 
     Enum LeaveType
         Vacation
