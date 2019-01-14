@@ -19,6 +19,17 @@ DECLARE paydat_to DATE;
 
 DECLARE sec_per_hour INT(11) DEFAULT 3600;
 
+SET @ppIds = (SELECT GROUP_CONCAT(pp.RowID)
+					#, SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH) #2018-01-05
+					
+					FROM payperiod pp
+					INNER JOIN payperiod ppd ON ppd.RowID = PayPeriodRowID
+					WHERE pp.OrganizationID=ppd.OrganizationID
+					AND pp.TotalGrossSalary=ppd.TotalGrossSalary
+					#AND SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH) BETWEEN pp.PayFromDate AND pp.PayToDate
+					AND pp.PayFromDate >= SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH)
+					AND pp.PayToDate <= ppd.PayToDate);
+
 SELECT
     pp.PayFromDate,
     pp.PayToDate
@@ -142,47 +153,38 @@ LEFT JOIN (
     GROUP BY paystub.RowID
 ) payStubLoans
 ON payStubLoans.PayStubID = ps.RowID
-LEFT JOIN (
-    SELECT
-        psi.PayStubID,
-        REPLACE(GROUP_CONCAT(IFNULL(p.PartNo, '')), ',', '\n') `Names`,
-        REPLACE(
-            GROUP_CONCAT(
-                IFNULL(
-                    IF(
-                        p.PartNo = 'Sick leave',
-                        (FORMAT(ete.SickLeaveHours / 8, 2)),
-                        (FORMAT(ete.VacationLeaveHours / 8, 2))
-                    ),
-                    ''
-                )
-            ),
-            ',',
-            '\n'
-        ) 'Availed',
-        REPLACE(GROUP_CONCAT(IFNULL(FORMAT(psi.PayAmount / 8, 2), 0)), ',', '\n') 'Balance'
-    FROM paystubitem psi
-    INNER JOIN product p
-    ON p.RowID = psi.ProductID AND
-        p.OrganizationID = psi.OrganizationID AND
-        p.`Category` = 'Leave Type' AND
-        p.PartNo = 'Vacation leave'
-    INNER JOIN paystub ps
-    ON ps.RowID = psi.PayStubID
-    INNER JOIN (
-        SELECT
-            EmployeeID,
-            SUM(VacationLeaveHours) `VacationLeaveHours`,
-            SUM(SickLeaveHours) `SickLeaveHours`
-        FROM employeetimeentry
-        WHERE `Date` BETWEEN paydate_from AND paydat_to
-        GROUP BY EmployeeID
-    ) ete
-    ON ete.EmployeeID = ps.EmployeeID
-    WHERE psi.OrganizationID = OrganizID
-    GROUP BY psi.PayStubID
+
+LEFT JOIN (SELECT lt.Balance
+				, lt.EmployeeID
+				, p.PartNo `Names`
+				, et.`VacationLeaveHours` `Availed`
+				
+				FROM (SELECT lt.*
+						, MAX(lt.TransactionDate) `MaxTransactionDate`
+						FROM leavetransaction lt
+						WHERE FIND_IN_SET(lt.PayPeriodID, @ppIds) > 0
+						AND lt.OrganizationID = OrganizID
+						GROUP BY lt.EmployeeID) i
+				
+				INNER JOIN leavetransaction lt ON lt.EmployeeID=i.EmployeeID AND lt.TransactionDate=i.`MaxTransactionDate`
+				INNER JOIN leaveledger ll ON ll.RowID=lt.LeaveLedgerID
+				INNER JOIN product p ON p.RowID=ll.ProductID AND p.PartNo='Vacation Leave'
+				INNER JOIN category c ON c.RowID=p.CategoryID AND c.CategoryName='Leave Type'
+				
+				LEFT JOIN (SELECT
+								ete.EmployeeID
+								, SUM(ete.VacationLeaveHours / 8) `VacationLeaveHours`
+								, SUM(ete.SickLeaveHours / 8) `SickLeaveHours`
+								FROM employeetimeentry ete
+								INNER JOIN payperiod pp ON pp.RowID = PayPeriodRowID
+								WHERE ete.OrganizationID = OrganizID
+								AND ete.`Date` BETWEEN pp.PayFromDate AND pp.PayToDate
+								GROUP BY ete.EmployeeID
+								) et ON et.EmployeeID = i.EmployeeID
 ) psiLeave
-ON psiLeave.PayStubID = ps.RowID
+#ON psiLeave.PayStubID = ps.RowID
+ON psiLeave.EmployeeID = ps.EmployeeID
+
 LEFT JOIN (
     SELECT
         psi.*,
