@@ -25,17 +25,31 @@ SET SESSION group_concat_max_len = 2048;
 
 SET @ids = NULL;
 
-SELECT
-	GROUP_CONCAT(pp.RowID) `Ids`
-FROM payperiod pp
-	INNER JOIN payperiod ppf ON ppf.RowID=payPeriodFromId
-	INNER JOIN payperiod ppt ON ppt.RowID=payPeriodToId
-WHERE (pp.PayFromDate >= ppf.PayFromDate OR pp.PayToDate >= ppf.PayFromDate)
-		AND (pp.PayFromDate <= ppt.PayToDate OR pp.PayToDate <= ppt.PayToDate)
-		AND pp.OrganizationID=orgId
-ORDER BY pp.`Year`, pp.OrdinalValue
-INTO @ids
-;
+IF IFNULL(payPeriodFromId, 0) = 0 OR payPeriodFromId = payPeriodToId THEN
+
+	SET @ids = (SELECT GROUP_CONCAT(pp.RowID)
+					FROM payperiod pp
+					INNER JOIN payperiod ppd ON ppd.RowID = payPeriodToId
+					WHERE pp.OrganizationID=ppd.OrganizationID
+					AND pp.TotalGrossSalary=ppd.TotalGrossSalary
+					AND pp.PayFromDate >= SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH)
+					AND pp.PayToDate <= ppd.PayToDate);
+
+ELSEIF payPeriodFromId IS NOT NULL AND payPeriodToId IS NOT NULL THEN
+
+	SELECT
+		GROUP_CONCAT(pp.RowID) `Ids`
+	FROM payperiod pp
+		INNER JOIN payperiod ppf ON ppf.RowID=payPeriodFromId
+		INNER JOIN payperiod ppt ON ppt.RowID=payPeriodToId
+	WHERE (pp.PayFromDate >= ppf.PayFromDate OR pp.PayToDate >= ppf.PayFromDate)
+			AND (pp.PayFromDate <= ppt.PayToDate OR pp.PayToDate <= ppt.PayToDate)
+			AND pp.OrganizationID=orgId
+	ORDER BY pp.`Year`, pp.OrdinalValue
+	INTO @ids
+	;
+
+END IF;
 
 SET @dailyRate = 0.00;
 
