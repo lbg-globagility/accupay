@@ -1954,7 +1954,7 @@ Public Class PayStubForm
                                               IsActualFlag)
     End Sub
 
-    Private Sub IncludeThirteenthMonthButton_Click(sender As Object, e As EventArgs) Handles IncludeThirteenthMonthButton.Click
+    Private Sub IncludeThirteenthMonthButton_Click(sender As Object, e As EventArgs) Handles Incude13thMonthPayToolStripMenuItem.Click
         Dim payPeriodSelector = New PayrollSummaDateSelection()
 
         If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
@@ -2096,7 +2096,7 @@ Public Class PayStubForm
 
     End Function
 
-    Private Sub tsbtnCashOutUnusedLeaves_Click(sender As Object, e As EventArgs) Handles tsbtnCashOutUnusedLeaves.Click
+    Private Sub tsbtnCashOutUnusedLeaves_Click(sender As Object, e As EventArgs) Handles CashOutUnusedLeavesToolStripMenuItem.Click
         If paypRowID = 0 Then
             MsgBox("Please select a generated payroll.", MsgBoxStyle.Exclamation)
             Return
