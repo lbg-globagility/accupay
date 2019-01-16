@@ -425,7 +425,11 @@ Public Class DayCalculator
             Dim requiredHours = currentShift.WorkingHours
             Dim missingHours = requiredHours - (timeEntry.TotalLeaveHours + timeEntry.RegularHours)
 
-            If missingHours > 0 Then
+            Dim payRate = _payrateCalendar.Find(currentShift.Date)
+
+            If missingHours > 0 _
+                And Not payRate.IsHoliday Then
+
                 timeEntry.UndertimeHours += missingHours
             End If
         End If
