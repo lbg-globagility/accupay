@@ -56,6 +56,12 @@ Public Class DayCalculator
         timeEntry.ResetHours()
         timeEntry.ResetPay()
 
+        Dim isBetweenSalaryDates = currentDate.Date >= salary.EffectiveFrom And currentDate.Date <= salary.EffectiveTo.Value
+
+        If Not isBetweenSalaryDates Then
+            Return timeEntry
+        End If
+
         Dim currentShift = New CurrentShift(shiftSchedule, currentDate)
         If _policy.RespectDefaultRestDay Then
             currentShift.SetDefaultRestDay(_employee.DayOfRest)
