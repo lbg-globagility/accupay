@@ -381,8 +381,10 @@ Public Class EmployeeShiftEntryForm
                              " LIMIT 1;")
 
                 If empshiftmaxdate = Nothing Then
+                    'CURRENT_DATE() was replaced by NOW(). The former was just a date and the latter has date and time.
+                    'Still not sure why was it like that.
                     empshiftmaxdate =
-                    EXECQUER("SELECT IFNULL(StartDate,CURRENT_DATE()) 'StartDate'" &
+                    EXECQUER("SELECT IFNULL(StartDate,NOW()) 'StartDate'" &
                              " FROM employee" &
                              " WHERE RowID='" & dgvEmpList.CurrentRow.Cells("c_ID").Value &
                              "';")

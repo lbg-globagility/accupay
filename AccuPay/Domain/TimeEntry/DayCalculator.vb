@@ -56,7 +56,11 @@ Public Class DayCalculator
         timeEntry.ResetHours()
         timeEntry.ResetPay()
 
-        Dim isBetweenSalaryDates = currentDate.Date >= salary.EffectiveFrom And currentDate.Date <= salary.EffectiveTo.Value
+        Dim isBetweenSalaryDates As Boolean = False
+        If salary IsNot Nothing Then
+            isBetweenSalaryDates = currentDate.Date >= salary.EffectiveFrom AndAlso
+                                    (salary.EffectiveTo Is Nothing OrElse currentDate.Date <= salary.EffectiveTo.Value)
+        End If
 
         If Not isBetweenSalaryDates Then
             Return timeEntry

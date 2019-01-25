@@ -32,7 +32,7 @@ Public Class ImportSalaryForm
         Using context = New PayrollContext()
             For Each record In records
                 Dim employee = context.Employees.
-                    FirstOrDefault(Function(t) t.EmployeeNo = record.EmployeeNo)
+                    FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo AndAlso t.OrganizationID = z_OrganizationID))
 
                 If employee Is Nothing Then
                     Continue For
