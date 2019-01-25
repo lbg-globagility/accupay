@@ -34,6 +34,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property EffectiveEndDate As Date
 
+        <NotMapped>
         Public Property TaxableFlag As Char
 
         <Column("AllowanceAmount")>

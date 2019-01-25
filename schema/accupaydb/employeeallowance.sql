@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `employeeallowance` (
   `AllowanceFrequency` varchar(50) DEFAULT NULL COMMENT 'Daily, Monthly, One Time',
   `EffectiveEndDate` date DEFAULT NULL,
   `TaxableFlag` char(50) DEFAULT NULL,
-  `AllowanceAmount` decimal(10,2) DEFAULT NULL,
+  `AllowanceAmount` decimal(10,2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`RowID`),
   KEY `FK_BaseTables_organization` (`OrganizationID`),
   KEY `FK_BaseTables_user` (`CreatedBy`),

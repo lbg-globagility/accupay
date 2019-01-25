@@ -56,6 +56,16 @@ Public Class DayCalculator
         timeEntry.ResetHours()
         timeEntry.ResetPay()
 
+        Dim isBetweenSalaryDates As Boolean = False
+        If salary IsNot Nothing Then
+            isBetweenSalaryDates = currentDate.Date >= salary.EffectiveFrom AndAlso
+                                    (salary.EffectiveTo Is Nothing OrElse currentDate.Date <= salary.EffectiveTo.Value)
+        End If
+
+        If Not isBetweenSalaryDates Then
+            Return timeEntry
+        End If
+
         Dim currentShift = New CurrentShift(shiftSchedule, currentDate)
         If _policy.RespectDefaultRestDay Then
             currentShift.SetDefaultRestDay(_employee.DayOfRest)
@@ -419,7 +429,11 @@ Public Class DayCalculator
             Dim requiredHours = currentShift.WorkingHours
             Dim missingHours = requiredHours - (timeEntry.TotalLeaveHours + timeEntry.RegularHours)
 
-            If missingHours > 0 Then
+            Dim payRate = _payrateCalendar.Find(currentShift.Date)
+
+            If missingHours > 0 _
+                And Not payRate.IsHoliday Then
+
                 timeEntry.UndertimeHours += missingHours
             End If
         End If

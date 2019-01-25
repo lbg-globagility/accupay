@@ -83,7 +83,8 @@ Public Class SalaryTab
         txtPayFrequency.Text = employee.PayFrequency.Type
         txtSalaryType.Text = employee.EmployeeType
         txtFullname.Text = $"{employee.FirstName} {employee.LastName}"
-        txtEmployeeID.Text = $"ID# {employee.EmployeeNo}, {employee?.Position.Name}, {employee.EmployeeType} Salary"
+        txtEmployeeID.Text = $"ID# {employee.EmployeeNo}, {employee.Position?.Name}, {employee.EmployeeType} Salary"
+
         pbEmployee.Image = ConvByteToImage(employee.Image)
 
         ChangeMode(FormMode.Empty)
