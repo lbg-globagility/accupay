@@ -694,6 +694,10 @@ Public Class PayStubForm
             txtempwtax.Text = ""
             txtnetsal.Text = ""
 
+            txtPaidLeave.Text = ""
+            txtThirteenthMonthPay.Text = ""
+            txtTotalNetPay.Text = ""
+
             dgvpaystub.Rows.Clear()
             dgvpaystubitem.Rows.Clear()
             dgvempsal.Rows.Clear()
