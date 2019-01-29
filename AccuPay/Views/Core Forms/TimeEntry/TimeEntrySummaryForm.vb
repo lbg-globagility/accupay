@@ -217,6 +217,9 @@ Public Class TimeEntrySummaryForm
         ColumnOTStart.Visible = timeEntries.Any(Function(t) t.OTStartTime.HasValue)
         ColumnOTEnd.Visible = timeEntries.Any(Function(t) t.OTEndTime.HasValue)
 
+        ColumnLeaveStart.Visible = timeEntries.Any(Function(t) t.LeaveStart.HasValue)
+        ColumnLeaveEnd.Visible = timeEntries.Any(Function(t) t.LeaveEnd.HasValue)
+
         ColumnNDiffHrs.Visible = timeEntries.Any(Function(t) t.NightDiffHours > 0)
         ColumnNDiffPay.Visible = timeEntries.Any(Function(t) t.NightDiffAmount > 0)
 
@@ -847,6 +850,8 @@ Public Class TimeEntrySummaryForm
         Public Property OBEndTime As TimeSpan?
         Public Property OTStartTime As TimeSpan?
         Public Property OTEndTime As TimeSpan?
+        Public Property LeaveStart As TimeSpan?
+        Public Property LeaveEnd As TimeSpan?
         Public Property RegularHours As Decimal
         Public Property RegularAmount As Decimal
         Public Property NightDiffHours As Decimal
@@ -926,6 +931,18 @@ Public Class TimeEntrySummaryForm
         Public ReadOnly Property OBEndTimeDisplay As Date?
             Get
                 Return ConvertToDate(OBEndTime)
+            End Get
+        End Property
+
+        Public ReadOnly Property LeaveStartDisplay As Date?
+            Get
+                Return ConvertToDate(LeaveStart)
+            End Get
+        End Property
+
+        Public ReadOnly Property LeaveEndDisplay As Date?
+            Get
+                Return ConvertToDate(LeaveEnd)
             End Get
         End Property
 
