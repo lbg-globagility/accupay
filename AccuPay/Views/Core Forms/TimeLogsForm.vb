@@ -1,4 +1,7 @@
 ﻿Imports System.IO
+Imports AccuPay.Entity
+Imports AccuPay.Extensions
+Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
@@ -1220,6 +1223,48 @@ Public Class TimeLogsForm
     End Function
 
     Private Sub bgworkTypicalImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkTypicalImport.DoWork
+        'OldTimeEntryImport()
+        NewTimeEntryImport()
+    End Sub
+
+    Private Async Sub NewTimeEntryImport()
+        Dim importer = New TimeLogsReader()
+        Dim logs = importer.Import(thefilepath)
+        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
+
+        If logs.Count = 0 Then
+            'Add a message saying no logs were read by the system
+            Return
+        End If
+
+        Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
+        Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
+
+
+        Using context = New PayrollContext()
+
+            Dim employeeShifts = New List(Of ShiftSchedule)
+
+            employeeShifts = Await context.ShiftSchedules.
+                    Include(Function(s) s.Shift).
+                    Where(Function(s) s.OrganizationID = z_OrganizationID).
+                    Where(Function(s) s.EffectiveFrom <= firstDate AndAlso s.EffectiveTo <= lastDate).
+                    ToListAsync()
+
+
+            Dim analyzer = New TimeAttendanceAnalyzer()
+            Dim timeLogs = analyzer.Analyze(logs, employeeShifts)
+
+            For Each timelog In timeLogs
+                context.TimeLogs.Add(timelog)
+            Next
+
+            context.SaveChanges()
+        End Using
+
+    End Sub
+
+    Private Sub OldTimeEntryImport()
         Dim import_id = ImportConventionalFormatTimeLogs()
 
         Dim param_values =

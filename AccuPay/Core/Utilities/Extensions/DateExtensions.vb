@@ -1,0 +1,31 @@
+﻿Imports System.Runtime.CompilerServices
+
+Namespace Global.AccuPay.Extensions
+
+    Module DateExtensions
+
+        <Extension()>
+        Public Function ToStringFormatOrNull(input As Date?, format As String) As String
+
+            If input Is Nothing Then Return Nothing
+            Return input.Value.ToString(format)
+
+        End Function
+
+        <Extension()>
+        Public Function ToMinimumHourValue(input As Date) As Date
+
+            Return New DateTime(input.Year, input.Month, input.Day, 0, 0, 0)
+
+        End Function
+
+        <Extension()>
+        Public Function ToMaximumHourValue(input As Date) As Date
+
+            Return New DateTime(input.Year, input.Month, input.Day, 23, 59, 59)
+
+        End Function
+
+    End Module
+
+End Namespace

@@ -12,7 +12,10 @@ Public Class TimeImporter
     <Test>
     Public Sub ShouldImport()
         Dim importer = New TimeLogsReader()
-        Dim filename = "C:\Users\GLOBAL-C-PC\Desktop\1_attlog.dat"
+
+        Dim filename = "E:\Stuff\accupay\_timelogs\1_attlog.dat"
+        'Dim filename = "E:\Stuff\accupay\_timelogs\cinema.txt"
+        'Dim filename = "E:\Stuff\accupay\_timelogs\fourlinq.dat"
 
         Dim logs = importer.Import(filename)
         logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
