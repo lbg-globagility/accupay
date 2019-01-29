@@ -4,7 +4,7 @@ Imports AccuPay.Entity
 Imports AccuPay.Tools
 
 Public Class TimeAttendanceAnalyzer
-
+    'TODO: ShiftSchedule
     Public Function Analyze(logs As IList(Of TimeAttendanceLog), employeeShifts As IList(Of ShiftSchedule)) As IList(Of TimeLog)
         Dim logGroups = logs.GroupBy(Function(l) l.EmployeeNo).ToList()
 
