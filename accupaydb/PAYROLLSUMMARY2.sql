@@ -184,7 +184,7 @@ IF is_keep_in_onesheet = TRUE THEN
 						, (LENGTH(IFNULL(TRIM(e.ATMNo), '')) > 0))) = TRUE AND
 			 -- If employee is paid monthly or daily, employee should have worked for the pay period to appear
 		    IF(e.EmployeeType IN ('Monthly', 'Daily'), paystub.WorkPay > 0, TRUE) # RegularHours
-		ORDER BY CONCAT(e.LastName, e.FirstName);
+		ORDER BY CONCAT(e.LastName, e.FirstName), paystub.PayFromDate, paystub.PayToDate;
 
 ELSE
 
@@ -330,7 +330,7 @@ ELSE
 		       , (LENGTH(IFNULL(TRIM(e.ATMNo), '')) > 0)) = TRUE AND
 			 -- If employee is paid monthly or daily, employee should have worked for the pay period to appear
 		    IF(e.EmployeeType IN ('Monthly', 'Daily'), paystub.RegularHours > 0, TRUE)
-		ORDER BY d.Name, e.LastName;
+		ORDER BY CONCAT(e.LastName, e.FirstName), paystub.PayFromDate, paystub.PayToDate;
 
 		SET div_index = (div_index + 1);
 
