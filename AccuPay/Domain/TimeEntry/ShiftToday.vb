@@ -94,7 +94,10 @@ Public Class CurrentShift
             Return
         End If
 
-        Me.ShiftPeriod = TimePeriod.FromTime(shift.TimeFrom, New TimeSpan(shift.TimeTo.Hours, shift.TimeTo.Minutes, 0), [date])
+        Me.ShiftPeriod =
+            TimePeriod.FromTime(New TimeSpan(shift.TimeFrom.Hours, shift.TimeFrom.Minutes, 0),
+                                New TimeSpan(shift.TimeTo.Hours, shift.TimeTo.Minutes, 0),
+                                [date])
 
         If shift.HasBreaktime Then
             Dim nextDay = [date].AddDays(1)
