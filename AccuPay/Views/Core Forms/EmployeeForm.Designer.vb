@@ -323,6 +323,7 @@ Partial Class EmployeeForm
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnImportEmployee = New System.Windows.Forms.ToolStripButton()
         Me.tsprogbarempimport = New System.Windows.Forms.ToolStripProgressBar()
+        Me.ToolStripButton22 = New System.Windows.Forms.ToolStripButton()
         Me.tbpSalary = New System.Windows.Forms.TabPage()
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label319 = New System.Windows.Forms.Label()
@@ -1502,7 +1503,6 @@ Partial Class EmployeeForm
         Me.Button3 = New System.Windows.Forms.Button()
         Me.bgworkImporting = New System.ComponentModel.BackgroundWorker()
         Me.Panel7 = New System.Windows.Forms.Panel()
-        Me.ToolStripButton22 = New System.Windows.Forms.ToolStripButton()
         Me.tabctrlemp.SuspendLayout()
         Me.tbpempchklist.SuspendLayout()
         Me.ToolStrip15.SuspendLayout()
@@ -1683,7 +1683,6 @@ Partial Class EmployeeForm
         '
         'txtDivisionName
         '
-        Me.txtDivisionName.BackColor = System.Drawing.Color.White
         Me.txtDivisionName.Location = New System.Drawing.Point(399, 6)
         Me.txtDivisionName.MaxLength = 50
         Me.txtDivisionName.Name = "txtDivisionName"
@@ -2272,7 +2271,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 430)
-        Me.SplitContainer2.SplitterDistance = 284
+        Me.SplitContainer2.SplitterDistance = 275
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3536,7 +3535,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 112)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 121)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -3900,6 +3899,14 @@ Partial Class EmployeeForm
         Me.tsprogbarempimport.Name = "tsprogbarempimport"
         Me.tsprogbarempimport.Size = New System.Drawing.Size(100, 22)
         Me.tsprogbarempimport.Visible = False
+        '
+        'ToolStripButton22
+        '
+        Me.ToolStripButton22.Image = CType(resources.GetObject("ToolStripButton22.Image"), System.Drawing.Image)
+        Me.ToolStripButton22.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton22.Name = "ToolStripButton22"
+        Me.ToolStripButton22.Size = New System.Drawing.Size(73, 22)
+        Me.ToolStripButton22.Text = "Print 201"
         '
         'tbpSalary
         '
@@ -15613,14 +15620,6 @@ Partial Class EmployeeForm
         Me.Panel7.Name = "Panel7"
         Me.Panel7.Size = New System.Drawing.Size(1231, 523)
         Me.Panel7.TabIndex = 151
-        '
-        'ToolStripButton22
-        '
-        Me.ToolStripButton22.Image = CType(resources.GetObject("ToolStripButton22.Image"), System.Drawing.Image)
-        Me.ToolStripButton22.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton22.Name = "ToolStripButton22"
-        Me.ToolStripButton22.Size = New System.Drawing.Size(73, 22)
-        Me.ToolStripButton22.Text = "Print 201"
         '
         'EmployeeForm
         '

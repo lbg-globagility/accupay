@@ -1752,12 +1752,31 @@ Public Class EmployeeForm
         e.Handled = True
     End Sub
 
+    Private Async Sub cboPosit_SelectedIndexChanged_1Async(sender As Object, e As EventArgs) Handles cboPosit.SelectedIndexChanged
+        If Not tsbtnNewEmp.Enabled Then
+            Dim positionId = cboPosit.SelectedValue
+            Dim divisionName = String.Empty
+
+            Using context = New PayrollContext
+                Dim position = Await context.Positions.
+                    Include(Function(pos) pos.Division).
+                    Where(Function(pos) Equals(pos.RowID, positionId)).FirstOrDefaultAsync
+
+                If position IsNot Nothing Then
+                    divisionName = position.Division.Name
+                End If
+            End Using
+            txtDivisionName.Text = divisionName
+        End If
+    End Sub
+
     Private Sub cboPosit_SelectedIndexChanged(sender As Object, e As EventArgs) 'Handles cboPosit.SelectedIndexChanged ', cboPosit.SelectedValueChanged
 
         positID = cboPosit.SelectedValue
         Dim n_ExecuteQuery As _
             New ExecuteQuery("SELECT d.GracePeriod FROM `division` d INNER JOIN position pos ON pos.RowID='" & positID & "' AND d.RowID=pos.DivisionId;")
         txtUTgrace.Text = ValNoComma(n_ExecuteQuery.Result)
+
     End Sub
 
     Dim noCurrCellChange As SByte
