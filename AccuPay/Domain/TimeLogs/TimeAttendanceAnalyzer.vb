@@ -5,23 +5,39 @@ Imports AccuPay.Tools
 
 Public Class TimeAttendanceAnalyzer
     'TODO: ShiftSchedule
-    Public Function Analyze(logs As IList(Of TimeAttendanceLog), employeeShifts As IList(Of ShiftSchedule)) As IList(Of TimeLog)
-        Dim logGroups = logs.GroupBy(Function(l) l.EmployeeNo).ToList()
+    Public Function GetLogsGroupByEmployee(
+        logs As IList(Of TimeAttendanceLog)
+    ) As List(Of IGrouping(Of String, TimeAttendanceLog))
+
+        Return logs.GroupBy(Function(l) l.EmployeeNo).ToList()
+    End Function
+
+    Public Function Analyze(
+        employees As List(Of Employee),
+        logGroups As List(Of IGrouping(Of String, TimeAttendanceLog)),
+        employeeShifts As IList(Of ShiftSchedule)
+    ) As IList(Of TimeLog)
 
         Dim timeLogs = New List(Of TimeLog)
 
         For Each logGroup In logGroups
-            Dim employeeNo = logGroup.Key
+            Dim employee = employees.FirstOrDefault(Function(e) e.EmployeeNo = logGroup.Key)
+
+            If employee Is Nothing Then
+                'Maybe add here an error count and error reason/details
+                Continue For
+            End If
+
             Dim employeeLogs = logGroup.ToList()
 
             timeLogs.AddRange(
-                GetEmployeeTimeLogs(employeeNo, employeeLogs, employeeShifts))
+                GetEmployeeTimeLogs(employee, employeeLogs, employeeShifts))
         Next
 
         Return timeLogs
     End Function
 
-    Private Function GetEmployeeTimeLogs(employeeNo As String, logGroup As IList(Of TimeAttendanceLog), employeeShifts As IList(Of ShiftSchedule)) As IList(Of TimeLog)
+    Private Function GetEmployeeTimeLogs(employee As Employee, logGroup As IList(Of TimeAttendanceLog), employeeShifts As IList(Of ShiftSchedule)) As IList(Of TimeLog)
         Dim earliestDate = logGroup.FirstOrDefault().DateTime.Date
         Dim lastDate = logGroup.LastOrDefault().DateTime.Date
 
@@ -45,7 +61,9 @@ Public Class TimeAttendanceAnalyzer
             End If
 
             Dim timeLog = New TimeLog() With {
-                .LogDate = currentDate
+                .LogDate = currentDate,
+                .OrganizationID = z_OrganizationID,
+                .EmployeeID = employee.RowID
             }
 
             timeLog.TimeIn = GetTimeIn(currentDate, currentShift, sortedLogs)
