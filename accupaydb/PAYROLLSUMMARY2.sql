@@ -70,7 +70,7 @@ IF is_keep_in_onesheet = TRUE THEN
 				GetActualDailyRate(e.RowID, e.OrganizationID, paystub.PayFromDate),
 				GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
 			), decimal_size) `Rate`,
-		    ROUND(GetBasicPay(e.RowID, paypdatefrom, paypdateto, psi_undeclared, IFNULL(ete.`TotalExpectedHours`, 0)), decimal_size) `BasicPay`,
+		    ROUND(GetBasicPay(e.RowID, paystub.PayFromDate, paystub.PayToDate, psi_undeclared, IFNULL(ete.`TotalExpectedHours`, 0)), decimal_size) `BasicPay`,
 			ROUND(paystub.RegularHours, decimal_size) `RegularHours`,
 		    ROUND(IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay), decimal_size) `RegularPay`,
 			ROUND(paystub.OvertimeHours, decimal_size) `OvertimeHours`,
@@ -184,7 +184,7 @@ IF is_keep_in_onesheet = TRUE THEN
 						, (LENGTH(IFNULL(TRIM(e.ATMNo), '')) > 0))) = TRUE AND
 			 -- If employee is paid monthly or daily, employee should have worked for the pay period to appear
 		    IF(e.EmployeeType IN ('Monthly', 'Daily'), paystub.WorkPay > 0, TRUE) # RegularHours
-		ORDER BY CONCAT(e.LastName, e.FirstName);
+		ORDER BY CONCAT(e.LastName, e.FirstName), paystub.PayFromDate, paystub.PayToDate;
 
 ELSE
 
@@ -223,7 +223,7 @@ ELSE
 				GetActualDailyRate(e.RowID, e.OrganizationID, paystub.PayFromDate),
 				GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
 			), decimal_size) `Rate`,
-		    ROUND(GetBasicPay(e.RowID, paypdatefrom, paypdateto, psi_undeclared, IFNULL(ete.`TotalExpectedHours`, 0)), decimal_size) `BasicPay`,
+		    ROUND(GetBasicPay(e.RowID, paystub.PayFromDate, paystub.PayToDate, psi_undeclared, IFNULL(ete.`TotalExpectedHours`, 0)), decimal_size) `BasicPay`,
 			ROUND(paystub.RegularHours, decimal_size) `RegularHours`,
 		    ROUND(IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay), decimal_size) `RegularPay`,
 			ROUND(paystub.OvertimeHours, decimal_size) `OvertimeHours`,
@@ -330,7 +330,7 @@ ELSE
 		       , (LENGTH(IFNULL(TRIM(e.ATMNo), '')) > 0)) = TRUE AND
 			 -- If employee is paid monthly or daily, employee should have worked for the pay period to appear
 		    IF(e.EmployeeType IN ('Monthly', 'Daily'), paystub.RegularHours > 0, TRUE)
-		ORDER BY d.Name, e.LastName;
+		ORDER BY CONCAT(e.LastName, e.FirstName), paystub.PayFromDate, paystub.PayToDate;
 
 		SET div_index = (div_index + 1);
 
