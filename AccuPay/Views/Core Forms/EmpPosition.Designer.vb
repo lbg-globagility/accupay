@@ -42,6 +42,73 @@ Partial Class EmpPosition
         Me.Last = New System.Windows.Forms.LinkLabel()
         Me.Nxt = New System.Windows.Forms.LinkLabel()
         Me.dgvemployees = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.cboDivis = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.cboParentPosit = New System.Windows.Forms.ComboBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtPositName = New System.Windows.Forms.TextBox()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+        Me.tsbtnNewPosition = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnSavePosition = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnDeletePosition = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.lblforballoon = New System.Windows.Forms.Label()
+        Me.autcomptxtposition = New Femiani.Forms.UI.Input.AutoCompleteTextBox()
+        Me.bgworkautcompsearch = New System.ComponentModel.BackgroundWorker()
+        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn32 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn39 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn40 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn41 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn42 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn43 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn44 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn45 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn46 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -88,31 +155,13 @@ Partial Class EmpPosition
         Me.createdby = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lastupd = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lastupdby = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.cboDivis = New System.Windows.Forms.ComboBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.cboParentPosit = New System.Windows.Forms.ComboBox()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtPositName = New System.Windows.Forms.TextBox()
-        Me.Label22 = New System.Windows.Forms.Label()
-        Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtnNewPosition = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnSavePosition = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnDeletePosition = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnCancel = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
-        Me.Label25 = New System.Windows.Forms.Label()
-        Me.lblforballoon = New System.Windows.Forms.Label()
-        Me.autcomptxtposition = New Femiani.Forms.UI.Input.AutoCompleteTextBox()
-        Me.bgworkautcompsearch = New System.ComponentModel.BackgroundWorker()
+        Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.TabControl1.SuspendLayout()
         Me.tbpPosition.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
+        CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'tv2
@@ -336,6 +385,444 @@ Partial Class EmpPosition
         Me.dgvemployees.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvemployees.Size = New System.Drawing.Size(780, 445)
         Me.dgvemployees.TabIndex = 175
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(6, 49)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(75, 13)
+        Me.Label3.TabIndex = 106
+        Me.Label3.Text = "Division Name"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label5.ForeColor = System.Drawing.Color.Red
+        Me.Label5.Location = New System.Drawing.Point(76, 41)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(18, 24)
+        Me.Label5.TabIndex = 105
+        Me.Label5.Text = "*"
+        '
+        'cboDivis
+        '
+        Me.cboDivis.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.cboDivis.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cboDivis.FormattingEnabled = True
+        Me.cboDivis.Location = New System.Drawing.Point(113, 41)
+        Me.cboDivis.MaxLength = 5
+        Me.cboDivis.Name = "cboDivis"
+        Me.cboDivis.Size = New System.Drawing.Size(203, 21)
+        Me.cboDivis.TabIndex = 13
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(6, 75)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(75, 13)
+        Me.Label1.TabIndex = 9
+        Me.Label1.Text = "Position Name"
+        '
+        'cboParentPosit
+        '
+        Me.cboParentPosit.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.cboParentPosit.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cboParentPosit.FormattingEnabled = True
+        Me.cboParentPosit.Location = New System.Drawing.Point(295, 123)
+        Me.cboParentPosit.MaxLength = 5
+        Me.cboParentPosit.Name = "cboParentPosit"
+        Me.cboParentPosit.Size = New System.Drawing.Size(203, 21)
+        Me.cboParentPosit.TabIndex = 14
+        Me.cboParentPosit.Visible = False
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label2.Location = New System.Drawing.Point(6, 132)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(123, 15)
+        Me.Label2.TabIndex = 12
+        Me.Label2.Text = "Assigned Employee(s)"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(188, 131)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(78, 13)
+        Me.Label4.TabIndex = 9
+        Me.Label4.Text = "Parent Position"
+        Me.Label4.Visible = False
+        '
+        'txtPositName
+        '
+        Me.txtPositName.Location = New System.Drawing.Point(113, 68)
+        Me.txtPositName.MaxLength = 50
+        Me.txtPositName.Multiline = True
+        Me.txtPositName.Name = "txtPositName"
+        Me.txtPositName.Size = New System.Drawing.Size(203, 49)
+        Me.txtPositName.TabIndex = 15
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label22.ForeColor = System.Drawing.Color.Red
+        Me.Label22.Location = New System.Drawing.Point(75, 67)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(18, 24)
+        Me.Label22.TabIndex = 105
+        Me.Label22.Text = "*"
+        '
+        'ToolStrip1
+        '
+        Me.ToolStrip1.BackColor = System.Drawing.Color.White
+        Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewPosition, Me.tsbtnSavePosition, Me.ToolStripLabel1, Me.tsbtnDeletePosition, Me.tsbtnCancel, Me.ToolStripButton4, Me.tsbtnAudittrail})
+        Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
+        Me.ToolStrip1.Name = "ToolStrip1"
+        Me.ToolStrip1.Size = New System.Drawing.Size(573, 25)
+        Me.ToolStrip1.TabIndex = 13
+        Me.ToolStrip1.Text = "ToolStrip1"
+        '
+        'tsbtnNewPosition
+        '
+        Me.tsbtnNewPosition.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.tsbtnNewPosition.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnNewPosition.Name = "tsbtnNewPosition"
+        Me.tsbtnNewPosition.Size = New System.Drawing.Size(97, 22)
+        Me.tsbtnNewPosition.Text = "&New Position"
+        '
+        'tsbtnSavePosition
+        '
+        Me.tsbtnSavePosition.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.tsbtnSavePosition.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnSavePosition.Name = "tsbtnSavePosition"
+        Me.tsbtnSavePosition.Size = New System.Drawing.Size(97, 22)
+        Me.tsbtnSavePosition.Text = "&Save Position"
+        '
+        'tsbtnDeletePosition
+        '
+        Me.tsbtnDeletePosition.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.tsbtnDeletePosition.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnDeletePosition.Name = "tsbtnDeletePosition"
+        Me.tsbtnDeletePosition.Size = New System.Drawing.Size(106, 22)
+        Me.tsbtnDeletePosition.Text = "D&elete Position"
+        '
+        'tsbtnCancel
+        '
+        Me.tsbtnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnCancel.Name = "tsbtnCancel"
+        Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
+        Me.tsbtnCancel.Text = "Cancel"
+        '
+        'ToolStripButton4
+        '
+        Me.ToolStripButton4.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripButton4.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.ToolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton4.Name = "ToolStripButton4"
+        Me.ToolStripButton4.Size = New System.Drawing.Size(56, 22)
+        Me.ToolStripButton4.Text = "Close"
+        '
+        'tsbtnAudittrail
+        '
+        Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
+        Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
+        Me.tsbtnAudittrail.Text = "ToolStripButton1"
+        Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
+        '
+        'Label25
+        '
+        Me.Label25.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(216, Byte), Integer), CType(CType(183, Byte), Integer))
+        Me.Label25.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Label25.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label25.Location = New System.Drawing.Point(0, 0)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(1063, 21)
+        Me.Label25.TabIndex = 107
+        Me.Label25.Text = "POSITION"
+        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'lblforballoon
+        '
+        Me.lblforballoon.AutoSize = True
+        Me.lblforballoon.Location = New System.Drawing.Point(571, 38)
+        Me.lblforballoon.Name = "lblforballoon"
+        Me.lblforballoon.Size = New System.Drawing.Size(63, 13)
+        Me.lblforballoon.TabIndex = 114
+        Me.lblforballoon.Text = "lblforballoon"
+        Me.lblforballoon.Visible = False
+        '
+        'autcomptxtposition
+        '
+        Me.autcomptxtposition.Enabled = False
+        Me.autcomptxtposition.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.autcomptxtposition.Location = New System.Drawing.Point(12, 60)
+        Me.autcomptxtposition.Name = "autcomptxtposition"
+        Me.autcomptxtposition.PopupBorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.autcomptxtposition.PopupOffset = New System.Drawing.Point(12, 0)
+        Me.autcomptxtposition.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight
+        Me.autcomptxtposition.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText
+        Me.autcomptxtposition.PopupWidth = 300
+        Me.autcomptxtposition.Size = New System.Drawing.Size(335, 25)
+        Me.autcomptxtposition.TabIndex = 335
+        '
+        'bgworkautcompsearch
+        '
+        Me.bgworkautcompsearch.WorkerReportsProgress = True
+        Me.bgworkautcompsearch.WorkerSupportsCancellation = True
+        '
+        'ToolStripLabel1
+        '
+        Me.ToolStripLabel1.Name = "ToolStripLabel1"
+        Me.ToolStripLabel1.Size = New System.Drawing.Size(91, 22)
+        Me.ToolStripLabel1.Text = "                            "
+        '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.Visible = False
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "First Name"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Middle Name"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Last Name"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.HeaderText = "Surname"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Nickname"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        '
+        'DataGridViewTextBoxColumn8
+        '
+        Me.DataGridViewTextBoxColumn8.HeaderText = "Marital status"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        '
+        'DataGridViewTextBoxColumn9
+        '
+        Me.DataGridViewTextBoxColumn9.HeaderText = "No. of dependents"
+        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        '
+        'DataGridViewTextBoxColumn10
+        '
+        Me.DataGridViewTextBoxColumn10.HeaderText = "Birthdate"
+        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        '
+        'DataGridViewTextBoxColumn11
+        '
+        Me.DataGridViewTextBoxColumn11.HeaderText = "Start date"
+        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        '
+        'DataGridViewTextBoxColumn12
+        '
+        Me.DataGridViewTextBoxColumn12.HeaderText = "Job Title"
+        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        '
+        'DataGridViewTextBoxColumn13
+        '
+        Me.DataGridViewTextBoxColumn13.HeaderText = "Position"
+        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        '
+        'DataGridViewTextBoxColumn14
+        '
+        Me.DataGridViewTextBoxColumn14.HeaderText = "Salutation"
+        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        '
+        'DataGridViewTextBoxColumn15
+        '
+        Me.DataGridViewTextBoxColumn15.HeaderText = "TIN No."
+        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+        '
+        'DataGridViewTextBoxColumn16
+        '
+        Me.DataGridViewTextBoxColumn16.HeaderText = "SSS No."
+        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+        '
+        'DataGridViewTextBoxColumn17
+        '
+        Me.DataGridViewTextBoxColumn17.HeaderText = "PAGIBIG No."
+        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+        '
+        'DataGridViewTextBoxColumn18
+        '
+        Me.DataGridViewTextBoxColumn18.HeaderText = "PhilHealth No."
+        Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+        '
+        'DataGridViewTextBoxColumn19
+        '
+        Me.DataGridViewTextBoxColumn19.HeaderText = "Work Phone No."
+        Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
+        '
+        'DataGridViewTextBoxColumn20
+        '
+        Me.DataGridViewTextBoxColumn20.HeaderText = "Home Phone No."
+        Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
+        '
+        'DataGridViewTextBoxColumn21
+        '
+        Me.DataGridViewTextBoxColumn21.HeaderText = "Mobile Phone No."
+        Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
+        '
+        'DataGridViewTextBoxColumn22
+        '
+        Me.DataGridViewTextBoxColumn22.HeaderText = "Home Address"
+        Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
+        '
+        'DataGridViewTextBoxColumn23
+        '
+        Me.DataGridViewTextBoxColumn23.HeaderText = "Email Address"
+        Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
+        '
+        'DataGridViewTextBoxColumn24
+        '
+        Me.DataGridViewTextBoxColumn24.HeaderText = "Gender"
+        Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
+        '
+        'DataGridViewTextBoxColumn25
+        '
+        Me.DataGridViewTextBoxColumn25.HeaderText = "Employment Status"
+        Me.DataGridViewTextBoxColumn25.Name = "DataGridViewTextBoxColumn25"
+        '
+        'DataGridViewTextBoxColumn26
+        '
+        Me.DataGridViewTextBoxColumn26.HeaderText = "Pay Frequency"
+        Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
+        '
+        'DataGridViewTextBoxColumn27
+        '
+        Me.DataGridViewTextBoxColumn27.HeaderText = "UndertimeOverride"
+        Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
+        '
+        'DataGridViewTextBoxColumn28
+        '
+        Me.DataGridViewTextBoxColumn28.HeaderText = "OvertimeOverride"
+        Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
+        '
+        'DataGridViewTextBoxColumn29
+        '
+        Me.DataGridViewTextBoxColumn29.HeaderText = "PositionID"
+        Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
+        Me.DataGridViewTextBoxColumn29.Visible = False
+        '
+        'DataGridViewTextBoxColumn30
+        '
+        Me.DataGridViewTextBoxColumn30.HeaderText = "PayFreqID"
+        Me.DataGridViewTextBoxColumn30.Name = "DataGridViewTextBoxColumn30"
+        Me.DataGridViewTextBoxColumn30.Visible = False
+        '
+        'DataGridViewTextBoxColumn31
+        '
+        Me.DataGridViewTextBoxColumn31.HeaderText = "Employee Type"
+        Me.DataGridViewTextBoxColumn31.Name = "DataGridViewTextBoxColumn31"
+        '
+        'DataGridViewTextBoxColumn32
+        '
+        Me.DataGridViewTextBoxColumn32.HeaderText = "Leave Balance"
+        Me.DataGridViewTextBoxColumn32.Name = "DataGridViewTextBoxColumn32"
+        '
+        'DataGridViewTextBoxColumn33
+        '
+        Me.DataGridViewTextBoxColumn33.HeaderText = "Sick Leave Balance"
+        Me.DataGridViewTextBoxColumn33.Name = "DataGridViewTextBoxColumn33"
+        '
+        'DataGridViewTextBoxColumn34
+        '
+        Me.DataGridViewTextBoxColumn34.HeaderText = "Maternity Leave Balance"
+        Me.DataGridViewTextBoxColumn34.Name = "DataGridViewTextBoxColumn34"
+        '
+        'DataGridViewTextBoxColumn35
+        '
+        Me.DataGridViewTextBoxColumn35.HeaderText = "Leave Allowance"
+        Me.DataGridViewTextBoxColumn35.Name = "DataGridViewTextBoxColumn35"
+        '
+        'DataGridViewTextBoxColumn36
+        '
+        Me.DataGridViewTextBoxColumn36.HeaderText = "Sick Leave Allowance"
+        Me.DataGridViewTextBoxColumn36.Name = "DataGridViewTextBoxColumn36"
+        '
+        'DataGridViewTextBoxColumn37
+        '
+        Me.DataGridViewTextBoxColumn37.HeaderText = "Maternity Leave Allowance"
+        Me.DataGridViewTextBoxColumn37.Name = "DataGridViewTextBoxColumn37"
+        '
+        'DataGridViewTextBoxColumn38
+        '
+        Me.DataGridViewTextBoxColumn38.HeaderText = "Leave per pay period"
+        Me.DataGridViewTextBoxColumn38.Name = "DataGridViewTextBoxColumn38"
+        '
+        'DataGridViewTextBoxColumn39
+        '
+        Me.DataGridViewTextBoxColumn39.HeaderText = "Sick Leave per pay period"
+        Me.DataGridViewTextBoxColumn39.Name = "DataGridViewTextBoxColumn39"
+        '
+        'DataGridViewTextBoxColumn40
+        '
+        Me.DataGridViewTextBoxColumn40.HeaderText = "Maternity Leave per pay period"
+        Me.DataGridViewTextBoxColumn40.Name = "DataGridViewTextBoxColumn40"
+        '
+        'DataGridViewTextBoxColumn41
+        '
+        Me.DataGridViewTextBoxColumn41.HeaderText = "fstatRowID"
+        Me.DataGridViewTextBoxColumn41.Name = "DataGridViewTextBoxColumn41"
+        Me.DataGridViewTextBoxColumn41.Visible = False
+        '
+        'DataGridViewTextBoxColumn42
+        '
+        Me.DataGridViewTextBoxColumn42.HeaderText = "Image"
+        Me.DataGridViewTextBoxColumn42.Name = "DataGridViewTextBoxColumn42"
+        Me.DataGridViewTextBoxColumn42.Visible = False
+        '
+        'DataGridViewTextBoxColumn43
+        '
+        Me.DataGridViewTextBoxColumn43.HeaderText = "Created"
+        Me.DataGridViewTextBoxColumn43.Name = "DataGridViewTextBoxColumn43"
+        '
+        'DataGridViewTextBoxColumn44
+        '
+        Me.DataGridViewTextBoxColumn44.HeaderText = "Created by"
+        Me.DataGridViewTextBoxColumn44.Name = "DataGridViewTextBoxColumn44"
+        '
+        'DataGridViewTextBoxColumn45
+        '
+        Me.DataGridViewTextBoxColumn45.HeaderText = "Last Update"
+        Me.DataGridViewTextBoxColumn45.Name = "DataGridViewTextBoxColumn45"
+        '
+        'DataGridViewTextBoxColumn46
+        '
+        Me.DataGridViewTextBoxColumn46.HeaderText = "Last Update by"
+        Me.DataGridViewTextBoxColumn46.Name = "DataGridViewTextBoxColumn46"
         '
         'RowID
         '
@@ -618,202 +1105,9 @@ Partial Class EmpPosition
         Me.lastupdby.Name = "lastupdby"
         Me.lastupdby.ReadOnly = True
         '
-        'Label3
+        'ErrorProvider1
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(6, 49)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(75, 13)
-        Me.Label3.TabIndex = 106
-        Me.Label3.Text = "Division Name"
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label5.ForeColor = System.Drawing.Color.Red
-        Me.Label5.Location = New System.Drawing.Point(76, 41)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(18, 24)
-        Me.Label5.TabIndex = 105
-        Me.Label5.Text = "*"
-        '
-        'cboDivis
-        '
-        Me.cboDivis.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
-        Me.cboDivis.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cboDivis.FormattingEnabled = True
-        Me.cboDivis.Location = New System.Drawing.Point(113, 41)
-        Me.cboDivis.MaxLength = 5
-        Me.cboDivis.Name = "cboDivis"
-        Me.cboDivis.Size = New System.Drawing.Size(203, 21)
-        Me.cboDivis.TabIndex = 13
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(6, 75)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(75, 13)
-        Me.Label1.TabIndex = 9
-        Me.Label1.Text = "Position Name"
-        '
-        'cboParentPosit
-        '
-        Me.cboParentPosit.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
-        Me.cboParentPosit.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cboParentPosit.FormattingEnabled = True
-        Me.cboParentPosit.Location = New System.Drawing.Point(295, 123)
-        Me.cboParentPosit.MaxLength = 5
-        Me.cboParentPosit.Name = "cboParentPosit"
-        Me.cboParentPosit.Size = New System.Drawing.Size(203, 21)
-        Me.cboParentPosit.TabIndex = 14
-        Me.cboParentPosit.Visible = False
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label2.Location = New System.Drawing.Point(6, 132)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(123, 15)
-        Me.Label2.TabIndex = 12
-        Me.Label2.Text = "Assigned Employee(s)"
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(188, 131)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(78, 13)
-        Me.Label4.TabIndex = 9
-        Me.Label4.Text = "Parent Position"
-        Me.Label4.Visible = False
-        '
-        'txtPositName
-        '
-        Me.txtPositName.Location = New System.Drawing.Point(113, 68)
-        Me.txtPositName.MaxLength = 50
-        Me.txtPositName.Multiline = True
-        Me.txtPositName.Name = "txtPositName"
-        Me.txtPositName.Size = New System.Drawing.Size(203, 49)
-        Me.txtPositName.TabIndex = 15
-        '
-        'Label22
-        '
-        Me.Label22.AutoSize = True
-        Me.Label22.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label22.ForeColor = System.Drawing.Color.Red
-        Me.Label22.Location = New System.Drawing.Point(75, 67)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(18, 24)
-        Me.Label22.TabIndex = 105
-        Me.Label22.Text = "*"
-        '
-        'ToolStrip1
-        '
-        Me.ToolStrip1.BackColor = System.Drawing.Color.White
-        Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewPosition, Me.tsbtnSavePosition, Me.tsbtnDeletePosition, Me.tsbtnCancel, Me.ToolStripButton4, Me.tsbtnAudittrail})
-        Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
-        Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(573, 25)
-        Me.ToolStrip1.TabIndex = 13
-        Me.ToolStrip1.Text = "ToolStrip1"
-        '
-        'tsbtnNewPosition
-        '
-        Me.tsbtnNewPosition.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.tsbtnNewPosition.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnNewPosition.Name = "tsbtnNewPosition"
-        Me.tsbtnNewPosition.Size = New System.Drawing.Size(97, 22)
-        Me.tsbtnNewPosition.Text = "&New Position"
-        '
-        'tsbtnSavePosition
-        '
-        Me.tsbtnSavePosition.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.tsbtnSavePosition.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnSavePosition.Name = "tsbtnSavePosition"
-        Me.tsbtnSavePosition.Size = New System.Drawing.Size(97, 22)
-        Me.tsbtnSavePosition.Text = "&Save Position"
-        '
-        'tsbtnDeletePosition
-        '
-        Me.tsbtnDeletePosition.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.tsbtnDeletePosition.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnDeletePosition.Name = "tsbtnDeletePosition"
-        Me.tsbtnDeletePosition.Size = New System.Drawing.Size(106, 22)
-        Me.tsbtnDeletePosition.Text = "D&elete Position"
-        '
-        'tsbtnCancel
-        '
-        Me.tsbtnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnCancel.Name = "tsbtnCancel"
-        Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
-        Me.tsbtnCancel.Text = "Cancel"
-        '
-        'ToolStripButton4
-        '
-        Me.ToolStripButton4.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton4.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton4.Name = "ToolStripButton4"
-        Me.ToolStripButton4.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton4.Text = "Close"
-        '
-        'tsbtnAudittrail
-        '
-        Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
-        Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.tsbtnAudittrail.Text = "ToolStripButton1"
-        Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
-        '
-        'Label25
-        '
-        Me.Label25.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(216, Byte), Integer), CType(CType(183, Byte), Integer))
-        Me.Label25.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Label25.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label25.Location = New System.Drawing.Point(0, 0)
-        Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(1063, 21)
-        Me.Label25.TabIndex = 107
-        Me.Label25.Text = "POSITION"
-        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblforballoon
-        '
-        Me.lblforballoon.AutoSize = True
-        Me.lblforballoon.Location = New System.Drawing.Point(571, 38)
-        Me.lblforballoon.Name = "lblforballoon"
-        Me.lblforballoon.Size = New System.Drawing.Size(63, 13)
-        Me.lblforballoon.TabIndex = 114
-        Me.lblforballoon.Text = "lblforballoon"
-        Me.lblforballoon.Visible = False
-        '
-        'autcomptxtposition
-        '
-        Me.autcomptxtposition.Enabled = False
-        Me.autcomptxtposition.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.autcomptxtposition.Location = New System.Drawing.Point(12, 60)
-        Me.autcomptxtposition.Name = "autcomptxtposition"
-        Me.autcomptxtposition.PopupBorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.autcomptxtposition.PopupOffset = New System.Drawing.Point(12, 0)
-        Me.autcomptxtposition.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight
-        Me.autcomptxtposition.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText
-        Me.autcomptxtposition.PopupWidth = 300
-        Me.autcomptxtposition.Size = New System.Drawing.Size(335, 25)
-        Me.autcomptxtposition.TabIndex = 335
-        '
-        'bgworkautcompsearch
-        '
-        Me.bgworkautcompsearch.WorkerReportsProgress = True
-        Me.bgworkautcompsearch.WorkerSupportsCancellation = True
+        Me.ErrorProvider1.ContainerControl = Me
         '
         'EmpPosition
         '
@@ -838,6 +1132,7 @@ Partial Class EmpPosition
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
+        CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -925,4 +1220,52 @@ Partial Class EmpPosition
     Friend WithEvents bgworkautcompsearch As System.ComponentModel.BackgroundWorker
     Friend WithEvents JobLevelComboBox As ComboBox
     Friend WithEvents JobLevelLabel As Label
+    Friend WithEvents ToolStripLabel1 As ToolStripLabel
+    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn12 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn13 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn14 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn15 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn16 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn17 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn18 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn19 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn20 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn21 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn22 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn23 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn24 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn25 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn26 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn27 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn28 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn29 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn30 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn31 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn32 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn33 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn34 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn35 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn36 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn37 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn38 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn39 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn40 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn41 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn42 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn43 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn44 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn45 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn46 As DataGridViewTextBoxColumn
+    Friend WithEvents ErrorProvider1 As ErrorProvider
 End Class

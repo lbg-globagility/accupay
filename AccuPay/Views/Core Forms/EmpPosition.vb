@@ -1,5 +1,6 @@
 ﻿Imports AccuPay.JobLevels
 Imports Femiani.Forms.UI.Input
+Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
 
 Public Class EmpPosition
@@ -435,7 +436,7 @@ Public Class EmpPosition
 
                 If cboParentPosit.Text = "" Then
 
-                    Dim posit_divis = positiontable.Select("RowID = " & selPositionID)
+                    Dim posit_divis = positiontable.Select(String.Concat("RowID = ", Convert.ToInt32(selPositionID)))
 
                     Dim divisRowID = Nothing
 
@@ -761,35 +762,29 @@ Public Class EmpPosition
 
     End Sub
 
-    Private Sub tsbtnDeletePosition_Click(sender As Object, e As EventArgs) Handles tsbtnDeletePosition.Click
+    Private Async Sub tsbtnDeletePosition_ClickAsync(sender As Object, e As EventArgs) Handles tsbtnDeletePosition.Click
 
         If selPositionID = Nothing Then
         Else
+            Dim askConfimation =
+                MessageBox.Show("Are you sure do you want to delete position ?",
+                                "Confirm delete position",
+                                MessageBoxButtons.YesNoCancel,
+                                MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+
+            If Not askConfimation = DialogResult.Yes Then
+                Return
+            End If
 
             RemoveHandler tv2.AfterSelect, AddressOf tv2_AfterSelect
-            EXECQUER(
-                String.Concat("UPDATE employee SET PositionID=NULL,LastUpdBy=", z_User, " WHERE PositionID='", selPositionID, "' AND OrganizationID=", orgztnID, ";",
-                              "DELETE FROM `position_view` WHERE PositionID='", selPositionID, "';",
-                              "DELETE FROM position WHERE RowID='", selPositionID, "';"))
 
-            positiontable = retAsDatTbl("SELECT *" &
-                                        ",COALESCE((SELECT CONCAT('(',FirstName,IF(MiddleName IS NULL,'',CONCAT(' ',LEFT(MiddleName,1))),IF(LastName IS NULL,'',CONCAT(' ',LEFT(LastName,1))),')') FROM employee WHERE OrganizationID=" & orgztnID & " AND PositionID=p.RowID AND TerminationDate IS NULL),'(Open)') 'positionstats'" &
-                                        " FROM position p" &
-                                        " WHERE p.OrganizationID=" & orgztnID & "" &
-                                        " AND p.RowID NOT IN (SELECT PositionID FROM user WHERE OrganizationID=" & orgztnID & ");")
-
-            alphaposition = retAsDatTbl("SELECT * FROM position WHERE OrganizationID=" & orgztnID & " AND ParentPositionID IS NULL" &
-                                        " AND RowID NOT IN (SELECT PositionID FROM user WHERE OrganizationID=" & orgztnID & ");")
-
-            For Each drow As DataRow In alphadivision.Rows
-
-                Divisiontreeviewfiller(drow("RowID"), drow("Name"), )
-
-            Next
-
-            tv2.ExpandAll()
-
-            AddHandler tv2.AfterSelect, AddressOf tv2_AfterSelect
+            Using context = New PayrollContext
+                Dim position = Await context.Positions.Where(Function(pos) Equals(pos.RowID, Convert.ToInt32(selPositionID))).FirstOrDefaultAsync
+                If position IsNot Nothing Then
+                    context.Positions.Remove(position)
+                    Await context.SaveChangesAsync()
+                End If
+            End Using
 
             btnRefresh_Click(sender, e)
 
@@ -978,4 +973,11 @@ Public Class EmpPosition
 
     End Function
 
+    Private Sub txtPositName_TextChanged(sender As Object, e As EventArgs) Handles txtPositName.TextChanged
+        If txtPositName.Text.Length = txtPositName.MaxLength Then
+            ErrorProvider1.SetError(txtPositName, String.Concat(txtPositName.MaxLength, " max char."))
+        Else
+            ErrorProvider1.Dispose()
+        End If
+    End Sub
 End Class
