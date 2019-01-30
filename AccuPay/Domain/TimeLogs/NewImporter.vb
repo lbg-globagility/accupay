@@ -3,6 +3,7 @@
 Imports System.Globalization
 Imports System.IO
 Imports System.Text.RegularExpressions
+Imports AccuPay.Utils
 
 Public Class TimeLogsReader
 
@@ -36,13 +37,13 @@ Public Class TimeLogsReader
 
             Dim parts = Regex.Split(line, "\t")
 
-            If parts.Length < 3 Then
+            If parts.Length < 2 Then
                 Return Nothing
             End If
 
             Dim employeeNo = Trim(parts(0))
 
-            Dim logDate = ParseDateTime(parts(1))
+            Dim logDate = ObjectUtils.ToDateTime(parts(1))
 
             Return New TimeAttendanceLog() With {
                 .EmployeeNo = employeeNo,
@@ -53,6 +54,7 @@ Public Class TimeLogsReader
         End Try
     End Function
 
+    'currently not used after using ObjectUtils conversion
     Private Function ParseDateTime(value As String) As DateTime
         Dim pattern = New Regex(DateTimePattern)
         Dim match = pattern.Match(value)

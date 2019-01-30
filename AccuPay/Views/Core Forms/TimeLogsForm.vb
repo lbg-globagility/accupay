@@ -1,4 +1,7 @@
 ﻿Imports System.IO
+Imports AccuPay.Entity
+Imports AccuPay.Extensions
+Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
@@ -80,6 +83,7 @@ Public Class TimeLogsForm
         If formuserprivilege.Count = 0 Then
 
             tsbtnNew.Visible = 0
+            tsbtnNewExperimental.Visible = 0
             tsbtnSave.Visible = 0
             tsbtndel.Visible = 0
 
@@ -88,6 +92,7 @@ Public Class TimeLogsForm
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
                     tsbtnNew.Visible = 0
+                    tsbtnNewExperimental.Visible = 0
                     tsbtnSave.Visible = 0
                     tsbtndel.Visible = 0
                     dontUpdate = 1
@@ -95,8 +100,10 @@ Public Class TimeLogsForm
                 Else
                     If drow("Creates").ToString = "N" Then
                         tsbtnNew.Visible = 0
+                        tsbtnNewExperimental.Visible = 0
                     Else
                         tsbtnNew.Visible = 1
+                        tsbtnNewExperimental.Visible = 1
                     End If
 
                     If drow("Deleting").ToString = "N" Then
@@ -161,10 +168,15 @@ Public Class TimeLogsForm
                            dgvetentdet)
     End Sub
 
-    Private Sub tsbtnNew_Click(sender As Object, e As EventArgs) Handles tsbtnNew.Click
+    Private Sub tsbtnNew_Click(sender As Object, e As EventArgs) _
+        Handles tsbtnNew.Click, tsbtnNewExperimental.Click
+
         Static employeeleaveRowID As Integer = -1
 
-        Dim _bool As Boolean = TimeLogsImportOption()
+        Dim timeLogsFormat_ As TimeLogsFormat? = TimeLogsImportOption()
+
+        'They chose Cancel or used the close button
+        If timeLogsFormat_ Is Nothing Then Return
 
         Try
             Dim browsefile As OpenFileDialog = New OpenFileDialog()
@@ -176,6 +188,7 @@ Public Class TimeLogsForm
                 thefilepath = browsefile.FileName
 
                 tsbtnNew.Enabled = False
+                tsbtnNewExperimental.Enabled = False
 
                 Dim balloon_x = lblforballoon.Location.X
 
@@ -192,9 +205,9 @@ Public Class TimeLogsForm
 
                 ToolStripProgressBar1.Visible = True
 
-                If _bool Then
+                If timeLogsFormat_ = TimeLogsFormat.Conventional Then
 
-                    bgworkTypicalImport.RunWorkerAsync()
+                    bgworkTypicalImport.RunWorkerAsync(sender)
                 Else
 
                     bgworkImport.RunWorkerAsync()
@@ -208,26 +221,27 @@ Public Class TimeLogsForm
         End Try
     End Sub
 
-    Private Function TimeLogsImportOption() As TimeLogsFormat
+    Private Function TimeLogsImportOption() As TimeLogsFormat?
 
-        Dim time_logformat As TimeLogsFormat
+        Dim time_logformat As TimeLogsFormat?
 
-        MessageBoxManager.OK = "Alternating line"
-
-        MessageBoxManager.Cancel = "Same line"
+        MessageBoxManager.Yes = "Alternating line"
+        MessageBoxManager.No = "Same line"
 
         MessageBoxManager.Register()
 
         Dim custom_prompt =
             MessageBox.Show("Which format are you going to import ?",
-                            "", MessageBoxButtons.OKCancel,
+                            "", MessageBoxButtons.YesNoCancel,
                             MessageBoxIcon.Question,
                             MessageBoxDefaultButton.Button1)
 
-        If custom_prompt = Windows.Forms.DialogResult.OK Then
+        If custom_prompt = Windows.Forms.DialogResult.Yes Then
             time_logformat = TimeLogsFormat.Conventional
-        ElseIf custom_prompt = Windows.Forms.DialogResult.Cancel Then
+        ElseIf custom_prompt = Windows.Forms.DialogResult.No Then
             time_logformat = TimeLogsFormat.Optimized
+        ElseIf custom_prompt = Windows.Forms.DialogResult.Cancel Then
+            time_logformat = Nothing
         End If
 
         MessageBoxManager.Unregister()
@@ -439,11 +453,16 @@ Public Class TimeLogsForm
 
             tsbtnNew.Enabled = True
 
+            tsbtnNewExperimental.Enabled = True
+
         ElseIf e.Cancelled Then
 
             MessageBox.Show("Background work cancelled.")
 
             tsbtnNew.Enabled = True
+
+            tsbtnNewExperimental.Enabled = True
+
         Else
 
             lblforballoon.Location = New Point(TabControl1.Location.X, lblforballoon.Location.Y)
@@ -508,11 +527,15 @@ Public Class TimeLogsForm
 
             tsbtnNew.Enabled = True
 
+            tsbtnNewExperimental.Enabled = True
+
         ElseIf e.Cancelled Then
 
             MessageBox.Show("Background work cancelled.")
 
             tsbtnNew.Enabled = True
+
+            tsbtnNewExperimental.Enabled = True
         Else
 
             loademployeetimeentrydetails(0)
@@ -531,6 +554,8 @@ Public Class TimeLogsForm
         progress_value = 0
 
         tsbtnNew.Enabled = True
+
+        tsbtnNewExperimental.Enabled = True
 
         Panel1.Enabled = True
 
@@ -1220,6 +1245,73 @@ Public Class TimeLogsForm
     End Function
 
     Private Sub bgworkTypicalImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkTypicalImport.DoWork
+        If e.Argument Is tsbtnNewExperimental Then
+            NewTimeEntryImport()
+        Else
+            OldTimeEntryImport()
+        End If
+    End Sub
+
+    Private Async Sub NewTimeEntryImport()
+        Try
+            Dim importer = New TimeLogsReader()
+            Dim logs = importer.Import(thefilepath)
+            logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
+
+            If logs.Count = 0 Then
+                MessageBox.Show("No logs were parsed. Please make sure the log files follows the right format.")
+                Return
+            End If
+
+            Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
+            Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
+
+
+            Using context = New PayrollContext()
+
+                Dim employeeShifts = New List(Of ShiftSchedule)
+
+                employeeShifts = Await context.ShiftSchedules.
+                    Include(Function(s) s.Shift).
+                    Where(Function(s) s.OrganizationID = z_OrganizationID).
+                    Where(Function(s) s.EffectiveFrom >= firstDate).
+                    Where(Function(s) s.EffectiveTo <= lastDate).
+                    ToListAsync()
+
+                Dim analyzer = New TimeAttendanceAnalyzer()
+
+                Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
+
+                Dim employees As List(Of Employee) =
+                Await GetEmployeesFromLogGroup(context, logsGroupedByEmployee)
+
+                Dim timeLogs = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
+
+                For Each timelog In timeLogs
+                    context.TimeLogs.Add(timelog)
+                Next
+
+                context.SaveChanges()
+            End Using
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Name))
+        End Try
+
+    End Sub
+
+    Private Async Function GetEmployeesFromLogGroup(context As PayrollContext, logsGroupedByEmployee As List(Of IGrouping(Of String, TimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
+        Dim employeeNumbersArray(logsGroupedByEmployee.Count) As String
+
+        For index = 0 To logsGroupedByEmployee.Count - 1
+            employeeNumbersArray(index) = logsGroupedByEmployee(index).Key
+        Next
+
+        Return Await context.Employees.
+                        Where(Function(e) employeeNumbersArray.Contains(e.EmployeeNo)).
+                        ToListAsync
+    End Function
+
+    Private Sub OldTimeEntryImport()
         Dim import_id = ImportConventionalFormatTimeLogs()
 
         Dim param_values =
@@ -1254,5 +1346,4 @@ Public Class TimeLogsForm
 
         MyBase.OnLoad(e)
     End Sub
-
 End Class

@@ -14,6 +14,7 @@ Public Class TimeLog
 
     Public Property OrganizationID As Integer?
 
+    <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
     Public Property Created As Date
 
     Public Property CreatedBy As Integer?

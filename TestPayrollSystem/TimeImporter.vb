@@ -12,12 +12,46 @@ Public Class TimeImporter
     <Test>
     Public Sub ShouldImport()
         Dim importer = New TimeLogsReader()
-        Dim filename = "C:\Users\GLOBAL-C-PC\Desktop\1_attlog.dat"
+
+        Dim filename = "E:\Stuff\accupay\_timelogs\1_attlog.dat"
+        'Dim filename = "E:\Stuff\accupay\_timelogs\cinema.txt"
+        'Dim filename = "E:\Stuff\accupay\_timelogs\fourlinq.dat"
 
         Dim logs = importer.Import(filename)
         logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
 
+        Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules()
+        Dim employees As List(Of Employee) = GetSampleEmployees()
+
+        Dim analyzer = New TimeAttendanceAnalyzer()
+
+        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
+        Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
+        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
+        AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
+        AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
+        AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
+        AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
+        AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
+        AssertTimeLog(results.Item(6), "", "23:30:00", "2018-06-07")
+    End Sub
+
+    Private Function GetSampleEmployees() As List(Of Employee)
+        Dim employees = New List(Of Employee)
+
+        Dim employee As New Employee With {
+            .RowID = 1,
+            .EmployeeNo = "10123"
+        }
+
+        employees.Add(employee)
+
+        Return employees
+    End Function
+
+    Private Function GetSampleShiftSchedules() As List(Of ShiftSchedule)
         Dim employeeShifts = New List(Of ShiftSchedule)
+
         Dim employeeShift As ShiftSchedule
 
         employeeShift = New ShiftSchedule() With {
@@ -91,16 +125,8 @@ Public Class TimeImporter
         }
         employeeShifts.Add(employeeShift)
 
-        Dim analyzer = New TimeAttendanceAnalyzer()
-        Dim results = analyzer.Analyze(logs, employeeShifts)
-        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
-        AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
-        AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
-        AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
-        AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
-        AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
-        AssertTimeLog(results.Item(6), "", "23:30:00", "2018-06-07")
-    End Sub
+        Return employeeShifts
+    End Function
 
     Private Sub AssertTimeLog(time As TimeLog, correctTimeIn As String, correctTimeOut As String, correctDate As String)
         Assert.Multiple(
