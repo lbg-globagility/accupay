@@ -76,7 +76,7 @@ Public Class TimeEntryGenerator
 
             _salaries = context.Salaries.
                 Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                Where(Function(s) s.EffectiveFrom <= _cutoffStart AndAlso _cutoffStart <= If(s.EffectiveTo, _cutoffStart)).
+                Where(Function(s) s.EffectiveFrom <= _cutoffEnd AndAlso _cutoffStart <= If(s.EffectiveTo, _cutoffStart)).
                 ToList()
 
             Dim previousCutoff = _cutoffStart.AddDays(-3)
