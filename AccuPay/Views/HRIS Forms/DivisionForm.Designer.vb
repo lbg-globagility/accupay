@@ -1,10 +1,10 @@
 ﻿
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class DivisionForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -21,8 +21,9 @@ Partial Class DivisionForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -46,6 +47,7 @@ Partial Class DivisionForm
         Me.CustomColoredTabControl1 = New AccuPay.CustomColoredTabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Label37 = New System.Windows.Forms.Label()
         Me.cboDivisionHead = New System.Windows.Forms.ComboBox()
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
         Me.chkbxautomaticOT = New System.Windows.Forms.CheckBox()
@@ -231,7 +233,7 @@ Partial Class DivisionForm
         Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label37 = New System.Windows.Forms.Label()
+        Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.CustomColoredTabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -256,6 +258,7 @@ Partial Class DivisionForm
         Me.tbpageDay.SuspendLayout()
         CType(Me.dgvWeek, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip3.SuspendLayout()
+        CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label35
@@ -457,6 +460,15 @@ Partial Class DivisionForm
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(717, 324)
         Me.Panel1.TabIndex = 318
+        '
+        'Label37
+        '
+        Me.Label37.AutoSize = True
+        Me.Label37.Location = New System.Drawing.Point(363, 527)
+        Me.Label37.Name = "Label37"
+        Me.Label37.Size = New System.Drawing.Size(73, 13)
+        Me.Label37.TabIndex = 395
+        Me.Label37.Text = "Division Head"
         '
         'cboDivisionHead
         '
@@ -1191,7 +1203,7 @@ Partial Class DivisionForm
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(11, 96)
+        Me.Label17.Location = New System.Drawing.Point(11, 43)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(79, 13)
         Me.Label17.TabIndex = 103
@@ -1199,8 +1211,9 @@ Partial Class DivisionForm
         '
         'cmbDivision
         '
+        Me.cmbDivision.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDivision.FormattingEnabled = True
-        Me.cmbDivision.Location = New System.Drawing.Point(108, 92)
+        Me.cmbDivision.Location = New System.Drawing.Point(108, 39)
         Me.cmbDivision.Name = "cmbDivision"
         Me.cmbDivision.Size = New System.Drawing.Size(195, 21)
         Me.cmbDivision.TabIndex = 87
@@ -1208,7 +1221,7 @@ Partial Class DivisionForm
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(11, 122)
+        Me.Label1.Location = New System.Drawing.Point(11, 69)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(38, 13)
         Me.Label1.TabIndex = 65
@@ -1218,9 +1231,10 @@ Partial Class DivisionForm
         '
         Me.cmbDivisionType.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cmbDivisionType.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cmbDivisionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDivisionType.FormattingEnabled = True
         Me.cmbDivisionType.Items.AddRange(New Object() {"Department", "Branch", "Sub branch"})
-        Me.cmbDivisionType.Location = New System.Drawing.Point(108, 65)
+        Me.cmbDivisionType.Location = New System.Drawing.Point(108, 12)
         Me.cmbDivisionType.Name = "cmbDivisionType"
         Me.cmbDivisionType.Size = New System.Drawing.Size(195, 21)
         Me.cmbDivisionType.TabIndex = 86
@@ -1230,7 +1244,7 @@ Partial Class DivisionForm
         Me.Label212.AutoSize = True
         Me.Label212.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label212.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label212.Location = New System.Drawing.Point(46, 114)
+        Me.Label212.Location = New System.Drawing.Point(46, 61)
         Me.Label212.Name = "Label212"
         Me.Label212.Size = New System.Drawing.Size(18, 24)
         Me.Label212.TabIndex = 360
@@ -1239,7 +1253,7 @@ Partial Class DivisionForm
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(11, 70)
+        Me.Label12.Location = New System.Drawing.Point(11, 17)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(74, 13)
         Me.Label12.TabIndex = 87
@@ -1247,9 +1261,11 @@ Partial Class DivisionForm
         '
         'txtname
         '
-        Me.txtname.Location = New System.Drawing.Point(108, 119)
+        Me.txtname.Location = New System.Drawing.Point(108, 66)
+        Me.txtname.MaxLength = 100
+        Me.txtname.Multiline = True
         Me.txtname.Name = "txtname"
-        Me.txtname.Size = New System.Drawing.Size(195, 20)
+        Me.txtname.Size = New System.Drawing.Size(195, 73)
         Me.txtname.TabIndex = 88
         '
         'Label11
@@ -1552,8 +1568,9 @@ Partial Class DivisionForm
         '
         Me.txtDivLocName.Location = New System.Drawing.Point(114, 45)
         Me.txtDivLocName.MaxLength = 100
+        Me.txtDivLocName.Multiline = True
         Me.txtDivLocName.Name = "txtDivLocName"
-        Me.txtDivLocName.Size = New System.Drawing.Size(195, 20)
+        Me.txtDivLocName.Size = New System.Drawing.Size(195, 73)
         Me.txtDivLocName.TabIndex = 362
         '
         'ToolStrip2
@@ -2132,14 +2149,9 @@ Partial Class DivisionForm
         Me.DataGridViewTextBoxColumn31.ReadOnly = True
         Me.DataGridViewTextBoxColumn31.Visible = False
         '
-        'Label37
+        'ErrorProvider1
         '
-        Me.Label37.AutoSize = True
-        Me.Label37.Location = New System.Drawing.Point(363, 527)
-        Me.Label37.Name = "Label37"
-        Me.Label37.Size = New System.Drawing.Size(73, 13)
-        Me.Label37.TabIndex = 395
-        Me.Label37.Text = "Division Head"
+        Me.ErrorProvider1.ContainerControl = Me
         '
         'DivisionForm
         '
@@ -2194,6 +2206,7 @@ Partial Class DivisionForm
         CType(Me.dgvWeek, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip3.ResumeLayout(False)
         Me.ToolStrip3.PerformLayout()
+        CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2398,4 +2411,5 @@ Partial Class DivisionForm
     Friend WithEvents Label34 As Label
     Friend WithEvents Label36 As Label
     Friend WithEvents Label37 As Label
+    Friend WithEvents ErrorProvider1 As ErrorProvider
 End Class
