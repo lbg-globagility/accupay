@@ -18,6 +18,7 @@ Public Class TimeImporter
                         ).FullName
     End Sub
 
+
     <Test>
     Public Sub ShouldImport()
         Dim importer = New TimeLogsReader()
@@ -27,7 +28,7 @@ Public Class TimeImporter
         'Dim filename = "E:\Stuff\accupay\_timelogs\fourlinq.dat"
 
         Dim importOutput = importer.Import(filename)
-        Dim logs = importOutput.Item1
+        Dim logs = importOutput.Logs
 
         logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
 
@@ -48,13 +49,28 @@ Public Class TimeImporter
     End Sub
 
     <Test>
+    Public Sub ShouldNotImport()
+        Dim importer = New TimeLogsReader()
+
+        Dim filename = _projectPath & "\_timelogs_test_errors_sdfsdf.dat"
+        Dim importOutput = importer.Import(filename)
+
+        Dim errors = importOutput.Errors
+
+        Assert.That(errors.Count = 1)
+        Assert.That(errors(0).LineNumber = 0)
+        Assert.That(errors(0).Reason = TimeLogsReader.ErrorLog.FILE_NOT_FOUND_ERROR)
+
+    End Sub
+
+    <Test>
     Public Sub ShouldHaveErrors()
         Dim importer = New TimeLogsReader()
 
         Dim filename = _projectPath & "\_timelogs_test_errors.dat"
 
         Dim importOutput = importer.Import(filename)
-        Dim errors = importOutput.Item2
+        Dim errors = importOutput.Errors
 
         Dim contentFormat = "    {0}" & vbTab & "{1}" & vbTab & "{2}" & vbTab & "{3}" & vbTab & "{4}" & vbTab & "{5}"
 
@@ -90,6 +106,8 @@ Public Class TimeImporter
         Assert.That(errors.Item(5).Content = String.Format(contentFormat,
                     "10123", "2018-06-06 08:00:F0", "1", "0", "1", "0"))
     End Sub
+
+
 
 #Region "Private Functions"
     Private Function GetSampleEmployees() As List(Of Employee)

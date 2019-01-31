@@ -85,7 +85,7 @@ Public Class TimeLogsForm
 
         If formuserprivilege.Count = 0 Then
 
-            tsbtnNew.Visible = 0
+            'tsbtnNew.Visible = 0
             tsbtnNewExperimental.Visible = 0
             tsbtnSave.Visible = 0
             tsbtndel.Visible = 0
@@ -94,7 +94,7 @@ Public Class TimeLogsForm
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
-                    tsbtnNew.Visible = 0
+                    'tsbtnNew.Visible = 0
                     tsbtnNewExperimental.Visible = 0
                     tsbtnSave.Visible = 0
                     tsbtndel.Visible = 0
@@ -102,10 +102,10 @@ Public Class TimeLogsForm
                     Exit For
                 Else
                     If drow("Creates").ToString = "N" Then
-                        tsbtnNew.Visible = 0
+                        'tsbtnNew.Visible = 0
                         tsbtnNewExperimental.Visible = 0
                     Else
-                        tsbtnNew.Visible = 1
+                        'tsbtnNew.Visible = 1
                         tsbtnNewExperimental.Visible = 1
                     End If
 
@@ -204,12 +204,17 @@ Public Class TimeLogsForm
                         Dim importer = New TimeLogsReader()
                         Dim importOutput = importer.Import(thefilepath)
 
-                        Dim logs = importOutput.Item1
+                        If importOutput.IsImportSuccess = False Then
+                            MessageBox.Show(importOutput.Errors(0).Reason)
+                            Return
+                        End If
+
+                        Dim logs = importOutput.Logs
 
                         'preview the logs here
                         Dim previewDialog As New TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
                         previewDialog.Logs = logs
-                        previewDialog.Errors = importOutput.Item2
+                        previewDialog.Errors = importOutput.Errors
 
                         With previewDialog
                             .ShowDialog()

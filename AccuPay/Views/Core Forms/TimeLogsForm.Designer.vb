@@ -23,8 +23,8 @@ Partial Class TimeLogsForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TimeLogsForm))
         Me.bgworkImport = New System.ComponentModel.BackgroundWorker()
         Me.dgvetentdet = New DevComponents.DotNetBar.Controls.DataGridViewX()
@@ -53,6 +53,7 @@ Partial Class TimeLogsForm
         Me.btnEmpID = New System.Windows.Forms.Button()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.tsbtnNew = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnNewExperimental = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnSave = New System.Windows.Forms.ToolStripButton()
         Me.tsbtndel = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnCancel = New System.Windows.Forms.ToolStripButton()
@@ -108,7 +109,6 @@ Partial Class TimeLogsForm
         Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.tsbtnNewExperimental = New System.Windows.Forms.ToolStripButton()
         CType(Me.dgvetentdet, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip2.SuspendLayout()
         CType(Me.dgvetentd, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -139,14 +139,14 @@ Partial Class TimeLogsForm
         Me.dgvetentdet.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvetentdet.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column7, Me.Column2, Me.Column11, Me.Column12, Me.Column3, Me.Column5, Me.Column4, Me.Column13, Me.Column6, Me.timeentstat})
         Me.dgvetentdet.ContextMenuStrip = Me.ContextMenuStrip2
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvetentdet.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvetentdet.DefaultCellStyle = DataGridViewCellStyle4
         Me.dgvetentdet.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvetentdet.Location = New System.Drawing.Point(11, 57)
         Me.dgvetentdet.MultiSelect = False
@@ -312,14 +312,14 @@ Partial Class TimeLogsForm
         Me.dgvetentd.ColumnHeadersHeight = 38
         Me.dgvetentd.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvetentd.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Createds, Me.createdmilit, Me.Column8, Me.Column9, Me.Column10})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvetentd.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvetentd.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvetentd.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvetentd.Location = New System.Drawing.Point(12, 223)
         Me.dgvetentd.MultiSelect = False
@@ -436,6 +436,15 @@ Partial Class TimeLogsForm
         Me.tsbtnNew.Name = "tsbtnNew"
         Me.tsbtnNew.Size = New System.Drawing.Size(120, 22)
         Me.tsbtnNew.Text = "Import time e&ntry"
+        Me.tsbtnNew.Visible = False
+        '
+        'tsbtnNewExperimental
+        '
+        Me.tsbtnNewExperimental.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.tsbtnNewExperimental.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnNewExperimental.Name = "tsbtnNewExperimental"
+        Me.tsbtnNewExperimental.Size = New System.Drawing.Size(88, 22)
+        Me.tsbtnNewExperimental.Text = "Import logs"
         '
         'tsbtnSave
         '
@@ -499,7 +508,7 @@ Partial Class TimeLogsForm
         Me.tsbtnExportReportTimeLogs.Image = CType(resources.GetObject("tsbtnExportReportTimeLogs.Image"), System.Drawing.Image)
         Me.tsbtnExportReportTimeLogs.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnExportReportTimeLogs.Name = "tsbtnExportReportTimeLogs"
-        Me.tsbtnExportReportTimeLogs.Size = New System.Drawing.Size(60, 20)
+        Me.tsbtnExportReportTimeLogs.Size = New System.Drawing.Size(60, 22)
         Me.tsbtnExportReportTimeLogs.Text = "E&xport"
         '
         'First
@@ -931,14 +940,6 @@ Partial Class TimeLogsForm
         Me.DataGridViewTextBoxColumn14.HeaderText = "TimeEntryStatus"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
         Me.DataGridViewTextBoxColumn14.Visible = False
-        '
-        'tsbtnNewExperimental
-        '
-        Me.tsbtnNewExperimental.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.tsbtnNewExperimental.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnNewExperimental.Name = "tsbtnNewExperimental"
-        Me.tsbtnNewExperimental.Size = New System.Drawing.Size(199, 22)
-        Me.tsbtnNewExperimental.Text = "Import time entry (Experimental)"
         '
         'TimeLogsForm
         '

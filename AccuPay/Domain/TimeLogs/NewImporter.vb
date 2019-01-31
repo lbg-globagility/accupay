@@ -10,39 +10,51 @@ Public Class TimeLogsReader
     'currently not used after using ObjectUtils conversion
     Private Const DateTimePattern As String = "^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2}) (\d{1,2}):(\d{1,2}):?(\d{1,2})?$"
 
-    Public Function Import(filename As String) As (IList(Of TimeAttendanceLog), IList(Of ErrorLog))
-        Dim logs = New List(Of TimeAttendanceLog)
-        Dim errors = New List(Of ErrorLog)
+    Public Function Import(filename As String) As ImportOutput
+        Dim output As New ImportOutput
+
+        output.Logs = New List(Of TimeAttendanceLog)
+        output.Errors = New List(Of ErrorLog)
 
         Dim lineNumber As Integer = 0
         Dim lineContent As String
-        Using fileStream = New FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
+
+        Try
+            Using fileStream = New FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
             stream = New StreamReader(fileStream)
-            Do
-                lineNumber += 1
-                lineContent = stream.ReadLine()
+                Do
+                    lineNumber += 1
+                    lineContent = stream.ReadLine()
 
-                Dim parseOutput = ParseLine(lineContent)
+                    Dim parseOutput = ParseLine(lineContent)
 
-                Dim log = parseOutput.Item1
-                Dim errorMessage = parseOutput.Item2
+                    Dim log = parseOutput.Item1
+                    Dim errorMessage = parseOutput.Item2
 
-                If log IsNot Nothing Then
-                    logs.Add(log)
-                Else
-                    If String.IsNullOrWhiteSpace(errorMessage) = False Then
-                        errors.Add(New ErrorLog With {
-                            .LineNumber = lineNumber,
-                            .Content = lineContent,
-                            .Reason = errorMessage
-                        })
+                    If log IsNot Nothing Then
+                        output.Logs.Add(log)
+                    Else
+                        If String.IsNullOrWhiteSpace(errorMessage) = False Then
+                            output.Errors.Add(New ErrorLog With {
+                                .LineNumber = lineNumber,
+                                .Content = lineContent,
+                                .Reason = errorMessage
+                            })
+                        End If
                     End If
-                End If
 
-            Loop Until lineContent Is Nothing
-        End Using
+                Loop Until lineContent Is Nothing
+            End Using
 
-        Return (logs, errors)
+        Catch ex As FileNotFoundException
+            output.IsImportSuccess = False
+            output.Errors.Clear()
+            output.Errors.Add(New ErrorLog With {
+                .Reason = ErrorLog.FILE_NOT_FOUND_ERROR
+            })
+        End Try
+
+        Return output
     End Function
 
     Private Function ParseLine(line As String) As (TimeAttendanceLog, String)
@@ -99,7 +111,28 @@ Public Class TimeLogsReader
         Return New DateTime(year, month, day, hours, minutes, seconds)
     End Function
 
+    Public Class ImportOutput
+        Public Property Logs As IList(Of TimeAttendanceLog)
+        Public Property Errors As IList(Of ErrorLog)
+        ''' <summary>
+        ''' True if the file was read successfully. Even if there are errors parsing
+        ''' some lines, as long as the file was read, this is still True.
+        ''' Posible reason for this to become False is when it did not find the chosen
+        ''' file.
+        ''' </summary>
+        Public Property IsImportSuccess As Boolean
+
+        Sub New()
+            Me.Logs = New List(Of TimeAttendanceLog)
+            Me.Errors = New List(Of ErrorLog)
+            Me.IsImportSuccess = True
+        End Sub
+    End Class
+
     Public Class ErrorLog
+        Public Const FILE_NOT_FOUND_ERROR As String =
+            "Import file not found. It may have been deleted or moved."
+
         Public Property LineNumber As Integer
         Public Property Content As String
         Public Property Reason As String
