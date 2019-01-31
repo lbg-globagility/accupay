@@ -276,6 +276,11 @@ Public Class HRISForm
             JobCategoryToolStripMenuItem.Visible = False
             PointsToolStripMenuItem.Visible = False
         End If
+
+        If Not Debugger.IsAttached Then
+            EmployeeExperimentalToolStripMenuItem.Visible = False
+        End If
+
     End Sub
 
     Private Sub AttachmentToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AttachmentToolStripMenuItem.Click

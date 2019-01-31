@@ -1694,4 +1694,19 @@ Public Class DivisionForm
 
     End Sub
 
+    Private Sub txtDivLocName_TextChanged(sender As Object, e As EventArgs) Handles txtDivLocName.TextChanged
+        If txtDivLocName.Text.Length = txtDivLocName.MaxLength Then
+            ErrorProvider1.SetError(txtDivLocName, String.Concat(txtDivLocName.MaxLength, " max char."))
+        Else
+            ErrorProvider1.Dispose()
+        End If
+    End Sub
+
+    Private Sub txtname_TextChanged(sender As Object, e As EventArgs) Handles txtname.TextChanged
+        If txtname.Text.Length = txtname.MaxLength Then
+            ErrorProvider1.SetError(txtname, String.Concat(txtname.MaxLength, " max char."))
+        Else
+            ErrorProvider1.Dispose()
+        End If
+    End Sub
 End Class
