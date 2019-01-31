@@ -658,6 +658,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Domain\TimeLogs\NewImporter.vb" />
+    <Compile Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.Designer.vb">
+      <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\AccuPayTreeView.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -1770,6 +1776,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.resx">
       <DependentUpon>ViewTimeEntryEmployeeLevel.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.resx">
+      <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Employees\NewEmployeeForm.resx">
       <DependentUpon>NewEmployeeForm.vb</DependentUpon>

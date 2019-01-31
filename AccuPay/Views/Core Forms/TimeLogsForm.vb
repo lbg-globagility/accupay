@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
+Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
@@ -12,6 +13,8 @@ Public Class TimeLogsForm
         Optimized = 0
         Conventional = 1
     End Enum
+
+    Private _logger As ILog = LogManager.GetLogger("TimeLogsLogger")
 
     Dim dattabLogs As New DataTable
 
@@ -186,10 +189,6 @@ Public Class TimeLogsForm
             If browsefile.ShowDialog = Windows.Forms.DialogResult.OK Then
 
                 thefilepath = browsefile.FileName
-
-                tsbtnNew.Enabled = False
-                tsbtnNewExperimental.Enabled = False
-
                 Dim balloon_x = lblforballoon.Location.X
 
                 lblforballoon.Location = New Point(TabControl1.Location.X, lblforballoon.Location.Y)
@@ -199,19 +198,39 @@ Public Class TimeLogsForm
 
                 lblforballoon.Location = New Point(balloon_x, lblforballoon.Location.Y)
 
-                RemoveHandler dgvetentd.SelectionChanged, AddressOf dgvetentd_SelectionChanged
-
-                Panel1.Enabled = False
-
-                ToolStripProgressBar1.Visible = True
-
                 If timeLogsFormat_ = TimeLogsFormat.Conventional Then
 
-                    bgworkTypicalImport.RunWorkerAsync(sender)
+                    If sender Is tsbtnNewExperimental Then
+                        Dim importer = New TimeLogsReader()
+                        Dim importOutput = importer.Import(thefilepath)
+
+                        Dim logs = importOutput.Item1
+
+                        'preview the logs here
+                        Dim previewDialog As New TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
+                        previewDialog.Logs = logs
+                        previewDialog.Errors = importOutput.Item2
+
+                        With previewDialog
+                            .ShowDialog()
+                            .BringToFront()
+                        End With
+
+                        If previewDialog.Cancelled Then
+                            Return
+                        End If
+
+                        HouseKeepingBeforeStartAlternateLineBackgroundWork()
+                        bgworkTypicalImport.RunWorkerAsync(logs)
+
+                    Else
+                        HouseKeepingBeforeStartAlternateLineBackgroundWork()
+                        bgworkTypicalImport.RunWorkerAsync(sender)
+                    End If
+
                 Else
-
+                    HouseKeepingBeforeStartAlternateLineBackgroundWork()
                     bgworkImport.RunWorkerAsync()
-
                 End If
 
             End If
@@ -219,6 +238,17 @@ Public Class TimeLogsForm
             MsgBox(ex.Message & " Error on file initialization")
         Finally
         End Try
+    End Sub
+
+    Private Sub HouseKeepingBeforeStartAlternateLineBackgroundWork()
+        tsbtnNew.Enabled = False
+        tsbtnNewExperimental.Enabled = False
+
+        RemoveHandler dgvetentd.SelectionChanged, AddressOf dgvetentd_SelectionChanged
+
+        Panel1.Enabled = False
+
+        ToolStripProgressBar1.Visible = True
     End Sub
 
     Private Function TimeLogsImportOption() As TimeLogsFormat?
@@ -1245,17 +1275,25 @@ Public Class TimeLogsForm
     End Function
 
     Private Sub bgworkTypicalImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkTypicalImport.DoWork
-        If e.Argument Is tsbtnNewExperimental Then
-            NewTimeEntryImport()
+        If e.Argument Is tsbtnNew Then
+            OldTimeEntryAlternateLineImport()
         Else
-            OldTimeEntryImport()
+            Dim logs As IList(Of TimeAttendanceLog)
+            Try
+                logs = CType(e.Argument, IList(Of TimeAttendanceLog))
+
+            Catch ex As Exception
+                _logger.Error("Error casting imported logs in bgworkTypicalImport_DoWork.", ex)
+                Return
+            End Try
+
+            NewTimeEntryAlternateLineImport(logs)
+
         End If
     End Sub
 
-    Private Async Sub NewTimeEntryImport()
+    Private Async Sub NewTimeEntryAlternateLineImport(logs As IList(Of TimeAttendanceLog))
         Try
-            Dim importer = New TimeLogsReader()
-            Dim logs = importer.Import(thefilepath)
             logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
 
             If logs.Count = 0 Then
@@ -1311,7 +1349,7 @@ Public Class TimeLogsForm
                         ToListAsync
     End Function
 
-    Private Sub OldTimeEntryImport()
+    Private Sub OldTimeEntryAlternateLineImport()
         Dim import_id = ImportConventionalFormatTimeLogs()
 
         Dim param_values =

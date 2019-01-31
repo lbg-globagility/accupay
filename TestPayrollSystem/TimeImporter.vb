@@ -1,23 +1,34 @@
 ﻿Option Strict On
 
+Imports System.IO
 Imports AccuPay
 Imports AccuPay.Entity
 
-
-
-
 <TestFixture>
 Public Class TimeImporter
+
+    Private _projectPath As String
+
+    <SetUp>
+    Public Sub Init()
+        _projectPath = Directory.GetParent(
+                            Directory.GetParent(
+                                AppDomain.CurrentDomain.BaseDirectory
+                            ).Parent.FullName
+                        ).FullName
+    End Sub
 
     <Test>
     Public Sub ShouldImport()
         Dim importer = New TimeLogsReader()
 
-        Dim filename = "E:\Stuff\accupay\_timelogs\1_attlog.dat"
+        Dim filename = _projectPath & "\_timelogs_test.dat"
         'Dim filename = "E:\Stuff\accupay\_timelogs\cinema.txt"
         'Dim filename = "E:\Stuff\accupay\_timelogs\fourlinq.dat"
 
-        Dim logs = importer.Import(filename)
+        Dim importOutput = importer.Import(filename)
+        Dim logs = importOutput.Item1
+
         logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
 
         Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules()
@@ -36,6 +47,51 @@ Public Class TimeImporter
         AssertTimeLog(results.Item(6), "", "23:30:00", "2018-06-07")
     End Sub
 
+    <Test>
+    Public Sub ShouldHaveErrors()
+        Dim importer = New TimeLogsReader()
+
+        Dim filename = _projectPath & "\_timelogs_test_errors.dat"
+
+        Dim importOutput = importer.Import(filename)
+        Dim errors = importOutput.Item2
+
+        Dim contentFormat = "    {0}" & vbTab & "{1}" & vbTab & "{2}" & vbTab & "{3}" & vbTab & "{4}" & vbTab & "{5}"
+
+        Assert.That(errors.Count = 6)
+
+        Assert.That(errors.Item(0).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(0).LineNumber = 3)
+        Assert.That(errors.Item(0).Content = String.Format(contentFormat,
+                    "10123", "201A-06-02 07:00:00", "1", "0", "1", "0"))
+
+        Assert.That(errors.Item(1).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(1).LineNumber = 7)
+        Assert.That(errors.Item(1).Content = String.Format(contentFormat,
+                    "10123", "2018-0B-04 20:00:00", "1", "0", "1", "0"))
+
+        Assert.That(errors.Item(2).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(2).LineNumber = 9)
+        Assert.That(errors.Item(2).Content = String.Format(contentFormat,
+                    "10123", "2018-06-0C 03:00:00", "1", "0", "1", "0"))
+
+        Assert.That(errors.Item(3).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(3).LineNumber = 10)
+        Assert.That(errors.Item(3).Content = String.Format(contentFormat,
+                    "10123", "2018-06-05 0D:00:00", "1", "0", "1", "0"))
+
+        Assert.That(errors.Item(4).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(4).LineNumber = 12)
+        Assert.That(errors.Item(4).Content = String.Format(contentFormat,
+                    "10123", "2018-06-05 19:E0:00", "1", "0", "1", "0"))
+
+        Assert.That(errors.Item(5).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(5).LineNumber = 15)
+        Assert.That(errors.Item(5).Content = String.Format(contentFormat,
+                    "10123", "2018-06-06 08:00:F0", "1", "0", "1", "0"))
+    End Sub
+
+#Region "Private Functions"
     Private Function GetSampleEmployees() As List(Of Employee)
         Dim employees = New List(Of Employee)
 
@@ -141,6 +197,7 @@ Public Class TimeImporter
                 Assert.That(time.LogDate.Date, [Is].EqualTo(DateTime.Parse(correctDate)))
             End Sub)
     End Sub
+#End Region
 
 End Class
 

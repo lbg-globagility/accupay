@@ -7,50 +7,76 @@ Imports AccuPay.Utils
 
 Public Class TimeLogsReader
 
+    'currently not used after using ObjectUtils conversion
     Private Const DateTimePattern As String = "^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2}) (\d{1,2}):(\d{1,2}):?(\d{1,2})?$"
 
-    Public Function Import(filename As String) As IList(Of TimeAttendanceLog)
+    Public Function Import(filename As String) As (IList(Of TimeAttendanceLog), IList(Of ErrorLog))
         Dim logs = New List(Of TimeAttendanceLog)
-        Dim line As String
+        Dim errors = New List(Of ErrorLog)
+
+        Dim lineNumber As Integer = 0
+        Dim lineContent As String
         Using fileStream = New FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
             stream = New StreamReader(fileStream)
             Do
-                line = stream.ReadLine()
+                lineNumber += 1
+                lineContent = stream.ReadLine()
 
-                Dim log = ParseLine(line)
+                Dim parseOutput = ParseLine(lineContent)
+
+                Dim log = parseOutput.Item1
+                Dim errorMessage = parseOutput.Item2
 
                 If log IsNot Nothing Then
                     logs.Add(log)
+                Else
+                    If String.IsNullOrWhiteSpace(errorMessage) = False Then
+                        errors.Add(New ErrorLog With {
+                            .LineNumber = lineNumber,
+                            .Content = lineContent,
+                            .Reason = errorMessage
+                        })
+                    End If
                 End If
 
-            Loop Until line Is Nothing
+            Loop Until lineContent Is Nothing
         End Using
 
-        Return logs
+        Return (logs, errors)
     End Function
 
-    Private Function ParseLine(line As String) As TimeAttendanceLog
+    Private Function ParseLine(line As String) As (TimeAttendanceLog, String)
         Try
             If String.IsNullOrEmpty(line) Then
-                Return Nothing
+                'not considered error if it's just an empty line
+                'but it won't still be added to TimeAttendanceLog
+                Return (Nothing, "")
             End If
 
             Dim parts = Regex.Split(line, "\t")
 
             If parts.Length < 2 Then
-                Return Nothing
+                Return (Nothing, "Needs at least 2 items in one line separated by a tab.")
             End If
 
             Dim employeeNo = Trim(parts(0))
 
-            Dim logDate = ObjectUtils.ToDateTime(parts(1))
+            Dim logDate = ObjectUtils.ToNullableDateTime(parts(1))
 
-            Return New TimeAttendanceLog() With {
+            If logDate Is Nothing Then
+                Return (Nothing, "Second column must be a valid Date Time.")
+            End If
+
+            Return (
+            New TimeAttendanceLog() With {
                 .EmployeeNo = employeeNo,
-                .DateTime = logDate
-            }
+                .DateTime = CType(logDate, Date)
+            },
+            "")
+
         Catch ex As Exception
-            Throw New ParseTimeLogException(line, ex)
+            Return (Nothing, "Error reading the line. Please check the template.")
+            'Throw New ParseTimeLogException(line, ex)
         End Try
     End Function
 
@@ -73,23 +99,26 @@ Public Class TimeLogsReader
         Return New DateTime(year, month, day, hours, minutes, seconds)
     End Function
 
-
-
+    Public Class ErrorLog
+        Public Property LineNumber As Integer
+        Public Property Content As String
+        Public Property Reason As String
+    End Class
 
 End Class
 
-Public Class TimeAttendanceLog
+    Public Class TimeAttendanceLog
 
-    Public EmployeeNo As String
+    Public Property EmployeeNo As String
 
-    Public [DateTime] As DateTime
+    Public Property [DateTime] As DateTime
 
-    Public FirstColumn As Integer
+    Public Property FirstColumn As Integer
 
-    Public SecondColumn As Integer
+    Public Property SecondColumn As Integer
 
-    Public ThirdColumn As Integer
+    Public Property ThirdColumn As Integer
 
-    Public FourthColumn As Integer
+    Public Property FourthColumn As Integer
 
 End Class

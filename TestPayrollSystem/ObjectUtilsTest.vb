@@ -185,6 +185,16 @@ Public Class ObjectUtilsTest
         Assert.AreEqual(expected, result)
     End Sub
 
+    <TestCase("2019-01-01")>
+    Public Sub ToDateTime_WithValueFirstDayOfYear2019DateTimeInstance_ReturnsFirstDayOfYear2019DateTimeInstance(
+        ByVal dateInput As Object)
+
+        Dim expected As Date = New DateTime(2019, 1, 1)
+        Dim result = ObjectUtils.ToDateTime(dateInput)
+
+        Assert.AreEqual(expected, result)
+    End Sub
+
     <TestCase("2019-01-01 15:22")>
     <TestCase("2019-01-01 3:22 PM")>
     Public Sub ToDateTime_WithYearMonthDayDash_ReturnsFirstDayOfYear2019DateParse(
@@ -213,16 +223,6 @@ Public Class ObjectUtilsTest
         ByVal dateInput As Object)
 
         Dim expected As Date = New DateTime(2017, 1, 30, 16, 35, 0)
-        Dim result = ObjectUtils.ToDateTime(dateInput)
-
-        Assert.AreEqual(expected, result)
-    End Sub
-
-    <TestCase("2019-01-01")>
-    Public Sub ToDateTime_WithValueFirstDayOfYear2019DateTimeInstance_ReturnsFirstDayOfYear2019DateTimeInstance(
-        ByVal dateInput As Object)
-
-        Dim expected As Date = New DateTime(2019, 1, 1)
         Dim result = ObjectUtils.ToDateTime(dateInput)
 
         Assert.AreEqual(expected, result)
@@ -266,6 +266,39 @@ Public Class ObjectUtilsTest
         ByVal dateInput As Object)
 
         Dim expected As Date = New DateTime(2019, 1, 1)
+        Dim result = ObjectUtils.ToNullableDateTime(dateInput)
+
+        Assert.AreEqual(expected, result)
+    End Sub
+
+    <TestCase("2019-01-01 15:22")>
+    <TestCase("2019-01-01 3:22 PM")>
+    Public Sub ToNullableDateTime_WithYearMonthDayDash_ReturnsFirstDayOfYear2019DateParse(
+        ByVal dateInput As Object)
+
+        Dim expected As Date? = New DateTime(2019, 1, 1, 15, 22, 0)
+        Dim result = ObjectUtils.ToNullableDateTime(dateInput)
+
+        Assert.AreEqual(expected, result)
+    End Sub
+
+    <TestCase("01-03-2019 13:24")>
+    <TestCase("01-03-2019 1:24 PM")>
+    Public Sub ToNullableDateTime_WithMonthDayYearDash_ReturnsFirstDayOfYear2019DateParse(
+        ByVal dateInput As Object)
+
+        Dim expected As Date? = New DateTime(2019, 1, 3, 13, 24, 0)
+        Dim result = ObjectUtils.ToNullableDateTime(dateInput)
+
+        Assert.AreEqual(expected, result)
+    End Sub
+
+    <TestCase("1/30/2017 16:35")>
+    <TestCase("1/30/2017 4:35 PM")>
+    Public Sub ToNullableDateTime_WithMonthDayYearSlash_ReturnsFirstDayOfYear2019DateParse(
+        ByVal dateInput As Object)
+
+        Dim expected As Date? = New DateTime(2017, 1, 30, 16, 35, 0)
         Dim result = ObjectUtils.ToNullableDateTime(dateInput)
 
         Assert.AreEqual(expected, result)
