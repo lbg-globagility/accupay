@@ -17,6 +17,7 @@ BEGIN
 DECLARE paydate_from DATE;
 DECLARE paydat_to DATE;
 
+DECLARE v_hours_per_day INT(2) DEFAULT 8;
 DECLARE sec_per_hour INT(11) DEFAULT 3600;
 
 SET @ppIds = (SELECT GROUP_CONCAT(pp.RowID)
@@ -154,7 +155,7 @@ LEFT JOIN (
 ) payStubLoans
 ON payStubLoans.PayStubID = ps.RowID
 
-LEFT JOIN (SELECT lt.Balance
+LEFT JOIN (SELECT ROUND((lt.Balance / v_hours_per_day), 2) AS 'Balance'
 				, lt.EmployeeID
 				, p.PartNo `Names`
 				, et.`VacationLeaveHours` `Availed`
