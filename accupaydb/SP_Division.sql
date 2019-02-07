@@ -59,6 +59,8 @@ INSERT INTO `division`
 	,PagIbigDeductionWeekwithAgenSchedule
 	,WithholdingTaxDeductionWeekwithAgenSchedule
 	,DivisionHeadID
+	
+	,ParentDivisionID
 ) VALUES (
 	I_Name,
 	I_TradeName,
@@ -104,7 +106,9 @@ INSERT INTO `division`
 	,I_PhHealthDeductSchedwithAgentWeekly
 	,I_HDMFDeductSchedwithAgentWeekly
 	,I_WTaxDeductSchedwithAgentWeekly
-	,I_DivisionHeadID);
+	,I_DivisionHeadID
+	
+	,I_ParentDivisionID);
 END//
 DELIMITER ;
 

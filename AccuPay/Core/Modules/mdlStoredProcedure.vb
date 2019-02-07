@@ -1419,14 +1419,15 @@ Module mdlStoredProcedure
                                 Optional I_MinimumWageAmount As Object = Nothing,
                                 Optional I_AutomaticOT As Object = Nothing,
                                 Optional I_DivisionHeadID As Integer? = Nothing,
-    Optional I_SSSDeductSchedWeekly As Object = Nothing,
-    Optional I_PhHealthDeductSchedWeekly As Object = Nothing,
-    Optional I_HDMFDeductSchedWeekly As Object = Nothing,
-    Optional I_WTaxDeductSchedWeekly As Object = Nothing,
-    Optional I_SSSDeductSchedwithAgentWeekly As Object = Nothing,
-    Optional I_PhHealthDeductSchedwithAgentWeekly As Object = Nothing,
-    Optional I_HDMFDeductSchedwithAgentWeekly As Object = Nothing,
-    Optional I_WTaxDeductSchedwithAgentWeekly As Object = Nothing) As Boolean
+                                Optional I_SSSDeductSchedWeekly As Object = Nothing,
+                                Optional I_PhHealthDeductSchedWeekly As Object = Nothing,
+                                Optional I_HDMFDeductSchedWeekly As Object = Nothing,
+                                Optional I_WTaxDeductSchedWeekly As Object = Nothing,
+                                Optional I_SSSDeductSchedwithAgentWeekly As Object = Nothing,
+                                Optional I_PhHealthDeductSchedwithAgentWeekly As Object = Nothing,
+                                Optional I_HDMFDeductSchedwithAgentWeekly As Object = Nothing,
+                                Optional I_WTaxDeductSchedwithAgentWeekly As Object = Nothing,
+                                Optional I_ParentDivisionID As Integer? = Nothing) As Boolean
 
         Dim F_return As Boolean = False
         Dim SQL_command As MySqlCommand =
@@ -1483,6 +1484,8 @@ Module mdlStoredProcedure
                 .Parameters.AddWithValue("I_PhHealthDeductSchedwithAgentWeekly", I_PhHealthDeductSchedwithAgentWeekly)
                 .Parameters.AddWithValue("I_HDMFDeductSchedwithAgentWeekly", I_HDMFDeductSchedwithAgentWeekly)
                 .Parameters.AddWithValue("I_WTaxDeductSchedwithAgentWeekly", I_WTaxDeductSchedwithAgentWeekly)
+
+                .Parameters.AddWithValue("I_ParentDivisionID", I_ParentDivisionID)
 
                 .CommandType = CommandType.StoredProcedure
                 F_return = (.ExecuteNonQuery > 0)

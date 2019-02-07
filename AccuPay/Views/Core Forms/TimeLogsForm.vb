@@ -85,8 +85,8 @@ Public Class TimeLogsForm
 
         If formuserprivilege.Count = 0 Then
 
-            'tsbtnNew.Visible = 0
-            tsbtnNewExperimental.Visible = 0
+            tsbtnNew.Visible = 0
+            'tsbtnNewExperimental.Visible = 0
             tsbtnSave.Visible = 0
             tsbtndel.Visible = 0
 
@@ -94,19 +94,19 @@ Public Class TimeLogsForm
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
-                    'tsbtnNew.Visible = 0
-                    tsbtnNewExperimental.Visible = 0
+                    tsbtnNew.Visible = 0
+                    'tsbtnNewExperimental.Visible = 0
                     tsbtnSave.Visible = 0
                     tsbtndel.Visible = 0
                     dontUpdate = 1
                     Exit For
                 Else
                     If drow("Creates").ToString = "N" Then
-                        'tsbtnNew.Visible = 0
-                        tsbtnNewExperimental.Visible = 0
+                        tsbtnNew.Visible = 0
+                        'tsbtnNewExperimental.Visible = 0
                     Else
-                        'tsbtnNew.Visible = 1
-                        tsbtnNewExperimental.Visible = 1
+                        tsbtnNew.Visible = 1
+                        'tsbtnNewExperimental.Visible = 1
                     End If
 
                     If drow("Deleting").ToString = "N" Then
