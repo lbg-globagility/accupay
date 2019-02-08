@@ -239,6 +239,11 @@ Public Class MetroLogin
 
     Private Sub MetroLogin_Load(sender As Object, e As EventArgs) Handles Me.Load
 
+        If Debugger.IsAttached Then
+            txtbxUserID.Text = "admin"
+            txtbxPword.Text = "admin"
+        End If
+
     End Sub
 
     Private Sub cbxorganiz_DropDown(sender As Object, e As EventArgs) Handles cbxorganiz.DropDown

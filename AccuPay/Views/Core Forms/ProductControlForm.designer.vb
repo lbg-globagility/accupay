@@ -24,7 +24,7 @@ Partial Class ProductControlForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ProductControlForm))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
@@ -134,14 +134,14 @@ Partial Class ProductControlForm
         Me.dgvproducts.BackgroundColor = System.Drawing.Color.White
         Me.dgvproducts.ColumnHeadersHeight = 34
         Me.dgvproducts.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.SupplierID, Me.ProdName, Me.Description, Me.PartNo, Me.Category, Me.CategoryID, Me.Status, Me.Fixed, Me.UnitPrice, Me.VATPercent, Me.FirstBillFlag, Me.SecondBillFlag, Me.ThirdBillFlag, Me.PDCFlag, Me.MonthlyBIllFlag, Me.PenaltyFlag, Me.WithholdingTaxPercent, Me.CostPrice, Me.UnitOfMeasure, Me.SKU, Me.LeadTime, Me.BarCode, Me.BusinessUnitID, Me.LastRcvdFromShipmentDate, Me.LastRcvdFromShipmentCount, Me.TotalShipmentCount, Me.BookPageNo, Me.BrandName, Me.LastPurchaseDate, Me.LastSoldDate, Me.LastSoldCount, Me.ReOrderPoint, Me.AllocateBelowSafetyFlag, Me.Strength, Me.UnitsBackordered, Me.UnitsBackorderAsOf, Me.DateLastInventoryCount, Me.TaxVAT, Me.WithholdingTax, Me.COAId})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvproducts.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvproducts.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvproducts.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvproducts.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvproducts.Location = New System.Drawing.Point(0, 38)
