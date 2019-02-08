@@ -104,6 +104,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property TotalAllowance As Decimal
 
+        Public Property TotalTaxableAllowance As Decimal
+
         <Column("TotalGrossSalary")>
         Public Property GrossPay As Decimal
 
