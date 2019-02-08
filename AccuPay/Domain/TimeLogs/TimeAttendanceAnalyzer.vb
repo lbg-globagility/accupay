@@ -112,6 +112,14 @@ Public Class TimeAttendanceAnalyzer
     End Function
 
     Private Function GetShiftBoundsForTimeOut(currentDate As Date, currentShift As ShiftSchedule, nextShift As ShiftSchedule) As (Min As Date, Max As Date)
+        'Nag eeror dito kapag walang shift ang employee
+        'TODO: handle that error
+        'Should we prompt 
+
+        'if walang shift
+        'min bound 12:00 am of current day
+        'max bound 12:00 am of next day
+
         Dim shiftTime = currentShift.Shift
         Dim nextShiftTime = nextShift.Shift
 

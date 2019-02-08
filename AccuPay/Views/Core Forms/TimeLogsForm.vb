@@ -31,7 +31,21 @@ Public Class TimeLogsForm
     Private str_query_insupd_timeentrylogs As String =
         "SELECT INSUPD_timeentrylogs(?og_id, ?emp_unique_key, ?timestamp_log, ?max_importid);"
 
+    'do this habang di pa 100% stable ang new import
+    Private showNewImport As Boolean
+
     Private Sub Form8_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        showNewImport = True
+
+        If showNewImport Then
+            tsbtnNew.Visible = 0
+            tsbtnNewExperimental.Visible = 1
+        Else
+            tsbtnNew.Visible = 1
+            tsbtnNewExperimental.Visible = 0
+        End If
+
         With dattabLogs.Columns
             .Add("logging")
 
@@ -85,8 +99,12 @@ Public Class TimeLogsForm
 
         If formuserprivilege.Count = 0 Then
 
-            tsbtnNew.Visible = 0
-            'tsbtnNewExperimental.Visible = 0
+            If showNewImport Then
+                tsbtnNewExperimental.Visible = 0
+            Else
+                tsbtnNew.Visible = 0
+            End If
+
             tsbtnSave.Visible = 0
             tsbtndel.Visible = 0
 
@@ -94,19 +112,32 @@ Public Class TimeLogsForm
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
-                    tsbtnNew.Visible = 0
-                    'tsbtnNewExperimental.Visible = 0
+                    If showNewImport Then
+                        tsbtnNewExperimental.Visible = 0
+                    Else
+                        tsbtnNew.Visible = 0
+                    End If
+
                     tsbtnSave.Visible = 0
                     tsbtndel.Visible = 0
                     dontUpdate = 1
                     Exit For
                 Else
                     If drow("Creates").ToString = "N" Then
-                        tsbtnNew.Visible = 0
-                        'tsbtnNewExperimental.Visible = 0
+
+
+                        If showNewImport Then
+                            tsbtnNewExperimental.Visible = 0
+                        Else
+                            tsbtnNew.Visible = 0
+                        End If
                     Else
-                        tsbtnNew.Visible = 1
-                        'tsbtnNewExperimental.Visible = 1
+
+                        If showNewImport Then
+                            tsbtnNewExperimental.Visible = 1
+                        Else
+                            tsbtnNew.Visible = 1
+                        End If
                     End If
 
                     If drow("Deleting").ToString = "N" Then
