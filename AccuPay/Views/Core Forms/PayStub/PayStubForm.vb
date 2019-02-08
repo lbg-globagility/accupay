@@ -1426,7 +1426,7 @@ Public Class PayStubForm
                 Dim basicPay = ValNoComma(drow("BasicPay"))
                 Dim deductions = 0.0
 
-                If drow("FirstTimeSalary").ToString = "1" Then
+                If drow("FirstTimeSalary").ToString = "True" Then
                     basicPay = ValNoComma(drow("RegularPay"))
                 Else
                     basicPay = ValNoComma(drow("BasicPay"))
@@ -1468,7 +1468,7 @@ Public Class PayStubForm
                 Dim thebasicpay = ValNoComma(drow("BasicPay"))
                 Dim thelessamounts = ValNoComma(0)
 
-                If drow("FirstTimeSalary").ToString = "1" Then
+                If drow("FirstTimeSalary").ToString = "True" Then
                     thebasicpay = ValNoComma(drow("RegularPay"))
                     lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
                 Else
@@ -1608,7 +1608,7 @@ Public Class PayStubForm
                 Dim thebasicpay = ValNoComma(drow("BasicPay"))
                 Dim thelessamounts = ValNoComma(0)
 
-                If drow("FirstTimeSalary").ToString = "1" Then
+                If drow("FirstTimeSalary").ToString = "True" Then
                     thebasicpay = ValNoComma(drow("RegularHoursAmount"))
                 Else
                     thebasicpay = ValNoComma(drow("BasicPay"))
@@ -1649,7 +1649,7 @@ Public Class PayStubForm
                 Dim thebasicpay = ValNoComma(drow("BasicPay"))
                 Dim thelessamounts = ValNoComma(0)
 
-                If drow("FirstTimeSalary").ToString = "1" Then
+                If drow("FirstTimeSalary").ToString = "True" Then
                     thebasicpay = ValNoComma(drow("RegularHoursAmount"))
                     lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
                 Else
