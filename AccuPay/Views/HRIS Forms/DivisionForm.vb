@@ -331,39 +331,44 @@ Public Class DivisionForm
             End If
 
 
-            SP_Division(Trim(txtname.Text), Trim(txtmainphone.Text), Trim(txtfaxno.Text), Trim(txtemailaddr.Text), Trim(txtaltemailaddr.Text),
-                Trim(txtaltphone.Text), Trim(txturl.Text), z_datetime, z_User, z_datetime, z_User, Trim(txttinno.Text),
-                Trim(txttradename.Text), Trim(cmbDivisionType.Text), Trim(txtbusinessaddr.Text), Trim(txtcontantname.Text),
-                z_OrganizationID,
-                FormatNumber(ValNoComma(txtgraceperiod.Text), 2).Replace(",", ""),
-                txtmindayperyear.Text,
-                cbophhdeductsched.Text,
-                cbohdmfdeductsched.Text,
-                cbosssdeductsched.Text,
-                cboTaxDeductSched.Text,
-                FormatNumber(ValNoComma(txtvlallow.Text), 2).Replace(",", ""),
-                FormatNumber(ValNoComma(txtslallow.Text), 2).Replace(",", ""),
-                FormatNumber(ValNoComma(txtmlallow.Text), 2).Replace(",", ""),
-                FormatNumber(ValNoComma(txtpatlallow.Text), 2).Replace(",", ""),
-                FormatNumber(ValNoComma(txtotherallow.Text), 2).Replace(",", ""),
-                cbopayfrequency.SelectedValue,
-                cbophhdeductsched2.Text,
-                cbohdmfdeductsched2.Text,
-                cbosssdeductsched2.Text,
-                cboTaxDeductSched2.Text,
-                txtminwage.Text,
-                Convert.ToInt16(chkbxautomaticOT.Checked),
-                DirectCast(cboDivisionHead.SelectedItem, Position).RowID,
-                cboxSSSDeducSchedWeekly.SelectedValue,
-                cboxPhHDeducSchedWeekly.SelectedValue,
-                cboxHDMFDeducSchedWeekly.SelectedValue,
-                cboxWTaxDeducSchedWeekly.SelectedValue,
-                cboxSSSDeducSchedWeekly1.SelectedValue,
-                cboxPhHDeducSchedWeekly1.SelectedValue,
-                cboxHDMFDeducSchedWeekly1.SelectedValue,
-                cboxWTaxDeducSchedWeekly1.SelectedValue,
-                parentDivisionId)
-            LoadDivision()
+            Dim isSaved As Boolean = SP_Division(Trim(txtname.Text), Trim(txtmainphone.Text), Trim(txtfaxno.Text), Trim(txtemailaddr.Text), Trim(txtaltemailaddr.Text),
+                                    Trim(txtaltphone.Text), Trim(txturl.Text), z_datetime, z_User, z_datetime, z_User, Trim(txttinno.Text),
+                                    Trim(txttradename.Text), Trim(cmbDivisionType.Text), Trim(txtbusinessaddr.Text), Trim(txtcontantname.Text),
+                                    z_OrganizationID,
+                                    FormatNumber(ValNoComma(txtgraceperiod.Text), 2).Replace(",", ""),
+                                    txtmindayperyear.Text,
+                                    cbophhdeductsched.Text,
+                                    cbohdmfdeductsched.Text,
+                                    cbosssdeductsched.Text,
+                                    cboTaxDeductSched.Text,
+                                    FormatNumber(ValNoComma(txtvlallow.Text), 2).Replace(",", ""),
+                                    FormatNumber(ValNoComma(txtslallow.Text), 2).Replace(",", ""),
+                                    FormatNumber(ValNoComma(txtmlallow.Text), 2).Replace(",", ""),
+                                    FormatNumber(ValNoComma(txtpatlallow.Text), 2).Replace(",", ""),
+                                    FormatNumber(ValNoComma(txtotherallow.Text), 2).Replace(",", ""),
+                                    cbopayfrequency.SelectedValue,
+                                    cbophhdeductsched2.Text,
+                                    cbohdmfdeductsched2.Text,
+                                    cbosssdeductsched2.Text,
+                                    cboTaxDeductSched2.Text,
+                                    txtminwage.Text,
+                                    Convert.ToInt16(chkbxautomaticOT.Checked),
+                                    DirectCast(cboDivisionHead.SelectedItem, Position).RowID,
+                                    cboxSSSDeducSchedWeekly.SelectedValue,
+                                    cboxPhHDeducSchedWeekly.SelectedValue,
+                                    cboxHDMFDeducSchedWeekly.SelectedValue,
+                                    cboxWTaxDeducSchedWeekly.SelectedValue,
+                                    cboxSSSDeducSchedWeekly1.SelectedValue,
+                                    cboxPhHDeducSchedWeekly1.SelectedValue,
+                                    cboxHDMFDeducSchedWeekly1.SelectedValue,
+                                    cboxWTaxDeducSchedWeekly1.SelectedValue,
+                                    parentDivisionId)
+
+            If isSaved Then
+                LoadDivision()
+                btnNew.Enabled = True
+                IsNew = 0
+            End If
             'filltreeview()
 
         ElseIf IsNew = 0 _
@@ -373,37 +378,37 @@ Public Class DivisionForm
                 Exit Sub
             End If
 
-            SP_DivisionUpdate(txtname.Text, txtmainphone.Text, txtfaxno.Text, txtemailaddr.Text, txtaltemailaddr.Text,
-                       txtaltphone.Text, txturl.Text, z_datetime, z_User, txttinno.Text,
-                       txttradename.Text, cmbDivisionType.Text, txtbusinessaddr.Text, txtcontantname.Text,
-                       currentDivisionRowID,
-                        FormatNumber(ValNoComma(txtgraceperiod.Text), 2).Replace(",", ""),
-                        txtmindayperyear.Text,
-                        cbophhdeductsched.Text,
-                        cbohdmfdeductsched.Text,
-                        cbosssdeductsched.Text,
-                        cboTaxDeductSched.Text,
-                        FormatNumber(ValNoComma(txtvlallow.Text), 2).Replace(",", ""),
-                        FormatNumber(ValNoComma(txtslallow.Text), 2).Replace(",", ""),
-                        FormatNumber(ValNoComma(txtmlallow.Text), 2).Replace(",", ""),
-                        FormatNumber(ValNoComma(txtpatlallow.Text), 2).Replace(",", ""),
-                        FormatNumber(ValNoComma(txtotherallow.Text), 2).Replace(",", ""),
-                        cbopayfrequency.SelectedValue,
-                        cbophhdeductsched2.Text,
-                        cbohdmfdeductsched2.Text,
-                        cbosssdeductsched2.Text,
-                        cboTaxDeductSched2.Text,
-                        txtminwage.Text,
-                        Convert.ToInt16(chkbxautomaticOT.Checked),
-                        DirectCast(cboDivisionHead.SelectedItem, Position).RowID,
-                        cboxSSSDeducSchedWeekly.SelectedValue,
-                        cboxPhHDeducSchedWeekly.SelectedValue,
-                        cboxHDMFDeducSchedWeekly.SelectedValue,
-                        cboxWTaxDeducSchedWeekly.SelectedValue,
-                        cboxSSSDeducSchedWeekly1.SelectedValue,
-                        cboxPhHDeducSchedWeekly1.SelectedValue,
-                        cboxHDMFDeducSchedWeekly1.SelectedValue,
-                        cboxWTaxDeducSchedWeekly1.SelectedValue)
+            Dim isSaved As Boolean = SP_DivisionUpdate(txtname.Text, txtmainphone.Text, txtfaxno.Text, txtemailaddr.Text, txtaltemailaddr.Text,
+                               txtaltphone.Text, txturl.Text, z_datetime, z_User, txttinno.Text,
+                               txttradename.Text, cmbDivisionType.Text, txtbusinessaddr.Text, txtcontantname.Text,
+                               currentDivisionRowID,
+                                FormatNumber(ValNoComma(txtgraceperiod.Text), 2).Replace(",", ""),
+                                txtmindayperyear.Text,
+                                cbophhdeductsched.Text,
+                                cbohdmfdeductsched.Text,
+                                cbosssdeductsched.Text,
+                                cboTaxDeductSched.Text,
+                                FormatNumber(ValNoComma(txtvlallow.Text), 2).Replace(",", ""),
+                                FormatNumber(ValNoComma(txtslallow.Text), 2).Replace(",", ""),
+                                FormatNumber(ValNoComma(txtmlallow.Text), 2).Replace(",", ""),
+                                FormatNumber(ValNoComma(txtpatlallow.Text), 2).Replace(",", ""),
+                                FormatNumber(ValNoComma(txtotherallow.Text), 2).Replace(",", ""),
+                                cbopayfrequency.SelectedValue,
+                                cbophhdeductsched2.Text,
+                                cbohdmfdeductsched2.Text,
+                                cbosssdeductsched2.Text,
+                                cboTaxDeductSched2.Text,
+                                txtminwage.Text,
+                                Convert.ToInt16(chkbxautomaticOT.Checked),
+                                DirectCast(cboDivisionHead.SelectedItem, Position).RowID,
+                                cboxSSSDeducSchedWeekly.SelectedValue,
+                                cboxPhHDeducSchedWeekly.SelectedValue,
+                                cboxHDMFDeducSchedWeekly.SelectedValue,
+                                cboxWTaxDeducSchedWeekly.SelectedValue,
+                                cboxSSSDeducSchedWeekly1.SelectedValue,
+                                cboxPhHDeducSchedWeekly1.SelectedValue,
+                                cboxHDMFDeducSchedWeekly1.SelectedValue,
+                                cboxWTaxDeducSchedWeekly1.SelectedValue)
 
             Dim getdv As Integer = cmbDivision.SelectedValue
 
@@ -428,11 +433,13 @@ Public Class DivisionForm
                 End If
             End If
 
-            LoadDivision()
+            If isSaved Then
+                LoadDivision()
+                btnNew.Enabled = True
+                IsNew = 0
+            End If
 
         End If
-
-        IsNew = 0
 
         btnSave.Enabled = True
 
