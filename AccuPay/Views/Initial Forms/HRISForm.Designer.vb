@@ -51,8 +51,8 @@ Partial Class HRISForm
         Me.JobLevelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.JobCategoryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PointsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PanelHRIS = New System.Windows.Forms.Panel()
         Me.EmployeeExperimentalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PanelHRIS = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -238,6 +238,13 @@ Partial Class HRISForm
         Me.PointsToolStripMenuItem.Size = New System.Drawing.Size(143, 22)
         Me.PointsToolStripMenuItem.Text = "Points"
         '
+        'EmployeeExperimentalToolStripMenuItem
+        '
+        Me.EmployeeExperimentalToolStripMenuItem.Name = "EmployeeExperimentalToolStripMenuItem"
+        Me.EmployeeExperimentalToolStripMenuItem.Size = New System.Drawing.Size(150, 20)
+        Me.EmployeeExperimentalToolStripMenuItem.Text = "Employee (Experimental)"
+        Me.EmployeeExperimentalToolStripMenuItem.Visible = False
+        '
         'PanelHRIS
         '
         Me.PanelHRIS.Dock = System.Windows.Forms.DockStyle.Fill
@@ -245,12 +252,6 @@ Partial Class HRISForm
         Me.PanelHRIS.Name = "PanelHRIS"
         Me.PanelHRIS.Size = New System.Drawing.Size(1006, 446)
         Me.PanelHRIS.TabIndex = 3
-        '
-        'EmployeeExperimentalToolStripMenuItem
-        '
-        Me.EmployeeExperimentalToolStripMenuItem.Name = "EmployeeExperimentalToolStripMenuItem"
-        Me.EmployeeExperimentalToolStripMenuItem.Size = New System.Drawing.Size(150, 20)
-        Me.EmployeeExperimentalToolStripMenuItem.Text = "Employee (Experimental)"
         '
         'HRISForm
         '

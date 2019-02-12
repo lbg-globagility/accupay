@@ -11,10 +11,10 @@ CREATE TRIGGER `BEFDEL_paystubbonus` BEFORE DELETE ON `paystubbonus` FOR EACH RO
 
 DECLARE bld_rowid
         ,loan_rowid
-        ,_index
-		  ,_count INT(11);
+        ,v_index
+		  ,v_count INT(11);
 
-SET _index = 0;
+SET v_index = 0;
 
 SELECT COUNT(bld.RowID)
 FROM bonusloandeduction bld
@@ -22,9 +22,9 @@ INNER JOIN employeeloanschedule els
         ON els.EmployeeID=OLD.EmployeeID
            AND els.RowID=bld.LoanSchedID
 WHERE bld.PayPeriodID=OLD.PayPeriodID
-INTO _count;
+INTO v_count;
 
-WHILE _index < _count DO
+WHILE v_index < v_count DO
 	
 	SELECT bld.RowID
 	,els.RowID
@@ -45,7 +45,7 @@ WHILE _index < _count DO
 	,els.TotalBalanceLeft = (els.TotalBalanceLeft + els.DeductionAmount)
 	WHERE els.RowID=loan_rowid;
 
-	SET _index = (_index + 1);
+	SET v_index = (v_index + 1);
 
 END WHILE;
 

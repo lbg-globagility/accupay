@@ -26,8 +26,8 @@ Partial Class PayrollForm
         Me.PayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BonusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.WithholdingTaxToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PanelPayroll = New System.Windows.Forms.Panel()
         Me.PaystubExperimentalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PanelPayroll = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -59,6 +59,13 @@ Partial Class PayrollForm
         Me.WithholdingTaxToolStripMenuItem.Size = New System.Drawing.Size(105, 20)
         Me.WithholdingTaxToolStripMenuItem.Text = "Withholding Tax"
         '
+        'PaystubExperimentalToolStripMenuItem
+        '
+        Me.PaystubExperimentalToolStripMenuItem.Name = "PaystubExperimentalToolStripMenuItem"
+        Me.PaystubExperimentalToolStripMenuItem.Size = New System.Drawing.Size(140, 20)
+        Me.PaystubExperimentalToolStripMenuItem.Text = "Paystub (Experimental)"
+        Me.PaystubExperimentalToolStripMenuItem.Visible = False
+        '
         'PanelPayroll
         '
         Me.PanelPayroll.Dock = System.Windows.Forms.DockStyle.Fill
@@ -66,12 +73,6 @@ Partial Class PayrollForm
         Me.PanelPayroll.Name = "PanelPayroll"
         Me.PanelPayroll.Size = New System.Drawing.Size(1006, 446)
         Me.PanelPayroll.TabIndex = 3
-        '
-        'PaystubExperimentalToolStripMenuItem
-        '
-        Me.PaystubExperimentalToolStripMenuItem.Name = "PaystubExperimentalToolStripMenuItem"
-        Me.PaystubExperimentalToolStripMenuItem.Size = New System.Drawing.Size(140, 20)
-        Me.PaystubExperimentalToolStripMenuItem.Text = "Paystub (Experimental)"
         '
         'PayrollForm
         '

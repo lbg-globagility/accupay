@@ -31,13 +31,13 @@ DECLARE regularPay DECIMAL(15, 4);
 DECLARE overtimePay DECIMAL(15, 4);
 DECLARE nightDiffPay DECIMAL(15, 4);
 DECLARE nightDiffOvertimePay DECIMAL(15, 4);
-DECLARE _restDayPay DECIMAL(15, 4);
-DECLARE _restDayOTPay DECIMAL(15, 4);
+DECLARE v_restDayPay DECIMAL(15, 4);
+DECLARE v_restDayOTPay DECIMAL(15, 4);
 DECLARE leavePay DECIMAL(15, 4);
-DECLARE _specialHolidayPay DECIMAL(15, 4);
-DECLARE _specialHolidayOTPay DECIMAL(15, 4);
-DECLARE _regularHolidayPay DECIMAL(15, 4);
-DECLARE _regularHolidayOTPay DECIMAL(15, 4);
+DECLARE v_specialHolidayPay DECIMAL(15, 4);
+DECLARE v_specialHolidayOTPay DECIMAL(15, 4);
+DECLARE v_regularHolidayPay DECIMAL(15, 4);
+DECLARE v_regularHolidayOTPay DECIMAL(15, 4);
 DECLARE holidayPay DECIMAL(15, 4);
 DECLARE lateDeduction DECIMAL(15, 4);
 DECLARE undertimeDeduction DECIMAL(15, 4);
@@ -104,12 +104,12 @@ INTO
     overtimePay,
     nightDiffPay,
     nightDiffOvertimePay,
-    _restDayPay,
-    _restDayOTPay,
-    _specialHolidayPay,
-    _specialHolidayOTPay,
-    _regularHolidayPay,
-    _regularHolidayOTPay,
+    v_restDayPay,
+    v_restDayOTPay,
+    v_specialHolidayPay,
+    v_specialHolidayOTPay,
+    v_regularHolidayPay,
+    v_regularHolidayOTPay,
     holidayPay,
     leavePay,
     lateDeduction,
@@ -188,12 +188,12 @@ ELSEIF e_type = 'Monthly' AND NOT IsFirstTimeSalary THEN
         overtimePay +
         nightDiffPay +
         nightDiffOvertimePay +
-        _restDayPay +
-        _restDayOTPay +
-        _specialHolidayPay +
-        _specialHolidayOTPay +
-        _regularHolidayPay +
-        _regularHolidayOTPay;
+        v_restDayPay +
+        v_restDayOTPay +
+        v_specialHolidayPay +
+        v_specialHolidayOTPay +
+        v_regularHolidayPay +
+        v_regularHolidayOTPay;
 
     SET totalDeductions = lateDeduction + undertimeDeduction + absenceDeduction;
 
@@ -298,12 +298,12 @@ VALUES (
     overtimePay,
     nightDiffPay,
     nightDiffOvertimePay,
-    _restDayPay,
+    v_restDayPay,
     restDayOTPay,
-    _specialHolidayPay,
-    _specialHolidayOTPay,
-    _regularHolidayPay,
-    _regularHolidayOTPay,
+    v_specialHolidayPay,
+    v_specialHolidayOTPay,
+    v_regularHolidayPay,
+    v_regularHolidayOTPay,
     holidayPay,
     leavePay,
     lateDeduction,
@@ -339,12 +339,12 @@ UPDATE
     OvertimePay = overtimePay,
     NightDiffPay = nightDiffPay,
     NightDiffOvertimePay = nightDiffOvertimePay,
-    RestDayPay = _restDayPay,
-    RestDayOTPay = _restDayOTPay,
-    SpecialHolidayPay = _specialHolidayPay,
-    SpecialHolidayOTPay = _specialHolidayOTPay,
-    RegularHolidayPay = _regularHolidayPay,
-    RegularHolidayOTPay = _regularHolidayOTPay,
+    RestDayPay = v_restDayPay,
+    RestDayOTPay = v_restDayOTPay,
+    SpecialHolidayPay = v_specialHolidayPay,
+    SpecialHolidayOTPay = v_specialHolidayOTPay,
+    RegularHolidayPay = v_regularHolidayPay,
+    RegularHolidayOTPay = v_regularHolidayOTPay,
     HolidayPay = holidayPay,
     LeavePay = leavePay,
     LateDeduction = lateDeduction,
