@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
+Imports AccuPay.Repository
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Win32
@@ -1361,14 +1362,17 @@ Public Class TimeLogsForm
 
                 Dim timeLogs = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
 
+                'Dim timeLogRepo = New TimeLogRepository(context)
                 For Each timelog In timeLogs
+                    'timeLogRepo.Add(timelog)
                     context.TimeLogs.Add(timelog)
                 Next
 
                 context.SaveChanges()
             End Using
         Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Name))
+            _logger.Error("NewTimeEntryAlternateLineImport", ex)
+            MsgBox("Something went wrong while loading the time logs. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Import Logs")
         End Try
 
     End Sub
