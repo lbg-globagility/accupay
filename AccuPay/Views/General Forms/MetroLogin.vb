@@ -238,12 +238,14 @@ Public Class MetroLogin
     End Sub
 
     Private Sub MetroLogin_Load(sender As Object, e As EventArgs) Handles Me.Load
-
         If Debugger.IsAttached Then
-            txtbxUserID.Text = "admin"
-            txtbxPword.Text = "admin"
+            AssignDefaultCredentials()
         End If
+    End Sub
 
+    Public Sub AssignDefaultCredentials()
+        txtbxUserID.Text = "admin"
+        txtbxPword.Text = "admin"
     End Sub
 
     Private Sub cbxorganiz_DropDown(sender As Object, e As EventArgs) Handles cbxorganiz.DropDown

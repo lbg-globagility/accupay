@@ -434,7 +434,7 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadAllowances() As Task
-        Dim isNotTaxable As Integer = 0
+        Dim isNotTaxable As String = "0"
         Try
             Using context = New PayrollContext(logger)
                 ' Retrieve all allowances whose begin and end date spans the cutoff dates.
@@ -452,7 +452,7 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadTaxableAllowances() As Task
-        Dim isTaxable As Integer = 1
+        Dim isTaxable As String = "1"
         Try
             Using context = New PayrollContext(logger)
                 Dim query = context.Allowances.Include(Function(a) a.Product).

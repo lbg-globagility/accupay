@@ -1,2 +1,5 @@
 ALTER TABLE `paystub`
 	ADD COLUMN `TotalTaxableAllowance` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `TotalAllowance`;
+
+ALTER TABLE `paystubactual`
+	ADD COLUMN `TotalTaxableAllowance` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `TotalAllowance`;

@@ -32,7 +32,11 @@ Namespace Global.AccuPay.Payroll
                 Else
                     currentTaxableIncome = paystub.BasicPay
                 End If
+
             End If
+
+            'Adds those taxable allowances to the taxable income
+            currentTaxableIncome += paystub.TotalTaxableAllowance
 
             currentTaxableIncome = currentTaxableIncome - paystub.GovernmentDeductions
 
