@@ -243,7 +243,6 @@ Partial Class HRISForm
         Me.EmployeeExperimentalToolStripMenuItem.Name = "EmployeeExperimentalToolStripMenuItem"
         Me.EmployeeExperimentalToolStripMenuItem.Size = New System.Drawing.Size(150, 20)
         Me.EmployeeExperimentalToolStripMenuItem.Text = "Employee (Experimental)"
-        Me.EmployeeExperimentalToolStripMenuItem.Visible = False
         '
         'PanelHRIS
         '
