@@ -1362,9 +1362,7 @@ Public Class TimeLogsForm
 
                 Dim timeLogs = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
 
-                'Dim timeLogRepo = New TimeLogRepository(context)
                 For Each timelog In timeLogs
-                    'timeLogRepo.Add(timelog)
                     context.TimeLogs.Add(timelog)
                 Next
 
