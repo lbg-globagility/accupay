@@ -94,7 +94,8 @@ Public Class DayCalculator
 
         timeEntry.EmployeeShiftID = currentShift.ShiftSchedule?.RowID
 
-        Dim hasTimeLog = timeLog IsNot Nothing Or officialBusiness IsNot Nothing
+        Dim hasTimeLog = (timeLog?.TimeIn IsNot Nothing And timeLog?.TimeOut IsNot Nothing) Or
+            officialBusiness IsNot Nothing
         Dim payrate = _payrateCalendar.Find(currentDate)
 
         Dim logPeriod As TimePeriod = Nothing
@@ -425,7 +426,14 @@ Public Class DayCalculator
             timeEntry.SetLeaveHours(leave.LeaveType, leaveHours)
         End If
 
+        Dim hasNoTimeLog = Not hasTimeLog
+
         If leaves.Any() Then
+            If hasNoTimeLog Then
+                timeEntry.UndertimeHours = 0
+                Return
+            End If
+
             Dim requiredHours = currentShift.WorkingHours
             Dim missingHours = requiredHours - (timeEntry.TotalLeaveHours + timeEntry.RegularHours)
 
