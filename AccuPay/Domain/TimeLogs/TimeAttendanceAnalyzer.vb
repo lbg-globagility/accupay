@@ -144,19 +144,22 @@ Public Class TimeAttendanceAnalyzer
         Dim shiftMaxBound As Date
 
         If currentShift Is Nothing OrElse currentShift.Shift Is Nothing Then
-            'replace the creation of timespan with a more elegant way
             shiftMinBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0)
             shiftMaxBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59)
 
         Else
             Dim shiftTime = currentShift.Shift
-            Dim nextShiftTime = nextShift.Shift
-
             Dim minBoundTime = shiftTime.TimeTo.Add(TimeSpan.FromHours(-4))
-            Dim maxBoundTime = nextShiftTime.TimeFrom.Add(TimeSpan.FromHours(-4))
-
             shiftMinBound = currentDate.Add(minBoundTime)
-            shiftMaxBound = currentDate.AddDays(1).Add(maxBoundTime).AddSeconds(-1)
+
+            '(nextShift Is Nothing) is already handled by the caller of the caller
+            If nextShift.Shift Is Nothing Then
+                shiftMaxBound = shiftMinBound.AddDays(1)
+            Else
+                Dim nextShiftTime = nextShift.Shift
+                Dim maxBoundTime = nextShiftTime.TimeFrom.Add(TimeSpan.FromHours(-4))
+                shiftMaxBound = currentDate.AddDays(1).Add(maxBoundTime).AddSeconds(-1)
+            End If
         End If
 
         Return (shiftMinBound, shiftMaxBound)
