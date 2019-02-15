@@ -149,14 +149,19 @@ Public Class TimeAttendanceAnalyzer
             shiftMaxBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59)
 
         Else
-            Dim shiftTime = currentShift.Shift
-            Dim nextShiftTime = nextShift.Shift
+            Try
+                Dim shiftTime = currentShift.Shift
+                Dim nextShiftTime = nextShift.Shift
 
-            Dim minBoundTime = shiftTime.TimeTo.Add(TimeSpan.FromHours(-4))
-            Dim maxBoundTime = nextShiftTime.TimeFrom.Add(TimeSpan.FromHours(-4))
+                Dim minBoundTime = shiftTime.TimeTo.Add(TimeSpan.FromHours(-4))
+                Dim maxBoundTime = nextShiftTime.TimeFrom.Add(TimeSpan.FromHours(-4))
 
-            shiftMinBound = currentDate.Add(minBoundTime)
-            shiftMaxBound = currentDate.AddDays(1).Add(maxBoundTime).AddSeconds(-1)
+                shiftMinBound = currentDate.Add(minBoundTime)
+                shiftMaxBound = currentDate.AddDays(1).Add(maxBoundTime).AddSeconds(-1)
+            Catch ex As Exception
+                MsgBox(ex)
+            End Try
+
         End If
 
         Return (shiftMinBound, shiftMaxBound)

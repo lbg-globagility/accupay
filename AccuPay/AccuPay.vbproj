@@ -377,7 +377,6 @@
     <Compile Include="Reports\Reports\Providers\Employee201ReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LoanLedgerReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\PayrollLedgerExcelFormatReportProvider.vb" />
-    <Compile Include="Repository\TimeLogRepository.vb" />
     <Compile Include="Views\Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
     </Compile>
@@ -699,6 +698,12 @@
     </Compile>
     <Compile Include="Views\Employees\SalaryTab2.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Loans\EmployeeLoansForm.Designer.vb">
+      <DependentUpon>EmployeeLoansForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Loans\EmployeeLoansForm.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
@@ -1840,6 +1845,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\LoanScheduleForm.resx">
       <DependentUpon>LoanScheduleForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\Loans\EmployeeLoansForm.resx">
+      <DependentUpon>EmployeeLoansForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Initial Forms\AboutUs.resx">
       <DependentUpon>AboutUs.vb</DependentUpon>

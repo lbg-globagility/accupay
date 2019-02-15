@@ -53,13 +53,14 @@ Partial Class HRISForm
         Me.PointsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EmployeeExperimentalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelHRIS = New System.Windows.Forms.Panel()
+        Me.LoansToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmployeeToolStripMenuItem, Me.DivisionToolStripMenuItem, Me.PositionToolStripMenuItem, Me.JobLevelToolStripMenuItem, Me.EmployeeExperimentalToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmployeeToolStripMenuItem, Me.DivisionToolStripMenuItem, Me.PositionToolStripMenuItem, Me.JobLevelToolStripMenuItem, Me.EmployeeExperimentalToolStripMenuItem, Me.LoansToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -229,13 +230,13 @@ Partial Class HRISForm
         'JobCategoryToolStripMenuItem
         '
         Me.JobCategoryToolStripMenuItem.Name = "JobCategoryToolStripMenuItem"
-        Me.JobCategoryToolStripMenuItem.Size = New System.Drawing.Size(143, 22)
+        Me.JobCategoryToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.JobCategoryToolStripMenuItem.Text = "Job Category"
         '
         'PointsToolStripMenuItem
         '
         Me.PointsToolStripMenuItem.Name = "PointsToolStripMenuItem"
-        Me.PointsToolStripMenuItem.Size = New System.Drawing.Size(143, 22)
+        Me.PointsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PointsToolStripMenuItem.Text = "Points"
         '
         'EmployeeExperimentalToolStripMenuItem
@@ -251,6 +252,12 @@ Partial Class HRISForm
         Me.PanelHRIS.Name = "PanelHRIS"
         Me.PanelHRIS.Size = New System.Drawing.Size(1006, 446)
         Me.PanelHRIS.TabIndex = 3
+        '
+        'LoansToolStripMenuItem
+        '
+        Me.LoansToolStripMenuItem.Name = "LoansToolStripMenuItem"
+        Me.LoansToolStripMenuItem.Size = New System.Drawing.Size(50, 20)
+        Me.LoansToolStripMenuItem.Text = "Loans"
         '
         'HRISForm
         '
@@ -300,4 +307,5 @@ Partial Class HRISForm
     Friend WithEvents JobCategoryToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PointsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents EmployeeExperimentalToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents LoansToolStripMenuItem As ToolStripMenuItem
 End Class
