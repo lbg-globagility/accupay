@@ -2,15 +2,16 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports AccuPay.Entity
+Imports AccuPay.SimplifiedEntities
 
 Namespace Global.AccuPay.Entity
 
     <Table("employee")>
     Public Class Employee
+        Implements IEmployeeBase
 
         <Key>
-        Public Property RowID As Integer?
+        Public Property RowID As Integer? Implements IEmployeeBase.RowID
 
         Public Property Created As Date
 
@@ -28,16 +29,16 @@ Namespace Global.AccuPay.Entity
 
         Public Property Salutation As String
 
-        Public Property FirstName As String
+        Public Property FirstName As String Implements IEmployeeBase.FirstName
 
         Public Property MiddleName As String
 
-        Public Property LastName As String
+        Public Property LastName As String Implements IEmployeeBase.LastName
 
         Public Property Surname As String
 
         <Column("EmployeeID")>
-        Public Property EmployeeNo As String
+        Public Property EmployeeNo As String Implements IEmployeeBase.EmployeeID
 
         Public Property TinNo As String
 
