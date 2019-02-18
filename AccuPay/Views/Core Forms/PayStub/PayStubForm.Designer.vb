@@ -4202,9 +4202,9 @@ Partial Class PayStubForm
         Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label12.Location = New System.Drawing.Point(14, 447)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(106, 13)
+        Me.Label12.Size = New System.Drawing.Size(176, 13)
         Me.Label12.TabIndex = 199
-        Me.Label12.Text = "Total Allowance :"
+        Me.Label12.Text = "Total non-taxable Allowance :"
         '
         'Label7
         '
