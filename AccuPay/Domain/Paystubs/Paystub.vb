@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
@@ -108,6 +108,9 @@ Namespace Global.AccuPay.Entity
 
         <Column("TotalGrossSalary")>
         Public Property GrossPay As Decimal
+
+        <Column("DeferredTaxableIncome")>
+        Public Property DeferredTaxableIncome As Decimal
 
         <Column("TotalTaxableSalary")>
         Public Property TaxableIncome As Decimal

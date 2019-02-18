@@ -250,6 +250,8 @@ Public Class MetroLogin
 
     Private Sub cbxorganiz_DropDown(sender As Object, e As EventArgs) Handles cbxorganiz.DropDown
 
+        'TODO: this code has an error sometimes when there is no organization
+
         Static cb_font As Font = cbxorganiz.Font
 
         'Dim cb_width As Integer = cbxorganiz.DropDownWidth

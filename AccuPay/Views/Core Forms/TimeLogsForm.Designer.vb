@@ -436,6 +436,7 @@ Partial Class TimeLogsForm
         Me.tsbtnNew.Name = "tsbtnNew"
         Me.tsbtnNew.Size = New System.Drawing.Size(120, 22)
         Me.tsbtnNew.Text = "Import time e&ntry"
+        Me.tsbtnNew.Visible = False
         '
         'tsbtnNewExperimental
         '

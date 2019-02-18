@@ -30,8 +30,12 @@ Public Class TimeAttendanceAnalyzer
 
             Dim employeeLogs = logGroup.ToList()
 
+            Dim currentEmployeeShifts = employeeShifts.
+                                        Where(Function(s) s.EmployeeID.Value = employee.RowID.Value).
+                                        ToList
+
             timeLogs.AddRange(
-                GetEmployeeTimeLogs(employee, employeeLogs, employeeShifts))
+                GetEmployeeTimeLogs(employee, employeeLogs, currentEmployeeShifts))
         Next
 
         Return timeLogs
@@ -81,7 +85,9 @@ Public Class TimeAttendanceAnalyzer
             Where(Function(l) timeInBounds.Min <= l And l <= timeInBounds.Max)
 
         If logIns.Any() Then
-            Return logIns.Min().TimeOfDay
+            Dim timeIn = logIns.Min()
+            sortedLogs.Remove(timeIn)
+            Return timeIn.TimeOfDay
         Else
             Return Nothing
         End If
@@ -93,33 +99,68 @@ Public Class TimeAttendanceAnalyzer
         Dim logOuts = sortedLogs.
                 Where(Function(l) timeOutBounds.Min <= l And l <= timeOutBounds.Max)
 
+
         If logOuts.Any() Then
-            Return logOuts.Max().TimeOfDay
+            Dim timeOut = logOuts.Max()
+            sortedLogs.Remove(timeOut)
+            Return timeOut.TimeOfDay
         Else
             Return Nothing
         End If
     End Function
 
     Private Function GetShiftBoundsForTimeIn(currentDate As Date, currentShift As ShiftSchedule) As (Min As Date, Max As Date)
-        Dim shiftTime = currentShift.Shift
-        Dim timeFromMinBound = shiftTime.TimeFrom.Add(TimeSpan.FromHours(-4))
-        Dim timeFromMaxBound = shiftTime.TimeFrom.Add(TimeSpan.FromHours(4))
 
-        Dim shiftMinBound = currentDate.Add(timeFromMinBound)
-        Dim shiftMaxBound = currentDate.Add(timeFromMaxBound)
+        Dim shiftMinBound As Date
+        Dim shiftMaxBound As Date
+
+        If currentShift Is Nothing OrElse currentShift.Shift Is Nothing Then
+            shiftMinBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0)
+            shiftMaxBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59)
+
+        Else
+            Dim shiftTime = currentShift.Shift
+            Dim timeFromMinBound = shiftTime.TimeFrom.Add(TimeSpan.FromHours(-4))
+            Dim timeFromMaxBound = shiftTime.TimeFrom.Add(TimeSpan.FromHours(4))
+
+            shiftMinBound = currentDate.Add(timeFromMinBound)
+            shiftMaxBound = currentDate.Add(timeFromMaxBound)
+
+        End If
 
         Return (shiftMinBound, shiftMaxBound)
     End Function
 
     Private Function GetShiftBoundsForTimeOut(currentDate As Date, currentShift As ShiftSchedule, nextShift As ShiftSchedule) As (Min As Date, Max As Date)
-        Dim shiftTime = currentShift.Shift
-        Dim nextShiftTime = nextShift.Shift
+        'Nag eeror dito kapag walang shift ang employee
+        'TODO: handle that error
+        'Should we prompt 
 
-        Dim minBoundTime = shiftTime.TimeTo.Add(TimeSpan.FromHours(-4))
-        Dim maxBoundTime = nextShiftTime.TimeFrom.Add(TimeSpan.FromHours(-4))
+        'if walang shift
+        'min bound 12:00 am of current day
+        'max bound 11:59 pm of current day
 
-        Dim shiftMinBound = currentDate.Add(minBoundTime)
-        Dim shiftMaxBound = currentDate.AddDays(1).Add(maxBoundTime).AddSeconds(-1)
+        Dim shiftMinBound As Date
+        Dim shiftMaxBound As Date
+
+        If currentShift Is Nothing OrElse currentShift.Shift Is Nothing Then
+            shiftMinBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0)
+            shiftMaxBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59)
+
+        Else
+            Dim shiftTime = currentShift.Shift
+            Dim minBoundTime = shiftTime.TimeTo.Add(TimeSpan.FromHours(-4))
+            shiftMinBound = currentDate.Add(minBoundTime)
+
+            '(nextShift Is Nothing) is already handled by the caller of the caller
+            If nextShift.Shift Is Nothing Then
+                shiftMaxBound = shiftMinBound.AddDays(1)
+            Else
+                Dim nextShiftTime = nextShift.Shift
+                Dim maxBoundTime = nextShiftTime.TimeFrom.Add(TimeSpan.FromHours(-4))
+                shiftMaxBound = currentDate.AddDays(1).Add(maxBoundTime).AddSeconds(-1)
+            End If
+        End If
 
         Return (shiftMinBound, shiftMaxBound)
     End Function

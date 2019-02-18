@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
+Imports AccuPay.Repository
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Win32
@@ -31,7 +32,21 @@ Public Class TimeLogsForm
     Private str_query_insupd_timeentrylogs As String =
         "SELECT INSUPD_timeentrylogs(?og_id, ?emp_unique_key, ?timestamp_log, ?max_importid);"
 
+    'do this habang di pa 100% stable ang new import
+    Private showNewImport As Boolean
+
     Private Sub Form8_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        showNewImport = True
+
+        If showNewImport Then
+            tsbtnNew.Visible = 0
+            tsbtnNewExperimental.Visible = 1
+        Else
+            tsbtnNew.Visible = 1
+            tsbtnNewExperimental.Visible = 0
+        End If
+
         With dattabLogs.Columns
             .Add("logging")
 
@@ -85,8 +100,12 @@ Public Class TimeLogsForm
 
         If formuserprivilege.Count = 0 Then
 
-            tsbtnNew.Visible = 0
-            'tsbtnNewExperimental.Visible = 0
+            If showNewImport Then
+                tsbtnNewExperimental.Visible = 0
+            Else
+                tsbtnNew.Visible = 0
+            End If
+
             tsbtnSave.Visible = 0
             tsbtndel.Visible = 0
 
@@ -94,19 +113,32 @@ Public Class TimeLogsForm
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
-                    tsbtnNew.Visible = 0
-                    'tsbtnNewExperimental.Visible = 0
+                    If showNewImport Then
+                        tsbtnNewExperimental.Visible = 0
+                    Else
+                        tsbtnNew.Visible = 0
+                    End If
+
                     tsbtnSave.Visible = 0
                     tsbtndel.Visible = 0
                     dontUpdate = 1
                     Exit For
                 Else
                     If drow("Creates").ToString = "N" Then
-                        tsbtnNew.Visible = 0
-                        'tsbtnNewExperimental.Visible = 0
+
+
+                        If showNewImport Then
+                            tsbtnNewExperimental.Visible = 0
+                        Else
+                            tsbtnNew.Visible = 0
+                        End If
                     Else
-                        tsbtnNew.Visible = 1
-                        'tsbtnNewExperimental.Visible = 1
+
+                        If showNewImport Then
+                            tsbtnNewExperimental.Visible = 1
+                        Else
+                            tsbtnNew.Visible = 1
+                        End If
                     End If
 
                     If drow("Deleting").ToString = "N" Then
@@ -1337,13 +1369,14 @@ Public Class TimeLogsForm
                 context.SaveChanges()
             End Using
         Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Name))
+            _logger.Error("NewTimeEntryAlternateLineImport", ex)
+            MsgBox("Something went wrong while loading the time logs. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Import Logs")
         End Try
 
     End Sub
 
     Private Async Function GetEmployeesFromLogGroup(context As PayrollContext, logsGroupedByEmployee As List(Of IGrouping(Of String, TimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
-        Dim employeeNumbersArray(logsGroupedByEmployee.Count) As String
+        Dim employeeNumbersArray(logsGroupedByEmployee.Count - 1) As String
 
         For index = 0 To logsGroupedByEmployee.Count - 1
             employeeNumbersArray(index) = logsGroupedByEmployee(index).Key
@@ -1351,6 +1384,7 @@ Public Class TimeLogsForm
 
         Return Await context.Employees.
                         Where(Function(e) employeeNumbersArray.Contains(e.EmployeeNo)).
+                        Where(Function(e) e.OrganizationID = z_OrganizationID).
                         ToListAsync
     End Function
 
