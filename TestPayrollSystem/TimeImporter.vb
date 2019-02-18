@@ -49,12 +49,10 @@ Public Class TimeImporter
     End Sub
 
     <Test>
-    Public Sub ShouldImportWithoutShifts()
+    Public Sub ShouldImport_WithoutShifts()
         Dim importer = New TimeLogsReader()
 
         Dim filename = _projectPath & "\_timelogs_test.dat"
-        'Dim filename = "E:\Stuff\accupay\_timelogs\cinema.txt"
-        'Dim filename = "E:\Stuff\accupay\_timelogs\fourlinq.dat"
 
         Dim importOutput = importer.Import(filename)
         Dim logs = importOutput.Logs
@@ -75,6 +73,32 @@ Public Class TimeImporter
         AssertTimeLog(results.Item(4), "03:00:00", "23:59:00", "2018-06-05")
         AssertTimeLog(results.Item(5), "01:00:00", "23:00:00", "2018-06-06")
         AssertTimeLog(results.Item(6), "02:00:00", "23:30:00", "2018-06-07")
+    End Sub
+
+    <Test>
+    Public Sub ShouldImport_WithNextShiftScheduleWithoutShift()
+        Dim importer = New TimeLogsReader()
+
+        Dim filename = _projectPath & "\_timelogs_test.dat"
+
+        Dim importOutput = importer.Import(filename)
+        Dim logs = importOutput.Logs
+
+        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
+
+        Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules_WithNextShiftScheduleWithoutShift()
+        Dim employees As List(Of Employee) = GetSampleEmployees()
+
+        Dim analyzer = New TimeAttendanceAnalyzer()
+
+        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
+        Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
+        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
+        AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
+        AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
+        AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
+        AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
+        AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
     End Sub
 
     <Test>
@@ -261,6 +285,116 @@ Public Class TimeImporter
                 .TimeFrom = TimeSpan.Parse("08:00:00"),
                 .TimeTo = TimeSpan.Parse("17:00:00")
             }
+        }
+        employeeShifts.Add(employeeShift)
+
+        Return employeeShifts
+    End Function
+
+    Private Function GetSampleShiftSchedules_WithNextShiftScheduleWithoutShift() As List(Of ShiftSchedule)
+        Dim employeeShifts = New List(Of ShiftSchedule)
+
+        Dim employeeShift As ShiftSchedule
+
+        Dim employeeId As Integer? = 1
+        Dim employeeId_2 As Integer? = 2
+
+        employeeShift = New ShiftSchedule() With {
+            .EmployeeID = employeeId,
+            .EffectiveFrom = Date.Parse("2018-06-01"),
+            .EffectiveTo = Date.Parse("2018-06-01"),
+            .Shift = New Shift() With {
+                .TimeFrom = TimeSpan.Parse("08:00:00"),
+                .TimeTo = TimeSpan.Parse("17:00:00")
+            }
+        }
+
+        employeeShifts.Add(employeeShift)
+
+        employeeShift = New ShiftSchedule() With {
+            .EmployeeID = employeeId,
+            .EffectiveFrom = Date.Parse("2018-06-02"),
+            .EffectiveTo = Date.Parse("2018-06-02"),
+            .Shift = New Shift() With {
+                .TimeFrom = TimeSpan.Parse("08:00:00"),
+                .TimeTo = TimeSpan.Parse("17:00:00")
+            }
+        }
+
+        employeeShifts.Add(employeeShift)
+
+        employeeShift = New ShiftSchedule() With {
+            .EmployeeID = employeeId_2,
+            .EffectiveFrom = Date.Parse("2018-06-01"),
+            .EffectiveTo = Date.Parse("2018-06-01"),
+            .Shift = New Shift() With {
+                .TimeFrom = TimeSpan.Parse("08:00:00"),
+                .TimeTo = TimeSpan.Parse("17:00:00")
+            }
+        }
+
+        employeeShifts.Add(employeeShift)
+
+        employeeShift = New ShiftSchedule() With {
+            .EmployeeID = employeeId_2,
+            .EffectiveFrom = Date.Parse("2018-06-02"),
+            .EffectiveTo = Date.Parse("2018-06-02"),
+            .Shift = New Shift() With {
+                .TimeFrom = TimeSpan.Parse("08:00:00"),
+                .TimeTo = TimeSpan.Parse("17:00:00")
+            }
+        }
+
+        employeeShifts.Add(employeeShift)
+
+        employeeShift = New ShiftSchedule() With {
+            .EmployeeID = employeeId,
+            .EffectiveFrom = Date.Parse("2018-06-03"),
+            .EffectiveTo = Date.Parse("2018-06-03"),
+            .Shift = New Shift() With {
+                .TimeFrom = TimeSpan.Parse("08:00:00"),
+                .TimeTo = TimeSpan.Parse("17:00:00")
+            }
+        }
+
+        employeeShifts.Add(employeeShift)
+
+        employeeShift = New ShiftSchedule() With {
+            .EmployeeID = employeeId,
+            .EffectiveFrom = Date.Parse("2018-06-04"),
+            .EffectiveTo = Date.Parse("2018-06-04"),
+            .Shift = New Shift() With {
+                .TimeFrom = TimeSpan.Parse("08:00:00"),
+                .TimeTo = TimeSpan.Parse("17:00:00")
+            }
+        }
+        employeeShifts.Add(employeeShift)
+
+        employeeShift = New ShiftSchedule() With {
+            .EmployeeID = employeeId,
+            .EffectiveFrom = Date.Parse("2018-06-05"),
+            .EffectiveTo = Date.Parse("2018-06-05"),
+            .Shift = New Shift() With {
+                .TimeFrom = TimeSpan.Parse("08:00:00"),
+                .TimeTo = TimeSpan.Parse("17:00:00")
+            }
+        }
+        employeeShifts.Add(employeeShift)
+        employeeShift = New ShiftSchedule() With {
+            .EmployeeID = employeeId,
+            .EffectiveFrom = Date.Parse("2018-06-06"),
+            .EffectiveTo = Date.Parse("2018-06-06"),
+            .Shift = New Shift() With {
+                .TimeFrom = TimeSpan.Parse("08:00:00"),
+                .TimeTo = TimeSpan.Parse("17:00:00")
+            }
+        }
+        employeeShifts.Add(employeeShift)
+        employeeShift = New ShiftSchedule() With {
+            .EmployeeID = employeeId,
+            .EffectiveFrom = Date.Parse("2018-06-07"),
+            .EffectiveTo = Date.Parse("2018-06-07"),
+            .Shift = Nothing
         }
         employeeShifts.Add(employeeShift)
 
