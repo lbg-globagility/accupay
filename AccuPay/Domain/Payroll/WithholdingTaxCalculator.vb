@@ -29,14 +29,15 @@ Namespace Global.AccuPay.Payroll
 
                 If taxablePolicy = "Gross Income" Then
                     currentTaxableIncome = paystub.TotalEarnings
+
+                    'Adds those taxable allowances to the taxable income
+                    currentTaxableIncome += paystub.TotalTaxableAllowance
                 Else
                     currentTaxableIncome = paystub.BasicPay
                 End If
 
             End If
 
-            'Adds those taxable allowances to the taxable income
-            currentTaxableIncome += paystub.TotalTaxableAllowance
 
             currentTaxableIncome = currentTaxableIncome - paystub.GovernmentDeductions
 
