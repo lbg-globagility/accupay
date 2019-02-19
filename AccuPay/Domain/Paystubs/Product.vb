@@ -148,8 +148,8 @@ Namespace Global.AccuPay.Entity
         <NotMapped>
         Public Overridable Property COAId As Integer?
 
-        <NotMapped>
-        Public Overridable Property ActiveData As Char
+        '<NotMapped>
+        Public Overridable Property ActiveData As Boolean
 
         Public Overridable ReadOnly Property IsTaxable As Boolean
             Get
