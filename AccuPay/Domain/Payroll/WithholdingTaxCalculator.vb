@@ -99,7 +99,7 @@ Namespace Global.AccuPay.Payroll
 
         Private Function GetCurrentMinimumWage(employee As Employee) As Decimal
             Dim divisionMinimumWage = _divisionMinimumWages?.
-                FirstOrDefault(Function(t) CBool(t.DivisionID = employee.Position?.DivisionID))
+                FirstOrDefault(Function(t) Nullable.Equals(t.DivisionID, employee.Position?.DivisionID))
             Dim minimumWage = If(divisionMinimumWage?.Amount, 0)
 
             Return minimumWage
