@@ -64,6 +64,8 @@ Public Class PayrollGeneration
 
     Private _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
+    Private _taxableAllowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
+
     Private _actualtimeentries As ICollection(Of ActualTimeEntry)
 
     Sub New(employee As Employee,
@@ -264,6 +266,9 @@ Public Class PayrollGeneration
                 context.Set(Of AllowanceItem).RemoveRange(_paystub.AllowanceItems)
 
                 _paystub.AllowanceItems = _allowanceItems
+                For Each aItem In _taxableAllowanceItems
+                    _paystub.AllowanceItems.Add(aItem)
+                Next
 
                 UpdatePaystubItems(context)
 
@@ -438,10 +443,10 @@ Public Class PayrollGeneration
                 item = Nothing
             End If
 
-            _allowanceItems.Add(item)
+            _taxableAllowanceItems.Add(item)
         Next
 
-        _paystub.TotalTaxableAllowance = AccuMath.CommercialRound(_allowanceItems.Sum(Function(a) a.Amount))
+        _paystub.TotalTaxableAllowance = AccuMath.CommercialRound(_taxableAllowanceItems.Sum(Function(a) a.Amount))
     End Sub
 
     Private Function CalculateOneTimeAllowances(allowance As Allowance) As Decimal
