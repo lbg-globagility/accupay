@@ -22,7 +22,7 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property CatalogID As Integer?
 
-        'Public Overridable Property LastUpd As Date?
+        Public Overridable Property LastUpd As Date?
     End Class
 
 End Namespace

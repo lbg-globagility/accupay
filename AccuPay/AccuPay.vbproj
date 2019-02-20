@@ -356,6 +356,11 @@
     <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
     <Compile Include="Core\Utilities\TypeTools.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
+    <Compile Include="Repositories\CategoryRepository.vb" />
+    <Compile Include="Repositories\ListOfValueRepository.vb" />
+    <Compile Include="Repositories\LoanRepository.vb" />
+    <Compile Include="Repositories\LoanScheduleRepository.vb" />
+    <Compile Include="Repositories\ProductRepository.vb" />
     <Compile Include="SimplifiedEntities\GridView\Employee.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
