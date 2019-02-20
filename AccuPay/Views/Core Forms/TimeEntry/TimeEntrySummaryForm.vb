@@ -248,7 +248,15 @@ Public Class TimeEntrySummaryForm
         Return years
     End Function
 
+<<<<<<< HEAD
     Private Async Function GetTimeEntries(employee As Simplified.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+=======
+    Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+        'WARN: this has a possibility to show wrong data since
+        'we are joining employeetimeentrydetails by LastUpd
+        'maybe this query should be replaced
+
+>>>>>>> master
         Dim sql = <![CDATA[
             SELECT
                 ete.RowID,
@@ -299,7 +307,7 @@ Public Class TimeEntrySummaryForm
                 payrate.PayType
             FROM employeetimeentry ete
             LEFT JOIN (
-                SELECT EmployeeID, Date, MAX(RowID) RowID
+                SELECT EmployeeID, Date, MAX(LastUpd) LastUpd, RowID
                 FROM employeetimeentrydetails
                 WHERE Date BETWEEN @DateFrom AND @DateTo
                 GROUP BY EmployeeID, Date
@@ -310,7 +318,7 @@ Public Class TimeEntrySummaryForm
             ON etd.Date = ete.Date AND
                 etd.OrganizationID = ete.OrganizationID AND
                 etd.EmployeeID = ete.EmployeeID AND
-                etd.RowID = latest.RowID
+                etd.LastUpd = latest.LastUpd
             LEFT JOIN employeeshift
             ON employeeshift.RowID = ete.EmployeeShiftID
             LEFT JOIN (
@@ -493,7 +501,7 @@ Public Class TimeEntrySummaryForm
             ON ete.EmployeeID = eta.EmployeeID AND
                 ete.Date = eta.Date
             LEFT JOIN (
-                SELECT EmployeeID, Date, MAX(Created) Created
+                SELECT EmployeeID, Date, MAX(LastUpd) LastUpd, Created
                 FROM employeetimeentrydetails
                 WHERE Date BETWEEN @DateFrom AND @DateTo
                 GROUP BY EmployeeID, Date
@@ -504,7 +512,7 @@ Public Class TimeEntrySummaryForm
             ON employeetimeentrydetails.Date = eta.Date AND
                 employeetimeentrydetails.OrganizationID = eta.OrganizationID AND
                 employeetimeentrydetails.EmployeeID = eta.EmployeeID AND
-                employeetimeentrydetails.Created = latest.Created
+                employeetimeentrydetails.LastUpd = latest.LastUpd
             LEFT JOIN employeeshift
             ON employeeshift.RowID = eta.EmployeeShiftID
             LEFT JOIN (
