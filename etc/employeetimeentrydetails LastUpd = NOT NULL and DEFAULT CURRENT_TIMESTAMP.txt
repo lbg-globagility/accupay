@@ -1,0 +1,7 @@
+UPDATE employeetimeentrydetails
+SET LastUpd = Created
+WHERE LastUpd IS NULL
+;
+
+ALTER TABLE `employeetimeentrydetails`
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `CreatedBy`;
