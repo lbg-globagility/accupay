@@ -56,6 +56,7 @@ UPDATE
     ,PartNo=p_PartNo
     ,LastUpd=CURRENT_TIMESTAMP()
     ,LastUpdBy=p_LastUpdBy
+    ,`Status`=p_Status
     ,`Fixed`=p_IsFixed
     ,AllocateBelowSafetyFlag=p_IsIncludedIn13th;SELECT @@Identity AS id INTO prod_RowID;
 

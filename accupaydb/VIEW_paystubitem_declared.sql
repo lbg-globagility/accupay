@@ -91,6 +91,7 @@ SELECT
     psa.TotalLoans,
     psa.TotalBonus,
     psa.TotalAllowance,
+    psa.TotalTaxableAllowance,
     psa.TotalAdjustments,
     psa.ThirteenthMonthInclusion,
     psa.FirstTimeSalary,

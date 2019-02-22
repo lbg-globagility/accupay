@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class viewtotallow
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,17 +20,22 @@ Partial Class viewtotallow
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvempallowance = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_Start = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AllowanceFrequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.ComboBox2 = New System.Windows.Forms.ComboBox()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
@@ -40,11 +45,6 @@ Partial Class viewtotallow
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Start = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AllowanceFrequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
@@ -76,7 +76,7 @@ Partial Class viewtotallow
         Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle4
         Me.dgvempallowance.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvempallowance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempallowance.Location = New System.Drawing.Point(0, 45)
+        Me.dgvempallowance.Location = New System.Drawing.Point(0, 44)
         Me.dgvempallowance.MultiSelect = False
         Me.dgvempallowance.Name = "dgvempallowance"
         Me.dgvempallowance.ReadOnly = True
@@ -88,8 +88,51 @@ Partial Class viewtotallow
         DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvempallowance.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
-        Me.dgvempallowance.Size = New System.Drawing.Size(808, 429)
+        Me.dgvempallowance.Size = New System.Drawing.Size(784, 380)
         Me.dgvempallowance.TabIndex = 0
+        '
+        'RowID
+        '
+        Me.RowID.HeaderText = "RowID"
+        Me.RowID.Name = "RowID"
+        Me.RowID.ReadOnly = True
+        Me.RowID.Visible = False
+        '
+        'eall_Type
+        '
+        Me.eall_Type.HeaderText = "Name"
+        Me.eall_Type.Name = "eall_Type"
+        Me.eall_Type.ReadOnly = True
+        Me.eall_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eall_Type.Width = 182
+        '
+        'eall_Start
+        '
+        DataGridViewCellStyle2.Format = "d"
+        DataGridViewCellStyle2.NullValue = Nothing
+        Me.eall_Start.DefaultCellStyle = DataGridViewCellStyle2
+        Me.eall_Start.HeaderText = "Date"
+        Me.eall_Start.Name = "eall_Start"
+        Me.eall_Start.ReadOnly = True
+        Me.eall_Start.Width = 180
+        '
+        'eall_Amount
+        '
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle3
+        Me.eall_Amount.HeaderText = "Amount"
+        Me.eall_Amount.Name = "eall_Amount"
+        Me.eall_Amount.ReadOnly = True
+        Me.eall_Amount.Width = 181
+        '
+        'AllowanceFrequency
+        '
+        Me.AllowanceFrequency.HeaderText = "Allowance Frequency"
+        Me.AllowanceFrequency.Name = "AllowanceFrequency"
+        Me.AllowanceFrequency.ReadOnly = True
+        Me.AllowanceFrequency.Width = 181
         '
         'Panel1
         '
@@ -98,14 +141,15 @@ Partial Class viewtotallow
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(808, 45)
+        Me.Panel1.Size = New System.Drawing.Size(784, 44)
         Me.Panel1.TabIndex = 1
+        Me.Panel1.Visible = False
         '
         'ComboBox2
         '
         Me.ComboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox2.FormattingEnabled = True
-        Me.ComboBox2.Location = New System.Drawing.Point(611, 12)
+        Me.ComboBox2.Location = New System.Drawing.Point(675, 35)
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(121, 21)
         Me.ComboBox2.TabIndex = 0
@@ -116,9 +160,9 @@ Partial Class viewtotallow
         Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Items.AddRange(New Object() {""})
-        Me.ComboBox1.Location = New System.Drawing.Point(66, 12)
+        Me.ComboBox1.Location = New System.Drawing.Point(12, 12)
         Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
+        Me.ComboBox1.Size = New System.Drawing.Size(175, 21)
         Me.ComboBox1.TabIndex = 0
         '
         'DataGridViewTextBoxColumn1
@@ -175,55 +219,12 @@ Partial Class viewtotallow
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.Width = 181
         '
-        'RowID
-        '
-        Me.RowID.HeaderText = "RowID"
-        Me.RowID.Name = "RowID"
-        Me.RowID.ReadOnly = True
-        Me.RowID.Visible = False
-        '
-        'eall_Type
-        '
-        Me.eall_Type.HeaderText = "Name"
-        Me.eall_Type.Name = "eall_Type"
-        Me.eall_Type.ReadOnly = True
-        Me.eall_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eall_Type.Width = 182
-        '
-        'eall_Start
-        '
-        DataGridViewCellStyle2.Format = "d"
-        DataGridViewCellStyle2.NullValue = Nothing
-        Me.eall_Start.DefaultCellStyle = DataGridViewCellStyle2
-        Me.eall_Start.HeaderText = "Date"
-        Me.eall_Start.Name = "eall_Start"
-        Me.eall_Start.ReadOnly = True
-        Me.eall_Start.Width = 180
-        '
-        'eall_Amount
-        '
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle3.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        DataGridViewCellStyle3.NullValue = Nothing
-        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle3
-        Me.eall_Amount.HeaderText = "Amount"
-        Me.eall_Amount.Name = "eall_Amount"
-        Me.eall_Amount.ReadOnly = True
-        Me.eall_Amount.Width = 181
-        '
-        'AllowanceFrequency
-        '
-        Me.AllowanceFrequency.HeaderText = "Allowance Frequency"
-        Me.AllowanceFrequency.Name = "AllowanceFrequency"
-        Me.AllowanceFrequency.ReadOnly = True
-        Me.AllowanceFrequency.Width = 181
-        '
         'viewtotallow
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(194, Byte), Integer), CType(CType(183, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(808, 474)
+        Me.ClientSize = New System.Drawing.Size(784, 424)
         Me.Controls.Add(Me.dgvempallowance)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
