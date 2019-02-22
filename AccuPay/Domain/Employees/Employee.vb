@@ -31,7 +31,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property FirstName As String Implements IEmployeeBase.FirstName
 
-        Public Property MiddleName As String
+        Public Property MiddleName As String Implements IEmployeeBase.MiddleName
 
         Public Property LastName As String Implements IEmployeeBase.LastName
 

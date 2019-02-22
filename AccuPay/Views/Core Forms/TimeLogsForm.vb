@@ -1,12 +1,13 @@
 ﻿Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
-Imports AccuPay.Repository
+Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
+
 
 Public Class TimeLogsForm
 
@@ -1372,9 +1373,14 @@ Public Class TimeLogsForm
                 context.SaveChanges()
 
             End Using
+
+
         Catch ex As Exception
+
             _logger.Error("NewTimeEntryAlternateLineImport", ex)
-            MsgBox("Something went wrong while loading the time logs. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Import Logs")
+
+            MessageBoxHelper.DefaultErrorMessage("Import Logs")
+
         End Try
 
     End Sub

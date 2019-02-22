@@ -321,6 +321,8 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core\Utilities\Extensions\DateExtensions.vb" />
+    <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
+    <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
     <Compile Include="Core\Utilities\ObjectUtils.vb" />
     <Compile Include="Domain\AgencyFees\Agency.vb" />
     <Compile Include="Domain\AgencyFees\AgencyFee.vb" />
@@ -706,6 +708,12 @@
     </Compile>
     <Compile Include="Views\Employees\SalaryTab2.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Loans\AddLoanScheduleForm.Designer.vb">
+      <DependentUpon>AddLoanScheduleForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Loans\AddLoanScheduleForm.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\Loans\EmployeeLoansForm.Designer.vb">
       <DependentUpon>EmployeeLoansForm.vb</DependentUpon>
@@ -1853,6 +1861,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\LoanScheduleForm.resx">
       <DependentUpon>LoanScheduleForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\Loans\AddLoanScheduleForm.resx">
+      <DependentUpon>AddLoanScheduleForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\Loans\EmployeeLoansForm.resx">
       <DependentUpon>EmployeeLoansForm.vb</DependentUpon>

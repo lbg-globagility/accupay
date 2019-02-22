@@ -10,8 +10,9 @@ Namespace Global.AccuPay.SimplifiedEntities
 
         Property FirstName As String
 
-        Property LastName As String
+        Property MiddleName As String
 
+        Property LastName As String
     End Interface
 
 End Namespace

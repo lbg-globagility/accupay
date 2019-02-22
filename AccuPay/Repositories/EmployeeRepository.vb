@@ -1,4 +1,6 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Entity
+Imports AccuPay.Loans
 Imports AccuPay.SimplifiedEntities
 Imports Microsoft.EntityFrameworkCore
 
@@ -21,6 +23,7 @@ Namespace Global.AccuPay.Repository
                                         .RowID = e.RowID,
                                         .EmployeeID = e.EmployeeNo,
                                         .FirstName = e.FirstName,
+                                        .MiddleName = e.MiddleName,
                                         .LastName = e.LastName
                                     }).
                                     ToListAsync

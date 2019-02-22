@@ -18,7 +18,7 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Public Function ConvertToStringList(products As IEnumerable(Of Product), Optional columnName As String = "Name") _
+        Public Function ConvertToStringList(products As IEnumerable(Of Product), Optional columnName As String = "PartNo") _
             As List(Of String)
 
             Dim stringList As List(Of String)
@@ -27,7 +27,7 @@ Namespace Global.AccuPay.Repository
             For Each product In products
 
                 Select Case columnName
-                    Case "PartNo"
+                    Case "Name"
                         stringList.Add(product.PartNo)
 
                     Case Else

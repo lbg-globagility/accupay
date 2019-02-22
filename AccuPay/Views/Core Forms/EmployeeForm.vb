@@ -12210,6 +12210,8 @@ Public Class EmployeeForm
             With dgvempOT.CurrentRow
                 If .IsNewRow = False Then
 
+                    'the codes below causes error if it cannot convert causing "Do you want to log out"
+
                     dgvEmpOTRowindx = .Index
 
                     prev_eot_Type = .Cells("eot_Type").Value

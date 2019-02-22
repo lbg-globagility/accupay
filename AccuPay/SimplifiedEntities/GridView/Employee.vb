@@ -11,11 +11,21 @@ Namespace Global.AccuPay.SimplifiedEntities.GridView
 
         Public Property FirstName As String Implements IEmployeeBase.FirstName
 
+        Public Property MiddleName As String Implements IEmployeeBase.MiddleName
+
         Public Property LastName As String Implements IEmployeeBase.LastName
 
 
         Public Function FullName() As String
             Return FirstName + " " + LastName
+        End Function
+
+        Public Function FullNameWithMiddleName() As String
+            Return FirstName + " " + If(String.IsNullOrWhiteSpace(MiddleName), "", MiddleName + " ") + LastName
+        End Function
+
+        Public Function FullNameWithMiddleNameInitial() As String
+            Return FirstName + " " + If(String.IsNullOrWhiteSpace(MiddleName), "", MiddleName(0) + ". ") + LastName
         End Function
 
         Public Overrides Function ToString() As String

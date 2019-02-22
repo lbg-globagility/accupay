@@ -32,13 +32,16 @@ Namespace Global.AccuPay.Utils
             Return output
         End Function
 
-        Public Shared Function ToDecimal(num As Object) As Decimal
+        Public Shared Function ToDecimal(num As Object, Optional decimalPlace As Integer = 0) As Decimal
             If IsNothing(num) Then Return 0
 
             Dim output As Decimal = 0
 
             Try
                 output = Convert.ToDecimal(num)
+                If decimalPlace > 0 Then
+                    AccuMath.CommercialRound(output, decimalPlace)
+                End If
             Catch ex As Exception
                 output = 0
             End Try

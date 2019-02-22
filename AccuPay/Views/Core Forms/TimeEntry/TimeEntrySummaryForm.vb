@@ -248,15 +248,11 @@ Public Class TimeEntrySummaryForm
         Return years
     End Function
 
-<<<<<<< HEAD
     Private Async Function GetTimeEntries(employee As Simplified.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
-=======
-    Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
         'WARN: this has a possibility to show wrong data since
         'we are joining employeetimeentrydetails by LastUpd
         'maybe this query should be replaced
 
->>>>>>> master
         Dim sql = <![CDATA[
             SELECT
                 ete.RowID,

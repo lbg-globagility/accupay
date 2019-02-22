@@ -20,6 +20,14 @@ Namespace Global.AccuPay.Loans
 
         Public Property BonusID As Integer?
 
+        Public Property Created As Date
+
+        Public Property CreatedBy As Integer?
+
+        Public Property LastUpd As Date?
+
+        Public Property LastUpdBy As Integer?
+
         Public Property LoanNumber As String
 
         Public Property DedEffectiveDateFrom As Date
