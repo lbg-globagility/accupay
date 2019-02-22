@@ -454,11 +454,11 @@ Public Class PayrollResources
     Private Async Function LoadTaxableAllowances() As Task
         Dim isTaxable As String = "1"
         Try
-            Using context = New PayrollContext(logger)
+        Using context = New PayrollContext(logger)
                 Dim query = context.Allowances.Include(Function(a) a.Product).
                     Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(a) _payDateFrom <= a.EffectiveStartDate).
-                    Where(Function(a) _payDateTo <= a.EffectiveEndDate).
+                    Where(Function(a) a.EffectiveStartDate <= _payDateTo).
+                    Where(Function(a) _payDateFrom <= a.EffectiveEndDate).
                     Where(Function(a) String.Equals(a.Product.Status, isTaxable))
 
                 _taxableAllowances = Await query.ToListAsync()
