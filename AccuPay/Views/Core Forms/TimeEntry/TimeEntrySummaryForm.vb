@@ -1122,4 +1122,37 @@ Public Class TimeEntrySummaryForm
         form.ShowDialog()
     End Sub
 
+    Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
+        Dim ask = String.Concat("Proceed deleting employee's time entry between ", _selectedPayPeriod.PayFromDate.ToShortDateString,
+                                " and ", _selectedPayPeriod.PayToDate.ToShortDateString, " ?")
+        Dim askConfirmation = MessageBox.Show(ask, "Confirm delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+        If askConfirmation = DialogResult.No Then
+            Return
+        End If
+
+        Dim query = String.Concat("DELETE FROM employeetimeentry WHERE EmployeeID=@employeePrimKey AND `Date` BETWEEN @dateFrom AND @dateTo;",
+                                  "DELETE FROM employeetimeentryactual WHERE EmployeeID=@employeePrimKey AND `Date` BETWEEN @dateFrom AND @dateTo;")
+        Using command = New MySqlCommand(query,
+                                         New MySqlConnection(mysql_conn_text))
+            With command
+                .Parameters.AddWithValue("@dateFrom", _selectedPayPeriod?.PayFromDate)
+                .Parameters.AddWithValue("@dateTo", _selectedPayPeriod?.PayToDate)
+                .Parameters.AddWithValue("@employeePrimKey", _selectedEmployee?.RowID)
+
+                Await .Connection.OpenAsync()
+            End With
+
+            'Dim transactn = command.Connection.BeginTransaction
+
+            Try
+                Await command.ExecuteNonQueryAsync()
+                'transactn.Commit()
+            Catch ex As Exception
+                'transactn.Rollback()
+                _logger.Error("Deleting time entry period", ex)
+            Finally
+                LoadTimeEntries()
+            End Try
+        End Using
+    End Sub
 End Class

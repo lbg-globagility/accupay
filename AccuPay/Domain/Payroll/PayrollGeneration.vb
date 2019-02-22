@@ -60,7 +60,11 @@ Public Class PayrollGeneration
 
     Private _allowances As ICollection(Of Allowance)
 
+    Private _taxableAllowances As ICollection(Of Allowance)
+
     Private _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
+
+    Private _taxableAllowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
     Private _actualtimeentries As ICollection(Of ActualTimeEntry)
 
@@ -121,6 +125,10 @@ Public Class PayrollGeneration
 
         _allowances = resources.Allowances.
             Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
+            ToList()
+
+        _taxableAllowances = resources.TaxableAllowances.
+            Where(Function(a) Nullable.Equals(a.EmployeeID, _employee.RowID)).
             ToList()
     End Sub
 
@@ -215,6 +223,7 @@ Public Class PayrollGeneration
             End If
 
             CalculateAllowances()
+            CalculateTaxableAllowances()
 
             Dim socialSecurityCalculator = New SssCalculator(_socialSecurityBrackets)
             socialSecurityCalculator.Calculate(_settings, _paystub, _previousPaystub, _salary, _employee, _payPeriod)
@@ -234,9 +243,9 @@ Public Class PayrollGeneration
                 _paystub.TotalEarnings = 0
             End If
 
+            Dim grandTotalAllowance = _paystub.TotalAllowance + _paystub.TotalTaxableAllowance
 
-
-            _paystub.GrossPay = _paystub.TotalEarnings + _paystub.TotalBonus + _paystub.TotalAllowance
+            _paystub.GrossPay = _paystub.TotalEarnings + _paystub.TotalBonus + grandTotalAllowance
             _paystub.TotalAdjustments = If(_paystub?.Adjustments.Sum(Function(a) a.Amount), 0)
             _paystub.NetPay = AccuMath.CommercialRound(_paystub.GrossPay - _paystub.NetDeductions + _paystub.TotalAdjustments)
 
@@ -257,6 +266,9 @@ Public Class PayrollGeneration
                 context.Set(Of AllowanceItem).RemoveRange(_paystub.AllowanceItems)
 
                 _paystub.AllowanceItems = _allowanceItems
+                For Each aItem In _taxableAllowanceItems
+                    _paystub.AllowanceItems.Add(aItem)
+                Next
 
                 UpdatePaystubItems(context)
 
@@ -394,6 +406,47 @@ Public Class PayrollGeneration
         Next
 
         _paystub.TotalAllowance = AccuMath.CommercialRound(_allowanceItems.Sum(Function(a) a.Amount))
+    End Sub
+
+    Private Sub CalculateTaxableAllowances()
+        Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payRates, _previousTimeEntries2)
+        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(_settings, _employee, _paystub, _payPeriod, _payRates, _timeEntries)
+
+        For Each taxableAllowance In _taxableAllowances
+            Dim item = New AllowanceItem() With {
+                .OrganizationID = z_OrganizationID,
+                .CreatedBy = z_User,
+                .LastUpdBy = z_User,
+                .PayPeriodID = _payPeriod.RowID,
+                .AllowanceID = taxableAllowance.RowID,
+                .Paystub = _paystub
+            }
+
+            If taxableAllowance.IsOneTime Then
+                item.Amount = taxableAllowance.Amount
+            ElseIf taxableAllowance.IsDaily Then
+                item = dailyCalculator.Compute(_payPeriod, taxableAllowance, _employee, _paystub, _timeEntries)
+            ElseIf taxableAllowance.IsSemiMonthly Then
+
+                If taxableAllowance.Product.Fixed Then
+                    item.Amount = taxableAllowance.Amount
+                Else
+                    item = semiMonthlyCalculator.Calculate(taxableAllowance)
+                End If
+
+            ElseIf taxableAllowance.IsMonthly Then
+
+                If taxableAllowance.Product.Fixed And _payPeriod.IsEndOfTheMonth Then
+                    item.Amount = taxableAllowance.Amount
+                End If
+            Else
+                item = Nothing
+            End If
+
+            _taxableAllowanceItems.Add(item)
+        Next
+
+        _paystub.TotalTaxableAllowance = AccuMath.CommercialRound(_taxableAllowanceItems.Sum(Function(a) a.Amount))
     End Sub
 
     Private Function CalculateOneTimeAllowances(allowance As Allowance) As Decimal

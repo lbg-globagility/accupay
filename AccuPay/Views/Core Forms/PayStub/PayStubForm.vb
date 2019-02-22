@@ -657,6 +657,7 @@ Public Class PayStubForm
             lblSubtotal.Text = ""
 
             txtemptotallow.Text = ""
+            txtTotTaxabAllow.Text = ""
 
             txtgrosssal.Text = ""
 
@@ -836,7 +837,7 @@ Public Class PayStubForm
         TabControlColor(TabControl1, e)
     End Sub
 
-    Private Sub btntotallow_Click(sender As Object, e As EventArgs) Handles btntotallow.Click
+    Private Sub btntotallow_Click(sender As Object, e As EventArgs) Handles btntotallow.Click, btnTotalTaxabAllowance.Click
         viewtotloan.Close()
         viewtotbon.Close()
 
@@ -1502,6 +1503,12 @@ Public Class PayStubForm
 
             'Allowance
             txtemptotallow.Text = FormatNumber(ValNoComma((drow("TotalAllowance"))), 2)
+
+            'Taxable Allowance
+            txtTotTaxabAllow.Text = FormatNumber(ValNoComma((drow("TotalTaxableAllowance"))), 2)
+
+            txtGrandTotalAllow.Text = FormatNumber(ValNoComma(drow("TotalAllowance")) + ValNoComma(drow("TotalTaxableAllowance")), 2)
+
             'Bonus
             txtemptotbon.Text = FormatNumber(ValNoComma((drow("TotalBonus"))), 2)
             'Gross
@@ -1684,6 +1691,12 @@ Public Class PayStubForm
 
             'Allowance
             txtemptotallow.Text = FormatNumber(ValNoComma((drow("TotalAllowance"))), 2)
+
+            'Taxable Allowance
+            txtTotTaxabAllow.Text = FormatNumber(ValNoComma((drow("TotalTaxableAllowance"))), 2)
+
+            txtGrandTotalAllow.Text = FormatNumber(ValNoComma(drow("TotalAllowance")) + ValNoComma(drow("TotalTaxableAllowance")), 2)
+
             'Bonus
             txtemptotbon.Text = FormatNumber(ValNoComma((drow("TotalBonus"))), 2)
             'Gross

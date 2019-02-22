@@ -1,7 +1,13 @@
-﻿Public Class viewtotallow
+﻿Imports Microsoft.EntityFrameworkCore
+
+Public Class viewtotallow
     Dim categallowID As Object = Nothing
 
     Dim allowance_type As New AutoCompleteStringCollection
+    Private employeeId As Object
+    Private periodDateFrom As Object
+    Private periodDateTo As Object
+
     Private Sub viewtotallow_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'categallowID = EXECQUER("SELECT RowID FROM category WHERE OrganizationID=" & orgztnID & " AND CategoryName='" & "Allowance Type" & "' LIMIT 1;")
@@ -17,6 +23,14 @@
         '    'cboallowtype.Items.Add(getStrBetween(strval, "", "@"))
         '    eall_Type.Items.Add(getStrBetween(strval, "", "@"))
         'Next
+        LoadAllowanceTypesAsync()
+
+        For Each cbox In Panel1.Controls.OfType(Of ComboBox)()
+            cbox.SelectedIndex = -1
+            AddHandler cbox.SelectedIndexChanged, AddressOf ComboBox1_SelectedIndexChanged
+        Next
+
+        AddHandler ComboBox1.DropDown, AddressOf ComboBox1_DropDown
 
     End Sub
 
@@ -26,18 +40,18 @@
                                Optional num_weekdays As Object = Nothing,
                                Optional AllowanceExcept As String = Nothing)
 
-        Static employee_rowid As Integer = eallow_EmployeeID
+        employeeId = eallow_EmployeeID
 
-        Static from_date As Object = datefrom
-        Static to_date As Object = dateto
+        periodDateFrom = datefrom
+        periodDateTo = dateto
 
         Dim params =
             New Object() {orgztnID,
-            employee_rowid,
-            from_date,
-            to_date,
+            employeeId,
+            periodDateFrom,
+            periodDateTo,
             ComboBox2.Text,
-            ComboBox1.Text}
+            ComboBox1.Text.Trim()}
 
         Dim sql As New SQL("CALL VIEW_allowanceperday(?og_rowid, ?e_rowid, ?from_date, ?to_date, ?allowance_frequency, ?allowance_name);",
                            params)
@@ -59,39 +73,7 @@
 
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Name))
-        Finally
 
-            Static once As Boolean = True
-            If once Then
-                once = False
-
-                Dim _types =
-                (From row
-                 In dgvempallowance.Rows.OfType(Of DataGridViewRow)
-                 Group By val = Convert.ToString(row.Cells(eall_Type.Name).Value)
-                     Into Group
-                 Where val IsNot Nothing
-                 Select val)
-
-                'ComboBox1.DataSource = _types.ToList
-                ComboBox1.Items.AddRange(_types.ToList.ToArray)
-
-                'Dim _frequencies =
-                '(From row
-                ' In dgvempallowance.Rows.OfType(Of DataGridViewRow)
-                ' Group By val = Convert.ToString(row.Cells(AllowanceFrequency.Name).Value)
-                '     Into Group
-                ' Where val IsNot Nothing
-                ' Select val)
-
-                'ComboBox2.DataSource = _frequencies.ToList
-
-                For Each cbox In Panel1.Controls.OfType(Of ComboBox)()
-                    cbox.SelectedIndex = -1
-                    AddHandler cbox.SelectedIndexChanged, AddressOf ComboBox1_SelectedIndexChanged
-                Next
-
-            End If
         End Try
 
     End Sub
@@ -107,8 +89,43 @@
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs)
+        VIEW_employeeallowance_indate(employeeId, periodDateFrom, periodDateTo)
 
-        VIEW_employeeallowance_indate()
+    End Sub
+
+    Private Async Sub LoadAllowanceTypesAsync()
+        ComboBox1.Items.Clear()
+        Dim orgId = Convert.ToInt32(orgztnID)
+
+        Using context = New PayrollContext
+            Dim allowanceTypes = Await context.Products.
+                Where(Function(p) Nullable.Equals(p.OrganizationID, orgId)).
+                Where(Function(p) p.PartNo.Trim().Length > 0).
+                Where(Function(p) Nullable.Equals(p.Category, "Allowance Type")).
+                Where(Function(p) p.ActiveData).
+                Select(Function(p) p.PartNo).
+                OrderBy(Function(p) p.Trim()).
+                ToListAsync
+
+            ComboBox1.Items.AddRange(allowanceTypes.ToList.ToArray)
+        End Using
+    End Sub
+
+    Private Sub ComboBox1_DropDown(sender As Object, e As EventArgs)
+
+        Static cb_font As Font = ComboBox1.Font
+
+        Dim grp As Graphics = ComboBox1.CreateGraphics()
+
+        Dim vertScrollBarWidth As Integer = If(ComboBox1.Items.Count > ComboBox1.MaxDropDownItems, SystemInformation.VerticalScrollBarWidth, 0)
+
+        Dim allowanceTypes = ComboBox1.Items().OfType(Of String).OrderByDescending(Function(s) s.Length).Take(1).FirstOrDefault
+
+        Dim wiidth = CInt(grp.MeasureString(allowanceTypes, cb_font).Width) + vertScrollBarWidth
+
+        ComboBox1.DropDownWidth = wiidth
+
+        RemoveHandler ComboBox1.DropDown, AddressOf ComboBox1_DropDown
     End Sub
 
 End Class

@@ -58,6 +58,8 @@ Public Class PayrollResources
 
     Private _allowances As ICollection(Of Allowance)
 
+    Private _taxableAllowances As ICollection(Of Allowance)
+
     Private _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
 
     Private _filingStatuses As DataTable
@@ -152,6 +154,12 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property TaxableAllowances As ICollection(Of Allowance)
+        Get
+            Return _taxableAllowances
+        End Get
+    End Property
+
     Public ReadOnly Property ActualTimeEntries As ICollection(Of ActualTimeEntry)
         Get
             Return _actualtimeentries
@@ -192,6 +200,7 @@ Public Class PayrollResources
             LoadPayPeriod(),
             LoadPayRates(),
             LoadAllowances(),
+            LoadTaxableAllowances(),
             LoadTimeEntries(),
             LoadActualTimeEntries(),
             LoadFilingStatuses(),
@@ -425,18 +434,37 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadAllowances() As Task
+        Dim isNotTaxable As String = "0"
         Try
             Using context = New PayrollContext(logger)
                 ' Retrieve all allowances whose begin and end date spans the cutoff dates.
                 Dim query = context.Allowances.Include(Function(a) a.Product).
                     Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
                     Where(Function(a) a.EffectiveStartDate <= _payDateTo).
-                    Where(Function(a) _payDateFrom <= a.EffectiveEndDate)
+                    Where(Function(a) _payDateFrom <= a.EffectiveEndDate).
+                    Where(Function(a) String.Equals(a.Product.Status, isNotTaxable))
 
                 _allowances = Await query.ToListAsync()
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("Allowances", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadTaxableAllowances() As Task
+        Dim isTaxable As String = "1"
+        Try
+        Using context = New PayrollContext(logger)
+                Dim query = context.Allowances.Include(Function(a) a.Product).
+                    Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
+                    Where(Function(a) a.EffectiveStartDate <= _payDateTo).
+                    Where(Function(a) _payDateFrom <= a.EffectiveEndDate).
+                    Where(Function(a) String.Equals(a.Product.Status, isTaxable))
+
+                _taxableAllowances = Await query.ToListAsync()
+            End Using
+        Catch ex As Exception
+            Throw New ResourceLoadingException("TaxableAllowances", ex)
         End Try
     End Function
 

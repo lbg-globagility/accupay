@@ -162,18 +162,19 @@ Public Class ProductControlForm
 
         dgvproducts.EndEdit(True)
 
+        Dim validRows = dgvproducts.Rows.OfType(Of DataGridViewRow).Where(Function(r) Not r.IsNewRow)
 
-        For Each drow As DataGridViewRow In dgvproducts.Rows
+        For Each drow As DataGridViewRow In validRows
 
-            If drow.IsNewRow = False Then
+            Dim datastatus As Short = 0
 
-                Dim datastatus As Short = 0
+            datastatus = Convert.ToInt16(drow.Cells("Status").Value)
 
-                datastatus = Convert.ToInt16(drow.Cells("Status").Value)
+            Dim allowanceTypeId = drow.Cells("RowID").Value
 
-                Dim has_no_rowid = CBool(drow.Cells("RowID").Value = Nothing)
+            Dim has_no_rowid = CBool(allowanceTypeId = Nothing)
 
-                Dim returnval =
+            Dim returnval =
                     INS_product(If(has_no_rowid, Nothing, drow.Cells("RowID").Value),
                                 drow.Cells("PartNo").Value,
                                 drow.Cells("PartNo").Value,
@@ -182,14 +183,8 @@ Public Class ProductControlForm
                                 Convert.ToInt16(drow.Cells("Fixed").Value),
                                 Convert.ToInt16(drow.Cells("AllocateBelowSafetyFlag").Value))
 
-                If has_no_rowid Then
-                    drow.Cells("RowID").Value = returnval
-                End If
-
-            Else
-
-                Continue For
-
+            If has_no_rowid Then
+                drow.Cells("RowID").Value = returnval
             End If
 
         Next

@@ -1,0 +1,19 @@
+
+# Set Ecola to non-taxable allowance, let the user define the allowance types whether it is taxable or not
+UPDATE product p SET p.`Status`=FALSE WHERE p.PartNo='Ecola';
+
+
+# Add column in paystub table, to store total taxable allowance
+ALTER TABLE `paystub`
+	ADD COLUMN `TotalTaxableAllowance` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `TotalAllowance`;
+
+ALTER TABLE `paystubactual`
+	ADD COLUMN `TotalTaxableAllowance` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `TotalAllowance`;
+
+# Add column in paystub table, to store deferred taxable income
+ALTER TABLE `paystub`
+	ADD COLUMN `DeferredTaxableIncome` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `TotalNetSalary`;
+
+ALTER TABLE `paystubactual`
+	ADD COLUMN `DeferredTaxableIncome` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `TotalNetSalary`;
+

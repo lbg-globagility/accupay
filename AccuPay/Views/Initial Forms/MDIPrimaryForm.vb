@@ -230,6 +230,9 @@ Public Class MDIPrimaryForm
 
                     .ReloadOrganization()
 
+                    If Debugger.IsAttached Then
+                        .AssignDefaultCredentials()
+                    End If
                 End With
 
             ElseIf prompt = MsgBoxResult.No Then
