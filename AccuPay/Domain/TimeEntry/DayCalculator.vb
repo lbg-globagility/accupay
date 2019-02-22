@@ -420,8 +420,13 @@ Public Class DayCalculator
 
         If Not hasTimeLog And leaves.Any() Then
             Dim leave = leaves.FirstOrDefault()
-            Dim leavePeriod = GetLeavePeriod(leave, currentShift)
-            Dim leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift)
+            Dim leaveHours = 0D
+            If leave.StartTime Is Nothing And leave.EndTime Is Nothing And Not currentShift.HasShift Then
+                leaveHours = 8
+            Else
+                Dim leavePeriod = GetLeavePeriod(leave, currentShift)
+                leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift)
+            End If
 
             timeEntry.SetLeaveHours(leave.LeaveType, leaveHours)
         End If

@@ -22,92 +22,95 @@ SET custom_date_format = '%c/%e/%Y';
 SET daily_frequency = 'Daily';
 SET semi_mon_frequency = 'Semi-monthly';
 
-SELECT i.*
-FROM (SELECT
-		apd.RowID
-		,ea.`AllowanceName`
-		, DATE_FORMAT(apd.`Date`, custom_date_format) `Date`
-		, apd.Amount
-		, ea.AllowanceFrequency
-		, 'Group 1' `Result`
-		FROM allowanceperday apd
-		INNER JOIN allowanceitem ai ON ai.RowID = apd.AllowanceItemID
-		INNER JOIN (SELECT a.*
-		            , p.PartNo `AllowanceName`
-		            FROM employeeallowance a
-		            INNER JOIN product p
-						        ON p.OrganizationID = a.OrganizationID
-								     AND p.RowID = a.ProductID
-								     AND p.`Category` = allowance_category
-								     AND p.ActiveData = 1
-		            WHERE a.OrganizationID = og_rowid
-		            AND a.EmployeeID = e_rowid
-		            AND a.AllowanceFrequency = daily_frequency
-		            AND LENGTH(allowance_name) = 0
-		            
-					UNION
-		            SELECT a.*
-		            , p.PartNo `AllowanceName`
-		            FROM employeeallowance a
-		            INNER JOIN product p
-						        ON p.OrganizationID = a.OrganizationID
-								     AND p.RowID = a.ProductID
-								     AND p.`Category` = allowance_category
-								     AND p.PartNo = allowance_name
-								     AND p.ActiveData = 1
-		            WHERE a.OrganizationID = og_rowid
-		            AND a.EmployeeID = e_rowid
-		            AND a.AllowanceFrequency = daily_frequency
-		            AND LENGTH(allowance_name) > 0
-						) ea ON ea.RowID = ai.AllowanceID
-		WHERE apd.`Date` BETWEEN from_date AND to_date
-		ORDER BY ea.`AllowanceName`, apd.`Date`
-) i
-
-# ########################################################################
-UNION
-SELECT i.*
-FROM (SELECT
-		apd.RowID
-		,ea.`AllowanceName`
-		, DATE_FORMAT(apd.`Date`, custom_date_format) `Date`
-		, apd.Amount
-		, ea.AllowanceFrequency
-		, 'Group 2' `Result`
-		FROM allowanceperday apd
-		INNER JOIN allowanceitem ai ON ai.RowID = apd.AllowanceItemID
-		INNER JOIN (SELECT a.*
-		            , p.PartNo `AllowanceName`
-		            FROM employeeallowance a
-		            INNER JOIN product p
-						        ON p.OrganizationID = a.OrganizationID
-								     AND p.RowID = a.ProductID
-								     AND p.`Category` = allowance_category
-								     AND p.ActiveData = 1
-		            WHERE a.OrganizationID = og_rowid
-		            AND a.EmployeeID = e_rowid
-		            AND a.AllowanceFrequency = semi_mon_frequency
-		            AND LENGTH(allowance_name) = 0
-		            
-					UNION
-		            SELECT a.*
-		            , p.PartNo `AllowanceName`
-		            FROM employeeallowance a
-		            INNER JOIN product p
-						        ON p.OrganizationID = a.OrganizationID
-								     AND p.RowID = a.ProductID
-								     AND p.`Category` = allowance_category
-								     AND p.PartNo = allowance_name
-								     AND p.ActiveData = 1
-		            WHERE a.OrganizationID = og_rowid
-		            AND a.EmployeeID = e_rowid
-		            AND a.AllowanceFrequency = semi_mon_frequency
-		            AND LENGTH(allowance_name) > 0            
-		            ) ea ON ea.RowID = ai.AllowanceID
-		WHERE apd.`Date` BETWEEN from_date AND to_date
-		AND apd.Amount != 0
-		ORDER BY ea.`AllowanceName`, apd.`Date`
-) i
+SELECT ii.*
+FROM (SELECT i.*
+		FROM (SELECT
+				apd.RowID
+				,ea.`AllowanceName`
+				, DATE_FORMAT(apd.`Date`, custom_date_format) `Date`
+				, apd.Amount
+				, ea.AllowanceFrequency
+				, 'Group 1' `Result`
+				FROM allowanceperday apd
+				INNER JOIN allowanceitem ai ON ai.RowID = apd.AllowanceItemID
+				INNER JOIN (SELECT a.*
+				            , p.PartNo `AllowanceName`
+				            FROM employeeallowance a
+				            INNER JOIN product p
+								        ON p.OrganizationID = a.OrganizationID
+										     AND p.RowID = a.ProductID
+										     AND p.`Category` = allowance_category
+										     AND p.ActiveData = 1
+				            WHERE a.OrganizationID = og_rowid
+				            AND a.EmployeeID = e_rowid
+				            AND a.AllowanceFrequency = daily_frequency
+				            AND LENGTH(allowance_name) = 0
+				            
+							UNION
+				            SELECT a.*
+				            , p.PartNo `AllowanceName`
+				            FROM employeeallowance a
+				            INNER JOIN product p
+								        ON p.OrganizationID = a.OrganizationID
+										     AND p.RowID = a.ProductID
+										     AND p.`Category` = allowance_category
+										     AND p.PartNo = allowance_name
+										     AND p.ActiveData = 1
+				            WHERE a.OrganizationID = og_rowid
+				            AND a.EmployeeID = e_rowid
+				            AND a.AllowanceFrequency = daily_frequency
+				            AND LENGTH(allowance_name) > 0
+								) ea ON ea.RowID = ai.AllowanceID
+				WHERE apd.`Date` BETWEEN from_date AND to_date
+				ORDER BY ea.`AllowanceName`, apd.`Date`
+				) i
+		
+		# ########################################################################
+		UNION
+		SELECT i.*
+		FROM (SELECT
+				apd.RowID
+				,ea.`AllowanceName`
+				, DATE_FORMAT(apd.`Date`, custom_date_format) `Date`
+				, apd.Amount
+				, ea.AllowanceFrequency
+				, 'Group 2' `Result`
+				FROM allowanceperday apd
+				INNER JOIN allowanceitem ai ON ai.RowID = apd.AllowanceItemID
+				INNER JOIN (SELECT a.*
+				            , p.PartNo `AllowanceName`
+				            FROM employeeallowance a
+				            INNER JOIN product p
+								        ON p.OrganizationID = a.OrganizationID
+										     AND p.RowID = a.ProductID
+										     AND p.`Category` = allowance_category
+										     AND p.ActiveData = 1
+				            WHERE a.OrganizationID = og_rowid
+				            AND a.EmployeeID = e_rowid
+				            AND a.AllowanceFrequency = semi_mon_frequency
+				            AND LENGTH(allowance_name) = 0
+				            
+							UNION
+				            SELECT a.*
+				            , p.PartNo `AllowanceName`
+				            FROM employeeallowance a
+				            INNER JOIN product p
+								        ON p.OrganizationID = a.OrganizationID
+										     AND p.RowID = a.ProductID
+										     AND p.`Category` = allowance_category
+										     AND p.PartNo = allowance_name
+										     AND p.ActiveData = 1
+				            WHERE a.OrganizationID = og_rowid
+				            AND a.EmployeeID = e_rowid
+				            AND a.AllowanceFrequency = semi_mon_frequency
+				            AND LENGTH(allowance_name) > 0            
+				            ) ea ON ea.RowID = ai.AllowanceID
+				WHERE apd.`Date` BETWEEN from_date AND to_date
+				AND apd.Amount != 0
+				ORDER BY ea.`AllowanceName`, apd.`Date`
+				) i
+		) ii
+ORDER BY ii.`AllowanceName`, STR_TO_DATE(ii.`Date`, custom_date_format)
 ;
 
 END//

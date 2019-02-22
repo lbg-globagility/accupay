@@ -141,6 +141,8 @@ Partial Class TimeEntrySummaryForm
         Me.actualButton = New System.Windows.Forms.ToolStripButton()
         Me.btnAmPm = New System.Windows.Forms.ToolStripButton()
         Me.tstbnResetLeaveBalance = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
+        Me.tsBtnDeleteTimeEntry = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnrecalc = New System.Windows.Forms.ToolStripButton()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.searchTextBox = New System.Windows.Forms.TextBox()
@@ -452,7 +454,7 @@ Partial Class TimeEntrySummaryForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.generateTimeEntryButton, Me.tsbtnCloseempawar, Me.tsbtnAudittrail, Me.cboYears, Me.ToolStripSeparator14, Me.actualButton, Me.btnAmPm, Me.tstbnResetLeaveBalance, Me.tsbtnrecalc})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.generateTimeEntryButton, Me.tsbtnCloseempawar, Me.tsbtnAudittrail, Me.cboYears, Me.ToolStripSeparator14, Me.actualButton, Me.btnAmPm, Me.tstbnResetLeaveBalance, Me.ToolStripLabel1, Me.tsBtnDeleteTimeEntry, Me.tsbtnrecalc})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(846, 25)
@@ -526,12 +528,27 @@ Partial Class TimeEntrySummaryForm
         Me.tstbnResetLeaveBalance.Size = New System.Drawing.Size(144, 22)
         Me.tstbnResetLeaveBalance.Text = "Renew Leave Balances"
         '
+        'ToolStripLabel1
+        '
+        Me.ToolStripLabel1.Name = "ToolStripLabel1"
+        Me.ToolStripLabel1.Size = New System.Drawing.Size(52, 22)
+        Me.ToolStripLabel1.Text = "               "
+        '
+        'tsBtnDeleteTimeEntry
+        '
+        Me.tsBtnDeleteTimeEntry.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.tsBtnDeleteTimeEntry.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsBtnDeleteTimeEntry.Name = "tsBtnDeleteTimeEntry"
+        Me.tsBtnDeleteTimeEntry.Size = New System.Drawing.Size(157, 22)
+        Me.tsBtnDeleteTimeEntry.Text = "Delete Time Entry Period"
+        Me.tsBtnDeleteTimeEntry.ToolTipText = "Deletes employee's time" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "entry of the selected period"
+        '
         'tsbtnrecalc
         '
         Me.tsbtnrecalc.Image = CType(resources.GetObject("tsbtnrecalc.Image"), System.Drawing.Image)
         Me.tsbtnrecalc.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnrecalc.Name = "tsbtnrecalc"
-        Me.tsbtnrecalc.Size = New System.Drawing.Size(131, 22)
+        Me.tsbtnrecalc.Size = New System.Drawing.Size(131, 20)
         Me.tsbtnrecalc.Text = "Recalculate day pay"
         Me.tsbtnrecalc.Visible = False
         '
@@ -2894,4 +2911,6 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents ColumnTotalHrs As DataGridViewTextBoxColumn
     Friend WithEvents ColumnTotalPay As DataGridViewTextBoxColumn
     Friend WithEvents ColumnRemarks As DataGridViewTextBoxColumn
+    Friend WithEvents tsBtnDeleteTimeEntry As ToolStripButton
+    Friend WithEvents ToolStripLabel1 As ToolStripLabel
 End Class
