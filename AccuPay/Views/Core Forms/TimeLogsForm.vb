@@ -492,6 +492,7 @@ Public Class TimeLogsForm
             Next
 
             context.SaveChanges()
+
         End Using
 
         bgworkImport.ReportProgress(100)
@@ -634,6 +635,8 @@ Public Class TimeLogsForm
 
         lblforballoon.Location = New Point(balloon_x, lblforballoon.Location.Y)
 
+        'Refresh Gridview
+        Button4.PerformClick()
     End Sub
 
     Dim haserrinput As SByte
@@ -1367,6 +1370,7 @@ Public Class TimeLogsForm
                 Next
 
                 context.SaveChanges()
+
             End Using
         Catch ex As Exception
             _logger.Error("NewTimeEntryAlternateLineImport", ex)

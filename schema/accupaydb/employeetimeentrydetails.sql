@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `employeetimeentrydetails` (
   `OrganizationID` int(10) NOT NULL,
   `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `LastUpdBy` int(10) DEFAULT NULL,
   `EmployeeID` int(10) DEFAULT NULL,
   `TimeIn` time DEFAULT NULL,
