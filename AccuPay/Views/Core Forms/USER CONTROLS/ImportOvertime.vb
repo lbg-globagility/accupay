@@ -49,10 +49,10 @@ Public Class ImportOvertime
                                      z_User,
                                       drow(0),
                                       drow(1),
-                                      drow(2),
-                                      drow(3),
-                                      drow(4),
-                                      drow(5)}
+                                      CDate(drow(2)),
+                                      CDate(drow(3)),
+                                     CDate(drow(4)),
+                                       CDate(drow(5))}
 
                     Dim sql As New SQL(str_query_import_loan,
                                        param_values)
