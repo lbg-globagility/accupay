@@ -1,0 +1,3 @@
+
+# Set Ecola to non-taxable allowance, let the user define the allowance types whether it is taxable or not
+UPDATE product p SET p.`Status`=FALSE WHERE p.PartNo='Ecola';
