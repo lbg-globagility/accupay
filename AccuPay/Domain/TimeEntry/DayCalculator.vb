@@ -273,6 +273,16 @@ Public Class DayCalculator
             Dim nightDiffRate = payrate.NightDifferentialRate - payrate.CommonRate
             Dim nightDiffOTRate = payrate.NightDifferentialOTRate - payrate.OvertimeRate
 
+            Dim notEntitledForLegalHolidayRate = Not _employee.CalcHoliday And payrate.IsSpecialNonWorkingHoliday
+            Dim notEntitledForSpecialNonWorkingHolidayRate = Not _employee.CalcSpecialHoliday And payrate.IsSpecialNonWorkingHoliday
+
+            If notEntitledForLegalHolidayRate Or
+                notEntitledForSpecialNonWorkingHolidayRate Then
+
+                nightDiffRate = (payrate.NightDifferentialRate / payrate.CommonRate) Mod 1
+                nightDiffOTRate = (payrate.NightDifferentialOTRate / payrate.OvertimeRate) Mod 1
+            End If
+
             timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * nightDiffRate
             timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * nightDiffOTRate
         ElseIf currentShift.IsRestDay Then
