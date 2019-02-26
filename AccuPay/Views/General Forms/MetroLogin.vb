@@ -240,6 +240,9 @@ Public Class MetroLogin
     Private Sub MetroLogin_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Debugger.IsAttached Then
             AssignDefaultCredentials()
+
+            Dim newForm As New ShiftScheduleForm
+            newForm.Show()
         End If
     End Sub
 
