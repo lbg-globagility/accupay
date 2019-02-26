@@ -15,6 +15,8 @@ Public Class EmployeeTreeView
 
     Public Event FiltersEmployee(s As Object, e As EventArgs)
 
+    Private tickedEmployees As ICollection(Of Employee)
+
     Public Property OrganizationID As Integer
         Get
 
@@ -230,5 +232,4 @@ Public Class EmployeeTreeView
         End Sub
 
     End Class
-
 End Class

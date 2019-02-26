@@ -22,23 +22,12 @@ Partial Class EmployeeTreeView
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.AccuPayEmployeeTreeView = New AccuPay.AccuPayTreeView()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.AccuPayEmployeeTreeView = New AccuPay.AccuPayTreeView()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'AccuPayEmployeeTreeView
-        '
-        Me.AccuPayEmployeeTreeView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.AccuPayEmployeeTreeView.CheckBoxes = True
-        Me.AccuPayEmployeeTreeView.Location = New System.Drawing.Point(0, 26)
-        Me.AccuPayEmployeeTreeView.Name = "AccuPayEmployeeTreeView"
-        Me.AccuPayEmployeeTreeView.Size = New System.Drawing.Size(156, 165)
-        Me.AccuPayEmployeeTreeView.TabIndex = 1
         '
         'TextBox1
         '
@@ -66,6 +55,17 @@ Partial Class EmployeeTreeView
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(156, 191)
         Me.Panel1.TabIndex = 5
+        '
+        'AccuPayEmployeeTreeView
+        '
+        Me.AccuPayEmployeeTreeView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.AccuPayEmployeeTreeView.CheckBoxes = True
+        Me.AccuPayEmployeeTreeView.Location = New System.Drawing.Point(0, 26)
+        Me.AccuPayEmployeeTreeView.Name = "AccuPayEmployeeTreeView"
+        Me.AccuPayEmployeeTreeView.Size = New System.Drawing.Size(156, 165)
+        Me.AccuPayEmployeeTreeView.TabIndex = 1
         '
         'EmployeeTreeView
         '
