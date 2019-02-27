@@ -66,6 +66,7 @@ Partial Class AddLoanTypeForm
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "AddLoanTypeForm"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "New Loan Type"
         Me.ResumeLayout(False)
         Me.PerformLayout()

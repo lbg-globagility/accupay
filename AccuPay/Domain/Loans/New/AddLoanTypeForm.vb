@@ -27,6 +27,8 @@ Public Class AddLoanTypeForm
 
             MessageBoxHelper.ErrorMessage("Please provide a loan name.")
 
+            Return
+
         End If
 
         Const messageTitle As String = "New Loan Type"
