@@ -1,0 +1,4 @@
+ALTER TABLE `scheduledloansperpayperiod`
+	DROP FOREIGN KEY `FK_scheduledloansperpayperiod_employeeloanschedule`;
+ALTER TABLE `scheduledloansperpayperiod`
+	ADD CONSTRAINT `FK_scheduledloansperpayperiod_employeeloanschedule` FOREIGN KEY (`EmployeeLoanRecordID`) REFERENCES `employeeloanschedule` (`RowID`) ON DELETE CASCADE;

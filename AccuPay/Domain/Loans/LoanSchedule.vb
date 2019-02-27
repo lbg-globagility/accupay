@@ -48,7 +48,7 @@ Namespace Global.AccuPay.Loans
 
         Public Property NoOfPayPeriod As Decimal
 
-        Public Property LoanPayPeriodLeft As Integer
+        Public Property LoanPayPeriodLeft As Integer? 'This should not be nullable but nullable sa database
 
         Public Property Comments As String
 
@@ -66,7 +66,7 @@ Namespace Global.AccuPay.Loans
                 .OrganizationID = z_OrganizationID,
                 .EmployeeID = EmployeeID,
                 .PayPeriodID = payPeriodID,
-                .LoanPayPeriodLeft = LoanPayPeriodLeft - 1,
+                .LoanPayPeriodLeft = If(LoanPayPeriodLeft Is Nothing, 0, Convert.ToInt32(LoanPayPeriodLeft) - 1),
                 .TotalBalance = newBalance,
                 .Amount = currentDeductionAmount
             }

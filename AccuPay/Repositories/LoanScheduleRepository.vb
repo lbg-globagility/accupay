@@ -1,18 +1,19 @@
 ﻿Option Strict On
+Imports System.Linq.Expressions
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
+Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 
 Namespace Global.AccuPay.Repository
 
     Public Class LoanScheduleRepository
 
-        Public Shared STATUS_IN_PROGRESS As String = "In Progress"
-        Public Shared STATUS_ON_HOLD As String = "On hold"
-        Public Shared STATUS_CANCELLED As String = "Cancelled"
-        Public Shared STATUS_COMPLETE As String = "Complete"
-
+        Public Shared ReadOnly STATUS_IN_PROGRESS As String = "In Progress"
+        Public Shared ReadOnly STATUS_ON_HOLD As String = "On hold"
+        Public Shared ReadOnly STATUS_CANCELLED As String = "Cancelled"
+        Public Shared ReadOnly STATUS_COMPLETE As String = "Complete"
 
         Public Function GetStatusList() As List(Of String)
             Return New List(Of String) From {
@@ -23,13 +24,36 @@ Namespace Global.AccuPay.Repository
             }
         End Function
 
-        Public Async Function GetByEmployeeAsync(employeeId As Integer?) As _
-            Threading.Tasks.Task(Of IEnumerable(Of LoanSchedule))
+        Public Async Function GetByEmployeeAsync(
+            employeeId As Integer?) As _
+            Task(Of IEnumerable(Of LoanSchedule))
 
             Using context = New PayrollContext()
 
                 Return Await context.LoanSchedules.
                         Where(Function(l) Nullable.Equals(l.EmployeeID, employeeId)).
+                        ToListAsync
+
+            End Using
+
+        End Function
+
+        Public Async Function GetByEmployeeAndStatusAsync(
+            employeeId As Integer?,
+            Optional inProgressChecked As Boolean = True,
+            Optional onHoldChecked As Boolean = True,
+            Optional cancelledChecked As Boolean = True,
+            Optional completeChecked As Boolean = True) As _
+            Task(Of IEnumerable(Of LoanSchedule))
+
+            Using context = New PayrollContext()
+
+                Return Await context.LoanSchedules.
+                        Where(Function(l) Nullable.Equals(l.EmployeeID, employeeId)).
+                        Where(Function(l) (inProgressChecked AndAlso l.Status = STATUS_IN_PROGRESS) OrElse
+                                   (onHoldChecked AndAlso l.Status = STATUS_ON_HOLD) OrElse
+                                   (cancelledChecked AndAlso l.Status = STATUS_CANCELLED) OrElse
+                                   (completeChecked AndAlso l.Status = STATUS_COMPLETE)).
                         ToListAsync
 
             End Using
@@ -88,7 +112,6 @@ Namespace Global.AccuPay.Repository
             loanTypes As IEnumerable(Of Product),
             Optional passedContext As PayrollContext = Nothing) As Task
 
-
             'if completed yung loan, hindi pwede ma i-insert or update
             If loanSchedule.Status = STATUS_COMPLETE Then
 
@@ -106,7 +129,7 @@ Namespace Global.AccuPay.Repository
             loanSchedule.DeductionPercentage = AccuMath.CommercialRound(loanSchedule.DeductionPercentage)
 
             loanSchedule.NoOfPayPeriod = AccuMath.CommercialRound(loanSchedule.NoOfPayPeriod)
-            loanSchedule.LoanPayPeriodLeft = CType(AccuMath.CommercialRound(loanSchedule.LoanPayPeriodLeft), Integer)
+            loanSchedule.LoanPayPeriodLeft = CType(AccuMath.CommercialRound(ObjectUtils.ToInteger(loanSchedule.LoanPayPeriodLeft)), Integer)
 
             loanSchedule.OrganizationID = z_OrganizationID
 
@@ -133,15 +156,43 @@ Namespace Global.AccuPay.Repository
             End If
         End Function
 
-        Public Function ComputeNumberOfPayPeriod(totalLoanAmount As Decimal, deductionAmount As Decimal) As Integer
+        Public Async Function GetTotalLoanTransactions(loanSchedules As List(Of LoanSchedule)) As Task(Of Integer)
 
-            Return CType(AccuMath.CommercialRound(totalLoanAmount / deductionAmount), Integer)
+            If loanSchedules.Count > 0 Then
+                Return 0
+            End If
 
+            Dim loanScheduleRowIdArray(loanSchedules.Count - 1) As Integer?
+
+            For index = 0 To loanSchedules.Count - 1
+                loanScheduleRowIdArray(index) = loanSchedules(index).RowID
+            Next
+
+            Using context As New PayrollContext
+                Return Await context.LoanTransactions.
+                        CountAsync(Function(l) loanScheduleRowIdArray.Contains(l.RowID))
+            End Using
         End Function
 
-        Public Function ComputeNumberOfPayPeriodLeft(totalBalanceLeft As Decimal, deductionAmount As Decimal) As Integer
+        Public Async Function DeleteAsync(loanScheduleId As Integer?) As Task
+            Using context = New PayrollContext()
 
-            Return CType(AccuMath.CommercialRound(totalBalanceLeft / deductionAmount), Integer)
+                Dim loanSchedule = Await GetByIdAsync(loanScheduleId)
+
+                context.Remove(loanSchedule)
+
+                Await context.SaveChangesAsync()
+
+            End Using
+        End Function
+
+        Public Function ComputeNumberOfPayPeriod(totalLoanAmount As Decimal, deductionAmount As Decimal) As Integer
+
+            If deductionAmount = 0 Then Return 0
+
+            If deductionAmount > totalLoanAmount Then Return 1
+
+            Return CType(Math.Floor(totalLoanAmount / deductionAmount), Integer)
 
         End Function
 
@@ -151,8 +202,11 @@ Namespace Global.AccuPay.Repository
             loanTypes As IEnumerable(Of Product),
             context As PayrollContext)
 
-            If loanSchedule.LoanPayPeriodLeft < 1 Then
-                loanSchedule.Status = STATUS_COMPLETE
+            loanSchedule.LoanPayPeriodLeft =
+                    ComputeNumberOfPayPeriod(loanSchedule.TotalBalanceLeft, loanSchedule.DeductionAmount)
+
+            If loanSchedule.LoanPayPeriodLeft <1 Then
+                loanSchedule.Status= STATUS_COMPLETE
             End If
 
             If loanSchedule.LoanNumber Is Nothing Then
@@ -167,7 +221,6 @@ Namespace Global.AccuPay.Repository
 
             End If
 
-
             loanSchedule.Created = Date.Now
             loanSchedule.CreatedBy = z_User
 
@@ -179,8 +232,12 @@ Namespace Global.AccuPay.Repository
             newLoanSchedule As LoanSchedule,
             context As PayrollContext) As Task
 
+            Dim oldLoanSchedule = Await Me.GetByIdAsync(newLoanSchedule.RowID)
+            Dim loanTransactionsCount = Await context.LoanTransactions.
+                                        CountAsync(Function(l) Nullable.Equals(l.LoanScheduleID, newLoanSchedule.RowID))
+
             'if cancelled na yung loan, hindi pwede ma update
-            If (newLoanSchedule.Status = STATUS_CANCELLED) Then
+            If (oldLoanSchedule.Status = STATUS_CANCELLED) Then
 
                 Throw New ArgumentException("Loan schedule is already cancelled!")
 
@@ -190,10 +247,6 @@ Namespace Global.AccuPay.Repository
                 newLoanSchedule.LoanPayPeriodLeft = 0
                 newLoanSchedule.Status = STATUS_COMPLETE
             End If
-
-            Dim oldLoanSchedule = Await Me.GetByIdAsync(newLoanSchedule.RowID)
-            Dim loanTransactionsCount = Await context.LoanTransactions.
-                                        CountAsync(Function(l) Nullable.Equals(l.LoanScheduleID, newLoanSchedule.RowID))
 
             'if nag start ng magbawas ng loan, dapat hindi na pwede ma edit ang TotalLoanAmount
             If oldLoanSchedule.TotalBalanceLeft <> oldLoanSchedule.TotalLoanAmount OrElse
@@ -213,7 +266,7 @@ Namespace Global.AccuPay.Repository
                 'recompute LoanPayPeriodLeft if TotalBalanceLeft changed
 
                 newLoanSchedule.LoanPayPeriodLeft =
-                    ComputeNumberOfPayPeriodLeft(newLoanSchedule.TotalBalanceLeft, newLoanSchedule.DeductionAmount)
+                    ComputeNumberOfPayPeriod(newLoanSchedule.TotalBalanceLeft, newLoanSchedule.DeductionAmount)
 
             End If
 
@@ -227,4 +280,3 @@ Namespace Global.AccuPay.Repository
     End Class
 
 End Namespace
-

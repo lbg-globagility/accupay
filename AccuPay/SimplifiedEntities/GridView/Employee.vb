@@ -15,6 +15,7 @@ Namespace Global.AccuPay.SimplifiedEntities.GridView
 
         Public Property LastName As String Implements IEmployeeBase.LastName
 
+        Public Property Image As Byte() Implements IEmployeeBase.Image
 
         Public Function FullName() As String
             Return FirstName + " " + LastName

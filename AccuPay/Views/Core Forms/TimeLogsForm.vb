@@ -1386,6 +1386,11 @@ Public Class TimeLogsForm
     End Sub
 
     Private Async Function GetEmployeesFromLogGroup(context As PayrollContext, logsGroupedByEmployee As List(Of IGrouping(Of String, TimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
+
+        If logsGroupedByEmployee.Count < 1 Then
+            Return New List(Of Employee)
+        End If
+
         Dim employeeNumbersArray(logsGroupedByEmployee.Count - 1) As String
 
         For index = 0 To logsGroupedByEmployee.Count - 1
@@ -1394,7 +1399,7 @@ Public Class TimeLogsForm
 
         Return Await context.Employees.
                         Where(Function(e) employeeNumbersArray.Contains(e.EmployeeNo)).
-                        Where(Function(e) e.OrganizationID = z_OrganizationID).
+                        Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
                         ToListAsync
     End Function
 

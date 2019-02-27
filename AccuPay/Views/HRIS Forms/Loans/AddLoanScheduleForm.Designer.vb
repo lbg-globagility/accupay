@@ -37,7 +37,7 @@ Partial Class AddLoanScheduleForm
         Me.plnCboLoanType = New System.Windows.Forms.Panel()
         Me.cboLoanType = New System.Windows.Forms.ComboBox()
         Me.Label350 = New System.Windows.Forms.Label()
-        Me.lnklblloantype = New System.Windows.Forms.LinkLabel()
+        Me.lnlAddLoanType = New System.Windows.Forms.LinkLabel()
         Me.lblLoanInterestPercentage = New System.Windows.Forms.Label()
         Me.lblLoanNumber = New System.Windows.Forms.Label()
         Me.txtLoanNumber = New System.Windows.Forms.TextBox()
@@ -130,7 +130,7 @@ Partial Class AddLoanScheduleForm
         Me.pnlTxtLoanBalance.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlTxtLoanBalance.Name = "pnlTxtLoanBalance"
         Me.pnlTxtLoanBalance.Size = New System.Drawing.Size(267, 32)
-        Me.pnlTxtLoanBalance.TabIndex = 390
+        Me.pnlTxtLoanBalance.TabIndex = 356
         '
         'Label3
         '
@@ -161,7 +161,7 @@ Partial Class AddLoanScheduleForm
         Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(267, 39)
-        Me.Panel3.TabIndex = 389
+        Me.Panel3.TabIndex = 362
         '
         'Label2
         '
@@ -191,7 +191,7 @@ Partial Class AddLoanScheduleForm
         Me.pnlTxtDeductionAmount.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlTxtDeductionAmount.Name = "pnlTxtDeductionAmount"
         Me.pnlTxtDeductionAmount.Size = New System.Drawing.Size(267, 32)
-        Me.pnlTxtDeductionAmount.TabIndex = 388
+        Me.pnlTxtDeductionAmount.TabIndex = 360
         '
         'Label1
         '
@@ -238,13 +238,13 @@ Partial Class AddLoanScheduleForm
         '
         Me.plnCboLoanType.Controls.Add(Me.cboLoanType)
         Me.plnCboLoanType.Controls.Add(Me.Label350)
-        Me.plnCboLoanType.Controls.Add(Me.lnklblloantype)
+        Me.plnCboLoanType.Controls.Add(Me.lnlAddLoanType)
         Me.plnCboLoanType.Dock = System.Windows.Forms.DockStyle.Fill
         Me.plnCboLoanType.Location = New System.Drawing.Point(0, 16)
         Me.plnCboLoanType.Margin = New System.Windows.Forms.Padding(0)
         Me.plnCboLoanType.Name = "plnCboLoanType"
         Me.plnCboLoanType.Size = New System.Drawing.Size(267, 32)
-        Me.plnCboLoanType.TabIndex = 380
+        Me.plnCboLoanType.TabIndex = 353
         '
         'cboLoanType
         '
@@ -265,15 +265,15 @@ Partial Class AddLoanScheduleForm
         Me.Label350.TabIndex = 507
         Me.Label350.Text = "*"
         '
-        'lnklblloantype
+        'lnlAddLoanType
         '
-        Me.lnklblloantype.AutoSize = True
-        Me.lnklblloantype.Location = New System.Drawing.Point(222, 6)
-        Me.lnklblloantype.Name = "lnklblloantype"
-        Me.lnklblloantype.Size = New System.Drawing.Size(28, 13)
-        Me.lnklblloantype.TabIndex = 354
-        Me.lnklblloantype.TabStop = True
-        Me.lnklblloantype.Text = "Add"
+        Me.lnlAddLoanType.AutoSize = True
+        Me.lnlAddLoanType.Location = New System.Drawing.Point(222, 6)
+        Me.lnlAddLoanType.Name = "lnlAddLoanType"
+        Me.lnlAddLoanType.Size = New System.Drawing.Size(28, 13)
+        Me.lnlAddLoanType.TabIndex = 354
+        Me.lnlAddLoanType.TabStop = True
+        Me.lnlAddLoanType.Text = "Add"
         '
         'lblLoanInterestPercentage
         '
@@ -433,7 +433,7 @@ Partial Class AddLoanScheduleForm
         Me.pnlTxtLoanAmount.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlTxtLoanAmount.Name = "pnlTxtLoanAmount"
         Me.pnlTxtLoanAmount.Size = New System.Drawing.Size(267, 32)
-        Me.pnlTxtLoanAmount.TabIndex = 387
+        Me.pnlTxtLoanAmount.TabIndex = 355
         '
         'Label220
         '
@@ -614,7 +614,7 @@ Partial Class AddLoanScheduleForm
     Friend WithEvents plnCboLoanType As Panel
     Friend WithEvents cboLoanType As ComboBox
     Friend WithEvents Label350 As Label
-    Friend WithEvents lnklblloantype As LinkLabel
+    Friend WithEvents lnlAddLoanType As LinkLabel
     Friend WithEvents lblLoanInterestPercentage As Label
     Friend WithEvents lblLoanNumber As Label
     Friend WithEvents txtLoanNumber As TextBox

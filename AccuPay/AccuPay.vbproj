@@ -360,7 +360,6 @@
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
     <Compile Include="Repositories\CategoryRepository.vb" />
     <Compile Include="Repositories\ListOfValueRepository.vb" />
-    <Compile Include="Repositories\LoanRepository.vb" />
     <Compile Include="Repositories\LoanScheduleRepository.vb" />
     <Compile Include="Repositories\ProductRepository.vb" />
     <Compile Include="SimplifiedEntities\GridView\Employee.vb" />
@@ -713,6 +712,12 @@
       <DependentUpon>AddLoanScheduleForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\HRIS Forms\Loans\AddLoanScheduleForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Loans\AddLoanTypeForm.Designer.vb">
+      <DependentUpon>AddLoanTypeForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\Loans\AddLoanTypeForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\Loans\EmployeeLoansForm.Designer.vb">
@@ -1864,6 +1869,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\Loans\AddLoanScheduleForm.resx">
       <DependentUpon>AddLoanScheduleForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\Loans\AddLoanTypeForm.resx">
+      <DependentUpon>AddLoanTypeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\Loans\EmployeeLoansForm.resx">
       <DependentUpon>EmployeeLoansForm.vb</DependentUpon>

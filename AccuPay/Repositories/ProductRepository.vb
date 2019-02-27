@@ -8,13 +8,47 @@ Namespace Global.AccuPay.Repository
 
     Public Class ProductRepository
 
+        Private Shared ReadOnly LOAN_TYPE_CATEGORY As String = "Loan Type"
+
+
         Public Async Function GetLoanTypes() _
             As Task(Of IEnumerable(Of Product))
 
-            Dim categoryName = "Loan Type"
+            Dim categoryName = LOAN_TYPE_CATEGORY
 
             Dim category = Await GetOrCreateCategoryByName(categoryName)
             Return Await GetProductsByCategory(category.RowID)
+
+        End Function
+
+        Public Async Function AddLoanType(loanName As String) _
+            As Task(Of Product)
+
+            Using context = New PayrollContext()
+
+                Dim product As New Product
+                product.PartNo = loanName.Trim()
+                product.Name = loanName.Trim()
+
+                product.Category = LOAN_TYPE_CATEGORY
+
+                product.Created = Date.Now
+                product.CreatedBy = z_User
+                product.OrganizationID = z_OrganizationID
+
+                context.Products.Add(product)
+
+                Await context.SaveChangesAsync()
+
+                Dim newProduct = Await context.Products.
+                    FirstOrDefaultAsync(Function(p) Nullable.Equals(p.RowID, product.RowID))
+
+                If newProduct Is Nothing Then
+                    Throw New ArgumentException("There was a problem inserting the new loan type. Please try again.")
+                End If
+
+                Return newProduct
+            End Using
 
         End Function
 
@@ -35,7 +69,7 @@ Namespace Global.AccuPay.Repository
                 End Select
             Next
 
-            Return stringList
+            Return stringList.OrderBy(Function(s) s).ToList
 
         End Function
 

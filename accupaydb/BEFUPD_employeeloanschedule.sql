@@ -11,7 +11,7 @@ CREATE TRIGGER `BEFUPD_employeeloanschedule` BEFORE UPDATE ON `employeeloansched
 
 DECLARE loan_amount_update DECIMAL(15, 4);
 
-SET NEW.LoanPayPeriodLeft = CEIL(NEW.TotalBalanceLeft / NEW.DeductionAmount);
+SET NEW.LoanPayPeriodLeft = IF(NEW.DeductionAmount > NEW.TotalBalanceLeft, NEW.DeductionAmount, FLOOR(NEW.TotalBalanceLeft / NEW.DeductionAmount));
 
 IF OLD.LoanPayPeriodLeft <= 0 AND NEW.LoanPayPeriodLeft = 1 THEN
 

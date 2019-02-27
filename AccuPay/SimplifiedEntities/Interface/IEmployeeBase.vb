@@ -13,6 +13,9 @@ Namespace Global.AccuPay.SimplifiedEntities
         Property MiddleName As String
 
         Property LastName As String
+
+        Property Image As Byte()
+
     End Interface
 
 End Namespace

@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Entity
+﻿Imports System.Threading.Tasks
+Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Repository
 Imports Simplified = AccuPay.SimplifiedEntities.GridView
@@ -15,7 +16,11 @@ Public Class AddLoanScheduleForm
 
     Private _loanScheduleRepository As New LoanScheduleRepository
 
-    Private _loanTypeList As IEnumerable(Of Product)
+    Private _loanTypeList As List(Of Product)
+
+    Private _deductionSchedulesList As List(Of String)
+
+    Public Property NewLoanTypes As List(Of Product)
 
     Public Property IsSaved As Boolean
 
@@ -31,6 +36,8 @@ Public Class AddLoanScheduleForm
 
         Me.IsSaved = False
 
+        Me.NewLoanTypes = New List(Of Product)
+
     End Sub
 
     Private Async Sub AddLoanScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -45,6 +52,20 @@ Public Class AddLoanScheduleForm
 
         Me._newLoanSchedule = New LoanSchedule
         Me._newLoanSchedule.EmployeeID = _currentEmployee.RowID
+        Me._newLoanSchedule.DedEffectiveDateFrom = Date.Now
+
+        Me._newLoanSchedule.Status = LoanScheduleRepository.STATUS_IN_PROGRESS
+
+        Dim firstLoanType = Me._loanTypeList.FirstOrDefault()
+
+        If firstLoanType IsNot Nothing Then
+            Me._newLoanSchedule.LoanTypeID = firstLoanType.RowID
+            Me._newLoanSchedule.LoanName = firstLoanType.PartNo
+        End If
+
+        If _deductionSchedulesList IsNot Nothing Then
+            Me._newLoanSchedule.DeductionSchedule = _deductionSchedulesList.FirstOrDefault
+        End If
 
         CreateDataBindings()
 
@@ -68,7 +89,7 @@ Public Class AddLoanScheduleForm
 
         txtLoanBalance.DataBindings.Add("Text", Me._newLoanSchedule, "TotalBalanceLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
-        dtpDateFrom.DataBindings.Add("Value", Me._newLoanSchedule, "DedEffectiveDateFrom", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
+        dtpDateFrom.DataBindings.Add("Value", Me._newLoanSchedule, "DedEffectiveDateFrom")
 
         txtNumberOfPayPeriod.DataBindings.Add("Text", Me._newLoanSchedule, "NoOfPayPeriod", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
 
@@ -122,52 +143,86 @@ Public Class AddLoanScheduleForm
 
         Dim totalLoanAmount = AccuMath.CommercialRound(Me._newLoanSchedule.TotalLoanAmount)
         Dim deductionAmount = AccuMath.CommercialRound(Me._newLoanSchedule.DeductionAmount)
-        Dim totalBalanceLeft = AccuMath.CommercialRound(Me._newLoanSchedule.TotalBalanceLeft)
-
-        Dim numberOfPayPeriod, numberOfPayPeriodLeft As Integer
-
-        If deductionAmount = 0 Then
-            numberOfPayPeriod = 0
-            numberOfPayPeriodLeft = 0
-        Else
-            numberOfPayPeriod = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
-            numberOfPayPeriodLeft = _loanScheduleRepository.ComputeNumberOfPayPeriodLeft(totalBalanceLeft, deductionAmount)
-        End If
-
-        Me._newLoanSchedule.NoOfPayPeriod = numberOfPayPeriod
-        Me._newLoanSchedule.LoanPayPeriodLeft = numberOfPayPeriodLeft
 
         Me._newLoanSchedule.TotalBalanceLeft = totalLoanAmount
+
+        Dim numberOfPayPeriod = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
+
+        Me._newLoanSchedule.NoOfPayPeriod = numberOfPayPeriod
+
+        Me._newLoanSchedule.LoanPayPeriodLeft = numberOfPayPeriod
+
+
+    End Sub
+
+    Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
+        Dim form As New AddLoanTypeForm()
+        form.ShowDialog()
+
+        If form.IsSaved Then
+
+            Me._loanTypeList.Add(form.NewProduct)
+
+            Me.NewLoanTypes.Add(form.NewProduct)
+
+            PopulateLoanTypeCombobox()
+
+            If Me._newLoanSchedule IsNot Nothing Then
+
+                Me._newLoanSchedule.LoanTypeID = form.NewProduct.RowID
+                Me._newLoanSchedule.LoanName = form.NewProduct.PartNo
+
+                Dim orderedLoanTypeList = Me._loanTypeList.OrderBy(Function(p) p.PartNo).ToList
+
+                cboLoanType.SelectedIndex = orderedLoanTypeList.IndexOf(form.NewProduct)
+
+            End If
+
+            ShowBalloonInfo("Loan Type Successfully Added", "Saved")
+        End If
     End Sub
 
 #Region "Private Functions"
 
-
     Private Sub LoadLoanStatus()
-        cmbLoanStatus.DataSource = _loanScheduleRepository.GetStatusList()
+
+        Dim statusList = _loanScheduleRepository.GetStatusList()
+
+        statusList.Remove(LoanScheduleRepository.STATUS_CANCELLED)
+        statusList.Remove(LoanScheduleRepository.STATUS_COMPLETE)
+
+        cmbLoanStatus.DataSource = statusList
     End Sub
 
-    Private Async Function LoadLoanTypes() As Threading.Tasks.Task
+    Private Async Function LoadLoanTypes() As Task
 
-        Me._loanTypeList = Await _productRepository.GetLoanTypes()
-        Dim loanTypes = _productRepository.ConvertToStringList(_loanTypeList)
-
-        cboLoanType.DataSource = loanTypes
+        Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes())
+        PopulateLoanTypeCombobox()
 
     End Function
 
-    Private Async Function LoadDeductionSchedules() As Threading.Tasks.Task
+    Private Sub PopulateLoanTypeCombobox()
+        Dim loanTypes = _productRepository.ConvertToStringList(Me._loanTypeList)
 
-        Dim deductionSchedules = _listOfValueRepository.
+        cboLoanType.DataSource = loanTypes
+    End Sub
+
+    Private Async Function LoadDeductionSchedules() As Task
+
+        Me._deductionSchedulesList = _listOfValueRepository.
             ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
 
-        cmbDeductionSchedule.DataSource = deductionSchedules
+        cmbDeductionSchedule.DataSource = Me._deductionSchedulesList
 
     End Function
 
     Private Sub ForceLoanScheduleGridViewCommit()
         'Workaround. Focus other control to lose focus on current control
         pbEmpPicLoan.Focus()
+    End Sub
+
+    Private Sub ShowBalloonInfo(content As String, title As String)
+        myBalloon(content, title, txtEmployeeFirstName, 400)
     End Sub
 #End Region
 End Class

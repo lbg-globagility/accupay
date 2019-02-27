@@ -142,7 +142,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property AgencyID As Integer?
 
-        Public Property Image As Byte()
+        Public Property Image As Byte() Implements IEmployeeBase.Image
 
         Public Property AdvancementPoints As Integer
 

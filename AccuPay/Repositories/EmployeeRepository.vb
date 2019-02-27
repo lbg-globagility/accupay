@@ -24,7 +24,8 @@ Namespace Global.AccuPay.Repository
                                         .EmployeeID = e.EmployeeNo,
                                         .FirstName = e.FirstName,
                                         .MiddleName = e.MiddleName,
-                                        .LastName = e.LastName
+                                        .LastName = e.LastName,
+                                        .Image = e.Image
                                     }).
                                     ToListAsync
 
