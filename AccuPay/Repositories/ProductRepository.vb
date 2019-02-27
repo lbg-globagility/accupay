@@ -21,7 +21,26 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Public Async Function AddLoanType(loanName As String) _
+        Public Async Function GetOrCreateLoanType(loanTypeName As String) As Task(Of Product)
+
+            Using context = New PayrollContext()
+
+                Dim loanType = Await context.Products.
+                                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                Where(Function(p) p.PartNo = loanTypeName).
+                                FirstOrDefaultAsync
+
+                If loanType Is Nothing Then
+                    loanType = Await AddLoanType(loanTypeName)
+                End If
+
+                Return loanType
+
+            End Using
+
+        End Function
+
+        Public Async Function AddLoanType(loanName As String, Optional throwError As Boolean = True) _
             As Task(Of Product)
 
             Using context = New PayrollContext()
@@ -43,7 +62,7 @@ Namespace Global.AccuPay.Repository
                 Dim newProduct = Await context.Products.
                     FirstOrDefaultAsync(Function(p) Nullable.Equals(p.RowID, product.RowID))
 
-                If newProduct Is Nothing Then
+                If newProduct Is Nothing AndAlso throwError Then
                     Throw New ArgumentException("There was a problem inserting the new loan type. Please try again.")
                 End If
 
@@ -110,7 +129,7 @@ Namespace Global.AccuPay.Repository
 
                         Try
                             categoryProduct.CategoryID = categoryProduct.RowID
-                            context.SaveChanges()
+                            Await context.SaveChangesAsync()
 
                         Catch ex As Exception
                             'if for some reason hindi na update, we can't let that row

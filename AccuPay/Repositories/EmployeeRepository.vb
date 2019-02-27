@@ -45,6 +45,20 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
+
+        Public Async Function GetByEmployeeNumberAsync(employeeNumber As String) As Task(Of Employee)
+
+            Using context = New PayrollContext()
+
+                Return Await context.Employees.
+                    Where(Function(l) l.EmployeeNo = employeeNumber).
+                    Where(Function(l) Nullable.Equals(l.OrganizationID, z_OrganizationID)).
+                    FirstOrDefaultAsync()
+
+            End Using
+
+        End Function
+
         Public Async Function SearchSimpleLocal _
             (employees As IEnumerable(Of IEmployeeBase), searchValue As String) As _
             Task(Of IEnumerable(Of IEmployeeBase))

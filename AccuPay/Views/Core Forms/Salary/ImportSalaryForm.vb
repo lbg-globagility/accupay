@@ -1,11 +1,11 @@
 ﻿Option Strict On
 
-Imports PayrollSys
-Imports Globagility.AccuPay.Salaries
 Imports AccuPay.Entity
+Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Government
-Imports System.Data.Entity
+Imports Globagility.AccuPay.Salaries
 Imports Microsoft.EntityFrameworkCore
+Imports PayrollSys
 
 Public Class ImportSalaryForm
 
@@ -126,6 +126,12 @@ Public Class ImportSalaryForm
             _salary = salary
             _employee = employee
         End Sub
+
+        Public ReadOnly Property EmployeeNo As String
+            Get
+                Return _employee.EmployeeNo
+            End Get
+        End Property
 
         Public ReadOnly Property FullName As String
             Get

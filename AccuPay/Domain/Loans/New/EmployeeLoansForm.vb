@@ -363,47 +363,26 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Sub tsbtnImportLoans_Click(sender As Object, e As EventArgs) Handles tsbtnImportLoans.Click
+    Private Async Sub tsbtnImportLoans_Click(sender As Object, e As EventArgs) Handles tsbtnImportLoans.Click
 
-        Dim currentEmployee = GetSelectedEmployee()
+        Using form = New ImportLoansForm()
+            form.ShowDialog()
 
-        If currentEmployee Is Nothing Then
-            MessageBoxHelper.Warning("No employee selected!")
-            Return
-        End If
+            If form.IsSaved Then
 
-        Dim browsefile As New OpenFileDialog()
+                Await LoadLoanTypes()
 
-        browsefile.Filter = str_ms_excel_file_extension
+                Dim currentEmployee = GetSelectedEmployee()
 
-        If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                If currentEmployee IsNot Nothing Then
+                    Await LoadLoanSchedules(currentEmployee)
+                End If
 
-            Dim filepath = IO.Path.GetFullPath(browsefile.FileName)
-
-            Dim catchDatSet As DataSet = CType(
-                getWorkBookAsDataSet(filepath,
-                                     Me.Name), DataSet)
-
-            If (catchDatSet Is Nothing) = False And Trim(filepath).Length > 0 Then
-
-                Dim n_ImportLoans As New ImportLoans(catchDatSet, Me)
-
-                Dim objNewThread As New Thread(AddressOf n_ImportLoans.StartProcess)
-
-                Static indx As Integer = 0
-
-                indx += 1
-
-                objNewThread.Name = String.Concat("ImportLoans", indx)
-
-                objNewThread.IsBackground = True
-
-                objNewThread.Start()
-
-                threadArrayList.Add(objNewThread)
+                ShowBalloonInfo("Loans Successfully Imported", "Import Loans")
 
             End If
-        End If
+
+        End Using
     End Sub
 
     Private Sub EmployeeLoansForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
