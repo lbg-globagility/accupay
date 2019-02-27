@@ -1,12 +1,13 @@
 ﻿Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
-Imports AccuPay.Repository
+Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
+
 
 Public Class TimeLogsForm
 
@@ -1372,14 +1373,24 @@ Public Class TimeLogsForm
                 context.SaveChanges()
 
             End Using
+
+
         Catch ex As Exception
+
             _logger.Error("NewTimeEntryAlternateLineImport", ex)
-            MsgBox("Something went wrong while loading the time logs. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Import Logs")
+
+            MessageBoxHelper.DefaultErrorMessage("Import Logs")
+
         End Try
 
     End Sub
 
     Private Async Function GetEmployeesFromLogGroup(context As PayrollContext, logsGroupedByEmployee As List(Of IGrouping(Of String, TimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
+
+        If logsGroupedByEmployee.Count < 1 Then
+            Return New List(Of Employee)
+        End If
+
         Dim employeeNumbersArray(logsGroupedByEmployee.Count - 1) As String
 
         For index = 0 To logsGroupedByEmployee.Count - 1
@@ -1388,7 +1399,7 @@ Public Class TimeLogsForm
 
         Return Await context.Employees.
                         Where(Function(e) employeeNumbersArray.Contains(e.EmployeeNo)).
-                        Where(Function(e) e.OrganizationID = z_OrganizationID).
+                        Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
                         ToListAsync
     End Function
 

@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.ComponentModel.DataAnnotations
+Imports AccuPay.Entity
 
 Namespace Global.AccuPay.Loans
 
@@ -36,6 +37,16 @@ Namespace Global.AccuPay.Loans
 
         <ForeignKey("LoanScheduleID")>
         Public Overridable Property LoanSchedule As LoanSchedule
+
+        <ForeignKey("PayPeriodID")>
+        Public Overridable Property PayPeriod As PayPeriod
+
+
+        Public ReadOnly Property PayPeriodPayToDate() As Date?
+            Get
+                Return PayPeriod?.PayToDate
+            End Get
+        End Property
 
     End Class
 

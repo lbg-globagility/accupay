@@ -1,4 +1,5 @@
-﻿Public Class LoanType
+﻿'TBD
+Public Class LoanType
 
     Private Sub LoanType_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'dbconn()
@@ -10,8 +11,8 @@
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         If Trim(TextBox1.Text) <> "" Then
             'TextBox1.Text = StrConv(TextBox1.Text, VbStrConv.ProperCase)
-            Dim new_ID = EmployeeForm.INS_product(Trim(TextBox1.Text), _
-                             Trim(TextBox1.Text), _
+            Dim new_ID = EmployeeForm.INS_product(Trim(TextBox1.Text),
+                             Trim(TextBox1.Text),
                              "Loan Type")
 
             EmployeeForm.cboloantype.Items.Add(Trim(TextBox1.Text))

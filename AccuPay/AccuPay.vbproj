@@ -320,7 +320,10 @@
     <Compile Include="Auditing\Forms\TimeLogForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
     <Compile Include="Core\Utilities\Extensions\DateExtensions.vb" />
+    <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
+    <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
     <Compile Include="Core\Utilities\ObjectUtils.vb" />
     <Compile Include="Domain\AgencyFees\Agency.vb" />
     <Compile Include="Domain\AgencyFees\AgencyFee.vb" />
@@ -336,6 +339,8 @@
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Domain\Commons\SemiMonthlyAllowanceCalculator.vb" />
     <Compile Include="Domain\Leaves\LeaveConvertible.vb" />
+    <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
+    <Compile Include="Domain\Loans\New\LoanRowRecord.vb" />
     <Compile Include="Domain\Payroll\CashOutUnusedLeave.vb" />
     <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
     <Compile Include="Domain\Commons\ListOfValueCollection.vb" />
@@ -356,6 +361,11 @@
     <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
     <Compile Include="Core\Utilities\TypeTools.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
+    <Compile Include="Repositories\CategoryRepository.vb" />
+    <Compile Include="Repositories\ListOfValueRepository.vb" />
+    <Compile Include="Repositories\LoanScheduleRepository.vb" />
+    <Compile Include="Repositories\ProductRepository.vb" />
+    <Compile Include="SimplifiedEntities\GridView\Employee.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -377,6 +387,8 @@
     <Compile Include="Reports\Reports\Providers\Employee201ReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LoanLedgerReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\PayrollLedgerExcelFormatReportProvider.vb" />
+    <Compile Include="Repositories\EmployeeRepository.vb" />
+    <Compile Include="SimplifiedEntities\Interface\IEmployeeBase.vb" />
     <Compile Include="Views\Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
     </Compile>
@@ -698,6 +710,30 @@
     </Compile>
     <Compile Include="Views\Employees\SalaryTab2.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Domain\Loans\New\AddLoanScheduleForm.Designer.vb">
+      <DependentUpon>AddLoanScheduleForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\Loans\New\AddLoanScheduleForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Domain\Loans\New\AddLoanTypeForm.Designer.vb">
+      <DependentUpon>AddLoanTypeForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\Loans\New\AddLoanTypeForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Domain\Loans\New\EmployeeLoansForm.Designer.vb">
+      <DependentUpon>EmployeeLoansForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\Loans\New\EmployeeLoansForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Domain\Loans\New\ImportLoansForm.Designer.vb">
+      <DependentUpon>ImportLoansForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\Loans\New\ImportLoansForm.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Initial Forms\AboutUs.Designer.vb">
       <DependentUpon>AboutUs.vb</DependentUpon>
@@ -1839,6 +1875,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\LoanScheduleForm.resx">
       <DependentUpon>LoanScheduleForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Loans\New\AddLoanScheduleForm.resx">
+      <DependentUpon>AddLoanScheduleForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Loans\New\AddLoanTypeForm.resx">
+      <DependentUpon>AddLoanTypeForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Loans\New\EmployeeLoansForm.resx">
+      <DependentUpon>EmployeeLoansForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Loans\New\ImportLoansForm.resx">
+      <DependentUpon>ImportLoansForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Initial Forms\AboutUs.resx">
       <DependentUpon>AboutUs.vb</DependentUpon>

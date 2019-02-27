@@ -2,14 +2,18 @@
 
 Imports System.IO
 Imports System.Reflection
+Imports AccuPay.Attributes
 Imports AccuPay.Utils
 Imports OfficeOpenXml
 
-Namespace Global.Globagility.AccuPay.Salaries
+Namespace Global.Globagility.AccuPay
 
     Public Class ExcelParser(Of T As {Class, New})
 
         Private ReadOnly _worksheetName As String
+
+        Public Sub New()
+        End Sub
 
         Public Sub New(worksheetName As String)
             _worksheetName = worksheetName
@@ -21,11 +25,22 @@ Namespace Global.Globagility.AccuPay.Salaries
             Dim records As List(Of T) = Nothing
 
             Using excel = New ExcelPackage(stream)
-                Dim worksheet = excel.Workbook.Worksheets(_worksheetName)
+
+                Dim worksheet As ExcelWorksheet
+
+                If _worksheetName Is Nothing Then
+                    worksheet = excel.Workbook.Worksheets(1)
+
+                Else
+                    worksheet = excel.Workbook.Worksheets(_worksheetName)
+
+                End If
 
                 If worksheet Is Nothing Then
-                    Throw New Exception($"We can't find the worksheet `{_worksheetName}`.")
+                    Throw New Exception($"We can't find the worksheet{If(String.IsNullOrWhiteSpace(_worksheetName), "", $"`{_worksheetName}`")}.")
                 End If
+
+
 
                 Dim tprops = GetType(T).GetProperties().ToList()
 
@@ -59,12 +74,40 @@ Namespace Global.Globagility.AccuPay.Salaries
                 End If
 
                 Dim originalValue = row(column.Index)
-                Dim prop = tprops.FirstOrDefault(
+
+                Dim prop As PropertyInfo
+
+                'Check by Property Attribute Name
+                prop = tprops.FirstOrDefault(
                     Function(t)
-                        Return StringUtils.ToPascal(t.Name) = StringUtils.ToPascal(column.Name)
+
+                        If Attribute.IsDefined(t, GetType(ColumnNameAttribute)) = False Then
+                            Return False
+                        End If
+
+                        Dim attr = CType(t.GetCustomAttributes(GetType(ColumnNameAttribute), False), ColumnNameAttribute())
+
+                        Return StringUtils.ToPascal(attr(0).Value) = StringUtils.ToPascal(column.Name)
+
                     End Function)
 
+
+                If prop Is Nothing Then
+
+                    'Check by Property Name
+                    prop = tprops.FirstOrDefault(
+                        Function(t)
+                            Return StringUtils.ToPascal(t.Name) = StringUtils.ToPascal(column.Name)
+                        End Function)
+
+                End If
+
                 If prop IsNot Nothing Then
+
+                    If Attribute.IsDefined(prop, GetType(IgnoreAttribute)) Then
+                        Continue For
+                    End If
+
                     ParseValue(newRecord, prop, originalValue)
                 End If
             Next
