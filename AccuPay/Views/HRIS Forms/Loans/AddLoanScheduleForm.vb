@@ -2,6 +2,7 @@
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Repository
+Imports AccuPay.Utils
 Imports Simplified = AccuPay.SimplifiedEntities.GridView
 
 Public Class AddLoanScheduleForm
@@ -50,6 +51,11 @@ Public Class AddLoanScheduleForm
 
         Await LoadDeductionSchedules()
 
+        ResetForm()
+
+    End Sub
+
+    Private Sub ResetForm()
         Me._newLoanSchedule = New LoanSchedule
         Me._newLoanSchedule.EmployeeID = _currentEmployee.RowID
         Me._newLoanSchedule.DedEffectiveDateFrom = Date.Now
@@ -68,7 +74,6 @@ Public Class AddLoanScheduleForm
         End If
 
         CreateDataBindings()
-
     End Sub
 
     Private Sub PopulateEmployeeData()
@@ -81,28 +86,40 @@ Public Class AddLoanScheduleForm
 
     Private Sub CreateDataBindings()
 
+        txtLoanNumber.DataBindings.Clear()
         txtLoanNumber.DataBindings.Add("Text", Me._newLoanSchedule, "LoanNumber")
 
+        txtRemarks.DataBindings.Clear()
         txtRemarks.DataBindings.Add("Text", Me._newLoanSchedule, "Comments")
 
+        txtTotalLoanAmount.DataBindings.Clear()
         txtTotalLoanAmount.DataBindings.Add("Text", Me._newLoanSchedule, "TotalLoanAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
+        txtLoanBalance.DataBindings.Clear()
         txtLoanBalance.DataBindings.Add("Text", Me._newLoanSchedule, "TotalBalanceLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
+        dtpDateFrom.DataBindings.Clear()
         dtpDateFrom.DataBindings.Add("Value", Me._newLoanSchedule, "DedEffectiveDateFrom")
 
+        txtNumberOfPayPeriod.DataBindings.Clear()
         txtNumberOfPayPeriod.DataBindings.Add("Text", Me._newLoanSchedule, "NoOfPayPeriod", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
 
+        txtNumberOfPayPeriodLeft.DataBindings.Clear()
         txtNumberOfPayPeriodLeft.DataBindings.Add("Text", Me._newLoanSchedule, "LoanPayPeriodLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
 
+        txtDeductionAmount.DataBindings.Clear()
         txtDeductionAmount.DataBindings.Add("Text", Me._newLoanSchedule, "DeductionAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
+        txtLoanInterestPercentage.DataBindings.Clear()
         txtLoanInterestPercentage.DataBindings.Add("Text", Me._newLoanSchedule, "DeductionPercentage", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
+        cboLoanType.DataBindings.Clear()
         cboLoanType.DataBindings.Add("Text", Me._newLoanSchedule, "LoanName")
 
+        cmbLoanStatus.DataBindings.Clear()
         cmbLoanStatus.DataBindings.Add("Text", Me._newLoanSchedule, "Status")
 
+        cmbDeductionSchedule.DataBindings.Clear()
         cmbDeductionSchedule.DataBindings.Add("Text", Me._newLoanSchedule, "DeductionSchedule")
     End Sub
 
@@ -126,16 +143,47 @@ Public Class AddLoanScheduleForm
         End If
     End Sub
 
-    Private Async Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
+    Private Async Sub btnAdd_Click(sender As Object, e As EventArgs) _
+        Handles btnAddAndNew.Click, btnAddAndClose.Click
+
         ForceLoanScheduleGridViewCommit()
+
+        Dim confirmMessage = ""
+
+        If Me._newLoanSchedule.TotalLoanAmount = 0 AndAlso Me._newLoanSchedule.DeductionAmount = 0 Then
+            confirmMessage = "You did not enter a value for Total Loan Amount and Deduction Amount. Do you want to save the new loan?"
+
+        ElseIf Me._newLoanSchedule.TotalLoanAmount = 0 Then
+            confirmMessage = "You did not enter a value for Total Loan Amount. Do you want to save the new loan?"
+
+        ElseIf Me._newLoanSchedule.DeductionAmount = 0 Then
+            confirmMessage = "You did not enter a value for Deduction Amount. Do you want to save the new loan?"
+
+        End If
+
+        If String.IsNullOrWhiteSpace(confirmMessage) = False Then
+
+            If MessageBoxHelper.Confirm(Of Boolean)(confirmMessage, "New Loan") = False Then Return
+
+        End If
+
+
 
         Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
         Me.IsSaved = True
 
-        Me.ShowBalloonSuccess = True
+        If sender Is btnAddAndNew Then
+            ShowBalloonInfo("Loan Successfully Added", "Saved")
 
-        Me.Close()
+            ResetForm()
+
+        Else
+
+            Me.ShowBalloonSuccess = True
+            Me.Close()
+        End If
+
     End Sub
 
     Private Sub txtTotalLoanAmount_Leave(sender As Object, e As EventArgs) _
@@ -161,20 +209,20 @@ Public Class AddLoanScheduleForm
 
         If form.IsSaved Then
 
-            Me._loanTypeList.Add(form.NewProduct)
+            Me._loanTypeList.Add(form.NewLoanType)
 
-            Me.NewLoanTypes.Add(form.NewProduct)
+            Me.NewLoanTypes.Add(form.NewLoanType)
 
             PopulateLoanTypeCombobox()
 
             If Me._newLoanSchedule IsNot Nothing Then
 
-                Me._newLoanSchedule.LoanTypeID = form.NewProduct.RowID
-                Me._newLoanSchedule.LoanName = form.NewProduct.PartNo
+                Me._newLoanSchedule.LoanTypeID = form.NewLoanType.RowID
+                Me._newLoanSchedule.LoanName = form.NewLoanType.PartNo
 
                 Dim orderedLoanTypeList = Me._loanTypeList.OrderBy(Function(p) p.PartNo).ToList
 
-                cboLoanType.SelectedIndex = orderedLoanTypeList.IndexOf(form.NewProduct)
+                cboLoanType.SelectedIndex = orderedLoanTypeList.IndexOf(form.NewLoanType)
 
             End If
 
@@ -222,7 +270,7 @@ Public Class AddLoanScheduleForm
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)
-        myBalloon(content, title, txtEmployeeFirstName, 400)
+        myBalloon(content, title, EmployeeInfoTabLayout, 400)
     End Sub
 #End Region
 End Class

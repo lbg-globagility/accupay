@@ -26,7 +26,7 @@ Public Class EmployeeLoansForm
 
     Private _unchangedLoanSchedules As New List(Of LoanSchedule)
 
-    Private _currentLoanTransactions As IEnumerable(Of LoanTransaction)
+    Private _currentLoanTransactions As New List(Of LoanTransaction)
 
 
     Private str_ms_excel_file_extension As String =
@@ -86,6 +86,10 @@ Public Class EmployeeLoansForm
 
         DetailsTabControl.Enabled = False
 
+        Dim loanHistoryTabText = "Loan History"
+
+        tbpHistory.Text = loanHistoryTabText
+
         If loanSchedulesDataGridView.CurrentRow Is Nothing Then Return
 
         Dim currentLoanSchedule As LoanSchedule = GetSelectedLoanSchedule()
@@ -93,12 +97,17 @@ Public Class EmployeeLoansForm
         Dim currentEmployee = GetSelectedEmployee()
         If currentLoanSchedule IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
            Nullable.Equals(currentLoanSchedule.EmployeeID, currentEmployee.RowID) Then
-            PopulateLoanScheduleForm(currentLoanSchedule)
 
             Await LoadLoanTransactions(currentLoanSchedule)
 
+            PopulateLoanScheduleForm(currentLoanSchedule)
+
+            tbpHistory.Text = $"{loanHistoryTabText} ({Me._currentLoanTransactions.Count})"
+
             DetailsTabControl.Enabled = True
         End If
+
+
 
     End Sub
 
@@ -110,19 +119,22 @@ Public Class EmployeeLoansForm
         Dim totalLoanAmount = AccuMath.CommercialRound(Me._currentLoanSchedule.TotalLoanAmount)
         Dim deductionAmount = AccuMath.CommercialRound(Me._currentLoanSchedule.DeductionAmount)
 
-        Dim numberOfPayPeriod = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
-
-        Me._currentLoanSchedule.NoOfPayPeriod = numberOfPayPeriod
 
 
         If Me._currentLoanTransactions.Count = 0 AndAlso
             (Me._currentLoanSchedule.Status IsNot LoanScheduleRepository.STATUS_CANCELLED OrElse
             Me._currentLoanSchedule.Status IsNot LoanScheduleRepository.STATUS_COMPLETE) Then
 
+            Dim numberOfPayPeriod = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
+
             Me._currentLoanSchedule.TotalBalanceLeft = totalLoanAmount
-            Me._currentLoanSchedule.LoanPayPeriodLeft = numberOfPayPeriod
+            Me._currentLoanSchedule.NoOfPayPeriod = numberOfPayPeriod
 
         End If
+
+        Dim totalBalanceLeft = AccuMath.CommercialRound(Me._currentLoanSchedule.TotalBalanceLeft)
+
+        Me._currentLoanSchedule.LoanPayPeriodLeft = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalBalanceLeft, deductionAmount)
 
     End Sub
 
@@ -337,7 +349,7 @@ Public Class EmployeeLoansForm
 
             Await LoadLoanSchedules(currentEmployee)
 
-            ShowBalloonInfo($"Loan{loanNumberString}Successfully Deleted.", messageTitle)
+            ShowBalloonInfo($"Loan{If(String.IsNullOrWhiteSpace(loanNumberString), " ", loanNumberString)}Successfully Deleted.", messageTitle)
 
         Catch ex As ArgumentException
 
@@ -509,7 +521,8 @@ Public Class EmployeeLoansForm
 
     Private Async Function LoadLoanTransactions(currentLoanSchedule As LoanSchedule) As Task
 
-        Me._currentLoanTransactions = Await _loanScheduleRepository.GetLoanTransactionsWithPayPeriod(currentLoanSchedule.RowID)
+        Me._currentLoanTransactions = New List(Of LoanTransaction) _
+            (Await _loanScheduleRepository.GetLoanTransactionsWithPayPeriod(currentLoanSchedule.RowID))
 
         loanHistoryGridView.DataSource = Me._currentLoanTransactions
 
@@ -553,10 +566,13 @@ Public Class EmployeeLoansForm
 
         tbpDetails.Enabled = Not isUneditable
 
+        txtLoanNumber.DataBindings.Clear()
         txtLoanNumber.DataBindings.Add("Text", Me._currentLoanSchedule, "LoanNumber")
 
+        txtRemarks.DataBindings.Clear()
         txtRemarks.DataBindings.Add("Text", Me._currentLoanSchedule, "Comments")
 
+        txtTotalLoanAmount.DataBindings.Clear()
         txtTotalLoanAmount.DataBindings.Add("Text", Me._currentLoanSchedule, "TotalLoanAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
         If Me._currentLoanTransactions IsNot Nothing AndAlso Me._currentLoanTransactions.Count > 0 Then
             txtTotalLoanAmount.Enabled = False
@@ -564,21 +580,29 @@ Public Class EmployeeLoansForm
             txtTotalLoanAmount.Enabled = True
         End If
 
+        txtLoanBalance.DataBindings.Clear()
         txtLoanBalance.DataBindings.Add("Text", Me._currentLoanSchedule, "TotalBalanceLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
+        dtpDateFrom.DataBindings.Clear()
         dtpDateFrom.DataBindings.Add("Value", Me._currentLoanSchedule, "DedEffectiveDateFrom")
 
+        txtNumberOfPayPeriod.DataBindings.Clear()
         txtNumberOfPayPeriod.DataBindings.Add("Text", Me._currentLoanSchedule, "NoOfPayPeriod", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
 
+        txtNumberOfPayPeriodLeft.DataBindings.Clear()
         txtNumberOfPayPeriodLeft.DataBindings.Add("Text", Me._currentLoanSchedule, "LoanPayPeriodLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
 
+        txtDeductionAmount.DataBindings.Clear()
         txtDeductionAmount.DataBindings.Add("Text", Me._currentLoanSchedule, "DeductionAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
+        txtLoanInterestPercentage.DataBindings.Clear()
         txtLoanInterestPercentage.DataBindings.Add("Text", Me._currentLoanSchedule, "DeductionPercentage", True, DataSourceUpdateMode.OnValidation, Nothing, "N2")
 
+        cboLoanType.DataBindings.Clear()
         cboLoanType.DataBindings.Add("Text", Me._currentLoanSchedule, "LoanName")
 
-
+        txtLoanStatus.DataBindings.Clear()
+        cmbLoanStatus.DataBindings.Clear()
         If isUneditable Then
 
             txtLoanStatus.DataBindings.Add("Text", Me._currentLoanSchedule, "Status")
@@ -589,6 +613,7 @@ Public Class EmployeeLoansForm
         End If
 
 
+        cmbDeductionSchedule.DataBindings.Clear()
         cmbDeductionSchedule.DataBindings.Add("Text", Me._currentLoanSchedule, "DeductionSchedule")
 
         ToggleLoanStatusComboboxVisibility(Not isUneditable)
@@ -598,6 +623,8 @@ Public Class EmployeeLoansForm
     Private Sub ResetLoanScheduleForm()
 
         Me._currentLoanSchedule = Nothing
+
+        Me._currentLoanTransactions.CLear()
 
         txtLoanNumber.Clear()
         txtLoanNumber.DataBindings.Clear()
@@ -697,18 +724,18 @@ Public Class EmployeeLoansForm
 
         If form.IsSaved Then
 
-            Me._loanTypeList.Add(form.NewProduct)
+            Me._loanTypeList.Add(form.NewLoanType)
 
             PopulateLoanTypeCombobox()
 
             If Me._currentLoanSchedule IsNot Nothing Then
 
-                Me._currentLoanSchedule.LoanTypeID = form.NewProduct.RowID
-                Me._currentLoanSchedule.LoanName = form.NewProduct.PartNo
+                Me._currentLoanSchedule.LoanTypeID = form.NewLoanType.RowID
+                Me._currentLoanSchedule.LoanName = form.NewLoanType.PartNo
 
                 Dim orderedLoanTypeList = Me._loanTypeList.OrderBy(Function(p) p.PartNo).ToList
 
-                cboLoanType.SelectedIndex = orderedLoanTypeList.IndexOf(form.NewProduct)
+                cboLoanType.SelectedIndex = orderedLoanTypeList.IndexOf(form.NewLoanType)
 
             End If
 

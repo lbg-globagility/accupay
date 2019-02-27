@@ -62,8 +62,9 @@ Partial Class AddLoanScheduleForm
         Me.txtEmployeeFirstName = New System.Windows.Forms.TextBox()
         Me.txtEmployeeNumber = New System.Windows.Forms.TextBox()
         Me.pbEmpPicLoan = New System.Windows.Forms.PictureBox()
-        Me.btnAdd = New System.Windows.Forms.Button()
+        Me.btnAddAndNew = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
+        Me.btnAddAndClose = New System.Windows.Forms.Button()
         Me.LoanDetailsTabLayout.SuspendLayout()
         Me.pnlTxtLoanBalance.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -81,29 +82,29 @@ Partial Class AddLoanScheduleForm
         Me.LoanDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33!))
         Me.LoanDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.34!))
         Me.LoanDetailsTabLayout.Controls.Add(Me.pnlTxtLoanBalance, 0, 7)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.Panel3, 1, 9)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.pnlTxtDeductionAmount, 1, 5)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.cmbDeductionSchedule, 2, 9)
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanType, 0, 0)
         Me.LoanDetailsTabLayout.Controls.Add(Me.plnCboLoanType, 0, 1)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanInterestPercentage, 1, 8)
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanNumber, 0, 2)
         Me.LoanDetailsTabLayout.Controls.Add(Me.txtLoanNumber, 0, 3)
         Me.LoanDetailsTabLayout.Controls.Add(Me.dtpDateFrom, 0, 9)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblNumberOfPayPeriod, 1, 0)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.txtNumberOfPayPeriod, 1, 1)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblNumberOfPayPeriodLeft, 1, 2)
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblDateFrom, 0, 8)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.txtNumberOfPayPeriodLeft, 1, 3)
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblRemarks, 2, 0)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanStatus, 1, 6)
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanBalance, 0, 6)
         Me.LoanDetailsTabLayout.Controls.Add(Me.txtRemarks, 2, 1)
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblTotalLoanAmount, 0, 4)
         Me.LoanDetailsTabLayout.Controls.Add(Me.pnlTxtLoanAmount, 0, 5)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblDeductionAmount, 1, 4)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblDeductionSchedule, 2, 8)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.cmbLoanStatus, 1, 7)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.lblNumberOfPayPeriodLeft, 1, 0)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.txtNumberOfPayPeriodLeft, 1, 1)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.lblDeductionAmount, 1, 2)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.pnlTxtDeductionAmount, 1, 3)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanStatus, 1, 4)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.cmbLoanStatus, 1, 5)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanInterestPercentage, 1, 6)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.Panel3, 1, 7)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.lblDeductionSchedule, 1, 8)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.lblNumberOfPayPeriod, 2, 8)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.txtNumberOfPayPeriod, 2, 9)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.cmbDeductionSchedule, 1, 9)
         Me.LoanDetailsTabLayout.Dock = System.Windows.Forms.DockStyle.Top
         Me.LoanDetailsTabLayout.Location = New System.Drawing.Point(0, 88)
         Me.LoanDetailsTabLayout.Name = "LoanDetailsTabLayout"
@@ -156,11 +157,10 @@ Partial Class AddLoanScheduleForm
         '
         Me.Panel3.Controls.Add(Me.Label2)
         Me.Panel3.Controls.Add(Me.txtLoanInterestPercentage)
-        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel3.Location = New System.Drawing.Point(267, 208)
+        Me.Panel3.Location = New System.Drawing.Point(267, 160)
         Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(267, 39)
+        Me.Panel3.Size = New System.Drawing.Size(267, 32)
         Me.Panel3.TabIndex = 362
         '
         'Label2
@@ -187,7 +187,7 @@ Partial Class AddLoanScheduleForm
         Me.pnlTxtDeductionAmount.Controls.Add(Me.Label1)
         Me.pnlTxtDeductionAmount.Controls.Add(Me.txtDeductionAmount)
         Me.pnlTxtDeductionAmount.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnlTxtDeductionAmount.Location = New System.Drawing.Point(267, 112)
+        Me.pnlTxtDeductionAmount.Location = New System.Drawing.Point(267, 64)
         Me.pnlTxtDeductionAmount.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlTxtDeductionAmount.Name = "pnlTxtDeductionAmount"
         Me.pnlTxtDeductionAmount.Size = New System.Drawing.Size(267, 32)
@@ -217,7 +217,7 @@ Partial Class AddLoanScheduleForm
         '
         Me.cmbDeductionSchedule.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbDeductionSchedule.FormattingEnabled = True
-        Me.cmbDeductionSchedule.Location = New System.Drawing.Point(554, 211)
+        Me.cmbDeductionSchedule.Location = New System.Drawing.Point(287, 211)
         Me.cmbDeductionSchedule.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.cmbDeductionSchedule.Name = "cmbDeductionSchedule"
         Me.cmbDeductionSchedule.Size = New System.Drawing.Size(195, 21)
@@ -279,7 +279,7 @@ Partial Class AddLoanScheduleForm
         '
         Me.lblLoanInterestPercentage.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblLoanInterestPercentage.AutoSize = True
-        Me.lblLoanInterestPercentage.Location = New System.Drawing.Point(287, 195)
+        Me.lblLoanInterestPercentage.Location = New System.Drawing.Point(287, 147)
         Me.lblLoanInterestPercentage.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblLoanInterestPercentage.Name = "lblLoanInterestPercentage"
         Me.lblLoanInterestPercentage.Size = New System.Drawing.Size(135, 13)
@@ -318,7 +318,7 @@ Partial Class AddLoanScheduleForm
         '
         Me.lblNumberOfPayPeriod.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblNumberOfPayPeriod.AutoSize = True
-        Me.lblNumberOfPayPeriod.Location = New System.Drawing.Point(287, 3)
+        Me.lblNumberOfPayPeriod.Location = New System.Drawing.Point(554, 195)
         Me.lblNumberOfPayPeriod.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblNumberOfPayPeriod.Name = "lblNumberOfPayPeriod"
         Me.lblNumberOfPayPeriod.Size = New System.Drawing.Size(95, 13)
@@ -328,7 +328,7 @@ Partial Class AddLoanScheduleForm
         'txtNumberOfPayPeriod
         '
         Me.txtNumberOfPayPeriod.Enabled = False
-        Me.txtNumberOfPayPeriod.Location = New System.Drawing.Point(287, 19)
+        Me.txtNumberOfPayPeriod.Location = New System.Drawing.Point(554, 211)
         Me.txtNumberOfPayPeriod.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.txtNumberOfPayPeriod.Name = "txtNumberOfPayPeriod"
         Me.txtNumberOfPayPeriod.ShortcutsEnabled = False
@@ -339,7 +339,7 @@ Partial Class AddLoanScheduleForm
         '
         Me.lblNumberOfPayPeriodLeft.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblNumberOfPayPeriodLeft.AutoSize = True
-        Me.lblNumberOfPayPeriodLeft.Location = New System.Drawing.Point(287, 51)
+        Me.lblNumberOfPayPeriodLeft.Location = New System.Drawing.Point(287, 3)
         Me.lblNumberOfPayPeriodLeft.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblNumberOfPayPeriodLeft.Name = "lblNumberOfPayPeriodLeft"
         Me.lblNumberOfPayPeriodLeft.Size = New System.Drawing.Size(115, 13)
@@ -361,7 +361,7 @@ Partial Class AddLoanScheduleForm
         '
         Me.txtNumberOfPayPeriodLeft.BackColor = System.Drawing.Color.White
         Me.txtNumberOfPayPeriodLeft.Enabled = False
-        Me.txtNumberOfPayPeriodLeft.Location = New System.Drawing.Point(287, 67)
+        Me.txtNumberOfPayPeriodLeft.Location = New System.Drawing.Point(287, 19)
         Me.txtNumberOfPayPeriodLeft.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.txtNumberOfPayPeriodLeft.Name = "txtNumberOfPayPeriodLeft"
         Me.txtNumberOfPayPeriodLeft.ReadOnly = True
@@ -383,7 +383,7 @@ Partial Class AddLoanScheduleForm
         '
         Me.lblLoanStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblLoanStatus.AutoSize = True
-        Me.lblLoanStatus.Location = New System.Drawing.Point(287, 147)
+        Me.lblLoanStatus.Location = New System.Drawing.Point(287, 99)
         Me.lblLoanStatus.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblLoanStatus.Name = "lblLoanStatus"
         Me.lblLoanStatus.Size = New System.Drawing.Size(39, 13)
@@ -459,7 +459,7 @@ Partial Class AddLoanScheduleForm
         '
         Me.lblDeductionAmount.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblDeductionAmount.AutoSize = True
-        Me.lblDeductionAmount.Location = New System.Drawing.Point(287, 99)
+        Me.lblDeductionAmount.Location = New System.Drawing.Point(287, 51)
         Me.lblDeductionAmount.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblDeductionAmount.Name = "lblDeductionAmount"
         Me.lblDeductionAmount.Size = New System.Drawing.Size(105, 13)
@@ -470,7 +470,7 @@ Partial Class AddLoanScheduleForm
         '
         Me.lblDeductionSchedule.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblDeductionSchedule.AutoSize = True
-        Me.lblDeductionSchedule.Location = New System.Drawing.Point(554, 195)
+        Me.lblDeductionSchedule.Location = New System.Drawing.Point(287, 195)
         Me.lblDeductionSchedule.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblDeductionSchedule.Name = "lblDeductionSchedule"
         Me.lblDeductionSchedule.Size = New System.Drawing.Size(111, 13)
@@ -481,7 +481,7 @@ Partial Class AddLoanScheduleForm
         '
         Me.cmbLoanStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbLoanStatus.FormattingEnabled = True
-        Me.cmbLoanStatus.Location = New System.Drawing.Point(287, 163)
+        Me.cmbLoanStatus.Location = New System.Drawing.Point(287, 115)
         Me.cmbLoanStatus.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.cmbLoanStatus.MaxLength = 50
         Me.cmbLoanStatus.Name = "cmbLoanStatus"
@@ -547,23 +547,32 @@ Partial Class AddLoanScheduleForm
         Me.pbEmpPicLoan.TabIndex = 382
         Me.pbEmpPicLoan.TabStop = False
         '
-        'btnAdd
+        'btnAddAndNew
         '
-        Me.btnAdd.Location = New System.Drawing.Point(331, 368)
-        Me.btnAdd.Name = "btnAdd"
-        Me.btnAdd.Size = New System.Drawing.Size(75, 23)
-        Me.btnAdd.TabIndex = 7
-        Me.btnAdd.Text = "&Add"
-        Me.btnAdd.UseVisualStyleBackColor = True
+        Me.btnAddAndNew.Location = New System.Drawing.Point(369, 372)
+        Me.btnAddAndNew.Name = "btnAddAndNew"
+        Me.btnAddAndNew.Size = New System.Drawing.Size(75, 23)
+        Me.btnAddAndNew.TabIndex = 7
+        Me.btnAddAndNew.Text = "Add && &New"
+        Me.btnAddAndNew.UseVisualStyleBackColor = True
         '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(414, 368)
+        Me.btnCancel.Location = New System.Drawing.Point(452, 372)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 8
         Me.btnCancel.Text = "&Cancel"
         Me.btnCancel.UseVisualStyleBackColor = True
+        '
+        'btnAddAndClose
+        '
+        Me.btnAddAndClose.Location = New System.Drawing.Point(278, 372)
+        Me.btnAddAndClose.Name = "btnAddAndClose"
+        Me.btnAddAndClose.Size = New System.Drawing.Size(85, 23)
+        Me.btnAddAndClose.TabIndex = 9
+        Me.btnAddAndClose.Text = "&Add && Close"
+        Me.btnAddAndClose.UseVisualStyleBackColor = True
         '
         'AddLoanScheduleForm
         '
@@ -571,8 +580,9 @@ Partial Class AddLoanScheduleForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(166, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(803, 416)
+        Me.Controls.Add(Me.btnAddAndClose)
         Me.Controls.Add(Me.btnCancel)
-        Me.Controls.Add(Me.btnAdd)
+        Me.Controls.Add(Me.btnAddAndNew)
         Me.Controls.Add(Me.LoanDetailsTabLayout)
         Me.Controls.Add(Me.EmployeeInfoTabLayout)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -639,6 +649,7 @@ Partial Class AddLoanScheduleForm
     Friend WithEvents txtEmployeeFirstName As TextBox
     Friend WithEvents txtEmployeeNumber As TextBox
     Friend WithEvents pbEmpPicLoan As PictureBox
-    Friend WithEvents btnAdd As Button
+    Friend WithEvents btnAddAndNew As Button
     Friend WithEvents btnCancel As Button
+    Friend WithEvents btnAddAndClose As Button
 End Class
