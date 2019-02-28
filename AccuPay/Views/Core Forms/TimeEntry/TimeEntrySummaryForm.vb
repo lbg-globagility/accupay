@@ -49,10 +49,14 @@ Public Class TimeEntrySummaryForm
     Private _employeeRepository As EmployeeRepository
 
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        employeesDataGridView.AutoGenerateColumns = False
+
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
 
         _employeeRepository = New EmployeeRepository
+
 
         Dim loadEmployeesTask = LoadEmployees()
         Dim loadPayPeriodsTask = LoadPayPeriods()
@@ -1090,4 +1094,5 @@ Public Class TimeEntrySummaryForm
             End Try
         End Using
     End Sub
+
 End Class

@@ -78,9 +78,11 @@ Public Class AddLoanScheduleForm
 
     Private Sub PopulateEmployeeData()
 
-        txtEmployeeFirstName.Text = _currentEmployee.FullNameWithMiddleNameInitial
+        txtEmployeeFirstName.Text = _currentEmployee?.FullNameWithMiddleNameInitial
 
-        txtEmployeeNumber.Text = _currentEmployee.EmployeeID
+        txtEmployeeNumber.Text = _currentEmployee?.EmployeeID
+
+        pbEmployeePicture.Image = ConvByteToImage(_currentEmployee.Image)
 
     End Sub
 
@@ -266,7 +268,7 @@ Public Class AddLoanScheduleForm
 
     Private Sub ForceLoanScheduleGridViewCommit()
         'Workaround. Focus other control to lose focus on current control
-        pbEmpPicLoan.Focus()
+        pbEmployeePicture.Focus()
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)

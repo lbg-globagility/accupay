@@ -883,7 +883,6 @@ Partial Class EmployeeLoansForm
         Me.txtEmployeeFirstName.ReadOnly = True
         Me.txtEmployeeFirstName.Size = New System.Drawing.Size(668, 28)
         Me.txtEmployeeFirstName.TabIndex = 381
-        Me.txtEmployeeFirstName.Text = "sdf"
         '
         'txtEmployeeNumber
         '
@@ -897,7 +896,6 @@ Partial Class EmployeeLoansForm
         Me.txtEmployeeNumber.ReadOnly = True
         Me.txtEmployeeNumber.Size = New System.Drawing.Size(516, 22)
         Me.txtEmployeeNumber.TabIndex = 380
-        Me.txtEmployeeNumber.Text = "sdf"
         '
         'pbEmployeePicture
         '

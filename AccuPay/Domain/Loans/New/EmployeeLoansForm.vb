@@ -211,6 +211,8 @@ Public Class EmployeeLoansForm
 
         If employee Is Nothing Then
             MessageBoxHelper.Warning("No employee selected!")
+
+            Return
         End If
 
         Dim form As New AddLoanScheduleForm(employee)
@@ -305,6 +307,7 @@ Public Class EmployeeLoansForm
 
             MessageBoxHelper.Warning("Loan not found in database! Please close this form the open again.")
 
+            Return
         End If
 
 
@@ -386,19 +389,9 @@ Public Class EmployeeLoansForm
     End Sub
 
     Private Sub EmployeeLoansForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If e.Cancel = False Then
 
-            Dim liveThreads = threadArrayList.Cast(Of Thread).Where(Function(i) i.IsAlive)
+        HRISForm.listHRISForm.Remove(Me.Name)
 
-            For Each ilist As Thread In liveThreads
-                'If ilist.IsAlive Then
-                ilist.Abort()
-                'End If
-            Next
-
-            threadArrayList.Clear()
-
-        End If
     End Sub
 
     Private Async Sub checkboxFilter_CheckedChanged(sender As Object, e As EventArgs) Handles chkOnHoldFilter.CheckedChanged, chkInProgressFilter.CheckedChanged, chkCompleteFilter.CheckedChanged, chkCancelledFilter.CheckedChanged
@@ -540,8 +533,12 @@ Public Class EmployeeLoansForm
         Dim originalLoanSchedule = Me._unchangedLoanSchedules.
             FirstOrDefault(Function(l) Nullable.Equals(l.RowID, Me._currentLoanSchedule.RowID))
 
-        Dim isUneditable = originalLoanSchedule.Status = LoanScheduleRepository.STATUS_CANCELLED OrElse
+        Dim isUneditable As Boolean = False
+
+        If originalLoanSchedule IsNot Nothing Then
+            isUneditable = originalLoanSchedule.Status = LoanScheduleRepository.STATUS_CANCELLED OrElse
             originalLoanSchedule.Status = LoanScheduleRepository.STATUS_COMPLETE
+        End If
 
         tbpDetails.Enabled = Not isUneditable
 
@@ -644,8 +641,6 @@ Public Class EmployeeLoansForm
 
         cmbDeductionSchedule.SelectedIndex = -1
         cmbDeductionSchedule.DataBindings.Clear()
-
-        pbEmployeePicture.Image = Nothing
 
     End Sub
 

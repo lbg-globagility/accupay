@@ -36,9 +36,6 @@ Public Class ImportLoansForm
         LoansDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
 
-        lblStatus.BackColor = Color.Black
-        lblStatus.Text = "Click the Browse button to select the file then click the Save button after you checked the preview."
-
         SaveButton.Enabled = False
 
     End Sub
@@ -154,7 +151,7 @@ Public Class ImportLoansForm
 
             End If
 
-            lblStatus.Text += "Failed logs will not be saved."
+            lblStatus.Text += "Failed records will not be saved."
             lblStatus.BackColor = Color.Red
 
 
