@@ -8,10 +8,8 @@ Namespace Global.AccuPay.Tools
 
         Private Shared HoursInAClock As Integer = 12
 
-        '^(?<hour>0?[0-9]|1[0-9]|2[0-3])(?:\s|\.|\:)*(?<minute>0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])\s*(?<clock>a|am|p|pm)?$
-
         Private Shared TimeRegex As Regex = New Regex(
-            "^(0?[0-9]|1[0-9]|2[0-3])(?:\s|\.|\:)*(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])\s*(a|am|p|pm)?$",
+            "^(2[0-3]|1[0-9]|0?[0-9])(?:\s|\.|\:)*(5[0-9]|4[0-9]|3[0-9]|2[0-9]|1[0-9]|0[0-9]|[0-5])?\s*(a|am|p|pm)?$",
             RegexOptions.IgnoreCase)
 
         Public Shared Function ToDate(text As String) As Date
@@ -31,7 +29,7 @@ Namespace Global.AccuPay.Tools
             End If
 
             Dim hour As Integer = If(groups.Count > 1, CInt(groups(1).Value), 0)
-            Dim minute As Integer = If(groups.Count > 2, CInt(groups(2).Value), 0)
+            Dim minute As Integer = If(groups.Count > 2, ParseMinute(groups(2).Value), 0)
             Dim clock As String = If(groups.Count > 3, groups(3).Value, String.Empty)
 
             If String.IsNullOrEmpty(clock) Then
@@ -52,6 +50,18 @@ Namespace Global.AccuPay.Tools
                 Return New TimeSpan(hour, minute, 0)
             Else
                 Return Nothing
+            End If
+        End Function
+
+        Private Shared Function ParseMinute(value As String) As Integer
+            If String.IsNullOrWhiteSpace(value) Then
+                Return 0
+            End If
+
+            If value.Length = 1 Then
+                Return CInt($"{value}0")
+            Else
+                Return CInt(value)
             End If
         End Function
 

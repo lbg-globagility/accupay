@@ -1,12 +1,13 @@
 ﻿Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
-Imports AccuPay.Repository
+Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
+
 
 Public Class TimeLogsForm
 
@@ -258,7 +259,7 @@ Public Class TimeLogsForm
                         End If
 
                         HouseKeepingBeforeStartAlternateLineBackgroundWork()
-                        bgworkTypicalImport.RunWorkerAsync(logs)
+                        bgworkTypicalImport.RunWorkerAsync((logs, previewDialog.IsChangeableType))
 
                     Else
                         HouseKeepingBeforeStartAlternateLineBackgroundWork()
@@ -1317,22 +1318,29 @@ Public Class TimeLogsForm
     Private Sub bgworkTypicalImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkTypicalImport.DoWork
         If e.Argument Is tsbtnNew Then
             OldTimeEntryAlternateLineImport()
+
         Else
             Dim logs As IList(Of TimeAttendanceLog)
+            Dim isChangeableType As Boolean
+
             Try
-                logs = CType(e.Argument, IList(Of TimeAttendanceLog))
+                Dim args = CType(e.Argument, Tuple(Of IList(Of TimeAttendanceLog), Boolean))
+
+                logs = args.Item1
+
+                isChangeableType = args.Item2
 
             Catch ex As Exception
                 _logger.Error("Error casting imported logs in bgworkTypicalImport_DoWork.", ex)
                 Return
             End Try
 
-            NewTimeEntryAlternateLineImport(logs)
+            NewTimeEntryAlternateLineImport(logs, isChangeableType)
 
         End If
     End Sub
 
-    Private Async Sub NewTimeEntryAlternateLineImport(logs As IList(Of TimeAttendanceLog))
+    Private Async Sub NewTimeEntryAlternateLineImport(logs As IList(Of TimeAttendanceLog), isChangeableType As Boolean)
         Try
             logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
 
@@ -1356,7 +1364,7 @@ Public Class TimeLogsForm
                     Where(Function(s) s.EffectiveTo <= lastDate).
                     ToListAsync()
 
-                Dim analyzer = New TimeAttendanceAnalyzer()
+                Dim analyzer = New TimeAttendanceAnalyzer(isChangeableType)
 
                 Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
 
@@ -1372,14 +1380,24 @@ Public Class TimeLogsForm
                 context.SaveChanges()
 
             End Using
+
+
         Catch ex As Exception
+
             _logger.Error("NewTimeEntryAlternateLineImport", ex)
-            MsgBox("Something went wrong while loading the time logs. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Import Logs")
+
+            MessageBoxHelper.DefaultErrorMessage("Import Logs")
+
         End Try
 
     End Sub
 
     Private Async Function GetEmployeesFromLogGroup(context As PayrollContext, logsGroupedByEmployee As List(Of IGrouping(Of String, TimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
+
+        If logsGroupedByEmployee.Count < 1 Then
+            Return New List(Of Employee)
+        End If
+
         Dim employeeNumbersArray(logsGroupedByEmployee.Count - 1) As String
 
         For index = 0 To logsGroupedByEmployee.Count - 1
@@ -1388,7 +1406,7 @@ Public Class TimeLogsForm
 
         Return Await context.Employees.
                         Where(Function(e) employeeNumbersArray.Contains(e.EmployeeNo)).
-                        Where(Function(e) e.OrganizationID = z_OrganizationID).
+                        Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
                         ToListAsync
     End Function
 

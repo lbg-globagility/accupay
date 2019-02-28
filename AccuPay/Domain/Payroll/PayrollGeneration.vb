@@ -542,7 +542,7 @@ Public Class PayrollGeneration
                     .EmployeeID = _paystub.EmployeeID,
                     .PayPeriodID = _payPeriod.RowID,
                     .LoanScheduleID = loanSchedule.RowID.Value,
-                    .LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft - 1
+                    .LoanPayPeriodLeft = If(loanSchedule.LoanPayPeriodLeft Is Nothing, 0, Convert.ToInt32(loanSchedule.LoanPayPeriodLeft) - 1)
                 }
 
                 If loanSchedule.DeductionAmount > loanSchedule.TotalBalanceLeft Then

@@ -29,6 +29,14 @@ Public Class SssCalculator
         Dim employeeSssPerMonth = 0D
         Dim employerSssPerMonth = 0D
 
+        If salary.PaySocialSecurityID Is Nothing Then
+
+            paystub.SssEmployeeShare = employeeSssPerMonth
+            paystub.SssEmployerShare = employerSssPerMonth
+
+            Return
+        End If
+
         If isSssProrated Then
             Dim amount = GetSocialSecurityAmount(paystub, previousPaystub, sssCalculation)
             Dim socialSecurityBracket = FindMatchingBracket(amount)

@@ -8,6 +8,8 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     Public Property Cancelled As Boolean
 
+    Public Property IsChangeableType As Boolean
+
     Sub New()
 
         ' This call is required by the designer.
@@ -15,9 +17,15 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         ' Add any initialization after the InitializeComponent() call.
         Me.Cancelled = True
+
+        'This will be changed immediately to false on Load
+        Me.IsChangeableType = True
+
     End Sub
 
     Private Sub TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        ToggleChangeableType()
 
         Dim errorCount = Me.Errors.Count
 
@@ -55,7 +63,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
 
     Private Sub FooterButton_Click(sender As Object, e As EventArgs) _
-        Handles btnOK.Click, btnCancel.Click
+        Handles btnOK.Click, btnClose.Click
 
         If sender Is btnOK Then
 
@@ -70,5 +78,33 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Private Sub dgvErrors_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvErrors.CellFormatting
         Dim value As String = e.Value.ToString().Replace(vbTab, "     ")
         e.Value = value
+    End Sub
+
+    Private Sub dgvLogs_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvLogs.CellMouseUp
+
+        dgvLogs.EndEdit()
+
+        dgvLogs.Refresh()
+
+    End Sub
+
+    Private Sub btnChangeTimeType_Click(sender As Object, e As EventArgs) Handles btnChangeTimeType.Click
+
+        ToggleChangeableType()
+
+    End Sub
+
+    Private Sub ToggleChangeableType()
+        IsChangeableType = Not Me.IsChangeableType
+
+        dgvLogsColumnType.Visible = IsChangeableType
+        dgvLogsColumnIsTimeIn.Visible = IsChangeableType
+
+        If IsChangeableType Then
+            btnChangeTimeType.Text = "Ca&ncel Edit Time Type"
+
+        Else
+            btnChangeTimeType.Text = "&Edit Time Type"
+        End If
     End Sub
 End Class

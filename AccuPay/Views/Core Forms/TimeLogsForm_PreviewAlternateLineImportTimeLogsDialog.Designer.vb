@@ -22,14 +22,13 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvLogs = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.btnChangeTimeType = New System.Windows.Forms.Button()
         Me.btnOK = New System.Windows.Forms.Button()
-        Me.btnCancel = New System.Windows.Forms.Button()
+        Me.btnClose = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
         Me.lblStatus = New System.Windows.Forms.Label()
@@ -43,6 +42,10 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dgvLogsColumnType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dgvLogsColumnIsTimeIn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         CType(Me.dgvLogs, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
@@ -60,70 +63,64 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.dgvLogs.BackgroundColor = System.Drawing.Color.White
         Me.dgvLogs.ColumnHeadersHeight = 34
         Me.dgvLogs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvLogs.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvLogs.DefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvLogs.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.dgvLogsColumnType, Me.dgvLogsColumnIsTimeIn})
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvLogs.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvLogs.Dock = System.Windows.Forms.DockStyle.Top
         Me.dgvLogs.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvLogs.Location = New System.Drawing.Point(3, 24)
         Me.dgvLogs.MultiSelect = False
         Me.dgvLogs.Name = "dgvLogs"
-        Me.dgvLogs.ReadOnly = True
         Me.dgvLogs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvLogs.Size = New System.Drawing.Size(571, 316)
+        Me.dgvLogs.Size = New System.Drawing.Size(609, 316)
         Me.dgvLogs.TabIndex = 12
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "EmployeeNo"
-        Me.Column1.FillWeight = 20.0!
-        Me.Column1.HeaderText = "Employee ID"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "DateTime"
-        Me.Column2.FillWeight = 80.0!
-        Me.Column2.HeaderText = "Timestamp"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.btnChangeTimeType)
         Me.Panel1.Controls.Add(Me.btnOK)
-        Me.Panel1.Controls.Add(Me.btnCancel)
+        Me.Panel1.Controls.Add(Me.btnClose)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel1.Location = New System.Drawing.Point(0, 378)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(585, 72)
+        Me.Panel1.Size = New System.Drawing.Size(623, 72)
         Me.Panel1.TabIndex = 13
+        '
+        'btnChangeTimeType
+        '
+        Me.btnChangeTimeType.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnChangeTimeType.Location = New System.Drawing.Point(12, 25)
+        Me.btnChangeTimeType.Name = "btnChangeTimeType"
+        Me.btnChangeTimeType.Size = New System.Drawing.Size(136, 35)
+        Me.btnChangeTimeType.TabIndex = 12
+        Me.btnChangeTimeType.Text = "Edit Time Type"
+        Me.btnChangeTimeType.UseVisualStyleBackColor = True
         '
         'btnOK
         '
         Me.btnOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnOK.Location = New System.Drawing.Point(417, 25)
+        Me.btnOK.Location = New System.Drawing.Point(455, 25)
         Me.btnOK.Name = "btnOK"
         Me.btnOK.Size = New System.Drawing.Size(75, 35)
         Me.btnOK.TabIndex = 10
-        Me.btnOK.Text = "Save"
+        Me.btnOK.Text = "&Save"
         Me.btnOK.UseVisualStyleBackColor = True
         '
-        'btnCancel
+        'btnClose
         '
-        Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnCancel.Location = New System.Drawing.Point(498, 25)
-        Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(75, 35)
-        Me.btnCancel.TabIndex = 11
-        Me.btnCancel.Text = "Cancel"
-        Me.btnCancel.UseVisualStyleBackColor = True
+        Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnClose.Location = New System.Drawing.Point(536, 25)
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.Size = New System.Drawing.Size(75, 35)
+        Me.btnClose.TabIndex = 11
+        Me.btnClose.Text = "&Close"
+        Me.btnClose.UseVisualStyleBackColor = True
         '
         'TabControl1
         '
@@ -133,7 +130,7 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(585, 378)
+        Me.TabControl1.Size = New System.Drawing.Size(623, 378)
         Me.TabControl1.TabIndex = 14
         '
         'ParsedTabControl
@@ -143,7 +140,7 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.ParsedTabControl.Location = New System.Drawing.Point(4, 22)
         Me.ParsedTabControl.Name = "ParsedTabControl"
         Me.ParsedTabControl.Padding = New System.Windows.Forms.Padding(3)
-        Me.ParsedTabControl.Size = New System.Drawing.Size(577, 352)
+        Me.ParsedTabControl.Size = New System.Drawing.Size(615, 352)
         Me.ParsedTabControl.TabIndex = 0
         Me.ParsedTabControl.Text = "Ok"
         Me.ParsedTabControl.UseVisualStyleBackColor = True
@@ -156,7 +153,7 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.lblStatus.Location = New System.Drawing.Point(3, 3)
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Padding = New System.Windows.Forms.Padding(4)
-        Me.lblStatus.Size = New System.Drawing.Size(571, 21)
+        Me.lblStatus.Size = New System.Drawing.Size(609, 21)
         Me.lblStatus.TabIndex = 13
         Me.lblStatus.Text = "There is 1 error. Failed error logs will not be saved."
         '
@@ -181,14 +178,14 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.dgvErrors.ColumnHeadersHeight = 34
         Me.dgvErrors.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvErrors.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn4, Me.Column3})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvErrors.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvErrors.DefaultCellStyle = DataGridViewCellStyle4
         Me.dgvErrors.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvErrors.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvErrors.Location = New System.Drawing.Point(3, 3)
@@ -247,6 +244,7 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.DataGridViewTextBoxColumn5.FillWeight = 40.0!
         Me.DataGridViewTextBoxColumn5.HeaderText = "Reason"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
         Me.DataGridViewTextBoxColumn5.Width = 211
         '
         'DataGridViewTextBoxColumn6
@@ -255,6 +253,7 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.DataGridViewTextBoxColumn6.FillWeight = 40.0!
         Me.DataGridViewTextBoxColumn6.HeaderText = "Line Content"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
         Me.DataGridViewTextBoxColumn6.Width = 211
         '
         'DataGridViewTextBoxColumn7
@@ -265,12 +264,45 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.Width = 211
         '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "EmployeeNo"
+        Me.Column1.FillWeight = 40.0!
+        Me.Column1.HeaderText = "Employee ID"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "DateTime"
+        Me.Column2.FillWeight = 80.0!
+        Me.Column2.HeaderText = "Timestamp"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'dgvLogsColumnType
+        '
+        Me.dgvLogsColumnType.DataPropertyName = "Type"
+        Me.dgvLogsColumnType.FillWeight = 20.0!
+        Me.dgvLogsColumnType.HeaderText = "Type"
+        Me.dgvLogsColumnType.Name = "dgvLogsColumnType"
+        Me.dgvLogsColumnType.ReadOnly = True
+        '
+        'dgvLogsColumnIsTimeIn
+        '
+        Me.dgvLogsColumnIsTimeIn.DataPropertyName = "IsTimeIn"
+        Me.dgvLogsColumnIsTimeIn.FillWeight = 25.0!
+        Me.dgvLogsColumnIsTimeIn.HeaderText = "Is Time In"
+        Me.dgvLogsColumnIsTimeIn.Name = "dgvLogsColumnIsTimeIn"
+        Me.dgvLogsColumnIsTimeIn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvLogsColumnIsTimeIn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
         'TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(585, 450)
+        Me.ClientSize = New System.Drawing.Size(623, 450)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -293,15 +325,13 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Friend WithEvents dgvLogs As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Panel1 As Panel
     Friend WithEvents btnOK As Button
-    Friend WithEvents btnCancel As Button
+    Friend WithEvents btnClose As Button
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents ParsedTabControl As TabPage
     Friend WithEvents ErrorsTabControl As TabPage
     Friend WithEvents dgvErrors As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
-    Friend WithEvents Column1 As DataGridViewTextBoxColumn
-    Friend WithEvents Column2 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
     Friend WithEvents Column3 As DataGridViewTextBoxColumn
@@ -309,4 +339,9 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
     Friend WithEvents lblStatus As Label
+    Friend WithEvents btnChangeTimeType As Button
+    Friend WithEvents Column1 As DataGridViewTextBoxColumn
+    Friend WithEvents Column2 As DataGridViewTextBoxColumn
+    Friend WithEvents dgvLogsColumnType As DataGridViewTextBoxColumn
+    Friend WithEvents dgvLogsColumnIsTimeIn As DataGridViewCheckBoxColumn
 End Class

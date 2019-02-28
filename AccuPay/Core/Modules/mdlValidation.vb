@@ -600,7 +600,7 @@ Module mdlValidation
     End Function
 
 
-    Public hintInfo As ToolTip
+    Public hintInfo As New ToolTip
     Public Sub myBalloon(Optional ToolTipStringContent As String = Nothing, Optional ToolTipStringTitle As String = Nothing, Optional objct As System.Windows.Forms.IWin32Window = Nothing, Optional x As Integer = 0, Optional y As Integer = 0, Optional dispo As SByte = 0, Optional duration As Integer = 3000)
         Try
             If hintInfo IsNot Nothing Then

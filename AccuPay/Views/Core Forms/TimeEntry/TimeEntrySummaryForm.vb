@@ -1,13 +1,14 @@
 ﻿Option Strict On
 
-Imports MySql.Data.MySqlClient
 Imports System.Collections.ObjectModel
-Imports System.ComponentModel
-Imports System.Threading.Tasks
-Imports log4net
 Imports System.Threading
-Imports Microsoft.EntityFrameworkCore
+Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Repository
+Imports log4net
+Imports Microsoft.EntityFrameworkCore
+Imports MySql.Data.MySqlClient
+Imports Simplified = AccuPay.SimplifiedEntities.GridView
 
 Public Class TimeEntrySummaryForm
 
@@ -31,9 +32,9 @@ Public Class TimeEntrySummaryForm
 
     Private _payPeriods As ICollection(Of PayPeriod)
 
-    Private _employees As ICollection(Of Employee)
+    Private _employees As ICollection(Of Simplified.Employee)
 
-    Private _selectedEmployee As Employee
+    Private _selectedEmployee As Simplified.Employee
 
     Private _selectedPayPeriod As PayPeriod
 
@@ -45,9 +46,17 @@ Public Class TimeEntrySummaryForm
 
     Private WithEvents timeEntDurationModal As TimEntduration
 
+    Private _employeeRepository As EmployeeRepository
+
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        employeesDataGridView.AutoGenerateColumns = False
+
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
+
+        _employeeRepository = New EmployeeRepository
+
 
         Dim loadEmployeesTask = LoadEmployees()
         Dim loadPayPeriodsTask = LoadPayPeriods()
@@ -63,47 +72,11 @@ Public Class TimeEntrySummaryForm
         'End If
     End Function
 
-    Private Async Function GetEmployees() As Task(Of ICollection(Of Employee))
-        Dim sql = <![CDATA[
-            SELECT
-                employee.RowID,
-                employee.EmployeeID,
-                employee.FirstName,
-                employee.LastName
-            FROM employee
-            WHERE employee.OrganizationID = @OrganizationID
-            ORDER BY
-                employee.LastName,
-                employee.FirstName
-        ]]>.Value
+    Private Async Function GetEmployees() As Task(Of ICollection(Of Simplified.Employee))
 
-        Dim employees = New Collection(Of Employee)
+        Dim list = Await _employeeRepository.GetAll(Of Simplified.Employee)()
+        Return CType(list, ICollection(Of Simplified.Employee))
 
-        Using connection As New MySqlConnection(connectionString),
-            command As New MySqlCommand(sql, connection)
-
-            command.Parameters.AddWithValue("@OrganizationID", CStr(z_OrganizationID))
-
-            Await connection.OpenAsync()
-            Dim reader = Await command.ExecuteReaderAsync()
-            While Await reader.ReadAsync()
-                Dim rowID = reader.GetValue(Of String)("RowID")
-                Dim employeeID = reader.GetValue(Of String)("EmployeeID")
-                Dim firstName = reader.GetValue(Of String)("FirstName")
-                Dim lastName = reader.GetValue(Of String)("LastName")
-
-                Dim employee = New Employee() With {
-                    .RowID = rowID,
-                    .EmployeeID = employeeID,
-                    .FirstName = firstName,
-                    .LastName = lastName
-                }
-
-                employees.Add(employee)
-            End While
-        End Using
-
-        Return employees
     End Function
 
     Public Async Function LoadPayPeriods() As Task
@@ -279,7 +252,7 @@ Public Class TimeEntrySummaryForm
         Return years
     End Function
 
-    Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+    Private Async Function GetTimeEntries(employee As Simplified.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
         'WARN: this has a possibility to show wrong data since
         'we are joining employeetimeentrydetails by LastUpd
         'maybe this query should be replaced
@@ -482,7 +455,7 @@ Public Class TimeEntrySummaryForm
         Return timeEntries
     End Function
 
-    Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+    Private Async Function GetActualTimeEntries(employee As Simplified.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
         Dim sql = <![CDATA[
             SELECT
                 eta.RowID,
@@ -706,7 +679,7 @@ Public Class TimeEntrySummaryForm
             Return
         End If
 
-        Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
+        Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Simplified.Employee)
         If employee Is _selectedEmployee Then
             Return
         End If
@@ -741,24 +714,7 @@ Public Class TimeEntrySummaryForm
     Private Async Sub FilterEmployees()
         Dim searchValue = searchTextBox.Text.ToLower()
 
-        Dim matchCriteria =
-            Function(employee As Employee) As Boolean
-                Dim containsEmployeeId = employee.EmployeeID.ToLower().Contains(searchValue)
-                Dim containsFullName = employee.FullName.ToLower().Contains(searchValue)
-
-                Dim reverseFullName = employee.LastName.ToLower() + " " + employee.FirstName.ToLower()
-                Dim containsFullNameInReverse = reverseFullName.Contains(searchValue)
-
-                Return containsEmployeeId Or containsFullName Or containsFullNameInReverse
-            End Function
-
-        Dim filteredTask = Task.Factory.StartNew(
-            Function() New BindingList(Of Employee)(
-                _employees.Where(matchCriteria).ToList()
-            )
-        )
-
-        employeesDataGridView.DataSource = Await filteredTask
+        employeesDataGridView.DataSource = Await _employeeRepository.SearchSimpleLocal(Me._employees, searchValue)
         employeesDataGridView.Update()
     End Sub
 
@@ -821,23 +777,6 @@ Public Class TimeEntrySummaryForm
             Dim dateTo = PayToDate.ToString("MMM dd")
 
             Return dateFrom + " - " + dateTo
-        End Function
-
-    End Class
-
-    Private Class Employee
-
-        Public Property RowID As String
-        Public Property EmployeeID As String
-        Public Property FirstName As String
-        Public Property LastName As String
-
-        Public Function FullName() As String
-            Return FirstName + " " + LastName
-        End Function
-
-        Public Overrides Function ToString() As String
-            Return EmployeeID
         End Function
 
     End Class
@@ -1155,4 +1094,5 @@ Public Class TimeEntrySummaryForm
             End Try
         End Using
     End Sub
+
 End Class

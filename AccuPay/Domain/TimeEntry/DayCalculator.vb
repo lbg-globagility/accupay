@@ -112,9 +112,10 @@ Public Class DayCalculator
 
                 Dim coveredPeriod = dutyPeriod
 
+                Dim leavePeriod As TimePeriod = Nothing
                 If leaves.Any() Then
                     Dim leave = leaves.FirstOrDefault()
-                    Dim leavePeriod = GetLeavePeriod(leave, currentShift)
+                    leavePeriod = GetLeavePeriod(leave, currentShift)
 
                     coveredPeriod = New TimePeriod(
                         {dutyPeriod.Start, leavePeriod.Start}.Min(),
@@ -141,6 +142,14 @@ Public Class DayCalculator
                 timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift)
 
                 timeEntry.RegularHours = currentShift.WorkingHours - (timeEntry.LateHours + timeEntry.UndertimeHours)
+
+                If leavePeriod IsNot Nothing Then
+                    Dim coveredLeavePeriod = New TimePeriod(
+                        {currentShift.Start, leavePeriod.Start}.Max(),
+                        {currentShift.End, leavePeriod.End}.Min())
+
+                    timeEntry.RegularHours -= coveredLeavePeriod.TotalHours
+                End If
 
                 Dim nightBreaktime As TimePeriod = Nothing
                 If _policy.HasNightBreaktime Then
@@ -169,6 +178,11 @@ Public Class DayCalculator
         ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves)
         ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry)
     End Sub
+
+    'Private Function fsdfsd(currentShift As CurrentShift, leavePeriod As TimePeriod) As Decimal
+    '    If leavePeriod.Start Then
+    '        Return 0
+    'End Function
 
     Private Function OvertimeSchemeSkipCountHours(timeEntry As TimeEntry, overtimes As IList(Of Overtime), currentShift As CurrentShift, calculator As TimeEntryCalculator, logPeriod As TimePeriod, nightBreaktime As TimePeriod) As TimeEntry
         If _overtimeSkipCountRounding Then
@@ -272,6 +286,16 @@ Public Class DayCalculator
         If currentShift.IsWorkingDay Then
             Dim nightDiffRate = payrate.NightDifferentialRate - payrate.CommonRate
             Dim nightDiffOTRate = payrate.NightDifferentialOTRate - payrate.OvertimeRate
+
+            Dim notEntitledForLegalHolidayRate = Not _employee.CalcHoliday And payrate.IsSpecialNonWorkingHoliday
+            Dim notEntitledForSpecialNonWorkingHolidayRate = Not _employee.CalcSpecialHoliday And payrate.IsSpecialNonWorkingHoliday
+
+            If notEntitledForLegalHolidayRate Or
+                notEntitledForSpecialNonWorkingHolidayRate Then
+
+                nightDiffRate = (payrate.NightDifferentialRate / payrate.CommonRate) Mod 1
+                nightDiffOTRate = (payrate.NightDifferentialOTRate / payrate.OvertimeRate) Mod 1
+            End If
 
             timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * nightDiffRate
             timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * nightDiffOTRate
