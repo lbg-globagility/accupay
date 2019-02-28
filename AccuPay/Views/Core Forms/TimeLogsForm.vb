@@ -259,7 +259,7 @@ Public Class TimeLogsForm
                         End If
 
                         HouseKeepingBeforeStartAlternateLineBackgroundWork()
-                        bgworkTypicalImport.RunWorkerAsync(logs)
+                        bgworkTypicalImport.RunWorkerAsync((logs, previewDialog.IsChangeableType))
 
                     Else
                         HouseKeepingBeforeStartAlternateLineBackgroundWork()
@@ -1318,22 +1318,29 @@ Public Class TimeLogsForm
     Private Sub bgworkTypicalImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkTypicalImport.DoWork
         If e.Argument Is tsbtnNew Then
             OldTimeEntryAlternateLineImport()
+
         Else
             Dim logs As IList(Of TimeAttendanceLog)
+            Dim isChangeableType As Boolean
+
             Try
-                logs = CType(e.Argument, IList(Of TimeAttendanceLog))
+                Dim args = CType(e.Argument, Tuple(Of IList(Of TimeAttendanceLog), Boolean))
+
+                logs = args.Item1
+
+                isChangeableType = args.Item2
 
             Catch ex As Exception
                 _logger.Error("Error casting imported logs in bgworkTypicalImport_DoWork.", ex)
                 Return
             End Try
 
-            NewTimeEntryAlternateLineImport(logs)
+            NewTimeEntryAlternateLineImport(logs, isChangeableType)
 
         End If
     End Sub
 
-    Private Async Sub NewTimeEntryAlternateLineImport(logs As IList(Of TimeAttendanceLog))
+    Private Async Sub NewTimeEntryAlternateLineImport(logs As IList(Of TimeAttendanceLog), isChangeableType As Boolean)
         Try
             logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
 
@@ -1357,7 +1364,7 @@ Public Class TimeLogsForm
                     Where(Function(s) s.EffectiveTo <= lastDate).
                     ToListAsync()
 
-                Dim analyzer = New TimeAttendanceAnalyzer()
+                Dim analyzer = New TimeAttendanceAnalyzer(isChangeableType)
 
                 Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
 

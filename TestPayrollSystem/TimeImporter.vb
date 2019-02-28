@@ -18,87 +18,34 @@ Public Class TimeImporter
                         ).FullName
     End Sub
 
-
     <Test>
     Public Sub ShouldImport()
-        Dim importer = New TimeLogsReader()
+        Base_ShouldImport(False)
+    End Sub
 
-        Dim filename = _projectPath & "\_timelogs_test.dat"
-        'Dim filename = "E:\Stuff\accupay\_timelogs\cinema.txt"
-        'Dim filename = "E:\Stuff\accupay\_timelogs\fourlinq.dat"
-
-        Dim importOutput = importer.Import(filename)
-        Dim logs = importOutput.Logs
-
-        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
-
-        Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules()
-        Dim employees As List(Of Employee) = GetSampleEmployees()
-
-        Dim analyzer = New TimeAttendanceAnalyzer()
-
-        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
-        Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
-        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
-        AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
-        AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
-        AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
-        AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
-        AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
-        AssertTimeLog(results.Item(6), "", "23:30:00", "2018-06-07")
+    <Test>
+    Public Sub ShouldImport_WithIsChangeableType()
+        Base_ShouldImport(True)
     End Sub
 
     <Test>
     Public Sub ShouldImport_WithoutShifts()
-        Dim importer = New TimeLogsReader()
+        Base_ShouldImport_WithoutShifts(False)
+    End Sub
 
-        Dim filename = _projectPath & "\_timelogs_test.dat"
-
-        Dim importOutput = importer.Import(filename)
-        Dim logs = importOutput.Logs
-
-        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
-
-        Dim employeeShifts As New List(Of ShiftSchedule)
-        Dim employees As List(Of Employee) = GetSampleEmployees()
-
-        Dim analyzer = New TimeAttendanceAnalyzer()
-
-        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
-        Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
-        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
-        AssertTimeLog(results.Item(1), "07:00:00", Nothing, "2018-06-02")
-        AssertTimeLog(results.Item(2), "01:00:00", "20:00:00", "2018-06-03")
-        AssertTimeLog(results.Item(3), "05:00:00", Nothing, "2018-06-04")
-        AssertTimeLog(results.Item(4), "03:00:00", "23:59:00", "2018-06-05")
-        AssertTimeLog(results.Item(5), "01:00:00", "23:00:00", "2018-06-06")
-        AssertTimeLog(results.Item(6), "02:00:00", "23:30:00", "2018-06-07")
+    <Test>
+    Public Sub ShouldImport_WithoutShiftsWithIsChangeableType()
+        Base_ShouldImport_WithoutShifts(True)
     End Sub
 
     <Test>
     Public Sub ShouldImport_WithNextShiftScheduleWithoutShift()
-        Dim importer = New TimeLogsReader()
+        Base_ShouldImport_WithNextShiftScheduleWithoutShift(False)
+    End Sub
 
-        Dim filename = _projectPath & "\_timelogs_test.dat"
-
-        Dim importOutput = importer.Import(filename)
-        Dim logs = importOutput.Logs
-
-        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
-
-        Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules_WithNextShiftScheduleWithoutShift()
-        Dim employees As List(Of Employee) = GetSampleEmployees()
-
-        Dim analyzer = New TimeAttendanceAnalyzer()
-
-        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
-        Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
-        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
-        AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
-        AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
-        AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
-        AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
-        AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
+    <Test>
+    Public Sub ShouldNotImport_WithNextShiftScheduleWithoutShiftAndIsChangeableTime()
+        Base_ShouldImport_WithNextShiftScheduleWithoutShift(True)
     End Sub
 
     <Test>
@@ -161,8 +108,98 @@ Public Class TimeImporter
     End Sub
 
 
-
 #Region "Private Functions"
+    Private Sub Base_ShouldImport(isChangeableTime As Boolean)
+        Dim importer = New TimeLogsReader()
+
+        Dim filename = _projectPath & "\_timelogs_test.dat"
+        'Dim filename = "E:\Stuff\accupay\_timelogs\cinema.txt"
+        'Dim filename = "E:\Stuff\accupay\_timelogs\fourlinq.dat"
+
+        Dim importOutput = importer.Import(filename)
+        Dim logs = importOutput.Logs
+
+        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
+
+        Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules()
+        Dim employees As List(Of Employee) = GetSampleEmployees()
+
+        Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
+
+        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
+        Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
+        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
+        AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
+        AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
+        AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
+        AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
+        AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
+        AssertTimeLog(results.Item(6), "", "23:30:00", "2018-06-07")
+    End Sub
+
+    Private Sub Base_ShouldImport_WithoutShifts(isChangeableTime As Boolean)
+        Dim importer = New TimeLogsReader()
+
+        Dim filename = _projectPath & "\_timelogs_test.dat"
+
+        Dim importOutput = importer.Import(filename)
+        Dim logs = importOutput.Logs
+
+        If isChangeableTime Then
+            'put IsTimeIn value if testing for isChangeable
+
+            Dim index As Integer = 0
+            For Each log In logs
+
+                index += 1
+
+                log.IsTimeIn = index Mod 2 = 1 'odd number is time in
+            Next
+        End If
+
+        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
+
+        Dim employeeShifts As New List(Of ShiftSchedule)
+        Dim employees As List(Of Employee) = GetSampleEmployees()
+
+        Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
+
+        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
+        Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
+        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
+        AssertTimeLog(results.Item(1), "07:00:00", Nothing, "2018-06-02")
+        AssertTimeLog(results.Item(2), "01:00:00", "20:00:00", "2018-06-03")
+        AssertTimeLog(results.Item(3), "05:00:00", Nothing, "2018-06-04")
+        AssertTimeLog(results.Item(4), "03:00:00", "23:59:00", "2018-06-05")
+        AssertTimeLog(results.Item(5), "01:00:00", "23:00:00", "2018-06-06")
+        AssertTimeLog(results.Item(6), "02:00:00", "23:30:00", "2018-06-07")
+    End Sub
+
+    Private Sub Base_ShouldImport_WithNextShiftScheduleWithoutShift(isChangeableTime As Boolean)
+        Dim importer = New TimeLogsReader()
+
+        Dim filename = _projectPath & "\_timelogs_test.dat"
+
+        Dim importOutput = importer.Import(filename)
+        Dim logs = importOutput.Logs
+
+        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
+
+        Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules_WithNextShiftScheduleWithoutShift()
+        Dim employees As List(Of Employee) = GetSampleEmployees()
+
+        Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
+
+        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
+        Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
+        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
+        AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
+        AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
+        AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
+        AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
+        AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
+    End Sub
+
     Private Function GetSampleEmployees() As List(Of Employee)
         Dim employees = New List(Of Employee)
 
