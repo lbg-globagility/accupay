@@ -146,6 +146,8 @@ End Class
 
     Public Property [DateTime] As DateTime
 
+    Public Property IsTimeIn As Boolean
+
     Public Property FirstColumn As Integer
 
     Public Property SecondColumn As Integer
@@ -153,5 +155,11 @@ End Class
     Public Property ThirdColumn As Integer
 
     Public Property FourthColumn As Integer
+
+    Public ReadOnly Property Type As String
+        Get
+            Return If(IsTimeIn, "Time-in", "Time-out")
+        End Get
+    End Property
 
 End Class

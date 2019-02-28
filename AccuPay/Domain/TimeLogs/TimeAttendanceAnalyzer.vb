@@ -4,7 +4,15 @@ Imports AccuPay.Entity
 Imports AccuPay.Tools
 
 Public Class TimeAttendanceAnalyzer
-    'TODO: ShiftSchedule
+
+    Private _isChangeableType As Boolean
+
+    Sub New(isChangeableTimeType As Boolean)
+
+        Me._isChangeableType = isChangeableTimeType
+
+    End Sub
+
     Public Function GetLogsGroupByEmployee(
         logs As IList(Of TimeAttendanceLog)
     ) As List(Of IGrouping(Of String, TimeAttendanceLog))
@@ -45,7 +53,26 @@ Public Class TimeAttendanceAnalyzer
         Dim earliestDate = logGroup.FirstOrDefault().DateTime.Date
         Dim lastDate = logGroup.LastOrDefault().DateTime.Date
 
-        Dim sortedLogs = New SortedSet(Of Date)(logGroup.Select(Function(l) l.DateTime))
+        Dim sortedLogsIn, sortedLogsOut As New SortedSet(Of Date)
+
+        If Me._isChangeableType Then
+
+            sortedLogsIn = New SortedSet(Of Date)(logGroup.
+                            Where(Function(l) l.IsTimeIn = True).
+                            Select(Function(l) l.DateTime))
+
+            sortedLogsOut = New SortedSet(Of Date)(logGroup.
+                            Where(Function(l) l.IsTimeIn = False).
+                            Select(Function(l) l.DateTime))
+
+        Else
+            Dim sortedLogs = New SortedSet(Of Date)(logGroup.Select(Function(l) l.DateTime))
+
+            sortedLogsIn = sortedLogs
+            sortedLogsOut = sortedLogs
+        End If
+
+
 
         Dim timeLogs = New List(Of TimeLog)
 
@@ -70,8 +97,8 @@ Public Class TimeAttendanceAnalyzer
                 .EmployeeID = employee.RowID
             }
 
-            timeLog.TimeIn = GetTimeIn(currentDate, currentShift, sortedLogs)
-            timeLog.TimeOut = GetTimeOut(currentDate, currentShift, nextShift, sortedLogs)
+            timeLog.TimeIn = GetTimeIn(currentDate, currentShift, sortedLogsIn)
+            timeLog.TimeOut = GetTimeOut(currentDate, currentShift, nextShift, sortedLogsOut)
 
             timeLogs.Add(timeLog)
         Next
