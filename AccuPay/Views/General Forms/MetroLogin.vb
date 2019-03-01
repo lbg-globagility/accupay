@@ -241,8 +241,6 @@ Public Class MetroLogin
         If Debugger.IsAttached Then
             AssignDefaultCredentials()
 
-            Dim newForm As New ShiftScheduleForm
-            newForm.Show()
         End If
     End Sub
 
