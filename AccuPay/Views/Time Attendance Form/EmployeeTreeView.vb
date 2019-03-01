@@ -15,13 +15,19 @@ Public Class EmployeeTreeView
 
     Public Event FiltersEmployee(s As Object, e As EventArgs)
 
-    Private tickedEmployees As ICollection(Of Employee)
+    Public Event TickedEmployee(s As Object, e As EventArgs)
+
+    Private tickedEmployees As IList(Of Employee)
+    Private tickedEmployeeIDs As IList(Of Integer)
+
+    Private _organizationID As Integer
 
     Public Property OrganizationID As Integer
         Get
-
+            Return _organizationID
         End Get
         Set(value As Integer)
+            _organizationID = value
             WhenOrganizationIdChanged(value)
         End Set
     End Property
@@ -34,6 +40,8 @@ Public Class EmployeeTreeView
         ' Add any initialization after the InitializeComponent() call.
 
         _presenter = New EmployeeTreeViewPresenter(Me)
+        tickedEmployees = New List(Of Employee)
+        tickedEmployeeIDs = New List(Of Integer)
     End Sub
 
     Private Sub EmployeeTreeView_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -43,6 +51,11 @@ Public Class EmployeeTreeView
 
         _presenter.Load()
         AddHandler AccuPayEmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
+    End Sub
+
+    Public Sub SwitchOrganization(organizationId As Integer)
+        _organizationID = organizationId
+        WhenOrganizationIdChanged(organizationId)
     End Sub
 
     Private Sub WhenOrganizationIdChanged(organizationId As Integer)
@@ -58,11 +71,21 @@ Public Class EmployeeTreeView
         RemoveHandler AccuPayEmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
         SetCheck(e.Node)
         SetParent(e.Node)
+
+        CollectTickedEmployees(e.Node)
+
         AddHandler AccuPayEmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
 
-    Public Function GetActiveEmployees() As IList(Of Employee)
-        Return _presenter.GetActiveEmployees
+    Private Sub CollectTickedEmployees(tickedNode As TreeNode)
+        _presenter.TraverseNodes(tickedNode, tickedEmployees)
+        tickedEmployeeIDs = tickedEmployees.Select(Function(e) e.RowID.Value).ToList
+
+        RaiseEvent TickedEmployee(Me, New EventArgs)
+    End Sub
+
+    Public Function GetTickedEmployees() As IList(Of Employee)
+        Return tickedEmployees
     End Function
 
     Private Sub SetCheck(node As TreeNode)
@@ -117,10 +140,13 @@ Public Class EmployeeTreeView
                 Dim childEmployees = employees.
                     Where(Function(e) Nullable.Equals(e.Position?.Division.RowID, childDivision.RowID))
                 For Each childEmployee In childEmployees
+                    Dim shouldSetChecked = tickedEmployeeIDs.Any(Function(eID) Nullable.Equals(eID, childEmployee.RowID))
+
                     Dim employeeNode = New TreeNode() With {
                         .Name = childEmployee.Fullname,
                         .Text = childEmployee.Fullname,
-                        .Tag = childEmployee
+                        .Tag = childEmployee,
+                        .Checked = shouldSetChecked
                     }
 
                     childNode.Nodes.Add(employeeNode)
@@ -179,6 +205,7 @@ Public Class EmployeeTreeView
             Using context = New PayrollContext()
                 Return context.Divisions.
                     Where(Function(d) Nullable.Equals(d.OrganizationID, _organizationId)).
+                    OrderBy(Function(d) d.Name).
                     ToList()
             End Using
         End Function
@@ -219,15 +246,31 @@ Public Class EmployeeTreeView
             Return list
         End Function
 
-        Private Sub TraverseNodes(node As TreeNode, list As IList(Of Employee))
-            If TypeOf node.Tag Is Employee And node.Checked Then
+        Public Sub TraverseNodes(node As TreeNode, list As IList(Of Employee))
+            Dim isEmployee = TypeOf node.Tag Is Employee
+            Dim isSatisfy = isEmployee And node.Checked
+
+            If isSatisfy Then
+                EmployeeListRemover(DirectCast(node.Tag, Employee), list)
+
                 list.Add(DirectCast(node.Tag, Employee))
+            Else
+                If isEmployee Then
+                    EmployeeListRemover(DirectCast(node.Tag, Employee), list)
+                End If
             End If
 
             If node.GetNodeCount(False) >= 1 Then
                 For Each child As TreeNode In node.Nodes
                     TraverseNodes(child, list)
                 Next
+            End If
+        End Sub
+
+        Private Sub EmployeeListRemover(employee As Employee, list As IList(Of Employee))
+            Dim isExists = list.Any(Function(e) Nullable.Equals(e.RowID, employee.RowID))
+            If isExists Then
+                list.Remove(employee)
             End If
         End Sub
 
