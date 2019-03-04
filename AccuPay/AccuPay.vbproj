@@ -1680,12 +1680,6 @@
     <Compile Include="Views\Time Attendance Form\EmployeeShiftEntryForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\BulkShiftScheduleForm.Designer.vb">
-      <DependentUpon>BulkShiftScheduleForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Time Attendance Form\BulkShiftScheduleForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Time Attendance Form\ShiftScheduleForm.Designer.vb">
       <DependentUpon>ShiftScheduleForm.vb</DependentUpon>
     </Compile>

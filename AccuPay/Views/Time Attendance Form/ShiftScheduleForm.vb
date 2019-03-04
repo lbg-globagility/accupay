@@ -8,7 +8,7 @@ Public Class ShiftScheduleForm
     Private sunDayName = DayNames.Sun.ToString
 
     Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click
-
+        LoadChanges()
     End Sub
 
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
@@ -103,10 +103,10 @@ Public Class ShiftScheduleForm
             .FullName = ee.FullName,
             .DateValue = dateVal,
             .DayName = GetDayName(dateVal.Value),
-            .TimeFrom = TimeTextBox1.Value,
-            .TimeTo = TimeTextBox2.Value,
-            .BreakFrom = TimeTextBox3.Value,
-            .BreakTo = TimeTextBox4.Value}
+            .TimeFrom = TimeUtility.ToDateTime(TimeTextBox1.Value),
+            .TimeTo = TimeUtility.ToDateTime(TimeTextBox2.Value),
+            .BreakFrom = TimeUtility.ToDateTime(TimeTextBox3.Value),
+            .BreakTo = TimeUtility.ToDateTime(TimeTextBox4.Value)}
 
         modelList.Add(newEe)
     End Sub
@@ -161,10 +161,10 @@ Public Class ShiftScheduleForm
         Public Property FullName As String
         Public Property DateValue As Date?
         Public Property DayName As String
-        Public Property TimeFrom As TimeSpan?
-        Public Property TimeTo As TimeSpan?
-        Public Property BreakFrom As TimeSpan?
-        Public Property BreakTo As TimeSpan?
+        Public Property TimeFrom As DateTime?
+        Public Property TimeTo As DateTime?
+        Public Property BreakFrom As DateTime?
+        Public Property BreakTo As DateTime?
     End Class
 
     Private Enum DayNames
@@ -183,6 +183,51 @@ Public Class ShiftScheduleForm
 
     Private Sub grid_DataSourceChanged(sender As Object, e As EventArgs) Handles grid.DataSourceChanged
         ZebraliseEmployeeRows()
+    End Sub
+
+    Private Sub grid_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles grid.DataError
+        Console.WriteLine("grid_DataError : {0}, {1}", e.Cancel, e.Exception.Message)
+
+        'Dim rowItem = grid.Item(e.ColumnIndex, e.RowIndex)
+
+        'rowItem.ErrorText = String.Empty
+
+        'If e.Exception IsNot Nothing Then rowItem.ErrorText = e.Exception.Message
+
+        'e.Cancel = False
+    End Sub
+
+    Private Sub grid_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellEndEdit
+        Console.WriteLine("grid_CellEndEdit")
+
+        'Dim rowItem = grid.Item(e.ColumnIndex, e.RowIndex)
+
+        'If rowItem.Value Is Nothing Then rowItem.ErrorText = String.Empty
+
+    End Sub
+
+    Private Sub grid_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles grid.CellBeginEdit
+        Console.WriteLine("grid_CellBeginEdit")
+        'Dim rowItem = grid.Item(e.ColumnIndex, e.RowIndex)
+        'rowItem.ErrorText = String.Empty
+    End Sub
+
+    Private Sub grid_CellParsing(sender As Object, e As DataGridViewCellParsingEventArgs) Handles grid.CellParsing
+        Console.WriteLine("grid_CellParsing")
+
+        If e.ColumnIndex = eshTimeFrom.Index Then
+            Dim _value As DateTime? = TimeUtility.ToDateTime(Calendar.ToTimespan(e.Value))
+            'If _value.HasValue Then
+            e.Value = _value
+            '    'Else
+            '    '    e.Value = String.Empty
+            'End If
+
+            e.ParsingApplied = _value.HasValue
+        Else
+            e.ParsingApplied = False
+        End If
+
     End Sub
 
 End Class
