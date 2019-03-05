@@ -1,6 +1,8 @@
 ﻿Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
+Imports AccuPay.Helper.TimeAttendanceAnalyzer
+Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
@@ -234,32 +236,7 @@ Public Class TimeLogsForm
                 If timeLogsFormat_ = TimeLogsFormat.Conventional Then
 
                     If sender Is tsbtnNewExperimental Then
-                        Dim importer = New TimeLogsReader()
-                        Dim importOutput = importer.Import(thefilepath)
-
-                        If importOutput.IsImportSuccess = False Then
-                            MessageBox.Show(importOutput.Errors(0).Reason)
-                            Return
-                        End If
-
-                        Dim logs = importOutput.Logs
-
-                        'preview the logs here
-                        Dim previewDialog As New TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
-                        previewDialog.Logs = logs
-                        previewDialog.Errors = importOutput.Errors
-
-                        With previewDialog
-                            .ShowDialog()
-                            .BringToFront()
-                        End With
-
-                        If previewDialog.Cancelled Then
-                            Return
-                        End If
-
-                        HouseKeepingBeforeStartAlternateLineBackgroundWork()
-                        bgworkTypicalImport.RunWorkerAsync((logs, previewDialog.IsChangeableType))
+                        NewTimeEntryAlternateLineImport()
 
                     Else
                         HouseKeepingBeforeStartAlternateLineBackgroundWork()
@@ -276,6 +253,59 @@ Public Class TimeLogsForm
             MsgBox(ex.Message & " Error on file initialization")
         Finally
         End Try
+    End Sub
+
+    Private Async Sub NewTimeEntryAlternateLineImport()
+        Dim importer = New TimeLogsReader()
+        Dim importOutput = importer.Import(thefilepath)
+
+        If importOutput.IsImportSuccess = False Then
+            MessageBox.Show(importOutput.ErrorMessage)
+            Return
+        End If
+
+        Dim logs = importOutput.Logs
+
+        If logs.Count = 0 Then
+            MessageBox.Show("No logs were parsed. Please make sure the log files follows the right format.")
+            Return
+        End If
+
+        Dim logsGroupedByEmployee = TimeAttendanceLog.GroupByEmployee(logs)
+        Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
+
+        Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
+        Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
+
+        Dim employeeShifts As List(Of ShiftSchedule) =
+                Await GetEmployeeShifts(firstDate, lastDate)
+
+        Dim timeAttendanceHelper As New TimeAttendanceHelper(logs, employees, employeeShifts)
+
+        'determines the IstimeIn, LogDate, and Employee values
+        logs = timeAttendanceHelper.Analyze()
+        Dim validLogs = logs.Where(Function(l) l.HasError = False).ToList()
+        Dim invalidLogs = logs.Where(Function(l) l.HasError = True).ToList()
+
+        'preview the logs here
+        Dim previewDialog As New TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
+        previewDialog.Logs = validLogs
+
+        invalidLogs.AddRange(importOutput.Errors)
+
+        previewDialog.Errors = invalidLogs.OrderBy(Function(l) l.LineNumber).ToList()
+
+        With previewDialog
+            .ShowDialog()
+            .BringToFront()
+        End With
+
+        If previewDialog.Cancelled Then
+            Return
+        End If
+
+        HouseKeepingBeforeStartAlternateLineBackgroundWork()
+        bgworkTypicalImport.RunWorkerAsync(timeAttendanceHelper)
     End Sub
 
     Private Sub HouseKeepingBeforeStartAlternateLineBackgroundWork()
@@ -461,9 +491,9 @@ Public Class TimeLogsForm
         Using context = New PayrollContext()
             Dim dateCreated = Date.Now
 
-            For Each timeLogs In timeLogsByEmployee
+            For Each timelogs In timeLogsByEmployee
                 Dim employee = context.Employees.
-                    Where(Function(et) et.EmployeeNo = timeLogs.Key).
+                    Where(Function(et) et.EmployeeNo = timelogs.Key).
                     Where(Function(et) Nullable.Equals(et.OrganizationID, z_OrganizationID)).
                     FirstOrDefault()
 
@@ -471,7 +501,7 @@ Public Class TimeLogsForm
                     Continue For
                 End If
 
-                For Each timeLog In timeLogs
+                For Each timeLog In timelogs
                     Dim t = New TimeLog() With {
                         .OrganizationID = z_OrganizationID,
                         .EmployeeID = employee.RowID,
@@ -1320,64 +1350,25 @@ Public Class TimeLogsForm
             OldTimeEntryAlternateLineImport()
 
         Else
-            Dim logs As IList(Of TimeAttendanceLog)
-            Dim isChangeableType As Boolean
+            Dim args = CType(e.Argument, TimeAttendanceHelper)
 
-            Try
-                Dim args = CType(e.Argument, Tuple(Of IList(Of TimeAttendanceLog), Boolean))
-
-                logs = args.Item1
-
-                isChangeableType = args.Item2
-
-            Catch ex As Exception
-                _logger.Error("Error casting imported logs in bgworkTypicalImport_DoWork.", ex)
-                Return
-            End Try
-
-            NewTimeEntryAlternateLineImport(logs, isChangeableType)
+            NewTimeEntryAlternateLineImportSave(args)
 
         End If
     End Sub
 
-    Private Async Sub NewTimeEntryAlternateLineImport(logs As IList(Of TimeAttendanceLog), isChangeableType As Boolean)
+    Private Async Sub NewTimeEntryAlternateLineImportSave(timeAttendanceHelper As TimeAttendanceHelper)
+
         Try
-            logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
-
-            If logs.Count = 0 Then
-                MessageBox.Show("No logs were parsed. Please make sure the log files follows the right format.")
-                Return
-            End If
-
-            Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
-            Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
-
+            Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
 
             Using context = New PayrollContext()
-
-                Dim employeeShifts = New List(Of ShiftSchedule)
-
-                employeeShifts = Await context.ShiftSchedules.
-                    Include(Function(s) s.Shift).
-                    Where(Function(s) s.OrganizationID = z_OrganizationID).
-                    Where(Function(s) s.EffectiveFrom >= firstDate).
-                    Where(Function(s) s.EffectiveTo <= lastDate).
-                    ToListAsync()
-
-                Dim analyzer = New TimeAttendanceAnalyzer(isChangeableType)
-
-                Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
-
-                Dim employees As List(Of Employee) =
-                Await GetEmployeesFromLogGroup(context, logsGroupedByEmployee)
-
-                Dim timeLogs = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
 
                 For Each timelog In timeLogs
                     context.TimeLogs.Add(timelog)
                 Next
 
-                context.SaveChanges()
+                Await context.SaveChangesAsync()
 
             End Using
 
@@ -1388,26 +1379,44 @@ Public Class TimeLogsForm
 
             MessageBoxHelper.DefaultErrorMessage("Import Logs")
 
+            Throw ex
+
         End Try
 
     End Sub
 
-    Private Async Function GetEmployeesFromLogGroup(context As PayrollContext, logsGroupedByEmployee As List(Of IGrouping(Of String, TimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
+    Private Async Function GetEmployeeShifts(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of ShiftSchedule))
 
-        If logsGroupedByEmployee.Count < 1 Then
-            Return New List(Of Employee)
-        End If
+        Using context = New PayrollContext()
+            Return Await context.ShiftSchedules.
+                           Include(Function(s) s.Shift).
+                           Where(Function(s) s.OrganizationID = z_OrganizationID).
+                           Where(Function(s) s.EffectiveFrom >= firstDate).
+                           Where(Function(s) s.EffectiveTo <= lastDate).
+                           ToListAsync()
+        End Using
 
-        Dim employeeNumbersArray(logsGroupedByEmployee.Count - 1) As String
+    End Function
 
-        For index = 0 To logsGroupedByEmployee.Count - 1
-            employeeNumbersArray(index) = logsGroupedByEmployee(index).Key
-        Next
+    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, TimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
 
-        Return Await context.Employees.
-                        Where(Function(e) employeeNumbersArray.Contains(e.EmployeeNo)).
-                        Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
-                        ToListAsync
+        Using context As New PayrollContext
+            If logsGroupedByEmployee.Count < 1 Then
+                Return New List(Of Employee)
+            End If
+
+            Dim employeeNumbersArray(logsGroupedByEmployee.Count - 1) As String
+
+            For index = 0 To logsGroupedByEmployee.Count - 1
+                employeeNumbersArray(index) = logsGroupedByEmployee(index).Key
+            Next
+
+            Return Await context.Employees.
+                            Where(Function(e) employeeNumbersArray.Contains(e.EmployeeNo)).
+                            Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
+                            ToListAsync
+        End Using
+
     End Function
 
     Private Sub OldTimeEntryAlternateLineImport()
@@ -1445,4 +1454,14 @@ Public Class TimeLogsForm
 
         MyBase.OnLoad(e)
     End Sub
+
+    Private Class NewTimeLogsArgument
+        Public Property Logs As IList(Of TimeAttendanceLog)
+        Public Property IsChangeable As Boolean
+
+        Sub New(logs As IList(Of TimeAttendanceLog), isChangeable As Boolean)
+            Me.Logs = logs
+            Me.IsChangeable = isChangeable
+        End Sub
+    End Class
 End Class

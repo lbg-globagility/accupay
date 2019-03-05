@@ -126,6 +126,7 @@ Public Class DayCalculator
                 End If
 
                 timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift)
+                timeEntry.LateHours += calculator.ComputeLateHours(coveredPeriod, currentShift)
 
                 If _policy.LateHoursRoundingUp Then
                     Dim lateHours = timeEntry.LateHours

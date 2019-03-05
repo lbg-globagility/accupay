@@ -1,14 +1,16 @@
 ﻿Imports AccuPay
+Imports AccuPay.Helper.TimeLogsReader
 
 Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     Public Property Logs As IList(Of TimeAttendanceLog)
 
-    Public Property Errors As IList(Of TimeLogsReader.ErrorLog)
+    Public Property Errors As IList(Of TimeAttendanceLog)
 
     Public Property Cancelled As Boolean
 
-    Public Property IsChangeableType As Boolean
+    Private _dtp As New DateTimePicker()
+    Private _Rectangle As Rectangle
 
     Sub New()
 
@@ -18,14 +20,42 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         ' Add any initialization after the InitializeComponent() call.
         Me.Cancelled = True
 
-        'This will be changed immediately to false on Load
-        Me.IsChangeableType = True
+    End Sub
 
+    Private Sub TimeAttendanceLogDataGrid_CellClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
+        Handles TimeAttendanceLogDataGrid.CellClick
+        If TimeAttendanceLogDataGrid.Columns(e.ColumnIndex) Is TimeAttendanceLogDataGridLogDate Then
+            _Rectangle = TimeAttendanceLogDataGrid.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, True)
+            _dtp.Size = New Size(_Rectangle.Width, _Rectangle.Height)
+            _dtp.Location = New Point(_Rectangle.X, _Rectangle.Y)
+
+            Dim currentLog As TimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
+
+            If currentLog Is Nothing Then Return
+
+            _dtp.Value = currentLog.LogDate
+
+            _dtp.Visible = True
+        Else
+            _dtp.Visible = False
+        End If
+    End Sub
+
+    Private Sub dtp_TextChange(ByVal sender As Object, ByVal e As EventArgs)
+        TimeAttendanceLogDataGrid.CurrentCell.Value = _dtp.Text.ToString()
+    End Sub
+
+    Private Sub TimeAttendanceLogDataGrid_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs) _
+        Handles TimeAttendanceLogDataGrid.Scroll
+        _dtp.Visible = False
     End Sub
 
     Private Sub TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        ToggleChangeableType()
+        TimeAttendanceLogDataGrid.Controls.Add(_dtp)
+        _dtp.Visible = False
+        _dtp.Format = DateTimePickerFormat.Custom
+        AddHandler _dtp.ValueChanged, AddressOf dtp_TextChange
 
         Dim errorCount = Me.Errors.Count
 
@@ -47,20 +77,16 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
             lblStatus.BackColor = Color.Green
         End If
 
-
-        dgvLogs.AutoGenerateColumns = False
-
-        dgvErrors.AutoGenerateColumns = False
+        TimeAttendanceLogDataGrid.AutoGenerateColumns = False
+        TimeAttendanceLogErrorsDataGrid.AutoGenerateColumns = False
 
         ParsedTabControl.Text = $"Ok ({Me.Logs.Count})"
         ErrorsTabControl.Text = $"Errors ({errorCount})"
 
-        dgvLogs.DataSource = Me.Logs
-
-        dgvErrors.DataSource = Me.Errors
+        TimeAttendanceLogDataGrid.DataSource = Me.Logs
+        TimeAttendanceLogErrorsDataGrid.DataSource = Me.Errors
 
     End Sub
-
 
     Private Sub FooterButton_Click(sender As Object, e As EventArgs) _
         Handles btnOK.Click, btnClose.Click
@@ -75,36 +101,111 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     End Sub
 
-    Private Sub dgvErrors_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvErrors.CellFormatting
+    Private Sub dgvErrors_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles TimeAttendanceLogErrorsDataGrid.CellFormatting
         Dim value As String = e.Value.ToString().Replace(vbTab, "     ")
         e.Value = value
     End Sub
 
-    Private Sub dgvLogs_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvLogs.CellMouseUp
+    Private Sub TimeAttendanceLogDataGrid_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) _
+        Handles TimeAttendanceLogDataGrid.CellFormatting
 
-        dgvLogs.EndEdit()
+        Dim currentLog As TimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
 
-        dgvLogs.Refresh()
+        If currentLog Is Nothing Then Return
 
-    End Sub
 
-    Private Sub btnChangeTimeType_Click(sender As Object, e As EventArgs) Handles btnChangeTimeType.Click
+        Dim currentColumn As DataGridViewColumn = TimeAttendanceLogDataGrid.Columns(e.ColumnIndex)
 
-        ToggleChangeableType()
+        If currentColumn Is TimeAttendanceLogDataGridTimeInButton Then
+            If currentLog.IsTimeIn = True Then
+                e.CellStyle.BackColor = Color.Green
+                e.CellStyle.SelectionBackColor = Color.Green
+                e.CellStyle.SelectionForeColor = Color.Black
+                e.CellStyle.Font = New Font(e.CellStyle.Font, FontStyle.Bold)
+            Else
+                e.CellStyle.BackColor = Color.White
+                e.CellStyle.SelectionBackColor = Color.White
+                e.CellStyle.SelectionForeColor = Color.Black
+            End If
 
-    End Sub
-
-    Private Sub ToggleChangeableType()
-        IsChangeableType = Not Me.IsChangeableType
-
-        dgvLogsColumnType.Visible = IsChangeableType
-        dgvLogsColumnIsTimeIn.Visible = IsChangeableType
-
-        If IsChangeableType Then
-            btnChangeTimeType.Text = "Ca&ncel Edit Time Type"
-
-        Else
-            btnChangeTimeType.Text = "&Edit Time Type"
+        ElseIf currentColumn Is TimeAttendanceLogDataGridTimeOutButton Then
+            If currentLog.IsTimeIn = False Then
+                e.CellStyle.BackColor = Color.Green
+                e.CellStyle.SelectionBackColor = Color.Green
+                e.CellStyle.SelectionForeColor = Color.Black
+                e.CellStyle.Font = New Font(e.CellStyle.Font, FontStyle.Bold)
+            Else
+                e.CellStyle.BackColor = Color.White
+                e.CellStyle.SelectionBackColor = Color.White
+                e.CellStyle.SelectionForeColor = Color.Black
+            End If
         End If
+
     End Sub
+
+    Private Sub TimeAttendanceLogDataGrid_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) _
+        Handles TimeAttendanceLogDataGrid.CellMouseUp
+
+        TimeAttendanceLogDataGrid.EndEdit()
+
+        TimeAttendanceLogDataGrid.Refresh()
+
+    End Sub
+
+    Private Sub TimeAttendanceLogDataGrid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) _
+                                           Handles TimeAttendanceLogDataGrid.CellContentClick
+
+        Dim currentLog As TimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
+
+        If currentLog Is Nothing Then Return
+
+        If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
+
+        Dim currentColumn = TimeAttendanceLogDataGrid.Columns(e.ColumnIndex)
+
+        If TypeOf currentColumn IsNot DataGridViewButtonColumn Then Return
+
+        If currentColumn Is TimeAttendanceLogDataGridTimeInButton Then
+
+            If currentLog.IsTimeIn Is Nothing OrElse currentLog.IsTimeIn = False Then
+                currentLog.IsTimeIn = True
+            Else
+                'Reset IsTimeIn if it is currently TRUE and he clicked IN button
+                'currentLog.IsTimeIn = Nothing
+            End If
+
+        ElseIf currentColumn Is TimeAttendanceLogDataGridTimeOutButton Then
+
+            If currentLog.IsTimeIn Is Nothing OrElse currentLog.IsTimeIn = True Then
+                currentLog.IsTimeIn = False
+            Else
+                'Reset IsTimeIn if it is currently FALSE and he clicked OUT button
+                'currentLog.IsTimeIn = Nothing
+            End If
+
+        ElseIf currentColumn Is TimeAttendanceLogDataGridDecrementLogDayButton Then
+
+            If currentLog.LogDate IsNot Nothing Then
+                currentLog.LogDate = currentLog.LogDate.Value.AddDays(-1)
+            End If
+
+        ElseIf currentColumn Is TimeAttendanceLogDataGridIncrementLogDayButton Then
+
+            If currentLog.LogDate IsNot Nothing Then
+                currentLog.LogDate = currentLog.LogDate.Value.AddDays(1)
+            End If
+        End If
+
+    End Sub
+
+    Private Function GetCurrentTimeLogByGridRowIndex(rowIndex As Integer) As TimeAttendanceLog
+
+        If rowIndex < 0 Then Return Nothing
+
+        If rowIndex > Me.Logs.Count - 1 Then Return Nothing
+
+        Return Me.Logs(rowIndex)
+
+    End Function
+
 End Class
