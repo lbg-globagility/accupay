@@ -33,6 +33,10 @@ Public Class TimeLog
 
     Public Property TimeOut As TimeSpan?
 
+    Public Property TimeStampIn As Date?
+
+    Public Property TimeStampOut As Date?
+
     Public ReadOnly Property HasLogs As Boolean
         Get
             Return TimeIn.HasValue And TimeOut.HasValue
