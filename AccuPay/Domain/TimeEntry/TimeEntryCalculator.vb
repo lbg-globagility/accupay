@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports Microsoft.EntityFrameworkCore
 
 Public Class TimeEntryCalculator
@@ -37,6 +38,55 @@ Public Class TimeEntryCalculator
         End If
 
         Return latePeriod.TotalHours
+    End Function
+
+    Public Function ComputeBreakTimeLateHours(workPeriod As TimePeriod, currentShift As CurrentShift, timeAttendanceLogs As IList(Of TimeAttendanceLog)) As Decimal
+        Dim shiftPeriod = currentShift.ShiftPeriod
+
+        Dim startTime = If(workPeriod.Start >= shiftPeriod.Start, workPeriod.Start, shiftPeriod.Start)
+        Dim endTime = If(workPeriod.End >= shiftPeriod.End, shiftPeriod.End, workPeriod.End)
+
+        Dim logs = timeAttendanceLogs.
+                    Where(Function(l) l.TimeStamp >= startTime).
+                    Where(Function(l) l.TimeStamp <= endTime).
+                    OrderBy(Function(l) l.TimeStamp).
+                    ToList
+
+        'get the late periods
+        Dim latePeriods As New List(Of TimePeriod)
+
+        Dim lastOut As Date
+        Dim firstIn As Date
+        Dim isLookingForBreakTimeOut As Boolean = True
+
+        For Each log In logs
+            If isLookingForBreakTimeOut Then
+                If log.IsTimeIn = False Then
+                    lastOut = log.TimeStamp
+
+                    isLookingForBreakTimeOut = False
+                End If
+            Else
+                'still get the time out to get the last OUT
+                If log.IsTimeIn = False Then
+                    lastOut = log.TimeStamp
+
+                Else
+                    'here in else, we found the first IN since the employee OUT for breaktime
+                    'this will be the late timeperiod
+                    firstIn = log.TimeStamp
+
+                    isLookingForBreakTimeOut = True
+
+                    latePeriods.Add(New TimePeriod(lastOut, firstIn))
+                End If
+            End If
+
+        Next
+
+        'compute the late hours
+        Return latePeriods.Sum(Function(l) l.TotalHours)
+
     End Function
 
     Public Function ComputeLateMinutes(workPeriod As TimePeriod, currentShift As CurrentShift) As Decimal

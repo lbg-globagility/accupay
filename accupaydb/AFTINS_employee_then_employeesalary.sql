@@ -37,7 +37,7 @@ DECLARE the_date DATE;
 
 
 SELECT IF(NEW.MaritalStatus IN ('Single','Married'),NEW.MaritalStatus,'Zero') INTO marit_stat;
-
+/*
     INSERT INTO employeesalary
     (
         EmployeeID
@@ -71,7 +71,7 @@ SELECT IF(NEW.MaritalStatus IN ('Single','Married'),NEW.MaritalStatus,'Zero') IN
         ,NEW.StartDate
     );
 
-
+*/
 
 INSERT INTO employeechecklist
 (

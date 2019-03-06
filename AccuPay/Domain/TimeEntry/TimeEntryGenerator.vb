@@ -27,6 +27,7 @@ Public Class TimeEntryGenerator
     Private _agencyFees As IList(Of AgencyFee)
     Private _shiftSchedules As IList(Of ShiftSchedule)
     Private _salaries As IList(Of Salary)
+    Private _timeAttendanceLogs As IList(Of TimeAttendanceLog)
 
     Private _total As Integer
 
@@ -125,6 +126,11 @@ Public Class TimeEntryGenerator
                 Where(Function(s) s.EffectiveFrom <= _cutoffEnd AndAlso _cutoffStart <= s.EffectiveTo).
                 ToList()
 
+            _timeAttendanceLogs = context.TimeAttendanceLogs.
+                Where(Function(t) Nullable.Equals(t.OrganizationID, z_OrganizationID)).
+                Where(Function(t) _cutoffStart <= t.WorkDay AndAlso t.WorkDay <= _cutoffEnd).
+                ToList()
+
             Dim payRates =
                 (From p In context.PayRates
                  Where p.OrganizationID.Value = z_OrganizationID AndAlso
@@ -170,6 +176,7 @@ Public Class TimeEntryGenerator
             Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             ToList()
 
+
         Dim shiftSchedules As IList(Of ShiftSchedule) = _shiftSchedules.
             Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
             ToList()
@@ -188,6 +195,10 @@ Public Class TimeEntryGenerator
 
         Dim agencyFees As IList(Of AgencyFee) = _agencyFees.
             Where(Function(a) Nullable.Equals(a.EmployeeID, employee.RowID)).
+            ToList()
+
+        Dim timeAttendanceLogs As IList(Of TimeAttendanceLog) = _timeAttendanceLogs.
+            Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             ToList()
 
         If employee.EmploymentStatus = "Resigned" OrElse employee.EmploymentStatus = "Terminated" Then
@@ -214,6 +225,7 @@ Public Class TimeEntryGenerator
                 Dim overtimes = overtimesInCutoff.Where(Function(o) o.OTStartDate <= currentDate And currentDate <= o.OTEndDate).ToList()
                 Dim leaves = leavesInCutoff.Where(Function(l) l.StartDate = currentDate).ToList()
                 Dim officialBusiness = officialBusinesses.FirstOrDefault(Function(o) o.StartDate = currentDate)
+                Dim currentTimeAttendanceLogs = timeAttendanceLogs.Where(Function(l) l.WorkDay = currentDate).ToList()
 
                 Dim timeEntry = dayCalculator.Compute(
                     currentDate,
@@ -223,7 +235,8 @@ Public Class TimeEntryGenerator
                     timelog,
                     overtimes,
                     officialBusiness,
-                    leaves)
+                    leaves,
+                    currentTimeAttendanceLogs)
 
                 timeEntries.Add(timeEntry)
 

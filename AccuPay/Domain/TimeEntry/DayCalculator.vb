@@ -42,7 +42,8 @@ Public Class DayCalculator
                             timeLog As TimeLog,
                             overtimes As IList(Of Overtime),
                             officialBusiness As OfficialBusiness,
-                            leaves As IList(Of Leave)) As TimeEntry
+                            leaves As IList(Of Leave),
+                            timeAttendanceLogs As IList(Of TimeAttendanceLog)) As TimeEntry
         Dim timeEntry = oldTimeEntries.Where(Function(t) t.Date = currentDate).SingleOrDefault()
 
         If timeEntry Is Nothing Then
@@ -74,7 +75,7 @@ Public Class DayCalculator
         Dim hasWorkedLastDay = HasWorkedLastWorkingDay(currentDate, oldTimeEntries)
         Dim payrate = _payrateCalendar.Find(currentDate)
 
-        ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, oldTimeEntries, currentShift, hasWorkedLastDay)
+        ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, oldTimeEntries, timeAttendanceLogs, currentShift, hasWorkedLastDay)
         ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay)
 
         Return timeEntry
@@ -87,6 +88,7 @@ Public Class DayCalculator
                              leaves As IList(Of Leave),
                              overtimes As IList(Of Overtime),
                              oldTimeEntries As IList(Of TimeEntry),
+                             timeAttendanceLogs As IList(Of TimeAttendanceLog),
                              currentShift As CurrentShift,
                              hasWorkedLastDay As Boolean)
         Dim previousDay = currentDate.AddDays(-1)
@@ -126,7 +128,7 @@ Public Class DayCalculator
                 End If
 
                 timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift)
-                'timeEntry.LateHours += calculator.ComputeLateHours(coveredPeriod, currentShift)
+                timeEntry.LateHours += calculator.ComputeBreakTimeLateHours(coveredPeriod, currentShift, timeAttendanceLogs)
 
                 If _policy.LateHoursRoundingUp Then
                     Dim lateHours = timeEntry.LateHours
