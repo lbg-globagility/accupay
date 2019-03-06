@@ -86,6 +86,8 @@ Public Class PayrollContext
 
     Public Overridable Property DivisionMinimumWages As DbSet(Of DivisionMinimumWage)
 
+    Public Overridable Property EmployeeDutySchedules As DbSet(Of EmployeeDutySchedule)
+
     Public Sub New()
     End Sub
 

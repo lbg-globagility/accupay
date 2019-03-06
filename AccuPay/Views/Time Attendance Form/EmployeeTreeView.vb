@@ -223,6 +223,7 @@ Public Class EmployeeTreeView
         Public Async Sub FilterEmployees(needle As String)
             Dim match =
                 Function(employee As Employee) As Boolean
+                    needle = needle.ToLower
                     Dim contains = employee.Fullname.ToLower().Contains(needle)
                     Dim reverseName = ($"{employee.LastName} {employee.FirstName}").ToLower()
                     Dim containsReverseName = reverseName.Contains(needle)

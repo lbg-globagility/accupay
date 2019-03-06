@@ -15,6 +15,13 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
+        Public Async Function GetDutyShiftPolicies() _
+            As Task(Of IEnumerable(Of ListOfValue))
+
+            Return Await GetListOfValues("DutyShift")
+
+        End Function
+
 #Region "Private Functions"
         Private Async Function GetListOfValues(type As String) _
             As Task(Of IEnumerable(Of ListOfValue))
