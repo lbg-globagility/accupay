@@ -116,7 +116,7 @@ Public Class TimeImporter
 #Region "Private Functions"
     Private Sub Base_ShouldImport(isChangeableTime As Boolean)
 
-        Dim logs As IList(Of TimeAttendanceLog) = GetParsedTimeLogs(isChangeableTime)
+        Dim logs As IList(Of ImportTimeAttendanceLog) = GetParsedTimeLogs(isChangeableTime)
 
         If isChangeableTime Then
             'put IsTimeIn value if testing for isChangeable
@@ -141,7 +141,7 @@ Public Class TimeImporter
         'Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
         Dim analyzer = New TimeAttendanceAnalyzer()
 
-        Dim logsGroupedByEmployee = TimeAttendanceLog.GroupByEmployee(logs)
+        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
         Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
 
         AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
@@ -155,7 +155,7 @@ Public Class TimeImporter
 
     Private Sub Base_ShouldImport_WithoutShifts(isChangeableTime As Boolean)
 
-        Dim logs As IList(Of TimeAttendanceLog) = GetParsedTimeLogs(isChangeableTime)
+        Dim logs As IList(Of ImportTimeAttendanceLog) = GetParsedTimeLogs(isChangeableTime)
 
         If isChangeableTime Then
             'put IsTimeIn value if testing for isChangeable
@@ -185,7 +185,7 @@ Public Class TimeImporter
         'Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
         Dim analyzer = New TimeAttendanceAnalyzer()
 
-        Dim logsGroupedByEmployee = TimeAttendanceLog.GroupByEmployee(logs)
+        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
         Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
 
         AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
@@ -199,7 +199,7 @@ Public Class TimeImporter
 
     Private Sub Base_ShouldImport_WithNextShiftScheduleWithoutShift(isChangeableTime As Boolean)
 
-        Dim logs As IList(Of TimeAttendanceLog) = GetParsedTimeLogs(isChangeableTime)
+        Dim logs As IList(Of ImportTimeAttendanceLog) = GetParsedTimeLogs(isChangeableTime)
 
         If isChangeableTime Then
             'put IsTimeIn value if testing for isChangeable
@@ -224,7 +224,7 @@ Public Class TimeImporter
         'Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
         Dim analyzer = New TimeAttendanceAnalyzer()
 
-        Dim logsGroupedByEmployee = TimeAttendanceLog.GroupByEmployee(logs)
+        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
         Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
 
         AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
@@ -235,7 +235,7 @@ Public Class TimeImporter
         AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
     End Sub
 
-    Private Function GetParsedTimeLogs(isChangeableTime As Boolean) As IList(Of TimeAttendanceLog)
+    Private Function GetParsedTimeLogs(isChangeableTime As Boolean) As IList(Of ImportTimeAttendanceLog)
         Dim importer = New TimeLogsReader()
 
         Dim filename = _projectPath & "\_timelogs_test.dat"

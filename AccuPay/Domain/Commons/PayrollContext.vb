@@ -86,6 +86,8 @@ Public Class PayrollContext
 
     Public Overridable Property DivisionMinimumWages As DbSet(Of DivisionMinimumWage)
 
+    Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
+
     Public Sub New()
     End Sub
 

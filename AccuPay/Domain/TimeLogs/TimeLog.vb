@@ -1,55 +1,57 @@
 ﻿Option Strict On
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports AccuPay.Entity
 
-<Table("employeetimeentrydetails")>
-Public Class TimeLog
+Namespace Global.AccuPay.Entity
 
-    <Key>
-    <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-    Public Property RowID As Integer?
+    <Table("employeetimeentrydetails")>
+    Public Class TimeLog
 
-    Public Property OrganizationID As Integer?
+        <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
+        Public Property RowID As Integer?
 
-    <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-    Public Property Created As Date
+        Public Property OrganizationID As Integer?
 
-    Public Property CreatedBy As Integer?
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
+        Public Property Created As Date
 
-    <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
-    Public Property LastUpd As Date?
+        Public Property CreatedBy As Integer?
 
-    Public Property LastUpdBy As Integer?
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
+        Public Property LastUpd As Date?
 
-    Public Property EmployeeID As Integer?
+        Public Property LastUpdBy As Integer?
 
-    <Column("Date")>
-    Public Property LogDate As Date
+        Public Property EmployeeID As Integer?
 
-    Public Property TimeIn As TimeSpan?
+        <Column("Date")>
+        Public Property LogDate As Date
 
-    Public Property TimeOut As TimeSpan?
+        Public Property TimeIn As TimeSpan?
 
-    Public Property TimeStampIn As Date?
+        Public Property TimeOut As TimeSpan?
 
-    Public Property TimeStampOut As Date?
+        Public Property TimeStampIn As Date?
 
-    Public ReadOnly Property HasLogs As Boolean
-        Get
-            Return TimeIn.HasValue And TimeOut.HasValue
-        End Get
-    End Property
+        Public Property TimeStampOut As Date?
 
-    Public Sub New()
-    End Sub
+        Public ReadOnly Property HasLogs As Boolean
+            Get
+                Return TimeIn.HasValue And TimeOut.HasValue
+            End Get
+        End Property
 
-    Public Sub New(timeIn As String, timeOut As String)
-        Me.TimeIn = TimeSpan.Parse(timeIn)
-        Me.TimeOut = TimeSpan.Parse(timeOut)
-    End Sub
+        Public Sub New()
+        End Sub
 
-    <ForeignKey("EmployeeID")>
-    Public Overridable Property Employee As Employee
+        Public Sub New(timeIn As String, timeOut As String)
+            Me.TimeIn = TimeSpan.Parse(timeIn)
+            Me.TimeOut = TimeSpan.Parse(timeOut)
+        End Sub
 
-End Class
+        <ForeignKey("EmployeeID")>
+        Public Overridable Property Employee As Employee
+
+    End Class
+End Namespace

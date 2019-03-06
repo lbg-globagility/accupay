@@ -1,36 +1,40 @@
 ﻿Option Strict On
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports AccuPay.Entity
 
-<Table("employeetimeattendancelog")>
-Public Class TimeAttendanceLog
+Namespace Global.AccuPay.Entity
 
-    <Key>
-    <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-    Public Property RowID As Integer?
+    <Table("employeetimeattendancelog")>
+    Public Class TimeAttendanceLog
 
-    Public Property OrganizationID As Integer?
+        <Key>
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
+        Public Property RowID As Integer?
 
-    <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-    Public Property Created As Date
+        Public Property OrganizationID As Integer?
 
-    Public Property CreatedBy As Integer?
+        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
+        Public Property Created As Date
 
-    <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
-    Public Property LastUpd As Date?
+        Public Property CreatedBy As Integer?
 
-    Public Property LastUpdBy As Integer?
+        <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
+        Public Property LastUpd As Date?
 
-    Public Property TimeStamp As Date
+        Public Property LastUpdBy As Integer?
 
-    Public Property IsTimeIn As Boolean?
+        Public Property TimeStamp As Date
 
-    Public Property WorkDay As Date
+        Public Property IsTimeIn As Boolean?
 
-    Public Property EmployeeID As Integer?
+        Public Property WorkDay As Date
 
-    <ForeignKey("EmployeeID")>
-    Public Overridable Property Employee As Employee
+        Public Property EmployeeID As Integer?
 
-End Class
+        <ForeignKey("EmployeeID")>
+        Public Overridable Property Employee As Employee
+
+    End Class
+
+
+End Namespace

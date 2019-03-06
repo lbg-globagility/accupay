@@ -10,7 +10,7 @@ Namespace Global.AccuPay.Helper.TimeAttendanceAnalyzer
 
         Public Function Analyze(
         employees As List(Of Employee),
-        logGroups As List(Of IGrouping(Of String, TimeAttendanceLog)),
+        logGroups As List(Of IGrouping(Of String, ImportTimeAttendanceLog)),
         employeeShifts As IList(Of ShiftSchedule)
     ) As List(Of TimeLog)
 
@@ -35,7 +35,7 @@ Namespace Global.AccuPay.Helper.TimeAttendanceAnalyzer
 
         End Function
 
-        Private Function GetEmployeeTimeLogs(employee As Employee, logGroup As IList(Of TimeAttendanceLog), employeeShifts As IList(Of ShiftSchedule)) As IList(Of TimeLog)
+        Private Function GetEmployeeTimeLogs(employee As Employee, logGroup As IList(Of ImportTimeAttendanceLog), employeeShifts As IList(Of ShiftSchedule)) As IList(Of TimeLog)
             Dim earliestDate = logGroup.FirstOrDefault().DateTime.Date
             Dim lastDate = logGroup.LastOrDefault().DateTime.Date
 

@@ -1,20 +1,21 @@
 ﻿Option Strict On
 Imports AccuPay.Entity
+Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
 
 Public Class TimeAttendanceHelper
 
-    Private _importedTimeAttendanceLogs As New List(Of Helper.TimeLogsReader.TimeAttendanceLog)
+    Private _importedTimeAttendanceLogs As New List(Of ImportTimeAttendanceLog)
 
     Private _employees As New List(Of Employee)
 
     Private _employeeShifts As New List(Of ShiftSchedule)
 
-    Private _logsGroupedByEmployee As New List(Of IGrouping(Of String, Helper.TimeLogsReader.TimeAttendanceLog))
+    Private _logsGroupedByEmployee As New List(Of IGrouping(Of String, ImportTimeAttendanceLog))
 
 
     Sub New(
-           importedTimeLogs As List(Of Helper.TimeLogsReader.TimeAttendanceLog),
+           importedTimeLogs As List(Of ImportTimeAttendanceLog),
            employees As List(Of Employee),
            employeeShifts As List(Of ShiftSchedule))
 
@@ -22,38 +23,13 @@ Public Class TimeAttendanceHelper
         _employees = employees
         _employeeShifts = employeeShifts
 
-        _logsGroupedByEmployee = Helper.TimeLogsReader.TimeAttendanceLog.GroupByEmployee(_importedTimeAttendanceLogs)
+        _logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(_importedTimeAttendanceLogs)
 
         GetEmployeeObjectOfLogs()
 
     End Sub
 
-    Private Sub GetEmployeeObjectOfLogs()
-
-        For Each logGroup In _logsGroupedByEmployee
-            Dim employee = _employees.FirstOrDefault(Function(e) e.EmployeeNo = logGroup.Key)
-
-
-            For Each log In logGroup
-
-                If log.HasError Then Continue For
-
-                If employee Is Nothing Then
-                    log.Employee = Nothing
-
-                    log.ErrorMessage = "Employee not found in the database."
-
-                Else
-                    log.Employee = employee
-                End If
-
-            Next
-
-        Next
-
-    End Sub
-
-    Public Function Analyze() As List(Of Helper.TimeLogsReader.TimeAttendanceLog)
+    Public Function Analyze() As List(Of ImportTimeAttendanceLog)
 
         Dim dayLogRecords = GenerateDayLogRecords()
 
@@ -94,6 +70,90 @@ Public Class TimeAttendanceHelper
         Return _importedTimeAttendanceLogs
     End Function
 
+    Public Function GenerateTimeLogs() As List(Of TimeLog)
+
+        Dim timeLogs As New List(Of TimeLog)
+
+        For Each logGroups In _logsGroupedByEmployee
+
+            Dim timeAttendanceLogOfEmployee = logGroups.ToList()
+
+            If timeAttendanceLogOfEmployee.Count = 0 Then Continue For
+
+            Dim currentEmployee = timeAttendanceLogOfEmployee(0).Employee
+
+            If currentEmployee Is Nothing Then Continue For
+
+            Dim logsByDayGroup = timeAttendanceLogOfEmployee.GroupBy(Function(l) l.LogDate).ToList()
+
+            For Each logsByDay In logsByDayGroup
+
+                Dim logsByDayList = logsByDay.OrderBy(Function(l) l.DateTime).ToList()
+
+                If logsByDay.Key Is Nothing Then Continue For
+
+                Dim logDate = CType(logsByDay.Key, Date)
+
+
+                Dim firstTimeStampIn = logsByDayList.FirstOrDefault(Function(l) Nullable.Equals(l.IsTimeIn, True))?.DateTime
+                Dim finalTimeStampOut = logsByDayList.LastOrDefault(Function(l) Nullable.Equals(l.IsTimeIn, False))?.DateTime
+
+                Dim firstTimeIn, finalTimeOut As TimeSpan?
+
+                'using timestampin with timeOfDay does not result to nothing
+                If firstTimeStampIn Is Nothing Then
+                    firstTimeIn = Nothing
+                Else
+                    firstTimeIn = firstTimeStampIn.Value.TimeOfDay
+                End If
+                If finalTimeStampOut Is Nothing Then
+                    finalTimeOut = Nothing
+                Else
+                    finalTimeOut = finalTimeStampOut.Value.TimeOfDay
+                End If
+
+                timeLogs.Add(New TimeLog() With {
+                    .LogDate = logDate,
+                    .CreatedBy = z_User,
+                    .OrganizationID = z_OrganizationID,
+                    .EmployeeID = currentEmployee.RowID,
+                    .TimeIn = firstTimeIn,
+                    .TimeOut = finalTimeOut,
+                    .TimeStampIn = firstTimeStampIn,
+                    .TimeStampOut = finalTimeStampOut
+                })
+
+            Next
+
+        Next
+
+        Return timeLogs
+
+    End Function
+
+    Public Function GenerateTimeAttendanceLogs() As List(Of TimeAttendanceLog)
+        Dim timeAttendanceLogs As New List(Of TimeAttendanceLog)
+
+        For Each log In _importedTimeAttendanceLogs
+
+            If log.LogDate Is Nothing Then Continue For
+
+            timeAttendanceLogs.Add(New TimeAttendanceLog() With {
+                .CreatedBy = z_User,
+                .OrganizationID = z_OrganizationID,
+                .TimeStamp = log.DateTime,
+                .IsTimeIn = log.IsTimeIn,
+                .WorkDay = CType(log.LogDate, Date),
+                .EmployeeID = log.Employee.RowID
+            })
+
+        Next
+
+        Return timeAttendanceLogs
+
+    End Function
+
+#Region "Private Functions"
     Private Function GenerateDayLogRecords() As List(Of DayLogRecord)
 
         Dim dayLogRecords As New List(Of DayLogRecord)
@@ -133,7 +193,7 @@ Public Class TimeAttendanceHelper
     End Function
 
     Private Function GenerateDayLogRecord(
-        employeeLogs As List(Of Helper.TimeLogsReader.TimeAttendanceLog),
+        employeeLogs As List(Of ImportTimeAttendanceLog),
         currentEmployeeShifts As List(Of ShiftSchedule),
         currentDate As Date) As DayLogRecord
 
@@ -169,66 +229,6 @@ Public Class TimeAttendanceHelper
 
     End Function
 
-    Public Function GenerateTimeLogs() As List(Of TimeLog)
-
-        Dim timeLogs As New List(Of TimeLog)
-
-        For Each logGroups In _logsGroupedByEmployee
-
-            Dim timeAttendanceLogOfEmployee = logGroups.ToList()
-
-            If timeAttendanceLogOfEmployee.Count = 0 Then Continue For
-
-            Dim currentEmployee = timeAttendanceLogOfEmployee(0).Employee
-
-            Dim logsByDayGroup = timeAttendanceLogOfEmployee.GroupBy(Function(l) l.LogDate).ToList()
-
-            For Each logsByDay In logsByDayGroup
-
-                Dim logsByDayList = logsByDay.OrderBy(Function(l) l.DateTime).ToList()
-
-                If logsByDay.Key Is Nothing Then Continue For
-
-                Dim logDate = CType(logsByDay.Key, Date)
-
-
-                Dim firstTimeStampIn = logsByDayList.FirstOrDefault(Function(l) Nullable.Equals(l.IsTimeIn, True))?.DateTime
-                Dim finalTimeStampOut = logsByDayList.LastOrDefault(Function(l) Nullable.Equals(l.IsTimeIn, False))?.DateTime
-
-                Dim firstTimeIn, finalTimeOut As TimeSpan?
-
-                'using timestampin with timeOfDay does not result to nothing
-                If firstTimeStampIn Is Nothing Then
-                    firstTimeIn = Nothing
-                Else
-                    firstTimeIn = firstTimeStampIn.Value.TimeOfDay
-                End If
-                If finalTimeStampOut Is Nothing Then
-                    finalTimeOut = Nothing
-                Else
-                    finalTimeOut = finalTimeStampOut.Value.TimeOfDay
-                End If
-
-                Dim timeLog = New TimeLog() With {
-                    .LogDate = logDate,
-                    .OrganizationID = z_OrganizationID,
-                    .EmployeeID = currentEmployee.RowID,
-                    .TimeIn = firstTimeIn,
-                    .TimeOut = finalTimeOut,
-                    .TimeStampIn = firstTimeStampIn,
-                    .TimeStampOut = finalTimeStampOut
-                }
-
-                timeLogs.Add(timeLog)
-
-            Next
-
-        Next
-
-        Return timeLogs
-
-    End Function
-
     Private Function GetNextShift(currentEmployeeShifts As List(Of ShiftSchedule), currentShift As ShiftSchedule, nextDate As Date) As ShiftSchedule
         Dim nextShift = currentEmployeeShifts.
         Where(Function(s) s.EffectiveFrom <= nextDate And nextDate <= s.EffectiveTo).
@@ -249,8 +249,8 @@ Public Class TimeAttendanceHelper
 
     Private Function GetTimeLogsFromBounds(
         shiftBounds As TimePeriod,
-        timeAttendanceLogs As List(Of Helper.TimeLogsReader.TimeAttendanceLog)
-    ) As List(Of Helper.TimeLogsReader.TimeAttendanceLog)
+        timeAttendanceLogs As List(Of ImportTimeAttendanceLog)
+    ) As List(Of ImportTimeAttendanceLog)
 
 
         Return timeAttendanceLogs.
@@ -315,12 +315,38 @@ Public Class TimeAttendanceHelper
         Return shiftMaxBound
     End Function
 
+    Private Sub GetEmployeeObjectOfLogs()
+
+        For Each logGroup In _logsGroupedByEmployee
+            Dim employee = _employees.FirstOrDefault(Function(e) e.EmployeeNo = logGroup.Key)
+
+
+            For Each log In logGroup
+
+                If log.HasError Then Continue For
+
+                If employee Is Nothing Then
+                    log.Employee = Nothing
+
+                    log.ErrorMessage = "Employee not found in the database."
+
+                Else
+                    log.Employee = employee
+                End If
+
+            Next
+
+        Next
+
+    End Sub
+
+#End Region
 
     Private Class DayLogRecord
 
         Property LogDate As Date
 
-        Property LogRecords As List(Of Helper.TimeLogsReader.TimeAttendanceLog)
+        Property LogRecords As List(Of ImportTimeAttendanceLog)
 
         Property ShiftTimeInBounds As Date
 
@@ -329,5 +355,7 @@ Public Class TimeAttendanceHelper
         Property ShiftSchedule As ShiftSchedule
 
     End Class
+
+
 
 End Class

@@ -271,7 +271,7 @@ Public Class TimeLogsForm
             Return
         End If
 
-        Dim logsGroupedByEmployee = TimeAttendanceLog.GroupByEmployee(logs)
+        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
         Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
 
         Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
@@ -1361,11 +1361,16 @@ Public Class TimeLogsForm
 
         Try
             Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
+            Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
             Using context = New PayrollContext()
 
-                For Each timelog In timeLogs
-                    context.TimeLogs.Add(timelog)
+                For Each timeLog In timeLogs
+                    context.TimeLogs.Add(timeLog)
+                Next
+
+                For Each timeAttendanceLog In timeAttendanceLogs
+                    context.TimeAttendanceLogs.Add(timeAttendanceLog)
                 Next
 
                 Await context.SaveChangesAsync()
@@ -1398,7 +1403,7 @@ Public Class TimeLogsForm
 
     End Function
 
-    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, TimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
+    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
 
         Using context As New PayrollContext
             If logsGroupedByEmployee.Count < 1 Then
@@ -1456,10 +1461,10 @@ Public Class TimeLogsForm
     End Sub
 
     Private Class NewTimeLogsArgument
-        Public Property Logs As IList(Of TimeAttendanceLog)
+        Public Property Logs As IList(Of ImportTimeAttendanceLog)
         Public Property IsChangeable As Boolean
 
-        Sub New(logs As IList(Of TimeAttendanceLog), isChangeable As Boolean)
+        Sub New(logs As IList(Of ImportTimeAttendanceLog), isChangeable As Boolean)
             Me.Logs = logs
             Me.IsChangeable = isChangeable
         End Sub

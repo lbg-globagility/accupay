@@ -21,7 +21,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
         Public Function Import(filename As String) As ImportOutput
             Dim output As New ImportOutput
 
-            Dim logs = New List(Of TimeAttendanceLog)
+            Dim logs = New List(Of ImportTimeAttendanceLog)
 
             Dim lineNumber As Integer = 0
             Dim lineContent As String
@@ -55,7 +55,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
             Return output
         End Function
 
-        Private Function ParseLine(lineContent As String, lineNumber As Integer) As TimeAttendanceLog
+        Private Function ParseLine(lineContent As String, lineNumber As Integer) As ImportTimeAttendanceLog
             Try
                 If String.IsNullOrEmpty(lineContent) Then
                     'not considered error if it's just an empty line
@@ -66,7 +66,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
                 Dim parts = Regex.Split(lineContent, "\t")
 
                 If parts.Length < 2 Then
-                    Return (New TimeAttendanceLog() With {
+                    Return (New ImportTimeAttendanceLog() With {
                         .LineContent = lineContent,
                         .LineNumber = lineNumber,
                         .ErrorMessage = "Needs at least 2 items in one line separated by a tab."
@@ -78,7 +78,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
                 Dim logDate = ObjectUtils.ToNullableDateTime(parts(1))
 
                 If logDate Is Nothing Then
-                    Return (New TimeAttendanceLog() With {
+                    Return (New ImportTimeAttendanceLog() With {
                         .LineContent = lineContent,
                         .LineNumber = lineNumber,
                         .ErrorMessage = "Second column must be a valid Date Time."
@@ -86,7 +86,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
                 End If
 
                 Return (
-            New TimeAttendanceLog() With {
+            New ImportTimeAttendanceLog() With {
                 .EmployeeNumber = employeeNo,
                 .DateTime = CType(logDate, Date),
                 .LineContent = lineContent,
@@ -94,7 +94,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
             })
 
             Catch ex As Exception
-                Return (New TimeAttendanceLog() With {
+                Return (New ImportTimeAttendanceLog() With {
                         .LineContent = lineContent,
                         .LineNumber = lineNumber,
                         .ErrorMessage = "Error reading the line. Please check the template."
@@ -103,8 +103,8 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
         End Function
 
         Public Class ImportOutput
-            Public Property Logs As IList(Of TimeAttendanceLog)
-            Public Property Errors As IList(Of TimeAttendanceLog)
+            Public Property Logs As IList(Of ImportTimeAttendanceLog)
+            Public Property Errors As IList(Of ImportTimeAttendanceLog)
             ''' <summary>
             ''' True if the file was read successfully. Even if there are errors parsing
             ''' some lines, as long as the file was read, this is still True.
@@ -116,8 +116,8 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
             Public Property ErrorMessage As String
 
             Sub New()
-                Me.Logs = New List(Of TimeAttendanceLog)
-                Me.Errors = New List(Of TimeAttendanceLog)
+                Me.Logs = New List(Of ImportTimeAttendanceLog)
+                Me.Errors = New List(Of ImportTimeAttendanceLog)
                 Me.IsImportSuccess = True
 
                 Me.ErrorMessage = Nothing
@@ -126,7 +126,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
 
     End Class
 
-    Public Class TimeAttendanceLog
+    Public Class ImportTimeAttendanceLog
 
         ' - Contents and error message
         Public Property LineContent As String
@@ -185,8 +185,8 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
             End Get
         End Property
 
-        Public Shared Function GroupByEmployee(logs As IList(Of TimeAttendanceLog)) _
-            As List(Of IGrouping(Of String, TimeAttendanceLog))
+        Public Shared Function GroupByEmployee(logs As IList(Of ImportTimeAttendanceLog)) _
+            As List(Of IGrouping(Of String, ImportTimeAttendanceLog))
 
             Return logs.GroupBy(Function(l) l.EmployeeNumber).ToList()
         End Function

@@ -3,9 +3,9 @@ Imports AccuPay.Helper.TimeLogsReader
 
 Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
-    Public Property Logs As IList(Of TimeAttendanceLog)
+    Public Property Logs As IList(Of ImportTimeAttendanceLog)
 
-    Public Property Errors As IList(Of TimeAttendanceLog)
+    Public Property Errors As IList(Of ImportTimeAttendanceLog)
 
     Public Property Cancelled As Boolean
 
@@ -29,7 +29,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
             _dtp.Size = New Size(_Rectangle.Width, _Rectangle.Height)
             _dtp.Location = New Point(_Rectangle.X, _Rectangle.Y)
 
-            Dim currentLog As TimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
+            Dim currentLog As ImportTimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
 
             If currentLog Is Nothing Then Return
 
@@ -109,7 +109,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Private Sub TimeAttendanceLogDataGrid_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) _
         Handles TimeAttendanceLogDataGrid.CellFormatting
 
-        Dim currentLog As TimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
+        Dim currentLog As ImportTimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
 
         If currentLog Is Nothing Then Return
 
@@ -155,7 +155,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Private Sub TimeAttendanceLogDataGrid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) _
                                            Handles TimeAttendanceLogDataGrid.CellContentClick
 
-        Dim currentLog As TimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
+        Dim currentLog As ImportTimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
 
         If currentLog Is Nothing Then Return
 
@@ -198,7 +198,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     End Sub
 
-    Private Function GetCurrentTimeLogByGridRowIndex(rowIndex As Integer) As TimeAttendanceLog
+    Private Function GetCurrentTimeLogByGridRowIndex(rowIndex As Integer) As ImportTimeAttendanceLog
 
         If rowIndex < 0 Then Return Nothing
 
