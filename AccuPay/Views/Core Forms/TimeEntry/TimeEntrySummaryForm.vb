@@ -49,6 +49,8 @@ Public Class TimeEntrySummaryForm
 
     Private _employeeRepository As EmployeeRepository
 
+    Private _calculateBreakTimeLateHours As Boolean
+
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         employeesDataGridView.AutoGenerateColumns = False
@@ -58,11 +60,23 @@ Public Class TimeEntrySummaryForm
 
         _employeeRepository = New EmployeeRepository
 
+        _calculateBreakTimeLateHours = GetBreakTimeLateHoursPolicy()
 
         Dim loadEmployeesTask = LoadEmployees()
         Dim loadPayPeriodsTask = LoadPayPeriods()
         LoadYears()
     End Sub
+
+    Private Function GetBreakTimeLateHoursPolicy() As Boolean
+        Using context = New PayrollContext()
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim policy = New TimeEntryPolicy(settings)
+
+            Return policy.BreakTimeLateHours
+        End Using
+    End Function
 
     Private Async Function LoadEmployees() As Task
         _employees = Await GetEmployees()
@@ -1059,6 +1073,8 @@ Public Class TimeEntrySummaryForm
 
         If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
 
+        If _calculateBreakTimeLateHours = False Then Return
+
         Dim currentRow = timeEntriesDataGridView.Rows(e.RowIndex)
         Dim currentColumn = timeEntriesDataGridView.Columns(e.ColumnIndex)
 
@@ -1097,9 +1113,12 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Sub AddLinkButtonEffectOnRegularHours(ByRef e As DataGridViewCellFormattingEventArgs)
+
         If _selectedEmployee Is Nothing Then Return
 
         If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
+
+        If _calculateBreakTimeLateHours = False Then Return
 
         'format except the last row
         If e.RowIndex >= timeEntriesDataGridView.Rows.Count - 1 Then Return

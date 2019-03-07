@@ -128,7 +128,10 @@ Public Class DayCalculator
                 End If
 
                 timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift)
-                timeEntry.LateHours += calculator.ComputeBreakTimeLateHours(coveredPeriod, currentShift, timeAttendanceLogs)
+
+                If _policy.BreakTimeLateHours Then
+                    timeEntry.LateHours += calculator.ComputeBreakTimeLateHours(coveredPeriod, currentShift, timeAttendanceLogs)
+                End If
 
                 If _policy.LateHoursRoundingUp Then
                     Dim lateHours = timeEntry.LateHours

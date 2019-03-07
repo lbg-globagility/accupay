@@ -1,0 +1,1 @@
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('0', 'ComputeBreakTimeLate', 'LateHours', 'Yes', 'Computes break time late', '2019-03-07 15:27:53', '1', '2019-03-07 15:27:58', '1', '1');

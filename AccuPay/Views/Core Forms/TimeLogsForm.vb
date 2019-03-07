@@ -1,7 +1,6 @@
 ﻿Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
-Imports AccuPay.Helper.TimeAttendanceAnalyzer
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Utils
 Imports log4net
