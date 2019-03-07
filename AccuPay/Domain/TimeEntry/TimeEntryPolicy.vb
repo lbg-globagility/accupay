@@ -74,4 +74,10 @@ Public Class TimeEntryPolicy
         End Get
     End Property
 
+    Public ReadOnly Property UseShiftSchedule As Boolean
+        Get
+            Return _settings.GetBoolean("ShiftPolicy.UseShiftSchedule")
+        End Get
+    End Property
+
 End Class

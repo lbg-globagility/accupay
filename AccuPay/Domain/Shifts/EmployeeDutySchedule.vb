@@ -28,7 +28,7 @@ Namespace Global.AccuPay.Entity
         Public Property EmployeeID As Integer?
 
         <Column("Date")>
-        Public Property DateSched As Date?
+        Public Property DateSched As Date
 
         Public Property StartTime As TimeSpan?
         Public Property EndTime As TimeSpan?

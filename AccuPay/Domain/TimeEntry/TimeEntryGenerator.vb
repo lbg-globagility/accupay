@@ -25,8 +25,9 @@ Public Class TimeEntryGenerator
     Private _leaves As IList(Of Leave)
     Private _officialBusinesses As IList(Of OfficialBusiness)
     Private _agencyFees As IList(Of AgencyFee)
-    Private _shiftSchedules As IList(Of ShiftSchedule)
+    Private _employeeShifts As IList(Of ShiftSchedule)
     Private _salaries As IList(Of Salary)
+    Private _shiftSchedules As IList(Of EmployeeDutySchedule)
 
     Private _total As Integer
 
@@ -119,10 +120,15 @@ Public Class TimeEntryGenerator
                 Where(Function(a) _cutoffStart <= a.Date AndAlso a.Date <= _cutoffEnd).
                 ToList()
 
-            _shiftSchedules = context.ShiftSchedules.
+            _employeeShifts = context.ShiftSchedules.
                 Include(Function(s) s.Shift).
                 Where(Function(s) s.OrganizationID = z_OrganizationID).
                 Where(Function(s) s.EffectiveFrom <= _cutoffEnd AndAlso _cutoffStart <= s.EffectiveTo).
+                ToList()
+
+            _shiftSchedules = context.EmployeeDutySchedules.
+                Where(Function(es) es.OrganizationID.Value = z_OrganizationID).
+                Where(Function(es) _cutoffStart <= es.DateSched AndAlso es.DateSched <= _cutoffEnd).
                 ToList()
 
             Dim payRates =
@@ -170,7 +176,7 @@ Public Class TimeEntryGenerator
             Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim shiftSchedules As IList(Of ShiftSchedule) = _shiftSchedules.
+        Dim shiftSchedules As IList(Of ShiftSchedule) = _employeeShifts.
             Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
             ToList()
 
@@ -188,6 +194,10 @@ Public Class TimeEntryGenerator
 
         Dim agencyFees As IList(Of AgencyFee) = _agencyFees.
             Where(Function(a) Nullable.Equals(a.EmployeeID, employee.RowID)).
+            ToList()
+
+        Dim dutyShiftSchedules = _shiftSchedules.
+            Where(Function(es) Nullable.Equals(es.EmployeeID, employee.RowID)).
             ToList()
 
         If employee.EmploymentStatus = "Resigned" OrElse employee.EmploymentStatus = "Terminated" Then
@@ -210,16 +220,18 @@ Public Class TimeEntryGenerator
 
             Try
                 Dim timelog = timeLogs.OrderByDescending(Function(t) t.LastUpd).FirstOrDefault(Function(t) t.LogDate = currentDate)
-                Dim shiftSchedule = shiftSchedules.FirstOrDefault(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo)
+                Dim employeeShift = shiftSchedules.FirstOrDefault(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo)
                 Dim overtimes = overtimesInCutoff.Where(Function(o) o.OTStartDate <= currentDate And currentDate <= o.OTEndDate).ToList()
                 Dim leaves = leavesInCutoff.Where(Function(l) l.StartDate = currentDate).ToList()
                 Dim officialBusiness = officialBusinesses.FirstOrDefault(Function(o) o.StartDate = currentDate)
+                Dim dutyShiftSched = dutyShiftSchedules.FirstOrDefault(Function(es) es.DateSched = currentDate)
 
                 Dim timeEntry = dayCalculator.Compute(
                     currentDate,
                     salary,
                     previousTimeEntries,
-                    shiftSchedule,
+                    employeeShift,
+                    dutyShiftSched,
                     timelog,
                     overtimes,
                     officialBusiness,

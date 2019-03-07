@@ -38,7 +38,8 @@ Public Class DayCalculator
     Public Function Compute(currentDate As DateTime,
                             salary As Salary,
                             oldTimeEntries As IList(Of TimeEntry),
-                            shiftSchedule As ShiftSchedule,
+                            employeeShift As ShiftSchedule,
+                            shiftSched As EmployeeDutySchedule,
                             timeLog As TimeLog,
                             overtimes As IList(Of Overtime),
                             officialBusiness As OfficialBusiness,
@@ -66,7 +67,7 @@ Public Class DayCalculator
             Return timeEntry
         End If
 
-        Dim currentShift = New CurrentShift(shiftSchedule, currentDate)
+        Dim currentShift = New CurrentShift(employeeShift, currentDate)
         If _policy.RespectDefaultRestDay Then
             currentShift.SetDefaultRestDay(_employee.DayOfRest)
         End If
