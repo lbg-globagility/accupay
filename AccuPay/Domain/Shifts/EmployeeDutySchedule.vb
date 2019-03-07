@@ -7,13 +7,12 @@ Namespace Global.AccuPay.Entity
 
     <Table("shiftschedules")>
     Public Class EmployeeDutySchedule
-        Implements IEmployeeDutySchedule
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer
 
-        Public Property OrganizationID As Integer? Implements IEmployeeDutySchedule.OrganizationID
+        Public Property OrganizationID As Integer?
 
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property Created As DateTime
@@ -26,16 +25,16 @@ Namespace Global.AccuPay.Entity
         Public Property LastUpdBy As Integer?
 
         <ForeignKey("Employee")>
-        Public Property EmployeeID As Integer? Implements IEmployeeDutySchedule.EmployeeID
+        Public Property EmployeeID As Integer?
 
         <Column("Date")>
-        Public Property DateSched As Date? Implements IEmployeeDutySchedule.DateSched
+        Public Property DateSched As Date?
 
-        Public Property StartTime As TimeSpan? Implements IEmployeeDutySchedule.StartTime
-        Public Property EndTime As TimeSpan? Implements IEmployeeDutySchedule.EndTime
-        Public Property BreakStartTime As TimeSpan? Implements IEmployeeDutySchedule.BreakStartTime
-        Public Property BreakEndTime As TimeSpan? Implements IEmployeeDutySchedule.BreakEndTime
-        Public Property IsRestDay As Boolean Implements IEmployeeDutySchedule.IsRestDay
+        Public Property StartTime As TimeSpan?
+        Public Property EndTime As TimeSpan?
+        Public Property BreakStartTime As TimeSpan?
+        Public Property BreakLength As Decimal
+        Public Property IsRestDay As Boolean
 
         Public Overridable Property Employee As Employee
 

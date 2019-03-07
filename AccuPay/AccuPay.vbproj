@@ -356,7 +356,6 @@
     <Compile Include="Domain\Paystubs\Category.vb" />
     <Compile Include="Domain\Paystubs\DivisionMinimumWage.vb" />
     <Compile Include="Domain\Shifts\EmployeeDutySchedule.vb" />
-    <Compile Include="Domain\Shifts\IEmployeeDutySchedule.vb" />
     <Compile Include="Domain\TimeEntry\ActualTimeEntryCalculator.vb" />
     <Compile Include="Domain\TimeEntry\ActualTimeEntryPolicy.vb" />
     <Compile Include="Domain\TimeEntry\AgencyFeeCalculator.vb" />
