@@ -5,6 +5,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Repository
+Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
@@ -1052,8 +1053,64 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Sub timeEntriesDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles timeEntriesDataGridView.CellContentClick
+    Private Async Sub timeEntriesDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles timeEntriesDataGridView.CellContentClick
 
+        If _selectedEmployee Is Nothing Then Return
+
+        If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
+
+        Dim currentRow = timeEntriesDataGridView.Rows(e.RowIndex)
+        Dim currentColumn = timeEntriesDataGridView.Columns(e.ColumnIndex)
+
+        If currentRow Is Nothing OrElse currentColumn Is Nothing Then Return
+
+        If currentColumn Is ColumnRegHrs Then
+
+            Dim nullableCurrentDate = ObjectUtils.ToNullableDateTime(currentRow.Cells(1).Value)
+
+            If nullableCurrentDate Is Nothing Then Return
+
+            Dim currentDate = Convert.ToDateTime(nullableCurrentDate)
+
+            Dim timeAttendanceLogs As List(Of TimeAttendanceLog)
+
+            Using context As New PayrollContext
+
+                timeAttendanceLogs = Await context.TimeAttendanceLogs.
+                                        Where(Function(t) Nullable.Equals(t.EmployeeID, _selectedEmployee.RowID)).
+                                        Where(Function(t) t.WorkDay = currentDate).
+                                        OrderBy(Function(t) t.TimeStamp).
+                                        ToListAsync
+
+
+            End Using
+
+            Dim form As New TimeAttendanceLogListForm(timeAttendanceLogs)
+            form.ShowDialog()
+
+        End If
+
+    End Sub
+
+    Private Sub timeEntriesDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles timeEntriesDataGridView.CellFormatting
+        AddLinkButtonEffectOnRegularHours(e)
+    End Sub
+
+    Private Sub AddLinkButtonEffectOnRegularHours(ByRef e As DataGridViewCellFormattingEventArgs)
+        If _selectedEmployee Is Nothing Then Return
+
+        If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
+
+        'format except the last row
+        If e.RowIndex >= timeEntriesDataGridView.Rows.Count - 1 Then Return
+
+        Dim currentColumn = timeEntriesDataGridView.Columns(e.ColumnIndex)
+
+        If currentColumn Is ColumnRegHrs Then
+
+            e.CellStyle.ForeColor = Color.Blue
+            e.CellStyle.Font = New Font(e.CellStyle.Font, FontStyle.Underline)
+        End If
     End Sub
 
     Private Sub tstbnResetLeaveBalance_Click(sender As Object, e As EventArgs) Handles tstbnResetLeaveBalance.Click
@@ -1094,5 +1151,4 @@ Public Class TimeEntrySummaryForm
             End Try
         End Using
     End Sub
-
 End Class

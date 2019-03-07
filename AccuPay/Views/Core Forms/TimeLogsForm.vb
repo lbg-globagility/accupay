@@ -1119,17 +1119,35 @@ Public Class TimeLogsForm
         tsbtndel.Enabled = False
     End Sub
 
-    Private Sub tsbtndel_Click(sender As Object, e As EventArgs) Handles tsbtndel.Click
-        With dgvetentd
-            If .RowCount <> 0 Then
-                Dim result = MessageBox.Show("Are you sure you want to delete ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+    Private Async Sub tsbtndel_Click(sender As Object, e As EventArgs) Handles tsbtndel.Click
 
-                If result = DialogResult.Yes Then
-                    EXECQUER("DELETE FROM employeetimeentrydetails WHERE Created='" & .CurrentRow.Cells("createdmilit").Value & "';")
-                    dgvetentd.Rows.Remove(.CurrentRow)
-                End If
-            End If
-        End With
+        If dgvetentd.RowCount = 0 Then Return
+
+        Dim importId = dgvetentd.CurrentRow.Cells("TimeentrylogsImportID").Value
+
+        If importId Is Nothing Then Return
+
+        Dim result = MessageBox.Show($"Are you sure you want to delete import: {importId}?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+
+        If result = DialogResult.Yes Then
+
+            Using context As New PayrollContext
+
+                context.TimeAttendanceLogs.
+                    RemoveRange(context.TimeAttendanceLogs.
+                                    Where(Function(t) t.ImportNumber = importId))
+
+                context.TimeLogs.
+                    RemoveRange(context.TimeLogs.
+                                    Where(Function(t) t.TimeentrylogsImportID = importId))
+
+                Await context.SaveChangesAsync()
+
+                dgvetentd.Rows.Remove(dgvetentd.CurrentRow)
+
+            End Using
+
+        End If
     End Sub
 
     Private Sub dgvetentdet_Scroll(sender As Object, e As ScrollEventArgs) Handles dgvetentdet.Scroll
@@ -1365,11 +1383,30 @@ Public Class TimeLogsForm
 
             Using context = New PayrollContext()
 
+                Dim importId = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                Dim originalImportId = importId
+
+                Dim counter As Integer = 0
+
+                While context.TimeLogs.FirstOrDefault(Function(t) t.TimeentrylogsImportID = importId) IsNot Nothing OrElse
+                        context.TimeAttendanceLogs.FirstOrDefault(Function(t) t.ImportNumber = importId) IsNot Nothing
+                    counter += 1
+
+                    importId = originalImportId & "_" & counter
+
+                End While
+
                 For Each timeLog In timeLogs
+
+                    timeLog.TimeentrylogsImportID = importId
+
                     context.TimeLogs.Add(timeLog)
                 Next
 
                 For Each timeAttendanceLog In timeAttendanceLogs
+
+                    timeAttendanceLog.ImportNumber = importId
+
                     context.TimeAttendanceLogs.Add(timeAttendanceLog)
                 Next
 

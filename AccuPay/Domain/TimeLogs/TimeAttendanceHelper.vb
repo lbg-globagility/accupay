@@ -138,13 +138,17 @@ Public Class TimeAttendanceHelper
 
             If log.LogDate Is Nothing Then Continue For
 
+            Dim employeeId = log.Employee?.RowID
+
+            If employeeId Is Nothing Then Continue For
+
             timeAttendanceLogs.Add(New TimeAttendanceLog() With {
                 .CreatedBy = z_User,
                 .OrganizationID = z_OrganizationID,
                 .TimeStamp = log.DateTime,
                 .IsTimeIn = log.IsTimeIn,
                 .WorkDay = CType(log.LogDate, Date),
-                .EmployeeID = log.Employee.RowID
+                .EmployeeID = Convert.ToInt32(employeeId)
             })
 
         Next

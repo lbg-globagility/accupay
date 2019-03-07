@@ -23,16 +23,26 @@ Namespace Global.AccuPay.Entity
 
         Public Property LastUpdBy As Integer?
 
+        Public Property ImportNumber As String
+
         Public Property TimeStamp As Date
 
         Public Property IsTimeIn As Boolean?
 
         Public Property WorkDay As Date
 
-        Public Property EmployeeID As Integer?
+        Public Property EmployeeID As Integer
 
         <ForeignKey("EmployeeID")>
         Public Overridable Property Employee As Employee
+
+        Public ReadOnly Property IsTimeInDescription() As String
+            Get
+                If IsTimeIn Is Nothing Then Return ""
+
+                Return If(IsTimeIn = True, "IN", "OUT")
+            End Get
+        End Property
 
     End Class
 

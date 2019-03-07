@@ -36,6 +36,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property TimeStampOut As Date?
 
+        Public Property TimeentrylogsImportID As String
+
         Public ReadOnly Property HasLogs As Boolean
             Get
                 Return TimeIn.HasValue And TimeOut.HasValue
