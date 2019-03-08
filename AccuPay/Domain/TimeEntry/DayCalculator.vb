@@ -67,7 +67,10 @@ Public Class DayCalculator
             Return timeEntry
         End If
 
-        Dim currentShift = New CurrentShift(employeeShift, currentDate)
+        Dim currentShift = If(_policy.UseShiftSchedule,
+            New CurrentShift(shiftSched),
+            New CurrentShift(employeeShift, currentDate))
+
         If _policy.RespectDefaultRestDay Then
             currentShift.SetDefaultRestDay(_employee.DayOfRest)
         End If

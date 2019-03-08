@@ -93,7 +93,7 @@ Public Class ShiftScheduleForm
         BindGridEvents()
     End Sub
 
-    Private Sub CollectShiftSchedModel(ee As ShiftScheduleModel, dateVal As Date?, modelList As ICollection(Of ShiftScheduleModel))
+    Private Sub CollectShiftSchedModel(ee As ShiftScheduleModel, dateVal As Date, modelList As ICollection(Of ShiftScheduleModel))
         Dim newEe As New ShiftScheduleModel With {
             .EmployeeId = ee.EmployeeId,
             .EmployeeNo = ee.EmployeeNo,
@@ -368,14 +368,14 @@ Public Class ShiftScheduleForm
             Dim _empShiftScheds = Await context.EmployeeDutySchedules.
                 Include(Function(e) e.Employee).
                 Where(Function(e) eIDs.Any(Function(eID) Equals(e.EmployeeID, eID))).
-                Where(Function(e) e.DateSched.Value >= beginDate And e.DateSched.Value <= endDate).
+                Where(Function(e) e.DateSched >= beginDate And e.DateSched <= endDate).
                 ToListAsync
 
             If _empShiftScheds.Any Then
                 Dim notExists = Function(shSched As ShiftScheduleModel)
                                     Dim seekResult = _empShiftScheds.
                                     Where(Function(ess) Nullable.Equals(ess.EmployeeID, shSched.EmployeeId)).
-                                    Where(Function(ess) Nullable.Equals(ess.DateSched.Value.Date, shSched.DateValue.Value.Date))
+                                    Where(Function(ess) Nullable.Equals(ess.DateSched.Date, shSched.DateValue.Date))
 
                                     Return Not seekResult.Any
                                 End Function
@@ -404,7 +404,7 @@ Public Class ShiftScheduleForm
 
                 Dim _dataSource = _models.
                     OrderBy(Function(ssm) ssm.FullName.ToLower).
-                    ThenBy(Function(ssm) ssm.DateValue.Value.Date).
+                    ThenBy(Function(ssm) ssm.DateValue.Date).
                     ToList
                 _models = _dataSource
             End If
@@ -514,7 +514,7 @@ Public Class ShiftScheduleForm
         Public Property EmployeeId As Integer?
         Public Property EmployeeNo As String
         Public Property FullName As String
-        Public Property DateValue As Date?
+        Public Property DateValue As Date
 
         Public Property TimeFrom As String
             Get
@@ -549,7 +549,7 @@ Public Class ShiftScheduleForm
 
         Public ReadOnly Property DayName As String
             Get
-                Return GetDayName(DateValue.Value)
+                Return GetDayName(DateValue)
             End Get
         End Property
 

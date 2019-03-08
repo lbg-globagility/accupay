@@ -323,6 +323,7 @@
     <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
     <Compile Include="Core\Utilities\Extensions\DateExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
+    <Compile Include="Core\Utilities\Extensions\TimeSpanExtensions.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
     <Compile Include="Core\Utilities\ObjectUtils.vb" />
     <Compile Include="Domain\AgencyFees\Agency.vb" />
