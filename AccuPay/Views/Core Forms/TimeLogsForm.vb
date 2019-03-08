@@ -181,20 +181,20 @@ Public Class TimeLogsForm
         catchdt.Dispose()
     End Sub
 
-    Sub VIEWemployeetimeentrydetails(ByVal timeentrylogsImportID As Object,
+    Sub VIEWemployeetimeentrydetails(ByVal date_created As Object,
                                      EmployeeNumber As String,
                                      firstName As String,
                                      lastName As String)
 
         Dim param(4, 4) As Object
 
-        param(0, 0) = "etentd_TimeentrylogsImportID"
+        param(0, 0) = "etentd_Created"
         param(1, 0) = "etentd_OrganizationID"
         param(2, 0) = "etd_EmployeeNumber"
         param(3, 0) = "e_FirstName"
         param(4, 0) = "e_LastName"
 
-        param(0, 1) = timeentrylogsImportID
+        param(0, 1) = date_created
         param(1, 1) = orgztnID
         param(2, 1) = EmployeeNumber
         param(3, 1) = firstName
@@ -1053,7 +1053,7 @@ Public Class TimeLogsForm
         With dgvetentd
             If .RowCount <> 0 Then
                 If backgroundworking = 0 Then
-                    VIEWemployeetimeentrydetails(.CurrentRow.Cells("TimeentrylogsImportID").Value,
+                    VIEWemployeetimeentrydetails(.CurrentRow.Cells("createdmilit").Value,
                                                  TextBox1.Text.Trim,
                                                  txtFirstName.Text.Trim,
                                                  txtLastName.Text.Trim)

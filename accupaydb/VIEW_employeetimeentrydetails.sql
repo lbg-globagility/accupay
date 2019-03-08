@@ -6,19 +6,11 @@
 
 DROP PROCEDURE IF EXISTS `VIEW_employeetimeentrydetails`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `VIEW_employeetimeentrydetails`(
-	IN `etentd_TimeentrylogsImportID` VARCHAR(100),
-	IN `etentd_OrganizationID` INT,
-	IN `etd_EmployeeNumber` VARCHAR(50),
-	IN `e_FirstName` VARCHAR(50),
-	IN `e_LastName` VARCHAR(50)
-
+CREATE DEFINER=`root`@`localhost` PROCEDURE `VIEW_employeetimeentrydetails`(IN `etentd_Created` DATETIME, IN `etentd_OrganizationID` INT, IN `etd_EmployeeNumber` VARCHAR(50)
+, IN `e_FirstName` VARCHAR(50)
+, IN `e_LastName` VARCHAR(50)
 )
-LANGUAGE SQL
-DETERMINISTIC
-CONTAINS SQL
-SQL SECURITY DEFINER
-COMMENT ''
+    DETERMINISTIC
 BEGIN
 
 IF etd_EmployeeNumber IS NULL THEN
@@ -40,7 +32,7 @@ IF etd_EmployeeNumber = '' THEN
     ,COALESCE(etentd.TimeEntryStatus,'') 'TimeEntryStatus'
     FROM employeetimeentrydetails etentd
     LEFT JOIN employee e ON e.RowID=etentd.EmployeeID
-    WHERE etentd.TimeentrylogsImportID =etentd_TimeentrylogsImportID
+    WHERE DATE_FORMAT(etentd.Created,'%Y-%m-%d %H:%m:%s')=DATE_FORMAT(etentd_Created,'%Y-%m-%d %H:%m:%s')
         AND (e.FirstName LIKE CONCAT('%', e_FirstName, '%') OR e_FirstName = '')
         AND (e.LastName LIKE CONCAT('%', e_LastName, '%') OR e_LastName = '')
     AND etentd.OrganizationID=etentd_OrganizationID
@@ -61,7 +53,7 @@ ELSE
     ,COALESCE(etentd.TimeEntryStatus,'') 'TimeEntryStatus'
     FROM employeetimeentrydetails etentd
     INNER JOIN employee e ON e.EmployeeID=etd_EmployeeNumber AND e.OrganizationID=etentd_OrganizationID
-    WHERE etentd.TimeentrylogsImportID = etentd_TimeentrylogsImportID
+    WHERE DATE_FORMAT(etentd.Created,'%Y-%m-%d %H:%m:%s')=DATE_FORMAT(etentd_Created,'%Y-%m-%d %H:%m:%s')
     AND etentd.OrganizationID=etentd_OrganizationID
     AND etentd.EmployeeID=e.RowID
     ORDER BY etentd.EmployeeID,etentd.`Date`;
