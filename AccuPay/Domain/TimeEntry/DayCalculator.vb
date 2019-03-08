@@ -154,7 +154,7 @@ Public Class DayCalculator
                         {currentShift.Start, leavePeriod.Start}.Max(),
                         {currentShift.End, leavePeriod.End}.Min())
 
-                    timeEntry.RegularHours -= coveredLeavePeriod.TotalHours
+                    timeEntry.RegularHours -= calculator.ComputeRegularHours(coveredLeavePeriod, currentShift)
                 End If
 
                 Dim nightBreaktime As TimePeriod = Nothing

@@ -360,7 +360,8 @@ Public Class TimeLogsForm
                                              Optional EditAsUnique As String = "0",
                                              Optional Branch_Code As Object = Nothing,
                                              Optional DateTimeLogIn As Object = Nothing,
-                                             Optional DateTimeLogOut As Object = Nothing) As Object
+                                             Optional DateTimeLogOut As Object = Nothing,
+                                             Optional timeentrylogsImportID As String = "") As Object
 
         Static mysql_date_format As String = String.Empty
 
@@ -411,6 +412,9 @@ Public Class TimeLogsForm
                 .Parameters.AddWithValue("etentd_Created", etentd_Created)
                 .Parameters.AddWithValue("etentd_LastUpdBy", z_User)
                 .Parameters.AddWithValue("etentd_EmployeeID", If(etentd_EmployeeID = Nothing, DBNull.Value, etentd_EmployeeID))
+
+                .Parameters.AddWithValue("etentd_TimeentrylogsImportID", timeentrylogsImportID)
+
 
                 If IsDBNull(etentd_TimeIn) Then
                     .Parameters.AddWithValue("etentd_TimeIn", etentd_TimeIn)
@@ -949,9 +953,11 @@ Public Class TimeLogsForm
         End If
 
         Dim currtimestamp = Nothing
+        Dim currentImportId = ""
 
         If dgvetentd.RowCount <> 0 Then
             currtimestamp = Format(CDate(dgvetentd.CurrentRow.Cells("createdmilit").Value), "yyyy-MM-dd HH:mm:ss")
+            currentImportId = dgvetentd.CurrentRow.Cells("TimeentrylogsImportID").Value
         Else
             currtimestamp = Format(CDate(EXECQUER("SELECT CURRENT_TIMESTAMP();")), "yyyy-MM-dd HH:mm:ss")
         End If
@@ -1001,7 +1007,8 @@ Public Class TimeLogsForm
                                                     time_i,
                                                     time_o,
                                                     Trim(etent_date),
-                                                    .Cells("Column6").Value,,,,, timestampin, timestampinout)
+                                                    .Cells("Column6").Value,,,,, timestampin, timestampinout,
+                                                            timeentrylogsImportID:=currentImportId)
                     Else
                         If .Cells("Column1").Value = Nothing Then
                             Dim newRowID =
@@ -1011,7 +1018,8 @@ Public Class TimeLogsForm
                                                             time_o,
                                                             Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd"),
                                                             .Cells("Column6").Value,
-                                                            currtimestamp)
+                                                            currtimestamp,
+                                                            timeentrylogsImportID:=currentImportId)
 
                             .Cells("Column1").Value = newRowID
                         End If

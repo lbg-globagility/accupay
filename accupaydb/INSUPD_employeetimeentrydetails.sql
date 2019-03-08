@@ -7,23 +7,31 @@
 DROP FUNCTION IF EXISTS `INSUPD_employeetimeentrydetails`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employeetimeentrydetails`(
-    `etentd_RowID` INT,
-    `etentd_OrganizationID` INT,
-    `etentd_CreatedBy` INT,
-    `etentd_Created` DATETIME,
-    `etentd_LastUpdBy` INT,
-    `etentd_EmployeeID` VARCHAR(50),
-    `etentd_TimeIn` TIME,
-    `etentd_TimeOut` TIME,
-    `etentd_Date` DATE,
-    `etentd_TimeScheduleType` VARCHAR(50),
-    `etentd_TimeEntryStatus` VARCHAR(50),
-    `EditAsUnique` CHAR(1),
-    `Branch_Code` VARCHAR(150),
-    `DateTimeLogIn` VARCHAR(150),
-    `DateTimeLogOut` VARCHAR(150)
-) RETURNS int(11)
-    DETERMINISTIC
+	`etentd_RowID` INT,
+	`etentd_OrganizationID` INT,
+	`etentd_CreatedBy` INT,
+	`etentd_Created` DATETIME,
+	`etentd_LastUpdBy` INT,
+	`etentd_EmployeeID` VARCHAR(50),
+	`etentd_TimeIn` TIME,
+	`etentd_TimeOut` TIME,
+	`etentd_Date` DATE,
+	`etentd_TimeScheduleType` VARCHAR(50),
+	`etentd_TimeEntryStatus` VARCHAR(50),
+	`EditAsUnique` CHAR(1),
+	`Branch_Code` VARCHAR(150),
+	`DateTimeLogIn` VARCHAR(150),
+	`DateTimeLogOut` VARCHAR(150)
+,
+	`etentd_TimeentrylogsImportID` VARCHAR(100)
+
+)
+RETURNS int(11)
+LANGUAGE SQL
+DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
 BEGIN
 
 DECLARE etentdID INT(11) DEFAULT -1;
@@ -81,7 +89,8 @@ IF $employeeId IS NOT NULL THEN
         TimeEntryStatus,
         ChargeToDivisionID,
         TimeStampIn,
-        TimeStampOut
+        TimeStampOut,
+        TimeentrylogsImportID
     )
     SELECT
         etentd_RowID,
@@ -107,7 +116,8 @@ IF $employeeId IS NOT NULL THEN
         ),
         branch_rowid,
         TIMESTAMP(ADDDATE(DateTimeLogIn, INTERVAL 0 SECOND)),
-        TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND))
+        TIMESTAMP(ADDDATE(DateTimeLogOut, INTERVAL 0 SECOND)),
+        etentd_TimeentrylogsImportID
     ON DUPLICATE KEY
     UPDATE
         LastUpd = CURRENT_TIMESTAMP(),
@@ -118,7 +128,8 @@ IF $employeeId IS NOT NULL THEN
         TimeScheduleType = etentd_TimeScheduleType,
         ChargeToDivisionID = branch_rowid,
         TimeStampIn = DateTimeLogIn,
-        TimeStampOut = DateTimeLogOut;
+        TimeStampOut = DateTimeLogOut,
+        TimeentrylogsImportID = etentd_TimeentrylogsImportID;
 	
     SELECT @@Identity AS id
     INTO etentdID;

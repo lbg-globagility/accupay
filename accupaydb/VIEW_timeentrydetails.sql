@@ -18,7 +18,7 @@ DATE_FORMAT(etdet.Created,'%m/%d/%Y %h:%i %p') 'Created'
 ,SUBSTRING(u.LastName, 2))),'') 'Created by'
 ,COALESCE(DATE_FORMAT(etdet.LastUpd,'%b-%d-%Y'),'') 'Last Update'
 ,COALESCE((SELECT CONCAT(CONCAT(UCASE(LEFT(FirstName, 1)), SUBSTRING(FirstName, 2)),' ',CONCAT(UCASE(LEFT(LastName, 1))
-,SUBSTRING(LastName, 2))) FROM user WHERE RowID=etdet.LastUpd),'') 'Last update by'
+,SUBSTRING(LastName, 2))) FROM user WHERE RowID=etdet.LastUpdBy),'') 'Last update by'
 ,etdet.TimeentrylogsImportID
 
 
