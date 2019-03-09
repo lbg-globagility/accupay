@@ -11,6 +11,7 @@ Imports Microsoft.EntityFrameworkCore
 Public Class ShiftScheduleForm
 
 #Region "VariableDeclarations"
+
     Private Shared logger As ILog = LogManager.GetLogger("ShiftScheduleAppender")
 
     Const defaultWorkHours As Integer = 8
@@ -26,19 +27,12 @@ Public Class ShiftScheduleForm
     Private implementIt As Boolean = False
 
     Private _dataSource As List(Of ShiftScheduleModel)
+
 #End Region
 
 #Region "Methods"
 
-    Private Sub BindGridEvents()
-        AddHandler grid.CellEndEdit, AddressOf DataGrid_CellEndEdit
-    End Sub
-
-    Private Sub UnbindGridEvents()
-        RemoveHandler grid.CellEndEdit, AddressOf DataGrid_CellEndEdit
-    End Sub
-
-    Private Async Sub LoadDutyReference()
+    Private Async Sub LoadShiftScheduleConfigurablePolicy()
         _dutyShiftPolicy = Await DutyShiftPolicy.Load1
 
         txtBreakLength.Value = _dutyShiftPolicy.BreakHour
@@ -58,49 +52,14 @@ Public Class ShiftScheduleForm
         gridWeek.DataSource = _models
     End Sub
 
-    Private Async Sub LoadChangesAsync()
-        UnbindGridEvents()
-
-        Dim beginDate = dtpDateFrom.Value.Date
-        Dim endDate = dtpDateTo.Value.Date
-
-        Dim _shiftSchedSource As New List(Of ShiftScheduleModel)
-
-        If tcSchedule.SelectedTab Is tabRange Then
-
-            Dim _models As List(Of ShiftScheduleModel) = CreatedResult()
-
-            _dataSource = Await RangeApply(beginDate, endDate, _models)
-
-            _shiftSchedSource = _dataSource
-
-        ElseIf tcSchedule.SelectedTab Is tabWeekCycle Then
-
-            WeekCycleApply()
-
-            _shiftSchedSource = _dataSource
-
-        End If
-
-        grid.DataSource = _shiftSchedSource
-
-        If implementIt Then
-            For Each row In grid.Rows.OfType(Of DataGridViewRow)
-                TransformTouchedRow(row)
-            Next
-        End If
-
-        BindGridEvents()
-    End Sub
-
-    Private Sub CollectShiftSchedModel(ee As ShiftScheduleModel, dateVal As Date, modelList As ICollection(Of ShiftScheduleModel))
+    Private Sub CollectShiftSchedModel(ee As ShiftScheduleModel, dateVal As Date, modelList As ICollection(Of ShiftScheduleModel), isRaw As Boolean)
         Dim newEe As New ShiftScheduleModel With {
             .EmployeeId = ee.EmployeeId,
             .EmployeeNo = ee.EmployeeNo,
             .FullName = ee.FullName,
             .DateValue = dateVal}
 
-        ApplyChangesToModel(newEe)
+        If Not isRaw Then ApplyChangesToModel(newEe)
 
         modelList.Add(newEe)
     End Sub
@@ -116,6 +75,15 @@ Public Class ShiftScheduleForm
             Else
                 .BreakLength = txtBreakLength.Value
             End If
+        End With
+    End Sub
+
+    Private Sub ApplyChangesToModel(ssm As ShiftScheduleModel, update As ShiftScheduleModel)
+        With ssm
+            .TimeFrom = update.TimeFrom
+            .TimeTo = update.TimeTo
+            .BreakFrom = update.BreakFrom
+            .BreakLength = update.BreakLength
         End With
     End Sub
 
@@ -180,11 +148,12 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub ShiftProper(dataGrid As DataGridView, e As DataGridViewCellEventArgs)
+        Dim _currRow = dataGrid.Rows(e.RowIndex)
         If Not IsStartTimeCellParseable(dataGrid, e.ColumnIndex) Then
+            TransformTouchedRow(_currRow)
             Return
         End If
 
-        Dim _currRow = dataGrid.Rows(e.RowIndex)
         Dim model = DirectCast(_currRow.DataBoundItem, ShiftScheduleModel)
 
         AutomaticShiftCompute(model)
@@ -242,11 +211,9 @@ Public Class ShiftScheduleForm
                         breakHours = _dutyShiftPolicy.BreakHour
                         .BreakLength = breakHours
                     End If
-
                 Else
                     ClearBreakTimes(shiftSched)
                 End If
-
             Else
                 ClearBreakTimes(shiftSched)
 
@@ -267,6 +234,11 @@ Public Class ShiftScheduleForm
         For Each ctl In control.Controls.OfType(Of NumericUpDown)
             ctl.Value = ctl.Minimum
         Next
+    End Sub
+
+    Private Sub RefreshDataSource(source As IList(Of ShiftScheduleModel))
+        grid.DataSource = source
+        grid.Refresh()
     End Sub
 
 #End Region
@@ -332,7 +304,7 @@ Public Class ShiftScheduleForm
         Return TimeUtility.ToDateTime(timeSpanValue)
     End Function
 
-    Private Function CreatedResult() As List(Of ShiftScheduleModel)
+    Private Function CreatedResult(isRawData As Boolean) As List(Of ShiftScheduleModel)
         CommitTimeValues()
 
         Dim beginDate = dtpDateFrom.Value.Date
@@ -354,7 +326,8 @@ Public Class ShiftScheduleForm
             For Each dateVal In dates
                 CollectShiftSchedModel(ee,
                                        dateVal,
-                                       _models)
+                                       _models,
+                                       isRawData)
             Next
         Next
 
@@ -419,37 +392,15 @@ Public Class ShiftScheduleForm
         Return _weekCycleRows.Select(Function(r) DirectCast(r.DataBoundItem, ShiftScheduleModel)).ToList
     End Function
 
-    Private Function WeekCycleApply() As Boolean
+    Private Function TimeSpanToString(text As String) As String
+        Dim _value = Calendar.ToTimespan(text)
+        Dim hasValue = _value.HasValue
 
-        Dim _weekPatterns = ConvertGridRowsToShiftScheduleModels(gridWeek)
-        Dim _weekCycles = _weekPatterns
-
-        Dim isSatisfy = _weekCycles.Any
-
-        If isSatisfy Then
-
-            For Each w In _weekCycles
-                Dim _update = _dataSource.
-                        Where(Function(ssm) Equals(w.DayName, ssm.DayName))
-
-                If Not _update.Any Then Continue For
-                For Each ssm In _update
-                    With ssm
-                        .TimeFrom = w.TimeFrom
-                        .TimeTo = w.TimeTo
-
-                        .BreakFrom = w.BreakFrom
-                        .BreakLength = w.BreakLength
-
-                        .IsRestDay = w.IsRestDay
-                    End With
-                Next
-
-            Next
-
+        If hasValue Then
+            Return _value.Value.ToString("hh\:mm")
+        Else
+            Return String.Empty
         End If
-
-        Return isSatisfy
     End Function
 
 #End Region
@@ -644,6 +595,7 @@ Public Class ShiftScheduleForm
                 Return _eds
             End Get
         End Property
+
     End Class
 
     Private Class DutyShiftPolicy
@@ -724,7 +676,43 @@ Public Class ShiftScheduleForm
     Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click
         implementIt = True
 
-        LoadChangesAsync()
+        Dim start As Date = dtpDateFrom.Value.Date
+        Dim finish As Date = dtpDateTo.Value.Date
+
+        Dim _newSource = New List(Of ShiftScheduleModel)
+        For Each r In _dataSource
+            _newSource.Add(r)
+        Next
+
+        If tcSchedule.SelectedTab Is tabRange Then
+            For Each ssm In _newSource
+                ApplyChangesToModel(ssm)
+            Next
+
+        ElseIf tcSchedule.SelectedTab Is tabWeekCycle Then
+
+            Dim _weekCycles = ConvertGridRowsToShiftScheduleModels(gridWeek)
+
+            Dim isSatisfy = _weekCycles.Any
+
+            If isSatisfy Then
+
+                For Each w In _weekCycles
+                    Dim _update = _newSource.
+                        Where(Function(ssm) Equals(w.DayName, ssm.DayName))
+
+                    If Not _update.Any Then Continue For
+                    For Each ssm In _update
+                        ApplyChangesToModel(ssm, w)
+                    Next
+
+                Next
+
+            End If
+
+        End If
+
+        RefreshDataSource(_newSource)
     End Sub
 
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
@@ -763,7 +751,7 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub EmployeeTreeView1_TickedEmployee(s As Object, e As EventArgs) Handles EmployeeTreeView1.TickedEmployee
-        LoadChangesAsync()
+        DateFilter_ValueChangedAsync(dtpDateFrom, e)
     End Sub
 
     Private Sub EmployeeTreeView1_Load(sender As Object, e As EventArgs) Handles EmployeeTreeView1.Load
@@ -775,7 +763,7 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub ShiftScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
-        LoadDutyReference()
+        LoadShiftScheduleConfigurablePolicy()
 
         organizationId = z_OrganizationID
 
@@ -794,6 +782,10 @@ Public Class ShiftScheduleForm
 
     Private Sub grid_DataSourceChanged(sender As Object, e As EventArgs) Handles grid.DataSourceChanged
         ZebraliseEmployeeRows()
+
+        For Each row As DataGridViewRow In grid.Rows
+            TransformTouchedRow(row)
+        Next
     End Sub
 
     Private Sub dataGrid_TimeCellParsing(sender As Object, e As DataGridViewCellParsingEventArgs) _
@@ -809,17 +801,6 @@ Public Class ShiftScheduleForm
         End If
 
     End Sub
-
-    Private Function TimeSpanToString(text As String) As String
-        Dim _value = Calendar.ToTimespan(text)
-        Dim hasValue = _value.HasValue
-
-        If hasValue Then
-            Return _value.Value.ToString("hh\:mm")
-        Else
-            Return String.Empty
-        End If
-    End Function
 
     Private Sub txtTimeFrom_TextChanged(sender As Object, e As EventArgs) Handles txtTimeFrom.TextChanged
         Dim _value = txtTimeFrom.Text.Trim
@@ -854,15 +835,9 @@ Public Class ShiftScheduleForm
         Dim startTime = Calendar.ToTimespan(txtBreakFrom.Text.Trim)
         If startTime.HasValue Then
             Dim breakStart = ToDateTime(startTime.Value).Value
-            txtBreakTo.Text = MilitarDateTime(breakStart.AddHours(txtBreakLength.Value))
         Else
-            txtBreakTo.Clear()
             txtBreakLength.Value = txtBreakLength.Minimum
         End If
-    End Sub
-
-    Private Sub txtBreakTo_TextChanged(sender As Object, e As EventArgs) Handles txtBreakTo.TextChanged
-
     End Sub
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
@@ -911,12 +886,8 @@ Public Class ShiftScheduleForm
 
     Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
         implementIt = False
-        ResetInputFields(GroupBox2)
-        ResetInputFields(GroupBox3)
 
-        LoadWeek()
-
-        LoadChangesAsync()
+        DateFilter_ValueChangedAsync(dtpDateFrom, e)
     End Sub
 
     Private Sub gridWeek_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles gridWeek.RowsAdded
@@ -927,34 +898,39 @@ Public Class ShiftScheduleForm
 
     End Sub
 
-    Private Sub DataGrid_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles gridWeek.CellEndEdit
+    Private Sub DataGrid_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellEndEdit, gridWeek.CellEndEdit
         Dim _dataGrid = DirectCast(sender, DataGridView)
         ShiftProper(_dataGrid, e)
 
         _dataGrid.Refresh()
     End Sub
 
-    Private Sub dtpDateFrom_ValueChanged(sender As Object, e As EventArgs) Handles dtpDateFrom.ValueChanged
+    Private Async Sub DateFilter_ValueChangedAsync(sender As Object, e As EventArgs) _
+        Handles dtpDateFrom.ValueChanged, dtpDateTo.ValueChanged
+
+        Dim dtp = DirectCast(sender, DateTimePicker)
+
         Dim start As Date = dtpDateFrom.Value.Date
         Dim finish As Date = dtpDateTo.Value.Date
 
         If start > finish Then
-            dtpDateTo.Value = start
-        Else
-            btnReset_Click(btnReset, e)
+            If dtp.Name = dtpDateFrom.Name Then dtpDateTo.Value = start : finish = start
+            If dtp.Name = dtpDateTo.Name Then dtpDateFrom.Value = finish : start = finish
+
         End If
+
+        _dataSource = Await RangeApply(start, finish, CreatedResult(True))
+        RefreshDataSource(_dataSource)
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDiscard1.Click
+        ResetInputFields(GroupBox2)
+        ResetInputFields(GroupBox3)
 
     End Sub
 
-    Private Sub dtpDateTo_ValueChanged(sender As Object, e As EventArgs) Handles dtpDateTo.ValueChanged
-        Dim start As Date = dtpDateFrom.Value.Date
-        Dim finish As Date = dtpDateTo.Value.Date
-
-        If start > finish Then
-            dtpDateFrom.Value = finish
-        Else
-            btnReset_Click(btnReset, e)
-        End If
+    Private Sub btnDiscard2_Click(sender As Object, e As EventArgs) Handles btnDiscard2.Click
+        LoadWeek()
 
     End Sub
 
