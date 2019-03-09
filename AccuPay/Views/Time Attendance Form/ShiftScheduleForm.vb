@@ -241,6 +241,15 @@ Public Class ShiftScheduleForm
         grid.Refresh()
     End Sub
 
+    Private Sub EnterKeySameAsTabKey(e As KeyPressEventArgs)
+        Dim eAsc = Asc(e.KeyChar)
+        If Not eAsc = 13 Then
+            Return
+        End If
+
+        SendKeys.Send("{TAB}")
+    End Sub
+
 #End Region
 
 #Region "Functions"
@@ -774,6 +783,11 @@ Public Class ShiftScheduleForm
 
         LoadWeek()
 
+        Dim ctrls = New Control() {dtpDateFrom, dtpDateTo, txtTimeFrom, txtTimeTo, txtBreakFrom, txtBreakLength}
+        For Each c In ctrls
+            AddHandler c.KeyPress, AddressOf EnterKeySameAsTabKey_KeyPress
+        Next
+
     End Sub
 
     Private Sub grid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellContentClick
@@ -864,10 +878,6 @@ Public Class ShiftScheduleForm
         End If
     End Sub
 
-    Private Sub gridWeek_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles gridWeek.CellContentClick
-
-    End Sub
-
     Private Sub gridWeek_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles gridWeek.CellPainting
         Dim isSatisfy = e.ColumnIndex = Column7.Index And e.RowIndex > -1
         If isSatisfy Then
@@ -932,6 +942,22 @@ Public Class ShiftScheduleForm
     Private Sub btnDiscard2_Click(sender As Object, e As EventArgs) Handles btnDiscard2.Click
         LoadWeek()
 
+    End Sub
+
+    Private Sub EnterKeySameAsTabKey_KeyPress(sender As Object, e As KeyPressEventArgs)
+        EnterKeySameAsTabKey(e)
+    End Sub
+
+    Private Sub tabRange_Click(sender As Object, e As EventArgs) Handles tabRange.Click
+
+    End Sub
+
+    Private Sub tabRange_Enter(sender As Object, e As EventArgs) Handles tabRange.Enter
+        tabRange.SelectNextControl(GroupBox2, True, True, True, True)
+    End Sub
+
+    Private Sub tabWeekCycle_Enter(sender As Object, e As EventArgs) Handles tabWeekCycle.Enter
+        tabWeekCycle.SelectNextControl(gridWeek, True, True, True, True)
     End Sub
 
 #End Region
