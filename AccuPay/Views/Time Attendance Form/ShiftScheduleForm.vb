@@ -960,6 +960,34 @@ Public Class ShiftScheduleForm
         tabWeekCycle.SelectNextControl(gridWeek, True, True, True, True)
     End Sub
 
+    Private Sub gridWeek_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles gridWeek.CellContentClick
+
+        If gridWeek.Columns(e.ColumnIndex).Name = Column6.Name Then
+            Dim _cellButton = gridWeek.Item(Column6.Name, e.RowIndex)
+            Dim ignoredText = "Ignore"
+
+            If Convert.ToString(_cellButton.Value) = ignoredText _
+                Or _cellButton.Value Is Nothing Then
+                _cellButton.Value = "Apply"
+
+                With _cellButton.Style
+                    Dim _color = Color.FromArgb(0, 200, 83)
+                    .ForeColor = Color.Black
+                    .BackColor = _color
+
+                    .SelectionForeColor = Color.White
+                    .SelectionBackColor = Color.Green
+
+                End With
+            Else
+                _cellButton.Value = ignoredText
+                '_cellButton.Style = gridWeek.Item(Column1.Name, e.RowIndex).Style
+                _cellButton.Style = gridWeek.Rows(e.RowIndex).DefaultCellStyle
+            End If
+
+        End If
+    End Sub
+
 #End Region
 
 End Class
