@@ -122,6 +122,10 @@ Public Class EmployeeTreeView
 
         Dim parentDivisions = divisions.Where(Function(d) d.IsRoot)
 
+        Dim rootNode = New TreeNode With {
+            .Name = "$root",
+            .Text = "All"}
+
         For Each parentDivision In parentDivisions
             Dim parentNode = New TreeNode() With {
                 .Name = parentDivision.Name,
@@ -155,11 +159,14 @@ Public Class EmployeeTreeView
                 parentNode.Nodes.Add(childNode)
             Next
 
-            AccuPayEmployeeTreeView.Nodes.Add(parentNode)
+            rootNode.Nodes.Add(parentNode)
         Next
+
+        AccuPayEmployeeTreeView.Nodes.Add(rootNode)
 
         AccuPayEmployeeTreeView.ExpandAll()
         AccuPayEmployeeTreeView.EndUpdate()
+        AccuPayEmployeeTreeView.Nodes(0).EnsureVisible()
     End Sub
 
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
