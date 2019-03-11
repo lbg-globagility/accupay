@@ -1,4 +1,5 @@
-﻿Imports AccuPay
+﻿Imports System.Threading.Tasks
+Imports AccuPay
 Imports AccuPay.Helper.TimeLogsReader
 
 Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
@@ -7,6 +8,10 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     Private _errors As IList(Of ImportTimeAttendanceLog)
 
+    Private _originalLogs As IList(Of ImportTimeAttendanceLog)
+
+    Private _originalErrors As IList(Of ImportTimeAttendanceLog)
+
     Public Property Cancelled As Boolean
 
     Private _dtp As New DateTimePicker()
@@ -14,15 +19,20 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     Sub New(logs As IList(Of ImportTimeAttendanceLog), errors As IList(Of ImportTimeAttendanceLog))
 
-        Me._logs = logs.
+        Me._originalLogs = logs.
                     OrderBy(Function(l) l.Employee.EmployeeID).
                     ThenBy(Function(l) l.LogDate).
                     ThenBy(Function(l) l.DateTime).
                     ToList
 
-        Me._errors = errors.
+        Me._logs = Me._originalLogs
+
+        Me._originalErrors = errors.
                     OrderBy(Function(l) l.LineNumber).
                     ToList()
+
+        Me._errors = Me._originalErrors
+
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -219,4 +229,32 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     End Function
 
+    Private Async Sub txtSearch_TextChanged(sender As Object, e As EventArgs) Handles txtSearch.TextChanged
+
+        Dim searchValue = txtSearch.Text.ToLower()
+
+        Me._logs = Await Task.Run(Function() As IList(Of ImportTimeAttendanceLog)
+                                      Return Me._originalLogs.
+                                          Where(Function(o) o.EmployeeFullName.ToLower.Contains(searchValue) _
+                                            OrElse o.EmployeeNumber.ToLower.Contains(searchValue)).
+                                          ToList
+                                  End Function)
+
+        TimeAttendanceLogDataGrid.DataSource = Me._logs
+
+    End Sub
+
+    Private Async Sub txtErrorSearch_TextChanged(sender As Object, e As EventArgs) Handles txtErrorSearch.TextChanged
+
+        Dim searchValue = txtErrorSearch.Text.ToLower()
+
+        Me._errors = Await Task.Run(Function() As IList(Of ImportTimeAttendanceLog)
+                                        Return Me._originalErrors.
+                                          Where(Function(o) o.LineContent.ToLower.Contains(searchValue)).
+                                          ToList
+                                    End Function)
+
+        TimeAttendanceLogErrorsDataGrid.DataSource = Me._errors
+
+    End Sub
 End Class

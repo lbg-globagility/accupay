@@ -22,10 +22,10 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -39,15 +39,17 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
         Me.TimeAttendanceLogDataGrid = New System.Windows.Forms.DataGridView()
-        Me.lblStatus = New System.Windows.Forms.Label()
-        Me.ErrorsTabControl = New System.Windows.Forms.TabPage()
-        Me.TimeAttendanceLogErrorsDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column6 = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
         Me.TimeAttendanceLogDataGridLogDate = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.TimeAttendanceLogDataGridDecrementLogDayButton = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.TimeAttendanceLogDataGridIncrementLogDayButton = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.TimeAttendanceLogDataGridTimeInButton = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.TimeAttendanceLogDataGridTimeOutButton = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.lblStatus = New System.Windows.Forms.Label()
+        Me.ErrorsTabControl = New System.Windows.Forms.TabPage()
+        Me.TimeAttendanceLogErrorsDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.lblSearch = New System.Windows.Forms.Label()
+        Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -65,12 +67,16 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.txtErrorSearch = New System.Windows.Forms.TextBox()
+        Me.lblErrorSearch = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.ParsedTabControl.SuspendLayout()
         CType(Me.TimeAttendanceLogDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ErrorsTabControl.SuspendLayout()
         CType(Me.TimeAttendanceLogErrorsDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -116,6 +122,8 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         '
         'ParsedTabControl
         '
+        Me.ParsedTabControl.Controls.Add(Me.txtSearch)
+        Me.ParsedTabControl.Controls.Add(Me.lblSearch)
         Me.ParsedTabControl.Controls.Add(Me.TimeAttendanceLogDataGrid)
         Me.ParsedTabControl.Controls.Add(Me.lblStatus)
         Me.ParsedTabControl.Location = New System.Drawing.Point(4, 22)
@@ -135,62 +143,11 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TimeAttendanceLogDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.TimeAttendanceLogDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column6, Me.Column7, Me.Column8, Me.TimeAttendanceLogDataGridLogDate, Me.TimeAttendanceLogDataGridDecrementLogDayButton, Me.TimeAttendanceLogDataGridIncrementLogDayButton, Me.Column1, Me.TimeAttendanceLogDataGridTimeInButton, Me.TimeAttendanceLogDataGridTimeOutButton})
-        Me.TimeAttendanceLogDataGrid.Location = New System.Drawing.Point(8, 47)
+        Me.TimeAttendanceLogDataGrid.Location = New System.Drawing.Point(8, 62)
         Me.TimeAttendanceLogDataGrid.Name = "TimeAttendanceLogDataGrid"
         Me.TimeAttendanceLogDataGrid.RowHeadersVisible = False
-        Me.TimeAttendanceLogDataGrid.Size = New System.Drawing.Size(833, 299)
+        Me.TimeAttendanceLogDataGrid.Size = New System.Drawing.Size(833, 284)
         Me.TimeAttendanceLogDataGrid.TabIndex = 14
-        '
-        'lblStatus
-        '
-        Me.lblStatus.BackColor = System.Drawing.Color.Red
-        Me.lblStatus.Dock = System.Windows.Forms.DockStyle.Top
-        Me.lblStatus.ForeColor = System.Drawing.Color.White
-        Me.lblStatus.Location = New System.Drawing.Point(3, 3)
-        Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Padding = New System.Windows.Forms.Padding(4)
-        Me.lblStatus.Size = New System.Drawing.Size(843, 21)
-        Me.lblStatus.TabIndex = 13
-        Me.lblStatus.Text = "There is 1 error. Failed error logs will not be saved."
-        '
-        'ErrorsTabControl
-        '
-        Me.ErrorsTabControl.Controls.Add(Me.TimeAttendanceLogErrorsDataGrid)
-        Me.ErrorsTabControl.Location = New System.Drawing.Point(4, 22)
-        Me.ErrorsTabControl.Name = "ErrorsTabControl"
-        Me.ErrorsTabControl.Padding = New System.Windows.Forms.Padding(3)
-        Me.ErrorsTabControl.Size = New System.Drawing.Size(849, 352)
-        Me.ErrorsTabControl.TabIndex = 1
-        Me.ErrorsTabControl.Text = "Errors"
-        Me.ErrorsTabControl.UseVisualStyleBackColor = True
-        '
-        'TimeAttendanceLogErrorsDataGrid
-        '
-        Me.TimeAttendanceLogErrorsDataGrid.AllowUserToAddRows = False
-        Me.TimeAttendanceLogErrorsDataGrid.AllowUserToDeleteRows = False
-        Me.TimeAttendanceLogErrorsDataGrid.AllowUserToOrderColumns = True
-        Me.TimeAttendanceLogErrorsDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.TimeAttendanceLogErrorsDataGrid.BackgroundColor = System.Drawing.Color.White
-        Me.TimeAttendanceLogErrorsDataGrid.ColumnHeadersHeight = 34
-        Me.TimeAttendanceLogErrorsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.TimeAttendanceLogErrorsDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn4, Me.Column3})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.TimeAttendanceLogErrorsDataGrid.DefaultCellStyle = DataGridViewCellStyle8
-        Me.TimeAttendanceLogErrorsDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TimeAttendanceLogErrorsDataGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.TimeAttendanceLogErrorsDataGrid.Location = New System.Drawing.Point(3, 3)
-        Me.TimeAttendanceLogErrorsDataGrid.MultiSelect = False
-        Me.TimeAttendanceLogErrorsDataGrid.Name = "TimeAttendanceLogErrorsDataGrid"
-        Me.TimeAttendanceLogErrorsDataGrid.ReadOnly = True
-        Me.TimeAttendanceLogErrorsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.TimeAttendanceLogErrorsDataGrid.Size = New System.Drawing.Size(843, 346)
-        Me.TimeAttendanceLogErrorsDataGrid.TabIndex = 13
         '
         'Column6
         '
@@ -293,6 +250,74 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.TimeAttendanceLogDataGridTimeOutButton.Text = "OUT"
         Me.TimeAttendanceLogDataGridTimeOutButton.UseColumnTextForButtonValue = True
         Me.TimeAttendanceLogDataGridTimeOutButton.Width = 50
+        '
+        'lblStatus
+        '
+        Me.lblStatus.BackColor = System.Drawing.Color.Red
+        Me.lblStatus.Dock = System.Windows.Forms.DockStyle.Top
+        Me.lblStatus.ForeColor = System.Drawing.Color.White
+        Me.lblStatus.Location = New System.Drawing.Point(3, 3)
+        Me.lblStatus.Name = "lblStatus"
+        Me.lblStatus.Padding = New System.Windows.Forms.Padding(4)
+        Me.lblStatus.Size = New System.Drawing.Size(843, 21)
+        Me.lblStatus.TabIndex = 13
+        Me.lblStatus.Text = "There is 1 error. Failed error logs will not be saved."
+        '
+        'ErrorsTabControl
+        '
+        Me.ErrorsTabControl.Controls.Add(Me.TimeAttendanceLogErrorsDataGrid)
+        Me.ErrorsTabControl.Controls.Add(Me.Panel2)
+        Me.ErrorsTabControl.Location = New System.Drawing.Point(4, 22)
+        Me.ErrorsTabControl.Name = "ErrorsTabControl"
+        Me.ErrorsTabControl.Padding = New System.Windows.Forms.Padding(3)
+        Me.ErrorsTabControl.Size = New System.Drawing.Size(849, 352)
+        Me.ErrorsTabControl.TabIndex = 1
+        Me.ErrorsTabControl.Text = "Errors"
+        Me.ErrorsTabControl.UseVisualStyleBackColor = True
+        '
+        'TimeAttendanceLogErrorsDataGrid
+        '
+        Me.TimeAttendanceLogErrorsDataGrid.AllowUserToAddRows = False
+        Me.TimeAttendanceLogErrorsDataGrid.AllowUserToDeleteRows = False
+        Me.TimeAttendanceLogErrorsDataGrid.AllowUserToOrderColumns = True
+        Me.TimeAttendanceLogErrorsDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.TimeAttendanceLogErrorsDataGrid.BackgroundColor = System.Drawing.Color.White
+        Me.TimeAttendanceLogErrorsDataGrid.ColumnHeadersHeight = 34
+        Me.TimeAttendanceLogErrorsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.TimeAttendanceLogErrorsDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn4, Me.Column3})
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.TimeAttendanceLogErrorsDataGrid.DefaultCellStyle = DataGridViewCellStyle8
+        Me.TimeAttendanceLogErrorsDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TimeAttendanceLogErrorsDataGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.TimeAttendanceLogErrorsDataGrid.Location = New System.Drawing.Point(3, 44)
+        Me.TimeAttendanceLogErrorsDataGrid.MultiSelect = False
+        Me.TimeAttendanceLogErrorsDataGrid.Name = "TimeAttendanceLogErrorsDataGrid"
+        Me.TimeAttendanceLogErrorsDataGrid.ReadOnly = True
+        Me.TimeAttendanceLogErrorsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.TimeAttendanceLogErrorsDataGrid.Size = New System.Drawing.Size(843, 305)
+        Me.TimeAttendanceLogErrorsDataGrid.TabIndex = 13
+        '
+        'lblSearch
+        '
+        Me.lblSearch.AutoSize = True
+        Me.lblSearch.Location = New System.Drawing.Point(8, 36)
+        Me.lblSearch.Name = "lblSearch"
+        Me.lblSearch.Size = New System.Drawing.Size(41, 13)
+        Me.lblSearch.TabIndex = 15
+        Me.lblSearch.Text = "Search"
+        '
+        'txtSearch
+        '
+        Me.txtSearch.Location = New System.Drawing.Point(52, 32)
+        Me.txtSearch.Name = "txtSearch"
+        Me.txtSearch.Size = New System.Drawing.Size(394, 22)
+        Me.txtSearch.TabIndex = 16
         '
         'DataGridViewTextBoxColumn1
         '
@@ -461,6 +486,32 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
         Me.DataGridViewTextBoxColumn12.Width = 226
         '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.txtErrorSearch)
+        Me.Panel2.Controls.Add(Me.lblErrorSearch)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(3, 3)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(843, 41)
+        Me.Panel2.TabIndex = 14
+        '
+        'txtErrorSearch
+        '
+        Me.txtErrorSearch.Location = New System.Drawing.Point(49, 7)
+        Me.txtErrorSearch.Name = "txtErrorSearch"
+        Me.txtErrorSearch.Size = New System.Drawing.Size(394, 22)
+        Me.txtErrorSearch.TabIndex = 18
+        '
+        'lblErrorSearch
+        '
+        Me.lblErrorSearch.AutoSize = True
+        Me.lblErrorSearch.Location = New System.Drawing.Point(5, 11)
+        Me.lblErrorSearch.Name = "lblErrorSearch"
+        Me.lblErrorSearch.Size = New System.Drawing.Size(41, 13)
+        Me.lblErrorSearch.TabIndex = 17
+        Me.lblErrorSearch.Text = "Search"
+        '
         'TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -479,9 +530,12 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.Panel1.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.ParsedTabControl.ResumeLayout(False)
+        Me.ParsedTabControl.PerformLayout()
         CType(Me.TimeAttendanceLogDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ErrorsTabControl.ResumeLayout(False)
         CType(Me.TimeAttendanceLogErrorsDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -517,4 +571,9 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents TimeAttendanceLogDataGridTimeInButton As DataGridViewButtonColumn
     Friend WithEvents TimeAttendanceLogDataGridTimeOutButton As DataGridViewButtonColumn
+    Friend WithEvents lblSearch As Label
+    Friend WithEvents txtSearch As TextBox
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents txtErrorSearch As TextBox
+    Friend WithEvents lblErrorSearch As Label
 End Class
