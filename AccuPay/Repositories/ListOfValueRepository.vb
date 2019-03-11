@@ -22,6 +22,13 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
+        Public Async Function GetShiftPolicies() _
+            As Task(Of IEnumerable(Of ListOfValue))
+
+            Return Await GetListOfValues("ShiftPolicy")
+
+        End Function
+
 #Region "Private Functions"
         Private Async Function GetListOfValues(type As String) _
             As Task(Of IEnumerable(Of ListOfValue))
