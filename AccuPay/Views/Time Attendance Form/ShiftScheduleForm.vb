@@ -11,6 +11,8 @@ Imports Microsoft.EntityFrameworkCore
 Public Class ShiftScheduleForm
 
 #Region "VariableDeclarations"
+    Private Const ENABLED_TEXT As String = "Enable"
+    Private Const DISABLED_TEXT As String = "Disable"
 
     Private Shared logger As ILog = LogManager.GetLogger("ShiftScheduleAppender")
 
@@ -22,7 +24,7 @@ Public Class ShiftScheduleForm
 
     Private _dutyShiftPolicy As DutyShiftPolicy
 
-    Private _boldFont As Font = New Font("Segoe UI", 8.25!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
+    Private _boldFont As Font
 
     Private implementIt As Boolean = False
 
@@ -49,7 +51,7 @@ Public Class ShiftScheduleForm
             _models.Add(New ShiftScheduleModel With {.DateValue = d})
         Next
 
-        gridWeek.DataSource = _models
+        RefreshDataSource(gridWeek, _models)
     End Sub
 
     Private Sub CollectShiftSchedModel(ee As ShiftScheduleModel, dateVal As Date, modelList As ICollection(Of ShiftScheduleModel), isRaw As Boolean)
@@ -236,9 +238,9 @@ Public Class ShiftScheduleForm
         Next
     End Sub
 
-    Private Sub RefreshDataSource(source As IList(Of ShiftScheduleModel))
-        grid.DataSource = source
-        grid.Refresh()
+    Private Sub RefreshDataSource(dataGrid As DataGridView, source As IList(Of ShiftScheduleModel))
+        dataGrid.DataSource = source
+        dataGrid.Refresh()
     End Sub
 
     Private Sub EnterKeySameAsTabKey(e As KeyPressEventArgs)
@@ -398,6 +400,15 @@ Public Class ShiftScheduleForm
 
     Private Function ConvertGridRowsToShiftScheduleModels(dataGrid As DataGridView) As List(Of ShiftScheduleModel)
         Dim _weekCycleRows = dataGrid.Rows.OfType(Of DataGridViewRow)
+        If gridWeek.Name = dataGrid.Name Then
+            Dim satisfied = Function(dgvRow As DataGridViewRow) As Boolean
+                                Dim _cell = dgvRow.Cells(Column6.Name)
+                                Dim isApplied = Convert.ToString(_cell.Value) = DISABLED_TEXT
+                                Return isApplied
+                            End Function
+
+            _weekCycleRows = _weekCycleRows.Where(Function(r) satisfied(r))
+        End If
         Return _weekCycleRows.Select(Function(r) DirectCast(r.DataBoundItem, ShiftScheduleModel)).ToList
     End Function
 
@@ -420,7 +431,7 @@ Public Class ShiftScheduleForm
 
         Private origStartTime, origEndTime, origBreakStart As String
         Private origOffset As Boolean
-        Private origBreakLength As Decimal?
+        Private origBreakLength As Decimal
         Private _timeFrom, _timeTo, _breakFrom As String
         Private _isNew, _madeChanges, _isValid As Boolean
         Private _eds As EmployeeDutySchedule
@@ -721,7 +732,7 @@ Public Class ShiftScheduleForm
 
         End If
 
-        RefreshDataSource(_newSource)
+        RefreshDataSource(grid, _newSource)
     End Sub
 
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
@@ -772,6 +783,9 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub ShiftScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Dim parentFont = Parent.Font
+        _boldFont = New Font(parentFont.Name, parentFont.Size, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
+
         LoadShiftScheduleConfigurablePolicy()
 
         organizationId = z_OrganizationID
@@ -930,7 +944,7 @@ Public Class ShiftScheduleForm
         End If
 
         _dataSource = Await RangeApply(start, finish, CreatedResult(True))
-        RefreshDataSource(_dataSource)
+        RefreshDataSource(grid, _dataSource)
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDiscard1.Click
@@ -964,25 +978,26 @@ Public Class ShiftScheduleForm
 
         If gridWeek.Columns(e.ColumnIndex).Name = Column6.Name Then
             Dim _cellButton = gridWeek.Item(Column6.Name, e.RowIndex)
-            Dim ignoredText = "Ignore"
 
-            If Convert.ToString(_cellButton.Value) = ignoredText _
+            Dim _currRow = gridWeek.Rows(e.RowIndex)
+            _currRow.DefaultCellStyle = Nothing
+
+            If Convert.ToString(_cellButton.Value) = ENABLED_TEXT _
                 Or _cellButton.Value Is Nothing Then
-                _cellButton.Value = "Apply"
+                _cellButton.Value = DISABLED_TEXT
 
                 With _cellButton.Style
-                    Dim _color = Color.FromArgb(0, 200, 83)
-                    .ForeColor = Color.Black
-                    .BackColor = _color
+                    .ForeColor = Color.Silver
+                    '.BackColor = _color
 
                     .SelectionForeColor = Color.White
-                    .SelectionBackColor = Color.Green
+                    .SelectionBackColor = Color.Gray
 
                 End With
             Else
-                _cellButton.Value = ignoredText
-                '_cellButton.Style = gridWeek.Item(Column1.Name, e.RowIndex).Style
-                _cellButton.Style = gridWeek.Rows(e.RowIndex).DefaultCellStyle
+                _cellButton.Style = Nothing
+                _cellButton.Value = ENABLED_TEXT
+                TransformTouchedRow(_currRow)
             End If
 
         End If
