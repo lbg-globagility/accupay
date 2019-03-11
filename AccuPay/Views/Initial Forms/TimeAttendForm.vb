@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.Specialized
 Imports System.Configuration
+Imports AccuPay.Repository
 
 Public Class TimeAttendForm
 
@@ -8,6 +9,8 @@ Public Class TimeAttendForm
     Public listTimeAttendForm As New List(Of String)
 
     Private sys_ownr As New SystemOwner
+
+    Private lRepo As ListOfValueRepository
 
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -121,6 +124,24 @@ Public Class TimeAttendForm
     Private Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim checker = FeatureListChecker.Instance
         OvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
+
+        LoadShiftSchedulePolicyAsync()
+    End Sub
+
+    Private Async Sub LoadShiftSchedulePolicyAsync()
+        lRepo = New ListOfValueRepository
+        Dim shiftPolicies = Await lRepo.GetShiftPolicies()
+
+        If Not shiftPolicies.Any() Then
+            ShiftScheduleToolStripMenuItem.Visible = False
+            Return
+        End If
+        Dim settings = New ListOfValueCollection(shiftPolicies)
+        Dim _policy = New TimeEntryPolicy(settings)
+
+        Dim _bool = _policy.UseShiftSchedule
+        ShiftScheduleToolStripMenuItem.Visible = _bool
+        TimeEntToolStripMenuItem.Visible = Not _bool
     End Sub
 
     Sub reloadViewPrivilege()
@@ -162,7 +183,7 @@ Public Class TimeAttendForm
         previousForm = MassOvertimeForm
     End Sub
 
-    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
+    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ShiftScheduleToolStripMenuItem.Click
         ChangeForm(ShiftScheduleForm, "Employee Time Entry Logs")
         previousForm = ShiftScheduleForm
     End Sub

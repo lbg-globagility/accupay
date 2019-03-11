@@ -24,19 +24,19 @@ Partial Class TimeAttendForm
     Private Sub InitializeComponent()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.TimeEntToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShiftScheduleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimeEntryLogsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimeEntryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OvertimeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelTimeAttend = New System.Windows.Forms.Panel()
-        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TimeEntToolStripMenuItem, Me.ToolStripMenuItem1, Me.TimeEntryLogsToolStripMenuItem, Me.TimeEntryToolStripMenuItem, Me.SummaryToolStripMenuItem, Me.OvertimeToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TimeEntToolStripMenuItem, Me.ShiftScheduleToolStripMenuItem, Me.TimeEntryLogsToolStripMenuItem, Me.TimeEntryToolStripMenuItem, Me.SummaryToolStripMenuItem, Me.OvertimeToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -48,6 +48,12 @@ Partial Class TimeAttendForm
         Me.TimeEntToolStripMenuItem.Name = "TimeEntToolStripMenuItem"
         Me.TimeEntToolStripMenuItem.Size = New System.Drawing.Size(98, 20)
         Me.TimeEntToolStripMenuItem.Text = "Employee Shift"
+        '
+        'ShiftScheduleToolStripMenuItem
+        '
+        Me.ShiftScheduleToolStripMenuItem.Name = "ShiftScheduleToolStripMenuItem"
+        Me.ShiftScheduleToolStripMenuItem.Size = New System.Drawing.Size(94, 20)
+        Me.ShiftScheduleToolStripMenuItem.Text = "Shift Schedule"
         '
         'TimeEntryLogsToolStripMenuItem
         '
@@ -83,12 +89,6 @@ Partial Class TimeAttendForm
         Me.PanelTimeAttend.Size = New System.Drawing.Size(1006, 446)
         Me.PanelTimeAttend.TabIndex = 3
         '
-        'ToolStripMenuItem1
-        '
-        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(94, 20)
-        Me.ToolStripMenuItem1.Text = "Shift Schedule"
-        '
         'TimeAttendForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -113,5 +113,5 @@ Partial Class TimeAttendForm
     Friend WithEvents TimeEntryToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SummaryToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OvertimeToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents ShiftScheduleToolStripMenuItem As ToolStripMenuItem
 End Class
