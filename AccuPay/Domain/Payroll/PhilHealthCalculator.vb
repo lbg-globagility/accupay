@@ -22,6 +22,12 @@ Namespace Global.AccuPay.Payroll
         End Sub
 
         Public Sub Calculate(settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, allowances As ICollection(Of Allowance))
+            If salary.PayPhilHealthID Is Nothing Then
+                paystub.PhilHealthEmployeeShare = 0
+                paystub.PhilHealthEmployerShare = 0
+                Return
+            End If
+
             Dim deductionSchedule = employee.PhilHealthSchedule
 
             Dim philHealthCalculation = settings.GetEnum(
