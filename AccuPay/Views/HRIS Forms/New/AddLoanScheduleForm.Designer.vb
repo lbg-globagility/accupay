@@ -276,7 +276,7 @@ Partial Class AddLoanScheduleForm
         Me.LoanDetailsTabLayout.SetRowSpan(Me.txtRemarks, 7)
         Me.txtRemarks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtRemarks.Size = New System.Drawing.Size(195, 170)
-        Me.txtRemarks.TabIndex = 363
+        Me.txtRemarks.TabIndex = 364
         '
         'lblTotalLoanAmount
         '
@@ -467,6 +467,7 @@ Partial Class AddLoanScheduleForm
         Me.lblNumberOfPayPeriod.Size = New System.Drawing.Size(95, 13)
         Me.lblNumberOfPayPeriod.TabIndex = 369
         Me.lblNumberOfPayPeriod.Text = "No. of Pay Period"
+        Me.lblNumberOfPayPeriod.Visible = False
         '
         'txtNumberOfPayPeriod
         '
@@ -477,6 +478,7 @@ Partial Class AddLoanScheduleForm
         Me.txtNumberOfPayPeriod.ShortcutsEnabled = False
         Me.txtNumberOfPayPeriod.Size = New System.Drawing.Size(195, 22)
         Me.txtNumberOfPayPeriod.TabIndex = 358
+        Me.txtNumberOfPayPeriod.Visible = False
         '
         'cmbDeductionSchedule
         '
@@ -486,7 +488,7 @@ Partial Class AddLoanScheduleForm
         Me.cmbDeductionSchedule.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.cmbDeductionSchedule.Name = "cmbDeductionSchedule"
         Me.cmbDeductionSchedule.Size = New System.Drawing.Size(195, 21)
-        Me.cmbDeductionSchedule.TabIndex = 364
+        Me.cmbDeductionSchedule.TabIndex = 363
         '
         'EmployeeInfoTabLayout
         '
