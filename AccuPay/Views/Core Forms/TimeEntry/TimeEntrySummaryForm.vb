@@ -4,6 +4,7 @@ Imports System.Collections.ObjectModel
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports log4net
@@ -319,7 +320,9 @@ Public Class TimeEntrySummaryForm
                 ofb.OffBusEndTime,
                 ot.OTStartTime,
                 ot.OTEndTIme,
-                payrate.PayType
+                payrate.PayType,
+                etd.TimeStampIn,
+                etd.TimeStampOut
             FROM employeetimeentry ete
             LEFT JOIN (
                 SELECT EmployeeID, Date, MAX(LastUpd) LastUpd, RowID
@@ -510,7 +513,9 @@ Public Class TimeEntrySummaryForm
                 eta.TotalHoursWorked,
                 eta.TotalDayPay,
                 ofb.OffBusStartTime,
-                ofb.OffBusEndTime
+                ofb.OffBusEndTime,
+                employeetimeentrydetails.TimeStampIn,
+                employeetimeentrydetails.TimeStampOut
             FROM employeetimeentryactual eta
             LEFT JOIN employeetimeentry ete
             ON ete.EmployeeID = eta.EmployeeID AND
@@ -1082,24 +1087,20 @@ Public Class TimeEntrySummaryForm
 
         If currentColumn Is ColumnRegHrs Then
 
-            Dim nullableCurrentDate = ObjectUtils.ToNullableDateTime(currentRow.Cells(1).Value)
+            Dim nullableCurrentDate =
+                ObjectUtils.ToNullableDateTime(currentRow.Cells(ColumnDate.Index).Value)
 
             If nullableCurrentDate Is Nothing Then Return
 
             Dim currentDate = Convert.ToDateTime(nullableCurrentDate)
 
-            Dim timeAttendanceLogs As List(Of TimeAttendanceLog)
+            Dim timeAttendanceLogs As New List(Of TimeAttendanceLog)
 
-            Using context As New PayrollContext
+            timeAttendanceLogs = Await _
+               GetTimeAttendanceLogsOfSelectedTimeEntry(currentRow, currentDate)
 
-                timeAttendanceLogs = Await context.TimeAttendanceLogs.
-                                        Where(Function(t) Nullable.Equals(t.EmployeeID, _selectedEmployee.RowID)).
-                                        Where(Function(t) t.WorkDay = currentDate).
-                                        OrderBy(Function(t) t.TimeStamp).
-                                        ToListAsync
-
-
-            End Using
+            If timeAttendanceLogs Is Nothing OrElse
+                timeAttendanceLogs.Count = 0 Then Return
 
             Dim form As New TimeAttendanceLogListForm(timeAttendanceLogs)
             form.ShowDialog()
@@ -1107,6 +1108,98 @@ Public Class TimeEntrySummaryForm
         End If
 
     End Sub
+
+    Private Async Function GetTimeAttendanceLogsOfSelectedTimeEntry(currentRow As DataGridViewRow, currentDate As Date) As Task(Of List(Of TimeAttendanceLog))
+        Dim timeAttendanceLogs As List(Of TimeAttendanceLog)
+
+        Using context As New PayrollContext
+
+            timeAttendanceLogs = Await context.TimeAttendanceLogs.
+                                    Where(Function(t) Nullable.Equals(t.EmployeeID, _selectedEmployee.RowID)).
+                                    Where(Function(t) t.WorkDay = currentDate).
+                                    OrderBy(Function(t) t.TimeStamp).
+                                    ToListAsync
+
+
+        End Using
+
+        If timeAttendanceLogs Is Nothing OrElse timeAttendanceLogs.Count = 0 Then
+            Dim timeIn = ObjectUtils.
+                ToNullableDateTime(currentRow.Cells(ColumnTimeIn.Index).Value)
+
+            Dim timeOut = ObjectUtils.
+                ToNullableDateTime(currentRow.Cells(ColumnTimeOut.Index).Value)
+
+            Dim dateTimeIn = ObjectUtils.
+                ToNullableDateTime(currentRow.Cells(ColumnTimeStampIn.Index).Value)
+
+            Dim dateTimeOut = ObjectUtils.
+                ToNullableDateTime(currentRow.Cells(ColumnTimeStampOut.Index).Value)
+
+            If timeIn IsNot Nothing Then
+
+                Dim actualTimeIn As Date
+
+                If dateTimeIn IsNot Nothing Then
+
+                    actualTimeIn = dateTimeIn.
+                                    ToMinimumHourValue.
+                                    Add(timeIn.Value.TimeOfDay)
+
+                Else
+                    actualTimeIn = currentDate.
+                                    ToMinimumHourValue.
+                                    Add(timeIn.Value.TimeOfDay)
+
+                End If
+
+                timeAttendanceLogs.Add(
+                    New TimeAttendanceLog With {
+                        .IsTimeIn = True,
+                        .TimeStamp = actualTimeIn
+                })
+
+            End If
+
+            If timeOut IsNot Nothing Then
+
+                Dim actualTimeOut As Date
+
+                If dateTimeOut IsNot Nothing Then
+
+                    actualTimeOut = dateTimeOut.
+                                    ToMinimumHourValue.
+                                    Add(timeOut.Value.TimeOfDay)
+
+                Else
+
+                    If timeOut >= timeIn Then
+                        actualTimeOut = currentDate.
+                                        ToMinimumHourValue.
+                                        AddDays(1).
+                                        Add(timeOut.Value.TimeOfDay)
+
+                    Else
+                        actualTimeOut = currentDate.
+                                        ToMinimumHourValue.
+                                        Add(timeOut.Value.TimeOfDay)
+
+                    End If
+
+
+                End If
+
+                timeAttendanceLogs.Add(
+                    New TimeAttendanceLog With {
+                        .IsTimeIn = False,
+                        .TimeStamp = actualTimeOut
+                })
+            End If
+
+        End If
+
+        Return timeAttendanceLogs
+    End Function
 
     Private Sub timeEntriesDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles timeEntriesDataGridView.CellFormatting
         AddLinkButtonEffectOnRegularHours(e)
