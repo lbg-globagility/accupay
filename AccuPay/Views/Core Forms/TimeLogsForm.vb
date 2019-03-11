@@ -286,13 +286,12 @@ Public Class TimeLogsForm
         Dim validLogs = logs.Where(Function(l) l.HasError = False).ToList()
         Dim invalidLogs = logs.Where(Function(l) l.HasError = True).ToList()
 
-        'preview the logs here
-        Dim previewDialog As New TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
-        previewDialog.Logs = validLogs
-
         invalidLogs.AddRange(importOutput.Errors)
 
-        previewDialog.Errors = invalidLogs.OrderBy(Function(l) l.LineNumber).ToList()
+
+        'preview the logs here
+        Dim previewDialog As New _
+            TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog(validLogs, invalidLogs)
 
         With previewDialog
             .ShowDialog()
