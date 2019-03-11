@@ -123,7 +123,18 @@ IF e_type = 'Fixed' THEN
     INTO totalWorkAmount;
 
     SET totalWorkAmount = IFNULL(totalWorkAmount, 0) * (IF(actualrate < 1, (actualrate + 1), actualrate));
-    SET totalWorkAmount = totalWorkAmount + holidayPay;
+    
+	SET totalWorkAmount = totalWorkAmount + 
+                    holidayPay +
+                    overtimePay +
+                    nightDiffPay +
+                    nightDiffOvertimePay +
+                    v_restDayPay +
+                    v_restDayOTPay +
+                    v_specialHolidayPay +
+                    v_specialHolidayOTPay +
+                    v_regularHolidayPay +
+                    v_regularHolidayOTPay;
 
 ELSEIF e_type = 'Monthly' AND IsFirstTimeSalary THEN
 

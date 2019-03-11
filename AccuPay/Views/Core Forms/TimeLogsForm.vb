@@ -181,20 +181,20 @@ Public Class TimeLogsForm
         catchdt.Dispose()
     End Sub
 
-    Sub VIEWemployeetimeentrydetails(ByVal date_created As Object,
+    Sub VIEWemployeetimeentrydetails(ByVal timeentrylogsImportID As Object,
                                      EmployeeNumber As String,
                                      firstName As String,
                                      lastName As String)
 
         Dim param(4, 4) As Object
 
-        param(0, 0) = "etentd_Created"
+        param(0, 0) = "etentd_TimeentrylogsImportID"
         param(1, 0) = "etentd_OrganizationID"
         param(2, 0) = "etd_EmployeeNumber"
         param(3, 0) = "e_FirstName"
         param(4, 0) = "e_LastName"
 
-        param(0, 1) = date_created
+        param(0, 1) = timeentrylogsImportID
         param(1, 1) = orgztnID
         param(2, 1) = EmployeeNumber
         param(3, 1) = firstName
@@ -286,13 +286,12 @@ Public Class TimeLogsForm
         Dim validLogs = logs.Where(Function(l) l.HasError = False).ToList()
         Dim invalidLogs = logs.Where(Function(l) l.HasError = True).ToList()
 
-        'preview the logs here
-        Dim previewDialog As New TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
-        previewDialog.Logs = validLogs
-
         invalidLogs.AddRange(importOutput.Errors)
 
-        previewDialog.Errors = invalidLogs.OrderBy(Function(l) l.LineNumber).ToList()
+
+        'preview the logs here
+        Dim previewDialog As New _
+            TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog(validLogs, invalidLogs)
 
         With previewDialog
             .ShowDialog()
@@ -360,7 +359,8 @@ Public Class TimeLogsForm
                                              Optional EditAsUnique As String = "0",
                                              Optional Branch_Code As Object = Nothing,
                                              Optional DateTimeLogIn As Object = Nothing,
-                                             Optional DateTimeLogOut As Object = Nothing) As Object
+                                             Optional DateTimeLogOut As Object = Nothing,
+                                             Optional timeentrylogsImportID As String = "") As Object
 
         Static mysql_date_format As String = String.Empty
 
@@ -411,6 +411,9 @@ Public Class TimeLogsForm
                 .Parameters.AddWithValue("etentd_Created", etentd_Created)
                 .Parameters.AddWithValue("etentd_LastUpdBy", z_User)
                 .Parameters.AddWithValue("etentd_EmployeeID", If(etentd_EmployeeID = Nothing, DBNull.Value, etentd_EmployeeID))
+
+                .Parameters.AddWithValue("etentd_TimeentrylogsImportID", timeentrylogsImportID)
+
 
                 If IsDBNull(etentd_TimeIn) Then
                     .Parameters.AddWithValue("etentd_TimeIn", etentd_TimeIn)
@@ -949,9 +952,11 @@ Public Class TimeLogsForm
         End If
 
         Dim currtimestamp = Nothing
+        Dim currentImportId = ""
 
         If dgvetentd.RowCount <> 0 Then
             currtimestamp = Format(CDate(dgvetentd.CurrentRow.Cells("createdmilit").Value), "yyyy-MM-dd HH:mm:ss")
+            currentImportId = dgvetentd.CurrentRow.Cells("TimeentrylogsImportID").Value
         Else
             currtimestamp = Format(CDate(EXECQUER("SELECT CURRENT_TIMESTAMP();")), "yyyy-MM-dd HH:mm:ss")
         End If
@@ -1001,7 +1006,8 @@ Public Class TimeLogsForm
                                                     time_i,
                                                     time_o,
                                                     Trim(etent_date),
-                                                    .Cells("Column6").Value,,,,, timestampin, timestampinout)
+                                                    .Cells("Column6").Value,,,,, timestampin, timestampinout,
+                                                            timeentrylogsImportID:=currentImportId)
                     Else
                         If .Cells("Column1").Value = Nothing Then
                             Dim newRowID =
@@ -1011,7 +1017,8 @@ Public Class TimeLogsForm
                                                             time_o,
                                                             Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd"),
                                                             .Cells("Column6").Value,
-                                                            currtimestamp)
+                                                            currtimestamp,
+                                                            timeentrylogsImportID:=currentImportId)
 
                             .Cells("Column1").Value = newRowID
                         End If
@@ -1045,7 +1052,7 @@ Public Class TimeLogsForm
         With dgvetentd
             If .RowCount <> 0 Then
                 If backgroundworking = 0 Then
-                    VIEWemployeetimeentrydetails(.CurrentRow.Cells("createdmilit").Value,
+                    VIEWemployeetimeentrydetails(.CurrentRow.Cells("TimeentrylogsImportID").Value,
                                                  TextBox1.Text.Trim,
                                                  txtFirstName.Text.Trim,
                                                  txtLastName.Text.Trim)

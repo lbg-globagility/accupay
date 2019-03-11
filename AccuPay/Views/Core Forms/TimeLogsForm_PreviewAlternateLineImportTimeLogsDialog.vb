@@ -1,18 +1,38 @@
-﻿Imports AccuPay
+﻿Imports System.Threading.Tasks
+Imports AccuPay
 Imports AccuPay.Helper.TimeLogsReader
 
 Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
-    Public Property Logs As IList(Of ImportTimeAttendanceLog)
+    Private _logs As IList(Of ImportTimeAttendanceLog)
 
-    Public Property Errors As IList(Of ImportTimeAttendanceLog)
+    Private _errors As IList(Of ImportTimeAttendanceLog)
+
+    Private _originalLogs As IList(Of ImportTimeAttendanceLog)
+
+    Private _originalErrors As IList(Of ImportTimeAttendanceLog)
 
     Public Property Cancelled As Boolean
 
     Private _dtp As New DateTimePicker()
     Private _Rectangle As Rectangle
 
-    Sub New()
+    Sub New(logs As IList(Of ImportTimeAttendanceLog), errors As IList(Of ImportTimeAttendanceLog))
+
+        Me._originalLogs = logs.
+                    OrderBy(Function(l) l.Employee.EmployeeID).
+                    ThenBy(Function(l) l.LogDate).
+                    ThenBy(Function(l) l.DateTime).
+                    ToList
+
+        Me._logs = Me._originalLogs
+
+        Me._originalErrors = errors.
+                    OrderBy(Function(l) l.LineNumber).
+                    ToList()
+
+        Me._errors = Me._originalErrors
+
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -57,7 +77,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         _dtp.Format = DateTimePickerFormat.Custom
         AddHandler _dtp.ValueChanged, AddressOf dtp_TextChange
 
-        Dim errorCount = Me.Errors.Count
+        Dim errorCount = Me._errors.Count
 
         If errorCount > 0 Then
 
@@ -80,11 +100,12 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         TimeAttendanceLogDataGrid.AutoGenerateColumns = False
         TimeAttendanceLogErrorsDataGrid.AutoGenerateColumns = False
 
-        ParsedTabControl.Text = $"Ok ({Me.Logs.Count})"
+        ParsedTabControl.Text = $"Ok ({Me._logs.Count})"
         ErrorsTabControl.Text = $"Errors ({errorCount})"
 
-        TimeAttendanceLogDataGrid.DataSource = Me.Logs
-        TimeAttendanceLogErrorsDataGrid.DataSource = Me.Errors
+        TimeAttendanceLogDataGrid.DataSource = Me._logs
+
+        TimeAttendanceLogErrorsDataGrid.DataSource = Me._errors
 
     End Sub
 
@@ -202,10 +223,38 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         If rowIndex < 0 Then Return Nothing
 
-        If rowIndex > Me.Logs.Count - 1 Then Return Nothing
+        If rowIndex > Me._logs.Count - 1 Then Return Nothing
 
-        Return Me.Logs(rowIndex)
+        Return Me._logs(rowIndex)
 
     End Function
 
+    Private Async Sub txtSearch_TextChanged(sender As Object, e As EventArgs) Handles txtSearch.TextChanged
+
+        Dim searchValue = txtSearch.Text.ToLower()
+
+        Me._logs = Await Task.Run(Function() As IList(Of ImportTimeAttendanceLog)
+                                      Return Me._originalLogs.
+                                          Where(Function(o) o.EmployeeFullName.ToLower.Contains(searchValue) _
+                                            OrElse o.EmployeeNumber.ToLower.Contains(searchValue)).
+                                          ToList
+                                  End Function)
+
+        TimeAttendanceLogDataGrid.DataSource = Me._logs
+
+    End Sub
+
+    Private Async Sub txtErrorSearch_TextChanged(sender As Object, e As EventArgs) Handles txtErrorSearch.TextChanged
+
+        Dim searchValue = txtErrorSearch.Text.ToLower()
+
+        Me._errors = Await Task.Run(Function() As IList(Of ImportTimeAttendanceLog)
+                                        Return Me._originalErrors.
+                                          Where(Function(o) o.LineContent.ToLower.Contains(searchValue)).
+                                          ToList
+                                    End Function)
+
+        TimeAttendanceLogErrorsDataGrid.DataSource = Me._errors
+
+    End Sub
 End Class

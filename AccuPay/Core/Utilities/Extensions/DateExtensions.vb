@@ -26,6 +26,26 @@ Namespace Global.AccuPay.Extensions
 
         End Function
 
+        <Extension()>
+        Public Function ToMinimumHourValue(input As Date?) As Date
+
+            If input Is Nothing Then Return Nothing
+
+            Return New DateTime(
+                input.Value.Year, input.Value.Month, input.Value.Day, 0, 0, 0)
+
+        End Function
+
+        <Extension()>
+        Public Function ToMaximumHourValue(input As Date?) As Date
+
+            If input Is Nothing Then Return Nothing
+
+            Return New DateTime(
+                input.Value.Year, input.Value.Month, input.Value.Day, 23, 59, 59)
+
+        End Function
+
     End Module
 
 End Namespace
