@@ -59,6 +59,25 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
+
+        Public Async Function GetAllWithPosition() As Task(Of List(Of Employee))
+
+            Using context = New PayrollContext()
+
+                Dim query As IQueryable(Of Entity.Employee) = GetAllEmployeeBaseQuery(context)
+
+                Dim list As New List(Of Entity.Employee)
+
+                list = Await query.
+                                Include(Function(e) e.Position).
+                                ToListAsync
+
+                Return list
+
+            End Using
+
+        End Function
+
         Public Async Function SearchSimpleLocal _
             (employees As IEnumerable(Of IEmployeeBase), searchValue As String) As _
             Task(Of IEnumerable(Of IEmployeeBase))

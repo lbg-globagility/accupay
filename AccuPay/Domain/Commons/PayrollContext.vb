@@ -88,6 +88,8 @@ Public Class PayrollContext
 
     Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
 
+    Public Overridable Property BreakTimeBrackets As DbSet(Of BreakTimeBracket)
+
     Public Sub New()
     End Sub
 

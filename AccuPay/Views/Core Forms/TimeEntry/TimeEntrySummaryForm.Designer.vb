@@ -147,6 +147,18 @@ Partial Class TimeEntrySummaryForm
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.timeEntriesDataGridView = New System.Windows.Forms.DataGridView()
         Me.payPeriodsDataGridView = New System.Windows.Forms.DataGridView()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -269,22 +281,6 @@ Partial Class TimeEntrySummaryForm
         Me.DataGridViewTextBoxColumn59 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn60 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn61 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn62 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn63 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn64 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -324,6 +320,10 @@ Partial Class TimeEntrySummaryForm
         Me.col_tue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_mon = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_sun = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnDay = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -642,6 +642,79 @@ Partial Class TimeEntrySummaryForm
         Me.payPeriodsDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.None
         Me.payPeriodsDataGridView.Size = New System.Drawing.Size(829, 86)
         Me.payPeriodsDataGridView.TabIndex = 493
+        '
+        'Column8
+        '
+        Me.Column8.HeaderText = "January"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        Me.Column8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Column9
+        '
+        Me.Column9.HeaderText = "February"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
+        '
+        'Column10
+        '
+        Me.Column10.HeaderText = "March"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        '
+        'Column11
+        '
+        Me.Column11.HeaderText = "April"
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        '
+        'Column12
+        '
+        Me.Column12.HeaderText = "May"
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
+        '
+        'Column13
+        '
+        Me.Column13.HeaderText = "June"
+        Me.Column13.Name = "Column13"
+        Me.Column13.ReadOnly = True
+        '
+        'Column14
+        '
+        Me.Column14.HeaderText = "July"
+        Me.Column14.Name = "Column14"
+        Me.Column14.ReadOnly = True
+        '
+        'Column15
+        '
+        Me.Column15.HeaderText = "August"
+        Me.Column15.Name = "Column15"
+        Me.Column15.ReadOnly = True
+        '
+        'Column16
+        '
+        Me.Column16.HeaderText = "September"
+        Me.Column16.Name = "Column16"
+        Me.Column16.ReadOnly = True
+        '
+        'Column17
+        '
+        Me.Column17.HeaderText = "October"
+        Me.Column17.Name = "Column17"
+        Me.Column17.ReadOnly = True
+        '
+        'Column18
+        '
+        Me.Column18.HeaderText = "November"
+        Me.Column18.Name = "Column18"
+        Me.Column18.ReadOnly = True
+        '
+        'Column19
+        '
+        Me.Column19.HeaderText = "December"
+        Me.Column19.Name = "Column19"
+        Me.Column19.ReadOnly = True
         '
         'Button1
         '
@@ -1781,108 +1854,6 @@ Partial Class TimeEntrySummaryForm
         Me.DataGridViewTextBoxColumn61.ReadOnly = True
         Me.DataGridViewTextBoxColumn61.Width = 103
         '
-        'cemp_RowID
-        '
-        Me.cemp_RowID.DataPropertyName = "RowID"
-        Me.cemp_RowID.HeaderText = "RowID"
-        Me.cemp_RowID.Name = "cemp_RowID"
-        Me.cemp_RowID.ReadOnly = True
-        Me.cemp_RowID.Visible = False
-        '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.DataPropertyName = "EmployeeID"
-        Me.cemp_EmployeeID.HeaderText = "Employee ID"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
-        'cemp_LastName
-        '
-        Me.cemp_LastName.DataPropertyName = "LastName"
-        Me.cemp_LastName.HeaderText = "Last Name"
-        Me.cemp_LastName.Name = "cemp_LastName"
-        Me.cemp_LastName.ReadOnly = True
-        '
-        'cemp_FirstName
-        '
-        Me.cemp_FirstName.DataPropertyName = "FirstName"
-        Me.cemp_FirstName.HeaderText = "First Name"
-        Me.cemp_FirstName.Name = "cemp_FirstName"
-        Me.cemp_FirstName.ReadOnly = True
-        '
-        'Column8
-        '
-        Me.Column8.HeaderText = "January"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        Me.Column8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column9
-        '
-        Me.Column9.HeaderText = "February"
-        Me.Column9.Name = "Column9"
-        Me.Column9.ReadOnly = True
-        '
-        'Column10
-        '
-        Me.Column10.HeaderText = "March"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        '
-        'Column11
-        '
-        Me.Column11.HeaderText = "April"
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        '
-        'Column12
-        '
-        Me.Column12.HeaderText = "May"
-        Me.Column12.Name = "Column12"
-        Me.Column12.ReadOnly = True
-        '
-        'Column13
-        '
-        Me.Column13.HeaderText = "June"
-        Me.Column13.Name = "Column13"
-        Me.Column13.ReadOnly = True
-        '
-        'Column14
-        '
-        Me.Column14.HeaderText = "July"
-        Me.Column14.Name = "Column14"
-        Me.Column14.ReadOnly = True
-        '
-        'Column15
-        '
-        Me.Column15.HeaderText = "August"
-        Me.Column15.Name = "Column15"
-        Me.Column15.ReadOnly = True
-        '
-        'Column16
-        '
-        Me.Column16.HeaderText = "September"
-        Me.Column16.Name = "Column16"
-        Me.Column16.ReadOnly = True
-        '
-        'Column17
-        '
-        Me.Column17.HeaderText = "October"
-        Me.Column17.Name = "Column17"
-        Me.Column17.ReadOnly = True
-        '
-        'Column18
-        '
-        Me.Column18.HeaderText = "November"
-        Me.Column18.Name = "Column18"
-        Me.Column18.ReadOnly = True
-        '
-        'Column19
-        '
-        Me.Column19.HeaderText = "December"
-        Me.Column19.Name = "Column19"
-        Me.Column19.ReadOnly = True
-        '
         'DataGridViewTextBoxColumn62
         '
         Me.DataGridViewTextBoxColumn62.HeaderText = "SSS No."
@@ -2154,11 +2125,39 @@ Partial Class TimeEntrySummaryForm
         Me.col_sun.ReadOnly = True
         Me.col_sun.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
+        'cemp_RowID
+        '
+        Me.cemp_RowID.DataPropertyName = "RowID"
+        Me.cemp_RowID.HeaderText = "RowID"
+        Me.cemp_RowID.Name = "cemp_RowID"
+        Me.cemp_RowID.ReadOnly = True
+        Me.cemp_RowID.Visible = False
+        '
+        'cemp_EmployeeID
+        '
+        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
+        Me.cemp_EmployeeID.HeaderText = "Employee ID"
+        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
+        Me.cemp_EmployeeID.ReadOnly = True
+        '
+        'cemp_LastName
+        '
+        Me.cemp_LastName.DataPropertyName = "LastName"
+        Me.cemp_LastName.HeaderText = "Last Name"
+        Me.cemp_LastName.Name = "cemp_LastName"
+        Me.cemp_LastName.ReadOnly = True
+        '
+        'cemp_FirstName
+        '
+        Me.cemp_FirstName.DataPropertyName = "FirstName"
+        Me.cemp_FirstName.HeaderText = "First Name"
+        Me.cemp_FirstName.Name = "cemp_FirstName"
+        Me.cemp_FirstName.ReadOnly = True
+        '
         'ColumnRowID
         '
         Me.ColumnRowID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
         Me.ColumnRowID.DataPropertyName = "RowID"
-        Me.ColumnRowID.Frozen = True
         Me.ColumnRowID.HeaderText = "RowID"
         Me.ColumnRowID.Name = "ColumnRowID"
         Me.ColumnRowID.ReadOnly = True
@@ -2171,7 +2170,6 @@ Partial Class TimeEntrySummaryForm
         Me.ColumnDate.DataPropertyName = "EntryDate"
         DataGridViewCellStyle4.Format = "MM/dd/yyyy"
         Me.ColumnDate.DefaultCellStyle = DataGridViewCellStyle4
-        Me.ColumnDate.Frozen = True
         Me.ColumnDate.HeaderText = "Date"
         Me.ColumnDate.MinimumWidth = 80
         Me.ColumnDate.Name = "ColumnDate"
@@ -2183,7 +2181,6 @@ Partial Class TimeEntrySummaryForm
         Me.ColumnDay.DataPropertyName = "EntryDate"
         DataGridViewCellStyle5.Format = "ddd"
         Me.ColumnDay.DefaultCellStyle = DataGridViewCellStyle5
-        Me.ColumnDay.Frozen = True
         Me.ColumnDay.HeaderText = "Day"
         Me.ColumnDay.Name = "ColumnDay"
         Me.ColumnDay.ReadOnly = True
@@ -2196,7 +2193,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle6.Format = "HH:mm"
         DataGridViewCellStyle6.NullValue = Nothing
         Me.ColumnShiftFrom.DefaultCellStyle = DataGridViewCellStyle6
-        Me.ColumnShiftFrom.Frozen = True
         Me.ColumnShiftFrom.HeaderText = "Shift From"
         Me.ColumnShiftFrom.Name = "ColumnShiftFrom"
         Me.ColumnShiftFrom.ReadOnly = True
@@ -2208,7 +2204,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle7.Format = "HH:mm"
         Me.ColumnShiftTo.DefaultCellStyle = DataGridViewCellStyle7
-        Me.ColumnShiftTo.Frozen = True
         Me.ColumnShiftTo.HeaderText = "Shift To"
         Me.ColumnShiftTo.Name = "ColumnShiftTo"
         Me.ColumnShiftTo.ReadOnly = True
@@ -2220,7 +2215,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle8.Format = "HH:mm"
         Me.ColumnOTStart.DefaultCellStyle = DataGridViewCellStyle8
-        Me.ColumnOTStart.Frozen = True
         Me.ColumnOTStart.HeaderText = "OT Start"
         Me.ColumnOTStart.Name = "ColumnOTStart"
         Me.ColumnOTStart.ReadOnly = True
@@ -2232,7 +2226,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle9.Format = "HH:mm"
         Me.ColumnOTEnd.DefaultCellStyle = DataGridViewCellStyle9
-        Me.ColumnOTEnd.Frozen = True
         Me.ColumnOTEnd.HeaderText = "OT End"
         Me.ColumnOTEnd.Name = "ColumnOTEnd"
         Me.ColumnOTEnd.ReadOnly = True
@@ -2244,7 +2237,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle10.Format = "HH:mm"
         Me.ColumnTimeIn.DefaultCellStyle = DataGridViewCellStyle10
-        Me.ColumnTimeIn.Frozen = True
         Me.ColumnTimeIn.HeaderText = "Time In"
         Me.ColumnTimeIn.Name = "ColumnTimeIn"
         Me.ColumnTimeIn.ReadOnly = True
@@ -2256,7 +2248,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle11.Format = "HH:mm"
         Me.ColumnTimeOut.DefaultCellStyle = DataGridViewCellStyle11
-        Me.ColumnTimeOut.Frozen = True
         Me.ColumnTimeOut.HeaderText = "Time Out"
         Me.ColumnTimeOut.Name = "ColumnTimeOut"
         Me.ColumnTimeOut.ReadOnly = True
@@ -2268,7 +2259,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle12.Format = "HH:mm"
         Me.ColumnLeaveStart.DefaultCellStyle = DataGridViewCellStyle12
-        Me.ColumnLeaveStart.Frozen = True
         Me.ColumnLeaveStart.HeaderText = "LV Start"
         Me.ColumnLeaveStart.Name = "ColumnLeaveStart"
         Me.ColumnLeaveStart.ReadOnly = True
@@ -2280,7 +2270,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle13.Format = "HH:mm"
         Me.ColumnLeaveEnd.DefaultCellStyle = DataGridViewCellStyle13
-        Me.ColumnLeaveEnd.Frozen = True
         Me.ColumnLeaveEnd.HeaderText = "LV End"
         Me.ColumnLeaveEnd.Name = "ColumnLeaveEnd"
         Me.ColumnLeaveEnd.ReadOnly = True
@@ -2292,7 +2281,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle14.Format = "HH:mm"
         Me.ColumnOBStart.DefaultCellStyle = DataGridViewCellStyle14
-        Me.ColumnOBStart.Frozen = True
         Me.ColumnOBStart.HeaderText = "OB Start"
         Me.ColumnOBStart.Name = "ColumnOBStart"
         Me.ColumnOBStart.ReadOnly = True
@@ -2304,7 +2292,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle15.Format = "HH:mm"
         Me.ColumnOBEnd.DefaultCellStyle = DataGridViewCellStyle15
-        Me.ColumnOBEnd.Frozen = True
         Me.ColumnOBEnd.HeaderText = "OB End"
         Me.ColumnOBEnd.Name = "ColumnOBEnd"
         Me.ColumnOBEnd.ReadOnly = True
@@ -2316,7 +2303,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle16.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnRegHrs.DefaultCellStyle = DataGridViewCellStyle16
-        Me.ColumnRegHrs.Frozen = True
         Me.ColumnRegHrs.HeaderText = "Reg Hrs"
         Me.ColumnRegHrs.Name = "ColumnRegHrs"
         Me.ColumnRegHrs.ReadOnly = True
@@ -2330,7 +2316,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle17.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         DataGridViewCellStyle17.NullValue = Nothing
         Me.ColumnRegPay.DefaultCellStyle = DataGridViewCellStyle17
-        Me.ColumnRegPay.Frozen = True
         Me.ColumnRegPay.HeaderText = "Reg Pay"
         Me.ColumnRegPay.Name = "ColumnRegPay"
         Me.ColumnRegPay.ReadOnly = True
@@ -2342,7 +2327,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle18.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnOTHrs.DefaultCellStyle = DataGridViewCellStyle18
-        Me.ColumnOTHrs.Frozen = True
         Me.ColumnOTHrs.HeaderText = "OT Hrs"
         Me.ColumnOTHrs.Name = "ColumnOTHrs"
         Me.ColumnOTHrs.ReadOnly = True
@@ -2354,7 +2338,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle19.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnOTPay.DefaultCellStyle = DataGridViewCellStyle19
-        Me.ColumnOTPay.Frozen = True
         Me.ColumnOTPay.HeaderText = "OT Pay"
         Me.ColumnOTPay.Name = "ColumnOTPay"
         Me.ColumnOTPay.ReadOnly = True
@@ -2366,7 +2349,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle20.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnNDiffHrs.DefaultCellStyle = DataGridViewCellStyle20
-        Me.ColumnNDiffHrs.Frozen = True
         Me.ColumnNDiffHrs.HeaderText = "N.Diff Hrs"
         Me.ColumnNDiffHrs.Name = "ColumnNDiffHrs"
         Me.ColumnNDiffHrs.ReadOnly = True
@@ -2378,7 +2360,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle21.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnNDiffPay.DefaultCellStyle = DataGridViewCellStyle21
-        Me.ColumnNDiffPay.Frozen = True
         Me.ColumnNDiffPay.HeaderText = "N.Diff Pay"
         Me.ColumnNDiffPay.Name = "ColumnNDiffPay"
         Me.ColumnNDiffPay.ReadOnly = True
@@ -2390,7 +2371,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle22.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnNDiffOTHrs.DefaultCellStyle = DataGridViewCellStyle22
-        Me.ColumnNDiffOTHrs.Frozen = True
         Me.ColumnNDiffOTHrs.HeaderText = "N.Diff OT Hrs"
         Me.ColumnNDiffOTHrs.Name = "ColumnNDiffOTHrs"
         Me.ColumnNDiffOTHrs.ReadOnly = True
@@ -2402,7 +2382,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle23.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnNDiffOTPay.DefaultCellStyle = DataGridViewCellStyle23
-        Me.ColumnNDiffOTPay.Frozen = True
         Me.ColumnNDiffOTPay.HeaderText = "N.Diff OT Pay"
         Me.ColumnNDiffOTPay.Name = "ColumnNDiffOTPay"
         Me.ColumnNDiffOTPay.ReadOnly = True
@@ -2414,7 +2393,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle24.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnRDayHrs.DefaultCellStyle = DataGridViewCellStyle24
-        Me.ColumnRDayHrs.Frozen = True
         Me.ColumnRDayHrs.HeaderText = "R.Day Hrs"
         Me.ColumnRDayHrs.Name = "ColumnRDayHrs"
         Me.ColumnRDayHrs.ReadOnly = True
@@ -2426,7 +2404,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle25.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnRDayPay.DefaultCellStyle = DataGridViewCellStyle25
-        Me.ColumnRDayPay.Frozen = True
         Me.ColumnRDayPay.HeaderText = "R.Day Pay"
         Me.ColumnRDayPay.Name = "ColumnRDayPay"
         Me.ColumnRDayPay.ReadOnly = True
@@ -2438,7 +2415,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle26.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnRDayOTHrs.DefaultCellStyle = DataGridViewCellStyle26
-        Me.ColumnRDayOTHrs.Frozen = True
         Me.ColumnRDayOTHrs.HeaderText = "R.DayOT Hrs"
         Me.ColumnRDayOTHrs.Name = "ColumnRDayOTHrs"
         Me.ColumnRDayOTHrs.ReadOnly = True
@@ -2450,7 +2426,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle27.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnRDayOTPay.DefaultCellStyle = DataGridViewCellStyle27
-        Me.ColumnRDayOTPay.Frozen = True
         Me.ColumnRDayOTPay.HeaderText = "R.DayOT Pay"
         Me.ColumnRDayOTPay.Name = "ColumnRDayOTPay"
         Me.ColumnRDayOTPay.ReadOnly = True
@@ -2462,7 +2437,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle28.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnSHolHrs.DefaultCellStyle = DataGridViewCellStyle28
-        Me.ColumnSHolHrs.Frozen = True
         Me.ColumnSHolHrs.HeaderText = "S.Hol Hrs"
         Me.ColumnSHolHrs.Name = "ColumnSHolHrs"
         Me.ColumnSHolHrs.ReadOnly = True
@@ -2474,7 +2448,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle29.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnSHolPay.DefaultCellStyle = DataGridViewCellStyle29
-        Me.ColumnSHolPay.Frozen = True
         Me.ColumnSHolPay.HeaderText = "S.Hol Pay"
         Me.ColumnSHolPay.Name = "ColumnSHolPay"
         Me.ColumnSHolPay.ReadOnly = True
@@ -2486,7 +2459,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle30.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnSHolOTHrs.DefaultCellStyle = DataGridViewCellStyle30
-        Me.ColumnSHolOTHrs.Frozen = True
         Me.ColumnSHolOTHrs.HeaderText = "S.HolOT Hrs"
         Me.ColumnSHolOTHrs.Name = "ColumnSHolOTHrs"
         Me.ColumnSHolOTHrs.ReadOnly = True
@@ -2498,7 +2470,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle31.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnSHolOTPay.DefaultCellStyle = DataGridViewCellStyle31
-        Me.ColumnSHolOTPay.Frozen = True
         Me.ColumnSHolOTPay.HeaderText = "S.HolOT Pay"
         Me.ColumnSHolOTPay.Name = "ColumnSHolOTPay"
         Me.ColumnSHolOTPay.ReadOnly = True
@@ -2510,7 +2481,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle32.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnRHolHrs.DefaultCellStyle = DataGridViewCellStyle32
-        Me.ColumnRHolHrs.Frozen = True
         Me.ColumnRHolHrs.HeaderText = "R.Hol Hrs"
         Me.ColumnRHolHrs.Name = "ColumnRHolHrs"
         Me.ColumnRHolHrs.ReadOnly = True
@@ -2522,7 +2492,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle33.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnRHolPay.DefaultCellStyle = DataGridViewCellStyle33
-        Me.ColumnRHolPay.Frozen = True
         Me.ColumnRHolPay.HeaderText = "R.Hol Pay"
         Me.ColumnRHolPay.Name = "ColumnRHolPay"
         Me.ColumnRHolPay.ReadOnly = True
@@ -2534,7 +2503,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle34.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnRHolOTHrs.DefaultCellStyle = DataGridViewCellStyle34
-        Me.ColumnRHolOTHrs.Frozen = True
         Me.ColumnRHolOTHrs.HeaderText = "R.HolOT Hrs"
         Me.ColumnRHolOTHrs.Name = "ColumnRHolOTHrs"
         Me.ColumnRHolOTHrs.ReadOnly = True
@@ -2546,7 +2514,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle35.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnRHolOTPay.DefaultCellStyle = DataGridViewCellStyle35
-        Me.ColumnRHolOTPay.Frozen = True
         Me.ColumnRHolOTPay.HeaderText = "R.HolOT Pay"
         Me.ColumnRHolOTPay.Name = "ColumnRHolOTPay"
         Me.ColumnRHolOTPay.ReadOnly = True
@@ -2558,7 +2525,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle36.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnHolidayPay.DefaultCellStyle = DataGridViewCellStyle36
-        Me.ColumnHolidayPay.Frozen = True
         Me.ColumnHolidayPay.HeaderText = "Holiday Pay"
         Me.ColumnHolidayPay.Name = "ColumnHolidayPay"
         Me.ColumnHolidayPay.ReadOnly = True
@@ -2571,7 +2537,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle37.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnLeaveHrs.DefaultCellStyle = DataGridViewCellStyle37
-        Me.ColumnLeaveHrs.Frozen = True
         Me.ColumnLeaveHrs.HeaderText = "Leave Hrs"
         Me.ColumnLeaveHrs.Name = "ColumnLeaveHrs"
         Me.ColumnLeaveHrs.ReadOnly = True
@@ -2583,7 +2548,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle38.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnLeavePay.DefaultCellStyle = DataGridViewCellStyle38
-        Me.ColumnLeavePay.Frozen = True
         Me.ColumnLeavePay.HeaderText = "Leave Pay"
         Me.ColumnLeavePay.Name = "ColumnLeavePay"
         Me.ColumnLeavePay.ReadOnly = True
@@ -2595,7 +2559,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle39.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnLateHrs.DefaultCellStyle = DataGridViewCellStyle39
-        Me.ColumnLateHrs.Frozen = True
         Me.ColumnLateHrs.HeaderText = "Late Hrs"
         Me.ColumnLateHrs.Name = "ColumnLateHrs"
         Me.ColumnLateHrs.ReadOnly = True
@@ -2607,7 +2570,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle40.Format = "(#,###,##0.00);#,###,##0.00;"""""""""
         Me.ColumnLateDeduc.DefaultCellStyle = DataGridViewCellStyle40
-        Me.ColumnLateDeduc.Frozen = True
         Me.ColumnLateDeduc.HeaderText = "Late Deduc"
         Me.ColumnLateDeduc.Name = "ColumnLateDeduc"
         Me.ColumnLateDeduc.ReadOnly = True
@@ -2619,7 +2581,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle41.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnUTHrs.DefaultCellStyle = DataGridViewCellStyle41
-        Me.ColumnUTHrs.Frozen = True
         Me.ColumnUTHrs.HeaderText = "UT Hrs"
         Me.ColumnUTHrs.Name = "ColumnUTHrs"
         Me.ColumnUTHrs.ReadOnly = True
@@ -2631,7 +2592,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle42.Format = "(#,###,##0.00);#,###,##0.00;"""""""""
         Me.ColumnDeduc.DefaultCellStyle = DataGridViewCellStyle42
-        Me.ColumnDeduc.Frozen = True
         Me.ColumnDeduc.HeaderText = "UT Deduc"
         Me.ColumnDeduc.Name = "ColumnDeduc"
         Me.ColumnDeduc.ReadOnly = True
@@ -2643,7 +2603,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle43.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnAbsentHrs.DefaultCellStyle = DataGridViewCellStyle43
-        Me.ColumnAbsentHrs.Frozen = True
         Me.ColumnAbsentHrs.HeaderText = "Absent Hrs"
         Me.ColumnAbsentHrs.Name = "ColumnAbsentHrs"
         Me.ColumnAbsentHrs.ReadOnly = True
@@ -2655,7 +2614,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle44.Format = "(#,###,##0.00);#,###,##0.00;"""""""""
         Me.ColumnAbsent.DefaultCellStyle = DataGridViewCellStyle44
-        Me.ColumnAbsent.Frozen = True
         Me.ColumnAbsent.HeaderText = "Absent"
         Me.ColumnAbsent.Name = "ColumnAbsent"
         Me.ColumnAbsent.ReadOnly = True
@@ -2667,7 +2625,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle45.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnTotalHrs.DefaultCellStyle = DataGridViewCellStyle45
-        Me.ColumnTotalHrs.Frozen = True
         Me.ColumnTotalHrs.HeaderText = "Total Hours"
         Me.ColumnTotalHrs.Name = "ColumnTotalHrs"
         Me.ColumnTotalHrs.ReadOnly = True
@@ -2679,7 +2636,6 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle46.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
         Me.ColumnTotalPay.DefaultCellStyle = DataGridViewCellStyle46
-        Me.ColumnTotalPay.Frozen = True
         Me.ColumnTotalPay.HeaderText = "Total Pay"
         Me.ColumnTotalPay.Name = "ColumnTotalPay"
         Me.ColumnTotalPay.ReadOnly = True
@@ -2688,14 +2644,12 @@ Partial Class TimeEntrySummaryForm
         'ColumnRemarks
         '
         Me.ColumnRemarks.DataPropertyName = "Remarks"
-        Me.ColumnRemarks.Frozen = True
         Me.ColumnRemarks.HeaderText = "Remarks"
         Me.ColumnRemarks.Name = "ColumnRemarks"
         Me.ColumnRemarks.ReadOnly = True
         '
         'ColumnTimeStampIn
         '
-        Me.ColumnTimeStampIn.Frozen = True
         Me.ColumnTimeStampIn.HeaderText = "TimeStampIn"
         Me.ColumnTimeStampIn.Name = "ColumnTimeStampIn"
         Me.ColumnTimeStampIn.ReadOnly = True
@@ -2703,7 +2657,6 @@ Partial Class TimeEntrySummaryForm
         '
         'ColumnTimeStampOut
         '
-        Me.ColumnTimeStampOut.Frozen = True
         Me.ColumnTimeStampOut.HeaderText = "TimeStampOut"
         Me.ColumnTimeStampOut.Name = "ColumnTimeStampOut"
         Me.ColumnTimeStampOut.ReadOnly = True
@@ -2923,10 +2876,6 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents Column17 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column18 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column19 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_LastName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cemp_FirstName As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cboYears As ToolStripComboBox
     Friend WithEvents actualButton As ToolStripButton
     Friend WithEvents Panel2 As Panel
@@ -2938,6 +2887,10 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents tstbnResetLeaveBalance As ToolStripButton
     Friend WithEvents tsBtnDeleteTimeEntry As ToolStripButton
     Friend WithEvents ToolStripLabel1 As ToolStripLabel
+    Friend WithEvents cemp_RowID As DataGridViewTextBoxColumn
+    Friend WithEvents cemp_EmployeeID As DataGridViewTextBoxColumn
+    Friend WithEvents cemp_LastName As DataGridViewTextBoxColumn
+    Friend WithEvents cemp_FirstName As DataGridViewTextBoxColumn
     Friend WithEvents ColumnRowID As DataGridViewTextBoxColumn
     Friend WithEvents ColumnDate As DataGridViewTextBoxColumn
     Friend WithEvents ColumnDay As DataGridViewTextBoxColumn

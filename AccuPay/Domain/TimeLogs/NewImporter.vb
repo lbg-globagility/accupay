@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports System.Globalization
 Imports System.IO
 Imports System.Text.RegularExpressions
 Imports AccuPay.Entity

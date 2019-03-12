@@ -1,0 +1,22 @@
+CREATE TABLE `breaktimebracket` (
+	`RowID` INT(10) NOT NULL AUTO_INCREMENT,
+	`DivisionID` INT(10) NOT NULL,
+	`Created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`CreatedBy` INT(10) NULL DEFAULT NULL,
+	`LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+	`LastUpdBy` INT(10) NULL DEFAULT NULL,
+	`ShiftDuration` DECIMAL(10,2) NOT NULL COMMENT 'In hours',
+	`BreakDuration` DECIMAL(10,2) NOT NULL COMMENT 'In hours',
+	PRIMARY KEY (`RowID`),
+	UNIQUE INDEX `AK_breaktimebracket_DivisionID_ShiftDuration` (`DivisionID`, `ShiftDuration`),
+	INDEX `FK_breaktimebracket_user_CreatedBy` (`CreatedBy`),
+	INDEX `FK_breaktimebracket_user_LastUpdBy` (`LastUpdBy`),
+	INDEX `FK_breaktimebracket_division_DivisionID` (`DivisionID`),
+	CONSTRAINT `FK_breaktimebracket_division_DivisionID` FOREIGN KEY (`DivisionID`) REFERENCES `division` (`RowID`),
+	CONSTRAINT `FK_breaktimebracket_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+	CONSTRAINT `FK_breaktimebracket_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=1
+;

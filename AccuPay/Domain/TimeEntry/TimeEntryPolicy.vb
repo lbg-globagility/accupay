@@ -26,7 +26,7 @@ Public Class TimeEntryPolicy
         End Get
     End Property
 
-    Public ReadOnly Property BreakTimeLateHours As Boolean
+    Public ReadOnly Property ComputeBreakTimeLate As Boolean
         Get
             Return _settings.GetBoolean("LateHours.ComputeBreakTimeLate")
         End Get

@@ -2,9 +2,22 @@
 
 Public Class TimeAttendanceLogListForm
 
-    Private _timeAttendanceLogs As New List(Of TimeAttendanceLog)
+    Private _timeAttendanceLogs As List(Of TimeAttendanceLog)
 
-    Sub New(timeAttendanceLogs As List(Of TimeAttendanceLog))
+    Private _currentShift As TimePeriod
+
+    Private _breakTimeDuration As Decimal
+
+    Private _isAmPm As Boolean
+
+    Private _currentDate As Date
+
+    Sub New(
+           timeAttendanceLogs As List(Of TimeAttendanceLog),
+           currentShift As TimePeriod,
+           breakTimeDuration As Decimal,
+           isAmPm As Boolean,
+           currentDate As Date)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -12,13 +25,42 @@ Public Class TimeAttendanceLogListForm
         ' Add any initialization after the InitializeComponent() call.
 
         _timeAttendanceLogs = timeAttendanceLogs
+
+        _currentShift = currentShift
+
+        _breakTimeDuration = breakTimeDuration
+
+        _isAmPm = isAmPm
+
+        _currentDate = currentDate
+
     End Sub
 
     Private Sub TimeAttendanceLogListForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         TimeAttendanceLogDataGrid.AutoGenerateColumns = False
-
         TimeAttendanceLogDataGrid.DataSource = _timeAttendanceLogs
+
+        Dim timeFormat = If(_isAmPm, "hh:mm tt", "HH:mm")
+        Dim dateFormat = "MM/dd/yyyy"
+
+        Me.Text = $"Time Attendance Log List ({_currentDate.ToString(dateFormat)})"
+        ColumnTimeStamp.DefaultCellStyle.Format = dateFormat & " " & timeFormat
+
+
+        If _currentShift IsNot Nothing Then
+
+            lblBreakTime.Text = $"Break Time (Hours): {_breakTimeDuration}"
+
+
+            lblShift.Text = $"Shift: {_currentShift.Start.ToString(timeFormat)} - {_currentShift.End.ToString(timeFormat)}"
+
+        Else
+
+            lblBreakTime.Text = ""
+            lblShift.ResetText()
+
+        End If
 
     End Sub
 

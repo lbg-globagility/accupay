@@ -10,7 +10,6 @@ Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
-Imports Simplified = AccuPay.SimplifiedEntities.GridView
 
 Public Class TimeEntrySummaryForm
 
@@ -34,9 +33,11 @@ Public Class TimeEntrySummaryForm
 
     Private _payPeriods As ICollection(Of PayPeriod)
 
-    Private _employees As ICollection(Of Simplified.Employee)
+    Private _employees As ICollection(Of Employee)
 
-    Private _selectedEmployee As Simplified.Employee
+    Private _selectedEmployee As Employee
+
+    Private _breakTimeBrackets As List(Of BreakTimeBracket)
 
     Private _selectedPayPeriod As PayPeriod
 
@@ -65,8 +66,25 @@ Public Class TimeEntrySummaryForm
 
         Dim loadEmployeesTask = LoadEmployees()
         Dim loadPayPeriodsTask = LoadPayPeriods()
+
+        _breakTimeBrackets = New List(Of BreakTimeBracket)
+        If _calculateBreakTimeLateHours Then
+            _breakTimeBrackets = GetBreakTimeBrackets()
+        End If
+
         LoadYears()
     End Sub
+
+    Private Function GetBreakTimeBrackets() As List(Of BreakTimeBracket)
+
+        Using context As New PayrollContext
+            Return context.BreakTimeBrackets.
+                            Include(Function(b) b.Division).
+                            Where(Function(b) Nullable.Equals(b.Division.OrganizationID, z_OrganizationID)).
+                            ToList()
+        End Using
+
+    End Function
 
     Private Function GetBreakTimeLateHoursPolicy() As Boolean
         Using context = New PayrollContext()
@@ -75,12 +93,12 @@ Public Class TimeEntrySummaryForm
 
             Dim policy = New TimeEntryPolicy(settings)
 
-            Return policy.BreakTimeLateHours
+            Return policy.ComputeBreakTimeLate
         End Using
     End Function
 
     Private Async Function LoadEmployees() As Task
-        _employees = Await GetEmployees()
+        _employees = Await GetEmployeesWithPosition()
         employeesDataGridView.DataSource = _employees
 
         'If _selectedEmployee Is Nothing Then
@@ -88,10 +106,10 @@ Public Class TimeEntrySummaryForm
         'End If
     End Function
 
-    Private Async Function GetEmployees() As Task(Of ICollection(Of Simplified.Employee))
+    Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Employee))
 
-        Dim list = Await _employeeRepository.GetAll(Of Simplified.Employee)()
-        Return CType(list, ICollection(Of Simplified.Employee))
+        Dim list = Await _employeeRepository.GetAllWithPosition()
+        Return CType(list, ICollection(Of Employee))
 
     End Function
 
@@ -268,7 +286,7 @@ Public Class TimeEntrySummaryForm
         Return years
     End Function
 
-    Private Async Function GetTimeEntries(employee As Simplified.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+    Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
         'WARN: this has a possibility to show wrong data since
         'we are joining employeetimeentrydetails by LastUpd
         'maybe this query should be replaced
@@ -473,7 +491,7 @@ Public Class TimeEntrySummaryForm
         Return timeEntries
     End Function
 
-    Private Async Function GetActualTimeEntries(employee As Simplified.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+    Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
         Dim sql = <![CDATA[
             SELECT
                 eta.RowID,
@@ -699,7 +717,7 @@ Public Class TimeEntrySummaryForm
             Return
         End If
 
-        Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Simplified.Employee)
+        Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
         If employee Is _selectedEmployee Then
             Return
         End If
@@ -1102,12 +1120,57 @@ Public Class TimeEntrySummaryForm
             If timeAttendanceLogs Is Nothing OrElse
                 timeAttendanceLogs.Count = 0 Then Return
 
-            Dim form As New TimeAttendanceLogListForm(timeAttendanceLogs)
+            Dim currentShift = GetShiftTimePeriod(currentRow, currentDate)
+
+            Dim breakTimeDuration = GetCurrentBreakTimeDuration(currentShift.Length.TotalHours)
+
+            Dim form As New TimeAttendanceLogListForm(
+                                            timeAttendanceLogs,
+                                            currentShift,
+                                            breakTimeDuration,
+                                            _isAmPm,
+                                            currentDate)
             form.ShowDialog()
 
         End If
 
     End Sub
+
+    Private Function GetCurrentBreakTimeDuration(shiftDuration As Double) As Decimal
+
+        Dim breakTimeBrackets = _breakTimeBrackets.
+                Where(Function(b) Nullable.Equals(b.DivisionID, _selectedEmployee.Position?.DivisionID)).
+                ToList()
+
+        Return BreakTimeBracketHelper.GetBreakTimeDuration(breakTimeBrackets, shiftDuration)
+
+    End Function
+
+    Private Function GetShiftTimePeriod(currentRow As DataGridViewRow, currentDate As Date) As TimePeriod
+
+        Dim shiftFromTime = ObjectUtils.
+            ToNullableDateTime(currentRow.Cells(ColumnShiftFrom.Index).Value)
+
+        Dim shiftToTime = ObjectUtils.
+            ToNullableDateTime(currentRow.Cells(ColumnShiftTo.Index).Value)
+
+        If shiftFromTime Is Nothing OrElse shiftToTime Is Nothing Then
+
+            Return Nothing
+
+        End If
+
+        Dim shiftFrom = currentDate.
+                            ToMinimumHourValue.
+                            Add(shiftFromTime.Value.TimeOfDay)
+
+        Dim shiftTo = If(shiftToTime <= shiftFromTime, currentDate.AddDays(1), currentDate)
+
+        shiftTo = shiftTo.ToMinimumHourValue.Add(shiftToTime.Value.TimeOfDay)
+
+        Return New TimePeriod(shiftFrom, shiftTo)
+
+    End Function
 
     Private Async Function GetTimeAttendanceLogsOfSelectedTimeEntry(currentRow As DataGridViewRow, currentDate As Date) As Task(Of List(Of TimeAttendanceLog))
         Dim timeAttendanceLogs As List(Of TimeAttendanceLog)
