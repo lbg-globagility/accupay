@@ -28,7 +28,7 @@ Public Class UndertimeHoursTest
         Dim workEnd = Date.Parse($"2018-01-01 {timeOut}")
         Dim workPeriod = New TimePeriod(workStart, workEnd)
 
-        Dim result = _calculator.ComputeUndertimeHours(workPeriod, currentShift)
+        Dim result = _calculator.ComputeUndertimeHours(workPeriod, currentShift, False)
 
         Assert.That(result, [Is].EqualTo(answer))
     End Sub

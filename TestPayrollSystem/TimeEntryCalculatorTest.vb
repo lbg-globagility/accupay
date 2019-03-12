@@ -22,7 +22,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
 
-        Dim result = calculator.ComputeLateHours(workPeriod, currentShift)
+        Dim result = calculator.ComputeLateHours(workPeriod, currentShift, False)
         Assert.AreEqual(0D, result)
     End Sub
 
@@ -41,7 +41,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
 
-        Dim result = calculator.ComputeLateHours(workPeriod, currentShift)
+        Dim result = calculator.ComputeLateHours(workPeriod, currentShift, False)
         Assert.AreEqual(0.5D, result)
     End Sub
 
@@ -62,7 +62,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
 
-        Dim result = calculator.ComputeLateHours(workPeriod, currentShift)
+        Dim result = calculator.ComputeLateHours(workPeriod, currentShift, False)
         Assert.AreEqual(3.5D, result)
     End Sub
 
@@ -83,7 +83,7 @@ Public Class TimeEntryCalculatorTest
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
 
-        Dim result = calculator.ComputeLateHours(workPeriod, currentShift)
+        Dim result = calculator.ComputeLateHours(workPeriod, currentShift, False)
         Assert.AreEqual(4.5D, result)
     End Sub
 
