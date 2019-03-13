@@ -35,6 +35,7 @@ Namespace Global.AccuPay.Entity
         Public Property BreakStartTime As TimeSpan?
         Public Property BreakLength As Decimal
         Public Property IsRestDay As Boolean
+        'Public Property ShiftHours As Decimal
 
         Public Overridable Property Employee As Employee
 

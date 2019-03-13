@@ -24,8 +24,6 @@ Public Class ShiftScheduleForm
 
     Private _dutyShiftPolicy As DutyShiftPolicy
 
-    Private _boldFont As Font
-
     Private implementIt As Boolean = False
 
     Private _dataSource As List(Of ShiftScheduleModel)
@@ -86,6 +84,7 @@ Public Class ShiftScheduleForm
             .TimeTo = update.TimeTo
             .BreakFrom = update.BreakFrom
             .BreakLength = update.BreakLength
+            .IsRestDay = update.IsRestDay
         End With
     End Sub
 
@@ -168,9 +167,9 @@ Public Class ShiftScheduleForm
         Dim ssm = DirectCast(currRow.DataBoundItem, ShiftScheduleModel)
 
         If ssm.HasChanged Then
-            currRow.DefaultCellStyle.Font = _boldFont
+            currRow.DefaultCellStyle.Font = New Font("Segoe UI", 8.25!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
         Else
-            currRow.DefaultCellStyle.Font = Font
+            currRow.DefaultCellStyle.Font = Nothing
         End If
     End Sub
 
@@ -403,8 +402,9 @@ Public Class ShiftScheduleForm
         If gridWeek.Name = dataGrid.Name Then
             Dim satisfied = Function(dgvRow As DataGridViewRow) As Boolean
                                 Dim _cell = dgvRow.Cells(Column6.Name)
-                                Dim isApplied = Convert.ToString(_cell.Value) = DISABLED_TEXT
-                                Return isApplied
+                                Dim isDefaultValue = _cell.Value Is Nothing
+                                Dim isApplied = Convert.ToString(_cell.Value) = ENABLED_TEXT
+                                Return isApplied Or isDefaultValue
                             End Function
 
             _weekCycleRows = _weekCycleRows.Where(Function(r) satisfied(r))
@@ -783,8 +783,6 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub ShiftScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Dim parentFont = Parent.Font
-        _boldFont = New Font(parentFont.Name, parentFont.Size, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
         LoadShiftScheduleConfigurablePolicy()
 
@@ -971,7 +969,7 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub tabWeekCycle_Enter(sender As Object, e As EventArgs) Handles tabWeekCycle.Enter
-        tabWeekCycle.SelectNextControl(gridWeek, True, True, True, True)
+        tabWeekCycle.SelectNextControl(tabWeekCycle, True, True, True, True)
     End Sub
 
     Private Sub gridWeek_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles gridWeek.CellContentClick
