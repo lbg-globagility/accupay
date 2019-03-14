@@ -24,8 +24,6 @@ Public Class ShiftScheduleForm
 
     Private _dutyShiftPolicy As DutyShiftPolicy
 
-    Private implementIt As Boolean = False
-
     Private _dataSource As List(Of ShiftScheduleModel)
 
 #End Region
@@ -89,21 +87,25 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub ZebraliseEmployeeRows()
-        Dim ebonyStyle = Color.FromArgb(237, 237, 237)
+        Dim ebonyStyle = Color.LightGray
         Dim ivoryStyle = Color.White
 
-        Dim eIDs = EmployeeTreeView1.GetTickedEmployees.Select(Function(e) e.RowID.Value).ToList
+        Dim groupEmployeeIDs = ConvertGridRowsToShiftScheduleModels(grid).
+            GroupBy(Function(ssm) ssm.EmployeeId).
+            ToList()
 
         Dim isEven = False
         Dim i = 1
 
-        For Each eID In eIDs
+        For Each eID In groupEmployeeIDs
             isEven = i Mod 2 = 0
 
+            Dim employeePrimKey = eID.FirstOrDefault.EmployeeId.Value
+
             If isEven Then
-                ColorEmployeeRows(eID, ivoryStyle)
+                ColorEmployeeRows(employeePrimKey, ivoryStyle)
             Else
-                ColorEmployeeRows(eID, ebonyStyle)
+                ColorEmployeeRows(employeePrimKey, ebonyStyle)
             End If
 
             i += 1
@@ -372,18 +374,6 @@ Public Class ShiftScheduleForm
                 For Each ssm In notInDb
                     _models.Add(ssm)
                 Next
-
-                If implementIt Then
-                    Dim _updateList = _models.
-                        Where(Function(ssm) _empShiftScheds.
-                                Any(Function(ess) Nullable.Equals(ess.EmployeeID, ssm.EmployeeId) _
-                                    And Nullable.Equals(ess.DateSched, ssm.DateValue)))
-
-                    For Each item In _updateList
-                        ApplyChangesToModel(item)
-                    Next
-
-                End If
 
                 Dim _dataSource = _models.
                     OrderBy(Function(ssm) ssm.FullName.ToLower).
@@ -693,8 +683,7 @@ Public Class ShiftScheduleForm
 
 #Region "EventHandlers"
 
-    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click
-        implementIt = True
+    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click, Button1.Click
 
         Dim start As Date = dtpDateFrom.Value.Date
         Dim finish As Date = dtpDateTo.Value.Date
@@ -907,7 +896,6 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-        implementIt = False
 
         DateFilter_ValueChangedAsync(dtpDateFrom, e)
     End Sub
@@ -974,6 +962,12 @@ Public Class ShiftScheduleForm
 
     Private Sub gridWeek_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles gridWeek.CellContentClick
 
+        Dim avoidColumns = {Column1.Name, Column6.Name}
+
+        Dim gridWeekEditableColumns = gridWeek.Columns.OfType(Of DataGridViewColumn).
+            Where(Function(col) Not avoidColumns.Any(Function(s) s = col.Name)).
+            Where(Function(col) col.Visible)
+
         If gridWeek.Columns(e.ColumnIndex).Name = Column6.Name Then
             Dim _cellButton = gridWeek.Item(Column6.Name, e.RowIndex)
 
@@ -992,9 +986,18 @@ Public Class ShiftScheduleForm
                     .SelectionBackColor = Color.Gray
 
                 End With
+
+                For Each col In gridWeekEditableColumns
+                    _currRow.Cells(col.Name).ReadOnly = True
+                Next
             Else
                 _cellButton.Style = Nothing
                 _cellButton.Value = ENABLED_TEXT
+
+                For Each col In gridWeekEditableColumns
+                    _currRow.Cells(col.Name).ReadOnly = False
+                Next
+
                 TransformTouchedRow(_currRow)
             End If
 
