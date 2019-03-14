@@ -114,6 +114,7 @@
     <Compile Include="NHibernateTest.vb" />
     <Compile Include="ObjectUtilsTest.vb" />
     <Compile Include="OvertimeHoursTest.vb" />
+    <Compile Include="RegexTimelogParserTest.vb" />
     <Compile Include="TimeEntryCalculatorTest.vb" />
     <Compile Include="TimeImporter.vb" />
     <Compile Include="TimeUtilityTest.vb" />

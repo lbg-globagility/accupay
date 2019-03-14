@@ -343,6 +343,7 @@
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
     <Compile Include="Domain\TimeLogs\BreakTimeBracketHelper.vb" />
     <Compile Include="Domain\TimeLogs\BreakTimeBracket.vb" />
+    <Compile Include="Domain\TimeLogs\Parser\TimelogRegexParser.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\TimeAttendanceLogListForm.Designer.vb">
       <DependentUpon>TimeAttendanceLogListForm.vb</DependentUpon>
