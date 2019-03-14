@@ -111,15 +111,58 @@ Public Class EmployeeLoansForm
 
     End Sub
 
+    Private loanAmountBeforeTextChange As Decimal
+
+    Private loanInterestPercentageBeforeTextChange As Decimal
+
+    Private Sub txtLoanInterestPercentage_Enter(sender As Object, e As EventArgs) Handles txtLoanInterestPercentage.Enter
+
+        If Me._currentLoanSchedule Is Nothing Then Return
+
+        loanInterestPercentageBeforeTextChange = Me._currentLoanSchedule.DeductionPercentage
+
+    End Sub
+
+    Private Sub txtLoanInterestPercentage_Leave(sender As Object, e As EventArgs) Handles txtLoanInterestPercentage.Leave
+
+        If Me._currentLoanSchedule Is Nothing Then Return
+
+        If loanInterestPercentageBeforeTextChange = Me._currentLoanSchedule.DeductionPercentage Then Return
+
+        Dim totalPlusInterestRate As Decimal = 1 + (Me._currentLoanSchedule.DeductionPercentage * 0.01D)
+
+        Me._currentLoanSchedule.TotalLoanAmount = Me._currentLoanSchedule.TotalLoanAmount * totalPlusInterestRate
+
+        UpdateBalanceAndNumberOfPayPeriod()
+
+    End Sub
+
+    Private Sub txtTotalLoanAmount_Enter(sender As Object, e As EventArgs) Handles txtTotalLoanAmount.Enter
+
+        If Me._currentLoanSchedule Is Nothing Then Return
+
+        loanAmountBeforeTextChange = Me._currentLoanSchedule.TotalLoanAmount
+
+    End Sub
+
     Private Sub txtTotalLoanAmount_Leave(sender As Object, e As EventArgs) _
         Handles txtTotalLoanAmount.Leave, txtDeductionAmount.Leave
 
         If Me._currentLoanSchedule Is Nothing Then Return
 
+        If sender Is txtTotalLoanAmount Then
+            If loanAmountBeforeTextChange <> Me._currentLoanSchedule.TotalLoanAmount Then
+                Me._currentLoanSchedule.DeductionPercentage = 0
+            End If
+        End If
+
+        UpdateBalanceAndNumberOfPayPeriod()
+
+    End Sub
+
+    Private Sub UpdateBalanceAndNumberOfPayPeriod()
         Dim totalLoanAmount = AccuMath.CommercialRound(Me._currentLoanSchedule.TotalLoanAmount)
         Dim deductionAmount = AccuMath.CommercialRound(Me._currentLoanSchedule.DeductionAmount)
-
-
 
         If Me._currentLoanTransactions.Count = 0 AndAlso
             (Me._currentLoanSchedule.Status IsNot LoanScheduleRepository.STATUS_CANCELLED OrElse
@@ -135,6 +178,32 @@ Public Class EmployeeLoansForm
         Dim totalBalanceLeft = AccuMath.CommercialRound(Me._currentLoanSchedule.TotalBalanceLeft)
 
         Me._currentLoanSchedule.LoanPayPeriodLeft = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalBalanceLeft, deductionAmount)
+    End Sub
+
+    Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
+
+        Dim form As New AddLoanTypeForm()
+        form.ShowDialog()
+
+        If form.IsSaved Then
+
+            Me._loanTypeList.Add(form.NewLoanType)
+
+            PopulateLoanTypeCombobox()
+
+            If Me._currentLoanSchedule IsNot Nothing Then
+
+                Me._currentLoanSchedule.LoanTypeID = form.NewLoanType.RowID
+                Me._currentLoanSchedule.LoanName = form.NewLoanType.PartNo
+
+                Dim orderedLoanTypeList = Me._loanTypeList.OrderBy(Function(p) p.PartNo).ToList
+
+                cboLoanType.SelectedIndex = orderedLoanTypeList.IndexOf(form.NewLoanType)
+
+            End If
+
+            ShowBalloonInfo("Loan Type Successfully Added", "Saved")
+        End If
 
     End Sub
 
@@ -552,8 +621,10 @@ Public Class EmployeeLoansForm
         txtTotalLoanAmount.DataBindings.Add("Text", Me._currentLoanSchedule, "TotalLoanAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
         If Me._currentLoanTransactions IsNot Nothing AndAlso Me._currentLoanTransactions.Count > 0 Then
             txtTotalLoanAmount.Enabled = False
+            txtLoanInterestPercentage.Enabled = False
         Else
             txtTotalLoanAmount.Enabled = True
+            txtLoanInterestPercentage.Enabled = True
         End If
 
         txtLoanBalance.DataBindings.Clear()
@@ -572,7 +643,7 @@ Public Class EmployeeLoansForm
         txtDeductionAmount.DataBindings.Add("Text", Me._currentLoanSchedule, "DeductionAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         txtLoanInterestPercentage.DataBindings.Clear()
-        txtLoanInterestPercentage.DataBindings.Add("Text", Me._currentLoanSchedule, "DeductionPercentage", True, DataSourceUpdateMode.OnValidation, Nothing, "N2")
+        txtLoanInterestPercentage.DataBindings.Add("Text", Me._currentLoanSchedule, "DeductionPercentage", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         cboLoanType.DataBindings.Clear()
         cboLoanType.DataBindings.Add("Text", Me._currentLoanSchedule, "LoanName")
@@ -690,33 +761,6 @@ Public Class EmployeeLoansForm
         Return hasChanged
 
     End Function
-
-    Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
-
-        Dim form As New AddLoanTypeForm()
-        form.ShowDialog()
-
-        If form.IsSaved Then
-
-            Me._loanTypeList.Add(form.NewLoanType)
-
-            PopulateLoanTypeCombobox()
-
-            If Me._currentLoanSchedule IsNot Nothing Then
-
-                Me._currentLoanSchedule.LoanTypeID = form.NewLoanType.RowID
-                Me._currentLoanSchedule.LoanName = form.NewLoanType.PartNo
-
-                Dim orderedLoanTypeList = Me._loanTypeList.OrderBy(Function(p) p.PartNo).ToList
-
-                cboLoanType.SelectedIndex = orderedLoanTypeList.IndexOf(form.NewLoanType)
-
-            End If
-
-            ShowBalloonInfo("Loan Type Successfully Added", "Saved")
-        End If
-
-    End Sub
 
 #End Region
 

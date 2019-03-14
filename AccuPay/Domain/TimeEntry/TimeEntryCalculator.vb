@@ -1,16 +1,22 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports Microsoft.EntityFrameworkCore
 
 Public Class TimeEntryCalculator
 
-    Public Function ComputeRegularHours(workPeriod As TimePeriod, currentShift As CurrentShift) As Decimal
+    Public Function ComputeRegularHours(
+        workPeriod As TimePeriod,
+        currentShift As CurrentShift,
+        computeBreakTimeLate As Boolean) As Decimal
+
+
         Dim shiftPeriod = currentShift.ShiftPeriod
 
         Dim coveredPeriod = workPeriod.Overlap(shiftPeriod)
 
-        If currentShift.HasBreaktime() Then
+        If currentShift.HasBreaktime() AndAlso computeBreakTimeLate = False Then
             Dim breakPeriod = currentShift.BreakPeriod
             Dim coveredPeriods = coveredPeriod.Difference(breakPeriod)
 
@@ -20,7 +26,12 @@ Public Class TimeEntryCalculator
         Return coveredPeriod.TotalHours
     End Function
 
-    Public Function ComputeLateHours(workPeriod As TimePeriod, currentShift As CurrentShift) As Decimal
+    Public Function ComputeLateHours(
+        workPeriod As TimePeriod,
+        currentShift As CurrentShift,
+        computeBreakTimeLate As Boolean) As Decimal
+
+
         Dim shiftPeriod = currentShift.ShiftPeriod
 
         If workPeriod.EarlierThan(shiftPeriod) Then
@@ -29,7 +40,7 @@ Public Class TimeEntryCalculator
 
         Dim latePeriod = New TimePeriod(shiftPeriod.Start, workPeriod.Start)
 
-        If currentShift.HasBreaktime Then
+        If currentShift.HasBreaktime AndAlso computeBreakTimeLate = False Then
             Dim breakPeriod = currentShift.BreakPeriod
             Dim latePeriods = latePeriod.Difference(breakPeriod)
 
@@ -39,7 +50,47 @@ Public Class TimeEntryCalculator
         Return latePeriod.TotalHours
     End Function
 
-    Public Function ComputeLateMinutes(workPeriod As TimePeriod, currentShift As CurrentShift) As Decimal
+    Public Function ComputeBreakTimeLateHours(
+                        workPeriod As TimePeriod,
+                        currentShift As CurrentShift,
+                        timeAttendanceLogs As IList(Of TimeAttendanceLog),
+                        breakTimeBrackets As IList(Of BreakTimeBracket)) As Decimal
+
+        Dim shiftPeriod = currentShift.ShiftPeriod
+
+        Dim startTime = If(workPeriod.Start >= shiftPeriod.Start, workPeriod.Start, shiftPeriod.Start)
+        Dim endTime = If(workPeriod.End >= shiftPeriod.End, shiftPeriod.End, workPeriod.End)
+
+        Dim logs = timeAttendanceLogs.
+                    Where(Function(l) l.TimeStamp >= startTime).
+                    Where(Function(l) l.TimeStamp <= endTime).
+                    OrderBy(Function(l) l.TimeStamp).
+                    ToList
+
+        Dim totalBreakTimeLateHours = GetTotalBreakTimeLateHours(logs)
+
+        If breakTimeBrackets Is Nothing OrElse breakTimeBrackets.Count = 0 Then
+
+            Return totalBreakTimeLateHours
+
+        End If
+
+        Dim breakTimeDuration = BreakTimeBracketHelper.GetBreakTimeDuration(breakTimeBrackets, shiftPeriod.Length.TotalHours)
+
+        Dim finalBreakTimeLateHours = totalBreakTimeLateHours - breakTimeDuration
+
+        If finalBreakTimeLateHours < 0 Then Return 0
+
+        Return finalBreakTimeLateHours
+
+    End Function
+
+    Public Function ComputeLateMinutes(
+        workPeriod As TimePeriod,
+        currentShift As CurrentShift,
+        computeBreakTimeLate As Boolean) As Decimal
+
+
         Dim shiftPeriod = currentShift.ShiftPeriod
 
         If workPeriod.EarlierThan(shiftPeriod) Then
@@ -48,7 +99,7 @@ Public Class TimeEntryCalculator
 
         Dim latePeriod = New TimePeriod(shiftPeriod.Start, workPeriod.Start)
 
-        If currentShift.HasBreaktime Then
+        If currentShift.HasBreaktime AndAlso computeBreakTimeLate = False Then
             Dim breakPeriod = currentShift.BreakPeriod
             Dim latePeriods = latePeriod.Difference(breakPeriod)
 
@@ -58,7 +109,12 @@ Public Class TimeEntryCalculator
         Return latePeriod.TotalMinutes
     End Function
 
-    Public Function ComputeUndertimeHours(workPeriod As TimePeriod, currentShift As CurrentShift) As Decimal
+    Public Function ComputeUndertimeHours(
+        workPeriod As TimePeriod,
+        currentShift As CurrentShift,
+        computeBreakTimeLate As Boolean) As Decimal
+
+
         Dim shiftPeriod = currentShift.ShiftPeriod
 
         If workPeriod.LaterThan(shiftPeriod) Then
@@ -67,7 +123,7 @@ Public Class TimeEntryCalculator
 
         Dim undertimePeriod = New TimePeriod(workPeriod.End, shiftPeriod.End)
 
-        If currentShift.HasBreaktime Then
+        If currentShift.HasBreaktime AndAlso computeBreakTimeLate = False Then
             Dim breakPeriod = currentShift.BreakPeriod
             Dim undertimePeriods = undertimePeriod.Difference(breakPeriod)
 
@@ -77,7 +133,13 @@ Public Class TimeEntryCalculator
         Return undertimePeriod.TotalHours
     End Function
 
-    Public Function ComputeNightDiffHours(workPeriod As TimePeriod, currentShift As CurrentShift, nightDiffPeriod As TimePeriod, shouldBreakTime As Boolean) As Decimal
+    Public Function ComputeNightDiffHours(
+        workPeriod As TimePeriod,
+        currentShift As CurrentShift,
+        nightDiffPeriod As TimePeriod,
+        shouldBreakTime As Boolean,
+        computeBreakTimeLate As Boolean) As Decimal
+
         If Not workPeriod.Intersects(nightDiffPeriod) Then
             Return 0D
         End If
@@ -86,7 +148,7 @@ Public Class TimeEntryCalculator
 
         Dim nightDiffHours = 0D
 
-        If shouldBreakTime AndAlso currentShift.HasBreaktime Then
+        If shouldBreakTime AndAlso currentShift.HasBreaktime AndAlso computeBreakTimeLate = False Then
             Dim breakPeriod = currentShift.BreakPeriod
             Dim nightWorkedPeriods = nightWorked.Difference(breakPeriod)
 
@@ -172,14 +234,56 @@ Public Class TimeEntryCalculator
         Return overtimeWorked
     End Function
 
-    Public Function ComputeLeaveHours(leavePeriod As TimePeriod, currentShift As CurrentShift) As Decimal
-        If currentShift.HasBreaktime() Then
+    Public Function ComputeLeaveHours(
+        leavePeriod As TimePeriod,
+        currentShift As CurrentShift,
+        computeBreakTimeLate As Boolean) As Decimal
+
+
+        If currentShift.HasBreaktime() AndAlso computeBreakTimeLate = False Then
             Dim breakPeriod = currentShift.BreakPeriod
 
             Return leavePeriod.Difference(breakPeriod).Sum(Function(l) l.TotalHours)
         End If
 
         Return leavePeriod.TotalHours
+    End Function
+
+    Private Function GetTotalBreakTimeLateHours(logs As List(Of TimeAttendanceLog)) As Decimal
+        'get the late periods
+        Dim latePeriods As New List(Of TimePeriod)
+
+        Dim lastOut As Date
+        Dim firstIn As Date
+        Dim isLookingForBreakTimeOut As Boolean = True
+
+        For Each log In logs
+            If isLookingForBreakTimeOut Then
+                If log.IsTimeIn = False Then
+                    lastOut = log.TimeStamp
+
+                    isLookingForBreakTimeOut = False
+                End If
+            Else
+                'still get the time out to get the last OUT
+                If log.IsTimeIn = False Then
+                    lastOut = log.TimeStamp
+
+                Else
+                    'here in else, we found the first IN since the last employee OUT for breaktime
+                    'this will be the late timeperiod
+                    firstIn = log.TimeStamp
+
+                    isLookingForBreakTimeOut = True
+
+                    latePeriods.Add(New TimePeriod(lastOut, firstIn))
+                End If
+            End If
+
+        Next
+
+        'compute the late hours
+        Return latePeriods.Sum(Function(l) l.TotalHours)
     End Function
 
 End Class

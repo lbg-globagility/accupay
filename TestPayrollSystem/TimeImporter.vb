@@ -3,6 +3,8 @@
 Imports System.IO
 Imports AccuPay
 Imports AccuPay.Entity
+Imports AccuPay.Helper.TimeAttendanceAnalyzer
+Imports AccuPay.Helper.TimeLogsReader
 
 <TestFixture>
 Public Class TimeImporter
@@ -23,30 +25,30 @@ Public Class TimeImporter
         Base_ShouldImport(False)
     End Sub
 
-    <Test>
-    Public Sub ShouldImport_WithIsChangeableType()
-        Base_ShouldImport(True)
-    End Sub
+    '<Test>
+    'Public Sub ShouldImport_WithIsChangeableType()
+    '    Base_ShouldImport(True)
+    'End Sub
 
     <Test>
     Public Sub ShouldImport_WithoutShifts()
         Base_ShouldImport_WithoutShifts(False)
     End Sub
 
-    <Test>
-    Public Sub ShouldImport_WithoutShiftsWithIsChangeableType()
-        Base_ShouldImport_WithoutShifts(True)
-    End Sub
+    '<Test>
+    'Public Sub ShouldImport_WithoutShiftsWithIsChangeableType()
+    '    Base_ShouldImport_WithoutShifts(True)
+    'End Sub
 
     <Test>
     Public Sub ShouldImport_WithNextShiftScheduleWithoutShift()
         Base_ShouldImport_WithNextShiftScheduleWithoutShift(False)
     End Sub
 
-    <Test>
-    Public Sub ShouldNotImport_WithNextShiftScheduleWithoutShiftAndIsChangeableTime()
-        Base_ShouldImport_WithNextShiftScheduleWithoutShift(True)
-    End Sub
+    '<Test>
+    'Public Sub ShouldNotImport_WithNextShiftScheduleWithoutShiftAndIsChangeableTime()
+    '    Base_ShouldImport_WithNextShiftScheduleWithoutShift(True)
+    'End Sub
 
     <Test>
     Public Sub ShouldNotImport()
@@ -57,9 +59,8 @@ Public Class TimeImporter
 
         Dim errors = importOutput.Errors
 
-        Assert.That(errors.Count = 1)
-        Assert.That(errors(0).LineNumber = 0)
-        Assert.That(errors(0).Reason = TimeLogsReader.ErrorLog.FILE_NOT_FOUND_ERROR)
+        Assert.That(importOutput.IsImportSuccess = False)
+        Assert.That(importOutput.ErrorMessage = TimeLogsReader.FILE_NOT_FOUND_ERROR)
 
     End Sub
 
@@ -74,76 +75,48 @@ Public Class TimeImporter
 
         Dim contentFormat = "    {0}" & vbTab & "{1}" & vbTab & "{2}" & vbTab & "{3}" & vbTab & "{4}" & vbTab & "{5}"
 
-        Assert.That(errors.Count = 6)
+        Assert.That(errors.Count = 7)
 
-        Assert.That(errors.Item(0).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(0).ErrorMessage = "Second column must be a valid Date Time.")
         Assert.That(errors.Item(0).LineNumber = 3)
-        Assert.That(errors.Item(0).Content = String.Format(contentFormat,
+        Assert.That(errors.Item(0).LineContent = String.Format(contentFormat,
                     "10123", "201A-06-02 07:00:00", "1", "0", "1", "0"))
 
-        Assert.That(errors.Item(1).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(1).ErrorMessage = "Second column must be a valid Date Time.")
         Assert.That(errors.Item(1).LineNumber = 7)
-        Assert.That(errors.Item(1).Content = String.Format(contentFormat,
+        Assert.That(errors.Item(1).LineContent = String.Format(contentFormat,
                     "10123", "2018-0B-04 20:00:00", "1", "0", "1", "0"))
 
-        Assert.That(errors.Item(2).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(2).ErrorMessage = "Second column must be a valid Date Time.")
         Assert.That(errors.Item(2).LineNumber = 9)
-        Assert.That(errors.Item(2).Content = String.Format(contentFormat,
+        Assert.That(errors.Item(2).LineContent = String.Format(contentFormat,
                     "10123", "2018-06-0C 03:00:00", "1", "0", "1", "0"))
 
-        Assert.That(errors.Item(3).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(3).ErrorMessage = "Second column must be a valid Date Time.")
         Assert.That(errors.Item(3).LineNumber = 10)
-        Assert.That(errors.Item(3).Content = String.Format(contentFormat,
+        Assert.That(errors.Item(3).LineContent = String.Format(contentFormat,
                     "10123", "2018-06-05 0D:00:00", "1", "0", "1", "0"))
 
-        Assert.That(errors.Item(4).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(4).ErrorMessage = "Second column must be a valid Date Time.")
         Assert.That(errors.Item(4).LineNumber = 12)
-        Assert.That(errors.Item(4).Content = String.Format(contentFormat,
+        Assert.That(errors.Item(4).LineContent = String.Format(contentFormat,
                     "10123", "2018-06-05 19:E0:00", "1", "0", "1", "0"))
 
-        Assert.That(errors.Item(5).Reason = "Second column must be a valid Date Time.")
+        Assert.That(errors.Item(5).ErrorMessage = "Second column must be a valid Date Time.")
         Assert.That(errors.Item(5).LineNumber = 15)
-        Assert.That(errors.Item(5).Content = String.Format(contentFormat,
+        Assert.That(errors.Item(5).LineContent = String.Format(contentFormat,
                     "10123", "2018-06-06 08:00:F0", "1", "0", "1", "0"))
+
+        Assert.That(errors.Item(6).ErrorMessage = "Needs at least 2 items in one line separated by a tab.")
+        Assert.That(errors.Item(6).LineNumber = 20)
+        Assert.That(errors.Item(6).LineContent = "    101232018-06-07 23:30:001010")
     End Sub
 
 
 #Region "Private Functions"
     Private Sub Base_ShouldImport(isChangeableTime As Boolean)
-        Dim importer = New TimeLogsReader()
 
-        Dim filename = _projectPath & "\_timelogs_test.dat"
-        'Dim filename = "E:\Stuff\accupay\_timelogs\cinema.txt"
-        'Dim filename = "E:\Stuff\accupay\_timelogs\fourlinq.dat"
-
-        Dim importOutput = importer.Import(filename)
-        Dim logs = importOutput.Logs
-
-        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
-
-        Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules()
-        Dim employees As List(Of Employee) = GetSampleEmployees()
-
-        Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
-
-        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
-        Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
-        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
-        AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
-        AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
-        AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
-        AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
-        AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
-        AssertTimeLog(results.Item(6), "", "23:30:00", "2018-06-07")
-    End Sub
-
-    Private Sub Base_ShouldImport_WithoutShifts(isChangeableTime As Boolean)
-        Dim importer = New TimeLogsReader()
-
-        Dim filename = _projectPath & "\_timelogs_test.dat"
-
-        Dim importOutput = importer.Import(filename)
-        Dim logs = importOutput.Logs
+        Dim logs As IList(Of ImportTimeAttendanceLog) = GetParsedTimeLogs(isChangeableTime)
 
         If isChangeableTime Then
             'put IsTimeIn value if testing for isChangeable
@@ -155,17 +128,66 @@ Public Class TimeImporter
 
                 log.IsTimeIn = index Mod 2 = 1 'odd number is time in
             Next
+
+            logs(16).IsTimeIn = False '2018-06-07 23:30:00
+
         End If
 
-        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
+        logs = logs.OrderByDescending(Function(x) x.EmployeeNumber).ThenBy(Function(y) y.DateTime).ToList
+
+        Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules()
+        Dim employees As List(Of Employee) = GetSampleEmployees()
+
+        'Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
+        Dim analyzer = New TimeAttendanceAnalyzer()
+
+        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
+        Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
+
+        AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
+        AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
+        AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
+        AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
+        AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
+        AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
+        AssertTimeLog(results.Item(6), "", "23:30:00", "2018-06-07")
+    End Sub
+
+    Private Sub Base_ShouldImport_WithoutShifts(isChangeableTime As Boolean)
+
+        Dim logs As IList(Of ImportTimeAttendanceLog) = GetParsedTimeLogs(isChangeableTime)
+
+        If isChangeableTime Then
+            'put IsTimeIn value if testing for isChangeable
+
+            Dim index As Integer = 0
+            For Each log In logs
+
+                index += 1
+
+                log.IsTimeIn = index Mod 2 = 1 'odd number is time in
+            Next
+
+            logs(3).IsTimeIn = True '2018-06-03 01:00:00
+            logs(7).IsTimeIn = True '2018-06-05 03:00:00
+            logs(10).IsTimeIn = False '2018-06-05 23:59:00
+            logs(11).IsTimeIn = True '2018-06-06 01:00:00
+            logs(16).IsTimeIn = False '2018-06-07 23:30:00
+
+        End If
+
+
+        logs = logs.OrderByDescending(Function(x) x.EmployeeNumber).ThenBy(Function(y) y.DateTime).ToList
 
         Dim employeeShifts As New List(Of ShiftSchedule)
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
+        'Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
+        Dim analyzer = New TimeAttendanceAnalyzer()
 
-        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
+        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
         Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
+
         AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
         AssertTimeLog(results.Item(1), "07:00:00", Nothing, "2018-06-02")
         AssertTimeLog(results.Item(2), "01:00:00", "20:00:00", "2018-06-03")
@@ -176,22 +198,35 @@ Public Class TimeImporter
     End Sub
 
     Private Sub Base_ShouldImport_WithNextShiftScheduleWithoutShift(isChangeableTime As Boolean)
-        Dim importer = New TimeLogsReader()
 
-        Dim filename = _projectPath & "\_timelogs_test.dat"
+        Dim logs As IList(Of ImportTimeAttendanceLog) = GetParsedTimeLogs(isChangeableTime)
 
-        Dim importOutput = importer.Import(filename)
-        Dim logs = importOutput.Logs
+        If isChangeableTime Then
+            'put IsTimeIn value if testing for isChangeable
 
-        logs = logs.OrderByDescending(Function(x) x.EmployeeNo).ThenBy(Function(y) y.DateTime).ToList
+            Dim index As Integer = 0
+            For Each log In logs
+
+                index += 1
+
+                log.IsTimeIn = index Mod 2 = 1 'odd number is time in
+            Next
+
+            logs(16).IsTimeIn = False '2018-06-07 23:30:00
+
+        End If
+
+        logs = logs.OrderByDescending(Function(x) x.EmployeeNumber).ThenBy(Function(y) y.DateTime).ToList
 
         Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules_WithNextShiftScheduleWithoutShift()
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
+        'Dim analyzer = New TimeAttendanceAnalyzer(isChangeableTime)
+        Dim analyzer = New TimeAttendanceAnalyzer()
 
-        Dim logsGroupedByEmployee = analyzer.GetLogsGroupByEmployee(logs)
+        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
         Dim results = analyzer.Analyze(employees, logsGroupedByEmployee, employeeShifts)
+
         AssertTimeLog(results.Item(0), "08:30:00", "18:00:00", "2018-06-01")
         AssertTimeLog(results.Item(1), "07:00:00", "01:00:00", "2018-06-02")
         AssertTimeLog(results.Item(2), "06:00:00", "20:00:00", "2018-06-03")
@@ -199,6 +234,19 @@ Public Class TimeImporter
         AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
         AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
     End Sub
+
+    Private Function GetParsedTimeLogs(isChangeableTime As Boolean) As IList(Of ImportTimeAttendanceLog)
+        Dim importer = New TimeLogsReader()
+
+        Dim filename = _projectPath & "\_timelogs_test.dat"
+        'Dim filename = "E:\Stuff\accupay\_timelogs\cinema.txt"
+        'Dim filename = "E:\Stuff\accupay\_timelogs\fourlinq.dat"
+
+        Dim importOutput = importer.Import(filename)
+        Dim logs = importOutput.Logs
+
+        Return logs
+    End Function
 
     Private Function GetSampleEmployees() As List(Of Employee)
         Dim employees = New List(Of Employee)

@@ -16,14 +16,14 @@ Public Class TimeEntryCalculator
 
     Private _shiftToday As CurrentShift
 
-    Public Sub ComputeAllHours()
-        ComputeRegularHours()
+    Public Sub ComputeAllHours(computeBreakTimeLate As Boolean)
+        ComputeRegularHours(computeBreakTimeLate)
     End Sub
 
-    Public Sub ComputeRegularHours()
+    Public Sub ComputeRegularHours(computeBreakTimeLate As Boolean)
         Dim regularHours As TimeSpan
 
-        If _shiftToday.HasBreaktime Then
+        If _shiftToday.HasBreaktime AndAlso computeBreakTimeLate = False Then
             Dim hoursBeforeBreak As TimeSpan
             Dim hoursAfterBreak As TimeSpan
 
@@ -47,14 +47,14 @@ Public Class TimeEntryCalculator
         _timeEntry.RegularHours = CDec(regularHours.TotalHours)
     End Sub
 
-    Public Function ComputeLateHours(workBegin As Date, workEnd As Date, shiftToday As CurrentShift) As Decimal
+    Public Function ComputeLateHours(workBegin As Date, workEnd As Date, shiftToday As CurrentShift, computeBreakTimeLate As Boolean) As Decimal
         If workBegin < shiftToday.RangeStart Then
             Return 0D
         End If
 
         Dim lateHours As TimeSpan
 
-        If shiftToday.HasBreaktime Then
+        If shiftToday.HasBreaktime AndAlso computeBreakTimeLate = False Then
             Dim hoursBeforeBreak As TimeSpan
             If shiftToday.RangeStart < shiftToday.BreaktimeStart Then
                 Dim latePeriodEndBeforeBreaktime = {workBegin, shiftToday.BreaktimeStart.Value}.Min
@@ -74,14 +74,14 @@ Public Class TimeEntryCalculator
         Return CDec(lateHours.TotalHours)
     End Function
 
-    Public Sub ComputeUndertimeHours()
+    Public Sub ComputeUndertimeHours(computeBreakTimeLate As Boolean)
         If _timeEntry.DutyEnd > _shiftToday.RangeEnd Then
             Return
         End If
 
         Dim undertimeHours As TimeSpan
 
-        If _shiftToday.HasBreaktime Then
+        If _shiftToday.HasBreaktime AndAlso computeBreakTimeLate = False Then
             Dim hoursBeforeBreak As TimeSpan
             Dim hoursAfterBreak As TimeSpan
 

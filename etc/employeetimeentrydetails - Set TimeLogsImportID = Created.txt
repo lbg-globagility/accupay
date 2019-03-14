@@ -1,0 +1,15 @@
+DROP TEMPORARY TABLE IF EXISTS old_employeetimeentrydetails;
+
+CREATE TEMPORARY TABLE IF NOT EXISTS old_employeetimeentrydetails
+SELECT * FROM employeetimeentrydetails
+WHERE TimeentrylogsImportID = '';
+
+UPDATE employeetimeentrydetails
+SET TimeentrylogsImportID = Created
+WHERE TimeentrylogsImportID = '';
+
+
+UPDATE employeetimeentrydetails
+INNER JOIN old_employeetimeentrydetails
+ON employeetimeentrydetails.RowID = old_employeetimeentrydetails.RowID
+SET employeetimeentrydetails.LastUpd = old_employeetimeentrydetails.LastUpd;

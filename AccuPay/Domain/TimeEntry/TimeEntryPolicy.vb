@@ -26,6 +26,12 @@ Public Class TimeEntryPolicy
         End Get
     End Property
 
+    Public ReadOnly Property ComputeBreakTimeLate As Boolean
+        Get
+            Return _settings.GetBoolean("LateHours.ComputeBreakTimeLate")
+        End Get
+    End Property
+
     Public ReadOnly Property OvertimeSkipCountRounding As Boolean
         Get
             Return _settings.GetBoolean("OvertimeHours.SkipCountRounding")

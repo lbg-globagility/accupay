@@ -1,92 +1,151 @@
 ﻿Option Strict On
 
+Imports System.Globalization
+
 Namespace Global.AccuPay.Utils
 
     Public Class ObjectUtils
 
         Public Shared Function ToInteger(num As Object) As Integer
-            If IsNothing(num) Then Return 0
 
-            Dim output As Integer = 0
+            Dim defaultOutput As Integer = 0
+
+            If IsNothing(num) Then Return defaultOutput
+
+            Dim output As Integer = defaultOutput
 
             Try
                 output = Convert.ToInt32(num)
             Catch ex As Exception
-                output = 0
+                output = defaultOutput
             End Try
 
             Return output
         End Function
 
         Public Shared Function ToNullableInteger(num As Object) As Integer?
-            If IsNothing(num) Then Return Nothing
 
-            Dim output As Integer? = Nothing
+            Dim defaultOutput As Integer? = Nothing
+
+
+            If IsNothing(num) Then Return defaultOutput
+
+            Dim output As Integer? = defaultOutput
 
             Try
                 output = Convert.ToInt32(num)
             Catch ex As Exception
-                output = Nothing
+                output = defaultOutput
             End Try
 
             Return output
         End Function
 
         Public Shared Function ToDecimal(num As Object, Optional decimalPlace As Integer = 0) As Decimal
-            If IsNothing(num) Then Return 0
 
-            Dim output As Decimal = 0
+            Dim defaultOutput As Decimal = 0
+
+            If IsNothing(num) Then Return defaultOutput
+
+            Dim output As Decimal = defaultOutput
 
             Try
                 output = Convert.ToDecimal(num)
-                If decimalPlace > 0 Then
+                If decimalPlace > defaultOutput Then
                     AccuMath.CommercialRound(output, decimalPlace)
                 End If
             Catch ex As Exception
-                output = 0
+                output = defaultOutput
             End Try
 
             Return output
         End Function
 
         Public Shared Function ToNullableDecimal(num As Object) As Decimal?
-            If IsNothing(num) Then Return Nothing
 
-            Dim output As Decimal? = Nothing
+            Dim defaultOutput As Decimal? = Nothing
+
+            If IsNothing(num) Then Return defaultOutput
+
+            Dim output As Decimal? = defaultOutput
 
             Try
                 output = Convert.ToDecimal(num)
             Catch ex As Exception
-                output = Nothing
+                output = defaultOutput
             End Try
 
             Return output
         End Function
 
         Public Shared Function ToDateTime(dateInput As Object) As Date
-            If IsNothing(dateInput) Then Return Date.MinValue
 
-            Dim output As Date = Date.MinValue
+            Dim defaultOutput As Date = Date.MinValue
+
+            If IsNothing(dateInput) Then Return defaultOutput
+
+            Dim output As Date = defaultOutput
 
             Try
                 output = Convert.ToDateTime(dateInput)
             Catch ex As Exception
-                output = Date.MinValue
+                output = defaultOutput
             End Try
 
             Return output
         End Function
 
         Public Shared Function ToNullableDateTime(dateInput As Object) As Date?
-            If IsNothing(dateInput) Then Return Nothing
 
-            Dim output As Date? = Nothing
+            Dim defaultOutput As Date? = Nothing
+
+            If IsNothing(dateInput) Then Return defaultOutput
+
+            Dim output As Date? = defaultOutput
 
             Try
                 output = Convert.ToDateTime(dateInput)
             Catch ex As Exception
-                output = Nothing
+                output = defaultOutput
             End Try
+
+            Return output
+        End Function
+
+        Public Shared Function ToTimeSpan(input As Object) As TimeSpan
+
+            Dim defaultOutput As TimeSpan = TimeSpan.Zero
+
+            If IsNothing(input) Then Return defaultOutput
+
+            Dim output As TimeSpan = defaultOutput
+
+            Dim dt As Date
+
+            If (Date.TryParseExact(input.ToString(), "HH:mm",
+                CultureInfo.InvariantCulture, DateTimeStyles.None, dt)) Then
+
+                output = dt.TimeOfDay
+            End If
+
+            Return output
+        End Function
+
+        Public Shared Function ToNullableTimeSpan(input As Object) As TimeSpan?
+
+            Dim defaultOutput As TimeSpan = Nothing
+
+            If IsNothing(input) Then Return defaultOutput
+
+            Dim output As TimeSpan = defaultOutput
+
+            Dim dt As Date
+
+            If (Date.TryParseExact(input.ToString(), "HH:mm",
+                CultureInfo.InvariantCulture, DateTimeStyles.None, dt)) Then
+
+                output = dt.TimeOfDay
+            End If
 
             Return output
         End Function

@@ -1,6 +1,4 @@
-﻿Option Strict On
-
-Imports System.Runtime.CompilerServices
+﻿Imports System.Runtime.CompilerServices
 
 Namespace Global.AccuPay.Extensions
 
@@ -8,9 +6,16 @@ Namespace Global.AccuPay.Extensions
         Private Const MINUTES_PER_HOUR As Decimal = 60
 
         <Extension()>
-        Public Function AddHours(input As TimeSpan, hours As Decimal) As TimeSpan
+        Public Function ToStringFormat(timeSpanInput As TimeSpan, format As String) As String
 
-            Return input.Add(New TimeSpan(0, CInt(hours * MINUTES_PER_HOUR), 0))
+            Dim currentDate = Date.Now.ToMinimumHourValue
+            Return currentDate.Add(timeSpanInput).ToString(format)
+
+        End Function
+
+        <Extension()>
+        Public Function AddHours(timeSpanInput As TimeSpan, value As Decimal) As TimeSpan
+            Return timeSpanInput.Add(New TimeSpan(0, value * MINUTES_PER_HOUR, 0))
         End Function
 
     End Module

@@ -586,7 +586,7 @@ Partial Class EmployeeLoansForm
         Me.LoanDetailsTabLayout.SetRowSpan(Me.txtRemarks, 7)
         Me.txtRemarks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtRemarks.Size = New System.Drawing.Size(195, 170)
-        Me.txtRemarks.TabIndex = 363
+        Me.txtRemarks.TabIndex = 364
         '
         'lblTotalLoanAmount
         '
@@ -816,7 +816,7 @@ Partial Class EmployeeLoansForm
         Me.cmbDeductionSchedule.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.cmbDeductionSchedule.Name = "cmbDeductionSchedule"
         Me.cmbDeductionSchedule.Size = New System.Drawing.Size(195, 21)
-        Me.cmbDeductionSchedule.TabIndex = 364
+        Me.cmbDeductionSchedule.TabIndex = 363
         '
         'tbpHistory
         '

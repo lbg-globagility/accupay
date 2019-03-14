@@ -2,6 +2,7 @@
 
 Imports System.Collections.Generic
 Imports System.ComponentModel
+Imports AccuPay.Entity
 
 Namespace Auditing
 

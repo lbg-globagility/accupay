@@ -7,8 +7,6 @@ Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
-Imports Microsoft.Extensions.Logging
-Imports Microsoft.Extensions.Logging.Console
 Imports PayrollSys
 
 Public Class TimeEntryGenerator
@@ -28,6 +26,8 @@ Public Class TimeEntryGenerator
     Private _employeeShifts As IList(Of ShiftSchedule)
     Private _salaries As IList(Of Salary)
     Private _shiftSchedules As IList(Of EmployeeDutySchedule)
+    Private _timeAttendanceLogs As List(Of TimeAttendanceLog)
+    Private _breakTimeBrackets As List(Of BreakTimeBracket)
 
     Private _total As Integer
 
@@ -64,8 +64,12 @@ Public Class TimeEntryGenerator
         Dim agencies As IList(Of Agency) = Nothing
 
         Using context = New PayrollContext()
+
+            settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
             employees = context.Employees.
                 Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
+                Include(Function(e) e.Position).
                 ToList()
 
             agencies = context.Agencies.
@@ -131,6 +135,23 @@ Public Class TimeEntryGenerator
                 Where(Function(es) _cutoffStart <= es.DateSched AndAlso es.DateSched <= _cutoffEnd).
                 ToList()
 
+            If New TimeEntryPolicy(settings).ComputeBreakTimeLate Then
+                _timeAttendanceLogs = context.TimeAttendanceLogs.
+                                Where(Function(t) Nullable.Equals(t.OrganizationID, z_OrganizationID)).
+                                Where(Function(t) _cutoffStart <= t.WorkDay AndAlso t.WorkDay <= _cutoffEnd).
+                                ToList()
+
+                _breakTimeBrackets = context.BreakTimeBrackets.
+                                Include(Function(b) b.Division).
+                                Where(Function(b) Nullable.Equals(b.Division.OrganizationID, z_OrganizationID)).
+                                ToList()
+            Else
+                _timeAttendanceLogs = New List(Of TimeAttendanceLog)
+                _breakTimeBrackets = New List(Of BreakTimeBracket)
+            End If
+
+
+
             Dim payRates =
                 (From p In context.PayRates
                  Where p.OrganizationID.Value = z_OrganizationID AndAlso
@@ -140,7 +161,6 @@ Public Class TimeEntryGenerator
 
             payrateCalendar = New PayratesCalendar(payRates)
 
-            settings = New ListOfValueCollection(context.ListOfValues.ToList())
         End Using
 
         Dim progress = New ObservableCollection(Of Integer)
@@ -200,6 +220,14 @@ Public Class TimeEntryGenerator
             Where(Function(es) Nullable.Equals(es.EmployeeID, employee.RowID)).
             ToList()
 
+        Dim timeAttendanceLogs As IList(Of TimeAttendanceLog) = _timeAttendanceLogs.
+            Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
+            ToList()
+
+        Dim breakTimeBrackets As IList(Of BreakTimeBracket) = _breakTimeBrackets.
+            Where(Function(b) Nullable.Equals(b.DivisionID, employee.Position?.DivisionID)).
+            ToList()
+
         If employee.EmploymentStatus = "Resigned" OrElse employee.EmploymentStatus = "Terminated" Then
             Dim currentTimeEntries = previousTimeEntries.
                 Where(Function(t) _cutoffStart <= t.Date And t.Date <= _cutoffEnd)
@@ -225,6 +253,7 @@ Public Class TimeEntryGenerator
                 Dim leaves = leavesInCutoff.Where(Function(l) l.StartDate = currentDate).ToList()
                 Dim officialBusiness = officialBusinesses.FirstOrDefault(Function(o) o.StartDate = currentDate)
                 Dim dutyShiftSched = dutyShiftSchedules.FirstOrDefault(Function(es) es.DateSched = currentDate)
+                Dim currentTimeAttendanceLogs = timeAttendanceLogs.Where(Function(l) l.WorkDay = currentDate).ToList()
 
                 Dim timeEntry = dayCalculator.Compute(
                     currentDate,
@@ -235,7 +264,9 @@ Public Class TimeEntryGenerator
                     timelog,
                     overtimes,
                     officialBusiness,
-                    leaves)
+                    leaves,
+                    currentTimeAttendanceLogs,
+                    breakTimeBrackets)
 
                 timeEntries.Add(timeEntry)
 

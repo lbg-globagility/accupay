@@ -169,8 +169,6 @@ Public Class AddLoanScheduleForm
 
         End If
 
-
-
         Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
         Me.IsSaved = True
@@ -188,9 +186,56 @@ Public Class AddLoanScheduleForm
 
     End Sub
 
+    Private loanAmountBeforeTextChange As Decimal
+
+    Private loanInterestPercentageBeforeTextChange As Decimal
+
+    Private Sub txtLoanInterestPercentage_Enter(sender As Object, e As EventArgs) Handles txtLoanInterestPercentage.Enter
+
+        If Me._newLoanSchedule Is Nothing Then Return
+
+        loanInterestPercentageBeforeTextChange = Me._newLoanSchedule.DeductionPercentage
+
+    End Sub
+
+    Private Sub txtLoanInterestPercentage_Leave(sender As Object, e As EventArgs) Handles txtLoanInterestPercentage.Leave
+
+        If Me._newLoanSchedule Is Nothing Then Return
+
+        If loanInterestPercentageBeforeTextChange = Me._newLoanSchedule.DeductionPercentage Then Return
+
+        Dim totalPlusInterestRate As Decimal = 1 + (Me._newLoanSchedule.DeductionPercentage * 0.01D)
+
+        Me._newLoanSchedule.TotalLoanAmount = Me._newLoanSchedule.TotalLoanAmount * totalPlusInterestRate
+
+        UpdateBalanceAndNumberOfPayPeriod()
+
+    End Sub
+
+    Private Sub txtTotalLoanAmount_Enter(sender As Object, e As EventArgs) Handles txtTotalLoanAmount.Enter
+
+        If Me._newLoanSchedule Is Nothing Then Return
+
+        loanAmountBeforeTextChange = Me._newLoanSchedule.TotalLoanAmount
+
+    End Sub
+
     Private Sub txtTotalLoanAmount_Leave(sender As Object, e As EventArgs) _
         Handles txtTotalLoanAmount.Leave, txtDeductionAmount.Leave
 
+        If Me._newLoanSchedule Is Nothing Then Return
+
+        If sender Is txtTotalLoanAmount Then
+            If loanAmountBeforeTextChange <> Me._newLoanSchedule.TotalLoanAmount Then
+                Me._newLoanSchedule.DeductionPercentage = 0
+            End If
+        End If
+
+        UpdateBalanceAndNumberOfPayPeriod()
+
+    End Sub
+
+    Private Sub UpdateBalanceAndNumberOfPayPeriod()
         Dim totalLoanAmount = AccuMath.CommercialRound(Me._newLoanSchedule.TotalLoanAmount)
         Dim deductionAmount = AccuMath.CommercialRound(Me._newLoanSchedule.DeductionAmount)
 
@@ -201,8 +246,6 @@ Public Class AddLoanScheduleForm
         Me._newLoanSchedule.NoOfPayPeriod = numberOfPayPeriod
 
         Me._newLoanSchedule.LoanPayPeriodLeft = numberOfPayPeriod
-
-
     End Sub
 
     Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked

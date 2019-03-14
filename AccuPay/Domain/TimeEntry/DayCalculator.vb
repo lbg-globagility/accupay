@@ -43,7 +43,10 @@ Public Class DayCalculator
                             timeLog As TimeLog,
                             overtimes As IList(Of Overtime),
                             officialBusiness As OfficialBusiness,
-                            leaves As IList(Of Leave)) As TimeEntry
+                            leaves As IList(Of Leave),
+                            timeAttendanceLogs As IList(Of TimeAttendanceLog),
+                            breakTimeBrackets As IList(Of BreakTimeBracket)) As TimeEntry
+
         Dim timeEntry = oldTimeEntries.Where(Function(t) t.Date = currentDate).SingleOrDefault()
 
         If timeEntry Is Nothing Then
@@ -78,7 +81,7 @@ Public Class DayCalculator
         Dim hasWorkedLastDay = HasWorkedLastWorkingDay(currentDate, oldTimeEntries)
         Dim payrate = _payrateCalendar.Find(currentDate)
 
-        ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, oldTimeEntries, currentShift, hasWorkedLastDay)
+        ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, oldTimeEntries, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay)
         ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay)
 
         Return timeEntry
@@ -91,6 +94,8 @@ Public Class DayCalculator
                              leaves As IList(Of Leave),
                              overtimes As IList(Of Overtime),
                              oldTimeEntries As IList(Of TimeEntry),
+                             timeAttendanceLogs As IList(Of TimeAttendanceLog),
+                             breakTimeBrackets As IList(Of BreakTimeBracket),
                              currentShift As CurrentShift,
                              hasWorkedLastDay As Boolean)
         Dim previousDay = currentDate.AddDays(-1)
@@ -112,7 +117,7 @@ Public Class DayCalculator
             Dim dutyPeriod = shiftPeriod.Overlap(logPeriod)
 
             If dutyPeriod IsNot Nothing Then
-                timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift)
+                timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift, _policy.ComputeBreakTimeLate)
 
                 Dim coveredPeriod = dutyPeriod
 
@@ -125,11 +130,15 @@ Public Class DayCalculator
                         {dutyPeriod.Start, leavePeriod.Start}.Min(),
                         {dutyPeriod.End, leavePeriod.End}.Max())
 
-                    Dim leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift)
+                    Dim leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift, _policy.ComputeBreakTimeLate)
                     timeEntry.SetLeaveHours(leave.LeaveType, leaveHours)
                 End If
 
-                timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift)
+                timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate)
+
+                If _policy.ComputeBreakTimeLate Then
+                    timeEntry.LateHours += calculator.ComputeBreakTimeLateHours(coveredPeriod, currentShift, timeAttendanceLogs, breakTimeBrackets)
+                End If
 
                 If _policy.LateHoursRoundingUp Then
                     Dim lateHours = timeEntry.LateHours
@@ -143,7 +152,7 @@ Public Class DayCalculator
 
                 timeEntry = LateSchemeSkipCountHours(timeEntry, currentShift, calculator, coveredPeriod)
 
-                timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift)
+                timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate)
 
                 timeEntry.RegularHours = currentShift.WorkingHours - (timeEntry.LateHours + timeEntry.UndertimeHours)
 
@@ -152,7 +161,7 @@ Public Class DayCalculator
                         {currentShift.Start, leavePeriod.Start}.Max(),
                         {currentShift.End, leavePeriod.End}.Min())
 
-                    timeEntry.RegularHours -= coveredLeavePeriod.TotalHours
+                    timeEntry.RegularHours -= calculator.ComputeRegularHours(coveredLeavePeriod, currentShift, _policy.ComputeBreakTimeLate)
                 End If
 
                 Dim nightBreaktime As TimePeriod = Nothing
@@ -221,7 +230,7 @@ Public Class DayCalculator
                                               calculator As TimeEntryCalculator,
                                               coveredPeriod As TimePeriod) As TimeEntry
         If _lateSkipCountRounding Then
-            Dim lateMinutes = calculator.ComputeLateMinutes(coveredPeriod, currentShift)
+            Dim lateMinutes = calculator.ComputeLateMinutes(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate)
 
             Dim empGracePeriod = _employee.LateGracePeriod
             Dim empGracePeriodHrs = empGracePeriod / _minutesPerHour
@@ -374,8 +383,8 @@ Public Class DayCalculator
             Dim dawnDiffPeriod = GetNightDiffPeriod(previousDay)
 
             timeEntry.NightDiffHours =
-                calculator.ComputeNightDiffHours(dutyPeriod, currentShift, nightDiffPeriod, _policy.HasNightBreaktime) +
-                calculator.ComputeNightDiffHours(dutyPeriod, currentShift, dawnDiffPeriod, _policy.HasNightBreaktime)
+                calculator.ComputeNightDiffHours(dutyPeriod, currentShift, nightDiffPeriod, _policy.HasNightBreaktime, _policy.ComputeBreakTimeLate) +
+                calculator.ComputeNightDiffHours(dutyPeriod, currentShift, dawnDiffPeriod, _policy.HasNightBreaktime, _policy.ComputeBreakTimeLate)
 
             timeEntry.NightDiffOTHours = overtimes.Sum(
                 Function(o) calculator.ComputeNightDiffOTHours(logPeriod, o, currentShift, nightDiffPeriod, nightBreaktime) +
@@ -453,7 +462,7 @@ Public Class DayCalculator
                 leaveHours = 8
             Else
                 Dim leavePeriod = GetLeavePeriod(leave, currentShift)
-                leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift)
+                leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift, _policy.ComputeBreakTimeLate)
             End If
 
             timeEntry.SetLeaveHours(leave.LeaveType, leaveHours)

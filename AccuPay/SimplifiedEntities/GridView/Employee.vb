@@ -18,15 +18,15 @@ Namespace Global.AccuPay.SimplifiedEntities.GridView
         Public Property Image As Byte() Implements IEmployeeBase.Image
 
         Public Function FullName() As String
-            Return FirstName + " " + LastName
+            Return FirstName & " " & LastName
         End Function
 
         Public Function FullNameWithMiddleName() As String
-            Return FirstName + " " + If(String.IsNullOrWhiteSpace(MiddleName), "", MiddleName + " ") + LastName
+            Return FirstName & " " & If(String.IsNullOrWhiteSpace(MiddleName), "", MiddleName & " ") & LastName
         End Function
 
         Public Function FullNameWithMiddleNameInitial() As String
-            Return FirstName + " " + If(String.IsNullOrWhiteSpace(MiddleName), "", MiddleName(0) + ". ") + LastName
+            Return FirstName & " " & If(String.IsNullOrWhiteSpace(MiddleName), "", MiddleName(0) & ". ") + LastName
         End Function
 
         Public Overrides Function ToString() As String

@@ -1,0 +1,24 @@
+CREATE TABLE `employeetimeattendancelog` (
+	`RowID` INT(10) NOT NULL AUTO_INCREMENT,
+	`OrganizationID` INT(10) NOT NULL,
+	`Created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`CreatedBy` INT(10) NULL DEFAULT NULL,
+	`LastUpd` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`LastUpdBy` INT(10) NULL DEFAULT NULL,
+	`EmployeeID` INT(10) NOT NULL,
+	`ImportNumber` VARCHAR(100) NULL DEFAULT NULL,
+	`TimeStamp` DATETIME NOT NULL,
+	`IsTimeIn` TINYINT(1) NULL DEFAULT NULL,
+	`WorkDay` DATE NOT NULL,
+	PRIMARY KEY (`RowID`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+
+
+ALTER TABLE `employeetimeattendancelog`
+	ADD CONSTRAINT `FK_employeetimeattendancelog_organization_OrganizationID` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`) ON DELETE RESTRICT,
+	ADD CONSTRAINT `FK_employeetimeattendancelog_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_employeetimeattendancelog_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_employeetimeattendancelog_employee_EmployeeID` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE;
