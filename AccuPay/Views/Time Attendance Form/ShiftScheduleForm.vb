@@ -296,7 +296,7 @@ Public Class ShiftScheduleForm
         If ts.HasValue Then
             Return ts.Value.ToString("hh\:mm")
         Else
-            Return String.Empty
+            Return Nothing
         End If
     End Function
 
