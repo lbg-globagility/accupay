@@ -697,6 +697,8 @@ Public Class ShiftScheduleForm
     Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click, Button1.Click
 
         Dim _currCell = grid.CurrentCell
+        Dim _currRowIndex = _currCell.RowIndex
+        Dim _currColIndex = _currCell.ColumnIndex
 
         Dim start As Date = dtpDateFrom.Value.Date
         Dim finish As Date = dtpDateTo.Value.Date
@@ -734,7 +736,11 @@ Public Class ShiftScheduleForm
 
         RefreshDataSource(grid, _newSource)
 
-        If _currCell IsNot Nothing Then grid.CurrentCell = _currCell
+        Dim rowCount = grid.Rows.Count
+
+        If _currCell IsNot Nothing _
+            And _currRowIndex > -1 _
+            And rowCount > _currRowIndex Then grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
     End Sub
 
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
