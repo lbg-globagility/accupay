@@ -24,7 +24,7 @@ Public Class ShiftScheduleForm
 
     Private _dutyShiftPolicy As DutyShiftPolicy
 
-    Private _dataSource As List(Of ShiftScheduleModel)
+    Private _originDataSource As List(Of ShiftScheduleModel)
 
 #End Region
 
@@ -253,6 +253,15 @@ Public Class ShiftScheduleForm
         SendKeys.Send("{TAB}")
     End Sub
 
+    Private Sub AffectedRows(_newSource As List(Of ShiftScheduleModel))
+        Dim changesCount = _newSource.Where(Function(data) data.HasChanged).Count
+        labelAffectedRows.Text = $"Affected rows : {changesCount}"
+    End Sub
+
+    Private Sub NoAffectedRows()
+        labelAffectedRows.Text = labelAffectedRows.AccessibleDescription
+    End Sub
+
 #End Region
 
 #Region "Functions"
@@ -394,7 +403,9 @@ Public Class ShiftScheduleForm
                                 Dim _cell = dgvRow.Cells(Column6.Name)
                                 Dim isDefaultValue = _cell.Value Is Nothing
                                 Dim isApplied = Convert.ToString(_cell.Value) = ENABLED_TEXT
-                                Return isApplied Or isDefaultValue
+                                Dim _satisfied = isApplied Or isDefaultValue
+
+                                Return _satisfied
                             End Function
 
             _weekCycleRows = _weekCycleRows.Where(Function(r) satisfied(r))
@@ -685,13 +696,12 @@ Public Class ShiftScheduleForm
 
     Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click, Button1.Click
 
+        Dim _currCell = grid.CurrentCell
+
         Dim start As Date = dtpDateFrom.Value.Date
         Dim finish As Date = dtpDateTo.Value.Date
 
-        Dim _newSource = New List(Of ShiftScheduleModel)
-        For Each r In _dataSource
-            _newSource.Add(r)
-        Next
+        Dim _newSource = ConvertGridRowsToShiftScheduleModels(grid)
 
         If tcSchedule.SelectedTab Is tabRange Then
             For Each ssm In _newSource
@@ -714,14 +724,17 @@ Public Class ShiftScheduleForm
                     For Each ssm In _update
                         ApplyChangesToModel(ssm, w)
                     Next
-
                 Next
 
             End If
 
         End If
 
+        AffectedRows(_newSource)
+
         RefreshDataSource(grid, _newSource)
+
+        If _currCell IsNot Nothing Then grid.CurrentCell = _currCell
     End Sub
 
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
@@ -751,6 +764,8 @@ Public Class ShiftScheduleForm
                 Next
 
                 ZebraliseEmployeeRows()
+
+                NoAffectedRows()
             Catch ex As Exception
                 logger.Error("ShiftScheduleSaving", ex)
                 Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
@@ -777,8 +792,12 @@ Public Class ShiftScheduleForm
 
         organizationId = z_OrganizationID
 
-        grid.AutoGenerateColumns = False
-        gridWeek.AutoGenerateColumns = False
+        Dim grids = {grid, gridWeek}
+        For Each dGrid In grids
+            dGrid.AutoGenerateColumns = False
+            dGrid.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText
+
+        Next
 
         EmployeeTreeView1.SwitchOrganization(organizationId)
 
@@ -929,8 +948,10 @@ Public Class ShiftScheduleForm
 
         End If
 
-        _dataSource = Await RangeApply(start, finish, CreatedResult(True))
-        RefreshDataSource(grid, _dataSource)
+        _originDataSource = Await RangeApply(start, finish, CreatedResult(True))
+        RefreshDataSource(grid, _originDataSource)
+
+        NoAffectedRows()
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDiscard1.Click
@@ -965,7 +986,7 @@ Public Class ShiftScheduleForm
         Dim avoidColumns = {Column1.Name, Column6.Name}
 
         Dim gridWeekEditableColumns = gridWeek.Columns.OfType(Of DataGridViewColumn).
-            Where(Function(col) Not avoidColumns.Any(Function(s) s = col.Name)).
+            Where(Function(col) Not avoidColumns.Any(Function(colName) colName = col.Name)).
             Where(Function(col) col.Visible)
 
         If gridWeek.Columns(e.ColumnIndex).Name = Column6.Name Then
@@ -978,21 +999,21 @@ Public Class ShiftScheduleForm
                 Or _cellButton.Value Is Nothing Then
                 _cellButton.Value = DISABLED_TEXT
 
-                With _cellButton.Style
+                'With _cellButton.Style
+                With _currRow.DefaultCellStyle
                     .ForeColor = Color.Silver
                     '.BackColor = _color
 
                     .SelectionForeColor = Color.White
-                    .SelectionBackColor = Color.Gray
-
+                    .SelectionBackColor = Color.LightGray
                 End With
 
                 For Each col In gridWeekEditableColumns
                     _currRow.Cells(col.Name).ReadOnly = True
                 Next
             Else
-                _cellButton.Style = Nothing
                 _cellButton.Value = ENABLED_TEXT
+                _cellButton.Style = Nothing
 
                 For Each col In gridWeekEditableColumns
                     _currRow.Cells(col.Name).ReadOnly = False
@@ -1002,6 +1023,21 @@ Public Class ShiftScheduleForm
             End If
 
         End If
+    End Sub
+
+    Private Sub gridWeek_KeyDown(sender As Object, e As KeyEventArgs) Handles gridWeek.KeyDown
+        Console.WriteLine("gridWeek_KeyDown.KeyCode : {0}", e.KeyCode)
+        Console.WriteLine("gridWeek_KeyDown.KeyData : {0}", e.KeyData)
+        Console.WriteLine("gridWeek_KeyDown.KeyValue : {0}", e.KeyValue)
+
+        'Dim keyData = e.KeyData
+        'Dim fsdfsd = Keys.ControlKey And Keys.V
+        'If keyData = fsdfsd Then Console.WriteLine("Clipboard.GetText : {0}", Clipboard.GetText)
+    End Sub
+
+    Private Sub gridWeek_KeyPress(sender As Object, e As KeyPressEventArgs) Handles gridWeek.KeyPress
+        Console.WriteLine("gridWeek_KeyPress : {0}", e.KeyChar)
+
     End Sub
 
 #End Region
