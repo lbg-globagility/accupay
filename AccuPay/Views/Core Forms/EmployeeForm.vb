@@ -3,15 +3,13 @@
 'Imports Emgu.CV.OCR
 'Imports Emgu.CV.
 'Imports Tesseract.Interop
-Imports System.Text.RegularExpressions
-Imports System.Data.Entity
-Imports MySql.Data.MySqlClient
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
+Imports MySql.Data.MySqlClient
 
 Public Class EmployeeForm
 

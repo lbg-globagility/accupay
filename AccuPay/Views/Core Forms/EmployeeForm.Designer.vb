@@ -1503,140 +1503,140 @@ Partial Class EmployeeForm
         Me.Button3 = New System.Windows.Forms.Button()
         Me.bgworkImporting = New System.ComponentModel.BackgroundWorker()
         Me.Panel7 = New System.Windows.Forms.Panel()
-        Me.tabctrlemp.SuspendLayout()
-        Me.tbpempchklist.SuspendLayout()
-        Me.ToolStrip15.SuspendLayout()
-        CType(Me.pbEmpPicChk, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.tbpEmployee.SuspendLayout()
-        CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SplitContainer2.Panel1.SuspendLayout()
-        Me.SplitContainer2.Panel2.SuspendLayout()
-        Me.SplitContainer2.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
-        Me.Panel1.SuspendLayout()
-        Me.GroupBox2.SuspendLayout()
-        Me.TabControl3.SuspendLayout()
-        Me.tbpleavebal.SuspendLayout()
-        Me.tbpleaveallow.SuspendLayout()
-        Me.tbpleavepayp.SuspendLayout()
-        CType(Me.pbemppic, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvDepen, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip4.SuspendLayout()
-        Me.ToolStrip1.SuspendLayout()
-        Me.tbpSalary.SuspendLayout()
-        Me.Panel8.SuspendLayout()
-        CType(Me.pbEmpPicSal, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.grpbasicsalaryaddeduction.SuspendLayout()
-        CType(Me.dgvemployeesalary, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip13.SuspendLayout()
-        Me.tbpAwards.SuspendLayout()
-        Me.Panel17.SuspendLayout()
-        CType(Me.pbEmpPicAwar, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempawar, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip2.SuspendLayout()
-        Me.tbpCertifications.SuspendLayout()
-        Me.Panel16.SuspendLayout()
-        CType(Me.pbEmpPicCert, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempcert, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip3.SuspendLayout()
-        Me.tbpLeave.SuspendLayout()
-        Me.Panel15.SuspendLayout()
-        CType(Me.pbEmpPicLeave, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabControl4.SuspendLayout()
-        Me.TabPage7.SuspendLayout()
-        Me.TabPage6.SuspendLayout()
-        Me.TabPage8.SuspendLayout()
-        CType(Me.pbempleave, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempleave, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip5.SuspendLayout()
-        Me.tbpDiscipAct.SuspendLayout()
-        Me.Panel14.SuspendLayout()
-        CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvDisciplinaryList, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip8.SuspendLayout()
-        Me.tbpEducBG.SuspendLayout()
-        Me.Panel13.SuspendLayout()
-        CType(Me.pbEmpPicEduc, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvEducback, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip9.SuspendLayout()
-        Me.tbpPrevEmp.SuspendLayout()
-        Me.Panel12.SuspendLayout()
-        CType(Me.pbEmpPicPrevEmp, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.grpDetails.SuspendLayout()
-        CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvListCompany, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip10.SuspendLayout()
-        Me.tbpPromotion.SuspendLayout()
-        Me.Panel11.SuspendLayout()
-        CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip11.SuspendLayout()
-        Me.tbpLoans.SuspendLayout()
-        Me.Panel10.SuspendLayout()
-        CType(Me.pbEmpPicLoan, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvLoanList, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip12.SuspendLayout()
-        Me.tbpLoanHist.SuspendLayout()
-        Me.Panel9.SuspendLayout()
-        Me.GroupBox3.SuspendLayout()
-        CType(Me.pbEmpPicLoanhist, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvloanhisto, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip14.SuspendLayout()
-        Me.tbpPayslip.SuspendLayout()
-        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SplitContainer3.Panel1.SuspendLayout()
-        Me.SplitContainer3.Panel2.SuspendLayout()
-        Me.SplitContainer3.SuspendLayout()
-        CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.PanelPayslip.SuspendLayout()
-        CType(Me.dgvempallowans, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvemploan, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempbonus, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvpaystubitm, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvetent, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempsal, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabControl1.SuspendLayout()
-        Me.TabPage1.SuspendLayout()
-        Me.TabPage4.SuspendLayout()
-        Me.TabPage5.SuspendLayout()
-        CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip16.SuspendLayout()
-        Me.tbpempallow.SuspendLayout()
-        Me.Panel6.SuspendLayout()
-        CType(Me.pbEmpPicAllow, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip17.SuspendLayout()
-        Me.tbpEmpOT.SuspendLayout()
-        Me.Panel5.SuspendLayout()
-        CType(Me.pbEmpPicEmpOT, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.pbempEmpOT, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempOT, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip18.SuspendLayout()
-        Me.tbpOBF.SuspendLayout()
-        Me.Panel4.SuspendLayout()
-        CType(Me.pbEmpPicOBF, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.pbempOBF, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvOBF, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip19.SuspendLayout()
-        Me.tbpBonus.SuspendLayout()
-        Me.Panel3.SuspendLayout()
-        CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip20.SuspendLayout()
-        Me.tbpAttachment.SuspendLayout()
-        Me.Panel2.SuspendLayout()
-        CType(Me.pbEmpPicAtta, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempatta, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.pbatta, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip21.SuspendLayout()
-        Me.tbpNewSalary.SuspendLayout()
-        Me.TabControl2.SuspendLayout()
-        Me.TabPage2.SuspendLayout()
-        Me.TabPage3.SuspendLayout()
-        CType(Me.dgvEmp, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.errprovidSal, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Panel7.SuspendLayout()
-        Me.SuspendLayout()
+        Me.tabctrlemp.SuspendLayout
+        Me.tbpempchklist.SuspendLayout
+        Me.ToolStrip15.SuspendLayout
+        CType(Me.pbEmpPicChk, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.tbpEmployee.SuspendLayout
+        CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.SplitContainer2.Panel1.SuspendLayout
+        Me.SplitContainer2.Panel2.SuspendLayout
+        Me.SplitContainer2.SuspendLayout
+        Me.GroupBox1.SuspendLayout
+        Me.Panel1.SuspendLayout
+        Me.GroupBox2.SuspendLayout
+        Me.TabControl3.SuspendLayout
+        Me.tbpleavebal.SuspendLayout
+        Me.tbpleaveallow.SuspendLayout
+        Me.tbpleavepayp.SuspendLayout
+        CType(Me.pbemppic, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvDepen, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip4.SuspendLayout
+        Me.ToolStrip1.SuspendLayout
+        Me.tbpSalary.SuspendLayout
+        Me.Panel8.SuspendLayout
+        CType(Me.pbEmpPicSal, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.grpbasicsalaryaddeduction.SuspendLayout
+        CType(Me.dgvemployeesalary, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip13.SuspendLayout
+        Me.tbpAwards.SuspendLayout
+        Me.Panel17.SuspendLayout
+        CType(Me.pbEmpPicAwar, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvempawar, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip2.SuspendLayout
+        Me.tbpCertifications.SuspendLayout
+        Me.Panel16.SuspendLayout
+        CType(Me.pbEmpPicCert, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvempcert, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip3.SuspendLayout
+        Me.tbpLeave.SuspendLayout
+        Me.Panel15.SuspendLayout
+        CType(Me.pbEmpPicLeave, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.TabControl4.SuspendLayout
+        Me.TabPage7.SuspendLayout
+        Me.TabPage6.SuspendLayout
+        Me.TabPage8.SuspendLayout
+        CType(Me.pbempleave, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvempleave, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip5.SuspendLayout
+        Me.tbpDiscipAct.SuspendLayout
+        Me.Panel14.SuspendLayout
+        CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvDisciplinaryList, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip8.SuspendLayout
+        Me.tbpEducBG.SuspendLayout
+        Me.Panel13.SuspendLayout
+        CType(Me.pbEmpPicEduc, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvEducback, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip9.SuspendLayout
+        Me.tbpPrevEmp.SuspendLayout
+        Me.Panel12.SuspendLayout
+        CType(Me.pbEmpPicPrevEmp, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.grpDetails.SuspendLayout
+        CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvListCompany, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip10.SuspendLayout
+        Me.tbpPromotion.SuspendLayout
+        Me.Panel11.SuspendLayout
+        CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip11.SuspendLayout
+        Me.tbpLoans.SuspendLayout
+        Me.Panel10.SuspendLayout
+        CType(Me.pbEmpPicLoan, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvLoanList, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip12.SuspendLayout
+        Me.tbpLoanHist.SuspendLayout
+        Me.Panel9.SuspendLayout
+        Me.GroupBox3.SuspendLayout
+        CType(Me.pbEmpPicLoanhist, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvloanhisto, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip14.SuspendLayout
+        Me.tbpPayslip.SuspendLayout
+        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.SplitContainer3.Panel1.SuspendLayout
+        Me.SplitContainer3.Panel2.SuspendLayout
+        Me.SplitContainer3.SuspendLayout
+        CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.PanelPayslip.SuspendLayout
+        CType(Me.dgvempallowans, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvemploan, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvempbonus, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvpaystubitm, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvetent, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvempsal, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.TabControl1.SuspendLayout
+        Me.TabPage1.SuspendLayout
+        Me.TabPage4.SuspendLayout
+        Me.TabPage5.SuspendLayout
+        CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip16.SuspendLayout
+        Me.tbpempallow.SuspendLayout
+        Me.Panel6.SuspendLayout
+        CType(Me.pbEmpPicAllow, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip17.SuspendLayout
+        Me.tbpEmpOT.SuspendLayout
+        Me.Panel5.SuspendLayout
+        CType(Me.pbEmpPicEmpOT, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.pbempEmpOT, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvempOT, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip18.SuspendLayout
+        Me.tbpOBF.SuspendLayout
+        Me.Panel4.SuspendLayout
+        CType(Me.pbEmpPicOBF, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.pbempOBF, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvOBF, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip19.SuspendLayout
+        Me.tbpBonus.SuspendLayout
+        Me.Panel3.SuspendLayout
+        CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip20.SuspendLayout
+        Me.tbpAttachment.SuspendLayout
+        Me.Panel2.SuspendLayout
+        CType(Me.pbEmpPicAtta, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvempatta, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.pbatta, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip21.SuspendLayout
+        Me.tbpNewSalary.SuspendLayout
+        Me.TabControl2.SuspendLayout
+        Me.TabPage2.SuspendLayout
+        Me.TabPage3.SuspendLayout
+        CType(Me.dgvEmp, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.errprovidSal, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.Panel7.SuspendLayout
+        Me.SuspendLayout
         '
         'txtEmpID
         '
@@ -2271,7 +2271,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 430)
-        Me.SplitContainer2.SplitterDistance = 275
+        Me.SplitContainer2.SplitterDistance = 272
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3535,7 +3535,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 121)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 124)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -15635,211 +15635,211 @@ Partial Class EmployeeForm
         Me.Text = "employee"
         Me.tabctrlemp.ResumeLayout(False)
         Me.tbpempchklist.ResumeLayout(False)
-        Me.tbpempchklist.PerformLayout()
+        Me.tbpempchklist.PerformLayout
         Me.ToolStrip15.ResumeLayout(False)
-        Me.ToolStrip15.PerformLayout()
-        CType(Me.pbEmpPicChk, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip15.PerformLayout
+        CType(Me.pbEmpPicChk, System.ComponentModel.ISupportInitialize).EndInit
         Me.tbpEmployee.ResumeLayout(False)
-        Me.tbpEmployee.PerformLayout()
+        Me.tbpEmployee.PerformLayout
         Me.SplitContainer2.Panel1.ResumeLayout(False)
-        Me.SplitContainer2.Panel1.PerformLayout()
+        Me.SplitContainer2.Panel1.PerformLayout
         Me.SplitContainer2.Panel2.ResumeLayout(False)
-        Me.SplitContainer2.Panel2.PerformLayout()
-        CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer2.Panel2.PerformLayout
+        CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit
         Me.SplitContainer2.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
+        Me.GroupBox1.PerformLayout
         Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
+        Me.Panel1.PerformLayout
         Me.GroupBox2.ResumeLayout(False)
-        Me.GroupBox2.PerformLayout()
+        Me.GroupBox2.PerformLayout
         Me.TabControl3.ResumeLayout(False)
         Me.tbpleavebal.ResumeLayout(False)
-        Me.tbpleavebal.PerformLayout()
+        Me.tbpleavebal.PerformLayout
         Me.tbpleaveallow.ResumeLayout(False)
-        Me.tbpleaveallow.PerformLayout()
+        Me.tbpleaveallow.PerformLayout
         Me.tbpleavepayp.ResumeLayout(False)
-        Me.tbpleavepayp.PerformLayout()
-        CType(Me.pbemppic, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvDepen, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tbpleavepayp.PerformLayout
+        CType(Me.pbemppic, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvDepen, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip4.ResumeLayout(False)
-        Me.ToolStrip4.PerformLayout()
+        Me.ToolStrip4.PerformLayout
         Me.ToolStrip1.ResumeLayout(False)
-        Me.ToolStrip1.PerformLayout()
+        Me.ToolStrip1.PerformLayout
         Me.tbpSalary.ResumeLayout(False)
-        Me.tbpSalary.PerformLayout()
+        Me.tbpSalary.PerformLayout
         Me.Panel8.ResumeLayout(False)
-        Me.Panel8.PerformLayout()
-        CType(Me.pbEmpPicSal, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel8.PerformLayout
+        CType(Me.pbEmpPicSal, System.ComponentModel.ISupportInitialize).EndInit
         Me.grpbasicsalaryaddeduction.ResumeLayout(False)
-        Me.grpbasicsalaryaddeduction.PerformLayout()
-        CType(Me.dgvemployeesalary, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.grpbasicsalaryaddeduction.PerformLayout
+        CType(Me.dgvemployeesalary, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip13.ResumeLayout(False)
-        Me.ToolStrip13.PerformLayout()
+        Me.ToolStrip13.PerformLayout
         Me.tbpAwards.ResumeLayout(False)
-        Me.tbpAwards.PerformLayout()
+        Me.tbpAwards.PerformLayout
         Me.Panel17.ResumeLayout(False)
-        Me.Panel17.PerformLayout()
-        CType(Me.pbEmpPicAwar, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempawar, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel17.PerformLayout
+        CType(Me.pbEmpPicAwar, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvempawar, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip2.ResumeLayout(False)
-        Me.ToolStrip2.PerformLayout()
+        Me.ToolStrip2.PerformLayout
         Me.tbpCertifications.ResumeLayout(False)
-        Me.tbpCertifications.PerformLayout()
+        Me.tbpCertifications.PerformLayout
         Me.Panel16.ResumeLayout(False)
-        Me.Panel16.PerformLayout()
-        CType(Me.pbEmpPicCert, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempcert, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel16.PerformLayout
+        CType(Me.pbEmpPicCert, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvempcert, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip3.ResumeLayout(False)
-        Me.ToolStrip3.PerformLayout()
+        Me.ToolStrip3.PerformLayout
         Me.tbpLeave.ResumeLayout(False)
-        Me.tbpLeave.PerformLayout()
+        Me.tbpLeave.PerformLayout
         Me.Panel15.ResumeLayout(False)
-        Me.Panel15.PerformLayout()
-        CType(Me.pbEmpPicLeave, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel15.PerformLayout
+        CType(Me.pbEmpPicLeave, System.ComponentModel.ISupportInitialize).EndInit
         Me.TabControl4.ResumeLayout(False)
         Me.TabPage7.ResumeLayout(False)
-        Me.TabPage7.PerformLayout()
+        Me.TabPage7.PerformLayout
         Me.TabPage6.ResumeLayout(False)
-        Me.TabPage6.PerformLayout()
+        Me.TabPage6.PerformLayout
         Me.TabPage8.ResumeLayout(False)
-        Me.TabPage8.PerformLayout()
-        CType(Me.pbempleave, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempleave, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage8.PerformLayout
+        CType(Me.pbempleave, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvempleave, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip5.ResumeLayout(False)
-        Me.ToolStrip5.PerformLayout()
+        Me.ToolStrip5.PerformLayout
         Me.tbpDiscipAct.ResumeLayout(False)
-        Me.tbpDiscipAct.PerformLayout()
+        Me.tbpDiscipAct.PerformLayout
         Me.Panel14.ResumeLayout(False)
-        Me.Panel14.PerformLayout()
-        CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvDisciplinaryList, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel14.PerformLayout
+        CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvDisciplinaryList, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip8.ResumeLayout(False)
-        Me.ToolStrip8.PerformLayout()
+        Me.ToolStrip8.PerformLayout
         Me.tbpEducBG.ResumeLayout(False)
-        Me.tbpEducBG.PerformLayout()
+        Me.tbpEducBG.PerformLayout
         Me.Panel13.ResumeLayout(False)
-        Me.Panel13.PerformLayout()
-        CType(Me.pbEmpPicEduc, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvEducback, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel13.PerformLayout
+        CType(Me.pbEmpPicEduc, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvEducback, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip9.ResumeLayout(False)
-        Me.ToolStrip9.PerformLayout()
+        Me.ToolStrip9.PerformLayout
         Me.tbpPrevEmp.ResumeLayout(False)
-        Me.tbpPrevEmp.PerformLayout()
+        Me.tbpPrevEmp.PerformLayout
         Me.Panel12.ResumeLayout(False)
-        Me.Panel12.PerformLayout()
-        CType(Me.pbEmpPicPrevEmp, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel12.PerformLayout
+        CType(Me.pbEmpPicPrevEmp, System.ComponentModel.ISupportInitialize).EndInit
         Me.grpDetails.ResumeLayout(False)
-        Me.grpDetails.PerformLayout()
-        CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvListCompany, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.grpDetails.PerformLayout
+        CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvListCompany, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip10.ResumeLayout(False)
-        Me.ToolStrip10.PerformLayout()
+        Me.ToolStrip10.PerformLayout
         Me.tbpPromotion.ResumeLayout(False)
-        Me.tbpPromotion.PerformLayout()
+        Me.tbpPromotion.PerformLayout
         Me.Panel11.ResumeLayout(False)
-        Me.Panel11.PerformLayout()
-        CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel11.PerformLayout
+        CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip11.ResumeLayout(False)
-        Me.ToolStrip11.PerformLayout()
+        Me.ToolStrip11.PerformLayout
         Me.tbpLoans.ResumeLayout(False)
-        Me.tbpLoans.PerformLayout()
+        Me.tbpLoans.PerformLayout
         Me.Panel10.ResumeLayout(False)
-        Me.Panel10.PerformLayout()
-        CType(Me.pbEmpPicLoan, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvLoanList, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel10.PerformLayout
+        CType(Me.pbEmpPicLoan, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvLoanList, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip12.ResumeLayout(False)
-        Me.ToolStrip12.PerformLayout()
+        Me.ToolStrip12.PerformLayout
         Me.tbpLoanHist.ResumeLayout(False)
-        Me.tbpLoanHist.PerformLayout()
+        Me.tbpLoanHist.PerformLayout
         Me.Panel9.ResumeLayout(False)
-        Me.Panel9.PerformLayout()
+        Me.Panel9.PerformLayout
         Me.GroupBox3.ResumeLayout(False)
-        Me.GroupBox3.PerformLayout()
-        CType(Me.pbEmpPicLoanhist, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvloanhisto, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox3.PerformLayout
+        CType(Me.pbEmpPicLoanhist, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvloanhisto, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip14.ResumeLayout(False)
-        Me.ToolStrip14.PerformLayout()
+        Me.ToolStrip14.PerformLayout
         Me.tbpPayslip.ResumeLayout(False)
-        Me.tbpPayslip.PerformLayout()
+        Me.tbpPayslip.PerformLayout
         Me.SplitContainer3.Panel1.ResumeLayout(False)
-        Me.SplitContainer3.Panel1.PerformLayout()
+        Me.SplitContainer3.Panel1.PerformLayout
         Me.SplitContainer3.Panel2.ResumeLayout(False)
-        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).EndInit
         Me.SplitContainer3.ResumeLayout(False)
-        CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).EndInit
         Me.PanelPayslip.ResumeLayout(False)
-        Me.PanelPayslip.PerformLayout()
-        CType(Me.dgvempallowans, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvemploan, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempbonus, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvpaystubitm, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvetent, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempsal, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.PanelPayslip.PerformLayout
+        CType(Me.dgvempallowans, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvemploan, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvempbonus, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvpaystubitm, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvetent, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvempsal, System.ComponentModel.ISupportInitialize).EndInit
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout()
+        Me.TabPage1.PerformLayout
         Me.TabPage4.ResumeLayout(False)
-        Me.TabPage4.PerformLayout()
+        Me.TabPage4.PerformLayout
         Me.TabPage5.ResumeLayout(False)
-        Me.TabPage5.PerformLayout()
-        CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage5.PerformLayout
+        CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip16.ResumeLayout(False)
-        Me.ToolStrip16.PerformLayout()
+        Me.ToolStrip16.PerformLayout
         Me.tbpempallow.ResumeLayout(False)
-        Me.tbpempallow.PerformLayout()
+        Me.tbpempallow.PerformLayout
         Me.Panel6.ResumeLayout(False)
-        Me.Panel6.PerformLayout()
-        CType(Me.pbEmpPicAllow, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel6.PerformLayout
+        CType(Me.pbEmpPicAllow, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip17.ResumeLayout(False)
-        Me.ToolStrip17.PerformLayout()
+        Me.ToolStrip17.PerformLayout
         Me.tbpEmpOT.ResumeLayout(False)
-        Me.tbpEmpOT.PerformLayout()
+        Me.tbpEmpOT.PerformLayout
         Me.Panel5.ResumeLayout(False)
-        Me.Panel5.PerformLayout()
-        CType(Me.pbEmpPicEmpOT, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.pbempEmpOT, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempOT, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel5.PerformLayout
+        CType(Me.pbEmpPicEmpOT, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.pbempEmpOT, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvempOT, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip18.ResumeLayout(False)
-        Me.ToolStrip18.PerformLayout()
+        Me.ToolStrip18.PerformLayout
         Me.tbpOBF.ResumeLayout(False)
-        Me.tbpOBF.PerformLayout()
+        Me.tbpOBF.PerformLayout
         Me.Panel4.ResumeLayout(False)
-        Me.Panel4.PerformLayout()
-        CType(Me.pbEmpPicOBF, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.pbempOBF, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvOBF, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel4.PerformLayout
+        CType(Me.pbEmpPicOBF, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.pbempOBF, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvOBF, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip19.ResumeLayout(False)
-        Me.ToolStrip19.PerformLayout()
+        Me.ToolStrip19.PerformLayout
         Me.tbpBonus.ResumeLayout(False)
-        Me.tbpBonus.PerformLayout()
+        Me.tbpBonus.PerformLayout
         Me.Panel3.ResumeLayout(False)
-        Me.Panel3.PerformLayout()
-        CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel3.PerformLayout
+        CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip20.ResumeLayout(False)
-        Me.ToolStrip20.PerformLayout()
+        Me.ToolStrip20.PerformLayout
         Me.tbpAttachment.ResumeLayout(False)
-        Me.tbpAttachment.PerformLayout()
+        Me.tbpAttachment.PerformLayout
         Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
-        CType(Me.pbEmpPicAtta, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempatta, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.pbatta, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel2.PerformLayout
+        CType(Me.pbEmpPicAtta, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvempatta, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.pbatta, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip21.ResumeLayout(False)
-        Me.ToolStrip21.PerformLayout()
+        Me.ToolStrip21.PerformLayout
         Me.tbpNewSalary.ResumeLayout(False)
         Me.TabControl2.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
-        Me.TabPage2.PerformLayout()
+        Me.TabPage2.PerformLayout
         Me.TabPage3.ResumeLayout(False)
-        Me.TabPage3.PerformLayout()
-        CType(Me.dgvEmp, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.errprovidSal, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage3.PerformLayout
+        CType(Me.dgvEmp, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.errprovidSal, System.ComponentModel.ISupportInitialize).EndInit
         Me.Panel7.ResumeLayout(False)
-        Me.Panel7.PerformLayout()
+        Me.Panel7.PerformLayout
         Me.ResumeLayout(False)
 
     End Sub

@@ -61,6 +61,14 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property FullDivisionName As String
+            Get
+                Dim parentName = If(ParentDivision Is Nothing, "", ParentDivision.Name & " - ")
+
+                Return parentName & Name
+            End Get
+        End Property
+
         Public Function IsParent(division As Division) As Boolean
             Return Nullable.Equals(ParentDivisionID, division.RowID)
         End Function

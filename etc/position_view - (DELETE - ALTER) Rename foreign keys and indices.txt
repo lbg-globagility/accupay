@@ -1,0 +1,36 @@
+DELETE FROM position_view WHERE (SELECT RowID FROM view WHERE RowID = position_view.ViewID) IS NULL;
+
+ALTER TABLE `position_view`
+	DROP FOREIGN KEY IF EXISTS `FK_position_view_organization`,
+	DROP FOREIGN KEY IF EXISTS `FK_position_view_position`,
+	DROP FOREIGN KEY IF EXISTS `FK_position_view_user`,
+	DROP FOREIGN KEY IF EXISTS `FK_position_view_user_2`,
+	DROP FOREIGN KEY IF EXISTS `FK_position_view_view`,
+	DROP FOREIGN KEY IF EXISTS `FK_position_view_organization_OrganizationID`,
+	DROP FOREIGN KEY IF EXISTS `FK_position_view_position_PositionID`,
+	DROP FOREIGN KEY IF EXISTS `FK_position_view_user_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_position_view_user_LastUpdBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_position_view_view_ViewID`;
+ALTER TABLE `position_view`
+	ADD CONSTRAINT `FK_position_view_organization_OrganizationID` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
+	ADD CONSTRAINT `FK_position_view_position_PositionID` FOREIGN KEY (`PositionID`) REFERENCES `position` (`RowID`),
+	ADD CONSTRAINT `FK_position_view_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_position_view_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_position_view_view_ViewID` FOREIGN KEY (`ViewID`) REFERENCES `view` (`RowID`);
+
+ALTER TABLE `position_view`
+	DROP INDEX IF EXISTS `Index 7`,
+	DROP INDEX IF EXISTS `AK_position_view_PositionID_ViewID_OrganizationID`,
+	ADD UNIQUE INDEX `AK_position_view_PositionID_ViewID_OrganizationID` (`PositionID`, `ViewID`, `OrganizationID`),
+	DROP INDEX IF EXISTS `FK_position_view_view`,
+	DROP INDEX IF EXISTS `FK_position_view_ViewID`,
+	ADD INDEX `FK_position_view_ViewID` (`ViewID`),
+	DROP INDEX IF EXISTS `FK_position_view_organization`,
+	DROP INDEX IF EXISTS `FK_position_view_organization_OrganizationID`,
+	ADD INDEX `FK_position_view_organization_OrganizationID` (`OrganizationID`),
+	DROP INDEX IF EXISTS `FK_position_view_user`,
+	DROP INDEX IF EXISTS `FK_position_view_user_CreatedBy`,
+	ADD INDEX `FK_position_view_user_CreatedBy` (`CreatedBy`),
+	DROP INDEX IF EXISTS `FK_position_view_user_2`,
+	DROP INDEX IF EXISTS `FK_position_view_user_LastUpdBy`,
+	ADD INDEX `FK_position_view_user_LastUpdBy` (`LastUpdBy`);

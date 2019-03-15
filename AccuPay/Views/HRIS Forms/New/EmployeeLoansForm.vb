@@ -20,6 +20,7 @@ Public Class EmployeeLoansForm
     Private _loanTypeList As List(Of Product)
 
     Private _employees As New List(Of Simplified.Employee)
+
     Private _currentLoanSchedule As New LoanSchedule
 
     Private _currentloanSchedules As New List(Of LoanSchedule)
@@ -27,11 +28,6 @@ Public Class EmployeeLoansForm
     Private _unchangedLoanSchedules As New List(Of LoanSchedule)
 
     Private _currentLoanTransactions As New List(Of LoanTransaction)
-
-
-    Private str_ms_excel_file_extension As String =
-        String.Concat("Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|",
-                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls")
 
     Private threadArrayList As New List(Of Thread)
 
@@ -106,8 +102,6 @@ Public Class EmployeeLoansForm
 
             DetailsTabControl.Enabled = True
         End If
-
-
 
     End Sub
 
@@ -415,6 +409,11 @@ Public Class EmployeeLoansForm
             End If
         End If
 
+        Await DeleteLoanSchedule(currentEmployee, messageTitle, loanNumberString)
+
+    End Sub
+
+    Private Async Function DeleteLoanSchedule(currentEmployee As Simplified.Employee, messageTitle As String, loanNumberString As String) As Task
         Try
 
             Await _loanScheduleRepository.DeleteAsync(Me._currentLoanSchedule.RowID)
@@ -432,8 +431,7 @@ Public Class EmployeeLoansForm
             MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
 
         End Try
-
-    End Sub
+    End Function
 
     Private Async Sub tsbtnImportLoans_Click(sender As Object, e As EventArgs) Handles tsbtnImportLoans.Click
 

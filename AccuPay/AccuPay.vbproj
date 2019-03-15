@@ -324,6 +324,7 @@
     <Compile Include="Core\Utilities\Extensions\DateExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\TimeSpanExtensions.vb" />
+    <Compile Include="Core\Utilities\FunctionUtils.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
     <Compile Include="Core\Utilities\ObjectUtils.vb" />
     <Compile Include="Domain\AgencyFees\Agency.vb" />
@@ -344,11 +345,30 @@
     <Compile Include="Domain\TimeLogs\BreakTimeBracketHelper.vb" />
     <Compile Include="Domain\TimeLogs\BreakTimeBracket.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
+    <Compile Include="Repositories\PositionRepository.vb" />
+    <Compile Include="Views\Core Forms\NewEmployeePositionForm.Designer.vb">
+      <DependentUpon>NewEmployeePositionForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\NewEmployeePositionForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\TimeAttendanceLogListForm.Designer.vb">
       <DependentUpon>TimeAttendanceLogListForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\TimeAttendanceLogListForm.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\DivisionUserControl.Designer.vb">
+      <DependentUpon>DivisionUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\DivisionUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\PositionUserControl.Designer.vb">
+      <DependentUpon>PositionUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\PositionUserControl.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
     <Compile Include="Domain\Payroll\CashOutUnusedLeave.vb" />
@@ -1758,6 +1778,9 @@
     <EmbeddedResource Include="Views\Core Forms\JobLevel\JobPointsForm.resx">
       <DependentUpon>JobPointsForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\NewEmployeePositionForm.resx">
+      <DependentUpon>NewEmployeePositionForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </EmbeddedResource>
@@ -1829,6 +1852,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.resx">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\DivisionUserControl.resx">
+      <DependentUpon>DivisionUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\PositionUserControl.resx">
+      <DependentUpon>PositionUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Employees\NewEmployeeForm.resx">
       <DependentUpon>NewEmployeeForm.vb</DependentUpon>

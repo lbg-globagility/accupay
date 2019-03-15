@@ -1,6 +1,4 @@
 ﻿Option Strict On
-
-Imports System.Data.Entity
 Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys

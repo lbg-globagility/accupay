@@ -16,7 +16,8 @@ Public Class FeatureListChecker
     ''' The list of optional features that AccuPay has and its corresponding correct password.
     ''' </summary>
     Private _featureList As Dictionary(Of String, String) = New Dictionary(Of String, String) From {
-        {"MassOvertime", "1189C349-DDA2-4654-8E7F-DC5FC62513C3"}
+        {"MassOvertime", "1189C349-DDA2-4654-8E7F-DC5FC62513C3"},
+        {"JobLevel", "1189C349-DDA2-4654-8E7F-DC5FC62513C1"}
     }
 
     ''' <summary>
@@ -78,4 +79,5 @@ End Class
 
 Public Enum Feature
     MassOvertime
+    JobLevel
 End Enum
