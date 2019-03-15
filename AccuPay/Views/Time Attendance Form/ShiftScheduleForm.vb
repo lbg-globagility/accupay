@@ -26,6 +26,20 @@ Public Class ShiftScheduleForm
 
     Private _originDataSource As List(Of ShiftScheduleModel)
 
+    Private Property ChangesCount As Integer
+        Get
+        End Get
+        Set(value As Integer)
+            If value > 0 Then
+                labelChangesCount.ForeColor = Color.Red
+            Else
+                labelChangesCount.ForeColor = Nothing
+            End If
+
+            labelChangesCount.Text = value.ToString
+        End Set
+    End Property
+
 #End Region
 
 #Region "Methods"
@@ -254,12 +268,11 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub AffectedRows(_newSource As List(Of ShiftScheduleModel))
-        Dim changesCount = _newSource.Where(Function(data) data.HasChanged).Count
-        labelAffectedRows.Text = $"Affected rows : {changesCount}"
+        ChangesCount = _newSource.Where(Function(data) data.HasChanged).Count
     End Sub
 
     Private Sub NoAffectedRows()
-        labelAffectedRows.Text = labelAffectedRows.AccessibleDescription
+        ChangesCount = 0
     End Sub
 
 #End Region
@@ -938,6 +951,11 @@ Public Class ShiftScheduleForm
         ShiftProper(_dataGrid, e)
 
         _dataGrid.Refresh()
+
+        If _dataGrid.Name = grid.Name Then
+            Dim shiftSchedModels = ConvertGridRowsToShiftScheduleModels(grid)
+            AffectedRows(shiftSchedModels)
+        End If
     End Sub
 
     Private Async Sub DateFilter_ValueChangedAsync(sender As Object, e As EventArgs) _
