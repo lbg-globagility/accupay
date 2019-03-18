@@ -121,6 +121,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Globagility Inc..
+        '''</summary>
+        Friend ReadOnly Property AppCreator() As String
+            Get
+                Return ResourceManager.GetString("AppCreator", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property application_view_list_icon() As System.Drawing.Bitmap

@@ -365,6 +365,7 @@
     <Compile Include="Domain\Payroll\SssCalculator.vb" />
     <Compile Include="Domain\Paystubs\Category.vb" />
     <Compile Include="Domain\Paystubs\DivisionMinimumWage.vb" />
+    <Compile Include="Domain\Shifts\EmployeeDutySchedule.vb" />
     <Compile Include="Domain\TimeEntry\ActualTimeEntryCalculator.vb" />
     <Compile Include="Domain\TimeEntry\ActualTimeEntryPolicy.vb" />
     <Compile Include="Domain\TimeEntry\AgencyFeeCalculator.vb" />
@@ -1661,6 +1662,12 @@
     <Compile Include="Views\Time Attendance Form\EmployeeShiftMassUpdate.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Time Attendance Form\EmployeeTreeView.Designer.vb">
+      <DependentUpon>EmployeeTreeView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\EmployeeTreeView.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\Time Attendance Form\MassOvertimeForm.Designer.vb">
       <DependentUpon>MassOvertimeForm.vb</DependentUpon>
     </Compile>
@@ -1685,9 +1692,21 @@
     <Compile Include="Views\Time Attendance Form\EmployeeShiftEntryForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Time Attendance Form\ShiftScheduleForm.Designer.vb">
+      <DependentUpon>ShiftScheduleForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\ShiftScheduleForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo - Copy.ico" />
+    <EmbeddedResource Include="Views\Time Attendance Form\EmployeeTreeView.resx">
+      <DependentUpon>EmployeeTreeView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\ShiftScheduleForm.resx">
+      <DependentUpon>ShiftScheduleForm.vb</DependentUpon>
+    </EmbeddedResource>
     <None Include="Resources\AccuPay.ico" />
     <None Include="Resources\AccuPayLogo.ico" />
     <None Include="Resources\loading-icon.gif" />

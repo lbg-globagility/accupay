@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Tools
 
 Public Class CurrentShift
@@ -8,6 +9,10 @@ Public Class CurrentShift
     Public Const StandardWorkingHours As Decimal = 8
 
     Private _defaultRestDay As Integer?
+
+    Private _isOffset As Boolean
+
+    Private _shiftSchedule2 As EmployeeDutySchedule
 
     Public ReadOnly Property Start As Date
         Get
@@ -51,7 +56,7 @@ Public Class CurrentShift
 
     Public ReadOnly Property HasShift As Boolean
         Get
-            Return Shift IsNot Nothing
+            Return Shift IsNot Nothing Or _shiftSchedule2 IsNot Nothing
         End Get
     End Property
 
@@ -63,7 +68,7 @@ Public Class CurrentShift
 
     Public ReadOnly Property IsRestDay As Boolean
         Get
-            Dim isRestDayOffset = If(ShiftSchedule?.IsRestDay, False)
+            Dim isRestDayOffset = _isOffset
 
             Dim isDefaultRestDay = False
             If _defaultRestDay.HasValue Then
@@ -76,13 +81,13 @@ Public Class CurrentShift
 
     Public ReadOnly Property IsWorkingDay As Boolean
         Get
-            Return Not If(ShiftSchedule?.IsRestDay, True)
+            Return Not IsRestDay
         End Get
     End Property
 
     Public ReadOnly Property IsNightShift As Boolean
         Get
-            Return If(ShiftSchedule?.IsNightShift, False)
+            Return True
         End Get
     End Property
 
@@ -110,10 +115,33 @@ Public Class CurrentShift
     Public Sub New(shiftSchedule As ShiftSchedule, [date] As DateTime)
         Me.New(shiftSchedule?.Shift, [date])
         Me.ShiftSchedule = shiftSchedule
+        Me._isOffset = shiftSchedule.IsRestDay
     End Sub
 
     Public Sub SetDefaultRestDay(dayOfWeek As Integer?)
         _defaultRestDay = dayOfWeek
+    End Sub
+
+    Public Sub New(shiftSchedule As EmployeeDutySchedule)
+        If shiftSchedule Is Nothing Then
+            Return
+        End If
+
+        _shiftSchedule2 = shiftSchedule
+        Me.Date = shiftSchedule.DateSched
+
+        Me.ShiftPeriod =
+            TimePeriod.FromTime(New TimeSpan(shiftSchedule.StartTime.Value.Hours, shiftSchedule.StartTime.Value.Minutes, 0),
+                                New TimeSpan(shiftSchedule.EndTime.Value.Hours, shiftSchedule.EndTime.Value.Minutes, 0),
+                                [Date])
+
+        If shiftSchedule.BreakStartTime.HasValue Then
+            Dim nextDay = [Date].AddDays(1)
+            Dim breakDate = If(shiftSchedule.BreakStartTime > shiftSchedule.StartTime, [Date], nextDay)
+
+            Dim breakTimeEnd = shiftSchedule.BreakStartTime.Value.AddHours(shiftSchedule.BreakLength)
+            Me.BreakPeriod = TimePeriod.FromTime(shiftSchedule.BreakStartTime.Value, breakTimeEnd, breakDate)
+        End If
     End Sub
 
 End Class

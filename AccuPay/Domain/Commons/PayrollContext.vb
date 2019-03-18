@@ -86,6 +86,8 @@ Public Class PayrollContext
 
     Public Overridable Property DivisionMinimumWages As DbSet(Of DivisionMinimumWage)
 
+    Public Overridable Property EmployeeDutySchedules As DbSet(Of EmployeeDutySchedule)
+
     Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
 
     Public Overridable Property BreakTimeBrackets As DbSet(Of BreakTimeBracket)
