@@ -5,6 +5,7 @@ Imports AccuPay
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Tools
+Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 
@@ -710,6 +711,15 @@ Public Class ShiftScheduleForm
     Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click, Button1.Click
 
         Dim _currCell = grid.CurrentCell
+
+        If _currCell Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected employees.")
+
+            Return
+
+        End If
+
         Dim _currRowIndex = _currCell.RowIndex
         Dim _currColIndex = _currCell.ColumnIndex
 
