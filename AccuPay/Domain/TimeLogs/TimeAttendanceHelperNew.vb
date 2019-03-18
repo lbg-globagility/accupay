@@ -1,24 +1,24 @@
 ﻿Option Strict On
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
 
-Public Class TimeAttendanceHelper
+Public Class TimeAttendanceHelperNew
     Implements ITimeAttendanceHelper
 
     Private _importedTimeAttendanceLogs As New List(Of ImportTimeAttendanceLog)
 
     Private _employees As New List(Of Employee)
 
-    Private _employeeShifts As New List(Of ShiftSchedule)
+    Private _employeeShifts As New List(Of EmployeeDutySchedule)
 
     Private _logsGroupedByEmployee As New List(Of IGrouping(Of String, ImportTimeAttendanceLog))
-
 
     Sub New(
            importedTimeLogs As List(Of ImportTimeAttendanceLog),
            employees As List(Of Employee),
-           employeeShifts As List(Of ShiftSchedule))
+           employeeShifts As List(Of EmployeeDutySchedule))
 
         _importedTimeAttendanceLogs = importedTimeLogs
         _employees = employees
@@ -61,7 +61,7 @@ Public Class TimeAttendanceHelper
 
                 timeAttendanceLog.ShiftTimeOutBounds = dayLogRecord.ShiftTimeOutBounds
 
-                timeAttendanceLog.ShiftSchedule = dayLogRecord.ShiftSchedule
+                timeAttendanceLog.EmployeeDutySchedule = dayLogRecord.ShiftSchedule
 
                 index += 1
 
@@ -183,8 +183,8 @@ Public Class TimeAttendanceHelper
 
             Dim employeeLogs = logGroup.ToList()
 
-            Dim earliestDate = logGroup.FirstOrDefault().DateTime.Date
-            Dim lastDate = logGroup.LastOrDefault().DateTime.Date
+            Dim earliestDate = logGroup.FirstOrDefault().DateTime.Date.ToMinimumHourValue
+            Dim lastDate = logGroup.LastOrDefault().DateTime.Date.ToMaximumHourValue
 
             For Each currentDate In Calendar.EachDay(earliestDate, lastDate)
 
@@ -204,7 +204,7 @@ Public Class TimeAttendanceHelper
 
     Private Function GenerateDayLogRecord(
         employeeLogs As List(Of ImportTimeAttendanceLog),
-        currentEmployeeShifts As List(Of ShiftSchedule),
+        currentEmployeeShifts As List(Of EmployeeDutySchedule),
         currentDate As Date) As DayLogRecord
 
         Dim currentShift = GetCurrentShift(currentEmployeeShifts, currentDate)
@@ -239,10 +239,10 @@ Public Class TimeAttendanceHelper
 
     End Function
 
-    Private Function GetNextShift(currentEmployeeShifts As List(Of ShiftSchedule), currentShift As ShiftSchedule, nextDate As Date) As ShiftSchedule
+    Private Function GetNextShift(currentEmployeeShifts As List(Of EmployeeDutySchedule), currentShift As EmployeeDutySchedule, nextDate As Date) As EmployeeDutySchedule
         Dim nextShift = currentEmployeeShifts.
-        Where(Function(s) s.EffectiveFrom <= nextDate And nextDate <= s.EffectiveTo).
-        FirstOrDefault()
+                        Where(Function(s) s.DateSched = nextDate).
+                        FirstOrDefault()
 
         If nextShift Is Nothing Then
             nextShift = currentShift
@@ -251,9 +251,9 @@ Public Class TimeAttendanceHelper
         Return nextShift
     End Function
 
-    Private Function GetCurrentShift(currentEmployeeShifts As List(Of ShiftSchedule), currentDate As Date) As ShiftSchedule
+    Private Function GetCurrentShift(currentEmployeeShifts As List(Of EmployeeDutySchedule), currentDate As Date) As EmployeeDutySchedule
         Return currentEmployeeShifts.
-                        Where(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo).
+                        Where(Function(s) s.DateSched = currentDate).
                         FirstOrDefault()
     End Function
 
@@ -274,19 +274,19 @@ Public Class TimeAttendanceHelper
 
     Private Function GetShiftBoundsForTimeIn(
         currentDate As Date,
-        currentShift As ShiftSchedule) As Date
+        currentShift As EmployeeDutySchedule) As Date
 
         Dim shiftMinBound As Date
 
         Dim shiftTimeFrom As Date
 
-        If currentShift Is Nothing OrElse currentShift.Shift Is Nothing Then
+        If currentShift Is Nothing OrElse currentShift.StartTime Is Nothing Then
 
             shiftTimeFrom = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0)
             shiftMinBound = shiftTimeFrom
 
         Else
-            shiftTimeFrom = currentDate.Add(currentShift.Shift.TimeFrom)
+            shiftTimeFrom = currentDate.Add(CType(currentShift.StartTime, TimeSpan))
             shiftMinBound = shiftTimeFrom.Add(TimeSpan.FromHours(-4))
 
         End If
@@ -296,28 +296,28 @@ Public Class TimeAttendanceHelper
 
     Private Function GetShiftBoundsForTimeOut(
         currentDate As Date,
-        currentShift As ShiftSchedule,
-        nextShift As ShiftSchedule) As Date
+        currentShift As EmployeeDutySchedule,
+        nextShift As EmployeeDutySchedule) As Date
 
         Dim shiftMinBound As Date
         Dim shiftMaxBound As Date
 
         Dim shiftTimeTo As Date
 
-        If currentShift Is Nothing OrElse currentShift.Shift Is Nothing Then
+        If currentShift Is Nothing OrElse currentShift.EndTime Is Nothing Then
             shiftTimeTo = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59)
             shiftMaxBound = shiftTimeTo
 
         Else
-            shiftTimeTo = currentDate.Add(currentShift.Shift.TimeTo)
+            shiftTimeTo = currentDate.Add(CType(currentShift.EndTime, TimeSpan))
             shiftMinBound = shiftTimeTo.Add(TimeSpan.FromHours(-4))
 
             '(nextShift Is Nothing) is already handled by the caller of the caller
-            If nextShift.Shift Is Nothing Then
+            If nextShift Is Nothing Then
                 shiftMaxBound = shiftMinBound.AddDays(1)
 
             Else
-                Dim maxBoundTime = nextShift.Shift.TimeFrom.Add(TimeSpan.FromHours(-4))
+                Dim maxBoundTime = nextShift.StartTime.Value.Add(TimeSpan.FromHours(-4))
                 shiftMaxBound = currentDate.AddDays(1).Add(maxBoundTime).AddSeconds(-1)
             End If
         End If
@@ -362,7 +362,7 @@ Public Class TimeAttendanceHelper
 
         Property ShiftTimeOutBounds As Date
 
-        Property ShiftSchedule As ShiftSchedule
+        Property ShiftSchedule As EmployeeDutySchedule
 
     End Class
 
