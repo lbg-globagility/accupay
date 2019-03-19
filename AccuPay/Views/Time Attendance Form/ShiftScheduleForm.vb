@@ -278,6 +278,15 @@ Public Class ShiftScheduleForm
         ChangesCount = 0
     End Sub
 
+    Private Sub ShowSuccessBalloon()
+        Dim infohint = New ToolTip
+        infohint.IsBalloon = True
+        infohint.ToolTipTitle = "Done"
+        infohint.ToolTipIcon = ToolTipIcon.Info
+
+        infohint.Show("Save successfully.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
+    End Sub
+
 #End Region
 
 #Region "Functions"
@@ -776,8 +785,10 @@ Public Class ShiftScheduleForm
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
         Dim _saveList = ConvertGridRowsToShiftScheduleModels(grid)
 
+        Dim _toSaveList = _saveList.Where(Function(ssm) ssm.HasChanged)
+        If Not _toSaveList.Any Then Return
+
         Using context = New PayrollContext
-            Dim _toSaveList = _saveList.Where(Function(ssm) ssm.HasChanged)
 
             For Each ssm In _toSaveList
                 If ssm.IsNew Then
@@ -793,7 +804,7 @@ Public Class ShiftScheduleForm
             Try
                 Dim i = Await context.SaveChangesAsync
 
-                MessageBox.Show("Save successfully.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                ShowSuccessBalloon()
 
                 For Each row As DataGridViewRow In grid.Rows
                     row.DefaultCellStyle = Nothing
