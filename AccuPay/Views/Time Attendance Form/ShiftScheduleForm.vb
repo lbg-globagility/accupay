@@ -778,7 +778,8 @@ Public Class ShiftScheduleForm
             If _currCell IsNot Nothing _
                 And _currRowIndex > -1 _
                 And rowCount > _currRowIndex Then _
-                grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+                grid.CurrentCell = GridSelectedCells().FirstOrDefault
+            'grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
         End If
     End Sub
 
@@ -1018,7 +1019,8 @@ Public Class ShiftScheduleForm
             If _currCell IsNot Nothing _
                 And _currRowIndex > -1 _
                 And rowCount > _currRowIndex Then _
-                grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+                grid.CurrentCell = GridSelectedCells().FirstOrDefault
+            'grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
         End If
     End Sub
 
