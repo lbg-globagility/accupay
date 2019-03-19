@@ -1064,6 +1064,12 @@ Public Class ShiftScheduleForm
 
     End Sub
 
+    Private Sub labelChangesCount_TextChanged(sender As Object, e As EventArgs) Handles labelChangesCount.TextChanged
+        Dim isNotZero = labelChangesCount.Text <> "0"
+        labelChangesCount.Visible = isNotZero
+        labelAffectedRows.Visible = isNotZero
+    End Sub
+
 #End Region
 
 End Class
