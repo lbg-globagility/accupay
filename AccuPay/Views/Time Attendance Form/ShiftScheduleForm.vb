@@ -1143,6 +1143,9 @@ Public Class ShiftScheduleForm
         Dim isNotZero = labelChangesCount.Text <> "0"
         labelChangesCount.Visible = isNotZero
         labelAffectedRows.Visible = isNotZero
+
+        btnReset.Enabled = isNotZero
+        btnSave.Enabled = isNotZero
     End Sub
 
 #End Region
