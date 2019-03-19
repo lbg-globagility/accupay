@@ -115,14 +115,11 @@
     <Compile Include="NHibernateTest.vb" />
     <Compile Include="ObjectUtilsTest.vb" />
     <Compile Include="OvertimeHoursTest.vb" />
-<<<<<<< HEAD
     <Compile Include="TimeAnalyzer.vb" />
     <Compile Include="TimeAttendanceAnalyzerTest.vb" />
     <Compile Include="TimeAttendanceHelperNewTest.vb" />
     <Compile Include="TimeAttendanceHelperTest.vb" />
-=======
     <Compile Include="RegexTimelogParserTest.vb" />
->>>>>>> 182defe77f69dd6c63be5fd0c77f2932d1760a93
     <Compile Include="TimeEntryCalculatorTest.vb" />
     <Compile Include="TimeImporter.vb" />
     <Compile Include="TimeUtilityTest.vb" />
