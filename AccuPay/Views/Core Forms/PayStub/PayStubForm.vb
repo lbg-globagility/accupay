@@ -215,7 +215,7 @@ Public Class PayStubForm
         cboProducts.DisplayMember = "ProductName"
 
         cboProducts.DataSource = New SQLQueryToDatatable("SELECT RowID AS 'ProductID', Name AS 'ProductName', Category FROM product WHERE Category IN ('Allowance Type', 'Bonus', 'Adjustment Type')" &
-                                                  " AND OrganizationID='" & orgztnID & "';").ResultTable
+                                                  " AND OrganizationID='" & orgztnID & "' ORDER BY Name;").ResultTable
 
         dgvAdjustments.AutoGenerateColumns = False
 
@@ -1891,7 +1891,7 @@ Public Class PayStubForm
                 cboProducts.DisplayMember = "ProductName"
 
                 cboProducts.DataSource = New SQLQueryToDatatable("SELECT RowID AS 'ProductID', Name AS 'ProductName', Category FROM product WHERE Category IN ('Allowance Type', 'Bonus', 'Adjustment Type')" &
-                                                                 " AND OrganizationID='" & orgztnID & "';").ResultTable
+                                                                 " AND OrganizationID='" & orgztnID & "' ORDER BY Name;").ResultTable
 
             End If
 
