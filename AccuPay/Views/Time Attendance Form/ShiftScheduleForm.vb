@@ -458,7 +458,8 @@ Public Class ShiftScheduleForm
 #Region "Classes"
 
     Private Class ShiftScheduleModel
-
+        Private Const ONE_DAY_HOURS As Integer = 24
+        Private Const MINUTES_PER_HOUR As Integer = 60
         Private origStartTime, origEndTime, origBreakStart As String
         Private origOffset As Boolean
         Private origBreakLength As Decimal
@@ -547,6 +548,29 @@ Public Class ShiftScheduleForm
         Public Property BreakLength As Decimal
 
         Public Property IsRestDay As Boolean
+
+        Public Property ShiftHours As Decimal
+        Public Property WorkHours As Decimal
+
+        Public Sub ComputeShiftHours()
+            Dim shiftStart = Calendar.ToTimespan(_timeFrom)
+            Dim shiftEnd = Calendar.ToTimespan(_timeTo)
+
+            Dim isValidForCompute = shiftStart.HasValue And shiftStart.HasValue
+
+            If isValidForCompute Then
+                Dim sdfsd = shiftEnd - shiftStart
+                If sdfsd.Value.Hours <= 0 Then sdfsd = sdfsd.Value.Add(New TimeSpan(ONE_DAY_HOURS, 0, 0))
+
+                ShiftHours = Convert.ToDecimal(sdfsd.Value.TotalMinutes / MINUTES_PER_HOUR)
+            Else
+                ShiftHours = 0
+            End If
+        End Sub
+
+        Public Sub ComputeWorkHours()
+            WorkHours = ShiftHours - BreakLength
+        End Sub
 
         Public ReadOnly Property DayName As String
             Get
@@ -640,6 +664,8 @@ Public Class ShiftScheduleForm
                     .BreakStartTime = Calendar.ToTimespan(_breakFrom)
                     .BreakLength = _BreakLength
                     .IsRestDay = _IsRestDay
+                    .ShiftHours = ShiftHours
+                    .WorkHours = WorkHours
                 End With
 
                 Return _eds
@@ -792,6 +818,9 @@ Public Class ShiftScheduleForm
         Using context = New PayrollContext
 
             For Each ssm In _toSaveList
+                ssm.ComputeShiftHours()
+                ssm.ComputeWorkHours()
+
                 If ssm.IsNew Then
                     context.EmployeeDutySchedules.Add(ssm.ToEmployeeDutySchedule)
                 ElseIf ssm.IsUpdate Then
