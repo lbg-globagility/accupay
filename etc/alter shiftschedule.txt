@@ -1,0 +1,2 @@
+ALTER TABLE `shiftschedules`
+	ADD COLUMN `WorkHours` DECIMAL(10,2) NULL DEFAULT '0' AFTER `ShiftHours`
