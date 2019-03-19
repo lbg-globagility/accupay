@@ -1,5 +1,6 @@
 ﻿Option Strict On
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
 
@@ -13,7 +14,6 @@ Public Class TimeAttendanceHelper
     Private _employeeShifts As New List(Of ShiftSchedule)
 
     Private _logsGroupedByEmployee As New List(Of IGrouping(Of String, ImportTimeAttendanceLog))
-
 
     Sub New(
            importedTimeLogs As List(Of ImportTimeAttendanceLog),
@@ -207,13 +207,13 @@ Public Class TimeAttendanceHelper
         currentEmployeeShifts As List(Of ShiftSchedule),
         currentDate As Date) As DayLogRecord
 
-        Dim currentShift = GetCurrentShift(currentEmployeeShifts, currentDate)
+        Dim currentShift = GetShift(currentEmployeeShifts, currentDate)
 
         Dim nextDate = currentDate.AddDays(1)
-        Dim nextShift = GetNextShift(currentEmployeeShifts, currentShift, nextDate)
+        Dim nextShift = GetShift(currentEmployeeShifts, nextDate)
 
         Dim timeInBounds = GetShiftBoundsForTimeIn(currentDate, currentShift)
-        Dim timeOutBounds = GetShiftBoundsForTimeOut(currentDate, currentShift, nextShift)
+        Dim timeOutBounds = GetShiftBoundsForTimeOut(currentDate, nextShift)
 
         Dim dayBounds = New TimePeriod(timeInBounds, timeOutBounds)
 
@@ -225,33 +225,9 @@ Public Class TimeAttendanceHelper
             .ShiftSchedule = currentShift
         }
 
-        'Dim timeInLog = timeInLogs.OrderBy(Function(t) t.DateTime).FirstOrDefault
-        'Dim timeOutLog = timeOutLogs.OrderByDescending(Function(t) t.DateTime).FirstOrDefault
-
-
-        'Return New DayLog With {
-        '    .LogDate = currentDate,
-        '    .TimeInLog = timeInLog,
-        '    .TimeOutLog = timeOutLog,
-        '    .ShiftTimeIn = timeInBounds.Start,
-        '    .ShiftTimeOut = timeOutBounds.End
-        '}
-
     End Function
 
-    Private Function GetNextShift(currentEmployeeShifts As List(Of ShiftSchedule), currentShift As ShiftSchedule, nextDate As Date) As ShiftSchedule
-        Dim nextShift = currentEmployeeShifts.
-        Where(Function(s) s.EffectiveFrom <= nextDate And nextDate <= s.EffectiveTo).
-        FirstOrDefault()
-
-        If nextShift Is Nothing Then
-            nextShift = currentShift
-        End If
-
-        Return nextShift
-    End Function
-
-    Private Function GetCurrentShift(currentEmployeeShifts As List(Of ShiftSchedule), currentDate As Date) As ShiftSchedule
+    Private Function GetShift(currentEmployeeShifts As List(Of ShiftSchedule), currentDate As Date) As ShiftSchedule
         Return currentEmployeeShifts.
                         Where(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo).
                         FirstOrDefault()
@@ -282,10 +258,13 @@ Public Class TimeAttendanceHelper
 
         If currentShift Is Nothing OrElse currentShift.Shift Is Nothing Then
 
-            shiftTimeFrom = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0)
+            'If walang shift, minimum bound should be 12:00 AM
+            shiftTimeFrom = currentDate.ToMinimumHourValue
             shiftMinBound = shiftTimeFrom
 
         Else
+            'If merong shift, minimum bound should be shift.TimeFrom - 4 hours 
+            '(ex. 9:00 AM - 5:00 PM shift -> 5:00 AM minimum bound)
             shiftTimeFrom = currentDate.Add(currentShift.Shift.TimeFrom)
             shiftMinBound = shiftTimeFrom.Add(TimeSpan.FromHours(-4))
 
@@ -296,30 +275,22 @@ Public Class TimeAttendanceHelper
 
     Private Function GetShiftBoundsForTimeOut(
         currentDate As Date,
-        currentShift As ShiftSchedule,
         nextShift As ShiftSchedule) As Date
 
-        Dim shiftMinBound As Date
         Dim shiftMaxBound As Date
 
-        Dim shiftTimeTo As Date
+        If nextShift Is Nothing OrElse
+            nextShift.Shift Is Nothing Then
 
-        If currentShift Is Nothing OrElse currentShift.Shift Is Nothing Then
-            shiftTimeTo = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59)
-            shiftMaxBound = shiftTimeTo
+            'If walang next shift, maximum bound should be 23:59 PM
+            shiftMaxBound = currentDate.ToMaximumHourValue
 
         Else
-            shiftTimeTo = currentDate.Add(currentShift.Shift.TimeTo)
-            shiftMinBound = shiftTimeTo.Add(TimeSpan.FromHours(-4))
 
-            '(nextShift Is Nothing) is already handled by the caller of the caller
-            If nextShift.Shift Is Nothing Then
-                shiftMaxBound = shiftMinBound.AddDays(1)
-
-            Else
-                Dim maxBoundTime = nextShift.Shift.TimeFrom.Add(TimeSpan.FromHours(-4))
-                shiftMaxBound = currentDate.AddDays(1).Add(maxBoundTime).AddSeconds(-1)
-            End If
+            'If merong next shift, maximum bound should be nextShift.TimeFrom - 4 hours - 1 second
+            '(ex. 9:00 AM - 5:00 PM nextShift -> 4:59 AM maximum bound)
+            Dim maxBoundTime = nextShift.Shift.TimeFrom.Add(TimeSpan.FromHours(-4))
+            shiftMaxBound = currentDate.AddDays(1).Add(maxBoundTime).AddSeconds(-1)
         End If
 
         Return shiftMaxBound
@@ -365,7 +336,5 @@ Public Class TimeAttendanceHelper
         Property ShiftSchedule As ShiftSchedule
 
     End Class
-
-
 
 End Class

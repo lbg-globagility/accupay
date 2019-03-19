@@ -28,11 +28,26 @@ Partial Class TimeLogsForm
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TimeLogsForm))
         Me.bgworkImport = New System.ComponentModel.BackgroundWorker()
         Me.dgvetentdet = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column5 = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column13 = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.timeentstat = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.DeleteRowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.dgvetentd = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Createds = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.createdmilit = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TimeentrylogsImportID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -96,21 +111,6 @@ Partial Class TimeLogsForm
         Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.timeentstat = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Createds = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.createdmilit = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TimeentrylogsImportID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvetentdet, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip2.SuspendLayout()
         CType(Me.dgvetentd, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -157,6 +157,46 @@ Partial Class TimeLogsForm
         Me.dgvetentdet.Size = New System.Drawing.Size(872, 385)
         Me.dgvetentdet.TabIndex = 6
         '
+        'Column1
+        '
+        Me.Column1.HeaderText = "RowID"
+        Me.Column1.Name = "Column1"
+        Me.Column1.Visible = False
+        Me.Column1.Width = 80
+        '
+        'Column7
+        '
+        Me.Column7.HeaderText = "empRowID"
+        Me.Column7.Name = "Column7"
+        Me.Column7.Visible = False
+        '
+        'Column2
+        '
+        Me.Column2.HeaderText = "Employee ID"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        Me.Column2.Width = 80
+        '
+        'Column11
+        '
+        Me.Column11.HeaderText = "Employee name"
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        Me.Column11.Width = 165
+        '
+        'Column12
+        '
+        Me.Column12.HeaderText = "Employee shift"
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
+        Me.Column12.Width = 155
+        '
+        'Column3
+        '
+        Me.Column3.HeaderText = "Time In (I)"
+        Me.Column3.Name = "Column3"
+        Me.Column3.Width = 70
+        '
         'Column5
         '
         '
@@ -195,6 +235,12 @@ Partial Class TimeLogsForm
         Me.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Column5.Width = 90
         '
+        'Column4
+        '
+        Me.Column4.HeaderText = "Time Out (O)"
+        Me.Column4.Name = "Column4"
+        Me.Column4.Width = 70
+        '
         'Column13
         '
         '
@@ -231,6 +277,18 @@ Partial Class TimeLogsForm
         Me.Column13.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
         Me.Column13.Name = "Column13"
         Me.Column13.Width = 90
+        '
+        'Column6
+        '
+        Me.Column6.HeaderText = "Schedule type"
+        Me.Column6.Name = "Column6"
+        Me.Column6.Width = 115
+        '
+        'timeentstat
+        '
+        Me.timeentstat.HeaderText = "TimeEntryStatus"
+        Me.timeentstat.Name = "timeentstat"
+        Me.timeentstat.Visible = False
         '
         'ContextMenuStrip2
         '
@@ -273,6 +331,48 @@ Partial Class TimeLogsForm
         Me.dgvetentd.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvetentd.Size = New System.Drawing.Size(350, 247)
         Me.dgvetentd.TabIndex = 7
+        '
+        'Createds
+        '
+        Me.Createds.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.Createds.HeaderText = "Date imported"
+        Me.Createds.Name = "Createds"
+        Me.Createds.ReadOnly = True
+        '
+        'createdmilit
+        '
+        Me.createdmilit.HeaderText = "createdmilit"
+        Me.createdmilit.Name = "createdmilit"
+        Me.createdmilit.ReadOnly = True
+        Me.createdmilit.Visible = False
+        '
+        'Column8
+        '
+        Me.Column8.HeaderText = "Created by"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        Me.Column8.Visible = False
+        '
+        'Column9
+        '
+        Me.Column9.HeaderText = "Last update"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
+        Me.Column9.Visible = False
+        '
+        'Column10
+        '
+        Me.Column10.HeaderText = "Last upate by"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        Me.Column10.Visible = False
+        '
+        'TimeentrylogsImportID
+        '
+        Me.TimeentrylogsImportID.HeaderText = "TimeentrylogsImportID"
+        Me.TimeentrylogsImportID.Name = "TimeentrylogsImportID"
+        Me.TimeentrylogsImportID.ReadOnly = True
+        Me.TimeentrylogsImportID.Visible = False
         '
         'TabControl1
         '
@@ -859,106 +959,6 @@ Partial Class TimeLogsForm
         Me.DataGridViewTextBoxColumn15.HeaderText = "TimeEntryStatus"
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
         Me.DataGridViewTextBoxColumn15.Visible = False
-        '
-        'Column1
-        '
-        Me.Column1.HeaderText = "RowID"
-        Me.Column1.Name = "Column1"
-        Me.Column1.Visible = False
-        Me.Column1.Width = 80
-        '
-        'Column7
-        '
-        Me.Column7.HeaderText = "empRowID"
-        Me.Column7.Name = "Column7"
-        Me.Column7.Visible = False
-        '
-        'Column2
-        '
-        Me.Column2.HeaderText = "Employee ID"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        Me.Column2.Width = 80
-        '
-        'Column11
-        '
-        Me.Column11.HeaderText = "Employee name"
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        Me.Column11.Width = 165
-        '
-        'Column12
-        '
-        Me.Column12.HeaderText = "Employee shift"
-        Me.Column12.Name = "Column12"
-        Me.Column12.ReadOnly = True
-        Me.Column12.Width = 155
-        '
-        'Column3
-        '
-        Me.Column3.HeaderText = "Time In (I)"
-        Me.Column3.Name = "Column3"
-        Me.Column3.Width = 70
-        '
-        'Column4
-        '
-        Me.Column4.HeaderText = "Time Out (O)"
-        Me.Column4.Name = "Column4"
-        Me.Column4.Width = 70
-        '
-        'Column6
-        '
-        Me.Column6.HeaderText = "Schedule type"
-        Me.Column6.Name = "Column6"
-        Me.Column6.Width = 115
-        '
-        'timeentstat
-        '
-        Me.timeentstat.HeaderText = "TimeEntryStatus"
-        Me.timeentstat.Name = "timeentstat"
-        Me.timeentstat.Visible = False
-        '
-        'Createds
-        '
-        Me.Createds.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.Createds.HeaderText = "Date imported"
-        Me.Createds.Name = "Createds"
-        Me.Createds.ReadOnly = True
-        '
-        'createdmilit
-        '
-        Me.createdmilit.HeaderText = "createdmilit"
-        Me.createdmilit.Name = "createdmilit"
-        Me.createdmilit.ReadOnly = True
-        Me.createdmilit.Visible = False
-        '
-        'Column8
-        '
-        Me.Column8.HeaderText = "Created by"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        Me.Column8.Visible = False
-        '
-        'Column9
-        '
-        Me.Column9.HeaderText = "Last update"
-        Me.Column9.Name = "Column9"
-        Me.Column9.ReadOnly = True
-        Me.Column9.Visible = False
-        '
-        'Column10
-        '
-        Me.Column10.HeaderText = "Last upate by"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        Me.Column10.Visible = False
-        '
-        'TimeentrylogsImportID
-        '
-        Me.TimeentrylogsImportID.HeaderText = "TimeentrylogsImportID"
-        Me.TimeentrylogsImportID.Name = "TimeentrylogsImportID"
-        Me.TimeentrylogsImportID.ReadOnly = True
-        Me.TimeentrylogsImportID.Visible = False
         '
         'TimeLogsForm
         '
