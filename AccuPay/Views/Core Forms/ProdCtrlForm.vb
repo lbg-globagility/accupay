@@ -197,11 +197,11 @@ Public Class ProdCtrlForm
         
         Dim selectAllProduct As New DataTable
 
-        selectAllProduct = retAsDatTbl("SELECT p.*, IF(p.`Status` = '0', 'No', 'Yes') AS IStatus" & _
-                                       " FROM product p" & _
-                                       " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND CategoryName='" & n_categname & "'" & _
-                                       " WHERE p.OrganizationID='" & orgztnID & "'" & _
-                                       " AND p.CategoryID=c.RowID;")
+        selectAllProduct = retAsDatTbl("SELECT p.*, IF(p.`Status` = '0', 'No', 'Yes') AS IStatus" &
+                                       " FROM product p" &
+                                       " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND CategoryName='" & n_categname & "'" &
+                                       " WHERE p.OrganizationID='" & orgztnID & "'" &
+                                       " AND p.CategoryID=c.RowID ORDER BY p.Name;")
 
         'dgvproducts.Rows.Clear()
 
