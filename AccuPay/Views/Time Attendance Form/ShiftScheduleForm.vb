@@ -36,7 +36,7 @@ Public Class ShiftScheduleForm
                 labelChangesCount.ForeColor = Nothing
             End If
 
-            labelChangesCount.Text = value.ToString
+            labelChangesCount.Text = value.ToString("#,##0")
         End Set
     End Property
 
