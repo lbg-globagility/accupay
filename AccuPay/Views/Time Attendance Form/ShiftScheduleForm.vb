@@ -27,6 +27,8 @@ Public Class ShiftScheduleForm
 
     Private _originDataSource As List(Of ShiftScheduleModel)
 
+    Private _currCell As DataGridViewCell
+
     Private Property ChangesCount As Integer
         Get
         End Get
@@ -37,7 +39,7 @@ Public Class ShiftScheduleForm
                 labelChangesCount.ForeColor = Nothing
             End If
 
-            labelChangesCount.Text = value.ToString
+            labelChangesCount.Text = value.ToString("#,##0")
         End Set
     End Property
 
@@ -45,7 +47,7 @@ Public Class ShiftScheduleForm
 
 #Region "Methods"
 
-    Private Async Sub LoadShiftScheduleConfigurablePolicy()
+    Public Async Sub LoadShiftScheduleConfigurablePolicy()
         _dutyShiftPolicy = Await DutyShiftPolicy.Load1
 
         txtBreakLength.Value = _dutyShiftPolicy.BreakHour
@@ -276,6 +278,15 @@ Public Class ShiftScheduleForm
         ChangesCount = 0
     End Sub
 
+    Private Sub ShowSuccessBalloon()
+        Dim infohint = New ToolTip
+        infohint.IsBalloon = True
+        infohint.ToolTipTitle = "Done"
+        infohint.ToolTipIcon = ToolTipIcon.Info
+
+        infohint.Show("Save successfully.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
+    End Sub
+
 #End Region
 
 #Region "Functions"
@@ -438,12 +449,17 @@ Public Class ShiftScheduleForm
         End If
     End Function
 
+    Function GridSelectedCells() As IEnumerable(Of DataGridViewCell)
+        Return grid.SelectedCells.OfType(Of DataGridViewCell)
+    End Function
+
 #End Region
 
 #Region "Classes"
 
     Private Class ShiftScheduleModel
-
+        Private Const ONE_DAY_HOURS As Integer = 24
+        Private Const MINUTES_PER_HOUR As Integer = 60
         Private origStartTime, origEndTime, origBreakStart As String
         Private origOffset As Boolean
         Private origBreakLength As Decimal
@@ -532,6 +548,29 @@ Public Class ShiftScheduleForm
         Public Property BreakLength As Decimal
 
         Public Property IsRestDay As Boolean
+
+        Public Property ShiftHours As Decimal
+        Public Property WorkHours As Decimal
+
+        Public Sub ComputeShiftHours()
+            Dim shiftStart = Calendar.ToTimespan(_timeFrom)
+            Dim shiftEnd = Calendar.ToTimespan(_timeTo)
+
+            Dim isValidForCompute = shiftStart.HasValue And shiftStart.HasValue
+
+            If isValidForCompute Then
+                Dim sdfsd = shiftEnd - shiftStart
+                If sdfsd.Value.Hours <= 0 Then sdfsd = sdfsd.Value.Add(New TimeSpan(ONE_DAY_HOURS, 0, 0))
+
+                ShiftHours = Convert.ToDecimal(sdfsd.Value.TotalMinutes / MINUTES_PER_HOUR)
+            Else
+                ShiftHours = 0
+            End If
+        End Sub
+
+        Public Sub ComputeWorkHours()
+            WorkHours = ShiftHours - BreakLength
+        End Sub
 
         Public ReadOnly Property DayName As String
             Get
@@ -625,6 +664,8 @@ Public Class ShiftScheduleForm
                     .BreakStartTime = Calendar.ToTimespan(_breakFrom)
                     .BreakLength = _BreakLength
                     .IsRestDay = _IsRestDay
+                    .ShiftHours = ShiftHours
+                    .WorkHours = WorkHours
                 End With
 
                 Return _eds
@@ -709,19 +750,17 @@ Public Class ShiftScheduleForm
 #Region "EventHandlers"
 
     Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click, Button1.Click
+        CommitTimeValues()
 
-        Dim _currCell = grid.CurrentCell
+        Dim _currRowIndex, _currColIndex As Integer
+        If GridSelectedCells().Any Then
+            _currCell = GridSelectedCells().FirstOrDefault
+            _currRowIndex = _currCell.RowIndex
+            _currColIndex = _currCell.ColumnIndex
 
-        If _currCell Is Nothing Then
-
+        Else
             MessageBoxHelper.Warning("No selected employees.")
-
-            Return
-
         End If
-
-        Dim _currRowIndex = _currCell.RowIndex
-        Dim _currColIndex = _currCell.ColumnIndex
 
         Dim start As Date = dtpDateFrom.Value.Date
         Dim finish As Date = dtpDateTo.Value.Date
@@ -761,18 +800,27 @@ Public Class ShiftScheduleForm
 
         Dim rowCount = grid.Rows.Count
 
-        If _currCell IsNot Nothing _
-            And _currRowIndex > -1 _
-            And rowCount > _currRowIndex Then grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+        If GridSelectedCells().Any Then
+            If _currCell IsNot Nothing _
+                And _currRowIndex > -1 _
+                And rowCount > _currRowIndex Then _
+                grid.CurrentCell = GridSelectedCells().FirstOrDefault
+            'grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+        End If
     End Sub
 
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
         Dim _saveList = ConvertGridRowsToShiftScheduleModels(grid)
 
+        Dim _toSaveList = _saveList.Where(Function(ssm) ssm.HasChanged)
+        If Not _toSaveList.Any Then Return
+
         Using context = New PayrollContext
-            Dim _toSaveList = _saveList.Where(Function(ssm) ssm.HasChanged)
 
             For Each ssm In _toSaveList
+                ssm.ComputeShiftHours()
+                ssm.ComputeWorkHours()
+
                 If ssm.IsNew Then
                     context.EmployeeDutySchedules.Add(ssm.ToEmployeeDutySchedule)
                 ElseIf ssm.IsUpdate Then
@@ -786,7 +834,7 @@ Public Class ShiftScheduleForm
             Try
                 Dim i = Await context.SaveChangesAsync
 
-                MessageBox.Show("Save successfully.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                ShowSuccessBalloon()
 
                 For Each row As DataGridViewRow In grid.Rows
                     row.DefaultCellStyle = Nothing
@@ -982,10 +1030,27 @@ Public Class ShiftScheduleForm
 
         End If
 
+        Dim _currRowIndex, _currColIndex As Integer
+        If GridSelectedCells().Any Then
+            _currCell = GridSelectedCells().FirstOrDefault
+            _currRowIndex = _currCell.RowIndex
+            _currColIndex = _currCell.ColumnIndex
+        End If
+
         _originDataSource = Await RangeApply(start, finish, CreatedResult(True))
         RefreshDataSource(grid, _originDataSource)
 
         NoAffectedRows()
+
+        Dim rowCount = grid.Rows.Count
+
+        If GridSelectedCells().Any Then
+            If _currCell IsNot Nothing _
+                And _currRowIndex > -1 _
+                And rowCount > _currRowIndex Then _
+                grid.CurrentCell = GridSelectedCells().FirstOrDefault
+            'grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+        End If
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDiscard1.Click
@@ -1072,6 +1137,15 @@ Public Class ShiftScheduleForm
     Private Sub gridWeek_KeyPress(sender As Object, e As KeyPressEventArgs) Handles gridWeek.KeyPress
         Console.WriteLine("gridWeek_KeyPress : {0}", e.KeyChar)
 
+    End Sub
+
+    Private Sub labelChangesCount_TextChanged(sender As Object, e As EventArgs) Handles labelChangesCount.TextChanged
+        Dim isNotZero = labelChangesCount.Text <> "0"
+        labelChangesCount.Visible = isNotZero
+        labelAffectedRows.Visible = isNotZero
+
+        btnReset.Enabled = isNotZero
+        btnSave.Enabled = isNotZero
     End Sub
 
 #End Region
