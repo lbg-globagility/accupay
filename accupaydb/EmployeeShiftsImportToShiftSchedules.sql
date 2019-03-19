@@ -15,7 +15,7 @@ SET @startBreak = NULL;
 SET @endBreak = NULL;
 SET @breakDuration = 0;
 
-INSERT INTO `shiftschedules` (`OrganizationID`, `Created`, `LastUpd`, `EmployeeID`, `Date`, `StartTime`, `EndTime`, `BreakStartTime`, `BreakLength`, `IsRestDay`, `ShiftHours`)
+INSERT INTO `shiftschedules` (`OrganizationID`, `Created`, `LastUpd`, `EmployeeID`, `Date`, `StartTime`, `EndTime`, `BreakStartTime`, `BreakLength`, `IsRestDay`, `ShiftHours`, `WorkHours`)
 SELECT
 ii.OrganizationID
 , CURRENT_TIMESTAMP()
@@ -28,6 +28,7 @@ ii.OrganizationID
 , ii.BreakLength
 , ii.IsRestDay
 , ii.ShiftHours
+, ii.WorkHours
 FROM (SELECT
 		i.OrganizationID
 		, i.EmployeeID
@@ -47,8 +48,9 @@ FROM (SELECT
 			  , (TIMESTAMPDIFF(SECOND, @startBreak, @endBreak) / minutesPerHour)) `BreakLength`
 		
 		, IF(@breakDuration = 0, NULL, i.BreakTimeFrom) `BreakStartTime`
+		, i.WorkHours
 		FROM (SELECT esh.*
-				, sh.TimeFrom, sh.TimeTo, sh.BreakTimeFrom, sh.BreakTimeTo, sh.ShiftHours
+				, sh.TimeFrom, sh.TimeTo, sh.BreakTimeFrom, sh.BreakTimeTo, sh.ShiftHours, sh.WorkHours
 				FROM employeeshift esh
 				LEFT JOIN shift sh ON sh.RowID=esh.ShiftID
 				) i
@@ -64,6 +66,7 @@ ON DUPLICATE KEY UPDATE LastUpd = CURRENT_TIMESTAMP()
 , `BreakLength` = ii.BreakLength
 , `IsRestDay` = ii.IsRestDay
 , `ShiftHours` = ii.ShiftHours
+, `WorkHours` = ii.WorkHours
 ;
 
 END//
