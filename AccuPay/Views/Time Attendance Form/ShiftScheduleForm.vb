@@ -722,6 +722,9 @@ Public Class ShiftScheduleForm
             _currCell = GridSelectedCells().FirstOrDefault
             _currRowIndex = _currCell.RowIndex
             _currColIndex = _currCell.ColumnIndex
+
+        Else
+            MessageBoxHelper.Warning("No selected employees.")
         End If
 
         Dim start As Date = dtpDateFrom.Value.Date
