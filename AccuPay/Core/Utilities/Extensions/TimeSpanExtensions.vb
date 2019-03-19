@@ -6,10 +6,28 @@ Namespace Global.AccuPay.Extensions
         Private Const MINUTES_PER_HOUR As Decimal = 60
 
         <Extension()>
-        Public Function ToStringFormat(timeSpanInput As TimeSpan, format As String) As String
+        Public Function ToStringFormat(
+                        timeSpanInput As TimeSpan,
+                        format As String,
+                        Optional currentDate As Date? = Nothing) As String
 
-            Dim currentDate = Date.Now.ToMinimumHourValue
-            Return currentDate.Add(timeSpanInput).ToString(format)
+
+            currentDate = If(currentDate Is Nothing, Date.Now.ToMinimumHourValue, currentDate.ToMinimumHourValue)
+
+            Return currentDate.Value.Add(timeSpanInput).ToString(format)
+
+        End Function
+
+        <Extension()>
+        Public Function ToStringFormat(
+                        timeSpanInput As TimeSpan?,
+                        format As String,
+                        Optional currentDate As Date? = Nothing) As String
+
+
+            currentDate = If(currentDate Is Nothing, Date.Now.ToMinimumHourValue, currentDate.ToMinimumHourValue)
+
+            Return currentDate.Value.Add(timeSpanInput).ToString(format)
 
         End Function
 
