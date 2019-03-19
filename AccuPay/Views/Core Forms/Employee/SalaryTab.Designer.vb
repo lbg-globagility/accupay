@@ -23,6 +23,7 @@ Partial Class SalaryTab
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SalaryTab))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -44,15 +45,15 @@ Partial Class SalaryTab
         Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SalaryTab))
         Me.ToolStrip5 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton30 = New System.Windows.Forms.ToolStripButton()
+        Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton31 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripProgressBar2 = New System.Windows.Forms.ToolStripProgressBar()
+        Me.btnImport = New System.Windows.Forms.ToolStripButton()
         Me.pbEmployee = New System.Windows.Forms.PictureBox()
         Me.grpSalary = New System.Windows.Forms.GroupBox()
         Me.txtTotalSalary = New System.Windows.Forms.TextBox()
@@ -122,7 +123,6 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.tlpResult = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnImport = New System.Windows.Forms.ToolStripButton()
         Me.ToolStrip5.SuspendLayout()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpSalary.SuspendLayout()
@@ -133,7 +133,7 @@ Partial Class SalaryTab
         '
         Me.ToolStrip5.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip5.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.ToolStripButton30, Me.ToolStripButton31, Me.ToolStripProgressBar2, Me.btnImport})
+        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripButton31, Me.ToolStripProgressBar2, Me.btnImport})
         Me.ToolStrip5.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip5.Name = "ToolStrip5"
         Me.ToolStrip5.Size = New System.Drawing.Size(856, 25)
@@ -172,14 +172,14 @@ Partial Class SalaryTab
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
         Me.btnCancel.Text = "Cancel"
         '
-        'ToolStripButton30
+        'btnClose
         '
-        Me.ToolStripButton30.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton30.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton30.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton30.Name = "ToolStripButton30"
-        Me.ToolStripButton30.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton30.Text = "Close"
+        Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.btnClose.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.Size = New System.Drawing.Size(56, 22)
+        Me.btnClose.Text = "Close"
         '
         'ToolStripButton31
         '
@@ -198,6 +198,14 @@ Partial Class SalaryTab
         Me.ToolStripProgressBar2.Name = "ToolStripProgressBar2"
         Me.ToolStripProgressBar2.Size = New System.Drawing.Size(100, 22)
         Me.ToolStripProgressBar2.Visible = False
+        '
+        'btnImport
+        '
+        Me.btnImport.Image = CType(resources.GetObject("btnImport.Image"), System.Drawing.Image)
+        Me.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnImport.Name = "btnImport"
+        Me.btnImport.Size = New System.Drawing.Size(63, 22)
+        Me.btnImport.Text = "Import"
         '
         'pbEmployee
         '
@@ -281,6 +289,7 @@ Partial Class SalaryTab
         Me.txtBasicPay.ReadOnly = True
         Me.txtBasicPay.Size = New System.Drawing.Size(160, 20)
         Me.txtBasicPay.TabIndex = 280
+        Me.txtBasicPay.Visible = False
         '
         'Label10
         '
@@ -379,6 +388,7 @@ Partial Class SalaryTab
         Me.Label13.TabIndex = 271
         Me.Label13.Text = "₱"
         Me.Label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Label13.Visible = False
         '
         'Label213
         '
@@ -460,6 +470,7 @@ Partial Class SalaryTab
         Me.Label7.Size = New System.Drawing.Size(57, 13)
         Me.Label7.TabIndex = 63
         Me.Label7.Text = "Basic Pay:"
+        Me.Label7.Visible = False
         '
         'Label6
         '
@@ -884,14 +895,6 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.Visible = False
         '
-        'btnImport
-        '
-        Me.btnImport.Image = CType(resources.GetObject("btnImport.Image"), System.Drawing.Image)
-        Me.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnImport.Name = "btnImport"
-        Me.btnImport.Size = New System.Drawing.Size(63, 22)
-        Me.btnImport.Text = "Import"
-        '
         'SalaryTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -920,7 +923,7 @@ Partial Class SalaryTab
     Friend WithEvents btnSave As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnDelete As ToolStripButton
-    Friend WithEvents ToolStripButton30 As ToolStripButton
+    Friend WithEvents btnClose As ToolStripButton
     Friend WithEvents ToolStripButton31 As ToolStripButton
     Friend WithEvents pbEmployee As PictureBox
     Friend WithEvents btnNew As ToolStripButton

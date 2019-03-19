@@ -1,6 +1,4 @@
 ﻿Option Strict On
-
-Imports System.Data.Entity
 Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
@@ -406,12 +404,23 @@ Public Class SalaryTab
             Return
         End If
 
+
+        UpdateTotalSalary()
         UpdateSss(monthlyRate)
         UpdatePhilHealth(monthlyRate)
     End Sub
 
-    Private Sub UpdateBasicPay()
+    Private Sub txtAllowance_TextChanged(sender As Object, e As EventArgs) Handles txtAllowance.TextChanged
 
+        UpdateTotalSalary()
+
+    End Sub
+
+    Private Sub UpdateTotalSalary()
+        Dim totalSalary = TypeTools.ParseDecimal(txtAmount.Text) +
+                    TypeTools.ParseDecimal(txtAllowance.Text)
+
+        txtTotalSalary.Text = totalSalary.ToString
     End Sub
 
     Private Sub UpdateSss(monthlyRate As Decimal)
@@ -465,4 +474,9 @@ Public Class SalaryTab
         Editing
     End Enum
 
+    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+
+        EmployeeForm.Close()
+
+    End Sub
 End Class

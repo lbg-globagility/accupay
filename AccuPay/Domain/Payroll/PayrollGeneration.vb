@@ -185,8 +185,7 @@ Public Class PayrollGeneration
                     _paystub.BasicHours = workDaysPerPayPeriod * 8
                 End If
 
-                _paystub.BasicPay = _salary.BasicPay
-            ElseIf _employee.IsDaily Then
+                _paystub.BasicPay = AccuMath.CommercialRound((_salary.BasicSalary / 2), 2)
                 ComputeBasicHours()
 
                 _paystub.BasicPay = _timeEntries.Sum(Function(t) t.BasicDayPay)
