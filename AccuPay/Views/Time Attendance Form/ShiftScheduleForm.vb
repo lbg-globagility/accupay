@@ -26,6 +26,8 @@ Public Class ShiftScheduleForm
 
     Private _originDataSource As List(Of ShiftScheduleModel)
 
+    Private _currCell As DataGridViewCell
+
     Private Property ChangesCount As Integer
         Get
         End Get
@@ -437,6 +439,10 @@ Public Class ShiftScheduleForm
         End If
     End Function
 
+    Function GridSelectedCells() As IEnumerable(Of DataGridViewCell)
+        Return grid.SelectedCells.OfType(Of DataGridViewCell)
+    End Function
+
 #End Region
 
 #Region "Classes"
@@ -710,9 +716,12 @@ Public Class ShiftScheduleForm
     Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click, Button1.Click
         CommitTimeValues()
 
-        Dim _currCell = grid.CurrentCell
-        Dim _currRowIndex = _currCell.RowIndex
-        Dim _currColIndex = _currCell.ColumnIndex
+        Dim _currRowIndex, _currColIndex As Integer
+        If GridSelectedCells().Any Then
+            _currCell = GridSelectedCells().FirstOrDefault
+            _currRowIndex = _currCell.RowIndex
+            _currColIndex = _currCell.ColumnIndex
+        End If
 
         Dim start As Date = dtpDateFrom.Value.Date
         Dim finish As Date = dtpDateTo.Value.Date
@@ -752,9 +761,12 @@ Public Class ShiftScheduleForm
 
         Dim rowCount = grid.Rows.Count
 
-        If _currCell IsNot Nothing _
-            And _currRowIndex > -1 _
-            And rowCount > _currRowIndex Then grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+        If GridSelectedCells().Any Then
+            If _currCell IsNot Nothing _
+                And _currRowIndex > -1 _
+                And rowCount > _currRowIndex Then _
+                grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+        End If
     End Sub
 
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
@@ -973,10 +985,26 @@ Public Class ShiftScheduleForm
 
         End If
 
+        Dim _currRowIndex, _currColIndex As Integer
+        If GridSelectedCells().Any Then
+            _currCell = GridSelectedCells().FirstOrDefault
+            _currRowIndex = _currCell.RowIndex
+            _currColIndex = _currCell.ColumnIndex
+        End If
+
         _originDataSource = Await RangeApply(start, finish, CreatedResult(True))
         RefreshDataSource(grid, _originDataSource)
 
         NoAffectedRows()
+
+        Dim rowCount = grid.Rows.Count
+
+        If GridSelectedCells().Any Then
+            If _currCell IsNot Nothing _
+                And _currRowIndex > -1 _
+                And rowCount > _currRowIndex Then _
+                grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+        End If
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDiscard1.Click
