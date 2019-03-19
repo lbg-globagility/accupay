@@ -708,6 +708,7 @@ Public Class ShiftScheduleForm
 #Region "EventHandlers"
 
     Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click, Button1.Click
+        CommitTimeValues()
 
         Dim _currCell = grid.CurrentCell
         Dim _currRowIndex = _currCell.RowIndex
