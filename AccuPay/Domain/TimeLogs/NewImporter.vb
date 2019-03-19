@@ -141,6 +141,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
         Public Property LogDate As Date?
         Public Property Employee As IEmployeeBase
         Public Property ShiftSchedule As ShiftSchedule
+        Public Property EmployeeDutySchedule As EmployeeDutySchedule
         Public Property ShiftTimeInBounds As Date
         Public Property ShiftTimeOutBounds As Date
 
@@ -160,11 +161,21 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
 
         Public ReadOnly Property ShiftDescription As String
             Get
-                If ShiftSchedule Is Nothing OrElse
-                ShiftSchedule.Shift Is Nothing Then Return "-"
+                If ShiftSchedule IsNot Nothing AndAlso
+                ShiftSchedule.Shift IsNot Nothing Then
 
-                Return $"{ShiftSchedule.Shift.TimeFrom.ToStringFormat("hh:mm tt")} - { _
+                    Return $"{ShiftSchedule.Shift.TimeFrom.ToStringFormat("hh:mm tt")} - { _
                     ShiftSchedule.Shift.TimeTo.ToStringFormat("hh:mm tt")}"
+
+                ElseIf EmployeeDutySchedule IsNot Nothing Then
+
+                    Return $"{EmployeeDutySchedule.StartTime.ToStringFormat("hh:mm tt")} - { _
+                    EmployeeDutySchedule.EndTime.ToStringFormat("hh:mm tt")}"
+
+                End If
+
+                Return "-"
+
             End Get
         End Property
 

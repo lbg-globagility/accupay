@@ -68,7 +68,7 @@ Public Class MassOvertimeForm
                 }
 
                 Dim childEmployees = employees.
-                    Where(Function(e) Nullable.Equals(e.Position.Division.RowID, childDivision.RowID))
+                    Where(Function(e) Nullable.Equals(e.Position?.Division.RowID, childDivision.RowID))
                 For Each childEmployee In childEmployees
                     Dim employeeNode = New TreeNode() With {
                         .Name = childEmployee.Fullname,
@@ -213,6 +213,7 @@ Public Class MassOvertimePresenter
         Using context = New PayrollContext()
             Return context.Divisions.
                 Where(Function(d) Nullable.Equals(d.OrganizationID, z_OrganizationID)).
+                OrderBy(Function(d) d.Name).
                 ToList()
         End Using
     End Function

@@ -42,7 +42,8 @@ Public Class SssCalculator
             Dim socialSecurityBracket = FindMatchingBracket(amount)
 
             employeeSssPerMonth = If(socialSecurityBracket?.EmployeeContributionAmount, 0)
-            employerSssPerMonth = If(socialSecurityBracket?.EmployerContributionAmount, 0)
+            employerSssPerMonth = If(socialSecurityBracket?.EmployerContributionAmount + socialSecurityBracket?.EmployeeECAmount, 0)
+
         ElseIf sssCalculation = SssCalculationBasis.BasicSalary Then
             Dim socialSecurityId = salary.PaySocialSecurityID
 

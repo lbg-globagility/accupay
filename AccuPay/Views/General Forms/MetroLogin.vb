@@ -240,6 +240,7 @@ Public Class MetroLogin
     Private Sub MetroLogin_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Debugger.IsAttached Then
             AssignDefaultCredentials()
+
         End If
     End Sub
 

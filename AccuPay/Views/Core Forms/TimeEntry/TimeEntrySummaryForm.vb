@@ -298,8 +298,8 @@ Public Class TimeEntrySummaryForm
                 etd.TimeIn,
                 etd.TimeOut,
                 etd.RowID,
-                shift.TimeFrom AS ShiftFrom,
-                shift.TimeTo AS ShiftTo,
+                shiftschedules.StartTime AS ShiftFrom,
+                shiftschedules.EndTime AS ShiftTo,
                 ete.RegularHoursWorked,
                 ete.RegularHoursAmount,
                 ete.NightDifferentialHours,
@@ -373,11 +373,12 @@ Public Class TimeEntrySummaryForm
             ON ot.OTStartDate = ete.Date AND
                 ot.EmployeeID = ete.EmployeeID AND
                 ot.OTStatus = 'Approved'
-            LEFT JOIN shift
-            ON shift.RowID = employeeshift.ShiftID
             LEFT JOIN payrate
             ON payrate.Date = ete.Date AND
                 payrate.OrganizationID = ete.OrganizationID
+            LEFT JOIN shiftschedules
+            ON shiftschedules.EmployeeID = ete.EmployeeID AND
+                shiftschedules.`Date` = ete.`Date`
             WHERE ete.EmployeeID = @EmployeeID AND
                 ete.`Date` BETWEEN @DateFrom AND @DateTo
             ORDER BY ete.`Date`;
