@@ -1552,13 +1552,4 @@ Public Class TimeLogsForm
         MyBase.OnLoad(e)
     End Sub
 
-    Private Class NewTimeLogsArgument
-        Public Property Logs As IList(Of ImportTimeAttendanceLog)
-        Public Property IsChangeable As Boolean
-
-        Sub New(logs As IList(Of ImportTimeAttendanceLog), isChangeable As Boolean)
-            Me.Logs = logs
-            Me.IsChangeable = isChangeable
-        End Sub
-    End Class
 End Class
