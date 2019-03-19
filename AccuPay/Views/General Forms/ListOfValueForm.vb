@@ -335,6 +335,11 @@ Public Class ListOfValueForm
 
         btnSave.Enabled = True
 
+        If txtType.Text = "DutyShift" _
+            And Application.OpenForms.OfType(Of ShiftScheduleForm).Any Then
+            Application.OpenForms.OfType(Of ShiftScheduleForm).FirstOrDefault.LoadShiftScheduleConfigurablePolicy()
+        End If
+
     End Sub
 
     Private Sub ListOfValueForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing

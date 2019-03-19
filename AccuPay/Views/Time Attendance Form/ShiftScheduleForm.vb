@@ -46,7 +46,7 @@ Public Class ShiftScheduleForm
 
 #Region "Methods"
 
-    Private Async Sub LoadShiftScheduleConfigurablePolicy()
+    Public Async Sub LoadShiftScheduleConfigurablePolicy()
         _dutyShiftPolicy = Await DutyShiftPolicy.Load1
 
         txtBreakLength.Value = _dutyShiftPolicy.BreakHour
