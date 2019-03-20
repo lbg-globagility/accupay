@@ -7,7 +7,7 @@ Namespace Global.AccuPay.SimplifiedEntities.GridView
 
         Public Property RowID As Integer? Implements IEmployeeBase.RowID
 
-        Public Property EmployeeID As String Implements IEmployeeBase.EmployeeID
+        Public Property EmployeeNo As String Implements IEmployeeBase.EmployeeNo
 
         Public Property FirstName As String Implements IEmployeeBase.FirstName
 
@@ -30,7 +30,7 @@ Namespace Global.AccuPay.SimplifiedEntities.GridView
         End Function
 
         Public Overrides Function ToString() As String
-            Return EmployeeID
+            Return EmployeeNo
         End Function
 
     End Class

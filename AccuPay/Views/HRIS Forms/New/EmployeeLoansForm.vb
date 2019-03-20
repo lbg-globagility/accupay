@@ -1,6 +1,4 @@
 ﻿Option Strict On
-
-Imports System.Linq.Expressions
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
@@ -73,7 +71,7 @@ Public Class EmployeeLoansForm
         If currentEmployee Is Nothing Then Return
 
         txtEmployeeFirstName.Text = currentEmployee.FullNameWithMiddleNameInitial
-        txtEmployeeNumber.Text = currentEmployee.EmployeeID
+        txtEmployeeNumber.Text = currentEmployee.EmployeeNo
 
         pbEmployeePicture.Image = ConvByteToImage(currentEmployee.Image)
 

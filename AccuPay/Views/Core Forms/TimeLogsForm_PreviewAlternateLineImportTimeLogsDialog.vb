@@ -20,7 +20,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Sub New(logs As IList(Of ImportTimeAttendanceLog), errors As IList(Of ImportTimeAttendanceLog))
 
         Me._originalLogs = logs.
-                    OrderBy(Function(l) l.Employee.EmployeeID).
+                    OrderBy(Function(l) l.Employee.EmployeeNo).
                     ThenBy(Function(l) l.LogDate).
                     ThenBy(Function(l) l.DateTime).
                     ToList

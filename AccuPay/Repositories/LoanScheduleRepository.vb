@@ -115,10 +115,7 @@ Namespace Global.AccuPay.Repository
             'if completed yung loan, hindi pwede ma i-insert or update
             If loanSchedule.Status = STATUS_COMPLETE Then
 
-                Dim exception As New ArgumentException("Loan schedule is already completed!")
-                Throw exception
-                'has error serializable
-                'exception.Data("loanSchedule") = loanSchedule
+                Throw New ArgumentException("Loan schedule is already completed!")
 
             End If
 

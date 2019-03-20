@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Loans
 Imports AccuPay.Repository
 Imports AccuPay.Utils
@@ -7,7 +8,7 @@ Imports Globagility.AccuPay.Loans
 
 Public Class ImportLoansForm
 
-    Private _loans As IList(Of LoanSchedule)
+    Private _loans As List(Of LoanSchedule)
 
     Private _employeeRepository As New EmployeeRepository
 
@@ -108,9 +109,11 @@ Public Class ImportLoansForm
 
 
             Dim loanSchedule = New LoanSchedule With {
+                .RowID = Nothing,
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
+                .Employee = employee,
                 .LoanNumber = record.LoanNumber,
                 .Comments = record.Comments,
                 .TotalLoanAmount = record.TotalLoanAmount,
@@ -173,7 +176,13 @@ Public Class ImportLoansForm
 
         Try
 
-            Await _loanScheduleRepository.SaveManyAsync(_loans, Me._loanTypeList)
+            Dim loansWithOutEmployeeObject = _loans.CloneListJson()
+
+            For Each loan In loansWithOutEmployeeObject
+                loan.Employee = Nothing
+            Next
+
+            Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject, Me._loanTypeList)
 
             Me.IsSaved = True
 

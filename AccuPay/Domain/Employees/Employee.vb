@@ -38,7 +38,7 @@ Namespace Global.AccuPay.Entity
         Public Property Surname As String
 
         <Column("EmployeeID")>
-        Public Property EmployeeNo As String Implements IEmployeeBase.EmployeeID
+        Public Property EmployeeNo As String Implements IEmployeeBase.EmployeeNo
 
         Public Property TinNo As String
 
