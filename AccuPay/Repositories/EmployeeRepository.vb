@@ -11,7 +11,7 @@ Namespace Global.AccuPay.Repository
         Public Async Function GetAll(Of T As {New, IEmployeeBase})() As Task(Of IEnumerable(Of IEmployeeBase))
 
             Using context = New PayrollContext()
-                Dim query As IQueryable(Of Entity.Employee) = GetAllEmployeeBaseQuery(context)
+                Dim query = GetAllEmployeeBaseQuery(context)
 
                 Select Case GetType(T)
                     Case GetType(GridView.Employee)
@@ -21,7 +21,7 @@ Namespace Global.AccuPay.Repository
                         list = Await query.
                                     Select(Function(e) New GridView.Employee With {
                                         .RowID = e.RowID,
-                                        .EmployeeID = e.EmployeeNo,
+                                        .EmployeeNo = e.EmployeeNo,
                                         .FirstName = e.FirstName,
                                         .MiddleName = e.MiddleName,
                                         .LastName = e.LastName,
@@ -50,9 +50,10 @@ Namespace Global.AccuPay.Repository
 
             Using context = New PayrollContext()
 
-                Return Await context.Employees.
+                Dim query = GetAllEmployeeBaseQuery(context)
+
+                Return Await query.
                     Where(Function(l) l.EmployeeNo = employeeNumber).
-                    Where(Function(l) Nullable.Equals(l.OrganizationID, z_OrganizationID)).
                     FirstOrDefaultAsync()
 
             End Using
@@ -84,7 +85,7 @@ Namespace Global.AccuPay.Repository
 
             Dim matchCriteria =
             Function(employee As IEmployeeBase) As Boolean
-                Dim containsEmployeeId = employee.EmployeeID.ToLower().Contains(searchValue)
+                Dim containsEmployeeId = employee.EmployeeNo.ToLower().Contains(searchValue)
                 Dim containsFullName = (employee.FirstName.ToLower() + " " + employee.LastName.ToLower()).
                                         Contains(searchValue)
 

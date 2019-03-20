@@ -25,7 +25,17 @@ Partial Class EmployeeLoansForm
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -39,16 +49,6 @@ Partial Class EmployeeLoansForm
         Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblFormTitle = New System.Windows.Forms.Label()
         Me.pnlSearch = New System.Windows.Forms.Panel()
         Me.searchTextBox = New System.Windows.Forms.TextBox()
@@ -61,6 +61,18 @@ Partial Class EmployeeLoansForm
         Me.chkOnHoldFilter = New System.Windows.Forms.CheckBox()
         Me.chkInProgressFilter = New System.Windows.Forms.CheckBox()
         Me.loanSchedulesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_loanno = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_totloanamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_totballeft = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_dedamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_DedPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_dedsched = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_noofpayperiod = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_noofpayperiodleft = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_dedeffectivedatefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_status = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_loantype = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.pnlForm = New System.Windows.Forms.Panel()
         Me.DetailsTabControl = New System.Windows.Forms.TabControl()
         Me.tbpDetails = New System.Windows.Forms.TabPage()
@@ -104,6 +116,10 @@ Partial Class EmployeeLoansForm
         Me.cmbDeductionSchedule = New System.Windows.Forms.ComboBox()
         Me.tbpHistory = New System.Windows.Forms.TabPage()
         Me.loanHistoryGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_dateded = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn116 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn117 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.txtEmployeeFirstName = New System.Windows.Forms.TextBox()
         Me.txtEmployeeNumber = New System.Windows.Forms.TextBox()
@@ -141,22 +157,6 @@ Partial Class EmployeeLoansForm
         Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_loanno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_totloanamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_totballeft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_DedPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedsched = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_noofpayperiod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_noofpayperiodleft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedeffectivedatefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_status = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_loantype = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dateded = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn116 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn117 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.pnlSearch.SuspendLayout()
         CType(Me.employeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlMain.SuspendLayout()
@@ -351,6 +351,115 @@ Partial Class EmployeeLoansForm
         Me.loanSchedulesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.loanSchedulesDataGridView.Size = New System.Drawing.Size(781, 250)
         Me.loanSchedulesDataGridView.TabIndex = 366
+        '
+        'c_loanno
+        '
+        Me.c_loanno.DataPropertyName = "LoanNumber"
+        Me.c_loanno.HeaderText = "Loan Number"
+        Me.c_loanno.Name = "c_loanno"
+        Me.c_loanno.ReadOnly = True
+        Me.c_loanno.Width = 40
+        '
+        'c_totloanamt
+        '
+        Me.c_totloanamt.DataPropertyName = "TotalLoanAmount"
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle2.Format = "N2"
+        DataGridViewCellStyle2.NullValue = Nothing
+        Me.c_totloanamt.DefaultCellStyle = DataGridViewCellStyle2
+        Me.c_totloanamt.HeaderText = "Total Loan Amount"
+        Me.c_totloanamt.Name = "c_totloanamt"
+        Me.c_totloanamt.ReadOnly = True
+        '
+        'c_totballeft
+        '
+        Me.c_totballeft.DataPropertyName = "TotalBalanceLeft"
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "N2"
+        Me.c_totballeft.DefaultCellStyle = DataGridViewCellStyle3
+        Me.c_totballeft.HeaderText = "Total Balance Left"
+        Me.c_totballeft.Name = "c_totballeft"
+        Me.c_totballeft.ReadOnly = True
+        '
+        'c_dedamt
+        '
+        Me.c_dedamt.DataPropertyName = "DeductionAmount"
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle4.Format = "N2"
+        Me.c_dedamt.DefaultCellStyle = DataGridViewCellStyle4
+        Me.c_dedamt.HeaderText = "Deduction Amount"
+        Me.c_dedamt.Name = "c_dedamt"
+        Me.c_dedamt.ReadOnly = True
+        '
+        'c_DedPercent
+        '
+        Me.c_DedPercent.DataPropertyName = "DeductionPercentage"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle5.Format = "N2"
+        Me.c_DedPercent.DefaultCellStyle = DataGridViewCellStyle5
+        Me.c_DedPercent.HeaderText = "Deduction Percentage"
+        Me.c_DedPercent.Name = "c_DedPercent"
+        Me.c_DedPercent.ReadOnly = True
+        '
+        'c_dedsched
+        '
+        Me.c_dedsched.DataPropertyName = "DeductionSchedule"
+        Me.c_dedsched.HeaderText = "Deduction Schedule"
+        Me.c_dedsched.Name = "c_dedsched"
+        Me.c_dedsched.ReadOnly = True
+        '
+        'c_noofpayperiod
+        '
+        Me.c_noofpayperiod.DataPropertyName = "NoOfPayPeriod"
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle6.Format = "N0"
+        DataGridViewCellStyle6.NullValue = Nothing
+        Me.c_noofpayperiod.DefaultCellStyle = DataGridViewCellStyle6
+        Me.c_noofpayperiod.HeaderText = "No of pay period"
+        Me.c_noofpayperiod.Name = "c_noofpayperiod"
+        Me.c_noofpayperiod.ReadOnly = True
+        Me.c_noofpayperiod.Visible = False
+        '
+        'c_noofpayperiodleft
+        '
+        Me.c_noofpayperiodleft.DataPropertyName = "LoanPayPeriodLeft"
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle7.Format = "N0"
+        DataGridViewCellStyle7.NullValue = Nothing
+        Me.c_noofpayperiodleft.DefaultCellStyle = DataGridViewCellStyle7
+        Me.c_noofpayperiodleft.HeaderText = "No of pay period left"
+        Me.c_noofpayperiodleft.Name = "c_noofpayperiodleft"
+        Me.c_noofpayperiodleft.ReadOnly = True
+        '
+        'c_dedeffectivedatefrom
+        '
+        Me.c_dedeffectivedatefrom.DataPropertyName = "DedEffectiveDateFrom"
+        DataGridViewCellStyle8.Format = "d"
+        DataGridViewCellStyle8.NullValue = Nothing
+        Me.c_dedeffectivedatefrom.DefaultCellStyle = DataGridViewCellStyle8
+        Me.c_dedeffectivedatefrom.HeaderText = "Deduction date from"
+        Me.c_dedeffectivedatefrom.Name = "c_dedeffectivedatefrom"
+        Me.c_dedeffectivedatefrom.ReadOnly = True
+        '
+        'Comments
+        '
+        Me.Comments.HeaderText = "Remarks"
+        Me.Comments.Name = "Comments"
+        Me.Comments.ReadOnly = True
+        '
+        'c_status
+        '
+        Me.c_status.DataPropertyName = "Status"
+        Me.c_status.HeaderText = "Status"
+        Me.c_status.Name = "c_status"
+        Me.c_status.ReadOnly = True
+        '
+        'c_loantype
+        '
+        Me.c_loantype.DataPropertyName = "LoanName"
+        Me.c_loantype.HeaderText = "Loan type"
+        Me.c_loantype.Name = "c_loantype"
+        Me.c_loantype.ReadOnly = True
         '
         'pnlForm
         '
@@ -824,7 +933,7 @@ Partial Class EmployeeLoansForm
         Me.tbpHistory.Location = New System.Drawing.Point(4, 22)
         Me.tbpHistory.Name = "tbpHistory"
         Me.tbpHistory.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpHistory.Size = New System.Drawing.Size(817, 248)
+        Me.tbpHistory.Size = New System.Drawing.Size(834, 248)
         Me.tbpHistory.TabIndex = 1
         Me.tbpHistory.Text = "Loan History"
         Me.tbpHistory.UseVisualStyleBackColor = True
@@ -852,6 +961,48 @@ Partial Class EmployeeLoansForm
         Me.loanHistoryGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.loanHistoryGridView.Size = New System.Drawing.Size(764, 242)
         Me.loanHistoryGridView.TabIndex = 325
+        '
+        'c_dateded
+        '
+        Me.c_dateded.DataPropertyName = "PayPeriodPayToDate"
+        Me.c_dateded.HeaderText = "Deduction Date"
+        Me.c_dateded.Name = "c_dateded"
+        Me.c_dateded.ReadOnly = True
+        Me.c_dateded.Width = 180
+        '
+        'c_Amount
+        '
+        Me.c_Amount.DataPropertyName = "Amount"
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle10.Format = "(#,###.00)"
+        DataGridViewCellStyle10.NullValue = Nothing
+        Me.c_Amount.DefaultCellStyle = DataGridViewCellStyle10
+        Me.c_Amount.HeaderText = "Amount"
+        Me.c_Amount.Name = "c_Amount"
+        Me.c_Amount.ReadOnly = True
+        Me.c_Amount.Width = 180
+        '
+        'DataGridViewTextBoxColumn116
+        '
+        Me.DataGridViewTextBoxColumn116.DataPropertyName = "TotalBalance"
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle11.Format = "N2"
+        DataGridViewCellStyle11.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn116.DefaultCellStyle = DataGridViewCellStyle11
+        Me.DataGridViewTextBoxColumn116.HeaderText = "Balance"
+        Me.DataGridViewTextBoxColumn116.Name = "DataGridViewTextBoxColumn116"
+        Me.DataGridViewTextBoxColumn116.ReadOnly = True
+        Me.DataGridViewTextBoxColumn116.Width = 180
+        '
+        'DataGridViewTextBoxColumn117
+        '
+        Me.DataGridViewTextBoxColumn117.DataPropertyName = "LoanPayPeriodLeft"
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn117.DefaultCellStyle = DataGridViewCellStyle12
+        Me.DataGridViewTextBoxColumn117.HeaderText = "Payments Remaining"
+        Me.DataGridViewTextBoxColumn117.Name = "DataGridViewTextBoxColumn117"
+        Me.DataGridViewTextBoxColumn117.ReadOnly = True
+        Me.DataGridViewTextBoxColumn117.Width = 180
         '
         'EmployeeInfoTabLayout
         '
@@ -1174,7 +1325,7 @@ Partial Class EmployeeLoansForm
         '
         'cemp_EmployeeID
         '
-        Me.cemp_EmployeeID.DataPropertyName = "EmployeeID"
+        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
         Me.cemp_EmployeeID.HeaderText = "Employee ID"
         Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
         Me.cemp_EmployeeID.ReadOnly = True
@@ -1192,157 +1343,6 @@ Partial Class EmployeeLoansForm
         Me.cemp_FirstName.HeaderText = "First Name"
         Me.cemp_FirstName.Name = "cemp_FirstName"
         Me.cemp_FirstName.ReadOnly = True
-        '
-        'c_loanno
-        '
-        Me.c_loanno.DataPropertyName = "LoanNumber"
-        Me.c_loanno.HeaderText = "Loan Number"
-        Me.c_loanno.Name = "c_loanno"
-        Me.c_loanno.ReadOnly = True
-        Me.c_loanno.Width = 40
-        '
-        'c_totloanamt
-        '
-        Me.c_totloanamt.DataPropertyName = "TotalLoanAmount"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle2.Format = "N2"
-        DataGridViewCellStyle2.NullValue = Nothing
-        Me.c_totloanamt.DefaultCellStyle = DataGridViewCellStyle2
-        Me.c_totloanamt.HeaderText = "Total Loan Amount"
-        Me.c_totloanamt.Name = "c_totloanamt"
-        Me.c_totloanamt.ReadOnly = True
-        '
-        'c_totballeft
-        '
-        Me.c_totballeft.DataPropertyName = "TotalBalanceLeft"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle3.Format = "N2"
-        Me.c_totballeft.DefaultCellStyle = DataGridViewCellStyle3
-        Me.c_totballeft.HeaderText = "Total Balance Left"
-        Me.c_totballeft.Name = "c_totballeft"
-        Me.c_totballeft.ReadOnly = True
-        '
-        'c_dedamt
-        '
-        Me.c_dedamt.DataPropertyName = "DeductionAmount"
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle4.Format = "N2"
-        Me.c_dedamt.DefaultCellStyle = DataGridViewCellStyle4
-        Me.c_dedamt.HeaderText = "Deduction Amount"
-        Me.c_dedamt.Name = "c_dedamt"
-        Me.c_dedamt.ReadOnly = True
-        '
-        'c_DedPercent
-        '
-        Me.c_DedPercent.DataPropertyName = "DeductionPercentage"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle5.Format = "N2"
-        Me.c_DedPercent.DefaultCellStyle = DataGridViewCellStyle5
-        Me.c_DedPercent.HeaderText = "Deduction Percentage"
-        Me.c_DedPercent.Name = "c_DedPercent"
-        Me.c_DedPercent.ReadOnly = True
-        '
-        'c_dedsched
-        '
-        Me.c_dedsched.DataPropertyName = "DeductionSchedule"
-        Me.c_dedsched.HeaderText = "Deduction Schedule"
-        Me.c_dedsched.Name = "c_dedsched"
-        Me.c_dedsched.ReadOnly = True
-        '
-        'c_noofpayperiod
-        '
-        Me.c_noofpayperiod.DataPropertyName = "NoOfPayPeriod"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "N0"
-        DataGridViewCellStyle6.NullValue = Nothing
-        Me.c_noofpayperiod.DefaultCellStyle = DataGridViewCellStyle6
-        Me.c_noofpayperiod.HeaderText = "No of pay period"
-        Me.c_noofpayperiod.Name = "c_noofpayperiod"
-        Me.c_noofpayperiod.ReadOnly = True
-        Me.c_noofpayperiod.Visible = False
-        '
-        'c_noofpayperiodleft
-        '
-        Me.c_noofpayperiodleft.DataPropertyName = "LoanPayPeriodLeft"
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle7.Format = "N0"
-        DataGridViewCellStyle7.NullValue = Nothing
-        Me.c_noofpayperiodleft.DefaultCellStyle = DataGridViewCellStyle7
-        Me.c_noofpayperiodleft.HeaderText = "No of pay period left"
-        Me.c_noofpayperiodleft.Name = "c_noofpayperiodleft"
-        Me.c_noofpayperiodleft.ReadOnly = True
-        '
-        'c_dedeffectivedatefrom
-        '
-        Me.c_dedeffectivedatefrom.DataPropertyName = "DedEffectiveDateFrom"
-        DataGridViewCellStyle8.Format = "d"
-        DataGridViewCellStyle8.NullValue = Nothing
-        Me.c_dedeffectivedatefrom.DefaultCellStyle = DataGridViewCellStyle8
-        Me.c_dedeffectivedatefrom.HeaderText = "Deduction date from"
-        Me.c_dedeffectivedatefrom.Name = "c_dedeffectivedatefrom"
-        Me.c_dedeffectivedatefrom.ReadOnly = True
-        '
-        'Comments
-        '
-        Me.Comments.HeaderText = "Remarks"
-        Me.Comments.Name = "Comments"
-        Me.Comments.ReadOnly = True
-        '
-        'c_status
-        '
-        Me.c_status.DataPropertyName = "Status"
-        Me.c_status.HeaderText = "Status"
-        Me.c_status.Name = "c_status"
-        Me.c_status.ReadOnly = True
-        '
-        'c_loantype
-        '
-        Me.c_loantype.DataPropertyName = "LoanName"
-        Me.c_loantype.HeaderText = "Loan type"
-        Me.c_loantype.Name = "c_loantype"
-        Me.c_loantype.ReadOnly = True
-        '
-        'c_dateded
-        '
-        Me.c_dateded.DataPropertyName = "PayPeriodPayToDate"
-        Me.c_dateded.HeaderText = "Deduction Date"
-        Me.c_dateded.Name = "c_dateded"
-        Me.c_dateded.ReadOnly = True
-        Me.c_dateded.Width = 180
-        '
-        'c_Amount
-        '
-        Me.c_Amount.DataPropertyName = "Amount"
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle10.Format = "(#,###.00)"
-        DataGridViewCellStyle10.NullValue = Nothing
-        Me.c_Amount.DefaultCellStyle = DataGridViewCellStyle10
-        Me.c_Amount.HeaderText = "Amount"
-        Me.c_Amount.Name = "c_Amount"
-        Me.c_Amount.ReadOnly = True
-        Me.c_Amount.Width = 180
-        '
-        'DataGridViewTextBoxColumn116
-        '
-        Me.DataGridViewTextBoxColumn116.DataPropertyName = "TotalBalance"
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle11.Format = "N2"
-        DataGridViewCellStyle11.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn116.DefaultCellStyle = DataGridViewCellStyle11
-        Me.DataGridViewTextBoxColumn116.HeaderText = "Balance"
-        Me.DataGridViewTextBoxColumn116.Name = "DataGridViewTextBoxColumn116"
-        Me.DataGridViewTextBoxColumn116.ReadOnly = True
-        Me.DataGridViewTextBoxColumn116.Width = 180
-        '
-        'DataGridViewTextBoxColumn117
-        '
-        Me.DataGridViewTextBoxColumn117.DataPropertyName = "LoanPayPeriodLeft"
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn117.DefaultCellStyle = DataGridViewCellStyle12
-        Me.DataGridViewTextBoxColumn117.HeaderText = "Payments Remaining"
-        Me.DataGridViewTextBoxColumn117.Name = "DataGridViewTextBoxColumn117"
-        Me.DataGridViewTextBoxColumn117.ReadOnly = True
-        Me.DataGridViewTextBoxColumn117.Width = 180
         '
         'EmployeeLoansForm
         '
@@ -1475,9 +1475,6 @@ Partial Class EmployeeLoansForm
     Friend WithEvents Label3 As Label
     Friend WithEvents Panel3 As Panel
     Friend WithEvents Label2 As Label
-    Friend WithEvents cemp_EmployeeID As DataGridViewTextBoxColumn
-    Friend WithEvents cemp_LastName As DataGridViewTextBoxColumn
-    Friend WithEvents cemp_FirstName As DataGridViewTextBoxColumn
     Friend WithEvents loanHistoryGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents DataGridViewTextBoxColumn19 As DataGridViewTextBoxColumn
     Friend WithEvents c_dateded As DataGridViewTextBoxColumn
@@ -1503,4 +1500,7 @@ Partial Class EmployeeLoansForm
     Friend WithEvents Comments As DataGridViewTextBoxColumn
     Friend WithEvents c_status As DataGridViewTextBoxColumn
     Friend WithEvents c_loantype As DataGridViewTextBoxColumn
+    Friend WithEvents cemp_EmployeeID As DataGridViewTextBoxColumn
+    Friend WithEvents cemp_LastName As DataGridViewTextBoxColumn
+    Friend WithEvents cemp_FirstName As DataGridViewTextBoxColumn
 End Class

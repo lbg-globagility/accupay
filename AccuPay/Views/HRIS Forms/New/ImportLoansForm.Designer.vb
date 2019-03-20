@@ -35,16 +35,6 @@ Partial Class ImportLoansForm
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
         Me.LoansDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.ErrorsTabControl = New System.Windows.Forms.TabPage()
         Me.RejectedRecordsGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
@@ -72,6 +62,16 @@ Partial Class ImportLoansForm
         Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1.SuspendLayout()
         Me.ParsedTabControl.SuspendLayout()
         CType(Me.LoansDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -164,76 +164,6 @@ Partial Class ImportLoansForm
         Me.LoansDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.LoansDataGrid.Size = New System.Drawing.Size(890, 356)
         Me.LoansDataGrid.TabIndex = 12
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "EmployeeID"
-        Me.Column4.HeaderText = "Employee Name"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "EmployeeID"
-        Me.Column1.HeaderText = "Employee ID"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "LoanName"
-        Me.Column5.HeaderText = "Loan Name"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "LoanNumber"
-        Me.Column6.HeaderText = "Loan number/code"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "DedEffectiveDateFrom"
-        Me.Column7.HeaderText = "Start date"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'Column8
-        '
-        Me.Column8.DataPropertyName = "TotalLoanAmount"
-        Me.Column8.HeaderText = "Total loan amount"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        '
-        'Column9
-        '
-        Me.Column9.DataPropertyName = "TotalBalanceLeft"
-        Me.Column9.HeaderText = "Loan balance"
-        Me.Column9.Name = "Column9"
-        Me.Column9.ReadOnly = True
-        '
-        'Column10
-        '
-        Me.Column10.DataPropertyName = "DeductionAmount"
-        Me.Column10.HeaderText = "Deduction amount"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        '
-        'Column11
-        '
-        Me.Column11.DataPropertyName = "DeductionSchedule"
-        Me.Column11.HeaderText = "Deduction frequency"
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        '
-        'Column12
-        '
-        Me.Column12.DataPropertyName = "Comments"
-        Me.Column12.HeaderText = "Comments"
-        Me.Column12.Name = "Column12"
-        Me.Column12.ReadOnly = True
         '
         'lblStatus
         '
@@ -465,6 +395,76 @@ Partial Class ImportLoansForm
         Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
         Me.DataGridViewTextBoxColumn22.Width = 71
         '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "EmployeeFullName"
+        Me.Column4.HeaderText = "Employee Name"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "EmployeeNumber"
+        Me.Column1.HeaderText = "Employee ID"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "LoanName"
+        Me.Column5.HeaderText = "Loan Name"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "LoanNumber"
+        Me.Column6.HeaderText = "Loan number/code"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "DedEffectiveDateFrom"
+        Me.Column7.HeaderText = "Start date"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column8
+        '
+        Me.Column8.DataPropertyName = "TotalLoanAmount"
+        Me.Column8.HeaderText = "Total loan amount"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        '
+        'Column9
+        '
+        Me.Column9.DataPropertyName = "TotalBalanceLeft"
+        Me.Column9.HeaderText = "Loan balance"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
+        '
+        'Column10
+        '
+        Me.Column10.DataPropertyName = "DeductionAmount"
+        Me.Column10.HeaderText = "Deduction amount"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        '
+        'Column11
+        '
+        Me.Column11.DataPropertyName = "DeductionSchedule"
+        Me.Column11.HeaderText = "Deduction frequency"
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        '
+        'Column12
+        '
+        Me.Column12.DataPropertyName = "Comments"
+        Me.Column12.HeaderText = "Comments"
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
+        '
         'ImportLoansForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -498,16 +498,6 @@ Partial Class ImportLoansForm
     Friend WithEvents LoansDataGrid As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents lblStatus As Label
     Friend WithEvents ErrorsTabControl As TabPage
-    Friend WithEvents Column4 As DataGridViewTextBoxColumn
-    Friend WithEvents Column1 As DataGridViewTextBoxColumn
-    Friend WithEvents Column5 As DataGridViewTextBoxColumn
-    Friend WithEvents Column6 As DataGridViewTextBoxColumn
-    Friend WithEvents Column7 As DataGridViewTextBoxColumn
-    Friend WithEvents Column8 As DataGridViewTextBoxColumn
-    Friend WithEvents Column9 As DataGridViewTextBoxColumn
-    Friend WithEvents Column10 As DataGridViewTextBoxColumn
-    Friend WithEvents Column11 As DataGridViewTextBoxColumn
-    Friend WithEvents Column12 As DataGridViewTextBoxColumn
     Friend WithEvents RejectedRecordsGrid As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents DataGridViewTextBoxColumn17 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn18 As DataGridViewTextBoxColumn
@@ -527,4 +517,14 @@ Partial Class ImportLoansForm
     Friend WithEvents DataGridViewTextBoxColumn14 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn15 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn16 As DataGridViewTextBoxColumn
+    Friend WithEvents Column4 As DataGridViewTextBoxColumn
+    Friend WithEvents Column1 As DataGridViewTextBoxColumn
+    Friend WithEvents Column5 As DataGridViewTextBoxColumn
+    Friend WithEvents Column6 As DataGridViewTextBoxColumn
+    Friend WithEvents Column7 As DataGridViewTextBoxColumn
+    Friend WithEvents Column8 As DataGridViewTextBoxColumn
+    Friend WithEvents Column9 As DataGridViewTextBoxColumn
+    Friend WithEvents Column10 As DataGridViewTextBoxColumn
+    Friend WithEvents Column11 As DataGridViewTextBoxColumn
+    Friend WithEvents Column12 As DataGridViewTextBoxColumn
 End Class
