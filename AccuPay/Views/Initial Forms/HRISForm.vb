@@ -198,12 +198,8 @@ Public Class HRISForm
     End Sub
 
     Private Sub LoadSchedToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoanSchedToolStripMenuItem.Click
-        EmployeeForm.tabctrlemp.SelectedIndex = 10
-        EmployeeForm.tabIndx = 10
-        ChangeForm(EmployeeForm, "Employee Loan Schedule")
-        'ChangeForm(LoanScheduleForm)
-        EmployeeForm.tbpLoans.Focus()
-        'Employee.tbpLoans_Enter(sender, e)
+
+        LoansToolStripMenuItem.PerformClick()
     End Sub
 
     Private Sub LoanHistoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoanHistoToolStripMenuItem.Click
@@ -357,5 +353,6 @@ Public Class HRISForm
     Private Sub HrisToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoansToolStripMenuItem.Click
         ChangeForm(EmployeeLoansForm, "Employee Loan Schedule")
         previousForm = EmployeeLoansForm
+
     End Sub
 End Class

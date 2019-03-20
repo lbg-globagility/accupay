@@ -17519,6 +17519,10 @@ Public Class EmployeeForm
             Next
 
             tabctrlemp.SelectedIndex = index
+
+        ElseIf e.TabPage.Name = tbpLoans.Name Then
+            e.Cancel = True
+            HRISForm.LoansToolStripMenuItem.PerformClick()
         Else
             Dim view_name As String = String.Empty
 

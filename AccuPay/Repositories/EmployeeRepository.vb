@@ -95,19 +95,29 @@ Namespace Global.AccuPay.Repository
                 Return containsEmployeeId Or containsFullName Or containsFullNameInReverse
             End Function
 
-            Return Await Task.Run(Function() employees.Where(matchCriteria).ToList())
+            Return Await Task.Run(Function() employees.Where(matchCriteria).
+                                      Select(Function(e) ConvertsToEmployee(e)).
+                                      ToList())
 
         End Function
-
 
 #Region "Private Functions"
         Private Shared Function GetAllEmployeeBaseQuery(context As PayrollContext) As IQueryable(Of Entity.Employee)
             Return context.Employees.
                             Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID))
         End Function
+
+        Private Function ConvertsToEmployee(employee As IEmployeeBase) As Employee
+            Dim e = employee
+            Return New Employee With {
+                .RowID = e.RowID,
+                .EmployeeNo = e.EmployeeID,
+                .FirstName = e.FirstName,
+                .LastName = e.LastName,
+                .MiddleName = e.MiddleName}
+        End Function
 #End Region
 
     End Class
 
 End Namespace
-

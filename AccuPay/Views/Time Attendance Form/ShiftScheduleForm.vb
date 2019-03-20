@@ -1148,6 +1148,26 @@ Public Class ShiftScheduleForm
         btnSave.Enabled = isNotZero
     End Sub
 
+    Private Sub PasteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PasteToolStripMenuItem.Click
+        Dim _text = Clipboard.GetText()
+
+        Dim _selectedCells = gridWeek.SelectedCells.OfType(Of DataGridViewCell)
+        For Each _cell In _selectedCells
+            _cell.Value = _text
+            DataGrid_CellEndEdit(gridWeek, New DataGridViewCellEventArgs(_cell.ColumnIndex, _cell.RowIndex))
+        Next
+    End Sub
+
+    Private Sub PasteToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles PasteToolStripMenuItem1.Click
+        Dim _text = Clipboard.GetText()
+
+        Dim _selectedCells = grid.SelectedCells.OfType(Of DataGridViewCell).Where(Function(_cell) Not _cell.ReadOnly)
+        For Each _cell In _selectedCells
+            _cell.Value = _text
+            DataGrid_CellEndEdit(grid, New DataGridViewCellEventArgs(_cell.ColumnIndex, _cell.RowIndex))
+        Next
+    End Sub
+
 #End Region
 
 End Class
