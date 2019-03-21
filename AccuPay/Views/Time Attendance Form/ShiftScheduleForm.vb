@@ -286,7 +286,9 @@ Public Class ShiftScheduleForm
         infohint.ToolTipTitle = "Save successfully"
         infohint.ToolTipIcon = ToolTipIcon.Info
 
-        infohint.Show("Done.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
+        infohint.Show(String.Empty, btnSave, 3475)
+        infohint.Show("Done.", btnSave, 3475)
+        'infohint.Show("Done.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
     End Sub
 
     Private Sub ShowSuccessImportBalloon()
