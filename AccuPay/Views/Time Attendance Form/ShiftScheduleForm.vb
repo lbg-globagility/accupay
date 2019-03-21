@@ -686,6 +686,16 @@ Public Class ShiftScheduleForm
             End Get
         End Property
 
+        Public Sub CommitChanges()
+            origStartTime = _timeFrom
+            origEndTime = _timeTo
+
+            origBreakStart = _breakFrom
+            origBreakLength = _BreakLength
+
+            origOffset = _IsRestDay
+        End Sub
+
     End Class
 
     Private Class DutyShiftPolicy
@@ -843,6 +853,8 @@ Public Class ShiftScheduleForm
                     context.EmployeeDutySchedules.Remove(ssm.ToEmployeeDutySchedule)
                     ssm.RemoveShift()
                 End If
+
+                ssm.CommitChanges()
             Next
 
             Try
