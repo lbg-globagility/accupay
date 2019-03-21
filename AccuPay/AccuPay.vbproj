@@ -1671,6 +1671,13 @@
     <Compile Include="Views\Time Attendance Form\EmployeeTreeView.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Time Attendance Form\Import ShiftSchedule\ImportedShiftSchedulesForm.Designer.vb">
+      <DependentUpon>ImportedShiftSchedulesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Import ShiftSchedule\ImportedShiftSchedulesForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Import ShiftSchedule\ShiftScheduleRowRecord.vb" />
     <Compile Include="Views\Time Attendance Form\MassOvertimeForm.Designer.vb">
       <DependentUpon>MassOvertimeForm.vb</DependentUpon>
     </Compile>
@@ -1706,6 +1713,9 @@
     <Content Include="logo - Copy.ico" />
     <EmbeddedResource Include="Views\Time Attendance Form\EmployeeTreeView.resx">
       <DependentUpon>EmployeeTreeView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\Import ShiftSchedule\ImportedShiftSchedulesForm.resx">
+      <DependentUpon>ImportedShiftSchedulesForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\ShiftScheduleForm.resx">
       <DependentUpon>ShiftScheduleForm.vb</DependentUpon>

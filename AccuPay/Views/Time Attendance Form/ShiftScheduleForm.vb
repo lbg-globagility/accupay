@@ -6,6 +6,8 @@ Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Tools
 Imports AccuPay.Utils
+Imports Globagility.AccuPay
+Imports Globagility.AccuPay.ShiftSchedules
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 
@@ -279,12 +281,24 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub ShowSuccessBalloon()
-        Dim infohint = New ToolTip
+        Dim infohint = ToolTip1
         infohint.IsBalloon = True
-        infohint.ToolTipTitle = "Done"
+        infohint.ToolTipTitle = "Save successfully"
         infohint.ToolTipIcon = ToolTipIcon.Info
 
-        infohint.Show("Save successfully.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
+        infohint.Show(String.Empty, btnSave, 3475)
+        infohint.Show("Done.", btnSave, 3475)
+        'infohint.Show("Done.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
+    End Sub
+
+    Private Sub ShowSuccessImportBalloon()
+        Dim infohint = ToolTip1
+        infohint.IsBalloon = True
+        infohint.ToolTipTitle = "Imported successfully"
+        infohint.ToolTipIcon = ToolTipIcon.Info
+
+        infohint.Show(String.Empty, Button2, 3475)
+        infohint.Show("Done.", Button2, 3475)
     End Sub
 
 #End Region
@@ -678,6 +692,16 @@ Public Class ShiftScheduleForm
             End Get
         End Property
 
+        Public Sub CommitChanges()
+            origStartTime = _timeFrom
+            origEndTime = _timeTo
+
+            origBreakStart = _breakFrom
+            origBreakLength = _BreakLength
+
+            origOffset = _IsRestDay
+        End Sub
+
     End Class
 
     Private Class DutyShiftPolicy
@@ -755,12 +779,14 @@ Public Class ShiftScheduleForm
 
 #Region "EventHandlers"
 
-    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click, Button1.Click
+    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply1.Click, btnApply2.Click
         CommitTimeValues()
 
         Dim _currRowIndex, _currColIndex As Integer
-        If GridSelectedCells().Any Then
-            _currCell = GridSelectedCells().FirstOrDefault
+        Dim selectedCell = GridSelectedCells()
+        Dim hasSelectedCell = selectedCell.Any
+        If hasSelectedCell Then
+            _currCell = selectedCell.FirstOrDefault
             _currRowIndex = _currCell.RowIndex
             _currColIndex = _currCell.ColumnIndex
 
@@ -806,12 +832,11 @@ Public Class ShiftScheduleForm
 
         Dim rowCount = grid.Rows.Count
 
-        If GridSelectedCells().Any Then
+        If hasSelectedCell Then
             If _currCell IsNot Nothing _
                 And _currRowIndex > -1 _
                 And rowCount > _currRowIndex Then _
-                grid.CurrentCell = GridSelectedCells().FirstOrDefault
-            'grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+                grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
         End If
     End Sub
 
@@ -835,6 +860,8 @@ Public Class ShiftScheduleForm
                     context.EmployeeDutySchedules.Remove(ssm.ToEmployeeDutySchedule)
                     ssm.RemoveShift()
                 End If
+
+                ssm.CommitChanges()
             Next
 
             Try
@@ -1037,8 +1064,10 @@ Public Class ShiftScheduleForm
         End If
 
         Dim _currRowIndex, _currColIndex As Integer
-        If GridSelectedCells().Any Then
-            _currCell = GridSelectedCells().FirstOrDefault
+        Dim selectedCell = GridSelectedCells()
+        Dim hasSelectedCell = selectedCell.Any
+        If hasSelectedCell Then
+            _currCell = selectedCell.FirstOrDefault
             _currRowIndex = _currCell.RowIndex
             _currColIndex = _currCell.ColumnIndex
         End If
@@ -1050,12 +1079,11 @@ Public Class ShiftScheduleForm
 
         Dim rowCount = grid.Rows.Count
 
-        If GridSelectedCells().Any Then
+        If hasSelectedCell Then
             If _currCell IsNot Nothing _
                 And _currRowIndex > -1 _
                 And rowCount > _currRowIndex Then _
-                grid.CurrentCell = GridSelectedCells().FirstOrDefault
-            'grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+                grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
         End If
     End Sub
 
@@ -1150,8 +1178,8 @@ Public Class ShiftScheduleForm
         labelChangesCount.Visible = isNotZero
         labelAffectedRows.Visible = isNotZero
 
-        btnReset.Enabled = isNotZero
-        btnSave.Enabled = isNotZero
+        'btnReset.Enabled = isNotZero
+        'btnSave.Enabled = isNotZero
     End Sub
 
     Private Sub PasteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PasteToolStripMenuItem.Click
@@ -1188,6 +1216,26 @@ Public Class ShiftScheduleForm
 
         grid.EndEdit()
 
+    End Sub
+
+    Private Sub tsBtnImport_Click(sender As Object, e As EventArgs) Handles tsBtnImport.Click
+
+        Dim browseFile = New OpenFileDialog With {
+            .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
+        }
+
+        If Not browseFile.ShowDialog() = DialogResult.OK Then Return
+
+        Dim fileName = browseFile.FileName
+
+        Dim parser = New ExcelParser(Of ShiftScheduleRowRecord)("ShiftSchedule")
+        Dim records = parser.Read(fileName)
+
+        Dim importForm As New ImportedShiftSchedulesForm(records)
+        If Not importForm.ShowDialog = DialogResult.OK Then Return
+
+        ShowSuccessImportBalloon()
     End Sub
 
 #End Region

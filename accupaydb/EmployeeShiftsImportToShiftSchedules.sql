@@ -25,10 +25,10 @@ ii.OrganizationID
 , ii.StartTime
 , ii.EndTime
 , ii.BreakStartTime
-, ii.BreakLength
+, IFNULL(ii.BreakLength, 0)
 , ii.IsRestDay
-, ii.ShiftHours
-, ii.WorkHours
+, IFNULL(ii.ShiftHours, 0)
+, IFNULL(ii.WorkHours, 0)
 FROM (SELECT
 		i.OrganizationID
 		, i.EmployeeID
@@ -63,10 +63,10 @@ ON DUPLICATE KEY UPDATE LastUpd = CURRENT_TIMESTAMP()
 , `StartTime` = ii.StartTime
 , `EndTime` = ii.EndTime
 , `BreakStartTime` = ii.BreakStartTime
-, `BreakLength` = ii.BreakLength
+, `BreakLength` = IFNULL(ii.BreakLength, 0)
 , `IsRestDay` = ii.IsRestDay
-, `ShiftHours` = ii.ShiftHours
-, `WorkHours` = ii.WorkHours
+, `ShiftHours` = IFNULL(ii.ShiftHours, 0)
+, `WorkHours` = IFNULL(ii.WorkHours, 0)
 ;
 
 END//
