@@ -1170,8 +1170,8 @@ Public Class ShiftScheduleForm
         labelChangesCount.Visible = isNotZero
         labelAffectedRows.Visible = isNotZero
 
-        btnReset.Enabled = isNotZero
-        btnSave.Enabled = isNotZero
+        'btnReset.Enabled = isNotZero
+        'btnSave.Enabled = isNotZero
     End Sub
 
     Private Sub PasteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PasteToolStripMenuItem.Click
