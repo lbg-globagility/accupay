@@ -297,6 +297,7 @@ Public Class ShiftScheduleForm
         infohint.ToolTipTitle = "Imported successfully"
         infohint.ToolTipIcon = ToolTipIcon.Info
 
+        infohint.Show(String.Empty, Button2, 3475)
         infohint.Show("Done.", Button2, 3475)
     End Sub
 
