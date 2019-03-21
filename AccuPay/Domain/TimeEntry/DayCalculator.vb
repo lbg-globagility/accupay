@@ -71,7 +71,7 @@ Public Class DayCalculator
         End If
 
         Dim currentShift = If(_policy.UseShiftSchedule,
-            New CurrentShift(shiftSched),
+            New CurrentShift(shiftSched, currentDate),
             New CurrentShift(employeeShift, currentDate))
 
         If _policy.RespectDefaultRestDay Then
@@ -108,13 +108,19 @@ Public Class DayCalculator
         Dim payrate = _payrateCalendar.Find(currentDate)
 
         Dim logPeriod As TimePeriod = Nothing
-        If hasTimeLog And currentShift.HasShift Then
+        If hasTimeLog Then
             logPeriod = GetLogPeriod(timeLog, officialBusiness, currentShift, currentDate)
         End If
 
         If logPeriod IsNot Nothing Then
+
+            Dim dutyPeriod As TimePeriod = Nothing
+
             Dim shiftPeriod = currentShift.ShiftPeriod
-            Dim dutyPeriod = shiftPeriod.Overlap(logPeriod)
+
+            If shiftPeriod IsNot Nothing Then
+                dutyPeriod = shiftPeriod.Overlap(logPeriod)
+            End If
 
             If dutyPeriod IsNot Nothing Then
                 timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift, _policy.ComputeBreakTimeLate)
@@ -177,15 +183,17 @@ Public Class DayCalculator
                 timeEntry = OvertimeSchemeSkipCountHours(timeEntry, overtimes, currentShift, calculator, logPeriod, nightBreaktime)
 
                 ComputeNightDiffHours(timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime)
-                ComputeHolidayHours(payrate, timeEntry)
-                ComputeRestDayHours(currentShift, timeEntry, logPeriod)
 
-                timeEntry.BasicHours =
-                    timeEntry.RegularHours +
-                    timeEntry.RestDayHours +
-                    timeEntry.RegularHolidayHours +
-                    timeEntry.SpecialHolidayHours
             End If
+
+            ComputeHolidayHours(payrate, timeEntry)
+            ComputeRestDayHours(currentShift, timeEntry, logPeriod)
+
+            timeEntry.BasicHours =
+                timeEntry.RegularHours +
+                timeEntry.RestDayHours +
+                timeEntry.RegularHolidayHours +
+                timeEntry.SpecialHolidayHours
         End If
 
         ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves)

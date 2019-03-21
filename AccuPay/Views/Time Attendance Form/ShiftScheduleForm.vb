@@ -199,7 +199,7 @@ Public Class ShiftScheduleForm
         Dim _empty = String.Empty
 
         Dim ClearBreakTimes = Sub(ss As ShiftScheduleModel)
-                                  ss.BreakFrom = String.Empty
+                                  ss.BreakFrom = Nothing
                                   ss.BreakLength = Nothing
                               End Sub
 
@@ -483,14 +483,20 @@ Public Class ShiftScheduleForm
             AssignEmployee(ess.Employee)
 
             _DateValue = ess.DateSched
-            _timeFrom = ShiftScheduleForm.MilitarDateTime(ess.StartTime.GetValueOrDefault)
-            _timeTo = ShiftScheduleForm.MilitarDateTime(ess.EndTime.GetValueOrDefault)
+
+            Dim timeFrom = ess.StartTime
+            Dim timeTo = ess.EndTime
+
+            _timeFrom = If(timeFrom Is Nothing, "", ShiftScheduleForm.MilitarDateTime(timeFrom.GetValueOrDefault))
+            _timeTo = If(timeTo Is Nothing, "", ShiftScheduleForm.MilitarDateTime(timeTo.GetValueOrDefault))
 
             _BreakLength = ess.BreakLength
 
             Dim _hasBreakStart = ess.BreakStartTime.HasValue
             If _hasBreakStart Then
-                _breakFrom = ShiftScheduleForm.MilitarDateTime(ess.BreakStartTime.GetValueOrDefault)
+
+                Dim breakFrom = ess.BreakStartTime
+                _breakFrom = If(breakFrom Is Nothing, "", ShiftScheduleForm.MilitarDateTime(breakFrom.GetValueOrDefault))
 
             End If
 
@@ -1166,6 +1172,22 @@ Public Class ShiftScheduleForm
             _cell.Value = _text
             DataGrid_CellEndEdit(grid, New DataGridViewCellEventArgs(_cell.ColumnIndex, _cell.RowIndex))
         Next
+    End Sub
+
+    Private Sub grid_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles grid.CellMouseUp
+
+        If grid.CurrentCell Is Nothing Then Return
+
+        Dim currentColumnIndex = grid.CurrentCell.ColumnIndex
+
+        If currentColumnIndex < 0 Then Return
+
+        Dim currentColumn = grid.Columns(currentColumnIndex)
+
+        If currentColumn IsNot colIsRestDay Then Return
+
+        grid.EndEdit()
+
     End Sub
 
 #End Region

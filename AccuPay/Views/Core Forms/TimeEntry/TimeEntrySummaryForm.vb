@@ -287,9 +287,6 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
-        'WARN: this has a possibility to show wrong data since
-        'we are joining employeetimeentrydetails by LastUpd
-        'maybe this query should be replaced
 
         Dim sql = <![CDATA[
             SELECT
@@ -343,10 +340,16 @@ Public Class TimeEntrySummaryForm
                 etd.TimeStampOut
             FROM employeetimeentry ete
             LEFT JOIN (
-                SELECT EmployeeID, Date, MAX(LastUpd) LastUpd, RowID
-                FROM employeetimeentrydetails
-                WHERE Date BETWEEN @DateFrom AND @DateTo
-                GROUP BY EmployeeID, Date
+                SELECT EmployeeID, DATE,
+				    (SELECT RowID
+				    FROM employeetimeentrydetails
+				    WHERE EmployeeID = groupedEtd.EmployeeID
+				    AND DATE = groupedEtd.Date
+				    ORDER BY LastUpd DESC
+				    LIMIT 1) RowID
+				FROM employeetimeentrydetails groupedEtd
+				WHERE Date BETWEEN @DateFrom AND @DateTo
+				GROUP BY EmployeeID, Date
             ) latest
             ON latest.EmployeeID = ete.EmployeeID AND
                 latest.Date = ete.Date
@@ -354,7 +357,7 @@ Public Class TimeEntrySummaryForm
             ON etd.Date = ete.Date AND
                 etd.OrganizationID = ete.OrganizationID AND
                 etd.EmployeeID = ete.EmployeeID AND
-                etd.LastUpd = latest.LastUpd
+                etd.RowID = latest.RowID
             LEFT JOIN employeeshift
             ON employeeshift.RowID = ete.EmployeeShiftID
             LEFT JOIN (
@@ -447,41 +450,47 @@ Public Class TimeEntrySummaryForm
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
                 }
 
-                With totalTimeEntry
-                    .RegularHours += timeEntry.RegularHours
-                    .RegularAmount += timeEntry.RegularAmount
-                    .OvertimeHours += timeEntry.OvertimeHours
-                    .OvertimeAmount += timeEntry.OvertimeAmount
-                    .NightDiffHours += timeEntry.NightDiffHours
-                    .NightDiffAmount += timeEntry.NightDiffAmount
-                    .NightDiffOTHours += timeEntry.NightDiffOTHours
-                    .NightDiffOTAmount += timeEntry.NightDiffOTAmount
-                    .RestDayHours += timeEntry.RestDayHours
-                    .RestDayAmount += timeEntry.RestDayAmount
-                    .RestDayOTHours += timeEntry.RestDayOTHours
-                    .RestDayOTPay += timeEntry.RestDayOTPay
-                    .SpecialHolidayHours += timeEntry.SpecialHolidayHours
-                    .SpecialHolidayPay += timeEntry.SpecialHolidayPay
-                    .SpecialHolidayOTHours += timeEntry.SpecialHolidayOTHours
-                    .SpecialHolidayOTPay += timeEntry.SpecialHolidayOTPay
-                    .RegularHolidayHours += timeEntry.RegularHolidayHours
-                    .RegularHolidayPay += timeEntry.RegularHolidayPay
-                    .RegularHolidayOTHours += timeEntry.RegularHolidayOTHours
-                    .RegularHolidayOTPay += timeEntry.RegularHolidayOTPay
-                    .HolidayPay += timeEntry.HolidayPay
-                    .VacationLeaveHours += timeEntry.VacationLeaveHours
-                    .SickLeaveHours += timeEntry.SickLeaveHours
-                    .OtherLeaveHours += timeEntry.OtherLeaveHours
-                    .LeavePay += timeEntry.LeavePay
-                    .LateHours += timeEntry.LateHours
-                    .LateAmount += timeEntry.LateAmount
-                    .UndertimeHours += timeEntry.UndertimeHours
-                    .UndertimeAmount += timeEntry.UndertimeAmount
-                    .AbsentHours += timeEntry.AbsentHours
-                    .AbsentAmount += timeEntry.AbsentAmount
-                    .TotalHoursWorked += timeEntry.TotalHoursWorked
-                    .TotalDayPay += timeEntry.TotalDayPay
-                End With
+                'check first if there is duplicate
+                If timeEntries.
+                    FirstOrDefault(Function(t) Nullable.Equals(t.RowID, timeEntry.RowID)) _
+                    Is Nothing Then
+
+                    With totalTimeEntry
+                        .RegularHours += timeEntry.RegularHours
+                        .RegularAmount += timeEntry.RegularAmount
+                        .OvertimeHours += timeEntry.OvertimeHours
+                        .OvertimeAmount += timeEntry.OvertimeAmount
+                        .NightDiffHours += timeEntry.NightDiffHours
+                        .NightDiffAmount += timeEntry.NightDiffAmount
+                        .NightDiffOTHours += timeEntry.NightDiffOTHours
+                        .NightDiffOTAmount += timeEntry.NightDiffOTAmount
+                        .RestDayHours += timeEntry.RestDayHours
+                        .RestDayAmount += timeEntry.RestDayAmount
+                        .RestDayOTHours += timeEntry.RestDayOTHours
+                        .RestDayOTPay += timeEntry.RestDayOTPay
+                        .SpecialHolidayHours += timeEntry.SpecialHolidayHours
+                        .SpecialHolidayPay += timeEntry.SpecialHolidayPay
+                        .SpecialHolidayOTHours += timeEntry.SpecialHolidayOTHours
+                        .SpecialHolidayOTPay += timeEntry.SpecialHolidayOTPay
+                        .RegularHolidayHours += timeEntry.RegularHolidayHours
+                        .RegularHolidayPay += timeEntry.RegularHolidayPay
+                        .RegularHolidayOTHours += timeEntry.RegularHolidayOTHours
+                        .RegularHolidayOTPay += timeEntry.RegularHolidayOTPay
+                        .HolidayPay += timeEntry.HolidayPay
+                        .VacationLeaveHours += timeEntry.VacationLeaveHours
+                        .SickLeaveHours += timeEntry.SickLeaveHours
+                        .OtherLeaveHours += timeEntry.OtherLeaveHours
+                        .LeavePay += timeEntry.LeavePay
+                        .LateHours += timeEntry.LateHours
+                        .LateAmount += timeEntry.LateAmount
+                        .UndertimeHours += timeEntry.UndertimeHours
+                        .UndertimeAmount += timeEntry.UndertimeAmount
+                        .AbsentHours += timeEntry.AbsentHours
+                        .AbsentAmount += timeEntry.AbsentAmount
+                        .TotalHoursWorked += timeEntry.TotalHoursWorked
+                        .TotalDayPay += timeEntry.TotalDayPay
+                    End With
+                End If
 
                 timeEntries.Add(timeEntry)
             End While
@@ -540,10 +549,16 @@ Public Class TimeEntrySummaryForm
             ON ete.EmployeeID = eta.EmployeeID AND
                 ete.Date = eta.Date
             LEFT JOIN (
-                SELECT EmployeeID, Date, MAX(LastUpd) LastUpd, Created
-                FROM employeetimeentrydetails
-                WHERE Date BETWEEN @DateFrom AND @DateTo
-                GROUP BY EmployeeID, Date
+                SELECT EmployeeID, DATE,
+				    (SELECT RowID
+				    FROM employeetimeentrydetails
+				    WHERE EmployeeID = groupedEtd.EmployeeID
+				    AND DATE = groupedEtd.Date
+				    ORDER BY LastUpd DESC
+				    LIMIT 1) RowID
+				FROM employeetimeentrydetails groupedEtd
+				WHERE Date BETWEEN @DateFrom AND @DateTo
+				GROUP BY EmployeeID, Date
             ) latest
             ON latest.EmployeeID = eta.EmployeeID AND
                 latest.Date = eta.Date
@@ -551,7 +566,7 @@ Public Class TimeEntrySummaryForm
             ON employeetimeentrydetails.Date = eta.Date AND
                 employeetimeentrydetails.OrganizationID = eta.OrganizationID AND
                 employeetimeentrydetails.EmployeeID = eta.EmployeeID AND
-                employeetimeentrydetails.LastUpd = latest.LastUpd
+                employeetimeentrydetails.RowID = latest.RowID
             LEFT JOIN employeeshift
             ON employeeshift.RowID = eta.EmployeeShiftID
             LEFT JOIN (
@@ -630,35 +645,42 @@ Public Class TimeEntrySummaryForm
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
                 }
 
-                totalTimeEntry.RegularHours += timeEntry.RegularHours
-                totalTimeEntry.RegularAmount += timeEntry.RegularAmount
-                totalTimeEntry.OvertimeHours += timeEntry.OvertimeHours
-                totalTimeEntry.OvertimeAmount += timeEntry.OvertimeAmount
-                totalTimeEntry.NightDiffHours += timeEntry.NightDiffHours
-                totalTimeEntry.NightDiffAmount += timeEntry.NightDiffAmount
-                totalTimeEntry.NightDiffOTHours += timeEntry.NightDiffOTHours
-                totalTimeEntry.NightDiffOTAmount += timeEntry.NightDiffOTAmount
-                totalTimeEntry.RestDayHours += timeEntry.RestDayHours
-                totalTimeEntry.RestDayAmount += timeEntry.RestDayAmount
-                totalTimeEntry.RestDayOTHours += timeEntry.RestDayOTHours
-                totalTimeEntry.RestDayOTPay += timeEntry.RestDayOTPay
-                totalTimeEntry.SpecialHolidayHours += timeEntry.SpecialHolidayHours
-                totalTimeEntry.SpecialHolidayPay += timeEntry.SpecialHolidayPay
-                totalTimeEntry.SpecialHolidayOTHours += timeEntry.SpecialHolidayOTHours
-                totalTimeEntry.SpecialHolidayOTPay += timeEntry.SpecialHolidayOTPay
-                totalTimeEntry.RegularHolidayHours += timeEntry.RegularHolidayHours
-                totalTimeEntry.RegularHolidayPay += timeEntry.RegularHolidayPay
-                totalTimeEntry.RegularHolidayOTHours += timeEntry.RegularHolidayOTHours
-                totalTimeEntry.RegularHolidayOTPay += timeEntry.RegularHolidayOTPay
-                totalTimeEntry.HolidayPay += timeEntry.HolidayPay
-                totalTimeEntry.LeavePay += timeEntry.LeavePay
-                totalTimeEntry.LateHours += timeEntry.LateHours
-                totalTimeEntry.LateAmount += timeEntry.LateAmount
-                totalTimeEntry.UndertimeHours += timeEntry.UndertimeHours
-                totalTimeEntry.UndertimeAmount += timeEntry.UndertimeAmount
-                totalTimeEntry.AbsentAmount += timeEntry.AbsentAmount
-                totalTimeEntry.TotalHoursWorked += timeEntry.TotalHoursWorked
-                totalTimeEntry.TotalDayPay += timeEntry.TotalDayPay
+                'check first if there is duplicate
+                If timeEntries.
+                    FirstOrDefault(Function(t) Nullable.Equals(t.RowID, timeEntry.RowID)) _
+                    Is Nothing Then
+
+                    totalTimeEntry.RegularHours += timeEntry.RegularHours
+                    totalTimeEntry.RegularAmount += timeEntry.RegularAmount
+                    totalTimeEntry.OvertimeHours += timeEntry.OvertimeHours
+                    totalTimeEntry.OvertimeAmount += timeEntry.OvertimeAmount
+                    totalTimeEntry.NightDiffHours += timeEntry.NightDiffHours
+                    totalTimeEntry.NightDiffAmount += timeEntry.NightDiffAmount
+                    totalTimeEntry.NightDiffOTHours += timeEntry.NightDiffOTHours
+                    totalTimeEntry.NightDiffOTAmount += timeEntry.NightDiffOTAmount
+                    totalTimeEntry.RestDayHours += timeEntry.RestDayHours
+                    totalTimeEntry.RestDayAmount += timeEntry.RestDayAmount
+                    totalTimeEntry.RestDayOTHours += timeEntry.RestDayOTHours
+                    totalTimeEntry.RestDayOTPay += timeEntry.RestDayOTPay
+                    totalTimeEntry.SpecialHolidayHours += timeEntry.SpecialHolidayHours
+                    totalTimeEntry.SpecialHolidayPay += timeEntry.SpecialHolidayPay
+                    totalTimeEntry.SpecialHolidayOTHours += timeEntry.SpecialHolidayOTHours
+                    totalTimeEntry.SpecialHolidayOTPay += timeEntry.SpecialHolidayOTPay
+                    totalTimeEntry.RegularHolidayHours += timeEntry.RegularHolidayHours
+                    totalTimeEntry.RegularHolidayPay += timeEntry.RegularHolidayPay
+                    totalTimeEntry.RegularHolidayOTHours += timeEntry.RegularHolidayOTHours
+                    totalTimeEntry.RegularHolidayOTPay += timeEntry.RegularHolidayOTPay
+                    totalTimeEntry.HolidayPay += timeEntry.HolidayPay
+                    totalTimeEntry.LeavePay += timeEntry.LeavePay
+                    totalTimeEntry.LateHours += timeEntry.LateHours
+                    totalTimeEntry.LateAmount += timeEntry.LateAmount
+                    totalTimeEntry.UndertimeHours += timeEntry.UndertimeHours
+                    totalTimeEntry.UndertimeAmount += timeEntry.UndertimeAmount
+                    totalTimeEntry.AbsentAmount += timeEntry.AbsentAmount
+                    totalTimeEntry.TotalHoursWorked += timeEntry.TotalHoursWorked
+                    totalTimeEntry.TotalDayPay += timeEntry.TotalDayPay
+
+                End If
 
                 timeEntries.Add(timeEntry)
             End While

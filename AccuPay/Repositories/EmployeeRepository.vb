@@ -100,7 +100,7 @@ Namespace Global.AccuPay.Repository
         End Function
 
 #Region "Private Functions"
-        Private Shared Function GetAllEmployeeBaseQuery(context As PayrollContext) As IQueryable(Of Entity.Employee)
+        Private Function GetAllEmployeeBaseQuery(context As PayrollContext) As IQueryable(Of Entity.Employee)
             Return context.Employees.
                             Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID))
         End Function

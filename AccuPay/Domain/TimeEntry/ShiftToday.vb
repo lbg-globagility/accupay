@@ -122,22 +122,28 @@ Public Class CurrentShift
         _defaultRestDay = dayOfWeek
     End Sub
 
-    Public Sub New(shiftSchedule As EmployeeDutySchedule)
-        If shiftSchedule Is Nothing Then
+    Public Sub New(shiftSchedule As EmployeeDutySchedule, [date] As DateTime)
+
+        Me.Date = [date]
+
+        If shiftSchedule Is Nothing OrElse
+            shiftSchedule.StartTime Is Nothing OrElse
+            shiftSchedule.EndTime Is Nothing Then
             Return
         End If
 
+        Me._isOffset = shiftSchedule.IsRestDay
+
         _shiftSchedule2 = shiftSchedule
-        Me.Date = shiftSchedule.DateSched
 
         Me.ShiftPeriod =
             TimePeriod.FromTime(New TimeSpan(shiftSchedule.StartTime.Value.Hours, shiftSchedule.StartTime.Value.Minutes, 0),
                                 New TimeSpan(shiftSchedule.EndTime.Value.Hours, shiftSchedule.EndTime.Value.Minutes, 0),
-                                [Date])
+                               Me.Date)
 
         If shiftSchedule.BreakStartTime.HasValue Then
-            Dim nextDay = [Date].AddDays(1)
-            Dim breakDate = If(shiftSchedule.BreakStartTime > shiftSchedule.StartTime, [Date], nextDay)
+            Dim nextDay = Me.Date.AddDays(1)
+            Dim breakDate = If(shiftSchedule.BreakStartTime > shiftSchedule.StartTime, Me.Date, nextDay)
 
             Dim breakTimeEnd = shiftSchedule.BreakStartTime.Value.AddHours(shiftSchedule.BreakLength)
             Me.BreakPeriod = TimePeriod.FromTime(shiftSchedule.BreakStartTime.Value, breakTimeEnd, breakDate)

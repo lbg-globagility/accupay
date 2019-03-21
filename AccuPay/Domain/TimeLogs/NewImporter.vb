@@ -145,6 +145,10 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
         Public Property ShiftTimeInBounds As Date
         Public Property ShiftTimeOutBounds As Date
 
+        Public Overrides Function ToString() As String
+            Return DateTime.ToString("MM/dd/yyyy hh:mm tt")
+        End Function
+
         Sub New()
             Me.IsTimeIn = Nothing
             Me.LogDate = Nothing
