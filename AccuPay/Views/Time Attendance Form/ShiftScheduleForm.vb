@@ -773,7 +773,7 @@ Public Class ShiftScheduleForm
 
 #Region "EventHandlers"
 
-    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click, Button1.Click
+    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply1.Click, btnApply2.Click
         CommitTimeValues()
 
         Dim _currRowIndex, _currColIndex As Integer
@@ -830,8 +830,7 @@ Public Class ShiftScheduleForm
             If _currCell IsNot Nothing _
                 And _currRowIndex > -1 _
                 And rowCount > _currRowIndex Then _
-                grid.CurrentCell = selectedCell.FirstOrDefault
-            'grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+                grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
         End If
     End Sub
 
@@ -1079,7 +1078,6 @@ Public Class ShiftScheduleForm
                 And _currRowIndex > -1 _
                 And rowCount > _currRowIndex Then _
                 grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
-            'grid.CurrentCell = GridSelectedCells().FirstOrDefault
         End If
     End Sub
 
