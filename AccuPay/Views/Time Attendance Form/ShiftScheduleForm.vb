@@ -6,6 +6,8 @@ Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Tools
 Imports AccuPay.Utils
+Imports Globagility.AccuPay
+Imports Globagility.AccuPay.ShiftSchedules
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 
@@ -279,12 +281,21 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub ShowSuccessBalloon()
-        Dim infohint = New ToolTip
+        Dim infohint = ToolTip1
         infohint.IsBalloon = True
-        infohint.ToolTipTitle = "Done"
+        infohint.ToolTipTitle = "Save successfully"
         infohint.ToolTipIcon = ToolTipIcon.Info
 
-        infohint.Show("Save successfully.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
+        infohint.Show("Done.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
+    End Sub
+
+    Private Sub ShowSuccessImportBalloon()
+        Dim infohint = ToolTip1
+        infohint.IsBalloon = True
+        infohint.ToolTipTitle = "Imported successfully"
+        infohint.ToolTipIcon = ToolTipIcon.Info
+
+        infohint.Show("Done.", Button2, 3475)
     End Sub
 
 #End Region
@@ -1166,6 +1177,26 @@ Public Class ShiftScheduleForm
             _cell.Value = _text
             DataGrid_CellEndEdit(grid, New DataGridViewCellEventArgs(_cell.ColumnIndex, _cell.RowIndex))
         Next
+    End Sub
+
+    Private Sub tsBtnImport_Click(sender As Object, e As EventArgs) Handles tsBtnImport.Click
+
+        Dim browseFile = New OpenFileDialog With {
+            .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
+        }
+
+        If Not browseFile.ShowDialog() = DialogResult.OK Then Return
+
+        Dim fileName = browseFile.FileName
+
+        Dim parser = New ExcelParser(Of ShiftScheduleRowRecord)("ShiftSchedule")
+        Dim records = parser.Read(fileName)
+
+        Dim importForm As New ImportedShiftSchedulesForm(records)
+        If Not importForm.ShowDialog = DialogResult.OK Then Return
+
+        ShowSuccessImportBalloon()
     End Sub
 
 #End Region

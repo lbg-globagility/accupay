@@ -139,6 +139,8 @@ Namespace Global.Globagility.AccuPay
                     prop.SetValue(newRecord, Date.FromOADate(value))
                 ElseIf prop.PropertyType Is GetType(String) Then
                     prop.SetValue(newRecord, CStr(value))
+                ElseIf prop.PropertyType Is GetType(TimeSpan) Or prop.PropertyType Is GetType(TimeSpan?) Then
+                    prop.SetValue(newRecord, Date.FromOADate(value).TimeOfDay)
                 End If
             Else
                 prop.SetValue(newRecord, originalValue)
