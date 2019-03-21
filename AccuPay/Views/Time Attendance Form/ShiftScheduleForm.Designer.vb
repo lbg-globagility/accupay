@@ -93,6 +93,7 @@ Partial Class ShiftScheduleForm
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.Button2 = New System.Windows.Forms.Button()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -139,7 +140,6 @@ Partial Class ShiftScheduleForm
         Me.colHasChanged = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Panel1.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.tcSchedule.SuspendLayout()
@@ -170,7 +170,6 @@ Partial Class ShiftScheduleForm
         Me.Panel1.BackColor = System.Drawing.Color.White
         Me.Panel1.Controls.Add(Me.Panel3)
         Me.Panel1.Controls.Add(Me.ToolStrip1)
-        Me.Panel1.Controls.Add(Me.Button2)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
@@ -415,7 +414,6 @@ Partial Class ShiftScheduleForm
         '
         'btnReset
         '
-        Me.btnReset.Enabled = False
         Me.btnReset.Location = New System.Drawing.Point(314, 4)
         Me.btnReset.Name = "btnReset"
         Me.btnReset.Size = New System.Drawing.Size(75, 23)
@@ -425,7 +423,6 @@ Partial Class ShiftScheduleForm
         '
         'btnSave
         '
-        Me.btnSave.Enabled = False
         Me.btnSave.Location = New System.Drawing.Point(439, 4)
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(75, 23)
@@ -618,7 +615,7 @@ Partial Class ShiftScheduleForm
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(2, 1)
+        Me.Button2.Location = New System.Drawing.Point(355, 30)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(47, 22)
         Me.Button2.TabIndex = 338
@@ -1163,6 +1160,7 @@ Partial Class ShiftScheduleForm
         Me.ClientSize = New System.Drawing.Size(1255, 613)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.Label16)
+        Me.Controls.Add(Me.Button2)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.KeyPreview = True

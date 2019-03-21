@@ -777,8 +777,10 @@ Public Class ShiftScheduleForm
         CommitTimeValues()
 
         Dim _currRowIndex, _currColIndex As Integer
-        If GridSelectedCells().Any Then
-            _currCell = GridSelectedCells().FirstOrDefault
+        Dim selectedCell = GridSelectedCells()
+        Dim hasSelectedCell = selectedCell.Any
+        If hasSelectedCell Then
+            _currCell = selectedCell.FirstOrDefault
             _currRowIndex = _currCell.RowIndex
             _currColIndex = _currCell.ColumnIndex
 
@@ -824,11 +826,11 @@ Public Class ShiftScheduleForm
 
         Dim rowCount = grid.Rows.Count
 
-        If GridSelectedCells().Any Then
+        If hasSelectedCell Then
             If _currCell IsNot Nothing _
                 And _currRowIndex > -1 _
                 And rowCount > _currRowIndex Then _
-                grid.CurrentCell = GridSelectedCells().FirstOrDefault
+                grid.CurrentCell = selectedCell.FirstOrDefault
             'grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
         End If
     End Sub
@@ -1057,8 +1059,10 @@ Public Class ShiftScheduleForm
         End If
 
         Dim _currRowIndex, _currColIndex As Integer
-        If GridSelectedCells().Any Then
-            _currCell = GridSelectedCells().FirstOrDefault
+        Dim selectedCell = GridSelectedCells()
+        Dim hasSelectedCell = selectedCell.Any
+        If hasSelectedCell Then
+            _currCell = selectedCell.FirstOrDefault
             _currRowIndex = _currCell.RowIndex
             _currColIndex = _currCell.ColumnIndex
         End If
@@ -1070,12 +1074,12 @@ Public Class ShiftScheduleForm
 
         Dim rowCount = grid.Rows.Count
 
-        If GridSelectedCells().Any Then
+        If hasSelectedCell Then
             If _currCell IsNot Nothing _
                 And _currRowIndex > -1 _
                 And rowCount > _currRowIndex Then _
-                grid.CurrentCell = GridSelectedCells().FirstOrDefault
-            'grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+                grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
+            'grid.CurrentCell = GridSelectedCells().FirstOrDefault
         End If
     End Sub
 
