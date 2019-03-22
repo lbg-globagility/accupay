@@ -57,7 +57,25 @@ IF usesShiftSchedule THEN
 	#, GREATEST(et.VacationLeaveHours, et.SickLeaveHours, et.MaternityLeaveHours, et.OtherLeaveHours) > 0 `HasLeave`
 	FROM employee e
 	INNER JOIN employeetimeentry et ON et.EmployeeID=e.RowID AND et.`Date` BETWEEN @dateFrom AND @dateTo
-	LEFT JOIN employeetimeentrydetails etd ON etd.EmployeeID=e.RowID AND etd.`Date`=et.`Date`
+	LEFT JOIN (
+	       SELECT EmployeeID, DATE,
+		    (SELECT RowID
+		    FROM employeetimeentrydetails
+		    WHERE EmployeeID = groupedEtd.EmployeeID
+		    AND DATE = groupedEtd.Date
+		    ORDER BY LastUpd DESC
+		    LIMIT 1) RowID
+		FROM employeetimeentrydetails groupedEtd
+		WHERE Date BETWEEN @DateFrom AND @DateTo
+		GROUP BY EmployeeID, Date
+	   ) latestEtd
+	   ON latestEtd.EmployeeID = et.EmployeeID
+		AND latestEtd.Date = et.Date
+	LEFT JOIN employeetimeentrydetails etd
+      ON etd.Date = et.Date AND
+          etd.OrganizationID = et.OrganizationID AND
+          etd.EmployeeID = et.EmployeeID AND
+          etd.RowID = latestEtd.RowID
 	LEFT JOIN employeeofficialbusiness ob ON ob.EmployeeID=e.RowID AND et.`Date` BETWEEN ob.OffBusStartDate AND ob.OffBusEndDate
 	LEFT JOIN shiftschedules ss ON ss.EmployeeID=e.RowID AND ss.`Date`=et.`Date`
 	
@@ -88,7 +106,25 @@ ELSE
 	FROM employeetimeentry ete
 	LEFT JOIN employeeshift esh ON esh.RowID=ete.EmployeeShiftID
 	LEFT JOIN shift sh ON sh.RowID=esh.ShiftID
-	LEFT JOIN employeetimeentrydetails etd ON etd.EmployeeID=ete.EmployeeID AND etd.OrganizationID=ete.OrganizationID AND etd.Date=ete.Date
+	LEFT JOIN (
+	       SELECT EmployeeID, DATE,
+		    (SELECT RowID
+		    FROM employeetimeentrydetails
+		    WHERE EmployeeID = groupedEtd.EmployeeID
+		    AND DATE = groupedEtd.Date
+		    ORDER BY LastUpd DESC
+		    LIMIT 1) RowID
+		FROM employeetimeentrydetails groupedEtd
+		WHERE Date BETWEEN @DateFrom AND @DateTo
+		GROUP BY EmployeeID, Date
+	   ) latestEtd
+	   ON latestEtd.EmployeeID = et.EmployeeID
+		AND latestEtd.Date = et.Date
+	LEFT JOIN employeetimeentrydetails etd
+      ON etd.Date = et.Date AND
+          etd.OrganizationID = et.OrganizationID AND
+          etd.EmployeeID = et.EmployeeID AND
+          etd.RowID = latestEtd.RowID
 	LEFT JOIN employee ee ON ee.RowID=ete.EmployeeID AND FIND_IN_SET(ee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 	WHERE ete.DATE BETWEEN FromDate AND ToDate AND
 	    ete.OrganizationID=OrganizationID
