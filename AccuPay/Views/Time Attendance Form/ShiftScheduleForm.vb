@@ -31,6 +31,8 @@ Public Class ShiftScheduleForm
 
     Private _currCell As DataGridViewCell
 
+    Private _balloonToolTips As IList(Of ToolTip)
+
     Private Property ChangesCount As Integer
         Get
         End Get
@@ -281,7 +283,7 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub ShowSuccessBalloon()
-        Dim infohint = ToolTip1
+        Dim infohint As New ToolTip
         infohint.IsBalloon = True
         infohint.ToolTipTitle = "Save successfully"
         infohint.ToolTipIcon = ToolTipIcon.Info
@@ -289,16 +291,20 @@ Public Class ShiftScheduleForm
         infohint.Show(String.Empty, btnSave, 3475)
         infohint.Show("Done.", btnSave, 3475)
         'infohint.Show("Done.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
+
+        _balloonToolTips.Add(infohint)
     End Sub
 
     Private Sub ShowSuccessImportBalloon()
-        Dim infohint = ToolTip1
+        Dim infohint As New ToolTip
         infohint.IsBalloon = True
         infohint.ToolTipTitle = "Imported successfully"
         infohint.ToolTipIcon = ToolTipIcon.Info
 
         infohint.Show(String.Empty, Button2, 3475)
         infohint.Show("Done.", Button2, 3475)
+
+        _balloonToolTips.Add(infohint)
     End Sub
 
 #End Region
@@ -918,6 +924,7 @@ Public Class ShiftScheduleForm
             AddHandler c.KeyPress, AddressOf EnterKeySameAsTabKey_KeyPress
         Next
 
+        _balloonToolTips = New List(Of ToolTip)
     End Sub
 
     Private Sub grid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellContentClick
@@ -1236,6 +1243,12 @@ Public Class ShiftScheduleForm
         If Not importForm.ShowDialog = DialogResult.OK Then Return
 
         ShowSuccessImportBalloon()
+    End Sub
+
+    Private Sub ShiftScheduleForm_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        For Each tTip In _balloonToolTips
+            tTip.Dispose()
+        Next
     End Sub
 
 #End Region

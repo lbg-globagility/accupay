@@ -112,16 +112,16 @@ IF NEW.NoOfDependents != OLD.NoOfDependents OR NEW.MaritalStatus != COALESCE(OLD
 
 SET preEffDateFromEmpSallatest = IF(DATEDIFF(CURRENT_DATE(),preEffDateFromEmpSal) = 0, ADDDATE(CURRENT_DATE(), INTERVAL 1 DAY), IF(DATEDIFF(CURRENT_DATE(),preEffDateFromEmpSal) < 0, ADDDATE(preEffDateFromEmpSal, INTERVAL 1 DAY), ADDDATE(CURRENT_DATE(), INTERVAL -1 DAY)));
 
-    UPDATE employeesalary SET
+    /*UPDATE employeesalary SET
     LastUpdBy=NEW.LastUpdBy
     ,EffectiveDateTo=preEffDateFromEmpSallatest
-    WHERE RowID=prevesalRowID;
+    WHERE RowID=prevesalRowID;*/
 
 
 
     SELECT ADDDATE(EffectiveDateTo, INTERVAL 1 DAY) FROM employeesalary WHERE RowID=prevesalRowID INTO preEffDateToEmpSallatest;
     SET @emp_true_sal = (SELECT TrueSalary FROM employeesalary WHERE RowID=prevesalRowID);
-    INSERT INTO employeesalary
+    /*INSERT INTO employeesalary
     (
         EmployeeID
         ,Created
@@ -134,9 +134,8 @@ SET preEffDateFromEmpSallatest = IF(DATEDIFF(CURRENT_DATE(),preEffDateFromEmpSal
         ,BasicPay
         ,BasicDailyPay
         ,BasicHourlyPay
-        ,FilingStatusID
+#        ,FilingStatusID
         ,NoofDependents
-        ,MaritalStatus
         ,PositionID
         ,EffectiveDateFrom,TrueSalary
     ) VALUES(
@@ -151,12 +150,11 @@ SET preEffDateFromEmpSallatest = IF(DATEDIFF(CURRENT_DATE(),preEffDateFromEmpSal
         ,thebasicpay
         ,thedailypay
         ,thehourlypay
-        ,(SELECT fs.RowID FROM filingstatus fs INNER JOIN (SELECT RowID, MaritalStatus, MAX(Dependent) `Dependent` FROM filingstatus GROUP BY MaritalStatus) fss ON fss.MaritalStatus=fs.MaritalStatus WHERE fs.MaritalStatus = NEW.MaritalStatus AND fs.Dependent = IF(NEW.NoOfDependents > fss.Dependent, fss.Dependent, NEW.NoOfDependents))
+#        ,(SELECT fs.RowID FROM filingstatus fs INNER JOIN (SELECT RowID, MaritalStatus, MAX(Dependent) `Dependent` FROM filingstatus GROUP BY MaritalStatus) fss ON fss.MaritalStatus=fs.MaritalStatus WHERE fs.MaritalStatus = NEW.MaritalStatus AND fs.Dependent = IF(NEW.NoOfDependents > fss.Dependent, fss.Dependent, NEW.NoOfDependents))
         ,COALESCE(NEW.NoOfDependents,0)
-        ,NEW.MaritalStatus
         ,NEW.PositionID
         ,preEffDateToEmpSallatest,IFNULL(@emp_true_sal,0)
-    );
+    );*/
     END IF;
 
 
@@ -357,7 +355,7 @@ IF OLD.Gender!=NEW.Gender THEN INSERT INTO audittrail (LastUpd,LastUpdBy,Created
 
 IF OLD.EmployeeType!=NEW.EmployeeType THEN INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'EmployeeType',NEW.RowID,OLD.EmployeeType,NEW.Salutation,'Update'); END IF;
 
-IF OLD.MaritalStatus!=NEW.MaritalStatus THEN INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'MaritalStatus',NEW.RowID,OLD.MaritalStatus,NEW.Salutation,'Update'); END IF;
+IF OLD.MaritalStatus!=NEW.MaritalStatus THEN INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'MaritalStatus',NEW.RowID,OLD.MaritalStatus,NEW.MaritalStatus,'Update'); END IF;
 
 IF OLD.Birthdate!=NEW.Birthdate THEN INSERT INTO audittrail (LastUpd,LastUpdBy,CreatedBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'Birthdate',NEW.RowID,OLD.Birthdate,NEW.Salutation,'Update'); END IF;
 
