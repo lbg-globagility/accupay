@@ -10,8 +10,6 @@ Public Class CurrentShift
 
     Private _defaultRestDay As Integer?
 
-    Private _isOffset As Boolean
-
     Private _shiftSchedule2 As EmployeeDutySchedule
 
     Public ReadOnly Property Start As Date
@@ -68,7 +66,17 @@ Public Class CurrentShift
 
     Public ReadOnly Property IsRestDay As Boolean
         Get
-            Dim isRestDayOffset = _isOffset
+            Dim isRestDayOffset = False
+
+            If _shiftSchedule2 IsNot Nothing Then
+
+                isRestDayOffset = _shiftSchedule2.IsRestDay
+
+            ElseIf ShiftSchedule IsNot Nothing Then
+
+                isRestDayOffset = ShiftSchedule.IsRestDay
+
+            End If
 
             Dim isDefaultRestDay = False
             If _defaultRestDay.HasValue Then
@@ -115,7 +123,6 @@ Public Class CurrentShift
     Public Sub New(shiftSchedule As ShiftSchedule, [date] As DateTime)
         Me.New(shiftSchedule?.Shift, [date])
         Me.ShiftSchedule = shiftSchedule
-        Me._isOffset = shiftSchedule.IsRestDay
     End Sub
 
     Public Sub SetDefaultRestDay(dayOfWeek As Integer?)
@@ -131,8 +138,6 @@ Public Class CurrentShift
             shiftSchedule.EndTime Is Nothing Then
             Return
         End If
-
-        Me._isOffset = shiftSchedule.IsRestDay
 
         _shiftSchedule2 = shiftSchedule
 
