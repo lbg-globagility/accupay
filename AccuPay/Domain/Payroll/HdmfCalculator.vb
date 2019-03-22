@@ -19,7 +19,7 @@ Namespace Global.AccuPay.Payroll
             Dim deductionSchedule = employee.PagIBIGSchedule
 
             Dim employeeShare = salary.HDMFAmount
-            Dim employerShare = PagibigEmployerAmount
+            Dim employerShare = If(employeeShare = 0, 0, PagibigEmployerAmount)
 
             If employee.IsWeeklyPaid Then
                 Dim isOnScheduleForDeduction = If(
