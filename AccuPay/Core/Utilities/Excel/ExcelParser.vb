@@ -2,6 +2,7 @@
 
 Imports System.IO
 Imports System.Reflection
+Imports System.Text.RegularExpressions
 Imports AccuPay.Attributes
 Imports AccuPay.Utils
 Imports OfficeOpenXml
@@ -25,22 +26,17 @@ Namespace Global.Globagility.AccuPay
             Dim records As List(Of T) = Nothing
 
             Using excel = New ExcelPackage(stream)
-
                 Dim worksheet As ExcelWorksheet
 
                 If _worksheetName Is Nothing Then
                     worksheet = excel.Workbook.Worksheets(1)
-
                 Else
                     worksheet = excel.Workbook.Worksheets(_worksheetName)
-
                 End If
 
                 If worksheet Is Nothing Then
                     Throw New Exception($"We can't find the worksheet{If(String.IsNullOrWhiteSpace(_worksheetName), "", $"`{_worksheetName}`")}.")
                 End If
-
-
 
                 Dim tprops = GetType(T).GetProperties().ToList()
 
@@ -48,17 +44,15 @@ Namespace Global.Globagility.AccuPay
                     GroupBy(Function(g) g.Start.Row).
                     ToList()
 
-                Dim colNames = groups.
+                Dim columns = groups.
                     First().
-                    Select(Function(col, index) New Column With {.Name = col.Value.ToString(), .Index = index}).
+                    Select(Function(col, index) New Column(col, index)).
                     ToList()
 
-                Dim rowValues = groups.
-                    Skip(1).
-                    Select(Function(cfg) cfg.Select(Function(g) g.Value).ToList())
+                Dim rows = GetRows(worksheet, columns)
 
-                records = rowValues.
-                    Select(Function(row) ParseRow(row, colNames, tprops)).
+                records = rows.
+                    Select(Function(row) ParseRow(row, columns, tprops)).
                     ToList()
             End Using
 
@@ -80,7 +74,6 @@ Namespace Global.Globagility.AccuPay
                 'Check by Property Attribute Name
                 prop = tprops.FirstOrDefault(
                     Function(t)
-
                         If Attribute.IsDefined(t, GetType(ColumnNameAttribute)) = False Then
                             Return False
                         End If
@@ -88,22 +81,17 @@ Namespace Global.Globagility.AccuPay
                         Dim attr = CType(t.GetCustomAttributes(GetType(ColumnNameAttribute), False), ColumnNameAttribute())
 
                         Return StringUtils.ToPascal(attr(0).Value) = StringUtils.ToPascal(column.Name)
-
                     End Function)
 
-
                 If prop Is Nothing Then
-
                     'Check by Property Name
                     prop = tprops.FirstOrDefault(
                         Function(t)
                             Return StringUtils.ToPascal(t.Name) = StringUtils.ToPascal(column.Name)
                         End Function)
-
                 End If
 
                 If prop IsNot Nothing Then
-
                     If Attribute.IsDefined(prop, GetType(IgnoreAttribute)) Then
                         Continue For
                     End If
@@ -113,6 +101,25 @@ Namespace Global.Globagility.AccuPay
             Next
 
             Return newRecord
+        End Function
+
+        Private Function GetRows(worksheet As ExcelWorksheet, columns As ICollection(Of Column)) As List(Of List(Of Object))
+            Dim firstRow = worksheet.Dimension.Start.Row + 1
+            Dim endRow = worksheet.Dimension.End.Row
+
+            Dim rows = New List(Of List(Of Object))
+
+            For i = firstRow To endRow
+                Dim row = New List(Of Object)
+
+                For Each column In columns
+                    row.Add(worksheet.Cells($"{column.Letter}{i}").Value)
+                Next
+
+                rows.Add(row)
+            Next
+
+            Return rows
         End Function
 
         Private Function GetFileContents(filePath As String) As Stream
@@ -148,9 +155,23 @@ Namespace Global.Globagility.AccuPay
         End Sub
 
         Private Class Column
-            Public Property Name As String
 
-            Public Property Index As Integer
+            Public ReadOnly Property Letter As String
+
+            Public ReadOnly Property Name As String
+
+            Public ReadOnly Property Index As Integer
+
+            Public Sub New(cell As ExcelRangeBase, index As Integer)
+                Me.Letter = GetLettersOnly(cell.Address)
+                Me.Name = cell.Value.ToString()
+                Me.Index = index
+            End Sub
+
+            Private Function GetLettersOnly(address As String) As String
+                Return Regex.Replace(address, "[\d-]", String.Empty)
+            End Function
+
         End Class
 
     End Class
