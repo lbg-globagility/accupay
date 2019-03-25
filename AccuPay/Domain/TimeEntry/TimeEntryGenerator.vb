@@ -172,7 +172,7 @@ Public Class TimeEntryGenerator
                 Try
                     CalculateEmployee(employee, organization, payrateCalendar, settings, agencies)
                 Catch ex As Exception
-                    logger.Error(employee.EmployeeNo, ex)
+                    logger.Error(ex.Message, ex)
                     _errors += 1
                 End Try
 
@@ -271,7 +271,7 @@ Public Class TimeEntryGenerator
                 timeEntries.Add(timeEntry)
 
             Catch ex As Exception
-                Throw New Exception(currentDate.ToString(), ex)
+                Throw New Exception($"{currentDate} #{employee.EmployeeNo}", ex)
             End Try
 
         Next

@@ -501,6 +501,7 @@ Public Class DayCalculator
         If _employee.IsDaily Then
             dailyRate = salary.BasicSalary
         ElseIf _employee.IsMonthly Or _employee.IsFixed Then
+            If _employee.WorkDaysPerYear = 0 Then Return 0
             dailyRate = salary.BasicSalary / (_employee.WorkDaysPerYear / 12)
         End If
 
@@ -579,8 +580,8 @@ Public Class DayCalculator
     End Function
 
     Public Function GetLeavePeriod(leave As Leave, currentShift As CurrentShift) As TimePeriod
-        Dim startTime = If(leave.StartTime, currentShift.Shift.TimeFrom)
-        Dim endTime = If(leave.EndTime, currentShift.Shift.TimeTo)
+        Dim startTime = If(leave.StartTime, currentShift.StartTime.Value)
+        Dim endTime = If(leave.EndTime, currentShift.EndTime.Value)
 
         Dim leavePeriod = TimePeriod.FromTime(startTime, endTime, currentShift.Date)
 

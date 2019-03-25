@@ -61,7 +61,8 @@ Public Class ImportedShiftSchedulesForm
 
                 Dim isRestDay = If(String.IsNullOrWhiteSpace(shiftSched.IsRestDay), False, CBool(Convert.ToInt16(shiftSched.IsRestDay)))
 
-                Dim dates = Calendar.EachDay(shiftSched.StartDate, shiftSched.EndDate)
+                Dim endDate = If(shiftSched.EndDate.HasValue, shiftSched.EndDate.Value, shiftSched.StartDate)
+                Dim dates = Calendar.EachDay(shiftSched.StartDate, endDate)
                 If seek.Any Then
                     Dim employee = seek.FirstOrDefault
 
