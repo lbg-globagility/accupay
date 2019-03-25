@@ -25,8 +25,11 @@ Partial Class EmployeeTreeView
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.chkBoxShowEmployeeNo = New System.Windows.Forms.CheckBox()
         Me.AccuPayEmployeeTreeView = New AccuPay.AccuPayTreeView()
         Me.Panel1.SuspendLayout()
+        Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
         'TextBox1
@@ -49,22 +52,42 @@ Partial Class EmployeeTreeView
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.AccuPayEmployeeTreeView)
-        Me.Panel1.Controls.Add(Me.TextBox1)
+        Me.Panel1.Controls.Add(Me.Panel2)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(0, 13)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(156, 191)
         Me.Panel1.TabIndex = 5
         '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.chkBoxShowEmployeeNo)
+        Me.Panel2.Controls.Add(Me.TextBox1)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(0, 0)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(156, 40)
+        Me.Panel2.TabIndex = 2
+        '
+        'chkBoxShowEmployeeNo
+        '
+        Me.chkBoxShowEmployeeNo.AutoSize = True
+        Me.chkBoxShowEmployeeNo.Dock = System.Windows.Forms.DockStyle.Left
+        Me.chkBoxShowEmployeeNo.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkBoxShowEmployeeNo.Location = New System.Drawing.Point(0, 20)
+        Me.chkBoxShowEmployeeNo.Name = "chkBoxShowEmployeeNo"
+        Me.chkBoxShowEmployeeNo.Size = New System.Drawing.Size(105, 20)
+        Me.chkBoxShowEmployeeNo.TabIndex = 1
+        Me.chkBoxShowEmployeeNo.Text = "Show Employee No"
+        Me.chkBoxShowEmployeeNo.UseVisualStyleBackColor = True
+        '
         'AccuPayEmployeeTreeView
         '
-        Me.AccuPayEmployeeTreeView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.AccuPayEmployeeTreeView.CheckBoxes = True
-        Me.AccuPayEmployeeTreeView.Location = New System.Drawing.Point(0, 26)
+        Me.AccuPayEmployeeTreeView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.AccuPayEmployeeTreeView.Location = New System.Drawing.Point(0, 40)
         Me.AccuPayEmployeeTreeView.Name = "AccuPayEmployeeTreeView"
-        Me.AccuPayEmployeeTreeView.Size = New System.Drawing.Size(156, 165)
+        Me.AccuPayEmployeeTreeView.Size = New System.Drawing.Size(156, 151)
         Me.AccuPayEmployeeTreeView.TabIndex = 1
         '
         'EmployeeTreeView
@@ -77,7 +100,8 @@ Partial Class EmployeeTreeView
         Me.Name = "EmployeeTreeView"
         Me.Size = New System.Drawing.Size(156, 204)
         Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -86,4 +110,6 @@ Partial Class EmployeeTreeView
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Panel1 As Panel
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents chkBoxShowEmployeeNo As CheckBox
 End Class

@@ -283,4 +283,9 @@ Public Class EmployeeTreeView
         End Sub
 
     End Class
+
+    Private Sub chkBoxShowEmployeeNo_CheckedChanged(sender As Object, e As EventArgs) Handles chkBoxShowEmployeeNo.CheckedChanged
+
+    End Sub
+
 End Class
