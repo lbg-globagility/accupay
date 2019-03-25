@@ -353,6 +353,12 @@
     <Compile Include="Views\Core Forms\TimeEntry\TimeAttendanceLogListForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\TimeLogsForm2.Designer.vb">
+      <DependentUpon>TimeLogsForm2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TimeLogsForm2.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
     <Compile Include="Domain\Payroll\CashOutUnusedLeave.vb" />
     <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
@@ -1711,6 +1717,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo - Copy.ico" />
+    <EmbeddedResource Include="Views\Core Forms\TimeLogsForm2.resx">
+      <DependentUpon>TimeLogsForm2.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\EmployeeTreeView.resx">
       <DependentUpon>EmployeeTreeView.vb</DependentUpon>
     </EmbeddedResource>

@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class EmployeeTreeView
     Inherits System.Windows.Forms.UserControl
 
     'UserControl overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,14 +20,13 @@ Partial Class EmployeeTreeView
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.chkBoxShowEmployeeNo = New System.Windows.Forms.CheckBox()
         Me.AccuPayEmployeeTreeView = New AccuPay.AccuPayTreeView()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
@@ -59,36 +58,23 @@ Partial Class EmployeeTreeView
         Me.Panel1.Size = New System.Drawing.Size(156, 191)
         Me.Panel1.TabIndex = 5
         '
-        'Panel2
-        '
-        Me.Panel2.Controls.Add(Me.chkBoxShowEmployeeNo)
-        Me.Panel2.Controls.Add(Me.TextBox1)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel2.Location = New System.Drawing.Point(0, 0)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(156, 40)
-        Me.Panel2.TabIndex = 2
-        '
-        'chkBoxShowEmployeeNo
-        '
-        Me.chkBoxShowEmployeeNo.AutoSize = True
-        Me.chkBoxShowEmployeeNo.Dock = System.Windows.Forms.DockStyle.Left
-        Me.chkBoxShowEmployeeNo.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkBoxShowEmployeeNo.Location = New System.Drawing.Point(0, 20)
-        Me.chkBoxShowEmployeeNo.Name = "chkBoxShowEmployeeNo"
-        Me.chkBoxShowEmployeeNo.Size = New System.Drawing.Size(105, 20)
-        Me.chkBoxShowEmployeeNo.TabIndex = 1
-        Me.chkBoxShowEmployeeNo.Text = "Show Employee No"
-        Me.chkBoxShowEmployeeNo.UseVisualStyleBackColor = True
-        '
         'AccuPayEmployeeTreeView
         '
         Me.AccuPayEmployeeTreeView.CheckBoxes = True
         Me.AccuPayEmployeeTreeView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.AccuPayEmployeeTreeView.Location = New System.Drawing.Point(0, 40)
+        Me.AccuPayEmployeeTreeView.Location = New System.Drawing.Point(0, 28)
         Me.AccuPayEmployeeTreeView.Name = "AccuPayEmployeeTreeView"
-        Me.AccuPayEmployeeTreeView.Size = New System.Drawing.Size(156, 151)
+        Me.AccuPayEmployeeTreeView.Size = New System.Drawing.Size(156, 163)
         Me.AccuPayEmployeeTreeView.TabIndex = 1
+        '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.TextBox1)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(0, 0)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(156, 28)
+        Me.Panel2.TabIndex = 2
         '
         'EmployeeTreeView
         '
@@ -111,5 +97,4 @@ Partial Class EmployeeTreeView
     Friend WithEvents Label1 As Label
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents chkBoxShowEmployeeNo As CheckBox
 End Class

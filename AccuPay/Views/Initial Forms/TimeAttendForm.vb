@@ -187,4 +187,9 @@ Public Class TimeAttendForm
         ChangeForm(ShiftScheduleForm, "Employee Time Entry Logs")
         previousForm = ShiftScheduleForm
     End Sub
+
+    Private Sub ToolStripMenuItem1_Click_1(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
+        ChangeForm(TimeLogsForm2, "Employee Time Entry logs")
+        previousForm = TimeLogsForm2
+    End Sub
 End Class

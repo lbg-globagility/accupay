@@ -30,13 +30,14 @@ Partial Class TimeAttendForm
         Me.SummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OvertimeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelTimeAttend = New System.Windows.Forms.Panel()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TimeEntToolStripMenuItem, Me.ShiftScheduleToolStripMenuItem, Me.TimeEntryLogsToolStripMenuItem, Me.TimeEntryToolStripMenuItem, Me.SummaryToolStripMenuItem, Me.OvertimeToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TimeEntToolStripMenuItem, Me.ShiftScheduleToolStripMenuItem, Me.TimeEntryLogsToolStripMenuItem, Me.ToolStripMenuItem1, Me.TimeEntryToolStripMenuItem, Me.SummaryToolStripMenuItem, Me.OvertimeToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -89,6 +90,12 @@ Partial Class TimeAttendForm
         Me.PanelTimeAttend.Size = New System.Drawing.Size(1006, 446)
         Me.PanelTimeAttend.TabIndex = 3
         '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(101, 20)
+        Me.ToolStripMenuItem1.Text = "Time entry logs"
+        '
         'TimeAttendForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -114,4 +121,5 @@ Partial Class TimeAttendForm
     Friend WithEvents SummaryToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OvertimeToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ShiftScheduleToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
 End Class

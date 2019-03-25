@@ -9,6 +9,8 @@ Imports System.Threading.Tasks
 
 Public Class EmployeeTreeView
 
+#Region "VariableDeclarations"
+
     Private _presenter As EmployeeTreeViewPresenter
 
     Public Event OrganizationIDChanged(s As Object, e As EventArgs)
@@ -32,6 +34,10 @@ Public Class EmployeeTreeView
         End Set
     End Property
 
+#End Region
+
+#Region "Constructors"
+
     Public Sub New()
 
         ' This call is required by the designer.
@@ -44,14 +50,9 @@ Public Class EmployeeTreeView
         tickedEmployeeIDs = New List(Of Integer)
     End Sub
 
-    Private Sub EmployeeTreeView_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If DesignMode Then
-            Return
-        End If
+#End Region
 
-        _presenter.Load()
-        AddHandler AccuPayEmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
-    End Sub
+#Region "Methods"
 
     Public Sub SwitchOrganization(organizationId As Integer)
         _organizationID = organizationId
@@ -83,10 +84,6 @@ Public Class EmployeeTreeView
 
         RaiseEvent TickedEmployee(Me, New EventArgs)
     End Sub
-
-    Public Function GetTickedEmployees() As IList(Of Employee)
-        Return tickedEmployees
-    End Function
 
     Private Sub SetCheck(node As TreeNode)
         If node.GetNodeCount(False) >= 1 Then
@@ -148,7 +145,7 @@ Public Class EmployeeTreeView
 
                     Dim employeeNode = New TreeNode() With {
                         .Name = childEmployee.Fullname,
-                        .Text = childEmployee.Fullname,
+                        .Text = $"{childEmployee.Fullname} #{childEmployee.EmployeeNo}",
                         .Tag = childEmployee,
                         .Checked = shouldSetChecked
                     }
@@ -169,11 +166,15 @@ Public Class EmployeeTreeView
         AccuPayEmployeeTreeView.Nodes(0).EnsureVisible()
     End Sub
 
-    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
-        _presenter.FilterEmployees(TextBox1.Text)
+#End Region
 
-        RaiseEvent FiltersEmployee(e, New EventArgs)
-    End Sub
+#Region "Functions"
+
+    Public Function GetTickedEmployees() As IList(Of Employee)
+        Return tickedEmployees
+    End Function
+
+#End Region
 
     Private Class EmployeeTreeViewPresenter
 
@@ -234,8 +235,9 @@ Public Class EmployeeTreeView
                     Dim contains = employee.Fullname.ToLower().Contains(needle)
                     Dim reverseName = ($"{employee.LastName} {employee.FirstName}").ToLower()
                     Dim containsReverseName = reverseName.Contains(needle)
+                    Dim hasThisKindOfEmployeeNo = employee.EmployeeNo.Contains(needle)
 
-                    Return contains Or containsReverseName
+                    Return contains Or containsReverseName Or hasThisKindOfEmployeeNo
                 End Function
 
             Dim employees = Await Task.Run(
@@ -284,60 +286,23 @@ Public Class EmployeeTreeView
 
     End Class
 
-    Private Sub chkBoxShowEmployeeNo_CheckedChanged(sender As Object, e As EventArgs) Handles chkBoxShowEmployeeNo.CheckedChanged
+#Region "EventHandlers"
 
-        Dim isDisplayed = chkBoxShowEmployeeNo.Checked
-
-        Dim employeeNodes = AccuPayEmployeeTreeView.Nodes.OfType(Of TreeNode)
-
-        If isDisplayed Then
-            For Each eNode In employeeNodes
-                ShowTreeNodeEmployeeNo(eNode)
-            Next
-
-        Else
-            For Each eNode In employeeNodes
-                HideTreeNodeEmployeeNo(eNode)
-            Next
-
+    Private Sub EmployeeTreeView_Load(sender As Object, e As EventArgs) Handles Me.Load
+        If DesignMode Then
+            Return
         End If
 
+        _presenter.Load()
+        AddHandler AccuPayEmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
 
-    Private Sub ShowTreeNodeEmployeeNo(eNode As TreeNode)
-        Dim isEmployee = TypeOf eNode.Tag Is Employee
-        Dim isSatisfy = isEmployee
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+        _presenter.FilterEmployees(TextBox1.Text)
 
-        If isSatisfy Then
-            Dim employeeNode = DirectCast(eNode.Tag, Employee)
-
-            eNode.Text =
-                String.Join(", ", employeeNode.EmployeeNo,
-                            String.Join(", ", employeeNode.LastName, employeeNode.FirstName))
-        End If
-
-        If eNode.GetNodeCount(False) >= 1 Then
-            For Each child As TreeNode In eNode.Nodes
-                ShowTreeNodeEmployeeNo(child)
-            Next
-        End If
+        RaiseEvent FiltersEmployee(e, New EventArgs)
     End Sub
 
-    Private Sub HideTreeNodeEmployeeNo(eNode As TreeNode)
-        Dim isEmployee = TypeOf eNode.Tag Is Employee
-        Dim isSatisfy = isEmployee
-
-        If isSatisfy Then
-            Dim employeeNode = DirectCast(eNode.Tag, Employee)
-
-            eNode.Text = String.Join(", ", employeeNode.LastName, employeeNode.FirstName)
-        End If
-
-        If eNode.GetNodeCount(False) >= 1 Then
-            For Each child As TreeNode In eNode.Nodes
-                HideTreeNodeEmployeeNo(child)
-            Next
-        End If
-    End Sub
+#End Region
 
 End Class
