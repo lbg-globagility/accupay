@@ -99,6 +99,18 @@ Public Class CurrentShift
         End Get
     End Property
 
+    Public ReadOnly Property StartTime As TimeSpan?
+        Get
+            Return If(_shiftSchedule2?.StartTime, ShiftSchedule?.Shift?.TimeFrom)
+        End Get
+    End Property
+
+    Public ReadOnly Property EndTime As TimeSpan?
+        Get
+            Return If(_shiftSchedule2?.EndTime, ShiftSchedule?.Shift?.TimeTo)
+        End Get
+    End Property
+
     Public Sub New(shift As Shift, [date] As DateTime)
         Me.Shift = shift
         Me.Date = [date]
