@@ -286,6 +286,58 @@ Public Class EmployeeTreeView
 
     Private Sub chkBoxShowEmployeeNo_CheckedChanged(sender As Object, e As EventArgs) Handles chkBoxShowEmployeeNo.CheckedChanged
 
+        Dim isDisplayed = chkBoxShowEmployeeNo.Checked
+
+        Dim employeeNodes = AccuPayEmployeeTreeView.Nodes.OfType(Of TreeNode)
+
+        If isDisplayed Then
+            For Each eNode In employeeNodes
+                ShowTreeNodeEmployeeNo(eNode)
+            Next
+
+        Else
+            For Each eNode In employeeNodes
+                HideTreeNodeEmployeeNo(eNode)
+            Next
+
+        End If
+
+    End Sub
+
+    Private Sub ShowTreeNodeEmployeeNo(eNode As TreeNode)
+        Dim isEmployee = TypeOf eNode.Tag Is Employee
+        Dim isSatisfy = isEmployee
+
+        If isSatisfy Then
+            Dim employeeNode = DirectCast(eNode.Tag, Employee)
+
+            eNode.Text =
+                String.Join(", ", employeeNode.EmployeeNo,
+                            String.Join(", ", employeeNode.LastName, employeeNode.FirstName))
+        End If
+
+        If eNode.GetNodeCount(False) >= 1 Then
+            For Each child As TreeNode In eNode.Nodes
+                ShowTreeNodeEmployeeNo(child)
+            Next
+        End If
+    End Sub
+
+    Private Sub HideTreeNodeEmployeeNo(eNode As TreeNode)
+        Dim isEmployee = TypeOf eNode.Tag Is Employee
+        Dim isSatisfy = isEmployee
+
+        If isSatisfy Then
+            Dim employeeNode = DirectCast(eNode.Tag, Employee)
+
+            eNode.Text = String.Join(", ", employeeNode.LastName, employeeNode.FirstName)
+        End If
+
+        If eNode.GetNodeCount(False) >= 1 Then
+            For Each child As TreeNode In eNode.Nodes
+                HideTreeNodeEmployeeNo(child)
+            Next
+        End If
     End Sub
 
 End Class
