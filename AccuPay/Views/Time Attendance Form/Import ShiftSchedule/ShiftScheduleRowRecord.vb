@@ -14,7 +14,7 @@ Namespace Global.Globagility.AccuPay.ShiftSchedules
         Public Property StartDate As Date Implements IShiftScheduleRowRecord.StartDate
 
         <ColumnName("Effective Date To (Optional)")>
-        Public Property EndDate As Date Implements IShiftScheduleRowRecord.EndDate
+        Public Property EndDate As Date? Implements IShiftScheduleRowRecord.EndDate
 
         <ColumnName("Time From")>
         Public Property StartTime As TimeSpan? Implements IShiftScheduleRowRecord.StartTime
@@ -36,7 +36,7 @@ Namespace Global.Globagility.AccuPay.ShiftSchedules
     Public Interface IShiftScheduleRowRecord
         Property EmployeeNo As String
         Property StartDate As Date
-        Property EndDate As Date
+        Property EndDate As Date?
         Property StartTime As TimeSpan?
         Property EndTime As TimeSpan?
         Property BreakStartTime As TimeSpan?
