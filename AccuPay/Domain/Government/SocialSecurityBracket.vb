@@ -31,6 +31,10 @@ Namespace Global.PayrollSys
 
         Public Property HiddenData As Boolean
 
+        Public Property EffectiveDateFrom As Date
+
+        Public Property EffectiveDateTo As Date
+
     End Class
 
 End Namespace

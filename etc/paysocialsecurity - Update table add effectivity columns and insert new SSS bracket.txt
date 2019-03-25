@@ -1,0 +1,97 @@
+/*  Improve the Index and foreign keys then add effectivity columns */
+ALTER TABLE `paysocialsecurity`
+	DROP FOREIGN KEY `FK_PaySocialSecurity_user`,
+	DROP FOREIGN KEY `FK_PaySocialSecurity_user_2`;
+ALTER TABLE `paysocialsecurity`
+	ADD COLUMN `EffectiveDateFrom` DATE NOT NULL DEFAULT '2014-01-01' AFTER `HiddenData`,
+	ADD COLUMN `EffectiveDateTo` DATE NOT NULL DEFAULT '2019-03-01' AFTER `EffectiveDateFrom`,
+	DROP INDEX `FK_PaySocialSecurity_user`,
+	ADD INDEX `FK_paypocialsecurity_user_CreatedBy` (`CreatedBy`),
+	DROP INDEX `FK_PaySocialSecurity_user_2`,
+	ADD INDEX `FK_paysocialsecurity_user_LastUpdBy` (`LastUpdBy`),
+	ADD CONSTRAINT `FK_paypocialsecurity_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_paysocialsecurity_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`);
+
+ALTER TABLE `paysocialsecurity`
+	DROP INDEX `MonthlySalaryCredit`,
+	ADD UNIQUE INDEX `AK_paysocialsecurity_MonthlySalaryCredit_EffctvDtFrm_EffctvDtT` (`MonthlySalaryCredit`, `EffectiveDateFrom`, `EffectiveDateTo`);
+
+/*	The default values earlier are only for the old brackets.
+	We need to remove the default values after.*/
+ALTER TABLE `paysocialsecurity`
+	ALTER `EffectiveDateFrom` DROP DEFAULT,
+	ALTER `EffectiveDateTo` DROP DEFAULT;
+ALTER TABLE `paysocialsecurity`
+	CHANGE COLUMN `EffectiveDateFrom` `EffectiveDateFrom` DATE NOT NULL AFTER `HiddenData`,
+	CHANGE COLUMN `EffectiveDateTo` `EffectiveDateTo` DATE NOT NULL AFTER `EffectiveDateFrom`;
+
+/*  Add the new SSS Brackets */
+SET @UserId = (SELECT RowID FROM user WHERE RowID <> 0 LIMIT 1 );
+
+INSERT INTO `paysocialsecurity` (`CreatedBy`, `LastUpdBy`, `RangeFromAmount`, `RangeToAmount`, `MonthlySalaryCredit`, `EmployeeContributionAmount`, `EmployerContributionAmount`, `EmployeeECAmount`, `HiddenData`, `EffectiveDateFrom`, `EffectiveDateTo`) VALUES
+	(@UserId, @UserId, 0.00, 2249.99, 2000.00, 80.00, 160.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 2250.00, 2749.99, 2500.00, 100.00, 200.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 2750.00, 3249.99, 3000.00, 120.00, 240.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 3250.00, 3749.99, 3500.00, 140.00, 280.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 3750.00, 4249.99, 4000.00, 160.00, 320.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 4250.00, 4749.99, 4500.00, 180.00, 360.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 4750.00, 5249.99, 5000.00, 200.00, 400.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 5250.00, 5749.99, 5500.00, 220.00, 440.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 5750.00, 6249.99, 6000.00, 240.00, 480.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 6250.00, 6749.99, 6500.00, 260.00, 520.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 6750.00, 7249.99, 7000.00, 280.00, 560.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 7250.00, 7749.99, 7500.00, 300.00, 600.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 7750.00, 8249.99, 8000.00, 320.00, 640.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 8250.00, 8749.99, 8500.00, 340.00, 680.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 8750.00, 9249.99, 9000.00, 360.00, 720.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 9250.00, 9749.99, 9500.00, 380.00, 760.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 9750.00, 10249.99, 10000.00, 400.00, 800.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 10250.00, 10749.99, 10500.00, 420.00, 840.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 10750.00, 11249.99, 11000.00, 440.00, 880.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 11250.00, 11749.99, 11500.00, 460.00, 920.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 11750.00, 12249.99, 12000.00, 480.00, 960.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 12250.00, 12749.99, 12500.00, 500.00, 1000.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 12750.00, 13249.99, 13000.00, 520.00, 1040.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 13250.00, 13749.99, 13500.00, 540.00, 1080.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 13750.00, 14249.99, 14000.00, 560.00, 1120.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 14250.00, 14749.99, 14500.00, 580.00, 1160.00, 10.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 14750.00, 15249.99, 15000.00, 600.00, 1200.00, 30.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 15250.00, 15749.99, 15500.00, 620.00, 1240.00, 30.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 15750.00, 16249.99, 16000.00, 640.00, 1280.00, 30.00, 0, '2019-04-01', '2022-12-01'),
+
+	(@UserId, @UserId, 16250.00, 16749.99, 16500.00, 660.00, 1320.00, 30.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 16750.00, 17249.99, 17000.00, 680.00, 1360.00, 30.00, 0, '2019-04-01', '2022-12-01'),
+    
+	(@UserId, @UserId, 17250.00, 17749.99, 17500.00, 700.00, 1400.00, 30.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 17750.00, 18249.99, 18000.00, 720.00, 1440.00, 30.00, 0, '2019-04-01', '2022-12-01'),
+    
+	(@UserId, @UserId, 18250.00, 18749.99, 18500.00, 740.00, 1480.00, 30.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 18750.00, 19249.99, 19000.00, 760.00, 1520.00, 30.00, 0, '2019-04-01', '2022-12-01'),
+    
+	(@UserId, @UserId, 19250.00, 19749.99, 19500.00, 780.00, 1560.00, 30.00, 0, '2019-04-01', '2022-12-01'),
+	(@UserId, @UserId, 19750.00, 999999.00, 20000.00, 800.00, 1600.00, 30.00, 0, '2019-04-01', '2022-12-01');
+
+
+/*  Add new column */
+ALTER TABLE `employeesalary`
+	ADD COLUMN `DoPaySSSContribution` TINYINT(1) NOT NULL DEFAULT '1' AFTER `OverrideDiscardPhilHealthContrib`;
+
+UPDATE
+	employeesalary
+SET
+	employeesalary.DoPaySSSContribution = IF(employeesalary.PaySocialSecurityID IS NULL, FALSE, TRUE),
+	employeesalary.LastUpdBy = @UserId
+;

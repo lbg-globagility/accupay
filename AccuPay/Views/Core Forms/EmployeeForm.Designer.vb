@@ -14407,7 +14407,6 @@ Partial Class EmployeeForm
         Me.SalaryTab.Name = "SalaryTab"
         Me.SalaryTab.PhilHealth = Nothing
         Me.SalaryTab.Size = New System.Drawing.Size(860, 461)
-        Me.SalaryTab.Sss = Nothing
         Me.SalaryTab.TabIndex = 0
         '
         'imglstchklist

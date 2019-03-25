@@ -185,6 +185,11 @@ Public Class PayrollResources
     End Sub
 
     Public Async Function Load() As Task
+
+        'LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
+
+        Await LoadPayPeriod()
+
         Await Task.WhenAll({
             LoadEmployees(),
             LoadLoanSchedules(),
@@ -197,7 +202,6 @@ Public Class PayrollResources
             LoadPhilHealthBrackets(),
             LoadWithholdingTaxBrackets(),
             LoadSettings(),
-            LoadPayPeriod(),
             LoadPayRates(),
             LoadAllowances(),
             LoadTaxableAllowances(),
@@ -353,10 +357,15 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadSocialSecurityBrackets() As Task
+
         Try
+            'LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
+            Dim taxEffectivityDate = New Date(_payPeriod.Year, _payPeriod.Month, 1)
+
             Using context = New PayrollContext()
-                Dim query = From s In context.SocialSecurityBrackets
-                            Select s
+                Dim query = context.SocialSecurityBrackets.
+                            Where(Function(s) taxEffectivityDate >= s.EffectiveDateFrom).
+                            Where(Function(s) taxEffectivityDate <= s.EffectiveDateTo)
 
                 _socialSecurityBrackets = Await query.ToListAsync()
             End Using
