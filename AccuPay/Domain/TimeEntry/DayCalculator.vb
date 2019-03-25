@@ -507,6 +507,7 @@ Public Class DayCalculator
         If _employee.IsDaily Then
             dailyRate = salary.BasicSalary
         ElseIf _employee.IsMonthly Or _employee.IsFixed Then
+            If _employee.WorkDaysPerYear = 0 Then Return 0
             dailyRate = salary.BasicSalary / (_employee.WorkDaysPerYear / 12)
         End If
 
