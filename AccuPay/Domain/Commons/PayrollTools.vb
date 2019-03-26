@@ -11,7 +11,7 @@ Public Class PayrollTools
                             employee As Employee,
                             basicSalary As Decimal) As Decimal
 
-        If employee.IsMonthly OrElse employee.IsDaily Then
+        If employee.IsMonthly OrElse employee.IsFixed Then
 
             Return basicSalary
 
