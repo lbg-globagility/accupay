@@ -1,7 +1,10 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
+Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
+Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 
@@ -46,6 +49,13 @@ Public Class TimeLogsForm2
                 Where(Function(e) employeeIDs.Contains(e.RowID.Value)).
                 ToListAsync() 'employeeIDs.Any(Function(eID) e.RowID.Value = eID)
 
+            Dim shiftSchedules = Await context.EmployeeDutySchedules.
+                Where(Function(ss) ss.OrganizationID.Value = z_OrganizationID).
+                Where(Function(ss) ss.DateSched >= startDate AndAlso ss.DateSched <= endDate).
+                Where(Function(ss) employeeIDs.Contains(ss.EmployeeID.Value)).
+                Where(Function(ss) ss.StartTime.HasValue AndAlso ss.EndTime.HasValue).
+                ToListAsync()
+
             Dim dataSource As New List(Of TimeLogModel)
 
             Dim models = CreatedResults(employees, startDate, endDate)
@@ -55,17 +65,27 @@ Public Class TimeLogsForm2
                 Where(Function(etd) employeeIDs.Contains(etd.EmployeeID.Value)).
                 Where(Function(etd) etd.LogDate >= startDate AndAlso etd.LogDate <= endDate).
                 ToListAsync()
-            'employeeIDs.Any(Function(eID) etd.EmployeeID.Value = eID)
 
             For Each model In models
                 Dim seek = timeLogs.
                     Where(Function(etd) etd.EmployeeID.Value = model.EmployeeID).
                     Where(Function(etd) etd.LogDate = model.DateIn)
 
+                Dim seekShiftSched = shiftSchedules.
+                    Where(Function(ss) ss.EmployeeID.Value = model.EmployeeID).
+                    Where(Function(ss) ss.DateSched = model.DateIn)
+
+                Dim hasShiftSched = seekShiftSched.Any()
+
                 If seek.Any Then
                     Dim timeLog = seek.FirstOrDefault
+                    If hasShiftSched Then
+                        dataSource.Add(New TimeLogModel(timeLog) With {.ShiftSchedule = seekShiftSched.FirstOrDefault})
+                        Continue For
+                    End If
                     dataSource.Add(New TimeLogModel(timeLog))
                 Else
+                    If hasShiftSched Then model.ShiftSchedule = seekShiftSched.FirstOrDefault
                     dataSource.Add(model)
                 End If
             Next
@@ -438,6 +458,22 @@ Public Class TimeLogsForm2
                 Return If(_timeLog?.Employee?.Fullname, _employee.Fullname)
             End Get
         End Property
+
+        Public ReadOnly Property ShiftScheduleText As String
+            Get
+                Dim hasShift = ShiftSchedule IsNot Nothing
+
+                If Not hasShift Then Return Nothing
+
+                'Dim timeShifts = {TimeSpanToString(ShiftSchedule.StartTime), TimeSpanToString(ShiftSchedule.EndTime)}
+                'Dim properArray = timeShifts.Where(Function(shiftTime) Not String.IsNullOrWhiteSpace(shiftTime)).ToArray()
+                'Return String.Join(" - ", properArray)
+
+                Return $"{TimeSpanToString(ShiftSchedule.StartTime)} - {TimeSpanToString(ShiftSchedule.EndTime)}"
+            End Get
+        End Property
+
+        Public Property ShiftSchedule As EmployeeDutySchedule
 
         Public Property DateIn As Date
 
@@ -896,11 +932,6 @@ Public Class TimeLogsForm2
         For Each tTip In _balloonToolTips
             tTip.Dispose()
         Next
-    End Sub
-
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        ShowSuccessBalloon()
-        ShowSuccessImportBalloon()
     End Sub
 
     Private Sub grid_CellMouseEnter(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellMouseEnter
