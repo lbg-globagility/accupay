@@ -1717,6 +1717,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo - Copy.ico" />
+    <None Include="Resources\baseline_delete_forever_black_18dp.png" />
     <EmbeddedResource Include="Views\Core Forms\TimeLogsForm2.resx">
       <DependentUpon>TimeLogsForm2.vb</DependentUpon>
     </EmbeddedResource>
