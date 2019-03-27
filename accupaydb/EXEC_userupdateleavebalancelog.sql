@@ -10,7 +10,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `EXEC_userupdateleavebalancelog`(IN 
     DETERMINISTIC
 BEGIN
 
-DECLARE hasupdate TINYINT;
+/*DECLARE hasupdate TINYINT;
 
 DECLARE minimum_date DATE;
 
@@ -63,7 +63,7 @@ IF hasupdate = 0 THEN
     ,e.LastUpdBy=UserRowID
     WHERE e.OrganizationID=OrganizID
     /*AND (ADDDATE(e.StartDate, INTERVAL 2 YEAR) <= curr_year
-            OR ADDDATE(e.StartDate, INTERVAL 1 YEAR) BETWEEN minimum_date AND custom_maximum_date)*/
+            OR ADDDATE(e.StartDate, INTERVAL 1 YEAR) BETWEEN minimum_date AND custom_maximum_date)
     AND (YEAR(IFNULL(e.DateRegularized, ADDDATE(e.StartDate, INTERVAL 2 YEAR))) <= curr_year
             OR IFNULL(e.DateRegularized, ADDDATE(e.StartDate, INTERVAL 1 YEAR)) BETWEEN minimum_date AND custom_maximum_date)
 	 ;
@@ -153,7 +153,7 @@ IF hasupdate = 0 THEN
     
     INSERT INTO userupdateleavebalancelog(OrganizationID,Created,UserID,YearValue) VALUES (OrganizID,CURRENT_TIMESTAMP(),UserRowID,curr_year) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
     
-END IF;
+END IF;*/
 
 END//
 DELIMITER ;

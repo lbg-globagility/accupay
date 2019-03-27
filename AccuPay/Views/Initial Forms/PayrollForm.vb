@@ -99,6 +99,11 @@
 
     Private Sub PayrollForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         setProperInterfaceBaseOnCurrentSystemOwner()
+
+
+        If Not Debugger.IsAttached Then
+            PaystubExperimentalToolStripMenuItem.Visible = False
+        End If
     End Sub
 
     Sub reloadViewPrivilege()

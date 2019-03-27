@@ -53,6 +53,8 @@ Public Class TimeEntrySummaryForm
 
     Private _calculateBreakTimeLateHours As Boolean
 
+    Private _useNewShift As Boolean
+
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         employeesDataGridView.AutoGenerateColumns = False
@@ -63,6 +65,7 @@ Public Class TimeEntrySummaryForm
         _employeeRepository = New EmployeeRepository
 
         _calculateBreakTimeLateHours = GetBreakTimeLateHoursPolicy()
+        _useNewShift = GetNewShiftSchedulePolicy()
 
         Dim loadEmployeesTask = LoadEmployees()
         Dim loadPayPeriodsTask = LoadPayPeriods()
@@ -94,6 +97,17 @@ Public Class TimeEntrySummaryForm
             Dim policy = New TimeEntryPolicy(settings)
 
             Return policy.ComputeBreakTimeLate
+        End Using
+    End Function
+
+    Private Function GetNewShiftSchedulePolicy() As Boolean
+        Using context = New PayrollContext()
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim policy = New TimeEntryPolicy(settings)
+
+            Return policy.UseShiftSchedule
         End Using
     End Function
 
@@ -295,8 +309,8 @@ Public Class TimeEntrySummaryForm
                 etd.TimeIn,
                 etd.TimeOut,
                 etd.RowID,
-                shiftschedules.StartTime AS ShiftFrom,
-                shiftschedules.EndTime AS ShiftTo,
+                IF(@useNewSchedule, IFNULL(shiftschedules.StartTime, NULL), IFNULL(shift.TimeFrom, NULL)) AS ShiftFrom,
+                IF(@useNewSchedule, IFNULL(shiftschedules.EndTime, NULL), IFNULL(shift.TimeTo, NULL)) AS ShiftTo,
                 ete.RegularHoursWorked,
                 ete.RegularHoursAmount,
                 ete.NightDifferentialHours,
@@ -351,37 +365,41 @@ Public Class TimeEntrySummaryForm
 				WHERE Date BETWEEN @DateFrom AND @DateTo
 				GROUP BY EmployeeID, Date
             ) latest
-            ON latest.EmployeeID = ete.EmployeeID AND
-                latest.Date = ete.Date
+                ON latest.EmployeeID = ete.EmployeeID AND
+                    latest.Date = ete.Date
             LEFT JOIN employeetimeentrydetails etd
-            ON etd.Date = ete.Date AND
-                etd.OrganizationID = ete.OrganizationID AND
-                etd.EmployeeID = ete.EmployeeID AND
-                etd.RowID = latest.RowID
+                ON etd.Date = ete.Date AND
+                    etd.OrganizationID = ete.OrganizationID AND
+                    etd.EmployeeID = ete.EmployeeID AND
+                    etd.RowID = latest.RowID
             LEFT JOIN employeeshift
-            ON employeeshift.RowID = ete.EmployeeShiftID
+                ON employeeshift.RowID = ete.EmployeeShiftID
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
                 WHERE OffBusStartDate BETWEEN @DateFrom AND @DateTo
                 GROUP BY EmployeeID, Date
             ) latestOb
-            ON latestOb.EmployeeID = ete.EmployeeID AND
-                latestOb.Date = ete.Date
+                ON latestOb.EmployeeID = ete.EmployeeID AND
+                    latestOb.Date = ete.Date
             LEFT JOIN employeeofficialbusiness ofb
-            ON ofb.OffBusStartDate = ete.Date AND
-                ofb.EmployeeID = ete.EmployeeID AND
-                ofb.Created = latestOb.Created
+                ON ofb.OffBusStartDate = ete.Date AND
+                    ofb.EmployeeID = ete.EmployeeID AND
+                    ofb.Created = latestOb.Created
             LEFT JOIN employeeovertime ot
-            ON ot.OTStartDate = ete.Date AND
-                ot.EmployeeID = ete.EmployeeID AND
-                ot.OTStatus = 'Approved'
+                ON ot.OTStartDate = ete.Date AND
+                    ot.EmployeeID = ete.EmployeeID AND
+                    ot.OTStatus = 'Approved'
             LEFT JOIN payrate
-            ON payrate.Date = ete.Date AND
-                payrate.OrganizationID = ete.OrganizationID
+                ON payrate.Date = ete.Date AND
+                    payrate.OrganizationID = ete.OrganizationID
             LEFT JOIN shiftschedules
-            ON shiftschedules.EmployeeID = ete.EmployeeID AND
-                shiftschedules.`Date` = ete.`Date`
+                ON shiftschedules.EmployeeID = ete.EmployeeID AND
+                    shiftschedules.`Date` = ete.`Date`
+                
+            LEFT JOIN shift
+                ON employeeshift.ShiftID = shift.RowID
+
             WHERE ete.EmployeeID = @EmployeeID AND
                 ete.`Date` BETWEEN @DateFrom AND @DateTo
             ORDER BY ete.`Date`;
@@ -396,6 +414,7 @@ Public Class TimeEntrySummaryForm
                 .AddWithValue("@EmployeeID", employee.RowID)
                 .AddWithValue("@DateFrom", payPeriod.PayFromDate)
                 .AddWithValue("@DateTo", payPeriod.PayToDate)
+                .AddWithValue("@UseNewSchedule", _useNewShift)
             End With
 
             Await connection.OpenAsync()
@@ -508,8 +527,8 @@ Public Class TimeEntrySummaryForm
                 eta.Date,
                 employeetimeentrydetails.TimeIn,
                 employeetimeentrydetails.TimeOut,
-                shift.TimeFrom AS ShiftFrom,
-                shift.TimeTo AS ShiftTo,
+                IF(@useNewSchedule, IFNULL(shiftschedules.StartTime, NULL), IFNULL(shift.TimeFrom, NULL)) AS ShiftFrom,
+                IF(@useNewSchedule, IFNULL(shiftschedules.EndTime, NULL), IFNULL(shift.TimeTo, NULL)) AS ShiftTo,
                 eta.RegularHoursWorked,
                 eta.RegularHoursAmount,
                 eta.NightDifferentialHours,
@@ -546,8 +565,8 @@ Public Class TimeEntrySummaryForm
                 employeetimeentrydetails.TimeStampOut
             FROM employeetimeentryactual eta
             LEFT JOIN employeetimeentry ete
-            ON ete.EmployeeID = eta.EmployeeID AND
-                ete.Date = eta.Date
+                ON ete.EmployeeID = eta.EmployeeID AND
+                    ete.Date = eta.Date
             LEFT JOIN (
                 SELECT EmployeeID, DATE,
 				    (SELECT RowID
@@ -560,29 +579,35 @@ Public Class TimeEntrySummaryForm
 				WHERE Date BETWEEN @DateFrom AND @DateTo
 				GROUP BY EmployeeID, Date
             ) latest
-            ON latest.EmployeeID = eta.EmployeeID AND
-                latest.Date = eta.Date
+                ON latest.EmployeeID = eta.EmployeeID AND
+                    latest.Date = eta.Date
             LEFT JOIN employeetimeentrydetails
-            ON employeetimeentrydetails.Date = eta.Date AND
+                ON employeetimeentrydetails.Date = eta.Date AND
                 employeetimeentrydetails.OrganizationID = eta.OrganizationID AND
                 employeetimeentrydetails.EmployeeID = eta.EmployeeID AND
                 employeetimeentrydetails.RowID = latest.RowID
             LEFT JOIN employeeshift
-            ON employeeshift.RowID = eta.EmployeeShiftID
+                ON employeeshift.RowID = eta.EmployeeShiftID
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
                 WHERE OffBusStartDate BETWEEN @DateFrom AND @DateTo
                 GROUP BY EmployeeID, Date
             ) latestOb
-            ON latestOb.EmployeeID = ete.EmployeeID AND
-                latestOb.Date = ete.Date
+                ON latestOb.EmployeeID = ete.EmployeeID AND
+                    latestOb.Date = ete.Date
             LEFT JOIN employeeofficialbusiness ofb
-            ON ofb.OffBusStartDate = eta.Date AND
-                ofb.EmployeeID = eta.EmployeeID AND
-                latestOb.Created = ofb.Created
+                ON ofb.OffBusStartDate = eta.Date AND
+                    ofb.EmployeeID = eta.EmployeeID AND
+                    latestOb.Created = ofb.Created
             LEFT JOIN shift
-            ON shift.RowID = employeeshift.ShiftID
+                ON shift.RowID = employeeshift.ShiftID
+
+            
+            LEFT JOIN shiftschedules
+                ON shiftschedules.EmployeeID = ete.EmployeeID AND
+                shiftschedules.`Date` = ete.`Date`
+
             WHERE eta.EmployeeID = @EmployeeID AND
                 eta.`Date` BETWEEN @DateFrom AND @DateTo
             ORDER BY eta.`Date`;
@@ -597,6 +622,7 @@ Public Class TimeEntrySummaryForm
                 .AddWithValue("@EmployeeID", employee.RowID)
                 .AddWithValue("@DateFrom", payPeriod.PayFromDate)
                 .AddWithValue("@DateTo", payPeriod.PayToDate)
+                .AddWithValue("@UseNewSchedule", _useNewShift)
             End With
 
             Await connection.OpenAsync()

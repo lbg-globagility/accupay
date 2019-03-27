@@ -476,13 +476,7 @@ Public Class DayCalculator
             timeEntry.SetLeaveHours(leave.LeaveType, leaveHours)
         End If
 
-        Dim hasNoTimeLog = Not hasTimeLog
-
-        If leaves.Any() Then
-            If hasNoTimeLog Then
-                timeEntry.UndertimeHours = 0
-                Return
-            End If
+        If leaves.Any() AndAlso currentShift.IsWorkingDay Then
 
             Dim requiredHours = currentShift.WorkingHours
             Dim missingHours = requiredHours - (timeEntry.TotalLeaveHours + timeEntry.RegularHours)
@@ -586,8 +580,8 @@ Public Class DayCalculator
     End Function
 
     Public Function GetLeavePeriod(leave As Leave, currentShift As CurrentShift) As TimePeriod
-        Dim startTime = If(leave.StartTime, currentShift.Shift.TimeFrom)
-        Dim endTime = If(leave.EndTime, currentShift.Shift.TimeTo)
+        Dim startTime = If(leave.StartTime, currentShift.StartTime.Value)
+        Dim endTime = If(leave.EndTime, currentShift.EndTime.Value)
 
         Dim leavePeriod = TimePeriod.FromTime(startTime, endTime, currentShift.Date)
 

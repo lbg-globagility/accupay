@@ -529,6 +529,8 @@ Public Class TimeLogsForm
         Using context = New PayrollContext()
             Dim dateCreated = Date.Now
 
+            Dim importId As String = GenerateImportId(context)
+
             For Each timelogs In timeLogsByEmployee
                 Dim employee = context.Employees.
                     Where(Function(et) et.EmployeeNo = timelogs.Key).
@@ -545,7 +547,8 @@ Public Class TimeLogsForm
                         .EmployeeID = employee.RowID,
                         .Created = dateCreated,
                         .CreatedBy = z_User,
-                        .LogDate = timeLog.DateOccurred
+                        .LogDate = timeLog.DateOccurred,
+                        .TimeentrylogsImportID = importId
                     }
 
                     If Not String.IsNullOrWhiteSpace(timeLog.TimeIn) Then
@@ -1425,18 +1428,7 @@ Public Class TimeLogsForm
 
             Using context = New PayrollContext()
 
-                Dim importId = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                Dim originalImportId = importId
-
-                Dim counter As Integer = 0
-
-                While context.TimeLogs.FirstOrDefault(Function(t) t.TimeentrylogsImportID = importId) IsNot Nothing OrElse
-                        context.TimeAttendanceLogs.FirstOrDefault(Function(t) t.ImportNumber = importId) IsNot Nothing
-                    counter += 1
-
-                    importId = originalImportId & "_" & counter
-
-                End While
+                Dim importId As String = GenerateImportId(context)
 
                 For Each timeLog In timeLogs
 
@@ -1468,6 +1460,23 @@ Public Class TimeLogsForm
         End Try
 
     End Sub
+
+    Private Shared Function GenerateImportId(context As PayrollContext) As String
+        Dim importId = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
+        Dim originalImportId = importId
+
+        Dim counter As Integer = 0
+
+        While context.TimeLogs.FirstOrDefault(Function(t) t.TimeentrylogsImportID = importId) IsNot Nothing OrElse
+                context.TimeAttendanceLogs.FirstOrDefault(Function(t) t.ImportNumber = importId) IsNot Nothing
+            counter += 1
+
+            importId = originalImportId & "_" & counter
+
+        End While
+
+        Return importId
+    End Function
 
     Private Async Function GetEmployeeShifts(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of ShiftSchedule))
 

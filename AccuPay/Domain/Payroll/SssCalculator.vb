@@ -22,36 +22,22 @@ Public Class SssCalculator
 
         Dim sssCalculation = settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
 
-        Dim isSssProrated =
-            (sssCalculation = SssCalculationBasis.Earnings) Or
-            (sssCalculation = SssCalculationBasis.GrossPay)
-
         Dim employeeSssPerMonth = 0D
         Dim employerSssPerMonth = 0D
 
-        If salary.PaySocialSecurityID Is Nothing Then
+        If salary.DoPaySSSContribution = False Then
 
-            paystub.SssEmployeeShare = employeeSssPerMonth
-            paystub.SssEmployerShare = employerSssPerMonth
+            paystub.SssEmployeeShare = employeeSssPerMonth '0
+            paystub.SssEmployerShare = employerSssPerMonth '0
 
             Return
         End If
 
-        If isSssProrated Then
-            Dim amount = GetSocialSecurityAmount(paystub, previousPaystub, sssCalculation)
-            Dim socialSecurityBracket = FindMatchingBracket(amount)
+        Dim amount = GetSocialSecurityAmount(paystub, previousPaystub, salary, employee, sssCalculation)
+        Dim socialSecurityBracket = FindMatchingBracket(amount)
 
-            employeeSssPerMonth = If(socialSecurityBracket?.EmployeeContributionAmount, 0)
-            employerSssPerMonth = If(socialSecurityBracket?.EmployerContributionAmount + socialSecurityBracket?.EmployeeECAmount, 0)
-
-        ElseIf sssCalculation = SssCalculationBasis.BasicSalary Then
-            Dim socialSecurityId = salary.PaySocialSecurityID
-
-            Dim socialSecurityBracket = _socialSecurityBrackets.FirstOrDefault(Function(s) Nullable.Equals(s.RowID, socialSecurityId))
-
-            employeeSssPerMonth = If(socialSecurityBracket?.EmployeeContributionAmount, 0)
-            employerSssPerMonth = If(socialSecurityBracket?.EmployerContributionAmount + socialSecurityBracket?.EmployeeECAmount, 0)
-        End If
+        employeeSssPerMonth = If(socialSecurityBracket?.EmployeeContributionAmount, 0)
+        employerSssPerMonth = If(socialSecurityBracket?.EmployerContributionAmount + socialSecurityBracket?.EmployeeECAmount, 0)
 
         If employee.IsWeeklyPaid Then
             Dim shouldDeduct = If(employee.IsUnderAgency, payperiod.SSSWeeklyAgentContribSched, payperiod.SSSWeeklyContribSched)
@@ -81,11 +67,23 @@ Public Class SssCalculator
         Return _socialSecurityBrackets.FirstOrDefault(Function(s) s.RangeFromAmount <= amount And s.RangeToAmount >= amount)
     End Function
 
-    Private Function GetSocialSecurityAmount(paystub As Paystub, previousPaystub As Paystub, sssCalculation As SssCalculationBasis) As Decimal
+    Private Function GetSocialSecurityAmount(
+                        paystub As Paystub,
+                        previousPaystub As Paystub,
+                        salary As Salary,
+                        employee As Employee,
+                        sssCalculation As SssCalculationBasis) As Decimal
+
         If sssCalculation = SssCalculationBasis.Earnings Then
             Return If(previousPaystub?.TotalEarnings, 0) + paystub.TotalEarnings
+
         ElseIf sssCalculation = SssCalculationBasis.GrossPay Then
             Return If(previousPaystub?.GrossPay, 0) + paystub.GrossPay
+
+        ElseIf sssCalculation = SssCalculationBasis.BasicSalary Then
+
+            Return PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
+
         Else
             Return 0
         End If

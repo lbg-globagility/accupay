@@ -4,24 +4,25 @@ Imports MySql.Data.MySqlClient
 'Imports Microsoft.Office.Interop
 
 Public Class SSSCntrib
-    Public q_paysocialsecurity As String = "SELECT sss.RowID," & _
-    "COALESCE(sss.RangeFromAmount,0) 'Range of Compensation'," & _
-    "COALESCE(sss.RangeToAmount,0)," & _
-    "COALESCE(sss.MonthlySalaryCredit,0) 'Monthly Salary Credit'," & _
-    "COALESCE(sss.EmployerContributionAmount,0) 'Employer Contribution Amount'," & _
-    "COALESCE(sss.EmployeeContributionAmount,0) 'Employee Contribution Amount'," & _
-    "COALESCE(sss.EmployeeECAmount,0) 'EC\/ER Amount'," & _
-    "COALESCE(sss.EmployerContributionAmount,0) + COALESCE(sss.EmployeeECAmount,0) 'Employer Total Contribution'," & _
-    "COALESCE(sss.EmployeeContributionAmount,0) 'Employee Total Contribution'," & _
-    "COALESCE(sss.EmployerContributionAmount,0) + COALESCE(sss.EmployeeContributionAmount,0) + COALESCE(sss.EmployeeECAmount,0) 'EC\/ER Total'," & _
-    "DATE_FORMAT(sss.Created,'%m-%d-%Y') 'Creation Date'," & _
-    "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," & _
-    "COALESCE(DATE_FORMAT(sss.LastUpd,'%m-%d-%Y'),'') 'Last Update'," & _
-    "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=sss.LastUpdBy) 'LastUpdate by' " & _
-    "FROM paysocialsecurity sss " & _
-    "INNER JOIN user u ON sss.CreatedBy=u.RowID" & _
+    Public q_paysocialsecurity As String = "SELECT sss.RowID," &
+    "COALESCE(sss.RangeFromAmount,0) 'Range of Compensation'," &
+    "COALESCE(sss.RangeToAmount,0)," &
+    "COALESCE(sss.MonthlySalaryCredit,0) 'Monthly Salary Credit'," &
+    "COALESCE(sss.EmployerContributionAmount,0) 'Employer Contribution Amount'," &
+    "COALESCE(sss.EmployeeContributionAmount,0) 'Employee Contribution Amount'," &
+    "COALESCE(sss.EmployeeECAmount,0) 'EC\/ER Amount'," &
+    "COALESCE(sss.EmployerContributionAmount,0) + COALESCE(sss.EmployeeECAmount,0) 'Employer Total Contribution'," &
+    "COALESCE(sss.EmployeeContributionAmount,0) 'Employee Total Contribution'," &
+    "COALESCE(sss.EmployerContributionAmount,0) + COALESCE(sss.EmployeeContributionAmount,0) + COALESCE(sss.EmployeeECAmount,0) 'EC\/ER Total'," &
+    "DATE_FORMAT(sss.Created,'%m-%d-%Y') 'Creation Date'," &
+    "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," &
+    "COALESCE(DATE_FORMAT(sss.LastUpd,'%m-%d-%Y'),'') 'Last Update'," &
+    "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=sss.LastUpdBy) 'LastUpdate by' " &
+    "FROM paysocialsecurity sss " &
+    "INNER JOIN user u ON sss.CreatedBy=u.RowID" &
     " WHERE sss.MonthlySalaryCredit!=0" &
-    " AND sss.HiddenData='0'"
+    " AND sss.HiddenData='0'" &
+    " AND EffectiveDateFrom='2019-04-01' AND EffectiveDateTo='2022-12-01'"
 
     Dim _editRowID As New List(Of String)
     Dim e_rindx, e_cindx, charcnt, SS_rcount As Integer

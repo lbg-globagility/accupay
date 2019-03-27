@@ -28,15 +28,11 @@ Namespace Global.PayrollSys
 
         Public Property PositionID As Integer?
 
-        Public Property PaySocialSecurityID As Integer?
-
         Public Property PayPhilHealthID As Integer?
 
         Public Property PhilHealthDeduction As Decimal
 
         Public Property HDMFAmount As Decimal
-
-        Public Property BasicPay As Decimal
 
         <Column("Salary")>
         Public Property BasicSalary As Decimal
@@ -67,20 +63,13 @@ Namespace Global.PayrollSys
 
         Public Property OverrideDiscardPhilHealthContrib As Boolean
 
-        Public ReadOnly Property SSSDeduction As Decimal
-            Get
-                Return If(SocialSecurityBracket?.EmployeeContributionAmount, 0)
-            End Get
-        End Property
+        Public Property DoPaySSSContribution As Boolean
 
         Public ReadOnly Property IsIndefinite As Boolean
             Get
                 Return Not EffectiveTo.HasValue
             End Get
         End Property
-
-        <ForeignKey("PaySocialSecurityID")>
-        Public Overridable Property SocialSecurityBracket As SocialSecurityBracket
 
     End Class
 
