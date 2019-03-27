@@ -2,16 +2,20 @@
 
 Imports AccuPay.Entity
 Imports AccuPay.Tools
+Imports log4net
 Imports Microsoft.EntityFrameworkCore
 
 Public Class TimeLogsForm2
 
 #Region "VariableDeclarations"
+    Private Shared logger As ILog = LogManager.GetLogger("TimeLogsFormAppender")
 
     Private Const SUNDAY_SHORT_NAME As String = "Sun"
 
     Private currRowIndex As Integer = -1
     Private currColIndex As Integer = -1
+
+    Private _balloonToolTips As IList(Of ToolTip)
 
 #End Region
 
@@ -75,7 +79,7 @@ Public Class TimeLogsForm2
     Private Sub ColoriseSundayRows(gridRows As DataGridViewRowCollection)
         Dim rows = gridRows.OfType(Of DataGridViewRow)
 
-        Dim sundayRows = rows.Where(Function(row) Convert.ToString(row.Cells(Day.Name).FormattedValue) = SUNDAY_SHORT_NAME)
+        Dim sundayRows = rows.Where(Function(row) Convert.ToString(row.Cells(colDay.Name).FormattedValue) = SUNDAY_SHORT_NAME)
 
         Dim count = sundayRows.Count
 
@@ -131,7 +135,7 @@ Public Class TimeLogsForm2
         Dim employeeGridRows =
                 grid.Rows.OfType(Of DataGridViewRow).
                 Where(Function(row) _
-                          Equals(Convert.ToInt32(row.Cells(EmployeeID.Name).Value),
+                          Equals(Convert.ToInt32(row.Cells(colEmployeeID.Name).Value),
                                  employeePrimKey))
 
         For Each eGridRow In employeeGridRows
@@ -139,11 +143,36 @@ Public Class TimeLogsForm2
         Next
     End Sub
 
-    Private Sub CountHasChanged()
+    Private Sub ToSaveCountChanged()
         Dim models = GridRowToTimeLogModels(grid)
 
         Dim countHasChanged = models.Where(Function(tlm) tlm.HasChanged).ToList()
         labelChangedCount.Text = countHasChanged.Count.ToString("#,##0")
+    End Sub
+
+    Private Sub ShowSuccessBalloon()
+        Dim infohint As New ToolTip
+        infohint.IsBalloon = True
+        infohint.ToolTipTitle = "Save successfully"
+        infohint.ToolTipIcon = ToolTipIcon.Info
+
+        infohint.Show(String.Empty, btnSave)
+        infohint.Show("Done.", btnSave, 3475)
+        'infohint.Show("Done.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
+
+        _balloonToolTips.Add(infohint)
+    End Sub
+
+    Private Sub ShowSuccessImportBalloon()
+        Dim infohint As New ToolTip
+        infohint.IsBalloon = True
+        infohint.ToolTipTitle = "Imported successfully"
+        infohint.ToolTipIcon = ToolTipIcon.Info
+
+        infohint.Show(String.Empty, btnImport)
+        infohint.Show("Done.", btnImport, 3475)
+
+        _balloonToolTips.Add(infohint)
     End Sub
 
 #End Region
@@ -185,6 +214,7 @@ Public Class TimeLogsForm2
         Private _dateOut, origDateIn, origDateOut As Date
         Private origTimeIn, origTimeOut As String
         Private _dateOutDisplay As Date?
+        Private _timeIn, _timeOut As String
 
         Sub New(timeLog As TimeLog)
             _timeLog = timeLog
@@ -210,8 +240,8 @@ Public Class TimeLogsForm2
                 origTimeIn = TimeSpanToString(.TimeIn)
                 origTimeOut = TimeSpanToString(.TimeOut)
 
-                TimeIn = origTimeIn
-                TimeOut = origTimeOut
+                _timeIn = origTimeIn
+                _timeOut = origTimeOut
             End With
 
         End Sub
@@ -248,7 +278,15 @@ Public Class TimeLogsForm2
         End Property
 
         Public Property DateIn As Date
+
         Public Property TimeIn As String
+            Get
+                Return _timeIn
+            End Get
+            Set(value As String)
+                _timeIn = value
+            End Set
+        End Property
 
         Public Property DateOut As Date
             Get
@@ -279,6 +317,13 @@ Public Class TimeLogsForm2
         End Sub
 
         Public Property TimeOut As String
+            Get
+                Return _timeOut
+            End Get
+            Set(value As String)
+                _timeOut = value
+            End Set
+        End Property
 
         Public ReadOnly Property IsExisting As Boolean
             Get
@@ -289,35 +334,88 @@ Public Class TimeLogsForm2
         Public ReadOnly Property HasChanged As Boolean
             Get
                 Dim differs = Not Equals(origDateIn, DateIn) _
-                    Or Not Equals(origTimeIn, TimeIn) _
+                    Or Not Equals(origTimeIn, _timeIn) _
                     Or Not Equals(origDateOut, DateOut) _
-                    Or Not Equals(origTimeOut, TimeOut)
+                    Or Not Equals(origTimeOut, _timeOut)
 
-                Return differs And IsValidToSave
+                Return differs
             End Get
         End Property
 
         Public ReadOnly Property IsValidToSave As Boolean
             Get
-                Dim hasShiftTime = Not String.IsNullOrWhiteSpace(TimeIn) _
-                    Or Not String.IsNullOrWhiteSpace(TimeOut)
+                Dim hasLog = Not String.IsNullOrWhiteSpace(_timeIn) _
+                    Or Not String.IsNullOrWhiteSpace(_timeOut)
 
-                Return hasShiftTime
+                Return hasLog
+            End Get
+        End Property
+
+        Public ReadOnly Property ConsideredDelete As Boolean
+            Get
+                Return Not IsValidToSave And IsExisting
+            End Get
+        End Property
+
+        Public ReadOnly Property ToTimeLog As TimeLog
+            Get
+                If _timeLog Is Nothing Then
+                    _timeLog = New TimeLog With {
+                        .EmployeeID = EmployeeID,
+                        .OrganizationID = z_OrganizationID,
+                        .LogDate = DateIn,
+                        .CreatedBy = z_User,
+                        .Created = Now}
+                End If
+
+                With _timeLog
+                    .LastUpd = Now
+                    .LastUpdBy = z_User
+
+                    .TimeIn = Calendar.ToTimespan(TimeIn)
+                    .TimeOut = Calendar.ToTimespan(TimeOut)
+                End With
+
+                Return _timeLog
             End Get
         End Property
 
         Public Sub Restore()
             DateIn = origDateIn
-            TimeIn = origTimeIn
+            _timeIn = origTimeIn
 
             DateOut = origDateOut
-            TimeOut = origTimeOut
+            _timeOut = origTimeOut
+        End Sub
+
+        Public Sub Commit()
+            origDateIn = DateIn
+            origTimeIn = _timeIn
+
+            origDateOut = DateOut
+            origTimeOut = _timeOut
+
+            Remove()
+        End Sub
+
+        Public Sub Added(primaryKey As Integer)
+            RowID = primaryKey
+        End Sub
+
+        Public Sub Remove()
+            If ConsideredDelete Then
+                RowID = 0
+                If _timeLog IsNot Nothing Then
+                    _timeLog.RowID = Nothing
+                End If
+            End If
         End Sub
 
         Public Shared Function TimeSpanToString(timeSpan As TimeSpan?) As String
             If Not timeSpan.HasValue Then Return Nothing
             Return TimeUtility.ToDateTime(timeSpan.Value).Value.ToString(CUSTOM_SHORT_TIME_FORMAT)
         End Function
+
     End Class
 #End Region
 
@@ -331,6 +429,8 @@ Public Class TimeLogsForm2
 
         BindGridCurrentCellChanged()
 
+        _balloonToolTips = New List(Of ToolTip)
+
     End Sub
 
     Private Sub TimeLogsForm2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -343,9 +443,116 @@ Public Class TimeLogsForm2
 
     End Sub
 
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+    Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
+        Using context = New PayrollContext
+            Dim models = GridRowToTimeLogModels(grid)
 
+            Dim toSaveList = models.Where(Function(tlm) tlm.HasChanged).ToList()
+            Dim toSaveListEmployeeIDs = toSaveList.Select(Function(tlm) tlm.EmployeeID)
+
+            Dim existingRecords = Await context.TimeLogs.
+                Where(Function(tl) tl.OrganizationID.Value = z_OrganizationID).
+                Where(Function(tl) SeekEmployeeID(tl, toSaveListEmployeeIDs)).
+                Where(Function(tl) SeekBetweenDates(tl, dtpDateFrom.Value.Date, dtpDateTo.Value.Date)).
+                ToListAsync()
+
+            Dim addedTimeLogs As New List(Of TimeLog)
+
+            For Each model In toSaveList
+                Dim seek = existingRecords.
+                    Where(Function(tl) tl.EmployeeID.Value = model.EmployeeID).
+                    Where(Function(tl) tl.LogDate = model.DateIn)
+
+                Dim exists = seek.Any
+                Dim timeLog = seek.FirstOrDefault
+
+                If model.ConsideredDelete Then
+                    context.TimeLogs.Remove(timeLog)
+                    'model.Remove()
+                ElseIf model.IsExisting Then
+                    timeLog.TimeIn = Calendar.ToTimespan(model.TimeIn)
+                    timeLog.TimeOut = Calendar.ToTimespan(model.TimeOut)
+                    timeLog.LastUpdBy = z_User
+                    timeLog.LastUpd = Now
+
+                    'context.Entry(model.ToTimeLog).State = EntityState.Modified
+                    context.Entry(timeLog).State = EntityState.Modified
+                ElseIf Not exists And model.IsValidToSave Then
+                    model.Remove()
+                    Dim addedTimeLog = model.ToTimeLog
+                    'addedTimeLog.RowID = Nothing
+                    context.TimeLogs.Add(addedTimeLog)
+                    addedTimeLogs.Add(addedTimeLog)
+                End If
+
+            Next
+
+            Try
+                Await context.SaveChangesAsync()
+
+                If addedTimeLogs.Any() Then
+                    Dim addedTimeLogEmployeeIDs = addedTimeLogs.Select(Function(tl) tl.EmployeeID.Value).ToList()
+                    Dim addedTimeLogMinDate = addedTimeLogs.Min(Function(tl) tl.LogDate)
+                    Dim addedTimeLogMaxDate = addedTimeLogs.Max(Function(tl) tl.LogDate)
+
+                    Dim newlyAdded = Await context.TimeLogs.
+                    Where(Function(tl) SeekEmployeeID(tl, addedTimeLogEmployeeIDs)).
+                    Where(Function(tl) SeekBetweenDates(tl, addedTimeLogMinDate, addedTimeLogMaxDate)).
+                    ToListAsync()
+
+                    For Each model In toSaveList
+                        Dim seek = newlyAdded.
+                        Where(Function(tl) tl.EmployeeID.Value = model.EmployeeID).
+                        Where(Function(tl) tl.LogDate = model.DateIn).
+                        FirstOrDefault
+
+                        If seek IsNot Nothing Then
+                            model.Added(seek.RowID.Value)
+
+                        ElseIf model.ConsideredDelete Then
+                            model.Remove()
+
+                        End If
+
+                        model.Commit()
+                    Next
+
+                Else
+                    For Each model In toSaveList
+                        model.Remove()
+                        model.Commit()
+                    Next
+
+                End If
+
+                ShowSuccessBalloon()
+
+                For Each row As DataGridViewRow In grid.Rows
+                    row.DefaultCellStyle = Nothing
+                Next
+
+                ColoriseSundayRows(grid.Rows)
+
+                ZebraliseEmployeeRows()
+
+                ToSaveCountChanged()
+
+            Catch ex As Exception
+                logger.Error("TimeLogsForm2Saving", ex)
+                Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
+                MessageBox.Show(errMsg, "Help", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+
+        End Using
     End Sub
+
+    Private Shared Function SeekBetweenDates(tl As TimeLog, addedTimeLogMinDate As Date, addedTimeLogMaxDate As Date) As Boolean
+        Return tl.LogDate >= addedTimeLogMinDate AndAlso tl.LogDate <= addedTimeLogMaxDate
+    End Function
+
+    Private Shared Function SeekEmployeeID(tl As TimeLog, addedTimeLogEmployeeIDs As IEnumerable(Of Integer)) As Boolean
+        Return addedTimeLogEmployeeIDs.Contains(tl.EmployeeID.Value)
+    End Function
 
     Private Sub btnDiscard_Click(sender As Object, e As EventArgs) Handles btnDiscard.Click
         UnbindGridCurrentCellChanged()
@@ -419,10 +626,12 @@ Public Class TimeLogsForm2
                 HasNoChangedRow(currRow)
             End If
 
-            CountHasChanged()
+            ToSaveCountChanged()
 
             grid.Refresh()
         End If
+
+        Console.WriteLine("{0}", {grid.Columns(e.ColumnIndex).Name})
     End Sub
 
     Private Sub EmployeeTreeView1_Load(sender As Object, e As EventArgs) Handles EmployeeTreeView1.Load
@@ -434,15 +643,16 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Sub grid_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellEndEdit
-        Dim parseableIndexes = {TimeIn.Index, TimeOut.Index}
+        Dim parseableIndexes = {colTimeIn.Index, colTimeOut.Index}
 
         If parseableIndexes.Any(Function(i) i = e.ColumnIndex) Then
             Dim currRow = grid.Rows(e.RowIndex)
             Dim model = GridRowToTimeLogModel(currRow)
 
-            If e.ColumnIndex = TimeIn.Index Then
-                model.TimeIn = TimeLogModel.TimeSpanToString(Calendar.ToTimespan(model.TimeIn))
-            ElseIf e.ColumnIndex = TimeOut.Index Then
+            If e.ColumnIndex = colTimeIn.Index Then
+                Dim fdsfsd = TimeLogModel.TimeSpanToString(Calendar.ToTimespan(model.TimeIn))
+                model.TimeIn = fdsfsd
+            ElseIf e.ColumnIndex = colTimeOut.Index Then
                 model.TimeOut = TimeLogModel.TimeSpanToString(Calendar.ToTimespan(model.TimeOut))
             End If
 
@@ -452,7 +662,7 @@ Public Class TimeLogsForm2
                 HasNoChangedRow(currRow)
             End If
 
-            CountHasChanged()
+            ToSaveCountChanged()
         End If
     End Sub
 
@@ -489,6 +699,33 @@ Public Class TimeLogsForm2
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         dtpDateTo.Value = New Date(2018, 12, 31)
         dtpDateFrom.Value = New Date(2018, 12, 1)
+    End Sub
+
+    Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
+
+    End Sub
+
+    Private Sub TimeLogsForm2_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        For Each tTip In _balloonToolTips
+            tTip.Dispose()
+        Next
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        ShowSuccessBalloon()
+        ShowSuccessImportBalloon()
+    End Sub
+
+    Private Sub grid_CellMouseEnter(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellMouseEnter
+        If e.ColumnIndex = colDelete.Index Then
+            grid.Cursor = Cursors.Hand
+        Else
+            grid.Cursor = Cursors.Default
+        End If
+    End Sub
+
+    Private Sub grid_CellMouseLeave(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellMouseLeave
+        If e.ColumnIndex = colDelete.Index Then grid.Cursor = Cursors.Default
     End Sub
 
 #End Region
