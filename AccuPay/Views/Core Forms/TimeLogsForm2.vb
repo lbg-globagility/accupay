@@ -16,6 +16,9 @@ Public Class TimeLogsForm2
     Private currColIndex As Integer = -1
 
     Private _balloonToolTips As IList(Of ToolTip)
+    Private thefilepath As String
+
+    Private _useShiftSchedulePolicy As Boolean
 
 #End Region
 
@@ -175,6 +178,59 @@ Public Class TimeLogsForm2
         _balloonToolTips.Add(infohint)
     End Sub
 
+    Private Function GetShiftSchedulePolicy() As Boolean
+        Using context = New PayrollContext()
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim policy = New TimeEntryPolicy(settings)
+
+            Return policy.UseShiftSchedule
+        End Using
+    End Function
+
+    Private Async Sub NewTimeEntryAlternateLineImport()
+        Dim importer = New TimeLogsReader()
+        Dim importOutput = importer.Import(thefilepath)
+
+        If importOutput.IsImportSuccess = False Then
+            MessageBox.Show(importOutput.ErrorMessage)
+            Return
+        End If
+
+        Dim logs = importOutput.Logs.ToList()
+
+        If logs.Count = 0 Then
+            MessageBox.Show("No logs were parsed. Please make sure the log files follows the right format.")
+            Return
+        End If
+
+        Dim timeAttendanceHelper As ITimeAttendanceHelper = Await GetTimeAttendanceHelper(logs)
+
+        'determines the IstimeIn, LogDate, and Employee values
+        logs = timeAttendanceHelper.Analyze()
+        Dim validLogs = logs.Where(Function(l) l.HasError = False).ToList()
+        Dim invalidLogs = logs.Where(Function(l) l.HasError = True).ToList()
+
+        invalidLogs.AddRange(importOutput.Errors)
+
+
+        'preview the logs here
+        Dim previewDialog As New _
+            TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog(validLogs, invalidLogs)
+
+        With previewDialog
+            .ShowDialog()
+            .BringToFront()
+        End With
+
+        If previewDialog.Cancelled Then
+            Return
+        End If
+
+        ShowSuccessImportBalloon()
+    End Sub
+
 #End Region
 
 #Region "Functions"
@@ -201,6 +257,112 @@ Public Class TimeLogsForm2
 
     Private Function GridRowToTimeLogModels(dataGrid As DataGridView) As IList(Of TimeLogModel)
         Return dataGrid.Rows.OfType(Of DataGridViewRow).Select(Function(row) GridRowToTimeLogModel(row)).ToList()
+    End Function
+
+    Private Function TimeLogsImportOption() As TimeLogsForm.TimeLogsFormat?
+
+        Dim time_logformat As TimeLogsForm.TimeLogsFormat?
+
+        MessageBoxManager.Yes = "Alternating line"
+        MessageBoxManager.No = "Same line"
+
+        MessageBoxManager.Register()
+
+        Dim custom_prompt =
+            MessageBox.Show("Which format are you going to import ?",
+                            "", MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question,
+                            MessageBoxDefaultButton.Button1)
+
+        If custom_prompt = Windows.Forms.DialogResult.Yes Then
+            time_logformat = TimeLogsForm.TimeLogsFormat.Conventional
+        ElseIf custom_prompt = Windows.Forms.DialogResult.No Then
+            time_logformat = TimeLogsForm.TimeLogsFormat.Optimized
+        ElseIf custom_prompt = Windows.Forms.DialogResult.Cancel Then
+            time_logformat = Nothing
+        End If
+
+        MessageBoxManager.Unregister()
+
+        Return time_logformat
+
+    End Function
+
+    Private Async Function GetTimeAttendanceHelper(logs As List(Of ImportTimeAttendanceLog)) _
+                            As Threading.Tasks.Task(Of ITimeAttendanceHelper)
+
+        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
+        Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
+
+        Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
+        Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
+
+        Dim timeAttendanceHelper As ITimeAttendanceHelper
+
+        If _useShiftSchedulePolicy Then
+
+            Dim employeeShifts As List(Of EmployeeDutySchedule) =
+                    Await GetEmployeeDutyShifts(firstDate, lastDate)
+
+            timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts)
+
+        Else
+
+            Dim employeeShifts As List(Of ShiftSchedule) =
+                    Await GetEmployeeShifts(firstDate, lastDate)
+
+            timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts)
+
+        End If
+
+        Return timeAttendanceHelper
+    End Function
+
+    Private Async Function GetEmployeeShifts(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of ShiftSchedule))
+
+        Using context = New PayrollContext()
+            Return Await context.ShiftSchedules.
+                           Include(Function(s) s.Shift).
+                           Where(Function(s) s.OrganizationID = z_OrganizationID).
+                           Where(Function(s) s.EffectiveFrom >= firstDate).
+                           Where(Function(s) s.EffectiveTo <= lastDate).
+                           ToListAsync()
+        End Using
+
+    End Function
+
+    'new shift table
+    Private Async Function GetEmployeeDutyShifts(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of EmployeeDutySchedule))
+
+        Using context = New PayrollContext()
+            Return Await context.EmployeeDutySchedules.
+                           Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
+                           Where(Function(s) s.DateSched >= firstDate).
+                           Where(Function(s) s.DateSched <= lastDate).
+                           ToListAsync()
+        End Using
+
+    End Function
+
+    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
+
+        Using context As New PayrollContext
+            If logsGroupedByEmployee.Count < 1 Then
+                Return New List(Of Employee)
+            End If
+
+            Dim employeeNumbersArray(logsGroupedByEmployee.Count - 1) As String
+
+            For index = 0 To logsGroupedByEmployee.Count - 1
+                employeeNumbersArray(index) = logsGroupedByEmployee(index).Key
+            Next
+
+            Return Await context.Employees.
+                            Where(Function(e) employeeNumbersArray.Contains(e.EmployeeNo)).
+                            Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
+                            ToListAsync
+        End Using
+
     End Function
 
 #End Region
@@ -430,6 +592,8 @@ Public Class TimeLogsForm2
         BindGridCurrentCellChanged()
 
         _balloonToolTips = New List(Of ToolTip)
+
+        _useShiftSchedulePolicy = GetShiftSchedulePolicy()
 
     End Sub
 
@@ -696,12 +860,35 @@ Public Class TimeLogsForm2
         Console.WriteLine("{0} : {1}", {e.Column.Name, e.Column.Width})
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        dtpDateTo.Value = New Date(2018, 12, 31)
-        dtpDateFrom.Value = New Date(2018, 12, 1)
-    End Sub
-
     Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
+
+        Static employeeleaveRowID As Integer = -1
+
+        Dim timeLogsFormat_ As TimeLogsForm.TimeLogsFormat? = TimeLogsImportOption()
+
+        'They chose Cancel or used the close button
+        If timeLogsFormat_ Is Nothing Then Return
+
+        Try
+            Dim browsefile As OpenFileDialog = New OpenFileDialog()
+            browsefile.Filter = "Text Documents (*.txt)|*.txt" &
+                                "|All files (*.*)|*.*"
+
+            If browsefile.ShowDialog = Windows.Forms.DialogResult.OK Then
+
+                thefilepath = browsefile.FileName
+
+                If timeLogsFormat_ = TimeLogsForm.TimeLogsFormat.Conventional Then
+                    NewTimeEntryAlternateLineImport()
+
+                End If
+
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message & " Error on file initialization")
+        Finally
+
+        End Try
 
     End Sub
 
