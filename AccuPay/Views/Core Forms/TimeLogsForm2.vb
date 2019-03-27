@@ -309,6 +309,12 @@ Public Class TimeLogsForm2
 
     End Sub
 
+    Private Sub ResetGridRowsDefaultCellStyle()
+        For Each row As DataGridViewRow In grid.Rows
+            row.DefaultCellStyle = Nothing
+        Next
+    End Sub
+
 #End Region
 
 #Region "Functions"
@@ -441,6 +447,14 @@ Public Class TimeLogsForm2
                             ToListAsync
         End Using
 
+    End Function
+
+    Private Shared Function SeekBetweenDates(tl As TimeLog, addedTimeLogMinDate As Date, addedTimeLogMaxDate As Date) As Boolean
+        Return tl.LogDate >= addedTimeLogMinDate AndAlso tl.LogDate <= addedTimeLogMaxDate
+    End Function
+
+    Private Shared Function SeekEmployeeID(tl As TimeLog, addedTimeLogEmployeeIDs As IEnumerable(Of Integer)) As Boolean
+        Return addedTimeLogEmployeeIDs.Contains(tl.EmployeeID.Value)
     End Function
 
 #End Region
@@ -785,9 +799,7 @@ Public Class TimeLogsForm2
 
                 ShowSuccessBalloon()
 
-                For Each row As DataGridViewRow In grid.Rows
-                    row.DefaultCellStyle = Nothing
-                Next
+                ResetGridRowsDefaultCellStyle()
 
                 ColoriseSundayRows(grid.Rows)
 
@@ -803,14 +815,6 @@ Public Class TimeLogsForm2
 
         End Using
     End Sub
-
-    Private Shared Function SeekBetweenDates(tl As TimeLog, addedTimeLogMinDate As Date, addedTimeLogMaxDate As Date) As Boolean
-        Return tl.LogDate >= addedTimeLogMinDate AndAlso tl.LogDate <= addedTimeLogMaxDate
-    End Function
-
-    Private Shared Function SeekEmployeeID(tl As TimeLog, addedTimeLogEmployeeIDs As IEnumerable(Of Integer)) As Boolean
-        Return addedTimeLogEmployeeIDs.Contains(tl.EmployeeID.Value)
-    End Function
 
     Private Sub btnDiscard_Click(sender As Object, e As EventArgs) Handles btnDiscard.Click
         UnbindGridCurrentCellChanged()
