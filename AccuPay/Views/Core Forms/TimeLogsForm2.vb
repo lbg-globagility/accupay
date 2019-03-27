@@ -248,7 +248,65 @@ Public Class TimeLogsForm2
             Return
         End If
 
-        ShowSuccessImportBalloon()
+        NewTimeEntryAlternateLineImportSave(timeAttendanceHelper)
+    End Sub
+
+    Private Async Sub NewTimeEntryAlternateLineImportSave(timeAttendanceHelper As ITimeAttendanceHelper)
+        Dim succeed As Boolean = False
+        Try
+            Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
+            Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
+
+            Using context = New PayrollContext()
+
+                Dim importId = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                Dim originalImportId = importId
+
+                Dim counter As Integer = 0
+
+                While context.TimeLogs.FirstOrDefault(Function(t) t.TimeentrylogsImportID = importId) IsNot Nothing OrElse
+                        context.TimeAttendanceLogs.FirstOrDefault(Function(t) t.ImportNumber = importId) IsNot Nothing
+                    counter += 1
+
+                    importId = originalImportId & "_" & counter
+
+                End While
+
+                For Each timeLog In timeLogs
+
+                    timeLog.TimeentrylogsImportID = importId
+
+                    context.TimeLogs.Add(timeLog)
+                Next
+
+                For Each timeAttendanceLog In timeAttendanceLogs
+
+                    timeAttendanceLog.ImportNumber = importId
+
+                    context.TimeAttendanceLogs.Add(timeAttendanceLog)
+                Next
+
+                Await context.SaveChangesAsync()
+
+                succeed = True
+            End Using
+
+        Catch ex As Exception
+
+            logger.Error("NewTimeEntryAlternateLineImport", ex)
+
+            MessageBoxHelper.DefaultErrorMessage("Import Logs")
+
+            Throw ex
+
+        Finally
+            If succeed Then
+                ShowSuccessImportBalloon()
+
+                DateFilter_ValueChanged(dtpDateFrom, New EventArgs)
+            End If
+        End Try
+
     End Sub
 
 #End Region
