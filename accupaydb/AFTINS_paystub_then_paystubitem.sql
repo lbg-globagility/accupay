@@ -74,26 +74,26 @@ SELECT (e_startdate BETWEEN NEW.PayFromDate AND NEW.PayToDate)
 INTO IsFirstTimeSalary;
 
 SELECT
-    SUM(t.RegularHoursAmount),
-    SUM(t.OvertimeHoursAmount),
-    SUM(t.NightDiffHoursAmount),
-    SUM(t.NightDiffOTHoursAmount),
-    SUM(t.RestDayAmount),
-    SUM(t.RestDayOTPay),
-    SUM(t.SpecialHolidayPay),
-    SUM(t.SpecialHolidayOTPay),
-    SUM(t.RegularHolidayPay),
-    SUM(t.RegularHolidayOTPay),
-    SUM(t.HolidayPayAmount),
-    SUM(t.Leavepayment),
-    SUM(t.HoursLateAmount),
-    SUM(t.UndertimeHoursAmount),
-    SUM(t.Absent),
-    SUM(TotalDayPay),
-    SUM(t.VacationLeaveHours),
-    SUM(t.SickLeaveHours),
-    SUM(t.MaternityLeaveHours),
-    SUM(t.OtherLeaveHours),
+    IFNULL(SUM(t.RegularHoursAmount), 0),
+    IFNULL(SUM(t.OvertimeHoursAmount), 0),
+    IFNULL(SUM(t.NightDiffHoursAmount), 0),
+    IFNULL(SUM(t.NightDiffOTHoursAmount), 0),
+    IFNULL(SUM(t.RestDayAmount), 0),
+    IFNULL(SUM(t.RestDayOTPay), 0),
+    IFNULL(SUM(t.SpecialHolidayPay), 0),
+    IFNULL(SUM(t.SpecialHolidayOTPay), 0),
+    IFNULL(SUM(t.RegularHolidayPay), 0),
+    IFNULL(SUM(t.RegularHolidayOTPay), 0),
+    IFNULL(SUM(t.HolidayPayAmount), 0),
+    IFNULL(SUM(t.Leavepayment), 0),
+    IFNULL(SUM(t.HoursLateAmount), 0),
+    IFNULL(SUM(t.UndertimeHoursAmount), 0),
+    IFNULL(SUM(t.Absent), 0),
+    IFNULL(SUM(TotalDayPay), 0),
+    IFNULL(SUM(t.VacationLeaveHours), 0),
+    IFNULL(SUM(t.SickLeaveHours), 0),
+    IFNULL(SUM(t.MaternityLeaveHours), 0),
+    IFNULL(SUM(t.OtherLeaveHours), 0),
     t.EmployeeSalaryID
 FROM employeetimeentryactual t
 WHERE t.OrganizationID = NEW.OrganizationID AND
@@ -151,7 +151,7 @@ IF e_type = 'Fixed' THEN
 ELSEIF e_type = 'Monthly' AND IsFirstTimeSalary THEN
 
     SELECT
-        SUM(TotalDayPay),
+        IFNULL(SUM(TotalDayPay), 0),
         EmployeeSalaryID
     FROM employeetimeentryactual
     WHERE OrganizationID = NEW.OrganizationID
@@ -164,7 +164,7 @@ ELSEIF e_type = 'Monthly' AND IsFirstTimeSalary THEN
     IF totalWorkAmount IS NULL THEN
 
         SELECT
-            SUM(TotalDayPay),
+            IFNULL(SUM(TotalDayPay), 0),
             EmployeeSalaryID
         FROM employeetimeentry
         WHERE OrganizationID = NEW.OrganizationID
@@ -216,7 +216,7 @@ ELSE
     IF totalWorkAmount IS NULL THEN
 
         SELECT
-            SUM(TotalDayPay),
+            IFNULL(SUM(TotalDayPay), 0),
             EmployeeSalaryID
         FROM employeetimeentry
         WHERE OrganizationID = NEW.OrganizationID AND
