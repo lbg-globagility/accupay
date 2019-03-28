@@ -315,6 +315,13 @@ Public Class TimeLogsForm2
         Next
     End Sub
 
+    Private Sub ReAssignLastSelectedCell()
+        If currRowIndex < grid.Rows.Count _
+                    And currColIndex > 0 Then
+            grid.CurrentCell = grid.Item(currColIndex, currRowIndex)
+        End If
+    End Sub
+
 #End Region
 
 #Region "Functions"
@@ -869,32 +876,77 @@ Public Class TimeLogsForm2
 
     End Sub
 
-    Private Sub grid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellContentClick
-        Dim buttonIndexes = {colDecrement.Index, colIncrement.Index}
+    Private Async Sub grid_CellContentClickAsync(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellContentClick
+        Dim incremDecremButtonIndexes = {colDecrement.Index, colIncrement.Index}
 
-        If buttonIndexes.Any(Function(i) i = e.ColumnIndex) Then
+        Dim satisfied = incremDecremButtonIndexes.Any(Function(i) i = e.ColumnIndex) _
+            Or e.ColumnIndex = colDelete.Index
+
+        If satisfied Then
             grid.EndEdit()
-
-            Dim arithmeticOperand = If(e.ColumnIndex = colDecrement.Index, -1, 1)
 
             Dim currRow = grid.Rows(e.RowIndex)
             Dim model = GridRowToTimeLogModel(currRow)
 
-            model.DateOut = model.DateOut.AddDays(arithmeticOperand)
+            If incremDecremButtonIndexes.Any(Function(i) i = e.ColumnIndex) Then
+                Dim arithmeticOperand = If(e.ColumnIndex = colDecrement.Index, -1, 1)
 
-            If model.HasChanged Then
-                HasChangedRow(currRow)
-            Else
-                HasNoChangedRow(currRow)
+                model.DateOut = model.DateOut.AddDays(arithmeticOperand)
+
+                If model.HasChanged Then
+                    HasChangedRow(currRow)
+                Else
+                    HasNoChangedRow(currRow)
+                End If
+
+                ToSaveCountChanged()
+
+                grid.Refresh()
+
+            ElseIf e.ColumnIndex = colDelete.Index Then
+
+                Dim deletePrompt = MessageBox.Show("Proceed delete ? This can't be undone.", "Confirm delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
+
+                If Not deletePrompt = DialogResult.Yes Then Return
+
+                'UnbindGridCurrentCellChanged()
+
+                model.TimeIn = Nothing
+                model.TimeOut = Nothing
+
+                'HasChangedRow(currRow)
+
+                If model.IsExisting Then
+                    Await DeleteTimeLog(model)
+                Else
+                    model.Restore()
+                    HasNoChangedRow(currRow)
+
+                    ToSaveCountChanged()
+
+                End If
+
+                grid.Refresh()
+
+                'ReAssignLastSelectedCell()
+
+                'UnbindGridCurrentCellChanged()
             End If
-
-            ToSaveCountChanged()
-
-            grid.Refresh()
         End If
 
         Console.WriteLine("{0}", {grid.Columns(e.ColumnIndex).Name})
     End Sub
+
+    Private Shared Async Function DeleteTimeLog(model As TimeLogModel) As Threading.Tasks.Task
+        Using context = New PayrollContext
+            context.TimeLogs.Remove(model.ToTimeLog)
+
+            Await context.SaveChangesAsync()
+
+            model.Commit()
+
+        End Using
+    End Function
 
     Private Sub EmployeeTreeView1_Load(sender As Object, e As EventArgs) Handles EmployeeTreeView1.Load
 
@@ -937,10 +989,7 @@ Public Class TimeLogsForm2
 
         ColoriseSundayRows(grid.Rows)
 
-        If currRowIndex < grid.Rows.Count _
-            And currColIndex > 0 Then
-            grid.CurrentCell = grid.Item(currColIndex, currRowIndex)
-        End If
+        ReAssignLastSelectedCell()
 
     End Sub
 
