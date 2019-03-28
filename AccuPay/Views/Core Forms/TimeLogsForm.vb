@@ -359,6 +359,7 @@ Public Class TimeLogsForm
 
         MessageBoxManager.Yes = "Alternating line"
         MessageBoxManager.No = "Same line"
+        MessageBoxManager.Cancel = "Cancel"
 
         MessageBoxManager.Register()
 
