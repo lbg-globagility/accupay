@@ -473,6 +473,8 @@ Public Class DayCalculator
                 leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift, _policy.ComputeBreakTimeLate)
             End If
 
+            leaveHours = AccuMath.CommercialRound(leaveHours, 2)
+
             timeEntry.SetLeaveHours(leave.LeaveType, leaveHours)
         End If
 
