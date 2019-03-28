@@ -131,6 +131,9 @@ Public Class EmployeeTreeView
             }
 
             Dim childDivisions = divisions.Where(Function(d) d.IsParent(parentDivision))
+
+            If childDivisions.Any() Then parentNode.Text = $"{parentNode.Text} ({childDivisions.Count()})"
+
             For Each childDivision In childDivisions
                 Dim childNode = New TreeNode() With {
                     .Name = childDivision.Name,
@@ -140,6 +143,9 @@ Public Class EmployeeTreeView
 
                 Dim childEmployees = employees.
                     Where(Function(e) Nullable.Equals(e.Position?.Division.RowID, childDivision.RowID))
+
+                If childEmployees.Any() Then childNode.Text = $"{childNode.Text} ({childEmployees.Count()})"
+
                 For Each childEmployee In childEmployees
                     Dim shouldSetChecked = tickedEmployeeIDs.Any(Function(eID) Nullable.Equals(eID, childEmployee.RowID))
 
