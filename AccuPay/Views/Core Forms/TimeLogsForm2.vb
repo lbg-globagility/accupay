@@ -675,6 +675,11 @@ Public Class TimeLogsForm2
             Remove()
         End Sub
 
+        Public Sub ClearLogTime()
+            _timeIn = Nothing
+            _timeOut = Nothing
+        End Sub
+
         Public Sub Added(primaryKey As Integer)
             RowID = primaryKey
         End Sub
@@ -876,77 +881,52 @@ Public Class TimeLogsForm2
 
     End Sub
 
-    Private Async Sub grid_CellContentClickAsync(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellContentClick
+    Private Sub grid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellContentClick
         Dim incremDecremButtonIndexes = {colDecrement.Index, colIncrement.Index}
 
         Dim satisfied = incremDecremButtonIndexes.Any(Function(i) i = e.ColumnIndex) _
-            Or e.ColumnIndex = colDelete.Index
+            Or e.ColumnIndex = colDelete.Index _
+            Or e.ColumnIndex = colRestore.Index
 
-        If satisfied Then
-            grid.EndEdit()
+        If Not satisfied Then Return
 
-            Dim currRow = grid.Rows(e.RowIndex)
-            Dim model = GridRowToTimeLogModel(currRow)
+        grid.EndEdit()
 
-            If incremDecremButtonIndexes.Any(Function(i) i = e.ColumnIndex) Then
-                Dim arithmeticOperand = If(e.ColumnIndex = colDecrement.Index, -1, 1)
+        Dim currRow = grid.Rows(e.RowIndex)
+        Dim model = GridRowToTimeLogModel(currRow)
 
-                model.DateOut = model.DateOut.AddDays(arithmeticOperand)
+        If incremDecremButtonIndexes.Any(Function(i) i = e.ColumnIndex) Then
+            Dim arithmeticOperand = If(e.ColumnIndex = colDecrement.Index, -1, 1)
 
-                If model.HasChanged Then
-                    HasChangedRow(currRow)
-                Else
-                    HasNoChangedRow(currRow)
-                End If
+            model.DateOut = model.DateOut.AddDays(arithmeticOperand)
 
-                ToSaveCountChanged()
-
-                grid.Refresh()
-
-            ElseIf e.ColumnIndex = colDelete.Index Then
-
-                Dim deletePrompt = MessageBox.Show("Proceed delete ? This can't be undone.", "Confirm delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-
-                If Not deletePrompt = DialogResult.Yes Then Return
-
-                'UnbindGridCurrentCellChanged()
-
-                model.TimeIn = Nothing
-                model.TimeOut = Nothing
-
-                'HasChangedRow(currRow)
-
-                If model.IsExisting Then
-                    Await DeleteTimeLog(model)
-                Else
-                    model.Restore()
-                    HasNoChangedRow(currRow)
-
-                    ToSaveCountChanged()
-
-                End If
-
-                grid.Refresh()
-
-                'ReAssignLastSelectedCell()
-
-                'UnbindGridCurrentCellChanged()
+            If model.HasChanged Then
+                HasChangedRow(currRow)
+            Else
+                HasNoChangedRow(currRow)
             End If
+
+            ToSaveCountChanged()
+
+        ElseIf e.ColumnIndex = colDelete.Index Then
+            model.ClearLogTime()
+
+            If model.HasChanged Then HasChangedRow(currRow)
+
+        ElseIf e.ColumnIndex = colRestore.Index Then
+            model.Restore()
+
+            If Not model.HasChanged Then HasNoChangedRow(currRow)
+
         End If
 
-        Console.WriteLine("{0}", {grid.Columns(e.ColumnIndex).Name})
+        ToSaveCountChanged()
+
+        grid.Refresh()
+
+        grid.ResumeLayout()
+
     End Sub
-
-    Private Shared Async Function DeleteTimeLog(model As TimeLogModel) As Threading.Tasks.Task
-        Using context = New PayrollContext
-            context.TimeLogs.Remove(model.ToTimeLog)
-
-            Await context.SaveChangesAsync()
-
-            model.Commit()
-
-        End Using
-    End Function
 
     Private Sub EmployeeTreeView1_Load(sender As Object, e As EventArgs) Handles EmployeeTreeView1.Load
 
@@ -1046,7 +1026,16 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Sub grid_CellMouseEnter(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellMouseEnter
-        If e.ColumnIndex = colDelete.Index Then
+        If Not e.RowIndex > -1 Then grid.Cursor = Cursors.Default : Return
+
+        Dim model = GridRowToTimeLogModel(grid.Rows(e.RowIndex))
+
+        Dim hasChanged = model.HasChanged
+
+        Dim satsified = e.ColumnIndex = colDelete.Index And model.IsValidToSave _
+            Or e.ColumnIndex = colRestore.Index And hasChanged
+
+        If satsified Then
             grid.Cursor = Cursors.Hand
         Else
             grid.Cursor = Cursors.Default
