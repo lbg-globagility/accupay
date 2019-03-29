@@ -16375,6 +16375,23 @@ Public Class EmployeeForm
 
     End Sub
 
+    Private Sub ToolStripButton35_Click(sender As Object, e As EventArgs) Handles ToolStripButton35.Click
+
+        Dim browseFile = New OpenFileDialog With {
+            .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
+        }
+
+        If Not browseFile.ShowDialog() = DialogResult.OK Then Return
+
+        Dim fileName = browseFile.FileName
+
+        Dim importForm As New ImportEmployeeForm(fileName)
+        If Not importForm.ShowDialog() = DialogResult.OK Then Return
+
+        importForm.SaveAsync()
+    End Sub
+
     Dim sender_Name = ""
 
     Private Sub bgworkImporting_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkImporting.DoWork
