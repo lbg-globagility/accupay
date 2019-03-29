@@ -309,7 +309,7 @@ Public Class MDIPrimaryForm
         ToolStripButton0.BackColor = Color.FromArgb(255, 255, 255)
 
         ToolStripButton1.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton2.BackColor = Color.FromArgb(194, 228, 255)
+        tsbtnHRIS.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton3.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton4.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton5.BackColor = Color.FromArgb(194, 228, 255)
@@ -317,7 +317,7 @@ Public Class MDIPrimaryForm
         ToolStripButton0.Font = selectedButtonFont
 
         ToolStripButton1.Font = unselectedButtonFont
-        ToolStripButton2.Font = unselectedButtonFont
+        tsbtnHRIS.Font = unselectedButtonFont
         ToolStripButton3.Font = unselectedButtonFont
         ToolStripButton4.Font = unselectedButtonFont
         ToolStripButton5.Font = unselectedButtonFont
@@ -345,7 +345,7 @@ Public Class MDIPrimaryForm
         FormReports.Hide()
 
         ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton2.BackColor = Color.FromArgb(194, 228, 255)
+        tsbtnHRIS.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton3.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton4.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton5.BackColor = Color.FromArgb(194, 228, 255)
@@ -355,7 +355,7 @@ Public Class MDIPrimaryForm
         ToolStripButton1.Font = selectedButtonFont
 
         ToolStripButton0.Font = unselectedButtonFont
-        ToolStripButton2.Font = unselectedButtonFont
+        tsbtnHRIS.Font = unselectedButtonFont
         ToolStripButton3.Font = unselectedButtonFont
         ToolStripButton4.Font = unselectedButtonFont
         ToolStripButton5.Font = unselectedButtonFont
@@ -379,7 +379,7 @@ Public Class MDIPrimaryForm
 
         ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton1.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton2.BackColor = Color.FromArgb(194, 228, 255)
+        tsbtnHRIS.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton4.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton5.BackColor = Color.FromArgb(194, 228, 255)
 
@@ -389,7 +389,7 @@ Public Class MDIPrimaryForm
 
         ToolStripButton0.Font = unselectedButtonFont
         ToolStripButton1.Font = unselectedButtonFont
-        ToolStripButton2.Font = unselectedButtonFont
+        tsbtnHRIS.Font = unselectedButtonFont
         ToolStripButton4.Font = unselectedButtonFont
         ToolStripButton5.Font = unselectedButtonFont
 
@@ -446,100 +446,67 @@ Public Class MDIPrimaryForm
                     With EmployeeForm
 
                         Select Case .tabIndx
-                            Case 0 'Checklist
 
-                            Case 1 'Personal Profile
+                            Case .GetEmployeeProfileTabPageIndex
                                 If .listofEditDepen.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
+                                    .SearchEmployee_Click(sndr, ee)
                                 Else
 
                                 End If
 
-                            Case 2 'Awards
+                            Case .GetAwardsTabPageIndex
                                 If .listofEditRowAward.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
+                                    .SearchEmployee_Click(sndr, ee)
                                 Else
 
                                 End If
 
-                            Case 3 'Certification
+                            Case .GetCertificationTabPageIndex
                                 If .listofEditRowCert.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
+                                    .SearchEmployee_Click(sndr, ee)
                                 Else
 
                                 End If
 
-                            Case 4 'Leave
+                            Case .GetLeaveTabPageIndex
                                 If .listofEditRowleave.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
+                                    .SearchEmployee_Click(sndr, ee)
                                 Else
 
                                 End If
 
-                            Case 5 'Medicla Profile
-                                If .listofEditedmedprod.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
-                                Else
 
-                                End If
-
-                            Case 6 'Disciplinary action
-
-                            Case 7 'Educational Background
-
-                            Case 8 'Previous Employer
-
-                            Case 9 'Promotion
-
-                            Case 10 'Loan Schedule
-
-                            Case 11 'Loan History
-
-                            Case 12 'Salary
-                                If .listofEditEmpSal.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                            Case 13 'Pay slip
-                                If .listofEditedmedprod.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                            Case 14 'Allowance
+                            Case .GetAllowanceTabPageIndex
                                 If .listofEditEmpAllow.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
+                                    .SearchEmployee_Click(sndr, ee)
                                 Else
 
                                 End If
 
-                            Case 15 'Overtime
+                            Case .GetOvertimeTabPageIndex
                                 If .listofEditRowEmpOT.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
+                                    .SearchEmployee_Click(sndr, ee)
                                 Else
 
                                 End If
 
-                            Case 16 'Official business
+                            Case .GetOfficialBusinessTabPageIndex
                                 If .listofEditRowOBF.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
+                                    .SearchEmployee_Click(sndr, ee)
                                 Else
 
                                 End If
 
-                            Case 17 'Bonus
+                            Case .GetBonusTabPageIndex
                                 If .listofEditRowBon.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
+                                    .SearchEmployee_Click(sndr, ee)
                                 Else
 
                                 End If
 
-                            Case 18 'Attachment
+                            Case .GetAttachmentTabPageIndex
                                 If .listofEditRoweatt.Count = 0 Then
-                                    .SearchEmoloyee_Click(sndr, ee)
+                                    .SearchEmployee_Click(sndr, ee)
                                 Else
 
                                 End If
@@ -606,7 +573,7 @@ Public Class MDIPrimaryForm
 
         ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton1.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton2.BackColor = Color.FromArgb(194, 228, 255)
+        tsbtnHRIS.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton3.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton5.BackColor = Color.FromArgb(194, 228, 255)
 
@@ -616,7 +583,7 @@ Public Class MDIPrimaryForm
 
         ToolStripButton0.Font = unselectedButtonFont
         ToolStripButton1.Font = unselectedButtonFont
-        ToolStripButton2.Font = unselectedButtonFont
+        tsbtnHRIS.Font = unselectedButtonFont
         ToolStripButton3.Font = unselectedButtonFont
         ToolStripButton5.Font = unselectedButtonFont
 
@@ -624,7 +591,7 @@ Public Class MDIPrimaryForm
 
     End Sub
 
-    Private Sub ToolStripButton4_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+    Private Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles tsbtnHRIS.Click
 
         isHome = 0
 
@@ -644,41 +611,15 @@ Public Class MDIPrimaryForm
         ToolStripButton4.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton5.BackColor = Color.FromArgb(194, 228, 255)
 
-        ToolStripButton2.BackColor = Color.FromArgb(255, 255, 255)
+        tsbtnHRIS.BackColor = Color.FromArgb(255, 255, 255)
 
-        ToolStripButton2.Font = selectedButtonFont
+        tsbtnHRIS.Font = selectedButtonFont
 
         ToolStripButton0.Font = unselectedButtonFont
         ToolStripButton1.Font = unselectedButtonFont
         ToolStripButton3.Font = unselectedButtonFont
         ToolStripButton4.Font = unselectedButtonFont
         ToolStripButton5.Font = unselectedButtonFont
-
-        If HRISForm.listHRISForm.Count < 0 Then
-
-            Dim indx = HRISForm.listHRISForm.Count - 1
-
-            If HRISForm.listHRISForm.Item(indx) = "Employee" Then
-                Select Case EmployeeForm.tabctrlemp.SelectedIndex
-                    Case 1
-                        With EmployeeForm
-                            If .tsbtnNewEmp.Enabled = True Then
-                                Dim isTableChange = EXECQUER("SELECT EXISTS(SELECT RowID" &
-                                                             " FROM position" &
-                                                             " WHERE CURRENT_DATE()" &
-                                                             " IN (DATE_FORMAT(Created,'%Y-%m-%d'),DATE_FORMAT(LastUpd,'%Y-%m-%d'))" &
-                                                             " AND OrganizationID=" & orgztnID & " LIMIT 1);")
-
-                                If isTableChange = 1 Then
-
-                                End If
-
-                            End If
-
-                        End With
-                End Select
-            End If
-        End If
 
         refresh_previousForm(1, sender, e)
     End Sub
@@ -737,7 +678,7 @@ Public Class MDIPrimaryForm
 
         ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton1.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton2.BackColor = Color.FromArgb(194, 228, 255)
+        tsbtnHRIS.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton3.BackColor = Color.FromArgb(194, 228, 255)
         ToolStripButton4.BackColor = Color.FromArgb(194, 228, 255)
 
@@ -747,7 +688,7 @@ Public Class MDIPrimaryForm
 
         ToolStripButton0.Font = unselectedButtonFont
         ToolStripButton1.Font = unselectedButtonFont
-        ToolStripButton2.Font = unselectedButtonFont
+        tsbtnHRIS.Font = unselectedButtonFont
         ToolStripButton3.Font = unselectedButtonFont
         ToolStripButton4.Font = unselectedButtonFont
     End Sub
