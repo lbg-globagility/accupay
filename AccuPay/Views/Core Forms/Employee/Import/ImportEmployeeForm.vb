@@ -2,11 +2,14 @@
 Imports AccuPay.Attributes
 Imports AccuPay.Entity
 Imports Globagility.AccuPay
+Imports log4net
 Imports Microsoft.EntityFrameworkCore
 
 Public Class ImportEmployeeForm
 
 #Region "VariableDeclarations"
+    Private Shared logger As ILog = LogManager.GetLogger("EmployeeFormAppender")
+
     Private _worksheetName As String
     Private _ep As ExcelParser(Of EmployeeModel)
     Private _filePath As String
@@ -179,6 +182,16 @@ Public Class ImportEmployeeForm
     End Class
 
 #Region "Properties"
+    Private Property FileDirectory As String
+        Get
+            Return _filePath
+        End Get
+        Set(value As String)
+            _filePath = value
+
+            FilePathChanged()
+        End Set
+    End Property
 
 #End Region
 
@@ -196,7 +209,6 @@ Public Class ImportEmployeeForm
                 Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
                 Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
                 ToListAsync()
-            'Where(Function(e) employeeNos.Any(Function(eNo) eNo = e.EmployeeNo)).
 
             'for updates
             For Each e In employees
@@ -215,19 +227,47 @@ Public Class ImportEmployeeForm
                     Where(Function(p) p.Name = em.Job).
                     FirstOrDefaultAsync
 
+                Dim positionRowID = position?.RowID
+                If Not positionRowID.HasValue Then _
+                    positionRowID = Await CreatePositionAsync(context, em.Job)
+
                 Dim e As New Employee With {
                     .OrganizationID = z_OrganizationID,
                     .Created = Now,
                     .CreatedBy = z_User,
                     .PayFrequencyID = If(em.PayFrequency.ToLower() = "semi-monthly", 1, 4),
-                    .PositionID = position?.RowID}
+                    .PositionID = positionRowID}
 
                 AssignChanges(em, e)
+
+                context.Employees.Add(e)
             Next
 
-            Await context.SaveChangesAsync()
+            Try
+                Await context.SaveChangesAsync()
+
+            Catch ex As Exception
+                logger.Error("EmployeeImportProfile", ex)
+                Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
+                MessageBox.Show(errMsg, "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+            End Try
+
         End Using
     End Sub
+
+    Private Async Function CreatePositionAsync(context As PayrollContext, positionName As String) As Threading.Tasks.Task(Of Integer)
+        Dim jobPosition = context.Positions.
+            Add(New Position With {
+            .Name = positionName,
+            .OrganizationID = z_OrganizationID,
+            .Created = Now,
+            .CreatedBy = z_User})
+
+        Await context.SaveChangesAsync()
+
+        Return jobPosition.Entity.RowID.Value
+    End Function
 
 #End Region
 
@@ -299,6 +339,16 @@ Public Class ImportEmployeeForm
         _ep = New ExcelParser(Of EmployeeModel)
     End Sub
 
+    Private Sub FilePathChanged()
+        Dim models = _ep.Read(_filePath)
+
+        _okModels = models.Where(Function(ee) Not ee.ConsideredFailed).ToList()
+        _failModels = models.Where(Function(ee) ee.ConsideredFailed).ToList()
+
+        DataGridView1.DataSource = _okModels
+        DataGridView2.DataSource = _failModels
+    End Sub
+
 #End Region
 
 #Region "EventHandlers"
@@ -307,13 +357,7 @@ Public Class ImportEmployeeForm
         DataGridView1.AutoGenerateColumns = False
         DataGridView2.AutoGenerateColumns = False
 
-        Dim models = _ep.Read(_filePath)
-
-        _okModels = models.Where(Function(ee) Not ee.ConsideredFailed).ToList()
-        _failModels = models.Where(Function(ee) ee.ConsideredFailed).ToList()
-
-        DataGridView1.DataSource = _okModels
-        DataGridView2.DataSource = _failModels
+        FilePathChanged()
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -338,6 +382,20 @@ Public Class ImportEmployeeForm
 
     Private Sub DataGridView2_DataSourceChanged(sender As Object, e As EventArgs) Handles DataGridView2.DataSourceChanged
         TabPage2.Text = $"Failed ({DataGridView2.Rows.Count()})"
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+
+        Dim browseFile = New OpenFileDialog With {
+            .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls",
+            .RestoreDirectory = True
+        }
+
+        If Not browseFile.ShowDialog() = DialogResult.OK Then Return
+
+        FileDirectory = browseFile.FileName
+
     End Sub
 
 #End Region

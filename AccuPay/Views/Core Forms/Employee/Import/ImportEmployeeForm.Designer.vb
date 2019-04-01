@@ -20,14 +20,47 @@ Partial Class ImportEmployeeForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Button3 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.DataGridView2 = New System.Windows.Forms.DataGridView()
         Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -54,29 +87,6 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
@@ -87,6 +97,7 @@ Partial Class ImportEmployeeForm
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.Button3)
         Me.Panel1.Controls.Add(Me.Button2)
         Me.Panel1.Controls.Add(Me.Button1)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -94,6 +105,15 @@ Partial Class ImportEmployeeForm
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(800, 35)
         Me.Panel1.TabIndex = 0
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(12, 6)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(75, 23)
+        Me.Button3.TabIndex = 1
+        Me.Button3.Text = "Browse..."
+        Me.Button3.UseVisualStyleBackColor = True
         '
         'Button2
         '
@@ -140,6 +160,8 @@ Partial Class ImportEmployeeForm
         'DataGridView1
         '
         Me.DataGridView1.AllowUserToAddRows = False
+        DataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.DataGridView1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle10
         Me.DataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.Column15, Me.Column16, Me.Column17, Me.Column18, Me.Column19, Me.Column20, Me.Column21, Me.Column22, Me.Column23})
@@ -149,6 +171,182 @@ Partial Class ImportEmployeeForm
         Me.DataGridView1.ReadOnly = True
         Me.DataGridView1.Size = New System.Drawing.Size(786, 383)
         Me.DataGridView1.TabIndex = 0
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "EmployeeNo"
+        Me.Column1.HeaderText = "Employee No"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "LastName"
+        Me.Column2.HeaderText = "Last Name"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "FirstName"
+        Me.Column3.HeaderText = "First Name"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "MiddleName"
+        Me.Column4.HeaderText = "Middle Name"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "Surname"
+        Me.Column5.HeaderText = "Surname"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        Me.Column5.Visible = False
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "BirthDate"
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle11
+        Me.Column6.HeaderText = "Birth Date"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "Gender"
+        Me.Column7.HeaderText = "Gender"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column8
+        '
+        Me.Column8.DataPropertyName = "Nickname"
+        Me.Column8.HeaderText = "Nickname"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        '
+        'Column9
+        '
+        Me.Column9.DataPropertyName = "MaritalStatus"
+        Me.Column9.HeaderText = "Marital Status"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
+        '
+        'Column10
+        '
+        Me.Column10.DataPropertyName = "Salutation"
+        Me.Column10.HeaderText = "Salutation"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        '
+        'Column11
+        '
+        Me.Column11.DataPropertyName = "Address"
+        Me.Column11.HeaderText = "Address"
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        '
+        'Column12
+        '
+        Me.Column12.DataPropertyName = "ContactNo"
+        Me.Column12.HeaderText = "Contact No."
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
+        '
+        'Column13
+        '
+        Me.Column13.DataPropertyName = "Job"
+        Me.Column13.HeaderText = "Job Position"
+        Me.Column13.Name = "Column13"
+        Me.Column13.ReadOnly = True
+        '
+        'Column14
+        '
+        Me.Column14.DataPropertyName = "TIN"
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.Column14.DefaultCellStyle = DataGridViewCellStyle12
+        Me.Column14.HeaderText = "TIN"
+        Me.Column14.Name = "Column14"
+        Me.Column14.ReadOnly = True
+        '
+        'Column15
+        '
+        Me.Column15.DataPropertyName = "SSSNo"
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.Column15.DefaultCellStyle = DataGridViewCellStyle13
+        Me.Column15.HeaderText = "SSS No."
+        Me.Column15.Name = "Column15"
+        Me.Column15.ReadOnly = True
+        '
+        'Column16
+        '
+        Me.Column16.DataPropertyName = "PhilHealthNo"
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.Column16.DefaultCellStyle = DataGridViewCellStyle14
+        Me.Column16.HeaderText = "PhilHealth No."
+        Me.Column16.Name = "Column16"
+        Me.Column16.ReadOnly = True
+        '
+        'Column17
+        '
+        Me.Column17.DataPropertyName = "HDMFNo"
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.Column17.DefaultCellStyle = DataGridViewCellStyle15
+        Me.Column17.HeaderText = "HMDF No."
+        Me.Column17.Name = "Column17"
+        Me.Column17.ReadOnly = True
+        '
+        'Column18
+        '
+        Me.Column18.DataPropertyName = "DateEmployed"
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.Column18.DefaultCellStyle = DataGridViewCellStyle16
+        Me.Column18.HeaderText = "Date Employed"
+        Me.Column18.Name = "Column18"
+        Me.Column18.ReadOnly = True
+        '
+        'Column19
+        '
+        Me.Column19.DataPropertyName = "PayFrequency"
+        Me.Column19.HeaderText = "Pay Frequency"
+        Me.Column19.Name = "Column19"
+        Me.Column19.ReadOnly = True
+        '
+        'Column20
+        '
+        Me.Column20.DataPropertyName = "EmployeeType"
+        Me.Column20.HeaderText = "Employee Type"
+        Me.Column20.Name = "Column20"
+        Me.Column20.ReadOnly = True
+        '
+        'Column21
+        '
+        Me.Column21.DataPropertyName = "EmploymentStatus"
+        Me.Column21.HeaderText = "Employment Status"
+        Me.Column21.Name = "Column21"
+        Me.Column21.ReadOnly = True
+        '
+        'Column22
+        '
+        Me.Column22.DataPropertyName = "LeaveAllowance"
+        Me.Column22.HeaderText = "Leave Allowance"
+        Me.Column22.Name = "Column22"
+        Me.Column22.ReadOnly = True
+        '
+        'Column23
+        '
+        Me.Column23.DataPropertyName = "WorkDaysPerYear"
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.Column23.DefaultCellStyle = DataGridViewCellStyle17
+        Me.Column23.HeaderText = "Work Days Per Year"
+        Me.Column23.Name = "Column23"
+        Me.Column23.ReadOnly = True
         '
         'TabPage2
         '
@@ -164,6 +362,8 @@ Partial Class ImportEmployeeForm
         'DataGridView2
         '
         Me.DataGridView2.AllowUserToAddRows = False
+        DataGridViewCellStyle18.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.DataGridView2.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle18
         Me.DataGridView2.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView2.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn24, Me.DataGridViewTextBoxColumn1, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5, Me.DataGridViewTextBoxColumn6, Me.DataGridViewTextBoxColumn7, Me.DataGridViewTextBoxColumn8, Me.DataGridViewTextBoxColumn9, Me.DataGridViewTextBoxColumn10, Me.DataGridViewTextBoxColumn11, Me.DataGridViewTextBoxColumn12, Me.DataGridViewTextBoxColumn13, Me.DataGridViewTextBoxColumn14, Me.DataGridViewTextBoxColumn15, Me.DataGridViewTextBoxColumn16, Me.DataGridViewTextBoxColumn17, Me.DataGridViewTextBoxColumn18, Me.DataGridViewTextBoxColumn19, Me.DataGridViewTextBoxColumn20, Me.DataGridViewTextBoxColumn21, Me.DataGridViewTextBoxColumn22, Me.DataGridViewTextBoxColumn23})
@@ -343,177 +543,18 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
         Me.DataGridViewTextBoxColumn23.ReadOnly = True
         '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "EmployeeNo"
-        Me.Column1.HeaderText = "Employee No"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "LastName"
-        Me.Column2.HeaderText = "Last Name"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "FirstName"
-        Me.Column3.HeaderText = "First Name"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "MiddleName"
-        Me.Column4.HeaderText = "Middle Name"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "Surname"
-        Me.Column5.HeaderText = "Surname"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        Me.Column5.Visible = False
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "BirthDate"
-        Me.Column6.HeaderText = "Birth Date"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "Gender"
-        Me.Column7.HeaderText = "Gender"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'Column8
-        '
-        Me.Column8.DataPropertyName = "Nickname"
-        Me.Column8.HeaderText = "Nickname"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        '
-        'Column9
-        '
-        Me.Column9.DataPropertyName = "MaritalStatus"
-        Me.Column9.HeaderText = "Marital Status"
-        Me.Column9.Name = "Column9"
-        Me.Column9.ReadOnly = True
-        '
-        'Column10
-        '
-        Me.Column10.DataPropertyName = "Salutation"
-        Me.Column10.HeaderText = "Salutation"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        '
-        'Column11
-        '
-        Me.Column11.DataPropertyName = "Address"
-        Me.Column11.HeaderText = "Address"
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        '
-        'Column12
-        '
-        Me.Column12.DataPropertyName = "ContactNo"
-        Me.Column12.HeaderText = "Contact No."
-        Me.Column12.Name = "Column12"
-        Me.Column12.ReadOnly = True
-        '
-        'Column13
-        '
-        Me.Column13.DataPropertyName = "Job"
-        Me.Column13.HeaderText = "Job Position"
-        Me.Column13.Name = "Column13"
-        Me.Column13.ReadOnly = True
-        '
-        'Column14
-        '
-        Me.Column14.DataPropertyName = "TIN"
-        Me.Column14.HeaderText = "TIN"
-        Me.Column14.Name = "Column14"
-        Me.Column14.ReadOnly = True
-        '
-        'Column15
-        '
-        Me.Column15.DataPropertyName = "SSSNo"
-        Me.Column15.HeaderText = "SSS No."
-        Me.Column15.Name = "Column15"
-        Me.Column15.ReadOnly = True
-        '
-        'Column16
-        '
-        Me.Column16.DataPropertyName = "PhilHealthNo"
-        Me.Column16.HeaderText = "PhilHealth No."
-        Me.Column16.Name = "Column16"
-        Me.Column16.ReadOnly = True
-        '
-        'Column17
-        '
-        Me.Column17.DataPropertyName = "HDMFNo"
-        Me.Column17.HeaderText = "HMDF No."
-        Me.Column17.Name = "Column17"
-        Me.Column17.ReadOnly = True
-        '
-        'Column18
-        '
-        Me.Column18.DataPropertyName = "DateEmployed"
-        Me.Column18.HeaderText = "Column18"
-        Me.Column18.Name = "Column18"
-        Me.Column18.ReadOnly = True
-        '
-        'Column19
-        '
-        Me.Column19.DataPropertyName = "PayFrequency"
-        Me.Column19.HeaderText = "Pay Frequency"
-        Me.Column19.Name = "Column19"
-        Me.Column19.ReadOnly = True
-        '
-        'Column20
-        '
-        Me.Column20.DataPropertyName = "EmployeeType"
-        Me.Column20.HeaderText = "Employee Type"
-        Me.Column20.Name = "Column20"
-        Me.Column20.ReadOnly = True
-        '
-        'Column21
-        '
-        Me.Column21.DataPropertyName = "EmploymentStatus"
-        Me.Column21.HeaderText = "Employment Status"
-        Me.Column21.Name = "Column21"
-        Me.Column21.ReadOnly = True
-        '
-        'Column22
-        '
-        Me.Column22.DataPropertyName = "LeaveAllowance"
-        Me.Column22.HeaderText = "Leave Allowance"
-        Me.Column22.Name = "Column22"
-        Me.Column22.ReadOnly = True
-        '
-        'Column23
-        '
-        Me.Column23.DataPropertyName = "WorkDaysPerYear"
-        Me.Column23.HeaderText = "Work Days Per Year"
-        Me.Column23.Name = "Column23"
-        Me.Column23.ReadOnly = True
-        '
-        'ImportEmployeeForm1
+        'ImportEmployeeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(800, 450)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Name = "ImportEmployeeForm1"
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
+        Me.Name = "ImportEmployeeForm"
         Me.Panel1.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
@@ -556,6 +597,7 @@ Partial Class ImportEmployeeForm
     Friend WithEvents DataGridViewTextBoxColumn21 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn22 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn23 As DataGridViewTextBoxColumn
+    Friend WithEvents Button3 As Button
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
     Friend WithEvents Column3 As DataGridViewTextBoxColumn
