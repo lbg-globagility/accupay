@@ -70,22 +70,22 @@ SELECT (e_startdate BETWEEN NEW.PayFromDate AND NEW.PayToDate)
 INTO IsFirstTimeSalary;
 
 SELECT
-    SUM(RegularHoursAmount),
-    SUM(OvertimeHoursAmount),
-    SUM(NightDiffHoursAmount),
-    SUM(NightDiffOTHoursAmount),
-    SUM(RestDayAmount),
-    SUM(RestDayOTPay),
-    SUM(SpecialHolidayPay),
-    SUM(SpecialHolidayOTPay),
-    SUM(RegularHolidayPay),
-    SUM(RegularHolidayOTPay),
-    SUM(HolidayPayAmount),
-    SUM(Leavepayment),
-    SUM(HoursLateAmount),
-    SUM(UndertimeHoursAmount),
-    SUM(Absent),
-    SUM(TotalDayPay),
+    IFNULL(SUM(RegularHoursAmount),0),
+    IFNULL(SUM(OvertimeHoursAmount),0),
+    IFNULL(SUM(NightDiffHoursAmount),0),
+    IFNULL(SUM(NightDiffOTHoursAmount),0),
+    IFNULL(SUM(RestDayAmount),0),
+    IFNULL(SUM(RestDayOTPay),0),
+    IFNULL(SUM(SpecialHolidayPay),0),
+    IFNULL(SUM(SpecialHolidayOTPay),0),
+    IFNULL(SUM(RegularHolidayPay),0),
+    IFNULL(SUM(RegularHolidayOTPay),0),
+    IFNULL(SUM(HolidayPayAmount),0),
+    IFNULL(SUM(Leavepayment),0),
+    IFNULL(SUM(HoursLateAmount),0),
+    IFNULL(SUM(UndertimeHoursAmount),0),
+    IFNULL(SUM(Absent),0),
+    IFNULL(SUM(TotalDayPay),0),
     EmployeeSalaryID
 FROM employeetimeentryactual
 WHERE OrganizationID = NEW.OrganizationID AND
@@ -139,7 +139,7 @@ IF e_type = 'Fixed' THEN
 ELSEIF e_type = 'Monthly' AND IsFirstTimeSalary THEN
 
     SELECT
-        SUM(TotalDayPay),
+        IFNULL(SUM(TotalDayPay), 0),
         EmployeeSalaryID
     FROM employeetimeentryactual
     WHERE OrganizationID = NEW.OrganizationID
@@ -152,7 +152,7 @@ ELSEIF e_type = 'Monthly' AND IsFirstTimeSalary THEN
     IF totalWorkAmount IS NULL THEN
 
         SELECT
-            SUM(TotalDayPay),
+            IFNULL(SUM(TotalDayPay), 0),
             EmployeeSalaryID
         FROM employeetimeentry
         WHERE OrganizationID = NEW.OrganizationID
@@ -204,7 +204,7 @@ ELSE
     IF totalWorkAmount IS NULL THEN
 
         SELECT
-            SUM(TotalDayPay),
+            IFNULL(SUM(TotalDayPay), 0),
             EmployeeSalaryID
         FROM employeetimeentry
         WHERE OrganizationID = NEW.OrganizationID AND
