@@ -197,8 +197,10 @@ Public Class ImportEmployeeForm
 
 #Region "Functions"
 
-    Public Async Sub SaveAsync()
-        If Not _okModels.Any() Then Return
+    Public Async Function SaveAsync() As Threading.Tasks.Task(Of Boolean)
+        Dim succeed As Boolean = False
+
+        If Not _okModels.Any() Then Return False
 
         Dim importedEmployees = _okModels
 
@@ -246,7 +248,9 @@ Public Class ImportEmployeeForm
             Try
                 Await context.SaveChangesAsync()
 
+                succeed = True
             Catch ex As Exception
+                succeed = False
                 logger.Error("EmployeeImportProfile", ex)
                 Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
                 MessageBox.Show(errMsg, "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -254,7 +258,9 @@ Public Class ImportEmployeeForm
             End Try
 
         End Using
-    End Sub
+
+        Return succeed
+    End Function
 
     Private Async Function CreatePositionAsync(context As PayrollContext, positionName As String) As Threading.Tasks.Task(Of Integer)
         Dim jobPosition = context.Positions.
@@ -358,14 +364,6 @@ Public Class ImportEmployeeForm
         DataGridView2.AutoGenerateColumns = False
 
         FilePathChanged()
-    End Sub
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        DialogResult = DialogResult.OK
-    End Sub
-
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        DialogResult = DialogResult.Cancel
     End Sub
 
     Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick

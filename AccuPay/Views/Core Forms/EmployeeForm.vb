@@ -16375,7 +16375,7 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub ToolStripButton35_Click(sender As Object, e As EventArgs) Handles ToolStripButton35.Click
+    Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles ToolStripButton35.Click
 
         Dim browseFile = New OpenFileDialog With {
             .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
@@ -16389,7 +16389,12 @@ Public Class EmployeeForm
         Dim importForm As New ImportEmployeeForm(fileName)
         If Not importForm.ShowDialog() = DialogResult.OK Then Return
 
-        importForm.SaveAsync()
+        Dim succeed = Await importForm.SaveAsync()
+
+        If succeed Then _
+            SearchEmoloyee_Click(Button4, New EventArgs) : _
+            InfoBalloon("Imported successfully.", "Done Importing Employee Profiles", lblforballoon, 0, -69)
+
     End Sub
 
     Dim sender_Name = ""
