@@ -315,6 +315,8 @@ Public Class TimeLogsForm
     Private Async Function GetTimeAttendanceHelper(logs As IList(Of ImportTimeAttendanceLog)) _
                             As Threading.Tasks.Task(Of ITimeAttendanceHelper)
 
+        logs = logs.OrderBy(Function(l) l.DateTime).ToList
+
         Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
         Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
 
@@ -522,6 +524,11 @@ Public Class TimeLogsForm
 
         Dim parser = New TimeInTimeOutParser()
         Dim timeEntries = parser.Parse(thefilepath)
+
+        If timeEntries.Count = 0 Then
+            MessageBox.Show("No logs were parsed. Please make sure the log files follows the right format.")
+            Return
+        End If
 
         Dim timeLogsByEmployee = timeEntries.
             GroupBy(Function(t) t.EmployeeNo).
@@ -1422,7 +1429,6 @@ Public Class TimeLogsForm
     End Sub
 
     Private Async Sub NewTimeEntryAlternateLineImportSave(timeAttendanceHelper As ITimeAttendanceHelper)
-
         Try
             Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
             Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()

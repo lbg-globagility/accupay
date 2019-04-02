@@ -26,8 +26,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
             Dim lineContent As String
 
             Try
-                Using fileStream = New FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
-            stream = New StreamReader(fileStream)
+                Using fileStream = New FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), stream = New StreamReader(fileStream)
                     Do
                         lineNumber += 1
                         lineContent = stream.ReadLine()
@@ -46,6 +45,10 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
             Catch ex As FileNotFoundException
                 output.IsImportSuccess = False
                 output.ErrorMessage = FILE_NOT_FOUND_ERROR
+
+            Catch ex As Exception
+                output.IsImportSuccess = False
+                output.ErrorMessage = "An error occured. Please try again or contact Globagility."
             End Try
 
             output.Logs = logs.Where(Function(l) l.HasError = False).ToList
