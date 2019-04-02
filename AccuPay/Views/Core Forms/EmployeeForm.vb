@@ -750,6 +750,8 @@ Public Class EmployeeForm
         End If
         Static null_index() As Integer = {-1, 0}
         Dim new_eRowID = Nothing
+
+        Dim succeed As Boolean = False
         Try
             Dim employee_restday = If(null_index.Contains(cboDayOfRest.SelectedIndex), DBNull.Value, cboDayOfRest.SelectedIndex)
 
@@ -818,7 +820,9 @@ Public Class EmployeeForm
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
                            0)
+            succeed = True
         Catch ex As Exception
+            succeed = False
             MsgBox(getErrExcptn(ex, Me.Name))
         End Try
 
@@ -841,7 +845,7 @@ Public Class EmployeeForm
 
             emp_rcount += 1
             dgvEmp_RowIndex = 0
-            InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully." & vbNewLine &
+            If succeed Then InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully." & vbNewLine &
                         If(rdMale.Checked, "His", "Her") & " salary was created also, you may now proceed to 'SALARY' tab and update it.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
         Else 'UPDATE employee
 
@@ -862,7 +866,7 @@ Public Class EmployeeForm
 
             dgvEmp_RowIndex = dgvEmp.CurrentRow.Index
 
-            InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been updated successfully.", "Employee Update Successful", lblforballoon, 0, -69)
+            If succeed Then InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been updated successfully.", "Employee Update Successful", lblforballoon, 0, -69)
 
         End If
 
@@ -16372,6 +16376,28 @@ Public Class EmployeeForm
         tsbtnImportDependents.Enabled = True
 
         tsbtnImportSalary.Enabled = True
+
+    End Sub
+
+    Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles ToolStripButton35.Click
+
+        Dim browseFile = New OpenFileDialog With {
+            .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
+        }
+
+        If Not browseFile.ShowDialog() = DialogResult.OK Then Return
+
+        Dim fileName = browseFile.FileName
+
+        Dim importForm As New ImportEmployeeForm(fileName)
+        If Not importForm.ShowDialog() = DialogResult.OK Then Return
+
+        Dim succeed = Await importForm.SaveAsync()
+
+        If succeed Then _
+            SearchEmoloyee_Click(Button4, New EventArgs) : _
+            InfoBalloon("Imported successfully.", "Done Importing Employee Profiles", lblforballoon, 0, -69)
 
     End Sub
 
