@@ -104,7 +104,7 @@ Public Class ImportEmployeeForm
         <ColumnName("Pay frequency(Weekly/Semi-monthly)")>
         Public Property PayFrequency As String
 
-        <ColumnName("Employee Type(Weekly/Monthly)")>
+        <ColumnName("Employee Type(Daily/Monthly)")>
         Public Property EmployeeType As String
 
         <ColumnName("Employment status(Probationary/Regular/Resigned/Terminated)")>

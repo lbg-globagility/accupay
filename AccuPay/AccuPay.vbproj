@@ -1065,12 +1065,6 @@
     <Compile Include="Views\Core Forms\LoanCancellation.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\LoanType.Designer.vb">
-      <DependentUpon>LoanType.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\LoanType.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\newEmpStat.Designer.vb">
       <DependentUpon>newEmpStat.vb</DependentUpon>
     </Compile>
@@ -2032,9 +2026,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\LoanCancellation.resx">
       <DependentUpon>LoanCancellation.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\LoanType.resx">
-      <DependentUpon>LoanType.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\newEmpStat.resx">
       <DependentUpon>newEmpStat.vb</DependentUpon>
