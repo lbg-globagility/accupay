@@ -13805,7 +13805,11 @@ Public Class EmployeeForm
 
         End If
 
-        catchDT.Dispose()
+        If catchDT IsNot Nothing Then
+
+            catchDT.Dispose()
+
+        End If
 
     End Sub
 

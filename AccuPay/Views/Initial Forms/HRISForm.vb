@@ -111,7 +111,7 @@ Public Class HRISForm
 
         EmployeeForm.tabctrlemp.SelectedIndex = index
         EmployeeForm.tabIndx = index
-        'TODO: this should Employee Check List but there is a bug on user priviledge.
+        'TODO: this should be 'Employee Check List' but there is a bug on user priviledge.
         'this is needed to be fixed!
         ChangeForm(EmployeeForm, "Employee Personal Profile")
         EmployeeForm.tbpempchklist.Focus()

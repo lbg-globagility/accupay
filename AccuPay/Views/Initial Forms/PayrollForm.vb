@@ -103,6 +103,7 @@
 
         If Not Debugger.IsAttached Then
             PaystubExperimentalToolStripMenuItem.Visible = False
+            WithholdingTaxToolStripMenuItem.Visible = False
         End If
     End Sub
 
