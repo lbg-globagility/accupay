@@ -27,7 +27,7 @@ Namespace Global.AccuPay.Extensions
 
             currentDate = If(currentDate Is Nothing, Date.Now.ToMinimumHourValue, currentDate.ToMinimumHourValue)
 
-            If Not timeSpanInput.HasValue Then Return Nothing
+            If Not timeSpanInput.HasValue Then Return ""
             Return currentDate.Value.Add(timeSpanInput).ToString(format)
 
         End Function
