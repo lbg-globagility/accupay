@@ -110,6 +110,8 @@ Public Class ImportLeaveForm
     Public Async Function SaveAsync() As Task(Of Boolean)
         Dim succeed As Boolean = False
 
+        If Not _okModels.Any() Then Return succeed
+
         Using context = New PayrollContext
             Dim employeeIDs = _okModels.Select(Function(lm) lm.EmployeeID).ToList()
             Dim minDate = _okModels.Min(Function(lm) lm.StartDate.Value.Date)
@@ -191,6 +193,7 @@ Public Class ImportLeaveForm
 
     Private Class LeaveModel
         Private Const PENDING_STATUS As String = "Pending"
+        Private Const ADDITIONAL_VACATION_LEAVETYPE As String = "Additional VL"
         Private VALID_STATUS As String() = {"approved", "pending"}
         Private _employee As Employee
         Private _noEmployeeNo As Boolean
@@ -198,6 +201,7 @@ Public Class ImportLeaveForm
         Private _noStartDate As Boolean
         Private _employeeNotExists As Boolean
         Private _noStatus As Boolean
+        Private _notMeantToUseAddtlVL As Boolean
         Private _reasons As String
         Private _comments As String
         Private _startTime As TimeSpan?
@@ -205,17 +209,27 @@ Public Class ImportLeaveForm
         Private REASON_LENGTH As Integer = 500
         Private COMMENT_LENGTH As Integer = 2000
         Private _status As String
+        Private Shared _grantsAdditionalVacationLeaveTypeFeaure As Boolean
 
         Public Sub New()
+            FeatureAdditionalVacationLeaveType()
 
         End Sub
 
+        Private Shared Sub FeatureAdditionalVacationLeaveType()
+            Dim checker = FeatureListChecker.Instance
+            _grantsAdditionalVacationLeaveTypeFeaure = checker.HasAccess(Feature.AdditionalVacationLeaveType)
+        End Sub
+
         Public Sub New(employee As Employee)
+            FeatureAdditionalVacationLeaveType()
+
             _employee = employee
 
             EmployeeNo = _employee.EmployeeNo
             FullName = _employee.Fullname
             EmployeeID = _employee.RowID.Value
+
         End Sub
 
         Public Property EmployeeID As Integer
@@ -317,11 +331,14 @@ Public Class ImportLeaveForm
                 _noStatus = String.IsNullOrWhiteSpace(Status) _
                     Or Not VALID_STATUS.Any(Function(s) s = Status.ToLower())
 
+                _notMeantToUseAddtlVL = Not _grantsAdditionalVacationLeaveTypeFeaure And LeaveType = ADDITIONAL_VACATION_LEAVETYPE
+
                 Return _noEmployeeNo _
                     Or _noLeaveType _
                     Or _noStartDate _
                     Or _employeeNotExists _
-                    Or _noStatus
+                    Or _noStatus _
+                    Or _notMeantToUseAddtlVL
             End Get
         End Property
 
@@ -339,9 +356,13 @@ Public Class ImportLeaveForm
                     description.Add("Employee doesn't belong here")
                 ElseIf _noStatus Then
                     description.Add("invalid status")
+                ElseIf _notMeantToUseAddtlVL Then
+                    description.Add($"AccuPay doesn't support {ADDITIONAL_VACATION_LEAVETYPE} leave type")
                 End If
 
-                Return String.Join("; ", description.Where(Function(s) Not String.IsNullOrWhiteSpace(s)).ToArray())
+                Dim stringsToJoin = description.Where(Function(s) Not String.IsNullOrWhiteSpace(s)).ToArray()
+                If Not stringsToJoin.Any() Then Return Nothing
+                Return String.Join("; ", stringsToJoin)
             End Get
         End Property
 
@@ -369,8 +390,10 @@ Public Class ImportLeaveForm
     End Sub
 
     Private Sub DataGridView1_DataSourceChanged(sender As Object, e As EventArgs) Handles DataGridView1.DataSourceChanged
-        TabPage1.Text = $"OK ({DataGridView1.Rows.Count})"
+        Dim count = DataGridView1.Rows.Count
+        TabPage1.Text = $"OK ({count})"
 
+        Button1.Enabled = count > 0
     End Sub
 
     Private Sub DataGridView2_DataSourceChanged(sender As Object, e As EventArgs) Handles DataGridView2.DataSourceChanged
