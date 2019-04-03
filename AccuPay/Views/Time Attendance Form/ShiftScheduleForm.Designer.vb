@@ -617,9 +617,10 @@ Partial Class ShiftScheduleForm
         '
         'tsBtnImport
         '
+        Me.tsBtnImport.Image = Global.AccuPay.My.Resources.Resources.Add
         Me.tsBtnImport.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsBtnImport.Name = "tsBtnImport"
-        Me.tsBtnImport.Size = New System.Drawing.Size(47, 22)
+        Me.tsBtnImport.Size = New System.Drawing.Size(63, 22)
         Me.tsBtnImport.Text = "Import"
         '
         'grid

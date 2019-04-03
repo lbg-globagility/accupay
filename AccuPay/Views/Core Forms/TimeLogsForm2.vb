@@ -78,7 +78,10 @@ Public Class TimeLogsForm2
                 Dim hasShiftSched = seekShiftSched.Any()
 
                 If seek.Any Then
-                    Dim timeLog = seek.FirstOrDefault
+                    Dim timeLog = seek.
+                                    OrderByDescending(Function(t) t.LastUpd).
+                                    FirstOrDefault
+
                     If hasShiftSched Then
                         dataSource.Add(New TimeLogModel(timeLog) With {.ShiftSchedule = seekShiftSched.FirstOrDefault})
                         Continue For
@@ -248,29 +251,54 @@ Public Class TimeLogsForm2
             Return
         End If
 
+        HouseKeepingBeforeStartBackgroundWork()
+        bgworkTypicalImport.RunWorkerAsync(timeAttendanceHelper)
+    End Sub
+
+    Private Sub bgworkTypicalImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkTypicalImport.DoWork
+        Dim timeAttendanceHelper = CType(e.Argument, ITimeAttendanceHelper)
+
         NewTimeEntryAlternateLineImportSave(timeAttendanceHelper)
+
+    End Sub
+
+    Private Sub bgworkTypicalImport_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bgworkTypicalImport.ProgressChanged
+        ToolStripProgressBar1.Value = e.ProgressPercentage
+    End Sub
+
+    Private Sub BackGroundWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+        Handles bgworkTypicalImport.RunWorkerCompleted, bgworkImport.RunWorkerCompleted
+
+        If e.Error IsNot Nothing Then
+            MessageBox.Show("Error: " & e.Error.Message)
+
+        ElseIf e.Cancelled Then
+
+            MessageBox.Show("Background work cancelled.")
+
+        Else
+
+            ShowSuccessImportBalloon()
+
+            DateFilter_ValueChanged(dtpDateFrom, New EventArgs)
+
+        End If
+
+        MainSplitContainer.Enabled = True
+
+        ToolStripProgressBar1.Visible = False
+
+        ToolStripProgressBar1.Value = 0
     End Sub
 
     Private Async Sub NewTimeEntryAlternateLineImportSave(timeAttendanceHelper As ITimeAttendanceHelper)
-        Dim succeed As Boolean = False
         Try
             Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
             Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
             Using context = New PayrollContext()
 
-                Dim importId = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                Dim originalImportId = importId
-
-                Dim counter As Integer = 0
-
-                While context.TimeLogs.FirstOrDefault(Function(t) t.TimeentrylogsImportID = importId) IsNot Nothing OrElse
-                        context.TimeAttendanceLogs.FirstOrDefault(Function(t) t.ImportNumber = importId) IsNot Nothing
-                    counter += 1
-
-                    importId = originalImportId & "_" & counter
-
-                End While
+                Dim importId As String = GenerateImportId(context)
 
                 For Each timeLog In timeLogs
 
@@ -288,7 +316,6 @@ Public Class TimeLogsForm2
 
                 Await context.SaveChangesAsync()
 
-                succeed = True
             End Using
 
         Catch ex As Exception
@@ -298,16 +325,26 @@ Public Class TimeLogsForm2
             MessageBoxHelper.DefaultErrorMessage("Import Logs")
 
             Throw ex
-
-        Finally
-            If succeed Then
-                ShowSuccessImportBalloon()
-
-                DateFilter_ValueChanged(dtpDateFrom, New EventArgs)
-            End If
         End Try
 
     End Sub
+
+    Private Shared Function GenerateImportId(context As PayrollContext) As String
+        Dim importId = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
+        Dim originalImportId = importId
+
+        Dim counter As Integer = 0
+
+        While context.TimeLogs.FirstOrDefault(Function(t) t.TimeentrylogsImportID = importId) IsNot Nothing OrElse
+                context.TimeAttendanceLogs.FirstOrDefault(Function(t) t.ImportNumber = importId) IsNot Nothing
+            counter += 1
+
+            importId = originalImportId & "_" & counter
+
+        End While
+
+        Return importId
+    End Function
 
     Private Sub ResetGridRowsDefaultCellStyle()
         For Each row As DataGridViewRow In grid.Rows
@@ -381,6 +418,8 @@ Public Class TimeLogsForm2
 
     Private Async Function GetTimeAttendanceHelper(logs As List(Of ImportTimeAttendanceLog)) _
                             As Threading.Tasks.Task(Of ITimeAttendanceHelper)
+
+        logs = logs.OrderBy(Function(l) l.DateTime).ToList
 
         Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
         Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
@@ -1008,6 +1047,10 @@ Public Class TimeLogsForm2
                 If timeLogsFormat_ = TimeLogsForm.TimeLogsFormat.Conventional Then
                     NewTimeEntryAlternateLineImport()
 
+
+                Else
+                    HouseKeepingBeforeStartBackgroundWork()
+                    bgworkImport.RunWorkerAsync()
                 End If
 
             End If
@@ -1017,6 +1060,74 @@ Public Class TimeLogsForm2
 
         End Try
 
+    End Sub
+
+    Private Sub bgworkImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkImport.DoWork
+
+        Dim parser = New TimeInTimeOutParser()
+        Dim timeEntries = parser.Parse(thefilepath)
+
+        If timeEntries.Count = 0 Then
+            MessageBox.Show("No logs were parsed. Please make sure the log files follows the right format.")
+            Return
+        End If
+
+        Dim timeLogsByEmployee = timeEntries.
+            GroupBy(Function(t) t.EmployeeNo).
+            ToList()
+
+        Using context = New PayrollContext()
+            Dim dateCreated = Date.Now
+
+            Dim importId As String = GenerateImportId(context)
+
+            For Each timelogs In timeLogsByEmployee
+                Dim employee = context.Employees.
+                    Where(Function(et) et.EmployeeNo = timelogs.Key).
+                    Where(Function(et) Nullable.Equals(et.OrganizationID, z_OrganizationID)).
+                    FirstOrDefault()
+
+                If employee Is Nothing Then
+                    Continue For
+                End If
+
+                For Each timeLog In timelogs
+                    Dim t = New TimeLog() With {
+                        .OrganizationID = z_OrganizationID,
+                        .EmployeeID = employee.RowID,
+                        .Created = dateCreated,
+                        .CreatedBy = z_User,
+                        .LogDate = timeLog.DateOccurred,
+                        .TimeentrylogsImportID = importId
+                    }
+
+                    If Not String.IsNullOrWhiteSpace(timeLog.TimeIn) Then
+                        t.TimeIn = TimeSpan.Parse(timeLog.TimeIn)
+                    End If
+
+                    If Not String.IsNullOrWhiteSpace(timeLog.TimeOut) Then
+                        t.TimeOut = TimeSpan.Parse(timeLog.TimeOut)
+                    End If
+
+                    context.TimeLogs.Add(t)
+                Next
+            Next
+
+            context.SaveChanges()
+
+        End Using
+
+        Return
+
+    End Sub
+
+    Private Sub HouseKeepingBeforeStartBackgroundWork()
+
+        ToolStripProgressBar1.Value = 0
+
+        MainSplitContainer.Enabled = False
+
+        ToolStripProgressBar1.Visible = True
     End Sub
 
     Private Sub TimeLogsForm2_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
@@ -1044,6 +1155,10 @@ Public Class TimeLogsForm2
 
     Private Sub grid_CellMouseLeave(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellMouseLeave
         If e.ColumnIndex = colDelete.Index Then grid.Cursor = Cursors.Default
+    End Sub
+
+    Private Sub ToolStripLabel1_Click(sender As Object, e As EventArgs)
+
     End Sub
 
 #End Region
