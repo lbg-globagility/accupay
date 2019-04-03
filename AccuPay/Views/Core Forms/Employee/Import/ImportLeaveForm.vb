@@ -115,7 +115,7 @@ Public Class ImportLeaveForm
         Using context = New PayrollContext
             Dim employeeIDs = _okModels.Select(Function(lm) lm.EmployeeID).ToList()
             Dim minDate = _okModels.Min(Function(lm) lm.StartDate.Value.Date)
-            Dim maxDate = _okModels.Min(Function(lm) lm.EndDateProper)
+            Dim maxDate = _okModels.Max(Function(lm) lm.EndDateProper.Date)
 
             Dim leaves = Await context.Leaves.
                 Where(Function(lv) lv.OrganizationID = z_OrganizationID).
@@ -194,6 +194,8 @@ Public Class ImportLeaveForm
     Private Class LeaveModel
         Private Const PENDING_STATUS As String = "Pending"
         Private Const ADDITIONAL_VACATION_LEAVETYPE As String = "Additional VL"
+        Private Const REASON_LENGTH As Integer = 500
+        Private Const COMMENT_LENGTH As Integer = 2000
         Private VALID_STATUS As String() = {"approved", "pending"}
         Private _employee As Employee
         Private _noEmployeeNo As Boolean
@@ -206,8 +208,6 @@ Public Class ImportLeaveForm
         Private _comments As String
         Private _startTime As TimeSpan?
         Private _endTime As TimeSpan?
-        Private REASON_LENGTH As Integer = 500
-        Private COMMENT_LENGTH As Integer = 2000
         Private _status As String
         Private Shared _grantsAdditionalVacationLeaveTypeFeaure As Boolean
 
@@ -224,11 +224,13 @@ Public Class ImportLeaveForm
         Public Sub New(employee As Employee)
             FeatureAdditionalVacationLeaveType()
 
-            _employee = employee
+            If employee IsNot Nothing Then
+                _employee = employee
 
-            EmployeeNo = _employee.EmployeeNo
-            FullName = _employee.Fullname
-            EmployeeID = _employee.RowID.Value
+                EmployeeNo = _employee.EmployeeNo
+                FullName = _employee.Fullname
+                EmployeeID = _employee.RowID.Value
+            End If
 
         End Sub
 
@@ -346,19 +348,17 @@ Public Class ImportLeaveForm
             Get
                 Dim description As New List(Of String)
 
-                If _noEmployeeNo Then
-                    description.Add("no Employee No")
-                ElseIf _noLeaveType Then
-                    description.Add("no Leave Type")
-                ElseIf _noStartDate Then
-                    description.Add("no Start Date")
-                ElseIf _employeeNotExists Then
-                    description.Add("Employee doesn't belong here")
-                ElseIf _noStatus Then
-                    description.Add("invalid status")
-                ElseIf _notMeantToUseAddtlVL Then
-                    description.Add($"AccuPay doesn't support {ADDITIONAL_VACATION_LEAVETYPE} leave type")
-                End If
+                If _noEmployeeNo Then description.Add("no Employee No")
+
+                If _noLeaveType Then description.Add("no Leave Type")
+
+                If _noStartDate Then description.Add("no Start Date")
+
+                If _employeeNotExists Then description.Add("Employee doesn't belong here")
+
+                If _noStatus Then description.Add("invalid status")
+
+                If _notMeantToUseAddtlVL Then description.Add($"AccuPay doesn't support {ADDITIONAL_VACATION_LEAVETYPE} leave type")
 
                 Dim stringsToJoin = description.Where(Function(s) Not String.IsNullOrWhiteSpace(s)).ToArray()
                 If Not stringsToJoin.Any() Then Return Nothing
@@ -402,10 +402,10 @@ Public Class ImportLeaveForm
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        Static fileFilter = String.Join("|", {"Microsoft Excel Workbook Documents 2007-13 (*.xlsx)", "*.xlsx", "Microsoft Excel Documents 97-2003 (*.xls)", "*.xls"})
 
         Dim browseFile = New OpenFileDialog With {
-            .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
-                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls",
+            .Filter = fileFilter,
             .RestoreDirectory = True
         }
 
