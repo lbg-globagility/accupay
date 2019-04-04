@@ -760,6 +760,10 @@ Public Class EmployeeLoansForm
 
     End Function
 
+    Private Sub loanHistoryGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles loanHistoryGridView.DataError
+        e.Cancel = True
+    End Sub
+
 #End Region
 
 End Class
