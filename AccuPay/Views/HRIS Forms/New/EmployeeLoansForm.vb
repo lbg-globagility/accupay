@@ -222,7 +222,7 @@ Public Class EmployeeLoansForm
 
         If changedLoanSchedules.Count < 1 Then
 
-            MessageBoxHelper.ErrorMessage("No unchanged loans!", messageTitle)
+            MessageBoxHelper.Warning("No unchanged loans!", messageTitle)
             Return
         End If
 
