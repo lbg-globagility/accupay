@@ -7,6 +7,9 @@ Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
+Imports AccuPay.Repository
+Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
 
@@ -4767,7 +4770,7 @@ Public Class EmployeeForm
 
     Dim dontUpdateLeave As SByte = 0
 
-    Sub SaveLeave_Click(sender As Object, e As EventArgs) Handles tsbtnSaveLeave.Click
+    Async Sub SaveLeave_Click(sender As Object, e As EventArgs) Handles tsbtnSaveLeave.Click
 
         pbEmpPicLeave.Focus()
 
@@ -4839,6 +4842,117 @@ Public Class EmployeeForm
             Exit Sub
         End If
 
+        Dim success = Await NewSaveLeave()
+        'Dim hasError = OldSaveLeave()
+
+        listofEditRowleave.Clear()
+
+        If success Then
+            '                                           'dgvEmp
+            InfoBalloon("Changes made in Employee ID '" & dgvEmp.CurrentRow.Cells("Column1").Value & "' has successfully saved.", "Changes successfully save", lblforballoon, 0, -69)
+
+            dgvEmp_SelectionChanged(sender, e)
+
+        End If
+
+
+        AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
+
+    End Sub
+
+    Private Function CreateLeaveObject(leaveId As Integer?, row As DataGridViewRow) As Leave
+
+        Return New Leave With {
+            .RowID = leaveId,
+            .OrganizationID = z_OrganizationID,
+            .CreatedBy = z_User,
+            .LastUpdBy = z_User,
+            .StartTime = MilitTime(row.Cells("elv_StartTime").Value).ToString().ToNullableTimeSpan(),
+            .EndTime = MilitTime(row.Cells("elv_EndTime").Value).ToString().ToNullableTimeSpan(),
+            .LeaveType = row.Cells("elv_Type").Value,
+            .EmployeeID = dgvEmp.CurrentRow.Cells("RowID").Value,
+            .StartDate = ObjectUtils.ToDateTime(row.Cells("elv_StartDate").Value),
+            .EndDate = ObjectUtils.ToNullableDateTime(row.Cells("elv_EndDate").Value),
+            .Reason = If(row.Cells("elv_Reason").Value, ""),
+            .Comments = If(row.Cells("elv_Comment").Value, ""),
+            .Status = If(row.Cells("elv_Status").Value, "")
+        }
+
+    End Function
+
+    Private Async Function NewSaveLeave() As Task(Of Boolean)
+
+        Dim messageTitle = "Save Leave"
+
+        Dim leaves As New List(Of Leave)
+
+        Try
+
+            For Each row As DataGridViewRow In dgvempleave.Rows
+
+                Dim leaveId As Integer? = If(ValNoComma(row.Cells("elv_RowID").Value) = 0,
+                                                Nothing,
+                                                row.Cells("elv_RowID").Value)
+
+                If leaveId Is Nothing And
+                    tsbtnNewLeave.Visible = True Then
+
+                    If row.IsNewRow = False Then
+
+                        If row.Cells("elv_StartDate").Value <> Nothing And row.Cells("elv_EndDate").Value <> Nothing Then
+
+                            Dim leave = CreateLeaveObject(leaveId, row)
+
+                            leaves.Add(leave)
+
+                        End If
+
+                    End If
+
+                Else
+                    If listofEditRowleave.Contains(row.Cells("elv_RowID").Value) Then
+
+                        If row.Cells("elv_StartTime").Value <> Nothing And row.Cells("elv_EndTime").Value <> Nothing _
+                            And row.Cells("elv_StartDate").Value <> Nothing And row.Cells("elv_EndDate").Value <> Nothing Then
+
+                            Dim leave = CreateLeaveObject(leaveId, row)
+
+                            leaves.Add(leave)
+
+                        End If
+                    End If
+
+                End If
+
+            Next
+
+            Dim leaveRepository As New LeaveRepository()
+
+            If leaves.Any Then
+
+                Await leaveRepository.SaveManyAsync(leaves)
+
+            End If
+
+            Return True
+
+
+        Catch ex As ArgumentException
+
+            MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+
+        Catch ex As Exception
+
+            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
+        End Try
+
+        Return False
+
+
+    End Function
+
+    'TBDeleted
+    Private Function OldSaveLeave() As Boolean
         Dim param(13, 2) As Object
 
         param(0, 0) = "elv_RowID"
@@ -4956,20 +5070,8 @@ Public Class EmployeeForm
             End If
         Next
 
-        listofEditRowleave.Clear()
-
-        If hasERR = 0 Then
-
-            '                                           'dgvEmp
-            InfoBalloon("Changes made in Employee ID '" & dgvEmp.CurrentRow.Cells("Column1").Value & "' has successfully saved.", "Changes successfully save", lblforballoon, 0, -69)
-        Else
-            dgvEmp_SelectionChanged(sender, e)
-
-        End If
-
-        AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-
-    End Sub
+        Return hasERR = 0 ' Return true if no errors
+    End Function
 
     Sub INSUPD_employeeattachments(Optional eatta_RowID As Object = Nothing,
                                    Optional eatta_EmployeeID As Object = Nothing,

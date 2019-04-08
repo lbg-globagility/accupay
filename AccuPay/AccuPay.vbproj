@@ -323,9 +323,11 @@
     <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
     <Compile Include="Core\Utilities\Extensions\DateExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
+    <Compile Include="Core\Utilities\Extensions\StringExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\TimeSpanExtensions.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
     <Compile Include="Core\Utilities\ObjectUtils.vb" />
+    <Compile Include="Core\Utilities\Helper\PolicyHelper.vb" />
     <Compile Include="Domain\AgencyFees\Agency.vb" />
     <Compile Include="Domain\AgencyFees\AgencyFee.vb" />
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
@@ -347,6 +349,9 @@
     <Compile Include="Domain\TimeLogs\ITimeAttendanceHelper.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelperNew.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
+    <Compile Include="Repositories\EmployeeData.vb" />
+    <Compile Include="Repositories\LeaveRepository.vb" />
+    <Compile Include="Repositories\ProductConstant.vb" />
     <Compile Include="Views\Core Forms\Employee\Import\ImportEmployeeForm.Designer.vb">
       <DependentUpon>ImportEmployeeForm.vb</DependentUpon>
     </Compile>

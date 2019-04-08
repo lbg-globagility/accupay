@@ -234,7 +234,7 @@ Public Class TimeEntryCalculator
         Return overtimeWorked
     End Function
 
-    Public Function ComputeLeaveHours(
+    Public Shared Function ComputeLeaveHours(
         leavePeriod As TimePeriod,
         currentShift As CurrentShift,
         computeBreakTimeLate As Boolean) As Decimal

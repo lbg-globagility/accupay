@@ -1,6 +1,7 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Entity
-Imports AccuPay.Loans
 Imports AccuPay.SimplifiedEntities
 Imports Microsoft.EntityFrameworkCore
 
@@ -45,7 +46,6 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-
         Public Async Function GetByEmployeeNumberAsync(employeeNumber As String) As Task(Of Employee)
 
             Using context = New PayrollContext()
@@ -59,7 +59,6 @@ Namespace Global.AccuPay.Repository
             End Using
 
         End Function
-
 
         Public Async Function GetAllWithPosition() As Task(Of List(Of Employee))
 
