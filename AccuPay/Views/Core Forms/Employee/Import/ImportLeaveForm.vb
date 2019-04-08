@@ -2,7 +2,9 @@
 Imports AccuPay
 Imports AccuPay.Attributes
 Imports AccuPay.Entity
+Imports AccuPay.Repository
 Imports AccuPay.Tools
+Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
@@ -15,6 +17,7 @@ Public Class ImportLeaveForm
     Private _ep As ExcelParser(Of LeaveModel)
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
+    Private _leaveRepository As New LeaveRepository()
 
 #Region "VariableDeclarations"
 
@@ -93,6 +96,8 @@ Public Class ImportLeaveForm
             DataGridView2.DataSource = _failModels
         End Using
 
+        SaveButton.Enabled = _okModels.Count > 0
+
     End Sub
 
     Private Shared Function CreateLeaveModel(model As LeaveModel, employee As Employee) As LeaveModel
@@ -112,20 +117,64 @@ Public Class ImportLeaveForm
 
         If Not _okModels.Any() Then Return succeed
 
+        succeed = Await SaveImport()
+
+        Return succeed
+    End Function
+
+    Private Async Function SaveImport() As Task(Of Boolean)
+
+        Dim messageTitle = "Import Employee Leave"
+
+        Dim leaves As List(Of Leave) = Await GetLeaves()
+
+        If leaves.Any = False Then
+
+            MessageBoxHelper.Warning("No employee leaves to be added!")
+
+            Return False
+
+        End If
+
+        Try
+            Await _leaveRepository.SaveManyAsync(leaves)
+
+            Return True
+
+        Catch ex As ArgumentException
+
+            MessageBoxHelper.ErrorMessage("One of the employees has reached its maximum leave allowance. Please check your data and try again.", messageTitle)
+
+            Return False
+
+        Catch ex As Exception
+
+            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex, "EmployeeImportLeave")
+
+            Return False
+
+        End Try
+
+    End Function
+
+    Private Async Function GetLeaves() As Task(Of List(Of Leave))
+
+        Dim leaves As New List(Of Leave)
+
         Using context = New PayrollContext
             Dim employeeIDs = _okModels.Select(Function(lm) lm.EmployeeID).ToList()
             Dim minDate = _okModels.Min(Function(lm) lm.StartDate.Value.Date)
             Dim maxDate = _okModels.Max(Function(lm) lm.EndDateProper.Date)
 
-            Dim leaves = Await context.Leaves.
+            Dim currentLeaves = Await context.Leaves.
                 Where(Function(lv) lv.OrganizationID = z_OrganizationID).
                 Where(Function(lv) employeeIDs.Contains(lv.EmployeeID.Value)).
                 Where(Function(lv) lv.StartDate >= minDate AndAlso lv.EndDate.Value.Date <= maxDate).
                 ToListAsync()
 
-            If leaves.Any() Then
+            If currentLeaves.Any() Then
                 For Each model In _okModels
-                    Dim leave = leaves.
+                    Dim leave = currentLeaves.
                         Where(Function(lv) lv.EmployeeID.Value = model.EmployeeID).
                         Where(Function(lv) lv.StartDate >= model.StartDate.Value.Date AndAlso lv.EndDate.Value.Date <= model.EndDateProper.Date).
                         FirstOrDefault
@@ -141,39 +190,29 @@ Public Class ImportLeaveForm
                             .LastUpd = Now
                             .LastUpdBy = z_User
                         End With
+
+                        leaves.Add(leave)
                     Else
-                        context.Leaves.Add(CreateNewLeave(model))
+                        leaves.Add(CreateNewLeave(model))
                     End If
                 Next
 
             Else
                 For Each model In _okModels
-                    context.Leaves.Add(CreateNewLeave(model))
+                    leaves.Add(CreateNewLeave(model))
                 Next
 
             End If
-
-            Try
-                Await context.SaveChangesAsync()
-
-                succeed = True
-            Catch ex As Exception
-                succeed = False
-                logger.Error("EmployeeImportLeave", ex)
-                Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
-                MessageBox.Show(errMsg, "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
-
-            End Try
         End Using
 
-        Return succeed
+        Return leaves
     End Function
 
     Private Shared Function CreateNewLeave(model As LeaveModel) As Leave
         Return New Leave() With {
             .OrganizationID = z_OrganizationID,
-        .Reason = model.Reason,
-        .Comments = model.Comment,
+            .Reason = model.Reason,
+            .Comments = model.Comment,
             .CreatedBy = z_User,
             .LastUpdBy = z_User,
             .EmployeeID = model.EmployeeID,
@@ -255,7 +294,7 @@ Public Class ImportLeaveForm
             End Set
         End Property
 
-        <ColumnName("Start Time")>
+        <ColumnName("Start Time (Optional)")>
         Public Property StartTime As TimeSpan?
             Get
                 Return _startTime
@@ -271,7 +310,7 @@ Public Class ImportLeaveForm
             End Get
         End Property
 
-        <ColumnName("End Time")>
+        <ColumnName("End Time (Optional)")>
         Public Property EndTime As TimeSpan?
             Get
                 Return _endTime
@@ -393,7 +432,7 @@ Public Class ImportLeaveForm
         Dim count = DataGridView1.Rows.Count
         TabPage1.Text = $"OK ({count})"
 
-        Button1.Enabled = count > 0
+        SaveButton.Enabled = count > 0
     End Sub
 
     Private Sub DataGridView2_DataSourceChanged(sender As Object, e As EventArgs) Handles DataGridView2.DataSourceChanged

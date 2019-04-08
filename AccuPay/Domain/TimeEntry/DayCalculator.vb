@@ -476,11 +476,11 @@ Public Class DayCalculator
     End Sub
 
     ''' <summary>
-    ''' Updates timeentry. This sets the leave hours only if there is no time logs. This will also increment the undertime hours if its is a working day (with timelogs or not)
+    ''' Updates timeentry. This sets the leave hours only if there is no time logs. This will also increment the undertime hours if its is a working day (with timelogs or not).
     ''' </summary>
-    ''' <param name="leaves">The list of leave for this day</param>
-    ''' <param name="currentShift">The shift for this day</param>
-    ''' <param name="timeEntry">The timeEntry object that will be updated</param>
+    ''' <param name="leaves">The list of leave for this day.</param>
+    ''' <param name="currentShift">The shift for this day.</param>
+    ''' <param name="timeEntry">The timeEntry object that will be updated.</param>
     Private Sub ComputeLeaveHours(hasTimeLog As Boolean, leaves As IList(Of Leave), currentShift As CurrentShift, timeEntry As TimeEntry)
         Dim calculator = New TimeEntryCalculator()
 

@@ -50,45 +50,49 @@ Namespace Global.AccuPay.Repository
 
                     Await Me.SaveAsync(leave, context)
 
-                    If leave.Status.Trim.ToLower = STATUS_APPROVED.ToLower AndAlso
-                        policy.ValidateLeaveBalance AndAlso
-                        VALIDATABLE_TYPES.Contains(leave.LeaveType) Then
-
-                        Dim employee = employees.FirstOrDefault(Function(e) Nullable.Equals(e.RowID, leave.EmployeeID))
-
-                        Dim unusedApprovedLeaves = GetUnusedApprovedLeavesByType(context, employee.RowID, leave.LeaveType)
-
-                        Dim totalLeaveHours = ComputeTotalLeaveHours(unusedApprovedLeaves, policy, employeeShifts, shiftSchedules, employee)
-
-
-                        If leave.LeaveType = ProductConstant.SICK_LEAVE_PART_NO Then
-
-                            Dim sickLeaveBalance = Await EmployeeData.GetSickLeaveBalance(employee.RowID)
-
-                            If totalLeaveHours > sickLeaveBalance Then
-
-                                Throw New ArgumentException("Employee will exceed the allowable sick leave hours.")
-
-                            End If
-
-                        ElseIf leave.LeaveType = ProductConstant.VACATION_LEAVE_PART_NO Then
-
-                            Dim vacationLeaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID)
-
-                            If totalLeaveHours > vacationLeaveBalance Then
-
-                                Throw New ArgumentException("Employee will exceed the allowable vacation leave hours.")
-
-                            End If
-
-                        End If
-                    End If
+                    Await ValidateLeaveBalance(policy, employeeShifts, shiftSchedules, employees, context, leave)
                 Next
 
                 Await context.SaveChangesAsync()
 
             End Using
 
+        End Function
+
+        Private Async Function ValidateLeaveBalance(policy As PolicyHelper, employeeShifts As List(Of ShiftSchedule), shiftSchedules As List(Of EmployeeDutySchedule), employees As List(Of Employee), context As PayrollContext, leave As Leave) As Task
+            If leave.Status.Trim.ToLower = STATUS_APPROVED.ToLower AndAlso
+                                    policy.ValidateLeaveBalance AndAlso
+                                    VALIDATABLE_TYPES.Contains(leave.LeaveType) Then
+
+                Dim employee = employees.FirstOrDefault(Function(e) Nullable.Equals(e.RowID, leave.EmployeeID))
+
+                Dim unusedApprovedLeaves = GetUnusedApprovedLeavesByType(context, employee.RowID, leave.LeaveType)
+
+                Dim totalLeaveHours = ComputeTotalLeaveHours(unusedApprovedLeaves, policy, employeeShifts, shiftSchedules, employee)
+
+
+                If leave.LeaveType = ProductConstant.SICK_LEAVE_PART_NO Then
+
+                    Dim sickLeaveBalance = Await EmployeeData.GetSickLeaveBalance(employee.RowID)
+
+                    If totalLeaveHours > sickLeaveBalance Then
+
+                        Throw New ArgumentException("Employee will exceed the allowable sick leave hours.")
+
+                    End If
+
+                ElseIf leave.LeaveType = ProductConstant.VACATION_LEAVE_PART_NO Then
+
+                    Dim vacationLeaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID)
+
+                    If totalLeaveHours > vacationLeaveBalance Then
+
+                        Throw New ArgumentException("Employee will exceed the allowable vacation leave hours.")
+
+                    End If
+
+                End If
+            End If
         End Function
 
         Private Shared Async Function GetEmployees(employeeIds As IEnumerable(Of Integer?), context As PayrollContext) As Task(Of List(Of Employee))
@@ -169,8 +173,32 @@ Namespace Global.AccuPay.Repository
                         ToList
         End Function
 
-        Private Async Function SaveAsync(leave As Leave, context As PayrollContext) As Task
+        ''' <summary>
+        ''' This inserts or updates a leave depending if its RowID is null.
+        ''' </summary>
+        ''' <param name="leave">The leave that will be inserted/updated.</param>
+        ''' <param name="context">If there is no context provided, SaveAsync will save the changes to database automatically.</param>
+        Public Async Function SaveAsync(leave As Leave, Optional context As PayrollContext = Nothing) As Task
 
+            If context Is Nothing Then
+
+                context = New PayrollContext
+
+                Using context
+
+                    Await SaveAsyncFunction(leave, context)
+
+                    Await context.SaveChangesAsync
+
+                End Using
+
+            Else
+                Await SaveAsyncFunction(leave, context)
+            End If
+
+        End Function
+
+        Private Async Function SaveAsyncFunction(leave As Leave, context As PayrollContext) As Task
             If leave.RowID Is Nothing Then
 
                 context.Leaves.Add(leave)
@@ -178,7 +206,6 @@ Namespace Global.AccuPay.Repository
             Else
                 Await Me.UpdateAsync(leave, context)
             End If
-
         End Function
 
         Private Async Function UpdateAsync(leave As Leave, context As PayrollContext) As Task

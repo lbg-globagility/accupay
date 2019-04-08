@@ -85,7 +85,7 @@ Public Class ImportLoansForm
 
             If loanType Is Nothing Then
 
-                record.ErrorMessage = "Cannot get or create loan type. Please contact Globagility Inc."
+                record.ErrorMessage = "Cannot get or create loan type. Please contact " & My.Resources.AppCreator
 
                 rejectedRecords.Add(record)
 

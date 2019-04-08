@@ -40,7 +40,7 @@ Partial Class ImportLeaveForm
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.SaveButton = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
@@ -192,7 +192,7 @@ Partial Class ImportLeaveForm
         '
         Me.Panel1.Controls.Add(Me.Button3)
         Me.Panel1.Controls.Add(Me.Button2)
-        Me.Panel1.Controls.Add(Me.Button1)
+        Me.Panel1.Controls.Add(Me.SaveButton)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel1.Location = New System.Drawing.Point(0, 415)
         Me.Panel1.Name = "Panel1"
@@ -219,16 +219,16 @@ Partial Class ImportLeaveForm
         Me.Button2.Text = "Cancel"
         Me.Button2.UseVisualStyleBackColor = True
         '
-        'Button1
+        'SaveButton
         '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.Button1.Location = New System.Drawing.Point(632, 6)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 0
-        Me.Button1.Text = "&Save"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SaveButton.DialogResult = System.Windows.Forms.DialogResult.OK
+        Me.SaveButton.Location = New System.Drawing.Point(632, 6)
+        Me.SaveButton.Name = "SaveButton"
+        Me.SaveButton.Size = New System.Drawing.Size(75, 23)
+        Me.SaveButton.TabIndex = 0
+        Me.SaveButton.Text = "&Save"
+        Me.SaveButton.UseVisualStyleBackColor = True
         '
         'TabControl1
         '
@@ -454,7 +454,7 @@ Partial Class ImportLeaveForm
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Button3 As Button
     Friend WithEvents Button2 As Button
-    Friend WithEvents Button1 As Button
+    Friend WithEvents SaveButton As Button
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents DataGridView1 As DataGridView
