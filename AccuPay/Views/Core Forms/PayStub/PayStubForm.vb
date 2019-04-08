@@ -84,7 +84,7 @@ Public Class PayStubForm
     Private _successfulPaystubs As Integer = 0
     Private _failedPaystubs As Integer = 0
 
-    Const max_count_per_page As Integer = 1
+    Const max_count_per_page As Integer = 50
 
     Dim currentEmployeeID As String = Nothing
 

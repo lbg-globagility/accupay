@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
@@ -18,7 +19,6 @@ Public Class TimeLogsForm2
     Private currRowIndex As Integer = -1
     Private currColIndex As Integer = -1
 
-    Private _balloonToolTips As IList(Of ToolTip)
     Private thefilepath As String
 
     Private _useShiftSchedulePolicy As Boolean
@@ -32,7 +32,7 @@ Public Class TimeLogsForm2
         currColIndex = -1
     End Sub
 
-    Private Async Sub ReloadAsync(startDate As Date, endDate As Date)
+    Private Async Function ReloadAsync(startDate As Date, endDate As Date) As Task
         Dim hasSelectedEmployees = EmployeeTreeView1.GetTickedEmployees().Any()
 
         If Not hasSelectedEmployees Then
@@ -95,7 +95,7 @@ Public Class TimeLogsForm2
 
             RefreshDataSource(grid, dataSource)
         End Using
-    End Sub
+    End Function
 
     Private Sub RefreshDataSource(datagGrid As DataGridView, dataSource As List(Of TimeLogModel))
         datagGrid.DataSource = dataSource
@@ -177,28 +177,13 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Sub ShowSuccessBalloon()
-        Dim infohint As New ToolTip
-        infohint.IsBalloon = True
-        infohint.ToolTipTitle = "Save successfully"
-        infohint.ToolTipIcon = ToolTipIcon.Info
-
-        infohint.Show(String.Empty, btnSave)
-        infohint.Show("Done.", btnSave, 3475)
-        'infohint.Show("Done.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
-
-        _balloonToolTips.Add(infohint)
+        InfoBalloon("Successfully saved.",
+                  "Successfully saved.", btnSave, 0, -70)
     End Sub
 
     Private Sub ShowSuccessImportBalloon()
-        Dim infohint As New ToolTip
-        infohint.IsBalloon = True
-        infohint.ToolTipTitle = "Imported successfully"
-        infohint.ToolTipIcon = ToolTipIcon.Info
-
-        infohint.Show(String.Empty, btnImport)
-        infohint.Show("Done.", btnImport, 3475)
-
-        _balloonToolTips.Add(infohint)
+        InfoBalloon("Imported successfully.",
+                  "Imported successfully.", btnImport, 0, -70)
     End Sub
 
     Private Function GetShiftSchedulePolicy() As Boolean
@@ -532,7 +517,7 @@ Public Class TimeLogsForm2
                 If completeTimeLog Then
                     If .TimeStampIn.Value.Date < .TimeStampOut.Value.Date Then
                         Dim logOutDate = .TimeStampOut.Value.Date
-                        _dateOut = logOutDate
+                        DateOut = logOutDate
                         origDateOut = logOutDate
                     End If
                 End If
@@ -719,6 +704,10 @@ Public Class TimeLogsForm2
             _timeOut = Nothing
         End Sub
 
+        Public Sub ClearLogDateOut()
+            DateOut = DateIn
+        End Sub
+
         Public Sub Added(primaryKey As Integer)
             RowID = primaryKey
         End Sub
@@ -750,15 +739,13 @@ Public Class TimeLogsForm2
 
         BindGridCurrentCellChanged()
 
-        _balloonToolTips = New List(Of ToolTip)
-
         _useShiftSchedulePolicy = GetShiftSchedulePolicy()
 
     End Sub
 
     Private Sub TimeLogsForm2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
-
+        InfoBalloon(, , lblFormTitle, , , 1)
     End Sub
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
@@ -885,9 +872,23 @@ Public Class TimeLogsForm2
 
     Private Sub btnDeleteAll_Click(sender As Object, e As EventArgs) Handles btnDeleteAll.Click
 
+        UnbindGridCurrentCellChanged()
+
+        Dim models = GridRowToTimeLogModels(grid)
+        For Each model In models
+            model.ClearLogTime()
+            model.ClearLogDateOut()
+        Next
+
+        RefreshDataSource(grid, models.ToList())
+
+        ToSaveCountChanged()
+
+        BindGridCurrentCellChanged()
+
     End Sub
 
-    Private Sub DateFilter_ValueChanged(sender As Object, e As EventArgs) _
+    Private Async Sub DateFilter_ValueChanged(sender As Object, e As EventArgs) _
         Handles dtpDateFrom.ValueChanged, dtpDateTo.ValueChanged
 
         Dim dtp = DirectCast(sender, DateTimePicker)
@@ -901,7 +902,7 @@ Public Class TimeLogsForm2
 
         End If
 
-        ReloadAsync(start, finish)
+        Await ReloadAsync(start, finish)
     End Sub
 
     Private Sub dtpDateTo_ValueChanged(sender As Object, e As EventArgs) Handles dtpDateTo.ValueChanged
@@ -1130,12 +1131,6 @@ Public Class TimeLogsForm2
         ToolStripProgressBar1.Visible = True
     End Sub
 
-    Private Sub TimeLogsForm2_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        For Each tTip In _balloonToolTips
-            tTip.Dispose()
-        Next
-    End Sub
-
     Private Sub grid_CellMouseEnter(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellMouseEnter
         If Not e.RowIndex > -1 Then grid.Cursor = Cursors.Default : Return
 
@@ -1160,6 +1155,8 @@ Public Class TimeLogsForm2
     Private Sub ToolStripLabel1_Click(sender As Object, e As EventArgs)
 
     End Sub
+
+
 
 #End Region
 

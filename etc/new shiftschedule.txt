@@ -1,4 +1,0 @@
-
-INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('9', 'DefaultShiftHour', 'DutyShift', '', 'Yes', NULL, '2019-02-18 18:53:14', 1, '2019-02-18 18:53:21', 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
-INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('1', 'BreakHour', 'DutyShift', '', 'Yes', NULL, '2019-02-18 18:53:14', 1, '2019-02-18 18:53:21', 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
-INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('True', 'UseShiftSchedule', 'ShiftPolicy', '', 'Yes', '', '2016-10-21 16:13:05', 1, '2016-04-19 17:47:13', 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();

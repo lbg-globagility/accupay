@@ -191,12 +191,18 @@ Public Class EmployeeTreeView
     End Sub
 
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+
+        If _presenter Is Nothing Then Return
+
         _presenter.FilterEmployees(TextBox1.Text, chkActive.Checked)
 
         RaiseEvent FiltersEmployee(e, New EventArgs)
     End Sub
 
-    Private Sub ChkActive_CheckedChanged(sender As Object, e As EventArgs) Handles chkActive.CheckedChanged
+    Private Sub ChkActiveOnly_CheckedChanged(sender As Object, e As EventArgs) Handles chkActive.CheckedChanged
+
+        If _presenter Is Nothing Then Return
+
         _presenter.FilterEmployees(TextBox1.Text, chkActive.Checked)
 
         RaiseEvent FiltersEmployee(e, New EventArgs)

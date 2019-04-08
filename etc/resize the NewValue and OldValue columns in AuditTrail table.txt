@@ -1,3 +1,0 @@
-ALTER TABLE `audittrail`
-	CHANGE COLUMN `OldValue` `OldValue` TEXT NULL DEFAULT '0' COMMENT 'old value of field' AFTER `ChangedRowID`,
-	CHANGE COLUMN `NewValue` `NewValue` TEXT NULL DEFAULT '0' COMMENT 'new value of field' AFTER `OldValue`;

@@ -8318,10 +8318,10 @@ Public Class EmployeeForm
 
             cboallowtype.ContextMenu = New ContextMenu
 
-            categallowID = EXECQUER("SELECT RowID FROM category WHERE OrganizationID=" & orgztnID & " AND CategoryName='" & "Allowance Type" & "' LIMIT 1;")
+            categallowID = EXECQUER("SELECT RowID FROM category WHERE OrganizationID=" & orgztnID & " AND CategoryName='" & ProductConstant.ALLOWANCE_TYPE_CATEGORY & "' LIMIT 1;")
 
             If Val(categallowID) = 0 Then
-                categallowID = INSUPD_category(, "Allowance Type")
+                categallowID = INSUPD_category(, ProductConstant.ALLOWANCE_TYPE_CATEGORY)
             End If
 
             enlistTheLists("SELECT CONCAT(COALESCE(p.PartNo,''),'@',p.RowID)" &
@@ -9047,7 +9047,7 @@ Public Class EmployeeForm
 
             .PartNo.HeaderText = "Allowance name"
 
-            .NameOfCategory = "Allowance Type"
+            .NameOfCategory = ProductConstant.ALLOWANCE_TYPE_CATEGORY
 
             If n_ProductControlForm.ShowDialog = Windows.Forms.DialogResult.OK Then
 

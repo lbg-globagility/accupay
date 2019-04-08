@@ -68,6 +68,8 @@ Public Class PayrollContext
 
     Public Overridable Property Allowances As DbSet(Of Allowance)
 
+    Public Overridable Property AllowanceItems As DbSet(Of AllowanceItem)
+
     Public Overridable Property Adjustments As DbSet(Of Adjustment)
 
     Public Overridable Property ActualAdjustments As DbSet(Of ActualAdjustment)
@@ -118,5 +120,4 @@ Public Class PayrollContext
             HasMany(Function(p) p.AllowanceItems).
             WithOne(Function(a) a.Paystub)
     End Sub
-
 End Class

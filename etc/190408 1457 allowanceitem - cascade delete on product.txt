@@ -1,0 +1,4 @@
+ALTER TABLE `allowanceitem`
+	DROP FOREIGN KEY IF EXISTS `FK_allowanceitem_product`;
+ALTER TABLE `allowanceitem`
+	ADD CONSTRAINT `FK_allowanceitem_product_AllowanceID` FOREIGN KEY (`AllowanceID`) REFERENCES `employeeallowance` (`RowID`) ON DELETE CASCADE;
