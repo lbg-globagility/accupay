@@ -25,6 +25,7 @@ Partial Class EmployeeTreeView
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.chkActive = New System.Windows.Forms.CheckBox()
         Me.AccuPayEmployeeTreeView = New AccuPay.AccuPayTreeView()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
@@ -36,7 +37,7 @@ Partial Class EmployeeTreeView
         Me.TextBox1.Dock = System.Windows.Forms.DockStyle.Top
         Me.TextBox1.Location = New System.Drawing.Point(0, 0)
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(156, 20)
+        Me.TextBox1.Size = New System.Drawing.Size(165, 20)
         Me.TextBox1.TabIndex = 0
         '
         'Label1
@@ -44,27 +45,39 @@ Partial Class EmployeeTreeView
         Me.Label1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Label1.Location = New System.Drawing.Point(0, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(156, 13)
+        Me.Label1.Size = New System.Drawing.Size(165, 13)
         Me.Label1.TabIndex = 4
         Me.Label1.Text = "Search"
         '
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.AccuPayEmployeeTreeView)
+        Me.Panel1.Controls.Add(Me.chkActive)
         Me.Panel1.Controls.Add(Me.Panel2)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(0, 13)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(156, 191)
+        Me.Panel1.Size = New System.Drawing.Size(165, 145)
         Me.Panel1.TabIndex = 5
+        '
+        'chkActive
+        '
+        Me.chkActive.AutoSize = True
+        Me.chkActive.Dock = System.Windows.Forms.DockStyle.Top
+        Me.chkActive.Location = New System.Drawing.Point(0, 28)
+        Me.chkActive.Name = "chkActive"
+        Me.chkActive.Size = New System.Drawing.Size(165, 17)
+        Me.chkActive.TabIndex = 3
+        Me.chkActive.Text = "Show all"
+        Me.chkActive.UseVisualStyleBackColor = True
         '
         'AccuPayEmployeeTreeView
         '
         Me.AccuPayEmployeeTreeView.CheckBoxes = True
         Me.AccuPayEmployeeTreeView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.AccuPayEmployeeTreeView.Location = New System.Drawing.Point(0, 28)
+        Me.AccuPayEmployeeTreeView.Location = New System.Drawing.Point(0, 45)
         Me.AccuPayEmployeeTreeView.Name = "AccuPayEmployeeTreeView"
-        Me.AccuPayEmployeeTreeView.Size = New System.Drawing.Size(156, 163)
+        Me.AccuPayEmployeeTreeView.Size = New System.Drawing.Size(165, 100)
         Me.AccuPayEmployeeTreeView.TabIndex = 1
         '
         'Panel2
@@ -73,7 +86,7 @@ Partial Class EmployeeTreeView
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(156, 28)
+        Me.Panel2.Size = New System.Drawing.Size(165, 28)
         Me.Panel2.TabIndex = 2
         '
         'EmployeeTreeView
@@ -84,8 +97,9 @@ Partial Class EmployeeTreeView
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.Label1)
         Me.Name = "EmployeeTreeView"
-        Me.Size = New System.Drawing.Size(156, 204)
+        Me.Size = New System.Drawing.Size(165, 158)
         Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
@@ -97,4 +111,5 @@ Partial Class EmployeeTreeView
     Friend WithEvents Label1 As Label
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
+    Friend WithEvents chkActive As CheckBox
 End Class

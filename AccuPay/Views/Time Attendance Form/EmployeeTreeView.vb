@@ -1,11 +1,8 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
-Imports AccuPay.Tools
-Imports Microsoft.EntityFrameworkCore
-Imports System.Collections.ObjectModel
-Imports System.Data.Entity
 Imports System.Threading.Tasks
+Imports AccuPay.Entity
+Imports Microsoft.EntityFrameworkCore
 
 Public Class EmployeeTreeView
 
@@ -182,6 +179,31 @@ Public Class EmployeeTreeView
 
 #End Region
 
+#Region "EventHandlers"
+
+    Private Sub EmployeeTreeView_Load(sender As Object, e As EventArgs) Handles Me.Load
+        If DesignMode Then
+            Return
+        End If
+
+        _presenter.Load()
+        AddHandler AccuPayEmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
+    End Sub
+
+    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+        _presenter.FilterEmployees(TextBox1.Text, chkActive.Checked)
+
+        RaiseEvent FiltersEmployee(e, New EventArgs)
+    End Sub
+
+    Private Sub ChkActive_CheckedChanged(sender As Object, e As EventArgs) Handles chkActive.CheckedChanged
+        _presenter.FilterEmployees(TextBox1.Text, chkActive.Checked)
+
+        RaiseEvent FiltersEmployee(e, New EventArgs)
+    End Sub
+
+#End Region
+
     Private Class EmployeeTreeViewPresenter
 
         Private _employees As IList(Of Employee)
@@ -212,7 +234,9 @@ Public Class EmployeeTreeView
             _divisions = LoadDivisions()
             _employees = LoadEmployees()
 
-            _view.ShowEmployees(_divisions, _employees)
+            Dim initialEmployees = _employees.Where(AddressOf IsEmployee).ToList()
+
+            _view.ShowEmployees(_divisions, initialEmployees)
         End Sub
 
         Private Function LoadDivisions() As IList(Of Division)
@@ -234,7 +258,7 @@ Public Class EmployeeTreeView
             End Using
         End Function
 
-        Public Async Sub FilterEmployees(needle As String)
+        Public Async Sub FilterEmployees(needle As String, isActiveOnly As Boolean)
             Dim match =
                 Function(employee As Employee) As Boolean
                     needle = needle.ToLower
@@ -246,9 +270,18 @@ Public Class EmployeeTreeView
                     Return contains Or containsReverseName Or hasThisKindOfEmployeeNo
                 End Function
 
+            Dim filterActive =
+                Function(employee As Employee)
+                    If isActiveOnly Then
+                        Return True
+                    Else
+                        Return IsEmployee(employee)
+                    End If
+                End Function
+
             Dim employees = Await Task.Run(
                 Function()
-                    Return _employees.Where(match).ToList()
+                    Return _employees.Where(match).Where(filterActive).ToList()
                 End Function)
 
             _view.ShowEmployees(_divisions, employees)
@@ -283,6 +316,10 @@ Public Class EmployeeTreeView
             End If
         End Sub
 
+        Private Function IsEmployee(employee As Employee) As Boolean
+            Return employee.EmploymentStatus <> "Resigned" AndAlso employee.EmploymentStatus <> "Terminated"
+        End Function
+
         Private Sub EmployeeListRemover(employee As Employee, list As IList(Of Employee))
             Dim isExists = list.Any(Function(e) Nullable.Equals(e.RowID, employee.RowID))
             If isExists Then
@@ -291,24 +328,5 @@ Public Class EmployeeTreeView
         End Sub
 
     End Class
-
-#Region "EventHandlers"
-
-    Private Sub EmployeeTreeView_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If DesignMode Then
-            Return
-        End If
-
-        _presenter.Load()
-        AddHandler AccuPayEmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
-    End Sub
-
-    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
-        _presenter.FilterEmployees(TextBox1.Text)
-
-        RaiseEvent FiltersEmployee(e, New EventArgs)
-    End Sub
-
-#End Region
 
 End Class
