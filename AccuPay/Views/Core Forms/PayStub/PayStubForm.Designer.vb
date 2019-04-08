@@ -3856,6 +3856,7 @@ Partial Class PayStubForm
         Me.TabControl3.SelectedIndex = 0
         Me.TabControl3.Size = New System.Drawing.Size(291, 141)
         Me.TabControl3.TabIndex = 238
+        Me.TabControl3.Visible = False
         '
         'tbpleavebal
         '

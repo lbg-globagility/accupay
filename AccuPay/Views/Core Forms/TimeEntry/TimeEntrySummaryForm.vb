@@ -5,6 +5,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
+Imports AccuPay.Helpers
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports log4net
@@ -64,8 +65,10 @@ Public Class TimeEntrySummaryForm
 
         _employeeRepository = New EmployeeRepository
 
-        _calculateBreakTimeLateHours = GetBreakTimeLateHoursPolicy()
-        _useNewShift = GetNewShiftSchedulePolicy()
+
+        Dim policy As New PolicyHelper
+        _calculateBreakTimeLateHours = policy.ComputeBreakTimeLate
+        _useNewShift = policy.UseShiftSchedule
 
         Dim loadEmployeesTask = LoadEmployees()
         Dim loadPayPeriodsTask = LoadPayPeriods()
@@ -87,28 +90,6 @@ Public Class TimeEntrySummaryForm
                             ToList()
         End Using
 
-    End Function
-
-    Private Function GetBreakTimeLateHoursPolicy() As Boolean
-        Using context = New PayrollContext()
-
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            Dim policy = New TimeEntryPolicy(settings)
-
-            Return policy.ComputeBreakTimeLate
-        End Using
-    End Function
-
-    Private Function GetNewShiftSchedulePolicy() As Boolean
-        Using context = New PayrollContext()
-
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            Dim policy = New TimeEntryPolicy(settings)
-
-            Return policy.UseShiftSchedule
-        End Using
     End Function
 
     Private Async Function LoadEmployees() As Task

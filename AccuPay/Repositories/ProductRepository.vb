@@ -8,13 +8,11 @@ Namespace Global.AccuPay.Repository
 
     Public Class ProductRepository
 
-        Private Shared ReadOnly LOAN_TYPE_CATEGORY As String = "Loan Type"
-
 
         Public Async Function GetLoanTypes() _
             As Task(Of IEnumerable(Of Product))
 
-            Dim categoryName = LOAN_TYPE_CATEGORY
+            Dim categoryName = ProductConstant.LOAN_TYPE_CATEGORY
 
             Dim category = Await GetOrCreateCategoryByName(categoryName)
             Return Await GetProductsByCategory(category.RowID)
@@ -49,7 +47,7 @@ Namespace Global.AccuPay.Repository
                 product.PartNo = loanName.Trim()
                 product.Name = loanName.Trim()
 
-                product.Category = LOAN_TYPE_CATEGORY
+                product.Category = ProductConstant.LOAN_TYPE_CATEGORY
 
                 product.Created = Date.Now
                 product.CreatedBy = z_User
