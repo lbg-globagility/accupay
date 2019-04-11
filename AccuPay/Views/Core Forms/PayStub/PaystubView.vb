@@ -3,7 +3,6 @@
 Imports System.ComponentModel
 Imports AccuPay.Entity
 Imports AccuPay.Loans
-Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
 
 Public Class PaystubView
@@ -18,6 +17,8 @@ Public Class PaystubView
 
     Public Event ToggleActual()
 
+    Private _adjustmentTypes As ICollection(Of String)
+
     Private WithEvents _adjustmentSource As BindingSource
 
     Public Sub New()
@@ -28,6 +29,10 @@ Public Class PaystubView
         _adjustmentSource = New BindingSource With {
             .AllowNew = True
         }
+    End Sub
+
+    Public Sub SetAdjustmentTypes(adjustmentTypes As ICollection(Of String))
+        _adjustmentTypes = adjustmentTypes
     End Sub
 
     Public Sub ShowPaystubs(paystubs As IList(Of Paystub))
@@ -169,7 +174,7 @@ Public Class PaystubView
         _adjustmentSource.DataSource = adjustmentModels
     End Sub
 
-    Private Sub dataGridView1_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs)
+    Private Sub DgvAdjustments_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvAdjustments.EditingControlShowing
         Dim column As Integer = dgvAdjustments.CurrentCell.ColumnIndex
         Dim headerText As String = dgvAdjustments.Columns(column).HeaderText
 
@@ -178,11 +183,32 @@ Public Class PaystubView
 
             If (tb IsNot Nothing) Then
                 tb.AutoCompleteMode = AutoCompleteMode.SuggestAppend
-                'tb.AutoCompleteCustomSource = AutoCompleteLoad()
+                tb.AutoCompleteCustomSource = AutoCompleteLoad()
                 tb.AutoCompleteSource = AutoCompleteSource.CustomSource
             End If
+        ElseIf (headerText.Equals("Amount")) Then
+            Dim tb As TextBox = DirectCast(e.Control, TextBox)
+
+            Dim row = DirectCast(dgvAdjustments.CurrentRow.DataBoundItem, AdjustmentModel)
+
+            tb.Text = If(row?.Amount.ToString(), "0")
+
+            e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
         End If
     End Sub
+
+    Private Sub DgvAdjustments_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvAdjustments.DataError
+        Dim model = DirectCast(dgvAdjustments.Rows(e.RowIndex).DataBoundItem, AdjustmentModel)
+        model.Amount = 0
+
+        e.Cancel = False
+    End Sub
+
+    Public Function AutoCompleteLoad() As AutoCompleteStringCollection
+        Dim collection = New AutoCompleteStringCollection()
+        collection.AddRange(_adjustmentTypes.ToArray())
+        Return collection
+    End Function
 
     Private Sub NewPayStubForm_Load() Handles Me.Load
         dgvTimeEntries.AutoGenerateColumns = False

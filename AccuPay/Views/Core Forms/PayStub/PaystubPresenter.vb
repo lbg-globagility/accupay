@@ -24,6 +24,7 @@ Public Class PaystubPresenter
 
     Private Async Sub OnInit() Handles _view.Init
         Await LoadPayperiods()
+        Await LoadAdjustmentTypes()
     End Sub
 
     Private Async Function LoadPayperiods() As Task
@@ -34,6 +35,14 @@ Public Class PaystubPresenter
         End Using
 
         _view.ShowPayperiods(payperiods)
+    End Function
+
+    Private Async Function LoadAdjustmentTypes() As Task
+        Using repository = New Repository()
+            Dim adjustmentTypes = Await repository.GetAdjustmentTypes()
+
+            _view.SetAdjustmentTypes(adjustmentTypes.Select(Function(a) a.PartNo).ToList())
+        End Using
     End Function
 
     Private Async Sub OnPayperiodSelected(payperiod As PayPeriod) Handles _view.SelectPayperiod
@@ -155,6 +164,14 @@ Public Class PaystubPresenter
             Dim query = _context.Adjustments.
                 Include(Function(a) a.Product).
                 Where(Function(t) Nullable.Equals(t.PaystubID, paystub.RowID))
+
+            Return Await query.ToListAsync()
+        End Function
+
+        Public Async Function GetAdjustmentTypes() As Task(Of IList(Of Product))
+            Dim query = _context.Products.
+                Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                Where(Function(p) p.Category = "Adjustment Type")
 
             Return Await query.ToListAsync()
         End Function
