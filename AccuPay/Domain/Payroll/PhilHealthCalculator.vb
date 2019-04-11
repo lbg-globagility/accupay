@@ -22,50 +22,28 @@ Namespace Global.AccuPay.Payroll
         End Sub
 
         Public Sub Calculate(settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, allowances As ICollection(Of Allowance))
-            If salary.PhilHealthDeduction = 0 Then
-                paystub.PhilHealthEmployeeShare = 0
-                paystub.PhilHealthEmployerShare = 0
-                Return
-            End If
+
+            Dim totalContribution = 0D
 
             Dim deductionSchedule = employee.PhilHealthSchedule
 
-            Dim philHealthCalculation = settings.GetEnum(
-                "PhilHealth.CalculationBasis",
-                PhilHealthCalculationBasis.BasicSalary)
 
-            Dim isPhilHealthProrated =
-                (philHealthCalculation = PhilHealthCalculationBasis.Earnings) Or
-                (philHealthCalculation = PhilHealthCalculationBasis.GrossPay)
+            If salary.AutoComputePhilHealthContribution = False Then
 
-            Dim totalContribution = 0D
-            If philHealthCalculation = PhilHealthCalculationBasis.BasicSalary Then
-                ' If philHealth calculation is based on the basic salary, get it from the salary record
-                totalContribution = salary.PhilHealthDeduction
-            ElseIf philHealthCalculation = PhilHealthCalculationBasis.BasicAndEcola Then
-                totalContribution = salary.PhilHealthDeduction
-
-                Dim ecolas = allowances.Any(Function(ea) ea.Product.PartNo.ToLower() = ecolaName)
-                If ecolas Then
-                    Dim ecola = allowances.FirstOrDefault(Function(ea) ea.Product.PartNo.ToLower() = ecolaName)
-
-                    Dim phHSetting = settings.GetSublist("PhilHealth")
-                    Dim rate = phHSetting.GetDecimal("Rate") / 100
-
-                    Dim ecolaPhHContribAmount = (ecola.Amount * (employee.WorkDaysPerYear / CalendarConstants.MonthsInAYear)) * rate
-                    totalContribution += ecolaPhHContribAmount
+                If salary.PhilHealthDeduction = 0 Then
+                    paystub.PhilHealthEmployeeShare = 0
+                    paystub.PhilHealthEmployerShare = 0
+                    Return
                 End If
 
-            ElseIf isPhilHealthProrated Then
-                Dim basisPay = 0D
+                'this happens when it is overriden with custom amount
+                'the employee and the employer share will be computed below
+                'based on the totalContribution
+                totalContribution = salary.PhilHealthDeduction
 
-                If philHealthCalculation = PhilHealthCalculationBasis.Earnings Then
-                    basisPay = If(previousPaystub?.TotalEarnings, 0) + paystub.TotalEarnings
-                ElseIf philHealthCalculation = PhilHealthCalculationBasis.GrossPay Then
-                    basisPay = If(previousPaystub?.GrossPay, 0) + paystub.GrossPay
-                End If
-
-                totalContribution = ComputePhilHealth(basisPay, settings)
+            Else
+                'Auto compute = true
+                totalContribution = GetTotalContribution(settings, salary, paystub, previousPaystub, employee, allowances, totalContribution)
             End If
 
             Dim halfContribution = AccuMath.Truncate(totalContribution / 2, 2)
@@ -111,6 +89,57 @@ Namespace Global.AccuPay.Payroll
                 End If
             End If
         End Sub
+
+        Private Function GetTotalContribution(settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, allowances As ICollection(Of Allowance), totalContribution As Decimal) As Decimal
+            Dim philHealthCalculation = settings.GetEnum(
+                            "PhilHealth.CalculationBasis",
+                            PhilHealthCalculationBasis.BasicSalary)
+
+            Dim isPhilHealthProrated =
+                (philHealthCalculation = PhilHealthCalculationBasis.Earnings) Or
+                (philHealthCalculation = PhilHealthCalculationBasis.GrossPay)
+
+            Dim basisPay = 0D
+
+            If philHealthCalculation = PhilHealthCalculationBasis.BasicSalary Then
+
+                ' If philHealth calculation is based on the basic salary, get it from the salary record
+                basisPay = PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
+
+                totalContribution = ComputePhilHealth(basisPay, settings)
+
+
+            ElseIf philHealthCalculation = PhilHealthCalculationBasis.BasicAndEcola Then
+
+                basisPay = PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
+
+                totalContribution = ComputePhilHealth(basisPay, settings)
+
+                Dim ecolas = allowances.Any(Function(ea) ea.Product.PartNo.ToLower() = ecolaName)
+                If ecolas Then
+                    Dim ecola = allowances.FirstOrDefault(Function(ea) ea.Product.PartNo.ToLower() = ecolaName)
+
+                    Dim phHSetting = settings.GetSublist("PhilHealth")
+                    Dim rate = phHSetting.GetDecimal("Rate") / 100
+
+                    Dim ecolaPhHContribAmount = (ecola.Amount * (employee.WorkDaysPerYear / CalendarConstants.MonthsInAYear)) * rate
+                    totalContribution += ecolaPhHContribAmount
+                End If
+
+
+            ElseIf isPhilHealthProrated Then
+
+                If philHealthCalculation = PhilHealthCalculationBasis.Earnings Then
+                    basisPay = If(previousPaystub?.TotalEarnings, 0) + paystub.TotalEarnings
+                ElseIf philHealthCalculation = PhilHealthCalculationBasis.GrossPay Then
+                    basisPay = If(previousPaystub?.GrossPay, 0) + paystub.GrossPay
+                End If
+
+                totalContribution = ComputePhilHealth(basisPay, settings)
+            End If
+
+            Return totalContribution
+        End Function
 
         Private Function ComputePhilHealth(basis As Decimal, settings As ListOfValueCollection) As Decimal
             Dim philHealthSettings = settings.GetSublist("PhilHealth")
