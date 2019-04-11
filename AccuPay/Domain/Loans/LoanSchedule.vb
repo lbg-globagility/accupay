@@ -55,6 +55,9 @@ Namespace Global.AccuPay.Loans
 
         Public Property LoanName As String
 
+        <ForeignKey("LoanTypeID")>
+        Public Overridable Property LoanType As Product
+
         Public Overridable Property LoanTransactions As ICollection(Of LoanTransaction)
 
         <ForeignKey("EmployeeID")>

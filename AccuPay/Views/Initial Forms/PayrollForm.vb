@@ -40,7 +40,6 @@
                 End If
 
             Next
-
         Else
             Exit Sub
         End If
@@ -67,7 +66,6 @@
             Formname.Show()
             Formname.BringToFront()
             Formname.Focus()
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         End Try
@@ -109,18 +107,18 @@
 
     Sub reloadViewPrivilege()
 
-        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" & _
-                                             " RowID" & _
-                                             " FROM position_view" & _
+        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" &
+                                             " RowID" &
+                                             " FROM position_view" &
                                              " WHERE OrganizationID='" & orgztnID & "'" &
-                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" & _
+                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" &
                                              " OR DATE_FORMAT(LastUpd,@@date_format) = CURDATE()));")
 
         If hasPositionViewUpdate = "1" Then
 
-            position_view_table = retAsDatTbl("SELECT *" & _
-                                              " FROM position_view" & _
-                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" & _
+            position_view_table = retAsDatTbl("SELECT *" &
+                                              " FROM position_view" &
+                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" &
                                               " AND OrganizationID='" & orgztnID & "';")
 
         End If
@@ -152,7 +150,6 @@
 
         If _bool Then
             BonusToolStripMenuItem.Visible = (Not _bool)
-
         Else
 
         End If
@@ -160,8 +157,8 @@
     End Sub
 
     Private Sub PaystubExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PaystubExperimentalToolStripMenuItem.Click
-        ChangeForm(NewPayStubForm, "Employee Pay Slip")
-        previousForm = NewPayStubForm
+        ChangeForm(PaystubView, "Employee Pay Slip")
+        previousForm = PaystubView
     End Sub
 
 End Class
