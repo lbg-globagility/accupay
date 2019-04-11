@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
@@ -152,7 +153,6 @@ Public Class SalaryTab
         AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
     End Sub
 
-
     Private Sub ValidateSalaryRanges(salaries As List(Of PayrollSys.Salary))
         If salaries.Count <= 1 Then
             'lblWarning.Visible = False
@@ -227,7 +227,12 @@ Public Class SalaryTab
     Private Sub DisplaySalary()
         RemoveHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
         dtpEffectiveFrom.Value = _currentSalary.EffectiveFrom
-        dtpEffectiveTo.Value = If(_currentSalary.EffectiveTo, _currentSalary.EffectiveFrom.AddYears(100))
+        If _currentSalary.EffectiveTo.HasValue Then
+            dtpEffectiveTo.Value = _currentSalary.EffectiveTo.Value
+        Else
+            dtpEffectiveTo.Checked = False
+        End If
+
         txtAmount.Text = CStr(_currentSalary.BasicSalary)
         txtAllowance.Text = CStr(_currentSalary.AllowanceSalary)
         txtTotalSalary.Text = CStr(_currentSalary.TotalSalary)
@@ -282,7 +287,7 @@ Public Class SalaryTab
                     .AllowanceSalary = TypeTools.ParseDecimal(txtAllowance.Text)
                     .TotalSalary = (.BasicSalary + .AllowanceSalary)
                     .EffectiveFrom = dtpEffectiveFrom.Value
-                    .EffectiveTo = dtpEffectiveTo.Value
+                    .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
                     .PhilHealthDeduction = TypeTools.ParseDecimal(txtPhilHealth.Text)
                     .HDMFAmount = TypeTools.ParseDecimal(txtPagIbig.Text)
                     .DoPaySSSContribution = chkPaySSS.Checked
@@ -309,7 +314,6 @@ Public Class SalaryTab
                 End If
 
                 ShowBalloonInfo("Salary successfuly saved.", messageTitle)
-
             Catch ex As Exception
                 MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
                 Throw
@@ -446,4 +450,5 @@ Public Class SalaryTab
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, pbEmployee, 100, -20)
     End Sub
+
 End Class
