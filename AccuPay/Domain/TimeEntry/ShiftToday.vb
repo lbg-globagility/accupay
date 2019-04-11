@@ -12,6 +12,10 @@ Public Class CurrentShift
 
     Private _shiftSchedule2 As EmployeeDutySchedule
 
+    Public Overrides Function ToString() As String
+        Return $"{Start.ToString("yyyy-MM-dd hh:mm tt")} - {[End].ToString("yyyy-MM-dd hh:mm tt")} | {BreaktimeStart?.ToString("yyyy-MM-dd hh:mm tt")} - {BreaktimeEnd?.ToString("yyyy-MM-dd hh:mm tt")} "
+    End Function
+
     Public ReadOnly Property Start As Date
         Get
             Return ShiftPeriod.Start

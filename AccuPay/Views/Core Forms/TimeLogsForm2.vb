@@ -778,6 +778,14 @@ Public Class TimeLogsForm2
 
                 If model.ConsideredDelete Then
                     context.TimeLogs.Remove(timeLog)
+
+                    Dim duplicateTimeLogs = Await context.TimeLogs.
+                                                Where(Function(t) Nullable.Equals(t.EmployeeID, timeLog.EmployeeID)).
+                                                Where(Function(t) t.LogDate = timeLog.LogDate).
+                                                ToListAsync
+
+                    context.TimeLogs.RemoveRange(duplicateTimeLogs)
+
                     'model.Remove()
                 ElseIf model.IsExisting Then
                     timeLog.TimeIn = Calendar.ToTimespan(model.TimeIn)

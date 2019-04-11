@@ -497,7 +497,10 @@ Public Class DayCalculator
         If leaves.Any() AndAlso currentShift.IsWorkingDay Then
 
             Dim requiredHours = currentShift.WorkingHours
-            Dim missingHours = requiredHours - (timeEntry.TotalLeaveHours + timeEntry.RegularHours)
+            Dim missingHours = requiredHours - (timeEntry.TotalLeaveHours +
+                                                timeEntry.RegularHours +
+                                                timeEntry.LateHours +
+                                                timeEntry.UndertimeHours)
 
             Dim payRate = _payrateCalendar.Find(currentShift.Date)
 
