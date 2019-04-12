@@ -44,20 +44,21 @@ Namespace Global.AccuPay.Payroll
 
             Dim halfContribution = AccuMath.Truncate(totalContribution / 2, 2)
 
-            Dim philHealthNoRemainder = settings.GetBoolean("PhilHealth.Remainder", True)
+            Dim employeeShare = halfContribution
+            Dim employerShare = halfContribution
 
-            Dim remainder = 0D
-            ' Account for any division loss by putting the missing value to the employer share
-            If philHealthNoRemainder Then
+            Dim applyOddCent = settings.GetBoolean("PhilHealth.Remainder", True)
+            ' Account for any division loss by putting the missing value to the employer's share
+            If applyOddCent Then
                 Dim expectedTotal = halfContribution * 2
+                Dim remainder As Decimal
 
                 If expectedTotal < totalContribution Then
                     remainder = totalContribution - expectedTotal
                 End If
-            End If
 
-            Dim employeeShare = halfContribution
-            Dim employerShare = halfContribution + remainder
+                employerShare += remainder
+            End If
 
             If employee.IsWeeklyPaid Then
                 Dim is_deduct_sched_to_thisperiod = If(
@@ -140,8 +141,8 @@ Namespace Global.AccuPay.Payroll
 
             ' Contribution should be bounded by the minimum and maximum
             Dim contribution = {{basis * rate, minimum}.Max(), maximum}.Min()
-            ' Truncate to the nearest cent
-            contribution = AccuMath.Truncate(contribution, 2)
+            ' Round to the nearest cent
+            contribution = AccuMath.CommercialRound(contribution)
 
             Return contribution
         End Function
