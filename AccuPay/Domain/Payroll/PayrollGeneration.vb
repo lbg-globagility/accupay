@@ -229,8 +229,8 @@ Public Class PayrollGeneration
             Dim socialSecurityCalculator = New SssCalculator(_socialSecurityBrackets)
             socialSecurityCalculator.Calculate(_settings, _paystub, _previousPaystub, _salary, _employee, _payPeriod)
 
-            Dim philHealthCalculator = New PhilHealthCalculator(_philHealthBrackets)
-            philHealthCalculator.Calculate(_settings, _salary, _paystub, _previousPaystub, _employee, _payPeriod, _allowances)
+            Dim philHealthCalculator = New PhilHealthCalculator(New PhilHealthPolicy(_settings), _philHealthBrackets)
+            philHealthCalculator.Calculate(_salary, _paystub, _previousPaystub, _employee, _payPeriod, _allowances)
 
             Dim hdmfCalculator = New HdmfCalculator()
             hdmfCalculator.Calculate(_salary, _paystub, _employee, _payPeriod)

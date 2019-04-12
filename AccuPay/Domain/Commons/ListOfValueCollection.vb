@@ -51,18 +51,6 @@ Public Class ListOfValueCollection
         Return If(GetStringValue(names.Item1, names.Item2), [default])
     End Function
 
-    Private Function GetStringValue(type As String, lic As String) As String
-        Dim value As ListOfValue = Nothing
-
-        If type Is Nothing Then
-            value = _values?.FirstOrDefault(Function(f) f.LIC = lic)
-        Else
-            value = _values?.FirstOrDefault(Function(f) f.LIC = lic And f.Type = type)
-        End If
-
-        Return value?.DisplayValue
-    End Function
-
     Public Function GetEnum(Of T As {Structure})(name As String, Optional [default] As T = Nothing) As T
         Dim names = Split(name)
         Return GetEnum(Of T)(names.Item1, names.Item2, [default])
@@ -98,12 +86,17 @@ Public Class ListOfValueCollection
         Return Convert.ToBoolean(value?.DisplayValue)
     End Function
 
-    Public Function GetDecimal(lic As String, Optional [default] As Decimal = 0) As Decimal
-        Return If(GetDecimalOrNull(lic), [default])
+    Public Function GetDecimal(name As String, Optional [default] As Decimal = 0) As Decimal
+        Dim names = Split(name)
+        Dim value = GetStringValue(names.Item1, names.Item2)
+
+        Return If(value IsNot Nothing, Decimal.Parse(value), [default])
     End Function
 
-    Public Function GetDecimalOrNull(lic As String) As Decimal?
-        Dim value = GetValue(lic)
+    Public Function GetDecimalOrNull(name As String) As Decimal?
+        Dim names = Split(name)
+        Dim value = GetStringValue(names.Item1, names.Item2)
+
         Return If(value IsNot Nothing, Decimal.Parse(value), Nothing)
     End Function
 
@@ -121,6 +114,18 @@ Public Class ListOfValueCollection
         End If
 
         Return New Tuple(Of String, String)(Nothing, Nothing)
+    End Function
+
+    Private Function GetStringValue(type As String, lic As String) As String
+        Dim value As ListOfValue = Nothing
+
+        If type Is Nothing Then
+            value = _values?.FirstOrDefault(Function(f) f.LIC = lic)
+        Else
+            value = _values?.FirstOrDefault(Function(f) f.LIC = lic And f.Type = type)
+        End If
+
+        Return value?.DisplayValue
     End Function
 
     Private Function GetListOfValue(type As String, lic As String) As ListOfValue

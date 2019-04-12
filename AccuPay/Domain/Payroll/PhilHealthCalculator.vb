@@ -13,15 +13,17 @@ Namespace Global.AccuPay.Payroll
             Public Const PerPayPeriod As String = "Per pay period"
         End Class
 
+        Private ReadOnly _policy As PhilHealthPolicy
         Private ReadOnly _philHealthBrackets As ICollection(Of PhilHealthBracket)
 
         Private Const EcolaName As String = "ecola"
 
-        Public Sub New(philHealthBrackets As ICollection(Of PhilHealthBracket))
+        Public Sub New(policy As PhilHealthPolicy, philHealthBrackets As ICollection(Of PhilHealthBracket))
+            _policy = policy
             _philHealthBrackets = philHealthBrackets
         End Sub
 
-        Public Sub Calculate(settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, allowances As ICollection(Of Allowance))
+        Public Sub Calculate(salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, allowances As ICollection(Of Allowance))
             ' Reset the PhilHealth to zero
             paystub.PhilHealthEmployeeShare = 0
             paystub.PhilHealthEmployerShare = 0
@@ -32,7 +34,7 @@ Namespace Global.AccuPay.Payroll
             ' Otherwise, we use whatever amount is set in the salary.
             If salary.AutoComputePhilHealthContribution Then
                 totalContribution = GetTotalContribution(
-                    settings, salary, paystub, previousPaystub, employee, allowances)
+                    salary, paystub, previousPaystub, employee, allowances)
             Else
                 totalContribution = salary.PhilHealthDeduction
             End If
@@ -47,9 +49,8 @@ Namespace Global.AccuPay.Payroll
             Dim employeeShare = halfContribution
             Dim employerShare = halfContribution
 
-            Dim applyOddCent = settings.GetBoolean("PhilHealth.Remainder", True)
             ' Account for any division loss by putting the missing value to the employer's share
-            If applyOddCent Then
+            If _policy.OddCentDifference Then
                 Dim expectedTotal = halfContribution * 2
                 Dim remainder As Decimal
 
@@ -83,16 +84,13 @@ Namespace Global.AccuPay.Payroll
             End If
         End Sub
 
-        Private Function GetTotalContribution(settings As ListOfValueCollection,
-                                              salary As Salary,
+        Private Function GetTotalContribution(salary As Salary,
                                               paystub As Paystub,
                                               previousPaystub As Paystub,
                                               employee As Employee,
                                               allowances As ICollection(Of Allowance)) As Decimal
 
-            Dim calculationBasis = settings.GetEnum(
-                "PhilHealth.CalculationBasis",
-                PhilHealthCalculationBasis.BasicSalary)
+            Dim calculationBasis = _policy.CalculationBasis
 
             Dim basisPay = 0D
 
@@ -127,17 +125,15 @@ Namespace Global.AccuPay.Payroll
 
             End If
 
-            Dim totalContribution = ComputePhilHealth(basisPay, settings)
+            Dim totalContribution = ComputePhilHealth(basisPay)
 
             Return totalContribution
         End Function
 
-        Private Function ComputePhilHealth(basis As Decimal, settings As ListOfValueCollection) As Decimal
-            Dim philHealthSettings = settings.GetSublist("PhilHealth")
-
-            Dim minimum = philHealthSettings.GetDecimal("MinimumContribution")
-            Dim maximum = philHealthSettings.GetDecimal("MaximumContribution")
-            Dim rate = philHealthSettings.GetDecimal("Rate") / 100
+        Private Function ComputePhilHealth(basis As Decimal) As Decimal
+            Dim minimum = _policy.MinimumContribution
+            Dim maximum = _policy.MaximumContribution
+            Dim rate = _policy.Rate / 100
 
             ' Contribution should be bounded by the minimum and maximum
             Dim contribution = {{basis * rate, minimum}.Max(), maximum}.Min()
