@@ -228,10 +228,9 @@ Public Class SalaryTab
         RemoveHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
         dtpEffectiveFrom.Value = _currentSalary.EffectiveFrom
 
+        dtpEffectiveTo.Checked = _currentSalary.EffectiveTo.HasValue
         If _currentSalary.EffectiveTo.HasValue Then
             dtpEffectiveTo.Value = _currentSalary.EffectiveTo.Value
-        Else
-            dtpEffectiveTo.Checked = False
         End If
 
         txtAmount.Text = CStr(_currentSalary.BasicSalary)
