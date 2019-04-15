@@ -341,9 +341,11 @@
     <Compile Include="Domain\Commons\Enums.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
-    <Compile Include="Domain\Commons\SemiMonthlyAllowanceCalculator.vb" />
+    <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
+    <Compile Include="Domain\Payroll\SemiMonthlyAllowanceCalculator.vb" />
     <Compile Include="Domain\Leaves\LeaveConvertible.vb" />
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
+    <Compile Include="Domain\Payroll\PhilHealthPolicy.vb" />
     <Compile Include="Domain\TimeLogs\BreakTimeBracketHelper.vb" />
     <Compile Include="Domain\TimeLogs\BreakTimeBracket.vb" />
     <Compile Include="Domain\TimeLogs\Parser\TimelogRegexParser.vb" />

@@ -227,18 +227,23 @@ Public Class SalaryTab
     Private Sub DisplaySalary()
         RemoveHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
         dtpEffectiveFrom.Value = _currentSalary.EffectiveFrom
+
+        dtpEffectiveTo.Checked = _currentSalary.EffectiveTo.HasValue
         If _currentSalary.EffectiveTo.HasValue Then
             dtpEffectiveTo.Value = _currentSalary.EffectiveTo.Value
-        Else
-            dtpEffectiveTo.Checked = False
         End If
 
         txtAmount.Text = CStr(_currentSalary.BasicSalary)
         txtAllowance.Text = CStr(_currentSalary.AllowanceSalary)
         txtTotalSalary.Text = CStr(_currentSalary.TotalSalary)
-        txtPhilHealth.Text = CStr(_currentSalary.PhilHealthDeduction)
-        txtPagIbig.Text = CStr(_currentSalary.HDMFAmount)
+
         chkPaySSS.Checked = _currentSalary.DoPaySSSContribution
+
+        chkPayPhilHealth.Checked = _currentSalary.AutoComputePhilHealthContribution
+        txtPhilHealth.Text = CStr(_currentSalary.PhilHealthDeduction)
+
+        ChkPagIbig.Checked = _currentSalary.AutoComputeHDMFContribution
+        txtPagIbig.Text = CStr(_currentSalary.HDMFAmount)
 
         AddHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
     End Sub
@@ -255,7 +260,7 @@ Public Class SalaryTab
             .PositionID = _employee.PositionID,
             .HDMFAmount = StandardPagIbigContribution,
             .EffectiveFrom = Date.Today,
-            .EffectiveTo = .EffectiveFrom.AddYears(100)
+            .EffectiveTo = Nothing
         }
 
         DisableSalaryGrid()
@@ -281,16 +286,17 @@ Public Class SalaryTab
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         Using context = New PayrollContext()
             Try
-
                 With _currentSalary
+                    .EffectiveFrom = dtpEffectiveFrom.Value
+                    .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
                     .BasicSalary = TypeTools.ParseDecimal(txtAmount.Text)
                     .AllowanceSalary = TypeTools.ParseDecimal(txtAllowance.Text)
                     .TotalSalary = (.BasicSalary + .AllowanceSalary)
-                    .EffectiveFrom = dtpEffectiveFrom.Value
-                    .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
-                    .PhilHealthDeduction = TypeTools.ParseDecimal(txtPhilHealth.Text)
-                    .HDMFAmount = TypeTools.ParseDecimal(txtPagIbig.Text)
                     .DoPaySSSContribution = chkPaySSS.Checked
+                    .AutoComputePhilHealthContribution = chkPayPhilHealth.Checked
+                    .PhilHealthDeduction = TypeTools.ParseDecimal(txtPhilHealth.Text)
+                    .AutoComputeHDMFContribution = ChkPagIbig.Checked
+                    .HDMFAmount = TypeTools.ParseDecimal(txtPagIbig.Text)
                 End With
 
                 If _currentSalary.RowID.HasValue Then
@@ -384,7 +390,6 @@ Public Class SalaryTab
         End If
 
         UpdateTotalSalary()
-        UpdatePhilHealth(monthlyRate)
     End Sub
 
     Private Sub txtAllowance_TextChanged(sender As Object, e As EventArgs) Handles txtAllowance.TextChanged
@@ -400,6 +405,7 @@ Public Class SalaryTab
         txtTotalSalary.Text = totalSalary.ToString
     End Sub
 
+    <Obsolete>
     Private Sub UpdatePhilHealth(monthlyRate As Decimal)
         Dim philHealthContribution = 0D
         If _philHealthDeductionType = "Formula" Then
@@ -418,6 +424,14 @@ Public Class SalaryTab
         End If
 
         txtPhilHealth.Text = CStr(philHealthContribution)
+    End Sub
+
+    Private Sub ChkPayPhilHealth_CheckedChanged(sender As Object, e As EventArgs) Handles chkPayPhilHealth.CheckedChanged
+        txtPhilHealth.Enabled = Not chkPayPhilHealth.Checked
+    End Sub
+
+    Private Sub ChkPagIbig_CheckedChanged(sender As Object, e As EventArgs) Handles ChkPagIbig.CheckedChanged
+        txtPagIbig.Enabled = Not ChkPagIbig.Checked
     End Sub
 
     Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click

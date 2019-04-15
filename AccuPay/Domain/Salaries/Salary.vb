@@ -59,11 +59,11 @@ Namespace Global.PayrollSys
         <Column("EffectiveDateTo")>
         Public Property EffectiveTo As Date?
 
-        Public Property OverrideDiscardSSSContrib As Boolean
-
-        Public Property OverrideDiscardPhilHealthContrib As Boolean
-
         Public Property DoPaySSSContribution As Boolean
+
+        Public Property AutoComputePhilHealthContribution As Boolean
+
+        Public Property AutoComputeHDMFContribution As Boolean
 
         Public ReadOnly Property IsIndefinite As Boolean
             Get

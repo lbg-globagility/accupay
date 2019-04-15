@@ -13,77 +13,53 @@ Namespace Global.AccuPay.Payroll
             Public Const PerPayPeriod As String = "Per pay period"
         End Class
 
+        Private ReadOnly _policy As PhilHealthPolicy
         Private ReadOnly _philHealthBrackets As ICollection(Of PhilHealthBracket)
 
-        Private ReadOnly ecolaName As String = "ecola"
+        Private Const EcolaName As String = "ecola"
 
-        Public Sub New(philHealthBrackets As ICollection(Of PhilHealthBracket))
+        Public Sub New(policy As PhilHealthPolicy, philHealthBrackets As ICollection(Of PhilHealthBracket))
+            _policy = policy
             _philHealthBrackets = philHealthBrackets
         End Sub
 
-        Public Sub Calculate(settings As ListOfValueCollection, salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, allowances As ICollection(Of Allowance))
-            If salary.PhilHealthDeduction = 0 Then
-                paystub.PhilHealthEmployeeShare = 0
-                paystub.PhilHealthEmployerShare = 0
-                Return
+        Public Sub Calculate(salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, allowances As ICollection(Of Allowance))
+            ' Reset the PhilHealth to zero
+            paystub.PhilHealthEmployeeShare = 0
+            paystub.PhilHealthEmployerShare = 0
+
+            Dim totalContribution As Decimal
+
+            ' If auto compute the PhilHealth is true, then we use the available formulas to compute the total contribution.
+            ' Otherwise, we use whatever amount is set in the salary.
+            If salary.AutoComputePhilHealthContribution Then
+                totalContribution = GetTotalContribution(
+                    salary, paystub, previousPaystub, employee, allowances)
+            Else
+                totalContribution = salary.PhilHealthDeduction
             End If
 
-            Dim deductionSchedule = employee.PhilHealthSchedule
-
-            Dim philHealthCalculation = settings.GetEnum(
-                "PhilHealth.CalculationBasis",
-                PhilHealthCalculationBasis.BasicSalary)
-
-            Dim isPhilHealthProrated =
-                (philHealthCalculation = PhilHealthCalculationBasis.Earnings) Or
-                (philHealthCalculation = PhilHealthCalculationBasis.GrossPay)
-
-            Dim totalContribution = 0D
-            If philHealthCalculation = PhilHealthCalculationBasis.BasicSalary Then
-                ' If philHealth calculation is based on the basic salary, get it from the salary record
-                totalContribution = salary.PhilHealthDeduction
-            ElseIf philHealthCalculation = PhilHealthCalculationBasis.BasicAndEcola Then
-                totalContribution = salary.PhilHealthDeduction
-
-                Dim ecolas = allowances.Any(Function(ea) ea.Product.PartNo.ToLower() = ecolaName)
-                If ecolas Then
-                    Dim ecola = allowances.FirstOrDefault(Function(ea) ea.Product.PartNo.ToLower() = ecolaName)
-
-                    Dim phHSetting = settings.GetSublist("PhilHealth")
-                    Dim rate = phHSetting.GetDecimal("Rate") / 100
-
-                    Dim ecolaPhHContribAmount = (ecola.Amount * (employee.WorkDaysPerYear / CalendarConstants.MonthsInAYear)) * rate
-                    totalContribution += ecolaPhHContribAmount
-                End If
-
-            ElseIf isPhilHealthProrated Then
-                Dim basisPay = 0D
-
-                If philHealthCalculation = PhilHealthCalculationBasis.Earnings Then
-                    basisPay = If(previousPaystub?.TotalEarnings, 0) + paystub.TotalEarnings
-                ElseIf philHealthCalculation = PhilHealthCalculationBasis.GrossPay Then
-                    basisPay = If(previousPaystub?.GrossPay, 0) + paystub.GrossPay
-                End If
-
-                totalContribution = ComputePhilHealth(basisPay, settings)
+            ' If totalContribution is zero, then the employee has no PhilHealth to pay
+            If totalContribution <= 0 Then
+                Return
             End If
 
             Dim halfContribution = AccuMath.Truncate(totalContribution / 2, 2)
 
-            Dim philHealthNoRemainder = settings.GetBoolean("PhilHealth.Remainder", True)
+            Dim employeeShare = halfContribution
+            Dim employerShare = halfContribution
 
-            Dim remainder = 0D
-            ' Account for any division loss by putting the missing value to the employer share
-            If philHealthNoRemainder Then
+            ' Account for any division loss by putting the missing value to the employer's share
+            If _policy.OddCentDifference Then
                 Dim expectedTotal = halfContribution * 2
+                Dim remainder As Decimal
 
                 If expectedTotal < totalContribution Then
                     remainder = totalContribution - expectedTotal
                 End If
-            End If
 
-            Dim employeeShare = halfContribution
-            Dim employerShare = halfContribution + remainder
+                employerShare += remainder
+            End If
 
             If employee.IsWeeklyPaid Then
                 Dim is_deduct_sched_to_thisperiod = If(
@@ -94,39 +70,80 @@ Namespace Global.AccuPay.Payroll
                 If is_deduct_sched_to_thisperiod Then
                     paystub.PhilHealthEmployeeShare = employeeShare
                     paystub.PhilHealthEmployerShare = employerShare
-                Else
-                    paystub.PhilHealthEmployeeShare = 0
-                    paystub.PhilHealthEmployerShare = 0
                 End If
             Else
+                Dim deductionSchedule = employee.PhilHealthSchedule
+
                 If IsPhilHealthPaidOnFirstHalf(deductionSchedule, payperiod) Or IsPhilHealthPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
                     paystub.PhilHealthEmployeeShare = employeeShare
                     paystub.PhilHealthEmployerShare = employerShare
                 ElseIf IsPhilHealthPaidPerPayPeriod(deductionSchedule) Then
                     paystub.PhilHealthEmployeeShare = employeeShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
                     paystub.PhilHealthEmployerShare = employerShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
-                Else
-                    paystub.PhilHealthEmployeeShare = 0
-                    paystub.PhilHealthEmployerShare = 0
                 End If
             End If
         End Sub
 
-        Private Function ComputePhilHealth(basis As Decimal, settings As ListOfValueCollection) As Decimal
-            Dim philHealthSettings = settings.GetSublist("PhilHealth")
+        Private Function GetTotalContribution(salary As Salary,
+                                              paystub As Paystub,
+                                              previousPaystub As Paystub,
+                                              employee As Employee,
+                                              allowances As ICollection(Of Allowance)) As Decimal
 
-            Dim minimum = philHealthSettings.GetDecimal("MinimumContribution")
-            Dim maximum = philHealthSettings.GetDecimal("MaximumContribution")
-            Dim rate = philHealthSettings.GetDecimal("Rate") / 100
+            Dim calculationBasis = _policy.CalculationBasis
+
+            Dim basisPay = 0D
+
+            ' If philHealth calculation is based on the basic salary, get it from the salary record
+            If calculationBasis = PhilHealthCalculationBasis.BasicSalary Then
+
+                basisPay = PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
+
+            ElseIf calculationBasis = PhilHealthCalculationBasis.BasicAndEcola Then
+
+                Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
+
+                Dim ecolas = allowances.
+                    Where(Function(ea) ea.Product.PartNo.ToLower() = EcolaName)
+
+                Dim ecolaPerMonth = 0D
+                If ecolas.Any() Then
+                    Dim ecola = ecolas.FirstOrDefault()
+
+                    ecolaPerMonth = ecola.Amount * (employee.WorkDaysPerYear / CalendarConstants.MonthsInAYear)
+                End If
+
+                basisPay = monthlyRate + ecolaPerMonth
+
+            ElseIf calculationBasis = PhilHealthCalculationBasis.Earnings Then
+
+                basisPay = If(previousPaystub?.TotalEarnings, 0) + paystub.TotalEarnings
+
+            ElseIf calculationBasis = PhilHealthCalculationBasis.GrossPay Then
+
+                basisPay = If(previousPaystub?.GrossPay, 0) + paystub.GrossPay
+
+            End If
+
+            Dim totalContribution = ComputePhilHealth(basisPay)
+
+            Return totalContribution
+        End Function
+
+        Private Function ComputePhilHealth(basis As Decimal) As Decimal
+            Dim minimum = _policy.MinimumContribution
+            Dim maximum = _policy.MaximumContribution
+            Dim rate = _policy.Rate / 100
 
             ' Contribution should be bounded by the minimum and maximum
             Dim contribution = {{basis * rate, minimum}.Max(), maximum}.Min()
-            ' Truncate to the nearest cent
-            contribution = AccuMath.Truncate(contribution, 2)
+            ' Round to the nearest cent
+            contribution = AccuMath.CommercialRound(contribution)
 
             Return contribution
         End Function
 
+        <Obsolete>
         Private Function FindMatchingBracket(amount As Decimal) As PhilHealthBracket
             Return _philHealthBrackets.FirstOrDefault(
                 Function(p) p.SalaryRangeFrom <= amount And p.SalaryRangeTo >= amount)

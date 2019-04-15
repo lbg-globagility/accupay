@@ -13,13 +13,26 @@ Namespace Global.AccuPay.Payroll
             Public Const PerPayPeriod As String = "Per pay period"
         End Class
 
-        Private Const PagibigEmployerAmount As Decimal = 100
+        Private Const StandardEmployeeContribution As Decimal = 100
+
+        Private Const StandardEmployerContribution As Decimal = 100
 
         Public Sub Calculate(salary As Salary, paystub As Paystub, employee As Employee, payperiod As PayPeriod)
-            Dim deductionSchedule = employee.PagIBIGSchedule
+            ' Reset HDMF contribution
+            paystub.HdmfEmployeeShare = 0
+            paystub.HdmfEmployerShare = 0
 
-            Dim employeeShare = salary.HDMFAmount
-            Dim employerShare = If(employeeShare = 0, 0, PagibigEmployerAmount)
+            Dim employeeShare As Decimal
+
+            ' If HDMF autocomputation is true, employee share is the Standard contribution.
+            ' Otherwise, use whatever is set in the hdmf contribution in the salary
+            If salary.AutoComputeHDMFContribution Then
+                employeeShare = StandardEmployeeContribution
+            Else
+                employeeShare = salary.HDMFAmount
+            End If
+
+            Dim employerShare = If(employeeShare = 0, 0, StandardEmployerContribution)
 
             If employee.IsWeeklyPaid Then
                 Dim isOnScheduleForDeduction = If(
@@ -30,11 +43,10 @@ Namespace Global.AccuPay.Payroll
                 If isOnScheduleForDeduction Then
                     paystub.HdmfEmployeeShare = employeeShare
                     paystub.HdmfEmployerShare = employerShare
-                Else
-                    paystub.HdmfEmployeeShare = 0
-                    paystub.HdmfEmployerShare = 0
                 End If
             Else
+                Dim deductionSchedule = employee.PagIBIGSchedule
+
                 If IsHdmfPaidOnFirstHalf(deductionSchedule, payperiod) Or
                     IsHdmfPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
 
@@ -43,9 +55,6 @@ Namespace Global.AccuPay.Payroll
                 ElseIf IsHdmfPaidPerPayPeriod(deductionSchedule) Then
                     paystub.HdmfEmployeeShare = employeeShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
                     paystub.HdmfEmployerShare = employerShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
-                Else
-                    paystub.HdmfEmployeeShare = 0
-                    paystub.HdmfEmployerShare = 0
                 End If
             End If
         End Sub

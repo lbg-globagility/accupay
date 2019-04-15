@@ -243,8 +243,8 @@ Public Class PayrollGeneration
             Dim socialSecurityCalculator = New SssCalculator(_socialSecurityBrackets)
             socialSecurityCalculator.Calculate(_settings, _paystub, _previousPaystub, _salary, _employee, _payPeriod)
 
-            Dim philHealthCalculator = New PhilHealthCalculator(_philHealthBrackets)
-            philHealthCalculator.Calculate(_settings, _salary, _paystub, _previousPaystub, _employee, _payPeriod, _allowances)
+            Dim philHealthCalculator = New PhilHealthCalculator(New PhilHealthPolicy(_settings), _philHealthBrackets)
+            philHealthCalculator.Calculate(_salary, _paystub, _previousPaystub, _employee, _payPeriod, _allowances)
 
             Dim hdmfCalculator = New HdmfCalculator()
             hdmfCalculator.Calculate(_salary, _paystub, _employee, _payPeriod)
@@ -403,7 +403,7 @@ Public Class PayrollGeneration
 
     Private Sub CalculateAllowances()
         Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payRates, _previousTimeEntries2)
-        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(_settings, _employee, _paystub, _payPeriod, _payRates, _timeEntries)
+        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payRates, _timeEntries)
 
         For Each allowance In _allowances
             Dim item = New AllowanceItem() With {
@@ -444,7 +444,7 @@ Public Class PayrollGeneration
 
     Private Sub CalculateTaxableAllowances()
         Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payRates, _previousTimeEntries2)
-        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(_settings, _employee, _paystub, _payPeriod, _payRates, _timeEntries)
+        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payRates, _timeEntries)
 
         For Each taxableAllowance In _taxableAllowances
             Dim item = New AllowanceItem() With {
@@ -673,12 +673,20 @@ Public Class PayrollGeneration
                     Sum(Function(t) t.BasicDayPay + t.LeavePay))
 
         ElseIf _employee.IsMonthly Or _employee.IsFixed Then
+
             Dim trueSalary = _salary.TotalSalary
             Dim basicPay = trueSalary / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
 
             Dim totalDeductions = _actualtimeentries.Sum(Function(t) t.LateDeduction + t.UndertimeDeduction + t.AbsentDeduction)
 
-            thirteenthMonthAmount = (basicPay - totalDeductions)
+            Dim additionalAmount As Decimal
+            If (_settings.GetBoolean("ThirteenthMonthPolicy.IsAllowancePaid")) Then
+
+                additionalAmount = _allowanceItems.Sum(Function(a) a.Amount)
+
+            End If
+
+            thirteenthMonthAmount = ((basicPay + additionalAmount) - totalDeductions)
         End If
 
         _paystub.ThirteenthMonthPay.BasicPay = thirteenthMonthAmount
