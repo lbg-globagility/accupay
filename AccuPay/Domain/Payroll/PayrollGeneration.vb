@@ -370,7 +370,7 @@ Public Class PayrollGeneration
 
     Private Sub CalculateAllowances()
         Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payRates, _previousTimeEntries2)
-        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(_settings, _employee, _paystub, _payPeriod, _payRates, _timeEntries)
+        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payRates, _timeEntries)
 
         For Each allowance In _allowances
             Dim item = New AllowanceItem() With {
@@ -411,7 +411,7 @@ Public Class PayrollGeneration
 
     Private Sub CalculateTaxableAllowances()
         Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payRates, _previousTimeEntries2)
-        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(_settings, _employee, _paystub, _payPeriod, _payRates, _timeEntries)
+        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payRates, _timeEntries)
 
         For Each taxableAllowance In _taxableAllowances
             Dim item = New AllowanceItem() With {
@@ -640,12 +640,20 @@ Public Class PayrollGeneration
                     Sum(Function(t) t.BasicDayPay + t.LeavePay))
 
         ElseIf _employee.IsMonthly Or _employee.IsFixed Then
+
             Dim trueSalary = _salary.TotalSalary
             Dim basicPay = trueSalary / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
 
             Dim totalDeductions = _actualtimeentries.Sum(Function(t) t.LateDeduction + t.UndertimeDeduction + t.AbsentDeduction)
 
-            thirteenthMonthAmount = (basicPay - totalDeductions)
+            Dim additionalAmount As Decimal
+            If (_settings.GetBoolean("ThirteenthMonthPolicy.IsAllowancePaid")) Then
+
+                additionalAmount = _allowanceItems.Sum(Function(a) a.Amount)
+
+            End If
+
+            thirteenthMonthAmount = ((basicPay + additionalAmount) - totalDeductions)
         End If
 
         _paystub.ThirteenthMonthPay.BasicPay = thirteenthMonthAmount
