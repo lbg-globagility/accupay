@@ -73,7 +73,8 @@ SELECT
     psa.ThirteenthMonthInclusion,
     psa.FirstTimeSalary,
     psa.HolidayPay,
-    es.BasicPay * (es.TrueSalary / es.Salary) AS `BasicPay`,
+    (es.Salary + es.UndeclaredSalary) / IF(e.EmployeeType='Daily',PAYFREQUENCY_DIVISOR(e.EmployeeType),PAYFREQUENCY_DIVISOR(pf.PayFrequencyType)) AS 'BasicPay',
+	 #es.BasicPay * (es.TrueSalary / es.Salary) AS 'BasicPay', !BasicPay for daiy is computed in vb code. maybe refactor this
     es.TrueSalary,
     IF(e.EmployeeType='Daily',PAYFREQUENCY_DIVISOR(e.EmployeeType),PAYFREQUENCY_DIVISOR(pf.PayFrequencyType)) AS PAYFREQUENCYDIVISOR,
     ete.*,
@@ -104,23 +105,23 @@ ON thirteenthmonthpay.PaystubID = psa.RowID
 LEFT JOIN (
     SELECT
         etea.RowID `eteRowID`,
-        SUM(etea.RegularHoursWorked) `RegularHoursWorked`,
+        SUM(et.RegularHoursWorked) `RegularHoursWorked`,
         SUM(etea.RegularHoursAmount) `RegularHoursAmount`,
-        SUM(etea.TotalHoursWorked) `TotalHoursWorked`,
-        SUM(etea.OvertimeHoursWorked) `OvertimeHoursWorked`,
+        SUM(et.TotalHoursWorked) `TotalHoursWorked`,
+        SUM(et.OvertimeHoursWorked) `OvertimeHoursWorked`,
         SUM(etea.OvertimeHoursAmount) `OvertimeHoursAmount`,
-        SUM(etea.UndertimeHours) `UndertimeHours`,
+        SUM(et.UndertimeHours) `UndertimeHours`,
         SUM(etea.UndertimeHoursAmount) `UndertimeHoursAmount`,
-        SUM(etea.NightDifferentialHours) `NightDifferentialHours`,
+        SUM(et.NightDifferentialHours) `NightDifferentialHours`,
         SUM(etea.NightDiffHoursAmount) `NightDiffHoursAmount`,
-        SUM(etea.NightDifferentialOTHours) `NightDifferentialOTHours`,
+        SUM(et.NightDifferentialOTHours) `NightDifferentialOTHours`,
         SUM(etea.NightDiffOTHoursAmount) `NightDiffOTHoursAmount`,
-        SUM(etea.HoursLate) `HoursLate`,
+        SUM(et.HoursLate) `HoursLate`,
         SUM(etea.HoursLateAmount) `HoursLateAmount`,
-        SUM(etea.VacationLeaveHours) `VacationLeaveHours`,
-        SUM(etea.SickLeaveHours) `SickLeaveHours`,
-        SUM(etea.MaternityLeaveHours) `MaternityLeaveHours`,
-        SUM(etea.OtherLeaveHours) `OtherLeaveHours`,
+        SUM(et.VacationLeaveHours) `VacationLeaveHours`,
+        SUM(et.SickLeaveHours) `SickLeaveHours`,
+        SUM(et.MaternityLeaveHours) `MaternityLeaveHours`,
+        SUM(et.OtherLeaveHours) `OtherLeaveHours`,
         SUM(etea.TotalDayPay) `TotalDayPay`,
         SUM(etea.Absent) `Absent`,
         SUM(etea.Leavepayment) `Leavepayment`,
@@ -134,7 +135,7 @@ LEFT JOIN (
         SUM(IFNULL(et.RegularHolidayHours, 0)) `RegularHolidayHours`,
         SUM(IFNULL(et.SpecialHolidayHours, 0)) `SpecialHolidayHours`,
         SUM(IFNULL(et.RestDayHours, 0)) `RestDayHours`
-    FROM employeetimeentryactual etea
+	FROM employeetimeentryactual etea
     INNER JOIN employeetimeentry et
     ON et.EmployeeID = etea.EmployeeID AND
         et.OrganizationID = etea.OrganizationID AND

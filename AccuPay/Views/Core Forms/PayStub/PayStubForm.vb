@@ -1489,7 +1489,7 @@ Public Class PayStubForm
             End If
 
             'Absent
-            txttotabsent.Text = 0.0
+            txttotabsent.Text = FormatNumber(ValNoComma((drow("AbsentHours"))), 2)
             txttotabsentamt.Text = FormatNumber(ValNoComma((drow("Absent"))), 2)
             'Tardiness / late
             txttottardi.Text = ValNoComma(drow("LateHours"))
@@ -1600,7 +1600,7 @@ Public Class PayStubForm
 
             psaItems = New SQL("CALL VIEW_paystubitemundeclared('" & ValNoComma(drow("RowID")) & "');").GetFoundRows.Tables(0)
 
-            Dim strdouble = ValNoComma(drow("TrueSalary")) / ValNoComma(drow("PAYFREQUENCYDIVISOR")) 'BasicPay
+            Dim strdouble = ValNoComma(drow("BasicPay")) 'BasicPay
 
             'Basic Pay
             txtempbasicpay_U.Text = FormatNumber(ValNoComma(strdouble), 2)
@@ -1675,7 +1675,7 @@ Public Class PayStubForm
             End If
 
             'Absent
-            txttotabsent_U.Text = 0.0
+            txttotabsent_U.Text = FormatNumber(ValNoComma((drow("AbsentHours"))), 2)
             txttotabsentamt_U.Text = FormatNumber(ValNoComma((drow("Absent"))), 2)
             'Tardiness / late
             txttottardi_U.Text = ValNoComma(drow("HoursLate"))

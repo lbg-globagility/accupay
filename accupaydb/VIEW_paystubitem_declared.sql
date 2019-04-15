@@ -120,7 +120,7 @@ SELECT
     psa.TotalAdjustments,
     psa.ThirteenthMonthInclusion,
     psa.FirstTimeSalary,
-    es.BasicPay,
+    psa.BasicPay, #es.BasicPay,
     es.Salary AS TrueSalary,
     IF(
         e.EmployeeType = 'Daily',
@@ -177,6 +177,7 @@ LEFT JOIN (
         SUM(etea.OtherLeaveHours) AS OtherLeaveHours,
         SUM(etea.TotalDayPay) AS TotalDayPay,
         SUM(etea.Absent) AS Absent,
+        SUM(etea.AbsentHours) AS AbsentHours,
         SUM(etea.Leavepayment) AS Leavepayment,
         SUM(agencyfee.DailyFee) `TotalAgencyFee`,
         SUM(etea.SpecialHolidayPay) `SpecialHolidayPay`,

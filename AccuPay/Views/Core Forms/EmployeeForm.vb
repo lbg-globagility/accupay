@@ -905,7 +905,7 @@ Public Class EmployeeForm
 
             emp_rcount += 1
             dgvEmp_RowIndex = 0
-            InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
+            If succeed Then InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
         Else 'UPDATE employee
 
             If dontUpdateEmp = 1 Then

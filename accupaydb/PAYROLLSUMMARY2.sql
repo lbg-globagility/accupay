@@ -60,6 +60,7 @@ WHERE pp.RowID = ps_PayPeriodID1
 INTO min_paydatefrom
      ,max_paydateto;
 
+
 IF is_keep_in_onesheet = TRUE THEN
 
 		SELECT
@@ -70,7 +71,13 @@ IF is_keep_in_onesheet = TRUE THEN
 				GetActualDailyRate(e.RowID, e.OrganizationID, paystub.PayFromDate),
 				GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
 			), decimal_size) `Rate`,
-		    ROUND(GetBasicPay(e.RowID, paystub.PayFromDate, paystub.PayToDate, psi_undeclared, IFNULL(ete.`TotalExpectedHours`, 0)), decimal_size) `BasicPay`,
+		    ROUND(GetBasicPay(
+			 				e.RowID,
+							paystub.PayFromDate,
+							paystub.PayToDate,
+							psi_undeclared,
+							paystub.BasicHours),
+							decimal_size) `BasicPay`,
 			ROUND(paystub.RegularHours, decimal_size) `RegularHours`,
 		    ROUND(IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay), decimal_size) `RegularPay`,
 			ROUND(paystub.OvertimeHours, decimal_size) `OvertimeHours`,
@@ -223,7 +230,13 @@ ELSE
 				GetActualDailyRate(e.RowID, e.OrganizationID, paystub.PayFromDate),
 				GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
 			), decimal_size) `Rate`,
-		    ROUND(GetBasicPay(e.RowID, paystub.PayFromDate, paystub.PayToDate, psi_undeclared, IFNULL(ete.`TotalExpectedHours`, 0)), decimal_size) `BasicPay`,
+		    ROUND(GetBasicPay(
+			 				e.RowID,
+							paystub.PayFromDate,
+							paystub.PayToDate,
+							psi_undeclared,
+							paystub.BasicHours),
+							decimal_size) `BasicPay`,
 			ROUND(paystub.RegularHours, decimal_size) `RegularHours`,
 		    ROUND(IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay), decimal_size) `RegularPay`,
 			ROUND(paystub.OvertimeHours, decimal_size) `OvertimeHours`,

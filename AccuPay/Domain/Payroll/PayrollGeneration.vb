@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
@@ -56,6 +57,8 @@ Public Class PayrollGeneration
 
     Private _timeEntries As ICollection(Of TimeEntry)
 
+    Private _employeeDutySchedules As ICollection(Of EmployeeDutySchedule)
+
     Private _payRates As IReadOnlyDictionary(Of Date, PayRate)
 
     Private _allowances As ICollection(Of Allowance)
@@ -67,6 +70,8 @@ Public Class PayrollGeneration
     Private _taxableAllowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
     Private _actualtimeentries As ICollection(Of ActualTimeEntry)
+
+    Private _policy As TimeEntryPolicy
 
     Sub New(employee As Employee,
             allWeeklyAllowances As DataTable,
@@ -105,6 +110,7 @@ Public Class PayrollGeneration
             Function(p) CBool(p.EmployeeID = _employee.RowID))
 
         _settings = New ListOfValueCollection(resources.ListOfValues)
+        _policy = New TimeEntryPolicy(_settings)
         _payPeriod = resources.PayPeriod
 
         _previousTimeEntries2 = resources.TimeEntries.
@@ -115,6 +121,13 @@ Public Class PayrollGeneration
             Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             Where(Function(t) _payPeriod.PayFromDate <= t.Date And t.Date <= _payPeriod.PayToDate).
             OrderBy(Function(t) t.Date).
+            ToList()
+
+
+        _employeeDutySchedules = resources.EmployeeDutySchedule.
+            Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
+            Where(Function(t) _payPeriod.PayFromDate <= t.DateSched AndAlso t.DateSched <= _payPeriod.PayToDate).
+            OrderBy(Function(t) t.DateSched).
             ToList()
 
         _actualtimeentries = resources.ActualTimeEntries.
@@ -188,6 +201,7 @@ Public Class PayrollGeneration
                 _paystub.BasicPay = AccuMath.CommercialRound((_salary.BasicSalary / 2), 2)
 
             ElseIf _employee.IsDaily Then
+
                 ComputeBasicHours()
 
                 _paystub.BasicPay = _timeEntries.Sum(Function(t) t.BasicDayPay)
@@ -290,18 +304,37 @@ Public Class PayrollGeneration
 
     Private Sub ComputeBasicHours()
         Dim basicHours = 0D
+        Dim useNewShiftSchedule = _policy.UseShiftSchedule
+
+        Dim shiftIsRestDay As Boolean = False
+        Dim isRestDayOffset As Boolean = False
+        Dim shiftWorkHours As Decimal = 0
+        Dim newShift As EmployeeDutySchedule = Nothing
 
         For Each timeEntry In _timeEntries
             Dim isDefaultRestDay =
                 (_employee.DayOfRest IsNot Nothing) AndAlso
                 (_employee.DayOfRest.Value - 1) = timeEntry.Date.DayOfWeek
 
-            Dim isRestDayOffset = If(timeEntry.ShiftSchedule?.IsRestDay, False)
+
+            If useNewShiftSchedule Then
+
+                newShift = _employeeDutySchedules.
+                    FirstOrDefault(Function(s) s.DateSched = timeEntry.Date)
+
+                isRestDayOffset = If(newShift?.IsRestDay, False)
+                shiftWorkHours = If(newShift?.WorkHours, 0)
+
+            Else
+
+                isRestDayOffset = If(timeEntry.ShiftSchedule?.IsRestDay, False)
+                shiftWorkHours = If(timeEntry.ShiftSchedule?.Shift?.WorkHours, 0)
+            End If
 
             Dim payrate = _payRates(timeEntry.Date)
             Dim isRestDay = isDefaultRestDay Xor isRestDayOffset
             If Not (isRestDay Or (timeEntry.TotalLeaveHours > 0) Or payrate.IsRegularHoliday Or payrate.IsSpecialNonWorkingHoliday) Then
-                basicHours += If(timeEntry.ShiftSchedule?.Shift?.WorkHours, 0)
+                basicHours += shiftWorkHours
             End If
         Next
 
