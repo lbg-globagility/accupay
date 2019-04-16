@@ -59,7 +59,7 @@ SELECT ps.RowID
 
 ,fs.`FilingStatus` `COL5`
 
-,(@basic_sal := esa.BasicPay) `EmployeeBasicSalary`
+,(@basic_sal := ps.BasicPay) `EmployeeBasicSalary`
 
 ,FORMAT(ps.RegularHours, 2) `COL6`
 ,(@act_regular := IF(e.EmployeeType = 'Fixed'
