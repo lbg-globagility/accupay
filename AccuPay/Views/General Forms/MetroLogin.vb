@@ -12,8 +12,6 @@ Public Class MetroLogin
 
         ReloadOrganization()
 
-        setAppropriateInterface()
-
         MyBase.OnLoad(e)
 
     End Sub
@@ -595,7 +593,7 @@ Public Class MetroLogin
 
     End Sub
 
-    Private Sub lnklblleave_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblleave.LinkClicked
+    Private Sub lnklblleave_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
 
         Dim n_LeaveForm As New LeaveForm
 
@@ -613,7 +611,7 @@ Public Class MetroLogin
 
     End Sub
 
-    Private Sub lnklblovertime_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblovertime.LinkClicked
+    Private Sub lnklblovertime_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
 
         Dim n_OverTimeForm As New OverTimeForm
 
@@ -631,7 +629,7 @@ Public Class MetroLogin
 
     End Sub
 
-    Private Sub lnklblobf_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblobf.LinkClicked
+    Private Sub lnklblobf_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
 
         Dim n_OBFForm As New OBFForm
 
@@ -649,33 +647,7 @@ Public Class MetroLogin
 
     End Sub
 
-    Private Sub setAppropriateInterface()
-
-        Dim sys_ownr As New SystemOwner
-
-        Dim current_system_owner As String = sys_ownr.CurrentSystemOwner
-
-        Dim allowed_systemowners = New String() {SystemOwner.Hyundai}
-
-        Dim disallowed_systemowners = New String() {SystemOwner.Goldwings, SystemOwner.Cinema2000, SystemOwner.DefaultOwner}
-
-        If disallowed_systemowners.Contains(current_system_owner) Then
-
-            Size = New Size(Size.Width, 319)
-            PhotoImages.Location = New Point(242, 89)
-            Panel1.Visible = False
-
-        ElseIf allowed_systemowners.Contains(current_system_owner) Then
-
-            Size = New Size(Size.Width, 371)
-            PhotoImages.Location = New Point(242, 89)
-            Panel1.Visible = True
-
-        End If
-
-    End Sub
-
-    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
+    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
 
         Dim my_time_entry As New ViewTimeEntryEmployeeLevel
 
