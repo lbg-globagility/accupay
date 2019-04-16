@@ -26,7 +26,9 @@ elv.RowID
 ,elv.`Status`
 FROM employeeleave elv
 WHERE elv.OrganizationID=elv_OrganizationID
-AND elv.EmployeeID=elv_EmployeeID;
+AND elv.EmployeeID=elv_EmployeeID
+ORDER BY elv.LeaveStartDate DESC, elv.LeaveEndDate DESC
+;
 
 
 
