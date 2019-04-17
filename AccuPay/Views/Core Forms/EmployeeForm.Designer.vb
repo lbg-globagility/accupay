@@ -11125,54 +11125,7 @@ Partial Class EmployeeForm
         CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip11.ResumeLayout(False)
-        Me.ToolStrip11.PerformLayout
-<<<<<<< HEAD
-        Me.tbpLoans.ResumeLayout(False)
-        Me.tbpLoans.PerformLayout
-        Me.Panel10.ResumeLayout(False)
-        Me.Panel10.PerformLayout
-        CType(Me.pbEmpPicLoan, System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvLoanList, System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip12.ResumeLayout(False)
-        Me.ToolStrip12.PerformLayout
-        Me.tbpLoanHist.ResumeLayout(False)
-        Me.tbpLoanHist.PerformLayout
-        Me.Panel9.ResumeLayout(False)
-        Me.Panel9.PerformLayout
-        Me.GroupBox3.ResumeLayout(False)
-        Me.GroupBox3.PerformLayout
-        CType(Me.pbEmpPicLoanhist, System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvloanhisto, System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip14.ResumeLayout(False)
-        Me.ToolStrip14.PerformLayout
-        Me.tbpPayslip.ResumeLayout(False)
-        Me.tbpPayslip.PerformLayout
-        Me.SplitContainer3.Panel1.ResumeLayout(False)
-        Me.SplitContainer3.Panel1.PerformLayout
-        Me.SplitContainer3.Panel2.ResumeLayout(False)
-        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).EndInit
-        Me.SplitContainer3.ResumeLayout(False)
-        CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).EndInit
-        Me.PanelPayslip.ResumeLayout(False)
-        Me.PanelPayslip.PerformLayout
-        CType(Me.dgvempallowans, System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvemploan, System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvempbonus, System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvpaystubitm, System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvetent, System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvempsal, System.ComponentModel.ISupportInitialize).EndInit
-        Me.TabControl1.ResumeLayout(False)
-        Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout
-        Me.TabPage4.ResumeLayout(False)
-        Me.TabPage4.PerformLayout
-        Me.TabPage5.ResumeLayout(False)
-        Me.TabPage5.PerformLayout
-        CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip16.ResumeLayout(False)
-        Me.ToolStrip16.PerformLayout
-=======
->>>>>>> master
+        Me.ToolStrip11.PerformLayout()
         Me.tbpempallow.ResumeLayout(False)
         Me.tbpempallow.PerformLayout
         Me.Panel6.ResumeLayout(False)
