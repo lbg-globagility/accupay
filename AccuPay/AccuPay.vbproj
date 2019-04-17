@@ -353,6 +353,10 @@
     <Compile Include="Domain\TimeLogs\ITimeAttendanceHelper.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelperNew.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
+    <Compile Include="Repositories\ContributionSchedule.vb" />
+    <Compile Include="Repositories\DivisionRepository.vb" />
+    <Compile Include="Repositories\JobLevelRepository.vb" />
+    <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Views\Core Forms\NewEmployeePositionForm.Designer.vb">
       <DependentUpon>NewEmployeePositionForm.vb</DependentUpon>

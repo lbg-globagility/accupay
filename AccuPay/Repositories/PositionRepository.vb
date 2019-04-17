@@ -8,6 +8,18 @@ Namespace Global.AccuPay.Repository
 
     Public Class PositionRepository
 
+        Public Async Function GetAllAsync() As Task(Of List(Of Position))
+
+            Using context As New PayrollContext
+
+                Return Await context.Positions.
+                                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                ToListAsync
+
+            End Using
+
+        End Function
+
         Public Async Function GetByIdAsync(positionId As Integer?) As Task(Of Position)
 
             Using context As New PayrollContext
@@ -57,21 +69,6 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-#Region "Private Functions"
-        Private Async Function GetCategoryId(categoryName As String) As Task(Of Integer?)
-
-            Using context = New PayrollContext()
-
-                Dim category = Await context.Categories.
-                                Where(Function(c) Nullable.Equals(c.OrganizationID, z_OrganizationID)).
-                                FirstOrDefaultAsync
-
-                Return category?.RowID
-
-            End Using
-
-        End Function
-
         Public Async Function SaveAsync(position As Position) As Task
 
             Using context As New PayrollContext
@@ -106,6 +103,21 @@ Namespace Global.AccuPay.Repository
                 context.Remove(loanSchedule)
 
                 Await context.SaveChangesAsync()
+
+            End Using
+
+        End Function
+
+#Region "Private Functions"
+        Private Async Function GetCategoryId(categoryName As String) As Task(Of Integer?)
+
+            Using context = New PayrollContext()
+
+                Dim category = Await context.Categories.
+                                Where(Function(c) Nullable.Equals(c.OrganizationID, z_OrganizationID)).
+                                FirstOrDefaultAsync
+
+                Return category?.RowID
 
             End Using
 

@@ -22,12 +22,17 @@ Partial Class NewEmployeePositionForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.PositionTreeView = New System.Windows.Forms.TreeView()
         Me.lblFormTitle = New System.Windows.Forms.Label()
         Me.PositionTabPage = New System.Windows.Forms.TabPage()
         Me.PositionGroupBox = New System.Windows.Forms.GroupBox()
+        Me.PositionUserControl1 = New AccuPay.PositionUserControl()
         Me.EmployeeDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MiddleName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
         Me.NewPositionToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -40,6 +45,7 @@ Partial Class NewEmployeePositionForm
         Me.ToolStripButton13 = New System.Windows.Forms.ToolStripButton()
         Me.miniToolStrip = New System.Windows.Forms.ToolStrip()
         Me.DivisionTabPage = New System.Windows.Forms.TabPage()
+        Me.DivisionUserControl1 = New AccuPay.DivisionUserControl()
         Me.DivisionLocationGroupBox = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel9 = New System.Windows.Forms.Panel()
@@ -61,12 +67,6 @@ Partial Class NewEmployeePositionForm
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DivisionUserControl1 = New AccuPay.DivisionUserControl()
-        Me.PositionUserControl1 = New AccuPay.PositionUserControl()
-        Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MiddleName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PositionTabPage.SuspendLayout()
         Me.PositionGroupBox.SuspendLayout()
         CType(Me.EmployeeDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -126,6 +126,14 @@ Partial Class NewEmployeePositionForm
         Me.PositionGroupBox.TabStop = False
         Me.PositionGroupBox.Text = "Payroll Details"
         '
+        'PositionUserControl1
+        '
+        Me.PositionUserControl1.Location = New System.Drawing.Point(0, 17)
+        Me.PositionUserControl1.Margin = New System.Windows.Forms.Padding(4)
+        Me.PositionUserControl1.Name = "PositionUserControl1"
+        Me.PositionUserControl1.Size = New System.Drawing.Size(292, 148)
+        Me.PositionUserControl1.TabIndex = 0
+        '
         'EmployeeDataGrid
         '
         Me.EmployeeDataGrid.AllowUserToAddRows = False
@@ -134,14 +142,14 @@ Partial Class NewEmployeePositionForm
         Me.EmployeeDataGrid.BackgroundColor = System.Drawing.Color.White
         Me.EmployeeDataGrid.ColumnHeadersHeight = 34
         Me.EmployeeDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.EmployeeID, Me.LastName, Me.FirstName, Me.MiddleName})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeeDataGrid.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeeDataGrid.DefaultCellStyle = DataGridViewCellStyle2
         Me.EmployeeDataGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeeDataGrid.Location = New System.Drawing.Point(6, 242)
         Me.EmployeeDataGrid.MultiSelect = False
@@ -150,6 +158,34 @@ Partial Class NewEmployeePositionForm
         Me.EmployeeDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.EmployeeDataGrid.Size = New System.Drawing.Size(768, 212)
         Me.EmployeeDataGrid.TabIndex = 333
+        '
+        'EmployeeID
+        '
+        Me.EmployeeID.DataPropertyName = "EmployeeNo"
+        Me.EmployeeID.HeaderText = "Employee ID"
+        Me.EmployeeID.Name = "EmployeeID"
+        Me.EmployeeID.ReadOnly = True
+        '
+        'LastName
+        '
+        Me.LastName.DataPropertyName = "LastName"
+        Me.LastName.HeaderText = "Last Name"
+        Me.LastName.Name = "LastName"
+        Me.LastName.ReadOnly = True
+        '
+        'FirstName
+        '
+        Me.FirstName.DataPropertyName = "FirstName"
+        Me.FirstName.HeaderText = "First Name"
+        Me.FirstName.Name = "FirstName"
+        Me.FirstName.ReadOnly = True
+        '
+        'MiddleName
+        '
+        Me.MiddleName.DataPropertyName = "MiddleName"
+        Me.MiddleName.HeaderText = "Middle Name"
+        Me.MiddleName.Name = "MiddleName"
+        Me.MiddleName.ReadOnly = True
         '
         'Label2
         '
@@ -260,6 +296,14 @@ Partial Class NewEmployeePositionForm
         Me.DivisionTabPage.TabIndex = 0
         Me.DivisionTabPage.Text = "Division"
         Me.DivisionTabPage.UseVisualStyleBackColor = True
+        '
+        'DivisionUserControl1
+        '
+        Me.DivisionUserControl1.Location = New System.Drawing.Point(6, 42)
+        Me.DivisionUserControl1.Name = "DivisionUserControl1"
+        Me.DivisionUserControl1.Size = New System.Drawing.Size(740, 600)
+        Me.DivisionUserControl1.TabIndex = 396
+        Me.DivisionUserControl1.Visible = False
         '
         'DivisionLocationGroupBox
         '
@@ -446,50 +490,6 @@ Partial Class NewEmployeePositionForm
         Me.DataGridViewTextBoxColumn4.HeaderText = "Middle Name"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        '
-        'DivisionUserControl1
-        '
-        Me.DivisionUserControl1.Location = New System.Drawing.Point(6, 42)
-        Me.DivisionUserControl1.Name = "DivisionUserControl1"
-        Me.DivisionUserControl1.Size = New System.Drawing.Size(740, 600)
-        Me.DivisionUserControl1.TabIndex = 396
-        Me.DivisionUserControl1.Visible = False
-        '
-        'PositionUserControl1
-        '
-        Me.PositionUserControl1.Location = New System.Drawing.Point(0, 17)
-        Me.PositionUserControl1.Margin = New System.Windows.Forms.Padding(4)
-        Me.PositionUserControl1.Name = "PositionUserControl1"
-        Me.PositionUserControl1.Size = New System.Drawing.Size(292, 148)
-        Me.PositionUserControl1.TabIndex = 0
-        '
-        'EmployeeID
-        '
-        Me.EmployeeID.DataPropertyName = "EmployeeNo"
-        Me.EmployeeID.HeaderText = "Employee ID"
-        Me.EmployeeID.Name = "EmployeeID"
-        Me.EmployeeID.ReadOnly = True
-        '
-        'LastName
-        '
-        Me.LastName.DataPropertyName = "LastName"
-        Me.LastName.HeaderText = "Last Name"
-        Me.LastName.Name = "LastName"
-        Me.LastName.ReadOnly = True
-        '
-        'FirstName
-        '
-        Me.FirstName.DataPropertyName = "FirstName"
-        Me.FirstName.HeaderText = "First Name"
-        Me.FirstName.Name = "FirstName"
-        Me.FirstName.ReadOnly = True
-        '
-        'MiddleName
-        '
-        Me.MiddleName.DataPropertyName = "MiddleName"
-        Me.MiddleName.HeaderText = "Middle Name"
-        Me.MiddleName.Name = "MiddleName"
-        Me.MiddleName.ReadOnly = True
         '
         'NewEmployeePositionForm
         '

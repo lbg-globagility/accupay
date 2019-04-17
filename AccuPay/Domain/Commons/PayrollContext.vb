@@ -94,6 +94,8 @@ Public Class PayrollContext
 
     Public Overridable Property BreakTimeBrackets As DbSet(Of BreakTimeBracket)
 
+    Public Overridable Property PayFrequencies As DbSet(Of PayFrequency)
+
     Public Sub New()
     End Sub
 

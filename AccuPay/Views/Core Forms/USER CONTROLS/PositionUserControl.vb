@@ -93,7 +93,6 @@ Public Class PositionUserControl
 
         End If
 
-
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String, control As Control)
@@ -103,10 +102,6 @@ Public Class PositionUserControl
         myBalloon(content, title, win32Window)
 
         control.Focus()
-
-    End Sub
-
-    Private Sub DivisionComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DivisionComboBox.SelectedIndexChanged
 
     End Sub
 

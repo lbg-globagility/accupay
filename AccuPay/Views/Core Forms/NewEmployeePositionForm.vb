@@ -16,11 +16,23 @@ Public Class NewEmployeePositionForm
 
     Private _jobLevels As New List(Of JobLevel)
 
+    Private _payFrequencies As New List(Of PayFrequency)
+
+    Private _divisionTypes As List(Of String)
+
+    Private _deductionSchedules As List(Of String)
+
     Private _currentDivision As New Division
 
     Private _currentPosition As New Position
 
+    Private _jobLevelRepository As New JobLevelRepository
+
     Private _positionRepository As New PositionRepository
+
+    Private _divisionRepository As New DivisionRepository
+
+    Private _payFrequencyRepository As New PayFrequencyRepository
 
     Public Property _currentTreeNodes As TreeNode()
 
@@ -33,6 +45,12 @@ Public Class NewEmployeePositionForm
         Await GetDivisions()
 
         Await GetPositions()
+
+        Await GetPayFrequencies()
+
+        GetDivisionTypes()
+
+        GetDeductionSchedules()
 
         LoadTreeView()
 
@@ -76,7 +94,26 @@ Public Class NewEmployeePositionForm
 
     End Sub
 
-    Private Sub SaveDivisionToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveDivisionToolStripButton.Click
+    Private Async Sub SaveDivisionToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveDivisionToolStripButton.Click
+
+        'removing focus to PositionUserControl1 updates the databind
+        PositionGroupBox.Focus()
+
+        'removing focus to PositionUserControl1 updates the databind
+        PositionGroupBox.Focus()
+
+        Dim messageTitle = "Save Division"
+
+        If ValidateDivision(messageTitle) = False Then
+
+            Return
+
+        End If
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                          Async Function()
+                              Await SaveDivision(messageTitle)
+                          End Function)
 
     End Sub
 
@@ -242,42 +279,47 @@ Public Class NewEmployeePositionForm
 
     Private Async Function GetJobLevels() As Task
 
-        Using context As New PayrollContext
+        Dim jobLevels = Await _jobLevelRepository.GetAllAsync()
 
-            _jobLevels = Await context.JobLevels.
-                            Where(Function(j) Nullable.Equals(j.OrganizationID, z_OrganizationID)).
-                            OrderBy(Function(j) j.Name).
-                            ToListAsync
-
-        End Using
+        _jobLevels = jobLevels.OrderBy(Function(j) j.Name).ToList
 
     End Function
 
     Private Async Function GetDivisions() As Task
 
-        Using context As New PayrollContext
+        Dim divisions = Await _divisionRepository.GetAllAsync()
 
-            _divisions = Await context.Divisions.
-                            Where(Function(d) Nullable.Equals(d.OrganizationID, z_OrganizationID)).
-                            OrderBy(Function(d) d.Name).
-                            ToListAsync
-
-        End Using
+        _divisions = divisions.OrderBy(Function(d) d.Name).ToList
 
     End Function
 
     Private Async Function GetPositions() As Task
 
-        Using context As New PayrollContext
+        Dim positions = Await _positionRepository.GetAllAsync()
 
-            _positions = Await context.Positions.
-                            Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                            OrderBy(Function(p) p.Name).
-                            ToListAsync
-
-        End Using
+        _positions = positions.OrderBy(Function(p) p.Name).ToList
 
     End Function
+
+    Private Async Function GetPayFrequencies() As Task
+
+        Dim payFrequencies = Await _payFrequencyRepository.GetAllAsync()
+
+        _payFrequencies = payFrequencies.OrderBy(Function(p) p.Type).ToList
+
+    End Function
+
+    Private Sub GetDivisionTypes()
+
+        _divisionTypes = _divisionRepository.GetDivisionTypeList
+
+    End Sub
+
+    Private Sub GetDeductionSchedules()
+
+        _deductionSchedules = ContributionSchedule.GetList()
+
+    End Sub
 
     Private Sub ShowDivisionForm(selectedDivision As Division)
 
@@ -285,7 +327,7 @@ Public Class NewEmployeePositionForm
 
         ChangeDivisionToolStripButtonsDescription(isRoot)
 
-        _currentDivision = selectedDivision.CloneJson()
+        SetDivision(selectedDivision)
 
         If isRoot Then
 
@@ -312,11 +354,28 @@ Public Class NewEmployeePositionForm
 
     Private Sub SetPosition(selectedPosition As Position)
 
-        Dim allChildDivisions = _divisions.Where(Function(d) d.IsRoot = False).ToList
-
         Me._currentPosition = selectedPosition
 
+        Dim allChildDivisions = _divisions.Where(Function(d) d.IsRoot = False).ToList
+
         PositionUserControl1.SetPosition(Me._currentPosition, allChildDivisions, _jobLevels)
+    End Sub
+
+    Private Sub SetDivision(selectedDivision As Division)
+
+        Me._currentDivision = selectedDivision.CloneJson()
+
+        If Me._currentDivision.IsRoot = True Then Return
+
+        Dim allParentDivisions = _divisions.Where(Function(d) d.IsRoot = True).ToList
+
+        DivisionUserControl1.SetDivision(
+                                Me._currentDivision,
+                                allParentDivisions,
+                                Me._positions,
+                                Me._divisionTypes,
+                                Me._payFrequencies,
+                                Me._deductionSchedules)
     End Sub
 
     Private Sub ClearForms()
@@ -440,12 +499,13 @@ Public Class NewEmployeePositionForm
 
         If Me._currentPosition Is Nothing Then
 
-            MessageBoxHelper.ErrorMessage("No selected position!", messageTitle)
+            MessageBoxHelper.Warning("No selected position!", messageTitle)
             Return False
 
         ElseIf Me._currentPosition.DivisionID Is Nothing Then
 
             PositionUserControl1.ShowError("DivisionID", "Please select a division")
+            Return False
 
         ElseIf String.IsNullOrWhiteSpace(Me._currentPosition.Name) Then
 
@@ -481,6 +541,51 @@ Public Class NewEmployeePositionForm
         _positions.Remove(Me._currentPosition)
 
         ShowBalloonInfo($"Position: {positionName} was successfully deleted.", messageTitle)
+
+    End Function
+
+    Private Function ValidateDivision(messageTitle As String) As Boolean
+
+        If Me._currentDivision Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected division!", messageTitle)
+            Return False
+
+        ElseIf String.IsNullOrWhiteSpace(Me._currentDivision.DivisionType) Then
+
+            DivisionUserControl1.ShowError("DivisionType", "Please select a division type")
+            Return False
+
+        ElseIf Me._currentDivision.ParentDivisionID Is Nothing Then
+
+            DivisionUserControl1.ShowError("ParentDivisionID", "Please select a parent division")
+            Return False
+
+        ElseIf String.IsNullOrWhiteSpace(Me._currentDivision.Name) Then
+
+            DivisionUserControl1.ShowError("Name", "Please enter a name")
+            Return False
+
+        ElseIf Me._currentDivision.WorkDaysPerYear Is Nothing OrElse Me._currentDivision.WorkDaysPerYear < 0 Then
+
+            DivisionUserControl1.ShowError("WorkDaysPerYear", "Please enter a valid Number of days work per year")
+            Return False
+
+        End If
+
+        Return True
+
+    End Function
+
+    Private Async Function SaveDivision(messageTitle As String) As Task
+
+        Await _divisionRepository.SaveAsync(Me._currentDivision)
+
+        Dim currentTreeNode As TreeNode = GetTreeNode(Me._currentDivision.RowID, ObjectType.Division)
+
+        currentTreeNode.Text = Me._currentDivision.Name
+
+        ShowBalloonInfo($"Division: {Me._currentDivision.Name} was successfully updated.", messageTitle)
 
     End Function
 
