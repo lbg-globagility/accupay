@@ -1,0 +1,3 @@
+ALTER TABLE `employeesalary`
+	ADD COLUMN `AutoComputePhilHealthContribution` TINYINT(1) NOT NULL DEFAULT '1' AFTER `DoPaySSSContribution`,
+	ADD COLUMN `AutoComputeHDMFContribution` TINYINT(1) NOT NULL DEFAULT '1' AFTER `AutoComputePhilHealthContribution`;

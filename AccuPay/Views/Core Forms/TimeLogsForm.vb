@@ -35,13 +35,17 @@ Public Class TimeLogsForm
         "SELECT INSUPD_timeentrylogs(?og_id, ?emp_unique_key, ?timestamp_log, ?max_importid);"
 
     'do this habang di pa 100% stable ang new import
-    Private showNewImport As Boolean
+    Private _showNewImport As Boolean
+
+    Private _useShiftSchedulePolicy As Boolean
 
     Private Sub Form8_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        showNewImport = True
+        _useShiftSchedulePolicy = GetShiftSchedulePolicy()
 
-        If showNewImport Then
+        _showNewImport = True
+
+        If _showNewImport Then
             tsbtnNew.Visible = 0
             tsbtnNewExperimental.Visible = 1
         Else
@@ -102,7 +106,7 @@ Public Class TimeLogsForm
 
         If formuserprivilege.Count = 0 Then
 
-            If showNewImport Then
+            If _showNewImport Then
                 tsbtnNewExperimental.Visible = 0
             Else
                 tsbtnNew.Visible = 0
@@ -115,7 +119,7 @@ Public Class TimeLogsForm
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
-                    If showNewImport Then
+                    If _showNewImport Then
                         tsbtnNewExperimental.Visible = 0
                     Else
                         tsbtnNew.Visible = 0
@@ -129,14 +133,14 @@ Public Class TimeLogsForm
                     If drow("Creates").ToString = "N" Then
 
 
-                        If showNewImport Then
+                        If _showNewImport Then
                             tsbtnNewExperimental.Visible = 0
                         Else
                             tsbtnNew.Visible = 0
                         End If
                     Else
 
-                        If showNewImport Then
+                        If _showNewImport Then
                             tsbtnNewExperimental.Visible = 1
                         Else
                             tsbtnNew.Visible = 1
@@ -164,6 +168,17 @@ Public Class TimeLogsForm
         dgvetentd.Focus()
         TabPage1.Focus()
     End Sub
+
+    Private Function GetShiftSchedulePolicy() As Boolean
+        Using context = New PayrollContext()
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim policy = New TimeEntryPolicy(settings)
+
+            Return policy.UseShiftSchedule
+        End Using
+    End Function
 
     Sub loademployeetimeentrydetails(Optional pagination As Integer = 0)
         Static once As Integer = -1
@@ -270,16 +285,7 @@ Public Class TimeLogsForm
             Return
         End If
 
-        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
-        Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
-
-        Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
-        Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
-
-        Dim employeeShifts As List(Of ShiftSchedule) =
-                Await GetEmployeeShifts(firstDate, lastDate)
-
-        Dim timeAttendanceHelper As New TimeAttendanceHelper(logs, employees, employeeShifts)
+        Dim timeAttendanceHelper As ITimeAttendanceHelper = Await GetTimeAttendanceHelper(logs)
 
         'determines the IstimeIn, LogDate, and Employee values
         logs = timeAttendanceHelper.Analyze()
@@ -306,6 +312,38 @@ Public Class TimeLogsForm
         bgworkTypicalImport.RunWorkerAsync(timeAttendanceHelper)
     End Sub
 
+    Private Async Function GetTimeAttendanceHelper(logs As IList(Of ImportTimeAttendanceLog)) _
+                            As Threading.Tasks.Task(Of ITimeAttendanceHelper)
+
+        logs = logs.OrderBy(Function(l) l.DateTime).ToList
+
+        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
+        Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
+
+        Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
+        Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
+
+        Dim timeAttendanceHelper As ITimeAttendanceHelper
+
+        If _useShiftSchedulePolicy Then
+
+            Dim employeeShifts As List(Of EmployeeDutySchedule) =
+                    Await GetEmployeeDutyShifts(firstDate, lastDate)
+
+            timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts)
+
+        Else
+
+            Dim employeeShifts As List(Of ShiftSchedule) =
+                    Await GetEmployeeShifts(firstDate, lastDate)
+
+            timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts)
+
+        End If
+
+        Return timeAttendanceHelper
+    End Function
+
     Private Sub HouseKeepingBeforeStartAlternateLineBackgroundWork()
         tsbtnNew.Enabled = False
         tsbtnNewExperimental.Enabled = False
@@ -323,6 +361,7 @@ Public Class TimeLogsForm
 
         MessageBoxManager.Yes = "Alternating line"
         MessageBoxManager.No = "Same line"
+        MessageBoxManager.Cancel = "Cancel"
 
         MessageBoxManager.Register()
 
@@ -486,12 +525,19 @@ Public Class TimeLogsForm
         Dim parser = New TimeInTimeOutParser()
         Dim timeEntries = parser.Parse(thefilepath)
 
+        If timeEntries.Count = 0 Then
+            MessageBox.Show("No logs were parsed. Please make sure the log files follows the right format.")
+            Return
+        End If
+
         Dim timeLogsByEmployee = timeEntries.
             GroupBy(Function(t) t.EmployeeNo).
             ToList()
 
         Using context = New PayrollContext()
             Dim dateCreated = Date.Now
+
+            Dim importId As String = GenerateImportId(context)
 
             For Each timelogs In timeLogsByEmployee
                 Dim employee = context.Employees.
@@ -509,7 +555,8 @@ Public Class TimeLogsForm
                         .EmployeeID = employee.RowID,
                         .Created = dateCreated,
                         .CreatedBy = z_User,
-                        .LogDate = timeLog.DateOccurred
+                        .LogDate = timeLog.DateOccurred,
+                        .TimeentrylogsImportID = importId
                     }
 
                     If Not String.IsNullOrWhiteSpace(timeLog.TimeIn) Then
@@ -1374,33 +1421,21 @@ Public Class TimeLogsForm
             OldTimeEntryAlternateLineImport()
 
         Else
-            Dim args = CType(e.Argument, TimeAttendanceHelper)
+            Dim args = CType(e.Argument, ITimeAttendanceHelper)
 
             NewTimeEntryAlternateLineImportSave(args)
 
         End If
     End Sub
 
-    Private Async Sub NewTimeEntryAlternateLineImportSave(timeAttendanceHelper As TimeAttendanceHelper)
-
+    Private Async Sub NewTimeEntryAlternateLineImportSave(timeAttendanceHelper As ITimeAttendanceHelper)
         Try
             Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
             Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
             Using context = New PayrollContext()
 
-                Dim importId = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                Dim originalImportId = importId
-
-                Dim counter As Integer = 0
-
-                While context.TimeLogs.FirstOrDefault(Function(t) t.TimeentrylogsImportID = importId) IsNot Nothing OrElse
-                        context.TimeAttendanceLogs.FirstOrDefault(Function(t) t.ImportNumber = importId) IsNot Nothing
-                    counter += 1
-
-                    importId = originalImportId & "_" & counter
-
-                End While
+                Dim importId As String = GenerateImportId(context)
 
                 For Each timeLog In timeLogs
 
@@ -1433,6 +1468,23 @@ Public Class TimeLogsForm
 
     End Sub
 
+    Private Shared Function GenerateImportId(context As PayrollContext) As String
+        Dim importId = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
+        Dim originalImportId = importId
+
+        Dim counter As Integer = 0
+
+        While context.TimeLogs.FirstOrDefault(Function(t) t.TimeentrylogsImportID = importId) IsNot Nothing OrElse
+                context.TimeAttendanceLogs.FirstOrDefault(Function(t) t.ImportNumber = importId) IsNot Nothing
+            counter += 1
+
+            importId = originalImportId & "_" & counter
+
+        End While
+
+        Return importId
+    End Function
+
     Private Async Function GetEmployeeShifts(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of ShiftSchedule))
 
         Using context = New PayrollContext()
@@ -1441,6 +1493,19 @@ Public Class TimeLogsForm
                            Where(Function(s) s.OrganizationID = z_OrganizationID).
                            Where(Function(s) s.EffectiveFrom >= firstDate).
                            Where(Function(s) s.EffectiveTo <= lastDate).
+                           ToListAsync()
+        End Using
+
+    End Function
+
+    'new shift table
+    Private Async Function GetEmployeeDutyShifts(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of EmployeeDutySchedule))
+
+        Using context = New PayrollContext()
+            Return Await context.EmployeeDutySchedules.
+                           Where(Function(s) s.OrganizationID = z_OrganizationID).
+                           Where(Function(s) s.DateSched >= firstDate).
+                           Where(Function(s) s.DateSched <= lastDate).
                            ToListAsync()
         End Using
 
@@ -1503,13 +1568,4 @@ Public Class TimeLogsForm
         MyBase.OnLoad(e)
     End Sub
 
-    Private Class NewTimeLogsArgument
-        Public Property Logs As IList(Of ImportTimeAttendanceLog)
-        Public Property IsChangeable As Boolean
-
-        Sub New(logs As IList(Of ImportTimeAttendanceLog), isChangeable As Boolean)
-            Me.Logs = logs
-            Me.IsChangeable = isChangeable
-        End Sub
-    End Class
 End Class

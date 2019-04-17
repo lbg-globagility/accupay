@@ -6,7 +6,7 @@ Namespace Global.AccuPay.SimplifiedEntities
 
         Property RowID As Integer?
 
-        Property EmployeeID As String
+        Property EmployeeNo As String
 
         Property FirstName As String
 

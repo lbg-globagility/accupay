@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class SalaryTab
     Inherits System.Windows.Forms.UserControl
 
     'UserControl overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,56 +20,56 @@ Partial Class SalaryTab
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SalaryTab))
+        Dim DataGridViewCellStyle67 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle78 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle68 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle69 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle70 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle71 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle72 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle73 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle74 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle75 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle76 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle77 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle79 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle80 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle81 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle82 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle83 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle84 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle85 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle86 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle87 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle88 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip5 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton30 = New System.Windows.Forms.ToolStripButton()
+        Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton31 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripProgressBar2 = New System.Windows.Forms.ToolStripProgressBar()
+        Me.btnImport = New System.Windows.Forms.ToolStripButton()
         Me.pbEmployee = New System.Windows.Forms.PictureBox()
         Me.grpSalary = New System.Windows.Forms.GroupBox()
+        Me.chkPayPhilHealth = New System.Windows.Forms.CheckBox()
+        Me.ChkPagIbig = New System.Windows.Forms.CheckBox()
+        Me.chkPaySSS = New System.Windows.Forms.CheckBox()
         Me.txtTotalSalary = New System.Windows.Forms.TextBox()
         Me.txtPayFrequency = New System.Windows.Forms.TextBox()
         Me.txtSalaryType = New System.Windows.Forms.TextBox()
-        Me.txtBasicPay = New System.Windows.Forms.TextBox()
-        Me.Label10 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
-        Me.txtSss = New System.Windows.Forms.TextBox()
         Me.txtPagIbig = New System.Windows.Forms.TextBox()
         Me.txtPhilHealth = New System.Windows.Forms.TextBox()
         Me.Label217 = New System.Windows.Forms.Label()
-        Me.Label216 = New System.Windows.Forms.Label()
         Me.Label215 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.Label16 = New System.Windows.Forms.Label()
-        Me.Label13 = New System.Windows.Forms.Label()
         Me.Label213 = New System.Windows.Forms.Label()
         Me.txtAllowance = New System.Windows.Forms.TextBox()
         Me.txtAmount = New System.Windows.Forms.TextBox()
@@ -78,7 +78,6 @@ Partial Class SalaryTab
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.dtpEffectiveTo = New System.Windows.Forms.DateTimePicker()
@@ -102,6 +101,7 @@ Partial Class SalaryTab
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_BasicDailyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_BasicHourlyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.tlpResult = New System.Windows.Forms.ToolTip(Me.components)
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -121,8 +121,6 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.tlpResult = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnImport = New System.Windows.Forms.ToolStripButton()
         Me.ToolStrip5.SuspendLayout()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpSalary.SuspendLayout()
@@ -133,7 +131,7 @@ Partial Class SalaryTab
         '
         Me.ToolStrip5.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip5.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.ToolStripButton30, Me.ToolStripButton31, Me.ToolStripProgressBar2, Me.btnImport})
+        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripButton31, Me.ToolStripProgressBar2, Me.btnImport})
         Me.ToolStrip5.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip5.Name = "ToolStrip5"
         Me.ToolStrip5.Size = New System.Drawing.Size(856, 25)
@@ -172,14 +170,14 @@ Partial Class SalaryTab
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
         Me.btnCancel.Text = "Cancel"
         '
-        'ToolStripButton30
+        'btnClose
         '
-        Me.ToolStripButton30.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton30.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton30.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton30.Name = "ToolStripButton30"
-        Me.ToolStripButton30.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton30.Text = "Close"
+        Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.btnClose.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.Size = New System.Drawing.Size(56, 22)
+        Me.btnClose.Text = "Close"
         '
         'ToolStripButton31
         '
@@ -199,6 +197,14 @@ Partial Class SalaryTab
         Me.ToolStripProgressBar2.Size = New System.Drawing.Size(100, 22)
         Me.ToolStripProgressBar2.Visible = False
         '
+        'btnImport
+        '
+        Me.btnImport.Image = CType(resources.GetObject("btnImport.Image"), System.Drawing.Image)
+        Me.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnImport.Name = "btnImport"
+        Me.btnImport.Size = New System.Drawing.Size(63, 22)
+        Me.btnImport.Text = "Import"
+        '
         'pbEmployee
         '
         Me.pbEmployee.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
@@ -211,21 +217,21 @@ Partial Class SalaryTab
         '
         'grpSalary
         '
+        Me.grpSalary.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpSalary.Controls.Add(Me.chkPayPhilHealth)
+        Me.grpSalary.Controls.Add(Me.ChkPagIbig)
+        Me.grpSalary.Controls.Add(Me.chkPaySSS)
         Me.grpSalary.Controls.Add(Me.txtTotalSalary)
         Me.grpSalary.Controls.Add(Me.txtPayFrequency)
         Me.grpSalary.Controls.Add(Me.txtSalaryType)
-        Me.grpSalary.Controls.Add(Me.txtBasicPay)
-        Me.grpSalary.Controls.Add(Me.Label10)
         Me.grpSalary.Controls.Add(Me.Label14)
-        Me.grpSalary.Controls.Add(Me.txtSss)
         Me.grpSalary.Controls.Add(Me.txtPagIbig)
         Me.grpSalary.Controls.Add(Me.txtPhilHealth)
         Me.grpSalary.Controls.Add(Me.Label217)
-        Me.grpSalary.Controls.Add(Me.Label216)
         Me.grpSalary.Controls.Add(Me.Label215)
         Me.grpSalary.Controls.Add(Me.Label15)
         Me.grpSalary.Controls.Add(Me.Label16)
-        Me.grpSalary.Controls.Add(Me.Label13)
         Me.grpSalary.Controls.Add(Me.Label213)
         Me.grpSalary.Controls.Add(Me.txtAllowance)
         Me.grpSalary.Controls.Add(Me.txtAmount)
@@ -234,7 +240,6 @@ Partial Class SalaryTab
         Me.grpSalary.Controls.Add(Me.Label9)
         Me.grpSalary.Controls.Add(Me.Label8)
         Me.grpSalary.Controls.Add(Me.Label1)
-        Me.grpSalary.Controls.Add(Me.Label7)
         Me.grpSalary.Controls.Add(Me.Label6)
         Me.grpSalary.Controls.Add(Me.Label5)
         Me.grpSalary.Controls.Add(Me.dtpEffectiveTo)
@@ -250,9 +255,35 @@ Partial Class SalaryTab
         Me.grpSalary.TabStop = False
         Me.grpSalary.Text = "Salary"
         '
+        'chkPayPhilHealth
+        '
+        Me.chkPayPhilHealth.AutoSize = True
+        Me.chkPayPhilHealth.Location = New System.Drawing.Point(672, 40)
+        Me.chkPayPhilHealth.Name = "chkPayPhilHealth"
+        Me.chkPayPhilHealth.Size = New System.Drawing.Size(15, 14)
+        Me.chkPayPhilHealth.TabIndex = 284
+        Me.chkPayPhilHealth.UseVisualStyleBackColor = True
+        '
+        'ChkPagIbig
+        '
+        Me.ChkPagIbig.Location = New System.Drawing.Point(672, 88)
+        Me.ChkPagIbig.Name = "ChkPagIbig"
+        Me.ChkPagIbig.Size = New System.Drawing.Size(16, 16)
+        Me.ChkPagIbig.TabIndex = 284
+        Me.ChkPagIbig.UseVisualStyleBackColor = True
+        '
+        'chkPaySSS
+        '
+        Me.chkPaySSS.AutoSize = True
+        Me.chkPaySSS.Location = New System.Drawing.Point(672, 64)
+        Me.chkPaySSS.Name = "chkPaySSS"
+        Me.chkPaySSS.Size = New System.Drawing.Size(15, 14)
+        Me.chkPaySSS.TabIndex = 284
+        Me.chkPaySSS.UseVisualStyleBackColor = True
+        '
         'txtTotalSalary
         '
-        Me.txtTotalSalary.Location = New System.Drawing.Point(424, 88)
+        Me.txtTotalSalary.Location = New System.Drawing.Point(416, 88)
         Me.txtTotalSalary.Name = "txtTotalSalary"
         Me.txtTotalSalary.ReadOnly = True
         Me.txtTotalSalary.Size = New System.Drawing.Size(160, 20)
@@ -274,24 +305,6 @@ Partial Class SalaryTab
         Me.txtSalaryType.Size = New System.Drawing.Size(160, 20)
         Me.txtSalaryType.TabIndex = 281
         '
-        'txtBasicPay
-        '
-        Me.txtBasicPay.Location = New System.Drawing.Point(424, 112)
-        Me.txtBasicPay.Name = "txtBasicPay"
-        Me.txtBasicPay.ReadOnly = True
-        Me.txtBasicPay.Size = New System.Drawing.Size(160, 20)
-        Me.txtBasicPay.TabIndex = 280
-        '
-        'Label10
-        '
-        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label10.Location = New System.Drawing.Point(120, 112)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(16, 16)
-        Me.Label10.TabIndex = 279
-        Me.Label10.Text = "*"
-        '
         'Label14
         '
         Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
@@ -302,60 +315,43 @@ Partial Class SalaryTab
         Me.Label14.TabIndex = 278
         Me.Label14.Text = "*"
         '
-        'txtSss
-        '
-        Me.txtSss.BackColor = System.Drawing.Color.White
-        Me.txtSss.Location = New System.Drawing.Point(696, 64)
-        Me.txtSss.Name = "txtSss"
-        Me.txtSss.Size = New System.Drawing.Size(131, 20)
-        Me.txtSss.TabIndex = 273
-        '
         'txtPagIbig
         '
         Me.txtPagIbig.BackColor = System.Drawing.Color.White
-        Me.txtPagIbig.Location = New System.Drawing.Point(696, 90)
+        Me.txtPagIbig.Location = New System.Drawing.Point(712, 88)
         Me.txtPagIbig.Name = "txtPagIbig"
-        Me.txtPagIbig.Size = New System.Drawing.Size(131, 20)
+        Me.txtPagIbig.Size = New System.Drawing.Size(107, 20)
         Me.txtPagIbig.TabIndex = 274
         '
         'txtPhilHealth
         '
         Me.txtPhilHealth.BackColor = System.Drawing.Color.White
-        Me.txtPhilHealth.Location = New System.Drawing.Point(696, 38)
+        Me.txtPhilHealth.Location = New System.Drawing.Point(712, 40)
         Me.txtPhilHealth.Name = "txtPhilHealth"
-        Me.txtPhilHealth.Size = New System.Drawing.Size(131, 20)
+        Me.txtPhilHealth.Size = New System.Drawing.Size(107, 20)
         Me.txtPhilHealth.TabIndex = 272
         '
         'Label217
         '
-        Me.Label217.AutoSize = True
-        Me.Label217.Location = New System.Drawing.Point(673, 93)
+        Me.Label217.Location = New System.Drawing.Point(696, 88)
         Me.Label217.Name = "Label217"
-        Me.Label217.Size = New System.Drawing.Size(14, 13)
+        Me.Label217.Size = New System.Drawing.Size(16, 16)
         Me.Label217.TabIndex = 275
         Me.Label217.Text = "₱"
-        '
-        'Label216
-        '
-        Me.Label216.AutoSize = True
-        Me.Label216.Location = New System.Drawing.Point(673, 67)
-        Me.Label216.Name = "Label216"
-        Me.Label216.Size = New System.Drawing.Size(14, 13)
-        Me.Label216.TabIndex = 276
-        Me.Label216.Text = "₱"
+        Me.Label217.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Label215
         '
-        Me.Label215.AutoSize = True
-        Me.Label215.Location = New System.Drawing.Point(673, 41)
+        Me.Label215.Location = New System.Drawing.Point(696, 40)
         Me.Label215.Name = "Label215"
-        Me.Label215.Size = New System.Drawing.Size(14, 13)
+        Me.Label215.Size = New System.Drawing.Size(16, 16)
         Me.Label215.TabIndex = 277
         Me.Label215.Text = "₱"
+        Me.Label215.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Label15
         '
-        Me.Label15.Location = New System.Drawing.Point(408, 64)
+        Me.Label15.Location = New System.Drawing.Point(400, 64)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(16, 16)
         Me.Label15.TabIndex = 271
@@ -364,25 +360,16 @@ Partial Class SalaryTab
         '
         'Label16
         '
-        Me.Label16.Location = New System.Drawing.Point(408, 88)
+        Me.Label16.Location = New System.Drawing.Point(400, 88)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(16, 16)
         Me.Label16.TabIndex = 271
         Me.Label16.Text = "₱"
         Me.Label16.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'Label13
-        '
-        Me.Label13.Location = New System.Drawing.Point(408, 112)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(16, 16)
-        Me.Label13.TabIndex = 271
-        Me.Label13.Text = "₱"
-        Me.Label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
         'Label213
         '
-        Me.Label213.Location = New System.Drawing.Point(408, 40)
+        Me.Label213.Location = New System.Drawing.Point(400, 40)
         Me.Label213.Name = "Label213"
         Me.Label213.Size = New System.Drawing.Size(16, 16)
         Me.Label213.TabIndex = 270
@@ -391,14 +378,14 @@ Partial Class SalaryTab
         '
         'txtAllowance
         '
-        Me.txtAllowance.Location = New System.Drawing.Point(424, 64)
+        Me.txtAllowance.Location = New System.Drawing.Point(416, 64)
         Me.txtAllowance.Name = "txtAllowance"
         Me.txtAllowance.Size = New System.Drawing.Size(160, 20)
         Me.txtAllowance.TabIndex = 112
         '
         'txtAmount
         '
-        Me.txtAmount.Location = New System.Drawing.Point(424, 40)
+        Me.txtAmount.Location = New System.Drawing.Point(416, 40)
         Me.txtAmount.MaxLength = 12
         Me.txtAmount.Name = "txtAmount"
         Me.txtAmount.ShortcutsEnabled = False
@@ -418,64 +405,49 @@ Partial Class SalaryTab
         '
         'Label11
         '
-        Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(606, 94)
+        Me.Label11.Location = New System.Drawing.Point(584, 88)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(53, 13)
+        Me.Label11.Size = New System.Drawing.Size(88, 16)
         Me.Label11.TabIndex = 109
-        Me.Label11.Text = "PAGIBIG:"
+        Me.Label11.Text = "PAGIBIG (Auto)"
         '
         'Label9
         '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(606, 66)
+        Me.Label9.Location = New System.Drawing.Point(584, 64)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(31, 13)
+        Me.Label9.Size = New System.Drawing.Size(88, 16)
         Me.Label9.TabIndex = 65
-        Me.Label9.Text = "SSS:"
+        Me.Label9.Text = "SSS (Auto)"
         '
         'Label8
         '
-        Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(606, 40)
+        Me.Label8.Location = New System.Drawing.Point(584, 40)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(58, 13)
+        Me.Label8.Size = New System.Drawing.Size(88, 16)
         Me.Label8.TabIndex = 64
-        Me.Label8.Text = "PhilHealth:"
+        Me.Label8.Text = "PhilHealth (Auto)"
         '
         'Label1
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(304, 96)
+        Me.Label1.Location = New System.Drawing.Point(304, 88)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(63, 13)
+        Me.Label1.Size = New System.Drawing.Size(88, 16)
         Me.Label1.TabIndex = 63
         Me.Label1.Text = "Total Salary"
         '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(303, 118)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(57, 13)
-        Me.Label7.TabIndex = 63
-        Me.Label7.Text = "Basic Pay:"
-        '
         'Label6
         '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(303, 68)
+        Me.Label6.Location = New System.Drawing.Point(304, 64)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(88, 13)
+        Me.Label6.Size = New System.Drawing.Size(88, 16)
         Me.Label6.TabIndex = 62
         Me.Label6.Text = "Allowance Salary"
         '
         'Label5
         '
-        Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(303, 40)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(68, 13)
+        Me.Label5.Size = New System.Drawing.Size(89, 16)
         Me.Label5.TabIndex = 61
         Me.Label5.Text = "Basic Salary:"
         '
@@ -485,6 +457,7 @@ Partial Class SalaryTab
         Me.dtpEffectiveTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
         Me.dtpEffectiveTo.Location = New System.Drawing.Point(136, 112)
         Me.dtpEffectiveTo.Name = "dtpEffectiveTo"
+        Me.dtpEffectiveTo.ShowCheckBox = True
         Me.dtpEffectiveTo.Size = New System.Drawing.Size(159, 20)
         Me.dtpEffectiveTo.TabIndex = 58
         '
@@ -564,25 +537,28 @@ Partial Class SalaryTab
         Me.dgvSalaries.AllowUserToAddRows = False
         Me.dgvSalaries.AllowUserToDeleteRows = False
         Me.dgvSalaries.AllowUserToResizeRows = False
+        Me.dgvSalaries.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvSalaries.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvSalaries.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle67.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle67.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle67.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle67.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle67.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle67.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle67.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvSalaries.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle67
         Me.dgvSalaries.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvSalaries.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_fromdate, Me.c_todate, Me.c_EmpSal, Me.Column1, Me.Column2, Me.c_BasicPaySal, Me.c_sss, Me.c_philhealth, Me.c_pagibig, Me.Column3, Me.c_BasicDailyPaySal, Me.c_BasicHourlyPaySal})
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvSalaries.DefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle78.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle78.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle78.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle78.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle78.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle78.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle78.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvSalaries.DefaultCellStyle = DataGridViewCellStyle78
         Me.dgvSalaries.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvSalaries.Location = New System.Drawing.Point(8, 311)
         Me.dgvSalaries.MultiSelect = False
@@ -612,9 +588,9 @@ Partial Class SalaryTab
         'c_EmpSal
         '
         Me.c_EmpSal.DataPropertyName = "BasicSalary"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle2.Format = "#,###,##0.00;(#,###,##0.00)"
-        Me.c_EmpSal.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle68.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle68.Format = "#,###,##0.00;(#,###,##0.00)"
+        Me.c_EmpSal.DefaultCellStyle = DataGridViewCellStyle68
         Me.c_EmpSal.HeaderText = "Basic Salary"
         Me.c_EmpSal.Name = "c_EmpSal"
         Me.c_EmpSal.ReadOnly = True
@@ -623,9 +599,9 @@ Partial Class SalaryTab
         'Column1
         '
         Me.Column1.DataPropertyName = "AllowanceSalary"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle3.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle69.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle69.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle69
         Me.Column1.HeaderText = "Allowance Salary"
         Me.Column1.Name = "Column1"
         Me.Column1.ReadOnly = True
@@ -633,9 +609,9 @@ Partial Class SalaryTab
         'Column2
         '
         Me.Column2.DataPropertyName = "TotalSalary"
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle4.Format = "#,###,##0.00;(#,###,##0.00)"
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle70.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle70.Format = "#,###,##0.00;(#,###,##0.00)"
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle70
         Me.Column2.HeaderText = "Total Salary"
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
@@ -643,9 +619,9 @@ Partial Class SalaryTab
         'c_BasicPaySal
         '
         Me.c_BasicPaySal.DataPropertyName = "BasicPay"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle5.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_BasicPaySal.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle71.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle71.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_BasicPaySal.DefaultCellStyle = DataGridViewCellStyle71
         Me.c_BasicPaySal.HeaderText = "Basic Pay"
         Me.c_BasicPaySal.Name = "c_BasicPaySal"
         Me.c_BasicPaySal.ReadOnly = True
@@ -654,9 +630,9 @@ Partial Class SalaryTab
         'c_sss
         '
         Me.c_sss.DataPropertyName = "SSSDeduction"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_sss.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle72.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle72.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_sss.DefaultCellStyle = DataGridViewCellStyle72
         Me.c_sss.HeaderText = "SSS"
         Me.c_sss.Name = "c_sss"
         Me.c_sss.ReadOnly = True
@@ -665,9 +641,9 @@ Partial Class SalaryTab
         'c_philhealth
         '
         Me.c_philhealth.DataPropertyName = "PhilHealthDeduction"
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle7.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_philhealth.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle73.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle73.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_philhealth.DefaultCellStyle = DataGridViewCellStyle73
         Me.c_philhealth.HeaderText = "PhilHealth"
         Me.c_philhealth.Name = "c_philhealth"
         Me.c_philhealth.ReadOnly = True
@@ -676,9 +652,9 @@ Partial Class SalaryTab
         'c_pagibig
         '
         Me.c_pagibig.DataPropertyName = "HDMFAmount"
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle8.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_pagibig.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle74.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle74.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_pagibig.DefaultCellStyle = DataGridViewCellStyle74
         Me.c_pagibig.HeaderText = "Pag-IBIG"
         Me.c_pagibig.Name = "c_pagibig"
         Me.c_pagibig.ReadOnly = True
@@ -687,9 +663,9 @@ Partial Class SalaryTab
         'Column3
         '
         Me.Column3.DataPropertyName = "MonthlyRate"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle9.Format = "#,###,##0.00;(#,###,##0.00)"
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle75.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle75.Format = "#,###,##0.00;(#,###,##0.00)"
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle75
         Me.Column3.HeaderText = "Monthly Rate"
         Me.Column3.Name = "Column3"
         Me.Column3.ReadOnly = True
@@ -697,9 +673,9 @@ Partial Class SalaryTab
         'c_BasicDailyPaySal
         '
         Me.c_BasicDailyPaySal.DataPropertyName = "DailyRate"
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle10.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_BasicDailyPaySal.DefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle76.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle76.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_BasicDailyPaySal.DefaultCellStyle = DataGridViewCellStyle76
         Me.c_BasicDailyPaySal.HeaderText = "Daily Rate"
         Me.c_BasicDailyPaySal.Name = "c_BasicDailyPaySal"
         Me.c_BasicDailyPaySal.ReadOnly = True
@@ -708,9 +684,9 @@ Partial Class SalaryTab
         'c_BasicHourlyPaySal
         '
         Me.c_BasicHourlyPaySal.DataPropertyName = "HourlyRate"
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle11.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_BasicHourlyPaySal.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle77.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle77.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_BasicHourlyPaySal.DefaultCellStyle = DataGridViewCellStyle77
         Me.c_BasicHourlyPaySal.HeaderText = "Hourly Rate"
         Me.c_BasicHourlyPaySal.Name = "c_BasicHourlyPaySal"
         Me.c_BasicHourlyPaySal.ReadOnly = True
@@ -737,9 +713,9 @@ Partial Class SalaryTab
         'DataGridViewTextBoxColumn3
         '
         Me.DataGridViewTextBoxColumn3.DataPropertyName = "SalaryAmount"
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle13.Format = "#,###,##0.00;(#,###,##0.00)"
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle79.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle79.Format = "#,###,##0.00;(#,###,##0.00)"
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle79
         Me.DataGridViewTextBoxColumn3.HeaderText = "Pay Type"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         Me.DataGridViewTextBoxColumn3.ReadOnly = True
@@ -749,9 +725,9 @@ Partial Class SalaryTab
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "Amount"
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle14.Format = "#,###,##0.00;(#,###,##0.00)"
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle80.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle80.Format = "#,###,##0.00;(#,###,##0.00)"
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle80
         Me.DataGridViewTextBoxColumn4.HeaderText = "Marital Status"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
@@ -760,9 +736,9 @@ Partial Class SalaryTab
         'DataGridViewTextBoxColumn5
         '
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "AllowanceAmount"
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle15.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle81.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle81.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle81
         Me.DataGridViewTextBoxColumn5.HeaderText = "No Of Dependent"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.ReadOnly = True
@@ -771,9 +747,9 @@ Partial Class SalaryTab
         'DataGridViewTextBoxColumn6
         '
         Me.DataGridViewTextBoxColumn6.DataPropertyName = "BasicPay"
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle16.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle82.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle82.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle82
         Me.DataGridViewTextBoxColumn6.HeaderText = "Filing Status"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.ReadOnly = True
@@ -783,9 +759,9 @@ Partial Class SalaryTab
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "DailyRate"
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle17.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle83.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle83.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle83
         Me.DataGridViewTextBoxColumn7.HeaderText = "Basic Pay"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -794,9 +770,9 @@ Partial Class SalaryTab
         'DataGridViewTextBoxColumn8
         '
         Me.DataGridViewTextBoxColumn8.DataPropertyName = "HourlyRate"
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle18.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle84.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle84.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle84
         Me.DataGridViewTextBoxColumn8.HeaderText = "Salary"
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
         Me.DataGridViewTextBoxColumn8.ReadOnly = True
@@ -805,9 +781,9 @@ Partial Class SalaryTab
         'DataGridViewTextBoxColumn9
         '
         Me.DataGridViewTextBoxColumn9.DataPropertyName = "SSS"
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle19.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle85.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle85.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle85
         Me.DataGridViewTextBoxColumn9.HeaderText = "Daily pay"
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
         Me.DataGridViewTextBoxColumn9.ReadOnly = True
@@ -816,9 +792,9 @@ Partial Class SalaryTab
         'DataGridViewTextBoxColumn10
         '
         Me.DataGridViewTextBoxColumn10.DataPropertyName = "PhilHealth"
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle20.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle86.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle86.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle86
         Me.DataGridViewTextBoxColumn10.HeaderText = "Hourly pay"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
@@ -827,9 +803,9 @@ Partial Class SalaryTab
         'DataGridViewTextBoxColumn11
         '
         Me.DataGridViewTextBoxColumn11.DataPropertyName = "PagIbig"
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle21.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle87.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle87.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle87
         Me.DataGridViewTextBoxColumn11.HeaderText = "Pag-IBIG"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
         Me.DataGridViewTextBoxColumn11.ReadOnly = True
@@ -837,6 +813,10 @@ Partial Class SalaryTab
         '
         'DataGridViewTextBoxColumn12
         '
+        Me.DataGridViewTextBoxColumn12.DataPropertyName = "HourlyRate"
+        DataGridViewCellStyle88.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle88.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle88
         Me.DataGridViewTextBoxColumn12.HeaderText = "PhilHealth"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
         Me.DataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
@@ -884,14 +864,6 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.Visible = False
         '
-        'btnImport
-        '
-        Me.btnImport.Image = CType(resources.GetObject("btnImport.Image"), System.Drawing.Image)
-        Me.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnImport.Name = "btnImport"
-        Me.btnImport.Size = New System.Drawing.Size(63, 22)
-        Me.btnImport.Text = "Import"
-        '
         'SalaryTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -920,7 +892,7 @@ Partial Class SalaryTab
     Friend WithEvents btnSave As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnDelete As ToolStripButton
-    Friend WithEvents ToolStripButton30 As ToolStripButton
+    Friend WithEvents btnClose As ToolStripButton
     Friend WithEvents ToolStripButton31 As ToolStripButton
     Friend WithEvents pbEmployee As PictureBox
     Friend WithEvents btnNew As ToolStripButton
@@ -934,21 +906,16 @@ Partial Class SalaryTab
     Friend WithEvents dtpEffectiveFrom As DateTimePicker
     Friend WithEvents Label9 As Label
     Friend WithEvents Label8 As Label
-    Friend WithEvents Label7 As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents Label5 As Label
     Friend WithEvents Label11 As Label
     Friend WithEvents txtAllowance As TextBox
     Friend WithEvents txtAmount As TextBox
     Friend WithEvents Label213 As Label
-    Friend WithEvents Label13 As Label
-    Friend WithEvents txtSss As TextBox
     Friend WithEvents txtPagIbig As TextBox
     Friend WithEvents txtPhilHealth As TextBox
     Friend WithEvents Label217 As Label
-    Friend WithEvents Label216 As Label
     Friend WithEvents Label215 As Label
-    Friend WithEvents Label10 As Label
     Friend WithEvents Label14 As Label
     Friend WithEvents Label12 As Label
     Public WithEvents txtFullname As TextBox
@@ -974,7 +941,6 @@ Partial Class SalaryTab
     Friend WithEvents DataGridViewTextBoxColumn18 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn19 As DataGridViewTextBoxColumn
     Friend WithEvents Label15 As Label
-    Friend WithEvents txtBasicPay As TextBox
     Friend WithEvents txtPayFrequency As TextBox
     Friend WithEvents txtSalaryType As TextBox
     Friend WithEvents txtTotalSalary As TextBox
@@ -994,4 +960,7 @@ Partial Class SalaryTab
     Friend WithEvents c_BasicHourlyPaySal As DataGridViewTextBoxColumn
     Friend WithEvents tlpResult As ToolTip
     Friend WithEvents btnImport As ToolStripButton
+    Friend WithEvents chkPaySSS As CheckBox
+    Friend WithEvents chkPayPhilHealth As CheckBox
+    Friend WithEvents ChkPagIbig As CheckBox
 End Class

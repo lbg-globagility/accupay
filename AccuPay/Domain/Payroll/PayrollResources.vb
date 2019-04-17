@@ -30,6 +30,8 @@ Public Class PayrollResources
 
     Private _timeEntries As ICollection(Of TimeEntry)
 
+    Private _employeeDutySchedules As ICollection(Of EmployeeDutySchedule)
+
     Private _actualtimeentries As ICollection(Of ActualTimeEntry)
 
     Private _loanSchedules As ICollection(Of LoanSchedule)
@@ -73,6 +75,12 @@ Public Class PayrollResources
     Public ReadOnly Property TimeEntries As ICollection(Of TimeEntry)
         Get
             Return _timeEntries
+        End Get
+    End Property
+
+    Public ReadOnly Property EmployeeDutySchedule As ICollection(Of EmployeeDutySchedule)
+        Get
+            Return _employeeDutySchedules
         End Get
     End Property
 
@@ -185,6 +193,11 @@ Public Class PayrollResources
     End Sub
 
     Public Async Function Load() As Task
+
+        'LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
+
+        Await LoadPayPeriod()
+
         Await Task.WhenAll({
             LoadEmployees(),
             LoadLoanSchedules(),
@@ -197,14 +210,14 @@ Public Class PayrollResources
             LoadPhilHealthBrackets(),
             LoadWithholdingTaxBrackets(),
             LoadSettings(),
-            LoadPayPeriod(),
             LoadPayRates(),
             LoadAllowances(),
             LoadTaxableAllowances(),
             LoadTimeEntries(),
             LoadActualTimeEntries(),
             LoadFilingStatuses(),
-            LoadDivisionMinimumWages()
+            LoadDivisionMinimumWages(),
+            LoadEmployeeDutySchedules()
         })
     End Function
 
@@ -238,6 +251,23 @@ Public Class PayrollResources
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("TimeEntries", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadEmployeeDutySchedules() As Task
+        Dim backDate = _payDateFrom.AddDays(-3)
+
+        Try
+            Using context = New PayrollContext(logger)
+                Dim query = From e In context.EmployeeDutySchedules
+                            Where e.OrganizationID.Value = z_OrganizationID AndAlso
+                                e.DateSched >= backDate AndAlso
+                                e.DateSched <= _payDateTo
+
+                _employeeDutySchedules = Await query.ToListAsync()
+            End Using
+        Catch ex As Exception
+            Throw New ResourceLoadingException("EmployeeDutySchedules", ex)
         End Try
     End Function
 
@@ -353,10 +383,15 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadSocialSecurityBrackets() As Task
+
         Try
+            'LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
+            Dim taxEffectivityDate = New Date(_payPeriod.Year, _payPeriod.Month, 1)
+
             Using context = New PayrollContext()
-                Dim query = From s In context.SocialSecurityBrackets
-                            Select s
+                Dim query = context.SocialSecurityBrackets.
+                            Where(Function(s) taxEffectivityDate >= s.EffectiveDateFrom).
+                            Where(Function(s) taxEffectivityDate <= s.EffectiveDateTo)
 
                 _socialSecurityBrackets = Await query.ToListAsync()
             End Using
@@ -454,7 +489,7 @@ Public Class PayrollResources
     Private Async Function LoadTaxableAllowances() As Task
         Dim isTaxable As String = "1"
         Try
-        Using context = New PayrollContext(logger)
+            Using context = New PayrollContext(logger)
                 Dim query = context.Allowances.Include(Function(a) a.Product).
                     Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
                     Where(Function(a) a.EffectiveStartDate <= _payDateTo).

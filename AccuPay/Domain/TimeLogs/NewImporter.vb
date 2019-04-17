@@ -26,8 +26,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
             Dim lineContent As String
 
             Try
-                Using fileStream = New FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
-            stream = New StreamReader(fileStream)
+                Using fileStream = New FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), stream = New StreamReader(fileStream)
                     Do
                         lineNumber += 1
                         lineContent = stream.ReadLine()
@@ -46,6 +45,10 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
             Catch ex As FileNotFoundException
                 output.IsImportSuccess = False
                 output.ErrorMessage = FILE_NOT_FOUND_ERROR
+
+            Catch ex As Exception
+                output.IsImportSuccess = False
+                output.ErrorMessage = "An error occured. Please try again or contact Globagility."
             End Try
 
             output.Logs = logs.Where(Function(l) l.HasError = False).ToList
@@ -141,8 +144,13 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
         Public Property LogDate As Date?
         Public Property Employee As IEmployeeBase
         Public Property ShiftSchedule As ShiftSchedule
+        Public Property EmployeeDutySchedule As EmployeeDutySchedule
         Public Property ShiftTimeInBounds As Date
         Public Property ShiftTimeOutBounds As Date
+
+        Public Overrides Function ToString() As String
+            Return DateTime.ToString("MM/dd/yyyy hh:mm tt")
+        End Function
 
         Sub New()
             Me.IsTimeIn = Nothing
@@ -160,11 +168,21 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
 
         Public ReadOnly Property ShiftDescription As String
             Get
-                If ShiftSchedule Is Nothing OrElse
-                ShiftSchedule.Shift Is Nothing Then Return "-"
+                If ShiftSchedule IsNot Nothing AndAlso
+                ShiftSchedule.Shift IsNot Nothing Then
 
-                Return $"{ShiftSchedule.Shift.TimeFrom.ToStringFormat("hh:mm tt")} - { _
+                    Return $"{ShiftSchedule.Shift.TimeFrom.ToStringFormat("hh:mm tt")} - { _
                     ShiftSchedule.Shift.TimeTo.ToStringFormat("hh:mm tt")}"
+
+                ElseIf EmployeeDutySchedule IsNot Nothing Then
+
+                    Return $"{EmployeeDutySchedule.StartTime.ToStringFormat("hh:mm tt")} - { _
+                    EmployeeDutySchedule.EndTime.ToStringFormat("hh:mm tt")}"
+
+                End If
+
+                Return "-"
+
             End Get
         End Property
 

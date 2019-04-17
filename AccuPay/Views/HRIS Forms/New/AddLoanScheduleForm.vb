@@ -80,7 +80,7 @@ Public Class AddLoanScheduleForm
 
         txtEmployeeFirstName.Text = _currentEmployee?.FullNameWithMiddleNameInitial
 
-        txtEmployeeNumber.Text = _currentEmployee?.EmployeeID
+        txtEmployeeNumber.Text = _currentEmployee?.EmployeeNo
 
         pbEmployeePicture.Image = ConvByteToImage(_currentEmployee.Image)
 

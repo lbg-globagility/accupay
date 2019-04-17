@@ -49,6 +49,13 @@ Public Class TimeTextBox
         MyBase.OnLeave(e)
     End Sub
 
+    Public Sub Commit()
+        If DesignMode Then
+            Return
+        End If
+        OnLeave(New EventArgs)
+    End Sub
+
     Protected Overrides Sub WndProc(ByRef m As Message)
         MyBase.WndProc(m)
         If DesignMode Then

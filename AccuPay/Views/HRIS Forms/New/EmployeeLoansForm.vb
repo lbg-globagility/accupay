@@ -1,6 +1,4 @@
 ﻿Option Strict On
-
-Imports System.Linq.Expressions
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
@@ -69,7 +67,7 @@ Public Class EmployeeLoansForm
         If currentEmployee Is Nothing Then Return
 
         txtEmployeeFirstName.Text = currentEmployee.FullNameWithMiddleNameInitial
-        txtEmployeeNumber.Text = currentEmployee.EmployeeID
+        txtEmployeeNumber.Text = currentEmployee.EmployeeNo
 
         pbEmployeePicture.Image = ConvByteToImage(currentEmployee.Image)
 
@@ -218,7 +216,7 @@ Public Class EmployeeLoansForm
 
         If changedLoanSchedules.Count < 1 Then
 
-            MessageBoxHelper.ErrorMessage("No unchanged loans!", messageTitle)
+            MessageBoxHelper.Warning("No unchanged loans!", messageTitle)
             Return
         End If
 
@@ -759,6 +757,10 @@ Public Class EmployeeLoansForm
         Return hasChanged
 
     End Function
+
+    Private Sub loanHistoryGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles loanHistoryGridView.DataError
+        e.Cancel = True
+    End Sub
 
 #End Region
 

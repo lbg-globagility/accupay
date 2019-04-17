@@ -1,3 +1,0 @@
-INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('Vacation', 'LeaveType', 'LeaveConvertiblePolicy', '', 'Yes', '', CURRENT_TIMESTAMP(), 3, CURRENT_TIMESTAMP(), 1, 3) ON DUPLICATE KEY UPDATE LastUpd=IFNULL(ADDDATE(LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP());
-
-INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('Adjustment', 'AmountTreatment', 'LeaveConvertiblePolicy', '', 'Yes', '', CURRENT_TIMESTAMP(), 3, CURRENT_TIMESTAMP(), 1, 3) ON DUPLICATE KEY UPDATE LastUpd=IFNULL(ADDDATE(LastUpd, INTERVAL 1 SECOND), CURRENT_TIMESTAMP());

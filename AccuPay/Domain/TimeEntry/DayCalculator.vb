@@ -38,7 +38,8 @@ Public Class DayCalculator
     Public Function Compute(currentDate As DateTime,
                             salary As Salary,
                             oldTimeEntries As IList(Of TimeEntry),
-                            shiftSchedule As ShiftSchedule,
+                            employeeShift As ShiftSchedule,
+                            shiftSched As EmployeeDutySchedule,
                             timeLog As TimeLog,
                             overtimes As IList(Of Overtime),
                             officialBusiness As OfficialBusiness,
@@ -69,10 +70,7 @@ Public Class DayCalculator
             Return timeEntry
         End If
 
-        Dim currentShift = New CurrentShift(shiftSchedule, currentDate)
-        If _policy.RespectDefaultRestDay Then
-            currentShift.SetDefaultRestDay(_employee.DayOfRest)
-        End If
+        Dim currentShift = GetCurrentShift(currentDate, employeeShift, shiftSched, _policy.UseShiftSchedule, _policy.RespectDefaultRestDay, _employee.DayOfRest)
 
         Dim hasWorkedLastDay = HasWorkedLastWorkingDay(currentDate, oldTimeEntries)
         Dim payrate = _payrateCalendar.Find(currentDate)
@@ -81,6 +79,25 @@ Public Class DayCalculator
         ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay)
 
         Return timeEntry
+    End Function
+
+    Public Shared Function GetCurrentShift(
+                                currentDate As Date,
+                                employeeShift As ShiftSchedule,
+                                shiftSched As EmployeeDutySchedule,
+                                useShiftSchedule As Boolean,
+                                respectDefaultRestDay As Boolean,
+                                employeeDayOfRest As Integer?) As CurrentShift
+
+        Dim currentShift = If(useShiftSchedule,
+                    New CurrentShift(shiftSched, currentDate),
+                    New CurrentShift(employeeShift, currentDate))
+
+        If respectDefaultRestDay Then
+            currentShift.SetDefaultRestDay(employeeDayOfRest)
+        End If
+
+        Return currentShift
     End Function
 
     Private Sub ComputeHours(currentDate As Date,
@@ -104,13 +121,19 @@ Public Class DayCalculator
         Dim payrate = _payrateCalendar.Find(currentDate)
 
         Dim logPeriod As TimePeriod = Nothing
-        If hasTimeLog And currentShift.HasShift Then
+        If hasTimeLog Then
             logPeriod = GetLogPeriod(timeLog, officialBusiness, currentShift, currentDate)
         End If
 
         If logPeriod IsNot Nothing Then
+
+            Dim dutyPeriod As TimePeriod = Nothing
+
             Dim shiftPeriod = currentShift.ShiftPeriod
-            Dim dutyPeriod = shiftPeriod.Overlap(logPeriod)
+
+            If shiftPeriod IsNot Nothing Then
+                dutyPeriod = shiftPeriod.Overlap(logPeriod)
+            End If
 
             If dutyPeriod IsNot Nothing Then
                 timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift, _policy.ComputeBreakTimeLate)
@@ -126,7 +149,9 @@ Public Class DayCalculator
                         {dutyPeriod.Start, leavePeriod.Start}.Min(),
                         {dutyPeriod.End, leavePeriod.End}.Max())
 
-                    Dim leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift, _policy.ComputeBreakTimeLate)
+                    Dim leaveHours = TimeEntryCalculator.
+                        ComputeLeaveHours(leavePeriod, currentShift, _policy.ComputeBreakTimeLate)
+
                     timeEntry.SetLeaveHours(leave.LeaveType, leaveHours)
                 End If
 
@@ -173,15 +198,17 @@ Public Class DayCalculator
                 timeEntry = OvertimeSchemeSkipCountHours(timeEntry, overtimes, currentShift, calculator, logPeriod, nightBreaktime)
 
                 ComputeNightDiffHours(timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime)
-                ComputeHolidayHours(payrate, timeEntry)
-                ComputeRestDayHours(currentShift, timeEntry, logPeriod)
 
-                timeEntry.BasicHours =
-                    timeEntry.RegularHours +
-                    timeEntry.RestDayHours +
-                    timeEntry.RegularHolidayHours +
-                    timeEntry.SpecialHolidayHours
             End If
+
+            ComputeHolidayHours(payrate, timeEntry)
+            ComputeRestDayHours(currentShift, timeEntry, logPeriod)
+
+            timeEntry.BasicHours =
+                timeEntry.RegularHours +
+                timeEntry.RestDayHours +
+                timeEntry.RegularHolidayHours +
+                timeEntry.SpecialHolidayHours
         End If
 
         ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves)
@@ -448,32 +475,32 @@ Public Class DayCalculator
         End If
     End Sub
 
+    ''' <summary>
+    ''' Updates timeentry. This sets the leave hours only if there is no time logs. This will also increment the undertime hours if its is a working day (with timelogs or not).
+    ''' </summary>
+    ''' <param name="leaves">The list of leave for this day.</param>
+    ''' <param name="currentShift">The shift for this day.</param>
+    ''' <param name="timeEntry">The timeEntry object that will be updated.</param>
     Private Sub ComputeLeaveHours(hasTimeLog As Boolean, leaves As IList(Of Leave), currentShift As CurrentShift, timeEntry As TimeEntry)
         Dim calculator = New TimeEntryCalculator()
 
         If Not hasTimeLog And leaves.Any() Then
             Dim leave = leaves.FirstOrDefault()
-            Dim leaveHours = 0D
-            If leave.StartTime Is Nothing And leave.EndTime Is Nothing And Not currentShift.HasShift Then
-                leaveHours = 8
-            Else
-                Dim leavePeriod = GetLeavePeriod(leave, currentShift)
-                leaveHours = calculator.ComputeLeaveHours(leavePeriod, currentShift, _policy.ComputeBreakTimeLate)
-            End If
+            Dim leaveHours As Decimal = ComputeLeaveHoursWithoutTimelog(
+                                            currentShift,
+                                            leave,
+                                            _policy.ComputeBreakTimeLate)
 
             timeEntry.SetLeaveHours(leave.LeaveType, leaveHours)
         End If
 
-        Dim hasNoTimeLog = Not hasTimeLog
-
-        If leaves.Any() Then
-            If hasNoTimeLog Then
-                timeEntry.UndertimeHours = 0
-                Return
-            End If
+        If leaves.Any() AndAlso currentShift.IsWorkingDay Then
 
             Dim requiredHours = currentShift.WorkingHours
-            Dim missingHours = requiredHours - (timeEntry.TotalLeaveHours + timeEntry.RegularHours)
+            Dim missingHours = requiredHours - (timeEntry.TotalLeaveHours +
+                                                timeEntry.RegularHours +
+                                                timeEntry.LateHours +
+                                                timeEntry.UndertimeHours)
 
             Dim payRate = _payrateCalendar.Find(currentShift.Date)
 
@@ -485,6 +512,26 @@ Public Class DayCalculator
         End If
     End Sub
 
+    Public Shared Function ComputeLeaveHoursWithoutTimelog(
+                        currentShift As CurrentShift,
+                        leave As Leave,
+                        computeBreakTimeLate As Boolean) As Decimal
+
+        Dim leaveHours = 0D
+        If currentShift.HasShift = False AndAlso
+            (leave.StartTime Is Nothing OrElse leave.EndTime Is Nothing) Then
+
+            leaveHours = 8
+        Else
+            Dim leavePeriod = GetLeavePeriod(leave, currentShift)
+            leaveHours = TimeEntryCalculator.
+                ComputeLeaveHours(leavePeriod, currentShift, computeBreakTimeLate)
+        End If
+
+        leaveHours = AccuMath.CommercialRound(leaveHours, 2)
+        Return leaveHours
+    End Function
+
     Private Function GetDailyRate(salary As Salary) As Decimal
         Dim dailyRate = 0D
 
@@ -495,6 +542,7 @@ Public Class DayCalculator
         If _employee.IsDaily Then
             dailyRate = salary.BasicSalary
         ElseIf _employee.IsMonthly Or _employee.IsFixed Then
+            If _employee.WorkDaysPerYear = 0 Then Return 0
             dailyRate = salary.BasicSalary / (_employee.WorkDaysPerYear / 12)
         End If
 
@@ -572,9 +620,9 @@ Public Class DayCalculator
         Return logPeriod
     End Function
 
-    Public Function GetLeavePeriod(leave As Leave, currentShift As CurrentShift) As TimePeriod
-        Dim startTime = If(leave.StartTime, currentShift.Shift.TimeFrom)
-        Dim endTime = If(leave.EndTime, currentShift.Shift.TimeTo)
+    Private Shared Function GetLeavePeriod(leave As Leave, currentShift As CurrentShift) As TimePeriod
+        Dim startTime = If(leave.StartTime, currentShift.StartTime.Value)
+        Dim endTime = If(leave.EndTime, currentShift.EndTime.Value)
 
         Dim leavePeriod = TimePeriod.FromTime(startTime, endTime, currentShift.Date)
 

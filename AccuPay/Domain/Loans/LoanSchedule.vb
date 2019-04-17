@@ -3,6 +3,7 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports AccuPay
+Imports AccuPay.Entity
 
 Namespace Global.AccuPay.Loans
 
@@ -54,7 +55,26 @@ Namespace Global.AccuPay.Loans
 
         Public Property LoanName As String
 
+        <ForeignKey("LoanTypeID")>
+        Public Overridable Property LoanType As Product
+
         Public Overridable Property LoanTransactions As ICollection(Of LoanTransaction)
+
+        <ForeignKey("EmployeeID")>
+        Public Overridable Property Employee As Employee
+
+        Public ReadOnly Property EmployeeFullName As String
+            Get
+                Return $"{Employee?.LastName}, {Employee?.FirstName} {Employee?.MiddleInitial}"
+            End Get
+        End Property
+
+        Public ReadOnly Property EmployeeNumber As String
+            Get
+                Return Employee?.EmployeeNo
+            End Get
+        End Property
+
 
         Public Overridable Sub Credit(payPeriodID As Integer?)
             Dim currentDeductionAmount = If(DeductionAmount > TotalBalanceLeft, TotalBalanceLeft, DeductionAmount)

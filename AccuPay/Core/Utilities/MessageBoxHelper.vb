@@ -8,13 +8,13 @@ Namespace Global.AccuPay.Utils
 
         Private Shared _logger As ILog = LogManager.GetLogger("TimeLogsLogger")
 
-        Public Shared Sub DefaultErrorMessage(Optional title As String = "Accupay", Optional exception As Exception = Nothing)
+        Public Shared Sub DefaultErrorMessage(Optional title As String = "Accupay", Optional exception As Exception = Nothing, Optional errorMessageTitle As String = "DefaultErrorMessage")
 
             If exception IsNot Nothing Then
-                _logger.Error("DefaultErrorMessage", exception)
+                _logger.Error(errorMessageTitle, exception)
             End If
 
-            MsgBox("Something went wrong while executing the last task. Please contact Globagility Inc. for assistance.",
+            MsgBox("Something went wrong while executing the last task. Please contact " & My.Resources.AppCreator & " for assistance.",
                    MsgBoxStyle.OkOnly,
                    title)
         End Sub

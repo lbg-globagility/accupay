@@ -89,6 +89,8 @@ INSERT INTO payrate
     ,NightDifferentialOTRate
     ,RestDayRate
     ,RestDayOvertimeRate
+    ,RestDayNDRate
+    ,RestDayNDOTRate
 ) SELECT
     NEW.RowID
     ,CURRENT_TIMESTAMP()
@@ -103,6 +105,8 @@ INSERT INTO payrate
     ,NightDifferentialOTRate
     ,RestDayRate
     ,RestDayOvertimeRate
+    ,RestDayNDRate
+    ,RestDayNDOTRate
 FROM payrate
 GROUP BY `Date`
 ORDER BY `Date`

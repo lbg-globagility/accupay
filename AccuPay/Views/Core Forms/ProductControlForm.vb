@@ -1,5 +1,7 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Imports Microsoft.EntityFrameworkCore
+Imports MySql.Data.MySqlClient
 Imports System.IO
+Imports System.Threading.Tasks
 
 Public Class ProductControlForm
 
@@ -298,11 +300,11 @@ Public Class ProductControlForm
     '    End Select
     'End Sub
 
-    Dim seleceted_rowindex As Integer = -1
+    Dim selected_rowindex As Integer = -1
 
     Private Sub dgvproducts_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvproducts.CellMouseDown
 
-        seleceted_rowindex = -1
+        selected_rowindex = -1
 
         If e.RowIndex > -1 And e.ColumnIndex > -1 Then
 
@@ -325,9 +327,9 @@ Public Class ProductControlForm
 
                         dgvproducts.Focus()
 
-                        seleceted_rowindex = e.RowIndex
+                        selected_rowindex = e.RowIndex
 
-                        dgvproducts.Item(e.ColumnIndex, seleceted_rowindex).Selected = True
+                        dgvproducts.Item(e.ColumnIndex, selected_rowindex).Selected = True
 
                         ContextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Default)
 
@@ -403,35 +405,66 @@ Public Class ProductControlForm
 
     End Sub
 
-    Private Sub DeleteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeleteToolStripMenuItem.Click
+    Private Async Sub DeleteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeleteToolStripMenuItem.Click
 
-        If seleceted_rowindex = -1 Then
+        If selected_rowindex = -1 Then Return
 
+        Dim allowanceName = dgvproducts.Item("PartNo", selected_rowindex).Value.ToString
+
+
+        Dim prompt As DialogResult
+
+        If n_categname = ProductConstant.ALLOWANCE_TYPE_CATEGORY AndAlso
+            Await CheckIfAllowanceIsUsedInPayroll(allowanceName) Then
+
+            prompt = MessageBox.Show("This allowance type is already used in generated payrolls. Are you sure you want to delete this item?",
+                                    "Delete item",
+                                    MessageBoxButtons.YesNoCancel,
+                                    MessageBoxIcon.Warning,
+                                    MessageBoxDefaultButton.Button2)
         Else
 
-            Dim prompt = MessageBox.Show("Delete item",
-                                         "Are you sure do you want to delete this item ?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+            prompt = MessageBox.Show("Are you sure do you want to delete this item?",
+                                    "Delete item",
+                                    MessageBoxButtons.YesNoCancel,
+                                    MessageBoxIcon.Question,
+                                    MessageBoxDefaultButton.Button2)
 
-            If prompt = Windows.Forms.DialogResult.Yes Then
-                dgvproducts.Enabled = False
-                Dim n_ExecuteQuery As _
-                    New ExecuteQuery("UPDATE product" &
-                                     " SET LastUpd=CURRENT_TIMESTAMP()" &
-                                     ",LastUpdBy='" & z_User & "'" &
-                                     ",ActiveData='0'" &
-                                     " WHERE RowID='" & dgvproducts.Item("RowID", seleceted_rowindex).Value & "';")
+        End If
 
-                Dim removing_row = dgvproducts.Rows(seleceted_rowindex)
+        If prompt = Windows.Forms.DialogResult.Yes Then
+            dgvproducts.Enabled = False
+            Dim n_ExecuteQuery As _
+            New ExecuteQuery("UPDATE product" &
+                             " SET LastUpd=CURRENT_TIMESTAMP()" &
+                             ",LastUpdBy='" & z_User & "'" &
+                             ",ActiveData='0'" &
+                             " WHERE RowID='" & dgvproducts.Item("RowID", selected_rowindex).Value & "';")
 
-                dgvproducts.Rows.Remove(removing_row)
+            Dim removing_row = dgvproducts.Rows(selected_rowindex)
+
+            dgvproducts.Rows.Remove(removing_row)
 
                 'ToolStripButton3_Click(sender, e)
 
             End If
             dgvproducts.Enabled = True
-        End If
 
     End Sub
+
+    Private Async Function CheckIfAllowanceIsUsedInPayroll(allowanceName As String) As Task(Of Boolean)
+
+        Using context As New PayrollContext
+
+            Return Await context.AllowanceItems.
+                    Include(Function(a) a.Allowance).
+                    Include(Function(a) a.Allowance.Product).
+                    Where(Function(a) a.Allowance.Product.PartNo = allowanceName).
+                    AnyAsync
+
+        End Using
+
+    End Function
 
     Private Sub ContextMenuStrip1_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip1.Opening
 

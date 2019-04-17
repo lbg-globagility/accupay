@@ -101,7 +101,7 @@ Public Class viewtotallow
             Dim allowanceTypes = Await context.Products.
                 Where(Function(p) Nullable.Equals(p.OrganizationID, orgId)).
                 Where(Function(p) p.PartNo.Trim().Length > 0).
-                Where(Function(p) Nullable.Equals(p.Category, "Allowance Type")).
+                Where(Function(p) Nullable.Equals(p.Category, ProductConstant.ALLOWANCE_TYPE_CATEGORY)).
                 Where(Function(p) p.ActiveData).
                 Select(Function(p) p.PartNo).
                 OrderBy(Function(p) p.Trim()).

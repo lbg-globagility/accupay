@@ -120,7 +120,6 @@ IF $employeeId IS NOT NULL THEN
         etentd_TimeentrylogsImportID
     ON DUPLICATE KEY
     UPDATE
-        LastUpd = CURRENT_TIMESTAMP(),
         LastUpdBy = etentd_LastUpdBy,
         TimeIn = etentd_TimeIn,
         TimeOut = etentd_TimeOut,

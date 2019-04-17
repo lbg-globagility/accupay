@@ -84,7 +84,7 @@ Public Class PayStubForm
     Private _successfulPaystubs As Integer = 0
     Private _failedPaystubs As Integer = 0
 
-    Const max_count_per_page As Integer = 1
+    Const max_count_per_page As Integer = 50
 
     Dim currentEmployeeID As String = Nothing
 
@@ -215,7 +215,7 @@ Public Class PayStubForm
         cboProducts.DisplayMember = "ProductName"
 
         cboProducts.DataSource = New SQLQueryToDatatable("SELECT RowID AS 'ProductID', Name AS 'ProductName', Category FROM product WHERE Category IN ('Allowance Type', 'Bonus', 'Adjustment Type')" &
-                                                  " AND OrganizationID='" & orgztnID & "';").ResultTable
+                                                  " AND OrganizationID='" & orgztnID & "' ORDER BY Name;").ResultTable
 
         dgvAdjustments.AutoGenerateColumns = False
 
@@ -1489,7 +1489,7 @@ Public Class PayStubForm
             End If
 
             'Absent
-            txttotabsent.Text = 0.0
+            txttotabsent.Text = FormatNumber(ValNoComma((drow("AbsentHours"))), 2)
             txttotabsentamt.Text = FormatNumber(ValNoComma((drow("Absent"))), 2)
             'Tardiness / late
             txttottardi.Text = ValNoComma(drow("LateHours"))
@@ -1600,7 +1600,7 @@ Public Class PayStubForm
 
             psaItems = New SQL("CALL VIEW_paystubitemundeclared('" & ValNoComma(drow("RowID")) & "');").GetFoundRows.Tables(0)
 
-            Dim strdouble = ValNoComma(drow("TrueSalary")) / ValNoComma(drow("PAYFREQUENCYDIVISOR")) 'BasicPay
+            Dim strdouble = ValNoComma(drow("BasicPay")) 'BasicPay
 
             'Basic Pay
             txtempbasicpay_U.Text = FormatNumber(ValNoComma(strdouble), 2)
@@ -1675,7 +1675,7 @@ Public Class PayStubForm
             End If
 
             'Absent
-            txttotabsent_U.Text = 0.0
+            txttotabsent_U.Text = FormatNumber(ValNoComma((drow("AbsentHours"))), 2)
             txttotabsentamt_U.Text = FormatNumber(ValNoComma((drow("Absent"))), 2)
             'Tardiness / late
             txttottardi_U.Text = ValNoComma(drow("HoursLate"))
@@ -1891,7 +1891,7 @@ Public Class PayStubForm
                 cboProducts.DisplayMember = "ProductName"
 
                 cboProducts.DataSource = New SQLQueryToDatatable("SELECT RowID AS 'ProductID', Name AS 'ProductName', Category FROM product WHERE Category IN ('Allowance Type', 'Bonus', 'Adjustment Type')" &
-                                                                 " AND OrganizationID='" & orgztnID & "';").ResultTable
+                                                                 " AND OrganizationID='" & orgztnID & "' ORDER BY Name;").ResultTable
 
             End If
 

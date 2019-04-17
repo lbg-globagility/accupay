@@ -78,11 +78,6 @@ Namespace Global.AccuPay.Views.Employees
         Private Sub OnSave() Handles _view.SaveSalary
             Using context = New PayrollContext()
                 Try
-                    Dim sssAmount = If(_view.Sss, 0)
-
-                    Dim socialSecurityBracket = context.SocialSecurityBrackets.
-                        FirstOrDefault(Function(s) s.EmployeeContributionAmount = sssAmount)
-
                     Dim effectiveTo = _view.EffectiveTo
 
                     With _currentSalary
@@ -92,8 +87,6 @@ Namespace Global.AccuPay.Views.Employees
                         .EffectiveFrom = _view.EffectiveFrom
                         .EffectiveTo = effectiveTo
                         .PhilHealthDeduction = If(_view.PhilHealth, 0D)
-                        .PaySocialSecurityID = socialSecurityBracket?.RowID
-                        .SocialSecurityBracket = socialSecurityBracket
                         .HDMFAmount = _view.PagIBIG
                     End With
 
@@ -173,7 +166,6 @@ Namespace Global.AccuPay.Views.Employees
 
             Using context = New PayrollContext()
                 _salaries = context.Salaries.
-                    Include(Function(s) s.SocialSecurityBracket).
                     Where(Function(s) Nullable.Equals(s.EmployeeID, _employee.RowID)).
                     OrderByDescending(Function(s) s.EffectiveFrom).
                     ToList()

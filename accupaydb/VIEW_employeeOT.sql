@@ -27,7 +27,7 @@ eot.RowID
 FROM employeeovertime eot
 WHERE eot.OrganizationID=eot_OrganizationID
 AND eot.EmployeeID=eot_EmployeeID
-ORDER BY eot.OTStartDate,eot.OTEndDate
+ORDER BY eot.OTStartDate DESC,eot.OTEndDate DESC
 LIMIT pagenumber, 10;
 
 

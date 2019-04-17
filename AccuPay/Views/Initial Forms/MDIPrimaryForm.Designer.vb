@@ -142,7 +142,7 @@ Partial Class MDIPrimaryForm
         Me.Showmainbutton = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton0 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnHRIS = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton5 = New System.Windows.Forms.ToolStripButton()
@@ -1313,7 +1313,7 @@ Partial Class MDIPrimaryForm
         Me.Showmainbutton.Dock = System.Windows.Forms.DockStyle.Left
         Me.Showmainbutton.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.Showmainbutton.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.Showmainbutton.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton0, Me.ToolStripButton1, Me.ToolStripButton2, Me.ToolStripButton3, Me.ToolStripButton4, Me.ToolStripButton5})
+        Me.Showmainbutton.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton0, Me.ToolStripButton1, Me.tsbtnHRIS, Me.ToolStripButton3, Me.ToolStripButton4, Me.ToolStripButton5})
         Me.Showmainbutton.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow
         Me.Showmainbutton.Location = New System.Drawing.Point(0, 0)
         Me.Showmainbutton.Name = "Showmainbutton"
@@ -1352,17 +1352,17 @@ Partial Class MDIPrimaryForm
         '
         'ToolStripButton2
         '
-        Me.ToolStripButton2.AutoSize = False
-        Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
-        Me.ToolStripButton2.Size = New System.Drawing.Size(85, 80)
-        Me.ToolStripButton2.Text = "HRIS"
-        Me.ToolStripButton2.TextAlign = System.Drawing.ContentAlignment.BottomCenter
-        Me.ToolStripButton2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        Me.ToolStripButton2.ToolTipText = "HRIS"
+        Me.tsbtnHRIS.AutoSize = False
+        Me.tsbtnHRIS.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
+        Me.tsbtnHRIS.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnHRIS.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+        Me.tsbtnHRIS.Name = "ToolStripButton2"
+        Me.tsbtnHRIS.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
+        Me.tsbtnHRIS.Size = New System.Drawing.Size(85, 80)
+        Me.tsbtnHRIS.Text = "HRIS"
+        Me.tsbtnHRIS.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.tsbtnHRIS.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        Me.tsbtnHRIS.ToolTipText = "HRIS"
         '
         'ToolStripButton3
         '
@@ -1552,7 +1552,7 @@ Partial Class MDIPrimaryForm
     Friend WithEvents ToolStripButton0 As System.Windows.Forms.ToolStripButton
     Friend WithEvents systemprogressbar As System.Windows.Forms.ToolStripProgressBar
     Friend WithEvents ToolStripButton4 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripButton2 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents tsbtnHRIS As System.Windows.Forms.ToolStripButton
     Friend WithEvents ImageList1 As System.Windows.Forms.ImageList
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents ToolStripLabel8 As System.Windows.Forms.ToolStripLabel

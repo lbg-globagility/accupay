@@ -1,6 +1,7 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Entity
-Imports AccuPay.Loans
 Imports AccuPay.SimplifiedEntities
 Imports Microsoft.EntityFrameworkCore
 
@@ -11,7 +12,7 @@ Namespace Global.AccuPay.Repository
         Public Async Function GetAll(Of T As {New, IEmployeeBase})() As Task(Of IEnumerable(Of IEmployeeBase))
 
             Using context = New PayrollContext()
-                Dim query As IQueryable(Of Entity.Employee) = GetAllEmployeeBaseQuery(context)
+                Dim query = GetAllEmployeeBaseQuery(context)
 
                 Select Case GetType(T)
                     Case GetType(GridView.Employee)
@@ -21,7 +22,7 @@ Namespace Global.AccuPay.Repository
                         list = Await query.
                                     Select(Function(e) New GridView.Employee With {
                                         .RowID = e.RowID,
-                                        .EmployeeID = e.EmployeeNo,
+                                        .EmployeeNo = e.EmployeeNo,
                                         .FirstName = e.FirstName,
                                         .MiddleName = e.MiddleName,
                                         .LastName = e.LastName,
@@ -45,20 +46,19 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-
         Public Async Function GetByEmployeeNumberAsync(employeeNumber As String) As Task(Of Employee)
 
             Using context = New PayrollContext()
 
-                Return Await context.Employees.
+                Dim query = GetAllEmployeeBaseQuery(context)
+
+                Return Await query.
                     Where(Function(l) l.EmployeeNo = employeeNumber).
-                    Where(Function(l) Nullable.Equals(l.OrganizationID, z_OrganizationID)).
                     FirstOrDefaultAsync()
 
             End Using
 
         End Function
-
 
         Public Async Function GetAllWithPosition() As Task(Of List(Of Employee))
 
@@ -84,7 +84,7 @@ Namespace Global.AccuPay.Repository
 
             Dim matchCriteria =
             Function(employee As IEmployeeBase) As Boolean
-                Dim containsEmployeeId = employee.EmployeeID.ToLower().Contains(searchValue)
+                Dim containsEmployeeId = employee.EmployeeNo.ToLower().Contains(searchValue)
                 Dim containsFullName = (employee.FirstName.ToLower() + " " + employee.LastName.ToLower()).
                                         Contains(searchValue)
 
@@ -98,9 +98,8 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-
 #Region "Private Functions"
-        Private Shared Function GetAllEmployeeBaseQuery(context As PayrollContext) As IQueryable(Of Entity.Employee)
+        Private Function GetAllEmployeeBaseQuery(context As PayrollContext) As IQueryable(Of Entity.Employee)
             Return context.Employees.
                             Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID))
         End Function
@@ -109,4 +108,3 @@ Namespace Global.AccuPay.Repository
     End Class
 
 End Namespace
-

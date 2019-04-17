@@ -10,32 +10,95 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_attendance_sheet`(IN `Organizat
     DETERMINISTIC
 BEGIN
 
-SELECT
-CONCAT_WS(' / ', ee.EmployeeID, CONCAT_WS(',', ee.LastName, ee.FirstName, INITIALS(ee.MiddleName,'. ','1'))) `DatCol1`
-, UCASE(SUBSTRING(DATE_FORMAT(ete.Date,'%W'),1,3)) `DatCol2`
-, DATE_FORMAT(ete.Date,'%m/%e/%y') `DatCol3`
-, IFNULL(CONCAT(TIME_FORMAT(sh.TimeFrom,'%l'), IF(TIME_FORMAT(sh.TimeFrom,'%i') > 0, CONCAT(':', TIME_FORMAT(sh.TimeFrom,'%i')),''),'to', TIME_FORMAT(sh.TimeTo,'%l'), IF(TIME_FORMAT(sh.TimeTo,'%i') > 0, CONCAT(':', TIME_FORMAT(sh.TimeTo,'%i')),'')),'') `DatCol4`
-,REPLACE(TIME_FORMAT(etd.TimeIn,'%l:%i %p'),'M','') `DatCol5`
-,'' AS `DatCol6`
-,'' AS `DatCol7`
-,REPLACE(TIME_FORMAT(etd.TimeOut,'%l:%i %p'),'M','') `DatCol8`
-, IFNULL(ete.RegularHoursWorked,0) `DatCol9`
-, IFNULL(ete.HoursLate,0) `DatCol10`
-, IFNULL(ete.UndertimeHours,0) `DatCol11`
-, IFNULL(ete.NightDifferentialHours,0) `DatCol12`
-, IFNULL(ete.OvertimeHoursWorked,0) `DatCol13`
-, IFNULL(ete.NightDifferentialOTHours,0) `DatCol14`
-,etd.TimeScheduleType `DatCol15`
-FROM employeetimeentry ete
-LEFT JOIN employeeshift esh ON esh.RowID=ete.EmployeeShiftID
-LEFT JOIN shift sh ON sh.RowID=esh.ShiftID
-LEFT JOIN employeetimeentrydetails etd ON etd.EmployeeID=ete.EmployeeID AND etd.OrganizationID=ete.OrganizationID AND etd.Date=ete.Date
-LEFT JOIN employee ee ON ee.RowID=ete.EmployeeID AND FIND_IN_SET(ee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
-WHERE ete.DATE BETWEEN FromDate AND ToDate AND
-    ete.OrganizationID=OrganizationID
-GROUP BY ete.RowID
-ORDER BY ete.Date,ee.LastName;
+DECLARE usesShiftSchedule BOOLEAN DEFAULT FALSE;
 
+SET usesShiftSchedule = EXISTS(SELECT l.RowID FROM listofval l WHERE l.`Type` = 'ShiftPolicy' AND l.DisplayValue = 'True');
+
+SET @customDateFormat = '%c/%e/%Y';
+SET @customTimeFormat = '%l:%i';
+
+SELECT
+	CONCAT_WS(' / ', e.EmployeeID, CONCAT_WS(', ', e.LastName, e.FirstName)) `DatCol1`
+	, UCASE(LEFT(DAYNAME(ete.`Date`), 3)) `DatCol2`
+	, DATE_FORMAT(ete.`Date`, @customDateFormat) `DatCol3`
+	,IF(usesShiftSchedule = TRUE,
+		CONCAT_WS(' to '
+						, CONCAT(TIME_FORMAT(shiftschedules.StartTime, IF(MINUTE(shiftschedules.StartTime)=0, '%l', @customTimeFormat))
+									, LEFT(TIME_FORMAT(shiftschedules.StartTime, ' %p'), 2))
+						, CONCAT(TIME_FORMAT(shiftschedules.EndTime, IF(MINUTE(shiftschedules.EndTime)=0, '%l', @customTimeFormat))
+									, LEFT(TIME_FORMAT(shiftschedules.EndTime, ' %p'), 2))
+						),
+					
+		IFNULL(CONCAT(TIME_FORMAT(shift.TimeFrom,'%l'), IF(TIME_FORMAT(shift.TimeFrom,'%i') > 0, CONCAT(':', TIME_FORMAT(shift.TimeFrom,'%i')),''),'to', TIME_FORMAT(shift.TimeTo,'%l'), IF(TIME_FORMAT(shift.TimeTo,'%i') > 0, CONCAT(':', TIME_FORMAT(shift.TimeTo,'%i')),'')),'')
+	)`DatCol4`
+	,REPLACE(TIME_FORMAT(etd.TimeIn,'%l:%i %p'),'M','') `DatCol5`
+	,'' AS `DatCol6`
+	,'' AS `DatCol7`
+	,REPLACE(TIME_FORMAT(etd.TimeOut,'%l:%i %p'),'M','') `DatCol8`
+	, IFNULL(ete.RegularHoursWorked,0) `DatCol9`
+	, IFNULL(ete.HoursLate,0) `DatCol10`
+	, IFNULL(ete.UndertimeHours,0) `DatCol11`
+	, IFNULL(ete.NightDifferentialHours,0) `DatCol12`
+	, IFNULL(ete.OvertimeHoursWorked,0) `DatCol13`
+	, IFNULL(ete.NightDifferentialOTHours,0) `DatCol14`
+	,etd.TimeScheduleType `DatCol15`
+FROM employeetimeentry ete
+LEFT JOIN (
+    SELECT EmployeeID, DATE,
+    (SELECT RowID
+    FROM employeetimeentrydetails
+    WHERE EmployeeID = groupedEtd.EmployeeID
+    AND DATE = groupedEtd.Date
+    ORDER BY LastUpd DESC
+    LIMIT 1) RowID
+FROM employeetimeentrydetails groupedEtd
+WHERE Date BETWEEN FromDate AND ToDate
+GROUP BY EmployeeID, Date
+) latest
+    ON latest.EmployeeID = ete.EmployeeID AND
+        latest.Date = ete.Date
+LEFT JOIN employeetimeentrydetails etd
+    ON etd.Date = ete.Date AND
+        etd.OrganizationID = ete.OrganizationID AND
+        etd.EmployeeID = ete.EmployeeID AND
+        etd.RowID = latest.RowID
+LEFT JOIN employeeshift
+    ON employeeshift.RowID = ete.EmployeeShiftID
+LEFT JOIN (
+    SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
+    FROM employeeofficialbusiness
+    WHERE OffBusStartDate BETWEEN FromDate AND ToDate
+    GROUP BY EmployeeID, Date
+) latestOb
+    ON latestOb.EmployeeID = ete.EmployeeID AND
+        latestOb.Date = ete.Date
+LEFT JOIN employeeofficialbusiness ofb
+    ON ofb.OffBusStartDate = ete.Date AND
+        ofb.EmployeeID = ete.EmployeeID AND
+        ofb.Created = latestOb.Created
+LEFT JOIN employeeovertime ot
+    ON ot.OTStartDate = ete.Date AND
+        ot.EmployeeID = ete.EmployeeID AND
+        ot.OTStatus = 'Approved'
+LEFT JOIN payrate
+    ON payrate.Date = ete.Date AND
+        payrate.OrganizationID = ete.OrganizationID
+LEFT JOIN shiftschedules
+    ON shiftschedules.EmployeeID = ete.EmployeeID AND
+        shiftschedules.`Date` = ete.`Date`
+    
+LEFT JOIN shift
+    ON employeeshift.ShiftID = shift.RowID
+    
+INNER JOIN employee e
+    ON ete.EmployeeID = e.RowID
+
+WHERE ete.OrganizationID = OrganizationID AND
+    ete.`Date` BETWEEN FromDate AND ToDate
+GROUP BY ete.RowID
+ORDER BY  CONCAT(e.LastName, e.FirstName), ete.`Date`
+;
+	
 END//
 DELIMITER ;
 

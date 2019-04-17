@@ -13,20 +13,6 @@ DECLARE e_type VARCHAR(50);
 
 DECLARE e_workdayyear INT(11);
 
-DECLARE first_salary_count INT(11);
-
-DECLARE employment_date DATE;
-
-SELECT COUNT(RowID) FROM employeesalary WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID INTO first_salary_count;
-
-IF first_salary_count < 1 THEN
-    SELECT e.StartDate FROM employee e WHERE e.RowID=NEW.EmployeeID AND e.OrganizationID=NEW.OrganizationID INTO employment_date;
-
-    IF employment_date IS NOT NULL THEN
-        SET NEW.EffectiveDateFrom=employment_date;
-    END IF;
-END IF;
-
 SELECT e.EmployeeType,e.WorkDaysPerYear FROM employee e WHERE e.RowID=NEW.EmployeeID AND e.OrganizationID=NEW.OrganizationID INTO e_type,e_workdayyear;
 
 IF e_type = 'Daily' THEN

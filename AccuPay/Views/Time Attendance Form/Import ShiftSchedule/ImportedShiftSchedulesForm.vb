@@ -1,0 +1,505 @@
+﻿Option Strict On
+Imports AccuPay.Entity
+Imports AccuPay.Tools
+Imports Globagility.AccuPay.ShiftSchedules
+Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.Extensions.Logging
+Imports Microsoft.Extensions.Logging.Console
+
+Public Class ImportedShiftSchedulesForm
+
+#Region "VariableDeclarations"
+
+    Private _dataSource As IList(Of ShiftScheduleModel)
+
+    Private _dataSourceOk As IList(Of ShiftScheduleModel)
+
+    Private _dataSourceFailed As IList(Of ShiftScheduleModel)
+
+    Private _shiftScheduleRowRecords As IList(Of ShiftScheduleRowRecord)
+
+    Private _employees As IList(Of Employee)
+
+#End Region
+
+#Region "Constructors"
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+    End Sub
+
+    Sub New(listOfShiftScheduleRowRecord As IList(Of ShiftScheduleRowRecord))
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        _shiftScheduleRowRecords = listOfShiftScheduleRowRecord
+
+    End Sub
+
+#End Region
+
+#Region "Methods"
+
+    Private Async Sub GetEmployeesAsync(listOfShiftScheduleRowRecord As IList(Of ShiftScheduleRowRecord))
+        Using context = New PayrollContext
+            _employees = Await context.Employees.
+                Where(Function(e) listOfShiftScheduleRowRecord.Any(Function(ee) ee.EmployeeNo = e.EmployeeNo)).
+                Where(Function(e) Equals(e.OrganizationID, z_OrganizationID)).
+                ToListAsync()
+
+            For Each shiftSched In _shiftScheduleRowRecords
+
+                Dim seek = _employees.Where(Function(ee) ee.EmployeeNo = shiftSched.EmployeeNo)
+
+                Dim isRestDay = If(String.IsNullOrWhiteSpace(shiftSched.IsRestDay), False, CBool(Convert.ToInt16(shiftSched.IsRestDay)))
+
+                Dim endDate = If(shiftSched.EndDate.HasValue, shiftSched.EndDate.Value, shiftSched.StartDate)
+                Dim dates = Calendar.EachDay(shiftSched.StartDate, endDate)
+                If seek.Any Then
+                    Dim employee = seek.FirstOrDefault
+
+                    AppendToDataSourceWithEmployee(shiftSched, isRestDay, dates, employee)
+                Else
+                    AppendToDataSourceWithNoEmployee(shiftSched, isRestDay, dates)
+                End If
+
+            Next
+
+            Dim satisfy = Function(ssm As ShiftScheduleModel)
+                              Return ssm.IsValidToSave And ssm.IsExistingEmployee
+                          End Function
+
+            _dataSourceOk = _dataSource.
+                Where(satisfy).
+                ToList()
+
+            gridOK.DataSource = _dataSourceOk
+
+
+
+
+            _dataSourceFailed = _dataSource.
+                Where(Function(ssm) Not satisfy(ssm)).
+                ToList()
+
+            For Each ssm In _dataSourceFailed
+                Dim reasons As New List(Of String)
+
+                If Not ssm.IsValidToSave Then reasons.Add("no shift")
+
+                If Not ssm.IsExistingEmployee Then reasons.Add("employee doesn't exists")
+
+                ssm.Remarks = String.Join("; ", reasons.ToArray())
+            Next
+            gridFailed.DataSource = _dataSourceFailed
+
+        End Using
+    End Sub
+
+    Private Sub AppendToDataSourceWithNoEmployee(shiftSched As ShiftScheduleRowRecord, isRestDay As Boolean, dates As IEnumerable(Of Date))
+        For Each d In dates
+            _dataSource.Add(New ShiftScheduleModel() With {
+                        .EmployeeNo = shiftSched.EmployeeNo,
+                        .DateValue = d,
+                        .BreakFrom = shiftSched.BreakStartTime,
+                        .BreakLength = shiftSched.BreakLength,
+                        .IsRestDay = isRestDay,
+                        .TimeFrom = shiftSched.StartTime,
+                        .TimeTo = shiftSched.EndTime})
+
+        Next
+    End Sub
+
+    Private Sub AppendToDataSourceWithEmployee(shiftSched As ShiftScheduleRowRecord, isRestDay As Boolean, dates As IEnumerable(Of Date), employee As Employee)
+        For Each d In dates
+            _dataSource.Add(New ShiftScheduleModel(employee) With {
+                        .DateValue = d,
+                        .BreakFrom = shiftSched.BreakStartTime,
+                        .BreakLength = shiftSched.BreakLength,
+                        .IsRestDay = isRestDay,
+                        .TimeFrom = shiftSched.StartTime,
+                        .TimeTo = shiftSched.EndTime})
+
+        Next
+    End Sub
+
+#End Region
+
+#Region "Functions"
+
+#End Region
+
+#Region "PrivateClasses"
+    Private Class ShiftScheduleModel
+        Private Const ONE_DAY_HOURS As Integer = 24
+        Private Const MINUTES_PER_HOUR As Integer = 60
+        Private origStartTime, origEndTime, origBreakStart As TimeSpan?
+        Private origOffset As Boolean
+        Private origBreakLength As Decimal
+        Private _timeFrom, _timeTo, _breakFrom As TimeSpan?
+        Private _isNew, _madeChanges, _isValid As Boolean
+        Private _eds As EmployeeDutySchedule
+
+        Public Sub New()
+
+        End Sub
+
+        Public Sub New(employee As Employee)
+            AssignEmployee(employee)
+
+        End Sub
+
+        Public Sub New(ess As EmployeeDutySchedule)
+            _eds = ess
+
+            _RowID = ess.RowID
+            AssignEmployee(ess.Employee)
+
+            _DateValue = ess.DateSched
+            _timeFrom = ess.StartTime
+            _timeTo = ess.EndTime
+
+            _BreakLength = ess.BreakLength
+
+            Dim _hasBreakStart = ess.BreakStartTime.HasValue
+            If _hasBreakStart Then
+                _breakFrom = ess.BreakStartTime
+
+            End If
+
+            _IsRestDay = ess.IsRestDay
+
+            origStartTime = _timeFrom
+            origEndTime = _timeTo
+
+            origBreakStart = _breakFrom
+            origBreakLength = _BreakLength
+
+            origOffset = _IsRestDay
+        End Sub
+
+        Private Sub AssignEmployee(employee As Employee)
+            _EmployeeId = employee.RowID
+            _EmployeeNo = employee.EmployeeNo
+            _FullName = String.Join(", ", employee.LastName, employee.FirstName)
+
+        End Sub
+
+        Public Property RowID As Integer
+        Public Property EmployeeId As Integer?
+        Public Property EmployeeNo As String
+        Public Property FullName As String
+        Public Property DateValue As Date
+
+        Public Property TimeFrom As TimeSpan?
+            Get
+                Return _timeFrom
+            End Get
+            Set(value As TimeSpan?)
+                _timeFrom = value
+            End Set
+        End Property
+
+        Public ReadOnly Property TimeFromDisplay As DateTime?
+            Get
+                Return TimeUtility.ToDateTime(_timeFrom)
+            End Get
+        End Property
+
+        Public ReadOnly Property TimeToDisplay As DateTime?
+            Get
+                Return TimeUtility.ToDateTime(_timeTo)
+            End Get
+        End Property
+
+        Public Property TimeTo As TimeSpan?
+            Get
+                Return _timeTo
+            End Get
+            Set(value As TimeSpan?)
+                _timeTo = value
+            End Set
+        End Property
+
+        Public ReadOnly Property BreakFromDisplay As DateTime?
+            Get
+                Return TimeUtility.ToDateTime(_breakFrom)
+            End Get
+        End Property
+
+        Public Property BreakFrom As TimeSpan?
+            Get
+                Return _breakFrom
+            End Get
+            Set(value As TimeSpan?)
+                _breakFrom = value
+            End Set
+        End Property
+
+        Public Property BreakLength As Decimal
+
+        Public Property IsRestDay As Boolean
+
+        Public Property ShiftHours As Decimal
+        Public Property WorkHours As Decimal
+
+        Public Property Remarks As String
+
+        Public Sub ComputeShiftHours()
+            Dim shiftStart = _timeFrom
+            Dim shiftEnd = _timeTo
+
+            Dim isValidForCompute = shiftStart.HasValue And shiftStart.HasValue
+
+            If isValidForCompute Then
+                Dim sdfsd = shiftEnd - shiftStart
+                If sdfsd.Value.Hours <= 0 Then sdfsd = sdfsd.Value.Add(New TimeSpan(ONE_DAY_HOURS, 0, 0))
+
+                ShiftHours = Convert.ToDecimal(sdfsd.Value.TotalMinutes / MINUTES_PER_HOUR)
+            Else
+                ShiftHours = 0
+            End If
+        End Sub
+
+        Public Sub ComputeWorkHours()
+            WorkHours = ShiftHours - BreakLength
+        End Sub
+
+        Public ReadOnly Property DayName As String
+            Get
+                Return GetDayName(DateValue)
+            End Get
+        End Property
+
+        Public Shared Function GetDayName(dateValue As Date) As String
+            Dim machineCulture As Globalization.CultureInfo = Globalization.CultureInfo.CurrentCulture
+
+            Dim dayOfWeek As DayOfWeek = machineCulture.Calendar.GetDayOfWeek(dateValue)
+            Return machineCulture.DateTimeFormat.GetDayName(dayOfWeek)
+        End Function
+
+        Public ReadOnly Property IsExisting As Boolean
+            Get
+                Return _RowID > 0
+            End Get
+        End Property
+
+        Public ReadOnly Property HasChanged As Boolean
+            Get
+                _madeChanges = Not Equals(origStartTime, _timeFrom) _
+                    Or Not Equals(origEndTime, _timeTo) _
+                    Or Not Equals(origBreakStart, _breakFrom) _
+                    Or Not Equals(origBreakLength, _BreakLength) _
+                    Or Not Equals(origOffset, _IsRestDay)
+
+                Return _madeChanges
+            End Get
+        End Property
+
+        Public ReadOnly Property IsValidToSave As Boolean
+            Get
+                Dim hasShiftTime = _timeFrom.HasValue _
+                    And _timeTo.HasValue
+
+                _isValid = hasShiftTime Or _IsRestDay
+
+                Return _isValid
+            End Get
+        End Property
+
+        Public ReadOnly Property IsExistingEmployee() As Boolean
+            Get
+                Return EmployeeId.HasValue
+            End Get
+        End Property
+
+        Public ReadOnly Property IsExist As Boolean
+            Get
+                Return _eds IsNot Nothing
+            End Get
+        End Property
+
+        Public ReadOnly Property IsNew As Boolean
+            Get
+                Return (_eds?.RowID).GetValueOrDefault() = 0 And IsValidToSave
+            End Get
+        End Property
+
+        Public ReadOnly Property IsUpdate As Boolean
+            Get
+                Return Not IsNew And _madeChanges And IsValidToSave
+            End Get
+        End Property
+
+        Public ReadOnly Property ConsideredDelete As Boolean
+            Get
+                Dim _deleteable = Not IsValidToSave And IsExist
+
+                Return _deleteable
+            End Get
+        End Property
+
+        Public Sub RemoveShift()
+            _eds = Nothing
+        End Sub
+
+        Public ReadOnly Property ToEmployeeDutySchedule As EmployeeDutySchedule
+            Get
+                If _eds Is Nothing Then
+                    _eds = New EmployeeDutySchedule With {
+                        .EmployeeID = _EmployeeId,
+                        .OrganizationID = z_OrganizationID,
+                        .DateSched = _DateValue,
+                        .CreatedBy = z_User,
+                        .Created = Now
+                    }
+                End If
+
+                With _eds
+                    .LastUpdBy = z_User
+                    .LastUpd = Now
+                    .StartTime = _timeFrom
+                    .EndTime = _timeTo
+                    .BreakStartTime = _breakFrom
+                    .BreakLength = _BreakLength
+                    .IsRestDay = _IsRestDay
+                    .ShiftHours = ShiftHours
+                    .WorkHours = WorkHours
+                End With
+
+                Return _eds
+            End Get
+        End Property
+
+    End Class
+#End Region
+
+#Region "EventHandlers"
+
+    Private Sub ImportedShiftSchedulesForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        gridOK.AutoGenerateColumns = False
+        gridFailed.AutoGenerateColumns = False
+
+        _dataSource = New List(Of ShiftScheduleModel)
+
+        GetEmployeesAsync(_shiftScheduleRowRecords)
+
+    End Sub
+
+    Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
+
+        Using context = New PayrollContext
+
+            Dim minDate = _dataSourceOk.Min(Function(ssm) ssm.DateValue)
+            Dim maxDate = _dataSourceOk.Max(Function(ssm) ssm.DateValue)
+            Dim employeeIDs = _dataSourceOk.Select(Function(ssm) ssm.EmployeeId).Distinct
+
+            Dim eDutyScheds = Await context.EmployeeDutySchedules.
+                Where(Function(eds) eds.DateSched >= minDate AndAlso eds.DateSched <= maxDate).
+                Where(Function(eds) eds.OrganizationID.Value = z_OrganizationID).
+                Where(Function(eds) employeeIDs.Contains(eds.EmployeeID)).
+                ToListAsync()
+
+            For Each ssm In _dataSourceOk
+                Dim seek = eDutyScheds.
+                    Where(Function(eSched) eSched.EmployeeID.Value = ssm.EmployeeId.Value).
+                    Where(Function(eSched) eSched.DateSched = ssm.DateValue)
+
+                Dim eds = seek.FirstOrDefault
+                ssm.ComputeShiftHours()
+                ssm.ComputeWorkHours()
+
+                If seek.Any Then
+                    eds.StartTime = ssm.TimeFrom
+                    eds.EndTime = ssm.TimeTo
+                    eds.BreakStartTime = ssm.BreakFrom
+                    eds.BreakLength = ssm.BreakLength
+
+                    eds.ShiftHours = ssm.ShiftHours
+                    eds.WorkHours = ssm.WorkHours
+                Else
+
+                    context.EmployeeDutySchedules.Add(ssm.ToEmployeeDutySchedule)
+                End If
+
+            Next
+
+            Dim succeed As Boolean = False
+            Try
+                Dim i = Await context.SaveChangesAsync
+                succeed = True
+            Catch ex As Exception
+                succeed = False
+                Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
+                MessageBox.Show(errMsg, "Help", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Finally
+                If succeed Then DialogResult = DialogResult.OK
+            End Try
+
+        End Using
+
+    End Sub
+
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+        DialogResult = DialogResult.Cancel
+    End Sub
+
+    Private Sub gridOK_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles gridOK.CellContentClick
+
+    End Sub
+
+    Private Sub gridOK_DataSourceChanged(sender As Object, e As EventArgs) Handles gridOK.DataSourceChanged
+        Dim validCount = _dataSourceOk.Count
+
+        tabPageOK.Text = String.Concat(tabPageOK.AccessibleDescription, " (", validCount, ")")
+
+        Label2.Text = validCount.ToString("#,##0")
+    End Sub
+
+    Private Sub gridFailed_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles gridFailed.CellContentClick
+
+    End Sub
+
+    Private Sub gridFailed_DataSourceChanged(sender As Object, e As EventArgs) Handles gridFailed.DataSourceChanged
+        tabPageFailed.Text = String.Concat(tabPageFailed.AccessibleDescription, " (", _dataSourceFailed.Count, ")")
+    End Sub
+
+    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles Label2.Click
+
+    End Sub
+
+    Private Sub Label2_TextChanged(sender As Object, e As EventArgs) Handles Label2.TextChanged
+        Dim isValidToSave = Not Label2.Text = "0"
+        Label2.Visible = isValidToSave
+
+        btnSave.Enabled = isValidToSave
+    End Sub
+
+    Private Sub Label2_VisibleChanged(sender As Object, e As EventArgs) Handles Label2.VisibleChanged
+        If Label2.Visible Then
+            Label1.Text = "Total shifts :"
+        Else
+            Label1.Text = "Nothing to save"
+        End If
+    End Sub
+
+    Private Sub gridOK_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles gridOK.DataError
+
+    End Sub
+
+    Private Sub gridFailed_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles gridFailed.DataError
+
+    End Sub
+
+#End Region
+
+End Class

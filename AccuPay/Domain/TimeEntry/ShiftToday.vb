@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Tools
 
 Public Class CurrentShift
@@ -8,6 +9,12 @@ Public Class CurrentShift
     Public Const StandardWorkingHours As Decimal = 8
 
     Private _defaultRestDay As Integer?
+
+    Private _shiftSchedule2 As EmployeeDutySchedule
+
+    Public Overrides Function ToString() As String
+        Return $"{Start.ToString("yyyy-MM-dd hh:mm tt")} - {[End].ToString("yyyy-MM-dd hh:mm tt")} | {BreaktimeStart?.ToString("yyyy-MM-dd hh:mm tt")} - {BreaktimeEnd?.ToString("yyyy-MM-dd hh:mm tt")} "
+    End Function
 
     Public ReadOnly Property Start As Date
         Get
@@ -45,13 +52,13 @@ Public Class CurrentShift
 
     Public ReadOnly Property WorkingHours As Decimal
         Get
-            Return If(ShiftSchedule?.Shift?.WorkHours, StandardWorkingHours)
+            Return If(_shiftSchedule2?.WorkHours, If(ShiftSchedule?.Shift?.WorkHours, StandardWorkingHours))
         End Get
     End Property
 
     Public ReadOnly Property HasShift As Boolean
         Get
-            Return Shift IsNot Nothing
+            Return Shift IsNot Nothing Or _shiftSchedule2 IsNot Nothing
         End Get
     End Property
 
@@ -63,7 +70,17 @@ Public Class CurrentShift
 
     Public ReadOnly Property IsRestDay As Boolean
         Get
-            Dim isRestDayOffset = If(ShiftSchedule?.IsRestDay, False)
+            Dim isRestDayOffset = False
+
+            If _shiftSchedule2 IsNot Nothing Then
+
+                isRestDayOffset = _shiftSchedule2.IsRestDay
+
+            ElseIf ShiftSchedule IsNot Nothing Then
+
+                isRestDayOffset = ShiftSchedule.IsRestDay
+
+            End If
 
             Dim isDefaultRestDay = False
             If _defaultRestDay.HasValue Then
@@ -76,13 +93,25 @@ Public Class CurrentShift
 
     Public ReadOnly Property IsWorkingDay As Boolean
         Get
-            Return Not If(ShiftSchedule?.IsRestDay, True)
+            Return Not IsRestDay
         End Get
     End Property
 
     Public ReadOnly Property IsNightShift As Boolean
         Get
-            Return If(ShiftSchedule?.IsNightShift, False)
+            Return True
+        End Get
+    End Property
+
+    Public ReadOnly Property StartTime As TimeSpan?
+        Get
+            Return If(_shiftSchedule2?.StartTime, ShiftSchedule?.Shift?.TimeFrom)
+        End Get
+    End Property
+
+    Public ReadOnly Property EndTime As TimeSpan?
+        Get
+            Return If(_shiftSchedule2?.EndTime, ShiftSchedule?.Shift?.TimeTo)
         End Get
     End Property
 
@@ -114,6 +143,32 @@ Public Class CurrentShift
 
     Public Sub SetDefaultRestDay(dayOfWeek As Integer?)
         _defaultRestDay = dayOfWeek
+    End Sub
+
+    Public Sub New(shiftSchedule As EmployeeDutySchedule, [date] As DateTime)
+
+        Me.Date = [date]
+
+        If shiftSchedule Is Nothing OrElse
+            shiftSchedule.StartTime Is Nothing OrElse
+            shiftSchedule.EndTime Is Nothing Then
+            Return
+        End If
+
+        _shiftSchedule2 = shiftSchedule
+
+        Me.ShiftPeriod =
+            TimePeriod.FromTime(New TimeSpan(shiftSchedule.StartTime.Value.Hours, shiftSchedule.StartTime.Value.Minutes, 0),
+                                New TimeSpan(shiftSchedule.EndTime.Value.Hours, shiftSchedule.EndTime.Value.Minutes, 0),
+                               Me.Date)
+
+        If shiftSchedule.BreakStartTime.HasValue Then
+            Dim nextDay = Me.Date.AddDays(1)
+            Dim breakDate = If(shiftSchedule.BreakStartTime > shiftSchedule.StartTime, Me.Date, nextDay)
+
+            Dim breakTimeEnd = shiftSchedule.BreakStartTime.Value.AddHours(shiftSchedule.BreakLength)
+            Me.BreakPeriod = TimePeriod.FromTime(shiftSchedule.BreakStartTime.Value, breakTimeEnd, breakDate)
+        End If
     End Sub
 
 End Class

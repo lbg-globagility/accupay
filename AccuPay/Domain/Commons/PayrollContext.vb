@@ -68,6 +68,8 @@ Public Class PayrollContext
 
     Public Overridable Property Allowances As DbSet(Of Allowance)
 
+    Public Overridable Property AllowanceItems As DbSet(Of AllowanceItem)
+
     Public Overridable Property Adjustments As DbSet(Of Adjustment)
 
     Public Overridable Property ActualAdjustments As DbSet(Of ActualAdjustment)
@@ -85,6 +87,8 @@ Public Class PayrollContext
     Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
 
     Public Overridable Property DivisionMinimumWages As DbSet(Of DivisionMinimumWage)
+
+    Public Overridable Property EmployeeDutySchedules As DbSet(Of EmployeeDutySchedule)
 
     Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
 
@@ -116,5 +120,4 @@ Public Class PayrollContext
             HasMany(Function(p) p.AllowanceItems).
             WithOne(Function(a) a.Paystub)
     End Sub
-
 End Class

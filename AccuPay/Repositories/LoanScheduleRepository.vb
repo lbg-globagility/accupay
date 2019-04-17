@@ -189,7 +189,7 @@ Namespace Global.AccuPay.Repository
 
             If deductionAmount > totalLoanAmount Then Return 1
 
-            Return CType(Math.Floor(totalLoanAmount / deductionAmount), Integer)
+            Return CType(Math.Ceiling(totalLoanAmount / deductionAmount), Integer)
 
         End Function
 

@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Government
 Imports Globagility.AccuPay.Salaries
@@ -10,6 +11,19 @@ Imports PayrollSys
 Public Class ImportSalaryForm
 
     Private _salaries As IList(Of Salary)
+
+    Public Property IsSaved As Boolean
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        Me.IsSaved = False
+
+    End Sub
 
     Private Sub BrowseButton_Click(sender As Object, e As EventArgs) Handles BrowseButton.Click
         Dim browseFile = New OpenFileDialog With {
@@ -38,6 +52,17 @@ Public Class ImportSalaryForm
                     Continue For
                 End If
 
+                Dim lastSalary = context.Salaries.
+                    Where(Function(s) Nullable.Equals(employee.RowID, s.EmployeeID)).
+                    OrderByDescending(Function(s) s.EffectiveTo).
+                    FirstOrDefault
+
+                Dim doPaySSSContribution = True
+
+                If lastSalary IsNot Nothing Then
+                    doPaySSSContribution = lastSalary.DoPaySSSContribution
+                End If
+
                 Dim salary = New Salary With {
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,
@@ -46,7 +71,8 @@ Public Class ImportSalaryForm
                     .EffectiveFrom = record.EffectiveFrom,
                     .EffectiveTo = record.EffectiveTo,
                     .BasicSalary = record.BasicSalary,
-                    .AllowanceSalary = record.AllowanceSalary
+                    .AllowanceSalary = record.AllowanceSalary,
+                    .DoPaySSSContribution = lastSalary.DoPaySSSContribution
                 }
 
                 _salaries.Add(salary)
@@ -54,57 +80,59 @@ Public Class ImportSalaryForm
             Next
         End Using
 
+        SaveButton.Enabled = _salaries.Count > 0
+
         SalaryDataGrid.DataSource = salaryViewModels
     End Sub
 
     Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
+        'TODO: there Is a database error when Unique Constraint is violated.
+        'We should add a proper error message when that happens
+
         If _salaries Is Nothing Then
             Return
         End If
 
-        Using context = New PayrollContext()
-            Dim philHealthBrackets = Await context.PhilHealthBrackets.ToListAsync()
-            Dim philHealthConfig = Await context.ListOfValues.Where(Function(t) t.Type = "PhilHealth").ToListAsync()
-            Dim philHealthCalculator = New PhilHealthCalculator(philHealthConfig, philHealthBrackets)
+        Try
 
-            Dim socialSecurityBrackets = Await context.SocialSecurityBrackets.ToListAsync()
+            Using context = New PayrollContext()
+                Dim philHealthBrackets = Await context.PhilHealthBrackets.ToListAsync()
+                Dim philHealthConfig = Await context.ListOfValues.Where(Function(t) t.Type = "PhilHealth").ToListAsync()
+                Dim philHealthCalculator = New PhilHealthCalculator(philHealthConfig, philHealthBrackets)
 
-            For Each salary In _salaries
-                Dim employee = Await context.Employees.
-                    FirstOrDefaultAsync(Function(emp) Nullable.Equals(emp.RowID, salary.EmployeeID))
+                For Each salary In _salaries
+                    Dim employee = Await context.Employees.
+                        FirstOrDefaultAsync(Function(emp) Nullable.Equals(emp.RowID, salary.EmployeeID))
 
-                salary.TotalSalary = salary.BasicSalary + salary.AllowanceSalary
+                    salary.TotalSalary = salary.BasicSalary + salary.AllowanceSalary
 
-                Dim monthlyRate = 0D
-                If employee.EmployeeType = "Monthly" Or employee.EmployeeType = "Fixed" Then
-                    monthlyRate = salary.BasicSalary
-                ElseIf employee.EmployeeType = "Daily" Then
-                    Dim workDaysPerMonth = PayrollTools.GetWorkDaysPerMonth(employee.WorkDaysPerYear)
+                    Dim monthlyRate = 0D
+                    If employee.EmployeeType = "Monthly" Or employee.EmployeeType = "Fixed" Then
+                        monthlyRate = salary.BasicSalary
+                    ElseIf employee.EmployeeType = "Daily" Then
+                        Dim workDaysPerMonth = PayrollTools.GetWorkDaysPerMonth(employee.WorkDaysPerYear)
 
-                    monthlyRate = salary.BasicSalary * workDaysPerMonth
-                End If
+                        monthlyRate = salary.BasicSalary * workDaysPerMonth
+                    End If
 
-                If employee.EmployeeType = "Monthly" Or employee.EmployeeType = "Fixed" Then
-                    salary.BasicPay = monthlyRate / 2 ' Replace later
-                ElseIf employee.EmployeeType = "Daily" Then
-                    salary.BasicPay = salary.BasicSalary
-                End If
+                    salary.PhilHealthDeduction = philHealthCalculator.Calculate(monthlyRate)
 
-                Dim socialSecurityBracket = socialSecurityBrackets.FirstOrDefault(
-                    Function(s) s.RangeFromAmount <= monthlyRate And monthlyRate <= s.RangeToAmount)
+                    ' Set the pagibig amount to the default
+                    salary.HDMFAmount = 100D
 
-                salary.SocialSecurityBracket = socialSecurityBracket
+                    context.Salaries.Add(salary)
+                Next
 
-                salary.PhilHealthDeduction = philHealthCalculator.Calculate(monthlyRate)
+                Await context.SaveChangesAsync()
 
-                ' Set the pagibig amount to the default
-                salary.HDMFAmount = 100D
+                Me.IsSaved = True
 
-                context.Salaries.Add(salary)
-            Next
+            End Using
 
-            Await context.SaveChangesAsync()
-        End Using
+        Catch ex As Exception
+
+            MessageBoxHelper.DefaultErrorMessage("Import Salary", ex)
+        End Try
 
         Close()
     End Sub

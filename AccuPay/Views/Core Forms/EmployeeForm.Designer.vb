@@ -26,17 +26,17 @@ Partial Class EmployeeForm
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeForm))
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -46,66 +46,28 @@ Partial Class EmployeeForm
         Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle40 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle38 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle40 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle41 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle42 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle43 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle44 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle46 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle47 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle45 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle48 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle49 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle50 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle51 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle52 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle53 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle54 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle55 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle56 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle57 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle58 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle59 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle60 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle62 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle63 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle61 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle64 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle67 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle68 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle65 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle66 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle69 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle72 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle73 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle70 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle71 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle74 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle76 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle77 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle75 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle78 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle79 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle80 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle81 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle82 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.txtEmpID = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.rdMale = New System.Windows.Forms.RadioButton()
@@ -321,80 +283,11 @@ Partial Class EmployeeForm
         Me.tsbtnCancel = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnImportEmployee = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripLabel11 = New System.Windows.Forms.ToolStripLabel()
+        Me.ToolStripButton35 = New System.Windows.Forms.ToolStripButton()
         Me.tsprogbarempimport = New System.Windows.Forms.ToolStripProgressBar()
         Me.ToolStripButton22 = New System.Windows.Forms.ToolStripButton()
-        Me.tbpSalary = New System.Windows.Forms.TabPage()
-        Me.Panel8 = New System.Windows.Forms.Panel()
-        Me.Label319 = New System.Windows.Forms.Label()
-        Me.Label318 = New System.Windows.Forms.Label()
-        Me.pbEmpPicSal = New System.Windows.Forms.PictureBox()
-        Me.grpbasicsalaryaddeduction = New System.Windows.Forms.GroupBox()
-        Me.lblWarning = New System.Windows.Forms.Label()
-        Me.Label348 = New System.Windows.Forms.Label()
-        Me.txtTrueSal = New System.Windows.Forms.TextBox()
-        Me.Label347 = New System.Windows.Forms.Label()
-        Me.txtToComputeSal = New System.Windows.Forms.TextBox()
-        Me.Label135 = New System.Windows.Forms.Label()
-        Me.Label134 = New System.Windows.Forms.Label()
-        Me.Label159 = New System.Windows.Forms.Label()
-        Me.txtEmp_type = New System.Windows.Forms.TextBox()
-        Me.txtEmpDeclaSal = New System.Windows.Forms.TextBox()
-        Me.Label158 = New System.Windows.Forms.Label()
-        Me.dtpToSal = New System.Windows.Forms.DateTimePicker()
-        Me.dptFromSal = New System.Windows.Forms.DateTimePicker()
-        Me.txtpaytype = New System.Windows.Forms.TextBox()
-        Me.Label101 = New System.Windows.Forms.Label()
-        Me.Label102 = New System.Windows.Forms.Label()
-        Me.txtSSSSal = New System.Windows.Forms.TextBox()
-        Me.Label103 = New System.Windows.Forms.Label()
-        Me.txtPagibig = New System.Windows.Forms.TextBox()
-        Me.txtBasicrateSal = New System.Windows.Forms.TextBox()
-        Me.txtPhilHealthSal = New System.Windows.Forms.TextBox()
-        Me.Label106 = New System.Windows.Forms.Label()
-        Me.Label107 = New System.Windows.Forms.Label()
-        Me.Label108 = New System.Windows.Forms.Label()
-        Me.Label109 = New System.Windows.Forms.Label()
-        Me.Label217 = New System.Windows.Forms.Label()
-        Me.Label216 = New System.Windows.Forms.Label()
-        Me.Label215 = New System.Windows.Forms.Label()
-        Me.Label214 = New System.Windows.Forms.Label()
-        Me.Label213 = New System.Windows.Forms.Label()
-        Me.Label139 = New System.Windows.Forms.Label()
-        Me.txtFNameSal = New System.Windows.Forms.TextBox()
-        Me.dgvemployeesalary = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_empID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_fromdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_todate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_EmpSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicDailyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicHourlyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_TrueSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_sss = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_philhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_pagibig = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_maritalStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_noofdepd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_empName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_PayType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_filingstatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_RowIDSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_ToComputeSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TrueHDMFAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.txtEmpIDSal = New System.Windows.Forms.TextBox()
-        Me.ToolStrip13 = New System.Windows.Forms.ToolStrip()
-        Me.btnNewSal = New System.Windows.Forms.ToolStripButton()
-        Me.btnSaveSal = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripLabel6 = New System.Windows.Forms.ToolStripLabel()
-        Me.ToolStripSeparator11 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnDelSal = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator12 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnCancelSal = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton30 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton31 = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnImportSalary = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripProgressBar2 = New System.Windows.Forms.ToolStripProgressBar()
+        Me.tsbtnImportEmployee = New System.Windows.Forms.ToolStripButton()
         Me.tbpAwards = New System.Windows.Forms.TabPage()
         Me.Panel17 = New System.Windows.Forms.Panel()
         Me.Label320 = New System.Windows.Forms.Label()
@@ -532,6 +425,8 @@ Partial Class EmployeeForm
         Me.tsbtnSaveLeave = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel10 = New System.Windows.Forms.ToolStripLabel()
+        Me.ToolStripButton36 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripLabel12 = New System.Windows.Forms.ToolStripLabel()
         Me.tsbtnDeletLeave = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton17 = New System.Windows.Forms.ToolStripButton()
@@ -746,361 +641,6 @@ Partial Class EmployeeForm
         Me.btnCancePromot = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton18 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton19 = New System.Windows.Forms.ToolStripButton()
-        Me.tbpLoans = New System.Windows.Forms.TabPage()
-        Me.Panel10 = New System.Windows.Forms.Panel()
-        Me.chkboxChargeToBonus = New System.Windows.Forms.CheckBox()
-        Me.Label333 = New System.Windows.Forms.Label()
-        Me.Label332 = New System.Windows.Forms.Label()
-        Me.txtloaninterest = New System.Windows.Forms.TextBox()
-        Me.Label314 = New System.Windows.Forms.Label()
-        Me.Label231 = New System.Windows.Forms.Label()
-        Me.rdbamount = New System.Windows.Forms.RadioButton()
-        Me.rdbpercent = New System.Windows.Forms.RadioButton()
-        Me.txtnoofpayperleft = New System.Windows.Forms.TextBox()
-        Me.Label230 = New System.Windows.Forms.Label()
-        Me.pbEmpPicLoan = New System.Windows.Forms.PictureBox()
-        Me.Label221 = New System.Windows.Forms.Label()
-        Me.Label220 = New System.Windows.Forms.Label()
-        Me.dgvLoanList = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_loanno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_totloanamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_totballeft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_DedPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedsched = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_noofpayperiod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_noofpayperiodleft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedeffectivedatefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_RemarksLoan = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_RowIDLoan = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_status = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_loantype = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LoanHasBonus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.txtFNameLoan = New System.Windows.Forms.TextBox()
-        Me.TextBox7 = New System.Windows.Forms.TextBox()
-        Me.txtEmpIDLoan = New System.Windows.Forms.TextBox()
-        Me.Label100 = New System.Windows.Forms.Label()
-        Me.lnklblloantype = New System.Windows.Forms.LinkLabel()
-        Me.txtloannumber = New System.Windows.Forms.TextBox()
-        Me.cboloantype = New System.Windows.Forms.ComboBox()
-        Me.Label99 = New System.Windows.Forms.Label()
-        Me.Label185 = New System.Windows.Forms.Label()
-        Me.datefrom = New System.Windows.Forms.DateTimePicker()
-        Me.Label88 = New System.Windows.Forms.Label()
-        Me.txtloanamt = New System.Windows.Forms.TextBox()
-        Me.lblAdd = New System.Windows.Forms.LinkLabel()
-        Me.Label98 = New System.Windows.Forms.Label()
-        Me.cmbdedsched = New System.Windows.Forms.ComboBox()
-        Me.txtbal = New System.Windows.Forms.TextBox()
-        Me.Label89 = New System.Windows.Forms.Label()
-        Me.Label97 = New System.Windows.Forms.Label()
-        Me.Label90 = New System.Windows.Forms.Label()
-        Me.cmbStatus = New System.Windows.Forms.ComboBox()
-        Me.txtdedpercent = New System.Windows.Forms.TextBox()
-        Me.txtdedamt = New System.Windows.Forms.TextBox()
-        Me.Label91 = New System.Windows.Forms.Label()
-        Me.Label96 = New System.Windows.Forms.Label()
-        Me.dateto = New System.Windows.Forms.DateTimePicker()
-        Me.txtnoofpayper = New System.Windows.Forms.TextBox()
-        Me.Label92 = New System.Windows.Forms.Label()
-        Me.Label95 = New System.Windows.Forms.Label()
-        Me.Label93 = New System.Windows.Forms.Label()
-        Me.TextBox6 = New System.Windows.Forms.TextBox()
-        Me.Label94 = New System.Windows.Forms.Label()
-        Me.Label349 = New System.Windows.Forms.Label()
-        Me.Label350 = New System.Windows.Forms.Label()
-        Me.Label367 = New System.Windows.Forms.Label()
-        Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtnNewLoan = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnSaveLoan = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripLabel5 = New System.Windows.Forms.ToolStripLabel()
-        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
-        Me.DeleteLoanScheduleButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator10 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripButton23 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton24 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnImportLoans = New System.Windows.Forms.ToolStripButton()
-        Me.tbpLoanHist = New System.Windows.Forms.TabPage()
-        Me.Panel9 = New System.Windows.Forms.Panel()
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.Label361 = New System.Windows.Forms.Label()
-        Me.cbohistoloantype = New System.Windows.Forms.ComboBox()
-        Me.Label335 = New System.Windows.Forms.Label()
-        Me.Label334 = New System.Windows.Forms.Label()
-        Me.pbEmpPicLoanhist = New System.Windows.Forms.PictureBox()
-        Me.txtFNameLoanhist = New System.Windows.Forms.TextBox()
-        Me.ComboBox2 = New System.Windows.Forms.ComboBox()
-        Me.txtEmpIDLoanhist = New System.Windows.Forms.TextBox()
-        Me.TextBox12 = New System.Windows.Forms.TextBox()
-        Me.Label110 = New System.Windows.Forms.Label()
-        Me.Label113 = New System.Windows.Forms.Label()
-        Me.txtEmpnameloan = New System.Windows.Forms.TextBox()
-        Me.txtamount = New System.Windows.Forms.TextBox()
-        Me.dateded = New System.Windows.Forms.DateTimePicker()
-        Me.Label111 = New System.Windows.Forms.Label()
-        Me.Label115 = New System.Windows.Forms.Label()
-        Me.dgvloanhisto = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_dateded = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn116 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn117 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_LoanID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label112 = New System.Windows.Forms.Label()
-        Me.TextBox11 = New System.Windows.Forms.TextBox()
-        Me.Label114 = New System.Windows.Forms.Label()
-        Me.ToolStrip14 = New System.Windows.Forms.ToolStrip()
-        Me.ToolStripButton32 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton33 = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnPayLoan = New System.Windows.Forms.ToolStripButton()
-        Me.tbpPayslip = New System.Windows.Forms.TabPage()
-        Me.SplitContainer3 = New System.Windows.Forms.SplitContainer()
-        Me.Label312 = New System.Windows.Forms.Label()
-        Me.linkNxt = New System.Windows.Forms.LinkLabel()
-        Me.linkPrev = New System.Windows.Forms.LinkLabel()
-        Me.dgvpayper = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.payp_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_from = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_to = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_gross = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_net = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_empsss = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_emptax = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_compsss = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_empphh = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_compphh = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_emphdmf = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_comphdmf = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_noworigin = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.payp_endofmonth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label313 = New System.Windows.Forms.Label()
-        Me.PanelPayslip = New System.Windows.Forms.Panel()
-        Me.dgvempallowans = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.eallw_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eallw_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eallw_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eallw_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eallw_Start = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eallw_End = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eallw_taxable = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eallw_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvemploan = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.cloan_loanno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cloan_totloanamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cloan_totballeft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cloan_dedamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cloan_DedPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cloan_dedsched = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cloan_noofpayperiod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cloan_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cloan_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cloan_status = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cloan_loantype = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvempbonus = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.bons_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bons_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bons_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bons_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bons_Start = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bons_End = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bons_taxable = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bons_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label236 = New System.Windows.Forms.Label()
-        Me.Label237 = New System.Windows.Forms.Label()
-        Me.Label238 = New System.Windows.Forms.Label()
-        Me.Label239 = New System.Windows.Forms.Label()
-        Me.Label240 = New System.Windows.Forms.Label()
-        Me.Label241 = New System.Windows.Forms.Label()
-        Me.Label242 = New System.Windows.Forms.Label()
-        Me.Label243 = New System.Windows.Forms.Label()
-        Me.Label244 = New System.Windows.Forms.Label()
-        Me.Label245 = New System.Windows.Forms.Label()
-        Me.Label246 = New System.Windows.Forms.Label()
-        Me.Label247 = New System.Windows.Forms.Label()
-        Me.Label248 = New System.Windows.Forms.Label()
-        Me.Label249 = New System.Windows.Forms.Label()
-        Me.dgvpaystubitm = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.paystitmID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PayStubID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ProductID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PayAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.lblsubtotmisc = New System.Windows.Forms.TextBox()
-        Me.lblsubtot = New System.Windows.Forms.TextBox()
-        Me.Label250 = New System.Windows.Forms.Label()
-        Me.txthrsworkamt = New System.Windows.Forms.TextBox()
-        Me.txthrswork = New System.Windows.Forms.TextBox()
-        Me.Label251 = New System.Windows.Forms.Label()
-        Me.dgvetent = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.etent_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_Date = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_EmployeeShiftID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_EmployeeSalaryID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_EmployeeFixedSalaryFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_TotalHoursWorked = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_RegularHoursWorked = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_RegularHoursAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_OvertimeHoursWorked = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_OvertimeHoursAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_UndertimeHours = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_UndertimeHoursAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_NightDifferentialHours = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_NightDiffHoursAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_NightDifferentialOTHours = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_NightDiffOTHoursAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_HoursLate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_HoursLateAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_LateFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_PayRateID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_VacationLeaveHours = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_SickLeaveHours = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_TotalDayPay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvempsal = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.esal_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_FilingStatusID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_FilingStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_PaySocialSecurityID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_EmployeeContributionAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_PayPhilhealthID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_EmployeeShare = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_HDMFAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_BasicPay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_NoofDependents = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_MaritalStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_PositionID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_EffectiveDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_EffectiveDateTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.btntotbon = New System.Windows.Forms.Button()
-        Me.btntotloan = New System.Windows.Forms.Button()
-        Me.btntotallow = New System.Windows.Forms.Button()
-        Me.Label252 = New System.Windows.Forms.Label()
-        Me.Label253 = New System.Windows.Forms.Label()
-        Me.Label254 = New System.Windows.Forms.Label()
-        Me.Label255 = New System.Windows.Forms.Label()
-        Me.Label256 = New System.Windows.Forms.Label()
-        Me.Label257 = New System.Windows.Forms.Label()
-        Me.Label258 = New System.Windows.Forms.Label()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.Label259 = New System.Windows.Forms.Label()
-        Me.Label260 = New System.Windows.Forms.Label()
-        Me.Label261 = New System.Windows.Forms.Label()
-        Me.mlbal = New System.Windows.Forms.TextBox()
-        Me.Label262 = New System.Windows.Forms.Label()
-        Me.vlbal = New System.Windows.Forms.TextBox()
-        Me.Label263 = New System.Windows.Forms.Label()
-        Me.Label264 = New System.Windows.Forms.Label()
-        Me.slbal = New System.Windows.Forms.TextBox()
-        Me.TabPage4 = New System.Windows.Forms.TabPage()
-        Me.Label265 = New System.Windows.Forms.Label()
-        Me.Label266 = New System.Windows.Forms.Label()
-        Me.Label267 = New System.Windows.Forms.Label()
-        Me.TextBox5 = New System.Windows.Forms.TextBox()
-        Me.TextBox8 = New System.Windows.Forms.TextBox()
-        Me.Label268 = New System.Windows.Forms.Label()
-        Me.TextBox9 = New System.Windows.Forms.TextBox()
-        Me.Label269 = New System.Windows.Forms.Label()
-        Me.Label270 = New System.Windows.Forms.Label()
-        Me.TabPage5 = New System.Windows.Forms.TabPage()
-        Me.Label271 = New System.Windows.Forms.Label()
-        Me.Label272 = New System.Windows.Forms.Label()
-        Me.Label273 = New System.Windows.Forms.Label()
-        Me.TextBox10 = New System.Windows.Forms.TextBox()
-        Me.Label274 = New System.Windows.Forms.Label()
-        Me.TextBox13 = New System.Windows.Forms.TextBox()
-        Me.Label275 = New System.Windows.Forms.Label()
-        Me.Label276 = New System.Windows.Forms.Label()
-        Me.TextBox14 = New System.Windows.Forms.TextBox()
-        Me.txttotutamt = New System.Windows.Forms.TextBox()
-        Me.txttottardiamt = New System.Windows.Forms.TextBox()
-        Me.txttotabsentamt = New System.Windows.Forms.TextBox()
-        Me.Label277 = New System.Windows.Forms.Label()
-        Me.Label278 = New System.Windows.Forms.Label()
-        Me.txttotholidayamt = New System.Windows.Forms.TextBox()
-        Me.Label279 = New System.Windows.Forms.Label()
-        Me.Label280 = New System.Windows.Forms.Label()
-        Me.Label281 = New System.Windows.Forms.Label()
-        Me.txttotnightdiffothrs = New System.Windows.Forms.TextBox()
-        Me.Label282 = New System.Windows.Forms.Label()
-        Me.txttotnightdiffhrs = New System.Windows.Forms.TextBox()
-        Me.Label283 = New System.Windows.Forms.Label()
-        Me.txttotothrs = New System.Windows.Forms.TextBox()
-        Me.Label284 = New System.Windows.Forms.Label()
-        Me.txttotregamt = New System.Windows.Forms.TextBox()
-        Me.txttotreghrs = New System.Windows.Forms.TextBox()
-        Me.Label285 = New System.Windows.Forms.Label()
-        Me.txtempbasicpay = New System.Windows.Forms.TextBox()
-        Me.Label286 = New System.Windows.Forms.Label()
-        Me.Label287 = New System.Windows.Forms.Label()
-        Me.txtemptotbon = New System.Windows.Forms.TextBox()
-        Me.txttotut = New System.Windows.Forms.TextBox()
-        Me.Label288 = New System.Windows.Forms.Label()
-        Me.Label289 = New System.Windows.Forms.Label()
-        Me.txttottardi = New System.Windows.Forms.TextBox()
-        Me.txtemptotallow = New System.Windows.Forms.TextBox()
-        Me.txttotabsent = New System.Windows.Forms.TextBox()
-        Me.Label290 = New System.Windows.Forms.Label()
-        Me.Label291 = New System.Windows.Forms.Label()
-        Me.txtemptotloan = New System.Windows.Forms.TextBox()
-        Me.txttotholidayhrs = New System.Windows.Forms.TextBox()
-        Me.Label292 = New System.Windows.Forms.Label()
-        Me.Label293 = New System.Windows.Forms.Label()
-        Me.Label294 = New System.Windows.Forms.Label()
-        Me.txtempsss = New System.Windows.Forms.TextBox()
-        Me.txttotnightdiffotamt = New System.Windows.Forms.TextBox()
-        Me.txtempphh = New System.Windows.Forms.TextBox()
-        Me.txttotnightdiffamt = New System.Windows.Forms.TextBox()
-        Me.Label295 = New System.Windows.Forms.Label()
-        Me.txttototamt = New System.Windows.Forms.TextBox()
-        Me.txtemphdmf = New System.Windows.Forms.TextBox()
-        Me.Label296 = New System.Windows.Forms.Label()
-        Me.txtempwtax = New System.Windows.Forms.TextBox()
-        Me.Label297 = New System.Windows.Forms.Label()
-        Me.Label298 = New System.Windows.Forms.Label()
-        Me.txttaxabsal = New System.Windows.Forms.TextBox()
-        Me.txtnetsal = New System.Windows.Forms.TextBox()
-        Me.txtgrosssal = New System.Windows.Forms.TextBox()
-        Me.dgvpaystub = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.paystb_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_Created = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_CreatedBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_PayPeriodID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TimeEntryID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_PayFromDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_PayToDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalGrossSalary = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalNetSalary = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalTaxableSalary = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalEmpSSS = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalEmpWithholdingTax = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalCompSSS = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalEmpPhilhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalCompPhilhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalEmpHDMF = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalCompHDMF = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalVacationDaysLeft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalLoans = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalBonus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalAllowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label299 = New System.Windows.Forms.Label()
-        Me.Label300 = New System.Windows.Forms.Label()
-        Me.Label301 = New System.Windows.Forms.Label()
-        Me.Label302 = New System.Windows.Forms.Label()
-        Me.Label303 = New System.Windows.Forms.Label()
-        Me.Label304 = New System.Windows.Forms.Label()
-        Me.Label305 = New System.Windows.Forms.Label()
-        Me.Label306 = New System.Windows.Forms.Label()
-        Me.Label307 = New System.Windows.Forms.Label()
-        Me.Label308 = New System.Windows.Forms.Label()
-        Me.Label309 = New System.Windows.Forms.Label()
-        Me.ToolStrip16 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtnprintpayslip = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton12 = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnprintall = New System.Windows.Forms.ToolStripButton()
         Me.tbpempallow = New System.Windows.Forms.TabPage()
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.Label337 = New System.Windows.Forms.Label()
@@ -1523,12 +1063,6 @@ Partial Class EmployeeForm
         CType(Me.dgvDepen, System.ComponentModel.ISupportInitialize).BeginInit
         Me.ToolStrip4.SuspendLayout
         Me.ToolStrip1.SuspendLayout
-        Me.tbpSalary.SuspendLayout
-        Me.Panel8.SuspendLayout
-        CType(Me.pbEmpPicSal, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.grpbasicsalaryaddeduction.SuspendLayout
-        CType(Me.dgvemployeesalary, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.ToolStrip13.SuspendLayout
         Me.tbpAwards.SuspendLayout
         Me.Panel17.SuspendLayout
         CType(Me.pbEmpPicAwar, System.ComponentModel.ISupportInitialize).BeginInit
@@ -1571,36 +1105,6 @@ Partial Class EmployeeForm
         CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).BeginInit
         Me.ToolStrip11.SuspendLayout
-        Me.tbpLoans.SuspendLayout
-        Me.Panel10.SuspendLayout
-        CType(Me.pbEmpPicLoan, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.dgvLoanList, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.ToolStrip12.SuspendLayout
-        Me.tbpLoanHist.SuspendLayout
-        Me.Panel9.SuspendLayout
-        Me.GroupBox3.SuspendLayout
-        CType(Me.pbEmpPicLoanhist, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.dgvloanhisto, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.ToolStrip14.SuspendLayout
-        Me.tbpPayslip.SuspendLayout
-        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.SplitContainer3.Panel1.SuspendLayout
-        Me.SplitContainer3.Panel2.SuspendLayout
-        Me.SplitContainer3.SuspendLayout
-        CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.PanelPayslip.SuspendLayout
-        CType(Me.dgvempallowans, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.dgvemploan, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.dgvempbonus, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.dgvpaystubitm, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.dgvetent, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.dgvempsal, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.TabControl1.SuspendLayout
-        Me.TabPage1.SuspendLayout
-        Me.TabPage4.SuspendLayout
-        Me.TabPage5.SuspendLayout
-        CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.ToolStrip16.SuspendLayout
         Me.tbpempallow.SuspendLayout
         Me.Panel6.SuspendLayout
         CType(Me.pbEmpPicAllow, System.ComponentModel.ISupportInitialize).BeginInit
@@ -2007,7 +1511,6 @@ Partial Class EmployeeForm
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tabctrlemp.Controls.Add(Me.tbpempchklist)
         Me.tabctrlemp.Controls.Add(Me.tbpEmployee)
-        Me.tabctrlemp.Controls.Add(Me.tbpSalary)
         Me.tabctrlemp.Controls.Add(Me.tbpAwards)
         Me.tabctrlemp.Controls.Add(Me.tbpCertifications)
         Me.tabctrlemp.Controls.Add(Me.tbpLeave)
@@ -2015,9 +1518,6 @@ Partial Class EmployeeForm
         Me.tabctrlemp.Controls.Add(Me.tbpEducBG)
         Me.tabctrlemp.Controls.Add(Me.tbpPrevEmp)
         Me.tabctrlemp.Controls.Add(Me.tbpPromotion)
-        Me.tabctrlemp.Controls.Add(Me.tbpLoans)
-        Me.tabctrlemp.Controls.Add(Me.tbpLoanHist)
-        Me.tabctrlemp.Controls.Add(Me.tbpPayslip)
         Me.tabctrlemp.Controls.Add(Me.tbpempallow)
         Me.tabctrlemp.Controls.Add(Me.tbpEmpOT)
         Me.tabctrlemp.Controls.Add(Me.tbpOBF)
@@ -2045,7 +1545,7 @@ Partial Class EmployeeForm
         Me.tbpempchklist.Location = New System.Drawing.Point(4, 4)
         Me.tbpempchklist.Name = "tbpempchklist"
         Me.tbpempchklist.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpempchklist.Size = New System.Drawing.Size(860, 461)
+        Me.tbpempchklist.Size = New System.Drawing.Size(860, 486)
         Me.tbpempchklist.TabIndex = 13
         Me.tbpempchklist.Text = "CHECKLIST"
         Me.tbpempchklist.UseVisualStyleBackColor = True
@@ -2059,7 +1559,7 @@ Partial Class EmployeeForm
         Me.panelchklist.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.panelchklist.Location = New System.Drawing.Point(35, 170)
         Me.panelchklist.Name = "panelchklist"
-        Me.panelchklist.Size = New System.Drawing.Size(659, 260)
+        Me.panelchklist.Size = New System.Drawing.Size(659, 285)
         Me.panelchklist.TabIndex = 164
         '
         'lblyourrequirement
@@ -2139,7 +1639,7 @@ Partial Class EmployeeForm
         Me.tbpEmployee.Location = New System.Drawing.Point(4, 4)
         Me.tbpEmployee.Name = "tbpEmployee"
         Me.tbpEmployee.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpEmployee.Size = New System.Drawing.Size(860, 461)
+        Me.tbpEmployee.Size = New System.Drawing.Size(860, 486)
         Me.tbpEmployee.TabIndex = 0
         Me.tbpEmployee.Text = "PERSON"
         '
@@ -2270,8 +1770,8 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.txtCell)
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
-        Me.SplitContainer2.Size = New System.Drawing.Size(854, 430)
-        Me.SplitContainer2.SplitterDistance = 272
+        Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
+        Me.SplitContainer2.SplitterDistance = 282
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3535,7 +3035,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 124)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 139)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -3834,7 +3334,7 @@ Partial Class EmployeeForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewEmp, Me.tsbtnSaveEmp, Me.tsbtnCancel, Me.tsbtnClose, Me.tsbtnAudittrail, Me.tsbtnImportEmployee, Me.tsprogbarempimport, Me.ToolStripButton22})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewEmp, Me.tsbtnSaveEmp, Me.tsbtnCancel, Me.tsbtnClose, Me.tsbtnAudittrail, Me.ToolStripLabel11, Me.ToolStripButton35, Me.tsprogbarempimport, Me.ToolStripButton22, Me.tsbtnImportEmployee})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(854, 25)
@@ -3885,13 +3385,19 @@ Partial Class EmployeeForm
         Me.tsbtnAudittrail.Text = "ToolStripButton1"
         Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
         '
-        'tsbtnImportEmployee
+        'ToolStripLabel11
         '
-        Me.tsbtnImportEmployee.Image = CType(resources.GetObject("tsbtnImportEmployee.Image"), System.Drawing.Image)
-        Me.tsbtnImportEmployee.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnImportEmployee.Name = "tsbtnImportEmployee"
-        Me.tsbtnImportEmployee.Size = New System.Drawing.Size(118, 22)
-        Me.tsbtnImportEmployee.Text = "Import Employee"
+        Me.ToolStripLabel11.Name = "ToolStripLabel11"
+        Me.ToolStripLabel11.Size = New System.Drawing.Size(55, 22)
+        Me.ToolStripLabel11.Text = "                "
+        '
+        'ToolStripButton35
+        '
+        Me.ToolStripButton35.Image = Global.AccuPay.My.Resources.Resources.Add
+        Me.ToolStripButton35.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton35.Name = "ToolStripButton35"
+        Me.ToolStripButton35.Size = New System.Drawing.Size(63, 22)
+        Me.ToolStripButton35.Text = "Import"
         '
         'tsprogbarempimport
         '
@@ -3902,690 +3408,16 @@ Partial Class EmployeeForm
         '
         'ToolStripButton22
         '
-        Me.ToolStripButton22.Image = CType(resources.GetObject("ToolStripButton22.Image"), System.Drawing.Image)
+        Me.ToolStripButton22.Image = Global.AccuPay.My.Resources.Resources.Documents_icon_64
         Me.ToolStripButton22.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton22.Name = "ToolStripButton22"
         Me.ToolStripButton22.Size = New System.Drawing.Size(73, 22)
         Me.ToolStripButton22.Text = "Print 201"
         '
-        'tbpSalary
+        'tsbtnImportEmployee
         '
-        Me.tbpSalary.AccessibleDescription = "Employee Salary"
-        Me.tbpSalary.AutoScroll = True
-        Me.tbpSalary.Controls.Add(Me.Panel8)
-        Me.tbpSalary.Controls.Add(Me.ToolStrip13)
-        Me.tbpSalary.Location = New System.Drawing.Point(4, 4)
-        Me.tbpSalary.Name = "tbpSalary"
-        Me.tbpSalary.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpSalary.Size = New System.Drawing.Size(860, 461)
-        Me.tbpSalary.TabIndex = 10
-        Me.tbpSalary.Text = "SALARY"
-        Me.tbpSalary.UseVisualStyleBackColor = True
-        '
-        'Panel8
-        '
-        Me.Panel8.AutoScroll = True
-        Me.Panel8.Controls.Add(Me.Label319)
-        Me.Panel8.Controls.Add(Me.Label318)
-        Me.Panel8.Controls.Add(Me.pbEmpPicSal)
-        Me.Panel8.Controls.Add(Me.grpbasicsalaryaddeduction)
-        Me.Panel8.Controls.Add(Me.txtFNameSal)
-        Me.Panel8.Controls.Add(Me.dgvemployeesalary)
-        Me.Panel8.Controls.Add(Me.txtEmpIDSal)
-        Me.Panel8.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel8.Location = New System.Drawing.Point(3, 28)
-        Me.Panel8.Name = "Panel8"
-        Me.Panel8.Size = New System.Drawing.Size(854, 430)
-        Me.Panel8.TabIndex = 349
-        '
-        'Label319
-        '
-        Me.Label319.AutoSize = True
-        Me.Label319.ForeColor = System.Drawing.Color.White
-        Me.Label319.Location = New System.Drawing.Point(860, 585)
-        Me.Label319.Name = "Label319"
-        Me.Label319.Size = New System.Drawing.Size(25, 13)
-        Me.Label319.TabIndex = 504
-        Me.Label319.Text = "___"
-        '
-        'Label318
-        '
-        Me.Label318.AutoSize = True
-        Me.Label318.ForeColor = System.Drawing.Color.White
-        Me.Label318.Location = New System.Drawing.Point(29, 601)
-        Me.Label318.Name = "Label318"
-        Me.Label318.Size = New System.Drawing.Size(37, 13)
-        Me.Label318.TabIndex = 361
-        Me.Label318.Text = "_____"
-        '
-        'pbEmpPicSal
-        '
-        Me.pbEmpPicSal.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.pbEmpPicSal.Location = New System.Drawing.Point(32, 8)
-        Me.pbEmpPicSal.Name = "pbEmpPicSal"
-        Me.pbEmpPicSal.Size = New System.Drawing.Size(89, 77)
-        Me.pbEmpPicSal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.pbEmpPicSal.TabIndex = 348
-        Me.pbEmpPicSal.TabStop = False
-        '
-        'grpbasicsalaryaddeduction
-        '
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.lblWarning)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label348)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.txtTrueSal)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label347)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.txtToComputeSal)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label135)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label134)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label159)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.txtEmp_type)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.txtEmpDeclaSal)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label158)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.dtpToSal)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.dptFromSal)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.txtpaytype)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label101)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label102)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.txtSSSSal)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label103)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.txtPagibig)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.txtBasicrateSal)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.txtPhilHealthSal)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label106)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label107)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label108)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label109)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label217)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label216)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label215)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label214)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label213)
-        Me.grpbasicsalaryaddeduction.Controls.Add(Me.Label139)
-        Me.grpbasicsalaryaddeduction.Location = New System.Drawing.Point(32, 91)
-        Me.grpbasicsalaryaddeduction.Name = "grpbasicsalaryaddeduction"
-        Me.grpbasicsalaryaddeduction.Size = New System.Drawing.Size(822, 183)
-        Me.grpbasicsalaryaddeduction.TabIndex = 321
-        Me.grpbasicsalaryaddeduction.TabStop = False
-        Me.grpbasicsalaryaddeduction.Text = "Employee Salary"
-        '
-        'lblWarning
-        '
-        Me.lblWarning.BackColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(110, Byte), Integer))
-        Me.lblWarning.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblWarning.ForeColor = System.Drawing.Color.Black
-        Me.lblWarning.Location = New System.Drawing.Point(8, 128)
-        Me.lblWarning.Name = "lblWarning"
-        Me.lblWarning.Size = New System.Drawing.Size(296, 48)
-        Me.lblWarning.TabIndex = 273
-        Me.lblWarning.Text = "<Warning>"
-        Me.lblWarning.Visible = False
-        '
-        'Label348
-        '
-        Me.Label348.AutoSize = True
-        Me.Label348.Location = New System.Drawing.Point(313, 54)
-        Me.Label348.Name = "Label348"
-        Me.Label348.Size = New System.Drawing.Size(72, 13)
-        Me.Label348.TabIndex = 272
-        Me.Label348.Text = "Actual Salary:"
-        '
-        'txtTrueSal
-        '
-        Me.txtTrueSal.BackColor = System.Drawing.Color.White
-        Me.txtTrueSal.Location = New System.Drawing.Point(640, 69)
-        Me.txtTrueSal.MaxLength = 12
-        Me.txtTrueSal.Name = "txtTrueSal"
-        Me.txtTrueSal.ReadOnly = True
-        Me.txtTrueSal.ShortcutsEnabled = False
-        Me.txtTrueSal.Size = New System.Drawing.Size(176, 20)
-        Me.txtTrueSal.TabIndex = 6
-        Me.txtTrueSal.Visible = False
-        '
-        'Label347
-        '
-        Me.Label347.AutoSize = True
-        Me.Label347.Location = New System.Drawing.Point(622, 72)
-        Me.Label347.Name = "Label347"
-        Me.Label347.Size = New System.Drawing.Size(14, 13)
-        Me.Label347.TabIndex = 271
-        Me.Label347.Text = "₱"
-        Me.Label347.Visible = False
-        '
-        'txtToComputeSal
-        '
-        Me.txtToComputeSal.Location = New System.Drawing.Point(433, 47)
-        Me.txtToComputeSal.Name = "txtToComputeSal"
-        Me.txtToComputeSal.Size = New System.Drawing.Size(176, 20)
-        Me.txtToComputeSal.TabIndex = 5
-        '
-        'Label135
-        '
-        Me.Label135.AutoSize = True
-        Me.Label135.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label135.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label135.Location = New System.Drawing.Point(97, 96)
-        Me.Label135.Name = "Label135"
-        Me.Label135.Size = New System.Drawing.Size(18, 24)
-        Me.Label135.TabIndex = 107
-        Me.Label135.Text = "*"
-        '
-        'Label134
-        '
-        Me.Label134.AutoSize = True
-        Me.Label134.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label134.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label134.Location = New System.Drawing.Point(107, 70)
-        Me.Label134.Name = "Label134"
-        Me.Label134.Size = New System.Drawing.Size(18, 24)
-        Me.Label134.TabIndex = 106
-        Me.Label134.Text = "*"
-        '
-        'Label159
-        '
-        Me.Label159.AutoSize = True
-        Me.Label159.Location = New System.Drawing.Point(6, 53)
-        Me.Label159.Name = "Label159"
-        Me.Label159.Size = New System.Drawing.Size(83, 13)
-        Me.Label159.TabIndex = 57
-        Me.Label159.Text = "Employee Type:"
-        '
-        'txtEmp_type
-        '
-        Me.txtEmp_type.BackColor = System.Drawing.Color.White
-        Me.txtEmp_type.Location = New System.Drawing.Point(131, 47)
-        Me.txtEmp_type.Name = "txtEmp_type"
-        Me.txtEmp_type.ReadOnly = True
-        Me.txtEmp_type.Size = New System.Drawing.Size(176, 20)
-        Me.txtEmp_type.TabIndex = 56
-        '
-        'txtEmpDeclaSal
-        '
-        Me.txtEmpDeclaSal.Location = New System.Drawing.Point(433, 21)
-        Me.txtEmpDeclaSal.MaxLength = 12
-        Me.txtEmpDeclaSal.Name = "txtEmpDeclaSal"
-        Me.txtEmpDeclaSal.ShortcutsEnabled = False
-        Me.txtEmpDeclaSal.Size = New System.Drawing.Size(176, 20)
-        Me.txtEmpDeclaSal.TabIndex = 4
-        '
-        'Label158
-        '
-        Me.Label158.AutoSize = True
-        Me.Label158.Location = New System.Drawing.Point(313, 27)
-        Me.Label158.Name = "Label158"
-        Me.Label158.Size = New System.Drawing.Size(85, 13)
-        Me.Label158.TabIndex = 55
-        Me.Label158.Text = "Declared Salary:"
-        '
-        'dtpToSal
-        '
-        Me.dtpToSal.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpToSal.Location = New System.Drawing.Point(131, 99)
-        Me.dtpToSal.Name = "dtpToSal"
-        Me.dtpToSal.Size = New System.Drawing.Size(176, 20)
-        Me.dtpToSal.TabIndex = 3
-        '
-        'dptFromSal
-        '
-        Me.dptFromSal.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dptFromSal.Location = New System.Drawing.Point(131, 73)
-        Me.dptFromSal.Name = "dptFromSal"
-        Me.dptFromSal.Size = New System.Drawing.Size(176, 20)
-        Me.dptFromSal.TabIndex = 2
-        '
-        'txtpaytype
-        '
-        Me.txtpaytype.BackColor = System.Drawing.Color.White
-        Me.txtpaytype.Location = New System.Drawing.Point(131, 21)
-        Me.txtpaytype.Name = "txtpaytype"
-        Me.txtpaytype.ReadOnly = True
-        Me.txtpaytype.Size = New System.Drawing.Size(176, 20)
-        Me.txtpaytype.TabIndex = 49
-        '
-        'Label101
-        '
-        Me.Label101.AutoSize = True
-        Me.Label101.Location = New System.Drawing.Point(6, 27)
-        Me.Label101.Name = "Label101"
-        Me.Label101.Size = New System.Drawing.Size(55, 13)
-        Me.Label101.TabIndex = 48
-        Me.Label101.Text = "Pay Type:"
-        '
-        'Label102
-        '
-        Me.Label102.AutoSize = True
-        Me.Label102.Location = New System.Drawing.Point(6, 105)
-        Me.Label102.Name = "Label102"
-        Me.Label102.Size = New System.Drawing.Size(94, 13)
-        Me.Label102.TabIndex = 40
-        Me.Label102.Text = "Effective Date To:"
-        '
-        'txtSSSSal
-        '
-        Me.txtSSSSal.BackColor = System.Drawing.Color.White
-        Me.txtSSSSal.Location = New System.Drawing.Point(433, 125)
-        Me.txtSSSSal.Name = "txtSSSSal"
-        Me.txtSSSSal.Size = New System.Drawing.Size(176, 20)
-        Me.txtSSSSal.TabIndex = 9
-        '
-        'Label103
-        '
-        Me.Label103.AutoSize = True
-        Me.Label103.Location = New System.Drawing.Point(6, 79)
-        Me.Label103.Name = "Label103"
-        Me.Label103.Size = New System.Drawing.Size(104, 13)
-        Me.Label103.TabIndex = 33
-        Me.Label103.Text = "Effective Date From:"
-        '
-        'txtPagibig
-        '
-        Me.txtPagibig.BackColor = System.Drawing.Color.White
-        Me.txtPagibig.Location = New System.Drawing.Point(433, 151)
-        Me.txtPagibig.Name = "txtPagibig"
-        Me.txtPagibig.Size = New System.Drawing.Size(176, 20)
-        Me.txtPagibig.TabIndex = 10
-        '
-        'txtBasicrateSal
-        '
-        Me.txtBasicrateSal.BackColor = System.Drawing.Color.White
-        Me.txtBasicrateSal.Location = New System.Drawing.Point(433, 73)
-        Me.txtBasicrateSal.MaxLength = 12
-        Me.txtBasicrateSal.Name = "txtBasicrateSal"
-        Me.txtBasicrateSal.ReadOnly = True
-        Me.txtBasicrateSal.ShortcutsEnabled = False
-        Me.txtBasicrateSal.Size = New System.Drawing.Size(176, 20)
-        Me.txtBasicrateSal.TabIndex = 7
-        '
-        'txtPhilHealthSal
-        '
-        Me.txtPhilHealthSal.BackColor = System.Drawing.Color.White
-        Me.txtPhilHealthSal.Location = New System.Drawing.Point(433, 99)
-        Me.txtPhilHealthSal.Name = "txtPhilHealthSal"
-        Me.txtPhilHealthSal.Size = New System.Drawing.Size(176, 20)
-        Me.txtPhilHealthSal.TabIndex = 8
-        '
-        'Label106
-        '
-        Me.Label106.AutoSize = True
-        Me.Label106.Location = New System.Drawing.Point(313, 129)
-        Me.Label106.Name = "Label106"
-        Me.Label106.Size = New System.Drawing.Size(31, 13)
-        Me.Label106.TabIndex = 24
-        Me.Label106.Text = "SSS:"
-        '
-        'Label107
-        '
-        Me.Label107.AutoSize = True
-        Me.Label107.Location = New System.Drawing.Point(313, 105)
-        Me.Label107.Name = "Label107"
-        Me.Label107.Size = New System.Drawing.Size(58, 13)
-        Me.Label107.TabIndex = 22
-        Me.Label107.Text = "PhilHealth:"
-        '
-        'Label108
-        '
-        Me.Label108.AutoSize = True
-        Me.Label108.Location = New System.Drawing.Point(313, 157)
-        Me.Label108.Name = "Label108"
-        Me.Label108.Size = New System.Drawing.Size(53, 13)
-        Me.Label108.TabIndex = 21
-        Me.Label108.Text = "PAGIBIG:"
-        '
-        'Label109
-        '
-        Me.Label109.AutoSize = True
-        Me.Label109.Location = New System.Drawing.Point(313, 79)
-        Me.Label109.Name = "Label109"
-        Me.Label109.Size = New System.Drawing.Size(56, 13)
-        Me.Label109.TabIndex = 7
-        Me.Label109.Text = "Basic pay:"
-        '
-        'Label217
-        '
-        Me.Label217.AutoSize = True
-        Me.Label217.Location = New System.Drawing.Point(415, 154)
-        Me.Label217.Name = "Label217"
-        Me.Label217.Size = New System.Drawing.Size(14, 13)
-        Me.Label217.TabIndex = 269
-        Me.Label217.Text = "₱"
-        '
-        'Label216
-        '
-        Me.Label216.AutoSize = True
-        Me.Label216.Location = New System.Drawing.Point(415, 128)
-        Me.Label216.Name = "Label216"
-        Me.Label216.Size = New System.Drawing.Size(14, 13)
-        Me.Label216.TabIndex = 269
-        Me.Label216.Text = "₱"
-        '
-        'Label215
-        '
-        Me.Label215.AutoSize = True
-        Me.Label215.Location = New System.Drawing.Point(415, 102)
-        Me.Label215.Name = "Label215"
-        Me.Label215.Size = New System.Drawing.Size(14, 13)
-        Me.Label215.TabIndex = 269
-        Me.Label215.Text = "₱"
-        '
-        'Label214
-        '
-        Me.Label214.AutoSize = True
-        Me.Label214.Location = New System.Drawing.Point(415, 76)
-        Me.Label214.Name = "Label214"
-        Me.Label214.Size = New System.Drawing.Size(14, 13)
-        Me.Label214.TabIndex = 269
-        Me.Label214.Text = "₱"
-        '
-        'Label213
-        '
-        Me.Label213.AutoSize = True
-        Me.Label213.Location = New System.Drawing.Point(415, 24)
-        Me.Label213.Name = "Label213"
-        Me.Label213.Size = New System.Drawing.Size(14, 13)
-        Me.Label213.TabIndex = 269
-        Me.Label213.Text = "₱"
-        '
-        'Label139
-        '
-        Me.Label139.AutoSize = True
-        Me.Label139.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label139.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label139.Location = New System.Drawing.Point(393, 18)
-        Me.Label139.Name = "Label139"
-        Me.Label139.Size = New System.Drawing.Size(18, 24)
-        Me.Label139.TabIndex = 108
-        Me.Label139.Text = "*"
-        '
-        'txtFNameSal
-        '
-        Me.txtFNameSal.BackColor = System.Drawing.Color.White
-        Me.txtFNameSal.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtFNameSal.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtFNameSal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
-        Me.txtFNameSal.Location = New System.Drawing.Point(127, 22)
-        Me.txtFNameSal.MaxLength = 250
-        Me.txtFNameSal.Name = "txtFNameSal"
-        Me.txtFNameSal.ReadOnly = True
-        Me.txtFNameSal.Size = New System.Drawing.Size(668, 28)
-        Me.txtFNameSal.TabIndex = 343
-        '
-        'dgvemployeesalary
-        '
-        Me.dgvemployeesalary.AllowUserToAddRows = False
-        Me.dgvemployeesalary.AllowUserToDeleteRows = False
-        Me.dgvemployeesalary.AllowUserToResizeRows = False
-        Me.dgvemployeesalary.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvemployeesalary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.dgvemployeesalary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvemployeesalary.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_empID, Me.c_fromdate, Me.c_todate, Me.c_EmpSal, Me.c_BasicDailyPaySal, Me.c_BasicHourlyPaySal, Me.c_TrueSal, Me.c_BasicPaySal, Me.c_sss, Me.c_philhealth, Me.c_pagibig, Me.c_maritalStatus, Me.c_noofdepd, Me.c_empName, Me.c_PayType, Me.c_filingstatus, Me.c_RowIDSal, Me.c_ToComputeSal, Me.TrueHDMFAmount})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvemployeesalary.DefaultCellStyle = DataGridViewCellStyle4
-        Me.dgvemployeesalary.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvemployeesalary.Location = New System.Drawing.Point(32, 280)
-        Me.dgvemployeesalary.MultiSelect = False
-        Me.dgvemployeesalary.Name = "dgvemployeesalary"
-        Me.dgvemployeesalary.ReadOnly = True
-        Me.dgvemployeesalary.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvemployeesalary.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvemployeesalary.Size = New System.Drawing.Size(822, 318)
-        Me.dgvemployeesalary.TabIndex = 11
-        '
-        'c_empID
-        '
-        Me.c_empID.HeaderText = "Employee ID"
-        Me.c_empID.Name = "c_empID"
-        Me.c_empID.ReadOnly = True
-        Me.c_empID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_empID.Visible = False
-        '
-        'c_fromdate
-        '
-        Me.c_fromdate.HeaderText = "Effectivity Date From"
-        Me.c_fromdate.Name = "c_fromdate"
-        Me.c_fromdate.ReadOnly = True
-        Me.c_fromdate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_todate
-        '
-        Me.c_todate.HeaderText = "Effectivity Date To"
-        Me.c_todate.Name = "c_todate"
-        Me.c_todate.ReadOnly = True
-        Me.c_todate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_EmpSal
-        '
-        Me.c_EmpSal.HeaderText = "Salary"
-        Me.c_EmpSal.Name = "c_EmpSal"
-        Me.c_EmpSal.ReadOnly = True
-        Me.c_EmpSal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_BasicDailyPaySal
-        '
-        Me.c_BasicDailyPaySal.HeaderText = "Daily Rate"
-        Me.c_BasicDailyPaySal.Name = "c_BasicDailyPaySal"
-        Me.c_BasicDailyPaySal.ReadOnly = True
-        Me.c_BasicDailyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_BasicHourlyPaySal
-        '
-        Me.c_BasicHourlyPaySal.HeaderText = "Hourly Rate"
-        Me.c_BasicHourlyPaySal.Name = "c_BasicHourlyPaySal"
-        Me.c_BasicHourlyPaySal.ReadOnly = True
-        Me.c_BasicHourlyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_TrueSal
-        '
-        Me.c_TrueSal.HeaderText = "True Salary"
-        Me.c_TrueSal.Name = "c_TrueSal"
-        Me.c_TrueSal.ReadOnly = True
-        Me.c_TrueSal.Visible = False
-        '
-        'c_BasicPaySal
-        '
-        Me.c_BasicPaySal.HeaderText = "Basic Pay"
-        Me.c_BasicPaySal.Name = "c_BasicPaySal"
-        Me.c_BasicPaySal.ReadOnly = True
-        Me.c_BasicPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_sss
-        '
-        Me.c_sss.HeaderText = "SSS"
-        Me.c_sss.Name = "c_sss"
-        Me.c_sss.ReadOnly = True
-        Me.c_sss.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_philhealth
-        '
-        Me.c_philhealth.HeaderText = "PhilHealth"
-        Me.c_philhealth.Name = "c_philhealth"
-        Me.c_philhealth.ReadOnly = True
-        Me.c_philhealth.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_pagibig
-        '
-        Me.c_pagibig.HeaderText = "Pag-IBIG"
-        Me.c_pagibig.Name = "c_pagibig"
-        Me.c_pagibig.ReadOnly = True
-        Me.c_pagibig.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_maritalStatus
-        '
-        Me.c_maritalStatus.HeaderText = "Marital Status"
-        Me.c_maritalStatus.Name = "c_maritalStatus"
-        Me.c_maritalStatus.ReadOnly = True
-        Me.c_maritalStatus.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_noofdepd
-        '
-        Me.c_noofdepd.HeaderText = "No Of Dependent"
-        Me.c_noofdepd.Name = "c_noofdepd"
-        Me.c_noofdepd.ReadOnly = True
-        Me.c_noofdepd.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'c_empName
-        '
-        Me.c_empName.HeaderText = "Employee Name"
-        Me.c_empName.Name = "c_empName"
-        Me.c_empName.ReadOnly = True
-        Me.c_empName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_empName.Visible = False
-        '
-        'c_PayType
-        '
-        Me.c_PayType.HeaderText = "Pay Type"
-        Me.c_PayType.Name = "c_PayType"
-        Me.c_PayType.ReadOnly = True
-        Me.c_PayType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_PayType.Visible = False
-        '
-        'c_filingstatus
-        '
-        Me.c_filingstatus.HeaderText = "Filing Status"
-        Me.c_filingstatus.Name = "c_filingstatus"
-        Me.c_filingstatus.ReadOnly = True
-        Me.c_filingstatus.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_filingstatus.Visible = False
-        '
-        'c_RowIDSal
-        '
-        Me.c_RowIDSal.HeaderText = "RowID"
-        Me.c_RowIDSal.Name = "c_RowIDSal"
-        Me.c_RowIDSal.ReadOnly = True
-        Me.c_RowIDSal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_RowIDSal.Visible = False
-        '
-        'c_ToComputeSal
-        '
-        Me.c_ToComputeSal.HeaderText = "DifferenceBetweenSal&TrueSal"
-        Me.c_ToComputeSal.Name = "c_ToComputeSal"
-        Me.c_ToComputeSal.ReadOnly = True
-        Me.c_ToComputeSal.Visible = False
-        '
-        'TrueHDMFAmount
-        '
-        Me.TrueHDMFAmount.HeaderText = "TrueHDMFAmount"
-        Me.TrueHDMFAmount.Name = "TrueHDMFAmount"
-        Me.TrueHDMFAmount.ReadOnly = True
-        Me.TrueHDMFAmount.Visible = False
-        '
-        'txtEmpIDSal
-        '
-        Me.txtEmpIDSal.BackColor = System.Drawing.Color.White
-        Me.txtEmpIDSal.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtEmpIDSal.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.txtEmpIDSal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
-        Me.txtEmpIDSal.Location = New System.Drawing.Point(127, 49)
-        Me.txtEmpIDSal.MaxLength = 50
-        Me.txtEmpIDSal.Name = "txtEmpIDSal"
-        Me.txtEmpIDSal.ReadOnly = True
-        Me.txtEmpIDSal.Size = New System.Drawing.Size(516, 22)
-        Me.txtEmpIDSal.TabIndex = 338
-        '
-        'ToolStrip13
-        '
-        Me.ToolStrip13.BackColor = System.Drawing.Color.Transparent
-        Me.ToolStrip13.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip13.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNewSal, Me.btnSaveSal, Me.ToolStripLabel6, Me.ToolStripSeparator11, Me.btnDelSal, Me.ToolStripSeparator12, Me.btnCancelSal, Me.ToolStripButton30, Me.ToolStripButton31, Me.tsbtnImportSalary, Me.ToolStripProgressBar2})
-        Me.ToolStrip13.Location = New System.Drawing.Point(3, 3)
-        Me.ToolStrip13.Name = "ToolStrip13"
-        Me.ToolStrip13.Size = New System.Drawing.Size(854, 25)
-        Me.ToolStrip13.TabIndex = 323
-        Me.ToolStrip13.Text = "ToolStrip13"
-        '
-        'btnNewSal
-        '
-        Me.btnNewSal.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.btnNewSal.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnNewSal.Name = "btnNewSal"
-        Me.btnNewSal.Size = New System.Drawing.Size(112, 22)
-        Me.btnNewSal.Text = "&New Emp Salary"
-        '
-        'btnSaveSal
-        '
-        Me.btnSaveSal.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.btnSaveSal.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnSaveSal.Name = "btnSaveSal"
-        Me.btnSaveSal.Size = New System.Drawing.Size(112, 22)
-        Me.btnSaveSal.Text = "&Save Emp Salary"
-        '
-        'ToolStripLabel6
-        '
-        Me.ToolStripLabel6.AutoSize = False
-        Me.ToolStripLabel6.Name = "ToolStripLabel6"
-        Me.ToolStripLabel6.Size = New System.Drawing.Size(50, 22)
-        '
-        'ToolStripSeparator11
-        '
-        Me.ToolStripSeparator11.Name = "ToolStripSeparator11"
-        Me.ToolStripSeparator11.Size = New System.Drawing.Size(6, 25)
-        '
-        'btnDelSal
-        '
-        Me.btnDelSal.Image = Global.AccuPay.My.Resources.Resources.deleteuser
-        Me.btnDelSal.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnDelSal.Name = "btnDelSal"
-        Me.btnDelSal.Size = New System.Drawing.Size(121, 22)
-        Me.btnDelSal.Text = "&Delete Emp Salary"
-        '
-        'ToolStripSeparator12
-        '
-        Me.ToolStripSeparator12.Name = "ToolStripSeparator12"
-        Me.ToolStripSeparator12.Size = New System.Drawing.Size(6, 25)
-        '
-        'btnCancelSal
-        '
-        Me.btnCancelSal.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.btnCancelSal.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnCancelSal.Name = "btnCancelSal"
-        Me.btnCancelSal.Size = New System.Drawing.Size(63, 22)
-        Me.btnCancelSal.Text = "&Cancel"
-        '
-        'ToolStripButton30
-        '
-        Me.ToolStripButton30.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton30.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton30.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton30.Name = "ToolStripButton30"
-        Me.ToolStripButton30.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton30.Text = "Close"
-        '
-        'ToolStripButton31
-        '
-        Me.ToolStripButton31.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton31.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton31.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton31.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton31.Name = "ToolStripButton31"
-        Me.ToolStripButton31.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton31.Text = "ToolStripButton1"
-        Me.ToolStripButton31.ToolTipText = "Show audit trails"
-        '
-        'tsbtnImportSalary
-        '
-        Me.tsbtnImportSalary.Image = CType(resources.GetObject("tsbtnImportSalary.Image"), System.Drawing.Image)
-        Me.tsbtnImportSalary.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnImportSalary.Name = "tsbtnImportSalary"
-        Me.tsbtnImportSalary.Size = New System.Drawing.Size(97, 22)
-        Me.tsbtnImportSalary.Text = "Import Salary"
-        '
-        'ToolStripProgressBar2
-        '
-        Me.ToolStripProgressBar2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripProgressBar2.Name = "ToolStripProgressBar2"
-        Me.ToolStripProgressBar2.Size = New System.Drawing.Size(100, 22)
-        Me.ToolStripProgressBar2.Visible = False
+        Me.tsbtnImportEmployee.Name = "tsbtnImportEmployee"
+        Me.tsbtnImportEmployee.Size = New System.Drawing.Size(23, 22)
         '
         'tbpAwards
         '
@@ -4596,7 +3428,7 @@ Partial Class EmployeeForm
         Me.tbpAwards.Location = New System.Drawing.Point(4, 4)
         Me.tbpAwards.Name = "tbpAwards"
         Me.tbpAwards.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpAwards.Size = New System.Drawing.Size(860, 461)
+        Me.tbpAwards.Size = New System.Drawing.Size(860, 486)
         Me.tbpAwards.TabIndex = 1
         Me.tbpAwards.Text = "AWARD"
         Me.tbpAwards.UseVisualStyleBackColor = True
@@ -4612,7 +3444,7 @@ Partial Class EmployeeForm
         Me.Panel17.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel17.Location = New System.Drawing.Point(3, 28)
         Me.Panel17.Name = "Panel17"
-        Me.Panel17.Size = New System.Drawing.Size(854, 430)
+        Me.Panel17.Size = New System.Drawing.Size(854, 455)
         Me.Panel17.TabIndex = 159
         '
         'Label320
@@ -4643,26 +3475,26 @@ Partial Class EmployeeForm
         Me.dgvempawar.BackgroundColor = System.Drawing.Color.White
         Me.dgvempawar.ColumnHeadersHeight = 34
         Me.dgvempawar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eawar_RowID, Me.eawar_EmployeeID, Me.eawar_Type, Me.eawar_Description, Me.eawar_DateAwarded, Me.DataGridViewTextBoxColumn69, Me.DataGridViewTextBoxColumn70, Me.DataGridViewTextBoxColumn71, Me.DataGridViewTextBoxColumn72})
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempawar.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempawar.DefaultCellStyle = DataGridViewCellStyle4
         Me.dgvempawar.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempawar.Location = New System.Drawing.Point(32, 170)
         Me.dgvempawar.MultiSelect = False
         Me.dgvempawar.Name = "dgvempawar"
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempawar.RowHeadersDefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempawar.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
         Me.dgvempawar.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempawar.Size = New System.Drawing.Size(705, 400)
         Me.dgvempawar.TabIndex = 118
@@ -4690,8 +3522,8 @@ Partial Class EmployeeForm
         '
         'eawar_Description
         '
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eawar_Description.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eawar_Description.DefaultCellStyle = DataGridViewCellStyle3
         Me.eawar_Description.HeaderText = "Award Description"
         Me.eawar_Description.MaxInputLength = 500
         Me.eawar_Description.Name = "eawar_Description"
@@ -4822,7 +3654,7 @@ Partial Class EmployeeForm
         Me.tbpCertifications.Location = New System.Drawing.Point(4, 4)
         Me.tbpCertifications.Name = "tbpCertifications"
         Me.tbpCertifications.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpCertifications.Size = New System.Drawing.Size(860, 461)
+        Me.tbpCertifications.Size = New System.Drawing.Size(860, 486)
         Me.tbpCertifications.TabIndex = 2
         Me.tbpCertifications.Text = "CERTI"
         Me.tbpCertifications.UseVisualStyleBackColor = True
@@ -4839,7 +3671,7 @@ Partial Class EmployeeForm
         Me.Panel16.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel16.Location = New System.Drawing.Point(3, 28)
         Me.Panel16.Name = "Panel16"
-        Me.Panel16.Size = New System.Drawing.Size(854, 430)
+        Me.Panel16.Size = New System.Drawing.Size(854, 455)
         Me.Panel16.TabIndex = 170
         '
         'Label322
@@ -4879,14 +3711,14 @@ Partial Class EmployeeForm
         Me.dgvempcert.BackgroundColor = System.Drawing.Color.White
         Me.dgvempcert.ColumnHeadersHeight = 34
         Me.dgvempcert.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ecert_RowID, Me.ecert_EmployeeID, Me.ecert_Type, Me.ecert_IssuingAuth, Me.ecert_CertNum, Me.ecert_DateIssued, Me.ecert_Expiration, Me.ecert_Comments, Me.DataGridViewTextBoxColumn81, Me.DataGridViewTextBoxColumn82, Me.DataGridViewTextBoxColumn83, Me.DataGridViewTextBoxColumn84})
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempcert.DefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempcert.DefaultCellStyle = DataGridViewCellStyle8
         Me.dgvempcert.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempcert.Location = New System.Drawing.Point(32, 170)
         Me.dgvempcert.MultiSelect = False
@@ -4918,8 +3750,8 @@ Partial Class EmployeeForm
         '
         'ecert_IssuingAuth
         '
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.ecert_IssuingAuth.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ecert_IssuingAuth.DefaultCellStyle = DataGridViewCellStyle6
         Me.ecert_IssuingAuth.HeaderText = "Issuing Authority"
         Me.ecert_IssuingAuth.MaxInputLength = 50
         Me.ecert_IssuingAuth.Name = "ecert_IssuingAuth"
@@ -5008,8 +3840,8 @@ Partial Class EmployeeForm
         '
         'ecert_Comments
         '
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.ecert_Comments.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ecert_Comments.DefaultCellStyle = DataGridViewCellStyle7
         Me.ecert_Comments.HeaderText = "Comments"
         Me.ecert_Comments.MaxInputLength = 2000
         Me.ecert_Comments.Name = "ecert_Comments"
@@ -5099,6 +3931,7 @@ Partial Class EmployeeForm
         Me.tsbtnCertEmploymnt.Name = "tsbtnCertEmploymnt"
         Me.tsbtnCertEmploymnt.Size = New System.Drawing.Size(194, 22)
         Me.tsbtnCertEmploymnt.Text = "Print Ceritficate of Employment"
+        Me.tsbtnCertEmploymnt.Visible = False
         '
         'tsbtnCancelempcert
         '
@@ -5138,7 +3971,7 @@ Partial Class EmployeeForm
         Me.tbpLeave.Location = New System.Drawing.Point(4, 4)
         Me.tbpLeave.Name = "tbpLeave"
         Me.tbpLeave.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpLeave.Size = New System.Drawing.Size(860, 461)
+        Me.tbpLeave.Size = New System.Drawing.Size(860, 486)
         Me.tbpLeave.TabIndex = 3
         Me.tbpLeave.Text = "LEAVE"
         Me.tbpLeave.UseVisualStyleBackColor = True
@@ -5186,7 +4019,7 @@ Partial Class EmployeeForm
         Me.Panel15.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel15.Location = New System.Drawing.Point(3, 28)
         Me.Panel15.Name = "Panel15"
-        Me.Panel15.Size = New System.Drawing.Size(854, 430)
+        Me.Panel15.Size = New System.Drawing.Size(854, 455)
         Me.Panel15.TabIndex = 188
         '
         'Label345
@@ -5328,6 +4161,7 @@ Partial Class EmployeeForm
         Me.Label128.Size = New System.Drawing.Size(39, 13)
         Me.Label128.TabIndex = 160
         Me.Label128.Text = "hour(s)"
+        Me.Label128.Visible = False
         '
         'Label131
         '
@@ -5356,6 +4190,7 @@ Partial Class EmployeeForm
         Me.txtmlbalLeave.ReadOnly = True
         Me.txtmlbalLeave.Size = New System.Drawing.Size(84, 20)
         Me.txtmlbalLeave.TabIndex = 149
+        Me.txtmlbalLeave.Visible = False
         '
         'Label105
         '
@@ -5365,6 +4200,7 @@ Partial Class EmployeeForm
         Me.Label105.Size = New System.Drawing.Size(50, 13)
         Me.Label105.TabIndex = 152
         Me.Label105.Text = "Maternity"
+        Me.Label105.Visible = False
         '
         'txtvlbalLeave
         '
@@ -5431,6 +4267,7 @@ Partial Class EmployeeForm
         Me.Label133.Size = New System.Drawing.Size(39, 13)
         Me.Label133.TabIndex = 160
         Me.Label133.Text = "hour(s)"
+        Me.Label133.Visible = False
         '
         'Label136
         '
@@ -5459,6 +4296,7 @@ Partial Class EmployeeForm
         Me.txtmlallowleave.ReadOnly = True
         Me.txtmlallowleave.Size = New System.Drawing.Size(84, 20)
         Me.txtmlallowleave.TabIndex = 28
+        Me.txtmlallowleave.Visible = False
         '
         'txtvlallowLeave
         '
@@ -5506,6 +4344,7 @@ Partial Class EmployeeForm
         Me.Label104.Size = New System.Drawing.Size(50, 13)
         Me.Label104.TabIndex = 146
         Me.Label104.Text = "Maternity"
+        Me.Label104.Visible = False
         '
         'TabPage8
         '
@@ -5534,6 +4373,7 @@ Partial Class EmployeeForm
         Me.Label127.Size = New System.Drawing.Size(39, 13)
         Me.Label127.TabIndex = 159
         Me.Label127.Text = "hour(s)"
+        Me.Label127.Visible = False
         '
         'Label126
         '
@@ -5562,6 +4402,7 @@ Partial Class EmployeeForm
         Me.txtmlpaypLeave.ReadOnly = True
         Me.txtmlpaypLeave.Size = New System.Drawing.Size(84, 20)
         Me.txtmlpaypLeave.TabIndex = 155
+        Me.txtmlpaypLeave.Visible = False
         '
         'Label119
         '
@@ -5571,6 +4412,7 @@ Partial Class EmployeeForm
         Me.Label119.Size = New System.Drawing.Size(50, 13)
         Me.Label119.TabIndex = 158
         Me.Label119.Text = "Maternity"
+        Me.Label119.Visible = False
         '
         'txtvlpaypLeave
         '
@@ -5762,14 +4604,14 @@ Partial Class EmployeeForm
         Me.dgvempleave.ColumnHeadersHeight = 38
         Me.dgvempleave.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvempleave.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.elv_RowID, Me.elv_Type, Me.elv_StartTime, Me.elv_EndTime, Me.elv_StartDate, Me.elv_EndDate, Me.elv_Reason, Me.elv_Comment, Me.elv_Image, Me.elv_viewimage, Me.elv_attafilename, Me.elv_attafileextensn, Me.elv_Status})
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempleave.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempleave.DefaultCellStyle = DataGridViewCellStyle11
         Me.dgvempleave.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempleave.Location = New System.Drawing.Point(32, 257)
         Me.dgvempleave.MultiSelect = False
@@ -5883,8 +4725,8 @@ Partial Class EmployeeForm
         '
         'elv_Reason
         '
-        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.elv_Reason.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.elv_Reason.DefaultCellStyle = DataGridViewCellStyle9
         Me.elv_Reason.HeaderText = "Reason"
         Me.elv_Reason.Name = "elv_Reason"
         Me.elv_Reason.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
@@ -5892,8 +4734,8 @@ Partial Class EmployeeForm
         '
         'elv_Comment
         '
-        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.elv_Comment.DefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.elv_Comment.DefaultCellStyle = DataGridViewCellStyle10
         Me.elv_Comment.HeaderText = "Comments"
         Me.elv_Comment.MaxInputLength = 499
         Me.elv_Comment.Name = "elv_Comment"
@@ -6053,7 +4895,7 @@ Partial Class EmployeeForm
         '
         Me.ToolStrip5.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip5.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewLeave, Me.tsbtnSaveLeave, Me.ToolStripButton3, Me.ToolStripLabel10, Me.tsbtnDeletLeave, Me.ToolStripButton4, Me.ToolStripButton17, Me.ToolStripButton20})
+        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewLeave, Me.tsbtnSaveLeave, Me.ToolStripButton3, Me.ToolStripLabel10, Me.ToolStripButton36, Me.ToolStripLabel12, Me.tsbtnDeletLeave, Me.ToolStripButton4, Me.ToolStripButton17, Me.ToolStripButton20})
         Me.ToolStrip5.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip5.Name = "ToolStrip5"
         Me.ToolStrip5.Size = New System.Drawing.Size(854, 25)
@@ -6089,6 +4931,20 @@ Partial Class EmployeeForm
         Me.ToolStripLabel10.AutoSize = False
         Me.ToolStripLabel10.Name = "ToolStripLabel10"
         Me.ToolStripLabel10.Size = New System.Drawing.Size(89, 22)
+        '
+        'ToolStripButton36
+        '
+        Me.ToolStripButton36.Image = Global.AccuPay.My.Resources.Resources.Add
+        Me.ToolStripButton36.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton36.Name = "ToolStripButton36"
+        Me.ToolStripButton36.Size = New System.Drawing.Size(63, 22)
+        Me.ToolStripButton36.Text = "Import"
+        '
+        'ToolStripLabel12
+        '
+        Me.ToolStripLabel12.AutoSize = False
+        Me.ToolStripLabel12.Name = "ToolStripLabel12"
+        Me.ToolStripLabel12.Size = New System.Drawing.Size(22, 22)
         '
         'tsbtnDeletLeave
         '
@@ -6126,6 +4982,7 @@ Partial Class EmployeeForm
         Me.ToolStripButton20.Name = "ToolStripButton20"
         Me.ToolStripButton20.Size = New System.Drawing.Size(23, 22)
         Me.ToolStripButton20.Text = "ToolStripButton20"
+        Me.ToolStripButton20.Visible = False
         '
         'Label39
         '
@@ -6146,7 +5003,7 @@ Partial Class EmployeeForm
         Me.tbpDiscipAct.Location = New System.Drawing.Point(4, 4)
         Me.tbpDiscipAct.Name = "tbpDiscipAct"
         Me.tbpDiscipAct.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpDiscipAct.Size = New System.Drawing.Size(860, 461)
+        Me.tbpDiscipAct.Size = New System.Drawing.Size(860, 486)
         Me.tbpDiscipAct.TabIndex = 5
         Me.tbpDiscipAct.Text = "DISCIP"
         Me.tbpDiscipAct.UseVisualStyleBackColor = True
@@ -6177,7 +5034,7 @@ Partial Class EmployeeForm
         Me.Panel14.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel14.Location = New System.Drawing.Point(3, 28)
         Me.Panel14.Name = "Panel14"
-        Me.Panel14.Size = New System.Drawing.Size(854, 430)
+        Me.Panel14.Size = New System.Drawing.Size(854, 455)
         Me.Panel14.TabIndex = 338
         '
         'LinkLabel3
@@ -6308,24 +5165,24 @@ Partial Class EmployeeForm
         Me.dgvDisciplinaryList.AllowUserToAddRows = False
         Me.dgvDisciplinaryList.AllowUserToDeleteRows = False
         Me.dgvDisciplinaryList.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDisciplinaryList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDisciplinaryList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
         Me.dgvDisciplinaryList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvDisciplinaryList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_FindingName, Me.c_action, Me.c_datefrom, Me.c_dateto, Me.c_desc, Me.c_comment, Me.c_rowid})
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDisciplinaryList.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDisciplinaryList.DefaultCellStyle = DataGridViewCellStyle13
         Me.dgvDisciplinaryList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvDisciplinaryList.Location = New System.Drawing.Point(32, 248)
         Me.dgvDisciplinaryList.MultiSelect = False
@@ -6510,6 +5367,7 @@ Partial Class EmployeeForm
         Me.btnPrintMemo.Name = "btnPrintMemo"
         Me.btnPrintMemo.Size = New System.Drawing.Size(90, 22)
         Me.btnPrintMemo.Text = "Print Memo"
+        Me.btnPrintMemo.Visible = False
         '
         'btnCancel
         '
@@ -6549,7 +5407,7 @@ Partial Class EmployeeForm
         Me.tbpEducBG.Location = New System.Drawing.Point(4, 4)
         Me.tbpEducBG.Name = "tbpEducBG"
         Me.tbpEducBG.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpEducBG.Size = New System.Drawing.Size(860, 461)
+        Me.tbpEducBG.Size = New System.Drawing.Size(860, 486)
         Me.tbpEducBG.TabIndex = 6
         Me.tbpEducBG.Text = "EDUC"
         Me.tbpEducBG.UseVisualStyleBackColor = True
@@ -6582,7 +5440,7 @@ Partial Class EmployeeForm
         Me.Panel13.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel13.Location = New System.Drawing.Point(3, 28)
         Me.Panel13.Name = "Panel13"
-        Me.Panel13.Size = New System.Drawing.Size(854, 430)
+        Me.Panel13.Size = New System.Drawing.Size(854, 455)
         Me.Panel13.TabIndex = 349
         '
         'Label327
@@ -6675,24 +5533,24 @@ Partial Class EmployeeForm
         Me.dgvEducback.AllowUserToAddRows = False
         Me.dgvEducback.AllowUserToDeleteRows = False
         Me.dgvEducback.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvEducback.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvEducback.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
         Me.dgvEducback.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvEducback.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_EmplyeeID, Me.c_name, Me.c_EducationalType, Me.c_school, Me.c_degree, Me.c_course, Me.c_minor, Me.DataGridViewTextBoxColumn108, Me.DataGridViewTextBoxColumn109, Me.c_Remarks, Me.c_RowID1})
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvEducback.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvEducback.DefaultCellStyle = DataGridViewCellStyle15
         Me.dgvEducback.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvEducback.Location = New System.Drawing.Point(32, 224)
         Me.dgvEducback.MultiSelect = False
@@ -6991,7 +5849,7 @@ Partial Class EmployeeForm
         Me.tbpPrevEmp.Location = New System.Drawing.Point(4, 4)
         Me.tbpPrevEmp.Name = "tbpPrevEmp"
         Me.tbpPrevEmp.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpPrevEmp.Size = New System.Drawing.Size(860, 461)
+        Me.tbpPrevEmp.Size = New System.Drawing.Size(860, 486)
         Me.tbpPrevEmp.TabIndex = 7
         Me.tbpPrevEmp.Text = "PREV EMP"
         Me.tbpPrevEmp.UseVisualStyleBackColor = True
@@ -7009,7 +5867,7 @@ Partial Class EmployeeForm
         Me.Panel12.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel12.Location = New System.Drawing.Point(3, 28)
         Me.Panel12.Name = "Panel12"
-        Me.Panel12.Size = New System.Drawing.Size(854, 430)
+        Me.Panel12.Size = New System.Drawing.Size(854, 455)
         Me.Panel12.TabIndex = 352
         '
         'Label329
@@ -7387,23 +6245,23 @@ Partial Class EmployeeForm
         'DataGridView2
         '
         Me.DataGridView2.BackgroundColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
         Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView2.DefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView2.DefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridView2.Location = New System.Drawing.Point(6, 257)
         Me.DataGridView2.Name = "DataGridView2"
         Me.DataGridView2.Size = New System.Drawing.Size(317, 109)
@@ -7471,24 +6329,24 @@ Partial Class EmployeeForm
         Me.dgvListCompany.AllowUserToAddRows = False
         Me.dgvListCompany.AllowUserToDeleteRows = False
         Me.dgvListCompany.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvListCompany.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvListCompany.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle18
         Me.dgvListCompany.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvListCompany.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_compname, Me.c_trade, Me.c_contname, Me.c_mainphone, Me.c_altphone, Me.c_faxno, Me.c_emailaddr, Me.c_altemailaddr, Me.c_url, Me.c_tinno, Me.c_jobtitle, Me.c_jobfunction, Me.c_orgtype, Me.c_experience, Me.c_expdateto, Me.c_compaddr, Me.c_rowidPrevEmp})
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvListCompany.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvListCompany.DefaultCellStyle = DataGridViewCellStyle19
         Me.dgvListCompany.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvListCompany.Location = New System.Drawing.Point(32, 326)
         Me.dgvListCompany.MultiSelect = False
@@ -7703,7 +6561,7 @@ Partial Class EmployeeForm
         Me.tbpPromotion.Location = New System.Drawing.Point(4, 4)
         Me.tbpPromotion.Name = "tbpPromotion"
         Me.tbpPromotion.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpPromotion.Size = New System.Drawing.Size(860, 461)
+        Me.tbpPromotion.Size = New System.Drawing.Size(860, 486)
         Me.tbpPromotion.TabIndex = 8
         Me.tbpPromotion.Text = "PROMOT"
         Me.tbpPromotion.UseVisualStyleBackColor = True
@@ -7741,7 +6599,7 @@ Partial Class EmployeeForm
         Me.Panel11.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel11.Location = New System.Drawing.Point(3, 28)
         Me.Panel11.Name = "Panel11"
-        Me.Panel11.Size = New System.Drawing.Size(854, 430)
+        Me.Panel11.Size = New System.Drawing.Size(854, 455)
         Me.Panel11.TabIndex = 386
         '
         'Label331
@@ -7808,24 +6666,24 @@ Partial Class EmployeeForm
         Me.dgvPromotionList.AllowUserToAddRows = False
         Me.dgvPromotionList.AllowUserToDeleteRows = False
         Me.dgvPromotionList.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvPromotionList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvPromotionList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle20
         Me.dgvPromotionList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPromotionList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_empID2, Me.c_empname2, Me.c_promotRowID, Me.c_PostionFrom, Me.c_positionto, Me.c_effecDate, Me.c_compensation, Me.c_basicpay, Me.c_reasonpromot})
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvPromotionList.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvPromotionList.DefaultCellStyle = DataGridViewCellStyle21
         Me.dgvPromotionList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvPromotionList.Location = New System.Drawing.Point(32, 239)
         Me.dgvPromotionList.MultiSelect = False
@@ -8179,3470 +7037,6 @@ Partial Class EmployeeForm
         Me.ToolStripButton19.Text = "ToolStripButton1"
         Me.ToolStripButton19.ToolTipText = "Show audit trails"
         '
-        'tbpLoans
-        '
-        Me.tbpLoans.AccessibleDescription = "Employee Loan Schedule"
-        Me.tbpLoans.AutoScroll = True
-        Me.tbpLoans.Controls.Add(Me.Panel10)
-        Me.tbpLoans.Controls.Add(Me.ToolStrip12)
-        Me.tbpLoans.Location = New System.Drawing.Point(4, 4)
-        Me.tbpLoans.Name = "tbpLoans"
-        Me.tbpLoans.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpLoans.Size = New System.Drawing.Size(860, 461)
-        Me.tbpLoans.TabIndex = 9
-        Me.tbpLoans.Text = "LOAN SCH"
-        Me.tbpLoans.UseVisualStyleBackColor = True
-        '
-        'Panel10
-        '
-        Me.Panel10.AutoScroll = True
-        Me.Panel10.Controls.Add(Me.chkboxChargeToBonus)
-        Me.Panel10.Controls.Add(Me.Label333)
-        Me.Panel10.Controls.Add(Me.Label332)
-        Me.Panel10.Controls.Add(Me.txtloaninterest)
-        Me.Panel10.Controls.Add(Me.Label314)
-        Me.Panel10.Controls.Add(Me.Label231)
-        Me.Panel10.Controls.Add(Me.rdbamount)
-        Me.Panel10.Controls.Add(Me.rdbpercent)
-        Me.Panel10.Controls.Add(Me.txtnoofpayperleft)
-        Me.Panel10.Controls.Add(Me.Label230)
-        Me.Panel10.Controls.Add(Me.pbEmpPicLoan)
-        Me.Panel10.Controls.Add(Me.Label221)
-        Me.Panel10.Controls.Add(Me.Label220)
-        Me.Panel10.Controls.Add(Me.dgvLoanList)
-        Me.Panel10.Controls.Add(Me.txtFNameLoan)
-        Me.Panel10.Controls.Add(Me.TextBox7)
-        Me.Panel10.Controls.Add(Me.txtEmpIDLoan)
-        Me.Panel10.Controls.Add(Me.Label100)
-        Me.Panel10.Controls.Add(Me.lnklblloantype)
-        Me.Panel10.Controls.Add(Me.txtloannumber)
-        Me.Panel10.Controls.Add(Me.cboloantype)
-        Me.Panel10.Controls.Add(Me.Label99)
-        Me.Panel10.Controls.Add(Me.Label185)
-        Me.Panel10.Controls.Add(Me.datefrom)
-        Me.Panel10.Controls.Add(Me.Label88)
-        Me.Panel10.Controls.Add(Me.txtloanamt)
-        Me.Panel10.Controls.Add(Me.lblAdd)
-        Me.Panel10.Controls.Add(Me.Label98)
-        Me.Panel10.Controls.Add(Me.cmbdedsched)
-        Me.Panel10.Controls.Add(Me.txtbal)
-        Me.Panel10.Controls.Add(Me.Label89)
-        Me.Panel10.Controls.Add(Me.Label97)
-        Me.Panel10.Controls.Add(Me.Label90)
-        Me.Panel10.Controls.Add(Me.cmbStatus)
-        Me.Panel10.Controls.Add(Me.txtdedpercent)
-        Me.Panel10.Controls.Add(Me.txtdedamt)
-        Me.Panel10.Controls.Add(Me.Label91)
-        Me.Panel10.Controls.Add(Me.Label96)
-        Me.Panel10.Controls.Add(Me.dateto)
-        Me.Panel10.Controls.Add(Me.txtnoofpayper)
-        Me.Panel10.Controls.Add(Me.Label92)
-        Me.Panel10.Controls.Add(Me.Label95)
-        Me.Panel10.Controls.Add(Me.Label93)
-        Me.Panel10.Controls.Add(Me.TextBox6)
-        Me.Panel10.Controls.Add(Me.Label94)
-        Me.Panel10.Controls.Add(Me.Label349)
-        Me.Panel10.Controls.Add(Me.Label350)
-        Me.Panel10.Controls.Add(Me.Label367)
-        Me.Panel10.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel10.Location = New System.Drawing.Point(3, 28)
-        Me.Panel10.Name = "Panel10"
-        Me.Panel10.Size = New System.Drawing.Size(854, 430)
-        Me.Panel10.TabIndex = 385
-        '
-        'chkboxChargeToBonus
-        '
-        Me.chkboxChargeToBonus.AutoSize = True
-        Me.chkboxChargeToBonus.Location = New System.Drawing.Point(522, 265)
-        Me.chkboxChargeToBonus.Name = "chkboxChargeToBonus"
-        Me.chkboxChargeToBonus.Size = New System.Drawing.Size(96, 17)
-        Me.chkboxChargeToBonus.TabIndex = 365
-        Me.chkboxChargeToBonus.Text = "Apply in Bonus"
-        Me.ToolTip1.SetToolTip(Me.chkboxChargeToBonus, "charges the dedcution on" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "bonus or else on salary")
-        Me.chkboxChargeToBonus.UseVisualStyleBackColor = True
-        '
-        'Label333
-        '
-        Me.Label333.AutoSize = True
-        Me.Label333.ForeColor = System.Drawing.Color.White
-        Me.Label333.Location = New System.Drawing.Point(862, 608)
-        Me.Label333.Name = "Label333"
-        Me.Label333.Size = New System.Drawing.Size(25, 13)
-        Me.Label333.TabIndex = 505
-        Me.Label333.Text = "___"
-        '
-        'Label332
-        '
-        Me.Label332.AutoSize = True
-        Me.Label332.ForeColor = System.Drawing.Color.White
-        Me.Label332.Location = New System.Drawing.Point(29, 624)
-        Me.Label332.Name = "Label332"
-        Me.Label332.Size = New System.Drawing.Size(25, 13)
-        Me.Label332.TabIndex = 504
-        Me.Label332.Text = "___"
-        '
-        'txtloaninterest
-        '
-        Me.txtloaninterest.BackColor = System.Drawing.Color.White
-        Me.txtloaninterest.Location = New System.Drawing.Point(273, 260)
-        Me.txtloaninterest.Name = "txtloaninterest"
-        Me.txtloaninterest.ShortcutsEnabled = False
-        Me.txtloaninterest.Size = New System.Drawing.Size(203, 20)
-        Me.txtloaninterest.TabIndex = 362
-        '
-        'Label314
-        '
-        Me.Label314.AutoSize = True
-        Me.Label314.Location = New System.Drawing.Point(272, 245)
-        Me.Label314.Name = "Label314"
-        Me.Label314.Size = New System.Drawing.Size(125, 13)
-        Me.Label314.TabIndex = 391
-        Me.Label314.Text = "Loan interest percentage"
-        '
-        'Label231
-        '
-        Me.Label231.AutoSize = True
-        Me.Label231.Location = New System.Drawing.Point(14, 227)
-        Me.Label231.Name = "Label231"
-        Me.Label231.Size = New System.Drawing.Size(14, 13)
-        Me.Label231.TabIndex = 389
-        Me.Label231.Text = "₱"
-        '
-        'rdbamount
-        '
-        Me.rdbamount.AutoSize = True
-        Me.rdbamount.Location = New System.Drawing.Point(273, 65)
-        Me.rdbamount.Name = "rdbamount"
-        Me.rdbamount.Size = New System.Drawing.Size(216, 17)
-        Me.rdbamount.TabIndex = 358
-        Me.rdbamount.Text = "Deduct a specific amount per pay period"
-        Me.rdbamount.UseVisualStyleBackColor = True
-        Me.rdbamount.Visible = False
-        '
-        'rdbpercent
-        '
-        Me.rdbpercent.AutoSize = True
-        Me.rdbpercent.Checked = True
-        Me.rdbpercent.Location = New System.Drawing.Point(761, 81)
-        Me.rdbpercent.Name = "rdbpercent"
-        Me.rdbpercent.Size = New System.Drawing.Size(246, 17)
-        Me.rdbpercent.TabIndex = 357
-        Me.rdbpercent.TabStop = True
-        Me.rdbpercent.Text = "Deduct a percent of the net pay per pay period"
-        Me.rdbpercent.UseVisualStyleBackColor = True
-        Me.rdbpercent.Visible = False
-        '
-        'txtnoofpayperleft
-        '
-        Me.txtnoofpayperleft.BackColor = System.Drawing.Color.White
-        Me.txtnoofpayperleft.Location = New System.Drawing.Point(273, 142)
-        Me.txtnoofpayperleft.Name = "txtnoofpayperleft"
-        Me.txtnoofpayperleft.ReadOnly = True
-        Me.txtnoofpayperleft.Size = New System.Drawing.Size(203, 20)
-        Me.txtnoofpayperleft.TabIndex = 359
-        '
-        'Label230
-        '
-        Me.Label230.AutoSize = True
-        Me.Label230.Location = New System.Drawing.Point(272, 127)
-        Me.Label230.Name = "Label230"
-        Me.Label230.Size = New System.Drawing.Size(107, 13)
-        Me.Label230.TabIndex = 386
-        Me.Label230.Text = "No. of Pay Period left"
-        '
-        'pbEmpPicLoan
-        '
-        Me.pbEmpPicLoan.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.pbEmpPicLoan.Location = New System.Drawing.Point(32, 8)
-        Me.pbEmpPicLoan.Name = "pbEmpPicLoan"
-        Me.pbEmpPicLoan.Size = New System.Drawing.Size(89, 77)
-        Me.pbEmpPicLoan.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.pbEmpPicLoan.TabIndex = 382
-        Me.pbEmpPicLoan.TabStop = False
-        '
-        'Label221
-        '
-        Me.Label221.AutoSize = True
-        Me.Label221.Location = New System.Drawing.Point(256, 185)
-        Me.Label221.Name = "Label221"
-        Me.Label221.Size = New System.Drawing.Size(14, 13)
-        Me.Label221.TabIndex = 384
-        Me.Label221.Text = "₱"
-        '
-        'Label220
-        '
-        Me.Label220.AutoSize = True
-        Me.Label220.Location = New System.Drawing.Point(12, 185)
-        Me.Label220.Name = "Label220"
-        Me.Label220.Size = New System.Drawing.Size(14, 13)
-        Me.Label220.TabIndex = 383
-        Me.Label220.Text = "₱"
-        '
-        'dgvLoanList
-        '
-        Me.dgvLoanList.AllowUserToAddRows = False
-        Me.dgvLoanList.AllowUserToDeleteRows = False
-        Me.dgvLoanList.AllowUserToResizeRows = False
-        Me.dgvLoanList.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle24.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvLoanList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle24
-        Me.dgvLoanList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvLoanList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_loanno, Me.c_totloanamt, Me.c_totballeft, Me.c_dedamt, Me.c_DedPercent, Me.c_dedsched, Me.c_noofpayperiod, Me.c_noofpayperiodleft, Me.c_dedeffectivedatefrom, Me.c_RemarksLoan, Me.c_RowIDLoan, Me.c_status, Me.c_loantype, Me.LoanHasBonus})
-        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle31.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle31.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle31.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle31.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvLoanList.DefaultCellStyle = DataGridViewCellStyle31
-        Me.dgvLoanList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvLoanList.Location = New System.Drawing.Point(32, 287)
-        Me.dgvLoanList.MultiSelect = False
-        Me.dgvLoanList.Name = "dgvLoanList"
-        Me.dgvLoanList.ReadOnly = True
-        Me.dgvLoanList.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvLoanList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvLoanList.Size = New System.Drawing.Size(824, 334)
-        Me.dgvLoanList.TabIndex = 366
-        '
-        'c_loanno
-        '
-        Me.c_loanno.HeaderText = "Loan Number"
-        Me.c_loanno.Name = "c_loanno"
-        Me.c_loanno.ReadOnly = True
-        Me.c_loanno.Width = 40
-        '
-        'c_totloanamt
-        '
-        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.c_totloanamt.DefaultCellStyle = DataGridViewCellStyle25
-        Me.c_totloanamt.HeaderText = "Total Loan Amount"
-        Me.c_totloanamt.Name = "c_totloanamt"
-        Me.c_totloanamt.ReadOnly = True
-        '
-        'c_totballeft
-        '
-        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.c_totballeft.DefaultCellStyle = DataGridViewCellStyle26
-        Me.c_totballeft.HeaderText = "Total Balance Left"
-        Me.c_totballeft.Name = "c_totballeft"
-        Me.c_totballeft.ReadOnly = True
-        '
-        'c_dedamt
-        '
-        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.c_dedamt.DefaultCellStyle = DataGridViewCellStyle27
-        Me.c_dedamt.HeaderText = "Deduction Amount"
-        Me.c_dedamt.Name = "c_dedamt"
-        Me.c_dedamt.ReadOnly = True
-        '
-        'c_DedPercent
-        '
-        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.c_DedPercent.DefaultCellStyle = DataGridViewCellStyle28
-        Me.c_DedPercent.HeaderText = "Deduction Percentage"
-        Me.c_DedPercent.Name = "c_DedPercent"
-        Me.c_DedPercent.ReadOnly = True
-        '
-        'c_dedsched
-        '
-        Me.c_dedsched.HeaderText = "Deduction Schedule"
-        Me.c_dedsched.Name = "c_dedsched"
-        Me.c_dedsched.ReadOnly = True
-        '
-        'c_noofpayperiod
-        '
-        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.c_noofpayperiod.DefaultCellStyle = DataGridViewCellStyle29
-        Me.c_noofpayperiod.HeaderText = "No of pay period"
-        Me.c_noofpayperiod.Name = "c_noofpayperiod"
-        Me.c_noofpayperiod.ReadOnly = True
-        '
-        'c_noofpayperiodleft
-        '
-        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.c_noofpayperiodleft.DefaultCellStyle = DataGridViewCellStyle30
-        Me.c_noofpayperiodleft.HeaderText = "No of pay period left"
-        Me.c_noofpayperiodleft.Name = "c_noofpayperiodleft"
-        Me.c_noofpayperiodleft.ReadOnly = True
-        '
-        'c_dedeffectivedatefrom
-        '
-        Me.c_dedeffectivedatefrom.HeaderText = "Deduction date from"
-        Me.c_dedeffectivedatefrom.Name = "c_dedeffectivedatefrom"
-        Me.c_dedeffectivedatefrom.ReadOnly = True
-        '
-        'c_RemarksLoan
-        '
-        Me.c_RemarksLoan.HeaderText = "Remarks"
-        Me.c_RemarksLoan.Name = "c_RemarksLoan"
-        Me.c_RemarksLoan.ReadOnly = True
-        '
-        'c_RowIDLoan
-        '
-        Me.c_RowIDLoan.HeaderText = "RowiD"
-        Me.c_RowIDLoan.Name = "c_RowIDLoan"
-        Me.c_RowIDLoan.ReadOnly = True
-        Me.c_RowIDLoan.Visible = False
-        '
-        'c_status
-        '
-        Me.c_status.HeaderText = "Status"
-        Me.c_status.Name = "c_status"
-        Me.c_status.ReadOnly = True
-        '
-        'c_loantype
-        '
-        Me.c_loantype.HeaderText = "Loan type"
-        Me.c_loantype.Name = "c_loantype"
-        Me.c_loantype.ReadOnly = True
-        '
-        'LoanHasBonus
-        '
-        Me.LoanHasBonus.HeaderText = "LoanHasBonus"
-        Me.LoanHasBonus.Name = "LoanHasBonus"
-        Me.LoanHasBonus.ReadOnly = True
-        Me.LoanHasBonus.Visible = False
-        '
-        'txtFNameLoan
-        '
-        Me.txtFNameLoan.BackColor = System.Drawing.Color.White
-        Me.txtFNameLoan.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtFNameLoan.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtFNameLoan.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
-        Me.txtFNameLoan.Location = New System.Drawing.Point(127, 22)
-        Me.txtFNameLoan.MaxLength = 250
-        Me.txtFNameLoan.Name = "txtFNameLoan"
-        Me.txtFNameLoan.ReadOnly = True
-        Me.txtFNameLoan.Size = New System.Drawing.Size(668, 28)
-        Me.txtFNameLoan.TabIndex = 381
-        '
-        'TextBox7
-        '
-        Me.TextBox7.Enabled = False
-        Me.TextBox7.Location = New System.Drawing.Point(731, 260)
-        Me.TextBox7.Name = "TextBox7"
-        Me.TextBox7.Size = New System.Drawing.Size(203, 20)
-        Me.TextBox7.TabIndex = 352
-        Me.TextBox7.Visible = False
-        '
-        'txtEmpIDLoan
-        '
-        Me.txtEmpIDLoan.BackColor = System.Drawing.Color.White
-        Me.txtEmpIDLoan.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtEmpIDLoan.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.txtEmpIDLoan.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
-        Me.txtEmpIDLoan.Location = New System.Drawing.Point(127, 49)
-        Me.txtEmpIDLoan.MaxLength = 50
-        Me.txtEmpIDLoan.Name = "txtEmpIDLoan"
-        Me.txtEmpIDLoan.ReadOnly = True
-        Me.txtEmpIDLoan.Size = New System.Drawing.Size(516, 22)
-        Me.txtEmpIDLoan.TabIndex = 380
-        '
-        'Label100
-        '
-        Me.Label100.AutoSize = True
-        Me.Label100.Location = New System.Drawing.Point(728, 245)
-        Me.Label100.Name = "Label100"
-        Me.Label100.Size = New System.Drawing.Size(67, 13)
-        Me.Label100.TabIndex = 354
-        Me.Label100.Text = "Employee ID"
-        Me.Label100.Visible = False
-        '
-        'lnklblloantype
-        '
-        Me.lnklblloantype.AutoSize = True
-        Me.lnklblloantype.Location = New System.Drawing.Point(241, 111)
-        Me.lnklblloantype.Name = "lnklblloantype"
-        Me.lnklblloantype.Size = New System.Drawing.Size(26, 13)
-        Me.lnklblloantype.TabIndex = 354
-        Me.lnklblloantype.TabStop = True
-        Me.lnklblloantype.Text = "Add"
-        '
-        'txtloannumber
-        '
-        Me.txtloannumber.Enabled = False
-        Me.txtloannumber.Location = New System.Drawing.Point(32, 142)
-        Me.txtloannumber.Name = "txtloannumber"
-        Me.txtloannumber.Size = New System.Drawing.Size(203, 20)
-        Me.txtloannumber.TabIndex = 354
-        '
-        'cboloantype
-        '
-        Me.cboloantype.FormattingEnabled = True
-        Me.cboloantype.Location = New System.Drawing.Point(32, 103)
-        Me.cboloantype.Name = "cboloantype"
-        Me.cboloantype.Size = New System.Drawing.Size(204, 21)
-        Me.cboloantype.TabIndex = 353
-        '
-        'Label99
-        '
-        Me.Label99.AutoSize = True
-        Me.Label99.Location = New System.Drawing.Point(29, 127)
-        Me.Label99.Name = "Label99"
-        Me.Label99.Size = New System.Drawing.Size(71, 13)
-        Me.Label99.TabIndex = 357
-        Me.Label99.Text = "Loan Number"
-        '
-        'Label185
-        '
-        Me.Label185.AutoSize = True
-        Me.Label185.Location = New System.Drawing.Point(30, 88)
-        Me.Label185.Name = "Label185"
-        Me.Label185.Size = New System.Drawing.Size(66, 13)
-        Me.Label185.TabIndex = 379
-        Me.Label185.Text = "Type of loan"
-        '
-        'datefrom
-        '
-        Me.datefrom.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.datefrom.Location = New System.Drawing.Point(32, 260)
-        Me.datefrom.Name = "datefrom"
-        Me.datefrom.Size = New System.Drawing.Size(203, 20)
-        Me.datefrom.TabIndex = 357
-        '
-        'Label88
-        '
-        Me.Label88.AutoSize = True
-        Me.Label88.Location = New System.Drawing.Point(103, 7)
-        Me.Label88.Name = "Label88"
-        Me.Label88.Size = New System.Drawing.Size(67, 13)
-        Me.Label88.TabIndex = 377
-        Me.Label88.Text = "Employee ID"
-        Me.Label88.Visible = False
-        '
-        'txtloanamt
-        '
-        Me.txtloanamt.Location = New System.Drawing.Point(32, 181)
-        Me.txtloanamt.Name = "txtloanamt"
-        Me.txtloanamt.ShortcutsEnabled = False
-        Me.txtloanamt.Size = New System.Drawing.Size(203, 20)
-        Me.txtloanamt.TabIndex = 355
-        '
-        'lblAdd
-        '
-        Me.lblAdd.AutoSize = True
-        Me.lblAdd.Location = New System.Drawing.Point(731, 210)
-        Me.lblAdd.Name = "lblAdd"
-        Me.lblAdd.Size = New System.Drawing.Size(26, 13)
-        Me.lblAdd.TabIndex = 358
-        Me.lblAdd.TabStop = True
-        Me.lblAdd.Text = "Add"
-        Me.lblAdd.Visible = False
-        '
-        'Label98
-        '
-        Me.Label98.AutoSize = True
-        Me.Label98.Location = New System.Drawing.Point(29, 166)
-        Me.Label98.Name = "Label98"
-        Me.Label98.Size = New System.Drawing.Size(97, 13)
-        Me.Label98.TabIndex = 362
-        Me.Label98.Text = "Total Loan Amount"
-        '
-        'cmbdedsched
-        '
-        Me.cmbdedsched.FormattingEnabled = True
-        Me.cmbdedsched.Location = New System.Drawing.Point(522, 238)
-        Me.cmbdedsched.Name = "cmbdedsched"
-        Me.cmbdedsched.Size = New System.Drawing.Size(204, 21)
-        Me.cmbdedsched.TabIndex = 364
-        '
-        'txtbal
-        '
-        Me.txtbal.Enabled = False
-        Me.txtbal.Location = New System.Drawing.Point(32, 220)
-        Me.txtbal.Name = "txtbal"
-        Me.txtbal.Size = New System.Drawing.Size(203, 20)
-        Me.txtbal.TabIndex = 356
-        '
-        'Label89
-        '
-        Me.Label89.AutoSize = True
-        Me.Label89.Location = New System.Drawing.Point(519, 222)
-        Me.Label89.Name = "Label89"
-        Me.Label89.Size = New System.Drawing.Size(104, 13)
-        Me.Label89.TabIndex = 375
-        Me.Label89.Text = "Deduction Schedule"
-        '
-        'Label97
-        '
-        Me.Label97.AutoSize = True
-        Me.Label97.Location = New System.Drawing.Point(29, 205)
-        Me.Label97.Name = "Label97"
-        Me.Label97.Size = New System.Drawing.Size(94, 13)
-        Me.Label97.TabIndex = 365
-        Me.Label97.Text = "Total Balance Left"
-        '
-        'Label90
-        '
-        Me.Label90.AutoSize = True
-        Me.Label90.Location = New System.Drawing.Point(758, 104)
-        Me.Label90.Name = "Label90"
-        Me.Label90.Size = New System.Drawing.Size(114, 13)
-        Me.Label90.TabIndex = 374
-        Me.Label90.Text = "Deduction Percentage"
-        Me.Label90.Visible = False
-        '
-        'cmbStatus
-        '
-        Me.cmbStatus.FormattingEnabled = True
-        Me.cmbStatus.Items.AddRange(New Object() {"In Progress", "On hold"})
-        Me.cmbStatus.Location = New System.Drawing.Point(273, 220)
-        Me.cmbStatus.MaxLength = 50
-        Me.cmbStatus.Name = "cmbStatus"
-        Me.cmbStatus.Size = New System.Drawing.Size(204, 21)
-        Me.cmbStatus.TabIndex = 361
-        '
-        'txtdedpercent
-        '
-        Me.txtdedpercent.Location = New System.Drawing.Point(761, 119)
-        Me.txtdedpercent.Name = "txtdedpercent"
-        Me.txtdedpercent.Size = New System.Drawing.Size(203, 20)
-        Me.txtdedpercent.TabIndex = 359
-        Me.txtdedpercent.Visible = False
-        '
-        'txtdedamt
-        '
-        Me.txtdedamt.Location = New System.Drawing.Point(274, 181)
-        Me.txtdedamt.Name = "txtdedamt"
-        Me.txtdedamt.ShortcutsEnabled = False
-        Me.txtdedamt.Size = New System.Drawing.Size(203, 20)
-        Me.txtdedamt.TabIndex = 360
-        '
-        'Label91
-        '
-        Me.Label91.AutoSize = True
-        Me.Label91.Location = New System.Drawing.Point(758, 142)
-        Me.Label91.Name = "Label91"
-        Me.Label91.Size = New System.Drawing.Size(46, 13)
-        Me.Label91.TabIndex = 373
-        Me.Label91.Text = "Date To"
-        Me.Label91.Visible = False
-        '
-        'Label96
-        '
-        Me.Label96.AutoSize = True
-        Me.Label96.Location = New System.Drawing.Point(272, 167)
-        Me.Label96.Name = "Label96"
-        Me.Label96.Size = New System.Drawing.Size(95, 13)
-        Me.Label96.TabIndex = 368
-        Me.Label96.Text = "Deduction Amount"
-        '
-        'dateto
-        '
-        Me.dateto.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dateto.Location = New System.Drawing.Point(761, 158)
-        Me.dateto.Name = "dateto"
-        Me.dateto.Size = New System.Drawing.Size(203, 20)
-        Me.dateto.TabIndex = 365
-        Me.dateto.Visible = False
-        '
-        'txtnoofpayper
-        '
-        Me.txtnoofpayper.Location = New System.Drawing.Point(273, 103)
-        Me.txtnoofpayper.Name = "txtnoofpayper"
-        Me.txtnoofpayper.ShortcutsEnabled = False
-        Me.txtnoofpayper.Size = New System.Drawing.Size(203, 20)
-        Me.txtnoofpayper.TabIndex = 358
-        '
-        'Label92
-        '
-        Me.Label92.AutoSize = True
-        Me.Label92.Location = New System.Drawing.Point(29, 244)
-        Me.Label92.Name = "Label92"
-        Me.Label92.Size = New System.Drawing.Size(56, 13)
-        Me.Label92.TabIndex = 372
-        Me.Label92.Text = "Date From"
-        '
-        'Label95
-        '
-        Me.Label95.AutoSize = True
-        Me.Label95.Location = New System.Drawing.Point(270, 88)
-        Me.Label95.Name = "Label95"
-        Me.Label95.Size = New System.Drawing.Size(90, 13)
-        Me.Label95.TabIndex = 369
-        Me.Label95.Text = "No. of Pay Period"
-        '
-        'Label93
-        '
-        Me.Label93.AutoSize = True
-        Me.Label93.Location = New System.Drawing.Point(272, 205)
-        Me.Label93.Name = "Label93"
-        Me.Label93.Size = New System.Drawing.Size(37, 13)
-        Me.Label93.TabIndex = 371
-        Me.Label93.Text = "Status"
-        '
-        'TextBox6
-        '
-        Me.TextBox6.Location = New System.Drawing.Point(522, 103)
-        Me.TextBox6.MaxLength = 2000
-        Me.TextBox6.Multiline = True
-        Me.TextBox6.Name = "TextBox6"
-        Me.TextBox6.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TextBox6.Size = New System.Drawing.Size(203, 116)
-        Me.TextBox6.TabIndex = 363
-        '
-        'Label94
-        '
-        Me.Label94.AutoSize = True
-        Me.Label94.Location = New System.Drawing.Point(519, 88)
-        Me.Label94.Name = "Label94"
-        Me.Label94.Size = New System.Drawing.Size(49, 13)
-        Me.Label94.TabIndex = 370
-        Me.Label94.Text = "Remarks"
-        '
-        'Label349
-        '
-        Me.Label349.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label349.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label349.Location = New System.Drawing.Point(618, 217)
-        Me.Label349.Name = "Label349"
-        Me.Label349.Size = New System.Drawing.Size(13, 13)
-        Me.Label349.TabIndex = 506
-        Me.Label349.Text = "*"
-        '
-        'Label350
-        '
-        Me.Label350.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label350.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label350.Location = New System.Drawing.Point(91, 83)
-        Me.Label350.Name = "Label350"
-        Me.Label350.Size = New System.Drawing.Size(13, 13)
-        Me.Label350.TabIndex = 507
-        Me.Label350.Text = "*"
-        '
-        'Label367
-        '
-        Me.Label367.Location = New System.Drawing.Point(273, 260)
-        Me.Label367.Name = "Label367"
-        Me.Label367.Size = New System.Drawing.Size(203, 20)
-        Me.Label367.TabIndex = 508
-        Me.Label367.Text = "Label367"
-        '
-        'ToolStrip12
-        '
-        Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
-        Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewLoan, Me.tsbtnSaveLoan, Me.ToolStripLabel5, Me.ToolStripSeparator9, Me.DeleteLoanScheduleButton, Me.ToolStripSeparator10, Me.ToolStripButton23, Me.ToolStripButton24, Me.ToolStripButton25, Me.tsbtnImportLoans})
-        Me.ToolStrip12.Location = New System.Drawing.Point(3, 3)
-        Me.ToolStrip12.Name = "ToolStrip12"
-        Me.ToolStrip12.Size = New System.Drawing.Size(854, 25)
-        Me.ToolStrip12.TabIndex = 327
-        Me.ToolStrip12.Text = "ToolStrip12"
-        '
-        'tsbtnNewLoan
-        '
-        Me.tsbtnNewLoan.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.tsbtnNewLoan.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnNewLoan.Name = "tsbtnNewLoan"
-        Me.tsbtnNewLoan.Size = New System.Drawing.Size(115, 22)
-        Me.tsbtnNewLoan.Text = "&New Loan Sched"
-        '
-        'tsbtnSaveLoan
-        '
-        Me.tsbtnSaveLoan.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.tsbtnSaveLoan.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnSaveLoan.Name = "tsbtnSaveLoan"
-        Me.tsbtnSaveLoan.Size = New System.Drawing.Size(115, 22)
-        Me.tsbtnSaveLoan.Text = "&Save Loan Sched"
-        '
-        'ToolStripLabel5
-        '
-        Me.ToolStripLabel5.AutoSize = False
-        Me.ToolStripLabel5.Name = "ToolStripLabel5"
-        Me.ToolStripLabel5.Size = New System.Drawing.Size(50, 22)
-        '
-        'ToolStripSeparator9
-        '
-        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
-        Me.ToolStripSeparator9.Size = New System.Drawing.Size(6, 25)
-        '
-        'DeleteLoanScheduleButton
-        '
-        Me.DeleteLoanScheduleButton.Image = Global.AccuPay.My.Resources.Resources.deleteuser
-        Me.DeleteLoanScheduleButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.DeleteLoanScheduleButton.Name = "DeleteLoanScheduleButton"
-        Me.DeleteLoanScheduleButton.Size = New System.Drawing.Size(124, 22)
-        Me.DeleteLoanScheduleButton.Text = "&Delete Loan Sched"
-        '
-        'ToolStripSeparator10
-        '
-        Me.ToolStripSeparator10.Name = "ToolStripSeparator10"
-        Me.ToolStripSeparator10.Size = New System.Drawing.Size(6, 25)
-        '
-        'ToolStripButton23
-        '
-        Me.ToolStripButton23.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.ToolStripButton23.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton23.Name = "ToolStripButton23"
-        Me.ToolStripButton23.Size = New System.Drawing.Size(63, 22)
-        Me.ToolStripButton23.Text = "Cancel"
-        '
-        'ToolStripButton24
-        '
-        Me.ToolStripButton24.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton24.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton24.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton24.Name = "ToolStripButton24"
-        Me.ToolStripButton24.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton24.Text = "Close"
-        '
-        'ToolStripButton25
-        '
-        Me.ToolStripButton25.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton25.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton25.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton25.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton25.Name = "ToolStripButton25"
-        Me.ToolStripButton25.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton25.Text = "ToolStripButton1"
-        Me.ToolStripButton25.ToolTipText = "Show audit trails"
-        '
-        'tsbtnImportLoans
-        '
-        Me.tsbtnImportLoans.Image = Global.AccuPay.My.Resources.Resources.Add
-        Me.tsbtnImportLoans.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnImportLoans.Name = "tsbtnImportLoans"
-        Me.tsbtnImportLoans.Size = New System.Drawing.Size(97, 22)
-        Me.tsbtnImportLoans.Text = "Import Loans"
-        Me.tsbtnImportLoans.ToolTipText = "Import loans"
-        '
-        'tbpLoanHist
-        '
-        Me.tbpLoanHist.AccessibleDescription = "Employee Loan History"
-        Me.tbpLoanHist.AutoScroll = True
-        Me.tbpLoanHist.Controls.Add(Me.Panel9)
-        Me.tbpLoanHist.Controls.Add(Me.ToolStrip14)
-        Me.tbpLoanHist.Location = New System.Drawing.Point(4, 4)
-        Me.tbpLoanHist.Name = "tbpLoanHist"
-        Me.tbpLoanHist.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpLoanHist.Size = New System.Drawing.Size(860, 461)
-        Me.tbpLoanHist.TabIndex = 11
-        Me.tbpLoanHist.Text = "LOAN HIST"
-        Me.tbpLoanHist.UseVisualStyleBackColor = True
-        '
-        'Panel9
-        '
-        Me.Panel9.AutoScroll = True
-        Me.Panel9.Controls.Add(Me.GroupBox3)
-        Me.Panel9.Controls.Add(Me.Label335)
-        Me.Panel9.Controls.Add(Me.Label334)
-        Me.Panel9.Controls.Add(Me.pbEmpPicLoanhist)
-        Me.Panel9.Controls.Add(Me.txtFNameLoanhist)
-        Me.Panel9.Controls.Add(Me.ComboBox2)
-        Me.Panel9.Controls.Add(Me.txtEmpIDLoanhist)
-        Me.Panel9.Controls.Add(Me.TextBox12)
-        Me.Panel9.Controls.Add(Me.Label110)
-        Me.Panel9.Controls.Add(Me.Label113)
-        Me.Panel9.Controls.Add(Me.txtEmpnameloan)
-        Me.Panel9.Controls.Add(Me.txtamount)
-        Me.Panel9.Controls.Add(Me.dateded)
-        Me.Panel9.Controls.Add(Me.Label111)
-        Me.Panel9.Controls.Add(Me.Label115)
-        Me.Panel9.Controls.Add(Me.dgvloanhisto)
-        Me.Panel9.Controls.Add(Me.Label112)
-        Me.Panel9.Controls.Add(Me.TextBox11)
-        Me.Panel9.Controls.Add(Me.Label114)
-        Me.Panel9.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel9.Location = New System.Drawing.Point(3, 28)
-        Me.Panel9.Name = "Panel9"
-        Me.Panel9.Size = New System.Drawing.Size(854, 430)
-        Me.Panel9.TabIndex = 386
-        '
-        'GroupBox3
-        '
-        Me.GroupBox3.Controls.Add(Me.Label361)
-        Me.GroupBox3.Controls.Add(Me.cbohistoloantype)
-        Me.GroupBox3.Location = New System.Drawing.Point(520, 89)
-        Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(275, 79)
-        Me.GroupBox3.TabIndex = 506
-        Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "Search box"
-        '
-        'Label361
-        '
-        Me.Label361.AutoSize = True
-        Me.Label361.BackColor = System.Drawing.Color.Transparent
-        Me.Label361.Location = New System.Drawing.Point(24, 37)
-        Me.Label361.Name = "Label361"
-        Me.Label361.Size = New System.Drawing.Size(58, 13)
-        Me.Label361.TabIndex = 334
-        Me.Label361.Text = "Loan Type"
-        '
-        'cbohistoloantype
-        '
-        Me.cbohistoloantype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbohistoloantype.FormattingEnabled = True
-        Me.cbohistoloantype.Items.AddRange(New Object() {"In Progress", "Completed"})
-        Me.cbohistoloantype.Location = New System.Drawing.Point(88, 31)
-        Me.cbohistoloantype.Name = "cbohistoloantype"
-        Me.cbohistoloantype.Size = New System.Drawing.Size(163, 21)
-        Me.cbohistoloantype.TabIndex = 329
-        '
-        'Label335
-        '
-        Me.Label335.AutoSize = True
-        Me.Label335.ForeColor = System.Drawing.Color.White
-        Me.Label335.Location = New System.Drawing.Point(29, 583)
-        Me.Label335.Name = "Label335"
-        Me.Label335.Size = New System.Drawing.Size(25, 13)
-        Me.Label335.TabIndex = 505
-        Me.Label335.Text = "___"
-        '
-        'Label334
-        '
-        Me.Label334.AutoSize = True
-        Me.Label334.ForeColor = System.Drawing.Color.White
-        Me.Label334.Location = New System.Drawing.Point(801, 567)
-        Me.Label334.Name = "Label334"
-        Me.Label334.Size = New System.Drawing.Size(25, 13)
-        Me.Label334.TabIndex = 504
-        Me.Label334.Text = "___"
-        '
-        'pbEmpPicLoanhist
-        '
-        Me.pbEmpPicLoanhist.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.pbEmpPicLoanhist.Location = New System.Drawing.Point(32, 8)
-        Me.pbEmpPicLoanhist.Name = "pbEmpPicLoanhist"
-        Me.pbEmpPicLoanhist.Size = New System.Drawing.Size(89, 77)
-        Me.pbEmpPicLoanhist.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.pbEmpPicLoanhist.TabIndex = 385
-        Me.pbEmpPicLoanhist.TabStop = False
-        '
-        'txtFNameLoanhist
-        '
-        Me.txtFNameLoanhist.BackColor = System.Drawing.Color.White
-        Me.txtFNameLoanhist.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtFNameLoanhist.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtFNameLoanhist.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
-        Me.txtFNameLoanhist.Location = New System.Drawing.Point(127, 22)
-        Me.txtFNameLoanhist.MaxLength = 250
-        Me.txtFNameLoanhist.Name = "txtFNameLoanhist"
-        Me.txtFNameLoanhist.ReadOnly = True
-        Me.txtFNameLoanhist.Size = New System.Drawing.Size(668, 28)
-        Me.txtFNameLoanhist.TabIndex = 384
-        '
-        'ComboBox2
-        '
-        Me.ComboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox2.FormattingEnabled = True
-        Me.ComboBox2.Items.AddRange(New Object() {"In Progress", "Completed"})
-        Me.ComboBox2.Location = New System.Drawing.Point(32, 107)
-        Me.ComboBox2.Name = "ComboBox2"
-        Me.ComboBox2.Size = New System.Drawing.Size(163, 21)
-        Me.ComboBox2.TabIndex = 328
-        '
-        'txtEmpIDLoanhist
-        '
-        Me.txtEmpIDLoanhist.BackColor = System.Drawing.Color.White
-        Me.txtEmpIDLoanhist.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtEmpIDLoanhist.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.txtEmpIDLoanhist.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
-        Me.txtEmpIDLoanhist.Location = New System.Drawing.Point(127, 49)
-        Me.txtEmpIDLoanhist.MaxLength = 50
-        Me.txtEmpIDLoanhist.Name = "txtEmpIDLoanhist"
-        Me.txtEmpIDLoanhist.ReadOnly = True
-        Me.txtEmpIDLoanhist.Size = New System.Drawing.Size(516, 22)
-        Me.txtEmpIDLoanhist.TabIndex = 383
-        '
-        'TextBox12
-        '
-        Me.TextBox12.Enabled = False
-        Me.TextBox12.Location = New System.Drawing.Point(801, 192)
-        Me.TextBox12.Multiline = True
-        Me.TextBox12.Name = "TextBox12"
-        Me.TextBox12.Size = New System.Drawing.Size(200, 20)
-        Me.TextBox12.TabIndex = 153
-        Me.TextBox12.Visible = False
-        '
-        'Label110
-        '
-        Me.Label110.AutoSize = True
-        Me.Label110.BackColor = System.Drawing.Color.Transparent
-        Me.Label110.Location = New System.Drawing.Point(198, 132)
-        Me.Label110.Name = "Label110"
-        Me.Label110.Size = New System.Drawing.Size(95, 13)
-        Me.Label110.TabIndex = 335
-        Me.Label110.Text = "Deduction Amount"
-        '
-        'Label113
-        '
-        Me.Label113.AutoSize = True
-        Me.Label113.BackColor = System.Drawing.Color.Transparent
-        Me.Label113.Location = New System.Drawing.Point(29, 89)
-        Me.Label113.Name = "Label113"
-        Me.Label113.Size = New System.Drawing.Size(37, 13)
-        Me.Label113.TabIndex = 329
-        Me.Label113.Text = "Status"
-        '
-        'txtEmpnameloan
-        '
-        Me.txtEmpnameloan.Enabled = False
-        Me.txtEmpnameloan.Location = New System.Drawing.Point(801, 233)
-        Me.txtEmpnameloan.Multiline = True
-        Me.txtEmpnameloan.Name = "txtEmpnameloan"
-        Me.txtEmpnameloan.Size = New System.Drawing.Size(200, 20)
-        Me.txtEmpnameloan.TabIndex = 152
-        Me.txtEmpnameloan.Visible = False
-        '
-        'txtamount
-        '
-        Me.txtamount.Location = New System.Drawing.Point(201, 148)
-        Me.txtamount.Multiline = True
-        Me.txtamount.Name = "txtamount"
-        Me.txtamount.Size = New System.Drawing.Size(200, 20)
-        Me.txtamount.TabIndex = 331
-        '
-        'dateded
-        '
-        Me.dateded.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dateded.Location = New System.Drawing.Point(32, 148)
-        Me.dateded.Name = "dateded"
-        Me.dateded.Size = New System.Drawing.Size(163, 20)
-        Me.dateded.TabIndex = 329
-        '
-        'Label111
-        '
-        Me.Label111.AutoSize = True
-        Me.Label111.BackColor = System.Drawing.Color.Transparent
-        Me.Label111.Location = New System.Drawing.Point(198, 89)
-        Me.Label111.Name = "Label111"
-        Me.Label111.Size = New System.Drawing.Size(58, 13)
-        Me.Label111.TabIndex = 333
-        Me.Label111.Text = "Loan Type"
-        '
-        'Label115
-        '
-        Me.Label115.AutoSize = True
-        Me.Label115.BackColor = System.Drawing.Color.Transparent
-        Me.Label115.Location = New System.Drawing.Point(798, 218)
-        Me.Label115.Name = "Label115"
-        Me.Label115.Size = New System.Drawing.Size(87, 13)
-        Me.Label115.TabIndex = 150
-        Me.Label115.Text = "Employee Name:"
-        Me.Label115.Visible = False
-        '
-        'dgvloanhisto
-        '
-        Me.dgvloanhisto.AllowUserToAddRows = False
-        Me.dgvloanhisto.AllowUserToDeleteRows = False
-        Me.dgvloanhisto.BackgroundColor = System.Drawing.SystemColors.ControlLightLight
-        DataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle32.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle32.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle32.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle32.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle32.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvloanhisto.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle32
-        Me.dgvloanhisto.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvloanhisto.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_dateded, Me.c_Amount, Me.DataGridViewTextBoxColumn116, Me.DataGridViewTextBoxColumn117, Me.c_LoanID})
-        DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle33.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle33.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle33.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle33.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle33.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvloanhisto.DefaultCellStyle = DataGridViewCellStyle33
-        Me.dgvloanhisto.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvloanhisto.Location = New System.Drawing.Point(32, 174)
-        Me.dgvloanhisto.MultiSelect = False
-        Me.dgvloanhisto.Name = "dgvloanhisto"
-        Me.dgvloanhisto.ReadOnly = True
-        Me.dgvloanhisto.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvloanhisto.Size = New System.Drawing.Size(763, 406)
-        Me.dgvloanhisto.TabIndex = 324
-        '
-        'c_dateded
-        '
-        Me.c_dateded.HeaderText = "Deduction Date"
-        Me.c_dateded.Name = "c_dateded"
-        Me.c_dateded.ReadOnly = True
-        Me.c_dateded.Width = 180
-        '
-        'c_Amount
-        '
-        Me.c_Amount.HeaderText = "Amount Deducted"
-        Me.c_Amount.Name = "c_Amount"
-        Me.c_Amount.ReadOnly = True
-        Me.c_Amount.Width = 180
-        '
-        'DataGridViewTextBoxColumn116
-        '
-        Me.DataGridViewTextBoxColumn116.HeaderText = "Status"
-        Me.DataGridViewTextBoxColumn116.Name = "DataGridViewTextBoxColumn116"
-        Me.DataGridViewTextBoxColumn116.ReadOnly = True
-        Me.DataGridViewTextBoxColumn116.Width = 180
-        '
-        'DataGridViewTextBoxColumn117
-        '
-        Me.DataGridViewTextBoxColumn117.HeaderText = "Loan Type"
-        Me.DataGridViewTextBoxColumn117.Name = "DataGridViewTextBoxColumn117"
-        Me.DataGridViewTextBoxColumn117.ReadOnly = True
-        Me.DataGridViewTextBoxColumn117.Width = 180
-        '
-        'c_LoanID
-        '
-        Me.c_LoanID.HeaderText = "Loan ID"
-        Me.c_LoanID.Name = "c_LoanID"
-        Me.c_LoanID.ReadOnly = True
-        Me.c_LoanID.Visible = False
-        '
-        'Label112
-        '
-        Me.Label112.AutoSize = True
-        Me.Label112.BackColor = System.Drawing.Color.Transparent
-        Me.Label112.Location = New System.Drawing.Point(29, 128)
-        Me.Label112.Name = "Label112"
-        Me.Label112.Size = New System.Drawing.Size(82, 13)
-        Me.Label112.TabIndex = 331
-        Me.Label112.Text = "Deduction Date"
-        '
-        'TextBox11
-        '
-        Me.TextBox11.Location = New System.Drawing.Point(201, 107)
-        Me.TextBox11.Multiline = True
-        Me.TextBox11.Name = "TextBox11"
-        Me.TextBox11.Size = New System.Drawing.Size(200, 20)
-        Me.TextBox11.TabIndex = 330
-        '
-        'Label114
-        '
-        Me.Label114.AutoSize = True
-        Me.Label114.BackColor = System.Drawing.Color.Transparent
-        Me.Label114.Location = New System.Drawing.Point(798, 177)
-        Me.Label114.Name = "Label114"
-        Me.Label114.Size = New System.Drawing.Size(70, 13)
-        Me.Label114.TabIndex = 151
-        Me.Label114.Text = "Employee ID:"
-        Me.Label114.Visible = False
-        '
-        'ToolStrip14
-        '
-        Me.ToolStrip14.BackColor = System.Drawing.Color.Transparent
-        Me.ToolStrip14.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip14.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton32, Me.ToolStripButton33, Me.tsbtnPayLoan})
-        Me.ToolStrip14.Location = New System.Drawing.Point(3, 3)
-        Me.ToolStrip14.Name = "ToolStrip14"
-        Me.ToolStrip14.Size = New System.Drawing.Size(854, 25)
-        Me.ToolStrip14.TabIndex = 328
-        Me.ToolStrip14.Text = "ToolStrip14"
-        '
-        'ToolStripButton32
-        '
-        Me.ToolStripButton32.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton32.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton32.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton32.Name = "ToolStripButton32"
-        Me.ToolStripButton32.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton32.Text = "Close"
-        '
-        'ToolStripButton33
-        '
-        Me.ToolStripButton33.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton33.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton33.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton33.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton33.Name = "ToolStripButton33"
-        Me.ToolStripButton33.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton33.Text = "ToolStripButton1"
-        Me.ToolStripButton33.ToolTipText = "Show audit trails"
-        '
-        'tsbtnPayLoan
-        '
-        Me.tsbtnPayLoan.Image = Global.AccuPay.My.Resources.Resources.money1
-        Me.tsbtnPayLoan.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnPayLoan.Name = "tsbtnPayLoan"
-        Me.tsbtnPayLoan.Size = New System.Drawing.Size(75, 22)
-        Me.tsbtnPayLoan.Text = "Pay Loan"
-        Me.tsbtnPayLoan.Visible = False
-        '
-        'tbpPayslip
-        '
-        Me.tbpPayslip.AccessibleDescription = "Employee Pay Slip"
-        Me.tbpPayslip.AutoScroll = True
-        Me.tbpPayslip.Controls.Add(Me.SplitContainer3)
-        Me.tbpPayslip.Controls.Add(Me.ToolStrip16)
-        Me.tbpPayslip.Location = New System.Drawing.Point(4, 4)
-        Me.tbpPayslip.Name = "tbpPayslip"
-        Me.tbpPayslip.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpPayslip.Size = New System.Drawing.Size(860, 461)
-        Me.tbpPayslip.TabIndex = 12
-        Me.tbpPayslip.Text = "PAYSLIP"
-        Me.tbpPayslip.UseVisualStyleBackColor = True
-        '
-        'SplitContainer3
-        '
-        Me.SplitContainer3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.SplitContainer3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer3.Location = New System.Drawing.Point(3, 28)
-        Me.SplitContainer3.Name = "SplitContainer3"
-        '
-        'SplitContainer3.Panel1
-        '
-        Me.SplitContainer3.Panel1.AutoScroll = True
-        Me.SplitContainer3.Panel1.Controls.Add(Me.Label312)
-        Me.SplitContainer3.Panel1.Controls.Add(Me.linkNxt)
-        Me.SplitContainer3.Panel1.Controls.Add(Me.linkPrev)
-        Me.SplitContainer3.Panel1.Controls.Add(Me.dgvpayper)
-        Me.SplitContainer3.Panel1.Controls.Add(Me.Label313)
-        '
-        'SplitContainer3.Panel2
-        '
-        Me.SplitContainer3.Panel2.Controls.Add(Me.PanelPayslip)
-        Me.SplitContainer3.Size = New System.Drawing.Size(854, 430)
-        Me.SplitContainer3.SplitterDistance = 230
-        Me.SplitContainer3.TabIndex = 171
-        '
-        'Label312
-        '
-        Me.Label312.AutoSize = True
-        Me.Label312.ForeColor = System.Drawing.Color.White
-        Me.Label312.Location = New System.Drawing.Point(97, 551)
-        Me.Label312.Name = "Label312"
-        Me.Label312.Size = New System.Drawing.Size(25, 13)
-        Me.Label312.TabIndex = 504
-        Me.Label312.Text = "___"
-        '
-        'linkNxt
-        '
-        Me.linkNxt.AutoSize = True
-        Me.linkNxt.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!)
-        Me.linkNxt.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.linkNxt.Location = New System.Drawing.Point(97, 531)
-        Me.linkNxt.Name = "linkNxt"
-        Me.linkNxt.Size = New System.Drawing.Size(39, 15)
-        Me.linkNxt.TabIndex = 144
-        Me.linkNxt.TabStop = True
-        Me.linkNxt.Text = "Next>"
-        '
-        'linkPrev
-        '
-        Me.linkPrev.AutoSize = True
-        Me.linkPrev.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!)
-        Me.linkPrev.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.linkPrev.Location = New System.Drawing.Point(0, 531)
-        Me.linkPrev.Name = "linkPrev"
-        Me.linkPrev.Size = New System.Drawing.Size(38, 15)
-        Me.linkPrev.TabIndex = 143
-        Me.linkPrev.TabStop = True
-        Me.linkPrev.Text = "<Prev"
-        '
-        'dgvpayper
-        '
-        Me.dgvpayper.AllowUserToAddRows = False
-        Me.dgvpayper.AllowUserToDeleteRows = False
-        Me.dgvpayper.AllowUserToOrderColumns = True
-        Me.dgvpayper.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle34.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle34.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle34.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle34.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle34.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvpayper.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle34
-        Me.dgvpayper.ColumnHeadersHeight = 34
-        Me.dgvpayper.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvpayper.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.payp_RowID, Me.payp_from, Me.payp_to, Me.payp_gross, Me.payp_net, Me.payp_empsss, Me.payp_emptax, Me.payp_compsss, Me.payp_empphh, Me.payp_compphh, Me.payp_emphdmf, Me.payp_comphdmf, Me.payp_noworigin, Me.payp_endofmonth})
-        DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle35.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle35.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle35.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle35.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle35.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpayper.DefaultCellStyle = DataGridViewCellStyle35
-        Me.dgvpayper.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvpayper.Location = New System.Drawing.Point(3, 113)
-        Me.dgvpayper.MultiSelect = False
-        Me.dgvpayper.Name = "dgvpayper"
-        Me.dgvpayper.ReadOnly = True
-        DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle36.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle36.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle36.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle36.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle36.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvpayper.RowHeadersDefaultCellStyle = DataGridViewCellStyle36
-        Me.dgvpayper.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvpayper.Size = New System.Drawing.Size(350, 415)
-        Me.dgvpayper.TabIndex = 1
-        '
-        'payp_RowID
-        '
-        Me.payp_RowID.HeaderText = "RowID"
-        Me.payp_RowID.Name = "payp_RowID"
-        Me.payp_RowID.ReadOnly = True
-        Me.payp_RowID.Visible = False
-        '
-        'payp_from
-        '
-        Me.payp_from.HeaderText = "Pay period from"
-        Me.payp_from.Name = "payp_from"
-        Me.payp_from.ReadOnly = True
-        Me.payp_from.Width = 154
-        '
-        'payp_to
-        '
-        Me.payp_to.HeaderText = "Pay period to"
-        Me.payp_to.Name = "payp_to"
-        Me.payp_to.ReadOnly = True
-        Me.payp_to.Width = 153
-        '
-        'payp_gross
-        '
-        Me.payp_gross.HeaderText = "TotalGrossSalary"
-        Me.payp_gross.Name = "payp_gross"
-        Me.payp_gross.ReadOnly = True
-        Me.payp_gross.Visible = False
-        '
-        'payp_net
-        '
-        Me.payp_net.HeaderText = "TotalNetSalary"
-        Me.payp_net.Name = "payp_net"
-        Me.payp_net.ReadOnly = True
-        Me.payp_net.Visible = False
-        '
-        'payp_empsss
-        '
-        Me.payp_empsss.HeaderText = "TotalEmpSSS"
-        Me.payp_empsss.Name = "payp_empsss"
-        Me.payp_empsss.ReadOnly = True
-        Me.payp_empsss.Visible = False
-        '
-        'payp_emptax
-        '
-        Me.payp_emptax.HeaderText = "TotalEmpWithholdingTax"
-        Me.payp_emptax.Name = "payp_emptax"
-        Me.payp_emptax.ReadOnly = True
-        Me.payp_emptax.Visible = False
-        '
-        'payp_compsss
-        '
-        Me.payp_compsss.HeaderText = "TotalCompSSS"
-        Me.payp_compsss.Name = "payp_compsss"
-        Me.payp_compsss.ReadOnly = True
-        Me.payp_compsss.Visible = False
-        '
-        'payp_empphh
-        '
-        Me.payp_empphh.HeaderText = "TotalEmpPhilhealth"
-        Me.payp_empphh.Name = "payp_empphh"
-        Me.payp_empphh.ReadOnly = True
-        Me.payp_empphh.Visible = False
-        '
-        'payp_compphh
-        '
-        Me.payp_compphh.HeaderText = "TotalCompPhilhealth"
-        Me.payp_compphh.Name = "payp_compphh"
-        Me.payp_compphh.ReadOnly = True
-        Me.payp_compphh.Visible = False
-        '
-        'payp_emphdmf
-        '
-        Me.payp_emphdmf.HeaderText = "TotalEmpHDMF"
-        Me.payp_emphdmf.Name = "payp_emphdmf"
-        Me.payp_emphdmf.ReadOnly = True
-        Me.payp_emphdmf.Visible = False
-        '
-        'payp_comphdmf
-        '
-        Me.payp_comphdmf.HeaderText = "TotalCompHDMF"
-        Me.payp_comphdmf.Name = "payp_comphdmf"
-        Me.payp_comphdmf.ReadOnly = True
-        Me.payp_comphdmf.Visible = False
-        '
-        'payp_noworigin
-        '
-        Me.payp_noworigin.HeaderText = "now_origin"
-        Me.payp_noworigin.Name = "payp_noworigin"
-        Me.payp_noworigin.ReadOnly = True
-        Me.payp_noworigin.Visible = False
-        '
-        'payp_endofmonth
-        '
-        Me.payp_endofmonth.HeaderText = "End of month"
-        Me.payp_endofmonth.Name = "payp_endofmonth"
-        Me.payp_endofmonth.ReadOnly = True
-        Me.payp_endofmonth.Visible = False
-        '
-        'Label313
-        '
-        Me.Label313.AutoSize = True
-        Me.Label313.ForeColor = System.Drawing.Color.White
-        Me.Label313.Location = New System.Drawing.Point(336, 352)
-        Me.Label313.Name = "Label313"
-        Me.Label313.Size = New System.Drawing.Size(25, 13)
-        Me.Label313.TabIndex = 505
-        Me.Label313.Text = "___"
-        '
-        'PanelPayslip
-        '
-        Me.PanelPayslip.AutoScroll = True
-        Me.PanelPayslip.Controls.Add(Me.dgvempallowans)
-        Me.PanelPayslip.Controls.Add(Me.dgvemploan)
-        Me.PanelPayslip.Controls.Add(Me.dgvempbonus)
-        Me.PanelPayslip.Controls.Add(Me.Label236)
-        Me.PanelPayslip.Controls.Add(Me.Label237)
-        Me.PanelPayslip.Controls.Add(Me.Label238)
-        Me.PanelPayslip.Controls.Add(Me.Label239)
-        Me.PanelPayslip.Controls.Add(Me.Label240)
-        Me.PanelPayslip.Controls.Add(Me.Label241)
-        Me.PanelPayslip.Controls.Add(Me.Label242)
-        Me.PanelPayslip.Controls.Add(Me.Label243)
-        Me.PanelPayslip.Controls.Add(Me.Label244)
-        Me.PanelPayslip.Controls.Add(Me.Label245)
-        Me.PanelPayslip.Controls.Add(Me.Label246)
-        Me.PanelPayslip.Controls.Add(Me.Label247)
-        Me.PanelPayslip.Controls.Add(Me.Label248)
-        Me.PanelPayslip.Controls.Add(Me.Label249)
-        Me.PanelPayslip.Controls.Add(Me.dgvpaystubitm)
-        Me.PanelPayslip.Controls.Add(Me.lblsubtotmisc)
-        Me.PanelPayslip.Controls.Add(Me.lblsubtot)
-        Me.PanelPayslip.Controls.Add(Me.Label250)
-        Me.PanelPayslip.Controls.Add(Me.txthrsworkamt)
-        Me.PanelPayslip.Controls.Add(Me.txthrswork)
-        Me.PanelPayslip.Controls.Add(Me.Label251)
-        Me.PanelPayslip.Controls.Add(Me.dgvetent)
-        Me.PanelPayslip.Controls.Add(Me.dgvempsal)
-        Me.PanelPayslip.Controls.Add(Me.btntotbon)
-        Me.PanelPayslip.Controls.Add(Me.btntotloan)
-        Me.PanelPayslip.Controls.Add(Me.btntotallow)
-        Me.PanelPayslip.Controls.Add(Me.Label252)
-        Me.PanelPayslip.Controls.Add(Me.Label253)
-        Me.PanelPayslip.Controls.Add(Me.Label254)
-        Me.PanelPayslip.Controls.Add(Me.Label255)
-        Me.PanelPayslip.Controls.Add(Me.Label256)
-        Me.PanelPayslip.Controls.Add(Me.Label257)
-        Me.PanelPayslip.Controls.Add(Me.Label258)
-        Me.PanelPayslip.Controls.Add(Me.TabControl1)
-        Me.PanelPayslip.Controls.Add(Me.txttotutamt)
-        Me.PanelPayslip.Controls.Add(Me.txttottardiamt)
-        Me.PanelPayslip.Controls.Add(Me.txttotabsentamt)
-        Me.PanelPayslip.Controls.Add(Me.Label277)
-        Me.PanelPayslip.Controls.Add(Me.Label278)
-        Me.PanelPayslip.Controls.Add(Me.txttotholidayamt)
-        Me.PanelPayslip.Controls.Add(Me.Label279)
-        Me.PanelPayslip.Controls.Add(Me.Label280)
-        Me.PanelPayslip.Controls.Add(Me.Label281)
-        Me.PanelPayslip.Controls.Add(Me.txttotnightdiffothrs)
-        Me.PanelPayslip.Controls.Add(Me.Label282)
-        Me.PanelPayslip.Controls.Add(Me.txttotnightdiffhrs)
-        Me.PanelPayslip.Controls.Add(Me.Label283)
-        Me.PanelPayslip.Controls.Add(Me.txttotothrs)
-        Me.PanelPayslip.Controls.Add(Me.Label284)
-        Me.PanelPayslip.Controls.Add(Me.txttotregamt)
-        Me.PanelPayslip.Controls.Add(Me.txttotreghrs)
-        Me.PanelPayslip.Controls.Add(Me.Label285)
-        Me.PanelPayslip.Controls.Add(Me.txtempbasicpay)
-        Me.PanelPayslip.Controls.Add(Me.Label286)
-        Me.PanelPayslip.Controls.Add(Me.Label287)
-        Me.PanelPayslip.Controls.Add(Me.txtemptotbon)
-        Me.PanelPayslip.Controls.Add(Me.txttotut)
-        Me.PanelPayslip.Controls.Add(Me.Label288)
-        Me.PanelPayslip.Controls.Add(Me.Label289)
-        Me.PanelPayslip.Controls.Add(Me.txttottardi)
-        Me.PanelPayslip.Controls.Add(Me.txtemptotallow)
-        Me.PanelPayslip.Controls.Add(Me.txttotabsent)
-        Me.PanelPayslip.Controls.Add(Me.Label290)
-        Me.PanelPayslip.Controls.Add(Me.Label291)
-        Me.PanelPayslip.Controls.Add(Me.txtemptotloan)
-        Me.PanelPayslip.Controls.Add(Me.txttotholidayhrs)
-        Me.PanelPayslip.Controls.Add(Me.Label292)
-        Me.PanelPayslip.Controls.Add(Me.Label293)
-        Me.PanelPayslip.Controls.Add(Me.Label294)
-        Me.PanelPayslip.Controls.Add(Me.txtempsss)
-        Me.PanelPayslip.Controls.Add(Me.txttotnightdiffotamt)
-        Me.PanelPayslip.Controls.Add(Me.txtempphh)
-        Me.PanelPayslip.Controls.Add(Me.txttotnightdiffamt)
-        Me.PanelPayslip.Controls.Add(Me.Label295)
-        Me.PanelPayslip.Controls.Add(Me.txttototamt)
-        Me.PanelPayslip.Controls.Add(Me.txtemphdmf)
-        Me.PanelPayslip.Controls.Add(Me.Label296)
-        Me.PanelPayslip.Controls.Add(Me.txtempwtax)
-        Me.PanelPayslip.Controls.Add(Me.Label297)
-        Me.PanelPayslip.Controls.Add(Me.Label298)
-        Me.PanelPayslip.Controls.Add(Me.txttaxabsal)
-        Me.PanelPayslip.Controls.Add(Me.txtnetsal)
-        Me.PanelPayslip.Controls.Add(Me.txtgrosssal)
-        Me.PanelPayslip.Controls.Add(Me.dgvpaystub)
-        Me.PanelPayslip.Controls.Add(Me.Label299)
-        Me.PanelPayslip.Controls.Add(Me.Label300)
-        Me.PanelPayslip.Controls.Add(Me.Label301)
-        Me.PanelPayslip.Controls.Add(Me.Label302)
-        Me.PanelPayslip.Controls.Add(Me.Label303)
-        Me.PanelPayslip.Controls.Add(Me.Label304)
-        Me.PanelPayslip.Controls.Add(Me.Label305)
-        Me.PanelPayslip.Controls.Add(Me.Label306)
-        Me.PanelPayslip.Controls.Add(Me.Label307)
-        Me.PanelPayslip.Controls.Add(Me.Label308)
-        Me.PanelPayslip.Controls.Add(Me.Label309)
-        Me.PanelPayslip.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PanelPayslip.Location = New System.Drawing.Point(0, 0)
-        Me.PanelPayslip.Name = "PanelPayslip"
-        Me.PanelPayslip.Size = New System.Drawing.Size(618, 428)
-        Me.PanelPayslip.TabIndex = 170
-        '
-        'dgvempallowans
-        '
-        Me.dgvempallowans.AllowUserToAddRows = False
-        Me.dgvempallowans.AllowUserToDeleteRows = False
-        Me.dgvempallowans.AllowUserToOrderColumns = True
-        Me.dgvempallowans.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle37.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle37.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle37.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle37.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle37.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempallowans.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle37
-        Me.dgvempallowans.ColumnHeadersHeight = 34
-        Me.dgvempallowans.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eallw_RowID, Me.eallw_Type, Me.eallw_Amount, Me.eallw_Frequency, Me.eallw_Start, Me.eallw_End, Me.eallw_taxable, Me.eallw_ProdID})
-        DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle39.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle39.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempallowans.DefaultCellStyle = DataGridViewCellStyle39
-        Me.dgvempallowans.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempallowans.Location = New System.Drawing.Point(507, 697)
-        Me.dgvempallowans.MultiSelect = False
-        Me.dgvempallowans.Name = "dgvempallowans"
-        Me.dgvempallowans.ReadOnly = True
-        DataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle40.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle40.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle40.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle40.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle40.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempallowans.RowHeadersDefaultCellStyle = DataGridViewCellStyle40
-        Me.dgvempallowans.Size = New System.Drawing.Size(240, 73)
-        Me.dgvempallowans.TabIndex = 505
-        Me.dgvempallowans.Visible = False
-        '
-        'eallw_RowID
-        '
-        Me.eallw_RowID.HeaderText = "RowID"
-        Me.eallw_RowID.Name = "eallw_RowID"
-        Me.eallw_RowID.ReadOnly = True
-        Me.eallw_RowID.Visible = False
-        Me.eallw_RowID.Width = 50
-        '
-        'eallw_Type
-        '
-        Me.eallw_Type.HeaderText = "Type"
-        Me.eallw_Type.Name = "eallw_Type"
-        Me.eallw_Type.ReadOnly = True
-        Me.eallw_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eallw_Type.Width = 371
-        '
-        'eallw_Amount
-        '
-        DataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.eallw_Amount.DefaultCellStyle = DataGridViewCellStyle38
-        Me.eallw_Amount.HeaderText = "Amount"
-        Me.eallw_Amount.Name = "eallw_Amount"
-        Me.eallw_Amount.ReadOnly = True
-        Me.eallw_Amount.Width = 370
-        '
-        'eallw_Frequency
-        '
-        Me.eallw_Frequency.HeaderText = "Frequency"
-        Me.eallw_Frequency.Name = "eallw_Frequency"
-        Me.eallw_Frequency.ReadOnly = True
-        Me.eallw_Frequency.Visible = False
-        Me.eallw_Frequency.Width = 180
-        '
-        'eallw_Start
-        '
-        Me.eallw_Start.HeaderText = "Effective start date"
-        Me.eallw_Start.Name = "eallw_Start"
-        Me.eallw_Start.ReadOnly = True
-        Me.eallw_Start.Visible = False
-        '
-        'eallw_End
-        '
-        Me.eallw_End.HeaderText = "Effective end date"
-        Me.eallw_End.Name = "eallw_End"
-        Me.eallw_End.ReadOnly = True
-        Me.eallw_End.Visible = False
-        '
-        'eallw_taxable
-        '
-        Me.eallw_taxable.HeaderText = "Taxable"
-        Me.eallw_taxable.Name = "eallw_taxable"
-        Me.eallw_taxable.ReadOnly = True
-        '
-        'eallw_ProdID
-        '
-        Me.eallw_ProdID.HeaderText = "ProductID"
-        Me.eallw_ProdID.Name = "eallw_ProdID"
-        Me.eallw_ProdID.ReadOnly = True
-        Me.eallw_ProdID.Visible = False
-        '
-        'dgvemploan
-        '
-        Me.dgvemploan.AllowUserToAddRows = False
-        Me.dgvemploan.AllowUserToDeleteRows = False
-        Me.dgvemploan.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle41.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle41.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle41.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle41.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle41.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle41.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvemploan.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle41
-        Me.dgvemploan.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvemploan.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cloan_loanno, Me.cloan_totloanamt, Me.cloan_totballeft, Me.cloan_dedamt, Me.cloan_DedPercent, Me.cloan_dedsched, Me.cloan_noofpayperiod, Me.cloan_Remarks, Me.cloan_RowID, Me.cloan_status, Me.cloan_loantype})
-        DataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle42.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle42.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle42.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle42.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle42.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle42.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvemploan.DefaultCellStyle = DataGridViewCellStyle42
-        Me.dgvemploan.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvemploan.Location = New System.Drawing.Point(261, 697)
-        Me.dgvemploan.Name = "dgvemploan"
-        Me.dgvemploan.ReadOnly = True
-        DataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle43.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle43.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle43.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle43.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle43.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvemploan.RowHeadersDefaultCellStyle = DataGridViewCellStyle43
-        Me.dgvemploan.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvemploan.Size = New System.Drawing.Size(240, 73)
-        Me.dgvemploan.TabIndex = 504
-        Me.dgvemploan.Visible = False
-        '
-        'cloan_loanno
-        '
-        Me.cloan_loanno.HeaderText = "Loan Number"
-        Me.cloan_loanno.Name = "cloan_loanno"
-        Me.cloan_loanno.ReadOnly = True
-        '
-        'cloan_totloanamt
-        '
-        Me.cloan_totloanamt.HeaderText = "Total Loan Amount"
-        Me.cloan_totloanamt.Name = "cloan_totloanamt"
-        Me.cloan_totloanamt.ReadOnly = True
-        '
-        'cloan_totballeft
-        '
-        Me.cloan_totballeft.HeaderText = "Total Balance Left"
-        Me.cloan_totballeft.Name = "cloan_totballeft"
-        Me.cloan_totballeft.ReadOnly = True
-        '
-        'cloan_dedamt
-        '
-        Me.cloan_dedamt.HeaderText = "Deduction Amount"
-        Me.cloan_dedamt.Name = "cloan_dedamt"
-        Me.cloan_dedamt.ReadOnly = True
-        '
-        'cloan_DedPercent
-        '
-        Me.cloan_DedPercent.HeaderText = "Deduction Percentage"
-        Me.cloan_DedPercent.Name = "cloan_DedPercent"
-        Me.cloan_DedPercent.ReadOnly = True
-        '
-        'cloan_dedsched
-        '
-        Me.cloan_dedsched.HeaderText = "Deduction Schedule"
-        Me.cloan_dedsched.Name = "cloan_dedsched"
-        Me.cloan_dedsched.ReadOnly = True
-        '
-        'cloan_noofpayperiod
-        '
-        Me.cloan_noofpayperiod.HeaderText = "No of pay period"
-        Me.cloan_noofpayperiod.Name = "cloan_noofpayperiod"
-        Me.cloan_noofpayperiod.ReadOnly = True
-        '
-        'cloan_Remarks
-        '
-        Me.cloan_Remarks.HeaderText = "Remarks"
-        Me.cloan_Remarks.Name = "cloan_Remarks"
-        Me.cloan_Remarks.ReadOnly = True
-        '
-        'cloan_RowID
-        '
-        Me.cloan_RowID.HeaderText = "RowiD"
-        Me.cloan_RowID.Name = "cloan_RowID"
-        Me.cloan_RowID.ReadOnly = True
-        Me.cloan_RowID.Visible = False
-        '
-        'cloan_status
-        '
-        Me.cloan_status.HeaderText = "Status"
-        Me.cloan_status.Name = "cloan_status"
-        Me.cloan_status.ReadOnly = True
-        '
-        'cloan_loantype
-        '
-        Me.cloan_loantype.HeaderText = "Loan type"
-        Me.cloan_loantype.Name = "cloan_loantype"
-        Me.cloan_loantype.ReadOnly = True
-        '
-        'dgvempbonus
-        '
-        Me.dgvempbonus.AllowUserToAddRows = False
-        Me.dgvempbonus.AllowUserToDeleteRows = False
-        Me.dgvempbonus.AllowUserToOrderColumns = True
-        Me.dgvempbonus.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle44.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle44.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle44.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle44.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle44.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle44.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbonus.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle44
-        Me.dgvempbonus.ColumnHeadersHeight = 34
-        Me.dgvempbonus.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bons_RowID, Me.bons_Type, Me.bons_Amount, Me.bons_Frequency, Me.bons_Start, Me.bons_End, Me.bons_taxable, Me.bons_ProdID})
-        DataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle46.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle46.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle46.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle46.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle46.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle46.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempbonus.DefaultCellStyle = DataGridViewCellStyle46
-        Me.dgvempbonus.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempbonus.Location = New System.Drawing.Point(15, 697)
-        Me.dgvempbonus.MultiSelect = False
-        Me.dgvempbonus.Name = "dgvempbonus"
-        Me.dgvempbonus.ReadOnly = True
-        DataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle47.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle47.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle47.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle47.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle47.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle47.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbonus.RowHeadersDefaultCellStyle = DataGridViewCellStyle47
-        Me.dgvempbonus.Size = New System.Drawing.Size(240, 73)
-        Me.dgvempbonus.TabIndex = 503
-        Me.dgvempbonus.Visible = False
-        '
-        'bons_RowID
-        '
-        Me.bons_RowID.HeaderText = "RowID"
-        Me.bons_RowID.Name = "bons_RowID"
-        Me.bons_RowID.ReadOnly = True
-        Me.bons_RowID.Visible = False
-        Me.bons_RowID.Width = 50
-        '
-        'bons_Type
-        '
-        Me.bons_Type.HeaderText = "Type"
-        Me.bons_Type.Name = "bons_Type"
-        Me.bons_Type.ReadOnly = True
-        Me.bons_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.bons_Type.Width = 370
-        '
-        'bons_Amount
-        '
-        DataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.bons_Amount.DefaultCellStyle = DataGridViewCellStyle45
-        Me.bons_Amount.HeaderText = "Amount"
-        Me.bons_Amount.Name = "bons_Amount"
-        Me.bons_Amount.ReadOnly = True
-        Me.bons_Amount.Width = 370
-        '
-        'bons_Frequency
-        '
-        Me.bons_Frequency.HeaderText = "Frequency"
-        Me.bons_Frequency.Name = "bons_Frequency"
-        Me.bons_Frequency.ReadOnly = True
-        Me.bons_Frequency.Visible = False
-        Me.bons_Frequency.Width = 180
-        '
-        'bons_Start
-        '
-        Me.bons_Start.HeaderText = "Effective start date"
-        Me.bons_Start.Name = "bons_Start"
-        Me.bons_Start.ReadOnly = True
-        Me.bons_Start.Visible = False
-        '
-        'bons_End
-        '
-        Me.bons_End.HeaderText = "Effective end date"
-        Me.bons_End.Name = "bons_End"
-        Me.bons_End.ReadOnly = True
-        Me.bons_End.Visible = False
-        '
-        'bons_taxable
-        '
-        Me.bons_taxable.HeaderText = "Taxable"
-        Me.bons_taxable.Name = "bons_taxable"
-        Me.bons_taxable.ReadOnly = True
-        '
-        'bons_ProdID
-        '
-        Me.bons_ProdID.HeaderText = "ProductID"
-        Me.bons_ProdID.Name = "bons_ProdID"
-        Me.bons_ProdID.ReadOnly = True
-        Me.bons_ProdID.Visible = False
-        '
-        'Label236
-        '
-        Me.Label236.AutoSize = True
-        Me.Label236.ForeColor = System.Drawing.Color.White
-        Me.Label236.Location = New System.Drawing.Point(348, 569)
-        Me.Label236.Name = "Label236"
-        Me.Label236.Size = New System.Drawing.Size(37, 13)
-        Me.Label236.TabIndex = 502
-        Me.Label236.Text = "_____"
-        '
-        'Label237
-        '
-        Me.Label237.AutoSize = True
-        Me.Label237.Location = New System.Drawing.Point(25, 52)
-        Me.Label237.Name = "Label237"
-        Me.Label237.Size = New System.Drawing.Size(14, 13)
-        Me.Label237.TabIndex = 501
-        Me.Label237.Text = "₱"
-        '
-        'Label238
-        '
-        Me.Label238.AutoSize = True
-        Me.Label238.Location = New System.Drawing.Point(621, 101)
-        Me.Label238.Name = "Label238"
-        Me.Label238.Size = New System.Drawing.Size(14, 13)
-        Me.Label238.TabIndex = 500
-        Me.Label238.Text = "₱"
-        '
-        'Label239
-        '
-        Me.Label239.AutoSize = True
-        Me.Label239.Location = New System.Drawing.Point(621, 127)
-        Me.Label239.Name = "Label239"
-        Me.Label239.Size = New System.Drawing.Size(14, 13)
-        Me.Label239.TabIndex = 499
-        Me.Label239.Text = "₱"
-        '
-        'Label240
-        '
-        Me.Label240.AutoSize = True
-        Me.Label240.Location = New System.Drawing.Point(621, 154)
-        Me.Label240.Name = "Label240"
-        Me.Label240.Size = New System.Drawing.Size(14, 13)
-        Me.Label240.TabIndex = 498
-        Me.Label240.Text = "₱"
-        '
-        'Label241
-        '
-        Me.Label241.AutoSize = True
-        Me.Label241.Location = New System.Drawing.Point(621, 182)
-        Me.Label241.Name = "Label241"
-        Me.Label241.Size = New System.Drawing.Size(14, 13)
-        Me.Label241.TabIndex = 497
-        Me.Label241.Text = "₱"
-        '
-        'Label242
-        '
-        Me.Label242.AutoSize = True
-        Me.Label242.Location = New System.Drawing.Point(621, 241)
-        Me.Label242.Name = "Label242"
-        Me.Label242.Size = New System.Drawing.Size(14, 13)
-        Me.Label242.TabIndex = 495
-        Me.Label242.Text = "₱"
-        '
-        'Label243
-        '
-        Me.Label243.AutoSize = True
-        Me.Label243.Location = New System.Drawing.Point(621, 267)
-        Me.Label243.Name = "Label243"
-        Me.Label243.Size = New System.Drawing.Size(14, 13)
-        Me.Label243.TabIndex = 496
-        Me.Label243.Text = "₱"
-        '
-        'Label244
-        '
-        Me.Label244.AutoSize = True
-        Me.Label244.Location = New System.Drawing.Point(621, 293)
-        Me.Label244.Name = "Label244"
-        Me.Label244.Size = New System.Drawing.Size(14, 13)
-        Me.Label244.TabIndex = 494
-        Me.Label244.Text = "₱"
-        '
-        'Label245
-        '
-        Me.Label245.AutoSize = True
-        Me.Label245.Location = New System.Drawing.Point(621, 452)
-        Me.Label245.Name = "Label245"
-        Me.Label245.Size = New System.Drawing.Size(14, 13)
-        Me.Label245.TabIndex = 493
-        Me.Label245.Text = "₱"
-        '
-        'Label246
-        '
-        Me.Label246.AutoSize = True
-        Me.Label246.Location = New System.Drawing.Point(244, 361)
-        Me.Label246.Name = "Label246"
-        Me.Label246.Size = New System.Drawing.Size(14, 13)
-        Me.Label246.TabIndex = 492
-        Me.Label246.Text = "₱"
-        '
-        'Label247
-        '
-        Me.Label247.AutoSize = True
-        Me.Label247.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label247.Location = New System.Drawing.Point(617, 532)
-        Me.Label247.Name = "Label247"
-        Me.Label247.Size = New System.Drawing.Size(23, 24)
-        Me.Label247.TabIndex = 491
-        Me.Label247.Text = "₱"
-        '
-        'Label248
-        '
-        Me.Label248.AutoSize = True
-        Me.Label248.Location = New System.Drawing.Point(621, 404)
-        Me.Label248.Name = "Label248"
-        Me.Label248.Size = New System.Drawing.Size(14, 13)
-        Me.Label248.TabIndex = 490
-        Me.Label248.Text = "₱"
-        '
-        'Label249
-        '
-        Me.Label249.AutoSize = True
-        Me.Label249.Location = New System.Drawing.Point(621, 365)
-        Me.Label249.Name = "Label249"
-        Me.Label249.Size = New System.Drawing.Size(14, 13)
-        Me.Label249.TabIndex = 489
-        Me.Label249.Text = "₱"
-        '
-        'dgvpaystubitm
-        '
-        Me.dgvpaystubitm.AllowUserToAddRows = False
-        Me.dgvpaystubitm.AllowUserToDeleteRows = False
-        Me.dgvpaystubitm.AllowUserToOrderColumns = True
-        DataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle48.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle48.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle48.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle48.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle48.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle48.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvpaystubitm.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle48
-        Me.dgvpaystubitm.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvpaystubitm.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.paystitmID, Me.PayStubID, Me.ProductID, Me.Item, Me.PayAmount})
-        DataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle49.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle49.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle49.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle49.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle49.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle49.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpaystubitm.DefaultCellStyle = DataGridViewCellStyle49
-        Me.dgvpaystubitm.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvpaystubitm.Location = New System.Drawing.Point(-231, 550)
-        Me.dgvpaystubitm.MultiSelect = False
-        Me.dgvpaystubitm.Name = "dgvpaystubitm"
-        DataGridViewCellStyle50.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle50.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle50.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle50.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle50.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle50.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle50.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvpaystubitm.RowHeadersDefaultCellStyle = DataGridViewCellStyle50
-        Me.dgvpaystubitm.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvpaystubitm.Size = New System.Drawing.Size(240, 73)
-        Me.dgvpaystubitm.TabIndex = 486
-        Me.dgvpaystubitm.Visible = False
-        '
-        'paystitmID
-        '
-        Me.paystitmID.HeaderText = "paystitmID"
-        Me.paystitmID.Name = "paystitmID"
-        '
-        'PayStubID
-        '
-        Me.PayStubID.HeaderText = "PayStubID"
-        Me.PayStubID.Name = "PayStubID"
-        '
-        'ProductID
-        '
-        Me.ProductID.HeaderText = "ProductID"
-        Me.ProductID.Name = "ProductID"
-        '
-        'Item
-        '
-        Me.Item.HeaderText = "Item"
-        Me.Item.Name = "Item"
-        '
-        'PayAmount
-        '
-        Me.PayAmount.HeaderText = "PayAmount"
-        Me.PayAmount.Name = "PayAmount"
-        '
-        'lblsubtotmisc
-        '
-        Me.lblsubtotmisc.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.lblsubtotmisc.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.lblsubtotmisc.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.lblsubtotmisc.Location = New System.Drawing.Point(641, 181)
-        Me.lblsubtotmisc.Name = "lblsubtotmisc"
-        Me.lblsubtotmisc.Size = New System.Drawing.Size(100, 16)
-        Me.lblsubtotmisc.TabIndex = 485
-        Me.lblsubtotmisc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'lblsubtot
-        '
-        Me.lblsubtot.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.lblsubtot.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.lblsubtot.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.lblsubtot.Location = New System.Drawing.Point(264, 264)
-        Me.lblsubtot.Name = "lblsubtot"
-        Me.lblsubtot.Size = New System.Drawing.Size(100, 16)
-        Me.lblsubtot.TabIndex = 484
-        Me.lblsubtot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label250
-        '
-        Me.Label250.AutoSize = True
-        Me.Label250.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label250.Location = New System.Drawing.Point(398, 190)
-        Me.Label250.Name = "Label250"
-        Me.Label250.Size = New System.Drawing.Size(66, 13)
-        Me.Label250.TabIndex = 483
-        Me.Label250.Text = "Sub total :"
-        '
-        'txthrsworkamt
-        '
-        Me.txthrsworkamt.Location = New System.Drawing.Point(264, 236)
-        Me.txthrsworkamt.Name = "txthrsworkamt"
-        Me.txthrsworkamt.Size = New System.Drawing.Size(100, 20)
-        Me.txthrsworkamt.TabIndex = 482
-        Me.txthrsworkamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txthrswork
-        '
-        Me.txthrswork.Location = New System.Drawing.Point(138, 236)
-        Me.txthrswork.Name = "txthrswork"
-        Me.txthrswork.Size = New System.Drawing.Size(100, 20)
-        Me.txthrswork.TabIndex = 481
-        Me.txthrswork.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label251
-        '
-        Me.Label251.AutoSize = True
-        Me.Label251.Location = New System.Drawing.Point(25, 243)
-        Me.Label251.Name = "Label251"
-        Me.Label251.Size = New System.Drawing.Size(104, 13)
-        Me.Label251.TabIndex = 480
-        Me.Label251.Text = "Total hours worked :"
-        '
-        'dgvetent
-        '
-        Me.dgvetent.AllowUserToAddRows = False
-        Me.dgvetent.AllowUserToDeleteRows = False
-        Me.dgvetent.AllowUserToOrderColumns = True
-        Me.dgvetent.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle51.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle51.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle51.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle51.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle51.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle51.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle51.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvetent.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle51
-        Me.dgvetent.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvetent.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.etent_RowID, Me.etent_Date, Me.etent_EmployeeShiftID, Me.etent_EmployeeID, Me.etent_EmployeeSalaryID, Me.etent_EmployeeFixedSalaryFlag, Me.etent_TotalHoursWorked, Me.etent_RegularHoursWorked, Me.etent_RegularHoursAmount, Me.etent_OvertimeHoursWorked, Me.etent_OvertimeHoursAmount, Me.etent_UndertimeHours, Me.etent_UndertimeHoursAmount, Me.etent_NightDifferentialHours, Me.etent_NightDiffHoursAmount, Me.etent_NightDifferentialOTHours, Me.etent_NightDiffOTHoursAmount, Me.etent_HoursLate, Me.etent_HoursLateAmount, Me.etent_LateFlag, Me.etent_PayRateID, Me.etent_VacationLeaveHours, Me.etent_SickLeaveHours, Me.etent_TotalDayPay})
-        DataGridViewCellStyle52.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle52.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle52.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle52.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle52.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle52.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle52.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvetent.DefaultCellStyle = DataGridViewCellStyle52
-        Me.dgvetent.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvetent.Location = New System.Drawing.Point(-231, 392)
-        Me.dgvetent.MultiSelect = False
-        Me.dgvetent.Name = "dgvetent"
-        Me.dgvetent.ReadOnly = True
-        DataGridViewCellStyle53.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle53.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle53.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle53.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle53.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle53.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle53.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvetent.RowHeadersDefaultCellStyle = DataGridViewCellStyle53
-        Me.dgvetent.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvetent.Size = New System.Drawing.Size(240, 150)
-        Me.dgvetent.TabIndex = 479
-        Me.dgvetent.Visible = False
-        '
-        'etent_RowID
-        '
-        Me.etent_RowID.HeaderText = "etent_RowID"
-        Me.etent_RowID.Name = "etent_RowID"
-        Me.etent_RowID.ReadOnly = True
-        '
-        'etent_Date
-        '
-        Me.etent_Date.HeaderText = "etent_Date"
-        Me.etent_Date.Name = "etent_Date"
-        Me.etent_Date.ReadOnly = True
-        '
-        'etent_EmployeeShiftID
-        '
-        Me.etent_EmployeeShiftID.HeaderText = "etent_EmployeeShiftID"
-        Me.etent_EmployeeShiftID.Name = "etent_EmployeeShiftID"
-        Me.etent_EmployeeShiftID.ReadOnly = True
-        '
-        'etent_EmployeeID
-        '
-        Me.etent_EmployeeID.HeaderText = "etent_EmployeeID"
-        Me.etent_EmployeeID.Name = "etent_EmployeeID"
-        Me.etent_EmployeeID.ReadOnly = True
-        '
-        'etent_EmployeeSalaryID
-        '
-        Me.etent_EmployeeSalaryID.HeaderText = "etent_EmployeeSalaryID"
-        Me.etent_EmployeeSalaryID.Name = "etent_EmployeeSalaryID"
-        Me.etent_EmployeeSalaryID.ReadOnly = True
-        '
-        'etent_EmployeeFixedSalaryFlag
-        '
-        Me.etent_EmployeeFixedSalaryFlag.HeaderText = "etent_EmployeeFixedSalaryFlag"
-        Me.etent_EmployeeFixedSalaryFlag.Name = "etent_EmployeeFixedSalaryFlag"
-        Me.etent_EmployeeFixedSalaryFlag.ReadOnly = True
-        '
-        'etent_TotalHoursWorked
-        '
-        Me.etent_TotalHoursWorked.HeaderText = "etent_TotalHoursWorked"
-        Me.etent_TotalHoursWorked.Name = "etent_TotalHoursWorked"
-        Me.etent_TotalHoursWorked.ReadOnly = True
-        '
-        'etent_RegularHoursWorked
-        '
-        Me.etent_RegularHoursWorked.HeaderText = "etent_RegularHoursWorked"
-        Me.etent_RegularHoursWorked.Name = "etent_RegularHoursWorked"
-        Me.etent_RegularHoursWorked.ReadOnly = True
-        '
-        'etent_RegularHoursAmount
-        '
-        Me.etent_RegularHoursAmount.HeaderText = "etent_RegularHoursAmount"
-        Me.etent_RegularHoursAmount.Name = "etent_RegularHoursAmount"
-        Me.etent_RegularHoursAmount.ReadOnly = True
-        '
-        'etent_OvertimeHoursWorked
-        '
-        Me.etent_OvertimeHoursWorked.HeaderText = "etent_OvertimeHoursWorked"
-        Me.etent_OvertimeHoursWorked.Name = "etent_OvertimeHoursWorked"
-        Me.etent_OvertimeHoursWorked.ReadOnly = True
-        '
-        'etent_OvertimeHoursAmount
-        '
-        Me.etent_OvertimeHoursAmount.HeaderText = "etent_OvertimeHoursAmount"
-        Me.etent_OvertimeHoursAmount.Name = "etent_OvertimeHoursAmount"
-        Me.etent_OvertimeHoursAmount.ReadOnly = True
-        '
-        'etent_UndertimeHours
-        '
-        Me.etent_UndertimeHours.HeaderText = "etent_UndertimeHours"
-        Me.etent_UndertimeHours.Name = "etent_UndertimeHours"
-        Me.etent_UndertimeHours.ReadOnly = True
-        '
-        'etent_UndertimeHoursAmount
-        '
-        Me.etent_UndertimeHoursAmount.HeaderText = "etent_UndertimeHoursAmount"
-        Me.etent_UndertimeHoursAmount.Name = "etent_UndertimeHoursAmount"
-        Me.etent_UndertimeHoursAmount.ReadOnly = True
-        '
-        'etent_NightDifferentialHours
-        '
-        Me.etent_NightDifferentialHours.HeaderText = "etent_NightDifferentialHours"
-        Me.etent_NightDifferentialHours.Name = "etent_NightDifferentialHours"
-        Me.etent_NightDifferentialHours.ReadOnly = True
-        '
-        'etent_NightDiffHoursAmount
-        '
-        Me.etent_NightDiffHoursAmount.HeaderText = "etent_NightDiffHoursAmount"
-        Me.etent_NightDiffHoursAmount.Name = "etent_NightDiffHoursAmount"
-        Me.etent_NightDiffHoursAmount.ReadOnly = True
-        '
-        'etent_NightDifferentialOTHours
-        '
-        Me.etent_NightDifferentialOTHours.HeaderText = "etent_NightDifferentialOTHours"
-        Me.etent_NightDifferentialOTHours.Name = "etent_NightDifferentialOTHours"
-        Me.etent_NightDifferentialOTHours.ReadOnly = True
-        '
-        'etent_NightDiffOTHoursAmount
-        '
-        Me.etent_NightDiffOTHoursAmount.HeaderText = "etent_NightDiffOTHoursAmount"
-        Me.etent_NightDiffOTHoursAmount.Name = "etent_NightDiffOTHoursAmount"
-        Me.etent_NightDiffOTHoursAmount.ReadOnly = True
-        '
-        'etent_HoursLate
-        '
-        Me.etent_HoursLate.HeaderText = "etent_HoursLate"
-        Me.etent_HoursLate.Name = "etent_HoursLate"
-        Me.etent_HoursLate.ReadOnly = True
-        '
-        'etent_HoursLateAmount
-        '
-        Me.etent_HoursLateAmount.HeaderText = "etent_HoursLateAmount"
-        Me.etent_HoursLateAmount.Name = "etent_HoursLateAmount"
-        Me.etent_HoursLateAmount.ReadOnly = True
-        '
-        'etent_LateFlag
-        '
-        Me.etent_LateFlag.HeaderText = "etent_LateFlag"
-        Me.etent_LateFlag.Name = "etent_LateFlag"
-        Me.etent_LateFlag.ReadOnly = True
-        '
-        'etent_PayRateID
-        '
-        Me.etent_PayRateID.HeaderText = "etent_PayRateID"
-        Me.etent_PayRateID.Name = "etent_PayRateID"
-        Me.etent_PayRateID.ReadOnly = True
-        '
-        'etent_VacationLeaveHours
-        '
-        Me.etent_VacationLeaveHours.HeaderText = "etent_VacationLeaveHours"
-        Me.etent_VacationLeaveHours.Name = "etent_VacationLeaveHours"
-        Me.etent_VacationLeaveHours.ReadOnly = True
-        '
-        'etent_SickLeaveHours
-        '
-        Me.etent_SickLeaveHours.HeaderText = "etent_SickLeaveHours"
-        Me.etent_SickLeaveHours.Name = "etent_SickLeaveHours"
-        Me.etent_SickLeaveHours.ReadOnly = True
-        '
-        'etent_TotalDayPay
-        '
-        Me.etent_TotalDayPay.HeaderText = "etent_TotalDayPay"
-        Me.etent_TotalDayPay.Name = "etent_TotalDayPay"
-        Me.etent_TotalDayPay.ReadOnly = True
-        '
-        'dgvempsal
-        '
-        Me.dgvempsal.AllowUserToAddRows = False
-        Me.dgvempsal.AllowUserToDeleteRows = False
-        Me.dgvempsal.AllowUserToOrderColumns = True
-        Me.dgvempsal.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle54.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle54.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle54.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle54.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle54.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle54.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle54.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempsal.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle54
-        Me.dgvempsal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvempsal.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.esal_RowID, Me.esal_EmployeeID, Me.esal_FilingStatusID, Me.esal_FilingStatus, Me.esal_PaySocialSecurityID, Me.esal_EmployeeContributionAmount, Me.esal_PayPhilhealthID, Me.esal_EmployeeShare, Me.esal_HDMFAmount, Me.esal_BasicPay, Me.esal_NoofDependents, Me.esal_MaritalStatus, Me.esal_PositionID, Me.esal_Position, Me.esal_EffectiveDateFrom, Me.esal_EffectiveDateTo})
-        DataGridViewCellStyle55.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle55.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle55.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle55.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle55.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle55.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle55.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempsal.DefaultCellStyle = DataGridViewCellStyle55
-        Me.dgvempsal.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempsal.Location = New System.Drawing.Point(-231, 228)
-        Me.dgvempsal.MultiSelect = False
-        Me.dgvempsal.Name = "dgvempsal"
-        Me.dgvempsal.ReadOnly = True
-        DataGridViewCellStyle56.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle56.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle56.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle56.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle56.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle56.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle56.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempsal.RowHeadersDefaultCellStyle = DataGridViewCellStyle56
-        Me.dgvempsal.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvempsal.Size = New System.Drawing.Size(240, 150)
-        Me.dgvempsal.TabIndex = 478
-        Me.dgvempsal.Visible = False
-        '
-        'esal_RowID
-        '
-        Me.esal_RowID.HeaderText = "esal_RowID"
-        Me.esal_RowID.Name = "esal_RowID"
-        Me.esal_RowID.ReadOnly = True
-        '
-        'esal_EmployeeID
-        '
-        Me.esal_EmployeeID.HeaderText = "esal_EmployeeID"
-        Me.esal_EmployeeID.Name = "esal_EmployeeID"
-        Me.esal_EmployeeID.ReadOnly = True
-        '
-        'esal_FilingStatusID
-        '
-        Me.esal_FilingStatusID.HeaderText = "esal_FilingStatusID"
-        Me.esal_FilingStatusID.Name = "esal_FilingStatusID"
-        Me.esal_FilingStatusID.ReadOnly = True
-        '
-        'esal_FilingStatus
-        '
-        Me.esal_FilingStatus.HeaderText = "esal_FilingStatus"
-        Me.esal_FilingStatus.Name = "esal_FilingStatus"
-        Me.esal_FilingStatus.ReadOnly = True
-        '
-        'esal_PaySocialSecurityID
-        '
-        Me.esal_PaySocialSecurityID.HeaderText = "esal_PaySocialSecurityID"
-        Me.esal_PaySocialSecurityID.Name = "esal_PaySocialSecurityID"
-        Me.esal_PaySocialSecurityID.ReadOnly = True
-        '
-        'esal_EmployeeContributionAmount
-        '
-        Me.esal_EmployeeContributionAmount.HeaderText = "esal_EmployeeContributionAmount"
-        Me.esal_EmployeeContributionAmount.Name = "esal_EmployeeContributionAmount"
-        Me.esal_EmployeeContributionAmount.ReadOnly = True
-        '
-        'esal_PayPhilhealthID
-        '
-        Me.esal_PayPhilhealthID.HeaderText = "esal_PayPhilhealthID"
-        Me.esal_PayPhilhealthID.Name = "esal_PayPhilhealthID"
-        Me.esal_PayPhilhealthID.ReadOnly = True
-        '
-        'esal_EmployeeShare
-        '
-        Me.esal_EmployeeShare.HeaderText = "esal_EmployeeShare"
-        Me.esal_EmployeeShare.Name = "esal_EmployeeShare"
-        Me.esal_EmployeeShare.ReadOnly = True
-        '
-        'esal_HDMFAmount
-        '
-        Me.esal_HDMFAmount.HeaderText = "esal_HDMFAmount"
-        Me.esal_HDMFAmount.Name = "esal_HDMFAmount"
-        Me.esal_HDMFAmount.ReadOnly = True
-        '
-        'esal_BasicPay
-        '
-        Me.esal_BasicPay.HeaderText = "esal_BasicPay"
-        Me.esal_BasicPay.Name = "esal_BasicPay"
-        Me.esal_BasicPay.ReadOnly = True
-        '
-        'esal_NoofDependents
-        '
-        Me.esal_NoofDependents.HeaderText = "esal_NoofDependents"
-        Me.esal_NoofDependents.Name = "esal_NoofDependents"
-        Me.esal_NoofDependents.ReadOnly = True
-        '
-        'esal_MaritalStatus
-        '
-        Me.esal_MaritalStatus.HeaderText = "esal_MaritalStatus"
-        Me.esal_MaritalStatus.Name = "esal_MaritalStatus"
-        Me.esal_MaritalStatus.ReadOnly = True
-        '
-        'esal_PositionID
-        '
-        Me.esal_PositionID.HeaderText = "esal_PositionID"
-        Me.esal_PositionID.Name = "esal_PositionID"
-        Me.esal_PositionID.ReadOnly = True
-        '
-        'esal_Position
-        '
-        Me.esal_Position.HeaderText = "esal_Position"
-        Me.esal_Position.Name = "esal_Position"
-        Me.esal_Position.ReadOnly = True
-        '
-        'esal_EffectiveDateFrom
-        '
-        Me.esal_EffectiveDateFrom.HeaderText = "esal_EffectiveDateFrom"
-        Me.esal_EffectiveDateFrom.Name = "esal_EffectiveDateFrom"
-        Me.esal_EffectiveDateFrom.ReadOnly = True
-        '
-        'esal_EffectiveDateTo
-        '
-        Me.esal_EffectiveDateTo.HeaderText = "esal_EffectiveDateTo"
-        Me.esal_EffectiveDateTo.Name = "esal_EffectiveDateTo"
-        Me.esal_EffectiveDateTo.ReadOnly = True
-        '
-        'btntotbon
-        '
-        Me.btntotbon.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btntotbon.Location = New System.Drawing.Point(370, 354)
-        Me.btntotbon.Name = "btntotbon"
-        Me.btntotbon.Size = New System.Drawing.Size(21, 22)
-        Me.btntotbon.TabIndex = 477
-        Me.btntotbon.Text = "..."
-        Me.btntotbon.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.btntotbon.UseVisualStyleBackColor = True
-        '
-        'btntotloan
-        '
-        Me.btntotloan.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btntotloan.Location = New System.Drawing.Point(747, 445)
-        Me.btntotloan.Name = "btntotloan"
-        Me.btntotloan.Size = New System.Drawing.Size(21, 22)
-        Me.btntotloan.TabIndex = 476
-        Me.btntotloan.Text = "..."
-        Me.btntotloan.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.btntotloan.UseVisualStyleBackColor = True
-        '
-        'btntotallow
-        '
-        Me.btntotallow.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btntotallow.Location = New System.Drawing.Point(370, 307)
-        Me.btntotallow.Name = "btntotallow"
-        Me.btntotallow.Size = New System.Drawing.Size(21, 22)
-        Me.btntotallow.TabIndex = 475
-        Me.btntotallow.Text = "..."
-        Me.btntotallow.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.btntotallow.UseVisualStyleBackColor = True
-        '
-        'Label252
-        '
-        Me.Label252.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label252.Location = New System.Drawing.Point(401, 498)
-        Me.Label252.Name = "Label252"
-        Me.Label252.Size = New System.Drawing.Size(367, 13)
-        Me.Label252.TabIndex = 474
-        Me.Label252.Text = "---------------------------------------------------------------------------------" &
-    "----------------------"
-        '
-        'Label253
-        '
-        Me.Label253.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label253.Location = New System.Drawing.Point(401, 385)
-        Me.Label253.Name = "Label253"
-        Me.Label253.Size = New System.Drawing.Size(367, 13)
-        Me.Label253.TabIndex = 473
-        Me.Label253.Text = "---------------------------------------------------------------------------------" &
-    "----------------------"
-        '
-        'Label254
-        '
-        Me.Label254.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label254.Location = New System.Drawing.Point(401, 344)
-        Me.Label254.Name = "Label254"
-        Me.Label254.Size = New System.Drawing.Size(367, 13)
-        Me.Label254.TabIndex = 472
-        Me.Label254.Text = "---------------------------------------------------------------------------------" &
-    "-----------------------------------------"
-        '
-        'Label255
-        '
-        Me.Label255.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label255.Location = New System.Drawing.Point(401, 431)
-        Me.Label255.Name = "Label255"
-        Me.Label255.Size = New System.Drawing.Size(367, 13)
-        Me.Label255.TabIndex = 471
-        Me.Label255.Text = "---------------------------------------------------------------------------------" &
-    "----------------------"
-        '
-        'Label256
-        '
-        Me.Label256.Font = New System.Drawing.Font("Segoe UI", 6.75!)
-        Me.Label256.Location = New System.Drawing.Point(401, 215)
-        Me.Label256.Name = "Label256"
-        Me.Label256.Size = New System.Drawing.Size(367, 13)
-        Me.Label256.TabIndex = 470
-        Me.Label256.Text = "---------------------------------------------------------------------------------" &
-    "----------------------"
-        '
-        'Label257
-        '
-        Me.Label257.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label257.Location = New System.Drawing.Point(26, 392)
-        Me.Label257.Name = "Label257"
-        Me.Label257.Size = New System.Drawing.Size(365, 13)
-        Me.Label257.TabIndex = 469
-        Me.Label257.Text = "---------------------------------------------------------------------------------" &
-    "-----------------------------------------"
-        '
-        'Label258
-        '
-        Me.Label258.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label258.Location = New System.Drawing.Point(26, 289)
-        Me.Label258.Name = "Label258"
-        Me.Label258.Size = New System.Drawing.Size(365, 13)
-        Me.Label258.TabIndex = 468
-        Me.Label258.Text = "---------------------------------------------------------------------------------" &
-    "----------------------"
-        '
-        'TabControl1
-        '
-        Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Controls.Add(Me.TabPage4)
-        Me.TabControl1.Controls.Add(Me.TabPage5)
-        Me.TabControl1.Location = New System.Drawing.Point(28, 456)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(291, 148)
-        Me.TabControl1.TabIndex = 467
-        '
-        'TabPage1
-        '
-        Me.TabPage1.Controls.Add(Me.Label259)
-        Me.TabPage1.Controls.Add(Me.Label260)
-        Me.TabPage1.Controls.Add(Me.Label261)
-        Me.TabPage1.Controls.Add(Me.mlbal)
-        Me.TabPage1.Controls.Add(Me.Label262)
-        Me.TabPage1.Controls.Add(Me.vlbal)
-        Me.TabPage1.Controls.Add(Me.Label263)
-        Me.TabPage1.Controls.Add(Me.Label264)
-        Me.TabPage1.Controls.Add(Me.slbal)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(283, 122)
-        Me.TabPage1.TabIndex = 3
-        Me.TabPage1.Text = "Leave balance"
-        Me.TabPage1.UseVisualStyleBackColor = True
-        '
-        'Label259
-        '
-        Me.Label259.AutoSize = True
-        Me.Label259.Location = New System.Drawing.Point(205, 65)
-        Me.Label259.Name = "Label259"
-        Me.Label259.Size = New System.Drawing.Size(39, 13)
-        Me.Label259.TabIndex = 160
-        Me.Label259.Text = "hour(s)"
-        '
-        'Label260
-        '
-        Me.Label260.AutoSize = True
-        Me.Label260.Location = New System.Drawing.Point(205, 39)
-        Me.Label260.Name = "Label260"
-        Me.Label260.Size = New System.Drawing.Size(39, 13)
-        Me.Label260.TabIndex = 161
-        Me.Label260.Text = "hour(s)"
-        '
-        'Label261
-        '
-        Me.Label261.AutoSize = True
-        Me.Label261.Location = New System.Drawing.Point(205, 13)
-        Me.Label261.Name = "Label261"
-        Me.Label261.Size = New System.Drawing.Size(39, 13)
-        Me.Label261.TabIndex = 162
-        Me.Label261.Text = "hour(s)"
-        '
-        'mlbal
-        '
-        Me.mlbal.BackColor = System.Drawing.Color.White
-        Me.mlbal.Location = New System.Drawing.Point(115, 57)
-        Me.mlbal.MaxLength = 50
-        Me.mlbal.Name = "mlbal"
-        Me.mlbal.ReadOnly = True
-        Me.mlbal.Size = New System.Drawing.Size(84, 20)
-        Me.mlbal.TabIndex = 149
-        Me.mlbal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label262
-        '
-        Me.Label262.AutoSize = True
-        Me.Label262.Location = New System.Drawing.Point(14, 65)
-        Me.Label262.Name = "Label262"
-        Me.Label262.Size = New System.Drawing.Size(95, 13)
-        Me.Label262.TabIndex = 152
-        Me.Label262.Text = "Maternity/paternity"
-        '
-        'vlbal
-        '
-        Me.vlbal.BackColor = System.Drawing.Color.White
-        Me.vlbal.Location = New System.Drawing.Point(115, 5)
-        Me.vlbal.MaxLength = 50
-        Me.vlbal.Name = "vlbal"
-        Me.vlbal.ReadOnly = True
-        Me.vlbal.Size = New System.Drawing.Size(84, 20)
-        Me.vlbal.TabIndex = 147
-        Me.vlbal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label263
-        '
-        Me.Label263.AutoSize = True
-        Me.Label263.Location = New System.Drawing.Point(14, 39)
-        Me.Label263.Name = "Label263"
-        Me.Label263.Size = New System.Drawing.Size(28, 13)
-        Me.Label263.TabIndex = 151
-        Me.Label263.Text = "Sick"
-        '
-        'Label264
-        '
-        Me.Label264.AutoSize = True
-        Me.Label264.Location = New System.Drawing.Point(14, 13)
-        Me.Label264.Name = "Label264"
-        Me.Label264.Size = New System.Drawing.Size(49, 13)
-        Me.Label264.TabIndex = 150
-        Me.Label264.Text = "Vacation"
-        '
-        'slbal
-        '
-        Me.slbal.BackColor = System.Drawing.Color.White
-        Me.slbal.Location = New System.Drawing.Point(115, 31)
-        Me.slbal.MaxLength = 50
-        Me.slbal.Name = "slbal"
-        Me.slbal.ReadOnly = True
-        Me.slbal.Size = New System.Drawing.Size(84, 20)
-        Me.slbal.TabIndex = 148
-        Me.slbal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'TabPage4
-        '
-        Me.TabPage4.Controls.Add(Me.Label265)
-        Me.TabPage4.Controls.Add(Me.Label266)
-        Me.TabPage4.Controls.Add(Me.Label267)
-        Me.TabPage4.Controls.Add(Me.TextBox5)
-        Me.TabPage4.Controls.Add(Me.TextBox8)
-        Me.TabPage4.Controls.Add(Me.Label268)
-        Me.TabPage4.Controls.Add(Me.TextBox9)
-        Me.TabPage4.Controls.Add(Me.Label269)
-        Me.TabPage4.Controls.Add(Me.Label270)
-        Me.TabPage4.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage4.Name = "TabPage4"
-        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(283, 122)
-        Me.TabPage4.TabIndex = 4
-        Me.TabPage4.Text = "Leave allowance"
-        Me.TabPage4.UseVisualStyleBackColor = True
-        '
-        'Label265
-        '
-        Me.Label265.AutoSize = True
-        Me.Label265.Location = New System.Drawing.Point(160, 65)
-        Me.Label265.Name = "Label265"
-        Me.Label265.Size = New System.Drawing.Size(39, 13)
-        Me.Label265.TabIndex = 160
-        Me.Label265.Text = "hour(s)"
-        '
-        'Label266
-        '
-        Me.Label266.AutoSize = True
-        Me.Label266.Location = New System.Drawing.Point(160, 39)
-        Me.Label266.Name = "Label266"
-        Me.Label266.Size = New System.Drawing.Size(39, 13)
-        Me.Label266.TabIndex = 161
-        Me.Label266.Text = "hour(s)"
-        '
-        'Label267
-        '
-        Me.Label267.AutoSize = True
-        Me.Label267.Location = New System.Drawing.Point(160, 13)
-        Me.Label267.Name = "Label267"
-        Me.Label267.Size = New System.Drawing.Size(39, 13)
-        Me.Label267.TabIndex = 162
-        Me.Label267.Text = "hour(s)"
-        '
-        'TextBox5
-        '
-        Me.TextBox5.BackColor = System.Drawing.Color.White
-        Me.TextBox5.Location = New System.Drawing.Point(71, 57)
-        Me.TextBox5.MaxLength = 50
-        Me.TextBox5.Name = "TextBox5"
-        Me.TextBox5.ReadOnly = True
-        Me.TextBox5.Size = New System.Drawing.Size(84, 20)
-        Me.TextBox5.TabIndex = 28
-        Me.TextBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'TextBox8
-        '
-        Me.TextBox8.BackColor = System.Drawing.Color.White
-        Me.TextBox8.Location = New System.Drawing.Point(70, 5)
-        Me.TextBox8.MaxLength = 50
-        Me.TextBox8.Name = "TextBox8"
-        Me.TextBox8.ReadOnly = True
-        Me.TextBox8.Size = New System.Drawing.Size(84, 20)
-        Me.TextBox8.TabIndex = 26
-        Me.TextBox8.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label268
-        '
-        Me.Label268.AutoSize = True
-        Me.Label268.Location = New System.Drawing.Point(15, 13)
-        Me.Label268.Name = "Label268"
-        Me.Label268.Size = New System.Drawing.Size(49, 13)
-        Me.Label268.TabIndex = 142
-        Me.Label268.Text = "Vacation"
-        '
-        'TextBox9
-        '
-        Me.TextBox9.BackColor = System.Drawing.Color.White
-        Me.TextBox9.Location = New System.Drawing.Point(70, 31)
-        Me.TextBox9.MaxLength = 50
-        Me.TextBox9.Name = "TextBox9"
-        Me.TextBox9.ReadOnly = True
-        Me.TextBox9.Size = New System.Drawing.Size(84, 20)
-        Me.TextBox9.TabIndex = 27
-        Me.TextBox9.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label269
-        '
-        Me.Label269.AutoSize = True
-        Me.Label269.Location = New System.Drawing.Point(36, 39)
-        Me.Label269.Name = "Label269"
-        Me.Label269.Size = New System.Drawing.Size(28, 13)
-        Me.Label269.TabIndex = 145
-        Me.Label269.Text = "Sick"
-        '
-        'Label270
-        '
-        Me.Label270.AutoSize = True
-        Me.Label270.Location = New System.Drawing.Point(14, 65)
-        Me.Label270.Name = "Label270"
-        Me.Label270.Size = New System.Drawing.Size(50, 13)
-        Me.Label270.TabIndex = 146
-        Me.Label270.Text = "Maternity"
-        '
-        'TabPage5
-        '
-        Me.TabPage5.Controls.Add(Me.Label271)
-        Me.TabPage5.Controls.Add(Me.Label272)
-        Me.TabPage5.Controls.Add(Me.Label273)
-        Me.TabPage5.Controls.Add(Me.TextBox10)
-        Me.TabPage5.Controls.Add(Me.Label274)
-        Me.TabPage5.Controls.Add(Me.TextBox13)
-        Me.TabPage5.Controls.Add(Me.Label275)
-        Me.TabPage5.Controls.Add(Me.Label276)
-        Me.TabPage5.Controls.Add(Me.TextBox14)
-        Me.TabPage5.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage5.Name = "TabPage5"
-        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage5.Size = New System.Drawing.Size(283, 122)
-        Me.TabPage5.TabIndex = 5
-        Me.TabPage5.Text = "Leave per pay period"
-        Me.TabPage5.UseVisualStyleBackColor = True
-        '
-        'Label271
-        '
-        Me.Label271.AutoSize = True
-        Me.Label271.Location = New System.Drawing.Point(160, 65)
-        Me.Label271.Name = "Label271"
-        Me.Label271.Size = New System.Drawing.Size(39, 13)
-        Me.Label271.TabIndex = 160
-        Me.Label271.Text = "hour(s)"
-        '
-        'Label272
-        '
-        Me.Label272.AutoSize = True
-        Me.Label272.Location = New System.Drawing.Point(160, 39)
-        Me.Label272.Name = "Label272"
-        Me.Label272.Size = New System.Drawing.Size(39, 13)
-        Me.Label272.TabIndex = 161
-        Me.Label272.Text = "hour(s)"
-        '
-        'Label273
-        '
-        Me.Label273.AutoSize = True
-        Me.Label273.Location = New System.Drawing.Point(160, 13)
-        Me.Label273.Name = "Label273"
-        Me.Label273.Size = New System.Drawing.Size(39, 13)
-        Me.Label273.TabIndex = 162
-        Me.Label273.Text = "hour(s)"
-        '
-        'TextBox10
-        '
-        Me.TextBox10.BackColor = System.Drawing.Color.White
-        Me.TextBox10.Location = New System.Drawing.Point(71, 57)
-        Me.TextBox10.MaxLength = 50
-        Me.TextBox10.Name = "TextBox10"
-        Me.TextBox10.ReadOnly = True
-        Me.TextBox10.Size = New System.Drawing.Size(84, 20)
-        Me.TextBox10.TabIndex = 155
-        Me.TextBox10.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label274
-        '
-        Me.Label274.AutoSize = True
-        Me.Label274.Location = New System.Drawing.Point(14, 65)
-        Me.Label274.Name = "Label274"
-        Me.Label274.Size = New System.Drawing.Size(50, 13)
-        Me.Label274.TabIndex = 158
-        Me.Label274.Text = "Maternity"
-        '
-        'TextBox13
-        '
-        Me.TextBox13.BackColor = System.Drawing.Color.White
-        Me.TextBox13.Location = New System.Drawing.Point(70, 5)
-        Me.TextBox13.MaxLength = 50
-        Me.TextBox13.Name = "TextBox13"
-        Me.TextBox13.ReadOnly = True
-        Me.TextBox13.Size = New System.Drawing.Size(84, 20)
-        Me.TextBox13.TabIndex = 153
-        Me.TextBox13.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label275
-        '
-        Me.Label275.AutoSize = True
-        Me.Label275.Location = New System.Drawing.Point(36, 39)
-        Me.Label275.Name = "Label275"
-        Me.Label275.Size = New System.Drawing.Size(28, 13)
-        Me.Label275.TabIndex = 157
-        Me.Label275.Text = "Sick"
-        '
-        'Label276
-        '
-        Me.Label276.AutoSize = True
-        Me.Label276.Location = New System.Drawing.Point(15, 13)
-        Me.Label276.Name = "Label276"
-        Me.Label276.Size = New System.Drawing.Size(49, 13)
-        Me.Label276.TabIndex = 156
-        Me.Label276.Text = "Vacation"
-        '
-        'TextBox14
-        '
-        Me.TextBox14.BackColor = System.Drawing.Color.White
-        Me.TextBox14.Location = New System.Drawing.Point(70, 31)
-        Me.TextBox14.MaxLength = 50
-        Me.TextBox14.Name = "TextBox14"
-        Me.TextBox14.ReadOnly = True
-        Me.TextBox14.Size = New System.Drawing.Size(84, 20)
-        Me.TextBox14.TabIndex = 154
-        Me.TextBox14.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txttotutamt
-        '
-        Me.txttotutamt.Location = New System.Drawing.Point(641, 151)
-        Me.txttotutamt.Name = "txttotutamt"
-        Me.txttotutamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttotutamt.TabIndex = 466
-        Me.txttotutamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txttottardiamt
-        '
-        Me.txttottardiamt.Location = New System.Drawing.Point(641, 124)
-        Me.txttottardiamt.Name = "txttottardiamt"
-        Me.txttottardiamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttottardiamt.TabIndex = 465
-        Me.txttottardiamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txttotabsentamt
-        '
-        Me.txttotabsentamt.Location = New System.Drawing.Point(641, 98)
-        Me.txttotabsentamt.Name = "txttotabsentamt"
-        Me.txttotabsentamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttotabsentamt.TabIndex = 464
-        Me.txttotabsentamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label277
-        '
-        Me.Label277.AutoSize = True
-        Me.Label277.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label277.Location = New System.Drawing.Point(261, 82)
-        Me.Label277.Name = "Label277"
-        Me.Label277.Size = New System.Drawing.Size(81, 13)
-        Me.Label277.TabIndex = 463
-        Me.Label277.Text = "Total amount"
-        '
-        'Label278
-        '
-        Me.Label278.AutoSize = True
-        Me.Label278.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label278.Location = New System.Drawing.Point(135, 82)
-        Me.Label278.Name = "Label278"
-        Me.Label278.Size = New System.Drawing.Size(71, 13)
-        Me.Label278.TabIndex = 462
-        Me.Label278.Text = "Total hours"
-        '
-        'txttotholidayamt
-        '
-        Me.txttotholidayamt.Location = New System.Drawing.Point(264, 202)
-        Me.txttotholidayamt.Name = "txttotholidayamt"
-        Me.txttotholidayamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttotholidayamt.TabIndex = 461
-        Me.txttotholidayamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label279
-        '
-        Me.Label279.AutoSize = True
-        Me.Label279.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label279.Location = New System.Drawing.Point(25, 273)
-        Me.Label279.Name = "Label279"
-        Me.Label279.Size = New System.Drawing.Size(66, 13)
-        Me.Label279.TabIndex = 460
-        Me.Label279.Text = "Sub total :"
-        '
-        'Label280
-        '
-        Me.Label280.AutoSize = True
-        Me.Label280.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label280.Location = New System.Drawing.Point(638, 82)
-        Me.Label280.Name = "Label280"
-        Me.Label280.Size = New System.Drawing.Size(81, 13)
-        Me.Label280.TabIndex = 459
-        Me.Label280.Text = "Total amount"
-        '
-        'Label281
-        '
-        Me.Label281.AutoSize = True
-        Me.Label281.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label281.Location = New System.Drawing.Point(511, 82)
-        Me.Label281.Name = "Label281"
-        Me.Label281.Size = New System.Drawing.Size(71, 13)
-        Me.Label281.TabIndex = 458
-        Me.Label281.Text = "Total hours"
-        '
-        'txttotnightdiffothrs
-        '
-        Me.txttotnightdiffothrs.Location = New System.Drawing.Point(138, 176)
-        Me.txttotnightdiffothrs.Name = "txttotnightdiffothrs"
-        Me.txttotnightdiffothrs.Size = New System.Drawing.Size(100, 20)
-        Me.txttotnightdiffothrs.TabIndex = 457
-        Me.txttotnightdiffothrs.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label282
-        '
-        Me.Label282.AutoSize = True
-        Me.Label282.Location = New System.Drawing.Point(25, 183)
-        Me.Label282.Name = "Label282"
-        Me.Label282.Size = New System.Drawing.Size(107, 13)
-        Me.Label282.TabIndex = 456
-        Me.Label282.Text = "Night differential OT :"
-        '
-        'txttotnightdiffhrs
-        '
-        Me.txttotnightdiffhrs.Location = New System.Drawing.Point(138, 150)
-        Me.txttotnightdiffhrs.Name = "txttotnightdiffhrs"
-        Me.txttotnightdiffhrs.Size = New System.Drawing.Size(100, 20)
-        Me.txttotnightdiffhrs.TabIndex = 455
-        Me.txttotnightdiffhrs.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label283
-        '
-        Me.Label283.AutoSize = True
-        Me.Label283.Location = New System.Drawing.Point(25, 157)
-        Me.Label283.Name = "Label283"
-        Me.Label283.Size = New System.Drawing.Size(89, 13)
-        Me.Label283.TabIndex = 454
-        Me.Label283.Text = "Night differential :"
-        '
-        'txttotothrs
-        '
-        Me.txttotothrs.Location = New System.Drawing.Point(138, 124)
-        Me.txttotothrs.Name = "txttotothrs"
-        Me.txttotothrs.Size = New System.Drawing.Size(100, 20)
-        Me.txttotothrs.TabIndex = 453
-        Me.txttotothrs.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label284
-        '
-        Me.Label284.AutoSize = True
-        Me.Label284.Location = New System.Drawing.Point(25, 131)
-        Me.Label284.Name = "Label284"
-        Me.Label284.Size = New System.Drawing.Size(55, 13)
-        Me.Label284.TabIndex = 452
-        Me.Label284.Text = "Overtime :"
-        '
-        'txttotregamt
-        '
-        Me.txttotregamt.Location = New System.Drawing.Point(264, 98)
-        Me.txttotregamt.Name = "txttotregamt"
-        Me.txttotregamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttotregamt.TabIndex = 451
-        Me.txttotregamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txttotreghrs
-        '
-        Me.txttotreghrs.Location = New System.Drawing.Point(138, 98)
-        Me.txttotreghrs.Name = "txttotreghrs"
-        Me.txttotreghrs.Size = New System.Drawing.Size(100, 20)
-        Me.txttotreghrs.TabIndex = 450
-        Me.txttotreghrs.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label285
-        '
-        Me.Label285.AutoSize = True
-        Me.Label285.Location = New System.Drawing.Point(25, 105)
-        Me.Label285.Name = "Label285"
-        Me.Label285.Size = New System.Drawing.Size(50, 13)
-        Me.Label285.TabIndex = 449
-        Me.Label285.Text = "Regular :"
-        '
-        'txtempbasicpay
-        '
-        Me.txtempbasicpay.Location = New System.Drawing.Point(43, 49)
-        Me.txtempbasicpay.Name = "txtempbasicpay"
-        Me.txtempbasicpay.Size = New System.Drawing.Size(100, 20)
-        Me.txtempbasicpay.TabIndex = 448
-        Me.txtempbasicpay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label286
-        '
-        Me.Label286.AutoSize = True
-        Me.Label286.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label286.Location = New System.Drawing.Point(25, 33)
-        Me.Label286.Name = "Label286"
-        Me.Label286.Size = New System.Drawing.Size(70, 13)
-        Me.Label286.TabIndex = 447
-        Me.Label286.Text = "Basic pay :"
-        '
-        'Label287
-        '
-        Me.Label287.AutoSize = True
-        Me.Label287.Location = New System.Drawing.Point(398, 158)
-        Me.Label287.Name = "Label287"
-        Me.Label287.Size = New System.Drawing.Size(61, 13)
-        Me.Label287.TabIndex = 446
-        Me.Label287.Text = "Undertime :"
-        '
-        'txtemptotbon
-        '
-        Me.txtemptotbon.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtemptotbon.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txtemptotbon.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtemptotbon.Location = New System.Drawing.Point(264, 360)
-        Me.txtemptotbon.Name = "txtemptotbon"
-        Me.txtemptotbon.Size = New System.Drawing.Size(100, 16)
-        Me.txtemptotbon.TabIndex = 432
-        Me.txtemptotbon.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txttotut
-        '
-        Me.txttotut.Location = New System.Drawing.Point(514, 151)
-        Me.txttotut.Name = "txttotut"
-        Me.txttotut.Size = New System.Drawing.Size(100, 20)
-        Me.txttotut.TabIndex = 445
-        Me.txttotut.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label288
-        '
-        Me.Label288.AutoSize = True
-        Me.Label288.Location = New System.Drawing.Point(398, 131)
-        Me.Label288.Name = "Label288"
-        Me.Label288.Size = New System.Drawing.Size(59, 13)
-        Me.Label288.TabIndex = 444
-        Me.Label288.Text = "Tardiness :"
-        '
-        'Label289
-        '
-        Me.Label289.AutoSize = True
-        Me.Label289.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label289.Location = New System.Drawing.Point(25, 367)
-        Me.Label289.Name = "Label289"
-        Me.Label289.Size = New System.Drawing.Size(83, 13)
-        Me.Label289.TabIndex = 435
-        Me.Label289.Text = "Total Bonus :"
-        '
-        'txttottardi
-        '
-        Me.txttottardi.Location = New System.Drawing.Point(514, 124)
-        Me.txttottardi.Name = "txttottardi"
-        Me.txttottardi.Size = New System.Drawing.Size(100, 20)
-        Me.txttottardi.TabIndex = 443
-        Me.txttottardi.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtemptotallow
-        '
-        Me.txtemptotallow.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtemptotallow.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txtemptotallow.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtemptotallow.Location = New System.Drawing.Point(264, 313)
-        Me.txtemptotallow.Name = "txtemptotallow"
-        Me.txtemptotallow.Size = New System.Drawing.Size(100, 16)
-        Me.txtemptotallow.TabIndex = 437
-        Me.txtemptotallow.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txttotabsent
-        '
-        Me.txttotabsent.Location = New System.Drawing.Point(514, 98)
-        Me.txttotabsent.Name = "txttotabsent"
-        Me.txttotabsent.Size = New System.Drawing.Size(100, 20)
-        Me.txttotabsent.TabIndex = 442
-        Me.txttotabsent.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label290
-        '
-        Me.Label290.AutoSize = True
-        Me.Label290.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label290.Location = New System.Drawing.Point(25, 323)
-        Me.Label290.Name = "Label290"
-        Me.Label290.Size = New System.Drawing.Size(106, 13)
-        Me.Label290.TabIndex = 438
-        Me.Label290.Text = "Total Allowance :"
-        '
-        'Label291
-        '
-        Me.Label291.AutoSize = True
-        Me.Label291.Location = New System.Drawing.Point(398, 105)
-        Me.Label291.Name = "Label291"
-        Me.Label291.Size = New System.Drawing.Size(46, 13)
-        Me.Label291.TabIndex = 441
-        Me.Label291.Text = "Absent :"
-        '
-        'txtemptotloan
-        '
-        Me.txtemptotloan.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtemptotloan.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txtemptotloan.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtemptotloan.Location = New System.Drawing.Point(641, 451)
-        Me.txtemptotloan.Name = "txtemptotloan"
-        Me.txtemptotloan.Size = New System.Drawing.Size(100, 16)
-        Me.txtemptotloan.TabIndex = 431
-        Me.txtemptotloan.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txttotholidayhrs
-        '
-        Me.txttotholidayhrs.Location = New System.Drawing.Point(138, 202)
-        Me.txttotholidayhrs.Name = "txttotholidayhrs"
-        Me.txttotholidayhrs.Size = New System.Drawing.Size(100, 20)
-        Me.txttotholidayhrs.TabIndex = 440
-        Me.txttotholidayhrs.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label292
-        '
-        Me.Label292.AutoSize = True
-        Me.Label292.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label292.Location = New System.Drawing.Point(398, 458)
-        Me.Label292.Name = "Label292"
-        Me.Label292.Size = New System.Drawing.Size(76, 13)
-        Me.Label292.TabIndex = 430
-        Me.Label292.Text = "Total Loan :"
-        '
-        'Label293
-        '
-        Me.Label293.AutoSize = True
-        Me.Label293.Location = New System.Drawing.Point(25, 209)
-        Me.Label293.Name = "Label293"
-        Me.Label293.Size = New System.Drawing.Size(68, 13)
-        Me.Label293.TabIndex = 439
-        Me.Label293.Text = "Holiday pay :"
-        '
-        'Label294
-        '
-        Me.Label294.AutoSize = True
-        Me.Label294.Location = New System.Drawing.Point(398, 245)
-        Me.Label294.Name = "Label294"
-        Me.Label294.Size = New System.Drawing.Size(83, 13)
-        Me.Label294.TabIndex = 423
-        Me.Label294.Text = "Employee SSS :"
-        '
-        'txtempsss
-        '
-        Me.txtempsss.Location = New System.Drawing.Point(641, 238)
-        Me.txtempsss.Name = "txtempsss"
-        Me.txtempsss.Size = New System.Drawing.Size(100, 20)
-        Me.txtempsss.TabIndex = 425
-        Me.txtempsss.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txttotnightdiffotamt
-        '
-        Me.txttotnightdiffotamt.Location = New System.Drawing.Point(264, 176)
-        Me.txttotnightdiffotamt.Name = "txttotnightdiffotamt"
-        Me.txttotnightdiffotamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttotnightdiffotamt.TabIndex = 436
-        Me.txttotnightdiffotamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtempphh
-        '
-        Me.txtempphh.Location = New System.Drawing.Point(641, 264)
-        Me.txtempphh.Name = "txtempphh"
-        Me.txtempphh.Size = New System.Drawing.Size(100, 20)
-        Me.txtempphh.TabIndex = 426
-        Me.txtempphh.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txttotnightdiffamt
-        '
-        Me.txttotnightdiffamt.Location = New System.Drawing.Point(264, 150)
-        Me.txttotnightdiffamt.Name = "txttotnightdiffamt"
-        Me.txttotnightdiffamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttotnightdiffamt.TabIndex = 434
-        Me.txttotnightdiffamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label295
-        '
-        Me.Label295.AutoSize = True
-        Me.Label295.Location = New System.Drawing.Point(398, 271)
-        Me.Label295.Name = "Label295"
-        Me.Label295.Size = New System.Drawing.Size(110, 13)
-        Me.Label295.TabIndex = 427
-        Me.Label295.Text = "Employee PhilHealth :"
-        '
-        'txttototamt
-        '
-        Me.txttototamt.Location = New System.Drawing.Point(264, 124)
-        Me.txttototamt.Name = "txttototamt"
-        Me.txttototamt.Size = New System.Drawing.Size(100, 20)
-        Me.txttototamt.TabIndex = 433
-        Me.txttototamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtemphdmf
-        '
-        Me.txtemphdmf.Location = New System.Drawing.Point(641, 290)
-        Me.txtemphdmf.Name = "txtemphdmf"
-        Me.txtemphdmf.Size = New System.Drawing.Size(100, 20)
-        Me.txtemphdmf.TabIndex = 428
-        Me.txtemphdmf.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label296
-        '
-        Me.Label296.AutoSize = True
-        Me.Label296.Location = New System.Drawing.Point(398, 297)
-        Me.Label296.Name = "Label296"
-        Me.Label296.Size = New System.Drawing.Size(105, 13)
-        Me.Label296.TabIndex = 429
-        Me.Label296.Text = "Employee PAGIBIG :"
-        '
-        'txtempwtax
-        '
-        Me.txtempwtax.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtempwtax.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txtempwtax.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtempwtax.Location = New System.Drawing.Point(641, 401)
-        Me.txtempwtax.Name = "txtempwtax"
-        Me.txtempwtax.Size = New System.Drawing.Size(100, 16)
-        Me.txtempwtax.TabIndex = 424
-        Me.txtempwtax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label297
-        '
-        Me.Label297.AutoSize = True
-        Me.Label297.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label297.Location = New System.Drawing.Point(398, 408)
-        Me.Label297.Name = "Label297"
-        Me.Label297.Size = New System.Drawing.Size(103, 13)
-        Me.Label297.TabIndex = 422
-        Me.Label297.Text = "Withholding tax :"
-        '
-        'Label298
-        '
-        Me.Label298.AutoSize = True
-        Me.Label298.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label298.Location = New System.Drawing.Point(398, 369)
-        Me.Label298.Name = "Label298"
-        Me.Label298.Size = New System.Drawing.Size(104, 13)
-        Me.Label298.TabIndex = 421
-        Me.Label298.Text = "Taxable income :"
-        '
-        'txttaxabsal
-        '
-        Me.txttaxabsal.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txttaxabsal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txttaxabsal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txttaxabsal.Location = New System.Drawing.Point(641, 362)
-        Me.txttaxabsal.Name = "txttaxabsal"
-        Me.txttaxabsal.Size = New System.Drawing.Size(100, 16)
-        Me.txttaxabsal.TabIndex = 420
-        Me.txttaxabsal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtnetsal
-        '
-        Me.txtnetsal.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtnetsal.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!)
-        Me.txtnetsal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtnetsal.Location = New System.Drawing.Point(641, 535)
-        Me.txtnetsal.Name = "txtnetsal"
-        Me.txtnetsal.Size = New System.Drawing.Size(100, 22)
-        Me.txtnetsal.TabIndex = 419
-        Me.txtnetsal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtgrosssal
-        '
-        Me.txtgrosssal.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtgrosssal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txtgrosssal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtgrosssal.Location = New System.Drawing.Point(264, 416)
-        Me.txtgrosssal.Name = "txtgrosssal"
-        Me.txtgrosssal.Size = New System.Drawing.Size(100, 16)
-        Me.txtgrosssal.TabIndex = 412
-        Me.txtgrosssal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'dgvpaystub
-        '
-        Me.dgvpaystub.AllowUserToAddRows = False
-        Me.dgvpaystub.AllowUserToDeleteRows = False
-        Me.dgvpaystub.AllowUserToOrderColumns = True
-        Me.dgvpaystub.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle57.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle57.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle57.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle57.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle57.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle57.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle57.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvpaystub.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle57
-        Me.dgvpaystub.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvpaystub.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.paystb_RowID, Me.paystb_Created, Me.paystb_CreatedBy, Me.paystb_PayPeriodID, Me.paystb_EmployeeID, Me.paystb_TimeEntryID, Me.paystb_PayFromDate, Me.paystb_PayToDate, Me.paystb_TotalGrossSalary, Me.paystb_TotalNetSalary, Me.paystb_TotalTaxableSalary, Me.paystb_TotalEmpSSS, Me.paystb_TotalEmpWithholdingTax, Me.paystb_TotalCompSSS, Me.paystb_TotalEmpPhilhealth, Me.paystb_TotalCompPhilhealth, Me.paystb_TotalEmpHDMF, Me.paystb_TotalCompHDMF, Me.paystb_TotalVacationDaysLeft, Me.paystb_TotalLoans, Me.paystb_TotalBonus, Me.paystb_TotalAllowance})
-        DataGridViewCellStyle58.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle58.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle58.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle58.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle58.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle58.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle58.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpaystub.DefaultCellStyle = DataGridViewCellStyle58
-        Me.dgvpaystub.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvpaystub.Location = New System.Drawing.Point(-231, 63)
-        Me.dgvpaystub.MultiSelect = False
-        Me.dgvpaystub.Name = "dgvpaystub"
-        DataGridViewCellStyle59.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle59.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle59.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle59.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle59.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle59.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle59.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvpaystub.RowHeadersDefaultCellStyle = DataGridViewCellStyle59
-        Me.dgvpaystub.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvpaystub.Size = New System.Drawing.Size(240, 150)
-        Me.dgvpaystub.TabIndex = 409
-        Me.dgvpaystub.Visible = False
-        '
-        'paystb_RowID
-        '
-        Me.paystb_RowID.HeaderText = "RowID"
-        Me.paystb_RowID.Name = "paystb_RowID"
-        '
-        'paystb_Created
-        '
-        Me.paystb_Created.HeaderText = "Created"
-        Me.paystb_Created.Name = "paystb_Created"
-        '
-        'paystb_CreatedBy
-        '
-        Me.paystb_CreatedBy.HeaderText = "CreatedBy"
-        Me.paystb_CreatedBy.Name = "paystb_CreatedBy"
-        '
-        'paystb_PayPeriodID
-        '
-        Me.paystb_PayPeriodID.HeaderText = "PayPeriodID"
-        Me.paystb_PayPeriodID.Name = "paystb_PayPeriodID"
-        '
-        'paystb_EmployeeID
-        '
-        Me.paystb_EmployeeID.HeaderText = "EmployeeID"
-        Me.paystb_EmployeeID.Name = "paystb_EmployeeID"
-        '
-        'paystb_TimeEntryID
-        '
-        Me.paystb_TimeEntryID.HeaderText = "TimeEntryID"
-        Me.paystb_TimeEntryID.Name = "paystb_TimeEntryID"
-        '
-        'paystb_PayFromDate
-        '
-        Me.paystb_PayFromDate.HeaderText = "PayFromDate"
-        Me.paystb_PayFromDate.Name = "paystb_PayFromDate"
-        '
-        'paystb_PayToDate
-        '
-        Me.paystb_PayToDate.HeaderText = "PayToDate"
-        Me.paystb_PayToDate.Name = "paystb_PayToDate"
-        '
-        'paystb_TotalGrossSalary
-        '
-        Me.paystb_TotalGrossSalary.HeaderText = "TotalGrossSalary"
-        Me.paystb_TotalGrossSalary.Name = "paystb_TotalGrossSalary"
-        '
-        'paystb_TotalNetSalary
-        '
-        Me.paystb_TotalNetSalary.HeaderText = "TotalNetSalary"
-        Me.paystb_TotalNetSalary.Name = "paystb_TotalNetSalary"
-        '
-        'paystb_TotalTaxableSalary
-        '
-        Me.paystb_TotalTaxableSalary.HeaderText = "TotalTaxableSalary"
-        Me.paystb_TotalTaxableSalary.Name = "paystb_TotalTaxableSalary"
-        '
-        'paystb_TotalEmpSSS
-        '
-        Me.paystb_TotalEmpSSS.HeaderText = "TotalEmpSSS"
-        Me.paystb_TotalEmpSSS.Name = "paystb_TotalEmpSSS"
-        '
-        'paystb_TotalEmpWithholdingTax
-        '
-        Me.paystb_TotalEmpWithholdingTax.HeaderText = "TotalEmpWithholdingTax"
-        Me.paystb_TotalEmpWithholdingTax.Name = "paystb_TotalEmpWithholdingTax"
-        '
-        'paystb_TotalCompSSS
-        '
-        Me.paystb_TotalCompSSS.HeaderText = "TotalCompSSS"
-        Me.paystb_TotalCompSSS.Name = "paystb_TotalCompSSS"
-        '
-        'paystb_TotalEmpPhilhealth
-        '
-        Me.paystb_TotalEmpPhilhealth.HeaderText = "TotalEmpPhilhealth"
-        Me.paystb_TotalEmpPhilhealth.Name = "paystb_TotalEmpPhilhealth"
-        '
-        'paystb_TotalCompPhilhealth
-        '
-        Me.paystb_TotalCompPhilhealth.HeaderText = "TotalCompPhilhealth"
-        Me.paystb_TotalCompPhilhealth.Name = "paystb_TotalCompPhilhealth"
-        '
-        'paystb_TotalEmpHDMF
-        '
-        Me.paystb_TotalEmpHDMF.HeaderText = "TotalEmpHDMF"
-        Me.paystb_TotalEmpHDMF.Name = "paystb_TotalEmpHDMF"
-        '
-        'paystb_TotalCompHDMF
-        '
-        Me.paystb_TotalCompHDMF.HeaderText = "TotalCompHDMF"
-        Me.paystb_TotalCompHDMF.Name = "paystb_TotalCompHDMF"
-        '
-        'paystb_TotalVacationDaysLeft
-        '
-        Me.paystb_TotalVacationDaysLeft.HeaderText = "TotalVacationDaysLeft"
-        Me.paystb_TotalVacationDaysLeft.Name = "paystb_TotalVacationDaysLeft"
-        '
-        'paystb_TotalLoans
-        '
-        Me.paystb_TotalLoans.HeaderText = "TotalLoans"
-        Me.paystb_TotalLoans.Name = "paystb_TotalLoans"
-        '
-        'paystb_TotalBonus
-        '
-        Me.paystb_TotalBonus.HeaderText = "TotalBonus"
-        Me.paystb_TotalBonus.Name = "paystb_TotalBonus"
-        '
-        'paystb_TotalAllowance
-        '
-        Me.paystb_TotalAllowance.HeaderText = "TotalAllowance"
-        Me.paystb_TotalAllowance.Name = "paystb_TotalAllowance"
-        '
-        'Label299
-        '
-        Me.Label299.AutoSize = True
-        Me.Label299.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label299.Location = New System.Drawing.Point(25, 426)
-        Me.Label299.Name = "Label299"
-        Me.Label299.Size = New System.Drawing.Size(91, 13)
-        Me.Label299.TabIndex = 407
-        Me.Label299.Text = "Gross income :"
-        '
-        'Label300
-        '
-        Me.Label300.AutoSize = True
-        Me.Label300.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label300.Location = New System.Drawing.Point(398, 536)
-        Me.Label300.Name = "Label300"
-        Me.Label300.Size = New System.Drawing.Size(93, 24)
-        Me.Label300.TabIndex = 408
-        Me.Label300.Text = "Net pay :"
-        '
-        'Label301
-        '
-        Me.Label301.AutoSize = True
-        Me.Label301.Location = New System.Drawing.Point(244, 419)
-        Me.Label301.Name = "Label301"
-        Me.Label301.Size = New System.Drawing.Size(14, 13)
-        Me.Label301.TabIndex = 488
-        Me.Label301.Text = "₱"
-        '
-        'Label302
-        '
-        Me.Label302.AutoSize = True
-        Me.Label302.Location = New System.Drawing.Point(244, 314)
-        Me.Label302.Name = "Label302"
-        Me.Label302.Size = New System.Drawing.Size(14, 13)
-        Me.Label302.TabIndex = 487
-        Me.Label302.Text = "₱"
-        '
-        'Label303
-        '
-        Me.Label303.AutoSize = True
-        Me.Label303.Location = New System.Drawing.Point(244, 101)
-        Me.Label303.Name = "Label303"
-        Me.Label303.Size = New System.Drawing.Size(14, 13)
-        Me.Label303.TabIndex = 418
-        Me.Label303.Text = "₱"
-        '
-        'Label304
-        '
-        Me.Label304.AutoSize = True
-        Me.Label304.Location = New System.Drawing.Point(244, 127)
-        Me.Label304.Name = "Label304"
-        Me.Label304.Size = New System.Drawing.Size(14, 13)
-        Me.Label304.TabIndex = 414
-        Me.Label304.Text = "₱"
-        '
-        'Label305
-        '
-        Me.Label305.AutoSize = True
-        Me.Label305.Location = New System.Drawing.Point(244, 153)
-        Me.Label305.Name = "Label305"
-        Me.Label305.Size = New System.Drawing.Size(14, 13)
-        Me.Label305.TabIndex = 415
-        Me.Label305.Text = "₱"
-        '
-        'Label306
-        '
-        Me.Label306.AutoSize = True
-        Me.Label306.Location = New System.Drawing.Point(244, 179)
-        Me.Label306.Name = "Label306"
-        Me.Label306.Size = New System.Drawing.Size(14, 13)
-        Me.Label306.TabIndex = 416
-        Me.Label306.Text = "₱"
-        '
-        'Label307
-        '
-        Me.Label307.AutoSize = True
-        Me.Label307.Location = New System.Drawing.Point(244, 205)
-        Me.Label307.Name = "Label307"
-        Me.Label307.Size = New System.Drawing.Size(14, 13)
-        Me.Label307.TabIndex = 417
-        Me.Label307.Text = "₱"
-        '
-        'Label308
-        '
-        Me.Label308.AutoSize = True
-        Me.Label308.Location = New System.Drawing.Point(244, 239)
-        Me.Label308.Name = "Label308"
-        Me.Label308.Size = New System.Drawing.Size(14, 13)
-        Me.Label308.TabIndex = 413
-        Me.Label308.Text = "₱"
-        '
-        'Label309
-        '
-        Me.Label309.AutoSize = True
-        Me.Label309.Location = New System.Drawing.Point(244, 265)
-        Me.Label309.Name = "Label309"
-        Me.Label309.Size = New System.Drawing.Size(14, 13)
-        Me.Label309.TabIndex = 411
-        Me.Label309.Text = "₱"
-        '
-        'ToolStrip16
-        '
-        Me.ToolStrip16.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip16.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnprintpayslip, Me.ToolStripButton12, Me.tsbtnprintall})
-        Me.ToolStrip16.Location = New System.Drawing.Point(3, 3)
-        Me.ToolStrip16.Name = "ToolStrip16"
-        Me.ToolStrip16.Size = New System.Drawing.Size(854, 25)
-        Me.ToolStrip16.TabIndex = 172
-        Me.ToolStrip16.Text = "ToolStrip16"
-        '
-        'tsbtnprintpayslip
-        '
-        Me.tsbtnprintpayslip.Image = CType(resources.GetObject("tsbtnprintpayslip.Image"), System.Drawing.Image)
-        Me.tsbtnprintpayslip.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnprintpayslip.Name = "tsbtnprintpayslip"
-        Me.tsbtnprintpayslip.Size = New System.Drawing.Size(95, 22)
-        Me.tsbtnprintpayslip.Text = "&Print pay slip"
-        '
-        'ToolStripButton12
-        '
-        Me.ToolStripButton12.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton12.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton12.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton12.Name = "ToolStripButton12"
-        Me.ToolStripButton12.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton12.Text = "Close"
-        '
-        'tsbtnprintall
-        '
-        Me.tsbtnprintall.Image = CType(resources.GetObject("tsbtnprintall.Image"), System.Drawing.Image)
-        Me.tsbtnprintall.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnprintall.Name = "tsbtnprintall"
-        Me.tsbtnprintall.Size = New System.Drawing.Size(110, 22)
-        Me.tsbtnprintall.Text = "Print all pay slip"
-        Me.tsbtnprintall.Visible = False
-        '
         'tbpempallow
         '
         Me.tbpempallow.AccessibleDescription = "Employee Allowance"
@@ -11652,7 +7046,7 @@ Partial Class EmployeeForm
         Me.tbpempallow.Location = New System.Drawing.Point(4, 4)
         Me.tbpempallow.Name = "tbpempallow"
         Me.tbpempallow.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpempallow.Size = New System.Drawing.Size(860, 461)
+        Me.tbpempallow.Size = New System.Drawing.Size(860, 486)
         Me.tbpempallow.TabIndex = 14
         Me.tbpempallow.Text = "ALLOW"
         Me.tbpempallow.UseVisualStyleBackColor = True
@@ -11686,7 +7080,7 @@ Partial Class EmployeeForm
         Me.Panel6.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel6.Location = New System.Drawing.Point(3, 28)
         Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(854, 430)
+        Me.Panel6.Size = New System.Drawing.Size(854, 455)
         Me.Panel6.TabIndex = 359
         '
         'Label337
@@ -11830,37 +7224,37 @@ Partial Class EmployeeForm
         Me.dgvempallowance.AllowUserToResizeColumns = False
         Me.dgvempallowance.AllowUserToResizeRows = False
         Me.dgvempallowance.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle60.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle60.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle60.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle60.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle60.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle60.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle60.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempallowance.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle60
+        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempallowance.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle22
         Me.dgvempallowance.ColumnHeadersHeight = 34
         Me.dgvempallowance.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eall_RowID, Me.eall_Type, Me.eall_Amount, Me.eall_Frequency, Me.eall_Start, Me.eall_End, Me.allow_taxab, Me.eall_ProdID})
-        DataGridViewCellStyle62.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle62.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle62.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle62.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle62.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle62.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle62.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle62
+        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle24.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle24
         Me.dgvempallowance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempallowance.Location = New System.Drawing.Point(32, 225)
         Me.dgvempallowance.MultiSelect = False
         Me.dgvempallowance.Name = "dgvempallowance"
         Me.dgvempallowance.ReadOnly = True
-        DataGridViewCellStyle63.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle63.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle63.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle63.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle63.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle63.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle63.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempallowance.RowHeadersDefaultCellStyle = DataGridViewCellStyle63
+        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle25.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle25.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle25.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle25.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempallowance.RowHeadersDefaultCellStyle = DataGridViewCellStyle25
         Me.dgvempallowance.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempallowance.Size = New System.Drawing.Size(784, 345)
         Me.dgvempallowance.TabIndex = 5
@@ -11884,8 +7278,8 @@ Partial Class EmployeeForm
         '
         'eall_Amount
         '
-        DataGridViewCellStyle61.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle61
+        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle23
         Me.eall_Amount.HeaderText = "Amount"
         Me.eall_Amount.Name = "eall_Amount"
         Me.eall_Amount.ReadOnly = True
@@ -12166,7 +7560,7 @@ Partial Class EmployeeForm
         Me.tbpEmpOT.Location = New System.Drawing.Point(4, 4)
         Me.tbpEmpOT.Name = "tbpEmpOT"
         Me.tbpEmpOT.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpEmpOT.Size = New System.Drawing.Size(860, 461)
+        Me.tbpEmpOT.Size = New System.Drawing.Size(860, 486)
         Me.tbpEmpOT.TabIndex = 15
         Me.tbpEmpOT.Text = "EMP OT"
         Me.tbpEmpOT.UseVisualStyleBackColor = True
@@ -12215,7 +7609,7 @@ Partial Class EmployeeForm
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel5.Location = New System.Drawing.Point(3, 28)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(854, 430)
+        Me.Panel5.Size = New System.Drawing.Size(854, 455)
         Me.Panel5.TabIndex = 194
         '
         'lnkLastOT
@@ -12450,37 +7844,37 @@ Partial Class EmployeeForm
         Me.dgvempOT.AllowUserToOrderColumns = True
         Me.dgvempOT.AllowUserToResizeRows = False
         Me.dgvempOT.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle64.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle64.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle64.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle64.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle64.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle64.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle64.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempOT.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle64
+        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle26.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle26.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle26.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempOT.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle26
         Me.dgvempOT.ColumnHeadersHeight = 38
         Me.dgvempOT.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvempOT.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eot_RowID, Me.eot_Type, Me.eot_StartTime, Me.eot_EndTime, Me.eot_StartDate, Me.eot_EndDate, Me.eot_Status, Me.eot_Reason, Me.eot_Comment, Me.eot_Image, Me.eot_viewimage, Me.eot_attafilename, Me.eot_attafileextensn})
-        DataGridViewCellStyle67.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle67.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle67.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle67.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle67.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle67.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle67.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempOT.DefaultCellStyle = DataGridViewCellStyle67
+        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle29.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempOT.DefaultCellStyle = DataGridViewCellStyle29
         Me.dgvempOT.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempOT.Location = New System.Drawing.Point(32, 227)
         Me.dgvempOT.MultiSelect = False
         Me.dgvempOT.Name = "dgvempOT"
-        DataGridViewCellStyle68.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle68.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle68.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle68.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle68.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle68.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle68.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempOT.RowHeadersDefaultCellStyle = DataGridViewCellStyle68
+        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempOT.RowHeadersDefaultCellStyle = DataGridViewCellStyle30
         Me.dgvempOT.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempOT.Size = New System.Drawing.Size(611, 331)
         Me.dgvempOT.TabIndex = 0
@@ -12594,8 +7988,8 @@ Partial Class EmployeeForm
         '
         'eot_Reason
         '
-        DataGridViewCellStyle65.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eot_Reason.DefaultCellStyle = DataGridViewCellStyle65
+        DataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eot_Reason.DefaultCellStyle = DataGridViewCellStyle27
         Me.eot_Reason.HeaderText = "Reason"
         Me.eot_Reason.Name = "eot_Reason"
         Me.eot_Reason.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
@@ -12603,8 +7997,8 @@ Partial Class EmployeeForm
         '
         'eot_Comment
         '
-        DataGridViewCellStyle66.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eot_Comment.DefaultCellStyle = DataGridViewCellStyle66
+        DataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eot_Comment.DefaultCellStyle = DataGridViewCellStyle28
         Me.eot_Comment.HeaderText = "Comments"
         Me.eot_Comment.MaxInputLength = 499
         Me.eot_Comment.Name = "eot_Comment"
@@ -12873,7 +8267,7 @@ Partial Class EmployeeForm
         Me.tbpOBF.Location = New System.Drawing.Point(4, 4)
         Me.tbpOBF.Name = "tbpOBF"
         Me.tbpOBF.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpOBF.Size = New System.Drawing.Size(860, 461)
+        Me.tbpOBF.Size = New System.Drawing.Size(860, 486)
         Me.tbpOBF.TabIndex = 16
         Me.tbpOBF.Text = "OFFBUSI"
         Me.tbpOBF.UseVisualStyleBackColor = True
@@ -12922,7 +8316,7 @@ Partial Class EmployeeForm
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel4.Location = New System.Drawing.Point(3, 28)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(854, 430)
+        Me.Panel4.Size = New System.Drawing.Size(854, 455)
         Me.Panel4.TabIndex = 198
         '
         'Label341
@@ -13169,37 +8563,37 @@ Partial Class EmployeeForm
         Me.dgvOBF.AllowUserToOrderColumns = True
         Me.dgvOBF.AllowUserToResizeRows = False
         Me.dgvOBF.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle69.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle69.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle69.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle69.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle69.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle69.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle69.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvOBF.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle69
+        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle31.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle31.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle31.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle31.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvOBF.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle31
         Me.dgvOBF.ColumnHeadersHeight = 38
         Me.dgvOBF.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvOBF.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.obf_RowID, Me.obf_Type, Me.obf_StartTime, Me.obf_EndTime, Me.obf_StartDate, Me.obf_EndDate, Me.obf_Status, Me.obf_Reason, Me.obf_Comment, Me.obf_Image, Me.obf_view, Me.obf_attafilename, Me.obf_attafileextensn})
-        DataGridViewCellStyle72.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle72.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle72.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle72.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle72.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle72.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle72.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvOBF.DefaultCellStyle = DataGridViewCellStyle72
+        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle34.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle34.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle34.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle34.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle34.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvOBF.DefaultCellStyle = DataGridViewCellStyle34
         Me.dgvOBF.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvOBF.Location = New System.Drawing.Point(32, 228)
         Me.dgvOBF.MultiSelect = False
         Me.dgvOBF.Name = "dgvOBF"
-        DataGridViewCellStyle73.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle73.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle73.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle73.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle73.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle73.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle73.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvOBF.RowHeadersDefaultCellStyle = DataGridViewCellStyle73
+        DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle35.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle35.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle35.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle35.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle35.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvOBF.RowHeadersDefaultCellStyle = DataGridViewCellStyle35
         Me.dgvOBF.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvOBF.Size = New System.Drawing.Size(611, 345)
         Me.dgvOBF.TabIndex = 0
@@ -13313,8 +8707,8 @@ Partial Class EmployeeForm
         '
         'obf_Reason
         '
-        DataGridViewCellStyle70.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.obf_Reason.DefaultCellStyle = DataGridViewCellStyle70
+        DataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.obf_Reason.DefaultCellStyle = DataGridViewCellStyle32
         Me.obf_Reason.HeaderText = "Reason"
         Me.obf_Reason.Name = "obf_Reason"
         Me.obf_Reason.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
@@ -13322,8 +8716,8 @@ Partial Class EmployeeForm
         '
         'obf_Comment
         '
-        DataGridViewCellStyle71.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.obf_Comment.DefaultCellStyle = DataGridViewCellStyle71
+        DataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.obf_Comment.DefaultCellStyle = DataGridViewCellStyle33
         Me.obf_Comment.HeaderText = "Comments"
         Me.obf_Comment.MaxInputLength = 499
         Me.obf_Comment.Name = "obf_Comment"
@@ -13590,7 +8984,7 @@ Partial Class EmployeeForm
         Me.tbpBonus.Location = New System.Drawing.Point(4, 4)
         Me.tbpBonus.Name = "tbpBonus"
         Me.tbpBonus.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpBonus.Size = New System.Drawing.Size(860, 461)
+        Me.tbpBonus.Size = New System.Drawing.Size(860, 486)
         Me.tbpBonus.TabIndex = 17
         Me.tbpBonus.Text = "BONUS"
         Me.tbpBonus.UseVisualStyleBackColor = True
@@ -13623,7 +9017,7 @@ Partial Class EmployeeForm
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel3.Location = New System.Drawing.Point(3, 28)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(854, 430)
+        Me.Panel3.Size = New System.Drawing.Size(854, 455)
         Me.Panel3.TabIndex = 360
         '
         'Label342
@@ -13756,37 +9150,37 @@ Partial Class EmployeeForm
         Me.dgvempbon.AllowUserToOrderColumns = True
         Me.dgvempbon.AllowUserToResizeRows = False
         Me.dgvempbon.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle74.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle74.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle74.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle74.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle74.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle74.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle74.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle74
+        DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle36.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle36.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle36.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle36.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle36.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempbon.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle36
         Me.dgvempbon.ColumnHeadersHeight = 34
         Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bon_RowID, Me.bon_Type, Me.bon_Amount, Me.bon_Frequency, Me.bon_Start, Me.bon_End, Me.bon_ProdID})
-        DataGridViewCellStyle76.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle76.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle76.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle76.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle76.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle76.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle76.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle76
+        DataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle38.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle38.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle38.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle38.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle38.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle38
         Me.dgvempbon.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempbon.Location = New System.Drawing.Point(32, 225)
         Me.dgvempbon.MultiSelect = False
         Me.dgvempbon.Name = "dgvempbon"
         Me.dgvempbon.ReadOnly = True
-        DataGridViewCellStyle77.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle77.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle77.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle77.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle77.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle77.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle77.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle77
+        DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle39.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle39.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle39
         Me.dgvempbon.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempbon.Size = New System.Drawing.Size(783, 345)
         Me.dgvempbon.TabIndex = 5
@@ -13810,8 +9204,8 @@ Partial Class EmployeeForm
         '
         'bon_Amount
         '
-        DataGridViewCellStyle75.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle75
+        DataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle37
         Me.bon_Amount.HeaderText = "Amount"
         Me.bon_Amount.Name = "bon_Amount"
         Me.bon_Amount.ReadOnly = True
@@ -14076,7 +9470,7 @@ Partial Class EmployeeForm
         Me.tbpAttachment.Location = New System.Drawing.Point(4, 4)
         Me.tbpAttachment.Name = "tbpAttachment"
         Me.tbpAttachment.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpAttachment.Size = New System.Drawing.Size(860, 461)
+        Me.tbpAttachment.Size = New System.Drawing.Size(860, 486)
         Me.tbpAttachment.TabIndex = 18
         Me.tbpAttachment.Text = "ATTACH"
         Me.tbpAttachment.UseVisualStyleBackColor = True
@@ -14099,7 +9493,7 @@ Partial Class EmployeeForm
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(3, 28)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(854, 430)
+        Me.Panel2.Size = New System.Drawing.Size(854, 455)
         Me.Panel2.TabIndex = 345
         '
         'Label344
@@ -14138,36 +9532,36 @@ Partial Class EmployeeForm
         Me.dgvempatta.AllowUserToOrderColumns = True
         Me.dgvempatta.AllowUserToResizeRows = False
         Me.dgvempatta.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle78.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle78.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle78.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle78.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle78.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle78.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle78.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempatta.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle78
+        DataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle40.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle40.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle40.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle40.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle40.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempatta.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle40
         Me.dgvempatta.ColumnHeadersHeight = 34
         Me.dgvempatta.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eatt_RowID, Me.eatt_Type, Me.eatt_FileName, Me.eatt_FileType, Me.eatt_EmployeeID, Me.eatt_Created, Me.eatt_CreatedBy, Me.eatt_LastUpd, Me.eatt_LastUpdBy, Me.eatt_AttachedFile, Me.eatt_viewthis, Me.Column38})
-        DataGridViewCellStyle79.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle79.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle79.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle79.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle79.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle79.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle79.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempatta.DefaultCellStyle = DataGridViewCellStyle79
+        DataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle41.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle41.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle41.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle41.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle41.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle41.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempatta.DefaultCellStyle = DataGridViewCellStyle41
         Me.dgvempatta.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempatta.Location = New System.Drawing.Point(32, 91)
         Me.dgvempatta.MultiSelect = False
         Me.dgvempatta.Name = "dgvempatta"
-        DataGridViewCellStyle80.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle80.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle80.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle80.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle80.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle80.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle80.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempatta.RowHeadersDefaultCellStyle = DataGridViewCellStyle80
+        DataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle42.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle42.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle42.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle42.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle42.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle42.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempatta.RowHeadersDefaultCellStyle = DataGridViewCellStyle42
         Me.dgvempatta.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempatta.Size = New System.Drawing.Size(611, 345)
         Me.dgvempatta.TabIndex = 0
@@ -14392,9 +9786,9 @@ Partial Class EmployeeForm
         Me.tbpNewSalary.Controls.Add(Me.SalaryTab)
         Me.tbpNewSalary.Location = New System.Drawing.Point(4, 4)
         Me.tbpNewSalary.Name = "tbpNewSalary"
-        Me.tbpNewSalary.Size = New System.Drawing.Size(860, 461)
+        Me.tbpNewSalary.Size = New System.Drawing.Size(860, 486)
         Me.tbpNewSalary.TabIndex = 19
-        Me.tbpNewSalary.Text = "Salary"
+        Me.tbpNewSalary.Text = "SALARY"
         Me.tbpNewSalary.UseVisualStyleBackColor = True
         '
         'SalaryTab
@@ -14406,8 +9800,7 @@ Partial Class EmployeeForm
         Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
         Me.SalaryTab.Name = "SalaryTab"
         Me.SalaryTab.PhilHealth = Nothing
-        Me.SalaryTab.Size = New System.Drawing.Size(860, 461)
-        Me.SalaryTab.Sss = Nothing
+        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
         Me.SalaryTab.TabIndex = 0
         '
         'imglstchklist
@@ -14637,24 +10030,24 @@ Partial Class EmployeeForm
         Me.dgvEmp.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.dgvEmp.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle81.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle81.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle81.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle81.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle81.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle81.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle81.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvEmp.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle81
+        DataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle43.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle43.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle43.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle43.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle43.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvEmp.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle43
         Me.dgvEmp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvEmp.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column21, Me.Column5, Me.Column31, Me.Column32, Me.Column6, Me.colstartdate, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column15, Me.Column16, Me.Column17, Me.Column18, Me.Column14, Me.Column19, Me.Column20, Me.Column22, Me.Column23, Me.Column24, Me.Column25, Me.Column26, Me.Column27, Me.Column28, Me.Column29, Me.Column30, Me.Column34, Me.Column35, Me.slbalance, Me.mlbalance, Me.Column36, Me.slallowance, Me.mlallowance, Me.Column33, Me.slpayp, Me.mlpayp, Me.fstatRowID, Me.AlphaExempted, Me.WorkDaysPerYear, Me.DayOfRest, Me.ATMNo, Me.BankName, Me.OtherPayP, Me.OtherLeaveAllowance, Me.OtherLeaveBalance, Me.CalcHoliday, Me.CalcSpecialHoliday, Me.CalcNightDiff, Me.CalcNightDiffOT, Me.CalcRestDay, Me.CalcRestDayOT, Me.LateGracePeriod, Me.RevealInPayroll, Me.OffSetBal, Me.AgencyName, Me.AgencyRowID, Me.Column37})
-        DataGridViewCellStyle82.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle82.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle82.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle82.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle82.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle82.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle82.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvEmp.DefaultCellStyle = DataGridViewCellStyle82
+        DataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle44.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle44.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle44.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle44.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle44.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle44.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvEmp.DefaultCellStyle = DataGridViewCellStyle44
         Me.dgvEmp.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvEmp.Location = New System.Drawing.Point(2, 208)
         Me.dgvEmp.MultiSelect = False
@@ -15666,16 +11059,6 @@ Partial Class EmployeeForm
         Me.ToolStrip4.PerformLayout
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout
-        Me.tbpSalary.ResumeLayout(False)
-        Me.tbpSalary.PerformLayout
-        Me.Panel8.ResumeLayout(False)
-        Me.Panel8.PerformLayout
-        CType(Me.pbEmpPicSal, System.ComponentModel.ISupportInitialize).EndInit
-        Me.grpbasicsalaryaddeduction.ResumeLayout(False)
-        Me.grpbasicsalaryaddeduction.PerformLayout
-        CType(Me.dgvemployeesalary, System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip13.ResumeLayout(False)
-        Me.ToolStrip13.PerformLayout
         Me.tbpAwards.ResumeLayout(False)
         Me.tbpAwards.PerformLayout
         Me.Panel17.ResumeLayout(False)
@@ -15743,6 +11126,7 @@ Partial Class EmployeeForm
         CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip11.ResumeLayout(False)
         Me.ToolStrip11.PerformLayout
+<<<<<<< HEAD
         Me.tbpLoans.ResumeLayout(False)
         Me.tbpLoans.PerformLayout
         Me.Panel10.ResumeLayout(False)
@@ -15787,6 +11171,8 @@ Partial Class EmployeeForm
         CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip16.ResumeLayout(False)
         Me.ToolStrip16.PerformLayout
+=======
+>>>>>>> master
         Me.tbpempallow.ResumeLayout(False)
         Me.tbpempallow.PerformLayout
         Me.Panel6.ResumeLayout(False)
@@ -16081,8 +11467,6 @@ Partial Class EmployeeForm
     Friend WithEvents tbpEducBG As System.Windows.Forms.TabPage
     Friend WithEvents tbpPrevEmp As System.Windows.Forms.TabPage
     Friend WithEvents tbpPromotion As System.Windows.Forms.TabPage
-    Friend WithEvents tbpLoans As System.Windows.Forms.TabPage
-    Friend WithEvents tbpSalary As System.Windows.Forms.TabPage
     Friend WithEvents ToolStrip9 As System.Windows.Forms.ToolStrip
     Friend WithEvents btnNewEduc As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripButton5 As System.Windows.Forms.ToolStripButton
@@ -16183,91 +11567,10 @@ Partial Class EmployeeForm
     Friend WithEvents Label85 As System.Windows.Forms.Label
     Friend WithEvents cmbto As System.Windows.Forms.ComboBox
     Friend WithEvents cmbfrom As System.Windows.Forms.ComboBox
-    Friend WithEvents ToolStrip12 As System.Windows.Forms.ToolStrip
-    Friend WithEvents tsbtnNewLoan As System.Windows.Forms.ToolStripButton
-    Friend WithEvents tsbtnSaveLoan As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripLabel5 As System.Windows.Forms.ToolStripLabel
-    Friend WithEvents ToolStripSeparator9 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents DeleteLoanScheduleButton As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripSeparator10 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents ToolStripButton23 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripButton24 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripButton25 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents dgvLoanList As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents Label88 As System.Windows.Forms.Label
-    Friend WithEvents lblAdd As System.Windows.Forms.LinkLabel
-    Friend WithEvents cmbdedsched As System.Windows.Forms.ComboBox
-    Friend WithEvents Label89 As System.Windows.Forms.Label
-    Friend WithEvents Label90 As System.Windows.Forms.Label
-    Friend WithEvents txtdedpercent As System.Windows.Forms.TextBox
-    Friend WithEvents Label91 As System.Windows.Forms.Label
-    Friend WithEvents dateto As System.Windows.Forms.DateTimePicker
-    Friend WithEvents Label92 As System.Windows.Forms.Label
-    Friend WithEvents Label93 As System.Windows.Forms.Label
-    Friend WithEvents Label94 As System.Windows.Forms.Label
-    Friend WithEvents TextBox6 As System.Windows.Forms.TextBox
-    Friend WithEvents Label95 As System.Windows.Forms.Label
-    Friend WithEvents txtnoofpayper As System.Windows.Forms.TextBox
-    Friend WithEvents Label96 As System.Windows.Forms.Label
-    Friend WithEvents txtdedamt As System.Windows.Forms.TextBox
-    Friend WithEvents cmbStatus As System.Windows.Forms.ComboBox
-    Friend WithEvents Label97 As System.Windows.Forms.Label
-    Friend WithEvents txtbal As System.Windows.Forms.TextBox
-    Friend WithEvents Label98 As System.Windows.Forms.Label
-    Friend WithEvents txtloanamt As System.Windows.Forms.TextBox
-    Friend WithEvents datefrom As System.Windows.Forms.DateTimePicker
-    Friend WithEvents Label99 As System.Windows.Forms.Label
-    Friend WithEvents txtloannumber As System.Windows.Forms.TextBox
-    Friend WithEvents Label100 As System.Windows.Forms.Label
-    Friend WithEvents TextBox7 As System.Windows.Forms.TextBox
-    Friend WithEvents dgvemployeesalary As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents grpbasicsalaryaddeduction As System.Windows.Forms.GroupBox
-    Friend WithEvents dtpToSal As System.Windows.Forms.DateTimePicker
-    Friend WithEvents dptFromSal As System.Windows.Forms.DateTimePicker
-    Friend WithEvents txtpaytype As System.Windows.Forms.TextBox
-    Friend WithEvents Label101 As System.Windows.Forms.Label
-    Friend WithEvents Label102 As System.Windows.Forms.Label
-    Friend WithEvents txtSSSSal As System.Windows.Forms.TextBox
-    Friend WithEvents Label103 As System.Windows.Forms.Label
-    Friend WithEvents txtPagibig As System.Windows.Forms.TextBox
-    Friend WithEvents txtBasicrateSal As System.Windows.Forms.TextBox
-    Friend WithEvents txtPhilHealthSal As System.Windows.Forms.TextBox
-    Friend WithEvents Label106 As System.Windows.Forms.Label
-    Friend WithEvents Label107 As System.Windows.Forms.Label
-    Friend WithEvents Label108 As System.Windows.Forms.Label
-    Friend WithEvents Label109 As System.Windows.Forms.Label
-    Friend WithEvents ToolStrip13 As System.Windows.Forms.ToolStrip
-    Friend WithEvents btnNewSal As System.Windows.Forms.ToolStripButton
-    Friend WithEvents btnSaveSal As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripLabel6 As System.Windows.Forms.ToolStripLabel
-    Friend WithEvents ToolStripSeparator11 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents btnDelSal As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripSeparator12 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents btnCancelSal As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripButton30 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripButton31 As System.Windows.Forms.ToolStripButton
     Friend WithEvents Last As System.Windows.Forms.LinkLabel
     Friend WithEvents Nxt As System.Windows.Forms.LinkLabel
     Friend WithEvents Prev As System.Windows.Forms.LinkLabel
     Friend WithEvents First As System.Windows.Forms.LinkLabel
-    Friend WithEvents tbpLoanHist As System.Windows.Forms.TabPage
-    Friend WithEvents Label110 As System.Windows.Forms.Label
-    Friend WithEvents txtamount As System.Windows.Forms.TextBox
-    Friend WithEvents Label111 As System.Windows.Forms.Label
-    Friend WithEvents TextBox11 As System.Windows.Forms.TextBox
-    Friend WithEvents Label112 As System.Windows.Forms.Label
-    Friend WithEvents dateded As System.Windows.Forms.DateTimePicker
-    Friend WithEvents Label113 As System.Windows.Forms.Label
-    Friend WithEvents ComboBox2 As System.Windows.Forms.ComboBox
-    Friend WithEvents TextBox12 As System.Windows.Forms.TextBox
-    Friend WithEvents dgvloanhisto As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents txtEmpnameloan As System.Windows.Forms.TextBox
-    Friend WithEvents Label114 As System.Windows.Forms.Label
-    Friend WithEvents Label115 As System.Windows.Forms.Label
-    Friend WithEvents ToolStrip14 As System.Windows.Forms.ToolStrip
-    Friend WithEvents ToolStripButton32 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripButton33 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents tsbtnPayLoan As System.Windows.Forms.ToolStripButton
     Friend WithEvents pbEmpPicAwar As System.Windows.Forms.PictureBox
     Friend WithEvents txtFNameAwar As System.Windows.Forms.TextBox
     Friend WithEvents txtEmpIDAwar As System.Windows.Forms.TextBox
@@ -16315,12 +11618,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label153 As System.Windows.Forms.Label
     Friend WithEvents Label154 As System.Windows.Forms.Label
     Friend WithEvents txtslpayp As System.Windows.Forms.TextBox
-    Friend WithEvents pbEmpPicSal As System.Windows.Forms.PictureBox
-    Friend WithEvents txtEmpIDSal As System.Windows.Forms.TextBox
-    Friend WithEvents txtEmpDeclaSal As System.Windows.Forms.TextBox
-    Friend WithEvents Label158 As System.Windows.Forms.Label
-    Friend WithEvents txtEmp_type As System.Windows.Forms.TextBox
-    Friend WithEvents Label159 As System.Windows.Forms.Label
     Friend WithEvents TabControl4 As System.Windows.Forms.TabControl
     Friend WithEvents TabPage6 As System.Windows.Forms.TabPage
     Friend WithEvents txtmlallowleave As System.Windows.Forms.TextBox
@@ -16362,7 +11659,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label161 As System.Windows.Forms.Label
     Friend WithEvents Label162 As System.Windows.Forms.Label
     Friend WithEvents btndlleavefile As System.Windows.Forms.Button
-    Public WithEvents txtFNameSal As System.Windows.Forms.TextBox
     Friend WithEvents cboleavetypes As System.Windows.Forms.ComboBox
     Friend WithEvents errprovidSal As System.Windows.Forms.ErrorProvider
     Friend WithEvents FontDialog1 As System.Windows.Forms.FontDialog
@@ -16373,10 +11669,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label125 As System.Windows.Forms.Label
     Friend WithEvents Label129 As System.Windows.Forms.Label
     Friend WithEvents Label130 As System.Windows.Forms.Label
-    Friend WithEvents Label134 As System.Windows.Forms.Label
-    Friend WithEvents Label135 As System.Windows.Forms.Label
-    Friend WithEvents Label139 As System.Windows.Forms.Label
-    Friend WithEvents tbpPayslip As System.Windows.Forms.TabPage
     Friend WithEvents Label140 As System.Windows.Forms.Label
     Friend WithEvents tbpempchklist As System.Windows.Forms.TabPage
     Friend WithEvents imglstchklist As System.Windows.Forms.ImageList
@@ -16508,20 +11800,11 @@ Partial Class EmployeeForm
     Friend WithEvents lblbonenddate As System.Windows.Forms.Label
     Friend WithEvents pbEmpPicBon As System.Windows.Forms.PictureBox
     Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
-    Friend WithEvents Label185 As System.Windows.Forms.Label
-    Friend WithEvents cboloantype As System.Windows.Forms.ComboBox
-    Friend WithEvents lnklblloantype As System.Windows.Forms.LinkLabel
     Friend WithEvents cboStatusEmpOT As System.Windows.Forms.ComboBox
     Friend WithEvents Label186 As System.Windows.Forms.Label
     Friend WithEvents pbEmpPicPrevEmp As System.Windows.Forms.PictureBox
     Friend WithEvents txtFNamePrevEmp As System.Windows.Forms.TextBox
     Friend WithEvents txtEmpIDPrevEmp As System.Windows.Forms.TextBox
-    Friend WithEvents pbEmpPicLoan As System.Windows.Forms.PictureBox
-    Friend WithEvents txtFNameLoan As System.Windows.Forms.TextBox
-    Friend WithEvents txtEmpIDLoan As System.Windows.Forms.TextBox
-    Friend WithEvents pbEmpPicLoanhist As System.Windows.Forms.PictureBox
-    Friend WithEvents txtFNameLoanhist As System.Windows.Forms.TextBox
-    Friend WithEvents txtEmpIDLoanhist As System.Windows.Forms.TextBox
     Friend WithEvents Label195 As System.Windows.Forms.Label
     Friend WithEvents Label198 As System.Windows.Forms.Label
     Friend WithEvents Label199 As System.Windows.Forms.Label
@@ -16538,15 +11821,8 @@ Partial Class EmployeeForm
     Friend WithEvents Label210 As System.Windows.Forms.Label
     Friend WithEvents Label211 As System.Windows.Forms.Label
     Friend WithEvents Label212 As System.Windows.Forms.Label
-    Friend WithEvents Label217 As System.Windows.Forms.Label
-    Friend WithEvents Label216 As System.Windows.Forms.Label
-    Friend WithEvents Label215 As System.Windows.Forms.Label
-    Friend WithEvents Label214 As System.Windows.Forms.Label
-    Friend WithEvents Label213 As System.Windows.Forms.Label
     Friend WithEvents Label218 As System.Windows.Forms.Label
     Friend WithEvents Label219 As System.Windows.Forms.Label
-    Friend WithEvents Label220 As System.Windows.Forms.Label
-    Friend WithEvents Label221 As System.Windows.Forms.Label
     Friend WithEvents lblpeso As System.Windows.Forms.Label
     Friend WithEvents Label222 As System.Windows.Forms.Label
     Friend WithEvents tbpAttachment As System.Windows.Forms.TabPage
@@ -16568,9 +11844,6 @@ Partial Class EmployeeForm
     Friend WithEvents Panel4 As System.Windows.Forms.Panel
     Friend WithEvents Panel5 As System.Windows.Forms.Panel
     Friend WithEvents Panel6 As System.Windows.Forms.Panel
-    Friend WithEvents Panel9 As System.Windows.Forms.Panel
-    Friend WithEvents Panel8 As System.Windows.Forms.Panel
-    Friend WithEvents Panel10 As System.Windows.Forms.Panel
     Friend WithEvents Panel12 As System.Windows.Forms.Panel
     Friend WithEvents Panel11 As System.Windows.Forms.Panel
     Friend WithEvents Panel13 As System.Windows.Forms.Panel
@@ -16589,11 +11862,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label229 As System.Windows.Forms.Label
     Friend WithEvents cboOBFstatus As System.Windows.Forms.ComboBox
     Friend WithEvents cboAction As System.Windows.Forms.ComboBox
-    Friend WithEvents txtnoofpayperleft As System.Windows.Forms.TextBox
-    Friend WithEvents Label230 As System.Windows.Forms.Label
-    Friend WithEvents rdbpercent As System.Windows.Forms.RadioButton
-    Friend WithEvents rdbamount As System.Windows.Forms.RadioButton
-    Friend WithEvents Label231 As System.Windows.Forms.Label
     Friend WithEvents dtpendateOBF As System.Windows.Forms.DateTimePicker
     Friend WithEvents dtpstartdateOBF As System.Windows.Forms.DateTimePicker
     Friend WithEvents dtpendateEmpOT As System.Windows.Forms.DateTimePicker
@@ -16604,220 +11872,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label233 As System.Windows.Forms.Label
     Friend WithEvents Label234 As System.Windows.Forms.Label
     Friend WithEvents Label235 As System.Windows.Forms.Label
-    Friend WithEvents PanelPayslip As System.Windows.Forms.Panel
-    Friend WithEvents dgvempallowans As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents dgvemploan As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents dgvempbonus As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents Label236 As System.Windows.Forms.Label
-    Friend WithEvents Label237 As System.Windows.Forms.Label
-    Friend WithEvents Label238 As System.Windows.Forms.Label
-    Friend WithEvents Label239 As System.Windows.Forms.Label
-    Friend WithEvents Label240 As System.Windows.Forms.Label
-    Friend WithEvents Label241 As System.Windows.Forms.Label
-    Friend WithEvents Label242 As System.Windows.Forms.Label
-    Friend WithEvents Label243 As System.Windows.Forms.Label
-    Friend WithEvents Label244 As System.Windows.Forms.Label
-    Friend WithEvents Label245 As System.Windows.Forms.Label
-    Friend WithEvents Label246 As System.Windows.Forms.Label
-    Friend WithEvents Label247 As System.Windows.Forms.Label
-    Friend WithEvents Label248 As System.Windows.Forms.Label
-    Friend WithEvents Label249 As System.Windows.Forms.Label
-    Friend WithEvents dgvpaystubitm As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents paystitmID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PayStubID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ProductID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Item As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PayAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents lblsubtotmisc As System.Windows.Forms.TextBox
-    Friend WithEvents lblsubtot As System.Windows.Forms.TextBox
-    Friend WithEvents Label250 As System.Windows.Forms.Label
-    Friend WithEvents txthrsworkamt As System.Windows.Forms.TextBox
-    Friend WithEvents txthrswork As System.Windows.Forms.TextBox
-    Friend WithEvents Label251 As System.Windows.Forms.Label
-    Friend WithEvents dgvetent As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents etent_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_Date As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_EmployeeShiftID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_EmployeeSalaryID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_EmployeeFixedSalaryFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_TotalHoursWorked As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_RegularHoursWorked As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_RegularHoursAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_OvertimeHoursWorked As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_OvertimeHoursAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_UndertimeHours As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_UndertimeHoursAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_NightDifferentialHours As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_NightDiffHoursAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_NightDifferentialOTHours As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_NightDiffOTHoursAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_HoursLate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_HoursLateAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_LateFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_PayRateID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_VacationLeaveHours As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_SickLeaveHours As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_TotalDayPay As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents dgvempsal As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents esal_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_FilingStatusID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_FilingStatus As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_PaySocialSecurityID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_EmployeeContributionAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_PayPhilhealthID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_EmployeeShare As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_HDMFAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_BasicPay As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_NoofDependents As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_MaritalStatus As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_PositionID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_Position As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_EffectiveDateFrom As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_EffectiveDateTo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents btntotbon As System.Windows.Forms.Button
-    Friend WithEvents btntotloan As System.Windows.Forms.Button
-    Friend WithEvents btntotallow As System.Windows.Forms.Button
-    Friend WithEvents Label252 As System.Windows.Forms.Label
-    Friend WithEvents Label253 As System.Windows.Forms.Label
-    Friend WithEvents Label254 As System.Windows.Forms.Label
-    Friend WithEvents Label255 As System.Windows.Forms.Label
-    Friend WithEvents Label256 As System.Windows.Forms.Label
-    Friend WithEvents Label257 As System.Windows.Forms.Label
-    Friend WithEvents Label258 As System.Windows.Forms.Label
-    Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
-    Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
-    Friend WithEvents Label259 As System.Windows.Forms.Label
-    Friend WithEvents Label260 As System.Windows.Forms.Label
-    Friend WithEvents Label261 As System.Windows.Forms.Label
-    Friend WithEvents mlbal As System.Windows.Forms.TextBox
-    Friend WithEvents Label262 As System.Windows.Forms.Label
-    Friend WithEvents vlbal As System.Windows.Forms.TextBox
-    Friend WithEvents Label263 As System.Windows.Forms.Label
-    Friend WithEvents Label264 As System.Windows.Forms.Label
-    Friend WithEvents slbal As System.Windows.Forms.TextBox
-    Friend WithEvents TabPage4 As System.Windows.Forms.TabPage
-    Friend WithEvents Label265 As System.Windows.Forms.Label
-    Friend WithEvents Label266 As System.Windows.Forms.Label
-    Friend WithEvents Label267 As System.Windows.Forms.Label
-    Friend WithEvents TextBox5 As System.Windows.Forms.TextBox
-    Friend WithEvents TextBox8 As System.Windows.Forms.TextBox
-    Friend WithEvents Label268 As System.Windows.Forms.Label
-    Friend WithEvents TextBox9 As System.Windows.Forms.TextBox
-    Friend WithEvents Label269 As System.Windows.Forms.Label
-    Friend WithEvents Label270 As System.Windows.Forms.Label
-    Friend WithEvents TabPage5 As System.Windows.Forms.TabPage
-    Friend WithEvents Label271 As System.Windows.Forms.Label
-    Friend WithEvents Label272 As System.Windows.Forms.Label
-    Friend WithEvents Label273 As System.Windows.Forms.Label
-    Friend WithEvents TextBox10 As System.Windows.Forms.TextBox
-    Friend WithEvents Label274 As System.Windows.Forms.Label
-    Friend WithEvents TextBox13 As System.Windows.Forms.TextBox
-    Friend WithEvents Label275 As System.Windows.Forms.Label
-    Friend WithEvents Label276 As System.Windows.Forms.Label
-    Friend WithEvents TextBox14 As System.Windows.Forms.TextBox
-    Friend WithEvents txttotutamt As System.Windows.Forms.TextBox
-    Friend WithEvents txttottardiamt As System.Windows.Forms.TextBox
-    Friend WithEvents txttotabsentamt As System.Windows.Forms.TextBox
-    Friend WithEvents Label277 As System.Windows.Forms.Label
-    Friend WithEvents Label278 As System.Windows.Forms.Label
-    Friend WithEvents txttotholidayamt As System.Windows.Forms.TextBox
-    Friend WithEvents Label279 As System.Windows.Forms.Label
-    Friend WithEvents Label280 As System.Windows.Forms.Label
-    Friend WithEvents Label281 As System.Windows.Forms.Label
-    Friend WithEvents txttotnightdiffothrs As System.Windows.Forms.TextBox
-    Friend WithEvents Label282 As System.Windows.Forms.Label
-    Friend WithEvents txttotnightdiffhrs As System.Windows.Forms.TextBox
-    Friend WithEvents Label283 As System.Windows.Forms.Label
-    Friend WithEvents txttotothrs As System.Windows.Forms.TextBox
-    Friend WithEvents Label284 As System.Windows.Forms.Label
-    Friend WithEvents txttotregamt As System.Windows.Forms.TextBox
-    Friend WithEvents txttotreghrs As System.Windows.Forms.TextBox
-    Friend WithEvents Label285 As System.Windows.Forms.Label
-    Friend WithEvents txtempbasicpay As System.Windows.Forms.TextBox
-    Friend WithEvents Label286 As System.Windows.Forms.Label
-    Friend WithEvents Label287 As System.Windows.Forms.Label
-    Friend WithEvents txtemptotbon As System.Windows.Forms.TextBox
-    Friend WithEvents txttotut As System.Windows.Forms.TextBox
-    Friend WithEvents Label288 As System.Windows.Forms.Label
-    Friend WithEvents Label289 As System.Windows.Forms.Label
-    Friend WithEvents txttottardi As System.Windows.Forms.TextBox
-    Friend WithEvents txtemptotallow As System.Windows.Forms.TextBox
-    Friend WithEvents txttotabsent As System.Windows.Forms.TextBox
-    Friend WithEvents Label290 As System.Windows.Forms.Label
-    Friend WithEvents Label291 As System.Windows.Forms.Label
-    Friend WithEvents txtemptotloan As System.Windows.Forms.TextBox
-    Friend WithEvents txttotholidayhrs As System.Windows.Forms.TextBox
-    Friend WithEvents Label292 As System.Windows.Forms.Label
-    Friend WithEvents Label293 As System.Windows.Forms.Label
-    Friend WithEvents Label294 As System.Windows.Forms.Label
-    Friend WithEvents txtempsss As System.Windows.Forms.TextBox
-    Friend WithEvents txttotnightdiffotamt As System.Windows.Forms.TextBox
-    Friend WithEvents txtempphh As System.Windows.Forms.TextBox
-    Friend WithEvents txttotnightdiffamt As System.Windows.Forms.TextBox
-    Friend WithEvents Label295 As System.Windows.Forms.Label
-    Friend WithEvents txttototamt As System.Windows.Forms.TextBox
-    Friend WithEvents txtemphdmf As System.Windows.Forms.TextBox
-    Friend WithEvents Label296 As System.Windows.Forms.Label
-    Friend WithEvents txtempwtax As System.Windows.Forms.TextBox
-    Friend WithEvents Label297 As System.Windows.Forms.Label
-    Friend WithEvents Label298 As System.Windows.Forms.Label
-    Friend WithEvents txttaxabsal As System.Windows.Forms.TextBox
-    Friend WithEvents txtnetsal As System.Windows.Forms.TextBox
-    Friend WithEvents txtgrosssal As System.Windows.Forms.TextBox
-    Friend WithEvents dgvpaystub As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents paystb_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_Created As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_CreatedBy As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_PayPeriodID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TimeEntryID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_PayFromDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_PayToDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalGrossSalary As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalNetSalary As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalTaxableSalary As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalEmpSSS As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalEmpWithholdingTax As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalCompSSS As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalEmpPhilhealth As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalCompPhilhealth As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalEmpHDMF As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalCompHDMF As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalVacationDaysLeft As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalLoans As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalBonus As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalAllowance As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Label299 As System.Windows.Forms.Label
-    Friend WithEvents Label300 As System.Windows.Forms.Label
-    Friend WithEvents Label301 As System.Windows.Forms.Label
-    Friend WithEvents Label302 As System.Windows.Forms.Label
-    Friend WithEvents Label303 As System.Windows.Forms.Label
-    Friend WithEvents Label304 As System.Windows.Forms.Label
-    Friend WithEvents Label305 As System.Windows.Forms.Label
-    Friend WithEvents Label306 As System.Windows.Forms.Label
-    Friend WithEvents Label307 As System.Windows.Forms.Label
-    Friend WithEvents Label308 As System.Windows.Forms.Label
-    Friend WithEvents Label309 As System.Windows.Forms.Label
-    Friend WithEvents SplitContainer3 As System.Windows.Forms.SplitContainer
-    Friend WithEvents dgvpayper As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents payp_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_from As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_to As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_gross As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_net As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_empsss As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_emptax As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_compsss As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_empphh As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_compphh As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_emphdmf As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_comphdmf As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_noworigin As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents payp_endofmonth As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents linkNxt As System.Windows.Forms.LinkLabel
-    Friend WithEvents linkPrev As System.Windows.Forms.LinkLabel
     Friend WithEvents ecert_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ecert_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ecert_Type As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -16894,40 +11948,7 @@ Partial Class EmployeeForm
     Friend WithEvents bon_Start As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
     Friend WithEvents bon_End As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
     Friend WithEvents bon_ProdID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ToolStrip16 As System.Windows.Forms.ToolStrip
-    Friend WithEvents tsbtnprintpayslip As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripButton12 As System.Windows.Forms.ToolStripButton
     Friend WithEvents Label311 As System.Windows.Forms.Label
-    Friend WithEvents tsbtnprintall As System.Windows.Forms.ToolStripButton
-    Friend WithEvents Label312 As System.Windows.Forms.Label
-    Friend WithEvents Label313 As System.Windows.Forms.Label
-    Friend WithEvents eallw_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eallw_Type As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eallw_Amount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eallw_Frequency As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eallw_Start As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eallw_End As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eallw_taxable As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eallw_ProdID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bons_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bons_Type As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bons_Amount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bons_Frequency As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bons_Start As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bons_End As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bons_taxable As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bons_ProdID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_loanno As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_totloanamt As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_totballeft As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_dedamt As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_DedPercent As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_dedsched As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_noofpayperiod As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_Remarks As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_status As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cloan_loantype As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripButton6 As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripButton14 As System.Windows.Forms.ToolStripButton
@@ -16988,8 +12009,6 @@ Partial Class EmployeeForm
     Friend WithEvents Column38 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label57 As System.Windows.Forms.Label
     Friend WithEvents txtReasonPromot As System.Windows.Forms.TextBox
-    Friend WithEvents txtloaninterest As System.Windows.Forms.TextBox
-    Friend WithEvents Label314 As System.Windows.Forms.Label
     Friend WithEvents tsbtnCertEmploymnt As System.Windows.Forms.ToolStripButton
     Friend WithEvents c_empID2 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents c_empname2 As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -17004,14 +12023,10 @@ Partial Class EmployeeForm
     Friend WithEvents tsbtnImportDependents As System.Windows.Forms.ToolStripButton
     Friend WithEvents Label315 As System.Windows.Forms.Label
     Friend WithEvents tsprogbarempimport As System.Windows.Forms.ToolStripProgressBar
-    Friend WithEvents tsbtnImportSalary As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripProgressBar1 As System.Windows.Forms.ToolStripProgressBar
-    Friend WithEvents ToolStripProgressBar2 As System.Windows.Forms.ToolStripProgressBar
     Friend WithEvents Label316 As System.Windows.Forms.Label
     Friend WithEvents txtothrallow As System.Windows.Forms.TextBox
     Friend WithEvents Label317 As System.Windows.Forms.Label
-    Friend WithEvents Label318 As System.Windows.Forms.Label
-    Friend WithEvents Label319 As System.Windows.Forms.Label
     Friend WithEvents Label320 As System.Windows.Forms.Label
     Friend WithEvents Label321 As System.Windows.Forms.Label
     Friend WithEvents Label322 As System.Windows.Forms.Label
@@ -17024,10 +12039,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label328 As System.Windows.Forms.Label
     Friend WithEvents Label331 As System.Windows.Forms.Label
     Friend WithEvents Label330 As System.Windows.Forms.Label
-    Friend WithEvents Label333 As System.Windows.Forms.Label
-    Friend WithEvents Label332 As System.Windows.Forms.Label
-    Friend WithEvents Label335 As System.Windows.Forms.Label
-    Friend WithEvents Label334 As System.Windows.Forms.Label
     Friend WithEvents Label337 As System.Windows.Forms.Label
     Friend WithEvents Label336 As System.Windows.Forms.Label
     Friend WithEvents Label339 As System.Windows.Forms.Label
@@ -17037,12 +12048,9 @@ Partial Class EmployeeForm
     Friend WithEvents Label342 As System.Windows.Forms.Label
     Friend WithEvents Label344 As System.Windows.Forms.Label
     Friend WithEvents Label343 As System.Windows.Forms.Label
-    Friend WithEvents txtToComputeSal As System.Windows.Forms.TextBox
     Friend WithEvents Label345 As System.Windows.Forms.Label
     Friend WithEvents Label346 As System.Windows.Forms.Label
     Friend WithEvents cboleavestatus As System.Windows.Forms.ComboBox
-    Friend WithEvents txtTrueSal As System.Windows.Forms.TextBox
-    Friend WithEvents Label347 As System.Windows.Forms.Label
     Friend WithEvents elv_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents elv_Type As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents elv_StartTime As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -17057,10 +12065,7 @@ Partial Class EmployeeForm
     Friend WithEvents elv_attafileextensn As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents elv_Status As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents btnPrintMemo As System.Windows.Forms.ToolStripButton
-    Friend WithEvents Label348 As System.Windows.Forms.Label
-    Friend WithEvents Label349 As System.Windows.Forms.Label
     Friend WithEvents chkAlphaListExempt As System.Windows.Forms.CheckBox
-    Friend WithEvents Label350 As System.Windows.Forms.Label
     Friend WithEvents Panel7 As System.Windows.Forms.Panel
     Friend WithEvents txtWorkDaysPerYear As System.Windows.Forms.TextBox
     Friend WithEvents Label351 As System.Windows.Forms.Label
@@ -17098,15 +12103,6 @@ Partial Class EmployeeForm
     Friend WithEvents lnklblAddBank As System.Windows.Forms.LinkLabel
     Friend WithEvents Label359 As System.Windows.Forms.Label
     Friend WithEvents Label360 As System.Windows.Forms.Label
-    Friend WithEvents c_dateded As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_Amount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn116 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn117 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_LoanID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
-    Friend WithEvents Label361 As System.Windows.Forms.Label
-    Friend WithEvents cbohistoloantype As System.Windows.Forms.ComboBox
-    Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents Label362 As System.Windows.Forms.Label
     Friend WithEvents Label363 As System.Windows.Forms.Label
     Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
@@ -17125,11 +12121,9 @@ Partial Class EmployeeForm
     Friend WithEvents tsbtnDelOffBusi As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripLabel7 As System.Windows.Forms.ToolStripLabel
     Friend WithEvents tsbtnDelAllowance As System.Windows.Forms.ToolStripButton
-    Friend WithEvents chkboxChargeToBonus As System.Windows.Forms.CheckBox
     Friend WithEvents ToolStripLabel8 As System.Windows.Forms.ToolStripLabel
     Friend WithEvents tsbtnDelBon As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripLabel10 As System.Windows.Forms.ToolStripLabel
-    Friend WithEvents tsbtnImportLoans As System.Windows.Forms.ToolStripButton
     Friend WithEvents RowID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column1 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -17198,47 +12192,17 @@ Partial Class EmployeeForm
     Friend WithEvents tsbtnimportallowance As ToolStripButton
     Friend WithEvents OTImport As ToolStripButton
     Friend WithEvents OBImport As ToolStripButton
-    Friend WithEvents Panel1 As Panel
     Friend WithEvents chkbxRevealInPayroll As CheckBox
     Friend WithEvents Label366 As Label
     Friend WithEvents txtWorkHoursPerWeek As TextBox
     Friend WithEvents ToolStripButton20 As ToolStripButton
-    Friend WithEvents c_loanno As DataGridViewTextBoxColumn
-    Friend WithEvents c_totloanamt As DataGridViewTextBoxColumn
-    Friend WithEvents c_totballeft As DataGridViewTextBoxColumn
-    Friend WithEvents c_dedamt As DataGridViewTextBoxColumn
-    Friend WithEvents c_DedPercent As DataGridViewTextBoxColumn
-    Friend WithEvents c_dedsched As DataGridViewTextBoxColumn
-    Friend WithEvents c_noofpayperiod As DataGridViewTextBoxColumn
-    Friend WithEvents c_noofpayperiodleft As DataGridViewTextBoxColumn
-    Friend WithEvents c_dedeffectivedatefrom As DataGridViewTextBoxColumn
-    Friend WithEvents c_RemarksLoan As DataGridViewTextBoxColumn
-    Friend WithEvents c_RowIDLoan As DataGridViewTextBoxColumn
-    Friend WithEvents c_status As DataGridViewTextBoxColumn
-    Friend WithEvents c_loantype As DataGridViewTextBoxColumn
-    Friend WithEvents LoanHasBonus As DataGridViewTextBoxColumn
-    Friend WithEvents lblWarning As Label
-    Friend WithEvents c_empID As DataGridViewTextBoxColumn
-    Friend WithEvents c_fromdate As DataGridViewTextBoxColumn
-    Friend WithEvents c_todate As DataGridViewTextBoxColumn
-    Friend WithEvents c_EmpSal As DataGridViewTextBoxColumn
-    Friend WithEvents c_BasicDailyPaySal As DataGridViewTextBoxColumn
-    Friend WithEvents c_BasicHourlyPaySal As DataGridViewTextBoxColumn
-    Friend WithEvents c_TrueSal As DataGridViewTextBoxColumn
-    Friend WithEvents c_BasicPaySal As DataGridViewTextBoxColumn
-    Friend WithEvents c_sss As DataGridViewTextBoxColumn
-    Friend WithEvents c_philhealth As DataGridViewTextBoxColumn
-    Friend WithEvents c_pagibig As DataGridViewTextBoxColumn
-    Friend WithEvents c_maritalStatus As DataGridViewTextBoxColumn
-    Friend WithEvents c_noofdepd As DataGridViewTextBoxColumn
-    Friend WithEvents c_empName As DataGridViewTextBoxColumn
-    Friend WithEvents c_PayType As DataGridViewTextBoxColumn
-    Friend WithEvents c_filingstatus As DataGridViewTextBoxColumn
-    Friend WithEvents c_RowIDSal As DataGridViewTextBoxColumn
-    Friend WithEvents c_ToComputeSal As DataGridViewTextBoxColumn
-    Friend WithEvents TrueHDMFAmount As DataGridViewTextBoxColumn
-    Friend WithEvents Label367 As Label
     Friend WithEvents tbpNewSalary As TabPage
     Friend WithEvents SalaryTab As SalaryTab
     Friend WithEvents ToolStripButton22 As ToolStripButton
+    Friend WithEvents ToolStripButton35 As ToolStripButton
+    Friend WithEvents ToolStripLabel11 As ToolStripLabel
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents ToolStripButton36 As ToolStripButton
+    Friend WithEvents ToolStripLabel12 As ToolStripLabel
 End Class
