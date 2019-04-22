@@ -1,4 +1,4 @@
-Option Strict On
+﻿Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports System.Threading
@@ -1365,4 +1365,19 @@ Public Class TimeEntrySummaryForm
             End Try
         End Using
     End Sub
+
+    Private Sub TimeEntriesDataGridView_DataSourceChanged(sender As Object, e As EventArgs) Handles timeEntriesDataGridView.DataSourceChanged
+        timeEntriesDataGridView.Rows.OfType(Of DataGridViewRow).
+            ToList().
+            ForEach(Sub(row) ColorizeSundays(row))
+    End Sub
+
+    Private Sub ColorizeSundays(gridRow As DataGridViewRow)
+        Dim timeEntry = DirectCast(gridRow.DataBoundItem, TimeEntry)
+
+        If timeEntry.EntryDate?.DayOfWeek = DayOfWeek.Sunday Then
+            gridRow.DefaultCellStyle.ForeColor = Color.Red
+        End If
+    End Sub
+
 End Class
