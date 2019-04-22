@@ -68,7 +68,7 @@ SELECT
 		GetActualDailyRate(e.RowID, e.OrganizationID, paystub.PayFromDate),
 		GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
 	), decimal_size) `Rate`,
-	ROUND(paystub.BasicHours) `BasicHours`,
+	ROUND(paystub.BasicHours, decimal_size) `BasicHours`,
 	ROUND(GetBasicPay(
 					e.RowID,
 					paystub.PayFromDate,
@@ -98,11 +98,7 @@ SELECT
 	paystub.RestDayOTHours `RestDayOTHours`,
 	ROUND(IF(psi_undeclared, paystubactual.RestDayOTPay, paystub.RestDayOTPay), decimal_size) `RestDayOTPay`,
 	paystub.LeaveHours `LeaveHours`,
-	IF(
-		e.EmployeeType = 'Daily',
-		ROUND(IF(psi_undeclared, paystubactual.LeavePay, paystub.LeavePay), decimal_size),
-		0
-	) 'LeavePay',
+	ROUND(IF(psi_undeclared, paystubactual.LeavePay, paystub.LeavePay), decimal_size) `LeavePay`,
 	-paystub.LateHours `LateHours`,
 	ROUND(IF(psi_undeclared, -paystubactual.LateDeduction, -paystub.LateDeduction), decimal_size) 'LateDeduction',
 	-paystub.UndertimeHours `UndertimeHours`,
