@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports System.Threading
@@ -64,7 +64,6 @@ Public Class TimeEntrySummaryForm
         _selectedYear = Date.Today.Year
 
         _employeeRepository = New EmployeeRepository
-
 
         Dim policy As New PolicyHelper
         _calculateBreakTimeLateHours = policy.ComputeBreakTimeLate
@@ -332,7 +331,9 @@ Public Class TimeEntrySummaryForm
                 ot.OTEndTIme,
                 payrate.PayType,
                 etd.TimeStampIn,
-                etd.TimeStampOut
+                etd.TimeStampOut,
+                l.LeaveStartTime,
+                l.LeaveEndTime
             FROM employeetimeentry ete
             LEFT JOIN (
                 SELECT EmployeeID, DATE,
@@ -371,13 +372,17 @@ Public Class TimeEntrySummaryForm
                 ON ot.OTStartDate = ete.Date AND
                     ot.EmployeeID = ete.EmployeeID AND
                     ot.OTStatus = 'Approved'
+            LEFT JOIN employeeleave l
+                ON l.LeaveStartDate = ete.Date AND
+                    l.EmployeeID = ete.EmployeeID AND
+                    l.Status = 'Approved'
             LEFT JOIN payrate
                 ON payrate.Date = ete.Date AND
                     payrate.OrganizationID = ete.OrganizationID
             LEFT JOIN shiftschedules
                 ON shiftschedules.EmployeeID = ete.EmployeeID AND
                     shiftschedules.`Date` = ete.`Date`
-                
+
             LEFT JOIN shift
                 ON employeeshift.ShiftID = shift.RowID
 
@@ -415,6 +420,8 @@ Public Class TimeEntrySummaryForm
                     .OBEndTime = reader.GetValue(Of TimeSpan?)("OffBusEndTime"),
                     .OTStartTime = reader.GetValue(Of TimeSpan?)("OTStartTime"),
                     .OTEndTime = reader.GetValue(Of TimeSpan?)("OTEndTime"),
+                    .LeaveStart = reader.GetValue(Of TimeSpan?)("LeaveStartTime"),
+                    .LeaveEnd = reader.GetValue(Of TimeSpan?)("LeaveEndTime"),
                     .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
                     .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
                     .NightDiffHours = reader.GetValue(Of Decimal)("NightDifferentialHours"),
@@ -543,7 +550,9 @@ Public Class TimeEntrySummaryForm
                 ofb.OffBusStartTime,
                 ofb.OffBusEndTime,
                 employeetimeentrydetails.TimeStampIn,
-                employeetimeentrydetails.TimeStampOut
+                employeetimeentrydetails.TimeStampOut,
+                l.LeaveStartTime,
+                l.LeaveEndTime
             FROM employeetimeentryactual eta
             LEFT JOIN employeetimeentry ete
                 ON ete.EmployeeID = eta.EmployeeID AND
@@ -577,6 +586,10 @@ Public Class TimeEntrySummaryForm
             ) latestOb
                 ON latestOb.EmployeeID = ete.EmployeeID AND
                     latestOb.Date = ete.Date
+            LEFT JOIN employeeleave l
+                ON l.LeaveStartDate = ete.Date AND
+                    l.EmployeeID = ete.EmployeeID AND
+                    l.Status = 'Approved'
             LEFT JOIN employeeofficialbusiness ofb
                 ON ofb.OffBusStartDate = eta.Date AND
                     ofb.EmployeeID = eta.EmployeeID AND
@@ -584,7 +597,6 @@ Public Class TimeEntrySummaryForm
             LEFT JOIN shift
                 ON shift.RowID = employeeshift.ShiftID
 
-            
             LEFT JOIN shiftschedules
                 ON shiftschedules.EmployeeID = ete.EmployeeID AND
                 shiftschedules.`Date` = ete.`Date`
@@ -621,6 +633,8 @@ Public Class TimeEntrySummaryForm
                     .ShiftTo = reader.GetValue(Of TimeSpan?)("ShiftTo"),
                     .OBStartTime = reader.GetValue(Of TimeSpan?)("OffBusStartTime"),
                     .OBEndTime = reader.GetValue(Of TimeSpan?)("OffBusEndTime"),
+                    .LeaveStart = reader.GetValue(Of TimeSpan?)("LeaveStartTime"),
+                    .LeaveEnd = reader.GetValue(Of TimeSpan?)("LeaveEndTime"),
                     .RegularHours = reader.GetValue(Of Decimal)("RegularHoursWorked"),
                     .RegularAmount = reader.GetValue(Of Decimal)("RegularHoursAmount"),
                     .NightDiffHours = reader.GetValue(Of Decimal)("NightDifferentialHours"),
@@ -1213,7 +1227,6 @@ Public Class TimeEntrySummaryForm
                                     OrderBy(Function(t) t.TimeStamp).
                                     ToListAsync
 
-
         End Using
 
         If timeAttendanceLogs Is Nothing OrElse timeAttendanceLogs.Count = 0 Then
@@ -1238,7 +1251,6 @@ Public Class TimeEntrySummaryForm
                     actualTimeIn = dateTimeIn.
                                     ToMinimumHourValue.
                                     Add(timeIn.Value.TimeOfDay)
-
                 Else
                     actualTimeIn = currentDate.
                                     ToMinimumHourValue.
@@ -1263,7 +1275,6 @@ Public Class TimeEntrySummaryForm
                     actualTimeOut = dateTimeOut.
                                     ToMinimumHourValue.
                                     Add(timeOut.Value.TimeOfDay)
-
                 Else
 
                     If timeOut >= timeIn Then
@@ -1271,14 +1282,12 @@ Public Class TimeEntrySummaryForm
                                         ToMinimumHourValue.
                                         AddDays(1).
                                         Add(timeOut.Value.TimeOfDay)
-
                     Else
                         actualTimeOut = currentDate.
                                         ToMinimumHourValue.
                                         Add(timeOut.Value.TimeOfDay)
 
                     End If
-
 
                 End If
 
