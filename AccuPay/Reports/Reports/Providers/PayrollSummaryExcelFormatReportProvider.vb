@@ -18,6 +18,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
         New ReportColumn("Code", "DatCol2", ColumnType.Text),
         New ReportColumn("Full Name", "DatCol3", ColumnType.Text),
         New ReportColumn("Rate", "Rate"),
+        New ReportColumn("Basic Hours", "BasicHours"),
         New ReportColumn("Basic Pay", "BasicPay"),
         New ReportColumn("Reg Hrs", "RegularHours"),
         New ReportColumn("Reg Pay", "RegularPay"),
@@ -74,14 +75,10 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private ReadOnly margin_size() As Decimal = New Decimal() {0.25D, 0.75D, 0.3D}
 
-    Private sys_ownr As New SystemOwner
-
     Public Property IsActual As Boolean
 
     Public Sub Run() Implements IReportProvider.Run
-        Dim is_goldwings As Boolean = (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
-
-        Static last_cell_column As String = basic_alphabet.Last
+        Dim lastCell = String.Empty
 
         Dim bool_result As Short = Convert.ToInt16(IsActual)
 
@@ -93,7 +90,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
             Return
         End If
 
-        Dim excel_custom_format = Convert.ToBoolean(ExcelOptionFormat())
+        Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
 
         Dim parameters =
                 New Object() {orgztnID,
@@ -101,7 +98,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                               n_PayrollSummaDateSelection.PayPeriodToID,
                               bool_result,
                               n_PayrollSummaDateSelection.cboStringParameter.Text,
-                              excel_custom_format}
+                              keepInOneSheet}
 
         Dim sql_print_employee_profiles As New SQL(
             "CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
@@ -115,29 +112,48 @@ Public Class PayrollSummaryExcelFormatReportProvider
             End If
 
             Static report_name As String = "PayrollSummary"
-            Static temp_path As String = Path.GetTempPath()
 
             Dim short_dates() As String = New String() {
                 CDate(n_PayrollSummaDateSelection.DateFrom).ToShortDateString,
                 CDate(n_PayrollSummaDateSelection.DateTo).ToShortDateString}
 
-            Dim temp_file As String =
-                        String.Concat(temp_path,
-                                      orgNam,
+            Dim defaultFileName As String =
+                        String.Concat(orgNam,
                                       report_name, n_PayrollSummaDateSelection.cboStringParameter.Text.Replace(" ", ""), "Report",
                                       String.Concat(short_dates(0).Replace("/", "-"), "TO", short_dates(1).Replace("/", "-")),
                                       ".xlsx")
 
-            Dim date_range As String = String.Concat("For the period of ", short_dates(0), " to ", short_dates(1))
+            Dim saveFileDialog = New SaveFileDialog With {
+                .RestoreDirectory = True,
+                .FileName = defaultFileName
+            }
 
-            Dim newFile = New FileInfo(temp_file)
+            Dim fileName = String.Empty
+            If saveFileDialog.ShowDialog() = DialogResult.OK Then
+                fileName = saveFileDialog.FileName
+            Else
+                Return
+            End If
+
+            Dim newFile = New FileInfo(fileName)
 
             If newFile.Exists Then
                 newFile.Delete()
-                newFile = New FileInfo(temp_file)
+                newFile = New FileInfo(fileName)
             End If
 
-            Dim divisionsWithEmployees = ds.Tables.OfType(Of DataTable).Where(Function(dt) dt.Rows.Count > 0)
+            Dim allEmployees = ds.Tables.OfType(Of DataTable).FirstOrDefault()
+            Dim allEmployeesByDivision As IEnumerable(Of IGrouping(Of String, DataRow))
+
+            If keepInOneSheet Then
+                allEmployeesByDivision = allEmployees.Rows.
+                    OfType(Of DataRow).ToList().
+                    GroupBy(Function(r) String.Empty)
+            Else
+                allEmployeesByDivision = allEmployees.Rows.
+                    OfType(Of DataRow).ToList().
+                    GroupBy(Function(r) r("DivisionID").ToString())
+            End If
 
             Using excel = New ExcelPackage(newFile)
                 Dim subTotalRows = New List(Of Integer)
@@ -150,13 +166,14 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 organizationCell.Style.Font.Bold = True
 
                 Dim dateCell = worksheet.Cells(2, 1)
-                dateCell.Value = date_range
+                Dim dateRange = $"For the period of {short_dates(0)} to {short_dates(1)})"
+                dateCell.Value = dateRange
 
                 Dim rowIndex As Integer = 4
 
-                For Each employeesInDivision As DataTable In divisionsWithEmployees
+                For Each employeesInDivision In allEmployeesByDivision
                     Dim divisionCell = worksheet.Cells(rowIndex, 1)
-                    Dim firstEmployee = employeesInDivision.AsEnumerable().FirstOrDefault()
+                    Dim firstEmployee = employeesInDivision.FirstOrDefault()
                     Dim divisionName = firstEmployee("DatCol1").ToString
                     If divisionName.Length > 0 Then
                         divisionCell.Value = divisionName
@@ -172,7 +189,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                     Dim employeesStartIndex = rowIndex
                     Dim employeesLastIndex = 0
 
-                    For Each employeeRow As DataRow In employeesInDivision.Rows
+                    For Each employeeRow In employeesInDivision
                         Dim letters = GenerateAlphabet.GetEnumerator()
 
                         For Each reportColumn In reportColumns
@@ -191,6 +208,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
                             End If
                         Next
 
+                        lastCell = letters.Current
+
                         employeesLastIndex = rowIndex
                         rowIndex += 1
                     Next
@@ -198,7 +217,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                     Dim subTotalCellRange = String.Join(
                         ":",
                         String.Concat("C", rowIndex),
-                        String.Concat(last_cell_column, rowIndex))
+                        String.Concat(lastCell, rowIndex))
 
                     subTotalRows.Add(rowIndex)
 
@@ -212,7 +231,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                 rowIndex += 1
 
-                RenderGrandTotal(worksheet, rowIndex, last_cell_column, subTotalRows)
+                RenderGrandTotal(worksheet, rowIndex, lastCell, subTotalRows)
 
                 rowIndex += 1
 
@@ -222,8 +241,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 excel.Save()
             End Using
 
-            If divisionsWithEmployees.Count > 0 Then
-                Process.Start(temp_file)
+            If allEmployeesByDivision.Count > 0 Then
+                Process.Start(fileName)
             Else
                 MsgBox("No found record(s)", MsgBoxStyle.Information)
             End If
@@ -412,6 +431,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
     End Function
 
     Private Class ReportColumn
+
         Public Sub New(name As String, source As String, Optional type As ColumnType = ColumnType.Numeric)
             Me.Name = name
             Me.SourceName = source
