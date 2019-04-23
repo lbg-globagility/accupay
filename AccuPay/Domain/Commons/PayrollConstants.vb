@@ -20,3 +20,9 @@ Public Enum PhilHealthCalculationBasis
     BasicSalary
     BasicAndEcola
 End Enum
+
+Public Enum WithholdingTaxCalculationBasis
+    Earnings
+    GrossPay
+    BasicSalary
+End Enum

@@ -13,13 +13,17 @@ Namespace Global.AccuPay.Payroll
 
         Private ReadOnly _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
 
-        Public Sub New(filingStatuses As DataTable, withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket), divisionMinimumWages As ICollection(Of DivisionMinimumWage))
+        Private ReadOnly _settings As ListOfValueCollection
+
+        Public Sub New(settings As ListOfValueCollection, filingStatuses As DataTable, withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket), divisionMinimumWages As ICollection(Of DivisionMinimumWage))
             _filingStatuses = filingStatuses
             _withholdingTaxBrackets = withholdingTaxBrackets
             _divisionMinimumWages = divisionMinimumWages
+            _settings = settings
         End Sub
 
-        Public Sub Calculate(settings As ListOfValueCollection, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, salary As Salary)
+        Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, salary As Salary)
+            ' Reset the tax value before starting
             paystub.DeferredTaxableIncome = 0
             paystub.TaxableIncome = 0
             paystub.WithholdingTax = 0
@@ -29,25 +33,24 @@ Namespace Global.AccuPay.Payroll
             If employee.EmployeeType = SalaryType.Fixed Then
                 currentTaxableIncome = paystub.BasicPay
             ElseIf employee.EmployeeType = SalaryType.Monthly Then
-                Dim taxablePolicy = If(settings.GetString("Payroll Policy.paystub.taxableincome"), "Basic Pay")
+                Dim taxablePolicy = If(_settings.GetString("Payroll Policy.paystub.taxableincome"), "Basic Pay")
 
                 If taxablePolicy = "Gross Income" Then
-                    currentTaxableIncome = paystub.TotalEarnings
-
                     'Adds those taxable allowances to the taxable income
-                    currentTaxableIncome += paystub.TotalTaxableAllowance
+                    currentTaxableIncome = paystub.TotalEarnings + paystub.TotalTaxableAllowance
                 Else
                     currentTaxableIncome = paystub.BasicPay
                 End If
-
             End If
 
-
-            currentTaxableIncome = currentTaxableIncome - paystub.GovernmentDeductions
+            ' Government contributions are tax deductible
+            currentTaxableIncome -= paystub.GovernmentDeductions
             ' Taxable income should not be less than zero
             paystub.TaxableIncome = {currentTaxableIncome, 0}.Max()
 
             Dim deductionSchedule = employee.WithholdingTaxSchedule
+            ' Check if the current pay period is scheduled for taxation. If not, put the
+            ' taxable income as `Deferred` to be added on the taxable income in the next period.
             If Not IsScheduledForTaxation(deductionSchedule, payperiod) Then
                 paystub.DeferredTaxableIncome = paystub.TaxableIncome
                 paystub.TaxableIncome = 0
@@ -55,8 +58,10 @@ Namespace Global.AccuPay.Payroll
                 Return
             End If
 
-            If IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) Or IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
-                paystub.TaxableIncome = paystub.TaxableIncome + If(previousPaystub?.DeferredTaxableIncome, 0)
+            If IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) Or
+                IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
+
+                paystub.TaxableIncome += If(previousPaystub?.DeferredTaxableIncome, 0)
             ElseIf IsWithholdingTaxPaidPerPayPeriod(deductionSchedule) Then
                 ' Nothing to do here for now
             End If
@@ -68,33 +73,32 @@ Namespace Global.AccuPay.Payroll
 
             ' Round the daily rate to two decimal places since amounts in the 3rd decimal place
             ' isn't significant enough to warrant the employee to be taxable.
-            dailyRate = Math.Round(dailyRate, 2)
-            ' If the employee is earning below the minimum wage, then remove the taxable income
+            dailyRate = AccuMath.CommercialRound(dailyRate, 2)
+
+            ' If the employee is earning below the minimum wage, then remove the taxable income.
             Dim minimumWage = GetCurrentMinimumWage(employee)
             If dailyRate <= minimumWage Then
                 paystub.TaxableIncome = 0
             End If
 
-            ' If the employee has no taxable income, then there's no need to compute for tax withheld
+            ' If the employee has no taxable income, then there's no need to compute for tax withheld.
             If paystub.TaxableIncome <= 0 Then
                 Return
             End If
 
             Dim payFrequencyID As Integer
-            If IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) Or IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
+            If IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) Or
+                IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod) Then
+
                 payFrequencyID = PayFrequency.Monthly
             ElseIf IsWithholdingTaxPaidPerPayPeriod(deductionSchedule) Then
                 payFrequencyID = PayFrequency.SemiMonthly
             End If
 
             Dim filingStatusID = GetFilingStatusID(employee.MaritalStatus, employee.NoOfDependents)
+            Dim taxBracket = GetTaxBracket(payFrequencyID, filingStatusID, paystub, payperiod)
 
-            Dim bracket = GetMatchingTaxBracket(payFrequencyID, filingStatusID, paystub, payperiod)
-            If bracket Is Nothing Then
-                paystub.WithholdingTax = 0
-            Else
-                paystub.WithholdingTax = GetTaxWithheld(bracket, paystub.TaxableIncome)
-            End If
+            paystub.WithholdingTax = GetTaxWithheld(taxBracket, paystub.TaxableIncome)
         End Sub
 
         Private Function GetCurrentMinimumWage(employee As Employee) As Decimal
@@ -106,6 +110,10 @@ Namespace Global.AccuPay.Payroll
         End Function
 
         Private Function GetTaxWithheld(bracket As WithholdingTaxBracket, taxableIncome As Decimal) As Decimal
+            If bracket Is Nothing Then
+                Return 0
+            End If
+
             Dim excessAmount = taxableIncome - bracket.TaxableIncomeFromAmount
             Dim taxWithheld = bracket.ExemptionAmount + (excessAmount * bracket.ExemptionInExcessAmount)
 
@@ -129,7 +137,7 @@ Namespace Global.AccuPay.Payroll
             Return filingStatusID
         End Function
 
-        Private Function GetMatchingTaxBracket(payFrequencyID As Integer?, filingStatusID As Integer?, _paystub As Paystub, _payperiod As PayPeriod) As WithholdingTaxBracket
+        Private Function GetTaxBracket(payFrequencyID As Integer?, filingStatusID As Integer?, _paystub As Paystub, _payperiod As PayPeriod) As WithholdingTaxBracket
             Dim taxEffectivityDate = New Date(_payperiod.Year, _payperiod.Month, 1)
 
             Dim possibleBrackets = _withholdingTaxBrackets.

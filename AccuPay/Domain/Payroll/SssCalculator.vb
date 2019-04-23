@@ -5,60 +5,54 @@ Imports PayrollSys
 
 Public Class SssCalculator
 
-    Private Class ContributionSchedule
-        Public Const FirstHalf As String = "First half"
-        Public Const EndOfTheMonth As String = "End of the month"
-        Public Const PerPayPeriod As String = "Per pay period"
-    End Class
+    Private ReadOnly _settings As ListOfValueCollection
 
     Private ReadOnly _socialSecurityBrackets As ICollection(Of SocialSecurityBracket)
 
-    Public Sub New(socialSecurityBrackets As ICollection(Of SocialSecurityBracket))
+    Public Sub New(settings As ListOfValueCollection, socialSecurityBrackets As ICollection(Of SocialSecurityBracket))
+        _settings = settings
         _socialSecurityBrackets = socialSecurityBrackets
     End Sub
 
-    Public Sub Calculate(settings As ListOfValueCollection, paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As Employee, payperiod As PayPeriod)
-        Dim deductionSchedule = employee.SssSchedule
+    Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As Employee, payperiod As PayPeriod)
+        ' Reset SSS values to zero
+        paystub.SssEmployeeShare = 0
+        paystub.SssEmployerShare = 0
 
-        Dim sssCalculation = settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
-
-        Dim employeeSssPerMonth = 0D
-        Dim employerSssPerMonth = 0D
-
-        If salary.DoPaySSSContribution = False Then
-
-            paystub.SssEmployeeShare = employeeSssPerMonth '0
-            paystub.SssEmployerShare = employerSssPerMonth '0
-
+        ' If salary is is set not to pay sss, return.
+        If Not salary.DoPaySSSContribution Then
             Return
         End If
 
-        Dim amount = GetSocialSecurityAmount(paystub, previousPaystub, salary, employee, sssCalculation)
+        Dim sssCalculation = _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
+        ' Get the social security bracket based on the amount earned.
+        Dim amount = GetSocialSecurityAmount(paystub, previousPaystub, salary, employee)
         Dim socialSecurityBracket = FindMatchingBracket(amount)
 
-        employeeSssPerMonth = If(socialSecurityBracket?.EmployeeContributionAmount, 0)
-        employerSssPerMonth = If(socialSecurityBracket?.EmployerContributionAmount + socialSecurityBracket?.EmployeeECAmount, 0)
+        ' If no bracket was matched/found, then there's nothing to compute.
+        If socialSecurityBracket Is Nothing Then
+            Return
+        End If
+
+        Dim employeeShare = socialSecurityBracket.EmployeeContributionAmount
+        Dim employerShare = socialSecurityBracket.EmployerContributionAmount + socialSecurityBracket.EmployeeECAmount
 
         If employee.IsWeeklyPaid Then
             Dim shouldDeduct = If(employee.IsUnderAgency, payperiod.SSSWeeklyAgentContribSched, payperiod.SSSWeeklyContribSched)
 
             If shouldDeduct Then
-                paystub.SssEmployeeShare = employeeSssPerMonth
-                paystub.SssEmployerShare = employerSssPerMonth
-            Else
-                paystub.SssEmployeeShare = 0
-                paystub.SssEmployerShare = 0
+                paystub.SssEmployeeShare = employeeShare
+                paystub.SssEmployerShare = employerShare
             End If
         Else
+            Dim deductionSchedule = employee.SssSchedule
+
             If IsSssPaidOnFirstHalf(payperiod, deductionSchedule) Or IsSssPaidOnEndOfTheMonth(payperiod, deductionSchedule) Then
-                paystub.SssEmployeeShare = employeeSssPerMonth
-                paystub.SssEmployerShare = employerSssPerMonth
+                paystub.SssEmployeeShare = employeeShare
+                paystub.SssEmployerShare = employerShare
             ElseIf IsSssPaidPerPayPeriod(deductionSchedule) Then
-                paystub.SssEmployeeShare = employeeSssPerMonth / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
-                paystub.SssEmployerShare = employerSssPerMonth / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
-            Else
-                paystub.SssEmployeeShare = 0
-                paystub.SssEmployerShare = 0
+                paystub.SssEmployeeShare = employeeShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
+                paystub.SssEmployerShare = employerShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
             End If
         End If
     End Sub
@@ -67,26 +61,30 @@ Public Class SssCalculator
         Return _socialSecurityBrackets.FirstOrDefault(Function(s) s.RangeFromAmount <= amount And s.RangeToAmount >= amount)
     End Function
 
-    Private Function GetSocialSecurityAmount(
-                        paystub As Paystub,
-                        previousPaystub As Paystub,
-                        salary As Salary,
-                        employee As Employee,
-                        sssCalculation As SssCalculationBasis) As Decimal
+    Private Function GetSocialSecurityAmount(paystub As Paystub,
+                                             previousPaystub As Paystub,
+                                             salary As Salary,
+                                             employee As Employee) As Decimal
 
-        If sssCalculation = SssCalculationBasis.Earnings Then
-            Return If(previousPaystub?.TotalEarnings, 0) + paystub.TotalEarnings
+        Dim calculationBasis = _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
 
-        ElseIf sssCalculation = SssCalculationBasis.GrossPay Then
-            Return If(previousPaystub?.GrossPay, 0) + paystub.GrossPay
+        Select Case calculationBasis
+            Case SssCalculationBasis.BasicSalary
 
-        ElseIf sssCalculation = SssCalculationBasis.BasicSalary Then
+                Return PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
 
-            Return PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
+            Case SssCalculationBasis.Earnings
 
-        Else
-            Return 0
-        End If
+                Return If(previousPaystub?.TotalEarnings, 0) + paystub.TotalEarnings
+
+            Case SssCalculationBasis.GrossPay
+
+                Return If(previousPaystub?.GrossPay, 0) + paystub.GrossPay
+
+            Case Else
+
+                Return 0
+        End Select
     End Function
 
     Private Function IsSssPaidOnFirstHalf(payperiod As PayPeriod, deductionSchedule As String) As Boolean
@@ -100,5 +98,11 @@ Public Class SssCalculator
     Private Function IsSssPaidPerPayPeriod(deductionSchedule As String) As Boolean
         Return deductionSchedule = ContributionSchedule.PerPayPeriod
     End Function
+
+    Private Class ContributionSchedule
+        Public Const FirstHalf As String = "First half"
+        Public Const EndOfTheMonth As String = "End of the month"
+        Public Const PerPayPeriod As String = "Per pay period"
+    End Class
 
 End Class

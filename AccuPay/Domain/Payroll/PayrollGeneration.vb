@@ -245,8 +245,8 @@ Public Class PayrollGeneration
             CalculateAllowances()
             CalculateTaxableAllowances()
 
-            Dim socialSecurityCalculator = New SssCalculator(_socialSecurityBrackets)
-            socialSecurityCalculator.Calculate(_settings, _paystub, _previousPaystub, _salary, _employee, _payPeriod)
+            Dim socialSecurityCalculator = New SssCalculator(_settings, _socialSecurityBrackets)
+            socialSecurityCalculator.Calculate(_paystub, _previousPaystub, _salary, _employee, _payPeriod)
 
             Dim philHealthCalculator = New PhilHealthCalculator(New PhilHealthPolicy(_settings), _philHealthBrackets)
             philHealthCalculator.Calculate(_salary, _paystub, _previousPaystub, _employee, _payPeriod, _allowances)
@@ -254,8 +254,8 @@ Public Class PayrollGeneration
             Dim hdmfCalculator = New HdmfCalculator()
             hdmfCalculator.Calculate(_salary, _paystub, _employee, _payPeriod)
 
-            Dim withholdingTaxCalculator = New WithholdingTaxCalculator(_filingStatuses, _withholdingTaxBrackets, _resources.DivisionMinimumWages)
-            withholdingTaxCalculator.Calculate(_settings, _paystub, _previousPaystub, _employee, _payPeriod, _salary)
+            Dim withholdingTaxCalculator = New WithholdingTaxCalculator(_settings, _filingStatuses, _withholdingTaxBrackets, _resources.DivisionMinimumWages)
+            withholdingTaxCalculator.Calculate(_paystub, _previousPaystub, _employee, _payPeriod, _salary)
 
             Dim newLoanTransactions = ComputeLoans()
 
