@@ -114,11 +114,12 @@ Public Class EmployeeTreeView
         AccuPayEmployeeTreeView.BeginUpdate()
         AccuPayEmployeeTreeView.Nodes.Clear()
 
-        Dim parentDivisions = divisions.Where(Function(d) d.IsRoot)
-
         Dim rootNode = New TreeNode With {
             .Name = "$root",
-            .Text = "All"}
+            .Text = "All"
+        }
+
+        Dim parentDivisions = divisions.Where(Function(d) d.IsRoot)
 
         For Each parentDivision In parentDivisions
             Dim parentNode = New TreeNode() With {
@@ -129,7 +130,9 @@ Public Class EmployeeTreeView
 
             Dim childDivisions = divisions.Where(Function(d) d.IsParent(parentDivision))
 
-            If childDivisions.Any() Then parentNode.Text = $"{parentNode.Text} ({childDivisions.Count()})"
+            If childDivisions.Any() Then
+                parentNode.Text = $"{parentNode.Text} ({childDivisions.Count()})"
+            End If
 
             For Each childDivision In childDivisions
                 Dim childNode = New TreeNode() With {
@@ -141,7 +144,11 @@ Public Class EmployeeTreeView
                 Dim childEmployees = employees.
                     Where(Function(e) Nullable.Equals(e.Position?.Division.RowID, childDivision.RowID))
 
-                If childEmployees.Any() Then childNode.Text = $"{childNode.Text} ({childEmployees.Count()})"
+                If Not childEmployees.Any() Then
+                    Continue For
+                End If
+
+                childNode.Text = $"{childNode.Text} ({childEmployees.Count()})"
 
                 For Each childEmployee In childEmployees
                     Dim shouldSetChecked = tickedEmployeeIDs.Any(Function(eID) Nullable.Equals(eID, childEmployee.RowID))
@@ -158,6 +165,10 @@ Public Class EmployeeTreeView
 
                 parentNode.Nodes.Add(childNode)
             Next
+
+            If parentNode.Nodes.Count < 1 Then
+                Continue For
+            End If
 
             rootNode.Nodes.Add(parentNode)
         Next
