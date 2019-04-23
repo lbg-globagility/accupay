@@ -123,7 +123,6 @@ Public Class PayrollGeneration
             OrderBy(Function(t) t.Date).
             ToList()
 
-
         _employeeDutySchedules = resources.EmployeeDutySchedule.
             Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             Where(Function(t) _payPeriod.PayFromDate <= t.DateSched AndAlso t.DateSched <= _payPeriod.PayToDate).
@@ -227,6 +226,12 @@ Public Class PayrollGeneration
                         _paystub.LeavePay +
                         _paystub.AdditionalPay
                 Else
+                    _paystub.RegularHours =
+                        _paystub.BasicHours - _paystub.LeaveHours
+
+                    _paystub.RegularPay =
+                        _paystub.BasicPay - _paystub.LeavePay
+
                     _paystub.TotalEarnings = (_paystub.BasicPay + _paystub.AdditionalPay) - _paystub.BasicDeductions
                 End If
 
@@ -316,7 +321,6 @@ Public Class PayrollGeneration
                 (_employee.DayOfRest IsNot Nothing) AndAlso
                 (_employee.DayOfRest.Value - 1) = timeEntry.Date.DayOfWeek
 
-
             If useNewShiftSchedule Then
 
                 newShift = _employeeDutySchedules.
@@ -324,7 +328,6 @@ Public Class PayrollGeneration
 
                 isRestDayOffset = If(newShift?.IsRestDay, False)
                 shiftWorkHours = If(newShift?.WorkHours, 0)
-
             Else
 
                 isRestDayOffset = If(timeEntry.ShiftSchedule?.IsRestDay, False)
