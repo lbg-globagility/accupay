@@ -51,7 +51,6 @@ Partial Class selectPayPeriod
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblpapyperiodval = New System.Windows.Forms.Label()
         Me.tstrip = New System.Windows.Forms.ToolStrip()
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
         CType(Me.dgvpaypers, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
@@ -313,17 +312,6 @@ Partial Class selectPayPeriod
         Me.tstrip.TabIndex = 281
         Me.tstrip.Text = "ToolStrip1"
         '
-        'CheckBox1
-        '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox1.Location = New System.Drawing.Point(10, 479)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(177, 17)
-        Me.CheckBox1.TabIndex = 282
-        Me.CheckBox1.Text = "Include thirteenth month pay"
-        Me.CheckBox1.UseVisualStyleBackColor = True
-        '
         'Panel2
         '
         Me.Panel2.Controls.Add(Me.linkNxt)
@@ -338,7 +326,6 @@ Partial Class selectPayPeriod
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(548, 508)
-        Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.tstrip)
         Me.Controls.Add(Me.lblpapyperiodval)
         Me.Controls.Add(Me.Label2)
@@ -367,7 +354,6 @@ Partial Class selectPayPeriod
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents lblpapyperiodval As System.Windows.Forms.Label
     Friend WithEvents tstrip As System.Windows.Forms.ToolStrip
-    Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents Column1 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
