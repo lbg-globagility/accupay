@@ -27,6 +27,10 @@ DECLARE anycomment VARCHAR(200);
 
 DECLARE au_ViewID INT(11);
 
+DECLARE v_use_shiftschedule TINYINT(1);
+
+SET v_use_shiftschedule = CHECK_UsesShiftSchedule();
+
 SELECT d.AutomaticOvertimeFiling
 FROM employee e
 INNER JOIN position p ON p.RowID=e.PositionID
@@ -40,21 +44,43 @@ SET today_timeout = ADDTIME(IF(NEW.TimeOut > NEW.TimeIn AND TIME_FORMAT(NEW.Time
 
 IF emp_group_name = '1' THEN
     SET @min_ot_time = CURTIME();
-    SELECT sh.TimeFrom
-    ,sh.TimeTo
-    ,esh.RestDay
-    ,ADDTIME(TIMESTAMP(NEW.`Date`), sh.TimeFrom)
-    ,ADDTIME(IF(sh.TimeTo > sh.TimeFrom, TIMESTAMP(NEW.`Date`), TIMESTAMP(ADDDATE(NEW.`Date`, INTERVAL 1 DAY))), sh.TimeTo)
-    ,IFNULL(e.MinimumOvertime, CAST(0 AS TIME))
-    FROM employeeshift esh
-    INNER JOIN employee e ON e.RowID=esh.EmployeeID AND e.OrganizationID=esh.OrganizationID
-    INNER JOIN shift sh ON sh.RowID=esh.ShiftID
-    WHERE esh.EmployeeID=NEW.EmployeeID
-    AND esh.OrganizationID=NEW.OrganizationID
-    AND NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo LIMIT 1
-    INTO sh_timefrom
-            ,sh_timeto
-            ,isShiftRestDay,today_timefrom,today_timeto, @min_ot_time;
+    
+    IF v_use_shiftschedule THEN
+	    SELECT
+			 ss.StartTime
+		    ,ss.EndTime
+		    ,ss.IsRestDay
+		    ,ADDTIME(TIMESTAMP(NEW.`Date`), ss.StartTime)
+		    ,ADDTIME(IF(ss.EndTime > ss.StartTime, TIMESTAMP(NEW.`Date`), TIMESTAMP(ADDDATE(NEW.`Date`, INTERVAL 1 DAY))), ss.EndTime)
+		    ,IFNULL(e.MinimumOvertime, CAST(0 AS TIME))
+	    FROM shiftschedules ss
+	    INNER JOIN employee e ON e.RowID=ss.EmployeeID AND e.OrganizationID=ss.OrganizationID
+	    WHERE ss.EmployeeID=NEW.EmployeeID
+	    AND ss.OrganizationID=NEW.OrganizationID
+	    AND NEW.`Date` = ss.DATE LIMIT 1
+	    INTO sh_timefrom
+	            ,sh_timeto
+	            ,isShiftRestDay,today_timefrom,today_timeto, @min_ot_time;
+    
+    ELSE
+    
+	    SELECT sh.TimeFrom
+	    ,sh.TimeTo
+	    ,esh.RestDay
+	    ,ADDTIME(TIMESTAMP(NEW.`Date`), sh.TimeFrom)
+	    ,ADDTIME(IF(sh.TimeTo > sh.TimeFrom, TIMESTAMP(NEW.`Date`), TIMESTAMP(ADDDATE(NEW.`Date`, INTERVAL 1 DAY))), sh.TimeTo)
+	    ,IFNULL(e.MinimumOvertime, CAST(0 AS TIME))
+	    FROM employeeshift esh
+	    INNER JOIN employee e ON e.RowID=esh.EmployeeID AND e.OrganizationID=esh.OrganizationID
+	    INNER JOIN shift sh ON sh.RowID=esh.ShiftID
+	    WHERE esh.EmployeeID=NEW.EmployeeID
+	    AND esh.OrganizationID=NEW.OrganizationID
+	    AND NEW.`Date` BETWEEN esh.EffectiveFrom AND esh.EffectiveTo LIMIT 1
+	    INTO sh_timefrom
+	            ,sh_timeto
+	            ,isShiftRestDay,today_timefrom,today_timeto, @min_ot_time;
+    
+    END IF;
 
     SET tomorrow_timefrom = TIMESTAMP(TIMESTAMPADD(HOUR,24,today_timefrom));
     SET tomorrow_timeto = TIMESTAMP(TIMESTAMPADD(HOUR,24,today_timeto));

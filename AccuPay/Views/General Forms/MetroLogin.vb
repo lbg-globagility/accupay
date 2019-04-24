@@ -198,27 +198,6 @@ Public Class MetroLogin
 
             Return True
 
-        ElseIf keyData = Keys.Oem5 Then
-
-            Static thrice As Integer = -1
-
-            thrice += 1
-
-            If thrice = 5 Then
-
-                thrice = 0
-
-                Dim n_ShiftTemplater As _
-                    New ViewTimeEntryEmployeeLevel
-
-                'n_ShiftTemplater.Show()
-                'n_ShiftTemplater.PrintPayslip(Me, New EventArgs)
-                n_ShiftTemplater.Dispose()
-
-            End If
-
-            Return True
-
         Else
             'ShiftTemplater
             Return MyBase.ProcessCmdKey(msg, keyData)
@@ -644,14 +623,6 @@ Public Class MetroLogin
             .Show()
 
         End With
-
-    End Sub
-
-    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs)
-
-        Dim my_time_entry As New ViewTimeEntryEmployeeLevel
-
-        my_time_entry.Show()
 
     End Sub
 

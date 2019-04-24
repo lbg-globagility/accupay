@@ -336,26 +336,6 @@ LEFT JOIN (SELECT ea.*
 			  GROUP BY ea.EmployeeID, ea.RowID) once_allow
        ON once_allow.EmployeeID=ps.EmployeeID
 
-/*LEFT JOIN (SELECT ea.*
-           ,(@perc0 := AVG(IFNULL(etn.`AttendancePercentage`, 0)))
-           ,(@counts0 := COUNT(IFNULL(etn.RowID, 0)))
-           ,GROUP_CONCAT( ( ROUND((ea.AllowanceAmount * (IF(p.`Fixed` = 1, 1, @perc0) * @counts0)), 2) ) ) `AllowanceAmountList`# DISTINCT
-           # ,GROUP_CONCAT(p.PartNo) `AllowanceNameList`
-           ,GROUP_CONCAT( p.PartNo ) `AllowanceNameList`
-           FROM employeeallowance ea
-           INNER JOIN product p ON p.RowID=ea.ProductID
-           LEFT JOIN v_employeetimeentry_numbers etn
-                  ON etn.EmployeeID=ea.EmployeeID
-                     AND etn.OrganizationID=ea.OrganizationID
-                     AND etn.PayPeriodID=pperiod_id
-			  WHERE ea.OrganizationID=og_rowid
-			  AND ea.AllowanceAmount != 0
-			  AND ea.AllowanceFrequency='Daily'
-			  AND (ea.EffectiveStartDate >= date_from OR ea.EffectiveEndDate >= date_from)
-			  AND (ea.EffectiveStartDate <= date_to OR ea.EffectiveEndDate <= date_to)
-			  GROUP BY ea.EmployeeID, ea.RowID
-			  ) day_allow
-       ON day_allow.EmployeeID=ps.EmployeeID*/
 
 LEFT JOIN (
            SELECT ea.*

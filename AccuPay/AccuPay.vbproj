@@ -746,12 +746,6 @@
     <Compile Include="Domain\TimeLogs\TimeLogInOut.vb" />
     <Compile Include="Domain\TimeEntry\TimeLogsTempIn.vb" />
     <Compile Include="Domain\TimeEntry\TimeLogsTempOut.vb" />
-    <Compile Include="Views\Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.designer.vb">
-      <DependentUpon>ViewTimeEntryEmployeeLevel.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Domain\TimeLogs\NewImporter.vb" />
     <Compile Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.Designer.vb">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
@@ -1077,12 +1071,6 @@
       <DependentUpon>TimeLogsForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\TimeLogsForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\EmpTimeEntry.Designer.vb">
-      <DependentUpon>EmpTimeEntry.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\EmpTimeEntry.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\BlankTimeEntryLogs.Designer.vb">
@@ -1536,12 +1524,6 @@
     <Compile Include="Views\Core Forms\SSSCntrib.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\TimEntduration.Designer.vb">
-      <DependentUpon>TimEntduration.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\TimEntduration.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\cboListOfValue.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -1936,9 +1918,6 @@
     <EmbeddedResource Include="Views\Core Forms\TimeEntry\TimeEntrySummaryForm.resx">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\TimeEntry\ViewTimeEntryEmployeeLevel.resx">
-      <DependentUpon>ViewTimeEntryEmployeeLevel.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.resx">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
     </EmbeddedResource>
@@ -2079,9 +2058,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeLogsForm.resx">
       <DependentUpon>TimeLogsForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\EmpTimeEntry.resx">
-      <DependentUpon>EmpTimeEntry.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\importWithholdingTax.resx">
       <DependentUpon>importWithholdingTax.vb</DependentUpon>
@@ -2350,9 +2326,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SSSCntrib.resx">
       <DependentUpon>SSSCntrib.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\TimEntduration.resx">
-      <DependentUpon>TimEntduration.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\DiscipAction.resx">
       <DependentUpon>DiscipAction.vb</DependentUpon>

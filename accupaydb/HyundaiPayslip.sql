@@ -231,54 +231,6 @@ LEFT JOIN (SELECT etlv.RowID
 			  GROUP BY etlv.EmployeeID) etlv
 	    ON etlv.EmployeeID=ps.EmployeeID
 
-/*LEFT JOIN (SELECT ea.*
-           ,GROUP_CONCAT(ea.AllowanceAmount) `AllowanceAmountList`
-           ,GROUP_CONCAT( CUSTOM_ABBREVIATE(p.PartNo) ) `AllowanceNameList`
-           FROM employeeallowance ea
-           INNER JOIN product p ON p.RowID=ea.ProductID
-			  WHERE ea.OrganizationID=og_rowid
-			  AND ea.AllowanceAmount != 0
-			  AND ea.AllowanceFrequency='One time'
-			  AND ea.EffectiveStartDate BETWEEN date_from AND date_to
-			  GROUP BY ea.EmployeeID) once_allow
-       ON once_allow.EmployeeID=ps.EmployeeID
-
-LEFT JOIN (SELECT ea.*
-           ,(@perc0 := AVG(IFNULL(etn.`AttendancePercentage`, 0)))
-           ,(@counts0 := COUNT(IFNULL(etn.RowID, 0)))
-           ,GROUP_CONCAT( ROUND((ea.AllowanceAmount * (IF(p.`Fixed` = 1, 1, @perc0) * @counts0)), 2) ) `AllowanceAmountList`
-           ,GROUP_CONCAT( CUSTOM_ABBREVIATE(p.PartNo) ) `AllowanceNameList`
-           FROM employeeallowance ea
-           INNER JOIN product p ON p.RowID=ea.ProductID
-           LEFT JOIN v_employeetimeentry_numbers etn
-                  ON etn.EmployeeID=ea.EmployeeID
-                     AND etn.OrganizationID=ea.OrganizationID
-                     AND etn.PayPeriodID=pperiod_id
-			  WHERE ea.OrganizationID=og_rowid
-			  AND ea.AllowanceAmount != 0
-			  AND ea.AllowanceFrequency='Daily'
-			  AND (ea.EffectiveStartDate >= date_from OR ea.EffectiveEndDate >= date_from)
-			  AND (ea.EffectiveStartDate <= date_to OR ea.EffectiveEndDate <= date_to)
-			  GROUP BY ea.EmployeeID) day_allow
-       ON day_allow.EmployeeID=ps.EmployeeID
-
-LEFT JOIN (SELECT ea.*
-           ,(@perc1 := AVG(IFNULL(etn.`AttendancePercentage`, 0)))
-           ,GROUP_CONCAT( ROUND((ea.AllowanceAmount * IF(p.`Fixed` = 1, 1, @perc1)), 2) ) `AllowanceAmountList`
-           ,GROUP_CONCAT( CUSTOM_ABBREVIATE(p.PartNo) ) `AllowanceNameList`
-           FROM employeeallowance ea
-           INNER JOIN product p ON p.RowID=ea.ProductID
-           LEFT JOIN v_employeetimeentry_numbers etn
-                  ON etn.EmployeeID=ea.EmployeeID
-                     AND etn.OrganizationID=ea.OrganizationID
-                     AND etn.PayPeriodID=pperiod_id
-			  WHERE ea.OrganizationID=og_rowid
-			  AND ea.AllowanceAmount != 0
-			  AND ea.AllowanceFrequency='Semi-monthly'
-			  AND (ea.EffectiveStartDate >= date_from OR ea.EffectiveEndDate >= date_from)
-			  AND (ea.EffectiveStartDate <= date_to OR ea.EffectiveEndDate <= date_to)
-			  GROUP BY ea.EmployeeID) semimonth_allow
-       ON semimonth_allow.EmployeeID=ps.EmployeeID*/
 LEFT JOIN (SELECT ai.*
            , GROUP_CONCAT( ROUND(ai.Amount, 2) ) `AllowanceAmountList`
            # , GROUP_CONCAT( CUSTOM_ABBREVIATE(p.PartNo) ) `AllowanceNameList`

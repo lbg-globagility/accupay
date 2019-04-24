@@ -48,8 +48,6 @@ Public Class TimeEntrySummaryForm
 
     Private _currentTimeEntryDate As Date
 
-    Private WithEvents timeEntDurationModal As TimEntduration
-
     Private _employeeRepository As EmployeeRepository
 
     Private _calculateBreakTimeLateHours As Boolean
