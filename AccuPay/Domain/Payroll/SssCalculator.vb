@@ -100,9 +100,9 @@ Public Class SssCalculator
     End Function
 
     Private Class ContributionSchedule
-        Public Const FirstHalf As String = "First half"
-        Public Const EndOfTheMonth As String = "End of the month"
-        Public Const PerPayPeriod As String = "Per pay period"
+        Public Const FIRST_HALF As String = "First half"
+        Public Const END_OF_THE_MONTH As String = "End of the month"
+        Public Const PER_PAY_PERIOD As String = "Per pay period"
     End Class
 
 End Class
