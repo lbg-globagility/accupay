@@ -10,12 +10,9 @@ Namespace Global.AccuPay.Entity
     Public Class PaystubActual
 
         <Key>
-        <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
 
         Public Property OrganizationID As Integer?
-
-        Public Property PaystubID As Integer?
 
         Public Property PayPeriodID As Integer?
 
@@ -66,6 +63,29 @@ Namespace Global.AccuPay.Entity
 
         <ForeignKey("EmployeeID")>
         Public Overridable Property Employee As Employee
+
+        <ForeignKey("RowID")>
+        Public Overridable Property Paystub As Paystub
+
+        Public ReadOnly Property AdditionalPay As Decimal
+            Get
+                Return OvertimePay +
+                    NightDiffPay +
+                    NightDiffOTPay +
+                    RestDayPay +
+                    RestDayOTPay +
+                    SpecialHolidayPay +
+                    SpecialHolidayOTPay +
+                    RegularHolidayPay +
+                    RegularHolidayOTPay
+            End Get
+        End Property
+
+        Public ReadOnly Property BasicDeductions As Decimal
+            Get
+                Return LateDeduction + UndertimeDeduction + AbsenceDeduction
+            End Get
+        End Property
 
     End Class
 
