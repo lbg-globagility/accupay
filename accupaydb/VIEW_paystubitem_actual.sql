@@ -124,6 +124,7 @@ LEFT JOIN (
         SUM(et.OtherLeaveHours) `OtherLeaveHours`,
         SUM(etea.TotalDayPay) `TotalDayPay`,
         SUM(etea.Absent) `Absent`,
+        SUM(et.AbsentHours) `AbsentHours`,
         SUM(etea.Leavepayment) `Leavepayment`,
         SUM(agencyfee.DailyFee) `TotalAgencyFee`,
         SUM(etea.SpecialHolidayPay) `SpecialHolidayPay`,
