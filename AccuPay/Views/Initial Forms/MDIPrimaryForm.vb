@@ -535,14 +535,6 @@ Public Class MDIPrimaryForm
 
                 ElseIf previousForm.Name = "EmpTimeEntry" Then
 
-                    If Application.OpenForms().OfType(Of TimEntduration).Any Then
-                        If TimEntduration.bgWork.IsBusy Then
-                        Else
-                            EmpTimeEntry.btnRerfresh_Click(sndr, ee)
-                        End If
-
-                    End If
-
                 End If
 
             ElseIf groupindex = 3 Then 'Payroll
