@@ -71,35 +71,38 @@ Public Class PositionUserControl
     Private Sub CreateFieldDataBindings()
 
         DivisionComboBox.DataBindings.Clear()
-        DivisionComboBox.DataBindings.Add("SelectedValue", Me._position, "DivisionID")
+        DivisionComboBox.DataBindings.Add("SelectedValue", Me._position, "DivisionID", True, DataSourceUpdateMode.OnPropertyChanged)
 
         PositionNameTextBox.DataBindings.Clear()
         PositionNameTextBox.DataBindings.Add("Text", Me._position, "Name")
 
         JobLevelComboBox.DataBindings.Clear()
-        JobLevelComboBox.DataBindings.Add("SelectedValue", Me._position, "JobLevelID")
+        JobLevelComboBox.DataBindings.Add("SelectedValue", Me._position, "JobLevelID", True, DataSourceUpdateMode.OnPropertyChanged)
 
     End Sub
 
-    Public Sub ShowError(ColumnName As String, ErrorMessage As String)
+    Public Sub ShowError(ColumnName As String, ErrorMessage As String, Optional x As Integer = 0, Optional y As Integer = 0)
+
+        Dim xPosition As Integer = 0
+        Dim yPosition As Integer = -50
 
         If ColumnName = "DivisionID" Then
 
-            ShowBalloonInfo(ErrorMessage, "Division", DivisionComboBox)
+            ShowBalloonInfo(ErrorMessage, "Division", DivisionComboBox, x, y)
 
         ElseIf ColumnName = "Name" Then
 
-            ShowBalloonInfo(ErrorMessage, "Name", PositionNameTextBox)
+            ShowBalloonInfo(ErrorMessage, "Name", PositionNameTextBox, x, y)
 
         End If
 
     End Sub
 
-    Private Sub ShowBalloonInfo(content As String, title As String, control As Control)
+    Private Sub ShowBalloonInfo(content As String, title As String, control As Control, Optional x As Integer = 0, Optional y As Integer = 0)
 
         Dim win32Window = CType(control, IWin32Window)
 
-        myBalloon(content, title, win32Window)
+        myBalloon(content, title, win32Window, x, y)
 
         control.Focus()
 

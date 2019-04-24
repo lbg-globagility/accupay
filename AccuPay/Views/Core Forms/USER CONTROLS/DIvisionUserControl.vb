@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Entity
+Imports AccuPay.Extensions
 
 Public Class DivisionUserControl
 
@@ -11,7 +12,7 @@ Public Class DivisionUserControl
 
     Private Sub DivisionUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        'Hide weekly for the moment until this is supported
+        'Hide weekly for the moment until this Is supported
         DefaultDeductionTabControl.TabPages.Remove(WeeklyTabPage)
         WithAgencyDeductionScheduleTabControl.TabPages.Remove(AgencyWeeklyTabPage)
 
@@ -36,28 +37,33 @@ Public Class DivisionUserControl
 
         ParentDivisionComboBox.DataSource = _parentDivisions
         DivisionHeadComboBox.DataSource = _positions
-        DivisionTypeComboBox.DataSource = _divisionTypes
         PayFrequencyComboBox.DataSource = _payFrequencies
 
-        SemiMonthlyPhilHealthDeductionScheduleComboBox.DataSource = _deductionSchedules
-        SemiMonthlySSSDeductionScheduleComboBox.DataSource = _deductionSchedules
-        SemiMonthlyHDMFDeductionScheduleComboBox.DataSource = _deductionSchedules
-        SemiMonthlyWithholdingTaxDeductionScheduleComboBox.DataSource = _deductionSchedules
+        Dim divisionTypesWithNull = _divisionTypes.CloneListJson()
+        divisionTypesWithNull.Insert(0, "")
+        DivisionTypeComboBox.DataSource = divisionTypesWithNull
 
-        WeeklyPhilHealthDeductionScheduleComboBox.DataSource = _deductionSchedules
-        WeeklySSSDeductionScheduleComboBox.DataSource = _deductionSchedules
-        WeeklyHDMFDeductionScheduleComboBox.DataSource = _deductionSchedules
-        WeeklyWithholdingTaxDeductionScheduleComboBox.DataSource = _deductionSchedules
+        SemiMonthlyPhilHealthDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        SemiMonthlySSSDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        SemiMonthlyHDMFDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        SemiMonthlyWithholdingTaxDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
 
-        SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.DataSource = _deductionSchedules
-        SemiMonthlyAgencySSSDeductionScheduleComboBox.DataSource = _deductionSchedules
-        SemiMonthlyAgencyHDMFDeductionScheduleComboBox.DataSource = _deductionSchedules
-        SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.DataSource = _deductionSchedules
+        'WeeklyPhilHealthDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        'WeeklySSSDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        'WeeklyHDMFDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        'WeeklyWithholdingTaxDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
 
-        WeeklyAgencyPhilHealthDeductionScheduleComboBox.DataSource = _deductionSchedules
-        WeeklyAgencySSSDeductionScheduleComboBox.DataSource = _deductionSchedules
-        WeeklyAgencyHDMFDeductionScheduleComboBox.DataSource = _deductionSchedules
-        WeeklyAgencyWithholdingTaxDeductionScheduleComboBox.DataSource = _deductionSchedules
+        SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        SemiMonthlyAgencySSSDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        SemiMonthlyAgencyHDMFDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+
+        'WeeklyAgencyPhilHealthDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        'WeeklyAgencySSSDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        'WeeklyAgencyHDMFDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+        'WeeklyAgencyWithholdingTaxDeductionScheduleComboBox.DataSource = _deductionSchedules.CloneListJson()
+
+        PrepareForm()
 
     End Sub
 
@@ -74,10 +80,10 @@ Public Class DivisionUserControl
 
     Private Sub PrepareComboBoxes()
 
-        ParentDivisionComboBox.DisplayMember = "name"
+        ParentDivisionComboBox.DisplayMember = "Name"
         ParentDivisionComboBox.ValueMember = "RowID"
 
-        DivisionHeadComboBox.DisplayMember = "PositionName"
+        DivisionHeadComboBox.DisplayMember = "Name"
         DivisionHeadComboBox.ValueMember = "RowID"
 
         PayFrequencyComboBox.DisplayMember = "Type"
@@ -86,6 +92,8 @@ Public Class DivisionUserControl
     End Sub
 
     Private Sub CreateFieldDataBindings()
+
+        If Me._division Is Nothing Then Return
 
         CreateDivisionDetailsDataBindings()
 
@@ -100,11 +108,12 @@ Public Class DivisionUserControl
     End Sub
 
     Private Sub CreateDivisionDetailsDataBindings()
+
         DivisionTypeComboBox.DataBindings.Clear()
         DivisionTypeComboBox.DataBindings.Add("Text", Me._division, "DivisionType")
 
         ParentDivisionComboBox.DataBindings.Clear()
-        ParentDivisionComboBox.DataBindings.Add("SelectedValue", Me._division, "ParentDivisionID")
+        ParentDivisionComboBox.DataBindings.Add("SelectedValue", Me._division, "ParentDivisionID", True, DataSourceUpdateMode.OnPropertyChanged)
 
         DivisionNameTextBox.DataBindings.Clear()
         DivisionNameTextBox.DataBindings.Add("Text", Me._division, "Name")
@@ -119,7 +128,8 @@ Public Class DivisionUserControl
         BusinessAddressTextBox.DataBindings.Add("Text", Me._division, "BusinessAddress")
 
         DivisionHeadComboBox.DataBindings.Clear()
-        DivisionHeadComboBox.DataBindings.Add("SelectedValue", Me._division, "DivisionHeadID")
+        DivisionHeadComboBox.DataBindings.Add("SelectedValue", Me._division, "DivisionHeadID", True, DataSourceUpdateMode.OnPropertyChanged)
+
     End Sub
 
     Private Sub CreateContactDetailsDataBindings()
@@ -147,24 +157,27 @@ Public Class DivisionUserControl
 
     Private Sub CreateLeaveHoursDataBindings()
         VacationLeaveTextBox.DataBindings.Clear()
-        VacationLeaveTextBox.DataBindings.Add("Text", Me._division, "DefaultVacationLeave")
+        VacationLeaveTextBox.DataBindings.Add("Text", Me._division, "DefaultVacationLeave", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         SickLeaveTextBox.DataBindings.Clear()
-        SickLeaveTextBox.DataBindings.Add("Text", Me._division, "DefaultSickLeave")
+        SickLeaveTextBox.DataBindings.Add("Text", Me._division, "DefaultSickLeave", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
+
+        OthersLeaveTextBox.DataBindings.Clear()
+        OthersLeaveTextBox.DataBindings.Add("Text", Me._division, "DefaultOtherLeave", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
     End Sub
 
     Private Sub CreatePayrollDetailsDataBindings()
         PayFrequencyComboBox.DataBindings.Clear()
-        PayFrequencyComboBox.DataBindings.Add("SelectedValue", Me._division, "PayFrequencyID")
+        PayFrequencyComboBox.DataBindings.Add("SelectedValue", Me._division, "PayFrequencyID", True, DataSourceUpdateMode.OnPropertyChanged)
 
         GracePeriodTextBox.DataBindings.Clear()
-        GracePeriodTextBox.DataBindings.Add("Text", Me._division, "GracePeriod")
+        GracePeriodTextBox.DataBindings.Add("Text", Me._division, "GracePeriod", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         WorkDaysPerYearTextBox.DataBindings.Clear()
-        WorkDaysPerYearTextBox.DataBindings.Add("Text", Me._division, "WorkDaysPerYear")
+        WorkDaysPerYearTextBox.DataBindings.Add("Text", Me._division, "WorkDaysPerYear", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
 
         AutomaticOvertimeCheckBox.DataBindings.Clear()
-        AutomaticOvertimeCheckBox.DataBindings.Add("Checked", Me._division, "AutomaticOvertimeFiling")
+        AutomaticOvertimeCheckBox.DataBindings.Add("Checked", Me._division, "AutomaticOvertimeFiling", True, DataSourceUpdateMode.OnPropertyChanged)
     End Sub
 
     Private Sub CreateDeductionSchedulesDataBindings()
@@ -183,17 +196,17 @@ Public Class DivisionUserControl
         SemiMonthlyWithholdingTaxDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WithholdingTaxSchedule")
 
         'Weekly
-        WeeklyPhilHealthDeductionScheduleComboBox.DataBindings.Clear()
-        WeeklyPhilHealthDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyPhilHealthDeductionSchedule")
+        'WeeklyPhilHealthDeductionScheduleComboBox.DataBindings.Clear()
+        'WeeklyPhilHealthDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyPhilHealthDeductionSchedule")
 
-        WeeklySSSDeductionScheduleComboBox.DataBindings.Clear()
-        WeeklySSSDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklySSSDeductionSchedule")
+        'WeeklySSSDeductionScheduleComboBox.DataBindings.Clear()
+        'WeeklySSSDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklySSSDeductionSchedule")
 
-        WeeklyHDMFDeductionScheduleComboBox.DataBindings.Clear()
-        WeeklyHDMFDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyPagIBIGDeductionSchedule")
+        'WeeklyHDMFDeductionScheduleComboBox.DataBindings.Clear()
+        'WeeklyHDMFDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyPagIBIGDeductionSchedule")
 
-        WeeklyWithholdingTaxDeductionScheduleComboBox.DataBindings.Clear()
-        WeeklyWithholdingTaxDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyWithholdingTaxSchedule")
+        'WeeklyWithholdingTaxDeductionScheduleComboBox.DataBindings.Clear()
+        'WeeklyWithholdingTaxDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyWithholdingTaxSchedule")
 
         'Semi Monthly Agency
         SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.DataBindings.Clear()
@@ -209,47 +222,47 @@ Public Class DivisionUserControl
         SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "AgencyWithholdingTaxSchedule")
 
         'Weekly Agency
-        WeeklyAgencyPhilHealthDeductionScheduleComboBox.DataBindings.Clear()
-        WeeklyAgencyPhilHealthDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyAgencyPhilHealthDeductionSchedule")
+        'WeeklyAgencyPhilHealthDeductionScheduleComboBox.DataBindings.Clear()
+        'WeeklyAgencyPhilHealthDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyAgencyPhilHealthDeductionSchedule")
 
-        WeeklyAgencySSSDeductionScheduleComboBox.DataBindings.Clear()
-        WeeklyAgencySSSDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyAgencySssDeductionSchedule")
+        'WeeklyAgencySSSDeductionScheduleComboBox.DataBindings.Clear()
+        'WeeklyAgencySSSDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyAgencySssDeductionSchedule")
 
-        WeeklyAgencyHDMFDeductionScheduleComboBox.DataBindings.Clear()
-        WeeklyAgencyHDMFDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyAgencyPagIBIGDeductionSchedule")
+        'WeeklyAgencyHDMFDeductionScheduleComboBox.DataBindings.Clear()
+        'WeeklyAgencyHDMFDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyAgencyPagIBIGDeductionSchedule")
 
-        WeeklyAgencyWithholdingTaxDeductionScheduleComboBox.DataBindings.Clear()
-        WeeklyAgencyWithholdingTaxDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyAgencyWithholdingTaxSchedule")
+        'WeeklyAgencyWithholdingTaxDeductionScheduleComboBox.DataBindings.Clear()
+        'WeeklyAgencyWithholdingTaxDeductionScheduleComboBox.DataBindings.Add("Text", Me._division, "WeeklyAgencyWithholdingTaxSchedule")
 
     End Sub
 
-    Public Sub ShowError(ColumnName As String, ErrorMessage As String)
+    Public Sub ShowError(ColumnName As String, ErrorMessage As String, Optional x As Integer = 0, Optional y As Integer = 0)
 
         If ColumnName = "DivisionType" Then
 
-            ShowBalloonInfo(ErrorMessage, "Division Type", DivisionTypeComboBox)
+            ShowBalloonInfo(ErrorMessage, "Division Type", DivisionTypeComboBox, x, y)
 
         ElseIf ColumnName = "ParentDivisionID" Then
 
-            ShowBalloonInfo(ErrorMessage, "Parent Division", ParentDivisionComboBox)
+            ShowBalloonInfo(ErrorMessage, "Parent Division", ParentDivisionComboBox, x, y)
 
         ElseIf ColumnName = "Name" Then
 
-            ShowBalloonInfo(ErrorMessage, "Name", DivisionNameTextBox)
+            ShowBalloonInfo(ErrorMessage, "Name", DivisionNameTextBox, x, y)
 
         ElseIf ColumnName = "WorkDaysPerYear" Then
 
-            ShowBalloonInfo(ErrorMessage, "Number of days work per year", WorkDaysPerYearTextBox)
+            ShowBalloonInfo(ErrorMessage, "Number of days work per year", WorkDaysPerYearTextBox, x, y)
 
         End If
 
     End Sub
 
-    Private Sub ShowBalloonInfo(content As String, title As String, control As Control)
+    Private Sub ShowBalloonInfo(content As String, title As String, control As Control, Optional x As Integer = 0, Optional y As Integer = 0)
 
         Dim win32Window = CType(control, IWin32Window)
 
-        myBalloon(content, title, win32Window)
+        myBalloon(content, title, win32Window, x, y)
 
         control.Focus()
 

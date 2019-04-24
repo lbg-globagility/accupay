@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class NewEmployeePositionForm
+Partial Class NewDivisionPositionForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -22,30 +22,26 @@ Partial Class NewEmployeePositionForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Me.PositionTreeView = New System.Windows.Forms.TreeView()
+        Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(NewDivisionPositionForm))
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Me.DivisionPositionTreeView = New System.Windows.Forms.TreeView()
+        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.lblFormTitle = New System.Windows.Forms.Label()
         Me.PositionTabPage = New System.Windows.Forms.TabPage()
         Me.PositionGroupBox = New System.Windows.Forms.GroupBox()
-        Me.PositionUserControl1 = New AccuPay.PositionUserControl()
         Me.EmployeeDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MiddleName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
-        Me.NewPositionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.SavePositionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.DeletePositionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.CancelPositionToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton12 = New System.Windows.Forms.ToolStripButton()
+        Me.CloseFormToolStripItem2 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton13 = New System.Windows.Forms.ToolStripButton()
         Me.miniToolStrip = New System.Windows.Forms.ToolStrip()
         Me.DivisionTabPage = New System.Windows.Forms.TabPage()
-        Me.DivisionUserControl1 = New AccuPay.DivisionUserControl()
         Me.DivisionLocationGroupBox = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel9 = New System.Windows.Forms.Panel()
@@ -54,19 +50,32 @@ Partial Class NewEmployeePositionForm
         Me.DivisionLocationTextBox = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.NewDivisionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveDivisionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.DeleteDivisionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.CancelDivisionToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton5 = New System.Windows.Forms.ToolStripButton()
+        Me.CloseFormToolStripItem = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton6 = New System.Windows.Forms.ToolStripButton()
         Me.FormsTabControl = New System.Windows.Forms.TabControl()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.ToolStrip3 = New System.Windows.Forms.ToolStrip()
+        Me.SearchToolStripTextBox = New System.Windows.Forms.ToolStripTextBox()
+        Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.AddDivisionLocationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AddDivisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AddPositionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DivisionUserControl1 = New AccuPay.DivisionUserControl()
+        Me.PositionUserControl1 = New AccuPay.PositionUserControl()
+        Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MiddleName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PositionTabPage.SuspendLayout()
         Me.PositionGroupBox.SuspendLayout()
         CType(Me.EmployeeDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -78,16 +87,29 @@ Partial Class NewEmployeePositionForm
         Me.Panel11.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.FormsTabControl.SuspendLayout()
+        Me.Panel1.SuspendLayout()
+        Me.ToolStrip3.SuspendLayout()
         Me.SuspendLayout()
         '
-        'PositionTreeView
+        'DivisionPositionTreeView
         '
-        Me.PositionTreeView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.DivisionPositionTreeView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.PositionTreeView.Location = New System.Drawing.Point(27, 42)
-        Me.PositionTreeView.Name = "PositionTreeView"
-        Me.PositionTreeView.Size = New System.Drawing.Size(350, 482)
-        Me.PositionTreeView.TabIndex = 0
+        Me.DivisionPositionTreeView.ImageIndex = 2
+        Me.DivisionPositionTreeView.ImageList = Me.ImageList1
+        Me.DivisionPositionTreeView.Location = New System.Drawing.Point(27, 70)
+        Me.DivisionPositionTreeView.Name = "DivisionPositionTreeView"
+        Me.DivisionPositionTreeView.SelectedImageIndex = 0
+        Me.DivisionPositionTreeView.Size = New System.Drawing.Size(350, 454)
+        Me.DivisionPositionTreeView.TabIndex = 0
+        '
+        'ImageList1
+        '
+        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+        Me.ImageList1.Images.SetKeyName(0, "Documents-icon-64.png")
+        Me.ImageList1.Images.SetKeyName(1, "Icon_159.ico")
+        Me.ImageList1.Images.SetKeyName(2, "groupofusers.png")
         '
         'lblFormTitle
         '
@@ -126,14 +148,6 @@ Partial Class NewEmployeePositionForm
         Me.PositionGroupBox.TabStop = False
         Me.PositionGroupBox.Text = "Payroll Details"
         '
-        'PositionUserControl1
-        '
-        Me.PositionUserControl1.Location = New System.Drawing.Point(0, 17)
-        Me.PositionUserControl1.Margin = New System.Windows.Forms.Padding(4)
-        Me.PositionUserControl1.Name = "PositionUserControl1"
-        Me.PositionUserControl1.Size = New System.Drawing.Size(292, 148)
-        Me.PositionUserControl1.TabIndex = 0
-        '
         'EmployeeDataGrid
         '
         Me.EmployeeDataGrid.AllowUserToAddRows = False
@@ -142,14 +156,14 @@ Partial Class NewEmployeePositionForm
         Me.EmployeeDataGrid.BackgroundColor = System.Drawing.Color.White
         Me.EmployeeDataGrid.ColumnHeadersHeight = 34
         Me.EmployeeDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.EmployeeID, Me.LastName, Me.FirstName, Me.MiddleName})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeeDataGrid.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeeDataGrid.DefaultCellStyle = DataGridViewCellStyle1
         Me.EmployeeDataGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeeDataGrid.Location = New System.Drawing.Point(6, 242)
         Me.EmployeeDataGrid.MultiSelect = False
@@ -158,34 +172,6 @@ Partial Class NewEmployeePositionForm
         Me.EmployeeDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.EmployeeDataGrid.Size = New System.Drawing.Size(768, 212)
         Me.EmployeeDataGrid.TabIndex = 333
-        '
-        'EmployeeID
-        '
-        Me.EmployeeID.DataPropertyName = "EmployeeNo"
-        Me.EmployeeID.HeaderText = "Employee ID"
-        Me.EmployeeID.Name = "EmployeeID"
-        Me.EmployeeID.ReadOnly = True
-        '
-        'LastName
-        '
-        Me.LastName.DataPropertyName = "LastName"
-        Me.LastName.HeaderText = "Last Name"
-        Me.LastName.Name = "LastName"
-        Me.LastName.ReadOnly = True
-        '
-        'FirstName
-        '
-        Me.FirstName.DataPropertyName = "FirstName"
-        Me.FirstName.HeaderText = "First Name"
-        Me.FirstName.Name = "FirstName"
-        Me.FirstName.ReadOnly = True
-        '
-        'MiddleName
-        '
-        Me.MiddleName.DataPropertyName = "MiddleName"
-        Me.MiddleName.HeaderText = "Middle Name"
-        Me.MiddleName.Name = "MiddleName"
-        Me.MiddleName.ReadOnly = True
         '
         'Label2
         '
@@ -202,28 +188,20 @@ Partial Class NewEmployeePositionForm
         '
         Me.ToolStrip2.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewPositionToolStripButton, Me.SavePositionToolStripButton, Me.ToolStripSeparator3, Me.DeletePositionToolStripButton, Me.ToolStripSeparator4, Me.CancelPositionToolStripButton, Me.ToolStripButton12, Me.ToolStripButton13})
+        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SavePositionToolStripButton, Me.ToolStripSeparator3, Me.DeletePositionToolStripButton, Me.ToolStripSeparator4, Me.CancelPositionToolStripButton, Me.CloseFormToolStripItem2, Me.ToolStripButton13})
         Me.ToolStrip2.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip2.Name = "ToolStrip2"
         Me.ToolStrip2.Size = New System.Drawing.Size(796, 25)
         Me.ToolStrip2.TabIndex = 330
         Me.ToolStrip2.Text = "ToolStrip2"
         '
-        'NewPositionToolStripButton
-        '
-        Me.NewPositionToolStripButton.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.NewPositionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.NewPositionToolStripButton.Name = "NewPositionToolStripButton"
-        Me.NewPositionToolStripButton.Size = New System.Drawing.Size(97, 22)
-        Me.NewPositionToolStripButton.Text = "&New Position"
-        '
         'SavePositionToolStripButton
         '
         Me.SavePositionToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Save
         Me.SavePositionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.SavePositionToolStripButton.Name = "SavePositionToolStripButton"
-        Me.SavePositionToolStripButton.Size = New System.Drawing.Size(97, 22)
-        Me.SavePositionToolStripButton.Text = "&Save Position"
+        Me.SavePositionToolStripButton.Size = New System.Drawing.Size(51, 22)
+        Me.SavePositionToolStripButton.Text = "&Save"
         '
         'ToolStripSeparator3
         '
@@ -235,8 +213,8 @@ Partial Class NewEmployeePositionForm
         Me.DeletePositionToolStripButton.Image = Global.AccuPay.My.Resources.Resources.deleteuser
         Me.DeletePositionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.DeletePositionToolStripButton.Name = "DeletePositionToolStripButton"
-        Me.DeletePositionToolStripButton.Size = New System.Drawing.Size(106, 22)
-        Me.DeletePositionToolStripButton.Text = "&Delete Position"
+        Me.DeletePositionToolStripButton.Size = New System.Drawing.Size(60, 22)
+        Me.DeletePositionToolStripButton.Text = "&Delete"
         '
         'ToolStripSeparator4
         '
@@ -248,17 +226,17 @@ Partial Class NewEmployeePositionForm
         Me.CancelPositionToolStripButton.Image = Global.AccuPay.My.Resources.Resources.cancel1
         Me.CancelPositionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.CancelPositionToolStripButton.Name = "CancelPositionToolStripButton"
-        Me.CancelPositionToolStripButton.Size = New System.Drawing.Size(86, 22)
-        Me.CancelPositionToolStripButton.Text = "Cancel Edit"
+        Me.CancelPositionToolStripButton.Size = New System.Drawing.Size(63, 22)
+        Me.CancelPositionToolStripButton.Text = "Cancel"
         '
-        'ToolStripButton12
+        'CloseFormToolStripItem2
         '
-        Me.ToolStripButton12.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton12.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton12.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton12.Name = "ToolStripButton12"
-        Me.ToolStripButton12.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton12.Text = "Close"
+        Me.CloseFormToolStripItem2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.CloseFormToolStripItem2.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.CloseFormToolStripItem2.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.CloseFormToolStripItem2.Name = "CloseFormToolStripItem2"
+        Me.CloseFormToolStripItem2.Size = New System.Drawing.Size(56, 22)
+        Me.CloseFormToolStripItem2.Text = "Close"
         '
         'ToolStripButton13
         '
@@ -286,6 +264,7 @@ Partial Class NewEmployeePositionForm
         '
         'DivisionTabPage
         '
+        Me.DivisionTabPage.AutoScroll = True
         Me.DivisionTabPage.Controls.Add(Me.DivisionUserControl1)
         Me.DivisionTabPage.Controls.Add(Me.DivisionLocationGroupBox)
         Me.DivisionTabPage.Controls.Add(Me.ToolStrip1)
@@ -296,14 +275,6 @@ Partial Class NewEmployeePositionForm
         Me.DivisionTabPage.TabIndex = 0
         Me.DivisionTabPage.Text = "Division"
         Me.DivisionTabPage.UseVisualStyleBackColor = True
-        '
-        'DivisionUserControl1
-        '
-        Me.DivisionUserControl1.Location = New System.Drawing.Point(6, 42)
-        Me.DivisionUserControl1.Name = "DivisionUserControl1"
-        Me.DivisionUserControl1.Size = New System.Drawing.Size(740, 600)
-        Me.DivisionUserControl1.TabIndex = 396
-        Me.DivisionUserControl1.Visible = False
         '
         'DivisionLocationGroupBox
         '
@@ -385,28 +356,20 @@ Partial Class NewEmployeePositionForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewDivisionToolStripButton, Me.SaveDivisionToolStripButton, Me.ToolStripSeparator1, Me.DeleteDivisionToolStripButton, Me.ToolStripSeparator2, Me.CancelDivisionToolStripButton, Me.ToolStripButton5, Me.ToolStripButton6})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveDivisionToolStripButton, Me.ToolStripSeparator1, Me.DeleteDivisionToolStripButton, Me.ToolStripSeparator2, Me.CancelDivisionToolStripButton, Me.CloseFormToolStripItem, Me.ToolStripButton6})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(796, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(779, 25)
         Me.ToolStrip1.TabIndex = 329
         Me.ToolStrip1.Text = "ToolStrip1"
-        '
-        'NewDivisionToolStripButton
-        '
-        Me.NewDivisionToolStripButton.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.NewDivisionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.NewDivisionToolStripButton.Name = "NewDivisionToolStripButton"
-        Me.NewDivisionToolStripButton.Size = New System.Drawing.Size(96, 22)
-        Me.NewDivisionToolStripButton.Text = "&New Division"
         '
         'SaveDivisionToolStripButton
         '
         Me.SaveDivisionToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Save
         Me.SaveDivisionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.SaveDivisionToolStripButton.Name = "SaveDivisionToolStripButton"
-        Me.SaveDivisionToolStripButton.Size = New System.Drawing.Size(96, 22)
-        Me.SaveDivisionToolStripButton.Text = "&Save Division"
+        Me.SaveDivisionToolStripButton.Size = New System.Drawing.Size(51, 22)
+        Me.SaveDivisionToolStripButton.Text = "&Save"
         '
         'ToolStripSeparator1
         '
@@ -418,8 +381,8 @@ Partial Class NewEmployeePositionForm
         Me.DeleteDivisionToolStripButton.Image = Global.AccuPay.My.Resources.Resources.deleteuser
         Me.DeleteDivisionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.DeleteDivisionToolStripButton.Name = "DeleteDivisionToolStripButton"
-        Me.DeleteDivisionToolStripButton.Size = New System.Drawing.Size(105, 22)
-        Me.DeleteDivisionToolStripButton.Text = "&Delete Division"
+        Me.DeleteDivisionToolStripButton.Size = New System.Drawing.Size(60, 22)
+        Me.DeleteDivisionToolStripButton.Text = "&Delete"
         '
         'ToolStripSeparator2
         '
@@ -431,17 +394,17 @@ Partial Class NewEmployeePositionForm
         Me.CancelDivisionToolStripButton.Image = Global.AccuPay.My.Resources.Resources.cancel1
         Me.CancelDivisionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.CancelDivisionToolStripButton.Name = "CancelDivisionToolStripButton"
-        Me.CancelDivisionToolStripButton.Size = New System.Drawing.Size(86, 22)
-        Me.CancelDivisionToolStripButton.Text = "Cancel Edit"
+        Me.CancelDivisionToolStripButton.Size = New System.Drawing.Size(63, 22)
+        Me.CancelDivisionToolStripButton.Text = "Cancel"
         '
-        'ToolStripButton5
+        'CloseFormToolStripItem
         '
-        Me.ToolStripButton5.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton5.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton5.Name = "ToolStripButton5"
-        Me.ToolStripButton5.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton5.Text = "Close"
+        Me.CloseFormToolStripItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.CloseFormToolStripItem.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.CloseFormToolStripItem.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.CloseFormToolStripItem.Name = "CloseFormToolStripItem"
+        Me.CloseFormToolStripItem.Size = New System.Drawing.Size(56, 22)
+        Me.CloseFormToolStripItem.Text = "Close"
         '
         'ToolStripButton6
         '
@@ -467,42 +430,151 @@ Partial Class NewEmployeePositionForm
         Me.FormsTabControl.TabIndex = 140
         Me.FormsTabControl.Visible = False
         '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.ToolStrip3)
+        Me.Panel1.Location = New System.Drawing.Point(27, 42)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(350, 29)
+        Me.Panel1.TabIndex = 141
+        '
+        'ToolStrip3
+        '
+        Me.ToolStrip3.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SearchToolStripTextBox, Me.ToolStripDropDownButton1, Me.ToolStripLabel1})
+        Me.ToolStrip3.Location = New System.Drawing.Point(0, 0)
+        Me.ToolStrip3.Name = "ToolStrip3"
+        Me.ToolStrip3.Size = New System.Drawing.Size(350, 25)
+        Me.ToolStrip3.TabIndex = 0
+        Me.ToolStrip3.Text = "ToolStrip3"
+        '
+        'SearchToolStripTextBox
+        '
+        Me.SearchToolStripTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.SearchToolStripTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.SearchToolStripTextBox.Margin = New System.Windows.Forms.Padding(1, 0, 20, 0)
+        Me.SearchToolStripTextBox.Name = "SearchToolStripTextBox"
+        Me.SearchToolStripTextBox.Size = New System.Drawing.Size(200, 25)
+        '
+        'ToolStripDropDownButton1
+        '
+        Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddDivisionLocationToolStripMenuItem, Me.AddDivisionToolStripMenuItem, Me.AddPositionToolStripMenuItem})
+        Me.ToolStripDropDownButton1.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
+        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(58, 22)
+        Me.ToolStripDropDownButton1.Text = "Add"
+        '
+        'AddDivisionLocationToolStripMenuItem
+        '
+        Me.AddDivisionLocationToolStripMenuItem.Name = "AddDivisionLocationToolStripMenuItem"
+        Me.AddDivisionLocationToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.AddDivisionLocationToolStripMenuItem.Text = "Division Location"
+        '
+        'AddDivisionToolStripMenuItem
+        '
+        Me.AddDivisionToolStripMenuItem.Name = "AddDivisionToolStripMenuItem"
+        Me.AddDivisionToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.AddDivisionToolStripMenuItem.Text = "Division"
+        '
+        'AddPositionToolStripMenuItem
+        '
+        Me.AddPositionToolStripMenuItem.Name = "AddPositionToolStripMenuItem"
+        Me.AddPositionToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.AddPositionToolStripMenuItem.Text = "Position"
+        '
+        'ToolStripLabel1
+        '
+        Me.ToolStripLabel1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripLabel1.Image = Global.AccuPay.My.Resources.Resources.magnifier_zoom
+        Me.ToolStripLabel1.Margin = New System.Windows.Forms.Padding(0, 1, 5, 2)
+        Me.ToolStripLabel1.Name = "ToolStripLabel1"
+        Me.ToolStripLabel1.Size = New System.Drawing.Size(16, 22)
+        '
         'DataGridViewTextBoxColumn1
         '
+        Me.DataGridViewTextBoxColumn1.DataPropertyName = "EmployeeNo"
         Me.DataGridViewTextBoxColumn1.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.ReadOnly = True
         '
         'DataGridViewTextBoxColumn2
         '
+        Me.DataGridViewTextBoxColumn2.DataPropertyName = "LastName"
         Me.DataGridViewTextBoxColumn2.HeaderText = "Last Name"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
         Me.DataGridViewTextBoxColumn2.ReadOnly = True
         '
         'DataGridViewTextBoxColumn3
         '
+        Me.DataGridViewTextBoxColumn3.DataPropertyName = "FirstName"
         Me.DataGridViewTextBoxColumn3.HeaderText = "First Name"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         Me.DataGridViewTextBoxColumn3.ReadOnly = True
         '
         'DataGridViewTextBoxColumn4
         '
+        Me.DataGridViewTextBoxColumn4.DataPropertyName = "MiddleName"
         Me.DataGridViewTextBoxColumn4.HeaderText = "Middle Name"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
         '
-        'NewEmployeePositionForm
+        'DivisionUserControl1
+        '
+        Me.DivisionUserControl1.Location = New System.Drawing.Point(6, 42)
+        Me.DivisionUserControl1.Name = "DivisionUserControl1"
+        Me.DivisionUserControl1.Size = New System.Drawing.Size(740, 600)
+        Me.DivisionUserControl1.TabIndex = 396
+        Me.DivisionUserControl1.Visible = False
+        '
+        'PositionUserControl1
+        '
+        Me.PositionUserControl1.Location = New System.Drawing.Point(0, 17)
+        Me.PositionUserControl1.Margin = New System.Windows.Forms.Padding(4)
+        Me.PositionUserControl1.Name = "PositionUserControl1"
+        Me.PositionUserControl1.Size = New System.Drawing.Size(292, 148)
+        Me.PositionUserControl1.TabIndex = 0
+        '
+        'EmployeeID
+        '
+        Me.EmployeeID.DataPropertyName = "EmployeeNo"
+        Me.EmployeeID.HeaderText = "Employee ID"
+        Me.EmployeeID.Name = "EmployeeID"
+        Me.EmployeeID.ReadOnly = True
+        '
+        'LastName
+        '
+        Me.LastName.DataPropertyName = "LastName"
+        Me.LastName.HeaderText = "Last Name"
+        Me.LastName.Name = "LastName"
+        Me.LastName.ReadOnly = True
+        '
+        'FirstName
+        '
+        Me.FirstName.DataPropertyName = "FirstName"
+        Me.FirstName.HeaderText = "First Name"
+        Me.FirstName.Name = "FirstName"
+        Me.FirstName.ReadOnly = True
+        '
+        'MiddleName
+        '
+        Me.MiddleName.DataPropertyName = "MiddleName"
+        Me.MiddleName.HeaderText = "Middle Name"
+        Me.MiddleName.Name = "MiddleName"
+        Me.MiddleName.ReadOnly = True
+        '
+        'NewDivisionPositionForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(166, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(1229, 547)
+        Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.FormsTabControl)
         Me.Controls.Add(Me.lblFormTitle)
-        Me.Controls.Add(Me.PositionTreeView)
+        Me.Controls.Add(Me.DivisionPositionTreeView)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
-        Me.Name = "NewEmployeePositionForm"
+        Me.Name = "NewDivisionPositionForm"
         Me.Text = "NewEmployeePositionForm"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.PositionTabPage.ResumeLayout(False)
@@ -522,11 +594,13 @@ Partial Class NewEmployeePositionForm
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.FormsTabControl.ResumeLayout(False)
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
+        Me.ToolStrip3.ResumeLayout(False)
+        Me.ToolStrip3.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
-
-    Friend WithEvents PositionTreeView As TreeView
     Friend WithEvents lblFormTitle As Label
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
@@ -536,24 +610,22 @@ Partial Class NewEmployeePositionForm
     Friend WithEvents EmployeeDataGrid As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Label2 As Label
     Friend WithEvents ToolStrip2 As ToolStrip
-    Friend WithEvents NewPositionToolStripButton As ToolStripButton
     Friend WithEvents SavePositionToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents DeletePositionToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
     Friend WithEvents CancelPositionToolStripButton As ToolStripButton
-    Friend WithEvents ToolStripButton12 As ToolStripButton
+    Friend WithEvents CloseFormToolStripItem2 As ToolStripButton
     Friend WithEvents ToolStripButton13 As ToolStripButton
     Friend WithEvents miniToolStrip As ToolStrip
     Friend WithEvents DivisionTabPage As TabPage
     Friend WithEvents ToolStrip1 As ToolStrip
-    Friend WithEvents NewDivisionToolStripButton As ToolStripButton
     Friend WithEvents SaveDivisionToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents DeleteDivisionToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents CancelDivisionToolStripButton As ToolStripButton
-    Friend WithEvents ToolStripButton5 As ToolStripButton
+    Friend WithEvents CloseFormToolStripItem As ToolStripButton
     Friend WithEvents ToolStripButton6 As ToolStripButton
     Friend WithEvents FormsTabControl As TabControl
     Friend WithEvents DivisionLocationGroupBox As GroupBox
@@ -570,4 +642,14 @@ Partial Class NewEmployeePositionForm
     Friend WithEvents LastName As DataGridViewTextBoxColumn
     Friend WithEvents FirstName As DataGridViewTextBoxColumn
     Friend WithEvents MiddleName As DataGridViewTextBoxColumn
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents ToolStrip3 As ToolStrip
+    Friend WithEvents SearchToolStripTextBox As ToolStripTextBox
+    Friend WithEvents ToolStripDropDownButton1 As ToolStripDropDownButton
+    Friend WithEvents AddDivisionLocationToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AddDivisionToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AddPositionToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripLabel1 As ToolStripLabel
+    Protected Friend WithEvents DivisionPositionTreeView As TreeView
+    Friend WithEvents ImageList1 As ImageList
 End Class

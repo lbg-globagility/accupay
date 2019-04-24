@@ -69,7 +69,7 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Public Async Function SaveAsync(position As Position) As Task
+        Public Async Function SaveAsync(position As Position) As Task(Of Position)
 
             Using context As New PayrollContext
 
@@ -83,6 +83,16 @@ Namespace Global.AccuPay.Repository
                 End If
 
                 Await context.SaveChangesAsync()
+
+
+                Dim newPosition = Await context.Positions.
+                                    FirstOrDefaultAsync(Function(p) Nullable.Equals(p.RowID, position.RowID))
+
+                If newPosition Is Nothing Then
+                    Throw New ArgumentException("There was a problem inserting the new position. Please try again.")
+                End If
+
+                Return newPosition
 
             End Using
 
@@ -98,9 +108,9 @@ Namespace Global.AccuPay.Repository
 
                 End If
 
-                Dim loanSchedule = Await GetByIdAsync(positionId)
+                Dim position = Await GetByIdAsync(positionId)
 
-                context.Remove(loanSchedule)
+                context.Remove(position)
 
                 Await context.SaveChangesAsync()
 

@@ -145,7 +145,7 @@ Public Class AddLoanScheduleForm
         End If
     End Sub
 
-    Private Async Sub btnAdd_Click(sender As Object, e As EventArgs) _
+    Private Async Sub AddLoanScheduleButtonClicked(sender As Object, e As EventArgs) _
         Handles btnAddAndNew.Click, btnAddAndClose.Click
 
         ForceLoanScheduleGridViewCommit()

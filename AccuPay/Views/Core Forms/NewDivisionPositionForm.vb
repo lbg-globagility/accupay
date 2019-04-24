@@ -1,14 +1,14 @@
 ﻿Option Strict On
 
+Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.JobLevels
 Imports AccuPay.Repository
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 
-Public Class NewEmployeePositionForm
+Public Class NewDivisionPositionForm
 
     Private _divisions As New List(Of Division)
 
@@ -40,19 +40,17 @@ Public Class NewEmployeePositionForm
 
         z_OrganizationID = 3
 
-        Await GetJobLevels()
-
-        Await GetDivisions()
-
-        Await GetPositions()
-
-        Await GetPayFrequencies()
+        Await LoadPayFrequencies()
 
         GetDivisionTypes()
 
         GetDeductionSchedules()
 
-        LoadTreeView()
+        Await RefreshTreeView()
+
+        AddDivisionLocationToolStripMenuItem.Image = ImageList1.Images(0)
+        AddDivisionToolStripMenuItem.Image = ImageList1.Images(1)
+        AddPositionToolStripMenuItem.Image = ImageList1.Images(2)
 
         HideFormsTabControlHeader()
 
@@ -60,11 +58,21 @@ Public Class NewEmployeePositionForm
 
     End Sub
 
-    Private Sub PositionTreeView_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles PositionTreeView.AfterSelect
+    Private Async Function RefreshTreeView() As Task
+        Await LoadJobLevels()
+
+        Await LoadDivisions()
+
+        Await LoadPositions()
+
+        LoadTreeView()
+    End Function
+
+    Private Sub DivisionPositionTreeView_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles DivisionPositionTreeView.AfterSelect
 
         ClearForms()
 
-        Dim selectedNode = PositionTreeView.SelectedNode
+        Dim selectedNode = DivisionPositionTreeView.SelectedNode
 
         If selectedNode Is Nothing OrElse selectedNode.Tag Is Nothing Then Return
 
@@ -73,8 +81,8 @@ Public Class NewEmployeePositionForm
         If selectedNodeData.ObjectType = ObjectType.Division Then
 
             Dim selectedDivision = _divisions.
-                    Where(Function(d) Nullable.Equals(d.RowID, selectedNodeData.Id)).
-                    FirstOrDefault
+                    FirstOrDefault(Function(d) Nullable.Equals(d.RowID, selectedNodeData.Id))
+
 
             If selectedDivision Is Nothing Then Return
 
@@ -83,8 +91,8 @@ Public Class NewEmployeePositionForm
         ElseIf selectedNodeData.ObjectType = ObjectType.Position Then
 
             Dim selectedPosition = _positions.
-                    Where(Function(d) Nullable.Equals(d.RowID, selectedNodeData.Id)).
-                    FirstOrDefault
+                    FirstOrDefault(Function(d) Nullable.Equals(d.RowID, selectedNodeData.Id))
+
 
             If selectedPosition Is Nothing Then Return
 
@@ -96,15 +104,22 @@ Public Class NewEmployeePositionForm
 
     Private Async Sub SaveDivisionToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveDivisionToolStripButton.Click
 
-        'removing focus to PositionUserControl1 updates the databind
-        PositionGroupBox.Focus()
-
-        'removing focus to PositionUserControl1 updates the databind
-        PositionGroupBox.Focus()
+        'removing focus to DivisionUserControl1 updates the databind
+        DivisionPositionTreeView.Focus()
 
         Dim messageTitle = "Save Division"
+        Dim isRoot = False
 
-        If ValidateDivision(messageTitle) = False Then
+        Dim selectedDivision = _divisions.
+                    FirstOrDefault(Function(d) Nullable.Equals(d.RowID, Me._currentDivision.RowID))
+
+        If selectedDivision.IsRoot Then
+
+            messageTitle = "Save Division Location"
+            isRoot = True
+        End If
+
+        If ValidateDivision(messageTitle, isRoot) = False Then
 
             Return
 
@@ -146,6 +161,12 @@ Public Class NewEmployeePositionForm
             Return
         End If
 
+        If MessageBoxHelper.Confirm(Of Boolean) _
+        ($"Are you sure you want to delete position: {Me._currentPosition.Name}?", "Confirm Deletion") = False Then
+
+            Return
+        End If
+
         Dim messageTitle = "Delete Position"
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
@@ -177,13 +198,127 @@ Public Class NewEmployeePositionForm
 
     End Sub
 
-    Private Sub DeleteDivisionToolStripButton_Click(sender As Object, e As EventArgs) _
+    Private Async Sub DeleteDivisionToolStripButton_Click(sender As Object, e As EventArgs) _
         Handles DeleteDivisionToolStripButton.Click
+
+        If Me._currentDivision Is Nothing Then
+            MessageBoxHelper.Warning("No division selected!")
+
+            Return
+        End If
+
+        If MessageBoxHelper.Confirm(Of Boolean) _
+        ($"Are you sure you want to delete division: {Me._currentDivision.Name}?", "Confirm Deletion") = False Then
+
+            Return
+        End If
+
+        Dim messageTitle = "Delete Division"
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                          Async Function()
+                              Await DeleteDivision(messageTitle)
+                          End Function,
+                          "Division already has transactions in the system therefore cannot be deleted")
 
     End Sub
 
     Private Sub CancelDivisionToolStripButton_Click(sender As Object, e As EventArgs) _
         Handles CancelDivisionToolStripButton.Click
+
+        If Me._currentDivision Is Nothing Then
+            MessageBoxHelper.Warning("No division selected!")
+
+            Return
+        End If
+
+        Dim unchangedDivision = _divisions.
+        FirstOrDefault(Function(p) Nullable.Equals(p.RowID, Me._currentDivision.RowID))
+
+        If unchangedDivision Is Nothing Then
+            MessageBoxHelper.Warning("No division selected!")
+
+            Return
+        End If
+
+        SetDivision(unchangedDivision)
+    End Sub
+
+    Private Async Sub AddDivisionLocationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddDivisionLocationToolStripMenuItem.Click
+
+        Await InsertDivisionLocation()
+
+    End Sub
+
+    Private Async Sub AddDivisionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddDivisionToolStripMenuItem.Click
+
+        Await InsertDivision()
+
+    End Sub
+
+    Private Async Function InsertDivisionLocation() As Task
+        Dim form As New AddDivisionLocationForm()
+        form.ShowDialog()
+
+        If form.IsSaved Then
+
+            Await RefreshTreeView()
+
+            Me._currentDivision = _divisions.FirstOrDefault(Function(d) Nullable.Equals(d.RowID, form.NewDivision.RowID))
+
+            Dim currentTreeNode As TreeNode = GetTreeNode(Me._currentDivision.RowID, ObjectType.Division)
+
+            DivisionPositionTreeView.SelectedNode = currentTreeNode
+
+            ShowBalloonInfo($"Division Location: {Me._currentDivision.Name} was successfully added.", "Division Location Added")
+
+        End If
+    End Function
+
+    Private Async Function InsertDivision() As Task
+        Dim form As New AddDivisionForm()
+        form.ShowDialog()
+
+        If form.IsSaved Then
+
+            Await RefreshTreeView()
+
+            Me._currentDivision = _divisions.FirstOrDefault(Function(d) Nullable.Equals(d.RowID, form.LastDivisionAdded.RowID))
+
+            Dim currentTreeNode As TreeNode = GetTreeNode(Me._currentDivision.RowID, ObjectType.Division)
+
+            DivisionPositionTreeView.SelectedNode = currentTreeNode
+
+            If form.ShowBalloonSuccess Then
+
+                ShowBalloonInfo($"Division: {Me._currentDivision.Name} was successfully added.", "New Division")
+
+            End If
+
+        End If
+    End Function
+
+    Private Async Sub NewPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles AddPositionToolStripMenuItem.Click
+
+        Dim form As New AddPositionForm
+        form.ShowDialog()
+
+        If form.IsSaved Then
+
+            Await RefreshTreeView()
+
+            Me._currentPosition = _positions.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, form.LastPositionAdded.RowID))
+
+            Dim currentTreeNode As TreeNode = GetTreeNode(Me._currentPosition.RowID, ObjectType.Position)
+
+            DivisionPositionTreeView.SelectedNode = currentTreeNode
+
+            If form.ShowBalloonSuccess Then
+
+                ShowBalloonInfo($"Position: {Me._currentPosition.Name} was successfully added.", "New Position")
+
+            End If
+        End If
 
     End Sub
 
@@ -196,21 +331,33 @@ Public Class NewEmployeePositionForm
 
     Private Sub LoadTreeView()
 
+        DivisionPositionTreeView.Nodes.Clear()
+
         Dim treeNode = GenerateTreeView()
 
         Me._currentTreeNodes = treeNode.ToArray
 
-        PositionTreeView.Nodes.AddRange(Me._currentTreeNodes)
+        DivisionPositionTreeView.Nodes.AddRange(Me._currentTreeNodes)
 
         If treeNode.Count > 0 Then
 
-            PositionTreeView.SelectedNode = Me._currentTreeNodes(0)
+            DivisionPositionTreeView.SelectedNode = Me._currentTreeNodes(0)
+
+            If String.IsNullOrWhiteSpace(SearchToolStripTextBox.Text) = False Then
+
+                DivisionPositionTreeView.ExpandAll()
+
+            End If
 
         End If
 
     End Sub
 
     Private Function GenerateTreeView() As List(Of TreeNode)
+
+        Dim parentDivisionImageIndex = 0
+        Dim divisionImageIndex = 1
+        Dim positionImageIndex = 2
 
         Dim parentDivisionNodes As New List(Of TreeNode)
 
@@ -224,7 +371,8 @@ Public Class NewEmployeePositionForm
             Dim parentDivisionNode = CreateNode(
                                         parentDivision.RowID,
                                         parentDivision.Name,
-                                        ObjectType.Division)
+                                        ObjectType.Division,
+                                        parentDivisionImageIndex)
 
             Dim childDivisions = _divisions.
                                     Where(Function(d) Nullable.Equals(d.ParentDivisionID, parentDivision.RowID)).
@@ -236,7 +384,8 @@ Public Class NewEmployeePositionForm
                 Dim childDivisionNode = CreateNode(
                                             childDivision.RowID,
                                             childDivision.Name,
-                                            ObjectType.Division)
+                                            ObjectType.Division,
+                                            divisionImageIndex)
 
                 'positions
                 Dim positions = _positions.
@@ -248,7 +397,8 @@ Public Class NewEmployeePositionForm
                     Dim positionNode = CreateNode(
                                                 position.RowID,
                                                 position.Name,
-                                                ObjectType.Position)
+                                                ObjectType.Position,
+                                                positionImageIndex)
 
                     childDivisionNode.Nodes.Add(positionNode)
 
@@ -262,22 +412,103 @@ Public Class NewEmployeePositionForm
 
         Next
 
-        Return parentDivisionNodes
+        Return FilterTreeView(parentDivisionNodes)
 
     End Function
 
-    Private Function CreateNode(RowId As Integer?, Name As String, objectType As ObjectType) As TreeNode
+    Private Function FilterTreeView(nodes As List(Of TreeNode)) As List(Of TreeNode)
+
+        If String.IsNullOrWhiteSpace(SearchToolStripTextBox.Text) Then Return nodes
+
+        For i = nodes.Count - 1 To 0 Step -1
+
+            Dim parentDivisionNode = nodes(i)
+
+            If parentDivisionNode.Text.ToUpper.Contains(SearchToolStripTextBox.Text.ToUpper) = False Then
+
+
+                For j = parentDivisionNode.Nodes.Count - 1 To 0 Step -1
+
+                    Dim divisionNode = parentDivisionNode.Nodes(j)
+
+
+                    If divisionNode.Text.ToUpper.Contains(SearchToolStripTextBox.Text.ToUpper) = False Then
+
+                        For k = divisionNode.Nodes.Count - 1 To 0 Step -1
+
+                            Dim positionNode = divisionNode.Nodes(k)
+
+                            If positionNode.Text.ToUpper.Contains(SearchToolStripTextBox.Text.ToUpper) = False Then
+
+                                positionNode.Remove()
+
+                            Else
+
+                                Continue For
+                            End If
+
+                        Next
+
+                        If divisionNode.Nodes.Count = 0 Then
+                            divisionNode.Remove()
+                        End If
+
+                    Else
+
+                        Continue For
+
+                    End If
+
+                Next
+
+                If parentDivisionNode.Nodes.Count = 0 Then
+
+                    If nodes.Count = 1 Then
+
+                        nodes.Clear()
+
+                    Else
+                        parentDivisionNode.Remove()
+                    End If
+
+
+                End If
+
+            Else
+
+                Continue For
+            End If
+
+
+        Next
+
+        If nodes.Count = 0 Then
+            nodes.Clear()
+        End If
+
+        Return nodes
+
+    End Function
+
+
+    Private Function CreateNode(
+                        RowId As Integer?,
+                        Name As String,
+                        objectType As ObjectType,
+                        imageIndex As Integer) As TreeNode
+
         Return New TreeNode With {
                         .Text = Name,
                         .Tag = New NodeData With {
                                     .Id = RowId,
                                     .ObjectType = objectType
                         },
-                        .ImageIndex = 4
+                        .ImageIndex = imageIndex,
+                        .SelectedImageIndex = imageIndex
         }
     End Function
 
-    Private Async Function GetJobLevels() As Task
+    Private Async Function LoadJobLevels() As Task
 
         Dim jobLevels = Await _jobLevelRepository.GetAllAsync()
 
@@ -285,7 +516,7 @@ Public Class NewEmployeePositionForm
 
     End Function
 
-    Private Async Function GetDivisions() As Task
+    Private Async Function LoadDivisions() As Task
 
         Dim divisions = Await _divisionRepository.GetAllAsync()
 
@@ -293,7 +524,7 @@ Public Class NewEmployeePositionForm
 
     End Function
 
-    Private Async Function GetPositions() As Task
+    Private Async Function LoadPositions() As Task
 
         Dim positions = Await _positionRepository.GetAllAsync()
 
@@ -301,7 +532,7 @@ Public Class NewEmployeePositionForm
 
     End Function
 
-    Private Async Function GetPayFrequencies() As Task
+    Private Async Function LoadPayFrequencies() As Task
 
         Dim payFrequencies = Await _payFrequencyRepository.GetAllAsync()
 
@@ -325,14 +556,10 @@ Public Class NewEmployeePositionForm
 
         Dim isRoot = selectedDivision.IsRoot
 
-        ChangeDivisionToolStripButtonsDescription(isRoot)
-
         SetDivision(selectedDivision)
 
         If isRoot Then
-
-            DivisionLocationTextBox.DataBindings.Add("Text", Me._currentDivision, "Name")
-
+            CreateDivisionLocationDataBindings()
         End If
 
         DivisionLocationGroupBox.Visible = isRoot
@@ -340,6 +567,13 @@ Public Class NewEmployeePositionForm
 
         FormsTabControl.SelectedTab = DivisionTabPage
 
+        lblFormTitle.Text = "DIVISION"
+    End Sub
+
+    Private Sub CreateDivisionLocationDataBindings()
+
+        DivisionLocationTextBox.DataBindings.Clear()
+        DivisionLocationTextBox.DataBindings.Add("Text", Me._currentDivision, "Name")
     End Sub
 
     Private Async Sub ShowPositionForm(selectedPosition As Position)
@@ -350,11 +584,13 @@ Public Class NewEmployeePositionForm
 
         FormsTabControl.SelectedTab = PositionTabPage
 
+        lblFormTitle.Text = "POSITION"
+
     End Sub
 
     Private Sub SetPosition(selectedPosition As Position)
 
-        Me._currentPosition = selectedPosition
+        Me._currentPosition = selectedPosition.CloneJson()
 
         Dim allChildDivisions = _divisions.Where(Function(d) d.IsRoot = False).ToList
 
@@ -365,7 +601,11 @@ Public Class NewEmployeePositionForm
 
         Me._currentDivision = selectedDivision.CloneJson()
 
-        If Me._currentDivision.IsRoot = True Then Return
+        If Me._currentDivision.IsRoot = True Then
+
+            CreateDivisionLocationDataBindings()
+            Return
+        End If
 
         Dim allParentDivisions = _divisions.Where(Function(d) d.IsRoot = True).ToList
 
@@ -382,27 +622,6 @@ Public Class NewEmployeePositionForm
 
         DivisionLocationTextBox.DataBindings.Clear()
 
-    End Sub
-
-    Private Sub ChangeDivisionToolStripButtonsDescription(isRoot As Boolean)
-        Dim newDescription = "New Division"
-        Dim saveDescription = "Save Division"
-        Dim deleteDescription = "Delete Division"
-        Dim cancelDescription = "Cancel Division"
-
-        If isRoot Then
-
-            newDescription &= " Location"
-            saveDescription &= " Location"
-            deleteDescription &= " Location"
-            cancelDescription &= " Location"
-
-        End If
-
-        NewDivisionToolStripButton.Text = newDescription
-        SaveDivisionToolStripButton.Text = saveDescription
-        DeleteDivisionToolStripButton.Text = deleteDescription
-        CancelDivisionToolStripButton.Text = cancelDescription
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)
@@ -522,9 +741,11 @@ Public Class NewEmployeePositionForm
 
         Await _positionRepository.SaveAsync(Me._currentPosition)
 
+        Await RefreshTreeView()
+
         Dim currentTreeNode As TreeNode = GetTreeNode(Me._currentPosition.RowID, ObjectType.Position)
 
-        currentTreeNode.Text = Me._currentPosition.Name
+        DivisionPositionTreeView.SelectedNode = currentTreeNode
 
         ShowBalloonInfo($"Position: {Me._currentPosition.Name} was successfully updated.", messageTitle)
 
@@ -536,34 +757,44 @@ Public Class NewEmployeePositionForm
 
         Await _positionRepository.DeleteAsync(Me._currentPosition.RowID)
 
-        PositionTreeView.Nodes.Remove(PositionTreeView.SelectedNode)
-
-        _positions.Remove(Me._currentPosition)
+        Await RefreshTreeView()
 
         ShowBalloonInfo($"Position: {positionName} was successfully deleted.", messageTitle)
 
     End Function
 
-    Private Function ValidateDivision(messageTitle As String) As Boolean
+    Private Async Function DeleteDivision(messageTitle As String) As Task
+
+        Dim divisionName = Me._currentDivision.Name
+
+        Await _divisionRepository.DeleteAsync(Me._currentDivision.RowID)
+
+        Await RefreshTreeView()
+
+        ShowBalloonInfo($"Division: {divisionName} was successfully deleted.", messageTitle)
+
+    End Function
+
+    Private Function ValidateDivision(messageTitle As String, Optional isDivisionLocation As Boolean = False) As Boolean
 
         If Me._currentDivision Is Nothing Then
 
             MessageBoxHelper.Warning("No selected division!", messageTitle)
             Return False
+        End If
 
-        ElseIf String.IsNullOrWhiteSpace(Me._currentDivision.DivisionType) Then
-
-            DivisionUserControl1.ShowError("DivisionType", "Please select a division type")
-            Return False
-
-        ElseIf Me._currentDivision.ParentDivisionID Is Nothing Then
-
-            DivisionUserControl1.ShowError("ParentDivisionID", "Please select a parent division")
-            Return False
-
-        ElseIf String.IsNullOrWhiteSpace(Me._currentDivision.Name) Then
+        If String.IsNullOrWhiteSpace(Me._currentDivision.Name) Then
 
             DivisionUserControl1.ShowError("Name", "Please enter a name")
+            Return False
+        End If
+
+        'if parent division, name is the only field required
+        If isDivisionLocation Then Return True
+
+        If Me._currentDivision.ParentDivisionID Is Nothing Then
+
+            DivisionUserControl1.ShowError("ParentDivisionID", "Please select a parent division")
             Return False
 
         ElseIf Me._currentDivision.WorkDaysPerYear Is Nothing OrElse Me._currentDivision.WorkDaysPerYear < 0 Then
@@ -579,11 +810,20 @@ Public Class NewEmployeePositionForm
 
     Private Async Function SaveDivision(messageTitle As String) As Task
 
-        Await _divisionRepository.SaveAsync(Me._currentDivision)
+        Dim division = Me._currentDivision.CloneJson()
+        division.ParentDivision = Nothing
+
+        Await _divisionRepository.SaveAsync(division)
+
+        RemoveHandler DivisionPositionTreeView.AfterSelect, AddressOf DivisionPositionTreeView_AfterSelect
+
+        Await RefreshTreeView()
+
+        AddHandler DivisionPositionTreeView.AfterSelect, AddressOf DivisionPositionTreeView_AfterSelect
 
         Dim currentTreeNode As TreeNode = GetTreeNode(Me._currentDivision.RowID, ObjectType.Division)
 
-        currentTreeNode.Text = Me._currentDivision.Name
+        DivisionPositionTreeView.SelectedNode = currentTreeNode
 
         ShowBalloonInfo($"Division: {Me._currentDivision.Name} was successfully updated.", messageTitle)
 
@@ -603,4 +843,28 @@ Public Class NewEmployeePositionForm
         Position
     End Enum
 
+    Private Sub CloseFormToolStripItem2_Click(sender As Object, e As EventArgs) _
+        Handles CloseFormToolStripItem2.Click, CloseFormToolStripItem.Click
+
+        Me.Close()
+
+    End Sub
+
+    Private Sub NewDivisionPositionForm_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+
+        If previousForm IsNot Nothing Then
+            If previousForm.Name = Me.Name Then
+                previousForm = Nothing
+            End If
+        End If
+
+
+        HRISForm.listHRISForm.Remove(Me.Name)
+    End Sub
+
+    Private Sub SearchToolStripTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchToolStripTextBox.TextChanged
+
+        LoadTreeView()
+
+    End Sub
 End Class

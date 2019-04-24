@@ -52,6 +52,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property DefaultSickLeave As Decimal?
 
+        Public Property DefaultOtherLeave As Decimal?
+
         Public Property GracePeriod As Decimal?
 
         Public Property WorkDaysPerYear As Integer?
@@ -121,6 +123,11 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("PayFrequencyID")>
         Public Overridable Property PayFrequency As PayFrequency
 
+        Public Property DivisionUniqueID As Integer?
+
+        Public Property MinimumWageAmount As Decimal?
+
+
         Public ReadOnly Property IsRoot As Boolean
             Get
                 Return ParentDivisionID Is Nothing
@@ -137,6 +144,38 @@ Namespace Global.AccuPay.Entity
 
         Public Function IsParent(division As Division) As Boolean
             Return Nullable.Equals(ParentDivisionID, division.RowID)
+        End Function
+
+        Public Shared Function CreateEmptyDivision() As Division
+
+            Return New Division With {
+                .OrganizationID = z_OrganizationID,
+                .GracePeriod = 0,
+                .WorkDaysPerYear = 313,
+                .PhilHealthDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,
+                .PagIBIGDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,
+                .SssDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,
+                .WithholdingTaxSchedule = ContributionSchedule.END_OF_THE_MONTH,
+                .DefaultVacationLeave = 0,
+                .DefaultSickLeave = 0,
+                .DefaultOtherLeave = 0,
+                .AgencyPhilHealthDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,
+                .AgencyPagIBIGDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,
+                .AgencySssDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,
+                .AgencyWithholdingTaxSchedule = ContributionSchedule.END_OF_THE_MONTH,
+                .DivisionUniqueID = 1,
+                .MinimumWageAmount = 466,
+                .AutomaticOvertimeFiling = False,
+                .WeeklySSSDeductionSchedule = ContributionSchedule.LAST_WEEK_OF_THE_MONTH,
+                .WeeklyPhilHealthDeductionSchedule = ContributionSchedule.LAST_WEEK_OF_THE_MONTH,
+                .WeeklyAgencyPagIBIGDeductionSchedule = ContributionSchedule.LAST_WEEK_OF_THE_MONTH,
+                .WeeklyWithholdingTaxSchedule = ContributionSchedule.LAST_WEEK_OF_THE_MONTH,
+                .WeeklyAgencySssDeductionSchedule = ContributionSchedule.LAST_WEEK_OF_THE_MONTH,
+                .WeeklyAgencyPhilHealthDeductionSchedule = ContributionSchedule.LAST_WEEK_OF_THE_MONTH,
+                .WeeklyPagIBIGDeductionSchedule = ContributionSchedule.LAST_WEEK_OF_THE_MONTH,
+                .WeeklyAgencyWithholdingTaxSchedule = ContributionSchedule.LAST_WEEK_OF_THE_MONTH
+            }
+
         End Function
 
     End Class

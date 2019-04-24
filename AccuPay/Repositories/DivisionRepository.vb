@@ -32,7 +32,20 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Public Async Function SaveAsync(division As Division) As Task
+        Public Async Function GetAllParentsAsync() As Task(Of List(Of Division))
+
+            Using context As New PayrollContext
+
+                Return Await context.Divisions.
+                            Where(Function(d) Nullable.Equals(d.OrganizationID, z_OrganizationID)).
+                            Where(Function(d) d.IsRoot).
+                            ToListAsync
+
+            End Using
+
+        End Function
+
+        Public Async Function SaveAsync(division As Division) As Task(Of Division)
 
             Using context As New PayrollContext
 
@@ -44,6 +57,43 @@ Namespace Global.AccuPay.Repository
                 Else
                     Update(division, existingDivision, context)
                 End If
+
+                Await context.SaveChangesAsync()
+
+
+                Dim newDivision = Await context.Divisions.
+                                    FirstOrDefaultAsync(Function(d) Nullable.Equals(d.RowID, division.RowID))
+
+                If newDivision Is Nothing Then
+                    Throw New ArgumentException("There was a problem inserting the new division location. Please try again.")
+                End If
+
+                Return newDivision
+            End Using
+
+        End Function
+
+        Public Async Function DeleteAsync(divisionId As Integer?) As Task
+
+            Using context = New PayrollContext()
+
+                If context.AgencyFees.Any(Function(a) Nullable.Equals(a.DivisionID, divisionId)) Then
+
+                    Throw New ArgumentException("Division already has agency fees therefore cannot be deleted.")
+
+                ElseIf context.Divisions.Any(Function(d) Nullable.Equals(d.ParentDivisionID, divisionId)) Then
+
+                    Throw New ArgumentException("Division already has child divisions therefore cannot be deleted.")
+
+                ElseIf context.Positions.Any(Function(p) Nullable.Equals(p.DivisionID, divisionId)) Then
+
+                    Throw New ArgumentException("Division already has positions therefore cannot be deleted.")
+
+                End If
+
+                Dim division = Await context.Divisions.FirstOrDefaultAsync(Function(d) Nullable.Equals(d.RowID, divisionId))
+
+                context.Remove(division)
 
                 Await context.SaveChangesAsync()
 

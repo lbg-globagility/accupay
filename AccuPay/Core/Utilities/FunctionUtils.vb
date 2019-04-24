@@ -5,7 +5,10 @@ Namespace Global.AccuPay.Utils
 
     Public Class FunctionUtils
 
-        Public Shared Async Function TryCatchFunctionAsync(messageTitle As String, action As Func(Of Task)) As Task
+        Public Shared Async Function TryCatchFunctionAsync(
+                                        messageTitle As String,
+                                        action As Func(Of Task),
+                                        Optional baseExceptionErrorMessage As String = Nothing) As Task
 
             Try
 
@@ -18,7 +21,14 @@ Namespace Global.AccuPay.Utils
             Catch ex As Exception
 
                 Debugger.Break()
-                MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
+
+                If baseExceptionErrorMessage Is Nothing Then
+
+                    MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
+                Else
+
+                    MessageBoxHelper.ErrorMessage(baseExceptionErrorMessage, messageTitle)
+                End If
 
             End Try
 
