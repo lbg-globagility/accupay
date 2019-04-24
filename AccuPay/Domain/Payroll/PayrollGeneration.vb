@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports AccuPay
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
@@ -10,89 +9,73 @@ Imports PayrollSys
 
 Public Class PayrollGeneration
 
-    Private Const PagibigEmployerAmount As Decimal = 100
+    Private Delegate Sub NotifyMainWindow(result As Result)
 
-    Private Shared logger As ILog = LogManager.GetLogger("PayrollLogger")
+    Private Shared ReadOnly logger As ILog = LogManager.GetLogger("PayrollLogger")
 
-    Private _employee As Employee
+    Private ReadOnly _notifyMainWindow As NotifyMainWindow
+
+    Private ReadOnly _employee As Employee
 
     Private ReadOnly _resources As PayrollResources
 
-    Private _salary As Salary
+    Private ReadOnly _salary As Salary
 
-    Private _allLoanSchedules As ICollection(Of LoanSchedule)
+    Private ReadOnly _loanSchedules As ICollection(Of LoanSchedule)
 
-    Private _allLoanTransactions As ICollection(Of LoanTransaction)
+    Private ReadOnly _loanTransactions As ICollection(Of LoanTransaction)
 
-    Private allWeeklyAllowances As DataTable
-    Private allNoTaxWeeklyAllowances As DataTable
+    Private ReadOnly _previousTimeEntries2 As ICollection(Of TimeEntry)
 
-    Private _previousTimeEntries2 As ICollection(Of TimeEntry)
+    Private ReadOnly _formCaller As Form
 
-    Private _filingStatuses As DataTable
+    Private ReadOnly _payPeriod As PayPeriod
 
-    Private Delegate Sub NotifyMainWindow(result As Result)
+    Private ReadOnly _products As IEnumerable(Of Product)
 
-    Private _notifyMainWindow As NotifyMainWindow
+    Private ReadOnly _settings As ListOfValueCollection
 
-    Private formCaller As Form
+    Private ReadOnly _timeEntries As ICollection(Of TimeEntry)
 
-    Private _payPeriod As PayPeriod
+    Private ReadOnly _employeeDutySchedules As ICollection(Of EmployeeDutySchedule)
+
+    Private ReadOnly _payRates As IReadOnlyDictionary(Of Date, PayRate)
+
+    Private ReadOnly _allowances As ICollection(Of Allowance)
+
+    Private ReadOnly _taxableAllowances As ICollection(Of Allowance)
+
+    Private ReadOnly _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
+
+    Private ReadOnly _taxableAllowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
+
+    Private ReadOnly _actualtimeentries As ICollection(Of ActualTimeEntry)
+
+    Private ReadOnly _policy As TimeEntryPolicy
+
+    Private ReadOnly _previousPaystub As Paystub
 
     Private _paystub As Paystub
 
     Private _paystubActual As PaystubActual
 
-    Private _previousPaystub As Paystub
-
-    Private _products As IEnumerable(Of Product)
-
-    Private _socialSecurityBrackets As ICollection(Of SocialSecurityBracket)
-
-    Private _philHealthBrackets As ICollection(Of PhilHealthBracket)
-
-    Private _withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket)
-
-    Private _settings As ListOfValueCollection
-
-    Private _timeEntries As ICollection(Of TimeEntry)
-
-    Private _employeeDutySchedules As ICollection(Of EmployeeDutySchedule)
-
-    Private _payRates As IReadOnlyDictionary(Of Date, PayRate)
-
-    Private _allowances As ICollection(Of Allowance)
-
-    Private _taxableAllowances As ICollection(Of Allowance)
-
-    Private _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
-
-    Private _taxableAllowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
-
-    Private _actualtimeentries As ICollection(Of ActualTimeEntry)
-
-    Private _policy As TimeEntryPolicy
-
     Sub New(employee As Employee,
-            allWeeklyAllowances As DataTable,
-            allNoTaxWeeklyAllowances As DataTable,
             resources As PayrollResources,
-            Optional pay_stub_frm As PayStubForm = Nothing)
-        formCaller = pay_stub_frm
+            Optional paystubForm As PayStubForm = Nothing)
+        _formCaller = paystubForm
+        _notifyMainWindow = AddressOf paystubForm.ProgressCounter
 
         _employee = employee
 
         _resources = resources
 
-        _allLoanSchedules = resources.LoanSchedules
-        _allLoanTransactions = resources.LoanTransactions
+        _loanSchedules = resources.LoanSchedules.
+            Where(Function(l) Nullable.Equals(l.EmployeeID, _employee.RowID)).
+            ToList()
 
-        Me.allWeeklyAllowances = allWeeklyAllowances
-        Me.allNoTaxWeeklyAllowances = allNoTaxWeeklyAllowances
-
-        _filingStatuses = resources.FilingStatuses
-
-        _notifyMainWindow = AddressOf pay_stub_frm.ProgressCounter
+        _loanTransactions = resources.LoanTransactions.
+            Where(Function(t) Nullable.Equals(t.EmployeeID, _employee.RowID)).
+            ToList()
 
         _salary = resources.Salaries.
             FirstOrDefault(Function(s) CBool(s.EmployeeID = _employee.RowID))
@@ -101,10 +84,6 @@ Public Class PayrollGeneration
 
         _paystub = resources.Paystubs.FirstOrDefault(
             Function(p) Nullable.Equals(p.EmployeeID, _employee.RowID))
-
-        _socialSecurityBrackets = resources.SocialSecurityBrackets
-        _philHealthBrackets = resources.PhilHealthBrackets
-        _withholdingTaxBrackets = resources.WithholdingTaxBrackets
 
         _previousPaystub = resources.PreviousPaystubs.FirstOrDefault(
             Function(p) CBool(p.EmployeeID = _employee.RowID))
@@ -122,7 +101,6 @@ Public Class PayrollGeneration
             Where(Function(t) _payPeriod.PayFromDate <= t.Date And t.Date <= _payPeriod.PayToDate).
             OrderBy(Function(t) t.Date).
             ToList()
-
 
         _employeeDutySchedules = resources.EmployeeDutySchedule.
             Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
@@ -149,13 +127,13 @@ Public Class PayrollGeneration
         Try
             GeneratePayStub()
 
-            formCaller.BeginInvoke(
+            _formCaller.BeginInvoke(
                 _notifyMainWindow,
                 New Result(_employee.EmployeeNo, _employee.Fullname, ResultStatus.Success, ""))
         Catch ex As Exception
             logger.Error("DoProcess", ex)
 
-            formCaller.BeginInvoke(
+            _formCaller.BeginInvoke(
                 _notifyMainWindow,
                 New Result(_employee.EmployeeNo, _employee.Fullname, ResultStatus.Error, ex.Message))
         End Try
@@ -227,6 +205,12 @@ Public Class PayrollGeneration
                         _paystub.LeavePay +
                         _paystub.AdditionalPay
                 Else
+                    _paystub.RegularHours =
+                        _paystub.BasicHours - _paystub.LeaveHours
+
+                    _paystub.RegularPay =
+                        _paystub.BasicPay - _paystub.LeavePay
+
                     _paystub.TotalEarnings = (_paystub.BasicPay + _paystub.AdditionalPay) - _paystub.BasicDeductions
                 End If
 
@@ -240,17 +224,17 @@ Public Class PayrollGeneration
             CalculateAllowances()
             CalculateTaxableAllowances()
 
-            Dim socialSecurityCalculator = New SssCalculator(_socialSecurityBrackets)
-            socialSecurityCalculator.Calculate(_settings, _paystub, _previousPaystub, _salary, _employee, _payPeriod)
+            Dim socialSecurityCalculator = New SssCalculator(_settings, _resources.SocialSecurityBrackets)
+            socialSecurityCalculator.Calculate(_paystub, _previousPaystub, _salary, _employee, _payPeriod)
 
-            Dim philHealthCalculator = New PhilHealthCalculator(New PhilHealthPolicy(_settings), _philHealthBrackets)
+            Dim philHealthCalculator = New PhilHealthCalculator(New PhilHealthPolicy(_settings), _resources.PhilHealthBrackets)
             philHealthCalculator.Calculate(_salary, _paystub, _previousPaystub, _employee, _payPeriod, _allowances)
 
             Dim hdmfCalculator = New HdmfCalculator()
             hdmfCalculator.Calculate(_salary, _paystub, _employee, _payPeriod)
 
-            Dim withholdingTaxCalculator = New WithholdingTaxCalculator(_filingStatuses, _withholdingTaxBrackets, _resources.DivisionMinimumWages)
-            withholdingTaxCalculator.Calculate(_settings, _paystub, _previousPaystub, _employee, _payPeriod, _salary)
+            Dim withholdingTaxCalculator = New WithholdingTaxCalculator(_settings, _resources.FilingStatuses, _resources.WithholdingTaxBrackets, _resources.DivisionMinimumWages)
+            withholdingTaxCalculator.Calculate(_paystub, _previousPaystub, _employee, _payPeriod, _salary)
 
             Dim newLoanTransactions = ComputeLoans()
 
@@ -316,7 +300,6 @@ Public Class PayrollGeneration
                 (_employee.DayOfRest IsNot Nothing) AndAlso
                 (_employee.DayOfRest.Value - 1) = timeEntry.Date.DayOfWeek
 
-
             If useNewShiftSchedule Then
 
                 newShift = _employeeDutySchedules.
@@ -324,7 +307,6 @@ Public Class PayrollGeneration
 
                 isRestDayOffset = If(newShift?.IsRestDay, False)
                 shiftWorkHours = If(newShift?.WorkHours, 0)
-
             Else
 
                 isRestDayOffset = If(timeEntry.ShiftSchedule?.IsRestDay, False)
@@ -549,12 +531,10 @@ Public Class PayrollGeneration
     End Sub
 
     Private Function ComputeLoans() As IList(Of LoanTransaction)
-        Dim existingLoanTransactions = _allLoanTransactions.
-               Where(Function(t) Nullable.Equals(t.EmployeeID, _paystub.EmployeeID))
         Dim newLoanTransactions = New List(Of LoanTransaction)
 
-        If existingLoanTransactions.Count > 0 Then
-            _paystub.TotalLoans = existingLoanTransactions.Sum(Function(t) t.Amount)
+        If _loanTransactions.Count > 0 Then
+            _paystub.TotalLoans = _loanTransactions.Sum(Function(t) t.Amount)
         Else
             Dim acceptedLoans As String() = {}
             If _payPeriod.IsFirstHalf Then
@@ -563,8 +543,7 @@ Public Class PayrollGeneration
                 acceptedLoans = {"Per pay period", "End of the month"}
             End If
 
-            Dim loanSchedules = _allLoanSchedules.
-                Where(Function(l) Nullable.Equals(l.EmployeeID, _paystub.EmployeeID)).
+            Dim loanSchedules = _loanSchedules.
                 Where(Function(l) acceptedLoans.Contains(l.DeductionSchedule)).
                 ToList()
 

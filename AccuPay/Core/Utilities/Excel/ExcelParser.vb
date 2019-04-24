@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.IO
 Imports System.Reflection
@@ -21,6 +21,18 @@ Namespace Global.Globagility.AccuPay
         End Sub
 
         Public Function Read(filePath As String) As IList(Of T)
+
+            If Path.GetExtension(filePath) = ".xls" Then
+                Dim tempFileName = Path.GetTempFileName() + ".xlsx"
+
+                Dim app = New Microsoft.Office.Interop.Excel.Application()
+                Dim workbook = app.Workbooks.Open(filePath)
+                workbook.SaveAs(Filename:=tempFileName, FileFormat:=Microsoft.Office.Interop.Excel.XlFileFormat.xlOpenXMLWorkbook)
+                workbook.Close()
+                app.Quit()
+                filePath = tempFileName
+            End If
+
             Dim stream = GetFileContents(filePath)
 
             Dim records As List(Of T) = Nothing

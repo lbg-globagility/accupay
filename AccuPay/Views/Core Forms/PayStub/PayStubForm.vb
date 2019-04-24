@@ -90,10 +90,6 @@ Public Class PayStubForm
 
     Dim employee_dattab As New DataTable
 
-    Dim emp_allowanceWeekly As New DataTable
-
-    Dim notax_allowanceWeekly As New DataTable
-
     Public numofweekdays As Integer
 
     Public numofweekends As Integer
@@ -733,24 +729,6 @@ Public Class PayStubForm
                 Dim resourcesTask = resources.Load()
                 resourcesTask.Wait()
 
-                emp_allowanceWeekly = New SQL(String.Concat("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID",
-                                                                " FROM employeeallowance",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='1'",
-                                                                " AND AllowanceFrequency='Weekly'",
-                                                                " AND EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                " GROUP BY EmployeeID",
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
-
-                notax_allowanceWeekly = New SQL(String.Concat("SELECT SUM(COALESCE(AllowanceAmount,0)) 'TotalAllowanceAmount',EmployeeID",
-                                                                " FROM employeeallowance",
-                                                                " WHERE OrganizationID=", orgztnID,
-                                                                " AND TaxableFlag='0'",
-                                                                " AND AllowanceFrequency='Weekly'",
-                                                                " AND EffectiveStartDate BETWEEN '", paypFrom, "' AND '", paypTo, "'",
-                                                                " GROUP BY EmployeeID",
-                                                                " ORDER BY DATEDIFF(CURRENT_DATE(),EffectiveStartDate);")).GetFoundRows.Tables(0)
-
                 Return resources
             End Function,
             0
@@ -799,8 +777,6 @@ Public Class PayStubForm
                         Sub(employee)
                             Dim generator = New PayrollGeneration(
                                 employee,
-                                emp_allowanceWeekly,
-                                notax_allowanceWeekly,
                                 resources,
                                 Me
                             )
@@ -2131,6 +2107,7 @@ Public Class PayStubForm
         Dim cashOut = New CashOutUnusedLeave(dateFromId, dateToId, paypRowID)
         cashOut.Execute()
     End Sub
+
 End Class
 
 Friend Class PrintAllPaySlipOfficialFormat
