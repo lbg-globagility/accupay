@@ -72,7 +72,7 @@ Public Class ImportSalaryForm
                     .EffectiveTo = record.EffectiveTo,
                     .BasicSalary = record.BasicSalary,
                     .AllowanceSalary = record.AllowanceSalary,
-                    .DoPaySSSContribution = lastSalary.DoPaySSSContribution
+                    .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True)
                 }
 
                 _salaries.Add(salary)
