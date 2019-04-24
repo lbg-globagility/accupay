@@ -325,6 +325,7 @@
     <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\StringExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\TimeSpanExtensions.vb" />
+    <Compile Include="Core\Utilities\FunctionUtils.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
     <Compile Include="Core\Utilities\ObjectUtils.vb" />
     <Compile Include="Core\Utilities\Helper\PolicyHelper.vb" />
@@ -352,6 +353,35 @@
     <Compile Include="Domain\TimeLogs\ITimeAttendanceHelper.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelperNew.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
+    <Compile Include="Repositories\ContributionSchedule.vb" />
+    <Compile Include="Repositories\DivisionRepository.vb" />
+    <Compile Include="Repositories\JobLevelRepository.vb" />
+    <Compile Include="Repositories\PayFrequencyRepository.vb" />
+    <Compile Include="Repositories\PositionRepository.vb" />
+    <Compile Include="Views\Core Forms\AddDivisionForm.Designer.vb">
+      <DependentUpon>AddDivisionForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\AddDivisionForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\AddDivisionLocationForm.Designer.vb">
+      <DependentUpon>AddDivisionLocationForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\AddDivisionLocationForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\AddPositionForm.Designer.vb">
+      <DependentUpon>AddPositionForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\AddPositionForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\NewDivisionPositionForm.Designer.vb">
+      <DependentUpon>NewDivisionPositionForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\NewDivisionPositionForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Repositories\EmployeeData.vb" />
     <Compile Include="Repositories\LeaveRepository.vb" />
     <Compile Include="Repositories\ProductConstant.vb" />
@@ -372,6 +402,18 @@
     </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\TimeAttendanceLogListForm.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\DivisionUserControl.Designer.vb">
+      <DependentUpon>DivisionUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\DivisionUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\PositionUserControl.Designer.vb">
+      <DependentUpon>PositionUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\PositionUserControl.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\TimeLogsForm2.Designer.vb">
       <DependentUpon>TimeLogsForm2.vb</DependentUpon>
@@ -825,12 +867,6 @@
       <DependentUpon>AddListOfValueForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\General Forms\AddListOfValueForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\General Forms\AddPostionForm.Designer.vb">
-      <DependentUpon>AddPostionForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\AddPostionForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\General Forms\Address.designer.vb">
@@ -1734,6 +1770,15 @@
     <None Include="Resources\baseline_undo_black_24dp.png" />
     <None Include="Resources\baseline_undo_black_18dp.png" />
     <None Include="Resources\baseline_delete_forever_black_18dp.png" />
+    <EmbeddedResource Include="Views\Core Forms\AddDivisionForm.resx">
+      <DependentUpon>AddDivisionForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\AddDivisionLocationForm.resx">
+      <DependentUpon>AddDivisionLocationForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\AddPositionForm.resx">
+      <DependentUpon>AddPositionForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\Import\ImportEmployeeForm.resx">
       <DependentUpon>ImportEmployeeForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -1822,6 +1867,9 @@
     <EmbeddedResource Include="Views\Core Forms\JobLevel\JobPointsForm.resx">
       <DependentUpon>JobPointsForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\NewDivisionPositionForm.resx">
+      <DependentUpon>NewDivisionPositionForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </EmbeddedResource>
@@ -1894,6 +1942,12 @@
     <EmbeddedResource Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.resx">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\DivisionUserControl.resx">
+      <DependentUpon>DivisionUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\PositionUserControl.resx">
+      <DependentUpon>PositionUserControl.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Employees\NewEmployeeForm.resx">
       <DependentUpon>NewEmployeeForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -1914,9 +1968,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\AddListOfValueForm.resx">
       <DependentUpon>AddListOfValueForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\AddPostionForm.resx">
-      <DependentUpon>AddPostionForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\Address.resx">
       <DependentUpon>Address.vb</DependentUpon>

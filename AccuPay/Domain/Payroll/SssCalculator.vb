@@ -88,15 +88,15 @@ Public Class SssCalculator
     End Function
 
     Private Function IsSssPaidOnFirstHalf(payperiod As PayPeriod, deductionSchedule As String) As Boolean
-        Return payperiod.IsFirstHalf And (deductionSchedule = ContributionSchedule.FirstHalf)
+        Return payperiod.IsFirstHalf And (deductionSchedule = ContributionSchedule.FIRST_HALF)
     End Function
 
     Private Function IsSssPaidOnEndOfTheMonth(payperiod As PayPeriod, deductionSchedule As String) As Boolean
-        Return payperiod.IsEndOfTheMonth And (deductionSchedule = ContributionSchedule.EndOfTheMonth)
+        Return payperiod.IsEndOfTheMonth And (deductionSchedule = ContributionSchedule.END_OF_THE_MONTH)
     End Function
 
     Private Function IsSssPaidPerPayPeriod(deductionSchedule As String) As Boolean
-        Return deductionSchedule = ContributionSchedule.PerPayPeriod
+        Return deductionSchedule = ContributionSchedule.PER_PAY_PERIOD
     End Function
 
     Private Class ContributionSchedule

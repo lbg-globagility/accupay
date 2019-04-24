@@ -684,12 +684,6 @@ Public Class PayrollGeneration
         Public Const Daily As String = "Daily"
     End Class
 
-    Private Class ContributionSchedule
-        Public Const FirstHalf As String = "First half"
-        Public Const EndOfTheMonth As String = "End of the month"
-        Public Const PerPayPeriod As String = "Per pay period"
-    End Class
-
     Public Class Result
 
         Public Property EmployeeNo As String

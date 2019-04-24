@@ -100,9 +100,9 @@ Public Class HRISForm
     End Sub
 
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles DivisionToolStripMenuItem.Click
-        ChangeForm(DivisionForm, "Division")
+        ChangeForm(NewDivisionPositionForm, "Division")
 
-        previousForm = DivisionForm
+        previousForm = NewDivisionPositionForm
     End Sub
 
     Private Sub ToolStripMenuItem6_Click(sender As Object, e As EventArgs) Handles CheckListToolStripMenuItem.Click

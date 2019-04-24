@@ -1,5 +1,4 @@
 ﻿Option Strict On
-Imports System.Linq.Expressions
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
@@ -98,7 +97,7 @@ Namespace Global.AccuPay.Repository
 
                 For Each loanSchedule In currentLoanSchedules
 
-                    Await Me.SaveAsync(loanSchedule, loanTypes)
+                    Await Me.SaveAsync(loanSchedule, loanTypes, context)
 
                     Await context.SaveChangesAsync()
                 Next
@@ -193,7 +192,6 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-
         Private Sub Insert(
             loanSchedule As LoanSchedule,
             loanTypes As IEnumerable(Of Product),
@@ -202,8 +200,8 @@ Namespace Global.AccuPay.Repository
             loanSchedule.LoanPayPeriodLeft =
                     ComputeNumberOfPayPeriod(loanSchedule.TotalBalanceLeft, loanSchedule.DeductionAmount)
 
-            If loanSchedule.LoanPayPeriodLeft <1 Then
-                loanSchedule.Status= STATUS_COMPLETE
+            If loanSchedule.LoanPayPeriodLeft < 1 Then
+                loanSchedule.Status = STATUS_COMPLETE
             End If
 
             If loanSchedule.LoanNumber Is Nothing Then

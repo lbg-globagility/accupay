@@ -16,6 +16,8 @@ Namespace Global.AccuPay.Extensions
 
             Dim newList As New List(Of T)
 
+            If source Is Nothing Then Return newList
+
             For Each item In source
                 newList.Add(item.CloneJson())
             Next

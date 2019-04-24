@@ -11125,7 +11125,7 @@ Partial Class EmployeeForm
         CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip11.ResumeLayout(False)
-        Me.ToolStrip11.PerformLayout
+        Me.ToolStrip11.PerformLayout()
         Me.tbpempallow.ResumeLayout(False)
         Me.tbpempallow.PerformLayout
         Me.Panel6.ResumeLayout(False)

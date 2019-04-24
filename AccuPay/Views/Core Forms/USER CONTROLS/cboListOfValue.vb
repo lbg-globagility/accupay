@@ -81,35 +81,35 @@ Public Class cboListOfValue
 
     Private Sub enlistingToCBoxItems()
 
-        Dim dr As MySqlDataReader
-        Try
-            If conn.State = ConnectionState.Open Then : conn.Close() : End If
-            conn.Open()
-            cmd = New MySqlCommand
-            With cmd
-                .Connection = conn
-                .CommandType = CommandType.Text
-                .CommandText = "SELECT DisplayValue FROM listofval WHERE `Type`='" & n_ListOfValueType & "' ORDER BY " & orderbystring & ";"
-            End With
-            dr = cmd.ExecuteReader()
+        'Dim dr As MySqlDataReader
+        'Try
+        '    If conn.State = ConnectionState.Open Then : conn.Close() : End If
+        '    conn.Open()
+        '    cmd = New MySqlCommand
+        '    With cmd
+        '        .Connection = conn
+        '        .CommandType = CommandType.Text
+        '        .CommandText = "SELECT DisplayValue FROM listofval WHERE `Type`='" & n_ListOfValueType & "' ORDER BY " & orderbystring & ";"
+        '    End With
+        '    dr = cmd.ExecuteReader()
 
-            Me.Items.Clear()
+        '    Me.Items.Clear()
 
-            Do While dr.Read
-                If dr.GetString(0) <> "" Then
-                    Me.Items.Add(dr(0)) 'GetString
-                End If
-            Loop
-            dr.Close()
-            hasERR = 0
-        Catch ex As Exception
-            hasERR = 1
-            'MsgBox(getErrExcptn(ex, "cboListOfValue"), MsgBoxStyle.Information, "UNEXPECTED MESSAGE")
-        Finally
-            conn.Close()
-            cmd.Dispose()
-            conn.Close()
-        End Try
+        '    Do While dr.Read
+        '        If dr.GetString(0) <> "" Then
+        '            Me.Items.Add(dr(0)) 'GetString
+        '        End If
+        '    Loop
+        '    dr.Close()
+        '    hasERR = 0
+        'Catch ex As Exception
+        '    hasERR = 1
+        '    'MsgBox(getErrExcptn(ex, "cboListOfValue"), MsgBoxStyle.Information, "UNEXPECTED MESSAGE")
+        'Finally
+        '    conn.Close()
+        '    cmd.Dispose()
+        '    conn.Close()
+        'End Try
 
     End Sub
 
