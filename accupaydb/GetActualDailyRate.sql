@@ -4,9 +4,9 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-DROP FUNCTION IF EXISTS `GET_employeerateperday`;
+DROP FUNCTION IF EXISTS `GetActualDailyRate`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `GET_employeerateperday`(`EmpID` INT, `OrgID` INT, `paramDate` DATE) RETURNS decimal(15,4)
+CREATE DEFINER=`root`@`localhost` FUNCTION `GetActualDailyRate`(`EmpID` INT, `OrgID` INT, `paramDate` DATE) RETURNS decimal(15,4)
     DETERMINISTIC
 BEGIN
 
