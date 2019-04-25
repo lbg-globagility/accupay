@@ -822,7 +822,7 @@ Public Class PayStubForm
             .BringToFront()
             If dgvemployees.RowCount > 0 Then
 
-                .VIEW_employeeallowance_indate(dgvemployees.CurrentRow.Cells("RowID").Value,
+                .VIEW_allowanceperday(dgvemployees.CurrentRow.Cells("RowID").Value,
                                         paypFrom,
                                         paypTo,
                                         numofweekdays)

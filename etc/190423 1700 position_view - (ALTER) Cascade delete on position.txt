@@ -1,0 +1,4 @@
+ALTER TABLE `position_view`
+	DROP FOREIGN KEY `FK_position_view_position_PositionID`;
+ALTER TABLE `position_view`
+	ADD CONSTRAINT `FK_position_view_position_PositionID` FOREIGN KEY (`PositionID`) REFERENCES `position` (`RowID`) ON DELETE CASCADE;

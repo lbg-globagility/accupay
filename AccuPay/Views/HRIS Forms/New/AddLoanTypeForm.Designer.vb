@@ -31,7 +31,7 @@ Partial Class AddLoanTypeForm
         '
         Me.txtLoanName.Location = New System.Drawing.Point(28, 33)
         Me.txtLoanName.Name = "txtLoanName"
-        Me.txtLoanName.Size = New System.Drawing.Size(314, 20)
+        Me.txtLoanName.Size = New System.Drawing.Size(314, 22)
         Me.txtLoanName.TabIndex = 0
         '
         'btnClose
@@ -65,6 +65,7 @@ Partial Class AddLoanTypeForm
         Me.Controls.Add(Me.btnClose)
         Me.Controls.Add(Me.btnAdd)
         Me.Controls.Add(Me.txtLoanName)
+        Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False

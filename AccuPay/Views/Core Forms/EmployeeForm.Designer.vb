@@ -1771,7 +1771,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
-        Me.SplitContainer2.SplitterDistance = 282
+        Me.SplitContainer2.SplitterDistance = 279
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3035,7 +3035,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 139)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 142)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -11125,7 +11125,7 @@ Partial Class EmployeeForm
         CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip11.ResumeLayout(False)
-        Me.ToolStrip11.PerformLayout
+        Me.ToolStrip11.PerformLayout()
         Me.tbpempallow.ResumeLayout(False)
         Me.tbpempallow.PerformLayout
         Me.Panel6.ResumeLayout(False)

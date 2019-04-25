@@ -97,19 +97,6 @@ Public Class TimeAttendForm
         previousForm = TimeLogsForm
     End Sub
 
-    Sub TimeEntryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeEntryToolStripMenuItem.Click
-
-        ChangeForm(EmpTimeEntry, "Employee Time Entry")
-        previousForm = EmpTimeEntry
-        'EmpTimeEntry.TabControl1.SelectedIndex = 0
-        'EmpTimeEntry.tbpemptimeent_Enter(sender, e)
-        'RemoveHandler EmpTimeEntry.dgvEmployi.SelectionChanged, AddressOf EmpTimeEntry.dgvEmployi_SelectionChanged
-        EmpTimeEntry.dgvEmployi_SelectionChanged(sender, e)
-
-        AddHandler EmpTimeEntry.dgvEmployi.SelectionChanged, AddressOf EmpTimeEntry.dgvEmployi_SelectionChanged
-
-    End Sub
-
     Private Sub TimeAttendForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
         For Each objctrl As Control In PanelTimeAttend.Controls

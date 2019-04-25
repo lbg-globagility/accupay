@@ -165,14 +165,6 @@ LEFT JOIN thirteenthmonthpay
 ON thirteenthmonthpay.OrganizationID = paystub.OrganizationID AND
 	thirteenthmonthpay.PaystubID = IF(psi_undeclared, paystubactual.RowID, paystub.RowID)
 
-LEFT JOIN (SELECT et.EmployeeID
-			,SUM(et.TotalExpectedHours) `TotalExpectedHours`
-			FROM expectedhours et
-				WHERE et.OrganizationID = ps_OrganizationID
-				AND et.`Date` BETWEEN min_paydatefrom AND max_paydateto
-				GROUP BY et.EmployeeID) ete
-		ON ete.EmployeeID = paystub.EmployeeID
-
 WHERE paystub.OrganizationID = ps_OrganizationID AND
 	(paystub.PayFromDate >= paypdatefrom OR paystub.PayToDate >= paypdatefrom) AND
 	(paystub.PayFromDate <= paypdateto OR paystub.PayToDate <= paypdateto) AND

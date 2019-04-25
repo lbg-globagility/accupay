@@ -7,12 +7,6 @@ Namespace Global.AccuPay.Payroll
 
     Public Class PhilHealthCalculator
 
-        Private Class ContributionSchedule
-            Public Const FirstHalf As String = "First half"
-            Public Const EndOfTheMonth As String = "End of the month"
-            Public Const PerPayPeriod As String = "Per pay period"
-        End Class
-
         Private ReadOnly _policy As PhilHealthPolicy
         Private ReadOnly _philHealthBrackets As ICollection(Of PhilHealthBracket)
 
@@ -150,15 +144,15 @@ Namespace Global.AccuPay.Payroll
         End Function
 
         Private Function IsPhilHealthPaidOnFirstHalf(deductionSchedule As String, payperiod As PayPeriod) As Boolean
-            Return payperiod.IsFirstHalf And (deductionSchedule = ContributionSchedule.FirstHalf)
+            Return payperiod.IsFirstHalf And (deductionSchedule = ContributionSchedule.FIRST_HALF)
         End Function
 
         Private Function IsPhilHealthPaidOnEndOfTheMonth(deductionSchedule As String, payperiod As PayPeriod) As Boolean
-            Return payperiod.IsEndOfTheMonth And (deductionSchedule = ContributionSchedule.EndOfTheMonth)
+            Return payperiod.IsEndOfTheMonth And (deductionSchedule = ContributionSchedule.END_OF_THE_MONTH)
         End Function
 
         Private Function IsPhilHealthPaidPerPayPeriod(deductionSchedule As String) As Boolean
-            Return deductionSchedule = ContributionSchedule.PerPayPeriod
+            Return deductionSchedule = ContributionSchedule.PER_PAY_PERIOD
         End Function
 
     End Class

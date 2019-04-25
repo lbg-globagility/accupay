@@ -34,7 +34,7 @@ Public Class viewtotallow
 
     End Sub
 
-    Sub VIEW_employeeallowance_indate(Optional eallow_EmployeeID As Object = Nothing,
+    Sub VIEW_allowanceperday(Optional eallow_EmployeeID As Object = Nothing,
                                Optional datefrom As Object = Nothing,
                                Optional dateto As Object = Nothing,
                                Optional num_weekdays As Object = Nothing,
@@ -89,7 +89,7 @@ Public Class viewtotallow
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs)
-        VIEW_employeeallowance_indate(employeeId, periodDateFrom, periodDateTo)
+        VIEW_allowanceperday(employeeId, periodDateFrom, periodDateTo)
 
     End Sub
 
