@@ -21,7 +21,7 @@ SET # e.PayFrequencyID = NEW.PayFrequencyID,
 WHERE e.OrganizationID = NEW.OrganizationID
 AND e.PositionID = ps.RowID;
 
-IF NEW.AutomaticOvertimeFiling = '1' THEN
+IF NEW.AutomaticOvertimeFiling = 1 THEN
      SET anyint = 0;
 END IF;
 

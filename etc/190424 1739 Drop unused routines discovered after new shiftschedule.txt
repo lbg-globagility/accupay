@@ -12,14 +12,12 @@ DROP PROCEDURE IF EXISTS VIEW_employeeallowance_indate;#
 DROP PROCEDURE IF EXISTS GET_employeeholidaypay;#
 DROP PROCEDURE IF EXISTS MASS_generate_employeetimeentry;#
 DROP PROCEDURE IF EXISTS GetSummaryOfDailyAllowances;#
-DROP PROCEDURE IF EXISTS GET_employee_allowanceofthisperiod;
 
 DROP FUNCTION IF EXISTS COUNT_employeeabsent;#
 DROP FUNCTION IF EXISTS DEL_division_shift;#
 DROP FUNCTION IF EXISTS GET_employeeallowance;#
 DROP FUNCTION IF EXISTS GET_employeedaysworked_indate;#
 DROP FUNCTION IF EXISTS GET_employeehoursworked_indate;#
-DROP FUNCTION IF EXISTS GET_employeerateperday;#
 DROP FUNCTION IF EXISTS GET_employeerateperhour;#
 DROP FUNCTION IF EXISTS GetOvertimeHours;#
 DROP FUNCTION IF EXISTS HasWorkedLastWorkingDay;#

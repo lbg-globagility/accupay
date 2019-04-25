@@ -4,14 +4,11 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-DROP FUNCTION IF EXISTS `GetActualDailyRate`;
+DROP FUNCTION IF EXISTS `GET_employeerateperday`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` FUNCTION `GetActualDailyRate`(`EmpID` INT, `OrgID` INT, `paramDate` DATE) RETURNS decimal(15,4)
+CREATE DEFINER=`root`@`localhost` FUNCTION `GET_employeerateperday`(`EmpID` INT, `OrgID` INT, `paramDate` DATE) RETURNS decimal(15,4)
     DETERMINISTIC
 BEGIN
-
-#Almost same as GET_employeerateperday. Changes in GET_employeerateperday function should also reflect here
-#Maybe call GET_employeerateperday so that they can have the same logic
 
 DECLARE dailyrate DECIMAL(15, 6);
 

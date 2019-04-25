@@ -9,7 +9,7 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTUPD_employeetimeentrydetails` AFTER UPDATE ON `employeetimeentrydetails` FOR EACH ROW BEGIN
 
-DECLARE emp_group_name VARCHAR(50);
+DECLARE emp_group_name TINYINT(1);
 
 DECLARE anyint INT(11);
 DECLARE sh_timefrom TIME;
@@ -42,7 +42,7 @@ SET today_timein = ADDTIME(TIMESTAMP(NEW.`Date`), NEW.TimeIn);
 
 SET today_timeout = ADDTIME(IF(NEW.TimeOut > NEW.TimeIn AND TIME_FORMAT(NEW.TimeIn,'%p') != TIME_FORMAT(NEW.TimeOut,'%p'), TIMESTAMP(NEW.`Date`), TIMESTAMP(ADDDATE(NEW.`Date`, INTERVAL 1 DAY))), NEW.TimeOut);
 
-IF emp_group_name = '1' THEN
+IF emp_group_name = 1 THEN
     SET @min_ot_time = CURTIME();
     
     IF v_use_shiftschedule THEN
