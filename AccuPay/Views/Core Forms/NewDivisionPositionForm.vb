@@ -38,8 +38,6 @@ Public Class NewDivisionPositionForm
 
     Private Async Sub NewEmployeePositionForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        z_OrganizationID = 3
-
         Await LoadPayFrequencies()
 
         GetDivisionTypes()
