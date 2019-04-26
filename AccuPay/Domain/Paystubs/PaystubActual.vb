@@ -45,6 +45,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property RegularHolidayOTPay As Decimal
 
+        <Obsolete>
         Public Property HolidayPay As Decimal
 
         Public Property LateDeduction As Decimal
@@ -52,6 +53,9 @@ Namespace Global.AccuPay.Entity
         Public Property UndertimeDeduction As Decimal
 
         Public Property AbsenceDeduction As Decimal
+
+        <NotMapped>
+        Public Property TotalEarnings As Decimal
 
         <Column("TotalGrossSalary")>
         Public Property GrossPay As Decimal

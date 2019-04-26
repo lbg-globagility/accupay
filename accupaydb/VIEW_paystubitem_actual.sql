@@ -84,7 +84,7 @@ SELECT
     (e.StartDate BETWEEN pay_date_from AND pay_date_to) AS FirstTimeSalary,
     thirteenthmonthpay.Amount AS 'ThirteenthMonthPay'
 FROM paystubactual psa
-INNER JOIN paystub pstb
+INNER JOIN paystub ps
 ON ps.OrganizationID = psa.OrganizationID AND
     ps.EmployeeID = psa.EmployeeID AND
     ps.PayPeriodID = psa.PayPeriodID

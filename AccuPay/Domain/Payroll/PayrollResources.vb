@@ -355,6 +355,7 @@ Public Class PayrollResources
                 Dim query = context.Paystubs.
                     Include(Function(p) p.Adjustments).
                     Include(Function(p) p.ThirteenthMonthPay).
+                    Include(Function(p) p.ActualAdjustments).
                     Include(Function(p) p.Actual).
                     Where(Function(p) p.PayFromdate = _payDateFrom).
                     Where(Function(p) p.PayToDate = _payDateTo).

@@ -252,7 +252,8 @@ Public Class PayrollGeneration
             _paystub.TotalAdjustments = _paystub.Adjustments.Sum(Function(a) a.Amount)
             _paystub.NetPay = AccuMath.CommercialRound(_paystub.GrossPay - _paystub.NetDeductions + _paystub.TotalAdjustments)
 
-            ComputeActual()
+            Dim actualCalculator = New PaystubActualCalculator()
+            actualCalculator.Compute(_employee, _salary, _settings, _payPeriod, _paystub, _actualtimeentries)
 
             Using context = New PayrollContext()
                 UpdateLeaveLedger(context)
@@ -678,43 +679,6 @@ Public Class PayrollGeneration
         _paystub.ThirteenthMonthPay.BasicPay = thirteenthMonthAmount
         _paystub.ThirteenthMonthPay.Amount = thirteenthMonthAmount / CalendarConstants.MonthsInAYear
         _paystub.ThirteenthMonthPay.Paystub = _paystub
-    End Sub
-
-    Private Sub ComputeActual()
-        Dim totalEarnings As Decimal
-
-        If _employee.IsFixed Then
-            Dim amount = _salary.BasicSalary + _salary.AllowanceSalary
-            Dim basicPay = PayrollTools.GetEmployeeMonthlyRate(_employee, amount)
-
-            totalEarnings = basicPay + _paystub.Actual.AdditionalPay
-
-        ElseIf _employee.IsMonthly Then
-
-            Dim isFirstPayAsDailyRule = _settings.GetBoolean("Payroll Policy", "isfirstsalarydaily")
-
-            Dim isFirstPay =
-                _payPeriod.PayFromDate <= _employee.StartDate And
-                _employee.StartDate <= _payPeriod.PayToDate
-
-            If isFirstPay And isFirstPayAsDailyRule Then
-
-                totalEarnings = _paystub.Actual.RegularPay + _paystub.Actual.LeavePay + _paystub.Actual.AdditionalPay
-            Else
-                Dim amount = _salary.BasicSalary + _salary.AllowanceSalary
-                Dim basicPay = PayrollTools.GetEmployeeMonthlyRate(_employee, amount)
-
-                totalEarnings = basicPay + _paystub.Actual.AdditionalPay - _paystub.Actual.BasicDeductions
-            End If
-
-        ElseIf _employee.IsDaily Then
-
-            totalEarnings = _actualtimeentries.Sum(Function(a) a.TotalDayPay)
-
-        End If
-
-        _paystub.Actual.GrossPay = AccuMath.CommercialRound(totalEarnings + _paystub.TotalAllowance)
-        _paystub.Actual.NetPay = AccuMath.CommercialRound(_paystub.Actual.GrossPay - _paystub.NetDeductions)
     End Sub
 
     Private Class PayFrequency

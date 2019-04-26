@@ -134,9 +134,9 @@ DELETE FROM paystubadjustment WHERE PayStubID=paystub_RowID;
 
 DELETE FROM paystubadjustmentactual WHERE PayStubID=paystub_RowID;
 
-DELETE FROM paystub WHERE RowID=paystub_RowID;
-
 DELETE FROM paystubactual WHERE EmployeeID=emp_RowID AND OrganizationID=og_RowID AND PayPeriodID=payperiod_rowid;
+
+DELETE FROM paystub WHERE RowID=paystub_RowID;
 
 DELETE FROM scheduledloansperpayperiod WHERE OrganizationID=og_RowID AND EmployeeID=emp_RowID AND PayPeriodID=payperiod_rowid;
 

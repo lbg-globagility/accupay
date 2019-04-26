@@ -343,6 +343,7 @@
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
+    <Compile Include="Domain\Payroll\PaystubActualCalculator.vb" />
     <Compile Include="Domain\Payroll\SemiMonthlyAllowanceCalculator.vb" />
     <Compile Include="Domain\Leaves\LeaveConvertible.vb" />
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
