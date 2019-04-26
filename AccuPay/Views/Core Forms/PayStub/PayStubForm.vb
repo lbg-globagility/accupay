@@ -1597,9 +1597,9 @@ Public Class PayStubForm
                 Else
                     thebasicpay = ValNoComma(drow("BasicPay"))
 
-                    thelessamounts = ValNoComma(drow("HoursLateAmount")) +
-                        ValNoComma(drow("UndertimeHoursAmount")) +
-                        ValNoComma(drow("Absent"))
+                    thelessamounts = ValNoComma(drow("LateDeduction")) +
+                        ValNoComma(drow("UndertimeDeduction")) +
+                        ValNoComma(drow("AbsenceDeduction"))
                 End If
 
                 txthrsworkamt_U.Text = FormatNumber((thebasicpay - thelessamounts), 2)
@@ -1632,7 +1632,7 @@ Public Class PayStubForm
                     lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
                 Else
                     thebasicpay = ValNoComma(drow("BasicPay"))
-                    thelessamounts = ValNoComma(drow("HoursLateAmount")) + ValNoComma(drow("UndertimeHoursAmount")) + ValNoComma(drow("Absent"))
+                    thelessamounts = ValNoComma(drow("LateDeduction")) + ValNoComma(drow("UndertimeDeduction")) + ValNoComma(drow("AbsenceDeduction"))
 
                     Dim all_regular = (thebasicpay - thelessamounts)
                     lblSubtotal.Text = FormatNumber(
