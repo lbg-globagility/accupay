@@ -26,15 +26,13 @@ Partial Class EmployeeForm
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeForm))
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -43,31 +41,52 @@ Partial Class EmployeeForm
         Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle38 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle40 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle41 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle42 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle43 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle44 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle45 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle46 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle47 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle48 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle49 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle50 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle51 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle52 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle53 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle54 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle55 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle56 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle57 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle58 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle59 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle60 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle61 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle62 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle63 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.txtEmpID = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.rdMale = New System.Windows.Forms.RadioButton()
@@ -242,32 +261,11 @@ Partial Class EmployeeForm
         Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
         Me.Label365 = New System.Windows.Forms.Label()
         Me.dgvDepen = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Colmn0 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Colmn2 = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.Colmn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Colmn7 = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.Colmn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Colmn19 = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.Colmn20 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Colmn21 = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.Colmn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip4 = New System.Windows.Forms.ToolStrip()
         Me.tsbtnNewDepen = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnSaveDepen = New System.Windows.Forms.ToolStripButton()
@@ -293,15 +291,6 @@ Partial Class EmployeeForm
         Me.Label320 = New System.Windows.Forms.Label()
         Me.pbEmpPicAwar = New System.Windows.Forms.PictureBox()
         Me.dgvempawar = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.eawar_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eawar_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eawar_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eawar_Description = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eawar_DateAwarded = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn69 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn70 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn71 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn72 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtFNameAwar = New System.Windows.Forms.TextBox()
         Me.txtEmpIDAwar = New System.Windows.Forms.TextBox()
         Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
@@ -316,18 +305,8 @@ Partial Class EmployeeForm
         Me.Label321 = New System.Windows.Forms.Label()
         Me.pbEmpPicCert = New System.Windows.Forms.PictureBox()
         Me.dgvempcert = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.ecert_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ecert_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ecert_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ecert_IssuingAuth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ecert_CertNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ecert_DateIssued = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.ecert_Expiration = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.ecert_Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn81 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn82 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn83 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn84 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtFNameCert = New System.Windows.Forms.TextBox()
         Me.txtEmpIDCert = New System.Windows.Forms.TextBox()
         Me.ToolStrip3 = New System.Windows.Forms.ToolStrip()
@@ -395,19 +374,9 @@ Partial Class EmployeeForm
         Me.pbempleave = New System.Windows.Forms.PictureBox()
         Me.Label36 = New System.Windows.Forms.Label()
         Me.dgvempleave = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.elv_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elv_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elv_StartTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elv_EndTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.elv_StartDate = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.elv_EndDate = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.elv_Reason = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elv_Comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elv_Image = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.elv_viewimage = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.elv_attafilename = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elv_attafileextensn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elv_Status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label37 = New System.Windows.Forms.Label()
         Me.txtstarttime = New System.Windows.Forms.TextBox()
         Me.Label38 = New System.Windows.Forms.Label()
@@ -447,13 +416,6 @@ Partial Class EmployeeForm
         Me.lblAddFindingname = New System.Windows.Forms.LinkLabel()
         Me.Label42 = New System.Windows.Forms.Label()
         Me.dgvDisciplinaryList = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_FindingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_action = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_datefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_desc = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dtpTo = New System.Windows.Forms.DateTimePicker()
         Me.txtDesc = New System.Windows.Forms.TextBox()
         Me.txtAction = New System.Windows.Forms.TextBox()
@@ -483,17 +445,6 @@ Partial Class EmployeeForm
         Me.txtEmpIDEduc = New System.Windows.Forms.TextBox()
         Me.Label54 = New System.Windows.Forms.Label()
         Me.dgvEducback = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_EmplyeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_name = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_EducationalType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_school = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_degree = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_course = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_minor = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn108 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn109 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_RowID1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtCourse = New System.Windows.Forms.TextBox()
         Me.cmbEducType = New System.Windows.Forms.ComboBox()
         Me.Label53 = New System.Windows.Forms.Label()
@@ -565,23 +516,6 @@ Partial Class EmployeeForm
         Me.Label56 = New System.Windows.Forms.Label()
         Me.txtFNamePrevEmp = New System.Windows.Forms.TextBox()
         Me.dgvListCompany = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_compname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_trade = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_contname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_mainphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_altphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_faxno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_emailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_altemailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_url = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_tinno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_jobtitle = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_jobfunction = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_orgtype = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_experience = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_expdateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_compaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_rowidPrevEmp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtEmpIDPrevEmp = New System.Windows.Forms.TextBox()
         Me.ToolStrip10 = New System.Windows.Forms.ToolStrip()
         Me.btnNewPrevEmp = New System.Windows.Forms.ToolStripButton()
@@ -602,15 +536,6 @@ Partial Class EmployeeForm
         Me.pbEmpPicPromot = New System.Windows.Forms.PictureBox()
         Me.Label222 = New System.Windows.Forms.Label()
         Me.dgvPromotionList = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_empID2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_empname2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_promotRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_PostionFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_positionto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_effecDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_compensation = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_basicpay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_reasonpromot = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblpeso = New System.Windows.Forms.Label()
         Me.cmbfrom = New System.Windows.Forms.ComboBox()
         Me.txtempcurrbasicpay = New System.Windows.Forms.Label()
@@ -657,14 +582,10 @@ Partial Class EmployeeForm
         Me.dtpallowstartdate = New System.Windows.Forms.DateTimePicker()
         Me.txtFNameAllow = New System.Windows.Forms.TextBox()
         Me.dgvempallowance = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.eall_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eall_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eall_Frequency = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.eall_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.eall_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.allow_taxab = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label156 = New System.Windows.Forms.Label()
         Me.Label166 = New System.Windows.Forms.Label()
         Me.cboallowtype = New System.Windows.Forms.ComboBox()
@@ -707,19 +628,10 @@ Partial Class EmployeeForm
         Me.pbempEmpOT = New System.Windows.Forms.PictureBox()
         Me.Label187 = New System.Windows.Forms.Label()
         Me.dgvempOT = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.eot_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eot_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.eot_StartTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eot_EndTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eot_StartDate = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.eot_EndDate = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.eot_Status = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eot_Reason = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eot_Comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eot_Image = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eot_viewimage = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.eot_attafilename = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eot_attafileextensn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label188 = New System.Windows.Forms.Label()
         Me.txtstarttimeEmpOT = New System.Windows.Forms.TextBox()
         Me.Label189 = New System.Windows.Forms.Label()
@@ -771,19 +683,10 @@ Partial Class EmployeeForm
         Me.pbempOBF = New System.Windows.Forms.PictureBox()
         Me.Label171 = New System.Windows.Forms.Label()
         Me.dgvOBF = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.obf_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.obf_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.obf_StartTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.obf_EndTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.obf_StartDate = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.obf_EndDate = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.obf_Status = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.obf_Reason = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.obf_Comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.obf_Image = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.obf_view = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.obf_attafilename = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.obf_attafileextensn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label172 = New System.Windows.Forms.Label()
         Me.txtstarttimeOBF = New System.Windows.Forms.TextBox()
         Me.Label173 = New System.Windows.Forms.Label()
@@ -823,13 +726,10 @@ Partial Class EmployeeForm
         Me.dtpbonstartdate = New System.Windows.Forms.DateTimePicker()
         Me.txtFNameBon = New System.Windows.Forms.TextBox()
         Me.dgvempbon = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Frequency = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.bon_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.bon_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label184 = New System.Windows.Forms.Label()
         Me.Label179 = New System.Windows.Forms.Label()
         Me.cbobontype = New System.Windows.Forms.ComboBox()
@@ -853,18 +753,8 @@ Partial Class EmployeeForm
         Me.Label343 = New System.Windows.Forms.Label()
         Me.pbEmpPicAtta = New System.Windows.Forms.PictureBox()
         Me.dgvempatta = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.eatt_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eatt_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.eatt_FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_FileType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_Created = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_CreatedBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_LastUpd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_LastUpdBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_AttachedFile = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eatt_viewthis = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.Column38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtFNameAtta = New System.Windows.Forms.TextBox()
         Me.cboattatype = New System.Windows.Forms.ComboBox()
         Me.txtEmpIDAtta = New System.Windows.Forms.TextBox()
@@ -880,7 +770,6 @@ Partial Class EmployeeForm
         Me.ToolStripButton16 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton34 = New System.Windows.Forms.ToolStripButton()
         Me.tbpNewSalary = New System.Windows.Forms.TabPage()
-        Me.SalaryTab = New AccuPay.SalaryTab()
         Me.imglstchklist = New System.Windows.Forms.ImageList(Me.components)
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
@@ -906,6 +795,279 @@ Partial Class EmployeeForm
         Me.Label30 = New System.Windows.Forms.Label()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.dgvEmp = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Last = New System.Windows.Forms.LinkLabel()
+        Me.Nxt = New System.Windows.Forms.LinkLabel()
+        Me.Prev = New System.Windows.Forms.LinkLabel()
+        Me.First = New System.Windows.Forms.LinkLabel()
+        Me.errprovidSal = New System.Windows.Forms.ErrorProvider(Me.components)
+        Me.FontDialog1 = New System.Windows.Forms.FontDialog()
+        Me.Button3 = New System.Windows.Forms.Button()
+        Me.bgworkImporting = New System.ComponentModel.BackgroundWorker()
+        Me.Panel7 = New System.Windows.Forms.Panel()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn32 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn39 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn40 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn41 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn42 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn43 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn44 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn45 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn46 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn47 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn48 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn49 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn50 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn51 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn52 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn53 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn54 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn55 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn56 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn57 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn58 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn59 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn60 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn61 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn62 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn63 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn64 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn65 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn66 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn67 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn68 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn69 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn70 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn71 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn72 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn73 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn74 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn75 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn76 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn77 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn78 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn79 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn80 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn81 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn82 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn83 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn84 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn85 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn86 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn87 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn88 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn89 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn90 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn91 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn92 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn93 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn94 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn95 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn96 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn97 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn98 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn99 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn100 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn101 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn102 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn103 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn104 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn105 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn106 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn107 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn108 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn109 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn110 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn111 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn112 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn113 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn114 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn115 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn116 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn117 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn118 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn119 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn120 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn121 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn122 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn123 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn124 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn125 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn126 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn127 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn128 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn129 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn130 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn131 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn132 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn133 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn134 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn135 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn136 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn137 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn138 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn139 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn140 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn141 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn142 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn143 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn144 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn145 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn146 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn147 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn148 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn149 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn150 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn151 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn152 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn153 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn154 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn155 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn156 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn157 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn158 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn159 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn160 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn161 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn162 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn163 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn164 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn0 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elv_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elv_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elv_StartTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elv_EndTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elv_Reason = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elv_Comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elv_Image = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elv_attafilename = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elv_attafileextensn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elv_Status = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_FindingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_action = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_datefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_dateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_desc = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_compname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_trade = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_contname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_mainphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_altphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_faxno = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_emailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_altemailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_url = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_tinno = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_jobtitle = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_jobfunction = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_orgtype = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_experience = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_expdateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_compaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_rowidPrevEmp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_empID2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_empname2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_promotRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_PostionFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_positionto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_effecDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_compensation = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_basicpay = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_reasonpromot = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.allow_taxab = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eot_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eot_StartTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eot_EndTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eot_Status = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eot_Reason = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eot_Comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eot_Image = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eot_attafilename = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eot_attafileextensn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.obf_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.obf_StartTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.obf_EndTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.obf_Status = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.obf_Reason = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.obf_Comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.obf_Image = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.obf_attafilename = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.obf_attafileextensn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_FileType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_Created = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_CreatedBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_LastUpd = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_LastUpdBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_AttachedFile = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SalaryTab = New AccuPay.SalaryTab()
         Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -971,78 +1133,56 @@ Partial Class EmployeeForm
         Me.AgencyName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.AgencyRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn32 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn39 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn40 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn41 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn42 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn43 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn44 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn45 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn46 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn47 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn48 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn49 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn50 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn51 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn52 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn53 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn54 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn55 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn56 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn57 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn58 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn59 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn60 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn61 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn62 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn63 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Last = New System.Windows.Forms.LinkLabel()
-        Me.Nxt = New System.Windows.Forms.LinkLabel()
-        Me.Prev = New System.Windows.Forms.LinkLabel()
-        Me.First = New System.Windows.Forms.LinkLabel()
-        Me.errprovidSal = New System.Windows.Forms.ErrorProvider(Me.components)
-        Me.FontDialog1 = New System.Windows.Forms.FontDialog()
-        Me.Button3 = New System.Windows.Forms.Button()
-        Me.bgworkImporting = New System.ComponentModel.BackgroundWorker()
-        Me.Panel7 = New System.Windows.Forms.Panel()
+        Me.DataGridViewTextBoxColumn165 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn166 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn167 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn168 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn169 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn170 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn171 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn172 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn173 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn174 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn175 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn176 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn177 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn178 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn179 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn180 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn181 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn182 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn183 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn184 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn185 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn186 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn187 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn188 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn189 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn190 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn191 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn192 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn193 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn194 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eawar_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eawar_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eawar_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eawar_Description = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eawar_DateAwarded = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_IssuingAuth = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_CertNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_EmplyeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_name = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_EducationalType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_school = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_degree = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_course = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_minor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_RowID1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.tabctrlemp.SuspendLayout
         Me.tbpempchklist.SuspendLayout
         Me.ToolStrip15.SuspendLayout
@@ -1771,7 +1911,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
-        Me.SplitContainer2.SplitterDistance = 279
+        Me.SplitContainer2.SplitterDistance = 276
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3035,22 +3175,8 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 142)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 145)
         Me.dgvDepen.TabIndex = 116
-        '
-        'Colmn0
-        '
-        Me.Colmn0.HeaderText = "RowID"
-        Me.Colmn0.Name = "Colmn0"
-        Me.Colmn0.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn0.Visible = False
-        '
-        'Colmn1
-        '
-        Me.Colmn1.HeaderText = "ParentEmployeeID"
-        Me.Colmn1.Name = "Colmn1"
-        Me.Colmn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn1.Visible = False
         '
         'Colmn2
         '
@@ -3059,115 +3185,10 @@ Partial Class EmployeeForm
         Me.Colmn2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Colmn2.Width = 160
         '
-        'Colmn3
-        '
-        Me.Colmn3.HeaderText = "First Name"
-        Me.Colmn3.Name = "Colmn3"
-        Me.Colmn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn3.Width = 160
-        '
-        'Colmn4
-        '
-        Me.Colmn4.HeaderText = "MiddleName"
-        Me.Colmn4.Name = "Colmn4"
-        Me.Colmn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn4.Width = 160
-        '
-        'Colmn5
-        '
-        Me.Colmn5.HeaderText = "Last Name"
-        Me.Colmn5.Name = "Colmn5"
-        Me.Colmn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn5.Width = 160
-        '
-        'Colmn6
-        '
-        Me.Colmn6.HeaderText = "Surname"
-        Me.Colmn6.Name = "Colmn6"
-        Me.Colmn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn6.Width = 160
-        '
         'Colmn7
         '
         Me.Colmn7.HeaderText = "Relationship to Employee"
         Me.Colmn7.Name = "Colmn7"
-        '
-        'Colmn8
-        '
-        Me.Colmn8.HeaderText = "TIN"
-        Me.Colmn8.Name = "Colmn8"
-        Me.Colmn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn8.Width = 160
-        '
-        'Colmn9
-        '
-        Me.Colmn9.HeaderText = "SSS No."
-        Me.Colmn9.Name = "Colmn9"
-        Me.Colmn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn9.Width = 160
-        '
-        'Colmn10
-        '
-        Me.Colmn10.HeaderText = "PAGIBIG No."
-        Me.Colmn10.Name = "Colmn10"
-        Me.Colmn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn10.Width = 160
-        '
-        'Colmn11
-        '
-        Me.Colmn11.HeaderText = "PhilHealth No."
-        Me.Colmn11.Name = "Colmn11"
-        Me.Colmn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn11.Width = 160
-        '
-        'Colmn12
-        '
-        Me.Colmn12.HeaderText = "Email address"
-        Me.Colmn12.Name = "Colmn12"
-        Me.Colmn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn12.Width = 160
-        '
-        'Colmn13
-        '
-        Me.Colmn13.HeaderText = "Work Phone No."
-        Me.Colmn13.Name = "Colmn13"
-        Me.Colmn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn13.Width = 160
-        '
-        'Colmn14
-        '
-        Me.Colmn14.HeaderText = "Home Phone No."
-        Me.Colmn14.Name = "Colmn14"
-        Me.Colmn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn14.Width = 160
-        '
-        'Colmn15
-        '
-        Me.Colmn15.HeaderText = "Mobile  Phone No."
-        Me.Colmn15.Name = "Colmn15"
-        Me.Colmn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn15.Width = 160
-        '
-        'Colmn16
-        '
-        Me.Colmn16.HeaderText = "Home address"
-        Me.Colmn16.Name = "Colmn16"
-        Me.Colmn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn16.Width = 160
-        '
-        'Colmn17
-        '
-        Me.Colmn17.HeaderText = "Nickname"
-        Me.Colmn17.Name = "Colmn17"
-        Me.Colmn17.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn17.Width = 160
-        '
-        'Colmn18
-        '
-        Me.Colmn18.HeaderText = "JobTitle"
-        Me.Colmn18.Name = "Colmn18"
-        Me.Colmn18.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn18.Width = 160
         '
         'Colmn19
         '
@@ -3217,38 +3238,6 @@ Partial Class EmployeeForm
         Me.Colmn21.Name = "Colmn21"
         Me.Colmn21.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Colmn21.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Colmn22
-        '
-        Me.Colmn22.HeaderText = "Created by"
-        Me.Colmn22.Name = "Colmn22"
-        Me.Colmn22.ReadOnly = True
-        Me.Colmn22.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn22.Visible = False
-        '
-        'Colmn23
-        '
-        Me.Colmn23.HeaderText = "Creation Date"
-        Me.Colmn23.Name = "Colmn23"
-        Me.Colmn23.ReadOnly = True
-        Me.Colmn23.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn23.Visible = False
-        '
-        'Colmn24
-        '
-        Me.Colmn24.HeaderText = "Last update by"
-        Me.Colmn24.Name = "Colmn24"
-        Me.Colmn24.ReadOnly = True
-        Me.Colmn24.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn24.Visible = False
-        '
-        'Colmn25
-        '
-        Me.Colmn25.HeaderText = "Last update"
-        Me.Colmn25.Name = "Colmn25"
-        Me.Colmn25.ReadOnly = True
-        Me.Colmn25.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn25.Visible = False
         '
         'ToolStrip4
         '
@@ -3474,95 +3463,29 @@ Partial Class EmployeeForm
         Me.dgvempawar.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells
         Me.dgvempawar.BackgroundColor = System.Drawing.Color.White
         Me.dgvempawar.ColumnHeadersHeight = 34
-        Me.dgvempawar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eawar_RowID, Me.eawar_EmployeeID, Me.eawar_Type, Me.eawar_Description, Me.eawar_DateAwarded, Me.DataGridViewTextBoxColumn69, Me.DataGridViewTextBoxColumn70, Me.DataGridViewTextBoxColumn71, Me.DataGridViewTextBoxColumn72})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempawar.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempawar.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvempawar.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempawar.Location = New System.Drawing.Point(32, 170)
         Me.dgvempawar.MultiSelect = False
         Me.dgvempawar.Name = "dgvempawar"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempawar.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempawar.RowHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.dgvempawar.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempawar.Size = New System.Drawing.Size(705, 400)
         Me.dgvempawar.TabIndex = 118
-        '
-        'eawar_RowID
-        '
-        Me.eawar_RowID.HeaderText = "RowID"
-        Me.eawar_RowID.Name = "eawar_RowID"
-        Me.eawar_RowID.ReadOnly = True
-        Me.eawar_RowID.Visible = False
-        '
-        'eawar_EmployeeID
-        '
-        Me.eawar_EmployeeID.HeaderText = "EmployeeID"
-        Me.eawar_EmployeeID.Name = "eawar_EmployeeID"
-        Me.eawar_EmployeeID.ReadOnly = True
-        Me.eawar_EmployeeID.Visible = False
-        '
-        'eawar_Type
-        '
-        Me.eawar_Type.HeaderText = "Award Type"
-        Me.eawar_Type.MaxInputLength = 500
-        Me.eawar_Type.Name = "eawar_Type"
-        Me.eawar_Type.Width = 220
-        '
-        'eawar_Description
-        '
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eawar_Description.DefaultCellStyle = DataGridViewCellStyle3
-        Me.eawar_Description.HeaderText = "Award Description"
-        Me.eawar_Description.MaxInputLength = 500
-        Me.eawar_Description.Name = "eawar_Description"
-        Me.eawar_Description.Width = 220
-        '
-        'eawar_DateAwarded
-        '
-        Me.eawar_DateAwarded.HeaderText = "Date awarded"
-        Me.eawar_DateAwarded.MaxInputLength = 500
-        Me.eawar_DateAwarded.Name = "eawar_DateAwarded"
-        Me.eawar_DateAwarded.Width = 220
-        '
-        'DataGridViewTextBoxColumn69
-        '
-        Me.DataGridViewTextBoxColumn69.HeaderText = "Column6"
-        Me.DataGridViewTextBoxColumn69.Name = "DataGridViewTextBoxColumn69"
-        Me.DataGridViewTextBoxColumn69.ReadOnly = True
-        Me.DataGridViewTextBoxColumn69.Visible = False
-        '
-        'DataGridViewTextBoxColumn70
-        '
-        Me.DataGridViewTextBoxColumn70.HeaderText = "Column7"
-        Me.DataGridViewTextBoxColumn70.Name = "DataGridViewTextBoxColumn70"
-        Me.DataGridViewTextBoxColumn70.ReadOnly = True
-        Me.DataGridViewTextBoxColumn70.Visible = False
-        '
-        'DataGridViewTextBoxColumn71
-        '
-        Me.DataGridViewTextBoxColumn71.HeaderText = "Column8"
-        Me.DataGridViewTextBoxColumn71.Name = "DataGridViewTextBoxColumn71"
-        Me.DataGridViewTextBoxColumn71.ReadOnly = True
-        Me.DataGridViewTextBoxColumn71.Visible = False
-        '
-        'DataGridViewTextBoxColumn72
-        '
-        Me.DataGridViewTextBoxColumn72.HeaderText = "Column9"
-        Me.DataGridViewTextBoxColumn72.Name = "DataGridViewTextBoxColumn72"
-        Me.DataGridViewTextBoxColumn72.ReadOnly = True
-        Me.DataGridViewTextBoxColumn72.Visible = False
         '
         'txtFNameAwar
         '
@@ -3710,15 +3633,14 @@ Partial Class EmployeeForm
         Me.dgvempcert.AllowUserToOrderColumns = True
         Me.dgvempcert.BackgroundColor = System.Drawing.Color.White
         Me.dgvempcert.ColumnHeadersHeight = 34
-        Me.dgvempcert.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ecert_RowID, Me.ecert_EmployeeID, Me.ecert_Type, Me.ecert_IssuingAuth, Me.ecert_CertNum, Me.ecert_DateIssued, Me.ecert_Expiration, Me.ecert_Comments, Me.DataGridViewTextBoxColumn81, Me.DataGridViewTextBoxColumn82, Me.DataGridViewTextBoxColumn83, Me.DataGridViewTextBoxColumn84})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempcert.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempcert.DefaultCellStyle = DataGridViewCellStyle5
         Me.dgvempcert.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempcert.Location = New System.Drawing.Point(32, 170)
         Me.dgvempcert.MultiSelect = False
@@ -3726,43 +3648,6 @@ Partial Class EmployeeForm
         Me.dgvempcert.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempcert.Size = New System.Drawing.Size(822, 400)
         Me.dgvempcert.TabIndex = 117
-        '
-        'ecert_RowID
-        '
-        Me.ecert_RowID.HeaderText = "RowID"
-        Me.ecert_RowID.Name = "ecert_RowID"
-        Me.ecert_RowID.ReadOnly = True
-        Me.ecert_RowID.Visible = False
-        '
-        'ecert_EmployeeID
-        '
-        Me.ecert_EmployeeID.HeaderText = "EmployeeID"
-        Me.ecert_EmployeeID.Name = "ecert_EmployeeID"
-        Me.ecert_EmployeeID.ReadOnly = True
-        Me.ecert_EmployeeID.Visible = False
-        '
-        'ecert_Type
-        '
-        Me.ecert_Type.HeaderText = "Certification Type"
-        Me.ecert_Type.MaxInputLength = 50
-        Me.ecert_Type.Name = "ecert_Type"
-        Me.ecert_Type.Width = 180
-        '
-        'ecert_IssuingAuth
-        '
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.ecert_IssuingAuth.DefaultCellStyle = DataGridViewCellStyle6
-        Me.ecert_IssuingAuth.HeaderText = "Issuing Authority"
-        Me.ecert_IssuingAuth.MaxInputLength = 50
-        Me.ecert_IssuingAuth.Name = "ecert_IssuingAuth"
-        Me.ecert_IssuingAuth.Width = 180
-        '
-        'ecert_CertNum
-        '
-        Me.ecert_CertNum.HeaderText = "Certification No."
-        Me.ecert_CertNum.MaxInputLength = 50
-        Me.ecert_CertNum.Name = "ecert_CertNum"
-        Me.ecert_CertNum.Width = 180
         '
         'ecert_DateIssued
         '
@@ -3837,39 +3722,6 @@ Partial Class EmployeeForm
         Me.ecert_Expiration.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
         Me.ecert_Expiration.Name = "ecert_Expiration"
         Me.ecert_Expiration.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'ecert_Comments
-        '
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.ecert_Comments.DefaultCellStyle = DataGridViewCellStyle7
-        Me.ecert_Comments.HeaderText = "Comments"
-        Me.ecert_Comments.MaxInputLength = 2000
-        Me.ecert_Comments.Name = "ecert_Comments"
-        Me.ecert_Comments.Width = 190
-        '
-        'DataGridViewTextBoxColumn81
-        '
-        Me.DataGridViewTextBoxColumn81.HeaderText = "Column8"
-        Me.DataGridViewTextBoxColumn81.Name = "DataGridViewTextBoxColumn81"
-        Me.DataGridViewTextBoxColumn81.Visible = False
-        '
-        'DataGridViewTextBoxColumn82
-        '
-        Me.DataGridViewTextBoxColumn82.HeaderText = "Column9"
-        Me.DataGridViewTextBoxColumn82.Name = "DataGridViewTextBoxColumn82"
-        Me.DataGridViewTextBoxColumn82.Visible = False
-        '
-        'DataGridViewTextBoxColumn83
-        '
-        Me.DataGridViewTextBoxColumn83.HeaderText = "Column10"
-        Me.DataGridViewTextBoxColumn83.Name = "DataGridViewTextBoxColumn83"
-        Me.DataGridViewTextBoxColumn83.Visible = False
-        '
-        'DataGridViewTextBoxColumn84
-        '
-        Me.DataGridViewTextBoxColumn84.HeaderText = "Column11"
-        Me.DataGridViewTextBoxColumn84.Name = "DataGridViewTextBoxColumn84"
-        Me.DataGridViewTextBoxColumn84.Visible = False
         '
         'txtFNameCert
         '
@@ -4604,14 +4456,14 @@ Partial Class EmployeeForm
         Me.dgvempleave.ColumnHeadersHeight = 38
         Me.dgvempleave.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvempleave.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.elv_RowID, Me.elv_Type, Me.elv_StartTime, Me.elv_EndTime, Me.elv_StartDate, Me.elv_EndDate, Me.elv_Reason, Me.elv_Comment, Me.elv_Image, Me.elv_viewimage, Me.elv_attafilename, Me.elv_attafileextensn, Me.elv_Status})
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempleave.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempleave.DefaultCellStyle = DataGridViewCellStyle8
         Me.dgvempleave.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempleave.Location = New System.Drawing.Point(32, 257)
         Me.dgvempleave.MultiSelect = False
@@ -4619,33 +4471,6 @@ Partial Class EmployeeForm
         Me.dgvempleave.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempleave.Size = New System.Drawing.Size(611, 345)
         Me.dgvempleave.TabIndex = 0
-        '
-        'elv_RowID
-        '
-        Me.elv_RowID.HeaderText = "RowID"
-        Me.elv_RowID.Name = "elv_RowID"
-        Me.elv_RowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.elv_RowID.Visible = False
-        '
-        'elv_Type
-        '
-        Me.elv_Type.HeaderText = "Leave type"
-        Me.elv_Type.Name = "elv_Type"
-        Me.elv_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.elv_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.elv_Type.Width = 150
-        '
-        'elv_StartTime
-        '
-        Me.elv_StartTime.HeaderText = "Start time"
-        Me.elv_StartTime.Name = "elv_StartTime"
-        Me.elv_StartTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'elv_EndTime
-        '
-        Me.elv_EndTime.HeaderText = "End time"
-        Me.elv_EndTime.Name = "elv_EndTime"
-        Me.elv_EndTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'elv_StartDate
         '
@@ -4723,52 +4548,10 @@ Partial Class EmployeeForm
         Me.elv_EndDate.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.elv_EndDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'elv_Reason
-        '
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.elv_Reason.DefaultCellStyle = DataGridViewCellStyle9
-        Me.elv_Reason.HeaderText = "Reason"
-        Me.elv_Reason.Name = "elv_Reason"
-        Me.elv_Reason.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.elv_Reason.Width = 190
-        '
-        'elv_Comment
-        '
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.elv_Comment.DefaultCellStyle = DataGridViewCellStyle10
-        Me.elv_Comment.HeaderText = "Comments"
-        Me.elv_Comment.MaxInputLength = 499
-        Me.elv_Comment.Name = "elv_Comment"
-        Me.elv_Comment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.elv_Comment.Width = 190
-        '
-        'elv_Image
-        '
-        Me.elv_Image.HeaderText = "Image"
-        Me.elv_Image.MaxInputLength = 1999
-        Me.elv_Image.Name = "elv_Image"
-        Me.elv_Image.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.elv_Image.Visible = False
-        '
         'elv_viewimage
         '
         Me.elv_viewimage.HeaderText = ""
         Me.elv_viewimage.Name = "elv_viewimage"
-        '
-        'elv_attafilename
-        '
-        Me.elv_attafilename.HeaderText = "Attachment file name"
-        Me.elv_attafilename.Name = "elv_attafilename"
-        '
-        'elv_attafileextensn
-        '
-        Me.elv_attafileextensn.HeaderText = "Attachment file extension"
-        Me.elv_attafileextensn.Name = "elv_attafileextensn"
-        '
-        'elv_Status
-        '
-        Me.elv_Status.HeaderText = "Status"
-        Me.elv_Status.Name = "elv_Status"
         '
         'Label37
         '
@@ -5165,24 +4948,24 @@ Partial Class EmployeeForm
         Me.dgvDisciplinaryList.AllowUserToAddRows = False
         Me.dgvDisciplinaryList.AllowUserToDeleteRows = False
         Me.dgvDisciplinaryList.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDisciplinaryList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDisciplinaryList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle9
         Me.dgvDisciplinaryList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvDisciplinaryList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_FindingName, Me.c_action, Me.c_datefrom, Me.c_dateto, Me.c_desc, Me.c_comment, Me.c_rowid})
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDisciplinaryList.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDisciplinaryList.DefaultCellStyle = DataGridViewCellStyle10
         Me.dgvDisciplinaryList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvDisciplinaryList.Location = New System.Drawing.Point(32, 248)
         Me.dgvDisciplinaryList.MultiSelect = False
@@ -5192,55 +4975,6 @@ Partial Class EmployeeForm
         Me.dgvDisciplinaryList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvDisciplinaryList.Size = New System.Drawing.Size(745, 325)
         Me.dgvDisciplinaryList.TabIndex = 323
-        '
-        'c_FindingName
-        '
-        Me.c_FindingName.HeaderText = "Finding Name"
-        Me.c_FindingName.Name = "c_FindingName"
-        Me.c_FindingName.ReadOnly = True
-        Me.c_FindingName.Width = 117
-        '
-        'c_action
-        '
-        Me.c_action.HeaderText = "Action"
-        Me.c_action.Name = "c_action"
-        Me.c_action.ReadOnly = True
-        Me.c_action.Width = 117
-        '
-        'c_datefrom
-        '
-        Me.c_datefrom.HeaderText = "Effective Date From"
-        Me.c_datefrom.Name = "c_datefrom"
-        Me.c_datefrom.ReadOnly = True
-        Me.c_datefrom.Width = 117
-        '
-        'c_dateto
-        '
-        Me.c_dateto.HeaderText = "Effective Date To"
-        Me.c_dateto.Name = "c_dateto"
-        Me.c_dateto.ReadOnly = True
-        Me.c_dateto.Width = 117
-        '
-        'c_desc
-        '
-        Me.c_desc.HeaderText = "Finding Description"
-        Me.c_desc.Name = "c_desc"
-        Me.c_desc.ReadOnly = True
-        Me.c_desc.Width = 117
-        '
-        'c_comment
-        '
-        Me.c_comment.HeaderText = "Comments"
-        Me.c_comment.Name = "c_comment"
-        Me.c_comment.ReadOnly = True
-        Me.c_comment.Width = 117
-        '
-        'c_rowid
-        '
-        Me.c_rowid.HeaderText = "RowID"
-        Me.c_rowid.Name = "c_rowid"
-        Me.c_rowid.ReadOnly = True
-        Me.c_rowid.Visible = False
         '
         'dtpTo
         '
@@ -5533,24 +5267,23 @@ Partial Class EmployeeForm
         Me.dgvEducback.AllowUserToAddRows = False
         Me.dgvEducback.AllowUserToDeleteRows = False
         Me.dgvEducback.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvEducback.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvEducback.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle11
         Me.dgvEducback.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvEducback.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_EmplyeeID, Me.c_name, Me.c_EducationalType, Me.c_school, Me.c_degree, Me.c_course, Me.c_minor, Me.DataGridViewTextBoxColumn108, Me.DataGridViewTextBoxColumn109, Me.c_Remarks, Me.c_RowID1})
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvEducback.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvEducback.DefaultCellStyle = DataGridViewCellStyle12
         Me.dgvEducback.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvEducback.Location = New System.Drawing.Point(32, 224)
         Me.dgvEducback.MultiSelect = False
@@ -5560,75 +5293,6 @@ Partial Class EmployeeForm
         Me.dgvEducback.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvEducback.Size = New System.Drawing.Size(806, 349)
         Me.dgvEducback.TabIndex = 319
-        '
-        'c_EmplyeeID
-        '
-        Me.c_EmplyeeID.HeaderText = "Employee ID"
-        Me.c_EmplyeeID.Name = "c_EmplyeeID"
-        Me.c_EmplyeeID.ReadOnly = True
-        Me.c_EmplyeeID.Visible = False
-        '
-        'c_name
-        '
-        Me.c_name.HeaderText = "Name"
-        Me.c_name.Name = "c_name"
-        Me.c_name.ReadOnly = True
-        Me.c_name.Visible = False
-        '
-        'c_EducationalType
-        '
-        Me.c_EducationalType.HeaderText = "Educational Type"
-        Me.c_EducationalType.Name = "c_EducationalType"
-        Me.c_EducationalType.ReadOnly = True
-        '
-        'c_school
-        '
-        Me.c_school.HeaderText = "School"
-        Me.c_school.Name = "c_school"
-        Me.c_school.ReadOnly = True
-        '
-        'c_degree
-        '
-        Me.c_degree.HeaderText = "Degree"
-        Me.c_degree.Name = "c_degree"
-        Me.c_degree.ReadOnly = True
-        '
-        'c_course
-        '
-        Me.c_course.HeaderText = "Course"
-        Me.c_course.Name = "c_course"
-        Me.c_course.ReadOnly = True
-        '
-        'c_minor
-        '
-        Me.c_minor.HeaderText = "Major"
-        Me.c_minor.Name = "c_minor"
-        Me.c_minor.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn108
-        '
-        Me.DataGridViewTextBoxColumn108.HeaderText = "Date From"
-        Me.DataGridViewTextBoxColumn108.Name = "DataGridViewTextBoxColumn108"
-        Me.DataGridViewTextBoxColumn108.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn109
-        '
-        Me.DataGridViewTextBoxColumn109.HeaderText = "Date To"
-        Me.DataGridViewTextBoxColumn109.Name = "DataGridViewTextBoxColumn109"
-        Me.DataGridViewTextBoxColumn109.ReadOnly = True
-        '
-        'c_Remarks
-        '
-        Me.c_Remarks.HeaderText = "Remarks"
-        Me.c_Remarks.Name = "c_Remarks"
-        Me.c_Remarks.ReadOnly = True
-        '
-        'c_RowID1
-        '
-        Me.c_RowID1.HeaderText = "Column1"
-        Me.c_RowID1.Name = "c_RowID1"
-        Me.c_RowID1.ReadOnly = True
-        Me.c_RowID1.Visible = False
         '
         'txtCourse
         '
@@ -6245,23 +5909,23 @@ Partial Class EmployeeForm
         'DataGridView2
         '
         Me.DataGridView2.BackgroundColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle13
         Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView2.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView2.DefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridView2.Location = New System.Drawing.Point(6, 257)
         Me.DataGridView2.Name = "DataGridView2"
         Me.DataGridView2.Size = New System.Drawing.Size(317, 109)
@@ -6329,24 +5993,24 @@ Partial Class EmployeeForm
         Me.dgvListCompany.AllowUserToAddRows = False
         Me.dgvListCompany.AllowUserToDeleteRows = False
         Me.dgvListCompany.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvListCompany.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvListCompany.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle15
         Me.dgvListCompany.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvListCompany.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_compname, Me.c_trade, Me.c_contname, Me.c_mainphone, Me.c_altphone, Me.c_faxno, Me.c_emailaddr, Me.c_altemailaddr, Me.c_url, Me.c_tinno, Me.c_jobtitle, Me.c_jobfunction, Me.c_orgtype, Me.c_experience, Me.c_expdateto, Me.c_compaddr, Me.c_rowidPrevEmp})
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvListCompany.DefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvListCompany.DefaultCellStyle = DataGridViewCellStyle16
         Me.dgvListCompany.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvListCompany.Location = New System.Drawing.Point(32, 326)
         Me.dgvListCompany.MultiSelect = False
@@ -6356,109 +6020,6 @@ Partial Class EmployeeForm
         Me.dgvListCompany.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvListCompany.Size = New System.Drawing.Size(822, 245)
         Me.dgvListCompany.TabIndex = 321
-        '
-        'c_compname
-        '
-        Me.c_compname.HeaderText = "Company Name"
-        Me.c_compname.Name = "c_compname"
-        Me.c_compname.ReadOnly = True
-        '
-        'c_trade
-        '
-        Me.c_trade.HeaderText = "Trade Name"
-        Me.c_trade.Name = "c_trade"
-        Me.c_trade.ReadOnly = True
-        '
-        'c_contname
-        '
-        Me.c_contname.HeaderText = "Contact Name"
-        Me.c_contname.Name = "c_contname"
-        Me.c_contname.ReadOnly = True
-        '
-        'c_mainphone
-        '
-        Me.c_mainphone.HeaderText = "Main Phone"
-        Me.c_mainphone.Name = "c_mainphone"
-        Me.c_mainphone.ReadOnly = True
-        '
-        'c_altphone
-        '
-        Me.c_altphone.HeaderText = "Alt Phone"
-        Me.c_altphone.Name = "c_altphone"
-        Me.c_altphone.ReadOnly = True
-        '
-        'c_faxno
-        '
-        Me.c_faxno.HeaderText = "Fax No."
-        Me.c_faxno.Name = "c_faxno"
-        Me.c_faxno.ReadOnly = True
-        '
-        'c_emailaddr
-        '
-        Me.c_emailaddr.HeaderText = "Email Address"
-        Me.c_emailaddr.Name = "c_emailaddr"
-        Me.c_emailaddr.ReadOnly = True
-        '
-        'c_altemailaddr
-        '
-        Me.c_altemailaddr.HeaderText = "Alt Email Address"
-        Me.c_altemailaddr.Name = "c_altemailaddr"
-        Me.c_altemailaddr.ReadOnly = True
-        '
-        'c_url
-        '
-        Me.c_url.HeaderText = "URL"
-        Me.c_url.Name = "c_url"
-        Me.c_url.ReadOnly = True
-        '
-        'c_tinno
-        '
-        Me.c_tinno.HeaderText = "TIN No."
-        Me.c_tinno.Name = "c_tinno"
-        Me.c_tinno.ReadOnly = True
-        '
-        'c_jobtitle
-        '
-        Me.c_jobtitle.HeaderText = "Job Title"
-        Me.c_jobtitle.Name = "c_jobtitle"
-        Me.c_jobtitle.ReadOnly = True
-        '
-        'c_jobfunction
-        '
-        Me.c_jobfunction.HeaderText = "Job Function"
-        Me.c_jobfunction.Name = "c_jobfunction"
-        Me.c_jobfunction.ReadOnly = True
-        '
-        'c_orgtype
-        '
-        Me.c_orgtype.HeaderText = "Organization Type"
-        Me.c_orgtype.Name = "c_orgtype"
-        Me.c_orgtype.ReadOnly = True
-        '
-        'c_experience
-        '
-        Me.c_experience.HeaderText = "Experience From date"
-        Me.c_experience.Name = "c_experience"
-        Me.c_experience.ReadOnly = True
-        '
-        'c_expdateto
-        '
-        Me.c_expdateto.HeaderText = "Experience To date"
-        Me.c_expdateto.Name = "c_expdateto"
-        Me.c_expdateto.ReadOnly = True
-        '
-        'c_compaddr
-        '
-        Me.c_compaddr.HeaderText = "Company Address"
-        Me.c_compaddr.Name = "c_compaddr"
-        Me.c_compaddr.ReadOnly = True
-        '
-        'c_rowidPrevEmp
-        '
-        Me.c_rowidPrevEmp.HeaderText = "RowiD"
-        Me.c_rowidPrevEmp.Name = "c_rowidPrevEmp"
-        Me.c_rowidPrevEmp.ReadOnly = True
-        Me.c_rowidPrevEmp.Visible = False
         '
         'txtEmpIDPrevEmp
         '
@@ -6666,24 +6227,24 @@ Partial Class EmployeeForm
         Me.dgvPromotionList.AllowUserToAddRows = False
         Me.dgvPromotionList.AllowUserToDeleteRows = False
         Me.dgvPromotionList.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvPromotionList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvPromotionList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle17
         Me.dgvPromotionList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPromotionList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_empID2, Me.c_empname2, Me.c_promotRowID, Me.c_PostionFrom, Me.c_positionto, Me.c_effecDate, Me.c_compensation, Me.c_basicpay, Me.c_reasonpromot})
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvPromotionList.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvPromotionList.DefaultCellStyle = DataGridViewCellStyle18
         Me.dgvPromotionList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvPromotionList.Location = New System.Drawing.Point(32, 239)
         Me.dgvPromotionList.MultiSelect = False
@@ -6693,64 +6254,6 @@ Partial Class EmployeeForm
         Me.dgvPromotionList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvPromotionList.Size = New System.Drawing.Size(793, 360)
         Me.dgvPromotionList.TabIndex = 330
-        '
-        'c_empID2
-        '
-        Me.c_empID2.HeaderText = "Employee ID"
-        Me.c_empID2.Name = "c_empID2"
-        Me.c_empID2.ReadOnly = True
-        '
-        'c_empname2
-        '
-        Me.c_empname2.HeaderText = "Employee Name"
-        Me.c_empname2.Name = "c_empname2"
-        Me.c_empname2.ReadOnly = True
-        Me.c_empname2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.c_empname2.Width = 150
-        '
-        'c_promotRowID
-        '
-        Me.c_promotRowID.HeaderText = "RowID"
-        Me.c_promotRowID.Name = "c_promotRowID"
-        Me.c_promotRowID.ReadOnly = True
-        Me.c_promotRowID.Visible = False
-        '
-        'c_PostionFrom
-        '
-        Me.c_PostionFrom.HeaderText = "Position From"
-        Me.c_PostionFrom.Name = "c_PostionFrom"
-        Me.c_PostionFrom.ReadOnly = True
-        '
-        'c_positionto
-        '
-        Me.c_positionto.HeaderText = "Position To"
-        Me.c_positionto.Name = "c_positionto"
-        Me.c_positionto.ReadOnly = True
-        '
-        'c_effecDate
-        '
-        Me.c_effecDate.HeaderText = "Effective Date"
-        Me.c_effecDate.Name = "c_effecDate"
-        Me.c_effecDate.ReadOnly = True
-        '
-        'c_compensation
-        '
-        Me.c_compensation.HeaderText = "Compensation"
-        Me.c_compensation.Name = "c_compensation"
-        Me.c_compensation.ReadOnly = True
-        '
-        'c_basicpay
-        '
-        Me.c_basicpay.HeaderText = "Basic Pay"
-        Me.c_basicpay.Name = "c_basicpay"
-        Me.c_basicpay.ReadOnly = True
-        Me.c_basicpay.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'c_reasonpromot
-        '
-        Me.c_reasonpromot.HeaderText = "Reason"
-        Me.c_reasonpromot.Name = "c_reasonpromot"
-        Me.c_reasonpromot.ReadOnly = True
         '
         'lblpeso
         '
@@ -7224,6 +6727,29 @@ Partial Class EmployeeForm
         Me.dgvempallowance.AllowUserToResizeColumns = False
         Me.dgvempallowance.AllowUserToResizeRows = False
         Me.dgvempallowance.BackgroundColor = System.Drawing.Color.White
+        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempallowance.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle19
+        Me.dgvempallowance.ColumnHeadersHeight = 34
+        Me.dgvempallowance.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eall_RowID, Me.eall_Type, Me.eall_Amount, Me.eall_Frequency, Me.eall_Start, Me.eall_End, Me.allow_taxab, Me.eall_ProdID})
+        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle21
+        Me.dgvempallowance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.dgvempallowance.Location = New System.Drawing.Point(32, 225)
+        Me.dgvempallowance.MultiSelect = False
+        Me.dgvempallowance.Name = "dgvempallowance"
+        Me.dgvempallowance.ReadOnly = True
         DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -7231,41 +6757,10 @@ Partial Class EmployeeForm
         DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempallowance.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle22
-        Me.dgvempallowance.ColumnHeadersHeight = 34
-        Me.dgvempallowance.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eall_RowID, Me.eall_Type, Me.eall_Amount, Me.eall_Frequency, Me.eall_Start, Me.eall_End, Me.allow_taxab, Me.eall_ProdID})
-        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle24.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle24
-        Me.dgvempallowance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempallowance.Location = New System.Drawing.Point(32, 225)
-        Me.dgvempallowance.MultiSelect = False
-        Me.dgvempallowance.Name = "dgvempallowance"
-        Me.dgvempallowance.ReadOnly = True
-        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle25.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle25.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle25.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle25.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempallowance.RowHeadersDefaultCellStyle = DataGridViewCellStyle25
+        Me.dgvempallowance.RowHeadersDefaultCellStyle = DataGridViewCellStyle22
         Me.dgvempallowance.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempallowance.Size = New System.Drawing.Size(784, 345)
         Me.dgvempallowance.TabIndex = 5
-        '
-        'eall_RowID
-        '
-        Me.eall_RowID.HeaderText = "RowID"
-        Me.eall_RowID.Name = "eall_RowID"
-        Me.eall_RowID.ReadOnly = True
-        Me.eall_RowID.Visible = False
-        Me.eall_RowID.Width = 50
         '
         'eall_Type
         '
@@ -7275,15 +6770,6 @@ Partial Class EmployeeForm
         Me.eall_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.eall_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.eall_Type.Width = 180
-        '
-        'eall_Amount
-        '
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle23
-        Me.eall_Amount.HeaderText = "Amount"
-        Me.eall_Amount.Name = "eall_Amount"
-        Me.eall_Amount.ReadOnly = True
-        Me.eall_Amount.Width = 180
         '
         'eall_Frequency
         '
@@ -7369,20 +6855,6 @@ Partial Class EmployeeForm
         Me.eall_End.Name = "eall_End"
         Me.eall_End.ReadOnly = True
         Me.eall_End.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'allow_taxab
-        '
-        Me.allow_taxab.HeaderText = "Taxable"
-        Me.allow_taxab.Name = "allow_taxab"
-        Me.allow_taxab.ReadOnly = True
-        Me.allow_taxab.Visible = False
-        '
-        'eall_ProdID
-        '
-        Me.eall_ProdID.HeaderText = "ProductID"
-        Me.eall_ProdID.Name = "eall_ProdID"
-        Me.eall_ProdID.ReadOnly = True
-        Me.eall_ProdID.Visible = False
         '
         'Label156
         '
@@ -7844,47 +7316,40 @@ Partial Class EmployeeForm
         Me.dgvempOT.AllowUserToOrderColumns = True
         Me.dgvempOT.AllowUserToResizeRows = False
         Me.dgvempOT.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle26.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle26.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle26.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempOT.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle26
+        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempOT.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle23
         Me.dgvempOT.ColumnHeadersHeight = 38
         Me.dgvempOT.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvempOT.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eot_RowID, Me.eot_Type, Me.eot_StartTime, Me.eot_EndTime, Me.eot_StartDate, Me.eot_EndDate, Me.eot_Status, Me.eot_Reason, Me.eot_Comment, Me.eot_Image, Me.eot_viewimage, Me.eot_attafilename, Me.eot_attafileextensn})
-        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle29.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempOT.DefaultCellStyle = DataGridViewCellStyle29
+        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle26.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle26.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle26.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempOT.DefaultCellStyle = DataGridViewCellStyle26
         Me.dgvempOT.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempOT.Location = New System.Drawing.Point(32, 227)
         Me.dgvempOT.MultiSelect = False
         Me.dgvempOT.Name = "dgvempOT"
-        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempOT.RowHeadersDefaultCellStyle = DataGridViewCellStyle30
+        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempOT.RowHeadersDefaultCellStyle = DataGridViewCellStyle27
         Me.dgvempOT.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempOT.Size = New System.Drawing.Size(611, 331)
         Me.dgvempOT.TabIndex = 0
-        '
-        'eot_RowID
-        '
-        Me.eot_RowID.HeaderText = "RowID"
-        Me.eot_RowID.Name = "eot_RowID"
-        Me.eot_RowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.eot_RowID.Visible = False
         '
         'eot_Type
         '
@@ -7892,18 +7357,6 @@ Partial Class EmployeeForm
         Me.eot_Type.Name = "eot_Type"
         Me.eot_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.eot_Type.Width = 150
-        '
-        'eot_StartTime
-        '
-        Me.eot_StartTime.HeaderText = "Start time"
-        Me.eot_StartTime.Name = "eot_StartTime"
-        Me.eot_StartTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'eot_EndTime
-        '
-        Me.eot_EndTime.HeaderText = "End time"
-        Me.eot_EndTime.Name = "eot_EndTime"
-        Me.eot_EndTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'eot_StartDate
         '
@@ -7981,52 +7434,10 @@ Partial Class EmployeeForm
         Me.eot_EndDate.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.eot_EndDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'eot_Status
-        '
-        Me.eot_Status.HeaderText = "Status"
-        Me.eot_Status.Name = "eot_Status"
-        '
-        'eot_Reason
-        '
-        DataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eot_Reason.DefaultCellStyle = DataGridViewCellStyle27
-        Me.eot_Reason.HeaderText = "Reason"
-        Me.eot_Reason.Name = "eot_Reason"
-        Me.eot_Reason.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.eot_Reason.Width = 190
-        '
-        'eot_Comment
-        '
-        DataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eot_Comment.DefaultCellStyle = DataGridViewCellStyle28
-        Me.eot_Comment.HeaderText = "Comments"
-        Me.eot_Comment.MaxInputLength = 499
-        Me.eot_Comment.Name = "eot_Comment"
-        Me.eot_Comment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.eot_Comment.Width = 190
-        '
-        'eot_Image
-        '
-        Me.eot_Image.HeaderText = "Image"
-        Me.eot_Image.MaxInputLength = 1999
-        Me.eot_Image.Name = "eot_Image"
-        Me.eot_Image.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.eot_Image.Visible = False
-        '
         'eot_viewimage
         '
         Me.eot_viewimage.HeaderText = ""
         Me.eot_viewimage.Name = "eot_viewimage"
-        '
-        'eot_attafilename
-        '
-        Me.eot_attafilename.HeaderText = "Attachment file name"
-        Me.eot_attafilename.Name = "eot_attafilename"
-        '
-        'eot_attafileextensn
-        '
-        Me.eot_attafileextensn.HeaderText = "Attachment file extension"
-        Me.eot_attafileextensn.Name = "eot_attafileextensn"
         '
         'Label188
         '
@@ -8563,47 +7974,40 @@ Partial Class EmployeeForm
         Me.dgvOBF.AllowUserToOrderColumns = True
         Me.dgvOBF.AllowUserToResizeRows = False
         Me.dgvOBF.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle31.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle31.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle31.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle31.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvOBF.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle31
+        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle28.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle28.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle28.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvOBF.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle28
         Me.dgvOBF.ColumnHeadersHeight = 38
         Me.dgvOBF.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvOBF.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.obf_RowID, Me.obf_Type, Me.obf_StartTime, Me.obf_EndTime, Me.obf_StartDate, Me.obf_EndDate, Me.obf_Status, Me.obf_Reason, Me.obf_Comment, Me.obf_Image, Me.obf_view, Me.obf_attafilename, Me.obf_attafileextensn})
-        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle34.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle34.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle34.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle34.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle34.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvOBF.DefaultCellStyle = DataGridViewCellStyle34
+        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle31.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle31.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle31.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle31.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvOBF.DefaultCellStyle = DataGridViewCellStyle31
         Me.dgvOBF.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvOBF.Location = New System.Drawing.Point(32, 228)
         Me.dgvOBF.MultiSelect = False
         Me.dgvOBF.Name = "dgvOBF"
-        DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle35.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle35.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle35.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle35.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle35.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvOBF.RowHeadersDefaultCellStyle = DataGridViewCellStyle35
+        DataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle32.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle32.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle32.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle32.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle32.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvOBF.RowHeadersDefaultCellStyle = DataGridViewCellStyle32
         Me.dgvOBF.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvOBF.Size = New System.Drawing.Size(611, 345)
         Me.dgvOBF.TabIndex = 0
-        '
-        'obf_RowID
-        '
-        Me.obf_RowID.HeaderText = "RowID"
-        Me.obf_RowID.Name = "obf_RowID"
-        Me.obf_RowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.obf_RowID.Visible = False
         '
         'obf_Type
         '
@@ -8611,18 +8015,6 @@ Partial Class EmployeeForm
         Me.obf_Type.Name = "obf_Type"
         Me.obf_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.obf_Type.Width = 150
-        '
-        'obf_StartTime
-        '
-        Me.obf_StartTime.HeaderText = "Start time"
-        Me.obf_StartTime.Name = "obf_StartTime"
-        Me.obf_StartTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'obf_EndTime
-        '
-        Me.obf_EndTime.HeaderText = "End time"
-        Me.obf_EndTime.Name = "obf_EndTime"
-        Me.obf_EndTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'obf_StartDate
         '
@@ -8700,52 +8092,10 @@ Partial Class EmployeeForm
         Me.obf_EndDate.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.obf_EndDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'obf_Status
-        '
-        Me.obf_Status.HeaderText = "Status"
-        Me.obf_Status.Name = "obf_Status"
-        '
-        'obf_Reason
-        '
-        DataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.obf_Reason.DefaultCellStyle = DataGridViewCellStyle32
-        Me.obf_Reason.HeaderText = "Reason"
-        Me.obf_Reason.Name = "obf_Reason"
-        Me.obf_Reason.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.obf_Reason.Width = 190
-        '
-        'obf_Comment
-        '
-        DataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.obf_Comment.DefaultCellStyle = DataGridViewCellStyle33
-        Me.obf_Comment.HeaderText = "Comments"
-        Me.obf_Comment.MaxInputLength = 499
-        Me.obf_Comment.Name = "obf_Comment"
-        Me.obf_Comment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.obf_Comment.Width = 190
-        '
-        'obf_Image
-        '
-        Me.obf_Image.HeaderText = "Image"
-        Me.obf_Image.MaxInputLength = 1999
-        Me.obf_Image.Name = "obf_Image"
-        Me.obf_Image.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.obf_Image.Visible = False
-        '
         'obf_view
         '
         Me.obf_view.HeaderText = ""
         Me.obf_view.Name = "obf_view"
-        '
-        'obf_attafilename
-        '
-        Me.obf_attafilename.HeaderText = "Attachment file name"
-        Me.obf_attafilename.Name = "obf_attafilename"
-        '
-        'obf_attafileextensn
-        '
-        Me.obf_attafileextensn.HeaderText = "Attachment file extension"
-        Me.obf_attafileextensn.Name = "obf_attafileextensn"
         '
         'Label172
         '
@@ -9150,6 +8500,29 @@ Partial Class EmployeeForm
         Me.dgvempbon.AllowUserToOrderColumns = True
         Me.dgvempbon.AllowUserToResizeRows = False
         Me.dgvempbon.BackgroundColor = System.Drawing.Color.White
+        DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle33.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle33.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle33.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle33.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle33.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempbon.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle33
+        Me.dgvempbon.ColumnHeadersHeight = 34
+        Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bon_RowID, Me.bon_Type, Me.bon_Amount, Me.bon_Frequency, Me.bon_Start, Me.bon_End, Me.bon_ProdID})
+        DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle35.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle35.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle35.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle35.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle35.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle35
+        Me.dgvempbon.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.dgvempbon.Location = New System.Drawing.Point(32, 225)
+        Me.dgvempbon.MultiSelect = False
+        Me.dgvempbon.Name = "dgvempbon"
+        Me.dgvempbon.ReadOnly = True
         DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle36.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle36.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -9157,41 +8530,10 @@ Partial Class EmployeeForm
         DataGridViewCellStyle36.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle36.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle36
-        Me.dgvempbon.ColumnHeadersHeight = 34
-        Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bon_RowID, Me.bon_Type, Me.bon_Amount, Me.bon_Frequency, Me.bon_Start, Me.bon_End, Me.bon_ProdID})
-        DataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle38.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle38.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle38.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle38.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle38.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle38
-        Me.dgvempbon.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempbon.Location = New System.Drawing.Point(32, 225)
-        Me.dgvempbon.MultiSelect = False
-        Me.dgvempbon.Name = "dgvempbon"
-        Me.dgvempbon.ReadOnly = True
-        DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle39.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle39.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle39
+        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle36
         Me.dgvempbon.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempbon.Size = New System.Drawing.Size(783, 345)
         Me.dgvempbon.TabIndex = 5
-        '
-        'bon_RowID
-        '
-        Me.bon_RowID.HeaderText = "RowID"
-        Me.bon_RowID.Name = "bon_RowID"
-        Me.bon_RowID.ReadOnly = True
-        Me.bon_RowID.Visible = False
-        Me.bon_RowID.Width = 50
         '
         'bon_Type
         '
@@ -9201,15 +8543,6 @@ Partial Class EmployeeForm
         Me.bon_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.bon_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.bon_Type.Width = 180
-        '
-        'bon_Amount
-        '
-        DataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle37
-        Me.bon_Amount.HeaderText = "Amount"
-        Me.bon_Amount.Name = "bon_Amount"
-        Me.bon_Amount.ReadOnly = True
-        Me.bon_Amount.Width = 180
         '
         'bon_Frequency
         '
@@ -9295,13 +8628,6 @@ Partial Class EmployeeForm
         Me.bon_End.Name = "bon_End"
         Me.bon_End.ReadOnly = True
         Me.bon_End.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'bon_ProdID
-        '
-        Me.bon_ProdID.HeaderText = "ProductID"
-        Me.bon_ProdID.Name = "bon_ProdID"
-        Me.bon_ProdID.ReadOnly = True
-        Me.bon_ProdID.Visible = False
         '
         'Label184
         '
@@ -9532,46 +8858,39 @@ Partial Class EmployeeForm
         Me.dgvempatta.AllowUserToOrderColumns = True
         Me.dgvempatta.AllowUserToResizeRows = False
         Me.dgvempatta.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle40.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle40.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle40.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle40.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle40.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempatta.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle40
+        DataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle37.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle37.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle37.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle37.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle37.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempatta.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle37
         Me.dgvempatta.ColumnHeadersHeight = 34
         Me.dgvempatta.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eatt_RowID, Me.eatt_Type, Me.eatt_FileName, Me.eatt_FileType, Me.eatt_EmployeeID, Me.eatt_Created, Me.eatt_CreatedBy, Me.eatt_LastUpd, Me.eatt_LastUpdBy, Me.eatt_AttachedFile, Me.eatt_viewthis, Me.Column38})
-        DataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle41.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle41.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle41.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle41.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle41.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle41.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempatta.DefaultCellStyle = DataGridViewCellStyle41
+        DataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle38.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle38.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle38.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle38.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle38.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempatta.DefaultCellStyle = DataGridViewCellStyle38
         Me.dgvempatta.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempatta.Location = New System.Drawing.Point(32, 91)
         Me.dgvempatta.MultiSelect = False
         Me.dgvempatta.Name = "dgvempatta"
-        DataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle42.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle42.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle42.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle42.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle42.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle42.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempatta.RowHeadersDefaultCellStyle = DataGridViewCellStyle42
+        DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle39.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle39.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempatta.RowHeadersDefaultCellStyle = DataGridViewCellStyle39
         Me.dgvempatta.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempatta.Size = New System.Drawing.Size(611, 345)
         Me.dgvempatta.TabIndex = 0
-        '
-        'eatt_RowID
-        '
-        Me.eatt_RowID.HeaderText = "RowID"
-        Me.eatt_RowID.Name = "eatt_RowID"
-        Me.eatt_RowID.Visible = False
-        Me.eatt_RowID.Width = 128
         '
         'eatt_Type
         '
@@ -9581,56 +8900,6 @@ Partial Class EmployeeForm
         Me.eatt_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.eatt_Type.Width = 200
         '
-        'eatt_FileName
-        '
-        Me.eatt_FileName.HeaderText = "File name"
-        Me.eatt_FileName.MaxInputLength = 200
-        Me.eatt_FileName.Name = "eatt_FileName"
-        Me.eatt_FileName.Width = 160
-        '
-        'eatt_FileType
-        '
-        Me.eatt_FileType.HeaderText = "File extension"
-        Me.eatt_FileType.Name = "eatt_FileType"
-        Me.eatt_FileType.ReadOnly = True
-        Me.eatt_FileType.Width = 160
-        '
-        'eatt_EmployeeID
-        '
-        Me.eatt_EmployeeID.HeaderText = "Column42"
-        Me.eatt_EmployeeID.Name = "eatt_EmployeeID"
-        Me.eatt_EmployeeID.Visible = False
-        '
-        'eatt_Created
-        '
-        Me.eatt_Created.HeaderText = "Column43"
-        Me.eatt_Created.Name = "eatt_Created"
-        Me.eatt_Created.Visible = False
-        '
-        'eatt_CreatedBy
-        '
-        Me.eatt_CreatedBy.HeaderText = "Column44"
-        Me.eatt_CreatedBy.Name = "eatt_CreatedBy"
-        Me.eatt_CreatedBy.Visible = False
-        '
-        'eatt_LastUpd
-        '
-        Me.eatt_LastUpd.HeaderText = "Column45"
-        Me.eatt_LastUpd.Name = "eatt_LastUpd"
-        Me.eatt_LastUpd.Visible = False
-        '
-        'eatt_LastUpdBy
-        '
-        Me.eatt_LastUpdBy.HeaderText = "Column46"
-        Me.eatt_LastUpdBy.Name = "eatt_LastUpdBy"
-        Me.eatt_LastUpdBy.Visible = False
-        '
-        'eatt_AttachedFile
-        '
-        Me.eatt_AttachedFile.HeaderText = "Column47"
-        Me.eatt_AttachedFile.Name = "eatt_AttachedFile"
-        Me.eatt_AttachedFile.Visible = False
-        '
         'eatt_viewthis
         '
         Me.eatt_viewthis.HeaderText = ""
@@ -9638,12 +8907,6 @@ Partial Class EmployeeForm
         Me.eatt_viewthis.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.eatt_viewthis.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.eatt_viewthis.Width = 120
-        '
-        'Column38
-        '
-        Me.Column38.HeaderText = "Attachment Type"
-        Me.Column38.Name = "Column38"
-        Me.Column38.Visible = False
         '
         'txtFNameAtta
         '
@@ -9790,18 +9053,6 @@ Partial Class EmployeeForm
         Me.tbpNewSalary.TabIndex = 19
         Me.tbpNewSalary.Text = "SALARY"
         Me.tbpNewSalary.UseVisualStyleBackColor = True
-        '
-        'SalaryTab
-        '
-        Me.SalaryTab.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.SalaryTab.BackColor = System.Drawing.Color.White
-        Me.SalaryTab.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
-        Me.SalaryTab.Name = "SalaryTab"
-        Me.SalaryTab.PhilHealth = Nothing
-        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
-        Me.SalaryTab.TabIndex = 0
         '
         'imglstchklist
         '
@@ -10030,24 +9281,24 @@ Partial Class EmployeeForm
         Me.dgvEmp.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.dgvEmp.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle43.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle43.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle43.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle43.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle43.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvEmp.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle43
+        DataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle40.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle40.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle40.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle40.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle40.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvEmp.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle40
         Me.dgvEmp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvEmp.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column21, Me.Column5, Me.Column31, Me.Column32, Me.Column6, Me.colstartdate, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column15, Me.Column16, Me.Column17, Me.Column18, Me.Column14, Me.Column19, Me.Column20, Me.Column22, Me.Column23, Me.Column24, Me.Column25, Me.Column26, Me.Column27, Me.Column28, Me.Column29, Me.Column30, Me.Column34, Me.Column35, Me.slbalance, Me.mlbalance, Me.Column36, Me.slallowance, Me.mlallowance, Me.Column33, Me.slpayp, Me.mlpayp, Me.fstatRowID, Me.AlphaExempted, Me.WorkDaysPerYear, Me.DayOfRest, Me.ATMNo, Me.BankName, Me.OtherPayP, Me.OtherLeaveAllowance, Me.OtherLeaveBalance, Me.CalcHoliday, Me.CalcSpecialHoliday, Me.CalcNightDiff, Me.CalcNightDiffOT, Me.CalcRestDay, Me.CalcRestDayOT, Me.LateGracePeriod, Me.RevealInPayroll, Me.OffSetBal, Me.AgencyName, Me.AgencyRowID, Me.Column37})
-        DataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle44.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle44.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle44.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle44.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle44.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle44.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvEmp.DefaultCellStyle = DataGridViewCellStyle44
+        DataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle41.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle41.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle41.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle41.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle41.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle41.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvEmp.DefaultCellStyle = DataGridViewCellStyle41
         Me.dgvEmp.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvEmp.Location = New System.Drawing.Point(2, 208)
         Me.dgvEmp.MultiSelect = False
@@ -10058,6 +9309,2038 @@ Partial Class EmployeeForm
         Me.dgvEmp.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvEmp.Size = New System.Drawing.Size(350, 296)
         Me.dgvEmp.TabIndex = 101
+        '
+        'Last
+        '
+        Me.Last.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Last.AutoSize = True
+        Me.Last.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Last.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Last.Location = New System.Drawing.Point(308, 507)
+        Me.Last.Name = "Last"
+        Me.Last.Size = New System.Drawing.Size(44, 15)
+        Me.Last.TabIndex = 150
+        Me.Last.TabStop = True
+        Me.Last.Text = "Last>>"
+        '
+        'Nxt
+        '
+        Me.Nxt.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Nxt.AutoSize = True
+        Me.Nxt.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Nxt.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Nxt.Location = New System.Drawing.Point(263, 507)
+        Me.Nxt.Name = "Nxt"
+        Me.Nxt.Size = New System.Drawing.Size(39, 15)
+        Me.Nxt.TabIndex = 149
+        Me.Nxt.TabStop = True
+        Me.Nxt.Text = "Next>"
+        '
+        'Prev
+        '
+        Me.Prev.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Prev.AutoSize = True
+        Me.Prev.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Prev.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Prev.Location = New System.Drawing.Point(49, 507)
+        Me.Prev.Name = "Prev"
+        Me.Prev.Size = New System.Drawing.Size(38, 15)
+        Me.Prev.TabIndex = 148
+        Me.Prev.TabStop = True
+        Me.Prev.Text = "<Prev"
+        '
+        'First
+        '
+        Me.First.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.First.AutoSize = True
+        Me.First.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.First.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.First.Location = New System.Drawing.Point(-1, 507)
+        Me.First.Name = "First"
+        Me.First.Size = New System.Drawing.Size(44, 15)
+        Me.First.TabIndex = 147
+        Me.First.TabStop = True
+        Me.First.Text = "<<First"
+        '
+        'errprovidSal
+        '
+        Me.errprovidSal.ContainerControl = Me
+        '
+        'Button3
+        '
+        Me.Button3.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
+        Me.Button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
+        Me.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button3.Image = Global.AccuPay.My.Resources.Resources.r_arrow
+        Me.Button3.Location = New System.Drawing.Point(320, 2)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(32, 23)
+        Me.Button3.TabIndex = 99
+        Me.Button3.TextAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.Button3.UseVisualStyleBackColor = False
+        '
+        'bgworkImporting
+        '
+        Me.bgworkImporting.WorkerReportsProgress = True
+        Me.bgworkImporting.WorkerSupportsCancellation = True
+        '
+        'Panel7
+        '
+        Me.Panel7.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
+        Me.Panel7.Controls.Add(Me.Button3)
+        Me.Panel7.Controls.Add(Me.tabctrlemp)
+        Me.Panel7.Controls.Add(Me.lblforballoon)
+        Me.Panel7.Controls.Add(Me.Last)
+        Me.Panel7.Controls.Add(Me.TabControl2)
+        Me.Panel7.Controls.Add(Me.Nxt)
+        Me.Panel7.Controls.Add(Me.Button4)
+        Me.Panel7.Controls.Add(Me.Prev)
+        Me.Panel7.Controls.Add(Me.dgvEmp)
+        Me.Panel7.Controls.Add(Me.First)
+        Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel7.Location = New System.Drawing.Point(0, 22)
+        Me.Panel7.Name = "Panel7"
+        Me.Panel7.Size = New System.Drawing.Size(1231, 523)
+        Me.Panel7.TabIndex = 151
+        '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        Me.DataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn1.Visible = False
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        Me.DataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn2.Visible = False
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "First Name"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        Me.DataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn3.Width = 160
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Middle Name"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        Me.DataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn4.Width = 160
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Last Name"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        Me.DataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn5.Width = 160
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.HeaderText = "Surname"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
+        Me.DataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn6.Width = 160
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Nickname"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.ReadOnly = True
+        Me.DataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn7.Width = 160
+        '
+        'DataGridViewTextBoxColumn8
+        '
+        Me.DataGridViewTextBoxColumn8.HeaderText = "Marital Status"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        Me.DataGridViewTextBoxColumn8.ReadOnly = True
+        Me.DataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn8.Width = 160
+        '
+        'DataGridViewTextBoxColumn9
+        '
+        Me.DataGridViewTextBoxColumn9.HeaderText = "No. of Dependents"
+        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        Me.DataGridViewTextBoxColumn9.ReadOnly = True
+        Me.DataGridViewTextBoxColumn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn9.Width = 160
+        '
+        'DataGridViewTextBoxColumn10
+        '
+        Me.DataGridViewTextBoxColumn10.HeaderText = "Birthdate"
+        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        Me.DataGridViewTextBoxColumn10.ReadOnly = True
+        Me.DataGridViewTextBoxColumn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn10.Width = 160
+        '
+        'DataGridViewTextBoxColumn11
+        '
+        Me.DataGridViewTextBoxColumn11.HeaderText = "JobTitle"
+        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        Me.DataGridViewTextBoxColumn11.ReadOnly = True
+        Me.DataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn11.Width = 160
+        '
+        'DataGridViewTextBoxColumn12
+        '
+        Me.DataGridViewTextBoxColumn12.HeaderText = "Position"
+        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        Me.DataGridViewTextBoxColumn12.ReadOnly = True
+        Me.DataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn12.Width = 160
+        '
+        'DataGridViewTextBoxColumn13
+        '
+        Me.DataGridViewTextBoxColumn13.HeaderText = "Salutation"
+        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        Me.DataGridViewTextBoxColumn13.ReadOnly = True
+        Me.DataGridViewTextBoxColumn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn13.Width = 160
+        '
+        'DataGridViewTextBoxColumn14
+        '
+        Me.DataGridViewTextBoxColumn14.HeaderText = "TIN"
+        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        Me.DataGridViewTextBoxColumn14.ReadOnly = True
+        Me.DataGridViewTextBoxColumn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn14.Width = 160
+        '
+        'DataGridViewTextBoxColumn15
+        '
+        Me.DataGridViewTextBoxColumn15.HeaderText = "SSS No."
+        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+        Me.DataGridViewTextBoxColumn15.ReadOnly = True
+        Me.DataGridViewTextBoxColumn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn15.Width = 160
+        '
+        'DataGridViewTextBoxColumn16
+        '
+        Me.DataGridViewTextBoxColumn16.HeaderText = "HDMF No."
+        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+        Me.DataGridViewTextBoxColumn16.ReadOnly = True
+        Me.DataGridViewTextBoxColumn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn16.Width = 160
+        '
+        'DataGridViewTextBoxColumn17
+        '
+        Me.DataGridViewTextBoxColumn17.HeaderText = "PhilHealth No."
+        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+        Me.DataGridViewTextBoxColumn17.ReadOnly = True
+        Me.DataGridViewTextBoxColumn17.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn17.Width = 160
+        '
+        'DataGridViewTextBoxColumn18
+        '
+        Me.DataGridViewTextBoxColumn18.HeaderText = "Work Phone No."
+        Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+        Me.DataGridViewTextBoxColumn18.ReadOnly = True
+        Me.DataGridViewTextBoxColumn18.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn18.Visible = False
+        '
+        'DataGridViewTextBoxColumn19
+        '
+        Me.DataGridViewTextBoxColumn19.HeaderText = "Home Phone No."
+        Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
+        Me.DataGridViewTextBoxColumn19.ReadOnly = True
+        Me.DataGridViewTextBoxColumn19.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn19.Visible = False
+        '
+        'DataGridViewTextBoxColumn20
+        '
+        Me.DataGridViewTextBoxColumn20.HeaderText = "Mobile Phone No."
+        Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
+        Me.DataGridViewTextBoxColumn20.ReadOnly = True
+        Me.DataGridViewTextBoxColumn20.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn20.Visible = False
+        '
+        'DataGridViewTextBoxColumn21
+        '
+        Me.DataGridViewTextBoxColumn21.HeaderText = "Home address"
+        Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
+        Me.DataGridViewTextBoxColumn21.ReadOnly = True
+        Me.DataGridViewTextBoxColumn21.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn21.Visible = False
+        '
+        'DataGridViewTextBoxColumn22
+        '
+        Me.DataGridViewTextBoxColumn22.HeaderText = "Email address"
+        Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
+        Me.DataGridViewTextBoxColumn22.ReadOnly = True
+        Me.DataGridViewTextBoxColumn22.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn22.Visible = False
+        '
+        'DataGridViewTextBoxColumn23
+        '
+        Me.DataGridViewTextBoxColumn23.HeaderText = "Gender"
+        Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
+        Me.DataGridViewTextBoxColumn23.ReadOnly = True
+        Me.DataGridViewTextBoxColumn23.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn23.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn23.Visible = False
+        Me.DataGridViewTextBoxColumn23.Width = 150
+        '
+        'DataGridViewTextBoxColumn24
+        '
+        Me.DataGridViewTextBoxColumn24.HeaderText = "Employee Status"
+        Me.DataGridViewTextBoxColumn24.MaxInputLength = 500
+        Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
+        Me.DataGridViewTextBoxColumn24.ReadOnly = True
+        Me.DataGridViewTextBoxColumn24.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn24.Width = 220
+        '
+        'DataGridViewTextBoxColumn25
+        '
+        DataGridViewCellStyle42.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn25.DefaultCellStyle = DataGridViewCellStyle42
+        Me.DataGridViewTextBoxColumn25.HeaderText = "Pay Frequency"
+        Me.DataGridViewTextBoxColumn25.MaxInputLength = 500
+        Me.DataGridViewTextBoxColumn25.Name = "DataGridViewTextBoxColumn25"
+        Me.DataGridViewTextBoxColumn25.ReadOnly = True
+        Me.DataGridViewTextBoxColumn25.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn25.Width = 220
+        '
+        'DataGridViewTextBoxColumn26
+        '
+        DataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle43
+        Me.DataGridViewTextBoxColumn26.HeaderText = "UndertimeOverride"
+        Me.DataGridViewTextBoxColumn26.MaxInputLength = 500
+        Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
+        Me.DataGridViewTextBoxColumn26.ReadOnly = True
+        Me.DataGridViewTextBoxColumn26.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn26.Visible = False
+        Me.DataGridViewTextBoxColumn26.Width = 220
+        '
+        'DataGridViewTextBoxColumn27
+        '
+        DataGridViewCellStyle44.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn27.DefaultCellStyle = DataGridViewCellStyle44
+        Me.DataGridViewTextBoxColumn27.HeaderText = "OvertimeOverride"
+        Me.DataGridViewTextBoxColumn27.MaxInputLength = 499
+        Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
+        Me.DataGridViewTextBoxColumn27.ReadOnly = True
+        Me.DataGridViewTextBoxColumn27.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn27.Visible = False
+        Me.DataGridViewTextBoxColumn27.Width = 190
+        '
+        'DataGridViewTextBoxColumn28
+        '
+        Me.DataGridViewTextBoxColumn28.HeaderText = "Creation Date"
+        Me.DataGridViewTextBoxColumn28.MaxInputLength = 1999
+        Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
+        Me.DataGridViewTextBoxColumn28.ReadOnly = True
+        Me.DataGridViewTextBoxColumn28.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn28.Visible = False
+        '
+        'DataGridViewTextBoxColumn29
+        '
+        Me.DataGridViewTextBoxColumn29.HeaderText = "Created by"
+        Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
+        Me.DataGridViewTextBoxColumn29.ReadOnly = True
+        Me.DataGridViewTextBoxColumn29.Visible = False
+        '
+        'DataGridViewTextBoxColumn30
+        '
+        Me.DataGridViewTextBoxColumn30.HeaderText = "Last Update"
+        Me.DataGridViewTextBoxColumn30.Name = "DataGridViewTextBoxColumn30"
+        Me.DataGridViewTextBoxColumn30.ReadOnly = True
+        Me.DataGridViewTextBoxColumn30.Visible = False
+        '
+        'DataGridViewTextBoxColumn31
+        '
+        Me.DataGridViewTextBoxColumn31.HeaderText = "Last Update by"
+        Me.DataGridViewTextBoxColumn31.Name = "DataGridViewTextBoxColumn31"
+        Me.DataGridViewTextBoxColumn31.ReadOnly = True
+        Me.DataGridViewTextBoxColumn31.Visible = False
+        '
+        'DataGridViewTextBoxColumn32
+        '
+        Me.DataGridViewTextBoxColumn32.HeaderText = "PositionID"
+        Me.DataGridViewTextBoxColumn32.Name = "DataGridViewTextBoxColumn32"
+        Me.DataGridViewTextBoxColumn32.ReadOnly = True
+        Me.DataGridViewTextBoxColumn32.Visible = False
+        Me.DataGridViewTextBoxColumn32.Width = 117
+        '
+        'DataGridViewTextBoxColumn33
+        '
+        Me.DataGridViewTextBoxColumn33.HeaderText = "PayFrequencyID"
+        Me.DataGridViewTextBoxColumn33.MaxInputLength = 50
+        Me.DataGridViewTextBoxColumn33.Name = "DataGridViewTextBoxColumn33"
+        Me.DataGridViewTextBoxColumn33.ReadOnly = True
+        Me.DataGridViewTextBoxColumn33.Width = 180
+        '
+        'DataGridViewTextBoxColumn34
+        '
+        DataGridViewCellStyle45.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn34.DefaultCellStyle = DataGridViewCellStyle45
+        Me.DataGridViewTextBoxColumn34.HeaderText = "LeavePerPayPeriod"
+        Me.DataGridViewTextBoxColumn34.MaxInputLength = 50
+        Me.DataGridViewTextBoxColumn34.Name = "DataGridViewTextBoxColumn34"
+        Me.DataGridViewTextBoxColumn34.ReadOnly = True
+        Me.DataGridViewTextBoxColumn34.ToolTipText = "No. of Dependents"
+        Me.DataGridViewTextBoxColumn34.Width = 180
+        '
+        'DataGridViewTextBoxColumn35
+        '
+        Me.DataGridViewTextBoxColumn35.HeaderText = "EmployeeType"
+        Me.DataGridViewTextBoxColumn35.MaxInputLength = 50
+        Me.DataGridViewTextBoxColumn35.Name = "DataGridViewTextBoxColumn35"
+        Me.DataGridViewTextBoxColumn35.ReadOnly = True
+        Me.DataGridViewTextBoxColumn35.Width = 180
+        '
+        'DataGridViewTextBoxColumn36
+        '
+        DataGridViewCellStyle46.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn36.DefaultCellStyle = DataGridViewCellStyle46
+        Me.DataGridViewTextBoxColumn36.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn36.MaxInputLength = 2000
+        Me.DataGridViewTextBoxColumn36.Name = "DataGridViewTextBoxColumn36"
+        Me.DataGridViewTextBoxColumn36.ReadOnly = True
+        Me.DataGridViewTextBoxColumn36.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn36.Width = 190
+        '
+        'DataGridViewTextBoxColumn37
+        '
+        Me.DataGridViewTextBoxColumn37.HeaderText = "ParentEmployeeID"
+        Me.DataGridViewTextBoxColumn37.Name = "DataGridViewTextBoxColumn37"
+        Me.DataGridViewTextBoxColumn37.ReadOnly = True
+        Me.DataGridViewTextBoxColumn37.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn37.Visible = False
+        Me.DataGridViewTextBoxColumn37.Width = 117
+        '
+        'DataGridViewTextBoxColumn38
+        '
+        Me.DataGridViewTextBoxColumn38.HeaderText = "Salutation"
+        Me.DataGridViewTextBoxColumn38.Name = "DataGridViewTextBoxColumn38"
+        Me.DataGridViewTextBoxColumn38.ReadOnly = True
+        Me.DataGridViewTextBoxColumn38.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn38.Visible = False
+        '
+        'DataGridViewTextBoxColumn39
+        '
+        Me.DataGridViewTextBoxColumn39.HeaderText = "First Name"
+        Me.DataGridViewTextBoxColumn39.Name = "DataGridViewTextBoxColumn39"
+        Me.DataGridViewTextBoxColumn39.ReadOnly = True
+        Me.DataGridViewTextBoxColumn39.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn39.Visible = False
+        '
+        'DataGridViewTextBoxColumn40
+        '
+        Me.DataGridViewTextBoxColumn40.HeaderText = "MiddleName"
+        Me.DataGridViewTextBoxColumn40.Name = "DataGridViewTextBoxColumn40"
+        Me.DataGridViewTextBoxColumn40.ReadOnly = True
+        Me.DataGridViewTextBoxColumn40.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn40.Visible = False
+        '
+        'DataGridViewTextBoxColumn41
+        '
+        Me.DataGridViewTextBoxColumn41.HeaderText = "Last Name"
+        Me.DataGridViewTextBoxColumn41.Name = "DataGridViewTextBoxColumn41"
+        Me.DataGridViewTextBoxColumn41.ReadOnly = True
+        Me.DataGridViewTextBoxColumn41.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn41.Visible = False
+        '
+        'DataGridViewTextBoxColumn42
+        '
+        Me.DataGridViewTextBoxColumn42.HeaderText = "Surname"
+        Me.DataGridViewTextBoxColumn42.Name = "DataGridViewTextBoxColumn42"
+        Me.DataGridViewTextBoxColumn42.ReadOnly = True
+        Me.DataGridViewTextBoxColumn42.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn42.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn42.Width = 150
+        '
+        'DataGridViewTextBoxColumn43
+        '
+        Me.DataGridViewTextBoxColumn43.HeaderText = "Relationship to Employee"
+        Me.DataGridViewTextBoxColumn43.Name = "DataGridViewTextBoxColumn43"
+        Me.DataGridViewTextBoxColumn43.ReadOnly = True
+        Me.DataGridViewTextBoxColumn43.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn44
+        '
+        Me.DataGridViewTextBoxColumn44.HeaderText = "TIN"
+        Me.DataGridViewTextBoxColumn44.Name = "DataGridViewTextBoxColumn44"
+        Me.DataGridViewTextBoxColumn44.ReadOnly = True
+        Me.DataGridViewTextBoxColumn44.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn45
+        '
+        DataGridViewCellStyle47.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn45.DefaultCellStyle = DataGridViewCellStyle47
+        Me.DataGridViewTextBoxColumn45.HeaderText = "SSS No."
+        Me.DataGridViewTextBoxColumn45.Name = "DataGridViewTextBoxColumn45"
+        Me.DataGridViewTextBoxColumn45.ReadOnly = True
+        Me.DataGridViewTextBoxColumn45.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn45.Width = 190
+        '
+        'DataGridViewTextBoxColumn46
+        '
+        DataGridViewCellStyle48.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn46.DefaultCellStyle = DataGridViewCellStyle48
+        Me.DataGridViewTextBoxColumn46.HeaderText = "PAGIBIG No."
+        Me.DataGridViewTextBoxColumn46.MaxInputLength = 499
+        Me.DataGridViewTextBoxColumn46.Name = "DataGridViewTextBoxColumn46"
+        Me.DataGridViewTextBoxColumn46.ReadOnly = True
+        Me.DataGridViewTextBoxColumn46.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn46.Width = 190
+        '
+        'DataGridViewTextBoxColumn47
+        '
+        Me.DataGridViewTextBoxColumn47.HeaderText = "PhilHealth No."
+        Me.DataGridViewTextBoxColumn47.MaxInputLength = 1999
+        Me.DataGridViewTextBoxColumn47.Name = "DataGridViewTextBoxColumn47"
+        Me.DataGridViewTextBoxColumn47.ReadOnly = True
+        Me.DataGridViewTextBoxColumn47.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn47.Visible = False
+        '
+        'DataGridViewTextBoxColumn48
+        '
+        Me.DataGridViewTextBoxColumn48.HeaderText = "Email address"
+        Me.DataGridViewTextBoxColumn48.Name = "DataGridViewTextBoxColumn48"
+        Me.DataGridViewTextBoxColumn48.ReadOnly = True
+        Me.DataGridViewTextBoxColumn48.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn49
+        '
+        Me.DataGridViewTextBoxColumn49.HeaderText = "Work Phone No."
+        Me.DataGridViewTextBoxColumn49.Name = "DataGridViewTextBoxColumn49"
+        Me.DataGridViewTextBoxColumn49.ReadOnly = True
+        Me.DataGridViewTextBoxColumn49.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn50
+        '
+        Me.DataGridViewTextBoxColumn50.HeaderText = "Home Phone No."
+        Me.DataGridViewTextBoxColumn50.Name = "DataGridViewTextBoxColumn50"
+        Me.DataGridViewTextBoxColumn50.ReadOnly = True
+        Me.DataGridViewTextBoxColumn50.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn51
+        '
+        Me.DataGridViewTextBoxColumn51.HeaderText = "Mobile  Phone No."
+        Me.DataGridViewTextBoxColumn51.Name = "DataGridViewTextBoxColumn51"
+        Me.DataGridViewTextBoxColumn51.ReadOnly = True
+        Me.DataGridViewTextBoxColumn51.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn51.Visible = False
+        Me.DataGridViewTextBoxColumn51.Width = 117
+        '
+        'DataGridViewTextBoxColumn52
+        '
+        Me.DataGridViewTextBoxColumn52.HeaderText = "Home address"
+        Me.DataGridViewTextBoxColumn52.Name = "DataGridViewTextBoxColumn52"
+        Me.DataGridViewTextBoxColumn52.ReadOnly = True
+        Me.DataGridViewTextBoxColumn52.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn52.Visible = False
+        Me.DataGridViewTextBoxColumn52.Width = 117
+        '
+        'DataGridViewTextBoxColumn53
+        '
+        Me.DataGridViewTextBoxColumn53.HeaderText = "Nickname"
+        Me.DataGridViewTextBoxColumn53.Name = "DataGridViewTextBoxColumn53"
+        Me.DataGridViewTextBoxColumn53.ReadOnly = True
+        Me.DataGridViewTextBoxColumn53.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn53.Width = 117
+        '
+        'DataGridViewTextBoxColumn54
+        '
+        Me.DataGridViewTextBoxColumn54.HeaderText = "JobTitle"
+        Me.DataGridViewTextBoxColumn54.Name = "DataGridViewTextBoxColumn54"
+        Me.DataGridViewTextBoxColumn54.ReadOnly = True
+        Me.DataGridViewTextBoxColumn54.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn54.Width = 117
+        '
+        'DataGridViewTextBoxColumn55
+        '
+        Me.DataGridViewTextBoxColumn55.HeaderText = "Created by"
+        Me.DataGridViewTextBoxColumn55.Name = "DataGridViewTextBoxColumn55"
+        Me.DataGridViewTextBoxColumn55.ReadOnly = True
+        Me.DataGridViewTextBoxColumn55.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn55.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn55.Visible = False
+        Me.DataGridViewTextBoxColumn55.Width = 117
+        '
+        'DataGridViewTextBoxColumn56
+        '
+        Me.DataGridViewTextBoxColumn56.HeaderText = "Creation Date"
+        Me.DataGridViewTextBoxColumn56.Name = "DataGridViewTextBoxColumn56"
+        Me.DataGridViewTextBoxColumn56.ReadOnly = True
+        Me.DataGridViewTextBoxColumn56.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn56.Width = 117
+        '
+        'DataGridViewTextBoxColumn57
+        '
+        Me.DataGridViewTextBoxColumn57.HeaderText = "Last update by"
+        Me.DataGridViewTextBoxColumn57.Name = "DataGridViewTextBoxColumn57"
+        Me.DataGridViewTextBoxColumn57.ReadOnly = True
+        Me.DataGridViewTextBoxColumn57.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn57.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn57.Visible = False
+        Me.DataGridViewTextBoxColumn57.Width = 150
+        '
+        'DataGridViewTextBoxColumn58
+        '
+        Me.DataGridViewTextBoxColumn58.HeaderText = "Last update"
+        Me.DataGridViewTextBoxColumn58.Name = "DataGridViewTextBoxColumn58"
+        Me.DataGridViewTextBoxColumn58.ReadOnly = True
+        Me.DataGridViewTextBoxColumn58.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn58.Visible = False
+        '
+        'DataGridViewTextBoxColumn59
+        '
+        Me.DataGridViewTextBoxColumn59.HeaderText = "Last update"
+        Me.DataGridViewTextBoxColumn59.Name = "DataGridViewTextBoxColumn59"
+        Me.DataGridViewTextBoxColumn59.ReadOnly = True
+        Me.DataGridViewTextBoxColumn59.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn59.Visible = False
+        '
+        'DataGridViewTextBoxColumn60
+        '
+        Me.DataGridViewTextBoxColumn60.HeaderText = "EmployeeType"
+        Me.DataGridViewTextBoxColumn60.Name = "DataGridViewTextBoxColumn60"
+        Me.DataGridViewTextBoxColumn60.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn61
+        '
+        Me.DataGridViewTextBoxColumn61.HeaderText = "LeaveBalance"
+        Me.DataGridViewTextBoxColumn61.Name = "DataGridViewTextBoxColumn61"
+        Me.DataGridViewTextBoxColumn61.ReadOnly = True
+        Me.DataGridViewTextBoxColumn61.Visible = False
+        '
+        'DataGridViewTextBoxColumn62
+        '
+        Me.DataGridViewTextBoxColumn62.HeaderText = "LeaveAllowance"
+        Me.DataGridViewTextBoxColumn62.Name = "DataGridViewTextBoxColumn62"
+        Me.DataGridViewTextBoxColumn62.ReadOnly = True
+        Me.DataGridViewTextBoxColumn62.Visible = False
+        '
+        'DataGridViewTextBoxColumn63
+        '
+        Me.DataGridViewTextBoxColumn63.HeaderText = "IMAGE"
+        Me.DataGridViewTextBoxColumn63.Name = "DataGridViewTextBoxColumn63"
+        Me.DataGridViewTextBoxColumn63.ReadOnly = True
+        Me.DataGridViewTextBoxColumn63.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn63.Visible = False
+        '
+        'DataGridViewTextBoxColumn64
+        '
+        Me.DataGridViewTextBoxColumn64.HeaderText = "Major"
+        Me.DataGridViewTextBoxColumn64.Name = "DataGridViewTextBoxColumn64"
+        Me.DataGridViewTextBoxColumn64.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn65
+        '
+        Me.DataGridViewTextBoxColumn65.HeaderText = "Date From"
+        Me.DataGridViewTextBoxColumn65.Name = "DataGridViewTextBoxColumn65"
+        Me.DataGridViewTextBoxColumn65.ReadOnly = True
+        Me.DataGridViewTextBoxColumn65.Visible = False
+        Me.DataGridViewTextBoxColumn65.Width = 50
+        '
+        'DataGridViewTextBoxColumn66
+        '
+        DataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle49
+        Me.DataGridViewTextBoxColumn66.HeaderText = "Date To"
+        Me.DataGridViewTextBoxColumn66.Name = "DataGridViewTextBoxColumn66"
+        Me.DataGridViewTextBoxColumn66.ReadOnly = True
+        Me.DataGridViewTextBoxColumn66.Width = 180
+        '
+        'DataGridViewTextBoxColumn67
+        '
+        Me.DataGridViewTextBoxColumn67.HeaderText = "Remarks"
+        Me.DataGridViewTextBoxColumn67.Name = "DataGridViewTextBoxColumn67"
+        Me.DataGridViewTextBoxColumn67.ReadOnly = True
+        Me.DataGridViewTextBoxColumn67.Visible = False
+        '
+        'DataGridViewTextBoxColumn68
+        '
+        Me.DataGridViewTextBoxColumn68.HeaderText = "Column1"
+        Me.DataGridViewTextBoxColumn68.Name = "DataGridViewTextBoxColumn68"
+        Me.DataGridViewTextBoxColumn68.ReadOnly = True
+        Me.DataGridViewTextBoxColumn68.Visible = False
+        '
+        'DataGridViewTextBoxColumn69
+        '
+        Me.DataGridViewTextBoxColumn69.HeaderText = "Column6"
+        Me.DataGridViewTextBoxColumn69.Name = "DataGridViewTextBoxColumn69"
+        Me.DataGridViewTextBoxColumn69.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn69.Visible = False
+        '
+        'DataGridViewTextBoxColumn70
+        '
+        Me.DataGridViewTextBoxColumn70.HeaderText = "Column7"
+        Me.DataGridViewTextBoxColumn70.Name = "DataGridViewTextBoxColumn70"
+        Me.DataGridViewTextBoxColumn70.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn70.Visible = False
+        '
+        'DataGridViewTextBoxColumn71
+        '
+        Me.DataGridViewTextBoxColumn71.HeaderText = "Column8"
+        Me.DataGridViewTextBoxColumn71.Name = "DataGridViewTextBoxColumn71"
+        Me.DataGridViewTextBoxColumn71.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn71.Visible = False
+        '
+        'DataGridViewTextBoxColumn72
+        '
+        Me.DataGridViewTextBoxColumn72.HeaderText = "Column9"
+        Me.DataGridViewTextBoxColumn72.Name = "DataGridViewTextBoxColumn72"
+        Me.DataGridViewTextBoxColumn72.Visible = False
+        '
+        'DataGridViewTextBoxColumn73
+        '
+        DataGridViewCellStyle50.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn73.DefaultCellStyle = DataGridViewCellStyle50
+        Me.DataGridViewTextBoxColumn73.HeaderText = "Alt Phone"
+        Me.DataGridViewTextBoxColumn73.Name = "DataGridViewTextBoxColumn73"
+        Me.DataGridViewTextBoxColumn73.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn73.Width = 190
+        '
+        'DataGridViewTextBoxColumn74
+        '
+        DataGridViewCellStyle51.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn74.DefaultCellStyle = DataGridViewCellStyle51
+        Me.DataGridViewTextBoxColumn74.HeaderText = "Fax No."
+        Me.DataGridViewTextBoxColumn74.MaxInputLength = 499
+        Me.DataGridViewTextBoxColumn74.Name = "DataGridViewTextBoxColumn74"
+        Me.DataGridViewTextBoxColumn74.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn74.Width = 190
+        '
+        'DataGridViewTextBoxColumn75
+        '
+        Me.DataGridViewTextBoxColumn75.HeaderText = "Email Address"
+        Me.DataGridViewTextBoxColumn75.MaxInputLength = 1999
+        Me.DataGridViewTextBoxColumn75.Name = "DataGridViewTextBoxColumn75"
+        Me.DataGridViewTextBoxColumn75.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn75.Visible = False
+        '
+        'DataGridViewTextBoxColumn76
+        '
+        Me.DataGridViewTextBoxColumn76.HeaderText = "Alt Email Address"
+        Me.DataGridViewTextBoxColumn76.Name = "DataGridViewTextBoxColumn76"
+        '
+        'DataGridViewTextBoxColumn77
+        '
+        Me.DataGridViewTextBoxColumn77.HeaderText = "URL"
+        Me.DataGridViewTextBoxColumn77.Name = "DataGridViewTextBoxColumn77"
+        '
+        'DataGridViewTextBoxColumn78
+        '
+        Me.DataGridViewTextBoxColumn78.HeaderText = "TIN No."
+        Me.DataGridViewTextBoxColumn78.Name = "DataGridViewTextBoxColumn78"
+        Me.DataGridViewTextBoxColumn78.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn78.Visible = False
+        '
+        'DataGridViewTextBoxColumn79
+        '
+        Me.DataGridViewTextBoxColumn79.HeaderText = "Job Title"
+        Me.DataGridViewTextBoxColumn79.Name = "DataGridViewTextBoxColumn79"
+        Me.DataGridViewTextBoxColumn79.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn80
+        '
+        Me.DataGridViewTextBoxColumn80.HeaderText = "Job Function"
+        Me.DataGridViewTextBoxColumn80.Name = "DataGridViewTextBoxColumn80"
+        Me.DataGridViewTextBoxColumn80.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn81
+        '
+        Me.DataGridViewTextBoxColumn81.HeaderText = "Column8"
+        Me.DataGridViewTextBoxColumn81.Name = "DataGridViewTextBoxColumn81"
+        Me.DataGridViewTextBoxColumn81.Visible = False
+        '
+        'DataGridViewTextBoxColumn82
+        '
+        DataGridViewCellStyle52.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn82.DefaultCellStyle = DataGridViewCellStyle52
+        Me.DataGridViewTextBoxColumn82.HeaderText = "Column9"
+        Me.DataGridViewTextBoxColumn82.Name = "DataGridViewTextBoxColumn82"
+        Me.DataGridViewTextBoxColumn82.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn82.Visible = False
+        Me.DataGridViewTextBoxColumn82.Width = 190
+        '
+        'DataGridViewTextBoxColumn83
+        '
+        DataGridViewCellStyle53.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn83.DefaultCellStyle = DataGridViewCellStyle53
+        Me.DataGridViewTextBoxColumn83.HeaderText = "Column10"
+        Me.DataGridViewTextBoxColumn83.MaxInputLength = 499
+        Me.DataGridViewTextBoxColumn83.Name = "DataGridViewTextBoxColumn83"
+        Me.DataGridViewTextBoxColumn83.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn83.Visible = False
+        Me.DataGridViewTextBoxColumn83.Width = 190
+        '
+        'DataGridViewTextBoxColumn84
+        '
+        Me.DataGridViewTextBoxColumn84.HeaderText = "Column11"
+        Me.DataGridViewTextBoxColumn84.MaxInputLength = 1999
+        Me.DataGridViewTextBoxColumn84.Name = "DataGridViewTextBoxColumn84"
+        Me.DataGridViewTextBoxColumn84.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn84.Visible = False
+        '
+        'DataGridViewTextBoxColumn85
+        '
+        Me.DataGridViewTextBoxColumn85.HeaderText = "RowiD"
+        Me.DataGridViewTextBoxColumn85.Name = "DataGridViewTextBoxColumn85"
+        Me.DataGridViewTextBoxColumn85.Visible = False
+        '
+        'DataGridViewTextBoxColumn86
+        '
+        Me.DataGridViewTextBoxColumn86.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn86.Name = "DataGridViewTextBoxColumn86"
+        '
+        'DataGridViewTextBoxColumn87
+        '
+        Me.DataGridViewTextBoxColumn87.HeaderText = "Employee Name"
+        Me.DataGridViewTextBoxColumn87.Name = "DataGridViewTextBoxColumn87"
+        Me.DataGridViewTextBoxColumn87.ReadOnly = True
+        Me.DataGridViewTextBoxColumn87.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn87.Visible = False
+        Me.DataGridViewTextBoxColumn87.Width = 150
+        '
+        'DataGridViewTextBoxColumn88
+        '
+        DataGridViewCellStyle54.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn88.DefaultCellStyle = DataGridViewCellStyle54
+        Me.DataGridViewTextBoxColumn88.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn88.Name = "DataGridViewTextBoxColumn88"
+        Me.DataGridViewTextBoxColumn88.ReadOnly = True
+        Me.DataGridViewTextBoxColumn88.Visible = False
+        Me.DataGridViewTextBoxColumn88.Width = 180
+        '
+        'DataGridViewTextBoxColumn89
+        '
+        Me.DataGridViewTextBoxColumn89.HeaderText = "Position From"
+        Me.DataGridViewTextBoxColumn89.Name = "DataGridViewTextBoxColumn89"
+        Me.DataGridViewTextBoxColumn89.ReadOnly = True
+        Me.DataGridViewTextBoxColumn89.Visible = False
+        '
+        'DataGridViewTextBoxColumn90
+        '
+        Me.DataGridViewTextBoxColumn90.HeaderText = "Position To"
+        Me.DataGridViewTextBoxColumn90.Name = "DataGridViewTextBoxColumn90"
+        Me.DataGridViewTextBoxColumn90.Visible = False
+        Me.DataGridViewTextBoxColumn90.Width = 128
+        '
+        'DataGridViewTextBoxColumn91
+        '
+        Me.DataGridViewTextBoxColumn91.HeaderText = "Effective Date"
+        Me.DataGridViewTextBoxColumn91.MaxInputLength = 200
+        Me.DataGridViewTextBoxColumn91.Name = "DataGridViewTextBoxColumn91"
+        Me.DataGridViewTextBoxColumn91.Width = 160
+        '
+        'DataGridViewTextBoxColumn92
+        '
+        Me.DataGridViewTextBoxColumn92.HeaderText = "Compensation"
+        Me.DataGridViewTextBoxColumn92.Name = "DataGridViewTextBoxColumn92"
+        Me.DataGridViewTextBoxColumn92.ReadOnly = True
+        Me.DataGridViewTextBoxColumn92.Width = 160
+        '
+        'DataGridViewTextBoxColumn93
+        '
+        Me.DataGridViewTextBoxColumn93.HeaderText = "Basic Pay"
+        Me.DataGridViewTextBoxColumn93.Name = "DataGridViewTextBoxColumn93"
+        Me.DataGridViewTextBoxColumn93.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn93.Visible = False
+        '
+        'DataGridViewTextBoxColumn94
+        '
+        Me.DataGridViewTextBoxColumn94.HeaderText = "Reason"
+        Me.DataGridViewTextBoxColumn94.Name = "DataGridViewTextBoxColumn94"
+        Me.DataGridViewTextBoxColumn94.Visible = False
+        '
+        'DataGridViewTextBoxColumn95
+        '
+        Me.DataGridViewTextBoxColumn95.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn95.Name = "DataGridViewTextBoxColumn95"
+        Me.DataGridViewTextBoxColumn95.Visible = False
+        Me.DataGridViewTextBoxColumn95.Width = 50
+        '
+        'DataGridViewTextBoxColumn96
+        '
+        DataGridViewCellStyle55.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn96.DefaultCellStyle = DataGridViewCellStyle55
+        Me.DataGridViewTextBoxColumn96.HeaderText = "Amount"
+        Me.DataGridViewTextBoxColumn96.Name = "DataGridViewTextBoxColumn96"
+        Me.DataGridViewTextBoxColumn96.Visible = False
+        Me.DataGridViewTextBoxColumn96.Width = 180
+        '
+        'DataGridViewTextBoxColumn97
+        '
+        Me.DataGridViewTextBoxColumn97.HeaderText = "Taxable"
+        Me.DataGridViewTextBoxColumn97.Name = "DataGridViewTextBoxColumn97"
+        Me.DataGridViewTextBoxColumn97.Visible = False
+        '
+        'DataGridViewTextBoxColumn98
+        '
+        Me.DataGridViewTextBoxColumn98.HeaderText = "ProductID"
+        Me.DataGridViewTextBoxColumn98.Name = "DataGridViewTextBoxColumn98"
+        Me.DataGridViewTextBoxColumn98.Visible = False
+        '
+        'DataGridViewTextBoxColumn99
+        '
+        Me.DataGridViewTextBoxColumn99.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn99.Name = "DataGridViewTextBoxColumn99"
+        Me.DataGridViewTextBoxColumn99.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn99.Visible = False
+        '
+        'DataGridViewTextBoxColumn100
+        '
+        Me.DataGridViewTextBoxColumn100.HeaderText = "Start time"
+        Me.DataGridViewTextBoxColumn100.Name = "DataGridViewTextBoxColumn100"
+        Me.DataGridViewTextBoxColumn100.ReadOnly = True
+        Me.DataGridViewTextBoxColumn100.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn100.Visible = False
+        '
+        'DataGridViewTextBoxColumn101
+        '
+        Me.DataGridViewTextBoxColumn101.HeaderText = "End time"
+        Me.DataGridViewTextBoxColumn101.Name = "DataGridViewTextBoxColumn101"
+        Me.DataGridViewTextBoxColumn101.ReadOnly = True
+        Me.DataGridViewTextBoxColumn101.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn102
+        '
+        Me.DataGridViewTextBoxColumn102.HeaderText = "Status"
+        Me.DataGridViewTextBoxColumn102.Name = "DataGridViewTextBoxColumn102"
+        Me.DataGridViewTextBoxColumn102.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn103
+        '
+        DataGridViewCellStyle56.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn103.DefaultCellStyle = DataGridViewCellStyle56
+        Me.DataGridViewTextBoxColumn103.HeaderText = "Reason"
+        Me.DataGridViewTextBoxColumn103.Name = "DataGridViewTextBoxColumn103"
+        Me.DataGridViewTextBoxColumn103.ReadOnly = True
+        Me.DataGridViewTextBoxColumn103.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn103.Width = 190
+        '
+        'DataGridViewTextBoxColumn104
+        '
+        DataGridViewCellStyle57.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn104.DefaultCellStyle = DataGridViewCellStyle57
+        Me.DataGridViewTextBoxColumn104.HeaderText = "Comments"
+        Me.DataGridViewTextBoxColumn104.MaxInputLength = 499
+        Me.DataGridViewTextBoxColumn104.Name = "DataGridViewTextBoxColumn104"
+        Me.DataGridViewTextBoxColumn104.ReadOnly = True
+        Me.DataGridViewTextBoxColumn104.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn104.Width = 190
+        '
+        'DataGridViewTextBoxColumn105
+        '
+        Me.DataGridViewTextBoxColumn105.HeaderText = "Image"
+        Me.DataGridViewTextBoxColumn105.MaxInputLength = 1999
+        Me.DataGridViewTextBoxColumn105.Name = "DataGridViewTextBoxColumn105"
+        Me.DataGridViewTextBoxColumn105.ReadOnly = True
+        Me.DataGridViewTextBoxColumn105.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn105.Visible = False
+        '
+        'DataGridViewTextBoxColumn106
+        '
+        Me.DataGridViewTextBoxColumn106.HeaderText = "Attachment file name"
+        Me.DataGridViewTextBoxColumn106.Name = "DataGridViewTextBoxColumn106"
+        Me.DataGridViewTextBoxColumn106.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn107
+        '
+        Me.DataGridViewTextBoxColumn107.HeaderText = "Attachment file extension"
+        Me.DataGridViewTextBoxColumn107.Name = "DataGridViewTextBoxColumn107"
+        Me.DataGridViewTextBoxColumn107.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn108
+        '
+        Me.DataGridViewTextBoxColumn108.HeaderText = "Date From"
+        Me.DataGridViewTextBoxColumn108.Name = "DataGridViewTextBoxColumn108"
+        Me.DataGridViewTextBoxColumn108.ReadOnly = True
+        Me.DataGridViewTextBoxColumn108.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn108.ToolTipText = "No. of Dependents"
+        Me.DataGridViewTextBoxColumn108.Visible = False
+        '
+        'DataGridViewTextBoxColumn109
+        '
+        Me.DataGridViewTextBoxColumn109.HeaderText = "Date To"
+        Me.DataGridViewTextBoxColumn109.Name = "DataGridViewTextBoxColumn109"
+        Me.DataGridViewTextBoxColumn109.ReadOnly = True
+        Me.DataGridViewTextBoxColumn109.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn110
+        '
+        Me.DataGridViewTextBoxColumn110.HeaderText = "End time"
+        Me.DataGridViewTextBoxColumn110.Name = "DataGridViewTextBoxColumn110"
+        Me.DataGridViewTextBoxColumn110.ReadOnly = True
+        Me.DataGridViewTextBoxColumn110.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn111
+        '
+        Me.DataGridViewTextBoxColumn111.HeaderText = "Status"
+        Me.DataGridViewTextBoxColumn111.Name = "DataGridViewTextBoxColumn111"
+        Me.DataGridViewTextBoxColumn111.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn112
+        '
+        DataGridViewCellStyle58.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn112.DefaultCellStyle = DataGridViewCellStyle58
+        Me.DataGridViewTextBoxColumn112.HeaderText = "Reason"
+        Me.DataGridViewTextBoxColumn112.Name = "DataGridViewTextBoxColumn112"
+        Me.DataGridViewTextBoxColumn112.ReadOnly = True
+        Me.DataGridViewTextBoxColumn112.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn112.Width = 190
+        '
+        'DataGridViewTextBoxColumn113
+        '
+        DataGridViewCellStyle59.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn113.DefaultCellStyle = DataGridViewCellStyle59
+        Me.DataGridViewTextBoxColumn113.HeaderText = "Comments"
+        Me.DataGridViewTextBoxColumn113.MaxInputLength = 499
+        Me.DataGridViewTextBoxColumn113.Name = "DataGridViewTextBoxColumn113"
+        Me.DataGridViewTextBoxColumn113.ReadOnly = True
+        Me.DataGridViewTextBoxColumn113.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn113.Width = 190
+        '
+        'DataGridViewTextBoxColumn114
+        '
+        Me.DataGridViewTextBoxColumn114.HeaderText = "Image"
+        Me.DataGridViewTextBoxColumn114.MaxInputLength = 1999
+        Me.DataGridViewTextBoxColumn114.Name = "DataGridViewTextBoxColumn114"
+        Me.DataGridViewTextBoxColumn114.ReadOnly = True
+        Me.DataGridViewTextBoxColumn114.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn114.Visible = False
+        '
+        'DataGridViewTextBoxColumn115
+        '
+        Me.DataGridViewTextBoxColumn115.HeaderText = "Attachment file name"
+        Me.DataGridViewTextBoxColumn115.Name = "DataGridViewTextBoxColumn115"
+        Me.DataGridViewTextBoxColumn115.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn116
+        '
+        Me.DataGridViewTextBoxColumn116.HeaderText = "Attachment file extension"
+        Me.DataGridViewTextBoxColumn116.Name = "DataGridViewTextBoxColumn116"
+        Me.DataGridViewTextBoxColumn116.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn117
+        '
+        Me.DataGridViewTextBoxColumn117.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn117.Name = "DataGridViewTextBoxColumn117"
+        Me.DataGridViewTextBoxColumn117.ReadOnly = True
+        Me.DataGridViewTextBoxColumn117.Visible = False
+        Me.DataGridViewTextBoxColumn117.Width = 50
+        '
+        'DataGridViewTextBoxColumn118
+        '
+        DataGridViewCellStyle60.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn118.DefaultCellStyle = DataGridViewCellStyle60
+        Me.DataGridViewTextBoxColumn118.HeaderText = "Amount"
+        Me.DataGridViewTextBoxColumn118.Name = "DataGridViewTextBoxColumn118"
+        Me.DataGridViewTextBoxColumn118.ReadOnly = True
+        Me.DataGridViewTextBoxColumn118.Width = 180
+        '
+        'DataGridViewTextBoxColumn119
+        '
+        Me.DataGridViewTextBoxColumn119.HeaderText = "ProductID"
+        Me.DataGridViewTextBoxColumn119.Name = "DataGridViewTextBoxColumn119"
+        Me.DataGridViewTextBoxColumn119.ReadOnly = True
+        Me.DataGridViewTextBoxColumn119.Visible = False
+        '
+        'DataGridViewTextBoxColumn120
+        '
+        Me.DataGridViewTextBoxColumn120.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn120.Name = "DataGridViewTextBoxColumn120"
+        Me.DataGridViewTextBoxColumn120.ReadOnly = True
+        Me.DataGridViewTextBoxColumn120.Visible = False
+        Me.DataGridViewTextBoxColumn120.Width = 128
+        '
+        'DataGridViewTextBoxColumn121
+        '
+        Me.DataGridViewTextBoxColumn121.HeaderText = "File name"
+        Me.DataGridViewTextBoxColumn121.MaxInputLength = 200
+        Me.DataGridViewTextBoxColumn121.Name = "DataGridViewTextBoxColumn121"
+        Me.DataGridViewTextBoxColumn121.ReadOnly = True
+        Me.DataGridViewTextBoxColumn121.Width = 160
+        '
+        'DataGridViewTextBoxColumn122
+        '
+        Me.DataGridViewTextBoxColumn122.HeaderText = "File extension"
+        Me.DataGridViewTextBoxColumn122.Name = "DataGridViewTextBoxColumn122"
+        Me.DataGridViewTextBoxColumn122.ReadOnly = True
+        Me.DataGridViewTextBoxColumn122.Width = 160
+        '
+        'DataGridViewTextBoxColumn123
+        '
+        Me.DataGridViewTextBoxColumn123.HeaderText = "Column42"
+        Me.DataGridViewTextBoxColumn123.Name = "DataGridViewTextBoxColumn123"
+        Me.DataGridViewTextBoxColumn123.ReadOnly = True
+        Me.DataGridViewTextBoxColumn123.Visible = False
+        '
+        'DataGridViewTextBoxColumn124
+        '
+        Me.DataGridViewTextBoxColumn124.HeaderText = "Column43"
+        Me.DataGridViewTextBoxColumn124.Name = "DataGridViewTextBoxColumn124"
+        Me.DataGridViewTextBoxColumn124.ReadOnly = True
+        Me.DataGridViewTextBoxColumn124.Visible = False
+        '
+        'DataGridViewTextBoxColumn125
+        '
+        Me.DataGridViewTextBoxColumn125.HeaderText = "Column44"
+        Me.DataGridViewTextBoxColumn125.Name = "DataGridViewTextBoxColumn125"
+        Me.DataGridViewTextBoxColumn125.ReadOnly = True
+        Me.DataGridViewTextBoxColumn125.Visible = False
+        '
+        'DataGridViewTextBoxColumn126
+        '
+        Me.DataGridViewTextBoxColumn126.HeaderText = "Column45"
+        Me.DataGridViewTextBoxColumn126.Name = "DataGridViewTextBoxColumn126"
+        Me.DataGridViewTextBoxColumn126.ReadOnly = True
+        Me.DataGridViewTextBoxColumn126.Visible = False
+        '
+        'DataGridViewTextBoxColumn127
+        '
+        Me.DataGridViewTextBoxColumn127.HeaderText = "Column46"
+        Me.DataGridViewTextBoxColumn127.Name = "DataGridViewTextBoxColumn127"
+        Me.DataGridViewTextBoxColumn127.ReadOnly = True
+        Me.DataGridViewTextBoxColumn127.Visible = False
+        '
+        'DataGridViewTextBoxColumn128
+        '
+        Me.DataGridViewTextBoxColumn128.HeaderText = "Column47"
+        Me.DataGridViewTextBoxColumn128.Name = "DataGridViewTextBoxColumn128"
+        Me.DataGridViewTextBoxColumn128.ReadOnly = True
+        Me.DataGridViewTextBoxColumn128.Visible = False
+        '
+        'DataGridViewTextBoxColumn129
+        '
+        Me.DataGridViewTextBoxColumn129.HeaderText = "Attachment Type"
+        Me.DataGridViewTextBoxColumn129.Name = "DataGridViewTextBoxColumn129"
+        Me.DataGridViewTextBoxColumn129.ReadOnly = True
+        Me.DataGridViewTextBoxColumn129.Visible = False
+        '
+        'DataGridViewTextBoxColumn130
+        '
+        Me.DataGridViewTextBoxColumn130.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn130.Name = "DataGridViewTextBoxColumn130"
+        Me.DataGridViewTextBoxColumn130.ReadOnly = True
+        Me.DataGridViewTextBoxColumn130.Visible = False
+        '
+        'DataGridViewTextBoxColumn131
+        '
+        Me.DataGridViewTextBoxColumn131.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn131.Name = "DataGridViewTextBoxColumn131"
+        Me.DataGridViewTextBoxColumn131.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn132
+        '
+        Me.DataGridViewTextBoxColumn132.HeaderText = "First Name"
+        Me.DataGridViewTextBoxColumn132.Name = "DataGridViewTextBoxColumn132"
+        Me.DataGridViewTextBoxColumn132.ReadOnly = True
+        Me.DataGridViewTextBoxColumn132.Visible = False
+        '
+        'DataGridViewTextBoxColumn133
+        '
+        Me.DataGridViewTextBoxColumn133.HeaderText = "Middle Name"
+        Me.DataGridViewTextBoxColumn133.Name = "DataGridViewTextBoxColumn133"
+        Me.DataGridViewTextBoxColumn133.ReadOnly = True
+        Me.DataGridViewTextBoxColumn133.Visible = False
+        '
+        'DataGridViewTextBoxColumn134
+        '
+        Me.DataGridViewTextBoxColumn134.HeaderText = "Last Name"
+        Me.DataGridViewTextBoxColumn134.Name = "DataGridViewTextBoxColumn134"
+        Me.DataGridViewTextBoxColumn134.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn135
+        '
+        Me.DataGridViewTextBoxColumn135.HeaderText = "Surname"
+        Me.DataGridViewTextBoxColumn135.Name = "DataGridViewTextBoxColumn135"
+        Me.DataGridViewTextBoxColumn135.ReadOnly = True
+        Me.DataGridViewTextBoxColumn135.Visible = False
+        '
+        'DataGridViewTextBoxColumn136
+        '
+        Me.DataGridViewTextBoxColumn136.HeaderText = "Nickname"
+        Me.DataGridViewTextBoxColumn136.Name = "DataGridViewTextBoxColumn136"
+        Me.DataGridViewTextBoxColumn136.ReadOnly = True
+        Me.DataGridViewTextBoxColumn136.Visible = False
+        '
+        'DataGridViewTextBoxColumn137
+        '
+        Me.DataGridViewTextBoxColumn137.HeaderText = "Marital Status"
+        Me.DataGridViewTextBoxColumn137.Name = "DataGridViewTextBoxColumn137"
+        Me.DataGridViewTextBoxColumn137.ReadOnly = True
+        Me.DataGridViewTextBoxColumn137.Visible = False
+        '
+        'DataGridViewTextBoxColumn138
+        '
+        Me.DataGridViewTextBoxColumn138.HeaderText = "No. of Dependents"
+        Me.DataGridViewTextBoxColumn138.Name = "DataGridViewTextBoxColumn138"
+        Me.DataGridViewTextBoxColumn138.ReadOnly = True
+        Me.DataGridViewTextBoxColumn138.ToolTipText = "No. of Dependents"
+        Me.DataGridViewTextBoxColumn138.Visible = False
+        '
+        'DataGridViewTextBoxColumn139
+        '
+        Me.DataGridViewTextBoxColumn139.HeaderText = "Birthdate"
+        Me.DataGridViewTextBoxColumn139.Name = "DataGridViewTextBoxColumn139"
+        Me.DataGridViewTextBoxColumn139.ReadOnly = True
+        Me.DataGridViewTextBoxColumn139.Visible = False
+        '
+        'DataGridViewTextBoxColumn140
+        '
+        Me.DataGridViewTextBoxColumn140.HeaderText = "Start date"
+        Me.DataGridViewTextBoxColumn140.Name = "DataGridViewTextBoxColumn140"
+        Me.DataGridViewTextBoxColumn140.ReadOnly = True
+        Me.DataGridViewTextBoxColumn140.Visible = False
+        '
+        'DataGridViewTextBoxColumn141
+        '
+        Me.DataGridViewTextBoxColumn141.HeaderText = "Job Title"
+        Me.DataGridViewTextBoxColumn141.Name = "DataGridViewTextBoxColumn141"
+        Me.DataGridViewTextBoxColumn141.ReadOnly = True
+        Me.DataGridViewTextBoxColumn141.Visible = False
+        '
+        'DataGridViewTextBoxColumn142
+        '
+        Me.DataGridViewTextBoxColumn142.HeaderText = "Position"
+        Me.DataGridViewTextBoxColumn142.Name = "DataGridViewTextBoxColumn142"
+        Me.DataGridViewTextBoxColumn142.ReadOnly = True
+        Me.DataGridViewTextBoxColumn142.Visible = False
+        '
+        'DataGridViewTextBoxColumn143
+        '
+        Me.DataGridViewTextBoxColumn143.HeaderText = "Salutation"
+        Me.DataGridViewTextBoxColumn143.Name = "DataGridViewTextBoxColumn143"
+        Me.DataGridViewTextBoxColumn143.ReadOnly = True
+        Me.DataGridViewTextBoxColumn143.Visible = False
+        '
+        'DataGridViewTextBoxColumn144
+        '
+        Me.DataGridViewTextBoxColumn144.HeaderText = "TIN"
+        Me.DataGridViewTextBoxColumn144.Name = "DataGridViewTextBoxColumn144"
+        Me.DataGridViewTextBoxColumn144.ReadOnly = True
+        Me.DataGridViewTextBoxColumn144.Visible = False
+        '
+        'DataGridViewTextBoxColumn145
+        '
+        Me.DataGridViewTextBoxColumn145.HeaderText = "SSS No."
+        Me.DataGridViewTextBoxColumn145.Name = "DataGridViewTextBoxColumn145"
+        Me.DataGridViewTextBoxColumn145.ReadOnly = True
+        Me.DataGridViewTextBoxColumn145.Visible = False
+        '
+        'DataGridViewTextBoxColumn146
+        '
+        Me.DataGridViewTextBoxColumn146.HeaderText = "PAGIBIG No."
+        Me.DataGridViewTextBoxColumn146.Name = "DataGridViewTextBoxColumn146"
+        Me.DataGridViewTextBoxColumn146.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn147
+        '
+        Me.DataGridViewTextBoxColumn147.HeaderText = "PhilHealth No."
+        Me.DataGridViewTextBoxColumn147.Name = "DataGridViewTextBoxColumn147"
+        Me.DataGridViewTextBoxColumn147.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn148
+        '
+        Me.DataGridViewTextBoxColumn148.HeaderText = "Work Phone No."
+        Me.DataGridViewTextBoxColumn148.Name = "DataGridViewTextBoxColumn148"
+        Me.DataGridViewTextBoxColumn148.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn149
+        '
+        Me.DataGridViewTextBoxColumn149.HeaderText = "Home Phone No."
+        Me.DataGridViewTextBoxColumn149.Name = "DataGridViewTextBoxColumn149"
+        Me.DataGridViewTextBoxColumn149.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn150
+        '
+        Me.DataGridViewTextBoxColumn150.HeaderText = "Mobile Phone No."
+        Me.DataGridViewTextBoxColumn150.Name = "DataGridViewTextBoxColumn150"
+        Me.DataGridViewTextBoxColumn150.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn151
+        '
+        Me.DataGridViewTextBoxColumn151.HeaderText = "Home address"
+        Me.DataGridViewTextBoxColumn151.Name = "DataGridViewTextBoxColumn151"
+        Me.DataGridViewTextBoxColumn151.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn152
+        '
+        Me.DataGridViewTextBoxColumn152.HeaderText = "Email address"
+        Me.DataGridViewTextBoxColumn152.Name = "DataGridViewTextBoxColumn152"
+        Me.DataGridViewTextBoxColumn152.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn153
+        '
+        Me.DataGridViewTextBoxColumn153.HeaderText = "Gender"
+        Me.DataGridViewTextBoxColumn153.Name = "DataGridViewTextBoxColumn153"
+        Me.DataGridViewTextBoxColumn153.ReadOnly = True
+        Me.DataGridViewTextBoxColumn153.Visible = False
+        '
+        'DataGridViewTextBoxColumn154
+        '
+        Me.DataGridViewTextBoxColumn154.HeaderText = "Employment Status"
+        Me.DataGridViewTextBoxColumn154.Name = "DataGridViewTextBoxColumn154"
+        Me.DataGridViewTextBoxColumn154.ReadOnly = True
+        Me.DataGridViewTextBoxColumn154.Visible = False
+        '
+        'DataGridViewTextBoxColumn155
+        '
+        Me.DataGridViewTextBoxColumn155.HeaderText = "Pay Frequency"
+        Me.DataGridViewTextBoxColumn155.Name = "DataGridViewTextBoxColumn155"
+        Me.DataGridViewTextBoxColumn155.ReadOnly = True
+        Me.DataGridViewTextBoxColumn155.Visible = False
+        '
+        'DataGridViewTextBoxColumn156
+        '
+        Me.DataGridViewTextBoxColumn156.HeaderText = "UndertimeOverride"
+        Me.DataGridViewTextBoxColumn156.Name = "DataGridViewTextBoxColumn156"
+        Me.DataGridViewTextBoxColumn156.ReadOnly = True
+        Me.DataGridViewTextBoxColumn156.Visible = False
+        '
+        'DataGridViewTextBoxColumn157
+        '
+        Me.DataGridViewTextBoxColumn157.HeaderText = "OvertimeOverride"
+        Me.DataGridViewTextBoxColumn157.Name = "DataGridViewTextBoxColumn157"
+        Me.DataGridViewTextBoxColumn157.ReadOnly = True
+        Me.DataGridViewTextBoxColumn157.Visible = False
+        '
+        'DataGridViewTextBoxColumn158
+        '
+        Me.DataGridViewTextBoxColumn158.HeaderText = "Creation Date"
+        Me.DataGridViewTextBoxColumn158.Name = "DataGridViewTextBoxColumn158"
+        Me.DataGridViewTextBoxColumn158.ReadOnly = True
+        Me.DataGridViewTextBoxColumn158.Visible = False
+        '
+        'DataGridViewTextBoxColumn159
+        '
+        Me.DataGridViewTextBoxColumn159.HeaderText = "Created by"
+        Me.DataGridViewTextBoxColumn159.Name = "DataGridViewTextBoxColumn159"
+        Me.DataGridViewTextBoxColumn159.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn160
+        '
+        Me.DataGridViewTextBoxColumn160.HeaderText = "Last Update"
+        Me.DataGridViewTextBoxColumn160.Name = "DataGridViewTextBoxColumn160"
+        Me.DataGridViewTextBoxColumn160.ReadOnly = True
+        Me.DataGridViewTextBoxColumn160.Visible = False
+        '
+        'DataGridViewTextBoxColumn161
+        '
+        Me.DataGridViewTextBoxColumn161.HeaderText = "Last Update by"
+        Me.DataGridViewTextBoxColumn161.Name = "DataGridViewTextBoxColumn161"
+        Me.DataGridViewTextBoxColumn161.ReadOnly = True
+        Me.DataGridViewTextBoxColumn161.Visible = False
+        '
+        'DataGridViewTextBoxColumn162
+        '
+        Me.DataGridViewTextBoxColumn162.HeaderText = "PositionID"
+        Me.DataGridViewTextBoxColumn162.Name = "DataGridViewTextBoxColumn162"
+        Me.DataGridViewTextBoxColumn162.ReadOnly = True
+        Me.DataGridViewTextBoxColumn162.Visible = False
+        '
+        'DataGridViewTextBoxColumn163
+        '
+        Me.DataGridViewTextBoxColumn163.HeaderText = "PayFrequencyID"
+        Me.DataGridViewTextBoxColumn163.Name = "DataGridViewTextBoxColumn163"
+        Me.DataGridViewTextBoxColumn163.ReadOnly = True
+        Me.DataGridViewTextBoxColumn163.Visible = False
+        '
+        'DataGridViewTextBoxColumn164
+        '
+        Me.DataGridViewTextBoxColumn164.HeaderText = "EmployeeType"
+        Me.DataGridViewTextBoxColumn164.Name = "DataGridViewTextBoxColumn164"
+        Me.DataGridViewTextBoxColumn164.ReadOnly = True
+        Me.DataGridViewTextBoxColumn164.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn164.Visible = False
+        '
+        'Colmn0
+        '
+        Me.Colmn0.HeaderText = "RowID"
+        Me.Colmn0.Name = "Colmn0"
+        Me.Colmn0.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn0.Visible = False
+        '
+        'Colmn1
+        '
+        Me.Colmn1.HeaderText = "ParentEmployeeID"
+        Me.Colmn1.Name = "Colmn1"
+        Me.Colmn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn1.Visible = False
+        '
+        'Colmn3
+        '
+        Me.Colmn3.HeaderText = "First Name"
+        Me.Colmn3.Name = "Colmn3"
+        Me.Colmn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn3.Width = 160
+        '
+        'Colmn4
+        '
+        Me.Colmn4.HeaderText = "MiddleName"
+        Me.Colmn4.Name = "Colmn4"
+        Me.Colmn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn4.Width = 160
+        '
+        'Colmn5
+        '
+        Me.Colmn5.HeaderText = "Last Name"
+        Me.Colmn5.Name = "Colmn5"
+        Me.Colmn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn5.Width = 160
+        '
+        'Colmn6
+        '
+        Me.Colmn6.HeaderText = "Surname"
+        Me.Colmn6.Name = "Colmn6"
+        Me.Colmn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn6.Width = 160
+        '
+        'Colmn8
+        '
+        Me.Colmn8.HeaderText = "TIN"
+        Me.Colmn8.Name = "Colmn8"
+        Me.Colmn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn8.Width = 160
+        '
+        'Colmn9
+        '
+        Me.Colmn9.HeaderText = "SSS No."
+        Me.Colmn9.Name = "Colmn9"
+        Me.Colmn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn9.Width = 160
+        '
+        'Colmn10
+        '
+        Me.Colmn10.HeaderText = "PAGIBIG No."
+        Me.Colmn10.Name = "Colmn10"
+        Me.Colmn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn10.Width = 160
+        '
+        'Colmn11
+        '
+        Me.Colmn11.HeaderText = "PhilHealth No."
+        Me.Colmn11.Name = "Colmn11"
+        Me.Colmn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn11.Width = 160
+        '
+        'Colmn12
+        '
+        Me.Colmn12.HeaderText = "Email address"
+        Me.Colmn12.Name = "Colmn12"
+        Me.Colmn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn12.Width = 160
+        '
+        'Colmn13
+        '
+        Me.Colmn13.HeaderText = "Work Phone No."
+        Me.Colmn13.Name = "Colmn13"
+        Me.Colmn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn13.Width = 160
+        '
+        'Colmn14
+        '
+        Me.Colmn14.HeaderText = "Home Phone No."
+        Me.Colmn14.Name = "Colmn14"
+        Me.Colmn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn14.Width = 160
+        '
+        'Colmn15
+        '
+        Me.Colmn15.HeaderText = "Mobile  Phone No."
+        Me.Colmn15.Name = "Colmn15"
+        Me.Colmn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn15.Width = 160
+        '
+        'Colmn16
+        '
+        Me.Colmn16.HeaderText = "Home address"
+        Me.Colmn16.Name = "Colmn16"
+        Me.Colmn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn16.Width = 160
+        '
+        'Colmn17
+        '
+        Me.Colmn17.HeaderText = "Nickname"
+        Me.Colmn17.Name = "Colmn17"
+        Me.Colmn17.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn17.Width = 160
+        '
+        'Colmn18
+        '
+        Me.Colmn18.HeaderText = "JobTitle"
+        Me.Colmn18.Name = "Colmn18"
+        Me.Colmn18.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn18.Width = 160
+        '
+        'Colmn22
+        '
+        Me.Colmn22.HeaderText = "Created by"
+        Me.Colmn22.Name = "Colmn22"
+        Me.Colmn22.ReadOnly = True
+        Me.Colmn22.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn22.Visible = False
+        '
+        'Colmn23
+        '
+        Me.Colmn23.HeaderText = "Creation Date"
+        Me.Colmn23.Name = "Colmn23"
+        Me.Colmn23.ReadOnly = True
+        Me.Colmn23.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn23.Visible = False
+        '
+        'Colmn24
+        '
+        Me.Colmn24.HeaderText = "Last update by"
+        Me.Colmn24.Name = "Colmn24"
+        Me.Colmn24.ReadOnly = True
+        Me.Colmn24.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn24.Visible = False
+        '
+        'Colmn25
+        '
+        Me.Colmn25.HeaderText = "Last update"
+        Me.Colmn25.Name = "Colmn25"
+        Me.Colmn25.ReadOnly = True
+        Me.Colmn25.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn25.Visible = False
+        '
+        'elv_RowID
+        '
+        Me.elv_RowID.HeaderText = "RowID"
+        Me.elv_RowID.Name = "elv_RowID"
+        Me.elv_RowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.elv_RowID.Visible = False
+        '
+        'elv_Type
+        '
+        Me.elv_Type.HeaderText = "Leave type"
+        Me.elv_Type.Name = "elv_Type"
+        Me.elv_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.elv_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.elv_Type.Width = 150
+        '
+        'elv_StartTime
+        '
+        Me.elv_StartTime.HeaderText = "Start time"
+        Me.elv_StartTime.Name = "elv_StartTime"
+        Me.elv_StartTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'elv_EndTime
+        '
+        Me.elv_EndTime.HeaderText = "End time"
+        Me.elv_EndTime.Name = "elv_EndTime"
+        Me.elv_EndTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'elv_Reason
+        '
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.elv_Reason.DefaultCellStyle = DataGridViewCellStyle6
+        Me.elv_Reason.HeaderText = "Reason"
+        Me.elv_Reason.Name = "elv_Reason"
+        Me.elv_Reason.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.elv_Reason.Width = 190
+        '
+        'elv_Comment
+        '
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.elv_Comment.DefaultCellStyle = DataGridViewCellStyle7
+        Me.elv_Comment.HeaderText = "Comments"
+        Me.elv_Comment.MaxInputLength = 499
+        Me.elv_Comment.Name = "elv_Comment"
+        Me.elv_Comment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.elv_Comment.Width = 190
+        '
+        'elv_Image
+        '
+        Me.elv_Image.HeaderText = "Image"
+        Me.elv_Image.MaxInputLength = 1999
+        Me.elv_Image.Name = "elv_Image"
+        Me.elv_Image.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.elv_Image.Visible = False
+        '
+        'elv_attafilename
+        '
+        Me.elv_attafilename.HeaderText = "Attachment file name"
+        Me.elv_attafilename.Name = "elv_attafilename"
+        '
+        'elv_attafileextensn
+        '
+        Me.elv_attafileextensn.HeaderText = "Attachment file extension"
+        Me.elv_attafileextensn.Name = "elv_attafileextensn"
+        '
+        'elv_Status
+        '
+        Me.elv_Status.HeaderText = "Status"
+        Me.elv_Status.Name = "elv_Status"
+        '
+        'c_FindingName
+        '
+        Me.c_FindingName.HeaderText = "Finding Name"
+        Me.c_FindingName.Name = "c_FindingName"
+        Me.c_FindingName.ReadOnly = True
+        Me.c_FindingName.Width = 117
+        '
+        'c_action
+        '
+        Me.c_action.HeaderText = "Action"
+        Me.c_action.Name = "c_action"
+        Me.c_action.ReadOnly = True
+        Me.c_action.Width = 117
+        '
+        'c_datefrom
+        '
+        Me.c_datefrom.HeaderText = "Effective Date From"
+        Me.c_datefrom.Name = "c_datefrom"
+        Me.c_datefrom.ReadOnly = True
+        Me.c_datefrom.Width = 117
+        '
+        'c_dateto
+        '
+        Me.c_dateto.HeaderText = "Effective Date To"
+        Me.c_dateto.Name = "c_dateto"
+        Me.c_dateto.ReadOnly = True
+        Me.c_dateto.Width = 117
+        '
+        'c_desc
+        '
+        Me.c_desc.HeaderText = "Finding Description"
+        Me.c_desc.Name = "c_desc"
+        Me.c_desc.ReadOnly = True
+        Me.c_desc.Width = 117
+        '
+        'c_comment
+        '
+        Me.c_comment.HeaderText = "Comments"
+        Me.c_comment.Name = "c_comment"
+        Me.c_comment.ReadOnly = True
+        Me.c_comment.Width = 117
+        '
+        'c_rowid
+        '
+        Me.c_rowid.HeaderText = "RowID"
+        Me.c_rowid.Name = "c_rowid"
+        Me.c_rowid.ReadOnly = True
+        Me.c_rowid.Visible = False
+        '
+        'c_compname
+        '
+        Me.c_compname.HeaderText = "Company Name"
+        Me.c_compname.Name = "c_compname"
+        Me.c_compname.ReadOnly = True
+        '
+        'c_trade
+        '
+        Me.c_trade.HeaderText = "Trade Name"
+        Me.c_trade.Name = "c_trade"
+        Me.c_trade.ReadOnly = True
+        '
+        'c_contname
+        '
+        Me.c_contname.HeaderText = "Contact Name"
+        Me.c_contname.Name = "c_contname"
+        Me.c_contname.ReadOnly = True
+        '
+        'c_mainphone
+        '
+        Me.c_mainphone.HeaderText = "Main Phone"
+        Me.c_mainphone.Name = "c_mainphone"
+        Me.c_mainphone.ReadOnly = True
+        '
+        'c_altphone
+        '
+        Me.c_altphone.HeaderText = "Alt Phone"
+        Me.c_altphone.Name = "c_altphone"
+        Me.c_altphone.ReadOnly = True
+        '
+        'c_faxno
+        '
+        Me.c_faxno.HeaderText = "Fax No."
+        Me.c_faxno.Name = "c_faxno"
+        Me.c_faxno.ReadOnly = True
+        '
+        'c_emailaddr
+        '
+        Me.c_emailaddr.HeaderText = "Email Address"
+        Me.c_emailaddr.Name = "c_emailaddr"
+        Me.c_emailaddr.ReadOnly = True
+        '
+        'c_altemailaddr
+        '
+        Me.c_altemailaddr.HeaderText = "Alt Email Address"
+        Me.c_altemailaddr.Name = "c_altemailaddr"
+        Me.c_altemailaddr.ReadOnly = True
+        '
+        'c_url
+        '
+        Me.c_url.HeaderText = "URL"
+        Me.c_url.Name = "c_url"
+        Me.c_url.ReadOnly = True
+        '
+        'c_tinno
+        '
+        Me.c_tinno.HeaderText = "TIN No."
+        Me.c_tinno.Name = "c_tinno"
+        Me.c_tinno.ReadOnly = True
+        '
+        'c_jobtitle
+        '
+        Me.c_jobtitle.HeaderText = "Job Title"
+        Me.c_jobtitle.Name = "c_jobtitle"
+        Me.c_jobtitle.ReadOnly = True
+        '
+        'c_jobfunction
+        '
+        Me.c_jobfunction.HeaderText = "Job Function"
+        Me.c_jobfunction.Name = "c_jobfunction"
+        Me.c_jobfunction.ReadOnly = True
+        '
+        'c_orgtype
+        '
+        Me.c_orgtype.HeaderText = "Organization Type"
+        Me.c_orgtype.Name = "c_orgtype"
+        Me.c_orgtype.ReadOnly = True
+        '
+        'c_experience
+        '
+        Me.c_experience.HeaderText = "Experience From date"
+        Me.c_experience.Name = "c_experience"
+        Me.c_experience.ReadOnly = True
+        '
+        'c_expdateto
+        '
+        Me.c_expdateto.HeaderText = "Experience To date"
+        Me.c_expdateto.Name = "c_expdateto"
+        Me.c_expdateto.ReadOnly = True
+        '
+        'c_compaddr
+        '
+        Me.c_compaddr.HeaderText = "Company Address"
+        Me.c_compaddr.Name = "c_compaddr"
+        Me.c_compaddr.ReadOnly = True
+        '
+        'c_rowidPrevEmp
+        '
+        Me.c_rowidPrevEmp.HeaderText = "RowiD"
+        Me.c_rowidPrevEmp.Name = "c_rowidPrevEmp"
+        Me.c_rowidPrevEmp.ReadOnly = True
+        Me.c_rowidPrevEmp.Visible = False
+        '
+        'c_empID2
+        '
+        Me.c_empID2.HeaderText = "Employee ID"
+        Me.c_empID2.Name = "c_empID2"
+        Me.c_empID2.ReadOnly = True
+        '
+        'c_empname2
+        '
+        Me.c_empname2.HeaderText = "Employee Name"
+        Me.c_empname2.Name = "c_empname2"
+        Me.c_empname2.ReadOnly = True
+        Me.c_empname2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.c_empname2.Width = 150
+        '
+        'c_promotRowID
+        '
+        Me.c_promotRowID.HeaderText = "RowID"
+        Me.c_promotRowID.Name = "c_promotRowID"
+        Me.c_promotRowID.ReadOnly = True
+        Me.c_promotRowID.Visible = False
+        '
+        'c_PostionFrom
+        '
+        Me.c_PostionFrom.HeaderText = "Position From"
+        Me.c_PostionFrom.Name = "c_PostionFrom"
+        Me.c_PostionFrom.ReadOnly = True
+        '
+        'c_positionto
+        '
+        Me.c_positionto.HeaderText = "Position To"
+        Me.c_positionto.Name = "c_positionto"
+        Me.c_positionto.ReadOnly = True
+        '
+        'c_effecDate
+        '
+        Me.c_effecDate.HeaderText = "Effective Date"
+        Me.c_effecDate.Name = "c_effecDate"
+        Me.c_effecDate.ReadOnly = True
+        '
+        'c_compensation
+        '
+        Me.c_compensation.HeaderText = "Compensation"
+        Me.c_compensation.Name = "c_compensation"
+        Me.c_compensation.ReadOnly = True
+        '
+        'c_basicpay
+        '
+        Me.c_basicpay.HeaderText = "Basic Pay"
+        Me.c_basicpay.Name = "c_basicpay"
+        Me.c_basicpay.ReadOnly = True
+        Me.c_basicpay.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'c_reasonpromot
+        '
+        Me.c_reasonpromot.HeaderText = "Reason"
+        Me.c_reasonpromot.Name = "c_reasonpromot"
+        Me.c_reasonpromot.ReadOnly = True
+        '
+        'eall_RowID
+        '
+        Me.eall_RowID.HeaderText = "RowID"
+        Me.eall_RowID.Name = "eall_RowID"
+        Me.eall_RowID.ReadOnly = True
+        Me.eall_RowID.Visible = False
+        Me.eall_RowID.Width = 50
+        '
+        'eall_Amount
+        '
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle20
+        Me.eall_Amount.HeaderText = "Amount"
+        Me.eall_Amount.Name = "eall_Amount"
+        Me.eall_Amount.ReadOnly = True
+        Me.eall_Amount.Width = 180
+        '
+        'allow_taxab
+        '
+        Me.allow_taxab.HeaderText = "Taxable"
+        Me.allow_taxab.Name = "allow_taxab"
+        Me.allow_taxab.ReadOnly = True
+        Me.allow_taxab.Visible = False
+        '
+        'eall_ProdID
+        '
+        Me.eall_ProdID.HeaderText = "ProductID"
+        Me.eall_ProdID.Name = "eall_ProdID"
+        Me.eall_ProdID.ReadOnly = True
+        Me.eall_ProdID.Visible = False
+        '
+        'eot_RowID
+        '
+        Me.eot_RowID.HeaderText = "RowID"
+        Me.eot_RowID.Name = "eot_RowID"
+        Me.eot_RowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.eot_RowID.Visible = False
+        '
+        'eot_StartTime
+        '
+        Me.eot_StartTime.HeaderText = "Start time"
+        Me.eot_StartTime.Name = "eot_StartTime"
+        Me.eot_StartTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'eot_EndTime
+        '
+        Me.eot_EndTime.HeaderText = "End time"
+        Me.eot_EndTime.Name = "eot_EndTime"
+        Me.eot_EndTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'eot_Status
+        '
+        Me.eot_Status.HeaderText = "Status"
+        Me.eot_Status.Name = "eot_Status"
+        '
+        'eot_Reason
+        '
+        DataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eot_Reason.DefaultCellStyle = DataGridViewCellStyle24
+        Me.eot_Reason.HeaderText = "Reason"
+        Me.eot_Reason.Name = "eot_Reason"
+        Me.eot_Reason.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.eot_Reason.Width = 190
+        '
+        'eot_Comment
+        '
+        DataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eot_Comment.DefaultCellStyle = DataGridViewCellStyle25
+        Me.eot_Comment.HeaderText = "Comments"
+        Me.eot_Comment.MaxInputLength = 499
+        Me.eot_Comment.Name = "eot_Comment"
+        Me.eot_Comment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.eot_Comment.Width = 190
+        '
+        'eot_Image
+        '
+        Me.eot_Image.HeaderText = "Image"
+        Me.eot_Image.MaxInputLength = 1999
+        Me.eot_Image.Name = "eot_Image"
+        Me.eot_Image.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.eot_Image.Visible = False
+        '
+        'eot_attafilename
+        '
+        Me.eot_attafilename.HeaderText = "Attachment file name"
+        Me.eot_attafilename.Name = "eot_attafilename"
+        '
+        'eot_attafileextensn
+        '
+        Me.eot_attafileextensn.HeaderText = "Attachment file extension"
+        Me.eot_attafileextensn.Name = "eot_attafileextensn"
+        '
+        'obf_RowID
+        '
+        Me.obf_RowID.HeaderText = "RowID"
+        Me.obf_RowID.Name = "obf_RowID"
+        Me.obf_RowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.obf_RowID.Visible = False
+        '
+        'obf_StartTime
+        '
+        Me.obf_StartTime.HeaderText = "Start time"
+        Me.obf_StartTime.Name = "obf_StartTime"
+        Me.obf_StartTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'obf_EndTime
+        '
+        Me.obf_EndTime.HeaderText = "End time"
+        Me.obf_EndTime.Name = "obf_EndTime"
+        Me.obf_EndTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'obf_Status
+        '
+        Me.obf_Status.HeaderText = "Status"
+        Me.obf_Status.Name = "obf_Status"
+        '
+        'obf_Reason
+        '
+        DataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.obf_Reason.DefaultCellStyle = DataGridViewCellStyle29
+        Me.obf_Reason.HeaderText = "Reason"
+        Me.obf_Reason.Name = "obf_Reason"
+        Me.obf_Reason.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.obf_Reason.Width = 190
+        '
+        'obf_Comment
+        '
+        DataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.obf_Comment.DefaultCellStyle = DataGridViewCellStyle30
+        Me.obf_Comment.HeaderText = "Comments"
+        Me.obf_Comment.MaxInputLength = 499
+        Me.obf_Comment.Name = "obf_Comment"
+        Me.obf_Comment.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.obf_Comment.Width = 190
+        '
+        'obf_Image
+        '
+        Me.obf_Image.HeaderText = "Image"
+        Me.obf_Image.MaxInputLength = 1999
+        Me.obf_Image.Name = "obf_Image"
+        Me.obf_Image.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.obf_Image.Visible = False
+        '
+        'obf_attafilename
+        '
+        Me.obf_attafilename.HeaderText = "Attachment file name"
+        Me.obf_attafilename.Name = "obf_attafilename"
+        '
+        'obf_attafileextensn
+        '
+        Me.obf_attafileextensn.HeaderText = "Attachment file extension"
+        Me.obf_attafileextensn.Name = "obf_attafileextensn"
+        '
+        'bon_RowID
+        '
+        Me.bon_RowID.HeaderText = "RowID"
+        Me.bon_RowID.Name = "bon_RowID"
+        Me.bon_RowID.ReadOnly = True
+        Me.bon_RowID.Visible = False
+        Me.bon_RowID.Width = 50
+        '
+        'bon_Amount
+        '
+        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle34
+        Me.bon_Amount.HeaderText = "Amount"
+        Me.bon_Amount.Name = "bon_Amount"
+        Me.bon_Amount.ReadOnly = True
+        Me.bon_Amount.Width = 180
+        '
+        'bon_ProdID
+        '
+        Me.bon_ProdID.HeaderText = "ProductID"
+        Me.bon_ProdID.Name = "bon_ProdID"
+        Me.bon_ProdID.ReadOnly = True
+        Me.bon_ProdID.Visible = False
+        '
+        'eatt_RowID
+        '
+        Me.eatt_RowID.HeaderText = "RowID"
+        Me.eatt_RowID.Name = "eatt_RowID"
+        Me.eatt_RowID.Visible = False
+        Me.eatt_RowID.Width = 128
+        '
+        'eatt_FileName
+        '
+        Me.eatt_FileName.HeaderText = "File name"
+        Me.eatt_FileName.MaxInputLength = 200
+        Me.eatt_FileName.Name = "eatt_FileName"
+        Me.eatt_FileName.Width = 160
+        '
+        'eatt_FileType
+        '
+        Me.eatt_FileType.HeaderText = "File extension"
+        Me.eatt_FileType.Name = "eatt_FileType"
+        Me.eatt_FileType.ReadOnly = True
+        Me.eatt_FileType.Width = 160
+        '
+        'eatt_EmployeeID
+        '
+        Me.eatt_EmployeeID.HeaderText = "Column42"
+        Me.eatt_EmployeeID.Name = "eatt_EmployeeID"
+        Me.eatt_EmployeeID.Visible = False
+        '
+        'eatt_Created
+        '
+        Me.eatt_Created.HeaderText = "Column43"
+        Me.eatt_Created.Name = "eatt_Created"
+        Me.eatt_Created.Visible = False
+        '
+        'eatt_CreatedBy
+        '
+        Me.eatt_CreatedBy.HeaderText = "Column44"
+        Me.eatt_CreatedBy.Name = "eatt_CreatedBy"
+        Me.eatt_CreatedBy.Visible = False
+        '
+        'eatt_LastUpd
+        '
+        Me.eatt_LastUpd.HeaderText = "Column45"
+        Me.eatt_LastUpd.Name = "eatt_LastUpd"
+        Me.eatt_LastUpd.Visible = False
+        '
+        'eatt_LastUpdBy
+        '
+        Me.eatt_LastUpdBy.HeaderText = "Column46"
+        Me.eatt_LastUpdBy.Name = "eatt_LastUpdBy"
+        Me.eatt_LastUpdBy.Visible = False
+        '
+        'eatt_AttachedFile
+        '
+        Me.eatt_AttachedFile.HeaderText = "Column47"
+        Me.eatt_AttachedFile.Name = "eatt_AttachedFile"
+        Me.eatt_AttachedFile.Visible = False
+        '
+        'Column38
+        '
+        Me.Column38.HeaderText = "Attachment Type"
+        Me.Column38.Name = "Column38"
+        Me.Column38.Visible = False
+        '
+        'SalaryTab
+        '
+        Me.SalaryTab.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab.BackColor = System.Drawing.Color.White
+        Me.SalaryTab.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
+        Me.SalaryTab.Name = "SalaryTab"
+        Me.SalaryTab.PhilHealth = Nothing
+        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
+        Me.SalaryTab.TabIndex = 0
         '
         'RowID
         '
@@ -10478,541 +11761,318 @@ Partial Class EmployeeForm
         Me.Column37.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Column37.Visible = False
         '
-        'DataGridViewTextBoxColumn1
+        'DataGridViewTextBoxColumn165
         '
-        Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
-        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        Me.DataGridViewTextBoxColumn1.ReadOnly = True
-        Me.DataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn1.Visible = False
+        Me.DataGridViewTextBoxColumn165.HeaderText = "LeaveBalance"
+        Me.DataGridViewTextBoxColumn165.Name = "DataGridViewTextBoxColumn165"
+        Me.DataGridViewTextBoxColumn165.Visible = False
         '
-        'DataGridViewTextBoxColumn2
+        'DataGridViewTextBoxColumn166
         '
-        Me.DataGridViewTextBoxColumn2.HeaderText = "Employee ID"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.ReadOnly = True
-        Me.DataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn2.Visible = False
+        Me.DataGridViewTextBoxColumn166.HeaderText = "Sick leave balance"
+        Me.DataGridViewTextBoxColumn166.Name = "DataGridViewTextBoxColumn166"
+        Me.DataGridViewTextBoxColumn166.Visible = False
         '
-        'DataGridViewTextBoxColumn3
+        'DataGridViewTextBoxColumn167
         '
-        Me.DataGridViewTextBoxColumn3.HeaderText = "First Name"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.ReadOnly = True
-        Me.DataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn167.HeaderText = "Maternity leave balance"
+        Me.DataGridViewTextBoxColumn167.Name = "DataGridViewTextBoxColumn167"
+        Me.DataGridViewTextBoxColumn167.Visible = False
         '
-        'DataGridViewTextBoxColumn4
+        'DataGridViewTextBoxColumn168
         '
-        Me.DataGridViewTextBoxColumn4.HeaderText = "Middle Name"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        Me.DataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn168.HeaderText = "LeaveAllowance"
+        Me.DataGridViewTextBoxColumn168.Name = "DataGridViewTextBoxColumn168"
+        Me.DataGridViewTextBoxColumn168.Visible = False
         '
-        'DataGridViewTextBoxColumn5
+        'DataGridViewTextBoxColumn169
         '
-        Me.DataGridViewTextBoxColumn5.HeaderText = "Last Name"
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.ReadOnly = True
-        Me.DataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn169.HeaderText = "Sick leave allowance"
+        Me.DataGridViewTextBoxColumn169.Name = "DataGridViewTextBoxColumn169"
+        Me.DataGridViewTextBoxColumn169.Visible = False
         '
-        'DataGridViewTextBoxColumn6
+        'DataGridViewTextBoxColumn170
         '
-        Me.DataGridViewTextBoxColumn6.HeaderText = "Surname"
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        Me.DataGridViewTextBoxColumn6.ReadOnly = True
-        Me.DataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn170.HeaderText = "Maternity leave allowance"
+        Me.DataGridViewTextBoxColumn170.Name = "DataGridViewTextBoxColumn170"
+        Me.DataGridViewTextBoxColumn170.Visible = False
         '
-        'DataGridViewTextBoxColumn7
+        'DataGridViewTextBoxColumn171
         '
-        Me.DataGridViewTextBoxColumn7.HeaderText = "Nickname"
-        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
-        Me.DataGridViewTextBoxColumn7.ReadOnly = True
-        Me.DataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn171.HeaderText = "LeavePerPayPeriod"
+        Me.DataGridViewTextBoxColumn171.Name = "DataGridViewTextBoxColumn171"
+        Me.DataGridViewTextBoxColumn171.Visible = False
         '
-        'DataGridViewTextBoxColumn8
+        'DataGridViewTextBoxColumn172
         '
-        Me.DataGridViewTextBoxColumn8.HeaderText = "Marital Status"
-        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-        Me.DataGridViewTextBoxColumn8.ReadOnly = True
-        Me.DataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn172.HeaderText = "Sick leave per pay period"
+        Me.DataGridViewTextBoxColumn172.Name = "DataGridViewTextBoxColumn172"
+        Me.DataGridViewTextBoxColumn172.Visible = False
         '
-        'DataGridViewTextBoxColumn9
+        'DataGridViewTextBoxColumn173
         '
-        Me.DataGridViewTextBoxColumn9.HeaderText = "No. of Dependents"
-        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
-        Me.DataGridViewTextBoxColumn9.ReadOnly = True
-        Me.DataGridViewTextBoxColumn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn173.HeaderText = "Maternity leavle per pay period"
+        Me.DataGridViewTextBoxColumn173.Name = "DataGridViewTextBoxColumn173"
+        Me.DataGridViewTextBoxColumn173.Visible = False
         '
-        'DataGridViewTextBoxColumn10
+        'DataGridViewTextBoxColumn174
         '
-        Me.DataGridViewTextBoxColumn10.HeaderText = "Birthdate"
-        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
-        Me.DataGridViewTextBoxColumn10.ReadOnly = True
-        Me.DataGridViewTextBoxColumn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn174.HeaderText = "flingstatusRowID"
+        Me.DataGridViewTextBoxColumn174.Name = "DataGridViewTextBoxColumn174"
+        Me.DataGridViewTextBoxColumn174.Visible = False
         '
-        'DataGridViewTextBoxColumn11
+        'DataGridViewTextBoxColumn175
         '
-        Me.DataGridViewTextBoxColumn11.HeaderText = "JobTitle"
-        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
-        Me.DataGridViewTextBoxColumn11.ReadOnly = True
-        Me.DataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn175.HeaderText = "Is included in Alpha list"
+        Me.DataGridViewTextBoxColumn175.Name = "DataGridViewTextBoxColumn175"
+        Me.DataGridViewTextBoxColumn175.Visible = False
         '
-        'DataGridViewTextBoxColumn12
+        'DataGridViewTextBoxColumn176
         '
-        Me.DataGridViewTextBoxColumn12.HeaderText = "Position"
-        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
-        Me.DataGridViewTextBoxColumn12.ReadOnly = True
-        Me.DataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn176.HeaderText = "Work Days Per Year"
+        Me.DataGridViewTextBoxColumn176.Name = "DataGridViewTextBoxColumn176"
         '
-        'DataGridViewTextBoxColumn13
+        'DataGridViewTextBoxColumn177
         '
-        Me.DataGridViewTextBoxColumn13.HeaderText = "Salutation"
-        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
-        Me.DataGridViewTextBoxColumn13.ReadOnly = True
-        Me.DataGridViewTextBoxColumn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn177.HeaderText = "Rest Day"
+        Me.DataGridViewTextBoxColumn177.Name = "DataGridViewTextBoxColumn177"
         '
-        'DataGridViewTextBoxColumn14
+        'DataGridViewTextBoxColumn178
         '
-        Me.DataGridViewTextBoxColumn14.HeaderText = "TIN"
-        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
-        Me.DataGridViewTextBoxColumn14.ReadOnly = True
-        Me.DataGridViewTextBoxColumn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn178.HeaderText = "ATM No."
+        Me.DataGridViewTextBoxColumn178.Name = "DataGridViewTextBoxColumn178"
         '
-        'DataGridViewTextBoxColumn15
+        'DataGridViewTextBoxColumn179
         '
-        Me.DataGridViewTextBoxColumn15.HeaderText = "SSS No."
-        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
-        Me.DataGridViewTextBoxColumn15.ReadOnly = True
-        Me.DataGridViewTextBoxColumn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn179.HeaderText = "Bank Name"
+        Me.DataGridViewTextBoxColumn179.Name = "DataGridViewTextBoxColumn179"
         '
-        'DataGridViewTextBoxColumn16
+        'DataGridViewTextBoxColumn180
         '
-        Me.DataGridViewTextBoxColumn16.HeaderText = "HDMF No."
-        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
-        Me.DataGridViewTextBoxColumn16.ReadOnly = True
-        Me.DataGridViewTextBoxColumn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn180.HeaderText = "Other leave per pay period"
+        Me.DataGridViewTextBoxColumn180.Name = "DataGridViewTextBoxColumn180"
         '
-        'DataGridViewTextBoxColumn17
+        'DataGridViewTextBoxColumn181
         '
-        Me.DataGridViewTextBoxColumn17.HeaderText = "PhilHealth No."
-        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
-        Me.DataGridViewTextBoxColumn17.ReadOnly = True
-        Me.DataGridViewTextBoxColumn17.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn181.HeaderText = "Other Leave Allowance"
+        Me.DataGridViewTextBoxColumn181.Name = "DataGridViewTextBoxColumn181"
         '
-        'DataGridViewTextBoxColumn18
+        'DataGridViewTextBoxColumn182
         '
-        Me.DataGridViewTextBoxColumn18.HeaderText = "Work Phone No."
-        Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
-        Me.DataGridViewTextBoxColumn18.ReadOnly = True
-        Me.DataGridViewTextBoxColumn18.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn182.HeaderText = "Other Leave Balance"
+        Me.DataGridViewTextBoxColumn182.Name = "DataGridViewTextBoxColumn182"
         '
-        'DataGridViewTextBoxColumn19
+        'DataGridViewTextBoxColumn183
         '
-        Me.DataGridViewTextBoxColumn19.HeaderText = "Home Phone No."
-        Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
-        Me.DataGridViewTextBoxColumn19.ReadOnly = True
-        Me.DataGridViewTextBoxColumn19.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn183.HeaderText = "CalcHoliday"
+        Me.DataGridViewTextBoxColumn183.Name = "DataGridViewTextBoxColumn183"
+        Me.DataGridViewTextBoxColumn183.Visible = False
         '
-        'DataGridViewTextBoxColumn20
+        'DataGridViewTextBoxColumn184
         '
-        Me.DataGridViewTextBoxColumn20.HeaderText = "Mobile Phone No."
-        Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
-        Me.DataGridViewTextBoxColumn20.ReadOnly = True
-        Me.DataGridViewTextBoxColumn20.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn184.HeaderText = "CalcSpecialHoliday"
+        Me.DataGridViewTextBoxColumn184.Name = "DataGridViewTextBoxColumn184"
+        Me.DataGridViewTextBoxColumn184.Visible = False
         '
-        'DataGridViewTextBoxColumn21
+        'DataGridViewTextBoxColumn185
         '
-        Me.DataGridViewTextBoxColumn21.HeaderText = "Home address"
-        Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
-        Me.DataGridViewTextBoxColumn21.ReadOnly = True
-        Me.DataGridViewTextBoxColumn21.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn185.HeaderText = "CalcNightDiff"
+        Me.DataGridViewTextBoxColumn185.Name = "DataGridViewTextBoxColumn185"
+        Me.DataGridViewTextBoxColumn185.Visible = False
         '
-        'DataGridViewTextBoxColumn22
+        'DataGridViewTextBoxColumn186
         '
-        Me.DataGridViewTextBoxColumn22.HeaderText = "Email address"
-        Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
-        Me.DataGridViewTextBoxColumn22.ReadOnly = True
-        Me.DataGridViewTextBoxColumn22.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn186.HeaderText = "CalcNightDiffOT"
+        Me.DataGridViewTextBoxColumn186.Name = "DataGridViewTextBoxColumn186"
+        Me.DataGridViewTextBoxColumn186.Visible = False
         '
-        'DataGridViewTextBoxColumn23
+        'DataGridViewTextBoxColumn187
         '
-        Me.DataGridViewTextBoxColumn23.HeaderText = "Gender"
-        Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
-        Me.DataGridViewTextBoxColumn23.ReadOnly = True
-        Me.DataGridViewTextBoxColumn23.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn187.HeaderText = "CalcRestDay"
+        Me.DataGridViewTextBoxColumn187.Name = "DataGridViewTextBoxColumn187"
+        Me.DataGridViewTextBoxColumn187.Visible = False
         '
-        'DataGridViewTextBoxColumn24
+        'DataGridViewTextBoxColumn188
         '
-        Me.DataGridViewTextBoxColumn24.HeaderText = "Employee Status"
-        Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
-        Me.DataGridViewTextBoxColumn24.ReadOnly = True
-        Me.DataGridViewTextBoxColumn24.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn188.HeaderText = "CalcRestDayOT"
+        Me.DataGridViewTextBoxColumn188.Name = "DataGridViewTextBoxColumn188"
+        Me.DataGridViewTextBoxColumn188.Visible = False
         '
-        'DataGridViewTextBoxColumn25
+        'DataGridViewTextBoxColumn189
         '
-        Me.DataGridViewTextBoxColumn25.HeaderText = "Pay Frequency"
-        Me.DataGridViewTextBoxColumn25.Name = "DataGridViewTextBoxColumn25"
-        Me.DataGridViewTextBoxColumn25.ReadOnly = True
-        Me.DataGridViewTextBoxColumn25.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn189.HeaderText = "LateGracePeriod"
+        Me.DataGridViewTextBoxColumn189.Name = "DataGridViewTextBoxColumn189"
         '
-        'DataGridViewTextBoxColumn26
+        'DataGridViewTextBoxColumn190
         '
-        Me.DataGridViewTextBoxColumn26.HeaderText = "UndertimeOverride"
-        Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
-        Me.DataGridViewTextBoxColumn26.ReadOnly = True
-        Me.DataGridViewTextBoxColumn26.Visible = False
+        Me.DataGridViewTextBoxColumn190.HeaderText = "RevealInPayroll"
+        Me.DataGridViewTextBoxColumn190.Name = "DataGridViewTextBoxColumn190"
+        Me.DataGridViewTextBoxColumn190.Visible = False
         '
-        'DataGridViewTextBoxColumn27
+        'DataGridViewTextBoxColumn191
         '
-        Me.DataGridViewTextBoxColumn27.HeaderText = "OvertimeOverride"
-        Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
-        Me.DataGridViewTextBoxColumn27.ReadOnly = True
+        Me.DataGridViewTextBoxColumn191.HeaderText = "OffSetBal"
+        Me.DataGridViewTextBoxColumn191.Name = "DataGridViewTextBoxColumn191"
+        Me.DataGridViewTextBoxColumn191.Visible = False
         '
-        'DataGridViewTextBoxColumn28
+        'DataGridViewTextBoxColumn192
         '
-        Me.DataGridViewTextBoxColumn28.HeaderText = "Creation Date"
-        Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
-        Me.DataGridViewTextBoxColumn28.ReadOnly = True
+        Me.DataGridViewTextBoxColumn192.HeaderText = "AgencyName"
+        Me.DataGridViewTextBoxColumn192.Name = "DataGridViewTextBoxColumn192"
+        Me.DataGridViewTextBoxColumn192.Visible = False
         '
-        'DataGridViewTextBoxColumn29
+        'DataGridViewTextBoxColumn193
         '
-        Me.DataGridViewTextBoxColumn29.HeaderText = "Created by"
-        Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
-        Me.DataGridViewTextBoxColumn29.ReadOnly = True
+        Me.DataGridViewTextBoxColumn193.HeaderText = "AgencyRowID"
+        Me.DataGridViewTextBoxColumn193.Name = "DataGridViewTextBoxColumn193"
+        Me.DataGridViewTextBoxColumn193.Visible = False
         '
-        'DataGridViewTextBoxColumn30
+        'DataGridViewTextBoxColumn194
         '
-        Me.DataGridViewTextBoxColumn30.HeaderText = "Last Update"
-        Me.DataGridViewTextBoxColumn30.Name = "DataGridViewTextBoxColumn30"
-        Me.DataGridViewTextBoxColumn30.ReadOnly = True
+        Me.DataGridViewTextBoxColumn194.HeaderText = "IMAGE"
+        Me.DataGridViewTextBoxColumn194.Name = "DataGridViewTextBoxColumn194"
+        Me.DataGridViewTextBoxColumn194.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn194.Visible = False
         '
-        'DataGridViewTextBoxColumn31
+        'eawar_RowID
         '
-        Me.DataGridViewTextBoxColumn31.HeaderText = "Last Update by"
-        Me.DataGridViewTextBoxColumn31.Name = "DataGridViewTextBoxColumn31"
-        Me.DataGridViewTextBoxColumn31.ReadOnly = True
+        Me.eawar_RowID.HeaderText = "RowID"
+        Me.eawar_RowID.Name = "eawar_RowID"
+        Me.eawar_RowID.ReadOnly = True
+        Me.eawar_RowID.Visible = False
         '
-        'DataGridViewTextBoxColumn32
+        'eawar_EmployeeID
         '
-        Me.DataGridViewTextBoxColumn32.HeaderText = "PositionID"
-        Me.DataGridViewTextBoxColumn32.Name = "DataGridViewTextBoxColumn32"
-        Me.DataGridViewTextBoxColumn32.ReadOnly = True
+        Me.eawar_EmployeeID.HeaderText = "EmployeeID"
+        Me.eawar_EmployeeID.Name = "eawar_EmployeeID"
+        Me.eawar_EmployeeID.ReadOnly = True
+        Me.eawar_EmployeeID.Visible = False
         '
-        'DataGridViewTextBoxColumn33
+        'eawar_Type
         '
-        Me.DataGridViewTextBoxColumn33.HeaderText = "PayFrequencyID"
-        Me.DataGridViewTextBoxColumn33.Name = "DataGridViewTextBoxColumn33"
-        Me.DataGridViewTextBoxColumn33.ReadOnly = True
+        Me.eawar_Type.HeaderText = "Award Type"
+        Me.eawar_Type.MaxInputLength = 500
+        Me.eawar_Type.Name = "eawar_Type"
+        Me.eawar_Type.Width = 220
         '
-        'DataGridViewTextBoxColumn34
+        'eawar_Description
         '
-        Me.DataGridViewTextBoxColumn34.HeaderText = "LeavePerPayPeriod"
-        Me.DataGridViewTextBoxColumn34.Name = "DataGridViewTextBoxColumn34"
-        Me.DataGridViewTextBoxColumn34.ReadOnly = True
-        Me.DataGridViewTextBoxColumn34.ToolTipText = "No. of Dependents"
+        DataGridViewCellStyle61.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eawar_Description.DefaultCellStyle = DataGridViewCellStyle61
+        Me.eawar_Description.HeaderText = "Award Description"
+        Me.eawar_Description.MaxInputLength = 500
+        Me.eawar_Description.Name = "eawar_Description"
+        Me.eawar_Description.Width = 220
         '
-        'DataGridViewTextBoxColumn35
+        'eawar_DateAwarded
         '
-        Me.DataGridViewTextBoxColumn35.HeaderText = "EmployeeType"
-        Me.DataGridViewTextBoxColumn35.Name = "DataGridViewTextBoxColumn35"
-        Me.DataGridViewTextBoxColumn35.ReadOnly = True
+        Me.eawar_DateAwarded.HeaderText = "Date awarded"
+        Me.eawar_DateAwarded.MaxInputLength = 500
+        Me.eawar_DateAwarded.Name = "eawar_DateAwarded"
+        Me.eawar_DateAwarded.Width = 220
         '
-        'DataGridViewTextBoxColumn36
+        'ecert_RowID
         '
-        Me.DataGridViewTextBoxColumn36.HeaderText = "RowID"
-        Me.DataGridViewTextBoxColumn36.Name = "DataGridViewTextBoxColumn36"
-        Me.DataGridViewTextBoxColumn36.ReadOnly = True
-        Me.DataGridViewTextBoxColumn36.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.ecert_RowID.HeaderText = "RowID"
+        Me.ecert_RowID.Name = "ecert_RowID"
+        Me.ecert_RowID.ReadOnly = True
+        Me.ecert_RowID.Visible = False
         '
-        'DataGridViewTextBoxColumn37
+        'ecert_EmployeeID
         '
-        Me.DataGridViewTextBoxColumn37.HeaderText = "ParentEmployeeID"
-        Me.DataGridViewTextBoxColumn37.Name = "DataGridViewTextBoxColumn37"
-        Me.DataGridViewTextBoxColumn37.ReadOnly = True
-        Me.DataGridViewTextBoxColumn37.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.ecert_EmployeeID.HeaderText = "EmployeeID"
+        Me.ecert_EmployeeID.Name = "ecert_EmployeeID"
+        Me.ecert_EmployeeID.ReadOnly = True
+        Me.ecert_EmployeeID.Visible = False
         '
-        'DataGridViewTextBoxColumn38
+        'ecert_Type
         '
-        Me.DataGridViewTextBoxColumn38.HeaderText = "Salutation"
-        Me.DataGridViewTextBoxColumn38.Name = "DataGridViewTextBoxColumn38"
-        Me.DataGridViewTextBoxColumn38.ReadOnly = True
-        Me.DataGridViewTextBoxColumn38.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.ecert_Type.HeaderText = "Certification Type"
+        Me.ecert_Type.MaxInputLength = 50
+        Me.ecert_Type.Name = "ecert_Type"
+        Me.ecert_Type.Width = 180
         '
-        'DataGridViewTextBoxColumn39
+        'ecert_IssuingAuth
         '
-        Me.DataGridViewTextBoxColumn39.HeaderText = "First Name"
-        Me.DataGridViewTextBoxColumn39.Name = "DataGridViewTextBoxColumn39"
-        Me.DataGridViewTextBoxColumn39.ReadOnly = True
-        Me.DataGridViewTextBoxColumn39.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        DataGridViewCellStyle62.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ecert_IssuingAuth.DefaultCellStyle = DataGridViewCellStyle62
+        Me.ecert_IssuingAuth.HeaderText = "Issuing Authority"
+        Me.ecert_IssuingAuth.MaxInputLength = 50
+        Me.ecert_IssuingAuth.Name = "ecert_IssuingAuth"
+        Me.ecert_IssuingAuth.Width = 180
         '
-        'DataGridViewTextBoxColumn40
+        'ecert_CertNum
         '
-        Me.DataGridViewTextBoxColumn40.HeaderText = "MiddleName"
-        Me.DataGridViewTextBoxColumn40.Name = "DataGridViewTextBoxColumn40"
-        Me.DataGridViewTextBoxColumn40.ReadOnly = True
-        Me.DataGridViewTextBoxColumn40.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.ecert_CertNum.HeaderText = "Certification No."
+        Me.ecert_CertNum.MaxInputLength = 50
+        Me.ecert_CertNum.Name = "ecert_CertNum"
+        Me.ecert_CertNum.Width = 180
         '
-        'DataGridViewTextBoxColumn41
+        'ecert_Comments
         '
-        Me.DataGridViewTextBoxColumn41.HeaderText = "Last Name"
-        Me.DataGridViewTextBoxColumn41.Name = "DataGridViewTextBoxColumn41"
-        Me.DataGridViewTextBoxColumn41.ReadOnly = True
-        Me.DataGridViewTextBoxColumn41.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        DataGridViewCellStyle63.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ecert_Comments.DefaultCellStyle = DataGridViewCellStyle63
+        Me.ecert_Comments.HeaderText = "Comments"
+        Me.ecert_Comments.MaxInputLength = 2000
+        Me.ecert_Comments.Name = "ecert_Comments"
+        Me.ecert_Comments.Width = 190
         '
-        'DataGridViewTextBoxColumn42
+        'c_EmplyeeID
         '
-        Me.DataGridViewTextBoxColumn42.HeaderText = "Surname"
-        Me.DataGridViewTextBoxColumn42.Name = "DataGridViewTextBoxColumn42"
-        Me.DataGridViewTextBoxColumn42.ReadOnly = True
-        Me.DataGridViewTextBoxColumn42.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_EmplyeeID.HeaderText = "Employee ID"
+        Me.c_EmplyeeID.Name = "c_EmplyeeID"
+        Me.c_EmplyeeID.ReadOnly = True
+        Me.c_EmplyeeID.Visible = False
         '
-        'DataGridViewTextBoxColumn43
+        'c_name
         '
-        Me.DataGridViewTextBoxColumn43.HeaderText = "Relationship to Employee"
-        Me.DataGridViewTextBoxColumn43.Name = "DataGridViewTextBoxColumn43"
-        Me.DataGridViewTextBoxColumn43.ReadOnly = True
-        Me.DataGridViewTextBoxColumn43.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_name.HeaderText = "Name"
+        Me.c_name.Name = "c_name"
+        Me.c_name.ReadOnly = True
+        Me.c_name.Visible = False
         '
-        'DataGridViewTextBoxColumn44
+        'c_EducationalType
         '
-        Me.DataGridViewTextBoxColumn44.HeaderText = "TIN"
-        Me.DataGridViewTextBoxColumn44.Name = "DataGridViewTextBoxColumn44"
-        Me.DataGridViewTextBoxColumn44.ReadOnly = True
-        Me.DataGridViewTextBoxColumn44.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_EducationalType.HeaderText = "Educational Type"
+        Me.c_EducationalType.Name = "c_EducationalType"
+        Me.c_EducationalType.ReadOnly = True
         '
-        'DataGridViewTextBoxColumn45
+        'c_school
         '
-        Me.DataGridViewTextBoxColumn45.HeaderText = "SSS No."
-        Me.DataGridViewTextBoxColumn45.Name = "DataGridViewTextBoxColumn45"
-        Me.DataGridViewTextBoxColumn45.ReadOnly = True
-        Me.DataGridViewTextBoxColumn45.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_school.HeaderText = "School"
+        Me.c_school.Name = "c_school"
+        Me.c_school.ReadOnly = True
         '
-        'DataGridViewTextBoxColumn46
+        'c_degree
         '
-        Me.DataGridViewTextBoxColumn46.HeaderText = "PAGIBIG No."
-        Me.DataGridViewTextBoxColumn46.Name = "DataGridViewTextBoxColumn46"
-        Me.DataGridViewTextBoxColumn46.ReadOnly = True
-        Me.DataGridViewTextBoxColumn46.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_degree.HeaderText = "Degree"
+        Me.c_degree.Name = "c_degree"
+        Me.c_degree.ReadOnly = True
         '
-        'DataGridViewTextBoxColumn47
+        'c_course
         '
-        Me.DataGridViewTextBoxColumn47.HeaderText = "PhilHealth No."
-        Me.DataGridViewTextBoxColumn47.Name = "DataGridViewTextBoxColumn47"
-        Me.DataGridViewTextBoxColumn47.ReadOnly = True
-        Me.DataGridViewTextBoxColumn47.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_course.HeaderText = "Course"
+        Me.c_course.Name = "c_course"
+        Me.c_course.ReadOnly = True
         '
-        'DataGridViewTextBoxColumn48
+        'c_minor
         '
-        Me.DataGridViewTextBoxColumn48.HeaderText = "Email address"
-        Me.DataGridViewTextBoxColumn48.Name = "DataGridViewTextBoxColumn48"
-        Me.DataGridViewTextBoxColumn48.ReadOnly = True
-        Me.DataGridViewTextBoxColumn48.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_minor.HeaderText = "Major"
+        Me.c_minor.Name = "c_minor"
+        Me.c_minor.ReadOnly = True
         '
-        'DataGridViewTextBoxColumn49
+        'c_Remarks
         '
-        Me.DataGridViewTextBoxColumn49.HeaderText = "Work Phone No."
-        Me.DataGridViewTextBoxColumn49.Name = "DataGridViewTextBoxColumn49"
-        Me.DataGridViewTextBoxColumn49.ReadOnly = True
-        Me.DataGridViewTextBoxColumn49.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_Remarks.HeaderText = "Remarks"
+        Me.c_Remarks.Name = "c_Remarks"
+        Me.c_Remarks.ReadOnly = True
         '
-        'DataGridViewTextBoxColumn50
+        'c_RowID1
         '
-        Me.DataGridViewTextBoxColumn50.HeaderText = "Home Phone No."
-        Me.DataGridViewTextBoxColumn50.Name = "DataGridViewTextBoxColumn50"
-        Me.DataGridViewTextBoxColumn50.ReadOnly = True
-        Me.DataGridViewTextBoxColumn50.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn51
-        '
-        Me.DataGridViewTextBoxColumn51.HeaderText = "Mobile  Phone No."
-        Me.DataGridViewTextBoxColumn51.Name = "DataGridViewTextBoxColumn51"
-        Me.DataGridViewTextBoxColumn51.ReadOnly = True
-        Me.DataGridViewTextBoxColumn51.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn51.Visible = False
-        '
-        'DataGridViewTextBoxColumn52
-        '
-        Me.DataGridViewTextBoxColumn52.HeaderText = "Home address"
-        Me.DataGridViewTextBoxColumn52.Name = "DataGridViewTextBoxColumn52"
-        Me.DataGridViewTextBoxColumn52.ReadOnly = True
-        Me.DataGridViewTextBoxColumn52.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn52.Visible = False
-        '
-        'DataGridViewTextBoxColumn53
-        '
-        Me.DataGridViewTextBoxColumn53.HeaderText = "Nickname"
-        Me.DataGridViewTextBoxColumn53.Name = "DataGridViewTextBoxColumn53"
-        Me.DataGridViewTextBoxColumn53.ReadOnly = True
-        Me.DataGridViewTextBoxColumn53.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn54
-        '
-        Me.DataGridViewTextBoxColumn54.HeaderText = "JobTitle"
-        Me.DataGridViewTextBoxColumn54.Name = "DataGridViewTextBoxColumn54"
-        Me.DataGridViewTextBoxColumn54.ReadOnly = True
-        Me.DataGridViewTextBoxColumn54.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn55
-        '
-        Me.DataGridViewTextBoxColumn55.HeaderText = "Created by"
-        Me.DataGridViewTextBoxColumn55.Name = "DataGridViewTextBoxColumn55"
-        Me.DataGridViewTextBoxColumn55.ReadOnly = True
-        Me.DataGridViewTextBoxColumn55.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn55.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn56
-        '
-        Me.DataGridViewTextBoxColumn56.HeaderText = "Creation Date"
-        Me.DataGridViewTextBoxColumn56.Name = "DataGridViewTextBoxColumn56"
-        Me.DataGridViewTextBoxColumn56.ReadOnly = True
-        Me.DataGridViewTextBoxColumn56.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn57
-        '
-        Me.DataGridViewTextBoxColumn57.HeaderText = "Last update by"
-        Me.DataGridViewTextBoxColumn57.Name = "DataGridViewTextBoxColumn57"
-        Me.DataGridViewTextBoxColumn57.ReadOnly = True
-        Me.DataGridViewTextBoxColumn57.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn57.Visible = False
-        '
-        'DataGridViewTextBoxColumn58
-        '
-        Me.DataGridViewTextBoxColumn58.HeaderText = "Last update"
-        Me.DataGridViewTextBoxColumn58.Name = "DataGridViewTextBoxColumn58"
-        Me.DataGridViewTextBoxColumn58.ReadOnly = True
-        Me.DataGridViewTextBoxColumn58.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn58.Visible = False
-        '
-        'DataGridViewTextBoxColumn59
-        '
-        Me.DataGridViewTextBoxColumn59.HeaderText = "Last update"
-        Me.DataGridViewTextBoxColumn59.Name = "DataGridViewTextBoxColumn59"
-        Me.DataGridViewTextBoxColumn59.ReadOnly = True
-        Me.DataGridViewTextBoxColumn59.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn59.Visible = False
-        '
-        'DataGridViewTextBoxColumn60
-        '
-        Me.DataGridViewTextBoxColumn60.HeaderText = "EmployeeType"
-        Me.DataGridViewTextBoxColumn60.Name = "DataGridViewTextBoxColumn60"
-        Me.DataGridViewTextBoxColumn60.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn61
-        '
-        Me.DataGridViewTextBoxColumn61.HeaderText = "LeaveBalance"
-        Me.DataGridViewTextBoxColumn61.Name = "DataGridViewTextBoxColumn61"
-        Me.DataGridViewTextBoxColumn61.ReadOnly = True
-        Me.DataGridViewTextBoxColumn61.Visible = False
-        '
-        'DataGridViewTextBoxColumn62
-        '
-        Me.DataGridViewTextBoxColumn62.HeaderText = "LeaveAllowance"
-        Me.DataGridViewTextBoxColumn62.Name = "DataGridViewTextBoxColumn62"
-        Me.DataGridViewTextBoxColumn62.ReadOnly = True
-        Me.DataGridViewTextBoxColumn62.Visible = False
-        '
-        'DataGridViewTextBoxColumn63
-        '
-        Me.DataGridViewTextBoxColumn63.HeaderText = "IMAGE"
-        Me.DataGridViewTextBoxColumn63.Name = "DataGridViewTextBoxColumn63"
-        Me.DataGridViewTextBoxColumn63.ReadOnly = True
-        Me.DataGridViewTextBoxColumn63.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn63.Visible = False
-        '
-        'Last
-        '
-        Me.Last.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Last.AutoSize = True
-        Me.Last.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Last.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Last.Location = New System.Drawing.Point(308, 507)
-        Me.Last.Name = "Last"
-        Me.Last.Size = New System.Drawing.Size(44, 15)
-        Me.Last.TabIndex = 150
-        Me.Last.TabStop = True
-        Me.Last.Text = "Last>>"
-        '
-        'Nxt
-        '
-        Me.Nxt.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Nxt.AutoSize = True
-        Me.Nxt.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Nxt.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Nxt.Location = New System.Drawing.Point(263, 507)
-        Me.Nxt.Name = "Nxt"
-        Me.Nxt.Size = New System.Drawing.Size(39, 15)
-        Me.Nxt.TabIndex = 149
-        Me.Nxt.TabStop = True
-        Me.Nxt.Text = "Next>"
-        '
-        'Prev
-        '
-        Me.Prev.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Prev.AutoSize = True
-        Me.Prev.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Prev.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Prev.Location = New System.Drawing.Point(49, 507)
-        Me.Prev.Name = "Prev"
-        Me.Prev.Size = New System.Drawing.Size(38, 15)
-        Me.Prev.TabIndex = 148
-        Me.Prev.TabStop = True
-        Me.Prev.Text = "<Prev"
-        '
-        'First
-        '
-        Me.First.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.First.AutoSize = True
-        Me.First.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.First.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.First.Location = New System.Drawing.Point(-1, 507)
-        Me.First.Name = "First"
-        Me.First.Size = New System.Drawing.Size(44, 15)
-        Me.First.TabIndex = 147
-        Me.First.TabStop = True
-        Me.First.Text = "<<First"
-        '
-        'errprovidSal
-        '
-        Me.errprovidSal.ContainerControl = Me
-        '
-        'Button3
-        '
-        Me.Button3.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.Button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.Button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.Button3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button3.Image = Global.AccuPay.My.Resources.Resources.r_arrow
-        Me.Button3.Location = New System.Drawing.Point(320, 2)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(32, 23)
-        Me.Button3.TabIndex = 99
-        Me.Button3.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Button3.UseVisualStyleBackColor = False
-        '
-        'bgworkImporting
-        '
-        Me.bgworkImporting.WorkerReportsProgress = True
-        Me.bgworkImporting.WorkerSupportsCancellation = True
-        '
-        'Panel7
-        '
-        Me.Panel7.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.Panel7.Controls.Add(Me.Button3)
-        Me.Panel7.Controls.Add(Me.tabctrlemp)
-        Me.Panel7.Controls.Add(Me.lblforballoon)
-        Me.Panel7.Controls.Add(Me.Last)
-        Me.Panel7.Controls.Add(Me.TabControl2)
-        Me.Panel7.Controls.Add(Me.Nxt)
-        Me.Panel7.Controls.Add(Me.Button4)
-        Me.Panel7.Controls.Add(Me.Prev)
-        Me.Panel7.Controls.Add(Me.dgvEmp)
-        Me.Panel7.Controls.Add(Me.First)
-        Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel7.Location = New System.Drawing.Point(0, 22)
-        Me.Panel7.Name = "Panel7"
-        Me.Panel7.Size = New System.Drawing.Size(1231, 523)
-        Me.Panel7.TabIndex = 151
+        Me.c_RowID1.HeaderText = "Column1"
+        Me.c_RowID1.Name = "c_RowID1"
+        Me.c_RowID1.ReadOnly = True
+        Me.c_RowID1.Visible = False
         '
         'EmployeeForm
         '
@@ -11125,7 +12185,7 @@ Partial Class EmployeeForm
         CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip11.ResumeLayout(False)
-        Me.ToolStrip11.PerformLayout()
+        Me.ToolStrip11.PerformLayout
         Me.tbpempallow.ResumeLayout(False)
         Me.tbpempallow.PerformLayout
         Me.Panel6.ResumeLayout(False)
@@ -12158,4 +13218,125 @@ Partial Class EmployeeForm
     Friend WithEvents Panel2 As Panel
     Friend WithEvents ToolStripButton36 As ToolStripButton
     Friend WithEvents ToolStripLabel12 As ToolStripLabel
+    Friend WithEvents DataGridViewTextBoxColumn64 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn65 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn66 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn67 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn68 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn73 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn74 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn75 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn76 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn77 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn78 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn79 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn80 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn85 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn86 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn87 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn88 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn89 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn90 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn91 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn92 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn93 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn94 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn95 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn96 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn97 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn98 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn99 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn100 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn101 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn102 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn103 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn104 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn105 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn106 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn107 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn110 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn111 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn112 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn113 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn114 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn115 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn116 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn117 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn118 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn119 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn120 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn121 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn122 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn123 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn124 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn125 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn126 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn127 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn128 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn129 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn130 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn131 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn132 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn133 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn134 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn135 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn136 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn137 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn138 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn139 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn140 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn141 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn142 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn143 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn144 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn145 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn146 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn147 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn148 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn149 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn150 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn151 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn152 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn153 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn154 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn155 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn156 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn157 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn158 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn159 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn160 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn161 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn162 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn163 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn164 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn165 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn166 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn167 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn168 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn169 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn170 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn171 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn172 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn173 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn174 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn175 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn176 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn177 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn178 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn179 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn180 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn181 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn182 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn183 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn184 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn185 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn186 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn187 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn188 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn189 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn190 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn191 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn192 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn193 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn194 As DataGridViewTextBoxColumn
 End Class

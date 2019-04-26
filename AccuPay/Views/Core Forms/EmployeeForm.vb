@@ -695,7 +695,11 @@ Public Class EmployeeForm
     End Sub
 
     Public Sub Print201(sender As Object, e As EventArgs) Handles ToolStripButton22.Click
-        Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+
+        Dim employeeID = ObjectUtils.ToNullableInteger(publicEmpRowID)
+
+        If employeeID Is Nothing Then Return
+
         Dim provider = New Employee201ReportProvider(employeeID)
         provider.Run()
     End Sub
@@ -907,6 +911,8 @@ Public Class EmployeeForm
             dgvEmp_RowIndex = 0
             If succeed Then InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
         Else 'UPDATE employee
+
+            If dgvEmp.CurrentRow Is Nothing Then Exit Sub
 
             If dontUpdateEmp = 1 Then
                 tsbtnNewEmp.Enabled = True
@@ -1760,9 +1766,9 @@ Public Class EmployeeForm
 
     Private Sub txt_Leave(sender As Object, e As EventArgs) Handles txtFName.Leave, txtFName.Leave, txtHomeAddr.Leave,
                                                                     txtLName.Leave, txtMName.Leave, txtNName.Leave, txtSName.Leave ', txtJTtle.Leave
-        With DirectCast(sender, TextBox)
-            .Text = StrConv(.Text, VbStrConv.ProperCase)
-        End With
+        'With DirectCast(sender, TextBox)
+        '    .Text = StrConv(.Text, VbStrConv.ProperCase)
+        'End With
     End Sub
 
     Dim PositE_asc As String
@@ -2712,7 +2718,16 @@ Public Class EmployeeForm
 
         If dgvEmp.RowCount <> 0 Then
             If curr_empRow <= dgvEmp.RowCount - 1 Then
-                dgvEmp.Item(curr_empColm, curr_empRow).Selected = True
+
+                If curr_empColm Is Nothing Then
+
+                    dgvEmp.Item(Column1.Name, curr_empRow).Selected = True
+
+                Else
+
+                    dgvEmp.Item(curr_empColm, curr_empRow).Selected = True
+                End If
+
             Else
                 dgvEmp.Item(curr_empColm, 0).Selected = True
             End If
