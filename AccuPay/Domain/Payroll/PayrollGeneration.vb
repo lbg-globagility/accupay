@@ -209,11 +209,9 @@ Public Class PayrollGeneration
                         _paystub.LeavePay +
                         _paystub.AdditionalPay
                 Else
-                    _paystub.RegularHours =
-                        _paystub.BasicHours - _paystub.LeaveHours
+                    _paystub.RegularHours = _paystub.BasicHours - _paystub.LeaveHours - _paystub.LateHours - _paystub.UndertimeHours - _paystub.AbsentHours
 
-                    _paystub.RegularPay =
-                        _paystub.BasicPay - _paystub.LeavePay
+                    _paystub.RegularPay = _paystub.BasicPay - _paystub.LeavePay - _paystub.BasicDeductions
 
                     _paystub.TotalEarnings = (_paystub.BasicPay + _paystub.AdditionalPay) - _paystub.BasicDeductions
                 End If
@@ -253,7 +251,7 @@ Public Class PayrollGeneration
             _paystub.NetPay = AccuMath.CommercialRound(_paystub.GrossPay - _paystub.NetDeductions + _paystub.TotalAdjustments)
 
             Dim actualCalculator = New PaystubActualCalculator()
-            actualCalculator.Compute(_employee, _salary, _settings, _payPeriod, _paystub, _actualtimeentries)
+            actualCalculator.Compute(_employee, _salary, _settings, _payPeriod, _paystub)
 
             Using context = New PayrollContext()
                 UpdateLeaveLedger(context)

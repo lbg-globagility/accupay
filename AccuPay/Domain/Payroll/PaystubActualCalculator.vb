@@ -11,8 +11,7 @@ Namespace Global.AccuPay.Payroll
                            salary As Salary,
                            settings As ListOfValueCollection,
                            payperiod As PayPeriod,
-                           paystub As Paystub,
-                           actualTimeEntries As ICollection(Of ActualTimeEntry))
+                           paystub As Paystub)
             Dim totalEarnings As Decimal
 
             If employee.IsFixed Then
@@ -40,7 +39,7 @@ Namespace Global.AccuPay.Payroll
                     Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, amount)
                     Dim basicPay = monthlyRate / 2
 
-                    paystub.Actual.RegularPay = basicPay - paystub.Actual.BasicDeductions
+                    paystub.Actual.RegularPay = basicPay - paystub.Actual.LeavePay - paystub.Actual.BasicDeductions
 
                     totalEarnings = paystub.Actual.RegularPay + paystub.Actual.AdditionalPay
                 End If
