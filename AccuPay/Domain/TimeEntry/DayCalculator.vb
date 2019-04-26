@@ -57,8 +57,7 @@ Public Class DayCalculator
             }
         End If
 
-        timeEntry.ResetHours()
-        timeEntry.ResetPay()
+        timeEntry.Reset()
 
         Dim isBetweenSalaryDates As Boolean = False
         If salary IsNot Nothing Then
@@ -72,7 +71,13 @@ Public Class DayCalculator
 
         Dim currentShift = GetCurrentShift(currentDate, employeeShift, shiftSched, _policy.UseShiftSchedule, _policy.RespectDefaultRestDay, _employee.DayOfRest)
 
-        Dim hasWorkedLastDay = HasWorkedLastWorkingDay(currentDate, oldTimeEntries)
+        timeEntry.WorkHours = currentShift.WorkingHours
+        timeEntry.ShiftHours = currentShift.ShiftHours
+        timeEntry.IsRestDay = currentShift.IsRestDay
+        timeEntry.HasShift = currentShift.HasShift
+
+
+        Dim hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries, _payrateCalendar)
         Dim payrate = _payrateCalendar.Find(currentDate)
 
         ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, oldTimeEntries, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay)
@@ -292,8 +297,8 @@ Public Class DayCalculator
                            payrate As PayRate,
                            hasWorkedLastDay As Boolean)
         If currentDate < _employee.StartDate Then
-            timeEntry.ResetHours()
-            timeEntry.ResetPay()
+
+            timeEntry.Reset()
 
             Return
         End If
@@ -547,49 +552,6 @@ Public Class DayCalculator
         End If
 
         Return dailyRate
-    End Function
-
-    Private Function HasWorkedLastWorkingDay(current As Date, currentTimeEntries As IList(Of TimeEntry)) As Boolean
-        Dim lastPotentialEntry = current.Date.AddDays(-3)
-
-        Dim lastTimeEntries = currentTimeEntries.
-            Where(Function(t) lastPotentialEntry <= t.Date And t.Date <= current.Date).
-            OrderByDescending(Function(t) t.Date).
-            ToList()
-
-        For Each lastTimeEntry In lastTimeEntries
-            ' If employee has no shift set for the day, it's not a working day.
-            If lastTimeEntry?.ShiftSchedule?.Shift Is Nothing Then
-                Continue For
-            End If
-
-            Dim isDefaultDayOff = _employee.DayOfRest = CInt(lastTimeEntry?.Date.DayOfWeek) + 1
-            Dim isShiftRestDay = If(lastTimeEntry?.ShiftSchedule.IsRestDay, False)
-
-            If isShiftRestDay Xor isDefaultDayOff Then
-
-                If lastTimeEntry.TotalDayPay > 0 Then
-                    Return True
-                End If
-
-                Continue For
-            End If
-
-            Dim payRate = _payrateCalendar.Find(lastTimeEntry.Date)
-            If payRate.IsHoliday Then
-                If lastTimeEntry.TotalDayPay > 0 Then
-                    Return True
-                End If
-
-                Continue For
-            End If
-
-            Dim isAbsent = lastTimeEntry.AbsentDeduction > 0
-
-            Return lastTimeEntry.RegularHours > 0 Or lastTimeEntry.TotalLeaveHours > 0
-        Next
-
-        Return False
     End Function
 
     Public Function GetLogPeriod(timeLog As TimeLog, officialBusiness As OfficialBusiness, currentShift As CurrentShift, currentDate As Date) As TimePeriod

@@ -1027,106 +1027,151 @@ Public Class TimeEntrySummaryForm
                 Dim dateValue = DirectCast(dateTimeValue, Date)
                 Dim employeeRowId = Convert.ToInt32(_selectedEmployee.RowID)
 
-                Using context = New PayrollContext()
+                Dim balloon As New ToolTip() With {
+                    .ToolTipTitle = "Delete shift schedule",
+                    .UseFading = True,
+                    .UseAnimation = True,
+                    .ShowAlways = True,
+                    .IsBalloon = True,
+                    .ToolTipIcon = ToolTipIcon.Info
+                }
 
-                    Dim eTimeEntry = Await context.TimeEntries.
-                            Where(Function(et) Nullable.Equals(et.EmployeeID, employeeRowId)).
-                            Where(Function(et) et.Date = dateValue).FirstOrDefaultAsync()
+                If _useNewShift Then
 
-                    Dim shiftRecord = Await context.ShiftSchedules.FindAsync(eTimeEntry.EmployeeShiftID)
+                    Await DeleteNewShift(dateValue, employeeRowId, balloon)
 
-                    If shiftRecord IsNot Nothing Then
-                        Dim balloon As New ToolTip() With {
-                            .ToolTipTitle = "Delete shift schedule",
-                            .UseFading = True,
-                            .UseAnimation = True,
-                            .ShowAlways = True,
-                            .IsBalloon = True,
-                            .ToolTipIcon = ToolTipIcon.Info
-                        }
-                        balloon.Show("Please wait a few moment while deleting", Button1, 3000)
-                        InfoBalloon()
-                        Dim orgId = Convert.ToInt32(orgztnID)
+                Else
+                    Await DeleteOldShift(dateValue, employeeRowId, balloon)
+                End If
 
-                        Dim hasTimeEntry = eTimeEntry IsNot Nothing
-
-                        Dim isShiftServeOneDay = (DateDiff("d", shiftRecord.EffectiveFrom, shiftRecord.EffectiveTo) = 0)
-                        If isShiftServeOneDay Then
-                            context.ShiftSchedules.Remove(shiftRecord)
-                        Else
-
-                            Dim primaryDiff = DateDiff("d", shiftRecord.EffectiveFrom, dateValue)
-                            Dim ultiDiff = DateDiff("d", dateValue, shiftRecord.EffectiveTo)
-
-                            Dim isLead = primaryDiff = 0
-                            Dim isTrail = ultiDiff = 0
-
-                            Dim effectDateFrom = shiftRecord.EffectiveFrom
-                            Dim effectDateTo = shiftRecord.EffectiveTo
-
-                            If isLead Then
-                                shiftRecord.EffectiveFrom = effectDateFrom.AddDays(1)
-                                shiftRecord.LastUpdBy = z_User
-                            End If
-
-                            If isTrail Then
-                                shiftRecord.EffectiveTo = effectDateTo.AddDays(-1)
-                                shiftRecord.LastUpdBy = z_User
-                            End If
-
-                            Dim isDoesntSatisfy = isLead = False And isTrail = False
-
-                            If isDoesntSatisfy Then
-                                shiftRecord.EffectiveTo = dateValue.AddDays(-1)
-                                shiftRecord.LastUpdBy = z_User
-
-                                Dim newShiftSched = New ShiftSchedule With {
-                                    .EffectiveFrom = dateValue.AddDays(1),
-                                    .EffectiveTo = effectDateTo,
-                                    .EmployeeID = shiftRecord.EmployeeID,
-                                    .ShiftID = shiftRecord.ShiftID,
-                                    .IsNightShift = shiftRecord.IsNightShift,
-                                    .OrganizationID = orgId,
-                                    .CreatedBy = z_User,
-                                    .LastUpdBy = z_User
-                                }
-
-                                context.ShiftSchedules.Add(newShiftSched)
-                            End If
-
-                        End If
-
-                        If hasTimeEntry Then
-                            eTimeEntry.EmployeeShiftID = Nothing
-                        End If
-
-                        Try
-                            Await context.SaveChangesAsync()
-
-                            'MsgBox("Shift schedule deleted successfully.", MsgBoxStyle.Information)
-                            balloon.ToolTipTitle = "Shift schedule deleted successfully"
-                            balloon.Show("Done!", Button1)
-
-                            _selectedPayPeriod = Nothing
-                            payPeriodDataGridView_SelectionChanged(timeEntriesDataGridView, New EventArgs)
-                        Catch ex As Exception
-                            _logger.Error("Error deleting shift schedule.", ex)
-                            MsgBox(String.Concat("Something went wrong when deleting shift schedule.", vbNewLine, "Please contact Globagility Inc. for assistance."),
-                                   MsgBoxStyle.OkOnly,
-                                   "Time entry summary form")
-                            'Finally
-                            '    If hasDateSelected _
-                            '        And currentRow.Index < timeEntriesDataGridView.Rows.Count Then
-                            '        timeEntriesDataGridView.Item(ColumnDate.Name, currentRow.Index).Selected = True
-                            '    End If
-                        End Try
-                    End If
-                End Using
             End If
         Else
             _currentTimeEntryDate = Date.Now
         End If
     End Sub
+
+    Private Async Function DeleteNewShift(dateValue As Date, employeeRowId As Integer, balloon As ToolTip) As Task
+
+        Using context = New PayrollContext()
+
+            Dim currentShift = Await context.EmployeeDutySchedules.
+                                        Where(Function(s) Nullable.Equals(s.EmployeeID, employeeRowId)).
+                                        Where(Function(s) s.DateSched = dateValue).
+                                        FirstOrDefaultAsync
+
+            If currentShift IsNot Nothing Then
+
+                context.EmployeeDutySchedules.Remove(currentShift)
+
+                Try
+                    Await context.SaveChangesAsync()
+
+                    balloon.ToolTipTitle = "Shift schedule deleted successfully"
+                    balloon.Show("Done!", Button1)
+
+                    _selectedPayPeriod = Nothing
+                    payPeriodDataGridView_SelectionChanged(timeEntriesDataGridView, New EventArgs)
+                Catch ex As Exception
+                    _logger.Error("Error deleting shift schedule.", ex)
+
+                    MessageBoxHelper.DefaultErrorMessage()
+                End Try
+
+            End If
+
+        End Using
+
+    End Function
+
+    Private Async Function DeleteOldShift(dateValue As Date, employeeRowId As Integer, balloon As ToolTip) As Task
+        Using context = New PayrollContext()
+
+            Dim eTimeEntry = Await context.TimeEntries.
+                    Where(Function(et) Nullable.Equals(et.EmployeeID, employeeRowId)).
+                    Where(Function(et) et.Date = dateValue).FirstOrDefaultAsync()
+
+            Dim shiftRecord = Await context.ShiftSchedules.FindAsync(eTimeEntry.EmployeeShiftID)
+
+            If shiftRecord IsNot Nothing Then
+                balloon.Show("Please wait a few moment while deleting", Button1, 3000)
+                InfoBalloon()
+                Dim orgId = Convert.ToInt32(orgztnID)
+
+                Dim hasTimeEntry = eTimeEntry IsNot Nothing
+
+                Dim isShiftServeOneDay = (DateDiff("d", shiftRecord.EffectiveFrom, shiftRecord.EffectiveTo) = 0)
+                If isShiftServeOneDay Then
+                    context.ShiftSchedules.Remove(shiftRecord)
+                Else
+
+                    Dim primaryDiff = DateDiff("d", shiftRecord.EffectiveFrom, dateValue)
+                    Dim ultiDiff = DateDiff("d", dateValue, shiftRecord.EffectiveTo)
+
+                    Dim isLead = primaryDiff = 0
+                    Dim isTrail = ultiDiff = 0
+
+                    Dim effectDateFrom = shiftRecord.EffectiveFrom
+                    Dim effectDateTo = shiftRecord.EffectiveTo
+
+                    If isLead Then
+                        shiftRecord.EffectiveFrom = effectDateFrom.AddDays(1)
+                        shiftRecord.LastUpdBy = z_User
+                    End If
+
+                    If isTrail Then
+                        shiftRecord.EffectiveTo = effectDateTo.AddDays(-1)
+                        shiftRecord.LastUpdBy = z_User
+                    End If
+
+                    Dim isDoesntSatisfy = isLead = False And isTrail = False
+
+                    If isDoesntSatisfy Then
+                        shiftRecord.EffectiveTo = dateValue.AddDays(-1)
+                        shiftRecord.LastUpdBy = z_User
+
+                        Dim newShiftSched = New ShiftSchedule With {
+                            .EffectiveFrom = dateValue.AddDays(1),
+                            .EffectiveTo = effectDateTo,
+                            .EmployeeID = shiftRecord.EmployeeID,
+                            .ShiftID = shiftRecord.ShiftID,
+                            .IsNightShift = shiftRecord.IsNightShift,
+                            .OrganizationID = orgId,
+                            .CreatedBy = z_User,
+                            .LastUpdBy = z_User
+                        }
+
+                        context.ShiftSchedules.Add(newShiftSched)
+                    End If
+
+                End If
+
+                If hasTimeEntry Then
+                    eTimeEntry.EmployeeShiftID = Nothing
+                End If
+
+                Try
+                    Await context.SaveChangesAsync()
+
+                    'MsgBox("Shift schedule deleted successfully.", MsgBoxStyle.Information)
+                    balloon.ToolTipTitle = "Shift schedule deleted successfully"
+                    balloon.Show("Done!", Button1)
+
+                    _selectedPayPeriod = Nothing
+                    payPeriodDataGridView_SelectionChanged(timeEntriesDataGridView, New EventArgs)
+                Catch ex As Exception
+                    _logger.Error("Error deleting shift schedule.", ex)
+                    MsgBox(String.Concat("Something went wrong when deleting shift schedule.", vbNewLine, "Please contact Globagility Inc. for assistance."),
+                           MsgBoxStyle.OkOnly,
+                           "Time entry summary form")
+                    'Finally
+                    '    If hasDateSelected _
+                    '        And currentRow.Index < timeEntriesDataGridView.Rows.Count Then
+                    '        timeEntriesDataGridView.Item(ColumnDate.Name, currentRow.Index).Selected = True
+                    '    End If
+                End Try
+            End If
+        End Using
+    End Function
 
     Private Sub timeEntriesDataGridView_SelectionChangedAsync(sender As Object, e As EventArgs) Handles timeEntriesDataGridView.SelectionChanged
 

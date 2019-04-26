@@ -25,7 +25,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _loanTransactions As ICollection(Of LoanTransaction)
 
-    Private ReadOnly _previousTimeEntries2 As ICollection(Of TimeEntry)
+    Private ReadOnly _previousTimeEntries As ICollection(Of TimeEntry)
 
     Private ReadOnly _formCaller As Form
 
@@ -39,7 +39,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _employeeDutySchedules As ICollection(Of EmployeeDutySchedule)
 
-    Private ReadOnly _payRates As IReadOnlyDictionary(Of Date, PayRate)
+    Private ReadOnly _payrateCalendar As PayratesCalendar
 
     Private ReadOnly _allowances As ICollection(Of Allowance)
 
@@ -92,7 +92,7 @@ Public Class PayrollGeneration
         _policy = New TimeEntryPolicy(_settings)
         _payPeriod = resources.PayPeriod
 
-        _previousTimeEntries2 = resources.TimeEntries.
+        _previousTimeEntries = resources.TimeEntries.
             Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             ToList()
 
@@ -112,7 +112,7 @@ Public Class PayrollGeneration
             Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             ToList()
 
-        _payRates = resources.PayRates.ToDictionary(Function(p) p.Date)
+        _payrateCalendar = New PayratesCalendar(CType(resources.PayRates, IList(Of PayRate)))
 
         _allowances = resources.Allowances.
             Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
@@ -288,35 +288,14 @@ Public Class PayrollGeneration
 
     Private Sub ComputeBasicHours()
         Dim basicHours = 0D
-        Dim useNewShiftSchedule = _policy.UseShiftSchedule
-
-        Dim shiftIsRestDay As Boolean = False
-        Dim isRestDayOffset As Boolean = False
-        Dim shiftWorkHours As Decimal = 0
-        Dim newShift As EmployeeDutySchedule = Nothing
 
         For Each timeEntry In _timeEntries
-            Dim isDefaultRestDay =
-                (_employee.DayOfRest IsNot Nothing) AndAlso
-                (_employee.DayOfRest.Value - 1) = timeEntry.Date.DayOfWeek
 
-            If useNewShiftSchedule Then
+            Dim payrate = _payrateCalendar.Find(timeEntry.Date)
+            If Not (timeEntry.IsRestDay Or (timeEntry.TotalLeaveHours > 0) Or
+                payrate.IsRegularHoliday Or payrate.IsSpecialNonWorkingHoliday) Then
 
-                newShift = _employeeDutySchedules.
-                    FirstOrDefault(Function(s) s.DateSched = timeEntry.Date)
-
-                isRestDayOffset = If(newShift?.IsRestDay, False)
-                shiftWorkHours = If(newShift?.WorkHours, 0)
-            Else
-
-                isRestDayOffset = If(timeEntry.ShiftSchedule?.IsRestDay, False)
-                shiftWorkHours = If(timeEntry.ShiftSchedule?.Shift?.WorkHours, 0)
-            End If
-
-            Dim payrate = _payRates(timeEntry.Date)
-            Dim isRestDay = isDefaultRestDay Xor isRestDayOffset
-            If Not (isRestDay Or (timeEntry.TotalLeaveHours > 0) Or payrate.IsRegularHoliday Or payrate.IsSpecialNonWorkingHoliday) Then
-                basicHours += shiftWorkHours
+                basicHours += timeEntry.WorkHours
             End If
         Next
 
@@ -384,8 +363,8 @@ Public Class PayrollGeneration
     End Sub
 
     Private Sub CalculateAllowances()
-        Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payRates, _previousTimeEntries2)
-        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payRates, _timeEntries)
+        Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payrateCalendar, _previousTimeEntries)
+        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payrateCalendar, _timeEntries)
 
         For Each allowance In _allowances
             Dim item = New AllowanceItem() With {
@@ -425,8 +404,8 @@ Public Class PayrollGeneration
     End Sub
 
     Private Sub CalculateTaxableAllowances()
-        Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payRates, _previousTimeEntries2)
-        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payRates, _timeEntries)
+        Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payrateCalendar, _previousTimeEntries)
+        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payrateCalendar, _timeEntries)
 
         For Each taxableAllowance In _taxableAllowances
             Dim item = New AllowanceItem() With {
@@ -635,12 +614,7 @@ Public Class PayrollGeneration
             thirteenthMonthAmount = If(
                 contractualEmployementStatuses.Contains(_employee.EmploymentStatus),
                 _timeEntries.
-                    Where(Function(t)
-                              Dim isRestDayOffset = If(t.ShiftSchedule?.IsRestDay, False)
-                              Dim isDefaultRestDay = If((_employee.DayOfRest - 1) = t.Date.DayOfWeek, False)
-
-                              Return Not (isRestDayOffset Xor isDefaultRestDay)
-                          End Function).
+                    Where(Function(t) t.IsRestDay).
                     Sum(Function(t) t.BasicDayPay + t.LeavePay),
                 _actualtimeentries.
                     Where(Function(t)

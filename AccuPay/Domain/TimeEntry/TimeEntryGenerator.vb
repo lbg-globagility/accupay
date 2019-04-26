@@ -86,7 +86,6 @@ Public Class TimeEntryGenerator
 
             Dim previousCutoff = _cutoffStart.AddDays(-3)
             _timeEntries = context.TimeEntries.
-                Include(Function(t) t.ShiftSchedule.Shift).
                 Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
                 Where(Function(t) previousCutoff <= t.Date AndAlso t.Date <= _cutoffEnd).
                 ToList()
@@ -342,7 +341,6 @@ Public Class TimeEntryGenerator
         Dim previousCutoff = _cutoffStart.AddDays(-3)
 
         Return context.TimeEntries.
-            Include(Function(t) t.ShiftSchedule.Shift).
             Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             Where(Function(t) previousCutoff <= t.Date And t.Date <= _cutoffEnd).
             ToList()
