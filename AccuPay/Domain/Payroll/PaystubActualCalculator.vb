@@ -18,7 +18,8 @@ Namespace Global.AccuPay.Payroll
             If employee.IsFixed Then
 
                 Dim amount = salary.BasicSalary + salary.AllowanceSalary
-                Dim basicPay = PayrollTools.GetEmployeeMonthlyRate(employee, amount)
+                Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, amount)
+                Dim basicPay = monthlyRate / 2
 
                 totalEarnings = basicPay + paystub.Actual.AdditionalPay
 
@@ -34,17 +35,19 @@ Namespace Global.AccuPay.Payroll
 
                     totalEarnings = paystub.Actual.RegularPay + paystub.Actual.LeavePay + paystub.Actual.AdditionalPay
                 Else
-                    Dim amount = salary.BasicSalary + salary.AllowanceSalary
-                    Dim basicPay = PayrollTools.GetEmployeeMonthlyRate(employee, amount)
 
-                    totalEarnings = basicPay + paystub.Actual.AdditionalPay - paystub.Actual.BasicDeductions
+                    Dim amount = salary.BasicSalary + salary.AllowanceSalary
+                    Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, amount)
+                    Dim basicPay = monthlyRate / 2
+
+                    paystub.Actual.RegularPay = basicPay - paystub.Actual.BasicDeductions
+
+                    totalEarnings = paystub.Actual.RegularPay + paystub.Actual.AdditionalPay
                 End If
 
             ElseIf employee.IsDaily Then
 
                 totalEarnings = paystub.Actual.RegularPay + paystub.Actual.LeavePay + paystub.Actual.AdditionalPay
-
-                'totalEarnings = actualTimeEntries.Sum(Function(a) a.TotalDayPay)
 
             End If
 

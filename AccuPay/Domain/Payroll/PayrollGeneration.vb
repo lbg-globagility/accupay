@@ -380,7 +380,7 @@ Public Class PayrollGeneration
 
         _paystub.LateHours = _timeEntries.Sum(Function(t) t.LateHours)
         _paystub.LateDeduction = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.LateDeduction))
-        _paystub.Actual.LateDeduction = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.LateDeduction))
+        _paystub.Actual.LateDeduction = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.LateDeduction))
 
         _paystub.UndertimeHours = _timeEntries.Sum(Function(t) t.UndertimeHours)
         _paystub.UndertimeDeduction = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.UndertimeDeduction))

@@ -1595,11 +1595,7 @@ Public Class PayStubForm
                 If drow("FirstTimeSalary").ToString = "True" Then
                     thebasicpay = ValNoComma(drow("RegularPay"))
                 Else
-                    thebasicpay = ValNoComma(drow("BasicPay"))
-
-                    thelessamounts = ValNoComma(drow("LateDeduction")) +
-                        ValNoComma(drow("UndertimeDeduction")) +
-                        ValNoComma(drow("AbsenceDeduction"))
+                    thebasicpay = ValNoComma(drow("RegularPay"))
                 End If
 
                 txthrsworkamt_U.Text = FormatNumber((thebasicpay - thelessamounts), 2)
