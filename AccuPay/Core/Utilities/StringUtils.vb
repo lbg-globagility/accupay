@@ -9,6 +9,9 @@ Namespace Global.AccuPay.Utils
         End Sub
 
         Public Shared Function ToPascal(text As String) As String
+
+            If text Is Nothing Then Return Nothing
+
             Dim newText = Regex.Replace(text, "([A-Z])", " $1")
 
             Dim info = CultureInfo.CurrentCulture.TextInfo
@@ -16,6 +19,9 @@ Namespace Global.AccuPay.Utils
         End Function
 
         Public Shared Function Strip(text As String) As String
+
+            If text Is Nothing Then Return Nothing
+
             Return text.Replace(" ", String.Empty)
         End Function
 
