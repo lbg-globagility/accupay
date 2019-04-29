@@ -14,7 +14,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
                       "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT"}
 
-    Private ReadOnly reportColumns As IReadOnlyCollection(Of ReportColumn) = New ReadOnlyCollection(Of ReportColumn)({
+    Private ReadOnly _reportColumns As IReadOnlyCollection(Of ReportColumn) = New ReadOnlyCollection(Of ReportColumn)({
         New ReportColumn("Code", "DatCol2", ColumnType.Text),
         New ReportColumn("Full Name", "DatCol3", ColumnType.Text),
         New ReportColumn("Rate", "Rate"),
@@ -22,44 +22,44 @@ Public Class PayrollSummaryExcelFormatReportProvider
         New ReportColumn("Basic Pay", "BasicPay"),
         New ReportColumn("Reg Hrs", "RegularHours"),
         New ReportColumn("Reg Pay", "RegularPay"),
-        New ReportColumn("OT Hrs", "OvertimeHours"),
-        New ReportColumn("OT Pay", "OvertimePay"),
-        New ReportColumn("ND Hrs", "NightDiffHours"),
-        New ReportColumn("ND Pay", "NightDiffPay"),
-        New ReportColumn("NDOT Hrs", "NightDiffOvertimeHours"),
-        New ReportColumn("NDOT Pay", "NightDiffOvertimePay"),
-        New ReportColumn("R.Day Hrs", "RestDayHours"),
-        New ReportColumn("R.Day Pay", "RestDayPay"),
-        New ReportColumn("R.DayOT Hrs", "RestDayOTHours"),
-        New ReportColumn("R.DayOT Pay", "RestDayOTPay"),
-        New ReportColumn("S.Hol Hrs", "SpecialHolidayHours"),
-        New ReportColumn("S.Hol Pay", "SpecialHolidayPay"),
-        New ReportColumn("S.HolOT Hrs", "SpecialHolidayOTHours"),
-        New ReportColumn("S.HolOT Pay", "SpecialHolidayOTPay"),
-        New ReportColumn("R.Hol Hrs", "RegularHolidayHours"),
-        New ReportColumn("R.Hol Pay", "RegularHolidayPay"),
-        New ReportColumn("R.HolOT Hrs", "RegularHolidayOTHours"),
-        New ReportColumn("R.HolOT Pay", "RegularHolidayOTPay"),
-        New ReportColumn("Leave Hrs", "LeaveHours"),
-        New ReportColumn("Leave Pay", "LeavePay"),
-        New ReportColumn("Late Hrs", "LateHours"),
-        New ReportColumn("Late Amt", "LateDeduction"),
-        New ReportColumn("UT Hrs", "UndertimeHours"),
-        New ReportColumn("UT Amt", "UndertimeDeduction"),
-        New ReportColumn("Absent Hrs", "AbsentHours"),
-        New ReportColumn("Absent Amt", "AbsentDeduction"),
+        New ReportColumn("OT Hrs", "OvertimeHours", [optional]:=True),
+        New ReportColumn("OT Pay", "OvertimePay", [optional]:=True),
+        New ReportColumn("ND Hrs", "NightDiffHours", [optional]:=True),
+        New ReportColumn("ND Pay", "NightDiffPay", [optional]:=True),
+        New ReportColumn("NDOT Hrs", "NightDiffOvertimeHours", [optional]:=True),
+        New ReportColumn("NDOT Pay", "NightDiffOvertimePay", [optional]:=True),
+        New ReportColumn("R.Day Hrs", "RestDayHours", [optional]:=True),
+        New ReportColumn("R.Day Pay", "RestDayPay", [optional]:=True),
+        New ReportColumn("R.DayOT Hrs", "RestDayOTHours", [optional]:=True),
+        New ReportColumn("R.DayOT Pay", "RestDayOTPay", [optional]:=True),
+        New ReportColumn("S.Hol Hrs", "SpecialHolidayHours", [optional]:=True),
+        New ReportColumn("S.Hol Pay", "SpecialHolidayPay", [optional]:=True),
+        New ReportColumn("S.HolOT Hrs", "SpecialHolidayOTHours", [optional]:=True),
+        New ReportColumn("S.HolOT Pay", "SpecialHolidayOTPay", [optional]:=True),
+        New ReportColumn("R.Hol Hrs", "RegularHolidayHours", [optional]:=True),
+        New ReportColumn("R.Hol Pay", "RegularHolidayPay", [optional]:=True),
+        New ReportColumn("R.HolOT Hrs", "RegularHolidayOTHours", [optional]:=True),
+        New ReportColumn("R.HolOT Pay", "RegularHolidayOTPay", [optional]:=True),
+        New ReportColumn("Leave Hrs", "LeaveHours", [optional]:=True),
+        New ReportColumn("Leave Pay", "LeavePay", [optional]:=True),
+        New ReportColumn("Late Hrs", "LateHours", [optional]:=True),
+        New ReportColumn("Late Amt", "LateDeduction", [optional]:=True),
+        New ReportColumn("UT Hrs", "UndertimeHours", [optional]:=True),
+        New ReportColumn("UT Amt", "UndertimeDeduction", [optional]:=True),
+        New ReportColumn("Absent Hrs", "AbsentHours", [optional]:=True),
+        New ReportColumn("Absent Amt", "AbsentDeduction", [optional]:=True),
         New ReportColumn("Allowance", "TotalAllowance"),
-        New ReportColumn("Bonus", "TotalBonus"),
+        New ReportColumn("Bonus", "TotalBonus", [optional]:=True),
         New ReportColumn("Gross", "GrossIncome"),
-        New ReportColumn("SSS", "SSS"),
-        New ReportColumn("Ph.Health", "PhilHealth"),
-        New ReportColumn("HDMF", "HDMF"),
+        New ReportColumn("SSS", "SSS", [optional]:=True),
+        New ReportColumn("Ph.Health", "PhilHealth", [optional]:=True),
+        New ReportColumn("HDMF", "HDMF", [optional]:=True),
         New ReportColumn("Taxable", "TaxableIncome"),
         New ReportColumn("W.Tax", "WithholdingTax"),
         New ReportColumn("Loan", "TotalLoans"),
-        New ReportColumn("A.Fee", "AgencyFee"),
-        New ReportColumn("Adj.", "TotalAdjustments"),
-        New ReportColumn("Net", "NetPay"),
+        New ReportColumn("A.Fee", "AgencyFee", [optional]:=True),
+        New ReportColumn("Adj.", "TotalAdjustments", [optional]:=True),
+        New ReportColumn("Net Pay", "NetPay"),
         New ReportColumn("13th Month", "13thMonthPay"),
         New ReportColumn("Total", "Total")
     })
@@ -78,48 +78,53 @@ Public Class PayrollSummaryExcelFormatReportProvider
     Public Property IsActual As Boolean
 
     Public Sub Run() Implements IReportProvider.Run
-        Dim lastCell = String.Empty
-
         Dim bool_result As Short = Convert.ToInt16(IsActual)
 
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection With {
+        Dim payrollSelector = New PayrollSummaDateSelection With {
             .ReportIndex = 6
         }
 
-        If n_PayrollSummaDateSelection.ShowDialog <> DialogResult.OK Then
+        If payrollSelector.ShowDialog() <> DialogResult.OK Then
             Return
         End If
 
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
 
-        Dim parameters =
-                New Object() {orgztnID,
-                              n_PayrollSummaDateSelection.PayPeriodFromID,
-                              n_PayrollSummaDateSelection.PayPeriodToID,
-                              bool_result,
-                              n_PayrollSummaDateSelection.cboStringParameter.Text,
-                              keepInOneSheet}
-
-        Dim sql_print_employee_profiles As New SQL(
-            "CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
-            parameters)
+        Dim parameters = New Object() {
+            orgztnID,
+            payrollSelector.PayPeriodFromID,
+            payrollSelector.PayPeriodToID,
+            bool_result,
+            payrollSelector.cboStringParameter.Text,
+            keepInOneSheet
+        }
 
         Try
-            Dim ds = sql_print_employee_profiles.GetFoundRows
+            Dim query = New SQL(
+                "CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
+                parameters)
 
-            If sql_print_employee_profiles.HasError Then
-                Throw sql_print_employee_profiles.ErrorException
+            Dim ds = query.GetFoundRows
+            If query.HasError Then
+                Throw query.ErrorException
             End If
 
-            Static report_name As String = "PayrollSummary"
+            Dim employeeTable = ds.Tables.OfType(Of DataTable).FirstOrDefault()
+            Dim allEmployees = employeeTable.Rows.OfType(Of DataRow).ToList()
+
+            If allEmployees.Count <= 0 Then
+                Throw New Exception("No paystubs to show.")
+            End If
+
+            Dim reportName As String = "PayrollSummary"
 
             Dim short_dates() As String = New String() {
-                CDate(n_PayrollSummaDateSelection.DateFrom).ToShortDateString,
-                CDate(n_PayrollSummaDateSelection.DateTo).ToShortDateString}
+                CDate(payrollSelector.DateFrom).ToShortDateString,
+                CDate(payrollSelector.DateTo).ToShortDateString}
 
             Dim defaultFileName As String =
                         String.Concat(orgNam,
-                                      report_name, n_PayrollSummaDateSelection.cboStringParameter.Text.Replace(" ", ""), "Report",
+                                      reportName, payrollSelector.cboStringParameter.Text.Replace(" ", ""), "Report",
                                       String.Concat(short_dates(0).Replace("/", "-"), "TO", short_dates(1).Replace("/", "-")),
                                       ".xlsx")
 
@@ -142,23 +147,34 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 newFile = New FileInfo(fileName)
             End If
 
-            Dim allEmployees = ds.Tables.OfType(Of DataTable).FirstOrDefault()
             Dim allEmployeesByDivision As IEnumerable(Of IGrouping(Of String, DataRow))
 
+            Dim viewableReportColumns = New List(Of ReportColumn)
+            For Each reportColumn In _reportColumns
+                If reportColumn.Optional Then
+                    Dim hasValue = allEmployees.
+                        Any(Function(row) Not IsDBNull(row(reportColumn.Source)) And Not CInt(row(reportColumn.Source)) = 0)
+
+                    If hasValue Then
+                        viewableReportColumns.Add(reportColumn)
+                    End If
+                Else
+                    viewableReportColumns.Add(reportColumn)
+                End If
+            Next
+
             If keepInOneSheet Then
-                allEmployeesByDivision = allEmployees.Rows.
-                    OfType(Of DataRow).ToList().
-                    GroupBy(Function(r) String.Empty)
+                allEmployeesByDivision = allEmployees.
+                GroupBy(Function(r) String.Empty)
             Else
-                allEmployeesByDivision = allEmployees.Rows.
-                    OfType(Of DataRow).ToList().
-                    GroupBy(Function(r) r("DivisionID").ToString())
+                allEmployeesByDivision = allEmployees.
+                GroupBy(Function(r) r("DivisionID").ToString())
             End If
 
             Using excel = New ExcelPackage(newFile)
                 Dim subTotalRows = New List(Of Integer)
 
-                Dim worksheet = excel.Workbook.Worksheets.Add(report_name)
+                Dim worksheet = excel.Workbook.Worksheets.Add(reportName)
                 worksheet.Cells.Style.Font.Size = FontSize
 
                 Dim organizationCell = worksheet.Cells(1, 1)
@@ -169,6 +185,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 Dim dateRange = $"For the period of {short_dates(0)} to {short_dates(1)})"
                 dateCell.Value = dateRange
 
+                Dim lastCell = String.Empty
                 Dim rowIndex As Integer = 4
 
                 For Each employeesInDivision In allEmployeesByDivision
@@ -182,7 +199,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                     rowIndex += 1
 
-                    RenderColumnHeaders(worksheet, rowIndex)
+                    RenderColumnHeaders(worksheet, rowIndex, viewableReportColumns)
 
                     rowIndex += 1
 
@@ -192,14 +209,14 @@ Public Class PayrollSummaryExcelFormatReportProvider
                     For Each employeeRow In employeesInDivision
                         Dim letters = GenerateAlphabet.GetEnumerator()
 
-                        For Each reportColumn In reportColumns
+                        For Each reportColumn In viewableReportColumns
                             letters.MoveNext()
                             Dim alphabet = letters.Current
 
                             Dim column = $"{alphabet}{rowIndex}"
 
                             Dim cell = worksheet.Cells(column)
-                            Dim sourceName = reportColumn.SourceName
+                            Dim sourceName = reportColumn.Source
                             cell.Value = employeeRow(sourceName)
 
                             If reportColumn.Type = ColumnType.Numeric Then
@@ -241,11 +258,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 excel.Save()
             End Using
 
-            If allEmployeesByDivision.Count > 0 Then
-                Process.Start(fileName)
-            Else
-                MsgBox("No found record(s)", MsgBoxStyle.Information)
-            End If
+            Process.Start(fileName)
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         End Try
@@ -283,9 +296,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
         End While
     End Function
 
-    Private Sub RenderColumnHeaders(worksheet As ExcelWorksheet, rowIndex As Integer)
+    Private Sub RenderColumnHeaders(worksheet As ExcelWorksheet, rowIndex As Integer, reportColum As ICollection(Of ReportColumn))
         Dim columnIndex As Integer = 1
-        For Each column In reportColumns
+        For Each column In reportColum
             Dim headerCell = worksheet.Cells(rowIndex, columnIndex)
             headerCell.Value = column.Name
             headerCell.Style.Font.Bold = True
@@ -432,15 +445,21 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private Class ReportColumn
 
-        Public Sub New(name As String, source As String, Optional type As ColumnType = ColumnType.Numeric)
-            Me.Name = name
-            Me.SourceName = source
-            Me.Type = type
-        End Sub
-
         Public Property Name As String
         Public Property Type As ColumnType
-        Public Property SourceName As String
+        Public Property Source As String
+        Public Property [Optional] As Boolean
+
+        Public Sub New(name As String,
+                       source As String,
+                       Optional type As ColumnType = ColumnType.Numeric,
+                       Optional [optional] As Boolean = False)
+            Me.Name = name
+            Me.Source = source
+            Me.Type = type
+            Me.Optional = [optional]
+        End Sub
+
     End Class
 
     Private Enum ColumnType
