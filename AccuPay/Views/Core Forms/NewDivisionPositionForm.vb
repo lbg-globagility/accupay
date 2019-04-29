@@ -38,6 +38,8 @@ Public Class NewDivisionPositionForm
 
     Private Async Sub NewEmployeePositionForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
+        EmployeeDataGrid.AutoGenerateColumns = False
+
         Await LoadPayFrequencies()
 
         GetDivisionTypes()
@@ -46,9 +48,13 @@ Public Class NewDivisionPositionForm
 
         Await RefreshTreeView()
 
-        AddDivisionLocationToolStripMenuItem.Image = ImageList1.Images(0)
-        AddDivisionToolStripMenuItem.Image = ImageList1.Images(1)
-        AddPositionToolStripMenuItem.Image = ImageList1.Images(2)
+        If ImageList1.Images.Count > 0 Then
+
+            AddDivisionLocationToolStripMenuItem.Image = ImageList1.Images(0)
+            AddDivisionToolStripMenuItem.Image = ImageList1.Images(1)
+            AddPositionToolStripMenuItem.Image = ImageList1.Images(2)
+
+        End If
 
         HideFormsTabControlHeader()
 
