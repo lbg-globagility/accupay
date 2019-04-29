@@ -170,7 +170,7 @@ Namespace Global.Globagility.AccuPay
                     End If
 
                 ElseIf prop.PropertyType Is GetType(Date?) Then
-                    prop.SetValue(newRecord, ObjectUtils.ToDateTime(originalValue))
+                    prop.SetValue(newRecord, ObjectUtils.ToNullableDateTime(originalValue))
 
                 ElseIf prop.PropertyType Is GetType(TimeSpan) Then
                     prop.SetValue(newRecord, ObjectUtils.ToTimeSpan(originalValue))
