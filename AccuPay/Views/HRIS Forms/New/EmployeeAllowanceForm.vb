@@ -30,7 +30,7 @@ Public Class EmployeeAllowanceForm
 
         InitializeComponentSettings()
 
-        Dim list = Await _employeeRepository.GetAll(Of Simplified.Employee)()
+        Dim list = Await _employeeRepository.GetAllAsync(Of Simplified.Employee)()
 
         Me._employees = CType(list, List(Of Simplified.Employee))
 
