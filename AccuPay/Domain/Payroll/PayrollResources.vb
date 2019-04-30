@@ -476,7 +476,7 @@ Public Class PayrollResources
                 Dim query = context.Allowances.Include(Function(a) a.Product).
                     Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
                     Where(Function(a) a.EffectiveStartDate <= _payDateTo).
-                    Where(Function(a) _payDateFrom <= a.EffectiveEndDate).
+                    Where(Function(a) _payDateFrom <= If(a.EffectiveEndDate, DateTime.Now)).
                     Where(Function(a) String.Equals(a.Product.Status, isNotTaxable))
 
                 _allowances = Await query.ToListAsync()
@@ -493,7 +493,7 @@ Public Class PayrollResources
                 Dim query = context.Allowances.Include(Function(a) a.Product).
                     Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
                     Where(Function(a) a.EffectiveStartDate <= _payDateTo).
-                    Where(Function(a) _payDateFrom <= a.EffectiveEndDate).
+                    Where(Function(a) _payDateFrom <= If(a.EffectiveEndDate, DateTime.Now)).
                     Where(Function(a) String.Equals(a.Product.Status, isTaxable))
 
                 _taxableAllowances = Await query.ToListAsync()

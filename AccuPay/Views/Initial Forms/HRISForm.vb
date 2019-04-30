@@ -369,6 +369,10 @@ Public Class HRISForm
     Private Sub HrisToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoansToolStripMenuItem.Click
         ChangeForm(EmployeeLoansForm, "Employee Loan Schedule")
         previousForm = EmployeeLoansForm
+    End Sub
 
+    Private Sub AllowanceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllowanceToolStripMenuItem.Click
+        ChangeForm(EmployeeAllowanceForm, "Employee Allowance")
+        previousForm = EmployeeAllowanceForm
     End Sub
 End Class
