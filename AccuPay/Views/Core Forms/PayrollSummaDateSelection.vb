@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.SimplifiedEntities
 Imports MySql.Data.MySqlClient
 
 Public Class PayrollSummaDateSelection
@@ -10,6 +11,8 @@ Public Class PayrollSummaDateSelection
     Private _showLoanType As Boolean = False
 
     Private _loanTypeId As Integer?
+
+    Private _currentlyWorkedOnPayPeriod As IPayPeriod
 
     Public ReadOnly Property PayPeriodFromID As Integer?
         Get
@@ -169,9 +172,13 @@ Public Class PayrollSummaDateSelection
     '**********************
     Dim yearnow As Integer = CDate(dbnow).Year
 
-    Private Sub PayrollSummaDateSelection_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub PayrollSummaDateSelection_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
         linkPrev.Text = "← " & (yearnow - 1)
         linkNxt.Text = (yearnow + 1) & " →"
+
+        _currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriod()
+
         DateFromLabel.Text = ""
         DateToLabel.Text = ""
         SemiMonthlyTab_Enter(TabControl1, New EventArgs)
@@ -179,19 +186,42 @@ Public Class PayrollSummaDateSelection
 
     Sub VIEW_payp(Optional param_Date As Object = Nothing,
                   Optional PayFreqType As Object = Nothing)
-        Dim params(3, 2) As Object
 
-        params(0, 0) = "payp_OrganizationID"
-        params(1, 0) = "param_Date"
-        params(2, 0) = "isotherformat"
-        params(3, 0) = "PayFreqType"
+        Dim params = New Object() {
+            orgztnID,
+            If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01"),
+            "1",
+            PayFreqType
+        }
 
-        params(0, 1) = orgztnID
-        params(1, 1) = If(param_Date Is Nothing, DBNull.Value, param_Date & "-01-01")
-        params(2, 1) = "1"
-        params(3, 1) = PayFreqType
+        dgvpayperiod.Rows.Clear()
 
-        EXEC_VIEW_PROCEDURE(params, "VIEW_payp", dgvpayperiod)
+        Dim sql As New SQL("CALL VIEW_payp(?og_rowid, ?param_date, ?isotherformat, ?payfreqtype);", params)
+        Dim dt = sql.GetFoundRows.Tables(0)
+
+        Dim index As Integer = 0
+        Dim currentlyWorkedOnPayPeriodIndex As Integer = 0
+        For Each drow As DataRow In dt.Rows
+
+
+            If _currentlyWorkedOnPayPeriod IsNot Nothing AndAlso Nullable.Equals(drow(5), _currentlyWorkedOnPayPeriod.RowID) Then
+
+                currentlyWorkedOnPayPeriodIndex = index
+
+            End If
+
+            Dim row_array = drow.ItemArray
+
+            dgvpayperiod.Rows.Add(row_array)
+
+            index += 1
+        Next
+
+        If currentlyWorkedOnPayPeriodIndex > dgvpayperiod.Rows.Count - 1 Then Return
+
+        dgvpayperiod.Rows(currentlyWorkedOnPayPeriodIndex).Selected = True
+
+        dgvpayperiod.Rows(currentlyWorkedOnPayPeriodIndex).Cells(Column6.Index).Selected = True
     End Sub
 
     Private Sub dgvpayperiod_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvpayperiod.CellContentClick

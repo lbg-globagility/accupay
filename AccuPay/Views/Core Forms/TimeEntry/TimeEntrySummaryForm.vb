@@ -7,6 +7,7 @@ Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
+Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
@@ -92,10 +93,6 @@ Public Class TimeEntrySummaryForm
     Private Async Function LoadEmployees() As Task
         _employees = Await GetEmployeesWithPosition()
         employeesDataGridView.DataSource = _employees
-
-        'If _selectedEmployee Is Nothing Then
-        '    _selectedEmployee = _employees.FirstOrDefault()
-        'End If
     End Function
 
     Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Employee))
@@ -130,11 +127,10 @@ Public Class TimeEntrySummaryForm
         If _selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            _selectedPayPeriod = _payPeriods.FirstOrDefault(
-                Function(payPeriod)
-                    Return (payPeriod.PayFromDate <= dateToday) And (payPeriod.PayToDate >= dateToday)
-                End Function
-            )
+            Dim currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriod(New List(Of IPayPeriod)(_payPeriods))
+
+            _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
+
 
             Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
             Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
@@ -151,7 +147,7 @@ Public Class TimeEntrySummaryForm
                                          year As Integer,
                                          salaryType As Integer) As Task(Of ICollection(Of PayPeriod))
         Dim sql = <![CDATA[
-            SELECT PayFromDate, PayToDate, Year, Month, OrdinalValue
+            SELECT RowID, PayFromDate, PayToDate, Year, Month, OrdinalValue
             FROM payperiod
             WHERE payperiod.OrganizationID = @OrganizationID
                 AND payperiod.Year = @Year
@@ -174,6 +170,7 @@ Public Class TimeEntrySummaryForm
             Dim reader = Await command.ExecuteReaderAsync()
             While Await reader.ReadAsync()
                 Dim payPeriod = New PayPeriod() With {
+                    .RowID = reader.GetValue(Of Integer?)("RowID"),
                     .PayFromDate = reader.GetValue(Of Date)("PayFromDate"),
                     .PayToDate = reader.GetValue(Of Date)("PayToDate"),
                     .Year = reader.GetValue(Of Integer)("Year"),
@@ -715,7 +712,7 @@ Public Class TimeEntrySummaryForm
         Dim endDate As Date
         Dim result As DialogResult
 
-        Using dialog = New DateRangePickerDialog()
+        Using dialog = New DateRangePickerDialog(_selectedPayPeriod)
             result = dialog.ShowDialog()
 
             If result = DialogResult.OK Then
@@ -845,9 +842,11 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Class PayPeriod
+        Implements IPayPeriod
 
-        Public Property PayFromDate As Date
-        Public Property PayToDate As Date
+        Public Property RowID As Integer? Implements IPayPeriod.RowID
+        Public Property PayFromDate As Date Implements IPayPeriod.PayFromDate
+        Public Property PayToDate As Date Implements IPayPeriod.PayToDate
         Public Property Year As Integer
         Public Property Month As Integer
         Public Property OrdinalValue As Integer

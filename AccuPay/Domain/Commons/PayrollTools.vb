@@ -1,5 +1,8 @@
 ﻿Option Strict On
+Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.SimplifiedEntities
+Imports Microsoft.EntityFrameworkCore
 
 Public Class PayrollTools
 
@@ -8,6 +11,12 @@ Public Class PayrollTools
     Public Const WorkHoursPerDay As Integer = 8
 
     Public Const DivisorToDailyRate As Integer = 8
+
+    Public Shared ReadOnly Property DefaultPayFrequencyId As Integer
+        Get
+            Return 1
+        End Get
+    End Property
 
     Public Shared Function GetEmployeeMonthlyRate(
                             employee As Employee,
@@ -81,4 +90,26 @@ Public Class PayrollTools
         Return False
     End Function
 
+    Friend Shared Async Function GetCurrentlyWorkedOnPayPeriod(
+                                    Optional payperiods As IList(Of IPayPeriod) = Nothing) As Task(Of IPayPeriod)
+
+        If payperiods Is Nothing OrElse payperiods.Count = 0 Then
+
+            Using context = New PayrollContext()
+                Dim pastPayPeriods = Await context.PayPeriods.
+                        Where(Function(p) p.Year = Now.Year).
+                        Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                        Where(Function(p) Nullable.Equals(p.PayFrequencyID, DefaultPayFrequencyId)).
+                        ToListAsync()
+
+                payperiods = New List(Of IPayPeriod)(pastPayPeriods)
+            End Using
+
+        End If
+
+        Return payperiods.
+                Where(Function(p) p.PayToDate < Date.Now).
+                LastOrDefault
+
+    End Function
 End Class

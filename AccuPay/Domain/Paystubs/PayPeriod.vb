@@ -2,15 +2,17 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports AccuPay.SimplifiedEntities
 
 Namespace Global.AccuPay.Entity
 
     <Table("payperiod")>
     Public Class PayPeriod
+        Implements IPayPeriod
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property RowID As Integer?
+        Public Property RowID As Integer? Implements IPayPeriod.RowID
 
         Public Property OrganizationID As Integer?
 
@@ -27,9 +29,9 @@ Namespace Global.AccuPay.Entity
         <Column("TotalGrossSalary")>
         Public Property PayFrequencyID As Integer?
 
-        Public Property PayFromDate As Date
+        Public Property PayFromDate As Date Implements IPayPeriod.PayFromDate
 
-        Public Property PayToDate As Date
+        Public Property PayToDate As Date Implements IPayPeriod.PayToDate
 
         Public Property Month As Integer
 

@@ -358,6 +358,7 @@
     <Compile Include="Repositories\JobLevelRepository.vb" />
     <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
+    <Compile Include="SimplifiedEntities\Interface\IPayPeriod.vb" />
     <Compile Include="Views\Core Forms\AddDivisionForm.Designer.vb">
       <DependentUpon>AddDivisionForm.vb</DependentUpon>
     </Compile>

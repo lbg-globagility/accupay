@@ -1,11 +1,13 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.SimplifiedEntities
 Imports Microsoft.EntityFrameworkCore
 
 Public Class DateRangePickerDialog
 
-    Private _payFrequencyId As Integer = 1
+    Private _payFrequencyId As Integer
 
     Private _currentPayperiod As PayPeriod
 
@@ -20,6 +22,18 @@ Public Class DateRangePickerDialog
     Private _end As Date
 
     Private _rowId As Integer
+
+    Private _passedPayPeriod As IPayPeriod
+
+    Sub New(Optional passedPayPeriod As IPayPeriod = Nothing)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _passedPayPeriod = passedPayPeriod
+
+    End Sub
 
     Public ReadOnly Property Start As Date
         Get
@@ -42,7 +56,11 @@ Public Class DateRangePickerDialog
     Private Async Sub DateRangePickerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PayperiodsDataGridView.AutoGenerateColumns = False
 
+        _payFrequencyId = PayrollTools.DefaultPayFrequencyId
+
         Await LoadPayPeriods()
+
+        Await ChooseSelectedDefaultPayPeriod()
 
         lblYear.Text = Convert.ToString(Year)
 
@@ -50,7 +68,35 @@ Public Class DateRangePickerDialog
         btnIncrementYear.Text = String.Concat((Year + 1), " →")
     End Sub
 
-    Private Async Function LoadPayPeriods() As Threading.Tasks.Task
+    Private Async Function ChooseSelectedDefaultPayPeriod() As Task
+
+        Dim currentPayPeriod As IPayPeriod
+
+        If _passedPayPeriod Is Nothing Then
+
+            currentPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriod(New List(Of IPayPeriod)(_payperiods))
+        Else
+            currentPayPeriod = _passedPayPeriod
+
+        End If
+
+        Dim currentPayPeriodModel = _payperiodModels.
+                                Where(Function(p) Nullable.Equals(p.RowID, currentPayPeriod.RowID)).
+                                LastOrDefault
+
+        If currentPayPeriodModel Is Nothing Then Return
+
+        Dim currentPayPeriodIndex = _payperiodModels.IndexOf(currentPayPeriodModel)
+
+        If currentPayPeriodIndex > PayperiodsDataGridView.Rows.Count - 1 Then Return
+
+        PayperiodsDataGridView.Rows(currentPayPeriodIndex).Selected = True
+
+        PayperiodsDataGridView.Rows(currentPayPeriodIndex).Cells(0).Selected = True
+
+    End Function
+
+    Private Async Function LoadPayPeriods() As Task
         Using context = New PayrollContext()
             _payperiods = Await context.PayPeriods.
                 Where(Function(p) p.Year = Year).

@@ -1,4 +1,6 @@
-﻿Public Class selectPayPeriod
+﻿Imports AccuPay.SimplifiedEntities
+
+Public Class selectPayPeriod
 
     Private ReadOnly selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
@@ -8,9 +10,13 @@
 
     Private _currentYear = Date.Now.Year
 
-    Private Sub selectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private _currentlyWorkedOnPayPeriod As IPayPeriod
+
+    Private Async Sub selectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         linkPrev.Text = "← " & (_currentYear - 1)
         linkNxt.Text = (_currentYear + 1) & " →"
+
+        _currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriod()
 
         Dim payfrqncy As New AutoCompleteStringCollection
 
@@ -142,14 +148,35 @@
             0,
             PayFreqType
         }
-
         dgvpaypers.Rows.Clear()
+
         Dim sql As New SQL("CALL VIEW_payp(?og_rowid, ?param_date, ?isotherformat, ?payfreqtype);", params)
         Dim dt = sql.GetFoundRows.Tables(0)
+
+        Dim index As Integer = 0
+        Dim currentlyWorkedOnPayPeriodIndex As Integer = 0
         For Each drow As DataRow In dt.Rows
+
+
+            If _currentlyWorkedOnPayPeriod IsNot Nothing AndAlso Nullable.Equals(drow(0), _currentlyWorkedOnPayPeriod.RowID) Then
+
+                currentlyWorkedOnPayPeriodIndex = index
+
+            End If
+
             Dim row_array = drow.ItemArray
+
             dgvpaypers.Rows.Add(row_array)
+
+            index += 1
         Next
+
+        If currentlyWorkedOnPayPeriodIndex > dgvpaypers.Rows.Count - 1 Then Return
+
+        dgvpaypers.Rows(currentlyWorkedOnPayPeriodIndex).Selected = True
+
+        dgvpaypers.Rows(currentlyWorkedOnPayPeriodIndex).Cells(Column15.Index).Selected = True
+
     End Sub
 
     Private Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
