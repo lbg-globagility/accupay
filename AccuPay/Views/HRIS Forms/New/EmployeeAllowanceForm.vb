@@ -633,7 +633,10 @@ Public Class EmployeeAllowanceForm
     Private Async Sub cbShowAll_CheckedChanged(sender As Object, e As EventArgs) Handles cbShowAll.CheckedChanged
         If cbShowAll.Checked Then
             If Not gotAllEmp Then
-                allEmpSorted = Await _employeeRepository.GetAllAsync(Of Simplified.Employee)()
+                Dim allEmp = Await _employeeRepository.GetAllAsync(Of Simplified.Employee)()
+                allEmpSorted = CType(allEmp, List(Of Simplified.Employee)).
+                    OrderBy(Function(emp) emp.LastName).
+                    ToList()
                 gotAllEmp = True
             End If
             Me._employees = allEmpSorted
@@ -645,7 +648,7 @@ Public Class EmployeeAllowanceForm
                                       emp.EmploymentStatus <> "Terminated" And
                                       emp.EmploymentStatus <> "Resigned")
 
-                    activeEmpSorted = Await list.
+                    Dim activeEmp = Await list.
                                 Select(Function(emp) New GridView.Employee With {
                                     .RowID = emp.RowID,
                                     .EmployeeNo = emp.EmployeeNo,
@@ -655,6 +658,9 @@ Public Class EmployeeAllowanceForm
                                     .Image = emp.Image
                                 }).
                                 ToListAsync
+                    activeEmpSorted = activeEmp.
+                        OrderBy(Function(emp) emp.LastName).
+                        ToList()
                 End Using
 
                 gotActiveEmp = True
