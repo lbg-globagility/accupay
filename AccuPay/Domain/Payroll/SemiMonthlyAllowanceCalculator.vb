@@ -10,17 +10,18 @@ Public Class SemiMonthlyAllowanceCalculator
 
     Private _payperiod As PayPeriod
 
-    Private _payRates As IReadOnlyDictionary(Of Date, PayRate)
+
+    Private ReadOnly _payrateCalendar As PayratesCalendar
 
     Private _timeEntries As ICollection(Of TimeEntry)
 
     Private ReadOnly _allowancePolicy As AllowancePolicy
 
-    Public Sub New(allowancePolicy As AllowancePolicy, employee As Employee, paystub As Paystub, payperiod As PayPeriod, payrates As IReadOnlyDictionary(Of Date, PayRate), timeEntries As ICollection(Of TimeEntry))
+    Public Sub New(allowancePolicy As AllowancePolicy, employee As Employee, paystub As Paystub, payperiod As PayPeriod, payrateCalendar As PayratesCalendar, timeEntries As ICollection(Of TimeEntry))
         _employee = employee
         _paystub = paystub
         _payperiod = payperiod
-        _payRates = payrates
+        _payrateCalendar = payrateCalendar
         _timeEntries = timeEntries
         _allowancePolicy = allowancePolicy
     End Sub
@@ -41,7 +42,7 @@ Public Class SemiMonthlyAllowanceCalculator
         }
 
         For Each timeEntry In _timeEntries
-            Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
+            Dim divisor = PayrollTools.DivisorToDailyRate
             Dim hourlyRate = dailyRate / divisor
 
             Dim deductionHours =
@@ -52,7 +53,7 @@ Public Class SemiMonthlyAllowanceCalculator
 
             Dim additionalAmount = 0D
 
-            Dim payRate = _payRates(timeEntry.Date)
+            Dim payRate = _payrateCalendar.Find(timeEntry.Date)
 
             If _allowancePolicy.IsSpecialHolidayPaid Then
 

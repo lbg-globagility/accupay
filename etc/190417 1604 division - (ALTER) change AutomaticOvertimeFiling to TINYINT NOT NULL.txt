@@ -1,0 +1,4 @@
+UPDATE division SET AutomaticOvertimeFiling = 0  WHERE AutomaticOvertimeFiling IS NULL;
+
+ALTER TABLE `division`
+	CHANGE COLUMN `AutomaticOvertimeFiling` `AutomaticOvertimeFiling` TINYINT NOT NULL DEFAULT '0' AFTER `MinimumWageAmount`;

@@ -9,7 +9,7 @@ Namespace Global.AccuPay.Repository
 
     Public Class EmployeeRepository
 
-        Public Async Function GetAll(Of T As {New, IEmployeeBase})() As Task(Of IEnumerable(Of IEmployeeBase))
+        Public Async Function GetAllAsync(Of T As {New, IEmployeeBase})() As Task(Of IEnumerable(Of IEmployeeBase))
 
             Using context = New PayrollContext()
                 Dim query = GetAllEmployeeBaseQuery(context)

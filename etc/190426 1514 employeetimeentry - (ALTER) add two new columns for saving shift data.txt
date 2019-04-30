@@ -1,0 +1,3 @@
+ALTER TABLE `employeetimeentry`
+	ADD COLUMN `IsRestDay` TINYINT(1) NOT NULL DEFAULT '0' AFTER `WorkHours`,
+	ADD COLUMN `HasShift` TINYINT(1) NOT NULL DEFAULT '0' AFTER `IsRestDay`;

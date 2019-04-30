@@ -161,8 +161,28 @@ Namespace Global.Globagility.AccuPay
                 ElseIf prop.PropertyType Is GetType(TimeSpan) Or prop.PropertyType Is GetType(TimeSpan?) Then
                     prop.SetValue(newRecord, Date.FromOADate(value).TimeOfDay)
                 End If
+
             Else
-                prop.SetValue(newRecord, originalValue)
+                If prop.PropertyType Is GetType(Date) Then
+                    Dim dateInput = ObjectUtils.ToDateTime(originalValue)
+                    If dateInput <> Date.MinValue AndAlso Date.MinValue.ToString <> originalValue?.ToString Then
+                        prop.SetValue(newRecord, dateInput)
+                    End If
+
+                ElseIf prop.PropertyType Is GetType(Date?) Then
+                    prop.SetValue(newRecord, ObjectUtils.ToNullableDateTime(originalValue))
+
+                ElseIf prop.PropertyType Is GetType(TimeSpan) Then
+                    prop.SetValue(newRecord, ObjectUtils.ToTimeSpan(originalValue))
+
+                ElseIf prop.PropertyType Is GetType(TimeSpan?) Then
+                    prop.SetValue(newRecord, ObjectUtils.ToNullableTimeSpan(originalValue))
+
+                Else
+
+                    prop.SetValue(newRecord, originalValue)
+
+                End If
             End If
         End Sub
 
@@ -176,7 +196,7 @@ Namespace Global.Globagility.AccuPay
 
             Public Sub New(cell As ExcelRangeBase, index As Integer)
                 Me.Letter = GetLettersOnly(cell.Address)
-                Me.Name = cell.Value.ToString()
+                Me.Name = cell.Value?.ToString()
                 Me.Index = index
             End Sub
 

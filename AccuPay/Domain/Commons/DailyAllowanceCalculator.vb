@@ -6,14 +6,14 @@ Public Class DailyAllowanceCalculator
 
     Private _settings As ListOfValueCollection
 
-    Private _previousTimeEntries2 As ICollection(Of TimeEntry)
+    Private _previousTimeEntries As ICollection(Of TimeEntry)
 
-    Private _payrates As IReadOnlyDictionary(Of Date, PayRate)
+    Private ReadOnly _payrateCalendar As PayratesCalendar
 
-    Public Sub New(settings As ListOfValueCollection, payrates As IReadOnlyDictionary(Of Date, PayRate), previousTimeEntries2 As ICollection(Of TimeEntry))
+    Public Sub New(settings As ListOfValueCollection, payrateCalendar As PayratesCalendar, previousTimeEntries2 As ICollection(Of TimeEntry))
         _settings = settings
-        _payrates = payrates
-        _previousTimeEntries2 = previousTimeEntries2
+        _payrateCalendar = payrateCalendar
+        _previousTimeEntries = previousTimeEntries2
     End Sub
 
     Public Function Compute(payperiod As PayPeriod, allowance As Allowance, employee As Employee, paystub As Paystub, timeEntries As ICollection(Of TimeEntry)) As AllowanceItem
@@ -33,11 +33,11 @@ Public Class DailyAllowanceCalculator
                 Continue For
             End If
 
-            Dim divisor = If(timeEntry.ShiftSchedule?.Shift?.DivisorToDailyRate, 8D)
+            Dim divisor = PayrollTools.DivisorToDailyRate
             Dim hourlyRate = dailyRate / divisor
 
             Dim amount = 0D
-            Dim payRate = _payrates(timeEntry.Date)
+            Dim payRate = _payrateCalendar.Find(timeEntry.Date)
             If payRate.IsRegularDay Then
                 Dim isRestDay = timeEntry.RestDayHours > 0
 
@@ -58,12 +58,12 @@ Public Class DailyAllowanceCalculator
                 Dim exemption = _settings.GetBoolean("AllowancePolicy.HolidayAllowanceForMonthly")
 
                 Dim giveAllowance =
-                    HasWorkedLastWorkingDay(timeEntry) Or
+                    PayrollTools.HasWorkedLastWorkingDay(timeEntry.Date, CType(_previousTimeEntries, IList(Of TimeEntry)), _payrateCalendar) Or
                     ((employee.IsFixed Or employee.IsMonthly) And exemption)
 
                 If giveAllowance Then
                     If _settings.GetString("AllowancePolicy.CalculationType") = "Hourly" Then
-                        Dim workHours = If(timeEntry.ShiftSchedule?.Shift?.WorkHours, 8D)
+                        Dim workHours = timeEntry.WorkHours
 
                         amount += {workHours * hourlyRate, dailyRate}.Max()
                     Else
@@ -76,43 +76,6 @@ Public Class DailyAllowanceCalculator
         Next
 
         Return allowanceItem
-    End Function
-
-    Private Function HasWorkedLastWorkingDay(current As TimeEntry) As Boolean
-        Dim lastPotentialEntry = current.Date.AddDays(-3)
-
-        Dim lastTimeEntries = _previousTimeEntries2.
-            Where(Function(t) lastPotentialEntry <= t.Date And t.Date <= current.Date).
-            Reverse().
-            ToList()
-
-        For Each lastTimeEntry In lastTimeEntries
-            ' If employee has no shift set for the day, it's not a working day.
-            If lastTimeEntry?.ShiftSchedule?.Shift Is Nothing Then
-                Continue For
-            End If
-
-            If lastTimeEntry?.ShiftSchedule.IsRestDay Then
-                If lastTimeEntry.TotalDayPay > 0 Then
-                    Return True
-                End If
-
-                Continue For
-            End If
-
-            Dim payRate = _payrates(lastTimeEntry.Date)
-            If payRate.IsHoliday Then
-                If lastTimeEntry.TotalDayPay > 0 Then
-                    Return True
-                End If
-
-                Continue For
-            End If
-
-            Return lastTimeEntry.RegularHours > 0 Or lastTimeEntry.TotalLeaveHours > 0
-        Next
-
-        Return False
     End Function
 
 End Class

@@ -123,8 +123,13 @@ Namespace Global.AccuPay.Entity
         <NotMapped>
         Public Property DutyEnd As Date
 
-        <ForeignKey("EmployeeShiftID")>
-        Public Overridable Property ShiftSchedule As ShiftSchedule
+        Public Property WorkHours As Decimal
+
+        Public Property ShiftHours As Decimal
+
+        Public Property IsRestDay As Boolean
+
+        Public Property HasShift As Boolean
 
         Public Sub New()
         End Sub
@@ -175,7 +180,15 @@ Namespace Global.AccuPay.Entity
                LeavePay
         End Sub
 
-        Public Sub ResetHours()
+        Public Sub Reset()
+
+            IsRestDay = False
+            ResetHours()
+            ResetPay()
+
+        End Sub
+
+        Private Sub ResetHours()
             BasicHours = 0
             RegularHours = 0
             OvertimeHours = 0
@@ -195,9 +208,12 @@ Namespace Global.AccuPay.Entity
             UndertimeHours = 0
             AbsentHours = 0
             TotalHours = 0
+
+            ShiftHours = 0
+            WorkHours = 0
         End Sub
 
-        Public Sub ResetPay()
+        Private Sub ResetPay()
             BasicDayPay = 0
             RegularPay = 0
             OvertimePay = 0

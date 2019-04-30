@@ -1,0 +1,2 @@
+ALTER TABLE `breaktimebracket`
+	ADD CONSTRAINT `FK_breaktimebracket_division_DivisionID` FOREIGN KEY (`DivisionID`) REFERENCES `division` (`RowID`) ON DELETE CASCADE;

@@ -25,7 +25,7 @@ Namespace Global.AccuPay.Repository
 
                 Dim loanType = Await context.Products.
                                 Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                                Where(Function(p) p.PartNo = loanTypeName).
+                                Where(Function(p) p.PartNo.ToLower = loanTypeName.ToLower).
                                 FirstOrDefaultAsync
 
                 If loanType Is Nothing Then

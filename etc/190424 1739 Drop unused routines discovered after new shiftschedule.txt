@@ -1,0 +1,33 @@
+DROP TRIGGER IF EXISTS BEFINS_employeeovertime;#
+DROP TRIGGER IF EXISTS BEFUPD_employeeovertime;#
+
+DROP PROCEDURE IF EXISTS GET_Attended_Months;#
+DROP PROCEDURE IF EXISTS GET_employee_allowanceofthisperiod;#
+DROP PROCEDURE IF EXISTS GetSummaryOfDailyAllowances;
+DROP PROCEDURE IF EXISTS RPT_AgencyFee;#
+DROP PROCEDURE IF EXISTS VIEW_employeeallowances;#
+DROP PROCEDURE IF EXISTS VIEW_employeetimeentry_SEMIMON;#
+DROP PROCEDURE IF EXISTS VIEW_employeetimeentry_SUM;#
+DROP PROCEDURE IF EXISTS VIEW_employeeallowance_indate;#
+DROP PROCEDURE IF EXISTS GET_employeeholidaypay;#
+DROP PROCEDURE IF EXISTS MASS_generate_employeetimeentry;#
+DROP PROCEDURE IF EXISTS GetSummaryOfDailyAllowances;#
+
+DROP FUNCTION IF EXISTS COUNT_employeeabsent;#
+DROP FUNCTION IF EXISTS DEL_division_shift;#
+DROP FUNCTION IF EXISTS GET_employeeallowance;#
+DROP FUNCTION IF EXISTS GET_employeedaysworked_indate;#
+DROP FUNCTION IF EXISTS GET_employeehoursworked_indate;#
+DROP FUNCTION IF EXISTS GET_employeerateperhour;#
+DROP FUNCTION IF EXISTS GetOvertimeHours;#
+DROP FUNCTION IF EXISTS HasWorkedLastWorkingDay;#
+DROP FUNCTION IF EXISTS INSUPD_employeetimeentry;#
+DROP FUNCTION IF EXISTS COMPUTE_employeetimeentry;#
+DROP FUNCTION IF EXISTS GENERATE_employeetimeentry;#
+
+DROP VIEW IF EXISTS expectedhours;#
+DROP VIEW IF EXISTS paystubitem_sum_daily_allowance_group_prodid_compress;#
+DROP VIEW IF EXISTS paystubitem_sum_daily_allowance_group_prodid;#
+DROP VIEW IF EXISTS v_employeetimeentry_numbers;#
+
+DROP EVENT IF EXISTS EVNT_reset_auto_increment;

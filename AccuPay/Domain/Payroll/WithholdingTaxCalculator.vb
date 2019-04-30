@@ -160,15 +160,15 @@ Namespace Global.AccuPay.Payroll
         End Function
 
         Private Function IsWithholdingTaxPaidOnFirstHalf(deductionSchedule As String, payperiod As PayPeriod) As Boolean
-            Return payperiod.IsFirstHalf And (deductionSchedule = ContributionSchedule.FirstHalf)
+            Return payperiod.IsFirstHalf And (deductionSchedule = ContributionSchedule.FIRST_HALF)
         End Function
 
         Private Function IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule As String, payperiod As PayPeriod) As Boolean
-            Return payperiod.IsEndOfTheMonth And (deductionSchedule = ContributionSchedule.EndOfTheMonth)
+            Return payperiod.IsEndOfTheMonth And (deductionSchedule = ContributionSchedule.END_OF_THE_MONTH)
         End Function
 
         Private Function IsWithholdingTaxPaidPerPayPeriod(deductionSchedule As String) As Boolean
-            Return deductionSchedule = ContributionSchedule.PerPayPeriod
+            Return deductionSchedule = ContributionSchedule.PER_PAY_PERIOD
         End Function
 
         Private Function IsScheduledForTaxation(deductionSchedule As String, payperiod As PayPeriod) As Boolean
@@ -180,12 +180,6 @@ Namespace Global.AccuPay.Payroll
         Private Class PayFrequency
             Public Const SemiMonthly As Integer = 1
             Public Const Monthly As Integer = 2
-        End Class
-
-        Private Class ContributionSchedule
-            Public Const FirstHalf As String = "First half"
-            Public Const EndOfTheMonth As String = "End of the month"
-            Public Const PerPayPeriod As String = "Per pay period"
         End Class
 
         Private Class SalaryType

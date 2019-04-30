@@ -56,6 +56,12 @@ Public Class CurrentShift
         End Get
     End Property
 
+    Public ReadOnly Property ShiftHours As Decimal
+        Get
+            Return If(_shiftSchedule2?.ShiftHours, If(ShiftSchedule?.Shift?.ShiftHours, StandardWorkingHours + 1))
+        End Get
+    End Property
+
     Public ReadOnly Property HasShift As Boolean
         Get
             Return Shift IsNot Nothing Or _shiftSchedule2 IsNot Nothing

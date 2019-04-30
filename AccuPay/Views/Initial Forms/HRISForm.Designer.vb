@@ -175,14 +175,15 @@ Partial Class HRISForm
         'DivisionToolStripMenuItem
         '
         Me.DivisionToolStripMenuItem.Name = "DivisionToolStripMenuItem"
-        Me.DivisionToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
-        Me.DivisionToolStripMenuItem.Text = "Division"
+        Me.DivisionToolStripMenuItem.Size = New System.Drawing.Size(120, 20)
+        Me.DivisionToolStripMenuItem.Text = "Division && Position"
         '
         'PositionToolStripMenuItem
         '
         Me.PositionToolStripMenuItem.Name = "PositionToolStripMenuItem"
         Me.PositionToolStripMenuItem.Size = New System.Drawing.Size(62, 20)
         Me.PositionToolStripMenuItem.Text = "Position"
+        Me.PositionToolStripMenuItem.Visible = False
         '
         'JobLevelToolStripMenuItem
         '
