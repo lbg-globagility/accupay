@@ -421,6 +421,24 @@
     <Compile Include="Views\Core Forms\TimeLogsForm2.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\HRIS Forms\New\AddAllowanceForm.Designer.vb">
+      <DependentUpon>AddAllowanceForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\New\AddAllowanceForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\New\AddAllowanceTypeForm.Designer.vb">
+      <DependentUpon>AddAllowanceTypeForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\New\AddAllowanceTypeForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\New\EmployeeAllowanceForm.Designer.vb">
+      <DependentUpon>EmployeeAllowanceForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\New\EmployeeAllowanceForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
     <Compile Include="Domain\Payroll\CashOutUnusedLeave.vb" />
     <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
@@ -1769,6 +1787,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeLogsForm2.resx">
       <DependentUpon>TimeLogsForm2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\New\AddAllowanceForm.resx">
+      <DependentUpon>AddAllowanceForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\New\AddAllowanceTypeForm.resx">
+      <DependentUpon>AddAllowanceTypeForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\New\EmployeeAllowanceForm.resx">
+      <DependentUpon>EmployeeAllowanceForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\EmployeeTreeView.resx">
       <DependentUpon>EmployeeTreeView.vb</DependentUpon>

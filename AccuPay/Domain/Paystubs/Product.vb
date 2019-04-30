@@ -37,6 +37,9 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property Category As String
 
+        <ForeignKey("CategoryID")>
+        Public Overridable Property CategoryEntity As Category
+
         Public Overridable Property CategoryID As Integer?
 
         <NotMapped>

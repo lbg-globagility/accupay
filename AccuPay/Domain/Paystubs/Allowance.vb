@@ -32,8 +32,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property AllowanceFrequency As String
 
-        Public Property EffectiveEndDate As Date
-
+        Public Property EffectiveEndDate As Date?
         <NotMapped>
         Public Property TaxableFlag As Char
 
@@ -42,6 +41,12 @@ Namespace Global.AccuPay.Entity
 
         <ForeignKey("ProductID")>
         Public Overridable Property Product As Product
+
+        Public ReadOnly Property Type As String
+            Get
+                Return Product?.PartNo
+            End Get
+        End Property
 
         Public ReadOnly Property IsOneTime As Boolean
             Get
