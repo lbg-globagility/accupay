@@ -2,6 +2,7 @@
 
 Imports System.Collections.ObjectModel
 Imports System.IO
+Imports AccuPay.Helpers
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -128,24 +129,13 @@ Public Class PayrollSummaryExcelFormatReportProvider
                                       String.Concat(short_dates(0).Replace("/", "-"), "TO", short_dates(1).Replace("/", "-")),
                                       ".xlsx")
 
-            Dim saveFileDialog = New SaveFileDialog With {
-                .RestoreDirectory = True,
-                .FileName = defaultFileName
-            }
 
-            Dim fileName = String.Empty
-            If saveFileDialog.ShowDialog() = DialogResult.OK Then
-                fileName = saveFileDialog.FileName
-            Else
-                Return
-            End If
 
-            Dim newFile = New FileInfo(fileName)
+            Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName)
 
-            If newFile.Exists Then
-                newFile.Delete()
-                newFile = New FileInfo(fileName)
-            End If
+            If saveFileDialogHelperOutPut.IsSuccess = False Then Return
+
+            Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
             Dim allEmployeesByDivision As IEnumerable(Of IGrouping(Of String, DataRow))
 
@@ -258,7 +248,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 excel.Save()
             End Using
 
-            Process.Start(fileName)
+            Process.Start(newFile.FullName)
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         End Try

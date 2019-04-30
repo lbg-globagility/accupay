@@ -1,10 +1,14 @@
 ﻿Option Strict On
+
+Imports System.IO
 Imports AccuPay.Entity
+Imports AccuPay.Helpers
 Imports AccuPay.Tools
+Imports AccuPay.Utils
+Imports Globagility.AccuPay
 Imports Globagility.AccuPay.ShiftSchedules
 Imports Microsoft.EntityFrameworkCore
-Imports Microsoft.Extensions.Logging
-Imports Microsoft.Extensions.Logging.Console
+Imports Microsoft.Office.Interop.Excel
 
 Public Class ImportedShiftSchedulesForm
 
@@ -20,9 +24,7 @@ Public Class ImportedShiftSchedulesForm
 
     Private _employees As IList(Of Employee)
 
-#End Region
-
-#Region "Constructors"
+    Public IsSaved As Boolean
 
     Sub New()
 
@@ -30,17 +32,9 @@ Public Class ImportedShiftSchedulesForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        _shiftScheduleRowRecords = New List(Of ShiftScheduleRowRecord)
 
-    End Sub
-
-    Sub New(listOfShiftScheduleRowRecord As IList(Of ShiftScheduleRowRecord))
-
-        ' This call is required by the designer.
-        InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
-
-        _shiftScheduleRowRecords = listOfShiftScheduleRowRecord
+        _dataSourceFailed = New List(Of ShiftScheduleModel)
 
     End Sub
 
@@ -129,6 +123,32 @@ Public Class ImportedShiftSchedulesForm
                         .TimeTo = shiftSched.EndTime})
 
         Next
+    End Sub
+
+    Private Sub UpdateStatusLabel(errorCount As Integer)
+        If errorCount > 0 Then
+
+            If errorCount = 1 Then
+                lblStatus.Text = $"There is 1 error."
+            Else
+                lblStatus.Text = $"There are {errorCount} errors."
+
+            End If
+
+            lblStatus.Text += "Failed records will not be saved."
+            lblStatus.BackColor = Color.Red
+
+
+        Else
+            lblStatus.Text = $"There is no error."
+            lblStatus.BackColor = Color.Green
+        End If
+    End Sub
+
+    Private Sub ResetDataSource()
+        _dataSource = New List(Of ShiftScheduleModel)
+
+        GetEmployeesAsync(_shiftScheduleRowRecords)
     End Sub
 
 #End Region
@@ -386,12 +406,12 @@ Public Class ImportedShiftSchedulesForm
 
     Private Sub ImportedShiftSchedulesForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        Me.IsSaved = False
+
+        btnSave.Enabled = False
+
         gridOK.AutoGenerateColumns = False
         gridFailed.AutoGenerateColumns = False
-
-        _dataSource = New List(Of ShiftScheduleModel)
-
-        GetEmployeesAsync(_shiftScheduleRowRecords)
 
     End Sub
 
@@ -443,6 +463,8 @@ Public Class ImportedShiftSchedulesForm
                 MessageBox.Show(errMsg, "Help", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally
                 If succeed Then DialogResult = DialogResult.OK
+
+                Me.IsSaved = True
             End Try
 
         End Using
@@ -453,43 +475,19 @@ Public Class ImportedShiftSchedulesForm
         DialogResult = DialogResult.Cancel
     End Sub
 
-    Private Sub gridOK_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles gridOK.CellContentClick
-
-    End Sub
-
     Private Sub gridOK_DataSourceChanged(sender As Object, e As EventArgs) Handles gridOK.DataSourceChanged
         Dim validCount = _dataSourceOk.Count
 
         tabPageOK.Text = String.Concat(tabPageOK.AccessibleDescription, " (", validCount, ")")
 
-        Label2.Text = validCount.ToString("#,##0")
-    End Sub
-
-    Private Sub gridFailed_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles gridFailed.CellContentClick
+        btnSave.Enabled = validCount > 0
 
     End Sub
 
     Private Sub gridFailed_DataSourceChanged(sender As Object, e As EventArgs) Handles gridFailed.DataSourceChanged
         tabPageFailed.Text = String.Concat(tabPageFailed.AccessibleDescription, " (", _dataSourceFailed.Count, ")")
-    End Sub
 
-    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles Label2.Click
-
-    End Sub
-
-    Private Sub Label2_TextChanged(sender As Object, e As EventArgs) Handles Label2.TextChanged
-        Dim isValidToSave = Not Label2.Text = "0"
-        Label2.Visible = isValidToSave
-
-        btnSave.Enabled = isValidToSave
-    End Sub
-
-    Private Sub Label2_VisibleChanged(sender As Object, e As EventArgs) Handles Label2.VisibleChanged
-        If Label2.Visible Then
-            Label1.Text = "Total shifts :"
-        Else
-            Label1.Text = "Nothing to save"
-        End If
+        UpdateStatusLabel(_dataSourceFailed.Count)
     End Sub
 
     Private Sub gridOK_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles gridOK.DataError
@@ -497,6 +495,38 @@ Public Class ImportedShiftSchedulesForm
     End Sub
 
     Private Sub gridFailed_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles gridFailed.DataError
+
+    End Sub
+
+    Private Sub btnBrowse_Click(sender As Object, e As EventArgs) Handles btnBrowse.Click
+
+        Dim workSheetName = "ShiftSchedule"
+
+        Try
+
+            Dim excelParserOutput = ExcelParser(Of ShiftScheduleRowRecord).Parse(workSheetName)
+
+            If excelParserOutput.IsSuccess = False Then Return
+
+            _shiftScheduleRowRecords = excelParserOutput.Records
+
+            ResetDataSource()
+
+        Catch ex As WorkSheetNotFoundException
+
+            MessageBoxHelper.ErrorMessage($"WorkSheet: ""{workSheetName}"" does not exists on the chosen Excel! Please use the right template.")
+
+        Catch ex As Exception
+
+            MessageBoxHelper.DefaultErrorMessage()
+
+        End Try
+
+    End Sub
+
+    Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
+
+        DownloadTemplateHelper.Download(ExcelTemplates.NewShift)
 
     End Sub
 

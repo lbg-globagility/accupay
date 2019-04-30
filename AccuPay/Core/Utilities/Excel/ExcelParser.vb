@@ -3,13 +3,28 @@ Option Strict On
 Imports System.IO
 Imports System.Reflection
 Imports System.Text.RegularExpressions
+Imports AccuPay
 Imports AccuPay.Attributes
+Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports OfficeOpenXml
 
 Namespace Global.Globagility.AccuPay
 
     Public Class ExcelParser(Of T As {Class, New})
+
+        Public Shared Function Parse(Optional workSheetName As String = Nothing) As ExcelParseOutput(Of T)
+
+            Dim browseFileOut = OpenFileDialogImportHelper.BrowseFile()
+
+            If browseFileOut.IsSuccess = False Then Return ExcelParseOutput(Of T).Failed()
+
+            Dim parser = New ExcelParser(Of T)(workSheetName)
+            Dim records = parser.Read(browseFileOut.FileName)
+
+            Return ExcelParseOutput(Of T).Success(records)
+
+        End Function
 
         Private ReadOnly _worksheetName As String
 
@@ -47,7 +62,7 @@ Namespace Global.Globagility.AccuPay
                 End If
 
                 If worksheet Is Nothing Then
-                    Throw New Exception($"We can't find the worksheet{If(String.IsNullOrWhiteSpace(_worksheetName), "", $"`{_worksheetName}`")}.")
+                    Throw New WorkSheetNotFoundException($"We can't find the worksheet{If(String.IsNullOrWhiteSpace(_worksheetName), "", $"`{_worksheetName}`")}.")
                 End If
 
                 Dim tprops = GetType(T).GetProperties().ToList()
@@ -203,6 +218,34 @@ Namespace Global.Globagility.AccuPay
             Private Function GetLettersOnly(address As String) As String
                 Return Regex.Replace(address, "[\d-]", String.Empty)
             End Function
+
+        End Class
+
+        Public Class ExcelParseOutput(Of E As {Class, New})
+
+            Property IsSuccess As Boolean
+            Property Records As IList(Of E)
+
+            Public Shared Function Success(records As IList(Of E)) As ExcelParseOutput(Of E)
+
+                Return New ExcelParseOutput(Of E)(True, records)
+
+            End Function
+
+            Public Shared Function Failed() As ExcelParseOutput(Of E)
+
+                Return New ExcelParseOutput(Of E)(False, Nothing)
+
+            End Function
+
+            Private Sub New(isSuccess As Boolean, records As IList(Of E))
+
+                Me.IsSuccess = isSuccess
+                Me.Records = records
+
+            End Sub
+
+
 
         End Class
 

@@ -321,11 +321,16 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
+    <Compile Include="Core\Utilities\Excel\WorkSheetNotFoundException.vb" />
     <Compile Include="Core\Utilities\Extensions\DateExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\StringExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\TimeSpanExtensions.vb" />
     <Compile Include="Core\Utilities\FunctionUtils.vb" />
+    <Compile Include="Core\Utilities\Helper\DownloadTemplateHelper.vb" />
+    <Compile Include="Core\Utilities\Helper\OpenFileDialogImportHelper.vb" />
+    <Compile Include="Core\Utilities\Helper\SaveFileDialogHelper.vb" />
+    <Compile Include="Core\Utilities\Helper\TemplatesHelper.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
     <Compile Include="Core\Utilities\ObjectUtils.vb" />
     <Compile Include="Core\Utilities\Helper\PolicyHelper.vb" />
@@ -1767,7 +1772,40 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ImportTemplates\default time logs format.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ImportTemplates\optimize time logs format.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="logo - Copy.ico" />
+    <None Include="ImportTemplates\accupay-allowance-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ImportTemplates\accupay-employeelist-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ImportTemplates\accupay-employeeshift-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ImportTemplates\accupay-leave-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ImportTemplates\accupay-loan-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ImportTemplates\accupay-officialbus-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ImportTemplates\accupay-overtime-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ImportTemplates\accupay-salary-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ImportTemplates\accupay-shiftschedule-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\baseline_undo_black_24dp.png" />
     <None Include="Resources\baseline_undo_black_18dp.png" />
     <None Include="Resources\baseline_delete_forever_black_18dp.png" />

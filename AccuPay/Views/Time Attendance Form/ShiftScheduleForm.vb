@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay
 Imports AccuPay.Entity
+Imports AccuPay.Helpers
 Imports AccuPay.Repository
 Imports AccuPay.Tools
 Imports AccuPay.Utils
@@ -894,10 +895,6 @@ Public Class ShiftScheduleForm
         DateFilter_ValueChangedAsync(dtpDateFrom, e)
     End Sub
 
-    Private Sub EmployeeTreeView1_Load(sender As Object, e As EventArgs) Handles EmployeeTreeView1.Load
-
-    End Sub
-
     Private Sub ShiftScheduleForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
     End Sub
@@ -1227,22 +1224,19 @@ Public Class ShiftScheduleForm
 
     Private Sub tsBtnImport_Click(sender As Object, e As EventArgs) Handles tsBtnImport.Click
 
-        Dim browseFile = New OpenFileDialog With {
-            .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
-                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
-        }
+        Using form = New ImportedShiftSchedulesForm()
+            form.ShowDialog()
 
-        If Not browseFile.ShowDialog() = DialogResult.OK Then Return
+            If form.IsSaved Then
 
-        Dim fileName = browseFile.FileName
+                DateFilter_ValueChangedAsync(dtpDateFrom, e)
 
-        Dim parser = New ExcelParser(Of ShiftScheduleRowRecord)("ShiftSchedule")
-        Dim records = parser.Read(fileName)
+                ShowSuccessImportBalloon()
 
-        Dim importForm As New ImportedShiftSchedulesForm(records)
-        If Not importForm.ShowDialog = DialogResult.OK Then Return
+            End If
 
-        ShowSuccessImportBalloon()
+        End Using
+
     End Sub
 
     Private Sub ShiftScheduleForm_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
