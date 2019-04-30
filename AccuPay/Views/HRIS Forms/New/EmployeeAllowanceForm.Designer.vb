@@ -23,23 +23,23 @@ Partial Class EmployeeAllowanceForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.txtEmployeeNumber = New System.Windows.Forms.TextBox()
         Me.txtEmployeeFirstName = New System.Windows.Forms.TextBox()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
@@ -59,6 +59,7 @@ Partial Class EmployeeAllowanceForm
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.pnlForm = New System.Windows.Forms.Panel()
+        Me.cbDtpOverlay = New System.Windows.Forms.CheckBox()
         Me.lnklbaddallowtype = New System.Windows.Forms.LinkLabel()
         Me.Label219 = New System.Windows.Forms.Label()
         Me.Label168 = New System.Windows.Forms.Label()
@@ -67,8 +68,14 @@ Partial Class EmployeeAllowanceForm
         Me.dtpallowenddate = New System.Windows.Forms.DateTimePicker()
         Me.dtpallowstartdate = New System.Windows.Forms.DateTimePicker()
         Me.dgvempallowance = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.eall_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eall_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.eall_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.allow_taxab = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label156 = New System.Windows.Forms.Label()
         Me.Label166 = New System.Windows.Forms.Label()
         Me.cboallowtype = New System.Windows.Forms.ComboBox()
@@ -79,6 +86,9 @@ Partial Class EmployeeAllowanceForm
         Me.txtallowamt = New System.Windows.Forms.TextBox()
         Me.Label163 = New System.Windows.Forms.Label()
         Me.dgvEmp = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.searchTextBox = New System.Windows.Forms.TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
         Me.pnlSearch = New System.Windows.Forms.Panel()
@@ -92,15 +102,6 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.allow_taxab = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewNumberColumn1 = New AccuPay.DataGridViewNumberColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -112,7 +113,7 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cbDtpOverlay = New System.Windows.Forms.CheckBox()
+        Me.cbShowAll = New System.Windows.Forms.CheckBox()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.pbEmpPicAllow, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
@@ -327,6 +328,15 @@ Partial Class EmployeeAllowanceForm
         Me.pnlForm.Size = New System.Drawing.Size(842, 477)
         Me.pnlForm.TabIndex = 509
         '
+        'cbDtpOverlay
+        '
+        Me.cbDtpOverlay.AutoSize = True
+        Me.cbDtpOverlay.Location = New System.Drawing.Point(137, 186)
+        Me.cbDtpOverlay.Name = "cbDtpOverlay"
+        Me.cbDtpOverlay.Size = New System.Drawing.Size(15, 14)
+        Me.cbDtpOverlay.TabIndex = 377
+        Me.cbDtpOverlay.UseVisualStyleBackColor = True
+        '
         'lnklbaddallowtype
         '
         Me.lnklbaddallowtype.AutoSize = True
@@ -405,14 +415,14 @@ Partial Class EmployeeAllowanceForm
         Me.dgvempallowance.BackgroundColor = System.Drawing.Color.White
         Me.dgvempallowance.ColumnHeadersHeight = 34
         Me.dgvempallowance.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eall_RowID, Me.eall_Type, Me.eall_Frequency, Me.eall_Start, Me.eall_End, Me.eall_Amount, Me.allow_taxab, Me.eall_ProdID})
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle19.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvempallowance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempallowance.Location = New System.Drawing.Point(28, 236)
         Me.dgvempallowance.MultiSelect = False
@@ -421,6 +431,33 @@ Partial Class EmployeeAllowanceForm
         Me.dgvempallowance.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempallowance.Size = New System.Drawing.Size(784, 234)
         Me.dgvempallowance.TabIndex = 364
+        '
+        'eall_RowID
+        '
+        Me.eall_RowID.DataPropertyName = "RowID"
+        Me.eall_RowID.HeaderText = "RowID"
+        Me.eall_RowID.Name = "eall_RowID"
+        Me.eall_RowID.ReadOnly = True
+        Me.eall_RowID.Visible = False
+        Me.eall_RowID.Width = 50
+        '
+        'eall_Type
+        '
+        Me.eall_Type.DataPropertyName = "Type"
+        Me.eall_Type.HeaderText = "Type"
+        Me.eall_Type.Name = "eall_Type"
+        Me.eall_Type.ReadOnly = True
+        Me.eall_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eall_Type.Width = 180
+        '
+        'eall_Frequency
+        '
+        Me.eall_Frequency.DataPropertyName = "AllowanceFrequency"
+        Me.eall_Frequency.HeaderText = "Frequency"
+        Me.eall_Frequency.Name = "eall_Frequency"
+        Me.eall_Frequency.ReadOnly = True
+        Me.eall_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eall_Frequency.Width = 180
         '
         'eall_Start
         '
@@ -499,6 +536,33 @@ Partial Class EmployeeAllowanceForm
         Me.eall_End.Name = "eall_End"
         Me.eall_End.ReadOnly = True
         Me.eall_End.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'eall_Amount
+        '
+        Me.eall_Amount.DataPropertyName = "Amount"
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle1.Format = "N2"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle1
+        Me.eall_Amount.HeaderText = "Amount"
+        Me.eall_Amount.Name = "eall_Amount"
+        Me.eall_Amount.ReadOnly = True
+        Me.eall_Amount.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eall_Amount.Width = 180
+        '
+        'allow_taxab
+        '
+        Me.allow_taxab.HeaderText = "Taxable"
+        Me.allow_taxab.Name = "allow_taxab"
+        Me.allow_taxab.ReadOnly = True
+        Me.allow_taxab.Visible = False
+        '
+        'eall_ProdID
+        '
+        Me.eall_ProdID.HeaderText = "ProductID"
+        Me.eall_ProdID.Name = "eall_ProdID"
+        Me.eall_ProdID.ReadOnly = True
+        Me.eall_ProdID.Visible = False
         '
         'Label156
         '
@@ -605,23 +669,44 @@ Partial Class EmployeeAllowanceForm
         Me.dgvEmp.ColumnHeadersHeight = 34
         Me.dgvEmp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvEmp.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle20.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvEmp.DefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvEmp.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvEmp.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvEmp.Location = New System.Drawing.Point(8, 96)
+        Me.dgvEmp.Location = New System.Drawing.Point(8, 120)
         Me.dgvEmp.MultiSelect = False
         Me.dgvEmp.Name = "dgvEmp"
         Me.dgvEmp.ReadOnly = True
         Me.dgvEmp.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvEmp.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvEmp.Size = New System.Drawing.Size(352, 439)
+        Me.dgvEmp.Size = New System.Drawing.Size(352, 415)
         Me.dgvEmp.TabIndex = 144
+        '
+        'cemp_EmployeeID
+        '
+        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
+        Me.cemp_EmployeeID.HeaderText = "Employee ID"
+        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
+        Me.cemp_EmployeeID.ReadOnly = True
+        '
+        'cemp_LastName
+        '
+        Me.cemp_LastName.DataPropertyName = "LastName"
+        Me.cemp_LastName.HeaderText = "Last Name"
+        Me.cemp_LastName.Name = "cemp_LastName"
+        Me.cemp_LastName.ReadOnly = True
+        '
+        'cemp_FirstName
+        '
+        Me.cemp_FirstName.DataPropertyName = "FirstName"
+        Me.cemp_FirstName.HeaderText = "First Name"
+        Me.cemp_FirstName.Name = "cemp_FirstName"
+        Me.cemp_FirstName.ReadOnly = True
         '
         'searchTextBox
         '
@@ -675,8 +760,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn2
         '
         Me.DataGridViewTextBoxColumn2.DataPropertyName = "EmployeeID"
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridViewTextBoxColumn2.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
         Me.DataGridViewTextBoxColumn2.ReadOnly = True
@@ -685,8 +770,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn3
         '
         Me.DataGridViewTextBoxColumn3.DataPropertyName = "LastName"
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle5
         Me.DataGridViewTextBoxColumn3.HeaderText = "Last Name"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         Me.DataGridViewTextBoxColumn3.ReadOnly = True
@@ -695,8 +780,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "FirstName"
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle6
         Me.DataGridViewTextBoxColumn4.HeaderText = "First Name"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
@@ -706,8 +791,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn5
         '
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "DeductionPercentage"
-        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle7
         Me.DataGridViewTextBoxColumn5.HeaderText = "Loan Number"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.ReadOnly = True
@@ -717,8 +802,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn6
         '
         Me.DataGridViewTextBoxColumn6.DataPropertyName = "DeductionSchedule"
-        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle25
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle8
         Me.DataGridViewTextBoxColumn6.HeaderText = "Total Loan Amount"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.ReadOnly = True
@@ -729,8 +814,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "NoOfPayPeriod"
-        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle26
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle9
         Me.DataGridViewTextBoxColumn7.HeaderText = "Total Balance Left"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -741,8 +826,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn8
         '
         Me.DataGridViewTextBoxColumn8.DataPropertyName = "LoanPayPeriodLeft"
-        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle27
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle10
         Me.DataGridViewTextBoxColumn8.HeaderText = "Deduction Amount"
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
         Me.DataGridViewTextBoxColumn8.ReadOnly = True
@@ -751,93 +836,18 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn9
         '
         Me.DataGridViewTextBoxColumn9.DataPropertyName = "DedEffectiveDateFrom"
-        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle28
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle11
         Me.DataGridViewTextBoxColumn9.HeaderText = "Deduction Percentage"
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
         Me.DataGridViewTextBoxColumn9.ReadOnly = True
         Me.DataGridViewTextBoxColumn9.Visible = False
         '
-        'eall_RowID
-        '
-        Me.eall_RowID.DataPropertyName = "RowID"
-        Me.eall_RowID.HeaderText = "RowID"
-        Me.eall_RowID.Name = "eall_RowID"
-        Me.eall_RowID.ReadOnly = True
-        Me.eall_RowID.Visible = False
-        Me.eall_RowID.Width = 50
-        '
-        'eall_Type
-        '
-        Me.eall_Type.DataPropertyName = "Type"
-        Me.eall_Type.HeaderText = "Type"
-        Me.eall_Type.Name = "eall_Type"
-        Me.eall_Type.ReadOnly = True
-        Me.eall_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eall_Type.Width = 180
-        '
-        'eall_Frequency
-        '
-        Me.eall_Frequency.DataPropertyName = "AllowanceFrequency"
-        Me.eall_Frequency.HeaderText = "Frequency"
-        Me.eall_Frequency.Name = "eall_Frequency"
-        Me.eall_Frequency.ReadOnly = True
-        Me.eall_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eall_Frequency.Width = 180
-        '
-        'eall_Amount
-        '
-        Me.eall_Amount.DataPropertyName = "Amount"
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle18.Format = "N2"
-        DataGridViewCellStyle18.NullValue = Nothing
-        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle18
-        Me.eall_Amount.HeaderText = "Amount"
-        Me.eall_Amount.Name = "eall_Amount"
-        Me.eall_Amount.ReadOnly = True
-        Me.eall_Amount.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eall_Amount.Width = 180
-        '
-        'allow_taxab
-        '
-        Me.allow_taxab.HeaderText = "Taxable"
-        Me.allow_taxab.Name = "allow_taxab"
-        Me.allow_taxab.ReadOnly = True
-        Me.allow_taxab.Visible = False
-        '
-        'eall_ProdID
-        '
-        Me.eall_ProdID.HeaderText = "ProductID"
-        Me.eall_ProdID.Name = "eall_ProdID"
-        Me.eall_ProdID.ReadOnly = True
-        Me.eall_ProdID.Visible = False
-        '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
-        Me.cemp_EmployeeID.HeaderText = "Employee ID"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
-        'cemp_LastName
-        '
-        Me.cemp_LastName.DataPropertyName = "LastName"
-        Me.cemp_LastName.HeaderText = "Last Name"
-        Me.cemp_LastName.Name = "cemp_LastName"
-        Me.cemp_LastName.ReadOnly = True
-        '
-        'cemp_FirstName
-        '
-        Me.cemp_FirstName.DataPropertyName = "FirstName"
-        Me.cemp_FirstName.HeaderText = "First Name"
-        Me.cemp_FirstName.Name = "cemp_FirstName"
-        Me.cemp_FirstName.ReadOnly = True
-        '
         'DataGridViewNumberColumn1
         '
         Me.DataGridViewNumberColumn1.DataPropertyName = "Amount"
-        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewNumberColumn1.DefaultCellStyle = DataGridViewCellStyle29
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewNumberColumn1.DefaultCellStyle = DataGridViewCellStyle12
         Me.DataGridViewNumberColumn1.HeaderText = "Amount"
         Me.DataGridViewNumberColumn1.MaxInputLength = 11
         Me.DataGridViewNumberColumn1.Name = "DataGridViewNumberColumn1"
@@ -863,8 +873,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn16
         '
         Me.DataGridViewTextBoxColumn16.DataPropertyName = "EmployeeID"
-        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle30
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle13
         Me.DataGridViewTextBoxColumn16.HeaderText = "Status"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
         Me.DataGridViewTextBoxColumn16.ReadOnly = True
@@ -873,9 +883,9 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn15
         '
         Me.DataGridViewTextBoxColumn15.DataPropertyName = "RowID"
-        DataGridViewCellStyle31.Format = "N2"
-        DataGridViewCellStyle31.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle31
+        DataGridViewCellStyle14.Format = "N2"
+        DataGridViewCellStyle14.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridViewTextBoxColumn15.HeaderText = "RowiD"
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
         Me.DataGridViewTextBoxColumn15.ReadOnly = True
@@ -885,9 +895,9 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn14
         '
         Me.DataGridViewTextBoxColumn14.DataPropertyName = "EmployeeID"
-        DataGridViewCellStyle32.Format = "(0,000.00)"
-        DataGridViewCellStyle32.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle32
+        DataGridViewCellStyle15.Format = "(0,000.00)"
+        DataGridViewCellStyle15.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle15
         Me.DataGridViewTextBoxColumn14.HeaderText = "Remarks"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
         Me.DataGridViewTextBoxColumn14.ReadOnly = True
@@ -906,8 +916,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn12
         '
         Me.DataGridViewTextBoxColumn12.DataPropertyName = "LoanType"
-        DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle33
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle16
         Me.DataGridViewTextBoxColumn12.HeaderText = "No of pay period left"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
         Me.DataGridViewTextBoxColumn12.ReadOnly = True
@@ -915,8 +925,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn11
         '
         Me.DataGridViewTextBoxColumn11.DataPropertyName = "Status"
-        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle34
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridViewTextBoxColumn11.HeaderText = "No of pay period"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
         Me.DataGridViewTextBoxColumn11.ReadOnly = True
@@ -937,14 +947,15 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn18.Visible = False
         Me.DataGridViewTextBoxColumn18.Width = 103
         '
-        'cbDtpOverlay
+        'cbShowAll
         '
-        Me.cbDtpOverlay.AutoSize = True
-        Me.cbDtpOverlay.Location = New System.Drawing.Point(137, 186)
-        Me.cbDtpOverlay.Name = "cbDtpOverlay"
-        Me.cbDtpOverlay.Size = New System.Drawing.Size(15, 14)
-        Me.cbDtpOverlay.TabIndex = 377
-        Me.cbDtpOverlay.UseVisualStyleBackColor = True
+        Me.cbShowAll.AutoSize = True
+        Me.cbShowAll.Location = New System.Drawing.Point(8, 97)
+        Me.cbShowAll.Name = "cbShowAll"
+        Me.cbShowAll.Size = New System.Drawing.Size(128, 17)
+        Me.cbShowAll.TabIndex = 147
+        Me.cbShowAll.Text = "Show All Employees"
+        Me.cbShowAll.UseVisualStyleBackColor = True
         '
         'EmployeeAllowanceForm
         '
@@ -952,6 +963,7 @@ Partial Class EmployeeAllowanceForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(166, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(1229, 547)
+        Me.Controls.Add(Me.cbShowAll)
         Me.Controls.Add(Me.pnlMain)
         Me.Controls.Add(Me.dgvEmp)
         Me.Controls.Add(Me.pnlSearch)
@@ -976,6 +988,7 @@ Partial Class EmployeeAllowanceForm
         Me.pnlSearch.ResumeLayout(False)
         Me.pnlSearch.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents txtEmployeeNumber As TextBox
@@ -1051,4 +1064,5 @@ Partial Class EmployeeAllowanceForm
     Friend WithEvents allow_taxab As DataGridViewTextBoxColumn
     Friend WithEvents eall_ProdID As DataGridViewTextBoxColumn
     Friend WithEvents cbDtpOverlay As CheckBox
+    Friend WithEvents cbShowAll As CheckBox
 End Class

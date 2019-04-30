@@ -3,6 +3,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Repository
+Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
@@ -30,9 +31,7 @@ Public Class EmployeeAllowanceForm
 
         InitializeComponentSettings()
 
-        Dim list = Await _employeeRepository.GetAllAsync(Of Simplified.Employee)()
-
-        Me._employees = CType(list, List(Of Simplified.Employee))
+        cbShowAll_CheckedChanged(sender, e)
 
         ResetAllowanceForm()
 
@@ -624,6 +623,52 @@ Public Class EmployeeAllowanceForm
             _currentAllowance.EffectiveEndDate = Nothing
         End If
     End Sub
-
 #End Region
+    Dim activeEmpSorted As List(Of Simplified.Employee)
+    Dim allEmpSorted As List(Of GridView.Employee)
+
+    Dim gotAllEmp As Boolean = False
+    Dim gotActiveEmp As Boolean = False
+
+    Private Async Sub cbShowAll_CheckedChanged(sender As Object, e As EventArgs) Handles cbShowAll.CheckedChanged
+        If cbShowAll.Checked Then
+            If Not gotAllEmp Then
+                Dim allEmp = Await _employeeRepository.GetAllAsync(Of Simplified.Employee)()
+                allEmpSorted = CType(allEmp, List(Of Simplified.Employee)).
+                    OrderBy(Function(emp) emp.LastName).
+                    ToList()
+                gotAllEmp = True
+            End If
+            Me._employees = allEmpSorted
+        Else
+            If Not gotActiveEmp Then
+                Using context As New PayrollContext
+                    Dim list = context.Employees.
+                            Where(Function(emp) Nullable.Equals(emp.OrganizationID, z_OrganizationID) And
+                                      emp.EmploymentStatus <> "Terminated" And
+                                      emp.EmploymentStatus <> "Resigned")
+
+                    Dim activeEmp = Await list.
+                                Select(Function(emp) New GridView.Employee With {
+                                    .RowID = emp.RowID,
+                                    .EmployeeNo = emp.EmployeeNo,
+                                    .FirstName = emp.FirstName,
+                                    .MiddleName = emp.MiddleName,
+                                    .LastName = emp.LastName,
+                                    .Image = emp.Image
+                                }).
+                                ToListAsync
+                    activeEmpSorted = activeEmp.
+                        OrderBy(Function(emp) emp.LastName).
+                        ToList()
+                End Using
+
+                gotActiveEmp = True
+            End If
+            Me._employees = activeEmpSorted
+        End If
+
+        Await LoadEmployees()
+    End Sub
+
 End Class
