@@ -90,9 +90,15 @@ Public Class DateRangePickerDialog
 
         If currentPayPeriodIndex > PayperiodsDataGridView.Rows.Count - 1 Then Return
 
+        PayperiodsDataGridView.ClearSelection()
+
         PayperiodsDataGridView.Rows(currentPayPeriodIndex).Selected = True
 
         PayperiodsDataGridView.Rows(currentPayPeriodIndex).Cells(0).Selected = True
+
+        PayperiodsDataGridView.CurrentCell = PayperiodsDataGridView.Rows(currentPayPeriodIndex).Cells(0)
+
+        UpdateCurrentPayPeriod(currentPayPeriodModel)
 
     End Function
 
@@ -113,6 +119,10 @@ Public Class DateRangePickerDialog
     Private Sub PayperiodsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles PayperiodsDataGridView.SelectionChanged
         Dim payperiod = DirectCast(PayperiodsDataGridView.CurrentRow.DataBoundItem, PayperiodModel)
 
+        UpdateCurrentPayPeriod(payperiod)
+    End Sub
+
+    Private Sub UpdateCurrentPayPeriod(payperiod As PayperiodModel)
         _currentPayperiod = payperiod.PayPeriod
 
         _rowId = payperiod.RowID

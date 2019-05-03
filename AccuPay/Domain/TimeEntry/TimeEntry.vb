@@ -183,6 +183,7 @@ Namespace Global.AccuPay.Entity
         Public Sub Reset()
 
             IsRestDay = False
+            HasShift = False
             ResetHours()
             ResetPay()
 
