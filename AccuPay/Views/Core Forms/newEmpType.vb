@@ -1,7 +1,7 @@
 ﻿Public Class newEmpType
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        txtNewEmpType.Text = EmployeeForm.strTrimProper(txtNewEmpType.Text)
+        txtNewEmpType.Text = txtNewEmpType.Text.Trim()
         If txtNewEmpType.Text = "" Then
             txtNewEmpType.Focus()
             WarnBalloon("Please input an Employee Type.", "Invalid Employee Type", txtNewEmpType, txtNewEmpType.Width - 16, -69, , 3000)

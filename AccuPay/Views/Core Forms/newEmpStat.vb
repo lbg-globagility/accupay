@@ -13,7 +13,7 @@
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        txtNewEmpStat.Text = EmployeeForm.strTrimProper(txtNewEmpStat.Text)
+        txtNewEmpStat.Text = txtNewEmpStat.Text.Trim()
         If txtNewEmpStat.Text = "" Then
             txtNewEmpStat.Focus()
             WarnBalloon("Pleas try another.", "Invalid Employee Status", txtNewEmpStat, txtNewEmpStat.Width - 16, -69, , 3000) : Exit Sub

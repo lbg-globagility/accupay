@@ -884,7 +884,7 @@ Public Class EmployeeForm
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
                            0)
-            succeed = True
+            succeed = new_eRowID IsNot Nothing
         Catch ex As Exception
             succeed = False
             MsgBox(getErrExcptn(ex, Me.Name))
@@ -943,21 +943,21 @@ Public Class EmployeeForm
 
             End If
 
-            .Cells("Column1").Value = strTrimProper(txtEmpID.Text) : .Cells("Column2").Value = strTrimProper(txtFName.Text)
-            .Cells("Column3").Value = strTrimProper(txtMName.Text) : .Cells("Column4").Value = strTrimProper(txtLName.Text)
-            .Cells("Column5").Value = strTrimProper(txtNName.Text)
+            .Cells("Column1").Value = txtEmpID.Text : .Cells("Column2").Value = txtFName.Text
+            .Cells("Column3").Value = txtMName.Text : .Cells("Column4").Value = txtLName.Text
+            .Cells("Column5").Value = txtNName.Text
             .Cells("Column6").Value = Format(dtpempbdate.Value, machineShortDateFormat) 'dtpBDate.Value
 
             .Cells("Column8").Value = If(cboPosit.SelectedIndex = -1, "",
                                          If(cboPosit.SelectedIndex = (cboPosit.Items.Count - 1), Nothing, Trim(cboPosit.Text)))
 
-            .Cells("Column9").Value = strTrimProper(cboSalut.Text) : .Cells("Column10").Value = txtTIN.Text
-            .Cells("Column11").Value = strTrimProper(txtSSS.Text) : .Cells("Column12").Value = txtHDMF.Text
-            .Cells("Column13").Value = strTrimProper(txtPIN.Text) : .Cells("Column15").Value = txtWorkPhne.Text
-            .Cells("Column16").Value = strTrimProper(txtHomePhne.Text) : .Cells("Column17").Value = txtMobPhne.Text
-            .Cells("Column18").Value = strTrimProper(txtHomeAddr.Text) : .Cells("Column14").Value = txtemail.Text
+            .Cells("Column9").Value = cboSalut.Text : .Cells("Column10").Value = txtTIN.Text
+            .Cells("Column11").Value = txtSSS.Text : .Cells("Column12").Value = txtHDMF.Text
+            .Cells("Column13").Value = txtPIN.Text : .Cells("Column15").Value = txtWorkPhne.Text
+            .Cells("Column16").Value = txtHomePhne.Text : .Cells("Column17").Value = txtMobPhne.Text
+            .Cells("Column18").Value = txtHomeAddr.Text : .Cells("Column14").Value = txtemail.Text
             .Cells("Column19").Value = If(rdMale.Checked, "Male", "Female")
-            .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = strTrimProper(txtSName.Text)
+            .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = txtSName.Text
             .Cells("Column25").Value = dbnow : .Cells("Column26").Value = u_nem
 
             .Cells("Column29").Value = cboPosit.SelectedValue
@@ -1301,22 +1301,22 @@ Public Class EmployeeForm
                     .Cells("RowID").Value = emplo_RowID
                 End If
 
-                .Cells("Column1").Value = strTrimProper(txtEmpID.Text) : .Cells("Column2").Value = strTrimProper(txtFName.Text)
-                .Cells("Column3").Value = strTrimProper(txtMName.Text) : .Cells("Column4").Value = strTrimProper(txtLName.Text)
-                .Cells("Column5").Value = strTrimProper(txtNName.Text)
+                .Cells("Column1").Value = txtEmpID.Text : .Cells("Column2").Value = txtFName.Text
+                .Cells("Column3").Value = txtMName.Text : .Cells("Column4").Value = txtLName.Text
+                .Cells("Column5").Value = txtNName.Text
                 .Cells("Column6").Value = Format(dtpempbdate.Value, machineShortDateFormat) 'dtpBDate.Value
                 .Cells("Column7").Value = Trim(txtDivisionName.Text)
 
                 .Cells("Column8").Value = If(cboPosit.SelectedIndex = -1, "",
                                              If(cboPosit.SelectedIndex = (cboPosit.Items.Count - 1), Nothing, Trim(cboPosit.Text)))
 
-                .Cells("Column9").Value = strTrimProper(cboSalut.Text) : .Cells("Column10").Value = txtTIN.Text
-                .Cells("Column11").Value = strTrimProper(txtSSS.Text) : .Cells("Column12").Value = txtHDMF.Text
-                .Cells("Column13").Value = strTrimProper(txtPIN.Text) : .Cells("Column15").Value = txtWorkPhne.Text
-                .Cells("Column16").Value = strTrimProper(txtHomePhne.Text) : .Cells("Column17").Value = txtMobPhne.Text
-                .Cells("Column18").Value = strTrimProper(txtHomeAddr.Text) : .Cells("Column14").Value = txtemail.Text
+                .Cells("Column9").Value = cboSalut.Text : .Cells("Column10").Value = txtTIN.Text
+                .Cells("Column11").Value = txtSSS.Text : .Cells("Column12").Value = txtHDMF.Text
+                .Cells("Column13").Value = txtPIN.Text : .Cells("Column15").Value = txtWorkPhne.Text
+                .Cells("Column16").Value = txtHomePhne.Text : .Cells("Column17").Value = txtMobPhne.Text
+                .Cells("Column18").Value = txtHomeAddr.Text : .Cells("Column14").Value = txtemail.Text
                 .Cells("Column19").Value = If(rdMale.Checked, "Male", "Female")
-                .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = strTrimProper(txtSName.Text)
+                .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = txtSName.Text
                 .Cells("Column25").Value = dbnow : .Cells("Column26").Value = u_nem
 
                 .Cells("Column29").Value = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", "",
@@ -1380,17 +1380,17 @@ Public Class EmployeeForm
         Static isDupEmpID As SByte
         If isDupEmpID = 0 And tsbtnNewEmp.Enabled = False Then
             For Each r As DataGridViewRow In dgvEmp.Rows
-                If strTrimProper(txtEmpID.Text) = r.Cells("Column1").Value Then : isDupEmpID = 1 : Exit For : Else : isDupEmpID = 0 : End If
+                If txtEmpID.Text?.ToUpper() = r.Cells("Column1").Value.ToString()?.ToUpper() Then : isDupEmpID = 1 : Exit For : Else : isDupEmpID = 0 : End If
             Next
         End If
 
         If isDupEmpID = 1 And tsbtnNewEmp.Enabled = False Then
             txtEmpID.Focus()
             WarnBalloon("Employee ID " & txtEmpID.Text & " is already exist, please try another.", "Invalid Employee ID", txtEmpID, txtEmpID.Width - 16, -69) : isDupEmpID = 0 : Exit Sub
-        ElseIf strTrimProper(txtFName.Text) = "" Then
+        ElseIf txtFName.Text.Trim() = "" Then
             txtFName.Focus()
             WarnBalloon("Please input First name", "Invalid First name", txtFName, txtFName.Width - 16, -69) : Exit Sub
-        ElseIf strTrimProper(txtLName.Text) = "" Then
+        ElseIf txtLName.Text.Trim() = "" Then
             txtLName.Focus()
             WarnBalloon("Please input Last name", "Invalid Last name", txtLName, txtLName.Width - 16, -69) : Exit Sub
         ElseIf cboMaritStat.Text = "" Or cboMaritStat.SelectedIndex = -1 Then
@@ -1415,22 +1415,22 @@ Public Class EmployeeForm
                     'Format(dtpBDate.Value, "yyyy-MM-dd")
                     EXECQUER("UPDATE employee SET " &
                     "EmployeeID='" & Trim(txtEmpID.Text) &
-                    "',FirstName='" & strTrimProper(txtFName.Text) &
-                    "',MiddleName='" & strTrimProper(txtMName.Text) &
-                    "',LastName='" & strTrimProper(txtLName.Text) &
+                    "',FirstName='" & txtFName.Text &
+                    "',MiddleName='" & txtMName.Text &
+                    "',LastName='" & txtLName.Text &
                     "',Surname='" & txtSName.Text &
-                    "',Nickname='" & strTrimProper(txtNName.Text) &
+                    "',Nickname='" & txtNName.Text &
                     "',Birthdate='" & empBDate &
                     "',JobTitle='" & Trim(txtDivisionName.Text) &
-                    "',Salutation='" & strTrimProper(cboSalut.Text) &
+                    "',Salutation='" & cboSalut.Text &
                     "',TINNo='" & txtTIN.Text &
                     "',SSSNo='" & txtSSS.Text &
                     "',HDMFNo='" & txtHDMF.Text &
                     "',PhilHealthNo='" & txtPIN.Text &
-                    "',WorkPhone='" & strTrimProper(txtWorkPhne.Text) &
-                    "',HomePhone='" & strTrimProper(txtHomePhne.Text) &
-                    "',MobilePhone='" & strTrimProper(txtMobPhne.Text) &
-                    "',HomeAddress='" & strTrimProper(txtHomeAddr.Text) &
+                    "',WorkPhone='" & txtWorkPhne.Text &
+                    "',HomePhone='" & txtHomePhne.Text &
+                    "',MobilePhone='" & txtMobPhne.Text &
+                    "',HomeAddress='" & txtHomeAddr.Text &
                     "',EmailAddress='" & txtemail.Text &
                     "',Gender='" & _gend &
                     "',EmploymentStatus='" & cboEmpStat.Text &
@@ -1442,17 +1442,17 @@ Public Class EmployeeForm
                     " WHERE RowID='" & .Cells("RowID").Value & "'")
 
                     If hasERR = 0 Then 'ito yung error sa EXECQUER() dun sa myModule.vb
-                        .Cells("Column1").Value = strTrimProper(txtEmpID.Text) : .Cells("Column2").Value = strTrimProper(txtFName.Text)
-                        .Cells("Column3").Value = strTrimProper(txtMName.Text) : .Cells("Column4").Value = strTrimProper(txtLName.Text)
-                        .Cells("Column5").Value = strTrimProper(txtNName.Text) : .Cells("Column6").Value = Format(CDate(empBDate), machineShortDateFormat) 'dtpBDate.Value
+                        .Cells("Column1").Value = txtEmpID.Text : .Cells("Column2").Value = txtFName.Text
+                        .Cells("Column3").Value = txtMName.Text : .Cells("Column4").Value = txtLName.Text
+                        .Cells("Column5").Value = txtNName.Text : .Cells("Column6").Value = Format(CDate(empBDate), machineShortDateFormat) 'dtpBDate.Value
                         .Cells("Column7").Value = Trim(txtDivisionName.Text) : .Cells("Column8").Value = cboPosit.Text
-                        .Cells("Column9").Value = strTrimProper(cboSalut.Text) : .Cells("Column10").Value = txtTIN.Text
-                        .Cells("Column11").Value = strTrimProper(txtSSS.Text) : .Cells("Column12").Value = txtHDMF.Text
-                        .Cells("Column13").Value = strTrimProper(txtPIN.Text) : .Cells("Column15").Value = txtWorkPhne.Text
-                        .Cells("Column16").Value = strTrimProper(txtHomePhne.Text) : .Cells("Column17").Value = txtMobPhne.Text
-                        .Cells("Column18").Value = strTrimProper(txtHomeAddr.Text) : .Cells("Column14").Value = txtemail.Text
+                        .Cells("Column9").Value = cboSalut.Text : .Cells("Column10").Value = txtTIN.Text
+                        .Cells("Column11").Value = txtSSS.Text : .Cells("Column12").Value = txtHDMF.Text
+                        .Cells("Column13").Value = txtPIN.Text : .Cells("Column15").Value = txtWorkPhne.Text
+                        .Cells("Column16").Value = txtHomePhne.Text : .Cells("Column17").Value = txtMobPhne.Text
+                        .Cells("Column18").Value = txtHomeAddr.Text : .Cells("Column14").Value = txtemail.Text
                         .Cells("Column19").Value = If(_gend = "M", "Male", "Female")
-                        .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = strTrimProper(txtSName.Text)
+                        .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = txtSName.Text
                         .Cells("Column27").Value = dbnow : .Cells("Column28").Value = u_nem
 
                         .Cells("Column29").Value = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", "",
@@ -1485,14 +1485,14 @@ Public Class EmployeeForm
         Else 'Format(dtpBDate.Value, "yyyy-MM-dd")
 
             Dim _RowID = INS_employee(txtEmpID.Text,
-                                cboEmpStat.Text, _gend, Trim(txtDivisionName.Text), positID, strTrimProper(cboSalut.Text), strTrimProper(txtFName.Text),
-                                strTrimProper(txtMName.Text),
-                                strTrimProper(txtLName.Text), strTrimProper(txtNName.Text),
+                                cboEmpStat.Text, _gend, Trim(txtDivisionName.Text), positID, cboSalut.Text, txtFName.Text,
+                                txtMName.Text,
+                                txtLName.Text, txtNName.Text,
                                 empBDate,
                                 txtTIN.Text, txtSSS.Text, txtHDMF.Text, txtPIN.Text, txtemail.Text,
                                 txtWorkPhne.Text, txtHomePhne.Text,
-                                txtMobPhne.Text, strTrimProper(txtHomeAddr.Text), payFreqID, , , strTrimProper(txtSName.Text),
-                                cboMaritStat.Text, Val(txtNumDepen.Text), 0, strTrimProper(cboEmpType.Text))
+                                txtMobPhne.Text, txtHomeAddr.Text, payFreqID, , , txtSName.Text,
+                                cboMaritStat.Text, Val(txtNumDepen.Text), 0, cboEmpType.Text)
             _EmpRowID = _RowID
             RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
@@ -1508,17 +1508,17 @@ Public Class EmployeeForm
 
                 With dgvEmp.Rows(0)
                     .Cells("RowID").Value = _RowID
-                    .Cells("Column1").Value = strTrimProper(txtEmpID.Text) : .Cells("Column2").Value = strTrimProper(txtFName.Text)
-                    .Cells("Column3").Value = strTrimProper(txtMName.Text) : .Cells("Column4").Value = strTrimProper(txtLName.Text)
-                    .Cells("Column5").Value = strTrimProper(txtNName.Text) : .Cells("Column6").Value = Format(CDate(empBDate), machineShortDateFormat) 'dtpBDate.Value
+                    .Cells("Column1").Value = txtEmpID.Text : .Cells("Column2").Value = txtFName.Text
+                    .Cells("Column3").Value = txtMName.Text : .Cells("Column4").Value = txtLName.Text
+                    .Cells("Column5").Value = txtNName.Text : .Cells("Column6").Value = Format(CDate(empBDate), machineShortDateFormat) 'dtpBDate.Value
                     .Cells("Column7").Value = Trim(txtDivisionName.Text) : .Cells("Column8").Value = cboPosit.Text
-                    .Cells("Column9").Value = strTrimProper(cboSalut.Text) : .Cells("Column10").Value = txtTIN.Text
-                    .Cells("Column11").Value = strTrimProper(txtSSS.Text) : .Cells("Column12").Value = txtHDMF.Text
-                    .Cells("Column13").Value = strTrimProper(txtPIN.Text) : .Cells("Column15").Value = txtWorkPhne.Text
-                    .Cells("Column16").Value = strTrimProper(txtHomePhne.Text) : .Cells("Column17").Value = txtMobPhne.Text
-                    .Cells("Column18").Value = strTrimProper(txtHomeAddr.Text) : .Cells("Column14").Value = txtemail.Text
+                    .Cells("Column9").Value = cboSalut.Text : .Cells("Column10").Value = txtTIN.Text
+                    .Cells("Column11").Value = txtSSS.Text : .Cells("Column12").Value = txtHDMF.Text
+                    .Cells("Column13").Value = txtPIN.Text : .Cells("Column15").Value = txtWorkPhne.Text
+                    .Cells("Column16").Value = txtHomePhne.Text : .Cells("Column17").Value = txtMobPhne.Text
+                    .Cells("Column18").Value = txtHomeAddr.Text : .Cells("Column14").Value = txtemail.Text
                     .Cells("Column19").Value = If(_gend = "M", "Male", "Female")
-                    .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = strTrimProper(txtSName.Text)
+                    .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = txtSName.Text
                     .Cells("Column25").Value = dbnow : .Cells("Column26").Value = u_nem
 
                     .Cells("Column29").Value = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", "",
@@ -2446,10 +2446,6 @@ Public Class EmployeeForm
         TabControlColor(TabControl2, e, Me.BackColor)
     End Sub
 
-    Function strTrimProper(ByVal exprssn As String) As String
-        Return StrConv(Trim(exprssn), VbStrConv.ProperCase)
-    End Function
-
     Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
 
         HRISForm.PositionToolStripMenuItem_Click(HRISForm.PositionToolStripMenuItem, New EventArgs)
@@ -2787,8 +2783,6 @@ Public Class EmployeeForm
                         WarnBalloon("Please input an appropriate Birth date", "Invalid Birth date", txtCell, txtCell.Width - 16, -69, , 3000)
                         Exit Sub
                     End Try
-                Else
-                    dgvDepen.Item(c_Editing, r_Editing).Value = strTrimProper(dgvDepen.Item(c_Editing, r_Editing).Value)
                 End If
             End If
 
@@ -3083,8 +3077,6 @@ Public Class EmployeeForm
             If c_Editing <> Nothing Then
                 If c_Editing = "Colmn12" Or c_Editing = "Colmn20" Or c_Editing = "Colmn21" Then
                     dgvDepen.Item("Colmn21", r_Editing).Selected = True
-                Else
-                    dgvDepen.Item(c_Editing, r_Editing).Value = strTrimProper(dgvDepen.Item(c_Editing, r_Editing).Value)
                 End If
             End If
         End If
