@@ -563,6 +563,16 @@ Public Class EmployeeLoansForm
 
         loanHistoryGridView.DataSource = Me._currentLoanTransactions
 
+
+        Dim loanHistoryCount As Integer = loanHistoryGridView.Rows.Count
+
+        If loanHistoryCount > 0 Then
+
+            loanHistoryGridView.CurrentCell = loanHistoryGridView.Rows(loanHistoryCount - 1).Cells(0)
+
+        End If
+
+
     End Function
 
     Private Async Function LoadLoanTypes() As Task
