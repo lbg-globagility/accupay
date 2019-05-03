@@ -407,8 +407,8 @@ Public Class ShiftScheduleForm
         Using context = New PayrollContext
             Dim _empShiftScheds = Await context.EmployeeDutySchedules.
                 Include(Function(e) e.Employee).
-                Where(Function(e) eIDs.Any(Function(eID) Equals(e.EmployeeID, eID))).
-                Where(Function(e) e.DateSched >= beginDate And e.DateSched <= endDate).
+                Where(Function(e) eIDs.Any(Function(eID) e.EmployeeID.Value = eID)).
+                Where(Function(e) e.DateSched >= beginDate AndAlso e.DateSched <= endDate).
                 ToListAsync
 
             If _empShiftScheds.Any Then
