@@ -305,8 +305,6 @@ Partial Class EmployeeForm
         Me.Label321 = New System.Windows.Forms.Label()
         Me.pbEmpPicCert = New System.Windows.Forms.PictureBox()
         Me.dgvempcert = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.ecert_DateIssued = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.ecert_Expiration = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.txtFNameCert = New System.Windows.Forms.TextBox()
         Me.txtEmpIDCert = New System.Windows.Forms.TextBox()
         Me.ToolStrip3 = New System.Windows.Forms.ToolStrip()
@@ -770,6 +768,8 @@ Partial Class EmployeeForm
         Me.ToolStripButton16 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton34 = New System.Windows.Forms.ToolStripButton()
         Me.tbpNewSalary = New System.Windows.Forms.TabPage()
+        Me.ecert_DateIssued = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.ecert_Expiration = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.imglstchklist = New System.Windows.Forms.ImageList(Me.components)
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
@@ -1911,7 +1911,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
-        Me.SplitContainer2.SplitterDistance = 276
+        Me.SplitContainer2.SplitterDistance = 273
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3133,6 +3133,7 @@ Partial Class EmployeeForm
         Me.LinkLabel2.TabIndex = 22
         Me.LinkLabel2.TabStop = True
         Me.LinkLabel2.Text = "Add"
+        Me.LinkLabel2.Visible = False
         '
         'Label365
         '
@@ -3175,7 +3176,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 145)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 148)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn2
@@ -3648,80 +3649,6 @@ Partial Class EmployeeForm
         Me.dgvempcert.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempcert.Size = New System.Drawing.Size(822, 400)
         Me.dgvempcert.TabIndex = 117
-        '
-        'ecert_DateIssued
-        '
-        '
-        '
-        '
-        Me.ecert_DateIssued.BackgroundStyle.BackColor = System.Drawing.SystemColors.Window
-        Me.ecert_DateIssued.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
-        Me.ecert_DateIssued.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_DateIssued.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlText
-        Me.ecert_DateIssued.HeaderText = "Date issued"
-        Me.ecert_DateIssued.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
-        '
-        '
-        '
-        Me.ecert_DateIssued.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
-        '
-        '
-        '
-        Me.ecert_DateIssued.MonthCalendar.BackgroundStyle.Class = ""
-        Me.ecert_DateIssued.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        '
-        '
-        '
-        Me.ecert_DateIssued.MonthCalendar.CommandsBackgroundStyle.Class = ""
-        Me.ecert_DateIssued.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_DateIssued.MonthCalendar.DisplayMonth = New Date(2015, 5, 1, 0, 0, 0, 0)
-        Me.ecert_DateIssued.MonthCalendar.MarkedDates = New Date(-1) {}
-        Me.ecert_DateIssued.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
-        '
-        '
-        '
-        Me.ecert_DateIssued.MonthCalendar.NavigationBackgroundStyle.Class = ""
-        Me.ecert_DateIssued.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_DateIssued.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
-        Me.ecert_DateIssued.Name = "ecert_DateIssued"
-        Me.ecert_DateIssued.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'ecert_Expiration
-        '
-        '
-        '
-        '
-        Me.ecert_Expiration.BackgroundStyle.BackColor = System.Drawing.SystemColors.Window
-        Me.ecert_Expiration.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
-        Me.ecert_Expiration.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_Expiration.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlText
-        Me.ecert_Expiration.HeaderText = "Date of expiration"
-        Me.ecert_Expiration.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
-        '
-        '
-        '
-        Me.ecert_Expiration.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
-        '
-        '
-        '
-        Me.ecert_Expiration.MonthCalendar.BackgroundStyle.Class = ""
-        Me.ecert_Expiration.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        '
-        '
-        '
-        Me.ecert_Expiration.MonthCalendar.CommandsBackgroundStyle.Class = ""
-        Me.ecert_Expiration.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_Expiration.MonthCalendar.DisplayMonth = New Date(2015, 5, 1, 0, 0, 0, 0)
-        Me.ecert_Expiration.MonthCalendar.MarkedDates = New Date(-1) {}
-        Me.ecert_Expiration.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
-        '
-        '
-        '
-        Me.ecert_Expiration.MonthCalendar.NavigationBackgroundStyle.Class = ""
-        Me.ecert_Expiration.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_Expiration.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
-        Me.ecert_Expiration.Name = "ecert_Expiration"
-        Me.ecert_Expiration.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         '
         'txtFNameCert
         '
@@ -9053,6 +8980,80 @@ Partial Class EmployeeForm
         Me.tbpNewSalary.TabIndex = 19
         Me.tbpNewSalary.Text = "SALARY"
         Me.tbpNewSalary.UseVisualStyleBackColor = True
+        '
+        'ecert_DateIssued
+        '
+        '
+        '
+        '
+        Me.ecert_DateIssued.BackgroundStyle.BackColor = System.Drawing.SystemColors.Window
+        Me.ecert_DateIssued.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
+        Me.ecert_DateIssued.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_DateIssued.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlText
+        Me.ecert_DateIssued.HeaderText = "Date issued"
+        Me.ecert_DateIssued.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
+        '
+        '
+        '
+        Me.ecert_DateIssued.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.ecert_DateIssued.MonthCalendar.BackgroundStyle.Class = ""
+        Me.ecert_DateIssued.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        '
+        '
+        '
+        Me.ecert_DateIssued.MonthCalendar.CommandsBackgroundStyle.Class = ""
+        Me.ecert_DateIssued.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_DateIssued.MonthCalendar.DisplayMonth = New Date(2015, 5, 1, 0, 0, 0, 0)
+        Me.ecert_DateIssued.MonthCalendar.MarkedDates = New Date(-1) {}
+        Me.ecert_DateIssued.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.ecert_DateIssued.MonthCalendar.NavigationBackgroundStyle.Class = ""
+        Me.ecert_DateIssued.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_DateIssued.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
+        Me.ecert_DateIssued.Name = "ecert_DateIssued"
+        Me.ecert_DateIssued.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'ecert_Expiration
+        '
+        '
+        '
+        '
+        Me.ecert_Expiration.BackgroundStyle.BackColor = System.Drawing.SystemColors.Window
+        Me.ecert_Expiration.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
+        Me.ecert_Expiration.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_Expiration.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlText
+        Me.ecert_Expiration.HeaderText = "Date of expiration"
+        Me.ecert_Expiration.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
+        '
+        '
+        '
+        Me.ecert_Expiration.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.ecert_Expiration.MonthCalendar.BackgroundStyle.Class = ""
+        Me.ecert_Expiration.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        '
+        '
+        '
+        Me.ecert_Expiration.MonthCalendar.CommandsBackgroundStyle.Class = ""
+        Me.ecert_Expiration.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_Expiration.MonthCalendar.DisplayMonth = New Date(2015, 5, 1, 0, 0, 0, 0)
+        Me.ecert_Expiration.MonthCalendar.MarkedDates = New Date(-1) {}
+        Me.ecert_Expiration.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.ecert_Expiration.MonthCalendar.NavigationBackgroundStyle.Class = ""
+        Me.ecert_Expiration.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_Expiration.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
+        Me.ecert_Expiration.Name = "ecert_Expiration"
+        Me.ecert_Expiration.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         '
         'imglstchklist
         '

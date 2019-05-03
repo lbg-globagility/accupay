@@ -555,7 +555,7 @@ Public Class EmployeeAllowanceForm
             Nullable.Equals(newAllowance.ProductID, oldAllowance.ProductID) = False OrElse
             newAllowance.OrganizationID <> oldAllowance.OrganizationID OrElse
             newAllowance.AllowanceFrequency <> oldAllowance.AllowanceFrequency OrElse
-            newAllowance.Product.PartNo <> oldAllowance.Product.PartNo OrElse
+            newAllowance.Product?.PartNo <> oldAllowance.Product?.PartNo OrElse
             newAllowance.Type <> oldAllowance.Type OrElse
             newAllowance.Amount <> oldAllowance.Amount OrElse
             newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate OrElse
