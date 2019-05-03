@@ -439,10 +439,17 @@
     <Compile Include="Views\HRIS Forms\New\AddAllowanceTypeForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\HRIS Forms\New\AllowanceRowRecord.vb" />
     <Compile Include="Views\HRIS Forms\New\EmployeeAllowanceForm.Designer.vb">
       <DependentUpon>EmployeeAllowanceForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\HRIS Forms\New\EmployeeAllowanceForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\New\ImportAllowanceForm.Designer.vb">
+      <DependentUpon>ImportAllowanceForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HRIS Forms\New\ImportAllowanceForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
@@ -1835,6 +1842,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\New\EmployeeAllowanceForm.resx">
       <DependentUpon>EmployeeAllowanceForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\HRIS Forms\New\ImportAllowanceForm.resx">
+      <DependentUpon>ImportAllowanceForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\EmployeeTreeView.resx">
       <DependentUpon>EmployeeTreeView.vb</DependentUpon>

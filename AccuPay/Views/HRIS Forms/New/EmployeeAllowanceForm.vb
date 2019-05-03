@@ -21,10 +21,6 @@ Public Class EmployeeAllowanceForm
 
     Private _unchangedAllowances As New List(Of Allowance)
 
-    Private str_ms_excel_file_extension As String =
-        String.Concat("Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|",
-                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls")
-
     Private threadArrayList As New List(Of Thread)
 
     Private Async Sub EmployeeAllowancesForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -328,36 +324,26 @@ Public Class EmployeeAllowanceForm
 
     Private filepath As String
 
-    Private Sub tsbtnimportallowance_Click(sender As Object, e As EventArgs) Handles tsbtnImportAllowance.Click
-        Dim browsefile As New OpenFileDialog()
+    Private Async Sub tsbtnImportAllowances_Click(sender As Object, e As EventArgs) Handles tsbtnImportAllowance.Click
 
-        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
-                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
+        Using form = New ImportAllowanceForm()
+            form.ShowDialog()
 
-        If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
+            If form.IsSaved Then
 
-            filepath = IO.Path.GetFullPath(browsefile.FileName)
+                Await LoadAllowanceTypes()
 
-            Dim catchDatSet =
-                getWorkBookAsDataSet(filepath,
-                                     Me.Name)
+                Dim currentEmployee = GetSelectedEmployee()
 
-            If (catchDatSet Is Nothing) = False And Trim(filepath).Length > 0 Then
+                If currentEmployee IsNot Nothing Then
+                    Await LoadAllowances(currentEmployee)
+                End If
 
-                Dim n_importallowance As New ImportAllowance(catchDatSet, Me)
-
-                Dim objNewThread As New Thread(AddressOf n_importallowance.DoImport)
-
-                objNewThread.IsBackground = True
-
-                objNewThread.Start()
-
-                threadArrayList.Add(objNewThread)
+                ShowBalloonInfo("Allowances Successfully Imported", "Import Allowances")
 
             End If
 
-        End If
-
+        End Using
     End Sub
 
     Private Sub EmployeeAllowancesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
