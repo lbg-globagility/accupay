@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Government
@@ -40,15 +41,24 @@ Public Class ImportSalaryForm
         Dim parser = New ExcelParser(Of SalaryRowRecord)("Employee Salary")
         Dim records = parser.Read(fileName)
 
+        Dim rejectedRecords As New List(Of SalaryRowRecord)
+
         Dim salaryViewModels = New List(Of SalaryViewModel)
         _salaries = New List(Of Salary)
 
+        Dim lineNumber = 0
+
         Using context = New PayrollContext()
             For Each record In records
+                lineNumber += 1
+                record.LineNumber = lineNumber
+
                 Dim employee = context.Employees.
                     FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo AndAlso t.OrganizationID = z_OrganizationID))
 
                 If employee Is Nothing Then
+                    record.ErrorMessage = "Employee does not exist!"
+                    rejectedRecords.Add(record)
                     Continue For
                 End If
 
@@ -80,10 +90,37 @@ Public Class ImportSalaryForm
             Next
         End Using
 
+        UpdateStatusLabel(rejectedRecords.Count)
+
+        ParsedTabControl.Text = $"Ok ({salaryViewModels.Count})"
+        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
+
         SaveButton.Enabled = _salaries.Count > 0
 
         SalaryDataGrid.DataSource = salaryViewModels
+        RejectedRecordsGrid.DataSource = rejectedRecords
     End Sub
+
+    Private Sub UpdateStatusLabel(errorCount As Integer)
+        If errorCount > 0 Then
+
+            If errorCount = 1 Then
+                lblStatus.Text = $"There is 1 error."
+            Else
+                lblStatus.Text = $"There are {errorCount} errors."
+
+            End If
+
+            lblStatus.Text += "Failed records will not be saved."
+            lblStatus.BackColor = Color.Red
+
+
+        Else
+            lblStatus.Text = $"There is no error."
+            lblStatus.BackColor = Color.Green
+        End If
+    End Sub
+
 
     Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
         'TODO: there Is a database error when Unique Constraint is violated.
@@ -193,4 +230,7 @@ Public Class ImportSalaryForm
 
     End Class
 
+    Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
+        DownloadTemplateHelper.Download(ExcelTemplates.Salary)
+    End Sub
 End Class

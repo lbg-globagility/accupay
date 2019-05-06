@@ -1650,6 +1650,8 @@ Public Class EmployeeForm
         Next
     End Sub
 
+    Dim dt_cboPosit As New DataTable
+
     Sub loadPositName()
 
         Dim str_quer_positions As String =
@@ -1669,7 +1671,10 @@ Public Class EmployeeForm
             cboPosit.ValueMember = n_SQLQueryToDatatable.ResultTable.Columns(0).ColumnName
             cboPosit.DisplayMember = n_SQLQueryToDatatable.ResultTable.Columns(1).ColumnName
         End If
-        cboPosit.DataSource = n_SQLQueryToDatatable.ResultTable
+        n_SQLQueryToDatatable.ResultTable.DefaultView.Sort = cboPosit.DisplayMember + " ASC"
+        dt_cboPosit = n_SQLQueryToDatatable.ResultTable.DefaultView.ToTable
+
+        cboPosit.DataSource = dt_cboPosit
     End Sub
 
     Sub reloadPositName(ByVal e_positID As String)
@@ -1678,13 +1683,17 @@ Public Class EmployeeForm
                                                              " FROM position" &
                                                              " WHERE OrganizationID=" & orgztnID &
                                                              " AND RowID!='" & String.Empty & "';")
+
         Static once As SByte = 0
         If once = 0 Then
             once = 1
             cboPosit.ValueMember = n_SQLQueryToDatatable.ResultTable.Columns(0).ColumnName
             cboPosit.DisplayMember = n_SQLQueryToDatatable.ResultTable.Columns(1).ColumnName
         End If
-        cboPosit.DataSource = n_SQLQueryToDatatable.ResultTable
+        n_SQLQueryToDatatable.ResultTable.DefaultView.Sort = cboPosit.DisplayMember + " ASC"
+        dt_cboPosit = n_SQLQueryToDatatable.ResultTable.DefaultView.ToTable
+
+        cboPosit.DataSource = dt_cboPosit
     End Sub
 
     Function payp_count(Optional PayFreqRowID As Object = Nothing) As Integer
