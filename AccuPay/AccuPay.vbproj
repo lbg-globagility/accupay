@@ -557,12 +557,6 @@
     <Compile Include="Views\Core Forms\Employee\SalaryTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\EmploymentPolicyForm.Designer.vb">
-      <DependentUpon>EmploymentPolicyForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\EmploymentPolicyForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Domain\Government\PhilHealthBracket.vb" />
     <Compile Include="Domain\Government\PhilHealthCalculator.vb" />
     <Compile Include="Domain\Government\SocialSecurityBracket.vb" />
@@ -642,12 +636,6 @@
       <DependentUpon>PaystubView.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\PayStub\PaystubView.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\PayStub\NewPayStubForm.Designer.vb">
-      <DependentUpon>NewPayStubForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\PayStub\NewPayStubForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Domain\Shifts\ShiftSchedule.vb" />
@@ -1907,9 +1895,6 @@
     <EmbeddedResource Include="Views\Core Forms\Employee\SalaryTab.resx">
       <DependentUpon>SalaryTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\EmploymentPolicyForm.resx">
-      <DependentUpon>EmploymentPolicyForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Independent filing\LeaveForm.resx">
       <DependentUpon>LeaveForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -1936,9 +1921,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayStub\PaystubView.resx">
       <DependentUpon>PaystubView.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\PayStub\NewPayStubForm.resx">
-      <DependentUpon>NewPayStubForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\AttendanceSheet2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
