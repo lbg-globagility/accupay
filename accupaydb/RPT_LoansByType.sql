@@ -21,8 +21,8 @@ SELECT
         INITIALS(ee.MiddleName, '. ', '1')
     ) `DatCol3`,
     FORMAT(SUM(IFNULL(slp.DeductionAmount, 0)), 2) `DatCol4`,
-    FORMAT(els.TotalLoanAmount, 2) `DatCol5`,
-    FORMAT(slp.TotalBalanceLeft, 2) `DatCol6`
+    FORMAT(SUM(IFNULL(els.TotalLoanAmount, 0)), 2) `DatCol5`,
+    FORMAT(SUM(IFNULL(slp.TotalBalanceLeft, 0)), 2) `DatCol6`
 FROM scheduledloansperpayperiod slp
 INNER JOIN employeeloanschedule els
 ON els.RowID = slp.EmployeeLoanRecordID
@@ -34,7 +34,7 @@ INNER JOIN payperiod pp
 ON pp.RowID = slp.PayPeriodID
 WHERE slp.OrganizationID = OrganizID AND
     pp.PayFromDate BETWEEN PayDateFrom AND PayDateTo
-GROUP BY slp.EmployeeID, els.RowID
+GROUP BY slp.EmployeeID, els.LoanTypeID
 ORDER BY p.PartNo, ee.LastName;
 
 END//
