@@ -720,7 +720,7 @@ Public Class TimeEntrySummaryForm
         Return timeEntries
     End Function
 
-    Private Sub generateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles generateTimeEntryButton.Click
+    Private Async Sub generateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles generateTimeEntryButton.Click
         Dim startDate As Date
         Dim endDate As Date
         Dim result As DialogResult
@@ -737,16 +737,33 @@ Public Class TimeEntrySummaryForm
         If result = DialogResult.OK Then
             Dim generator = New TimeEntryGenerator(startDate, endDate)
             Dim progressDialog = New TimeEntryProgressDialog(generator)
+            progressDialog.Show()
 
-            Task.Run(Sub() generator.Start()).
+            Await Task.Run(Sub() generator.Start()).
                 ContinueWith(
                     Sub() DoneGenerating(progressDialog, generator),
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext)
-
-            progressDialog.Show()
         End If
+
+        LoadTimeEntries()
+    End Sub
+
+    Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles regenerateTimeEntryButton.Click
+        Dim generator = New TimeEntryGenerator(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
+
+
+        Dim progressDialog = New TimeEntryProgressDialog(generator)
+        progressDialog.Show()
+        Await Task.Run(Sub() generator.Start()).
+            ContinueWith(
+                Sub() DoneGenerating(progressDialog, generator),
+                CancellationToken.None,
+                TaskContinuationOptions.OnlyOnRanToCompletion,
+                TaskScheduler.FromCurrentSynchronizationContext)
+
+        LoadTimeEntries()
     End Sub
 
     Private Sub DoneGenerating(dialog As TimeEntryProgressDialog, generator As TimeEntryGenerator)
