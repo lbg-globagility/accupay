@@ -942,11 +942,11 @@ Public Class TimeEntrySummaryForm
 
         Public ReadOnly Property DayType As String
             Get
-                Dim restDayText = If(IsRestDay, "R. Day", String.Empty)
-                Dim texts = {restDayText, HolidayAcronym(HolidayType)}
+                Dim restDayText = If(IsRestDay, "RDay", String.Empty)
+                Dim texts = {HolidayAcronym(HolidayType), restDayText}
                 Dim strings = texts.Where(Function(s) Not String.IsNullOrWhiteSpace(s)).ToArray()
                 If Not strings.Any() Then Return String.Empty
-                Return String.Join(", ", strings)
+                Return String.Join("+", strings)
             End Get
         End Property
 
@@ -955,8 +955,8 @@ Public Class TimeEntrySummaryForm
             Dim nameOfHoliday = holidayName.ToLower()
 
             Dim abbreviatn As String = String.Empty
-            If nameOfHoliday = "regular holiday" Then abbreviatn = "R. Holi."
-            If nameOfHoliday = "special non-working holiday" Then abbreviatn = "S. Holi."
+            If nameOfHoliday = "regular holiday" Then abbreviatn = "RHol"
+            If nameOfHoliday = "special non-working holiday" Then abbreviatn = "SHol"
             Return abbreviatn
         End Function
 
