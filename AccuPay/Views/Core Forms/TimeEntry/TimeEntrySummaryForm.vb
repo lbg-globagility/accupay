@@ -327,11 +327,12 @@ Public Class TimeEntrySummaryForm
                 ofb.OffBusEndTime,
                 ot.OTStartTime,
                 ot.OTEndTIme,
-                payrate.PayType,
+                IF(payrate.PayType='Regular Day', '', payrate.PayType) `PayType`,
                 etd.TimeStampIn,
                 etd.TimeStampOut,
                 l.LeaveStartTime,
-                l.LeaveEndTime
+                l.LeaveEndTime,
+                IF(@useNewSchedule, IFNULL(shiftschedules.IsRestDay, FALSE), IFNULL(employeeshift.RestDay, FALSE)) `IsRestDay`
             FROM employeetimeentry ete
             LEFT JOIN (
                 SELECT EmployeeID, DATE,
@@ -452,7 +453,9 @@ Public Class TimeEntrySummaryForm
                     .RegularHolidayOTPay = reader.GetValue(Of Decimal)("RegularHolidayOTPay"),
                     .HolidayPay = reader.GetValue(Of Decimal)("HolidayPayAmount"),
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
-                    .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
+                    .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay"),
+                    .HolidayType = reader.GetValue(Of String)("PayType"),
+                    .IsRestDay = reader.GetValue(Of Boolean)("IsRestDay")
                 }
 
                 'check first if there is duplicate
@@ -550,11 +553,16 @@ Public Class TimeEntrySummaryForm
                 employeetimeentrydetails.TimeStampIn,
                 employeetimeentrydetails.TimeStampOut,
                 l.LeaveStartTime,
-                l.LeaveEndTime
+                l.LeaveEndTime,
+                IF(payrate.PayType='Regular Day', '', payrate.PayType) `PayType`,
+                IF(@useNewSchedule, IFNULL(shiftschedules.IsRestDay, FALSE), IFNULL(employeeshift.RestDay, FALSE)) `IsRestDay`
             FROM employeetimeentryactual eta
             LEFT JOIN employeetimeentry ete
                 ON ete.EmployeeID = eta.EmployeeID AND
                     ete.Date = eta.Date
+            LEFT JOIN payrate
+                ON payrate.Date = ete.Date AND
+                    payrate.OrganizationID = ete.OrganizationID
             LEFT JOIN (
                 SELECT EmployeeID, DATE,
 				    (SELECT RowID
@@ -661,7 +669,9 @@ Public Class TimeEntrySummaryForm
                     .LeavePay = reader.GetValue(Of Decimal)("Leavepayment"),
                     .HolidayPay = reader.GetValue(Of Decimal)("HolidayPayAmount"),
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
-                    .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay")
+                    .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay"),
+                    .HolidayType = reader.GetValue(Of String)("PayType"),
+                    .IsRestDay = reader.GetValue(Of Boolean)("IsRestDay")
                 }
 
                 'check first if there is duplicate
@@ -864,7 +874,6 @@ Public Class TimeEntrySummaryForm
     End Class
 
     Private Class TimeEntry
-
         Public Property RowID As Integer?
         Public Property EntryDate As Date?
         Public Property TimeIn As TimeSpan?
@@ -910,6 +919,29 @@ Public Class TimeEntrySummaryForm
         Public Property AbsentAmount As Decimal
         Public Property TotalHoursWorked As Decimal
         Public Property TotalDayPay As Decimal
+
+        Public Property IsRestDay As Boolean
+        Public Property HolidayType As String
+
+        Public ReadOnly Property DayType As String
+            Get
+                Dim restDayText = If(IsRestDay, "R. Day", String.Empty)
+                Dim texts = {restDayText, HolidayAcronym(HolidayType)}
+                Dim strings = texts.Where(Function(s) Not String.IsNullOrWhiteSpace(s)).ToArray()
+                If Not strings.Any() Then Return String.Empty
+                Return String.Join(", ", strings)
+            End Get
+        End Property
+
+        Private Function HolidayAcronym(holidayName As String) As String
+            If String.IsNullOrWhiteSpace(holidayName) Then Return String.Empty
+            Dim nameOfHoliday = holidayName.ToLower()
+
+            Dim abbreviatn As String = String.Empty
+            If nameOfHoliday = "regular holiday" Then abbreviatn = "R. Holi."
+            If nameOfHoliday = "special non-working holiday" Then abbreviatn = "S. Holi."
+            Return abbreviatn
+        End Function
 
         Public ReadOnly Property TimeInDisplay As Date?
             Get

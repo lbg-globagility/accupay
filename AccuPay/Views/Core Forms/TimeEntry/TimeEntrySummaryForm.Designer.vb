@@ -127,6 +127,10 @@ Partial Class TimeEntrySummaryForm
         Dim DataGridViewCellStyle45 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle46 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.employeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.cemp_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.generateTimeEntryButton = New System.Windows.Forms.ToolStripButton()
@@ -320,15 +324,12 @@ Partial Class TimeEntrySummaryForm
         Me.col_tue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_mon = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.col_sun = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnDay = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnShiftFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnShiftTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColumnDayType = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnOTStart = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnOTEnd = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ColumnTimeIn = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -412,6 +413,35 @@ Partial Class TimeEntrySummaryForm
         Me.employeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.employeesDataGridView.Size = New System.Drawing.Size(352, 440)
         Me.employeesDataGridView.TabIndex = 137
+        '
+        'cemp_RowID
+        '
+        Me.cemp_RowID.DataPropertyName = "RowID"
+        Me.cemp_RowID.HeaderText = "RowID"
+        Me.cemp_RowID.Name = "cemp_RowID"
+        Me.cemp_RowID.ReadOnly = True
+        Me.cemp_RowID.Visible = False
+        '
+        'cemp_EmployeeID
+        '
+        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
+        Me.cemp_EmployeeID.HeaderText = "Employee ID"
+        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
+        Me.cemp_EmployeeID.ReadOnly = True
+        '
+        'cemp_LastName
+        '
+        Me.cemp_LastName.DataPropertyName = "LastName"
+        Me.cemp_LastName.HeaderText = "Last Name"
+        Me.cemp_LastName.Name = "cemp_LastName"
+        Me.cemp_LastName.ReadOnly = True
+        '
+        'cemp_FirstName
+        '
+        Me.cemp_FirstName.DataPropertyName = "FirstName"
+        Me.cemp_FirstName.HeaderText = "First Name"
+        Me.cemp_FirstName.Name = "cemp_FirstName"
+        Me.cemp_FirstName.ReadOnly = True
         '
         'lblforballoon
         '
@@ -600,7 +630,7 @@ Partial Class TimeEntrySummaryForm
         Me.timeEntriesDataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.timeEntriesDataGridView.ColumnHeadersHeight = 50
         Me.timeEntriesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.timeEntriesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ColumnRowID, Me.ColumnDate, Me.ColumnDay, Me.ColumnShiftFrom, Me.ColumnShiftTo, Me.ColumnOTStart, Me.ColumnOTEnd, Me.ColumnTimeIn, Me.ColumnTimeOut, Me.ColumnLeaveStart, Me.ColumnLeaveEnd, Me.ColumnOBStart, Me.ColumnOBEnd, Me.ColumnRegHrs, Me.ColumnRegPay, Me.ColumnOTHrs, Me.ColumnOTPay, Me.ColumnNDiffHrs, Me.ColumnNDiffPay, Me.ColumnNDiffOTHrs, Me.ColumnNDiffOTPay, Me.ColumnRDayHrs, Me.ColumnRDayPay, Me.ColumnRDayOTHrs, Me.ColumnRDayOTPay, Me.ColumnSHolHrs, Me.ColumnSHolPay, Me.ColumnSHolOTHrs, Me.ColumnSHolOTPay, Me.ColumnRHolHrs, Me.ColumnRHolPay, Me.ColumnRHolOTHrs, Me.ColumnRHolOTPay, Me.ColumnHolidayPay, Me.ColumnLeaveHrs, Me.ColumnLeavePay, Me.ColumnLateHrs, Me.ColumnLateDeduc, Me.ColumnUTHrs, Me.ColumnDeduc, Me.ColumnAbsentHrs, Me.ColumnAbsent, Me.ColumnTotalHrs, Me.ColumnTotalPay, Me.ColumnRemarks, Me.ColumnTimeStampIn, Me.ColumnTimeStampOut})
+        Me.timeEntriesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ColumnRowID, Me.ColumnDate, Me.ColumnDay, Me.ColumnShiftFrom, Me.ColumnShiftTo, Me.ColumnDayType, Me.ColumnOTStart, Me.ColumnOTEnd, Me.ColumnTimeIn, Me.ColumnTimeOut, Me.ColumnLeaveStart, Me.ColumnLeaveEnd, Me.ColumnOBStart, Me.ColumnOBEnd, Me.ColumnRegHrs, Me.ColumnRegPay, Me.ColumnOTHrs, Me.ColumnOTPay, Me.ColumnNDiffHrs, Me.ColumnNDiffPay, Me.ColumnNDiffOTHrs, Me.ColumnNDiffOTPay, Me.ColumnRDayHrs, Me.ColumnRDayPay, Me.ColumnRDayOTHrs, Me.ColumnRDayOTPay, Me.ColumnSHolHrs, Me.ColumnSHolPay, Me.ColumnSHolOTHrs, Me.ColumnSHolOTPay, Me.ColumnRHolHrs, Me.ColumnRHolPay, Me.ColumnRHolOTHrs, Me.ColumnRHolOTPay, Me.ColumnHolidayPay, Me.ColumnLeaveHrs, Me.ColumnLeavePay, Me.ColumnLateHrs, Me.ColumnLateDeduc, Me.ColumnUTHrs, Me.ColumnDeduc, Me.ColumnAbsentHrs, Me.ColumnAbsent, Me.ColumnTotalHrs, Me.ColumnTotalPay, Me.ColumnRemarks, Me.ColumnTimeStampIn, Me.ColumnTimeStampOut})
         Me.timeEntriesDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.timeEntriesDataGridView.Location = New System.Drawing.Point(0, 86)
         Me.timeEntriesDataGridView.MultiSelect = False
@@ -1341,6 +1371,7 @@ Partial Class TimeEntrySummaryForm
         Me.DataGridViewTextBoxColumn16.HeaderText = "Column16"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
         Me.DataGridViewTextBoxColumn16.ReadOnly = True
+        Me.DataGridViewTextBoxColumn16.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn16.Width = 117
         '
@@ -1751,6 +1782,7 @@ Partial Class TimeEntrySummaryForm
         Me.DataGridViewTextBoxColumn49.HeaderText = "First Name"
         Me.DataGridViewTextBoxColumn49.Name = "DataGridViewTextBoxColumn49"
         Me.DataGridViewTextBoxColumn49.ReadOnly = True
+        Me.DataGridViewTextBoxColumn49.Visible = False
         Me.DataGridViewTextBoxColumn49.Width = 103
         '
         'DataGridViewTextBoxColumn50
@@ -1759,6 +1791,7 @@ Partial Class TimeEntrySummaryForm
         Me.DataGridViewTextBoxColumn50.HeaderText = "Middle Name"
         Me.DataGridViewTextBoxColumn50.Name = "DataGridViewTextBoxColumn50"
         Me.DataGridViewTextBoxColumn50.ReadOnly = True
+        Me.DataGridViewTextBoxColumn50.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn50.Visible = False
         Me.DataGridViewTextBoxColumn50.Width = 103
         '
@@ -1856,27 +1889,35 @@ Partial Class TimeEntrySummaryForm
         '
         'DataGridViewTextBoxColumn62
         '
+        Me.DataGridViewTextBoxColumn62.DataPropertyName = "RowID"
         Me.DataGridViewTextBoxColumn62.HeaderText = "SSS No."
         Me.DataGridViewTextBoxColumn62.Name = "DataGridViewTextBoxColumn62"
         Me.DataGridViewTextBoxColumn62.ReadOnly = True
+        Me.DataGridViewTextBoxColumn62.Visible = False
         '
         'DataGridViewTextBoxColumn63
         '
+        Me.DataGridViewTextBoxColumn63.DataPropertyName = "EmployeeNo"
         Me.DataGridViewTextBoxColumn63.HeaderText = "PAGIBIG No."
         Me.DataGridViewTextBoxColumn63.Name = "DataGridViewTextBoxColumn63"
         Me.DataGridViewTextBoxColumn63.ReadOnly = True
+        Me.DataGridViewTextBoxColumn63.Width = 103
         '
         'DataGridViewTextBoxColumn64
         '
+        Me.DataGridViewTextBoxColumn64.DataPropertyName = "LastName"
         Me.DataGridViewTextBoxColumn64.HeaderText = "PhilHealth"
         Me.DataGridViewTextBoxColumn64.Name = "DataGridViewTextBoxColumn64"
         Me.DataGridViewTextBoxColumn64.ReadOnly = True
+        Me.DataGridViewTextBoxColumn64.Width = 103
         '
         'DataGridViewTextBoxColumn65
         '
+        Me.DataGridViewTextBoxColumn65.DataPropertyName = "FirstName"
         Me.DataGridViewTextBoxColumn65.HeaderText = "Work Phone"
         Me.DataGridViewTextBoxColumn65.Name = "DataGridViewTextBoxColumn65"
         Me.DataGridViewTextBoxColumn65.ReadOnly = True
+        Me.DataGridViewTextBoxColumn65.Width = 103
         '
         'DataGridViewTextBoxColumn66
         '
@@ -2125,35 +2166,6 @@ Partial Class TimeEntrySummaryForm
         Me.col_sun.ReadOnly = True
         Me.col_sun.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'cemp_RowID
-        '
-        Me.cemp_RowID.DataPropertyName = "RowID"
-        Me.cemp_RowID.HeaderText = "RowID"
-        Me.cemp_RowID.Name = "cemp_RowID"
-        Me.cemp_RowID.ReadOnly = True
-        Me.cemp_RowID.Visible = False
-        '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
-        Me.cemp_EmployeeID.HeaderText = "Employee ID"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
-        'cemp_LastName
-        '
-        Me.cemp_LastName.DataPropertyName = "LastName"
-        Me.cemp_LastName.HeaderText = "Last Name"
-        Me.cemp_LastName.Name = "cemp_LastName"
-        Me.cemp_LastName.ReadOnly = True
-        '
-        'cemp_FirstName
-        '
-        Me.cemp_FirstName.DataPropertyName = "FirstName"
-        Me.cemp_FirstName.HeaderText = "First Name"
-        Me.cemp_FirstName.Name = "cemp_FirstName"
-        Me.cemp_FirstName.ReadOnly = True
-        '
         'ColumnRowID
         '
         Me.ColumnRowID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
@@ -2208,6 +2220,16 @@ Partial Class TimeEntrySummaryForm
         Me.ColumnShiftTo.Name = "ColumnShiftTo"
         Me.ColumnShiftTo.ReadOnly = True
         Me.ColumnShiftTo.Width = 60
+        '
+        'ColumnDayType
+        '
+        Me.ColumnDayType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.ColumnDayType.DataPropertyName = "DayType"
+        Me.ColumnDayType.HeaderText = "Day Type"
+        Me.ColumnDayType.MinimumWidth = 44
+        Me.ColumnDayType.Name = "ColumnDayType"
+        Me.ColumnDayType.ReadOnly = True
+        Me.ColumnDayType.Width = 70
         '
         'ColumnOTStart
         '
@@ -2896,6 +2918,7 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents ColumnDay As DataGridViewTextBoxColumn
     Friend WithEvents ColumnShiftFrom As DataGridViewTextBoxColumn
     Friend WithEvents ColumnShiftTo As DataGridViewTextBoxColumn
+    Friend WithEvents ColumnDayType As DataGridViewTextBoxColumn
     Friend WithEvents ColumnOTStart As DataGridViewTextBoxColumn
     Friend WithEvents ColumnOTEnd As DataGridViewTextBoxColumn
     Friend WithEvents ColumnTimeIn As DataGridViewTextBoxColumn
