@@ -799,6 +799,7 @@ Public Class TimeLogsForm2
                     model.Remove()
                     Dim addedTimeLog = model.ToTimeLog
                     'addedTimeLog.RowID = Nothing
+                    context.Entry(addedTimeLog).State = EntityState.Added
                     context.TimeLogs.Add(addedTimeLog)
                     addedTimeLogs.Add(addedTimeLog)
                 End If
