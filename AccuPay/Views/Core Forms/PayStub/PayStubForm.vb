@@ -1924,7 +1924,10 @@ Public Class PayStubForm
 
                 paystubRowID = n_ExecuteQuery.Result
 
-                n_ExecuteQuery = New ExecuteQuery("CALL DEL_specificpaystub('" & paystubRowID & "');")
+                If paystubRowID IsNot Nothing Then
+                    n_ExecuteQuery = New ExecuteQuery("CALL DEL_specificpaystub('" & paystubRowID & "');")
+                End If
+
 
             End If
 
@@ -2108,6 +2111,45 @@ Public Class PayStubForm
         cashOut.Execute()
     End Sub
 
+    Private Sub tsbtnDelAllEmpPayroll_Click(sender As Object, e As EventArgs) Handles tsbtnDelAllEmpPayroll.Click
+        tsbtnDelAllEmpPayroll.Enabled = False
+
+        Dim prompt = MessageBox.Show("Do you want to delete all payrolls of employees?",
+                                     "Delete all employee payroll",
+                                     MessageBoxButtons.YesNoCancel,
+                                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+
+        If prompt = Windows.Forms.DialogResult.Yes Then
+            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+
+            For index = 0 To dgvemployees.Rows.Count - 1
+                With dgvemployees.Rows(index)
+                    dgvemployees.Tag = .Cells("RowID").Value
+                    currentEmployeeID = .Cells("EmployeeID").Value
+                End With
+
+                Dim n_ExecuteQuery As New ExecuteQuery("SELECT RowID" &
+                                                   " FROM paystub" &
+                                                   " WHERE EmployeeID='" & dgvemployees.Tag & "'" &
+                                                   " AND OrganizationID='" & orgztnID & "'" &
+                                                   " AND PayPeriodID='" & paypRowID & "'" &
+                                                   " LIMIT 1;")
+
+                Dim paystubRowID As Object = Nothing
+
+                paystubRowID = n_ExecuteQuery.Result
+
+                If paystubRowID IsNot Nothing Then
+                    n_ExecuteQuery = New ExecuteQuery("CALL DEL_specificpaystub('" & paystubRowID & "');")
+                End If
+            Next
+
+            AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+            dgvemployees_SelectionChanged(sender, e)
+        End If
+
+        tsbtnDelAllEmpPayroll.Enabled = True
+    End Sub
 End Class
 
 Friend Class PrintAllPaySlipOfficialFormat
