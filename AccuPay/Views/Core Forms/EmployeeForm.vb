@@ -10822,47 +10822,14 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub OTImport_Click(sender As Object, e As EventArgs) Handles OTImport.Click
-        Dim browsefile As New OpenFileDialog()
+        Using form = New ImportOvertimeForm()
+            form.ShowDialog()
 
-        browsefile.Filter = str_ms_excel_file_extensn
-
-        Try
-
-            If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
-
-                filepath = IO.Path.GetFullPath(browsefile.FileName)
-
-                Dim catchDatSet =
-                    getWorkBookAsDataSet(filepath,
-                                         Me.Name)
-
-                If (catchDatSet Is Nothing) = False And Trim(filepath).Length > 0 Then
-
-                    Dim n_overtime As New ImportOvertime(catchDatSet, Me)
-
-                    Dim objNewThread As New Thread(AddressOf n_overtime.DoImport)
-
-                    Static indx As Integer = 0
-
-                    indx += 1
-
-                    objNewThread.Name = String.Concat("ImportOvertime", indx)
-
-                    objNewThread.IsBackground = True
-
-                    objNewThread.Start()
-
-                    threadArrayList.Add(objNewThread)
-
-                End If
-
-                'MsgBox("Overtime Successfully Imported !")
-
+            If form.IsSaved Then
+                myBalloon("Overtimes Successfully Imported", "Import Overtimes", pbEmpPicEmpOT, 100, -20)
+                dgvEmp_SelectionChanged(sender, e)
             End If
-        Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Me.Name), , "Overtime Import Failed")
-        End Try
-
+        End Using
     End Sub
 
 #End Region
