@@ -44,7 +44,7 @@ SELECT IF(
 FROM employeesalary es
 WHERE es.EmployeeID = employeeID AND
     (
-        ((es.EffectiveDateTo IS NULL) AND payDateFrom > es.EffectiveDateFrom) OR
+        ((es.EffectiveDateTo IS NULL) AND payDateFrom >= es.EffectiveDateFrom) OR
         (
             payDateFrom BETWEEN es.EffectiveDateFrom AND es.EffectiveDateTo OR
             payDateTo BETWEEN es.EffectiveDateFrom AND es.EffectiveDateTo
