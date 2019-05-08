@@ -5435,8 +5435,8 @@ Public Class EmployeeForm
 
                     dgvempleave.Item(colNameleave, rowIndxleave).ErrorText = Nothing
                 Catch ex_1 As Exception
-                    haserrinputleave = 1
-                    dgvempleave.Item(colNameleave, rowIndxleave).ErrorText = "     Invalid time value"
+                    'haserrinputleave = 1
+                    'dgvempleave.Item(colNameleave, rowIndxleave).ErrorText = "     Invalid time value"
                 End Try
             End Try
 
@@ -6315,17 +6315,7 @@ Public Class EmployeeForm
     End Sub
 
     Private Async Sub ToolStripButton36_ClickAsync(sender As Object, e As EventArgs) Handles ToolStripButton36.Click
-
-        Dim browseFile = New OpenFileDialog With {
-            .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
-                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
-        }
-
-        If Not browseFile.ShowDialog() = DialogResult.OK Then Return
-
-        Dim fileName = browseFile.FileName
-
-        Dim importForm As New ImportLeaveForm(fileName)
+        Dim importForm As New ImportLeaveForm()
         If Not importForm.ShowDialog() = DialogResult.OK Then Return
 
         Dim succeed = Await importForm.SaveAsync()

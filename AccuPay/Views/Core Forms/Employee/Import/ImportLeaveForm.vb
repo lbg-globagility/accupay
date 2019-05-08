@@ -2,6 +2,7 @@
 Imports AccuPay
 Imports AccuPay.Attributes
 Imports AccuPay.Entity
+Imports AccuPay.Helpers
 Imports AccuPay.Repository
 Imports AccuPay.Tools
 Imports AccuPay.Utils
@@ -14,7 +15,7 @@ Public Class ImportLeaveForm
 
     Private _filePath As String
     Private _worksheetName As String
-    Private _ep As ExcelParser(Of LeaveModel)
+    Private _ep As New ExcelParser(Of LeaveModel)
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
     Private _leaveRepository As New LeaveRepository()
@@ -25,19 +26,19 @@ Public Class ImportLeaveForm
 
 #Region "Contructors"
 
-    Public Sub New(filePath As String)
-        InitializeComponent()
+    'Public Sub New(filePath As String)
+    '    InitializeComponent()
 
-        ExcelParserPreparation(filePath)
+    '    ExcelParserPreparation(filePath)
 
-    End Sub
+    'End Sub
 
-    Public Sub New(filePath As String, worksheetName As String)
-        InitializeComponent()
+    'Public Sub New(filePath As String, worksheetName As String)
+    '    InitializeComponent()
 
-        ExcelParserPreparation(filePath, worksheetName)
+    '    ExcelParserPreparation(filePath, worksheetName)
 
-    End Sub
+    'End Sub
 
 #End Region
 
@@ -57,18 +58,17 @@ Public Class ImportLeaveForm
 #End Region
 
 #Region "Methods"
+    'Private Sub ExcelParserPreparation(filePath As String, Optional worksheetName As String = Nothing)
 
-    Private Sub ExcelParserPreparation(filePath As String, Optional worksheetName As String = Nothing)
+    '    _filePath = filePath
 
-        _filePath = filePath
+    '    If Not String.IsNullOrWhiteSpace(worksheetName) Then
+    '        _worksheetName = worksheetName
+    '        _ep = New ExcelParser(Of LeaveModel)(_worksheetName)
+    '    End If
 
-        If Not String.IsNullOrWhiteSpace(worksheetName) Then
-            _worksheetName = worksheetName
-            _ep = New ExcelParser(Of LeaveModel)(_worksheetName)
-        End If
-
-        _ep = New ExcelParser(Of LeaveModel)
-    End Sub
+    '    _ep = New ExcelParser(Of LeaveModel)
+    'End Sub
 
     Private Async Sub FilePathChangedAsync()
         Dim models = _ep.Read(_filePath)
@@ -91,6 +91,9 @@ Public Class ImportLeaveForm
 
             _okModels = dataSource.Where(Function(ee) Not ee.ConsideredFailed).ToList()
             _failModels = dataSource.Where(Function(ee) ee.ConsideredFailed).ToList()
+
+            TabPage1.Text = $"Ok ({Me._okModels.Count})"
+            TabPage2.Text = $"Failed ({Me._failModels.Count})"
 
             DataGridView1.DataSource = _okModels
             DataGridView2.DataSource = _failModels
@@ -245,8 +248,8 @@ Public Class ImportLeaveForm
         Private _notMeantToUseAddtlVL As Boolean
         Private _reasons As String
         Private _comments As String
-        Private _startTime As TimeSpan?
-        Private _endTime As TimeSpan?
+        'Private _startTime As TimeSpan?
+        'Private _endTime As TimeSpan?
         Private _status As String
         Private Shared _grantsAdditionalVacationLeaveTypeFeaure As Boolean
 
@@ -296,40 +299,40 @@ Public Class ImportLeaveForm
 
         <ColumnName("Start Time (Optional)")>
         Public Property StartTime As TimeSpan?
-            Get
-                Return _startTime
-            End Get
-            Set(value As TimeSpan?)
-                _startTime = value
-            End Set
-        End Property
+        '    Get
+        '        Return _startTime
+        '    End Get
+        '    Set(value As TimeSpan?)
+        '        _startTime = value
+        '    End Set
+        'End Property
 
-        Public ReadOnly Property StartTimeDisplay As String
-            Get
-                Return ShortTimeSpan(_startTime)
-            End Get
-        End Property
+        'Public ReadOnly Property StartTimeDisplay As String
+        '    Get
+        '        Return ShortTimeSpan(_startTime)
+        '    End Get
+        'End Property
 
         <ColumnName("End Time (Optional)")>
         Public Property EndTime As TimeSpan?
-            Get
-                Return _endTime
-            End Get
-            Set(value As TimeSpan?)
-                _endTime = value
-            End Set
-        End Property
+        '    Get
+        '        Return _endTime
+        '    End Get
+        '    Set(value As TimeSpan?)
+        '        _endTime = value
+        '    End Set
+        'End Property
 
-        Public ReadOnly Property EndTimeDisplay As String
-            Get
-                Return ShortTimeSpan(_endTime)
-            End Get
-        End Property
+        'Public ReadOnly Property EndTimeDisplay As String
+        '    Get
+        '        Return ShortTimeSpan(_endTime)
+        '    End Get
+        'End Property
 
         <ColumnName("Start Date")>
         Public Property StartDate As Date?
 
-        <ColumnName("End Date (Optional)")>
+        <ColumnName("End Date To (Optional)")>
         Public Property EndDate As Date?
 
         Public ReadOnly Property EndDateProper As Date
@@ -420,8 +423,6 @@ Public Class ImportLeaveForm
     Private Sub ImportLeaveForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         DataGridView1.AutoGenerateColumns = False
         DataGridView2.AutoGenerateColumns = False
-
-        FilePathChangedAsync()
     End Sub
 
     Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
@@ -452,6 +453,10 @@ Public Class ImportLeaveForm
 
         FileDirectory = browseFile.FileName
 
+    End Sub
+
+    Private Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
+        DownloadTemplateHelper.Download(ExcelTemplates.Leave)
     End Sub
 
 #End Region

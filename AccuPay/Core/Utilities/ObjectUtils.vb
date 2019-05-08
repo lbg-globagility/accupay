@@ -133,11 +133,9 @@ Namespace Global.AccuPay.Utils
 
         Public Shared Function ToNullableTimeSpan(input As Object) As TimeSpan?
 
-            Dim defaultOutput As TimeSpan = Nothing
+            If IsNothing(input) Then Return Nothing
 
-            If IsNothing(input) Then Return defaultOutput
-
-            Dim output As TimeSpan = defaultOutput
+            Dim output As TimeSpan
 
             Dim dt As Date
 
