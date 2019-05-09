@@ -7,6 +7,7 @@ Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
+Imports OfficeOpenXml
 
 Public Class ImportAllowanceForm
 
@@ -291,9 +292,29 @@ Public Class ImportAllowanceForm
 
     End Sub
 
-    Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
+    Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadWithData(ExcelTemplates.Allowance)
 
-        DownloadTemplateHelper.Download(ExcelTemplates.Allowance)
+        If fileInfo IsNot Nothing Then
+            Using package As New ExcelPackage(fileInfo)
+                Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
+                Dim allowanceTypes
+                Using context As New PayrollContext
+                    allowanceTypes = Await context.Products.
+                                        Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                        Select(Function(p) p.PartNo).
+                                        ToListAsync()
+                End Using
+
+                For index = 0 To allowanceTypes.Count - 1
+                    worksheet.Cells(index + 2, 2).Value = allowanceTypes(index)
+                Next
+
+                package.Save()
+
+                Process.Start(fileInfo.FullName)
+            End Using
+        End If
     End Sub
 End Class
