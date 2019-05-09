@@ -1,5 +1,6 @@
 ﻿Imports AccuPay.Entity
 Imports AccuPay.Extensions
+Imports AccuPay.Helpers
 Imports AccuPay.Loans
 Imports AccuPay.Repository
 Imports AccuPay.Utils
@@ -204,5 +205,9 @@ Public Class ImportLoansForm
 
         End Try
 
+    End Sub
+
+    Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
+        DownloadTemplateHelper.Download(ExcelTemplates.Loan)
     End Sub
 End Class
