@@ -13739,16 +13739,16 @@ Public Class EmployeeForm
 
     Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles ToolStripButton35.Click
 
-        Dim browseFile = New OpenFileDialog With {
-            .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
-                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
-        }
+        'Dim browseFile = New OpenFileDialog With {
+        '    .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+        '              "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
+        '}
 
-        If Not browseFile.ShowDialog() = DialogResult.OK Then Return
+        'If Not browseFile.ShowDialog() = DialogResult.OK Then Return
 
-        Dim fileName = browseFile.FileName
+        'Dim fileName = browseFile.FileName
 
-        Dim importForm As New ImportEmployeeForm(fileName)
+        Dim importForm As New ImportEmployeeForm()
         If Not importForm.ShowDialog() = DialogResult.OK Then Return
 
         Dim succeed = Await importForm.SaveAsync()
