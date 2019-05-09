@@ -63,7 +63,7 @@ Public Class DailyAllowanceCalculator
 
                 If giveAllowance Then
                     If _settings.GetString("AllowancePolicy.CalculationType") = "Hourly" Then
-                        Dim workHours = timeEntry.WorkHours
+                        Dim workHours = If(timeEntry.HasShift, timeEntry.WorkHours, PayrollTools.WorkHoursPerDay)
 
                         amount += {workHours * hourlyRate, dailyRate}.Max()
                     Else

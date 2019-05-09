@@ -71,11 +71,13 @@ Public Class DayCalculator
 
         Dim currentShift = GetCurrentShift(currentDate, employeeShift, shiftSched, _policy.UseShiftSchedule, _policy.RespectDefaultRestDay, _employee.DayOfRest)
 
-        timeEntry.WorkHours = currentShift.WorkingHours
-        timeEntry.ShiftHours = currentShift.ShiftHours
         timeEntry.IsRestDay = currentShift.IsRestDay
         timeEntry.HasShift = currentShift.HasShift
 
+        If timeEntry.HasShift Then
+            timeEntry.WorkHours = currentShift.WorkingHours
+            timeEntry.ShiftHours = currentShift.ShiftHours
+        End If
 
         Dim hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries, _payrateCalendar)
         Dim payrate = _payrateCalendar.Find(currentDate)

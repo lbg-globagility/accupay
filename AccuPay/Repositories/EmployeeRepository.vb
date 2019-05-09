@@ -82,6 +82,8 @@ Namespace Global.AccuPay.Repository
             (employees As IEnumerable(Of IEmployeeBase), searchValue As String) As _
             Task(Of IEnumerable(Of IEmployeeBase))
 
+            If employees Is Nothing OrElse employees.Count = 0 Then Return employees
+
             Dim matchCriteria =
             Function(employee As IEmployeeBase) As Boolean
                 Dim containsEmployeeId = employee.EmployeeNo.ToLower().Contains(searchValue)

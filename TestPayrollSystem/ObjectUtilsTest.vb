@@ -304,7 +304,9 @@ Public Class ObjectUtilsTest
 
         Assert.AreEqual(expected, result)
     End Sub
+#End Region
 
+#Region "ToNullableTimeSpan"
     <TestCase("1/30/2017 16:35")>
     <TestCase("1/30/2017 16:35:00")>
     <TestCase("1/30/2017 4:35 PM")>
@@ -317,19 +319,9 @@ Public Class ObjectUtilsTest
     <TestCase("4:35 PM")>
     <TestCase("16:35:00")>
     <TestCase("16:35")>
-    Public Shared Sub ToNullableTimeSpan(input As Object)
+    Public Shared Sub ToNullableTimeSpan_WithValidInput_ReturnsTimeSpan(input As Object)
 
-        'If IsNothing(input) Then Return Nothing
-
-        Dim output As TimeSpan
-
-        Dim dt As Date
-
-        If (Date.TryParse(input.ToString(),
-            CultureInfo.InvariantCulture, DateTimeStyles.None, dt)) Then
-
-            output = dt.TimeOfDay
-        End If
+        Dim output = ObjectUtils.ToNullableTimeSpan(input)
 
         Assert.AreEqual(New TimeSpan(16, 35, 0), output)
     End Sub
