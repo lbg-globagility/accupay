@@ -6,6 +6,7 @@ Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
+Imports OfficeOpenXml
 
 Public Class ImportLoansForm
 
@@ -207,7 +208,21 @@ Public Class ImportLoansForm
 
     End Sub
 
-    Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
-        DownloadTemplateHelper.Download(ExcelTemplates.Loan)
+    Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
+
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadWithData(ExcelTemplates.Loan)
+
+        Using package As New ExcelPackage(fileInfo)
+            Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
+            Dim loanTypes = _productRepository.ConvertToStringList(Me._loanTypeList)
+
+            For index = 0 To loanTypes.Count - 1
+                worksheet.Cells(index + 2, 2).Value = loanTypes(index)
+            Next
+
+            package.Save()
+
+            Process.Start(fileInfo.FullName)
+        End Using
     End Sub
 End Class
