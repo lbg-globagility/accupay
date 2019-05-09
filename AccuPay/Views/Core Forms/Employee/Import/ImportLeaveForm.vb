@@ -9,6 +9,7 @@ Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
+Imports OfficeOpenXml
 
 Public Class ImportLeaveForm
     Private Shared logger As ILog = LogManager.GetLogger("EmployeeFormAppender")
@@ -455,8 +456,38 @@ Public Class ImportLeaveForm
 
     End Sub
 
-    Private Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
-        DownloadTemplateHelper.Download(ExcelTemplates.Leave)
+    Private Async Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadWithData(ExcelTemplates.Leave)
+
+        If fileInfo IsNot Nothing Then
+            Using package As New ExcelPackage(fileInfo)
+                Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
+
+                Dim leaveTypes
+                Using context As New PayrollContext
+                    Dim categleavID = Await context.Categories.
+                                        Where(Function(c) Nullable.Equals(c.OrganizationID, z_OrganizationID)).
+                                        Where(Function(c) Nullable.Equals(c.CategoryName, "Leave Type")).
+                                        Select(Function(c) c.RowID).
+                                        FirstOrDefaultAsync()
+
+                    leaveTypes = Await context.Products.
+                                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                    Where(Function(p) Nullable.Equals(p.CategoryID, categleavID)).
+                                    Select(Function(p) p.PartNo).
+                                    OrderBy(Function(p) p).
+                                    ToListAsync()
+                End Using
+
+                For index = 0 To leaveTypes.Count - 1
+                    worksheet.Cells(index + 2, 2).Value = leaveTypes(index)
+                Next
+
+                package.Save()
+
+                Process.Start(fileInfo.FullName)
+            End Using
+        End If
     End Sub
 
 #End Region
