@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports AccuPay.Entity
 
 <Table("employeeofficialbusiness")>
 Public Class OfficialBusiness
@@ -25,6 +26,9 @@ Public Class OfficialBusiness
     Public Property LastUpd As Date?
 
     Public Property EmployeeID As Integer?
+
+    <Column("OffBusType")>
+    Public Property Type As String
 
     <Column("OffBusStatus")>
     Public Property Status As String
