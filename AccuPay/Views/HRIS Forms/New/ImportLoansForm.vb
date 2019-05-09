@@ -214,7 +214,10 @@ Public Class ImportLoansForm
 
         Using package As New ExcelPackage(fileInfo)
             Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
-            Dim loanTypes = _productRepository.ConvertToStringList(Me._loanTypeList)
+            Dim loanTypes = _productRepository.
+                ConvertToStringList(Me._loanTypeList).
+                OrderBy(Function(t) t).
+                ToList()
 
             For index = 0 To loanTypes.Count - 1
                 worksheet.Cells(index + 2, 2).Value = loanTypes(index)
