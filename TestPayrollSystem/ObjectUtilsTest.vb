@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.Globalization
 Imports AccuPay.Utils
 
 <TestFixture>
@@ -302,6 +303,35 @@ Public Class ObjectUtilsTest
         Dim result = ObjectUtils.ToNullableDateTime(dateInput)
 
         Assert.AreEqual(expected, result)
+    End Sub
+
+    <TestCase("1/30/2017 16:35")>
+    <TestCase("1/30/2017 16:35:00")>
+    <TestCase("1/30/2017 4:35 PM")>
+    <TestCase("1/30/2017 04:35 PM")>
+    <TestCase("1/30/2017 4:35:00 PM")>
+    <TestCase("1/30/2017 04:35:00 PM")>
+    <TestCase("04:35:00 PM")>
+    <TestCase("04:35 PM")>
+    <TestCase("4:35:00 PM")>
+    <TestCase("4:35 PM")>
+    <TestCase("16:35:00")>
+    <TestCase("16:35")>
+    Public Shared Sub ToNullableTimeSpan(input As Object)
+
+        'If IsNothing(input) Then Return Nothing
+
+        Dim output As TimeSpan
+
+        Dim dt As Date
+
+        If (Date.TryParse(input.ToString(),
+            CultureInfo.InvariantCulture, DateTimeStyles.None, dt)) Then
+
+            output = dt.TimeOfDay
+        End If
+
+        Assert.AreEqual(New TimeSpan(16, 35, 0), output)
     End Sub
 #End Region
 

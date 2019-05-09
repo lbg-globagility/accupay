@@ -1,6 +1,7 @@
 ﻿
 Imports AccuPay.Attributes
 Imports AccuPay.Entity
+Imports AccuPay.Helpers
 Imports Globagility.AccuPay
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
@@ -11,7 +12,7 @@ Public Class ImportEmployeeForm
     Private Shared logger As ILog = LogManager.GetLogger("EmployeeFormAppender")
 
     Private _worksheetName As String
-    Private _ep As ExcelParser(Of EmployeeModel)
+    Private _ep As New ExcelParser(Of EmployeeModel)
     Private _filePath As String
     Private _okModels As List(Of EmployeeModel)
     Private _failModels As List(Of EmployeeModel)
@@ -19,17 +20,17 @@ Public Class ImportEmployeeForm
 #End Region
 
 #Region "Constructors"
-    Public Sub New(filePath As String)
-        InitializeComponent()
+    'Public Sub New(filePath As String)
+    '    InitializeComponent()
 
-        ExcelParserPreparation(filePath)
-    End Sub
+    '    ExcelParserPreparation(filePath)
+    'End Sub
 
-    Public Sub New(filePath As String, worksheetName As String)
-        InitializeComponent()
+    'Public Sub New(filePath As String, worksheetName As String)
+    '    InitializeComponent()
 
-        ExcelParserPreparation(filePath, worksheetName)
-    End Sub
+    '    ExcelParserPreparation(filePath, worksheetName)
+    'End Sub
 
 #End Region
 
@@ -123,29 +124,17 @@ Public Class ImportEmployeeForm
             Get
                 Dim resultStrings As New List(Of String)
 
-                If _monthlyHasNoWorkDaysPerYear Then
-                    resultStrings.Add("no Work Days Per Year")
-                ElseIf _noEmployeeNo Then
-                    resultStrings.Add("no Employee No")
-                ElseIf _noLastName Then
-                    resultStrings.Add("no Last Name")
-                ElseIf _noFirstName Then
-                    resultStrings.Add("no First Name")
-                ElseIf _noBirthDate Then
-                    resultStrings.Add("no Birthdate")
-                ElseIf _noGender Then
-                    resultStrings.Add("no Gender")
-                ElseIf _noMaritalStatus Then
-                    resultStrings.Add("no Marital Status")
-                ElseIf _noJob Then
-                    resultStrings.Add("no Job Position")
-                ElseIf _noEmploymentDate Then
-                    resultStrings.Add("no Employment Date")
-                ElseIf _noPayFrequency Then
-                    resultStrings.Add("no Pay Frequency")
-                ElseIf _noEmploymentStatus Then
-                    resultStrings.Add("no Employment Status")
-                End If
+                If _monthlyHasNoWorkDaysPerYear Then resultStrings.Add("no Work Days Per Year")
+                If _noEmployeeNo Then resultStrings.Add("no Employee No")
+                If _noLastName Then resultStrings.Add("no Last Name")
+                If _noFirstName Then resultStrings.Add("no First Name")
+                If _noBirthDate Then resultStrings.Add("no Birthdate")
+                If _noGender Then resultStrings.Add("no Gender")
+                If _noMaritalStatus Then resultStrings.Add("no Marital Status")
+                If _noJob Then resultStrings.Add("no Job Position")
+                If _noEmploymentDate Then resultStrings.Add("no Employment Date")
+                If _noPayFrequency Then resultStrings.Add("no Pay Frequency")
+                If _noEmploymentStatus Then resultStrings.Add("no Employment Status")
 
                 Return String.Join("; ", resultStrings.Where(Function(s) Not String.IsNullOrWhiteSpace(s)).ToArray())
             End Get
@@ -362,8 +351,6 @@ Public Class ImportEmployeeForm
     Private Sub ImportEmployeeForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         DataGridView1.AutoGenerateColumns = False
         DataGridView2.AutoGenerateColumns = False
-
-        FilePathChanged()
     End Sub
 
     Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
@@ -394,6 +381,10 @@ Public Class ImportEmployeeForm
 
         FileDirectory = browseFile.FileName
 
+    End Sub
+
+    Private Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
+        DownloadTemplateHelper.Download(ExcelTemplates.Employee)
     End Sub
 
 #End Region

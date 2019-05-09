@@ -12067,46 +12067,54 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub OBImport_Click(sender As Object, e As EventArgs) Handles OBImport.Click
-        Dim browsefile As New OpenFileDialog()
+        Using form = New ImportOBForm()
+            form.ShowDialog()
 
-        browsefile.Filter = str_ms_excel_file_extensn
-
-        Try
-
-            If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
-
-                filepath = IO.Path.GetFullPath(browsefile.FileName)
-
-                Dim catchDatSet =
-                    getWorkBookAsDataSet(filepath,
-                                         Me.Name)
-
-                If (catchDatSet Is Nothing) = False And Trim(filepath).Length > 0 Then
-
-                    Dim n_ob As New ImportOB(catchDatSet, Me)
-
-                    Dim objNewThread As New Thread(AddressOf n_ob.DoImport)
-
-                    Static indx As Integer = 0
-
-                    indx += 1
-
-                    objNewThread.Name = String.Concat("ImportOB", indx)
-
-                    objNewThread.IsBackground = True
-
-                    objNewThread.Start()
-
-                    threadArrayList.Add(objNewThread)
-
-                End If
-
-                'MsgBox("Official Business Successfully Imported !")
-
+            If form.IsSaved Then
+                myBalloon("Official businesses Successfully Imported", "Import Official Businesses", pbEmpPicEmpOT, 100, -20)
+                dgvEmp_SelectionChanged(sender, e)
             End If
-        Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Me.Name), , "Official Business Import Failed")
-        End Try
+        End Using
+        'Dim browsefile As New OpenFileDialog()
+
+        'browsefile.Filter = str_ms_excel_file_extensn
+
+        'Try
+
+        '    If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
+
+        '        filepath = IO.Path.GetFullPath(browsefile.FileName)
+
+        '        Dim catchDatSet =
+        '            getWorkBookAsDataSet(filepath,
+        '                                 Me.Name)
+
+        '        If (catchDatSet Is Nothing) = False And Trim(filepath).Length > 0 Then
+
+        '            Dim n_ob As New ImportOB(catchDatSet, Me)
+
+        '            Dim objNewThread As New Thread(AddressOf n_ob.DoImport)
+
+        '            Static indx As Integer = 0
+
+        '            indx += 1
+
+        '            objNewThread.Name = String.Concat("ImportOB", indx)
+
+        '            objNewThread.IsBackground = True
+
+        '            objNewThread.Start()
+
+        '            threadArrayList.Add(objNewThread)
+
+        '        End If
+
+        '        'MsgBox("Official Business Successfully Imported !")
+
+        '    End If
+        'Catch ex As Exception
+        '    MsgBox(getErrExcptn(ex, Me.Name), , "Official Business Import Failed")
+        'End Try
 
     End Sub
 
@@ -13739,16 +13747,16 @@ Public Class EmployeeForm
 
     Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles ToolStripButton35.Click
 
-        Dim browseFile = New OpenFileDialog With {
-            .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
-                      "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
-        }
+        'Dim browseFile = New OpenFileDialog With {
+        '    .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+        '              "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
+        '}
 
-        If Not browseFile.ShowDialog() = DialogResult.OK Then Return
+        'If Not browseFile.ShowDialog() = DialogResult.OK Then Return
 
-        Dim fileName = browseFile.FileName
+        'Dim fileName = browseFile.FileName
 
-        Dim importForm As New ImportEmployeeForm(fileName)
+        Dim importForm As New ImportEmployeeForm()
         If Not importForm.ShowDialog() = DialogResult.OK Then Return
 
         Dim succeed = Await importForm.SaveAsync()

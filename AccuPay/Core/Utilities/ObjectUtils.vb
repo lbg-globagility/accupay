@@ -139,7 +139,7 @@ Namespace Global.AccuPay.Utils
 
             Dim dt As Date
 
-            If (Date.TryParseExact(input.ToString(), "HH:mm",
+            If (Date.TryParse(input.ToString(),
                 CultureInfo.InvariantCulture, DateTimeStyles.None, dt)) Then
 
                 output = dt.TimeOfDay
