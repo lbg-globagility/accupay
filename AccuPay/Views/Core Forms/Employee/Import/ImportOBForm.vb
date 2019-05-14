@@ -144,7 +144,8 @@ Public Class ImportOBForm
                 .StartDate = record.StartDate.Value,
                 .EndDate = record.EndDate.Value,
                 .StartTime = record.StartTime,
-                .EndTime = record.EndTime
+                .EndTime = record.EndTime,
+                .Status = OfficialBusiness.StatusApproved
             }
 
             acceptedRecords.Add(record)

@@ -73,8 +73,9 @@ Public Class ImportOvertimeForm
                 Continue For
             End If
 
+
             'For database
-            Dim overtime = New Overtime With {
+            Dim newOvertime = New Overtime With {
                 .RowID = Nothing,
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
@@ -83,11 +84,12 @@ Public Class ImportOvertimeForm
                 .OTStartDate = record.EffectiveStartDate,
                 .OTEndDate = record.EffectiveEndDate,
                 .OTStartTime = record.EffectiveStartTime,
-                .OTEndTime = record.EffectiveEndTime
+                .OTEndTime = record.EffectiveEndTime,
+                .Status = Overtime.StatusApproved
             }
 
             acceptedRecords.Add(record)
-            _overtimes.Add(overtime)
+            _overtimes.Add(newOvertime)
         Next
 
         UpdateStatusLabel(rejectedRecords.Count)

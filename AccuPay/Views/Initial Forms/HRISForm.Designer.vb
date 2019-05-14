@@ -221,6 +221,7 @@ Partial Class HRISForm
         Me.AllowanceToolStripMenuItem.Name = "AllowanceToolStripMenuItem"
         Me.AllowanceToolStripMenuItem.Size = New System.Drawing.Size(74, 20)
         Me.AllowanceToolStripMenuItem.Text = "Allowance"
+        Me.AllowanceToolStripMenuItem.Visible = False
         '
         'PanelHRIS
         '
