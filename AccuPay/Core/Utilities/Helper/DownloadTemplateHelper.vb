@@ -56,6 +56,7 @@ Namespace Global.AccuPay.Helpers
                         Where(Function(emp) emp.EmploymentStatus <> "Terminated").
                         Where(Function(emp) emp.EmploymentStatus <> "Resigned").
                         Select(Function(emp) emp.EmployeeNo).
+                        OrderBy(Function(no) no).
                         ToList()
 
                     For index = 0 To allEmployed.Count - 1

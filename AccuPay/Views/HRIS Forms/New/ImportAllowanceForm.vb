@@ -299,13 +299,10 @@ Public Class ImportAllowanceForm
             Using package As New ExcelPackage(fileInfo)
                 Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
-                Dim allowanceTypes
-                Using context As New PayrollContext
-                    allowanceTypes = Await context.Products.
-                                        Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                Dim allowanceTypes = _allowanceTypeList.
                                         Select(Function(p) p.PartNo).
-                                        ToListAsync()
-                End Using
+                                        OrderBy(Function(p) p).
+                                        ToList()
 
                 For index = 0 To allowanceTypes.Count - 1
                     worksheet.Cells(index + 2, 2).Value = allowanceTypes(index)

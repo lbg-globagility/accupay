@@ -94,6 +94,7 @@ Partial Class TimeLogsForm2
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnExport = New System.Windows.Forms.Button()
         CType(Me.MainSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MainSplitContainer.Panel1.SuspendLayout()
         Me.MainSplitContainer.Panel2.SuspendLayout()
@@ -142,16 +143,6 @@ Partial Class TimeLogsForm2
         Me.MainSplitContainer.Size = New System.Drawing.Size(1255, 585)
         Me.MainSplitContainer.SplitterDistance = 352
         Me.MainSplitContainer.TabIndex = 316
-        '
-        'EmployeeTreeView1
-        '
-        Me.EmployeeTreeView1.BackColor = System.Drawing.Color.Transparent
-        Me.EmployeeTreeView1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.EmployeeTreeView1.Location = New System.Drawing.Point(0, 0)
-        Me.EmployeeTreeView1.Name = "EmployeeTreeView1"
-        Me.EmployeeTreeView1.OrganizationID = 0
-        Me.EmployeeTreeView1.Size = New System.Drawing.Size(352, 585)
-        Me.EmployeeTreeView1.TabIndex = 316
         '
         'EmployeeTreeView1
         '
@@ -245,6 +236,7 @@ Partial Class TimeLogsForm2
         '
         'Panel4
         '
+        Me.Panel4.Controls.Add(Me.btnExport)
         Me.Panel4.Controls.Add(Me.btnImport)
         Me.Panel4.Controls.Add(Me.Panel5)
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Top
@@ -751,6 +743,21 @@ Partial Class TimeLogsForm2
         Me.DataGridViewTextBoxColumn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn13.Visible = False
         '
+        'btnExport
+        '
+        Me.btnExport.BackgroundImage = Global.AccuPay.My.Resources.Resources.Document
+        Me.btnExport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.btnExport.Dock = System.Windows.Forms.DockStyle.Left
+        Me.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.btnExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnExport.Location = New System.Drawing.Point(75, 0)
+        Me.btnExport.Name = "btnExport"
+        Me.btnExport.Size = New System.Drawing.Size(75, 24)
+        Me.btnExport.TabIndex = 352
+        Me.btnExport.Text = "Exp&ort"
+        Me.btnExport.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnExport.UseVisualStyleBackColor = True
+        '
         'TimeLogsForm2
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -845,4 +852,5 @@ Partial Class TimeLogsForm2
     Friend WithEvents bgworkTypicalImport As System.ComponentModel.BackgroundWorker
     Friend WithEvents bgworkImport As System.ComponentModel.BackgroundWorker
     Friend WithEvents ToolStripProgressBar1 As ToolStripProgressBar
+    Friend WithEvents btnExport As Button
 End Class
