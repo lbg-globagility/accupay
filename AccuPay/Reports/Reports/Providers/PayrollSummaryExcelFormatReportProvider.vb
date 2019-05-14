@@ -143,7 +143,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
             For Each reportColumn In _reportColumns
                 If reportColumn.Optional Then
                     Dim hasValue = allEmployees.
-                        Any(Function(row) Not IsDBNull(row(reportColumn.Source)) And Not CInt(row(reportColumn.Source)) = 0)
+                        Any(Function(row) Not IsDBNull(row(reportColumn.Source)) And Not CDbl(row(reportColumn.Source)) = 0)
 
                     If hasValue Then
                         viewableReportColumns.Add(reportColumn)
