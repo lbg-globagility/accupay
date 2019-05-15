@@ -81,11 +81,11 @@ Public Class LeaveLedgerReportProvider
 
                 Dim sickLeaveBeginningBalance = If(sickLeaveBeginningTransaction?.Amount, 0)
 
-                Dim vacationLeave As New LeaveLedgerReportModel With {
-                    .EmployeeNumber = employee.EmployeeNo,
-                    .FullName = NameHelper.FullNameWithMiddleNameInitialLastNameFirst(employee.FirstName, employee.MiddleName, employee.LastName),
-                    
-                }
+                'Dim vacationLeave As New LeaveLedgerReportModel With {
+                '    .EmployeeNumber = employee.EmployeeNo,
+                '    .FullName = NameHelper.FullNameWithMiddleNameInitialLastNameFirst(employee.FirstName, employee.MiddleName, employee.LastName),
+
+                '}
 
             Next
 
@@ -103,20 +103,24 @@ Public Class LeaveLedgerReportProvider
                     {"PayPeriodDateToID", dateSelector.PayPeriodToID}
                 }
 
-        Dim data = DirectCast(callProcAsDatTab(params, "RPT_leave_ledger"), DataTable)
+            MessageBoxHelper.ErrorMessage("Please select a start date and end date.")
+            Return
+        'End If
 
-        Dim report = New Employee_Leave_Ledger()
-        report.SetDataSource(data)
+        'Dim data As DataTable = OldGetData(dateSelector, dateFrom, dateTo)
+        'Dim data As DataTable = NewGetData(dateFrom, dateTo)
 
-        Dim title = DirectCast(report.ReportDefinition.Sections(1).ReportObjects("txtCutoffDate"), TextObject)
-        Dim dateFromTitle = dateFrom?.ToString("MMM dd, yyyy")
-        Dim dateToTitle = dateTo?.ToString("MMM dd, yyyy")
-        title.Text = $"From {dateFromTitle} to {dateToTitle}"
+        'Dim report = New Employee_Leave_Ledger()
+        'report.SetDataSource(data)
 
-        Dim viewer As New CrysRepForm()
-        viewer.crysrepvwr.ReportSource = report
-        viewer.Show()
+        'Dim title = DirectCast(report.ReportDefinition.Sections(1).ReportObjects("txtCutoffDate"), TextObject)
+        'Dim dateFromTitle = dateFrom?.ToString("MMM dd, yyyy")
+        'Dim dateToTitle = dateTo?.ToString("MMM dd, yyyy")
+        'title.Text = $"From {dateFromTitle} to {dateToTitle}"
+
+        'Dim viewer As New CrysRepForm()
+        'viewer.crysrepvwr.ReportSource = report
+        'viewer.Show()
     End Sub
-
 
 End Class
