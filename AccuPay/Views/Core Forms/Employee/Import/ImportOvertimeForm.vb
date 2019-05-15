@@ -39,7 +39,6 @@ Public Class ImportOvertimeForm
 
         Dim parser = New ExcelParser(Of OvertimeRowRecord)()
         Dim records = parser.Read(fileName)
-        records.RemoveAt(records.Count - 1)
 
         _overtimes = New List(Of Overtime)
 
