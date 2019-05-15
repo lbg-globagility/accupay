@@ -160,6 +160,24 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property IsVacationOrSickLeave As Boolean
+            Get
+                Return IsVacationLeave OrElse IsSickLeave
+            End Get
+        End Property
+
+        Public ReadOnly Property IsVacationLeave As Boolean
+            Get
+                Return PartNo = ProductConstant.VACATION_LEAVE_PART_NO
+            End Get
+        End Property
+
+        Public ReadOnly Property IsSickLeave As Boolean
+            Get
+                Return PartNo = ProductConstant.SICK_LEAVE_PART_NO
+            End Get
+        End Property
+
     End Class
 
 End Namespace
