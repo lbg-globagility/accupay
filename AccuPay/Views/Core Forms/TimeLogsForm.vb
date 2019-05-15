@@ -1442,6 +1442,14 @@ Public Class TimeLogsForm
                     timeLog.TimeentrylogsImportID = importId
 
                     context.TimeLogs.Add(timeLog)
+
+                    Dim minimumDate = timeLog.LogDate.ToMinimumHourValue
+                    Dim maximumDate = timeLog.LogDate.ToMaximumHourValue
+
+                    context.TimeAttendanceLogs.
+                                RemoveRange(context.TimeAttendanceLogs.
+                                                Where(Function(t) t.TimeStamp >= minimumDate).
+                                                Where(Function(t) t.TimeStamp <= maximumDate))
                 Next
 
                 For Each timeAttendanceLog In timeAttendanceLogs

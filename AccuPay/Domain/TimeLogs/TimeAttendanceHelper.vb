@@ -47,6 +47,8 @@ Public Class TimeAttendanceHelper
             Dim index = 0
             Dim lastIndex = timeAttendanceLogs.Count - 1
 
+            Dim isPreviouslyTimeIn = False
+
             For Each timeAttendanceLog In timeAttendanceLogs
 
                 timeAttendanceLog.IsTimeIn = Nothing
@@ -58,7 +60,12 @@ Public Class TimeAttendanceHelper
                 ElseIf index = lastIndex Then
                     timeAttendanceLog.IsTimeIn = False
 
+                Else
+                    timeAttendanceLog.IsTimeIn = Not isPreviouslyTimeIn
                 End If
+
+                isPreviouslyTimeIn = If(timeAttendanceLog.IsTimeIn, False)
+
 
                 timeAttendanceLog.LogDate = dayLogRecord.LogDate
 
