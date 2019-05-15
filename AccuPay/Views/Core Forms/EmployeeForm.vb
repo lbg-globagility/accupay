@@ -1856,19 +1856,19 @@ Public Class EmployeeForm
                         End If
                     Next
 
-                    txtFName.Text = .Cells("Column2").Value
-                    txtMName.Text = .Cells("Column3").Value
-                    txtLName.Text = .Cells("Column4").Value
-                    txtSName.Text = .Cells("Column21").Value
+                    txtFName.Text = If(IsDBNull(.Cells("Column2").Value), "", .Cells("Column2").Value)
+                    txtMName.Text = If(IsDBNull(.Cells("Column3").Value), "", .Cells("Column3").Value)
+                    txtLName.Text = If(IsDBNull(.Cells("Column4").Value), "", .Cells("Column4").Value)
+                    txtSName.Text = If(IsDBNull(.Cells("Column21").Value), "", .Cells("Column21").Value)
 
-                    employeefullname = .Cells("Column2").Value
+                    employeefullname = If(IsDBNull(.Cells("Column2").Value), "", .Cells("Column2").Value)
 
                     Dim addtlWord = Nothing
 
-                    If .Cells("Column3").Value = Nothing Then
+                    If IsDBNull(.Cells("Column3").Value) OrElse .Cells("Column3").Value = Nothing OrElse .Cells("Column3").Value Is Nothing Then
                     Else
 
-                        Dim midNameTwoWords = Split(.Cells("Column3").Value.ToString, " ")
+                        Dim midNameTwoWords = Split(If(IsDBNull(.Cells("Column3").Value), "", .Cells("Column3").Value).ToString, " ")
                         addtlWord = " "
                         For Each s In midNameTwoWords
                             addtlWord &= (StrConv(Microsoft.VisualBasic.Left(s, 1), VbStrConv.ProperCase) & ".")
@@ -1876,13 +1876,13 @@ Public Class EmployeeForm
                     End If
 
                     employeefullname = employeefullname & addtlWord
-                    employeefullname = employeefullname & " " & .Cells("Column4").Value
-                    employeefullname = employeefullname & If(.Cells("Column21").Value = Nothing,
+                    employeefullname = employeefullname & " " & If(IsDBNull(.Cells("Column4").Value), "", .Cells("Column4").Value)
+                    employeefullname = employeefullname & If(IsDBNull(.Cells("Column21").Value),
                                                              "",
                                                              "-" & StrConv(.Cells("Column21").Value,
                                                                            VbStrConv.ProperCase))
                     '
-                    LastFirstMidName = .Cells("Column4").Value & ", " & .Cells("Column2").Value &
+                    LastFirstMidName = If(IsDBNull(.Cells("Column4").Value), "", .Cells("Column4").Value) & ", " & If(IsDBNull(.Cells("Column2").Value), "", .Cells("Column2").Value) &
                         If(Trim(addtlWord) = Nothing, "", If(Trim(addtlWord) = ".", "", ", " & addtlWord))
 
                     subdetails = "ID# " & .Cells("Column1").Value &
@@ -1931,7 +1931,7 @@ Public Class EmployeeForm
                     txtTIN.Text = .Cells("Column10").Value : txtSSS.Text = .Cells("Column11").Value
                     txtHDMF.Text = .Cells("Column12").Value : txtPIN.Text = .Cells("Column13").Value
                     txtWorkPhne.Text = .Cells("Column15").Value : txtHomePhne.Text = .Cells("Column16").Value
-                    txtMobPhne.Text = .Cells("Column17").Value : txtHomeAddr.Text = .Cells("Column18").Value
+                    txtMobPhne.Text = If(IsDBNull(.Cells("Column17").Value), "", .Cells("Column17").Value) : txtHomeAddr.Text = .Cells("Column18").Value
                     txtemail.Text = .Cells("Column14").Value
 
                     If .Cells("Column22").Value = "" Then : cboPayFreq.SelectedIndex = -1 : cboPayFreq.Text = ""
@@ -1953,7 +1953,7 @@ Public Class EmployeeForm
 
                     AddHandler cboPosit.SelectedIndexChanged, AddressOf cboPosit_SelectedIndexChanged
 
-                    If .Cells("Column9").Value = "" Then
+                    If IsDBNull(.Cells("Column9").Value) OrElse .Cells("Column9").Value = "" Then
                         cboSalut.SelectedIndex = -1
                         cboSalut.Text = ""
                     Else
@@ -1985,11 +1985,11 @@ Public Class EmployeeForm
 
                     pbemppic.Image = Nothing
                     pbemppic.Image = EmployeeImage
-                    txtEmpID.Text = .Cells("Column1").Value
-                    txtFName.Text = .Cells("Column2").Value
-                    txtMName.Text = .Cells("Column3").Value
-                    txtLName.Text = .Cells("Column4").Value
-                    txtSName.Text = .Cells("Column21").Value
+                    txtEmpID.Text = If(IsDBNull(.Cells("Column1").Value), "", .Cells("Column1").Value)
+                    txtFName.Text = If(IsDBNull(.Cells("Column2").Value), "", .Cells("Column2").Value)
+                    txtMName.Text = If(IsDBNull(.Cells("Column3").Value), "", .Cells("Column3").Value)
+                    txtLName.Text = If(IsDBNull(.Cells("Column4").Value), "", .Cells("Column4").Value)
+                    txtSName.Text = If(IsDBNull(.Cells("Column21").Value), "", .Cells("Column21").Value)
 
                     Static case_one As Integer = -1
                     If case_one <> sameEmpID Then
@@ -2037,11 +2037,11 @@ Public Class EmployeeForm
                     txtWorkDaysPerYear.Text = .Cells("WorkDaysPerYear").Value
                     cboDayOfRest.Text = String.Empty
                     cboDayOfRest.Text = .Cells("DayOfRest").Value
-                    txtATM.Text = .Cells("ATMNo").Value
+                    txtATM.Text = If(IsDBNull(.Cells("ATMNo").Value), "", .Cells("ATMNo").Value)
                     txtothrpayp.Text = .Cells("OtherPayP").Value
                     txtothrallow.Text = .Cells("OtherLeaveAllowance").Value
                     txtothrbal.Text = .Cells("OtherLeaveBalance").Value
-                    If .Cells("ATMNo").Value = Nothing Then
+                    If IsDBNull(.Cells("ATMNo").Value) OrElse .Cells("ATMNo").Value = Nothing OrElse .Cells("ATMNo").Value Is Nothing Then
                         rdbCash.Checked = True
                         rdbDirectDepo.Checked = False
                     Else
@@ -14328,7 +14328,7 @@ Public Class EmployeeForm
 
             If dgvEmp.RowCount <> 0 Then
 
-                cbobank.Text = dgvEmp.CurrentRow.Cells("BankName").Value
+                cbobank.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("BankName").Value), "", dgvEmp.CurrentRow.Cells("BankName").Value)
 
             End If
         Else
