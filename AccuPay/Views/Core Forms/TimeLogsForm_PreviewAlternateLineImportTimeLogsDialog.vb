@@ -1,5 +1,6 @@
 ﻿Imports System.Threading.Tasks
 Imports AccuPay
+Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
 
 Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
@@ -55,7 +56,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
             If currentLog Is Nothing Then Return
 
-            _dtp.Value = currentLog.LogDate
+            _dtp.Value = If(currentLog.LogDate, currentLog.DateTime.ToMinimumHourValue())
 
             _dtp.Visible = True
         Else
