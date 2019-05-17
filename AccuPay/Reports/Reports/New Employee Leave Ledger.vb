@@ -75,7 +75,6 @@ Public Class New_Employee_Leave_Ledger
             Return Me.ReportDefinition.Sections(2)
         End Get
     End Property
-
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
     Public ReadOnly Property Section3() As CrystalDecisions.CrystalReports.Engine.Section
