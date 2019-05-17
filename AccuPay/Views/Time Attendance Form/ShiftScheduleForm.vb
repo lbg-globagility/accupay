@@ -341,7 +341,7 @@ Public Class ShiftScheduleForm
         If dataGrid.Name = grid.Name Then
             timeColumnIndexes = New Integer() {colTimeFrom.Index, colBreakTimeFrom.Index, colBreakLength.Index, colIsRestDay.Index}
         ElseIf dataGrid.Name = gridWeek.Name Then
-            timeColumnIndexes = New Integer() {Column3.Index, Column5.Index, Column8.Index, Column7.Index}
+            timeColumnIndexes = New Integer() {Column3.Index, Column5.Index, gridWeekBreakLength.Index, Column7.Index}
         End If
 
         Return timeColumnIndexes.Any(Function(i) Equals(i, columnIndexNumber))
@@ -939,7 +939,27 @@ Public Class ShiftScheduleForm
     Private Sub dataGrid_TimeCellParsing(sender As Object, e As DataGridViewCellParsingEventArgs) _
         Handles grid.CellParsing, gridWeek.CellParsing
 
-        If IsCellTimeParseable(DirectCast(sender, DataGridView), e.ColumnIndex) Then
+        If e.ColumnIndex < 0 Then Return
+
+
+        Dim selectedGridView = DirectCast(sender, DataGridView)
+
+
+        If (sender Is grid AndAlso selectedGridView.Columns(e.ColumnIndex) Is colBreakLength) OrElse
+            (sender Is gridWeek AndAlso selectedGridView.Columns(e.ColumnIndex) Is gridWeekBreakLength) Then
+
+            Dim decimalValue = ObjectUtils.ToNullableDecimal(e.Value)
+
+            If decimalValue Is Nothing Then
+                e.Value = 0D
+
+                Dim hasValue = True
+                e.ParsingApplied = hasValue
+            Else
+                e.ParsingApplied = False
+            End If
+
+        ElseIf IsCellTimeParseable(selectedGridView, e.ColumnIndex) Then
             e.Value = TimeSpanToString(DirectCast(e.Value, String))
 
             Dim hasValue = e.Value IsNot Nothing
