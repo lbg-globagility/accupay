@@ -208,6 +208,10 @@ Public Class ImportEmployeeForm
                 If em IsNot Nothing Then AssignChanges(em, e)
             Next
 
+            Dim department =
+                Await context.Divisions.Where(Function(d) d.OrganizationID = z_OrganizationID).FirstOrDefaultAsync(Function(d) d.ParentDivisionID.HasValue)
+            Dim departmentID As Integer = If(department IsNot Nothing, department.RowID.Value, 0)
+
             'for insert
             Dim notExistEmployees = importedEmployees.
                 Where(Function(em) Not employees.Any(Function(e) e.EmployeeNo = em.EmployeeNo)).
@@ -220,7 +224,7 @@ Public Class ImportEmployeeForm
 
                 Dim positionRowID = position?.RowID
                 If Not positionRowID.HasValue Then _
-                    positionRowID = Await CreatePositionAsync(context, em.Job)
+                    positionRowID = Await CreatePositionAsync(context, em.Job, departmentID)
 
                 Dim e As New Employee With {
                     .OrganizationID = z_OrganizationID,
@@ -251,13 +255,15 @@ Public Class ImportEmployeeForm
         Return succeed
     End Function
 
-    Private Async Function CreatePositionAsync(context As PayrollContext, positionName As String) As Threading.Tasks.Task(Of Integer)
-        Dim jobPosition = context.Positions.
-            Add(New Position With {
+    Private Async Function CreatePositionAsync(context As PayrollContext, positionName As String, departmentID As Integer) As Threading.Tasks.Task(Of Integer)
+        Dim employeeJob As Position = New Position With {
             .Name = positionName,
             .OrganizationID = z_OrganizationID,
             .Created = Now,
-            .CreatedBy = z_User})
+            .CreatedBy = z_User}
+        If departmentID > 0 Then employeeJob.DivisionID = departmentID
+        Dim jobPosition = context.Positions.
+            Add(employeeJob)
 
         Await context.SaveChangesAsync()
 
