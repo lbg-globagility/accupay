@@ -12,7 +12,7 @@ Public Class ReportsList
             New PostEmploymentClearanceReportProvider(),
             New EmployeeIdentificationNumberReportProvider(),
             New EmployeeOffenseReportProvider(),
-            New LeaveLedgerReportProvider(),
+            New LeaveLedgerReportProvider() With {.IsNewReport = True},
             New FiledLeaveReportProvider(),
             New LoanSummaryByEmployeeReportProvider(),
             New LoanSummaryByTypeReportProvider(),

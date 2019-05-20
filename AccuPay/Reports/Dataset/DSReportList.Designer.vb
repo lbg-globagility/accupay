@@ -1691,13 +1691,19 @@ Partial Public Class DSReportList
         
         Private columnFullName As Global.System.Data.DataColumn
         
-        Private columnLeaveType As Global.System.Data.DataColumn
+        Private columnLeaveTypeDescription As Global.System.Data.DataColumn
         
         Private columnBeginningBalance As Global.System.Data.DataColumn
         
         Private columnAvailedLeave As Global.System.Data.DataColumn
         
         Private columnEndingBalance As Global.System.Data.DataColumn
+        
+        Private columnBeginningBalanceInDays As Global.System.Data.DataColumn
+        
+        Private columnAvailedLeaveInDays As Global.System.Data.DataColumn
+        
+        Private columnEndingBalanceInDays As Global.System.Data.DataColumn
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
@@ -1752,9 +1758,9 @@ Partial Public Class DSReportList
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
-        Public ReadOnly Property LeaveTypeColumn() As Global.System.Data.DataColumn
+        Public ReadOnly Property LeaveTypeDescriptionColumn() As Global.System.Data.DataColumn
             Get
-                Return Me.columnLeaveType
+                Return Me.columnLeaveTypeDescription
             End Get
         End Property
         
@@ -1779,6 +1785,30 @@ Partial Public Class DSReportList
         Public ReadOnly Property EndingBalanceColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columnEndingBalance
+            End Get
+        End Property
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public ReadOnly Property BeginningBalanceInDaysColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnBeginningBalanceInDays
+            End Get
+        End Property
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public ReadOnly Property AvailedLeaveInDaysColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnAvailedLeaveInDays
+            End Get
+        End Property
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public ReadOnly Property EndingBalanceInDaysColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnEndingBalanceInDays
             End Get
         End Property
         
@@ -1819,9 +1849,9 @@ Partial Public Class DSReportList
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
-        Public Overloads Function AddLeaveLedgerReportModelRow(ByVal EmployeeNumber As String, ByVal FullName As String, ByVal LeaveType As String, ByVal BeginningBalance As Decimal, ByVal AvailedLeave As Decimal, ByVal EndingBalance As Decimal) As LeaveLedgerReportModelRow
+        Public Overloads Function AddLeaveLedgerReportModelRow(ByVal EmployeeNumber As String, ByVal FullName As String, ByVal LeaveTypeDescription As String, ByVal BeginningBalance As Decimal, ByVal AvailedLeave As Decimal, ByVal EndingBalance As Decimal, ByVal BeginningBalanceInDays As Decimal, ByVal AvailedLeaveInDays As Decimal, ByVal EndingBalanceInDays As Decimal) As LeaveLedgerReportModelRow
             Dim rowLeaveLedgerReportModelRow As LeaveLedgerReportModelRow = CType(Me.NewRow,LeaveLedgerReportModelRow)
-            Dim columnValuesArray() As Object = New Object() {EmployeeNumber, FullName, LeaveType, BeginningBalance, AvailedLeave, EndingBalance}
+            Dim columnValuesArray() As Object = New Object() {EmployeeNumber, FullName, LeaveTypeDescription, BeginningBalance, AvailedLeave, EndingBalance, BeginningBalanceInDays, AvailedLeaveInDays, EndingBalanceInDays}
             rowLeaveLedgerReportModelRow.ItemArray = columnValuesArray
             Me.Rows.Add(rowLeaveLedgerReportModelRow)
             Return rowLeaveLedgerReportModelRow
@@ -1846,10 +1876,13 @@ Partial Public Class DSReportList
         Friend Sub InitVars()
             Me.columnEmployeeNumber = MyBase.Columns("EmployeeNumber")
             Me.columnFullName = MyBase.Columns("FullName")
-            Me.columnLeaveType = MyBase.Columns("LeaveType")
+            Me.columnLeaveTypeDescription = MyBase.Columns("LeaveTypeDescription")
             Me.columnBeginningBalance = MyBase.Columns("BeginningBalance")
             Me.columnAvailedLeave = MyBase.Columns("AvailedLeave")
             Me.columnEndingBalance = MyBase.Columns("EndingBalance")
+            Me.columnBeginningBalanceInDays = MyBase.Columns("BeginningBalanceInDays")
+            Me.columnAvailedLeaveInDays = MyBase.Columns("AvailedLeaveInDays")
+            Me.columnEndingBalanceInDays = MyBase.Columns("EndingBalanceInDays")
         End Sub
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
@@ -1859,14 +1892,20 @@ Partial Public Class DSReportList
             MyBase.Columns.Add(Me.columnEmployeeNumber)
             Me.columnFullName = New Global.System.Data.DataColumn("FullName", GetType(String), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnFullName)
-            Me.columnLeaveType = New Global.System.Data.DataColumn("LeaveType", GetType(String), Nothing, Global.System.Data.MappingType.Element)
-            MyBase.Columns.Add(Me.columnLeaveType)
+            Me.columnLeaveTypeDescription = New Global.System.Data.DataColumn("LeaveTypeDescription", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnLeaveTypeDescription)
             Me.columnBeginningBalance = New Global.System.Data.DataColumn("BeginningBalance", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnBeginningBalance)
             Me.columnAvailedLeave = New Global.System.Data.DataColumn("AvailedLeave", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnAvailedLeave)
             Me.columnEndingBalance = New Global.System.Data.DataColumn("EndingBalance", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnEndingBalance)
+            Me.columnBeginningBalanceInDays = New Global.System.Data.DataColumn("BeginningBalanceInDays", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnBeginningBalanceInDays)
+            Me.columnAvailedLeaveInDays = New Global.System.Data.DataColumn("AvailedLeaveInDays", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnAvailedLeaveInDays)
+            Me.columnEndingBalanceInDays = New Global.System.Data.DataColumn("EndingBalanceInDays", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnEndingBalanceInDays)
         End Sub
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
@@ -3696,16 +3735,17 @@ Partial Public Class DSReportList
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
-        Public Property LeaveType() As String
+        Public Property LeaveTypeDescription() As String
             Get
                 Try 
-                    Return CType(Me(Me.tableLeaveLedgerReportModel.LeaveTypeColumn),String)
+                    Return CType(Me(Me.tableLeaveLedgerReportModel.LeaveTypeDescriptionColumn),String)
                 Catch e As Global.System.InvalidCastException
-                    Throw New Global.System.Data.StrongTypingException("The value for column 'LeaveType' in table 'LeaveLedgerReportModel' is DBNull.", e)
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'LeaveTypeDescription' in table 'LeaveLedgerReportModel' is "& _ 
+                            "DBNull.", e)
                 End Try
             End Get
             Set
-                Me(Me.tableLeaveLedgerReportModel.LeaveTypeColumn) = value
+                Me(Me.tableLeaveLedgerReportModel.LeaveTypeDescriptionColumn) = value
             End Set
         End Property
         
@@ -3758,6 +3798,54 @@ Partial Public Class DSReportList
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public Property BeginningBalanceInDays() As Decimal
+            Get
+                Try 
+                    Return CType(Me(Me.tableLeaveLedgerReportModel.BeginningBalanceInDaysColumn),Decimal)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'BeginningBalanceInDays' in table 'LeaveLedgerReportModel' i"& _ 
+                            "s DBNull.", e)
+                End Try
+            End Get
+            Set
+                Me(Me.tableLeaveLedgerReportModel.BeginningBalanceInDaysColumn) = value
+            End Set
+        End Property
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public Property AvailedLeaveInDays() As Decimal
+            Get
+                Try 
+                    Return CType(Me(Me.tableLeaveLedgerReportModel.AvailedLeaveInDaysColumn),Decimal)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'AvailedLeaveInDays' in table 'LeaveLedgerReportModel' is DB"& _ 
+                            "Null.", e)
+                End Try
+            End Get
+            Set
+                Me(Me.tableLeaveLedgerReportModel.AvailedLeaveInDaysColumn) = value
+            End Set
+        End Property
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public Property EndingBalanceInDays() As Decimal
+            Get
+                Try 
+                    Return CType(Me(Me.tableLeaveLedgerReportModel.EndingBalanceInDaysColumn),Decimal)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'EndingBalanceInDays' in table 'LeaveLedgerReportModel' is D"& _ 
+                            "BNull.", e)
+                End Try
+            End Get
+            Set
+                Me(Me.tableLeaveLedgerReportModel.EndingBalanceInDaysColumn) = value
+            End Set
+        End Property
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
         Public Function IsEmployeeNumberNull() As Boolean
             Return Me.IsNull(Me.tableLeaveLedgerReportModel.EmployeeNumberColumn)
         End Function
@@ -3782,14 +3870,14 @@ Partial Public Class DSReportList
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
-        Public Function IsLeaveTypeNull() As Boolean
-            Return Me.IsNull(Me.tableLeaveLedgerReportModel.LeaveTypeColumn)
+        Public Function IsLeaveTypeDescriptionNull() As Boolean
+            Return Me.IsNull(Me.tableLeaveLedgerReportModel.LeaveTypeDescriptionColumn)
         End Function
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
-        Public Sub SetLeaveTypeNull()
-            Me(Me.tableLeaveLedgerReportModel.LeaveTypeColumn) = Global.System.Convert.DBNull
+        Public Sub SetLeaveTypeDescriptionNull()
+            Me(Me.tableLeaveLedgerReportModel.LeaveTypeDescriptionColumn) = Global.System.Convert.DBNull
         End Sub
         
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
@@ -3826,6 +3914,42 @@ Partial Public Class DSReportList
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
         Public Sub SetEndingBalanceNull()
             Me(Me.tableLeaveLedgerReportModel.EndingBalanceColumn) = Global.System.Convert.DBNull
+        End Sub
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public Function IsBeginningBalanceInDaysNull() As Boolean
+            Return Me.IsNull(Me.tableLeaveLedgerReportModel.BeginningBalanceInDaysColumn)
+        End Function
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public Sub SetBeginningBalanceInDaysNull()
+            Me(Me.tableLeaveLedgerReportModel.BeginningBalanceInDaysColumn) = Global.System.Convert.DBNull
+        End Sub
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public Function IsAvailedLeaveInDaysNull() As Boolean
+            Return Me.IsNull(Me.tableLeaveLedgerReportModel.AvailedLeaveInDaysColumn)
+        End Function
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public Sub SetAvailedLeaveInDaysNull()
+            Me(Me.tableLeaveLedgerReportModel.AvailedLeaveInDaysColumn) = Global.System.Convert.DBNull
+        End Sub
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public Function IsEndingBalanceInDaysNull() As Boolean
+            Return Me.IsNull(Me.tableLeaveLedgerReportModel.EndingBalanceInDaysColumn)
+        End Function
+        
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Public Sub SetEndingBalanceInDaysNull()
+            Me(Me.tableLeaveLedgerReportModel.EndingBalanceInDaysColumn) = Global.System.Convert.DBNull
         End Sub
     End Class
     

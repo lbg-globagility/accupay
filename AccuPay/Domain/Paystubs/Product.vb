@@ -168,13 +168,13 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property IsVacationLeave As Boolean
             Get
-                Return PartNo = ProductConstant.VACATION_LEAVE_PART_NO
+                Return PartNo.Trim.ToUpper = ProductConstant.VACATION_LEAVE_PART_NO.ToUpper
             End Get
         End Property
 
         Public ReadOnly Property IsSickLeave As Boolean
             Get
-                Return PartNo = ProductConstant.SICK_LEAVE_PART_NO
+                Return PartNo.Trim.ToUpper = ProductConstant.SICK_LEAVE_PART_NO.ToUpper
             End Get
         End Property
 

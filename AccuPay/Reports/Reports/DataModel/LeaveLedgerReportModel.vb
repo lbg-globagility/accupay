@@ -10,10 +10,14 @@
             fullName As String,
             leaveType As LeaveType.LeaveType,
             beginningBalance As Decimal,
-            availedLeave As Decimal,
-            endingBalance As Decimal)
-    End Sub
+            availedLeave As Decimal)
 
+        Me.EmployeeNumber = employeeNumber
+        Me.FullName = fullName
+        Me.LeaveType = leaveType
+        Me.BeginningBalance = beginningBalance
+        Me.AvailedLeave = availedLeave
+    End Sub
 
     Public ReadOnly Property LeaveTypeDescription As String
         Get
