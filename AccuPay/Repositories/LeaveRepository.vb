@@ -5,6 +5,7 @@ Imports AccuPay.ModelData
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Extensions
 
 Namespace Global.AccuPay.Repository
 
@@ -28,15 +29,16 @@ Namespace Global.AccuPay.Repository
             Dim shiftSchedules As New List(Of EmployeeDutySchedule)
             Dim employees As New List(Of Employee)
 
+
+            Dim orderedLeaves = leaves.OrderBy(Function(l) l.StartDate).ToList
+
+            Dim firstLeave = leaves.FirstOrDefault.StartDate
+            Dim lastLeave = leaves.LastOrDefault.StartDate
+
             Using context As New PayrollContext
 
                 If policy.ValidateLeaveBalance Then
                     Dim employeeIds = leaves.Select(Function(l) l.EmployeeID).Distinct
-
-                    Dim orderedLeaves = leaves.OrderBy(Function(l) l.StartDate).ToList
-
-                    Dim firstLeave = leaves.FirstOrDefault.StartDate
-                    Dim lastLeave = leaves.LastOrDefault.StartDate
 
                     employeeShifts = Await GetEmployeeShifts(employeeIds, firstLeave, lastLeave, context)
                     shiftSchedules = Await GetShiftSchedules(employeeIds, firstLeave, lastLeave, context)
@@ -50,7 +52,37 @@ Namespace Global.AccuPay.Repository
 
                     Await Me.SaveAsync(leave, context)
 
-                    Await ValidateLeaveBalance(policy, employeeShifts, shiftSchedules, employees, context, leave)
+
+                    If policy.ValidateLeaveBalance Then
+
+                        Dim employee = employees.FirstOrDefault(Function(e) Nullable.Equals(e.RowID, leave.EmployeeID))
+
+                        Dim unusedApprovedLeaves = GetUnusedApprovedLeavesByType(context, employee.RowID, leave.LeaveType)
+
+                        Dim earliestUnusedApprovedLeave = unusedApprovedLeaves.OrderBy(Function(l) l.StartDate).FirstOrDefault
+
+                        'if the earliest unused approved leave is earlier than the first leave, get its shifts
+                        If earliestUnusedApprovedLeave IsNot Nothing AndAlso
+                            earliestUnusedApprovedLeave.StartDate.ToMinimumHourValue < firstLeave.ToMinimumHourValue Then
+
+                            Dim firstShiftDate = earliestUnusedApprovedLeave.StartDate.ToMinimumHourValue
+                            Dim lastShiftDate = firstLeave.ToMinimumHourValue.AddSeconds(-1)
+
+                            Dim earlierEmployeeShifts = Await GetEmployeeShifts({leave.EmployeeID}, firstShiftDate, lastShiftDate, context)
+                            Dim earlierShiftSchedules = Await GetShiftSchedules({leave.EmployeeID}, firstShiftDate, lastShiftDate, context)
+
+                            employeeShifts.InsertRange(0, earlierEmployeeShifts)
+                            shiftSchedules.InsertRange(0, earlierShiftSchedules)
+
+                            employeeShifts = employeeShifts.OrderBy(Function(s) s.EffectiveFrom).ToList
+                            shiftSchedules = shiftSchedules.OrderBy(Function(s) s.DateSched).ToList
+
+                        End If
+
+                        Await ValidateLeaveBalance(policy, employeeShifts, shiftSchedules, unusedApprovedLeaves, employee, leave)
+
+                    End If
+
                 Next
 
                 Await context.SaveChangesAsync()
@@ -59,14 +91,11 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Private Async Function ValidateLeaveBalance(policy As PolicyHelper, employeeShifts As List(Of ShiftSchedule), shiftSchedules As List(Of EmployeeDutySchedule), employees As List(Of Employee), context As PayrollContext, leave As Leave) As Task
+        Private Async Function ValidateLeaveBalance(policy As PolicyHelper, employeeShifts As List(Of ShiftSchedule), shiftSchedules As List(Of EmployeeDutySchedule), unusedApprovedLeaves As List(Of Leave), employee As Employee, leave As Leave) As Task
             If leave.Status.Trim.ToLower = STATUS_APPROVED.ToLower AndAlso
                                     policy.ValidateLeaveBalance AndAlso
                                     VALIDATABLE_TYPES.Contains(leave.LeaveType) Then
 
-                Dim employee = employees.FirstOrDefault(Function(e) Nullable.Equals(e.RowID, leave.EmployeeID))
-
-                Dim unusedApprovedLeaves = GetUnusedApprovedLeavesByType(context, employee.RowID, leave.LeaveType)
 
                 Dim totalLeaveHours = ComputeTotalLeaveHours(unusedApprovedLeaves, policy, employeeShifts, shiftSchedules, employee)
 
