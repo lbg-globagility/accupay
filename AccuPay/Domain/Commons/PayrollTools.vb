@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.SimplifiedEntities
@@ -40,12 +41,12 @@ Public Class PayrollTools
         Return workDaysPerYear / MonthsPerYear
     End Function
 
-    Public Shared Function GetDailyRate(monthlySalary As Decimal, workDaysPerYear As Decimal) As Decimal
-        Return monthlySalary / GetWorkDaysPerMonth(workDaysPerYear)
+    Public Shared Function GetDailyRate(monthlyRate As Decimal, workDaysPerYear As Decimal) As Decimal
+        Return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear)
     End Function
 
-    Public Shared Function GetHourlyRate(monthlySalary As Decimal, workDaysPerYear As Decimal) As Decimal
-        Return monthlySalary / GetWorkDaysPerMonth(workDaysPerYear) / WorkHoursPerDay
+    Public Shared Function GetHourlyRate(monthlyRate As Decimal, workDaysPerYear As Decimal) As Decimal
+        Return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear) / WorkHoursPerDay
     End Function
 
     Public Shared Function HasWorkedLastWorkingDay(
@@ -112,4 +113,5 @@ Public Class PayrollTools
                 LastOrDefault
 
     End Function
+
 End Class

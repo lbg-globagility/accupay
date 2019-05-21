@@ -43,11 +43,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _allowances As ICollection(Of Allowance)
 
-    Private ReadOnly _taxableAllowances As ICollection(Of Allowance)
-
     Private ReadOnly _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
-
-    Private ReadOnly _taxableAllowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
     Private ReadOnly _actualtimeentries As ICollection(Of ActualTimeEntry)
 
@@ -116,10 +112,6 @@ Public Class PayrollGeneration
 
         _allowances = resources.Allowances.
             Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
-            ToList()
-
-        _taxableAllowances = resources.TaxableAllowances.
-            Where(Function(a) Nullable.Equals(a.EmployeeID, _employee.RowID)).
             ToList()
     End Sub
 
@@ -222,7 +214,6 @@ Public Class PayrollGeneration
             End If
 
             CalculateAllowances()
-            CalculateTaxableAllowances()
 
             Dim socialSecurityCalculator = New SssCalculator(_settings, _resources.SocialSecurityBrackets)
             socialSecurityCalculator.Calculate(_paystub, _previousPaystub, _salary, _employee, _payPeriod)
@@ -265,9 +256,6 @@ Public Class PayrollGeneration
                 context.Set(Of AllowanceItem).RemoveRange(_paystub.AllowanceItems)
 
                 _paystub.AllowanceItems = _allowanceItems
-                For Each aItem In _taxableAllowanceItems
-                    _paystub.AllowanceItems.Add(aItem)
-                Next
 
                 UpdatePaystubItems(context)
 
@@ -373,24 +361,26 @@ Public Class PayrollGeneration
                 .LastUpdBy = z_User,
                 .PayPeriodID = _payPeriod.RowID,
                 .AllowanceID = allowance.RowID,
-                .Paystub = _paystub
+                .Paystub = _paystub,
+                .IsTaxable = allowance.Product.IsTaxable
             }
 
             If allowance.IsOneTime Then
+
                 item.Amount = allowance.Amount
+
             ElseIf allowance.IsDaily Then
+
                 item = dailyCalculator.Compute(_payPeriod, allowance, _employee, _paystub, _timeEntries)
+
             ElseIf allowance.IsSemiMonthly Then
 
-                If allowance.Product.Fixed Then
-                    item.Amount = allowance.Amount
-                Else
-                    item = semiMonthlyCalculator.Calculate(allowance)
-                End If
+                item = semiMonthlyCalculator.Calculate(allowance)
 
             ElseIf allowance.IsMonthly Then
 
                 If allowance.Product.Fixed And _payPeriod.IsEndOfTheMonth Then
+
                     item.Amount = allowance.Amount
                 End If
             Else
@@ -400,48 +390,15 @@ Public Class PayrollGeneration
             _allowanceItems.Add(item)
         Next
 
-        _paystub.TotalAllowance = AccuMath.CommercialRound(_allowanceItems.Sum(Function(a) a.Amount))
-    End Sub
+        _paystub.TotalTaxableAllowance = AccuMath.CommercialRound(
+            _allowanceItems.
+                Where(Function(a) a.IsTaxable).
+                Sum(Function(a) a.Amount))
 
-    Private Sub CalculateTaxableAllowances()
-        Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payrateCalendar, _previousTimeEntries)
-        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payrateCalendar, _timeEntries)
-
-        For Each taxableAllowance In _taxableAllowances
-            Dim item = New AllowanceItem() With {
-                .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User,
-                .LastUpdBy = z_User,
-                .PayPeriodID = _payPeriod.RowID,
-                .AllowanceID = taxableAllowance.RowID,
-                .Paystub = _paystub
-            }
-
-            If taxableAllowance.IsOneTime Then
-                item.Amount = taxableAllowance.Amount
-            ElseIf taxableAllowance.IsDaily Then
-                item = dailyCalculator.Compute(_payPeriod, taxableAllowance, _employee, _paystub, _timeEntries)
-            ElseIf taxableAllowance.IsSemiMonthly Then
-
-                If taxableAllowance.Product.Fixed Then
-                    item.Amount = taxableAllowance.Amount
-                Else
-                    item = semiMonthlyCalculator.Calculate(taxableAllowance)
-                End If
-
-            ElseIf taxableAllowance.IsMonthly Then
-
-                If taxableAllowance.Product.Fixed And _payPeriod.IsEndOfTheMonth Then
-                    item.Amount = taxableAllowance.Amount
-                End If
-            Else
-                item = Nothing
-            End If
-
-            _taxableAllowanceItems.Add(item)
-        Next
-
-        _paystub.TotalTaxableAllowance = AccuMath.CommercialRound(_taxableAllowanceItems.Sum(Function(a) a.Amount))
+        _paystub.TotalAllowance = AccuMath.CommercialRound(
+            _allowanceItems.
+                Where(Function(a) Not a.IsTaxable).
+                Sum(Function(a) a.Amount))
     End Sub
 
     Private Function CalculateOneTimeAllowances(allowance As Allowance) As Decimal
