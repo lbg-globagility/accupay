@@ -230,6 +230,33 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property IsActive As Boolean
+            Get
+                Return IsResigned = False AndAlso IsTerminated = False AndAlso IsRetired = False
+            End Get
+        End Property
+
+        Public ReadOnly Property IsResigned As Boolean
+            Get
+                Return EmploymentStatus.ToUpper().Trim() = "RESIGNED"
+            End Get
+        End Property
+
+        Public ReadOnly Property IsTerminated As Boolean
+            Get
+                Return EmploymentStatus.ToUpper().Trim() = "TERMINATED"
+            End Get
+        End Property
+
+        Public ReadOnly Property IsRetired As Boolean
+            Get
+                Return EmploymentStatus.ToUpper().Trim() = "RETIRED"
+            End Get
+        End Property
+
+
+
+
     End Class
 
 End Namespace

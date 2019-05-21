@@ -84,6 +84,21 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="LeaveLedgerReportModel" msprop:Generator_TableClassName="LeaveLedgerReportModelDataTable" msprop:Generator_TableVarName="tableLeaveLedgerReportModel" msprop:Generator_RowChangedName="LeaveLedgerReportModelRowChanged" msprop:Generator_TablePropName="LeaveLedgerReportModel" msprop:Generator_RowDeletingName="LeaveLedgerReportModelRowDeleting" msprop:Generator_RowChangingName="LeaveLedgerReportModelRowChanging" msprop:Generator_RowEvHandlerName="LeaveLedgerReportModelRowChangeEventHandler" msprop:Generator_RowDeletedName="LeaveLedgerReportModelRowDeleted" msprop:Generator_RowClassName="LeaveLedgerReportModelRow" msprop:Generator_UserTableName="LeaveLedgerReportModel" msprop:Generator_RowEvArgName="LeaveLedgerReportModelRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="EmployeeNumber" msprop:Generator_ColumnVarNameInTable="columnEmployeeNumber" msprop:Generator_ColumnPropNameInRow="EmployeeNumber" msprop:Generator_ColumnPropNameInTable="EmployeeNumberColumn" msprop:Generator_UserColumnName="EmployeeNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="FullName" msprop:Generator_ColumnVarNameInTable="columnFullName" msprop:Generator_ColumnPropNameInRow="FullName" msprop:Generator_ColumnPropNameInTable="FullNameColumn" msprop:Generator_UserColumnName="FullName" type="xs:string" minOccurs="0" />
+              <xs:element name="LeaveTypeDescription" msprop:Generator_ColumnVarNameInTable="columnLeaveTypeDescription" msprop:Generator_ColumnPropNameInRow="LeaveTypeDescription" msprop:Generator_ColumnPropNameInTable="LeaveTypeDescriptionColumn" msprop:Generator_UserColumnName="LeaveTypeDescription" type="xs:string" minOccurs="0" />
+              <xs:element name="BeginningBalance" msprop:Generator_ColumnVarNameInTable="columnBeginningBalance" msprop:Generator_ColumnPropNameInRow="BeginningBalance" msprop:Generator_ColumnPropNameInTable="BeginningBalanceColumn" msprop:Generator_UserColumnName="BeginningBalance" type="xs:decimal" minOccurs="0" />
+              <xs:element name="AvailedLeave" msprop:Generator_ColumnVarNameInTable="columnAvailedLeave" msprop:Generator_ColumnPropNameInRow="AvailedLeave" msprop:Generator_ColumnPropNameInTable="AvailedLeaveColumn" msprop:Generator_UserColumnName="AvailedLeave" type="xs:decimal" minOccurs="0" />
+              <xs:element name="EndingBalance" msprop:Generator_ColumnVarNameInTable="columnEndingBalance" msprop:Generator_ColumnPropNameInRow="EndingBalance" msprop:Generator_ColumnPropNameInTable="EndingBalanceColumn" msprop:Generator_UserColumnName="EndingBalance" type="xs:decimal" minOccurs="0" />
+              <xs:element name="BeginningBalanceInDays" msprop:Generator_ColumnVarNameInTable="columnBeginningBalanceInDays" msprop:Generator_ColumnPropNameInRow="BeginningBalanceInDays" msprop:Generator_ColumnPropNameInTable="BeginningBalanceInDaysColumn" msprop:Generator_UserColumnName="BeginningBalanceInDays" type="xs:decimal" minOccurs="0" />
+              <xs:element name="AvailedLeaveInDays" msprop:Generator_ColumnVarNameInTable="columnAvailedLeaveInDays" msprop:Generator_ColumnPropNameInRow="AvailedLeaveInDays" msprop:Generator_ColumnPropNameInTable="AvailedLeaveInDaysColumn" msprop:Generator_UserColumnName="AvailedLeaveInDays" type="xs:decimal" minOccurs="0" />
+              <xs:element name="EndingBalanceInDays" msprop:Generator_ColumnVarNameInTable="columnEndingBalanceInDays" msprop:Generator_ColumnPropNameInRow="EndingBalanceInDays" msprop:Generator_ColumnPropNameInTable="EndingBalanceInDaysColumn" msprop:Generator_UserColumnName="EndingBalanceInDays" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
   </xs:element>
