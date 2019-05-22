@@ -22,7 +22,7 @@ Partial Class PayrollSummaDateSelection
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpayperiod = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -57,6 +57,7 @@ Partial Class PayrollSummaDateSelection
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.cboxLoanType = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.chkHideEmptyColumns = New System.Windows.Forms.CheckBox()
         CType(Me.dgvpayperiod, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -82,21 +83,21 @@ Partial Class PayrollSummaDateSelection
         Me.dgvpayperiod.ColumnHeadersHeight = 34
         Me.dgvpayperiod.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvpayperiod.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column6, Me.Column7, Me.Column4, Me.Column5})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpayperiod.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvpayperiod.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvpayperiod.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvpayperiod.Location = New System.Drawing.Point(0, 39)
         Me.dgvpayperiod.MultiSelect = False
         Me.dgvpayperiod.Name = "dgvpayperiod"
         Me.dgvpayperiod.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvpayperiod.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvpayperiod.Size = New System.Drawing.Size(438, 354)
+        Me.dgvpayperiod.Size = New System.Drawing.Size(438, 345)
         Me.dgvpayperiod.TabIndex = 0
         '
         'Column1
@@ -272,7 +273,7 @@ Partial Class PayrollSummaDateSelection
         Me.Label5.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Label5.Font = New System.Drawing.Font("Segoe UI", 9.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label5.ForeColor = System.Drawing.Color.White
-        Me.Label5.Location = New System.Drawing.Point(0, 548)
+        Me.Label5.Location = New System.Drawing.Point(0, 570)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(438, 20)
         Me.Label5.TabIndex = 521
@@ -317,7 +318,7 @@ Partial Class PayrollSummaDateSelection
         Me.Panel1.Controls.Add(Me.linkNxt)
         Me.Panel1.Controls.Add(Me.linkPrev)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel1.Location = New System.Drawing.Point(0, 399)
+        Me.Panel1.Location = New System.Drawing.Point(0, 390)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(438, 15)
         Me.Panel1.TabIndex = 523
@@ -331,7 +332,7 @@ Partial Class PayrollSummaDateSelection
         Me.Panel2.Controls.Add(Me.btnOK)
         Me.Panel2.Controls.Add(Me.btnClose)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 502)
+        Me.Panel2.Location = New System.Drawing.Point(0, 524)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(438, 46)
         Me.Panel2.TabIndex = 524
@@ -342,7 +343,7 @@ Partial Class PayrollSummaDateSelection
         Me.panelSalarySwitch.Controls.Add(Me.RadioButton2)
         Me.panelSalarySwitch.Controls.Add(Me.RadioButton1)
         Me.panelSalarySwitch.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.panelSalarySwitch.Location = New System.Drawing.Point(0, 472)
+        Me.panelSalarySwitch.Location = New System.Drawing.Point(0, 494)
         Me.panelSalarySwitch.Name = "panelSalarySwitch"
         Me.panelSalarySwitch.Size = New System.Drawing.Size(438, 30)
         Me.panelSalarySwitch.TabIndex = 525
@@ -381,13 +382,14 @@ Partial Class PayrollSummaDateSelection
         '
         'Panel3
         '
+        Me.Panel3.Controls.Add(Me.chkHideEmptyColumns)
         Me.Panel3.Controls.Add(Me.cboStringParameter)
         Me.Panel3.Controls.Add(Me.Label360)
         Me.Panel3.Controls.Add(Me.TextBox1)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel3.Location = New System.Drawing.Point(0, 443)
+        Me.Panel3.Location = New System.Drawing.Point(0, 434)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(438, 29)
+        Me.Panel3.Size = New System.Drawing.Size(438, 60)
         Me.Panel3.TabIndex = 526
         Me.Panel3.Visible = False
         '
@@ -399,7 +401,7 @@ Partial Class PayrollSummaDateSelection
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel4.Location = New System.Drawing.Point(0, 0)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(438, 414)
+        Me.Panel4.Size = New System.Drawing.Size(438, 405)
         Me.Panel4.TabIndex = 527
         '
         'Panel5
@@ -407,7 +409,7 @@ Partial Class PayrollSummaDateSelection
         Me.Panel5.Controls.Add(Me.cboxLoanType)
         Me.Panel5.Controls.Add(Me.Label4)
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel5.Location = New System.Drawing.Point(0, 414)
+        Me.Panel5.Location = New System.Drawing.Point(0, 405)
         Me.Panel5.Name = "Panel5"
         Me.Panel5.Size = New System.Drawing.Size(438, 29)
         Me.Panel5.TabIndex = 528
@@ -433,12 +435,24 @@ Partial Class PayrollSummaDateSelection
         Me.Label4.TabIndex = 0
         Me.Label4.Text = "Loan Type"
         '
+        'chkHideEmptyColumns
+        '
+        Me.chkHideEmptyColumns.AutoSize = True
+        Me.chkHideEmptyColumns.Checked = True
+        Me.chkHideEmptyColumns.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkHideEmptyColumns.Location = New System.Drawing.Point(177, 30)
+        Me.chkHideEmptyColumns.Name = "chkHideEmptyColumns"
+        Me.chkHideEmptyColumns.Size = New System.Drawing.Size(121, 17)
+        Me.chkHideEmptyColumns.TabIndex = 521
+        Me.chkHideEmptyColumns.Text = "Hide empty columns"
+        Me.chkHideEmptyColumns.UseVisualStyleBackColor = True
+        '
         'PayrollSummaDateSelection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(438, 568)
+        Me.ClientSize = New System.Drawing.Size(438, 590)
         Me.Controls.Add(Me.Panel4)
         Me.Controls.Add(Me.Panel5)
         Me.Controls.Add(Me.Panel3)
@@ -501,4 +515,5 @@ Partial Class PayrollSummaDateSelection
     Friend WithEvents Panel5 As Panel
     Friend WithEvents cboxLoanType As ComboBox
     Friend WithEvents Label4 As Label
+    Friend WithEvents chkHideEmptyColumns As CheckBox
 End Class

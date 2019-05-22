@@ -100,6 +100,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
             keepInOneSheet
         }
 
+        Dim hideEmptyColumns = payrollSelector.chkHideEmptyColumns.Checked
+
         Try
             Dim query = New SQL(
                 "CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
@@ -141,7 +143,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
             Dim viewableReportColumns = New List(Of ReportColumn)
             For Each reportColumn In _reportColumns
-                If reportColumn.Optional Then
+                If reportColumn.Optional AndAlso hideEmptyColumns Then
                     Dim hasValue = allEmployees.
                         Any(Function(row) Not IsDBNull(row(reportColumn.Source)) And Not CDbl(row(reportColumn.Source)) = 0)
 
