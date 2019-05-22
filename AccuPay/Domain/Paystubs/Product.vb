@@ -127,7 +127,6 @@ Namespace Global.AccuPay.Entity
         <NotMapped>
         Public Overridable Property ReOrderPoint As Integer?
 
-        <NotMapped>
         Public Overridable Property AllocateBelowSafetyFlag As Char
 
         <NotMapped>
@@ -175,6 +174,12 @@ Namespace Global.AccuPay.Entity
         Public ReadOnly Property IsSickLeave As Boolean
             Get
                 Return PartNo.Trim.ToUpper = ProductConstant.SICK_LEAVE_PART_NO.ToUpper
+            End Get
+        End Property
+
+        Public ReadOnly Property IsThirteenthMonthPay As Boolean
+            Get
+                Return AllocateBelowSafetyFlag = "1"
             End Get
         End Property
 
