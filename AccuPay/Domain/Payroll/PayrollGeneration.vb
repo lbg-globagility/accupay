@@ -362,7 +362,8 @@ Public Class PayrollGeneration
                 .PayPeriodID = _payPeriod.RowID,
                 .AllowanceID = allowance.RowID,
                 .Paystub = _paystub,
-                .IsTaxable = allowance.Product.IsTaxable
+                .IsTaxable = allowance.Product.IsTaxable,
+                .IsThirteenthMonthPay = allowance.Product.IsThirteenthMonthPay
             }
 
             If allowance.IsOneTime Then
@@ -598,6 +599,9 @@ Public Class PayrollGeneration
 
             thirteenthMonthAmount = ((basicPay + additionalAmount) - totalDeductions)
         End If
+
+        Dim allowanceAmount = _allowanceItems.Where(Function(a) a.IsThirteenthMonthPay).Sum(Function(a) a.Amount)
+        thirteenthMonthAmount += allowanceAmount
 
         _paystub.ThirteenthMonthPay.BasicPay = thirteenthMonthAmount
         _paystub.ThirteenthMonthPay.Amount = thirteenthMonthAmount / CalendarConstants.MonthsInAYear

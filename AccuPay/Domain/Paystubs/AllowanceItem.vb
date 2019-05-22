@@ -46,6 +46,9 @@ Namespace Global.AccuPay.Entity
         <NotMapped>
         Public Property IsTaxable As Boolean
 
+        <NotMapped>
+        Public Property IsThirteenthMonthPay As Boolean
+
         Public Sub New()
             AllowancesPerDay = New List(Of AllowancePerDay)
         End Sub
