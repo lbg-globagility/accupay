@@ -44,11 +44,4 @@ Public Class AllowancePolicy
         End Get
     End Property
 
-    <Obsolete>
-    Public ReadOnly Property IsHolidayPaid As Boolean
-        Get
-            Return _settings.GetBoolean("Payroll Policy", "allowances.holiday")
-        End Get
-    End Property
-
 End Class

@@ -4,16 +4,15 @@ Imports AccuPay.Entity
 
 Public Class SemiMonthlyAllowanceCalculator
 
-    Private _employee As Employee
+    Private ReadOnly _employee As Employee
 
-    Private _paystub As Paystub
+    Private ReadOnly _paystub As Paystub
 
-    Private _payperiod As PayPeriod
-
+    Private ReadOnly _payperiod As PayPeriod
 
     Private ReadOnly _payrateCalendar As PayratesCalendar
 
-    Private _timeEntries As ICollection(Of TimeEntry)
+    Private ReadOnly _timeEntries As ICollection(Of TimeEntry)
 
     Private ReadOnly _allowancePolicy As AllowancePolicy
 
@@ -27,10 +26,6 @@ Public Class SemiMonthlyAllowanceCalculator
     End Sub
 
     Public Function Calculate(allowance As Allowance) As AllowanceItem
-        Dim workDaysPerYear = _employee.WorkDaysPerYear
-        Dim workingDays = CDec(workDaysPerYear / CalendarConstants.MonthsInAYear / CalendarConstants.SemiMonthlyPayPeriodsPerMonth)
-        Dim dailyRate = allowance.Amount / workingDays
-
         Dim allowanceItem = New AllowanceItem() With {
             .OrganizationID = z_OrganizationID,
             .CreatedBy = z_User,
@@ -41,10 +36,13 @@ Public Class SemiMonthlyAllowanceCalculator
             .Amount = allowance.Amount
         }
 
-        For Each timeEntry In _timeEntries
-            Dim divisor = PayrollTools.DivisorToDailyRate
-            Dim hourlyRate = dailyRate / divisor
+        If allowance.Product.Fixed Then
+            Return allowanceItem
+        End If
 
+        Dim hourlyRate = PayrollTools.GetHourlyRate(allowance.Amount, _employee.WorkDaysPerYear)
+
+        For Each timeEntry In _timeEntries
             Dim deductionHours =
                 timeEntry.LateHours +
                 timeEntry.UndertimeHours +
@@ -69,16 +67,6 @@ Public Class SemiMonthlyAllowanceCalculator
                     additionalAmount = timeEntry.RegularHolidayHours * hourlyRate * (payRate.CommonRate - 1D)
                 End If
 
-            End If
-
-            If _allowancePolicy.IsHolidayPaid Then
-
-                If (payRate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday) Or
-                   (payRate.IsRegularHoliday And _employee.CalcHoliday) Then
-
-                    additionalAmount = timeEntry.RegularHours * hourlyRate * (payRate.CommonRate - 1D)
-
-                End If
             End If
 
             allowanceItem.AddPerDay(timeEntry.Date, deductionAmount + additionalAmount)

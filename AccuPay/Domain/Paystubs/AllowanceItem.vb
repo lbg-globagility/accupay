@@ -43,6 +43,9 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property AllowancesPerDay As IList(Of AllowancePerDay)
 
+        <NotMapped>
+        Public Property IsTaxable As Boolean
+
         Public Sub New()
             AllowancesPerDay = New List(Of AllowancePerDay)
         End Sub
