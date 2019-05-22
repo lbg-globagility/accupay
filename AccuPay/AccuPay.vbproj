@@ -859,12 +859,6 @@
     <Compile Include="Views\Initial Forms\AboutUs.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\AllowanceTypeForm.Designer.vb">
-      <DependentUpon>AllowanceTypeForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\AllowanceTypeForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\EmployeeForm.Designer.vb">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
     </Compile>
@@ -1024,12 +1018,6 @@
     <Compile Include="Views\Core Forms\AddressClass.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\BIR_1601CForm.Designer.vb">
-      <DependentUpon>BIR_1601CForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\BIR_1601CForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\BonusGenerator.Designer.vb">
       <DependentUpon>BonusGenerator.vb</DependentUpon>
     </Compile>
@@ -1138,12 +1126,6 @@
     <Compile Include="Views\Core Forms\leavetype.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\LoanCancellation.designer.vb">
-      <DependentUpon>LoanCancellation.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\LoanCancellation.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\newEmpStat.Designer.vb">
       <DependentUpon>newEmpStat.vb</DependentUpon>
     </Compile>
@@ -1178,12 +1160,6 @@
       <DependentUpon>OrganizationPrompt.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\OrganizationPrompt.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\payFreqSelectn.Designer.vb">
-      <DependentUpon>payFreqSelectn.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\payFreqSelectn.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\PayPeriodSelector.Designer.vb">
@@ -1232,12 +1208,6 @@
       <DependentUpon>promptyear.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\promptyear.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\ReportsForm.Designer.vb">
-      <DependentUpon>ReportsForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\ReportsForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\ReportsList.Designer.vb">
@@ -1894,9 +1864,6 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>LoanReportByTypePerPage.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\AllowanceTypeForm.resx">
-      <DependentUpon>AllowanceTypeForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\EmployeeForm.resx">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -2113,9 +2080,6 @@
     <EmbeddedResource Include="Views\Core Forms\AddressClass.resx">
       <DependentUpon>AddressClass.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\BIR_1601CForm.resx">
-      <DependentUpon>BIR_1601CForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\BlankTimeEntryLogs.resx">
       <DependentUpon>BlankTimeEntryLogs.vb</DependentUpon>
     </EmbeddedResource>
@@ -2158,9 +2122,6 @@
     <EmbeddedResource Include="Views\Core Forms\leavetype.resx">
       <DependentUpon>leavetype.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\LoanCancellation.resx">
-      <DependentUpon>LoanCancellation.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\newEmpStat.resx">
       <DependentUpon>newEmpStat.vb</DependentUpon>
     </EmbeddedResource>
@@ -2178,9 +2139,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\OrganizationPrompt.resx">
       <DependentUpon>OrganizationPrompt.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\payFreqSelectn.resx">
-      <DependentUpon>payFreqSelectn.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayPeriodSelector.resx">
       <DependentUpon>PayPeriodSelector.vb</DependentUpon>
@@ -2205,9 +2163,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\promptyear.resx">
       <DependentUpon>promptyear.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\ReportsForm.resx">
-      <DependentUpon>ReportsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\ReportsList.resx">
       <DependentUpon>ReportsList.vb</DependentUpon>
