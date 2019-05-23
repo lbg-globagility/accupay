@@ -1,0 +1,1 @@
+Server=localhost;Database=accupaydb_4linq;Uid=root;Pwd=globagility;
