@@ -134,7 +134,6 @@ Public Class TimeEntrySummaryForm
 
             _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
 
-
             Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
             Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
             payPeriodsDataGridView.CurrentCell = payPeriodCell
@@ -753,7 +752,6 @@ Public Class TimeEntrySummaryForm
     Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles regenerateTimeEntryButton.Click
         Dim generator = New TimeEntryGenerator(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
 
-
         Dim progressDialog = New TimeEntryProgressDialog(generator)
         progressDialog.Show()
         Await Task.Run(Sub() generator.Start()).
@@ -830,7 +828,7 @@ Public Class TimeEntrySummaryForm
             Return Nothing
         End If
 
-        If time > HoursPerDay Then
+        If time >= HoursPerDay Then
             Return Date.Parse((time - HoursPerDay).ToString())
         Else
             Return Date.Parse(time.ToString())
@@ -1090,7 +1088,6 @@ Public Class TimeEntrySummaryForm
                 If _useNewShift Then
 
                     Await DeleteNewShift(dateValue, employeeRowId, balloon)
-
                 Else
                     Await DeleteOldShift(dateValue, employeeRowId, balloon)
                 End If
