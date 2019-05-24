@@ -468,18 +468,29 @@ Public Class DayCalculator
                                    hasWorkedLastDay As Boolean,
                                    currentshift As CurrentShift,
                                    leaves As IList(Of Leave))
-        Dim isCalculatingRegularHoliday = payrate.IsRegularHoliday And _employee.CalcHoliday
-        Dim isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday
+        'Dim isCalculatingRegularHoliday = payrate.IsRegularHoliday And _employee.CalcHoliday
+        'Dim isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday
 
-        Dim isExemptDueToHoliday =
-            (payrate.IsHoliday And (Not _policy.RequiredToWorkLastDay Or hasWorkedLastDay)) And
-            (isCalculatingRegularHoliday Or isCalculatingSpecialHoliday Or Not _policy.AbsencesOnHoliday)
-
-        If (Not currentshift.HasShift) Or (timeEntry.RegularHours > 0) Or isExemptDueToHoliday Or currentshift.IsRestDay Or leaves.Any() Then
-            timeEntry.AbsentHours = 0
-        Else
-            timeEntry.AbsentHours = currentshift.WorkingHours
+        'Dim isExemptDueToHoliday =
+        '    (payrate.IsHoliday And (Not _policy.RequiredToWorkLastDay Or hasWorkedLastDay)) And
+        '    (isCalculatingRegularHoliday Or isCalculatingSpecialHoliday Or Not _policy.AbsencesOnHoliday)
+        If leaves.Any() Then
+            Return
         End If
+
+        If timeEntry.RegularHours > 0 Then
+            Return
+        End If
+
+        If payrate.IsRegularDay And (currentshift.IsRestDay Or (Not currentshift.HasShift)) Then
+            Return
+        End If
+
+        If IsExemptDueToHoliday(payrate, hasWorkedLastDay) Then
+            Return
+        End If
+
+        timeEntry.AbsentHours = currentshift.WorkingHours
     End Sub
 
     ''' <summary>
@@ -494,12 +505,7 @@ Public Class DayCalculator
             Return False
         End If
 
-        Dim isCalculatingRegularHoliday = payrate.IsRegularHoliday And _employee.CalcHoliday
-        Dim isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday
-
-        Dim isHolidayExempt = Not (isCalculatingRegularHoliday Or isCalculatingSpecialHoliday)
-
-        If isHolidayExempt Then
+        If IsHolidayExempt(payrate) Then
             Return True
         End If
 
@@ -508,6 +514,13 @@ Public Class DayCalculator
         End If
 
         Return ((Not _policy.RequiredToWorkLastDay) Or hasWorkedLastDay)
+    End Function
+
+    Public Function IsHolidayExempt(payrate As PayRate) As Boolean
+        Dim isCalculatingRegularHoliday = payrate.IsRegularHoliday And _employee.CalcHoliday
+        Dim isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday
+
+        Return Not (isCalculatingRegularHoliday Or isCalculatingSpecialHoliday)
     End Function
 
     ''' <summary>
