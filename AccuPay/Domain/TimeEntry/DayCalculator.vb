@@ -483,6 +483,34 @@ Public Class DayCalculator
     End Sub
 
     ''' <summary>
+    '''
+    ''' </summary>
+    ''' <param name="payrate"></param>
+    ''' <param name="hasWorkedLastDay"></param>
+    ''' <returns>True means no absence, false means possibly absent.</returns>
+    Public Function IsExemptDueToHoliday(payrate As PayRate, hasWorkedLastDay As Boolean) As Boolean
+        ' If it's not a holiday, then employee is not exempt
+        If Not payrate.IsHoliday Then
+            Return False
+        End If
+
+        Dim isCalculatingRegularHoliday = payrate.IsRegularHoliday And _employee.CalcHoliday
+        Dim isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday
+
+        Dim isHolidayExempt = Not (isCalculatingRegularHoliday Or isCalculatingSpecialHoliday)
+
+        If isHolidayExempt Then
+            Return True
+        End If
+
+        If Not _policy.AbsencesOnHoliday Then
+            Return True
+        End If
+
+        Return ((Not _policy.RequiredToWorkLastDay) Or hasWorkedLastDay)
+    End Function
+
+    ''' <summary>
     ''' Updates timeentry. This sets the leave hours only if there is no time logs. This will also increment the undertime hours if its is a working day (with timelogs or not).
     ''' </summary>
     ''' <param name="leaves">The list of leave for this day.</param>
