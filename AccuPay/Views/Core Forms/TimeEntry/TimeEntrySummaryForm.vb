@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports System.Threading
@@ -56,8 +56,8 @@ Public Class TimeEntrySummaryForm
     Private _useNewShift As Boolean
 
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
         employeesDataGridView.AutoGenerateColumns = False
+        timeEntriesDataGridView.AutoGenerateColumns = False
 
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
@@ -187,12 +187,12 @@ Public Class TimeEntrySummaryForm
         Return payPeriods
     End Function
 
-    Public Async Sub LoadTimeEntries()
+    Private Async Sub LoadTimeEntries()
         If _selectedEmployee Is Nothing Or _selectedPayPeriod Is Nothing Then
             Return
         End If
 
-        timeEntriesDataGridView.AutoGenerateColumns = False
+        Dim loadingEmployee = _selectedEmployee
 
         Dim timeEntries As ICollection(Of TimeEntry)
         If _isActual Then
@@ -201,8 +201,11 @@ Public Class TimeEntrySummaryForm
             timeEntries = Await GetTimeEntries(_selectedEmployee, _selectedPayPeriod)
         End If
 
-        SetVisibleColumns(timeEntries)
+        If loadingEmployee.EmployeeNo <> _selectedEmployee.EmployeeNo Then
+            Return
+        End If
 
+        SetVisibleColumns(timeEntries)
         timeEntriesDataGridView.DataSource = timeEntries
     End Sub
 
