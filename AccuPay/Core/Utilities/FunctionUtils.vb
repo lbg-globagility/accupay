@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.Threading.Tasks
 
 Namespace Global.AccuPay.Utils
@@ -13,11 +14,9 @@ Namespace Global.AccuPay.Utils
             Try
 
                 Await action()
-
             Catch ex As ArgumentException
 
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-
             Catch ex As Exception
 
                 Debugger.Break()
