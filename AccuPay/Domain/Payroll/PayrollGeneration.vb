@@ -53,8 +53,6 @@ Public Class PayrollGeneration
 
     Private _paystub As Paystub
 
-    Private _paystubActual As PaystubActual
-
     Sub New(employee As Employee,
             resources As PayrollResources,
             Optional paystubForm As PayStubForm = Nothing)
@@ -155,9 +153,15 @@ Public Class PayrollGeneration
                     .PayFromdate = _payPeriod.PayFromDate,
                     .PayToDate = _payPeriod.PayToDate
                 }
-            End If
 
-            _paystubActual = New PaystubActual()
+                _paystub.Actual = New PaystubActual With {
+                    .OrganizationID = z_OrganizationID,
+                    .EmployeeID = _employee.RowID,
+                    .PayPeriodID = _payPeriod.RowID,
+                    .PayFromDate = _payPeriod.PayFromDate,
+                    .PayToDate = _payPeriod.PayToDate
+                }
+            End If
 
             _paystub.EmployeeID = _employee.RowID
 
@@ -197,11 +201,9 @@ Public Class PayrollGeneration
                         _paystub.LeavePay +
                         _paystub.AdditionalPay
                 Else
-                    _paystub.RegularHours =
-                        _paystub.BasicHours - _paystub.LeaveHours
+                    _paystub.RegularHours = _paystub.BasicHours - _paystub.LeaveHours - _paystub.LateHours - _paystub.UndertimeHours - _paystub.AbsentHours
 
-                    _paystub.RegularPay =
-                        _paystub.BasicPay - _paystub.LeavePay
+                    _paystub.RegularPay = _paystub.BasicPay - _paystub.LeavePay - _paystub.BasicDeductions
 
                     _paystub.TotalEarnings = (_paystub.BasicPay + _paystub.AdditionalPay) - _paystub.BasicDeductions
                 End If
@@ -236,14 +238,18 @@ Public Class PayrollGeneration
             Dim grandTotalAllowance = _paystub.TotalAllowance + _paystub.TotalTaxableAllowance
 
             _paystub.GrossPay = _paystub.TotalEarnings + _paystub.TotalBonus + grandTotalAllowance
-            _paystub.TotalAdjustments = If(_paystub?.Adjustments.Sum(Function(a) a.Amount), 0)
+            _paystub.TotalAdjustments = _paystub.Adjustments.Sum(Function(a) a.Amount)
             _paystub.NetPay = AccuMath.CommercialRound(_paystub.GrossPay - _paystub.NetDeductions + _paystub.TotalAdjustments)
+
+            Dim actualCalculator = New PaystubActualCalculator()
+            actualCalculator.Compute(_employee, _salary, _settings, _payPeriod, _paystub)
 
             Using context = New PayrollContext()
                 UpdateLeaveLedger(context)
 
                 If _paystub.RowID.HasValue Then
                     context.Entry(_paystub).State = EntityState.Modified
+                    context.Entry(_paystub.Actual).State = EntityState.Modified
 
                     If _paystub.ThirteenthMonthPay IsNot Nothing Then
                         context.Entry(_paystub.ThirteenthMonthPay).State = EntityState.Modified
@@ -293,61 +299,61 @@ Public Class PayrollGeneration
     Private Sub ComputeHours()
         _paystub.RegularHours = _timeEntries.Sum(Function(t) t.RegularHours)
         _paystub.RegularPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RegularPay))
-        _paystubActual.RegularPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RegularPay))
+        _paystub.Actual.RegularPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RegularPay))
 
         _paystub.OvertimeHours = _timeEntries.Sum(Function(t) t.OvertimeHours)
         _paystub.OvertimePay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.OvertimePay))
-        _paystubActual.OvertimePay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RegularPay))
+        _paystub.Actual.OvertimePay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.OvertimePay))
 
         _paystub.NightDiffHours = _timeEntries.Sum(Function(t) t.NightDiffHours)
         _paystub.NightDiffPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.NightDiffPay))
-        _paystubActual.NightDiffPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.NightDiffPay))
+        _paystub.Actual.NightDiffPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.NightDiffPay))
 
         _paystub.NightDiffOvertimeHours = _timeEntries.Sum(Function(t) t.NightDiffOTHours)
         _paystub.NightDiffOvertimePay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.NightDiffOTPay))
-        _paystubActual.NightDiffOTPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.NightDiffOTPay))
+        _paystub.Actual.NightDiffOTPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.NightDiffOTPay))
 
         _paystub.RestDayHours = _timeEntries.Sum(Function(t) t.RestDayHours)
         _paystub.RestDayPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RestDayPay))
-        _paystubActual.RestDayPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RestDayPay))
+        _paystub.Actual.RestDayPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RestDayPay))
 
         _paystub.RestDayOTHours = _timeEntries.Sum(Function(t) t.RestDayOTHours)
         _paystub.RestDayOTPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RestDayOTPay))
-        _paystubActual.RestDayOTPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RestDayOTPay))
+        _paystub.Actual.RestDayOTPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RestDayOTPay))
 
         _paystub.SpecialHolidayHours = _timeEntries.Sum(Function(t) t.SpecialHolidayHours)
         _paystub.SpecialHolidayPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.SpecialHolidayPay))
-        _paystubActual.SpecialHolidayPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.SpecialHolidayPay))
+        _paystub.Actual.SpecialHolidayPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.SpecialHolidayPay))
 
         _paystub.SpecialHolidayOTHours = _timeEntries.Sum(Function(t) t.SpecialHolidayOTHours)
         _paystub.SpecialHolidayOTPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.SpecialHolidayOTPay))
-        _paystubActual.SpecialHolidayOTPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.SpecialHolidayOTPay))
+        _paystub.Actual.SpecialHolidayOTPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.SpecialHolidayOTPay))
 
         _paystub.RegularHolidayHours = _timeEntries.Sum(Function(t) t.RegularHolidayHours)
         _paystub.RegularHolidayPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RegularHolidayPay))
-        _paystubActual.RegularHolidayPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RegularHolidayPay))
+        _paystub.Actual.RegularHolidayPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RegularHolidayPay))
 
         _paystub.RegularHolidayOTHours = _timeEntries.Sum(Function(t) t.RegularHolidayOTHours)
         _paystub.RegularHolidayOTPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RegularHolidayOTPay))
-        _paystubActual.RegularHolidayOTPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RegularHolidayOTPay))
+        _paystub.Actual.RegularHolidayOTPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RegularHolidayOTPay))
 
         _paystub.HolidayPay = _timeEntries.Sum(Function(t) t.HolidayPay)
 
         _paystub.LeaveHours = _timeEntries.Sum(Function(t) t.TotalLeaveHours)
         _paystub.LeavePay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.LeavePay))
-        _paystubActual.LeavePay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.LeavePay))
+        _paystub.Actual.LeavePay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.LeavePay))
 
         _paystub.LateHours = _timeEntries.Sum(Function(t) t.LateHours)
         _paystub.LateDeduction = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.LateDeduction))
-        _paystubActual.LateDeduction = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.LateDeduction))
+        _paystub.Actual.LateDeduction = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.LateDeduction))
 
         _paystub.UndertimeHours = _timeEntries.Sum(Function(t) t.UndertimeHours)
         _paystub.UndertimeDeduction = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.UndertimeDeduction))
-        _paystubActual.UndertimeDeduction = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.UndertimeDeduction))
+        _paystub.Actual.UndertimeDeduction = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.UndertimeDeduction))
 
         _paystub.AbsentHours = _timeEntries.Sum(Function(t) t.AbsentHours)
         _paystub.AbsenceDeduction = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.AbsentDeduction))
-        _paystubActual.AbsenceDeduction = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.AbsentDeduction))
+        _paystub.Actual.AbsenceDeduction = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.AbsentDeduction))
     End Sub
 
     Private Sub CalculateAllowances()
