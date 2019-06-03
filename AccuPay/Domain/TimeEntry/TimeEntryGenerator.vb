@@ -149,8 +149,6 @@ Public Class TimeEntryGenerator
                 _breakTimeBrackets = New List(Of BreakTimeBracket)
             End If
 
-
-
             Dim payRates =
                 (From p In context.PayRates
                  Where p.OrganizationID.Value = z_OrganizationID AndAlso
@@ -209,6 +207,7 @@ Public Class TimeEntryGenerator
 
         Dim leavesInCutoff As IList(Of Leave) = _leaves.
             Where(Function(l) Nullable.Equals(l.EmployeeID, employee.RowID)).
+            Where(Function(l) l.LeaveType <> "Leave w/o Pay").
             ToList()
 
         Dim agencyFees As IList(Of AgencyFee) = _agencyFees.
@@ -268,7 +267,6 @@ Public Class TimeEntryGenerator
                     breakTimeBrackets)
 
                 timeEntries.Add(timeEntry)
-
             Catch ex As Exception
                 Throw New Exception($"{currentDate} #{employee.EmployeeNo}", ex)
             End Try
