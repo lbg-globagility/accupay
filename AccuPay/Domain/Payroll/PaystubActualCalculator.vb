@@ -39,9 +39,9 @@ Namespace Global.AccuPay.Payroll
                     Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, amount)
                     Dim basicPay = monthlyRate / 2
 
-                    paystub.Actual.RegularPay = basicPay - paystub.Actual.LeavePay - paystub.Actual.BasicDeductions
+                    paystub.Actual.RegularPay = basicPay - paystub.Actual.LeavePay
 
-                    totalEarnings = paystub.Actual.RegularPay + paystub.Actual.AdditionalPay
+                    totalEarnings = paystub.Actual.RegularPay + paystub.Actual.LeavePay + paystub.Actual.AdditionalPay - paystub.Actual.BasicDeductions
                 End If
 
             ElseIf employee.IsDaily Then

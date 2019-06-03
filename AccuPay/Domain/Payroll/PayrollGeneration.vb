@@ -201,9 +201,9 @@ Public Class PayrollGeneration
                         _paystub.LeavePay +
                         _paystub.AdditionalPay
                 Else
-                    _paystub.RegularHours = _paystub.BasicHours - _paystub.LeaveHours - _paystub.LateHours - _paystub.UndertimeHours - _paystub.AbsentHours
+                    _paystub.RegularHours = _paystub.BasicHours - _paystub.LeaveHours
 
-                    _paystub.RegularPay = _paystub.BasicPay - _paystub.LeavePay - _paystub.BasicDeductions
+                    _paystub.RegularPay = _paystub.BasicPay - _paystub.LeavePay
 
                     _paystub.TotalEarnings = (_paystub.BasicPay + _paystub.AdditionalPay) - _paystub.BasicDeductions
                 End If
