@@ -569,19 +569,27 @@ Public Class PayrollGeneration
         Dim thirteenthMonthAmount = 0D
 
         If _employee.IsDaily Then
-            thirteenthMonthAmount = If(
-                contractualEmployementStatuses.Contains(_employee.EmploymentStatus),
-                _timeEntries.
-                    Where(Function(t) t.IsRestDay).
-                    Sum(Function(t) t.BasicDayPay + t.LeavePay),
-                _actualtimeentries.
-                    Where(Function(t)
-                              Dim isRestDayOffset = If(t.ShiftSchedule?.IsRestDay, False)
-                              Dim isDefaultRestDay = If((_employee.DayOfRest - 1) = t.Date.DayOfWeek, False)
 
-                              Return Not (isRestDayOffset Xor isDefaultRestDay)
-                          End Function).
-                    Sum(Function(t) t.BasicDayPay + t.LeavePay))
+            If contractualEmployementStatuses.Contains(_employee.EmploymentStatus) Then
+
+                thirteenthMonthAmount = _timeEntries.
+                                            Where(Function(t) Not t.IsRestDay).
+                                            Sum(Function(t) t.BasicDayPay + t.LeavePay)
+            Else
+
+                Dim thirteenthMonthAmountRunningTotal As Decimal = 0
+
+                For Each actualTimeEntry In _actualtimeentries
+
+                    Dim timeEntry = _timeEntries.Where(Function(t) t.Date = actualTimeEntry.Date).FirstOrDefault
+
+                    If timeEntry Is Nothing OrElse timeEntry.IsRestDay Then Continue For
+
+                    thirteenthMonthAmount += actualTimeEntry.BasicDayPay + actualTimeEntry.LeavePay
+
+                Next
+
+            End If
 
         ElseIf _employee.IsMonthly Or _employee.IsFixed Then
 

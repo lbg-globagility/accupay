@@ -478,7 +478,7 @@ Public Class DayCalculator
             Return
         End If
 
-        If timeEntry.RegularHours > 0 Then
+        If timeEntry.BasicHours > 0 Then
             Return
         End If
 
@@ -503,6 +503,10 @@ Public Class DayCalculator
         ' If it's not a holiday, then employee is not exempt
         If Not payrate.IsHoliday Then
             Return False
+        End If
+
+        If _employee.IsDaily Then
+            Return True
         End If
 
         If IsHolidayExempt(payrate) Then
