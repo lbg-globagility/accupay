@@ -63,9 +63,12 @@ Partial Class TimeAttendForm
         '
         'TimeEntryLogsToolStripMenuItem
         '
+        Me.TimeEntryLogsToolStripMenuItem.Checked = True
+        Me.TimeEntryLogsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
         Me.TimeEntryLogsToolStripMenuItem.Name = "TimeEntryLogsToolStripMenuItem"
         Me.TimeEntryLogsToolStripMenuItem.Size = New System.Drawing.Size(101, 20)
         Me.TimeEntryLogsToolStripMenuItem.Text = "Time entry logs"
+        Me.TimeEntryLogsToolStripMenuItem.Visible = False
         '
         'SummaryToolStripMenuItem
         '

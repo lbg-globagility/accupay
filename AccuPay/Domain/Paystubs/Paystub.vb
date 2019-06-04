@@ -83,6 +83,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property RegularHolidayOTPay As Decimal
 
+        <Obsolete>
         Public Property HolidayPay As Decimal
 
         Public Property LateHours As Decimal
@@ -163,6 +164,8 @@ Namespace Global.AccuPay.Entity
         Public Overridable Property AllowanceItems As ICollection(Of AllowanceItem)
 
         Public Overridable Property ThirteenthMonthPay As ThirteenthMonthPay
+
+        Public Overridable Property Actual As PaystubActual
 
         Public ReadOnly Property AdditionalPay As Decimal
             Get

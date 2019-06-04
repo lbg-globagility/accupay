@@ -63,7 +63,7 @@ SELECT
     psa.PayPeriodID,
     psa.RegularHours,
     psa.RegularPay,
-	 ete.OvertimeHoursWorked `OvertimeHours`,
+	ete.OvertimeHoursWorked `OvertimeHours`,
     psa.OvertimePay `OvertimePay`,
     psa.OvertimePay `OvertimeHoursAmount`,
     psa.NightDiffHours,

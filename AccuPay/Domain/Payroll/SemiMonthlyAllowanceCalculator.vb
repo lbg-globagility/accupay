@@ -40,7 +40,8 @@ Public Class SemiMonthlyAllowanceCalculator
             Return allowanceItem
         End If
 
-        Dim hourlyRate = PayrollTools.GetHourlyRate(allowance.Amount, _employee.WorkDaysPerYear)
+        Dim monthlyRate = allowance.Amount * 2
+        Dim hourlyRate = PayrollTools.GetHourlyRate(monthlyRate, _employee.WorkDaysPerYear)
 
         For Each timeEntry In _timeEntries
             Dim deductionHours =
