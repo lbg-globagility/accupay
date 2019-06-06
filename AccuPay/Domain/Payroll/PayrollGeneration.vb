@@ -269,7 +269,8 @@ Public Class PayrollGeneration
                     context.LoanTransactions.Add(newLoanTransaction)
                 Next
 
-                ComputeThirteenthMonthPay()
+                Dim thirteenthMonthPayCalculator = New ThirteenthMonthPayCalculator()
+                thirteenthMonthPayCalculator.Calculate(_employee, _paystub, _timeEntries, _actualtimeentries, _salary, _settings, _allowanceItems)
 
                 context.SaveChanges()
             End Using
@@ -558,68 +559,6 @@ Public Class PayrollGeneration
         }
 
         _paystub.PaystubItems.Add(sickLeaveBalance)
-    End Sub
-
-    Private Sub ComputeThirteenthMonthPay()
-        If _paystub.ThirteenthMonthPay Is Nothing Then
-            _paystub.ThirteenthMonthPay = New ThirteenthMonthPay() With {
-                .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User
-            }
-        Else
-            _paystub.ThirteenthMonthPay.LastUpdBy = z_User
-        End If
-
-        Dim contractualEmployementStatuses = New String() {"Contractual", "SERVICE CONTRACT"}
-
-        Dim thirteenthMonthAmount = 0D
-
-        If _employee.IsDaily Then
-
-            If contractualEmployementStatuses.Contains(_employee.EmploymentStatus) Then
-
-                thirteenthMonthAmount = _timeEntries.
-                                            Where(Function(t) Not t.IsRestDay).
-                                            Sum(Function(t) t.BasicDayPay + t.LeavePay)
-            Else
-
-                Dim thirteenthMonthAmountRunningTotal As Decimal = 0
-
-                For Each actualTimeEntry In _actualtimeentries
-
-                    Dim timeEntry = _timeEntries.Where(Function(t) t.Date = actualTimeEntry.Date).FirstOrDefault
-
-                    If timeEntry Is Nothing OrElse timeEntry.IsRestDay Then Continue For
-
-                    thirteenthMonthAmount += actualTimeEntry.BasicDayPay + actualTimeEntry.LeavePay
-
-                Next
-
-            End If
-
-        ElseIf _employee.IsMonthly Or _employee.IsFixed Then
-
-            Dim trueSalary = _salary.TotalSalary
-            Dim basicPay = trueSalary / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
-
-            Dim totalDeductions = _actualtimeentries.Sum(Function(t) t.LateDeduction + t.UndertimeDeduction + t.AbsentDeduction)
-
-            Dim additionalAmount As Decimal
-            If (_settings.GetBoolean("ThirteenthMonthPolicy.IsAllowancePaid")) Then
-
-                additionalAmount = _allowanceItems.Sum(Function(a) a.Amount)
-
-            End If
-
-            thirteenthMonthAmount = ((basicPay + additionalAmount) - totalDeductions)
-        End If
-
-        Dim allowanceAmount = _allowanceItems.Where(Function(a) a.IsThirteenthMonthPay).Sum(Function(a) a.Amount)
-        thirteenthMonthAmount += allowanceAmount
-
-        _paystub.ThirteenthMonthPay.BasicPay = thirteenthMonthAmount
-        _paystub.ThirteenthMonthPay.Amount = thirteenthMonthAmount / CalendarConstants.MonthsInAYear
-        _paystub.ThirteenthMonthPay.Paystub = _paystub
     End Sub
 
     Private Class PayFrequency

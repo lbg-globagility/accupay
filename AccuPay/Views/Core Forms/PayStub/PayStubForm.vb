@@ -1921,7 +1921,6 @@ Public Class PayStubForm
                     n_ExecuteQuery = New ExecuteQuery("CALL DEL_specificpaystub('" & paystubRowID & "');")
                 End If
 
-
             End If
 
             tsbtnDelEmpPayroll.Enabled = True
@@ -2143,6 +2142,7 @@ Public Class PayStubForm
 
         tsbtnDelAllEmpPayroll.Enabled = True
     End Sub
+
 End Class
 
 Friend Class PrintAllPaySlipOfficialFormat
