@@ -177,7 +177,7 @@ Public Class PayrollSummaDateSelection
         linkPrev.Text = "← " & (yearnow - 1)
         linkNxt.Text = (yearnow + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriod()
+        _currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
 
         DateFromLabel.Text = ""
         DateToLabel.Text = ""
@@ -202,7 +202,6 @@ Public Class PayrollSummaDateSelection
         Dim index As Integer = 0
         Dim currentlyWorkedOnPayPeriodIndex As Integer = 0
         For Each drow As DataRow In dt.Rows
-
 
             If _currentlyWorkedOnPayPeriod IsNot Nothing AndAlso Nullable.Equals(drow(5), _currentlyWorkedOnPayPeriod.RowID) Then
 
@@ -389,7 +388,6 @@ Public Class PayrollSummaDateSelection
     Dim DefaultFontStyle As Font = New System.Drawing.Font("Segoe UI Semibold", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
     Dim faultFontStyle As Font = New System.Drawing.Font("Segoe UI Semilight", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-
 
     Private Sub SemiMonthlyTab_Enter(sender As Object, e As EventArgs) Handles SemiMonthlyTab.Enter
         VIEW_payp(, SemiMonthlyTab.Text.Trim)

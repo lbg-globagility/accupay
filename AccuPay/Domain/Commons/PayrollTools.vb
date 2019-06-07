@@ -13,11 +13,9 @@ Public Class PayrollTools
 
     Public Const DivisorToDailyRate As Integer = 8
 
-    Public Shared ReadOnly Property DefaultPayFrequencyId As Integer
-        Get
-            Return 1
-        End Get
-    End Property
+    Public Const PayFrequencyMonthlyId As Integer = 1
+
+    Public Const PayFrequencyWeeklyId As Integer = 4
 
     Public Shared Function GetEmployeeMonthlyRate(
                             employee As Employee,
@@ -91,7 +89,7 @@ Public Class PayrollTools
         Return False
     End Function
 
-    Friend Shared Async Function GetCurrentlyWorkedOnPayPeriod(
+    Friend Shared Async Function GetCurrentlyWorkedOnPayPeriodByCurrentYear(
                                     Optional payperiods As IList(Of IPayPeriod) = Nothing) As Task(Of IPayPeriod)
 
         If payperiods Is Nothing OrElse payperiods.Count = 0 Then
@@ -100,7 +98,7 @@ Public Class PayrollTools
                 Dim pastPayPeriods = Await context.PayPeriods.
                         Where(Function(p) p.Year = Now.Year).
                         Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                        Where(Function(p) Nullable.Equals(p.PayFrequencyID, DefaultPayFrequencyId)).
+                        Where(Function(p) p.IsMonthly).
                         ToListAsync()
 
                 payperiods = New List(Of IPayPeriod)(pastPayPeriods)

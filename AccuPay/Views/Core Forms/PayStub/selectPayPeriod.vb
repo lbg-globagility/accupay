@@ -16,7 +16,7 @@ Public Class selectPayPeriod
         linkPrev.Text = "← " & (_currentYear - 1)
         linkNxt.Text = (_currentYear + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriod()
+        _currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
 
         Dim payfrqncy As New AutoCompleteStringCollection
 
@@ -156,7 +156,6 @@ Public Class selectPayPeriod
         Dim index As Integer = 0
         Dim currentlyWorkedOnPayPeriodIndex As Integer = 0
         For Each drow As DataRow In dt.Rows
-
 
             If _currentlyWorkedOnPayPeriod IsNot Nothing AndAlso Nullable.Equals(drow(0), _currentlyWorkedOnPayPeriod.RowID) Then
 

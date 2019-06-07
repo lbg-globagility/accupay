@@ -130,7 +130,7 @@ Public Class TimeEntrySummaryForm
         If _selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            Dim currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriod(New List(Of IPayPeriod)(_payPeriods))
+            Dim currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear(New List(Of IPayPeriod)(_payPeriods))
 
             _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
 

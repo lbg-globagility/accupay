@@ -24,11 +24,9 @@ Namespace Global.AccuPay.Repository
 
             Dim policy As New PolicyHelper
 
-
             Dim employeeShifts As New List(Of ShiftSchedule)
             Dim shiftSchedules As New List(Of EmployeeDutySchedule)
             Dim employees As New List(Of Employee)
-
 
             Dim orderedLeaves = leaves.OrderBy(Function(l) l.StartDate).ToList
 
@@ -52,12 +50,11 @@ Namespace Global.AccuPay.Repository
 
                     Await Me.SaveAsync(leave, context)
 
-
                     If policy.ValidateLeaveBalance Then
 
                         Dim employee = employees.FirstOrDefault(Function(e) Nullable.Equals(e.RowID, leave.EmployeeID))
 
-                        Dim unusedApprovedLeaves = GetUnusedApprovedLeavesByType(context, employee.RowID, leave.LeaveType)
+                        Dim unusedApprovedLeaves = GetUnusedApprovedLeavesByType(context, employee.RowID, leave)
 
                         Dim earliestUnusedApprovedLeave = unusedApprovedLeaves.OrderBy(Function(l) l.StartDate).FirstOrDefault
 
@@ -96,9 +93,7 @@ Namespace Global.AccuPay.Repository
                                     policy.ValidateLeaveBalance AndAlso
                                     VALIDATABLE_TYPES.Contains(leave.LeaveType) Then
 
-
                 Dim totalLeaveHours = ComputeTotalLeaveHours(unusedApprovedLeaves, policy, employeeShifts, shiftSchedules, employee)
-
 
                 If leave.LeaveType = ProductConstant.SICK_LEAVE_PART_NO Then
 
@@ -190,12 +185,36 @@ Namespace Global.AccuPay.Repository
         Private Shared Function GetUnusedApprovedLeavesByType(
                                     context As PayrollContext,
                                     employeeId As Integer?,
-                                    leaveType As String) As List(Of Leave)
+                                    leave As Leave) As List(Of Leave)
+
+            Dim currentPayPeriod = context.PayPeriods.
+                                                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                                    Where(Function(p) p.IsMonthly).
+                                                    Where(Function(p) p.IsBetween(leave.StartDate)).
+                                                    FirstOrDefault
+
+            Dim firstDayOfTheYear = context.PayPeriods.
+                                                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                                    Where(Function(p) p.IsMonthly).
+                                                    Where(Function(p) p.Year = currentPayPeriod.Year).
+                                                    Where(Function(p) p.IsFirstPayPeriodOfTheYear).
+                                                    FirstOrDefault?.PayFromDate
+
+            Dim lastDayOfTheYear = context.PayPeriods.
+                                                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                                    Where(Function(p) p.IsMonthly).
+                                                    Where(Function(p) p.Year = currentPayPeriod.Year).
+                                                    Where(Function(p) p.IsLastPayPeriodOfTheYear).
+                                                    FirstOrDefault?.PayToDate
+
+            If firstDayOfTheYear Is Nothing OrElse lastDayOfTheYear Is Nothing Then Return New List(Of Leave)
 
             Return context.Leaves.Local.
                         Where(Function(l) Nullable.Equals(l.EmployeeID, employeeId)).
                         Where(Function(l) l.Status.Trim.ToUpper = STATUS_APPROVED.ToUpper).
-                        Where(Function(l) l.LeaveType = leaveType).
+                        Where(Function(l) l.LeaveType = leave.LeaveType).
+                        Where(Function(l) l.StartDate >= firstDayOfTheYear.Value).
+                        Where(Function(l) l.StartDate <= lastDayOfTheYear.Value).
                         Where(Function(l) context.LeaveTransactions.
                                             Where(Function(t) Nullable.Equals(t.ReferenceID, l.RowID)).
                                             Count = 0).
@@ -220,7 +239,6 @@ Namespace Global.AccuPay.Repository
                     Await context.SaveChangesAsync
 
                 End Using
-
             Else
                 Await SaveAsyncFunction(leave, context)
             End If
@@ -231,7 +249,6 @@ Namespace Global.AccuPay.Repository
             If leave.RowID Is Nothing Then
 
                 context.Leaves.Add(leave)
-
             Else
                 Await Me.UpdateAsync(leave, context)
             End If
@@ -255,8 +272,7 @@ Namespace Global.AccuPay.Repository
             currentLeave.Status = leave.Status
 
         End Function
+
     End Class
 
 End Namespace
-
-

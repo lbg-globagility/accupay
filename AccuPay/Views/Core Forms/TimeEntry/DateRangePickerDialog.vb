@@ -56,7 +56,7 @@ Public Class DateRangePickerDialog
     Private Async Sub DateRangePickerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PayperiodsDataGridView.AutoGenerateColumns = False
 
-        _payFrequencyId = PayrollTools.DefaultPayFrequencyId
+        _payFrequencyId = PayrollTools.PayFrequencyMonthlyId
 
         Await LoadPayPeriods()
 
@@ -74,7 +74,7 @@ Public Class DateRangePickerDialog
 
         If _passedPayPeriod Is Nothing Then
 
-            currentPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriod(New List(Of IPayPeriod)(_payperiods))
+            currentPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear(New List(Of IPayPeriod)(_payperiods))
         Else
             currentPayPeriod = _passedPayPeriod
 

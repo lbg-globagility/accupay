@@ -10,6 +10,9 @@ Namespace Global.AccuPay.Entity
     Public Class PayPeriod
         Implements IPayPeriod
 
+        Private Const IsJanuary As Integer = 1
+        Private Const IsDecember As Integer = 12
+
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer? Implements IPayPeriod.RowID
@@ -53,13 +56,13 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property IsMonthly As Boolean
             Get
-                Return PayFrequencyID.Value = 1
+                Return PayFrequencyID.Value = PayrollTools.PayFrequencyMonthlyId
             End Get
         End Property
 
         Public ReadOnly Property IsWeekly As Boolean
             Get
-                Return PayFrequencyID.Value = 4
+                Return PayFrequencyID.Value = PayrollTools.PayFrequencyWeeklyId
             End Get
         End Property
 
@@ -72,6 +75,24 @@ Namespace Global.AccuPay.Entity
         Public ReadOnly Property IsEndOfTheMonth As Boolean
             Get
                 Return Half = 0
+            End Get
+        End Property
+
+        Public ReadOnly Property IsBetween([date] As Date) As Boolean
+            Get
+                Return [date] >= PayFromDate AndAlso [date] <= PayToDate
+            End Get
+        End Property
+
+        Public ReadOnly Property IsFirstPayPeriodOfTheYear As Boolean
+            Get
+                Return IsFirstHalf AndAlso Month = IsJanuary
+            End Get
+        End Property
+
+        Public ReadOnly Property IsLastPayPeriodOfTheYear As Boolean
+            Get
+                Return IsEndOfTheMonth AndAlso Month = IsDecember
             End Get
         End Property
 
