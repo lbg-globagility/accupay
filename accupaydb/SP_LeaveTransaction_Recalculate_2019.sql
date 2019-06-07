@@ -8,6 +8,8 @@ DROP PROCEDURE IF EXISTS `SP_LeaveTransaction_Recalculate_2019`;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LeaveTransaction_Recalculate_2019`(
 	IN `p_EmployeeID` INT
+
+
 )
 LANGUAGE SQL
 NOT DETERMINISTIC
@@ -197,38 +199,46 @@ VALUES
 )
 ;
 
-# Insert all leavetransactions
-INSERT INTO leavetransaction
-(
-	OrganizationID,
-	CreatedBy,
-	EmployeeID,
-	ReferenceID,
-	LeaveLedgerID,
-	PayPeriodID,
-	TransactionDate,
-	`Type`,
-	Balance,
-	Amount
-)
-SELECT
-	OrganizationID,
-	v_UserID,
-	EmployeeID,
-	ReferenceID,
-	LeaveLedgerID,
-	PayperiodID,
-	TransactionDate,
-	`Type`,
-	Balance,
-	Amount
-FROM
-	NEW_LEAVE_TRANSACTIONS_VACATION
-;
-
 UPDATE leaveledger
 SET LastTransactionID = LAST_INSERT_ID()
 WHERE RowID = v_VacationLeaveLedgerID;
+
+
+IF EXISTS(SELECT 1 FROM NEW_LEAVE_TRANSACTIONS_VACATION) THEN
+	# Insert all leavetransactions
+	INSERT INTO leavetransaction
+	(
+		OrganizationID,
+		CreatedBy,
+		EmployeeID,
+		ReferenceID,
+		LeaveLedgerID,
+		PayPeriodID,
+		TransactionDate,
+		`Type`,
+		Balance,
+		Amount
+	)
+	SELECT
+		OrganizationID,
+		v_UserID,
+		EmployeeID,
+		ReferenceID,
+		LeaveLedgerID,
+		PayperiodID,
+		TransactionDate,
+		`Type`,
+		Balance,
+		Amount
+	FROM
+		NEW_LEAVE_TRANSACTIONS_VACATION
+	;
+	
+	UPDATE leaveledger
+	SET LastTransactionID = (SELECT MAX(RowID) FROM leavetransaction)
+	WHERE RowID = v_VacationLeaveLedgerID;
+
+END IF;
 
 
 ########################
@@ -286,8 +296,8 @@ AND employeetimeentry.DATE >= v_StartDate
 ORDER BY employeetimeentry.DATE
 ;
 
-DROP TEMPORARY TABLE IF EXISTS NEW_LEAVE_TRANSACTIONS_SICK_UNORDERED;
-CREATE TEMPORARY TABLE IF NOT EXISTS NEW_LEAVE_TRANSACTIONS_SICK_UNORDERED
+DROP TEMPORARY TABLE IF EXISTS NEW_LEAVE_TRANSACTIONS_SICK;
+CREATE TEMPORARY TABLE IF NOT EXISTS NEW_LEAVE_TRANSACTIONS_SICK
 SELECT
 	OrganizationID,
 	EmployeeID,
@@ -301,7 +311,7 @@ SELECT
 	LeaveStartDate,
 	LeaveStartTime,
 	LeaveEndTime
-FROM NEW_LEAVE_TRANSACTIONS_SICK
+FROM NEW_LEAVE_TRANSACTIONS_SICK_UNORDERED
 ORDER BY TransactionDate
 ;
 
@@ -354,38 +364,47 @@ VALUES
 )
 ;
 
-# Insert all leavetransactions
-INSERT INTO leavetransaction
-(
-	OrganizationID,
-	CreatedBy,
-	EmployeeID,
-	ReferenceID,
-	LeaveLedgerID,
-	PayPeriodID,
-	TransactionDate,
-	`Type`,
-	Balance,
-	Amount
-)
-SELECT
-	OrganizationID,
-	v_UserID,
-	EmployeeID,
-	ReferenceID,
-	LeaveLedgerID,
-	PayperiodID,
-	TransactionDate,
-	`Type`,
-	Balance,
-	Amount
-FROM
-	NEW_LEAVE_TRANSACTIONS_SICK
-;
-
 UPDATE leaveledger
 SET LastTransactionID = LAST_INSERT_ID()
 WHERE RowID = v_SickLeaveLedgerID;
+
+IF EXISTS(SELECT 1 FROM NEW_LEAVE_TRANSACTIONS_SICK) THEN
+	
+	# Insert all leavetransactions
+	INSERT INTO leavetransaction
+	(
+		OrganizationID,
+		CreatedBy,
+		EmployeeID,
+		ReferenceID,
+		LeaveLedgerID,
+		PayPeriodID,
+		TransactionDate,
+		`Type`,
+		Balance,
+		Amount
+	)
+	SELECT
+		OrganizationID,
+		v_UserID,
+		EmployeeID,
+		ReferenceID,
+		LeaveLedgerID,
+		PayperiodID,
+		TransactionDate,
+		`Type`,
+		Balance,
+		Amount
+	FROM
+		NEW_LEAVE_TRANSACTIONS_SICK
+	;
+	
+	UPDATE leaveledger
+	SET LastTransactionID = (SELECT MAX(RowID) FROM leavetransaction)
+	WHERE RowID = v_SickLeaveLedgerID;
+
+END IF
+;
 
 END//
 DELIMITER ;
