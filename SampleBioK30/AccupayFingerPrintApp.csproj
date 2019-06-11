@@ -86,7 +86,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="zkemkeeper">
-      <HintPath>..\..\..\..\..\Documents\zkemkeeper.dll</HintPath>
+      <HintPath>DLL\zkemkeeper.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
