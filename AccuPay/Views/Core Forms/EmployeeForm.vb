@@ -449,10 +449,6 @@ Public Class EmployeeForm
         Return tabctrlemp.TabPages.IndexOf(tbpPromotion)
     End Function
 
-    Public Function GetAllowanceTabPageIndex() As Integer
-        Return tabctrlemp.TabPages.IndexOf(tbpempallow)
-    End Function
-
     Public Function GetOvertimeTabPageIndex() As Integer
         Return tabctrlemp.TabPages.IndexOf(tbpEmpOT)
     End Function
@@ -472,7 +468,6 @@ Public Class EmployeeForm
     Public Function GetSalaryTabPageIndex() As Integer
         Return tabctrlemp.TabPages.IndexOf(tbpNewSalary)
     End Function
-
 
     Sub ctrlAttachment(ByVal lnk_lablesender As LinkLabel)
 
@@ -1767,8 +1762,8 @@ Public Class EmployeeForm
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click, tsbtnCloseempawar.Click, tsbtnCloseempcert.Click, ToolStripButton4.Click,
                                                                     btnClose.Click, ToolStripButton5.Click, ToolStripButton13.Click,
                                                                    ToolStripButton18.Click,
-                                                                   ToolStripButton2.Click, ToolStripButton7.Click,
-                                                                   ToolStripButton11.Click, tsbtnCloseOBF.Click, ToolStripButton9.Click, ToolStripButton7.Click,
+                                                                   ToolStripButton2.Click,
+                                                                   ToolStripButton11.Click, tsbtnCloseOBF.Click, ToolStripButton9.Click,
                                                                    ToolStripButton16.Click 'ToolStripButton12.Click
         Me.Close()
     End Sub
@@ -2172,17 +2167,6 @@ Public Class EmployeeForm
                     RemoveHandler cmbflg.SelectedIndexChanged, AddressOf cmbflg_SelectedIndexChanged
                     Label142.Text = "Current salary"
 
-                ElseIf selectedTab Is tbpempallow Then 'Employee Allowance
-                    RemoveHandler dgvempallowance.SelectionChanged, AddressOf dgvempallowance_SelectionChanged
-                    pbEmpPicAllow.Image = Nothing
-                    txtFNameAllow.Text = employeefullname
-                    txtEmpIDAllow.Text = subdetails
-                    pbEmpPicAllow.Image = EmployeeImage
-                    VIEW_employeeallowance(.Cells("RowID").Value)
-                    dgvempallowance_SelectionChanged(sender, e)
-
-                    AddHandler dgvempallowance.SelectionChanged, AddressOf dgvempallowance_SelectionChanged
-                    dgvempallowance_SelectionChanged1(sender, New EventArgs)
                 ElseIf selectedTab Is tbpEmpOT Then 'Employee Overtime
                     txtFNameEmpOT.Text = employeefullname
                     txtEmpIDEmpOT.Text = subdetails '"ID# " & .Cells("Column1").Value
@@ -2332,14 +2316,6 @@ Public Class EmployeeForm
                     txtbasicpay.Visible = False
 
                     RemoveHandler cmbflg.SelectedIndexChanged, AddressOf cmbflg_SelectedIndexChanged
-
-                Case GetAllowanceTabPageIndex() 'Employee Allowance
-                    dgvempallowance.Tag = Nothing
-                    txtFNameAllow.Text = ""
-                    txtEmpIDAllow.Text = ""
-                    pbEmpPicAllow.Image = Nothing
-                    dgvempallowance.Rows.Clear()
-                    listofEditEmpAllow.Clear()
 
                 Case GetOvertimeTabPageIndex() 'Employee Overtime
                     txtFNameEmpOT.Text = ""
@@ -2727,12 +2703,10 @@ Public Class EmployeeForm
                 If curr_empColm Is Nothing Then
 
                     dgvEmp.Item(Column1.Name, curr_empRow).Selected = True
-
                 Else
 
                     dgvEmp.Item(curr_empColm, curr_empRow).Selected = True
                 End If
-
             Else
                 dgvEmp.Item(curr_empColm, 0).Selected = True
             End If
@@ -4871,7 +4845,6 @@ Public Class EmployeeForm
 
         End If
 
-
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
     End Sub
@@ -4924,7 +4897,6 @@ Public Class EmployeeForm
                         End If
 
                     End If
-
                 Else
                     If listofEditRowleave.Contains(row.Cells("elv_RowID").Value) Then
 
@@ -4951,19 +4923,15 @@ Public Class EmployeeForm
             End If
 
             Return True
-
-
         Catch ex As ArgumentException
 
             MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
         End Try
 
         Return False
-
 
     End Function
 
@@ -8294,1008 +8262,7 @@ Public Class EmployeeForm
 
     End Sub
 
-
-
 #End Region 'Salary
-
-#Region "Employee Allowance"
-
-    Public categallowID As Object = Nothing
-
-    Public allowance_type As New AutoCompleteStringCollection
-
-    Dim view_IDAllow As Integer = Nothing
-
-    Sub tbpempallow_Enter(sender As Object, e As EventArgs) Handles tbpempallow.Enter
-
-        tabpageText(tabIndx)
-
-        tbpempallow.Text = "ALLOWANCE               "
-
-        Label25.Text = "ALLOWANCE"
-        Static once As SByte = 0
-
-        If once = 0 Then
-            once = 1
-
-            txtallowamt.ContextMenu = New ContextMenu
-
-            cboallowfreq.ContextMenu = New ContextMenu
-
-            cboallowtype.ContextMenu = New ContextMenu
-
-            categallowID = EXECQUER("SELECT RowID FROM category WHERE OrganizationID=" & orgztnID & " AND CategoryName='" & ProductConstant.ALLOWANCE_TYPE_CATEGORY & "' LIMIT 1;")
-
-            If Val(categallowID) = 0 Then
-                categallowID = INSUPD_category(, ProductConstant.ALLOWANCE_TYPE_CATEGORY)
-            End If
-
-            enlistTheLists("SELECT CONCAT(COALESCE(p.PartNo,''),'@',p.RowID)" &
-                           " FROM product p" &
-                           " INNER JOIN category c ON c.RowID=p.CategoryID" &
-                           " WHERE c.CategoryName='Allowance Type'" &
-                           " AND p.OrganizationID='" & orgztnID & "' AND p.ActiveData='1';",
-                           allowance_type) 'cboallowtype
-
-            For Each strval In allowance_type
-                cboallowtype.Items.Add(getStrBetween(strval, "", "@"))
-                eall_Type.Items.Add(getStrBetween(strval, "", "@"))
-            Next
-
-            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Allowance Frequency' AND Active='Yes' ORDER BY OrderBy;",
-                           cboallowfreq)
-
-            For Each strval In cboallowfreq.Items
-                eall_Frequency.Items.Add(strval)
-            Next
-
-            AddHandler dgvempallowance.SelectionChanged, AddressOf dgvempallowance_SelectionChanged
-
-            view_IDAllow = VIEW_privilege("Employee Allowance", orgztnID)
-
-            Dim formuserprivilege = position_view_table.Select("ViewID = " & view_IDAllow)
-
-            If formuserprivilege.Count = 0 Then
-
-                tsbtnNewAllowance.Visible = 0
-                tsbtnSaveAllowance.Visible = 0
-                tsbtnDelAllowance.Visible = False
-                dontUpdateAllow = 1
-            Else
-                For Each drow In formuserprivilege
-                    If drow("ReadOnly").ToString = "Y" Then
-                        tsbtnNewAllowance.Visible = 0
-                        tsbtnSaveAllowance.Visible = 0
-                        tsbtnDelAllowance.Visible = False
-                        dontUpdateAllow = 1
-                        Exit For
-                    Else
-                        If drow("Creates").ToString = "N" Then
-                            tsbtnNewAllowance.Visible = 0
-                        Else
-                            tsbtnNewAllowance.Visible = 1
-                        End If
-
-                        If drow("Deleting").ToString = "N" Then
-                            tsbtnDelAllowance.Visible = 0
-                        Else
-                            tsbtnDelAllowance.Visible = 1
-                        End If
-
-                        If drow("Updates").ToString = "N" Then
-                            dontUpdateAllow = 1
-                        Else
-                            dontUpdateAllow = 0
-                        End If
-
-                    End If
-
-                Next
-
-            End If
-
-        End If
-
-        tabIndx = GetAllowanceTabPageIndex()
-
-        dgvEmp_SelectionChanged(sender, e)
-
-    End Sub
-
-    Private Sub tsbtnNewAllowance_Click(sender As Object, e As EventArgs) Handles tsbtnNewAllowance.Click
-        dgvempallowance.EndEdit(1)
-        dgvempallowance.Focus()
-
-        For Each dgvrow As DataGridViewRow In dgvempallowance.Rows
-            If dgvrow.IsNewRow Then
-                dgvallowRowindx = dgvrow.Index
-                dgvrow.Cells("eall_Type").Selected = 1
-                Exit For
-            End If
-        Next
-
-        dgvempallowance_SelectionChanged(sender, e)
-
-    End Sub
-
-    Dim dontUpdateAllow As SByte = 0
-
-    Private Sub tsbtnSaveAllowance_Click(sender As Object, e As EventArgs) Handles tsbtnSaveAllowance.Click
-        pbEmpPicAllow.Focus()
-
-        cboallowtype.Focus()
-
-        pbEmpPicAllow.Focus()
-
-        cboallowfreq.Focus()
-
-        pbEmpPicAllow.Focus()
-
-        dtpallowstartdate.Focus()
-
-        pbEmpPicAllow.Focus()
-
-        dtpallowenddate.Focus()
-
-        pbEmpPicAllow.Focus()
-
-        txtallowamt.Focus()
-
-        pbEmpPicAllow.Focus()
-
-        dgvempallowance.EndEdit(1)
-
-        If dontUpdateAllow = 1 Then
-            listofEditEmpAllow.Clear()
-        End If
-
-        If dgvEmp.RowCount = 0 Then
-            Exit Sub
-        ElseIf empallow_daterangehasrecord = 1 Then
-            dtpallowstartdate.Focus()
-            WarnBalloon("Please supply a valid date range.", "Invalid date range", lblforballoon, 0, -69)
-            Exit Sub
-        End If
-
-        Static once As SByte = 0
-
-        For Each dgvrow As DataGridViewRow In dgvempallowance.Rows
-            With dgvrow
-                If .IsNewRow = 0 Then
-                    If listofEditEmpAllow.Contains(.Cells("eall_RowID").Value) Then
-
-                        INSUPD_employeeallowance(.Cells("eall_RowID").Value,
-                                                 dgvEmp.CurrentRow.Cells("RowID").Value,
-                                                 .Cells("eall_Frequency").Value,
-                                                 .Cells("eall_Start").Value,
-                                                 .Cells("eall_End").Value,
-                                                 .Cells("eall_Amount").Value,
-                                                 .Cells("eall_ProdID").Value)
-                    Else
-                        If .Cells("eall_RowID").Value = Nothing And
-                            tsbtnNewAllowance.Visible = True Then
-
-                            .Cells("eall_RowID").Value = INSUPD_employeeallowance(,
-                                                     dgvEmp.CurrentRow.Cells("RowID").Value,
-                                                     .Cells("eall_Frequency").Value,
-                                                     .Cells("eall_Start").Value,
-                                                     .Cells("eall_End").Value,
-                                                     .Cells("eall_Amount").Value,
-                                                     .Cells("eall_ProdID").Value)
-                        End If
-
-                    End If
-                End If
-
-            End With
-        Next
-
-        listofEditEmpAllow.Clear()
-
-        If hasERR = 0 Then
-
-            InfoBalloon("Changes made in Employee ID '" & dgvEmp.CurrentRow.Cells("Column1").Value & "' has successfully saved.", "Changes successfully save", lblforballoon, 0, -69)
-        Else
-            dgvEmp_SelectionChanged(sender, e)
-
-        End If
-
-    End Sub
-
-    Function INSUPD_employeeallowance(Optional eall_RowID As Object = Nothing,
-                                      Optional eall_EmployeeID As Object = Nothing,
-                                      Optional eall_AllowanceFrequency As Object = Nothing,
-                                      Optional eall_EffectiveStartDate As Object = Nothing,
-                                      Optional eall_EffectiveEndDate As Object = Nothing,
-                                      Optional eall_Amount As Object = Nothing,
-                                      Optional eall_ProductID As Object = Nothing) As Object
-
-        Dim params(9, 2) As Object
-
-        params(0, 0) = "eall_RowID"
-        params(1, 0) = "eall_OrganizationID"
-        params(2, 0) = "eall_EmployeeID"
-        params(3, 0) = "eall_CreatedBy"
-        params(4, 0) = "eall_LastUpdBy"
-        params(5, 0) = "eall_ProductID"
-        params(6, 0) = "eall_AllowanceFrequency"
-        params(7, 0) = "eall_EffectiveStartDate"
-        params(8, 0) = "eall_EffectiveEndDate"
-        params(9, 0) = "eall_Amount"
-
-        params(0, 1) = If(eall_RowID = Nothing, DBNull.Value, eall_RowID)
-        params(1, 1) = orgztnID
-        params(2, 1) = eall_EmployeeID
-        params(3, 1) = z_User
-        params(4, 1) = z_User
-        params(5, 1) = eall_ProductID
-        params(6, 1) = eall_AllowanceFrequency
-        params(7, 1) = Format(CDate(eall_EffectiveStartDate), "yyyy-MM-dd")
-        params(8, 1) = If(eall_EffectiveEndDate = Nothing, DBNull.Value, Format(CDate(eall_EffectiveEndDate), "yyyy-MM-dd"))
-        params(9, 1) = eall_Amount
-
-        INSUPD_employeeallowance = EXEC_INSUPD_PROCEDURE(params,
-                                                          "INSUPD_employeeallowance",
-                                                          "eallow_RowID")
-
-    End Function
-
-    Private Sub ToolStripButton10_Click(sender As Object, e As EventArgs) Handles ToolStripButton10.Click
-        listofEditEmpAllow.Clear()
-
-        RemoveHandler dtpallowstartdate.ValueChanged, AddressOf dtpallowstartdate_ValueChanged
-        RemoveHandler dtpallowenddate.ValueChanged, AddressOf dtpallowenddate_ValueChanged
-
-        dgvEmp_SelectionChanged(sender, e)
-    End Sub
-
-    Private Sub cboallowfreq_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboallowfreq.KeyPress, cboallowtype.KeyPress
-
-        e.Handled = True
-
-    End Sub
-
-    Private Sub cboallowfreq_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowfreq.SelectedValueChanged  ', cboallowfreq.SelectedIndexChanged
-
-        dtpallowstartdate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-
-        Select Case cboallowfreq.SelectedIndex
-
-            Case 0 To 1 'Daily & Monthly
-                dtpallowstartdate.Enabled = 1
-                dtpallowenddate.Enabled = 1
-
-                lblreqstartdate.Visible = 1
-                lblreqenddate.Visible = 1
-
-            Case 2 'One time
-                dtpallowstartdate.Enabled = 1
-                dtpallowenddate.Enabled = 0
-
-                lblreqstartdate.Visible = 1
-                lblreqenddate.Visible = 0
-            Case 3 To 4 'Semi-monthly & Weekly
-                dtpallowstartdate.Enabled = 1
-                dtpallowenddate.Enabled = 1
-
-                lblreqstartdate.Visible = 1
-                lblreqenddate.Visible = 1
-
-            Case Else 'Nothing
-                dtpallowstartdate.Enabled = 0
-                dtpallowenddate.Enabled = 0
-
-                lblreqstartdate.Visible = 0
-                lblreqenddate.Visible = 0
-
-        End Select
-
-    End Sub
-
-    Private Sub cboallowfreq_GotFocus(sender As Object, e As EventArgs) Handles cboallowfreq.GotFocus
-
-        If dgvempallowance.RowCount = 1 Then
-        Else
-            dgvempallowance.Item("eall_Frequency", dgvallowRowindx).Selected = 1
-        End If
-
-    End Sub
-
-    Private Sub cboallowfreq_Leave(sender As Object, e As EventArgs) Handles cboallowfreq.Leave ', cboallowfreq.SelectedIndexChanged
-
-        Dim thegetval = Trim(cboallowfreq.Text)
-
-        If dgvempallowance.RowCount = 1 Then
-            If thegetval <> "" Then
-                dgvempallowance.Rows.Add()
-                dgvallowRowindx = dgvempallowance.RowCount - 2
-
-            End If
-        Else
-            If dgvempallowance.CurrentRow.IsNewRow Then
-                If thegetval <> "" Then
-                    dgvempallowance.Rows.Add()
-                    dgvallowRowindx = dgvempallowance.RowCount - 2
-
-                End If
-            Else
-                dgvallowRowindx = dgvempallowance.CurrentRow.Index
-
-            End If
-        End If
-
-        If thegetval <> "" Then
-            dgvempallowance.Item("eall_Frequency", dgvallowRowindx).Value = thegetval
-
-            cboallowfreq.Text = thegetval
-
-        End If
-
-        With dgvempallowance.Rows(dgvallowRowindx)
-            If Val(.Cells("eall_RowID").Value) <> 0 Then
-                If thegetval <> allowance_prevval(1) Then
-                    listofEditEmpAllow.Add(.Cells("eall_RowID").Value)
-                End If
-            Else
-            End If
-        End With
-
-    End Sub
-
-    Dim dgvallowRowindx As Integer = 0
-
-    Dim allowProductID As String = Nothing
-
-    Dim statictabindxempallow As SByte = -1
-
-    Private Sub cboallowtype_GotFocus(sender As Object, e As EventArgs) Handles cboallowtype.GotFocus
-
-        If dgvempallowance.RowCount = 1 Then
-        Else
-            dgvempallowance.Item("eall_type", dgvallowRowindx).Selected = 1
-        End If
-
-    End Sub
-
-    Private Sub cboallowtype_Leave(sender As Object, e As EventArgs) Handles cboallowtype.Leave 'cboallowtype.SelectedIndexChanged
-
-        For Each strval In allowance_type
-            If Trim(cboallowtype.Text) = getStrBetween(strval, "", "@") Then
-                allowProductID = StrReverse(getStrBetween(StrReverse(strval), "", "@"))
-                Exit For
-            End If
-        Next
-
-        Dim thegetval = Trim(cboallowtype.Text)
-
-        If dgvempallowance.RowCount = 1 Then
-            If thegetval <> "" Then
-                dgvempallowance.Rows.Add()
-                dgvallowRowindx = dgvempallowance.RowCount - 2
-
-            End If
-        Else
-            If dgvempallowance.CurrentRow.IsNewRow Then
-                If thegetval <> "" Then
-                    dgvempallowance.Rows.Add()
-                    dgvallowRowindx = dgvempallowance.RowCount - 2
-
-                End If
-            Else
-                dgvallowRowindx = dgvempallowance.CurrentRow.Index
-
-            End If
-        End If
-
-        If thegetval <> "" Then
-            dgvempallowance.Item("eall_type", dgvallowRowindx).Value = thegetval
-            dgvempallowance.Item("eall_ProdID", dgvallowRowindx).Value = allowProductID
-
-            cboallowtype.Text = thegetval
-
-        End If
-
-        With dgvempallowance.Rows(dgvallowRowindx)
-            If Val(.Cells("eall_RowID").Value) <> 0 Then
-                If thegetval <> allowance_prevval(0) Then
-                    listofEditEmpAllow.Add(.Cells("eall_RowID").Value)
-                End If
-            Else
-            End If
-        End With
-
-    End Sub
-
-    Private Sub dtpallowstartdate_KeyPress(sender As Object, e As KeyPressEventArgs) Handles dtpallowstartdate.KeyPress ', dtpallowenddate.KeyPress
-        Dim e_asc As String = Asc(e.KeyChar)
-
-        Static j As SByte = 0
-        Static a As SByte = 0
-        Static m As SByte = 0
-
-        Dim MM = Format(CDate(dtpallowstartdate.Value), "MMM")
-        Dim dd = CDate(dtpallowstartdate.Value).Day
-        dd = If(dd.ToString.Length = 1, "0" & dd, dd)
-        Dim yyyy = CDate(dtpallowstartdate.Value).Year
-
-        If e_asc = 74 Or e_asc = 106 Then 'j
-
-            Select Case j
-                Case 0
-                    dtpallowstartdate.Value = CDate("Jan-" & dd & "-" & yyyy)
-                Case 1
-                    dtpallowstartdate.Value = CDate("Jun-" & dd & "-" & yyyy)
-                Case 2
-                    dtpallowstartdate.Value = CDate("Jul-" & dd & "-" & yyyy)
-            End Select
-
-            j += 1
-
-            If j >= 3 Then
-                j = 0
-            End If
-
-        ElseIf e_asc = 65 Or e_asc = 97 Then 'a
-
-            Select Case a
-                Case 0
-                    dtpallowstartdate.Value = CDate("Apr-" & dd & "-" & yyyy)
-                Case 1
-                    dtpallowstartdate.Value = CDate("Aug-" & dd & "-" & yyyy)
-            End Select
-
-            a += 1
-
-            If a >= 2 Then
-                a = 0
-            End If
-
-        ElseIf e_asc = 77 Or e_asc = 109 Then 'm
-            Select Case m
-                Case 0
-                    dtpallowstartdate.Value = CDate("Mar-" & dd & "-" & yyyy)
-                Case 1
-                    dtpallowstartdate.Value = CDate("May-" & dd & "-" & yyyy)
-            End Select
-
-            m += 1
-
-            If m >= 2 Then
-                m = 0
-            End If
-
-            'ElseIf e_asc = 70 Or e_asc = 102 Then 'f
-            '    dtpallowstartdate.Value = CDate("Feb-" & dd & "-" & yyyy)
-        ElseIf e_asc = 83 Or e_asc = 115 Then 's
-            dtpallowstartdate.Value = CDate("Sep-" & dd & "-" & yyyy)
-        ElseIf e_asc = 78 Or e_asc = 110 Then 'n
-            dtpallowstartdate.Value = CDate("Nov-" & dd & "-" & yyyy)
-        ElseIf e_asc = 68 Or e_asc = 100 Then 'd
-            dtpallowstartdate.Value = CDate("Dec-" & dd & "-" & yyyy)
-        ElseIf e_asc = 79 Or e_asc = 111 Then 'o
-            dtpallowstartdate.Value = CDate("Oct-" & dd & "-" & yyyy)
-        Else
-            dtpallowstartdate.Value = CDate(MM & "-" & dd & "-" & yyyy)
-        End If
-    End Sub
-
-    Private Sub dtpallowenddate_KeyPress(sender As Object, e As KeyPressEventArgs) Handles dtpallowenddate.KeyPress
-        Dim e_asc As String = Asc(e.KeyChar)
-
-        Static j As SByte = 0
-        Static a As SByte = 0
-        Static m As SByte = 0
-
-        Dim MM = Format(CDate(dtpallowenddate.Value), "MMM")
-        Dim dd = CDate(dtpallowenddate.Value).Day
-        dd = If(dd.ToString.Length = 1, "0" & dd, dd)
-        Dim yyyy = CDate(dtpallowenddate.Value).Year
-
-        If e_asc = 74 Or e_asc = 106 Then 'j
-
-            Select Case j
-                Case 0
-                    dtpallowenddate.Value = CDate("Jan-" & dd & "-" & yyyy)
-                Case 1
-                    dtpallowenddate.Value = CDate("Jun-" & dd & "-" & yyyy)
-                Case 2
-                    dtpallowenddate.Value = CDate("Jul-" & dd & "-" & yyyy)
-            End Select
-
-            j += 1
-
-            If j >= 3 Then
-                j = 0
-            End If
-
-        ElseIf e_asc = 65 Or e_asc = 97 Then 'a
-
-            Select Case a
-                Case 0
-                    dtpallowenddate.Value = CDate("Apr-" & dd & "-" & yyyy)
-                Case 1
-                    dtpallowenddate.Value = CDate("Aug-" & dd & "-" & yyyy)
-            End Select
-
-            a += 1
-
-            If a >= 2 Then
-                a = 0
-            End If
-
-        ElseIf e_asc = 77 Or e_asc = 109 Then 'm
-            Select Case m
-                Case 0
-                    dtpallowenddate.Value = CDate("Mar-" & dd & "-" & yyyy)
-                Case 1
-                    dtpallowenddate.Value = CDate("May-" & dd & "-" & yyyy)
-            End Select
-
-            m += 1
-
-            If m >= 2 Then
-                m = 0
-            End If
-
-            'ElseIf e_asc = 70 Or e_asc = 102 Then 'f
-            '    dtpallowenddate.Value = CDate("Feb-" & dd & "-" & yyyy)
-        ElseIf e_asc = 83 Or e_asc = 115 Then 's
-            dtpallowenddate.Value = CDate("Sep-" & dd & "-" & yyyy)
-        ElseIf e_asc = 78 Or e_asc = 110 Then 'n
-            dtpallowenddate.Value = CDate("Nov-" & dd & "-" & yyyy)
-        ElseIf e_asc = 68 Or e_asc = 100 Then 'd
-            dtpallowenddate.Value = CDate("Dec-" & dd & "-" & yyyy)
-        ElseIf e_asc = 79 Or e_asc = 111 Then 'o
-            dtpallowenddate.Value = CDate("Oct-" & dd & "-" & yyyy)
-        Else
-            dtpallowenddate.Value = CDate(MM & "-" & dd & "-" & yyyy)
-        End If
-    End Sub
-
-    Dim dtpallowstartdateval As Object = Nothing
-
-    Dim empallow_daterangehasrecord
-
-    Private Sub dtpallowstartdate_ValueChanged(sender As Object, e As EventArgs) 'Handles dtpallowstartdate.ValueChanged
-        'dtpallowstartdateval = dtpallowstartdate.Value
-        empallow_daterangehasrecord = 0
-        Dim date_range = DateDiff(DateInterval.Day, CDate(dtpallowstartdate.Value), CDate(dtpallowenddate.Value))
-
-        If date_range < 0 And cboallowfreq.SelectedIndex <> 2 And cboallowfreq.SelectedIndex <> -1 Then
-            empallow_daterangehasrecord = 1
-            WarnBalloon("Please supply a valid date range.", "Invalid date range", dtpallowstartdate, dtpallowstartdate.Width - 16, -69)
-        End If
-
-    End Sub
-
-    Private Sub dtpallowstartdate_TextChanged(sender As Object, e As EventArgs) Handles dtpallowstartdate.TextChanged
-        dtpallowstartdateval = dtpallowstartdate.Value
-    End Sub
-
-    Private Sub dtpallowstartdate_GotFocus(sender As Object, e As EventArgs) Handles dtpallowstartdate.GotFocus
-
-        If dgvempallowance.RowCount = 1 Then
-        Else
-            dgvempallowance.Item("eall_Start", dgvallowRowindx).Selected = 1
-        End If
-
-    End Sub
-
-    Private Sub dtpallowstartdate_Leave(sender As Object, e As EventArgs) Handles dtpallowstartdate.Leave
-        'dtpallowstartdateval.ToString
-        Dim thegetval = If(dtpallowstartdateval = Nothing, Trim(dtpallowstartdate.Value), Trim(dtpallowstartdateval))
-
-        If dgvempallowance.RowCount = 1 Then
-            If thegetval <> "" Then
-                dgvempallowance.Rows.Add()
-                dgvallowRowindx = dgvempallowance.RowCount - 2
-
-            End If
-        Else
-            If dgvempallowance.CurrentRow.IsNewRow Then
-                If thegetval <> "" Then
-                    dgvempallowance.Rows.Add()
-                    dgvallowRowindx = dgvempallowance.RowCount - 2
-
-                End If
-            Else
-                dgvallowRowindx = dgvempallowance.CurrentRow.Index
-
-            End If
-        End If
-
-        If thegetval <> "" Then
-            dgvempallowance.Item("eall_Start", dgvallowRowindx).Value = Format(CDate(thegetval), machineShortDateFormat)
-
-            dtpallowstartdate.Value = Format(CDate(thegetval), machineShortDateFormat)
-
-            If dtpallowenddate.Enabled = False Then
-                dgvempallowance.Item("eall_End", dgvallowRowindx).Value = Nothing
-            End If
-        End If
-
-        With dgvempallowance.Rows(dgvallowRowindx)
-            If Val(.Cells("eall_RowID").Value) <> 0 Then
-                If thegetval <> allowance_prevval(2) Then
-                    listofEditEmpAllow.Add(.Cells("eall_RowID").Value)
-                End If
-            Else
-            End If
-        End With
-
-    End Sub
-
-    Dim dtpallowenddateval As Object = Nothing
-
-    Private Sub dtpallowenddate_ValueChanged(sender As Object, e As EventArgs) 'Handles dtpallowenddate.ValueChanged
-        'dtpallowenddateval = dtpallowenddate.Value
-        empallow_daterangehasrecord = 0
-        Dim date_range = DateDiff(DateInterval.Day, CDate(dtpallowstartdate.Value), CDate(dtpallowenddate.Value))
-
-        If date_range < 0 And cboallowfreq.SelectedIndex <> 2 And cboallowfreq.SelectedIndex <> -1 Then
-            empallow_daterangehasrecord = 1
-            WarnBalloon("Please supply a valid date range.", "Invalid date range", dtpallowenddate, dtpallowenddate.Width - 16, -69)
-        End If
-
-    End Sub
-
-    Private Sub dtpallowenddate_TextChanged(sender As Object, e As EventArgs) Handles dtpallowenddate.TextChanged
-        dtpallowenddateval = dtpallowenddate.Value
-    End Sub
-
-    Private Sub dtpallowenddate_GotFocus(sender As Object, e As EventArgs) Handles dtpallowenddate.GotFocus
-
-        If dgvempallowance.RowCount = 1 Then
-        Else
-            dgvempallowance.Item("eall_End", dgvallowRowindx).Selected = 1
-        End If
-
-    End Sub
-
-    Private Sub dtpallowenddate_Leave(sender As Object, e As EventArgs) Handles dtpallowenddate.Leave
-
-        Dim thegetval = If(dtpallowenddateval = Nothing, Trim(dtpallowenddate.Value), Trim(dtpallowenddateval))
-
-        If dgvempallowance.RowCount = 1 Then
-            If thegetval <> "" Then
-                dgvempallowance.Rows.Add()
-                dgvallowRowindx = dgvempallowance.RowCount - 2
-
-            End If
-        Else
-            If dgvempallowance.CurrentRow.IsNewRow Then
-                If thegetval <> "" Then
-                    dgvempallowance.Rows.Add()
-                    dgvallowRowindx = dgvempallowance.RowCount - 2
-
-                End If
-            Else
-                dgvallowRowindx = dgvempallowance.CurrentRow.Index
-
-            End If
-        End If
-
-        If thegetval <> "" Then
-            dgvempallowance.Item("eall_End", dgvallowRowindx).Value = Format(CDate(thegetval), machineShortDateFormat)
-
-            dtpallowenddate.Value = Format(CDate(thegetval), machineShortDateFormat)
-
-        End If
-
-        With dgvempallowance.Rows(dgvallowRowindx)
-            If Val(.Cells("eall_RowID").Value) <> 0 Then
-                If thegetval <> allowance_prevval(3) Then
-                    listofEditEmpAllow.Add(.Cells("eall_RowID").Value)
-                End If
-            Else
-            End If
-        End With
-
-    End Sub
-
-    Private Sub txtallowamt_GotFocus(sender As Object, e As EventArgs) Handles txtallowamt.GotFocus
-
-        If dgvempallowance.RowCount = 1 Then
-        Else
-            dgvempallowance.Item("eall_Amount", dgvallowRowindx).Selected = 1
-        End If
-
-    End Sub
-
-    Private Sub txtallowamt_Leave(sender As Object, e As EventArgs) Handles txtallowamt.Leave
-
-        Dim thegetval = Trim(txtallowamt.Text)
-
-        If dgvempallowance.RowCount = 1 Then
-            If thegetval <> "" Then
-                dgvempallowance.Rows.Add()
-                dgvallowRowindx = dgvempallowance.RowCount - 2
-
-            End If
-        Else
-            If dgvempallowance.CurrentRow.IsNewRow Then
-                If thegetval <> "" Then
-                    dgvempallowance.Rows.Add()
-                    dgvallowRowindx = dgvempallowance.RowCount - 2
-
-                End If
-            Else
-                dgvallowRowindx = dgvempallowance.CurrentRow.Index
-
-            End If
-        End If
-
-        If thegetval <> "" Then
-            dgvempallowance.Item("eall_Amount", dgvallowRowindx).Value = thegetval
-
-            txtallowamt.Text = thegetval
-
-        End If
-
-        With dgvempallowance.Rows(dgvallowRowindx)
-            If Val(.Cells("eall_RowID").Value) <> 0 Then
-                If thegetval <> allowance_prevval(4) Then
-                    listofEditEmpAllow.Add(.Cells("eall_RowID").Value)
-                End If
-            Else
-            End If
-        End With
-
-    End Sub
-
-    Private Sub lnklbaddallowtype_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklbaddallowtype.LinkClicked
-
-        Dim n_ProductControlForm As New ProductControlForm
-
-        With n_ProductControlForm
-
-            .Status.HeaderText = "Taxable Flag"
-
-            .PartNo.HeaderText = "Allowance name"
-
-            .NameOfCategory = ProductConstant.ALLOWANCE_TYPE_CATEGORY
-
-            If n_ProductControlForm.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                enlistTheLists("SELECT CONCAT(COALESCE(p.PartNo,''),'@',p.RowID)" &
-                               " FROM product p" &
-                               " INNER JOIN category c ON c.RowID=p.CategoryID" &
-                               " WHERE c.CategoryName='Allowance Type'" &
-                               " AND p.OrganizationID='" & orgztnID & "' AND p.ActiveData='1';",
-                               allowance_type) 'cboallowtype
-
-                cboallowtype.Items.Clear()
-                eall_Type.Items.Clear()
-
-                For Each strval In allowance_type
-                    cboallowtype.Items.Add(getStrBetween(strval, "", "@"))
-                    eall_Type.Items.Add(getStrBetween(strval, "", "@"))
-                Next
-
-            End If
-
-        End With
-
-    End Sub
-
-    Private Sub dgvempallowance_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvempallowance.DataError
-        e.ThrowException = False
-
-    End Sub
-
-    Public listofEditEmpAllow As New List(Of String)
-
-    Private Sub dgvempallowance_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempallowance.CellEndEdit
-
-        dgvempallowance.ShowCellErrors = 1
-
-        Dim colname = dgvempallowance.Columns(e.ColumnIndex).Name
-
-        With dgvempallowance.Rows(e.RowIndex)
-            If Val(.Cells("eall_RowID").Value) <> 0 Then
-                listofEditEmpAllow.Add(.Cells("eall_RowID").Value)
-            Else
-            End If
-
-            If colname = "eall_Type" Then
-
-                For Each strval In allowance_type
-                    Dim strcompare = Trim(dgvempallowance.Item("eall_Type", e.RowIndex).Value)
-                    If strcompare = getStrBetween(strval, "", "@") Then
-                        dgvempallowance.Item("eall_ProdID", e.RowIndex).Value = StrReverse(getStrBetween(StrReverse(strval), "", "@"))
-                        Exit For
-                    End If
-                Next
-
-            End If
-
-        End With
-
-    End Sub
-
-    Dim allowance_prevval(5) As Object
-
-    Private Sub dgvempallowance_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvempallowance.SelectionChanged
-
-        RemoveHandler dtpallowstartdate.ValueChanged, AddressOf dtpallowstartdate_ValueChanged
-        RemoveHandler dtpallowenddate.ValueChanged, AddressOf dtpallowenddate_ValueChanged
-
-        If dgvempallowance.RowCount <> 1 Then
-            With dgvempallowance.CurrentRow
-                dgvallowRowindx = .Index
-                If .IsNewRow = False Then
-                    cboallowtype.Text = .Cells("eall_Type").Value
-                    cboallowfreq.Text = .Cells("eall_Frequency").Value
-
-                    If .Cells("eall_Start").Value = Nothing Then
-                        dtpallowstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-                    Else
-                        dtpallowstartdate.Value = Format(CDate(.Cells("eall_Start").Value), machineShortDateFormat)
-                    End If
-
-                    If .Cells("eall_End").Value = Nothing Then
-                        dtpallowenddate.Value = Format(CDate(dbnow), machineShortDateFormat)
-                    Else
-                        dtpallowenddate.Value = Format(CDate(.Cells("eall_End").Value), machineShortDateFormat)
-                    End If
-
-                    txtallowamt.Text = .Cells("eall_Amount").Value
-
-                    allowance_prevval(0) = .Cells("eall_Type").Value
-                    allowance_prevval(1) = .Cells("eall_Frequency").Value
-                    allowance_prevval(2) = dtpallowstartdate.Value
-                    allowance_prevval(3) = dtpallowenddate.Value
-                    allowance_prevval(4) = .Cells("eall_Amount").Value
-
-                    cboallowfreq_SelectedValueChanged(sender, e)
-                Else
-                    cboallowtype.Text = ""
-                    cboallowfreq.Text = ""
-                    dtpallowstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-                    dtpallowenddate.Value = Format(CDate(dbnow), machineShortDateFormat)
-                    txtallowamt.Text = ""
-
-                    allowance_prevval(0) = ""
-                    allowance_prevval(1) = ""
-                    allowance_prevval(2) = dtpallowstartdate.Value
-                    allowance_prevval(3) = dtpallowenddate.Value
-                    allowance_prevval(4) = ""
-
-                End If
-            End With
-        Else
-            dgvallowRowindx = 0
-
-            cboallowtype.Text = ""
-            cboallowfreq.Text = ""
-            dtpallowstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-            dtpallowenddate.Value = Format(CDate(dbnow), machineShortDateFormat)
-            txtallowamt.Text = ""
-
-            allowance_prevval(0) = ""
-            allowance_prevval(1) = ""
-            allowance_prevval(2) = dtpallowstartdate.Value
-            allowance_prevval(3) = dtpallowenddate.Value
-            allowance_prevval(4) = ""
-
-        End If
-
-        AddHandler dtpallowstartdate.ValueChanged, AddressOf dtpallowstartdate_ValueChanged
-        AddHandler dtpallowenddate.ValueChanged, AddressOf dtpallowenddate_ValueChanged
-
-    End Sub
-
-    Sub VIEW_employeeallowance(Optional eallow_EmployeeID As Object = Nothing)
-
-        Dim param(1, 2) As Object
-
-        param(0, 0) = "eallow_EmployeeID"
-        param(1, 0) = "eallow_OrganizationID"
-
-        param(0, 1) = eallow_EmployeeID
-        param(1, 1) = orgztnID
-
-        EXEC_VIEW_PROCEDURE(param,
-                           "VIEW_employeeallowance",
-                           dgvempallowance, , 1)
-
-    End Sub
-
-    Private Sub txtallowamt_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtallowamt.KeyPress
-
-        Dim e_KAsc As String = Asc(e.KeyChar)
-
-        Static onedash As SByte = 0
-
-        Static onedot As SByte = 0
-
-        If (e_KAsc >= 48 And e_KAsc <= 57) Or e_KAsc = 8 Or e_KAsc = 45 Or e_KAsc = 46 Then
-
-            If e_KAsc = 45 Then
-
-                onedash += 1
-                If onedash >= 2 Then
-                    If txtallowamt.Text.Contains("-") Then
-                        e.Handled = True
-                        onedash = 2
-                    Else
-                        e.Handled = False
-                        onedash = 0
-                    End If
-                Else
-                    If txtallowamt.Text.Contains("-") Then
-                        e.Handled = True
-                    Else
-                        e.Handled = False
-                    End If
-                End If
-
-            ElseIf e_KAsc = 46 Then
-
-                onedot += 1
-                If onedot >= 2 Then
-                    If txtallowamt.Text.Contains(".") Then
-                        e.Handled = True
-                        onedot = 2
-                    Else
-                        e.Handled = False
-                        onedot = 0
-                    End If
-                Else
-                    If txtallowamt.Text.Contains(".") Then
-                        e.Handled = True
-                    Else
-                        e.Handled = False
-
-                    End If
-
-                End If
-            Else
-
-                e.Handled = False
-
-            End If
-        Else
-
-            e.Handled = True
-
-        End If
-
-    End Sub
-
-    Private Sub tsbtnimportallowance_Click(sender As Object, e As EventArgs) Handles tsbtnimportallowance.Click
-        Dim browsefile As New OpenFileDialog()
-
-        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
-                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
-
-        If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
-
-            filepath = IO.Path.GetFullPath(browsefile.FileName)
-
-            Dim catchDatSet =
-                getWorkBookAsDataSet(filepath,
-                                     Me.Name)
-
-            If (catchDatSet Is Nothing) = False And Trim(filepath).Length > 0 Then
-
-                Dim n_importallowance As New ImportAllowance(catchDatSet, Me)
-
-                Dim objNewThread As New Thread(AddressOf n_importallowance.DoImport)
-
-                objNewThread.IsBackground = True
-
-                objNewThread.Start()
-
-                threadArrayList.Add(objNewThread)
-
-            End If
-
-        End If
-
-    End Sub
-
-#End Region
 
 #Region "Employee Overtime"
 
@@ -10185,7 +9152,6 @@ Public Class EmployeeForm
         End If
 
     End Sub
-
 
     Private Sub txtstarttimeEmpOT_Leave(sender As Object, e As EventArgs) Handles txtstarttimeEmpOT.Leave
 
@@ -13099,7 +12065,6 @@ Public Class EmployeeForm
 
         tabIndx = GetAttachmentTabPageIndex()
 
-
         dgvEmp_SelectionChanged(sender, e)
 
     End Sub
@@ -13535,9 +12500,6 @@ Public Class EmployeeForm
             Case GetPromotionTabPageIndex()
                 tbpPromotion.Text = "PROMOT"
 
-            Case GetAllowanceTabPageIndex()
-                tbpempallow.Text = "ALLOW"
-
             Case GetOvertimeTabPageIndex()
                 tbpEmpOT.Text = "EMP OT"
 
@@ -13645,12 +12607,6 @@ Public Class EmployeeForm
         showAuditTrail.loadAudTrail(view_IDPromot)
         showAuditTrail.BringToFront()
 
-    End Sub
-
-    Private Sub ToolStripButton26_Click(sender As Object, e As EventArgs) Handles ToolStripButton26.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_IDAllow)
-        showAuditTrail.BringToFront()
     End Sub
 
     Private Sub ToolStripButton27_Click(sender As Object, e As EventArgs) Handles ToolStripButton27.Click
@@ -14529,49 +13485,6 @@ Public Class EmployeeForm
         Label104.Text = label_gender
         Label105.Text = label_gender
         Label119.Text = label_gender
-
-    End Sub
-
-    Private Sub tsbtnDelAllowance_Click(sender As Object, e As EventArgs) Handles tsbtnDelAllowance.Click
-
-        Dim allowance_RowID = dgvempallowance.Tag
-
-        If allowance_RowID = Nothing Then
-        Else
-
-            Dim result = MessageBox.Show("Are you sure you want to delete allowance ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
-
-            If result = DialogResult.Yes Then
-
-                Dim n_ExecuteQuery As _
-                    New ExecuteQuery("CALL DEL_employeeallowance('" & dgvempallowance.Tag & "');")
-
-                dgvempallowance.Rows.Remove(dgvempallowance.CurrentRow)
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub dgvempallowance_SelectionChanged1(sender As Object, e As EventArgs) Handles dgvempallowance.SelectionChanged
-
-        dgvempallowance.Tag = Nothing
-
-        Try
-
-            Dim curr_row = dgvempallowance.CurrentRow
-
-            If curr_row IsNot Nothing Then
-
-                dgvempallowance.Tag = curr_row.Cells("eall_RowID").Value
-
-            End If
-        Catch ex As Exception
-
-            MsgBox(getErrExcptn(ex, Me.Name))
-
-        End Try
 
     End Sub
 

@@ -475,14 +475,6 @@ Public Class MDIPrimaryForm
 
                                 End If
 
-
-                            Case .GetAllowanceTabPageIndex
-                                If .listofEditEmpAllow.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
                             Case .GetOvertimeTabPageIndex
                                 If .listofEditRowEmpOT.Count = 0 Then
                                     .SearchEmployee_Click(sndr, ee)

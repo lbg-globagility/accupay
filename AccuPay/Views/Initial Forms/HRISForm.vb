@@ -44,7 +44,6 @@ Public Class HRISForm
                 End If
 
             Next
-
         Else
             Exit Sub
         End If
@@ -70,7 +69,7 @@ Public Class HRISForm
                 'Formname.Anchor = AnchorStyles.Top And AnchorStyles.Bottom And AnchorStyles.Right And AnchorStyles.Left
                 'Formname.WindowState = FormWindowState.Maximized
                 Formname.Dock = DockStyle.Fill
-                'PerformLayout      
+                'PerformLayout
             End If
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
@@ -220,17 +219,6 @@ Public Class HRISForm
         'Employee.tbpPromotion_Enter(sender, e)
     End Sub
 
-    Private Sub ToolStripMenuItem7_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem7.Click
-
-        Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpempallow)
-
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Allowance")
-        EmployeeForm.tbpempallow.Focus()
-        'Employee.tbpempallow_Enter(sender, e)
-    End Sub
-
     Private Sub ToolStripMenuItem8_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem8.Click
 
         Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpEmpOT)
@@ -305,18 +293,18 @@ Public Class HRISForm
 
     Sub reloadViewPrivilege()
 
-        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" & _
-                                             " RowID" & _
-                                             " FROM position_view" & _
+        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" &
+                                             " RowID" &
+                                             " FROM position_view" &
                                              " WHERE OrganizationID='" & orgztnID & "'" &
-                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" & _
+                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" &
                                              " OR DATE_FORMAT(LastUpd,@@date_format) = CURDATE()));")
 
         If hasPositionViewUpdate = "1" Then
 
-            position_view_table = retAsDatTbl("SELECT *" & _
-                                              " FROM position_view" & _
-                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" & _
+            position_view_table = retAsDatTbl("SELECT *" &
+                                              " FROM position_view" &
+                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" &
                                               " AND OrganizationID='" & orgztnID & "';")
 
         End If
@@ -375,4 +363,5 @@ Public Class HRISForm
         ChangeForm(EmployeeAllowanceForm, "Employee Allowance")
         previousForm = EmployeeAllowanceForm
     End Sub
+
 End Class
