@@ -305,8 +305,8 @@ Public Class DayCalculator
             Return
         End If
 
-        Dim dailyRate = GetDailyRate(salary)
-        Dim hourlyRate = dailyRate / 8
+        Dim dailyRate = PayrollTools.GetDailyRate(salary, _employee)
+        Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
 
         timeEntry.BasicDayPay = timeEntry.BasicHours * hourlyRate
         timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate
@@ -582,23 +582,6 @@ Public Class DayCalculator
 
         leaveHours = AccuMath.CommercialRound(leaveHours, 2)
         Return leaveHours
-    End Function
-
-    Private Function GetDailyRate(salary As Salary) As Decimal
-        Dim dailyRate = 0D
-
-        If salary Is Nothing Then
-            Return 0
-        End If
-
-        If _employee.IsDaily Then
-            dailyRate = salary.BasicSalary
-        ElseIf _employee.IsMonthly Or _employee.IsFixed Then
-            If _employee.WorkDaysPerYear = 0 Then Return 0
-            dailyRate = salary.BasicSalary / (_employee.WorkDaysPerYear / 12)
-        End If
-
-        Return dailyRate
     End Function
 
     Public Function GetLogPeriod(timeLog As TimeLog, officialBusiness As OfficialBusiness, currentShift As CurrentShift, currentDate As Date) As TimePeriod

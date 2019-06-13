@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.SimplifiedEntities
 Imports Microsoft.EntityFrameworkCore
+Imports PayrollSys
 
 Public Class PayrollTools
 
@@ -43,8 +44,34 @@ Public Class PayrollTools
         Return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear)
     End Function
 
-    Public Shared Function GetHourlyRate(monthlyRate As Decimal, workDaysPerYear As Decimal) As Decimal
+    Public Shared Function GetDailyRate(salary As Salary, employee As Employee) As Decimal
+        Dim dailyRate = 0D
+
+        If salary Is Nothing Then
+            Return 0
+        End If
+
+        If employee.IsDaily Then
+            dailyRate = salary.BasicSalary
+        ElseIf employee.IsMonthly Or employee.IsFixed Then
+            If employee.WorkDaysPerYear = 0 Then Return 0
+            dailyRate = salary.BasicSalary / (employee.WorkDaysPerYear / 12)
+        End If
+
+        Return dailyRate
+    End Function
+
+    Public Shared Function GetHourlyRateByMonthlyRate(monthlyRate As Decimal, workDaysPerYear As Decimal) As Decimal
         Return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear) / WorkHoursPerDay
+    End Function
+
+    Public Shared Function GetHourlyRateByDailyRate(dailyRate As Decimal) As Decimal
+        Return dailyRate / WorkHoursPerDay
+    End Function
+
+    Public Shared Function GetHourlyRateByDailyRate(salary As Salary, employee As Employee) As Decimal
+
+        Return GetDailyRate(salary, employee) / employee.WorkDaysPerYear
     End Function
 
     Public Shared Function HasWorkedLastWorkingDay(
