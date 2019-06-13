@@ -35,6 +35,8 @@ Public Class ShiftScheduleForm
 
     Private _balloonToolTips As IList(Of ToolTip)
 
+    Private _originalDates As TimePeriod
+
     Private Property ChangesCount As Integer
         Get
         End Get
@@ -1073,18 +1075,16 @@ Public Class ShiftScheduleForm
         End If
     End Sub
 
-    Dim originalDates As TimePeriod
+    Private Sub DateFilter_Enter(sender As Object, e As EventArgs) Handles dtpDateFrom.Enter, dtpDateTo.Enter
 
-    Private Sub DateFilter_Enter(sender As Object, e As EventArgs) Handles dtpDateTo.Enter
-
-        originalDates = New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)
+        _originalDates = New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)
 
     End Sub
 
-    Private Async Sub DateFilter_ValueChangedAsync(sender As Object, e As EventArgs) _
+    Private Async Sub DateFilter_LeaveAsync(sender As Object, e As EventArgs) _
         Handles dtpDateFrom.Leave, dtpDateTo.Leave
 
-        If originalDates.Equals(New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)) Then
+        If _originalDates.Equals(New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)) Then
             Return
         End If
 
@@ -1105,14 +1105,14 @@ Public Class ShiftScheduleForm
 
     Private Async Function RefreshGridByDateFilter() As Task
 
-        Me.Cursor = Cursors.WaitCursor
-
-        SplitContainer1.Enabled = False
-
         Dim start As Date = dtpDateFrom.Value.Date
         Dim finish As Date = dtpDateTo.Value.Date
 
         If start > finish Then Return
+
+        Me.Cursor = Cursors.WaitCursor
+
+        SplitContainer1.Enabled = False
 
         Dim _currRowIndex, _currColIndex As Integer
         Dim selectedCell = GridSelectedCells()

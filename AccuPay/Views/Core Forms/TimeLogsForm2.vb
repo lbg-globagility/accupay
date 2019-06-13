@@ -14,6 +14,7 @@ Imports OfficeOpenXml
 Public Class TimeLogsForm2
 
 #Region "VariableDeclarations"
+
     Private Shared logger As ILog = LogManager.GetLogger("TimeLogsFormAppender")
 
     Private Const SUNDAY_SHORT_NAME As String = "Sun"
@@ -25,6 +26,8 @@ Public Class TimeLogsForm2
 
     Private _useShiftSchedulePolicy As Boolean
 
+    Private _originalDates As TimePeriod
+
 #End Region
 
 #Region "Methods"
@@ -34,13 +37,28 @@ Public Class TimeLogsForm2
         currColIndex = -1
     End Sub
 
-    Private Async Function ReloadAsync(startDate As Date, endDate As Date) As Task
+    Private Async Function ReloadAsync() As Task
+
+        Dim startDate As Date = dtpDateFrom.Value.Date
+        Dim endDate As Date = dtpDateTo.Value.Date
+
+        If startDate > endDate Then Return
+
+        Me.Cursor = Cursors.WaitCursor
+
+        MainSplitContainer.Enabled = False
+
         Dim hasSelectedEmployees = EmployeeTreeView1.GetTickedEmployees().Any()
 
         If Not hasSelectedEmployees Then
             grid.DataSource = Nothing
 
             ResetCurrentCell()
+
+            MainSplitContainer.Enabled = True
+
+            Me.Cursor = Cursors.Default
+
             Return
         End If
 
@@ -97,6 +115,10 @@ Public Class TimeLogsForm2
 
             RefreshDataSource(grid, dataSource)
         End Using
+
+        MainSplitContainer.Enabled = True
+
+        Me.Cursor = Cursors.Default
     End Function
 
     Private Sub RefreshDataSource(datagGrid As DataGridView, dataSource As List(Of TimeLogModel))
@@ -224,7 +246,6 @@ Public Class TimeLogsForm2
 
         invalidLogs.AddRange(importOutput.Errors)
 
-
         'preview the logs here
         Dim previewDialog As New _
             TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog(validLogs, invalidLogs)
@@ -253,7 +274,7 @@ Public Class TimeLogsForm2
         ToolStripProgressBar1.Value = e.ProgressPercentage
     End Sub
 
-    Private Sub BackGroundWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+    Private Async Sub BackGroundWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) _
         Handles bgworkTypicalImport.RunWorkerCompleted, bgworkImport.RunWorkerCompleted
 
         If e.Error IsNot Nothing Then
@@ -262,12 +283,11 @@ Public Class TimeLogsForm2
         ElseIf e.Cancelled Then
 
             MessageBox.Show("Background work cancelled.")
-
         Else
 
             ShowSuccessImportBalloon()
 
-            DateFilter_ValueChanged(dtpDateFrom, New EventArgs)
+            Await ReloadAsync()
 
         End If
 
@@ -312,7 +332,6 @@ Public Class TimeLogsForm2
                 Await context.SaveChangesAsync()
 
             End Using
-
         Catch ex As Exception
 
             logger.Error("NewTimeEntryAlternateLineImport", ex)
@@ -430,7 +449,6 @@ Public Class TimeLogsForm2
                     Await GetEmployeeDutyShifts(firstDate, lastDate)
 
             timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts)
-
         Else
 
             Dim employeeShifts As List(Of ShiftSchedule) =
@@ -501,6 +519,7 @@ Public Class TimeLogsForm2
 #End Region
 
 #Region "PrivateClass"
+
     Private Class TimeLogModel
         Private Const CUSTOM_SHORT_TIME_FORMAT As String = "HH:mm"
 
@@ -737,6 +756,7 @@ Public Class TimeLogsForm2
         End Function
 
     End Class
+
 #End Region
 
 #Region "EventHandlers"
@@ -845,7 +865,6 @@ Public Class TimeLogsForm2
 
                         model.Commit()
                     Next
-
                 Else
                     For Each model In toSaveList
                         model.Remove()
@@ -863,7 +882,6 @@ Public Class TimeLogsForm2
                 ZebraliseEmployeeRows()
 
                 ToSaveCountChanged()
-
             Catch ex As Exception
                 logger.Error("TimeLogsForm2Saving", ex)
                 Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
@@ -907,8 +925,18 @@ Public Class TimeLogsForm2
 
     End Sub
 
-    Private Async Sub DateFilter_ValueChanged(sender As Object, e As EventArgs) _
-        Handles dtpDateFrom.ValueChanged, dtpDateTo.ValueChanged
+    Private Sub DateFilter_Enter(sender As Object, e As EventArgs) Handles dtpDateFrom.Enter, dtpDateTo.Enter
+
+        _originalDates = New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)
+
+    End Sub
+
+    Private Async Sub DateFilter_LeaveChangedAsync(sender As Object, e As EventArgs) _
+        Handles dtpDateFrom.Leave, dtpDateTo.Leave
+
+        If _originalDates.Equals(New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)) Then
+            Return
+        End If
 
         Dim dtp = DirectCast(sender, DateTimePicker)
 
@@ -916,16 +944,12 @@ Public Class TimeLogsForm2
         Dim finish As Date = dtpDateTo.Value.Date
 
         If start > finish Then
-            If dtp.Name = dtpDateFrom.Name Then dtpDateTo.Value = start : finish = start
-            If dtp.Name = dtpDateTo.Name Then dtpDateFrom.Value = finish : start = finish
+            If dtp.Name = dtpDateFrom.Name Then dtpDateTo.Value = start
+            If dtp.Name = dtpDateTo.Name Then dtpDateFrom.Value = finish
 
         End If
 
-        Await ReloadAsync(start, finish)
-    End Sub
-
-    Private Sub dtpDateTo_ValueChanged(sender As Object, e As EventArgs) Handles dtpDateTo.ValueChanged
-
+        Await ReloadAsync()
     End Sub
 
     Private Sub Label1_Click(sender As Object, e As EventArgs) Handles labelChangedCount.Click
@@ -987,12 +1011,10 @@ Public Class TimeLogsForm2
 
     End Sub
 
-    Private Sub EmployeeTreeView1_Load(sender As Object, e As EventArgs) Handles EmployeeTreeView1.Load
+    Private Async Sub EmployeeTreeView1_TickedEmployee(s As Object, e As EventArgs) Handles EmployeeTreeView1.TickedEmployee
 
-    End Sub
+        Await ReloadAsync()
 
-    Private Sub EmployeeTreeView1_TickedEmployee(s As Object, e As EventArgs) Handles EmployeeTreeView1.TickedEmployee
-        DateFilter_ValueChanged(dtpDateFrom, e)
     End Sub
 
     Private Sub grid_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellEndEdit
@@ -1066,8 +1088,6 @@ Public Class TimeLogsForm2
 
                 If timeLogsFormat_ = TimeLogsForm.TimeLogsFormat.Conventional Then
                     NewTimeEntryAlternateLineImport()
-
-
                 Else
                     HouseKeepingBeforeStartBackgroundWork()
                     bgworkImport.RunWorkerAsync()
@@ -1220,8 +1240,6 @@ Public Class TimeLogsForm2
             End Using
         End If
     End Sub
-
-
 
 #End Region
 
