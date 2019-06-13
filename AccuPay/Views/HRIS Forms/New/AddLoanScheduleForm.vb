@@ -130,13 +130,12 @@ Public Class AddLoanScheduleForm
     End Sub
 
     Private Sub cboLoanType_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboLoanType.SelectedValueChanged
-        If sender Is cboLoanType AndAlso Me._newLoanSchedule IsNot Nothing Then
+        If Me._newLoanSchedule IsNot Nothing Then
             Dim selectedLoanType = Me._loanTypeList.FirstOrDefault(Function(l) l.PartNo = cboLoanType.Text)
 
             If selectedLoanType Is Nothing Then
 
                 Me._newLoanSchedule.LoanTypeID = Nothing
-
             Else
 
                 Me._newLoanSchedule.LoanTypeID = selectedLoanType.RowID
@@ -148,7 +147,7 @@ Public Class AddLoanScheduleForm
     Private Async Sub AddLoanScheduleButtonClicked(sender As Object, e As EventArgs) _
         Handles btnAddAndNew.Click, btnAddAndClose.Click
 
-        ForceLoanScheduleGridViewCommit()
+        ForceLoanScheduleDataBindingsCommit()
 
         Dim confirmMessage = ""
 
@@ -165,7 +164,8 @@ Public Class AddLoanScheduleForm
 
         If String.IsNullOrWhiteSpace(confirmMessage) = False Then
 
-            If MessageBoxHelper.Confirm(Of Boolean)(confirmMessage, "New Loan") = False Then Return
+            If MessageBoxHelper.Confirm(Of Boolean) _
+                (confirmMessage, "New Loan", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
 
         End If
 
@@ -177,7 +177,6 @@ Public Class AddLoanScheduleForm
             ShowBalloonInfo("Loan Successfully Added", "Saved")
 
             ResetForm()
-
         Else
 
             Me.ShowBalloonSuccess = True
@@ -309,7 +308,7 @@ Public Class AddLoanScheduleForm
 
     End Function
 
-    Private Sub ForceLoanScheduleGridViewCommit()
+    Private Sub ForceLoanScheduleDataBindingsCommit()
         'Workaround. Focus other control to lose focus on current control
         pbEmployeePicture.Focus()
     End Sub
@@ -317,5 +316,7 @@ Public Class AddLoanScheduleForm
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, EmployeeInfoTabLayout, 400)
     End Sub
+
 #End Region
+
 End Class

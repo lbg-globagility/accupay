@@ -39,7 +39,6 @@ Partial Class EmployeeAllowanceForm
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.txtEmployeeNumber = New System.Windows.Forms.TextBox()
         Me.txtEmployeeFirstName = New System.Windows.Forms.TextBox()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
@@ -56,17 +55,27 @@ Partial Class EmployeeAllowanceForm
         Me.tsbtnImportAllowance = New System.Windows.Forms.ToolStripButton()
         Me.AllowancesBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.pnlMain = New System.Windows.Forms.Panel()
-        Me.lblforballoon = New System.Windows.Forms.Label()
-        Me.Panel10 = New System.Windows.Forms.Panel()
         Me.pnlForm = New System.Windows.Forms.Panel()
-        Me.cbDtpOverlay = New System.Windows.Forms.CheckBox()
-        Me.lnklbaddallowtype = New System.Windows.Forms.LinkLabel()
-        Me.Label219 = New System.Windows.Forms.Label()
+        Me.AllowanceDetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.pnlTxtLoanBalance = New System.Windows.Forms.Panel()
+        Me.txtallowamt = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label163 = New System.Windows.Forms.Label()
+        Me.NullableDatePicker1 = New AccuPay.NullableDatePicker()
         Me.Label168 = New System.Windows.Forms.Label()
-        Me.Label167 = New System.Windows.Forms.Label()
-        Me.lblreqstartdate = New System.Windows.Forms.Label()
-        Me.dtpallowenddate = New System.Windows.Forms.DateTimePicker()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.dtpallowstartdate = New System.Windows.Forms.DateTimePicker()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label167 = New System.Windows.Forms.Label()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.cboallowfreq = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.plnCboLoanType = New System.Windows.Forms.Panel()
+        Me.Label350 = New System.Windows.Forms.Label()
+        Me.cboallowtype = New System.Windows.Forms.ComboBox()
+        Me.lnklbaddallowtype = New System.Windows.Forms.LinkLabel()
+        Me.Label156 = New System.Windows.Forms.Label()
         Me.dgvempallowance = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.eall_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eall_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -76,16 +85,7 @@ Partial Class EmployeeAllowanceForm
         Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.allow_taxab = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eall_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label156 = New System.Windows.Forms.Label()
-        Me.Label166 = New System.Windows.Forms.Label()
-        Me.cboallowtype = New System.Windows.Forms.ComboBox()
-        Me.Label165 = New System.Windows.Forms.Label()
-        Me.Label157 = New System.Windows.Forms.Label()
-        Me.Label164 = New System.Windows.Forms.Label()
-        Me.cboallowfreq = New System.Windows.Forms.ComboBox()
-        Me.txtallowamt = New System.Windows.Forms.TextBox()
-        Me.Label163 = New System.Windows.Forms.Label()
-        Me.dgvEmp = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.employeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -93,6 +93,7 @@ Partial Class EmployeeAllowanceForm
         Me.lblSearch = New System.Windows.Forms.Label()
         Me.pnlSearch = New System.Windows.Forms.Panel()
         Me.lblFormTitle = New System.Windows.Forms.Label()
+        Me.cbShowAll = New System.Windows.Forms.CheckBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -102,7 +103,6 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewNumberColumn1 = New AccuPay.DataGridViewNumberColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -113,16 +113,19 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cbShowAll = New System.Windows.Forms.CheckBox()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.pbEmpPicAllow, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
         CType(Me.AllowancesBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlMain.SuspendLayout()
-        Me.Panel10.SuspendLayout()
         Me.pnlForm.SuspendLayout()
+        Me.AllowanceDetailsTabLayout.SuspendLayout()
+        Me.pnlTxtLoanBalance.SuspendLayout()
+        Me.Panel2.SuspendLayout()
+        Me.Panel1.SuspendLayout()
+        Me.plnCboLoanType.SuspendLayout()
         CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvEmp, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.employeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlSearch.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -162,7 +165,7 @@ Partial Class EmployeeAllowanceForm
         Me.EmployeeInfoTabLayout.Controls.Add(Me.txtEmployeeFirstName, 1, 0)
         Me.EmployeeInfoTabLayout.Controls.Add(Me.txtEmployeeNumber, 1, 1)
         Me.EmployeeInfoTabLayout.Controls.Add(Me.pbEmpPicAllow, 0, 0)
-        Me.EmployeeInfoTabLayout.Location = New System.Drawing.Point(0, 4)
+        Me.EmployeeInfoTabLayout.Location = New System.Drawing.Point(0, 9)
         Me.EmployeeInfoTabLayout.Name = "EmployeeInfoTabLayout"
         Me.EmployeeInfoTabLayout.RowCount = 2
         Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
@@ -271,139 +274,250 @@ Partial Class EmployeeAllowanceForm
         Me.pnlMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pnlMain.AutoScroll = True
         Me.pnlMain.BackColor = System.Drawing.Color.White
-        Me.pnlMain.Controls.Add(Me.lblforballoon)
-        Me.pnlMain.Controls.Add(Me.Panel10)
+        Me.pnlMain.Controls.Add(Me.pnlForm)
         Me.pnlMain.Controls.Add(Me.ToolStrip12)
         Me.pnlMain.Location = New System.Drawing.Point(375, 33)
         Me.pnlMain.Name = "pnlMain"
         Me.pnlMain.Size = New System.Drawing.Size(842, 503)
         Me.pnlMain.TabIndex = 146
         '
-        'lblforballoon
-        '
-        Me.lblforballoon.AutoSize = True
-        Me.lblforballoon.Location = New System.Drawing.Point(307, 5)
-        Me.lblforballoon.Name = "lblforballoon"
-        Me.lblforballoon.Size = New System.Drawing.Size(75, 13)
-        Me.lblforballoon.TabIndex = 147
-        Me.lblforballoon.Text = "lblforballoon"
-        Me.lblforballoon.Visible = False
-        '
-        'Panel10
-        '
-        Me.Panel10.AutoScroll = True
-        Me.Panel10.Controls.Add(Me.pnlForm)
-        Me.Panel10.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel10.Location = New System.Drawing.Point(0, 25)
-        Me.Panel10.Name = "Panel10"
-        Me.Panel10.Size = New System.Drawing.Size(842, 478)
-        Me.Panel10.TabIndex = 386
-        '
         'pnlForm
         '
-        Me.pnlForm.Controls.Add(Me.cbDtpOverlay)
-        Me.pnlForm.Controls.Add(Me.lnklbaddallowtype)
-        Me.pnlForm.Controls.Add(Me.Label219)
-        Me.pnlForm.Controls.Add(Me.Label168)
-        Me.pnlForm.Controls.Add(Me.Label167)
-        Me.pnlForm.Controls.Add(Me.lblreqstartdate)
-        Me.pnlForm.Controls.Add(Me.dtpallowenddate)
-        Me.pnlForm.Controls.Add(Me.dtpallowstartdate)
+        Me.pnlForm.AutoScroll = True
+        Me.pnlForm.BackColor = System.Drawing.Color.Transparent
+        Me.pnlForm.Controls.Add(Me.AllowanceDetailsTabLayout)
         Me.pnlForm.Controls.Add(Me.dgvempallowance)
-        Me.pnlForm.Controls.Add(Me.Label156)
-        Me.pnlForm.Controls.Add(Me.Label166)
-        Me.pnlForm.Controls.Add(Me.cboallowtype)
-        Me.pnlForm.Controls.Add(Me.Label165)
-        Me.pnlForm.Controls.Add(Me.Label157)
-        Me.pnlForm.Controls.Add(Me.Label164)
-        Me.pnlForm.Controls.Add(Me.cboallowfreq)
-        Me.pnlForm.Controls.Add(Me.txtallowamt)
-        Me.pnlForm.Controls.Add(Me.Label163)
         Me.pnlForm.Controls.Add(Me.EmployeeInfoTabLayout)
-        Me.pnlForm.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlForm.Location = New System.Drawing.Point(0, 0)
+        Me.pnlForm.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlForm.Location = New System.Drawing.Point(0, 25)
         Me.pnlForm.Name = "pnlForm"
-        Me.pnlForm.Size = New System.Drawing.Size(842, 477)
+        Me.pnlForm.Size = New System.Drawing.Size(842, 478)
         Me.pnlForm.TabIndex = 509
         '
-        'cbDtpOverlay
+        'AllowanceDetailsTabLayout
         '
-        Me.cbDtpOverlay.AutoSize = True
-        Me.cbDtpOverlay.Location = New System.Drawing.Point(137, 186)
-        Me.cbDtpOverlay.Name = "cbDtpOverlay"
-        Me.cbDtpOverlay.Size = New System.Drawing.Size(15, 14)
-        Me.cbDtpOverlay.TabIndex = 377
-        Me.cbDtpOverlay.UseVisualStyleBackColor = True
+        Me.AllowanceDetailsTabLayout.ColumnCount = 1
+        Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.pnlTxtLoanBalance, 0, 9)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label163, 0, 8)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.NullableDatePicker1, 0, 7)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label168, 0, 6)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel2, 0, 5)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label167, 0, 4)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel1, 0, 3)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label1, 0, 2)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.plnCboLoanType, 0, 1)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label156, 0, 0)
+        Me.AllowanceDetailsTabLayout.Location = New System.Drawing.Point(8, 101)
+        Me.AllowanceDetailsTabLayout.Name = "AllowanceDetailsTabLayout"
+        Me.AllowanceDetailsTabLayout.RowCount = 10
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.AllowanceDetailsTabLayout.Size = New System.Drawing.Size(265, 249)
+        Me.AllowanceDetailsTabLayout.TabIndex = 380
+        '
+        'pnlTxtLoanBalance
+        '
+        Me.pnlTxtLoanBalance.Controls.Add(Me.txtallowamt)
+        Me.pnlTxtLoanBalance.Controls.Add(Me.Label4)
+        Me.pnlTxtLoanBalance.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlTxtLoanBalance.Location = New System.Drawing.Point(0, 208)
+        Me.pnlTxtLoanBalance.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlTxtLoanBalance.Name = "pnlTxtLoanBalance"
+        Me.pnlTxtLoanBalance.Size = New System.Drawing.Size(265, 41)
+        Me.pnlTxtLoanBalance.TabIndex = 382
+        '
+        'txtallowamt
+        '
+        Me.txtallowamt.Location = New System.Drawing.Point(20, 3)
+        Me.txtallowamt.Name = "txtallowamt"
+        Me.txtallowamt.ShortcutsEnabled = False
+        Me.txtallowamt.Size = New System.Drawing.Size(195, 22)
+        Me.txtallowamt.TabIndex = 384
+        Me.txtallowamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label4
+        '
+        Me.Label4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(3, 4)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(13, 13)
+        Me.Label4.TabIndex = 383
+        Me.Label4.Text = "₱"
+        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Label163
+        '
+        Me.Label163.AutoSize = True
+        Me.Label163.Location = New System.Drawing.Point(20, 192)
+        Me.Label163.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label163.Name = "Label163"
+        Me.Label163.Size = New System.Drawing.Size(48, 13)
+        Me.Label163.TabIndex = 381
+        Me.Label163.Text = "Amount"
+        '
+        'NullableDatePicker1
+        '
+        Me.NullableDatePicker1.Location = New System.Drawing.Point(20, 160)
+        Me.NullableDatePicker1.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.NullableDatePicker1.Name = "NullableDatePicker1"
+        Me.NullableDatePicker1.Size = New System.Drawing.Size(195, 22)
+        Me.NullableDatePicker1.TabIndex = 380
+        Me.NullableDatePicker1.Value = New Date(2019, 5, 24, 10, 35, 13, 830)
+        '
+        'Label168
+        '
+        Me.Label168.AutoSize = True
+        Me.Label168.Location = New System.Drawing.Point(20, 144)
+        Me.Label168.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label168.Name = "Label168"
+        Me.Label168.Size = New System.Drawing.Size(53, 13)
+        Me.Label168.TabIndex = 374
+        Me.Label168.Text = "End date"
+        '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.dtpallowstartdate)
+        Me.Panel2.Controls.Add(Me.Label3)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel2.Location = New System.Drawing.Point(0, 112)
+        Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(265, 32)
+        Me.Panel2.TabIndex = 373
+        '
+        'dtpallowstartdate
+        '
+        Me.dtpallowstartdate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpallowstartdate.Location = New System.Drawing.Point(20, 3)
+        Me.dtpallowstartdate.Name = "dtpallowstartdate"
+        Me.dtpallowstartdate.Size = New System.Drawing.Size(195, 22)
+        Me.dtpallowstartdate.TabIndex = 508
+        '
+        'Label3
+        '
+        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label3.Location = New System.Drawing.Point(3, 4)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(13, 13)
+        Me.Label3.TabIndex = 507
+        Me.Label3.Text = "*"
+        '
+        'Label167
+        '
+        Me.Label167.AutoSize = True
+        Me.Label167.Location = New System.Drawing.Point(20, 96)
+        Me.Label167.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label167.Name = "Label167"
+        Me.Label167.Size = New System.Drawing.Size(57, 13)
+        Me.Label167.TabIndex = 372
+        Me.Label167.Text = "Start date"
+        '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.Label2)
+        Me.Panel1.Controls.Add(Me.cboallowfreq)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel1.Location = New System.Drawing.Point(0, 64)
+        Me.Panel1.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(265, 32)
+        Me.Panel1.TabIndex = 368
+        '
+        'Label2
+        '
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label2.Location = New System.Drawing.Point(3, 4)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(13, 13)
+        Me.Label2.TabIndex = 507
+        Me.Label2.Text = "*"
+        '
+        'cboallowfreq
+        '
+        Me.cboallowfreq.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.cboallowfreq.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cboallowfreq.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboallowfreq.FormattingEnabled = True
+        Me.cboallowfreq.Location = New System.Drawing.Point(20, 2)
+        Me.cboallowfreq.Name = "cboallowfreq"
+        Me.cboallowfreq.Size = New System.Drawing.Size(195, 21)
+        Me.cboallowfreq.TabIndex = 360
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(20, 48)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(60, 13)
+        Me.Label1.TabIndex = 367
+        Me.Label1.Text = "Frequency"
+        '
+        'plnCboLoanType
+        '
+        Me.plnCboLoanType.Controls.Add(Me.Label350)
+        Me.plnCboLoanType.Controls.Add(Me.cboallowtype)
+        Me.plnCboLoanType.Controls.Add(Me.lnklbaddallowtype)
+        Me.plnCboLoanType.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.plnCboLoanType.Location = New System.Drawing.Point(0, 16)
+        Me.plnCboLoanType.Margin = New System.Windows.Forms.Padding(0)
+        Me.plnCboLoanType.Name = "plnCboLoanType"
+        Me.plnCboLoanType.Size = New System.Drawing.Size(265, 32)
+        Me.plnCboLoanType.TabIndex = 366
+        '
+        'Label350
+        '
+        Me.Label350.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label350.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label350.Location = New System.Drawing.Point(3, 4)
+        Me.Label350.Name = "Label350"
+        Me.Label350.Size = New System.Drawing.Size(13, 13)
+        Me.Label350.TabIndex = 507
+        Me.Label350.Text = "*"
+        '
+        'cboallowtype
+        '
+        Me.cboallowtype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboallowtype.FormattingEnabled = True
+        Me.cboallowtype.Location = New System.Drawing.Point(20, 2)
+        Me.cboallowtype.Name = "cboallowtype"
+        Me.cboallowtype.Size = New System.Drawing.Size(195, 21)
+        Me.cboallowtype.TabIndex = 378
         '
         'lnklbaddallowtype
         '
         Me.lnklbaddallowtype.AutoSize = True
         Me.lnklbaddallowtype.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lnklbaddallowtype.Location = New System.Drawing.Point(329, 107)
+        Me.lnklbaddallowtype.Location = New System.Drawing.Point(222, 6)
         Me.lnklbaddallowtype.Name = "lnklbaddallowtype"
         Me.lnklbaddallowtype.Size = New System.Drawing.Size(28, 15)
         Me.lnklbaddallowtype.TabIndex = 373
         Me.lnklbaddallowtype.TabStop = True
         Me.lnklbaddallowtype.Text = "Add"
         '
-        'Label219
+        'Label156
         '
-        Me.Label219.AutoSize = True
-        Me.Label219.Location = New System.Drawing.Point(115, 211)
-        Me.Label219.Name = "Label219"
-        Me.Label219.Size = New System.Drawing.Size(13, 13)
-        Me.Label219.TabIndex = 376
-        Me.Label219.Text = "₱"
-        '
-        'Label168
-        '
-        Me.Label168.AutoSize = True
-        Me.Label168.Location = New System.Drawing.Point(25, 189)
-        Me.Label168.Name = "Label168"
-        Me.Label168.Size = New System.Drawing.Size(59, 13)
-        Me.Label168.TabIndex = 372
-        Me.Label168.Text = "End date :"
-        '
-        'Label167
-        '
-        Me.Label167.AutoSize = True
-        Me.Label167.Location = New System.Drawing.Point(25, 163)
-        Me.Label167.Name = "Label167"
-        Me.Label167.Size = New System.Drawing.Size(63, 13)
-        Me.Label167.TabIndex = 371
-        Me.Label167.Text = "Start date :"
-        '
-        'lblreqstartdate
-        '
-        Me.lblreqstartdate.AutoSize = True
-        Me.lblreqstartdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.lblreqstartdate.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.lblreqstartdate.Location = New System.Drawing.Point(81, 155)
-        Me.lblreqstartdate.Name = "lblreqstartdate"
-        Me.lblreqstartdate.Size = New System.Drawing.Size(18, 24)
-        Me.lblreqstartdate.TabIndex = 374
-        Me.lblreqstartdate.Text = "*"
-        Me.lblreqstartdate.Visible = False
-        '
-        'dtpallowenddate
-        '
-        Me.dtpallowenddate.Checked = False
-        Me.dtpallowenddate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpallowenddate.Location = New System.Drawing.Point(133, 182)
-        Me.dtpallowenddate.Name = "dtpallowenddate"
-        Me.dtpallowenddate.ShowCheckBox = True
-        Me.dtpallowenddate.Size = New System.Drawing.Size(190, 22)
-        Me.dtpallowenddate.TabIndex = 362
-        '
-        'dtpallowstartdate
-        '
-        Me.dtpallowstartdate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpallowstartdate.Location = New System.Drawing.Point(133, 156)
-        Me.dtpallowstartdate.Name = "dtpallowstartdate"
-        Me.dtpallowstartdate.Size = New System.Drawing.Size(190, 22)
-        Me.dtpallowstartdate.TabIndex = 361
+        Me.Label156.AutoSize = True
+        Me.Label156.Location = New System.Drawing.Point(20, 0)
+        Me.Label156.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label156.Name = "Label156"
+        Me.Label156.Size = New System.Drawing.Size(29, 13)
+        Me.Label156.TabIndex = 365
+        Me.Label156.Text = "Type"
         '
         'dgvempallowance
         '
@@ -424,12 +538,13 @@ Partial Class EmployeeAllowanceForm
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvempallowance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempallowance.Location = New System.Drawing.Point(28, 236)
+        Me.dgvempallowance.Location = New System.Drawing.Point(28, 350)
         Me.dgvempallowance.MultiSelect = False
         Me.dgvempallowance.Name = "dgvempallowance"
         Me.dgvempallowance.ReadOnly = True
         Me.dgvempallowance.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvempallowance.Size = New System.Drawing.Size(784, 234)
+        Me.dgvempallowance.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvempallowance.Size = New System.Drawing.Size(784, 250)
         Me.dgvempallowance.TabIndex = 364
         '
         'eall_RowID
@@ -564,111 +679,19 @@ Partial Class EmployeeAllowanceForm
         Me.eall_ProdID.ReadOnly = True
         Me.eall_ProdID.Visible = False
         '
-        'Label156
+        'employeesDataGridView
         '
-        Me.Label156.AutoSize = True
-        Me.Label156.Location = New System.Drawing.Point(25, 110)
-        Me.Label156.Name = "Label156"
-        Me.Label156.Size = New System.Drawing.Size(35, 13)
-        Me.Label156.TabIndex = 365
-        Me.Label156.Text = "Type :"
-        '
-        'Label166
-        '
-        Me.Label166.AutoSize = True
-        Me.Label166.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label166.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label166.Location = New System.Drawing.Point(71, 208)
-        Me.Label166.Name = "Label166"
-        Me.Label166.Size = New System.Drawing.Size(18, 24)
-        Me.Label166.TabIndex = 370
-        Me.Label166.Text = "*"
-        '
-        'cboallowtype
-        '
-        Me.cboallowtype.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
-        Me.cboallowtype.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cboallowtype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboallowtype.FormattingEnabled = True
-        Me.cboallowtype.Location = New System.Drawing.Point(133, 101)
-        Me.cboallowtype.Name = "cboallowtype"
-        Me.cboallowtype.Size = New System.Drawing.Size(190, 21)
-        Me.cboallowtype.TabIndex = 359
-        '
-        'Label165
-        '
-        Me.Label165.AutoSize = True
-        Me.Label165.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label165.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label165.Location = New System.Drawing.Point(85, 129)
-        Me.Label165.Name = "Label165"
-        Me.Label165.Size = New System.Drawing.Size(18, 24)
-        Me.Label165.TabIndex = 369
-        Me.Label165.Text = "*"
-        '
-        'Label157
-        '
-        Me.Label157.AutoSize = True
-        Me.Label157.Location = New System.Drawing.Point(25, 137)
-        Me.Label157.Name = "Label157"
-        Me.Label157.Size = New System.Drawing.Size(66, 13)
-        Me.Label157.TabIndex = 366
-        Me.Label157.Text = "Frequency :"
-        '
-        'Label164
-        '
-        Me.Label164.AutoSize = True
-        Me.Label164.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label164.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label164.Location = New System.Drawing.Point(59, 102)
-        Me.Label164.Name = "Label164"
-        Me.Label164.Size = New System.Drawing.Size(18, 24)
-        Me.Label164.TabIndex = 368
-        Me.Label164.Text = "*"
-        '
-        'cboallowfreq
-        '
-        Me.cboallowfreq.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
-        Me.cboallowfreq.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cboallowfreq.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboallowfreq.FormattingEnabled = True
-        Me.cboallowfreq.Items.AddRange(New Object() {"One time", "Daily", "Semi-monthly", "Monthly"})
-        Me.cboallowfreq.Location = New System.Drawing.Point(133, 128)
-        Me.cboallowfreq.Name = "cboallowfreq"
-        Me.cboallowfreq.Size = New System.Drawing.Size(190, 21)
-        Me.cboallowfreq.TabIndex = 360
-        '
-        'txtallowamt
-        '
-        Me.txtallowamt.Location = New System.Drawing.Point(133, 208)
-        Me.txtallowamt.Name = "txtallowamt"
-        Me.txtallowamt.ShortcutsEnabled = False
-        Me.txtallowamt.Size = New System.Drawing.Size(190, 22)
-        Me.txtallowamt.TabIndex = 363
-        Me.txtallowamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label163
-        '
-        Me.Label163.AutoSize = True
-        Me.Label163.Location = New System.Drawing.Point(25, 216)
-        Me.Label163.Name = "Label163"
-        Me.Label163.Size = New System.Drawing.Size(54, 13)
-        Me.Label163.TabIndex = 367
-        Me.Label163.Text = "Amount :"
-        '
-        'dgvEmp
-        '
-        Me.dgvEmp.AllowUserToAddRows = False
-        Me.dgvEmp.AllowUserToDeleteRows = False
-        Me.dgvEmp.AllowUserToOrderColumns = True
-        Me.dgvEmp.AllowUserToResizeRows = False
-        Me.dgvEmp.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.employeesDataGridView.AllowUserToAddRows = False
+        Me.employeesDataGridView.AllowUserToDeleteRows = False
+        Me.employeesDataGridView.AllowUserToOrderColumns = True
+        Me.employeesDataGridView.AllowUserToResizeRows = False
+        Me.employeesDataGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.dgvEmp.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.dgvEmp.BackgroundColor = System.Drawing.Color.White
-        Me.dgvEmp.ColumnHeadersHeight = 34
-        Me.dgvEmp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvEmp.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
+        Me.employeesDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.employeesDataGridView.BackgroundColor = System.Drawing.Color.White
+        Me.employeesDataGridView.ColumnHeadersHeight = 34
+        Me.employeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.employeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -676,16 +699,16 @@ Partial Class EmployeeAllowanceForm
         DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvEmp.DefaultCellStyle = DataGridViewCellStyle3
-        Me.dgvEmp.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvEmp.Location = New System.Drawing.Point(8, 120)
-        Me.dgvEmp.MultiSelect = False
-        Me.dgvEmp.Name = "dgvEmp"
-        Me.dgvEmp.ReadOnly = True
-        Me.dgvEmp.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvEmp.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvEmp.Size = New System.Drawing.Size(352, 415)
-        Me.dgvEmp.TabIndex = 144
+        Me.employeesDataGridView.DefaultCellStyle = DataGridViewCellStyle3
+        Me.employeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.employeesDataGridView.Location = New System.Drawing.Point(8, 120)
+        Me.employeesDataGridView.MultiSelect = False
+        Me.employeesDataGridView.Name = "employeesDataGridView"
+        Me.employeesDataGridView.ReadOnly = True
+        Me.employeesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.employeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.employeesDataGridView.Size = New System.Drawing.Size(352, 415)
+        Me.employeesDataGridView.TabIndex = 144
         '
         'cemp_EmployeeID
         '
@@ -747,6 +770,16 @@ Partial Class EmployeeAllowanceForm
         Me.lblFormTitle.TabIndex = 143
         Me.lblFormTitle.Text = "Employee Allowance"
         Me.lblFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'cbShowAll
+        '
+        Me.cbShowAll.AutoSize = True
+        Me.cbShowAll.Location = New System.Drawing.Point(8, 97)
+        Me.cbShowAll.Name = "cbShowAll"
+        Me.cbShowAll.Size = New System.Drawing.Size(128, 17)
+        Me.cbShowAll.TabIndex = 147
+        Me.cbShowAll.Text = "Show All Employees"
+        Me.cbShowAll.UseVisualStyleBackColor = True
         '
         'DataGridViewTextBoxColumn1
         '
@@ -843,17 +876,6 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn9.ReadOnly = True
         Me.DataGridViewTextBoxColumn9.Visible = False
         '
-        'DataGridViewNumberColumn1
-        '
-        Me.DataGridViewNumberColumn1.DataPropertyName = "Amount"
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewNumberColumn1.DefaultCellStyle = DataGridViewCellStyle12
-        Me.DataGridViewNumberColumn1.HeaderText = "Amount"
-        Me.DataGridViewNumberColumn1.MaxInputLength = 11
-        Me.DataGridViewNumberColumn1.Name = "DataGridViewNumberColumn1"
-        Me.DataGridViewNumberColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewNumberColumn1.Width = 180
-        '
         'DataGridViewTextBoxColumn19
         '
         Me.DataGridViewTextBoxColumn19.DataPropertyName = "FirstName"
@@ -873,8 +895,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn16
         '
         Me.DataGridViewTextBoxColumn16.DataPropertyName = "EmployeeID"
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle12
         Me.DataGridViewTextBoxColumn16.HeaderText = "Status"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
         Me.DataGridViewTextBoxColumn16.ReadOnly = True
@@ -883,9 +905,9 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn15
         '
         Me.DataGridViewTextBoxColumn15.DataPropertyName = "RowID"
-        DataGridViewCellStyle14.Format = "N2"
-        DataGridViewCellStyle14.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle13.Format = "N2"
+        DataGridViewCellStyle13.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle13
         Me.DataGridViewTextBoxColumn15.HeaderText = "RowiD"
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
         Me.DataGridViewTextBoxColumn15.ReadOnly = True
@@ -895,9 +917,9 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn14
         '
         Me.DataGridViewTextBoxColumn14.DataPropertyName = "EmployeeID"
-        DataGridViewCellStyle15.Format = "(0,000.00)"
-        DataGridViewCellStyle15.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle14.Format = "(0,000.00)"
+        DataGridViewCellStyle14.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridViewTextBoxColumn14.HeaderText = "Remarks"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
         Me.DataGridViewTextBoxColumn14.ReadOnly = True
@@ -916,8 +938,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn12
         '
         Me.DataGridViewTextBoxColumn12.DataPropertyName = "LoanType"
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle15
         Me.DataGridViewTextBoxColumn12.HeaderText = "No of pay period left"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
         Me.DataGridViewTextBoxColumn12.ReadOnly = True
@@ -925,8 +947,8 @@ Partial Class EmployeeAllowanceForm
         'DataGridViewTextBoxColumn11
         '
         Me.DataGridViewTextBoxColumn11.DataPropertyName = "Status"
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle16
         Me.DataGridViewTextBoxColumn11.HeaderText = "No of pay period"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
         Me.DataGridViewTextBoxColumn11.ReadOnly = True
@@ -947,16 +969,6 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn18.Visible = False
         Me.DataGridViewTextBoxColumn18.Width = 103
         '
-        'cbShowAll
-        '
-        Me.cbShowAll.AutoSize = True
-        Me.cbShowAll.Location = New System.Drawing.Point(8, 97)
-        Me.cbShowAll.Name = "cbShowAll"
-        Me.cbShowAll.Size = New System.Drawing.Size(128, 17)
-        Me.cbShowAll.TabIndex = 147
-        Me.cbShowAll.Text = "Show All Employees"
-        Me.cbShowAll.UseVisualStyleBackColor = True
-        '
         'EmployeeAllowanceForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -965,7 +977,7 @@ Partial Class EmployeeAllowanceForm
         Me.ClientSize = New System.Drawing.Size(1229, 547)
         Me.Controls.Add(Me.cbShowAll)
         Me.Controls.Add(Me.pnlMain)
-        Me.Controls.Add(Me.dgvEmp)
+        Me.Controls.Add(Me.employeesDataGridView)
         Me.Controls.Add(Me.pnlSearch)
         Me.Controls.Add(Me.lblFormTitle)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -980,11 +992,17 @@ Partial Class EmployeeAllowanceForm
         CType(Me.AllowancesBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlMain.ResumeLayout(False)
         Me.pnlMain.PerformLayout()
-        Me.Panel10.ResumeLayout(False)
         Me.pnlForm.ResumeLayout(False)
-        Me.pnlForm.PerformLayout()
+        Me.AllowanceDetailsTabLayout.ResumeLayout(False)
+        Me.AllowanceDetailsTabLayout.PerformLayout()
+        Me.pnlTxtLoanBalance.ResumeLayout(False)
+        Me.pnlTxtLoanBalance.PerformLayout()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel1.ResumeLayout(False)
+        Me.plnCboLoanType.ResumeLayout(False)
+        Me.plnCboLoanType.PerformLayout()
         CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvEmp, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.employeesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlSearch.ResumeLayout(False)
         Me.pnlSearch.PerformLayout()
         Me.ResumeLayout(False)
@@ -1025,36 +1043,20 @@ Partial Class EmployeeAllowanceForm
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents AllowancesBindingSource As BindingSource
     Friend WithEvents pnlMain As Panel
-    Friend WithEvents Panel10 As Panel
     Friend WithEvents pnlForm As Panel
     Friend WithEvents cemp_FirstName As DataGridViewTextBoxColumn
     Friend WithEvents cemp_LastName As DataGridViewTextBoxColumn
     Friend WithEvents cemp_EmployeeID As DataGridViewTextBoxColumn
-    Friend WithEvents dgvEmp As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents employeesDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents searchTextBox As TextBox
     Friend WithEvents lblSearch As Label
     Friend WithEvents pnlSearch As Panel
     Friend WithEvents lblFormTitle As Label
     Friend WithEvents DataGridViewTextBoxColumn18 As DataGridViewTextBoxColumn
     Friend WithEvents lnklbaddallowtype As LinkLabel
-    Friend WithEvents Label219 As Label
-    Friend WithEvents Label168 As Label
-    Friend WithEvents Label167 As Label
-    Friend WithEvents lblreqstartdate As Label
-    Friend WithEvents dtpallowenddate As DateTimePicker
-    Friend WithEvents dtpallowstartdate As DateTimePicker
     Friend WithEvents dgvempallowance As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Label156 As Label
-    Friend WithEvents Label166 As Label
-    Friend WithEvents cboallowtype As ComboBox
-    Friend WithEvents Label165 As Label
-    Friend WithEvents Label157 As Label
-    Friend WithEvents Label164 As Label
     Friend WithEvents cboallowfreq As ComboBox
-    Friend WithEvents txtallowamt As TextBox
-    Friend WithEvents Label163 As Label
-    Friend WithEvents lblforballoon As Label
-    Friend WithEvents DataGridViewNumberColumn1 As DataGridViewNumberColumn
     Friend WithEvents eall_RowID As DataGridViewTextBoxColumn
     Friend WithEvents eall_Type As DataGridViewTextBoxColumn
     Friend WithEvents eall_Frequency As DataGridViewTextBoxColumn
@@ -1063,6 +1065,22 @@ Partial Class EmployeeAllowanceForm
     Friend WithEvents eall_Amount As DataGridViewTextBoxColumn
     Friend WithEvents allow_taxab As DataGridViewTextBoxColumn
     Friend WithEvents eall_ProdID As DataGridViewTextBoxColumn
-    Friend WithEvents cbDtpOverlay As CheckBox
     Friend WithEvents cbShowAll As CheckBox
+    Friend WithEvents cboallowtype As ComboBox
+    Friend WithEvents AllowanceDetailsTabLayout As TableLayoutPanel
+    Friend WithEvents plnCboLoanType As Panel
+    Friend WithEvents Label350 As Label
+    Friend WithEvents Label1 As Label
+    Friend WithEvents Label163 As Label
+    Friend WithEvents NullableDatePicker1 As NullableDatePicker
+    Friend WithEvents Label168 As Label
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents dtpallowstartdate As DateTimePicker
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Label167 As Label
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents Label2 As Label
+    Friend WithEvents pnlTxtLoanBalance As Panel
+    Friend WithEvents txtallowamt As TextBox
+    Friend WithEvents Label4 As Label
 End Class

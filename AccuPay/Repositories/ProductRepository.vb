@@ -8,11 +8,20 @@ Namespace Global.AccuPay.Repository
 
     Public Class ProductRepository
 
-
         Public Async Function GetLoanTypes() _
             As Task(Of IEnumerable(Of Product))
 
             Dim categoryName = ProductConstant.LOAN_TYPE_CATEGORY
+
+            Dim category = Await GetOrCreateCategoryByName(categoryName)
+            Return Await GetProductsByCategory(category.RowID)
+
+        End Function
+
+        Public Async Function GetAllowanceTypes() _
+            As Task(Of IEnumerable(Of Product))
+
+            Dim categoryName = ProductConstant.ALLOWANCE_TYPE_CATEGORY
 
             Dim category = Await GetOrCreateCategoryByName(categoryName)
             Return Await GetProductsByCategory(category.RowID)
@@ -38,6 +47,25 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
+        Public Async Function GetOrCreateAllowanceType(allowanceTypeName As String) As Task(Of Product)
+
+            Using context = New PayrollContext()
+
+                Dim allowanceType = Await context.Products.
+                                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                    Where(Function(p) p.PartNo.ToLower = allowanceTypeName.ToLower).
+                                    FirstOrDefaultAsync
+
+                If allowanceType Is Nothing Then
+                    allowanceType = Await AddAllowanceType(allowanceTypeName)
+                End If
+
+                Return allowanceType
+
+            End Using
+
+        End Function
+
         Public Async Function AddLoanType(loanName As String, Optional throwError As Boolean = True) _
             As Task(Of Product)
 
@@ -48,6 +76,37 @@ Namespace Global.AccuPay.Repository
                 product.Name = loanName.Trim()
 
                 product.Category = ProductConstant.LOAN_TYPE_CATEGORY
+
+                product.Created = Date.Now
+                product.CreatedBy = z_User
+                product.OrganizationID = z_OrganizationID
+
+                context.Products.Add(product)
+
+                Await context.SaveChangesAsync()
+
+                Dim newProduct = Await context.Products.
+                    FirstOrDefaultAsync(Function(p) Nullable.Equals(p.RowID, product.RowID))
+
+                If newProduct Is Nothing AndAlso throwError Then
+                    Throw New ArgumentException("There was a problem inserting the new loan type. Please try again.")
+                End If
+
+                Return newProduct
+            End Using
+
+        End Function
+
+        Public Async Function AddAllowanceType(loanName As String, Optional throwError As Boolean = True) _
+            As Task(Of Product)
+
+            Using context = New PayrollContext()
+
+                Dim product As New Product
+                product.PartNo = loanName.Trim()
+                product.Name = loanName.Trim()
+
+                product.Category = ProductConstant.ALLOWANCE_TYPE_CATEGORY
 
                 product.Created = Date.Now
                 product.CreatedBy = z_User
@@ -91,6 +150,7 @@ Namespace Global.AccuPay.Repository
         End Function
 
 #Region "Private Functions"
+
         'this may only apply to "Loan Type" use with caution
         Private Shared Async Function GetOrCreateCategoryByName(categoryName As String) As Task(Of Category)
             Using context = New PayrollContext()
@@ -100,7 +160,6 @@ Namespace Global.AccuPay.Repository
                                     Where(Function(c) c.CategoryName = categoryName).
                                     FirstOrDefaultAsync
 
-
                 If categoryProduct Is Nothing Then
                     'get the existing category with same name to use as CategoryID
                     Dim existingCategoryProduct = Await context.Categories.
@@ -108,7 +167,6 @@ Namespace Global.AccuPay.Repository
                                     FirstOrDefaultAsync
 
                     Dim existingCategoryProductId = existingCategoryProduct?.RowID
-
 
                     categoryProduct = New Category
                     categoryProduct.CategoryID = existingCategoryProductId
@@ -128,7 +186,6 @@ Namespace Global.AccuPay.Repository
                         Try
                             categoryProduct.CategoryID = categoryProduct.RowID
                             Await context.SaveChangesAsync()
-
                         Catch ex As Exception
                             'if for some reason hindi na update, we can't let that row
                             'to have no CategoryID so dapat i-delete rin yung added category
@@ -166,6 +223,7 @@ Namespace Global.AccuPay.Repository
             End Using
 
         End Function
+
 #End Region
 
     End Class

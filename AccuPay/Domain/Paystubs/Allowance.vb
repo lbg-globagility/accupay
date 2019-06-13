@@ -8,6 +8,14 @@ Namespace Global.AccuPay.Entity
     <Table("employeeallowance")>
     Public Class Allowance
 
+        Public Const FREQUENCY_ONE_TIME As String = "One time"
+
+        Public Const FREQUENCY_DAILY As String = "Daily"
+
+        Public Const FREQUENCY_SEMI_MONTHLY As String = "Semi-monthly"
+
+        Public Const FREQUENCY_MONTHLY As String = "Monthly"
+
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
@@ -33,6 +41,7 @@ Namespace Global.AccuPay.Entity
         Public Property AllowanceFrequency As String
 
         Public Property EffectiveEndDate As Date?
+
         <NotMapped>
         Public Property TaxableFlag As Char
 
@@ -42,33 +51,37 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("ProductID")>
         Public Overridable Property Product As Product
 
-        Public ReadOnly Property Type As String
+        <NotMapped>
+        Public Property Type As String
             Get
                 Return Product?.PartNo
             End Get
+            Set(value As String)
+                If Product IsNot Nothing Then Product.PartNo = value
+            End Set
         End Property
 
         Public ReadOnly Property IsOneTime As Boolean
             Get
-                Return AllowanceFrequency = "One time"
+                Return AllowanceFrequency = FREQUENCY_ONE_TIME
             End Get
         End Property
 
         Public ReadOnly Property IsDaily As Boolean
             Get
-                Return AllowanceFrequency = "Daily"
+                Return AllowanceFrequency = FREQUENCY_DAILY
             End Get
         End Property
 
         Public ReadOnly Property IsSemiMonthly As Boolean
             Get
-                Return AllowanceFrequency = "Semi-monthly"
+                Return AllowanceFrequency = FREQUENCY_SEMI_MONTHLY
             End Get
         End Property
 
         Public ReadOnly Property IsMonthly As Boolean
             Get
-                Return AllowanceFrequency = "Monthly"
+                Return AllowanceFrequency = FREQUENCY_MONTHLY
             End Get
         End Property
 

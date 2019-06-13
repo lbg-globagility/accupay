@@ -32,6 +32,7 @@ Public Class ObjectUtilsTest
 
         Assert.AreEqual(expected, result)
     End Sub
+
 #End Region
 
 #Region "ToNullableDecimal"
@@ -60,6 +61,7 @@ Public Class ObjectUtilsTest
 
         Assert.AreEqual(expected, result)
     End Sub
+
 #End Region
 
 #Region "ToInteger"
@@ -106,6 +108,7 @@ Public Class ObjectUtilsTest
 
         Assert.AreEqual(expected, result)
     End Sub
+
 #End Region
 
 #Region "ToNullableInteger"
@@ -152,6 +155,7 @@ Public Class ObjectUtilsTest
 
         Assert.AreEqual(expected, result)
     End Sub
+
 #End Region
 
 #Region "ToDateTime"
@@ -228,6 +232,7 @@ Public Class ObjectUtilsTest
 
         Assert.AreEqual(expected, result)
     End Sub
+
 #End Region
 
 #Region "ToNullableDateTime"
@@ -304,9 +309,11 @@ Public Class ObjectUtilsTest
 
         Assert.AreEqual(expected, result)
     End Sub
+
 #End Region
 
 #Region "ToNullableTimeSpan"
+
     <TestCase("1/30/2017 16:35")>
     <TestCase("1/30/2017 16:35:00")>
     <TestCase("1/30/2017 4:35 PM")>
@@ -319,12 +326,14 @@ Public Class ObjectUtilsTest
     <TestCase("4:35 PM")>
     <TestCase("16:35:00")>
     <TestCase("16:35")>
+    <TestCase("1.00:00:00")>
     Public Shared Sub ToNullableTimeSpan_WithValidInput_ReturnsTimeSpan(input As Object)
 
         Dim output = ObjectUtils.ToNullableTimeSpan(input)
 
         Assert.AreEqual(New TimeSpan(16, 35, 0), output)
     End Sub
+
 #End Region
 
 #Region "ToStringOrNull"
@@ -352,6 +361,7 @@ Public Class ObjectUtilsTest
 
         Assert.AreEqual(expected, result)
     End Sub
+
 #End Region
 
 #Region "ToStringOrEmpty"
@@ -379,6 +389,7 @@ Public Class ObjectUtilsTest
 
         Assert.AreEqual(expected, result)
     End Sub
+
 #End Region
 
 End Class

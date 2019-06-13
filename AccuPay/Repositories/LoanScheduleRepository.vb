@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
@@ -84,13 +85,6 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Private Shared Function GetLoanTypeId(loanTypes As IEnumerable(Of Product), status As String) As Integer?
-            Return loanTypes.
-                            FirstOrDefault(Function(l) l.PartNo.
-                                            Equals(status, StringComparison.InvariantCultureIgnoreCase))?.
-                                            RowID
-        End Function
-
         Public Async Function SaveManyAsync(currentLoanSchedules As List(Of LoanSchedule), loanTypes As IEnumerable(Of Product)) As Task
 
             Using context As New PayrollContext
@@ -134,18 +128,15 @@ Namespace Global.AccuPay.Repository
                 Using newContext As New PayrollContext
                     If loanSchedule.RowID Is Nothing Then
                         Me.Insert(loanSchedule, loanTypes, newContext)
-
                     Else
                         Await Me.UpdateAsync(loanSchedule, newContext)
                     End If
 
                     Await newContext.SaveChangesAsync()
                 End Using
-
             Else
                 If loanSchedule.RowID Is Nothing Then
                     Me.Insert(loanSchedule, loanTypes, passedContext)
-
                 Else
                     Await Me.UpdateAsync(loanSchedule, passedContext)
                 End If
@@ -216,7 +207,6 @@ Namespace Global.AccuPay.Repository
 
             End If
 
-            loanSchedule.Created = Date.Now
             loanSchedule.CreatedBy = z_User
 
             context.LoanSchedules.Add(loanSchedule)
@@ -254,7 +244,6 @@ Namespace Global.AccuPay.Repository
                     ComputeNumberOfPayPeriod(newLoanSchedule.TotalLoanAmount, newLoanSchedule.DeductionAmount)
             End If
 
-
             If newLoanSchedule.TotalBalanceLeft > newLoanSchedule.TotalLoanAmount Then
 
                 newLoanSchedule.TotalBalanceLeft = oldLoanSchedule.TotalLoanAmount
@@ -265,13 +254,13 @@ Namespace Global.AccuPay.Repository
 
             End If
 
-            newLoanSchedule.LastUpd = Date.Now
             newLoanSchedule.LastUpdBy = z_User
 
             context.LoanSchedules.Attach(newLoanSchedule)
             context.Entry(newLoanSchedule).State = EntityState.Modified
 
         End Function
+
     End Class
 
 End Namespace

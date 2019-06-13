@@ -22,7 +22,7 @@ Public Class EmployeeLoansForm
 
     Private _employees As New List(Of Simplified.Employee)
 
-    Private _currentLoanSchedule As New LoanSchedule
+    Private _currentLoanSchedule As LoanSchedule
 
     Private _currentloanSchedules As New List(Of LoanSchedule)
 
@@ -42,21 +42,20 @@ Public Class EmployeeLoansForm
 
         InitializeComponentSettings()
 
-        cbShowAll_CheckedChanged(sender, e)
-
-        ResetLoanScheduleForm()
-
         LoadLoanStatus()
         Await LoadLoanTypes()
         Await LoadDeductionSchedules()
-        Await LoadEmployees()
+
+        Await ShowEmployeeList()
+
+        ResetLoanScheduleForm()
 
     End Sub
 
     Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
-                                               Await LoadEmployees(searchTextBox.Text.ToLower())
+                                               Await FilterEmployees(searchTextBox.Text.ToLower())
 
                                                Return True
                                            End Function)
@@ -68,6 +67,7 @@ Public Class EmployeeLoansForm
     End Sub
 
     Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
+
         ResetLoanScheduleForm()
 
         Dim currentEmployee = GetSelectedEmployee()
@@ -247,11 +247,9 @@ Public Class EmployeeLoansForm
         End Try
     End Sub
 
-    Private Sub combobox_SelectedValueChanged(sender As Object, e As EventArgs) _
-        Handles cmbLoanStatus.SelectedValueChanged, cmbDeductionSchedule.SelectedValueChanged,
-                cboLoanType.SelectedValueChanged
+    Private Sub cboLoanType_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboLoanType.SelectedValueChanged
 
-        If sender Is cboLoanType AndAlso Me._currentLoanSchedule IsNot Nothing Then
+        If Me._currentLoanSchedule IsNot Nothing Then
             Dim selectedLoanType = Me._loanTypeList.FirstOrDefault(Function(l) l.PartNo = cboLoanType.Text)
 
             If selectedLoanType Is Nothing Then
@@ -382,7 +380,8 @@ Public Class EmployeeLoansForm
         If currentLoanSchedule.Status = LoanScheduleRepository.STATUS_COMPLETE Then
 
             If MessageBoxHelper.Confirm(Of Boolean) _
-        ("Loan schedule is already completed. Deleting this might affect previous cutoffs. Do you want to proceed deletion?", "Confirm Deletion") = False Then
+        ("Loan schedule is already completed. Deleting this might affect previous cutoffs. Do you want to proceed deletion?", "Confirm Deletion",
+            messageBoxIcon:=MessageBoxIcon.Warning) = False Then
 
                 Return
             End If
@@ -394,7 +393,8 @@ Public Class EmployeeLoansForm
             If loanTransactions.Count > 0 Then
 
                 If MessageBoxHelper.Confirm(Of Boolean) _
-        ("This loan has already started. Deleting this might affect previous cutoffs. Do you want to proceed deletion?", "Confirm Deletion") = False Then
+        ("This loan has already started. Deleting this might affect previous cutoffs. Do you want to proceed deletion?", "Confirm Deletion",
+            messageBoxIcon:=MessageBoxIcon.Warning) = False Then
 
                     Return
                 End If
@@ -483,7 +483,7 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Async Function LoadEmployees(Optional searchValue As String = "") As Task
+    Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
         Dim filteredEmployees As New List(Of Simplified.Employee)
 
         If String.IsNullOrEmpty(searchValue) Then
@@ -770,6 +770,10 @@ Public Class EmployeeLoansForm
     Dim gotActiveEmp As Boolean = False
 
     Private Async Sub cbShowAll_CheckedChanged(sender As Object, e As EventArgs) Handles cbShowAll.CheckedChanged
+        Await ShowEmployeeList()
+    End Sub
+
+    Private Async Function ShowEmployeeList() As Task
         If cbShowAll.Checked Then
             If Not gotAllEmp Then
                 Dim allEmp = CType(Await _employeeRepository.GetAllAsync(Of Simplified.Employee)(), List(Of Simplified.Employee))
@@ -784,8 +788,7 @@ Public Class EmployeeLoansForm
                 Using context As New PayrollContext
                     Dim list = context.Employees.
                             Where(Function(emp) Nullable.Equals(emp.OrganizationID, z_OrganizationID) And
-                                      emp.EmploymentStatus <> "Terminated" And
-                                      emp.EmploymentStatus <> "Resigned")
+                                      emp.IsActive)
 
                     Dim activeEmp = Await list.
                                 Select(Function(emp) New Simplified.Employee With {
@@ -808,7 +811,7 @@ Public Class EmployeeLoansForm
             Me._employees = activeEmpSorted
         End If
 
-        Await LoadEmployees()
-    End Sub
+        Await FilterEmployees()
+    End Function
 
 End Class

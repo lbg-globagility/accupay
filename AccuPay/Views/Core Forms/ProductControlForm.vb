@@ -7,6 +7,8 @@ Public Class ProductControlForm
 
     Dim isShowAsDialog As Boolean = False
 
+    Public Property IsSaved As Boolean
+
     Public Overloads Function ShowDialog(ByVal someValue As String) As DialogResult
 
         With Me
@@ -14,6 +16,8 @@ Public Class ProductControlForm
             isShowAsDialog = True
 
             .Text = someValue
+
+            IsSaved = False
 
         End With
 
@@ -56,12 +60,10 @@ Public Class ProductControlForm
 
             If haschangestoDB = 1 Then
                 Me.DialogResult = Windows.Forms.DialogResult.OK
-
             Else
                 Me.DialogResult = Windows.Forms.DialogResult.Cancel
 
             End If
-
         Else
             e.Cancel = True
 
@@ -131,8 +133,9 @@ Public Class ProductControlForm
 
                 returnvalue = datrd(0)
 
-            End With
+                Me.IsSaved = True
 
+            End With
         Catch ex As Exception
             MsgBox(ex.Message & " INSUPD_product")
             returnvalue = Nothing
@@ -158,7 +161,6 @@ Public Class ProductControlForm
     End Sub
 
     Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
-
 
         ToolStripButton2.Enabled = False
 
@@ -338,7 +340,6 @@ Public Class ProductControlForm
                 End If
 
             End If
-
         Else
             ContextMenuStrip1.Hide()
 
@@ -391,7 +392,6 @@ Public Class ProductControlForm
             Me.Close()
 
             Return True
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)
@@ -410,7 +410,6 @@ Public Class ProductControlForm
         If selected_rowindex = -1 Then Return
 
         Dim allowanceName = dgvproducts.Item("PartNo", selected_rowindex).Value.ToString
-
 
         Dim prompt As DialogResult
 
@@ -445,10 +444,10 @@ Public Class ProductControlForm
 
             dgvproducts.Rows.Remove(removing_row)
 
-                'ToolStripButton3_Click(sender, e)
+            'ToolStripButton3_Click(sender, e)
 
-            End If
-            dgvproducts.Enabled = True
+        End If
+        dgvproducts.Enabled = True
 
     End Sub
 
@@ -467,7 +466,6 @@ Public Class ProductControlForm
     End Function
 
     Private Sub ContextMenuStrip1_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip1.Opening
-
 
     End Sub
 

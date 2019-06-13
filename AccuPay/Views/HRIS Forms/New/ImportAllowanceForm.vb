@@ -39,7 +39,6 @@ Public Class ImportAllowanceForm
                                     Where(Function(c) c.CategoryName = categoryName).
                                     FirstOrDefaultAsync
 
-
             If categoryProduct Is Nothing Then
                 'get the existing category with same name to use as CategoryID
                 Dim existingCategoryProduct = Await context.Categories.
@@ -47,7 +46,6 @@ Public Class ImportAllowanceForm
                                     FirstOrDefaultAsync
 
                 Dim existingCategoryProductId = existingCategoryProduct?.RowID
-
 
                 categoryProduct = New Category
                 categoryProduct.CategoryID = existingCategoryProductId
@@ -67,7 +65,6 @@ Public Class ImportAllowanceForm
                     Try
                         categoryProduct.CategoryID = categoryProduct.RowID
                         Await context.SaveChangesAsync()
-
                     Catch ex As Exception
                         'if for some reason hindi na update, we can't let that row
                         'to have no CategoryID so dapat i-delete rin yung added category
@@ -113,7 +110,6 @@ Public Class ImportAllowanceForm
 
         Dim parser = New ExcelParser(Of AllowanceRowRecord)()
         Dim records = parser.Read(fileName)
-        records.RemoveAt(records.Count - 1)
 
         _allowances = New List(Of Allowance)
 
@@ -141,39 +137,17 @@ Public Class ImportAllowanceForm
             record.EmployeeFullName = employee.Fullname
             record.EmployeeID = employee.EmployeeNo
 
-            Dim allowanceType As New Product
+            If String.IsNullOrWhiteSpace(record.Type) Then
 
-            Using context = New PayrollContext()
+                record.ErrorMessage = "Name of allowance/allowance type cannot be blank."
 
-                allowanceType = Await context.Products.
-                                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                                Where(Function(p) p.PartNo.Equals(record.Type, StringComparison.InvariantCultureIgnoreCase)).
-                                FirstOrDefaultAsync
+                rejectedRecords.Add(record)
 
-                If allowanceType Is Nothing Then
-                    Try
-                        Dim product As New Product
-                        product.PartNo = record.Type.Trim()
-                        product.Name = record.Type.Trim()
+                Continue For
 
-                        product.Category = ProductConstant.ALLOWANCE_TYPE_CATEGORY
+            End If
 
-                        product.Created = Date.Now
-                        product.CreatedBy = z_User
-                        product.OrganizationID = z_OrganizationID
-
-                        context.Products.Add(product)
-
-                        Await context.SaveChangesAsync()
-
-                        allowanceType = Await context.Products.
-                            FirstOrDefaultAsync(Function(p) Nullable.Equals(p.RowID, product.RowID))
-                    Catch ex As Exception
-                        allowanceType = Nothing
-                    End Try
-                End If
-
-            End Using
+            Dim allowanceType = Await _productRepository.GetOrCreateAllowanceType(record.Type)
 
             If allowanceType Is Nothing Then
 
@@ -186,6 +160,16 @@ Public Class ImportAllowanceForm
             End If
 
             record.Type = allowanceType.PartNo 'For displaying on datagrid view
+
+            If record.EffectiveStartDate Is Nothing Then
+
+                record.ErrorMessage = "Effective Start Date cannot be blank."
+
+                rejectedRecords.Add(record)
+
+                Continue For
+
+            End If
 
             Dim allowanceFrequency = Me._allowanceFrequencyList.
                 FirstOrDefault(Function(a) a.Equals(record.AllowanceFrequency, StringComparison.InvariantCultureIgnoreCase))
@@ -243,8 +227,6 @@ Public Class ImportAllowanceForm
 
             lblStatus.Text += "Failed records will not be saved."
             lblStatus.BackColor = Color.Red
-
-
         Else
             lblStatus.Text = $"There is no error."
             lblStatus.BackColor = Color.Green
@@ -273,17 +255,14 @@ Public Class ImportAllowanceForm
             Me.IsSaved = True
 
             Me.Close()
-
         Catch ex As ArgumentException
 
             Dim errorMessage = "One of the allowances has an error:" & Environment.NewLine & ex.Message
 
             MessageBoxHelper.ErrorMessage(errorMessage, messageTitle)
-
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-
         Finally
 
             Me.Cursor = Cursors.Default
@@ -314,4 +293,5 @@ Public Class ImportAllowanceForm
             End Using
         End If
     End Sub
+
 End Class

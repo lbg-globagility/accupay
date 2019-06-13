@@ -22,63 +22,41 @@ Partial Class AddAllowanceForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.pnlTxtLoanBalance = New System.Windows.Forms.Panel()
-        Me.dtpallowenddate = New System.Windows.Forms.DateTimePicker()
         Me.txtEmployeeNumber = New System.Windows.Forms.TextBox()
-        Me.lblLoanType = New System.Windows.Forms.Label()
-        Me.plnCboLoanType = New System.Windows.Forms.Panel()
-        Me.cboAllowType = New System.Windows.Forms.ComboBox()
-        Me.Label350 = New System.Windows.Forms.Label()
-        Me.lnlAddAllowanceType = New System.Windows.Forms.LinkLabel()
         Me.pbEmployeePicture = New System.Windows.Forms.PictureBox()
-        Me.dtpallowstartdate = New System.Windows.Forms.DateTimePicker()
-        Me.lblDateFrom = New System.Windows.Forms.Label()
-        Me.lblLoanBalance = New System.Windows.Forms.Label()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnAddAndNew = New System.Windows.Forms.Button()
         Me.txtEmployeeFirstName = New System.Windows.Forms.TextBox()
         Me.btnAddAndClose = New System.Windows.Forms.Button()
-        Me.lblTotalLoanAmount = New System.Windows.Forms.Label()
-        Me.pnlTxtLoanAmount = New System.Windows.Forms.Panel()
-        Me.lblreqstartdate = New System.Windows.Forms.Label()
-        Me.Label220 = New System.Windows.Forms.Label()
-        Me.txtPeriodicAllowanceAmount = New System.Windows.Forms.TextBox()
-        Me.LoanDetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
-        Me.lblLoanNumber = New System.Windows.Forms.Label()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.cboAllowFreq = New System.Windows.Forms.ComboBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
-        Me.pnlTxtLoanBalance.SuspendLayout()
-        Me.plnCboLoanType.SuspendLayout()
+        Me.AllowanceDetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.dtpallowstartdate = New System.Windows.Forms.DateTimePicker()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.cboallowfreq = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.plnCboLoanType = New System.Windows.Forms.Panel()
+        Me.Label350 = New System.Windows.Forms.Label()
+        Me.cboallowtype = New System.Windows.Forms.ComboBox()
+        Me.lnklbaddallowtype = New System.Windows.Forms.LinkLabel()
+        Me.Label156 = New System.Windows.Forms.Label()
+        Me.Label167 = New System.Windows.Forms.Label()
+        Me.Label168 = New System.Windows.Forms.Label()
+        Me.Label163 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtallowamt = New System.Windows.Forms.TextBox()
+        Me.pnlTxtLoanBalance = New System.Windows.Forms.Panel()
+        Me.NullableDatePicker1 = New AccuPay.NullableDatePicker()
         CType(Me.pbEmployeePicture, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.pnlTxtLoanAmount.SuspendLayout()
-        Me.LoanDetailsTabLayout.SuspendLayout()
-        Me.Panel1.SuspendLayout()
-        Me.Panel2.SuspendLayout()
         Me.EmployeeInfoTabLayout.SuspendLayout()
+        Me.AllowanceDetailsTabLayout.SuspendLayout()
+        Me.Panel2.SuspendLayout()
+        Me.Panel1.SuspendLayout()
+        Me.plnCboLoanType.SuspendLayout()
+        Me.pnlTxtLoanBalance.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'pnlTxtLoanBalance
-        '
-        Me.pnlTxtLoanBalance.Controls.Add(Me.dtpallowenddate)
-        Me.pnlTxtLoanBalance.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnlTxtLoanBalance.Location = New System.Drawing.Point(0, 160)
-        Me.pnlTxtLoanBalance.Margin = New System.Windows.Forms.Padding(0)
-        Me.pnlTxtLoanBalance.Name = "pnlTxtLoanBalance"
-        Me.pnlTxtLoanBalance.Size = New System.Drawing.Size(566, 32)
-        Me.pnlTxtLoanBalance.TabIndex = 356
-        '
-        'dtpallowenddate
-        '
-        Me.dtpallowenddate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpallowenddate.Location = New System.Drawing.Point(20, 4)
-        Me.dtpallowenddate.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
-        Me.dtpallowenddate.Name = "dtpallowenddate"
-        Me.dtpallowenddate.ShowCheckBox = True
-        Me.dtpallowenddate.Size = New System.Drawing.Size(195, 20)
-        Me.dtpallowenddate.TabIndex = 381
         '
         'txtEmployeeNumber
         '
@@ -93,58 +71,6 @@ Partial Class AddAllowanceForm
         Me.txtEmployeeNumber.Size = New System.Drawing.Size(516, 22)
         Me.txtEmployeeNumber.TabIndex = 380
         '
-        'lblLoanType
-        '
-        Me.lblLoanType.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblLoanType.AutoSize = True
-        Me.lblLoanType.Location = New System.Drawing.Point(20, 3)
-        Me.lblLoanType.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.lblLoanType.Name = "lblLoanType"
-        Me.lblLoanType.Size = New System.Drawing.Size(94, 13)
-        Me.lblLoanType.TabIndex = 379
-        Me.lblLoanType.Text = "Type of allowance"
-        '
-        'plnCboLoanType
-        '
-        Me.plnCboLoanType.Controls.Add(Me.cboAllowType)
-        Me.plnCboLoanType.Controls.Add(Me.Label350)
-        Me.plnCboLoanType.Controls.Add(Me.lnlAddAllowanceType)
-        Me.plnCboLoanType.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.plnCboLoanType.Location = New System.Drawing.Point(0, 16)
-        Me.plnCboLoanType.Margin = New System.Windows.Forms.Padding(0)
-        Me.plnCboLoanType.Name = "plnCboLoanType"
-        Me.plnCboLoanType.Size = New System.Drawing.Size(566, 32)
-        Me.plnCboLoanType.TabIndex = 353
-        '
-        'cboAllowType
-        '
-        Me.cboAllowType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboAllowType.FormattingEnabled = True
-        Me.cboAllowType.Location = New System.Drawing.Point(20, 2)
-        Me.cboAllowType.Name = "cboAllowType"
-        Me.cboAllowType.Size = New System.Drawing.Size(195, 21)
-        Me.cboAllowType.TabIndex = 353
-        '
-        'Label350
-        '
-        Me.Label350.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label350.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label350.Location = New System.Drawing.Point(3, 4)
-        Me.Label350.Name = "Label350"
-        Me.Label350.Size = New System.Drawing.Size(13, 13)
-        Me.Label350.TabIndex = 507
-        Me.Label350.Text = "*"
-        '
-        'lnlAddAllowanceType
-        '
-        Me.lnlAddAllowanceType.AutoSize = True
-        Me.lnlAddAllowanceType.Location = New System.Drawing.Point(222, 6)
-        Me.lnlAddAllowanceType.Name = "lnlAddAllowanceType"
-        Me.lnlAddAllowanceType.Size = New System.Drawing.Size(26, 13)
-        Me.lnlAddAllowanceType.TabIndex = 354
-        Me.lnlAddAllowanceType.TabStop = True
-        Me.lnlAddAllowanceType.Text = "Add"
-        '
         'pbEmployeePicture
         '
         Me.pbEmployeePicture.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
@@ -157,40 +83,9 @@ Partial Class AddAllowanceForm
         Me.pbEmployeePicture.TabIndex = 382
         Me.pbEmployeePicture.TabStop = False
         '
-        'dtpallowstartdate
-        '
-        Me.dtpallowstartdate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpallowstartdate.Location = New System.Drawing.Point(20, 4)
-        Me.dtpallowstartdate.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
-        Me.dtpallowstartdate.Name = "dtpallowstartdate"
-        Me.dtpallowstartdate.Size = New System.Drawing.Size(195, 20)
-        Me.dtpallowstartdate.TabIndex = 357
-        '
-        'lblDateFrom
-        '
-        Me.lblDateFrom.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblDateFrom.AutoSize = True
-        Me.lblDateFrom.Location = New System.Drawing.Point(20, 195)
-        Me.lblDateFrom.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.lblDateFrom.Name = "lblDateFrom"
-        Me.lblDateFrom.Size = New System.Drawing.Size(43, 13)
-        Me.lblDateFrom.TabIndex = 372
-        Me.lblDateFrom.Text = "Amount"
-        '
-        'lblLoanBalance
-        '
-        Me.lblLoanBalance.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblLoanBalance.AutoSize = True
-        Me.lblLoanBalance.Location = New System.Drawing.Point(20, 147)
-        Me.lblLoanBalance.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.lblLoanBalance.Name = "lblLoanBalance"
-        Me.lblLoanBalance.Size = New System.Drawing.Size(52, 13)
-        Me.lblLoanBalance.TabIndex = 365
-        Me.lblLoanBalance.Text = "End Date"
-        '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(452, 400)
+        Me.btnCancel.Location = New System.Drawing.Point(315, 364)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 13
@@ -199,7 +94,7 @@ Partial Class AddAllowanceForm
         '
         'btnAddAndNew
         '
-        Me.btnAddAndNew.Location = New System.Drawing.Point(369, 400)
+        Me.btnAddAndNew.Location = New System.Drawing.Point(232, 364)
         Me.btnAddAndNew.Name = "btnAddAndNew"
         Me.btnAddAndNew.Size = New System.Drawing.Size(75, 23)
         Me.btnAddAndNew.TabIndex = 12
@@ -222,147 +117,12 @@ Partial Class AddAllowanceForm
         '
         'btnAddAndClose
         '
-        Me.btnAddAndClose.Location = New System.Drawing.Point(278, 400)
+        Me.btnAddAndClose.Location = New System.Drawing.Point(141, 364)
         Me.btnAddAndClose.Name = "btnAddAndClose"
         Me.btnAddAndClose.Size = New System.Drawing.Size(85, 23)
         Me.btnAddAndClose.TabIndex = 14
         Me.btnAddAndClose.Text = "&Add && Close"
         Me.btnAddAndClose.UseVisualStyleBackColor = True
-        '
-        'lblTotalLoanAmount
-        '
-        Me.lblTotalLoanAmount.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblTotalLoanAmount.AutoSize = True
-        Me.lblTotalLoanAmount.Location = New System.Drawing.Point(20, 99)
-        Me.lblTotalLoanAmount.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.lblTotalLoanAmount.Name = "lblTotalLoanAmount"
-        Me.lblTotalLoanAmount.Size = New System.Drawing.Size(55, 13)
-        Me.lblTotalLoanAmount.TabIndex = 362
-        Me.lblTotalLoanAmount.Text = "Start Date"
-        '
-        'pnlTxtLoanAmount
-        '
-        Me.pnlTxtLoanAmount.Controls.Add(Me.lblreqstartdate)
-        Me.pnlTxtLoanAmount.Controls.Add(Me.dtpallowstartdate)
-        Me.pnlTxtLoanAmount.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnlTxtLoanAmount.Location = New System.Drawing.Point(0, 112)
-        Me.pnlTxtLoanAmount.Margin = New System.Windows.Forms.Padding(0)
-        Me.pnlTxtLoanAmount.Name = "pnlTxtLoanAmount"
-        Me.pnlTxtLoanAmount.Size = New System.Drawing.Size(566, 32)
-        Me.pnlTxtLoanAmount.TabIndex = 355
-        '
-        'lblreqstartdate
-        '
-        Me.lblreqstartdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.lblreqstartdate.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.lblreqstartdate.Location = New System.Drawing.Point(3, 2)
-        Me.lblreqstartdate.Name = "lblreqstartdate"
-        Me.lblreqstartdate.Size = New System.Drawing.Size(13, 13)
-        Me.lblreqstartdate.TabIndex = 511
-        Me.lblreqstartdate.Text = "*"
-        '
-        'Label220
-        '
-        Me.Label220.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label220.AutoSize = True
-        Me.Label220.Location = New System.Drawing.Point(3, 7)
-        Me.Label220.Name = "Label220"
-        Me.Label220.Size = New System.Drawing.Size(14, 13)
-        Me.Label220.TabIndex = 383
-        Me.Label220.Text = "₱"
-        Me.Label220.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'txtPeriodicAllowanceAmount
-        '
-        Me.txtPeriodicAllowanceAmount.Location = New System.Drawing.Point(17, 3)
-        Me.txtPeriodicAllowanceAmount.Name = "txtPeriodicAllowanceAmount"
-        Me.txtPeriodicAllowanceAmount.ShortcutsEnabled = False
-        Me.txtPeriodicAllowanceAmount.Size = New System.Drawing.Size(195, 20)
-        Me.txtPeriodicAllowanceAmount.TabIndex = 355
-        '
-        'LoanDetailsTabLayout
-        '
-        Me.LoanDetailsTabLayout.ColumnCount = 1
-        Me.LoanDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33!))
-        Me.LoanDetailsTabLayout.Controls.Add(Me.pnlTxtLoanBalance, 0, 7)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanType, 0, 0)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.plnCboLoanType, 0, 1)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanNumber, 0, 2)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblDateFrom, 0, 8)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanBalance, 0, 6)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblTotalLoanAmount, 0, 4)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.pnlTxtLoanAmount, 0, 5)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.Panel1, 0, 3)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.Panel2, 0, 9)
-        Me.LoanDetailsTabLayout.Dock = System.Windows.Forms.DockStyle.Top
-        Me.LoanDetailsTabLayout.Location = New System.Drawing.Point(0, 88)
-        Me.LoanDetailsTabLayout.Name = "LoanDetailsTabLayout"
-        Me.LoanDetailsTabLayout.RowCount = 11
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34.0!))
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 14.0!))
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.LoanDetailsTabLayout.Size = New System.Drawing.Size(566, 247)
-        Me.LoanDetailsTabLayout.TabIndex = 10
-        '
-        'lblLoanNumber
-        '
-        Me.lblLoanNumber.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblLoanNumber.AutoSize = True
-        Me.lblLoanNumber.Location = New System.Drawing.Point(20, 51)
-        Me.lblLoanNumber.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.lblLoanNumber.Name = "lblLoanNumber"
-        Me.lblLoanNumber.Size = New System.Drawing.Size(57, 13)
-        Me.lblLoanNumber.TabIndex = 357
-        Me.lblLoanNumber.Text = "Frequency"
-        '
-        'Panel1
-        '
-        Me.Panel1.Controls.Add(Me.cboAllowFreq)
-        Me.Panel1.Controls.Add(Me.Label1)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel1.Location = New System.Drawing.Point(3, 67)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(560, 28)
-        Me.Panel1.TabIndex = 380
-        '
-        'cboAllowFreq
-        '
-        Me.cboAllowFreq.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboAllowFreq.FormattingEnabled = True
-        Me.cboAllowFreq.Items.AddRange(New Object() {"One time", "Daily", "Semi-monthly", "Monthly"})
-        Me.cboAllowFreq.Location = New System.Drawing.Point(17, 4)
-        Me.cboAllowFreq.Name = "cboAllowFreq"
-        Me.cboAllowFreq.Size = New System.Drawing.Size(195, 21)
-        Me.cboAllowFreq.TabIndex = 508
-        '
-        'Label1
-        '
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(-1, 6)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(13, 13)
-        Me.Label1.TabIndex = 510
-        Me.Label1.Text = "*"
-        '
-        'Panel2
-        '
-        Me.Panel2.Controls.Add(Me.Label220)
-        Me.Panel2.Controls.Add(Me.txtPeriodicAllowanceAmount)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(3, 211)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(560, 26)
-        Me.Panel2.TabIndex = 384
         '
         'EmployeeInfoTabLayout
         '
@@ -379,63 +139,286 @@ Partial Class AddAllowanceForm
         Me.EmployeeInfoTabLayout.RowCount = 2
         Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
         Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
-        Me.EmployeeInfoTabLayout.Size = New System.Drawing.Size(566, 88)
+        Me.EmployeeInfoTabLayout.Size = New System.Drawing.Size(538, 88)
         Me.EmployeeInfoTabLayout.TabIndex = 11
+        '
+        'AllowanceDetailsTabLayout
+        '
+        Me.AllowanceDetailsTabLayout.ColumnCount = 1
+        Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.pnlTxtLoanBalance, 0, 9)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel2, 0, 5)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel1, 0, 3)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label1, 0, 2)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.plnCboLoanType, 0, 1)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label156, 0, 0)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label167, 0, 4)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label168, 0, 6)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label163, 0, 8)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.NullableDatePicker1, 0, 7)
+        Me.AllowanceDetailsTabLayout.Location = New System.Drawing.Point(137, 105)
+        Me.AllowanceDetailsTabLayout.Name = "AllowanceDetailsTabLayout"
+        Me.AllowanceDetailsTabLayout.RowCount = 10
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.AllowanceDetailsTabLayout.Size = New System.Drawing.Size(257, 253)
+        Me.AllowanceDetailsTabLayout.TabIndex = 381
+        '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.dtpallowstartdate)
+        Me.Panel2.Controls.Add(Me.Label3)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel2.Location = New System.Drawing.Point(0, 112)
+        Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(257, 32)
+        Me.Panel2.TabIndex = 373
+        '
+        'dtpallowstartdate
+        '
+        Me.dtpallowstartdate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpallowstartdate.Location = New System.Drawing.Point(20, 3)
+        Me.dtpallowstartdate.Name = "dtpallowstartdate"
+        Me.dtpallowstartdate.Size = New System.Drawing.Size(195, 20)
+        Me.dtpallowstartdate.TabIndex = 508
+        '
+        'Label3
+        '
+        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label3.Location = New System.Drawing.Point(3, 4)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(13, 13)
+        Me.Label3.TabIndex = 507
+        Me.Label3.Text = "*"
+        '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.Label2)
+        Me.Panel1.Controls.Add(Me.cboallowfreq)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel1.Location = New System.Drawing.Point(0, 64)
+        Me.Panel1.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(257, 32)
+        Me.Panel1.TabIndex = 368
+        '
+        'Label2
+        '
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label2.Location = New System.Drawing.Point(3, 4)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(13, 13)
+        Me.Label2.TabIndex = 507
+        Me.Label2.Text = "*"
+        '
+        'cboallowfreq
+        '
+        Me.cboallowfreq.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.cboallowfreq.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cboallowfreq.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboallowfreq.FormattingEnabled = True
+        Me.cboallowfreq.Items.AddRange(New Object() {"One time", "Daily", "Semi-monthly", "Monthly"})
+        Me.cboallowfreq.Location = New System.Drawing.Point(20, 2)
+        Me.cboallowfreq.Name = "cboallowfreq"
+        Me.cboallowfreq.Size = New System.Drawing.Size(195, 21)
+        Me.cboallowfreq.TabIndex = 360
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(20, 48)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(57, 13)
+        Me.Label1.TabIndex = 367
+        Me.Label1.Text = "Frequency"
+        '
+        'plnCboLoanType
+        '
+        Me.plnCboLoanType.Controls.Add(Me.Label350)
+        Me.plnCboLoanType.Controls.Add(Me.cboallowtype)
+        Me.plnCboLoanType.Controls.Add(Me.lnklbaddallowtype)
+        Me.plnCboLoanType.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.plnCboLoanType.Location = New System.Drawing.Point(0, 16)
+        Me.plnCboLoanType.Margin = New System.Windows.Forms.Padding(0)
+        Me.plnCboLoanType.Name = "plnCboLoanType"
+        Me.plnCboLoanType.Size = New System.Drawing.Size(257, 32)
+        Me.plnCboLoanType.TabIndex = 366
+        '
+        'Label350
+        '
+        Me.Label350.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label350.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label350.Location = New System.Drawing.Point(3, 4)
+        Me.Label350.Name = "Label350"
+        Me.Label350.Size = New System.Drawing.Size(13, 13)
+        Me.Label350.TabIndex = 507
+        Me.Label350.Text = "*"
+        '
+        'cboallowtype
+        '
+        Me.cboallowtype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboallowtype.FormattingEnabled = True
+        Me.cboallowtype.Location = New System.Drawing.Point(20, 2)
+        Me.cboallowtype.Name = "cboallowtype"
+        Me.cboallowtype.Size = New System.Drawing.Size(195, 21)
+        Me.cboallowtype.TabIndex = 378
+        '
+        'lnklbaddallowtype
+        '
+        Me.lnklbaddallowtype.AutoSize = True
+        Me.lnklbaddallowtype.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lnklbaddallowtype.Location = New System.Drawing.Point(222, 6)
+        Me.lnklbaddallowtype.Name = "lnklbaddallowtype"
+        Me.lnklbaddallowtype.Size = New System.Drawing.Size(28, 15)
+        Me.lnklbaddallowtype.TabIndex = 373
+        Me.lnklbaddallowtype.TabStop = True
+        Me.lnklbaddallowtype.Text = "Add"
+        '
+        'Label156
+        '
+        Me.Label156.AutoSize = True
+        Me.Label156.Location = New System.Drawing.Point(20, 0)
+        Me.Label156.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label156.Name = "Label156"
+        Me.Label156.Size = New System.Drawing.Size(31, 13)
+        Me.Label156.TabIndex = 365
+        Me.Label156.Text = "Type"
+        '
+        'Label167
+        '
+        Me.Label167.AutoSize = True
+        Me.Label167.Location = New System.Drawing.Point(20, 96)
+        Me.Label167.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label167.Name = "Label167"
+        Me.Label167.Size = New System.Drawing.Size(53, 13)
+        Me.Label167.TabIndex = 372
+        Me.Label167.Text = "Start date"
+        '
+        'Label168
+        '
+        Me.Label168.AutoSize = True
+        Me.Label168.Location = New System.Drawing.Point(20, 144)
+        Me.Label168.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label168.Name = "Label168"
+        Me.Label168.Size = New System.Drawing.Size(50, 13)
+        Me.Label168.TabIndex = 374
+        Me.Label168.Text = "End date"
+        '
+        'Label163
+        '
+        Me.Label163.AutoSize = True
+        Me.Label163.Location = New System.Drawing.Point(20, 192)
+        Me.Label163.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label163.Name = "Label163"
+        Me.Label163.Size = New System.Drawing.Size(43, 13)
+        Me.Label163.TabIndex = 381
+        Me.Label163.Text = "Amount"
+        '
+        'Label4
+        '
+        Me.Label4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(3, 4)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(14, 13)
+        Me.Label4.TabIndex = 383
+        Me.Label4.Text = "₱"
+        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'txtallowamt
+        '
+        Me.txtallowamt.Location = New System.Drawing.Point(20, 3)
+        Me.txtallowamt.Name = "txtallowamt"
+        Me.txtallowamt.ShortcutsEnabled = False
+        Me.txtallowamt.Size = New System.Drawing.Size(195, 20)
+        Me.txtallowamt.TabIndex = 384
+        Me.txtallowamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'pnlTxtLoanBalance
+        '
+        Me.pnlTxtLoanBalance.Controls.Add(Me.txtallowamt)
+        Me.pnlTxtLoanBalance.Controls.Add(Me.Label4)
+        Me.pnlTxtLoanBalance.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlTxtLoanBalance.Location = New System.Drawing.Point(0, 208)
+        Me.pnlTxtLoanBalance.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlTxtLoanBalance.Name = "pnlTxtLoanBalance"
+        Me.pnlTxtLoanBalance.Size = New System.Drawing.Size(257, 45)
+        Me.pnlTxtLoanBalance.TabIndex = 382
+        '
+        'NullableDatePicker1
+        '
+        Me.NullableDatePicker1.Location = New System.Drawing.Point(20, 160)
+        Me.NullableDatePicker1.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.NullableDatePicker1.Name = "NullableDatePicker1"
+        Me.NullableDatePicker1.Size = New System.Drawing.Size(195, 22)
+        Me.NullableDatePicker1.TabIndex = 380
+        Me.NullableDatePicker1.Value = New Date(2019, 5, 24, 10, 35, 13, 830)
         '
         'AddAllowanceForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(166, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(566, 450)
+        Me.ClientSize = New System.Drawing.Size(538, 429)
+        Me.Controls.Add(Me.AllowanceDetailsTabLayout)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnAddAndNew)
         Me.Controls.Add(Me.btnAddAndClose)
-        Me.Controls.Add(Me.LoanDetailsTabLayout)
         Me.Controls.Add(Me.EmployeeInfoTabLayout)
         Me.Name = "AddAllowanceForm"
         Me.Text = "New Allowance"
-        Me.pnlTxtLoanBalance.ResumeLayout(False)
-        Me.plnCboLoanType.ResumeLayout(False)
-        Me.plnCboLoanType.PerformLayout()
         CType(Me.pbEmployeePicture, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.pnlTxtLoanAmount.ResumeLayout(False)
-        Me.LoanDetailsTabLayout.ResumeLayout(False)
-        Me.LoanDetailsTabLayout.PerformLayout()
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
         Me.EmployeeInfoTabLayout.ResumeLayout(False)
         Me.EmployeeInfoTabLayout.PerformLayout()
+        Me.AllowanceDetailsTabLayout.ResumeLayout(False)
+        Me.AllowanceDetailsTabLayout.PerformLayout()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel1.ResumeLayout(False)
+        Me.plnCboLoanType.ResumeLayout(False)
+        Me.plnCboLoanType.PerformLayout()
+        Me.pnlTxtLoanBalance.ResumeLayout(False)
+        Me.pnlTxtLoanBalance.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents pnlTxtLoanBalance As Panel
     Friend WithEvents txtEmployeeNumber As TextBox
-    Friend WithEvents lblLoanType As Label
-    Friend WithEvents plnCboLoanType As Panel
     Friend WithEvents pbEmployeePicture As PictureBox
     Friend WithEvents EmployeeInfoTabLayout As TableLayoutPanel
     Friend WithEvents txtEmployeeFirstName As TextBox
-    Friend WithEvents dtpallowstartdate As DateTimePicker
-    Friend WithEvents lblDateFrom As Label
-    Friend WithEvents lblLoanBalance As Label
     Friend WithEvents btnCancel As Button
     Friend WithEvents btnAddAndNew As Button
-    Friend WithEvents LoanDetailsTabLayout As TableLayoutPanel
-    Friend WithEvents lblTotalLoanAmount As Label
-    Friend WithEvents pnlTxtLoanAmount As Panel
-    Friend WithEvents Label220 As Label
-    Friend WithEvents txtPeriodicAllowanceAmount As TextBox
     Friend WithEvents btnAddAndClose As Button
-    Friend WithEvents lblLoanNumber As Label
-    Friend WithEvents cboAllowType As ComboBox
-    Friend WithEvents Label350 As Label
-    Friend WithEvents lnlAddAllowanceType As LinkLabel
+    Friend WithEvents AllowanceDetailsTabLayout As TableLayoutPanel
+    Friend WithEvents Label163 As Label
+    Friend WithEvents NullableDatePicker1 As NullableDatePicker
+    Friend WithEvents Label168 As Label
+    Friend WithEvents Label167 As Label
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents cboAllowFreq As ComboBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents cboallowfreq As ComboBox
     Friend WithEvents Label1 As Label
-    Friend WithEvents dtpallowenddate As DateTimePicker
+    Friend WithEvents plnCboLoanType As Panel
+    Friend WithEvents Label350 As Label
+    Friend WithEvents cboallowtype As ComboBox
+    Friend WithEvents lnklbaddallowtype As LinkLabel
+    Friend WithEvents Label156 As Label
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents lblreqstartdate As Label
+    Friend WithEvents dtpallowstartdate As DateTimePicker
+    Friend WithEvents Label3 As Label
+    Friend WithEvents pnlTxtLoanBalance As Panel
+    Friend WithEvents txtallowamt As TextBox
+    Friend WithEvents Label4 As Label
 End Class

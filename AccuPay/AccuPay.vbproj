@@ -371,6 +371,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
+    <Compile Include="Repositories\AllowanceRepository.vb" />
     <Compile Include="Repositories\ContributionSchedule.vb" />
     <Compile Include="Repositories\DivisionRepository.vb" />
     <Compile Include="Repositories\JobLevelRepository.vb" />
@@ -440,6 +441,12 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\DivisionUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\NullableDatePicker.Designer.vb">
+      <DependentUpon>NullableDatePicker.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\NullableDatePicker.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\PositionUserControl.Designer.vb">
       <DependentUpon>PositionUserControl.vb</DependentUpon>
     </Compile>
@@ -456,12 +463,6 @@
       <DependentUpon>AddAllowanceForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\HRIS Forms\New\AddAllowanceForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\HRIS Forms\New\AddAllowanceTypeForm.Designer.vb">
-      <DependentUpon>AddAllowanceTypeForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HRIS Forms\New\AddAllowanceTypeForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\New\AllowanceRowRecord.vb" />
@@ -1827,11 +1828,11 @@
     <EmbeddedResource Include="Views\Core Forms\TimeLogsForm2.resx">
       <DependentUpon>TimeLogsForm2.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableDatePicker.resx">
+      <DependentUpon>NullableDatePicker.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\New\AddAllowanceForm.resx">
       <DependentUpon>AddAllowanceForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\New\AddAllowanceTypeForm.resx">
-      <DependentUpon>AddAllowanceTypeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\New\EmployeeAllowanceForm.resx">
       <DependentUpon>EmployeeAllowanceForm.vb</DependentUpon>

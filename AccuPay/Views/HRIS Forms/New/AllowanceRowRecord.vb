@@ -1,10 +1,10 @@
 ﻿Option Strict On
+
 Imports AccuPay.Attributes
 
 Namespace Global.Globagility.AccuPay.Loans
 
     Public Class AllowanceRowRecord
-
 
         <ColumnName("EmployeeID")>
         Public Property EmployeeID As String
@@ -13,10 +13,10 @@ Namespace Global.Globagility.AccuPay.Loans
         Public Property Type As String
 
         <ColumnName("Effective start date")>
-        Public Property EffectiveStartDate As Date
+        Public Property EffectiveStartDate As Date?
 
         <ColumnName("Effective end date")>
-        Public Property EffectiveEndDate As Date
+        Public Property EffectiveEndDate As Date?
 
         <ColumnName("Allowance frequency(Daily, Semi-monthly)")>
         Public Property AllowanceFrequency As String
@@ -25,6 +25,7 @@ Namespace Global.Globagility.AccuPay.Loans
         Public Property Amount As Decimal
 
         Public Property EmployeeFullName As String
+
         <Ignore>
         Public Property ErrorMessage As String
 
@@ -34,4 +35,3 @@ Namespace Global.Globagility.AccuPay.Loans
     End Class
 
 End Namespace
-

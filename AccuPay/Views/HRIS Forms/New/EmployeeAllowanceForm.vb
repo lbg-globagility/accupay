@@ -1,4 +1,6 @@
-﻿Imports System.Threading
+﻿Option Strict On
+
+Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
@@ -6,16 +8,20 @@ Imports AccuPay.Repository
 Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
-Imports MySql.Data.MySqlClient
 Imports Simplified = AccuPay.SimplifiedEntities.GridView
 
 Public Class EmployeeAllowanceForm
+
     Private _employeeRepository As New EmployeeRepository
+
+    Private _productRepository As New ProductRepository
+
+    Private _allowanceRepository As New AllowanceRepository
 
     Private _allowanceTypeList As List(Of Product)
 
     Private _employees As New List(Of Simplified.Employee)
-    Private _currentAllowance As New Allowance
+    Private _currentAllowance As Allowance
 
     Private _currentAllowances As New List(Of Allowance)
 
@@ -27,19 +33,19 @@ Public Class EmployeeAllowanceForm
 
         InitializeComponentSettings()
 
-        cbShowAll_CheckedChanged(sender, e)
+        LoadFrequencyList()
+        Await LoadAllowanceTypes()
+
+        Await ShowEmployeeList()
 
         ResetAllowanceForm()
-
-        Await LoadAllowanceTypes()
-        Await LoadEmployees()
 
     End Sub
 
     Private Async Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
         Dim searchValue = searchTextBox.Text.ToLower()
 
-        Await LoadEmployees(searchValue)
+        Await FilterEmployees(searchValue)
 
     End Sub
 
@@ -47,7 +53,7 @@ Public Class EmployeeAllowanceForm
         Me.Close()
     End Sub
 
-    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles dgvEmp.SelectionChanged
+    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
 
         ResetAllowanceForm()
 
@@ -79,30 +85,39 @@ Public Class EmployeeAllowanceForm
         End If
     End Sub
 
-    Private Sub lnlAddAllowanceType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklbaddallowtype.LinkClicked
+    Private Async Sub lnlAddAllowanceType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklbaddallowtype.LinkClicked
 
-        Dim form As New AddAllowanceTypeForm()
-        form.ShowDialog()
+        Dim n_ProductControlForm As New ProductControlForm
 
-        If form.IsSaved Then
+        With n_ProductControlForm
 
-            Me._allowanceTypeList.Add(form.NewAllowanceType)
+            .Status.HeaderText = "Taxable Flag"
 
-            PopulateAllowanceTypeCombobox()
+            .PartNo.HeaderText = "Allowance name"
 
-            If Me._currentAllowance IsNot Nothing Then
+            .NameOfCategory = ProductConstant.ALLOWANCE_TYPE_CATEGORY
 
-                Me._currentAllowance.ProductID = form.NewAllowanceType.RowID
-                'Me._currentAllowance.Type = form.NewAllowanceType.PartNo
+            If n_ProductControlForm.ShowDialog = Windows.Forms.DialogResult.OK Then
 
-                Dim orderedAllowanceTypeList = Me._allowanceTypeList.OrderBy(Function(p) p.PartNo).ToList
+                If .IsSaved Then
 
-                cboallowtype.SelectedIndex = orderedAllowanceTypeList.IndexOf(form.NewAllowanceType)
+                    Dim oldSelectedAllowanceId = Me._currentAllowance.ProductID
+
+                    Await LoadAllowanceTypes()
+
+                    Dim oldSelectedAllowance = Me._allowanceTypeList.FirstOrDefault(Function(a) Nullable.Equals(a.RowID, oldSelectedAllowanceId))
+
+                    If oldSelectedAllowance Is Nothing Then Return
+
+                    Dim orderedAllowanceTypeList = Me._allowanceTypeList.OrderBy(Function(p) p.PartNo).ToList
+
+                    cboallowtype.SelectedIndex = orderedAllowanceTypeList.IndexOf(oldSelectedAllowance)
+
+                End If
 
             End If
 
-            ShowBalloonInfo("Allowance Type Successfully Added", "Saved")
-        End If
+        End With
 
     End Sub
 
@@ -125,48 +140,25 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Try
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                                        Async Function()
+                                            Await _allowanceRepository.SaveManyAsync(changedAllowances)
 
-            Using context As New PayrollContext
-                For Each allowance In changedAllowances
-                    If allowance.RowID Is Nothing Then
-                        allowance.Created = Date.Now
-                        allowance.CreatedBy = z_User
+                                            ShowBalloonInfo($"{changedAllowances.Count} Allowance(s) Successfully Updated.", messageTitle)
 
-                        context.Allowances.Add(allowance)
-                    Else
-                        allowance.LastUpdBy = z_User
+                                            Dim currentEmployee = GetSelectedEmployee()
 
-                        context.Entry(allowance).State = EntityState.Modified
-                    End If
+                                            If currentEmployee IsNot Nothing Then
 
-                    Await context.SaveChangesAsync()
-                Next
-            End Using
+                                                Await LoadAllowances(currentEmployee)
 
-            ShowBalloonInfo($"{changedAllowances.Count} Allowance(s) Successfully Updated.", messageTitle)
+                                            End If
 
-            Dim currentEmployee = GetSelectedEmployee()
-
-            If currentEmployee Is Nothing Then Return
-
-            Await LoadAllowances(currentEmployee)
-
-        Catch ex As ArgumentException
-
-            Dim errorMessage = "One of the updated allowances has an error:" & Environment.NewLine & ex.Message
-
-            MessageBoxHelper.ErrorMessage(errorMessage, messageTitle)
-
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-
-        End Try
+                                        End Function)
     End Sub
 
-    Private Sub combobox_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowfreq.SelectedValueChanged, cboallowtype.SelectedValueChanged
-        If sender Is cboallowtype AndAlso Me._currentAllowance IsNot Nothing Then
+    Private Sub cboallowtype_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowtype.SelectedValueChanged
+        If Me._currentAllowance IsNot Nothing Then
             Dim selectedAllowanceType = Me._allowanceTypeList.FirstOrDefault(Function(l) (l.PartNo = cboallowtype.Text))
 
             If selectedAllowanceType Is Nothing Then
@@ -174,7 +166,10 @@ Public Class EmployeeAllowanceForm
             Else
                 Me._currentAllowance.ProductID = selectedAllowanceType.RowID
                 Me._currentAllowance.Product.PartNo = selectedAllowanceType.PartNo
-                AllowanceBindingSource_CurrentItemChanged(Nothing, Nothing) 'Force refresh to show PartNo update
+
+                'force commit to gridview
+                'ForceAllowanceGridViewCommit()
+                'cboallowtype.Focus()
             End If
         End If
 
@@ -264,9 +259,7 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-
         Const messageTitle As String = "Delete Allowance"
-
 
         If Me._currentAllowance Is Nothing OrElse
             Me._currentAllowance.RowID Is Nothing Then
@@ -275,13 +268,7 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim currentAllowance
-
-        Using context = New PayrollContext()
-
-            currentAllowance = Await context.Allowances.FirstOrDefaultAsync(Function(l) Nullable.Equals(l.RowID, _currentAllowance.RowID))
-
-        End Using
+        Dim currentAllowance = Await _allowanceRepository.GetByIdAsync(Me._currentAllowance.RowID)
 
         If currentAllowance Is Nothing Then
 
@@ -296,31 +283,35 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Try
+        Dim allowanceIsAlreadyUsed = Await _allowanceRepository.CheckIfAlreadyUsed(Me._currentAllowance.RowID)
 
-            Using context = New PayrollContext()
+        If allowanceIsAlreadyUsed Then
 
-                context.Remove(currentAllowance)
+            If MessageBoxHelper.Confirm(Of Boolean) _
+        ("This allowance has already been used. Deleting this might affect previous cutoffs. We suggest changing the End Date instead. Do you want to proceed deletion?", "Confirm Deletion",
+            messageBoxIcon:=MessageBoxIcon.Warning) = False Then
 
-                Await context.SaveChangesAsync()
+                Return
+            End If
 
-            End Using
+        End If
 
-            Await LoadAllowances(currentEmployee)
-
-            ShowBalloonInfo("Successfully Deleted.", messageTitle)
-
-        Catch ex As ArgumentException
-
-            MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-
-        End Try
+        Await DeleteAllowance(currentEmployee, messageTitle)
 
     End Sub
+
+    Private Async Function DeleteAllowance(currentEmployee As Simplified.Employee, messageTitle As String) As Task
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                                            Async Function()
+                                                Await _allowanceRepository.DeleteAsync(Me._currentAllowance.RowID)
+
+                                                Await LoadAllowances(currentEmployee)
+
+                                                ShowBalloonInfo("Successfully Deleted.", messageTitle)
+
+                                            End Function)
+    End Function
 
     Private filepath As String
 
@@ -352,24 +343,28 @@ Public Class EmployeeAllowanceForm
 
     End Sub
 
-#Region "Private Functions"
-
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, lblFormTitle, 400)
     End Sub
 
     Private Sub InitializeComponentSettings()
         dgvempallowance.AutoGenerateColumns = False
-        dgvEmp.AutoGenerateColumns = False
+        employeesDataGridView.AutoGenerateColumns = False
     End Sub
 
-    Private Async Function LoadEmployees(Optional searchValue As String = "") As Task
+    Private Sub LoadFrequencyList()
+
+        cboallowfreq.DataSource = _allowanceRepository.GetStatusList()
+
+    End Sub
+
+    Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
         Dim filteredEmployees As New List(Of Simplified.Employee)
 
         If String.IsNullOrEmpty(searchValue) Then
-            dgvEmp.DataSource = Me._employees
+            employeesDataGridView.DataSource = Me._employees
         Else
-            dgvEmp.DataSource =
+            employeesDataGridView.DataSource =
                 Await _employeeRepository.SearchSimpleLocal(Me._employees, searchValue)
         End If
     End Function
@@ -377,16 +372,7 @@ Public Class EmployeeAllowanceForm
     Private Async Function LoadAllowances(currentEmployee As Simplified.Employee) As Task
         If currentEmployee Is Nothing Then Return
 
-        Using context = New PayrollContext()
-            Me._currentAllowances = Await context.Allowances.
-                        Include(Function(p) p.Product).
-                        Where(Function(a) Nullable.Equals(a.EmployeeID, currentEmployee.RowID)).
-                        ToListAsync
-        End Using
-
-        If Me._currentAllowances.Count = 0 Then
-            Me._currentAllowances.Add(Nothing)
-        End If
+        Me._currentAllowances = (Await _allowanceRepository.GetByEmployeeIncludesProductAsync(currentEmployee.RowID)).ToList
 
         Me._unchangedAllowances = Me._currentAllowances.CloneListJson()
 
@@ -397,94 +383,27 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Async Function LoadAllowanceTypes() As Task
-        Dim categoryName = ProductConstant.ALLOWANCE_TYPE_CATEGORY
 
-        Using context = New PayrollContext()
+        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypes())
 
-            Dim category = Await context.Categories.
-                                Where(Function(c) Nullable.Equals(c.OrganizationID, z_OrganizationID)).
-                                Where(Function(c) c.CategoryName = categoryName).
-                                FirstOrDefaultAsync
-
-
-            If category Is Nothing Then
-                'get the existing category with same name to use as CategoryID
-                Dim existingCategoryProduct = Await context.Categories.
-                                Where(Function(c) c.CategoryName = categoryName).
-                                FirstOrDefaultAsync
-
-                Dim existingCategoryProductId = existingCategoryProduct?.RowID
-
-
-                category = New Category
-                category.CategoryID = existingCategoryProductId
-                category.CategoryName = categoryName
-                category.OrganizationID = z_OrganizationID
-                category.CatalogID = Nothing
-                category.LastUpd = Date.Now
-
-                context.Categories.Add(category)
-                context.SaveChanges()
-
-                'if there is no existing category with same name,
-                'use the newly added category's RowID as its CategoryID
-
-                If existingCategoryProductId Is Nothing Then
-
-                    Try
-                        category.CategoryID = category.RowID
-                        Await context.SaveChangesAsync()
-
-                    Catch ex As Exception
-                        'if for some reason hindi na update, we can't let that row
-                        'to have no CategoryID so dapat i-delete rin yung added category
-                        context.Categories.Remove(category)
-                        context.SaveChanges()
-
-                        Throw ex
-                    End Try
-
-                End If
-            End If
-
-            If category Is Nothing Then
-                Dim ex = New Exception("ProductRepository->GetOrCreate: Category not found.")
-                Throw ex
-            End If
-
-            Me._allowanceTypeList = Await context.Products.
-                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                Where(Function(p) Nullable.Equals(p.CategoryID, category.RowID)).
-                ToListAsync
-        End Using
+        Me._allowanceTypeList = allowanceList.Where(Function(a) a.PartNo IsNot Nothing).
+                                                Where(Function(a) a.PartNo.Trim <> String.Empty).
+                                                ToList
 
         PopulateAllowanceTypeCombobox()
+
     End Function
 
     Private Sub PopulateAllowanceTypeCombobox()
-        Dim stringList As List(Of String)
-        stringList = New List(Of String)
-
-        For Each product In Me._allowanceTypeList
-
-            Select Case "PartNo"
-                Case "Name"
-                    stringList.Add(product.PartNo)
-
-                Case Else
-                    stringList.Add(product.Name)
-            End Select
-        Next
-
-        Dim allowanceTypes = stringList.OrderBy(Function(s) s).ToList
+        Dim allowanceTypes = _productRepository.ConvertToStringList(Me._allowanceTypeList)
 
         cboallowtype.DataSource = allowanceTypes
     End Sub
 
     Private Function GetSelectedEmployee() As Simplified.Employee
-        If dgvEmp.CurrentRow Is Nothing Then Return Nothing
+        If employeesDataGridView.CurrentRow Is Nothing Then Return Nothing
 
-        Return CType(dgvEmp.CurrentRow.DataBoundItem, Simplified.Employee)
+        Return CType(employeesDataGridView.CurrentRow.DataBoundItem, Simplified.Employee)
     End Function
 
     Private Sub PopulateAllowanceForm(allowance As Allowance)
@@ -497,16 +416,18 @@ Public Class EmployeeAllowanceForm
         txtallowamt.DataBindings.Add("Text", Me._currentAllowance, "Amount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         dtpallowstartdate.DataBindings.Clear()
-        dtpallowstartdate.DataBindings.Add("Value", Me._currentAllowance, "EffectiveStartDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        dtpallowstartdate.DataBindings.Add("Value", Me._currentAllowance, "EffectiveStartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
-        dtpallowenddate.DataBindings.Clear()
-        dtpallowenddate.DataBindings.Add("Value", Me._currentAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        NullableDatePicker1.DataBindings.Clear()
+        NullableDatePicker1.DataBindings.Add("Value", Me._currentAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         cboallowtype.DataBindings.Clear()
-        cboallowtype.DataBindings.Add("Text", Me._currentAllowance, "Type", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        cboallowtype.DataBindings.Add("Text", Me._currentAllowance, "Type")
 
         cboallowfreq.DataBindings.Clear()
-        cboallowfreq.DataBindings.Add("Text", Me._currentAllowance, "AllowanceFrequency", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        cboallowfreq.DataBindings.Add("Text", Me._currentAllowance, "AllowanceFrequency")
+
+        AllowanceDetailsTabLayout.Enabled = True
 
     End Sub
 
@@ -514,20 +435,22 @@ Public Class EmployeeAllowanceForm
 
         Me._currentAllowance = Nothing
 
-        cboallowtype.DataBindings.Clear()
+        AllowanceDetailsTabLayout.Enabled = False
+
         cboallowtype.SelectedIndex = -1
+        cboallowtype.DataBindings.Clear()
 
-        cboallowfreq.DataBindings.Clear()
         cboallowfreq.SelectedIndex = -1
+        cboallowfreq.DataBindings.Clear()
 
-        dtpallowstartdate.DataBindings.Clear()
         dtpallowstartdate.ResetText()
+        dtpallowstartdate.DataBindings.Clear()
 
-        dtpallowenddate.DataBindings.Clear()
-        dtpallowenddate.ResetText()
+        NullableDatePicker1.ResetText()
+        NullableDatePicker1.DataBindings.Clear()
 
-        txtallowamt.DataBindings.Clear()
         txtallowamt.Clear()
+        txtallowamt.DataBindings.Clear()
 
     End Sub
 
@@ -553,13 +476,13 @@ Public Class EmployeeAllowanceForm
 
         If _
             Nullable.Equals(newAllowance.ProductID, oldAllowance.ProductID) = False OrElse
-            newAllowance.OrganizationID <> oldAllowance.OrganizationID OrElse
+            Nullable.Equals(newAllowance.OrganizationID, oldAllowance.OrganizationID) = False OrElse
             newAllowance.AllowanceFrequency <> oldAllowance.AllowanceFrequency OrElse
             newAllowance.Product?.PartNo <> oldAllowance.Product?.PartNo OrElse
             newAllowance.Type <> oldAllowance.Type OrElse
             newAllowance.Amount <> oldAllowance.Amount OrElse
             newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate OrElse
-            newAllowance.EffectiveEndDate <> oldAllowance.EffectiveEndDate Then
+            Nullable.Equals(newAllowance.EffectiveEndDate, oldAllowance.EffectiveEndDate) = False Then
 
             hasChanged = True
         End If
@@ -568,48 +491,6 @@ Public Class EmployeeAllowanceForm
 
     End Function
 
-#End Region
-
-#Region "DateTimePickers"
-    Dim empallow_daterangehasrecord
-
-    Private Sub dtpallowstartdate_ValueChanged(sender As Object, e As EventArgs) Handles dtpallowstartdate.ValueChanged
-        empallow_daterangehasrecord = 0
-        Dim date_range = DateDiff(DateInterval.Day, CDate(dtpallowstartdate.Value), CDate(dtpallowenddate.Value))
-
-        If date_range < 0 And cboallowfreq.SelectedIndex <> 2 And cboallowfreq.SelectedIndex <> -1 Then
-            empallow_daterangehasrecord = 1
-            WarnBalloon("please supply a valid date range.", "invalid date range", dtpallowstartdate, dtpallowstartdate.Width - 16, -69)
-
-            dtpallowenddate.Value = dtpallowstartdate.Value
-        End If
-    End Sub
-
-    Private Sub dtpallowenddate_ValueChanged(sender As Object, e As EventArgs) Handles dtpallowenddate.ValueChanged
-        cbDtpOverlay.Checked = True
-        'If Not dtpallowenddate.Checked And _currentAllowance IsNot Nothing Then
-        '    _currentAllowance.EffectiveEndDate = Nothing
-        'End If
-
-        empallow_daterangehasrecord = 0
-        Dim date_range = DateDiff(DateInterval.Day, CDate(dtpallowstartdate.Value), CDate(dtpallowenddate.Value))
-
-        If date_range < 0 And cboallowfreq.SelectedIndex <> 2 And cboallowfreq.SelectedIndex <> -1 Then
-            empallow_daterangehasrecord = 1
-            WarnBalloon("Please supply a valid date range.", "Invalid date range", dtpallowenddate, dtpallowenddate.Width - 16, -69)
-
-            dtpallowstartdate.Value = dtpallowenddate.Value
-        End If
-    End Sub
-
-    Private Sub cbDtpOverlay_CheckedChanged(sender As Object, e As EventArgs) Handles cbDtpOverlay.CheckedChanged
-        dtpallowenddate.Checked = cbDtpOverlay.Checked
-
-        If Not cbDtpOverlay.Checked And _currentAllowance IsNot Nothing Then
-            _currentAllowance.EffectiveEndDate = Nothing
-        End If
-    End Sub
-#End Region
     Dim activeEmpSorted As List(Of Simplified.Employee)
     Dim allEmpSorted As List(Of GridView.Employee)
 
@@ -617,6 +498,10 @@ Public Class EmployeeAllowanceForm
     Dim gotActiveEmp As Boolean = False
 
     Private Async Sub cbShowAll_CheckedChanged(sender As Object, e As EventArgs) Handles cbShowAll.CheckedChanged
+        Await ShowEmployeeList()
+    End Sub
+
+    Private Async Function ShowEmployeeList() As Task
         If cbShowAll.Checked Then
             If Not gotAllEmp Then
                 Dim allEmp = Await _employeeRepository.GetAllAsync(Of Simplified.Employee)()
@@ -631,8 +516,7 @@ Public Class EmployeeAllowanceForm
                 Using context As New PayrollContext
                     Dim list = context.Employees.
                             Where(Function(emp) Nullable.Equals(emp.OrganizationID, z_OrganizationID) And
-                                      emp.EmploymentStatus <> "Terminated" And
-                                      emp.EmploymentStatus <> "Resigned")
+                                      emp.IsActive)
 
                     Dim activeEmp = Await list.
                                 Select(Function(emp) New GridView.Employee With {
@@ -654,7 +538,7 @@ Public Class EmployeeAllowanceForm
             Me._employees = activeEmpSorted
         End If
 
-        Await LoadEmployees()
-    End Sub
+        Await FilterEmployees()
+    End Function
 
 End Class
