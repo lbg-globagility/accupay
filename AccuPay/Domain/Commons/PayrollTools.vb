@@ -44,18 +44,20 @@ Public Class PayrollTools
         Return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear)
     End Function
 
-    Public Shared Function GetDailyRate(salary As Salary, employee As Employee) As Decimal
+    Public Shared Function GetDailyRate(salary As Salary, employee As Employee, Optional isActual As Boolean = False) As Decimal
         Dim dailyRate = 0D
 
         If salary Is Nothing Then
             Return 0
         End If
 
+        Dim basicSalary = If(isActual, salary.BasicSalary + salary.AllowanceSalary, salary.BasicSalary)
+
         If employee.IsDaily Then
-            dailyRate = salary.BasicSalary
-        ElseIf employee.IsMonthly Or employee.IsFixed Then
+            dailyRate = basicSalary
+        ElseIf employee.IsMonthly OrElse employee.IsFixed Then
             If employee.WorkDaysPerYear = 0 Then Return 0
-            dailyRate = salary.BasicSalary / (employee.WorkDaysPerYear / 12)
+            dailyRate = basicSalary / (employee.WorkDaysPerYear / 12)
         End If
 
         Return dailyRate
@@ -69,9 +71,9 @@ Public Class PayrollTools
         Return dailyRate / WorkHoursPerDay
     End Function
 
-    Public Shared Function GetHourlyRateByDailyRate(salary As Salary, employee As Employee) As Decimal
+    Public Shared Function GetHourlyRateByDailyRate(salary As Salary, employee As Employee, Optional isActual As Boolean = False) As Decimal
 
-        Return GetDailyRate(salary, employee) / employee.WorkDaysPerYear
+        Return GetDailyRate(salary, employee, isActual) / WorkHoursPerDay
     End Function
 
     Public Shared Function HasWorkedLastWorkingDay(

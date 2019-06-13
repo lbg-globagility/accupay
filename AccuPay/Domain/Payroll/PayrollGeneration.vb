@@ -299,8 +299,8 @@ Public Class PayrollGeneration
 
     Private Sub ComputeHours()
         _paystub.RegularHours = _timeEntries.Sum(Function(t) t.RegularHours)
-        _paystub.RegularPay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.RegularPay))
-        _paystub.Actual.RegularPay = AccuMath.CommercialRound(_actualtimeentries.Sum(Function(t) t.RegularPay))
+        _paystub.RegularPay = PayrollTools.GetHourlyRateByDailyRate(_salary, _employee) * _paystub.RegularHours
+        _paystub.Actual.RegularPay = PayrollTools.GetHourlyRateByDailyRate(_salary, _employee, isActual:=True) * _paystub.RegularHours
 
         _paystub.OvertimeHours = _timeEntries.Sum(Function(t) t.OvertimeHours)
         _paystub.OvertimePay = AccuMath.CommercialRound(_timeEntries.Sum(Function(t) t.OvertimePay))
