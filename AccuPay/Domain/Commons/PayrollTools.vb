@@ -122,20 +122,22 @@ Public Class PayrollTools
         If payperiods Is Nothing OrElse payperiods.Count = 0 Then
 
             Using context = New PayrollContext()
-                Dim pastPayPeriods = Await context.PayPeriods.
+                Return Await context.PayPeriods.
                         Where(Function(p) p.Year = Now.Year).
                         Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
                         Where(Function(p) p.IsMonthly).
-                        ToListAsync()
+                        Where(Function(p) p.PayToDate < Date.Now).
+                        OrderByDescending(Function(p) p.PayToDate).
+                        FirstOrDefaultAsync
 
-                payperiods = New List(Of IPayPeriod)(pastPayPeriods)
             End Using
+        Else
 
-        End If
-
-        Return payperiods.
+            Return payperiods.
                 Where(Function(p) p.PayToDate < Date.Now).
                 LastOrDefault
+
+        End If
 
     End Function
 

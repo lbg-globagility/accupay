@@ -902,7 +902,7 @@ Public Class ShiftScheduleForm
         TimeAttendForm.listTimeAttendForm.Remove(Name)
     End Sub
 
-    Private Sub ShiftScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Async Sub ShiftScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         LoadShiftScheduleConfigurablePolicy()
 
@@ -923,6 +923,15 @@ Public Class ShiftScheduleForm
         For Each c In ctrls
             AddHandler c.KeyPress, AddressOf EnterKeySameAsTabKey_KeyPress
         Next
+
+        Dim currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+
+        If currentlyWorkedOnPayPeriod IsNot Nothing Then
+
+            dtpDateFrom.Value = currentlyWorkedOnPayPeriod.PayFromDate
+            dtpDateTo.Value = currentlyWorkedOnPayPeriod.PayToDate
+
+        End If
 
         _balloonToolTips = New List(Of ToolTip)
     End Sub

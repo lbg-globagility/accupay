@@ -761,7 +761,7 @@ Public Class TimeLogsForm2
 
 #Region "EventHandlers"
 
-    Private Sub TimeLogsForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub TimeLogsForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         grid.AutoGenerateColumns = False
 
@@ -770,6 +770,15 @@ Public Class TimeLogsForm2
         BindGridCurrentCellChanged()
 
         _useShiftSchedulePolicy = GetShiftSchedulePolicy()
+
+        Dim currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+
+        If currentlyWorkedOnPayPeriod IsNot Nothing Then
+
+            dtpDateFrom.Value = currentlyWorkedOnPayPeriod.PayFromDate
+            dtpDateTo.Value = currentlyWorkedOnPayPeriod.PayToDate
+
+        End If
 
     End Sub
 
