@@ -88,6 +88,16 @@ Namespace Global.AccuPay
             Return $"{Start.ToString()} to {[End].ToString()}"
         End Function
 
+        Public Overrides Function Equals(obj As Object) As Boolean
+
+            If obj Is Nothing OrElse TypeOf obj IsNot TimePeriod Then Return False
+
+            Dim compared = CType(obj, TimePeriod)
+
+            Return Me.Start = compared.Start AndAlso Me.End = compared.End
+
+        End Function
+
     End Class
 
 End Namespace

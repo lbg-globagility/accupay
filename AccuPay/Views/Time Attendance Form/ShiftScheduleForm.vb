@@ -15,6 +15,7 @@ Imports Microsoft.EntityFrameworkCore
 Public Class ShiftScheduleForm
 
 #Region "VariableDeclarations"
+
     Private Const ENABLED_TEXT As String = "Enable"
     Private Const DISABLED_TEXT As String = "Disable"
 
@@ -796,7 +797,6 @@ Public Class ShiftScheduleForm
             _currCell = selectedCell.FirstOrDefault
             _currRowIndex = _currCell.RowIndex
             _currColIndex = _currCell.ColumnIndex
-
         Else
             MessageBoxHelper.Warning("No selected employees.")
         End If
@@ -891,8 +891,9 @@ Public Class ShiftScheduleForm
         End Using
     End Sub
 
-    Private Sub EmployeeTreeView1_TickedEmployee(s As Object, e As EventArgs) Handles EmployeeTreeView1.TickedEmployee
-        DateFilter_ValueChangedAsync(dtpDateFrom, e)
+    Private Async Sub EmployeeTreeView1_TickedEmployee(sender As Object, e As EventArgs) Handles EmployeeTreeView1.TickedEmployee
+
+        Await RefreshGridByDateFilter()
     End Sub
 
     Private Sub ShiftScheduleForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -941,9 +942,7 @@ Public Class ShiftScheduleForm
 
         If e.ColumnIndex < 0 Then Return
 
-
         Dim selectedGridView = DirectCast(sender, DataGridView)
-
 
         If (sender Is grid AndAlso selectedGridView.Columns(e.ColumnIndex) Is colBreakLength) OrElse
             (sender Is gridWeek AndAlso selectedGridView.Columns(e.ColumnIndex) Is gridWeekBreakLength) Then
@@ -1048,9 +1047,10 @@ Public Class ShiftScheduleForm
 
     End Sub
 
-    Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
+    Private Async Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
 
-        DateFilter_ValueChangedAsync(dtpDateFrom, e)
+        Await RefreshGridByDateFilter()
+
     End Sub
 
     Private Sub gridWeek_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles gridWeek.RowsAdded
@@ -1073,8 +1073,20 @@ Public Class ShiftScheduleForm
         End If
     End Sub
 
+    Dim originalDates As TimePeriod
+
+    Private Sub DateFilter_Enter(sender As Object, e As EventArgs) Handles dtpDateTo.Enter
+
+        originalDates = New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)
+
+    End Sub
+
     Private Async Sub DateFilter_ValueChangedAsync(sender As Object, e As EventArgs) _
-        Handles dtpDateFrom.ValueChanged, dtpDateTo.ValueChanged
+        Handles dtpDateFrom.Leave, dtpDateTo.Leave
+
+        If originalDates.Equals(New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)) Then
+            Return
+        End If
 
         Dim dtp = DirectCast(sender, DateTimePicker)
 
@@ -1082,10 +1094,25 @@ Public Class ShiftScheduleForm
         Dim finish As Date = dtpDateTo.Value.Date
 
         If start > finish Then
-            If dtp.Name = dtpDateFrom.Name Then dtpDateTo.Value = start : finish = start
-            If dtp.Name = dtpDateTo.Name Then dtpDateFrom.Value = finish : start = finish
+            If dtp.Name = dtpDateFrom.Name Then dtpDateTo.Value = start
+            If dtp.Name = dtpDateTo.Name Then dtpDateFrom.Value = finish
 
         End If
+
+        Await RefreshGridByDateFilter()
+
+    End Sub
+
+    Private Async Function RefreshGridByDateFilter() As Task
+
+        Me.Cursor = Cursors.WaitCursor
+
+        SplitContainer1.Enabled = False
+
+        Dim start As Date = dtpDateFrom.Value.Date
+        Dim finish As Date = dtpDateTo.Value.Date
+
+        If start > finish Then Return
 
         Dim _currRowIndex, _currColIndex As Integer
         Dim selectedCell = GridSelectedCells()
@@ -1109,7 +1136,14 @@ Public Class ShiftScheduleForm
                 And rowCount > _currRowIndex Then _
                 grid.CurrentCell = grid.Item(_currColIndex, _currRowIndex)
         End If
-    End Sub
+
+        'BUG
+        'this is called twice when changing the datepicker which results to
+        'the Cursor changing to default but does not enable the form for quite some time
+        SplitContainer1.Enabled = True
+
+        Me.Cursor = Cursors.Default
+    End Function
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDiscard1.Click
         ResetInputFields(GroupBox2)
@@ -1242,14 +1276,14 @@ Public Class ShiftScheduleForm
 
     End Sub
 
-    Private Sub tsBtnImport_Click(sender As Object, e As EventArgs) Handles tsBtnImport.Click
+    Private Async Sub tsBtnImport_Click(sender As Object, e As EventArgs) Handles tsBtnImport.Click
 
         Using form = New ImportedShiftSchedulesForm()
             form.ShowDialog()
 
             If form.IsSaved Then
 
-                DateFilter_ValueChangedAsync(dtpDateFrom, e)
+                Await RefreshGridByDateFilter()
 
                 ShowSuccessImportBalloon()
 
