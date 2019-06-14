@@ -1,7 +1,7 @@
-﻿
-Imports AccuPay.Attributes
+﻿Imports AccuPay.Attributes
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
+Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
@@ -9,6 +9,7 @@ Imports Microsoft.EntityFrameworkCore
 Public Class ImportEmployeeForm
 
 #Region "VariableDeclarations"
+
     Private Shared logger As ILog = LogManager.GetLogger("EmployeeFormAppender")
 
     Private _worksheetName As String
@@ -20,6 +21,7 @@ Public Class ImportEmployeeForm
 #End Region
 
 #Region "Constructors"
+
     'Public Sub New(filePath As String)
     '    InitializeComponent()
 
@@ -37,6 +39,7 @@ Public Class ImportEmployeeForm
     Private Class EmployeeModel
         Private FIXED_AND_MONTHLY_TYPES As String() = {"monthly", "fixed"}
         Private _monthlyHasNoWorkDaysPerYear As Boolean
+
         Private _noEmployeeNo,
             _noLastName,
             _noFirstName,
@@ -168,9 +171,11 @@ Public Class ImportEmployeeForm
                     Or _noEmploymentStatus
             End Get
         End Property
+
     End Class
 
 #Region "Properties"
+
     Private Property FileDirectory As String
         Get
             Return _filePath
@@ -341,13 +346,26 @@ Public Class ImportEmployeeForm
     End Sub
 
     Private Sub FilePathChanged()
-        Dim models = _ep.Read(_filePath)
+
+        Dim models As IList(Of EmployeeModel)
+        Try
+
+            _ep.Read(_filePath)
+        Catch ex As WorkSheetNotFoundException
+
+            MessageBoxHelper.ErrorMessage(ex.Message)
+
+            Return
+        End Try
 
         _okModels = models.Where(Function(ee) Not ee.ConsideredFailed).ToList()
         _failModels = models.Where(Function(ee) ee.ConsideredFailed).ToList()
 
         DataGridView1.DataSource = _okModels
         DataGridView2.DataSource = _failModels
+
+        SaveButton.Enabled = _okModels.Count > 0
+
     End Sub
 
 #End Region

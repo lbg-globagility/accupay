@@ -38,8 +38,18 @@ Public Class ImportSalaryForm
 
         Dim fileName = browseFile.FileName
 
-        Dim parser = New ExcelParser(Of SalaryRowRecord)("Employee Salary")
-        Dim records = parser.Read(fileName)
+        Dim records As IList(Of SalaryRowRecord)
+
+        Try
+            Dim parser = New ExcelParser(Of SalaryRowRecord)("Employee Salary")
+
+            records = parser.Read(fileName)
+        Catch ex As WorkSheetNotFoundException
+
+            MessageBoxHelper.ErrorMessage(ex.Message)
+
+            Return
+        End Try
 
         Dim rejectedRecords As New List(Of SalaryRowRecord)
 
@@ -113,14 +123,11 @@ Public Class ImportSalaryForm
 
             lblStatus.Text += "Failed records will not be saved."
             lblStatus.BackColor = Color.Red
-
-
         Else
             lblStatus.Text = $"There is no error."
             lblStatus.BackColor = Color.Green
         End If
     End Sub
-
 
     Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
         'TODO: there Is a database error when Unique Constraint is violated.
@@ -165,7 +172,6 @@ Public Class ImportSalaryForm
                 Me.IsSaved = True
 
             End Using
-
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage("Import Salary", ex)
@@ -233,4 +239,5 @@ Public Class ImportSalaryForm
     Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
         DownloadTemplateHelper.Download(ExcelTemplates.Salary)
     End Sub
+
 End Class

@@ -22,38 +22,55 @@ Partial Class ImportOBForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle38 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle40 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle41 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle42 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle43 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle44 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle45 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle46 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle47 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle48 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle49 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle50 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ImportOBForm))
         Me.btnDownloadTemplate = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
         Me.OBDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.ErrorsTabControl = New System.Windows.Forms.TabPage()
         Me.RejectedRecordsGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CancelButton = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.BrowseButton = New System.Windows.Forms.Button()
@@ -64,28 +81,12 @@ Partial Class ImportOBForm
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -106,56 +107,128 @@ Partial Class ImportOBForm
         '
         'btnDownloadTemplate
         '
-        Me.btnDownloadTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDownloadTemplate.Location = New System.Drawing.Point(113, 431)
+        Me.btnDownloadTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnDownloadTemplate.Location = New System.Drawing.Point(113, 397)
         Me.btnDownloadTemplate.Name = "btnDownloadTemplate"
         Me.btnDownloadTemplate.Size = New System.Drawing.Size(119, 32)
         Me.btnDownloadTemplate.TabIndex = 25
-        Me.btnDownloadTemplate.Text = "Download Template"
+        Me.btnDownloadTemplate.Text = "&Download Template"
         Me.btnDownloadTemplate.UseVisualStyleBackColor = True
         '
         'TabControl1
         '
         Me.TabControl1.Controls.Add(Me.ParsedTabControl)
         Me.TabControl1.Controls.Add(Me.ErrorsTabControl)
-        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(800, 429)
+        Me.TabControl1.Size = New System.Drawing.Size(904, 463)
         Me.TabControl1.TabIndex = 26
         '
         'ParsedTabControl
         '
+        Me.ParsedTabControl.Controls.Add(Me.btnDownloadTemplate)
+        Me.ParsedTabControl.Controls.Add(Me.BrowseButton)
+        Me.ParsedTabControl.Controls.Add(Me.CancelButton)
         Me.ParsedTabControl.Controls.Add(Me.OBDataGrid)
+        Me.ParsedTabControl.Controls.Add(Me.SaveButton)
         Me.ParsedTabControl.Controls.Add(Me.lblStatus)
         Me.ParsedTabControl.Location = New System.Drawing.Point(4, 22)
         Me.ParsedTabControl.Name = "ParsedTabControl"
         Me.ParsedTabControl.Padding = New System.Windows.Forms.Padding(3)
-        Me.ParsedTabControl.Size = New System.Drawing.Size(792, 403)
+        Me.ParsedTabControl.Size = New System.Drawing.Size(896, 437)
         Me.ParsedTabControl.TabIndex = 0
         Me.ParsedTabControl.Text = "Ok"
         Me.ParsedTabControl.UseVisualStyleBackColor = True
         '
         'OBDataGrid
         '
+        Me.OBDataGrid.AllowUserToAddRows = False
+        Me.OBDataGrid.AllowUserToDeleteRows = False
+        Me.OBDataGrid.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.OBDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.OBDataGrid.BackgroundColor = System.Drawing.Color.White
         Me.OBDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.OBDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column6, Me.Column7, Me.Column2, Me.Column8, Me.Column3, Me.Column9})
-        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle30.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.OBDataGrid.DefaultCellStyle = DataGridViewCellStyle30
-        Me.OBDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.OBDataGrid.DefaultCellStyle = DataGridViewCellStyle5
         Me.OBDataGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.OBDataGrid.Location = New System.Drawing.Point(3, 24)
         Me.OBDataGrid.Name = "OBDataGrid"
-        Me.OBDataGrid.Size = New System.Drawing.Size(786, 376)
+        Me.OBDataGrid.ReadOnly = True
+        Me.OBDataGrid.Size = New System.Drawing.Size(890, 367)
         Me.OBDataGrid.TabIndex = 0
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "EmployeeID"
+        Me.Column1.HeaderText = "Employee No"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "EmployeeFullName"
+        Me.Column6.FillWeight = 150.0!
+        Me.Column6.HeaderText = "Full Name"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "Type"
+        Me.Column7.HeaderText = "Type"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "StartDate"
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle1.Format = "MM/dd/yyyy"
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle1
+        Me.Column2.HeaderText = "Start Date"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column8
+        '
+        Me.Column8.DataPropertyName = "StartTime"
+        DataGridViewCellStyle2.Format = "t"
+        DataGridViewCellStyle2.NullValue = Nothing
+        Me.Column8.DefaultCellStyle = DataGridViewCellStyle2
+        Me.Column8.HeaderText = "Start Time"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "EndDate"
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "MM/dd/yyyy"
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle3
+        Me.Column3.HeaderText = "End Date"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column9
+        '
+        Me.Column9.DataPropertyName = "EndTime"
+        DataGridViewCellStyle4.Format = "t"
+        DataGridViewCellStyle4.NullValue = Nothing
+        Me.Column9.DefaultCellStyle = DataGridViewCellStyle4
+        Me.Column9.HeaderText = "End Time"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
         '
         'lblStatus
         '
@@ -165,7 +238,7 @@ Partial Class ImportOBForm
         Me.lblStatus.Location = New System.Drawing.Point(3, 3)
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Padding = New System.Windows.Forms.Padding(4)
-        Me.lblStatus.Size = New System.Drawing.Size(786, 21)
+        Me.lblStatus.Size = New System.Drawing.Size(890, 21)
         Me.lblStatus.TabIndex = 13
         Me.lblStatus.Text = "Click the Browse button to select the file then click the Save button after you c" &
     "hecked the preview."
@@ -176,7 +249,7 @@ Partial Class ImportOBForm
         Me.ErrorsTabControl.Location = New System.Drawing.Point(4, 22)
         Me.ErrorsTabControl.Name = "ErrorsTabControl"
         Me.ErrorsTabControl.Padding = New System.Windows.Forms.Padding(3)
-        Me.ErrorsTabControl.Size = New System.Drawing.Size(792, 403)
+        Me.ErrorsTabControl.Size = New System.Drawing.Size(896, 437)
         Me.ErrorsTabControl.TabIndex = 1
         Me.ErrorsTabControl.Text = "Errors"
         Me.ErrorsTabControl.UseVisualStyleBackColor = True
@@ -192,14 +265,14 @@ Partial Class ImportOBForm
         Me.RejectedRecordsGrid.ColumnHeadersHeight = 34
         Me.RejectedRecordsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.RejectedRecordsGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn33, Me.DataGridViewTextBoxColumn34, Me.DataGridViewTextBoxColumn8, Me.Column4, Me.Type, Me.Column5, Me.DataGridViewTextBoxColumn11, Me.Column10, Me.DataGridViewTextBoxColumn12})
-        DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle36.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle36.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle36.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle36.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle36.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.RejectedRecordsGrid.DefaultCellStyle = DataGridViewCellStyle36
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.RejectedRecordsGrid.DefaultCellStyle = DataGridViewCellStyle11
         Me.RejectedRecordsGrid.Dock = System.Windows.Forms.DockStyle.Fill
         Me.RejectedRecordsGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.RejectedRecordsGrid.Location = New System.Drawing.Point(3, 3)
@@ -207,38 +280,120 @@ Partial Class ImportOBForm
         Me.RejectedRecordsGrid.Name = "RejectedRecordsGrid"
         Me.RejectedRecordsGrid.ReadOnly = True
         Me.RejectedRecordsGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.RejectedRecordsGrid.Size = New System.Drawing.Size(786, 397)
+        Me.RejectedRecordsGrid.Size = New System.Drawing.Size(890, 431)
         Me.RejectedRecordsGrid.TabIndex = 13
+        '
+        'DataGridViewTextBoxColumn33
+        '
+        Me.DataGridViewTextBoxColumn33.DataPropertyName = "LineNumber"
+        Me.DataGridViewTextBoxColumn33.FillWeight = 60.0!
+        Me.DataGridViewTextBoxColumn33.HeaderText = "Line Number"
+        Me.DataGridViewTextBoxColumn33.Name = "DataGridViewTextBoxColumn33"
+        Me.DataGridViewTextBoxColumn33.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn34
+        '
+        Me.DataGridViewTextBoxColumn34.DataPropertyName = "ErrorMessage"
+        Me.DataGridViewTextBoxColumn34.FillWeight = 140.0!
+        Me.DataGridViewTextBoxColumn34.HeaderText = "Reason"
+        Me.DataGridViewTextBoxColumn34.Name = "DataGridViewTextBoxColumn34"
+        Me.DataGridViewTextBoxColumn34.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn8
+        '
+        Me.DataGridViewTextBoxColumn8.DataPropertyName = "EmployeeID"
+        DataGridViewCellStyle6.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle6
+        Me.DataGridViewTextBoxColumn8.FillWeight = 80.0!
+        Me.DataGridViewTextBoxColumn8.HeaderText = "Employee No"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        Me.DataGridViewTextBoxColumn8.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "EmployeeFullName"
+        Me.Column4.FillWeight = 120.0!
+        Me.Column4.HeaderText = "Employee Name"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Type
+        '
+        Me.Type.DataPropertyName = "Type"
+        Me.Type.HeaderText = "Type"
+        Me.Type.Name = "Type"
+        Me.Type.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "StartDate"
+        DataGridViewCellStyle7.Format = "d"
+        DataGridViewCellStyle7.NullValue = Nothing
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle7
+        Me.Column5.HeaderText = "Start Date"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn11
+        '
+        Me.DataGridViewTextBoxColumn11.DataPropertyName = "StartTime"
+        DataGridViewCellStyle8.Format = "t"
+        DataGridViewCellStyle8.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle8
+        Me.DataGridViewTextBoxColumn11.FillWeight = 120.0!
+        Me.DataGridViewTextBoxColumn11.HeaderText = "Start Time"
+        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        Me.DataGridViewTextBoxColumn11.ReadOnly = True
+        '
+        'Column10
+        '
+        Me.Column10.DataPropertyName = "EndDate"
+        DataGridViewCellStyle9.Format = "d"
+        DataGridViewCellStyle9.NullValue = Nothing
+        Me.Column10.DefaultCellStyle = DataGridViewCellStyle9
+        Me.Column10.HeaderText = "End Date"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn12
+        '
+        Me.DataGridViewTextBoxColumn12.DataPropertyName = "EndTime"
+        DataGridViewCellStyle10.Format = "t"
+        DataGridViewCellStyle10.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle10
+        Me.DataGridViewTextBoxColumn12.HeaderText = "End Time"
+        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        Me.DataGridViewTextBoxColumn12.ReadOnly = True
         '
         'CancelButton
         '
         Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(691, 431)
+        Me.CancelButton.Location = New System.Drawing.Point(790, 397)
         Me.CancelButton.Name = "CancelButton"
         Me.CancelButton.Size = New System.Drawing.Size(96, 32)
         Me.CancelButton.TabIndex = 24
-        Me.CancelButton.Text = "Cancel"
+        Me.CancelButton.Text = "&Cancel"
         Me.CancelButton.UseVisualStyleBackColor = True
         '
         'SaveButton
         '
         Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SaveButton.Enabled = False
-        Me.SaveButton.Location = New System.Drawing.Point(589, 431)
+        Me.SaveButton.Location = New System.Drawing.Point(685, 397)
         Me.SaveButton.Name = "SaveButton"
         Me.SaveButton.Size = New System.Drawing.Size(96, 32)
         Me.SaveButton.TabIndex = 23
-        Me.SaveButton.Text = "Save"
+        Me.SaveButton.Text = "&Save"
         Me.SaveButton.UseVisualStyleBackColor = True
         '
         'BrowseButton
         '
-        Me.BrowseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BrowseButton.Location = New System.Drawing.Point(11, 431)
+        Me.BrowseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.BrowseButton.Location = New System.Drawing.Point(8, 397)
         Me.BrowseButton.Name = "BrowseButton"
         Me.BrowseButton.Size = New System.Drawing.Size(96, 32)
         Me.BrowseButton.TabIndex = 22
-        Me.BrowseButton.Text = "Browse..."
+        Me.BrowseButton.Text = "&Browse..."
         Me.BrowseButton.UseVisualStyleBackColor = True
         '
         'DataGridViewTextBoxColumn1
@@ -259,8 +414,8 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn3
         '
         Me.DataGridViewTextBoxColumn3.DataPropertyName = "EffectiveFrom"
-        DataGridViewCellStyle37.Format = "MM/dd/yyyy"
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle37
+        DataGridViewCellStyle12.Format = "MM/dd/yyyy"
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle12
         Me.DataGridViewTextBoxColumn3.HeaderText = "Effective From"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         Me.DataGridViewTextBoxColumn3.Width = 114
@@ -268,8 +423,8 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "EffectiveTo"
-        DataGridViewCellStyle38.Format = "MM/dd/yyyy"
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle38
+        DataGridViewCellStyle13.Format = "MM/dd/yyyy"
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle13
         Me.DataGridViewTextBoxColumn4.HeaderText = "Effective To"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.Width = 113
@@ -277,9 +432,9 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn5
         '
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "BasicSalary"
-        DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle39.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle39
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle14.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridViewTextBoxColumn5.HeaderText = "Basic Salary"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.Width = 114
@@ -287,9 +442,9 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn6
         '
         Me.DataGridViewTextBoxColumn6.DataPropertyName = "AllowanceSalary"
-        DataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle40.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle40
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle15.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle15
         Me.DataGridViewTextBoxColumn6.HeaderText = "Allowance Salary"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.Width = 115
@@ -297,23 +452,13 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "EmployeeNo"
-        DataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle41.Format = "MM/dd/yyyy"
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle41
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle16.Format = "MM/dd/yyyy"
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle16
         Me.DataGridViewTextBoxColumn7.FillWeight = 70.0!
         Me.DataGridViewTextBoxColumn7.HeaderText = "Employee No"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.Width = 84
-        '
-        'DataGridViewTextBoxColumn8
-        '
-        Me.DataGridViewTextBoxColumn8.DataPropertyName = "EmployeeID"
-        DataGridViewCellStyle31.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle31
-        Me.DataGridViewTextBoxColumn8.FillWeight = 80.0!
-        Me.DataGridViewTextBoxColumn8.HeaderText = "Employee No"
-        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-        Me.DataGridViewTextBoxColumn8.ReadOnly = True
         '
         'DataGridViewTextBoxColumn9
         '
@@ -327,41 +472,20 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn10
         '
         Me.DataGridViewTextBoxColumn10.DataPropertyName = "EffectiveFrom"
-        DataGridViewCellStyle42.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle42
+        DataGridViewCellStyle17.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridViewTextBoxColumn10.FillWeight = 70.0!
         Me.DataGridViewTextBoxColumn10.HeaderText = "Effective from"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Width = 97
         '
-        'DataGridViewTextBoxColumn11
-        '
-        Me.DataGridViewTextBoxColumn11.DataPropertyName = "StartTime"
-        DataGridViewCellStyle33.Format = "t"
-        DataGridViewCellStyle33.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle33
-        Me.DataGridViewTextBoxColumn11.FillWeight = 120.0!
-        Me.DataGridViewTextBoxColumn11.HeaderText = "Start Time"
-        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
-        Me.DataGridViewTextBoxColumn11.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn12
-        '
-        Me.DataGridViewTextBoxColumn12.DataPropertyName = "EndTime"
-        DataGridViewCellStyle35.Format = "t"
-        DataGridViewCellStyle35.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle35
-        Me.DataGridViewTextBoxColumn12.HeaderText = "End Time"
-        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
-        Me.DataGridViewTextBoxColumn12.ReadOnly = True
-        '
         'DataGridViewTextBoxColumn13
         '
         Me.DataGridViewTextBoxColumn13.DataPropertyName = "EffectiveEndTime"
-        DataGridViewCellStyle43.Format = "t"
-        DataGridViewCellStyle43.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle43
+        DataGridViewCellStyle18.Format = "t"
+        DataGridViewCellStyle18.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle18
         Me.DataGridViewTextBoxColumn13.FillWeight = 200.0!
         Me.DataGridViewTextBoxColumn13.HeaderText = "Effective End Time"
         Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
@@ -371,9 +495,9 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn14
         '
         Me.DataGridViewTextBoxColumn14.DataPropertyName = "EffectiveStartDate"
-        DataGridViewCellStyle44.Format = "d"
-        DataGridViewCellStyle44.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle44
+        DataGridViewCellStyle19.Format = "d"
+        DataGridViewCellStyle19.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle19
         Me.DataGridViewTextBoxColumn14.FillWeight = 120.0!
         Me.DataGridViewTextBoxColumn14.HeaderText = "Effective Start Date"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
@@ -383,9 +507,9 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn15
         '
         Me.DataGridViewTextBoxColumn15.DataPropertyName = "EffectiveEndDate"
-        DataGridViewCellStyle45.Format = "d"
-        DataGridViewCellStyle45.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle45
+        DataGridViewCellStyle20.Format = "d"
+        DataGridViewCellStyle20.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewTextBoxColumn15.HeaderText = "Effective End Date"
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
         Me.DataGridViewTextBoxColumn15.ReadOnly = True
@@ -394,125 +518,19 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn16
         '
         Me.DataGridViewTextBoxColumn16.DataPropertyName = "EndTime"
-        DataGridViewCellStyle46.Format = "t"
-        DataGridViewCellStyle46.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle46
+        DataGridViewCellStyle21.Format = "t"
+        DataGridViewCellStyle21.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle21
         Me.DataGridViewTextBoxColumn16.HeaderText = "End Time"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
         Me.DataGridViewTextBoxColumn16.ReadOnly = True
         Me.DataGridViewTextBoxColumn16.Width = 81
         '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "EmployeeID"
-        Me.Column1.HeaderText = "Employee No"
-        Me.Column1.Name = "Column1"
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "EmployeeFullName"
-        Me.Column6.FillWeight = 150.0!
-        Me.Column6.HeaderText = "Full Name"
-        Me.Column6.Name = "Column6"
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "Type"
-        Me.Column7.HeaderText = "Type"
-        Me.Column7.Name = "Column7"
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "StartDate"
-        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle26.Format = "MM/dd/yyyy"
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle26
-        Me.Column2.HeaderText = "Start Date"
-        Me.Column2.Name = "Column2"
-        '
-        'Column8
-        '
-        Me.Column8.DataPropertyName = "StartTime"
-        DataGridViewCellStyle27.Format = "t"
-        DataGridViewCellStyle27.NullValue = Nothing
-        Me.Column8.DefaultCellStyle = DataGridViewCellStyle27
-        Me.Column8.HeaderText = "Start Time"
-        Me.Column8.Name = "Column8"
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "EndDate"
-        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle28.Format = "MM/dd/yyyy"
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle28
-        Me.Column3.HeaderText = "End Date"
-        Me.Column3.Name = "Column3"
-        '
-        'Column9
-        '
-        Me.Column9.DataPropertyName = "EndTime"
-        DataGridViewCellStyle29.Format = "t"
-        DataGridViewCellStyle29.NullValue = Nothing
-        Me.Column9.DefaultCellStyle = DataGridViewCellStyle29
-        Me.Column9.HeaderText = "End Time"
-        Me.Column9.Name = "Column9"
-        '
-        'DataGridViewTextBoxColumn33
-        '
-        Me.DataGridViewTextBoxColumn33.DataPropertyName = "LineNumber"
-        Me.DataGridViewTextBoxColumn33.FillWeight = 60.0!
-        Me.DataGridViewTextBoxColumn33.HeaderText = "Line Number"
-        Me.DataGridViewTextBoxColumn33.Name = "DataGridViewTextBoxColumn33"
-        Me.DataGridViewTextBoxColumn33.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn34
-        '
-        Me.DataGridViewTextBoxColumn34.DataPropertyName = "ErrorMessage"
-        Me.DataGridViewTextBoxColumn34.FillWeight = 140.0!
-        Me.DataGridViewTextBoxColumn34.HeaderText = "Reason"
-        Me.DataGridViewTextBoxColumn34.Name = "DataGridViewTextBoxColumn34"
-        Me.DataGridViewTextBoxColumn34.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "EmployeeFullName"
-        Me.Column4.FillWeight = 120.0!
-        Me.Column4.HeaderText = "Employee Name"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Type
-        '
-        Me.Type.DataPropertyName = "Type"
-        Me.Type.HeaderText = "Type"
-        Me.Type.Name = "Type"
-        Me.Type.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "StartDate"
-        DataGridViewCellStyle32.Format = "d"
-        DataGridViewCellStyle32.NullValue = Nothing
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle32
-        Me.Column5.HeaderText = "Start Date"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        '
-        'Column10
-        '
-        Me.Column10.DataPropertyName = "EndDate"
-        DataGridViewCellStyle34.Format = "d"
-        DataGridViewCellStyle34.NullValue = Nothing
-        Me.Column10.DefaultCellStyle = DataGridViewCellStyle34
-        Me.Column10.HeaderText = "End Date"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        '
         'DataGridViewTextBoxColumn17
         '
         Me.DataGridViewTextBoxColumn17.DataPropertyName = "EffectiveFrom"
-        DataGridViewCellStyle47.Format = "MM/dd/yyyy"
-        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle47
+        DataGridViewCellStyle22.Format = "MM/dd/yyyy"
+        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle22
         Me.DataGridViewTextBoxColumn17.HeaderText = "Effective From"
         Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
         Me.DataGridViewTextBoxColumn17.Width = 84
@@ -520,8 +538,8 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn18
         '
         Me.DataGridViewTextBoxColumn18.DataPropertyName = "EffectiveTo"
-        DataGridViewCellStyle48.Format = "MM/dd/yyyy"
-        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle48
+        DataGridViewCellStyle23.Format = "MM/dd/yyyy"
+        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle23
         Me.DataGridViewTextBoxColumn18.HeaderText = "Effective To"
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
         Me.DataGridViewTextBoxColumn18.Width = 85
@@ -529,9 +547,9 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn19
         '
         Me.DataGridViewTextBoxColumn19.DataPropertyName = "BasicSalary"
-        DataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle49.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle49
+        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle24.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle24
         Me.DataGridViewTextBoxColumn19.HeaderText = "Basic Salary"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.Width = 85
@@ -539,9 +557,9 @@ Partial Class ImportOBForm
         'DataGridViewTextBoxColumn20
         '
         Me.DataGridViewTextBoxColumn20.DataPropertyName = "AllowanceSalary"
-        DataGridViewCellStyle50.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle50.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn20.DefaultCellStyle = DataGridViewCellStyle50
+        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle25.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn20.DefaultCellStyle = DataGridViewCellStyle25
         Me.DataGridViewTextBoxColumn20.HeaderText = "Allowance Salary"
         Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
         Me.DataGridViewTextBoxColumn20.Width = 85
@@ -599,13 +617,12 @@ Partial Class ImportOBForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 469)
-        Me.Controls.Add(Me.btnDownloadTemplate)
+        Me.ClientSize = New System.Drawing.Size(904, 463)
         Me.Controls.Add(Me.TabControl1)
-        Me.Controls.Add(Me.CancelButton)
-        Me.Controls.Add(Me.SaveButton)
-        Me.Controls.Add(Me.BrowseButton)
+        Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ImportOBForm"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Import OB Form"
         Me.TabControl1.ResumeLayout(False)
         Me.ParsedTabControl.ResumeLayout(False)

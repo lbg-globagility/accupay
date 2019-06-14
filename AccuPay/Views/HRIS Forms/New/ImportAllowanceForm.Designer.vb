@@ -36,8 +36,10 @@ Partial Class ImportAllowanceForm
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ImportAllowanceForm))
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
+        Me.btnDownloadTemplate = New System.Windows.Forms.Button()
         Me.BrowseButton = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.CancelButton = New System.Windows.Forms.Button()
@@ -83,7 +85,6 @@ Partial Class ImportAllowanceForm
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.btnDownloadTemplate = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.ParsedTabControl.SuspendLayout()
         CType(Me.AllowancesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -118,34 +119,44 @@ Partial Class ImportAllowanceForm
         Me.ParsedTabControl.Text = "Ok"
         Me.ParsedTabControl.UseVisualStyleBackColor = True
         '
+        'btnDownloadTemplate
+        '
+        Me.btnDownloadTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnDownloadTemplate.Location = New System.Drawing.Point(113, 397)
+        Me.btnDownloadTemplate.Name = "btnDownloadTemplate"
+        Me.btnDownloadTemplate.Size = New System.Drawing.Size(119, 32)
+        Me.btnDownloadTemplate.TabIndex = 14
+        Me.btnDownloadTemplate.Text = "&Download Template"
+        Me.btnDownloadTemplate.UseVisualStyleBackColor = True
+        '
         'BrowseButton
         '
-        Me.BrowseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BrowseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.BrowseButton.Location = New System.Drawing.Point(8, 397)
         Me.BrowseButton.Name = "BrowseButton"
         Me.BrowseButton.Size = New System.Drawing.Size(96, 32)
         Me.BrowseButton.TabIndex = 4
-        Me.BrowseButton.Text = "Browse"
+        Me.BrowseButton.Text = "&Browse..."
         Me.BrowseButton.UseVisualStyleBackColor = True
         '
         'SaveButton
         '
         Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SaveButton.Location = New System.Drawing.Point(688, 397)
+        Me.SaveButton.Location = New System.Drawing.Point(685, 397)
         Me.SaveButton.Name = "SaveButton"
         Me.SaveButton.Size = New System.Drawing.Size(96, 32)
         Me.SaveButton.TabIndex = 6
-        Me.SaveButton.Text = "Save"
+        Me.SaveButton.Text = "&Save"
         Me.SaveButton.UseVisualStyleBackColor = True
         '
         'CancelButton
         '
         Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(792, 397)
+        Me.CancelButton.Location = New System.Drawing.Point(790, 397)
         Me.CancelButton.Name = "CancelButton"
         Me.CancelButton.Size = New System.Drawing.Size(96, 32)
         Me.CancelButton.TabIndex = 5
-        Me.CancelButton.Text = "Cancel"
+        Me.CancelButton.Text = "&Cancel"
         Me.CancelButton.UseVisualStyleBackColor = True
         '
         'AllowancesDataGrid
@@ -175,7 +186,7 @@ Partial Class ImportAllowanceForm
         Me.AllowancesDataGrid.Name = "AllowancesDataGrid"
         Me.AllowancesDataGrid.ReadOnly = True
         Me.AllowancesDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.AllowancesDataGrid.Size = New System.Drawing.Size(890, 356)
+        Me.AllowancesDataGrid.Size = New System.Drawing.Size(890, 367)
         Me.AllowancesDataGrid.TabIndex = 12
         '
         'lblStatus
@@ -554,23 +565,16 @@ Partial Class ImportAllowanceForm
         Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
         Me.DataGridViewTextBoxColumn22.Width = 71
         '
-        'btnDownloadTemplate
-        '
-        Me.btnDownloadTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDownloadTemplate.Location = New System.Drawing.Point(110, 397)
-        Me.btnDownloadTemplate.Name = "btnDownloadTemplate"
-        Me.btnDownloadTemplate.Size = New System.Drawing.Size(119, 32)
-        Me.btnDownloadTemplate.TabIndex = 14
-        Me.btnDownloadTemplate.Text = "Download Template"
-        Me.btnDownloadTemplate.UseVisualStyleBackColor = True
-        '
         'ImportAllowanceForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(904, 463)
         Me.Controls.Add(Me.TabControl1)
+        Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ImportAllowanceForm"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Import Allowance Form"
         Me.TabControl1.ResumeLayout(False)
         Me.ParsedTabControl.ResumeLayout(False)

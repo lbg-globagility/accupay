@@ -24,16 +24,18 @@ Partial Class ImportLeaveForm
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ImportLeaveForm))
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.DataGridView2 = New System.Windows.Forms.DataGridView()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.DataGridView2 = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.btnDownload = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.btnDownload = New System.Windows.Forms.Button()
+        Me.DataGridView1 = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -56,7 +58,6 @@ Partial Class ImportLeaveForm
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -67,9 +68,9 @@ Partial Class ImportLeaveForm
         Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabPage2.SuspendLayout()
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Panel1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -81,9 +82,9 @@ Partial Class ImportLeaveForm
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(792, 389)
+        Me.TabPage2.Size = New System.Drawing.Size(896, 437)
         Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "Failed"
+        Me.TabPage2.Text = "Errors"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
         'DataGridView2
@@ -95,52 +96,61 @@ Partial Class ImportLeaveForm
         Me.DataGridView2.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView2.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column11, Me.DataGridViewTextBoxColumn1, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5, Me.DataGridViewTextBoxColumn6, Me.DataGridViewTextBoxColumn7, Me.DataGridViewTextBoxColumn8, Me.DataGridViewTextBoxColumn9, Me.DataGridViewTextBoxColumn10})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView2.DefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridView2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridView2.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.DataGridView2.Location = New System.Drawing.Point(3, 3)
         Me.DataGridView2.Name = "DataGridView2"
         Me.DataGridView2.ReadOnly = True
-        Me.DataGridView2.Size = New System.Drawing.Size(786, 383)
+        Me.DataGridView2.Size = New System.Drawing.Size(890, 431)
         Me.DataGridView2.TabIndex = 1
         '
-        'Panel1
+        'btnDownload
         '
-        Me.Panel1.Controls.Add(Me.btnDownload)
-        Me.Panel1.Controls.Add(Me.Button3)
-        Me.Panel1.Controls.Add(Me.Button2)
-        Me.Panel1.Controls.Add(Me.SaveButton)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel1.Location = New System.Drawing.Point(0, 415)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(800, 35)
-        Me.Panel1.TabIndex = 2
+        Me.btnDownload.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnDownload.Location = New System.Drawing.Point(113, 397)
+        Me.btnDownload.Name = "btnDownload"
+        Me.btnDownload.Size = New System.Drawing.Size(119, 32)
+        Me.btnDownload.TabIndex = 2
+        Me.btnDownload.Text = "&Download Template"
+        Me.btnDownload.UseVisualStyleBackColor = True
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(12, 6)
+        Me.Button3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Button3.Location = New System.Drawing.Point(8, 397)
         Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(75, 23)
+        Me.Button3.Size = New System.Drawing.Size(96, 32)
         Me.Button3.TabIndex = 1
         Me.Button3.Text = "&Browse..."
         Me.Button3.UseVisualStyleBackColor = True
         '
         'Button2
         '
-        Me.Button2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Button2.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Button2.Location = New System.Drawing.Point(713, 6)
+        Me.Button2.Location = New System.Drawing.Point(790, 397)
         Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 23)
+        Me.Button2.Size = New System.Drawing.Size(96, 32)
         Me.Button2.TabIndex = 0
-        Me.Button2.Text = "Cancel"
+        Me.Button2.Text = "&Cancel"
         Me.Button2.UseVisualStyleBackColor = True
         '
         'SaveButton
         '
-        Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SaveButton.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.SaveButton.Location = New System.Drawing.Point(632, 6)
+        Me.SaveButton.Enabled = False
+        Me.SaveButton.Location = New System.Drawing.Point(685, 397)
         Me.SaveButton.Name = "SaveButton"
-        Me.SaveButton.Size = New System.Drawing.Size(75, 23)
+        Me.SaveButton.Size = New System.Drawing.Size(96, 32)
         Me.SaveButton.TabIndex = 0
         Me.SaveButton.Text = "&Save"
         Me.SaveButton.UseVisualStyleBackColor = True
@@ -153,17 +163,21 @@ Partial Class ImportLeaveForm
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(800, 415)
+        Me.TabControl1.Size = New System.Drawing.Size(904, 463)
         Me.TabControl1.TabIndex = 3
         '
         'TabPage1
         '
+        Me.TabPage1.Controls.Add(Me.Button3)
+        Me.TabPage1.Controls.Add(Me.btnDownload)
         Me.TabPage1.Controls.Add(Me.DataGridView1)
         Me.TabPage1.Controls.Add(Me.lblStatus)
+        Me.TabPage1.Controls.Add(Me.SaveButton)
+        Me.TabPage1.Controls.Add(Me.Button2)
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(792, 389)
+        Me.TabPage1.Size = New System.Drawing.Size(896, 437)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "OK"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -172,26 +186,28 @@ Partial Class ImportLeaveForm
         '
         Me.DataGridView1.AllowUserToAddRows = False
         Me.DataGridView1.AllowUserToDeleteRows = False
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        Me.DataGridView1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle2
-        Me.DataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None
+        DataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.DataGridView1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
+        Me.DataGridView1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10})
-        Me.DataGridView1.Dock = System.Windows.Forms.DockStyle.Top
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle4
+        Me.DataGridView1.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.DataGridView1.Location = New System.Drawing.Point(3, 24)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.ReadOnly = True
-        Me.DataGridView1.Size = New System.Drawing.Size(786, 362)
+        Me.DataGridView1.Size = New System.Drawing.Size(890, 367)
         Me.DataGridView1.TabIndex = 0
-        '
-        'btnDownload
-        '
-        Me.btnDownload.Location = New System.Drawing.Point(93, 6)
-        Me.btnDownload.Name = "btnDownload"
-        Me.btnDownload.Size = New System.Drawing.Size(120, 23)
-        Me.btnDownload.TabIndex = 2
-        Me.btnDownload.Text = "Download Template"
-        Me.btnDownload.UseVisualStyleBackColor = True
         '
         'lblStatus
         '
@@ -201,7 +217,7 @@ Partial Class ImportLeaveForm
         Me.lblStatus.Location = New System.Drawing.Point(3, 3)
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Padding = New System.Windows.Forms.Padding(4)
-        Me.lblStatus.Size = New System.Drawing.Size(786, 21)
+        Me.lblStatus.Size = New System.Drawing.Size(890, 21)
         Me.lblStatus.TabIndex = 14
         Me.lblStatus.Text = "Click the Browse button to select the file then click the Save button after you c" &
     "hecked the preview."
@@ -293,6 +309,7 @@ Partial Class ImportLeaveForm
         Me.DataGridViewTextBoxColumn11.DataPropertyName = "FailureDescription"
         Me.DataGridViewTextBoxColumn11.HeaderText = "Missing Input"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        Me.DataGridViewTextBoxColumn11.ReadOnly = True
         Me.DataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'DataGridViewTextBoxColumn12
@@ -300,6 +317,7 @@ Partial Class ImportLeaveForm
         Me.DataGridViewTextBoxColumn12.DataPropertyName = "EmployeeNo"
         Me.DataGridViewTextBoxColumn12.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        Me.DataGridViewTextBoxColumn12.ReadOnly = True
         Me.DataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'DataGridViewTextBoxColumn13
@@ -307,6 +325,7 @@ Partial Class ImportLeaveForm
         Me.DataGridViewTextBoxColumn13.DataPropertyName = "FullName"
         Me.DataGridViewTextBoxColumn13.HeaderText = "Full Name"
         Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        Me.DataGridViewTextBoxColumn13.ReadOnly = True
         Me.DataGridViewTextBoxColumn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'DataGridViewTextBoxColumn14
@@ -314,6 +333,7 @@ Partial Class ImportLeaveForm
         Me.DataGridViewTextBoxColumn14.DataPropertyName = "LeaveType"
         Me.DataGridViewTextBoxColumn14.HeaderText = "Leave Type"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        Me.DataGridViewTextBoxColumn14.ReadOnly = True
         Me.DataGridViewTextBoxColumn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'DataGridViewTextBoxColumn15
@@ -321,6 +341,7 @@ Partial Class ImportLeaveForm
         Me.DataGridViewTextBoxColumn15.DataPropertyName = "Status"
         Me.DataGridViewTextBoxColumn15.HeaderText = "Status"
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+        Me.DataGridViewTextBoxColumn15.ReadOnly = True
         Me.DataGridViewTextBoxColumn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'DataGridViewTextBoxColumn16
@@ -328,6 +349,7 @@ Partial Class ImportLeaveForm
         Me.DataGridViewTextBoxColumn16.DataPropertyName = "StartTime"
         Me.DataGridViewTextBoxColumn16.HeaderText = "Start Time"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+        Me.DataGridViewTextBoxColumn16.ReadOnly = True
         Me.DataGridViewTextBoxColumn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'DataGridViewTextBoxColumn17
@@ -335,6 +357,7 @@ Partial Class ImportLeaveForm
         Me.DataGridViewTextBoxColumn17.DataPropertyName = "EndTime"
         Me.DataGridViewTextBoxColumn17.HeaderText = "End Time"
         Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+        Me.DataGridViewTextBoxColumn17.ReadOnly = True
         Me.DataGridViewTextBoxColumn17.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'DataGridViewTextBoxColumn18
@@ -342,6 +365,7 @@ Partial Class ImportLeaveForm
         Me.DataGridViewTextBoxColumn18.DataPropertyName = "StartDate"
         Me.DataGridViewTextBoxColumn18.HeaderText = "Start Date"
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+        Me.DataGridViewTextBoxColumn18.ReadOnly = True
         Me.DataGridViewTextBoxColumn18.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'DataGridViewTextBoxColumn19
@@ -349,29 +373,26 @@ Partial Class ImportLeaveForm
         Me.DataGridViewTextBoxColumn19.DataPropertyName = "EndDate"
         Me.DataGridViewTextBoxColumn19.HeaderText = "End Date"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
+        Me.DataGridViewTextBoxColumn19.ReadOnly = True
         Me.DataGridViewTextBoxColumn19.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'DataGridViewTextBoxColumn20
         '
         Me.DataGridViewTextBoxColumn20.DataPropertyName = "Reason"
         Me.DataGridViewTextBoxColumn20.HeaderText = "Reason"
+        Me.DataGridViewTextBoxColumn20.MaxInputLength = 500
         Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
+        Me.DataGridViewTextBoxColumn20.ReadOnly = True
         Me.DataGridViewTextBoxColumn20.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'DataGridViewTextBoxColumn21
         '
         Me.DataGridViewTextBoxColumn21.DataPropertyName = "Comment"
         Me.DataGridViewTextBoxColumn21.HeaderText = "Comment"
+        Me.DataGridViewTextBoxColumn21.MaxInputLength = 2000
         Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
+        Me.DataGridViewTextBoxColumn21.ReadOnly = True
         Me.DataGridViewTextBoxColumn21.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'Column11
-        '
-        Me.Column11.DataPropertyName = "FailureDescription"
-        Me.Column11.HeaderText = "Missing Input"
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        Me.Column11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'Column1
         '
@@ -455,23 +476,29 @@ Partial Class ImportLeaveForm
         Me.Column10.ReadOnly = True
         Me.Column10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
+        'Column11
+        '
+        Me.Column11.DataPropertyName = "FailureDescription"
+        Me.Column11.HeaderText = "Missing Input"
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        Me.Column11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
         'ImportLeaveForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.ClientSize = New System.Drawing.Size(904, 463)
         Me.Controls.Add(Me.TabControl1)
-        Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
-        Me.MaximizeBox = False
-        Me.MinimizeBox = False
         Me.Name = "ImportLeaveForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "Import Leave Form"
         Me.TabPage2.ResumeLayout(False)
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Panel1.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -479,14 +506,13 @@ Partial Class ImportLeaveForm
 
     End Sub
     Friend WithEvents TabPage2 As TabPage
-    Friend WithEvents Panel1 As Panel
     Friend WithEvents Button3 As Button
     Friend WithEvents Button2 As Button
     Friend WithEvents SaveButton As Button
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TabPage1 As TabPage
-    Friend WithEvents DataGridView1 As DataGridView
-    Friend WithEvents DataGridView2 As DataGridView
+    Friend WithEvents DataGridView1 As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents DataGridView2 As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Column11 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn

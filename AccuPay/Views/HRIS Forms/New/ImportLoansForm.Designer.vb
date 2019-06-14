@@ -34,6 +34,7 @@ Partial Class ImportLoansForm
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
+        Me.btnDownloadTemplate = New System.Windows.Forms.Button()
         Me.LoansDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -72,7 +73,6 @@ Partial Class ImportLoansForm
         Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.btnDownloadTemplate = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.ParsedTabControl.SuspendLayout()
         CType(Me.LoansDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -82,32 +82,32 @@ Partial Class ImportLoansForm
         '
         'BrowseButton
         '
-        Me.BrowseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BrowseButton.Location = New System.Drawing.Point(6, 397)
+        Me.BrowseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.BrowseButton.Location = New System.Drawing.Point(8, 397)
         Me.BrowseButton.Name = "BrowseButton"
         Me.BrowseButton.Size = New System.Drawing.Size(96, 32)
         Me.BrowseButton.TabIndex = 4
-        Me.BrowseButton.Text = "Browse..."
+        Me.BrowseButton.Text = "&Browse..."
         Me.BrowseButton.UseVisualStyleBackColor = True
         '
         'CancelButton
         '
         Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(792, 397)
+        Me.CancelButton.Location = New System.Drawing.Point(790, 397)
         Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(96, 32)
+        Me.CancelButton.Size = New System.Drawing.Size(95, 32)
         Me.CancelButton.TabIndex = 5
-        Me.CancelButton.Text = "Cancel"
+        Me.CancelButton.Text = "&Cancel"
         Me.CancelButton.UseVisualStyleBackColor = True
         '
         'SaveButton
         '
         Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SaveButton.Location = New System.Drawing.Point(688, 397)
+        Me.SaveButton.Location = New System.Drawing.Point(685, 397)
         Me.SaveButton.Name = "SaveButton"
         Me.SaveButton.Size = New System.Drawing.Size(96, 32)
         Me.SaveButton.TabIndex = 6
-        Me.SaveButton.Text = "Save"
+        Me.SaveButton.Text = "&Save"
         Me.SaveButton.UseVisualStyleBackColor = True
         '
         'TabControl1
@@ -136,6 +136,16 @@ Partial Class ImportLoansForm
         Me.ParsedTabControl.TabIndex = 0
         Me.ParsedTabControl.Text = "Ok"
         Me.ParsedTabControl.UseVisualStyleBackColor = True
+        '
+        'btnDownloadTemplate
+        '
+        Me.btnDownloadTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnDownloadTemplate.Location = New System.Drawing.Point(113, 397)
+        Me.btnDownloadTemplate.Name = "btnDownloadTemplate"
+        Me.btnDownloadTemplate.Size = New System.Drawing.Size(119, 32)
+        Me.btnDownloadTemplate.TabIndex = 26
+        Me.btnDownloadTemplate.Text = "&Download Template"
+        Me.btnDownloadTemplate.UseVisualStyleBackColor = True
         '
         'LoansDataGrid
         '
@@ -467,16 +477,6 @@ Partial Class ImportLoansForm
         Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
         Me.DataGridViewTextBoxColumn22.Width = 71
         '
-        'btnDownloadTemplate
-        '
-        Me.btnDownloadTemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDownloadTemplate.Location = New System.Drawing.Point(108, 397)
-        Me.btnDownloadTemplate.Name = "btnDownloadTemplate"
-        Me.btnDownloadTemplate.Size = New System.Drawing.Size(119, 32)
-        Me.btnDownloadTemplate.TabIndex = 26
-        Me.btnDownloadTemplate.Text = "Download Template"
-        Me.btnDownloadTemplate.UseVisualStyleBackColor = True
-        '
         'ImportLoansForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -486,7 +486,7 @@ Partial Class ImportLoansForm
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ImportLoansForm"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Import Loans Form"
         Me.TabControl1.ResumeLayout(False)
         Me.ParsedTabControl.ResumeLayout(False)
