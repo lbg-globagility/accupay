@@ -21,10 +21,6 @@ Public Class ImportLeaveForm
     Private _failModels As List(Of LeaveModel)
     Private _leaveRepository As New LeaveRepository()
 
-#Region "VariableDeclarations"
-
-#End Region
-
 #Region "Contructors"
 
     'Public Sub New(filePath As String)
@@ -59,6 +55,7 @@ Public Class ImportLeaveForm
 #End Region
 
 #Region "Methods"
+
     'Private Sub ExcelParserPreparation(filePath As String, Optional worksheetName As String = Nothing)
 
     '    _filePath = filePath
@@ -92,16 +89,35 @@ Public Class ImportLeaveForm
 
             _okModels = dataSource.Where(Function(ee) Not ee.ConsideredFailed).ToList()
             _failModels = dataSource.Where(Function(ee) ee.ConsideredFailed).ToList()
-
-            TabPage1.Text = $"Ok ({Me._okModels.Count})"
-            TabPage2.Text = $"Failed ({Me._failModels.Count})"
-
             DataGridView1.DataSource = _okModels
             DataGridView2.DataSource = _failModels
         End Using
 
         SaveButton.Enabled = _okModels.Count > 0
 
+        TabPage1.Text = $"Ok ({Me._okModels.Count})"
+        TabPage2.Text = $"Failed ({Me._failModels.Count})"
+
+        UpdateStatusLabel(_failModels.Count)
+
+    End Sub
+
+    Private Sub UpdateStatusLabel(errorCount As Integer)
+        If errorCount > 0 Then
+
+            If errorCount = 1 Then
+                lblStatus.Text = $"There is 1 error."
+            Else
+                lblStatus.Text = $"There are {errorCount} errors."
+
+            End If
+
+            lblStatus.Text += " Failed records will not be saved."
+            lblStatus.BackColor = Color.Red
+        Else
+            lblStatus.Text = $"There is no error."
+            lblStatus.BackColor = Color.Green
+        End If
     End Sub
 
     Private Shared Function CreateLeaveModel(model As LeaveModel, employee As Employee) As LeaveModel
@@ -144,13 +160,11 @@ Public Class ImportLeaveForm
             Await _leaveRepository.SaveManyAsync(leaves)
 
             Return True
-
         Catch ex As ArgumentException
 
             MessageBoxHelper.ErrorMessage("One of the employees has reached its maximum leave allowance. Please check your data and try again.", messageTitle)
 
             Return False
-
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage(messageTitle, ex, "EmployeeImportLeave")
@@ -200,7 +214,6 @@ Public Class ImportLeaveForm
                         leaves.Add(CreateNewLeave(model))
                     End If
                 Next
-
             Else
                 For Each model In _okModels
                     leaves.Add(CreateNewLeave(model))
@@ -230,10 +243,6 @@ Public Class ImportLeaveForm
 
 #End Region
 
-#Region "Functions"
-
-#End Region
-
     Private Class LeaveModel
         Private Const PENDING_STATUS As String = "Pending"
         Private Const ADDITIONAL_VACATION_LEAVETYPE As String = "Additional VL"
@@ -249,9 +258,11 @@ Public Class ImportLeaveForm
         Private _notMeantToUseAddtlVL As Boolean
         Private _reasons As String
         Private _comments As String
+
         'Private _startTime As TimeSpan?
         'Private _endTime As TimeSpan?
         Private _status As String
+
         Private Shared _grantsAdditionalVacationLeaveTypeFeaure As Boolean
 
         Public Sub New()
@@ -300,6 +311,7 @@ Public Class ImportLeaveForm
 
         <ColumnName("Start Time (Optional)")>
         Public Property StartTime As TimeSpan?
+
         '    Get
         '        Return _startTime
         '    End Get
@@ -316,6 +328,7 @@ Public Class ImportLeaveForm
 
         <ColumnName("End Time (Optional)")>
         Public Property EndTime As TimeSpan?
+
         '    Get
         '        Return _endTime
         '    End Get

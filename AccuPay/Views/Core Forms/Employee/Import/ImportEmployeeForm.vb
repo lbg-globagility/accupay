@@ -350,13 +350,20 @@ Public Class ImportEmployeeForm
         Dim models As IList(Of EmployeeModel)
         Try
 
-            _ep.Read(_filePath)
+            models = _ep.Read(_filePath)
         Catch ex As WorkSheetNotFoundException
 
             MessageBoxHelper.ErrorMessage(ex.Message)
 
             Return
         End Try
+
+        If models Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot read the template.")
+
+            Return
+        End If
 
         _okModels = models.Where(Function(ee) Not ee.ConsideredFailed).ToList()
         _failModels = models.Where(Function(ee) ee.ConsideredFailed).ToList()
@@ -366,6 +373,29 @@ Public Class ImportEmployeeForm
 
         SaveButton.Enabled = _okModels.Count > 0
 
+        TabPage1.Text = $"Ok ({Me._okModels.Count})"
+        TabPage2.Text = $"Failed ({Me._failModels.Count})"
+
+        UpdateStatusLabel(_failModels.Count)
+
+    End Sub
+
+    Private Sub UpdateStatusLabel(errorCount As Integer)
+        If errorCount > 0 Then
+
+            If errorCount = 1 Then
+                lblStatus.Text = $"There is 1 error."
+            Else
+                lblStatus.Text = $"There are {errorCount} errors."
+
+            End If
+
+            lblStatus.Text += " Failed records will not be saved."
+            lblStatus.BackColor = Color.Red
+        Else
+            lblStatus.Text = $"There is no error."
+            lblStatus.BackColor = Color.Green
+        End If
     End Sub
 
 #End Region

@@ -77,9 +77,6 @@ Public Class ImportedShiftSchedulesForm
 
             gridOK.DataSource = _dataSourceOk
 
-
-
-
             _dataSourceFailed = _dataSource.
                 Where(Function(ssm) Not satisfy(ssm)).
                 ToList()
@@ -135,10 +132,8 @@ Public Class ImportedShiftSchedulesForm
 
             End If
 
-            lblStatus.Text += "Failed records will not be saved."
+            lblStatus.Text += " Failed records will not be saved."
             lblStatus.BackColor = Color.Red
-
-
         Else
             lblStatus.Text = $"There is no error."
             lblStatus.BackColor = Color.Green
@@ -153,11 +148,10 @@ Public Class ImportedShiftSchedulesForm
 
 #End Region
 
-#Region "Functions"
 
-#End Region
 
 #Region "PrivateClasses"
+
     Private Class ShiftScheduleModel
         Private Const ONE_DAY_HOURS As Integer = 24
         Private Const MINUTES_PER_HOUR As Integer = 60
@@ -400,6 +394,7 @@ Public Class ImportedShiftSchedulesForm
         End Property
 
     End Class
+
 #End Region
 
 #Region "EventHandlers"
@@ -511,11 +506,9 @@ Public Class ImportedShiftSchedulesForm
             _shiftScheduleRowRecords = excelParserOutput.Records
 
             ResetDataSource()
-
         Catch ex As WorkSheetNotFoundException
 
             MessageBoxHelper.ErrorMessage($"WorkSheet: ""{workSheetName}"" does not exists on the chosen Excel! Please use the right template.")
-
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage()

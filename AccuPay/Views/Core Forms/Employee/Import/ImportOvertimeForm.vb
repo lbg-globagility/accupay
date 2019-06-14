@@ -112,7 +112,7 @@ Public Class ImportOvertimeForm
 
             End If
 
-            lblStatus.Text += "Failed records will not be saved."
+            lblStatus.Text += " Failed records will not be saved."
             lblStatus.BackColor = Color.Red
         Else
             lblStatus.Text = $"There is no error."

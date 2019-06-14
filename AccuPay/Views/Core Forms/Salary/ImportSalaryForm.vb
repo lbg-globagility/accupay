@@ -51,6 +51,13 @@ Public Class ImportSalaryForm
             Return
         End Try
 
+        If records Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot read the template.")
+
+            Return
+        End If
+
         Dim rejectedRecords As New List(Of SalaryRowRecord)
 
         Dim salaryViewModels = New List(Of SalaryViewModel)
@@ -121,7 +128,7 @@ Public Class ImportSalaryForm
 
             End If
 
-            lblStatus.Text += "Failed records will not be saved."
+            lblStatus.Text += " Failed records will not be saved."
             lblStatus.BackColor = Color.Red
         Else
             lblStatus.Text = $"There is no error."
