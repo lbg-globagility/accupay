@@ -251,7 +251,7 @@ Public Class EmployeeTreeView
             _divisions = LoadDivisions()
             _employees = LoadEmployees()
 
-            Dim initialEmployees = _employees.Where(AddressOf IsEmployee).ToList()
+            Dim initialEmployees = _employees.Where(Function(e) e.IsActive).ToList()
 
             _view.ShowEmployees(_divisions, initialEmployees)
         End Sub
@@ -292,7 +292,7 @@ Public Class EmployeeTreeView
                     If isActiveOnly Then
                         Return True
                     Else
-                        Return IsEmployee(employee)
+                        Return employee.IsActive
                     End If
                 End Function
 
@@ -332,10 +332,6 @@ Public Class EmployeeTreeView
                 Next
             End If
         End Sub
-
-        Private Function IsEmployee(employee As Employee) As Boolean
-            Return employee.EmploymentStatus <> "Resigned" AndAlso employee.EmploymentStatus <> "Terminated"
-        End Function
 
         Private Sub EmployeeListRemover(employee As Employee, list As IList(Of Employee))
             Dim isExists = list.Any(Function(e) Nullable.Equals(e.RowID, employee.RowID))

@@ -226,7 +226,7 @@ Public Class TimeEntryGenerator
             Where(Function(b) Nullable.Equals(b.DivisionID, employee.Position?.DivisionID)).
             ToList()
 
-        If employee.EmploymentStatus = "Resigned" OrElse employee.EmploymentStatus = "Terminated" Then
+        If employee.IsActive = False Then
             Dim currentTimeEntries = previousTimeEntries.
                 Where(Function(t) _cutoffStart <= t.Date And t.Date <= _cutoffEnd)
 

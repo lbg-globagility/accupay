@@ -52,8 +52,7 @@ Namespace Global.AccuPay.Helpers
                     Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
                     Dim allEmployees = Await _employeeRepository.GetAllWithPositionAsync()
                     Dim allEmployed = allEmployees.
-                        Where(Function(emp) emp.EmploymentStatus <> "Terminated").
-                        Where(Function(emp) emp.EmploymentStatus <> "Resigned").
+                        Where(Function(emp) emp.IsActive).
                         Select(Function(emp) emp.EmployeeNo).
                         OrderBy(Function(no) no).
                         ToList()

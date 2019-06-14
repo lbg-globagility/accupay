@@ -218,7 +218,7 @@ Public Class PayrollResources
                 Dim query = context.Employees.
                     Include(Function(e) e.Position.Division).
                     Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(e) e.EmploymentStatus <> "Resigned" AndAlso e.EmploymentStatus <> "Terminated")
+                    Where(Function(e) e.IsActive)
 
                 _employees = Await query.ToListAsync()
             End Using
