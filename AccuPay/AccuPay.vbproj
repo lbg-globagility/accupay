@@ -505,7 +505,6 @@
     <Compile Include="Repositories\ListOfValueRepository.vb" />
     <Compile Include="Repositories\LoanScheduleRepository.vb" />
     <Compile Include="Repositories\ProductRepository.vb" />
-    <Compile Include="SimplifiedEntities\GridView\Employee.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -528,7 +527,6 @@
     <Compile Include="Reports\Reports\Providers\LoanLedgerReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\PayrollLedgerExcelFormatReportProvider.vb" />
     <Compile Include="Repositories\EmployeeRepository.vb" />
-    <Compile Include="SimplifiedEntities\Interface\IEmployeeBase.vb" />
     <Compile Include="Views\Core Forms\Employee\AllowanceTab.Designer.vb">
       <DependentUpon>AllowanceTab.vb</DependentUpon>
     </Compile>

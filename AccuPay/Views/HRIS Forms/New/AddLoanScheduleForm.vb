@@ -3,11 +3,10 @@ Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Repository
 Imports AccuPay.Utils
-Imports Simplified = AccuPay.SimplifiedEntities.GridView
 
 Public Class AddLoanScheduleForm
 
-    Private _currentEmployee As Simplified.Employee
+    Private _currentEmployee As Employee
 
     Private _newLoanSchedule As New LoanSchedule
 
@@ -27,7 +26,7 @@ Public Class AddLoanScheduleForm
 
     Public Property ShowBalloonSuccess As Boolean
 
-    Sub New(employee As Simplified.Employee)
+    Sub New(employee As Employee)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -78,9 +77,9 @@ Public Class AddLoanScheduleForm
 
     Private Sub PopulateEmployeeData()
 
-        txtEmployeeFirstName.Text = _currentEmployee?.FullNameWithMiddleNameInitial
+        txtEmployeeFirstName.Text = _currentEmployee?.FullNameWithMiddleInitial
 
-        txtEmployeeNumber.Text = _currentEmployee?.EmployeeNo
+        txtEmployeeNumber.Text = _currentEmployee?.EmployeeIdWithPositionAndEmployeeType
 
         pbEmployeePicture.Image = ConvByteToImage(_currentEmployee.Image)
 

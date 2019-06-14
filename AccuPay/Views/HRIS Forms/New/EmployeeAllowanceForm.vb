@@ -8,7 +8,6 @@ Imports AccuPay.Repository
 Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
-Imports Simplified = AccuPay.SimplifiedEntities.GridView
 
 Public Class EmployeeAllowanceForm
 
@@ -20,7 +19,10 @@ Public Class EmployeeAllowanceForm
 
     Private _allowanceTypeList As List(Of Product)
 
-    Private _employees As New List(Of Simplified.Employee)
+    Private _employees As New List(Of Employee)
+
+    Private _AllEmployees As New List(Of Employee)
+
     Private _currentAllowance As Allowance
 
     Private _currentAllowances As New List(Of Allowance)
@@ -36,6 +38,7 @@ Public Class EmployeeAllowanceForm
         LoadFrequencyList()
         Await LoadAllowanceTypes()
 
+        Await LoadEmployees()
         Await ShowEmployeeList()
 
         ResetAllowanceForm()
@@ -61,8 +64,8 @@ Public Class EmployeeAllowanceForm
 
         If currentEmployee Is Nothing Then Return
 
-        txtEmployeeFirstName.Text = currentEmployee.FullNameWithMiddleNameInitial
-        txtEmployeeNumber.Text = currentEmployee.EmployeeNo
+        txtEmployeeFirstName.Text = currentEmployee.FullNameWithMiddleInitial
+        txtEmployeeNumber.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
 
         pbEmpPicAllow.Image = ConvByteToImage(currentEmployee.Image)
 
@@ -177,7 +180,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Sub tsbtnNewAllowance_Click(sender As Object, e As EventArgs) Handles tsbtnNewAllowance.Click
 
-        Dim employee As Simplified.Employee = GetSelectedEmployee()
+        Dim employee As Employee = GetSelectedEmployee()
 
         If employee Is Nothing Then
             MessageBoxHelper.Warning("No employee selected!")
@@ -300,7 +303,7 @@ Public Class EmployeeAllowanceForm
 
     End Sub
 
-    Private Async Function DeleteAllowance(currentEmployee As Simplified.Employee, messageTitle As String) As Task
+    Private Async Function DeleteAllowance(currentEmployee As Employee, messageTitle As String) As Task
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
@@ -343,6 +346,10 @@ Public Class EmployeeAllowanceForm
 
     End Sub
 
+    Private Async Sub cbShowAll_CheckedChanged(sender As Object, e As EventArgs) Handles cbShowAll.CheckedChanged
+        Await ShowEmployeeList()
+    End Sub
+
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, lblFormTitle, 400)
     End Sub
@@ -359,7 +366,7 @@ Public Class EmployeeAllowanceForm
     End Sub
 
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
-        Dim filteredEmployees As New List(Of Simplified.Employee)
+        Dim filteredEmployees As New List(Of Employee)
 
         If String.IsNullOrEmpty(searchValue) Then
             employeesDataGridView.DataSource = Me._employees
@@ -369,7 +376,7 @@ Public Class EmployeeAllowanceForm
         End If
     End Function
 
-    Private Async Function LoadAllowances(currentEmployee As Simplified.Employee) As Task
+    Private Async Function LoadAllowances(currentEmployee As Employee) As Task
         If currentEmployee Is Nothing Then Return
 
         Me._currentAllowances = (Await _allowanceRepository.GetByEmployeeIncludesProductAsync(currentEmployee.RowID)).ToList
@@ -400,10 +407,10 @@ Public Class EmployeeAllowanceForm
         cboallowtype.DataSource = allowanceTypes
     End Sub
 
-    Private Function GetSelectedEmployee() As Simplified.Employee
+    Private Function GetSelectedEmployee() As Employee
         If employeesDataGridView.CurrentRow Is Nothing Then Return Nothing
 
-        Return CType(employeesDataGridView.CurrentRow.DataBoundItem, Simplified.Employee)
+        Return CType(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
     End Function
 
     Private Sub PopulateAllowanceForm(allowance As Allowance)
@@ -491,51 +498,23 @@ Public Class EmployeeAllowanceForm
 
     End Function
 
-    Dim activeEmpSorted As List(Of Simplified.Employee)
-    Dim allEmpSorted As List(Of GridView.Employee)
+    Private Async Function LoadEmployees() As Task
 
-    Dim gotAllEmp As Boolean = False
-    Dim gotActiveEmp As Boolean = False
+        Me._AllEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+                            OrderBy(Function(e) e.LastName).
+                            ToList
 
-    Private Async Sub cbShowAll_CheckedChanged(sender As Object, e As EventArgs) Handles cbShowAll.CheckedChanged
-        Await ShowEmployeeList()
-    End Sub
+    End Function
 
     Private Async Function ShowEmployeeList() As Task
+
         If cbShowAll.Checked Then
-            If Not gotAllEmp Then
-                Dim allEmp = Await _employeeRepository.GetAllAsync(Of Simplified.Employee)()
-                allEmpSorted = CType(allEmp, List(Of Simplified.Employee)).
-                    OrderBy(Function(emp) emp.LastName).
-                    ToList()
-                gotAllEmp = True
-            End If
-            Me._employees = allEmpSorted
+
+            Me._employees = Me._AllEmployees
         Else
-            If Not gotActiveEmp Then
-                Using context As New PayrollContext
-                    Dim list = context.Employees.
-                            Where(Function(emp) Nullable.Equals(emp.OrganizationID, z_OrganizationID) And
-                                      emp.IsActive)
 
-                    Dim activeEmp = Await list.
-                                Select(Function(emp) New GridView.Employee With {
-                                    .RowID = emp.RowID,
-                                    .EmployeeNo = emp.EmployeeNo,
-                                    .FirstName = emp.FirstName,
-                                    .MiddleName = emp.MiddleName,
-                                    .LastName = emp.LastName,
-                                    .Image = emp.Image
-                                }).
-                                ToListAsync
-                    activeEmpSorted = activeEmp.
-                        OrderBy(Function(emp) emp.LastName).
-                        ToList()
-                End Using
+            Me._employees = Me._AllEmployees.Where(Function(e) e.IsActive).ToList
 
-                gotActiveEmp = True
-            End If
-            Me._employees = activeEmpSorted
         End If
 
         Await FilterEmployees()

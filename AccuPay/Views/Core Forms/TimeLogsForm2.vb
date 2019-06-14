@@ -382,7 +382,7 @@ Public Class TimeLogsForm2
 
         Dim dateRanges = Calendar.EachDay(startDate, endDate)
 
-        Dim sortedEmployees = employees.OrderBy(Function(e) e.Fullname)
+        Dim sortedEmployees = employees.OrderBy(Function(e) e.FullNameWithMiddleInitialLastNameFirst)
 
         For Each e In sortedEmployees
             For Each d In dateRanges
@@ -587,7 +587,7 @@ Public Class TimeLogsForm2
 
         Public ReadOnly Property FullName As String
             Get
-                Return If(_timeLog?.Employee?.Fullname, _employee.Fullname)
+                Return If(_timeLog?.Employee?.FullNameWithMiddleInitialLastNameFirst, _employee.FullNameWithMiddleInitialLastNameFirst)
             End Get
         End Property
 

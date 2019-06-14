@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
@@ -67,8 +68,8 @@ Public Class SalaryTab
         _employee = employee
         txtPayFrequency.Text = employee.PayFrequency.Type
         txtSalaryType.Text = employee.EmployeeType
-        txtFullname.Text = $"{employee.FirstName} {employee.LastName}"
-        txtEmployeeID.Text = $"ID# {employee.EmployeeNo}, {employee.Position?.Name}, {employee.EmployeeType} Salary"
+        txtFullname.Text = employee.FullNameWithMiddleInitial
+        txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
 
         pbEmployee.Image = ConvByteToImage(employee.Image)
 

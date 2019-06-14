@@ -71,8 +71,8 @@ Public Class MassOvertimeForm
                     Where(Function(e) Nullable.Equals(e.Position?.Division.RowID, childDivision.RowID))
                 For Each childEmployee In childEmployees
                     Dim employeeNode = New TreeNode() With {
-                        .Name = childEmployee.Fullname,
-                        .Text = childEmployee.Fullname,
+                        .Name = childEmployee.FullNameWithMiddleInitialLastNameFirst,
+                        .Text = childEmployee.FullNameWithMiddleInitialLastNameFirst,
                         .Tag = childEmployee
                     }
 
@@ -244,7 +244,7 @@ Public Class MassOvertimePresenter
     Public Async Sub FilterEmployees(needle As String)
         Dim match =
             Function(employee As Employee) As Boolean
-                Dim contains = employee.Fullname.ToLower().Contains(needle)
+                Dim contains = employee.FullNameWithMiddleInitialLastNameFirst.ToLower().Contains(needle)
                 Dim reverseName = ($"{employee.LastName} {employee.FirstName}").ToLower()
                 Dim containsReverseName = reverseName.Contains(needle)
 
@@ -279,7 +279,7 @@ Public Class MassOvertimePresenter
                 Dim model = New OvertimeModel() With {
                     .EmployeeID = employee.RowID,
                     .EmployeeNo = employee.EmployeeNo,
-                    .Name = employee.Fullname,
+                    .Name = employee.FullNameWithMiddleInitialLastNameFirst,
                     .Date = currentDate,
                     .StartTime = overtime?.OTStartTime,
                     .EndTime = overtime?.OTEndTime,

@@ -134,7 +134,7 @@ Public Class ImportAllowanceForm
             End If
 
             'For displaying on datagrid view; placed here in case record is rejected soon
-            record.EmployeeFullName = employee.Fullname
+            record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeID = employee.EmployeeNo
 
             If String.IsNullOrWhiteSpace(record.Type) Then

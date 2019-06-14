@@ -119,13 +119,13 @@ Public Class PayrollGeneration
 
             _formCaller.BeginInvoke(
                 _notifyMainWindow,
-                New Result(_employee.EmployeeNo, _employee.Fullname, ResultStatus.Success, ""))
+                New Result(_employee.EmployeeNo, _employee.FullNameWithMiddleInitialLastNameFirst, ResultStatus.Success, ""))
         Catch ex As Exception
             logger.Error("DoProcess", ex)
 
             _formCaller.BeginInvoke(
                 _notifyMainWindow,
-                New Result(_employee.EmployeeNo, _employee.Fullname, ResultStatus.Error, ex.Message))
+                New Result(_employee.EmployeeNo, _employee.FullNameWithMiddleInitialLastNameFirst, ResultStatus.Error, ex.Message))
         End Try
     End Sub
 

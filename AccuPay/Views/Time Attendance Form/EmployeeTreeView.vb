@@ -154,8 +154,8 @@ Public Class EmployeeTreeView
                     Dim shouldSetChecked = tickedEmployeeIDs.Any(Function(eID) Nullable.Equals(eID, childEmployee.RowID))
 
                     Dim employeeNode = New TreeNode() With {
-                        .Name = childEmployee.Fullname,
-                        .Text = $"{childEmployee.Fullname} #{childEmployee.EmployeeNo}",
+                        .Name = childEmployee.FullNameWithMiddleInitialLastNameFirst,
+                        .Text = $"{childEmployee.FullNameWithMiddleInitialLastNameFirst} #{childEmployee.EmployeeNo}",
                         .Tag = childEmployee,
                         .Checked = shouldSetChecked
                     }
@@ -279,7 +279,7 @@ Public Class EmployeeTreeView
             Dim match =
                 Function(employee As Employee) As Boolean
                     needle = needle.ToLower
-                    Dim contains = employee.Fullname.ToLower().Contains(needle)
+                    Dim contains = employee.FullNameWithMiddleInitialLastNameFirst.ToLower().Contains(needle)
                     Dim reverseName = ($"{employee.LastName} {employee.FirstName}").ToLower()
                     Dim containsReverseName = reverseName.Contains(needle)
                     Dim hasThisKindOfEmployeeNo = employee.EmployeeNo.Contains(needle)

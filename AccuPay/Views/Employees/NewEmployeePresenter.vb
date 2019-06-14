@@ -68,7 +68,7 @@ Public Class NewEmployeePresenter
         Dim matchCriteria =
             Function(employee As Employee) As Boolean
                 Dim containsEmployeeId = employee.EmployeeNo.ToLower().Contains(term)
-                Dim containsFullName = employee.Fullname.ToLower().Contains(term)
+                Dim containsFullName = employee.FullNameWithMiddleInitialLastNameFirst.ToLower().Contains(term)
 
                 Dim reverseFullName = employee.LastName.ToLower() + " " + employee.FirstName.ToLower()
                 Dim containsFullNameInReverse = reverseFullName.Contains(term)

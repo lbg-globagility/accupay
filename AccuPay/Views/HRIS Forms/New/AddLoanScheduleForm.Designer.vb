@@ -521,19 +521,23 @@ Partial Class AddLoanScheduleForm
         Me.txtEmployeeFirstName.ReadOnly = True
         Me.txtEmployeeFirstName.Size = New System.Drawing.Size(668, 28)
         Me.txtEmployeeFirstName.TabIndex = 381
+        Me.txtEmployeeFirstName.TabStop = False
         '
         'txtEmployeeNumber
         '
         Me.txtEmployeeNumber.BackColor = System.Drawing.Color.White
         Me.txtEmployeeNumber.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtEmployeeNumber.Dock = System.Windows.Forms.DockStyle.Fill
         Me.txtEmployeeNumber.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.txtEmployeeNumber.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
         Me.txtEmployeeNumber.Location = New System.Drawing.Point(124, 47)
         Me.txtEmployeeNumber.MaxLength = 50
+        Me.txtEmployeeNumber.Multiline = True
         Me.txtEmployeeNumber.Name = "txtEmployeeNumber"
         Me.txtEmployeeNumber.ReadOnly = True
-        Me.txtEmployeeNumber.Size = New System.Drawing.Size(516, 22)
+        Me.txtEmployeeNumber.Size = New System.Drawing.Size(855, 38)
         Me.txtEmployeeNumber.TabIndex = 380
+        Me.txtEmployeeNumber.TabStop = False
         '
         'pbEmployeePicture
         '
@@ -587,6 +591,7 @@ Partial Class AddLoanScheduleForm
         Me.Controls.Add(Me.EmployeeInfoTabLayout)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.MaximizeBox = False
         Me.Name = "AddLoanScheduleForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "New Loan Schedule"

@@ -6,7 +6,7 @@ Imports Microsoft.EntityFrameworkCore
 Imports Simplified = AccuPay.SimplifiedEntities.GridView
 
 Public Class AddAllowanceForm
-    Private _currentEmployee As Simplified.Employee
+    Private _currentEmployee As Employee
 
     Private _newAllowance As New Allowance
 
@@ -22,7 +22,7 @@ Public Class AddAllowanceForm
 
     Public Property ShowBalloonSuccess As Boolean
 
-    Sub New(employee As Simplified.Employee)
+    Sub New(employee As Employee)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -68,9 +68,9 @@ Public Class AddAllowanceForm
 
     Private Sub PopulateEmployeeData()
 
-        txtEmployeeFirstName.Text = _currentEmployee?.FullNameWithMiddleNameInitial
+        txtEmployeeFirstName.Text = _currentEmployee?.FullNameWithMiddleInitial
 
-        txtEmployeeNumber.Text = _currentEmployee?.EmployeeNo
+        txtEmployeeNumber.Text = _currentEmployee?.EmployeeIdWithPositionAndEmployeeType
 
         pbEmployeePicture.Image = ConvByteToImage(_currentEmployee.Image)
 

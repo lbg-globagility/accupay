@@ -30,6 +30,9 @@ Partial Class AddAllowanceForm
         Me.btnAddAndClose = New System.Windows.Forms.Button()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.AllowanceDetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.pnlTxtLoanBalance = New System.Windows.Forms.Panel()
+        Me.txtallowamt = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.dtpallowstartdate = New System.Windows.Forms.DateTimePicker()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -45,17 +48,14 @@ Partial Class AddAllowanceForm
         Me.Label167 = New System.Windows.Forms.Label()
         Me.Label168 = New System.Windows.Forms.Label()
         Me.Label163 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtallowamt = New System.Windows.Forms.TextBox()
-        Me.pnlTxtLoanBalance = New System.Windows.Forms.Panel()
         Me.NullableDatePicker1 = New AccuPay.NullableDatePicker()
         CType(Me.pbEmployeePicture, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         Me.AllowanceDetailsTabLayout.SuspendLayout()
+        Me.pnlTxtLoanBalance.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.plnCboLoanType.SuspendLayout()
-        Me.pnlTxtLoanBalance.SuspendLayout()
         Me.SuspendLayout()
         '
         'txtEmployeeNumber
@@ -66,10 +66,12 @@ Partial Class AddAllowanceForm
         Me.txtEmployeeNumber.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
         Me.txtEmployeeNumber.Location = New System.Drawing.Point(124, 47)
         Me.txtEmployeeNumber.MaxLength = 50
+        Me.txtEmployeeNumber.Multiline = True
         Me.txtEmployeeNumber.Name = "txtEmployeeNumber"
         Me.txtEmployeeNumber.ReadOnly = True
-        Me.txtEmployeeNumber.Size = New System.Drawing.Size(516, 22)
+        Me.txtEmployeeNumber.Size = New System.Drawing.Size(393, 52)
         Me.txtEmployeeNumber.TabIndex = 380
+        Me.txtEmployeeNumber.TabStop = False
         '
         'pbEmployeePicture
         '
@@ -85,7 +87,7 @@ Partial Class AddAllowanceForm
         '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(315, 364)
+        Me.btnCancel.Location = New System.Drawing.Point(315, 367)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 13
@@ -94,7 +96,7 @@ Partial Class AddAllowanceForm
         '
         'btnAddAndNew
         '
-        Me.btnAddAndNew.Location = New System.Drawing.Point(232, 364)
+        Me.btnAddAndNew.Location = New System.Drawing.Point(232, 367)
         Me.btnAddAndNew.Name = "btnAddAndNew"
         Me.btnAddAndNew.Size = New System.Drawing.Size(75, 23)
         Me.btnAddAndNew.TabIndex = 12
@@ -114,10 +116,11 @@ Partial Class AddAllowanceForm
         Me.txtEmployeeFirstName.ReadOnly = True
         Me.txtEmployeeFirstName.Size = New System.Drawing.Size(668, 28)
         Me.txtEmployeeFirstName.TabIndex = 381
+        Me.txtEmployeeFirstName.TabStop = False
         '
         'btnAddAndClose
         '
-        Me.btnAddAndClose.Location = New System.Drawing.Point(141, 364)
+        Me.btnAddAndClose.Location = New System.Drawing.Point(141, 367)
         Me.btnAddAndClose.Name = "btnAddAndClose"
         Me.btnAddAndClose.Size = New System.Drawing.Size(85, 23)
         Me.btnAddAndClose.TabIndex = 14
@@ -139,7 +142,7 @@ Partial Class AddAllowanceForm
         Me.EmployeeInfoTabLayout.RowCount = 2
         Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
         Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
-        Me.EmployeeInfoTabLayout.Size = New System.Drawing.Size(538, 88)
+        Me.EmployeeInfoTabLayout.Size = New System.Drawing.Size(557, 102)
         Me.EmployeeInfoTabLayout.TabIndex = 11
         '
         'AllowanceDetailsTabLayout
@@ -156,7 +159,7 @@ Partial Class AddAllowanceForm
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label168, 0, 6)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label163, 0, 8)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.NullableDatePicker1, 0, 7)
-        Me.AllowanceDetailsTabLayout.Location = New System.Drawing.Point(137, 105)
+        Me.AllowanceDetailsTabLayout.Location = New System.Drawing.Point(141, 108)
         Me.AllowanceDetailsTabLayout.Name = "AllowanceDetailsTabLayout"
         Me.AllowanceDetailsTabLayout.RowCount = 10
         Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
@@ -170,7 +173,39 @@ Partial Class AddAllowanceForm
         Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
         Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
         Me.AllowanceDetailsTabLayout.Size = New System.Drawing.Size(257, 253)
-        Me.AllowanceDetailsTabLayout.TabIndex = 381
+        Me.AllowanceDetailsTabLayout.TabIndex = 0
+        '
+        'pnlTxtLoanBalance
+        '
+        Me.pnlTxtLoanBalance.Controls.Add(Me.txtallowamt)
+        Me.pnlTxtLoanBalance.Controls.Add(Me.Label4)
+        Me.pnlTxtLoanBalance.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlTxtLoanBalance.Location = New System.Drawing.Point(0, 208)
+        Me.pnlTxtLoanBalance.Margin = New System.Windows.Forms.Padding(0)
+        Me.pnlTxtLoanBalance.Name = "pnlTxtLoanBalance"
+        Me.pnlTxtLoanBalance.Size = New System.Drawing.Size(257, 45)
+        Me.pnlTxtLoanBalance.TabIndex = 382
+        '
+        'txtallowamt
+        '
+        Me.txtallowamt.Location = New System.Drawing.Point(20, 3)
+        Me.txtallowamt.Name = "txtallowamt"
+        Me.txtallowamt.ShortcutsEnabled = False
+        Me.txtallowamt.Size = New System.Drawing.Size(195, 20)
+        Me.txtallowamt.TabIndex = 384
+        Me.txtallowamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label4
+        '
+        Me.Label4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(3, 4)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(14, 13)
+        Me.Label4.TabIndex = 383
+        Me.Label4.Text = "₱"
+        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Panel2
         '
@@ -326,38 +361,6 @@ Partial Class AddAllowanceForm
         Me.Label163.TabIndex = 381
         Me.Label163.Text = "Amount"
         '
-        'Label4
-        '
-        Me.Label4.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(3, 4)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(14, 13)
-        Me.Label4.TabIndex = 383
-        Me.Label4.Text = "₱"
-        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'txtallowamt
-        '
-        Me.txtallowamt.Location = New System.Drawing.Point(20, 3)
-        Me.txtallowamt.Name = "txtallowamt"
-        Me.txtallowamt.ShortcutsEnabled = False
-        Me.txtallowamt.Size = New System.Drawing.Size(195, 20)
-        Me.txtallowamt.TabIndex = 384
-        Me.txtallowamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'pnlTxtLoanBalance
-        '
-        Me.pnlTxtLoanBalance.Controls.Add(Me.txtallowamt)
-        Me.pnlTxtLoanBalance.Controls.Add(Me.Label4)
-        Me.pnlTxtLoanBalance.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnlTxtLoanBalance.Location = New System.Drawing.Point(0, 208)
-        Me.pnlTxtLoanBalance.Margin = New System.Windows.Forms.Padding(0)
-        Me.pnlTxtLoanBalance.Name = "pnlTxtLoanBalance"
-        Me.pnlTxtLoanBalance.Size = New System.Drawing.Size(257, 45)
-        Me.pnlTxtLoanBalance.TabIndex = 382
-        '
         'NullableDatePicker1
         '
         Me.NullableDatePicker1.Location = New System.Drawing.Point(20, 160)
@@ -372,25 +375,27 @@ Partial Class AddAllowanceForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(166, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(538, 429)
+        Me.ClientSize = New System.Drawing.Size(557, 429)
         Me.Controls.Add(Me.AllowanceDetailsTabLayout)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnAddAndNew)
         Me.Controls.Add(Me.btnAddAndClose)
         Me.Controls.Add(Me.EmployeeInfoTabLayout)
+        Me.MaximizeBox = False
         Me.Name = "AddAllowanceForm"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "New Allowance"
         CType(Me.pbEmployeePicture, System.ComponentModel.ISupportInitialize).EndInit()
         Me.EmployeeInfoTabLayout.ResumeLayout(False)
         Me.EmployeeInfoTabLayout.PerformLayout()
         Me.AllowanceDetailsTabLayout.ResumeLayout(False)
         Me.AllowanceDetailsTabLayout.PerformLayout()
+        Me.pnlTxtLoanBalance.ResumeLayout(False)
+        Me.pnlTxtLoanBalance.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.plnCboLoanType.ResumeLayout(False)
         Me.plnCboLoanType.PerformLayout()
-        Me.pnlTxtLoanBalance.ResumeLayout(False)
-        Me.pnlTxtLoanBalance.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub

@@ -271,7 +271,7 @@ Public Class ImportLeaveForm
                 _employee = employee
 
                 EmployeeNo = _employee.EmployeeNo
-                FullName = _employee.Fullname
+                FullName = _employee.FullNameWithMiddleInitialLastNameFirst
                 EmployeeID = _employee.RowID.Value
             End If
 

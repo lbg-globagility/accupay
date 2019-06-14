@@ -200,7 +200,7 @@ Public Class ImportSalaryForm
 
         Public ReadOnly Property FullName As String
             Get
-                Return _employee.Fullname
+                Return _employee.FullNameWithMiddleInitialLastNameFirst
             End Get
         End Property
 

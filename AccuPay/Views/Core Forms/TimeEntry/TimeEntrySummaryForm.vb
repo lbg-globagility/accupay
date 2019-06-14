@@ -97,7 +97,7 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Employee))
 
-        Dim unsortedList = Await _employeeRepository.GetAllWithPosition()
+        Dim unsortedList = Await _employeeRepository.GetAllWithPositionAsync()
         Dim list = unsortedList.
             OrderBy(Function(e) e.LastName).
             ToList()

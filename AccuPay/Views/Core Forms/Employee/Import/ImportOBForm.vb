@@ -70,7 +70,7 @@ Public Class ImportOBForm
             End If
 
             'For displaying on datagrid view; placed here in case record is rejected soon
-            record.EmployeeFullName = employee.Fullname
+            record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeID = employee.EmployeeNo
 
             Dim officialbusType As New ListOfValue

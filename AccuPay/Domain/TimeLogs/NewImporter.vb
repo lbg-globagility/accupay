@@ -41,11 +41,9 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
 
                     Loop Until lineContent Is Nothing
                 End Using
-
             Catch ex As FileNotFoundException
                 output.IsImportSuccess = False
                 output.ErrorMessage = FILE_NOT_FOUND_ERROR
-
             Catch ex As Exception
                 output.IsImportSuccess = False
                 output.ErrorMessage = "An error occured. Please try again or contact Globagility."
@@ -94,7 +92,6 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
                 .LineContent = lineContent,
                 .LineNumber = lineNumber
             })
-
             Catch ex As Exception
                 Return (New ImportTimeAttendanceLog() With {
                         .LineContent = lineContent,
@@ -107,6 +104,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
         Public Class ImportOutput
             Public Property Logs As IList(Of ImportTimeAttendanceLog)
             Public Property Errors As IList(Of ImportTimeAttendanceLog)
+
             ''' <summary>
             ''' True if the file was read successfully. Even if there are errors parsing
             ''' some lines, as long as the file was read, this is still True.
@@ -124,6 +122,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
 
                 Me.ErrorMessage = Nothing
             End Sub
+
         End Class
 
     End Class
@@ -132,17 +131,20 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
 
         ' - Contents and error message
         Public Property LineContent As String
+
         Public Property LineNumber As Integer
         Public Property ErrorMessage As String
 
         ' - Extracted contents
         Public Property EmployeeNumber As String
+
         Public Property [DateTime] As Date
 
         ' - analyzed data
         Public Property IsTimeIn As Boolean?
+
         Public Property LogDate As Date?
-        Public Property Employee As IEmployeeBase
+        Public Property Employee As Employee
         Public Property ShiftSchedule As ShiftSchedule
         Public Property EmployeeDutySchedule As EmployeeDutySchedule
         Public Property ShiftTimeInBounds As Date
@@ -207,5 +209,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
 
             Return logs.GroupBy(Function(l) l.EmployeeNumber).ToList()
         End Function
+
     End Class
+
 End Namespace

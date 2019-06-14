@@ -63,7 +63,7 @@ Public Class ImportOvertimeForm
             End If
 
             'For displaying on datagrid view; placed here in case record is rejected soon
-            record.EmployeeFullName = employee.Fullname
+            record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeID = employee.EmployeeNo
 
             If record.Type Is Nothing Then
@@ -71,7 +71,6 @@ Public Class ImportOvertimeForm
                 rejectedRecords.Add(record)
                 Continue For
             End If
-
 
             'For database
             Dim newOvertime = New Overtime With {
@@ -115,8 +114,6 @@ Public Class ImportOvertimeForm
 
             lblStatus.Text += "Failed records will not be saved."
             lblStatus.BackColor = Color.Red
-
-
         Else
             lblStatus.Text = $"There is no error."
             lblStatus.BackColor = Color.Green
@@ -145,17 +142,14 @@ Public Class ImportOvertimeForm
             Me.IsSaved = True
 
             Me.Close()
-
         Catch ex As ArgumentException
 
             Dim errorMessage = "One of the overtimes has an error:" & Environment.NewLine & ex.Message
 
             MessageBoxHelper.ErrorMessage(errorMessage, messageTitle)
-
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-
         Finally
 
             Me.Cursor = Cursors.Default
@@ -169,4 +163,5 @@ Public Class ImportOvertimeForm
         DownloadTemplateHelper.Download(ExcelTemplates.Overtime)
 
     End Sub
+
 End Class

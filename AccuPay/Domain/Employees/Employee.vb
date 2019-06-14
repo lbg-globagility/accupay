@@ -8,10 +8,9 @@ Namespace Global.AccuPay.Entity
 
     <Table("employee")>
     Public Class Employee
-        Implements IEmployeeBase
 
         <Key>
-        Public Property RowID As Integer? Implements IEmployeeBase.RowID
+        Public Property RowID As Integer?
 
         Public Property Created As Date
 
@@ -29,16 +28,16 @@ Namespace Global.AccuPay.Entity
 
         Public Property Salutation As String
 
-        Public Property FirstName As String Implements IEmployeeBase.FirstName
+        Public Property FirstName As String
 
-        Public Property MiddleName As String Implements IEmployeeBase.MiddleName
+        Public Property MiddleName As String
 
-        Public Property LastName As String Implements IEmployeeBase.LastName
+        Public Property LastName As String
 
         Public Property Surname As String
 
         <Column("EmployeeID")>
-        Public Property EmployeeNo As String Implements IEmployeeBase.EmployeeNo
+        Public Property EmployeeNo As String
 
         Public Property TinNo As String
 
@@ -142,7 +141,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property AgencyID As Integer?
 
-        Public Property Image As Byte() Implements IEmployeeBase.Image
+        Public Property Image As Byte()
 
         Public Property AdvancementPoints As Integer
 
@@ -182,9 +181,27 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
-        Public ReadOnly Property Fullname As String
+        Public ReadOnly Property FullNameWithMiddleInitialLastNameFirst As String
             Get
                 Return $"{LastName}, {FirstName} {MiddleInitial}"
+            End Get
+        End Property
+
+        Public ReadOnly Property FullNameWithMiddleInitial As String
+            Get
+                Return $"{FirstName} {If(MiddleInitial Is Nothing, "", MiddleInitial & ". ")}{LastName}"
+            End Get
+        End Property
+
+        Public ReadOnly Property FullName As String
+            Get
+                Return $"{FirstName} {LastName}"
+            End Get
+        End Property
+
+        Public ReadOnly Property EmployeeIdWithPositionAndEmployeeType As String
+            Get
+                Return $"ID# {EmployeeNo}, {Position?.Name}, {EmployeeType} Salary"
             End Get
         End Property
 
@@ -253,9 +270,6 @@ Namespace Global.AccuPay.Entity
                 Return EmploymentStatus.ToUpper().Trim() = "RETIRED"
             End Get
         End Property
-
-
-
 
     End Class
 

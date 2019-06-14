@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.Repository
@@ -23,7 +24,6 @@ Namespace Global.AccuPay.Helpers
                 File.Copy(template, saveFileDialogHelperOutPut.FileInfo.FullName)
 
                 Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
-
             Catch ex As Exception
 
                 MessageBoxHelper.DefaultErrorMessage()
@@ -31,7 +31,6 @@ Namespace Global.AccuPay.Helpers
             End Try
 
         End Sub
-
 
         Public Shared Async Function DownloadWithData(excelTemplate As ExcelTemplates) As Threading.Tasks.Task(Of FileInfo)
             Dim _employeeRepository As New EmployeeRepository
@@ -51,7 +50,7 @@ Namespace Global.AccuPay.Helpers
                 'Import employee numbers
                 Using package As New ExcelPackage(fileInfo)
                     Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
-                    Dim allEmployees = CType(Await _employeeRepository.GetAllAsync(Of Employee), List(Of Employee))
+                    Dim allEmployees = Await _employeeRepository.GetAllWithPositionAsync()
                     Dim allEmployed = allEmployees.
                         Where(Function(emp) emp.EmploymentStatus <> "Terminated").
                         Where(Function(emp) emp.EmploymentStatus <> "Resigned").
@@ -67,7 +66,6 @@ Namespace Global.AccuPay.Helpers
                 End Using
 
                 Return fileInfo
-
             Catch ex As Exception
 
                 MessageBoxHelper.DefaultErrorMessage()
