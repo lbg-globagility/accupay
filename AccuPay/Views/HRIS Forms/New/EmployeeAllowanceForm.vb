@@ -5,9 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Repository
-Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 
 Public Class EmployeeAllowanceForm
 
@@ -29,7 +27,7 @@ Public Class EmployeeAllowanceForm
 
     Private _unchangedAllowances As New List(Of Allowance)
 
-    Private threadArrayList As New List(Of Thread)
+    Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
     Private Async Sub EmployeeAllowancesForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -46,9 +44,12 @@ Public Class EmployeeAllowanceForm
     End Sub
 
     Private Async Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
-        Dim searchValue = searchTextBox.Text.ToLower()
 
-        Await FilterEmployees(searchValue)
+        _textBoxDelayedAction.ProcessAsync(Async Function()
+                                               Await FilterEmployees(searchTextBox.Text.ToLower())
+
+                                               Return True
+                                           End Function)
 
     End Sub
 

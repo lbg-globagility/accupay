@@ -1,14 +1,11 @@
 ﻿Option Strict On
 
-Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Loans
 Imports AccuPay.Repository
-Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 
 Public Class EmployeeLoansForm
 
@@ -30,8 +27,6 @@ Public Class EmployeeLoansForm
     Private _unchangedLoanSchedules As New List(Of LoanSchedule)
 
     Private _currentLoanTransactions As New List(Of LoanTransaction)
-
-    Private threadArrayList As New List(Of Thread)
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -71,6 +66,9 @@ Public Class EmployeeLoansForm
     Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
 
         ResetLoanScheduleForm()
+        Me._currentloanSchedules.Clear()
+        Me.LoanScheduleBindingSource.Clear()
+        loanSchedulesDataGridView.DataSource = LoanScheduleBindingSource
 
         Dim currentEmployee = GetSelectedEmployee()
 
@@ -494,7 +492,11 @@ Public Class EmployeeLoansForm
     End Sub
 
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
-        Dim filteredEmployees As New List(Of Employee)
+
+        ResetLoanScheduleForm()
+        Me._currentloanSchedules.Clear()
+        Me.LoanScheduleBindingSource.Clear()
+        loanSchedulesDataGridView.DataSource = LoanScheduleBindingSource
 
         If String.IsNullOrEmpty(searchValue) Then
             employeesDataGridView.DataSource = Me._employees
@@ -502,6 +504,17 @@ Public Class EmployeeLoansForm
             employeesDataGridView.DataSource =
                 Await _employeeRepository.SearchSimpleLocal(Me._employees, searchValue)
         End If
+
+        If employeesDataGridView.Rows.Count = 0 Then
+
+            Me._currentloanSchedules.Clear()
+            Me.LoanScheduleBindingSource.Clear()
+            loanSchedulesDataGridView.DataSource = LoanScheduleBindingSource
+
+            loanSchedulesDataGridView.Rows.Clear()
+
+        End If
+
     End Function
 
     Private Async Function LoadLoanSchedules(currentEmployee As Employee) As Task
@@ -518,16 +531,16 @@ Public Class EmployeeLoansForm
 
         Me._currentloanSchedules = loanSchedules.Where(statusFilter).ToList
 
-        chkInProgressFilter.Text = $"In Progress ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_IN_PROGRESS)})"
-        chkOnHoldFilter.Text = $"On Hold ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_ON_HOLD)})"
-        chkCancelledFilter.Text = $"Cancelled ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_CANCELLED)})"
-        chkCompleteFilter.Text = $"Complete ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_COMPLETE)})"
-
         Me._unchangedLoanSchedules = Me._currentloanSchedules.CloneListJson()
 
         LoanScheduleBindingSource.DataSource = Me._currentloanSchedules
 
         loanSchedulesDataGridView.DataSource = LoanScheduleBindingSource
+
+        chkInProgressFilter.Text = $"{LoanScheduleRepository.STATUS_IN_PROGRESS} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_IN_PROGRESS)})"
+        chkOnHoldFilter.Text = $"{LoanScheduleRepository.STATUS_ON_HOLD} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_ON_HOLD)})"
+        chkCancelledFilter.Text = $"{LoanScheduleRepository.STATUS_CANCELLED} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_CANCELLED)})"
+        chkCompleteFilter.Text = $"{LoanScheduleRepository.STATUS_COMPLETE} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_COMPLETE)})"
 
     End Function
 
@@ -715,6 +728,11 @@ Public Class EmployeeLoansForm
 
         cmbDeductionSchedule.SelectedIndex = -1
         cmbDeductionSchedule.DataBindings.Clear()
+
+        chkInProgressFilter.Text = LoanScheduleRepository.STATUS_IN_PROGRESS
+        chkOnHoldFilter.Text = LoanScheduleRepository.STATUS_ON_HOLD
+        chkCancelledFilter.Text = LoanScheduleRepository.STATUS_CANCELLED
+        chkCompleteFilter.Text = LoanScheduleRepository.STATUS_COMPLETE
 
         tbpHistory.Text = LOAN_HISTORY_TAB_TEXT
 
