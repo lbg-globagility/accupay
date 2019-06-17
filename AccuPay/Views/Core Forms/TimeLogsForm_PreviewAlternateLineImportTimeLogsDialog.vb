@@ -36,7 +36,6 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         Me._errors = Me._originalErrors
 
-
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -85,18 +84,16 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         If errorCount > 0 Then
 
             If errorCount = 1 Then
-                lblStatus.Text = $"There is 1 error."
+                lblStatus.Text = "There is 1 error."
             Else
                 lblStatus.Text = $"There are {errorCount} errors."
 
             End If
 
-            lblStatus.Text += "Failed logs will not be saved."
+            lblStatus.Text += " Failed logs will not be saved."
             lblStatus.BackColor = Color.Red
-
-
         Else
-            lblStatus.Text = $"There is no error."
+            lblStatus.Text = "No errors found."
             lblStatus.BackColor = Color.Green
         End If
 
@@ -136,7 +133,6 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Dim currentLog As ImportTimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
 
         If currentLog Is Nothing Then Return
-
 
         Dim currentColumn As DataGridViewColumn = TimeAttendanceLogDataGrid.Columns(e.ColumnIndex)
 
@@ -260,4 +256,5 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         TimeAttendanceLogErrorsDataGrid.DataSource = Me._errors
 
     End Sub
+
 End Class

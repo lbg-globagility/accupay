@@ -156,7 +156,7 @@ Public Class ImportLoansForm
         If errorCount > 0 Then
 
             If errorCount = 1 Then
-                lblStatus.Text = $"There is 1 error."
+                lblStatus.Text = "There is 1 error."
             Else
                 lblStatus.Text = $"There are {errorCount} errors."
 
@@ -165,7 +165,7 @@ Public Class ImportLoansForm
             lblStatus.Text += " Failed records will not be saved."
             lblStatus.BackColor = Color.Red
         Else
-            lblStatus.Text = $"There is no error."
+            lblStatus.Text = "No errors found."
             lblStatus.BackColor = Color.Green
         End If
     End Sub
