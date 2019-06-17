@@ -1,10 +1,10 @@
-﻿Imports AccuPay.Entity
+﻿Option Strict On
+
+Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
-Imports Globagility.AccuPay.Loans
-Imports Microsoft.EntityFrameworkCore
 
 Public Class ImportOvertimeForm
 
@@ -47,11 +47,7 @@ Public Class ImportOvertimeForm
 
         Dim _okEmployees As New List(Of String)
 
-        Dim lineNumber = 0
-
         For Each record In records
-            lineNumber += 1
-            record.LineNumber = lineNumber
             Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
 
             If employee Is Nothing Then
@@ -65,11 +61,12 @@ Public Class ImportOvertimeForm
             'For displaying on datagrid view; placed here in case record is rejected soon
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeID = employee.EmployeeNo
+            record.Type = Overtime.DefaultType
 
-            If record.Type Is Nothing Then
-                record.Type = "Overtime"
-                rejectedRecords.Add(record)
+            If CheckIfRecordIsValid(record, rejectedRecords) = False Then
+
                 Continue For
+
             End If
 
             'For database
@@ -79,8 +76,8 @@ Public Class ImportOvertimeForm
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
                 .Type = record.Type,
-                .OTStartDate = record.EffectiveStartDate,
-                .OTEndDate = record.EffectiveEndDate,
+                .OTStartDate = record.EffectiveStartDate.Value,
+                .OTEndDate = record.EffectiveEndDate.Value,
                 .OTStartTime = record.EffectiveStartTime,
                 .OTEndTime = record.EffectiveEndTime,
                 .Status = Overtime.StatusApproved
@@ -101,6 +98,39 @@ Public Class ImportOvertimeForm
         RejectedRecordsGrid.DataSource = rejectedRecords
 
     End Sub
+
+    Private Function CheckIfRecordIsValid(record As OvertimeRowRecord, rejectedRecords As List(Of OvertimeRowRecord)) As Boolean
+
+        If record.EffectiveStartDate Is Nothing Then
+
+            record.ErrorMessage = "Effective Start Date cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.EffectiveStartTime Is Nothing Then
+
+            record.ErrorMessage = "Effective Start Time cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.EffectiveEndDate Is Nothing Then
+
+            record.ErrorMessage = "Effective End Date cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.EffectiveEndTime Is Nothing Then
+
+            record.ErrorMessage = "Effective End Time cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        Return True
+    End Function
 
     Private Sub UpdateStatusLabel(errorCount As Integer)
         If errorCount > 0 Then

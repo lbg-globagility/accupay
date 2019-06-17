@@ -1,5 +1,4 @@
-﻿
-Option Strict On
+﻿Option Strict On
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
@@ -10,6 +9,8 @@ Public Class Overtime
     Public Const StatusApproved = "Approved"
 
     Public Const StatusPending = "Pending"
+
+    Public Const DefaultType = "Overtime"
 
     <Key>
     <DatabaseGenerated(DatabaseGeneratedOption.Identity)>

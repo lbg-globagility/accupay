@@ -11,7 +11,7 @@ Imports OfficeOpenXml
 
 Namespace Global.Globagility.AccuPay
 
-    Public Class ExcelParser(Of T As {Class, New})
+    Public Class ExcelParser(Of T As {IExcelRowRecord, New})
 
         Public Shared Function Parse(Optional workSheetName As String = Nothing) As ExcelParseOutput(Of T)
 
@@ -50,7 +50,7 @@ Namespace Global.Globagility.AccuPay
 
             Dim stream = GetFileContents(filePath)
 
-            Dim records As List(Of T) = Nothing
+            Dim records As New List(Of T)
 
             Using excel = New ExcelPackage(stream)
                 Dim worksheet As ExcelWorksheet
@@ -78,9 +78,17 @@ Namespace Global.Globagility.AccuPay
 
                 Dim rows = GetRows(worksheet, columns)
 
-                records = rows.
-                    Select(Function(row) ParseRow(row, columns, tprops)).
-                    ToList()
+                Dim rowIndex = 1 'starts at 1 because of the headers
+                For Each row In rows
+
+                    rowIndex += 1
+
+                    Dim newRow = ParseRow(row, columns, tprops)
+                    If newRow Is Nothing Then Continue For
+
+                    newRow.LineNumber = rowIndex
+                    records.Add(newRow)
+                Next
             End Using
 
             Return records
@@ -89,12 +97,18 @@ Namespace Global.Globagility.AccuPay
         Private Function ParseRow(row As List(Of Object), colNames As IList(Of Column), tprops As List(Of PropertyInfo)) As T
             Dim newRecord = New T()
 
+            Dim rowIsBlank As Boolean = True
+
             For Each column In colNames
                 If column.Index >= row.Count Then
                     Continue For
                 End If
 
                 Dim originalValue = row(column.Index)
+
+                If String.IsNullOrWhiteSpace(ObjectUtils.ToStringOrNull(originalValue)) = False Then
+                    rowIsBlank = False
+                End If
 
                 Dim prop As PropertyInfo
 
@@ -127,7 +141,8 @@ Namespace Global.Globagility.AccuPay
                 End If
             Next
 
-            Return newRecord
+            Return If(rowIsBlank, Nothing, newRecord)
+
         End Function
 
         Private Function GetRows(worksheet As ExcelWorksheet, columns As ICollection(Of Column)) As List(Of List(Of Object))
@@ -160,23 +175,34 @@ Namespace Global.Globagility.AccuPay
         End Function
 
         Private Sub ParseValue(newRecord As T, prop As PropertyInfo, originalValue As Object)
+
             If TypeOf originalValue Is Double Then
                 Dim value = DirectCast(originalValue, Double)
 
                 If prop.PropertyType Is GetType(Double) Then
                     prop.SetValue(newRecord, value)
+                ElseIf prop.PropertyType Is GetType(Double?) Then
+                    prop.SetValue(newRecord, ObjectUtils.ToNullableDouble(value))
+
                 ElseIf prop.PropertyType Is GetType(Decimal) Then
                     prop.SetValue(newRecord, CDec(value))
+                ElseIf prop.PropertyType Is GetType(Decimal?) Then
+                    prop.SetValue(newRecord, ObjectUtils.ToNullableDecimal(value))
+
                 ElseIf prop.PropertyType Is GetType(Integer) Then
                     prop.SetValue(newRecord, CInt(value))
+                ElseIf prop.PropertyType Is GetType(Integer?) Then
+                    prop.SetValue(newRecord, ObjectUtils.ToNullableInteger(value))
+
                 ElseIf prop.PropertyType Is GetType(Date) Or prop.PropertyType Is GetType(Date?) Then
                     prop.SetValue(newRecord, Date.FromOADate(value))
+
                 ElseIf prop.PropertyType Is GetType(String) Then
                     prop.SetValue(newRecord, CStr(value))
+
                 ElseIf prop.PropertyType Is GetType(TimeSpan) Or prop.PropertyType Is GetType(TimeSpan?) Then
                     prop.SetValue(newRecord, Date.FromOADate(value).TimeOfDay)
                 End If
-
             Else
                 If prop.PropertyType Is GetType(Date) Then
                     Dim dateInput = ObjectUtils.ToDateTime(originalValue)
@@ -192,7 +218,6 @@ Namespace Global.Globagility.AccuPay
 
                 ElseIf prop.PropertyType Is GetType(TimeSpan?) Then
                     prop.SetValue(newRecord, ObjectUtils.ToNullableTimeSpan(originalValue))
-
                 Else
 
                     prop.SetValue(newRecord, originalValue)
@@ -221,7 +246,7 @@ Namespace Global.Globagility.AccuPay
 
         End Class
 
-        Public Class ExcelParseOutput(Of E As {Class, New})
+        Public Class ExcelParseOutput(Of E As {IExcelRowRecord, New})
 
             Property IsSuccess As Boolean
             Property Records As IList(Of E)
@@ -244,8 +269,6 @@ Namespace Global.Globagility.AccuPay
                 Me.Records = records
 
             End Sub
-
-
 
         End Class
 

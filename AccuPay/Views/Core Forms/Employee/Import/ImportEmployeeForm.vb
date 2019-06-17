@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Attributes
+﻿Imports AccuPay
+Imports AccuPay.Attributes
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
@@ -20,36 +21,22 @@ Public Class ImportEmployeeForm
 
 #End Region
 
-#Region "Constructors"
-
-    'Public Sub New(filePath As String)
-    '    InitializeComponent()
-
-    '    ExcelParserPreparation(filePath)
-    'End Sub
-
-    'Public Sub New(filePath As String, worksheetName As String)
-    '    InitializeComponent()
-
-    '    ExcelParserPreparation(filePath, worksheetName)
-    'End Sub
-
-#End Region
-
     Private Class EmployeeModel
+        Implements IExcelRowRecord
+
         Private FIXED_AND_MONTHLY_TYPES As String() = {"monthly", "fixed"}
         Private _monthlyHasNoWorkDaysPerYear As Boolean
 
         Private _noEmployeeNo,
-            _noLastName,
-            _noFirstName,
-            _noBirthDate,
-            _noGender,
-            _noMaritalStatus,
-            _noJob,
-            _noEmploymentDate,
-            _noPayFrequency,
-            _noEmploymentStatus As Boolean
+        _noLastName,
+        _noFirstName,
+        _noBirthDate,
+        _noGender,
+        _noMaritalStatus,
+        _noJob,
+        _noEmploymentDate,
+        _noPayFrequency,
+        _noEmploymentStatus As Boolean
 
         <ColumnName("Employee ID")>
         Public Property EmployeeNo As String
@@ -123,6 +110,9 @@ Public Class ImportEmployeeForm
         <ColumnName("Works days per year")>
         Public Property WorkDaysPerYear As Decimal
 
+        <Ignore>
+        Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
+
         Public ReadOnly Property FailureDescription As String
             Get
                 Dim resultStrings As New List(Of String)
@@ -159,16 +149,16 @@ Public Class ImportEmployeeForm
                 _noEmploymentStatus = String.IsNullOrWhiteSpace(EmploymentStatus)
 
                 Return _monthlyHasNoWorkDaysPerYear _
-                    Or _noEmployeeNo _
-                    Or _noLastName _
-                    Or _noFirstName _
-                    Or _noBirthDate _
-                    Or _noGender _
-                    Or _noMaritalStatus _
-                    Or _noJob _
-                    Or _noEmploymentDate _
-                    Or _noPayFrequency _
-                    Or _noEmploymentStatus
+                Or _noEmployeeNo _
+                Or _noLastName _
+                Or _noFirstName _
+                Or _noBirthDate _
+                Or _noGender _
+                Or _noMaritalStatus _
+                Or _noJob _
+                Or _noEmploymentDate _
+                Or _noPayFrequency _
+                Or _noEmploymentStatus
             End Get
         End Property
 

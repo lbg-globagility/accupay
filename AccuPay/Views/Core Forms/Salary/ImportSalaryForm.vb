@@ -63,12 +63,8 @@ Public Class ImportSalaryForm
         Dim salaryViewModels = New List(Of SalaryViewModel)
         _salaries = New List(Of Salary)
 
-        Dim lineNumber = 0
-
         Using context = New PayrollContext()
             For Each record In records
-                lineNumber += 1
-                record.LineNumber = lineNumber
 
                 Dim employee = context.Employees.
                     FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo AndAlso t.OrganizationID = z_OrganizationID))
@@ -90,14 +86,20 @@ Public Class ImportSalaryForm
                     doPaySSSContribution = lastSalary.DoPaySSSContribution
                 End If
 
+                If CheckIfRecordIsValid(record, rejectedRecords) = False Then
+
+                    Continue For
+
+                End If
+
                 Dim salary = New Salary With {
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,
                     .EmployeeID = employee.RowID,
                     .PositionID = employee.PositionID,
-                    .EffectiveFrom = record.EffectiveFrom,
+                    .EffectiveFrom = record.EffectiveFrom.Value,
                     .EffectiveTo = record.EffectiveTo,
-                    .BasicSalary = record.BasicSalary,
+                    .BasicSalary = record.BasicSalary.Value,
                     .AllowanceSalary = record.AllowanceSalary,
                     .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True)
                 }
@@ -117,6 +119,26 @@ Public Class ImportSalaryForm
         SalaryDataGrid.DataSource = salaryViewModels
         RejectedRecordsGrid.DataSource = rejectedRecords
     End Sub
+
+    Private Function CheckIfRecordIsValid(record As SalaryRowRecord, rejectedRecords As List(Of SalaryRowRecord)) As Boolean
+
+        If record.EffectiveFrom Is Nothing Then
+
+            record.ErrorMessage = "Effective from cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.BasicSalary Is Nothing Then
+
+            record.ErrorMessage = "Basic salary cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        Return True
+
+    End Function
 
     Private Sub UpdateStatusLabel(errorCount As Integer)
         If errorCount > 0 Then

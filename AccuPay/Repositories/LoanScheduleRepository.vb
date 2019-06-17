@@ -207,6 +207,7 @@ Namespace Global.AccuPay.Repository
 
             End If
 
+            loanSchedule.Created = Date.Now
             loanSchedule.CreatedBy = z_User
 
             context.LoanSchedules.Add(loanSchedule)

@@ -118,11 +118,7 @@ Public Class ImportAllowanceForm
 
         Dim _okEmployees As New List(Of String)
 
-        Dim lineNumber = 0
-
         For Each record In records
-            lineNumber += 1
-            record.LineNumber = lineNumber
             Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
 
             If employee Is Nothing Then

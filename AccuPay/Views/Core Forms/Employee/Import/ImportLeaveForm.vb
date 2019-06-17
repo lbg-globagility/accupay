@@ -21,24 +21,6 @@ Public Class ImportLeaveForm
     Private _failModels As List(Of LeaveModel)
     Private _leaveRepository As New LeaveRepository()
 
-#Region "Contructors"
-
-    'Public Sub New(filePath As String)
-    '    InitializeComponent()
-
-    '    ExcelParserPreparation(filePath)
-
-    'End Sub
-
-    'Public Sub New(filePath As String, worksheetName As String)
-    '    InitializeComponent()
-
-    '    ExcelParserPreparation(filePath, worksheetName)
-
-    'End Sub
-
-#End Region
-
 #Region "Properties"
 
     Private Property FileDirectory As String
@@ -82,6 +64,7 @@ Public Class ImportLeaveForm
                 ToListAsync()
 
             For Each model In models
+
                 Dim employee = employees.Where(Function(e) e.EmployeeNo = model.EmployeeNo).FirstOrDefault
 
                 dataSource.Add(CreateLeaveModel(model, employee))
@@ -129,7 +112,8 @@ Public Class ImportLeaveForm
             .LeaveType = model.LeaveType,
             .Reason = model.Reason,
             .StartDate = model.StartDate,
-            .StartTime = model.StartTime}
+            .StartTime = model.StartTime,
+            .LineNumber = model.LineNumber}
     End Function
 
     Public Async Function SaveAsync() As Task(Of Boolean)
@@ -244,6 +228,7 @@ Public Class ImportLeaveForm
 #End Region
 
     Private Class LeaveModel
+        Implements IExcelRowRecord
         Private Const PENDING_STATUS As String = "Pending"
         Private Const ADDITIONAL_VACATION_LEAVETYPE As String = "Additional VL"
         Private Const REASON_LENGTH As Integer = 500
@@ -421,6 +406,9 @@ Public Class ImportLeaveForm
                 Return String.Join("; ", stringsToJoin)
             End Get
         End Property
+
+        <Ignore>
+        Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
 
         Private Function ShortTimeSpan(ts As TimeSpan?) As String
             If ts.HasValue Then

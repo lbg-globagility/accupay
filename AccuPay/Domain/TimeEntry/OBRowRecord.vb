@@ -1,6 +1,8 @@
 ﻿Imports AccuPay.Attributes
 
 Public Class OBRowRecord
+    Implements IExcelRowRecord
+
     <Ignore>
     Public Property EmployeeFullName As String
 
@@ -26,5 +28,6 @@ Public Class OBRowRecord
     Public Property ErrorMessage As String
 
     <Ignore>
-    Public Property LineNumber As Integer
+    Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
+
 End Class

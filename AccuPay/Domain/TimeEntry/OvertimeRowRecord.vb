@@ -1,6 +1,8 @@
 ﻿Imports AccuPay.Attributes
 
 Public Class OvertimeRowRecord
+    Implements IExcelRowRecord
+
     <Ignore>
     Public Property EmployeeFullName As String
 
@@ -11,13 +13,13 @@ Public Class OvertimeRowRecord
     Public Property Type As String
 
     <ColumnName("Effective start date")>
-    Public Property EffectiveStartDate As Date
+    Public Property EffectiveStartDate As Date?
 
     <ColumnName("Effective Start Time")>
     Public Property EffectiveStartTime As TimeSpan?
 
     <ColumnName("Effective end date")>
-    Public Property EffectiveEndDate As Date
+    Public Property EffectiveEndDate As Date?
 
     <ColumnName("Effective End Time")>
     Public Property EffectiveEndTime As TimeSpan?
@@ -26,5 +28,6 @@ Public Class OvertimeRowRecord
     Public Property ErrorMessage As String
 
     <Ignore>
-    Public Property LineNumber As Integer
+    Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
+
 End Class

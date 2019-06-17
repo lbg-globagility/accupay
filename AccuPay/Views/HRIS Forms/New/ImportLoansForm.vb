@@ -63,13 +63,7 @@ Public Class ImportLoansForm
 
         Dim rejectedRecords As New List(Of LoanRowRecord)
 
-        Dim lineNumber = 0
-
         For Each record In records
-
-            lineNumber += 1
-
-            record.LineNumber = lineNumber
 
             Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber)
 
@@ -98,6 +92,12 @@ Public Class ImportLoansForm
                 record.ErrorMessage = "Cannot get or create loan type. Please contact " & My.Resources.AppCreator
 
                 rejectedRecords.Add(record)
+
+                Continue For
+
+            End If
+
+            If CheckIfRecordIsValid(record, rejectedRecords) = False Then
 
                 Continue For
 
@@ -151,6 +151,39 @@ Public Class ImportLoansForm
         RejectedRecordsGrid.DataSource = rejectedRecords
 
     End Sub
+
+    Private Function CheckIfRecordIsValid(record As LoanRowRecord, rejectedRecords As List(Of LoanRowRecord)) As Boolean
+
+        If record.DedEffectiveDateFrom Is Nothing Then
+
+            record.ErrorMessage = "Start date cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.TotalLoanAmount Is Nothing Then
+
+            record.ErrorMessage = "Total loan amount cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.TotalBalanceLeft Is Nothing Then
+
+            record.ErrorMessage = "Loan balance cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.DeductionAmount Is Nothing Then
+
+            record.ErrorMessage = "Deduction amount cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        Return True
+    End Function
 
     Private Sub UpdateStatusLabel(errorCount As Integer)
         If errorCount > 0 Then

@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay
 Imports AccuPay.Attributes
 
 Namespace Global.Globagility.AccuPay.ShiftSchedules
@@ -31,9 +32,12 @@ Namespace Global.Globagility.AccuPay.ShiftSchedules
         <ColumnName("Offset")>
         Public Property IsRestDay As String Implements IShiftScheduleRowRecord.IsRestDay
 
+        Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
     End Class
 
     Public Interface IShiftScheduleRowRecord
+        Inherits IExcelRowRecord
+
         Property EmployeeNo As String
         Property StartDate As Date
         Property EndDate As Date?

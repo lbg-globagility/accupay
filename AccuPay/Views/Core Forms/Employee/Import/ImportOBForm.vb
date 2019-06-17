@@ -56,11 +56,7 @@ Public Class ImportOBForm
 
         Dim _okEmployees As New List(Of String)
 
-        Dim lineNumber = 0
-
         For Each record In records
-            lineNumber += 1
-            record.LineNumber = lineNumber
             Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
 
             If employee Is Nothing Then
@@ -72,6 +68,15 @@ Public Class ImportOBForm
             'For displaying on datagrid view; placed here in case record is rejected soon
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeID = employee.EmployeeNo
+
+            If String.IsNullOrWhiteSpace(record.Type) Then
+
+                record.ErrorMessage = "OB Type cannot be blank."
+
+                rejectedRecords.Add(record)
+
+                Continue For
+            End If
 
             Dim officialbusType As New ListOfValue
 

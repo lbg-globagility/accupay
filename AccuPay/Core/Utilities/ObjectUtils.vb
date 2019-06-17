@@ -27,7 +27,6 @@ Namespace Global.AccuPay.Utils
 
             Dim defaultOutput As Integer? = Nothing
 
-
             If IsNothing(num) Then Return defaultOutput
 
             Dim output As Integer? = defaultOutput
@@ -71,6 +70,23 @@ Namespace Global.AccuPay.Utils
 
             Try
                 output = Convert.ToDecimal(num)
+            Catch ex As Exception
+                output = defaultOutput
+            End Try
+
+            Return output
+        End Function
+
+        Public Shared Function ToNullableDouble(num As Object) As Double?
+
+            Dim defaultOutput As Double? = Nothing
+
+            If IsNothing(num) Then Return defaultOutput
+
+            Dim output As Double? = defaultOutput
+
+            Try
+                output = Convert.ToDouble(num)
             Catch ex As Exception
                 output = defaultOutput
             End Try
@@ -173,4 +189,5 @@ Namespace Global.AccuPay.Utils
         End Function
 
     End Class
+
 End Namespace

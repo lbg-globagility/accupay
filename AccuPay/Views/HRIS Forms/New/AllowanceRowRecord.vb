@@ -1,10 +1,12 @@
 ﻿Option Strict On
 
+Imports AccuPay
 Imports AccuPay.Attributes
 
 Namespace Global.Globagility.AccuPay.Loans
 
     Public Class AllowanceRowRecord
+        Implements IExcelRowRecord
 
         <ColumnName("EmployeeID")>
         Public Property EmployeeID As String
@@ -30,7 +32,7 @@ Namespace Global.Globagility.AccuPay.Loans
         Public Property ErrorMessage As String
 
         <Ignore>
-        Public Property LineNumber As Integer
+        Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
 
     End Class
 
