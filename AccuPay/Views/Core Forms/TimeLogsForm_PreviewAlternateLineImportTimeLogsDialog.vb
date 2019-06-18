@@ -1,5 +1,6 @@
-﻿Imports System.Threading.Tasks
-Imports AccuPay
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
 

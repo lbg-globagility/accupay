@@ -38,6 +38,8 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.btnClose = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
+        Me.txtSearch = New System.Windows.Forms.TextBox()
+        Me.lblSearch = New System.Windows.Forms.Label()
         Me.TimeAttendanceLogDataGrid = New System.Windows.Forms.DataGridView()
         Me.Column6 = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
         Me.TimeAttendanceLogDataGridLogDate = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
@@ -48,8 +50,9 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.ErrorsTabControl = New System.Windows.Forms.TabPage()
         Me.TimeAttendanceLogErrorsDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.lblSearch = New System.Windows.Forms.Label()
-        Me.txtSearch = New System.Windows.Forms.TextBox()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.txtErrorSearch = New System.Windows.Forms.TextBox()
+        Me.lblErrorSearch = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -67,9 +70,6 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.txtErrorSearch = New System.Windows.Forms.TextBox()
-        Me.lblErrorSearch = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.ParsedTabControl.SuspendLayout()
@@ -133,6 +133,22 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.ParsedTabControl.TabIndex = 0
         Me.ParsedTabControl.Text = "Ok"
         Me.ParsedTabControl.UseVisualStyleBackColor = True
+        '
+        'txtSearch
+        '
+        Me.txtSearch.Location = New System.Drawing.Point(52, 32)
+        Me.txtSearch.Name = "txtSearch"
+        Me.txtSearch.Size = New System.Drawing.Size(394, 22)
+        Me.txtSearch.TabIndex = 16
+        '
+        'lblSearch
+        '
+        Me.lblSearch.AutoSize = True
+        Me.lblSearch.Location = New System.Drawing.Point(8, 36)
+        Me.lblSearch.Name = "lblSearch"
+        Me.lblSearch.Size = New System.Drawing.Size(41, 13)
+        Me.lblSearch.TabIndex = 15
+        Me.lblSearch.Text = "Search"
         '
         'TimeAttendanceLogDataGrid
         '
@@ -303,21 +319,31 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.TimeAttendanceLogErrorsDataGrid.Size = New System.Drawing.Size(843, 305)
         Me.TimeAttendanceLogErrorsDataGrid.TabIndex = 13
         '
-        'lblSearch
+        'Panel2
         '
-        Me.lblSearch.AutoSize = True
-        Me.lblSearch.Location = New System.Drawing.Point(8, 36)
-        Me.lblSearch.Name = "lblSearch"
-        Me.lblSearch.Size = New System.Drawing.Size(41, 13)
-        Me.lblSearch.TabIndex = 15
-        Me.lblSearch.Text = "Search"
+        Me.Panel2.Controls.Add(Me.txtErrorSearch)
+        Me.Panel2.Controls.Add(Me.lblErrorSearch)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(3, 3)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(843, 41)
+        Me.Panel2.TabIndex = 14
         '
-        'txtSearch
+        'txtErrorSearch
         '
-        Me.txtSearch.Location = New System.Drawing.Point(52, 32)
-        Me.txtSearch.Name = "txtSearch"
-        Me.txtSearch.Size = New System.Drawing.Size(394, 22)
-        Me.txtSearch.TabIndex = 16
+        Me.txtErrorSearch.Location = New System.Drawing.Point(49, 7)
+        Me.txtErrorSearch.Name = "txtErrorSearch"
+        Me.txtErrorSearch.Size = New System.Drawing.Size(394, 22)
+        Me.txtErrorSearch.TabIndex = 18
+        '
+        'lblErrorSearch
+        '
+        Me.lblErrorSearch.AutoSize = True
+        Me.lblErrorSearch.Location = New System.Drawing.Point(5, 11)
+        Me.lblErrorSearch.Name = "lblErrorSearch"
+        Me.lblErrorSearch.Size = New System.Drawing.Size(41, 13)
+        Me.lblErrorSearch.TabIndex = 17
+        Me.lblErrorSearch.Text = "Search"
         '
         'DataGridViewTextBoxColumn1
         '
@@ -486,32 +512,6 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
         Me.DataGridViewTextBoxColumn12.Width = 226
         '
-        'Panel2
-        '
-        Me.Panel2.Controls.Add(Me.txtErrorSearch)
-        Me.Panel2.Controls.Add(Me.lblErrorSearch)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel2.Location = New System.Drawing.Point(3, 3)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(843, 41)
-        Me.Panel2.TabIndex = 14
-        '
-        'txtErrorSearch
-        '
-        Me.txtErrorSearch.Location = New System.Drawing.Point(49, 7)
-        Me.txtErrorSearch.Name = "txtErrorSearch"
-        Me.txtErrorSearch.Size = New System.Drawing.Size(394, 22)
-        Me.txtErrorSearch.TabIndex = 18
-        '
-        'lblErrorSearch
-        '
-        Me.lblErrorSearch.AutoSize = True
-        Me.lblErrorSearch.Location = New System.Drawing.Point(5, 11)
-        Me.lblErrorSearch.Name = "lblErrorSearch"
-        Me.lblErrorSearch.Size = New System.Drawing.Size(41, 13)
-        Me.lblErrorSearch.TabIndex = 17
-        Me.lblErrorSearch.Text = "Search"
-        '
         'TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -523,7 +523,6 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.KeyPreview = True
-        Me.MinimizeBox = False
         Me.Name = "TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Import Preview"
