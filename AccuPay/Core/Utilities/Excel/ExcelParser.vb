@@ -71,6 +71,12 @@ Namespace Global.Globagility.AccuPay
                     GroupBy(Function(g) g.Start.Row).
                     ToList()
 
+                If groups.Count < 1 Then
+
+                    Throw New WorkSheetIsEmptyException()
+
+                End If
+
                 Dim columns = groups.
                     First().
                     Select(Function(col, index) New Column(col, index)).

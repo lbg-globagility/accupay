@@ -1,5 +1,4 @@
-﻿Imports AccuPay
-Imports AccuPay.Attributes
+﻿Imports AccuPay.Attributes
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
@@ -337,16 +336,14 @@ Public Class ImportEmployeeForm
 
     Private Sub FilePathChanged()
 
-        Dim models As IList(Of EmployeeModel)
-        Try
+        Dim models As New List(Of EmployeeModel)
 
-            models = _ep.Read(_filePath)
-        Catch ex As WorkSheetNotFoundException
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+            Sub()
+                models = _ep.Read(_filePath).ToList
+            End Sub)
 
-            MessageBoxHelper.ErrorMessage(ex.Message)
-
-            Return
-        End Try
+        If parsedSuccessfully = False Then Return
 
         If models Is Nothing Then
 

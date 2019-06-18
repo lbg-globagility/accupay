@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
@@ -362,7 +361,7 @@ Public Class EmployeeAllowanceForm
 
     Private Sub LoadFrequencyList()
 
-        cboallowfreq.DataSource = _allowanceRepository.GetStatusList()
+        cboallowfreq.DataSource = _allowanceRepository.GetFrequencyList()
 
     End Sub
 
@@ -380,7 +379,18 @@ Public Class EmployeeAllowanceForm
     Private Async Function LoadAllowances(currentEmployee As Employee) As Task
         If currentEmployee Is Nothing Then Return
 
-        Me._currentAllowances = (Await _allowanceRepository.GetByEmployeeIncludesProductAsync(currentEmployee.RowID)).ToList
+        Dim allowances = (Await _allowanceRepository.GetByEmployeeIncludesProductAsync(currentEmployee.RowID)).
+                                OrderByDescending(Function(a) a.EffectiveEndDate).
+                                ToList
+
+        'only get the items with effective end dates first
+        Me._currentAllowances = allowances.Where(Function(a) a.EffectiveEndDate IsNot Nothing).ToList
+
+        'then add the items with no effective end dates at the beginning
+        Me._currentAllowances.InsertRange(0, allowances.
+                                Where(Function(a) a.EffectiveEndDate Is Nothing).
+                                OrderByDescending(Function(a) a.EffectiveStartDate).
+                                ToList)
 
         Me._unchangedAllowances = Me._currentAllowances.CloneListJson()
 

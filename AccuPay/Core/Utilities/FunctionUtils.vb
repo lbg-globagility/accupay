@@ -33,6 +33,27 @@ Namespace Global.AccuPay.Utils
 
         End Function
 
+        Public Shared Function TryCatchExcelParserReadFunctionAsync(
+                                        action As Action,
+                                       Optional messageTitle As String = "WorkSheet Parsing Error") As Boolean
+
+            Try
+
+                action()
+
+                Return True
+            Catch ex As WorkSheetNotFoundException
+
+                MessageBoxHelper.ErrorMessage(ex.Message)
+            Catch ex As WorkSheetIsEmptyException
+
+                MessageBoxHelper.ErrorMessage(ex.Message)
+            End Try
+
+            Return False
+
+        End Function
+
     End Class
 
 End Namespace

@@ -38,18 +38,15 @@ Public Class ImportSalaryForm
 
         Dim fileName = browseFile.FileName
 
-        Dim records As IList(Of SalaryRowRecord)
+        Dim records As New List(Of SalaryRowRecord)
+        Dim parser = New ExcelParser(Of SalaryRowRecord)("Employee Salary")
 
-        Try
-            Dim parser = New ExcelParser(Of SalaryRowRecord)("Employee Salary")
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+                                Sub()
+                                    records = parser.Read(fileName).ToList
+                                End Sub)
 
-            records = parser.Read(fileName)
-        Catch ex As WorkSheetNotFoundException
-
-            MessageBoxHelper.ErrorMessage(ex.Message)
-
-            Return
-        End Try
+        If parsedSuccessfully = False Then Return
 
         If records Is Nothing Then
 

@@ -3,7 +3,6 @@ Imports AccuPay.Helpers
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
-Imports Globagility.AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
 
 Public Class ImportOBForm
@@ -46,8 +45,15 @@ Public Class ImportOBForm
 
         Dim fileName = browseFile.FileName
 
+        Dim records As New List(Of OBRowRecord)
         Dim parser = New ExcelParser(Of OBRowRecord)()
-        Dim records = parser.Read(fileName)
+
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+            Sub()
+                records = parser.Read(fileName).ToList
+            End Sub)
+
+        If parsedSuccessfully = False Then Return
 
         _officialbus = New List(Of OfficialBusiness)
 

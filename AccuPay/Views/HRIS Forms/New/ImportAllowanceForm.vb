@@ -1,12 +1,9 @@
 ﻿Imports AccuPay.Entity
-Imports AccuPay.Extensions
 Imports AccuPay.Helpers
-Imports AccuPay.Loans
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
-Imports Microsoft.EntityFrameworkCore
 Imports OfficeOpenXml
 
 Public Class ImportAllowanceForm
@@ -17,13 +14,11 @@ Public Class ImportAllowanceForm
 
     Private _productRepository As New ProductRepository
 
-    Private _allowanceRepository As New LoanScheduleRepository
-
-    Private _listOfValueRepository As New ListOfValueRepository
+    Private _allowanceRepository As New AllowanceRepository
 
     Private _allowanceTypeList As List(Of Product)
 
-    Private _allowanceFrequencyList As New List(Of String) From {"One time", "Daily", "Semi-monthly", "Monthly"}
+    Private _allowanceFrequencyList As New List(Of String)
 
     Public IsSaved As Boolean
 
@@ -31,62 +26,9 @@ Public Class ImportAllowanceForm
 
         Me.IsSaved = False
 
-        Dim categoryName = ProductConstant.ALLOWANCE_TYPE_CATEGORY
-        Using context = New PayrollContext()
+        Me._allowanceFrequencyList = _allowanceRepository.GetFrequencyList()
 
-            Dim categoryProduct = Await context.Categories.
-                                    Where(Function(c) Nullable.Equals(c.OrganizationID, z_OrganizationID)).
-                                    Where(Function(c) c.CategoryName = categoryName).
-                                    FirstOrDefaultAsync
-
-            If categoryProduct Is Nothing Then
-                'get the existing category with same name to use as CategoryID
-                Dim existingCategoryProduct = Await context.Categories.
-                                    Where(Function(c) c.CategoryName = categoryName).
-                                    FirstOrDefaultAsync
-
-                Dim existingCategoryProductId = existingCategoryProduct?.RowID
-
-                categoryProduct = New Category
-                categoryProduct.CategoryID = existingCategoryProductId
-                categoryProduct.CategoryName = categoryName
-                categoryProduct.OrganizationID = z_OrganizationID
-                categoryProduct.CatalogID = Nothing
-                categoryProduct.LastUpd = Date.Now
-
-                context.Categories.Add(categoryProduct)
-                context.SaveChanges()
-
-                'if there is no existing category with same name,
-                'use the newly added category's RowID as its CategoryID
-
-                If existingCategoryProductId Is Nothing Then
-
-                    Try
-                        categoryProduct.CategoryID = categoryProduct.RowID
-                        Await context.SaveChangesAsync()
-                    Catch ex As Exception
-                        'if for some reason hindi na update, we can't let that row
-                        'to have no CategoryID so dapat i-delete rin yung added category
-                        context.Categories.Remove(categoryProduct)
-                        context.SaveChanges()
-
-                        Throw ex
-                    End Try
-
-                End If
-            End If
-
-            If categoryProduct Is Nothing Then
-                Dim ex = New Exception("ProductRepository->GetOrCreate: Category not found.")
-                Throw ex
-            End If
-
-            _allowanceTypeList = Await context.Products.
-                                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                                Where(Function(p) Nullable.Equals(p.CategoryID, categoryProduct.RowID)).
-                                ToListAsync
-        End Using
+        Me._allowanceTypeList = Await _productRepository.GetAllowanceTypes()
 
         AllowancesDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -108,8 +50,15 @@ Public Class ImportAllowanceForm
 
         Dim fileName = browseFile.FileName
 
+        Dim records As New List(Of AllowanceRowRecord)
         Dim parser = New ExcelParser(Of AllowanceRowRecord)()
-        Dim records = parser.Read(fileName)
+
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+            Sub()
+                records = parser.Read(fileName).ToList
+            End Sub)
+
+        If parsedSuccessfully = False Then Return
 
         _allowances = New List(Of Allowance)
 
@@ -180,6 +129,16 @@ Public Class ImportAllowanceForm
 
             End If
 
+            If record.Amount Is Nothing Then
+
+                record.ErrorMessage = "Allowance amount cannot be blank."
+
+                rejectedRecords.Add(record)
+
+                Continue For
+
+            End If
+
             'For database
             Dim allowance = New Allowance With {
                 .RowID = Nothing,
@@ -239,32 +198,17 @@ Public Class ImportAllowanceForm
 
         Dim messageTitle = "Import Allowances"
 
-        Try
-            Using context As New PayrollContext
-                For Each allowance In _allowances
-                    context.Allowances.Add(allowance)
-                Next
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                                        Async Function()
+                                            Await _allowanceRepository.SaveManyAsync(_allowances)
 
-                Await context.SaveChangesAsync()
-            End Using
+                                            Me.IsSaved = True
+                                            Me.Cursor = Cursors.Default
+                                            Me.Close()
 
-            Me.IsSaved = True
+                                        End Function)
 
-            Me.Close()
-        Catch ex As ArgumentException
-
-            Dim errorMessage = "One of the allowances has an error:" & Environment.NewLine & ex.Message
-
-            MessageBoxHelper.ErrorMessage(errorMessage, messageTitle)
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-        Finally
-
-            Me.Cursor = Cursors.Default
-
-        End Try
-
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click

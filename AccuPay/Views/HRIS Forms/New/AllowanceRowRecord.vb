@@ -24,7 +24,7 @@ Namespace Global.Globagility.AccuPay.Loans
         Public Property AllowanceFrequency As String
 
         <ColumnName("Allowance amount")>
-        Public Property Amount As Decimal
+        Public Property Amount As Decimal?
 
         Public Property EmployeeFullName As String
 

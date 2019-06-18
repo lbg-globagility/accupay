@@ -158,7 +158,7 @@ Public Class AddAllowanceForm
 
     Private Sub LoadFrequencyList()
 
-        cboallowfreq.DataSource = _allowanceRepository.GetStatusList()
+        cboallowfreq.DataSource = _allowanceRepository.GetFrequencyList()
 
     End Sub
 

@@ -11037,7 +11037,7 @@ Public Class EmployeeForm
             form.ShowDialog()
 
             If form.IsSaved Then
-                myBalloon("Official businesses Successfully Imported", "Import Official Businesses", pbEmpPicEmpOT, 100, -20)
+                myBalloon("Official businesses Successfully Imported", "Import Official Businesses", pbEmpPicOBF, 100, -20)
                 dgvEmp_SelectionChanged(sender, e)
             End If
         End Using

@@ -1,4 +1,6 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports Microsoft.EntityFrameworkCore
@@ -7,7 +9,7 @@ Namespace Global.AccuPay.Repository
 
     Public Class AllowanceRepository
 
-        Public Function GetStatusList() As List(Of String)
+        Public Function GetFrequencyList() As List(Of String)
             Return New List(Of String) From {
                     Allowance.FREQUENCY_ONE_TIME,
                     Allowance.FREQUENCY_DAILY,

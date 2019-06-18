@@ -1,10 +1,8 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay
 Imports AccuPay.Attributes
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
-Imports AccuPay.Tools
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports log4net
@@ -51,7 +49,14 @@ Public Class ImportLeaveForm
     'End Sub
 
     Private Async Sub FilePathChangedAsync()
-        Dim models = _ep.Read(_filePath)
+        Dim models As New List(Of LeaveModel)
+
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+            Sub()
+                models = _ep.Read(_filePath).ToList
+            End Sub)
+
+        If parsedSuccessfully = False Then Return
 
         Dim employeeNos = models.Select(Function(lm) lm.EmployeeNo).ToList()
 

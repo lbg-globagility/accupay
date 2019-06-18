@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Tools
@@ -8,7 +7,6 @@ Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.ShiftSchedules
 Imports Microsoft.EntityFrameworkCore
-Imports Microsoft.Office.Interop.Excel
 
 Public Class ImportedShiftSchedulesForm
 
@@ -495,23 +493,18 @@ Public Class ImportedShiftSchedulesForm
 
         Dim workSheetName = "ShiftSchedule"
 
-        Try
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+            Sub()
+                Dim excelParserOutput = ExcelParser(Of ShiftScheduleRowRecord).Parse(workSheetName)
 
-            Dim excelParserOutput = ExcelParser(Of ShiftScheduleRowRecord).Parse(workSheetName)
+                If excelParserOutput.IsSuccess = False Then Return
 
-            If excelParserOutput.IsSuccess = False Then Return
+                _shiftScheduleRowRecords = excelParserOutput.Records
 
-            _shiftScheduleRowRecords = excelParserOutput.Records
+                ResetDataSource()
+            End Sub)
 
-            ResetDataSource()
-        Catch ex As WorkSheetNotFoundException
-
-            MessageBoxHelper.ErrorMessage($"WorkSheet: ""{workSheetName}"" does not exists on the chosen Excel! Please use the right template.")
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage()
-
-        End Try
+        If parsedSuccessfully = False Then Return
 
     End Sub
 

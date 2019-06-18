@@ -56,8 +56,15 @@ Public Class ImportLoansForm
 
         Dim fileName = browseFile.FileName
 
+        Dim records As New List(Of LoanRowRecord)
         Dim parser = New ExcelParser(Of LoanRowRecord)()
-        Dim records = parser.Read(fileName)
+
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+            Sub()
+                records = parser.Read(fileName).ToList
+            End Sub)
+
+        If parsedSuccessfully = False Then Return
 
         _loans = New List(Of LoanSchedule)
 

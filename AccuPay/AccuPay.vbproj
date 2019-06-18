@@ -323,6 +323,7 @@
     <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
     <Compile Include="Core\Utilities\DelayedAction.vb" />
     <Compile Include="Core\Utilities\Excel\IExcelRowRecord.vb" />
+    <Compile Include="Core\Utilities\Excel\WorkSheetIsEmptyException.vb" />
     <Compile Include="Core\Utilities\Excel\WorkSheetNotFoundException.vb" />
     <Compile Include="Core\Utilities\Extensions\DateExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
