@@ -463,7 +463,7 @@ Public Class ImportLeaveForm
     End Sub
 
     Private Async Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadWithData(ExcelTemplates.Leave)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Leave)
 
         If fileInfo IsNot Nothing Then
             Using package As New ExcelPackage(fileInfo)

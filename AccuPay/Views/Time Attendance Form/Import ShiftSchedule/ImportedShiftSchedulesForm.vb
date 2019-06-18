@@ -510,7 +510,7 @@ Public Class ImportedShiftSchedulesForm
 
     Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
 
-        DownloadTemplateHelper.Download(ExcelTemplates.NewShift)
+        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.NewShift)
 
     End Sub
 

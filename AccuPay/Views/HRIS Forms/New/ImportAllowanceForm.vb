@@ -212,7 +212,7 @@ Public Class ImportAllowanceForm
     End Sub
 
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadWithData(ExcelTemplates.Allowance)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Allowance)
 
         If fileInfo IsNot Nothing Then
             Using package As New ExcelPackage(fileInfo)

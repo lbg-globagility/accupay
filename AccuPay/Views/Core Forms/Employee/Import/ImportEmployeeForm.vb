@@ -425,7 +425,7 @@ Public Class ImportEmployeeForm
     End Sub
 
     Private Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
-        DownloadTemplateHelper.Download(ExcelTemplates.Employee)
+        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.Employee)
     End Sub
 
 #End Region

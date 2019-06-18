@@ -197,7 +197,7 @@ Public Class ImportOvertimeForm
 
     Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
 
-        DownloadTemplateHelper.Download(ExcelTemplates.Overtime)
+        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.Overtime)
 
     End Sub
 

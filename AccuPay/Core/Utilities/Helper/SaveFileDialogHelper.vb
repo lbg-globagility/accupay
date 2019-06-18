@@ -1,16 +1,33 @@
 ﻿Option Strict On
+
 Imports System.IO
 
 Namespace Global.AccuPay.Helpers
 
     Public Class SaveFileDialogHelper
 
-        Public Shared Function BrowseFile(defaultFileName As String) As SaveFileDialogHelperOutPut
+        Public Shared Function BrowseFile(
+                                defaultFileName As String,
+                                Optional defaultExtension As String = Nothing,
+                                Optional filter As String = Nothing) As SaveFileDialogHelperOutPut
 
             Dim saveFileDialog = New SaveFileDialog With {
                 .RestoreDirectory = True,
                 .FileName = defaultFileName
             }
+
+            If String.IsNullOrWhiteSpace(defaultExtension) = False Then
+
+                saveFileDialog.DefaultExt = defaultExtension
+                saveFileDialog.AddExtension = True
+
+            End If
+
+            If String.IsNullOrWhiteSpace(filter) = False Then
+
+                saveFileDialog.Filter = filter
+
+            End If
 
             Dim fileName = String.Empty
             If saveFileDialog.ShowDialog() = DialogResult.OK Then

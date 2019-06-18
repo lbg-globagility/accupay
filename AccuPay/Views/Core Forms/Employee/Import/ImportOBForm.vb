@@ -233,7 +233,7 @@ Public Class ImportOBForm
 
     Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
 
-        DownloadTemplateHelper.Download(ExcelTemplates.OfficialBusiness)
+        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.OfficialBusiness)
 
     End Sub
 

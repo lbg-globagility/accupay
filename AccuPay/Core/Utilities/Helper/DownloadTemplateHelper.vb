@@ -10,14 +10,17 @@ Namespace Global.AccuPay.Helpers
 
     Public Class DownloadTemplateHelper
 
-        Public Shared Sub Download(excelTemplate As ExcelTemplates)
+        Private Const excelFileExtension As String = "xlsx"
+        Private Const excelFileFilter As String = "Excel Files|*.xls;*.xlsx;"
+
+        Public Shared Sub DownloadExcel(excelTemplate As ExcelTemplates)
 
             Dim excelName = TemplatesHelper.GetFileName(excelTemplate)
             Dim template = TemplatesHelper.GetFullPath(excelTemplate)
 
             Try
 
-                Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(excelName)
+                Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(excelName, excelFileExtension, excelFileFilter)
 
                 If saveFileDialogHelperOutPut.IsSuccess = False Then Return
 
@@ -32,14 +35,14 @@ Namespace Global.AccuPay.Helpers
 
         End Sub
 
-        Public Shared Async Function DownloadWithData(excelTemplate As ExcelTemplates) As Threading.Tasks.Task(Of FileInfo)
+        Public Shared Async Function DownloadExcelWithData(excelTemplate As ExcelTemplates) As Threading.Tasks.Task(Of FileInfo)
             Dim _employeeRepository As New EmployeeRepository
             Dim excelName = TemplatesHelper.GetFileName(excelTemplate)
             Dim template = TemplatesHelper.GetFullPath(excelTemplate)
 
             Try
 
-                Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(excelName)
+                Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(excelName, excelFileExtension, excelFileFilter)
 
                 If saveFileDialogHelperOutPut.IsSuccess = False Then Return Nothing
 

@@ -251,7 +251,7 @@ Public Class ImportLoansForm
 
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
 
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadWithData(ExcelTemplates.Loan)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Loan)
 
         Using package As New ExcelPackage(fileInfo)
             Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")

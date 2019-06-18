@@ -263,7 +263,7 @@ Public Class ImportSalaryForm
     End Class
 
     Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
-        DownloadTemplateHelper.Download(ExcelTemplates.Salary)
+        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.Salary)
     End Sub
 
 End Class
