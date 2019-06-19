@@ -941,6 +941,18 @@ Public Class TimeEntrySummaryForm
         Public Property IsRestDay As Boolean
         Public Property HolidayType As String
 
+        Public ReadOnly Property TotalAdditionalPay As Decimal
+            Get
+                Return TotalDayPay - RegularAmount
+            End Get
+        End Property
+
+        Public ReadOnly Property TotalAdditionalHours As Decimal
+            Get
+                Return TotalHoursWorked - RegularHours
+            End Get
+        End Property
+
         Public ReadOnly Property DayType As String
             Get
                 Dim restDayText = If(IsRestDay, "RDay", String.Empty)
