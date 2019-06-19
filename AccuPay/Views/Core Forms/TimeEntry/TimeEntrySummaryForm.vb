@@ -949,7 +949,7 @@ Public Class TimeEntrySummaryForm
 
         Public ReadOnly Property TotalAdditionalHours As Decimal
             Get
-                Return TotalHoursWorked - RegularHours
+                Return (TotalHoursWorked + LeaveHours + NightDiffHours + NightDiffOTHours) - RegularHours
             End Get
         End Property
 
