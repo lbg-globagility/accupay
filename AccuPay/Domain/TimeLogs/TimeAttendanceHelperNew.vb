@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
@@ -53,19 +54,16 @@ Public Class TimeAttendanceHelperNew
 
                 timeAttendanceLog.IsTimeIn = Nothing
 
-
                 If index = 0 Then
                     timeAttendanceLog.IsTimeIn = True
 
                 ElseIf index = lastIndex Then
                     timeAttendanceLog.IsTimeIn = False
-
                 Else
                     timeAttendanceLog.IsTimeIn = Not isPreviouslyTimeIn
                 End If
 
                 isPreviouslyTimeIn = If(timeAttendanceLog.IsTimeIn, False)
-
 
                 timeAttendanceLog.LogDate = dayLogRecord.LogDate
 
@@ -80,6 +78,63 @@ Public Class TimeAttendanceHelperNew
             Next
 
         Next
+
+        ValidateLogs(dayLogRecords)
+
+        Return _importedTimeAttendanceLogs
+    End Function
+
+    Public Function Revalidate() As List(Of ImportTimeAttendanceLog) _
+        Implements ITimeAttendanceHelper.Revalidate
+
+        '#1 Convert it back to DayLogRecords
+        Dim dayLogRecords As New List(Of DayLogRecord)
+
+        For Each logGroup In _logsGroupedByEmployee
+
+            If logGroup.Count = 0 Then Continue For
+
+            Dim employeeId = logGroup(0).Employee?.RowID
+
+            If employeeId Is Nothing Then Continue For
+
+            Dim employeeLogs = logGroup.ToList()
+
+            Dim earliestLog = logGroup.FirstOrDefault().DateTime.ToMinimumHourValue
+            Dim earliestLogDate = logGroup.FirstOrDefault().LogDate.ToMinimumHourValue
+            Dim lastlog = logGroup.LastOrDefault().DateTime.ToMaximumHourValue
+            Dim lastLogDate = logGroup.LastOrDefault().LogDate.ToMaximumHourValue
+
+            Dim earliestDate = {earliestLog, earliestLogDate}.Min
+            Dim lastDate = {lastlog, lastLogDate}.Max
+
+            For Each currentDate In Calendar.EachDay(earliestDate, lastDate)
+
+                Dim currentEmployeeLogs = employeeLogs.
+                                            Where(Function(l) Nullable.Equals(l.LogDate, currentDate)).
+                                            Where(Function(l) l.HasError = False).
+                                            ToList
+
+                If currentEmployeeLogs.Any() = False Then Continue For
+
+                For Each log In currentEmployeeLogs
+
+                    log.WarningMessage = Nothing
+
+                Next
+
+                dayLogRecords.Add(New DayLogRecord With {
+                    .EmployeeId = employeeId.Value,
+                    .LogDate = currentDate,
+                    .LogRecords = currentEmployeeLogs.OrderBy(Function(l) l.DateTime).ToList
+                })
+
+            Next
+
+        Next
+
+        '#2 revalidate the logs. '[Check for succeeding logs that are both INs Or OUTs]
+        ValidateLogs(dayLogRecords)
 
         Return _importedTimeAttendanceLogs
     End Function
@@ -108,7 +163,6 @@ Public Class TimeAttendanceHelperNew
                 If logsByDay.Key Is Nothing Then Continue For
 
                 Dim logDate = CType(logsByDay.Key, Date)
-
 
                 Dim firstTimeStampIn = logsByDayList.FirstOrDefault(Function(l) Nullable.Equals(l.IsTimeIn, True))?.DateTime
                 Dim finalTimeStampOut = logsByDayList.LastOrDefault(Function(l) Nullable.Equals(l.IsTimeIn, False))?.DateTime
@@ -149,7 +203,6 @@ Public Class TimeAttendanceHelperNew
     Public Function GenerateTimeAttendanceLogs() As List(Of TimeAttendanceLog) _
         Implements ITimeAttendanceHelper.GenerateTimeAttendanceLogs
 
-
         Dim timeAttendanceLogs As New List(Of TimeAttendanceLog)
 
         For Each log In _importedTimeAttendanceLogs
@@ -176,6 +229,7 @@ Public Class TimeAttendanceHelperNew
     End Function
 
 #Region "Private Functions"
+
     Private Function GenerateDayLogRecords() As List(Of DayLogRecord)
 
         Dim dayLogRecords As New List(Of DayLogRecord)
@@ -188,7 +242,6 @@ Public Class TimeAttendanceHelperNew
 
             If employeeId Is Nothing Then Continue For
 
-
             Dim currentEmployeeShifts = _employeeShifts.
                                         Where(Function(s) Nullable.Equals(s.EmployeeID, employeeId)).
                                         ToList
@@ -200,7 +253,10 @@ Public Class TimeAttendanceHelperNew
 
             For Each currentDate In Calendar.EachDay(earliestDate, lastDate)
 
-                Dim dayLogRecord = GenerateDayLogRecord(employeeLogs, currentEmployeeShifts, currentDate)
+                Dim dayLogRecord = GenerateDayLogRecord(employeeId.Value,
+                                                        employeeLogs,
+                                                        currentEmployeeShifts,
+                                                        currentDate)
 
                 If dayLogRecord IsNot Nothing Then
                     dayLogRecords.Add(dayLogRecord)
@@ -215,6 +271,7 @@ Public Class TimeAttendanceHelperNew
     End Function
 
     Private Function GenerateDayLogRecord(
+        employeeId As Integer,
         employeeLogs As List(Of ImportTimeAttendanceLog),
         currentEmployeeShifts As List(Of EmployeeDutySchedule),
         currentDate As Date) As DayLogRecord
@@ -230,6 +287,7 @@ Public Class TimeAttendanceHelperNew
         Dim dayBounds = New TimePeriod(timeInBounds, timeOutBounds)
 
         Return New DayLogRecord With {
+            .EmployeeId = employeeId,
             .LogDate = currentDate,
             .LogRecords = GetTimeLogsFromBounds(dayBounds, employeeLogs),
             .ShiftTimeInBounds = dayBounds.Start,
@@ -249,7 +307,6 @@ Public Class TimeAttendanceHelperNew
         shiftBounds As TimePeriod,
         timeAttendanceLogs As List(Of ImportTimeAttendanceLog)
     ) As List(Of ImportTimeAttendanceLog)
-
 
         Return timeAttendanceLogs.
             Where(Function(t)
@@ -273,9 +330,8 @@ Public Class TimeAttendanceHelperNew
             'If walang shift, minimum bound should be 12:00 AM
             shiftTimeFrom = currentDate.ToMinimumHourValue
             shiftMinBound = shiftTimeFrom
-
         Else
-            'If merong shift, minimum bound should be shift.TimeFrom - 4 hours 
+            'If merong shift, minimum bound should be shift.TimeFrom - 4 hours
             '(ex. 9:00 AM - 5:00 PM shift -> 5:00 AM minimum bound)
             shiftTimeFrom = currentDate.Add(CType(currentShift.StartTime, TimeSpan))
             shiftMinBound = shiftTimeFrom.Add(TimeSpan.FromHours(-HOURS_BUFFER))
@@ -307,7 +363,7 @@ Public Class TimeAttendanceHelperNew
 
             Dim dateTimeOut = currentShift.DateSched
 
-            'check if shift is night shift by checking 
+            'check if shift is night shift by checking
             'if StartTime is greater than EndTime
             If currentShift.StartTime IsNot Nothing AndAlso
                 currentShift.StartTime >= currentShift.EndTime Then
@@ -318,7 +374,6 @@ Public Class TimeAttendanceHelperNew
                 'maxBoundTime should be shift EndTime plus 4 hours
                 '(ex. 9:00 PM - 5:00 AM -> (next day) 9:00 AM
                 maxBoundTime = currentShift.EndTime.Value.Add(TimeSpan.FromHours(HOURS_BUFFER))
-
             Else
 
                 'if not night shift, then dateTimeOut should be same day
@@ -329,13 +384,11 @@ Public Class TimeAttendanceHelperNew
             End If
 
             shiftMaxBound = dateTimeOut.Add(maxBoundTime)
-
         Else
 
             'If walang next shift and walang current end time shift
             'maximum bound should be 11:59 PM
             shiftMaxBound = currentDate.ToMaximumHourValue
-
 
         End If
 
@@ -347,7 +400,6 @@ Public Class TimeAttendanceHelperNew
         For Each logGroup In _logsGroupedByEmployee
             Dim employee = _employees.FirstOrDefault(Function(e) e.EmployeeNo = logGroup.Key)
 
-
             For Each log In logGroup
 
                 If log.HasError Then Continue For
@@ -356,7 +408,6 @@ Public Class TimeAttendanceHelperNew
                     log.Employee = Nothing
 
                     log.ErrorMessage = "Employee not found in the database."
-
                 Else
                     log.Employee = employee
                 End If
@@ -367,18 +418,75 @@ Public Class TimeAttendanceHelperNew
 
     End Sub
 
+    Private Sub ValidateLogs(dayLogRecords As List(Of DayLogRecord))
+
+        Dim succeedingInOrOutLogsWarningMessage = "This day has succeeding logs that are both IN or OUT."
+
+        For Each dayLogRecord In dayLogRecords
+
+            'check if logs for the day was ok
+            Dim logsWithTimeStatus = dayLogRecord.LogRecords.
+                                        Where(Function(l) l.IsTimeIn IsNot Nothing).
+                                        OrderBy(Function(l) l.DateTime).
+                                        ToList
+
+            Dim warningMessage As String = Nothing
+
+            'if the total count for that day is even, it means it is ok
+            'because it means its logs are alternating IN then OUT
+            'if it is odd then there are succeeding logs that are either both IN or OUT
+            If (logsWithTimeStatus.Count Mod 2 <> 0) Then
+
+                warningMessage = succeedingInOrOutLogsWarningMessage
+            Else
+                'Check if there are succeeding logs that are either both IN or OUT
+                'and it should start with Time In
+                Dim isTimeIn = True
+
+                For Each log In logsWithTimeStatus
+
+                    If Nullable.Equals(log.IsTimeIn, isTimeIn) = False Then
+
+                        warningMessage = succeedingInOrOutLogsWarningMessage
+
+                        Exit For
+
+                    End If
+
+                    isTimeIn = Not isTimeIn
+
+                Next
+            End If
+
+            If warningMessage IsNot Nothing Then
+
+                For Each log In logsWithTimeStatus
+                    log.WarningMessage = warningMessage
+                Next
+
+            End If
+
+        Next
+
+        'add warning message for logs that were not including in a "day".
+        Dim logsWithNoDateOrTimeStatus = _importedTimeAttendanceLogs.
+                                            Where(Function(l) l.LogDate Is Nothing).
+                                            Where(Function(l) l.IsTimeIn Is Nothing).
+                                            ToList
+        For Each log In logsWithNoDateOrTimeStatus
+            log.WarningMessage = "The analyzer were not able to figure out this log's date."
+        Next
+    End Sub
+
 #End Region
 
     Private Class DayLogRecord
 
+        Property EmployeeId As Integer
         Property LogDate As Date
-
         Property LogRecords As List(Of ImportTimeAttendanceLog)
-
         Property ShiftTimeInBounds As Date
-
         Property ShiftTimeOutBounds As Date
-
         Property ShiftSchedule As EmployeeDutySchedule
 
         Public Overrides Function ToString() As String

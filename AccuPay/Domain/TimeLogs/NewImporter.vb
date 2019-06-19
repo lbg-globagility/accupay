@@ -149,6 +149,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
         Public Property EmployeeDutySchedule As EmployeeDutySchedule
         Public Property ShiftTimeInBounds As Date
         Public Property ShiftTimeOutBounds As Date
+        Public Property WarningMessage As String
 
         Public Overrides Function ToString() As String
             Return DateTime.ToString("MM/dd/yyyy hh:mm tt")
@@ -201,6 +202,12 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
         Public ReadOnly Property HasError As Boolean
             Get
                 Return ErrorMessage IsNot Nothing
+            End Get
+        End Property
+
+        Public ReadOnly Property HasWarning As Boolean
+            Get
+                Return WarningMessage IsNot Nothing
             End Get
         End Property
 

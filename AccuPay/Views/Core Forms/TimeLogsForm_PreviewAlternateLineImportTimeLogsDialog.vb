@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
+Imports AccuPay.Utils
 
 Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
@@ -19,9 +20,20 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Private _dtp As New DateTimePicker()
     Private _Rectangle As Rectangle
 
-    Sub New(logs As IList(Of ImportTimeAttendanceLog), errors As IList(Of ImportTimeAttendanceLog))
+    Private ReadOnly _timeAttendanceHelper As ITimeAttendanceHelper
 
-        Me._originalLogs = logs.
+    Sub New(timeAttendanceHelper As ITimeAttendanceHelper, otherErrorLogs As IList(Of ImportTimeAttendanceLog))
+
+        _timeAttendanceHelper = timeAttendanceHelper
+
+        'determines the IstimeIn, LogDate, and Employee values
+        Dim allLogs = _timeAttendanceHelper.Analyze()
+        Dim validLogs = allLogs.Where(Function(l) l.HasError = False).ToList()
+        Dim invalidLogs = allLogs.Where(Function(l) l.HasError = True).ToList()
+
+        invalidLogs.AddRange(otherErrorLogs)
+
+        Me._originalLogs = validLogs.
                     OrderBy(Function(l) l.Employee?.LastName).
                     ThenBy(Function(l) l.Employee?.FirstName).
                     ThenBy(Function(l) l.Employee?.MiddleName).
@@ -31,7 +43,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         Me._logs = Me._originalLogs
 
-        Me._originalErrors = errors.
+        Me._originalErrors = invalidLogs.
                     OrderBy(Function(l) l.LineNumber).
                     ToList()
 
@@ -42,7 +54,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         ' Add any initialization after the InitializeComponent() call.
         Me.Cancelled = True
-
+        Me._timeAttendanceHelper = _timeAttendanceHelper
     End Sub
 
     Private Sub TimeAttendanceLogDataGrid_CellClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
@@ -57,6 +69,8 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
             If currentLog Is Nothing Then Return
 
             _dtp.Value = If(currentLog.LogDate, currentLog.DateTime.ToMinimumHourValue())
+
+            '_dtp.Bac
 
             _dtp.Visible = True
         Else
@@ -160,6 +174,8 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
                 e.CellStyle.SelectionBackColor = Color.White
                 e.CellStyle.SelectionForeColor = Color.Black
             End If
+        Else
+            e.CellStyle.BackColor = If(currentLog.HasWarning, Color.Yellow, Color.White)
         End If
 
     End Sub
@@ -255,6 +271,32 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
                                     End Function)
 
         TimeAttendanceLogErrorsDataGrid.DataSource = Me._errors
+
+    End Sub
+
+    Private Sub BtnRevalidate_Click(sender As Object, e As EventArgs) Handles btnRevalidate.Click
+
+        Me.Cursor = Cursors.WaitCursor
+
+        _timeAttendanceHelper.Revalidate()
+
+        TimeAttendanceLogDataGrid.DataSource = Me._logs
+        TimeAttendanceLogDataGrid.Refresh()
+
+        Me.Cursor = Cursors.Default
+
+        Dim warningLogsCount = Me._logs.Where(Function(l) l.HasWarning).Count
+
+        Dim messageTitle = "Logs Revalidation"
+
+        If warningLogsCount > 0 Then
+
+            MessageBoxHelper.Warning($"{warningLogsCount} warnings remains.", messageTitle, MessageBoxButtons.OK)
+        Else
+
+            MessageBoxHelper.Information("No more warnings!", messageTitle)
+
+        End If
 
     End Sub
 

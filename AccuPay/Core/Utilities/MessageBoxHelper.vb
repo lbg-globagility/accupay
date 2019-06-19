@@ -1,8 +1,8 @@
 ﻿Option Strict On
+
 Imports log4net
 
 Namespace Global.AccuPay.Utils
-
 
     Public Class MessageBoxHelper
 
@@ -31,17 +31,23 @@ Namespace Global.AccuPay.Utils
 
         End Sub
 
+        Public Shared Sub Information(ByVal message As String, ByVal Optional title As String = "Accupay", ByVal Optional messageBoxButtons As MessageBoxButtons = MessageBoxButtons.OK)
+
+            MessageBox.Show(message, title, messageBoxButtons, MessageBoxIcon.Information)
+
+        End Sub
+
         ''' <summary>
         ''' Displays a messasage box with specified text, caption, buttons And icons.
         ''' This Is a wrapper method to System.Windows.Forms.MessageBox.Show().
-        ''' Only bool And DialogResult type parameter Is allowed. Otherwise this will throw an exception 
+        ''' Only bool And DialogResult type parameter Is allowed. Otherwise this will throw an exception
         ''' </summary>
         ''' <typeparam name="T">The data type you want the method to return</typeparam>
         ''' <param name="text">The text to display in the message box</param>
         ''' <param name="caption">The text to display in the title bar of the message box</param>
-        ''' <param name="messageBoxButton">One of the System.Windows.Forms.MessageBoxButtons values 
+        ''' <param name="messageBoxButton">One of the System.Windows.Forms.MessageBoxButtons values
         ''' that specifies which buttons to display in the message box</param>
-        ''' <param name="messageBoxIcon">One of the System.Windows.Forms.MessageBoxIcon values 
+        ''' <param name="messageBoxIcon">One of the System.Windows.Forms.MessageBoxIcon values
         ''' that specifies which icon to display in the message box</param>
         ''' <returns></returns>
         ''' <exception cref="ArgumentException">Only type of bool And DialogResult have implementations</exception>
@@ -54,7 +60,7 @@ Namespace Global.AccuPay.Utils
                 Throw New ArgumentException()
             End If
         End Function
+
     End Class
 
 End Namespace
-

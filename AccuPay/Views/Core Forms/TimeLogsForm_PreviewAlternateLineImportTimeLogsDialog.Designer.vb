@@ -22,18 +22,20 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog))
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.btnRevalidate = New System.Windows.Forms.Button()
         Me.btnOK = New System.Windows.Forms.Button()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
@@ -42,27 +44,27 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.lblSearch = New System.Windows.Forms.Label()
         Me.TimeAttendanceLogDataGrid = New System.Windows.Forms.DataGridView()
         Me.Column6 = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TimeAttendanceLogDataGridLogDate = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.TimeAttendanceLogDataGridDecrementLogDayButton = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.TimeAttendanceLogDataGridIncrementLogDayButton = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TimeAttendanceLogDataGridTimeInButton = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.TimeAttendanceLogDataGridTimeOutButton = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.ErrorsTabControl = New System.Windows.Forms.TabPage()
         Me.TimeAttendanceLogErrorsDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.txtErrorSearch = New System.Windows.Forms.TextBox()
         Me.lblErrorSearch = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewDateColumn1 = New AccuPay.DataGridViewDateColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -81,6 +83,7 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.btnRevalidate)
         Me.Panel1.Controls.Add(Me.btnOK)
         Me.Panel1.Controls.Add(Me.btnClose)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -88,6 +91,18 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(857, 72)
         Me.Panel1.TabIndex = 13
+        '
+        'btnRevalidate
+        '
+        Me.btnRevalidate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnRevalidate.BackColor = System.Drawing.Color.Yellow
+        Me.btnRevalidate.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.btnRevalidate.Location = New System.Drawing.Point(15, 25)
+        Me.btnRevalidate.Name = "btnRevalidate"
+        Me.btnRevalidate.Size = New System.Drawing.Size(98, 35)
+        Me.btnRevalidate.TabIndex = 12
+        Me.btnRevalidate.Text = "&Revalidate Logs"
+        Me.btnRevalidate.UseVisualStyleBackColor = False
         '
         'btnOK
         '
@@ -173,6 +188,22 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.Column6.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Column6.Width = 180
         '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "EmployeeNumber"
+        Me.Column7.HeaderText = "Employee ID"
+        Me.Column7.Name = "Column7"
+        Me.Column7.Width = 110
+        '
+        'Column8
+        '
+        Me.Column8.DataPropertyName = "ShiftDescription"
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.Column8.DefaultCellStyle = DataGridViewCellStyle1
+        Me.Column8.HeaderText = "Shift"
+        Me.Column8.Name = "Column8"
+        Me.Column8.Width = 150
+        '
         'TimeAttendanceLogDataGridLogDate
         '
         '
@@ -244,6 +275,16 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.TimeAttendanceLogDataGridIncrementLogDayButton.ToolTipText = "Increment one day"
         Me.TimeAttendanceLogDataGridIncrementLogDayButton.UseColumnTextForButtonValue = True
         Me.TimeAttendanceLogDataGridIncrementLogDayButton.Width = 25
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "DateTime"
+        DataGridViewCellStyle5.Format = "MM/dd/yyyy hh:mm tt"
+        DataGridViewCellStyle5.NullValue = Nothing
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle5
+        Me.Column1.HeaderText = "Timestamp"
+        Me.Column1.Name = "Column1"
+        Me.Column1.Width = 120
         '
         'TimeAttendanceLogDataGridTimeInButton
         '
@@ -319,6 +360,36 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.TimeAttendanceLogErrorsDataGrid.Size = New System.Drawing.Size(843, 305)
         Me.TimeAttendanceLogErrorsDataGrid.TabIndex = 13
         '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.DataPropertyName = "LineNumber"
+        DataGridViewCellStyle6.Format = "MM/dd/yyyy hh:mm tt"
+        DataGridViewCellStyle6.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle6
+        Me.DataGridViewTextBoxColumn3.FillWeight = 20.0!
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Line Number"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.DataPropertyName = "LineContent"
+        DataGridViewCellStyle7.Format = "MM/dd/yyyy hh:mm tt"
+        DataGridViewCellStyle7.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle7
+        Me.DataGridViewTextBoxColumn4.FillWeight = 40.0!
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Line Content"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "ErrorMessage"
+        Me.Column3.FillWeight = 40.0!
+        Me.Column3.HeaderText = "Reason"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
         'Panel2
         '
         Me.Panel2.Controls.Add(Me.txtErrorSearch)
@@ -365,28 +436,6 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.DataGridViewTextBoxColumn2.ReadOnly = True
         Me.DataGridViewTextBoxColumn2.Width = 422
         '
-        'DataGridViewTextBoxColumn3
-        '
-        Me.DataGridViewTextBoxColumn3.DataPropertyName = "LineNumber"
-        DataGridViewCellStyle6.Format = "MM/dd/yyyy hh:mm tt"
-        DataGridViewCellStyle6.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle6
-        Me.DataGridViewTextBoxColumn3.FillWeight = 20.0!
-        Me.DataGridViewTextBoxColumn3.HeaderText = "Line Number"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn4
-        '
-        Me.DataGridViewTextBoxColumn4.DataPropertyName = "LineContent"
-        DataGridViewCellStyle7.Format = "MM/dd/yyyy hh:mm tt"
-        DataGridViewCellStyle7.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle7
-        Me.DataGridViewTextBoxColumn4.FillWeight = 40.0!
-        Me.DataGridViewTextBoxColumn4.HeaderText = "Line Content"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        '
         'DataGridViewTextBoxColumn5
         '
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "Reason"
@@ -407,40 +456,6 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.ReadOnly = True
         Me.DataGridViewTextBoxColumn6.Width = 211
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "EmployeeNumber"
-        Me.Column7.HeaderText = "Employee ID"
-        Me.Column7.Name = "Column7"
-        Me.Column7.Width = 110
-        '
-        'Column8
-        '
-        Me.Column8.DataPropertyName = "ShiftDescription"
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.Column8.DefaultCellStyle = DataGridViewCellStyle1
-        Me.Column8.HeaderText = "Shift"
-        Me.Column8.Name = "Column8"
-        Me.Column8.Width = 150
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "DateTime"
-        DataGridViewCellStyle5.Format = "MM/dd/yyyy hh:mm tt"
-        DataGridViewCellStyle5.NullValue = Nothing
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle5
-        Me.Column1.HeaderText = "Timestamp"
-        Me.Column1.Name = "Column1"
-        Me.Column1.Width = 120
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "ErrorMessage"
-        Me.Column3.FillWeight = 40.0!
-        Me.Column3.HeaderText = "Reason"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
         '
         'DataGridViewDateColumn1
         '
@@ -522,6 +537,7 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -575,4 +591,5 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Friend WithEvents Panel2 As Panel
     Friend WithEvents txtErrorSearch As TextBox
     Friend WithEvents lblErrorSearch As Label
+    Friend WithEvents btnRevalidate As Button
 End Class

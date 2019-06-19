@@ -326,7 +326,6 @@ Public Class ObjectUtilsTest
     <TestCase("4:35 PM")>
     <TestCase("16:35:00")>
     <TestCase("16:35")>
-    <TestCase("1.00:00:00")>
     Public Shared Sub ToNullableTimeSpan_WithValidInput_ReturnsTimeSpan(input As Object)
 
         Dim output = ObjectUtils.ToNullableTimeSpan(input)

@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
@@ -53,19 +54,16 @@ Public Class TimeAttendanceHelper
 
                 timeAttendanceLog.IsTimeIn = Nothing
 
-
                 If index = 0 Then
                     timeAttendanceLog.IsTimeIn = True
 
                 ElseIf index = lastIndex Then
                     timeAttendanceLog.IsTimeIn = False
-
                 Else
                     timeAttendanceLog.IsTimeIn = Not isPreviouslyTimeIn
                 End If
 
                 isPreviouslyTimeIn = If(timeAttendanceLog.IsTimeIn, False)
-
 
                 timeAttendanceLog.LogDate = dayLogRecord.LogDate
 
@@ -80,6 +78,13 @@ Public Class TimeAttendanceHelper
             Next
 
         Next
+
+        Return _importedTimeAttendanceLogs
+    End Function
+
+    Public Function Revalidate() As List(Of ImportTimeAttendanceLog) _
+        Implements ITimeAttendanceHelper.Revalidate
+        'NOTHING YET
 
         Return _importedTimeAttendanceLogs
     End Function
@@ -108,7 +113,6 @@ Public Class TimeAttendanceHelper
                 If logsByDay.Key Is Nothing Then Continue For
 
                 Dim logDate = CType(logsByDay.Key, Date)
-
 
                 Dim firstTimeStampIn = logsByDayList.FirstOrDefault(Function(l) Nullable.Equals(l.IsTimeIn, True))?.DateTime
                 Dim finalTimeStampOut = logsByDayList.LastOrDefault(Function(l) Nullable.Equals(l.IsTimeIn, False))?.DateTime
@@ -149,7 +153,6 @@ Public Class TimeAttendanceHelper
     Public Function GenerateTimeAttendanceLogs() As List(Of TimeAttendanceLog) _
         Implements ITimeAttendanceHelper.GenerateTimeAttendanceLogs
 
-
         Dim timeAttendanceLogs As New List(Of TimeAttendanceLog)
 
         For Each log In _importedTimeAttendanceLogs
@@ -176,6 +179,7 @@ Public Class TimeAttendanceHelper
     End Function
 
 #Region "Private Functions"
+
     Private Function GenerateDayLogRecords() As List(Of DayLogRecord)
 
         Dim dayLogRecords As New List(Of DayLogRecord)
@@ -187,7 +191,6 @@ Public Class TimeAttendanceHelper
             Dim employeeId = logGroup(0).Employee?.RowID
 
             If employeeId Is Nothing Then Continue For
-
 
             Dim currentEmployeeShifts = _employeeShifts.
                                         Where(Function(s) Nullable.Equals(s.EmployeeID, employeeId)).
@@ -250,7 +253,6 @@ Public Class TimeAttendanceHelper
         timeAttendanceLogs As List(Of ImportTimeAttendanceLog)
     ) As List(Of ImportTimeAttendanceLog)
 
-
         Return timeAttendanceLogs.
             Where(Function(t)
                       Return t.DateTime >= shiftBounds.Start AndAlso
@@ -273,9 +275,8 @@ Public Class TimeAttendanceHelper
             'If walang shift, minimum bound should be 12:00 AM
             shiftTimeFrom = currentDate.ToMinimumHourValue
             shiftMinBound = shiftTimeFrom
-
         Else
-            'If merong shift, minimum bound should be shift.TimeFrom - 4 hours 
+            'If merong shift, minimum bound should be shift.TimeFrom - 4 hours
             '(ex. 9:00 AM - 5:00 PM shift -> 5:00 AM minimum bound)
             shiftTimeFrom = currentDate.Add(currentShift.Shift.TimeFrom)
             shiftMinBound = shiftTimeFrom.Add(TimeSpan.FromHours(-HOURS_BUFFER))
@@ -307,7 +308,7 @@ Public Class TimeAttendanceHelper
 
             Dim dateTimeOut = currentDate
 
-            'check if shift is night shift by checking 
+            'check if shift is night shift by checking
             'if TimeFrom is greater than TimeTo
             If currentShift.Shift.TimeFrom >= currentShift.Shift.TimeTo Then
 
@@ -317,7 +318,6 @@ Public Class TimeAttendanceHelper
                 'maxBoundTime should be shift TimeTo plus 4 hours
                 '(ex. 9:00 PM - 5:00 AM -> (next day) 9:00 AM
                 maxBoundTime = currentShift.Shift.TimeTo.Add(TimeSpan.FromHours(HOURS_BUFFER))
-
             Else
 
                 'if not night shift, then dateTimeOut should be same day
@@ -328,7 +328,6 @@ Public Class TimeAttendanceHelper
             End If
 
             shiftMaxBound = dateTimeOut.Add(maxBoundTime)
-
         Else
 
             'If walang next shift and walang current end time shift
@@ -344,7 +343,6 @@ Public Class TimeAttendanceHelper
         For Each logGroup In _logsGroupedByEmployee
             Dim employee = _employees.FirstOrDefault(Function(e) e.EmployeeNo = logGroup.Key)
 
-
             For Each log In logGroup
 
                 If log.HasError Then Continue For
@@ -353,7 +351,6 @@ Public Class TimeAttendanceHelper
                     log.Employee = Nothing
 
                     log.ErrorMessage = "Employee not found in the database."
-
                 Else
                     log.Employee = employee
                 End If

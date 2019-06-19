@@ -9,4 +9,6 @@ Public Interface ITimeAttendanceHelper
 
     Function Analyze() As List(Of ImportTimeAttendanceLog)
 
+    Function Revalidate() As List(Of ImportTimeAttendanceLog)
+
 End Interface

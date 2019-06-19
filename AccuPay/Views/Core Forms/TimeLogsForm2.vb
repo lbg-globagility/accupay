@@ -239,16 +239,9 @@ Public Class TimeLogsForm2
 
         Dim timeAttendanceHelper As ITimeAttendanceHelper = Await GetTimeAttendanceHelper(logs)
 
-        'determines the IstimeIn, LogDate, and Employee values
-        logs = timeAttendanceHelper.Analyze()
-        Dim validLogs = logs.Where(Function(l) l.HasError = False).ToList()
-        Dim invalidLogs = logs.Where(Function(l) l.HasError = True).ToList()
-
-        invalidLogs.AddRange(importOutput.Errors)
-
         'preview the logs here
         Dim previewDialog As New _
-            TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog(validLogs, invalidLogs)
+            TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog(timeAttendanceHelper, importOutput.Errors)
 
         With previewDialog
             .ShowDialog()
@@ -431,7 +424,7 @@ Public Class TimeLogsForm2
     End Function
 
     Private Async Function GetTimeAttendanceHelper(logs As List(Of ImportTimeAttendanceLog)) _
-                            As Threading.Tasks.Task(Of ITimeAttendanceHelper)
+                            As Task(Of ITimeAttendanceHelper)
 
         logs = logs.OrderBy(Function(l) l.DateTime).ToList
 
