@@ -27,7 +27,9 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         _timeAttendanceHelper = timeAttendanceHelper
 
         'determines the IstimeIn, LogDate, and Employee values
-        Dim allLogs = _timeAttendanceHelper.Analyze()
+        _timeAttendanceHelper.Analyze()
+        Dim allLogs = _timeAttendanceHelper.Validate()
+
         Dim validLogs = allLogs.Where(Function(l) l.HasError = False).ToList()
         Dim invalidLogs = allLogs.Where(Function(l) l.HasError = True).ToList()
 
@@ -289,7 +291,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         Me.Cursor = Cursors.WaitCursor
 
-        _timeAttendanceHelper.Revalidate()
+        _timeAttendanceHelper.Validate()
 
         TimeAttendanceLogDataGrid.DataSource = Me._logs
         TimeAttendanceLogDataGrid.Refresh()

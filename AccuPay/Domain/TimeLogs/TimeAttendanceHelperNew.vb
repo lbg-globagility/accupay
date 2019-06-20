@@ -84,8 +84,8 @@ Public Class TimeAttendanceHelperNew
         Return _importedTimeAttendanceLogs
     End Function
 
-    Public Function Revalidate() As List(Of ImportTimeAttendanceLog) _
-        Implements ITimeAttendanceHelper.Revalidate
+    Public Function Validate() As List(Of ImportTimeAttendanceLog) _
+        Implements ITimeAttendanceHelper.Validate
 
         '#1 Convert it back to DayLogRecords
         Dim dayLogRecords As New List(Of DayLogRecord)
