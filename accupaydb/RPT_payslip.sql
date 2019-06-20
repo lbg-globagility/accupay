@@ -118,7 +118,7 @@ SELECT ps.RowID
 ,IFNULL(FORMAT(et.NightDifferentialHours, 2), 0) `COL14`
 ,IFNULL(FORMAT(et.NightDiffHoursAmount, 2), 0) `COL15`
 
-,IFNULL(FORMAT(et.HolidayPayAmount, 2), 0) `COL17`
+,IFNULL(FORMAT(ps.HolidayPay, 2), 0) `COL17`
 
 ,(ps.TotalAllowance + ps.TotalBonus) `COL18`
 ,ps.TotalAdjustments `COL19`
