@@ -69,7 +69,13 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
             If currentLog Is Nothing Then Return
 
-            _dtp.Value = If(currentLog.LogDate, currentLog.DateTime.ToMinimumHourValue())
+            If currentLog.LogDate Is Nothing Then
+
+                currentLog.LogDate = currentLog.DateTime.ToMinimumHourValue()
+
+            End If
+
+            _dtp.Value = currentLog.LogDate.Value
 
             '_dtp.Bac
 
@@ -218,7 +224,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
                 currentLog.IsTimeIn = True
             Else
                 'Reset IsTimeIn if it is currently TRUE and he clicked IN button
-                'currentLog.IsTimeIn = Nothing
+                currentLog.IsTimeIn = Nothing
             End If
 
         ElseIf currentColumn Is TimeAttendanceLogDataGridTimeOutButton Then
@@ -227,7 +233,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
                 currentLog.IsTimeIn = False
             Else
                 'Reset IsTimeIn if it is currently FALSE and he clicked OUT button
-                'currentLog.IsTimeIn = Nothing
+                currentLog.IsTimeIn = Nothing
             End If
 
         ElseIf currentColumn Is TimeAttendanceLogDataGridDecrementLogDayButton Then
