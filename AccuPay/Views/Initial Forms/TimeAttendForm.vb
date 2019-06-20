@@ -48,7 +48,6 @@ Public Class TimeAttendForm
                 End If
 
             Next
-
         Else
             Exit Sub
         End If
@@ -90,11 +89,6 @@ Public Class TimeAttendForm
         'EmployeeShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
         ChangeForm(EmployeeShiftEntryForm, "Employee Shift")
         previousForm = EmployeeShiftEntryForm
-    End Sub
-
-    Sub TimeEntryLogsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeEntryLogsToolStripMenuItem.Click
-        ChangeForm(TimeLogsForm, "Employee Time Entry logs")
-        previousForm = TimeLogsForm
     End Sub
 
     Private Sub TimeAttendForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -179,4 +173,5 @@ Public Class TimeAttendForm
         ChangeForm(TimeLogsForm2, "Employee Time Entry logs")
         previousForm = TimeLogsForm2
     End Sub
+
 End Class

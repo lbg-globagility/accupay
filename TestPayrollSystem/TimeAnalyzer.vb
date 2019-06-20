@@ -1,5 +1,7 @@
 ﻿Option Strict On
+
 Imports System.IO
+Imports AccuPay
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
@@ -272,6 +274,12 @@ Public Class TimeAnalyzer
         Dim shiftSchedules = GetSampleShiftSchedules()
 
         Return ConvertShiftSchedulesListToEmployeeDutyScheduleList(shiftSchedules)
+
+    End Function
+
+    Protected Function GetSampleEmployeeOvertimes() As List(Of Overtime)
+
+        Return New List(Of Overtime)
 
     End Function
 
