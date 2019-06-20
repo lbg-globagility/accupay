@@ -124,6 +124,17 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     End Sub
 
+    Private Sub TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Dim warningLogsCount = Me._logs.Where(Function(l) l.HasWarning).Count
+
+        Dim messageTitle = "Logs Revalidation"
+
+        If warningLogsCount > 0 Then
+
+            MessageBoxHelper.Warning($"There are {warningLogsCount} warning(s). It is advisable to import the overtimes and shifts first before importing the time logs.", messageTitle, MessageBoxButtons.OK)
+        End If
+    End Sub
+
     Private Sub FooterButton_Click(sender As Object, e As EventArgs) _
         Handles btnOK.Click, btnClose.Click
 
