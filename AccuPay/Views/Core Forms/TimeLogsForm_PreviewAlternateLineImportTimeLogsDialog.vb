@@ -27,8 +27,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         _timeAttendanceHelper = timeAttendanceHelper
 
         'determines the IstimeIn, LogDate, and Employee values
-        _timeAttendanceHelper.Analyze()
-        Dim allLogs = _timeAttendanceHelper.Validate()
+        Dim allLogs = _timeAttendanceHelper.Analyze()
 
         Dim validLogs = allLogs.Where(Function(l) l.HasError = False).ToList()
         Dim invalidLogs = allLogs.Where(Function(l) l.HasError = True).ToList()
@@ -91,6 +90,8 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     Private Sub TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        TabControl1.Visible = False
+
         TimeAttendanceLogDataGrid.Controls.Add(_dtp)
         _dtp.Visible = False
         _dtp.Format = DateTimePickerFormat.Custom
@@ -127,14 +128,10 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     End Sub
 
     Private Sub TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Dim warningLogsCount = Me._logs.Where(Function(l) l.HasWarning).Count
 
-        Dim messageTitle = "Logs Revalidation"
+        ValidateLogs(True)
+        TabControl1.Visible = True
 
-        If warningLogsCount > 0 Then
-
-            MessageBoxHelper.Warning($"There are {warningLogsCount} warning(s). It is advisable to import the overtimes and shifts first before importing the time logs.", messageTitle, MessageBoxButtons.OK)
-        End If
     End Sub
 
     Private Sub FooterButton_Click(sender As Object, e As EventArgs) _
@@ -288,7 +285,11 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     End Sub
 
     Private Sub BtnRevalidate_Click(sender As Object, e As EventArgs) Handles btnRevalidate.Click
+        ValidateLogs()
 
+    End Sub
+
+    Private Sub ValidateLogs(Optional isFirstLoad As Boolean = False)
         Me.Cursor = Cursors.WaitCursor
 
         _timeAttendanceHelper.Validate()
@@ -304,13 +305,24 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         If warningLogsCount > 0 Then
 
-            MessageBoxHelper.Warning($"{warningLogsCount} warnings remains.", messageTitle, MessageBoxButtons.OK)
+            If isFirstLoad Then
+
+                MessageBoxHelper.Warning($"There are {warningLogsCount} warning(s). It is advisable to import the overtimes and shifts first before importing the time logs.", messageTitle, MessageBoxButtons.OK)
+            Else
+
+                MessageBoxHelper.Warning($"{warningLogsCount} warnings remains.", messageTitle, MessageBoxButtons.OK)
+
+            End If
         Else
 
-            MessageBoxHelper.Information("No more warnings!", messageTitle)
+            If isFirstLoad = False Then
+
+                MessageBoxHelper.Information("No more warnings!", messageTitle)
+            Else
+
+            End If
 
         End If
-
     End Sub
 
 End Class
