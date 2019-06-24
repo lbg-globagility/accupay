@@ -28,6 +28,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         'determines the IstimeIn, LogDate, and Employee values
         Dim allLogs = _timeAttendanceHelper.Analyze()
+
         Dim validLogs = allLogs.Where(Function(l) l.HasError = False).ToList()
         Dim invalidLogs = allLogs.Where(Function(l) l.HasError = True).ToList()
 
@@ -68,7 +69,13 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
             If currentLog Is Nothing Then Return
 
-            _dtp.Value = If(currentLog.LogDate, currentLog.DateTime.ToMinimumHourValue())
+            If currentLog.LogDate Is Nothing Then
+
+                currentLog.LogDate = currentLog.DateTime.ToMinimumHourValue()
+
+            End If
+
+            _dtp.Value = currentLog.LogDate.Value
 
             '_dtp.Bac
 
@@ -88,6 +95,8 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     End Sub
 
     Private Sub TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        TabControl1.Visible = False
 
         TimeAttendanceLogDataGrid.Controls.Add(_dtp)
         _dtp.Visible = False
@@ -121,6 +130,13 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         TimeAttendanceLogDataGrid.DataSource = Me._logs
 
         TimeAttendanceLogErrorsDataGrid.DataSource = Me._errors
+
+    End Sub
+
+    Private Sub TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+
+        ValidateLogs(True)
+        TabControl1.Visible = True
 
     End Sub
 
@@ -208,7 +224,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
                 currentLog.IsTimeIn = True
             Else
                 'Reset IsTimeIn if it is currently TRUE and he clicked IN button
-                'currentLog.IsTimeIn = Nothing
+                currentLog.IsTimeIn = Nothing
             End If
 
         ElseIf currentColumn Is TimeAttendanceLogDataGridTimeOutButton Then
@@ -217,7 +233,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
                 currentLog.IsTimeIn = False
             Else
                 'Reset IsTimeIn if it is currently FALSE and he clicked OUT button
-                'currentLog.IsTimeIn = Nothing
+                currentLog.IsTimeIn = Nothing
             End If
 
         ElseIf currentColumn Is TimeAttendanceLogDataGridDecrementLogDayButton Then
@@ -275,10 +291,14 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     End Sub
 
     Private Sub BtnRevalidate_Click(sender As Object, e As EventArgs) Handles btnRevalidate.Click
+        ValidateLogs()
 
+    End Sub
+
+    Private Sub ValidateLogs(Optional isFirstLoad As Boolean = False)
         Me.Cursor = Cursors.WaitCursor
 
-        _timeAttendanceHelper.Revalidate()
+        _timeAttendanceHelper.Validate()
 
         TimeAttendanceLogDataGrid.DataSource = Me._logs
         TimeAttendanceLogDataGrid.Refresh()
@@ -291,13 +311,24 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         If warningLogsCount > 0 Then
 
-            MessageBoxHelper.Warning($"{warningLogsCount} warnings remains.", messageTitle, MessageBoxButtons.OK)
+            If isFirstLoad Then
+
+                MessageBoxHelper.Warning($"There are {warningLogsCount} warning(s). It is advisable to import the overtimes and shifts first before importing the time logs.", messageTitle, MessageBoxButtons.OK)
+            Else
+
+                MessageBoxHelper.Warning($"{warningLogsCount} warnings remains.", messageTitle, MessageBoxButtons.OK)
+
+            End If
         Else
 
-            MessageBoxHelper.Information("No more warnings!", messageTitle)
+            If isFirstLoad = False Then
+
+                MessageBoxHelper.Information("No more warnings!", messageTitle)
+            Else
+
+            End If
 
         End If
-
     End Sub
 
 End Class
