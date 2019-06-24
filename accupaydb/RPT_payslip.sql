@@ -32,7 +32,7 @@ DECLARE leave_transac_rowids TINYTEXT;
 
 SET month_per_year = 12; SET default_min_workhour = 8;
 
-# SET @perc0 = 0.00; SET @perc1 = @perc0; SET @counts0 = @perc0; SET @_amt = @perc0;
+
 
 SELECT LeaveTransactionRowIdsWithinCutOff(og_rowid, pperiod_id) INTO leave_transac_rowids;
 
@@ -69,15 +69,11 @@ SELECT ps.RowID
 ,e.EmployeeID `COL1`
 ,CONCAT_WS(', ', e.LastName, e.FirstName) `COL69`
 
-/*,CONCAT_WS('-', DATE_FORMAT(ADDDATE(date_from, INTERVAL 5 DAY), custom_dateformat)
-              , DATE_FORMAT(IF(is_endofmonth = TRUE
-				                   , LAST_DAY(date_to)
-										 , ADDDATE(date_to, INTERVAL 5 DAY)), custom_dateformat)) `COL3`*/
-              
-/*,CONCAT_WS('-', DATE_FORMAT(date_from, custom_dateformat)
-              , DATE_FORMAT(date_to, custom_dateformat)) `COL4`*/
 
-# ,fs.`FilingStatus` `COL5`
+              
+
+
+
 
 ,esa.Salary `COL70`
 ,(@basic_sal := esa.BasicPay) `BasicPay`
@@ -88,10 +84,19 @@ SELECT ps.RowID
                          , (@basic_sal - (ps.LateDeduction + ps.UndertimeDeduction + ps.AbsenceDeduction))
                          , IFNULL(ps.RegularPay, 0)))
 						  ) `ActualRegular`
-,FORMAT(@act_regular, 2) `COL3`
-,IFNULL(FORMAT(et.RegularHoursWorked, 2), 0) `COL2`
+/*,FORMAT(@act_regular, 2) `COL3`
+,IFNULL(FORMAT(et.RegularHoursWorked, 2), 0) `COL2`*/
+, IF(LCASE(e.EmployeeType)='daily', ps.BasicHours, ps.RegularHours) `COL2`
+, ROUND(GetBasicPay(e.RowID,
+							ps.PayFromDate,
+							ps.PayToDate,
+							is_actual,
+							ps.BasicHours), 2) `COL3`
 
-,IFNULL(FORMAT(et.Absent, 2), 0) `COL5`
+#,IFNULL(FORMAT(et.Absent, 2), 0) `COL5`
+, ps.AbsentHours `COL4`
+, ps.AbsenceDeduction `COL5`
+
 ,IFNULL(FORMAT(et.HoursLate, 2), 0) `COL6`
 ,IFNULL(FORMAT(et.HoursLateAmount, 2), 0) `COL7`
 
@@ -113,7 +118,7 @@ SELECT ps.RowID
 ,IFNULL(FORMAT(et.NightDifferentialHours, 2), 0) `COL14`
 ,IFNULL(FORMAT(et.NightDiffHoursAmount, 2), 0) `COL15`
 
-,IFNULL(FORMAT(et.HolidayPayAmount, 2), 0) `COL17`
+,IFNULL(FORMAT(ps.HolidayPay, 2), 0) `COL17`
 
 ,(ps.TotalAllowance + ps.TotalBonus) `COL18`
 ,ps.TotalAdjustments `COL19`
@@ -157,61 +162,16 @@ SELECT ps.RowID
 ,IF(slp.`LoanDeductList` IS NULL, '', REPLACE(slp.`LoanDeductList`, ',', '\n')) `COL32`
 ,IF(slp.`LoanBalance` IS NULL, '', REPLACE(slp.`LoanBalance`, ',', '\n')) `COL40`
 ,IFNULL(slp.`TotalLoanBal`, 0) `COL50`
-# `LoanBalance` `TotalLoanBal`
+
 
 ,ps.TotalLoans `COL33`
 
 ,IF(lt.`LeaveTypes` IS NULL, '', REPLACE(lt.`LeaveTypes`, ',', '\n')) `COL34`
 ,IF(lt.`BalanceLeave` IS NULL, '', REPLACE(lt.`BalanceLeave`, ',', '\n')) `COL35`
 
-# ######################
+, ps.LeaveHours `COL80`
+, ps.LeavePay `COL81`
 
-/*
-
-,(@de_minimis := IFNULL(ROUND(((@act_regular * (esa.TrueSalary / esa.Salary))
-                               - @act_regular), 2), 0)
-  ) `DeMinimis`
-,IF(@de_minimis <= 0, 0.00, FORMAT(ps.RegularHours, 2)) `COL8`
-,FORMAT(@de_minimis, 2) `COL9`
-
-
-
-
-
-
-
-
-
-,psa.TotalGrossSalary `COL23`
-,(ps.TotalLoans
-  + ps.TotalEmpSSS
-  + ps.TotalEmpPhilhealth
-  + ps.TotalEmpHDMF
-  + ps.TotalEmpWithholdingTax
-  + IFNULL((lessadj.`TotalNegativeAdjustment`), 0)) `COL24`
-,psa.TotalNetSalary `COL25`
-
-,(e.LeaveAllowance - IFNULL(etlv.VacationLeaveHours, 0)) `COL26`
-,(e.SickLeaveAllowance - IFNULL(etlv.SickLeaveHours, 0)) `COL27`
-
-,ps.TotalEmpWithholdingTax `COL32`
-
-,ps.OvertimeHours `COL33`
-,FORMAT(ps.OvertimePay, 2) `COL34`
-
-,pstub.TotalTaxableSalary `COL41`
-,pstub.TotalEmpWithholdingTax `COL42`
-,pstub.TotalEmpSSS `COL43`
-,pstub.TotalEmpPhilhealth `COL28`
-,pstub.TotalEmpHDMF `COL29`
-
-,text_cutoff_ordinal `COL44`
-
-,CONCAT('Dept: ', dv.Name) `COL100`
-
-,is_endofmonth `IsEndOfMonth`
-
-*/
 
 FROM paystub ps
 
@@ -262,7 +222,7 @@ LEFT JOIN (SELECT ete.EmployeeID
        ON et.EmployeeID=ps.EmployeeID
 
 INNER JOIN employeesalary esa
-        ON esa.RowID = (SELECT esa.RowID # ROUND((esa.BasicPay * (esa.TrueSalary / esa.Salary)), 2)
+        ON esa.RowID = (SELECT esa.RowID 
 		                  FROM employeesalary esa
 								WHERE esa.EmployeeID=ps.EmployeeID
 								AND esa.OrganizationID=og_rowid
@@ -324,8 +284,8 @@ LEFT JOIN (SELECT etlv.RowID
 	    ON etlv.EmployeeID=ps.EmployeeID
 
 LEFT JOIN (SELECT ea.*
-           ,GROUP_CONCAT( ea.AllowanceAmount ) `AllowanceAmountList`# DISTINCT
-           # ,GROUP_CONCAT(p.PartNo) `AllowanceNameList`
+           ,GROUP_CONCAT( ea.AllowanceAmount ) `AllowanceAmountList`
+           
            ,GROUP_CONCAT( p.PartNo ) `AllowanceNameList`
            FROM employeeallowance ea
            INNER JOIN product p ON p.RowID=ea.ProductID
@@ -363,13 +323,8 @@ LEFT JOIN (
 		     ,GROUP_CONCAT( ea.PartNo ) `AllowanceNameList`
 		FROM (
 		     SELECT ea.eaRowID `RowID`, ea.EmployeeID
-		     # , (@perc1 := AVG(IFNULL(etn.`HoursDeduct` / etn.DivisorToDailyRate, 0)))
-		     /*, IF(p.`Fixed` = 1
-			       , ea.AllowanceAmount
-					 , ROUND(ea.AllowanceAmount
-					         - (ea.AllowanceAmount * AVG(IFNULL(etn.`HoursDeduct` / etn.DivisorToDailyRate, 0)))
-								, 2)
-             ) `TheAmount`*/
+		     
+		     
            , ROUND( ( ea.AllowanceAmount - (SUM(ea.HoursToLess) * ((ea.AllowanceAmount / (ea.WorkDaysPerYear / (ea.PAYFREQDIV * month_per_year))) / default_min_workhour)) + IF(giveAllowanceForHoliday, SUM(ea.HolidayAllowance), 0) ), 2) `TheAmount`
            
 		     , p.PartNo
