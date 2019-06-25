@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay
 Imports AccuPay.Entity
 Imports PayrollSys
 
@@ -164,6 +165,10 @@ Public Class DayCalculator
 
                 timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate)
 
+                timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate)
+
+                OverrideLateAndUndertimeHoursComputations(timeEntry, currentShift, dutyPeriod, leavePeriod, _policy)
+
                 If _policy.ComputeBreakTimeLate Then
                     timeEntry.LateHours += calculator.ComputeBreakTimeLateHours(coveredPeriod, currentShift, timeAttendanceLogs, breakTimeBrackets)
                 End If
@@ -179,8 +184,6 @@ Public Class DayCalculator
                 End If
 
                 timeEntry = LateSchemeSkipCountHours(timeEntry, currentShift, calculator, coveredPeriod)
-
-                timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate)
 
                 timeEntry.RegularHours = currentShift.WorkingHours - (timeEntry.LateHours + timeEntry.UndertimeHours)
 
@@ -221,6 +224,191 @@ Public Class DayCalculator
         ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves)
         ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry)
     End Sub
+
+    Private Sub OverrideLateAndUndertimeHoursComputations(
+                    timeEntry As TimeEntry,
+                    currentShift As CurrentShift,
+                    dutyPeriod As TimePeriod,
+                    leavePeriod As TimePeriod,
+                    policy As TimeEntryPolicy)
+
+        Dim output = ComputeLateAndUndertimeHours(
+                        currentShift.ShiftPeriod,
+                        dutyPeriod,
+                        leavePeriod,
+                        currentShift.BreakPeriod,
+                        policy.ComputeBreakTimeLate)
+
+        If output.Item1 IsNot Nothing AndAlso output.Item2 IsNot Nothing Then
+
+            timeEntry.LateHours = output.Item1.Value
+            timeEntry.UndertimeHours = output.Item2.Value
+
+        End If
+
+    End Sub
+
+    Public Shared Function ComputeLateAndUndertimeHours(
+                                shiftPeriod As TimePeriod,
+                                dutyPeriod As TimePeriod,
+                                leavePeriod As TimePeriod,
+                                breakPeriod As TimePeriod,
+                                computeBreakTimeLatePolicy As Boolean) As (Decimal?, Decimal?)
+
+        Dim lateHours, undertimeHours As Decimal
+
+        Dim shiftAndDutyDifference As New List(Of TimePeriod)
+
+        If shiftPeriod Is Nothing Then Return (Nothing, Nothing)
+
+        If dutyPeriod IsNot Nothing Then
+
+            shiftAndDutyDifference = shiftPeriod.Difference(dutyPeriod).ToList
+        Else
+
+            shiftAndDutyDifference.Add(shiftPeriod)
+
+        End If
+
+        Dim undertimePeriod As TimePeriod = Nothing
+        Dim latePeriod As TimePeriod = Nothing
+
+        Dim undertimeHoursAfterLeaveBeforeDuty As Decimal = 0
+        Dim undertimeHoursAfterLeaveBeforeDutyTimePeriod As TimePeriod = Nothing
+
+        If shiftAndDutyDifference.Any() Then
+
+            If shiftAndDutyDifference.Count = 2 Then
+
+                latePeriod = shiftAndDutyDifference(0)
+                undertimePeriod = shiftAndDutyDifference(1)
+
+                If leavePeriod IsNot Nothing Then
+                    'check if there is undertime after leave
+                    'ex 9am-6pm shift / 10am-3pm leave / 4pm-5pm duty period / 9am-10am Late - 3am-4pm UT & 5pm-6pm UT
+                    Dim latePeriods = latePeriod.Difference(leavePeriod)
+                    If latePeriods.Count = 2 Then
+
+                        latePeriod = latePeriods(0)
+
+                        undertimeHoursAfterLeaveBeforeDutyTimePeriod = latePeriods(1)
+                    Else
+
+                        If leavePeriod.Start <= shiftPeriod.Start OrElse
+                        (dutyPeriod IsNot Nothing AndAlso dutyPeriod.Start <= shiftPeriod.Start) Then
+
+                            undertimeHoursAfterLeaveBeforeDutyTimePeriod = latePeriods(1)
+                        Else
+
+                            latePeriod = latePeriods(0)
+                        End If
+
+                    End If
+
+                    If undertimeHoursAfterLeaveBeforeDutyTimePeriod IsNot Nothing Then
+
+                        undertimeHoursAfterLeaveBeforeDuty = ComputeHoursNotCoveredByLeave(breakPeriod, computeBreakTimeLatePolicy, undertimeHoursAfterLeaveBeforeDutyTimePeriod, leavePeriod)
+
+                    End If
+                End If
+            Else
+
+                If (leavePeriod IsNot Nothing AndAlso leavePeriod.Start <= shiftPeriod.Start) OrElse
+                    (dutyPeriod IsNot Nothing AndAlso dutyPeriod.Start <= shiftPeriod.Start) Then
+
+                    'ex. 9am-6pm shift / 9am-12pm leave
+                    undertimePeriod = shiftAndDutyDifference(0)
+                Else
+
+                    'ex. 9am-6pm shift / 3pm-6pm leave
+                    latePeriod = shiftAndDutyDifference(0)
+
+                    If leavePeriod IsNot Nothing Then
+
+                        'check if there is undertime after leave
+                        'ex 9am-6pm shift / 3pm-5pm leave / 9am-3pm Late - 5pm-6pm Undertime
+                        Dim latePeriods = latePeriod.Difference(leavePeriod)
+                        If latePeriods.Count = 2 Then
+
+                            latePeriod = latePeriods(0)
+
+                            undertimePeriod = latePeriods(1)
+
+                        End If
+
+                    End If
+
+                End If
+
+            End If
+
+        End If
+
+        lateHours = ComputeHoursNotCoveredByLeave(breakPeriod, computeBreakTimeLatePolicy, latePeriod, leavePeriod)
+        undertimeHours = ComputeHoursNotCoveredByLeave(breakPeriod, computeBreakTimeLatePolicy, undertimePeriod, leavePeriod)
+
+        undertimeHours += undertimeHoursAfterLeaveBeforeDuty
+
+        Return (lateHours, undertimeHours)
+
+    End Function
+
+    Private Shared Function ComputeHoursNotCoveredByLeave(
+                                breakPeriod As TimePeriod,
+                                computeBreakTimeLatePolicy As Boolean,
+                                notCoveredByLeavePeriod As TimePeriod,
+                                leavePeriod As TimePeriod) As Decimal
+
+        Dim hours As Decimal = 0
+
+        If notCoveredByLeavePeriod Is Nothing Then Return hours
+
+        Dim notCoveredByLeavePeriods As New List(Of TimePeriod)
+
+        If leavePeriod IsNot Nothing Then
+
+            notCoveredByLeavePeriods = notCoveredByLeavePeriod.
+                                        Difference(leavePeriod).
+                                        ToList
+        Else
+
+            notCoveredByLeavePeriods.Add(notCoveredByLeavePeriod)
+        End If
+
+        If notCoveredByLeavePeriods.Any() Then
+
+            If notCoveredByLeavePeriods.Count = 2 Then
+
+                Dim periodBeforeLeave = notCoveredByLeavePeriods(0)
+                Dim periodAfterLeave = notCoveredByLeavePeriods(1)
+
+                hours = ComputeHoursWithBreaktime(breakPeriod, computeBreakTimeLatePolicy, periodBeforeLeave)
+                hours += ComputeHoursWithBreaktime(breakPeriod, computeBreakTimeLatePolicy, periodAfterLeave)
+            Else
+
+                hours = ComputeHoursWithBreaktime(breakPeriod, computeBreakTimeLatePolicy, notCoveredByLeavePeriods(0))
+
+            End If
+
+        End If
+
+        Return hours
+    End Function
+
+    Private Shared Function ComputeHoursWithBreaktime(breakPeriod As TimePeriod, computeBreakTimeLatePolicy As Boolean, hoursPeriod As TimePeriod) As Decimal
+        Dim hours As Decimal
+
+        If breakPeriod IsNot Nothing AndAlso computeBreakTimeLatePolicy = False Then
+            Dim hoursWithoutBreaktimes = hoursPeriod.Difference(breakPeriod)
+
+            hours = hoursWithoutBreaktimes.Sum(Function(l) l.TotalHours)
+        Else
+
+            hours = hoursPeriod.TotalHours
+        End If
+
+        Return hours
+    End Function
 
     'Private Function fsdfsd(currentShift As CurrentShift, leavePeriod As TimePeriod) As Decimal
     '    If leavePeriod.Start Then
