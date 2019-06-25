@@ -5,6 +5,8 @@ Imports AccuPay
 <TestFixture>
 Public Class OverrideLateAndUndertimeHoursTest
 
+#Region "Normal duty"
+
     <Test>
     Public Sub ShouldHaveNoLateOrUndertime_WithNormalDutyPeriodWholeDay()
 
@@ -39,7 +41,111 @@ Public Class OverrideLateAndUndertimeHoursTest
 
     End Sub
 
-#Region "Duty Then Leave"
+    <Test>
+    Public Sub ShouldHaveLate_WithNormalDutyPeriod()
+
+        Dim lateHours = 0.75
+        Dim undertimeHours = 0
+
+        Dim shiftPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 0, 0),
+                        New Date(2019, 6, 24, 18, 0, 0))
+
+        Dim dutyPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 45, 0),
+                        New Date(2019, 6, 24, 18, 0, 0))
+
+        Dim leavePeriod As TimePeriod = Nothing
+
+        Dim breakPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 12, 0, 0),
+                        New Date(2019, 6, 24, 13, 0, 0))
+
+        Dim computeBreakTimeLatePolicy As Boolean = False
+
+        Dim output = DayCalculator.ComputeLateAndUndertimeHours(
+                                        shiftPeriod,
+                                        dutyPeriod,
+                                        leavePeriod,
+                                        breakPeriod,
+                                        computeBreakTimeLatePolicy)
+
+        Assert.AreEqual(output.Item1, lateHours)
+        Assert.AreEqual(output.Item2, undertimeHours)
+
+    End Sub
+
+    <Test>
+    Public Sub ShouldHaveUndertime_WithNormalDutyPeriod()
+
+        Dim lateHours = 0
+        Dim undertimeHours = 0.75
+
+        Dim shiftPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 0, 0),
+                        New Date(2019, 6, 24, 18, 0, 0))
+
+        Dim dutyPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 0, 0),
+                        New Date(2019, 6, 24, 17, 15, 0))
+
+        Dim leavePeriod As TimePeriod = Nothing
+
+        Dim breakPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 12, 0, 0),
+                        New Date(2019, 6, 24, 13, 0, 0))
+
+        Dim computeBreakTimeLatePolicy As Boolean = False
+
+        Dim output = DayCalculator.ComputeLateAndUndertimeHours(
+                                        shiftPeriod,
+                                        dutyPeriod,
+                                        leavePeriod,
+                                        breakPeriod,
+                                        computeBreakTimeLatePolicy)
+
+        Assert.AreEqual(output.Item1, lateHours)
+        Assert.AreEqual(output.Item2, undertimeHours)
+
+    End Sub
+
+    <Test>
+    Public Sub ShouldHaveLateAndUndertime_WithNormalDutyPeriod()
+
+        Dim lateHours = 0.75
+        Dim undertimeHours = 0.75
+
+        Dim shiftPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 0, 0),
+                        New Date(2019, 6, 24, 18, 0, 0))
+
+        Dim dutyPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 45, 0),
+                        New Date(2019, 6, 24, 17, 15, 0))
+
+        Dim leavePeriod As TimePeriod = Nothing
+
+        Dim breakPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 12, 0, 0),
+                        New Date(2019, 6, 24, 13, 0, 0))
+
+        Dim computeBreakTimeLatePolicy As Boolean = False
+
+        Dim output = DayCalculator.ComputeLateAndUndertimeHours(
+                                        shiftPeriod,
+                                        dutyPeriod,
+                                        leavePeriod,
+                                        breakPeriod,
+                                        computeBreakTimeLatePolicy)
+
+        Assert.AreEqual(output.Item1, lateHours)
+        Assert.AreEqual(output.Item2, undertimeHours)
+
+    End Sub
+
+#End Region
+
+#Region "Duty Then leave"
 
     <Test>
     Public Sub ShouldHaveLateAndUndertime_WithDutyAndLeavePeriod()
