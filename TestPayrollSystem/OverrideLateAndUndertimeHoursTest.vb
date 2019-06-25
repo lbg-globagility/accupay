@@ -13,16 +13,19 @@ Public Class OverrideLateAndUndertimeHoursTest
         Dim lateHours = 0
         Dim undertimeHours = 0
 
+        '9am-6pm
         Dim shiftPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 9, 0, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
+        '9am-6pm
         Dim dutyPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 9, 0, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
         Dim leavePeriod As TimePeriod = Nothing
 
+        '12pm-1pm
         Dim breakPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 12, 0, 0),
                         New Date(2019, 6, 24, 13, 0, 0))
@@ -47,16 +50,19 @@ Public Class OverrideLateAndUndertimeHoursTest
         Dim lateHours = 0.75
         Dim undertimeHours = 0
 
+        '9am-6pm
         Dim shiftPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 9, 0, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
+        '9:45am-6pm
         Dim dutyPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 9, 45, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
         Dim leavePeriod As TimePeriod = Nothing
 
+        '12pm-1pm
         Dim breakPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 12, 0, 0),
                         New Date(2019, 6, 24, 13, 0, 0))
@@ -115,16 +121,19 @@ Public Class OverrideLateAndUndertimeHoursTest
         Dim lateHours = 0.75
         Dim undertimeHours = 0.75
 
+        '9am-6pm
         Dim shiftPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 9, 0, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
+        '9:45am-5:15pm
         Dim dutyPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 9, 45, 0),
                         New Date(2019, 6, 24, 17, 15, 0))
 
         Dim leavePeriod As TimePeriod = Nothing
 
+        '12pm-1pm
         Dim breakPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 12, 0, 0),
                         New Date(2019, 6, 24, 13, 0, 0))

@@ -285,7 +285,7 @@ Public Class DayCalculator
 
                 If leavePeriod IsNot Nothing Then
                     'check if there is undertime after leave
-                    'ex 9am-6pm shift / 10am-3pm leave / 4pm-5pm duty period / 9am-10am Late - 3am-4pm UT & 5pm-6pm UT
+                    'ex 9am-6pm shift / 10am-3pm leave / 4pm-5pm duty period / 9am-10am Late - 3pm-4pm UT & 5pm-6pm UT
                     Dim latePeriods = latePeriod.Difference(leavePeriod)
                     If latePeriods.Count = 2 Then
 
