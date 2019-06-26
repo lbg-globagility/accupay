@@ -1350,13 +1350,13 @@ Partial Class MDIPrimaryForm
         Me.ToolStripButton1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.ToolStripButton1.ToolTipText = "General"
         '
-        'ToolStripButton2
+        'tsbtnHRIS
         '
         Me.tsbtnHRIS.AutoSize = False
-        Me.tsbtnHRIS.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
+        Me.tsbtnHRIS.Image = CType(resources.GetObject("tsbtnHRIS.Image"), System.Drawing.Image)
         Me.tsbtnHRIS.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnHRIS.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
-        Me.tsbtnHRIS.Name = "ToolStripButton2"
+        Me.tsbtnHRIS.Name = "tsbtnHRIS"
         Me.tsbtnHRIS.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
         Me.tsbtnHRIS.Size = New System.Drawing.Size(85, 80)
         Me.tsbtnHRIS.Text = "HRIS"
@@ -1467,6 +1467,7 @@ Partial Class MDIPrimaryForm
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.Showmainbutton)
         Me.Controls.Add(Me.ToolStrip1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MinimumSize = New System.Drawing.Size(1065, 590)
         Me.Name = "MDIPrimaryForm"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
