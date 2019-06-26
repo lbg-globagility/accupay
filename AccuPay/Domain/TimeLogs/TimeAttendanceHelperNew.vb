@@ -82,8 +82,6 @@ Public Class TimeAttendanceHelperNew
 
         Next
 
-        ValidateLogs(dayLogRecords)
-
         Return _importedTimeAttendanceLogs
     End Function
 
@@ -351,7 +349,7 @@ Public Class TimeAttendanceHelperNew
     Private Function GetLastOvertime(currentEmployeeOvertimes As List(Of Overtime), currentDate As Date) As Overtime
         Return currentEmployeeOvertimes.
                         Where(Function(o) o.OTStartDate = currentDate).
-                        OrderBy(Function(o) o.OTEndTime).
+                        OrderBy(Function(o) o.OTStartTime).
                         LastOrDefault()
     End Function
 
@@ -499,8 +497,8 @@ Public Class TimeAttendanceHelperNew
 
                 End If
 
-                shiftMaxBound = currentDayEndTime.Value.
-                                Add(TimeSpan.FromHours(hoursBuffer)).
+                shiftMaxBound = nextDayStartDateTime.Value.
+                                Add(TimeSpan.FromHours(-hoursBuffer)).
                                 Add(TimeSpan.FromSeconds(-1))
 
             End If
@@ -531,11 +529,11 @@ Public Class TimeAttendanceHelperNew
     Private Function GetStartDateTime(currentShift As EmployeeDutySchedule, earliestOvertime As Overtime) As Date?
         Dim currentShiftStartTime = CreateDateTime(
                                         currentShift?.DateSched,
-                                        currentShift?.StartTime.Value)
+                                        currentShift?.StartTime)
 
         Dim earliestOvertimeStartTime = CreateDateTime(
                                             earliestOvertime?.OTStartDate,
-                                            earliestOvertime?.OTStartTime.Value)
+                                            earliestOvertime?.OTStartTime)
 
         Dim startDateTime As Date? = CompareShiftToOvertime(
                                         currentShiftStartTime,
@@ -547,13 +545,13 @@ Public Class TimeAttendanceHelperNew
     Private Function GetEndDateTime(currentShift As EmployeeDutySchedule, lastOvertime As Overtime) As Date?
         Dim currentShiftEndTime = CreateDateTime(
                                             currentShift?.DateSched,
-                                            currentShift?.EndTime.Value,
-                                            currentShift?.StartTime.Value)
+                                            currentShift?.EndTime,
+                                            currentShift?.StartTime)
 
         Dim lastOvertimeEndTime = CreateDateTime(
                                         lastOvertime?.OTStartDate,
-                                        lastOvertime?.OTEndTime.Value,
-                                        lastOvertime?.OTStartTime.Value)
+                                        lastOvertime?.OTEndTime,
+                                        lastOvertime?.OTStartTime)
 
         Dim endTime As Date? = CompareShiftToOvertime(
                                         currentShiftEndTime,

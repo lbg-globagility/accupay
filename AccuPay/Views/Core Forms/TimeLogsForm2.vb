@@ -272,7 +272,7 @@ Public Class TimeLogsForm2
         ToolStripProgressBar1.Value = e.ProgressPercentage
     End Sub
 
-    Private Async Sub BackGroundWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+    Private Sub BackGroundWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) _
         Handles bgworkTypicalImport.RunWorkerCompleted, bgworkImport.RunWorkerCompleted
 
         If e.Error IsNot Nothing Then
@@ -285,7 +285,7 @@ Public Class TimeLogsForm2
 
             ShowSuccessImportBalloon()
 
-            Await ReloadAsync()
+            ReloadAsync()
 
         End If
 
