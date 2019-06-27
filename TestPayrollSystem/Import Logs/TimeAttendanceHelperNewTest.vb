@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports AccuPay
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
@@ -17,7 +18,9 @@ Public Class TimeAttendanceHelperNewTest
         Dim employeeShifts As List(Of EmployeeDutySchedule) = GetSampleEmployeeDutySchedules()
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts)
+        Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -29,7 +32,6 @@ Public Class TimeAttendanceHelperNewTest
         AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
         AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
         AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
-
 
         ' Original AssertTimeLog(results.Item(6), "", "23:30:00", "2018-06-07")
         ' In old analyzer, 11:30 PM was analyzed as time out
@@ -45,7 +47,9 @@ Public Class TimeAttendanceHelperNewTest
         Dim employeeShifts As New List(Of EmployeeDutySchedule)
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts)
+        Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -69,7 +73,9 @@ Public Class TimeAttendanceHelperNewTest
         Dim employeeShifts As List(Of EmployeeDutySchedule) = GetSampleEmployeeDutySchedules_WithNextShiftScheduleWithoutShift()
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts)
+        Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
 
         logs = timeAttendanceHelper.Analyze()
 
