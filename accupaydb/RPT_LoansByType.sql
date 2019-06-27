@@ -21,8 +21,8 @@ SELECT
         INITIALS(ee.MiddleName, '. ', '1')
     ) `DatCol3`,
     FORMAT(SUM(IFNULL(slp.DeductionAmount, 0)), 2) `DatCol4`,
-    FORMAT(SUM(IFNULL(els.TotalLoanAmount, 0)), 2) `DatCol5`,
-    FORMAT(SUM(IFNULL(slp.TotalBalanceLeft, 0)), 2) `DatCol6`
+    FORMAT(IFNULL(els.TotalLoanAmount, 0), 2) `DatCol5`,
+    FORMAT(ROUND(IFNULL(els.TotalLoanAmount, 0),2) - ROUND(SUM(IFNULL(slp.DeductionAmount, 0)),2),2) `DatCol6`
 FROM scheduledloansperpayperiod slp
 INNER JOIN employeeloanschedule els
 ON els.RowID = slp.EmployeeLoanRecordID
