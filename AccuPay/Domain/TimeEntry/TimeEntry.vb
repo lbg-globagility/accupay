@@ -166,19 +166,22 @@ Namespace Global.AccuPay.Entity
         End Sub
 
         Public Sub ComputeTotalPay()
-            TotalDayPay =
-               RegularPay +
-               OvertimePay +
-               NightDiffPay +
-               NightDiffOTPay +
-               RestDayPay +
-               RestDayOTPay +
-               SpecialHolidayPay +
-               SpecialHolidayOTPay +
-               RegularHolidayPay +
-               RegularHolidayOTPay +
-               LeavePay
+            TotalDayPay = GetTotalDayPay()
         End Sub
+
+        Public Function GetTotalDayPay() As Decimal
+            Return RegularPay +
+                    OvertimePay +
+                    NightDiffPay +
+                    NightDiffOTPay +
+                    RestDayPay +
+                    RestDayOTPay +
+                    SpecialHolidayPay +
+                    SpecialHolidayOTPay +
+                    RegularHolidayPay +
+                    RegularHolidayOTPay +
+                    LeavePay
+        End Function
 
         Public Sub Reset()
 

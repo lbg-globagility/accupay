@@ -572,9 +572,13 @@ Public Class DayCalculator
                     basicHolidayPay = dailyRate
                 End If
 
+                Dim isPaidToday = timeEntry.GetTotalDayPay() > 0
+
                 Dim isEntitledToHolidayPay =
                     (Not isHolidayPayInclusive) AndAlso
-                    (hasWorkedLastDay Or (Not _policy.RequiredToWorkLastDayForHolidayPay))
+                    (hasWorkedLastDay OrElse
+                        isPaidToday OrElse
+                        (Not _policy.RequiredToWorkLastDayForHolidayPay))
 
                 If isEntitledToHolidayPay Then
                     timeEntry.RegularHolidayPay += basicHolidayPay
