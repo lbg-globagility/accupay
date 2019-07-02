@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
 Imports System.Collections.ObjectModel
-Imports System.IO
 Imports AccuPay.Helpers
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
@@ -10,10 +9,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "" Implements IReportProvider.Name
-
-    Private basic_alphabet() As String =
-        New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-                      "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT"}
 
     Private ReadOnly _reportColumns As IReadOnlyCollection(Of ReportColumn) = New ReadOnlyCollection(Of ReportColumn)({
         New ReportColumn("Code", "DatCol2", ColumnType.Text),
@@ -64,13 +59,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
         New ReportColumn("13th Month", "13thMonthPay"),
         New ReportColumn("Total", "Total")
     })
-
-    Private ReadOnly preferred_font As Font = New Font(
-        "Source Sans Pro",
-        8.25!,
-        FontStyle.Regular,
-        GraphicsUnit.Point,
-        CType(0, Byte))
 
     Private Const FontSize As Single = 8
 
@@ -131,121 +119,36 @@ Public Class PayrollSummaryExcelFormatReportProvider
                                       String.Concat(short_dates(0).Replace("/", "-"), "TO", short_dates(1).Replace("/", "-")),
                                       ".xlsx")
 
+            Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
 
-
-            Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName)
-
-            If saveFileDialogHelperOutPut.IsSuccess = False Then Return
+            If saveFileDialogHelperOutPut.IsSuccess = False Then
+                Return
+            End If
 
             Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
-            Dim allEmployeesByDivision As IEnumerable(Of IGrouping(Of String, DataRow))
+            Dim viewableReportColumns = GetViewableReportColumns(allEmployees, hideEmptyColumns)
 
-            Dim viewableReportColumns = New List(Of ReportColumn)
-            For Each reportColumn In _reportColumns
-                If reportColumn.Optional AndAlso hideEmptyColumns Then
-                    Dim hasValue = allEmployees.
-                        Any(Function(row) Not IsDBNull(row(reportColumn.Source)) And Not CDbl(row(reportColumn.Source)) = 0)
-
-                    If hasValue Then
-                        viewableReportColumns.Add(reportColumn)
-                    End If
-                Else
-                    viewableReportColumns.Add(reportColumn)
-                End If
-            Next
-
-            If keepInOneSheet Then
-                allEmployeesByDivision = allEmployees.
-                GroupBy(Function(r) String.Empty)
-            Else
-                allEmployeesByDivision = allEmployees.
-                GroupBy(Function(r) r("DivisionID").ToString())
-            End If
+            Dim employeeGroups = GroupEmployees(allEmployees)
 
             Using excel = New ExcelPackage(newFile)
                 Dim subTotalRows = New List(Of Integer)
 
-                Dim worksheet = excel.Workbook.Worksheets.Add(reportName)
-                worksheet.Cells.Style.Font.Size = FontSize
+                If keepInOneSheet Then
+                    Dim worksheet = excel.Workbook.Worksheets.Add(reportName)
 
-                Dim organizationCell = worksheet.Cells(1, 1)
-                organizationCell.Value = orgNam.ToUpper
-                organizationCell.Style.Font.Bold = True
+                    RenderWorksheet(worksheet, employeeGroups, short_dates, viewableReportColumns)
+                Else
+                    For Each employeeGroup In employeeGroups
+                        Dim worksheet = excel.Workbook.Worksheets.Add(employeeGroup.DivisionName)
 
-                Dim dateCell = worksheet.Cells(2, 1)
-                Dim dateRange = $"For the period of {short_dates(0)} to {short_dates(1)})"
-                dateCell.Value = dateRange
+                        Dim currentGroup = New Collection(Of EmployeeGroup) From {
+                            employeeGroup
+                        }
 
-                Dim lastCell = String.Empty
-                Dim rowIndex As Integer = 4
-
-                For Each employeesInDivision In allEmployeesByDivision
-                    Dim divisionCell = worksheet.Cells(rowIndex, 1)
-                    Dim firstEmployee = employeesInDivision.FirstOrDefault()
-                    Dim divisionName = firstEmployee("DatCol1").ToString
-                    If divisionName.Length > 0 Then
-                        divisionCell.Value = divisionName
-                        divisionCell.Style.Font.Italic = True
-                    End If
-
-                    rowIndex += 1
-
-                    RenderColumnHeaders(worksheet, rowIndex, viewableReportColumns)
-
-                    rowIndex += 1
-
-                    Dim employeesStartIndex = rowIndex
-                    Dim employeesLastIndex = 0
-
-                    For Each employeeRow In employeesInDivision
-                        Dim letters = GenerateAlphabet.GetEnumerator()
-
-                        For Each reportColumn In viewableReportColumns
-                            letters.MoveNext()
-                            Dim alphabet = letters.Current
-
-                            Dim column = $"{alphabet}{rowIndex}"
-
-                            Dim cell = worksheet.Cells(column)
-                            Dim sourceName = reportColumn.Source
-                            cell.Value = employeeRow(sourceName)
-
-                            If reportColumn.Type = ColumnType.Numeric Then
-                                cell.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
-                                cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
-                            End If
-                        Next
-
-                        lastCell = letters.Current
-
-                        employeesLastIndex = rowIndex
-                        rowIndex += 1
+                        RenderWorksheet(worksheet, currentGroup, short_dates, viewableReportColumns)
                     Next
-
-                    Dim subTotalCellRange = String.Join(
-                        ":",
-                        String.Concat("C", rowIndex),
-                        String.Concat(lastCell, rowIndex))
-
-                    subTotalRows.Add(rowIndex)
-
-                    RenderSubTotal(worksheet, subTotalCellRange, employeesStartIndex, employeesLastIndex)
-
-                    rowIndex += 2
-                Next
-
-                worksheet.Cells.AutoFitColumns()
-                worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
-
-                rowIndex += 1
-
-                RenderGrandTotal(worksheet, rowIndex, lastCell, subTotalRows)
-
-                rowIndex += 1
-
-                RenderSignatureFields(worksheet, rowIndex)
-                SetDefaultPrinterSettings(worksheet.PrinterSettings)
+                End If
 
                 excel.Save()
             End Using
@@ -255,6 +158,106 @@ Public Class PayrollSummaryExcelFormatReportProvider
             MsgBox(getErrExcptn(ex, Me.Name))
         End Try
     End Sub
+
+    Private Sub RenderWorksheet(worksheet As ExcelWorksheet,
+                                employeeGroups As ICollection(Of EmployeeGroup),
+                                short_dates As String(),
+                                viewableReportColumns As ICollection(Of ReportColumn))
+        Dim subTotalRows = New List(Of Integer)
+
+        worksheet.Cells.Style.Font.Size = FontSize
+
+        Dim organizationCell = worksheet.Cells(1, 1)
+        organizationCell.Value = orgNam.ToUpper()
+        organizationCell.Style.Font.Bold = True
+
+        Dim dateCell = worksheet.Cells(2, 1)
+        Dim dateRange = $"For the period of {short_dates(0)} to {short_dates(1)})"
+        dateCell.Value = dateRange
+
+        Dim lastCell = String.Empty
+        Dim rowIndex As Integer = 4
+
+        For Each employeeGroup In employeeGroups
+            Dim divisionCell = worksheet.Cells(rowIndex, 1)
+            divisionCell.Value = employeeGroup.DivisionName
+            divisionCell.Style.Font.Italic = True
+
+            rowIndex += 1
+
+            RenderColumnHeaders(worksheet, rowIndex, viewableReportColumns)
+
+            rowIndex += 1
+
+            Dim employeesStartIndex = rowIndex
+            Dim employeesLastIndex = 0
+
+            For Each employee In employeeGroup.Employees
+                Dim letters = GenerateAlphabet.GetEnumerator()
+
+                For Each reportColumn In viewableReportColumns
+                    letters.MoveNext()
+                    Dim alphabet = letters.Current
+
+                    Dim column = $"{alphabet}{rowIndex}"
+
+                    Dim cell = worksheet.Cells(column)
+                    Dim sourceName = reportColumn.Source
+                    cell.Value = employee(sourceName)
+
+                    If reportColumn.Type = ColumnType.Numeric Then
+                        cell.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
+                        cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+                    End If
+                Next
+
+                lastCell = letters.Current
+
+                employeesLastIndex = rowIndex
+                rowIndex += 1
+            Next
+
+            Dim subTotalCellRange = $"C{rowIndex}:{lastCell}{rowIndex}"
+
+            subTotalRows.Add(rowIndex)
+
+            RenderSubTotal(worksheet, subTotalCellRange, employeesStartIndex, employeesLastIndex)
+
+            rowIndex += 2
+        Next
+
+        worksheet.Cells.AutoFitColumns()
+        worksheet.Cells("A1").AutoFitColumns(4.9, 5.3)
+
+        rowIndex += 1
+
+        If employeeGroups.Count > 1 Then
+            RenderGrandTotal(worksheet, rowIndex, lastCell, subTotalRows)
+        End If
+
+        rowIndex += 1
+
+        RenderSignatureFields(worksheet, rowIndex)
+        SetDefaultPrinterSettings(worksheet.PrinterSettings)
+    End Sub
+
+    Private Function GetViewableReportColumns(allEmployees As ICollection(Of DataRow), hideEmptyColumns As Boolean) As ICollection(Of ReportColumn)
+        Dim viewableReportColumns = New List(Of ReportColumn)
+        For Each reportColumn In _reportColumns
+            If reportColumn.Optional AndAlso hideEmptyColumns Then
+                Dim hasValue = allEmployees.
+                                    Any(Function(row) Not IsDBNull(row(reportColumn.Source)) And Not CDbl(row(reportColumn.Source)) = 0)
+
+                If hasValue Then
+                    viewableReportColumns.Add(reportColumn)
+                End If
+            Else
+                viewableReportColumns.Add(reportColumn)
+            End If
+        Next
+
+        Return viewableReportColumns
+    End Function
 
     Private Iterator Function GenerateAlphabet() As IEnumerable(Of String)
         Dim letter = "A"
@@ -275,7 +278,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
             Dim letterAsAscii = Asc(currentLetter)
             If letterAsAscii >= Asc("Z") Then
-                If firstLetter = "" Then
+                If firstLetter = String.Empty Then
                     firstLetter = "A"
                 Else
                     firstLetter = Chr(Asc(firstLetter) + 1)
@@ -311,8 +314,11 @@ Public Class PayrollSummaryExcelFormatReportProvider
         worksheet.Cells(subTotalCellRange).Style.Border.Top.Style = ExcelBorderStyle.Thin
     End Sub
 
-    Private Sub RenderGrandTotal(worksheet As ExcelWorksheet, rowIndex As Integer, last_cell_column As String, subTotalRows As IEnumerable(Of Integer))
-        Dim grandTotalRange = String.Join(":", String.Concat("C", rowIndex), String.Concat(last_cell_column, rowIndex))
+    Private Sub RenderGrandTotal(worksheet As ExcelWorksheet,
+                                 rowIndex As Integer,
+                                 lastCellColumn As String,
+                                 subTotalRows As IEnumerable(Of Integer))
+        Dim grandTotalRange = $"C{rowIndex}:{lastCellColumn}{rowIndex}"
         worksheet.Cells(grandTotalRange).Formula = String.Format("SUM({0})", String.Join(",", subTotalRows.Select(Function(s) $"C{s}")))
         worksheet.Cells(grandTotalRange).Style.Border.Top.Style = ExcelBorderStyle.Double
         worksheet.Cells(grandTotalRange).Style.Font.Bold = True
@@ -320,25 +326,19 @@ Public Class PayrollSummaryExcelFormatReportProvider
     End Sub
 
     Private Sub RenderSignatureFields(worksheet As ExcelWorksheet, startIdx As Integer)
-        Dim signatur_field_index As Integer = (startIdx + 1)
+        Dim index As Integer = (startIdx + 1)
 
         With worksheet
-            .Cells(String.Concat("A", signatur_field_index)).Value = "Prepared by: "
-            .Cells(String.Join(":",
-                                   String.Concat("A", signatur_field_index),
-                                   String.Concat("B", signatur_field_index))).Merge = True
+            .Cells($"A{index}").Value = "Prepared by: "
+            .Cells($"A{index}:B{index}").Merge = True
 
-            signatur_field_index += 1
-            .Cells(String.Concat("A", signatur_field_index)).Value = "Audited by: "
-            .Cells(String.Join(":",
-                                   String.Concat("A", signatur_field_index),
-                                   String.Concat("B", signatur_field_index))).Merge = True
+            index += 1
+            .Cells($"A{index}").Value = "Audited by: "
+            .Cells($"A{index}:B{index}").Merge = True
 
-            signatur_field_index += 1
-            .Cells(String.Concat("A", signatur_field_index)).Value = "Approved by: "
-            .Cells(String.Join(":",
-                                   String.Concat("A", signatur_field_index),
-                                   String.Concat("B", signatur_field_index))).Merge = True
+            index += 1
+            .Cells($"A{index}").Value = "Approved by: "
+            .Cells($"A{index}:B{index}").Merge = True
         End With
     End Sub
 
@@ -417,23 +417,54 @@ Public Class PayrollSummaryExcelFormatReportProvider
     End Function
 
     Private Function NewLiner(Optional repetition As Integer = 1) As String
-
         Dim _result As String = String.Empty
 
         Dim i = 0
-
         While i < repetition
-
-            _result =
-                String.Concat(_result, Environment.NewLine)
-
+            _result = String.Concat(_result, Environment.NewLine)
             i += 1
-
         End While
 
         Return _result
-
     End Function
+
+    Private Function GroupEmployees(allEmployees As ICollection(Of DataRow)) As ICollection(Of EmployeeGroup)
+        Dim employeesByGroups = allEmployees.
+            GroupBy(Function(r) r("DivisionID").ToString())
+
+        Dim groups = New Collection(Of EmployeeGroup)
+
+        For Each employeesByGroup In employeesByGroups
+            Dim group = New EmployeeGroup() With {
+                .Employees = employeesByGroup.ToList()
+            }
+
+            Dim employee = group.Employees.FirstOrDefault()
+            group.DivisionName = employee("DatCol1").ToString()
+
+            groups.Add(group)
+        Next
+
+        For Each groupsWithSameDivision In groups.GroupBy(Function(g) g.DivisionName)
+            If groupsWithSameDivision.Count > 1 Then
+                Dim index = 1
+                For Each groupInSameDivision In groupsWithSameDivision
+                    groupInSameDivision.DivisionName = $"{groupInSameDivision.DivisionName}-{index}"
+                    index += 1
+                Next
+            End If
+        Next
+
+        Return groups
+    End Function
+
+    Private Class EmployeeGroup
+
+        Public Property DivisionName As String
+
+        Public Property Employees As ICollection(Of DataRow)
+
+    End Class
 
     Private Class ReportColumn
 
