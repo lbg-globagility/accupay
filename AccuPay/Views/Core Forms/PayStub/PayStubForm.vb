@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Loans
 Imports log4net
 Imports System.Collections.Concurrent
+Imports Microsoft.EntityFrameworkCore
 
 Public Class PayStubForm
 
@@ -2103,7 +2104,7 @@ Public Class PayStubForm
         cashOut.Execute()
     End Sub
 
-    Private Sub tsbtnDelAllEmpPayroll_Click(sender As Object, e As EventArgs) Handles tsbtnDelAllEmpPayroll.Click
+    Private Async Sub tsbtnDelAllEmpPayroll_Click(sender As Object, e As EventArgs) Handles tsbtnDelAllEmpPayroll.Click
         tsbtnDelAllEmpPayroll.Enabled = False
 
         Dim prompt = MessageBox.Show("Do you want to delete all payrolls of employees?",
@@ -2114,26 +2115,17 @@ Public Class PayStubForm
         If prompt = Windows.Forms.DialogResult.Yes Then
             RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
-            For index = 0 To dgvemployees.Rows.Count - 1
-                With dgvemployees.Rows(index)
-                    dgvemployees.Tag = .Cells("RowID").Value
-                    currentEmployeeID = .Cells("EmployeeID").Value
-                End With
+            Dim payperiodId As Integer? = Integer.Parse(paypRowID)
 
-                Dim n_ExecuteQuery As New ExecuteQuery("SELECT RowID" &
-                                                   " FROM paystub" &
-                                                   " WHERE EmployeeID='" & dgvemployees.Tag & "'" &
-                                                   " AND OrganizationID='" & orgztnID & "'" &
-                                                   " AND PayPeriodID='" & paypRowID & "'" &
-                                                   " LIMIT 1;")
+            Dim paystubIds As IList(Of Integer?)
+            Using context = New PayrollContext
+                paystubIds = Await context.Paystubs.Where(Function(p) p.PayPeriodID = payperiodId).
+                    Select(Function(p) p.RowID).
+                    ToListAsync()
+            End Using
 
-                Dim paystubRowID As Object = Nothing
-
-                paystubRowID = n_ExecuteQuery.Result
-
-                If paystubRowID IsNot Nothing Then
-                    n_ExecuteQuery = New ExecuteQuery("CALL DEL_specificpaystub('" & paystubRowID & "');")
-                End If
+            For Each p In paystubIds
+                Dim query = New ExecuteQuery($"CALL DEL_specificpaystub('{p}');")
             Next
 
             AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
