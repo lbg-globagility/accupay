@@ -4,7 +4,6 @@ Imports System.IO
 Imports System.Text.RegularExpressions
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
-Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
 
 Namespace Global.AccuPay.Helper.TimeLogsReader
@@ -71,6 +70,12 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
                         .LineNumber = lineNumber,
                         .ErrorMessage = "Needs at least 2 items in one line separated by a tab."
                     })
+                End If
+
+                If String.IsNullOrEmpty(parts(0)) AndAlso String.IsNullOrEmpty(parts(1)) Then
+                    'happens when blank lines was still read
+                    'usually because it received an input like tab
+                    Return Nothing
                 End If
 
                 Dim employeeNo = Trim(parts(0))
