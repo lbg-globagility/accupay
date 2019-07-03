@@ -9,18 +9,22 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `BEFUPD_employeeloanschedule` BEFORE UPDATE ON `employeeloanschedule` FOR EACH ROW BEGIN
 
-DECLARE loan_amount_update DECIMAL(15, 4);
+/* First update the pay period left based on the remaining balance and how many deductions to
+ * get the balance to zero.
+ */
+SET NEW.LoanPayPeriodLeft = CEIL(NEW.TotalBalanceLeft / NEW.DeductionAmount);
 
-SET NEW.LoanPayPeriodLeft = IF(NEW.DeductionAmount > NEW.TotalBalanceLeft, 1, CEIL(NEW.TotalBalanceLeft / NEW.DeductionAmount));
-
-IF OLD.LoanPayPeriodLeft <= 0 AND NEW.LoanPayPeriodLeft = 1 THEN
-
+/* If there's remaining balance left change the status to 'In Progress'. This should also only happen
+ * if the status was `Complete` and not for any other status.
+ */
+IF NEW.TotalBalanceLeft > 0 THEN
     IF NEW.`Status` = 'Complete' THEN
-        SET NEW.`Status` = 'In progress';
+        SET NEW.`Status` = 'In Progress';
     END IF;
-
 END IF;
 
+/* If the remaining balance is <= 0, then status should be `Complete`.
+ */
 IF NEW.TotalBalanceLeft <= 0 THEN
     SET NEW.`Status` = 'Complete';
 END IF;
@@ -32,15 +36,14 @@ END IF;
 SET @is_charge_tobonust = (OLD.BonusID IS NULL AND NEW.BonusID IS NOT NULL);
 
 IF @is_charge_tobonust = TRUE THEN
-
     SET NEW.LoanPayPeriodLeftForBonus = NEW.LoanPayPeriodLeft;
-
 END IF;
 
+/* Normalize the casing of the deduction schedule
+ */
 IF LCASE(NEW.DeductionSchedule) = 'end of the month' THEN
     SET NEW.DeductionSchedule = 'End of the month';
 END IF;
-
 IF LCASE(NEW.DeductionSchedule) = 'first half' THEN
     SET NEW.DeductionSchedule = 'First half';
 END IF;

@@ -110,14 +110,16 @@ WHERE e.RowID=emp_RowID
 AND ADDDATE(e.StartDate, INTERVAL 1 YEAR) BETWEEN paydate_from AND paydate_to;
 
 
-    UPDATE employeeloanschedule els
-    INNER JOIN scheduledloansperpayperiod slp ON slp.EmployeeLoanRecordID=els.RowID AND slp.PayPeriodID=payperiod_rowid AND slp.OrganizationID=els.OrganizationID AND slp.EmployeeID=els.EmployeeID
-    SET
-    els.TotalBalanceLeft = els.TotalBalanceLeft + slp.DeductionAmount
-    ,els.LastUpdBy = IFNULL(els.LastUpdBy, els.CreatedBy)
-    WHERE els.OrganizationID = og_RowID
-    AND els.EmployeeID = emp_RowID;
-
+UPDATE employeeloanschedule els
+INNER JOIN scheduledloansperpayperiod slp
+ON slp.EmployeeLoanRecordID = els.RowID AND
+    slp.PayPeriodID = payperiod_rowid AND
+    slp.OrganizationID = els.OrganizationID AND
+    slp.EmployeeID = els.EmployeeID
+SET els.TotalBalanceLeft = els.TotalBalanceLeft + slp.DeductionAmount,
+    els.LastUpdBy = IFNULL(els.LastUpdBy, els.CreatedBy)
+WHERE els.OrganizationID = og_RowID AND
+    els.EmployeeID = emp_RowID;
 
 UPDATE thirteenthmonthpay tmp
 SET tmp.Amount=0
