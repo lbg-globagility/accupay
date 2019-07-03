@@ -224,7 +224,7 @@ Public Class PayrollGeneration
             philHealthCalculator.Calculate(_salary, _paystub, _previousPaystub, _employee, _payPeriod, _allowances)
 
             Dim hdmfCalculator = New HdmfCalculator()
-            hdmfCalculator.Calculate(_salary, _paystub, _employee, _payPeriod)
+            hdmfCalculator.Calculate(_salary, _paystub, _employee, _payPeriod, _settings)
 
             Dim withholdingTaxCalculator = New WithholdingTaxCalculator(_settings, _resources.FilingStatuses, _resources.WithholdingTaxBrackets, _resources.DivisionMinimumWages)
             withholdingTaxCalculator.Calculate(_paystub, _previousPaystub, _employee, _payPeriod, _salary)

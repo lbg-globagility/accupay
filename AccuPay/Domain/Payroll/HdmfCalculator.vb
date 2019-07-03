@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.Text.RegularExpressions
 Imports AccuPay.Entity
 Imports PayrollSys
 
@@ -11,7 +12,7 @@ Namespace Global.AccuPay.Payroll
 
         Private Const StandardEmployerContribution As Decimal = 100
 
-        Public Sub Calculate(salary As Salary, paystub As Paystub, employee As Employee, payperiod As PayPeriod)
+        Public Sub Calculate(salary As Salary, paystub As Paystub, employee As Employee, payperiod As PayPeriod, settings As ListOfValueCollection)
             ' Reset HDMF contribution
             paystub.HdmfEmployeeShare = 0
             paystub.HdmfEmployerShare = 0
@@ -51,6 +52,25 @@ Namespace Global.AccuPay.Payroll
                     paystub.HdmfEmployerShare = employerShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
                 End If
             End If
+
+            'Override employer share
+            'make its value matching to the employee share
+            Dim hdmfPolicy = "HDMF.EmployeesMatchingEmployerShare"
+            Dim employeesMatchingEmployerShare = settings.GetStringOrNull(hdmfPolicy)
+
+            If Not String.IsNullOrWhiteSpace(employeesMatchingEmployerShare) Then
+
+                Dim employees = Regex.Split(employeesMatchingEmployerShare, ",")
+
+                If employees.Where(Function(e) e.Trim = employee.EmployeeNo).
+                    Any Then
+
+                    paystub.HdmfEmployerShare = paystub.HdmfEmployeeShare
+
+                End If
+
+            End If
+
         End Sub
 
         Private Function IsHdmfPaidOnFirstHalf(deductionSchedule As String, payperiod As PayPeriod) As Boolean
