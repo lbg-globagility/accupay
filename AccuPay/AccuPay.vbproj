@@ -1100,12 +1100,6 @@
     <Compile Include="Views\Core Forms\dutyshift.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\TimeLogsForm.Designer.vb">
-      <DependentUpon>TimeLogsForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\TimeLogsForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\BlankTimeEntryLogs.Designer.vb">
       <DependentUpon>BlankTimeEntryLogs.vb</DependentUpon>
     </Compile>
@@ -1484,12 +1478,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TwoEmpIn1PaySlip.rpt</DependentUpon>
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\SelectFromEmployee.Designer.vb">
-      <DependentUpon>SelectFromEmployee.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\SelectFromEmployee.vb">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\selectMonth.Designer.vb">
       <DependentUpon>selectMonth.vb</DependentUpon>
@@ -2108,9 +2096,6 @@
     <EmbeddedResource Include="Views\Core Forms\dutyshift.resx">
       <DependentUpon>dutyshift.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\TimeLogsForm.resx">
-      <DependentUpon>TimeLogsForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\importWithholdingTax.resx">
       <DependentUpon>importWithholdingTax.vb</DependentUpon>
     </EmbeddedResource>
@@ -2342,9 +2327,6 @@
     <EmbeddedResource Include="Reports\rpt\rpt\TwoEmpIn1PaySlip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>TwoEmpIn1PaySlip.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\SelectFromEmployee.resx">
-      <DependentUpon>SelectFromEmployee.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\selectMonth.resx">
       <DependentUpon>selectMonth.vb</DependentUpon>

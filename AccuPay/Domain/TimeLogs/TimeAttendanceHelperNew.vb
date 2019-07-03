@@ -10,9 +10,10 @@ Public Class TimeAttendanceHelperNew
 
     Private _importedTimeAttendanceLogs As New List(Of ImportTimeAttendanceLog)
 
-    Private _employees As New List(Of Employee)
+    Private ReadOnly _employees As New List(Of Employee)
+    Private ReadOnly _employeeShifts As New List(Of EmployeeDutySchedule)
 
-    Private _employeeShifts As New List(Of EmployeeDutySchedule)
+    Private ReadOnly _employeeOvertimes As List(Of Overtime)
 
     Private _logsGroupedByEmployee As New List(Of IGrouping(Of String, ImportTimeAttendanceLog))
 
@@ -21,11 +22,13 @@ Public Class TimeAttendanceHelperNew
     Sub New(
            importedTimeLogs As List(Of ImportTimeAttendanceLog),
            employees As List(Of Employee),
-           employeeShifts As List(Of EmployeeDutySchedule))
+           employeeShifts As List(Of EmployeeDutySchedule),
+           employeeOvertimes As List(Of Overtime))
 
         _importedTimeAttendanceLogs = importedTimeLogs
         _employees = employees
         _employeeShifts = employeeShifts
+        _employeeOvertimes = employeeOvertimes
 
         _logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(_importedTimeAttendanceLogs)
 
@@ -78,8 +81,6 @@ Public Class TimeAttendanceHelperNew
             Next
 
         Next
-
-        ValidateLogs(dayLogRecords)
 
         Return _importedTimeAttendanceLogs
     End Function
@@ -246,20 +247,32 @@ Public Class TimeAttendanceHelperNew
                                         Where(Function(s) Nullable.Equals(s.EmployeeID, employeeId)).
                                         ToList
 
+            Dim currentEmployeeOvertimes = _employeeOvertimes.
+                                            Where(Function(o) Nullable.Equals(o.EmployeeID, employeeId)).
+                                            ToList
+
             Dim employeeLogs = logGroup.ToList()
 
             Dim earliestDate = logGroup.FirstOrDefault().DateTime.Date.ToMinimumHourValue
             Dim lastDate = logGroup.LastOrDefault().DateTime.Date.ToMaximumHourValue
+
+            Dim lastDayLogRecord As DayLogRecord = Nothing
 
             For Each currentDate In Calendar.EachDay(earliestDate, lastDate)
 
                 Dim dayLogRecord = GenerateDayLogRecord(employeeId.Value,
                                                         employeeLogs,
                                                         currentEmployeeShifts,
-                                                        currentDate)
+                                                        currentEmployeeOvertimes,
+                                                        currentDate,
+                                                        lastDayLogRecord)
 
                 If dayLogRecord IsNot Nothing Then
+
                     dayLogRecords.Add(dayLogRecord)
+                    lastDayLogRecord = dayLogRecord
+                Else
+                    lastDayLogRecord = Nothing
                 End If
 
             Next
@@ -274,22 +287,45 @@ Public Class TimeAttendanceHelperNew
         employeeId As Integer,
         employeeLogs As List(Of ImportTimeAttendanceLog),
         currentEmployeeShifts As List(Of EmployeeDutySchedule),
-        currentDate As Date) As DayLogRecord
+        currentEmployeeOvertimes As List(Of Overtime),
+        currentDate As Date,
+        lastDayLogRecord As DayLogRecord) As DayLogRecord
 
         Dim currentShift = GetShift(currentEmployeeShifts, currentDate)
 
         Dim nextDate = currentDate.AddDays(1)
         Dim nextShift = GetShift(currentEmployeeShifts, nextDate)
 
-        Dim timeInBounds = GetShiftBoundsForTimeIn(currentDate, currentShift)
-        Dim timeOutBounds = GetShiftBoundsForTimeOut(currentDate, currentShift, nextShift)
+        Dim earliestOvertime = GetEarliestOvertime(
+                                currentEmployeeOvertimes,
+                                currentDate)
+        Dim lastOvertime = GetLastOvertime(
+                                currentEmployeeOvertimes,
+                                currentDate)
+
+        Dim earliestOvertimeNextDay = GetEarliestOvertime(
+                                        currentEmployeeOvertimes,
+                                        nextDate)
+
+        Dim timeInBounds = GetShiftBoundsForTimeIn(
+                                lastDayLogRecord?.ShiftTimeOutBounds,
+                                currentDate,
+                                currentShift,
+                                earliestOvertime)
+
+        Dim timeOutBounds = GetShiftBoundsForTimeOut(
+                                    currentDate,
+                                    currentShift,
+                                    lastOvertime,
+                                    nextShift,
+                                    earliestOvertimeNextDay)
 
         Dim dayBounds = New TimePeriod(timeInBounds, timeOutBounds)
 
         Return New DayLogRecord With {
             .EmployeeId = employeeId,
             .LogDate = currentDate,
-            .LogRecords = GetTimeLogsFromBounds(dayBounds, employeeLogs),
+            .LogRecords = GetTimeLogsFromBounds(dayBounds, employeeLogs, lastDayLogRecord),
             .ShiftTimeInBounds = dayBounds.Start,
             .ShiftTimeOutBounds = dayBounds.End,
             .ShiftSchedule = currentShift
@@ -303,38 +339,101 @@ Public Class TimeAttendanceHelperNew
                         FirstOrDefault()
     End Function
 
+    Private Function GetEarliestOvertime(currentEmployeeOvertimes As List(Of Overtime), currentDate As Date) As Overtime
+        Return currentEmployeeOvertimes.
+                        Where(Function(o) o.OTStartDate = currentDate).
+                        OrderBy(Function(o) o.OTStartTime).
+                        FirstOrDefault()
+    End Function
+
+    Private Function GetLastOvertime(currentEmployeeOvertimes As List(Of Overtime), currentDate As Date) As Overtime
+        Return currentEmployeeOvertimes.
+                        Where(Function(o) o.OTStartDate = currentDate).
+                        OrderBy(Function(o) o.OTStartTime).
+                        LastOrDefault()
+    End Function
+
     Private Function GetTimeLogsFromBounds(
-        shiftBounds As TimePeriod,
-        timeAttendanceLogs As List(Of ImportTimeAttendanceLog)
+                        shiftBounds As TimePeriod,
+                        timeAttendanceLogs As List(Of ImportTimeAttendanceLog),
+                        lastDayLogRecord As DayLogRecord
     ) As List(Of ImportTimeAttendanceLog)
 
-        Return timeAttendanceLogs.
-            Where(Function(t)
-                      Return t.DateTime >= shiftBounds.Start AndAlso
-                            t.DateTime <= shiftBounds.End
-                  End Function).
-            ToList
+        Dim logRecords = timeAttendanceLogs.
+                            Where(Function(t) t.DateTime >= shiftBounds.Start).
+                            Where(Function(t) t.DateTime <= shiftBounds.End).
+                            ToList
+
+        If lastDayLogRecord?.ShiftTimeOutBounds IsNot Nothing AndAlso
+            lastDayLogRecord?.ShiftTimeOutBounds = shiftBounds.Start AndAlso
+            lastDayLogRecord?.LogRecords IsNot Nothing Then
+
+            'if this happens, this maybe caused by an employee that after previous overtime, [A1]
+            'he continued his current shift right after
+            'ex: previous day OT end = 9:00 AM | current day shift start = 9:00 AM
+
+            'if there are multiple logs in the previous day log record
+            'that are the same as the start shift bounds
+            'ex: multiple logs of 9:00 AM, maybe caused by employee
+            'logging out for previous OT then logging in again for current shift
+            'we need to get at least one same log from previous day log record
+            'And transfer it to current logs
+            Dim shiftBoundsStartLogs = lastDayLogRecord.LogRecords.
+                                            Where(Function(l) l.DateTime = shiftBounds.Start).
+                                            ToList
+
+            If shiftBoundsStartLogs.Count > 1 Then
+
+                'get 1 same log from previous day log record
+                Dim shiftBoundStartLog = shiftBoundsStartLogs(shiftBoundsStartLogs.Count - 1)
+
+                logRecords.Add(shiftBoundStartLog)
+
+                lastDayLogRecord?.LogRecords.Remove(shiftBoundStartLog)
+
+            End If
+
+        End If
+
+        Return logRecords
 
     End Function
 
     Private Function GetShiftBoundsForTimeIn(
-        currentDate As Date,
-        currentShift As EmployeeDutySchedule) As Date
+                        previousTimeOutBounds As Date?,
+                        currentDate As Date,
+                        currentShift As EmployeeDutySchedule,
+                        earliestOvertime As Overtime) As Date
+
+        Dim currentDayStartDateTime = GetStartDateTime(currentShift, earliestOvertime)
+
+        If previousTimeOutBounds IsNot Nothing Then
+
+            If currentDayStartDateTime IsNot Nothing AndAlso
+                    currentDayStartDateTime = previousTimeOutBounds Then
+
+                'if this happens, this maybe caused by an employee that after previous overtime, [A1]
+                'he continued his current shift right after
+                'ex: previous day OT end = 9:00 AM | current day shift start = 9:00 AM
+
+                Return previousTimeOutBounds.Value
+            End If
+
+            Return previousTimeOutBounds.Value.AddSeconds(1)
+
+        End If
 
         Dim shiftMinBound As Date
 
-        Dim shiftTimeFrom As Date
+        If currentDayStartDateTime IsNot Nothing Then
 
-        If currentShift Is Nothing OrElse currentShift.StartTime Is Nothing Then
-
-            'If walang shift, minimum bound should be 12:00 AM
-            shiftTimeFrom = currentDate.ToMinimumHourValue
-            shiftMinBound = shiftTimeFrom
-        Else
-            'If merong shift, minimum bound should be shift.TimeFrom - 4 hours
+            'If merong shift or OT, minimum bound should be earliest shift or OT - HOURS_BUFFER (4 hours)
             '(ex. 9:00 AM - 5:00 PM shift -> 5:00 AM minimum bound)
-            shiftTimeFrom = currentDate.Add(CType(currentShift.StartTime, TimeSpan))
-            shiftMinBound = shiftTimeFrom.Add(TimeSpan.FromHours(-HOURS_BUFFER))
+            shiftMinBound = currentDayStartDateTime.Value.Add(TimeSpan.FromHours(-HOURS_BUFFER))
+        Else
+
+            'If walang shift and OT, minimum bound should be 12:00 AM
+            shiftMinBound = currentDate.ToMinimumHourValue
 
         End If
 
@@ -342,57 +441,180 @@ Public Class TimeAttendanceHelperNew
     End Function
 
     Private Function GetShiftBoundsForTimeOut(
-        currentDate As Date,
-        currentShift As EmployeeDutySchedule,
-        nextShift As EmployeeDutySchedule) As Date
+                        currentDate As Date,
+                        currentShift As EmployeeDutySchedule,
+                        lastOvertime As Overtime,
+                        nextShift As EmployeeDutySchedule,
+                        earliestOvertimeNextDay As Overtime) As Date
 
         Dim shiftMaxBound As Date
-        Dim maxBoundTime As TimeSpan
 
-        If nextShift IsNot Nothing AndAlso nextShift.StartTime IsNot Nothing Then
-            'If merong next shift, maximum bound should be
-            '(nextShift.TimeFrom - 4 hours - 1 second) + 1 day
-            'ex. 9:00 AM - 5:00 PM -> (next day) 4:59 AM maximum bound
-            maxBoundTime = nextShift.StartTime.Value.
-                                        Add(TimeSpan.FromHours(-HOURS_BUFFER)).
-                                        Add(TimeSpan.FromSeconds(-1))
+        Dim hoursBuffer As Decimal = HOURS_BUFFER
 
-            shiftMaxBound = nextShift.DateSched.Add(maxBoundTime)
+        Dim currentDayEndTime As Date? = GetEndDateTime(currentShift, lastOvertime)
 
-        ElseIf currentShift IsNot Nothing AndAlso currentShift.EndTime IsNot Nothing Then
+        Dim nextDayStartDateTime As Date? = GetStartDateTime(nextShift, earliestOvertimeNextDay)
 
-            Dim dateTimeOut = currentShift.DateSched
+        If currentDayEndTime Is Nothing AndAlso nextDayStartDateTime Is Nothing Then
+            'no current day shift or overtime
+            'and no next day shift or overtime
+            '= maximum bound should be 11:59 PM
+            shiftMaxBound = currentDate.ToMaximumHourValue
 
-            'check if shift is night shift by checking
-            'if StartTime is greater than EndTime
-            If currentShift.StartTime IsNot Nothing AndAlso
-                currentShift.StartTime >= currentShift.EndTime Then
+        ElseIf currentDayEndTime IsNot Nothing AndAlso nextDayStartDateTime IsNot Nothing Then
+            'has current day shift or overtime
+            'and has next day shift or overtime
 
-                'if night shift, then dateTimeOut should be in the next day
-                dateTimeOut = dateTimeOut.AddDays(1)
+            If currentDayEndTime > nextDayStartDateTime Then
 
-                'maxBoundTime should be shift EndTime plus 4 hours
-                '(ex. 9:00 PM - 5:00 AM -> (next day) 9:00 AM
-                maxBoundTime = currentShift.EndTime.Value.Add(TimeSpan.FromHours(HOURS_BUFFER))
+                'this may happen when there is input error
+                'if current shift or late overtime end time is greater than
+                'next day shift or early overtime start time
+
+                shiftMaxBound = nextDayStartDateTime.Value.AddSeconds(1)
+
+            ElseIf currentDayEndTime = nextDayStartDateTime Then
+
+                'if this happens, this maybe caused by an employee that after overtime, [A1]
+                'he continued his next shift right after
+                'ex: current OT end = 9:00 AM | next day shift start = 9:00 AM
+
+                shiftMaxBound = nextDayStartDateTime.Value
             Else
+                'maximum bound should be halfway of the
+                'current day end time and next day start date
+                'ex 1: current day end time = 3:00 AM, next day start date = 9:00 AM (difference is 6 hours)
+                '= maximum bound should be 5:59 AM (next day -3 hours -1 second)
+                'if difference is greater HOURS_BUFFER * 2, use the default HOURS_BUFFER
+                'ex 2: current day end time = 10:00 PM, next day start date = 9:00 AM (difference is 11 hours)
+                '= maximum bound should be 4:59 AM (next day -4 hours -1 second)
 
-                'if not night shift, then dateTimeOut should be same day
-                'and make the maxBoundTime the maximum hours for that day
-                '(ex. 9:00 AM - 5:00 PM -> 11:59 PM maximum bound)
-                maxBoundTime = New TimeSpan(23, 59, 59)
+                Dim restPeriodHours = New TimePeriod(currentDayEndTime.Value, nextDayStartDateTime.Value).TotalHours
+
+                If restPeriodHours < (HOURS_BUFFER * 2) Then
+
+                    hoursBuffer = AccuMath.CommercialRound(restPeriodHours / 2)
+
+                End If
+
+                shiftMaxBound = nextDayStartDateTime.Value.
+                                Add(TimeSpan.FromHours(-hoursBuffer)).
+                                Add(TimeSpan.FromSeconds(-1))
 
             End If
 
-            shiftMaxBound = dateTimeOut.Add(maxBoundTime)
+        ElseIf currentDayEndTime IsNot Nothing Then
+            'currentDayEndTime IsNot Nothing AndAlso nextDayStartDateTime Is Nothing
+
+            'if no next day shift or over time but has
+            'current shift or overtime, set max bound time = currentDayEndTime + HOURS_BUFFER
+            'ex: end time is 6:00 PM - max bound time = 10:00 PM
+            'ex: end time is 4:00 PM - max bound time = 10:00 PM
+            shiftMaxBound = currentDayEndTime.Value.Add(TimeSpan.FromHours(HOURS_BUFFER))
         Else
+            'nextDayStartDateTime IsNot Nothing AndAlso currentDayEndTime Is Nothing
 
-            'If walang next shift and walang current end time shift
-            'maximum bound should be 11:59 PM
-            shiftMaxBound = currentDate.ToMaximumHourValue
-
+            'if no next day shift or over time but has
+            'current shift or overtime, set max bound time = currentDayEndTime - HOURS_BUFFER - 1 second
+            'ex: next day start time is 9:00 AM - max bound time = 4:59 AM
+            'ex: next day start end time is 5:00 AM - max bound time = 12:59 AM
+            shiftMaxBound = nextDayStartDateTime.Value.
+                                Add(TimeSpan.FromHours(-HOURS_BUFFER)).
+                                Add(TimeSpan.FromSeconds(-1))
         End If
 
         Return shiftMaxBound
+    End Function
+
+    Private Function GetStartDateTime(currentShift As EmployeeDutySchedule, earliestOvertime As Overtime) As Date?
+        Dim currentShiftStartTime = CreateDateTime(
+                                        currentShift?.DateSched,
+                                        currentShift?.StartTime)
+
+        Dim earliestOvertimeStartTime = CreateDateTime(
+                                            earliestOvertime?.OTStartDate,
+                                            earliestOvertime?.OTStartTime)
+
+        Dim startDateTime As Date? = CompareShiftToOvertime(
+                                        currentShiftStartTime,
+                                        earliestOvertimeStartTime,
+                                        getEarliest:=True)
+        Return startDateTime
+    End Function
+
+    Private Function GetEndDateTime(currentShift As EmployeeDutySchedule, lastOvertime As Overtime) As Date?
+        Dim currentShiftEndTime = CreateDateTime(
+                                            currentShift?.DateSched,
+                                            currentShift?.EndTime,
+                                            currentShift?.StartTime)
+
+        Dim lastOvertimeEndTime = CreateDateTime(
+                                        lastOvertime?.OTStartDate,
+                                        lastOvertime?.OTEndTime,
+                                        lastOvertime?.OTStartTime)
+
+        Dim endTime As Date? = CompareShiftToOvertime(
+                                        currentShiftEndTime,
+                                        lastOvertimeEndTime,
+                                        getEarliest:=False)
+        Return endTime
+    End Function
+
+    Private Function CompareShiftToOvertime(
+                        shiftDateTime As Date?,
+                        overtimeDateTime As Date?,
+                        getEarliest As Boolean) As Date?
+
+        If overtimeDateTime Is Nothing AndAlso shiftDateTime Is Nothing Then
+
+            Return Nothing
+
+        ElseIf overtimeDateTime IsNot Nothing AndAlso shiftDateTime IsNot Nothing Then
+
+            If getEarliest Then
+
+                Return {overtimeDateTime.Value, shiftDateTime.Value}.Min
+            Else
+
+                Return {overtimeDateTime.Value, shiftDateTime.Value}.Max
+
+            End If
+
+        ElseIf overtimeDateTime IsNot Nothing Then
+
+            Return overtimeDateTime.Value
+        Else
+            Return shiftDateTime.Value
+
+        End If
+
+    End Function
+
+    Private Function CreateDateTime(
+                        [date] As Date?,
+                        time As TimeSpan?,
+                        Optional startTime As TimeSpan? = Nothing) As Date?
+
+        If [date] Is Nothing OrElse time Is Nothing Then
+
+            Return Nothing
+        End If
+
+        'for night shift, add 1 day
+        If startTime IsNot Nothing AndAlso startTime >= time Then
+
+            Return [date].Value.
+                AddDays(1).
+                ToMinimumHourValue.
+                AddTicks(time.Value.Ticks)
+        Else
+
+            Return [date].Value.
+                ToMinimumHourValue.
+                AddTicks(time.Value.Ticks)
+
+        End If
+
     End Function
 
     Private Sub GetEmployeeObjectOfLogs()

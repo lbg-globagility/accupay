@@ -22,6 +22,8 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     Private ReadOnly _timeAttendanceHelper As ITimeAttendanceHelper
 
+    Private _employeeDetails As New List(Of EmployeeDetail)
+
     Sub New(timeAttendanceHelper As ITimeAttendanceHelper, otherErrorLogs As IList(Of ImportTimeAttendanceLog))
 
         _timeAttendanceHelper = timeAttendanceHelper
@@ -130,6 +132,9 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         TimeAttendanceLogDataGrid.DataSource = Me._logs
 
         TimeAttendanceLogErrorsDataGrid.DataSource = Me._errors
+
+        EmployeeFilterComboBox.ValueMember = "RowID"
+        EmployeeFilterComboBox.DisplayMember = "Description"
 
     End Sub
 
@@ -261,20 +266,20 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     End Function
 
-    Private Async Sub txtSearch_TextChanged(sender As Object, e As EventArgs) Handles txtSearch.TextChanged
+    'Private Async Sub txtSearch_TextChanged(sender As Object, e As EventArgs) Handles txtSearch.TextChanged
 
-        Dim searchValue = txtSearch.Text.ToLower()
+    '    Dim searchValue = txtSearch.Text.ToLower()
 
-        Me._logs = Await Task.Run(Function() As IList(Of ImportTimeAttendanceLog)
-                                      Return Me._originalLogs.
-                                          Where(Function(o) o.EmployeeFullName.ToLower.Contains(searchValue) _
-                                            OrElse o.EmployeeNumber.ToLower.Contains(searchValue)).
-                                          ToList
-                                  End Function)
+    '    Me._logs = Await Task.Run(Function() As IList(Of ImportTimeAttendanceLog)
+    '                                  Return Me._originalLogs.
+    '                                      Where(Function(o) o.EmployeeFullName.ToLower.Contains(searchValue) _
+    '                                        OrElse o.EmployeeNumber.ToLower.Contains(searchValue)).
+    '                                      ToList
+    '                              End Function)
 
-        TimeAttendanceLogDataGrid.DataSource = Me._logs
+    '    TimeAttendanceLogDataGrid.DataSource = Me._logs
 
-    End Sub
+    'End Sub
 
     Private Async Sub txtErrorSearch_TextChanged(sender As Object, e As EventArgs) Handles txtErrorSearch.TextChanged
 
@@ -295,17 +300,16 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     End Sub
 
-    Private Sub ValidateLogs(Optional isFirstLoad As Boolean = False)
+    Private Async Sub ValidateLogs(Optional isFirstLoad As Boolean = False)
         Me.Cursor = Cursors.WaitCursor
 
         _timeAttendanceHelper.Validate()
 
-        TimeAttendanceLogDataGrid.DataSource = Me._logs
-        TimeAttendanceLogDataGrid.Refresh()
-
         Me.Cursor = Cursors.Default
 
-        Dim warningLogsCount = Me._logs.Where(Function(l) l.HasWarning).Count
+        Dim warningLogsCount = Me._originalLogs.Where(Function(l) l.HasWarning).Count
+
+        btnRevalidate.Text = $"&Revalidate Logs ({warningLogsCount})"
 
         Dim messageTitle = "Logs Revalidation"
 
@@ -329,6 +333,153 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
             End If
 
         End If
+
+        RefreshEmployeeComboBox()
+
     End Sub
+
+    Private Sub EmployeeFilterComboBox_DrawItem(sender As Object, e As DrawItemEventArgs) Handles EmployeeFilterComboBox.DrawItem
+
+        Dim backgroundColor As Brush
+        Dim g = e.Graphics
+        Dim rect = e.Bounds
+        Dim displayString = ""
+        Dim font = e.Font
+
+        Dim selectedEmployee As EmployeeDetail
+
+        If e.Index < 0 Then
+
+            Return
+        Else
+
+            selectedEmployee = _employeeDetails(e.Index)
+        End If
+
+        If Nullable.Equals(selectedEmployee?.HasWarning, True) Then
+
+            backgroundColor = Brushes.Yellow
+        Else
+
+            backgroundColor = Brushes.White
+
+        End If
+
+        If e.Index >= 0 AndAlso selectedEmployee IsNot Nothing Then
+
+            displayString = selectedEmployee.Description
+
+        End If
+
+        g.FillRectangle(backgroundColor, rect.X, rect.Y, rect.Width, rect.Height)
+        g.DrawString(displayString, font, Brushes.Black, rect.X, rect.Y)
+
+    End Sub
+
+    Private Async Sub EmployeeFilterComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles EmployeeFilterComboBox.SelectedValueChanged
+        Await RefreshFilteredLogs()
+
+    End Sub
+
+    Private Async Function RefreshFilteredLogs() As Task
+        If EmployeeFilterComboBox.SelectedIndex < 0 OrElse
+                        EmployeeFilterComboBox.SelectedIndex >= _employeeDetails.Count Then
+
+            Return
+        End If
+
+        Dim selectedEmployee = _employeeDetails(EmployeeFilterComboBox.SelectedIndex)
+
+        If selectedEmployee Is Nothing OrElse selectedEmployee.RowID Is Nothing Then
+
+            Me._logs = Me._originalLogs
+        Else
+
+            Me._logs = Await Task.Run(Function() As IList(Of ImportTimeAttendanceLog)
+                                          Return Me._originalLogs.
+                                              Where(Function(o) Nullable.Equals(selectedEmployee.RowID, o.Employee?.RowID)).
+                                              ToList
+                                      End Function)
+
+        End If
+
+        TimeAttendanceLogDataGrid.DataSource = Me._logs
+    End Function
+
+    Private Sub RefreshEmployeeComboBox()
+        Dim employeeDetails As New List(Of EmployeeDetail)
+
+        employeeDetails.Add(New EmployeeDetail With {
+                     .RowID = Nothing,
+                     .Name = "<ALL>",
+                     .HasWarning = False
+        })
+
+        For Each log In Me._originalLogs
+
+            If log.HasError Then Continue For
+            If log.Employee?.RowID Is Nothing Then Continue For
+
+            Dim employee = employeeDetails.
+                            Where(Function(e) Nullable.Equals(e.RowID, log.Employee?.RowID)).
+                            FirstOrDefault
+
+            If employee Is Nothing Then
+
+                employee = New EmployeeDetail() With {
+                    .RowID = log.Employee.RowID,
+                    .Name = log.EmployeeFullName,
+                    .EmployeeNumber = log.EmployeeNumber,
+                    .HasWarning = False
+                }
+
+                employeeDetails.Add(employee)
+
+            End If
+
+            If log.HasWarning = False Then Continue For
+
+            employee.HasWarning = True
+
+        Next
+
+        Dim oldSelectedIndex = EmployeeFilterComboBox.SelectedIndex
+
+        _employeeDetails = employeeDetails
+
+        EmployeeFilterComboBox.DataSource = _employeeDetails
+
+        If oldSelectedIndex > 0 AndAlso
+            oldSelectedIndex < _employeeDetails.Count Then
+
+            EmployeeFilterComboBox.SelectedIndex = oldSelectedIndex
+
+        End If
+
+        EmployeeFilterComboBox.Refresh()
+    End Sub
+
+    Public Class EmployeeDetail
+
+        Public Property RowID As Integer?
+        Public Property Name As String
+        Public Property EmployeeNumber As String
+        Public Property HasWarning As Boolean
+
+        Public ReadOnly Property Description() As String
+            Get
+                If String.IsNullOrWhiteSpace(EmployeeNumber) Then
+
+                    Return Name
+                Else
+
+                    Return $"{EmployeeNumber} - {Name}"
+
+                End If
+
+            End Get
+        End Property
+
+    End Class
 
 End Class

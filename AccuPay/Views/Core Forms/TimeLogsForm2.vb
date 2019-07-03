@@ -28,6 +28,11 @@ Public Class TimeLogsForm2
 
     Private _originalDates As TimePeriod
 
+    Public Enum TimeLogsFormat
+        Optimized = 0
+        Conventional = 1
+    End Enum
+
 #End Region
 
 #Region "Methods"
@@ -267,7 +272,7 @@ Public Class TimeLogsForm2
         ToolStripProgressBar1.Value = e.ProgressPercentage
     End Sub
 
-    Private Async Sub BackGroundWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+    Private Sub BackGroundWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) _
         Handles bgworkTypicalImport.RunWorkerCompleted, bgworkImport.RunWorkerCompleted
 
         If e.Error IsNot Nothing Then
@@ -280,7 +285,7 @@ Public Class TimeLogsForm2
 
             ShowSuccessImportBalloon()
 
-            Await ReloadAsync()
+            ReloadAsync()
 
         End If
 
@@ -394,9 +399,9 @@ Public Class TimeLogsForm2
         Return dataGrid.Rows.OfType(Of DataGridViewRow).Select(Function(row) GridRowToTimeLogModel(row)).ToList()
     End Function
 
-    Private Function TimeLogsImportOption() As TimeLogsForm.TimeLogsFormat?
+    Private Function TimeLogsImportOption() As TimeLogsFormat?
 
-        Dim time_logformat As TimeLogsForm.TimeLogsFormat?
+        Dim time_logformat As TimeLogsFormat?
 
         MessageBoxManager.Yes = "Alternating line"
         MessageBoxManager.No = "Same line"
@@ -410,9 +415,9 @@ Public Class TimeLogsForm2
                             MessageBoxDefaultButton.Button1)
 
         If custom_prompt = Windows.Forms.DialogResult.Yes Then
-            time_logformat = TimeLogsForm.TimeLogsFormat.Conventional
+            time_logformat = TimeLogsFormat.Conventional
         ElseIf custom_prompt = Windows.Forms.DialogResult.No Then
-            time_logformat = TimeLogsForm.TimeLogsFormat.Optimized
+            time_logformat = TimeLogsFormat.Optimized
         ElseIf custom_prompt = Windows.Forms.DialogResult.Cancel Then
             time_logformat = Nothing
         End If
@@ -441,7 +446,10 @@ Public Class TimeLogsForm2
             Dim employeeShifts As List(Of EmployeeDutySchedule) =
                     Await GetEmployeeDutyShifts(firstDate, lastDate)
 
-            timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts)
+            Dim employeeOvertimes As List(Of Overtime) =
+                    Await GetEmployeeOvertime(firstDate, lastDate)
+
+            timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
         Else
 
             Dim employeeShifts As List(Of ShiftSchedule) =
@@ -475,6 +483,18 @@ Public Class TimeLogsForm2
                            Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
                            Where(Function(s) s.DateSched >= firstDate).
                            Where(Function(s) s.DateSched <= lastDate).
+                           ToListAsync()
+        End Using
+
+    End Function
+
+    Private Async Function GetEmployeeOvertime(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of Overtime))
+
+        Using context = New PayrollContext()
+            Return Await context.Overtimes.
+                           Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
+                           Where(Function(s) s.OTStartDate >= firstDate).
+                           Where(Function(s) s.OTStartDate <= lastDate).
                            ToListAsync()
         End Using
 
@@ -1074,7 +1094,7 @@ Public Class TimeLogsForm2
 
         Static employeeleaveRowID As Integer = -1
 
-        Dim timeLogsFormat_ As TimeLogsForm.TimeLogsFormat? = TimeLogsImportOption()
+        Dim timeLogsFormat_ As TimeLogsFormat? = TimeLogsImportOption()
 
         'They chose Cancel or used the close button
         If timeLogsFormat_ Is Nothing Then Return
@@ -1088,7 +1108,7 @@ Public Class TimeLogsForm2
 
                 thefilepath = browsefile.FileName
 
-                If timeLogsFormat_ = TimeLogsForm.TimeLogsFormat.Conventional Then
+                If timeLogsFormat_ = TimeLogsFormat.Conventional Then
                     NewTimeEntryAlternateLineImport()
                 Else
                     HouseKeepingBeforeStartBackgroundWork()

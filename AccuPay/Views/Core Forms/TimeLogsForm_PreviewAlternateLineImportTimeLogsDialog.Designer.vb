@@ -40,8 +40,8 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.btnClose = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
-        Me.txtSearch = New System.Windows.Forms.TextBox()
-        Me.lblSearch = New System.Windows.Forms.Label()
+        Me.EmployeeFilterComboBox = New System.Windows.Forms.ComboBox()
+        Me.lblFilter = New System.Windows.Forms.Label()
         Me.TimeAttendanceLogDataGrid = New System.Windows.Forms.DataGridView()
         Me.Column6 = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
         Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -137,8 +137,8 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         '
         'ParsedTabControl
         '
-        Me.ParsedTabControl.Controls.Add(Me.txtSearch)
-        Me.ParsedTabControl.Controls.Add(Me.lblSearch)
+        Me.ParsedTabControl.Controls.Add(Me.EmployeeFilterComboBox)
+        Me.ParsedTabControl.Controls.Add(Me.lblFilter)
         Me.ParsedTabControl.Controls.Add(Me.TimeAttendanceLogDataGrid)
         Me.ParsedTabControl.Controls.Add(Me.lblStatus)
         Me.ParsedTabControl.Location = New System.Drawing.Point(4, 22)
@@ -149,21 +149,24 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
         Me.ParsedTabControl.Text = "Ok"
         Me.ParsedTabControl.UseVisualStyleBackColor = True
         '
-        'txtSearch
+        'ComboBox1
         '
-        Me.txtSearch.Location = New System.Drawing.Point(52, 32)
-        Me.txtSearch.Name = "txtSearch"
-        Me.txtSearch.Size = New System.Drawing.Size(394, 22)
-        Me.txtSearch.TabIndex = 16
+        Me.EmployeeFilterComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable
+        Me.EmployeeFilterComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.EmployeeFilterComboBox.FormattingEnabled = True
+        Me.EmployeeFilterComboBox.Location = New System.Drawing.Point(45, 32)
+        Me.EmployeeFilterComboBox.Name = "ComboBox1"
+        Me.EmployeeFilterComboBox.Size = New System.Drawing.Size(300, 23)
+        Me.EmployeeFilterComboBox.TabIndex = 17
         '
-        'lblSearch
+        'lblFilter
         '
-        Me.lblSearch.AutoSize = True
-        Me.lblSearch.Location = New System.Drawing.Point(8, 36)
-        Me.lblSearch.Name = "lblSearch"
-        Me.lblSearch.Size = New System.Drawing.Size(41, 13)
-        Me.lblSearch.TabIndex = 15
-        Me.lblSearch.Text = "Search"
+        Me.lblFilter.AutoSize = True
+        Me.lblFilter.Location = New System.Drawing.Point(8, 36)
+        Me.lblFilter.Name = "lblFilter"
+        Me.lblFilter.Size = New System.Drawing.Size(33, 13)
+        Me.lblFilter.TabIndex = 15
+        Me.lblFilter.Text = "Filter"
         '
         'TimeAttendanceLogDataGrid
         '
@@ -586,10 +589,10 @@ Partial Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents TimeAttendanceLogDataGridTimeInButton As DataGridViewButtonColumn
     Friend WithEvents TimeAttendanceLogDataGridTimeOutButton As DataGridViewButtonColumn
-    Friend WithEvents lblSearch As Label
-    Friend WithEvents txtSearch As TextBox
+    Friend WithEvents lblFilter As Label
     Friend WithEvents Panel2 As Panel
     Friend WithEvents txtErrorSearch As TextBox
     Friend WithEvents lblErrorSearch As Label
     Friend WithEvents btnRevalidate As Button
+    Friend WithEvents EmployeeFilterComboBox As ComboBox
 End Class
