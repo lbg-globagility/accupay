@@ -217,8 +217,6 @@ Public Class selectPayPeriod
                 PayStubForm.isEndOfMonth = Trim(.Cells("Column14").Value)
             End With
 
-            PayStubForm.VeryFirstPayPeriodIDOfThisYear = id_value
-
             Dim PayFreqRowID = EXECQUER("SELECT RowID FROM payfrequency WHERE PayFrequencyType='" & quer_empPayFreq & "';")
 
             PayStubForm.genpayroll(PayFreqRowID)
