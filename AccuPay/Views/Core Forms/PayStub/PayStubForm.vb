@@ -1,68 +1,14 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports System.Threading
 Imports System.Threading.Tasks
-Imports AccuPay.Loans
 Imports log4net
 Imports System.Collections.Concurrent
 Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Views.Payroll
 
 Public Class PayStubForm
 
     Private _logger As ILog = LogManager.GetLogger("PayrollLogger")
-
-    Public q_employee As String = "SELECT e.RowID," &
-        "e.EmployeeID 'Employee ID'," &
-        "e.FirstName 'First Name'," &
-        "e.MiddleName 'Middle Name'," &
-        "e.LastName 'Last Name'," &
-        "e.Surname," &
-        "e.Nickname," &
-        "e.MaritalStatus 'Marital Status'," &
-        "COALESCE(e.NoOfDependents,0) 'No. Of Dependents'," &
-        "DATE_FORMAT(e.Birthdate,'%m-%d-%Y') 'Birthdate'," &
-        "DATE_FORMAT(e.Startdate,'" & custom_mysqldateformat & "') AS Startdate," &
-        "e.JobTitle 'Job Title'," &
-        "COALESCE(pos.PositionName,'') 'Position'," &
-        "e.Salutation," &
-        "e.TINNo 'TIN'," &
-        "e.SSSNo 'SSS No.'," &
-        "e.HDMFNo 'PAGIBIG No.'," &
-        "e.PhilHealthNo 'PhilHealth No.'," &
-        "e.WorkPhone 'Work Phone No.'," &
-        "e.HomePhone 'Home Phone No.'," &
-        "e.MobilePhone 'Mobile Phone No.'," &
-        "e.HomeAddress 'Home address'," &
-        "e.EmailAddress 'Email address'," &
-        "IF(e.Gender='M','Male','Female') 'Gender'," &
-        "e.EmploymentStatus 'Employment Status'," &
-        "IFNULL(pf.PayFrequencyType,'') 'Pay Frequency'," &
-        "e.UndertimeOverride," &
-        "e.OvertimeOverride," &
-        "COALESCE(pos.RowID,'pos.RowID') 'PositionID'" &
-        ",IFNULL(e.PayFrequencyID,'') 'PayFrequencyID'" &
-        ",e.EmployeeType" &
-        ",e.LeaveBalance" &
-        ",e.SickLeaveBalance" &
-        ",e.MaternityLeaveBalance" &
-        ",e.LeaveAllowance" &
-        ",e.SickLeaveAllowance" &
-        ",e.MaternityLeaveAllowance" &
-        ",e.LeavePerPayPeriod" &
-        ",e.SickLeavePerPayPeriod" &
-        ",e.MaternityLeavePerPayPeriod" &
-        ",COALESCE(fstat.RowID,3) 'fstatRowID'" &
-        ",'' 'Image'" &
-        ",DATE_FORMAT(e.Created,'%m-%d-%Y') 'Creation Date'," &
-        "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," &
-        "COALESCE(DATE_FORMAT(e.LastUpd,'%m-%d-%Y'),'') 'Last Update'," &
-        "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=e.LastUpdBy) 'LastUpdate by'" &
-        " " &
-        "FROM employee e " &
-        "LEFT JOIN user u ON e.CreatedBy=u.RowID " &
-        "LEFT JOIN position pos ON e.PositionID=pos.RowID " &
-        "LEFT JOIN payfrequency pf ON e.PayFrequencyID=pf.RowID " &
-        "LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents " &
-        "WHERE e.OrganizationID=" & orgztnID
 
     Public current_year As String = CDate(dbnow).Year
 
@@ -71,8 +17,6 @@ Public Class PayStubForm
     Dim employeepicture As New DataTable
 
     Dim viewID As Integer = Nothing
-
-    Dim n_VeryFirstPayPeriodIDOfThisYear As Object = Nothing
 
     Public paypFrom As String = Nothing
     Public paypTo As String = Nothing
@@ -89,12 +33,6 @@ Public Class PayStubForm
 
     Dim currentEmployeeID As String = Nothing
 
-    Dim employee_dattab As New DataTable
-
-    Public numofweekdays As Integer
-
-    Public numofweekends As Integer
-
     Public withthirteenthmonthpay As SByte = 0
 
     Const max_rec_perpage As Integer = 1
@@ -110,22 +48,9 @@ Public Class PayStubForm
     Dim dtJosh As DataTable
     Dim da As New MySqlDataAdapter()
 
-    Dim dtprintAllPaySlip As New DataTable
-
-    Dim rptdocAll As New rptAllDecUndecPaySlip
-
     Private sys_ownr As New SystemOwner
 
     Private _results As BlockingCollection(Of PayrollGeneration.Result)
-
-    Property VeryFirstPayPeriodIDOfThisYear As Object
-        Get
-            Return n_VeryFirstPayPeriodIDOfThisYear
-        End Get
-        Set(value As Object)
-            n_VeryFirstPayPeriodIDOfThisYear = value
-        End Set
-    End Property
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -302,10 +227,6 @@ Public Class PayStubForm
         End If
     End Sub
 
-    Private Sub dgvpayper_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvpayper.CellContentClick
-
-    End Sub
-
     Private Sub dgvpayper_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvpayper.SelectionChanged
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
@@ -327,26 +248,6 @@ Public Class PayStubForm
 
                 isEndOfMonth = Trim(.Cells("Column14").Value)
 
-                Dim date_diff = DateDiff(DateInterval.Day, CDate(paypFrom), CDate(paypTo))
-
-                numofweekdays = 0
-
-                For i = 0 To date_diff
-
-                    Dim DayOfWeek = CDate(paypFrom).AddDays(i)
-
-                    If DayOfWeek.DayOfWeek = 0 Then 'System.DayOfWeek.Sunday
-                        numofweekends += 1
-
-                    ElseIf DayOfWeek.DayOfWeek = 6 Then 'System.DayOfWeek.Saturday
-                        numofweekends += 1
-                    Else
-                        numofweekdays += 1
-
-                    End If
-
-                Next
-
                 Dim str_sched_payfreq As String = Convert.ToString(.Cells("Column12").Value)
 
                 str_pay_freq_sched = str_sched_payfreq
@@ -358,13 +259,10 @@ Public Class PayStubForm
 
                 For Each _tsbtn In select_cutoff_payfrequency
                     PayFreq_Changed(_tsbtn, New EventArgs)
-
                 Next
 
             End With
         Else
-
-            numofweekdays = 0
 
             paypRowID = Nothing
             paypFrom = Nothing
@@ -593,20 +491,11 @@ Public Class PayStubForm
                         TabPage4_Enter(TabPage4, New EventArgs)
                     End If
                 Else
-                    dgvpaystub.Rows.Clear()
 
                     txtgrosssal.Text = ""
                     txtnetsal.Text = ""
                     txttaxabsal.Text = ""
 
-                    dgvpaystub.Rows.Clear()
-                    dgvpaystubitem.Rows.Clear()
-                    dgvempsal.Rows.Clear()
-                    dgvetent.Rows.Clear()
-                    dgvpaystubitm.Rows.Clear()
-                    dgvempbon.Rows.Clear()
-                    dgvLoanList.Rows.Clear()
-                    dgvempallowance.Rows.Clear()
                     Try
                         For Each txtbxctrl In SplitContainer1.Panel2.Controls.OfType(Of TextBox).ToList()
                             txtbxctrl.Text = "0.00"
@@ -696,22 +585,11 @@ Public Class PayStubForm
             txtThirteenthMonthPay.Text = ""
             txtTotalNetPay.Text = ""
 
-            dgvpaystub.Rows.Clear()
-            dgvpaystubitem.Rows.Clear()
-            dgvempsal.Rows.Clear()
-            dgvetent.Rows.Clear()
-            dgvpaystubitm.Rows.Clear()
-            dgvempbon.Rows.Clear()
-            dgvLoanList.Rows.Clear()
-            dgvempallowance.Rows.Clear()
-
         End If
 
     End Sub
 
     Private Sub tsbtngenpayroll_Click(sender As Object, e As EventArgs) Handles tsbtngenpayroll.Click
-        Me.VeryFirstPayPeriodIDOfThisYear = Nothing
-
         With selectPayPeriod
             .Show()
             .BringToFront()
@@ -790,16 +668,6 @@ Public Class PayStubForm
         End Try
     End Sub
 
-    Private Sub SinglePaySlip_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem.Click,
-                                                                                ActualToolStripMenuItem.Click
-        Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
-
-        Dim n_PrintSinglePaySlipOfficialFormat As _
-            New PrintSinglePaySlipOfficialFormat(ValNoComma(paypRowID),
-                                                 IsActualFlag,
-                                                 ValNoComma(dgvemployees.Tag))
-    End Sub
-
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
         Me.Close()
     End Sub
@@ -825,8 +693,7 @@ Public Class PayStubForm
 
                 .VIEW_allowanceperday(dgvemployees.CurrentRow.Cells("RowID").Value,
                                         paypFrom,
-                                        paypTo,
-                                        numofweekdays)
+                                        paypTo)
 
                 .Text = .Text & " - ID# " & dgvemployees.CurrentRow.Cells("EmployeeID").Value
             End If
@@ -1121,79 +988,6 @@ Public Class PayStubForm
 
         tsbtnSearch_Click(sender, e)
 
-    End Sub
-
-    '********************************************************
-    '*********             CONTEXT MENU             *********
-    '********************************************************
-
-    Private Sub cms1_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles cms1.Opening
-
-        If dgvpayper.RowCount <> 0 Then
-            ToolStripMenuItem1.Enabled = True
-        Else
-            ToolStripMenuItem1.Enabled = False
-
-        End If
-
-    End Sub
-
-    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
-
-        If dgvpayper.RowCount <> 0 Then
-
-            With dgvpayper.CurrentRow
-
-                paypRowID = .Cells("Column1").Value
-
-                paypFrom = Format(CDate(.Cells("Column2").Value), "yyyy-MM-dd")
-
-                paypTo = Format(CDate(.Cells("Column3").Value), "yyyy-MM-dd")
-
-                isEndOfMonth = Trim(.Cells("Column14").Value)
-
-                genpayselyear = Format(CDate(.Cells("Column2").Value), "yyyy")
-
-                numofweekdays = 0
-
-                numofweekends = 0
-
-                Dim date_diff = DateDiff(DateInterval.Day, CDate(paypFrom), CDate(paypTo))
-
-                For i = 0 To date_diff
-
-                    Dim DayOfWeek = CDate(paypFrom).AddDays(i)
-
-                    If DayOfWeek.DayOfWeek = 0 Then 'System.DayOfWeek.Sunday
-                        numofweekends += 1
-
-                    ElseIf DayOfWeek.DayOfWeek = 6 Then 'System.DayOfWeek.Saturday
-                        numofweekends += 1
-                    Else
-                        numofweekdays += 1
-
-                    End If
-
-                Next
-
-                withthirteenthmonthpay = 0
-
-                If Format(CDate(.Cells("Column3").Value), "MM") = "12" Then
-
-                    Dim prompt = MessageBox.Show("Do you want to include the calculation of Thirteenth month pay ?", "Thirteenth month pay calculation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information)
-
-                    If prompt = Windows.Forms.DialogResult.Yes Then
-                    ElseIf prompt = Windows.Forms.DialogResult.No Then
-                    ElseIf prompt = Windows.Forms.DialogResult.Cancel Then
-                    End If
-                Else
-
-                End If
-
-                Dim PayFreqRowID = EXECQUER("SELECT RowID FROM payfrequency WHERE PayFrequencyType='" & Trim(.Cells("Column12").Value) & "';")
-
-            End With
-        End If
     End Sub
 
     Private Sub dgAdjustments_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvAdjustments.CellContentClick
@@ -1724,117 +1518,6 @@ Public Class PayStubForm
         TabPage4_Enter1(TabPage4, New EventArgs)
     End Sub
 
-    Private Sub bgwPrintAllPaySlip_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgwPrintAllPaySlip.DoWork
-
-        If dtprintAllPaySlip.Columns.Count = 0 Then
-
-            For i = 1 To 120
-
-                Dim n_col As New DataColumn
-
-                n_col.ColumnName = "COL" & i
-
-                dtprintAllPaySlip.Columns.Add(n_col)
-
-            Next
-
-        End If
-
-        employee_dattab = retAsDatTbl("SELECT e.*" &
-                                      ",CONCAT(UCASE(e.LastName),', ',UCASE(e.FirstName),', ',INITIALS(e.MiddleName,'.','1')) AS FullName" &
-                                      " FROM employee e LEFT JOIN employeesalary esal ON e.RowID=esal.EmployeeID" &
-                                      " WHERE e.OrganizationID=" & orgztnID &
-                                      " AND CURDATE() BETWEEN esal.EffectiveDateFrom AND COALESCE(esal.EffectiveDateTo,CURDATE())" &
-                                      " GROUP BY e.RowID" &
-                                      " ORDER BY e.LastName;") 'RowID DESC
-
-        Dim n_row As DataRow
-
-        For Each drow As DataRow In employee_dattab.Rows
-
-            n_row = dtprintAllPaySlip.NewRow
-
-            n_row("COL1") = drow("EmployeeID")
-
-            n_row("COL2") = drow("FullName")
-
-            For ii = 3 To 120
-
-                Dim datacol_name = "COL" & ii
-
-                n_row(datacol_name) = "0.0"
-
-            Next
-
-            dtprintAllPaySlip.Rows.Add(n_row)
-
-        Next
-
-        rptdocAll = New rptAllDecUndecPaySlip
-
-        With rptdocAll.ReportDefinition.Sections(2)
-
-            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("OrgName")
-
-            objText.Text = orgNam
-
-            objText = .ReportObjects("OrgAddress")
-
-            Dim orgaddress = EXECQUER("SELECT CONCAT(IF(StreetAddress1 IS NULL,'',StreetAddress1)" &
-                                    ",IF(StreetAddress2 IS NULL,'',CONCAT(', ',StreetAddress2))" &
-                                    ",IF(Barangay IS NULL,'',CONCAT(', ',Barangay))" &
-                                    ",IF(CityTown IS NULL,'',CONCAT(', ',CityTown))" &
-                                    ",IF(Country IS NULL,'',CONCAT(', ',Country))" &
-                                    ",IF(State IS NULL,'',CONCAT(', ',State)))" &
-                                    " FROM address a LEFT JOIN organization o ON o.PrimaryAddressID=a.RowID" &
-                                    " WHERE o.RowID=" & orgztnID & ";")
-
-            objText.Text = orgaddress
-
-            Dim contactdetails = EXECQUER("SELECT GROUP_CONCAT(COALESCE(MainPhone,'')" &
-                                    ",',',COALESCE(FaxNumber,'')" &
-                                    ",',',COALESCE(EmailAddress,'')" &
-                                    ",',',COALESCE(TINNo,''))" &
-                                    " FROM organization WHERE RowID=" & orgztnID & ";")
-
-            Dim contactdet = Split(contactdetails, ",")
-            objText = .ReportObjects("OrgContact")
-
-            Dim contactdets As String = Nothing
-
-            If Trim(contactdet(0).ToString) = "" Then
-                contactdets = ""
-            Else
-                contactdets = "Contact No. " & contactdet(0).ToString
-            End If
-
-            objText.Text = contactdets
-            objText = .ReportObjects("payperiod")
-
-            Dim papy_str = "Payroll slip for the period of   " & Format(CDate(Now), machineShortDateFormat) & If(paypTo = Nothing, "", " to " & Format(CDate(Now), machineShortDateFormat))
-            objText.Text = papy_str
-        End With
-
-        rptdocAll.SetDataSource(dtprintAllPaySlip)
-    End Sub
-
-    Private Sub bgwPrintAllPaySlip_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgwPrintAllPaySlip.RunWorkerCompleted
-        If e.Error IsNot Nothing Then
-            MsgBox("Error: " & vbNewLine & e.Error.Message)
-        ElseIf e.Cancelled Then
-            MsgBox("Background work cancelled.",
-                   MsgBoxStyle.Exclamation)
-        Else
-            Dim crvwr As New CrysVwr
-
-            crvwr.CrystalReportViewer1.ReportSource = rptdocAll
-            Dim papy_string = "Payroll slip for the period of   " & Format(CDate(Now), machineShortDateFormat) & If(paypTo = Nothing, "", " to " & Format(CDate(Now), machineShortDateFormat))
-            crvwr.Text = papy_string
-            crvwr.Refresh()
-            crvwr.Show()
-        End If
-    End Sub
-
     Private Sub btndiscardchanges_Click(sender As Object, e As EventArgs) Handles btndiscardchanges.Click
         UpdateAdjustmentDetails(Convert.ToInt16(tabEarned.SelectedIndex)) 'Josh
 
@@ -1986,60 +1669,6 @@ Public Class PayStubForm
             Me.Enabled = True
             dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
         End If
-
-        Console.WriteLine(String.Concat("#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@ ", percentComplete, "% complete"))
-    End Sub
-
-    Private Sub PopulateDGVEmployee(dat_tbl As DataTable)
-        For Each drow As DataRow In dat_tbl.Rows
-            dgvemployees.Rows.Add(drow("RowID"),
-                                  drow("EmployeeID"),
-                                  drow("FirstName"),
-                                  drow("MiddleName"),
-                                  drow("LastName"),
-                                  drow("Surname"),
-                                  drow("Nickname"),
-                                  drow("MaritalStatus"),
-                                  drow("NoOfDependents"),
-                                  Format(CDate(drow("Birthdate")), machineShortDateFormat),
-                                  Format(CDate(drow("StartDate")), machineShortDateFormat),
-                                  drow("JobTitle"),
-                                  If(IsDBNull(drow("PositionName")), "", drow("PositionName")),
-                                  drow("Salutation"),
-                                  drow("TINNo"),
-                                  drow("SSSNo"),
-                                  drow("HDMFNo"),
-                                  drow("PhilHealthNo"),
-                                  drow("WorkPhone"),
-                                  drow("HomePhone"),
-                                  drow("MobilePhone"),
-                                  drow("HomeAddress"),
-                                  drow("EmailAddress"),
-                                  If(Trim(drow("Gender")) = "M", "Male", "Female"),
-                                  drow("EmploymentStatus"),
-                                  drow("PayFrequencyType"),
-                                  drow("UndertimeOverride"),
-                                  drow("OvertimeOverride"),
-                                  If(IsDBNull(drow("PositionID")), "", drow("PositionID")),
-                                  drow("PayFrequencyID"),
-                                  drow("EmployeeType"),
-                                  drow("LeaveBalance"),
-                                  drow("SickLeaveBalance"),
-                                  drow("MaternityLeaveBalance"),
-                                  drow("LeaveAllowance"),
-                                  drow("SickLeaveAllowance"),
-                                  drow("MaternityLeaveAllowance"),
-                                  drow("LeavePerPayPeriod"),
-                                  drow("SickLeavePerPayPeriod"),
-                                  drow("MaternityLeavePerPayPeriod"),
-                                  drow("fstatRowID"),
-                                  Nothing,
-                                  drow("Created"),
-                                  drow("CreatedBy"),
-                                  If(IsDBNull(drow("LastUpd")), "", drow("LastUpd")),
-                                  If(IsDBNull(drow("LastUpdBy")), "", drow("LastUpdBy")))
-        Next
-
     End Sub
 
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
@@ -2133,303 +1762,6 @@ Public Class PayStubForm
         End If
 
         tsbtnDelAllEmpPayroll.Enabled = True
-    End Sub
-
-End Class
-
-Friend Class PrintAllPaySlipOfficialFormat
-
-    Private n_PayPeriodRowID As Object = Nothing
-
-    Private n_IsPrintingAsActual As SByte = 0
-
-    Sub New(PayPeriodRowID As Object,
-            IsPrintingAsActual As SByte)
-
-        n_PayPeriodRowID = PayPeriodRowID
-
-        n_IsPrintingAsActual = IsPrintingAsActual
-
-        DoProcess()
-
-    End Sub
-
-    Const customDateFormat As String = "'%c/%e/%Y'"
-
-    Private crvwr As New CrysRepForm
-
-    Private catchdt As New DataTable
-
-    Private sys_ownr As New SystemOwner
-
-    Sub DoProcess()
-
-        Dim rptdoc As Object = Nothing
-
-        Static current_system_owner As String = sys_ownr.CurrentSystemOwner
-
-        Dim some_systemowners = New String() {SystemOwner.Goldwings, SystemOwner.DefaultOwner}
-
-        If some_systemowners.Contains(current_system_owner) Then
-
-            Dim n_SQLQueryToDatatable As _
-            New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual & ");")
-
-            catchdt = n_SQLQueryToDatatable.ResultTable
-
-            rptdoc = New OfficialPaySlipFormat
-
-            With rptdoc.ReportDefinition.Sections(2)
-                Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("txtOrganizName")
-                objText.Text = orgNam.ToUpper
-
-                objText = .ReportObjects("txtPayPeriod")
-
-                If ValNoComma(n_PayPeriodRowID) > 0 Then
-                    objText.Text =
-                New ExecuteQuery("SELECT CONCAT(DATE_FORMAT(PayFromDate," & customDateFormat & "),' to ',DATE_FORMAT(PayToDate," & customDateFormat & ")) `Result`" &
-                                 " FROM payperiod WHERE RowID=" & ValNoComma(n_PayPeriodRowID) & ";").Result
-                End If
-            End With
-
-        ElseIf SystemOwner.Hyundai = current_system_owner Then
-
-            Dim params =
-                New Object() {orgztnID, n_PayPeriodRowID}
-
-            Dim _sql As New SQL("CALL `HyundaiPayslip`(?og_rowid, ?pp_rowid, TRUE, NULL);",
-                               params)
-
-            catchdt = _sql.GetFoundRows.Tables(0)
-
-            'rptdoc = New HyundaiPayslip
-            rptdoc = New HyundaiPayslip1
-
-            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
-
-            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
-            objText.Text = orgNam.ToUpper
-
-        ElseIf SystemOwner.Cinema2000 = current_system_owner Then
-
-            Dim params =
-                New Object() {orgztnID, n_PayPeriodRowID}
-
-            Dim str_query As String = String.Concat(
-                "CALL `RPT_payslip`(?og_rowid, ?pp_rowid, TRUE, NULL);")
-
-            Dim _sql As New SQL(str_query,
-                                params)
-
-            catchdt = _sql.GetFoundRows.Tables(0)
-
-            rptdoc = New TwoEmpIn1PaySlip
-
-            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
-
-            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("payperiod")
-            objText.Text =
-                Convert.ToString(
-                New SQL(String.Concat("SELECT",
-                                      " CONCAT('Payroll period ', DATE_FORMAT(pp.PayFromDate, '%c/%e/%Y'), ' to ', DATE_FORMAT(pp.PayToDate, '%c/%e/%Y')) `Result`",
-                                      " FROM payperiod pp WHERE pp.RowID=", n_PayPeriodRowID, ";")).GetFoundRow)
-
-            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgContact")
-            objText.Text = String.Empty
-
-            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgName")
-            objText.Text = orgNam.ToUpper
-
-            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgAddress")
-            objText.Text =
-                Convert.ToString(New SQL(String.Concat("SELECT CONCAT_WS(', ',",
-                                                       "IF(LENGTH(TRIM(ad.StreetAddress1)) > 0, ad.StreetAddress1, NULL)",
-                                                       ",IF(LENGTH(TRIM(ad.StreetAddress2)) > 0, ad.StreetAddress2, NULL)",
-                                                       ",IF(LOCATE('city', ad.Barangay) > 0, IF(LENGTH(TRIM(ad.Barangay)) > 0, ad.Barangay, NULL), CONCAT('Brgy. ', TRIM(ad.Barangay)))",
-                                                       ",IF(LOCATE('city', ad.CityTown) > 0, IF(LENGTH(TRIM(ad.CityTown)) > 0, ad.CityTown, NULL), CONCAT(TRIM(ad.CityTown), ' city'))",
-                                                       ",IF(LENGTH(TRIM(ad.Country)) > 0, ad.Country, NULL)",
-                                                       ",IF(LENGTH(TRIM(ad.State)) > 0, ad.State, NULL)",
-                                                       ",IF(LENGTH(TRIM(ad.ZipCode)) > 0, ad.ZipCode, NULL)",
-                                                       ") `AddressText`",
-                                                       " FROM organization og",
-                                                       " INNER JOIN address ad ON ad.RowID=og.PrimaryAddressID",
-                                                       " WHERE og.RowID = ", orgztnID,
-                                                       ";")).GetFoundRow)
-
-        End If
-
-        rptdoc.SetDataSource(catchdt)
-
-        crvwr.crysrepvwr.ReportSource = rptdoc
-
-        crvwr.Show()
-
-    End Sub
-
-End Class
-
-Friend Class PrintSinglePaySlipOfficialFormat
-
-    Private n_PayPeriodRowID As Object = Nothing
-
-    Private n_IsPrintingAsActual As SByte = 0
-
-    Private n_EmployeeRowID As Object = Nothing
-
-    Private sys_ownr As New SystemOwner
-
-    Sub New(PayPeriodRowID As Object,
-            IsPrintingAsActual As SByte,
-            EmployeeRow_ID As Object)
-
-        n_PayPeriodRowID = PayPeriodRowID
-
-        n_IsPrintingAsActual = IsPrintingAsActual
-
-        n_EmployeeRowID = EmployeeRow_ID
-
-        DoProcess()
-
-    End Sub
-
-    Const customDateFormat As String = "'%c/%e/%Y'"
-
-    Private crvwr As New CrysRepForm
-
-    Private catchdt As New DataTable
-
-    Sub DoProcess()
-
-        Static current_system_owner As String = sys_ownr.CurrentSystemOwner
-
-        If SystemOwner.Goldwings = current_system_owner Then
-
-            Dim rptdoc = New OfficialPaySlipFormat
-
-            Dim n_SQLQueryToDatatable As _
-            New SQLQueryToDatatable("CALL paystub_singlepayslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual &
-                                    "," & n_EmployeeRowID & ");")
-
-            catchdt = n_SQLQueryToDatatable.ResultTable
-
-            With rptdoc.ReportDefinition.Sections(2)
-                Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("txtOrganizName")
-                objText.Text = orgNam.ToUpper
-
-                objText = .ReportObjects("txtPayPeriod")
-
-                If ValNoComma(n_PayPeriodRowID) > 0 Then
-                    objText.Text =
-                    New ExecuteQuery("SELECT CONCAT(DATE_FORMAT(PayFromDate," & customDateFormat & "),' to ',DATE_FORMAT(PayToDate," & customDateFormat & ")) `Result`" &
-                                     " FROM payperiod WHERE RowID=" & ValNoComma(n_PayPeriodRowID) & ";").Result
-                End If
-            End With
-
-            rptdoc.SetDataSource(catchdt)
-
-            crvwr.crysrepvwr.ReportSource = rptdoc
-
-        ElseIf SystemOwner.Hyundai = current_system_owner Then
-
-            Dim params =
-                New Object() {orgztnID, n_PayPeriodRowID, n_EmployeeRowID}
-
-            Dim _sql As New SQL("CALL `HyundaiPayslip`(?og_rowid, ?pp_rowid, TRUE, ?emp_rowid);",
-                               params)
-
-            catchdt = _sql.GetFoundRows.Tables(0)
-
-            Dim rptdoc = New HyundaiPayslip
-
-            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
-
-            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
-            objText.Text = orgNam.ToUpper
-
-            rptdoc.SetDataSource(catchdt)
-
-            crvwr.crysrepvwr.ReportSource = rptdoc
-
-        ElseIf SystemOwner.Cinema2000 = current_system_owner Then
-
-            Dim params =
-                New Object() {orgztnID, n_PayPeriodRowID, n_EmployeeRowID}
-
-            Dim str_query As String = String.Concat(
-                "CALL `RPT_payslip`(?og_rowid, ?pp_rowid, TRUE, ?emp_rowid);")
-
-            Dim _sql As New SQL(str_query,
-                                params)
-
-            catchdt = _sql.GetFoundRows.Tables(0)
-
-            Dim rptdoc = New TwoEmpIn1PaySlip
-
-            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
-
-            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgName")
-            objText.Text = orgNam.ToUpper
-
-            rptdoc.SetDataSource(catchdt)
-
-            crvwr.crysrepvwr.ReportSource = rptdoc
-
-        End If
-
-        crvwr.Show()
-
-    End Sub
-
-End Class
-
-Friend Class PrintSoloPaySlipThisPayPeriod
-
-    Sub New(ByVal payp_From As Object, ByVal payp_To As Object, ByVal emp_RowID As Object,
-            Optional Is_Actual As Int16 = 0)
-
-        Dim rptdoc = New TwoEmpIn1PaySlip
-
-        Dim rptdt = New DataTable
-
-        rptdt = retAsDatTbl("CALL `RPT_solopayslip`('" & orgztnID & "', '" & payp_From & "', '" & payp_To & "', '" & emp_RowID & "', '" & Is_Actual & "');")
-
-        Dim pay_periodstring = String.Empty
-
-        With rptdoc.ReportDefinition.Sections(2)
-            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("OrgName")
-
-            objText.Text = orgNam
-
-            Dim orgaddress = EXECQUER("SELECT CONCAT_WS(', ',a.StreetAddress1,a.StreetAddress2,a.Barangay,a.CityTown,a.Country,a.State) AS Result" &
-                                      " FROM organization o LEFT JOIN address a ON a.RowID=o.PrimaryAddressID" &
-                                      " WHERE o.RowID=" & orgztnID & ";")
-
-            objText = .ReportObjects("OrgAddress")
-            objText.Text = orgaddress
-
-            Dim og_contact = String.Empty
-
-            objText = .ReportObjects("OrgContact")
-            objText.Text = New ExecuteQuery("SELECT CONCAT_WS(', ',c.FirstName,c.LastName,c.MainPhone,a.StreetAddress1,a.StreetAddress2,a.Barangay,a.CityTown,a.Country,a.State) AS Result" &
-                                            " FROM organization o LEFT JOIN contact c ON c.RowID=o.PrimaryContactID" &
-                                            " LEFT JOIN address a ON a.RowID=c.AddressID" &
-                                            " WHERE o.RowID=" & orgztnID & ";").Result
-            pay_periodstring = "for the period of  " & CDate(payp_From).ToShortDateString & " to " & CDate(payp_To).ToShortDateString
-
-            objText = .ReportObjects("payperiod")
-            objText.Text = pay_periodstring
-        End With
-
-        rptdoc.SetDataSource(rptdt)
-
-        Dim crvwr As New CrysRepForm
-
-        crvwr.crysrepvwr.ReportSource = rptdoc
-
-        crvwr.Text = "Print payslip\" & orgNam & "\" & pay_periodstring
-
-        crvwr.Show()
-
     End Sub
 
 End Class

@@ -32,21 +32,6 @@ Partial Class PayStubForm
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpayper = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PayDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -64,8 +49,6 @@ Partial Class PayStubForm
         Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cms1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.dgvemployees = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -278,37 +261,7 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn64 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column15 = New System.Windows.Forms.DataGridViewLinkColumn()
         Me.IsAdjustmentActual = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvempallowance = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.eall_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Start = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_End = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.allow_taxable = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvLoanList = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_loanno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_totloanamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_totballeft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_DedPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dedsched = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_noofpayperiod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn112 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn113 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_status = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_loantype = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label37 = New System.Windows.Forms.Label()
-        Me.dgvempbon = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Start = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_End = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bonus_taxable = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtHolidayPay = New System.Windows.Forms.TextBox()
         Me.lblsubtotmisc = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -320,56 +273,8 @@ Partial Class PayStubForm
         Me.Label43 = New System.Windows.Forms.Label()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
-        Me.dgvpaystubitm = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.paystitmID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PayStubID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ProductID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PayAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblSubtotal = New System.Windows.Forms.TextBox()
         Me.Label30 = New System.Windows.Forms.Label()
-        Me.dgvetent = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.etent_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_Date = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_EmployeeShiftID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_EmployeeSalaryID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_EmployeeFixedSalaryFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_TotalHoursWorked = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_RegularHoursWorked = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_RegularHoursAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_OvertimeHoursWorked = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_OvertimeHoursAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_UndertimeHours = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_UndertimeHoursAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_NightDifferentialHours = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_NightDiffHoursAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_NightDifferentialOTHours = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_NightDiffOTHoursAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_HoursLate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_HoursLateAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_LateFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_PayRateID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_VacationLeaveHours = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_SickLeaveHours = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.etent_TotalDayPay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvempsal = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.esal_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_FilingStatusID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_FilingStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_PaySocialSecurityID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_EmployeeContributionAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_PayPhilhealthID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_EmployeeShare = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_HDMFAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_BasicPay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_NoofDependents = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_MaritalStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_PositionID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_EffectiveDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.esal_EffectiveDateTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btntotbon = New System.Windows.Forms.Button()
         Me.btntotloan = New System.Windows.Forms.Button()
         Me.btnTotalTaxabAllowance = New System.Windows.Forms.Button()
@@ -427,36 +332,6 @@ Partial Class PayStubForm
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtnetsal = New System.Windows.Forms.TextBox()
         Me.txtgrosssal = New System.Windows.Forms.TextBox()
-        Me.dgvpaystubitem = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.paystitm_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystitm_PayStubID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystitm_ProductID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystitm_Item = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystitm_PayAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvpaystub = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.paystb_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_Created = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_CreatedBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_PayPeriodID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TimeEntryID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_PayFromDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_PayToDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalGrossSalary = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalNetSalary = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalTaxableSalary = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalEmpSSS = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalEmpWithholdingTax = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalCompSSS = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalEmpPhilhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalCompPhilhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalEmpHDMF = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalCompHDMF = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalVacationDaysLeft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalLoans = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalBonus = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalAllowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.paystb_TotalAdjustments = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label103 = New System.Windows.Forms.Label()
         Me.Label39 = New System.Windows.Forms.Label()
         Me.Label38 = New System.Windows.Forms.Label()
@@ -487,12 +362,10 @@ Partial Class PayStubForm
         Me.ActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.Button3 = New System.Windows.Forms.Button()
-        Me.bgwPrintAllPaySlip = New System.ComponentModel.BackgroundWorker()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.cms1.SuspendLayout()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.tbppayroll.SuspendLayout()
@@ -507,18 +380,10 @@ Partial Class PayStubForm
         Me.TabPage1.SuspendLayout()
         Me.TabPage4.SuspendLayout()
         CType(Me.dgvAdjustments, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvLoanList, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvpaystubitm, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvetent, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvempsal, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl3.SuspendLayout()
         Me.tbpleavebal.SuspendLayout()
         Me.tbpleaveallow.SuspendLayout()
         Me.tbpleavepayp.SuspendLayout()
-        CType(Me.dgvpaystubitem, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.Panel5.SuspendLayout()
@@ -672,18 +537,6 @@ Partial Class PayStubForm
         Me.Column14.Name = "Column14"
         Me.Column14.ReadOnly = True
         Me.Column14.Visible = False
-        '
-        'cms1
-        '
-        Me.cms1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1})
-        Me.cms1.Name = "cms1"
-        Me.cms1.Size = New System.Drawing.Size(173, 26)
-        '
-        'ToolStripMenuItem1
-        '
-        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(172, 22)
-        Me.ToolStripMenuItem1.Text = "Regenerate Payroll"
         '
         'Label25
         '
@@ -1238,10 +1091,7 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.btnSaveAdjustments)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label62)
         Me.SplitContainer1.Panel2.Controls.Add(Me.dgvAdjustments)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.dgvempallowance)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.dgvLoanList)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label37)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.dgvempbon)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtHolidayPay)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblsubtotmisc)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label5)
@@ -1253,11 +1103,8 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label43)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label41)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label40)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.dgvpaystubitm)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblSubtotal)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label30)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.dgvetent)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.dgvempsal)
         Me.SplitContainer1.Panel2.Controls.Add(Me.btntotbon)
         Me.SplitContainer1.Panel2.Controls.Add(Me.btntotloan)
         Me.SplitContainer1.Panel2.Controls.Add(Me.btnTotalTaxabAllowance)
@@ -1285,8 +1132,6 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label3)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtnetsal)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtgrosssal)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.dgvpaystubitem)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.dgvpaystub)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label1)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label2)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label103)
@@ -2960,206 +2805,6 @@ Partial Class PayStubForm
         Me.IsAdjustmentActual.Name = "IsAdjustmentActual"
         Me.IsAdjustmentActual.Visible = False
         '
-        'dgvempallowance
-        '
-        Me.dgvempallowance.AllowUserToAddRows = False
-        Me.dgvempallowance.AllowUserToDeleteRows = False
-        Me.dgvempallowance.AllowUserToOrderColumns = True
-        Me.dgvempallowance.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempallowance.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle9
-        Me.dgvempallowance.ColumnHeadersHeight = 34
-        Me.dgvempallowance.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eall_RowID, Me.eall_Type, Me.eall_Amount, Me.eall_Frequency, Me.eall_Start, Me.eall_End, Me.allow_taxable, Me.eall_ProdID})
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle11
-        Me.dgvempallowance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempallowance.Location = New System.Drawing.Point(510, 805)
-        Me.dgvempallowance.MultiSelect = False
-        Me.dgvempallowance.Name = "dgvempallowance"
-        Me.dgvempallowance.ReadOnly = True
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempallowance.RowHeadersDefaultCellStyle = DataGridViewCellStyle12
-        Me.dgvempallowance.Size = New System.Drawing.Size(240, 73)
-        Me.dgvempallowance.TabIndex = 406
-        Me.dgvempallowance.Visible = False
-        '
-        'eall_RowID
-        '
-        Me.eall_RowID.HeaderText = "RowID"
-        Me.eall_RowID.Name = "eall_RowID"
-        Me.eall_RowID.ReadOnly = True
-        Me.eall_RowID.Visible = False
-        Me.eall_RowID.Width = 50
-        '
-        'eall_Type
-        '
-        Me.eall_Type.HeaderText = "Type"
-        Me.eall_Type.Name = "eall_Type"
-        Me.eall_Type.ReadOnly = True
-        Me.eall_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eall_Type.Width = 371
-        '
-        'eall_Amount
-        '
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle10
-        Me.eall_Amount.HeaderText = "Amount"
-        Me.eall_Amount.Name = "eall_Amount"
-        Me.eall_Amount.ReadOnly = True
-        Me.eall_Amount.Width = 370
-        '
-        'eall_Frequency
-        '
-        Me.eall_Frequency.HeaderText = "Frequency"
-        Me.eall_Frequency.Name = "eall_Frequency"
-        Me.eall_Frequency.ReadOnly = True
-        Me.eall_Frequency.Visible = False
-        Me.eall_Frequency.Width = 180
-        '
-        'eall_Start
-        '
-        Me.eall_Start.HeaderText = "Effective start date"
-        Me.eall_Start.Name = "eall_Start"
-        Me.eall_Start.ReadOnly = True
-        Me.eall_Start.Visible = False
-        '
-        'eall_End
-        '
-        Me.eall_End.HeaderText = "Effective end date"
-        Me.eall_End.Name = "eall_End"
-        Me.eall_End.ReadOnly = True
-        Me.eall_End.Visible = False
-        '
-        'allow_taxable
-        '
-        Me.allow_taxable.HeaderText = "Taxable"
-        Me.allow_taxable.Name = "allow_taxable"
-        Me.allow_taxable.ReadOnly = True
-        '
-        'eall_ProdID
-        '
-        Me.eall_ProdID.HeaderText = "ProductID"
-        Me.eall_ProdID.Name = "eall_ProdID"
-        Me.eall_ProdID.ReadOnly = True
-        Me.eall_ProdID.Visible = False
-        '
-        'dgvLoanList
-        '
-        Me.dgvLoanList.AllowUserToAddRows = False
-        Me.dgvLoanList.AllowUserToDeleteRows = False
-        Me.dgvLoanList.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvLoanList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle13
-        Me.dgvLoanList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvLoanList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_loanno, Me.c_totloanamt, Me.c_totballeft, Me.c_dedamt, Me.c_DedPercent, Me.c_dedsched, Me.c_noofpayperiod, Me.DataGridViewTextBoxColumn112, Me.DataGridViewTextBoxColumn113, Me.c_status, Me.c_loantype})
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvLoanList.DefaultCellStyle = DataGridViewCellStyle14
-        Me.dgvLoanList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvLoanList.Location = New System.Drawing.Point(264, 805)
-        Me.dgvLoanList.Name = "dgvLoanList"
-        Me.dgvLoanList.ReadOnly = True
-        Me.dgvLoanList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvLoanList.Size = New System.Drawing.Size(240, 73)
-        Me.dgvLoanList.TabIndex = 405
-        Me.dgvLoanList.Visible = False
-        '
-        'c_loanno
-        '
-        Me.c_loanno.HeaderText = "Loan Number"
-        Me.c_loanno.Name = "c_loanno"
-        Me.c_loanno.ReadOnly = True
-        '
-        'c_totloanamt
-        '
-        Me.c_totloanamt.HeaderText = "Total Loan Amount"
-        Me.c_totloanamt.Name = "c_totloanamt"
-        Me.c_totloanamt.ReadOnly = True
-        '
-        'c_totballeft
-        '
-        Me.c_totballeft.HeaderText = "Total Balance Left"
-        Me.c_totballeft.Name = "c_totballeft"
-        Me.c_totballeft.ReadOnly = True
-        '
-        'c_dedamt
-        '
-        Me.c_dedamt.HeaderText = "Deduction Amount"
-        Me.c_dedamt.Name = "c_dedamt"
-        Me.c_dedamt.ReadOnly = True
-        '
-        'c_DedPercent
-        '
-        Me.c_DedPercent.HeaderText = "Deduction Percentage"
-        Me.c_DedPercent.Name = "c_DedPercent"
-        Me.c_DedPercent.ReadOnly = True
-        '
-        'c_dedsched
-        '
-        Me.c_dedsched.HeaderText = "Deduction Schedule"
-        Me.c_dedsched.Name = "c_dedsched"
-        Me.c_dedsched.ReadOnly = True
-        '
-        'c_noofpayperiod
-        '
-        Me.c_noofpayperiod.HeaderText = "No of pay period"
-        Me.c_noofpayperiod.Name = "c_noofpayperiod"
-        Me.c_noofpayperiod.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn112
-        '
-        Me.DataGridViewTextBoxColumn112.HeaderText = "Remarks"
-        Me.DataGridViewTextBoxColumn112.Name = "DataGridViewTextBoxColumn112"
-        Me.DataGridViewTextBoxColumn112.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn113
-        '
-        Me.DataGridViewTextBoxColumn113.HeaderText = "RowiD"
-        Me.DataGridViewTextBoxColumn113.Name = "DataGridViewTextBoxColumn113"
-        Me.DataGridViewTextBoxColumn113.ReadOnly = True
-        Me.DataGridViewTextBoxColumn113.Visible = False
-        '
-        'c_status
-        '
-        Me.c_status.HeaderText = "Status"
-        Me.c_status.Name = "c_status"
-        Me.c_status.ReadOnly = True
-        '
-        'c_loantype
-        '
-        Me.c_loantype.HeaderText = "Loan type"
-        Me.c_loantype.Name = "c_loantype"
-        Me.c_loantype.ReadOnly = True
-        '
         'Label37
         '
         Me.Label37.AutoSize = True
@@ -3169,107 +2814,6 @@ Partial Class PayStubForm
         Me.Label37.Size = New System.Drawing.Size(66, 13)
         Me.Label37.TabIndex = 254
         Me.Label37.Text = "Sub total :"
-        '
-        'dgvempbon
-        '
-        Me.dgvempbon.AllowUserToAddRows = False
-        Me.dgvempbon.AllowUserToDeleteRows = False
-        Me.dgvempbon.AllowUserToOrderColumns = True
-        Me.dgvempbon.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle15
-        Me.dgvempbon.ColumnHeadersHeight = 34
-        Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bon_RowID, Me.bon_Type, Me.bon_Amount, Me.bon_Frequency, Me.bon_Start, Me.bon_End, Me.bonus_taxable, Me.bon_ProdID})
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle17
-        Me.dgvempbon.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempbon.Location = New System.Drawing.Point(18, 805)
-        Me.dgvempbon.MultiSelect = False
-        Me.dgvempbon.Name = "dgvempbon"
-        Me.dgvempbon.ReadOnly = True
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle18
-        Me.dgvempbon.Size = New System.Drawing.Size(240, 73)
-        Me.dgvempbon.TabIndex = 366
-        Me.dgvempbon.Visible = False
-        '
-        'bon_RowID
-        '
-        Me.bon_RowID.HeaderText = "RowID"
-        Me.bon_RowID.Name = "bon_RowID"
-        Me.bon_RowID.ReadOnly = True
-        Me.bon_RowID.Visible = False
-        Me.bon_RowID.Width = 50
-        '
-        'bon_Type
-        '
-        Me.bon_Type.HeaderText = "Type"
-        Me.bon_Type.Name = "bon_Type"
-        Me.bon_Type.ReadOnly = True
-        Me.bon_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.bon_Type.Width = 370
-        '
-        'bon_Amount
-        '
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle16
-        Me.bon_Amount.HeaderText = "Amount"
-        Me.bon_Amount.Name = "bon_Amount"
-        Me.bon_Amount.ReadOnly = True
-        Me.bon_Amount.Width = 370
-        '
-        'bon_Frequency
-        '
-        Me.bon_Frequency.HeaderText = "Frequency"
-        Me.bon_Frequency.Name = "bon_Frequency"
-        Me.bon_Frequency.ReadOnly = True
-        Me.bon_Frequency.Visible = False
-        Me.bon_Frequency.Width = 180
-        '
-        'bon_Start
-        '
-        Me.bon_Start.HeaderText = "Effective start date"
-        Me.bon_Start.Name = "bon_Start"
-        Me.bon_Start.ReadOnly = True
-        Me.bon_Start.Visible = False
-        '
-        'bon_End
-        '
-        Me.bon_End.HeaderText = "Effective end date"
-        Me.bon_End.Name = "bon_End"
-        Me.bon_End.ReadOnly = True
-        Me.bon_End.Visible = False
-        '
-        'bonus_taxable
-        '
-        Me.bonus_taxable.HeaderText = "Taxable"
-        Me.bonus_taxable.Name = "bonus_taxable"
-        Me.bonus_taxable.ReadOnly = True
-        '
-        'bon_ProdID
-        '
-        Me.bon_ProdID.HeaderText = "ProductID"
-        Me.bon_ProdID.Name = "bon_ProdID"
-        Me.bon_ProdID.ReadOnly = True
-        Me.bon_ProdID.Visible = False
         '
         'txtHolidayPay
         '
@@ -3379,55 +2923,6 @@ Partial Class PayStubForm
         Me.Label40.TabIndex = 261
         Me.Label40.Text = "₱"
         '
-        'dgvpaystubitm
-        '
-        Me.dgvpaystubitm.AllowUserToAddRows = False
-        Me.dgvpaystubitm.AllowUserToDeleteRows = False
-        Me.dgvpaystubitm.AllowUserToOrderColumns = True
-        Me.dgvpaystubitm.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvpaystubitm.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.paystitmID, Me.PayStubID, Me.ProductID, Me.Item, Me.PayAmount})
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpaystubitm.DefaultCellStyle = DataGridViewCellStyle19
-        Me.dgvpaystubitm.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvpaystubitm.Location = New System.Drawing.Point(-228, 805)
-        Me.dgvpaystubitm.MultiSelect = False
-        Me.dgvpaystubitm.Name = "dgvpaystubitm"
-        Me.dgvpaystubitm.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvpaystubitm.Size = New System.Drawing.Size(240, 73)
-        Me.dgvpaystubitm.TabIndex = 258
-        Me.dgvpaystubitm.Visible = False
-        '
-        'paystitmID
-        '
-        Me.paystitmID.HeaderText = "paystitmID"
-        Me.paystitmID.Name = "paystitmID"
-        '
-        'PayStubID
-        '
-        Me.PayStubID.HeaderText = "PayStubID"
-        Me.PayStubID.Name = "PayStubID"
-        '
-        'ProductID
-        '
-        Me.ProductID.HeaderText = "ProductID"
-        Me.ProductID.Name = "ProductID"
-        '
-        'Item
-        '
-        Me.Item.HeaderText = "Item"
-        Me.Item.Name = "Item"
-        '
-        'PayAmount
-        '
-        Me.PayAmount.HeaderText = "PayAmount"
-        Me.PayAmount.Name = "PayAmount"
-        '
         'lblSubtotal
         '
         Me.lblSubtotal.BackColor = System.Drawing.Color.White
@@ -3450,298 +2945,6 @@ Partial Class PayStubForm
         Me.Label30.Size = New System.Drawing.Size(63, 13)
         Me.Label30.TabIndex = 251
         Me.Label30.Text = "Paid leave :"
-        '
-        'dgvetent
-        '
-        Me.dgvetent.AllowUserToAddRows = False
-        Me.dgvetent.AllowUserToDeleteRows = False
-        Me.dgvetent.AllowUserToOrderColumns = True
-        Me.dgvetent.BackgroundColor = System.Drawing.Color.White
-        Me.dgvetent.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvetent.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.etent_RowID, Me.etent_Date, Me.etent_EmployeeShiftID, Me.etent_EmployeeID, Me.etent_EmployeeSalaryID, Me.etent_EmployeeFixedSalaryFlag, Me.etent_TotalHoursWorked, Me.etent_RegularHoursWorked, Me.etent_RegularHoursAmount, Me.etent_OvertimeHoursWorked, Me.etent_OvertimeHoursAmount, Me.etent_UndertimeHours, Me.etent_UndertimeHoursAmount, Me.etent_NightDifferentialHours, Me.etent_NightDiffHoursAmount, Me.etent_NightDifferentialOTHours, Me.etent_NightDiffOTHoursAmount, Me.etent_HoursLate, Me.etent_HoursLateAmount, Me.etent_LateFlag, Me.etent_PayRateID, Me.etent_VacationLeaveHours, Me.etent_SickLeaveHours, Me.etent_TotalDayPay})
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvetent.DefaultCellStyle = DataGridViewCellStyle20
-        Me.dgvetent.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvetent.Location = New System.Drawing.Point(-242, 545)
-        Me.dgvetent.MultiSelect = False
-        Me.dgvetent.Name = "dgvetent"
-        Me.dgvetent.ReadOnly = True
-        Me.dgvetent.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvetent.Size = New System.Drawing.Size(240, 150)
-        Me.dgvetent.TabIndex = 250
-        Me.dgvetent.Visible = False
-        '
-        'etent_RowID
-        '
-        Me.etent_RowID.HeaderText = "etent_RowID"
-        Me.etent_RowID.Name = "etent_RowID"
-        Me.etent_RowID.ReadOnly = True
-        '
-        'etent_Date
-        '
-        Me.etent_Date.HeaderText = "etent_Date"
-        Me.etent_Date.Name = "etent_Date"
-        Me.etent_Date.ReadOnly = True
-        '
-        'etent_EmployeeShiftID
-        '
-        Me.etent_EmployeeShiftID.HeaderText = "etent_EmployeeShiftID"
-        Me.etent_EmployeeShiftID.Name = "etent_EmployeeShiftID"
-        Me.etent_EmployeeShiftID.ReadOnly = True
-        '
-        'etent_EmployeeID
-        '
-        Me.etent_EmployeeID.HeaderText = "etent_EmployeeID"
-        Me.etent_EmployeeID.Name = "etent_EmployeeID"
-        Me.etent_EmployeeID.ReadOnly = True
-        '
-        'etent_EmployeeSalaryID
-        '
-        Me.etent_EmployeeSalaryID.HeaderText = "etent_EmployeeSalaryID"
-        Me.etent_EmployeeSalaryID.Name = "etent_EmployeeSalaryID"
-        Me.etent_EmployeeSalaryID.ReadOnly = True
-        '
-        'etent_EmployeeFixedSalaryFlag
-        '
-        Me.etent_EmployeeFixedSalaryFlag.HeaderText = "etent_EmployeeFixedSalaryFlag"
-        Me.etent_EmployeeFixedSalaryFlag.Name = "etent_EmployeeFixedSalaryFlag"
-        Me.etent_EmployeeFixedSalaryFlag.ReadOnly = True
-        '
-        'etent_TotalHoursWorked
-        '
-        Me.etent_TotalHoursWorked.HeaderText = "etent_TotalHoursWorked"
-        Me.etent_TotalHoursWorked.Name = "etent_TotalHoursWorked"
-        Me.etent_TotalHoursWorked.ReadOnly = True
-        '
-        'etent_RegularHoursWorked
-        '
-        Me.etent_RegularHoursWorked.HeaderText = "etent_RegularHoursWorked"
-        Me.etent_RegularHoursWorked.Name = "etent_RegularHoursWorked"
-        Me.etent_RegularHoursWorked.ReadOnly = True
-        '
-        'etent_RegularHoursAmount
-        '
-        Me.etent_RegularHoursAmount.HeaderText = "etent_RegularHoursAmount"
-        Me.etent_RegularHoursAmount.Name = "etent_RegularHoursAmount"
-        Me.etent_RegularHoursAmount.ReadOnly = True
-        '
-        'etent_OvertimeHoursWorked
-        '
-        Me.etent_OvertimeHoursWorked.HeaderText = "etent_OvertimeHoursWorked"
-        Me.etent_OvertimeHoursWorked.Name = "etent_OvertimeHoursWorked"
-        Me.etent_OvertimeHoursWorked.ReadOnly = True
-        '
-        'etent_OvertimeHoursAmount
-        '
-        Me.etent_OvertimeHoursAmount.HeaderText = "etent_OvertimeHoursAmount"
-        Me.etent_OvertimeHoursAmount.Name = "etent_OvertimeHoursAmount"
-        Me.etent_OvertimeHoursAmount.ReadOnly = True
-        '
-        'etent_UndertimeHours
-        '
-        Me.etent_UndertimeHours.HeaderText = "etent_UndertimeHours"
-        Me.etent_UndertimeHours.Name = "etent_UndertimeHours"
-        Me.etent_UndertimeHours.ReadOnly = True
-        '
-        'etent_UndertimeHoursAmount
-        '
-        Me.etent_UndertimeHoursAmount.HeaderText = "etent_UndertimeHoursAmount"
-        Me.etent_UndertimeHoursAmount.Name = "etent_UndertimeHoursAmount"
-        Me.etent_UndertimeHoursAmount.ReadOnly = True
-        '
-        'etent_NightDifferentialHours
-        '
-        Me.etent_NightDifferentialHours.HeaderText = "etent_NightDifferentialHours"
-        Me.etent_NightDifferentialHours.Name = "etent_NightDifferentialHours"
-        Me.etent_NightDifferentialHours.ReadOnly = True
-        '
-        'etent_NightDiffHoursAmount
-        '
-        Me.etent_NightDiffHoursAmount.HeaderText = "etent_NightDiffHoursAmount"
-        Me.etent_NightDiffHoursAmount.Name = "etent_NightDiffHoursAmount"
-        Me.etent_NightDiffHoursAmount.ReadOnly = True
-        '
-        'etent_NightDifferentialOTHours
-        '
-        Me.etent_NightDifferentialOTHours.HeaderText = "etent_NightDifferentialOTHours"
-        Me.etent_NightDifferentialOTHours.Name = "etent_NightDifferentialOTHours"
-        Me.etent_NightDifferentialOTHours.ReadOnly = True
-        '
-        'etent_NightDiffOTHoursAmount
-        '
-        Me.etent_NightDiffOTHoursAmount.HeaderText = "etent_NightDiffOTHoursAmount"
-        Me.etent_NightDiffOTHoursAmount.Name = "etent_NightDiffOTHoursAmount"
-        Me.etent_NightDiffOTHoursAmount.ReadOnly = True
-        '
-        'etent_HoursLate
-        '
-        Me.etent_HoursLate.HeaderText = "etent_HoursLate"
-        Me.etent_HoursLate.Name = "etent_HoursLate"
-        Me.etent_HoursLate.ReadOnly = True
-        '
-        'etent_HoursLateAmount
-        '
-        Me.etent_HoursLateAmount.HeaderText = "etent_HoursLateAmount"
-        Me.etent_HoursLateAmount.Name = "etent_HoursLateAmount"
-        Me.etent_HoursLateAmount.ReadOnly = True
-        '
-        'etent_LateFlag
-        '
-        Me.etent_LateFlag.HeaderText = "etent_LateFlag"
-        Me.etent_LateFlag.Name = "etent_LateFlag"
-        Me.etent_LateFlag.ReadOnly = True
-        '
-        'etent_PayRateID
-        '
-        Me.etent_PayRateID.HeaderText = "etent_PayRateID"
-        Me.etent_PayRateID.Name = "etent_PayRateID"
-        Me.etent_PayRateID.ReadOnly = True
-        '
-        'etent_VacationLeaveHours
-        '
-        Me.etent_VacationLeaveHours.HeaderText = "etent_VacationLeaveHours"
-        Me.etent_VacationLeaveHours.Name = "etent_VacationLeaveHours"
-        Me.etent_VacationLeaveHours.ReadOnly = True
-        '
-        'etent_SickLeaveHours
-        '
-        Me.etent_SickLeaveHours.HeaderText = "etent_SickLeaveHours"
-        Me.etent_SickLeaveHours.Name = "etent_SickLeaveHours"
-        Me.etent_SickLeaveHours.ReadOnly = True
-        '
-        'etent_TotalDayPay
-        '
-        Me.etent_TotalDayPay.HeaderText = "etent_TotalDayPay"
-        Me.etent_TotalDayPay.Name = "etent_TotalDayPay"
-        Me.etent_TotalDayPay.ReadOnly = True
-        '
-        'dgvempsal
-        '
-        Me.dgvempsal.AllowUserToAddRows = False
-        Me.dgvempsal.AllowUserToDeleteRows = False
-        Me.dgvempsal.AllowUserToOrderColumns = True
-        Me.dgvempsal.BackgroundColor = System.Drawing.Color.White
-        Me.dgvempsal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvempsal.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.esal_RowID, Me.esal_EmployeeID, Me.esal_FilingStatusID, Me.esal_FilingStatus, Me.esal_PaySocialSecurityID, Me.esal_EmployeeContributionAmount, Me.esal_PayPhilhealthID, Me.esal_EmployeeShare, Me.esal_HDMFAmount, Me.esal_BasicPay, Me.esal_NoofDependents, Me.esal_MaritalStatus, Me.esal_PositionID, Me.esal_Position, Me.esal_EffectiveDateFrom, Me.esal_EffectiveDateTo})
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempsal.DefaultCellStyle = DataGridViewCellStyle21
-        Me.dgvempsal.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempsal.Location = New System.Drawing.Point(-242, 381)
-        Me.dgvempsal.MultiSelect = False
-        Me.dgvempsal.Name = "dgvempsal"
-        Me.dgvempsal.ReadOnly = True
-        Me.dgvempsal.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvempsal.Size = New System.Drawing.Size(240, 150)
-        Me.dgvempsal.TabIndex = 249
-        Me.dgvempsal.Visible = False
-        '
-        'esal_RowID
-        '
-        Me.esal_RowID.HeaderText = "esal_RowID"
-        Me.esal_RowID.Name = "esal_RowID"
-        Me.esal_RowID.ReadOnly = True
-        '
-        'esal_EmployeeID
-        '
-        Me.esal_EmployeeID.HeaderText = "esal_EmployeeID"
-        Me.esal_EmployeeID.Name = "esal_EmployeeID"
-        Me.esal_EmployeeID.ReadOnly = True
-        '
-        'esal_FilingStatusID
-        '
-        Me.esal_FilingStatusID.HeaderText = "esal_FilingStatusID"
-        Me.esal_FilingStatusID.Name = "esal_FilingStatusID"
-        Me.esal_FilingStatusID.ReadOnly = True
-        '
-        'esal_FilingStatus
-        '
-        Me.esal_FilingStatus.HeaderText = "esal_FilingStatus"
-        Me.esal_FilingStatus.Name = "esal_FilingStatus"
-        Me.esal_FilingStatus.ReadOnly = True
-        '
-        'esal_PaySocialSecurityID
-        '
-        Me.esal_PaySocialSecurityID.HeaderText = "esal_PaySocialSecurityID"
-        Me.esal_PaySocialSecurityID.Name = "esal_PaySocialSecurityID"
-        Me.esal_PaySocialSecurityID.ReadOnly = True
-        '
-        'esal_EmployeeContributionAmount
-        '
-        Me.esal_EmployeeContributionAmount.HeaderText = "esal_EmployeeContributionAmount"
-        Me.esal_EmployeeContributionAmount.Name = "esal_EmployeeContributionAmount"
-        Me.esal_EmployeeContributionAmount.ReadOnly = True
-        '
-        'esal_PayPhilhealthID
-        '
-        Me.esal_PayPhilhealthID.HeaderText = "esal_PayPhilhealthID"
-        Me.esal_PayPhilhealthID.Name = "esal_PayPhilhealthID"
-        Me.esal_PayPhilhealthID.ReadOnly = True
-        '
-        'esal_EmployeeShare
-        '
-        Me.esal_EmployeeShare.HeaderText = "esal_EmployeeShare"
-        Me.esal_EmployeeShare.Name = "esal_EmployeeShare"
-        Me.esal_EmployeeShare.ReadOnly = True
-        '
-        'esal_HDMFAmount
-        '
-        Me.esal_HDMFAmount.HeaderText = "esal_HDMFAmount"
-        Me.esal_HDMFAmount.Name = "esal_HDMFAmount"
-        Me.esal_HDMFAmount.ReadOnly = True
-        '
-        'esal_BasicPay
-        '
-        Me.esal_BasicPay.HeaderText = "esal_BasicPay"
-        Me.esal_BasicPay.Name = "esal_BasicPay"
-        Me.esal_BasicPay.ReadOnly = True
-        '
-        'esal_NoofDependents
-        '
-        Me.esal_NoofDependents.HeaderText = "esal_NoofDependents"
-        Me.esal_NoofDependents.Name = "esal_NoofDependents"
-        Me.esal_NoofDependents.ReadOnly = True
-        '
-        'esal_MaritalStatus
-        '
-        Me.esal_MaritalStatus.HeaderText = "esal_MaritalStatus"
-        Me.esal_MaritalStatus.Name = "esal_MaritalStatus"
-        Me.esal_MaritalStatus.ReadOnly = True
-        '
-        'esal_PositionID
-        '
-        Me.esal_PositionID.HeaderText = "esal_PositionID"
-        Me.esal_PositionID.Name = "esal_PositionID"
-        Me.esal_PositionID.ReadOnly = True
-        '
-        'esal_Position
-        '
-        Me.esal_Position.HeaderText = "esal_Position"
-        Me.esal_Position.Name = "esal_Position"
-        Me.esal_Position.ReadOnly = True
-        '
-        'esal_EffectiveDateFrom
-        '
-        Me.esal_EffectiveDateFrom.HeaderText = "esal_EffectiveDateFrom"
-        Me.esal_EffectiveDateFrom.Name = "esal_EffectiveDateFrom"
-        Me.esal_EffectiveDateFrom.ReadOnly = True
-        '
-        'esal_EffectiveDateTo
-        '
-        Me.esal_EffectiveDateTo.HeaderText = "esal_EffectiveDateTo"
-        Me.esal_EffectiveDateTo.Name = "esal_EffectiveDateTo"
-        Me.esal_EffectiveDateTo.ReadOnly = True
         '
         'btntotbon
         '
@@ -4358,196 +3561,6 @@ Partial Class PayStubForm
         Me.txtgrosssal.TabIndex = 176
         Me.txtgrosssal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'dgvpaystubitem
-        '
-        Me.dgvpaystubitem.AllowUserToAddRows = False
-        Me.dgvpaystubitem.AllowUserToDeleteRows = False
-        Me.dgvpaystubitem.AllowUserToOrderColumns = True
-        Me.dgvpaystubitem.BackgroundColor = System.Drawing.Color.White
-        Me.dgvpaystubitem.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvpaystubitem.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.paystitm_RowID, Me.paystitm_PayStubID, Me.paystitm_ProductID, Me.paystitm_Item, Me.paystitm_PayAmount})
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpaystubitem.DefaultCellStyle = DataGridViewCellStyle22
-        Me.dgvpaystubitem.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvpaystubitem.Location = New System.Drawing.Point(-242, 225)
-        Me.dgvpaystubitem.MultiSelect = False
-        Me.dgvpaystubitem.Name = "dgvpaystubitem"
-        Me.dgvpaystubitem.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvpaystubitem.Size = New System.Drawing.Size(240, 150)
-        Me.dgvpaystubitem.TabIndex = 175
-        Me.dgvpaystubitem.Visible = False
-        '
-        'paystitm_RowID
-        '
-        Me.paystitm_RowID.HeaderText = "RowID"
-        Me.paystitm_RowID.Name = "paystitm_RowID"
-        '
-        'paystitm_PayStubID
-        '
-        Me.paystitm_PayStubID.HeaderText = "PayStubID"
-        Me.paystitm_PayStubID.Name = "paystitm_PayStubID"
-        '
-        'paystitm_ProductID
-        '
-        Me.paystitm_ProductID.HeaderText = "ProductID"
-        Me.paystitm_ProductID.Name = "paystitm_ProductID"
-        '
-        'paystitm_Item
-        '
-        Me.paystitm_Item.HeaderText = "Item"
-        Me.paystitm_Item.Name = "paystitm_Item"
-        '
-        'paystitm_PayAmount
-        '
-        Me.paystitm_PayAmount.HeaderText = "PayAmount"
-        Me.paystitm_PayAmount.Name = "paystitm_PayAmount"
-        '
-        'dgvpaystub
-        '
-        Me.dgvpaystub.AllowUserToAddRows = False
-        Me.dgvpaystub.AllowUserToDeleteRows = False
-        Me.dgvpaystub.AllowUserToOrderColumns = True
-        Me.dgvpaystub.BackgroundColor = System.Drawing.Color.White
-        Me.dgvpaystub.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvpaystub.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.paystb_RowID, Me.paystb_Created, Me.paystb_CreatedBy, Me.paystb_PayPeriodID, Me.paystb_EmployeeID, Me.paystb_TimeEntryID, Me.paystb_PayFromDate, Me.paystb_PayToDate, Me.paystb_TotalGrossSalary, Me.paystb_TotalNetSalary, Me.paystb_TotalTaxableSalary, Me.paystb_TotalEmpSSS, Me.paystb_TotalEmpWithholdingTax, Me.paystb_TotalCompSSS, Me.paystb_TotalEmpPhilhealth, Me.paystb_TotalCompPhilhealth, Me.paystb_TotalEmpHDMF, Me.paystb_TotalCompHDMF, Me.paystb_TotalVacationDaysLeft, Me.paystb_TotalLoans, Me.paystb_TotalBonus, Me.paystb_TotalAllowance, Me.paystb_TotalAdjustments})
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpaystub.DefaultCellStyle = DataGridViewCellStyle23
-        Me.dgvpaystub.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvpaystub.Location = New System.Drawing.Point(-242, 69)
-        Me.dgvpaystub.MultiSelect = False
-        Me.dgvpaystub.Name = "dgvpaystub"
-        Me.dgvpaystub.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvpaystub.Size = New System.Drawing.Size(240, 150)
-        Me.dgvpaystub.TabIndex = 174
-        Me.dgvpaystub.Visible = False
-        '
-        'paystb_RowID
-        '
-        Me.paystb_RowID.HeaderText = "RowID"
-        Me.paystb_RowID.Name = "paystb_RowID"
-        '
-        'paystb_Created
-        '
-        Me.paystb_Created.HeaderText = "Created"
-        Me.paystb_Created.Name = "paystb_Created"
-        '
-        'paystb_CreatedBy
-        '
-        Me.paystb_CreatedBy.HeaderText = "CreatedBy"
-        Me.paystb_CreatedBy.Name = "paystb_CreatedBy"
-        '
-        'paystb_PayPeriodID
-        '
-        Me.paystb_PayPeriodID.HeaderText = "PayPeriodID"
-        Me.paystb_PayPeriodID.Name = "paystb_PayPeriodID"
-        '
-        'paystb_EmployeeID
-        '
-        Me.paystb_EmployeeID.HeaderText = "EmployeeID"
-        Me.paystb_EmployeeID.Name = "paystb_EmployeeID"
-        '
-        'paystb_TimeEntryID
-        '
-        Me.paystb_TimeEntryID.HeaderText = "TimeEntryID"
-        Me.paystb_TimeEntryID.Name = "paystb_TimeEntryID"
-        '
-        'paystb_PayFromDate
-        '
-        Me.paystb_PayFromDate.HeaderText = "PayFromDate"
-        Me.paystb_PayFromDate.Name = "paystb_PayFromDate"
-        '
-        'paystb_PayToDate
-        '
-        Me.paystb_PayToDate.HeaderText = "PayToDate"
-        Me.paystb_PayToDate.Name = "paystb_PayToDate"
-        '
-        'paystb_TotalGrossSalary
-        '
-        Me.paystb_TotalGrossSalary.HeaderText = "TotalGrossSalary"
-        Me.paystb_TotalGrossSalary.Name = "paystb_TotalGrossSalary"
-        '
-        'paystb_TotalNetSalary
-        '
-        Me.paystb_TotalNetSalary.HeaderText = "TotalNetSalary"
-        Me.paystb_TotalNetSalary.Name = "paystb_TotalNetSalary"
-        '
-        'paystb_TotalTaxableSalary
-        '
-        Me.paystb_TotalTaxableSalary.HeaderText = "TotalTaxableSalary"
-        Me.paystb_TotalTaxableSalary.Name = "paystb_TotalTaxableSalary"
-        '
-        'paystb_TotalEmpSSS
-        '
-        Me.paystb_TotalEmpSSS.HeaderText = "TotalEmpSSS"
-        Me.paystb_TotalEmpSSS.Name = "paystb_TotalEmpSSS"
-        '
-        'paystb_TotalEmpWithholdingTax
-        '
-        Me.paystb_TotalEmpWithholdingTax.HeaderText = "TotalEmpWithholdingTax"
-        Me.paystb_TotalEmpWithholdingTax.Name = "paystb_TotalEmpWithholdingTax"
-        '
-        'paystb_TotalCompSSS
-        '
-        Me.paystb_TotalCompSSS.HeaderText = "TotalCompSSS"
-        Me.paystb_TotalCompSSS.Name = "paystb_TotalCompSSS"
-        '
-        'paystb_TotalEmpPhilhealth
-        '
-        Me.paystb_TotalEmpPhilhealth.HeaderText = "TotalEmpPhilhealth"
-        Me.paystb_TotalEmpPhilhealth.Name = "paystb_TotalEmpPhilhealth"
-        '
-        'paystb_TotalCompPhilhealth
-        '
-        Me.paystb_TotalCompPhilhealth.HeaderText = "TotalCompPhilhealth"
-        Me.paystb_TotalCompPhilhealth.Name = "paystb_TotalCompPhilhealth"
-        '
-        'paystb_TotalEmpHDMF
-        '
-        Me.paystb_TotalEmpHDMF.HeaderText = "TotalEmpHDMF"
-        Me.paystb_TotalEmpHDMF.Name = "paystb_TotalEmpHDMF"
-        '
-        'paystb_TotalCompHDMF
-        '
-        Me.paystb_TotalCompHDMF.HeaderText = "TotalCompHDMF"
-        Me.paystb_TotalCompHDMF.Name = "paystb_TotalCompHDMF"
-        '
-        'paystb_TotalVacationDaysLeft
-        '
-        Me.paystb_TotalVacationDaysLeft.HeaderText = "TotalVacationDaysLeft"
-        Me.paystb_TotalVacationDaysLeft.Name = "paystb_TotalVacationDaysLeft"
-        '
-        'paystb_TotalLoans
-        '
-        Me.paystb_TotalLoans.HeaderText = "TotalLoans"
-        Me.paystb_TotalLoans.Name = "paystb_TotalLoans"
-        '
-        'paystb_TotalBonus
-        '
-        Me.paystb_TotalBonus.HeaderText = "TotalBonus"
-        Me.paystb_TotalBonus.Name = "paystb_TotalBonus"
-        '
-        'paystb_TotalAllowance
-        '
-        Me.paystb_TotalAllowance.HeaderText = "TotalAllowance"
-        Me.paystb_TotalAllowance.Name = "paystb_TotalAllowance"
-        '
-        'paystb_TotalAdjustments
-        '
-        Me.paystb_TotalAdjustments.HeaderText = "TotalAdjustments"
-        Me.paystb_TotalAdjustments.Name = "paystb_TotalAdjustments"
-        '
         'Label103
         '
         Me.Label103.AutoSize = True
@@ -4801,11 +3814,6 @@ Partial Class PayStubForm
         Me.Button3.TextAlign = System.Drawing.ContentAlignment.TopLeft
         Me.Button3.UseVisualStyleBackColor = False
         '
-        'bgwPrintAllPaySlip
-        '
-        Me.bgwPrintAllPaySlip.WorkerReportsProgress = True
-        Me.bgwPrintAllPaySlip.WorkerSupportsCancellation = True
-        '
         'Panel4
         '
         Me.Panel4.Controls.Add(Me.Panel5)
@@ -4847,7 +3855,6 @@ Partial Class PayStubForm
         Me.Name = "PayStubForm"
         Me.Text = "paystub"
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.cms1.ResumeLayout(False)
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl1.ResumeLayout(False)
         Me.tbppayroll.ResumeLayout(False)
@@ -4868,12 +3875,6 @@ Partial Class PayStubForm
         Me.TabPage4.ResumeLayout(False)
         Me.TabPage4.PerformLayout()
         CType(Me.dgvAdjustments, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvLoanList, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvpaystubitm, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvetent, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvempsal, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl3.ResumeLayout(False)
         Me.tbpleavebal.ResumeLayout(False)
         Me.tbpleavebal.PerformLayout()
@@ -4881,8 +3882,6 @@ Partial Class PayStubForm
         Me.tbpleaveallow.PerformLayout()
         Me.tbpleavepayp.ResumeLayout(False)
         Me.tbpleavepayp.PerformLayout()
-        CType(Me.dgvpaystubitem, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvpaystub, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.Panel4.ResumeLayout(False)
@@ -4912,16 +3911,9 @@ Partial Class PayStubForm
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
     Friend WithEvents tsbtngenpayroll As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnClose As System.Windows.Forms.ToolStripButton
-    Friend WithEvents dgvpaystubitem As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents dgvpaystub As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents txtgrosssal As System.Windows.Forms.TextBox
     Friend WithEvents txttaxabsal As System.Windows.Forms.TextBox
     Friend WithEvents txtnetsal As System.Windows.Forms.TextBox
-    Friend WithEvents paystitm_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystitm_PayStubID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystitm_ProductID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystitm_Item As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystitm_PayAmount As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents txtempphh As System.Windows.Forms.TextBox
     Friend WithEvents txtempsss As System.Windows.Forms.TextBox
@@ -5009,60 +4001,12 @@ Partial Class PayStubForm
     Friend WithEvents btntotallow As System.Windows.Forms.Button
     Friend WithEvents btntotloan As System.Windows.Forms.Button
     Friend WithEvents btntotbon As System.Windows.Forms.Button
-    Friend WithEvents dgvempsal As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents esal_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_FilingStatusID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_FilingStatus As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_PaySocialSecurityID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_EmployeeContributionAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_PayPhilhealthID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_EmployeeShare As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_HDMFAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_BasicPay As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_NoofDependents As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_MaritalStatus As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_PositionID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_Position As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_EffectiveDateFrom As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents esal_EffectiveDateTo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents dgvetent As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents etent_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_Date As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_EmployeeShiftID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_EmployeeSalaryID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_EmployeeFixedSalaryFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_TotalHoursWorked As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_RegularHoursWorked As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_RegularHoursAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_OvertimeHoursWorked As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_OvertimeHoursAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_UndertimeHours As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_UndertimeHoursAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_NightDifferentialHours As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_NightDiffHoursAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_NightDifferentialOTHours As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_NightDiffOTHoursAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_HoursLate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_HoursLateAmount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_LateFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_PayRateID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_VacationLeaveHours As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_SickLeaveHours As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents etent_TotalDayPay As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents txtRegularPay As System.Windows.Forms.TextBox
     Friend WithEvents txtRegularHours As System.Windows.Forms.TextBox
     Friend WithEvents Label30 As System.Windows.Forms.Label
     Friend WithEvents Label37 As System.Windows.Forms.Label
     Friend WithEvents lblSubtotal As System.Windows.Forms.TextBox
     Friend WithEvents lblsubtotmisc As System.Windows.Forms.TextBox
-    Friend WithEvents dgvpaystubitm As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents paystitmID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PayStubID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ProductID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Item As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PayAmount As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label36 As System.Windows.Forms.Label
     Friend WithEvents Label38 As System.Windows.Forms.Label
     Friend WithEvents Label39 As System.Windows.Forms.Label
@@ -5086,37 +4030,7 @@ Partial Class PayStubForm
     Friend WithEvents Label52 As System.Windows.Forms.Label
     Friend WithEvents Label58 As System.Windows.Forms.Label
     Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents dgvempbon As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents dgvLoanList As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents c_loanno As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_totloanamt As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_totballeft As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_dedamt As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_DedPercent As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_dedsched As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_noofpayperiod As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn112 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn113 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_status As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_loantype As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents dgvempallowance As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Label59 As System.Windows.Forms.Label
-    Friend WithEvents eall_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eall_Type As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eall_Amount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eall_Frequency As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eall_Start As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eall_End As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents allow_taxable As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents eall_ProdID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bon_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bon_Type As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bon_Amount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bon_Frequency As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bon_Start As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bon_End As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bonus_taxable As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bon_ProdID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents tsSearch As System.Windows.Forms.ToolStripTextBox
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents tsbtnSearch As System.Windows.Forms.ToolStripButton
@@ -5129,8 +4043,6 @@ Partial Class PayStubForm
     Friend WithEvents LinkLabel4 As System.Windows.Forms.LinkLabel
     Friend WithEvents Label61 As System.Windows.Forms.Label
     Friend WithEvents tstrip As System.Windows.Forms.ToolStrip
-    Friend WithEvents cms1 As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label62 As System.Windows.Forms.Label
     Friend WithEvents dgvAdjustments As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents btnSaveAdjustments As System.Windows.Forms.Button
@@ -5138,29 +4050,6 @@ Partial Class PayStubForm
     Friend WithEvents Label66 As System.Windows.Forms.Label
     Friend WithEvents txtTotalAdjustments As System.Windows.Forms.TextBox
     Friend WithEvents Label67 As System.Windows.Forms.Label
-    Friend WithEvents paystb_RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_Created As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_CreatedBy As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_PayPeriodID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_EmployeeID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TimeEntryID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_PayFromDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_PayToDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalGrossSalary As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalNetSalary As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalTaxableSalary As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalEmpSSS As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalEmpWithholdingTax As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalCompSSS As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalEmpPhilhealth As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalCompPhilhealth As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalEmpHDMF As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalCompHDMF As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalVacationDaysLeft As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalLoans As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalBonus As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalAllowance As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents paystb_TotalAdjustments As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents tabEarned As System.Windows.Forms.TabControl
     Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
     Friend WithEvents TabPage4 As System.Windows.Forms.TabPage
@@ -5204,7 +4093,6 @@ Partial Class PayStubForm
     Friend WithEvents txttotabsent_U As System.Windows.Forms.TextBox
     Friend WithEvents Label92 As System.Windows.Forms.Label
     Friend WithEvents Panel3 As System.Windows.Forms.Panel
-    Friend WithEvents bgwPrintAllPaySlip As System.ComponentModel.BackgroundWorker
     Friend WithEvents tsbtnprintpayslip As System.Windows.Forms.ToolStripDropDownButton
     Friend WithEvents DeclaredToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ActualToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
