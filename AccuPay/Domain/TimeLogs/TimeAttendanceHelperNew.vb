@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
@@ -7,6 +8,12 @@ Imports AccuPay.Tools
 
 Public Class TimeAttendanceHelperNew
     Implements ITimeAttendanceHelper
+
+    Private Enum OvertimeType
+        [Nothing]
+        Pre
+        Post
+    End Enum
 
     Private _importedTimeAttendanceLogs As New List(Of ImportTimeAttendanceLog)
 
@@ -298,14 +305,18 @@ Public Class TimeAttendanceHelperNew
 
         Dim earliestOvertime = GetEarliestOvertime(
                                 currentEmployeeOvertimes,
-                                currentDate)
+                                currentDate,
+                                currentShift)
+
         Dim lastOvertime = GetLastOvertime(
                                 currentEmployeeOvertimes,
-                                currentDate)
+                                currentDate,
+                                currentShift)
 
         Dim earliestOvertimeNextDay = GetEarliestOvertime(
                                         currentEmployeeOvertimes,
-                                        nextDate)
+                                        nextDate,
+                                        nextShift)
 
         Dim timeInBounds = GetShiftBoundsForTimeIn(
                                 lastDayLogRecord?.ShiftTimeOutBounds,
@@ -333,24 +344,141 @@ Public Class TimeAttendanceHelperNew
 
     End Function
 
+    ''' <summary>
+    ''' Check if the OT is really a pre OT or a .
+    ''' </summary>
+    ''' <param name="overtime"></param>
+    ''' <param name="shift"></param>
+    ''' <returns></returns>
+    Private Function CheckOvertimeType(overtime As Overtime, shift As EmployeeDutySchedule) As OvertimeType
+
+        'Sometimes the OT StartTime is less than the shift StartTime
+        'but it can be a post OT.
+
+        'FOR NIGHT SHIFT
+        'for post shift
+        'Example 1:   7PM-4AM shift / 4:30AM - 8:30AM OT
+        'OT Is Post OT
+
+        'For pre shift
+        '(Example 2:   7PM-4AM shift / 2:30PM - 6:30PM OT
+        'OT Is Pre OT)
+
+        'FOR DAY SHIFT
+        'for post shift
+        'Example 1:   9AM-6PM shift / 6:30PM - 10:30PM OT
+        'OT Is Post OT
+
+        'For pre shift
+        '(Example 2:  9AM-6PM shift / 4:30AM - 8:30AM OT
+        'OT Is Pre OT)
+
+        If shift Is Nothing OrElse shift.StartTime Is Nothing OrElse shift.EndTime Is Nothing OrElse
+            overtime Is Nothing OrElse overtime.OTStartTime Is Nothing OrElse overtime.OTEndTime Is Nothing Then
+
+            Return OvertimeType.Nothing
+
+        End If
+
+        'ex1: 08:30AM to 7PM = 11.5 hours
+        'ex2: 10:30PM to 9AM = 10.5 hours (negative)
+        Dim preOvertimeBreakSpan = ComputeHoursDifference(overtime.OTEndTime.Value, shift.StartTime.Value)
+
+        'ex1: 4AM to 4:30AM = 0.5 hours
+        'ex2: 6PM to 6:30PM = 0.5 hours
+        Dim postOvertimeBreakSpan = ComputeHoursDifference(shift.EndTime.Value, overtime.OTStartTime.Value)
+
+        'check where is the OT closest. Is it on the end shift time or start shift time
+        If preOvertimeBreakSpan < postOvertimeBreakSpan Then
+
+            Return OvertimeType.Pre
+        Else
+            'prioritize Post OT that is why it is the one on the else block
+            Return OvertimeType.Post
+
+        End If
+
+    End Function
+
+    Private Function ComputeHoursDifference(start As TimeSpan, [end] As TimeSpan) As Decimal
+
+        'No difference
+        If start = [end] Then Return 0
+
+        Return TimePeriod.FromTime(start, [end], Date.Now.ToMinimumHourValue).TotalHours
+
+    End Function
+
     Private Function GetShift(currentEmployeeShifts As List(Of EmployeeDutySchedule), currentDate As Date) As EmployeeDutySchedule
         Return currentEmployeeShifts.
                         Where(Function(s) s.DateSched = currentDate).
                         FirstOrDefault()
     End Function
 
-    Private Function GetEarliestOvertime(currentEmployeeOvertimes As List(Of Overtime), currentDate As Date) As Overtime
+    Private Function GetEarliestOvertime(
+                        currentEmployeeOvertimes As List(Of Overtime),
+                        currentDate As Date,
+                        currentShift As EmployeeDutySchedule) As Overtime
+
         Return currentEmployeeOvertimes.
-                        Where(Function(o) o.OTStartDate = currentDate).
-                        OrderBy(Function(o) o.OTStartTime).
-                        FirstOrDefault()
+                Where(Function(o)
+
+                          If Not IsTodaysOvertime(o, currentDate, currentShift) Then
+                              Return False
+                          End If
+
+                          Return CheckOvertimeType(o, currentShift) = OvertimeType.Pre
+
+                      End Function).
+                OrderBy(Function(o) o.OTStartTime).
+                FirstOrDefault()
     End Function
 
-    Private Function GetLastOvertime(currentEmployeeOvertimes As List(Of Overtime), currentDate As Date) As Overtime
+    Private Function GetLastOvertime(
+                        currentEmployeeOvertimes As List(Of Overtime),
+                        currentDate As Date,
+                        currentShift As EmployeeDutySchedule) As Overtime
+
         Return currentEmployeeOvertimes.
-                        Where(Function(o) o.OTStartDate = currentDate).
-                        OrderBy(Function(o) o.OTStartTime).
-                        LastOrDefault()
+                Where(Function(o)
+
+                          If Not IsTodaysOvertime(o, currentDate, currentShift) Then
+                              Return False
+                          End If
+
+                          Return CheckOvertimeType(o, currentShift) = OvertimeType.Post
+
+                      End Function).
+                OrderBy(Function(o) o.OTStartTime).
+                LastOrDefault()
+    End Function
+
+    ''' <summary>
+    ''' Checks if overtime and currentShift is not null then check if OT Startdate is equal to currentDate.
+    ''' </summary>
+    ''' <param name="overtime"></param>
+    ''' <param name="currentDate"></param>
+    ''' <param name="currentShift"></param>
+    ''' <returns></returns>
+    Private Function IsTodaysOvertime(
+                        overtime As Overtime,
+                        currentDate As Date,
+                        currentShift As EmployeeDutySchedule) As Boolean
+
+        If overtime Is Nothing OrElse
+            currentShift Is Nothing OrElse
+            overtime.OTStartDate <> currentDate OrElse
+            overtime.OTStartTime Is Nothing OrElse
+            overtime.OTEndTime Is Nothing OrElse
+            currentShift.StartTime Is Nothing OrElse
+            currentShift.EndTime Is Nothing Then
+
+            Return False
+        Else
+
+            Return True
+        End If
+
     End Function
 
     Private Function GetTimeLogsFromBounds(
@@ -453,6 +581,14 @@ Public Class TimeAttendanceHelperNew
 
         Dim currentDayEndTime As Date? = GetEndDateTime(currentShift, lastOvertime)
 
+        If nextShift Is Nothing Then
+
+            'if there is no next shift, disregard the next day overtime
+            'scenario: should be next shift is (6am-3pm), OT is (3pm-4pm)
+            'if no shift, the nextDayStartDateTime would be 3pm which would be wrong
+            earliestOvertimeNextDay = Nothing
+        End If
+
         Dim nextDayStartDateTime As Date? = GetStartDateTime(nextShift, earliestOvertimeNextDay)
 
         If currentDayEndTime Is Nothing AndAlso nextDayStartDateTime Is Nothing Then
@@ -471,7 +607,9 @@ Public Class TimeAttendanceHelperNew
                 'if current shift or late overtime end time is greater than
                 'next day shift or early overtime start time
 
-                shiftMaxBound = nextDayStartDateTime.Value.AddSeconds(1)
+                shiftMaxBound = nextDayStartDateTime.Value.
+                                Add(TimeSpan.FromHours(-hoursBuffer)).
+                                Add(TimeSpan.FromSeconds(-1))
 
             ElseIf currentDayEndTime = nextDayStartDateTime Then
 
@@ -506,11 +644,14 @@ Public Class TimeAttendanceHelperNew
         ElseIf currentDayEndTime IsNot Nothing Then
             'currentDayEndTime IsNot Nothing AndAlso nextDayStartDateTime Is Nothing
 
+            shiftMaxBound = currentDayEndTime.ToMaximumHourValue
+
+            ''''OLD CODE BELOW
             'if no next day shift or over time but has
             'current shift or overtime, set max bound time = currentDayEndTime + HOURS_BUFFER
             'ex: end time is 6:00 PM - max bound time = 10:00 PM
             'ex: end time is 4:00 PM - max bound time = 10:00 PM
-            shiftMaxBound = currentDayEndTime.Value.Add(TimeSpan.FromHours(HOURS_BUFFER))
+            'shiftMaxBound = currentDayEndTime.Value.Add(TimeSpan.FromHours(HOURS_BUFFER))
         Else
             'nextDayStartDateTime IsNot Nothing AndAlso currentDayEndTime Is Nothing
 
@@ -547,17 +688,33 @@ Public Class TimeAttendanceHelperNew
                                             currentShift?.DateSched,
                                             currentShift?.EndTime,
                                             currentShift?.StartTime)
-
-        Dim lastOvertimeEndTime = CreateDateTime(
-                                        lastOvertime?.OTStartDate,
-                                        lastOvertime?.OTEndTime,
-                                        lastOvertime?.OTStartTime)
+        Dim lastOvertimeEndTime As Date? = GetLastOvertime(currentShift, lastOvertime)
 
         Dim endTime As Date? = CompareShiftToOvertime(
                                         currentShiftEndTime,
                                         lastOvertimeEndTime,
                                         getEarliest:=False)
         Return endTime
+    End Function
+
+    Private Function GetLastOvertime(currentShift As EmployeeDutySchedule, lastOvertime As Overtime) As Date?
+        Dim lastOvertimeEndTime = CreateDateTime(
+                                        lastOvertime?.OTStartDate,
+                                        lastOvertime?.OTEndTime,
+                                        lastOvertime?.OTStartTime)
+
+        'if OT start time < shift start time,
+        'the OT is most likely a night shift Post OT
+        If currentShift?.StartTime IsNot Nothing AndAlso
+            lastOvertime?.OTStartTime IsNot Nothing AndAlso
+            lastOvertimeEndTime IsNot Nothing AndAlso
+            lastOvertime?.OTStartTime < currentShift?.StartTime Then
+
+            lastOvertimeEndTime = lastOvertimeEndTime.Value.AddDays(1)
+
+        End If
+
+        Return lastOvertimeEndTime
     End Function
 
     Private Function CompareShiftToOvertime(
