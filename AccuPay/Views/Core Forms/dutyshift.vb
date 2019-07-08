@@ -58,7 +58,7 @@
 
         'dtpTimeFrom.Focus()
 
-        MDIPrimaryForm.ToolStripButton1_Click(sender, e)
+        MDIPrimaryForm.tsbtnGeneral_Click(sender, e)
 
         GeneralForm.ChangeForm(ShiftEntryForm)
         previousForm = ShiftEntryForm
