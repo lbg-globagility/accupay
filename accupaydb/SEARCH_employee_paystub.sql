@@ -7,12 +7,17 @@
 DROP PROCEDURE IF EXISTS `SEARCH_employee_paystub`;
 DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employee_paystub`(
-    IN `$organizationId` INT,
-    IN `$searchTerm` VARCHAR(50),
-    IN `$payperiodId` INT,
-    IN `$offset` INT,
-    IN `$limit` INT)
-    DETERMINISTIC
+	IN `$organizationId` INT,
+	IN `$searchTerm` VARCHAR(50),
+	IN `$payperiodId` INT,
+	IN `$offset` INT,
+	IN `$limit` INT
+)
+LANGUAGE SQL
+DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
 BEGIN
 
 DECLARE $skipSearch TINYINT(1) DEFAULT FALSE;
@@ -20,14 +25,63 @@ DECLARE $skipSearch TINYINT(1) DEFAULT FALSE;
 SET $skipSearch = NOT(IFNULL($searchTerm, '') > '');
 
 SELECT
-    e.RowID,
-    e.EmployeeID,
-    e.FirstName,
-    e.MiddleName,
-    e.LastName
+    e.RowID
+	,e.EmployeeID
+	,e.FirstName
+	,e.MiddleName
+	,e.LastName
+	,e.Surname
+	,e.Nickname
+	,e.MaritalStatus
+	,e.NoOfDependents
+	,e.Birthdate
+	,e.StartDate
+	,e.JobTitle
+	,pos.PositionName
+	,e.Salutation
+	,e.TINNo
+	,e.SSSNo
+	,e.HDMFNo
+	,e.PhilHealthNo
+	,e.WorkPhone
+	,e.HomePhone
+	,e.MobilePhone
+	,e.HomeAddress
+	,e.EmailAddress
+	,e.Gender
+	,e.EmploymentStatus
+	
+	,pf.PayFrequencyType
+	,e.UndertimeOverride
+	,e.OvertimeOverride
+	,e.PositionID
+	,e.PayFrequencyID
+	,e.EmployeeType
+	,e.LeaveBalance
+	,e.SickLeaveBalance
+	,e.MaternityLeaveBalance
+	,e.LeaveAllowance
+	,e.SickLeaveAllowance
+	,e.MaternityLeaveAllowance
+	
+	,e.LeavePerPayPeriod `LeavePerPayPeriod`
+	,e.SickLeavePerPayPeriod `SickLeavePerPayPeriod`
+	,e.MaternityLeavePerPayPeriod `MaternityLeavePerPayPeriod`
+	,fstat.RowID `fstatRowID`
+	,'' `Image`
+	,e.Created`Created`
+	,CONCAT_WS(u.LastName, u.FirstName) `Createdby`
+	,e.LastUpd `LastUpd`
+	,CONCAT_WS(uu.LastName, uu.FirstName) `LastUpdby`
 FROM paystub p
-INNER JOIN employee e
-ON e.RowID = p.EmployeeID
+INNER JOIN employee e			  ON e.RowID = p.EmployeeID
+LEFT JOIN `user` u              ON e.CreatedBy=u.RowID
+LEFT JOIN `user` uu             ON e.LastUpdBy=uu.RowID
+LEFT JOIN `position` pos        ON e.PositionID=pos.RowID
+LEFT JOIN payfrequency pf       ON e.PayFrequencyID=pf.RowID
+LEFT JOIN filingstatus fstat    ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents
+LEFT JOIN agency ag             ON ag.RowID=e.AgencyID
+LEFT JOIN division d            ON d.RowID=pos.DivisionId
 WHERE p.OrganizationID = $organizationId AND
     p.PayPeriodID = $payperiodId AND
     ($skipSearch OR (
