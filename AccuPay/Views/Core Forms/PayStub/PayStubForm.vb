@@ -205,25 +205,6 @@ Public Class PayStubForm
 
             With dgvemployees
                 .Columns("RowID").Visible = False
-                .Columns("UndertimeOverride").Visible = False
-                .Columns("OvertimeOverride").Visible = False
-                .Columns("PositionID").Visible = False
-                .Columns("PayFreqID").Visible = False
-
-                .Columns("LeaveBal").Visible = False
-                .Columns("SickBal").Visible = False
-                .Columns("MaternBal").Visible = False
-
-                .Columns("LeaveAllow").Visible = False
-                .Columns("SickAllow").Visible = False
-                .Columns("MaternAllow").Visible = False
-
-                .Columns("Leavepayp").Visible = False
-                .Columns("Sickpayp").Visible = False
-                .Columns("Maternpayp").Visible = False
-
-                .Columns("fstatRowID").Visible = False
-                .Columns("Image").Visible = False
 
             End With
             If dgvemployees.RowCount > 0 Then
@@ -419,11 +400,6 @@ Public Class PayStubForm
 
                 txtFName.Text = txtFName.Text & " " & .Cells("LastName").Value
 
-                txtFName.Text = txtFName.Text & If(.Cells("Surname").Value = Nothing,
-                                                         "",
-                                                         "-" & StrConv(.Cells("Surname").Value,
-                                                                       VbStrConv.ProperCase))
-
                 currentEmployeeID = .Cells("EmployeeID").Value
 
                 txtEmpID.Text = "ID# " & .Cells("EmployeeID").Value &
@@ -451,16 +427,6 @@ Public Class PayStubForm
                 End Try
 
                 'End If
-
-                Gender_Label(.Cells("Gender").Value)
-
-                txtvlallow.Text = .Cells("LeaveAllow").Value
-                txtslallow.Text = .Cells("SickAllow").Value
-                txtmlallow.Text = .Cells("MaternAllow").Value
-
-                txtvlpayp.Text = .Cells("Leavepayp").Value
-                txtslpayp.Text = .Cells("Sickpayp").Value
-                txtmlpayp.Text = .Cells("Maternpayp").Value
 
                 txttotabsentamt.Text = "0.00"
                 txttottardiamt.Text = "0.00"
@@ -536,18 +502,6 @@ Public Class PayStubForm
             txtTotTaxabAllow.Text = ""
 
             txtgrosssal.Text = ""
-
-            txtvlbal.Text = ""
-            txtslbal.Text = ""
-            txtmlbal.Text = ""
-
-            txtvlallow.Text = ""
-            txtslallow.Text = ""
-            txtmlallow.Text = ""
-
-            txtvlpayp.Text = ""
-            txtslpayp.Text = ""
-            txtmlpayp.Text = ""
 
             txttotabsent.Text = ""
             txttotabsentamt.Text = ""
@@ -1315,10 +1269,6 @@ Public Class PayStubForm
             Dim totalNetPay = totalNetSalary + thirteenthMonthPay
             txtTotalNetPay.Text = FormatNumber(totalNetPay, 2)
 
-            'LEAVE BALANCES
-            txtvlbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Vacation leave'")) ' -
-            txtslbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Sick leave'")) ' -
-            txtmlbal.Text = ValNoComma(psaItems.Compute("SUM(PayAmount)", "Item = 'Maternity/paternity leave'")) ' -
             txtPaidLeave.Text = FormatNumber(ValNoComma(drow("PaidLeaveAmount")), 2)
 
             For Each txtbx In txtbxField
@@ -1550,28 +1500,6 @@ Public Class PayStubForm
             End If
 
         End With
-
-    End Sub
-
-    Private Sub Gender_Label(ByVal strGender As String)
-
-        'If strGender.Trim.Length > 0 Then
-
-        '    Dim label_output As String = ""
-
-        '    If strGender = "Male" Then
-        '        label_output = "Paternity"
-        '    Else
-        '        label_output = "Maternity"
-        '    End If
-
-        '    Label149.Text = label_output
-
-        '    Label148.Text = label_output
-
-        '    Label152.Text = label_output
-
-        'End If
 
     End Sub
 
