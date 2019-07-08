@@ -12,7 +12,13 @@ Public Class PayStubForm
 
     Public current_year As String = CDate(dbnow).Year
 
-    Dim pagination As Integer = 0
+    Private Const ItemsPerPage As Integer = 20
+
+    Private _pageNo As Integer = 0
+
+    Private _lastPageNo As Integer = 0
+
+    Private _totalItems As Integer = 0
 
     Dim employeepicture As New DataTable
 
@@ -29,13 +35,9 @@ Public Class PayStubForm
     Private _successfulPaystubs As Integer = 0
     Private _failedPaystubs As Integer = 0
 
-    Const max_count_per_page As Integer = 50
-
     Dim currentEmployeeID As String = Nothing
 
     Public withthirteenthmonthpay As SByte = 0
-
-    Const max_rec_perpage As Integer = 1
 
     Dim IsUserPressEnterToSearch As Boolean = False
 
@@ -165,24 +167,26 @@ Public Class PayStubForm
     End Sub
 
     Sub loademployee(Optional q_empsearch As String = Nothing)
-        If q_empsearch = Nothing Then
-        Else
-            If pagination <= 0 Then
-                pagination = 0
-            End If
+        If paypRowID Is Nothing Then
+            Return
         End If
 
-        Dim catchdt As New DataTable
-        Dim param_array = New Object() {orgztnID,
-                                        tsSearch.Text,
-                                        pagination,
-                                        GetCurrentPayFrequencyType()}
+        Dim offset = _pageNo * ItemsPerPage
+        Dim limit = ItemsPerPage
 
-        Dim n_ReadSQLProcedureToDatatable As New _
-            SQL("CALL SEARCH_employee_paystub(?og_rowid, ?unified_search_string, ?page_number, ?text_pay_freq_sched);",
-                param_array)
+        Dim parameters = New Object() {
+            orgztnID,
+            tsSearch.Text,
+            paypRowID,
+            offset,
+            limit
+        }
 
-        catchdt = n_ReadSQLProcedureToDatatable.GetFoundRows.Tables(0)
+        Dim n_ReadSQLProcedureToDatatable =
+            New SQL("CALL SEARCH_employee_paystub(?1, ?2, ?3, ?4, ?5);",
+                    parameters)
+
+        Dim catchdt = n_ReadSQLProcedureToDatatable.GetFoundRows.Tables(0)
 
         dgvemployees.Rows.Clear()
 
@@ -190,6 +194,9 @@ Public Class PayStubForm
             Dim row_array = drow.ItemArray
             dgvemployees.Rows.Add(row_array)
         Next
+
+        _totalItems = Val(EXECQUER($"SELECT COUNT(RowID) FROM paystub WHERE OrganizationID={orgztnID} AND PayPeriodID = {paypRowID};"))
+        _lastPageNo = {Math.Ceiling(_totalItems / ItemsPerPage) - 1, 0}.Max()
 
         Static x As SByte = 0
 
@@ -312,45 +319,28 @@ Public Class PayStubForm
                                                                                                 LinkLabel2.LinkClicked, LinkLabel1.LinkClicked
         Dim sendrname As String = DirectCast(sender, LinkLabel).Name
 
+        Dim action As PaginationAction
+
         If sendrname = "First" Or sendrname = "LinkLabel1" Then
-            pagination = 0
+            action = PaginationAction.First
         ElseIf sendrname = "Prev" Or sendrname = "LinkLabel2" Then
-
-            Dim modcent = pagination Mod max_count_per_page
-
-            If modcent = 0 Then
-
-                pagination -= max_count_per_page
-            Else
-
-                pagination -= modcent
-
-            End If
-
-            If pagination < 0 Then
-
-                pagination = 0
-
-            End If
-
+            action = PaginationAction.Previous
         ElseIf sendrname = "Nxt" Or sendrname = "LinkLabel4" Then
-
-            Dim modcent = pagination Mod max_count_per_page
-
-            If modcent = 0 Then
-                pagination += max_count_per_page
-            Else
-                pagination -= modcent
-
-                pagination += max_count_per_page
-
-            End If
+            action = PaginationAction.Next
         ElseIf sendrname = "Last" Or sendrname = "LinkLabel3" Then
-            Dim lastpage = Val(EXECQUER("SELECT COUNT(RowID) / " & max_count_per_page & " FROM employee WHERE OrganizationID=" & orgztnID & ";"))
-            Dim remender = lastpage Mod 1
-
-            pagination = (lastpage - remender) * max_count_per_page
+            action = PaginationAction.Last
         End If
+
+        Select Case action
+            Case PaginationAction.First
+                _pageNo = 0
+            Case PaginationAction.Previous
+                _pageNo = If(1 < _pageNo, _pageNo - 1, 0)
+            Case PaginationAction.Next
+                _pageNo = If(_pageNo < _lastPageNo, _pageNo + 1, _lastPageNo)
+            Case PaginationAction.Last
+                _pageNo = _lastPageNo
+        End Select
 
         Dim pay_freqString = String.Empty
 
@@ -762,20 +752,31 @@ Public Class PayStubForm
         Else
             Dim dattabsearch As New DataTable
 
-            pagination = 0
+            'pagination = 0
 
-            Dim param_array = New Object() {orgztnID,
-                                            tsSearch.Text,
-                                            pagination,
-                                            GetCurrentPayFrequencyType()}
+            _pageNo = 0
 
-            Dim n_ReadSQLProcedureToDatatable As New _
-                SQL("CALL SEARCH_employee_paystub(?og_rowid, ?unified_search_string, ?page_number, ?text_pay_freq_sched);",
-                    param_array)
+            Dim offset = _pageNo * ItemsPerPage
+            Dim limit = ItemsPerPage
+
+            Dim param_array = New Object() {
+                orgztnID,
+                tsSearch.Text,
+                paypRowID,
+                offset,
+                limit
+            }
+
+            Dim n_ReadSQLProcedureToDatatable = New SQL(
+                "CALL SEARCH_employee_paystub(?1, ?2, ?3, ?4, ?5);",
+                param_array)
 
             dattabsearch = n_ReadSQLProcedureToDatatable.GetFoundRows.Tables(0)
 
             dgvemployees.Rows.Clear()
+
+            _totalItems = Val(EXECQUER($"SELECT COUNT(RowID) FROM paystub WHERE OrganizationID={orgztnID} AND PayPeriodID = {paypRowID};"))
+            _lastPageNo = {Math.Ceiling(_totalItems / ItemsPerPage) - 1, 0}.Max()
 
             For Each drow As DataRow In dattabsearch.Rows
                 Dim row_array = drow.ItemArray
@@ -1554,23 +1555,23 @@ Public Class PayStubForm
 
     Private Sub Gender_Label(ByVal strGender As String)
 
-        If strGender.Trim.Length > 0 Then
+        'If strGender.Trim.Length > 0 Then
 
-            Dim label_output As String = ""
+        '    Dim label_output As String = ""
 
-            If strGender = "Male" Then
-                label_output = "Paternity"
-            Else
-                label_output = "Maternity"
-            End If
+        '    If strGender = "Male" Then
+        '        label_output = "Paternity"
+        '    Else
+        '        label_output = "Maternity"
+        '    End If
 
-            Label149.Text = label_output
+        '    Label149.Text = label_output
 
-            Label148.Text = label_output
+        '    Label148.Text = label_output
 
-            Label152.Text = label_output
+        '    Label152.Text = label_output
 
-        End If
+        'End If
 
     End Sub
 
@@ -1763,5 +1764,12 @@ Public Class PayStubForm
 
         tsbtnDelAllEmpPayroll.Enabled = True
     End Sub
+
+    Private Enum PaginationAction
+        First
+        Last
+        [Next]
+        Previous
+    End Enum
 
 End Class
