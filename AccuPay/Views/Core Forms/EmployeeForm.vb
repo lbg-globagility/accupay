@@ -1604,11 +1604,6 @@ Public Class EmployeeForm
 
             showAuditTrail.Close()
 
-            MDIPrimaryForm.lblCreatedBy.Text = Nothing
-            MDIPrimaryForm.lblCreatedDate.Text = Nothing
-            MDIPrimaryForm.lblUpdatedBy.Text = Nothing
-            MDIPrimaryForm.lblUpdatedDate.Text = Nothing
-
             If previousForm IsNot Nothing Then
                 If previousForm.Name = Me.Name Then
                     previousForm = Nothing
@@ -2207,11 +2202,6 @@ Public Class EmployeeForm
                     SalaryTab.SetEmployee(employee)
                 End If
 
-                MDIPrimaryForm.lblCreatedBy.Text = .Cells("Column26").Value
-                MDIPrimaryForm.lblCreatedDate.Text = .Cells("Column25").Value
-                MDIPrimaryForm.lblUpdatedBy.Text = .Cells("Column28").Value
-                MDIPrimaryForm.lblUpdatedDate.Text = .Cells("Column27").Value
-
                 If txtdgvDepen IsNot Nothing Then
                     RemoveHandler txtdgvDepen.KeyDown, AddressOf dgvDepen_KeyDown
                 End If
@@ -2348,10 +2338,6 @@ Public Class EmployeeForm
                     pbEmpPicAtta.Image = Nothing
                     listofEditRoweatt.Clear()
             End Select
-            MDIPrimaryForm.lblCreatedBy.Text = Nothing
-            MDIPrimaryForm.lblCreatedDate.Text = Nothing
-            MDIPrimaryForm.lblUpdatedBy.Text = Nothing
-            MDIPrimaryForm.lblUpdatedDate.Text = Nothing
         End If
         listofEditDepen.Clear()
     End Sub
