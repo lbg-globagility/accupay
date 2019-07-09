@@ -379,6 +379,7 @@
     <Compile Include="Repositories\JobLevelRepository.vb" />
     <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
+    <Compile Include="Repositories\SalaryRepository.vb" />
     <Compile Include="SimplifiedEntities\Interface\IPayPeriod.vb" />
     <Compile Include="Views\Benchmark Forms\BenchmarkPayrollForm.Designer.vb">
       <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>

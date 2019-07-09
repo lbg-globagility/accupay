@@ -2,7 +2,6 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
-Imports AccuPay.SimplifiedEntities
 Imports Microsoft.EntityFrameworkCore
 
 Namespace Global.AccuPay.Repository
@@ -28,6 +27,23 @@ Namespace Global.AccuPay.Repository
                 Return Await query.
                     Where(Function(l) l.IsActive).
                     ToListAsync()
+
+            End Using
+
+        End Function
+
+        Public Async Function GetAllActiveWithoutPayrollAsync() As Task(Of List(Of Employee))
+
+            Using context = New PayrollContext()
+
+                Dim query = GetAllEmployeeBaseQuery(context).
+                                Where(Function(l) l.IsActive)
+
+                Return Await query.
+                                Where(Function(e) context.Paystubs.
+                                                    Where(Function(p) Nullable.Equals(p.EmployeeID, e.RowID)).
+                                                    Any() = False).
+                                ToListAsync
 
             End Using
 

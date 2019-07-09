@@ -181,6 +181,12 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property FullNameLastNameFirst As String
+            Get
+                Return $"{LastName}, {FirstName}"
+            End Get
+        End Property
+
         Public ReadOnly Property FullNameWithMiddleInitialLastNameFirst As String
             Get
                 Return $"{LastName}, {FirstName} {MiddleInitial}"
