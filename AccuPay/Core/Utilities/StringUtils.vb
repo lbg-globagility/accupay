@@ -25,6 +25,10 @@ Namespace Global.AccuPay.Utils
             Return text.Replace(" ", String.Empty)
         End Function
 
+        Public Shared Function Normalize(text As String) As String
+            Return text?.Trim()?.ToUpper()
+        End Function
+
     End Class
 
 End Namespace

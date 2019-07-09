@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Attributes
+﻿Imports System.Collections.ObjectModel
+Imports System.Threading.Tasks
+Imports AccuPay.Attributes
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
@@ -180,14 +182,14 @@ Public Class ImportEmployeeForm
 
 #Region "Functions"
 
-    Public Async Function SaveAsync() As Threading.Tasks.Task(Of Boolean)
-        Dim succeed As Boolean = False
+    Public Async Function SaveAsync() As Task
+        If Not _okModels.Any() Then
+            Return
+        End If
 
-        If Not _okModels.Any() Then Return False
+        Dim models = _okModels
 
-        Dim importedEmployees = _okModels
-
-        Dim employeeNos = importedEmployees.Select(Function(e) e.EmployeeNo).ToList()
+        Dim employeeNos = models.Select(Function(e) e.EmployeeNo).ToList()
 
         Using context = New PayrollContext
             Dim employees = Await context.Employees.
@@ -196,72 +198,85 @@ Public Class ImportEmployeeForm
                 ToListAsync()
 
             'for updates
-            For Each e In employees
-                Dim em = importedEmployees.Where(Function(model) model.EmployeeNo = e.EmployeeNo).FirstOrDefault
+            For Each employee In employees
+                Dim model = models.
+                    FirstOrDefault(Function(m) m.EmployeeNo = employee.EmployeeNo)
 
-                If em IsNot Nothing Then AssignChanges(em, e)
+                If model IsNot Nothing Then
+                    AssignChanges(model, employee)
+                    employee.LastUpdBy = z_User
+                End If
             Next
 
-            Dim department =
-                Await context.Divisions.Where(Function(d) d.OrganizationID = z_OrganizationID).FirstOrDefaultAsync(Function(d) d.ParentDivisionID.HasValue)
-            Dim departmentID As Integer = If(department IsNot Nothing, department.RowID.Value, 0)
+            Dim division = Await context.Divisions.
+                Where(Function(d) d.OrganizationID = z_OrganizationID).
+                FirstOrDefaultAsync(Function(d) d.ParentDivisionID.HasValue)
 
             'for insert
-            Dim notExistEmployees = importedEmployees.
+            Dim notExistEmployees = models.
                 Where(Function(em) Not employees.Any(Function(e) e.EmployeeNo = em.EmployeeNo)).
                 ToList()
-            For Each em In notExistEmployees
-                Dim position = Await context.Positions.
-                    Where(Function(p) p.OrganizationID = z_OrganizationID).
-                    Where(Function(p) p.Name = em.Job).
-                    FirstOrDefaultAsync
 
-                Dim positionRowID = position?.RowID
-                If Not positionRowID.HasValue Then _
-                    positionRowID = Await CreatePositionAsync(context, em.Job, departmentID)
+            Dim newPositions = New Collection(Of Position)
 
-                Dim e As New Employee With {
+            Dim existingPositions = Await context.Positions.
+                Where(Function(p) p.OrganizationID = z_OrganizationID).
+                ToListAsync()
+
+            For Each model In notExistEmployees
+                Dim position = existingPositions.
+                    Where(Function(p) StringUtils.Normalize(p.Name) = StringUtils.Normalize(model.Job)).
+                    FirstOrDefault()
+
+                If position Is Nothing Then
+                    position = newPositions.
+                        FirstOrDefault(Function(p) StringUtils.Normalize(p.Name) = StringUtils.Normalize(model.Job))
+                End If
+
+                If position Is Nothing Then
+                    position = CreatePosition(model.Job, division)
+
+                    newPositions.Add(position)
+                End If
+
+                Dim employee = New Employee With {
                     .OrganizationID = z_OrganizationID,
                     .Created = Now,
                     .CreatedBy = z_User,
-                    .PayFrequencyID = If(em.PayFrequency.ToLower() = "semi-monthly", 1, 4),
-                    .PositionID = positionRowID}
+                    .PayFrequencyID = If(model.PayFrequency.ToLower() = "semi-monthly", 1, 4),
+                    .Position = position
+                }
 
-                AssignChanges(em, e)
+                AssignChanges(model, employee)
 
-                context.Employees.Add(e)
+                context.Employees.Add(employee)
             Next
 
             Try
                 Await context.SaveChangesAsync()
-
-                succeed = True
             Catch ex As Exception
-                succeed = False
                 logger.Error("EmployeeImportProfile", ex)
-                Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
-                MessageBox.Show(errMsg, "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
-
+                'Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
+                'MessageBox.Show(errMsg, "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Throw
             End Try
-
         End Using
-
-        Return succeed
     End Function
 
-    Private Async Function CreatePositionAsync(context As PayrollContext, positionName As String, departmentID As Integer) As Threading.Tasks.Task(Of Integer)
-        Dim employeeJob As Position = New Position With {
-            .Name = positionName,
+    Private Function CreatePosition(positionName As String,
+                                    division As Division) As Position
+        Dim position As Position = New Position() With {
+            .Name = positionName.Trim(),
             .OrganizationID = z_OrganizationID,
             .Created = Now,
-            .CreatedBy = z_User}
-        If departmentID > 0 Then employeeJob.DivisionID = departmentID
-        Dim jobPosition = context.Positions.
-            Add(employeeJob)
+            .CreatedBy = z_User
+        }
 
-        Await context.SaveChangesAsync()
+        If division IsNot Nothing Then
+            position.DivisionID = division.RowID
+        End If
 
-        Return jobPosition.Entity.RowID.Value
+        Return position
     End Function
 
 #End Region
