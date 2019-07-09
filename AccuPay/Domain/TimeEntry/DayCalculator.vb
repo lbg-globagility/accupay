@@ -5,7 +5,7 @@ Imports AccuPay.Entity
 Imports PayrollSys
 
 Public Class DayCalculator
-
+    Private Const DEFAULT_WORK_HOURS As Integer = 8
     Private ReadOnly _payrateCalendar As PayratesCalendar
     Private ReadOnly _settings As ListOfValueCollection
     Private ReadOnly _organization As Organization
@@ -34,6 +34,7 @@ Public Class DayCalculator
         If _overtimeSkipCountRounding Then
             _overtimeSkipCount = Convert.ToDecimal(settings.GetValue("OvertimeSkipCount"))
         End If
+
     End Sub
 
     Public Function Compute(currentDate As DateTime,
@@ -131,6 +132,11 @@ Public Class DayCalculator
         Dim logPeriod As TimePeriod = Nothing
         If hasTimeLog Then
             logPeriod = GetLogPeriod(timeLog, officialBusiness, currentShift, currentDate)
+        End If
+
+        If _policy.PaidAsLongAsPresent Then
+            Dim atLeastHasTimeLogs = timeLog?.TimeIn IsNot Nothing Or timeLog?.TimeOut IsNot Nothing
+            If atLeastHasTimeLogs Then timeEntry.RegularHours = DEFAULT_WORK_HOURS
         End If
 
         If logPeriod IsNot Nothing Then

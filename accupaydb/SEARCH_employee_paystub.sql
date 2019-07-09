@@ -6,80 +6,49 @@
 
 DROP PROCEDURE IF EXISTS `SEARCH_employee_paystub`;
 DELIMITER //
-CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employee_paystub`(IN `og_rowid` INT, IN `unified_search_string` VARCHAR(50), IN `page_number` INT, IN `text_pay_freq_sched` VARCHAR(50))
-    DETERMINISTIC
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employee_paystub`(
+	IN `$organizationId` INT,
+	IN `$searchTerm` VARCHAR(50),
+	IN `$payperiodId` INT,
+	IN `$offset` INT,
+	IN `$limit` INT
+)
+LANGUAGE SQL
+DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
 BEGIN
 
-DECLARE max_count_per_page INT(11) DEFAULT 20;
+DECLARE $skipSearch TINYINT(1) DEFAULT FALSE;
 
-SELECT e.RowID
-        ,e.EmployeeID
-        ,e.FirstName
-        ,e.MiddleName
-        ,e.LastName
-        ,e.Surname
-        ,e.Nickname
-        ,e.MaritalStatus
-        ,e.NoOfDependents
-        ,e.Birthdate
-        ,e.StartDate
-        ,e.JobTitle
-        ,pos.PositionName
-        ,e.Salutation
-        ,e.TINNo
-        ,e.SSSNo
-        ,e.HDMFNo
-        ,e.PhilHealthNo
-        ,e.WorkPhone
-        ,e.HomePhone
-        ,e.MobilePhone
-        ,e.HomeAddress
-        ,e.EmailAddress
-        ,e.Gender
-        ,e.EmploymentStatus
+SET $skipSearch = NOT(IFNULL($searchTerm, '') > '');
 
-        ,pf.PayFrequencyType
-        ,e.UndertimeOverride
-        ,e.OvertimeOverride
-        ,e.PositionID
-        ,e.PayFrequencyID
-        ,e.EmployeeType
-        ,e.LeaveBalance
-        ,e.SickLeaveBalance
-        ,e.MaternityLeaveBalance
-        ,e.LeaveAllowance
-        ,e.SickLeaveAllowance
-        ,e.MaternityLeaveAllowance
-
-        ,e.LeavePerPayPeriod `LeavePerPayPeriod`
-		  ,e.SickLeavePerPayPeriod `SickLeavePerPayPeriod`
-		  ,e.MaternityLeavePerPayPeriod `MaternityLeavePerPayPeriod`
-		  ,fstat.RowID `fstatRowID`
-		  ,'' `Image`
-		  ,e.Created`Created`
-		  ,CONCAT_WS(u.LastName, u.FirstName) `Createdby`
-		  ,e.LastUpd `LastUpd`
-		  ,CONCAT_WS(uu.LastName, uu.FirstName) `LastUpdby`
-
-FROM (SELECT * FROM employee WHERE OrganizationID=og_rowid AND EmployeeID   =unified_search_string  AND LENGTH(unified_search_string) > 0 AND FIND_IN_SET(EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
-    UNION
-        SELECT * FROM employee WHERE OrganizationID=og_rowid AND LastName       =unified_search_string  AND LENGTH(unified_search_string) > 0 AND FIND_IN_SET(EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
-    UNION
-        SELECT * FROM employee WHERE OrganizationID=og_rowid AND FirstName  =unified_search_string  AND LENGTH(unified_search_string) > 0 AND FIND_IN_SET(EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
-    UNION
-        SELECT * FROM employee WHERE OrganizationID=og_rowid AND LENGTH(TRIM(unified_search_string))=0 AND FIND_IN_SET(EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
-        ) e
-
-LEFT JOIN `user` u              ON e.CreatedBy=u.RowID
-LEFT JOIN `user` uu             ON e.LastUpdBy=uu.RowID
-LEFT JOIN `position` pos        ON e.PositionID=pos.RowID
-INNER JOIN payfrequency pf       ON e.PayFrequencyID=pf.RowID AND pf.PayFrequencyType = text_pay_freq_sched
-LEFT JOIN filingstatus fstat    ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents
-LEFT JOIN agency ag             ON ag.RowID=e.AgencyID
-LEFT JOIN division d                ON d.RowID=pos.DivisionId
-
-ORDER BY e.LastName ASC, e.FirstName ASC
-LIMIT page_number, max_count_per_page;
+SELECT
+    e.RowID
+	,e.EmployeeID
+	,e.FirstName
+	,e.MiddleName
+	,e.LastName
+	,e.EmployeeType
+	,pos.PositionName
+	,d.Name AS 'DivisionName'
+FROM paystub p
+INNER JOIN employee e
+ON e.RowID = p.EmployeeID
+LEFT JOIN `position` pos
+ON e.PositionID=pos.RowID
+LEFT JOIN `division` d
+ON pos.DivisionId=d.RowID
+WHERE p.OrganizationID = $organizationId AND
+    p.PayPeriodID = $payperiodId AND
+    ($skipSearch OR (
+        e.FirstName = $searchTerm OR
+        e.LastName = $searchTerm OR
+        e.EmployeeID = $searchTerm
+    ))
+ORDER BY e.LastName, e.FirstName
+LIMIT $offset, $limit;
 
 END//
 DELIMITER ;

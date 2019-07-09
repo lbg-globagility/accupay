@@ -1,0 +1,2 @@
+# a policy that only requires a time log to be able be paid on that date
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('1', 'TimeLogAsPaymentRequirement', 'TimeEntry', NULL, 'Yes', 'Paid as long as has time logs', CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP(), 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();

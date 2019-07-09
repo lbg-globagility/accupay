@@ -92,4 +92,10 @@ Public Class TimeEntryPolicy
         End Get
     End Property
 
+    Public ReadOnly Property PaidAsLongAsPresent As Boolean
+        Get
+            Return _settings.GetBoolean("TimeEntry.TimeLogAsPaymentRequirement")
+        End Get
+    End Property
+
 End Class
