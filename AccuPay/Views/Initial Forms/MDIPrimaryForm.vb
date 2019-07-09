@@ -329,6 +329,7 @@ Public Class MDIPrimaryForm
         GeneralForm.Hide()
         HRISForm.Hide()
         PayrollForm.Hide()
+        BenchmarkPayrollForm.Hide()
         TimeAttendForm.Hide()
 
         FormReports.Hide()
@@ -574,7 +575,14 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
-        ChangeForm(PayrollForm)
+        If if_sysowner_is_benchmark Then
+
+            ChangeForm(BenchmarkPayrollForm)
+        Else
+
+            ChangeForm(PayrollForm)
+
+        End If
 
         GeneralForm.Hide()
         HRISForm.Hide()
