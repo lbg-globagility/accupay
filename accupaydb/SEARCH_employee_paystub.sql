@@ -46,8 +46,7 @@ WHERE p.OrganizationID = $organizationId AND
         e.FirstName = $searchTerm OR
         e.LastName = $searchTerm OR
         e.EmployeeID = $searchTerm
-    )) AND
-	FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+    ))
 ORDER BY e.LastName, e.FirstName
 LIMIT $offset, $limit;
 
