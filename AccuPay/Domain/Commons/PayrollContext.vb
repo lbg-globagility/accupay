@@ -1,16 +1,20 @@
-Imports System.Data.Common
-Imports System.Data.Entity
+Option Strict On
+
 Imports AccuPay.Entity
-Imports AccuPay.Loans
 Imports AccuPay.JobLevels
-Imports PayrollSys
+Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Logging
+Imports Microsoft.Extensions.Logging.Console
+Imports PayrollSys
 
 Public Class PayrollContext
     Inherits DbContext
 
     Private ReadOnly _loggerFactory As ILoggerFactory
+
+    Public Shared ReadOnly DbCommandConsoleLoggerFactory As LoggerFactory =
+        New LoggerFactory({New ConsoleLoggerProvider(Function(category, level) category = DbLoggerCategory.Database.Command.Name AndAlso level = LogLevel.Information, True)})
 
     Public Overridable Property Agencies As DbSet(Of Agency)
 
@@ -122,4 +126,5 @@ Public Class PayrollContext
             HasMany(Function(p) p.AllowanceItems).
             WithOne(Function(a) a.Paystub)
     End Sub
+
 End Class

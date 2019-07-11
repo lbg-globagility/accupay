@@ -32,17 +32,16 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Public Async Function GetAllActiveWithoutPayrollAsync() As Task(Of List(Of Employee))
+        Public Async Function GetAllActiveWithoutPayrollAsync(payPeriodId As Decimal?) As Task(Of List(Of Employee))
 
-            Using context = New PayrollContext()
+            Using context = New PayrollContext(PayrollContext.DbCommandConsoleLoggerFactory)
 
                 Dim query = GetAllEmployeeBaseQuery(context).
                                 Where(Function(l) l.IsActive)
 
                 Return Await query.
                                 Where(Function(e) context.Paystubs.
-                                                    Where(Function(p) Nullable.Equals(p.EmployeeID, e.RowID)).
-                                                    Any() = False).
+                                                    Any(Function(p) p.EmployeeID.Value = e.RowID.Value AndAlso p.PayPeriodID.Value = payPeriodId.Value) = False).
                                 ToListAsync
 
             End Using

@@ -1,6 +1,10 @@
-﻿Imports AccuPay.SimplifiedEntities
+﻿Imports AccuPay.Entity
+Imports AccuPay.SimplifiedEntities
 
 Public Class selectPayPeriod
+
+    Public Property PayPeriod As IPayPeriod
+    Public Property GeneratePayroll As Boolean = True
 
     Private ReadOnly selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
@@ -37,6 +41,11 @@ Public Class selectPayPeriod
         Dim indx = 0
 
         For Each strval In payfrqncy
+
+            If strval.ToString.ToUpper = "WEEKLY" Then
+                Continue For
+            End If
+
             Dim new_tsbtn As New ToolStripButton
 
             With new_tsbtn
@@ -215,11 +224,21 @@ Public Class selectPayPeriod
                 PayStubForm.paypFrom = Format(CDate(.Cells("Column2").Value), "yyyy-MM-dd")
                 PayStubForm.paypTo = Format(CDate(.Cells("Column3").Value), "yyyy-MM-dd")
                 PayStubForm.isEndOfMonth = Trim(.Cells("Column14").Value)
+
+                PayPeriod = New PayPeriod
+
+                PayPeriod.RowID = .Cells("Column1").Value
+                PayPeriod.PayFromDate = CDate(.Cells("Column2").Value)
+                PayPeriod.PayToDate = CDate(.Cells("Column3").Value)
             End With
 
             Dim PayFreqRowID = EXECQUER("SELECT RowID FROM payfrequency WHERE PayFrequencyType='" & quer_empPayFreq & "';")
 
-            PayStubForm.genpayroll(PayFreqRowID)
+            If GeneratePayroll Then
+                PayStubForm.genpayroll(PayFreqRowID)
+
+            End If
+
         End If
 
         Me.Hide()

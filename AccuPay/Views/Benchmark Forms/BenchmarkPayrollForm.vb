@@ -4,14 +4,18 @@ Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.SimplifiedEntities
+Imports AccuPay.Utils
 Imports PayrollSys
 
 Public Class BenchmarkPayrollForm
 
-    Private employeeRepository As EmployeeRepository
-    Private salaryRepository As SalaryRepository
+    Private _employeeRepository As EmployeeRepository
+    Private _salaryRepository As SalaryRepository
     Private _currentPayPeriod As IPayPeriod
     Private _salaries As List(Of Salary)
+    Private _employees As List(Of Employee)
+
+    Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
     Sub New()
 
@@ -19,15 +23,25 @@ Public Class BenchmarkPayrollForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        employeeRepository = New EmployeeRepository
-        salaryRepository = New SalaryRepository
+        _employeeRepository = New EmployeeRepository
+        _salaryRepository = New SalaryRepository
+        _salaries = New List(Of Salary)
+        _employees = New List(Of Employee)
     End Sub
 
     Private Async Function ShowEmployees() As Task
 
-        Dim employees = Await employeeRepository.GetAllActiveWithoutPayrollAsync()
+        Dim payPeriodId = _currentPayPeriod?.RowID
 
-        EmployeesGridView.DataSource = employees
+        If payPeriodId IsNot Nothing Then
+
+            _employees = Await _employeeRepository.
+                                GetAllActiveWithoutPayrollAsync(_currentPayPeriod.RowID)
+        Else
+            _employees = New List(Of Employee)
+        End If
+
+        Await FilterEmployeeGridView()
 
     End Function
 
@@ -119,7 +133,7 @@ Public Class BenchmarkPayrollForm
 
         Await GetCutOffPeriod()
 
-        _salaries = Await salaryRepository.
+        _salaries = Await _salaryRepository.
                         GetAllByCutOff(_currentPayPeriod.PayFromDate)
 
         Await ShowEmployees()
@@ -132,8 +146,29 @@ Public Class BenchmarkPayrollForm
         _currentPayPeriod = Await PayrollTools.
                                 GetCurrentlyWorkedOnPayPeriodByCurrentYear()
 
+        UpdateCutOffLabel()
+    End Function
+
+    Private Sub UpdateCutOffLabel()
         PayPeriodLabel.Text = $"For the Period:
             {_currentPayPeriod.PayFromDate.ToString("MMMM d")} - {_currentPayPeriod.PayToDate.ToString("MMMM d")}, {_currentPayPeriod.PayToDate.Year}"
+    End Sub
+
+    Private Async Function FilterEmployeeGridView() As Task
+
+        Dim searchValue = SearchEmployeeTextBox.Text.Trim
+
+        If String.IsNullOrWhiteSpace(searchValue) Then
+            EmployeesGridView.DataSource = _employees
+        Else
+
+            Dim employees = Await _employeeRepository.
+               SearchSimpleLocal(_employees, SearchEmployeeTextBox.Text)
+
+            EmployeesGridView.DataSource = employees
+
+        End If
+
     End Function
 
     Private Sub EmployeesGridView_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles EmployeesGridView.CellDoubleClick
@@ -145,6 +180,33 @@ Public Class BenchmarkPayrollForm
     Private Sub ResetPayrollButton_Click(sender As Object, e As EventArgs) Handles ResetPayrollButton.Click
 
         ClearEmployeeForms()
+
+    End Sub
+
+    Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
+        Dim form As New selectPayPeriod()
+        form.GeneratePayroll = False
+        form.ShowDialog()
+
+        If form.PayPeriod IsNot Nothing Then
+
+            _currentPayPeriod = form.PayPeriod
+
+            UpdateCutOffLabel()
+
+            Await ShowEmployees()
+
+            ClearEmployeeForms()
+        End If
+    End Sub
+
+    Private Sub SearchEmployeeTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchEmployeeTextBox.TextChanged
+
+        _textBoxDelayedAction.ProcessAsync(Async Function()
+                                               Await FilterEmployeeGridView()
+
+                                               Return True
+                                           End Function)
 
     End Sub
 
