@@ -326,6 +326,7 @@
     <Compile Include="Core\Utilities\Excel\WorkSheetIsEmptyException.vb" />
     <Compile Include="Core\Utilities\Excel\WorkSheetNotFoundException.vb" />
     <Compile Include="Core\Utilities\Extensions\DateExtensions.vb" />
+    <Compile Include="Core\Utilities\Extensions\DecimalExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\StringExtensions.vb" />
     <Compile Include="Core\Utilities\Extensions\TimeSpanExtensions.vb" />
@@ -352,6 +353,7 @@
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
+    <Compile Include="Domain\Payroll\IPaystubRate.vb" />
     <Compile Include="Domain\Payroll\PaystubActualCalculator.vb" />
     <Compile Include="Domain\Payroll\SemiMonthlyAllowanceCalculator.vb" />
     <Compile Include="Domain\Leaves\LeaveConvertible.vb" />
@@ -387,6 +389,7 @@
     <Compile Include="Views\Benchmark Forms\BenchmarkPayrollForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Benchmark Forms\BenchmarkPaystubRate.vb" />
     <Compile Include="Views\Core Forms\AddDivisionForm.Designer.vb">
       <DependentUpon>AddDivisionForm.vb</DependentUpon>
     </Compile>

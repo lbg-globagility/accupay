@@ -2,6 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
@@ -16,6 +17,12 @@ Public Class BenchmarkPayrollForm
     Private _employees As List(Of Employee)
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
+
+    Private _payrollResources As PayrollResources
+
+    Private _employeeRate As BenchmarkPaystubRate
+
+    Private Const MoneyFormat As String = "#,##0.0000"
 
     Sub New()
 
@@ -51,29 +58,21 @@ Public Class BenchmarkPayrollForm
 
         If EmployeesGridView.CurrentRow IsNot Nothing Then
 
-            Dim employee = CType(EmployeesGridView.CurrentRow.DataBoundItem, Employee)
+            _employeeRate = New BenchmarkPaystubRate(CType(EmployeesGridView.CurrentRow.DataBoundItem, Employee), _salaries)
 
-            Dim salary = _salaries.
-                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
-                            FirstOrDefault
+            If _employeeRate.IsInvalid Then Return
 
-            If employee Is Nothing OrElse salary Is Nothing Then Return
+            EmployeeNumberLabel.Text = _employeeRate.Employee.EmployeeNo
+            EmployeeNameLabel.Text = _employeeRate.Employee.FullNameLastNameFirst.ToUpper
 
-            Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
-            Dim dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear)
-            Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
-
-            EmployeeNumberLabel.Text = employee.EmployeeNo
-            EmployeeNameLabel.Text = employee.FullNameLastNameFirst.ToUpper
-
-            TinTextBox.Text = employee.TinNo
-            SssNumberTextBox.Text = employee.SssNo
-            PagibigNumberTextBox.Text = employee.HdmfNo
-            PhilhealthNumberTextBox.Text = employee.PhilHealthNo
-            BasicPayTextBox.Text = AccuMath.CommercialRound(monthlyRate, 4).ToString("#,##0.0000")
-            PerDayTextBox.Text = AccuMath.CommercialRound(dailyRate, 4).ToString("#,##0.0000")
-            PerHourTextBox.Text = AccuMath.CommercialRound(hourlyRate, 4).ToString("#,##0.0000")
-            AllowanceTextBox.Text = AccuMath.CommercialRound(salary.AllowanceSalary, 4).ToString("#,##0.0000")
+            TinTextBox.Text = _employeeRate.Employee.TinNo
+            SssNumberTextBox.Text = _employeeRate.Employee.SssNo
+            PagibigNumberTextBox.Text = _employeeRate.Employee.HdmfNo
+            PhilhealthNumberTextBox.Text = _employeeRate.Employee.PhilHealthNo
+            BasicPayTextBox.Text = _employeeRate.MonthlyRate.ToString(MoneyFormat)
+            PerDayTextBox.Text = _employeeRate.DailyRate.ToString(MoneyFormat)
+            PerHourTextBox.Text = _employeeRate.HourlyRate.ToString(MoneyFormat)
+            AllowanceTextBox.Text = _employeeRate.AllowanceSalary.ToString(MoneyFormat)
 
             EmployeeDetailsGroupBox.Enabled = True
             InputsTabControl.Enabled = True
@@ -140,6 +139,34 @@ Public Class BenchmarkPayrollForm
 
         ClearEmployeeForms()
 
+        LoadPayrollResources()
+
+    End Sub
+
+    Private Sub LoadPayrollResources()
+        'TODO: Add loading bar
+
+        Dim paypRowID = _currentPayPeriod.RowID.Value
+        Dim paypFrom = _currentPayPeriod.PayFromDate
+        Dim paypTo = _currentPayPeriod.PayToDate
+
+        Dim loadTask = Task.Factory.StartNew(
+            Function()
+                If paypFrom = Nothing And paypTo = Nothing Then
+                    Return Nothing
+                End If
+
+                Dim resources = New PayrollResources(paypRowID, CDate(paypFrom), CDate(paypTo))
+                Dim resourcesTask = resources.Load()
+                resourcesTask.Wait()
+
+                Return resources
+            End Function,
+            0
+        )
+
+        _payrollResources = loadTask.Result
+
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
@@ -170,6 +197,75 @@ Public Class BenchmarkPayrollForm
         End If
 
     End Function
+
+    Private Function GetSelectedEmployee() As Employee
+
+        If EmployeesGridView.CurrentRow Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("No employee selected.")
+            Return Nothing
+
+        End If
+
+        Dim employee = CType(EmployeesGridView.CurrentRow.DataBoundItem, Employee)
+
+        If employee Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("No employee selected.")
+            Return Nothing
+
+        End If
+
+        Return employee
+
+    End Function
+
+    Private Function CreatePaystub(employee As Employee, generator As PayrollGeneration) As Paystub
+        Dim paystub = New Paystub() With {
+                    .OrganizationID = z_OrganizationID,
+                    .CreatedBy = z_User,
+                    .LastUpdBy = z_User,
+                    .EmployeeID = employee.RowID,
+                    .PayPeriodID = _currentPayPeriod.RowID,
+                    .PayFromdate = _currentPayPeriod.PayFromDate,
+                    .PayToDate = _currentPayPeriod.PayToDate
+                }
+
+        paystub.Actual = New PaystubActual With {
+            .OrganizationID = z_OrganizationID,
+            .EmployeeID = employee.RowID,
+            .PayPeriodID = _currentPayPeriod.RowID,
+            .PayFromDate = _currentPayPeriod.PayFromDate,
+            .PayToDate = _currentPayPeriod.PayToDate
+        }
+
+        paystub.EmployeeID = employee.RowID
+
+        ComputeBasicHoursAndPay(paystub, employee)
+        ComputeHours(paystub)
+
+        generator.ComputePayroll(paystub)
+        Return paystub
+    End Function
+
+    Private Sub ComputeBasicHoursAndPay(paystub As Paystub, employee As Employee)
+
+        Dim cutOffsPerMonth As Integer = 2
+
+        Dim workDaysThisCutOff = PayrollTools.
+                GetWorkDaysPerMonth(employee.WorkDaysPerYear) / cutOffsPerMonth
+
+        paystub.BasicHours = workDaysThisCutOff * PayrollTools.WorkHoursPerDay
+
+        paystub.BasicPay = paystub.BasicHours * _employeeRate.HourlyRate
+
+    End Sub
+
+    Private Sub ComputeHours(paystub As Paystub)
+
+        '_employeeRate.Compute(paystub)
+
+    End Sub
 
     Private Sub EmployeesGridView_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles EmployeesGridView.CellDoubleClick
 
@@ -207,6 +303,45 @@ Public Class BenchmarkPayrollForm
 
                                                Return True
                                            End Function)
+
+    End Sub
+
+    Private Sub ComputeSalaryButton_Click(sender As Object, e As EventArgs) Handles ComputeSalaryButton.Click
+
+        Dim employee = GetSelectedEmployee()
+
+        If employee Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("No employee selected.")
+            Return
+
+        End If
+
+        Dim generator = New PayrollGeneration(
+                                employee,
+                                _payrollResources
+                            )
+
+        Dim paystub As Paystub = CreatePaystub(employee, generator)
+
+        BasicPaySummaryTextBox.Text = paystub.BasicPay.RoundToString()
+        PhilhealthAmountTextBox.Text = paystub.PhilHealthEmployeeShare.RoundToString()
+        SssAmountTextBox.Text = paystub.SssEmployeeShare.RoundToString()
+        PagibigNumberTextBox.Text = paystub.HdmfEmployeeShare.RoundToString()
+        WithholdingTaxTextBox.Text = paystub.WithholdingTax.RoundToString()
+        PagibigLoanTextBox.Text = 0D.RoundToString()
+        SssLoanTextBox.Text = 0D.RoundToString()
+
+        NightDifferentialAmountTextBox.Text = paystub.NightDiffHours.RoundToString()
+        ThirteenthMonthPayTextBox.Text = paystub.ThirteenthMonthPay?.Amount.RoundToString()
+        LeaveBalanceTextBox.Text = 0D.RoundToString()
+
+        GrossPayTextBox.Text = paystub.GrossPay.RoundToString()
+        TotalLeaveTextBox.Text = paystub.LeaveHours.RoundToString()
+        TotalDeductionTextBox.Text = paystub.NetDeductions.RoundToString()
+        TotalOtherIncomeTextBox.Text = paystub.TotalAllowance.RoundToString()
+        TotalOvertimeTextBox.Text = paystub.OvertimeHours.RoundToString()
+        NetPayTextBox.Text = paystub.NetPay.RoundToString()
 
     End Sub
 

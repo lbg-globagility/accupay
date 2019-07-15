@@ -383,11 +383,11 @@ Public Class SalaryTab
     Private Sub txtAmount_TextChanged(sender As Object, e As EventArgs)
         Dim basicSalary = TypeTools.ParseDecimal(txtAmount.Text)
 
-        Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(_employee, basicSalary)
-
         If _currentSalary Is Nothing Then
             Return
         End If
+
+        Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(_employee, _currentSalary)
 
         UpdateTotalSalary()
     End Sub

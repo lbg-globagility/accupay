@@ -548,7 +548,7 @@ Public Class PayStubForm
                     Return Nothing
                 End If
 
-                Dim resources = New PayrollResources(paypRowID, CDate(paypFrom), CDate(paypTo))
+                Dim resources = New PayrollResources(Integer.Parse(paypRowID), CDate(paypFrom), CDate(paypTo))
                 Dim resourcesTask = resources.Load()
                 resourcesTask.Wait()
 

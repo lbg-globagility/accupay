@@ -91,11 +91,11 @@ Namespace Global.AccuPay.Payroll
             ' If philHealth calculation is based on the basic salary, get it from the salary record
             If calculationBasis = PhilHealthCalculationBasis.BasicSalary Then
 
-                basisPay = PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
+                basisPay = PayrollTools.GetEmployeeMonthlyRate(employee, salary)
 
             ElseIf calculationBasis = PhilHealthCalculationBasis.BasicAndEcola Then
 
-                Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
+                Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary)
 
                 Dim ecolas = allowances.
                     Where(Function(ea) ea.Product.PartNo.ToLower() = EcolaName)

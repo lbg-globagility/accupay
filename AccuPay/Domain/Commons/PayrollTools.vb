@@ -20,7 +20,10 @@ Public Class PayrollTools
 
     Public Shared Function GetEmployeeMonthlyRate(
                             employee As Employee,
-                            basicSalary As Decimal) As Decimal
+                            salary As Salary,
+                            Optional isActual As Boolean = False) As Decimal
+
+        Dim basicSalary = If(isActual, salary.BasicSalary + salary.AllowanceSalary, salary.BasicSalary)
 
         If employee.IsMonthly OrElse employee.IsFixed Then
 

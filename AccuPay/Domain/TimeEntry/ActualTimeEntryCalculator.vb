@@ -17,6 +17,8 @@ Public Class ActualTimeEntryCalculator
     End Sub
 
     Public Function Compute(timeEntries As IList(Of TimeEntry)) As IList(Of ActualTimeEntry)
+        'Changes here should also reflect in BenchmarkPayrollForm.vb
+
         Dim actualTimeEntries = New List(Of ActualTimeEntry)
 
         Dim allowanceRate = If(

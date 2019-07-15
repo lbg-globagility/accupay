@@ -64,6 +64,8 @@ Public Class PayrollResources
 
     Private _filingStatuses As DataTable
 
+    Private _systemOwner As SystemOwner
+
     Public ReadOnly Property Employees As ICollection(Of Employee)
         Get
             Return _employees
@@ -178,8 +180,14 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public Sub New(payPeriodID As String, payDateFrom As Date, payDateTo As Date)
-        _payPeriodID = Integer.Parse(payPeriodID)
+    Public ReadOnly Property SystemOwner As SystemOwner
+        Get
+            Return _systemOwner
+        End Get
+    End Property
+
+    Public Sub New(payPeriodID As Integer, payDateFrom As Date, payDateTo As Date)
+        _payPeriodID = payPeriodID
         _payDateFrom = payDateFrom
         _payDateTo = payDateTo
     End Sub
@@ -191,6 +199,7 @@ Public Class PayrollResources
         Await LoadPayPeriod()
 
         Await Task.WhenAll({
+            LoadSystemOwner(),
             LoadEmployees(),
             LoadLoanSchedules(),
             LoadLoanTransactions(),
@@ -210,6 +219,12 @@ Public Class PayrollResources
             LoadDivisionMinimumWages(),
             LoadEmployeeDutySchedules()
         })
+    End Function
+
+    Public Async Function LoadSystemOwner() As Task
+        Await Task.Run(Sub()
+                           _systemOwner = New SystemOwner
+                       End Sub)
     End Function
 
     Public Async Function LoadEmployees() As Task

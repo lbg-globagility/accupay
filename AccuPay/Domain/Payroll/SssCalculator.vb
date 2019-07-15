@@ -71,7 +71,7 @@ Public Class SssCalculator
         Select Case calculationBasis
             Case SssCalculationBasis.BasicSalary
 
-                Return PayrollTools.GetEmployeeMonthlyRate(employee, salary.BasicSalary)
+                Return PayrollTools.GetEmployeeMonthlyRate(employee, salary)
 
             Case SssCalculationBasis.Earnings
 
