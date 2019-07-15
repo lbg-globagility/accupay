@@ -51,7 +51,7 @@ Namespace Global.AccuPay.Payroll
             paystub.Actual.TotalEarnings = AccuMath.CommercialRound(totalEarnings)
             paystub.Actual.GrossPay = AccuMath.CommercialRound(totalEarnings + paystub.TotalAllowance)
             paystub.Actual.TotalAdjustments = AccuMath.CommercialRound(paystub.TotalAdjustments + paystub.ActualAdjustments.Sum(Function(a) a.PayAmount))
-            paystub.Actual.NetPay = AccuMath.CommercialRound(paystub.Actual.GrossPay - paystub.NetDeductions)
+            paystub.Actual.NetPay = AccuMath.CommercialRound(paystub.Actual.GrossPay - paystub.NetDeductions + paystub.Actual.TotalAdjustments)
         End Sub
 
     End Class
