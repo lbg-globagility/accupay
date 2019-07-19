@@ -151,6 +151,12 @@ Namespace Global.AccuPay.Utils
 
             If IsNothing(input) Then Return Nothing
 
+            If input.ToString.Trim = "24:00" Then
+                '"24:00" is considered invalid in parsing
+                input = "00:00"
+
+            End If
+
             Dim output As TimeSpan
 
             Dim dt As Date

@@ -1,5 +1,4 @@
-﻿
-Public Class PayRateForm
+﻿Public Class PayRateForm
     Dim view_ID As Integer = Nothing
 
     Dim _now
@@ -59,7 +58,6 @@ Public Class PayRateForm
 
             tsbtnsavepayrate.Visible = 0
             dontUpdate = 1
-
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
@@ -102,21 +100,21 @@ Public Class PayRateForm
 
             Label1.Text = defaultViewDate
 
-            dattab = retAsDatTbl("SELECT prate.RowID,DAY(prate.Date) 'dateday'" & _
-                                 ", DAYOFWEEK(prate.Date) 'dayofwk'" & _
-                                 ", DAY(LAST_DAY(prate.Date)) 'maxday'" & _
-                                 ",COALESCE(prate.PayType,'') 'PayType'" & _
-                                 ",COALESCE(prate.Description,'') 'Description'" & _
-                                 ",COALESCE(prate.PayRate,1) 'PayRate'" & _
-                                 ",COALESCE(prate.OvertimeRate,1) 'OvertimeRate'" & _
-                                 ",COALESCE(prate.NightDifferentialRate,1) 'NightDifferentialRate'" & _
-                                 ",COALESCE(prate.NightDifferentialOTRate,1) 'NightDifferentialOTRate'" & _
-                                 ",DATE_FORMAT(prate.Date,'%m-%d-%Y') 'Date'" & _
-                                 ",COALESCE(RestDayRate,1) 'RestDayRate'" & _
-                                 ",COALESCE(RestDayOvertimeRate,1) 'RestDayOvertimeRate'" & _
-                                 " FROM payrate prate" & _
-                                 " WHERE DATE_FORMAT(prate.Date,'%Y-%m')=DATE_FORMAT(CURDATE(),'%Y-%m')" & _
-                                 " AND prate.OrganizationID='" & orgztnID & "'" & _
+            dattab = retAsDatTbl("SELECT prate.RowID,DAY(prate.Date) 'dateday'" &
+                                 ", DAYOFWEEK(prate.Date) 'dayofwk'" &
+                                 ", DAY(LAST_DAY(prate.Date)) 'maxday'" &
+                                 ",COALESCE(prate.PayType,'') 'PayType'" &
+                                 ",COALESCE(prate.Description,'') 'Description'" &
+                                 ",COALESCE(prate.PayRate,1) 'PayRate'" &
+                                 ",COALESCE(prate.OvertimeRate,1) 'OvertimeRate'" &
+                                 ",COALESCE(prate.NightDifferentialRate,1) 'NightDifferentialRate'" &
+                                 ",COALESCE(prate.NightDifferentialOTRate,1) 'NightDifferentialOTRate'" &
+                                 ",DATE_FORMAT(prate.Date,'%m-%d-%Y') 'Date'" &
+                                 ",COALESCE(RestDayRate,1) 'RestDayRate'" &
+                                 ",COALESCE(RestDayOvertimeRate,1) 'RestDayOvertimeRate'" &
+                                 " FROM payrate prate" &
+                                 " WHERE DATE_FORMAT(prate.Date,'%Y-%m')=DATE_FORMAT(CURDATE(),'%Y-%m')" &
+                                 " AND prate.OrganizationID='" & orgztnID & "'" &
                                  " ORDER BY prate.Date;")
             'MONTH(prate.Date)=MONTH(NOW()) AND YEAR(prate.Date)=YEAR(NOW());
             'DISTINCT(DATE_FORMAT(DATE,'%m-%d-%Y')),
@@ -149,7 +147,6 @@ Public Class PayRateForm
                     End If
                 Next
             Next
-
         Else
 
             Dim querdate As Object = Format(CDate(prate_date), "yyyy-MM-dd")
@@ -157,22 +154,22 @@ Public Class PayRateForm
             defaultViewDate = Format(CDate(prate_date), "MMMM, yyyy")
             'Label1.Text = Format(CDate(prate_date), "MMMM dd, yyyy")
 
-            dattab = retAsDatTbl("SELECT prate.RowID" & _
-                                 ", DAY(prate.Date) 'dateday'" & _
-                                 ", DAYOFWEEK(prate.Date) 'dayofwk'" & _
-                                 ", DAY(LAST_DAY(prate.Date)) 'maxday'" & _
-                                 ", COALESCE(prate.PayType,'') 'PayType'" & _
-                                 ", COALESCE(prate.Description,'') 'Description'" & _
-                                 ", COALESCE(prate.PayRate,1) 'PayRate'" & _
-                                 ", COALESCE(prate.OvertimeRate,1) 'OvertimeRate'" & _
-                                 ", COALESCE(prate.NightDifferentialRate,1) 'NightDifferentialRate'" & _
-                                 ", COALESCE(prate.NightDifferentialOTRate,1) 'NightDifferentialOTRate'" & _
-                                 ", DATE_FORMAT(prate.Date,'%m-%d-%Y') 'Date'" & _
-                                 ", COALESCE(RestDayRate,1) 'RestDayRate'" & _
-                                 ", COALESCE(RestDayOvertimeRate,1) 'RestDayOvertimeRate'" & _
-                                 " FROM payrate prate" & _
-                                 " WHERE DATE_FORMAT(prate.Date,'%Y-%m')=DATE_FORMAT('" & querdate & "','%Y-%m')" & _
-                                 " AND prate.OrganizationID='" & orgztnID & "'" & _
+            dattab = retAsDatTbl("SELECT prate.RowID" &
+                                 ", DAY(prate.Date) 'dateday'" &
+                                 ", DAYOFWEEK(prate.Date) 'dayofwk'" &
+                                 ", DAY(LAST_DAY(prate.Date)) 'maxday'" &
+                                 ", COALESCE(prate.PayType,'') 'PayType'" &
+                                 ", COALESCE(prate.Description,'') 'Description'" &
+                                 ", COALESCE(prate.PayRate,1) 'PayRate'" &
+                                 ", COALESCE(prate.OvertimeRate,1) 'OvertimeRate'" &
+                                 ", COALESCE(prate.NightDifferentialRate,1) 'NightDifferentialRate'" &
+                                 ", COALESCE(prate.NightDifferentialOTRate,1) 'NightDifferentialOTRate'" &
+                                 ", DATE_FORMAT(prate.Date,'%m-%d-%Y') 'Date'" &
+                                 ", COALESCE(RestDayRate,1) 'RestDayRate'" &
+                                 ", COALESCE(RestDayOvertimeRate,1) 'RestDayOvertimeRate'" &
+                                 " FROM payrate prate" &
+                                 " WHERE DATE_FORMAT(prate.Date,'%Y-%m')=DATE_FORMAT('" & querdate & "','%Y-%m')" &
+                                 " AND prate.OrganizationID='" & orgztnID & "'" &
                                  " ORDER BY prate.Date;")
             'MONTH(prate.Date)=MONTH('" & querdate & "') AND YEAR(prate.Date)=YEAR('" & querdate & "');
             'DISTINCT(DATE_FORMAT(DATE,'%m-%d-%Y')),
@@ -221,7 +218,6 @@ Public Class PayRateForm
 
                 Dim currColName As String = dgvpayrate.Columns(dgvpayrate.CurrentCell.ColumnIndex).Name
                 ObjectFields(dgvpayrate, currColName)
-
             Else
 
                 dgvpayrate.Rows.Clear()
@@ -298,16 +294,17 @@ Public Class PayRateForm
     '            End If
     '        Next
     '    End If
+
 #End Region
 
-    Dim currPayrateID, _
-        currPayrate, _
-        Dscrptn, _
-        PayType, _
-        OTRate, _
-        NightDiffRate, _
-        NightDiffOTRate, _
-        RestRate, _
+    Dim currPayrateID,
+        currPayrate,
+        Dscrptn,
+        PayType,
+        OTRate,
+        NightDiffRate,
+        NightDiffOTRate,
+        RestRate,
         RestOTRate As String
 
     Sub addhandlr(ByVal sendr As Object, ByVal e As EventArgs)
@@ -319,6 +316,7 @@ Public Class PayRateForm
         DataGridView1_CurrentCellChanged(sendr, e)
         DataGridView1_SelectionChanged(sendr, e)
     End Sub
+
     Sub rmvhandlr()
         RemoveHandler dgvpayrate.CurrentCellChanged, AddressOf DataGridView1_CurrentCellChanged
         RemoveHandler dgvpayrate.RowLeave, AddressOf DataGridView1_RowLeave
@@ -360,8 +358,8 @@ Public Class PayRateForm
                 txtrestotrate.Text = ""
 
                 If dgvpayrate.CurrentRow.Cells(currColName).Value <> Nothing Then
-                    Dim indx_day As String = If(dgvpayrate.CurrentRow.Cells(currColName).Value.ToString.Length = 1, _
-                                                "0" & dgvpayrate.CurrentRow.Cells(currColName).Value, _
+                    Dim indx_day As String = If(dgvpayrate.CurrentRow.Cells(currColName).Value.ToString.Length = 1,
+                                                "0" & dgvpayrate.CurrentRow.Cells(currColName).Value,
                                                 dgvpayrate.CurrentRow.Cells(currColName).Value)
 
                     Dim selrow() As DataRow = dattab.Select("Date='" & monthindx & "-" & indx_day & "-" & TextBox5.Text & "'")
@@ -399,7 +397,6 @@ Public Class PayRateForm
                 End If
 
             End If
-
         Else
             dgvisLlostfocus = 0
 
@@ -460,7 +457,6 @@ Public Class PayRateForm
                     dgvpayrate.FirstDisplayedScrollingRowIndex = dgvpayrate.CurrentRow.Index - 1
 
                 End If
-
             Else
 
                 once = -1
@@ -482,8 +478,8 @@ Public Class PayRateForm
         End If
     End Sub
 
-    Sub ObjectFields(ByVal dgv As DataGridView, _
-                        ByVal colName As String, _
+    Sub ObjectFields(ByVal dgv As DataGridView,
+                        ByVal colName As String,
                         Optional isVisb As SByte = 0)
 
         Try
@@ -603,7 +599,6 @@ Public Class PayRateForm
             If dgvisLlostfocus = 0 Then
                 ObjectFields(dgvpayrate, currColName)
             End If
-
         Else
             hideObjFields()
         End If
@@ -885,12 +880,25 @@ Public Class PayRateForm
         Label1.Location = New Point(lbl_X, lbl_Y)
     End Sub
 
-    Private Sub cbopaytype_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbopaytype.SelectedIndexChanged
-        Dim holidaypayrate = EXECQUER("SELECT DisplayValue FROM listofval WHERE ParentLIC='" & Trim(cbopaytype.Text) & "' AND Type='Pay rate';")
+    Private Async Sub cbopaytype_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbopaytype.SelectedIndexChanged
+        'Dim holidaypayrate = EXECQUER("SELECT DisplayValue FROM listofval WHERE ParentLIC='" & Trim(cbopaytype.Text) & "' AND Type='Pay rate';")
 
-        Dim ratevalues = Split(holidaypayrate, ",")
+        'Dim ratevalues = Split(holidaypayrate, ",")
 
-        If ratevalues.Length = 0 Then
+        Dim overtimeRates = Await OvertimeRateService.GetOvertimeRates()
+
+        Dim overtimeRate As New OvertimeRate.RateGroup
+
+        Select Case Trim(cbopaytype.Text)
+            Case "Regular Day"
+                overtimeRate = overtimeRates.RegularRateGroup
+            Case "Special Non-Working Holiday"
+                overtimeRate = overtimeRates.SpecialHolidayRateGroup
+            Case "Regular Holiday"
+                overtimeRate = overtimeRates.RegularHolidayRateGroup
+        End Select
+
+        If overtimeRate Is Nothing Then
 
             txtpayrate.Text = 100
 
@@ -903,46 +911,53 @@ Public Class PayRateForm
             txtrestrate.Text = 100
 
             txtrestotrate.Text = 100
-
         Else
 
             Try
-                txtpayrate.Text = ValNoComma(ratevalues(0))
+                txtpayrate.Text = GetPayRate(overtimeRate.BasePay)
             Catch ex As Exception
                 txtpayrate.Text = 100
             End Try
 
             Try
-                txtotrate.Text = ValNoComma(ratevalues(1))
+                txtotrate.Text = GetPayRate(overtimeRate.Overtime)
             Catch ex As Exception
                 txtotrate.Text = 100
             End Try
 
             Try
-                txtnightdiffrate.Text = ValNoComma(ratevalues(2))
+                txtnightdiffrate.Text = GetPayRate(overtimeRate.NightDifferential)
             Catch ex As Exception
                 txtnightdiffrate.Text = 100
             End Try
 
             Try
-                txtnightdiffotrate.Text = ValNoComma(ratevalues(3))
+                txtnightdiffotrate.Text = GetPayRate(overtimeRate.NightDifferentialOvertime)
             Catch ex As Exception
                 txtnightdiffotrate.Text = 100
             End Try
 
             Try
-                txtrestrate.Text = ValNoComma(ratevalues(4))
+                txtrestrate.Text = GetPayRate(overtimeRate.RestDay)
             Catch ex As Exception
                 txtrestrate.Text = 100
             End Try
 
             Try
-                txtrestotrate.Text = ValNoComma(ratevalues(5))
+                txtrestotrate.Text = GetPayRate(overtimeRate.RestDayOvertime)
             Catch ex As Exception
                 txtrestotrate.Text = 100
             End Try
         End If
     End Sub
+
+    Private Function GetPayRate(rate As Rate) As String
+
+        Dim number As Decimal = rate.Rate * 100
+
+        Return number.ToString("#.#")
+
+    End Function
 
     Private Sub txt_Leave(sender As Object, e As EventArgs) 'Handles txtpayrate.Leave, txtotrate.Leave, _
         Dim txtsender As TextBox = New TextBox
@@ -980,16 +995,16 @@ Public Class PayRateForm
         End If
     End Sub
 
-    Private Sub GridDrawCustomHeaderColumns(ByVal dgv As DataGridView, _
-     ByVal e As DataGridViewCellPaintingEventArgs, ByVal img As Image, _
+    Private Sub GridDrawCustomHeaderColumns(ByVal dgv As DataGridView,
+     ByVal e As DataGridViewCellPaintingEventArgs, ByVal img As Image,
      ByVal Style As DGVHeaderImageAlignments)
         ' All of the graphical Processing is done here.
         Dim gr As Graphics = e.Graphics
-        ' Fill the BackGround with the BackGroud Color of Headers. 
+        ' Fill the BackGround with the BackGroud Color of Headers.
         ' This step is necessary, for transparent images, or what's behind
         ' would be painted instead.
-        gr.FillRectangle( _
-         New SolidBrush(dgv.ColumnHeadersDefaultCellStyle.BackColor), _
+        gr.FillRectangle(
+         New SolidBrush(dgv.ColumnHeadersDefaultCellStyle.BackColor),
          e.CellBounds)
         If img IsNot Nothing Then
             Select Case Style
@@ -1081,7 +1096,7 @@ Public Class PayRateForm
             Dim newForeColor = Color.FromArgb(0, 0, 0)
 
             With dgv.ColumnHeadersDefaultCellStyle
-                gr.DrawString(e.Value.ToString, newFont, _
+                gr.DrawString(e.Value.ToString, newFont,
                  New SolidBrush(newForeColor), e.CellBounds, sf)
             End With
         End Using

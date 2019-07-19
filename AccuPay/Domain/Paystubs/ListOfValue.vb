@@ -28,6 +28,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property Type As String
 
+        Public Property ParentLIC As String
+
         Public Property Active As String
 
         Public Property Description As String

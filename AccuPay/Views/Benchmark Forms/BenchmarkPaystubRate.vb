@@ -4,6 +4,8 @@ Imports PayrollSys
 Public Class BenchmarkPaystubRate
     Implements IPaystubRate
 
+    Public Const WorkHoursPerDay As Decimal = 8
+
     Public Property Employee As Employee
     Public Property Salary As Salary
     Public Property MonthlyRate As Decimal
@@ -101,21 +103,8 @@ Public Class BenchmarkPaystubRate
     Public Property AbsenceDeduction As Decimal Implements IPaystubRate.AbsenceDeduction
     Public Property ActualAbsenceDeduction As Decimal Implements IPaystubRate.ActualAbsenceDeduction
 
-    Public Class PayRate
-
-        Public Property Overtime As Decimal
-        Public Property NightDifferentialRate As Decimal
-        Public Property NightDifferentialOvertimeRate As Decimal
-        Public Property RestDayRate As Decimal
-        Public Property RestDayOvertimeRate As Decimal
-        Public Property SpecialHolidayRate As Decimal
-        Public Property SpecialHolidayOvertimeRate As Decimal
-        Public Property RegularHolidayPayRate As Decimal
-        Public Property RegularHolidayOvertimePayRate As Decimal
-    End Class
-
     Public Sub Compute(
-                payRate As PayRate,
+                payRate As OvertimeRate,
                 actualSalaryPolicy As ActualTimeEntryPolicy,
                 regularHours As Decimal,
                 overtimeHours As Decimal,
@@ -142,21 +131,21 @@ Public Class BenchmarkPaystubRate
         Me.ActualRegularPay = Me.RegularHours * Me.ActualHourlyRate
 
         Me.OvertimeHours = overtimeHours
-        Me.OvertimePay = Me.OvertimeHours * Me.HourlyRate * payRate.Overtime
+        Me.OvertimePay = Me.OvertimeHours * Me.HourlyRate * payRate.Overtime.Rate
         Me.ActualOvertimePay = Me.OvertimePay
         If actualSalaryPolicy.AllowanceForOvertime Then
             Me.ActualOvertimePay += Me.OvertimePay * allowanceRate
         End If
 
         Me.NightDiffHours = nightDiffHours
-        Me.NightDiffPay = Me.NightDiffHours * Me.HourlyRate * payRate.NightDifferentialRate
+        Me.NightDiffPay = Me.NightDiffHours * Me.HourlyRate * payRate.NightDifferential.Rate
         Me.ActualNightDiffPay = Me.NightDiffPay
         If actualSalaryPolicy.AllowanceForNightDiff Then
             Me.ActualNightDiffPay += Me.NightDiffPay * allowanceRate
         End If
 
         Me.NightDiffOvertimeHours = nightDiffOvertimeHours
-        Me.NightDiffOvertimePay = Me.NightDiffOvertimeHours * Me.HourlyRate * payRate.NightDifferentialOvertimeRate
+        Me.NightDiffOvertimePay = Me.NightDiffOvertimeHours * Me.HourlyRate * payRate.NightDifferentialOvertime.Rate
         Me.ActualNightDiffOTPay = Me.NightDiffOvertimePay
         If actualSalaryPolicy.AllowanceForNightDiffOT Then
             Me.ActualNightDiffOTPay += Me.NightDiffOvertimePay * allowanceRate
@@ -164,7 +153,7 @@ Public Class BenchmarkPaystubRate
         'TODO ND Holiday, ND Special Holiday
 
         Me.RestDayHours = restDayHours
-        Me.RestDayPay = Me.RestDayHours * Me.HourlyRate * payRate.RestDayRate
+        Me.RestDayPay = Me.RestDayHours * Me.HourlyRate * payRate.RestDay.Rate
         Me.ActualRestDayPay = Me.RestDayPay
         If actualSalaryPolicy.AllowanceForRestDay Then
             Me.ActualRestDayPay += Me.RestDayPay * allowanceRate
@@ -172,31 +161,31 @@ Public Class BenchmarkPaystubRate
         'TODO ND Holiday OT, ND Special Holiday OT
 
         Me.RestDayOTHours = restDayOTHours
-        Me.RestDayOTPay = Me.RestDayOTHours * Me.HourlyRate * payRate.RestDayOvertimeRate
+        Me.RestDayOTPay = Me.RestDayOTHours * Me.HourlyRate * payRate.RestDayOvertime.Rate
         Me.ActualRestDayOTPay = Me.RestDayOTPay
         If actualSalaryPolicy.AllowanceForRestDay Then
             Me.ActualRestDayOTPay += Me.RestDayOTPay * allowanceRate
         End If
 
         Me.RestDayOTHours = restDayOTHours
-        Me.RestDayOTPay = Me.RestDayOTHours * Me.HourlyRate * payRate.RestDayOvertimeRate
+        Me.RestDayOTPay = Me.RestDayOTHours * Me.HourlyRate * payRate.RestDayOvertime.Rate
         Me.ActualRestDayOTPay = Me.RestDayOTPay
 
         'Holidays
         Me.SpecialHolidayHours = specialHolidayHours
-        Me.SpecialHolidayPay = Me.SpecialHolidayHours * Me.HourlyRate * payRate.SpecialHolidayRate
+        Me.SpecialHolidayPay = Me.SpecialHolidayHours * Me.HourlyRate * payRate.SpecialHoliday.Rate
         Me.ActualSpecialHolidayPay = Me.SpecialHolidayPay
 
         Me.SpecialHolidayOTHours = specialHolidayOTHours
-        Me.SpecialHolidayOTPay = Me.SpecialHolidayOTHours * Me.HourlyRate * payRate.SpecialHolidayOvertimeRate
+        Me.SpecialHolidayOTPay = Me.SpecialHolidayOTHours * Me.HourlyRate * payRate.SpecialHolidayOvertime.Rate
         Me.ActualSpecialHolidayOTPay = Me.SpecialHolidayOTPay
 
         Me.RegularHolidayHours = regularHolidayHours
-        Me.RegularHolidayPay = Me.RegularHolidayHours * Me.HourlyRate * payRate.RegularHolidayPayRate
+        Me.RegularHolidayPay = Me.RegularHolidayHours * Me.HourlyRate * payRate.RegularHoliday.Rate
         Me.ActualRegularHolidayPay = Me.RegularHolidayPay
 
         Me.RegularHolidayOTHours = regularHolidayOTHours
-        Me.RegularHolidayOTPay = Me.RegularHolidayOTHours * Me.HourlyRate * payRate.RegularHolidayOvertimePayRate
+        Me.RegularHolidayOTPay = Me.RegularHolidayOTHours * Me.HourlyRate * payRate.RegularHolidayOvertime.Rate
         Me.ActualRegularHolidayOTPay = Me.RegularHolidayOTPay
 
         If actualSalaryPolicy.AllowanceForHoliday Then
@@ -219,7 +208,7 @@ Public Class BenchmarkPaystubRate
         Me.UndertimeDeduction = Me.UndertimeHours * Me.HourlyRate
         Me.ActualUndertimeDeduction = Me.UndertimeHours * Me.ActualHourlyRate
 
-        Me.AbsentHours = undertimeHours
+        Me.AbsentHours = absentHours
         Me.AbsenceDeduction = Me.AbsentHours * Me.HourlyRate
         Me.ActualAbsenceDeduction = Me.AbsentHours * Me.ActualHourlyRate
 

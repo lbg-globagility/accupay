@@ -120,6 +120,7 @@
     <Compile Include="Import Logs\TimeAttendanceHelperNewTest.vb" />
     <Compile Include="Import Logs\TimeAttendanceHelperTest.vb" />
     <Compile Include="RegexTimelogParserTest.vb" />
+    <Compile Include="StringExtensionsTest.vb" />
     <Compile Include="TimeEntryCalculatorTest.vb" />
     <Compile Include="TimeImporter.vb" />
     <Compile Include="TimeUtilityTest.vb" />

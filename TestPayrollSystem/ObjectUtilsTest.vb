@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports System.Globalization
 Imports AccuPay.Utils
 
 <TestFixture>
@@ -314,6 +313,8 @@ Public Class ObjectUtilsTest
 
 #Region "ToNullableTimeSpan"
 
+    'changes here should reflect in StringExtensionsTest
+
     <TestCase("1/30/2017 16:35")>
     <TestCase("1/30/2017 16:35:00")>
     <TestCase("1/30/2017 4:35 PM")>
@@ -331,6 +332,45 @@ Public Class ObjectUtilsTest
         Dim output = ObjectUtils.ToNullableTimeSpan(input)
 
         Assert.AreEqual(New TimeSpan(16, 35, 0), output)
+    End Sub
+
+    'commented testcase results to 12:00 PM
+    '<TestCase("00:00 PM")>
+    '<TestCase("00:00:00 PM")>
+    '<TestCase("0:00 PM")>
+    '<TestCase("0:00:00 PM")>
+    '<TestCase("1/30/2017 00:00:00 PM")>
+    '<TestCase("1/30/2017 0:00 PM")>
+    '<TestCase("1/30/2017 0:00:00 PM")>
+    <TestCase("1/30/2017 00:00")>
+    <TestCase("1/30/2017 00:00:00")>
+    <TestCase("1/30/2017 24:00")>
+    <TestCase("1/30/2017 24:00:00")>
+    <TestCase("1/30/2017 0:00 AM")>
+    <TestCase("1/30/2017 00:00 AM")>
+    <TestCase("1/30/2017 24:00 AM")>
+    <TestCase("1/30/2017 24:00 PM")>
+    <TestCase("1/30/2017 0:00:00 AM")>
+    <TestCase("1/30/2017 00:00:00 AM")>
+    <TestCase("1/30/2017 24:00:00 AM")>
+    <TestCase("1/30/2017 24:00:00 PM")>
+    <TestCase("00:00:00 AM")>
+    <TestCase("00:00 AM")>
+    <TestCase("0:00:00 AM")>
+    <TestCase("0:00 AM")>
+    <TestCase("24:00:00 AM")>
+    <TestCase("24:00 AM")>
+    <TestCase("24:00:00 PM")>
+    <TestCase("24:00 PM")>
+    <TestCase("00:00:00")>
+    <TestCase("00:00")>
+    <TestCase("24:00:00")>
+    <TestCase("24:00")>
+    Public Shared Sub ToNullableTimeSpan_With12AMInput_Returns12AM(input As Object)
+
+        Dim output = ObjectUtils.ToNullableTimeSpan(input)
+
+        Assert.AreEqual(New TimeSpan(0, 0, 0), output)
     End Sub
 
 #End Region

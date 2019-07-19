@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Repository
+Imports AccuPay.SetOvertimeForm
 Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
 Imports PayrollSys
@@ -22,6 +23,8 @@ Public Class BenchmarkPayrollForm
 
     Private _employeeRate As BenchmarkPaystubRate
 
+    Private _overtimes As List(Of OvertimeInput)
+
     Private Const MoneyFormat As String = "#,##0.0000"
 
     Sub New()
@@ -34,6 +37,8 @@ Public Class BenchmarkPayrollForm
         _salaryRepository = New SalaryRepository
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
+
+        _overtimes = New List(Of OvertimeInput)
     End Sub
 
     Private Async Function ShowEmployees() As Task
@@ -261,9 +266,97 @@ Public Class BenchmarkPayrollForm
 
     End Sub
 
+    Private Function ConvertDaysToHours(days As Decimal) As Decimal
+
+        Return days / BenchmarkPaystubRate.WorkHoursPerDay
+
+    End Function
+
     Private Sub ComputeHours(paystub As Paystub)
 
-        '_employeeRate.Compute(paystub)
+        'Dim payRate As New OvertimeRate
+        'Dim actualSalaryPolicy As New ActualTimeEntryPolicy(New ListOfValueCollection)
+
+        'Dim regularDays As Decimal = RegularDaysTextBox.Text.ToDecimal()
+
+        Dim regularHours As Decimal = ConvertDaysToHours(RegularDaysTextBox.Text.ToDecimal)
+        Dim overtimeHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+
+        Dim nightDiffHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim nightDiffOvertimeHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim restDayHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim restDayOTHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim specialHolidayHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim specialHolidayOTHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim regularHolidayHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim regularHolidayOTHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim leaveHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim lateHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim undertimeHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim absentHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+
+        '_employeeRate.Compute(
+        '    payRate,
+        '    actualSalaryPolicy,
+        ')
+        Dim str = RegularDaysTextBox.Text.ToDecimal
+        paystub.RegularHours = _employeeRate.RegularHours
+        paystub.RegularPay = _employeeRate.RegularPay
+        paystub.Actual.RegularPay = _employeeRate.ActualRegularPay
+
+        paystub.OvertimeHours = _employeeRate.OvertimeHours
+        paystub.OvertimePay = _employeeRate.OvertimePay
+        paystub.Actual.OvertimePay = _employeeRate.ActualOvertimePay
+
+        paystub.NightDiffHours = _employeeRate.NightDiffHours
+        paystub.NightDiffPay = _employeeRate.NightDiffPay
+        paystub.Actual.NightDiffPay = _employeeRate.ActualNightDiffPay
+
+        paystub.NightDiffOvertimeHours = _employeeRate.NightDiffOvertimeHours
+        paystub.NightDiffOvertimePay = _employeeRate.NightDiffOvertimePay
+        paystub.Actual.NightDiffOTPay = _employeeRate.ActualNightDiffOTPay
+
+        paystub.RestDayHours = _employeeRate.RestDayHours
+        paystub.RestDayPay = _employeeRate.RestDayPay
+        paystub.Actual.RestDayPay = _employeeRate.ActualRestDayPay
+
+        paystub.RestDayOTHours = _employeeRate.RestDayOTHours
+        paystub.RestDayOTPay = _employeeRate.RestDayOTPay
+        paystub.Actual.RestDayOTPay = _employeeRate.ActualRestDayOTPay
+
+        paystub.SpecialHolidayHours = _employeeRate.SpecialHolidayHours
+        paystub.SpecialHolidayPay = _employeeRate.SpecialHolidayPay
+        paystub.Actual.SpecialHolidayPay = _employeeRate.ActualSpecialHolidayPay
+
+        paystub.SpecialHolidayOTHours = _employeeRate.SpecialHolidayOTHours
+        paystub.SpecialHolidayOTPay = _employeeRate.SpecialHolidayOTPay
+        paystub.Actual.SpecialHolidayOTPay = _employeeRate.ActualSpecialHolidayOTPay
+
+        paystub.RegularHolidayHours = _employeeRate.RegularHolidayHours
+        paystub.RegularHolidayPay = _employeeRate.RegularHolidayPay
+        paystub.Actual.RegularHolidayPay = _employeeRate.ActualRegularHolidayPay
+
+        paystub.RegularHolidayOTHours = _employeeRate.RegularHolidayOTHours
+        paystub.RegularHolidayOTPay = _employeeRate.RegularHolidayOTPay
+        paystub.Actual.RegularHolidayOTPay = _employeeRate.ActualRegularHolidayOTPay
+
+        paystub.HolidayPay = _employeeRate.HolidayPay
+
+        paystub.LeaveHours = _employeeRate.LeaveHours
+        paystub.LeavePay = _employeeRate.LeavePay
+        paystub.Actual.LeavePay = _employeeRate.ActualLeavePay
+
+        paystub.LateHours = _employeeRate.LateHours
+        paystub.LateDeduction = _employeeRate.LateDeduction
+        paystub.Actual.LateDeduction = _employeeRate.ActualLateDeduction
+
+        paystub.UndertimeHours = _employeeRate.UndertimeHours
+        paystub.UndertimeDeduction = _employeeRate.UndertimeDeduction
+        paystub.Actual.UndertimeDeduction = _employeeRate.ActualUndertimeDeduction
+
+        paystub.AbsentHours = _employeeRate.AbsentHours
+        paystub.AbsenceDeduction = _employeeRate.AbsenceDeduction
+        paystub.Actual.AbsenceDeduction = _employeeRate.ActualAbsenceDeduction
 
     End Sub
 
@@ -342,6 +435,17 @@ Public Class BenchmarkPayrollForm
         TotalOtherIncomeTextBox.Text = paystub.TotalAllowance.RoundToString()
         TotalOvertimeTextBox.Text = paystub.OvertimeHours.RoundToString()
         NetPayTextBox.Text = paystub.NetPay.RoundToString()
+
+    End Sub
+
+    Private Sub SetOvertimeButton_Click(sender As Object, e As EventArgs) Handles SetOvertimeButton.Click
+
+        Dim form As New SetOvertimeForm(_employeeRate.HourlyRate, _overtimes)
+        form.ShowDialog()
+
+        _overtimes = form.Overtimes
+
+        OvertimeTextBox.Text = _overtimes.Sum(Function(o) o.Hours).ToString
 
     End Sub
 

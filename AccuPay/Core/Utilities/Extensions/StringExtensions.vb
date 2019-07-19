@@ -1,5 +1,8 @@
-﻿Imports System.Globalization
+﻿Option Strict On
+
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
+Imports AccuPay.Utils
 
 Namespace Global.AccuPay.Extensions
 
@@ -7,29 +10,16 @@ Namespace Global.AccuPay.Extensions
 
         <Extension()>
         Public Function ToNullableTimeSpan(
-                            timespanString As String,
-                            Optional timeFormat As String = "H:mm") As TimeSpan?
+                            timespanString As String) As TimeSpan?
 
-            If timespanString Is Nothing Then Return Nothing
+            Return ObjectUtils.ToNullableTimeSpan(timespanString)
 
-            Dim dt As Date
+        End Function
 
-            If timespanString.Trim = "24:00" Then
-                '"24:00" is considered invalid in parsing
-                timespanString = "00:00"
+        <Extension()>
+        Public Function ToDecimal(num As String) As Decimal
 
-            End If
-
-            If Date.TryParseExact(timespanString, timeFormat,
-                                      CultureInfo.InvariantCulture,
-                                      DateTimeStyles.None, dt) Then
-
-                Return dt.TimeOfDay
-
-            Else
-                Return Nothing
-            End If
-
+            Return ObjectUtils.ToDecimal(num)
         End Function
 
     End Module
