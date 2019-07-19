@@ -840,8 +840,15 @@ Public Class TimeLogsForm2
 
                     'model.Remove()
                 ElseIf model.IsExisting Then
+                    Dim timeOut = Calendar.ToTimespan(model.TimeOut)
+
                     timeLog.TimeIn = Calendar.ToTimespan(model.TimeIn)
-                    timeLog.TimeOut = Calendar.ToTimespan(model.TimeOut)
+                    timeLog.TimeOut = timeOut
+
+                    If timeOut IsNot Nothing Then
+                        timeLog.TimeStampOut = model.DateOut.ToMinimumHourValue.Add(Calendar.ToTimespan(model.TimeOut).Value)
+                    End If
+
                     timeLog.LastUpdBy = z_User
                     timeLog.LastUpd = Now
 
