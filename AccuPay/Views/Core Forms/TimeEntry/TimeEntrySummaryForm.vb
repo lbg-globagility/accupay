@@ -739,7 +739,7 @@ Public Class TimeEntrySummaryForm
         If result = DialogResult.OK Then
             Dim generator = New TimeEntryGenerator(startDate, endDate)
             Dim progressDialog = New TimeEntryProgressDialog(generator)
-            progressDialog.ShowDialog()
+            progressDialog.Show()
 
             Await Task.Run(Sub() generator.Start()).
                 ContinueWith(
