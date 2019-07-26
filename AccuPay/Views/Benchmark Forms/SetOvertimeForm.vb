@@ -12,7 +12,7 @@ Public Class SetOvertimeForm
 
     Private _overtimeRateList As New List(Of Rate)
 
-    Sub New(payPerHour As Decimal, Optional overtimes As List(Of OvertimeInput) = Nothing)
+    Sub New(payPerHour As Decimal, overtimeRateList As List(Of Rate), Optional overtimes As List(Of OvertimeInput) = Nothing)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -25,6 +25,8 @@ Public Class SetOvertimeForm
         End If
 
         _payPerHour = payPerHour
+
+        _overtimeRateList = overtimeRateList
     End Sub
 
     Private Sub BackButton_Click(sender As Object, e As EventArgs) Handles BackButton.Click
@@ -34,10 +36,6 @@ Public Class SetOvertimeForm
     End Sub
 
     Private Async Sub SetOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-        Dim overtimeRate = Await OvertimeRateService.GetOvertimeRates()
-
-        _overtimeRateList = overtimeRate.OvertimeRateList
 
         OvertimeComboBox.DisplayMember = "Name"
         OvertimeComboBox.DataSource = _overtimeRateList
@@ -228,7 +226,9 @@ Public Class SetOvertimeForm
 
         Public ReadOnly Property Amount As Decimal
             Get
-                Return AccuMath.CommercialRound((Hours * OvertimeType.Rate * _payPerHour))
+                Dim rate = If(OvertimeType.BaseRate Is Nothing, OvertimeType.Rate, OvertimeType.Rate - OvertimeType.BaseRate.Rate)
+
+                Return AccuMath.CommercialRound((Hours * rate * _payPerHour))
             End Get
         End Property
 

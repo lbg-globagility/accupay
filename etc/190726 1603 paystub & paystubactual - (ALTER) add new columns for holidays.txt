@@ -1,0 +1,85 @@
+ALTER TABLE `paystub`
+	ADD COLUMN `RestDayNightDiffHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `AbsenceDeduction`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RestDayNightDiffPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RestDayNightDiffHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RestDayNightDiffOTHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RestDayNightDiffPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RestDayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RestDayNightDiffOTHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayNightDiffHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RestDayNightDiffOTPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayNightDiffPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayNightDiffHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayNightDiffOTHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayNightDiffPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayNightDiffOTHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayRestDayHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayNightDiffOTPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayRestDayPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayRestDayOTHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayRestDayOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayOTHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayRestDayNightDiffHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayOTPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayRestDayNightDiffPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayNightDiffHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayRestDayNightDiffOTHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayNightDiffPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `SpecialHolidayRestDayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayNightDiffOTHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayNightDiffHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayNightDiffOTPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayNightDiffPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayNightDiffHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayNightDiffOTHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayNightDiffPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayNightDiffOTHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayRestDayHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayNightDiffOTPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayRestDayPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayRestDayOTHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayRestDayOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayOTHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayRestDayNightDiffHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayOTPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayRestDayNightDiffPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayNightDiffHours`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayRestDayNightDiffOTHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayNightDiffPay`;
+ALTER TABLE `paystub`
+	ADD COLUMN `RegularHolidayRestDayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayNightDiffOTHours`;
+
+ALTER TABLE `paystubactual`
+	ADD COLUMN `RestDayNightDiffPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `AbsenceDeduction`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `RestDayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RestDayNightDiffPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `SpecialHolidayNightDiffPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RestDayNightDiffOTPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `SpecialHolidayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayNightDiffPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `SpecialHolidayRestDayPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayNightDiffOTPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `SpecialHolidayRestDayOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `SpecialHolidayRestDayNightDiffPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayOTPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `SpecialHolidayRestDayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayNightDiffPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `RegularHolidayNightDiffPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayNightDiffOTPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `RegularHolidayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayNightDiffPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `RegularHolidayRestDayPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayNightDiffOTPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `RegularHolidayRestDayOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `RegularHolidayRestDayNightDiffPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayOTPay`;
+ALTER TABLE `paystubactual`
+	ADD COLUMN `RegularHolidayRestDayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayNightDiffPay`;

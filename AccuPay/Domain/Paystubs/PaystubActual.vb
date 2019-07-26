@@ -71,6 +71,23 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("RowID")>
         Public Overridable Property Paystub As Paystub
 
+        Public Property RestDayNightDiffPay As Decimal
+        Public Property RestDayNightDiffOTPay As Decimal
+
+        Public Property SpecialHolidayNightDiffPay As Decimal
+        Public Property SpecialHolidayNightDiffOTPay As Decimal
+        Public Property SpecialHolidayRestDayPay As Decimal
+        Public Property SpecialHolidayRestDayOTPay As Decimal
+        Public Property SpecialHolidayRestDayNightDiffPay As Decimal
+        Public Property SpecialHolidayRestDayNightDiffOTPay As Decimal
+
+        Public Property RegularHolidayNightDiffPay As Decimal
+        Public Property RegularHolidayNightDiffOTPay As Decimal
+        Public Property RegularHolidayRestDayPay As Decimal
+        Public Property RegularHolidayRestDayOTPay As Decimal
+        Public Property RegularHolidayRestDayNightDiffPay As Decimal
+        Public Property RegularHolidayRestDayNightDiffOTPay As Decimal
+
         Public ReadOnly Property AdditionalPay As Decimal
             Get
                 Return OvertimePay +

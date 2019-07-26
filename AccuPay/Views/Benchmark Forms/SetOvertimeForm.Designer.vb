@@ -329,6 +329,8 @@ Partial Class SetOvertimeForm
         Me.OvertimeGridView.Location = New System.Drawing.Point(20, 186)
         Me.OvertimeGridView.Name = "OvertimeGridView"
         Me.OvertimeGridView.ReadOnly = True
+        Me.OvertimeGridView.RowHeadersVisible = False
+        Me.OvertimeGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.OvertimeGridView.Size = New System.Drawing.Size(507, 185)
         Me.OvertimeGridView.TabIndex = 25
         '
@@ -338,7 +340,7 @@ Partial Class SetOvertimeForm
         Me.Column1.HeaderText = "Description"
         Me.Column1.Name = "Column1"
         Me.Column1.ReadOnly = True
-        Me.Column1.Width = 220
+        Me.Column1.Width = 280
         '
         'Column2
         '
@@ -348,7 +350,6 @@ Partial Class SetOvertimeForm
         Me.Column2.HeaderText = "Hours"
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
-        Me.Column2.Width = 120
         '
         'Column3
         '
@@ -358,7 +359,7 @@ Partial Class SetOvertimeForm
         Me.Column3.HeaderText = "Amount"
         Me.Column3.Name = "Column3"
         Me.Column3.ReadOnly = True
-        Me.Column3.Width = 120
+        Me.Column3.Width = 105
         '
         'SetOvertimeForm
         '

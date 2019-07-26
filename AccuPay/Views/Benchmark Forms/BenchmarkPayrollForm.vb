@@ -16,6 +16,8 @@ Public Class BenchmarkPayrollForm
     Private _currentPayPeriod As IPayPeriod
     Private _salaries As List(Of Salary)
     Private _employees As List(Of Employee)
+    Private _overtimeRate As OvertimeRate
+    Private _actualSalaryPolicy As ActualTimeEntryPolicy
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -144,11 +146,22 @@ Public Class BenchmarkPayrollForm
 
         ClearEmployeeForms()
 
-        LoadPayrollResources()
+        Await LoadPayrollResourcesAsync()
 
     End Sub
 
-    Private Sub LoadPayrollResources()
+    Private Async Function LoadPayrollResourcesAsync() As Task
+
+        _overtimeRate = Await OvertimeRateService.GetOvertimeRates()
+
+        Using context As New PayrollContext
+
+            Dim settings As New ListOfValueCollection(context.ListOfValues.ToList())
+
+            _actualSalaryPolicy = New ActualTimeEntryPolicy(settings)
+
+        End Using
+
         'TODO: Add loading bar
 
         Dim paypRowID = _currentPayPeriod.RowID.Value
@@ -172,7 +185,7 @@ Public Class BenchmarkPayrollForm
 
         _payrollResources = loadTask.Result
 
-    End Sub
+    End Function
 
     Private Async Function GetCutOffPeriod() As Task
         _currentPayPeriod = Await PayrollTools.
@@ -272,33 +285,96 @@ Public Class BenchmarkPayrollForm
 
     End Function
 
+    Private Function GetOvertime(overtimeDescription As String) As Decimal
+
+        Dim overtime = _overtimes.
+            Where(Function(o) o.OvertimeType.Name = overtimeDescription).
+            FirstOrDefault
+
+        If overtime Is Nothing Then
+            Return 0
+        Else
+            Return overtime.Hours
+        End If
+
+    End Function
+
     Private Sub ComputeHours(paystub As Paystub)
 
-        'Dim payRate As New OvertimeRate
-        'Dim actualSalaryPolicy As New ActualTimeEntryPolicy(New ListOfValueCollection)
-
-        'Dim regularDays As Decimal = RegularDaysTextBox.Text.ToDecimal()
-
         Dim regularHours As Decimal = ConvertDaysToHours(RegularDaysTextBox.Text.ToDecimal)
-        Dim overtimeHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim overtimeHours As Decimal = GetOvertime(OvertimeRate.OvertimeDescription)
 
-        Dim nightDiffHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim nightDiffOvertimeHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim restDayHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim restDayOTHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim specialHolidayHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim specialHolidayOTHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim regularHolidayHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim regularHolidayOTHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim leaveHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim lateHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim undertimeHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
-        Dim absentHours As Decimal = ConvertDaysToHours(OvertimeTextBox.Text.ToDecimal)
+        Dim nightDiffHours As Decimal = GetOvertime(OvertimeRate.NightDifferentialDescription)
+        Dim nightDiffOvertimeHours As Decimal = GetOvertime(OvertimeRate.NightDifferentialOvertimeDescription)
+        Dim restDayHours As Decimal = GetOvertime(OvertimeRate.RestDayDescription)
+        Dim restDayOTHours As Decimal = GetOvertime(OvertimeRate.RestDayOvertimeDescription)
+        Dim specialHolidayHours As Decimal = GetOvertime(OvertimeRate.SpecialHolidayDescription)
+        Dim specialHolidayOTHours As Decimal = GetOvertime(OvertimeRate.SpecialHolidayOvertimeDescription)
+        Dim regularHolidayHours As Decimal = GetOvertime(OvertimeRate.RegularHolidayDescription)
+        Dim regularHolidayOTHours As Decimal = GetOvertime(OvertimeRate.RegularHolidayOvertimeDescription)
 
-        '_employeeRate.Compute(
-        '    payRate,
-        '    actualSalaryPolicy,
-        ')
+        Dim leaveHours As Decimal = 0
+        Dim lateHours As Decimal = 0
+        Dim undertimeHours As Decimal = 0
+        Dim absentHours As Decimal = 0
+
+        Dim restDayNightDiffHours As Decimal = GetOvertime(OvertimeRate.RestDayNightDifferentialDescription)
+        Dim restDayNightDiffOTHours As Decimal = GetOvertime(OvertimeRate.RestDayNightDifferentialOvertimeDescription)
+        Dim specialHolidayNightDiffHours As Decimal = GetOvertime(OvertimeRate.SpecialHolidayNightDifferentialDescription)
+        Dim specialHolidayNightDiffOTHours As Decimal = GetOvertime(OvertimeRate.SpecialHolidayNightDifferentialOvertimeDescription)
+        Dim specialHolidayRestDayHours As Decimal = GetOvertime(OvertimeRate.SpecialHolidayRestDayDescription)
+        Dim specialHolidayRestDayOTHours As Decimal = GetOvertime(OvertimeRate.SpecialHolidayRestDayOvertimeDescription)
+        Dim specialHolidayRestDayNightDiffHours As Decimal = GetOvertime(OvertimeRate.SpecialHolidayRestDayNightDifferentialDescription)
+        Dim specialHolidayRestDayNightDiffOTHours As Decimal = GetOvertime(OvertimeRate.SpecialHolidayRestDayNightDifferentialOvertimeDescription)
+        Dim regularHolidayNightDiffHours As Decimal = GetOvertime(OvertimeRate.RegularHolidayNightDifferentialDescription)
+        Dim regularHolidayNightDiffOTHours As Decimal = GetOvertime(OvertimeRate.RegularHolidayNightDifferentialOvertimeDescription)
+        Dim regularHolidayRestDayHours As Decimal = GetOvertime(OvertimeRate.RegularHolidayRestDayDescription)
+        Dim regularHolidayRestDayOTHours As Decimal = GetOvertime(OvertimeRate.RegularHolidayRestDayOvertimeDescription)
+        Dim regularHolidayRestDayNightDiffHours As Decimal = GetOvertime(OvertimeRate.RegularHolidayRestDayNightDifferentialDescription)
+        Dim regularHolidayRestDayNightDiffOTHours As Decimal = GetOvertime(OvertimeRate.RegularHolidayRestDayNightDifferentialOvertimeDescription)
+
+        _employeeRate.Compute(
+            _overtimeRate,
+            employeeEntitledForNightDifferentialPay:=_employeeRate.Employee.CalcNightDiff,
+            employeeEntitledForSpecialHolidayPay:=_employeeRate.Employee.CalcSpecialHoliday,
+            employeeEntitledForRegularHolidayPay:=_employeeRate.Employee.CalcHoliday,
+            employeeEntitledForRestDayPay:=_employeeRate.Employee.CalcRestDay,
+            allowanceForOvertimePolicy:=_actualSalaryPolicy.AllowanceForOvertime,
+            allowanceForNightDiffPolicy:=_actualSalaryPolicy.AllowanceForNightDiff,
+            allowanceForNightDiffOTPolicy:=_actualSalaryPolicy.AllowanceForNightDiffOT,
+            allowanceForHolidayPolicy:=_actualSalaryPolicy.AllowanceForHoliday,
+            allowanceForRestDayPolicy:=_actualSalaryPolicy.AllowanceForRestDay,
+            allowanceForRestDayOTPolicy:=_actualSalaryPolicy.AllowanceForRestDayOT,
+            regularHours:=regularHours,
+            overtimeHours:=overtimeHours,
+            nightDiffHours:=nightDiffHours,
+            nightDiffOvertimeHours:=nightDiffOvertimeHours,
+            restDayHours:=restDayHours,
+            restDayOTHours:=restDayOTHours,
+            specialHolidayHours:=specialHolidayHours,
+            specialHolidayOTHours:=specialHolidayOTHours,
+            regularHolidayHours:=regularHolidayHours,
+            regularHolidayOTHours:=regularHolidayOTHours,
+            leaveHours:=leaveHours,
+            lateHours:=lateHours,
+            undertimeHours:=undertimeHours,
+            absentHours:=absentHours,
+            restDayNightDiffHours:=restDayNightDiffHours,
+            restDayNightDiffOTHours:=restDayNightDiffOTHours,
+            specialHolidayNightDiffHours:=specialHolidayNightDiffHours,
+            specialHolidayNightDiffOTHours:=specialHolidayNightDiffOTHours,
+            specialHolidayRestDayHours:=specialHolidayRestDayHours,
+            specialHolidayRestDayOTHours:=specialHolidayRestDayOTHours,
+            specialHolidayRestDayNightDiffHours:=specialHolidayRestDayNightDiffHours,
+            specialHolidayRestDayNightDiffOTHours:=specialHolidayRestDayNightDiffOTHours,
+            regularHolidayNightDiffHours:=regularHolidayNightDiffHours,
+            regularHolidayNightDiffOTHours:=regularHolidayNightDiffOTHours,
+            regularHolidayRestDayHours:=regularHolidayRestDayHours,
+            regularHolidayRestDayOTHours:=regularHolidayRestDayOTHours,
+            regularHolidayRestDayNightDiffHours:=regularHolidayRestDayNightDiffHours,
+            regularHolidayRestDayNightDiffOTHours:=regularHolidayRestDayNightDiffOTHours
+        )
+
         Dim str = RegularDaysTextBox.Text.ToDecimal
         paystub.RegularHours = _employeeRate.RegularHours
         paystub.RegularPay = _employeeRate.RegularPay
@@ -340,8 +416,6 @@ Public Class BenchmarkPayrollForm
         paystub.RegularHolidayOTPay = _employeeRate.RegularHolidayOTPay
         paystub.Actual.RegularHolidayOTPay = _employeeRate.ActualRegularHolidayOTPay
 
-        paystub.HolidayPay = _employeeRate.HolidayPay
-
         paystub.LeaveHours = _employeeRate.LeaveHours
         paystub.LeavePay = _employeeRate.LeavePay
         paystub.Actual.LeavePay = _employeeRate.ActualLeavePay
@@ -357,6 +431,63 @@ Public Class BenchmarkPayrollForm
         paystub.AbsentHours = _employeeRate.AbsentHours
         paystub.AbsenceDeduction = _employeeRate.AbsenceDeduction
         paystub.Actual.AbsenceDeduction = _employeeRate.ActualAbsenceDeduction
+
+        'new
+        paystub.RestDayNightDiffHours = _employeeRate.RestDayNightDiffHours
+        paystub.RestDayNightDiffPay = _employeeRate.RestDayNightDiffPay
+        paystub.Actual.RestDayNightDiffPay = _employeeRate.ActualRestDayNightDiffPay
+
+        paystub.RestDayNightDiffOTHours = _employeeRate.RestDayNightDiffOTHours
+        paystub.RestDayNightDiffOTPay = _employeeRate.RestDayNightDiffOTPay
+        paystub.Actual.RestDayNightDiffOTPay = _employeeRate.ActualRestDayNightDiffOTPay
+
+        paystub.SpecialHolidayNightDiffHours = _employeeRate.SpecialHolidayNightDiffHours
+        paystub.SpecialHolidayNightDiffPay = _employeeRate.SpecialHolidayNightDiffPay
+        paystub.Actual.SpecialHolidayNightDiffPay = _employeeRate.ActualSpecialHolidayNightDiffPay
+
+        paystub.SpecialHolidayNightDiffOTHours = _employeeRate.SpecialHolidayNightDiffOTHours
+        paystub.SpecialHolidayNightDiffOTPay = _employeeRate.SpecialHolidayNightDiffOTPay
+        paystub.Actual.SpecialHolidayNightDiffOTPay = _employeeRate.ActualSpecialHolidayNightDiffOTPay
+
+        paystub.SpecialHolidayRestDayHours = _employeeRate.SpecialHolidayRestDayHours
+        paystub.SpecialHolidayRestDayPay = _employeeRate.SpecialHolidayRestDayPay
+        paystub.Actual.SpecialHolidayRestDayPay = _employeeRate.ActualSpecialHolidayRestDayPay
+
+        paystub.SpecialHolidayRestDayOTHours = _employeeRate.SpecialHolidayRestDayOTHours
+        paystub.SpecialHolidayRestDayOTPay = _employeeRate.SpecialHolidayRestDayOTPay
+        paystub.Actual.SpecialHolidayRestDayOTPay = _employeeRate.ActualSpecialHolidayRestDayOTPay
+
+        paystub.SpecialHolidayRestDayNightDiffHours = _employeeRate.SpecialHolidayRestDayNightDiffHours
+        paystub.SpecialHolidayRestDayNightDiffPay = _employeeRate.SpecialHolidayRestDayNightDiffPay
+        paystub.Actual.SpecialHolidayRestDayNightDiffPay = _employeeRate.ActualSpecialHolidayRestDayNightDiffPay
+
+        paystub.SpecialHolidayRestDayNightDiffOTHours = _employeeRate.SpecialHolidayRestDayNightDiffOTHours
+        paystub.SpecialHolidayRestDayNightDiffOTPay = _employeeRate.SpecialHolidayRestDayNightDiffOTPay
+        paystub.Actual.SpecialHolidayRestDayNightDiffOTPay = _employeeRate.ActualSpecialHolidayRestDayNightDiffOTPay
+
+        paystub.RegularHolidayNightDiffHours = _employeeRate.RegularHolidayNightDiffHours
+        paystub.RegularHolidayNightDiffPay = _employeeRate.RegularHolidayNightDiffPay
+        paystub.Actual.RegularHolidayNightDiffPay = _employeeRate.ActualRegularHolidayNightDiffPay
+
+        paystub.RegularHolidayNightDiffOTHours = _employeeRate.RegularHolidayNightDiffOTHours
+        paystub.RegularHolidayNightDiffOTPay = _employeeRate.RegularHolidayNightDiffOTPay
+        paystub.Actual.RegularHolidayNightDiffOTPay = _employeeRate.ActualRegularHolidayNightDiffOTPay
+
+        paystub.RegularHolidayRestDayHours = _employeeRate.RegularHolidayRestDayHours
+        paystub.RegularHolidayRestDayPay = _employeeRate.RegularHolidayRestDayPay
+        paystub.Actual.RegularHolidayRestDayPay = _employeeRate.ActualRegularHolidayRestDayPay
+
+        paystub.RegularHolidayRestDayOTHours = _employeeRate.RegularHolidayRestDayOTHours
+        paystub.RegularHolidayRestDayOTPay = _employeeRate.RegularHolidayRestDayOTPay
+        paystub.Actual.RegularHolidayRestDayOTPay = _employeeRate.ActualRegularHolidayRestDayOTPay
+
+        paystub.RegularHolidayRestDayNightDiffHours = _employeeRate.RegularHolidayRestDayNightDiffHours
+        paystub.RegularHolidayRestDayNightDiffPay = _employeeRate.RegularHolidayRestDayNightDiffPay
+        paystub.Actual.RegularHolidayRestDayNightDiffPay = _employeeRate.ActualRegularHolidayRestDayNightDiffPay
+
+        paystub.RegularHolidayRestDayNightDiffOTHours = _employeeRate.RegularHolidayRestDayNightDiffOTHours
+        paystub.RegularHolidayRestDayNightDiffOTPay = _employeeRate.RegularHolidayRestDayNightDiffOTPay
+        paystub.Actual.RegularHolidayRestDayNightDiffOTPay = _employeeRate.ActualRegularHolidayRestDayNightDiffOTPay
 
     End Sub
 
@@ -433,14 +564,42 @@ Public Class BenchmarkPayrollForm
         TotalLeaveTextBox.Text = paystub.LeaveHours.RoundToString()
         TotalDeductionTextBox.Text = paystub.NetDeductions.RoundToString()
         TotalOtherIncomeTextBox.Text = paystub.TotalAllowance.RoundToString()
-        TotalOvertimeTextBox.Text = paystub.OvertimeHours.RoundToString()
+        TotalOvertimeTextBox.Text = GetTotalOvertimePay(paystub).RoundToString()
         NetPayTextBox.Text = paystub.NetPay.RoundToString()
 
     End Sub
 
+    Private Function GetTotalOvertimePay(paystub As Paystub) As Decimal
+
+        Return paystub.OvertimePay +
+                paystub.NightDiffPay +
+                paystub.NightDiffOvertimePay +
+                paystub.RestDayPay +
+                paystub.RestDayOTPay +
+                paystub.RestDayNightDiffPay +
+                paystub.RestDayNightDiffOTPay +
+                paystub.SpecialHolidayPay +
+                paystub.SpecialHolidayOTPay +
+                paystub.SpecialHolidayNightDiffPay +
+                paystub.SpecialHolidayNightDiffOTPay +
+                paystub.SpecialHolidayRestDayPay +
+                paystub.SpecialHolidayRestDayOTPay +
+                paystub.SpecialHolidayRestDayNightDiffPay +
+                paystub.SpecialHolidayRestDayNightDiffOTPay +
+                paystub.RegularHolidayPay +
+                paystub.RegularHolidayOTPay +
+                paystub.RegularHolidayNightDiffPay +
+                paystub.RegularHolidayNightDiffOTPay +
+                paystub.RegularHolidayRestDayPay +
+                paystub.RegularHolidayRestDayOTPay +
+                paystub.RegularHolidayRestDayNightDiffPay +
+                paystub.RegularHolidayRestDayNightDiffOTPay
+
+    End Function
+
     Private Sub SetOvertimeButton_Click(sender As Object, e As EventArgs) Handles SetOvertimeButton.Click
 
-        Dim form As New SetOvertimeForm(_employeeRate.HourlyRate, _overtimes)
+        Dim form As New SetOvertimeForm(_employeeRate.HourlyRate, _overtimeRate.OvertimeRateList, _overtimes)
         form.ShowDialog()
 
         _overtimes = form.Overtimes

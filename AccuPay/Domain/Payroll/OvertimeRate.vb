@@ -29,6 +29,34 @@ Public Class OvertimeRate
     Public Property RegularHolidayRestDayNightDifferential As Rate
     Public Property RegularHolidayRestDayNightDifferentialOvertime As Rate
 
+    Public Const BasePayDescription As String = "Base Pay"
+    Public Const OvertimeDescription As String = "Overtime"
+    Public Const NightDifferentialDescription As String = "Night Differential"
+    Public Const NightDifferentialOvertimeDescription As String = "Night Differential OT"
+
+    Public Const RestDayDescription As String = "Rest Day"
+    Public Const RestDayOvertimeDescription As String = "Rest Day OT"
+    Public Const RestDayNightDifferentialDescription As String = "Rest Day Night Differential"
+    Public Const RestDayNightDifferentialOvertimeDescription As String = "Rest Day Night Differential OT"
+
+    Public Const SpecialHolidayDescription As String = "Special Holiday"
+    Public Const SpecialHolidayOvertimeDescription As String = "Special Holiday OT"
+    Public Const SpecialHolidayNightDifferentialDescription As String = "Special Holiday Night Differential"
+    Public Const SpecialHolidayNightDifferentialOvertimeDescription As String = "Special Holiday Night Differential OT"
+    Public Const SpecialHolidayRestDayDescription As String = "Special Holiday Rest Day"
+    Public Const SpecialHolidayRestDayOvertimeDescription As String = "Special Holiday Rest Day OT"
+    Public Const SpecialHolidayRestDayNightDifferentialDescription As String = "Special Holiday Rest Day Night Differential"
+    Public Const SpecialHolidayRestDayNightDifferentialOvertimeDescription As String = "Special Holiday Rest Day Night Differential OT"
+
+    Public Const RegularHolidayDescription As String = "Regular Holiday"
+    Public Const RegularHolidayOvertimeDescription As String = "Regular Holiday OT"
+    Public Const RegularHolidayNightDifferentialDescription As String = "Regular Holiday Night Differential"
+    Public Const RegularHolidayNightDifferentialOvertimeDescription As String = "Regular Holiday Night Differential OT"
+    Public Const RegularHolidayRestDayDescription As String = "Regular Holiday Rest Day"
+    Public Const RegularHolidayRestDayOvertimeDescription As String = "Regular Holiday Rest Day OT"
+    Public Const RegularHolidayRestDayNightDifferentialDescription As String = "Regular Holiday Rest Day Night Differential"
+    Public Const RegularHolidayRestDayNightDifferentialOvertimeDescription As String = "Regular Holiday Rest Day Night Differential OT"
+
     Private _overtimeRateList As List(Of Rate)
 
     Public ReadOnly Property OvertimeRateList() As List(Of Rate)
@@ -142,30 +170,30 @@ Public Class OvertimeRate
 
         Me.BasePay = New Rate("Base Pay", basePay)
         Me.Overtime = New Rate("Overtime", overtime)
-        Me.NightDifferential = New Rate("Night Differential", nightDifferential)
+        Me.NightDifferential = New Rate("Night Differential", nightDifferential, Me.BasePay)
         Me.NightDifferentialOvertime = New Rate("Night Differential OT", nightDifferentialOvertime)
 
         Me.RestDay = New Rate("Rest Day", restDay)
         Me.RestDayOvertime = New Rate("Rest Day OT", restDayOvertime)
-        Me.RestDayNightDifferential = New Rate("Rest Day Night Differential", restDayNightDifferential)
+        Me.RestDayNightDifferential = New Rate("Rest Day Night Differential", restDayNightDifferential, Me.RestDay)
         Me.RestDayNightDifferentialOvertime = New Rate("Rest Day Night Differential OT", restDayNightDifferentialOvertime)
 
         Me.SpecialHoliday = New Rate("Special Holiday", specialHoliday)
         Me.SpecialHolidayOvertime = New Rate("Special Holiday OT", specialHolidayOvertime)
-        Me.SpecialHolidayNightDifferential = New Rate("Special Holiday Night Differential", specialHolidayNightDifferential)
+        Me.SpecialHolidayNightDifferential = New Rate("Special Holiday Night Differential", specialHolidayNightDifferential, Me.SpecialHoliday)
         Me.SpecialHolidayNightDifferentialOvertime = New Rate("Special Holiday Night Differential OT", specialHolidayNightDifferentialOvertime)
         Me.SpecialHolidayRestDay = New Rate("Special Holiday Rest Day", specialHolidayRestDay)
         Me.SpecialHolidayRestDayOvertime = New Rate("Special Holiday Rest Day OT", specialHolidayRestDayOvertime)
-        Me.SpecialHolidayRestDayNightDifferential = New Rate("Special Holiday Rest Day Night Differential", specialHolidayRestDayNightDifferential)
+        Me.SpecialHolidayRestDayNightDifferential = New Rate("Special Holiday Rest Day Night Differential", specialHolidayRestDayNightDifferential, Me.SpecialHolidayRestDay)
         Me.SpecialHolidayRestDayNightDifferentialOvertime = New Rate("Special Holiday Rest Day Night Differential OT", specialHolidayRestDayNightDifferentialOvertime)
 
         Me.RegularHoliday = New Rate("Regular Holiday", regularHoliday)
         Me.RegularHolidayOvertime = New Rate("Regular Holiday OT", regularHolidayOvertime)
-        Me.RegularHolidayNightDifferential = New Rate("Regular Holiday Night Differential", regularHolidayNightDifferential)
+        Me.RegularHolidayNightDifferential = New Rate("Regular Holiday Night Differential", regularHolidayNightDifferential, Me.RegularHoliday)
         Me.RegularHolidayNightDifferentialOvertime = New Rate("Regular Holiday Night Differential OT", regularHolidayNightDifferentialOvertime)
         Me.RegularHolidayRestDay = New Rate("Regular Holiday Rest Day", regularHolidayRestDay)
         Me.RegularHolidayRestDayOvertime = New Rate("Regular Holiday Rest Day OT", regularHolidayRestDayOvertime)
-        Me.RegularHolidayRestDayNightDifferential = New Rate("Regular Holiday Rest Day Night Differential", regularHolidayRestDayNightDifferential)
+        Me.RegularHolidayRestDayNightDifferential = New Rate("Regular Holiday Rest Day Night Differential", regularHolidayRestDayNightDifferential, Me.RegularHolidayRestDay)
         Me.RegularHolidayRestDayNightDifferentialOvertime = New Rate("Regular Holiday Rest Day Night Differential OT", regularHolidayRestDayNightDifferentialOvertime)
 
     End Sub

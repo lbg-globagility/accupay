@@ -105,6 +105,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BenchmarkPaystubRateTest.vb" />
     <Compile Include="CalendarTest.vb" />
     <Compile Include="CurrentShiftTest.vb" />
     <Compile Include="EnumsTest.vb" />

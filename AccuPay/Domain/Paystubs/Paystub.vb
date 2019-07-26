@@ -167,6 +167,37 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property Actual As PaystubActual
 
+        Public Property RestDayNightDiffHours As Decimal
+        Public Property RestDayNightDiffPay As Decimal
+        Public Property RestDayNightDiffOTHours As Decimal
+        Public Property RestDayNightDiffOTPay As Decimal
+
+        Public Property SpecialHolidayNightDiffHours As Decimal
+        Public Property SpecialHolidayNightDiffPay As Decimal
+        Public Property SpecialHolidayNightDiffOTHours As Decimal
+        Public Property SpecialHolidayNightDiffOTPay As Decimal
+        Public Property SpecialHolidayRestDayHours As Decimal
+        Public Property SpecialHolidayRestDayPay As Decimal
+        Public Property SpecialHolidayRestDayOTHours As Decimal
+        Public Property SpecialHolidayRestDayOTPay As Decimal
+        Public Property SpecialHolidayRestDayNightDiffHours As Decimal
+        Public Property SpecialHolidayRestDayNightDiffPay As Decimal
+        Public Property SpecialHolidayRestDayNightDiffOTHours As Decimal
+        Public Property SpecialHolidayRestDayNightDiffOTPay As Decimal
+
+        Public Property RegularHolidayNightDiffHours As Decimal
+        Public Property RegularHolidayNightDiffPay As Decimal
+        Public Property RegularHolidayNightDiffOTHours As Decimal
+        Public Property RegularHolidayNightDiffOTPay As Decimal
+        Public Property RegularHolidayRestDayHours As Decimal
+        Public Property RegularHolidayRestDayPay As Decimal
+        Public Property RegularHolidayRestDayOTHours As Decimal
+        Public Property RegularHolidayRestDayOTPay As Decimal
+        Public Property RegularHolidayRestDayNightDiffHours As Decimal
+        Public Property RegularHolidayRestDayNightDiffPay As Decimal
+        Public Property RegularHolidayRestDayNightDiffOTHours As Decimal
+        Public Property RegularHolidayRestDayNightDiffOTPay As Decimal
+
         Public ReadOnly Property AdditionalPay As Decimal
             Get
                 Return (
