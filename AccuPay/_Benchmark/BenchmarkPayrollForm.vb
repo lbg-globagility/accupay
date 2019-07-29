@@ -20,8 +20,11 @@ Public Class BenchmarkPayrollForm
     Private _currentPayPeriod As IPayPeriod
     Private _salaries As List(Of Salary)
     Private _employees As List(Of Employee)
-    Private _overtimeRate As OvertimeRate
     Private _actualSalaryPolicy As ActualTimeEntryPolicy
+
+    Private _overtimeRate As OvertimeRate
+
+    Private _currentPaystub As Paystub
 
     Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
 
@@ -577,27 +580,28 @@ Public Class BenchmarkPayrollForm
                                 _payrollResources
                             )
 
-        Dim paystub As Paystub = CreatePaystub(employee, generator)
+        _currentPaystub = CreatePaystub(employee, generator)
 
-        BasicPaySummaryTextBox.Text = paystub.BasicPay.RoundToString()
-        PhilhealthAmountTextBox.Text = paystub.PhilHealthEmployeeShare.RoundToString()
-        SssAmountTextBox.Text = paystub.SssEmployeeShare.RoundToString()
-        PagibigAmountTextBox.Text = paystub.HdmfEmployeeShare.RoundToString()
-        WithholdingTaxTextBox.Text = paystub.WithholdingTax.RoundToString()
+        BasicPaySummaryTextBox.Text = _currentPaystub.BasicPay.RoundToString()
+        PhilhealthAmountTextBox.Text = _currentPaystub.PhilHealthEmployeeShare.RoundToString()
+        SssAmountTextBox.Text = _currentPaystub.SssEmployeeShare.RoundToString()
+        PagibigAmountTextBox.Text = _currentPaystub.HdmfEmployeeShare.RoundToString()
+        WithholdingTaxTextBox.Text = _currentPaystub.WithholdingTax.RoundToString()
         PagibigLoanTextBox.Text = 0D.RoundToString()
         SssLoanTextBox.Text = 0D.RoundToString()
 
-        NightDifferentialAmountTextBox.Text = paystub.NightDiffHours.RoundToString()
-        ThirteenthMonthPayTextBox.Text = paystub.ThirteenthMonthPay?.Amount.RoundToString()
+        NightDifferentialAmountTextBox.Text = _currentPaystub.NightDiffHours.RoundToString()
+        ThirteenthMonthPayTextBox.Text = _currentPaystub.ThirteenthMonthPay?.Amount.RoundToString()
         LeaveBalanceTextBox.Text = 0D.RoundToString()
 
-        GrossPayTextBox.Text = paystub.GrossPay.RoundToString()
-        TotalLeaveTextBox.Text = paystub.LeaveHours.RoundToString()
-        TotalDeductionTextBox.Text = paystub.NetDeductions.RoundToString()
-        TotalOtherIncomeTextBox.Text = paystub.TotalAllowance.RoundToString()
-        TotalOvertimeTextBox.Text = GetTotalOvertimePay(paystub).RoundToString()
-        NetPayTextBox.Text = paystub.NetPay.RoundToString()
+        GrossPayTextBox.Text = _currentPaystub.GrossPay.RoundToString()
+        TotalLeaveTextBox.Text = _currentPaystub.LeaveHours.RoundToString()
+        TotalDeductionTextBox.Text = _currentPaystub.NetDeductions.RoundToString()
+        TotalOtherIncomeTextBox.Text = _currentPaystub.TotalAllowance.RoundToString()
+        TotalOvertimeTextBox.Text = GetTotalOvertimePay(_currentPaystub).RoundToString()
+        NetPayTextBox.Text = _currentPaystub.NetPay.RoundToString()
 
+        SummaryGroupBox.Enabled = True
     End Sub
 
     Private Function GetTotalOvertimePay(paystub As Paystub) As Decimal
@@ -636,6 +640,10 @@ Public Class BenchmarkPayrollForm
         _overtimes = form.Overtimes
 
         OvertimeTextBox.Text = _overtimes.Sum(Function(o) o.Hours).ToString
+
+    End Sub
+
+    Private Sub SavePayrollButton_Click(sender As Object, e As EventArgs) Handles SavePayrollButton.Click
 
     End Sub
 

@@ -387,18 +387,18 @@
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Repositories\SalaryRepository.vb" />
     <Compile Include="SimplifiedEntities\Interface\IPayPeriod.vb" />
-    <Compile Include="Views\Benchmark Forms\BenchmarkPayrollForm.Designer.vb">
+    <Compile Include="_Benchmark\BenchmarkPayrollForm.Designer.vb">
       <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Benchmark Forms\BenchmarkPayrollForm.vb">
+    <Compile Include="_Benchmark\BenchmarkPayrollForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Benchmark Forms\BenchmarkPayrollHelper.vb" />
-    <Compile Include="Views\Benchmark Forms\BenchmarkPaystubRate.vb" />
-    <Compile Include="Views\Benchmark Forms\SetOvertimeForm.Designer.vb">
+    <Compile Include="_Benchmark\BenchmarkPayrollHelper.vb" />
+    <Compile Include="_Benchmark\BenchmarkPaystubRate.vb" />
+    <Compile Include="_Benchmark\SetOvertimeForm.Designer.vb">
       <DependentUpon>SetOvertimeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Benchmark Forms\SetOvertimeForm.vb">
+    <Compile Include="_Benchmark\SetOvertimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\AddDivisionForm.Designer.vb">
@@ -1808,10 +1808,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>New Employee Leave Ledger.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Benchmark Forms\BenchmarkPayrollForm.resx">
+    <EmbeddedResource Include="_Benchmark\BenchmarkPayrollForm.resx">
       <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Benchmark Forms\SetOvertimeForm.resx">
+    <EmbeddedResource Include="_Benchmark\SetOvertimeForm.resx">
       <DependentUpon>SetOvertimeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\AddDivisionForm.resx">
