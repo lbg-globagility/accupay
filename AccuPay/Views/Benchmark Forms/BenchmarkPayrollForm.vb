@@ -1,15 +1,19 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Benchmark
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.SetOvertimeForm
 Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
+Imports log4net
 Imports PayrollSys
 
 Public Class BenchmarkPayrollForm
+
+    Private Shared ReadOnly logger As ILog = LogManager.GetLogger("BenchmarkPayrollLogger")
 
     Private _employeeRepository As EmployeeRepository
     Private _salaryRepository As SalaryRepository
@@ -18,6 +22,8 @@ Public Class BenchmarkPayrollForm
     Private _employees As List(Of Employee)
     Private _overtimeRate As OvertimeRate
     Private _actualSalaryPolicy As ActualTimeEntryPolicy
+
+    Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -43,99 +49,19 @@ Public Class BenchmarkPayrollForm
         _overtimes = New List(Of OvertimeInput)
     End Sub
 
-    Private Async Function ShowEmployees() As Task
-
-        Dim payPeriodId = _currentPayPeriod?.RowID
-
-        If payPeriodId IsNot Nothing Then
-
-            _employees = Await _employeeRepository.
-                                GetAllActiveWithoutPayrollAsync(_currentPayPeriod.RowID)
-        Else
-            _employees = New List(Of Employee)
-        End If
-
-        Await FilterEmployeeGridView()
-
-    End Function
-
-    Private Sub ShowEmployee()
-
-        ClearEmployeeForms()
-
-        If EmployeesGridView.CurrentRow IsNot Nothing Then
-
-            _employeeRate = New BenchmarkPaystubRate(CType(EmployeesGridView.CurrentRow.DataBoundItem, Employee), _salaries)
-
-            If _employeeRate.IsInvalid Then Return
-
-            EmployeeNumberLabel.Text = _employeeRate.Employee.EmployeeNo
-            EmployeeNameLabel.Text = _employeeRate.Employee.FullNameLastNameFirst.ToUpper
-
-            TinTextBox.Text = _employeeRate.Employee.TinNo
-            SssNumberTextBox.Text = _employeeRate.Employee.SssNo
-            PagibigNumberTextBox.Text = _employeeRate.Employee.HdmfNo
-            PhilhealthNumberTextBox.Text = _employeeRate.Employee.PhilHealthNo
-            BasicPayTextBox.Text = _employeeRate.MonthlyRate.ToString(MoneyFormat)
-            PerDayTextBox.Text = _employeeRate.DailyRate.ToString(MoneyFormat)
-            PerHourTextBox.Text = _employeeRate.HourlyRate.ToString(MoneyFormat)
-            AllowanceTextBox.Text = _employeeRate.AllowanceSalary.ToString(MoneyFormat)
-
-            EmployeeDetailsGroupBox.Enabled = True
-            InputsTabControl.Enabled = True
-
-        End If
-
-    End Sub
-
-    Private Sub ClearEmployeeForms()
-
-        EmployeeDetailsGroupBox.Enabled = False
-        InputsTabControl.Enabled = False
-        SummaryGroupBox.Enabled = False
-
-        EmployeeNumberLabel.Text = "000-0000"
-        EmployeeNameLabel.Text = "EMPLOYEE NAME"
-
-        TinTextBox.ResetText()
-        SssNumberTextBox.ResetText()
-        PagibigNumberTextBox.ResetText()
-        PhilhealthNumberTextBox.ResetText()
-        BasicPayTextBox.ResetText()
-        PerDayTextBox.ResetText()
-        PerHourTextBox.ResetText()
-        AllowanceTextBox.ResetText()
-
-        RegularDaysTextBox.ResetText()
-        OvertimeTextBox.ResetText()
-        LateTextBox.ResetText()
-        NightDifferentialTextBox.ResetText()
-        EcolaTextBox.ResetText()
-
-        BasicPaySummaryTextBox.ResetText()
-        PhilhealthAmountTextBox.ResetText()
-        SssAmountTextBox.ResetText()
-        PagibigNumberTextBox.ResetText()
-        WithholdingTaxTextBox.ResetText()
-        PagibigLoanTextBox.ResetText()
-        SssLoanTextBox.ResetText()
-
-        NightDifferentialAmountTextBox.ResetText()
-        ThirteenthMonthPayTextBox.ResetText()
-        LeaveBalanceTextBox.ResetText()
-
-        GrossPayTextBox.ResetText()
-        TotalLeaveTextBox.ResetText()
-        TotalDeductionTextBox.ResetText()
-        TotalOtherIncomeTextBox.ResetText()
-        TotalOvertimeTextBox.ResetText()
-        NetPayTextBox.ResetText()
-
-    End Sub
-
     Private Async Sub BenchmarkPayrollForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         EmployeesGridView.AutoGenerateColumns = False
+
+        _benchmarkPayrollHelper = Await BenchmarkPayrollHelper.GetInstance(logger)
+
+        If _benchmarkPayrollHelper Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot initialize the payroll form properly. Please contact Globagility Inc.")
+
+            Return
+
+        End If
 
         Await GetCutOffPeriod()
 
@@ -187,6 +113,104 @@ Public Class BenchmarkPayrollForm
 
     End Function
 
+    Private Async Function ShowEmployees() As Task
+
+        Dim payPeriodId = _currentPayPeriod?.RowID
+
+        If payPeriodId IsNot Nothing Then
+
+            _employees = Await _employeeRepository.
+                                GetAllActiveWithoutPayrollAsync(_currentPayPeriod.RowID)
+        Else
+            _employees = New List(Of Employee)
+        End If
+
+        Await FilterEmployeeGridView()
+
+    End Function
+
+    Private Async Function ShowEmployee() As Task
+
+        ClearEmployeeForms()
+
+        If EmployeesGridView.CurrentRow IsNot Nothing Then
+
+            Dim employeeId = CType(EmployeesGridView.CurrentRow.DataBoundItem, Employee)?.RowID
+
+            If employeeId Is Nothing Then Return
+
+            Dim employee = Await _employeeRepository.GetEmployeeWithDivisionAsync(employeeId)
+
+            Await _benchmarkPayrollHelper.CleanEmployee(employeeId.Value)
+
+            _employeeRate = New BenchmarkPaystubRate(employee, _salaries)
+
+            If _employeeRate.IsInvalid Then Return
+
+            EmployeeNumberLabel.Text = _employeeRate.Employee.EmployeeNo
+            EmployeeNameLabel.Text = _employeeRate.Employee.FullNameLastNameFirst.ToUpper
+
+            TinTextBox.Text = _employeeRate.Employee.TinNo
+            SssNumberTextBox.Text = _employeeRate.Employee.SssNo
+            PagibigNumberTextBox.Text = _employeeRate.Employee.HdmfNo
+            PhilhealthNumberTextBox.Text = _employeeRate.Employee.PhilHealthNo
+            BasicPayTextBox.Text = _employeeRate.MonthlyRate.ToString(MoneyFormat)
+            PerDayTextBox.Text = _employeeRate.DailyRate.ToString(MoneyFormat)
+            PerHourTextBox.Text = _employeeRate.HourlyRate.ToString(MoneyFormat)
+            AllowanceTextBox.Text = _employeeRate.AllowanceSalary.ToString(MoneyFormat)
+
+            EmployeeDetailsGroupBox.Enabled = True
+            InputsTabControl.Enabled = True
+
+        End If
+
+    End Function
+
+    Private Sub ClearEmployeeForms()
+
+        EmployeeDetailsGroupBox.Enabled = False
+        InputsTabControl.Enabled = False
+        SummaryGroupBox.Enabled = False
+
+        EmployeeNumberLabel.Text = "000-0000"
+        EmployeeNameLabel.Text = "EMPLOYEE NAME"
+
+        TinTextBox.ResetText()
+        SssNumberTextBox.ResetText()
+        PagibigNumberTextBox.ResetText()
+        PhilhealthNumberTextBox.ResetText()
+        BasicPayTextBox.ResetText()
+        PerDayTextBox.ResetText()
+        PerHourTextBox.ResetText()
+        AllowanceTextBox.ResetText()
+
+        RegularDaysTextBox.ResetText()
+        OvertimeTextBox.ResetText()
+        LateTextBox.ResetText()
+        NightDifferentialTextBox.ResetText()
+        EcolaTextBox.ResetText()
+
+        BasicPaySummaryTextBox.ResetText()
+        PhilhealthAmountTextBox.ResetText()
+        SssAmountTextBox.ResetText()
+        PagibigNumberTextBox.ResetText()
+        WithholdingTaxTextBox.ResetText()
+        PagibigLoanTextBox.ResetText()
+        SssLoanTextBox.ResetText()
+
+        NightDifferentialAmountTextBox.ResetText()
+        ThirteenthMonthPayTextBox.ResetText()
+        LeaveBalanceTextBox.ResetText()
+
+        GrossPayTextBox.ResetText()
+        TotalLeaveTextBox.ResetText()
+        TotalDeductionTextBox.ResetText()
+        TotalOtherIncomeTextBox.ResetText()
+        TotalOvertimeTextBox.ResetText()
+        NetPayTextBox.ResetText()
+
+    End Sub
+
     Private Async Function GetCutOffPeriod() As Task
         _currentPayPeriod = Await PayrollTools.
                                 GetCurrentlyWorkedOnPayPeriodByCurrentYear()
@@ -234,7 +258,14 @@ Public Class BenchmarkPayrollForm
 
         End If
 
-        Return employee
+        If _employeeRate.Employee Is Nothing OrElse Nullable.Equals(_employeeRate.Employee.RowID, employee.RowID) = False Then
+
+            MessageBoxHelper.ErrorMessage("No employee selected.")
+            Return Nothing
+
+        End If
+
+        Return _employeeRate.Employee
 
     End Function
 
@@ -259,14 +290,14 @@ Public Class BenchmarkPayrollForm
 
         paystub.EmployeeID = employee.RowID
 
-        ComputeBasicHoursAndPay(paystub, employee)
-        ComputeHours(paystub)
+        ComputeBasicHoursAndBasicPay(paystub, employee)
+        ComputeHoursAndPay(paystub)
 
         generator.ComputePayroll(paystub)
         Return paystub
     End Function
 
-    Private Sub ComputeBasicHoursAndPay(paystub As Paystub, employee As Employee)
+    Private Sub ComputeBasicHoursAndBasicPay(paystub As Paystub, employee As Employee)
 
         Dim cutOffsPerMonth As Integer = 2
 
@@ -281,7 +312,7 @@ Public Class BenchmarkPayrollForm
 
     Private Function ConvertDaysToHours(days As Decimal) As Decimal
 
-        Return days / BenchmarkPaystubRate.WorkHoursPerDay
+        Return days * BenchmarkPaystubRate.WorkHoursPerDay
 
     End Function
 
@@ -299,7 +330,7 @@ Public Class BenchmarkPayrollForm
 
     End Function
 
-    Private Sub ComputeHours(paystub As Paystub)
+    Private Sub ComputeHoursAndPay(paystub As Paystub)
 
         Dim regularHours As Decimal = ConvertDaysToHours(RegularDaysTextBox.Text.ToDecimal)
         Dim overtimeHours As Decimal = GetOvertime(OvertimeRate.OvertimeDescription)
@@ -390,7 +421,7 @@ Public Class BenchmarkPayrollForm
 
         paystub.NightDiffOvertimeHours = _employeeRate.NightDiffOvertimeHours
         paystub.NightDiffOvertimePay = _employeeRate.NightDiffOvertimePay
-        paystub.Actual.NightDiffOTPay = _employeeRate.ActualNightDiffOTPay
+        paystub.Actual.NightDiffOvertimePay = _employeeRate.ActualNightDiffOvertimePay
 
         paystub.RestDayHours = _employeeRate.RestDayHours
         paystub.RestDayPay = _employeeRate.RestDayPay
@@ -491,9 +522,9 @@ Public Class BenchmarkPayrollForm
 
     End Sub
 
-    Private Sub EmployeesGridView_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles EmployeesGridView.CellDoubleClick
+    Private Async Sub EmployeesGridView_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles EmployeesGridView.CellDoubleClick
 
-        ShowEmployee()
+        Await ShowEmployee()
 
     End Sub
 
@@ -551,7 +582,7 @@ Public Class BenchmarkPayrollForm
         BasicPaySummaryTextBox.Text = paystub.BasicPay.RoundToString()
         PhilhealthAmountTextBox.Text = paystub.PhilHealthEmployeeShare.RoundToString()
         SssAmountTextBox.Text = paystub.SssEmployeeShare.RoundToString()
-        PagibigNumberTextBox.Text = paystub.HdmfEmployeeShare.RoundToString()
+        PagibigAmountTextBox.Text = paystub.HdmfEmployeeShare.RoundToString()
         WithholdingTaxTextBox.Text = paystub.WithholdingTax.RoundToString()
         PagibigLoanTextBox.Text = 0D.RoundToString()
         SssLoanTextBox.Text = 0D.RoundToString()

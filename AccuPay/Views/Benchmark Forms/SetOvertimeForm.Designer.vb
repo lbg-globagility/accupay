@@ -209,7 +209,6 @@ Partial Class SetOvertimeForm
         Me.DaysRadioButton.Name = "DaysRadioButton"
         Me.DaysRadioButton.Size = New System.Drawing.Size(69, 22)
         Me.DaysRadioButton.TabIndex = 28
-        Me.DaysRadioButton.TabStop = True
         Me.DaysRadioButton.Text = "DAY/S"
         Me.DaysRadioButton.UseVisualStyleBackColor = False
         '
@@ -227,6 +226,7 @@ Partial Class SetOvertimeForm
         '
         Me.HoursRadioButton.AutoSize = True
         Me.HoursRadioButton.BackColor = System.Drawing.Color.Transparent
+        Me.HoursRadioButton.Checked = True
         Me.HoursRadioButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.HoursRadioButton.Location = New System.Drawing.Point(123, 7)
         Me.HoursRadioButton.Name = "HoursRadioButton"

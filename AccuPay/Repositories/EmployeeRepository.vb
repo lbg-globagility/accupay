@@ -12,7 +12,7 @@ Namespace Global.AccuPay.Repository
 
             Using context = New PayrollContext()
 
-                Return Await GetAllEmployeeBaseQuery(context).ToListAsync
+                Return Await EmployeeBaseQuery(context).ToListAsync
 
             End Using
 
@@ -22,7 +22,7 @@ Namespace Global.AccuPay.Repository
 
             Using context = New PayrollContext()
 
-                Dim query = GetAllEmployeeBaseQuery(context)
+                Dim query = EmployeeBaseQuery(context)
 
                 Return Await query.
                     Where(Function(l) l.IsActive).
@@ -36,7 +36,7 @@ Namespace Global.AccuPay.Repository
 
             Using context = New PayrollContext(PayrollContext.DbCommandConsoleLoggerFactory)
 
-                Dim query = GetAllEmployeeBaseQuery(context).
+                Dim query = EmployeeBaseQuery(context).
                                 Where(Function(l) l.IsActive)
 
                 Return Await query.
@@ -52,7 +52,7 @@ Namespace Global.AccuPay.Repository
 
             Using context = New PayrollContext()
 
-                Dim query = GetAllEmployeeBaseQuery(context)
+                Dim query = EmployeeBaseQuery(context)
 
                 Return Await query.
                     Where(Function(l) l.EmployeeNo = employeeNumber).
@@ -66,7 +66,7 @@ Namespace Global.AccuPay.Repository
 
             Using context = New PayrollContext()
 
-                Dim query = GetAllEmployeeBaseQuery(context)
+                Dim query = EmployeeBaseQuery(context)
 
                 Return Await query.
                                 Include(Function(e) e.Position).
@@ -80,12 +80,28 @@ Namespace Global.AccuPay.Repository
 
             Using context = New PayrollContext()
 
-                Dim query = GetAllEmployeeBaseQuery(context)
+                Dim query = EmployeeBaseQuery(context)
 
                 Return Await query.
                                 Include(Function(e) e.Position).
                                 Where(Function(l) l.IsActive).
                                 ToListAsync
+
+            End Using
+
+        End Function
+
+        Public Async Function GetEmployeeWithDivisionAsync(id As Integer?) As Task(Of Employee)
+
+            Using context = New PayrollContext()
+
+                Dim query = EmployeeBaseQuery(context)
+
+                Return Await query.
+                                Include(Function(e) e.Position.Division).
+                                Where(Function(l) l.RowID.Value = id.Value).
+                                Where(Function(l) l.IsActive).
+                                FirstOrDefaultAsync
 
             End Using
 
@@ -115,7 +131,7 @@ Namespace Global.AccuPay.Repository
 
 #Region "Private Functions"
 
-        Private Function GetAllEmployeeBaseQuery(context As PayrollContext) As IQueryable(Of Entity.Employee)
+        Private Function EmployeeBaseQuery(context As PayrollContext) As IQueryable(Of Entity.Employee)
             Return context.Employees.
                             Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID))
         End Function

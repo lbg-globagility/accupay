@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay
+Imports AccuPay.Benchmark
 Imports AccuPay.Entity
 Imports PayrollSys
 
@@ -387,7 +388,7 @@ Public Class BenchmarkPaystubRateTest
         Dim regularHolidayRestDayOvertimeRate = 3.38
 
         Assert.AreEqual(_benchmarkPaystubRate.NightDiffOvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.NightDiffOvertimeHours * hourlyRate * overtimeRate * nightDifferentialRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.NightDiffOvertimeHours * actualHourlyRate * overtimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffOvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.NightDiffOvertimeHours * actualHourlyRate * overtimeRate * nightDifferentialRate))
 
         Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayNightDiffOTHours * hourlyRate * restDayOvertimeRate * nightDifferentialRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayNightDiffOTHours * actualHourlyRate * restDayOvertimeRate * nightDifferentialRate))
@@ -411,7 +412,7 @@ Public Class BenchmarkPaystubRateTest
         DefaultOvertimeInitialization(employeeEntitledForNightDifferentialPay:=False)
 
         Assert.AreEqual(_benchmarkPaystubRate.NightDiffOvertimePay, 0)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffOTPay, 0)
+        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffOvertimePay, 0)
 
         Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffOTPay, 0)
         Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayNightDiffOTPay, 0)
@@ -447,7 +448,7 @@ Public Class BenchmarkPaystubRateTest
         Dim regularHolidayRestDayOvertimeRate = 3.38
 
         Assert.AreEqual(_benchmarkPaystubRate.NightDiffOvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.NightDiffOvertimeHours * hourlyRate * overtimeRate * nightDifferentialRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffOTPay, _benchmarkPaystubRate.NightDiffOvertimePay)
+        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffOvertimePay, _benchmarkPaystubRate.NightDiffOvertimePay)
 
         Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayNightDiffOTHours * hourlyRate * restDayOvertimeRate * nightDifferentialRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayNightDiffOTPay, _benchmarkPaystubRate.RestDayNightDiffOTPay)

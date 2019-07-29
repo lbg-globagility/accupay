@@ -200,7 +200,7 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property AdditionalPay As Decimal
             Get
-                Return (
+                Dim original =
                     OvertimePay +
                     NightDiffPay +
                     NightDiffOvertimePay +
@@ -209,7 +209,25 @@ Namespace Global.AccuPay.Entity
                     SpecialHolidayPay +
                     SpecialHolidayOTPay +
                     RegularHolidayPay +
-                    RegularHolidayOTPay)
+                    RegularHolidayOTPay
+
+                Dim newBreakdowns =
+                    RestDayNightDiffPay +
+                    RestDayNightDiffOTPay +
+                    SpecialHolidayNightDiffPay +
+                    SpecialHolidayNightDiffOTPay +
+                    SpecialHolidayRestDayPay +
+                    SpecialHolidayRestDayOTPay +
+                    SpecialHolidayRestDayNightDiffPay +
+                    SpecialHolidayRestDayNightDiffOTPay +
+                    RegularHolidayNightDiffPay +
+                    RegularHolidayNightDiffOTPay +
+                    RegularHolidayRestDayPay +
+                    RegularHolidayRestDayOTPay +
+                    RegularHolidayRestDayNightDiffPay +
+                    RegularHolidayRestDayNightDiffOTPay
+
+                Return original + newBreakdowns
             End Get
         End Property
 

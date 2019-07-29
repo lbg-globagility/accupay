@@ -13,7 +13,7 @@
 
     Property NightDiffOvertimeHours As Decimal
     Property NightDiffOvertimePay As Decimal
-    Property ActualNightDiffOTPay As Decimal
+    Property ActualNightDiffOvertimePay As Decimal
 
     Property RestDayHours As Decimal
     Property RestDayPay As Decimal

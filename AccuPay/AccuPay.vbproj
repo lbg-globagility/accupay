@@ -393,6 +393,7 @@
     <Compile Include="Views\Benchmark Forms\BenchmarkPayrollForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Benchmark Forms\BenchmarkPayrollHelper.vb" />
     <Compile Include="Views\Benchmark Forms\BenchmarkPaystubRate.vb" />
     <Compile Include="Views\Benchmark Forms\SetOvertimeForm.Designer.vb">
       <DependentUpon>SetOvertimeForm.vb</DependentUpon>

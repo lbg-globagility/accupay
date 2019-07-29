@@ -351,7 +351,7 @@ Public Class PayrollGeneration
 
         _paystub.NightDiffOvertimeHours = paystubRate.NightDiffOvertimeHours
         _paystub.NightDiffOvertimePay = paystubRate.NightDiffOvertimePay
-        _paystub.Actual.NightDiffOTPay = paystubRate.ActualNightDiffOTPay
+        _paystub.Actual.NightDiffOvertimePay = paystubRate.ActualNightDiffOvertimePay
 
         _paystub.RestDayHours = paystubRate.RestDayHours
         _paystub.RestDayPay = paystubRate.RestDayPay
@@ -646,7 +646,7 @@ Public Class PayrollGeneration
 
         Public Property NightDiffOvertimeHours As Decimal Implements IPaystubRate.NightDiffOvertimeHours
         Public Property NightDiffOvertimePay As Decimal Implements IPaystubRate.NightDiffOvertimePay
-        Public Property ActualNightDiffOTPay As Decimal Implements IPaystubRate.ActualNightDiffOTPay
+        Public Property ActualNightDiffOvertimePay As Decimal Implements IPaystubRate.ActualNightDiffOvertimePay
 
         Public Property RestDayHours As Decimal Implements IPaystubRate.RestDayHours
         Public Property RestDayPay As Decimal Implements IPaystubRate.RestDayPay
@@ -706,7 +706,7 @@ Public Class PayrollGeneration
 
             Me.NightDiffOvertimeHours = timeEntries.Sum(Function(t) t.NightDiffOTHours)
             Me.NightDiffOvertimePay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.NightDiffOTPay))
-            Me.ActualNightDiffOTPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.NightDiffOTPay))
+            Me.ActualNightDiffOvertimePay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.NightDiffOTPay))
 
             Me.RestDayHours = timeEntries.Sum(Function(t) t.RestDayHours)
             Me.RestDayPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.RestDayPay))
