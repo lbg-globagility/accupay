@@ -1,4 +1,6 @@
-﻿Public Class AccuMath
+﻿Option Strict On
+
+Public Class AccuMath
 
     ''' <summary>
     ''' Truncates and not round the fractional portion of the decimal to n places.
@@ -8,7 +10,7 @@
     ''' <returns>The truncated decimal value</returns>
     Public Shared Function Truncate(value As Decimal, places As Integer) As Decimal
         Dim x = Math.Pow(10, places)
-        Return Math.Truncate(value * x) / x
+        Return CDec(Math.Truncate(value * x) / x)
     End Function
 
     ''' <summary>
@@ -24,6 +26,17 @@
     ''' <returns></returns>
     Public Shared Function CommercialRound(value As Decimal, Optional places As Integer = 2) As Decimal
         Return Math.Round(value, places, MidpointRounding.AwayFromZero)
+    End Function
+
+    Public Shared Function CommercialRound(value As Decimal?, Optional places As Integer = 2) As Decimal
+
+        If value Is Nothing Then Return 0D
+
+        Return CommercialRound(CDec(value), places)
+    End Function
+
+    Public Shared Function CommercialRound(value As Double, Optional places As Integer = 2) As Decimal
+        Return CommercialRound(CDec(value), places)
     End Function
 
 End Class

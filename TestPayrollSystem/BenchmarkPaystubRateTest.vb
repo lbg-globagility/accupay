@@ -249,14 +249,14 @@ Public Class BenchmarkPaystubRateTest
 
         Dim overtimeRate = 1.25
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularPay, _benchmarkPaystubRate.RegularHours * hourlyRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularPay, _benchmarkPaystubRate.RegularHours * actualHourlyRate)
+        Assert.AreEqual(_benchmarkPaystubRate.RegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.OvertimePay, _benchmarkPaystubRate.OvertimeHours * hourlyRate * overtimeRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualOvertimePay, _benchmarkPaystubRate.OvertimeHours * actualHourlyRate * overtimeRate)
+        Assert.AreEqual(_benchmarkPaystubRate.OvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.OvertimeHours * hourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualOvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.OvertimeHours * actualHourlyRate * overtimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.LeavePay, _benchmarkPaystubRate.LeaveHours * hourlyRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualLeavePay, _benchmarkPaystubRate.LeaveHours * actualHourlyRate)
+        Assert.AreEqual(_benchmarkPaystubRate.LeavePay, AccuMath.CommercialRound(_benchmarkPaystubRate.LeaveHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualLeavePay, AccuMath.CommercialRound(_benchmarkPaystubRate.LeaveHours * actualHourlyRate))
 
     End Sub
 
@@ -269,14 +269,14 @@ Public Class BenchmarkPaystubRateTest
 
         Dim overtimeRate = 1.25
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularPay, _benchmarkPaystubRate.RegularHours * hourlyRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularPay, _benchmarkPaystubRate.RegularHours * actualHourlyRate)
+        Assert.AreEqual(_benchmarkPaystubRate.RegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.OvertimePay, _benchmarkPaystubRate.OvertimeHours * hourlyRate * overtimeRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualOvertimePay, _benchmarkPaystubRate.OvertimePay)
+        Assert.AreEqual(_benchmarkPaystubRate.OvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.OvertimeHours * hourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualOvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.OvertimePay))
 
-        Assert.AreEqual(_benchmarkPaystubRate.LeavePay, _benchmarkPaystubRate.LeaveHours * hourlyRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualLeavePay, _benchmarkPaystubRate.LeaveHours * actualHourlyRate)
+        Assert.AreEqual(_benchmarkPaystubRate.LeavePay, AccuMath.CommercialRound(_benchmarkPaystubRate.LeaveHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualLeavePay, AccuMath.CommercialRound(_benchmarkPaystubRate.LeaveHours * actualHourlyRate))
 
     End Sub
 
@@ -287,14 +287,14 @@ Public Class BenchmarkPaystubRateTest
         Dim hourlyRate = 67.125
         Dim actualHourlyRate = 75
 
-        Assert.AreEqual(_benchmarkPaystubRate.LateDeduction, _benchmarkPaystubRate.LateHours * hourlyRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualLateDeduction, _benchmarkPaystubRate.LateHours * actualHourlyRate)
+        Assert.AreEqual(_benchmarkPaystubRate.LateDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.LateHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualLateDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.LateHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.UndertimeDeduction, _benchmarkPaystubRate.UndertimeHours * hourlyRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualUndertimeDeduction, _benchmarkPaystubRate.UndertimeHours * actualHourlyRate)
+        Assert.AreEqual(_benchmarkPaystubRate.UndertimeDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.UndertimeHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualUndertimeDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.UndertimeHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.AbsenceDeduction, _benchmarkPaystubRate.AbsentHours * hourlyRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualAbsenceDeduction, _benchmarkPaystubRate.AbsentHours * actualHourlyRate)
+        Assert.AreEqual(_benchmarkPaystubRate.AbsenceDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.AbsentHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualAbsenceDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.AbsentHours * actualHourlyRate))
 
     End Sub
 
@@ -314,23 +314,23 @@ Public Class BenchmarkPaystubRateTest
         Dim hourlyRate = 67.125
         Dim actualHourlyRate = 75
 
-        Assert.AreEqual(_benchmarkPaystubRate.NightDiffPay, hourlyRate * nightDifferentialRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffPay, actualHourlyRate * nightDifferentialRate)
+        Assert.AreEqual(_benchmarkPaystubRate.NightDiffPay, AccuMath.CommercialRound(hourlyRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffPay, AccuMath.CommercialRound(actualHourlyRate * nightDifferentialRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffPay, hourlyRate * restDayRate * nightDifferentialRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayNightDiffPay, actualHourlyRate * restDayRate * nightDifferentialRate)
+        Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffPay, AccuMath.CommercialRound(hourlyRate * restDayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayNightDiffPay, AccuMath.CommercialRound(actualHourlyRate * restDayRate * nightDifferentialRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayNightDiffPay, hourlyRate * specialHolidayRate * nightDifferentialRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayNightDiffPay, actualHourlyRate * specialHolidayRate * nightDifferentialRate)
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayNightDiffPay, AccuMath.CommercialRound(hourlyRate * specialHolidayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayNightDiffPay, AccuMath.CommercialRound(actualHourlyRate * specialHolidayRate * nightDifferentialRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffPay, CDec(hourlyRate * specialHolidayRestDayRate * nightDifferentialRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayNightDiffPay, CDec(actualHourlyRate * specialHolidayRestDayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffPay, AccuMath.CommercialRound(hourlyRate * specialHolidayRestDayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayNightDiffPay, AccuMath.CommercialRound(actualHourlyRate * specialHolidayRestDayRate * nightDifferentialRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayNightDiffPay, hourlyRate * regularHolidayRate * nightDifferentialRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayNightDiffPay, actualHourlyRate * regularHolidayRate * nightDifferentialRate)
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayNightDiffPay, AccuMath.CommercialRound(hourlyRate * regularHolidayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayNightDiffPay, AccuMath.CommercialRound(actualHourlyRate * regularHolidayRate * nightDifferentialRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffPay, hourlyRate * regularHolidayRestDayRate * nightDifferentialRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayNightDiffPay, actualHourlyRate * regularHolidayRestDayRate * nightDifferentialRate)
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffPay, AccuMath.CommercialRound(hourlyRate * regularHolidayRestDayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayNightDiffPay, AccuMath.CommercialRound(actualHourlyRate * regularHolidayRestDayRate * nightDifferentialRate))
 
     End Sub
 
@@ -349,23 +349,23 @@ Public Class BenchmarkPaystubRateTest
 
         Dim hourlyRate = 67.125
 
-        Assert.AreEqual(_benchmarkPaystubRate.NightDiffPay, hourlyRate * nightDifferentialRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffPay, _benchmarkPaystubRate.NightDiffPay)
+        Assert.AreEqual(_benchmarkPaystubRate.NightDiffPay, AccuMath.CommercialRound(hourlyRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffPay, AccuMath.CommercialRound(_benchmarkPaystubRate.NightDiffPay))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffPay, hourlyRate * restDayRate * nightDifferentialRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayNightDiffPay, _benchmarkPaystubRate.RestDayNightDiffPay)
+        Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffPay, AccuMath.CommercialRound(hourlyRate * restDayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayNightDiffPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayNightDiffPay))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayNightDiffPay, hourlyRate * specialHolidayRate * nightDifferentialRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayNightDiffPay, _benchmarkPaystubRate.SpecialHolidayNightDiffPay)
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayNightDiffPay, AccuMath.CommercialRound(hourlyRate * specialHolidayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayNightDiffPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayNightDiffPay))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffPay, CDec(hourlyRate * specialHolidayRestDayRate * nightDifferentialRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayNightDiffPay, _benchmarkPaystubRate.SpecialHolidayRestDayNightDiffPay)
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffPay, AccuMath.CommercialRound(hourlyRate * specialHolidayRestDayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayNightDiffPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffPay))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayNightDiffPay, hourlyRate * regularHolidayRate * nightDifferentialRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayNightDiffPay, _benchmarkPaystubRate.RegularHolidayNightDiffPay)
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayNightDiffPay, AccuMath.CommercialRound(hourlyRate * regularHolidayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayNightDiffPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayNightDiffPay))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffPay, hourlyRate * regularHolidayRestDayRate * nightDifferentialRate)
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayNightDiffPay, _benchmarkPaystubRate.RegularHolidayRestDayNightDiffPay)
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffPay, AccuMath.CommercialRound(hourlyRate * regularHolidayRestDayRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayNightDiffPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffPay))
 
     End Sub
 
@@ -386,23 +386,23 @@ Public Class BenchmarkPaystubRateTest
         Dim regularHolidayOvertimeRate = 2.6
         Dim regularHolidayRestDayOvertimeRate = 3.38
 
-        Assert.AreEqual(_benchmarkPaystubRate.NightDiffOvertimePay, CDec(_benchmarkPaystubRate.NightDiffOvertimeHours * hourlyRate * overtimeRate * nightDifferentialRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffOTPay, CDec(_benchmarkPaystubRate.NightDiffOvertimeHours * actualHourlyRate * overtimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.NightDiffOvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.NightDiffOvertimeHours * hourlyRate * overtimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.NightDiffOvertimeHours * actualHourlyRate * overtimeRate * nightDifferentialRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffOTPay, CDec(_benchmarkPaystubRate.RestDayNightDiffOTHours * hourlyRate * restDayOvertimeRate * nightDifferentialRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayNightDiffOTPay, CDec(_benchmarkPaystubRate.RestDayNightDiffOTHours * actualHourlyRate * restDayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayNightDiffOTHours * hourlyRate * restDayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayNightDiffOTHours * actualHourlyRate * restDayOvertimeRate * nightDifferentialRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayNightDiffOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayNightDiffOTHours * hourlyRate * specialHolidayOvertimeRate * nightDifferentialRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayNightDiffOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayNightDiffOTHours * actualHourlyRate * specialHolidayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayNightDiffOTHours * hourlyRate * specialHolidayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayNightDiffOTHours * actualHourlyRate * specialHolidayOvertimeRate * nightDifferentialRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTHours * hourlyRate * specialHolidayRestDayOvertimeRate * nightDifferentialRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayNightDiffOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTHours * actualHourlyRate * specialHolidayRestDayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTHours * hourlyRate * specialHolidayRestDayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTHours * actualHourlyRate * specialHolidayRestDayOvertimeRate * nightDifferentialRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayNightDiffOTPay, CDec(_benchmarkPaystubRate.RegularHolidayNightDiffOTHours * hourlyRate * regularHolidayOvertimeRate * nightDifferentialRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayNightDiffOTPay, CDec(_benchmarkPaystubRate.RegularHolidayNightDiffOTHours * actualHourlyRate * regularHolidayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayNightDiffOTHours * hourlyRate * regularHolidayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayNightDiffOTHours * actualHourlyRate * regularHolidayOvertimeRate * nightDifferentialRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTHours * hourlyRate * regularHolidayRestDayOvertimeRate * nightDifferentialRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayNightDiffOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTHours * actualHourlyRate * regularHolidayRestDayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTHours * hourlyRate * regularHolidayRestDayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTHours * actualHourlyRate * regularHolidayRestDayOvertimeRate * nightDifferentialRate))
 
     End Sub
 
@@ -446,22 +446,22 @@ Public Class BenchmarkPaystubRateTest
         Dim regularHolidayOvertimeRate = 2.6
         Dim regularHolidayRestDayOvertimeRate = 3.38
 
-        Assert.AreEqual(_benchmarkPaystubRate.NightDiffOvertimePay, CDec(_benchmarkPaystubRate.NightDiffOvertimeHours * hourlyRate * overtimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.NightDiffOvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.NightDiffOvertimeHours * hourlyRate * overtimeRate * nightDifferentialRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualNightDiffOTPay, _benchmarkPaystubRate.NightDiffOvertimePay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffOTPay, CDec(_benchmarkPaystubRate.RestDayNightDiffOTHours * hourlyRate * restDayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayNightDiffOTHours * hourlyRate * restDayOvertimeRate * nightDifferentialRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayNightDiffOTPay, _benchmarkPaystubRate.RestDayNightDiffOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayNightDiffOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayNightDiffOTHours * hourlyRate * specialHolidayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayNightDiffOTHours * hourlyRate * specialHolidayOvertimeRate * nightDifferentialRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayNightDiffOTPay, _benchmarkPaystubRate.SpecialHolidayNightDiffOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTHours * hourlyRate * specialHolidayRestDayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTHours * hourlyRate * specialHolidayRestDayOvertimeRate * nightDifferentialRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayNightDiffOTPay, _benchmarkPaystubRate.SpecialHolidayRestDayNightDiffOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayNightDiffOTPay, CDec(_benchmarkPaystubRate.RegularHolidayNightDiffOTHours * hourlyRate * regularHolidayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayNightDiffOTHours * hourlyRate * regularHolidayOvertimeRate * nightDifferentialRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayNightDiffOTPay, _benchmarkPaystubRate.RegularHolidayNightDiffOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTHours * hourlyRate * regularHolidayRestDayOvertimeRate * nightDifferentialRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTHours * hourlyRate * regularHolidayRestDayOvertimeRate * nightDifferentialRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayNightDiffOTPay, _benchmarkPaystubRate.RegularHolidayRestDayNightDiffOTPay)
 
     End Sub
@@ -485,29 +485,29 @@ Public Class BenchmarkPaystubRateTest
         Dim hourlyRate = 67.125
         Dim actualHourlyRate = 75
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate * specialHolidayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * actualHourlyRate * specialHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate * specialHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * actualHourlyRate * specialHolidayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * specialHolidayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * actualHourlyRate * specialHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * specialHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * actualHourlyRate * specialHolidayOvertimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * specialHolidayRestDayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * actualHourlyRate * specialHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * specialHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * actualHourlyRate * specialHolidayRestDayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * specialHolidayRestDayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * actualHourlyRate * specialHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * specialHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * actualHourlyRate * specialHolidayRestDayOvertimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate * regularHolidayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * actualHourlyRate * regularHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate * regularHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * actualHourlyRate * regularHolidayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * regularHolidayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * actualHourlyRate * regularHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * regularHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * actualHourlyRate * regularHolidayOvertimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * regularHolidayRestDayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * actualHourlyRate * regularHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * regularHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * actualHourlyRate * regularHolidayRestDayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * regularHolidayRestDayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * actualHourlyRate * regularHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * regularHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * actualHourlyRate * regularHolidayRestDayOvertimeRate))
     End Sub
 
     <Test>
@@ -527,29 +527,29 @@ Public Class BenchmarkPaystubRateTest
         Dim hourlyRate = 67.125
         Dim actualHourlyRate = 75
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * actualHourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * overtimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * actualHourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * actualHourlyRate * overtimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * restDayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * actualHourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * actualHourlyRate * restDayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * actualHourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * actualHourlyRate * restDayOvertimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate * regularHolidayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * actualHourlyRate * regularHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate * regularHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * actualHourlyRate * regularHolidayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * regularHolidayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * actualHourlyRate * regularHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * regularHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * actualHourlyRate * regularHolidayOvertimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * regularHolidayRestDayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * actualHourlyRate * regularHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * regularHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * actualHourlyRate * regularHolidayRestDayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * regularHolidayRestDayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * actualHourlyRate * regularHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * regularHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * actualHourlyRate * regularHolidayRestDayOvertimeRate))
     End Sub
 
     <Test>
@@ -568,29 +568,29 @@ Public Class BenchmarkPaystubRateTest
         Dim hourlyRate = 67.125
         Dim actualHourlyRate = 75
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate * specialHolidayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * actualHourlyRate * specialHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate * specialHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * actualHourlyRate * specialHolidayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * specialHolidayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * actualHourlyRate * specialHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * specialHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * actualHourlyRate * specialHolidayOvertimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * specialHolidayRestDayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * actualHourlyRate * specialHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * specialHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * actualHourlyRate * specialHolidayRestDayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * specialHolidayRestDayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * actualHourlyRate * specialHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * specialHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * actualHourlyRate * specialHolidayRestDayOvertimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * actualHourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * overtimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * actualHourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * actualHourlyRate * overtimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * restDayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * actualHourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * actualHourlyRate * restDayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * actualHourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * actualHourlyRate * restDayOvertimeRate))
     End Sub
 
     <Test>
@@ -609,28 +609,28 @@ Public Class BenchmarkPaystubRateTest
 
         Dim hourlyRate = 67.125
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate * specialHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate * specialHolidayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, _benchmarkPaystubRate.SpecialHolidayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * specialHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * specialHolidayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, _benchmarkPaystubRate.SpecialHolidayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * specialHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * specialHolidayRestDayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, _benchmarkPaystubRate.SpecialHolidayRestDayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * specialHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * specialHolidayRestDayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, _benchmarkPaystubRate.SpecialHolidayRestDayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate * regularHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate * regularHolidayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, _benchmarkPaystubRate.RegularHolidayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * regularHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * regularHolidayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, _benchmarkPaystubRate.RegularHolidayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * regularHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * regularHolidayRestDayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, _benchmarkPaystubRate.RegularHolidayRestDayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * regularHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * regularHolidayRestDayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, _benchmarkPaystubRate.RegularHolidayRestDayOTPay)
     End Sub
 
@@ -651,28 +651,28 @@ Public Class BenchmarkPaystubRateTest
         Dim hourlyRate = 67.125
         Dim actualHourlyRate = 75
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * actualHourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * overtimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * actualHourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * actualHourlyRate * overtimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * restDayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * actualHourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * actualHourlyRate * restDayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * actualHourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * actualHourlyRate * restDayOvertimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate * regularHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate * regularHolidayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, _benchmarkPaystubRate.RegularHolidayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * regularHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * regularHolidayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, _benchmarkPaystubRate.RegularHolidayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * regularHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * regularHolidayRestDayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, _benchmarkPaystubRate.RegularHolidayRestDayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * regularHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * regularHolidayRestDayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, _benchmarkPaystubRate.RegularHolidayRestDayOTPay)
     End Sub
 
@@ -698,28 +698,28 @@ Public Class BenchmarkPaystubRateTest
         Dim hourlyRate = 67.125
         Dim actualHourlyRate = 75
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * actualHourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * overtimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, _benchmarkPaystubRate.SpecialHolidayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * restDayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, _benchmarkPaystubRate.SpecialHolidayRestDayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, _benchmarkPaystubRate.SpecialHolidayRestDayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate * regularHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate * regularHolidayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, _benchmarkPaystubRate.RegularHolidayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * regularHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * regularHolidayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, _benchmarkPaystubRate.RegularHolidayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * regularHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * regularHolidayRestDayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, _benchmarkPaystubRate.RegularHolidayRestDayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * regularHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * regularHolidayRestDayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, _benchmarkPaystubRate.RegularHolidayRestDayOTPay)
     End Sub
 
@@ -739,29 +739,29 @@ Public Class BenchmarkPaystubRateTest
         Dim hourlyRate = 67.125
         Dim actualHourlyRate = 75
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate * specialHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate * specialHolidayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, _benchmarkPaystubRate.SpecialHolidayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * specialHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * specialHolidayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, _benchmarkPaystubRate.SpecialHolidayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * specialHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * specialHolidayRestDayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, _benchmarkPaystubRate.SpecialHolidayRestDayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * specialHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * specialHolidayRestDayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, _benchmarkPaystubRate.SpecialHolidayRestDayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * actualHourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * overtimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * actualHourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * actualHourlyRate * overtimeRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * restDayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * actualHourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * actualHourlyRate * restDayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * actualHourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * actualHourlyRate * restDayOvertimeRate))
     End Sub
 
     <Test>
@@ -785,28 +785,28 @@ Public Class BenchmarkPaystubRateTest
         Dim hourlyRate = 67.125
         Dim actualHourlyRate = 75
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, CDec(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate * specialHolidayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayHours * hourlyRate * specialHolidayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayPay, _benchmarkPaystubRate.SpecialHolidayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * specialHolidayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayOTHours * hourlyRate * specialHolidayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayOTPay, _benchmarkPaystubRate.SpecialHolidayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * specialHolidayRestDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayHours * hourlyRate * specialHolidayRestDayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayPay, _benchmarkPaystubRate.SpecialHolidayRestDayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * specialHolidayRestDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.SpecialHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.SpecialHolidayRestDayOTHours * hourlyRate * specialHolidayRestDayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualSpecialHolidayRestDayOTPay, _benchmarkPaystubRate.SpecialHolidayRestDayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, CDec(_benchmarkPaystubRate.RegularHolidayHours * actualHourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * overtimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayOTHours * hourlyRate * overtimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayOTPay, _benchmarkPaystubRate.RegularHolidayOTPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayHours * hourlyRate * restDayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayPay, _benchmarkPaystubRate.RegularHolidayRestDayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, CDec(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularHolidayRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHolidayRestDayOTHours * hourlyRate * restDayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRegularHolidayRestDayOTPay, _benchmarkPaystubRate.RegularHolidayRestDayOTPay)
     End Sub
 
@@ -824,11 +824,11 @@ Public Class BenchmarkPaystubRateTest
         Dim restDayRate = 1.3
         Dim restDayOvertimeRate = 1.69
 
-        Assert.AreEqual(_benchmarkPaystubRate.RestDayPay, CDec(_benchmarkPaystubRate.RestDayHours * hourlyRate * restDayRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayPay, CDec(_benchmarkPaystubRate.RestDayHours * actualHourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayHours * hourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayHours * actualHourlyRate * restDayRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.RestDayOTPay, CDec(_benchmarkPaystubRate.RestDayOTHours * hourlyRate * restDayOvertimeRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayOTPay, CDec(_benchmarkPaystubRate.RestDayOTHours * actualHourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayOTHours * hourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayOTHours * actualHourlyRate * restDayOvertimeRate))
 
     End Sub
 
@@ -853,10 +853,10 @@ Public Class BenchmarkPaystubRateTest
         Dim restDayRate = 1.3
         Dim restDayOvertimeRate = 1.69
 
-        Assert.AreEqual(_benchmarkPaystubRate.RestDayPay, CDec(_benchmarkPaystubRate.RestDayHours * hourlyRate * restDayRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RestDayPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayHours * hourlyRate * restDayRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayPay, _benchmarkPaystubRate.RestDayPay)
 
-        Assert.AreEqual(_benchmarkPaystubRate.RestDayOTPay, CDec(_benchmarkPaystubRate.RestDayOTHours * hourlyRate * restDayOvertimeRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RestDayOTPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RestDayOTHours * hourlyRate * restDayOvertimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualRestDayOTPay, _benchmarkPaystubRate.RestDayOTPay)
 
     End Sub
