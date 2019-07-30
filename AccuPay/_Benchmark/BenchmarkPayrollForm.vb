@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Entity
@@ -21,6 +22,9 @@ Public Class BenchmarkPayrollForm
     Private _salaries As List(Of Salary)
     Private _employees As List(Of Employee)
     Private _actualSalaryPolicy As ActualTimeEntryPolicy
+
+    Private _selectedDeductions As List(Of AdjustmentInput)
+    Private _selectedIncomes As List(Of AdjustmentInput)
 
     Private _overtimeRate As OvertimeRate
 
@@ -50,11 +54,14 @@ Public Class BenchmarkPayrollForm
         _employees = New List(Of Employee)
 
         _overtimes = New List(Of OvertimeInput)
+
+        _selectedDeductions = New List(Of AdjustmentInput)
+        _selectedIncomes = New List(Of AdjustmentInput)
     End Sub
 
     Private Async Sub BenchmarkPayrollForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        EmployeesGridView.AutoGenerateColumns = False
+        InitializeControls()
 
         _benchmarkPayrollHelper = Await BenchmarkPayrollHelper.GetInstance(logger)
 
@@ -65,6 +72,11 @@ Public Class BenchmarkPayrollForm
             Return
 
         End If
+
+        DeductionComboBox.DataSource = _benchmarkPayrollHelper.DeductionList
+        DeductionComboBox.SelectedIndex = -1
+        OtherIncomeComboBox.DataSource = _benchmarkPayrollHelper.IncomeList
+        OtherIncomeComboBox.SelectedIndex = -1
 
         Await GetCutOffPeriod()
 
@@ -77,6 +89,15 @@ Public Class BenchmarkPayrollForm
 
         Await LoadPayrollResourcesAsync()
 
+    End Sub
+
+    Private Sub InitializeControls()
+        EmployeesGridView.AutoGenerateColumns = False
+        DeductionsGridView.AutoGenerateColumns = False
+        OtherIncomeGridView.AutoGenerateColumns = False
+
+        DeductionComboBox.DisplayMember = "PartNo"
+        OtherIncomeComboBox.DisplayMember = "PartNo"
     End Sub
 
     Private Async Function LoadPayrollResourcesAsync() As Task
@@ -138,6 +159,8 @@ Public Class BenchmarkPayrollForm
 
         If EmployeesGridView.CurrentRow IsNot Nothing Then
 
+            If CheckIfGridViewHasValue(EmployeesGridView) = False Then Return
+
             Dim employeeId = CType(EmployeesGridView.CurrentRow.DataBoundItem, Employee)?.RowID
 
             If employeeId Is Nothing Then Return
@@ -161,6 +184,13 @@ Public Class BenchmarkPayrollForm
             PerDayTextBox.Text = _employeeRate.DailyRate.ToString(MoneyFormat)
             PerHourTextBox.Text = _employeeRate.HourlyRate.ToString(MoneyFormat)
             AllowanceTextBox.Text = _employeeRate.AllowanceSalary.ToString(MoneyFormat)
+
+            _selectedDeductions.Clear()
+            DeductionsGridView.Rows.Clear()
+            _selectedIncomes.Clear()
+            OtherIncomeGridView.Rows.Clear()
+
+            _overtimes = New List(Of OvertimeInput)
 
             EmployeeDetailsGroupBox.Enabled = True
             InputsTabControl.Enabled = True
@@ -252,6 +282,8 @@ Public Class BenchmarkPayrollForm
 
         End If
 
+        If CheckIfGridViewHasValue(EmployeesGridView) = False Then Return Nothing
+
         Dim employee = CType(EmployeesGridView.CurrentRow.DataBoundItem, Employee)
 
         If employee Is Nothing Then
@@ -296,9 +328,43 @@ Public Class BenchmarkPayrollForm
         ComputeBasicHoursAndBasicPay(paystub, employee)
         ComputeHoursAndPay(paystub)
 
+        CreateAdjustments(paystub)
+
         generator.ComputePayroll(paystub)
         Return paystub
     End Function
+
+    Private Sub CreateAdjustments(paystub As Paystub)
+
+        paystub.Adjustments = New List(Of Adjustment)
+
+        For Each deduction In _selectedDeductions
+
+            paystub.Adjustments.Add(New Adjustment With {
+                .OrganizationID = z_OrganizationID,
+                .CreatedBy = z_User,
+                .ProductID = deduction.Adjustment?.RowID,
+                .Amount = deduction.Amount * -1 'to make it negative
+            })
+
+        Next
+
+        TotalDeductionsLabel.Text = "Php " & Math.Abs(paystub.TotalDeductionAdjustments).RoundToString()
+
+        For Each deduction In _selectedIncomes
+
+            paystub.Adjustments.Add(New Adjustment With {
+                .OrganizationID = z_OrganizationID,
+                .CreatedBy = z_User,
+                .ProductID = deduction.Adjustment?.RowID,
+                .Amount = deduction.Amount
+            })
+
+        Next
+
+        TotalOtherIncomeLabel.Text = "Php " & paystub.TotalAdditionAdjustments.RoundToString()
+
+    End Sub
 
     Private Sub ComputeBasicHoursAndBasicPay(paystub As Paystub, employee As Employee)
 
@@ -566,6 +632,11 @@ Public Class BenchmarkPayrollForm
 
     Private Sub ComputeSalaryButton_Click(sender As Object, e As EventArgs) Handles ComputeSalaryButton.Click
 
+        GenerateSummary()
+
+    End Sub
+
+    Private Sub GenerateSummary()
         Dim employee = GetSelectedEmployee()
 
         If employee Is Nothing Then
@@ -596,8 +667,11 @@ Public Class BenchmarkPayrollForm
 
         GrossPayTextBox.Text = _currentPaystub.GrossPay.RoundToString()
         TotalLeaveTextBox.Text = _currentPaystub.LeaveHours.RoundToString()
-        TotalDeductionTextBox.Text = _currentPaystub.NetDeductions.RoundToString()
-        TotalOtherIncomeTextBox.Text = _currentPaystub.TotalAllowance.RoundToString()
+
+        TotalDeductionTextBox.Text = (_currentPaystub.NetDeductions +
+                                    Math.Abs(_currentPaystub.TotalDeductionAdjustments)).RoundToString()
+
+        TotalOtherIncomeTextBox.Text = _currentPaystub.TotalAdditionAdjustments.RoundToString()
         TotalOvertimeTextBox.Text = GetTotalOvertimePay(_currentPaystub).RoundToString()
         NetPayTextBox.Text = _currentPaystub.NetPay.RoundToString()
 
@@ -632,6 +706,57 @@ Public Class BenchmarkPayrollForm
 
     End Function
 
+    Private Function GetSelectedDeduction() As Product
+
+        If DeductionComboBox.SelectedIndex < 0 OrElse
+            DeductionComboBox.SelectedIndex >= _benchmarkPayrollHelper.DeductionList.Count Then
+
+            Return Nothing
+
+        End If
+
+        Return _benchmarkPayrollHelper.DeductionList(DeductionComboBox.SelectedIndex)
+
+    End Function
+
+    Private Function GetSelectedIncome() As Product
+
+        If OtherIncomeComboBox.SelectedIndex < 0 OrElse
+            OtherIncomeComboBox.SelectedIndex >= _benchmarkPayrollHelper.IncomeList.Count Then
+
+            Return Nothing
+
+        End If
+
+        Return _benchmarkPayrollHelper.IncomeList(OtherIncomeComboBox.SelectedIndex)
+
+    End Function
+
+    Private Sub RefreshDeductionGridView()
+
+        DeductionComboBox.SelectedIndex = -1
+
+        Try
+
+            DeductionsGridView.DataSource = New BindingList(Of AdjustmentInput)(_selectedDeductions)
+        Catch ex As Exception
+            'usually because the cell is not yet committed (maybe because there is error)
+        End Try
+
+    End Sub
+
+    Private Sub RefreshOtherIncomeGridView()
+
+        OtherIncomeComboBox.SelectedIndex = -1
+
+        Try
+            OtherIncomeGridView.DataSource = New BindingList(Of AdjustmentInput)(_selectedIncomes)
+        Catch ex As Exception
+            'usually because the cell is not yet committed (maybe because there is error)
+        End Try
+
+    End Sub
+
     Private Sub SetOvertimeButton_Click(sender As Object, e As EventArgs) Handles SetOvertimeButton.Click
 
         Dim form As New SetOvertimeForm(_employeeRate.HourlyRate, _overtimeRate.OvertimeRateList, _overtimes)
@@ -646,5 +771,175 @@ Public Class BenchmarkPayrollForm
     Private Sub SavePayrollButton_Click(sender As Object, e As EventArgs) Handles SavePayrollButton.Click
 
     End Sub
+
+    Private Sub AddDeductionButton_Click(sender As Object, e As EventArgs) Handles AddDeductionButton.Click
+
+        Dim adjustment = GetSelectedDeduction()
+
+        If adjustment Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Select a deduction type first.")
+            Return
+        End If
+
+        If _selectedDeductions.
+            Where(Function(a) a.Adjustment.RowID.Value = adjustment.RowID.Value).
+            Any Then
+
+            MessageBoxHelper.Warning("You have already added this deduction. You can edit the existing deduction amount instead.")
+            Return
+
+        End If
+
+        _selectedDeductions.Add(New AdjustmentInput(adjustment))
+
+        RefreshDeductionGridView()
+
+    End Sub
+
+    Private Sub RemoveDeductionButton_Click(sender As Object, e As EventArgs) Handles RemoveDeductionButton.Click
+
+        If CheckIfGridViewHasValue(DeductionsGridView) = False Then Return
+
+        Dim adjustment = CType(DeductionsGridView.CurrentRow?.DataBoundItem, AdjustmentInput)
+
+        If adjustment Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected deduction.")
+            Return
+        End If
+
+        _selectedDeductions.Remove(adjustment)
+
+        RefreshDeductionGridView()
+
+        GenerateSummary()
+
+    End Sub
+
+    Private Function CheckIfGridViewHasValue(gridView As DataGridView) As Boolean
+        Return gridView.Rows.
+                        Cast(Of DataGridViewRow).
+                        Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
+                                                Any(Function(c) c.Value IsNot Nothing))
+    End Function
+
+    Private Sub AddIncomeButton_Click(sender As Object, e As EventArgs) Handles AddIncomeButton.Click
+
+        Dim adjustment = GetSelectedIncome()
+
+        If adjustment Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Select an income type first.")
+            Return
+        End If
+
+        If _selectedIncomes.
+            Where(Function(a) a.Adjustment.RowID.Value = adjustment.RowID.Value).
+            Any Then
+
+            MessageBoxHelper.Warning("You have already added this income. You can edit the existing income amount instead.")
+            Return
+
+        End If
+
+        _selectedIncomes.Add(New AdjustmentInput(adjustment))
+
+        RefreshOtherIncomeGridView()
+
+    End Sub
+
+    Private Sub RemoveIncomeButton_Click(sender As Object, e As EventArgs) Handles RemoveIncomeButton.Click
+
+        If CheckIfGridViewHasValue(OtherIncomeGridView) = False Then Return
+
+        Dim adjustment = CType(OtherIncomeGridView.CurrentRow?.DataBoundItem, AdjustmentInput)
+
+        If adjustment Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected income.")
+            Return
+        End If
+
+        _selectedIncomes.Remove(adjustment)
+
+        RefreshOtherIncomeGridView()
+
+        GenerateSummary()
+
+    End Sub
+
+    Private Sub GridView_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) _
+        Handles OtherIncomeGridView.CellEndEdit, DeductionsGridView.CellEndEdit
+
+        If e.RowIndex >= 0 Then
+
+            Dim adjustmentInput As AdjustmentInput
+
+            If sender Is DeductionsGridView Then
+
+                If e.RowIndex >= _selectedDeductions.Count Then Return
+
+                adjustmentInput = _selectedDeductions(e.RowIndex)
+
+            ElseIf sender Is OtherIncomeGridView Then
+
+                If e.RowIndex >= _selectedIncomes.Count Then Return
+
+                adjustmentInput = _selectedIncomes(e.RowIndex)
+            End If
+
+            If adjustmentInput Is Nothing Then
+
+                Return
+            Else
+
+                If adjustmentInput.Amount < 0 Then
+
+                    adjustmentInput.Amount = Math.Abs(adjustmentInput.Amount)
+
+                End If
+
+            End If
+
+            adjustmentInput.Amount = AccuMath.CommercialRound(adjustmentInput.Amount)
+
+            GenerateSummary()
+
+        End If
+
+    End Sub
+
+    Private Sub GridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) _
+        Handles OtherIncomeGridView.DataError, DeductionsGridView.DataError
+
+        e.Cancel = True
+
+    End Sub
+
+    Private Class AdjustmentInput
+
+        Property Adjustment As Product
+        Property Amount As Decimal
+
+        Sub New(adjustment As Product)
+
+            Me.Adjustment = adjustment
+
+        End Sub
+
+        ReadOnly Property Code As String
+            Get
+                Return Adjustment?.Comments
+            End Get
+        End Property
+
+        ReadOnly Property Description As String
+            Get
+                Return Adjustment?.PartNo
+            End Get
+        End Property
+
+    End Class
 
 End Class

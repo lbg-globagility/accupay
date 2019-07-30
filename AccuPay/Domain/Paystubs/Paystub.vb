@@ -249,6 +249,28 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property TotalDeductionAdjustments As Decimal
+            Get
+                Return Adjustments.
+                            Where(Function(a) a.Amount < 0).
+                            Sum(Function(a) a.Amount) +
+                        ActualAdjustments.
+                            Where(Function(a) a.PayAmount < 0).
+                            Sum(Function(a) a.PayAmount)
+            End Get
+        End Property
+
+        Public ReadOnly Property TotalAdditionAdjustments As Decimal
+            Get
+                Return Adjustments.
+                            Where(Function(a) a.Amount > 0).
+                            Sum(Function(a) a.Amount) +
+                        ActualAdjustments.
+                            Where(Function(a) a.PayAmount > 0).
+                            Sum(Function(a) a.PayAmount)
+            End Get
+        End Property
+
         Public Sub New()
             Adjustments = New List(Of Adjustment)
             ActualAdjustments = New List(Of ActualAdjustment)

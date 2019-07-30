@@ -36,7 +36,7 @@ Public Class SetOvertimeForm
 
     End Sub
 
-    Private Async Sub SetOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub SetOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         OvertimeComboBox.DisplayMember = "Name"
         OvertimeComboBox.DataSource = _overtimeRateList
@@ -58,9 +58,7 @@ Public Class SetOvertimeForm
 
         End If
 
-        Dim overtimeRate = Me._overtimeRateList(OvertimeComboBox.SelectedIndex)
-
-        Return overtimeRate
+        Return Me._overtimeRateList(OvertimeComboBox.SelectedIndex)
 
     End Function
 
@@ -132,7 +130,7 @@ Public Class SetOvertimeForm
 
         If overtimeRate Is Nothing Then
 
-            MessageBoxHelper.Warning("Select overtime type first.")
+            MessageBoxHelper.Warning("Select an overtime type first.")
             Return
         End If
 

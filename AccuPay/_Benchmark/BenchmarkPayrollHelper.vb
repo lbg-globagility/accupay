@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Entity
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 
@@ -10,6 +11,22 @@ Namespace Benchmark
 
         Private _pagibigLoanId As Integer?
         Private _sssLoanId As Integer?
+
+        Private _deductionList As List(Of Product)
+
+        Public ReadOnly Property DeductionList() As List(Of Product)
+            Get
+                Return _deductionList
+            End Get
+        End Property
+
+        Private _incomeList As List(Of Product)
+
+        Public ReadOnly Property IncomeList() As List(Of Product)
+            Get
+                Return _incomeList
+            End Get
+        End Property
 
         Private Sub New()
         End Sub
@@ -28,9 +45,30 @@ Namespace Benchmark
 
         End Function
 
+        ''' <summary>
+        ''' Makes sure that Accupay does not have unneccesary data for benchmark.
+        ''' </summary>
+        Public Async Function CleanEmployee(employeeId As Integer) As Task
+
+            Using context As New PayrollContext
+
+                'delete all loans that are not HDMF or SSS
+                'only HDMF or SSS loans are supported in benchmark
+                context.LoanSchedules.
+                        RemoveRange(context.LoanSchedules.
+                                    Where(Function(l) l.EmployeeID.Value = employeeId).
+                                    Where(Function(l) l.LoanTypeID.Value <> _pagibigLoanId.Value).
+                                    Where(Function(l) l.LoanTypeID.Value <> _sssLoanId.Value))
+
+                Await context.SaveChangesAsync
+            End Using
+
+        End Function
+
         Public Async Function Initialize(logger As ILog) As Task(Of Boolean)
 
-            If Await InitializeLoanIds(logger) = False Then
+            If Await InitializeLoanIds(logger) = False OrElse
+                Await InitializeAdjustmentsLists() = False Then
 
                 Return False
 
@@ -49,10 +87,7 @@ Namespace Benchmark
             Using context As New PayrollContext
 
                 'get category
-                Dim loanTypeCategoryId = (Await context.Categories.
-                                               Where(Function(c) c.CategoryName = loanTypeCategory).
-                                               Where(Function(c) c.OrganizationID = z_OrganizationID).
-                                               FirstOrDefaultAsync)?.RowID
+                Dim loanTypeCategoryId As Integer? = Await GetCategoryId(loanTypeCategory, context)
 
                 'get Ids from product table
 
@@ -80,24 +115,40 @@ Namespace Benchmark
 
         End Function
 
-        ''' <summary>
-        ''' Makes sure that Accupay does not have unneccesary data for benchmark.
-        ''' </summary>
-        Public Async Function CleanEmployee(employeeId As Integer) As Task
+        Private Async Function InitializeAdjustmentsLists() As Task(Of Boolean)
+
+            Dim adjustmentTypeCategory = "Adjustment Type"
+
+            Dim deductionsType = "DEDUCTION"
+            Dim incomeType = "ADDITION"
 
             Using context As New PayrollContext
 
-                'delete all loans that are not HDMF or SSS
-                'only HDMF or SSS loans are supported in benchmark
-                context.LoanSchedules.
-                        RemoveRange(context.LoanSchedules.
-                                    Where(Function(l) l.EmployeeID.Value = employeeId).
-                                    Where(Function(l) l.LoanTypeID.Value <> _pagibigLoanId.Value).
-                                    Where(Function(l) l.LoanTypeID.Value <> _sssLoanId.Value))
+                Dim loanTypeCategoryId As Integer? = Await GetCategoryId(adjustmentTypeCategory, context)
 
-                Await context.SaveChangesAsync
+                If loanTypeCategoryId Is Nothing Then Return False
+
+                _deductionList = Await context.Products.
+                                        Where(Function(p) p.CategoryID.Value = loanTypeCategoryId.Value).
+                                        Where(Function(p) p.Description = deductionsType).
+                                        ToListAsync
+
+                _incomeList = Await context.Products.
+                                        Where(Function(p) p.CategoryID.Value = loanTypeCategoryId.Value).
+                                        Where(Function(p) p.Description = incomeType).
+                                        ToListAsync
+
+                Return True
+
             End Using
 
+        End Function
+
+        Private Shared Async Function GetCategoryId(loanTypeCategory As String, context As PayrollContext) As Task(Of Integer?)
+            Return (Await context.Categories.
+                                                           Where(Function(c) c.CategoryName = loanTypeCategory).
+                                                           Where(Function(c) c.OrganizationID = z_OrganizationID).
+                                                           FirstOrDefaultAsync)?.RowID
         End Function
 
     End Class
