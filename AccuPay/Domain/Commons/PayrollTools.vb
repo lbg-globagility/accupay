@@ -17,6 +17,7 @@ Public Class PayrollTools
     Public Const PayFrequencyMonthlyId As Integer = 1
 
     Public Const PayFrequencyWeeklyId As Integer = 4
+    Private Const threeDays As Integer = 3
 
     Public Shared Function GetEmployeeMonthlyRate(
                             employee As Employee,
@@ -81,7 +82,8 @@ Public Class PayrollTools
                             currentTimeEntries As IList(Of TimeEntry),
                             payratesCalendar As PayratesCalendar) As Boolean
 
-        Dim lastPotentialEntry = currentDate.Date.AddDays(-3)
+        Dim threeDaysPrior = threeDays * -1
+        Dim lastPotentialEntry = currentDate.Date.AddDays(threeDaysPrior)
 
         Dim lastTimeEntries = currentTimeEntries.
             Where(Function(t) lastPotentialEntry <= t.Date And t.Date <= currentDate.Date).
@@ -114,6 +116,52 @@ Public Class PayrollTools
 
             Return lastTimeEntry.RegularHours > 0 Or lastTimeEntry.TotalLeaveHours > 0
         Next
+
+        Return False
+    End Function
+
+    Public Shared Function HasWorkAfterLegalHoliday(
+                            legalHolidayDate As Date,
+                            endOfCutOff As Date,
+                            currentTimeEntries As IList(Of TimeEntry),
+                            payratesCalendar As PayratesCalendar) As Boolean
+
+        Dim thirdDateAfterCurrDate = legalHolidayDate.Date.AddDays(threeDays)
+
+        Dim postTimeEntries = currentTimeEntries.
+            Where(Function(t) legalHolidayDate.Date < t.Date And t.Date <= thirdDateAfterCurrDate).
+            OrderBy(Function(t) t.Date).
+            ToList()
+
+        For Each timeEntry In postTimeEntries
+            If timeEntry.HasShift = False Then
+                Continue For
+            End If
+
+            If timeEntry.IsRestDay Then
+
+                If timeEntry.TotalDayPay > 0 Then
+                    Return True
+                End If
+
+                Continue For
+            End If
+
+            Dim payRate = payratesCalendar.Find(timeEntry.Date)
+            If payRate.IsRegularHoliday Then
+                If timeEntry.TotalDayPay > 0 Then
+                    Return True
+                End If
+
+                Continue For
+            End If
+
+            Return timeEntry.RegularHours > 0 Or timeEntry.TotalLeaveHours > 0
+        Next
+
+        'If holiday exactly falls in ending date of cut-off, and no attendance 3days after it
+        'will treat it that employee was present
+        If Not postTimeEntries.Any() And endOfCutOff = legalHolidayDate Then Return True
 
         Return False
     End Function

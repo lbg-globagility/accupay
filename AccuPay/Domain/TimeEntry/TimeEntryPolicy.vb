@@ -98,4 +98,10 @@ Public Class TimeEntryPolicy
         End Get
     End Property
 
+    Public ReadOnly Property PostLegalHolidayCheck As Boolean
+        Get
+            Return _settings.GetBoolean("HolidayPolicy.PostLegalHolidayCheck")
+        End Get
+    End Property
+
 End Class
