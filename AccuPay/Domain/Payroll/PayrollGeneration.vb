@@ -228,9 +228,9 @@ Public Class PayrollGeneration
 
             ComputeHours()
 
-        End If
+            ComputeTotalEarnings()
 
-        ComputeTotalEarnings()
+        End If
 
         CalculateAllowances()
 

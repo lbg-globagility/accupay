@@ -387,14 +387,17 @@
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Repositories\SalaryRepository.vb" />
     <Compile Include="SimplifiedEntities\Interface\IPayPeriod.vb" />
+    <Compile Include="_Benchmark\AdjustmentInput.vb" />
     <Compile Include="_Benchmark\BenchmarkPayrollForm.Designer.vb">
       <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>
     </Compile>
     <Compile Include="_Benchmark\BenchmarkPayrollForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="_Benchmark\BenchmarkPayrollGeneration.vb" />
     <Compile Include="_Benchmark\BenchmarkPayrollHelper.vb" />
     <Compile Include="_Benchmark\BenchmarkPaystubRate.vb" />
+    <Compile Include="_Benchmark\OvertimeInput.vb" />
     <Compile Include="_Benchmark\SetOvertimeForm.Designer.vb">
       <DependentUpon>SetOvertimeForm.vb</DependentUpon>
     </Compile>

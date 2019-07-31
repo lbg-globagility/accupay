@@ -19,13 +19,11 @@ Namespace Benchmark
         Public Property ActualDailyRate As Decimal
         Public Property ActualHourlyRate As Decimal
 
-        Sub New(employee As Employee, salaries As List(Of Salary))
+        Sub New(employee As Employee, salary As Salary)
 
             Me.Employee = employee
 
-            Me.Salary = salaries.
-                                Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
-                                FirstOrDefault
+            Me.Salary = salary
 
             Me.MonthlyRate = AccuMath.CommercialRound(PayrollTools.GetEmployeeMonthlyRate(employee, Me.Salary), 4)
             Me.DailyRate = AccuMath.CommercialRound(PayrollTools.GetDailyRate(Me.MonthlyRate, employee.WorkDaysPerYear), 4)
