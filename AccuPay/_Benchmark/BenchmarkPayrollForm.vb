@@ -5,6 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
+Imports AccuPay.ModelData
 Imports AccuPay.Repository
 Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
@@ -38,6 +39,8 @@ Public Class BenchmarkPayrollForm
     Private _employeeRate As BenchmarkPaystubRate
 
     Private _overtimes As List(Of OvertimeInput)
+
+    Private _leaveBalance As Decimal
 
     Private Const MoneyFormat As String = "#,##0.0000"
 
@@ -185,6 +188,8 @@ Public Class BenchmarkPayrollForm
 
             _employeeRate = New BenchmarkPaystubRate(employee, salary)
 
+            _leaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID)
+
             If _employeeRate.IsInvalid Then Return
 
             EmployeeNumberLabel.Text = _employeeRate.Employee.EmployeeNo
@@ -234,7 +239,7 @@ Public Class BenchmarkPayrollForm
         RegularDaysTextBox.ResetText()
         OvertimeTextBox.ResetText()
         LateTextBox.ResetText()
-        NightDifferentialTextBox.ResetText()
+        LeaveTextBox.ResetText()
         EcolaTextBox.ResetText()
 
         BasicPaySummaryTextBox.ResetText()
@@ -362,6 +367,7 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Sub GenerateSummary()
+
         Dim employee = GetSelectedEmployee()
 
         If employee Is Nothing Then
@@ -371,13 +377,27 @@ Public Class BenchmarkPayrollForm
 
         End If
 
+        Dim regularDays = AccuMath.CommercialRound(RegularDaysTextBox.Text.ToDecimal)
+        RegularDaysTextBox.Text = regularDays.ToString
+        Dim lateDays = AccuMath.CommercialRound(LateTextBox.Text.ToDecimal)
+        LateTextBox.Text = lateDays.ToString
+        Dim leaveDays = AccuMath.CommercialRound(LeaveTextBox.Text.ToDecimal)
+        LeaveTextBox.Text = leaveDays.ToString
+
+        If leaveDays > _leaveBalance Then
+
+            MessageBoxHelper.ErrorMessage("No remaining SL/VL for this employee.")
+            Return
+        End If
+
         _currentPaystub = BenchmarkPayrollGeneration.DoProcess(
                                                 employee,
                                                 _payrollResources,
                                                 _currentPayPeriod,
                                                 _employeeRate,
-                                                regularDays:=RegularDaysTextBox.Text.ToDecimal,
-                                                lateDays:=LateTextBox.Text.ToDecimal,
+                                                regularDays:=regularDays,
+                                                lateDays:=lateDays,
+                                                leaveDays:=leaveDays,
                                                 overtimeRate:=_overtimeRate,
                                                 actualSalaryPolicy:=_actualSalaryPolicy,
                                                 selectedDeductions:=_selectedDeductions,
@@ -397,10 +417,10 @@ Public Class BenchmarkPayrollForm
 
         NightDifferentialAmountTextBox.Text = _currentPaystub.NightDiffHours.RoundToString()
         ThirteenthMonthPayTextBox.Text = _currentPaystub.ThirteenthMonthPay?.Amount.RoundToString()
-        LeaveBalanceTextBox.Text = 0D.RoundToString()
+        LeaveBalanceTextBox.Text = (_leaveBalance - ConvertHoursToDays(_currentPaystub.LeaveHours)).ToString
 
         GrossPayTextBox.Text = _currentPaystub.GrossPay.RoundToString()
-        TotalLeaveTextBox.Text = _currentPaystub.LeaveHours.RoundToString()
+        TotalLeaveTextBox.Text = _currentPaystub.LeavePay.RoundToString()
 
         TotalDeductionTextBox.Text = (_currentPaystub.NetDeductions +
                                     Math.Abs(_currentPaystub.TotalDeductionAdjustments)).RoundToString()
@@ -411,6 +431,12 @@ Public Class BenchmarkPayrollForm
 
         SummaryGroupBox.Enabled = True
     End Sub
+
+    Private Function ConvertHoursToDays(hours As Decimal) As Decimal
+
+        Return hours / BenchmarkPaystubRate.WorkHoursPerDay
+
+    End Function
 
     Private Function GetTotalOvertimePay(paystub As Paystub) As Decimal
 

@@ -13,7 +13,9 @@ Namespace Benchmark
 
         Private ReadOnly _regularDays As Decimal
 
-        Private ReadOnly _LateDays As Decimal
+        Private ReadOnly _lateDays As Decimal
+
+        Private ReadOnly _leaveDays As Decimal
 
         Private ReadOnly _overtimeRate As OvertimeRate
 
@@ -36,6 +38,7 @@ Namespace Benchmark
                 employeeRate As BenchmarkPaystubRate,
                 regularDays As Decimal,
                 lateDays As Decimal,
+                leaveDays As Decimal,
                 overtimeRate As OvertimeRate,
                 actualSalaryPolicy As ActualTimeEntryPolicy,
                 selectedDeductions As List(Of AdjustmentInput),
@@ -47,7 +50,8 @@ Namespace Benchmark
             _currentPayPeriod = currentPayPeriod
             _employeeRate = employeeRate
             _regularDays = regularDays
-            _LateDays = lateDays
+            _lateDays = lateDays
+            _leaveDays = leaveDays
             _overtimeRate = overtimeRate
             _actualSalaryPolicy = actualSalaryPolicy
             _selectedDeductions = selectedDeductions
@@ -62,6 +66,7 @@ Namespace Benchmark
                                     employeeRate As BenchmarkPaystubRate,
                                     regularDays As Decimal,
                                     lateDays As Decimal,
+                                    leaveDays As Decimal,
                                     overtimeRate As OvertimeRate,
                                     actualSalaryPolicy As ActualTimeEntryPolicy,
                                     selectedDeductions As List(Of AdjustmentInput),
@@ -75,6 +80,7 @@ Namespace Benchmark
                                     employeeRate,
                                     regularDays:=regularDays,
                                     lateDays:=lateDays,
+                                    leaveDays:=leaveDays,
                                     overtimeRate:=overtimeRate,
                                     actualSalaryPolicy:=actualSalaryPolicy,
                                     selectedDeductions:=selectedDeductions,
@@ -151,8 +157,8 @@ Namespace Benchmark
             Dim regularHolidayHours As Decimal = GetOvertime(OvertimeRate.RegularHolidayDescription)
             Dim regularHolidayOTHours As Decimal = GetOvertime(OvertimeRate.RegularHolidayOvertimeDescription)
 
-            Dim leaveHours As Decimal = 0
-            Dim lateHours As Decimal = ConvertDaysToHours(_LateDays)
+            Dim leaveHours As Decimal = ConvertDaysToHours(_leaveDays)
+            Dim lateHours As Decimal = ConvertDaysToHours(_lateDays)
             Dim undertimeHours As Decimal = 0
             Dim absentHours As Decimal = 0
 
