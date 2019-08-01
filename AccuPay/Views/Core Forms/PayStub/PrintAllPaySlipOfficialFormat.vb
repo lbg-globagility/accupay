@@ -1,4 +1,6 @@
-﻿Namespace Global.AccuPay.Views.Payroll
+﻿Imports CrystalDecisions.CrystalReports.Engine
+
+Namespace Global.AccuPay.Views.Payroll
 
     Class PrintAllPaySlipOfficialFormat
 
@@ -31,9 +33,7 @@
 
             Static current_system_owner As String = sys_ownr.CurrentSystemOwner
 
-            Dim some_systemowners = New String() {SystemOwner.Goldwings, SystemOwner.DefaultOwner}
-
-            If some_systemowners.Contains(current_system_owner) Then
+            If SystemOwner.Goldwings = current_system_owner Then
 
                 Dim n_SQLQueryToDatatable As _
             New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual & ");")
@@ -117,7 +117,30 @@
                                                        " INNER JOIN address ad ON ad.RowID=og.PrimaryAddressID",
                                                        " WHERE og.RowID = ", orgztnID,
                                                        ";")).GetFoundRow)
+            Else
 
+                Dim n_SQLQueryToDatatable As _
+            New SQLQueryToDatatable("CALL PrintDefaultPayslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual & ");")
+
+                catchdt = n_SQLQueryToDatatable.ResultTable
+
+                'rptdoc = New OfficialPaySlipFormat
+                Dim rptPayslip As New DefaultPaySlipFormat
+
+                With rptPayslip.Section2
+                    Dim objText As TextObject = .ReportObjects("txtOrganizName")
+                    objText.Text = orgNam.ToUpper
+
+                    objText = .ReportObjects("txtPayPeriod")
+
+                    If ValNoComma(n_PayPeriodRowID) > 0 Then
+                        objText.Text =
+                New ExecuteQuery("SELECT CONCAT(DATE_FORMAT(PayFromDate," & customDateFormat & "),' to ',DATE_FORMAT(PayToDate," & customDateFormat & ")) `Result`" &
+                                 " FROM payperiod WHERE RowID=" & ValNoComma(n_PayPeriodRowID) & ";").Result
+                    End If
+                End With
+
+                rptdoc = rptPayslip
             End If
 
             rptdoc.SetDataSource(catchdt)

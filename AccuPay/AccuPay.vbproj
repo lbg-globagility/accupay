@@ -373,6 +373,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
+    <Compile Include="Reports\rpt\rpt\DefaultPaySlipFormat.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefaultPaySlipFormat.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Repositories\AllowanceRepository.vb" />
     <Compile Include="Repositories\ContributionSchedule.vb" />
     <Compile Include="Repositories\DivisionRepository.vb" />
@@ -1786,6 +1792,10 @@
     <EmbeddedResource Include="Reports\Reports\New Employee Leave Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>New Employee Leave Ledger.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rpt\rpt\DefaultPaySlipFormat.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DefaultPaySlipFormat.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\AddDivisionForm.resx">
       <DependentUpon>AddDivisionForm.vb</DependentUpon>
