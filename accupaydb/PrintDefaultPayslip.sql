@@ -64,17 +64,11 @@ SELECT
             IsActualFlag,
             (
                 psa.OvertimePay +
-                psa.NightDiffOvertimePay +
-                psa.RestDayOTPay +
-                psa.SpecialHolidayOTPay +
-                psa.RegularHolidayOTPay
+                psa.NightDiffOvertimePay
             ),
             (
                 ps.OvertimePay +
-                ps.NightDiffOvertimePay +
-                ps.RestDayOTPay +
-                ps.SpecialHolidayOTPay +
-                ps.RegularHolidayOTPay
+                ps.NightDiffOvertimePay
             )
         )
     ) `COL13`,
