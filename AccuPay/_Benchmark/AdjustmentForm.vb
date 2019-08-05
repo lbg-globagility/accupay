@@ -7,21 +7,23 @@ Imports AccuPay.Utils
 
 Public Class AdjustmentForm
 
-    Private ReadOnly _adjustmentType As AdjustmentType
+    Private ReadOnly _adjustmentType As AdjustmentType.AdjustmentType
 
     Private _productRepository As ProductRepository
 
     Private _adjustments As IEnumerable(Of Product)
 
-    Public Enum AdjustmentType
+    Private _currentAdjustment As Product
 
-        Deduction
-        OtherIncome
-        Blank
+    Private _currentFormType As FormType
 
+    Private Enum FormType
+        Null
+        Add
+        Edit
     End Enum
 
-    Sub New(Optional adjustmentType As AdjustmentType = AdjustmentType.Blank)
+    Sub New(Optional adjustmentType As AdjustmentType.AdjustmentType = AdjustmentType.AdjustmentType.Blank)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -40,13 +42,13 @@ Public Class AdjustmentForm
     End Sub
 
     Private Async Function RefreshForm() As Task
-        If _adjustmentType = AdjustmentType.Deduction Then
+        If _adjustmentType = AdjustmentType.AdjustmentType.Deduction Then
 
             _adjustments = Await _productRepository.GetDeductionAdjustmentTypes()
 
             Me.Text = "Deduction Adjustments"
 
-        ElseIf _adjustmentType = AdjustmentType.OtherIncome Then
+        ElseIf _adjustmentType = AdjustmentType.AdjustmentType.OtherIncome Then
 
             _adjustments = Await _productRepository.GetAdditionAdjustmentTypes()
 
@@ -57,8 +59,14 @@ Public Class AdjustmentForm
 
         End If
 
+        CodeTextBox.Clear()
+        DescriptionTextBox.Clear()
+        DetailsGroupBox.Enabled = False
+
         AdjustmentGridView.AutoGenerateColumns = False
         AdjustmentGridView.DataSource = _adjustments
+
+        _currentFormType = FormType.Null
     End Function
 
     Private Function GetSelectedAdjustment() As Product
@@ -82,12 +90,33 @@ Public Class AdjustmentForm
                                                 Any(Function(c) c.Value IsNot Nothing))
     End Function
 
+    Private Function GetTextBoxWithError() As TextBox
+        Dim errorTextBox As TextBox = Nothing
+
+        If String.IsNullOrWhiteSpace(CodeTextBox.Text) Then
+
+            errorTextBox = CodeTextBox
+
+        ElseIf String.IsNullOrWhiteSpace(DescriptionTextBox.Text) Then
+
+            errorTextBox = DescriptionTextBox
+
+        End If
+
+        Return errorTextBox
+    End Function
+
     Private Sub AddButton_Click(sender As Object, e As EventArgs) Handles AddButton.Click
 
         DetailsGroupBox.Text = "New Adjustment"
+        DetailsGroupBox.Enabled = True
 
         CodeTextBox.Clear()
         DescriptionTextBox.Clear()
+
+        _currentFormType = FormType.Add
+
+        CodeTextBox.Focus()
 
     End Sub
 
@@ -102,10 +131,101 @@ Public Class AdjustmentForm
 
         End If
 
-        DetailsGroupBox.Text = "Edit Adjustment"
+        _currentAdjustment = adjustment
 
-        CodeTextBox.Text = adjustment.Comments
-        DescriptionTextBox.Text = adjustment.PartNo
+        DetailsGroupBox.Text = "Edit Adjustment"
+        DetailsGroupBox.Enabled = True
+
+        CodeTextBox.Text = _currentAdjustment.Comments
+        DescriptionTextBox.Text = _currentAdjustment.PartNo
+
+        _currentFormType = FormType.Edit
+
+        CodeTextBox.Focus()
+
+    End Sub
+
+    Private Async Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+
+        Dim adjustment = GetSelectedAdjustment()
+
+        Dim adjustmentId = adjustment?.RowID
+
+        If adjustmentId Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("No adjustment selected.")
+            Return
+
+        End If
+
+        Dim confirmMessage = $"Are you sure you want to delete adjustment: '{adjustment.PartNo}'?"
+
+        If MessageBoxHelper.Confirm(Of Boolean) _
+               (confirmMessage, "Delete Adjustment", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
+
+        Await FunctionUtils.TryCatchFunctionAsync("Delete Adjustment",
+                Async Function()
+
+                    Await _productRepository.Delete(adjustmentId.Value)
+
+                    Await RefreshForm()
+                    MessageBoxHelper.Information($"Adjustment: '{adjustment.PartNo}' successfully deleted.")
+                End Function)
+
+    End Sub
+
+    Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
+
+        Dim errorTextBox As TextBox = GetTextBoxWithError()
+
+        If _currentFormType = FormType.Null Then Return
+
+        If errorTextBox IsNot Nothing Then
+
+            MessageBoxHelper.Warning("Please provide input for the required fields.")
+            errorTextBox.Focus()
+            Return
+
+        End If
+
+        If _currentFormType = FormType.Edit AndAlso _currentAdjustment?.RowID Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("There was a problem in updating the adjustment type. Please reopen the form and try again.")
+            Return
+        End If
+
+        Await FunctionUtils.TryCatchFunctionAsync("Save adjustment",
+                                Async Function()
+
+                                    Dim successMessage = ""
+
+                                    Dim adjustmentName = DescriptionTextBox.Text.Trim
+
+                                    If _currentFormType = FormType.Add Then
+
+                                        Await _productRepository.AddAdjustmentType(
+                                                        adjustmentName:=adjustmentName,
+                                                        code:=CodeTextBox.Text.Trim,
+                                                        adjustmentType:=_adjustmentType)
+
+                                        successMessage = $"Adjustment: '{adjustmentName}' successfully added."
+
+                                    ElseIf _currentFormType = FormType.Edit Then
+
+                                        Dim currentAdjustmentId = _currentAdjustment.RowID.Value
+
+                                        Await _productRepository.UpdateAdjustmentType(currentAdjustmentId,
+                                                        adjustmentName:=adjustmentName,
+                                                        code:=CodeTextBox.Text.Trim)
+
+                                        successMessage = $"Adjustment: '{adjustmentName}' successfully updated."
+                                    End If
+
+                                    Await RefreshForm()
+
+                                    MessageBoxHelper.Information(successMessage)
+
+                                End Function)
 
     End Sub
 

@@ -405,14 +405,14 @@ Public Class HRISForm
 
     Private Sub DeductionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeductionsToolStripMenuItem.Click
 
-        Dim form As New AdjustmentForm(AdjustmentForm.AdjustmentType.Deduction)
+        Dim form As New AdjustmentForm(AdjustmentType.AdjustmentType.Deduction)
         form.ShowDialog()
 
     End Sub
 
     Private Sub OtherIncomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OtherIncomeToolStripMenuItem.Click
 
-        Dim form As New AdjustmentForm(AdjustmentForm.AdjustmentType.OtherIncome)
+        Dim form As New AdjustmentForm(AdjustmentType.AdjustmentType.OtherIncome)
         form.ShowDialog()
 
     End Sub

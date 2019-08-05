@@ -122,19 +122,84 @@ Namespace Global.AccuPay.Repository
         Public Async Function AddLoanType(loanName As String, Optional throwError As Boolean = True) _
             As Task(Of Product)
 
+            Dim product As New Product
+
+            product.Category = ProductConstant.LOAN_TYPE_CATEGORY
+
+            Return Await AddProduct(loanName, throwError, product)
+
+        End Function
+
+        Public Async Function AddAllowanceType(allowanceName As String, Optional throwError As Boolean = True) _
+            As Task(Of Product)
+
+            Dim product As New Product
+
+            product.Category = ProductConstant.ALLOWANCE_TYPE_CATEGORY
+
+            Return Await AddProduct(allowanceName, throwError, product)
+
+        End Function
+
+        Public Async Function AddAdjustmentType(
+                                    adjustmentName As String,
+                                    code As String,
+                                    adjustmentType As AdjustmentType.AdjustmentType,
+                                    Optional throwError As Boolean = True) _
+            As Task(Of Product)
+
+            Dim product As New Product
+
+            product.Comments = code
+            product.Description = DetermineAdjustmentTypeString(adjustmentType)
+
+            product.Category = ProductConstant.ADJUSTMENT_TYPE_CATEGORY
+
+            Return Await AddProduct(adjustmentName, throwError, product)
+
+        End Function
+
+        Public Async Function Delete(id As Integer, Optional throwError As Boolean = True) _
+            As Task(Of Boolean)
+
             Using context = New PayrollContext()
 
-                Dim product As New Product
-                product.PartNo = loanName.Trim()
-                product.Name = loanName.Trim()
+                Dim product = Await context.Products.FirstOrDefaultAsync(Function(p) p.RowID.Value = id)
 
-                product.Category = ProductConstant.LOAN_TYPE_CATEGORY
+                If product Is Nothing Then
+                    If throwError Then
+                        Throw New ArgumentException("The data that you want to delete is already gone. Please reopen the form to refresh the page.")
+                    Else
+                        Return False
+                    End If
 
-                product.Created = Date.Now
-                product.CreatedBy = z_User
-                product.OrganizationID = z_OrganizationID
+                End If
 
-                context.Products.Add(product)
+                context.Products.Remove(product)
+
+                Await context.SaveChangesAsync()
+
+                Return True
+            End Using
+
+        End Function
+
+        Public Async Function UpdateAdjustmentType(id As Integer, adjustmentName As String, code As String, Optional throwError As Boolean = True) _
+            As Task(Of Product)
+
+            Using context = New PayrollContext()
+
+                Dim product = Await context.Products.FirstOrDefaultAsync(Function(p) p.RowID.Value = id)
+
+                If product Is Nothing AndAlso throwError Then
+                    Throw New ArgumentException("There was a problem in updating the adjustment type. Please reopen the form and try again.")
+                End If
+
+                product.PartNo = adjustmentName.Trim()
+                product.Name = adjustmentName.Trim()
+
+                product.Comments = code
+                product.LastUpdBy = z_User
 
                 Await context.SaveChangesAsync()
 
@@ -142,7 +207,7 @@ Namespace Global.AccuPay.Repository
                     FirstOrDefaultAsync(Function(p) Nullable.Equals(p.RowID, product.RowID))
 
                 If newProduct Is Nothing AndAlso throwError Then
-                    Throw New ArgumentException("There was a problem inserting the new loan type. Please try again.")
+                    Throw New ArgumentException("There was a problem inserting the new adjustment type. Please try again.")
                 End If
 
                 Return newProduct
@@ -150,33 +215,15 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Public Async Function AddAllowanceType(loanName As String, Optional throwError As Boolean = True) _
-            As Task(Of Product)
+        Public Async Function CheckIfProductExists(productName As String, categoryId As Integer?) As Task(Of Boolean)
 
-            Using context = New PayrollContext()
+            Using context As New PayrollContext
 
-                Dim product As New Product
-                product.PartNo = loanName.Trim()
-                product.Name = loanName.Trim()
-
-                product.Category = ProductConstant.ALLOWANCE_TYPE_CATEGORY
-
-                product.Created = Date.Now
-                product.CreatedBy = z_User
-                product.OrganizationID = z_OrganizationID
-
-                context.Products.Add(product)
-
-                Await context.SaveChangesAsync()
-
-                Dim newProduct = Await context.Products.
-                    FirstOrDefaultAsync(Function(p) Nullable.Equals(p.RowID, product.RowID))
-
-                If newProduct Is Nothing AndAlso throwError Then
-                    Throw New ArgumentException("There was a problem inserting the new loan type. Please try again.")
-                End If
-
-                Return newProduct
+                Return Await context.Products.
+                                Where(Function(p) p.PartNo.Trim = productName.Trim).
+                                Where(Function(p) p.CategoryID.Value = categoryId.Value).
+                                Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                                AnyAsync
             End Using
 
         End Function
@@ -300,6 +347,71 @@ Namespace Global.AccuPay.Repository
             Dim category = Await GetOrCreateCategoryByName(categoryName)
             Return GetProductsByCategoryBaseQuery(category.RowID, context)
 
+        End Function
+
+        Private Async Function AddProduct(productName As String, throwError As Boolean, product As Product) As Task(Of Product)
+
+            Dim categoryId = (Await GetOrCreateCategoryByName(product.Category))?.RowID
+
+            If categoryId Is Nothing Then
+
+                If throwError Then
+                    Throw New ArgumentException("There was a problem on saving the data. Please try again.")
+                Else
+                    Return Nothing
+                End If
+
+            End If
+
+            If Await CheckIfProductExists(productName, categoryId) Then
+
+                If throwError Then
+                    Throw New ArgumentException("Product already exists.")
+                Else
+                    Return Nothing
+                End If
+
+            End If
+
+            product.CategoryID = categoryId
+
+            product.PartNo = productName.Trim()
+            product.Name = productName.Trim()
+
+            product.Created = Date.Now
+            product.CreatedBy = z_User
+            product.OrganizationID = z_OrganizationID
+
+            Using context = New PayrollContext()
+
+                context.Products.Add(product)
+
+                Await context.SaveChangesAsync()
+
+                Dim newProduct = Await context.Products.
+                    FirstOrDefaultAsync(Function(p) Nullable.Equals(p.RowID, product.RowID))
+
+                If newProduct Is Nothing AndAlso throwError Then
+                    Throw New ArgumentException("There was a problem on saving the data. Please try again.")
+                End If
+
+                Return newProduct
+            End Using
+        End Function
+
+        Private Shared Function DetermineAdjustmentTypeString(adjustmentType As AdjustmentType.AdjustmentType) As String
+            If adjustmentType = AccuPay.AdjustmentType.AdjustmentType.Deduction Then
+
+                Return ProductConstant.ADJUSTMENT_TYPE_DEDUCTION
+
+            ElseIf adjustmentType = AccuPay.AdjustmentType.AdjustmentType.OtherIncome Then
+
+                Return ProductConstant.ADJUSTMENT_TYPE_ADDITION
+            Else
+
+                Return String.Empty
+
+            End If
         End Function
 
 #End Region
