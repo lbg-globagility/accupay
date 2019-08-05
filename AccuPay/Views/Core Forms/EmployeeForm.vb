@@ -882,6 +882,9 @@ Public Class EmployeeForm
                            agensi_rowid,
                            0)
             succeed = new_eRowID IsNot Nothing
+
+            'TODO benchmark
+            'save allowance from leave groupbox
         Catch ex As Exception
             succeed = False
             MsgBox(getErrExcptn(ex, Me.Name))
@@ -965,13 +968,21 @@ Public Class EmployeeForm
             .Cells("Column34").Value = cboEmpType.Text
 
             .Cells("colstartdate").Value = dtpempstartdate.Value
-            .Cells("Column35").Value = txtvlallow.Text
 
-            .Cells("Column36").Value = txtvlallow.Text
+            If if_sysowner_is_benchmark Then
+
+                .Cells("Column36").Value = LeaveAllowanceTextBox.Text
+                .Cells("Column35").Value = LeaveBalanceTextBox.Text
+            Else
+
+                .Cells("Column36").Value = txtvlallow.Text
+                .Cells("Column35").Value = txtvlbal.Text
+
+            End If
+
             .Cells("slallowance").Value = txtslallow.Text
             .Cells("mlallowance").Value = txtmlallow.Text
 
-            .Cells("Column35").Value = txtvlbal.Text
             .Cells("slbalance").Value = txtslbal.Text
             .Cells("mlbalance").Value = txtmlbal.Text
 
@@ -1012,364 +1023,6 @@ Public Class EmployeeForm
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
         tsbtnSaveEmp.Enabled = True
-    End Sub
-
-    Sub SaveEmployee(sender As Object, e As EventArgs) 'Handles tsbtnSaveEmp.Click
-
-        RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-
-        If tsbtnNewEmp.Enabled = False And
-            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" & Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1 Then
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-
-            WarnBalloon("Employee ID has already exist.", "Invalid employee ID", lblforballoon, 0, -69)
-            Exit Sub
-        ElseIf Trim(txtEmpID.Text) = "" Then
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            txtEmpID.Focus()
-            WarnBalloon("Please input an employee ID.", "Invalid employee ID", lblforballoon, 0, -69)
-            Exit Sub
-        ElseIf cboEmpType.Text = "" Then
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            cboEmpType.Focus()
-            WarnBalloon("Please select an employee type.", "Invalid employee type", lblforballoon, 0, -69)
-            Exit Sub
-        ElseIf Trim(txtFName.Text) = "" Then
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            txtFName.Focus()
-            WarnBalloon("Please input first name.", "Invalid first name", lblforballoon, 0, -69)
-            Exit Sub
-        ElseIf Trim(txtLName.Text) = "" Then
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            txtLName.Focus()
-            WarnBalloon("Please input last name.", "Invalid last name", lblforballoon, 0, -69)
-            Exit Sub
-
-        ElseIf Trim(cboMaritStat.Text) = "" Then
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            cboMaritStat.Focus()
-            WarnBalloon("Please input marital status.", "Invalid marital status", lblforballoon, 0, -69)
-            Exit Sub
-
-        ElseIf Trim(cboPayFreq.Text) = "" Then
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            cboPayFreq.Focus()
-            WarnBalloon("Please input a pay frequency.", "Invalid Pay Frequency", lblforballoon, 0, -69)
-            Exit Sub
-
-        ElseIf Trim(cboEmpStat.Text) = "" Then
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            cboEmpStat.Focus()
-            WarnBalloon("Please input an Employee status.", "Invalid Employee status", lblforballoon, 0, -69)
-            Exit Sub
-
-        ElseIf rdbDirectDepo.Checked Then
-
-            If txtATM.Text.Trim = String.Empty Then
-                AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-                txtATM.Focus()
-                WarnBalloon("Please input an ATM No.", "Invalid ATM No.", lblforballoon, 0, -69)
-                Exit Sub
-            ElseIf cbobank.Text.Trim = String.Empty Then
-                AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-                cbobank.Focus()
-                WarnBalloon("Please input a Bank Name", "Invalid Bank Name", lblforballoon, 0, -69)
-                Exit Sub
-            End If
-
-        End If
-
-        Dim params(54, 2) As Object
-
-        params(0, 0) = "RID"
-        params(1, 0) = "UserRowID"
-        params(2, 0) = "OrganizID"
-        params(3, 0) = "Salutat"
-        params(4, 0) = "FName"
-        params(5, 0) = "MName"
-        params(6, 0) = "LName"
-        params(7, 0) = "Surname"
-        params(8, 0) = "EmpID"
-        params(9, 0) = "TIN"
-        params(10, 0) = "SSS"
-        params(11, 0) = "HDMF"
-        params(12, 0) = "PhH"
-        params(13, 0) = "EmpStatus"
-        params(14, 0) = "EmailAdd"
-        params(15, 0) = "WorkNo"
-        params(16, 0) = "HomeNo"
-        params(17, 0) = "MobileNo"
-        params(18, 0) = "HAddress"
-        params(19, 0) = "Nick"
-        params(20, 0) = "JTitle"
-        params(21, 0) = "Gend"
-        params(22, 0) = "EmpType"
-        params(23, 0) = "MaritStat"
-        params(24, 0) = "BDate"
-        params(25, 0) = "Start_Date"
-        params(26, 0) = "TerminatDate"
-        params(27, 0) = "PositID"
-        params(28, 0) = "PayFreqID"
-        params(29, 0) = "NumDependent"
-        params(30, 0) = "UTOverride"
-        params(31, 0) = "OTOverride"
-        params(32, 0) = "NewEmpFlag"
-        params(33, 0) = "LeaveBal"
-        params(34, 0) = "SickBal"
-        params(35, 0) = "MaternBal"
-        params(36, 0) = "LeaveAllow"
-        params(37, 0) = "SickAllow"
-        params(38, 0) = "MaternAllow"
-        params(39, 0) = "Imag"
-        params(40, 0) = "LeavePayPer"
-        params(41, 0) = "SickPayPer"
-        params(42, 0) = "MaternPayPer"
-        params(43, 0) = "IsExemptAlphaList"
-        params(44, 0) = "Work_DaysPerYear"
-        params(45, 0) = "Day_Rest"
-
-        params(46, 0) = "ATM_No"
-        params(47, 0) = "OtherLeavePayPer"
-        params(48, 0) = "Bank_Name"
-        params(49, 0) = "Calc_Holiday"
-
-        params(50, 0) = "Calc_SpecialHoliday"
-        params(51, 0) = "Calc_NightDiff"
-        params(52, 0) = "Calc_NightDiffOT"
-        params(53, 0) = "Calc_RestDay"
-        params(54, 0) = "Calc_RestDayOT"
-        '**********************
-        Dim dgvEmp_RowIndex = 0
-        Try
-            txtEmpID.Focus()
-            'dgvEmp
-
-            If tsbtnNewEmp.Enabled = True Then
-                params(0, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-            Else
-                params(0, 1) = DBNull.Value
-            End If
-
-            params(1, 1) = z_User 'CreaBy
-            params(2, 1) = orgztnID 'OrganizID
-            params(4, 1) = Trim(cboSalut.Text) 'Salutat
-            params(4, 1) = Trim(txtFName.Text) 'FName
-            params(5, 1) = Trim(txtMName.Text) 'MName
-            params(6, 1) = Trim(txtLName.Text) 'LName
-            params(7, 1) = Trim(txtSName.Text) 'Surname
-            params(8, 1) = Trim(txtEmpID.Text) 'EmpID
-            params(9, 1) = txtTIN.Text 'TIN
-            params(10, 1) = txtSSS.Text 'SSS
-            params(11, 1) = txtHDMF.Text 'HDMF
-            params(12, 1) = txtPIN.Text 'PhH
-            params(13, 1) = cboEmpStat.Text 'EmpStatus
-            params(14, 1) = Trim(txtemail.Text) 'EmailAdd
-            params(15, 1) = Trim(txtWorkPhne.Text) 'WorkNo
-            params(16, 1) = Trim(txtHomePhne.Text) 'HomeNo
-            params(17, 1) = Trim(txtMobPhne.Text) 'MobileNo
-            params(18, 1) = Trim(txtHomeAddr.Text) 'HAddress
-            params(19, 1) = Trim(txtNName.Text) 'Nick
-            params(20, 1) = Trim(txtDivisionName.Text) 'JTitle
-            params(21, 1) = If(rdMale.Checked, "M", "F") 'Gend
-            params(22, 1) = cboEmpType.Text 'EmpType
-            params(23, 1) = cboMaritStat.Text 'MaritStat
-            params(24, 1) = Format(CDate(dtpempbdate.Value), "yyyy-MM-dd") 'BDate
-            params(25, 1) = Format(CDate(dtpempstartdate.Value), "yyyy-MM-dd") 'Start_Date
-
-            params(26, 1) = DBNull.Value 'If(termdate = "", DBNull.Value, Format(CDate(termdate), "yyyy-MM-dd"))
-
-            Dim positn_ID = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "",
-                               DBNull.Value,
-                               If(getStrBetween(positn.Item(cboPosit.SelectedIndex).ToString, "", "@") = "NULL",
-                                  DBNull.Value,
-                                  getStrBetween(positn.Item(cboPosit.SelectedIndex).ToString, "", "@")))
-
-            params(27, 1) = positID 'positn_ID 'PositID
-
-            Dim pay_freqID = EXECQUER("SELECT RowID FROM payfrequency WHERE PayFrequencyType='" & cboPayFreq.Text & "';")
-            params(28, 1) = cboPayFreq.SelectedValue 'If(Val(pay_freqID) = 0, DBNull.Value, pay_freqID) 'PayFreqID
-
-            Dim Employee_RowID_ID = Nothing
-
-            If dgvEmp.RowCount <> 0 Then
-                Employee_RowID_ID = dgvEmp.CurrentRow.Cells("RowID").Value
-            End If
-
-            Dim count_Dependents = EXECQUER("SELECT COUNT(edep.RowID)" &
-                                     " FROM employeedependents edep" &
-                                     " LEFT JOIN employee e ON e.RowID=edep.ParentEmployeeID AND e.OrganizationID=edep.OrganizationID" &
-                                     " WHERE e.RowID='" & Employee_RowID_ID & "'" &
-                                     " AND edep.ActiveFlag='Y'" &
-                                     " AND edep.OrganizationID='" & orgztnID & "';") 'NumDependent
-
-            count_Dependents = IntVal(count_Dependents)
-
-            params(29, 1) = count_Dependents
-            params(30, 1) = If(chkutflag.Checked, "1", "0") 'UTOverride
-            params(31, 1) = If(chkotflag.Checked, "1", "0") 'UTOverride
-            params(32, 1) = If(cboEmpStat.Text = "Probationary", "1", "0") 'NewEmpFlag
-            params(33, 1) = txtvlbal.Text 'LeaveBal
-            params(34, 1) = txtslbal.Text 'SickBal
-            params(35, 1) = txtmlbal.Text 'MaternBal
-            params(36, 1) = txtvlallow.Text 'LeaveAllow
-            params(37, 1) = txtslallow.Text 'SickAllow
-            params(38, 1) = txtmlallow.Text 'MaternAllow
-            '*********IMAGE
-            If File.Exists(Path.GetTempPath & "tmpfileEmployeeImage.jpg") Then 'pbemppic.Image = Nothing
-                params(39, 1) = convertFileToByte(Path.GetTempPath & "tmpfileEmployeeImage.jpg") 'ang gawin mo from image, convert into Byte()
-            ElseIf empPic = "" Then
-                params(39, 1) = DBNull.Value
-            ElseIf empPic <> "" Then
-                If File.Exists(Path.GetTempPath & "tmpfileEmployeeImage.jpg") Then
-                    params(39, 1) = convertFileToByte(empPic)
-                Else
-                    params(39, 1) = DBNull.Value
-                End If
-            End If
-            '*********IMAGE
-            params(40, 1) = ValNoComma(txtvlpayp.Text) 'LeavePayPer
-            params(41, 1) = ValNoComma(txtslpayp.Text) 'SickPayPer
-            params(42, 1) = ValNoComma(txtmlpayp.Text) 'MaternPayPer
-            params(43, 1) = If(chkAlphaListExempt.Checked, "0", "1")
-            params(44, 1) = ValNoComma(txtWorkDaysPerYear.Text)
-            If cboDayOfRest.SelectedIndex = -1 Then
-                params(45, 1) = "1"
-            Else
-                params(45, 1) = cboDayOfRest.SelectedIndex + 1
-            End If
-            params(46, 1) = txtATM.Text.Trim
-            params(47, 1) = ValNoComma(txtothrpayp.Text)
-            params(48, 1) = cbobank.Text
-            params(49, 1) = If(chkcalcHoliday.Checked, "Y", "N")
-            params(50, 1) = If(chkcalcSpclHoliday.Checked, "Y", "N")
-            params(51, 1) = If(chkcalcNightDiff.Checked, "Y", "N")
-            params(52, 1) = If(chkcalcNightDiffOT.Checked, "Y", "N")
-            params(53, 1) = If(chkcalcRestDay.Checked, "Y", "N")
-            params(54, 1) = If(chkcalcRestDayOT.Checked, "Y", "N")
-
-            Dim emplo_RowID =
-                EXEC_INSUPD_PROCEDURE(params,
-                                       "INSUPD_employee_01",
-                                       "returnval")
-
-            If tsbtnNewEmp.Enabled = False Then 'INSERT employee
-
-                Dim new_drow As DataRow
-                new_drow = employeepix.NewRow
-                new_drow("RowID") = emplo_RowID
-                new_drow("Image") = params(40, 1) 'If(empPic = Nothing, "", convertFileToByte(empPic))
-                employeepix.Rows.Add(new_drow)
-
-                'emp_rcount
-                If dgvEmp.RowCount = 0 Then
-                    dgvEmp.Rows.Add()
-                Else : dgvEmp.Rows.Insert(0, 1)
-
-                End If
-
-                emp_rcount += 1 ': isDupEmpID = 0
-
-                dgvEmp_RowIndex = 0
-
-                InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
-            Else 'UPDATE employee
-
-                If dontUpdateEmp = 1 Then
-                    tsbtnNewEmp.Enabled = True
-                    AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-                    Exit Sub
-                End If
-
-                For Each drow As DataRow In employeepix.Rows
-                    If drow("RowID").ToString = dgvEmp.CurrentRow.Cells("RowID").Value Then
-                        drow("Image") = Nothing
-                        drow("Image") = params(40, 1) 'If(empPic = Nothing, "", convertFileToByte(empPic))
-                        'employeepix.Rows.Remove(drow)
-                        Exit For
-                    End If
-                Next
-
-                dgvEmp_RowIndex = dgvEmp.CurrentRow.Index
-                InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been updated successfully.", "Employee Update Successful", lblforballoon, 0, -69)
-            End If
-
-            With dgvEmp.Rows(dgvEmp_RowIndex)
-                If tsbtnNewEmp.Enabled = False Then
-                    .Cells("RowID").Value = emplo_RowID
-                End If
-
-                .Cells("Column1").Value = txtEmpID.Text : .Cells("Column2").Value = txtFName.Text
-                .Cells("Column3").Value = txtMName.Text : .Cells("Column4").Value = txtLName.Text
-                .Cells("Column5").Value = txtNName.Text
-                .Cells("Column6").Value = Format(dtpempbdate.Value, machineShortDateFormat) 'dtpBDate.Value
-                .Cells("Column7").Value = Trim(txtDivisionName.Text)
-
-                .Cells("Column8").Value = If(cboPosit.SelectedIndex = -1, "",
-                                             If(cboPosit.SelectedIndex = (cboPosit.Items.Count - 1), Nothing, Trim(cboPosit.Text)))
-
-                .Cells("Column9").Value = cboSalut.Text : .Cells("Column10").Value = txtTIN.Text
-                .Cells("Column11").Value = txtSSS.Text : .Cells("Column12").Value = txtHDMF.Text
-                .Cells("Column13").Value = txtPIN.Text : .Cells("Column15").Value = txtWorkPhne.Text
-                .Cells("Column16").Value = txtHomePhne.Text : .Cells("Column17").Value = txtMobPhne.Text
-                .Cells("Column18").Value = txtHomeAddr.Text : .Cells("Column14").Value = txtemail.Text
-                .Cells("Column19").Value = If(rdMale.Checked, "Male", "Female")
-                .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = txtSName.Text
-                .Cells("Column25").Value = dbnow : .Cells("Column26").Value = u_nem
-
-                .Cells("Column29").Value = If(cboPosit.SelectedIndex = -1 Or cboPosit.Text = "", "",
-                                             If(cboPosit.SelectedIndex = (cboPosit.Items.Count - 1), Nothing, getStrBetween(positn.Item(cboPosit.SelectedIndex), "", "@")))
-
-                .Cells("Column22").Value = paytypestring
-
-                .Cells("Column31").Value = cboMaritStat.Text : .Cells("Column32").Value = Val(txtNumDepen.Text)
-                .Cells("Column34").Value = cboEmpType.Text
-
-                .Cells("colstartdate").Value = dtpempstartdate.Value '.ToString.Replace("/", "-")
-
-                .Cells("Column35").Value = txtvlallow.Text
-
-                .Cells("Column36").Value = txtvlallow.Text
-                .Cells("slallowance").Value = txtslallow.Text
-                .Cells("mlallowance").Value = txtmlallow.Text
-
-                .Cells("Column35").Value = txtvlbal.Text
-                .Cells("slbalance").Value = txtslbal.Text
-                .Cells("mlbalance").Value = txtmlbal.Text
-
-                .Cells("Column23").Value = If(chkutflag.Checked, 1, 0)
-                .Cells("Column24").Value = If(chkotflag.Checked, 1, 0)
-
-                .Cells("Column1").Selected = True
-
-                .Cells("AlphaExempted").Value = If(chkAlphaListExempt.Checked = True, "0", "1")
-                .Cells("WorkDaysPerYear").Value = txtWorkDaysPerYear.Text
-                .Cells("DayOfRest").Value = cboDayOfRest.Text
-                .Cells("ATMNo").Value = txtATM.Text
-                .Cells("BankName").Value = cbobank.Text
-                .Cells("OtherPayP").Value = txtothrpayp.Text
-                .Cells("OtherLeaveAllowance").Value = txtothrallow.Text
-                .Cells("OtherLeaveBalance").Value = txtothrbal.Text
-
-                .Cells("CalcHoliday").Value = If(chkcalcHoliday.Checked, "Y", "N")
-                .Cells("CalcSpecialHoliday").Value = If(chkcalcSpclHoliday.Checked, "Y", "N")
-                .Cells("CalcNightDiff").Value = If(chkcalcNightDiff.Checked, "Y", "N")
-                .Cells("CalcNightDiffOT").Value = If(chkcalcNightDiffOT.Checked, "Y", "N")
-                .Cells("CalcRestDay").Value = If(chkcalcRestDay.Checked, "Y", "N")
-                .Cells("CalcRestDayOT").Value = If(chkcalcRestDayOT.Checked, "Y", "N")
-            End With
-        Catch ex As Exception
-
-            Dim catch_errstr = getErrExcptn(ex, Me.Name)
-
-            If catch_errstr.Contains("Object reference not set to an instance of an object.") Then
-                WarnBalloon("No employee is selected", "Please select an employee.", lblforballoon, 0, -69)
-            Else
-                WarnBalloon(catch_errstr, catch_errstr, lblforballoon, 0, -69)
-            End If
-        Finally
-            tsbtnNewEmp.Enabled = True
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-        End Try
     End Sub
 
     Sub tsbtnSaveEmp_Click(sender As Object, e As EventArgs) 'Handles tsbtnSaveEmp.Click
@@ -1733,6 +1386,9 @@ Public Class EmployeeForm
             tabctrlemp.TabPages.Remove(tbpBonus)
             tabctrlemp.TabPages.Remove(tbpAttachment)
 
+            TabControl3.Visible = False
+            LeaveGroupBox.Visible = True
+
         End If
 
         If dbnow = Nothing Then
@@ -2029,6 +1685,13 @@ Public Class EmployeeForm
                             End If
 
                         End If
+                    End If
+
+                    If if_sysowner_is_benchmark Then
+
+                        LeaveAllowanceTextBox.Text = .Cells("Column36").Value
+                        LeaveBalanceTextBox.Text = .Cells("Column35").Value
+
                     End If
 
                     txtvlallow.Text = .Cells("Column36").Value
@@ -2379,6 +2042,8 @@ Public Class EmployeeForm
 
         pbemppic.Image = Nothing
         File.Delete(Path.GetTempPath & "tmpfileEmployeeImage.jpg")
+
+        LeaveBalanceTextBox.Text = 0
         txtvlbal.Text = 0
         txtslbal.Text = 0
         txtmlbal.Text = 0
@@ -2393,6 +2058,13 @@ Public Class EmployeeForm
                                         " FROM organization" &
                                         " WHERE RowID=" & orgztnID & ";")
         For Each drow As DataRow In leavedefaults.Rows
+
+            If if_sysowner_is_benchmark Then
+
+                LeaveAllowanceTextBox.Text = If(IsDBNull(drow("vl_allowance")), 0.0, drow("vl_allowance"))
+
+            End If
+
             txtvlallow.Text = If(IsDBNull(drow("vl_allowance")), 0.0, drow("vl_allowance"))
             txtslallow.Text = If(IsDBNull(drow("sl_allowance")), 0.0, drow("sl_allowance"))
             txtmlallow.Text = If(IsDBNull(drow("ml_allowance")), 0.0, drow("ml_allowance"))
@@ -3791,8 +3463,12 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub txtvlallow_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtvlallow.KeyPress
+    Private Sub txtvlallow_KeyPress(sender As Object, e As KeyPressEventArgs) _
+        Handles txtvlallow.KeyPress, LeaveAllowanceTextBox.KeyPress
+
         Dim e_KAsc As String = Asc(e.KeyChar)
+
+        Dim textbox = CType(sender, TextBox)
 
         Static onedot As SByte = 0
 
@@ -3801,7 +3477,7 @@ Public Class EmployeeForm
             If e_KAsc = 46 Then
                 onedot += 1
                 If onedot >= 2 Then
-                    If txtvlallow.Text.Contains(".") Then
+                    If textbox.Text.Contains(".") Then
                         e.Handled = True
                         onedot = 2
                     Else
@@ -3809,7 +3485,7 @@ Public Class EmployeeForm
                         onedot = 0
                     End If
                 Else
-                    If txtvlallow.Text.Contains(".") Then
+                    If textbox.Text.Contains(".") Then
                         e.Handled = True
                     Else
                         e.Handled = False
